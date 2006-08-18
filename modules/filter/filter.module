@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.133 2006/08/10 15:42:32 dries Exp $
+// $Id: filter.module,v 1.134 2006/08/18 12:16:58 unconed Exp $
 
 /**
  * @file
@@ -24,11 +24,11 @@ function filter_help($section) {
       $output .= '<p>'. t('Users can choose between the available input formats when creating or editing content. Administrators can configure which input formats are available to which user roles, as well as choose a default input format. Administrators can also create new input formats. Each input format can be configured to use a selection of filters.') .'</p>';
       $output .= t('<p>You can</p>
 <ul>
-<li>administer input format permissions and settings  at <a href="%admin-filters">administer &gt;&gt; site configuration &gt;&gt; input formats</a>.</li>
-<li>configure the filters for each input format at <a href="%admin-filters">administer &gt;&gt; site configuration &gt;&gt; input formats</a>.</li>
+<li>administer input format permissions and settings  at <a href="@admin-filters">administer &gt;&gt; site configuration &gt;&gt; input formats</a>.</li>
+<li>configure the filters for each input format at <a href="@admin-filters">administer &gt;&gt; site configuration &gt;&gt; input formats</a>.</li>
 </ul>
-', array('%admin-filters' => url('admin/settings/filters')));
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%filter">Filter page</a>.', array('%filter' => 'http://drupal.org/handbook/modules/filter/')) .'</p>';
+', array('@admin-filters' => url('admin/settings/filters')));
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@filter">Filter page</a>.', array('@filter' => 'http://drupal.org/handbook/modules/filter/')) .'</p>';
       return $output;
     case 'admin/settings/modules#description':
       return t('Handles the filtering of content in preparation for display.');
@@ -43,11 +43,11 @@ function filter_help($section) {
     case 'admin/settings/filters/'. arg(3):
       return t('
 <p>Every <em>filter</em> performs one particular change on the user input, for example stripping out malicious HTML or making URLs clickable. Choose which filters you want to apply to text in this input format.</p>
-<p>If you notice some filters are causing conflicts in the output, you can <a href="%rearrange">rearrange them</a>.</p>', array('%rearrange' => url('admin/settings/filters/'. arg(3) .'/order')));
+<p>If you notice some filters are causing conflicts in the output, you can <a href="@rearrange">rearrange them</a>.</p>', array('@rearrange' => url('admin/settings/filters/'. arg(3) .'/order')));
 
     case 'admin/settings/filters/'. arg(3) .'/configure':
       return t('
-<p>If you cannot find the settings for a certain filter, make sure you\'ve enabled it on the <a href="%url">view tab</a> first.</p>', array('%url' => url('admin/settings/filters/'. arg(3))));
+<p>If you cannot find the settings for a certain filter, make sure you\'ve enabled it on the <a href="@url">view tab</a> first.</p>', array('@url' => url('admin/settings/filters/'. arg(3))));
 
     case 'admin/settings/filters/'. arg(3) .'/order':
       return t('
@@ -101,7 +101,7 @@ function filter_menu($may_cache) {
 
       if (isset($formats[arg(3)])) {
         $items[] = array('path' => 'admin/settings/filters/'. arg(3),
-          'title' => t("'%format' input format", array('%format' => $formats[arg(3)]->name)),
+          'title' => t("!format input format", array('!format' => $formats[arg(3)]->name)),
           'callback' => 'filter_admin_format_form',
           'callback arguments' => array('format' => $formats[arg(3)]),
           'type' => MENU_CALLBACK,
@@ -216,7 +216,7 @@ function filter_filter_tips($delta, $format, $long = FALSE) {
                 }
                 else {
                   $rows[] = array(
-                    array('data' => t('No help provided for tag %tag.', array('%tag' => check_plain($tag))), 'class' => 'description', 'colspan' => 3),
+                    array('data' => t('No help provided for tag %tag.', array('%tag' => $tag)), 'class' => 'description', 'colspan' => 3),
                   );
                 }
               }
@@ -359,7 +359,7 @@ function filter_admin_delete() {
       $form['format'] = array('#type' => 'hidden', '#value' => $format->format);
       $form['name'] = array('#type' => 'hidden', '#value' => $format->name);
 
-      return confirm_form('filter_admin_delete', $form, t('Are you sure you want to delete the input format %format?', array('%format' => theme('placeholder', $format->name))), 'admin/settings/filters', t('If you have any content left in this input format, it will be switched to the default input format. This action cannot be undone.'), t('Delete'), t('Cancel'));
+      return confirm_form('filter_admin_delete', $form, t('Are you sure you want to delete the input format %format?', array('%format' => $format->name)), 'admin/settings/filters', t('If you have any content left in this input format, it will be switched to the default input format. This action cannot be undone.'), t('Delete'), t('Cancel'));
     }
     else {
       drupal_set_message(t('The default format cannot be deleted.'));
@@ -385,7 +385,7 @@ function filter_admin_delete_submit($form_id, $form_values) {
   db_query("UPDATE {boxes} SET format = %d WHERE format = %d", $default, $form_values['format']);
 
   cache_clear_all('filter:'. $form_values['format'], TRUE);
-  drupal_set_message(t('Deleted input format %format.', array('%format' => theme('placeholder', $form_values['name']))));
+  drupal_set_message(t('Deleted input format %format.', array('%format' => $form_values['name'])));
 
   return 'admin/settings/filters';
 }
@@ -469,7 +469,7 @@ function filter_admin_format_form_validate($form_id, $form_values) {
     $name = trim($form_values['name']);
     $result = db_fetch_object(db_query("SELECT format FROM {filter_formats} WHERE name='%s'", $name));
     if ($result) {
-      form_set_error('name', t('Filter format names need to be unique. A format named %name already exists.', array('%name' => theme('placeholder', $name))));
+      form_set_error('name', t('Filter format names need to be unique. A format named %name already exists.', array('%name' => $name)));
     }
   }
 }
@@ -489,7 +489,7 @@ function filter_admin_format_form_submit($form_id, $form_values) {
     db_query("INSERT INTO {filter_formats} (name) VALUES ('%s')", $name);
     $result = db_fetch_object(db_query("SELECT MAX(format) AS format FROM {filter_formats}"));
     $format = $result->format;
-    drupal_set_message(t('Added input format %format.', array('%format' => theme('placeholder', $name))));
+    drupal_set_message(t('Added input format %format.', array('%format' => $name)));
   }
   else {
     drupal_set_message(t('The input format settings have been updated.'));

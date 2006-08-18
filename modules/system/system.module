@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.345 2006/08/14 20:35:11 dries Exp $
+// $Id: system.module,v 1.346 2006/08/18 12:16:59 unconed Exp $
 
 /**
  * @file
@@ -21,14 +21,14 @@ function system_help($section) {
       $output .= '<p>'. t('There is a caching mechanism which stores dynamically generated web pages in a database. By caching a web page, the system module does not have to create the page each time someone wants to view it, instead it takes only one SQL query to display it, reducing response time and the server\'s load. Only pages requested by <em>anonymous</em> users are cached. In order to reduce server load and save bandwidth, the system module stores and sends cached pages compressed.') .'</p>';
       $output .= t('<p>You can</p>
 <ul>
-<li>activate your cron job on the cron page <a href="%file-cron">cron.php</a>.</li>
-<li>read how to <a href="%external-http-drupal-org-cron">configure cron jobs</a>.</li>
-<li>administer cache settings in <a href="%admin-settings">administer &gt;&gt; site configuration &gt;&gt; page caching</a>.</li>
-<li><a href="%cron-status">view</a> whether or not cron is running on your site.</li>
-<li>run cron <a href="%cron-manually">manually</a>.</li>
+<li>activate your cron job on the cron page <a href="@file-cron">cron.php</a>.</li>
+<li>read how to <a href="@external-http-drupal-org-cron">configure cron jobs</a>.</li>
+<li>administer cache settings in <a href="@admin-settings">administer &gt;&gt; site configuration &gt;&gt; page caching</a>.</li>
+<li><a href="@cron-status">view</a> whether or not cron is running on your site.</li>
+<li>run cron <a href="@cron-manually">manually</a>.</li>
 </ul>
-', array('%file-cron' => 'cron.php', '%external-http-drupal-org-cron' => 'http://drupal.org/cron', '%cron-status' => url('admin/settings/cron-status'), '%cron-manually' => url('admin/settings/cron-status/cron'), '%admin-settings' => url('admin/settings/page-caching')));
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%system">System page</a>.', array('%system' => 'http://drupal.org/handbook/modules/system/')) .'</p>';
+', array('@file-cron' => 'cron.php', '@external-http-drupal-org-cron' => 'http://drupal.org/cron', '@cron-status' => url('admin/settings/cron-status'), '@cron-manually' => url('admin/settings/cron-status/cron'), '@admin-settings' => url('admin/settings/page-caching')));
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@system">System page</a>.', array('@system' => 'http://drupal.org/handbook/modules/system/')) .'</p>';
       return $output;
     case 'admin/settings/modules#description':
       return t('Handles general site configuration for administrators.');
@@ -41,10 +41,10 @@ function system_help($section) {
     case 'admin/build/themes/settings/'. arg(3):
       $reference = explode('.', arg(3), 2);
       $theme = array_pop($reference);
-      return t('<p>These options control the display settings for the <code>%template</code> theme. When your site is displayed using this theme, these settings will be used. By clicking "Reset to defaults," you can choose to use the <a href="%global">global settings</a> for this theme.</p>', array('%template' => $theme, '%global' => url('admin/build/themes/settings')));
+      return t('<p>These options control the display settings for the <code>%template</code> theme. When your site is displayed using this theme, these settings will be used. By clicking "Reset to defaults," you can choose to use the <a href="@global">global settings</a> for this theme.</p>', array('%template' => $theme, '@global' => url('admin/build/themes/settings')));
     case 'admin/settings/modules':
-      return t('<p>Modules are plugins for Drupal that extend its core functionality. Here you can select which modules are enabled. Click on the name of the module in the navigation menu for their individual configuration pages. Once a module is enabled, new <a href="%permissions">permissions</a> might be made available. Modules can automatically be temporarily disabled to reduce server load when your site becomes extremely busy by enabling the throttle.module and checking throttle. The auto-throttle functionality must be enabled on the <a href="%throttle">throttle configuration page</a> after having enabled the throttle module.</p>
-<p>It is important that <a href="%update-php">update.php</a> is run every time a module is updated to a newer version.</p>', array('%permissions' => url('admin/user/access'), '%throttle' => url('admin/settings/throttle'), '%update-php' => $base_url .'/update.php'));
+      return t('<p>Modules are plugins for Drupal that extend its core functionality. Here you can select which modules are enabled. Click on the name of the module in the navigation menu for their individual configuration pages. Once a module is enabled, new <a href="@permissions">permissions</a> might be made available. Modules can automatically be temporarily disabled to reduce server load when your site becomes extremely busy by enabling the throttle.module and checking throttle. The auto-throttle functionality must be enabled on the <a href="@throttle">throttle configuration page</a> after having enabled the throttle module.</p>
+<p>It is important that <a href="@update-php">update.php</a> is run every time a module is updated to a newer version.</p>', array('@permissions' => url('admin/user/access'), '@throttle' => url('admin/settings/throttle'), '@update-php' => $base_url .'/update.php'));
   }
 }
 
@@ -519,7 +519,7 @@ function system_clean_url_settings() {
 
   if (!variable_get('clean_url', 0)) {
     if (strpos(request_uri(), '?q=') !== FALSE) {
-      $form['clean_url']['#description'] .= t(' Before enabling clean URLs, you must perform a test to determine if your server is properly configured. If you are able to see this page again after clicking the "Run the clean URL test" link, the test has succeeded and the radio buttons above will be available. If instead you are directed to a "Page not found" error, you will need to change the configuration of your server. The <a href="%handbook">handbook page on Clean URLs</a> has additional troubleshooting information. %run-test', array('%handbook' => 'http://drupal.org/node/15365', '%run-test' => '<a href ="'. base_path() . 'admin/settings/clean-urls">'. t('Run the clean URL test') .'</a>'));
+      $form['clean_url']['#description'] .= t(' Before enabling clean URLs, you must perform a test to determine if your server is properly configured. If you are able to see this page again after clicking the "Run the clean URL test" link, the test has succeeded and the radio buttons above will be available. If instead you are directed to a "Page not found" error, you will need to change the configuration of your server. The <a href="@handbook">handbook page on Clean URLs</a> has additional troubleshooting information. !run-test', array('@handbook' => 'http://drupal.org/node/15365', '!run-test' => '<a href ="'. base_path() . 'admin/settings/clean-urls">'. t('Run the clean URL test') .'</a>'));
       $form['clean_url']['#attributes'] = array('disabled' => 'disabled');
     }
     else {
@@ -742,13 +742,13 @@ function system_site_status_settings() {
     '#title' => t('Site status'),
     '#default_value' => variable_get('site_offline', 0),
     '#options' => array(t('Online'), t('Off-line')),
-    '#description' => t('When set to "Online", all visitors will be able to browse your site normally. When set to "Off-line", only users with the "administer site configuration" permission will be able to access your site to perform maintenance; all other visitors will see the site off-line message configured below. Authorized users can log in during "Off-line" mode directly via the <a href="%user-login">user login</a> page.', array('%user-login' => url('user'))),
+    '#description' => t('When set to "Online", all visitors will be able to browse your site normally. When set to "Off-line", only users with the "administer site configuration" permission will be able to access your site to perform maintenance; all other visitors will see the site off-line message configured below. Authorized users can log in during "Off-line" mode directly via the <a href="@user-login">user login</a> page.', array('@user-login' => url('user'))),
   );
 
   $form['site_offline_message'] = array(
     '#type' => 'textarea',
     '#title' => t('Site off-line message'),
-    '#default_value' => variable_get('site_offline_message', t('%site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('%site' => variable_get('site_name', t('This Drupal site'))))),
+    '#default_value' => variable_get('site_offline_message', t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('@site' => variable_get('site_name', t('This Drupal site'))))),
     '#description' => t('Message to show visitors when the site is in off-line mode.')
   );
 
@@ -776,7 +776,7 @@ function system_cron_status($cron = '') {
     $status = t('Cron is running. The last cron job ran %time ago.', array('%time' => format_interval(time() - $cron_last)));
   }
   else {
-    $status = t('Cron has not run. It appears cron jobs have not been setup on your system. Please check the help pages for <a href="%url">configuring cron jobs</a>.', array('%url' => 'http://drupal.org/cron'));
+    $status = t('Cron has not run. It appears cron jobs have not been setup on your system. Please check the help pages for <a href="@url">configuring cron jobs</a>.', array('@url' => 'http://drupal.org/cron'));
   }
   $status .= ' '. t('Cron can, if necessary, also be run <a href="%cron">manually</a>.', array('%cron' => url('admin/settings/cron-status/cron')));
 

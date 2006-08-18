@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.474 2006/08/10 15:42:32 dries Exp $
+// $Id: comment.module,v 1.475 2006/08/18 12:16:57 unconed Exp $
 
 /**
  * @file
@@ -74,11 +74,11 @@ function comment_help($section) {
       $output .= '<p>'. t('An administrator can give comment permissions to user groups, and users can (optionally) edit their last comment, assuming no others have been posted since. Attached to each comment board is a control panel for customizing the way that comments are displayed. Users can control the chronological ordering of posts (newest or oldest first) and the number of posts to display on each page. Comments behave like other user submissions. Filters, smileys and HTML that work in nodes will also work with comments. The comment module provides specific features to inform site members when new comments have been posted.') .'</p>';
       $output .= t('<p>You can</p>
 <ul>
-<li>control access for various comment module functions through access permissions <a href="%admin-access">administer &gt;&gt; user management &gt;&gt; access control</a>.</li>
-<li>administer comments <a href="%admin-comment-configure"> administer &gt;&gt; content management &gt;&gt; comments &gt;&gt; settings</a>.</li>
+<li>control access for various comment module functions through access permissions <a href="@admin-access">administer &gt;&gt; user management &gt;&gt; access control</a>.</li>
+<li>administer comments <a href="@admin-comment-configure"> administer &gt;&gt; content management &gt;&gt; comments &gt;&gt; settings</a>.</li>
 </ul>
-', array('%admin-access' => url('admin/user/access'), '%admin-settings-comment' => url('admin/content/comment/settings')));
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%comment">Comment page</a>.', array('%comment' => 'http://drupal.org/handbook/modules/comment/')) .'</p>';
+', array('@admin-access' => url('admin/user/access'), '@admin-settings-comment' => url('admin/content/comment/settings')));
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@comment">Comment page</a>.', array('@comment' => 'http://drupal.org/handbook/modules/comment/')) .'</p>';
       return $output;
     case 'admin/settings/modules#description':
       return t('Allows users to comment on and discuss published content.');
@@ -181,7 +181,7 @@ function theme_comment_block() {
   $result = db_query_range(db_rewrite_sql('SELECT c.nid, c.subject, c.cid, c.timestamp FROM {comments} c INNER JOIN {node} n ON n.nid = c.nid WHERE n.status = 1 AND c.status = %d ORDER BY c.timestamp DESC', 'c'), COMMENT_PUBLISHED, 0, 10);
   $items = array();
   while ($comment = db_fetch_object($result)) {
-    $items[] = l($comment->subject, 'node/'. $comment->nid, NULL, NULL, 'comment-'. $comment->cid) .'<br />'. t('%time ago', array('%time' => format_interval(time() - $comment->timestamp)));
+    $items[] = l($comment->subject, 'node/'. $comment->nid, NULL, NULL, 'comment-'. $comment->cid) .'<br />'. t('@time ago', array('@time' => format_interval(time() - $comment->timestamp)));
   }
   return theme('item_list', $items);
 }
@@ -203,7 +203,7 @@ function comment_link($type, $node = NULL, $teaser = FALSE) {
 
         if ($all) {
           $links['comment_comments'] = array(
-            'title' => format_plural($all, '1 comment', '%count comments'),
+            'title' => format_plural($all, '1 comment', '@count comments'),
             'href' => "node/$node->nid",
             'attributes' => array('title' => t('Jump to the first comment of this posting.')),
             'fragment' => 'comments'
@@ -211,7 +211,7 @@ function comment_link($type, $node = NULL, $teaser = FALSE) {
 
           if ($new) {
             $links['comment_new_comments'] = array(
-              'title' => format_plural($new, '1 new comment', '%count new comments'),
+              'title' => format_plural($new, '1 new comment', '@count new comments'),
               'href' => "node/$node->nid",
               'attributes' => array('title' => t('Jump to the first new comment of this posting.')),
               'fragment' => 'new'
@@ -337,7 +337,7 @@ function comment_nodeapi(&$node, $op, $arg = 0) {
 
     case 'search result':
       $comments = db_result(db_query('SELECT comment_count FROM {node_comment_statistics} WHERE nid = %d', $node->nid));
-      return format_plural($comments, '1 comment', '%count comments');
+      return format_plural($comments, '1 comment', '@count comments');
 
     case 'rss item':
       if ($node->comment != COMMENT_NODE_DISABLED) {
@@ -438,7 +438,7 @@ function comment_admin_settings() {
       COMMENT_ANONYMOUS_MAYNOT_CONTACT => t('Anonymous posters may not enter their contact information'),
       COMMENT_ANONYMOUS_MAY_CONTACT => t('Anonymous posters may leave their contact information'),
       COMMENT_ANONYMOUS_MUST_CONTACT => t('Anonymous posters must leave their contact information')),
-    '#description' => t('This option is enabled when anonymous users have permission to post comments on the <a href="%url">permissions page</a>.', array('%url' => url('admin/user/access'))),
+    '#description' => t('This option is enabled when anonymous users have permission to post comments on the <a href="@url">permissions page</a>.', array('@url' => url('admin/user/access'))),
   );
   if (!user_access('post comments', user_load(array('uid' => 0)))) {
     $form['posting_settings']['comment_anonymous']['#attributes'] = array('disabled' => 'disabled');
@@ -587,7 +587,7 @@ function comment_save($edit) {
       // validated/filtered data to perform such check.
       $duplicate = db_result(db_query("SELECT COUNT(cid) FROM {comments} WHERE pid = %d AND nid = %d AND subject = '%s' AND comment = '%s'", $edit['pid'], $edit['nid'], $edit['subject'], $edit['comment']), 0);
       if ($duplicate != 0) {
-        watchdog('content', t('Comment: duplicate %subject.', array('%subject' => theme('placeholder', $edit['subject']))), WATCHDOG_WARNING);
+        watchdog('content', t('Comment: duplicate %subject.', array('%subject' => $edit['subject'])), WATCHDOG_WARNING);
       }
 
       if ($edit['cid']) {
@@ -601,7 +601,7 @@ function comment_save($edit) {
 
 
         // Add an entry to the watchdog log.
-        watchdog('content', t('Comment: updated %subject.', array('%subject' => theme('placeholder', $edit['subject']))), WATCHDOG_NOTICE, l(t('view'), 'node/'. $edit['nid'], NULL, NULL, 'comment-'. $edit['cid']));
+        watchdog('content', t('Comment: updated %subject.', array('%subject' => $edit['subject'])), WATCHDOG_NOTICE, l(t('view'), 'node/'. $edit['nid'], NULL, NULL, 'comment-'. $edit['cid']));
       }
       else {
         // Add the comment to database.
@@ -674,7 +674,7 @@ function comment_save($edit) {
         comment_invoke_comment($edit, 'insert');
 
         // Add an entry to the watchdog log.
-        watchdog('content', t('Comment: added %subject.', array('%subject' => theme('placeholder', $edit['subject']))), WATCHDOG_NOTICE, l(t('view'), 'node/'. $edit['nid'], NULL, NULL, 'comment-'. $edit['cid']));
+        watchdog('content', t('Comment: added %subject.', array('%subject' => $edit['subject'])), WATCHDOG_NOTICE, l(t('view'), 'node/'. $edit['nid'], NULL, NULL, 'comment-'. $edit['cid']));
       }
 
       // Clear the cache so an anonymous user can see his comment being added.
@@ -692,7 +692,7 @@ function comment_save($edit) {
     }
   }
   else {
-    $txt = t('Comment: unauthorized comment submitted or comment submitted to a closed node %subject.', array('%subject' => theme('placeholder', $edit['subject'])));
+    $txt = t('Comment: unauthorized comment submitted or comment submitted to a closed node %subject.', array('%subject' => $edit['subject']));
     watchdog('content', $txt, WATCHDOG_WARNING);
     drupal_set_message($txt, 'error');
     return FALSE;
@@ -958,7 +958,7 @@ function comment_delete($cid) {
   else if (is_object($comment) && is_numeric($comment->cid)) {
     $output = confirm_form('comment_confirm_delete',
                     array(),
-                    t('Are you sure you want to delete the comment %title?', array('%title' => theme('placeholder', $comment->subject))),
+                    t('Are you sure you want to delete the comment %title?', array('%title' => $comment->subject)),
                     'node/'. $comment->nid,
                     t('Any replies to this comment will be lost. This action cannot be undone.'),
                     t('Delete'),
@@ -1075,7 +1075,7 @@ function comment_admin_overview_submit($form_id, $edit) {
         // Allow modules to respond to the updating of a comment.
         comment_invoke_comment($comment, $edit['operation']);
         // Add an entry to the watchdog log.
-        watchdog('content', t('Comment: updated %subject.', array('%subject' => theme('placeholder', $comment->subject))), WATCHDOG_NOTICE, l(t('view'), 'node/'. $comment->nid, NULL, NULL, 'comment-'. $comment->cid));
+        watchdog('content', t('Comment: updated %subject.', array('%subject' => $comment->subject)), WATCHDOG_NOTICE, l(t('view'), 'node/'. $comment->nid, NULL, NULL, 'comment-'. $comment->cid));
       }
     }
     cache_clear_all();
@@ -1665,10 +1665,10 @@ function theme_comment_post_forbidden($nid) {
     }
 
     if (variable_get('user_register', 1)) {
-      return t('<a href="%login">login</a> or <a href="%register">register</a> to post comments', array('%login' => url('user/login', $destination), '%register' => check_url(url('user/register', $destination))));
+      return t('<a href="@login">login</a> or <a href="@register">register</a> to post comments', array('@login' => url('user/login', $destination), '@register' => url('user/register', $destination)));
     }
     else {
-      return t('<a href="%login">login</a> to post comments', array('%login' => check_url(url('user/login', $destination))));
+      return t('<a href="@login">login</a> to post comments', array('@login' => url('user/login', $destination)));
     }
   }
 }
@@ -1688,7 +1688,7 @@ function _comment_delete_thread($comment) {
 
   // Delete the comment:
   db_query('DELETE FROM {comments} WHERE cid = %d', $comment->cid);
-  watchdog('content', t('Comment: deleted %subject.', array('%subject' => theme('placeholder', $comment->subject))));
+  watchdog('content', t('Comment: deleted %subject.', array('%subject' => $comment->subject)));
 
   comment_invoke_comment($comment, 'delete');
 

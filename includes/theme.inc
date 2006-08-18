@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.307 2006/08/17 06:55:26 drumm Exp $
+// $Id: theme.inc,v 1.308 2006/08/18 12:16:57 unconed Exp $
 
 /**
  * @file
@@ -338,9 +338,8 @@ function theme_get_setting($setting_name, $refresh = FALSE) {
  */
 
 /**
- * Format a dynamic text string for emphasized display in a placeholder.
- *
- * E.g. t('Added term %term', array('%term' => theme('placeholder', $term)))
+ * Formats text for emphasized display in a placeholder inside a sentence.
+ * Used automatically by t().
  *
  * @param $text
  *   The text to format (plain-text).
@@ -606,10 +605,10 @@ function theme_node($node, $teaser = FALSE, $page = FALSE) {
   }
 
   if ($page == 0) {
-    $output .= t('%title by %name', array('%title' => '<h2 class="title">'. check_plain($node->title) .'</h2>', '%name' => theme('username', $node)));
+    $output .= t('!title by !name', array('!title' => '<h2 class="title">'. check_plain($node->title) .'</h2>', '!name' => theme('username', $node)));
   }
   else {
-    $output .= t('by %name', array('%name' => theme('username', $node)));
+    $output .= t('by !name', array('!name' => theme('username', $node)));
   }
 
   if (count($terms)) {
@@ -889,7 +888,7 @@ function theme_item_list($items = array(), $title = NULL, $type = 'ul', $attribu
  * Returns code that emits the 'more help'-link.
  */
 function theme_more_help_link($url) {
-  return '<div class="more-help-link">' . t('[<a href="%link">more help...</a>]', array('%link' => check_url($url))) . '</div>';
+  return '<div class="more-help-link">' . t('[<a href="@link">more help...</a>]', array('@link' => check_url($url))) . '</div>';
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.191 2006/08/14 07:14:49 drumm Exp $
+// $Id: search.module,v 1.192 2006/08/18 12:16:59 unconed Exp $
 
 /**
  * @file
@@ -100,12 +100,12 @@ function search_help($section) {
       $output .= '<p>'. t('The search engine works by maintaining an index of the words in your site\'s content. It indexes the posts and users. You can adjust the settings to tweak the indexing behaviour. Note that the search requires cron to be set up correctly. The index percentage sets the maximum amount of items that will be indexed in one cron run. Set this number lower if your cron is timing out or if PHP is running out of memory.') .'</p>';
       $output .= t('<p>You can</p>
 <ul>
-<li>read about how your site uses cron in the <a href="%admin-help-system">administer &gt;&gt; help &gt;&gt; system</a>.</li>
-<li>run your <a href="%file-cron">cron.php</a>.</li>
-<li>read about <a href="%external-http-drupal-org-node-23714">configuring cron jobs</a>.</li>
-<li><a href="%admin-settings-search">administer &gt;&gt; site configuration &gt;&gt; search</a>.</li></ul>
-', array('%admin-help-system' => url('admin/help/system'), '%file-cron' => 'cron.php', '%external-http-drupal-org-node-23714' => 'http://drupal.org/node/23714', '%admin-settings-search' => url('admin/settings/search')));
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%search">Search page</a>.', array('%search' => 'http://drupal.org/handbook/modules/search/')) .'</p>';
+<li>read about how your site uses cron in the <a href="@admin-help-system">administer &gt;&gt; help &gt;&gt; system</a>.</li>
+<li>run your <a href="@file-cron">cron.php</a>.</li>
+<li>read about <a href="@external-http-drupal-org-node-23714">configuring cron jobs</a>.</li>
+<li><a href="@admin-settings-search">administer &gt;&gt; site configuration &gt;&gt; search</a>.</li></ul>
+', array('@admin-help-system' => url('admin/help/system'), '@file-cron' => 'cron.php', '@external-http-drupal-org-node-23714' => 'http://drupal.org/node/23714', '@admin-settings-search' => url('admin/settings/search')));
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@search">Search page</a>.', array('@search' => 'http://drupal.org/handbook/modules/search/')) .'</p>';
       return $output;
     case 'admin/settings/modules#description':
       return t('Enables site-wide keyword searching.');
@@ -220,7 +220,7 @@ function search_admin_settings() {
       $total += $status['total'];
     }
   }
-  $count = format_plural($remaining, 'There is 1 item left to index.', 'There are %count items left to index.');
+  $count = format_plural($remaining, 'There is 1 item left to index.', 'There are @count items left to index.');
   $percentage = ((int)min(100, 100 * ($total - $remaining) / max(1, $total))) . '%';
   $status = '<p><strong>'. t('%percentage of the site has been indexed.', array('%percentage' => $percentage)) .' '. $count .'</strong></p>';
   $form['status'] = array('#type' => 'fieldset', '#title' => t('Indexing status'));
@@ -849,7 +849,7 @@ function do_search($keywords, $type, $join1 = '', $where1 = '1', $arguments1 = a
   $query = search_parse_query($keywords);
 
   if ($query[2] == '') {
-    form_set_error('keys', t('You must include at least one positive keyword with %count characters or more.', array('%count' => variable_get('minimum_word_size', 3))));
+    form_set_error('keys', t('You must include at least one positive keyword with @count characters or more.', array('@count' => variable_get('minimum_word_size', 3))));
   }
   if ($query === NULL || $query[0] == '' || $query[2] == '') {
     return array();
@@ -917,7 +917,7 @@ function search_view() {
     // Only perform search if there is non-whitespace search term:
     if (trim($keys)) {
       // Log the search keys:
-      watchdog('search', t('Search: %keys (%type).', array('%keys' => theme('placeholder', $keys), '%type' => module_invoke($type, 'search', 'name'))), WATCHDOG_NOTICE, l(t('results'), 'search/'. $type .'/'. $keys));
+      watchdog('search', t('Search: %keys (@type).', array('%keys' => $keys, '@type' => module_invoke($type, 'search', 'name'))), WATCHDOG_NOTICE, l(t('results'), 'search/'. $type .'/'. $keys));
 
       // Collect the search results:
       $results = search_data($keys, $type);

@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.347 2006/08/14 07:14:49 drumm Exp $
+// $Id: forum.module,v 1.348 2006/08/18 12:16:58 unconed Exp $
 
 /**
  * @file
@@ -17,13 +17,13 @@ function forum_help($section) {
       $output .= '<p>'. t('Forums module <strong>requires Taxonomy and Comments module</strong> be enabled.') .'</p>';
       $output .= t('<p>You can</p>
 <ul>
-<li>administer forums at <a href="%admin-forum">administer &gt;&gt; content management &gt;&gt; forums</a>.</li>
-<li>enable the required comment and taxonomy modules at <a href="%admin-modules">administer &gt;&gt; site configuration &gt;&gt; modules</a>.</li>
-<li>read about the comment module at <a href="%admin-help-comment">administer &gt;&gt; help &gt;&gt; comment</a>.</li>
-<li>read about the taxonomy module at <a href="%admin-help-taxonomy">administer &gt;&gt; help &gt;&gt; taxonomy</a>.</li>
+<li>administer forums at <a href="@admin-forum">administer &gt;&gt; content management &gt;&gt; forums</a>.</li>
+<li>enable the required comment and taxonomy modules at <a href="@admin-modules">administer &gt;&gt; site configuration &gt;&gt; modules</a>.</li>
+<li>read about the comment module at <a href="@admin-help-comment">administer &gt;&gt; help &gt;&gt; comment</a>.</li>
+<li>read about the taxonomy module at <a href="@admin-help-taxonomy">administer &gt;&gt; help &gt;&gt; taxonomy</a>.</li>
 </ul>
-', array('%admin-forum' => url('admin/content/forum'), '%admin-modules' => url('admin/settings/modules'), '%admin-help-comment' => url('admin/help/comment'), '%admin-help-taxonomy' => url('admin/help/taxonomy')));
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%forum">Forum page</a>.', array('%forum' => 'http://drupal.org/handbook/modules/forum/')) .'</p>';
+', array('@admin-forum' => url('admin/content/forum'), '@admin-modules' => url('admin/settings/modules'), '@admin-help-comment' => url('admin/help/comment'), '@admin-help-taxonomy' => url('admin/help/taxonomy')));
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@forum">Forum page</a>.', array('@forum' => 'http://drupal.org/handbook/modules/forum/')) .'</p>';
       return $output;
     case 'admin/settings/modules#description':
       return t('Enables threaded discussions about general topics.');
@@ -373,7 +373,7 @@ function forum_validate($node) {
       if (db_result(db_query('SELECT COUNT(*) FROM {term_data} WHERE tid = %d AND vid = %d', $term, $vocabulary))) {
         if (in_array($term, $containers)) {
           $term = taxonomy_get_term($term);
-          form_set_error('taxonomy', t('The item %forum is only a container for forums. Please select one of the forums below it.', array('%forum' => theme('placeholder', $term->name))));
+          form_set_error('taxonomy', t('The item %forum is only a container for forums. Please select one of the forums below it.', array('%forum' => $term->name)));
         }
       }
     }
@@ -547,10 +547,10 @@ function forum_form_submit($form_id, $form_values) {
         $containers[] = $form_values['tid'];
         variable_set('forum_containers', $containers);
       }
-      drupal_set_message(t('Created new %type %term.', array('%term' => theme('placeholder', $form_values['name']), '%type' => $type)));
+      drupal_set_message(t('Created new @type %term.', array('%term' => $form_values['name'], '@type' => $type)));
       break;
     case SAVED_UPDATED:
-      drupal_set_message(t('The %type %term has been updated.', array('%term' => theme('placeholder', $form_values['name']), '%type' => $type)));
+      drupal_set_message(t('The @type %term has been updated.', array('%term' => $form_values['name'], '@type' => $type)));
       break;
   }
   return 'admin/content/forum';
@@ -567,7 +567,7 @@ function _forum_confirm_delete($tid) {
   $form['tid'] = array('#type' => 'value', '#value' => $tid);
   $form['name'] = array('#type' => 'value', '#value' => $term->name);
 
-  return confirm_form('forum_confirm_delete', $form, t('Are you sure you want to delete the forum %name?', array('%name' => theme('placeholder', $term->name))), 'admin/content/forums', t('Deleting a forum or container will delete all sub-forums and associated posts as well. This action cannot be undone.'), t('Delete'), t('Cancel'));
+  return confirm_form('forum_confirm_delete', $form, t('Are you sure you want to delete the forum %name?', array('%name' => $term->name)), 'admin/content/forums', t('Deleting a forum or container will delete all sub-forums and associated posts as well. This action cannot be undone.'), t('Delete'), t('Cancel'));
 }
 
 /**
@@ -575,8 +575,8 @@ function _forum_confirm_delete($tid) {
  */
 function forum_confirm_delete_submit($form_id, $form_values) {
   taxonomy_del_term($form_values['tid']);
-  drupal_set_message(t('The forum %term and all sub-forums and associated posts have been deleted.', array('%term' => theme('placeholder', $form_values['name']))));
-  watchdog('content', t('forum: deleted %term and all its sub-forums and associated posts.', array('%term' => theme('placeholder', $form_values['name']))));
+  drupal_set_message(t('The forum %term and all sub-forums and associated posts have been deleted.', array('%term' => $form_values['name'])));
+  watchdog('content', t('forum: deleted %term and all its sub-forums and associated posts.', array('%term' => $form_values['name'])));
 
   return 'admin/content/forum';
 }
@@ -600,7 +600,7 @@ function forum_overview() {
     }
   }
   else {
-    $rows[] = array(array('data' => '<em>' . t('There are no existing containers or forums. You may add some on the <a href="%container">add container</a> or <a href="%forum">add forum</a> pages.', array('%container' => url('admin/content/forum/add/container'), '%forum' => url('admin/content/forum/add/forum'))) . '</em>', 'colspan' => 2));
+    $rows[] = array(array('data' => '<em>' . t('There are no existing containers or forums. You may add some on the <a href="@container">add container</a> or <a href="@forum">add forum</a> pages.', array('@container' => url('admin/content/forum/add/container'), '@forum' => url('admin/content/forum/add/forum'))) . '</em>', 'colspan' => 2));
   }
   return theme('table', $header, $rows);
 }
@@ -692,7 +692,7 @@ function _forum_get_vid() {
  */
 function _forum_format($topic) {
   if ($topic && $topic->timestamp) {
-    return t('%time ago<br />by %author', array('%time' => format_interval(time() - $topic->timestamp), '%author' => theme('username', $topic)));
+    return t('@time ago<br />by !author', array('@time' => format_interval(time() - $topic->timestamp), '!author' => theme('username', $topic)));
   }
   else {
     return t('n/a');
@@ -920,7 +920,7 @@ function theme_forum_display($forums, $topics, $parents, $tid, $sortby, $forum_p
       $output .= '<li>'. t('You are not allowed to post a new forum topic.') .'</li>';
     }
     else {
-      $output .= '<li>'. t('<a href="%login">Login</a> to post a new forum topic.', array('%login' => url('user/login'))) .'</li>';
+      $output .= '<li>'. t('<a href="@login">Login</a> to post a new forum topic.', array('@login' => url('user/login'))) .'</li>';
     }
     $output .= '</ul>';
 
@@ -986,7 +986,7 @@ function theme_forum_list($forums, $parents, $tid) {
 
         $rows[] = array(
           array('data' => $description, 'class' => 'forum'),
-          array('data' => $forum->num_topics . ($new_topics ? '<br />'. l(format_plural($new_topics, '1 new', '%count new'), "forum/$forum->tid", NULL, NULL, 'new') : ''), 'class' => 'topics'),
+          array('data' => $forum->num_topics . ($new_topics ? '<br />'. l(format_plural($new_topics, '1 new', '@count new'), "forum/$forum->tid", NULL, NULL, 'new') : ''), 'class' => 'topics'),
           array('data' => $forum->num_posts, 'class' => 'posts'),
           array('data' => _forum_format($forum->last_post), 'class' => 'last-reply'));
       }
@@ -1021,7 +1021,7 @@ function theme_forum_topic_list($tid, $topics, $sortby, $forum_per_page) {
         $rows[] = array(
           array('data' => theme('forum_icon', $topic->new, $topic->num_comments, $topic->comment_mode, $topic->sticky), 'class' => 'icon'),
           array('data' => l($topic->title, "node/$topic->nid"), 'class' => 'topic'),
-          array('data' => $topic->num_comments . ($topic->new_replies ? '<br />'. l(format_plural($topic->new_replies, '1 new', '%count new'), "node/$topic->nid", NULL, NULL, 'new') : ''), 'class' => 'replies'),
+          array('data' => $topic->num_comments . ($topic->new_replies ? '<br />'. l(format_plural($topic->new_replies, '1 new', '@count new'), "node/$topic->nid", NULL, NULL, 'new') : ''), 'class' => 'replies'),
           array('data' => _forum_format($topic), 'class' => 'created'),
           array('data' => _forum_format($topic->last_reply), 'class' => 'last-reply')
         );

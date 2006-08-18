@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.235 2006/08/10 15:35:10 dries Exp $
+// $Id: statistics.module,v 1.236 2006/08/18 12:16:59 unconed Exp $
 
 /**
  * @file
@@ -33,18 +33,18 @@ function statistics_help($section) {
 ');
       $output .= t('<p>You can</p>
 <ul>
-<li>administer statistics <a href="%admin-settings-statistics">administer &gt;&gt; logs &gt;&gt; access log settings</a>.</li>
-<li>access statistics logs <a href="%admin-logs">administer &gt;&gt; logs</a>.</li>
-<li>view recent hits <a href="%admin-logs-hits">administer &gt;&gt; logs &gt;&gt; recent hits</a>.</li>
-<li>enable \'popular content\' block in block administration <a href="%admin-block">administer &gt;&gt; site building &gt;&gt; blocks </a> but only after you have enabled \'Count content views\' in settings.</li>
+<li>administer statistics <a href="@admin-settings-statistics">administer &gt;&gt; logs &gt;&gt; access log settings</a>.</li>
+<li>access statistics logs <a href="@admin-logs">administer &gt;&gt; logs</a>.</li>
+<li>view recent hits <a href="@admin-logs-hits">administer &gt;&gt; logs &gt;&gt; recent hits</a>.</li>
+<li>enable \'popular content\' block in block administration <a href="@admin-block">administer &gt;&gt; site building &gt;&gt; blocks </a> but only after you have enabled \'Count content views\' in settings.</li>
 </ul>
-', array('%admin-settings-statistics' => url('admin/logs/settings'), '%admin-logs' => url('admin/logs'), '%admin-logs-hits' => url('admin/logs/hits'), '%admin-block' => url('admin/build/block')));
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%statistics">Statistics page</a>.', array('%statistics' => 'http://drupal.org/handbook/modules/statistics/')) .'</p>';
+', array('@admin-settings-statistics' => url('admin/logs/settings'), '@admin-logs' => url('admin/logs'), '@admin-logs-hits' => url('admin/logs/hits'), '@admin-block' => url('admin/build/block')));
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@statistics">Statistics page</a>.', array('@statistics' => 'http://drupal.org/handbook/modules/statistics/')) .'</p>';
       return $output;
     case 'admin/settings/modules#description':
       return t('Logs access statistics for your site.');
     case 'admin/logs/settings':
-      return t('<p>Settings for the statistical information that Drupal will keep about the site. See <a href="%statistics">site statistics</a> for the actual information.</p>', array('%statistics' => url('admin/logs/hits')));
+      return t('<p>Settings for the statistical information that Drupal will keep about the site. See <a href="@statistics">site statistics</a> for the actual information.</p>', array('@statistics' => url('admin/logs/hits')));
     case 'admin/logs/hits':
       return t('<p>This page shows you the most recent hits.</p>');
     case 'admin/logs/referrers':
@@ -99,7 +99,7 @@ function statistics_link($type, $node = NULL, $teaser = FALSE) {
   if ($type != 'comment' && user_access('view post access counter')) {
     $statistics = statistics_get($node->nid);
     if ($statistics) {
-      $links['statistics_counter']['title'] = format_plural($statistics['totalcount'], '1 read', '%count reads');
+      $links['statistics_counter']['title'] = format_plural($statistics['totalcount'], '1 read', '@count reads');
     }
   }
 
@@ -361,7 +361,7 @@ function statistics_top_referrers() {
   $result = pager_query($query, 30, 0, $query_cnt, $_SERVER['HTTP_HOST']);
 
   while ($referrer = db_fetch_object($result)) {
-    $rows[] = array($referrer->hits, _statistics_link($referrer->url), t('%time ago', array('%time' => format_interval(time() - $referrer->last))));
+    $rows[] = array($referrer->hits, _statistics_link($referrer->url), t('@time ago', array('@time' => format_interval(time() - $referrer->last))));
   }
 
   $output = theme('table', $header, $rows);

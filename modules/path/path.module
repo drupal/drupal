@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.87 2006/08/07 15:04:15 dries Exp $
+// $Id: path.module,v 1.88 2006/08/18 12:16:58 unconed Exp $
 
 /**
  * @file
@@ -26,13 +26,13 @@ function path_help($section) {
       $output .= t('<p>You can</p>
 <ul>
 <li>set the path for a post with the path module.</li>
-<li>add a URL alias: <a href="%admin-path-add">administer &gt;&gt; site building &gt;&gt; url aliases &gt;&gt; add alias</a>.</li>
-<li>administer the list of URL aliases: <a href="%admin-path">administer &gt;&gt; site building &gt;&gt; url aliases</a>.</li>
-<li>read how to <a href="%external-http-drupal-org-node-15365">configure clean URLs</a> for your webserver.
-<li>enable clean url\'s to remove the =? at <a href="%admin-clean-url-settings">administer &gt;&gt; site configuration &gt;&gt; clean URLs</a>.</li>
+<li>add a URL alias: <a href="@admin-path-add">administer &gt;&gt; site building &gt;&gt; url aliases &gt;&gt; add alias</a>.</li>
+<li>administer the list of URL aliases: <a href="@admin-path">administer &gt;&gt; site building &gt;&gt; url aliases</a>.</li>
+<li>read how to <a href="@external-http-drupal-org-node-15365">configure clean URLs</a> for your webserver.
+<li>enable clean url\'s to remove the =? at <a href="@admin-clean-url-settings">administer &gt;&gt; site configuration &gt;&gt; clean URLs</a>.</li>
 </ul>
-', array('%admin-path-add' => url('admin/build/path/add'), '%admin-path' => url('admin/build/path'), '%external-http-drupal-org-node-15365' => 'http://drupal.org/node/15365', '%admin-clean-url-settings' => url('admin/settings/clean-urls')));
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%path">Path page</a>.', array('%path' => 'http://drupal.org/handbook/modules/path/')) .'</p>';
+', array('@admin-path-add' => url('admin/build/path/add'), '@admin-path' => url('admin/build/path'), '@external-http-drupal-org-node-15365' => 'http://drupal.org/node/15365', '@admin-clean-url-settings' => url('admin/settings/clean-urls')));
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@path">Path page</a>.', array('@path' => 'http://drupal.org/handbook/modules/path/')) .'</p>';
       return $output;
     case 'admin/settings/modules#description':
       return t('Allows users to rename URLs.');
@@ -104,7 +104,7 @@ function path_admin_delete_confirm($pid) {
   if (user_access('administer url aliases')) {
     $form['pid'] = array('#type' => 'value', '#value' => $pid);
     $output = confirm_form('path_admin_delete_confirm', $form,
-  t('Are you sure you want to delete path alias %title?', array('%title' => theme('placeholder', $path['dst']))),
+  t('Are you sure you want to delete path alias %title?', array('%title' => $path['dst'])),
    $_GET['destination'] ? $_GET['destination'] : 'admin/build/path', t('This action cannot be undone.'),
   t('Delete'), t('Cancel') );
   }
@@ -329,15 +329,15 @@ function path_form_submit() {
   $pid = $edit['pid'];
 
   if (!valid_url($src)) {
-    form_set_error('src', t('The system path %path is invalid.', array('%path' => theme('placeholder', $src))));
+    form_set_error('src', t('The system path %path is invalid.', array('%path' => $src)));
   }
 
   if (!valid_url($dst)) {
-    form_set_error('dst', t('The alias %alias is invalid.', array('%alias' => theme('placeholder', $dst))));
+    form_set_error('dst', t('The alias %alias is invalid.', array('%alias' => $dst)));
   }
 
   if (db_result(db_query("SELECT COUNT(dst) FROM {url_alias} WHERE pid != %d AND dst = '%s'", $pid, $dst))) {
-    form_set_error('dst', t('The alias %alias is already in use.', array('%alias' => theme('placeholder', $dst))));
+    form_set_error('dst', t('The alias %alias is already in use.', array('%alias' => $dst)));
   }
 
   if (form_get_errors()) {

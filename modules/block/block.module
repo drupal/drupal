@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.214 2006/08/14 07:14:49 drumm Exp $
+// $Id: block.module,v 1.215 2006/08/18 12:16:57 unconed Exp $
 
 /**
  * @file
@@ -27,16 +27,16 @@ function block_help($section) {
 </ul>
 ');
       $output .= '<h3>'. t('Module blocks') .'</h3>';
-      $output .= '<p>'. t('Some modules generate blocks that become available when the modules are enabled. These blocks can be administered via the <a href="%admin-block">blocks administration page</a>.</p>', array('%admin-block' => url('admin/build/block'))) .'</p>';
+      $output .= '<p>'. t('Some modules generate blocks that become available when the modules are enabled. These blocks can be administered via the <a href="@admin-block">blocks administration page</a>.</p>', array('@admin-block' => url('admin/build/block'))) .'</p>';
       $output .= '<h3>'. t('Administrator defined blocks') .'</h3>';
       $output .= '<p>'. t('Administrators can also define custom blocks. These blocks consist of a title, a description, and a body which can be as long as you wish. Block content can be in any of the input formats supported for other content.') .'</p>';
       $output .= t('<p>You can</p>
 <ul>
-<li>enable, throttle and configure blocks at <a href="%admin-block">administer &gt;&gt; site building &gt;&gt; blocks</a>.</li>
-<li>add an administrator-defined block at <a href="%admin-block-add">administer &gt;&gt; site building &gt;&gt; blocks &gt;&gt; add block</a>.</li>
+<li>enable, throttle and configure blocks at <a href="@admin-block">administer &gt;&gt; site building &gt;&gt; blocks</a>.</li>
+<li>add an administrator-defined block at <a href="@admin-block-add">administer &gt;&gt; site building &gt;&gt; blocks &gt;&gt; add block</a>.</li>
 </ul>
-', array('%admin-block' => url('admin/build/block'), '%admin-block-add' => url('admin/build/block/add')));
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%block">Block page</a>.', array('%block' => 'http://drupal.org/handbook/modules/block/')) .'</p>';
+', array('@admin-block' => url('admin/build/block'), '@admin-block-add' => url('admin/build/block/add')));
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@block">Block page</a>.', array('@block' => 'http://drupal.org/handbook/modules/block/')) .'</p>';
       return $output;
     case 'admin/settings/modules#description':
       return t('Controls the boxes that are displayed around the main content.');
@@ -44,11 +44,11 @@ function block_help($section) {
       return t("
 <p>Blocks are boxes of content that may be rendered into certain regions of your web pages, for example, into sidebars. They are usually generated automatically by modules, but administrators can create blocks manually.</p>
 <p>Only enabled blocks are shown. You can position blocks by specifying which area of the page they should appear in (e.g., a sidebar).  Highlighted labels on this page show the regions into which blocks can be rendered. You can specify where within a region a block will appear by adjusting its weight.</p>
-<p>If you want certain blocks to disable themselves temporarily during high server loads, check the 'Throttle' box. You can configure the auto-throttle on the <a href=\"%throttle\">throttle configuration page</a> after having enabled the throttle module.</p>
+<p>If you want certain blocks to disable themselves temporarily during high server loads, check the 'Throttle' box. You can configure the auto-throttle on the <a href=\"@throttle\">throttle configuration page</a> after having enabled the throttle module.</p>
 <p>You can configure the behaviour of each block (for example, specifying on which pages and for what users it will appear) by clicking the 'configure' link for each block.</p>
-", array('%throttle' => url('admin/settings/throttle')));
+", array('@throttle' => url('admin/settings/throttle')));
     case 'admin/build/block/add':
-      return t('<p>Here you can create a new block. Once you have created this block you must make it active and give it a place on the page using <a href="%overview">blocks</a>. The title is used when displaying the block. The description is used in the "block" column on the <a href="%overview">blocks</a> page.</p>', array('%overview' => url('admin/build/block')));
+      return t('<p>Here you can create a new block. Once you have created this block you must make it active and give it a place on the page using <a href="@overview">blocks</a>. The title is used when displaying the block. The description is used in the "block" column on the <a href="@overview">blocks</a> page.</p>', array('@overview' => url('admin/build/block')));
   }
 }
 
@@ -443,11 +443,11 @@ function block_admin_configure($module = NULL, $delta = 0) {
   }
   else {
     $options = array(t('Show on every page except the listed pages.'), t('Show on only the listed pages.'));
-    $description = t("Enter one page per line as Drupal paths. The '*' character is a wildcard. Example paths are '%blog' for the blog page and %blog-wildcard for every personal blog. %front is the front page.", array('%blog' => theme('placeholder', 'blog'), '%blog-wildcard' =>  theme('placeholder', 'blog/*'), '%front' => theme('placeholder', '<front>')));
+    $description = t("Enter one page per line as Drupal paths. The '*' character is a wildcard. Example paths are %blog for the blog page and %blog-wildcard for every personal blog. %front is the front page.", array('%blog' => 'blog', '%blog-wildcard' => 'blog/*', '%front' => '<front>'));
 
     if ($access) {
       $options[] = t('Show if the following PHP code returns <code>TRUE</code> (PHP-mode, experts only).');
-      $description .= t('If the PHP-mode is chosen, enter PHP code between %php. Note that executing incorrect PHP-code can break your Drupal site.', array('%php' => theme('placeholder', '<?php ?>')));
+      $description .= t('If the PHP-mode is chosen, enter PHP code between %php. Note that executing incorrect PHP-code can break your Drupal site.', array('%php' => '<?php ?>'));
     }
     $form['page_vis_settings']['visibility'] = array(
       '#type' => 'radios',
@@ -526,7 +526,7 @@ function block_box_delete($bid = 0) {
   $form['info'] = array('#type' => 'hidden', '#value' => $box['info'] ? $box['info'] : $box['title']);
   $form['bid'] = array('#type' => 'hidden', '#value' => $bid);
 
-  return confirm_form('block_box_delete_confirm', $form, t('Are you sure you want to delete the block %name?', array('%name' => theme('placeholder', $box['info']))), 'admin/build/block', '', t('Delete'), t('Cancel'));
+  return confirm_form('block_box_delete_confirm', $form, t('Are you sure you want to delete the block %name?', array('%name' => $box['info'])), 'admin/build/block', '', t('Delete'), t('Cancel'));
 }
 
 /**
@@ -534,7 +534,7 @@ function block_box_delete($bid = 0) {
  */
 function block_box_delete_confirm_submit($form_id, $form_values) {
   db_query('DELETE FROM {boxes} WHERE bid = %d', $form_values['bid']);
-  drupal_set_message(t('The block %name has been removed.', array('%name' => theme('placeholder', $form_values['info']))));
+  drupal_set_message(t('The block %name has been removed.', array('%name' => $form_values['info'])));
   cache_clear_all();
   return 'admin/build/block';
 };
@@ -545,7 +545,7 @@ function block_box_form($edit = array()) {
     '#title' => t('Block description'),
     '#default_value' => $edit['info'],
     '#maxlength' => 64,
-    '#description' => t('A brief description of your block. Used on the <a href="%overview">block overview page</a>.', array('%overview' => url('admin/build/block'))),
+    '#description' => t('A brief description of your block. Used on the <a href="@overview">block overview page</a>.', array('@overview' => url('admin/build/block'))),
     '#required' => TRUE,
     '#weight' => -19,
   );

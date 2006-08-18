@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.133 2006/08/10 15:42:32 dries Exp $
+// $Id: form.inc,v 1.134 2006/08/18 12:16:57 unconed Exp $
 
 /**
  * @defgroup form Form generation
@@ -283,7 +283,7 @@ function _form_validate($elements, $form_id = NULL) {
       // and a textfield could return '0' and empty('0') returns TRUE so we
       // need a special check for the '0' string.
       if ($elements['#required'] && empty($elements['#value']) && $elements['#value'] !== '0') {
-        form_error($elements, t('%name field is required.', array('%name' => $elements['#title'])));
+        form_error($elements, t('!name field is required.', array('!name' => $elements['#title'])));
       }
 
       // Add legal choice check if element has #options. Can be skipped, but then you must validate your own element.
@@ -299,7 +299,7 @@ function _form_validate($elements, $form_id = NULL) {
           foreach ($value as $v) {
             if (!isset($options[$v])) {
               form_error($elements, t('An illegal choice has been detected. Please contact the site administrator.'));
-              watchdog('form', t('Illegal choice %choice in %name element.', array('%choice' => theme('placeholder', check_plain($v)), '%name' => theme_placeholder(empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title']))), WATCHDOG_ERROR);
+              watchdog('form', t('Illegal choice %choice in !name element.', array('%choice' => $v, '!name' => empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title'])), WATCHDOG_ERROR);
             }
           }
         }
@@ -1147,10 +1147,10 @@ function theme_form_element($element, $value) {
   if (!empty($element['#title'])) {
     $title = $element['#title'];
     if (!empty($element['#id'])) {
-      $output .= ' <label for="'. form_clean_id($element['#id']) .'">'. t('%title: %required', array('%title' => $title, '%required' => $required)) ."</label>\n";
+      $output .= ' <label for="'. form_clean_id($element['#id']) .'">'. t('!title: !required', array('!title' => $title, '!required' => $required)) ."</label>\n";
     }
     else {
-      $output .= ' <label>'. t('%title: %required', array('%title' => $title, '%required' => $required)) ."</label>\n";
+      $output .= ' <label>'. t('!title: !required', array('!title' => $title, '!required' => $required)) ."</label>\n";
     }
   }
 

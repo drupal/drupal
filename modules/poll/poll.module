@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.208 2006/08/14 07:14:49 drumm Exp $
+// $Id: poll.module,v 1.209 2006/08/18 12:16:58 unconed Exp $
 
 /**
  * @file
@@ -14,14 +14,14 @@ function poll_help($section) {
   switch ($section) {
     case 'admin/help#poll':
       $output = '<p>'. t('The poll module can be used to create simple polls for site users. A poll is a simple multiple choice questionnaire which displays the cumulative results of the answers to the poll. Having polls on the site is a good way to get instant feedback from community members.') .'</p>';
-      $output .= '<p>'. t('Users can create a poll. The title of the poll should be the question, then enter the answers and the "base" vote counts. You can also choose the time period over which the vote will run.The <a href="%poll">poll</a> item in the navigation menu will take you to a page where you can see all the current polls, vote on them (if you haven\'t already) and view the results.', array('%poll' => url('poll'))) .'</p>';
+      $output .= '<p>'. t('Users can create a poll. The title of the poll should be the question, then enter the answers and the "base" vote counts. You can also choose the time period over which the vote will run.The <a href="@poll">poll</a> item in the navigation menu will take you to a page where you can see all the current polls, vote on them (if you haven\'t already) and view the results.', array('@poll' => url('poll'))) .'</p>';
       $output .= t('<p>You can</p>
 <ul>
-<li>view the <a href="%poll">polls page</a>.</li>
-<li><a href="%admin-node-configure-types-poll">administer &gt;&gt; content management &gt;&gt; content types &gt;&gt; poll</a>.</li>
+<li>view the <a href="@poll">polls page</a>.</li>
+<li><a href="@admin-node-configure-types-poll">administer &gt;&gt; content management &gt;&gt; content types &gt;&gt; poll</a>.</li>
 </ul>
-', array('%poll' => url('poll'), '%admin-node-configure-types-poll' => url('admin/content/types/poll')));
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%poll">Poll page</a>.', array('%poll' => 'http://drupal.org/handbook/modules/poll/')) .'</p>';
+', array('@poll' => url('poll'), '@admin-node-configure-types-poll' => url('admin/content/types/poll')));
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@poll">Poll page</a>.', array('@poll' => 'http://drupal.org/handbook/modules/poll/')) .'</p>';
       return $output;
     case 'admin/settings/modules#description':
       return t("Allows your site to capture votes on different topics in the form of multiple choice questions.");
@@ -143,9 +143,9 @@ function poll_form(&$node) {
   // Poll choices
   $form['choice'] += array('#type' => 'fieldset', '#title' => t('Choices'), '#prefix' => '<div class="poll-form">', '#suffix' => '</div>', '#tree' => TRUE);
   for ($a = 0; $a < $node->choices; $a++) {
-    $form['choice'][$a]['chtext'] = array('#type' => 'textfield', '#title' => t('Choice %n', array('%n' => ($a + 1))), '#default_value' => $node->choice[$a]['chtext']);
+    $form['choice'][$a]['chtext'] = array('#type' => 'textfield', '#title' => t('Choice @n', array('@n' => ($a + 1))), '#default_value' => $node->choice[$a]['chtext']);
     if ($admin) {
-      $form['choice'][$a]['chvotes'] = array('#type' => 'textfield', '#title' => t('Votes for choice %n', array('%n' => ($a + 1))), '#default_value' => (int)$node->choice[$a]['chvotes'], '#size' => 5, '#maxlength' => 7);
+      $form['choice'][$a]['chvotes'] = array('#type' => 'textfield', '#title' => t('Votes for choice @n', array('@n' => ($a + 1))), '#default_value' => (int)$node->choice[$a]['chvotes'], '#size' => 5, '#maxlength' => 7);
     }
   }
 
@@ -291,7 +291,7 @@ function poll_page() {
   $result = pager_query($sql, 15);
   $output = '<ul>';
   while ($node = db_fetch_object($result)) {
-    $output .= '<li>'. l($node->title, "node/$node->nid") .' - '. format_plural($node->votes, '1 vote', '%count votes') .' - '. ($node->active ? t('open') : t('closed')) .'</li>';
+    $output .= '<li>'. l($node->title, "node/$node->nid") .' - '. format_plural($node->votes, '1 vote', '@count votes') .' - '. ($node->active ? t('open') : t('closed')) .'</li>';
   }
   $output .= '</ul>';
   $output .= theme("pager", NULL, 15);
@@ -368,7 +368,7 @@ function poll_view_results(&$node, $teaser, $page, $block) {
 
   foreach ($node->choice as $i => $choice) {
     if ($choice['chtext'] != '') {
-      $poll_results .= theme('poll_bar', check_plain($choice['chtext']), round($choice['chvotes'] * 100 / max($total_votes, 1)), format_plural($choice['chvotes'], '1 vote', '%count votes'), $block);
+      $poll_results .= theme('poll_bar', check_plain($choice['chtext']), round($choice['chvotes'] * 100 / max($total_votes, 1)), format_plural($choice['chvotes'], '1 vote', '@count votes'), $block);
     }
   }
 

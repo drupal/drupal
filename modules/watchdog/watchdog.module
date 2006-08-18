@@ -1,5 +1,5 @@
 <?php
-// $Id: watchdog.module,v 1.148 2006/08/14 07:14:50 drumm Exp $
+// $Id: watchdog.module,v 1.149 2006/08/18 12:17:00 unconed Exp $
 
 /**
  * @file
@@ -22,11 +22,11 @@ function watchdog_help($section) {
       $output .= '<p>'. t('The watchdog log is simply a list of recorded events containing usage data, performance data, errors, warnings and operational information. Administrators should check the watchdog report on a regular basis to ensure their site is working properly.') .'</p>';
       $output .= t('<p>You can</p>
 <ul>
-<li>view watchdog logs at <a href="%admin-watchdog">administer &gt;&gt; logs &gt;&gt; watchdog</a>.</li>
-<li>view watchdog event logs at <a href="%admin-watchdog-events">administer &gt;&gt; logs &gt;&gt; watchdog &gt;&gt; events</a>.</li>
+<li>view watchdog logs at <a href="@admin-watchdog">administer &gt;&gt; logs &gt;&gt; watchdog</a>.</li>
+<li>view watchdog event logs at <a href="@admin-watchdog-events">administer &gt;&gt; logs &gt;&gt; watchdog &gt;&gt; events</a>.</li>
 </ul>
-', array('%admin-watchdog' => url('admin/logs/watchdog'), '%admin-watchdog-events' => url('admin/logs/watchdog/events')));
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%watchdog">Watchdog page</a>.', array('%watchdog' => 'http://drupal.org/handbook/modules/watchdog/')) .'</p>';
+', array('@admin-watchdog' => url('admin/logs/watchdog'), '@admin-watchdog-events' => url('admin/logs/watchdog/events')));
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@watchdog">Watchdog page</a>.', array('@watchdog' => 'http://drupal.org/handbook/modules/watchdog/')) .'</p>';
       return $output;
     case 'admin/settings/modules#description':
       return t('Logs and records system events.');
@@ -94,7 +94,7 @@ function watchdog_overview() {
 
   $names['all'] = t('all messages');
   foreach (_watchdog_get_message_types() as $type) {
-    $names[$type] = t('%type messages', array('%type' => t($type)));
+    $names[$type] = t('!type messages', array('!type' => t($type)));
   }
 
   if (empty($_SESSION['watchdog_overview_filter'])) {

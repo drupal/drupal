@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.118 2006/08/10 15:42:33 dries Exp $
+// $Id: upload.module,v 1.119 2006/08/18 12:16:59 unconed Exp $
 
 /**
  * @file
@@ -17,17 +17,17 @@ function upload_help($section) {
       $output .= '<p>'. t('Users with the upload files permission can upload attachments. You can choose which post types can take attachments on the content types settings page. Each user role can be customized for the file size of uploads, and the dimension of image files.') .'</p>';
       $output .= t('<p>You can</p>
 <ul>
-<li>administer user permissions at <a href="%admin-access">administer &gt;&gt; user management &gt;&gt; access control</a>.</li>
-<li>administer content at <a href="%admin-content-types">administer &gt;&gt; content management &gt;&gt; content types</a>.</li>
-<li>administer upload at <a href="%admin-upload">administer &gt;&gt; site configuration &gt;&gt; file upload</a>.</li>
+<li>administer user permissions at <a href="@admin-access">administer &gt;&gt; user management &gt;&gt; access control</a>.</li>
+<li>administer content at <a href="@admin-content-types">administer &gt;&gt; content management &gt;&gt; content types</a>.</li>
+<li>administer upload at <a href="@admin-upload">administer &gt;&gt; site configuration &gt;&gt; file upload</a>.</li>
 </ul>
-', array('%admin-access' => url('admin/user/access'), '%admin-content-types' => url('admin/settings/types'), '%admin-upload' => url('admin/settings/upload')));
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%upload">Upload page</a>.', array('%upload' => 'http://drupal.org/handbook/modules/upload/')) .'</p>';
+', array('@admin-access' => url('admin/user/access'), '@admin-content-types' => url('admin/settings/types'), '@admin-upload' => url('admin/settings/upload')));
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@upload">Upload page</a>.', array('@upload' => 'http://drupal.org/handbook/modules/upload/')) .'</p>';
       return $output;
     case 'admin/settings/modules#description':
       return t('Allows users to upload and attach files to content.');
     case 'admin/settings/upload':
-      return t('<p>Users with the <a href="%permissions">upload files permission</a> can upload attachments. Users with the <a href="%permissions">view uploaded files permission</a> can view uploaded attachments. You can choose which post types can take attachments on the <a href="%types">content types settings</a> page.</p>', array('%permissions' => url('admin/user/access'), '%types' => url('admin/settings/types')));
+      return t('<p>Users with the <a href="@permissions">upload files permission</a> can upload attachments. Users with the <a href="@permissions">view uploaded files permission</a> can view uploaded attachments. You can choose which post types can take attachments on the <a href="@types">content types settings</a> page.</p>', array('@permissions' => url('admin/user/access'), '@types' => url('admin/settings/types')));
   }
 }
 
@@ -54,7 +54,7 @@ function upload_link($type, $node = NULL, $teaser = FALSE) {
     }
     if ($num_files) {
       $links['upload_attachments'] = array(
-        'title' => format_plural($num_files, '1 attachment', '%count attachments'),
+        'title' => format_plural($num_files, '1 attachment', '@count attachments'),
         'href' => "node/$node->nid",
         'attributes' => array('title' => t('Read full article to view attachments.')),
         'fragment' => 'attachments'
@@ -223,7 +223,7 @@ function upload_admin_settings() {
   foreach ($roles as $rid => $role) {
     $form['settings_role_'. $rid] = array(
       '#type' => 'fieldset',
-      '#title' => t('Settings for %role', array('%role' => theme('placeholder', $role))),
+      '#title' => t('Settings for %role', array('%role' => $role)),
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
     );
@@ -434,19 +434,19 @@ function _upload_validate(&$node) {
           $user_roles = count($user->roles);
           $valid = TRUE;
           if ($error['extension'] == $user_roles) {
-            form_set_error('upload', t('The selected file %name can not be attached to this post, because it is only possible to attach files with the following extensions: %files-allowed.', array('%name' => theme('placeholder', $file->filename), '%files-allowed' => theme('placeholder', $extensions))));
+            form_set_error('upload', t('The selected file %name can not be attached to this post, because it is only possible to attach files with the following extensions: %files-allowed.', array('%name' => $file->filename, '%files-allowed' => $extensions)));
             $valid = FALSE;
           }
           elseif ($error['uploadsize'] == $user_roles) {
-            form_set_error('upload', t('The selected file %name can not be attached to this post, because it exceeded the maximum filesize of %maxsize.', array('%name' => theme('placeholder', $file->filename), '%maxsize' => theme('placeholder', format_size($uploadsize)))));
+            form_set_error('upload', t('The selected file %name can not be attached to this post, because it exceeded the maximum filesize of %maxsize.', array('%name' => $file->filename, '%maxsize' => format_size($uploadsize))));
             $valid = FALSE;
           }
           elseif ($error['usersize'] == $user_roles) {
-            form_set_error('upload', t('The selected file %name can not be attached to this post, because the disk quota of %quota has been reached.', array('%name' => theme('placeholder', $file->filename), '%quota' => theme('placeholder', format_size($usersize)))));
+            form_set_error('upload', t('The selected file %name can not be attached to this post, because the disk quota of %quota has been reached.', array('%name' => $file->filename, '%quota' => format_size($usersize))));
             $valid = FALSE;
           }
           elseif (strlen($file->filename) > 255) {
-            form_set_error('upload', t('The selected file %name can not be attached to this post, because the filename is too long.', array('%name' => theme('placeholder', $file->filename))));
+            form_set_error('upload', t('The selected file %name can not be attached to this post, because the filename is too long.', array('%name' => $file->filename)));
             $valid = FALSE;
           }
 
@@ -533,7 +533,7 @@ function upload_nodeapi(&$node, $op, $teaser) {
       break;
 
     case 'search result':
-      return is_array($node->files) ? format_plural(count($node->files), '1 attachment', '%count attachments') : NULL;
+      return is_array($node->files) ? format_plural(count($node->files), '1 attachment', '@count attachments') : NULL;
 
     case 'rss item':
       if (is_array($node->files)) {
@@ -859,7 +859,7 @@ function _upload_image($file) {
       $result = image_scale($file->filepath, $file->filepath, $width, $height);
       if ($result) {
         $file->filesize = filesize($file->filepath);
-        drupal_set_message(t('The image was resized to fit within the maximum allowed resolution of %resolution pixels.', array('%resolution' => theme('placeholder', variable_get('upload_max_resolution', 0)))));
+        drupal_set_message(t('The image was resized to fit within the maximum allowed resolution of %resolution pixels.', array('%resolution' => variable_get('upload_max_resolution', 0))));
       }
     }
   }

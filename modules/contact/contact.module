@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.60 2006/08/17 09:04:09 drumm Exp $
+// $Id: contact.module,v 1.61 2006/08/18 12:16:57 unconed Exp $
 
 /**
  * @file
@@ -15,25 +15,25 @@ function contact_help($section) {
       $output = '<p>'. t('The contact module enables the use of both personal and site-wide contact forms, thereby facilitating easy communication within the community. While personal contact forms allow users to contact each other by e-mail, site-wide forms allow community members to contact the site administration from a central location. Users can specify a subject and message in the contact form, and also request that a copy of the e-mail be sent to their own address.') .'</p>';
       $output .= '<p>'. t("Users can activate/deactivate their personal contact forms in their account settings. Upon activation, a contact tab will appear in their user profiles. Privileged users such as site administrators are able to contact users even if they have chosen not to enable this feature.") .'</p>';
       $output .= '<p>'. t("Note that the contact tab will not appear when a user views his or her own profile; only when viewing another user's profile, if that user's contact form is enabled.") .'</p>';
-      $output .= '<p>'. t('If the menu module is enabled, a menu item linking to the site-wide contact page is added to the navigation block. It is disabled by default, but can be enabled via the <a href="%menu-module">menu management</a> page. Links to the contact page may also be added to the primary and secondary links using the same page.', array('%menu-module' => url('admin/build/menu'))) .'</p>';
+      $output .= '<p>'. t('If the menu module is enabled, a menu item linking to the site-wide contact page is added to the navigation block. It is disabled by default, but can be enabled via the <a href="@menu-module">menu management</a> page. Links to the contact page may also be added to the primary and secondary links using the same page.', array('@menu-module' => url('admin/build/menu'))) .'</p>';
       $output .= t('Contact module links:') .'<ul>';
-      $output .= '<li>'. t('Default site-wide <a href="%contact-page">contact page</a>.', array('%contact-page' => url('contact'))) .'</li>';
-      $output .= '<li>'. t('Site-wide contact form <a href="%configuration-page">category configuration</a>.', array('%configuration-page' => url('admin/build/contact'))) .'</li>';
-      $output .= '<li>'. t('Site-wide contact form <a href="%additional-settings">general settings</a>.', array('%additional-settings' => url('admin/build/contact/settings'))) .'</li>';
-      $output .= '<li>'. t('Site-wide contact form <a href="%menu-configuration">menu configuration</a>.', array('%menu-configuration' => url('admin/build/menu'))) .'</li></ul>';
-      $output .= t('For more information, please read the configuration and customization handbook page for the <a href="%contact">contact module</a>.', array('%contact' => url('http://drupal.org/handbook/modules/contact/', NULL, NULL, TRUE)));
+      $output .= '<li>'. t('Default site-wide <a href="@contact-page">contact page</a>.', array('@contact-page' => url('contact'))) .'</li>';
+      $output .= '<li>'. t('Site-wide contact form <a href="@configuration-page">category configuration</a>.', array('@configuration-page' => url('admin/build/contact'))) .'</li>';
+      $output .= '<li>'. t('Site-wide contact form <a href="@additional-settings">general settings</a>.', array('@additional-settings' => url('admin/build/contact/settings'))) .'</li>';
+      $output .= '<li>'. t('Site-wide contact form <a href="@menu-configuration">menu configuration</a>.', array('@menu-configuration' => url('admin/build/menu'))) .'</li></ul>';
+      $output .= t('For more information, please read the configuration and customization handbook page for the <a href="@contact">contact module</a>.', array('@contact' => url('http://drupal.org/handbook/modules/contact/', NULL, NULL, TRUE)));
       return $output;
     case 'admin/settings/modules#description':
       return t('Enables the use of both personal and site-wide contact forms.');
     case 'admin/build/contact':
-      $output = t('This page lets you setup <a href="%form">your site-wide contact form</a>. To do so, add one or more categories. You can associate different recipients with each category to route e-mails to different people. For example, you can route website feedback to the webmaster and direct product information requests to the sales department. On the <a href="%settings">settings page</a>, you can customize the information shown above the contact form. This can be useful to provide additional contact information such as your postal address and telephone number.', array('%settings' => url('admin/build/contact/settings'), '%form' => url('contact')));
+      $output = t('This page lets you setup <a href="@form">your site-wide contact form</a>. To do so, add one or more categories. You can associate different recipients with each category to route e-mails to different people. For example, you can route website feedback to the webmaster and direct product information requests to the sales department. On the <a href="@settings">settings page</a>, you can customize the information shown above the contact form. This can be useful to provide additional contact information such as your postal address and telephone number.', array('@settings' => url('admin/build/contact/settings'), '@form' => url('contact')));
       if (!module_exist('menu')) {
-        $menu_note = t('The menu item can be customized and configured only once the menu module has been <a href="%modules-page">enabled</a>.', array('%modules-page' => url('admin/settings/modules')));
+        $menu_note = t('The menu item can be customized and configured only once the menu module has been <a href="@modules-page">enabled</a>.', array('@modules-page' => url('admin/settings/modules')));
       }
       else {
         $menu_note = '';
       }
-      $output .= '<p>'. t('The contact module also adds a <a href="%menu-settings">menu item</a> (disabled by default) to the navigation block.', array('%menu-settings' => url('admin/build/menu'))) .' '. $menu_note .'</p>';
+      $output .= '<p>'. t('The contact module also adds a <a href="@menu-settings">menu item</a> (disabled by default) to the navigation block.', array('@menu-settings' => url('admin/build/menu'))) .' '. $menu_note .'</p>';
       return($output);
   }
 }
@@ -130,7 +130,7 @@ function contact_user($type, &$edit, &$user, $category = NULL) {
     $form['contact']['contact'] = array('#type' => 'checkbox',
       '#title' => t('Personal contact form'),
       '#default_value' => $edit['contact'],
-      '#description' => t('Allow other users to contact you by e-mail via <a href="%url">your personal contact form</a>. Note that while your e-mail address is not made public to other members of the community, privileged users such as site administrators are able to contact you even if you choose not to enable this feature.', array('%url' => url("user/$user->uid/contact"))),
+      '#description' => t('Allow other users to contact you by e-mail via <a href="@url">your personal contact form</a>. Note that while your e-mail address is not made public to other members of the community, privileged users such as site administrators are able to contact you even if you choose not to enable this feature.', array('@url' => url("user/$user->uid/contact"))),
     );
     return $form;
   }
@@ -216,7 +216,7 @@ function contact_admin_edit_validate($form_id, $form_values) {
     $recipients = explode(',', $form_values['recipients']);
     foreach($recipients as $recipient) {
       if (!valid_email_address(trim($recipient))) {
-        form_set_error('recipients', t('%recipient is an invalid e-mail address.', array('%recipient' => theme('placeholder', $recipient))));
+        form_set_error('recipients', t('%recipient is an invalid e-mail address.', array('%recipient' => $recipient)));
       }
     }
   }
@@ -238,14 +238,14 @@ function contact_admin_edit_submit($form_id, $form_values) {
   $form_values['recipients'] = implode(',', $recipients);
   if (arg(3) == 'add') {
     db_query("INSERT INTO {contact} (category, recipients, reply, weight, selected) VALUES ('%s', '%s', '%s', %d, %d)", $form_values['category'], $form_values['recipients'], $form_values['reply'], $form_values['weight'], $form_values['selected']);
-    drupal_set_message(t('Category %category has been added.', array('%category' => theme('placeholder', $form_values['category']))));
-    watchdog('mail', t('Contact form: category %category added.', array('%category' => theme('placeholder', $form_values['category']))), WATCHDOG_NOTICE, l(t('view'), 'admin/build/contact'));
+    drupal_set_message(t('Category %category has been added.', array('%category' => $form_values['category'])));
+    watchdog('mail', t('Contact form: category %category added.', array('%category' => $form_values['category'])), WATCHDOG_NOTICE, l(t('view'), 'admin/build/contact'));
 
   }
   else {
     db_query("UPDATE {contact} SET category = '%s', recipients = '%s', reply = '%s', weight = %d, selected = %d WHERE cid = %d", $form_values['category'], $form_values['recipients'], $form_values['reply'], $form_values['weight'], $form_values['selected'], $form_values['cid']);
-    drupal_set_message(t('Category %category has been updated.', array('%category' => theme('placeholder', $form_values['category']))));
-    watchdog('mail', t('Contact form: category %category updated.', array('%category' => theme('placeholder', $form_values['category']))), WATCHDOG_NOTICE, l(t('view'), 'admin/build/contact'));
+    drupal_set_message(t('Category %category has been updated.', array('%category' => $form_values['category'])));
+    watchdog('mail', t('Contact form: category %category updated.', array('%category' => $form_values['category'])), WATCHDOG_NOTICE, l(t('view'), 'admin/build/contact'));
   }
 
   return 'admin/build/contact';
@@ -260,7 +260,7 @@ function contact_admin_delete($cid = NULL) {
       '#value' => $info->category,
     );
 
-    return confirm_form('contact_admin_delete', $form, t('Are you sure you want to delete %category?', array('%category' => theme('placeholder', $info->category))), 'admin/build/contact', t('This action cannot be undone.'), t('Delete'), t('Cancel'));
+    return confirm_form('contact_admin_delete', $form, t('Are you sure you want to delete %category?', array('%category' => $info->category)), 'admin/build/contact', t('This action cannot be undone.'), t('Delete'), t('Cancel'));
   }
   else {
     drupal_set_message(t('Category not found.'), 'error');
@@ -273,8 +273,8 @@ function contact_admin_delete($cid = NULL) {
  */
 function contact_admin_delete_submit($form_id, $form_values) {
   db_query("DELETE FROM {contact} WHERE cid = %d", arg(4));
-  drupal_set_message(t('Category %category has been deleted.', array('%category' => theme('placeholder', $form_values['category']))));
-  watchdog('mail', t('Contact form: category %category deleted.', array('%category' => theme('placeholder', $form_values['category']))), WATCHDOG_NOTICE);
+  drupal_set_message(t('Category %category has been deleted.', array('%category' => $form_values['category'])));
+  watchdog('mail', t('Contact form: category %category deleted.', array('%category' => $form_values['category'])), WATCHDOG_NOTICE);
 
   return 'admin/build/contact';
 }
@@ -283,7 +283,7 @@ function contact_admin_settings() {
   $form['contact_form_information'] = array('#type' => 'textarea',
     '#title' => t('Additional information'),
     '#default_value' => variable_get('contact_form_information', t('You can leave a message using the contact form below.')),
-    '#description' => t('Information to show on the <a href="%form">contact page</a>. Can be anything from submission guidelines to your postal address or telephone number.', array('%form' => url('contact'))),
+    '#description' => t('Information to show on the <a href="@form">contact page</a>. Can be anything from submission guidelines to your postal address or telephone number.', array('@form' => url('contact'))),
   );
   $form['contact_hourly_threshold'] = array('#type' => 'select',
     '#title' => t('Hourly threshold'),
@@ -315,7 +315,7 @@ function contact_mail_user() {
 
   if ($account = user_load(array('uid' => arg(1)))) {
     if (!valid_email_address($user->mail)) {
-      $output = t('You need to provide a valid e-mail address to contact other users. Please update your <a href="%url">user information</a> and try again.', array('%url' => url("user/$user->uid/edit")));
+      $output = t('You need to provide a valid e-mail address to contact other users. Please update your <a href="@url">user information</a> and try again.', array('@url' => url("user/$user->uid/edit")));
     }
     else if (!flood_is_allowed('contact', variable_get('contact_hourly_threshold', 3))) {
       $output = t('You cannot contact more than %number users per hour. Please try again later.', array('%number' => variable_get('contact_hourly_threshold', 3)));
@@ -367,8 +367,8 @@ function contact_mail_user_submit($form_id, $edit) {
   $account = user_load(array('uid' => arg(1), 'status' => 1));
   // Compose the body:
   $message[] = "$account->name,";
-  $message[] = t("%name (%name-url) has sent you a message via your contact form (%form-url) at %site.", array('%name' => $user->name, '%name-url' => url("user/$user->uid", NULL, NULL, TRUE), '%form-url' => url($_GET['q'], NULL, NULL, TRUE), '%site' => variable_get('site_name', 'drupal')));
-  $message[] = t("If you don't want to receive such e-mails, you can change your settings at %url.", array('%url' => url("user/$account->uid", NULL, NULL, TRUE)));
+  $message[] = t("!name (!name-url) has sent you a message via your contact form (!form-url) at !site.", array('!name' => $user->name, '!name-url' => url("user/$user->uid", NULL, NULL, TRUE), '!form-url' => url($_GET['q'], NULL, NULL, TRUE), '!site' => variable_get('site_name', 'drupal')));
+  $message[] = t("If you don't want to receive such e-mails, you can change your settings at !url.", array('!url' => url("user/$account->uid", NULL, NULL, TRUE)));
   $message[] = t('Message:');
   $message[] = $edit['message'];
 
@@ -397,7 +397,7 @@ function contact_mail_user_submit($form_id, $edit) {
 
   // Log the operation:
   flood_register_event('contact');
-  watchdog('mail', t('%name-from sent %name-to an e-mail.', array('%name-from' => theme('placeholder', $user->name), '%name-to' => theme('placeholder', $account->name))));
+  watchdog('mail', t('%name-from sent %name-to an e-mail.', array('%name-from' => $user->name, '%name-to' => $account->name)));
 
   // Set a status message:
   drupal_set_message(t('The message has been sent.'));
@@ -543,7 +543,7 @@ function contact_mail_page_submit($form_id, $edit) {
 
   // Log the operation:
   flood_register_event('contact');
-  watchdog('mail', t('%name-from sent an e-mail regarding %category.', array('%name-from' => theme('placeholder', $edit['name'] ." <$from>"), '%category' => theme('placeholder', $contact->category))));
+  watchdog('mail', t('%name-from sent an e-mail regarding %category.', array('%name-from' => $edit['name'] ." <$from>", '%category' => $contact->category)));
 
   // Update user:
   drupal_set_message(t('Your message has been sent.'));

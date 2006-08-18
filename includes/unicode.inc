@@ -1,5 +1,5 @@
 <?php
-// $Id: unicode.inc,v 1.18 2006/07/05 11:45:51 dries Exp $
+// $Id: unicode.inc,v 1.19 2006/08/18 12:16:57 unconed Exp $
 
 define('UNICODE_ERROR', -1);
 define('UNICODE_SINGLEBYTE', 0);
@@ -31,7 +31,7 @@ function _unicode_check($errors = FALSE) {
   // Note: we check if U+E2 is in the range U+E0 - U+E1. This test returns TRUE on old PCRE versions.
   if (preg_match('/[à-á]/u', 'â')) {
     if ($errors) {
-      form_set_error('unicode', t('The PCRE library in your PHP installation is outdated. This will cause problems when handling Unicode text. If you are running PHP 4.3.3 or higher, make sure you are using the PCRE library supplied by PHP. Please refer to the <a href="%url">PHP PCRE documentation</a> for more information.', array('%url' => 'http://www.php.net/pcre')));
+      form_set_error('unicode', t('The PCRE library in your PHP installation is outdated. This will cause problems when handling Unicode text. If you are running PHP 4.3.3 or higher, make sure you are using the PCRE library supplied by PHP. Please refer to the <a href="@url">PHP PCRE documentation</a> for more information.', array('@url' => 'http://www.php.net/pcre')));
     }
     return UNICODE_ERROR;
   }
@@ -44,25 +44,25 @@ function _unicode_check($errors = FALSE) {
   // Check mbstring configuration
   if (ini_get('mbstring.func_overload') != 0) {
     if ($errors) {
-      form_set_error('unicode', t('Multibyte string function overloading in PHP is active and must be disabled. Check the php.ini <em>mbstring.func_overload</em> setting. Please refer to the <a href="%url">PHP mbstring documentation</a> for more information.', array('%url' => 'http://www.php.net/mbstring')));
+      form_set_error('unicode', t('Multibyte string function overloading in PHP is active and must be disabled. Check the php.ini <em>mbstring.func_overload</em> setting. Please refer to the <a href="@url">PHP mbstring documentation</a> for more information.', array('@url' => 'http://www.php.net/mbstring')));
     }
     return UNICODE_ERROR;
   }
   if (ini_get('mbstring.encoding_translation') != 0) {
     if ($errors) {
-      form_set_error('unicode', t('Multibyte string input conversion in PHP is active and must be disabled. Check the php.ini <em>mbstring.encoding_translation</em> setting. Please refer to the <a href="%url">PHP mbstring documentation</a> for more information.', array('%url' => 'http://www.php.net/mbstring')));
+      form_set_error('unicode', t('Multibyte string input conversion in PHP is active and must be disabled. Check the php.ini <em>mbstring.encoding_translation</em> setting. Please refer to the <a href="@url">PHP mbstring documentation</a> for more information.', array('@url' => 'http://www.php.net/mbstring')));
     }
     return UNICODE_ERROR;
   }
   if (ini_get('mbstring.http_input') != 'pass') {
     if ($errors) {
-      form_set_error('unicode', t('Multibyte string input conversion in PHP is active and must be disabled. Check the php.ini <em>mbstring.http_input</em> setting. Please refer to the <a href="%url">PHP mbstring documentation</a> for more information.', array('%url' => 'http://www.php.net/mbstring')));
+      form_set_error('unicode', t('Multibyte string input conversion in PHP is active and must be disabled. Check the php.ini <em>mbstring.http_input</em> setting. Please refer to the <a href="@url">PHP mbstring documentation</a> for more information.', array('@url' => 'http://www.php.net/mbstring')));
     }
     return UNICODE_ERROR;
   }
   if (ini_get('mbstring.http_output') != 'pass') {
     if ($errors) {
-      form_set_error('unicode', t('Multibyte string output conversion in PHP is active and must be disabled. Check the php.ini <em>mbstring.http_output</em> setting. Please refer to the <a href="%url">PHP mbstring documentation</a> for more information.', array('%url' => 'http://www.php.net/mbstring')));
+      form_set_error('unicode', t('Multibyte string output conversion in PHP is active and must be disabled. Check the php.ini <em>mbstring.http_output</em> setting. Please refer to the <a href="@url">PHP mbstring documentation</a> for more information.', array('@url' => 'http://www.php.net/mbstring')));
     }
     return UNICODE_ERROR;
   }
@@ -78,8 +78,8 @@ function _unicode_check($errors = FALSE) {
  */
 function unicode_settings() {
   $status = _unicode_check(TRUE);
-  $options = array(UNICODE_SINGLEBYTE => t('Standard PHP: operations on Unicode strings are emulated on a best-effort basis. Install the <a href="%url">PHP mbstring extension</a> for improved Unicode support.', array('%url' => 'http://www.php.net/mbstring')),
-                   UNICODE_MULTIBYTE => t('Multi-byte: operations on Unicode strings are supported through the <a href="%url">PHP mbstring extension</a>.', array('%url' => 'http://www.php.net/mbstring')),
+  $options = array(UNICODE_SINGLEBYTE => t('Standard PHP: operations on Unicode strings are emulated on a best-effort basis. Install the <a href="@url">PHP mbstring extension</a> for improved Unicode support.', array('@url' => 'http://www.php.net/mbstring')),
+                   UNICODE_MULTIBYTE => t('Multi-byte: operations on Unicode strings are supported through the <a href="@url">PHP mbstring extension</a>.', array('@url' => 'http://www.php.net/mbstring')),
                    UNICODE_ERROR => t('Invalid: the current configuration is incompatible with Drupal.'));
   $form['settings'] = array('#type' => 'item', '#title' => t('String handling method'), '#value' => $options[$status]);
   return $form;
@@ -128,7 +128,7 @@ function drupal_xml_parser_create(&$data) {
       $data = ereg_replace('^(<\?xml[^>]+encoding)="([^"]+)"', '\\1="utf-8"', $out);
     }
     else {
-      watchdog('php', t("Could not convert XML encoding '%s' to UTF-8.", array('%s' => $encoding)), WATCHDOG_WARNING);
+      watchdog('php', t("Could not convert XML encoding %s to UTF-8.", array('%s' => $encoding)), WATCHDOG_WARNING);
       return 0;
     }
   }
@@ -161,7 +161,7 @@ function drupal_convert_to_utf8($data, $encoding) {
     $out = @recode_string($encoding .'..utf-8', $data);
   }
   else {
-    watchdog('php', t("Unsupported encoding '%s'. Please install iconv, GNU recode or mbstring for PHP.", array('%s' => $encoding)), WATCHDOG_ERROR);
+    watchdog('php', t("Unsupported encoding %s. Please install iconv, GNU recode or mbstring for PHP.", array('%s' => $encoding)), WATCHDOG_ERROR);
     return FALSE;
   }
 

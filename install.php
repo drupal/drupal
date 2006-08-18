@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.6 2006/08/08 21:18:02 dries Exp $
+// $Id: install.php,v 1.7 2006/08/18 12:16:57 unconed Exp $
 
 require_once './includes/install.inc';
 
@@ -129,7 +129,7 @@ function install_change_settings() {
   // to settings.php to change them.
   if (!drupal_verify_install_file($settings_file, FILE_EXIST|FILE_READABLE|FILE_WRITABLE)) {
     drupal_maintenance_theme();
-    drupal_set_message(st('The Drupal installer requires write permissions to %file during the installation process.', array('%file' => $settings_file)), 'error');
+    drupal_set_message(st('The @drupal installer requires write permissions to %file during the installation process.', array('@drupal' => drupal_install_profile_name(), '%file' => $settings_file)), 'error');
 
     drupal_set_title('Drupal database setup');
     print theme('install_page', '');
@@ -140,7 +140,6 @@ function install_change_settings() {
   if ($db_url == 'mysql://username:password@localhost/databasename') {
     $db_user = $db_pass = $db_path = '';
   }
-
 
 
   $db_types = drupal_detect_database_types();
@@ -154,7 +153,7 @@ function install_change_settings() {
     $form['basic_options'] = array(
       '#type' => 'fieldset',
       '#title' => 'Basic options',
-      '#description' => st('<p>To set up your %drupal database, enter the following information.</p>', array('%drupal' => drupal_install_profile_name())),
+      '#description' => st('<p>To set up your @drupal database, enter the following information.</p>', array('@drupal' => drupal_install_profile_name())),
     );
 
     if (count($db_types) > 1) {
@@ -165,18 +164,18 @@ function install_change_settings() {
         '#required' => TRUE,
         '#options' => drupal_detect_database_types(),
         '#default_value' => $db_type,
-        '#description' => st('The type of database your %drupal data will be stored in.', array('%drupal' => drupal_install_profile_name())),
+        '#description' => st('The type of database your @drupal data will be stored in.', array('@drupal' => drupal_install_profile_name())),
       );
-      $db_path_description = st('The name of the database your %drupal data will be stored in. It must exist on your server before %drupal can be installed.', array('%drupal' => drupal_install_profile_name()));
+      $db_path_description = st('The name of the database your @drupal data will be stored in. It must exist on your server before @drupal can be installed.', array('@drupal' => drupal_install_profile_name()));
     }
     else {
       if (count($db_types) == 1) {
-        $db_types = array_values($db_types);
+        $db_types = array_values($db_types);      
         $form['basic_options']['db_type'] = array(
           '#type' => 'hidden',
           '#value' => $db_types[0],
         );
-        $db_path_description = st('The name of the %db_type database your %drupal data will be stored in. It must exist on your server before %drupal can be installed.', array('%db_type' => $db_types[0], '%drupal' => drupal_install_profile_name()));
+        $db_path_description = st('The name of the %db_type database your @drupal data will be stored in. It must exist on your server before @drupal can be installed.', array('%db_type' => $db_types[0], '@drupal' => drupal_install_profile_name()));
       }
     }
 
@@ -216,7 +215,7 @@ function install_change_settings() {
       '#title' => 'Advanced options',
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
-      '#description' => st('These options are only necessary for some sites. If you\'re not sure what you should enter here, leave the default settings or check with your hosting provider.')
+      '#description' => 'These options are only necessary for some sites. If you\'re not sure what you should enter here, leave the default settings or check with your hosting provider.'
     );
 
     // Database host
@@ -227,7 +226,7 @@ function install_change_settings() {
       '#size' => 45,
       '#maxlength' => 45,
       '#required' => TRUE,
-      '#description' => st('If your database is located on a different server, change this.', array('%drupal' => drupal_install_profile_name())),
+      '#description' => 'If your database is located on a different server, change this.',
     );
 
     // Database prefix
@@ -238,7 +237,7 @@ function install_change_settings() {
       '#size' => 45,
       '#maxlength' => 45,
       '#required' => FALSE,
-      '#description' => st('If more than one %drupal web site will be sharing this database, enter a table prefix for your %drupal site here.', array('%drupal' => drupal_install_profile_name())),
+      '#description' => st('If more than one @drupal web site will be sharing this database, enter a table prefix for your @drupal site here.', array('@drupal' => drupal_install_profile_name())),
     );
 
     $form['save'] = array(
@@ -275,7 +274,7 @@ function _install_settings_validate($db_prefix, $db_type, $db_user, $db_pass, $d
 
   // Check for default username/password
   if ($db_user == 'username' && $db_pass == 'password') {
-    form_set_error('db_user', st('You have configured %drupal to use the default username and password. This is not allowed for security reasons.', array('%drupal' => drupal_install_profile_name())));
+    form_set_error('db_user', st('You have configured @drupal to use the default username and password. This is not allowed for security reasons.', array('@drupal' => drupal_install_profile_name())));
   }
 
   // Verify database prefix
@@ -289,7 +288,7 @@ function _install_settings_validate($db_prefix, $db_type, $db_user, $db_pass, $d
   }
   $databases = drupal_detect_database_types();
   if (!in_array($db_type, $databases)) {
-    form_set_error('db_type', st("In your %settings_file file you have configured Drupal to use a %db_type server, however your PHP installation currently does not support this database type.", array('%settings_file' => $settings_file, '%db_type' => $db_type)));
+    form_set_error('db_type', st("In your %settings_file file you have configured @drupal to use a %db_type server, however your PHP installation currently does not support this database type.", array('%settings_file' => $settings_file, '@drupal' => drupal_install_profile_name(), '%db_type' => $db_type)));
   }
   else {
     // Verify
@@ -424,8 +423,8 @@ function install_complete($profile) {
 
   // Build final page.
   drupal_maintenance_theme();
-  drupal_set_title(st('%drupal installation complete', array('%drupal' => drupal_install_profile_name())));
-  $output = st('<p>Congratulations, %drupal has been successfully installed.</p>', array('%drupal' => drupal_install_profile_name()));
+  drupal_set_title(st('@drupal installation complete', array('@drupal' => drupal_install_profile_name())));
+  $output = st('<p>Congratulations, @drupal has been successfully installed.</p>', array('@drupal' => drupal_install_profile_name()));
 
   // Show profile finalization info.
   $function = $profile .'_profile_final';

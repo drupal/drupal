@@ -1,5 +1,5 @@
 <?php
-// $Id: ping.module,v 1.41 2006/08/07 15:04:15 dries Exp $
+// $Id: ping.module,v 1.42 2006/08/18 12:16:58 unconed Exp $
 
 /**
  * @file
@@ -12,16 +12,16 @@
 function ping_help($section) {
   switch ($section) {
     case 'admin/help#ping':
-      $output = '<p>'. t('The ping module is useful for notifying interested sites that your site has changed. It automatically sends notifications (called "pings") to the <a href="%external-http-pingomatic-com">pingomatic</a> service to tell it that your site has changed. In turn pingomatic will ping other services such as weblogs.com, Technorati, blo.gs, BlogRolling, Feedster.com, Moreover, etc.', array('%external-http-pingomatic-com' => 'http://pingomatic.com/')) .'</p>';
+      $output = '<p>'. t('The ping module is useful for notifying interested sites that your site has changed. It automatically sends notifications (called "pings") to the <a href="@external-http-pingomatic-com">pingomatic</a> service to tell it that your site has changed. In turn pingomatic will ping other services such as weblogs.com, Technorati, blo.gs, BlogRolling, Feedster.com, Moreover, etc.', array('@external-http-pingomatic-com' => 'http://pingomatic.com/')) .'</p>';
       $output .= '<p>'. t('The ping module requires <code>cron</code> or a similar periodic job scheduler to be enabled.') .'</p>';
       $output .= t('<p>You can:</p>
 <ul>
-<li> enable or disable the ping module at <a href="%admin-modules">administer &gt;&gt; site configuration &gt;&gt; modules</a>.</li>
-<li>run your cron job at your sites <a href="%file-cron">cron page</a>.</li>
-<li>read about <a href="%external-http-drupal-org-node-23714">configuring cron jobs</a>.</li>
+<li> enable or disable the ping module at <a href="@admin-modules">administer &gt;&gt; site configuration &gt;&gt; modules</a>.</li>
+<li>run your cron job at your sites <a href="@file-cron">cron page</a>.</li>
+<li>read about <a href="@external-http-drupal-org-node-23714">configuring cron jobs</a>.</li>
 </ul></p>
-', array('%admin-modules' => url('admin/settings/modules'), '%file-cron' => 'cron.php', '%external-http-drupal-org-node-23714' => 'http://drupal.org/node/23714'));
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%ping">Ping page</a>.', array('%ping' => 'http://drupal.org/handbook/modules/ping/')) .'</p>';
+', array('@admin-modules' => url('admin/settings/modules'), '@file-cron' => 'cron.php', '@external-http-drupal-org-node-23714' => 'http://drupal.org/node/23714'));
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@ping">Ping page</a>.', array('@ping' => 'http://drupal.org/handbook/modules/ping/')) .'</p>';
       return $output;
     case 'admin/settings/modules#description':
       return t('Alerts other sites when your site has been updated.');

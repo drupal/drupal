@@ -1,5 +1,5 @@
 <?php
-// $Id: help.module,v 1.54 2006/08/14 07:14:49 drumm Exp $
+// $Id: help.module,v 1.55 2006/08/18 12:16:58 unconed Exp $
 
 /**
  * @file
@@ -98,9 +98,9 @@ function help_links_as_list() {
 function help_help($section) {
   switch ($section) {
     case 'admin/help':
-      $output = t('<p>This guide explains what the various modules in <a href="%Drupal">Drupal</a> do and how to configure them.</p>
-<p>It is not a substitute for the <a href="%handbook">Drupal handbook</a> available online and should be used in conjunction with it. The online reference handbook might be more up-to-date and has helpful user-contributed comments. It is your definitive reference point for all Drupal documentation.</p>
-', array('%Drupal' => 'http://drupal.org', '%handbook' => 'http://drupal.org/handbook'));
+      $output = t('<p>This guide explains what the various modules in <a href="@Drupal">Drupal</a> do and how to configure them.</p>
+<p>It is not a substitute for the <a href="@handbook">Drupal handbook</a> available online and should be used in conjunction with it. The online reference handbook might be more up-to-date and has helpful user-contributed comments. It is your definitive reference point for all Drupal documentation.</p>
+', array('@Drupal' => 'http://drupal.org', '@handbook' => 'http://drupal.org/handbook'));
       return $output;
     case 'admin/help#help':
       $output = '<p>'. t('The help module displays context sensitive help information. Users can learn how to use modules and accomplish tasks quicker with less errors by clicking on links in provided by the help module.') .'</p>';
@@ -114,7 +114,7 @@ function help_help($section) {
 </ul>
 ');
       $output .= '<p>'. t('You can not administer the help system.') .'</p>';
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%help">Help page</a>.', array('%help' => 'http://drupal.org/handbook/modules/help/')) .'</p>';
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@help">Help page</a>.', array('@help' => 'http://drupal.org/handbook/modules/help/')) .'</p>';
       return $output;
     case 'admin/settings/modules#description':
       return t('Manages the display of online help.');

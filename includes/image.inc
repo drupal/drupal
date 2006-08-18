@@ -1,5 +1,5 @@
 <?php
-// $Id: image.inc,v 1.13 2006/07/05 11:45:51 dries Exp $
+// $Id: image.inc,v 1.14 2006/08/18 12:16:57 unconed Exp $
 
 /**
  * Return a list of available toolkits.
@@ -58,7 +58,7 @@ function image_toolkit_invoke($method, $params = array()) {
       return call_user_func_array($function, $params);
     }
     else {
-      watchdog('php', t("The selected image handling toolkit '%toolkit' can not correctly process '%function'.", array('%toolkit' => "<em>$toolkit</em>", '%function' => "<em>$function</em>")), WATCHDOG_ERROR);
+      watchdog('php', t("The selected image handling toolkit %toolkit can not correctly process %function.", array('%toolkit' => $toolkit, '%function' => $function)), WATCHDOG_ERROR);
       return FALSE;
     }
   }
@@ -184,7 +184,7 @@ function image_gd_settings() {
     return t('The built-in GD2 toolkit is installed and working properly.');
   }
   else {
-    form_set_error('image_toolkit', t("The built-in GD image toolkit requires that the GD module for PHP be installed and configured properly. For more information see %url.", array('%url' => '<a href="http://php.net/image">http://php.net/image</a>')));
+    form_set_error('image_toolkit', t('The built-in GD image toolkit requires that the GD module for PHP be installed and configured properly. For more information see <a href="@url">PHP\'s image documentation</a>.', array('@url' => 'http://php.net/image')));
     return FALSE;
   }
 }

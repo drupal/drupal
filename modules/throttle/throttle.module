@@ -1,5 +1,5 @@
 <?php
-// $Id: throttle.module,v 1.63 2006/08/07 15:04:15 dries Exp $
+// $Id: throttle.module,v 1.64 2006/08/18 12:16:59 unconed Exp $
 
 /**
  * @file
@@ -81,7 +81,7 @@ function throttle_exit() {
         variable_set('throttle_level', 1);
         $message = format_plural($users,
                                  '1 user accessing site; throttle enabled.',
-                                 '%count users accessing site; throttle enabled.');
+                                 '@count users accessing site; throttle enabled.');
       }
     }
     elseif ($max_guests && $guests > $max_guests) {
@@ -89,15 +89,15 @@ function throttle_exit() {
         variable_set('throttle_level', 1);
         $message = format_plural($guests,
                                  '1 guest accessing site; throttle enabled.',
-                                 '%count guests accessing site; throttle enabled.');
+                                 '@count guests accessing site; throttle enabled.');
       }
     }
     else {
       if ($throttle) {
         variable_set('throttle_level', 0);
         // Note: unorthodox format_plural() usage due to Gettext plural limitations.
-        $message = format_plural($users, '1 user', '%count users') .', ';
-        $message .= format_plural($guests, '1 guest accessing site; throttle disabled', '%count guests accessing site; throttle disabled');
+        $message = format_plural($users, '1 user', '@count users') .', ';
+        $message .= format_plural($guests, '1 guest accessing site; throttle disabled', '@count guests accessing site; throttle disabled');
       }
     }
     if ($message) {
@@ -110,7 +110,7 @@ function throttle_exit() {
 function _throttle_validate($value, $form) {
   if ($value != NULL) {
     if (!is_numeric($value) || $value < 0) {
-      form_set_error($form, t("'%value' is not a valid auto-throttle setting. Please enter a positive numeric value.", array('%value' => theme('placeholder', $value))));
+      form_set_error($form, t("%value is not a valid auto-throttle setting. Please enter a positive numeric value.", array('%value' => $value)));
     }
   }
 }
@@ -125,12 +125,12 @@ function throttle_help($section) {
       $output .= '<p>'. t('The congestion control throttle can be automatically enabled when the number of anonymous or authenticated users currently visiting the site exceeds the specified threshold. ') .'</p>';
       $output .= t('<p>You can</p>
 <ul>
-<li>enable throttle for modules at <a href="%admin-modules">administer &gt;&gt; site configuration &gt;&gt; modules</a>.</li>
-<li>enable throttle for blocks at <a href="%admin-block">administer &gt;&gt; site building &gt;&gt; blocks</a>.</li>
-<li>administer throttle at <a href="%admin-settings-throttle">administer &gt;&gt; site configuration &gt;&gt; throttle</a>.</li>
+<li>enable throttle for modules at <a href="@admin-modules">administer &gt;&gt; site configuration &gt;&gt; modules</a>.</li>
+<li>enable throttle for blocks at <a href="@admin-block">administer &gt;&gt; site building &gt;&gt; blocks</a>.</li>
+<li>administer throttle at <a href="@admin-settings-throttle">administer &gt;&gt; site configuration &gt;&gt; throttle</a>.</li>
 </ul>
-', array('%admin-modules' => url('admin/settings/modules'), '%admin-block' => url('admin/build/block'), '%admin-settings-throttle' => url('admin/settings/throttle')));
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%throttle">Throttle page</a>.', array('%throttle' => 'http://drupal.org/handbook/modules/throttle/')) .'</p>';
+', array('@admin-modules' => url('admin/settings/modules'), '@admin-block' => url('admin/build/block'), '@admin-settings-throttle' => url('admin/settings/throttle')));
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@throttle">Throttle page</a>.', array('@throttle' => 'http://drupal.org/handbook/modules/throttle/')) .'</p>';
       return $output;
     case 'admin/settings/modules#description':
       return t('Handles the auto-throttling mechanism, to control site congestion.');

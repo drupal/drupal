@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.555 2006/08/14 07:14:48 drumm Exp $
+// $Id: common.inc,v 1.556 2006/08/18 12:16:57 unconed Exp $
 
 /**
  * @file
@@ -277,7 +277,7 @@ function drupal_site_offline() {
   drupal_set_header('HTTP/1.0 503 Service unavailable');
   drupal_set_title(t('Site off-line'));
   print theme('maintenance_page', filter_xss_admin(variable_get('site_offline_message',
-    t('%site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('%site' => variable_get('site_name', t('This Drupal site')))))));
+    t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('@site' => variable_get('site_name', t('This Drupal site')))))));
 }
 
 /**
@@ -285,7 +285,7 @@ function drupal_site_offline() {
  */
 function drupal_not_found() {
   drupal_set_header('HTTP/1.0 404 Not Found');
-  watchdog('page not found', t('%page not found.', array('%page' => theme('placeholder', $_GET['q']))), WATCHDOG_WARNING);
+  watchdog('page not found', t('%page not found.', array('%page' => $_GET['q'])), WATCHDOG_WARNING);
 
   // Keep old path for reference
   if (!isset($_REQUEST['destination'])) {
@@ -313,7 +313,7 @@ function drupal_not_found() {
  */
 function drupal_access_denied() {
   drupal_set_header('HTTP/1.0 403 Forbidden');
-  watchdog('access denied', t('%page denied access.', array('%page' => theme('placeholder', $_GET['q']))), WATCHDOG_WARNING, l(t('view'), $_GET['q']));
+  watchdog('access denied', t('%page denied access.', array('%page' => $_GET['q'])), WATCHDOG_WARNING, l(t('view'), $_GET['q']));
 
   // Keep old path for reference
   if (!isset($_REQUEST['destination'])) {
@@ -567,8 +567,8 @@ function locale_initialize() {
  * is acceptable, if necessary. The suggested syntax for a link embedded
  * within a translation string is:
  * @code
- *   $msg = t('You must log in below or <a href="%url">create a new
- *             account</a> before viewing the next page.', array('%url'
+ *   $msg = t('You must log in below or <a href="@url">create a new
+ *             account</a> before viewing the next page.', array('@url'
  *             => url('user/register')));
  * @endcode
  * We suggest the same syntax for links to other sites. This makes it easy to
@@ -580,6 +580,11 @@ function locale_initialize() {
  * @param $args
  *   An associative array of replacements to make after translation. Incidences
  *   of any key in this array are replaced with the corresponding value.
+ *   Based on the first character of the key, the value is escaped and/or themed:
+ *    - !variable: inserted as is
+ *    - @variable: escape plain text to HTML (check_plain)
+ *    - %variable: escape text and theme as a placeholder for user-submitted
+ *      content (check_plain + theme_placeholder)
  * @return
  *   The translated string.
  */
@@ -588,12 +593,31 @@ function t($string, $args = 0) {
   if (function_exists('locale') && $locale != 'en') {
     $string = locale($string);
   }
-
   if (!$args) {
     return $string;
   }
   else {
+    // Transform arguments before inserting them
+    array_walk($args, '_t');
     return strtr($string, $args);
+  }
+}
+
+/**
+ * Helper function: apply the appropriate transformation to st() and t()
+ * placeholders.
+ */
+function _t(&$value, $key) {
+  switch ($key[0]) {
+    // Escaped only
+    case '@':
+      $value = check_plain($value);
+      return;
+    // Escaped and placeholder
+    case '%':
+    default:
+      $value = theme('placeholder', $value);
+      return;
   }
 }
 
@@ -778,27 +802,27 @@ function format_xml_elements($array) {
  *   singular, to ease translation (e.g. use "1 new comment" instead of "1 new").
  * @param $plural
  *   The string for the plural case. Please make sure it is clear this is plural,
- *   to ease translation. Use %count in place of the item count, as in "%count
+ *   to ease translation. Use @count in place of the item count, as in "@count
  *   new comments".
  * @return
  *   A translated string.
  */
 function format_plural($count, $singular, $plural) {
-  if ($count == 1) return t($singular, array("%count" => $count));
+  if ($count == 1) return t($singular, array("@count" => $count));
 
   // get the plural index through the gettext formula
   $index = (function_exists('locale_get_plural')) ? locale_get_plural($count) : -1;
   if ($index < 0) { // backward compatibility
-    return t($plural, array("%count" => $count));
+    return t($plural, array("@count" => $count));
   }
   else {
     switch ($index) {
       case "0":
-        return t($singular, array("%count" => $count));
+        return t($singular, array("@count" => $count));
       case "1":
-        return t($plural, array("%count" => $count));
+        return t($plural, array("@count" => $count));
       default:
-        return t(strtr($plural, array("%count" => '%count['. $index .']')), array('%count['. $index .']' => $count));
+        return t(strtr($plural, array("@count" => '@count['. $index .']')), array('@count['. $index .']' => $count));
     }
   }
 }
@@ -821,7 +845,7 @@ function format_size($size) {
     $size = round($size / 1024, 2);
     $suffix = t('MB');
   }
-  return t('%size %suffix', array('%size' => $size, '%suffix' => $suffix));
+  return t('@size @suffix', array('@size' => $size, '@suffix' => $suffix));
 }
 
 /**
@@ -835,7 +859,7 @@ function format_size($size) {
  *   A translated string representation of the interval.
  */
 function format_interval($timestamp, $granularity = 2) {
-  $units = array('1 year|%count years' => 31536000, '1 week|%count weeks' => 604800, '1 day|%count days' => 86400, '1 hour|%count hours' => 3600, '1 min|%count min' => 60, '1 sec|%count sec' => 1);
+  $units = array('1 year|@count years' => 31536000, '1 week|@count weeks' => 604800, '1 day|@count days' => 86400, '1 hour|@count hours' => 3600, '1 min|@count min' => 60, '1 sec|@count sec' => 1);
   $output = '';
   foreach ($units as $key => $value) {
     $key = explode('|', $key);

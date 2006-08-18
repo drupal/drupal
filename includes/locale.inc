@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.86 2006/08/11 17:51:20 dries Exp $
+// $Id: locale.inc,v 1.87 2006/08/18 12:16:57 unconed Exp $
 
 /**
  * @file
@@ -23,13 +23,13 @@ function _locale_add_language($code, $name, $onlylanguage = TRUE) {
   // the language addition, we need to inform the user on how to start
   // a translation
   if ($onlylanguage) {
-    drupal_set_message(t('The language %locale has been created, and can now be used to import a translation. More information is available in the <a href="%locale-help">help screen</a>.', array('%locale' => theme('placeholder', t($name)), '%locale-help' => url('admin/help/locale'))));
+    drupal_set_message(t('The language %locale has been created and can now be used to import a translation. More information is available in the <a href="@locale-help">help screen</a>.', array('%locale' => t($name), '@locale-help' => url('admin/help/locale'))));
   }
   else {
-    drupal_set_message(t('The language %locale has been created.', array('%locale' => theme('placeholder', t($name)))));
+    drupal_set_message(t('The language %locale has been created.', array('%locale' => t($name))));
   }
 
-  watchdog('locale', t('The %language language (%locale) has been created.', array('%language' => theme('placeholder', $name), '%locale' => theme('placeholder', $code))));
+  watchdog('locale', t('The %language language (%locale) has been created.', array('%language' => $name, '%locale' => $code)));
 }
 
 /**
@@ -154,7 +154,7 @@ function _locale_admin_manage_add_screen() {
     '#size' => 12,
     '#maxlength' => 60,
     '#required' => TRUE,
-    '#description' => t("Commonly this is an <a href=\"%iso-codes\">ISO 639 language code</a> with an optional country code for regional variants. Examples include 'en', 'en-US' and 'zh-cn'.", array('%iso-codes' => 'http://www.w3.org/WAI/ER/IG/ert/iso639.htm')),
+    '#description' => t("Commonly this is an <a href=\"@iso-codes\">ISO 639 language code</a> with an optional country code for regional variants. Examples include 'en', 'en-US' and 'zh-cn'.", array('@iso-codes' => 'http://www.w3.org/WAI/ER/IG/ert/iso639.htm')),
   );
   $form['custom language']['langname'] = array('#type' => 'textfield',
     '#title' => t('Language name in English'),
@@ -175,7 +175,7 @@ function _locale_admin_manage_add_screen() {
  */
 function locale_add_language_form_validate($form_id, $form_values) {
   if ($duplicate = db_num_rows(db_query("SELECT locale FROM {locales_meta} WHERE locale = '%s'", $form_values['langcode'])) != 0) {
-    form_set_error(t('The language %language (%code) already exists.', array('%language' => theme('placeholder', check_plain($form_values['langname'])), '%code' => theme('placeholder', $form_values['langcode']))));
+    form_set_error(t('The language %language (%code) already exists.', array('%language' => $form_values['langname'], '%code' => $form_values['langcode'])));
   }
 
   if (!isset($form_values['langname'])) {
@@ -259,7 +259,7 @@ function _locale_admin_import_submit($form_id, $form_values) {
   // Now import strings into the language
   $file = file_check_upload('file');
   if ($ret = _locale_import_po($file, $form_values['langcode'], $form_values['mode']) == FALSE) {
-    $message = t('The translation import of %filename failed.', array('%filename' => theme('placeholder', $file->filename)));
+    $message = t('The translation import of %filename failed.', array('%filename' => $file->filename));
     drupal_set_message($message, 'error');
     watchdog('locale', $message, WATCHDOG_ERROR);
   }
@@ -469,7 +469,7 @@ function _locale_import_po($file, $lang, $mode) {
   list($headerdone, $additions, $updates) = _locale_import_one_string('report', $mode);
 
   if (!$headerdone) {
-    drupal_set_message(t('The translation file %filename appears to have a missing or malformed header.', array('%filename' => theme('placeholder', $file->filename))), 'error');
+    drupal_set_message(t('The translation file %filename appears to have a missing or malformed header.', array('%filename' => $file->filename)), 'error');
   }
 
   // rebuild locale cache
@@ -479,7 +479,7 @@ function _locale_import_po($file, $lang, $mode) {
   menu_rebuild();
 
   drupal_set_message(t('The translation was successfully imported. There are %number newly created translated strings and %update strings were updated.', array('%number' => $additions, '%update' => $updates)));
-  watchdog('locale', t('Imported %file into %locale: %number new strings added and %update updated.', array('%file' => theme('placeholder', $file->filename), '%locale' => theme('placeholder', $lang), '%number' => $additions, '%update' => $updates)));
+  watchdog('locale', t('Imported %file into %locale: %number new strings added and %update updated.', array('%file' => $file->filename, '%locale' => $lang, '%number' => $additions, '%update' => $updates)));
   return TRUE;
 }
 
@@ -982,8 +982,8 @@ function _locale_import_append_plural($entry, $key) {
   }
 
   // First remove any possibly false indices, then add new ones
-  $entry = preg_replace('/(%count)\[[0-9]\]/', '\\1', $entry);
-  return preg_replace('/(%count)/', "\\1[$key]", $entry);
+  $entry = preg_replace('/(@count)\[[0-9]\]/', '\\1', $entry);
+  return preg_replace('/(@count)/', "\\1[$key]", $entry);
 }
 
 /**
@@ -1083,7 +1083,7 @@ function _locale_export_po($language) {
       $header .= "\"Plural-Forms: nplurals=". $meta->plurals ."; plural=". strtr($meta->formula, '$', '') .";\\n\"\n";
     }
     $header .= "\n";
-    watchdog('locale', t('Exported %locale translation file: %filename.', array('%locale' => theme('placeholder', $meta->name), '%filename' => theme('placeholder', $filename))));
+    watchdog('locale', t('Exported %locale translation file: %filename.', array('%locale' => $meta->name, '%filename' => $filename)));
   }
 
   // Generating Portable Object Template
@@ -1104,7 +1104,7 @@ function _locale_export_po($language) {
     $header .= "\"Content-Transfer-Encoding: 8bit\\n\"\n";
     $header .= "\"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\\n\"\n";
     $header .= "\n";
-    watchdog('locale', t('Exported translation file: %filename.', array('%filename' => theme('placeholder', $filename))));
+    watchdog('locale', t('Exported translation file: %filename.', array('%filename' => $filename)));
   }
 
   // Start download process
@@ -1212,7 +1212,7 @@ function _locale_export_wrap($str, $len) {
  * Removes plural index information from a string
  */
 function _locale_export_remove_plural($entry) {
-  return preg_replace('/(%count)\[[0-9]\]/', '\\1', $entry);
+  return preg_replace('/(@count)\[[0-9]\]/', '\\1', $entry);
 }
 
 /**

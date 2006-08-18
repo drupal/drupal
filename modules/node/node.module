@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.674 2006/08/15 07:30:17 drumm Exp $
+// $Id: node.module,v 1.675 2006/08/18 12:16:58 unconed Exp $
 
 /**
  * @file
@@ -26,11 +26,11 @@ function node_help($section) {
 ');
       $output .= t('<p>You can</p>
 <ul>
-<li>search for content at <a href="%search">search</a>.</li>
-<li>administer nodes at <a href="%admin-settings-content-types">administer &gt;&gt; content management &gt;&gt; content types</a>.</li>
+<li>search for content at <a href="@search">search</a>.</li>
+<li>administer nodes at <a href="@admin-settings-content-types">administer &gt;&gt; content management &gt;&gt; content types</a>.</li>
 </ul>
-', array('%search' => url('search'), '%admin-settings-content-types' => url('admin/content/types')));
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%node">Node page</a>.', array('%node' => 'http://drupal.org/handbook/modules/node/')) .'</p>';
+', array('@search' => url('search'), '@admin-settings-content-types' => url('admin/content/types')));
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@node">Node page</a>.', array('@node' => 'http://drupal.org/handbook/modules/node/')) .'</p>';
       return $output;
     case 'admin/settings/modules#description':
       return t('Allows content to be submitted to the site and displayed on pages.');
@@ -72,7 +72,7 @@ function node_cron() {
  */
 function node_title_list($result, $title = NULL) {
   while ($node = db_fetch_object($result)) {
-    $items[] = l($node->title, 'node/'. $node->nid, $node->comment_count ? array('title' => format_plural($node->comment_count, '1 comment', '%count comments')) : '');
+    $items[] = l($node->title, 'node/'. $node->nid, $node->comment_count ? array('title' => format_plural($node->comment_count, '1 comment', '@count comments')) : '');
   }
 
   return theme('node_list', $items, $title);
@@ -1528,7 +1528,7 @@ function node_multiple_delete_confirm_submit($form_id, $edit) {
  * Generate an overview table of older revisions of a node.
  */
 function node_revision_overview($node) {
-  drupal_set_title(t('Revisions for %title', array('%title' => check_plain($node->title))));
+  drupal_set_title(t('Revisions for %title', array('%title' => $node->title)));
 
   $header = array(t('Revision'), array('data' => t('Operations'), 'colspan' => 2));
 
@@ -1548,13 +1548,13 @@ function node_revision_overview($node) {
     $operations = array();
 
     if ($revision->current_vid > 0) {
-      $row[] = array('data' => t('%date by %username', array('%date' => l(format_date($revision->timestamp, 'small'), "node/$node->nid"), '%username' => theme('username', $revision)))
+      $row[] = array('data' => t('!date by !username', array('!date' => l(format_date($revision->timestamp, 'small'), "node/$node->nid"), '!username' => theme('username', $revision)))
                                . (($revision->log != '') ? '<p class="revision-log">'. filter_xss($revision->log) .'</p>' : ''),
                      'class' => 'revision-current');
       $operations[] = array('data' => theme('placeholder', t('current revision')), 'class' => 'revision-current', 'colspan' => 2);
     }
     else {
-      $row[] = t('%date by %username', array('%date' => l(format_date($revision->timestamp, 'small'), "node/$node->nid/revisions/$revision->vid/view"), '%username' => theme('username', $revision)))
+      $row[] = t('!date by !username', array('!date' => l(format_date($revision->timestamp, 'small'), "node/$node->nid/revisions/$revision->vid/view"), '!username' => theme('username', $revision)))
                . (($revision->log != '') ? '<p class="revision-log">'. filter_xss($revision->log) .'</p>' : '');
       if ($revert_permission) {
         $operations[] = l(t('revert'), "node/$node->nid/revisions/$revision->vid/revert");
@@ -1581,13 +1581,13 @@ function node_revision_revert($nid, $revision) {
   if ((user_access('revert revisions') || user_access('administer nodes')) && node_access('update', $node)) {
     if ($node->vid) {
       $node->revision = 1;
-      $node->log = t('Copy of the revision from %date.', array('%date' => theme('placeholder', format_date($node->revision_timestamp))));
+      $node->log = t('Copy of the revision from %date.', array('%date' => format_date($node->revision_timestamp)));
       $node->taxonomy = array_keys($node->taxonomy);
 
       node_save($node);
 
-      drupal_set_message(t('%title has been reverted back to the revision from %revision-date', array('%revision-date' => theme('placeholder', format_date($node->revision_timestamp)), '%title' => theme('placeholder', check_plain($node->title)))));
-      watchdog('content', t('%type: reverted %title revision %revision.', array('%type' => theme('placeholder', t($node->type)), '%title' => theme('placeholder', $node->title), '%revision' => theme('placeholder', $revision))));
+      drupal_set_message(t('%title has been reverted back to the revision from %revision-date', array('%revision-date' => format_date($node->revision_timestamp), '%title' => $node->title)));
+      watchdog('content', t('@type: reverted %title revision %revision.', array('@type' => t($node->type), '%title' => $node->title, '%revision' => $revision)));
     }
     else {
       drupal_set_message(t('You tried to revert to an invalid revision.'), 'error');
@@ -1611,8 +1611,8 @@ function node_revision_delete($nid, $revision) {
 
         db_query("DELETE FROM {node_revisions} WHERE nid = %d AND vid = %d", $nid, $revision);
         node_invoke_nodeapi($node, 'delete revision');
-        drupal_set_message(t('Deleted %title revision %revision.', array('%title' => theme('placeholder', $node->title), '%revision' => theme('placeholder', $revision))));
-        watchdog('content', t('%type: deleted %title revision %revision.', array('%type' => theme('placeholder', t($node->type)), '%title' => theme('placeholder', $node->title), '%revision' => theme('placeholder', $revision))));
+        drupal_set_message(t('Deleted %title revision %revision.', array('%title' => $node->title, '%revision' => $revision)));
+        watchdog('content', t('@type: deleted %title revision %revision.', array('@type' => t($node->type), '%title' => $node->title, '%revision' => $revision)));
       }
 
       else {
@@ -1804,7 +1804,7 @@ function node_validate($node, $form = array()) {
   // Make sure the body has the minimum number of words.
   // todo use a better word counting algorithm that will work in other languages
   if (isset($node->body) && count(explode(' ', $node->body)) < $type->min_word_count) {
-    form_set_error('body', t('The body of your %type is too short. You need at least %words words.', array('%words' => $type->min_word_count, '%type' => $type->name)));
+    form_set_error('body', t('The body of your @type is too short. You need at least %words words.', array('%words' => $type->min_word_count, '%type' => $type->name)));
   }
 
   if (isset($node->nid) && (node_last_changed($node->nid) > $_POST['edit']['changed'])) {
@@ -1817,7 +1817,7 @@ function node_validate($node, $form = array()) {
       // The use of empty() is mandatory in the context of usernames
       // as the empty string denotes the anonymous user. In case we
       // are dealing with an anonymous user we set the user ID to 0.
-      form_set_error('name', t('The username %name does not exist.', array ('%name' => theme('placeholder', $node->name))));
+      form_set_error('name', t('The username %name does not exist.', array('%name' => $node->name)));
     }
 
     // Validate the "authored on" field. As of PHP 5.1.0, strtotime returns FALSE instead of -1 upon failure.
@@ -1903,7 +1903,7 @@ function node_form_array($node) {
   if (user_access('administer nodes')) {
     // Node author information
     $form['author'] = array('#type' => 'fieldset', '#title' => t('Authoring information'), '#collapsible' => TRUE, '#collapsed' => TRUE, '#weight' => 20);
-    $form['author']['name'] = array('#type' => 'textfield', '#title' => t('Authored by'), '#maxlength' => 60, '#autocomplete_path' => 'user/autocomplete', '#default_value' => $node->name ? $node->name : '', '#weight' => -1, '#description' => t('Leave blank for %anonymous.', array('%anonymous' => theme('placeholder', variable_get('anonymous', 'Anonymous')))));
+    $form['author']['name'] = array('#type' => 'textfield', '#title' => t('Authored by'), '#maxlength' => 60, '#autocomplete_path' => 'user/autocomplete', '#default_value' => $node->name ? $node->name : '', '#weight' => -1, '#description' => t('Leave blank for %anonymous.', array('%anonymous' => variable_get('anonymous', 'Anonymous'))));
     $form['author']['date'] = array('#type' => 'textfield', '#title' => t('Authored on'), '#maxlength' => 25, '#description' => t('Format: %time. Leave blank to use the time of form submission.', array('%time' => $node->date)));
 
     if (isset($node->nid)) {
@@ -2008,14 +2008,14 @@ function node_add($type = NULL) {
     $node = array('uid' => $user->uid, 'name' => $user->name, 'type' => $type);
 
     $output = node_form($node);
-    drupal_set_title(t('Submit %name', array('%name' => check_plain($types[$type]->name))));
+    drupal_set_title(t('Submit @name', array('%name' => $types[$type]->name)));
   }
   else {
     // If no (valid) node type has been provided, display a node type overview.
     foreach ($types as $type) {
       if (function_exists($type->module .'_form') && node_access('create', $type->type)) {
         $type_url_str = str_replace('_', '-', $type->type);
-        $title = t('Add a new %s.', array('%s' => check_plain($type->name)));
+        $title = t('Add a new @s.', array('%s' => $type->name));
         $out = '<dt>'. l($type->name, "node/add/$type_url_str", array('title' => $title)) .'</dt>';
         $out .= '<dd>'. filter_xss_admin($type->description) .'</dd>';
         $item[$type->type] = $out;
@@ -2075,7 +2075,7 @@ function node_preview($node) {
       $output = theme('node_preview', $cloned_node);
     }
     drupal_set_title(t('Preview'));
-    drupal_set_breadcrumb(array(l(t('Home'), NULL), l(t('create content'), 'node/add'), l(t('Submit %name', array('%name' => node_get_types('name', $node))), 'node/add/'. $node->type)));
+    drupal_set_breadcrumb(array(l(t('Home'), NULL), l(t('create content'), 'node/add'), l(t('Submit @name', array('@name' => node_get_types('name', $node))), 'node/add/'. $node->type)));
 
     return $output;
   }
@@ -2120,7 +2120,7 @@ function node_form_submit($form_id, $edit) {
     // perform this operation:
     if (node_access('update', $node)) {
       node_save($node);
-      watchdog('content', t('%type: updated %title.', array('%type' => theme('placeholder', t($node->type)), '%title' => theme('placeholder', $node->title))), WATCHDOG_NOTICE, l(t('view'), 'node/'. $node->nid));
+      watchdog('content', t('@type: updated %title.', array('@type' => t($node->type), '%title' => $node->title)), WATCHDOG_NOTICE, l(t('view'), 'node/'. $node->nid));
       drupal_set_message(t('The %post was updated.', array ('%post' => node_get_types('name', $node))));
     }
   }
@@ -2129,7 +2129,7 @@ function node_form_submit($form_id, $edit) {
     // perform this operation:
     if (node_access('create', $node)) {
       node_save($node);
-      watchdog('content', t('%type: added %title.', array('%type' => theme('placeholder', t($node->type)), '%title' => theme('placeholder', $node->title))), WATCHDOG_NOTICE, l(t('view'), "node/$node->nid"));
+      watchdog('content', t('@type: added %title.', array('@type' => t($node->type), '%title' => $node->title)), WATCHDOG_NOTICE, l(t('view'), "node/$node->nid"));
       drupal_set_message(t('Your %post was created.', array ('%post' => node_get_types('name', $node))));
     }
   }
@@ -2156,7 +2156,7 @@ function node_delete_confirm() {
   if (node_access('delete', $node)) {
     $form['nid'] = array('#type' => 'value', '#value' => $node->nid);
     $output = confirm_form('node_delete_confirm', $form,
-                   t('Are you sure you want to delete %title?', array('%title' => theme('placeholder', $node->title))),
+                   t('Are you sure you want to delete %title?', array('%title' => $node->title)),
                    $_GET['destination'] ? $_GET['destination'] : 'node/'. $node->nid, t('This action cannot be undone.'),
                    t('Delete'), t('Cancel')  );
   }
@@ -2197,8 +2197,8 @@ function node_delete($nid) {
     if (function_exists('search_wipe')) {
       search_wipe($node->nid, 'node');
     }
-    drupal_set_message(t('%title has been deleted.', array('%title' => theme('placeholder', $node->title))));
-    watchdog('content', t('%type: deleted %title.', array('%type' => theme('placeholder', t($node->type)), '%title' => theme('placeholder', $node->title))));
+    drupal_set_message(t('%title has been deleted.', array('%title' => $node->title)));
+    watchdog('content', t('@type: deleted %title.', array('@type' => t($node->type), '%title' => $node->title)));
   }
 }
 
@@ -2221,7 +2221,7 @@ function node_revisions() {
           $node = node_load(arg(1), arg(3));
           if ($node->nid) {
             if ((user_access('view revisions') || user_access('administer nodes')) && node_access('view', $node)) {
-              drupal_set_title(t('Revision of %title from %date', array('%title' => theme('placeholder', $node->title), '%date' => format_date($node->revision_timestamp))));
+              drupal_set_title(t('Revision of %title from %date', array('%title' => $node->title, '%date' => format_date($node->revision_timestamp))));
               return node_show($node, arg(2));
             }
             drupal_access_denied();
@@ -2244,6 +2244,7 @@ function node_revisions() {
  * Menu callback; Generate a listing of promoted nodes.
  */
 function node_page_default() {
+
   $result = pager_query(db_rewrite_sql('SELECT n.nid, n.sticky, n.created FROM {node} n WHERE n.promote = 1 AND n.status = 1 ORDER BY n.sticky DESC, n.created DESC'), variable_get('default_nodes_main', 10));
 
   if (db_num_rows($result)) {
@@ -2265,27 +2266,27 @@ function node_page_default() {
       <ol>
         <li>
           <strong>Create your administrator account</strong>
-          To begin, <a href="%register">create the first account</a>. This account will have full administration rights and will allow you to configure your website.
+          To begin, <a href="@register">create the first account</a>. This account will have full administration rights and will allow you to configure your website.
         </li>
         <li>
           <strong>Configure your website</strong>
-          Once logged in, visit the <a href="%admin">administration section</a>, where you can <a href="%config">customize and configure</a> all aspects of your website.
+          Once logged in, visit the <a href="@admin">administration section</a>, where you can <a href="@config">customize and configure</a> all aspects of your website.
         </li>
         <li>
           <strong>Enable additional functionality</strong>
-          Next, visit the <a href="%modules">module list</a> and enable features which suit your specific needs. You can find additional modules in the <a href="%download_modules">Drupal modules download section</a>.
+          Next, visit the <a href="@modules">module list</a> and enable features which suit your specific needs. You can find additional modules in the <a href="@download_modules">Drupal modules download section</a>.
         </li>
         <li>
           <strong>Customize your website design</strong>
-          To change the "look and feel" of your website, visit the <a href="%themes">themes section</a>. You may choose from one of the included themes or download additional themes from the <a href="%download_themes">Drupal themes download section</a>.
+          To change the "look and feel" of your website, visit the <a href="@themes">themes section</a>. You may choose from one of the included themes or download additional themes from the <a href="@download_themes">Drupal themes download section</a>.
         </li>
         <li>
           <strong>Start posting content</strong>
-          Finally, you can <a href="%content">create content</a> for your website. This message will disappear once you have published your first post.
+          Finally, you can <a href="@content">create content</a> for your website. This message will disappear once you have published your first post.
         </li>
       </ol>
-      <p>For more information, please refer to the <a href="%help">help section</a>, or the <a href="%handbook">online Drupal handbooks</a>. You may also post at the <a href="%forum">Drupal forum</a>, or view the wide range of <a href="%support">other support options</a> available.</p>',
-      array('%drupal' => 'http://drupal.org/', '%register' => url('user/register'), '%admin' => url('admin'), '%config' => url('admin/settings'), '%modules' => url('admin/settings/modules'), '%download_modules' => 'http://drupal.org/project/modules', '%themes' => url('admin/build/themes'), '%download_themes' => 'http://drupal.org/project/themes', '%content' => url('node/add'), '%help' => url('admin/help'), '%handbook' => 'http://drupal.org/handbooks', '%forum' => 'http://drupal.org/forum', '%support' => 'http://drupal.org/support')
+      <p>For more information, please refer to the <a href="@help">help section</a>, or the <a href="%handbook">online Drupal handbooks</a>. You may also post at the <a href="@forum">Drupal forum</a>, or view the wide range of <a href="@support">other support options</a> available.</p>',
+      array('@drupal' => 'http://drupal.org/', '@register' => url('user/register'), '@admin' => url('admin'), '@config' => url('admin/settings'), '@modules' => url('admin/settings/modules'), '@download_modules' => 'http://drupal.org/project/modules', '@themes' => url('admin/build/themes'), '@download_themes' => 'http://drupal.org/project/themes', '@content' => url('node/add'), '@help' => url('admin/help'), '@handbook' => 'http://drupal.org/handbooks', '@forum' => 'http://drupal.org/forum', '@support' => 'http://drupal.org/support')
     );
     $output = '<div id="first-time">'. $output .'</div>';
   }

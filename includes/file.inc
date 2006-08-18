@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.81 2006/08/14 05:33:21 drumm Exp $
+// $Id: file.inc,v 1.82 2006/08/18 12:16:57 unconed Exp $
 
 /**
  * @file
@@ -89,12 +89,12 @@ function file_check_directory(&$directory, $mode = 0, $form_item = NULL) {
   // Check if directory exists.
   if (!is_dir($directory)) {
     if (($mode & FILE_CREATE_DIRECTORY) && @mkdir($directory)) {
-      drupal_set_message(t('The directory %directory has been created.', array('%directory' => theme('placeholder', $directory))));
+      drupal_set_message(t('The directory %directory has been created.', array('%directory' => $directory)));
       @chmod($directory, 0775); // Necessary for non-webserver users.
     }
     else {
       if ($form_item) {
-        form_set_error($form_item, t('The directory %directory does not exist.', array('%directory' => theme('placeholder', $directory))));
+        form_set_error($form_item, t('The directory %directory does not exist.', array('%directory' => $directory)));
       }
       return FALSE;
     }
@@ -103,11 +103,11 @@ function file_check_directory(&$directory, $mode = 0, $form_item = NULL) {
   // Check to see if the directory is writable.
   if (!is_writable($directory)) {
     if (($mode & FILE_MODIFY_PERMISSIONS) && @chmod($directory, 0775)) {
-      drupal_set_message(t('The permissions of directory %directory have been changed to make it writable.', array('%directory' => theme('placeholder', $directory))));
+      drupal_set_message(t('The permissions of directory %directory have been changed to make it writable.', array('%directory' => $directory)));
     }
     else {
-      form_set_error($form_item, t('The directory %directory is not writable', array('%directory' => theme('placeholder', $directory))));
-      watchdog('file system', t('The directory %directory is not writable, because it does not have the correct permissions set.', array('%directory' => theme('placeholder', $directory))), WATCHDOG_ERROR);
+      form_set_error($form_item, t('The directory %directory is not writable', array('%directory' => $directory)));
+      watchdog('file system', t('The directory %directory is not writable, because it does not have the correct permissions set.', array('%directory' => $directory)), WATCHDOG_ERROR);
       return FALSE;
     }
   }
@@ -118,7 +118,7 @@ function file_check_directory(&$directory, $mode = 0, $form_item = NULL) {
       fclose($fp);
     }
     else {
-      $message = t("Security warning: Couldn't write .htaccess file. Please create a .htaccess file in your %directory directory which contains the following lines: <code>%htaccess</code>", array('%directory' => theme('placeholder', $directory), '%htaccess' => '<br />'. str_replace("\n", '<br />', check_plain($htaccess_lines))));
+      $message = t("Security warning: Couldn't write .htaccess file. Please create a .htaccess file in your %directory directory which contains the following lines: <code>!htaccess</code>", array('%directory' => $directory, '!htaccess' => '<br />'. nl2br(check_plain($htaccess_lines))));
       form_set_error($form_item, $message);
       watchdog('security', $message, WATCHDOG_ERROR);
     }
@@ -204,17 +204,17 @@ function file_check_upload($source = 'upload') {
 
       case UPLOAD_ERR_INI_SIZE:
       case UPLOAD_ERR_FORM_SIZE:
-        drupal_set_message(t('The file %file could not be saved, because it exceeds the maximum allowed size for uploads.', array('%file' => theme('placeholder', $source))), 'error');
+        drupal_set_message(t('The file %file could not be saved, because it exceeds the maximum allowed size for uploads.', array('%file' => $source)), 'error');
         return 0;
 
       case UPLOAD_ERR_PARTIAL:
       case UPLOAD_ERR_NO_FILE:
-        drupal_set_message(t('The file %file could not be saved, because the upload did not complete.', array('%file' => theme('placeholder', $source))), 'error');
+        drupal_set_message(t('The file %file could not be saved, because the upload did not complete.', array('%file' => $source)), 'error');
         return 0;
 
       // Unknown error
       default:
-        drupal_set_message(t('The file %file could not be saved. An unknown error has occurred.', array('%file' => theme('placeholder', $source))),'error');
+        drupal_set_message(t('The file %file could not be saved. An unknown error has occurred.', array('%file' => $source)),'error');
         return 0;
     }
 
@@ -238,7 +238,7 @@ function file_check_upload($source = 'upload') {
     // This overcomes open_basedir restrictions for future file operations.
     if (!move_uploaded_file($_FILES["edit"]["tmp_name"][$source], $file->filepath)) {
       drupal_set_message(t('File upload error. Could not move uploaded file.'));
-      watchdog('file', t('Upload Error. Could not move uploaded file(%file) to destination(%destination).', array('%file' => theme('placeholder', $_FILES["edit"]["tmp_name"][$source]), '%destination' => theme('placeholder', $file->filepath))));
+      watchdog('file', t('Upload Error. Could not move uploaded file (%file) to destination (%destination).', array('%file' => $_FILES["edit"]["tmp_name"][$source], '%destination' => $file->filepath)));
       return FALSE;
     }
 
@@ -318,8 +318,8 @@ function file_copy(&$source, $dest = 0, $replace = FILE_EXISTS_RENAME) {
   // Make sure we at least have a valid directory.
   if ($basename === FALSE) {
     $source = is_object($source) ? $source->filepath : $source;
-    drupal_set_message(t('The selected file %file could not be uploaded, because the destination %directory is not properly configured.', array('%file' => theme('placeholder', $source), '%directory' => theme('placeholder', $dest))), 'error');
-    watchdog('file system', t('The selected file %file could not not be uploaded, because the destination %directory could not be found, or because its permissions do not allow the file to be written.', array('%file' => theme('placeholder', $source), '%directory' => theme('placeholder', $dest))), WATCHDOG_ERROR);
+    drupal_set_message(t('The selected file %file could not be uploaded, because the destination %directory is not properly configured.', array('%file' => $source, '%directory' => $dest)), 'error');
+    watchdog('file system', t('The selected file %file could not not be uploaded, because the destination %directory could not be found, or because its permissions do not allow the file to be written.', array('%file' => $source, '%directory' => $dest)), WATCHDOG_ERROR);
     return 0;
   }
 
@@ -334,7 +334,7 @@ function file_copy(&$source, $dest = 0, $replace = FILE_EXISTS_RENAME) {
 
   $source = realpath($source);
   if (!file_exists($source)) {
-    drupal_set_message(t('The selected file %file could not be copied, because no file by that name exists. Please check that you supplied the correct filename.', array('%file' => theme('placeholder', $source))), 'error');
+    drupal_set_message(t('The selected file %file could not be copied, because no file by that name exists. Please check that you supplied the correct filename.', array('%file' => $source)), 'error');
     return 0;
   }
 
@@ -366,13 +366,13 @@ function file_copy(&$source, $dest = 0, $replace = FILE_EXISTS_RENAME) {
           break;
 
         case FILE_EXISTS_ERROR:
-          drupal_set_message(t('The selected file %file could not be copied, because a file by that name already exists in the destination.', array('%file' => theme('placeholder', $source))), 'error');
+          drupal_set_message(t('The selected file %file could not be copied, because a file by that name already exists in the destination.', array('%file' => $source)), 'error');
           return 0;
       }
     }
 
     if (!@copy($source, $dest)) {
-      drupal_set_message(t('The selected file %file could not be copied.', array('%file' => theme('placeholder', $source))), 'error');
+      drupal_set_message(t('The selected file %file could not be copied.', array('%file' => $source)), 'error');
       return 0;
     }
 
@@ -421,7 +421,7 @@ function file_move(&$source, $dest = 0, $replace = FILE_EXISTS_RENAME) {
     if ($path_original == $path_current || file_delete($path_original)) {
       return 1;
     }
-    drupal_set_message(t('The removal of the original file %file has failed.', array('%file' => theme('placeholder', $path_original))), 'error');
+    drupal_set_message(t('The removal of the original file %file has failed.', array('%file' => $path_original)), 'error');
   }
   return 0;
 }

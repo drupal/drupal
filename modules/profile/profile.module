@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.164 2006/08/18 07:43:44 dries Exp $
+// $Id: profile.module,v 1.165 2006/08/18 12:16:58 unconed Exp $
 
 /**
  * @file
@@ -34,11 +34,11 @@ function profile_help($section) {
 ');
       $output .= t('<p>You can</p>
 <ul>
-<li>view user <a href="%profile">profiles</a>.</li>
-<li>administer profile settings: <a href="%admin-settings-profile">administer &gt;&gt; user management &gt;&gt; profiles</a>.</li>
+<li>view user <a href="@profile">profiles</a>.</li>
+<li>administer profile settings: <a href="@admin-settings-profile">administer &gt;&gt; user management &gt;&gt; profiles</a>.</li>
 </ul>
 ', array('%profile' => url('profile'), '%admin-settings-profile' => url('admin/user/profile')));
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="%profile">Profile page</a>.', array('%profile' => 'http://drupal.org/handbook/modules/profile/')) .'</p>';
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@profile">Profile page</a>.', array('@profile' => 'http://drupal.org/handbook/modules/profile/')) .'</p>';
       return $output;
     case 'admin/settings/modules#description':
       return t('Supports configurable user profiles.');
@@ -116,7 +116,7 @@ function profile_block($op = 'list', $delta = 0, $edit = array()) {
       '#title' => t('Profile fields to display'),
       '#default_value' => variable_get('profile_block_author_fields', NULL),
       '#options' => $fields,
-      '#description' => t('Select which profile fields you wish to display in the block. Only fields designated as public in the <a href="%profile-admin">profile field configuration</a> are available.', array('%profile-admin' => url('admin/user/profile'))),
+      '#description' => t('Select which profile fields you wish to display in the block. Only fields designated as public in the <a href="@profile-admin">profile field configuration</a> are available.', array('@profile-admin' => url('admin/user/profile'))),
     );
     return $form;
   }
@@ -367,7 +367,7 @@ function profile_field_delete($fid) {
   $form['fid'] = array('#type' => 'value', '#value' => $fid);
   $form['title'] = array('#type' => 'value', '#value' => $field->title);
 
-  return confirm_form('profile_field_delete', $form, t('Are you sure you want to delete the field %field?', array('%field' => theme('placeholder', $field->title))), 'admin/user/profile', t('This action cannot be undone. If users have entered values into this field in their profile, these entries will also be deleted. If you want to keep the user-entered data, instead of deleting the field you may wish to <a href="%edit-field">edit this field</a> and change it to a %hidden-field so that it may only be accessed by administrators.', array('%edit-field' => url('admin/user/profile/edit/' . $fid), '%hidden-field' => theme('placeholder', t('hidden profile field')))), t('Delete'), t('Cancel'));
+  return confirm_form('profile_field_delete', $form, t('Are you sure you want to delete the field %field?', array('%field' => $field->title)), 'admin/user/profile', t('This action cannot be undone. If users have entered values into this field in their profile, these entries will also be deleted. If you want to keep the user-entered data, instead of deleting the field you may wish to <a href="@edit-field">edit this field</a> and change it to a hidden profile field so that it may only be accessed by administrators.', array('@edit-field' => url('admin/user/profile/edit/' . $fid))), t('Delete'), t('Cancel'));
 }
 
 /**
@@ -379,8 +379,8 @@ function profile_field_delete_submit($form_id, $form_values) {
 
   cache_clear_all();
 
-  drupal_set_message(t('The field %field has been deleted.', array('%field' => theme('placeholder', $form_values['title']))));
-  watchdog('profile', t('Profile field %field deleted.', array('%field' => theme('placeholder', $form_values['title']))), WATCHDOG_NOTICE, l(t('view'), 'admin/user/profile'));
+  drupal_set_message(t('The field %field has been deleted.', array('%field' => $form_values['title'])));
+  watchdog('profile', t('Profile field %field deleted.', array('%field' => $form_values['title'])), WATCHDOG_NOTICE, l(t('view'), 'admin/user/profile'));
 
   return 'admin/user/profile';
 }
@@ -757,12 +757,12 @@ function profile_validate_profile($edit, $category) {
     if ($edit[$field->name]) {
       if ($field->type == 'url') {
         if (!valid_url($edit[$field->name], TRUE)) {
-          form_set_error($field->name, t('The value provided for %field is not a valid URL.', array('%field' => theme('placeholder', $field->title))));
+          form_set_error($field->name, t('The value provided for %field is not a valid URL.', array('%field' => $field->title)));
         }
       }
     }
     else if ($field->required && !user_access('administer users')) {
-      form_set_error($field->name, t('The field %field is required.', array('%field' => theme('placeholder', $field->title))));
+      form_set_error($field->name, t('The field %field is required.', array('%field' => $field->title)));
     }
   }
 
