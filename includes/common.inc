@@ -618,6 +618,8 @@ function _t(&$value, $key) {
     default:
       $value = theme('placeholder', $value);
       return;
+    // Pass-through
+    case '!':
   }
 }
 
