@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.676 2006/08/18 18:58:46 dries Exp $
+// $Id: node.module,v 1.677 2006/08/19 21:40:58 dries Exp $
 
 /**
  * @file
@@ -1048,12 +1048,13 @@ function node_menu($may_cache) {
       'callback arguments' => array('node_type_form'),
       'type' => MENU_LOCAL_TASK,
     );
-
-    $items[] = array('path' => 'node', 'title' => t('content'),
+    $items[] = array('path' => 'node',
+      'title' => t('content'),
       'callback' => 'node_page_default',
       'access' => user_access('access content'),
       'type' => MENU_MODIFIABLE_BY_ADMIN);
-    $items[] = array('path' => 'node/add', 'title' => t('create content'),
+    $items[] = array('path' => 'node/add',
+      'title' => t('create content'),
       'callback' => 'node_add',
       'access' => user_access('access content'),
       'type' => MENU_ITEM_GROUPING,
@@ -1092,8 +1093,8 @@ function node_menu($may_cache) {
           'type' => MENU_DEFAULT_LOCAL_TASK,
           'weight' => -10);
         $items[] = array('path' => 'node/'. arg(1) .'/edit', 'title' => t('edit'),
-          'callback' => 'drupal_get_form',
-          'callback arguments' => array('node_page_edit', $node),
+          'callback' => 'node_page_edit',
+          'callback arguments' => array($node),
           'access' => node_access('update', $node),
           'weight' => 1,
           'type' => MENU_LOCAL_TASK);

@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.476 2006/08/18 18:58:45 dries Exp $
+// $Id: comment.module,v 1.477 2006/08/19 21:40:58 dries Exp $
 
 /**
  * @file
@@ -136,8 +136,8 @@ function comment_menu($may_cache) {
 
     $access = user_access('post comments');
     $items[] = array('path' => 'comment/edit', 'title' => t('edit comment'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('comment_edit'), 'access' => $access, 'type' => MENU_CALLBACK);
+      'callback' => 'comment_edit',
+      'access' => $access, 'type' => MENU_CALLBACK);
   }
   else {
     if (arg(0) == 'comment' && arg(1) == 'reply' && is_numeric(arg(2))) {
