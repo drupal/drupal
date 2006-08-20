@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.89 2006/08/18 18:58:46 dries Exp $
+// $Id: path.module,v 1.90 2006/08/20 07:00:14 dries Exp $
 
 /**
  * @file
@@ -184,6 +184,7 @@ function path_set_alias($path = NULL, $alias = NULL, $pid = NULL) {
  * Return a form for editing or creating an individual URL alias.
  */
 function path_form($edit = '') {
+  $form['#base'] = 'path_form';
 
   $form['src'] = array('#type' => 'textfield', '#title' => t('Existing system path'), '#default_value' => $edit['src'], '#maxlength' => 64, '#description' => t('Specify the existing path you wish to alias. For example: node/28, forum/1, taxonomy/term/1+2.'));
   $form['dst'] = array('#type' => 'textfield', '#default_value' => $edit['dst'], '#maxlength' => 64, '#description' => t('Specify an alternative path by which this data can be accessed. For example, type "about" when writing an about page. Use a relative path and don\'t add a trailing slash or the URL alias won\'t work.'));
@@ -323,10 +324,9 @@ function path_load($pid) {
 }
 
 /**
- * Verify that a new URL alias is valid, and save it to the database.
+ * Verify that a new URL alias is valid
  */
-function path_form_submit() {
-  $edit = $GLOBALS['form_values'];
+function path_form_validate($form_id, $edit) {
   $src = $edit['src'];
   $dst = $edit['dst'];
   $pid = $edit['pid'];
@@ -342,16 +342,14 @@ function path_form_submit() {
   if (db_result(db_query("SELECT COUNT(dst) FROM {url_alias} WHERE pid != %d AND dst = '%s'", $pid, $dst))) {
     form_set_error('dst', t('The alias %alias is already in use.', array('%alias' => $dst)));
   }
-
-  if (form_get_errors()) {
-    return path_form($edit);
-  }
-  else {
-    path_set_alias($src, $dst, $pid);
-
-    drupal_set_message(t('The alias has been saved.'));
-    return 'admin/build/path';
-  }
 }
 
+/**
+ * Save a new URL alias to the database.
+ */
+function path_form_submit($form_id, $edit) {
+  path_set_alias($edit['src'], $edit['dst'], $edit['pid']);
 
+  drupal_set_message(t('The alias has been saved.'));
+  return 'admin/build/path';
+}
