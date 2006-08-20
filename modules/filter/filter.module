@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.135 2006/08/18 18:58:45 dries Exp $
+// $Id: filter.module,v 1.136 2006/08/20 06:53:08 dries Exp $
 
 /**
  * @file
@@ -489,8 +489,7 @@ function filter_admin_format_form_submit($form_id, $form_values) {
   if (!$format) {
     $new = TRUE;
     db_query("INSERT INTO {filter_formats} (name) VALUES ('%s')", $name);
-    $result = db_fetch_object(db_query("SELECT MAX(format) AS format FROM {filter_formats}"));
-    $format = $result->format;
+    $format = db_result(db_query("SELECT MAX(format) AS format FROM {filter_formats}"));
     drupal_set_message(t('Added input format %format.', array('%format' => $name)));
   }
   else {
