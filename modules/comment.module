@@ -133,7 +133,7 @@ function comment_menu($may_cache) {
       $node = node_load(array('nid' => arg(2)));
       if ($node->nid) {
         $items[] = array('path' => 'comment/reply', 'title' => t('reply to comment'),
-          'callback' => 'comment_reply', 'access' => node_access('view', $node), 'type' => MENU_CALLBACK);
+          'callback' => 'comment_reply', 'access' => (node_access('view', $node) && (user_access('post comments')) ), 'type' => MENU_CALLBACK);
       }
     }
     if ((arg(0) == 'node') && is_numeric(arg(1)) && is_numeric(arg(2))) {
