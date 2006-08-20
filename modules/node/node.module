@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.678 2006/08/20 05:57:40 unconed Exp $
+// $Id: node.module,v 1.679 2006/08/20 07:07:17 dries Exp $
 
 /**
  * @file
@@ -1809,7 +1809,7 @@ function node_validate($node, $form = array()) {
   // Make sure the body has the minimum number of words.
   // todo use a better word counting algorithm that will work in other languages
   if (isset($node->body) && count(explode(' ', $node->body)) < $type->min_word_count) {
-    form_set_error('body', t('The body of your @type is too short. You need at least %words words.', array('%words' => $type->min_word_count, '%type' => $type->name)));
+    form_set_error('body', t('The body of your @type is too short. You need at least %words words.', array('%words' => $type->min_word_count, '@type' => $type->name)));
   }
 
   if (isset($node->nid) && (node_last_changed($node->nid) > $_POST['edit']['changed'])) {
@@ -2004,14 +2004,14 @@ function node_add($type = NULL) {
     $node = array('uid' => $user->uid, 'name' => $user->name, 'type' => $type);
 
     $output = drupal_get_form($type .'_node_form', $node);
-    drupal_set_title(t('Submit @name', array('%name' => $types[$type]->name)));
+    drupal_set_title(t('Submit @name', array('@name' => $types[$type]->name)));
   }
   else {
     // If no (valid) node type has been provided, display a node type overview.
     foreach ($types as $type) {
       if (function_exists($type->module .'_form') && node_access('create', $type->type)) {
         $type_url_str = str_replace('_', '-', $type->type);
-        $title = t('Add a new @s.', array('%s' => $type->name));
+        $title = t('Add a new @s.', array('@s' => $type->name));
         $out = '<dt>'. l($type->name, "node/add/$type_url_str", array('title' => $title)) .'</dt>';
         $out .= '<dd>'. filter_xss_admin($type->description) .'</dd>';
         $item[$type->type] = $out;
