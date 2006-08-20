@@ -6,10 +6,10 @@ function book_install() {
     case 'mysql':
     case 'mysqli':
       db_query("CREATE TABLE {book} (
-        vid int(10) unsigned NOT NULL default '0',
-        nid int(10) unsigned NOT NULL default '0',
-        parent int(10) NOT NULL default '0',
-        weight tinyint(3) NOT NULL default '0',
+        vid int unsigned NOT NULL default '0',
+        nid int unsigned NOT NULL default '0',
+        parent int NOT NULL default '0',
+        weight tinyint NOT NULL default '0',
         PRIMARY KEY (vid),
         KEY nid (nid),
         KEY parent (parent)
