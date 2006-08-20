@@ -2419,7 +2419,7 @@ function node_form_alter($form_id, &$form) {
     }
 
     // Node types:
-    $types = node_get_types();
+    $types = node_get_types('names');
     $form['advanced']['type'] = array(
       '#type' => 'checkboxes',
       '#title' => t('Only of the type(s)'),
