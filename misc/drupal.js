@@ -48,15 +48,14 @@ function HTTPGet(uri, callbackFunction, callbackParameter) {
   if (!callbackFunction) {
     bAsync = false;
   }
+
   xmlHttp.open('GET', uri, bAsync);
   xmlHttp.send(null);
 
   if (bAsync) {
-    if (callbackFunction) {
-      xmlHttp.onreadystatechange = function() {
-        if (xmlHttp.readyState == 4) {
-          callbackFunction(xmlHttp.responseText, xmlHttp, callbackParameter);
-        }
+    xmlHttp.onreadystatechange = function() {
+      if (xmlHttp.readyState == 4) {
+        callbackFunction(xmlHttp.responseText, xmlHttp, callbackParameter);
       }
     }
     return xmlHttp;
@@ -93,11 +92,9 @@ function HTTPPost(uri, callbackFunction, callbackParameter, object) {
   xmlHttp.send(toSend);
 
   if (bAsync) {
-    if (callbackFunction) {
-      xmlHttp.onreadystatechange = function() {
-        if (xmlHttp.readyState == 4) {
-          callbackFunction(xmlHttp.responseText, xmlHttp, callbackParameter);
-        }
+    xmlHttp.onreadystatechange = function() {
+      if (xmlHttp.readyState == 4) {
+        callbackFunction(xmlHttp.responseText, xmlHttp, callbackParameter);
       }
     }
     return xmlHttp;
