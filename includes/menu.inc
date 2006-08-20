@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.132 2006/07/31 11:25:52 dries Exp $
+// $Id: menu.inc,v 1.133 2006/08/20 05:57:40 unconed Exp $
 
 /**
  * @file
@@ -591,7 +591,7 @@ function menu_rebuild() {
 
   _menu_build();
 
-  if (module_exist('menu')) {
+  if (module_exists('menu')) {
     $menu = menu_get_menu();
 
     // Fill a queue of new menu items which are modifiable.
@@ -828,7 +828,7 @@ function theme_menu_local_task($mid, $active, $primary) {
  *   -active is appended if this element is in the active trail.
  */
 function menu_primary_links($start_level = 1, $pid = 0) {
-  if (!module_exist('menu')) {
+  if (!module_exists('menu')) {
     return NULL;
   }
   if (!$pid) {
@@ -1081,7 +1081,7 @@ function _menu_build() {
   }
 
   // Now fetch items from the DB, reassigning menu IDs as needed.
-  if (module_exist('menu')) {
+  if (module_exists('menu')) {
     $result = db_query(db_rewrite_sql('SELECT m.mid, m.* FROM {menu} m ORDER BY m.mid ASC', 'm', 'mid'));
     while ($item = db_fetch_object($result)) {
       // Handle URL aliases if entered in menu administration.

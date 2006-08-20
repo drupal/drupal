@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.677 2006/08/19 21:40:58 dries Exp $
+// $Id: node.module,v 1.678 2006/08/20 05:57:40 unconed Exp $
 
 /**
  * @file
@@ -785,10 +785,10 @@ function node_search($op = 'search', $keys = NULL) {
 
       $ranking = array('node_rank_relevance' => t('Keyword relevance'),
                        'node_rank_recent' => t('Recently posted'));
-      if (module_exist('comment')) {
+      if (module_exists('comment')) {
         $ranking['node_rank_comments'] = t('Number of comments');
       }
-      if (module_exist('statistics') && variable_get('statistics_count_content_views', 0)) {
+      if (module_exists('statistics') && variable_get('statistics_count_content_views', 0)) {
         $ranking['node_rank_views'] = t('Number of views');
       }
 
@@ -846,7 +846,7 @@ function node_search($op = 'search', $keys = NULL) {
         $join2 .= ' INNER JOIN {node} n ON n.nid = i.sid LEFT JOIN {node_comment_statistics} c ON c.nid = i.sid';
         $stats_join = TRUE;
       }
-      if (module_exist('comment') && $weight = (int)variable_get('node_rank_comments', 5)) {
+      if (module_exists('comment') && $weight = (int)variable_get('node_rank_comments', 5)) {
         // Inverse law that maps the highest reply count on the site to 1 and 0 to 0.
         $scale = variable_get('node_cron_comments_scale', 0.0);
         $ranking[] = '%d * (2.0 - 2.0 / (1.0 + c.comment_count * %f))';
@@ -856,7 +856,7 @@ function node_search($op = 'search', $keys = NULL) {
           $join2 .= ' LEFT JOIN {node_comment_statistics} c ON c.nid = i.sid';
         }
       }
-      if (module_exist('statistics') && variable_get('statistics_count_content_views', 0) &&
+      if (module_exists('statistics') && variable_get('statistics_count_content_views', 0) &&
           $weight = (int)variable_get('node_rank_views', 5)) {
         // Inverse law that maps the highest view count on the site to 1 and 0 to 0.
         $scale = variable_get('node_cron_views_scale', 0.0);
@@ -1011,7 +1011,7 @@ function node_menu($may_cache) {
     $items[] = array('path' => 'admin/content/node/overview', 'title' => t('list'),
       'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
 
-    if (module_exist('search')) {
+    if (module_exists('search')) {
       $items[] = array('path' => 'admin/content/search', 'title' => t('search posts'),
         'description' => t('Search posts by keyword.'),
         'callback' => 'node_admin_search',

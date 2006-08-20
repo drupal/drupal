@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.module,v 1.134 2006/08/18 12:16:59 unconed Exp $
+// $Id: tracker.module,v 1.135 2006/08/20 05:57:41 unconed Exp $
 
 /**
  * @file
@@ -104,7 +104,7 @@ function tracker_page($uid = 0) {
   while ($node = db_fetch_object($result)) {
     // Determine the number of comments:
     $comments = 0;
-    if (module_exist('comment') && $node->comment_count) {
+    if (module_exists('comment') && $node->comment_count) {
       $comments = $node->comment_count;
 
       if ($new = comment_num_new($node->nid)) {

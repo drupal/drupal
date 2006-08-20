@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.349 2006/08/18 18:58:45 dries Exp $
+// $Id: forum.module,v 1.350 2006/08/20 05:57:40 unconed Exp $
 
 /**
  * @file
@@ -851,7 +851,7 @@ function _forum_new($tid) {
  * Menu callback; prints a forum listing.
  */
 function forum_page($tid = 0) {
-  if (module_exist('taxonomy') && module_exist('comment')) {
+  if (module_exists('taxonomy') && module_exists('comment')) {
     $forum_per_page = variable_get('forum_per_page', 25);
     $sortby = variable_get('forum_order', 1);
 
@@ -908,7 +908,7 @@ function theme_forum_display($forums, $topics, $parents, $tid, $sortby, $forum_p
     $output  = '<div id="forum">';
     $output .= '<ul>';
 
-    if (module_exist('tracker')) {
+    if (module_exists('tracker')) {
       if ($user->uid) {
         $output .= ' <li>'. l(t('My discussions.'), "tracker/$user->uid") .'</li>';
       }

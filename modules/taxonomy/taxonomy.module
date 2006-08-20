@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.303 2006/08/18 18:58:46 dries Exp $
+// $Id: taxonomy.module,v 1.304 2006/08/20 05:57:40 unconed Exp $
 
 /**
  * @file
@@ -20,7 +20,7 @@ function taxonomy_perm() {
  * print lists of terms associated with a node. Themes can print taxonomy
  * links with:
  *
- * if (module_exist('taxonomy')) {
+ * if (module_exists('taxonomy')) {
  *   $this->links(taxonomy_link('taxonomy terms', $node));
  * }
  */

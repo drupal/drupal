@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.308 2006/08/18 12:16:57 unconed Exp $
+// $Id: theme.inc,v 1.309 2006/08/20 05:57:40 unconed Exp $
 
 /**
  * @file
@@ -244,7 +244,7 @@ function theme_get_settings($key = NULL) {
     'toggle_comment_user_picture'   =>  0,
   );
 
-  if (module_exist('node')) {
+  if (module_exists('node')) {
     foreach (node_get_types() as $type => $name) {
       $defaults['toggle_node_info_' . $type] = 1;
     }
@@ -256,7 +256,7 @@ function theme_get_settings($key = NULL) {
   }
 
   // Only offer search box if search.module is enabled.
-  if (!module_exist('search') || !user_access('search content')) {
+  if (!module_exists('search') || !user_access('search content')) {
     $settings['toggle_search'] = 0;
   }
 
@@ -600,7 +600,7 @@ function theme_node($node, $teaser = FALSE, $page = FALSE) {
     $output  = '<div class="node-unpublished">';
   }
 
-  if (module_exist('taxonomy')) {
+  if (module_exists('taxonomy')) {
     $terms = taxonomy_link('taxonomy terms', $node);
   }
 

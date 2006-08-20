@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.216 2006/08/18 18:58:44 dries Exp $
+// $Id: block.module,v 1.217 2006/08/20 05:57:40 unconed Exp $
 
 /**
  * @file
@@ -221,7 +221,7 @@ function block_admin_display($theme = NULL) {
   $blocks = _block_rehash();
   usort($blocks, '_block_compare');
 
-  $throttle = module_exist('throttle');
+  $throttle = module_exists('throttle');
   $block_regions = system_region_list($theme_key);
 
   // Build form tree
@@ -295,7 +295,7 @@ function block_admin_display_submit($form_id, $form_values) {
 function theme_block_admin_display($form) {
   global $theme_key;
 
-  $throttle = module_exist('throttle');
+  $throttle = module_exists('throttle');
   $block_regions = system_region_list($theme_key);
 
   // Highlight regions on page to provide visual reference.

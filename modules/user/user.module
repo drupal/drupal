@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.656 2006/08/18 18:58:47 dries Exp $
+// $Id: user.module,v 1.657 2006/08/20 05:57:41 unconed Exp $
 
 /**
  * @file
@@ -743,7 +743,7 @@ function user_menu($may_cache) {
       'callback' => 'drupal_get_form', 'callback arguments' => array('user_admin_access_delete_confirm'),
       'access' => $access_access, 'type' => MENU_CALLBACK);
 
-    if (module_exist('search')) {
+    if (module_exists('search')) {
       $items[] = array('path' => 'admin/user/search', 'title' => t('search users'),
         'description' => t('Search users by name.'),
         'callback' => 'user_admin', 'callback arguments' => array('search'), 'access' => $admin_access,
