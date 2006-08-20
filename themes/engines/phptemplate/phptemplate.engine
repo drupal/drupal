@@ -253,7 +253,7 @@ function phptemplate_page($content) {
  * into a pluggable template engine.
  */
 function phptemplate_node($node, $teaser = 0, $page = 0) {
-  if (module_exist('taxonomy')) {
+  if (module_exists('taxonomy')) {
     $taxonomy = taxonomy_link('taxonomy terms', $node);
   }
   else {

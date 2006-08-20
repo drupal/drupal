@@ -743,7 +743,7 @@ function user_menu($may_cache) {
       'callback' => 'drupal_get_form', 'callback arguments' => array('user_admin_access_delete_confirm'),
       'access' => $access_access, 'type' => MENU_CALLBACK);
 
-    if (module_exist('search')) {
+    if (module_exists('search')) {
       $items[] = array('path' => 'admin/user/search', 'title' => t('search users'),
         'description' => t('Search users by name.'),
         'callback' => 'user_admin', 'callback arguments' => array('search'), 'access' => $admin_access,

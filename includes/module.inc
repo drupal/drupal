@@ -136,7 +136,7 @@ function module_rebuild_cache() {
  * @return
  *   TRUE if the module is both installed and enabled.
  */
-function module_exist($module) {
+function module_exists($module) {
   $list = module_list();
   return array_key_exists($module, $list);
 }
@@ -181,7 +181,7 @@ function module_enable($module) {
  *   The name of the module (without the .module extension).
  */
 function module_disable($module) {
-  if (module_exist($module)) {
+  if (module_exists($module)) {
     module_load_install($module);
     module_invoke($module, 'disable');
     db_query("UPDATE {system} SET status = 0, throttle = 0 WHERE type = 'module' AND name = '%s'", $module);

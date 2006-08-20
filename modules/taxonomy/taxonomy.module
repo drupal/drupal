@@ -20,7 +20,7 @@ function taxonomy_perm() {
  * print lists of terms associated with a node. Themes can print taxonomy
  * links with:
  *
- * if (module_exist('taxonomy')) {
+ * if (module_exists('taxonomy')) {
  *   $this->links(taxonomy_link('taxonomy terms', $node));
  * }
  */
