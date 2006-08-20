@@ -1,15 +1,15 @@
 <?php
-// $Id: book.install,v 1.4 2006/08/15 05:25:19 drumm Exp $
+// $Id: book.install,v 1.5 2006/08/20 06:38:50 dries Exp $
 
 function book_install() {
   switch ($GLOBALS['db_type']) {
     case 'mysql':
     case 'mysqli':
       db_query("CREATE TABLE {book} (
-        vid int(10) unsigned NOT NULL default '0',
-        nid int(10) unsigned NOT NULL default '0',
-        parent int(10) NOT NULL default '0',
-        weight tinyint(3) NOT NULL default '0',
+        vid int unsigned NOT NULL default '0',
+        nid int unsigned NOT NULL default '0',
+        parent int NOT NULL default '0',
+        weight tinyint NOT NULL default '0',
         PRIMARY KEY (vid),
         KEY nid (nid),
         KEY parent (parent)

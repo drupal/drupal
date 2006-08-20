@@ -1,17 +1,17 @@
 <?php
-// $Id: contact.install,v 1.3 2006/08/04 06:58:44 dries Exp $
+// $Id: contact.install,v 1.4 2006/08/20 06:38:50 dries Exp $
 
 function contact_install() {
   switch ($GLOBALS['db_type']) {
     case 'mysql':
     case 'mysqli':
       db_query("CREATE TABLE {contact} (
-        cid int(10) unsigned NOT NULL auto_increment,
+        cid int unsigned NOT NULL auto_increment,
         category varchar(255) NOT NULL default '',
         recipients longtext NOT NULL default '',
         reply longtext NOT NULL default '',
-        weight tinyint(3) NOT NULL default '0',
-        selected tinyint(1) NOT NULL default '0',
+        weight tinyint NOT NULL default '0',
+        selected tinyint NOT NULL default '0',
         PRIMARY KEY (cid),
         UNIQUE KEY category (category)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");

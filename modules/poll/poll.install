@@ -1,21 +1,21 @@
 <?php
-// $Id: poll.install,v 1.5 2006/08/15 05:25:19 drumm Exp $
+// $Id: poll.install,v 1.6 2006/08/20 06:38:50 dries Exp $
 
 function poll_install() {
   switch ($GLOBALS['db_type']) {
     case 'mysql':
     case 'mysqli':
       db_query("CREATE TABLE {poll} (
-        nid int(10) unsigned NOT NULL default '0',
-        runtime int(10) NOT NULL default '0',
-        active int(2) unsigned NOT NULL default '0',
+        nid int unsigned NOT NULL default '0',
+        runtime int NOT NULL default '0',
+        active int unsigned NOT NULL default '0',
         PRIMARY KEY (nid)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {poll_votes} (
-        nid int(10) unsigned NOT NULL,
-        uid int(10) unsigned NOT NULL default 0,
-        chorder int(10) NOT NULL default -1,
+        nid int unsigned NOT NULL,
+        uid int unsigned NOT NULL default 0,
+        chorder int NOT NULL default -1,
         hostname varchar(128) NOT NULL default '',
         INDEX (nid),
         INDEX (uid),
@@ -23,11 +23,11 @@ function poll_install() {
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {poll_choices} (
-        chid int(10) unsigned NOT NULL auto_increment,
-        nid int(10) unsigned NOT NULL default '0',
+        chid int unsigned NOT NULL auto_increment,
+        nid int unsigned NOT NULL default '0',
         chtext varchar(128) NOT NULL default '',
-        chvotes int(6) NOT NULL default '0',
-        chorder int(2) NOT NULL default '0',
+        chvotes int NOT NULL default '0',
+        chorder int NOT NULL default '0',
         PRIMARY KEY (chid),
         KEY nid (nid)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");

@@ -1,20 +1,20 @@
 <?php
-// $Id: statistics.install,v 1.4 2006/08/15 05:25:20 drumm Exp $
+// $Id: statistics.install,v 1.5 2006/08/20 06:38:50 dries Exp $
 
 function statistics_install() {
   switch ($GLOBALS['db_type']) {
     case 'mysql':
     case 'mysqli':
       db_query("CREATE TABLE {accesslog} (
-        aid int(10) NOT NULL auto_increment,
+        aid int NOT NULL auto_increment,
         sid varchar(32) NOT NULL default '',
         title varchar(255) default NULL,
         path varchar(255) default NULL,
         url varchar(255) default NULL,
         hostname varchar(128) default NULL,
-        uid int(10) unsigned default '0',
-        timer int(10) unsigned NOT NULL default '0',
-        timestamp int(11) unsigned NOT NULL default '0',
+        uid int unsigned default '0',
+        timer int unsigned NOT NULL default '0',
+        timestamp int unsigned NOT NULL default '0',
         KEY accesslog_timestamp (timestamp),
         PRIMARY KEY (aid)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");

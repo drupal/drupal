@@ -1,21 +1,21 @@
 <?php
-// $Id: system.install,v 1.8 2006/08/18 08:39:21 dries Exp $
+// $Id: system.install,v 1.9 2006/08/20 06:38:50 dries Exp $
 
 function system_install() {
   switch ($GLOBALS['db_type']) {
     case 'mysql':
     case 'mysqli':
       db_query("CREATE TABLE {access} (
-        aid tinyint(10) NOT NULL auto_increment,
+        aid tinyint NOT NULL auto_increment,
         mask varchar(255) NOT NULL default '',
         type varchar(255) NOT NULL default '',
-        status tinyint(2) NOT NULL default '0',
+        status tinyint NOT NULL default '0',
         PRIMARY KEY (aid)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {authmap} (
-        aid int(10) unsigned NOT NULL auto_increment,
-        uid int(10) NOT NULL default '0',
+        aid int unsigned NOT NULL auto_increment,
+        uid int NOT NULL default '0',
         authname varchar(128) NOT NULL default '',
         module varchar(128) NOT NULL default '',
         PRIMARY KEY (aid),
@@ -26,21 +26,21 @@ function system_install() {
         module varchar(64) DEFAULT '' NOT NULL,
         delta varchar(32) NOT NULL default '0',
         theme varchar(255) NOT NULL default '',
-        status tinyint(2) DEFAULT '0' NOT NULL,
-        weight tinyint(1) DEFAULT '0' NOT NULL,
+        status tinyint DEFAULT '0' NOT NULL,
+        weight tinyint DEFAULT '0' NOT NULL,
         region varchar(64) DEFAULT 'left' NOT NULL,
-        custom tinyint(2) DEFAULT '0' NOT NULL,
-        throttle tinyint(1) DEFAULT '0' NOT NULL,
-        visibility tinyint(1) DEFAULT '0' NOT NULL,
+        custom tinyint DEFAULT '0' NOT NULL,
+        throttle tinyint DEFAULT '0' NOT NULL,
+        visibility tinyint DEFAULT '0' NOT NULL,
         pages text DEFAULT '' NOT NULL
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {boxes} (
-        bid tinyint(4) NOT NULL auto_increment,
+        bid tinyint NOT NULL auto_increment,
         title varchar(64) NOT NULL default '',
         body longtext,
         info varchar(128) NOT NULL default '',
-        format int(4) NOT NULL default '0',
+        format int NOT NULL default '0',
         PRIMARY KEY (bid),
         UNIQUE KEY info (info)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
@@ -48,25 +48,25 @@ function system_install() {
       db_query("CREATE TABLE {cache} (
         cid varchar(255) NOT NULL default '',
         data longblob,
-        expire int(11) NOT NULL default '0',
-        created int(11) NOT NULL default '0',
+        expire int NOT NULL default '0',
+        created int NOT NULL default '0',
         headers text,
         PRIMARY KEY (cid),
         INDEX expire (expire)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {comments} (
-        cid int(10) NOT NULL auto_increment,
-        pid int(10) NOT NULL default '0',
-        nid int(10) NOT NULL default '0',
-        uid int(10) NOT NULL default '0',
+        cid int NOT NULL auto_increment,
+        pid int NOT NULL default '0',
+        nid int NOT NULL default '0',
+        uid int NOT NULL default '0',
         subject varchar(64) NOT NULL default '',
         comment longtext NOT NULL,
         hostname varchar(128) NOT NULL default '',
-        timestamp int(11) NOT NULL default '0',
-        score mediumint(9) NOT NULL default '0',
-        status tinyint(3) unsigned NOT NULL default '0',
-        format int(4) NOT NULL default '0',
+        timestamp int NOT NULL default '0',
+        score mediumint NOT NULL default '0',
+        status tinyint unsigned NOT NULL default '0',
+        format int NOT NULL default '0',
         thread varchar(255) NOT NULL,
         users longtext,
         name varchar(60) default NULL,
@@ -77,88 +77,88 @@ function system_install() {
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {node_comment_statistics} (
-        nid int(10) unsigned NOT NULL auto_increment,
-        last_comment_timestamp int(11) NOT NULL default '0',
+        nid int unsigned NOT NULL auto_increment,
+        last_comment_timestamp int NOT NULL default '0',
         last_comment_name varchar(60) default NULL,
-        last_comment_uid int(10) NOT NULL default '0',
-        comment_count int(10) unsigned NOT NULL default '0',
+        last_comment_uid int NOT NULL default '0',
+        comment_count int unsigned NOT NULL default '0',
         PRIMARY KEY (nid),
         KEY node_comment_timestamp (last_comment_timestamp)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {files} (
-        fid int(10) unsigned NOT NULL default 0,
-        nid int(10) unsigned NOT NULL default 0,
+        fid int unsigned NOT NULL default 0,
+        nid int unsigned NOT NULL default 0,
         filename varchar(255) NOT NULL default '',
         filepath varchar(255) NOT NULL default '',
         filemime varchar(255) NOT NULL default '',
-        filesize int(10) unsigned NOT NULL default 0,
+        filesize int unsigned NOT NULL default 0,
         PRIMARY KEY (fid)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {file_revisions} (
-        fid int(10) unsigned NOT NULL default 0,
-        vid int(10) unsigned NOT NULL default 0,
+        fid int unsigned NOT NULL default 0,
+        vid int unsigned NOT NULL default 0,
         description varchar(255) NOT NULL default '',
-        list tinyint(1) unsigned NOT NULL default 0,
+        list tinyint unsigned NOT NULL default 0,
         PRIMARY KEY (fid, vid)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {filter_formats} (
-        format int(4) NOT NULL auto_increment,
+        format int NOT NULL auto_increment,
         name varchar(255) NOT NULL default '',
         roles varchar(255) NOT NULL default '',
-        cache tinyint(2) NOT NULL default '0',
+        cache tinyint NOT NULL default '0',
         PRIMARY KEY (format),
         UNIQUE KEY (name)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {filters} (
-        format int(4) NOT NULL default '0',
+        format int NOT NULL default '0',
         module varchar(64) NOT NULL default '',
-        delta tinyint(2) DEFAULT '0' NOT NULL,
-        weight tinyint(2) DEFAULT '0' NOT NULL,
+        delta tinyint DEFAULT '0' NOT NULL,
+        weight tinyint DEFAULT '0' NOT NULL,
         INDEX (weight)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {flood} (
         event varchar(64) NOT NULL default '',
         hostname varchar(128) NOT NULL default '',
-        timestamp int(11) NOT NULL default '0'
+        timestamp int NOT NULL default '0'
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {history} (
-        uid int(10) NOT NULL default '0',
-        nid int(10) NOT NULL default '0',
-        timestamp int(11) NOT NULL default '0',
+        uid int NOT NULL default '0',
+        nid int NOT NULL default '0',
+        timestamp int NOT NULL default '0',
         PRIMARY KEY (uid,nid)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {menu} (
-        mid int(10) unsigned NOT NULL default '0',
-        pid int(10) unsigned NOT NULL default '0',
+        mid int unsigned NOT NULL default '0',
+        pid int unsigned NOT NULL default '0',
         path varchar(255) NOT NULL default '',
         title varchar(255) NOT NULL default '',
         description varchar(255) NOT NULL default '',
-        weight tinyint(4) NOT NULL default '0',
-        type int(2) unsigned NOT NULL default '0',
+        weight tinyint NOT NULL default '0',
+        type int unsigned NOT NULL default '0',
         PRIMARY KEY (mid)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
 
       db_query("CREATE TABLE {node} (
-        nid int(10) unsigned NOT NULL auto_increment,
-        vid int(10) unsigned NOT NULL default '0',
+        nid int unsigned NOT NULL auto_increment,
+        vid int unsigned NOT NULL default '0',
         type varchar(32) NOT NULL default '',
         title varchar(128) NOT NULL default '',
-        uid int(10) NOT NULL default '0',
-        status int(4) NOT NULL default '1',
-        created int(11) NOT NULL default '0',
-        changed int(11) NOT NULL default '0',
-        comment int(2) NOT NULL default '0',
-        promote int(2) NOT NULL default '0',
-        moderate int(2) NOT NULL default '0',
-        sticky int(2) NOT NULL default '0',
+        uid int NOT NULL default '0',
+        status int NOT NULL default '1',
+        created int NOT NULL default '0',
+        changed int NOT NULL default '0',
+        comment int NOT NULL default '0',
+        promote int NOT NULL default '0',
+        moderate int NOT NULL default '0',
+        sticky int NOT NULL default '0',
         PRIMARY KEY  (nid, vid),
         UNIQUE KEY vid (vid),
         KEY node_type (type(4)),
@@ -174,25 +174,25 @@ function system_install() {
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {node_access} (
-        nid int(10) unsigned NOT NULL default '0',
-        gid int(10) unsigned NOT NULL default '0',
+        nid int unsigned NOT NULL default '0',
+        gid int unsigned NOT NULL default '0',
         realm varchar(255) NOT NULL default '',
-        grant_view tinyint(1) unsigned NOT NULL default '0',
-        grant_update tinyint(1) unsigned NOT NULL default '0',
-        grant_delete tinyint(1) unsigned NOT NULL default '0',
+        grant_view tinyint unsigned NOT NULL default '0',
+        grant_update tinyint unsigned NOT NULL default '0',
+        grant_delete tinyint unsigned NOT NULL default '0',
         PRIMARY KEY (nid,gid,realm)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {node_revisions} (
-        nid int(10) unsigned NOT NULL,
-        vid int(10) unsigned NOT NULL,
-        uid int(10) NOT NULL default '0',
+        nid int unsigned NOT NULL,
+        vid int unsigned NOT NULL,
+        uid int NOT NULL default '0',
         title varchar(128) NOT NULL default '',
         body longtext NOT NULL default '',
         teaser longtext NOT NULL default '',
         log longtext NOT NULL default '',
-        timestamp int(11) NOT NULL default '0',
-        format int(4) NOT NULL default '0',
+        timestamp int NOT NULL default '0',
+        format int NOT NULL default '0',
         PRIMARY KEY  (vid),
         KEY nid (nid),
         KEY uid (uid)
@@ -204,20 +204,20 @@ function system_install() {
         module varchar(255) NOT NULL,
         description mediumtext NOT NULL,
         help mediumtext NOT NULL,
-        has_title tinyint(3) unsigned NOT NULL,
+        has_title tinyint unsigned NOT NULL,
         title_label varchar(255) NOT NULL default '',
-        has_body tinyint(3) unsigned NOT NULL,
+        has_body tinyint unsigned NOT NULL,
         body_label varchar(255) NOT NULL default '',
-        min_word_count smallint(4) unsigned NOT NULL,
-        custom tinyint(1) NOT NULL DEFAULT '0',
-        modified tinyint(1) NOT NULL DEFAULT '0',
-        locked tinyint(1) NOT NULL DEFAULT '0',
+        min_word_count smallint unsigned NOT NULL,
+        custom tinyint NOT NULL DEFAULT '0',
+        modified tinyint NOT NULL DEFAULT '0',
+        locked tinyint NOT NULL DEFAULT '0',
         orig_type varchar(255) NOT NULL default '',
         PRIMARY KEY (type)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {url_alias} (
-        pid int(10) unsigned NOT NULL auto_increment,
+        pid int unsigned NOT NULL auto_increment,
         src varchar(128) NOT NULL default '',
         dst varchar(128) NOT NULL default '',
         PRIMARY KEY (pid),
@@ -226,14 +226,14 @@ function system_install() {
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {permission} (
-        rid int(10) unsigned NOT NULL default '0',
+        rid int unsigned NOT NULL default '0',
         perm longtext,
-        tid int(10) unsigned NOT NULL default '0',
+        tid int unsigned NOT NULL default '0',
         KEY rid (rid)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {role} (
-        rid int(10) unsigned NOT NULL auto_increment,
+        rid int unsigned NOT NULL auto_increment,
         name varchar(32) NOT NULL default '',
         PRIMARY KEY (rid),
         UNIQUE KEY name (name)
@@ -242,16 +242,16 @@ function system_install() {
       db_query("CREATE TABLE {blocks_roles} (
         module varchar(64) NOT NULL,
         delta varchar(32) NOT NULL,
-        rid int(10) unsigned NOT NULL,
+        rid int unsigned NOT NULL,
         PRIMARY KEY (module, delta, rid)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {sessions} (
-        uid int(10) unsigned NOT NULL,
+        uid int unsigned NOT NULL,
         sid varchar(32) NOT NULL default '',
         hostname varchar(128) NOT NULL default '',
-        timestamp int(11) NOT NULL default '0',
-        cache int(11) NOT NULL default '0',
+        timestamp int NOT NULL default '0',
+        cache int NOT NULL default '0',
         session longtext,
         KEY uid (uid),
         PRIMARY KEY (sid),
@@ -260,15 +260,15 @@ function system_install() {
 
       db_query("CREATE TABLE {sequences} (
         name varchar(255) NOT NULL default '',
-        id int(10) unsigned NOT NULL default '0',
+        id int unsigned NOT NULL default '0',
         PRIMARY KEY (name)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {node_counter} (
-        nid int(10) NOT NULL default '0',
-        totalcount bigint(20) unsigned NOT NULL default '0',
-        daycount mediumint(8) unsigned NOT NULL default '0',
-        timestamp int(11) unsigned NOT NULL default '0',
+        nid int NOT NULL default '0',
+        totalcount bigint unsigned NOT NULL default '0',
+        daycount mediumint unsigned NOT NULL default '0',
+        timestamp int unsigned NOT NULL default '0',
         PRIMARY KEY (nid),
         KEY totalcount (totalcount),
         KEY daycount (daycount),
@@ -280,69 +280,69 @@ function system_install() {
         name varchar(255) NOT NULL default '',
         type varchar(255) NOT NULL default '',
         description varchar(255) NOT NULL default '',
-        status int(2) NOT NULL default '0',
-        throttle tinyint(1) DEFAULT '0' NOT NULL,
-        bootstrap int(2) NOT NULL default '0',
-        schema_version smallint(3) NOT NULL default -1,
-        weight int(2) NOT NULL default '0',
+        status int NOT NULL default '0',
+        throttle tinyint DEFAULT '0' NOT NULL,
+        bootstrap int NOT NULL default '0',
+        schema_version smallint NOT NULL default -1,
+        weight int NOT NULL default '0',
         PRIMARY KEY (filename),
         KEY (weight)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {term_data} (
-        tid int(10) unsigned NOT NULL auto_increment,
-        vid int(10) unsigned NOT NULL default '0',
+        tid int unsigned NOT NULL auto_increment,
+        vid int unsigned NOT NULL default '0',
         name varchar(255) NOT NULL default '',
         description longtext,
-        weight tinyint(4) NOT NULL default '0',
+        weight tinyint NOT NULL default '0',
         PRIMARY KEY (tid),
         KEY vid (vid)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {term_hierarchy} (
-        tid int(10) unsigned NOT NULL default '0',
-        parent int(10) unsigned NOT NULL default '0',
+        tid int unsigned NOT NULL default '0',
+        parent int unsigned NOT NULL default '0',
         KEY tid (tid),
         KEY parent (parent),
         PRIMARY KEY (tid, parent)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {term_node} (
-        nid int(10) unsigned NOT NULL default '0',
-        tid int(10) unsigned NOT NULL default '0',
+        nid int unsigned NOT NULL default '0',
+        tid int unsigned NOT NULL default '0',
         KEY nid (nid),
         KEY tid (tid),
         PRIMARY KEY (tid,nid)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {term_relation} (
-        tid1 int(10) unsigned NOT NULL default '0',
-        tid2 int(10) unsigned NOT NULL default '0',
+        tid1 int unsigned NOT NULL default '0',
+        tid2 int unsigned NOT NULL default '0',
         KEY tid1 (tid1),
         KEY tid2 (tid2)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {term_synonym} (
-        tid int(10) unsigned NOT NULL default '0',
+        tid int unsigned NOT NULL default '0',
         name varchar(255) NOT NULL default '',
         KEY tid (tid),
         KEY name (name(3))
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {users} (
-        uid int(10) unsigned NOT NULL default '0',
+        uid int unsigned NOT NULL default '0',
         name varchar(60) NOT NULL default '',
         pass varchar(32) NOT NULL default '',
         mail varchar(64) default '',
-        mode tinyint(1) NOT NULL default '0',
-        sort tinyint(1) default '0',
-        threshold tinyint(1) default '0',
+        mode tinyint NOT NULL default '0',
+        sort tinyint default '0',
+        threshold tinyint default '0',
         theme varchar(255) NOT NULL default '',
         signature varchar(255) NOT NULL default '',
-        created int(11) NOT NULL default '0',
-        access int(11) NOT NULL default '0',
-        login int(11) NOT NULL default '0',
-        status tinyint(4) NOT NULL default '0',
+        created int NOT NULL default '0',
+        access int NOT NULL default '0',
+        login int NOT NULL default '0',
+        status tinyint NOT NULL default '0',
         timezone varchar(8) default NULL,
         language varchar(12) NOT NULL default '',
         picture varchar(255) NOT NULL DEFAULT '',
@@ -354,8 +354,8 @@ function system_install() {
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {users_roles} (
-        uid int(10) unsigned NOT NULL default '0',
-        rid int(10) unsigned NOT NULL default '0',
+        uid int unsigned NOT NULL default '0',
+        rid int unsigned NOT NULL default '0',
         PRIMARY KEY (uid, rid)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
@@ -366,37 +366,37 @@ function system_install() {
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {vocabulary} (
-        vid int(10) unsigned NOT NULL auto_increment,
+        vid int unsigned NOT NULL auto_increment,
         name varchar(255) NOT NULL default '',
         description longtext,
         help varchar(255) NOT NULL default '',
-        relations tinyint(3) unsigned NOT NULL default '0',
-        hierarchy tinyint(3) unsigned NOT NULL default '0',
-        multiple tinyint(3) unsigned NOT NULL default '0',
-        required tinyint(3) unsigned NOT NULL default '0',
-        tags tinyint(3) unsigned NOT NULL default '0',
+        relations tinyint unsigned NOT NULL default '0',
+        hierarchy tinyint unsigned NOT NULL default '0',
+        multiple tinyint unsigned NOT NULL default '0',
+        required tinyint unsigned NOT NULL default '0',
+        tags tinyint unsigned NOT NULL default '0',
         module varchar(255) NOT NULL default '',
-        weight tinyint(4) NOT NULL default '0',
+        weight tinyint NOT NULL default '0',
         PRIMARY KEY (vid)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {vocabulary_node_types} (
-        vid int(10) unsigned NOT NULL DEFAULT '0',
+        vid int unsigned NOT NULL DEFAULT '0',
         type varchar(32) NOT NULL DEFAULT '',
         PRIMARY KEY (vid, type)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {watchdog} (
-        wid int(5) NOT NULL auto_increment,
-        uid int(10) NOT NULL default '0',
+        wid int NOT NULL auto_increment,
+        uid int NOT NULL default '0',
         type varchar(16) NOT NULL default '',
         message longtext NOT NULL,
-        severity tinyint(3) unsigned NOT NULL default '0',
+        severity tinyint unsigned NOT NULL default '0',
         link varchar(255) NOT NULL default '',
         location varchar(128) NOT NULL default '',
         referer varchar(128) NOT NULL default '',
         hostname varchar(128) NOT NULL default '',
-        timestamp int(11) NOT NULL default '0',
+        timestamp int NOT NULL default '0',
         PRIMARY KEY (wid)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
@@ -856,11 +856,11 @@ function system_update_110() {
     $ret[] = update_sql('DROP TABLE {search_index}');
     $ret[] = update_sql("CREATE TABLE {search_index} (
       word varchar(50) NOT NULL default '',
-      sid int(10) unsigned NOT NULL default '0',
+      sid int unsigned NOT NULL default '0',
       type varchar(16) default NULL,
-      fromsid int(10) unsigned NOT NULL default '0',
+      fromsid int unsigned NOT NULL default '0',
       fromtype varchar(16) default NULL,
-      score int(10) unsigned default NULL,
+      score int unsigned default NULL,
       KEY sid (sid),
       KEY fromsid (fromsid),
       KEY word (word)
@@ -868,7 +868,7 @@ function system_update_110() {
 
     $ret[] = update_sql("CREATE TABLE {search_total} (
       word varchar(50) NOT NULL default '',
-      count int(10) unsigned default NULL,
+      count int unsigned default NULL,
       PRIMARY KEY word (word)
       )");
 
@@ -878,7 +878,7 @@ function system_update_110() {
     */
 
     $ret[] = update_sql('ALTER TABLE {blocks} DROP path');
-    $ret[] = update_sql('ALTER TABLE {blocks} ADD visibility tinyint(1) NOT NULL');
+    $ret[] = update_sql('ALTER TABLE {blocks} ADD visibility tinyint NOT NULL');
     $ret[] = update_sql('ALTER TABLE {blocks} ADD pages text NOT NULL');
   }
   elseif ($GLOBALS['db_type'] == 'pgsql') {
@@ -950,7 +950,7 @@ function system_update_112() {
     $ret[] = update_sql("CREATE TABLE {flood} (
       event varchar(64) NOT NULL default '',
       hostname varchar(128) NOT NULL default '',
-      timestamp int(11) NOT NULL default '0'
+      timestamp int NOT NULL default '0'
      );");
   }
   elseif ($GLOBALS['db_type'] == 'pgsql') {
@@ -968,7 +968,7 @@ function system_update_113() {
   $ret = array();
 
   if ($GLOBALS['db_type'] == 'mysql') {
-    $ret[] = update_sql('ALTER TABLE {accesslog} ADD aid int(10) NOT NULL auto_increment, ADD PRIMARY KEY (aid)');
+    $ret[] = update_sql('ALTER TABLE {accesslog} ADD aid int NOT NULL auto_increment, ADD PRIMARY KEY (aid)');
   }
   elseif ($GLOBALS['db_type'] == 'pgsql') {
     $ret[] = update_sql("SELECT * INTO TEMPORARY {accesslog}_t FROM {accesslog}");
@@ -999,9 +999,9 @@ function system_update_114() {
   $ret = array();
   if ($GLOBALS['db_type'] == 'mysql') {
     $ret[] = update_sql("CREATE TABLE {queue} (
-      nid int(10) unsigned NOT NULL,
-      uid int(10) unsigned NOT NULL,
-      vote int(3) NOT NULL default '0',
+      nid int unsigned NOT NULL,
+      uid int unsigned NOT NULL,
+      vote int NOT NULL default '0',
       PRIMARY KEY (nid, uid)
      )");
   }
@@ -1066,7 +1066,7 @@ function system_update_117() {
   $ret = array();
   if ($GLOBALS['db_type'] == 'mysql') {
     $ret[] = update_sql("CREATE TABLE {vocabulary_node_types} (
-                         vid int(10) NOT NULL default '0',
+                         vid int NOT NULL default '0',
                          type varchar(16) NOT NULL default '',
                          PRIMARY KEY (vid, type))");
   }
@@ -1191,11 +1191,11 @@ function system_update_124() {
     $ret[] = update_sql("DROP TABLE IF EXISTS {node_comment_statistics}");
 
     $ret[] = update_sql("CREATE TABLE {node_comment_statistics} (
-      nid int(10) unsigned NOT NULL auto_increment,
-      last_comment_timestamp int(11) NOT NULL default '0',
+      nid int unsigned NOT NULL auto_increment,
+      last_comment_timestamp int NOT NULL default '0',
       last_comment_name varchar(60) default NULL,
-      last_comment_uid int(10) NOT NULL default '0',
-      comment_count int(10) unsigned NOT NULL default '0',
+      last_comment_uid int NOT NULL default '0',
+      comment_count int unsigned NOT NULL default '0',
       PRIMARY KEY (nid),
       KEY node_comment_timestamp (last_comment_timestamp)
       )");
@@ -1286,7 +1286,7 @@ function system_update_129() {
   $ret = array();
 
   if ($GLOBALS['db_type'] == 'mysql') {
-    $ret[] = update_sql("ALTER TABLE {vocabulary} ADD tags tinyint(3) unsigned default '0' NOT NULL");
+    $ret[] = update_sql("ALTER TABLE {vocabulary} ADD tags tinyint unsigned default '0' NOT NULL");
   }
   elseif ($GLOBALS['db_type'] == 'pgsql') {
     db_add_column($ret, 'vocabulary', 'tags', 'smallint', array('default' => 0, 'not null' => TRUE));
@@ -1354,7 +1354,7 @@ function system_update_133() {
       recipients longtext NOT NULL default '',
       reply longtext NOT NULL default ''
       )");
-    $ret[] = update_sql("ALTER TABLE {users} ADD login int(11) NOT NULL default '0'");
+    $ret[] = update_sql("ALTER TABLE {users} ADD login int NOT NULL default '0'");
   }
   elseif ($GLOBALS['db_type'] == 'pgsql') {
     // Table {contact} is changed in update_143() so I have moved it's creation there.
@@ -1396,7 +1396,7 @@ function system_update_136() {
       break;
     case 'mysql':
     case 'mysqli':
-      $ret[] = update_sql("ALTER TABLE {users} CHANGE COLUMN changed access int(11) NOT NULL default '0'");
+      $ret[] = update_sql("ALTER TABLE {users} CHANGE COLUMN changed access int NOT NULL default '0'");
       break;
   }
 
@@ -1436,7 +1436,7 @@ function system_update_139() {
       break;
     case 'mysql':
     case 'mysqli':
-      $ret[] = update_sql("ALTER TABLE {accesslog} ADD timer int(10) unsigned NOT NULL default '0'");
+      $ret[] = update_sql("ALTER TABLE {accesslog} ADD timer int unsigned NOT NULL default '0'");
       break;
   }
 
@@ -1555,13 +1555,13 @@ function system_update_146() {
                                 SELECT nid, nid AS vid, uid, type, title, body, teaser, changed AS timestamp, format
                                 FROM {node}");
 
-    $ret[] = update_sql("ALTER TABLE {node_revisions} CHANGE nid nid int(10) unsigned NOT NULL default '0'");
+    $ret[] = update_sql("ALTER TABLE {node_revisions} CHANGE nid nid int unsigned NOT NULL default '0'");
     $ret[] = update_sql("ALTER TABLE {node_revisions} ADD log longtext");
 
-    $ret[] = update_sql("ALTER TABLE {node} ADD vid int(10) unsigned NOT NULL default '0'");
-    $ret[] = update_sql("ALTER TABLE {files} ADD vid int(10) unsigned NOT NULL default '0'");
-    $ret[] = update_sql("ALTER TABLE {book} ADD vid int(10) unsigned NOT NULL default '0'");
-    $ret[] = update_sql("ALTER TABLE {forum} ADD vid int(10) unsigned NOT NULL default '0'");
+    $ret[] = update_sql("ALTER TABLE {node} ADD vid int unsigned NOT NULL default '0'");
+    $ret[] = update_sql("ALTER TABLE {files} ADD vid int unsigned NOT NULL default '0'");
+    $ret[] = update_sql("ALTER TABLE {book} ADD vid int unsigned NOT NULL default '0'");
+    $ret[] = update_sql("ALTER TABLE {forum} ADD vid int unsigned NOT NULL default '0'");
 
     $ret[] = update_sql("ALTER TABLE {book} DROP PRIMARY KEY");
     $ret[] = update_sql("ALTER TABLE {forum} DROP PRIMARY KEY");
@@ -1709,7 +1709,7 @@ function system_update_150() {
     case 'mysqli':
     case 'mysql':
       $ret[] = update_sql("CREATE TABLE {search_dataset} (
-                           sid int(10) unsigned NOT NULL default '0',
+                           sid int unsigned NOT NULL default '0',
                            type varchar(16) default NULL,
                            data longtext NOT NULL,
                            KEY sid_type (sid, type)
@@ -1717,9 +1717,9 @@ function system_update_150() {
 
       $ret[] = update_sql("CREATE TABLE {search_index} (
                            word varchar(50) NOT NULL default '',
-                           sid int(10) unsigned NOT NULL default '0',
+                           sid int unsigned NOT NULL default '0',
                            type varchar(16) default NULL,
-                           fromsid int(10) unsigned NOT NULL default '0',
+                           fromsid int unsigned NOT NULL default '0',
                            fromtype varchar(16) default NULL,
                            score float default NULL,
                            KEY sid_type (sid, type),
@@ -1891,7 +1891,7 @@ function system_update_153(){
     case 'mysql':
     case 'mysqli':
       $ret[] = update_sql("ALTER TABLE {contact} DROP PRIMARY KEY");
-      $ret[] = update_sql("ALTER TABLE {contact} ADD COLUMN cid int(11) NOT NULL PRIMARY KEY auto_increment");
+      $ret[] = update_sql("ALTER TABLE {contact} ADD COLUMN cid int NOT NULL PRIMARY KEY auto_increment");
       $ret[] = update_sql("ALTER TABLE {contact} ADD UNIQUE KEY category (category)");
       break;
   }
@@ -1907,8 +1907,8 @@ function system_update_154() {
       break;
     case 'mysql':
     case 'mysqli':
-      $ret[] = update_sql("ALTER TABLE {contact} ADD COLUMN weight tinyint(3) NOT NULL DEFAULT 0");
-      $ret[] = update_sql("ALTER TABLE {contact} ADD COLUMN selected tinyint(1) NOT NULL DEFAULT 0");
+      $ret[] = update_sql("ALTER TABLE {contact} ADD COLUMN weight tinyint NOT NULL DEFAULT 0");
+      $ret[] = update_sql("ALTER TABLE {contact} ADD COLUMN selected tinyint NOT NULL DEFAULT 0");
       break;
   }
   return $ret;
@@ -1959,7 +1959,7 @@ function system_update_158() {
   switch ($GLOBALS['db_type']) {
     case 'mysqli':
     case 'mysql':
-      $ret[] = update_sql("ALTER TABLE {old_revisions} ADD done tinyint(1) NOT NULL DEFAULT 0");
+      $ret[] = update_sql("ALTER TABLE {old_revisions} ADD done tinyint NOT NULL DEFAULT 0");
       $ret[] = update_sql("ALTER TABLE {old_revisions} ADD INDEX (done)");
       break;
 
@@ -2164,8 +2164,8 @@ function system_update_164() {
     case 'mysql':
     case 'mysqli':
       $ret[] = update_sql("CREATE TABLE {poll_votes} (
-          nid int(10) unsigned NOT NULL,
-          uid int(10) unsigned NOT NULL default 0,
+          nid int unsigned NOT NULL,
+          uid int unsigned NOT NULL default 0,
           hostname varchar(128) NOT NULL default '',
           INDEX (nid),
           INDEX (uid),
@@ -2220,21 +2220,21 @@ function system_update_166() {
     case 'mysqli':
     case 'mysql':
       $ret[] = update_sql("CREATE TABLE {client} (
-        cid int(10) unsigned NOT NULL auto_increment,
+        cid int unsigned NOT NULL auto_increment,
         link varchar(255) NOT NULL default '',
         name varchar(128) NOT NULL default '',
         mail varchar(128) NOT NULL default '',
         slogan longtext NOT NULL,
         mission longtext NOT NULL,
-        users int(10) NOT NULL default '0',
-        nodes int(10) NOT NULL default '0',
+        users int NOT NULL default '0',
+        nodes int NOT NULL default '0',
         version varchar(35) NOT NULL default'',
-        created int(11) NOT NULL default '0',
-        changed int(11) NOT NULL default '0',
+        created int NOT NULL default '0',
+        changed int NOT NULL default '0',
         PRIMARY KEY (cid)
       )");
       $ret[] = update_sql("CREATE TABLE {client_system} (
-        cid int(10) NOT NULL default '0',
+        cid int NOT NULL default '0',
         name varchar(255) NOT NULL default '',
         type varchar(255) NOT NULL default '',
         PRIMARY KEY (cid,name)
@@ -2387,7 +2387,7 @@ function system_update_170() {
 
       case 'mysql':
       case 'mysqli':
-        db_query('ALTER TABLE {system} CHANGE schema_version schema_version smallint(3) not null default -1');
+        db_query('ALTER TABLE {system} CHANGE schema_version schema_version smallint not null default -1');
         break;
     }
     // Set schema version -1 (uninstalled) for disabled modules (only affects contrib).
@@ -2489,10 +2489,10 @@ function system_update_173() {
     case 'mysql':
       // create file_revisions table
       $ret[] = update_sql("CREATE TABLE {file_revisions} (
-        fid int(10) unsigned NOT NULL default 0,
-        vid int(10) unsigned NOT NULL default 0,
+        fid int unsigned NOT NULL default 0,
+        vid int unsigned NOT NULL default 0,
         description varchar(255) NOT NULL default '',
-        list tinyint(1) unsigned NOT NULL default 0,
+        list tinyint unsigned NOT NULL default 0,
         PRIMARY KEY (fid, vid)
         ) /*!40100 DEFAULT CHARACTER SET utf8 */");
 
@@ -2504,12 +2504,12 @@ function system_update_173() {
       }
 
       $ret[] = update_sql("CREATE TABLE {files} (
-        fid int(10) unsigned NOT NULL default 0,
-        nid int(10) unsigned NOT NULL default 0,
+        fid int unsigned NOT NULL default 0,
+        nid int unsigned NOT NULL default 0,
         filename varchar(255) NOT NULL default '',
         filepath varchar(255) NOT NULL default '',
         filemime varchar(255) NOT NULL default '',
-        filesize int(10) unsigned NOT NULL default 0,
+        filesize int unsigned NOT NULL default 0,
         PRIMARY KEY (fid)
         ) /*!40100 DEFAULT CHARACTER SET utf8 */");
       $result = update_sql("INSERT INTO {files} SELECT DISTINCT fid, nid, filename, filepath, filemime, filesize FROM {files_tmp}");
@@ -2816,7 +2816,7 @@ function system_update_180() {
       $ret[] = update_sql("ALTER TABLE {node} ADD UNIQUE (vid)");
       $ret[] = update_sql("ALTER TABLE {node} ADD INDEX (nid)");
 
-      $ret[] = update_sql("ALTER TABLE {node_counter} CHANGE nid nid INT(10) NOT NULL DEFAULT '0'");
+      $ret[] = update_sql("ALTER TABLE {node_counter} CHANGE nid nid int NOT NULL DEFAULT '0'");
       break;
     case 'pgsql':
       $ret[] = update_sql("ALTER TABLE {node} DROP CONSTRAINT {node}_pkey"); // Change PK
@@ -2835,7 +2835,7 @@ function system_update_181() {
   switch ($GLOBALS['db_type']) {
     case 'mysql':
     case 'mysqli':
-      $ret[] = update_sql("ALTER TABLE {profile_fields} ADD autocomplete TINYINT(1) NOT NULL AFTER visibility ;");
+      $ret[] = update_sql("ALTER TABLE {profile_fields} ADD autocomplete TINYint NOT NULL AFTER visibility ;");
       break;
     case 'pgsql':
       db_add_column($ret, 'profile_fields', 'autocomplete', 'smallint', array('not null' => TRUE, 'default' => 0));
@@ -2871,7 +2871,7 @@ function system_update_1000() {
     $ret[] = update_sql("CREATE TABLE {blocks_roles} (
       module varchar(64) NOT NULL,
       delta varchar(32) NOT NULL,
-      rid int(10) unsigned NOT NULL,
+      rid int unsigned NOT NULL,
       PRIMARY KEY (module, delta, rid)
       ) /*!40100 DEFAULT CHARACTER SET utf8 */;");
     break;
@@ -2897,7 +2897,7 @@ function system_update_1001() {
     case 'mysqli':
     case 'mysql':
       // alter poll_votes table
-      $ret[] = update_sql("ALTER TABLE {poll_votes} ADD COLUMN chorder int(10) NOT NULL default -1 AFTER uid");
+      $ret[] = update_sql("ALTER TABLE {poll_votes} ADD COLUMN chorder int NOT NULL default -1 AFTER uid");
       break;
 
     case 'pgsql':
@@ -2965,14 +2965,14 @@ function system_update_1005() {
         module varchar(255) NOT NULL,
         description mediumtext NOT NULL,
         help mediumtext NOT NULL,
-        has_title tinyint(3) unsigned NOT NULL,
+        has_title tinyint unsigned NOT NULL,
         title_label varchar(255) NOT NULL default '',
-        has_body tinyint(3) unsigned NOT NULL,
+        has_body tinyint unsigned NOT NULL,
         body_label varchar(255) NOT NULL default '',
-        min_word_count smallint(4) unsigned NOT NULL,
-        custom tinyint(1) NOT NULL DEFAULT '0',
-        modified tinyint(1) NOT NULL DEFAULT '0',
-        locked tinyint(1) NOT NULL DEFAULT '0',
+        min_word_count smallint unsigned NOT NULL,
+        custom tinyint NOT NULL DEFAULT '0',
+        modified tinyint NOT NULL DEFAULT '0',
+        locked tinyint NOT NULL DEFAULT '0',
         orig_type varchar(255) NOT NULL default '',
         PRIMARY KEY (type)
         ) /*!40100 DEFAULT CHARACTER SET utf8 */;");

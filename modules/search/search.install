@@ -1,12 +1,12 @@
 <?php
-// $Id: search.install,v 1.4 2006/08/15 05:25:20 drumm Exp $
+// $Id: search.install,v 1.5 2006/08/20 06:38:50 dries Exp $
 
 function search_install() {
   switch ($GLOBALS['db_type']) {
     case 'mysql':
     case 'mysqli':
       db_query("CREATE TABLE {search_dataset} (
-        sid int(10) unsigned NOT NULL default '0',
+        sid int unsigned NOT NULL default '0',
         type varchar(16) default NULL,
         data longtext NOT NULL,
         KEY sid_type (sid, type)
@@ -14,9 +14,9 @@ function search_install() {
 
       db_query("CREATE TABLE {search_index} (
         word varchar(50) NOT NULL default '',
-        sid int(10) unsigned NOT NULL default '0',
+        sid int unsigned NOT NULL default '0',
         type varchar(16) default NULL,
-        fromsid int(10) unsigned NOT NULL default '0',
+        fromsid int unsigned NOT NULL default '0',
         fromtype varchar(16) default NULL,
         score float default NULL,
         KEY sid_type (sid, type),

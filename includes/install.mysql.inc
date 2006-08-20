@@ -1,5 +1,5 @@
 <?php
-// $Id: install.mysql.inc,v 1.2 2006/07/14 01:05:09 drumm Exp $
+// $Id: install.mysql.inc,v 1.3 2006/08/20 06:38:50 dries Exp $
 
 // MySQL specific install functions
 
@@ -54,7 +54,7 @@ function drupal_test_mysql($url, &$success) {
   $success = array('CONNECT');
 
   // Test CREATE.
-  $query = 'CREATE TABLE drupal_install_test (id int(1) NULL)';
+  $query = 'CREATE TABLE drupal_install_test (id int NULL)';
   $result = mysql_query($query);
   if ($error = mysql_error()) {
     drupal_set_message(st('We were unable to create a test table on your MySQL database server with the command %query. MySQL reports the following message: %error.<ul><li>Are you sure the configured username has the necessary MySQL permissions to create tables in the database?</li></ul>For more help, see the <a href="http://drupal.org/node/258">Installation and upgrading handbook</a>. If you are unsure what these terms mean you should probably contact your hosting provider.', array('%query' => $query, '%error' => $error)), 'error');
