@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.679 2006/08/20 07:07:17 dries Exp $
+// $Id: node.module,v 1.680 2006/08/20 19:02:26 dries Exp $
 
 /**
  * @file
@@ -2419,7 +2419,7 @@ function node_form_alter($form_id, &$form) {
     }
 
     // Node types:
-    $types = node_get_types();
+    $types = node_get_types('names');
     $form['advanced']['type'] = array(
       '#type' => 'checkboxes',
       '#title' => t('Only of the type(s)'),
