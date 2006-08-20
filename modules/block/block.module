@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.217 2006/08/20 05:57:40 unconed Exp $
+// $Id: block.module,v 1.218 2006/08/20 06:49:15 dries Exp $
 
 /**
  * @file
@@ -163,7 +163,7 @@ function _block_rehash() {
     $old_blocks[$old_block->module][$old_block->delta] = $old_block;
   }
 
-  db_query("DELETE FROM {blocks} WHERE theme = '%s'", $theme_key);
+  $blocks = array();
 
   foreach (module_list() as $module) {
     $module_blocks = module_invoke($module, 'block', 'list');
@@ -191,13 +191,20 @@ function _block_rehash() {
           }
         }
 
-        // Reinsert blocks into table
-        db_query("INSERT INTO {blocks} (module, delta, theme, status, weight, region, visibility, pages, custom, throttle) VALUES ('%s', '%s', '%s', %d, %d, '%s', %d, '%s', %d, %d)",
-          $block['module'], $block['delta'], $theme_key, $block['status'], $block['weight'], $block['region'], $block['visibility'], $block['pages'], $block['custom'], $block['throttle']);
         $blocks[] = $block;
       }
     }
   }
+
+  db_lock_table('blocks');
+  // Remove all blocks from table.
+  db_query("DELETE FROM {blocks} WHERE theme = '%s'", $theme_key);
+
+  // Reinsert new set of blocks into table.
+  foreach ($blocks as $block) {
+    db_query("INSERT INTO {blocks} (module, delta, theme, status, weight, region, visibility, pages, custom, throttle) VALUES ('%s', '%s', '%s', %d, %d, '%s', %d, '%s', %d, %d)", $block['module'], $block['delta'], $theme_key, $block['status'], $block['weight'], $block['region'], $block['visibility'], $block['pages'], $block['custom'], $block['throttle']);
+  }
+  db_unlock_tables();
 
   return $blocks;
 }
