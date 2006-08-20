@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.658 2006/08/20 13:15:30 dries Exp $
+// $Id: user.module,v 1.659 2006/08/20 13:16:34 dries Exp $
 
 /**
  * @file
@@ -720,7 +720,7 @@ function user_menu($may_cache) {
       'callback' => 'drupal_get_form', 'callback arguments' => array('user_admin_perm'), 'access' => $access_access);
     $items[] = array('path' => 'admin/user/roles', 'title' => t('roles'),
       'description' => t('List, edit, or add user roles.'),
-      'callback' => 'drupal_get_form', 'callback arguments' => array('user_admin_role'), 'access' => $access_access,
+      'callback' => 'drupal_get_form', 'callback arguments' => array('user_admin_new_role'), 'access' => $access_access,
       'type' => MENU_NORMAL_ITEM);
     $items[] = array('path' => 'admin/user/roles/edit', 'title' => t('edit role'),
        'callback' => 'drupal_get_form', 'callback arguments' => array('user_admin_role'), 'access' => $access_access,
