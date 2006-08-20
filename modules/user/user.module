@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.657 2006/08/20 05:57:41 unconed Exp $
+// $Id: user.module,v 1.658 2006/08/20 13:15:30 dries Exp $
 
 /**
  * @file
@@ -2285,16 +2285,24 @@ function user_help($section) {
       <ul>
       <li>Anonymous user: this role is used for users that don\'t have a user account or that are not authenticated.</li>
       <li>Authenticated user: this role is automatically granted to all logged in users.</li>
-      </ul>', array('%permissions' => url('admin/user/access/permissions')));
+      </ul>', array('@permissions' => url('admin/user/access/permissions')));
     case 'admin/user/search':
       return t('<p>Enter a simple pattern ("*" may be used as a wildcard match) to search for a username. For example, one may search for "br" and Drupal might return "brian", "brad", and "brenda".</p>');
     case 'user/help#user':
       $site = variable_get('site_name', 'this website');
 
-      $output = t("
-      <h3>Distributed authentication<a id=\"da\"></a></h3>
-      <p>One of the more tedious moments in visiting a new website is filling out the registration form. Here at %site, you do not have to fill out a registration form if you are already a member of !help-links. This capability is called <em>distributed authentication</em>, and is unique to <a href=\"%drupal\">Drupal</a>, the software which powers %site.</p>
-      <p>Distributed authentication enables a new user to input a username and password into the login box, and immediately be recognized, even if that user never registered at %site. This works because Drupal knows how to communicate with external registration databases. For example, lets say that new user 'Joe' is already a registered member of <a href=\"%delphi-forums\">Delphi Forums</a>. Drupal informs Joe on registration and login screens that he may login with his Delphi ID instead of registering with %site. Joe likes that idea, and logs in with a username of joe@remote.delphiforums.com and his usual Delphi password. Drupal then contacts the <em>remote.delphiforums.com</em> server behind the scenes (usually using <a href=\"%xml\">XML-RPC</a>, <a href=\"%http-post\">HTTP POST</a>, or <a href=\"%soap\">SOAP</a>) and asks: \"Is the password for user Joe correct?\". If Delphi replies yes, then we create a new %site account for Joe and log him into it. Joe may keep on logging into %site in the same manner, and he will always be logged into the same account.</p>", array('!help-links' => (implode(', ', user_auth_help_links())), '%site' => $site, '%drupal' => 'http://drupal.org', '%delphi-forums' => 'http://www.delphiforums.com', '%xml' => 'http://www.xmlrpc.com', '%http-post' => 'http://www.w3.org/Protocols/', '%soap' => 'http://www.soapware.org'));
+      $affiliates = user_auth_help_links();
+      if (count($affiliates)) {
+        $affiliate_info = implode(', ', user_auth_help_links());
+      }
+      else {
+        $affiliate_info = t('one of our affiliates');
+      }
+
+      $output = t('
+      <h3>Distributed authentication<a id="da"></a></h3>
+      <p>One of the more tedious moments in visiting a new website is filling out the registration form. Here at @site, you do not have to fill out a registration form if you are already a member of !affiliate-info. This capability is called <em>distributed authentication</em>, and <a href="@drupal">Drupal</a>, the software which powers @site, fully supports it.</p>
+      <p>Distributed authentication enables a new user to input a username and password into the login box, and immediately be recognized, even if that user never registered at @site. This works because Drupal knows how to communicate with external registration databases. For example, lets say that new user \'Joe\' is already a registered member of <a href="@delphi-forums">Delphi Forums</a>. Drupal informs Joe on registration and login screens that he may login with his Delphi ID instead of registering with @site. Joe likes that idea, and logs in with a username of joe@remote.delphiforums.com and his usual Delphi password. Drupal then contacts the <em>remote.delphiforums.com</em> server behind the scenes (usually using <a href="@xml">XML-RPC</a>, <a href="@http-post">HTTP POST</a>, or <a href="@soap">SOAP</a>) and asks: "Is the password for user Joe correct?". If Delphi replies yes, then we create a new @site account for Joe and log him into it. Joe may keep on logging into @site in the same manner, and he will always be logged into the same account.</p>', array('!affiliate-info' => $affiliate_info, '@site' => $site, '@drupal' => 'http://drupal.org', '@delphi-forums' => 'http://www.delphiforums.com', '@xml' => 'http://www.xmlrpc.com', '@http-post' => 'http://www.w3.org/Protocols/', '@soap' => 'http://www.soapware.org'));
 
         foreach (module_list() as $module) {
           if (module_hook($module, 'auth')) {
