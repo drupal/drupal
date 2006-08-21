@@ -14,6 +14,17 @@ tr.even, tr.odd {
 td.active {
   background-color: #ddd;
 }
+tbody {
+  border-top: 1px solid #ccc;
+}
+tbody th {
+  border-bottom: 1px solid #ccc;
+}
+thead th {
+  text-align: left;
+  padding-right: 1em;
+  border-bottom: 3px solid #ccc;
+}
 
 /*
 ** Other common styles

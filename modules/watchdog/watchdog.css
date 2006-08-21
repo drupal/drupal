@@ -1,8 +1,5 @@
 /* $Id$ */
 
-table.watchdog-event th {
-  border-bottom: 1px solid #ccc;
-}
 tr.watchdog-user {
   background: #ffd;
 }
