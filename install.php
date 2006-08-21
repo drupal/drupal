@@ -140,7 +140,7 @@ function install_change_settings() {
   if ($db_url == 'mysql://username:password@localhost/databasename') {
     $db_user = $db_pass = $db_path = '';
   }
-  $output = drupal_get_form('install_settings_form', $profile, $settings_file, $db_url, $db_type, $db_prefix, $db_user, $db_pass, $db_host);
+  $output = drupal_get_form('install_settings_form', $profile, $settings_file, $db_url, $db_type, $db_prefix, $db_user, $db_pass, $db_host, $db_path);
   drupal_set_title('Database configuration');
   print theme('install_page', $output);
   exit;
@@ -150,7 +150,7 @@ function install_change_settings() {
 /**
  * Form API array definition for install_settings.
  */
-function install_settings_form($profile, $settings_file, $db_url, $db_type, $db_prefix, $db_user, $db_pass, $db_host) {
+function install_settings_form($profile, $settings_file, $db_url, $db_type, $db_prefix, $db_user, $db_pass, $db_host, $db_path) {
   $db_types = drupal_detect_database_types();
   if (count($db_types) == 0) {
     $form['no_db_types'] = array(

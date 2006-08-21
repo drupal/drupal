@@ -763,6 +763,10 @@ function theme_fieldset($element) {
   if ($element['#collapsible']) {
     drupal_add_js('misc/collapse.js');
 
+    if (!isset($element['#attributes']['class'])) {
+      $element['#attributes']['class'] = '';
+    }
+
     $element['#attributes']['class'] .= ' collapsible';
     if ($element['#collapsed']) {
      $element['#attributes']['class'] .= ' collapsed';

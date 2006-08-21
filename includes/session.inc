@@ -27,7 +27,7 @@ function sess_read($key) {
   $user = db_fetch_object(db_query("SELECT u.*, s.* FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.sid = '%s'", $key));
 
   // We found the client's session record and they are an authenticated user
-  if ($user->uid > 0) {
+  if ($user && $user->uid > 0) {
     // This is done to unserialize the data member of $user
     $user = drupal_unpack($user);
 
