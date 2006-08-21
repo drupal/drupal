@@ -1,8 +1,5 @@
-/* $Id: watchdog.css,v 1.1 2006/08/14 07:14:50 drumm Exp $ */
+/* $Id: watchdog.css,v 1.2 2006/08/21 07:33:26 drumm Exp $ */
 
-table.watchdog-event th {
-  border-bottom: 1px solid #ccc;
-}
 tr.watchdog-user {
   background: #ffd;
 }

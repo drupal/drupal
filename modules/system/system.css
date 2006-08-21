@@ -1,4 +1,4 @@
-/* $Id: system.css,v 1.4 2006/08/17 21:39:47 unconed Exp $ */
+/* $Id: system.css,v 1.5 2006/08/21 07:33:26 drumm Exp $ */
 
 /*
 ** HTML elements
@@ -13,6 +13,17 @@ tr.even, tr.odd {
 }
 td.active {
   background-color: #ddd;
+}
+tbody {
+  border-top: 1px solid #ccc;
+}
+tbody th {
+  border-bottom: 1px solid #ccc;
+}
+thead th {
+  text-align: left;
+  padding-right: 1em;
+  border-bottom: 3px solid #ccc;
 }
 
 /*
