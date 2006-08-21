@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.218 2006/08/20 06:49:15 dries Exp $
+// $Id: block.module,v 1.219 2006/08/21 09:18:46 dries Exp $
 
 /**
  * @file
@@ -351,7 +351,7 @@ function theme_block_admin_display($form) {
   }
 
   // Finish table
-  $header = array(t('Block'), t('Enabled'), t('Weight'), t('Placement'));
+  $header = array(t('Block'), t('Enabled'), t('Weight'), t('Region'));
   if ($throttle) {
     $header[] = t('Throttle');
   }
