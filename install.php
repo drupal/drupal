@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.8 2006/08/18 18:58:44 dries Exp $
+// $Id: install.php,v 1.9 2006/08/21 06:22:01 drumm Exp $
 
 require_once './includes/install.inc';
 
@@ -140,7 +140,7 @@ function install_change_settings() {
   if ($db_url == 'mysql://username:password@localhost/databasename') {
     $db_user = $db_pass = $db_path = '';
   }
-  $output = drupal_get_form('install_settings_form', $profile, $settings_file, $db_url, $db_type, $db_prefix, $db_user, $db_pass, $db_host);
+  $output = drupal_get_form('install_settings_form', $profile, $settings_file, $db_url, $db_type, $db_prefix, $db_user, $db_pass, $db_host, $db_path);
   drupal_set_title('Database configuration');
   print theme('install_page', $output);
   exit;
@@ -150,7 +150,7 @@ function install_change_settings() {
 /**
  * Form API array definition for install_settings.
  */
-function install_settings_form($profile, $settings_file, $db_url, $db_type, $db_prefix, $db_user, $db_pass, $db_host) {
+function install_settings_form($profile, $settings_file, $db_url, $db_type, $db_prefix, $db_user, $db_pass, $db_host, $db_path) {
   $db_types = drupal_detect_database_types();
   if (count($db_types) == 0) {
     $form['no_db_types'] = array(

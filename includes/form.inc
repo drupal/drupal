@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.135 2006/08/18 18:58:44 dries Exp $
+// $Id: form.inc,v 1.136 2006/08/21 06:22:01 drumm Exp $
 
 /**
  * @defgroup form Form generation
@@ -762,6 +762,10 @@ function form_select_options($element, $choices = NULL) {
 function theme_fieldset($element) {
   if ($element['#collapsible']) {
     drupal_add_js('misc/collapse.js');
+
+    if (!isset($element['#attributes']['class'])) {
+      $element['#attributes']['class'] = '';
+    }
 
     $element['#attributes']['class'] .= ' collapsible';
     if ($element['#collapsed']) {
