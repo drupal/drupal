@@ -208,7 +208,7 @@ function drupal_get_destination() {
   }
   else {
     // Use $_REQUEST here to retrieve the original path.
-    $path = isset($_REQUEST['q']) ? $_REQUEST['q'] : '';
+    $path = isset($_REQUEST['q']) ? drupal_get_path_alias($_REQUEST['q']) : '';
     $query = drupal_query_string_encode($_GET, array('q'));
     if ($query != '') {
       $path .= '?'. $query;
