@@ -351,7 +351,7 @@ function theme_block_admin_display($form) {
   }
 
   // Finish table
-  $header = array(t('Block'), t('Enabled'), t('Weight'), t('Placement'));
+  $header = array(t('Block'), t('Enabled'), t('Weight'), t('Region'));
   if ($throttle) {
     $header[] = t('Throttle');
   }
