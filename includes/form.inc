@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.137 2006/08/22 11:13:03 dries Exp $
+// $Id: form.inc,v 1.138 2006/08/22 19:12:05 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -56,12 +56,7 @@
 function drupal_get_form($form_id) {
   $args = func_get_args();
   $form = call_user_func_array('drupal_retrieve_form', $args);
-
-  $redirect = drupal_process_form($form_id, $form);
-
-  if (isset($redirect)) {
-    drupal_redirect_form($form, $redirect);
-  }
+  drupal_process_form($form_id, $form);
   return drupal_render_form($form_id, $form);
 }
 
@@ -129,6 +124,9 @@ function drupal_process_form($form_id, &$form) {
     // In that case we accept a submission without button values.
     if ((($form['#programmed']) || $form_submitted || (!$form_button_counter[0] && $form_button_counter[1])) && !form_get_errors()) {
       $redirect = drupal_submit_form($form_id, $form);
+      if (!$form['#programmed']) {
+        drupal_redirect_form($form, $redirect);
+      }
     }
   }
 
