@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.9 2006/08/20 06:38:50 dries Exp $
+// $Id: system.install,v 1.10 2006/08/22 07:43:33 dries Exp $
 
 function system_install() {
   switch ($GLOBALS['db_type']) {
@@ -32,7 +32,8 @@ function system_install() {
         custom tinyint DEFAULT '0' NOT NULL,
         throttle tinyint DEFAULT '0' NOT NULL,
         visibility tinyint DEFAULT '0' NOT NULL,
-        pages text DEFAULT '' NOT NULL
+        pages text DEFAULT '' NOT NULL,
+        title varchar(64) DEFAULT '' NOT NULL
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {boxes} (
@@ -3044,6 +3045,35 @@ function system_update_1005() {
 
   node_types_rebuild();
 
+  return $ret;
+}
+
+function system_update_1006() {
+  // Add a customizable title to all blocks.
+  $ret = array();
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+    $ret[] = update_sql("ALTER TABLE {blocks} ADD title VARCHAR(64) NOT NULL DEFAULT ''");
+      break;
+    case 'pgsql':
+      db_add_column($ret, 'blocks', 'title', 'varchar(64)', array('default' => '', 'not null' => TRUE));
+      break;
+  }
+  // Migrate custom block titles to new column.
+  $boxes = db_query('SELECT bid, title from {boxes}');
+  while ($box = db_fetch_object($boxes)) {
+    db_query("UPDATE {blocks} SET title = '%s' WHERE delta = %d and module = 'block'", $box->title, $box->bid);
+  }
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql('ALTER TABLE {boxes} DROP title');
+      break;
+    case 'pgsql':
+      $ret[] = update_sql('ALTER TABLE {boxes} DROP COLUMN title');
+      break;
+  }
   return $ret;
 }
 

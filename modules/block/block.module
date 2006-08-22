@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.219 2006/08/21 09:18:46 dries Exp $
+// $Id: block.module,v 1.220 2006/08/22 07:43:32 dries Exp $
 
 /**
  * @file
@@ -122,7 +122,7 @@ function block_block($op = 'list', $delta = 0, $edit = array()) {
     case 'list':
       $blocks = array();
 
-      $result = db_query('SELECT bid, title, info FROM {boxes} ORDER BY title');
+      $result = db_query("SELECT bid, title, info FROM {boxes} bx INNER JOIN {blocks} bl ON bx.bid = bl.delta WHERE module = 'block' ORDER BY title");
       while ($block = db_fetch_object($result)) {
         $blocks[$block->bid]['info'] = $block->info ? check_plain($block->info) : check_plain($block->title);
       }
@@ -141,7 +141,6 @@ function block_block($op = 'list', $delta = 0, $edit = array()) {
 
     case 'view':
       $block = db_fetch_object(db_query('SELECT * FROM {boxes} WHERE bid = %d', $delta));
-      $data['subject'] = check_plain($block->title);
       $data['content'] = check_markup($block->body, $block->format, FALSE);
       return $data;
   }
@@ -180,10 +179,11 @@ function _block_rehash() {
           $block['pages'] = $old_blocks[$module][$delta]->pages;
           $block['custom'] = $old_blocks[$module][$delta]->custom;
           $block['throttle'] = $old_blocks[$module][$delta]->throttle;
+          $block['title'] = $old_blocks[$module][$delta]->title;
         }
         // Otherwise, use any set values, or else substitute defaults.
         else {
-          $properties = array('status' => 0, 'weight' => 0, 'region' => 'left', 'pages' => '', 'custom' => 0);
+          $properties = array('status' => 0, 'weight' => 0, 'region' => 'left', 'pages' => '', 'custom' => 0, 'title' => '');
           foreach ($properties as $property => $default) {
             if (!isset($block[$property])) {
               $block[$property] = $default;
@@ -202,7 +202,7 @@ function _block_rehash() {
 
   // Reinsert new set of blocks into table.
   foreach ($blocks as $block) {
-    db_query("INSERT INTO {blocks} (module, delta, theme, status, weight, region, visibility, pages, custom, throttle) VALUES ('%s', '%s', '%s', %d, %d, '%s', %d, '%s', %d, %d)", $block['module'], $block['delta'], $theme_key, $block['status'], $block['weight'], $block['region'], $block['visibility'], $block['pages'], $block['custom'], $block['throttle']);
+    db_query("INSERT INTO {blocks} (module, delta, theme, status, weight, region, visibility, pages, custom, throttle, title) VALUES ('%s', '%s', '%s', %d, %d, '%s', %d, '%s', %d, %d, '%s')", $block['module'], $block['delta'], $theme_key, $block['status'], $block['weight'], $block['region'], $block['visibility'], $block['pages'], $block['custom'], $block['throttle'], $block['title']);
   }
   db_unlock_tables();
 
@@ -367,7 +367,7 @@ function theme_block_admin_display($form) {
 }
 
 function block_box_get($bid) {
-  return db_fetch_array(db_query('SELECT * FROM {boxes} WHERE bid = %d', $bid));
+  return db_fetch_array(db_query("SELECT bx.*, title FROM {boxes} bx INNER JOIN {blocks} bl ON bx.bid = bl.delta WHERE module = 'block' AND bid = %d", $bid));
 }
 
 /**
@@ -378,16 +378,25 @@ function block_admin_configure($module = NULL, $delta = 0) {
   $form['module'] = array('#type' => 'value', '#value' => $module);
   $form['delta'] = array('#type' => 'value', '#value' => $delta);
 
-  $edit = db_fetch_array(db_query("SELECT pages, visibility, custom FROM {blocks} WHERE module = '%s' AND delta = '%s'", $module, $delta));
+  $edit = db_fetch_array(db_query("SELECT pages, visibility, custom, title FROM {blocks} WHERE module = '%s' AND delta = '%s'", $module, $delta));
+
+  $form['block_settings'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Block specific settings'),
+    '#collapsible' => TRUE,
+  );
+  $form['block_settings']['title'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Block title'),
+    '#maxlength' => 64,
+    '#description' =>  $module == 'block' ? t('The title of the block as shown to the user.') : t('Override the default title for the block. Use <em>&lt;none&gt;</em> to display no title, or leave blank to use the default block title.'),
+    '#default_value' => $edit['title'],
+    '#weight' => -18,
+  );
+
 
   // Module-specific block configurations.
   if ($settings = module_invoke($module, 'block', 'configure', $delta)) {
-    $form['block_settings'] = array(
-      '#type' => 'fieldset',
-      '#title' => t('Block specific settings'),
-      '#collapsible' => TRUE,
-    );
-
     foreach ($settings as $k => $v) {
       $form['block_settings'][$k] = $v;
     }
@@ -398,7 +407,6 @@ function block_admin_configure($module = NULL, $delta = 0) {
   drupal_set_title(t("'%name' block", array('%name' => $info[$delta]['info'])));
 
   // Standard block configurations.
-
   $form['user_vis_settings'] = array(
     '#type' => 'fieldset',
     '#title' => t('User specific visibility settings'),
@@ -492,7 +500,7 @@ function block_admin_configure_validate($form_id, $form_values) {
 
 function block_admin_configure_submit($form_id, $form_values) {
   if (!form_get_errors()) {
-    db_query("UPDATE {blocks} SET visibility = %d, pages = '%s', custom = %d WHERE module = '%s' AND delta = '%s'", $form_values['visibility'], $form_values['pages'], $form_values['custom'], $form_values['module'], $form_values['delta']);
+    db_query("UPDATE {blocks} SET visibility = %d, pages = '%s', custom = %d, title = '%s' WHERE module = '%s' AND delta = '%s'", $form_values['visibility'], $form_values['pages'], $form_values['custom'], $form_values['title'], $form_values['module'], $form_values['delta']);
     db_query("DELETE FROM {blocks_roles} WHERE module = '%s' AND delta = '%s'", $form_values['module'], $form_values['delta']);
     foreach (array_filter($form_values['roles']) as $rid) {
       db_query("INSERT INTO {blocks_roles} (rid, module, delta) VALUES (%d, '%s', '%s')", $rid, $form_values['module'], $form_values['delta']);
@@ -550,14 +558,6 @@ function block_box_form($edit = array()) {
     '#required' => TRUE,
     '#weight' => -19,
   );
-  $form['title'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Block title'),
-    '#default_value' => $edit['title'],
-    '#maxlength' => 64,
-    '#description' => t('The title of the block as shown to the user.'),
-    '#weight' => -18,
-  );
   $form['body_filter']['#weight'] = -17;
   $form['body_filter']['body'] = array(
     '#type' => 'textarea',
@@ -579,10 +579,10 @@ function block_box_save($edit, $delta = NULL) {
   }
 
   if (isset($delta)) {
-    db_query("UPDATE {boxes} SET title = '%s', body = '%s', info = '%s', format = %d WHERE bid = %d", $edit['title'], $edit['body'], $edit['info'], $edit['format'], $delta);
+    db_query("UPDATE {boxes} SET body = '%s', info = '%s', format = %d WHERE bid = %d", $edit['body'], $edit['info'], $edit['format'], $delta);
   }
   else {
-    db_query("INSERT INTO {boxes} (title, body, info, format) VALUES  ('%s', '%s', '%s', %d)", $edit['title'], $edit['body'], $edit['info'], $edit['format']);
+    db_query("INSERT INTO {boxes} (body, info, format) VALUES  ('%s', '%s', %d)", $edit['body'], $edit['info'], $edit['format']);
   }
   return TRUE;
 }
@@ -690,6 +690,11 @@ function block_list($region) {
           }
         }
         if (isset($block->content) && $block->content) {
+          // Override default block title if a custom display title is present.
+          if ($block->title) {
+            // Check plain here to allow module generated titles to keep any markup.
+            $block->subject = $block->title == '<none>' ? '' : check_plain($block->title);
+          }
           $blocks[$block->region]["{$block->module}_{$block->delta}"] = $block;
         }
       }

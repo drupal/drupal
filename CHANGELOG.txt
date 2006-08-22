@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.150 2006/08/18 18:58:44 dries Exp $
+// $Id: CHANGELOG.txt,v 1.151 2006/08/22 07:43:32 dries Exp $
 
 Drupal x.x.x, xxxx-xx-xx (development version)
 ------------------------
@@ -19,6 +19,7 @@ Drupal x.x.x, xxxx-xx-xx (development version)
     * reorganized the settings pages.
 - block system:
     * extended the block visibility settings with a role specific settings.
+    * made it possible to customize all block titles.
 - poll module:
     * optionally allow people to inspect all votes.
     * optionally allow people to cancel their vote.
