@@ -365,6 +365,7 @@ function theme_page($content) {
   $output .= ' <title>'. (drupal_get_title() ? strip_tags(drupal_get_title()) : variable_get('site_name', 'drupal')) .'</title>';
   $output .= drupal_get_html_head();
   $output .= drupal_get_css();
+  $output .= drupal_get_js();
 
   $output .= ' </head>';
   $output .= ' <body style="background-color: #fff; color: #000;">';
@@ -406,6 +407,7 @@ function theme_maintenance_page($content, $messages = TRUE, $partial = FALSE) {
   $output .= ' <title>'. strip_tags(drupal_get_title()) .'</title>';
   $output .= drupal_get_html_head();
   $output .= drupal_get_css();
+  $output .= drupal_get_js();
   $output .= '</head>';
   $output .= '<body>';
   $output .= '<h1>' . drupal_get_title() . '</h1>';
@@ -435,6 +437,7 @@ function theme_install_page($content) {
   $output .= ' <title>'. strip_tags(drupal_get_title()) .'</title>';
   $output .= drupal_get_html_head();
   $output .= drupal_get_css();
+  $output .= drupal_get_js();
   $output .= '</head>';
   $output .= '<body>';
   $output .= '<h1>' . drupal_get_title() . '</h1>';
@@ -920,7 +923,7 @@ function theme_feed_icon($url) {
  */
 function theme_closure($main = 0) {
   $footer = module_invoke_all('footer', $main);
-  return implode("\n", $footer);
+  return implode("\n", $footer) . drupal_get_js('footer');
 }
 
 /**

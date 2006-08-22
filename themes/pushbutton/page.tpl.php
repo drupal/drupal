@@ -5,6 +5,7 @@
   <meta http-equiv="Content-Style-Type" content="text/css" />
   <?php print $head ?>
   <?php print $styles ?>
+  <?php print $scripts ?>
 </head>
 
 <body bgcolor="#ffffff">

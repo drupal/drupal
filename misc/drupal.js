@@ -21,6 +21,19 @@ if (isJsEnabled()) {
   document.documentElement.className = 'js';
 }
 
+Drupal = { };
+
+Drupal.extend = function(obj) {
+  for (var i in obj) {
+    if (this[i]) {
+      Drupal.extend.apply(this[i], [obj[i]]);
+    }
+    else {
+      this[i] = obj[i];
+    }
+  }
+}
+
 /**
  * Make IE's XMLHTTP object accessible through XMLHttpRequest()
  */

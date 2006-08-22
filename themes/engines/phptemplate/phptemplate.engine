@@ -214,6 +214,7 @@ function phptemplate_page($content) {
     'site_slogan'         => (theme_get_setting('toggle_slogan') ? variable_get('site_slogan', '') : ''),
     'css'                 => drupal_add_css(),
     'styles'              => drupal_get_css(),
+    'scripts'             => drupal_get_js(),
     'tabs'                => theme('menu_local_tasks'),
     'title'               => drupal_get_title()
   );
