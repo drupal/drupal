@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.681 2006/08/20 19:03:59 dries Exp $
+// $Id: node.module,v 1.682 2006/08/22 11:13:04 dries Exp $
 
 /**
  * @file
@@ -1899,28 +1899,38 @@ function node_form($node) {
   }
   $form['#node'] = $node;
 
-  if (user_access('administer nodes')) {
-    // Node author information
-    $form['author'] = array('#type' => 'fieldset', '#title' => t('Authoring information'), '#collapsible' => TRUE, '#collapsed' => TRUE, '#weight' => 20);
-    $form['author']['name'] = array('#type' => 'textfield', '#title' => t('Authored by'), '#maxlength' => 60, '#autocomplete_path' => 'user/autocomplete', '#default_value' => $node->name ? $node->name : '', '#weight' => -1, '#description' => t('Leave blank for %anonymous.', array('%anonymous' => variable_get('anonymous', 'Anonymous'))));
-    $form['author']['date'] = array('#type' => 'textfield', '#title' => t('Authored on'), '#maxlength' => 25, '#description' => t('Format: %time. Leave blank to use the time of form submission.', array('%time' => $node->date)));
+  // Node author information for administrators
+  $form['author'] = array(
+    '#type' => 'fieldset',
+    '#access' => user_access('administer nodes'),
+    '#title' => t('Authoring information'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#weight' => 20,
+  );
+  $form['author']['name'] = array('#type' => 'textfield', '#title' => t('Authored by'), '#maxlength' => 60, '#autocomplete_path' => 'user/autocomplete', '#default_value' => $node->name ? $node->name : '', '#weight' => -1, '#description' => t('Leave blank for %anonymous.', array('%anonymous' => variable_get('anonymous', 'Anonymous'))));
+  $form['author']['date'] = array('#type' => 'textfield', '#title' => t('Authored on'), '#maxlength' => 25, '#description' => t('Format: %time. Leave blank to use the time of form submission.', array('%time' => $node->date)));
 
-    if (isset($node->nid)) {
-      $form['author']['date']['#default_value'] = $node->date;
-    }
-
-    // Node options for administrators
-    $form['options'] = array('#type' => 'fieldset', '#title' => t('Publishing options'), '#collapsible' => TRUE, '#collapsed' => TRUE, '#weight' => 25);
-    $form['options']['status']   = array('#type' => 'checkbox', '#title' => t('Published'), '#default_value' => $node->status);
-    $form['options']['promote']  = array('#type' => 'checkbox', '#title' => t('Promoted to front page'), '#default_value' => $node->promote);
-    $form['options']['sticky']   = array('#type' => 'checkbox', '#title' => t('Sticky at top of lists'), '#default_value' => $node->sticky);
-    $form['options']['revision'] = array('#type' => 'checkbox', '#title' => t('Create new revision'), '#default_value' => $node->revision);
+  if (isset($node->nid)) {
+    $form['author']['date']['#default_value'] = $node->date;
   }
-  else {
-    // Put all of these through as values if the user doesn't have access to them.
-    foreach (array('uid', 'created') as $key) {
-      $form[$key] = array('#type' => 'value', '#value' => $node->$key);
-    }
+
+  // Node options for administrators
+  $form['options'] = array(
+    '#type' => 'fieldset',
+    '#access' => user_access('administer nodes'),
+    '#title' => t('Publishing options'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#weight' => 25,
+  );
+  $form['options']['status']   = array('#type' => 'checkbox', '#title' => t('Published'), '#default_value' => $node->status);
+  $form['options']['promote']  = array('#type' => 'checkbox', '#title' => t('Promoted to front page'), '#default_value' => $node->promote);
+  $form['options']['sticky']   = array('#type' => 'checkbox', '#title' => t('Sticky at top of lists'), '#default_value' => $node->sticky);
+  $form['options']['revision'] = array('#type' => 'checkbox', '#title' => t('Create new revision'), '#default_value' => $node->revision);
+  // These values are used when the user has no administrator accesss.
+  foreach (array('uid', 'created') as $key) {
+    $form[$key] = array('#type' => 'value', '#value' => $node->$key);
   }
 
   // Add the buttons.

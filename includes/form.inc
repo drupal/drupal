@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.136 2006/08/21 06:22:01 drumm Exp $
+// $Id: form.inc,v 1.137 2006/08/22 11:13:03 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -496,7 +496,7 @@ function form_builder($form_id, $form) {
       $form['#id'] =  'edit-' . implode('-', $form['#parents']);
     }
 
-    $posted = (($form['#programmed']) || (isset($_POST['edit']) && ($_POST['edit']['form_id'] == $form_id)));
+    $posted = (($form['#programmed']) || ((!isset($form['#access']) || $form['#access']) && isset($_POST['edit']) && ($_POST['edit']['form_id'] == $form_id)));
     $edit = $posted ? $form['#post']['edit'] : array();
     foreach ($form['#parents'] as $parent) {
       $edit = isset($edit[$parent]) ? $edit[$parent] : NULL;
@@ -585,13 +585,18 @@ function form_builder($form_id, $form) {
       $form[$key]['#tree'] = $form['#tree'];
     }
 
+    // deny access to child elements if parent is denied
+    if (isset($form['#access']) && !$form['#access']) {
+      $form[$key]['#access'] = FALSE;
+    }
+
     // don't squash existing parents value
     if (!isset($form[$key]['#parents'])) {
       // Check to see if a tree of child elements is present. If so, continue down the tree if required.
       $form[$key]['#parents'] = $form[$key]['#tree'] && $form['#tree'] ? array_merge($form['#parents'], array($key)) : array($key);
     }
 
-    # Assign a decimal placeholder weight to preserve original array order
+    // Assign a decimal placeholder weight to preserve original array order
     if (!isset($form[$key]['#weight'])) {
       $form[$key]['#weight'] = $count/1000;
     }

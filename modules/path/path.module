@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.90 2006/08/20 07:00:14 dries Exp $
+// $Id: path.module,v 1.91 2006/08/22 11:13:04 dries Exp $
 
 /**
  * @file
@@ -255,13 +255,14 @@ function path_nodeapi(&$node, $op, $arg) {
  * Implementation of hook_form_alter().
  */
 function path_form_alter($form_id, &$form) {
-  if (user_access('create url aliases') && isset($form['type']) && $form['type']['#value'] .'_node_form' == $form_id) {
+  if (isset($form['type']) && $form['type']['#value'] .'_node_form' == $form_id) {
     $path = $form['#node']->path;
     $form['path'] = array(
       '#type' => 'fieldset',
       '#title' => t('URL path settings'),
       '#collapsible' => TRUE,
       '#collapsed' => empty($path),
+      '#access' => user_access('create url aliases'),
       '#weight' => 30,
     );
     $form['path']['path'] = array(

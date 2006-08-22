@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.120 2006/08/18 18:58:47 dries Exp $
+// $Id: upload.module,v 1.121 2006/08/22 11:13:04 dries Exp $
 
 /**
  * @file
@@ -360,13 +360,14 @@ function upload_form_alter($form_id, &$form) {
 
   if (isset($form['type'])) {
     $node = $form['#node'];
-    if ($form['type']['#value'] .'_node_form' == $form_id && variable_get("upload_$node->type", TRUE) && user_access('upload files')) {
+    if ($form['type']['#value'] .'_node_form' == $form_id && variable_get("upload_$node->type", TRUE)) {
       drupal_add_js('misc/progress.js');
       drupal_add_js('misc/upload.js');
 
       // Attachments fieldset
       $form['attachments'] = array(
         '#type' => 'fieldset',
+        '#access' => user_access('upload files'),
         '#title' => t('File attachments'),
         '#collapsible' => TRUE,
         '#collapsed' => empty($node->files),

@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.477 2006/08/19 21:40:58 dries Exp $
+// $Id: comment.module,v 1.478 2006/08/22 11:13:03 dries Exp $
 
 /**
  * @file
@@ -281,27 +281,20 @@ function comment_form_alter($form_id, &$form) {
   elseif (isset($form['type'])) {
     if ($form['type']['#value'] .'_node_form' == $form_id) {
       $node = $form['#node'];
-      if (user_access('administer comments')) {
-        $form['comment_settings'] = array(
-          '#type' => 'fieldset',
-          '#title' => t('Comment settings'),
-          '#collapsible' => TRUE,
-          '#collapsed' => TRUE,
-          '#weight' => 30,
-        );
-        $form['comment_settings']['comment'] = array(
-          '#type' => 'radios',
-          '#parents' => array('comment'),
-          '#default_value' => $node->comment,
-          '#options' => array(t('Disabled'), t('Read only'), t('Read/Write')),
-        );
-      }
-      else {
-        $form['comment_settings']['comment'] = array(
-          '#type' => 'value',
-          '#value' => $node->comment,
-        );
-      }
+      $form['comment_settings'] = array(
+        '#type' => 'fieldset',
+        '#access' => user_access('administer comments'),
+        '#title' => t('Comment settings'),
+        '#collapsible' => TRUE,
+        '#collapsed' => TRUE,
+        '#weight' => 30,
+      );
+      $form['comment_settings']['comment'] = array(
+        '#type' => 'radios',
+        '#parents' => array('comment'),
+        '#default_value' => $node->comment,
+        '#options' => array(t('Disabled'), t('Read only'), t('Read/Write')),
+      );
     }
   }
 }

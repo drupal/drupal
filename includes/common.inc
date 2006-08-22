@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.559 2006/08/22 09:00:30 dries Exp $
+// $Id: common.inc,v 1.560 2006/08/22 11:13:03 dries Exp $
 
 /**
  * @file
@@ -1692,9 +1692,10 @@ function drupal_cron_run() {
  *   The rendered HTML.
  */
 function drupal_render(&$elements) {
-  if (!isset($elements)) {
+  if (!isset($elements) || (isset($elements['#access']) && !$elements['#access'])) {
     return NULL;
   }
+
   $content = '';
   uasort($elements, "_element_sort");
   if (!isset($elements['#children'])) {
