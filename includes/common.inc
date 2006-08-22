@@ -1692,9 +1692,10 @@ function drupal_cron_run() {
  *   The rendered HTML.
  */
 function drupal_render(&$elements) {
-  if (!isset($elements)) {
+  if (!isset($elements) || (isset($elements['#access']) && !$elements['#access'])) {
     return NULL;
   }
+
   $content = '';
   uasort($elements, "_element_sort");
   if (!isset($elements['#children'])) {
