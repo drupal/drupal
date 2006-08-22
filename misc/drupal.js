@@ -1,4 +1,4 @@
-// $Id: drupal.js,v 1.25 2006/08/20 06:22:35 dries Exp $
+// $Id: drupal.js,v 1.26 2006/08/22 09:00:31 dries Exp $
 
 /**
  * Only enable Javascript functionality if all required features are supported.
@@ -19,6 +19,19 @@ function isJsEnabled() {
 // Global Killswitch on the <html> element
 if (isJsEnabled()) {
   document.documentElement.className = 'js';
+}
+
+Drupal = { };
+
+Drupal.extend = function(obj) {
+  for (var i in obj) {
+    if (this[i]) {
+      Drupal.extend.apply(this[i], [obj[i]]);
+    }
+    else {
+      this[i] = obj[i];
+    }
+  }
 }
 
 /**

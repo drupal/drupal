@@ -1,5 +1,5 @@
 <?php
-// $Id: phptemplate.engine,v 1.43 2006/08/20 05:57:41 unconed Exp $
+// $Id: phptemplate.engine,v 1.44 2006/08/22 09:00:31 dries Exp $
 
 /**
  * @file
@@ -214,6 +214,7 @@ function phptemplate_page($content) {
     'site_slogan'         => (theme_get_setting('toggle_slogan') ? variable_get('site_slogan', '') : ''),
     'css'                 => drupal_add_css(),
     'styles'              => drupal_get_css(),
+    'scripts'             => drupal_get_js(),
     'tabs'                => theme('menu_local_tasks'),
     'title'               => drupal_get_title()
   );

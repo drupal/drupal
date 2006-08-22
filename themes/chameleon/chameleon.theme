@@ -1,5 +1,5 @@
 <?php
-// $Id: chameleon.theme,v 1.47 2006/08/20 05:57:41 unconed Exp $
+// $Id: chameleon.theme,v 1.48 2006/08/22 09:00:31 dries Exp $
 
 /**
  * @file
@@ -38,6 +38,7 @@ function chameleon_page($content) {
   $output .= " <title>". ($title ? strip_tags($title) ." | ". variable_get("site_name", "drupal") : variable_get("site_name", "drupal") ." | ". variable_get("site_slogan", "")) ."</title>\n";
   $output .= drupal_get_html_head();
   $output .= drupal_get_css();
+  $output .= drupal_get_js();
   $output .= "</head>";
   $output .= "<body>\n";
   $output .= " <div id=\"header\">";

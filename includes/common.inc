@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.558 2006/08/21 07:16:21 drumm Exp $
+// $Id: common.inc,v 1.559 2006/08/22 09:00:30 dries Exp $
 
 /**
  * @file
@@ -1276,44 +1276,129 @@ function drupal_get_css($css = NULL) {
 }
 
 /**
- * Add a JavaScript file to the output.
+ * Add a JavaScript file, setting or inline code to the page.
  *
- * The first time this function is invoked per page request,
- * it adds "misc/drupal.js" to the output. Other scripts
- * depends on the 'killswitch' inside it.
+ * The behavior of this function depends on the parameters it is called with.
+ * Generally, it handles the addition of JavaScript to the page, either as
+ * reference to an existing file or as inline code. The following actions can be
+ * performed using this function:
+ *
+ * - Add a file ('core', 'module' and 'theme'):
+ *   Adds a reference to a JavaScript file to the page. JavaScript files
+ *   are placed in a certain order, from 'core' first, to 'module' and finally
+ *   'theme' so that files, that are added later, can override previously added
+ *   files with ease.
+ *
+ * - Add inline JavaScript code ('inline'):
+ *   Executes a piece of JavaScript code on the current page by placing the code
+ *   directly in the page. This can, for example, be useful to tell the user that
+ *   a new message arrived, by opening a pop up, alert box etc.
+ *
+ * - Add settings ('setting'):
+ *   Adds a setting to Drupal's global storage of JavaScript settings. Per-page
+ *   settings are required by some modules to function properly. The settings
+ *   will be accessible at Drupal.settings.
+ *
+ * @param $data
+ *   (optional) If given, the value depends on the $type parameter:
+ *   - 'core', 'module' or 'theme': Path to the file relative to base_path().
+ *   - 'inline': The JavaScript code that should be placed in the given scope.
+ *   - 'setting': An array with configuration options as associative array. The
+ *       array is directly placed in Drupal.settings. You might want to wrap your
+ *       actual configuration settings in another variable to prevent the pollution
+ *       of the Drupal.settings namespace.
+ * @param $type
+ *   (optional) The type of JavaScript that should be added to the page. Allowed
+ *   values are 'core', 'module', 'theme', 'inline' and 'setting'. You
+ *   can, however, specify any value. It is treated as a reference to a JavaScript
+ *   file. Defaults to 'module'.
+ * @param $scope
+ *   (optional) The location in which you want to place the script. Possible
+ *   values are 'header' and 'footer' by default. If your theme implements
+ *   different locations, however, you can also use these.
+ * @param $defer
+ *   (optional) If set to TRUE, the defer attribute is set on the <script> tag.
+ *   Defaults to FALSE. This parameter is not used with $type == 'setting'.
+ * @param $cache
+ *   (optional) If set to FALSE, the JavaScript file is loaded anew on every page
+ *   call, that means, it is not cached. Defaults to TRUE. Used only when $type
+ *   references a JavaScript file.
+ * @return
+ *   If the first parameter is NULL, the JavaScript array that has been built so
+ *   far for $scope is returned.
  */
-function drupal_add_js($file, $nocache = FALSE) {
-  static $sent = array();
+function drupal_add_js($data = NULL, $type = 'module', $scope = 'header', $defer = FALSE, $cache = TRUE) {
+  static $javascript = array();
 
-  $postfix = $nocache ? '?'. time() : '';
-  if (!isset($sent['misc/drupal.js'])) {
-    drupal_set_html_head('<script type="text/javascript" src="'. base_path() .'misc/drupal.js'. $postfix .'"></script>');
-    $sent['misc/drupal.js'] = TRUE;
+  if (!isset($javascript[$scope])) {
+    $javascript[$scope] = array('core' => array(), 'module' => array(), 'theme' => array(), 'setting' => array(), 'inline' => array());
+
+    if (empty($javascript['header']['core']['misc/drupal.js'])) {
+      drupal_add_js('misc/drupal.js', 'core');
+    }
   }
-  if (!isset($sent[$file])) {
-    drupal_set_html_head('<script type="text/javascript" src="'. check_url(base_path() . $file) . $postfix .'"></script>');
-    $sent[$file] = TRUE;
+
+  if (!isset($javascript[$scope][$type])) {
+    $javascript[$scope][$type] = array();
   }
+
+  if (!is_null($data)) {
+    switch ($type) {
+      case 'setting':
+        $javascript[$scope][$type][] = $data;
+        break;
+      case 'inline':
+        $javascript[$scope][$type][] = array('code' => $data, 'defer' => $defer);
+        break;
+      default:
+        $javascript[$scope][$type][$data] = array('cache' => $cache, 'defer' => $defer);
+    }
+  }
+
+  return $javascript[$scope];
 }
 
 /**
- * Generates a Javascript call, while importing the arguments as is.
- * PHP arrays are turned into JS objects to preserve keys. This means the array
- * keys must conform to JS's member naming rules.
+ * Returns a themed presentation of all JavaScript code for the current page.
+ * References to JavaScript files are placed in a certain order: first, all
+ * 'core' files, then all 'module' and finally all 'theme' JavaScript files
+ * are added to the page. Then, all settings are output, followed by 'inline'
+ * JavaScript code.
  *
- * @param $function
- *   The name of the function to call.
- * @param $arguments
- *   An array of arguments.
+ * @parameter $scope
+ *   (optional) The scope for which the JavaScript rules should be returned.
+ *   Defaults to 'header'.
+ * @parameter $javascript
+ *   (optional) An array with all JavaScript code. Defaults to the default
+ *   JavaScript array for the given scope.
+ * @return
+ *   All JavaScript code segments and includes for the scope as HTML tags.
  */
-function drupal_call_js($function) {
-  $arguments = func_get_args();
-  array_shift($arguments);
-  $args = array();
-  foreach ($arguments as $arg) {
-    $args[] = drupal_to_js($arg);
+function drupal_get_js($scope = 'header', $javascript = NULL) {
+  $output = '';
+  if (is_null($javascript)) {
+    $javascript = drupal_add_js(NULL, NULL, $scope);
   }
-  $output = '<script type="text/javascript">'. $function .'('. implode(', ', $args) .');</script>';
+
+  foreach ($javascript as $type => $data) {
+    if (!$data) continue;
+
+    switch ($type) {
+      case 'setting':
+        $output .= '<script type="text/javascript">Drupal.extend({ settings: '. drupal_to_js(call_user_func_array('array_merge_recursive', $data)) ." });</script>\n";
+        break;
+      case 'inline':
+        foreach ($data as $info) {
+          $output .= '<script type="text/javascript"'. ($info['defer'] ? ' defer="defer"' : '') .'>'. $info['code'] ."</script>\n";
+        }
+        break;
+      default:
+        foreach ($data as $path => $flags) {
+          $output .= '<script type="text/javascript"'. ($info['defer'] ? ' defer="defer"' : '') .' src="'. check_url(base_path() . $path) . ($flags['cache'] ? '' : '?'. time()) ."\"></script>\n";
+        }
+    }
+  }
+
   return $output;
 }
 
