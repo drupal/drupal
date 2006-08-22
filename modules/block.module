@@ -351,7 +351,7 @@ function block_box_delete($bid = 0) {
 }
 
 function block_box_form($edit = array()) {
-  $output = form_textfield(t('Block title'), 'title', $edit['title'], 50, 64, t('The title of the block as shown to the user.'));
+  $output = form_textfield(t('Block title'), 'title', $edit['title'], 50, 64, t('The title of the block as shown to the user. Leave blank for no title.'));
   $output .= filter_form('format', $edit['format']);
   $output .= form_textarea(t('Block body'), 'body', $edit['body'], 70, 10, t('The content of the block as shown to the user.'));
   $output .= form_textfield(t('Block description'), 'info', $edit['info'], 50, 64, t('A brief description of your block. Used on the <a href="%overview">block overview page</a>.', array('%overview' => url('admin/block'))));
