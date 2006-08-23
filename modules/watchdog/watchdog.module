@@ -1,5 +1,5 @@
 <?php
-// $Id: watchdog.module,v 1.150 2006/08/18 18:58:47 dries Exp $
+// $Id: watchdog.module,v 1.151 2006/08/23 18:16:45 dries Exp $
 
 /**
  * @file
@@ -177,24 +177,43 @@ function watchdog_event($id) {
   $output = '';
   $result = db_query('SELECT w.*, u.name, u.uid FROM {watchdog} w INNER JOIN {users} u ON w.uid = u.uid WHERE w.wid = %d', $id);
   if ($watchdog = db_fetch_object($result)) {
-    $header = array(t('Type'), t('Date'), t('User'), t('Location'), t('Referrer'), t('Message'), t('Severity'), t('Hostname'));
-    $data = array(t($watchdog->type), format_date($watchdog->timestamp, 'large'), theme('username', $watchdog), l($watchdog->location, $watchdog->location), l($watchdog->referer, $watchdog->referer), $watchdog->message, $severity[$watchdog->severity], $watchdog->hostname);
-    $output = theme('watchdog_event', $header, $data);
+    $rows = array(
+      array(
+        array('data' => t('Type'), 'header' => TRUE),
+        t($watchdog->type),
+      ),
+      array(
+        array('data' => t('Date'), 'header' => TRUE),
+        format_date($watchdog->timestamp, 'large'),
+      ),
+      array(
+        array('data' => t('User'), 'header' => TRUE),
+        theme('username', $watchdog),
+      ),
+      array(
+        array('data' => t('Location'), 'header' => TRUE),
+        l($watchdog->location, $watchdog->location),
+      ),
+      array(
+        array('data' => t('Referrer'), 'header' => TRUE),
+        l($watchdog->referer, $watchdog->referer),
+      ),
+      array(
+        array('data' => t('Message'), 'header' => TRUE),
+        $watchdog->message,
+      ),
+      array(
+        array('data' => t('Severity'), 'header' => TRUE),
+        $severity[$watchdog->severity],
+      ),
+      array(
+        array('data' => t('Hostname'), 'header' => TRUE),
+        $watchdog->hostname,
+      ),
+    );
+    $attributes = array('class' => 'watchdog-event');
+    $output = theme('table', array(), $rows, $attributes);
   }
-  return $output;
-}
-
-function theme_watchdog_event($header, $data) {
-  $output = '';
-  $output .= '<table class="watchdog-event">';
-
-  $n = count($header);
-  for ($i = 0; $i < $n; $i++) {
-    $output .= '<tr class="' . ($i % 2 == 0 ? 'even' : 'odd') . '"><th>' . $header[$i] . '</th><td>' . $data[$i] . '</td></tr>';
-  }
-
-  $output .= '</table>';
-
   return $output;
 }
 
