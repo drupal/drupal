@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.261 2006/08/23 07:23:08 dries Exp $
+// $Id: blog.module,v 1.262 2006/08/23 07:32:18 drumm Exp $
 
 /**
  * @file
@@ -163,7 +163,7 @@ function blog_page_user($uid) {
       $output .= node_view(node_load($node->nid), 1);
     }
     $output .= theme('pager', NULL, variable_get('default_nodes_main', 10));
-    drupal_add_feed(url('blog/'. $account->uid .'/feed'), t('RSS - !title', array('!title' => $title));
+    drupal_add_feed(url('blog/'. $account->uid .'/feed'), t('RSS - !title', array('!title' => $title)));
 
     return $output;
   }
