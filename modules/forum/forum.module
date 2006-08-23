@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.351 2006/08/23 05:55:37 drumm Exp $
+// $Id: forum.module,v 1.352 2006/08/23 07:23:08 dries Exp $
 
 /**
  * @file
@@ -930,13 +930,8 @@ function theme_forum_display($forums, $topics, $parents, $tid, $sortby, $forum_p
     $output .= theme('forum_list', $forums, $parents, $tid);
 
     if ($tid && !in_array($tid, variable_get('forum_containers', array()))) {
-      drupal_add_link(array('rel' => 'alternate',
-                            'type' => 'application/rss+xml',
-                            'title' => 'RSS - '. $title,
-                            'href' => url('taxonomy/term/'. $tid .'/0/feed')));
-
       $output .= theme('forum_topic_list', $tid, $topics, $sortby, $forum_per_page);
-      drupal_add_feed(url('taxonomy/term/'. $tid .'/0/feed'));
+      drupal_add_feed(url('taxonomy/term/'. $tid .'/0/feed'), 'RSS - '. $title);
     }
     $output .= '</div>';
   }

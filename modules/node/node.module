@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.683 2006/08/23 05:55:37 drumm Exp $
+// $Id: node.module,v 1.684 2006/08/23 07:23:09 dries Exp $
 
 /**
  * @file
@@ -2257,11 +2257,7 @@ function node_page_default() {
 
   if (db_num_rows($result)) {
     $feed_url = url('rss.xml', NULL, NULL, TRUE);
-    drupal_add_feed($feed_url);
-    drupal_add_link(array('rel' => 'alternate',
-                          'type' => 'application/rss+xml',
-                          'title' => t('RSS'),
-                          'href' => $feed_url));
+    drupal_add_feed($feed_url, t('RSS'));
 
     $output = '';
     while ($node = db_fetch_object($result)) {
