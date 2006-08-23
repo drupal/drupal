@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.9 2006/08/21 06:22:01 drumm Exp $
+// $Id: install.php,v 1.10 2006/08/23 08:25:43 drumm Exp $
 
 require_once './includes/install.inc';
 
@@ -51,7 +51,7 @@ function install_main() {
     install_goto("install.php?profile=$profile");
   }
   else {
-    _install_no_profile_error();
+    install_no_profile_error();
   }
   // Load the profile.
   require_once "./profiles/$profile/$profile.profile";

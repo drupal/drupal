@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.15 2006/08/18 18:58:44 dries Exp $
+// $Id: install.inc,v 1.16 2006/08/23 08:25:44 drumm Exp $
 
 define('SCHEMA_UNINSTALLED', -1);
 define('SCHEMA_INSTALLED', 0);
@@ -262,7 +262,7 @@ function drupal_verify_profile($profile) {
   $profile_file = "./profiles/$profile/$profile.profile";
 
   if (!isset($profile) || !file_exists($profile_file)) {
-    _install_no_profile_error();
+    install_no_profile_error();
   }
 
   require_once($profile_file);
