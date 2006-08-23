@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.4 2006/08/18 18:58:46 dries Exp $
+// $Id: content_types.inc,v 1.5 2006/08/23 04:40:56 drumm Exp $
 
 /**
  * @file
@@ -280,7 +280,7 @@ function node_type_form_submit($form_id, $form_values) {
       $update_count = node_type_update_nodes($type->old_type, $type->type);
 
       if ($update_count) {
-        drupal_set_message(t('Changed the content type of %update_count %posts from %old_type to %type.', array('%update_count' => $update_count, '%posts' => format_plural($update_count, 'post', 'posts'), '%old_type' => theme('placeholder', $type->old_type), '%type' => theme('placeholder', $type->type))));
+        drupal_set_message(t('Changed the content type of %update_count %posts from %old_type to %type.', array('%update_count' => $update_count, '%posts' => format_plural($update_count, 'post', 'posts'), '%old_type' => $type->old_type, '%type' => $type->type)));
         cache_clear_all('filter:', TRUE);
       }
     }
@@ -320,7 +320,7 @@ function node_type_form_submit($form_id, $form_values) {
   node_types_rebuild();
   menu_rebuild();
   cache_clear_all();
-  $t_args = array('%name' => theme('placeholder', $type->name));
+  $t_args = array('%name' => $type->name);
 
   if ($op == t('Reset to defaults')) {
     drupal_set_message(t('The content type %name has been reset to its default values.', $t_args));
@@ -366,7 +366,7 @@ function node_type_delete($type) {
   $form['type'] = array('#type' => 'value', '#value' => $type->type);
   $form['name'] = array('#type' => 'value', '#value' => $type->name);
 
-  $message = t('Are you sure you want to delete the content type %type?', array('%type' => theme('placeholder', $type->name)));
+  $message = t('Are you sure you want to delete the content type %type?', array('%type' => $type->name));
   $caption = '';
 
   $num_nodes = db_num_rows(db_query("SELECT * FROM {node} WHERE type = '%s'", $type->type));
@@ -385,7 +385,7 @@ function node_type_delete($type) {
 function node_type_delete_form_submit($form_id, $form_values) {
   db_query("DELETE FROM {node_type} WHERE type = '%s'", $form_values['type']);
 
-  $t_args = array('%name' => theme('placeholder', $form_values['name']));
+  $t_args = array('%name' => $form_values['name']);
   drupal_set_message(t('The content type %name has been deleted.', $t_args));
   watchdog('menu', t('Deleted content type %name.', $t_args), WATCHDOG_NOTICE);
 

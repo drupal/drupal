@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.348 2006/08/20 05:57:40 unconed Exp $
+// $Id: system.module,v 1.349 2006/08/23 04:40:57 drumm Exp $
 
 /**
  * @file
@@ -798,7 +798,7 @@ function system_cron_status($cron = '') {
   else {
     $status = t('Cron has not run. It appears cron jobs have not been setup on your system. Please check the help pages for <a href="@url">configuring cron jobs</a>.', array('@url' => 'http://drupal.org/cron'));
   }
-  $status .= ' '. t('Cron can, if necessary, also be run <a href="%cron">manually</a>.', array('%cron' => url('admin/settings/cron-status/cron')));
+  $status .= ' '. t('Cron can, if necessary, also be run <a href="!cron">manually</a>.', array('!cron' => url('admin/settings/cron-status/cron')));
 
   return $status;
 }

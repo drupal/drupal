@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.220 2006/08/22 07:43:32 dries Exp $
+// $Id: block.module,v 1.221 2006/08/23 04:40:56 drumm Exp $
 
 /**
  * @file
@@ -93,11 +93,11 @@ function block_menu($may_cache) {
     foreach (list_themes() as $key => $theme) {
       if ($theme->status) {
         if ($key == variable_get('theme_default', 'bluemarine')) {
-          $items[] = array('path' => 'admin/build/block/list/' . $key, 'title' => t('%key settings', array('%key' => $key)),
+          $items[] = array('path' => 'admin/build/block/list/'. $key, 'title' => t('!key settings', array('!key' => $key)),
             'access' => user_access('administer blocks'), 'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
         }
         else {
-          $items[] = array('path' => 'admin/build/block/list/' . $key, 'title' => t('%key settings', array('%key' => $key)),
+          $items[] = array('path' => 'admin/build/block/list/'. $key, 'title' => t('!key settings', array('!key' => $key)),
             'access' => user_access('administer blocks'), 'type' => MENU_LOCAL_TASK);
         }
       }
