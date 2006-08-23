@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.385 2006/08/18 18:58:44 dries Exp $
+// $Id: book.module,v 1.386 2006/08/23 06:38:49 drumm Exp $
 
 /**
  * @file
@@ -220,7 +220,6 @@ function book_submit(&$node) {
   global $user;
   // Set default values for non-administrators.
   if (!user_access('administer nodes')) {
-    $node->weight = 0;
     $node->revision = 1;
     $book->uid = $user->uid;
     $book->name = $user->uid ? $user->name : '';
@@ -276,9 +275,12 @@ function book_form(&$node) {
     );
   }
   else {
-    // If a regular user updates a book page, we create a new revision
-    // authored by that user:
-    $form['revision'] = array('#type' => 'hidden', '#value' => 1);
+    // If a regular user updates a book page, we preserve the node weight; otherwise
+    // we use 0 as the default for new pages
+    $form['weight'] = array(
+      '#type' => 'value',
+      '#value' => isset($node->weight) ? $node->weight : 0,
+    );
   }
 
   return $form;
