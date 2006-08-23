@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.10 2006/08/22 07:43:33 dries Exp $
+// $Id: system.install,v 1.11 2006/08/23 04:44:36 drumm Exp $
 
 function system_install() {
   switch ($GLOBALS['db_type']) {
@@ -38,7 +38,6 @@ function system_install() {
 
       db_query("CREATE TABLE {boxes} (
         bid tinyint NOT NULL auto_increment,
-        title varchar(64) NOT NULL default '',
         body longtext,
         info varchar(128) NOT NULL default '',
         format int NOT NULL default '0',
