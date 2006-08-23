@@ -387,6 +387,7 @@ function theme_page($content) {
 
   $output .= "\n<!-- begin content -->\n";
   $output .= $content;
+  $output .= drupal_get_feeds();
   $output .= "\n<!-- end content -->\n";
 
   $output .= '</td></tr></table>';

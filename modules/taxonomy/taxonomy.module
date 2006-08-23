@@ -1257,7 +1257,7 @@ function taxonomy_term_page($str_tids = '', $depth = 0, $op = 'page') {
                                 'href' => url('taxonomy/term/'. $str_tids .'/'. $depth .'/feed')));
 
           $output = taxonomy_render_nodes(taxonomy_select_nodes($tids, $terms['operator'], $depth, TRUE));
-          $output .= theme('feed_icon', url('taxonomy/term/'. $str_tids .'/'. $depth .'/feed'));
+          drupal_add_feed(url('taxonomy/term/'. $str_tids .'/'. $depth .'/feed'));
           return $output;
           break;
 

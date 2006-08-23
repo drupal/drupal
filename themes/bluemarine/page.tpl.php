@@ -43,6 +43,7 @@
         <?php print $help ?>
         <?php print $messages ?>
         <?php print $content; ?>
+        <?php print $feed_icons; ?>
       </div>
     </td>
     <?php if ($sidebar_right) { ?><td id="sidebar-right">
