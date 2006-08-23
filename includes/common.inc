@@ -810,7 +810,7 @@ function format_xml_elements($array) {
         }
 
         if ($value['value'] != '') {
-          $output .= '>'. (is_array($value['value']) ? format_xml_tags($value['value']) : check_plain($value['value'])) .'</'. $value['key'] .">\n";
+          $output .= '>'. (is_array($value['value']) ? format_xml_elements($value['value']) : check_plain($value['value'])) .'</'. $value['key'] .">\n";
         }
         else {
           $output .= " />\n";
@@ -818,7 +818,7 @@ function format_xml_elements($array) {
       }
     }
     else {
-      $output .= ' <'. $key .'>'. (is_array($value) ? format_xml_tags($value) : check_plain($value)) ."</$key>\n";
+      $output .= ' <'. $key .'>'. (is_array($value) ? format_xml_elements($value) : check_plain($value)) ."</$key>\n";
     }
   }
   return $output;
