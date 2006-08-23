@@ -51,7 +51,7 @@ function install_main() {
     install_goto("install.php?profile=$profile");
   }
   else {
-    _install_no_profile_error();
+    install_no_profile_error();
   }
   // Load the profile.
   require_once "./profiles/$profile/$profile.profile";

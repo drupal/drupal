@@ -262,7 +262,7 @@ function drupal_verify_profile($profile) {
   $profile_file = "./profiles/$profile/$profile.profile";
 
   if (!isset($profile) || !file_exists($profile_file)) {
-    _install_no_profile_error();
+    install_no_profile_error();
   }
 
   require_once($profile_file);
