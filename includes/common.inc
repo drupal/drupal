@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.563 2006/08/23 08:04:29 drumm Exp $
+// $Id: common.inc,v 1.564 2006/08/23 13:35:44 dries Exp $
 
 /**
  * @file
@@ -1426,8 +1426,8 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
         }
         break;
       default:
-        foreach ($data as $path => $flags) {
-          $output .= '<script type="text/javascript"'. ($info['defer'] ? ' defer="defer"' : '') .' src="'. check_url(base_path() . $path) . ($flags['cache'] ? '' : '?'. time()) ."\"></script>\n";
+        foreach ($data as $path => $info) {
+          $output .= '<script type="text/javascript"'. ($info['defer'] ? ' defer="defer"' : '') .' src="'. check_url(base_path() . $path) . ($info['cache'] ? '' : '?'. time()) ."\"></script>\n";
         }
     }
   }
