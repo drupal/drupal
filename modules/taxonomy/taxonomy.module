@@ -1251,13 +1251,8 @@ function taxonomy_term_page($str_tids = '', $depth = 0, $op = 'page') {
           $breadcrumbs = array_reverse($breadcrumbs);
           menu_set_location($breadcrumbs);
 
-          drupal_add_link(array('rel' => 'alternate',
-                                'type' => 'application/rss+xml',
-                                'title' => 'RSS - '. $title,
-                                'href' => url('taxonomy/term/'. $str_tids .'/'. $depth .'/feed')));
-
           $output = taxonomy_render_nodes(taxonomy_select_nodes($tids, $terms['operator'], $depth, TRUE));
-          drupal_add_feed(url('taxonomy/term/'. $str_tids .'/'. $depth .'/feed'));
+          drupal_add_feed(url('taxonomy/term/'. $str_tids .'/'. $depth .'/feed'), 'RSS - '. $title);
           return $output;
           break;
 
