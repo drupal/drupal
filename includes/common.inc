@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.564 2006/08/23 13:35:44 dries Exp $
+// $Id: common.inc,v 1.565 2006/08/23 18:32:39 dries Exp $
 
 /**
  * @file
@@ -338,7 +338,8 @@ function drupal_not_found() {
   if (empty($return)) {
     drupal_set_title(t('Page not found'));
   }
-  print theme('page', $return);
+  // To conserve CPU and bandwidth, omit the blocks
+  print theme('page', $return, FALSE);
 }
 
 /**

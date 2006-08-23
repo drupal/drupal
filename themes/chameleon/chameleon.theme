@@ -1,9 +1,9 @@
 <?php
-// $Id: chameleon.theme,v 1.49 2006/08/23 05:55:38 drumm Exp $
+// $Id: chameleon.theme,v 1.50 2006/08/23 18:32:39 dries Exp $
 
 /**
  * @file
- * A slim, CSS-driven theme.
+ * A slim, CSS-driven theme which does not depend on a template engine like phptemplate
  */
 
 function chameleon_features() {
@@ -21,7 +21,7 @@ function chameleon_regions() {
   );
 }
 
-function chameleon_page($content) {
+function chameleon_page($content, $show_blocks = TRUE) {
   $language = $GLOBALS['locale'];
 
   if (theme_get_setting('toggle_favicon')) {
@@ -71,8 +71,10 @@ function chameleon_page($content) {
   $output .= " <table id=\"content\">\n";
   $output .= "  <tr>\n";
 
-  if ($blocks = theme_blocks("left")) {
-    $output .= "   <td id=\"sidebar-left\">$blocks</td>\n";
+  if ($show_blocks) {
+    if ($blocks = theme_blocks("left")) {
+      $output .= "   <td id=\"sidebar-left\">$blocks</td>\n";
+    }
   }
 
   $output .= "   <td id=\"main\">\n";
@@ -101,8 +103,10 @@ function chameleon_page($content) {
 
   $output  .= "   </td>\n";
 
-  if ($blocks = theme_blocks("right")) {
-    $output .= "   <td id=\"sidebar-right\">$blocks</td>\n";
+  if ($show_blocks) {
+    if ($blocks = theme_blocks("right")) {
+      $output .= "   <td id=\"sidebar-right\">$blocks</td>\n";
+    }
   }
 
   $output .= "  </tr>\n";
