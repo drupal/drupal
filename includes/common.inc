@@ -338,7 +338,8 @@ function drupal_not_found() {
   if (empty($return)) {
     drupal_set_title(t('Page not found'));
   }
-  print theme('page', $return);
+  // To conserve CPU and bandwidth, omit the blocks
+  print theme('page', $return, FALSE);
 }
 
 /**
