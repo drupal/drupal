@@ -494,13 +494,12 @@ function form_builder($form_id, $form) {
       $form['#id'] =  'edit-' . implode('-', $form['#parents']);
     }
 
-    $posted = (($form['#programmed']) || ((!isset($form['#access']) || $form['#access']) && isset($_POST['edit']) && ($_POST['edit']['form_id'] == $form_id)));
-    $edit = $posted ? $form['#post']['edit'] : array();
-    foreach ($form['#parents'] as $parent) {
-      $edit = isset($edit[$parent]) ? $edit[$parent] : NULL;
-    }
     if (!isset($form['#value']) && !array_key_exists('#value', $form)) {
-      if ($posted) {
+      if (($form['#programmed']) || ((!isset($form['#access']) || $form['#access']) && isset($_POST['edit']) && ($_POST['edit']['form_id'] == $form_id))) {
+        $edit = $form['#post']['edit'];
+        foreach ($form['#parents'] as $parent) {
+          $edit = isset($edit[$parent]) ? $edit[$parent] : NULL;
+        }
         switch ($form['#type']) {
           case 'checkbox':
             $form['#value'] = !empty($edit) ? $form['#return_value'] : 0;
