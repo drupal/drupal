@@ -43,8 +43,8 @@ Drupal x.x.x, xxxx-xx-xx (development version)
     * added configurable content types.
     * changed node rendering to work with structured arrays.
 - performance:
-    * improved session handling.
-    * omit sidebars when serving a '404 - Page not found'.
+    * improved session handling: reduces database overhead.
+    * omit sidebars when serving a '404 - Page not found': saves CPU cycles and bandwidth.
 - removed the archive module.
 - upgrade system:
     * created space for update branches.
