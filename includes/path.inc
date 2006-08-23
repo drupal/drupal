@@ -197,5 +197,5 @@ function drupal_set_title($title = NULL) {
 function drupal_is_front_page() {
   // As drupal_init_path updates $_GET['q'] with the 'site_frontpage' path,
   // we can check it against the 'site_frontpage' variable.
-  return $_GET['q'] == variable_get('site_frontpage', 'node');
+  return $_GET['q'] == drupal_get_normal_path(variable_get('site_frontpage', 'node'));
 }
