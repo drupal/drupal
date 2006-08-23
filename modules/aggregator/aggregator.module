@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.301 2006/08/23 05:55:37 drumm Exp $
+// $Id: aggregator.module,v 1.302 2006/08/23 18:38:41 dries Exp $
 
 /**
  * @file
@@ -1030,6 +1030,8 @@ function aggregator_admin_overview() {
  * Menu callback; displays the most recent items gathered from any feed.
  */
 function aggregator_page_last() {
+  drupal_add_feed(url('aggregator/rss'), variable_get('site_name', 'drupal') . ' ' . t('aggregator'));
+
   return _aggregator_page_list('SELECT i.*, f.title AS ftitle, f.link AS flink FROM {aggregator_item} i INNER JOIN {aggregator_feed} f ON i.fid = f.fid ORDER BY i.timestamp DESC, i.iid DESC', arg(1));
 }
 
@@ -1048,6 +1050,8 @@ function aggregator_page_source() {
  */
 function aggregator_page_category() {
   $category = db_fetch_object(db_query('SELECT cid, title FROM {aggregator_category} WHERE cid = %d', arg(2)));
+
+  drupal_add_feed(url('aggregator/rss/'. arg(2)), variable_get('site_name', 'drupal') . ' ' . t('aggregator - @title', array('@title' => $category->title)));
 
   return _aggregator_page_list('SELECT i.*, f.title AS ftitle, f.link AS flink FROM {aggregator_category_item} c LEFT JOIN {aggregator_item} i ON c.iid = i.iid LEFT JOIN {aggregator_feed} f ON i.fid = f.fid WHERE cid = '. $category->cid .' ORDER BY timestamp DESC, iid DESC', arg(3));
 }
@@ -1082,14 +1086,6 @@ function aggregator_page_list($sql, $header, $categorize) {
   }
   $form['submit'] = array('#type' => 'submit', '#value' => t('Save categories'));
   $form['pager'] = array('#value' => theme('pager', NULL, 20, 0));
-  // arg(1) is undefined if we are at the top aggregator URL
-  // is there a better way to do this?
-  if (!arg(1)) {
-    drupal_add_feed(url('aggregator/rss'));
-  }
-  elseif (arg(1) == 'categories' && arg(2) && !arg(3)) {
-    drupal_add_feed(url('aggregator/rss/'. arg(2)));
-  }
 
   return $form;
 }
