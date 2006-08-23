@@ -21,8 +21,20 @@ if (isJsEnabled()) {
   document.documentElement.className = 'js';
 }
 
+/**
+ * The global Drupal variable.
+ */
 Drupal = { };
 
+/**
+ * Merge an object into the Drupal namespace.
+ *
+ * @param obj
+ *   The object that should be merged into the Drupal namespace. Arbitrary objects
+ *   containing functions, variables or other objects can be used. An example object
+ *   would be { settings: { tree: { '/js/menu/tree': { mid: 206 } } } }. This item
+ *   can now be accessed at Drupal.settings.tree['/js/menu/tree'].mid.
+ */
 Drupal.extend = function(obj) {
   for (var i in obj) {
     if (this[i]) {
@@ -32,7 +44,7 @@ Drupal.extend = function(obj) {
       this[i] = obj[i];
     }
   }
-}
+};
 
 /**
  * Make IE's XMLHTTP object accessible through XMLHttpRequest()
