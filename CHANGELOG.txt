@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.151 2006/08/22 07:43:32 dries Exp $
+// $Id: CHANGELOG.txt,v 1.152 2006/08/23 18:34:20 dries Exp $
 
 Drupal x.x.x, xxxx-xx-xx (development version)
 ------------------------
@@ -42,6 +42,9 @@ Drupal x.x.x, xxxx-xx-xx (development version)
     * made it easier for node access modules to work well with each other.
     * added configurable content types.
     * changed node rendering to work with structured arrays.
+- performance:
+    * improved session handling.
+    * omit sidebars when serving a '404 - Page not found'.
 - removed the archive module.
 - upgrade system:
     * created space for update branches.
