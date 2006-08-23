@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.259 2006/08/20 07:07:17 dries Exp $
+// $Id: blog.module,v 1.260 2006/08/23 05:55:37 drumm Exp $
 
 /**
  * @file
@@ -163,7 +163,7 @@ function blog_page_user($uid) {
       $output .= node_view(node_load($node->nid), 1);
     }
     $output .= theme('pager', NULL, variable_get('default_nodes_main', 10));
-    $output .= theme('feed_icon', url("blog/$account->uid/feed"));
+    drupal_add_feed(url('blog/'. $account->uid .'/feed'));
 
     drupal_add_link(array('rel' => 'alternate',
                           'type' => 'application/rss+xml',
@@ -190,7 +190,7 @@ function blog_page_last() {
     $output .= node_view(node_load($node->nid), 1);
   }
   $output .= theme('pager', NULL, variable_get('default_nodes_main', 10));
-  $output .= theme('feed_icon', url('blog/feed'));
+  drupal_add_feed(url('blog/feed'));
 
   drupal_add_link(array('rel' => 'alternate',
                         'type' => 'application/rss+xml',
@@ -310,5 +310,3 @@ function blog_block($op = 'list', $delta = 0) {
     }
   }
 }
-
-

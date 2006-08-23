@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.560 2006/08/22 11:13:03 dries Exp $
+// $Id: common.inc,v 1.561 2006/08/23 05:55:37 drumm Exp $
 
 /**
  * @file
@@ -146,6 +146,34 @@ function drupal_set_header($header = NULL) {
  */
 function drupal_get_headers() {
   return drupal_set_header();
+}
+
+/*
+ * Add a feed URL for the current page.
+ *
+ * @param $url
+ *   The url for the feed
+ * @param $theme_function
+ *   The name of the theming function to use to style the feed icon, defaults to theme_feed_icon()
+ */
+function drupal_add_feed($url = NULL, $theme_function = 'feed_icon') {
+  static $stored_feed_links = array();
+
+  if (!is_null($url)) {
+    $stored_feed_links[$url] = theme($theme_function, $url);
+  }
+  return $stored_feed_links;
+}
+
+/**
+ * Get the feed URLs for the current page.
+ *
+ * @param $delimiter
+ *   The delimiter to split feeds by
+ */
+function drupal_get_feeds($delimiter = "\n") {
+  $feeds = drupal_add_feed();
+  return implode($feeds, $delimiter);
 }
 
 /**

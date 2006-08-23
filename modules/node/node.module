@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.682 2006/08/22 11:13:04 dries Exp $
+// $Id: node.module,v 1.683 2006/08/23 05:55:37 drumm Exp $
 
 /**
  * @file
@@ -2256,10 +2256,12 @@ function node_page_default() {
   $result = pager_query(db_rewrite_sql('SELECT n.nid, n.sticky, n.created FROM {node} n WHERE n.promote = 1 AND n.status = 1 ORDER BY n.sticky DESC, n.created DESC'), variable_get('default_nodes_main', 10));
 
   if (db_num_rows($result)) {
+    $feed_url = url('rss.xml', NULL, NULL, TRUE);
+    drupal_add_feed($feed_url);
     drupal_add_link(array('rel' => 'alternate',
                           'type' => 'application/rss+xml',
                           'title' => t('RSS'),
-                          'href' => url('rss.xml', NULL, NULL, TRUE)));
+                          'href' => $feed_url));
 
     $output = '';
     while ($node = db_fetch_object($result)) {

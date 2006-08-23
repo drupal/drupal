@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.304 2006/08/20 05:57:40 unconed Exp $
+// $Id: taxonomy.module,v 1.305 2006/08/23 05:55:38 drumm Exp $
 
 /**
  * @file
@@ -1257,7 +1257,7 @@ function taxonomy_term_page($str_tids = '', $depth = 0, $op = 'page') {
                                 'href' => url('taxonomy/term/'. $str_tids .'/'. $depth .'/feed')));
 
           $output = taxonomy_render_nodes(taxonomy_select_nodes($tids, $terms['operator'], $depth, TRUE));
-          $output .= theme('feed_icon', url('taxonomy/term/'. $str_tids .'/'. $depth .'/feed'));
+          drupal_add_feed(url('taxonomy/term/'. $str_tids .'/'. $depth .'/feed'));
           return $output;
           break;
 

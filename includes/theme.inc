@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.310 2006/08/22 09:00:30 dries Exp $
+// $Id: theme.inc,v 1.311 2006/08/23 05:55:37 drumm Exp $
 
 /**
  * @file
@@ -387,6 +387,7 @@ function theme_page($content) {
 
   $output .= "\n<!-- begin content -->\n";
   $output .= $content;
+  $output .= drupal_get_feeds();
   $output .= "\n<!-- end content -->\n";
 
   $output .= '</td></tr></table>';

@@ -1,5 +1,5 @@
 <?php
-// $Id: chameleon.theme,v 1.48 2006/08/22 09:00:31 dries Exp $
+// $Id: chameleon.theme,v 1.49 2006/08/23 05:55:38 drumm Exp $
 
 /**
  * @file
@@ -92,6 +92,7 @@ function chameleon_page($content) {
 
   $output .= "\n<!-- begin content -->\n";
   $output .= $content;
+  $output .= drupal_get_feeds();
   $output .= "\n<!-- end content -->\n";
 
   if ($footer = variable_get('site_footer', '')) {

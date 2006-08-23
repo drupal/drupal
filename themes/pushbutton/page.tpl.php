@@ -81,7 +81,8 @@
         <?php endif; ?>
 
       <!-- start main content -->
-      <?php print($content) ?>
+      <?php print $content; ?>
+      <?php print $feed_icons; ?>
       <!-- end main content -->
 
       </div><!-- main -->
