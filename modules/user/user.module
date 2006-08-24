@@ -2563,7 +2563,7 @@ function user_filter_form_submit($form_id, $form_values) {
 
 
 function user_forms() {
-  $forms['user_admin_access_add_form']['callback'] = 'user_admin_access_form';+
+  $forms['user_admin_access_add_form']['callback'] = 'user_admin_access_form';
   $forms['user_admin_access_edit_form']['callback'] = 'user_admin_access_form';
   $forms['user_admin_new_role']['callback'] = 'user_admin_role';
   return $forms;
