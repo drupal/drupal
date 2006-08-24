@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.307 2006/08/24 05:43:38 drumm Exp $
+// $Id: taxonomy.module,v 1.308 2006/08/24 06:29:50 dries Exp $
 
 /**
  * @file
@@ -181,7 +181,7 @@ function taxonomy_overview_terms($vid) {
   foreach ($tree as $term) {
     $total_entries++; // we're counting all-totals, not displayed
     if (($start_from && ($start_from * $page_increment) >= $total_entries) || ($displayed_count == $page_increment)) { continue; }
-    $rows[] = array(_taxonomy_depth($term->depth) . ' ' . l($term->name, "taxonomy/term/$term->tid"), l(t('edit'), "admin/content/taxonomy/edit/term/$term->tid", array(), $destination));
+    $rows[] = array(str_repeat('--', $term->depth) . ' ' . l($term->name, "taxonomy/term/$term->tid"), l(t('edit'), "admin/content/taxonomy/edit/term/$term->tid", array(), $destination));
     $displayed_count++; // we're counting tids displayed
   }
 
@@ -568,7 +568,7 @@ function taxonomy_form_all($free_tags = 0) {
     $options[$vocabulary->name] = array();
     if ($tree) {
       foreach ($tree as $term) {
-        $options[$vocabulary->name][$term->tid] = _taxonomy_depth($term->depth, '-') . $term->name;
+        $options[$vocabulary->name][$term->tid] = str_repeat('-', $term->depth) . $term->name;
       }
     }
   }
@@ -1048,7 +1048,7 @@ function _taxonomy_term_select($title, $name, $value, $vocabulary_id, $descripti
   if ($tree) {
     foreach ($tree as $term) {
       if (!in_array($term->tid, $exclude)) {
-        $options[$term->tid] = _taxonomy_depth($term->depth, '-') . $term->name;
+        $options[$term->tid] = str_repeat('-', $term->depth) . $term->name;
       }
     }
     if (!$blank && !$value) {
@@ -1071,13 +1071,6 @@ function _taxonomy_term_select($title, $name, $value, $vocabulary_id, $descripti
 
 function theme_taxonomy_term_select($element) {
   return theme('select', $element);
-}
-
-function _taxonomy_depth($depth, $graphic = '--') {
-  for ($n = 0; $n < $depth; $n++) {
-    $result .= $graphic;
-  }
-  return $result;
 }
 
 /**
