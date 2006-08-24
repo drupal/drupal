@@ -487,6 +487,7 @@ function poll_vote(&$node) {
 
         $node->allowvotes = FALSE;
         $node->choice[$choice]['chvotes']++;
+        cache_clear_all();
         drupal_set_message(t('Your vote was recorded.'));
       }
       else {
