@@ -62,7 +62,7 @@ function pager_query($query, $limit = 10, $element = 0, $count_query = NULL) {
 
   // Construct a count query if none was given.
   if (!isset($count_query)) {
-    $count_query = preg_replace(array('/SELECT.*?FROM/As', '/ORDER BY .*/'), array('SELECT COUNT(*) FROM', ''), $query);
+    $count_query = preg_replace(array('/SELECT.*?FROM /As', '/ORDER BY .*/'), array('SELECT COUNT(*) FROM ', ''), $query);
   }
 
   // Convert comma-separated $page to an array, used by other functions.
