@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.659 2006/08/20 13:16:34 dries Exp $
+// $Id: user.module,v 1.660 2006/08/24 09:14:19 drumm Exp $
 
 /**
  * @file
@@ -2563,7 +2563,7 @@ function user_filter_form_submit($form_id, $form_values) {
 
 
 function user_forms() {
-  $forms['user_admin_access_add_form']['callback'] = 'user_admin_access_form';+
+  $forms['user_admin_access_add_form']['callback'] = 'user_admin_access_form';
   $forms['user_admin_access_edit_form']['callback'] = 'user_admin_access_form';
   $forms['user_admin_new_role']['callback'] = 'user_admin_role';
   return $forms;
