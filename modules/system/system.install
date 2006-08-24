@@ -3076,6 +3076,20 @@ function system_update_1006() {
   return $ret;
 }
 
+function system_update_1007() {
+  $ret = array();
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql("ALTER TABLE {aggregator_item} ADD INDEX (fid)");
+      break;
+    case 'pgsql':
+      $ret[] = update_sql("CREATE INDEX {aggregator_item}_fid_idx ON {aggregator_item} (fid)");
+      break;
+  }
+  return $ret;
+}
+
 /**
  * @} End of "defgroup updates-4.7-to-x.x"
  * The next series of updates should start at 2000.
