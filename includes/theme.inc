@@ -534,7 +534,7 @@ function theme_links($links, $delimiter = ' | ') {
  * Return a themed image.
  *
  * @param $path
- *   The path of the image file.
+ *   Either the path of the image file (relative to base_path()) or a full URL.
  * @param $alt
  *   The alternative text for text-based browsers.
  * @param $title
@@ -549,7 +549,8 @@ function theme_links($links, $delimiter = ' | ') {
 function theme_image($path, $alt = '', $title = '', $attributes = NULL, $getsize = TRUE) {
   if (!$getsize || (is_file($path) && (list($width, $height, $type, $image_attributes) = @getimagesize($path)))) {
     $attributes = drupal_attributes($attributes);
-    return '<img src="'. check_url(base_path() . $path) .'" alt="'. check_plain($alt) .'" title="'. check_plain($title) .'" '. $image_attributes . $attributes .' />';
+    $url = (url($path) == $path) ? $path : (base_path() . $path);
+    return '<img src="'. check_url($url) .'" alt="'. check_plain($alt) .'" title="'. check_plain($title) .'" '. $image_attributes . $attributes .' />';
   }
 }
 
