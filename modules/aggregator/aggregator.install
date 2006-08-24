@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.install,v 1.5 2006/08/20 06:38:50 dries Exp $
+// $Id: aggregator.install,v 1.6 2006/08/24 06:27:41 drumm Exp $
 
 function aggregator_install() {
   switch ($GLOBALS['db_type']) {
@@ -52,7 +52,8 @@ function aggregator_install() {
         description longtext NOT NULL,
         timestamp int default NULL,
         guid varchar(255),
-        PRIMARY KEY (iid)
+        PRIMARY KEY (iid),
+        KEY fid (fid)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       break;
@@ -106,6 +107,7 @@ function aggregator_install() {
         guid varchar(255),
         PRIMARY KEY (iid)
       )");
+      db_query("CREATE INDEX {aggregator_item}_fid_idx ON {aggregator_item} (fid)");
 
       break;
   }
