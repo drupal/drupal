@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.140 2006/08/25 07:58:48 drumm Exp $
+// $Id: form.inc,v 1.141 2006/08/25 08:15:24 drumm Exp $
 
 /**
  * @defgroup form Form generation
@@ -39,7 +39,9 @@
 /**
  * Retrieves a form from a builder function, passes it on for
  * processing, and renders the form or redirects to its destination
- * as appropriate.
+ * as appropriate. In multi-step form scenerios, it handles properly
+ * processing the values using the previous step's form definition,
+ * then rendering the requested step for display.
  *
  * @param $form_id
  *   The unique string identifying the desired form. If a function
@@ -54,11 +56,60 @@
  *   The rendered form.
  */
 function drupal_get_form($form_id) {
-  $args = func_get_args();
-  $form = call_user_func_array('drupal_retrieve_form', $args);
-  drupal_process_form($form_id, $form);
-  return drupal_render_form($form_id, $form);
+  // In multi-step form scenerios, the incoming $_POST values are not
+  // necessarily intended for the current form. We need to build
+  // a copy of the previously built form for validation and processing,
+  // then go on to the one that was requested if everything works.
+
+  $form_build_id = md5(mt_rand());
+  if (isset($_POST['form_build_id']) && isset($_SESSION['form'][$_POST['form_build_id']])) {
+    // There's a previously stored multi-step form. We should handle
+    // IT first.
+    $stored = TRUE;
+    $args = $_SESSION['form'][$_POST['form_build_id']];
+    $form = call_user_func_array('drupal_retrieve_form', $args);
+  }
+  else {
+    // We're coming in fresh; build things as they would be. If the
+    // form's #multistep flag is set, store the build parameters so
+    // the same form can be reconstituted for validation.
+    $args = func_get_args();
+    $form = call_user_func_array('drupal_retrieve_form', $args);
+    if (isset($form['#multistep']) && $form['#multistep']) {
+      $_SESSION['form'][$form_build_id] = $args;
+      $form['#build_id'] = $form_build_id;
+    }
+    $stored = FALSE;
+  }
+
+  // Process the form, submit it, and store any errors if necessary.
+  drupal_process_form($args[0], $form);
+
+  if ($stored && !form_get_errors()) {
+    // If it's a stored form and there were no errors, we processed the
+    // stored form successfully. Now we need to build the form that was
+    // actually requested. We always pass in the current $_POST values
+    // to the builder function, as values from one stage of a multistep
+    // form can determine how subsequent steps are displayed.
+    $args = func_get_args();
+    $args[] = $_POST['edit'];
+    $form = call_user_func_array('drupal_retrieve_form', $args);
+    unset($_SESSION['form'][$_POST['form_build_id']]);
+    if (isset($form['#multistep']) && $form['#multistep']) {
+      $_SESSION['form'][$form_build_id] = $args;
+      $form['#build_id'] = $form_build_id;
+    }
+    // If we're in this part of the code, $_POST['edit'] always contains
+    // values from the previously submitted form. Unset it to avoid
+    // any accidental submission of doubled data, then process the form
+    // to prep it for rendering.
+    unset($_POST['edit']);
+    drupal_process_form($args[0], $form);
+  }
+
+  return drupal_render_form($args[0], $form);
 }
+
 
 /**
  * Retrieves the structured array that defines a given form.
@@ -156,6 +207,17 @@ function drupal_prepare_form($form_id, &$form) {
   }
   else {
     $form['#programmed'] = TRUE;
+  }
+
+  // In multi-step form scenerios, this id is used to identify
+  // a unique instance of a particular form for retrieval.
+  if (isset($form['#build_id'])) {
+    $form['form_build_id'] = array(
+      '#type' => 'hidden',
+      '#value' => $form['#build_id'],
+      '#id' => $form['#build_id'],
+      '#name' => 'form_build_id',
+    );
   }
 
   // If $base is set, it is used in place of $form_id when constructing validation,
