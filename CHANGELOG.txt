@@ -51,8 +51,10 @@ Drupal x.x.x, xxxx-xx-xx (development version)
 - forms API:
     * made it possible to programmatically submit forms.
     * improved api for multistep forms.
-- split up and removed drupal.css.
-- added nested lists generation.
+- theme system:
+    * split up and removed drupal.css.
+    * added nested lists generation.
+    * added a self-clearing block class.
 
 Drupal 4.7.0, 2006-05-01
 ------------------------

@@ -26,7 +26,28 @@ th {
   padding-right: 1em;
   border-bottom: 3px solid #ccc;
 }
-br.clear {
-  clear: both;
+
+/*
+** Markup free clearing
+** Details: http://www.positioniseverything.net/easyclearing.html
+*/
+.clear-block:after {
+  content: ".";
+  display: block;
   height: 0;
+  clear: both;
+  visibility: hidden;
 }
+
+.clear-block {
+  display: inline-block;
+}
+
+/* Hides from IE-mac \*/
+* html .clear-block {
+  height: 1%;
+}
+.clear-block {
+  display: block;
+}
+/* End hide from IE-mac */
