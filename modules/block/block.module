@@ -122,9 +122,9 @@ function block_block($op = 'list', $delta = 0, $edit = array()) {
     case 'list':
       $blocks = array();
 
-      $result = db_query("SELECT bid, bl.title, info FROM {boxes} bx INNER JOIN {blocks} bl ON bx.bid = bl.delta WHERE module = 'block' ORDER BY title");
+      $result = db_query('SELECT bid, info FROM {boxes} ORDER BY info');
       while ($block = db_fetch_object($result)) {
-        $blocks[$block->bid]['info'] = $block->info ? check_plain($block->info) : check_plain($block->title);
+        $blocks[$block->bid]['info'] = check_plain($block->info);
       }
       return $blocks;
 
