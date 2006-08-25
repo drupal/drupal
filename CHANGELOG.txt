@@ -50,6 +50,7 @@ Drupal x.x.x, xxxx-xx-xx (development version)
     * created space for update branches.
 - forms API:
     * made it possible to programmatically submit forms.
+    * improved api for multistep forms.
 - split up and removed drupal.css.
 - added nested lists generation.
 
