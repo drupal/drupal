@@ -500,38 +500,43 @@ function form_builder($form_id, $form) {
         foreach ($form['#parents'] as $parent) {
           $edit = isset($edit[$parent]) ? $edit[$parent] : NULL;
         }
-        switch ($form['#type']) {
-          case 'checkbox':
-            $form['#value'] = !empty($edit) ? $form['#return_value'] : 0;
-            break;
-          case 'select':
-            if (isset($form['#multiple']) && $form['#multiple']) {
-              if (isset($edit) && is_array($edit)) {
-                $form['#value'] = drupal_map_assoc($edit);
+        if (!$form['#programmed'] || isset($edit)) {
+          switch ($form['#type']) {
+            case 'checkbox':
+              $form['#value'] = !empty($edit) ? $form['#return_value'] : 0;
+              break;
+
+            case 'select':
+              if (isset($form['#multiple']) && $form['#multiple']) {
+                if (isset($edit) && is_array($edit)) {
+                  $form['#value'] = drupal_map_assoc($edit);
+                }
+                else {
+                  $form['#value'] = array();
+                }
               }
-              else {
-                $form['#value'] = array();
+              elseif (isset($edit)) {
+                $form['#value'] = $edit;
               }
-            }
-            elseif (isset($edit)) {
-              $form['#value'] = $edit;
-            }
-            break;
-          case 'textfield':
-            if (isset($edit)) {
-              // Equate $edit to the form value to ensure it's marked for validation
-              $edit = str_replace(array("\r", "\n"), '', $edit);
-              $form['#value'] = $edit;
-            }
-            break;
-          default:
-            if (isset($edit)) {
-              $form['#value'] = $edit;
-            }
-        }
-        // Mark all posted values for validation
-        if ((isset($form['#value']) && $form['#value'] === $edit) || (isset($form['#required']) && $form['#required'])) {
-          $form['#needs_validation'] = TRUE;
+              break;
+
+            case 'textfield':
+              if (isset($edit)) {
+                // Equate $edit to the form value to ensure it's marked for validation
+                $edit = str_replace(array("\r", "\n"), '', $edit);
+                $form['#value'] = $edit;
+              }
+              break;
+
+            default:
+              if (isset($edit)) {
+                $form['#value'] = $edit;
+              }
+          }
+          // Mark all posted values for validation
+          if ((isset($form['#value']) && $form['#value'] === $edit) || (isset($form['#required']) && $form['#required'])) {
+            $form['#needs_validation'] = TRUE;
+          }
         }
       }
       if (!isset($form['#value'])) {
