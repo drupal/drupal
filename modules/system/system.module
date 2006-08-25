@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.349 2006/08/23 04:40:57 drumm Exp $
+// $Id: system.module,v 1.350 2006/08/25 15:17:47 dries Exp $
 
 /**
  * @file
@@ -519,7 +519,7 @@ function system_site_information_settings() {
     '#type' => 'textfield',
     '#title' => t('Default front page'),
     '#default_value' => variable_get('site_frontpage', 'node'),
-    '#description' => t('The home page displays content from this relative URL. If you are not using clean URLs, specify the part after "?q=". If unsure, specify "node".')
+    '#description' => t('The home page displays content from this relative URL. If you are not using clean URLs, specify the part after "<code>?q=</code>". If unsure, specify "node".')
   );
 
   return system_settings_form($form);
@@ -555,14 +555,14 @@ function system_error_reporting_settings() {
     '#type' => 'textfield',
     '#title' => t('Default 403 (access denied) page'),
     '#default_value' => variable_get('site_403', ''),
-    '#description' => t('This page is displayed when the requested document is denied to the current user. If you are not using clean URLs, specify the part after "?q=". If unsure, specify nothing.')
+    '#description' => t('This page is displayed when the requested document is denied to the current user. If you are not using clean URLs, specify the part after "<code>?q=</code>". If unsure, specify nothing.')
   );
 
   $form['site_404'] = array(
     '#type' => 'textfield',
     '#title' => t('Default 404 (not found) page'),
     '#default_value' =>  variable_get('site_404', ''),
-    '#description' => t('This page is displayed when no other content matches the requested document. If you are not using clean URLs, specify the part after "?q=". If unsure, specify nothing.')
+    '#description' => t('This page is displayed when no other content matches the requested document. If you are not using clean URLs, specify the part after "<code>?q=</code>". If unsure, specify nothing.')
   );
 
   $form['error_level'] = array(
