@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.660 2006/08/24 09:14:19 drumm Exp $
+// $Id: user.module,v 1.661 2006/08/25 09:01:12 drumm Exp $
 
 /**
  * @file
@@ -2504,7 +2504,7 @@ function theme_user_filter_form($form) {
  * Theme user administraton filter selector.
  */
 function theme_user_filters($form) {
-  $output .= '<ul>';
+  $output .= '<ul class="clear-block">';
   if (sizeof($form['current'])) {
     foreach (element_children($form['current']) as $key) {
       $output .= '<li>'. drupal_render($form['current'][$key]) .'</li>';
@@ -2526,7 +2526,7 @@ function theme_user_filters($form) {
 
   $output .= '</dl>';
   $output .= '<div class="container-inline" id="user-admin-buttons">'. drupal_render($form['buttons']) .'</div>';
-  $output .= '</li></ul><br class="clear" />';
+  $output .= '</li></ul>';
 
   return $output;
 }

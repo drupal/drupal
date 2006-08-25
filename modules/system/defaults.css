@@ -1,4 +1,4 @@
-/* $Id: defaults.css,v 1.1 2006/08/14 07:14:49 drumm Exp $ */
+/* $Id: defaults.css,v 1.2 2006/08/25 09:01:12 drumm Exp $ */
 
 /*
 ** HTML elements
@@ -26,7 +26,28 @@ th {
   padding-right: 1em;
   border-bottom: 3px solid #ccc;
 }
-br.clear {
-  clear: both;
+
+/*
+** Markup free clearing
+** Details: http://www.positioniseverything.net/easyclearing.html
+*/
+.clear-block:after {
+  content: ".";
+  display: block;
   height: 0;
+  clear: both;
+  visibility: hidden;
 }
+
+.clear-block {
+  display: inline-block;
+}
+
+/* Hides from IE-mac \*/
+* html .clear-block {
+  height: 1%;
+}
+.clear-block {
+  display: block;
+}
+/* End hide from IE-mac */

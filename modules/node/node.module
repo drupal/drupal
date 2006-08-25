@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.685 2006/08/23 18:38:41 dries Exp $
+// $Id: node.module,v 1.686 2006/08/25 09:01:12 drumm Exp $
 
 /**
  * @file
@@ -1334,7 +1334,7 @@ function theme_node_filter_form($form) {
  * Theme node administraton filter selector.
  */
 function theme_node_filters($form) {
-  $output .= '<ul>';
+  $output .= '<ul class="clear-block">';
   if (sizeof($form['current'])) {
     foreach (element_children($form['current']) as $key) {
       $output .= '<li>' . drupal_render($form['current'][$key]) . '</li>';
@@ -1356,7 +1356,7 @@ function theme_node_filters($form) {
 
   $output .= '</dl>';
   $output .= '<div class="container-inline" id="node-admin-buttons">'. drupal_render($form['buttons']) .'</div>';
-  $output .= '</li></ul><br class="clear" />';
+  $output .= '</li></ul>';
 
   return $output;
 }
@@ -2440,8 +2440,8 @@ function node_form_alter($form_id, &$form) {
     $form['advanced']['submit'] = array(
       '#type' => 'submit',
       '#value' => t('Advanced search'),
-      '#prefix' => '<div class="action">',
-      '#suffix' => '</div><br class="clear" />',
+      '#prefix' => '<div class="action clear-block">',
+      '#suffix' => '</div>',
     );
 
     $form['#validate']['node_search_validate'] = array();

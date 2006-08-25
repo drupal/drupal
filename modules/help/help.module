@@ -1,5 +1,5 @@
 <?php
-// $Id: help.module,v 1.56 2006/08/20 07:07:17 dries Exp $
+// $Id: help.module,v 1.57 2006/08/25 09:01:12 drumm Exp $
 
 /**
  * @file
@@ -80,14 +80,14 @@ function help_links_as_list() {
 
   // Output pretty four-column list
   $break = ceil(count($modules) / 4);
-  $output = '<div class="help-items"><ul>';
+  $output = '<div class="help-items clear-block"><ul>';
   foreach ($modules as $i => $module) {
     $output .= '<li>'. l(t($module), 'admin/help/'. $module) .'</li>';
     if (($i + 1) % $break == 0) {
       $output .= '</ul></div><div class="help-items'. ($i + 1 == $break * 3 ? ' help-items-last' : '') .'"><ul>';
     }
   }
-  $output .= '</ul></div><br class="clear" />';
+  $output .= '</ul></div>';
 
   return $output;
 }
