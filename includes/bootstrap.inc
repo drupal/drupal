@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.115 2006/08/18 19:24:52 dries Exp $
+// $Id: bootstrap.inc,v 1.116 2006/08/25 05:42:00 dries Exp $
 
 /**
  * @file
@@ -24,7 +24,7 @@ define('DRUPAL_BOOTSTRAP_LATE_PAGE_CACHE', 4);
 define('DRUPAL_BOOTSTRAP_PATH', 5);
 define('DRUPAL_BOOTSTRAP_FULL', 6);
 
-// these values should match the'role' table
+// These values should match the 'role' table
 define('DRUPAL_ANONYMOUS_RID', 1);
 define('DRUPAL_AUTHENTICATED_RID', 2);
 
@@ -86,7 +86,7 @@ function timer_stop($name) {
  *
  * Try finding a matching configuration directory by stripping the website's
  * hostname from left to right and pathname from right to left. The first
- * configuration file found will be used, the remaining will ignored. If no
+ * configuration file found will be used; the remaining will ignored. If no
  * configuration file is found, return a default value '$confdir/default'.
  *
  * Example for a fictitious site installed at
@@ -239,7 +239,7 @@ function drupal_get_filename($type, $name, $filename = NULL, $check_db = TRUE) {
  * file.
  */
 function variable_init($conf = array()) {
-  // NOTE: caching the variables improves performance with 20% when serving cached pages.
+  // NOTE: caching the variables improves performance by 20% when serving cached pages.
   if ($cached = cache_get('variables')) {
     $variables = unserialize($cached->data);
   }
@@ -314,7 +314,7 @@ function variable_del($name) {
 /**
  * Retrieve the current page from the cache.
  *
- * Note, we do not serve cached pages when status messages are waiting (from
+ * Note: we do not serve cached pages when status messages are waiting (from
  * a redirected form submission which was completed).
  * Because the output handler is not activated, the resulting page will not
  * get cached either.
@@ -400,7 +400,7 @@ function drupal_page_header() {
     $date = gmdate('D, d M Y H:i:s', $cache->created) .' GMT';
     $etag = '"'. md5($date) .'"';
 
-    // Check http headers:
+    // Check HTTP headers:
     $modified_since = isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? $_SERVER['HTTP_IF_MODIFIED_SINCE'] == $date : NULL;
     if (!empty($_SERVER['HTTP_IF_MODIFIED_SINCE']) && ($timestamp = strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE'])) > 0) {
       $modified_since = $cache->created <= $timestamp;
@@ -611,7 +611,7 @@ function drupal_is_denied($type, $mask) {
 }
 
 /**
- * Generates a default annonymous $user object.
+ * Generates a default anonymous $user object.
  *
  * @return Object - the user object.
  */
@@ -628,20 +628,19 @@ function drupal_anonymous_user($session = '') {
 /**
  * A string describing a phase of Drupal to load. Each phase adds to the
  * previous one, so invoking a later phase automatically runs the earlier
- * phases too. The most important usage is that if you want to access
+ * phases too. The most important usage is that if you want to access the
  * Drupal database from a script without loading anything else, you can
  * include bootstrap.inc, and call drupal_bootstrap(DRUPAL_BOOTSTRAP_DATABASE).
  *
  * @param $phase
  *   A constant. Allowed values are:
- *     DRUPAL_BOOTSTRAP_CONFIGURATION: initialize configuration
- *     DRUPAL_BOOTSTRAP_EARLY_PAGE_CACHE: try to call a non-database cache fetch routine
+ *     DRUPAL_BOOTSTRAP_CONFIGURATION: initialize configuration.
+ *     DRUPAL_BOOTSTRAP_EARLY_PAGE_CACHE: try to call a non-database cache fetch routine.
  *     DRUPAL_BOOTSTRAP_DATABASE: initialize database layer.
  *     DRUPAL_BOOTSTRAP_SESSION: initialize session handling.
  *     DRUPAL_BOOTSTRAP_LATE_PAGE_CACHE: load bootstrap.inc and module.inc, start
  *       the variable system and try to serve a page from the cache.
- *     DRUPAL_BOOTSTRAP_FULL: Drupal is fully loaded, validate and fix input
- *       data.
+ *     DRUPAL_BOOTSTRAP_FULL: Drupal is fully loaded, validate and fix input data.
  */
 function drupal_bootstrap($phase) {
   static $phases = array(DRUPAL_BOOTSTRAP_CONFIGURATION, DRUPAL_BOOTSTRAP_EARLY_PAGE_CACHE, DRUPAL_BOOTSTRAP_DATABASE, DRUPAL_BOOTSTRAP_SESSION, DRUPAL_BOOTSTRAP_LATE_PAGE_CACHE, DRUPAL_BOOTSTRAP_PATH, DRUPAL_BOOTSTRAP_FULL);
