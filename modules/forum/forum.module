@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.352 2006/08/23 07:23:08 dries Exp $
+// $Id: forum.module,v 1.353 2006/08/25 08:55:04 drumm Exp $
 
 /**
  * @file
@@ -594,10 +594,10 @@ function forum_overview() {
   if ($tree) {
     foreach ($tree as $term) {
       if (in_array($term->tid, variable_get('forum_containers', array()))) {
-        $rows[] = array(_taxonomy_depth($term->depth) .' '. check_plain($term->name), l(t('edit container'), "admin/content/forum/edit/container/$term->tid"));
+        $rows[] = array(str_repeat(' -- ', $term->depth) .' '. check_plain($term->name), l(t('edit container'), "admin/content/forum/edit/container/$term->tid"));
       }
       else {
-        $rows[] = array(_taxonomy_depth($term->depth) .' '. check_plain($term->name), l(t('edit forum'), "admin/content/forum/edit/forum/$term->tid"));
+        $rows[] = array(str_repeat(' -- ', $term->depth) .' '. check_plain($term->name), l(t('edit forum'), "admin/content/forum/edit/forum/$term->tid"));
        }
 
     }
@@ -639,7 +639,7 @@ function _forum_parent_select($tid, $title, $child_type) {
   if ($tree) {
     foreach ($tree as $term) {
       if (!in_array($term->tid, $exclude)) {
-        $options[$term->tid] = _taxonomy_depth($term->depth) . $term->name;
+        $options[$term->tid] = str_repeat(' -- ', $term->depth) . $term->name;
       }
     }
   }
