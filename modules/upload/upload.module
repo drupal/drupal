@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.121 2006/08/22 11:13:04 dries Exp $
+// $Id: upload.module,v 1.122 2006/08/26 09:56:17 dries Exp $
 
 /**
  * @file
@@ -182,7 +182,8 @@ function upload_admin_settings() {
     '#default_value' => variable_get('upload_max_resolution', 0),
     '#size' => 15,
     '#maxlength' => 10,
-    '#description' => t('The maximum allowed image size expressed as WIDTHxHEIGHT (e.g. 640x480). Set to 0 for no restriction.'),
+    '#description' => t('The maximum allowed image size (e.g. 640x480). Set to 0 for no restriction.'),
+    '#field_suffix' => t('<kbd>WIDTHxHEIGHT</kbd>')
   );
   $form['settings_general']['upload_list_default'] = array(
     '#type' => 'select',
@@ -205,7 +206,8 @@ function upload_admin_settings() {
     '#default_value' => $upload_uploadsize_default,
     '#size' => 5,
     '#maxlength' => 5,
-    '#description' => t('The default maximum file size a user can upload (in megabytes).'),
+    '#description' => t('The default maximum file size a user can upload.'),
+    '#field_suffix' => t('MB')
   );
   $form['settings_general']['upload_usersize_default'] = array(
     '#type' => 'textfield',
@@ -213,7 +215,8 @@ function upload_admin_settings() {
     '#default_value' => $upload_usersize_default,
     '#size' => 5,
     '#maxlength' => 5,
-    '#description' => t('The default maximum size of all files a user can have on the site (in megabytes).'),
+    '#description' => t('The default maximum size of all files a user can have on the site.'),
+    '#field_suffix' => t('MB')
   );
 
   $form['upload_max_size'] = array('#value' => '<p>'. t('Your PHP settings limit the maximum file size per upload to %size MB.', array('%size' => file_upload_max_size())).'</p>');
