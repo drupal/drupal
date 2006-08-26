@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.565 2006/08/23 18:32:39 dries Exp $
+// $Id: common.inc,v 1.566 2006/08/26 00:23:12 drumm Exp $
 
 /**
  * @file
@@ -274,7 +274,7 @@ function drupal_get_destination() {
  * statement in your menu callback.
  *
  * @param $path
- *   A Drupal path.
+ *   A Drupal path or a full URL.
  * @param $query
  *   The query string component, if any.
  * @param $fragment
