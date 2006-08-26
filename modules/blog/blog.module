@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.262 2006/08/23 07:32:18 drumm Exp $
+// $Id: blog.module,v 1.263 2006/08/26 00:03:41 drumm Exp $
 
 /**
  * @file
@@ -180,7 +180,7 @@ function blog_page_last() {
 
   $output = '';
 
-  $result = pager_query(db_rewrite_sql("SELECT n.nid, n.created FROM {node} n WHERE n.type = 'blog' AND n.status = 1 ORDER BY n.created DESC"), variable_get('default_nodes_main', 10));
+  $result = pager_query(db_rewrite_sql("SELECT n.nid, n.created FROM {node} n WHERE n.type = 'blog' AND n.status = 1 ORDER BY n.sticky DESC, n.created DESC"), variable_get('default_nodes_main', 10));
 
   while ($node = db_fetch_object($result)) {
     $output .= node_view(node_load($node->nid), 1);
