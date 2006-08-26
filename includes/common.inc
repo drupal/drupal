@@ -242,7 +242,7 @@ function drupal_get_destination() {
  * statement in your menu callback.
  *
  * @param $path
- *   A Drupal path.
+ *   A Drupal path or a full URL.
  * @param $query
  *   The query string component, if any.
  * @param $fragment
