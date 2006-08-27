@@ -227,7 +227,7 @@ function upload_admin_settings() {
   foreach ($roles as $rid => $role) {
     $form['settings_role_'. $rid] = array(
       '#type' => 'fieldset',
-      '#title' => t('Settings for %role', array('%role' => $role)),
+      '#title' => t('Settings for @role', array('@role' => $role)),
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
     );
