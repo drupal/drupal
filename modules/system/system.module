@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.350 2006/08/25 15:17:47 dries Exp $
+// $Id: system.module,v 1.351 2006/08/27 07:44:55 dries Exp $
 
 /**
  * @file
@@ -1602,7 +1602,7 @@ function theme_admin_page($blocks) {
   $output .= '</div>';
 
   foreach ($container as $id => $data) {
-    $output .= '<div class="'. $id .'">';
+    $output .= '<div class="'. $id .' clear-block">';
     $output .= $data;
     $output .= '</div>';
   }
@@ -1625,14 +1625,14 @@ function theme_admin_block($block) {
   }
 
   $output = <<< EOT
-  <div class="admin-panel collapsible">
-    <div class="head">
+  <div class="admin-panel">
+    <h3>
       $block[title]
-    </div>
+    </h3>
     <div class="body">
-      <div class="description">
+      <p class="description">
         $block[description]
-      </div>
+      </p>
       $block[content]
     </div>
   </div>

@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.14 2006/05/23 02:11:17 drumm Exp $ */
+/* $Id: style.css,v 1.15 2006/08/27 07:44:55 dries Exp $ */
 
 /*
 ** HTML elements
@@ -327,6 +327,12 @@ table {
 }
 .block-forum h3 {
   margin-bottom: .5em;
+}
+div.admin-panel h3 {
+  background-color: #69c;
+  color: #fff;
+  padding: 5px 8px 5px;
+  margin: 0;
 }
 .calendar a {
   text-decoration: none;

@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.17 2006/05/23 02:11:17 drumm Exp $ */
+/* $Id: style.css,v 1.18 2006/08/27 07:44:55 dries Exp $ */
 
 /*
 ** HTML elements
@@ -485,6 +485,20 @@ table#footer-menu {
 .nav .links .up a:hover {
   padding: 11px 0 17px 0;
   background: transparent url(arrow-up-hover.png) center top no-repeat;
+}
+
+/*
+** Administration page styles
+*/
+
+div.admin-panel h3 {
+  background-color: #369;
+  color: #fff;
+  padding: 5px 8px 5px;
+  margin: 0;
+}
+div.admin-panel .body {
+  background: #fffaf0;
 }
 
 /*
