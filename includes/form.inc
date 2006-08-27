@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.142 2006/08/26 09:56:17 dries Exp $
+// $Id: form.inc,v 1.143 2006/08/27 12:54:01 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -554,6 +554,10 @@ function form_builder($form_id, $form) {
     }
     if (!isset($form['#id'])) {
       $form['#id'] =  'edit-' . implode('-', $form['#parents']);
+    }
+
+    if (isset($form['#disabled']) && $form['#disabled']) {
+      $form['#attributes']['disabled'] = 'disabled';
     }
 
     if (!isset($form['#value']) && !array_key_exists('#value', $form)) {

@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.136 2006/08/20 06:53:08 dries Exp $
+// $Id: filter.module,v 1.137 2006/08/27 12:54:01 dries Exp $
 
 /**
  * @file
@@ -425,7 +425,7 @@ function filter_admin_format_form($format = NULL) {
       '#default_value' => ($default || $checked),
     );
     if ($default) {
-      $form['roles'][$rid]['#attributes'] = array('disabled' => 'disabled');
+      $form['roles'][$rid]['#disabled'] = TRUE;
     }
   }
   // Table with filters

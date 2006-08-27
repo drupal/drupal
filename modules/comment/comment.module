@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.478 2006/08/22 11:13:03 dries Exp $
+// $Id: comment.module,v 1.479 2006/08/27 12:54:01 dries Exp $
 
 /**
  * @file
@@ -438,7 +438,7 @@ function comment_admin_settings() {
     '#description' => t('This option is enabled when anonymous users have permission to post comments on the <a href="@url">permissions page</a>.', array('@url' => url('admin/user/access'))),
   );
   if (!user_access('post comments', user_load(array('uid' => 0)))) {
-    $form['posting_settings']['comment_anonymous']['#attributes'] = array('disabled' => 'disabled');
+    $form['posting_settings']['comment_anonymous']['#disabled'] = TRUE;
   }
 
   $form['posting_settings']['comment_subject_field'] = array(
