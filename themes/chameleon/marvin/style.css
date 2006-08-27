@@ -87,6 +87,17 @@ table {
 }
 
 /*
+** Administration page styles
+*/
+
+div.admin-panel h3 {
+  background-color: #888;
+  color: #fff;
+  padding: 5px 8px 5px;
+  margin: 0;
+}
+
+/*
 ** Module specific styles
 */
 .item-list ul li {

@@ -2,15 +2,13 @@
 ** Formatting for administration page
 */
 div.admin-panel {
-  margin: 0px 0px 0px 0px;
+  margin: 0;
   padding: 5px 5px 15px 5px;
 }
 
 div.admin-panel .description {
-  margin: 0px 0px 3px;
+  margin: 0 0 3px;
   padding: 2px 0 3px 0;
-  font-weight: normal;
-  text-align: left;
   color: #999;
 }
 
@@ -18,15 +16,6 @@ div.admin-panel .body {
   padding: 0 4px 2px 8px;
   background-color: #f4f4f4;
   line-height: 1.2em;
-}
-
-div.admin-panel .head {
-  background-color: #6699CC;
-  color: #FFFFFF;
-  font-weight: bold;
-  font-size: 14px;
-  margin: 0px 0px 0px 0px;
-  padding: 4px 4px 4px 8px;
 }
 
 div.admin {

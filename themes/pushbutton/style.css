@@ -488,6 +488,20 @@ table#footer-menu {
 }
 
 /*
+** Administration page styles
+*/
+
+div.admin-panel h3 {
+  background-color: #369;
+  color: #fff;
+  padding: 5px 8px 5px;
+  margin: 0;
+}
+div.admin-panel .body {
+  background: #fffaf0;
+}
+
+/*
 ** Module specific styles
 */
 .content .active {

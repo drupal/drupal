@@ -88,3 +88,14 @@ ul {
 .item-list ul li {
   list-style: square;
 }
+
+/*
+** Administration page styles
+*/
+
+div.admin-panel h3 {
+  background-color: #999;
+  color: #fff;
+  padding: 5px 8px 5px;
+  margin: 0;
+}
