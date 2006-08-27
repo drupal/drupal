@@ -240,11 +240,12 @@ function xmlrpc_server_call($xmlrpc_server, $methodname, $args) {
   return call_user_func_array($method, $args);
 }
 
-function xmlrpc_server_method_signature($xmlrpc_server, $methodname) {
+function xmlrpc_server_method_signature($methodname) {
+  $xmlrpc_server = xmlrpc_server_get();
   if (!isset($xmlrpc_server->callbacks[$methodname])) {
     return xmlrpc_error(-32601, t('server error. requested method %methodname not specified.', array("%methodname" => $methodname)));
   }
-  if (!is_array($xmlrpc_server->signature[$methodname])) {
+  if (!is_array($xmlrpc_server->signatures[$methodname])) {
     return xmlrpc_error(-32601, t('server error. requested method %methodname signature not specified.', array("%methodname" => $methodname)));
   }
   // We should be returning an array of types
