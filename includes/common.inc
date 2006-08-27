@@ -1596,8 +1596,8 @@ function drupal_xml_parser_create(&$data) {
   if (!in_array(strtolower($encoding), $php_supported)) {
     $out = drupal_convert_to_utf8($data, $encoding);
     if ($out !== false) {
-      $data = $out;
       $encoding = 'utf-8';
+      $data = ereg_replace('^(<\?xml[^>]+encoding)="([^"]+)"', '\\1="utf-8"', $out);
     }
     else {
       watchdog('php', t("Could not convert XML encoding '%s' to UTF-8.", array('%s' => $encoding)), WATCHDOG_WARNING);
