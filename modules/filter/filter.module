@@ -425,7 +425,7 @@ function filter_admin_format_form($format = NULL) {
       '#default_value' => ($default || $checked),
     );
     if ($default) {
-      $form['roles'][$rid]['#attributes'] = array('disabled' => 'disabled');
+      $form['roles'][$rid]['#disabled'] = TRUE;
     }
   }
   // Table with filters

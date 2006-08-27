@@ -556,6 +556,10 @@ function form_builder($form_id, $form) {
       $form['#id'] =  'edit-' . implode('-', $form['#parents']);
     }
 
+    if (isset($form['#disabled']) && $form['#disabled']) {
+      $form['#attributes']['disabled'] = 'disabled';
+    }
+
     if (!isset($form['#value']) && !array_key_exists('#value', $form)) {
       if (($form['#programmed']) || ((!isset($form['#access']) || $form['#access']) && isset($_POST['edit']) && ($_POST['edit']['form_id'] == $form_id))) {
         $edit = $form['#post']['edit'];
