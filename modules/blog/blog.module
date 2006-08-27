@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.263 2006/08/26 00:03:41 drumm Exp $
+// $Id: blog.module,v 1.264 2006/08/27 12:43:18 dries Exp $
 
 /**
  * @file
@@ -49,7 +49,7 @@ function blog_access($op, $node) {
 function blog_user($type, &$edit, &$user) {
   if ($type == 'view' && user_access('edit own blog', $user)) {
     $items[] = array('title' => t('Blog'),
-      'value' => l(t('view recent blog entries'), "blog/$user->uid", array('title' => t("Read %username's latest blog entries.", array('%username' => $user->name)))),
+      'value' => l(t('view recent blog entries'), "blog/$user->uid", array('title' => t("Read @username's latest blog entries.", array('@username' => $user->name)))),
       'class' => 'blog',
     );
     return array(t('History') => $items);
@@ -249,7 +249,7 @@ function blog_link($type, $node = NULL, $teaser = FALSE) {
       $links['blog_usernames_blog'] = array(
         'title' => t("@username's blog", array('@username' => $node->name)),
         'href' => "blog/$node->uid",
-        'attributes' => array('title' => t("Read %username's latest blog entries.", array('%username' => $node->name)))
+        'attributes' => array('title' => t("Read @username's latest blog entries.", array('@username' => $node->name)))
       );
     }
   }

@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.122 2006/08/26 09:56:17 dries Exp $
+// $Id: upload.module,v 1.123 2006/08/27 12:43:18 dries Exp $
 
 /**
  * @file
@@ -227,7 +227,7 @@ function upload_admin_settings() {
   foreach ($roles as $rid => $role) {
     $form['settings_role_'. $rid] = array(
       '#type' => 'fieldset',
-      '#title' => t('Settings for %role', array('%role' => $role)),
+      '#title' => t('Settings for @role', array('@role' => $role)),
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
     );
