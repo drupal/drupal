@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.661 2006/08/25 09:01:12 drumm Exp $
+// $Id: user.module,v 1.662 2006/08/27 08:56:35 dries Exp $
 
 /**
  * @file
@@ -605,7 +605,7 @@ function theme_user_picture($account) {
     }
 
     if (isset($picture)) {
-      $alt = t('%user\'s picture', array('%user' => $account->name ? $account->name : variable_get('anonymous', 'Anonymous')));
+      $alt = t('@user\'s picture', array('@user' => $account->name ? $account->name : variable_get('anonymous', 'Anonymous')));
       $picture = theme('image', $picture, $alt, $alt, '', FALSE);
       if (!empty($account->uid) && user_access('access user profiles')) {
         $picture = l($picture, "user/$account->uid", array('title' => t('View user profile.')), NULL, NULL, FALSE, TRUE);
