@@ -1063,6 +1063,11 @@ function node_revision_delete($nid, $revision) {
 
     unset($node->revisions[$revision]);
 
+    // If the array is empty, replace the array by an empty string, or
+    // else we'll generate an SQL warning when we try to save the node.
+    if (count($node->revisions) == 0) {
+      $node->revisions = '';
+    }
     node_save($node, array('nid', 'revisions'));
 
     drupal_set_message(t('Deleted revision %revision of %title', array('%revision' => "<em>#$revision</em>", '%title' => theme('placeholder', $node->title))));
