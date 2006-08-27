@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.install,v 1.4 2006/08/20 06:38:50 dries Exp $
+// $Id: locale.install,v 1.5 2006/08/27 09:33:31 dries Exp $
 
 function locale_install() {
   switch ($GLOBALS['db_type']) {
@@ -19,7 +19,8 @@ function locale_install() {
         lid int NOT NULL auto_increment,
         location varchar(255) NOT NULL default '',
         source blob NOT NULL,
-        PRIMARY KEY (lid)
+        PRIMARY KEY (lid),
+        KEY source (source(30))
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {locales_target} (
@@ -63,6 +64,7 @@ function locale_install() {
       db_query("CREATE INDEX {locales_target}_locale_idx ON {locales_target} (locale)");
       db_query("CREATE INDEX {locales_target}_plid_idx ON {locales_target} (plid)");
       db_query("CREATE INDEX {locales_target}_plural_idx ON {locales_target} (plural)");
+      db_query("CREATE INDEX {locales_source}_source_idx ON {locales_source} (source)");
       break;
   }
   db_query("INSERT INTO {locales_meta} (locale, name, enabled, isdefault) VALUES ('en', 'English', '1', '1')");

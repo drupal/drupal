@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.12 2006/08/24 06:27:41 drumm Exp $
+// $Id: system.install,v 1.13 2006/08/27 09:33:31 dries Exp $
 
 function system_install() {
   switch ($GLOBALS['db_type']) {
@@ -3087,6 +3087,23 @@ function system_update_1007() {
       $ret[] = update_sql("CREATE INDEX {aggregator_item}_fid_idx ON {aggregator_item} (fid)");
       break;
   }
+  return $ret;
+}
+
+/**
+ * Performance update for queries that are related to the locale.module
+ */
+function system_update_1008() {
+  $ret = array();
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql('ALTER TABLE {locales_source} ADD KEY source (source(30))');
+      break;
+    case 'pgsql':
+      $ret[] = update_sql("CREATE INDEX {locales_source}_source_idx on {locales_source} (source)");
+  }
+
   return $ret;
 }
 
