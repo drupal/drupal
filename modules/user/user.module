@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.662 2006/08/27 08:56:35 dries Exp $
+// $Id: user.module,v 1.663 2006/08/28 05:52:33 dries Exp $
 
 /**
  * @file
@@ -1216,7 +1216,7 @@ function user_register_submit($form_id, $form_values) {
   }
 
   $account = user_save('', array_merge($form_values, array('pass' => $pass, 'init' => $mail, 'roles' => $roles, 'status' => ($admin || variable_get('user_register', 1) == 1))));
-  watchdog('user', t('New user: %name %email.', array('%name' => theme('placeholder', $name), '%email' => '<'. $mail .'>')), WATCHDOG_NOTICE, l(t('edit'), 'user/'. $account->uid .'/edit'));
+  watchdog('user', t('New user: %name %email.', array('%name' => $name, '%email' => '<'. $mail .'>')), WATCHDOG_NOTICE, l(t('edit'), 'user/'. $account->uid .'/edit'));
 
   $variables = array('!username' => $name, '!site' => variable_get('site_name', 'drupal'), '!password' => $pass, '!uri' => $base_url, '!uri_brief' => substr($base_url, strlen('http://')), '!mailto' => $mail, '!date' => format_date(time()), '!login_uri' => url('user', NULL, NULL, TRUE), '!edit_uri' => url('user/'. $account->uid .'/edit', NULL, NULL, TRUE), '!login_url' => user_pass_reset_url($account));
 
@@ -1437,7 +1437,7 @@ function user_delete($edit, $uid) {
   db_query('DELETE FROM {sessions} WHERE uid = %d', $uid);
   db_query('DELETE FROM {users_roles} WHERE uid = %d', $uid);
   db_query('DELETE FROM {authmap} WHERE uid = %d', $uid);
-  $array = array('%name' => theme('placeholder', $account->name), '%email' => theme('placeholder', '<'. $account->mail .'>'));
+  $array = array('%name' => $account->name, '%email' => '<'. $account->mail .'>');
   watchdog('user', t('Deleted user: %name %email.', $array), WATCHDOG_NOTICE);
   drupal_set_message(t('%name has been deleted.', $array));
   module_invoke_all('user', 'delete', $edit, $account);
