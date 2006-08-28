@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.4 2006/08/27 07:44:55 dries Exp $ */
+/* $Id: style.css,v 1.5 2006/08/28 07:56:21 dries Exp $ */
 
 /*
 ** HTML elements
@@ -92,7 +92,12 @@ ul {
 /*
 ** Administration page styles
 */
-
+div.admin-panel .description {
+  color: #999;
+}
+div.admin-panel .body {
+  background: #eee;
+}
 div.admin-panel h3 {
   background-color: #999;
   color: #fff;
