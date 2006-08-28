@@ -89,6 +89,13 @@ table {
 /*
 ** Administration page styles
 */
+div.admin-panel .description {
+  color: #999;
+}
+
+div.admin-panel .body {
+  background: #f4f4f4;
+}
 
 div.admin-panel h3 {
   background-color: #888;

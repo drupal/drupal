@@ -490,7 +490,9 @@ table#footer-menu {
 /*
 ** Administration page styles
 */
-
+div.admin-panel .description {
+  color: #999;
+}
 div.admin-panel h3 {
   background-color: #369;
   color: #fff;

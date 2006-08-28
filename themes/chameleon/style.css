@@ -92,7 +92,12 @@ ul {
 /*
 ** Administration page styles
 */
-
+div.admin-panel .description {
+  color: #999;
+}
+div.admin-panel .body {
+  background: #eee;
+}
 div.admin-panel h3 {
   background-color: #999;
   color: #fff;

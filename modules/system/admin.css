@@ -9,12 +9,10 @@ div.admin-panel {
 div.admin-panel .description {
   margin: 0 0 3px;
   padding: 2px 0 3px 0;
-  color: #999;
 }
 
 div.admin-panel .body {
   padding: 0 4px 2px 8px;
-  background-color: #f4f4f4;
   line-height: 1.2em;
 }
 
