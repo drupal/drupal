@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.687 2006/08/26 18:21:00 dries Exp $
+// $Id: node.module,v 1.688 2006/08/28 09:42:22 dries Exp $
 
 /**
  * @file
@@ -1428,7 +1428,7 @@ function node_admin_content() {
   $output = drupal_get_form('node_filter_form');
 
   if ($_POST['edit']['operation'] == 'delete' && $_POST['edit']['nodes']) {
-    return node_multiple_delete_confirm();
+    return drupal_get_form('node_multiple_delete_confirm');
   }
   // Call the form first, to allow for the form_values array to be populated.
   $output .= drupal_get_form('node_admin_nodes');
