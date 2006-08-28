@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.116 2006/08/25 05:42:00 dries Exp $
+// $Id: bootstrap.inc,v 1.117 2006/08/28 11:08:04 dries Exp $
 
 /**
  * @file
@@ -396,22 +396,18 @@ function drupal_load($type, $name) {
 function drupal_page_header() {
   if (variable_get('cache', 0) && $cache = page_get_cache()) {
     bootstrap_invoke_all('init');
+
     // Set default values:
-    $date = gmdate('D, d M Y H:i:s', $cache->created) .' GMT';
-    $etag = '"'. md5($date) .'"';
+    $last_modified = gmdate('D, d M Y H:i:s', $cache->created) .' GMT';
+    $etag = '"'.md5($last_modified).'"';
 
-    // Check HTTP headers:
-    $modified_since = isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? $_SERVER['HTTP_IF_MODIFIED_SINCE'] == $date : NULL;
-    if (!empty($_SERVER['HTTP_IF_MODIFIED_SINCE']) && ($timestamp = strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE'])) > 0) {
-      $modified_since = $cache->created <= $timestamp;
-    }
-    else {
-      $modified_since = NULL;
-    }
-    $none_match = !empty($_SERVER['HTTP_IF_NONE_MATCH']) ? $_SERVER['HTTP_IF_NONE_MATCH'] == $etag : NULL;
+    // See if the client has provided the required HTTP headers:
+    $if_modified_since = isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? stripslashes($_SERVER['HTTP_IF_MODIFIED_SINCE']) : FALSE;
+    $if_none_match = isset($_SERVER['HTTP_IF_NONE_MATCH']) ? stripslashes($_SERVER['HTTP_IF_NONE_MATCH']) : FALSE;
 
-    // The type checking here is very important, be careful when changing entries.
-    if (($modified_since !== NULL || $none_match !== NULL) && $modified_since !== FALSE && $none_match !== FALSE) {
+    if ($if_modified_since && $if_none_match
+        && $if_none_match == $etag // etag must match
+        && $if_modified_since == $last_modified) {  // if-modified-since must match
       header('HTTP/1.1 304 Not Modified');
       // All 304 responses must send an etag if the 200 response for the same object contained an etag
       header("Etag: $etag");
@@ -419,7 +415,7 @@ function drupal_page_header() {
     }
 
     // Send appropriate response:
-    header("Last-Modified: $date");
+    header("Last-Modified: $last_modified");
     header("ETag: $etag");
 
     // The following headers force validation of cache:
