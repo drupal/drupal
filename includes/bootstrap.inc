@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.117 2006/08/28 11:08:04 dries Exp $
+// $Id: bootstrap.inc,v 1.118 2006/08/29 08:36:14 dries Exp $
 
 /**
  * @file
@@ -597,13 +597,37 @@ function drupal_get_messages($type = NULL) {
 }
 
 /**
- * Perform an access check for a given mask and rule type. Rules are usually created via admin/user/rules page.
+ * Perform an access check for a given mask and rule type. Rules are usually
+ * created via admin/user/rules page.
+ *
+ * If any allow rule matches, access is allowed. Otherwise, if any deny rule
+ * matches, access is denied.  If no rule matches, access is allowed.
+ *
+ * @param $type string
+ *   Type of access to check: Allowed values are:
+ *     - 'host': host name or IP address
+ *     - 'mail': e-mail address
+ *     - 'user': username
+ * @param $mask string
+ *   String or mask to test: '_' matches any character, '%' matches any
+ *   number of characters.
+ * @return bool
+ *   TRUE if access is denied, FALSE if access is allowed.
  */
 function drupal_is_denied($type, $mask) {
-  $allow = db_fetch_object(db_query("SELECT * FROM {access} WHERE status = 1 AND type = '%s' AND LOWER('%s') LIKE LOWER(mask)", $type, $mask));
-  $deny = db_fetch_object(db_query("SELECT * FROM {access} WHERE status = 0 AND type = '%s' AND LOWER('%s') LIKE LOWER(mask)", $type, $mask));
-
-  return $deny && !$allow;
+  // Because this function is called for every page request, both cached
+  // and non-cached pages, we tried to optimize it as much as possible.
+  // We deny access if the only matching records in the {access} table have
+  // status 0. If any have status 1, or if there are no matching records,
+  // we allow access. So, select matching records in decreasing order of
+  // 'status', returning NOT(status) for the first. If any have status 1,
+  // they come first, and we return NOT(status) = 0 (allowed). Otherwise,
+  // if we have some with status 0, we return 1 (denied). If no matching
+  // records, we get no return from db_result, so we return (bool)NULL = 0
+  // (allowed).
+  // The use of ORDER BY / LIMIT is more efficient than "MAX(status) = 0"
+  // in PostgreSQL <= 8.0.
+  return (bool) db_result(db_query_range("SELECT NOT(status) FROM {access} WHERE type = '%s' AND LOWER('%s') LIKE LOWER(mask) ORDER BY status DESC", $type, $mask, 0, 1));
 }
 
 /**
