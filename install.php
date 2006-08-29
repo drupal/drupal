@@ -354,7 +354,7 @@ function install_select_profile() {
   }
   elseif (sizeof($profiles) > 1) {
     foreach ($profiles as $profile) {
-      if ($_POST['edit']['profile'] == $profile->name) {
+      if ($_POST['profile'] == $profile->name) {
         return $profile->name;
       }
     }

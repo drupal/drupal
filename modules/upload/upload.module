@@ -877,7 +877,7 @@ function _upload_image($file) {
  */
 function upload_js() {
   // We only do the upload.module part of the node validation process.
-  $node = (object)$_POST['edit'];
+  $node = (object)$_POST;
 
   // Load existing node files.
   $node->files = upload_load($node);

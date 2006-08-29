@@ -377,7 +377,7 @@ function update_script_selection_form() {
 
 function update_update_page() {
   // Set the installed version so updates start at the correct place.
-  foreach ($_POST['edit']['start'] as $module => $version) {
+  foreach ($_POST['start'] as $module => $version) {
     drupal_set_installed_schema_version($module, $version - 1);
     $updates = drupal_get_schema_versions($module);
     $max_version = max($updates);
@@ -393,7 +393,7 @@ function update_update_page() {
   // Keep track of total number of updates
   $_SESSION['update_total'] = count($_SESSION['update_remaining']);
 
-  if ($_POST['edit']['has_js']) {
+  if ($_POST['has_js']) {
     return update_progress_page();
   }
   else {

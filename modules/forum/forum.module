@@ -445,7 +445,7 @@ function forum_delete(&$node) {
  */
 function forum_form_container($edit = array()) {
   // Handle a delete operation.
-  if ($_POST['op'] == t('Delete') || $_POST['edit']['confirm']) {
+  if ($_POST['op'] == t('Delete') || $_POST['confirm']) {
     return forum_confirm_delete($edit['tid']);
   }
 
@@ -494,7 +494,7 @@ function forum_form_container($edit = array()) {
  */
 function forum_form_forum($edit = array()) {
   // Handle a delete operation.
-  if ($_POST['op'] == t('Delete') || $_POST['edit']['confirm']) {
+  if ($_POST['op'] == t('Delete') || $_POST['confirm']) {
     return forum_confirm_delete($edit['tid']);
   }
 
