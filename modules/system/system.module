@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.354 2006/08/29 18:43:26 dries Exp $
+// $Id: system.module,v 1.355 2006/08/29 20:19:41 dries Exp $
 
 /**
  * @file
@@ -550,69 +550,35 @@ function system_clean_url_settings() {
 }
 
 function system_error_reporting_settings() {
-  $form['403'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Access denied page (403)'),
-    '#description' => t('These settings apply when the requested document is denied to the current user, i.e. a <em>403 error</em>.'),
-  );
-  $form['403']['site_403'] = array(
+
+  $form['site_403'] = array(
     '#type' => 'textfield',
-    '#title' => t('Page to display'),
+    '#title' => t('Default 403 (access denied) page'),
     '#default_value' => variable_get('site_403', ''),
-    '#description' => t('This page is displayed when a 403 error occurs. If you are not using clean URLs, specify the part after "<code>?q=</code>". If unsure, leave blank.'),
+    '#description' => t('This page is displayed when the requested document is denied to the current user. If you are not using clean URLs, specify the part after "<code>?q=</code>". If unsure, specify nothing.')
   );
-  $form['403']['site_403_message_show'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Enable error message'),
-    '#description' => t('Displays the message below.'),
-    '#default_value' => variable_get('site_403_message_show', TRUE),
-  );
-  $form['403']['site_403_message'] = array(
-    '#type' => 'textarea',
-    '#title' => t('Message'),
-    '#description' => t('This message is shown when a 403 error occurs, if enabled. "%path" will be replaced with the path of the requested document.'),
-    '#default_value' => variable_get('site_403_message', t('We are sorry, the requested page (%path) was not found on this webserver. Either the URL does not exist or the page you were looking has been deleted.')),
-  );
-  $form['404'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('File not found page (404)'),
-    '#description' => t('These settings apply when the requested document could not be found, i.e. a <em>404 error</em>.'),
-  );
-  $form['404']['site_404'] = array(
+
+  $form['site_404'] = array(
     '#type' => 'textfield',
-    '#title' => t('Page to display'),
+    '#title' => t('Default 404 (not found) page'),
     '#default_value' =>  variable_get('site_404', ''),
-    '#description' => t('This page is displayed when a 404 error occurs. If you are not using clean URLs, specify the part after "<code>?q=</code>". If unsure, leave blank.'),
+    '#description' => t('This page is displayed when no other content matches the requested document. If you are not using clean URLs, specify the part after "<code>?q=</code>". If unsure, specify nothing.')
   );
-  $form['404']['site_404_message_show'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Enable error message'),
-    '#description' => t('Displays the message below.'),
-    '#default_value' => variable_get('site_404_message_show', TRUE),
-  );
-  $form['404']['site_404_message'] = array(
-    '#type' => 'textarea',
-    '#title' => t('Message'),
-    '#description' => t('This message is shown when a 404 error occurs, if enabled. "%path" will be replaced with the path of the requested document.'),
-    '#default_value' => variable_get('site_404_message', t('We are sorry, %path could not be found. Please check the spelling and punctuation. This website is case sensitive, so also make sure that the address has the correct case.')),
-  );
-  $form['error'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Other error handling'),
-  );
-  $form['error']['error_level'] = array(
+
+  $form['error_level'] = array(
     '#type' => 'select', '#title' => t('Error reporting'), '#default_value' => variable_get('error_level', 1),
     '#options' => array(t('Write errors to the log'), t('Write errors to the log and to the screen')),
-    '#description' =>  t('Where Drupal, PHP and SQL errors are logged. On a production server it is recommended that errors are only written to the error log. On a test server it can be helpful to write logs to the screen.'),
+    '#description' =>  t('Where Drupal, PHP and SQL errors are logged. On a production server it is recommended that errors are only written to the error log. On a test server it can be helpful to write logs to the screen.')
   );
+
   $period = drupal_map_assoc(array(3600, 10800, 21600, 32400, 43200, 86400, 172800, 259200, 604800, 1209600, 2419200), 'format_interval');
   $period['1000000000'] = t('Never');
-  $form['error']['watchdog_clear'] = array(
+  $form['watchdog_clear'] = array(
     '#type' => 'select',
     '#title' => t('Discard log entries older than'),
     '#default_value' => variable_get('watchdog_clear', 604800),
     '#options' => $period,
-    '#description' => t('The time log entries should be kept. Older entries will be automatically discarded. Requires crontab.'),
+    '#description' => t('The time log entries should be kept. Older entries will be automatically discarded. Requires crontab.')
   );
 
   return system_settings_form($form);
