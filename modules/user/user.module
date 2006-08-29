@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.663 2006/08/28 05:52:33 dries Exp $
+// $Id: user.module,v 1.664 2006/08/29 09:12:03 drumm Exp $
 
 /**
  * @file
@@ -1384,7 +1384,7 @@ function user_edit($category = 'account') {
     drupal_set_message(t('The account does not exist or has already been deleted.'));
     drupal_goto('admin/user/user');
   }
-  $edit = $_POST['op'] ? $_POST['edit'] : (array)$account;
+  $edit = $_POST['op'] ? $_POST : (array)$account;
 
   if (arg(2) == 'delete') {
     if ($edit['confirm']) {
@@ -1607,7 +1607,7 @@ function user_admin_access_check_submit($form_id, $edit) {
  * Menu callback: add an access rule
  */
 function user_admin_access_add($mask = NULL, $type = NULL) {
-  if ($edit = $_POST['edit']) {
+  if ($edit = $_POST) {
     if (!$edit['mask']) {
       form_set_error('mask', t('You must enter a mask.'));
     }
@@ -1653,7 +1653,7 @@ function user_admin_access_delete_confirm_submit($form_id, $edit) {
  * Menu callback: edit an access rule
  */
 function user_admin_access_edit($aid = 0) {
-  if ($edit = $_POST['edit']) {
+  if ($edit = $_POST) {
     if (!$edit['mask']) {
       form_set_error('mask', t('You must enter a mask.'));
     }
@@ -1870,7 +1870,7 @@ function user_admin_perm_submit($form_id, $edit) {
  * Menu callback: administer roles.
  */
 function user_admin_role() {
-  $edit = isset($_POST['edit']) ? $_POST['edit'] : '';
+  $edit = isset($_POST) ? $_POST : '';
   $op = isset($_POST['op']) ? $_POST['op'] : '';
   $id = arg(4);
 
@@ -1933,7 +1933,7 @@ function theme_user_admin_new_role($form) {
 }
 
 function user_admin_account() {
-  if ($_POST['edit']['accounts'] && $_POST['edit']['operation'] == 'delete') {
+  if ($_POST['accounts'] && $_POST['operation'] == 'delete') {
     return user_multiple_delete_confirm();
   }
 
@@ -2168,7 +2168,7 @@ function user_multiple_role_edit($accounts, $operation, $rid) {
 }
 
 function user_multiple_delete_confirm() {
-  $edit = $_POST['edit'];
+  $edit = $_POST;
 
   $form['accounts'] = array('#prefix' => '<ul>', '#suffix' => '</ul>', '#tree' => TRUE);
   // array_filter returns only elements with TRUE values
@@ -2230,13 +2230,13 @@ function user_admin_settings() {
 }
 
 function user_admin($callback_arg = '') {
-  $edit = isset($_POST['edit']) ? $_POST['edit'] : '';
+  $edit = isset($_POST) ? $_POST : '';
   $op = isset($_POST['op']) ? $_POST['op'] : $callback_arg;
 
   switch ($op) {
     case 'search':
     case t('Search'):
-      $output = drupal_get_form('search_form', url('admin/user/search'), $_POST['edit']['keys'], 'user') . search_data($_POST['edit']['keys'], 'user');
+      $output = drupal_get_form('search_form', url('admin/user/search'), $_POST['keys'], 'user') . search_data($_POST['keys'], 'user');
       break;
     case t('Create new account'):
     case 'create':

@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.82 2006/08/22 11:13:03 dries Exp $
+// $Id: menu.module,v 1.83 2006/08/29 09:12:02 drumm Exp $
 
 /**
  * @file
@@ -188,7 +188,7 @@ function menu_perm() {
  */
 function menu_form_alter($form_id, &$form) {
   if (isset($form['type']) && $form['type']['#value'] .'_node_form' == $form_id) {
-    $edit = isset($_POST['edit']) ? $_POST['edit'] : '';
+    $edit = isset($_POST) ? $_POST : '';
     $edit['nid'] = $form['nid']['#value'];
 
     $item = array();

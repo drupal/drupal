@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.143 2006/08/27 12:54:01 dries Exp $
+// $Id: form.inc,v 1.144 2006/08/29 09:12:02 drumm Exp $
 
 /**
  * @defgroup form Form generation
@@ -17,13 +17,13 @@
  * $output = drupal_get_form('user_register');
  *
  * Forms can also be built and submitted programmatically without any user input
- * by populating $form['#post']['edit'] with values to be submitted. For example:
+ * by populating $form['#post'] with values to be submitted. For example:
  *
  * // register a new user
  * $form = drupal_retrieve_form('user_register');
- * $form['#post']['edit']['name'] = 'robo-user';
- * $form['#post']['edit']['mail'] = 'robouser@example.com';
- * $form['#post']['edit']['pass'] = 'password';
+ * $form['#post']['name'] = 'robo-user';
+ * $form['#post']['mail'] = 'robouser@example.com';
+ * $form['#post']['pass'] = 'password';
  * drupal_process_form('user_register', $form);
  *
  * Calling form_get_errors() will list any validation errors that prevented the
@@ -92,18 +92,18 @@ function drupal_get_form($form_id) {
     // to the builder function, as values from one stage of a multistep
     // form can determine how subsequent steps are displayed.
     $args = func_get_args();
-    $args[] = $_POST['edit'];
+    $args[] = $_POST;
     $form = call_user_func_array('drupal_retrieve_form', $args);
     unset($_SESSION['form'][$_POST['form_build_id']]);
     if (isset($form['#multistep']) && $form['#multistep']) {
       $_SESSION['form'][$form_build_id] = $args;
       $form['#build_id'] = $form_build_id;
     }
-    // If we're in this part of the code, $_POST['edit'] always contains
+    // If we're in this part of the code, $_POST always contains
     // values from the previously submitted form. Unset it to avoid
     // any accidental submission of doubled data, then process the form
     // to prep it for rendering.
-    unset($_POST['edit']);
+    unset($_POST);
     drupal_process_form($args[0], $form);
   }
 
@@ -168,7 +168,7 @@ function drupal_process_form($form_id, &$form) {
   $form_button_counter = array(0, 0);
 
   drupal_prepare_form($form_id, $form);
-  if (($form['#programmed']) || (!empty($_POST['edit']) && (($_POST['edit']['form_id'] == $form_id) || ($_POST['edit']['form_id'] == $form['#base'])))) {
+  if (($form['#programmed']) || (!empty($_POST) && (($_POST['form_id'] == $form_id) || ($_POST['form_id'] == $form['#base'])))) {
     drupal_validate_form($form_id, $form);
     // IE does not send a button value when there is only one submit button (and no non-submit buttons)
     // and you submit by pressing enter.
@@ -550,10 +550,15 @@ function form_builder($form_id, $form) {
 
   if (isset($form['#input']) && $form['#input']) {
     if (!isset($form['#name'])) {
-      $form['#name'] = 'edit[' . implode('][', $form['#parents']) . ']';
+      $name = array_shift($form['#parents']);
+      $form['#name'] = $name;
+      if (count($form['#parents'])) {
+        $form['#name'] .= '['. implode('][', $form['#parents']) .']';
+      }
+      array_unshift($form['#parents'], $name);
     }
     if (!isset($form['#id'])) {
-      $form['#id'] =  'edit-' . implode('-', $form['#parents']);
+      $form['#id'] = 'edit-'. implode('-', $form['#parents']);
     }
 
     if (isset($form['#disabled']) && $form['#disabled']) {
@@ -561,8 +566,8 @@ function form_builder($form_id, $form) {
     }
 
     if (!isset($form['#value']) && !array_key_exists('#value', $form)) {
-      if (($form['#programmed']) || ((!isset($form['#access']) || $form['#access']) && isset($_POST['edit']) && ($_POST['edit']['form_id'] == $form_id))) {
-        $edit = $form['#post']['edit'];
+      if (($form['#programmed']) || ((!isset($form['#access']) || $form['#access']) && isset($form['#post']) && ($form['#post']['form_id'] == $form_id))) {
+        $edit = $form['#post'];
         foreach ($form['#parents'] as $parent) {
           $edit = isset($edit[$parent]) ? $edit[$parent] : NULL;
         }
@@ -619,8 +624,13 @@ function form_builder($form_id, $form) {
       // Count submit and non-submit buttons
       $form_button_counter[$form['#executes_submit_callback']]++;
       // See if a submit button was pressed
-      if (isset($_POST[$form['#name']]) && $_POST[$form['#name']] == $form['#value']) {
+      if (isset($form['#post'][$form['#name']]) && $form['#post'][$form['#name']] == $form['#value']) {
         $form_submitted = $form_submitted || $form['#executes_submit_callback'];
+
+        // In most cases, we want to use form_set_value() to manipulate the global variables.
+        // In this special case, we want to make sure that the value of this element is listed
+        // in $form_variables under 'op'.
+        $form_values[$form['#name']] = $form['#value'];
       }
     }
   }
@@ -936,7 +946,7 @@ function password_confirm_validate($form) {
       form_error($form, t('The specified passwords do not match.'));
     }
   }
-  elseif ($form['#required'] && !empty($form['#post']['edit'])) {
+  elseif ($form['#required'] && !empty($form['#post'])) {
     form_error($form, t('Password field is required.'));
   }
 

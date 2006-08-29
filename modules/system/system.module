@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.352 2006/08/27 12:54:01 dries Exp $
+// $Id: system.module,v 1.353 2006/08/29 09:12:03 drumm Exp $
 
 /**
  * @file
@@ -1359,9 +1359,9 @@ function system_theme_settings($key = '') {
       $filename = ($key) ? str_replace('/', '_', $key) . '_logo.' . $parts['extension'] : 'logo.' . $parts['extension'];
 
       if ($file = file_save_upload('logo_upload', $filename, 1)) {
-        $_POST['edit']['default_logo'] = 0;
-        $_POST['edit']['logo_path'] = $file->filepath;
-        $_POST['edit']['toggle_logo'] = 1;
+        $_POST['default_logo'] = 0;
+        $_POST['logo_path'] = $file->filepath;
+        $_POST['toggle_logo'] = 1;
       }
     }
     else {
@@ -1375,9 +1375,9 @@ function system_theme_settings($key = '') {
     $filename = ($key) ? str_replace('/', '_', $key) . '_favicon.' . $parts['extension'] : 'favicon.' . $parts['extension'];
 
     if ($file = file_save_upload('favicon_upload', $filename, 1)) {
-      $_POST['edit']['default_favicon'] = 0;
-      $_POST['edit']['favicon_path'] = $file->filepath;
-      $_POST['edit']['toggle_favicon'] = 1;
+      $_POST['default_favicon'] = 0;
+      $_POST['favicon_path'] = $file->filepath;
+      $_POST['toggle_favicon'] = 1;
     }
   }
 
@@ -1523,7 +1523,7 @@ function system_theme_settings($key = '') {
  * offered to go back to the item that is being changed in case the user changes
  * his/her mind.
  *
- * You can check for the existence of $_POST['edit'][$name] (where $name
+ * You can check for the existence of $_POST[$name] (where $name
  * is usually 'confirm') to check if the confirmation was successful or
  * use the regular submit model.
  *

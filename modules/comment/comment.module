@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.479 2006/08/27 12:54:01 dries Exp $
+// $Id: comment.module,v 1.480 2006/08/29 09:12:02 drumm Exp $
 
 /**
  * @file
@@ -939,7 +939,7 @@ function comment_delete($cid) {
 
   // We'll only delete if the user has confirmed the
   // deletion using the form in our else clause below.
-  if (is_object($comment) && is_numeric($comment->cid) && $_POST['edit']['confirm']) {
+  if (is_object($comment) && is_numeric($comment->cid) && $_POST['confirm']) {
     drupal_set_message(t('The comment and all its replies have been deleted.'));
 
     // Delete comment and its replies.
@@ -1003,7 +1003,7 @@ function comment_operations($action = NULL) {
  * Menu callback; present an administrative comment listing.
  */
 function comment_admin_overview($type = 'new') {
-  $edit = $_POST['edit'];
+  $edit = $_POST;
 
   if ($edit['operation'] == 'delete') {
     return comment_multiple_delete_confirm();
@@ -1117,7 +1117,7 @@ function theme_comment_admin_overview($form) {
  * them.
  */
 function comment_multiple_delete_confirm() {
-  $edit = $_POST['edit'];
+  $edit = $_POST;
 
   $form['comments'] = array('#prefix' => '<ul>', '#suffix' => '</ul>', '#tree' => TRUE);
   // array_filter() returns only elements with actual values

@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.354 2006/08/26 00:19:02 drumm Exp $
+// $Id: forum.module,v 1.355 2006/08/29 09:12:02 drumm Exp $
 
 /**
  * @file
@@ -445,7 +445,7 @@ function forum_delete(&$node) {
  */
 function forum_form_container($edit = array()) {
   // Handle a delete operation.
-  if ($_POST['op'] == t('Delete') || $_POST['edit']['confirm']) {
+  if ($_POST['op'] == t('Delete') || $_POST['confirm']) {
     return forum_confirm_delete($edit['tid']);
   }
 
@@ -494,7 +494,7 @@ function forum_form_container($edit = array()) {
  */
 function forum_form_forum($edit = array()) {
   // Handle a delete operation.
-  if ($_POST['op'] == t('Delete') || $_POST['edit']['confirm']) {
+  if ($_POST['op'] == t('Delete') || $_POST['confirm']) {
     return forum_confirm_delete($edit['tid']);
   }
 

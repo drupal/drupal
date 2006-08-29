@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.688 2006/08/28 09:42:22 dries Exp $
+// $Id: node.module,v 1.689 2006/08/29 09:12:02 drumm Exp $
 
 /**
  * @file
@@ -1427,7 +1427,7 @@ function node_admin_nodes_validate($form_id, $edit) {
 function node_admin_content() {
   $output = drupal_get_form('node_filter_form');
 
-  if ($_POST['edit']['operation'] == 'delete' && $_POST['edit']['nodes']) {
+  if ($_POST['operation'] == 'delete' && $_POST['nodes']) {
     return drupal_get_form('node_multiple_delete_confirm');
   }
   // Call the form first, to allow for the form_values array to be populated.
@@ -1504,7 +1504,7 @@ function theme_node_admin_nodes($form) {
 }
 
 function node_multiple_delete_confirm() {
-  $edit = $_POST['edit'];
+  $edit = $_POST;
 
   $form['nodes'] = array('#prefix' => '<ul>', '#suffix' => '</ul>', '#tree' => TRUE);
   // array_filter returns only elements with TRUE values
@@ -1652,7 +1652,7 @@ function node_revision_list($node) {
 }
 
 function node_admin_search() {
-  return drupal_get_form('search_form', url('admin/content/search'), $_POST['edit']['keys'], 'node') . search_data($_POST['edit']['keys'], 'node');
+  return drupal_get_form('search_form', url('admin/content/search'), $_POST['keys'], 'node') . search_data($_POST['keys'], 'node');
 }
 
 /**
@@ -1814,7 +1814,7 @@ function node_validate($node, $form = array()) {
     form_set_error('body', t('The body of your @type is too short. You need at least %words words.', array('%words' => $type->min_word_count, '@type' => $type->name)));
   }
 
-  if (isset($node->nid) && (node_last_changed($node->nid) > $_POST['edit']['changed'])) {
+  if (isset($node->nid) && (node_last_changed($node->nid) > $_POST['changed'])) {
     form_set_error('changed', t('This content has been modified by another user, changes cannot be saved.'));
   }
 
@@ -1947,8 +1947,8 @@ function node_form($node) {
 function node_form_add_preview($form) {
   global $form_values;
 
-  $op = isset($_POST['op']) ? $_POST['op'] : '';
-  if ($op == t('Preview')) {
+  $op = isset($form_values['op']) ? $form_values['op'] : '';
+  if ($op == $form_values['preview']) {
     drupal_validate_form($form['form_id']['#value'], $form);
     if (!form_get_errors()) {
       // We pass the global $form_values here to preserve changes made during form validation
@@ -2157,7 +2157,7 @@ function node_form_submit($form_id, $edit) {
  * Menu callback -- ask for confirmation of node deletion
  */
 function node_delete_confirm() {
-  $edit = $_POST['edit'];
+  $edit = $_POST;
   $edit['nid'] = $edit['nid'] ? $edit['nid'] : arg(1);
   $node = node_load($edit['nid']);
 

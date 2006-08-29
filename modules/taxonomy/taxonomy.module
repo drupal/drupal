@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.308 2006/08/24 06:29:50 dries Exp $
+// $Id: taxonomy.module,v 1.309 2006/08/29 09:12:03 drumm Exp $
 
 /**
  * @file
@@ -1277,7 +1277,7 @@ function taxonomy_term_page($str_tids = '', $depth = 0, $op = 'page') {
  * Page to edit a vocabulary
  */
 function taxonomy_admin_vocabulary_edit($vid = NULL) {
-  if ($_POST['op'] == t('Delete') || $_POST['edit']['confirm']) {
+  if ($_POST['op'] == t('Delete') || $_POST['confirm']) {
     return drupal_get_form('taxonomy_vocabulary_confirm_delete', $vid);
   }
   if ($vocabulary = (array)taxonomy_get_vocabulary($vid)) {
@@ -1290,7 +1290,7 @@ function taxonomy_admin_vocabulary_edit($vid = NULL) {
  * Page to edit a vocabulary term
  */
 function taxonomy_admin_term_edit($tid) {
-  if ($_POST['op'] == t('Delete') || $_POST['edit']['confirm']) {
+  if ($_POST['op'] == t('Delete') || $_POST['confirm']) {
     return drupal_get_form('taxonomy_term_confirm_delete', $tid);
   }
   if ($term = (array)taxonomy_get_term($tid)) {

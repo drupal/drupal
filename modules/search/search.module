@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.193 2006/08/18 18:58:46 dries Exp $
+// $Id: search.module,v 1.194 2006/08/29 09:12:02 drumm Exp $
 
 /**
  * @file
@@ -908,7 +908,7 @@ function search_view() {
   // Search form submits with POST but redirects to GET. This way we can keep
   // the search query URL clean as a whistle:
   // search/type/keyword+keyword
-  if (!isset($_POST['edit']['form_id'])) {
+  if (!isset($_POST['form_id'])) {
     if ($type == '') {
       // Note: search/node can not be a default tab because it would take on the
       // path of its parent (search). It would prevent remembering keywords when

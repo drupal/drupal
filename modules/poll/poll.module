@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.211 2006/08/24 08:56:17 drumm Exp $
+// $Id: poll.module,v 1.212 2006/08/29 09:12:02 drumm Exp $
 
 /**
  * @file
@@ -468,7 +468,7 @@ function poll_vote(&$node) {
   $nid = arg(1);
 
   if ($node = node_load($nid)) {
-    $edit = $_POST['edit'];
+    $edit = $_POST;
     $choice = $edit['choice'];
     $vote = $_POST['vote'];
 
@@ -513,7 +513,7 @@ function poll_cancel(&$node) {
 
   $nid = arg(2);
   if ($node = node_load(array('nid' => $nid))) {
-    $edit = $_POST['edit'];
+    $edit = $_POST;
     $choice = $edit['choice'];
     $cancel = $_POST['cancel'];
 
