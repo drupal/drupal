@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.480 2006/08/29 09:12:02 drumm Exp $
+// $Id: comment.module,v 1.481 2006/08/29 18:43:25 dries Exp $
 
 /**
  * @file
@@ -280,6 +280,7 @@ function comment_form_alter($form_id, &$form) {
   }
   elseif (isset($form['type'])) {
     if ($form['type']['#value'] .'_node_form' == $form_id) {
+      $form['#submit']['comment_node_submit'] = array();
       $node = $form['#node'];
       $form['comment_settings'] = array(
         '#type' => 'fieldset',
@@ -297,6 +298,10 @@ function comment_form_alter($form_id, &$form) {
       );
     }
   }
+
+  if ($form_id == 'node_delete_confirm') {
+    $form['#submit']['comment_node_delete_confirm_submit'] = array();
+  }
 }
 
 /**
@@ -313,15 +318,6 @@ function comment_nodeapi(&$node, $op, $arg = 0) {
       if (!isset($node->comment)) {
         $node->comment = variable_get("comment_$node->type", COMMENT_NODE_READ_WRITE);
       }
-      break;
-
-    case 'insert':
-      db_query('INSERT INTO {node_comment_statistics} (nid, last_comment_timestamp, last_comment_name, last_comment_uid, comment_count) VALUES (%d, %d, NULL, %d, 0)', $node->nid, $node->created, $node->uid);
-      break;
-
-    case 'delete':
-      db_query('DELETE FROM {comments} WHERE nid = %d', $node->nid);
-      db_query('DELETE FROM {node_comment_statistics} WHERE nid = %d', $node->nid);
       break;
 
     case 'update index':
@@ -343,6 +339,17 @@ function comment_nodeapi(&$node, $op, $arg = 0) {
       else {
         return array();
       }
+  }
+}
+
+function comment_node_delete_confirm_submit($form_id, $form_values) {
+  db_query('DELETE FROM {comments} WHERE nid = %d', $form_values['node']->nid);
+  db_query('DELETE FROM {node_comment_statistics} WHERE nid = %d', $form_values['node']->nid);
+}
+
+function comment_node_submit($form_id, $node) {
+  if ($node->is_new) {
+    db_query('INSERT INTO {node_comment_statistics} (nid, last_comment_timestamp, last_comment_name, last_comment_uid, comment_count) VALUES (%d, %d, NULL, %d, 0)', $node->nid, $node->created, $node->uid);
   }
 }
 

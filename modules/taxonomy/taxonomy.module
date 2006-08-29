@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.309 2006/08/29 09:12:03 drumm Exp $
+// $Id: taxonomy.module,v 1.310 2006/08/29 18:43:26 dries Exp $
 
 /**
  * @file
@@ -606,6 +606,10 @@ function taxonomy_get_vocabularies($type = NULL) {
  */
 function taxonomy_form_alter($form_id, &$form) {
   if (isset($form['type']) && $form['type']['#value'] .'_node_form' == $form_id) {
+    // inject custom validate and submit handlers
+    $form['#validate']['taxonomy_node_validate'] = array();
+    $form['#submit']['taxonomy_node_submit'] = array();
+
     $node = $form['#node'];
 
     if (!isset($node->taxonomy)) {
@@ -672,6 +676,10 @@ function taxonomy_form_alter($form_id, &$form) {
       $form['taxonomy'] += array('#type' => 'fieldset', '#title' => t('Categories'), '#collapsible' => TRUE, '#collapsed' => FALSE, '#tree' => TRUE, '#weight' => -3);
     }
   }
+
+  if ($form_id == 'node_delete_confirm') {
+    $form['#submit']['taxonomy_node_delete_confirm_submit'] = array();
+  }
 }
 
 /**
@@ -705,9 +713,9 @@ function taxonomy_node_get_terms($nid, $key = 'tid') {
 /**
  * Make sure incoming vids are free tagging enabled.
  */
-function taxonomy_node_validate(&$node) {
-  if ($node->taxonomy) {
-    $terms = $node->taxonomy;
+function taxonomy_node_validate($form_id, $node) {
+  if ($node['taxonomy']) {
+    $terms = $node['taxonomy'];
     if ($terms['tags']) {
       foreach ($terms['tags'] as $vid => $vid_value) {
         $vocabulary = taxonomy_get_vocabulary($vid);
@@ -724,14 +732,14 @@ function taxonomy_node_validate(&$node) {
 /**
  * Save term associations for a given node.
  */
-function taxonomy_node_save($nid, $terms) {
-  taxonomy_node_delete($nid);
+function taxonomy_node_submit($form_id, $node) {
+  taxonomy_node_delete($node->nid);
 
   // Free tagging vocabularies do not send their tids in the form,
   // so we'll detect them here and process them independently.
-  if (isset($terms['tags'])) {
-    $typed_input = $terms['tags'];
-    unset($terms['tags']);
+  if (isset($node->taxonomy['tags'])) {
+    $typed_input = $node->taxonomy['tags'];
+    unset($node->taxonomy['tags']);
 
     foreach ($typed_input as $vid => $vid_value) {
       // This regexp allows the following types of user input:
@@ -767,27 +775,27 @@ function taxonomy_node_save($nid, $terms) {
 
         // Defend against duplicate, different cased tags
         if (!isset($inserted[$typed_term_tid])) {
-          db_query('INSERT INTO {term_node} (nid, tid) VALUES (%d, %d)', $nid, $typed_term_tid);
+          db_query('INSERT INTO {term_node} (nid, tid) VALUES (%d, %d)', $node->nid, $typed_term_tid);
           $inserted[$typed_term_tid] = TRUE;
         }
       }
     }
   }
 
-  if (is_array($terms)) {
-    foreach ($terms as $term) {
+  if (is_array($node->taxonomy)) {
+    foreach ($node->taxonomy as $term) {
       if (is_array($term)) {
         foreach ($term as $tid) {
           if ($tid) {
-            db_query('INSERT INTO {term_node} (nid, tid) VALUES (%d, %d)', $nid, $tid);
+            db_query('INSERT INTO {term_node} (nid, tid) VALUES (%d, %d)', $node->nid, $tid);
           }
         }
       }
       else if (is_object($term)) {
-        db_query('INSERT INTO {term_node} (nid, tid) VALUES (%d, %d)', $nid, $term->tid);
+        db_query('INSERT INTO {term_node} (nid, tid) VALUES (%d, %d)', $node->nid, $term->tid);
       }
       else if ($term) {
-        db_query('INSERT INTO {term_node} (nid, tid) VALUES (%d, %d)', $nid, $term);
+        db_query('INSERT INTO {term_node} (nid, tid) VALUES (%d, %d)', $node->nid, $term);
       }
     }
   }
@@ -1157,23 +1165,15 @@ function taxonomy_nodeapi($node, $op, $arg = 0) {
     case 'load':
      $output['taxonomy'] = taxonomy_node_get_terms($node->nid);
      return $output;
-    case 'insert':
-      taxonomy_node_save($node->nid, $node->taxonomy);
-      break;
-    case 'update':
-      taxonomy_node_save($node->nid, $node->taxonomy);
-      break;
-    case 'delete':
-      taxonomy_node_delete($node->nid);
-      break;
-    case 'validate':
-      taxonomy_node_validate($node);
-      break;
     case 'rss item':
       return taxonomy_rss_item($node);
     case 'update index':
       return taxonomy_node_update_index($node);
   }
+}
+
+function taxonomy_node_confirm_delete_submit($form_id, $form_values) {
+  taxonomy_node_delete($form_values['node']->nid);
 }
 
 /**

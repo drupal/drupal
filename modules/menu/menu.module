@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.83 2006/08/29 09:12:02 drumm Exp $
+// $Id: menu.module,v 1.84 2006/08/29 18:43:25 dries Exp $
 
 /**
  * @file
@@ -147,31 +147,20 @@ function menu_block($op = 'list', $delta = 0) {
   }
 }
 
-/**
- * Implementation of hook_nodeapi().
- */
-function menu_nodeapi(&$node, $op) {
+function menu_node_delete_confirm_submit($form_id, $form_values) {
+  menu_node_form_delete($form_values['node']);
+  menu_rebuild();
+}
 
-  if (user_access('administer menu')) {
-    switch ($op) {
-      case 'insert':
-      case 'update':
-        if ($node->menu['delete']) {
-          menu_node_form_delete($node);
-          menu_rebuild();
-        }
-        elseif ($node->menu['title']) {
-          $node->menu['path'] = ($node->menu['path']) ? $node->menu['path'] : "node/$node->nid";
-          menu_edit_item_save($node->menu);
-          menu_rebuild();
-        }
-        break;
-
-      case 'delete':
-        menu_node_form_delete($node);
-        menu_rebuild();
-        break;
-    }
+function menu_node_submit($form_id, $node) {
+  if ($node->menu['delete']) {
+    menu_node_form_delete($node);
+    menu_rebuild();
+  }
+  elseif ($node->menu['title']) {
+    $node->menu['path'] = ($node->menu['path']) ? $node->menu['path'] : "node/$node->nid";
+    menu_edit_item_save($node->menu);
+    menu_rebuild();
   }
 }
 
@@ -198,6 +187,8 @@ function menu_form_alter($form_id, &$form) {
         $item = !is_array($item) ? $edit['menu'] : (($_POST['op'] == t('Preview')) ? array_merge($item, $edit['menu']) : array_merge($edit['menu'], $item));
       }
     }
+
+    $form['#submit']['menu_node_submit'] = array();
 
     $form['menu'] = array('#type' => 'fieldset',
       '#title' => t('Menu settings'),
@@ -258,6 +249,10 @@ function menu_form_alter($form_id, &$form) {
         '#value' => t('You may also <a href="@edit">edit the advanced settings</a> for this menu item.', array('@edit' => url("admin/build/menu/item/edit/{$item['mid']}"))),
       );
     }
+  }
+
+  if ($form_id == 'node_delete_confirm') {
+    $form['#submit']['menu_node_delete_confirm_submit'] = array();
   }
 }
 

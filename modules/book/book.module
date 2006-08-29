@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.386 2006/08/23 06:38:49 drumm Exp $
+// $Id: book.module,v 1.387 2006/08/29 18:43:25 dries Exp $
 
 /**
  * @file
@@ -187,18 +187,15 @@ function book_load($node) {
   return db_fetch_object(db_query('SELECT * FROM {book} WHERE vid = %d', $node->vid));
 }
 
-/**
- * Implementation of hook_insert().
- */
-function book_insert($node) {
-  db_query("INSERT INTO {book} (nid, vid, parent, weight) VALUES (%d, %d, %d, %d)", $node->nid, $node->vid, $node->parent, $node->weight);
+function book_form_alter($form_id, &$form) {
+  if ($form_id == 'node_delete_confirm') {
+    $form['#submit']['book_node_delete_confirm_submit'] = array();
+  }
 }
 
-/**
- * Implementation of hook_update().
- */
-function book_update($node) {
-  if ($node->revision) {
+function book_node_submit($form_id, $node) {
+  $node = (object)$node;
+  if ($node->is_new || $node->revision) {
     db_query("INSERT INTO {book} (nid, vid, parent, weight) VALUES (%d, %d, %d, %d)", $node->nid, $node->vid, $node->parent, $node->weight);
   }
   else {
@@ -206,30 +203,16 @@ function book_update($node) {
   }
 }
 
-/**
- * Implementation of hook_delete().
- */
-function book_delete(&$node) {
-  db_query('DELETE FROM {book} WHERE nid = %d', $node->nid);
-}
-
-/**
- * Implementation of hook_submit().
- */
-function book_submit(&$node) {
-  global $user;
-  // Set default values for non-administrators.
-  if (!user_access('administer nodes')) {
-    $node->revision = 1;
-    $book->uid = $user->uid;
-    $book->name = $user->uid ? $user->name : '';
-  }
+function book_node_delete_confirm_submit($form_id, $form_values) {
+  db_query('DELETE FROM {book} WHERE nid = %d OR parent = %d', $form_values['node']->nid, $form_values['node']->nid);
 }
 
 /**
  * Implementation of hook_form().
  */
 function book_form(&$node) {
+  global $user;
+
   $type = node_get_types('type', $node);
   if ($node->nid && !$node->parent && !user_access('create new books')) {
     $form['parent'] = array('#type' => 'value', '#value' => $node->parent);
@@ -265,22 +248,23 @@ function book_form(&$node) {
     '#description' => t('An explanation of the additions or updates being made to help other authors understand your motivations.'),
   );
 
-  if (user_access('administer nodes')) {
-    $form['weight'] = array('#type' => 'weight',
-      '#title' => t('Weight'),
-      '#default_value' => $node->weight,
-      '#delta' => 15,
-      '#weight' => 5,
-      '#description' => t('Pages at a given level are ordered first by weight and then by title.'),
-    );
-  }
-  else {
+  $form['weight'] = array('#type' => 'weight',
+    '#title' => t('Weight'),
+    '#access' => user_access('administer nodes'),
+    '#default_value' => $node->weight,
+    '#delta' => 15,
+    '#weight' => 5,
+    '#description' => t('Pages at a given level are ordered first by weight and then by title.'),
+  );
+
+  if (!user_access('administer nodes')) {
     // If a regular user updates a book page, we preserve the node weight; otherwise
     // we use 0 as the default for new pages
     $form['weight'] = array(
       '#type' => 'value',
       '#value' => isset($node->weight) ? $node->weight : 0,
     );
+    $form['name'] = array('#type' => 'value', '#value' => $user->uid ? $user->name : '');
   }
 
   return $form;
@@ -480,9 +464,6 @@ function book_nodeapi(&$node, $op, $teaser, $page) {
       break;
     case 'delete revision':
       db_query('DELETE FROM {book} WHERE vid = %d', $node->vid);
-      break;
-    case 'delete':
-      db_query('DELETE FROM {book} WHERE nid = %d', $node->nid);
       break;
   }
 }

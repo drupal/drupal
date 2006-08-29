@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.212 2006/08/29 09:12:02 drumm Exp $
+// $Id: poll.module,v 1.213 2006/08/29 18:43:25 dries Exp $
 
 /**
  * @file
@@ -78,45 +78,45 @@ function poll_cron() {
   }
 }
 
-/**
- * Implementation of hook_delete().
- */
-function poll_delete($node) {
-  db_query("DELETE FROM {poll} WHERE nid = %d", $node->nid);
-  db_query("DELETE FROM {poll_choices} WHERE nid = %d", $node->nid);
-  db_query("DELETE FROM {poll_votes} WHERE nid = %d", $node->nid);
+function poll_node_delete_confirm_submit($form_id, $form_values) {
+  db_query("DELETE FROM {poll} WHERE nid = %d", $form_values['node']->nid);
+  db_query("DELETE FROM {poll_choices} WHERE nid = %d", $form_values['node']->nid);
+  db_query("DELETE FROM {poll_votes} WHERE nid = %d", $form_values['node']->nid);
 }
 
 /**
- * Implementation of hook_submit().
+ * An early submit handler of the poll_node_form. Runs before the node is saved.
  */
-function poll_submit(&$node) {
+function poll_node_submit_early($form_id, &$node) {
+  $node = (object)$node;
   // Renumber fields
   $node->choice = array_values($node->choice);
   $node->teaser = poll_teaser($node);
 }
 
-/**
- * Implementation of hook_validate().
- */
-function poll_validate($node) {
-  if (isset($node->title)) {
-    // Check for at least two options and validate amount of votes:
-    $realchoices = 0;
-    // Renumber fields
-    $node->choice = array_values($node->choice);
-    foreach ($node->choice as $i => $choice) {
-      if ($choice['chtext'] != '') {
-        $realchoices++;
-      }
-      if ($choice['chvotes'] < 0) {
-        form_set_error("choice][$i][chvotes", t('Negative values are not allowed.'));
-      }
+function poll_node_validate($form_id, $node) {
+  $node = (object)$node;
+  // Check for at least two options and validate amount of votes:
+  $realchoices = 0;
+  // Renumber fields
+  $node->choice = array_values($node->choice);
+  foreach ($node->choice as $i => $choice) {
+    if ($choice['chtext'] != '') {
+      $realchoices++;
     }
+    if ($choice['chvotes'] < 0) {
+      form_set_error("choice][$i][chvotes", t('Negative values are not allowed.'));
+    }
+  }
 
-    if ($realchoices < 2) {
-      form_set_error("choice][$realchoices][chtext", t('You must fill in at least two choices.'));
-    }
+  if ($realchoices < 2) {
+    form_set_error("choice][$realchoices][chtext", t('You must fill in at least two choices.'));
+  }
+}
+
+function poll_form_alter($form_id, &$form) {
+  if ($form_id == 'node_delete_confirm' && $form['node']['#value']->type == 'poll') {
+    $form['#submit']['poll_node_delete_confirm_submit'] = array();
   }
 }
 
@@ -582,9 +582,16 @@ function poll_view($node, $teaser = FALSE, $page = FALSE, $block = FALSE) {
   return $node;
 }
 
-/**
- * Implementation of hook_update().
- */
+function poll_node_submit($form_id, $node) {
+  $node = (object)$node;
+  if ($node->is_new) {
+    poll_insert($node);
+  }
+  else {
+    poll_update($node);
+  }
+}
+
 function poll_update($node) {
   db_query('UPDATE {poll} SET runtime = %d, active = %d WHERE nid = %d', $node->runtime, $node->active, $node->nid);
 
