@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.237 2006/08/18 18:58:46 dries Exp $
+// $Id: statistics.module,v 1.238 2006/08/29 09:51:50 dries Exp $
 
 /**
  * @file
@@ -117,10 +117,9 @@ function statistics_menu($may_cache) {
     $items[] = array(
       'path' => 'admin/logs/hits',
       'title' => t('recent hits'),
-      'description' => t('View pages that have recently been hit.'),
+      'description' => t('View pages that have recently been visited.'),
       'callback' => 'statistics_recent_hits',
-      'access' => $access,
-      'weight' => 3);
+      'access' => $access);
     $items[] = array(
       'path' => 'admin/logs/pages',
       'title' => t('top pages'),
@@ -137,7 +136,7 @@ function statistics_menu($may_cache) {
       'weight' => 2);
     $items[] = array(
       'path' => 'admin/logs/referrers',
-      'title' => t('referrers'),
+      'title' => t('top referrers'),
       'description' => t('View top referrers.'),
       'callback' => 'statistics_top_referrers',
       'access' => $access);
@@ -155,8 +154,8 @@ function statistics_menu($may_cache) {
       'callback' => 'drupal_get_form',
       'callback arguments' => array('statistics_access_logging_settings'),
       'access' => user_access('administer site configuration'),
-      'type' => MENU_NORMAL_ITEM
-    );
+      'type' => MENU_NORMAL_ITEM,
+      'weight' => 3);
   }
   else {
     if (arg(0) == 'user' && is_numeric(arg(1)) && variable_get('statistics_enable_access_log', 0)) {

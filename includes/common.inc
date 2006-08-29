@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.566 2006/08/26 00:23:12 drumm Exp $
+// $Id: common.inc,v 1.567 2006/08/29 09:51:50 dries Exp $
 
 /**
  * @file
@@ -318,7 +318,8 @@ function drupal_site_offline() {
  */
 function drupal_not_found() {
   drupal_set_header('HTTP/1.0 404 Not Found');
-  watchdog('page not found', t('%page not found.', array('%page' => $_GET['q'])), WATCHDOG_WARNING);
+
+  watchdog('page not found', check_plain($_GET['q']), WATCHDOG_WARNING);
 
   // Keep old path for reference
   if (!isset($_REQUEST['destination'])) {
@@ -347,9 +348,9 @@ function drupal_not_found() {
  */
 function drupal_access_denied() {
   drupal_set_header('HTTP/1.0 403 Forbidden');
-  watchdog('access denied', t('%page denied access.', array('%page' => $_GET['q'])), WATCHDOG_WARNING, l(t('view'), $_GET['q']));
+  watchdog('access denied', check_plain($_GET['q']), WATCHDOG_WARNING);
 
-  // Keep old path for reference
+// Keep old path for reference
   if (!isset($_REQUEST['destination'])) {
     $_REQUEST['destination'] = $_GET['q'];
   }

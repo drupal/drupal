@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.194 2006/08/29 09:12:02 drumm Exp $
+// $Id: search.module,v 1.195 2006/08/29 09:51:50 dries Exp $
 
 /**
  * @file
@@ -170,6 +170,10 @@ function search_menu($may_cache) {
       'callback arguments' => array('search_wipe_confirm'),
       'access' => user_access('administer search'),
       'type' => MENU_CALLBACK);
+    $items[] = array('path' => 'admin/logs/search', 'title' => t('top search phrases'),
+      'description' => t('View most popular search phrases.'),
+      'callback' => 'watchdog_top',
+      'callback arguments' => array('search'));
   }
   else if (arg(0) == 'search') {
     // To remember the user's search keywords when switching across tabs,
@@ -920,7 +924,7 @@ function search_view() {
     // Only perform search if there is non-whitespace search term:
     if (trim($keys)) {
       // Log the search keys:
-      watchdog('search', t('Search: %keys (@type).', array('%keys' => $keys, '@type' => module_invoke($type, 'search', 'name'))), WATCHDOG_NOTICE, l(t('results'), 'search/'. $type .'/'. $keys));
+      watchdog('search', t('%keys (@type).', array('%keys' => $keys, '@type' => module_invoke($type, 'search', 'name'))), WATCHDOG_NOTICE, l(t('results'), 'search/'. $type .'/'. $keys));
 
       // Collect the search results:
       $results = search_data($keys, $type);

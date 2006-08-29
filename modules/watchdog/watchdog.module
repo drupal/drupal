@@ -1,5 +1,5 @@
 <?php
-// $Id: watchdog.module,v 1.151 2006/08/23 18:16:45 dries Exp $
+// $Id: watchdog.module,v 1.152 2006/08/29 09:51:50 dries Exp $
 
 /**
  * @file
@@ -47,10 +47,18 @@ function watchdog_menu($may_cache) {
       'callback' => 'system_admin_menu_block_page',
       'weight' => 5,
       'position' => 'left');
-    $items[] = array('path' => 'admin/logs/watchdog', 'title' => t('watchdog log'),
-      'description' => t('View the primary system log.'),
-      'weight' => -10,
-      'callback' => 'watchdog_overview');
+    $items[] = array('path' => 'admin/logs/watchdog', 'title' => t('recent log entries'),
+      'description' => t('View events that have recently been logged.'),
+      'callback' => 'watchdog_overview',
+      'weight' => -1);
+    $items[] = array('path' => 'admin/logs/page-not-found', 'title' => t("top 'page not found' errors"),
+      'description' => t("View 'page not found errors' (404s)."),
+      'callback' => 'watchdog_top',
+      'callback arguments' => array('page not found'));
+    $items[] = array('path' => 'admin/logs/access-denied', 'title' => t("top 'access denied' errors"),
+      'description' => t("View 'access denied' errors (403s)."),
+      'callback' => 'watchdog_top',
+      'callback arguments' => array('access denied'));
     $items[] = array('path' => 'admin/logs/event', 'title' => t('details'),
       'callback' => 'watchdog_event',
       'type' => MENU_CALLBACK);
@@ -156,6 +164,33 @@ function watchdog_overview() {
 
   $output .= theme('table', $header, $rows);
   $output .= theme('pager', NULL, 50, 0);
+
+  return $output;
+}
+
+/**
+ * Menu callback; generic function to display a page of the most frequent
+ * watchdog events of a specified type.
+ */
+function watchdog_top($type) {
+
+  $header = array(
+    array('data' => t('Count'), 'field' => 'count', 'sort' => 'desc'),
+    array('data' => t('Message'), 'field' => 'message')
+  );
+
+  $result = pager_query("SELECT COUNT(wid) AS count, message FROM {watchdog} WHERE type = '%s' GROUP BY message ". tablesort_sql($header), 30, 0, "SELECT COUNT(DISTINCT(message)) FROM {watchdog} WHERE type = '%s'", $type);
+
+  while ($watchdog = db_fetch_object($result)) {
+    $rows[] = array($watchdog->count, truncate_utf8($watchdog->message, 56, TRUE, TRUE));
+  }
+
+  if (!$rows) {
+    $rows[] = array(array('data' => t('No log messages available.'), 'colspan' => 2));
+  }
+
+  $output  = theme('table', $header, $rows);
+  $output .= theme('pager', NULL, 30, 0);
 
   return $output;
 }
