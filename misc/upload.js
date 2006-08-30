@@ -1,4 +1,4 @@
-// $Id: upload.js,v 1.9 2006/05/05 10:47:20 drumm Exp $
+// $Id: upload.js,v 1.10 2006/08/30 18:56:31 unconed Exp $
 
 // Global killswitch
 if (isJsEnabled()) {
@@ -13,10 +13,11 @@ function uploadAutoAttach() {
   for (i = 0; input = inputs[i]; i++) {
     if (input && hasClass(input, 'upload')) {
       var uri = input.value;
-      // Extract the button ID based on a substring of the input name: edit[foo][bar] -> foo-bar
-      var button = input.name.substr(5, input.name.length - 6).replace('][', '-');
-      var wrapper = button + '-wrapper';
-      var hide = button + '-hide';
+      // Extract the base name from the id (edit-attach-url -> attach).
+      var base = input.id.substring(5, input.id.length - 4);
+      var button = base + '-button';
+      var wrapper = base + '-wrapper';
+      var hide = base + '-hide';
       var upload = new jsUpload(uri, button, wrapper, hide);
     }
   }
