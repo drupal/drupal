@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.133 2006/08/20 05:57:40 unconed Exp $
+// $Id: menu.inc,v 1.134 2006/08/30 08:46:16 dries Exp $
 
 /**
  * @file
@@ -206,14 +206,14 @@ function menu_get_menu() {
     // _menu_build() may indirectly call this function, so prevent infinite loops.
     $_menu['items'] = array();
 
-    $cid = "menu:$user->uid:$locale";
-    if ($cached = cache_get($cid)) {
+    $cid = "$user->uid:$locale";
+    if ($cached = cache_get($cid, 'cache_menu')) {
       $_menu = unserialize($cached->data);
     }
     else {
       _menu_build();
       // Cache the menu structure for this user, to expire after one day.
-      cache_set($cid, serialize($_menu), time() + (60 * 60 * 24));
+      cache_set($cid, 'cache_menu', serialize($_menu), time() + (60 * 60 * 24));
     }
 
     // Make sure items that cannot be cached are added.
@@ -585,9 +585,9 @@ function menu_in_active_trail_in_submenu($mid, $pid) {
  */
 function menu_rebuild() {
   // Clear the page cache, so that changed menus are reflected for anonymous users.
-  cache_clear_all();
+  cache_clear_all('*', 'cache_page', TRUE);
   // Also clear the menu cache.
-  cache_clear_all('menu:', TRUE);
+  cache_clear_all('*', 'cache_menu', TRUE);
 
   _menu_build();
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.567 2006/08/29 09:51:50 dries Exp $
+// $Id: common.inc,v 1.568 2006/08/30 08:46:16 dries Exp $
 
 /**
  * @file
@@ -1597,7 +1597,7 @@ function page_set_cache() {
       }
       ob_end_flush();
       if ($cache && $data) {
-        cache_set($base_root . request_uri(), $data, CACHE_TEMPORARY, drupal_get_headers());
+        cache_set($base_root . request_uri(), 'cache_page', $data, CACHE_TEMPORARY, drupal_get_headers());
       }
     }
   }

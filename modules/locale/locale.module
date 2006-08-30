@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.143 2006/08/18 18:58:46 dries Exp $
+// $Id: locale.module,v 1.144 2006/08/30 08:46:16 dries Exp $
 
 /**
  * @file
@@ -181,11 +181,11 @@ function locale($string) {
 
   // Store database cached translations in a static var.
   if (!isset($locale_t)) {
-    $cache = cache_get("locale:$locale");
+    $cache = cache_get("locale:$locale", 'cache');
 
     if (!$cache) {
       locale_refresh_cache();
-      $cache = cache_get("locale:$locale");
+      $cache = cache_get("locale:$locale", 'cache');
     }
     $locale_t = unserialize($cache->data);
   }
@@ -225,7 +225,7 @@ function locale($string) {
         }
       }
       // Clear locale cache in DB
-      cache_clear_all("locale:$locale");
+      cache_clear_all("locale:$locale", 'cache');
     }
   }
 
@@ -246,7 +246,7 @@ function locale_refresh_cache() {
     while ($data = db_fetch_object($result)) {
       $t[$data->source] = (empty($data->translation) ? TRUE : $data->translation);
     }
-    cache_set("locale:$locale", serialize($t));
+    cache_set("locale:$locale", 'cache', serialize($t));
   }
 }
 
@@ -357,7 +357,8 @@ function locale_admin_manage_delete_form_submit($form_id, $form_values) {
   }
 
   // Changing the locale settings impacts the interface:
-  cache_clear_all();
+  cache_clear_all('*', 'cache_menu', TRUE);
+  cache_clear_all('*', 'cache_page', TRUE);
 
   return 'admin/settings/locale/language/overview';
 }

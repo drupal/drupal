@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.664 2006/08/29 09:12:03 drumm Exp $
+// $Id: user.module,v 1.665 2006/08/30 08:46:17 dries Exp $
 
 /**
  * @file
@@ -1461,7 +1461,7 @@ function user_edit_submit($form_id, $form_values) {
   user_module_invoke('submit', $form_values, $account, $category);
   user_save($account, $form_values, $category);
   // Delete that user's menu cache.
-  cache_clear_all('menu:'. $account->uid, TRUE);
+  cache_clear_all($account->uid .':', 'cache_menu', TRUE);
   drupal_set_message(t('The changes have been saved.'));
   return 'user/'. $account->uid;
 }
@@ -2065,7 +2065,7 @@ function user_admin_account_submit($form_id, $edit) {
     }
     call_user_func_array($function, $args);
 
-    cache_clear_all();
+    cache_clear_all('*', 'cache_menu', TRUE);
     drupal_set_message(t('The update has been performed.'));
   }
 }

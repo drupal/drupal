@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.119 2006/08/30 08:03:15 drumm Exp $
+// $Id: bootstrap.inc,v 1.120 2006/08/30 08:46:16 dries Exp $
 
 /**
  * @file
@@ -240,7 +240,7 @@ function drupal_get_filename($type, $name, $filename = NULL, $check_db = TRUE) {
  */
 function variable_init($conf = array()) {
   // NOTE: caching the variables improves performance by 20% when serving cached pages.
-  if ($cached = cache_get('variables')) {
+  if ($cached = cache_get('variables', 'cache')) {
     $variables = unserialize($cached->data);
   }
   else {
@@ -248,7 +248,7 @@ function variable_init($conf = array()) {
     while ($variable = db_fetch_object($result)) {
       $variables[$variable->name] = unserialize($variable->value);
     }
-    cache_set('variables', serialize($variables));
+    cache_set('variables', 'cache', serialize($variables));
   }
 
   foreach ($conf as $name => $value) {
@@ -291,7 +291,7 @@ function variable_set($name, $value) {
   db_query("INSERT INTO {variable} (name, value) VALUES ('%s', '%s')", $name, serialize($value));
   db_unlock_tables();
 
-  cache_clear_all('variables');
+  cache_clear_all('variables', 'cache');
 
   $conf[$name] = $value;
 }
@@ -306,7 +306,7 @@ function variable_del($name) {
   global $conf;
 
   db_query("DELETE FROM {variable} WHERE name = '%s'", $name);
-  cache_clear_all('variables');
+  cache_clear_all('variables', 'cache');
 
   unset($conf[$name]);
 }
@@ -325,7 +325,7 @@ function page_get_cache() {
   $cache = NULL;
 
   if (!$user->uid && $_SERVER['REQUEST_METHOD'] == 'GET' && count(drupal_set_message()) == 0) {
-    $cache = cache_get($base_root . request_uri());
+    $cache = cache_get($base_root . request_uri(), 'cache_page');
 
     if (empty($cache)) {
       ob_start();

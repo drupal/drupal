@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.88 2006/08/18 18:58:44 dries Exp $
+// $Id: locale.inc,v 1.89 2006/08/30 08:46:16 dries Exp $
 
 /**
  * @file
@@ -119,7 +119,8 @@ function _locale_admin_manage_screen_submit($form_id, $form_values) {
   drupal_set_message(t('Configuration saved.'));
 
   // Changing the locale settings impacts the interface:
-  cache_clear_all();
+  cache_clear_all('*', 'cache_menu', TRUE);
+  cache_clear_all('*', 'cache_page', TRUE);
 
   return 'admin/settings/locale/language/overview';
 }
@@ -486,7 +487,7 @@ function _locale_import_po($file, $lang, $mode) {
   }
 
   // rebuild locale cache
-  cache_clear_all("locale:$lang");
+  cache_clear_all("locale:$lang", 'cache');
 
   // rebuild the menu, strings may have changed
   menu_rebuild();

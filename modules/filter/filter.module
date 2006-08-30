@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.137 2006/08/27 12:54:01 dries Exp $
+// $Id: filter.module,v 1.138 2006/08/30 08:46:16 dries Exp $
 
 /**
  * @file
@@ -146,6 +146,15 @@ function filter_menu($may_cache) {
  */
 function filter_perm() {
   return array('administer filters');
+}
+
+/**
+ * Implementation of hook_cron().
+ *
+ * Expire outdated filter cache entries
+ */
+function filter_cron() {
+  cache_clear_all(NULL, 'cache_filter');
 }
 
 /**
@@ -388,7 +397,7 @@ function filter_admin_delete_submit($form_id, $form_values) {
   db_query("UPDATE {comments} SET format = %d WHERE format = %d", $default, $form_values['format']);
   db_query("UPDATE {boxes} SET format = %d WHERE format = %d", $default, $form_values['format']);
 
-  cache_clear_all('filter:'. $form_values['format'], TRUE);
+  cache_clear_all($form_values['format'] .':', 'cache_filter', TRUE);
   drupal_set_message(t('Deleted input format %format.', array('%format' => $form_values['name'])));
 
   return 'admin/settings/filters';
@@ -524,7 +533,7 @@ function filter_admin_format_form_submit($form_id, $form_values) {
 
   db_query("UPDATE {filter_formats} SET cache = %d, name='%s', roles = '%s' WHERE format = %d", $cache, $name, $roles, $format);
 
-  cache_clear_all('filter:'. $format, TRUE);
+  cache_clear_all($format .':', 'cache_filter', TRUE);
 
   // If a new filter was added, return to the main list of filters. Otherwise, stay on edit filter page to show new changes.
   if ($new) {
@@ -582,7 +591,7 @@ function filter_admin_order_submit($form_id, $form_values) {
   }
   drupal_set_message(t('The filter ordering has been saved.'));
 
-  cache_clear_all('filter:'. $form_values['format'], TRUE);
+  cache_clear_all($form_values['format'] .':', 'cache_filter', TRUE);
 }
 
 /**
@@ -747,8 +756,8 @@ function check_markup($text, $format = FILTER_FORMAT_DEFAULT, $check = TRUE) {
     $format = filter_resolve_format($format);
 
     // Check for a cached version of this piece of text.
-    $id = 'filter:'. $format .':'. md5($text);
-    if ($cached = cache_get($id)) {
+    $id = $format .':'. md5($text);
+    if ($cached = cache_get($id, 'cache_filter')) {
       return $cached->data;
     }
 
@@ -774,7 +783,7 @@ function check_markup($text, $format = FILTER_FORMAT_DEFAULT, $check = TRUE) {
 
     // Store in cache with a minimum expiration time of 1 day.
     if ($cache) {
-      cache_set($id, $text, time() + (60 * 60 * 24));
+      cache_set($id, 'cache_filter', $text, time() + (60 * 60 * 24));
     }
   }
   else {
