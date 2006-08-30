@@ -29,7 +29,7 @@
       <?php endif;?>
     </td>
     <td class="primary-links" width="70%" align="center" valign="middle">
-      <?php print theme('links', $primary_links) ?>
+      <?php print theme('links', $primary_links, array('class' => 'links', 'id' => 'navlist')) ?>
     </td>
   </tr>
 </table>
@@ -37,7 +37,7 @@
 <table id="secondary-menu" summary="Navigation elements." border="0" cellpadding="0" cellspacing="0" width="100%">
   <tr>
     <td class="secondary-links" width="75%"  align="center" valign="middle">
-      <?php print theme('links', $secondary_links) ?>
+      <?php print theme('links', $secondary_links, array('class' => 'links', 'id' => 'subnavlist')) ?>
     </td>
     <td  width="25%"  align="center" valign="middle">
       <?php print $search_box ?>
@@ -99,14 +99,10 @@
   <tr>
     <td align="center" valign="middle">
     <?php if (isset($primary_links)) : ?>
-      <div class="primary-links">
-        <?php print theme('links', $primary_links) ?>
-      </div>
+      <?php print theme('links', $primary_links, array('class' => 'links primary-links')) ?>
     <?php endif; ?>
     <?php if (isset($secondary_links)) : ?>
-      <div class="secondary-links">
-        <?php print theme('links', $secondary_links) ?>
-      </div>
+      <?php print theme('links', $secondary_links, array('class' => 'links secondary-links',)) ?>
     <?php endif; ?>
     </td>
   </tr>

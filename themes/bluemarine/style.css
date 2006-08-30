@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.16 2006/08/28 07:56:21 dries Exp $ */
+/* $Id: style.css,v 1.17 2006/08/30 07:37:13 drumm Exp $ */
 
 /*
 ** HTML elements
@@ -94,23 +94,29 @@ table {
   text-align: right;
   vertical-align: middle;
 }
-#primary {
+#navlist {
   font-size: 1.0em;
-  padding: 0em 0.8em 0.5em 0;
+  padding: 0 0.8em 1.2em 0;
   color: #9cf;
 }
-#primary a {
+#navlist a {
   font-weight: bold;
   color: #fff;
 }
-#secondary {
-  padding: 0 1em 0.5em 0;
+#subnavlist {
+  padding: 0.5em 1.2em 0.4em 0;
   font-size: 0.8em;
   color: #9cf;
 }
-#secondary a {
+#subnavlist a {
   font-weight: bold;
   color: #9cf;
+}
+ul.links li {
+  border-left: 1px solid #9cf;
+}
+ul.links li.first {
+  border: none;
 }
 #search .form-text, #search .form-submit {
   border: 1px solid #369;

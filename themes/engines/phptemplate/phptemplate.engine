@@ -1,5 +1,5 @@
 <?php
-// $Id: phptemplate.engine,v 1.46 2006/08/23 18:32:39 dries Exp $
+// $Id: phptemplate.engine,v 1.47 2006/08/30 07:37:14 drumm Exp $
 
 /**
  * @file
@@ -269,14 +269,14 @@ function phptemplate_node($node, $teaser = 0, $page = 0) {
   $variables = array(
     'content'        => ($teaser && $node->teaser) ? $node->teaser : $node->body,
     'date'           => format_date($node->created),
-    'links'          => $node->links ? theme('links', $node->links) : '',
+    'links'          => $node->links ? theme('links', $node->links, array('class' => 'links inline')) : '',
     'name'           => theme('username', $node),
     'node'           => $node,  // we pass the actual node to allow more customization
     'node_url'       => url('node/'. $node->nid),
     'page'           => $page,
     'taxonomy'       => $taxonomy,
     'teaser'         => $teaser,
-    'terms'          => theme('links', $taxonomy),
+    'terms'          => theme('links', $taxonomy, array('class' => 'links inline')),
     'title'          => check_plain($node->title)
   );
 

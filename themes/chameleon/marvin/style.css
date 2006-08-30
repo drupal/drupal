@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.5 2006/08/28 07:56:21 dries Exp $ */
+/* $Id: style.css,v 1.6 2006/08/30 07:37:14 drumm Exp $ */
 
 /*
 ** HTML elements
@@ -45,6 +45,15 @@ table {
 #header .title {
   padding-top: .75em;
 }
+#subnavlist {
+  font-size: 0.8em;
+}
+ul.links li {
+  border-left: 1px solid #888;
+}
+ul.links li.first {
+  border: none;
+}
 
 /*
 ** Common declarations for child classes of node, comment, block, box etc
@@ -65,7 +74,7 @@ table {
   padding-left: 1em;
 }
 .node .links {
-  padding: 1em;
+  padding: 1em 0 1em 0.2em;
 }
 .comment {
   border: solid 1px #777;

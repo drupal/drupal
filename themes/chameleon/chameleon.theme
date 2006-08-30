@@ -1,5 +1,5 @@
 <?php
-// $Id: chameleon.theme,v 1.51 2006/08/27 12:43:18 dries Exp $
+// $Id: chameleon.theme,v 1.52 2006/08/30 07:37:14 drumm Exp $
 
 /**
  * @file
@@ -55,15 +55,15 @@ function chameleon_page($content, $show_blocks = TRUE) {
 
   $output .= "</div>\n";
 
-  $primary_links = theme('links', menu_primary_links());
-  $secondary_links = theme('links', menu_secondary_links());
+  $primary_links = theme('links', menu_primary_links(), array('class' => 'links', 'id' => 'navlist'));
+  $secondary_links = theme('links', menu_secondary_links(), array('class' => 'links', 'id' => 'subnavlist'));
   if (isset($primary_links) || isset($secondary_links)) {
     $output .= ' <div class="navlinks">';
     if (isset($primary_links)) {
-      $output .= '<div class="primary">'. $primary_links .'</div>';
+      $output .= $primary_links;
     }
     if (isset($secondary_links)) {
-      $output .= '<div class="secondary">'. $secondary_links .'</div>';
+      $output .= $secondary_links;
     }
     $output .= " </div>\n";
   }
@@ -150,7 +150,7 @@ function chameleon_node($node, $teaser = 0, $page = 0) {
     $links = array_merge($links, $node->links);
   }
   if (count($links)) {
-    $output .= " <div class=\"links\">". theme('links', $links) ."</div>\n";
+    $output .= '<div class="links">'. theme('links', $links, array('class' => 'links inline')) ."</div>\n";
   }
 
   $output .= "</div>\n";

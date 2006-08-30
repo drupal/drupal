@@ -1,4 +1,4 @@
-/* $Id: common.css,v 1.10 2006/08/07 15:04:16 dries Exp $ */
+/* $Id: common.css,v 1.11 2006/08/30 07:37:14 drumm Exp $ */
 
 /*
 ** HTML elements
@@ -93,7 +93,7 @@ br {
 .content {
   margin: 0 0 .5em 0;
 }
-.links {
+ul.links.inline {
   font-size: 0.8em;
   line-height: 1.25em;
 }

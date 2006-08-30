@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.19 2006/08/28 07:56:21 dries Exp $ */
+/* $Id: style.css,v 1.20 2006/08/30 07:37:14 drumm Exp $ */
 
 /*
 ** HTML elements
@@ -124,6 +124,18 @@ td#home a:hover img {
 }
 #secondary-menu .secondary-links {
   font-size: 0.85em;
+}
+ul.links li {
+  border-left: 1px solid #ff8c00;
+}
+#navlist li {
+  border-left: 1px solid #369;
+}
+#subnavlist li, ul.primary-links li, ul.secondary-links li {
+  border-left: 1px solid #fff;
+}
+#navlist li.first, #subnavlist li.first, ul.links li.first {
+  border: none;
 }
 .tabs {
   margin: 15px 0;
@@ -362,11 +374,8 @@ table#footer-menu {
   color: #999;
   font-size: 0.79em;
 }
-.links {
+div.links {
   color: #ff8c00;
-  font-size: 0.8em;
-  padding: 0;
-  margin: 0;
 }
 .links a {
   font-weight: bold;
@@ -436,10 +445,10 @@ table#footer-menu {
   float: right;
   margin: 10px;
 }
-.links {
+div.links {
   font-size: 0.75em;
 }
-.links .prev, .links .next, .links .up {
+div.links .prev, div.links .next, div.links .up {
   font-size: 1.15em;
 }
 .titles .prev, .titles .next  {

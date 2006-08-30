@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.312 2006/08/24 00:04:44 unconed Exp $
+// $Id: theme.inc,v 1.313 2006/08/30 07:37:13 drumm Exp $
 
 /**
  * @file
@@ -499,35 +499,53 @@ function theme_status_messages($display = NULL) {
  *
  * @param $links
  *   A keyed array of links to be themed.
- * @param $delimiter
- *   A string used to separate the links.
+ * @param $attributes
+ *   A keyed array of attributes
  * @return
- *   A string containing the themed links.
+ *   A string containing an unordered list of links.
  */
-function theme_links($links, $delimiter = ' | ') {
-  $output = array();
+function theme_links($links, $attributes = array('class' => 'links')) {
+  $output = '';
 
   if (is_array($links)) {
+    $output = '<ul'. drupal_attributes($attributes) .'>';
+
+    $num_links = count($links);
+    $i = 1;
+
     foreach ($links as $key => $link) {
-      // Automatically add a class to each link and convert all _ to - for XHTML compliance
+      $class = '';
+
+      // Automatically add a class to each link and also to each LI
       if (isset($link['attributes']) && isset($link['attributes']['class'])) {
-        $link['attributes']['class'] .= ' '. str_replace('_', '-', $key);
+        $link['attributes']['class'] .= ' ' . $key;
+        $class = $key;
       }
       else {
-        $link['attributes']['class'] = str_replace('_', '-', $key);
+        $link['attributes']['class'] = $key;
+        $class = $key;
       }
 
+      // Add first and last classes to the list of links to help out themers
+      $extra_class = ($i == 1) ? 'first ' : (($i == $num_links) ? 'last ' : '');
+      $output .= '<li class="'. $extra_class . $class .'">';
+
       if ($link['href']) {
-        $output[] = l($link['title'], $link['href'], $link['attributes'], $link['query'], $link['fragment']);
+        $output .= l($link['title'], $link['href'], $link['attributes'], $link['query'], $link['fragment']);
       }
       else if ($link['title']) {
         //Some links are actually not links, but we wrap these in <span> for adding title and class attributes
-        $output[] = '<span'. drupal_attributes($link['attributes']) .'>'. check_plain($link['title']) .'</span>';
+        $output .= '<span'. drupal_attributes($link['attributes']) .'>'. check_plain($link['title']) .'</span>';
       }
+
+      $i++;
+      $output .= '</li>';
     }
+
+    $output .= '</ul>';
   }
 
-  return implode($delimiter, $output);
+  return $output;
 }
 
 /**
