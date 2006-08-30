@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.155 2006/08/25 09:01:11 drumm Exp $
+// $Id: CHANGELOG.txt,v 1.156 2006/08/30 08:40:36 dries Exp $
 
 Drupal x.x.x, xxxx-xx-xx (development version)
 ------------------------
@@ -17,6 +17,7 @@ Drupal x.x.x, xxxx-xx-xx (development version)
     * made it possible to instantly assign roles to newly created user accounts.
     * improved configurability of the contact forms.
     * reorganized the settings pages.
+    * made it easy to investigate popopular search terms
 - block system:
     * extended the block visibility settings with a role specific settings.
     * made it possible to customize all block titles.

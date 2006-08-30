@@ -1,5 +1,5 @@
 <?php
-// $Id: watchdog.module,v 1.152 2006/08/29 09:51:50 dries Exp $
+// $Id: watchdog.module,v 1.153 2006/08/30 08:40:36 dries Exp $
 
 /**
  * @file
@@ -52,7 +52,7 @@ function watchdog_menu($may_cache) {
       'callback' => 'watchdog_overview',
       'weight' => -1);
     $items[] = array('path' => 'admin/logs/page-not-found', 'title' => t("top 'page not found' errors"),
-      'description' => t("View 'page not found errors' (404s)."),
+      'description' => t("View 'page not found' errors (404s)."),
       'callback' => 'watchdog_top',
       'callback arguments' => array('page not found'));
     $items[] = array('path' => 'admin/logs/access-denied', 'title' => t("top 'access denied' errors"),
