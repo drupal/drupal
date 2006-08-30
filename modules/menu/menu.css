@@ -32,3 +32,15 @@ li a.active {
 td.menu-disabled {
   background: #ccc;
 }
+ul.links {
+  margin: 0;
+  padding: 0;
+}
+ul.links.inline {
+  display: inline;
+}
+ul.links li {
+  display: inline;
+  list-style-type: none;
+  padding: 0 0.5em;
+}

@@ -93,7 +93,7 @@ br {
 .content {
   margin: 0 0 .5em 0;
 }
-.links {
+ul.links.inline {
   font-size: 0.8em;
   line-height: 1.25em;
 }

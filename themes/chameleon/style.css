@@ -55,6 +55,15 @@ ul {
   margin-top: -0.1em;
   font-size: 0.8em;
 }
+#subnavlist {
+  font-size: 0.8em;
+}
+ul.links li {
+  border-left: 1px solid #000;
+}
+ul.links li.first {
+  border-left: none;
+}
 .node .title {
   font-size: 1.2em;
 }
@@ -68,10 +77,10 @@ ul {
 .node .title a:hover {
   text-decoration: underline;
 }
-.links {
+div.links {
   margin: 1em 0 3em 0;
   text-align: right;
- }
+}
 .comment .content, .block .content, .menu {
   font-size: 0.9em;
 }
