@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.82 2006/08/18 12:16:57 unconed Exp $
+// $Id: file.inc,v 1.83 2006/08/30 09:30:43 dries Exp $
 
 /**
  * @file
@@ -228,7 +228,7 @@ function file_check_upload($source = 'upload') {
     $file->filemime = $_FILES["edit"]["type"][$source];
 
     // Rename potentially executable files, to help prevent exploits.
-    if (((substr($file->filemime, 0, 5) == 'text/' || strpos($file->filemime, 'javascript')) && (substr($file->filename, -4) != '.txt')) || preg_match('/\.(php|pl|py|cgi|asp)$/i', $file->filename)) {
+    if (preg_match('/\.(php|pl|py|cgi|asp|js)$/i', $file->filename) && (substr($file->filename, -4) != '.txt')) {
       $file->filemime = 'text/plain';
       $file->filepath .= '.txt';
       $file->filename .= '.txt';
