@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.84 2006/08/29 18:43:25 dries Exp $
+// $Id: menu.module,v 1.85 2006/08/30 15:17:49 dries Exp $
 
 /**
  * @file
@@ -73,7 +73,8 @@ function menu_menu($may_cache) {
       'type' => MENU_CALLBACK);
     $items[] = array('path' => 'admin/build/menu/item/reset',
       'title' => t('reset menu item'),
-      'callback' => 'menu_reset_item',
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('menu_reset_item'),
       'access' => user_access('administer menu'),
       'type' => MENU_CALLBACK);
     $items[] = array('path' => 'admin/build/menu/item/disable',
