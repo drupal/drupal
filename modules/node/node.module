@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.690 2006/08/29 18:43:25 dries Exp $
+// $Id: node.module,v 1.691 2006/08/30 18:50:35 dries Exp $
 
 /**
  * @file
@@ -1820,7 +1820,7 @@ function node_object_prepare(&$node) {
 /**
  * Generate the node add/edit form array.
  */
-function node_form($node) {
+function node_form($node, $form_values = NULL) {
   global $user;
 
   $node = (object)$node;
@@ -1841,7 +1841,7 @@ function node_form($node) {
   $form['changed'] = array('#type' => 'hidden', '#value' => $node->changed);
 
   // Get the node-specific bits.
-  $form = array_merge_recursive($form, node_invoke($node, 'form'));
+  $form = array_merge_recursive($form, node_invoke($node, 'form', $form_values));
   if (!isset($form['title']['#weight'])) {
     $form['title']['#weight'] = -5;
   }

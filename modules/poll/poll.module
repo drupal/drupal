@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.213 2006/08/29 18:43:25 dries Exp $
+// $Id: poll.module,v 1.214 2006/08/30 18:50:35 dries Exp $
 
 /**
  * @file
@@ -123,32 +123,67 @@ function poll_form_alter($form_id, &$form) {
 /**
  * Implementation of hook_form().
  */
-function poll_form(&$node) {
+function poll_form($node, $form_values = NULL) {
   $admin = user_access('administer nodes');
   $type = node_get_types('type', $node);
+  $form['title'] = array(
+    '#type' => 'textfield',
+    '#title' => check_plain($type->title_label),
+    '#required' => TRUE,
+    '#default_value' => $node->title,
+    '#weight' => -1
+  );
 
-  $form['title'] = array('#type' => 'textfield', '#title' => check_plain($type->title_label), '#required' => TRUE, '#default_value' => $node->title, '#weight' => -1);
-
-  $form['choice']['choices'] = array('#type' => 'hidden', '#default_value' => max(2, count($node->choice) ? count($node->choice) : 5));
-  $form['choice']['morechoices'] = array('#type' => 'checkbox', '#title' => t('Need more choices'), '#default_value' => 0, '#description' => t("If the amount of boxes above isn't enough, check this box and click the Preview button below to add some more."), '#weight' => 1);
-  // when building the whole form, #post is overwritten unconditionally,
-  // so no problems from setting by hand here for the local build
-  $form['choice']['#post'] = $_POST;
-  $form['choice'] = form_builder('poll_node_form', $form['choice']);
-  if ($form['choice']['morechoices']['#value']) {
-    $form['choice']['morechoices']['#value'] = 0;
-    $form['choice']['choices']['#value'] *= 2;
+  if (isset($form_values)) {
+    $choices = $form_values['choices'];
+    if ($form_values['morechoices']) {
+      $choices *= 2;
+    }
+  }
+  else {
+    $choices = max(2, count($node->choice) ? count($node->choice) : 5);
   }
 
-  // if the value was changed in a previous iteration, retain it.
-  $node->choices = $form['choice']['choices']['#value'];
+  $form['choices'] = array(
+    '#type' => 'hidden',
+    '#default_value' => $choices,
+  );
 
   // Poll choices
-  $form['choice'] += array('#type' => 'fieldset', '#title' => t('Choices'), '#prefix' => '<div class="poll-form">', '#suffix' => '</div>', '#tree' => TRUE);
-  for ($a = 0; $a < $node->choices; $a++) {
-    $form['choice'][$a]['chtext'] = array('#type' => 'textfield', '#title' => t('Choice @n', array('@n' => ($a + 1))), '#default_value' => $node->choice[$a]['chtext']);
+  $form['choice'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Choices'),
+    '#prefix' => '<div class="poll-form">',
+    '#suffix' => '</div>',
+    '#tree' => TRUE
+  );
+
+  // We'll manually set the #parents property of this checkbox so that
+  // it appears in the fieldset visually, but its value won't pollute
+  // the $form_values['choice'] array.
+  $form['choice']['morechoices'] = array(
+    '#type' => 'checkbox',
+    '#parents' => array('morechoices'),
+    '#title' => t('Need more choices'),
+    '#default_value' => 0,
+    '#description' => t("If the amount of boxes above isn't enough, check this box and click the Preview button below to add some more."),
+    '#weight' => 1,
+  );
+
+  for ($a = 0; $a < $choices; $a++) {
+    $form['choice'][$a]['chtext'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Choice @n', array('@n' => ($a + 1))),
+      '#default_value' => $node->choice[$a]['chtext'],
+    );
+
     if ($admin) {
-      $form['choice'][$a]['chvotes'] = array('#type' => 'textfield', '#title' => t('Votes for choice @n', array('@n' => ($a + 1))), '#default_value' => (int)$node->choice[$a]['chvotes'], '#size' => 5, '#maxlength' => 7);
+      $form['choice'][$a]['chvotes'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Votes for choice @n', array('@n' => ($a + 1))),
+        '#default_value' => (int)$node->choice[$a]['chvotes'],
+        '#size' => 5, '#maxlength' => 7
+      );
     }
   }
 
@@ -158,10 +193,24 @@ function poll_form(&$node) {
 
   if ($admin) {
     $form['settings'] = array('#type' => 'fieldset', '#title' => t('Settings'));
-    $form['settings']['active'] = array('#type' => 'radios', '#title' => t('Poll status'), '#default_value' => isset($node->active) ? $node->active : 1, '#options' => $_active, '#description' => t('When a poll is closed, visitors can no longer vote for it.'));
-  }
-  $form['settings']['runtime'] = array('#type' => 'select', '#title' => t('Poll duration'), '#default_value' => $node->runtime ? $node->runtime : 0, '#options' => $_duration, '#description' => t('After this period, the poll will be closed automatically.'));
 
+    $form['settings']['active'] = array(
+      '#type' => 'radios',
+      '#title' => t('Poll status'),
+      '#default_value' => isset($node->active) ? $node->active : 1,
+      '#options' => $_active,
+      '#description' => t('When a poll is closed, visitors can no longer vote for it.')
+    );
+  }
+  $form['settings']['runtime'] = array(
+    '#type' => 'select',
+    '#title' => t('Poll duration'),
+    '#default_value' => $node->runtime,
+    '#options' => $_duration,
+    '#description' => t('After this period, the poll will be closed automatically.'),
+  );
+
+  $form['#multistep'] = TRUE;
   return $form;
 }
 
@@ -324,13 +373,18 @@ function poll_teaser($node) {
 /**
  * Generates the voting form for a poll.
  */
-function poll_view_voting($node, $page) {
+function poll_view_voting($node, $block) {
   if ($node->choice) {
     $list = array();
     foreach ($node->choice as $i => $choice) {
       $list[$i] = check_plain($choice['chtext']);
     }
-    $form['choice'] = array('#type' => 'radios', '#title' => $page ? '' : check_plain($node->title), '#default_value' => -1, '#options' => $list);
+    $form['choice'] = array(
+      '#type' => 'radios',
+      '#title' => $block ? check_plain($node->title) : '',
+      '#default_value' => -1,
+      '#options' => $list,
+    );
   }
   $form['nid'] = array('#type' => 'hidden', '#value' => $node->nid);
   $form['vote'] = array('#type' => 'submit', '#value' => t('Vote'));
@@ -571,7 +625,7 @@ function poll_view($node, $teaser = FALSE, $page = FALSE, $block = FALSE) {
       poll_vote($node);
     }
     $node->content['body'] = array(
-      '#value' => drupal_get_form('poll_view_voting', $node, $page),
+      '#value' => drupal_get_form('poll_view_voting', $node, $block),
     );
   }
   else {

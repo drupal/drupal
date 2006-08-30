@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.145 2006/08/30 07:50:10 drumm Exp $
+// $Id: form.inc,v 1.146 2006/08/30 18:50:35 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -99,11 +99,6 @@ function drupal_get_form($form_id) {
       $_SESSION['form'][$form_build_id] = $args;
       $form['#build_id'] = $form_build_id;
     }
-    // If we're in this part of the code, $_POST always contains
-    // values from the previously submitted form. Unset it to avoid
-    // any accidental submission of doubled data, then process the form
-    // to prep it for rendering.
-    unset($_POST);
     drupal_process_form($args[0], $form);
   }
 
