@@ -281,7 +281,6 @@ function node_type_form_submit($form_id, $form_values) {
 
       if ($update_count) {
         drupal_set_message(t('Changed the content type of %update_count %posts from %old_type to %type.', array('%update_count' => $update_count, '%posts' => format_plural($update_count, 'post', 'posts'), '%old_type' => $type->old_type, '%type' => $type->type)));
-        cache_clear_all('filter:', TRUE);
       }
     }
   }
@@ -318,8 +317,8 @@ function node_type_form_submit($form_id, $form_values) {
   }
 
   node_types_rebuild();
+  // menu_rebuild clears the cache, too
   menu_rebuild();
-  cache_clear_all();
   $t_args = array('%name' => $type->name);
 
   if ($op == t('Reset to defaults')) {
