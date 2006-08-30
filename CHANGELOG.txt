@@ -17,6 +17,7 @@ Drupal x.x.x, xxxx-xx-xx (development version)
     * made it possible to instantly assign roles to newly created user accounts.
     * improved configurability of the contact forms.
     * reorganized the settings pages.
+    * made it easy to investigate popopular search terms
 - block system:
     * extended the block visibility settings with a role specific settings.
     * made it possible to customize all block titles.
