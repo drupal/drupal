@@ -38,6 +38,9 @@ thead th {
 .error {
   color: red;
 }
+.ok {
+  color: green;
+}
 .item-list .icon {
   color: #555;
   float: right;
