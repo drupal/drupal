@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.15 2006/08/31 02:23:55 unconed Exp $
+// $Id: system.install,v 1.16 2006/08/31 14:53:28 dries Exp $
 
 function system_install() {
   switch ($GLOBALS['db_type']) {
@@ -507,9 +507,9 @@ function system_install() {
         PRIMARY KEY (cid)
       )");
       db_query("CREATE INDEX {cache}_expire_idx ON {cache} (expire)");
-      db_query("CREATE INDEX {cache}_expire_idx ON {cache_filter} (expire)");
-      db_query("CREATE INDEX {cache}_expire_idx ON {cache_menu} (expire)");
-      db_query("CREATE INDEX {cache}_expire_idx ON {cache_page} (expire)");
+      db_query("CREATE INDEX {cache_filter}_expire_idx ON {cache_filter} (expire)");
+      db_query("CREATE INDEX {cache_menu}_expire_idx ON {cache_menu} (expire)");
+      db_query("CREATE INDEX {cache_page}_expire_idx ON {cache_page} (expire)");
 
       db_query("CREATE TABLE {comments} (
         cid serial,
@@ -3224,9 +3224,9 @@ function system_update_1009() {
        headers text,
        PRIMARY KEY (cid)
      )");
-     $ret[] = update_sql("CREATE INDEX {cache}_expire_idx ON {cache_filter} (expire)");
-     $ret[] = update_sql("CREATE INDEX {cache}_expire_idx ON {cache_menu} (expire)");
-     $ret[] = update_sql("CREATE INDEX {cache}_expire_idx ON {cache_page} (expire)");
+     $ret[] = update_sql("CREATE INDEX {cache_filter}_expire_idx ON {cache_filter} (expire)");
+     $ret[] = update_sql("CREATE INDEX {cache_menu}_expire_idx ON {cache_menu} (expire)");
+     $ret[] = update_sql("CREATE INDEX {cache_page}_expire_idx ON {cache_page} (expire)");
      break;
  }
  return $ret;
