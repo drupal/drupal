@@ -346,30 +346,3 @@ div.admin-panel h3 {
   padding: 5px 8px 5px;
   margin: 0;
 }
-.calendar a {
-  text-decoration: none;
-}
-.calendar td, .calendar th {
-  padding: 0.4em 0;
-  border-color: #888;
-}
-.calendar .day-today {
-  background-color: #69c;
-}
-.calendar .day-today a {
-  color: #fff;
-}
-.calendar .day-selected {
-  background-color: #369;
-  color: #fff;
-}
-.calendar .header-week {
-  background-color: #ccc;
-}
-.calendar .day-blank {
-  background-color: #ccc;
-}
-.calendar .row-week td a:hover {
-  background-color: #fff;
-  color: #000;
-}
