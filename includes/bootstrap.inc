@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.120 2006/08/30 08:46:16 dries Exp $
+// $Id: bootstrap.inc,v 1.121 2006/08/31 18:40:04 dries Exp $
 
 /**
  * @file
@@ -10,7 +10,8 @@ define('CACHE_PERMANENT', 0);
 define('CACHE_TEMPORARY', -1);
 
 define('CACHE_DISABLED', 0);
-define('CACHE_ENABLED', 1);
+define('CACHE_NORMAL', 1);
+define('CACHE_AGGRESSIVE', 2);
 
 define('WATCHDOG_NOTICE', 0);
 define('WATCHDOG_WARNING', 1);
@@ -139,7 +140,7 @@ function conf_path() {
 function drupal_unset_globals() {
   if (ini_get('register_globals')) {
     $allowed = array('_ENV' => 1, '_GET' => 1, '_POST' => 1, '_COOKIE' => 1, '_FILES' => 1, '_SERVER' => 1, '_REQUEST' => 1, 'access_check' => 1, 'GLOBALS' => 1);
-    foreach ($GLOBALS as $key => $value) {
+    foreach ($GLOBALS as $key) {
       if (!isset($allowed[$key])) {
         unset($GLOBALS[$key]);
       }
@@ -382,11 +383,6 @@ function drupal_load($type, $name) {
 /**
  * Set HTTP headers in preparation for a page response.
  *
- * The general approach here is that anonymous users can keep a local
- * cache of the page, but must revalidate it on every request.  Then,
- * they are given a '304 Not Modified' response as long as they stay
- * logged out and the page has not been modified.
- *
  * Authenticated users are always given a 'no-cache' header, and will
  * fetch a fresh page on every request.  This prevents authenticated
  * users seeing locally cached pages that show them as logged out.
@@ -394,62 +390,66 @@ function drupal_load($type, $name) {
  * @see page_set_cache
  */
 function drupal_page_header() {
-  if (variable_get('cache', 0) && $cache = page_get_cache()) {
-    bootstrap_invoke_all('init');
+  header("Expires: Sun, 19 Nov 1978 05:00:00 GMT");
+  header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+  header("Cache-Control: no-store, no-cache, must-revalidate");
+  header("Cache-Control: post-check=0, pre-check=0", FALSE);
+  header("Pragma: no-cache");
+}
 
-    // Set default values:
-    $last_modified = gmdate('D, d M Y H:i:s', $cache->created) .' GMT';
-    $etag = '"'.md5($last_modified).'"';
+/**
+ * Set HTTP headers in preparation for a cached page response.
+ *
+ * The general approach here is that anonymous users can keep a local
+ * cache of the page, but must revalidate it on every request.  Then,
+ * they are given a '304 Not Modified' response as long as they stay
+ * logged out and the page has not been modified.
+ *
+ */
+function drupal_page_cache_header($cache) {
+  // Set default values:
+  $last_modified = gmdate('D, d M Y H:i:s', $cache->created) .' GMT';
+  $etag = '"'.md5($last_modified).'"';
 
-    // See if the client has provided the required HTTP headers:
-    $if_modified_since = isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? stripslashes($_SERVER['HTTP_IF_MODIFIED_SINCE']) : FALSE;
-    $if_none_match = isset($_SERVER['HTTP_IF_NONE_MATCH']) ? stripslashes($_SERVER['HTTP_IF_NONE_MATCH']) : FALSE;
+  // See if the client has provided the required HTTP headers:
+  $if_modified_since = isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? stripslashes($_SERVER['HTTP_IF_MODIFIED_SINCE']) : FALSE;
+  $if_none_match = isset($_SERVER['HTTP_IF_NONE_MATCH']) ? stripslashes($_SERVER['HTTP_IF_NONE_MATCH']) : FALSE;
 
-    if ($if_modified_since && $if_none_match
-        && $if_none_match == $etag // etag must match
-        && $if_modified_since == $last_modified) {  // if-modified-since must match
-      header('HTTP/1.1 304 Not Modified');
-      // All 304 responses must send an etag if the 200 response for the same object contained an etag
-      header("Etag: $etag");
-      exit();
-    }
-
-    // Send appropriate response:
-    header("Last-Modified: $last_modified");
-    header("ETag: $etag");
-
-    // The following headers force validation of cache:
-    header("Expires: Sun, 19 Nov 1978 05:00:00 GMT");
-    header("Cache-Control: must-revalidate");
-
-    // Determine if the browser accepts gzipped data.
-    if (@strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') === FALSE && function_exists('gzencode')) {
-      // Strip the gzip header and run uncompress.
-      $cache->data = gzinflate(substr(substr($cache->data, 10), 0, -8));
-    }
-    elseif (function_exists('gzencode')) {
-      header('Content-Encoding: gzip');
-    }
-
-    // Send the original request's headers. We send them one after
-    // another so PHP's header() function can deal with duplicate
-    // headers.
-    $headers = explode("\n", $cache->headers);
-    foreach ($headers as $header) {
-      header($header);
-    }
-
-    print $cache->data;
-    bootstrap_invoke_all('exit');
+  if ($if_modified_since && $if_none_match
+      && $if_none_match == $etag // etag must match
+      && $if_modified_since == $last_modified) {  // if-modified-since must match
+    header('HTTP/1.1 304 Not Modified');
+    // All 304 responses must send an etag if the 200 response for the same object contained an etag
+    header("Etag: $etag");
     exit();
   }
-  else {
-    header("Expires: Sun, 19 Nov 1978 05:00:00 GMT");
-    header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-    header("Cache-Control: no-store, no-cache, must-revalidate");
-    header("Cache-Control: post-check=0, pre-check=0", FALSE);
-    header("Pragma: no-cache");
+
+  // Send appropriate response:
+  header("Last-Modified: $last_modified");
+  header("ETag: $etag");
+
+  // The following headers force validation of cache:
+  header("Expires: Sun, 19 Nov 1978 05:00:00 GMT");
+  header("Cache-Control: must-revalidate");
+
+  // Determine if the browser accepts gzipped data.
+  if (@strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') === FALSE && function_exists('gzencode')) {
+    // Strip the gzip header and run uncompress.
+    $cache->data = gzinflate(substr(substr($cache->data, 10), 0, -8));
   }
+  elseif (function_exists('gzencode')) {
+    header('Content-Encoding: gzip');
+  }
+
+  // Send the original request's headers. We send them one after
+  // another so PHP's header() function can deal with duplicate
+  // headers.
+  $headers = explode("\n", $cache->headers);
+  foreach ($headers as $header) {
+    header($header);
+  }
+
+  print $cache->data;
 }
 
 /**
@@ -677,18 +677,17 @@ function _drupal_bootstrap($phase) {
   global $conf;
 
   switch ($phase) {
+
     case DRUPAL_BOOTSTRAP_CONFIGURATION:
       drupal_unset_globals();
       // Initialize the configuration
       conf_init();
       break;
+
     case DRUPAL_BOOTSTRAP_EARLY_PAGE_CACHE:
-      if (variable_get('page_cache_fastpath', 0)) {
-        require_once variable_get('cache_inc', './includes/cache.inc');
-        page_cache_fastpath();
-        exit;
-      }
+      _drupal_cache_init($phase);
       break;
+
     case DRUPAL_BOOTSTRAP_DATABASE:
       // Initialize the default database.
       require_once './includes/database.inc';
@@ -702,10 +701,10 @@ function _drupal_bootstrap($phase) {
       break;
 
     case DRUPAL_BOOTSTRAP_LATE_PAGE_CACHE:
-      require_once variable_get('cache_inc', './includes/cache.inc');
-      require_once './includes/module.inc';
-      // Start a page timer:
-      timer_start('page');
+      // Initialize configuration variables, using values from settings.php if available.
+      $conf = variable_init(isset($conf) ? $conf : array());
+
+      _drupal_cache_init($phase);
 
       // deny access to hosts which were banned. t() is not yet available.
       if (drupal_is_denied('host', $_SERVER['REMOTE_ADDR'])) {
@@ -714,8 +713,9 @@ function _drupal_bootstrap($phase) {
         exit();
       }
 
-      // Initialize configuration variables, using values from conf.php if available.
-      $conf = variable_init(isset($conf) ? $conf : array());
+      // Start a page timer:
+      timer_start('page');
+
       drupal_page_header();
       break;
 
@@ -729,6 +729,36 @@ function _drupal_bootstrap($phase) {
       require_once './includes/common.inc';
       _drupal_bootstrap_full();
       break;
+  }
+}
+
+/**
+ * Initialize the caching strategy, which loads at different stages within
+ * Drupal's bootstrap process.
+ */
+function _drupal_cache_init($phase) {
+  require_once variable_get('cache_inc', './includes/cache.inc');
+
+  if ($phase == DRUPAL_BOOTSTRAP_EARLY_PAGE_CACHE && variable_get('page_cache_fastpath', 0)) {
+    if (page_cache_fastpath()) {
+      exit();
+    }
+  }
+  elseif ($phase == DRUPAL_BOOTSTRAP_LATE_PAGE_CACHE) {
+    if ($cache = page_get_cache()) {
+      if (variable_get('cache', CACHE_DISABLED) == CACHE_AGGRESSIVE) {
+        drupal_page_cache_header($cache);
+        exit();
+      }
+      elseif (variable_get('cache', CACHE_DISABLED) == CACHE_NORMAL) {
+        require_once './includes/module.inc';
+        bootstrap_invoke_all('init');
+        drupal_page_cache_header($cache);
+        bootstrap_invoke_all('exit');
+        exit();
+      }
+    }
+    require_once './includes/module.inc';
   }
 }
 

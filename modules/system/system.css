@@ -1,4 +1,4 @@
-/* $Id: system.css,v 1.5 2006/08/21 07:33:26 drumm Exp $ */
+/* $Id: system.css,v 1.6 2006/08/31 18:40:04 dries Exp $ */
 
 /*
 ** HTML elements
@@ -37,6 +37,9 @@ thead th {
 }
 .error {
   color: red;
+}
+.ok {
+  color: green;
 }
 .item-list .icon {
   color: #555;

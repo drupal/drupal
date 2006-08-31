@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.156 2006/08/30 08:40:36 dries Exp $
+// $Id: CHANGELOG.txt,v 1.157 2006/08/31 18:40:04 dries Exp $
 
 Drupal x.x.x, xxxx-xx-xx (development version)
 ------------------------
@@ -45,7 +45,9 @@ Drupal x.x.x, xxxx-xx-xx (development version)
     * changed node rendering to work with structured arrays.
 - performance:
     * improved session handling: reduces database overhead.
+    * improved access checking: reduces database overhead.
     * omit sidebars when serving a '404 - Page not found': saves CPU cycles and bandwidth.
+    * added an 'aggressive' caching policy. 
 - removed the archive module.
 - upgrade system:
     * created space for update branches.

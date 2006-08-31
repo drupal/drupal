@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.355 2006/08/29 20:19:41 dries Exp $
+// $Id: system.module,v 1.356 2006/08/31 18:40:04 dries Exp $
 
 /**
  * @file
@@ -34,6 +34,8 @@ function system_help($section) {
       return t('Handles general site configuration for administrators.');
     case 'admin':
       return t('<p>Welcome to the administration section. Here you may control how your site functions.</p>');
+    case 'admin/settings/page-caching':
+      return t('Enabling the cache will offer a sufficient performance boost. Drupal can store and send compressed cached pages requested by "anonymous" users. By caching a web page, Drupal does not have to create the page each time someone wants to view it.');
     case 'admin/build/themes':
       return t('<p>Select which themes are available to your users and specify the default theme. To configure site-wide display settings, click the "configure" task above. Alternately, to override these settings in a specific theme, click the "configure" link for the corresponding theme. Note that different themes may have different regions available for rendering content like blocks. If you want consistency in what your users see, you may wish to enable only one theme.</p>');
     case 'admin/build/themes/settings':
@@ -586,12 +588,24 @@ function system_error_reporting_settings() {
 
 function system_page_caching_settings() {
 
+  $description = '<p>'. t("The normal cache mode is suitable for most sites and does not cause any side effects. The aggressive cache mode causes Drupal to skip the loading (init) and unloading (exit) of enabled modules when serving a cached page. This results in an additional performance boost but can cause unwanted side effects.") .'</p>';
+
+  $problem_modules = array_unique(array_merge(module_implements('init'), module_implements('exit')));
+  sort($problem_modules);
+
+  if (count($problem_modules) > 0) {
+    $description .= '<p>'. t("<strong class=\"error\">The following enabled modules are incompatible with aggressive mode caching and will not function properly: %modules</strong>", array('%modules' => implode(', ', $problem_modules))) .'.</p>';
+  }
+  else {
+    $description .= '<p>'. t("<strong class=\"ok\">Currently, all enabled modules are compatible with the aggressive caching policy.</strong> Please note, if you use aggressive caching and enable new modules, you'll need to check this page again to ensure compatibility.") .'</p>';
+  }
+
   $form['cache'] = array(
     '#type' => 'radios',
-    '#title' => t('Page cache'),
+    '#title' => t('Caching mode'),
     '#default_value' => variable_get('cache', CACHE_DISABLED),
-    '#options' => array(CACHE_DISABLED => t('Disabled'), CACHE_ENABLED => t('Enabled')),
-    '#description' => t("Drupal has a caching mechanism which stores dynamically generated web pages in a database. By caching a web page, Drupal does not have to create the page each time someone wants to view it, instead it takes only one SQL query to display it, reducing response time and the server's load. Only pages requested by \"anonymous\" users are cached. In order to reduce server load and save bandwidth, Drupal stores and sends compressed cached pages.")
+    '#options' => array(CACHE_DISABLED => t('Disabled'), CACHE_NORMAL => t('Normal (recommended, no side effects)'), CACHE_AGGRESSIVE => t('Aggressive (experts only, possible side effects)')),
+    '#description' => $description
   );
 
   $period = drupal_map_assoc(array(0, 60, 180, 300, 600, 900, 1800, 2700, 3600, 10800, 21600, 32400, 43200, 86400), 'format_interval');
@@ -601,7 +615,7 @@ function system_page_caching_settings() {
     '#title' => t('Minimum cache lifetime'),
     '#default_value' => variable_get('cache_lifetime', 0),
     '#options' => $period,
-    '#description' => t('Enabling the cache will offer a sufficient performance boost for most low-traffic and medium-traffic sites. On high-traffic sites it can become necessary to enforce a minimum cache lifetime. The minimum cache lifetime is the minimum amount of time that will go by before the cache is emptied and recreated. A larger minimum cache lifetime offers better performance, but users will not see new content for a longer period of time.')
+    '#description' => t('On high-traffic sites it can become necessary to enforce a minimum cache lifetime. The minimum cache lifetime is the minimum amount of time that will go by before the cache is emptied and recreated. A larger minimum cache lifetime offers better performance, but users will not see new content for a longer period of time.')
   );
 
   return system_settings_form($form);
