@@ -1130,7 +1130,7 @@ function node_menu($may_cache) {
             'path' => 'admin/content/types/'. $type_url_str .'/delete',
             'title' => t('delete'),
             'callback' => 'drupal_get_form',
-            'callback arguments' => array('node_type_delete', $type),
+            'callback arguments' => array('node_type_delete_confirm', $type),
             'type' => MENU_CALLBACK,
           );
         }
