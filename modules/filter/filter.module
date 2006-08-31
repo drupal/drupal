@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.140 2006/08/31 07:21:43 dries Exp $
+// $Id: filter.module,v 1.141 2006/08/31 17:40:45 dries Exp $
 
 /**
  * @file
@@ -313,7 +313,6 @@ function filter_admin_overview() {
   $formats = filter_formats();
   $error = FALSE;
 
-  $rows = array();
   foreach ($formats as $id => $format) {
     $roles = array();
     foreach (user_roles() as $rid => $name) {
@@ -322,7 +321,6 @@ function filter_admin_overview() {
         $roles[] = $name;
       }
     }
-    $row = array();
     $default = ($id == variable_get('filter_default_format', 1));
     $options[$id] = '';
     $form[$format->name]['id'] = array('#value' => $id);
@@ -344,6 +342,7 @@ function filter_admin_overview_submit($form_id, $form_values) {
 }
 
 function theme_filter_admin_overview($form) {
+  $rows = array();
   foreach ($form as $name => $element) {
     if (isset($element['roles']) && is_array($element['roles'])) {
       $rows[] = array(
