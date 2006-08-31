@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.14 2006/08/30 08:46:16 dries Exp $
+// $Id: system.install,v 1.15 2006/08/31 02:23:55 unconed Exp $
 
 function system_install() {
   switch ($GLOBALS['db_type']) {
@@ -879,14 +879,19 @@ function system_install() {
 
   db_query("INSERT INTO {node_type} (type, name, module, description, help, has_title, title_label, has_body, body_label, min_word_count, custom, modified, locked, orig_type) VALUES ('page', 'page', 'node', 'If you want to add a static page, like a contact page or an about page, use a page.', '', 1, 'Title', 1, 'Body', 0, 1, 1, 0, 'page')");
   db_query("INSERT INTO {node_type} (type, name, module, description, help, has_title, title_label, has_body, body_label, min_word_count, custom, modified, locked, orig_type) VALUES ('story', 'story', 'node', 'Stories are articles in their simplest form: they have a title, a teaser and a body, but can be extended by other modules. The teaser is part of the body too. Stories may be used as a personal blog or for news articles.', '', 1, 'Title', 1, 'Body', 0, 1, 1, 0, 'story')");
-
   db_query("INSERT INTO {filter_formats} (name, roles, cache) VALUES ('Filtered HTML',',1,2,',1)");
   db_query("INSERT INTO {filter_formats} (name, roles, cache) VALUES ('PHP code','',0)");
   db_query("INSERT INTO {filter_formats} (name, roles, cache) VALUES ('Full HTML','',1)");
-  db_query("INSERT INTO {filters} VALUES (1,'filter',0,0)");
-  db_query("INSERT INTO {filters} VALUES (1,'filter',2,1)");
+
+  db_query("INSERT INTO {filters} VALUES (1,'filter',3,0)");
+  db_query("INSERT INTO {filters} VALUES (1,'filter',0,1)");
+  db_query("INSERT INTO {filters} VALUES (1,'filter',2,2)");
+
   db_query("INSERT INTO {filters} VALUES (2,'filter',1,0)");
-  db_query("INSERT INTO {filters} VALUES (3,'filter',2,0)");
+
+  db_query("INSERT INTO {filters} VALUES (3,'filter',3,0)");
+  db_query("INSERT INTO {filters} VALUES (3,'filter',2,1)");
+
   db_query("INSERT INTO {variable} (name,value) VALUES ('filter_html_1','i:1;')");
 
   db_query("INSERT INTO {variable} (name, value) VALUES ('node_options_forum', '%s')", 'a:1:{i:0;s:6:"status";}');
@@ -3225,6 +3230,19 @@ function system_update_1009() {
      break;
  }
  return $ret;
+}
+
+function system_update_1010() {
+  $ret = array();
+
+  // Disable urlfilter.module, if it exists.
+  if (module_exists('urlfilter')) {
+    module_disable('urlfilter');
+    $ret[] = update_sql("UPDATE {filter_formats} SET module = 'filter', delta = 3 WHERE module = 'urlfilter'");
+    $ret[] = t('URL Filter module was disabled; this functionality has now been added to core.');
+  }
+
+  return $ret;
 }
 
 /**

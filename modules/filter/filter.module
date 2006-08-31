@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.138 2006/08/30 08:46:16 dries Exp $
+// $Id: filter.module,v 1.139 2006/08/31 02:23:55 unconed Exp $
 
 /**
  * @file
@@ -298,6 +298,9 @@ function filter_filter_tips($delta, $format, $long = FALSE) {
         case 1:
           return t('Lines and paragraphs are automatically recognized. The &lt;br /&gt; line break, &lt;p&gt; paragraph and &lt;/p&gt; close paragraph tags are inserted automatically. If paragraphs are not recognized simply add a couple blank lines.');
       }
+
+    case 3:
+       return t('Web page addresses and e-mail addresses turn into links automatically.');
   }
 }
 
@@ -979,7 +982,7 @@ function theme_filter_tips($tips, $long = FALSE, $extra = '') {
 function filter_filter($op, $delta = 0, $format = -1, $text = '') {
   switch ($op) {
     case 'list':
-      return array(0 => t('HTML filter'), 1 => t('PHP evaluator'), 2 => t('Line break converter'));
+      return array(0 => t('HTML filter'), 1 => t('PHP evaluator'), 2 => t('Line break converter'), 3 => t('URL filter'));
 
     case 'no cache':
       return $delta == 1; // No caching for the PHP evaluator.
@@ -992,6 +995,8 @@ function filter_filter($op, $delta = 0, $format = -1, $text = '') {
           return t('Runs a piece of PHP code. The usage of this filter should be restricted to administrators only!');
         case 2:
           return t('Converts line breaks into HTML (i.e. &lt;br&gt; and &lt;p&gt; tags).');
+        case 3:
+          return t('Turns web and e-mail addresses into clickable links.');
         default:
           return;
       }
@@ -1004,6 +1009,8 @@ function filter_filter($op, $delta = 0, $format = -1, $text = '') {
           return drupal_eval($text);
         case 2:
           return _filter_autop($text);
+        case 3:
+          return _filter_url($text, $format);
         default:
           return $text;
       }
@@ -1012,6 +1019,8 @@ function filter_filter($op, $delta = 0, $format = -1, $text = '') {
       switch ($delta) {
         case 0:
           return _filter_html_settings($format);
+        case 3:
+          return _filter_url_settings($format);
         default:
           return;
       }
@@ -1052,6 +1061,85 @@ function _filter_html($text, $format) {
   }
 
   return trim($text);
+}
+
+/**
+ * Settings for URL filter.
+ */
+function _filter_url_settings($format) {
+  $form['filter_urlfilter'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('URL filter'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+  );
+  $form['filter_urlfilter']['filter_url_length_'. $format] = array(
+    '#type' => 'textfield',
+    '#title' => t('Maximum link text length'),
+    '#default_value' => variable_get('filter_url_length_'. $format, 72),
+    '#maxlength' => 4,
+    '#description' => t('URLs longer than this number of characters will be truncated to prevent long strings that break formatting. The link itself will be retained, just the text portion of the link will be truncated.'),
+  );
+  return $form;
+}
+
+/**
+ * URL filter. Automatically converts text web addresses (URLs, e-mail addresses,
+ * ftp links, etc.) into hyperlinks.
+ */
+function _filter_url($text, $format) {
+  // Pass length to regexp callback
+  _filter_url_trim(NULL, variable_get('filter_url_length_'. $format, 72));
+
+  $text   = ' '. $text .' ';
+
+  // Match absolute URLs.
+  $text = preg_replace_callback("!(<p>|<li>|<br\s*/?>|[ \n\r\t\(])((http://|https://|ftp://|mailto:|smb://|afp://|file://|gopher://|news://|ssl://|sslv2://|sslv3://|tls://|tcp://|udp://)([a-zA-Z0-9@:%_+*~#?&=.,/;-]*[a-zA-Z0-9@:%_+*~#&=/;-]))([.,?]?)(?=(</p>|</li>|<br\s*/?>|[ \n\r\t\)]))!i", '_filter_url_parse_full_links', $text);
+  
+  // Match e-mail addresses.
+  $text = preg_replace("!(<p>|<li>|<br\s*/?>|[ \n\r\t\(])([A-Za-z0-9._-]+@[A-Za-z0-9._+-]+\.[A-Za-z]{2,4})([.,?]?)(?=(</p>|</li>|<br\s*/?>|[ \n\r\t\)]))!i", '\1<a href="mailto:\2">\2</a>\3', $text);
+
+  // Match www domains/addresses.
+  $text = preg_replace_callback("!(<p>|<li>|[ \n\r\t\(])(www\.[a-zA-Z0-9@:%_+*~#?&=.,/;-]*[a-zA-Z0-9@:%_+~#\&=/;-])([.,?]?)(?=(</p>|</li>|<br\s*/?>|[ \n\r\t\)]))!i", '_filter_url_parse_partial_links', $text);
+  $text = substr($text, 1, -1);
+
+  return $text;
+}
+
+/**
+ * Make links out of absolute URLs. 
+ */
+function _filter_url_parse_full_links($match) {
+  $match[2] = decode_entities($match[2]);
+  $caption = check_plain(_filter_url_trim($match[2]));
+  $match[2] = check_url($match[2]);
+  return $match[1] . '<a href="'. $match[2] .'" title="'. $match[2] .'">'. $caption .'</a>'. $match[5];
+}
+
+/**
+ * Make links out of domain names starting with "www."
+ */
+function _filter_url_parse_partial_links($match) {
+  $match[2] = decode_entities($match[2]);
+  $caption = check_plain(_filter_url_trim($match[2]));
+  $match[2] = check_plain($match[2]);
+  return $match[1] . '<a href="http://'. $match[2] .'" title="'. $match[2] .'">'. $caption .'</a>'. $match[3];
+}
+
+/**
+ * Shortens long URLs to http://www.example.com/long/url...
+ */
+function _filter_url_trim($text, $length = NULL) {
+  static $_length;
+  if ($length !== NULL) {
+    $_length = $length;
+  }
+
+  if (strlen($text) > $_length) {
+    $text = substr($text, 0, $_length) .'...';
+  }
+
+  return $text;
 }
 
 /**
