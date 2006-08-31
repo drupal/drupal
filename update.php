@@ -322,7 +322,7 @@ function update_selection_page() {
 
   drupal_set_title('Drupal database update');
   // Prevent browser from using cached drupal.js or update.js
-  drupal_add_js('misc/update.js', TRUE);
+  drupal_add_js('misc/update.js', 'core', 'header', FALSE, TRUE);
   $output .= drupal_get_form('update_script_selection_form');
 
   return $output;
@@ -403,8 +403,8 @@ function update_update_page() {
 
 function update_progress_page() {
   // Prevent browser from using cached drupal.js or update.js
-  drupal_add_js('misc/progress.js', TRUE);
-  drupal_add_js('misc/update.js', TRUE);
+  drupal_add_js('misc/progress.js', 'core', 'header', FALSE, TRUE);
+  drupal_add_js('misc/update.js', 'core', 'header', FALSE, TRUE);
 
   drupal_set_title('Updating');
   $output = '<div id="progress"></div>';

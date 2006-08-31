@@ -2358,7 +2358,7 @@ function _user_forms(&$edit, $account, $category, $hook = 'form') {
 /**
  * Retrieve a pipe delimited string of autocomplete suggestions for existing users
  */
-function user_autocomplete($string) {
+function user_autocomplete($string = '') {
   $matches = array();
   $result = db_query_range("SELECT name FROM {users} WHERE LOWER(name) LIKE LOWER('%s%%')", $string, 0, 10);
   while ($user = db_fetch_object($result)) {

@@ -8,6 +8,7 @@ Drupal x.x.x, xxxx-xx-xx (development version)
     * automatically generate the database configuration file
     * install pre-made 'install profiles' or distributions
     * import the database structure with automatic table prefixing
+- included the jQuery JavaScript library and converted all core JavaScript to use it
 - introduced the ability to alter mail sent from system
 - moved core modules to their own directories to allow additional flexibility
 - added support for different cache backends

@@ -1369,7 +1369,8 @@ function drupal_add_js($data = NULL, $type = 'module', $scope = 'header', $defer
     $javascript[$scope] = array('core' => array(), 'module' => array(), 'theme' => array(), 'setting' => array(), 'inline' => array());
 
     if (empty($javascript['header']['core']['misc/drupal.js'])) {
-      drupal_add_js('misc/drupal.js', 'core');
+      drupal_add_js('misc/jquery.js', 'core', 'header', FALSE, $cache);
+      drupal_add_js('misc/drupal.js', 'core', 'header', FALSE, $cache);
     }
   }
 
