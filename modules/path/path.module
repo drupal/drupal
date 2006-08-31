@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.93 2006/08/31 20:22:35 dries Exp $
+// $Id: path.module,v 1.94 2006/08/31 21:58:36 dries Exp $
 
 /**
  * @file
@@ -207,6 +207,16 @@ function path_form($edit = '') {
 function path_nodeapi(&$node, $op, $arg) {
   if (user_access('create url aliases') || user_access('administer url aliases')) {
     switch ($op) {
+      case 'validate':
+        $node->path = trim($node->path);
+        if ($node->path && !valid_url($node->path)) {
+          form_set_error('path', t('The path is invalid.'));
+        }
+        else if (db_result(db_query("SELECT COUNT(dst) FROM {url_alias} WHERE dst = '%s' AND src != '%s'", $node->path, "node/$node->nid"))) {
+          form_set_error('path', t('The path is already in use.'));
+        }
+        break;
+
       case 'load':
         $path = "node/$node->nid";
         // We don't use drupal_get_path_alias() to avoid custom rewrite functions.
@@ -216,36 +226,26 @@ function path_nodeapi(&$node, $op, $arg) {
           $node->path = db_result($result);
         }
         break;
+
+      case 'insert':
+        // Don't try to insert if path is NULL. We may have already set
+        // the alias ahead of time.
+        if ($node->path) {
+          path_set_alias("node/$node->nid", $node->path);
+        }
+        break;
+
+      case 'update':
+        path_set_alias("node/$node->nid", $node->path, $node->pid);
+        break;
+
+      case 'delete':
+        $path = "node/$node->nid";
+        if (drupal_get_path_alias($path) != $path) {
+          path_set_alias($path);
+        }
+        break;
     }
-  }
-}
-
-function path_node_delete_confirm_submit($form_id, $form_values) {
-  $path = 'node/'. $form_values['node']->nid;
-  if (drupal_get_path_alias($path) != $path) {
-    path_set_alias($path);
-  }
-}
-
-function path_node_submit($form_id, $node) {
-  if ($node->is_new) {
-    // Don't try to insert if path is NULL. We may have already set the alias ahead of time.
-    if ($node->path) {
-      path_set_alias("node/$node->nid", $node->path);
-    }
-  }
-  else {
-    path_set_alias("node/$node->nid", $node->path, $node->pid);
-  }
-}
-
-function path_node_validate($form_id, $node) {
-  $node['path'] = trim($node['path']);
-  if ($node['path'] && !valid_url($node['path'])) {
-    form_set_error('path', t('The path is invalid.'));
-  }
-  else if (db_result(db_query("SELECT COUNT(dst) FROM {url_alias} WHERE dst = '%s' AND src != '%s'", $node['path'], 'node/'. $node['nid']))) {
-    form_set_error('path', t('The path is already in use.'));
   }
 }
 
@@ -254,12 +254,6 @@ function path_node_validate($form_id, $node) {
  */
 function path_form_alter($form_id, &$form) {
   if (isset($form['type']) && $form['type']['#value'] .'_node_form' == $form_id) {
-
-    if (user_access('create url aliases')) {
-      $form['#validate']['path_node_validate'] = array();
-      $form['#submit']['path_node_submit'] = array();
-    }
-
     $path = $form['#node']->path;
     $form['path'] = array(
       '#type' => 'fieldset',
@@ -283,10 +277,6 @@ function path_form_alter($form_id, &$form) {
         '#value' => db_result(db_query("SELECT pid FROM {url_alias} WHERE dst = '%s'", $path))
       );
     }
-  }
-
-  if ($form_id == 'node_delete_confirm') {
-    $form['#submit']['path_node_delete_confirm_submit'] = array();
   }
 }
 

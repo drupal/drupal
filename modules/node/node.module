@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.694 2006/08/31 20:22:35 dries Exp $
+// $Id: node.module,v 1.695 2006/08/31 21:58:36 dries Exp $
 
 /**
  * @file
@@ -600,6 +600,16 @@ function node_save(&$node) {
   db_query($node_query, $node_table_values);
   db_query($revisions_query, $revisions_table_values);
 
+  // Call the node specific callback (if any):
+  if ($node->is_new) {
+    node_invoke($node, 'insert');
+    node_invoke_nodeapi($node, 'insert');
+  }
+  else {
+    node_invoke($node, 'update');
+    node_invoke_nodeapi($node, 'update');
+  }
+
   // Update the node access table for this node.
   node_access_acquire_grants($node);
 
@@ -1061,8 +1071,6 @@ function node_menu($may_cache) {
           'path' => 'node/add/'. $type_url_str,
           'title' => t($name),
           'access' => node_access('create', $type->type),
-          'callback' => 'drupal_get_form',
-          'callback arguments' => array($type->type. '_node_form', array('type' => $type->type))
         );
       }
     }
@@ -1091,7 +1099,7 @@ function node_menu($may_cache) {
           'type' => MENU_LOCAL_TASK);
         $items[] = array('path' => 'node/'. arg(1) .'/delete', 'title' => t('delete'),
           'callback' => 'drupal_get_form',
-          'callback arguments' => array('node_delete_confirm', $node),
+          'callback arguments' => array('node_delete_confirm'),
           'access' => node_access('delete', $node),
           'weight' => 1,
           'type' => MENU_CALLBACK);
@@ -1748,9 +1756,53 @@ function node_feed($nodes = 0, $channel = array()) {
 }
 
 /**
- * A form validate handler. Perform checks on the given node.
+ * Prepare node for save and allow modules to make changes.
  */
-function node_form_validate($form_id, $node) {
+function node_submit($node) {
+  global $user;
+
+  // Convert the node to an object, if necessary.
+  $node = (object)$node;
+
+  // Auto-generate the teaser, but only if it hasn't been set (e.g. by a
+  // module-provided 'teaser' form item).
+  if (!isset($node->teaser)) {
+    $node->teaser = isset($node->body) ? node_teaser($node->body, isset($node->format) ? $node->format : NULL) : '';
+  }
+
+  $access = user_access('administer nodes');
+  if ($access) {
+    // Populate the "authored by" field.
+    if ($account = user_load(array('name' => $node->name))) {
+      $node->uid = $account->uid;
+    }
+    else {
+      $node->uid = 0;
+    }
+
+    $node->created = $node->date ? strtotime($node->date) : NULL;
+  }
+  // Force defaults in case people modify the form:
+  $node_options = variable_get('node_options_'. $node->type, array('status', 'promote'));
+  foreach (array('status', 'promote', 'sticky', 'revision') as $key) {
+    if (!$access || !isset($node->$key)) {
+      $node->$key = in_array($key, $node_options);
+    }
+  }
+
+  // Do node-type-specific validation checks.
+  node_invoke($node, 'submit');
+  node_invoke_nodeapi($node, 'submit');
+
+  $node->validated = TRUE;
+
+  return $node;
+}
+
+/**
+ * Perform validation checks on the given node.
+ */
+function node_validate($node, $form = array()) {
   // Convert the node to an object, if necessary.
   $node = (object)$node;
   $type = node_get_types('type', $node);
@@ -1779,6 +1831,14 @@ function node_form_validate($form_id, $node) {
       form_set_error('date', t('You have to specify a valid date.'));
     }
   }
+
+  // Do node-type-specific validation checks.
+  node_invoke($node, 'validate', $form);
+  node_invoke_nodeapi($node, 'validate', $form);
+}
+
+function node_form_validate($form_id, $form_values, $form) {
+  node_validate($form_values, $form);
 }
 
 function node_object_prepare(&$node) {
@@ -1825,13 +1885,14 @@ function node_form($node, $form_values = NULL) {
     $form['title']['#weight'] = -5;
   }
 
-  // Populate $node so we can assign it to $form['#node].
   $node_options = variable_get('node_options_'. $node->type, array('status', 'promote'));
   // If this is a new node, fill in the default values.
   if (!isset($node->nid)) {
     foreach (array('status', 'promote', 'sticky', 'revision') as $key) {
       $node->$key = in_array($key, $node_options);
     }
+    global $user;
+    $node->uid = $user->uid;
   }
   else {
     // Nodes being edited should always be preset with the default revision setting.
@@ -1839,17 +1900,39 @@ function node_form($node, $form_values = NULL) {
   }
   $form['#node'] = $node;
 
-  // Node author information is editable only by administrators.
-  $form['author'] = array('#type' => 'fieldset', '#title' => t('Authoring information'), '#access' => user_access('administer nodes'), '#collapsible' => TRUE, '#collapsed' => TRUE, '#weight' => 20);
-  $form['author']['name'] = array('#type' => 'textfield', '#title' => t('Authored by'), '#maxlength' => 60, '#autocomplete_path' => 'user/autocomplete', '#default_value' => $node->nid ? $node->name : $user->name, '#weight' => -1, '#description' => t('Leave blank for %anonymous.', array('%anonymous' => variable_get('anonymous', 'Anonymous'))));
-  $form['author']['date'] = array('#type' => 'textfield', '#title' => t('Authored on'), '#maxlength' => 25, '#default_value' => $node->date, '#description' => t('Format: %time. Leave blank to use the time of form submission.', array('%time' => $node->date)));
+  // Node author information for administrators
+  $form['author'] = array(
+    '#type' => 'fieldset',
+    '#access' => user_access('administer nodes'),
+    '#title' => t('Authoring information'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#weight' => 20,
+  );
+  $form['author']['name'] = array('#type' => 'textfield', '#title' => t('Authored by'), '#maxlength' => 60, '#autocomplete_path' => 'user/autocomplete', '#default_value' => $node->name ? $node->name : '', '#weight' => -1, '#description' => t('Leave blank for %anonymous.', array('%anonymous' => variable_get('anonymous', 'Anonymous'))));
+  $form['author']['date'] = array('#type' => 'textfield', '#title' => t('Authored on'), '#maxlength' => 25, '#description' => t('Format: %time. Leave blank to use the time of form submission.', array('%time' => $node->date)));
 
-  // Node options are editable only by administrators.
-  $form['options'] = array('#type' => 'fieldset', '#title' => t('Publishing options'), '#access' => user_access('administer nodes'), '#collapsible' => TRUE, '#collapsed' => TRUE, '#weight' => 25);
+  if (isset($node->nid)) {
+    $form['author']['date']['#default_value'] = $node->date;
+  }
+
+  // Node options for administrators
+  $form['options'] = array(
+    '#type' => 'fieldset',
+    '#access' => user_access('administer nodes'),
+    '#title' => t('Publishing options'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#weight' => 25,
+  );
   $form['options']['status']   = array('#type' => 'checkbox', '#title' => t('Published'), '#default_value' => $node->status);
   $form['options']['promote']  = array('#type' => 'checkbox', '#title' => t('Promoted to front page'), '#default_value' => $node->promote);
   $form['options']['sticky']   = array('#type' => 'checkbox', '#title' => t('Sticky at top of lists'), '#default_value' => $node->sticky);
   $form['options']['revision'] = array('#type' => 'checkbox', '#title' => t('Create new revision'), '#default_value' => $node->revision);
+  // These values are used when the user has no administrator accesss.
+  foreach (array('uid', 'created') as $key) {
+    $form[$key] = array('#type' => 'value', '#value' => $node->$key);
+  }
 
   // Add the buttons.
   $form['preview'] = array('#type' => 'button', '#value' => t('Preview'), '#weight' => 40);
@@ -1858,15 +1941,6 @@ function node_form($node, $form_values = NULL) {
     $form['delete'] = array('#type' => 'button', '#value' => t('Delete'), '#weight' => 50);
   }
   $form['#after_build'] = array('node_form_add_preview');
-  $form['#validate'] = array(
-    'node_form_validate' => array(),
-    $node->type .'_node_validate' => array(),
-  );
-  $form['#submit'] = array(
-    $node->type .'_node_submit_early' => array(),
-    'node_form_submit' => array(),
-    $node->type .'_node_submit' => array(),
-  );
   $form['#base'] = 'node_form';
   return $form;
 }
@@ -1930,30 +2004,40 @@ function theme_node_form($form) {
 }
 
 /**
- * Present set of list of node creation links
+ * Present a node submission form or a set of links to such forms.
  */
-function node_add() {
+function node_add($type = NULL) {
   global $user;
 
   $types = node_get_types();
   $type = isset($type) ? str_replace('-', '_', $type) : NULL;
+  // If a node type has been specified, validate its existence.
+  if (isset($types[$type]) && node_access('create', $type)) {
+    // Initialize settings:
+    $node = array('uid' => $user->uid, 'name' => $user->name, 'type' => $type);
 
-  foreach ($types as $type) {
-    if (function_exists($type->module .'_form') && node_access('create', $type->type)) {
-      $type_url_str = str_replace('_', '-', $type->type);
-      $title = t('Add a new @s.', array('@s' => $type->name));
-      $out = '<dt>'. l($type->name, "node/add/$type_url_str", array('title' => $title)) .'</dt>';
-      $out .= '<dd>'. filter_xss_admin($type->description) .'</dd>';
-      $item[$type->type] = $out;
-    }
-  }
-
-  if (isset($item)) {
-    uksort($item, 'strnatcasecmp');
-    $output = t('Choose the appropriate item from the list:') .'<dl>'. implode('', $item) .'</dl>';
+    $output = drupal_get_form($type .'_node_form', $node);
+    drupal_set_title(t('Submit @name', array('@name' => $types[$type]->name)));
   }
   else {
-    $output = t('No content types available.');
+    // If no (valid) node type has been provided, display a node type overview.
+    foreach ($types as $type) {
+      if (function_exists($type->module .'_form') && node_access('create', $type->type)) {
+        $type_url_str = str_replace('_', '-', $type->type);
+        $title = t('Add a new @s.', array('@s' => $type->name));
+        $out = '<dt>'. l($type->name, "node/add/$type_url_str", array('title' => $title)) .'</dt>';
+        $out .= '<dd>'. filter_xss_admin($type->description) .'</dd>';
+        $item[$type->type] = $out;
+      }
+    }
+
+    if (isset($item)) {
+      uksort($item, 'strnatcasecmp');
+      $output = t('Choose the appropriate item from the list:') .'<dl>'. implode('', $item) .'</dl>';
+    }
+    else {
+      $output = t('No content types available.');
+    }
   }
 
   return $output;
@@ -2033,27 +2117,31 @@ function theme_node_log_message($log) {
   return '<div class="log"><div class="title">'. t('Log') .':</div>'. $log .'</div>';
 }
 
-function node_form_submit($form_id, &$node) {
+function node_form_submit($form_id, $edit) {
   global $user;
 
-  $node = (object)$node;
-  // Auto-generate the teaser, but only if it hasn't been set (e.g. by a
-  // module-provided 'teaser' form item).
-  if (!isset($node->teaser)) {
-    $node->teaser = isset($node->body) ? node_teaser($node->body, isset($node->format) ? $node->format : NULL) : '';
+  // Fix up the node when required:
+  $node = node_submit($edit);
+
+  // Prepare the node's body:
+  if ($node->nid) {
+    // Check whether the current user has the proper access rights to
+    // perform this operation:
+    if (node_access('update', $node)) {
+      node_save($node);
+      watchdog('content', t('@type: updated %title.', array('@type' => t($node->type), '%title' => $node->title)), WATCHDOG_NOTICE, l(t('view'), 'node/'. $node->nid));
+      drupal_set_message(t('The %post was updated.', array ('%post' => node_get_types('name', $node))));
+    }
   }
-
-  // Populate the uid based on name field.
-  $account = user_load(array('name' => $node->name));
-  $node->uid = $account->uid;
-  $node->created = strtotime($node->date);
-
-  $action = $node->nid ? 'updated' : 'created';
-  node_save($node);
-  watchdog('content', t("@type: $action %title.", array('@type' => t($node->type), '%title' => $node->title)), WATCHDOG_NOTICE, l(t('view'), 'node/'. $node->nid));
-  drupal_set_message(t("The %post was $action.", array ('%post' => node_get_types('name', $node))));
-
-  // redirect the submitter as needed
+  else {
+    // Check whether the current user has the proper access rights to
+    // perform this operation:
+    if (node_access('create', $node)) {
+      node_save($node);
+      watchdog('content', t('@type: added %title.', array('@type' => t($node->type), '%title' => $node->title)), WATCHDOG_NOTICE, l(t('view'), "node/$node->nid"));
+      drupal_set_message(t('Your %post was created.', array ('%post' => node_get_types('name', $node))));
+    }
+  }
   if ($node->nid) {
     if (node_access('view', $node)) {
       return 'node/'. $node->nid;
@@ -2069,9 +2157,13 @@ function node_form_submit($form_id, &$node) {
 /**
  * Menu callback -- ask for confirmation of node deletion
  */
-function node_delete_confirm($node) {
+function node_delete_confirm() {
+  $edit = $_POST;
+  $edit['nid'] = $edit['nid'] ? $edit['nid'] : arg(1);
+  $node = node_load($edit['nid']);
+
   if (node_access('delete', $node)) {
-    $form['node'] = array('#type' => 'value', '#value' => $node);
+    $form['nid'] = array('#type' => 'value', '#value' => $node->nid);
     $output = confirm_form($form,
                    t('Are you sure you want to delete %title?', array('%title' => $node->title)),
                    $_GET['destination'] ? $_GET['destination'] : 'node/'. $node->nid, t('This action cannot be undone.'),
@@ -2085,7 +2177,10 @@ function node_delete_confirm($node) {
  * Execute node deletion
  */
 function node_delete_confirm_submit($form_id, $form_values) {
-  node_delete($form_values['node']->nid);
+  if ($form_values['confirm']) {
+    node_delete($form_values['nid']);
+  }
+
   return '';
 }
 
@@ -2099,6 +2194,10 @@ function node_delete($nid) {
   if (node_access('delete', $node)) {
     db_query('DELETE FROM {node} WHERE nid = %d', $node->nid);
     db_query('DELETE FROM {node_revisions} WHERE nid = %d', $node->nid);
+
+    // Call the node-specific callback (if any):
+    node_invoke($node, 'delete');
+    node_invoke_nodeapi($node, 'delete');
 
     // Clear the cache so an anonymous poster can see the node being deleted.
     cache_clear_all();

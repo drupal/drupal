@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.127 2006/08/31 20:22:36 dries Exp $
+// $Id: upload.module,v 1.128 2006/08/31 21:58:36 dries Exp $
 
 /**
  * @file
@@ -361,13 +361,7 @@ function upload_form_alter($form_id, &$form) {
 
   if (isset($form['type'])) {
     $node = $form['#node'];
-
     if ($form['type']['#value'] .'_node_form' == $form_id && variable_get("upload_$node->type", TRUE)) {
-      if (user_access('upload files')) {
-        $form['#validate']['upload_node_validate'] = array();
-        $form['#submit']['upload_node_submit'] = array();
-      }
-
       drupal_add_js('misc/progress.js');
       drupal_add_js('misc/upload.js');
 
@@ -393,14 +387,9 @@ function upload_form_alter($form_id, &$form) {
       $form['#attributes']['enctype'] = 'multipart/form-data';
     }
   }
-
-  if ($form_id == 'node_delete_confirm') {
-    $form['#submit']['upload_node_delete_confirm_submit'] = array();
-  }
 }
 
-function upload_node_validate($form_id, $node) {
-  $node = (object)$node;
+function _upload_validate(&$node) {
   // Accumulator for disk space quotas.
   $filesize = 0;
 
@@ -492,6 +481,10 @@ function upload_nodeapi(&$node, $op, $teaser) {
       _upload_prepare($node);
       break;
 
+    case 'validate':
+      _upload_validate($node);
+      break;
+
     case 'view':
       if (isset($node->files) && user_access('view uploaded files')) {
         // Add the attachments list to node body with a heavy
@@ -526,6 +519,18 @@ function upload_nodeapi(&$node, $op, $teaser) {
         }
       }
       break;
+
+    case 'insert':
+    case 'update':
+      if (user_access('upload files')) {
+        upload_save($node);
+      }
+      break;
+
+    case 'delete':
+      upload_delete($node);
+      break;
+
     case 'delete revision':
       upload_delete_revision($node);
       break;
@@ -569,12 +574,6 @@ function upload_fix_preview_urls($elements, &$content) {
       $new_list[] = $new;
     }
     $content = str_replace($old_list, $new_list, $content);
-  }
-}
-
-function upload_node_submit($form_id, $node) {
-  if (user_access('upload files')) {
-    upload_save($node);
   }
 }
 
@@ -729,9 +728,9 @@ function upload_save($node) {
   }
 }
 
-function upload_node_delete_confirm_submit($form_id, $form_values) {
+function upload_delete($node) {
   $files = array();
-  $result = db_query('SELECT * FROM {files} WHERE nid = %d', $form_values['node']->nid);
+  $result = db_query('SELECT * FROM {files} WHERE nid = %d', $node->nid);
   while ($file = db_fetch_object($result)) {
     $files[$file->fid] = $file;
   }
@@ -743,7 +742,7 @@ function upload_node_delete_confirm_submit($form_id, $form_values) {
   }
 
   // Delete all files associated with the node
-  db_query('DELETE FROM {files} WHERE nid = %d', $form_values['node']->nid);
+  db_query('DELETE FROM {files} WHERE nid = %d', $node->nid);
 }
 
 function upload_delete_revision($node) {
@@ -883,7 +882,7 @@ function upload_js() {
 
   // Handle new uploads, and merge tmp files into node-files.
   _upload_prepare($node);
-  upload_node_validate(NULL, $node);
+  _upload_validate($node);
 
   $form = _upload_form($node);
   foreach (module_implements('form_alter') as $module) {
