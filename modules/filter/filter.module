@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.139 2006/08/31 02:23:55 unconed Exp $
+// $Id: filter.module,v 1.140 2006/08/31 07:21:43 dries Exp $
 
 /**
  * @file
@@ -1095,7 +1095,7 @@ function _filter_url($text, $format) {
 
   // Match absolute URLs.
   $text = preg_replace_callback("!(<p>|<li>|<br\s*/?>|[ \n\r\t\(])((http://|https://|ftp://|mailto:|smb://|afp://|file://|gopher://|news://|ssl://|sslv2://|sslv3://|tls://|tcp://|udp://)([a-zA-Z0-9@:%_+*~#?&=.,/;-]*[a-zA-Z0-9@:%_+*~#&=/;-]))([.,?]?)(?=(</p>|</li>|<br\s*/?>|[ \n\r\t\)]))!i", '_filter_url_parse_full_links', $text);
-  
+
   // Match e-mail addresses.
   $text = preg_replace("!(<p>|<li>|<br\s*/?>|[ \n\r\t\(])([A-Za-z0-9._-]+@[A-Za-z0-9._+-]+\.[A-Za-z]{2,4})([.,?]?)(?=(</p>|</li>|<br\s*/?>|[ \n\r\t\)]))!i", '\1<a href="mailto:\2">\2</a>\3', $text);
 
@@ -1107,7 +1107,7 @@ function _filter_url($text, $format) {
 }
 
 /**
- * Make links out of absolute URLs. 
+ * Make links out of absolute URLs.
  */
 function _filter_url_parse_full_links($match) {
   $match[2] = decode_entities($match[2]);
