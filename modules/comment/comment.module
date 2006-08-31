@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.481 2006/08/29 18:43:25 dries Exp $
+// $Id: comment.module,v 1.482 2006/08/31 08:55:45 drumm Exp $
 
 /**
  * @file
@@ -960,7 +960,7 @@ function comment_delete($cid) {
     drupal_goto("node/$comment->nid");
   }
   else if (is_object($comment) && is_numeric($comment->cid)) {
-    $output = drupal_get_form('comment_confirm_delete', $subject, $nid);
+    $output = drupal_get_form('comment_confirm_delete', $comment->subject, $comment->nid);
   }
   else {
     drupal_set_message(t('The comment no longer exists.'));
@@ -972,7 +972,7 @@ function comment_delete($cid) {
 function comment_confirm_delete($subject, $nid) {
   return confirm_form(
     array(),
-    t('Are you sure you want to delete the comment %title?', array('%title' => $comment->subject)),
+    t('Are you sure you want to delete the comment %title?', array('%title' => $subject)),
     'node/'. $nid,
     t('Any replies to this comment will be lost. This action cannot be undone.'),
     t('Delete'),
