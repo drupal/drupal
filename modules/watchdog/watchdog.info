@@ -1,0 +1,4 @@
+; $Id$
+name = Watchdog
+description = Logs and records system events.
+

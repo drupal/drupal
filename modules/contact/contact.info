@@ -1,0 +1,4 @@
+; $Id$
+name = Contact
+description = Enables the use of both personal and site-wide contact forms.
+

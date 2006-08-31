@@ -1,0 +1,4 @@
+; $Id$
+name = Filter
+description = Handles the filtering of content in preparation for display.
+

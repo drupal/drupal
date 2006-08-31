@@ -23,8 +23,6 @@ function poll_help($section) {
 ', array('@poll' => url('poll'), '@admin-node-configure-types-poll' => url('admin/content/types/poll')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@poll">Poll page</a>.', array('@poll' => 'http://drupal.org/handbook/modules/poll/')) .'</p>';
       return $output;
-    case 'admin/settings/modules#description':
-      return t("Allows your site to capture votes on different topics in the form of multiple choice questions.");
   }
 }
 

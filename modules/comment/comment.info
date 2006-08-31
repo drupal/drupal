@@ -1,0 +1,4 @@
+; $Id$
+name = Comment
+description = Allows users to comment on and discuss published content.
+

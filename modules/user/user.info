@@ -1,0 +1,4 @@
+; $Id$
+name = User
+description = Manages the user registration and login system.
+

@@ -1,0 +1,4 @@
+; $Id$
+name = Tracker
+description = Enables tracking of recent posts for users.
+

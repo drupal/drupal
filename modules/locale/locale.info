@@ -1,0 +1,4 @@
+; $Id$
+name = Locale
+description = Enables the translation of the user interface to languages other than English.
+
