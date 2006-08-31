@@ -960,7 +960,7 @@ function comment_delete($cid) {
     drupal_goto("node/$comment->nid");
   }
   else if (is_object($comment) && is_numeric($comment->cid)) {
-    $output = drupal_get_form('comment_confirm_delete', $subject, $nid);
+    $output = drupal_get_form('comment_confirm_delete', $comment->subject, $comment->nid);
   }
   else {
     drupal_set_message(t('The comment no longer exists.'));
@@ -972,7 +972,7 @@ function comment_delete($cid) {
 function comment_confirm_delete($subject, $nid) {
   return confirm_form(
     array(),
-    t('Are you sure you want to delete the comment %title?', array('%title' => $comment->subject)),
+    t('Are you sure you want to delete the comment %title?', array('%title' => $subject)),
     'node/'. $nid,
     t('Any replies to this comment will be lost. This action cannot be undone.'),
     t('Delete'),
