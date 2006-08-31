@@ -1,0 +1,4 @@
+; $Id: contact.info,v 1.1 2006/08/31 20:22:35 dries Exp $
+name = Contact
+description = Enables the use of both personal and site-wide contact forms.
+

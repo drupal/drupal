@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.85 2006/08/30 15:17:49 dries Exp $
+// $Id: menu.module,v 1.86 2006/08/31 20:22:35 dries Exp $
 
 /**
  * @file
@@ -31,8 +31,6 @@ Menu administration tabs:
 ', array('@admin-menu' => url('admin/build/menu'), '@admin-block' => url('admin/build/block'), '@admin-menu-menu-add' => url('admin/build/menu/menu/add'), '@admin-menu-item-add' => url('admin/build/menu/item/add'), '@admin-settings-menus' => url('admin/build/menu/settings')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@menu">Menu page</a>.', array('@menu' => 'http://drupal.org/handbook/modules/menu/')) .'</p>';
       return $output;
-    case 'admin/settings/modules#description':
-      return t('Allows administrators to customize the site navigation menu.');
     case 'admin/build/menu':
       return '<p>'. t('Menus are a collection of links (menu items) used to navigate a website. The list(s) below display the currently available menus along with their menu items. Select an operation from the list to manage each menu or menu item.', array('@admin-settings-menus' => url('admin/build/menu/settings'), '@admin-block'=> url('admin/build/block'))) .'</p>';
     case 'admin/build/menu/menu/add':

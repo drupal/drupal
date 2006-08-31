@@ -1,0 +1,4 @@
+; $Id: book.info,v 1.1 2006/08/31 20:22:34 dries Exp $
+name = Book
+description = Allows users to collaboratively author a book.
+

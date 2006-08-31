@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.693 2006/08/31 18:01:19 dries Exp $
+// $Id: node.module,v 1.694 2006/08/31 20:22:35 dries Exp $
 
 /**
  * @file
@@ -33,8 +33,6 @@ function node_help($section) {
 ', array('@search' => url('search'), '@admin-settings-content-types' => url('admin/content/types')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@node">Node page</a>.', array('@node' => 'http://drupal.org/handbook/modules/node/')) .'</p>';
       return $output;
-    case 'admin/settings/modules#description':
-      return t('Allows content to be submitted to the site and displayed on pages.');
     case 'admin/content/search':
       return t('<p>Enter a simple pattern to search for a post. This can include the wildcard character *.<br />For example, a search for "br*" might return "bread bakers", "our daily bread" and "brenda".</p>');
     case 'admin/content/types':

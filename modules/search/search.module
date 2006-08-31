@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.195 2006/08/29 09:51:50 dries Exp $
+// $Id: search.module,v 1.196 2006/08/31 20:22:36 dries Exp $
 
 /**
  * @file
@@ -107,8 +107,6 @@ function search_help($section) {
 ', array('@admin-help-system' => url('admin/help/system'), '@file-cron' => 'cron.php', '@external-http-drupal-org-node-23714' => 'http://drupal.org/node/23714', '@admin-settings-search' => url('admin/settings/search')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@search">Search page</a>.', array('@search' => 'http://drupal.org/handbook/modules/search/')) .'</p>';
       return $output;
-    case 'admin/settings/modules#description':
-      return t('Enables site-wide keyword searching.');
     case 'admin/settings/search':
       return t('
 <p>The search engine works by maintaining an index of the words in your site\'s content. You can adjust the settings below to tweak the indexing behaviour. Note that the search requires cron to be set up correctly.</p>

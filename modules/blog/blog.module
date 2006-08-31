@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.264 2006/08/27 12:43:18 dries Exp $
+// $Id: blog.module,v 1.265 2006/08/31 20:22:34 dries Exp $
 
 /**
  * @file
@@ -76,8 +76,6 @@ function blog_help($section) {
 ', array('@user' => url('user'), '@node-add-blog' => url('node/add/blog'), '@admin-node-configure-types-blog' => url('admin/content/types/blog'), '@admin-settings-blogapi' => url('admin/settings/blogapi'), '@admin-block' => url('admin/build/block')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@blog">Blog page</a>.', array('@blog' => 'http://drupal.org/handbook/modules/blog/')) .'</p>';
       return $output;
-    case 'admin/settings/modules#description':
-      return t('Enables keeping an easily and regularly updated web page or a blog.');
   }
 }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: ping.module,v 1.42 2006/08/18 12:16:58 unconed Exp $
+// $Id: ping.module,v 1.43 2006/08/31 20:22:36 dries Exp $
 
 /**
  * @file
@@ -23,8 +23,6 @@ function ping_help($section) {
 ', array('@admin-modules' => url('admin/settings/modules'), '@file-cron' => 'cron.php', '@external-http-drupal-org-node-23714' => 'http://drupal.org/node/23714'));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@ping">Ping page</a>.', array('@ping' => 'http://drupal.org/handbook/modules/ping/')) .'</p>';
       return $output;
-    case 'admin/settings/modules#description':
-      return t('Alerts other sites when your site has been updated.');
   }
 }
 

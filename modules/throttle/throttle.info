@@ -1,0 +1,4 @@
+; $Id: throttle.info,v 1.1 2006/08/31 20:22:36 dries Exp $
+name = Throttle
+description = Handles the auto-throttling mechanism, to control site congestion.
+

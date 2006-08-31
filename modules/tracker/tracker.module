@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.module,v 1.135 2006/08/20 05:57:41 unconed Exp $
+// $Id: tracker.module,v 1.136 2006/08/31 20:22:36 dries Exp $
 
 /**
  * @file
@@ -23,8 +23,6 @@ function tracker_help($section) {
 ', array('@tracker' => url('tracker'), '@profile' => url('profile')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@tracker">Tracker page</a>.', array('@tracker' => 'http://drupal.org/handbook/modules/tracker/')) .'</p>';
       return $output;
-    case 'admin/settings/modules#description':
-      return t('Enables tracking of recent posts for users.');
   }
 }
 

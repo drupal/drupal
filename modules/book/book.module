@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.387 2006/08/29 18:43:25 dries Exp $
+// $Id: book.module,v 1.388 2006/08/31 20:22:34 dries Exp $
 
 /**
  * @file
@@ -985,8 +985,6 @@ function book_help($section) {
 ', array('@node-add-book' => url('node/add/book'), '@admin-node-book' => url('admin/content/book'), '@admin-settings-content-types-book-page' => url('admin/content/types/book'), '@admin-block' => url('admin/build/block'), '@admin-access' => url('admin/user/access')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@book">Book page</a>.', array('@book' => 'http://drupal.org/handbook/modules/book/')) .'</p>';
       return $output;
-    case 'admin/settings/modules#description':
-      return t('Allows users to collaboratively author a book.');
     case 'admin/content/book':
       return t('<p>The book module offers a means to organize content, authored by many users, in an online manual, outline or FAQ.</p>');
     case 'admin/content/book/orphan':

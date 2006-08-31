@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.239 2006/08/29 18:43:25 dries Exp $
+// $Id: statistics.module,v 1.240 2006/08/31 20:22:36 dries Exp $
 
 /**
  * @file
@@ -41,8 +41,6 @@ function statistics_help($section) {
 ', array('@admin-settings-statistics' => url('admin/logs/settings'), '@admin-logs' => url('admin/logs'), '@admin-logs-hits' => url('admin/logs/hits'), '@admin-block' => url('admin/build/block')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@statistics">Statistics page</a>.', array('@statistics' => 'http://drupal.org/handbook/modules/statistics/')) .'</p>';
       return $output;
-    case 'admin/settings/modules#description':
-      return t('Logs access statistics for your site.');
     case 'admin/logs/settings':
       return t('<p>Settings for the statistical information that Drupal will keep about the site. See <a href="@statistics">site statistics</a> for the actual information.</p>', array('@statistics' => url('admin/logs/hits')));
     case 'admin/logs/hits':

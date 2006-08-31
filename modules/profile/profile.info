@@ -1,0 +1,4 @@
+; $Id: profile.info,v 1.1 2006/08/31 20:22:36 dries Exp $
+name = Profile
+description = Supports configurable user profiles.
+

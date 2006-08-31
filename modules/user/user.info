@@ -1,0 +1,4 @@
+; $Id: user.info,v 1.1 2006/08/31 20:22:37 dries Exp $
+name = User
+description = Manages the user registration and login system.
+

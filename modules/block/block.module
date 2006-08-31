@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.225 2006/08/31 08:52:11 drumm Exp $
+// $Id: block.module,v 1.226 2006/08/31 20:22:34 dries Exp $
 
 /**
  * @file
@@ -38,8 +38,6 @@ function block_help($section) {
 ', array('@admin-block' => url('admin/build/block'), '@admin-block-add' => url('admin/build/block/add')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@block">Block page</a>.', array('@block' => 'http://drupal.org/handbook/modules/block/')) .'</p>';
       return $output;
-    case 'admin/settings/modules#description':
-      return t('Controls the boxes that are displayed around the main content.');
     case 'admin/build/block':
       return t("
 <p>Blocks are boxes of content that may be rendered into certain regions of your web pages, for example, into sidebars. They are usually generated automatically by modules, but administrators can create blocks manually.</p>

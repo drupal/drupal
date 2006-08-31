@@ -1,0 +1,4 @@
+; $Id: node.info,v 1.1 2006/08/31 20:22:35 dries Exp $
+name = Node
+description = Allows content to be submitted to the site and displayed on pages.
+

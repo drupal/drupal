@@ -1,0 +1,4 @@
+; $Id: legacy.info,v 1.1 2006/08/31 20:22:35 dries Exp $
+name = Legacy
+description = Provides legacy handlers for upgrades from older Drupal installations.
+

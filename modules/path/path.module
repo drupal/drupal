@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.92 2006/08/29 18:43:25 dries Exp $
+// $Id: path.module,v 1.93 2006/08/31 20:22:35 dries Exp $
 
 /**
  * @file
@@ -34,8 +34,6 @@ function path_help($section) {
 ', array('@admin-path-add' => url('admin/build/path/add'), '@admin-path' => url('admin/build/path'), '@external-http-drupal-org-node-15365' => 'http://drupal.org/node/15365', '@admin-clean-url-settings' => url('admin/settings/clean-urls')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@path">Path page</a>.', array('@path' => 'http://drupal.org/handbook/modules/path/')) .'</p>';
       return $output;
-    case 'admin/settings/modules#description':
-      return t('Allows users to rename URLs.');
     case 'admin/build/path':
       return t("<p>Drupal provides users complete control over URLs through aliasing. This feature is typically used to make URLs human-readable or easy to remember. For example, one could map the relative URL 'node/1' onto 'about'. Each system path can have multiple aliases.</p>");
     case 'admin/build/path/add':

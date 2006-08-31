@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.126 2006/08/30 18:56:31 unconed Exp $
+// $Id: upload.module,v 1.127 2006/08/31 20:22:36 dries Exp $
 
 /**
  * @file
@@ -24,8 +24,6 @@ function upload_help($section) {
 ', array('@admin-access' => url('admin/user/access'), '@admin-content-types' => url('admin/settings/types'), '@admin-upload' => url('admin/settings/upload')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@upload">Upload page</a>.', array('@upload' => 'http://drupal.org/handbook/modules/upload/')) .'</p>';
       return $output;
-    case 'admin/settings/modules#description':
-      return t('Allows users to upload and attach files to content.');
     case 'admin/settings/upload':
       return t('<p>Users with the <a href="@permissions">upload files permission</a> can upload attachments. Users with the <a href="@permissions">view uploaded files permission</a> can view uploaded attachments. You can choose which post types can take attachments on the <a href="@types">content types settings</a> page.</p>', array('@permissions' => url('admin/user/access'), '@types' => url('admin/settings/types')));
   }

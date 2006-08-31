@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.63 2006/08/20 05:57:40 unconed Exp $
+// $Id: contact.module,v 1.64 2006/08/31 20:22:35 dries Exp $
 
 /**
  * @file
@@ -23,8 +23,6 @@ function contact_help($section) {
       $output .= '<li>'. t('Site-wide contact form <a href="@menu-configuration">menu configuration</a>.', array('@menu-configuration' => url('admin/build/menu'))) .'</li></ul>';
       $output .= t('For more information, please read the configuration and customization handbook page for the <a href="@contact">contact module</a>.', array('@contact' => url('http://drupal.org/handbook/modules/contact/', NULL, NULL, TRUE)));
       return $output;
-    case 'admin/settings/modules#description':
-      return t('Enables the use of both personal and site-wide contact forms.');
     case 'admin/build/contact':
       $output = t('This page lets you setup <a href="@form">your site-wide contact form</a>. To do so, add one or more categories. You can associate different recipients with each category to route e-mails to different people. For example, you can route website feedback to the webmaster and direct product information requests to the sales department. On the <a href="@settings">settings page</a>, you can customize the information shown above the contact form. This can be useful to provide additional contact information such as your postal address and telephone number.', array('@settings' => url('admin/build/contact/settings'), '@form' => url('contact')));
       if (!module_exists('menu')) {

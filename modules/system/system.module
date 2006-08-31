@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.356 2006/08/31 18:40:04 dries Exp $
+// $Id: system.module,v 1.357 2006/08/31 20:22:36 dries Exp $
 
 /**
  * @file
@@ -30,8 +30,6 @@ function system_help($section) {
 ', array('@file-cron' => 'cron.php', '@external-http-drupal-org-cron' => 'http://drupal.org/cron', '@cron-status' => url('admin/settings/cron-status'), '@cron-manually' => url('admin/settings/cron-status/cron'), '@admin-settings' => url('admin/settings/page-caching')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@system">System page</a>.', array('@system' => 'http://drupal.org/handbook/modules/system/')) .'</p>';
       return $output;
-    case 'admin/settings/modules#description':
-      return t('Handles general site configuration for administrators.');
     case 'admin':
       return t('<p>Welcome to the administration section. Here you may control how your site functions.</p>');
     case 'admin/settings/page-caching':
@@ -1220,13 +1218,9 @@ function system_modules() {
   $files = module_rebuild_cache();
 
   foreach ($files as $filename => $file) {
-    drupal_get_filename('module', $file->name, $file->filename);
-    drupal_load('module', $file->name);
-
-    $file->description = module_invoke($file->name, 'help', 'admin/settings/modules#description');
-
-    $form['name'][$file->name] = array('#value' => $file->name);
-    $form['description'][$file->name] = array('#value' => $file->description);
+    $info = $file->info;
+    $form['name'][$file->name] = array('#value' => $info['name']);
+    $form['description'][$file->name] = array('#value' => t($info['description']));
     $options[$file->name] = '';
     if ($file->status) {
       $status[] = $file->name;

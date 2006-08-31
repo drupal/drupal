@@ -1,0 +1,4 @@
+; $Id: drupal.info,v 1.1 2006/08/31 20:22:35 dries Exp $
+name = Drupal
+description = Lets you register your site with a central server and improve ranking of Drupal projects by posting information on your installed modules and themes; also enables users to log in using a Drupal ID.
+

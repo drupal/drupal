@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.302 2006/08/23 18:38:41 dries Exp $
+// $Id: aggregator.module,v 1.303 2006/08/31 20:22:34 dries Exp $
 
 /**
  * @file
@@ -27,8 +27,6 @@ function aggregator_help($section) {
 ', array('@admin-aggregator' => url('admin/content/aggregator'), '@admin-aggregator-add-feed' => url('admin/content/aggregator/add/feed'), '@admin-aggregator-add-category' => url('admin/content/aggregator/add/category'), '@admin-settings-aggregator' => url('admin/settings/aggregator'), '@admin-access' => url('admin/user/access'), '@aggregator' => url('aggregator')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@aggregator">Aggregator page</a>.', array('@aggregator' => 'http://drupal.org/handbook/modules/aggregator/')) .'</p>';
       return $output;
-    case 'admin/settings/modules#description':
-      return t('Aggregates syndicated content (RSS, RDF, and Atom feeds).');
     case 'admin/content/aggregator':
       return t('<p>Thousands of sites (particularly news sites and weblogs) publish their latest headlines and/or stories in a machine-readable format so that other sites can easily link to them. This content is usually in the form of an <a href="http://blogs.law.harvard.edu/tech/rss">RSS</a> feed (which is an XML-based syndication standard). To display the feed or category in a block you must decide how many items to show by editing the feed or block and turning on the <a href="@block">feed\'s block</a>.</p>', array('@block' => url('admin/build/block')));
     case 'admin/content/aggregator/add/feed':

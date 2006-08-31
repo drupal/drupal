@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.482 2006/08/31 08:55:45 drumm Exp $
+// $Id: comment.module,v 1.483 2006/08/31 20:22:35 dries Exp $
 
 /**
  * @file
@@ -80,8 +80,6 @@ function comment_help($section) {
 ', array('@admin-access' => url('admin/user/access'), '@admin-settings-comment' => url('admin/content/comment/settings')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@comment">Comment page</a>.', array('@comment' => 'http://drupal.org/handbook/modules/comment/')) .'</p>';
       return $output;
-    case 'admin/settings/modules#description':
-      return t('Allows users to comment on and discuss published content.');
     case 'admin/content/comment':
     case 'admin/content/comment/new':
       return t("<p>Below is a list of the latest comments posted to your site. Click on a subject to see the comment, the author's name to edit the author's user information , \"edit\" to modify the text, and \"delete\" to remove their submission.</p>");

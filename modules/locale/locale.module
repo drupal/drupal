@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.144 2006/08/30 08:46:16 dries Exp $
+// $Id: locale.module,v 1.145 2006/08/31 20:22:35 dries Exp $
 
 /**
  * @file
@@ -33,8 +33,6 @@ function locale_help($section) {
 ', array('@admin-locale' => url('admin/settings/locale'), '@admin-locale-string-search' => url('admin/settings/locale/string/search'), '@admin-locale-language-add' => url('admin/settings/locale/language/add'), '@external-http-drupal-org-project-Translations' => 'http://drupal.org/project/Translations'));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@locale">Locale page</a>.', array('@locale' => 'http://drupal.org/handbook/modules/locale/')) .'</p>';
       return $output;
-    case 'admin/settings/modules#description':
-      return t('Enables the translation of the user interface to languages other than English.');
     case 'admin/settings/locale':
     case 'admin/settings/locale/language/overview':
       return t("<p>Drupal provides support for the translation of its interface text into different languages. This page provides an overview of the installed languages. You can add a language on the <a href=\"@add-language\">add language page</a>, or directly by <a href=\"@import\">importing a translation</a>. If multiple languages are enabled, registered users will be able to set their preferred language. The site default will be used for anonymous visitors and for users without their own settings.</p><p>Drupal interface translations may be added or extended by several courses: by <a href=\"@import\">importing</a> an existing translation, by <a href=\"@search\">translating everything</a> from scratch, or by a combination of these approaches.</p>", array("@search" => url("admin/settings/locale/string/search"), "@import" => url("admin/settings/locale/language/import"), "@add-language" => url("admin/settings/locale/language/add")));

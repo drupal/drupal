@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.83 2006/08/31 19:52:39 dries Exp $
+// $Id: module.inc,v 1.84 2006/08/31 20:22:34 dries Exp $
 
 /**
  * @file
@@ -103,8 +103,13 @@ function module_rebuild_cache() {
   ksort($files);
 
   foreach ($files as $filename => $file) {
-    drupal_get_filename('module', $file->name, $file->filename);
-    drupal_load('module', $file->name);
+    $file->info = _module_parse_info_file(dirname($file->filename) .'/'. $file->name .'.info');
+    // Skip modules that don't provide info.
+    if (empty($file->info)) {
+      unset($files[$filename]);
+      continue;
+    }
+    $files[$filename]->info = $file->info;
 
     // log the critical hooks implemented by this module
     $bootstrap = 0;
@@ -116,12 +121,13 @@ function module_rebuild_cache() {
     }
 
     // Update the contents of the system table:
+    // TODO: We shouldn't actually need this description field anymore. Remove me next release.
     if (isset($file->status) || (isset($file->old_filename) && $file->old_filename != $file->filename)) {
-      db_query("UPDATE {system} SET description = '%s', name = '%s', filename = '%s', bootstrap = %d WHERE filename = '%s'", $file->description, $file->name, $file->filename, $bootstrap, $file->old_filename);
+      db_query("UPDATE {system} SET description = '%s', name = '%s', filename = '%s', bootstrap = %d WHERE filename = '%s'", $file->info['description'], $file->name, $file->filename, $bootstrap, $file->old_filename);
     }
     else {
       // This is a new module.
-      db_query("INSERT INTO {system} (name, description, type, filename, status, throttle, bootstrap) VALUES ('%s', '%s', '%s', '%s', %d, %d, %d)", $file->name, $file->description, 'module', $file->filename, $file->status, $file->throttle, $bootstrap);
+      db_query("INSERT INTO {system} (name, description, type, filename, status, throttle, bootstrap) VALUES ('%s', '%s', '%s', '%s', %d, %d, %d)", $file->name, $file->info['description'], 'module', $file->filename, $file->status, $file->throttle, $bootstrap);
     }
   }
 
@@ -150,6 +156,34 @@ function module_parse_meta_file($filename) {
     $metadata = parse_ini_file($filename);
   }
   return $metadata;
+}
+
+/**
+ * Parse Drupal info file format.
+ * Uses ini parser provided by php's parse_ini_file().
+ *
+ * Files should use the ini format to specify values.
+ * e.g.
+ * key = "value"
+ * key2 = value2
+ *
+ * Some things to be aware of:
+ * - This function is NOT for placing arbitrary module-specific settings. Use variable_get()
+ *   and variable_set() for that.
+ * - You may not use double-quotes in a value.
+ *
+ * @param $filename
+ *   The file we are parsing.  Accepts file with relative or absolute path.
+ * @return
+ *   The info array.
+ */
+function _module_parse_info_file($filename) {
+  $info = array();
+
+  if (file_exists($filename)) {
+    $info = parse_ini_file($filename);
+  }
+  return $info;
 }
 
 /**

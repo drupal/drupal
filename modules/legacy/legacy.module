@@ -1,5 +1,5 @@
 <?php
-// $Id: legacy.module,v 1.12 2006/08/18 12:16:58 unconed Exp $
+// $Id: legacy.module,v 1.13 2006/08/31 20:22:35 dries Exp $
 
 /**
  * @file
@@ -27,8 +27,6 @@ function legacy_help($section) {
       $output .= '<p>'. t('Legacy module has no configurable options.') .'</p>';
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@legacy">Legacy page</a>.', array('@legacy' => 'http://drupal.org/handbook/modules/legacy/')) .'</p>';
       return $output;
-    case 'admin/settings/modules#description':
-      return t('Provides legacy handlers for upgrades from older Drupal installations.');
   }
 }
 
