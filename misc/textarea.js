@@ -1,122 +1,34 @@
-// $Id: textarea.js,v 1.9 2006/04/14 13:48:56 killes Exp $
+// $Id: textarea.js,v 1.10 2006/08/31 23:31:25 unconed Exp $
 
-if (isJsEnabled()) {
-  addLoadEvent(textAreaAutoAttach);
-}
+Drupal.textareaAttach = function() {
+  $('textarea.resizable:not(.processed)').each(function() {
+    var textarea = $(this).addClass('processed'), staticOffset = null;
+    
+    $(this).wrap('<div class="resizable-textarea"></div>')
+      .parent().append($('<div class="grippie"></div>').mousedown(startDrag));
 
-function textAreaAutoAttach(event, parent) {
-  if (typeof parent == 'undefined') {
-    // Attach to all visible textareas.
-    textareas = document.getElementsByTagName('textarea');
-  }
-  else {
-    // Attach to all visible textareas inside parent.
-    textareas = parent.getElementsByTagName('textarea');
-  }
-  var textarea;
-  for (var i = 0; textarea = textareas[i]; ++i) {
-    if (hasClass(textarea, 'resizable') && !hasClass(textarea.nextSibling, 'grippie')) {
-      if (typeof dimensions(textarea).width != 'undefined' && dimensions(textarea).width != 0) {
-        new textArea(textarea);
-      }
+    var grippie = $('div.grippie', $(this).parent())[0];
+    grippie.style.marginRight = (grippie.offsetWidth - $(this)[0].offsetWidth) +'px';
+
+    function startDrag(e) {
+      staticOffset = textarea.height() - Drupal.mousePosition(e).y;
+      textarea.css('opacity', 0.25);
+      $(document).mousemove(performDrag).mouseup(endDrag);
+      return false;
     }
-  }
+
+    function performDrag(e) {
+      textarea.height(Math.max(32, staticOffset + Drupal.mousePosition(e).y) + 'px');
+      return false;
+    }
+
+    function endDrag(e) {
+      $(document).unmousemove(performDrag).unmouseup(endDrag);
+      textarea.css('opacity', 1);
+    }
+  });
 }
 
-function textArea(element) {
-  var ta = this;
-  this.element = element;
-  this.parent = this.element.parentNode;
-  this.dimensions = dimensions(element);
-
-  // Prepare wrapper
-  this.wrapper = document.createElement('div');
-  this.wrapper.className = 'resizable-textarea';
-  this.parent.insertBefore(this.wrapper, this.element);
-
-  // Add grippie and measure it
-  this.grippie = document.createElement('div');
-  this.grippie.className = 'grippie';
-  this.wrapper.appendChild(this.grippie);
-  this.grippie.dimensions = dimensions(this.grippie);
-  this.grippie.onmousedown = function (e) { ta.beginDrag(e); };
-
-  // Set wrapper and textarea dimensions
-  this.wrapper.style.height = this.dimensions.height + this.grippie.dimensions.height + 1 +'px';
-  this.element.style.marginBottom = '0px';
-  this.element.style.width = '100%';
-  this.element.style.height = this.dimensions.height +'px';
-
-  // Wrap textarea
-  removeNode(this.element);
-  this.wrapper.insertBefore(this.element, this.grippie);
-
-  // Measure difference between desired and actual textarea dimensions to account for padding/borders
-  this.widthOffset = dimensions(this.wrapper).width - this.dimensions.width;
-
-  // Make the grippie line up in various browsers
-  if (window.opera) {
-    // Opera
-    this.grippie.style.marginRight = '4px';
-  }
-  if (document.all && !window.opera) {
-    // IE
-    this.grippie.style.width = '100%';
-    this.grippie.style.paddingLeft = '2px';
-  }
-  // Mozilla
-  this.element.style.MozBoxSizing = 'border-box';
-
-  this.heightOffset = absolutePosition(this.grippie).y - absolutePosition(this.element).y - this.dimensions.height;
+if (Drupal.jsEnabled) {
+  $(document).ready(Drupal.textareaAttach);
 }
-
-textArea.prototype.beginDrag = function (event) {
-  if (document.isDragging) {
-    return;
-  }
-  document.isDragging = true;
-
-  event = event || window.event;
-  // Capture mouse
-  var cp = this;
-  this.oldMoveHandler = document.onmousemove;
-  document.onmousemove = function(e) { cp.handleDrag(e); };
-  this.oldUpHandler = document.onmouseup;
-  document.onmouseup = function(e) { cp.endDrag(e); };
-
-  // Store drag offset from grippie top
-  var pos = absolutePosition(this.grippie);
-  this.dragOffset = event.clientY - pos.y;
-
-  // Make transparent
-  this.element.style.opacity = 0.5;
-
-  // Process
-  this.handleDrag(event);
-}
-
-textArea.prototype.handleDrag = function (event) {
-  event = event || window.event;
-  // Get coordinates relative to text area
-  var pos = absolutePosition(this.element);
-  var y = event.clientY - pos.y;
-
-  // Set new height
-  var height = Math.max(32, y - this.dragOffset - this.heightOffset);
-  this.wrapper.style.height = height + this.grippie.dimensions.height + 1 + 'px';
-  this.element.style.height = height + 'px';
-
-  // Avoid text selection
-  stopEvent(event);
-}
-
-textArea.prototype.endDrag = function (event) {
-  // Uncapture mouse
-  document.onmousemove = this.oldMoveHandler;
-  document.onmouseup = this.oldUpHandler;
-
-  // Restore opacity
-  this.element.style.opacity = 1.0;
-  document.isDragging = false;
-}
-

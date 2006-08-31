@@ -1,70 +1,100 @@
-// $Id: collapse.js,v 1.6 2006/04/14 13:48:56 killes Exp $
+// $Id: collapse.js,v 1.7 2006/08/31 23:31:24 unconed Exp $
 
-if (isJsEnabled()) {
-  addLoadEvent(collapseAutoAttach);
-}
-
-function collapseAutoAttach() {
-  var fieldsets = document.getElementsByTagName('fieldset');
-  var legend, fieldset;
-  for (var i = 0; fieldset = fieldsets[i]; i++) {
-    if (!hasClass(fieldset, 'collapsible')) {
-      continue;
-    }
-    legend = fieldset.getElementsByTagName('legend');
-    if (legend.length == 0) {
-      continue;
-    }
-    legend = legend[0];
+Drupal.collapseAutoAttach = function () {
+  $('fieldset.collapsible legend').each(function () {
+    // Turn the legend into clickable link
     var a = document.createElement('a');
     a.href = '#';
-    a.onclick = function() {
-      toggleClass(this.parentNode.parentNode, 'collapsed');
-      if (!hasClass(this.parentNode.parentNode, 'collapsed')) {
-        collapseScrollIntoView(this.parentNode.parentNode);
-        if (typeof textAreaAutoAttach != 'undefined') {
-          // Add the grippie to a textarea in a collapsed fieldset.
-          textAreaAutoAttach(null, this.parentNode.parentNode);
+    $(a)
+      .click(function() {
+        var fieldset = this.parentNode.parentNode;
+
+        // Prevent double animations
+        if (fieldset.animating) {
+          return false;
         }
-      }
-      this.blur();
-      return false;
-    };
-    a.innerHTML = legend.innerHTML;
-    while (legend.hasChildNodes()) {
-      removeNode(legend.childNodes[0]);
+        fieldset.animating = true;
+
+        if ($(fieldset).is('.collapsed')) {
+          // Open fieldset with animation
+          $(fieldset.contentWrapper).hide();
+          $(fieldset).removeClass('collapsed');
+          $(fieldset.contentWrapper).slideDown(300,
+            {
+              // Make sure we open to height auto
+              complete: function() {
+                $(fieldset.contentWrapper).css('height', 'auto');
+                Drupal.collapseScrollIntoView(fieldset);
+                fieldset.animating = false;
+              },
+              // Scroll the fieldset into view
+              step: function() {
+                Drupal.collapseScrollIntoView(fieldset);
+              }
+            }
+          );
+          if (typeof Drupal.textareaAttach != 'undefined') {
+            // Initialize resizable textareas that are now revealed
+            Drupal.textareaAttach(null, fieldset);
+          }
+        }
+        else {
+          // Collapse fieldset with animation (reverse of opening)
+          $(fieldset.contentWrapper)
+            .slideUp('medium', function () { $(fieldset).addClass('collapsed'); fieldset.animating = false; } )
+            .show();
+        }
+        this.blur();
+        return false;
+      })
+      .html(this.innerHTML);
+    $(this)
+      .empty()
+      .append(a);
+
+    // Wrap fieldsets contents (except for the legend) into wrapper divs for animating.
+    // div1 is used to avoid margin problems inside fieldsets,
+    // div2 is the one that is actually animated.
+    var div1 = document.createElement('div');
+    var div2 = document.createElement('div');
+    this.parentNode.contentWrapper = div2;
+    $(this).after(div1);
+    $(div1).append(div2);
+    var el = div1.nextSibling;
+    while (el != null) {
+      var next = el.nextSibling;
+      $(el).remove();
+      $(div2).append(el);
+      el = next;
     }
-    legend.appendChild(a);
-    collapseEnsureErrorsVisible(fieldset);
-  }
+    // Avoid jumping around due to margins collapsing into fieldset border
+    $(div1).css('overflow', 'hidden');
+
+    // Expand if there are errors inside
+    if ($('input.error, textarea.error, select.error', this.parentNode).size() > 0) {
+      $(this.parentNode).removeClass('collapsed');
+    }
+  });
 }
 
-function collapseEnsureErrorsVisible(fieldset) {
-  if (!hasClass(fieldset, 'collapsed')) {
-    return;
-  }
-  var inputs = [];
-  inputs = inputs.concat(fieldset.getElementsByTagName('input'));
-  inputs = inputs.concat(fieldset.getElementsByTagName('textarea'));
-  inputs = inputs.concat(fieldset.getElementsByTagName('select'));
-  for (var j = 0; j<3; j++) {
-    for (var i = 0; i < inputs[j].length; i++) {
-      if (hasClass(inputs[j][i], 'error')) {
-        return removeClass(fieldset, 'collapsed');
-      }
-    }
-  }
-}
-
-function collapseScrollIntoView(node) {
+/**
+ * Scroll a given fieldset into view as much as possible.
+ */
+Drupal.collapseScrollIntoView = function (node) {
   var h = self.innerHeight || document.documentElement.clientHeight || document.body.clientHeight || 0;
   var offset = self.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
-  var pos = absolutePosition(node);
-  if (pos.y + node.scrollHeight > h + offset) {
-    if (node.scrollHeight > h) {
+  var pos = Drupal.absolutePosition(node);
+  var fudge = 55;
+  if (pos.y + node.offsetHeight + fudge > h + offset) {
+    if (node.offsetHeight > h) {
       window.scrollTo(0, pos.y);
     } else {
-      window.scrollTo(0, pos.y + node.scrollHeight - h);
+      window.scrollTo(0, pos.y + node.offsetHeight - h + fudge);
     }
   }
+}
+
+// Global Killswitch
+if (Drupal.jsEnabled) {
+  $(document).ready(Drupal.collapseAutoAttach);
 }

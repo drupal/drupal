@@ -1,39 +1,14 @@
-// $Id: drupal.js,v 1.27 2006/08/23 04:59:17 drumm Exp $
+// $Id: drupal.js,v 1.28 2006/08/31 23:31:24 unconed Exp $
+
+var Drupal = Drupal || {};
 
 /**
- * Only enable Javascript functionality if all required features are supported.
+ * Set the variable that indicates if JavaScript behaviors should be applied
  */
-function isJsEnabled() {
-  if (typeof document.jsEnabled == 'undefined') {
-    // Note: ! casts to boolean implicitly.
-    document.jsEnabled = !(
-     !document.getElementsByTagName ||
-     !document.createElement        ||
-     !document.createTextNode       ||
-     !document.documentElement      ||
-     !document.getElementById);
-  }
-  return document.jsEnabled;
-}
-
-// Global Killswitch on the <html> element
-if (isJsEnabled()) {
-  document.documentElement.className = 'js';
-}
+Drupal.jsEnabled = document.getElementsByTagName && document.createElement && document.createTextNode && document.documentElement && document.getElementById;
 
 /**
- * The global Drupal variable.
- */
-Drupal = { };
-
-/**
- * Merge an object into the Drupal namespace.
- *
- * @param obj
- *   The object that should be merged into the Drupal namespace. Arbitrary objects
- *   containing functions, variables or other objects can be used. An example object
- *   would be { settings: { tree: { '/js/menu/tree': { mid: 206 } } } }. This item
- *   can now be accessed at Drupal.settings.tree['/js/menu/tree'].mid.
+ * Extends the current object with the parameter. Works recursively.
  */
 Drupal.extend = function(obj) {
   for (var i in obj) {
@@ -44,109 +19,26 @@ Drupal.extend = function(obj) {
       this[i] = obj[i];
     }
   }
-};
-
-/**
- * Make IE's XMLHTTP object accessible through XMLHttpRequest()
- */
-if (typeof XMLHttpRequest == 'undefined') {
-  XMLHttpRequest = function () {
-    var msxmls = ['MSXML3', 'MSXML2', 'Microsoft']
-    for (var i=0; i < msxmls.length; i++) {
-      try {
-        return new ActiveXObject(msxmls[i]+'.XMLHTTP')
-      }
-      catch (e) { }
-    }
-    throw new Error("No XML component installed!");
-  }
-}
-
-/**
- * Creates an HTTP GET request and sends the response to the callback function.
- *
- * Note that dynamic arguments in the URI should be escaped with encodeURIComponent().
- */
-function HTTPGet(uri, callbackFunction, callbackParameter) {
-  var xmlHttp = new XMLHttpRequest();
-  var bAsync = true;
-  if (!callbackFunction) {
-    bAsync = false;
-  }
-
-  xmlHttp.open('GET', uri, bAsync);
-  xmlHttp.send(null);
-
-  if (bAsync) {
-    xmlHttp.onreadystatechange = function() {
-      if (xmlHttp.readyState == 4) {
-        callbackFunction(xmlHttp.responseText, xmlHttp, callbackParameter);
-      }
-    }
-    return xmlHttp;
-  }
-  else {
-    return xmlHttp.responseText;
-  }
-}
-
-/**
- * Creates an HTTP POST request and sends the response to the callback function
- *
- * Note: passing null or undefined for 'object' makes the request fail in Opera 8.
- *       Pass an empty string instead.
- */
-function HTTPPost(uri, callbackFunction, callbackParameter, object) {
-  var xmlHttp = new XMLHttpRequest();
-  var bAsync = true;
-  if (!callbackFunction) {
-    bAsync = false;
-  }
-  xmlHttp.open('POST', uri, bAsync);
-
-  var toSend = '';
-  if (typeof object == 'object') {
-    xmlHttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    for (var i in object) {
-      toSend += (toSend ? '&' : '') + i + '=' + encodeURIComponent(object[i]);
-    }
-  }
-  else {
-    toSend = object;
-  }
-  xmlHttp.send(toSend);
-
-  if (bAsync) {
-    xmlHttp.onreadystatechange = function() {
-      if (xmlHttp.readyState == 4) {
-        callbackFunction(xmlHttp.responseText, xmlHttp, callbackParameter);
-      }
-    }
-    return xmlHttp;
-  }
-  else {
-    return xmlHttp.responseText;
-  }
-}
+},
 
 /**
  * Redirects a button's form submission to a hidden iframe and displays the result
  * in a given wrapper. The iframe should contain a call to
  * window.parent.iframeHandler() after submission.
  */
-function redirectFormButton(uri, button, handler) {
-  // (Re)create an iframe to target.
-  createIframe();
-
+Drupal.redirectFormButton = function (uri, button, handler) {
   // Trap the button
   button.onmouseover = button.onfocus = function() {
     button.onclick = function() {
+      // Create target iframe
+      Drupal.createIframe();
+
       // Prepare variables for use in anonymous function.
       var button = this;
       var action = button.form.action;
       var target = button.form.target;
 
-      // Redirect form submission
+      // Redirect form submission to iframe
       this.form.action = uri;
       this.form.target = 'redirect-target';
 
@@ -154,7 +46,7 @@ function redirectFormButton(uri, button, handler) {
 
       // Set iframe handler for later
       window.iframeHandler = function () {
-        var iframe = $('redirect-target');
+        var iframe = $('#redirect-target').get(0);
         // Restore form submission
         button.form.action = action;
         button.form.target = target;
@@ -173,16 +65,15 @@ function redirectFormButton(uri, button, handler) {
           response = null;
         }
 
-        $('redirect-target').onload = null;
-        $('redirect-target').src = 'about:blank';
-
-        response = parseJson(response);
+        response = Drupal.parseJson(response);
         // Check response code
         if (response.status == 0) {
           handler.onerror(response.data);
           return;
         }
         handler.oncomplete(response.data);
+
+        return true;
       }
 
       return true;
@@ -191,43 +82,12 @@ function redirectFormButton(uri, button, handler) {
   button.onmouseout = button.onblur = function() {
     button.onclick = null;
   }
-}
-
-/**
- * Adds a function to the window onload event
- */
-function addLoadEvent(func) {
-  var oldOnload = window.onload;
-  if (typeof window.onload != 'function') {
-    window.onload = func;
-  }
-  else {
-    window.onload = function() {
-      oldOnload();
-      func();
-    }
-  }
-}
-
-/**
- * Adds a function to a given form's submit event
- */
-function addSubmitEvent(form, func) {
-  var oldSubmit = form.onsubmit;
-  if (typeof oldSubmit != 'function') {
-    form.onsubmit = func;
-  }
-  else {
-    form.onsubmit = function() {
-      return oldSubmit() && func();
-    }
-  }
-}
+},
 
 /**
  * Retrieves the absolute position of an element on the screen
  */
-function absolutePosition(el) {
+Drupal.absolutePosition = function (el) {
   var sLeft = 0, sTop = 0;
   var isDiv = /^div$/i.test(el.tagName);
   if (isDiv && el.scrollLeft) {
@@ -238,152 +98,109 @@ function absolutePosition(el) {
   }
   var r = { x: el.offsetLeft - sLeft, y: el.offsetTop - sTop };
   if (el.offsetParent) {
-    var tmp = absolutePosition(el.offsetParent);
+    var tmp = Drupal.absolutePosition(el.offsetParent);
     r.x += tmp.x;
     r.y += tmp.y;
   }
   return r;
-};
+},
 
-function dimensions(el) {
+/**
+ * Return the dimensions of an element on the screen
+ */
+Drupal.dimensions = function (el) {
   return { width: el.offsetWidth, height: el.offsetHeight };
-}
+},
 
 /**
- * Returns true if an element has a specified class name
+ *  Returns the position of the mouse cursor based on the event object passed
  */
-function hasClass(node, className) {
-  if (node.className == className) {
-    return true;
-  }
-  var reg = new RegExp('(^| )'+ className +'($| )')
-  if (reg.test(node.className)) {
-    return true;
-  }
-  return false;
-}
-
-/**
- * Adds a class name to an element
- */
-function addClass(node, className) {
-  if (hasClass(node, className)) {
-    return false;
-  }
-  node.className += ' '+ className;
-  return true;
-}
-
-/**
- * Removes a class name from an element
- */
-function removeClass(node, className) {
-  if (!hasClass(node, className)) {
-    return false;
-  }
-  // Replaces words surrounded with whitespace or at a string border with a space. Prevents multiple class names from being glued together.
-  node.className = eregReplace('(^|\\s+)'+ className +'($|\\s+)', ' ', node.className);
-  return true;
-}
-
-/**
- * Toggles a class name on or off for an element
- */
-function toggleClass(node, className) {
-  if (!removeClass(node, className) && !addClass(node, className)) {
-    return false;
-  }
-  return true;
-}
-
-/**
- * Emulate PHP's ereg_replace function in javascript
- */
-function eregReplace(search, replace, subject) {
-  return subject.replace(new RegExp(search,'g'), replace);
-}
-
-/**
- * Removes an element from the page
- */
-function removeNode(node) {
-  if (typeof node == 'string') {
-    node = $(node);
-  }
-  if (node && node.parentNode) {
-    return node.parentNode.removeChild(node);
-  }
-  else {
-    return false;
-  }
-}
-
-/**
- * Prevents an event from propagating.
- */
-function stopEvent(event) {
-  if (event.preventDefault) {
-    event.preventDefault();
-    event.stopPropagation();
-  }
-  else {
-    event.returnValue = false;
-    event.cancelBubble = true;
-  }
-}
+Drupal.mousePosition = function(e) {
+  return { x: e.clientX + document.documentElement.scrollLeft, y: e.clientY + document.documentElement.scrollTop };
+},
 
 /**
  * Parse a JSON response.
  *
  * The result is either the JSON object, or an object with 'status' 0 and 'data' an error message.
  */
-function parseJson(data) {
+Drupal.parseJson = function (data) {
   if ((data.substring(0, 1) != '{') && (data.substring(0, 1) != '[')) {
     return { status: 0, data: data.length ? data : 'Unspecified error' };
   }
   return eval('(' + data + ');');
-}
+},
 
 /**
  * Create an invisible iframe for form submissions.
  */
-function createIframe() {
-  // Delete any previous iframe
-  deleteIframe();
+Drupal.createIframe = function () {
+  if ($('#redirect-holder').size()) {
+    return;
+  }
   // Note: some browsers require the literal name/id attributes on the tag,
   // some want them set through JS. We do both.
   window.iframeHandler = function () {};
   var div = document.createElement('div');
   div.id = 'redirect-holder';
-  div.innerHTML = '<iframe name="redirect-target" id="redirect-target" class="redirect" onload="window.iframeHandler();"></iframe>';
+  $(div).html('<iframe name="redirect-target" id="redirect-target" class="redirect" onload="window.iframeHandler();"></iframe>');
   var iframe = div.firstChild;
-  with (iframe) {
-    name = 'redirect-target';
-    setAttribute('name', 'redirect-target');
-    id = 'redirect-target';
-  }
-  with (iframe.style) {
-    position = 'absolute';
-    height = '1px';
-    width = '1px';
-    visibility = 'hidden';
-  }
-  document.body.appendChild(div);
+  $(iframe)
+    .attr({
+      name: 'redirect-target',
+      id: 'redirect-target'
+    })
+    .css({
+      position: 'absolute',
+      height: '1px',
+      width: '1px',
+      visibility: 'hidden'
+    });
+  $('body').append(div);
+},
+
+/**
+ * Delete the invisible iframe
+ */
+Drupal.deleteIframe = function () {
+  $('#redirect-holder').remove();
+},
+
+/**
+ * Freeze the current body height (as minimum height). Used to prevent
+ * unnecessary upwards scrolling when doing DOM manipulations.
+ */
+Drupal.freezeHeight = function () {
+  Drupal.unfreezeHeight();
+  var div = document.createElement('div');
+  $(div).css({
+    position: 'absolute',
+    top: '0px',
+    left: '0px',
+    width: '1px',
+    height: $('body').css('height')
+  }).attr('id', 'freeze-height');
+  $('body').append(div);
+},
+
+/**
+ * Unfreeze the body height
+ */
+Drupal.unfreezeHeight = function () {
+  $('#freeze-height').remove();
 }
 
 /**
- * Delete the invisible iframe for form submissions.
+ * Wrapper to address the mod_rewrite url encoding bug
+ * (equivalent of drupal_urlencode() in PHP).
  */
-function deleteIframe() {
-  var holder = $('redirect-holder');
-  if (holder != null) {
-    removeNode(holder);
-  }
+Drupal.encodeURIComponent = function (item, uri) {
+  uri = uri || location.href;
+  item = encodeURIComponent(item).replace('%2F', '/');
+  return uri.indexOf('?q=') ? item : item.replace('%26', '%2526').replace('%23', '%2523');
 }
 
-/**
- * Wrapper around document.getElementById().
- */
-function $(id) {
-  return document.getElementById(id);
+// Global Killswitch on the <html> element
+if (Drupal.jsEnabled) {
+  document.documentElement.className = 'js';
 }

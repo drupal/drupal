@@ -1,4 +1,4 @@
-/* $Id: system.css,v 1.6 2006/08/31 18:40:04 dries Exp $ */
+/* $Id: system.css,v 1.7 2006/08/31 23:31:25 unconed Exp $ */
 
 /*
 ** HTML elements
@@ -235,24 +235,29 @@ html.js fieldset.collapsed {
   border-left-width: 0;
   border-right-width: 0;
   margin-bottom: 0;
+  height: 1em;
 }
 html.js fieldset.collapsed * {
   display: none;
 }
-html.js fieldset.collapsed table *,
-html.js fieldset.collapsed legend,
-html.js fieldset.collapsed legend * {
-  display: inline;
+html.js fieldset.collapsed legend {
+  display: block;
 }
 html.js fieldset.collapsible legend a {
   padding-left: 15px;
-  background: url(../../misc/menu-expanded.png) 5px 50% no-repeat;
+  background: url(../../misc/menu-expanded.png) 5px 75% no-repeat;
 }
 html.js fieldset.collapsed legend a {
   background-image: url(../../misc/menu-collapsed.png);
+  background-position: 5px 50%;
 }
 /* Note: IE-only fix due to '* html' (breaks Konqueror otherwise). */
-* html.js fieldset.collapsible legend a {
+* html.js fieldset.collapsed legend,
+* html.js fieldset.collapsed legend *,
+* html.js fieldset.collapsed table * {
+  display: inline;
+}
+html.js fieldset.collapsible legend a {
   display: block;
 }
 
@@ -268,6 +273,10 @@ html.js fieldset.collapsed legend a {
   border: 1px solid #ddd;
   border-top-width: 0;
   cursor: s-resize;
+}
+html.js .resizable-textarea textarea {
+  margin-bottom: 0;
+  width: 100%;
 }
 
 /*
