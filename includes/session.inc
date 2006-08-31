@@ -1,5 +1,5 @@
 <?php
-// $Id: session.inc,v 1.31 2006/08/21 06:25:49 drumm Exp $
+// $Id: session.inc,v 1.32 2006/08/31 19:52:39 dries Exp $
 
 /**
  * @file
@@ -79,8 +79,43 @@ function sess_write($key, $value) {
   return TRUE;
 }
 
-function sess_destroy($key) {
-  db_query("DELETE FROM {sessions} WHERE sid = '%s'", $key);
+/**
+ * Called when an anonymous user becomes authenticated or vice-versa.
+ */
+function sess_regenerate() {
+  $old_session_id = session_id();
+  session_regenerate_id();
+  db_query("UPDATE {sessions} SET sid = '%s' WHERE sid = '%s'", session_id(), $old_session_id);
+}
+
+/**
+ * Counts how many users have sessions. Can count either anonymous sessions, authenticated sessions, or both.
+ *
+ * @param int $timestamp
+ *   A Unix timestamp representing a point of time in the past.
+ *   The default is 0, which counts all existing sessions.
+ * @param int $anonymous
+ *   TRUE counts only anonymous users.
+ *   FALSE counts only authenticated users.
+ *   Any other value will return the count of both authenticated and anonymous users.
+ * @return  int
+ *   The number of users with sessions.
+ */
+function sess_count($timestamp = 0, $anonymous = true) {
+  $query = $anonymous ? ' AND uid = 0' : ' AND uid > 0';
+  return db_result(db_query('SELECT COUNT(sid) AS count FROM {sessions} WHERE timestamp >= %d'. $query, $timestamp));
+}
+
+/**
+ * Called by PHP session handling with the PHP session ID to end a user's session.
+ * Can also be called directly, either with the PHP session ID or another identifier
+ * such as uid to end a specific user's session.
+ *
+ * @param  string $uid
+ *   the user id
+ */
+function sess_destroy($uid) {
+  db_query('DELETE FROM {sessions} WHERE uid = %d', $uid);
 }
 
 function sess_gc($lifetime) {

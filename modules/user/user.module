@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.665 2006/08/30 08:46:17 dries Exp $
+// $Id: user.module,v 1.666 2006/08/31 19:52:39 dries Exp $
 
 /**
  * @file
@@ -148,7 +148,7 @@ function user_save($account, $array = array(), $category = 'account') {
 
     // Delete a blocked user's sessions to kick them if they are online.
     if (isset($array['status']) && $array['status'] == 0) {
-      db_query('DELETE FROM {sessions} WHERE uid = %d', $account->uid);
+      sess_destroy($account->uid);
     }
 
     // Refresh user object
@@ -560,24 +560,25 @@ function user_block($op = 'list', $delta = 0, $edit = array()) {
       case 3:
         if (user_access('access content')) {
           // Count users with activity in the past defined period.
-          $time_period = variable_get('user_block_seconds_online', 900);
+          $time_period = time() - variable_get('user_block_seconds_online', 900);
 
           // Perform database queries to gather online user lists.
-          $guests = db_fetch_object(db_query('SELECT COUNT(sid) AS count FROM {sessions} WHERE timestamp >= %d AND uid = 0', time() - $time_period));
-          $users = db_query('SELECT uid, name, access FROM {users} WHERE access >= %d AND uid != 0 ORDER BY access DESC', time() - $time_period);
-          $total_users = db_num_rows($users);
+          $anonymous_count = sess_count($time_period);
+          $authenticated_count = sess_count($time_period, false);
+          $authenticated_users = db_query('SELECT uid, name, access FROM {users} WHERE access >= %d AND uid != 0 ORDER BY access DESC', time() - $time_period);
+
 
           // Format the output with proper grammar.
-          if ($total_users == 1 && $guests->count == 1) {
-            $output = t('There is currently %members and %visitors online.', array('%members' => format_plural($total_users, '1 user', '@count users'), '%visitors' => format_plural($guests->count, '1 guest', '@count guests')));
+          if ($anonymous_count == 1 && $authenticated_count == 1) {
+            $output = t('There is currently %members and %visitors online.', array('%members' => format_plural($authenticated_count, '1 user', '@count users'), '%visitors' => format_plural($anonymous_count, '1 guest', '@count guests')));
           }
           else {
-            $output = t('There are currently %members and %visitors online.', array('%members' => format_plural($total_users, '1 user', '@count users'), '%visitors' => format_plural($guests->count, '1 guest', '@count guests')));
+            $output = t('There are currently %members and %visitors online.', array('%members' => format_plural($authenticated_count, '1 user', '@count users'), '%visitors' => format_plural($anonymous_count, '1 guest', '@count guests')));
           }
 
           // Display a list of currently online users.
           $max_users = variable_get('user_block_max_list_count', 10);
-          if ($total_users && $max_users) {
+          if ($authenticated_count && $max_users) {
             $items = array();
 
             while ($max_users-- && $account = db_fetch_object($users)) {
@@ -929,10 +930,7 @@ function user_login_submit($form_id, $form_values) {
 
     user_module_invoke('login', $form_values, $user);
 
-    $old_session_id = session_id();
-    session_regenerate_id();
-    db_query("UPDATE {sessions} SET sid = '%s' WHERE sid = '%s'", session_id(), $old_session_id);
-
+    sess_regenerate();
   }
 }
 
@@ -993,7 +991,7 @@ function user_logout() {
   watchdog('user', t('Session closed for %name.', array('%name' => $user->name)));
 
   // Destroy the current session:
-  session_destroy();
+  sess_destroy($user->uid);
   module_invoke_all('user', 'logout', NULL, $user);
 
   // We have to use $GLOBALS to unset a global variable:
@@ -1433,8 +1431,8 @@ function user_confirm_delete($name, $uid) {
  */
 function user_delete($edit, $uid) {
   $account = user_load(array('uid' => $uid));
+  sess_destroy($uid);
   db_query('DELETE FROM {users} WHERE uid = %d', $uid);
-  db_query('DELETE FROM {sessions} WHERE uid = %d', $uid);
   db_query('DELETE FROM {users_roles} WHERE uid = %d', $uid);
   db_query('DELETE FROM {authmap} WHERE uid = %d', $uid);
   $array = array('%name' => $account->name, '%email' => '<'. $account->mail .'>');

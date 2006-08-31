@@ -1,5 +1,5 @@
 <?php
-// $Id: throttle.module,v 1.65 2006/08/18 18:58:46 dries Exp $
+// $Id: throttle.module,v 1.66 2006/08/31 19:52:39 dries Exp $
 
 /**
  * @file
@@ -63,13 +63,13 @@ function throttle_exit() {
     $throttle = module_invoke('throttle', 'status');
 
     if ($max_guests = variable_get('throttle_anonymous', 0)) {
-      $guests = db_result(db_query('SELECT COUNT(sid) AS count FROM {sessions} WHERE timestamp >= %d AND uid = 0', time() - $time_period));
+      $guests = sess_count(time() - $time_period, TRUE);
     }
     else {
       $guests = 0;
     }
     if ($max_users = variable_get('throttle_user', 0)) {
-      $users = db_result(db_query('SELECT COUNT(DISTINCT(uid)) AS count FROM {sessions} WHERE timestamp >= %d AND uid != 0', time() - $time_period));
+      $users = sess_count(time() - $time_period, FALSE);
     }
     else {
       $users = 0;
