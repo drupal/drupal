@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.224 2006/08/27 12:43:18 dries Exp $
+// $Id: block.module,v 1.225 2006/08/31 08:52:11 drumm Exp $
 
 /**
  * @file
@@ -668,7 +668,15 @@ function block_list($region) {
         if ($block->visibility < 2) {
           $path = drupal_get_path_alias($_GET['q']);
           $regexp = '/^('. preg_replace(array('/(\r\n?|\n)/', '/\\\\\*/', '/(^|\|)\\\\<front\\\\>($|\|)/'), array('|', '.*', '\1'. preg_quote(variable_get('site_frontpage', 'node'), '/') .'\2'), preg_quote($block->pages, '/')) .')$/';
-          $page_match = !($block->visibility xor preg_match($regexp, $path));
+          // Compare with the internal and path alias (if any).
+          $page_match = preg_match($regexp, $path);
+          if ($path != $_GET['q']) {
+            $page_match = $page_match || preg_match($regexp, $_GET['q']);
+          }
+          // When $block->visibility has a value of 0, the block is displayed on
+          // all pages except those listed in $block->pages. When set to 1, it
+          // is displayed only on those pages listed in $block->pages.
+          $page_match = !($block->visibility xor $page_match);
         }
         else {
           $page_match = drupal_eval($block->pages);
