@@ -1,29 +1,10 @@
 <?php
-// $Id: node.module,v 1.691 2006/08/30 18:50:35 dries Exp $
+// $Id: node.module,v 1.692 2006/08/31 14:59:28 dries Exp $
 
 /**
  * @file
  * The core that allows content to be submitted to the site. Modules and scripts may
  * programmatically submit nodes using the usual form API pattern.
-
- * CREATE/EDIT NODE EXAMPLE
- * $type = 'story';
- * $node = array('type' => $type);
- * $form = drupal_retrieve_form($type. '_node_form', $node);
- * $form['#post']['edit']['nid'] = 112; // send this if performing an edit
- * $form['#post']['edit']['name'] = 'amy';
- * $form['#post']['edit']['title'] = 'robotitle';
- * $form['#post']['edit']['body'] = 'hello world';
- * $goto = drupal_process_form($type. '_node_form', $form);
- *
- * DELETE SINGLE NODE EXAMPLE
- * $node = node_load(112);
- * $form = drupal_retrieve_form('node_delete_confirm', $node);
- * $form['#post']['op'] = t('Delete');
- * $goto = drupal_process_form('node_delete_confirm', $form);
- *
- * Calling form_get_errors() will list any validation errors that prevented the
- * form from being submitted.
  */
 
 define('NODE_NEW_LIMIT', time() - 30 * 24 * 60 * 60);

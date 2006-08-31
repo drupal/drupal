@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.147 2006/08/31 07:30:49 drumm Exp $
+// $Id: form.inc,v 1.148 2006/08/31 14:59:28 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -17,17 +17,25 @@
  * $output = drupal_get_form('user_register');
  *
  * Forms can also be built and submitted programmatically without any user input
- * by populating $form['#post'] with values to be submitted. For example:
+ * using the drupal_execute() function. Pass in the id of the form, the values to
+ * submit to the form, and any parameters needed by the form's builder function.
+ * For example:
  *
  * // register a new user
- * $form = drupal_retrieve_form('user_register');
- * $form['#post']['name'] = 'robo-user';
- * $form['#post']['mail'] = 'robouser@example.com';
- * $form['#post']['pass'] = 'password';
- * drupal_process_form('user_register', $form);
+ * $values['name'] = 'robo-user';
+ * $values['mail'] = 'robouser@example.com';
+ * $values['pass'] = 'password';
+ * drupal_execute('user_register', $values);
  *
- * Calling form_get_errors() will list any validation errors that prevented the
- * form from being submitted.
+ * // Create a new node
+ * $node = array('type' => 'story');
+ * $values['title'] = 'My node';
+ * $values['body'] = 'This is the body text!';
+ * $values['name'] = 'robo-user';
+ * drupal_execute('story_node_form', $values, $node);
+ *
+ * Calling form_get_errors() after execution will return an array of any
+ * validation errors encountered.
  *
  * For information on the format of the structured arrays used to define forms,
  * and more detailed explanations of the Form API workflow, see the reference at
@@ -107,6 +115,40 @@ function drupal_get_form($form_id) {
 
 
 /**
+ * Retrieves a form using a form_id, populates it with $form_values,
+ * processes it, and returns any validation errors encountered. This
+ * function is the programmatic counterpart to drupal_get_form().
+ *
+ * @param $form_id
+ *   The unique string identifying the desired form. If a function
+ *   with that name exists, it is called to build the form array.
+ *   Modules that need to generate the same form (or very similar forms)
+ *   using different $form_ids can implement hook_forms(), which maps
+ *   different $form_id values to the proper form building function. Examples
+ *   may be found in node_forms(), search_forms(), and user_forms().
+ * @param $form_values
+ *   An array of values mirroring the values returned by a given form
+ *   when it is submitted by a user.
+ * @param ...
+ *   Any additional arguments needed by the form building function.
+ * @return
+ *   Any form validation errors encountered.
+ */
+function drupal_execute($form_id, $form_values) {
+  $args = func_get_args();
+
+  $form_id = array_shift($args);
+  $form_values = array_shift($args);
+  array_unshift($args, $form_id);
+
+  if (isset($form_values)) {
+    $form = call_user_func_array('drupal_retrieve_form', $args);
+    $form['#post'] = $form_values;
+    return drupal_process_form($form_id, $form);
+  }
+}
+
+/**
  * Retrieves the structured array that defines a given form.
  *
  * @param $form_id
@@ -136,7 +178,14 @@ function drupal_retrieve_form($form_id) {
     }
   }
   // $callback comes from a hook_forms() implementation
-  return call_user_func_array(isset($callback) ? $callback : $form_id, $args);
+  $form = call_user_func_array(isset($callback) ? $callback : $form_id, $args);
+
+  // We store the original function arguments, rather than the final $arg
+  // value, so that form_alter functions can see what was originally
+  // passed to drupal_retrieve_form(). This allows the contents of #parameters
+  // to be saved and passed in at a later date to recreate the form.
+  $form['#parameters'] = func_get_args();
+  return $form;
 }
 
 /**
