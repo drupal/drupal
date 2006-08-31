@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.84 2006/08/31 20:22:34 dries Exp $
+// $Id: module.inc,v 1.85 2006/08/31 22:12:15 dries Exp $
 
 /**
  * @file
@@ -132,30 +132,6 @@ function module_rebuild_cache() {
   }
 
   return $files;
-}
-
-/**
- * Parse Drupal meta file format.
- * Uses ini parser provided by php's parse_ini_file().
- * You should not use the meta files to store module specific settings:
- * user <code>variable_get()</code> and <code>variable_set()</code> for those.
- *
- * Files should use the ini format to specify values:
- *   key = "value"
- *   key2 = value2
- *
- * @param $filename
- *   The file we are parsing.  Accepts file with relative or absolute path.
- * @return
- *   The meta data array.
- */
-function module_parse_meta_file($filename) {
-  $metadata = array();
-
-  if (file_exists($filename)) {
-    $metadata = parse_ini_file($filename);
-  }
-  return $metadata;
 }
 
 /**
