@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.6 2006/08/30 08:46:16 dries Exp $
+// $Id: content_types.inc,v 1.7 2006/08/31 18:01:19 dries Exp $
 
 /**
  * @file
@@ -361,7 +361,7 @@ function node_type_reset(&$type) {
 /**
  * Menu callback; delete a single content type.
  */
-function node_type_delete($type) {
+function node_type_delete_confirm($type) {
   $form['type'] = array('#type' => 'value', '#value' => $type->type);
   $form['name'] = array('#type' => 'value', '#value' => $type->name);
 
@@ -375,13 +375,13 @@ function node_type_delete($type) {
 
   $caption .= '<p>'. t('This action cannot be undone.') .'</p>';
 
-  return confirm_form('node_type_delete_form', $form, $message, 'admin/content/types', $caption, t('Delete'));
+  return confirm_form($form, $message, 'admin/content/types', $caption, t('Delete'));
 }
 
 /**
- * Process content type delete form submissions.
+ * Process content type delete confirm submissions.
  */
-function node_type_delete_form_submit($form_id, $form_values) {
+function node_type_delete_confirm_submit($form_id, $form_values) {
   db_query("DELETE FROM {node_type} WHERE type = '%s'", $form_values['type']);
 
   $t_args = array('%name' => $form_values['name']);
