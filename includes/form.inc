@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.146 2006/08/30 18:50:35 dries Exp $
+// $Id: form.inc,v 1.147 2006/08/31 07:30:49 drumm Exp $
 
 /**
  * @defgroup form Form generation
@@ -547,7 +547,13 @@ function form_builder($form_id, $form) {
     if (!isset($form['#name'])) {
       $name = array_shift($form['#parents']);
       $form['#name'] = $name;
-      if (count($form['#parents'])) {
+      if ($form['#type'] == 'file') {
+        // to make it easier to handle $_FILES in file.inc, we place all
+        // file fields in the 'files' array. Also, we do not support
+        // nested file names
+        $form['#name'] = 'files['. $form['#name'] .']';
+      }
+      elseif (count($form['#parents'])) {
         $form['#name'] .= '['. implode('][', $form['#parents']) .']';
       }
       array_unshift($form['#parents'], $name);

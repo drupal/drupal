@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.83 2006/08/30 09:30:43 dries Exp $
+// $Id: file.inc,v 1.84 2006/08/31 07:30:49 drumm Exp $
 
 /**
  * @file
@@ -192,11 +192,11 @@ function file_check_upload($source = 'upload') {
   }
 
   // If a file was uploaded, process it.
-  if ($_FILES["edit"]["name"][$source] && is_uploaded_file($_FILES["edit"]["tmp_name"][$source])) {
+  if ($_FILES["files"]["name"][$source] && is_uploaded_file($_FILES["files"]["tmp_name"][$source])) {
 
     // Check for file upload errors and return FALSE if a
     // lower level system error occurred.
-    switch ($_FILES["edit"]["error"][$source]) {
+    switch ($_FILES["files"]["error"][$source]) {
 
       // @see http://php.net/manual/en/features.file-upload.errors.php
       case UPLOAD_ERR_OK:
@@ -220,12 +220,12 @@ function file_check_upload($source = 'upload') {
 
     // Begin building file object.
     $file = new StdClass();
-    $file->filename = trim(basename($_FILES["edit"]["name"][$source]), '.');
+    $file->filename = trim(basename($_FILES["files"]["name"][$source]), '.');
 
     // Create temporary name/path for newly uploaded files.
     $file->filepath = tempnam(file_directory_temp(), 'tmp_');
 
-    $file->filemime = $_FILES["edit"]["type"][$source];
+    $file->filemime = $_FILES["files"]["type"][$source];
 
     // Rename potentially executable files, to help prevent exploits.
     if (preg_match('/\.(php|pl|py|cgi|asp|js)$/i', $file->filename) && (substr($file->filename, -4) != '.txt')) {
@@ -236,13 +236,13 @@ function file_check_upload($source = 'upload') {
 
     // Move uploaded files from php's upload_tmp_dir to Drupal's file temp.
     // This overcomes open_basedir restrictions for future file operations.
-    if (!move_uploaded_file($_FILES["edit"]["tmp_name"][$source], $file->filepath)) {
+    if (!move_uploaded_file($_FILES["files"]["tmp_name"][$source], $file->filepath)) {
       drupal_set_message(t('File upload error. Could not move uploaded file.'));
-      watchdog('file', t('Upload Error. Could not move uploaded file (%file) to destination (%destination).', array('%file' => $_FILES["edit"]["tmp_name"][$source], '%destination' => $file->filepath)));
+      watchdog('file', t('Upload Error. Could not move uploaded file (%file) to destination (%destination).', array('%file' => $_FILES["files"]["tmp_name"][$source], '%destination' => $file->filepath)));
       return FALSE;
     }
 
-    $file->filesize = $_FILES["edit"]["size"][$source];
+    $file->filesize = $_FILES["files"]["size"][$source];
     $file->source = $source;
 
     // Add processed file to the cache.
