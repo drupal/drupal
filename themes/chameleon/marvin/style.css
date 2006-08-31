@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.6 2006/08/30 07:37:14 drumm Exp $ */
+/* $Id: style.css,v 1.7 2006/08/31 07:28:14 dries Exp $ */
 
 /*
 ** HTML elements
@@ -118,27 +118,6 @@ div.admin-panel h3 {
 */
 .item-list ul li {
   list-style-image: url(bullet.png);
-}
-.calendar .day-today {
-  background-color: #ccc;
-}
-.calendar .day-selected {
-  background-color: #bbb;
-}
-.calendar .header-month {
-  background-color: #ddd;
-}
-.calendar .header-week {
-  background-color: #ccc;
-}
-.calendar .day-blank {
-  background-color: #ddd;
-}
-.calendar .day-link a {
-  color: #000;
-}
-.calendar .row-week {
-  color: #aaa;
 }
 .path, .path a, .path a:visited {
   color: #888;

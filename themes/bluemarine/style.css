@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.17 2006/08/30 07:37:13 drumm Exp $ */
+/* $Id: style.css,v 1.18 2006/08/31 07:28:14 dries Exp $ */
 
 /*
 ** HTML elements
@@ -345,31 +345,4 @@ div.admin-panel h3 {
   color: #fff;
   padding: 5px 8px 5px;
   margin: 0;
-}
-.calendar a {
-  text-decoration: none;
-}
-.calendar td, .calendar th {
-  padding: 0.4em 0;
-  border-color: #888;
-}
-.calendar .day-today {
-  background-color: #69c;
-}
-.calendar .day-today a {
-  color: #fff;
-}
-.calendar .day-selected {
-  background-color: #369;
-  color: #fff;
-}
-.calendar .header-week {
-  background-color: #ccc;
-}
-.calendar .day-blank {
-  background-color: #ccc;
-}
-.calendar .row-week td a:hover {
-  background-color: #fff;
-  color: #000;
 }

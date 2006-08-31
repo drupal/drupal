@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.20 2006/08/30 07:37:14 drumm Exp $ */
+/* $Id: style.css,v 1.21 2006/08/31 07:28:14 dries Exp $ */
 
 /*
 ** HTML elements
@@ -610,33 +610,4 @@ div.admin-panel .body {
 }
 .block-forum h3 {
   margin-bottom: .5em;
-}
-.calendar a {
-  text-decoration: none;
-}
-.calendar td, .calendar th {
-  padding: 0.4em 0;
-  border-color: #888;
-}
-.calendar .row-week td a {
-  padding: 0.4em 0;
-}
-.calendar .day-today {
-  background-color: #69c;
-}
-.calendar .day-today a {
-  color: #fff;
-}
-.calendar .day-selected {
-  background-color: #369;
-  color: #fff;
-}
-.calendar .header-week {
-  background-color: #ccc;
-}
-.calendar .day-blank {
-  background-color: #ccc;
-}
-.calendar .row-week td a:hover {
-  background-color: #fff; color: #000;
 }
