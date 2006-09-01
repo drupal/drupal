@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.12 2006/09/01 05:38:40 drumm Exp $
+// $Id: install.php,v 1.13 2006/09/01 08:44:53 unconed Exp $
 
 require_once './includes/install.inc';
 
@@ -28,7 +28,6 @@ function install_main() {
     // Establish a connection to the database.
     require_once './includes/database.inc';
     db_set_active();
-
     // Check if Drupal is installed.
     if (install_verify_drupal()) {
       install_already_done_error();
@@ -69,6 +68,9 @@ function install_main() {
   if (!$verify) {
     install_change_settings();
   }
+
+  // Check the installation requirements for Drupal and this profile.
+  install_check_requirements($profile);
 
   // Perform actual installation defined in the profile.
   $modules = drupal_verify_profile($profile, $install_locale);
@@ -511,6 +513,29 @@ function install_complete($profile) {
   }
   // Output page.
   print theme('maintenance_page', $output);
+}
+
+/**
+ * Page to check installation requirements and report any errors.
+ */
+function install_check_requirements($profile) {
+  $requirements = drupal_check_profile($profile);
+  $severity = drupal_requirements_severity($requirements);
+
+  // If there are issues, report them.
+  if ($severity == REQUIREMENT_ERROR) {
+    drupal_maintenance_theme();
+
+    foreach ($requirements as $requirement) {
+      if (isset($requirement['severity']) && $requirement['severity'] == REQUIREMENT_ERROR) {
+        drupal_set_message($requirement['description'] .' ('. st('Currently using !item !version', array('!item' => $requirement['title'], '!version' => $requirement['value'])) .')', 'error');
+      }
+    }
+
+    drupal_set_title('Incompatible environment');
+    print theme('install_page', '');
+    exit;
+  }
 }
 
 install_main();

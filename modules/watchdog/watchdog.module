@@ -1,5 +1,5 @@
 <?php
-// $Id: watchdog.module,v 1.154 2006/08/31 20:22:37 dries Exp $
+// $Id: watchdog.module,v 1.155 2006/09/01 08:44:53 unconed Exp $
 
 /**
  * @file
@@ -40,11 +40,6 @@ function watchdog_menu($may_cache) {
   $items = array();
 
   if ($may_cache) {
-    $items[] = array('path' => 'admin/logs', 'title' => t('logs'),
-      'description' => t('View system logs and other status information.'),
-      'callback' => 'system_admin_menu_block_page',
-      'weight' => 5,
-      'position' => 'left');
     $items[] = array('path' => 'admin/logs/watchdog', 'title' => t('recent log entries'),
       'description' => t('View events that have recently been logged.'),
       'callback' => 'watchdog_overview',

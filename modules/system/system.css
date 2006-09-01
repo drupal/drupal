@@ -1,4 +1,4 @@
-/* $Id: system.css,v 1.7 2006/08/31 23:31:25 unconed Exp $ */
+/* $Id: system.css,v 1.8 2006/09/01 08:44:53 unconed Exp $ */
 
 /*
 ** HTML elements
@@ -36,7 +36,20 @@ thead th {
   display: inline;
 }
 .error {
-  color: red;
+  color: #f00;
+}
+div.error {
+  border: 1px solid #d77;
+}
+div.error, tr.error {
+  background: #fcc;
+  color: #200;
+}
+div.warning, tr.warning {
+  background: #ffd;
+}
+div.ok, tr.ok {
+  background: #dfd;
 }
 .ok {
   color: green;
@@ -76,6 +89,12 @@ tr.odd .form-item, tr.even .form-item {
   margin-bottom: 0;
   white-space: nowrap;
 }
+tr.merge-down, tr.merge-down td, tr.merge-down th {
+  border-bottom-width: 0 !important;
+}
+tr.merge-up, tr.merge-up td, tr.merge-up th {
+  border-top-width: 0 !important;
+}
 .form-item input.error, .form-item textarea.error {
   border: 2px solid red;
 }
@@ -102,9 +121,6 @@ tr.odd .form-item, tr.even .form-item {
 }
 .nowrap {
   white-space: nowrap;
-}
-.ok {
-  color: #080;
 }
 #pager {
   clear: both;

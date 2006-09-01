@@ -1,10 +1,12 @@
-// $Id: CHANGELOG.txt,v 1.160 2006/09/01 05:38:40 drumm Exp $
+// $Id: CHANGELOG.txt,v 1.161 2006/09/01 08:44:53 unconed Exp $
 
 Drupal x.x.x, xxxx-xx-xx (development version)
 ------------------------
 - completely retooled the administration page
     * /admin now contains an administration page which may be themed
+    * added a status report page with detailed PHP/MySQL information
 - added web-based installer which can:
+    * check installation requirements
     * automatically generate the database configuration file
     * install pre-made 'install profiles' or distributions
     * import the database structure with automatic table prefixing

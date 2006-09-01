@@ -1,5 +1,5 @@
 <?php
-// $Id: unicode.inc,v 1.19 2006/08/18 12:16:57 unconed Exp $
+// $Id: unicode.inc,v 1.20 2006/09/01 08:44:53 unconed Exp $
 
 define('UNICODE_ERROR', -1);
 define('UNICODE_SINGLEBYTE', 0);
@@ -9,7 +9,7 @@ define('UNICODE_MULTIBYTE', 1);
  * Wrapper around _unicode_check().
  */
 function unicode_check() {
-  $GLOBALS['multibyte'] = _unicode_check();
+  list($GLOBALS['multibyte']) = _unicode_check();
 }
 
 /**
@@ -23,68 +23,70 @@ function unicode_check() {
  * @param $errors
  *   Whether to report any fatal errors with form_set_error().
  */
-function _unicode_check($errors = FALSE) {
+function _unicode_check() {
+  // Ensure translations don't break at install time
+  $t = get_t();
+
   // Set the standard C locale to ensure consistent, ASCII-only string handling.
   setlocale(LC_CTYPE, 'C');
 
   // Check for outdated PCRE library
   // Note: we check if U+E2 is in the range U+E0 - U+E1. This test returns TRUE on old PCRE versions.
   if (preg_match('/[à-á]/u', 'â')) {
-    if ($errors) {
-      form_set_error('unicode', t('The PCRE library in your PHP installation is outdated. This will cause problems when handling Unicode text. If you are running PHP 4.3.3 or higher, make sure you are using the PCRE library supplied by PHP. Please refer to the <a href="@url">PHP PCRE documentation</a> for more information.', array('@url' => 'http://www.php.net/pcre')));
-    }
-    return UNICODE_ERROR;
+    return array(UNICODE_ERROR, $t('The PCRE library in your PHP installation is outdated. This will cause problems when handling Unicode text. If you are running PHP 4.3.3 or higher, make sure you are using the PCRE library supplied by PHP. Please refer to the <a href="@url">PHP PCRE documentation</a> for more information.', array('@url' => 'http://www.php.net/pcre')), REQUIREMENT_ERROR);
   }
 
   // Check for mbstring extension
   if (!function_exists('mb_strlen')) {
-    return UNICODE_SINGLEBYTE;
+    return array(UNICODE_SINGLEBYTE, $t('Operations on Unicode strings are emulated on a best-effort basis. Install the <a href="@url">PHP mbstring extension</a> for improved Unicode support.', array('@url' => 'http://www.php.net/mbstring')), REQUIREMENT_WARNING);
   }
 
   // Check mbstring configuration
   if (ini_get('mbstring.func_overload') != 0) {
-    if ($errors) {
-      form_set_error('unicode', t('Multibyte string function overloading in PHP is active and must be disabled. Check the php.ini <em>mbstring.func_overload</em> setting. Please refer to the <a href="@url">PHP mbstring documentation</a> for more information.', array('@url' => 'http://www.php.net/mbstring')));
-    }
-    return UNICODE_ERROR;
+    return array(UNICODE_ERROR, $t('Multibyte string function overloading in PHP is active and must be disabled. Check the php.ini <em>mbstring.func_overload</em> setting. Please refer to the <a href="@url">PHP mbstring documentation</a> for more information.', array('@url' => 'http://www.php.net/mbstring')), REQUIREMENT_ERROR);
   }
   if (ini_get('mbstring.encoding_translation') != 0) {
-    if ($errors) {
-      form_set_error('unicode', t('Multibyte string input conversion in PHP is active and must be disabled. Check the php.ini <em>mbstring.encoding_translation</em> setting. Please refer to the <a href="@url">PHP mbstring documentation</a> for more information.', array('@url' => 'http://www.php.net/mbstring')));
-    }
-    return UNICODE_ERROR;
+    return array(UNICODE_ERROR, $t('Multibyte string input conversion in PHP is active and must be disabled. Check the php.ini <em>mbstring.encoding_translation</em> setting. Please refer to the <a href="@url">PHP mbstring documentation</a> for more information.', array('@url' => 'http://www.php.net/mbstring')), REQUIREMENT_ERROR);
   }
   if (ini_get('mbstring.http_input') != 'pass') {
-    if ($errors) {
-      form_set_error('unicode', t('Multibyte string input conversion in PHP is active and must be disabled. Check the php.ini <em>mbstring.http_input</em> setting. Please refer to the <a href="@url">PHP mbstring documentation</a> for more information.', array('@url' => 'http://www.php.net/mbstring')));
-    }
-    return UNICODE_ERROR;
+    return array(UNICODE_ERROR, $t('Multibyte string input conversion in PHP is active and must be disabled. Check the php.ini <em>mbstring.http_input</em> setting. Please refer to the <a href="@url">PHP mbstring documentation</a> for more information.', array('@url' => 'http://www.php.net/mbstring')), REQUIREMENT_ERROR);
   }
   if (ini_get('mbstring.http_output') != 'pass') {
-    if ($errors) {
-      form_set_error('unicode', t('Multibyte string output conversion in PHP is active and must be disabled. Check the php.ini <em>mbstring.http_output</em> setting. Please refer to the <a href="@url">PHP mbstring documentation</a> for more information.', array('@url' => 'http://www.php.net/mbstring')));
-    }
-    return UNICODE_ERROR;
+    return array(UNICODE_ERROR, $t('Multibyte string output conversion in PHP is active and must be disabled. Check the php.ini <em>mbstring.http_output</em> setting. Please refer to the <a href="@url">PHP mbstring documentation</a> for more information.', array('@url' => 'http://www.php.net/mbstring')), REQUIREMENT_ERROR);
   }
 
   // Set appropriate configuration
   mb_internal_encoding('utf-8');
   mb_language('uni');
-  return UNICODE_MULTIBYTE;
+  return array(UNICODE_MULTIBYTE);
 }
 
 /**
- * Return the required Unicode status and errors for admin/settings.
+ * Return Unicode library status and errors.
  */
-function unicode_settings() {
-  $status = _unicode_check(TRUE);
-  $options = array(UNICODE_SINGLEBYTE => t('Standard PHP: operations on Unicode strings are emulated on a best-effort basis. Install the <a href="@url">PHP mbstring extension</a> for improved Unicode support.', array('@url' => 'http://www.php.net/mbstring')),
-                   UNICODE_MULTIBYTE => t('Multi-byte: operations on Unicode strings are supported through the <a href="@url">PHP mbstring extension</a>.', array('@url' => 'http://www.php.net/mbstring')),
-                   UNICODE_ERROR => t('Invalid: the current configuration is incompatible with Drupal.'));
-  $form['settings'] = array('#type' => 'item', '#title' => t('String handling method'), '#value' => $options[$status]);
-  return $form;
-}
+function unicode_requirements() {
+  // Ensure translations don't break at install time
+  $t = function_exists('install_main') ? 'st' : 't';
 
+  $libraries = array(
+    UNICODE_SINGLEBYTE => $t('Standard PHP'),
+    UNICODE_MULTIBYTE => $t('PHP Mbstring Extension'),
+    UNICODE_ERROR => $t('Error'),
+  );
+  list($library, $description, $severity) = _unicode_check();
+
+  $requirements['unicode'] = array(
+    'title' => $t('Unicode library'),
+    'value' => $libraries[$library],
+  );
+  if ($description) {
+    $requirements['unicode']['description'] = $description;
+    $requirements['unicode']['severity'] = $severity;
+  }
+
+  return $requirements;
+}
+ 
 /**
  * Prepare a new XML parser.
  *

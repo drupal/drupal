@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.313 2006/08/30 07:37:13 drumm Exp $
+// $Id: theme.inc,v 1.314 2006/09/01 08:44:53 unconed Exp $
 
 /**
  * @file
@@ -450,15 +450,15 @@ function theme_install_page($content) {
     $output .= theme('status_messages', 'error');
   }
 
-  $output .= "\n<!-- begin content -->\n";
-  $output .= $content;
-  $output .= "\n<!-- end content -->\n";
-
   if (isset($messages['status'])) {
     $warnings = count($messages['status']) > 1 ? 'warnings' : 'warning';
     $output .= "<h4>The following installation $warnings should be carefully reviewed, but in most cases may be safely ignored:</h4>";
     $output .= theme('status_messages', 'status');
   }
+
+  $output .= "\n<!-- begin content -->\n";
+  $output .= $content;
+  $output .= "\n<!-- end content -->\n";
 
   $output .= '</body></html>';
 

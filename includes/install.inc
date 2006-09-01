@@ -1,14 +1,12 @@
 <?php
-// $Id: install.inc,v 1.18 2006/09/01 07:40:07 drumm Exp $
+// $Id: install.inc,v 1.19 2006/09/01 08:44:53 unconed Exp $
 
 define('SCHEMA_UNINSTALLED', -1);
 define('SCHEMA_INSTALLED', 0);
 
-define('DRUPAL_MINIMUM_PHP',    '4.3.3');
-define('DRUPAL_MINIMUM_MEMORY', '8M');
-define('DRUPAL_MINIMUM_MYSQL',  '3.23.17'); // If using MySQL
-define('DRUPAL_MINIMUM_PGSQL',  '7.3');  // If using PostgreSQL
-define('DRUPAL_MINIMUM_APACHE', '1.3');  // If using Apache
+define('REQUIREMENT_OK', 0);
+define('REQUIREMENT_WARNING', 1);
+define('REQUIREMENT_ERROR', 2);
 
 define('FILE_EXIST',          1);
 define('FILE_READABLE',       2);
@@ -128,7 +126,7 @@ function drupal_detect_baseurl($file = 'install.php') {
   $proto = $_SERVER['HTTPS'] ? 'https://' : 'http://';
   $host = $_SERVER['SERVER_NAME'];
   $port = ($_SERVER['SERVER_PORT'] == 80 ? '' : ':'. $_SERVER['SERVER_PORT']);
-  $uri = str_replace("?profile=$profile", '', $_SERVER['REQUEST_URI']);
+  $uri = preg_replace("/\?.*/", '', $_SERVER['REQUEST_URI']);
   $dir = str_replace("/$file", '', $uri);
 
   return "$proto$host$port$dir";
@@ -601,4 +599,75 @@ function _st(&$value, $key) {
     // Pass-through
     case '!':
   }
+}
+
+
+/**
+ * Check a profile's requirements.
+ *
+ * @param profile
+ *   Name of profile to check.
+ */
+function drupal_check_profile($profile) {
+  include_once './includes/file.inc';
+
+  $profile_file = "./profiles/$profile/$profile.profile";
+
+  if (!isset($profile) || !file_exists($profile_file)) {
+    install_no_profile_error();
+  }
+
+  require_once($profile_file);
+
+  // Get a list of modules required by this profile.
+  $function = $profile .'_profile_modules';
+  $module_list = array_unique(array_merge(array('system'), $function()));
+
+  // Get a list of all .install files.
+  $installs = drupal_get_install_files($module_list);
+
+  // Collect requirement testing results
+  $requirements = array();
+  foreach ($installs as $install) {
+    require_once $install->filename;
+    $requirements = array_merge($requirements, module_invoke($install->name, 'requirements', 'install'));
+  }
+  return $requirements;
+}
+
+/**
+ * Extract highest severity from requirements array.
+ */
+function drupal_requirements_severity(&$requirements) {
+  $severity = REQUIREMENT_OK;
+  foreach ($requirements as $requirement) {
+    if (isset($requirement['severity'])) {
+      $severity = max($severity, $requirement['severity']);
+    }
+  }
+  return $severity;
+}
+
+/**
+ * Check a module's requirements.
+ */
+function drupal_check_module($module) {
+  // Include install file
+  $install = drupal_get_install_files(array($module));
+  if (isset($install[$module])) {
+    require_once $install[$module]->filename;
+
+    // Check requirements
+    $requirements = module_invoke($module, 'requirements', 'install');
+    if (is_array($requirements) && drupal_requirements_severity($requirements) == REQUIREMENT_ERROR) {
+      // Print any error messages
+      foreach ($requirements as $requirement) {
+        if (isset($requirement['severity']) && $requirement['severity'] == REQUIREMENT_ERROR) {
+          drupal_set_message($requirement['description'] .' ('. t('Currently using !item !version', array('!item' => $requirement['title'], '!version' => $requirement['value'])) .')', 'error');
+        }
+      }
+      return FALSE;
+    }
+  }
+  return TRUE;
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysql.inc,v 1.56 2006/07/31 19:24:16 unconed Exp $
+// $Id: database.mysql.inc,v 1.57 2006/09/01 08:44:53 unconed Exp $
 
 /**
  * @file
@@ -10,6 +10,28 @@
  * @ingroup database
  * @{
  */
+
+
+/**
+ * Report database status.
+ */
+function db_status_report($phase) {
+  $t = get_t();
+
+  $info = mysql_get_server_info();
+  $form['mysql'] = array(
+    'title' => $t('MySQL database'),
+    'value' => ($phase == 'runtime') ? l($info, 'admin/logs/status/sql') : $info,
+  );
+
+  // Extract version number
+  list($version) = explode('-', $info); 
+  if (version_compare($version, DRUPAL_MINIMUM_MYSQL) < 0) {
+    $form['mysql']['severity'] = REQUIREMENT_ERROR;
+    $form['mysql']['description'] = $t('Your MySQL Server is too old. Drupal requires at least MySQL %version.', array('%version' => DRUPAL_MINIMUM_MYSQL));
+  }
+  return $form;
+}
 
 /**
  * Initialize a database connection.

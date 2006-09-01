@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.360 2006/09/01 07:32:58 drumm Exp $
+// $Id: system.module,v 1.361 2006/09/01 08:44:53 unconed Exp $
 
 /**
  * @file
@@ -27,7 +27,7 @@ function system_help($section) {
 <li><a href="@cron-status">view</a> whether or not cron is running on your site.</li>
 <li>run cron <a href="@cron-manually">manually</a>.</li>
 </ul>
-', array('@file-cron' => 'cron.php', '@external-http-drupal-org-cron' => 'http://drupal.org/cron', '@cron-status' => url('admin/settings/cron-status'), '@cron-manually' => url('admin/settings/cron-status/cron'), '@admin-settings' => url('admin/settings/page-caching')));
+', array('@file-cron' => 'cron.php', '@external-http-drupal-org-cron' => 'http://drupal.org/cron', '@cron-status' => url('admin/logs/status'), '@cron-manually' => url('admin/logs/status/run-cron'), '@admin-settings' => url('admin/settings/page-caching')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@system">System page</a>.', array('@system' => 'http://drupal.org/handbook/modules/system/')) .'</p>';
       return $output;
     case 'admin':
@@ -45,6 +45,8 @@ function system_help($section) {
     case 'admin/settings/modules':
       return t('<p>Modules are plugins for Drupal that extend its core functionality. Here you can select which modules are enabled. Click on the name of the module in the navigation menu for their individual configuration pages. Once a module is enabled, new <a href="@permissions">permissions</a> might be made available. Modules can automatically be temporarily disabled to reduce server load when your site becomes extremely busy by enabling the throttle.module and checking throttle. The auto-throttle functionality must be enabled on the <a href="@throttle">throttle configuration page</a> after having enabled the throttle module.</p>
 <p>It is important that <a href="@update-php">update.php</a> is run every time a module is updated to a newer version.</p>', array('@permissions' => url('admin/user/access'), '@throttle' => url('admin/settings/throttle'), '@update-php' => $base_url .'/update.php'));
+    case 'admin/logs/status':
+      return t('<p>Here you can find a short overview of your Drupal site\'s parameters as well as any problems detected with your installation. It is useful for example to copy/paste this information when you need support.</p>');
   }
 }
 
@@ -233,28 +235,49 @@ function system_menu($may_cache) {
       'callback' => 'drupal_get_form',
       'callback arguments' => array('system_date_time_settings'));
     $items[] = array(
-      'path' => 'admin/settings/site-status',
-      'title' => t('site status'),
+      'path' => 'admin/settings/site-maintenance',
+      'title' => t('site maintenance'),
       'description' => t('Take the site off-line for maintenance or bring it back online.'),
       'callback' => 'drupal_get_form',
-      'callback arguments' => array('system_site_status_settings'));
-    $items[] = array(
-      'path' => 'admin/settings/unicode',
-      'title' => t('unicode'),
-      'description' => t('Unicode string handling settings.'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('system_unicode_settings'));
-    $items[] = array(
-      'path' => 'admin/settings/cron-status',
-      'title' => t('cron status'),
-      'description' => t('Check cron status or run cron manually.'),
-      'callback' => 'system_cron_status');
+      'callback arguments' => array('system_site_maintenance_settings'));
     $items[] = array(
       'path' => 'admin/settings/clean-urls',
       'title' => t('clean URLs'),
       'description' => t('Enable or disable clean URLs for your site.'),
       'callback' => 'drupal_get_form',
       'callback arguments' => array('system_clean_url_settings'));
+
+
+    // Logs:
+    $items[] = array(
+      'path' => 'admin/logs',
+      'title' => t('logs'),
+      'description' => t('View system logs and other status information.'),
+      'callback' => 'system_admin_menu_block_page',
+      'weight' => 5,
+      'position' => 'left');
+    $items[] = array(
+      'path' => 'admin/logs/status',
+      'title' => t('status report'),
+      'description' => t('Get a status report about your site\'s operation and any detected problems.'),
+      'callback' => 'system_status',
+      'weight' => -11,
+      'access' => $access);
+    $items[] = array(
+      'path' => 'admin/logs/status/run-cron',
+      'title' => t('run cron'),
+      'callback' => 'system_run_cron',
+      'type' => MENU_CALLBACK);
+    $items[] = array(
+      'path' => 'admin/logs/status/php',
+      'title' => t('PHP'),
+      'callback' => 'system_php',
+      'type' => MENU_CALLBACK);
+    $items[] = array(
+      'path' => 'admin/logs/status/sql',
+      'title' => t('SQL'),
+      'callback' => 'system_sql',
+      'type' => MENU_CALLBACK);
   }
   else {
     /**
@@ -307,6 +330,12 @@ function system_main_admin_page($arg = NULL) {
   if ($arg !== NULL) {
     return drupal_not_found();
   }
+
+  // Check for status report errors.
+  if (system_status(TRUE)) {
+    drupal_set_message(t('One or more problems were detected with your Drupal installation. Check the <a href="@status">status report</a> for more information.', array('@status' => url('admin/logs/status'))), 'error');
+  }
+
 
   $menu = menu_get_item(NULL, 'admin');
   usort($menu['children'], '_menu_sort');
@@ -766,11 +795,11 @@ function system_date_time_settings() {
   return system_settings_form($form);
 }
 
-function system_site_status_settings() {
+function system_site_maintenance_settings() {
 
   $form['site_offline'] = array(
     '#type' => 'radios',
-    '#title' => t('Site status'),
+    '#title' => t('Site maintenance'),
     '#default_value' => variable_get('site_offline', 0),
     '#options' => array(t('Online'), t('Off-line')),
     '#description' => t('When set to "Online", all visitors will be able to browse your site normally. When set to "Off-line", only users with the "administer site configuration" permission will be able to access your site to perform maintenance; all other visitors will see the site off-line message configured below. Authorized users can log in during "Off-line" mode directly via the <a href="@user-login">user login</a> page.', array('@user-login' => url('user'))),
@@ -784,35 +813,6 @@ function system_site_status_settings() {
   );
 
   return system_settings_form($form);
-}
-
-function system_unicode_settings() {
-  $form = unicode_settings();
-  return system_settings_form($form);
-}
-
-function system_cron_status($cron = '') {
-  if ($cron == 'cron') {
-    // Run cron manually
-    if (drupal_cron_run()) {
-      drupal_set_message(t('Cron ran successfully'));
-    }
-    else {
-      drupal_set_message(t('Cron run failed'));
-    }
-    drupal_goto('admin/settings/cron-status');
-  }
-
-  $cron_last = variable_get('cron_last', NULL);
-  if (is_numeric($cron_last)) {
-    $status = t('Cron is running. The last cron job ran %time ago.', array('%time' => format_interval(time() - $cron_last)));
-  }
-  else {
-    $status = t('Cron has not run. It appears cron jobs have not been setup on your system. Please check the help pages for <a href="@url">configuring cron jobs</a>.', array('@url' => 'http://drupal.org/cron'));
-  }
-  $status .= ' '. t('Cron can, if necessary, also be run <a href="!cron">manually</a>.', array('!cron' => url('admin/settings/cron-status/cron')));
-
-  return $status;
 }
 
 /**
@@ -1281,6 +1281,8 @@ function theme_system_modules($form) {
 function system_modules_submit($form_id, $edit) {
   include_once './includes/install.inc';
   $new_modules = array();
+
+  // Enable/disable modules that have already been installed
   foreach ($edit['status'] as $key => $choice) {
     if ($choice) {
       if (drupal_get_installed_schema_version($key) == SCHEMA_UNINSTALLED) {
@@ -1297,8 +1299,11 @@ function system_modules_submit($form_id, $edit) {
 
   module_list(TRUE, FALSE);
 
+  // Install new modules
   foreach ($new_modules as $module) {
-    drupal_install_module($module);
+    if (drupal_check_module($module)) {
+      drupal_install_module($module);
+    }
   }
 
   if (is_array($edit['throttle'])) {
@@ -1316,6 +1321,132 @@ function system_modules_submit($form_id, $edit) {
   return 'admin/settings/modules';
 }
 
+/**
+ * Menu callback: run cron manually.
+ */
+function system_run_cron() {
+   // Run cron manually
+   if (drupal_cron_run()) {
+     drupal_set_message(t('Cron ran successfully'));
+   }
+   else {
+     drupal_set_message(t('Cron run failed'));
+   }
+
+   drupal_goto('admin/logs/status');
+}
+
+/**
+ * Menu callback: return information about PHP.
+ */
+function system_php() {
+  phpinfo(INFO_GENERAL | INFO_CONFIGURATION);
+  exit();
+}
+
+function _system_sql($data, $keys) {
+  $rows = array();
+  foreach ($keys as $key => $explanation) {
+    if (isset($data[$key])) {
+      $rows[] = array(check_plain($key), check_plain($data[$key]), $explanation);
+    }
+  }
+
+  return theme('table', array(t('Variable'), t('Value'), t('Description')), $rows);
+}
+
+/**
+ * Menu callback: return information about PHP.
+ */
+function system_sql() {
+
+  $result = db_query("SHOW STATUS");
+  while ($entry = db_fetch_object($result)) {
+   $data[$entry->Variable_name] = $entry->Value;
+  }
+
+  $output  = '<h2>'. t('Command counters') .'</h2>';
+  $output .= _system_sql($data, array(
+   'Com_select' => t('The number of <code>SELECT</code>-statements.'),
+   'Com_insert' => t('The number of <code>INSERT</code>-statements.'),
+   'Com_update' => t('The number of <code>UPDATE</code>-statements.'),
+   'Com_delete' => t('The number of <code>DELETE</code>-statements.'),
+   'Com_lock_tables' => t('The number of table locks.'),
+   'Com_unlock_tables' => t('The number of table unlocks.')
+  ));
+
+  $output .= '<h2>'. t('Query performance') .'</h2>';
+  $output .= _system_sql($data, array(
+   'Select_full_join' => t(' The number of joins without an index; should be zero.'),
+   'Select_range_check' => t('The number of joins without an index; should be zero.'),
+   'Sort_scan' => t('The number of sorts done without using an index; should be zero.'),
+   'Table_locks_immediate' => t('The number of times a lock could be acquired immediately.'),
+   'Table_locks_waited' => t('The number of times the server had to wait for a lock.')
+  ));
+
+  $output .= '<h2>'. t('Query cache information') .'</h2>';
+  $output .= '<p>'. t('The MySQL query cache can improve performance of your site by storing the result of queries.  Then, if an identical query is received later, the MySQL server retrieves the result from the query cache rather than parsing and executing the statement again.') .'</p>';
+  $output .= _system_sql($data, array(
+   'Qcache_queries_in_cache' => t('The number of queries in the query cache.'),
+   'Qcache_hits' => t('The number of times that MySQL found previous results in the cache.'),
+   'Qcache_inserts' => t('The number of times that MySQL added a query to the cache (misses).'),
+   'Qcache_lowmem_prunes' => t('The number of times that MySQL had to remove queries from the cache because it ran out of memory.  Ideally should be zero.')
+  ));
+
+  return $output;
+}
+
+/**
+ * Menu callback: displays the site status report. Can also be used as a pure check.
+ *
+ * @param $check
+ *   If true, only returns a boolean whether there are system status errors.
+ */
+function system_status($check = FALSE) {
+  // Load .install files
+  include_once './includes/install.inc';
+  drupal_load_updates();
+
+  // Check run-time requirements and status information
+  $requirements = module_invoke_all('requirements', 'runtime');
+
+  if ($check) {
+    return drupal_requirements_severity($requirements) == REQUIREMENT_ERROR;
+  }
+
+  return theme('status_report', $requirements);
+}
+
+/**
+ * Theme status report
+ */
+function theme_status_report(&$requirements) {
+  $output = '<table class="system-status-report">';
+  foreach ($requirements as $requirement) {
+    if ($requirement['#type'] == '') {
+      $class = $i % 2 == 0 ? 'even' : 'odd';
+
+      $classes = array(
+        REQUIREMENT_OK => 'ok',
+        REQUIREMENT_WARNING => 'warning',
+        REQUIREMENT_ERROR => 'error',
+      );
+      $class = $classes[(int)$requirement['severity']] .' '. $class;
+
+      // Output table row(s)
+      if ($requirement['description']) {
+        $output .= '<tr class="'. $class .' merge-down"><th>'. $requirement['title'] .'</th><td>'. $requirement['value'] .'</td></tr>';
+        $output .= '<tr class="'. $class .' merge-up"><td colspan="2">'. $requirement['description'] .'</td></tr>';
+      }
+      else {
+        $output .= '<tr class="'. $class .'"><th>'. $requirement['title'] .'</th><td>'. $requirement['value'] .'</td></tr>';
+      }
+    }
+  }
+
+  $output .= '</table>';
+  return $output;
+}
 
 /**
  * Menu callback; displays a module's settings page.

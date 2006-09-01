@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.121 2006/08/31 18:40:04 dries Exp $
+// $Id: bootstrap.inc,v 1.122 2006/09/01 08:44:53 unconed Exp $
 
 /**
  * @file
@@ -780,4 +780,16 @@ function drupal_maintenance_theme() {
   drupal_add_css(drupal_get_path('module', 'system') .'/defaults.css', 'core');
   drupal_add_css(drupal_get_path('module', 'system') .'/system.css', 'core');
   $theme = '';
+}
+
+/**
+ * Return the name of the localisation function. Use in code that needs to
+ * run both during installation and normal operation.
+ */
+function get_t() {
+  static $t;
+  if (is_null($t)) {
+    $t = function_exists('install_main') ? 'st' : 't';
+  }
+  return $t;
 }

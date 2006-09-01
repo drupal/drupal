@@ -1,5 +1,116 @@
 <?php
-// $Id: system.install,v 1.18 2006/09/01 07:40:08 drumm Exp $
+// $Id: system.install,v 1.19 2006/09/01 08:44:53 unconed Exp $
+
+define('DRUPAL_MINIMUM_PHP',    '4.3.3');
+define('DRUPAL_MINIMUM_MYSQL',  '3.23.17'); // If using MySQL
+define('DRUPAL_MINIMUM_PGSQL',  '7.3');  // If using PostgreSQL
+define('DRUPAL_MINIMUM_APACHE', '1.3');  // If using Apache
+
+/**
+ * Test and report Drupal installation requirements.
+ */
+function system_requirements($phase) {
+  $requirements = array();
+  // Ensure translations don't break at install time
+  $t = function_exists('t') ? 't' : 'st';
+
+  // Report Drupal version
+  if ($phase == 'runtime') {
+    $requirements['drupal'] = array(
+      'title' => $t('Drupal'),
+      'value' => VERSION,
+    );
+  }
+
+  // Test web server
+  $requirements['webserver'] = array(
+    'title' => $t('Web server'),
+  );
+  // Use server info string, if present.
+  if (isset($_SERVER['SERVER_SOFTWARE'])) {
+    $requirements['webserver']['value'] = $_SERVER['SERVER_SOFTWARE'];
+
+    list($server, $version) = split('[ /]', $_SERVER['SERVER_SOFTWARE']);
+    switch ($server) {
+      case 'Apache':
+        if (version_compare($version, DRUPAL_MINIMUM_APACHE) < 0) {
+          $requirements['webserver']['description'] = $t('Your Apache server is too old. Drupal requires at least Apache %version.', array('%version' => DRUPAL_MINIMUM_APACHE));
+          $requirements['webserver']['severity'] = REQUIREMENT_ERROR;
+        }
+        break;
+
+      default:
+        $requirements['webserver']['description'] = $t('The web server you\'re using has not been tested with Drupal and might not work properly.');
+        $requirements['webserver']['severity'] = REQUIREMENT_WARNING;
+        break;
+    }
+  }
+  else {
+    $requirements['webserver']['value'] = $t('Unknown');
+    $requirements['webserver']['description'] = $t('Unable to determine your web server type. Drupal might not work properly.');
+    $requirements['webserver']['severity'] = REQUIREMENT_WARNING;
+  }
+
+  // Test PHP version
+  $requirements['php'] = array(
+    'title' => $t('PHP'),
+    'value' => ($phase == 'runtime') ? l(phpversion(), 'admin/logs/status/php') : phpversion(),
+  );
+  if (version_compare(phpversion(), DRUPAL_MINIMUM_PHP) < 0) {
+    $requirements['php']['description'] = $t('Your PHP installation is too old. Drupal requires at least PHP %version.', array('%version' => DRUPAL_MINIMUM_PHP));
+    $requirements['php']['severity'] = REQUIREMENT_ERROR;
+  }
+
+  // Test DB version
+  global $db_type;
+  if (function_exists('db_status_report')) {
+    $requirements += db_status_report($phase);
+  }
+
+  // Test settings.php file writability
+  if ($phase == 'runtime') {
+    if (!drupal_verify_install_file(conf_path() .'/settings.php', FILE_EXIST|FILE_READABLE|FILE_NOT_WRITABLE)) {
+      $requirements['settings.php'] = array(
+        'value' => $t('Not protected'),
+        'severity' => REQUIREMENT_ERROR,
+        'description' => $t('The file %file is not protected from modifications and poses a security risk. You must change the file\'s permissions to be non-writable.', array('%file' => conf_path() .'/settings.php')),
+      );
+    }
+    else {
+      $requirements['settings.php'] = array(
+        'value' => $t('Protected'),
+      );
+    }
+    $requirements['settings.php']['title'] = $t('Configuration file');
+  }
+
+  // Report cron status
+  if ($phase == 'runtime') {
+    $cron_last = variable_get('cron_last', NULL);
+
+    if (is_numeric($cron_last)) {
+      $requirements['cron']['value'] = $t('Last run !time ago', array('!time' => format_interval(time() - $cron_last)));
+    }
+    else {
+      $requirements['cron'] = array(
+        'description' => $t('Cron has not run. It appears cron jobs have not been setup on your system. Please check the help pages for <a href="@url">configuring cron jobs</a>.', array('@url' => 'http://drupal.org/cron')),
+        'severity' => REQUIREMENT_ERROR,
+        'value' => $t('Never run'),
+      );
+    }
+
+    $requirements['cron']['description'] .= ' '. t('You can <a href="@cron">run cron manually</a>.', array('@cron' => url('admin/logs/status/run-cron')));
+
+    $requirements['cron']['title'] = $t('Cron maintenance tasks');
+  }
+
+  // Test Unicode library
+  include_once './includes/unicode.inc';
+  $requirements = array_merge($requirements, unicode_requirements());
+
+  return $requirements;
+}
+
 
 /**
  * Implementation of hook_install().
