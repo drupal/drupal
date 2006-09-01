@@ -4,7 +4,9 @@ Drupal x.x.x, xxxx-xx-xx (development version)
 ------------------------
 - completely retooled the administration page
     * /admin now contains an administration page which may be themed
+    * added a status report page with detailed PHP/MySQL information
 - added web-based installer which can:
+    * check installation requirements
     * automatically generate the database configuration file
     * install pre-made 'install profiles' or distributions
     * import the database structure with automatic table prefixing

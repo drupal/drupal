@@ -36,3 +36,25 @@ div.admin .expert-link {
   margin-right: 1em;
   padding-right: 4px;
 }
+
+/**
+ * Formatting for status report
+ */
+table.system-status-report th {
+  border-bottom: 1px solid #ccc;
+}
+table.system-status-report th, table.system-status-report tr.merge-up td {
+  padding-left: 30px;
+}
+table.system-status-report th  {
+  background-repeat: no-repeat;
+  background-position: 5px 50%;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+table.system-status-report tr.error th {
+  background-image: url('../../misc/watchdog-error.png');
+}
+table.system-status-report tr.warning th {
+  background-image: url('../../misc/watchdog-warning.png');
+}

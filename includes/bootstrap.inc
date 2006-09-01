@@ -781,3 +781,15 @@ function drupal_maintenance_theme() {
   drupal_add_css(drupal_get_path('module', 'system') .'/system.css', 'core');
   $theme = '';
 }
+
+/**
+ * Return the name of the localisation function. Use in code that needs to
+ * run both during installation and normal operation.
+ */
+function get_t() {
+  static $t;
+  if (is_null($t)) {
+    $t = function_exists('install_main') ? 'st' : 't';
+  }
+  return $t;
+}

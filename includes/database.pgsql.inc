@@ -12,6 +12,31 @@
  */
 
 /**
+ * Report database status.
+ */
+function db_status_report() {
+  $t = get_t().dli;
+
+  $form['pgsql'] = array();
+
+  if (function_exists('pg_version')) {
+    $version = pg_version();
+    if (version_compare($version['server'], DRUPAL_MINIMUM_PGSQL) < 0) {
+      $form['pgsql']['severity'] = REQUIREMENT_ERROR;
+      $form['pgsql']['description'] = $t('Your PostgreSQL Server is too old. Drupal requires at least PostgreSQL %version.', array('%version' => DRUPAL_MINIMUM_PGSQL));
+    }
+  }
+  else {
+    $version = array('server' => t('Unknown'));
+  }
+
+  $form['pgsql']['title'] = $t('PostgreSQL database');
+  $form['pgsql']['value'] = $version['server'];
+
+  return $form;
+}
+
+/**
  * Initialize a database connection.
  *
  * Note that you can change the pg_connect() call to pg_pconnect() if you

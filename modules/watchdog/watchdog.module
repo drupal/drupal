@@ -40,11 +40,6 @@ function watchdog_menu($may_cache) {
   $items = array();
 
   if ($may_cache) {
-    $items[] = array('path' => 'admin/logs', 'title' => t('logs'),
-      'description' => t('View system logs and other status information.'),
-      'callback' => 'system_admin_menu_block_page',
-      'weight' => 5,
-      'position' => 'left');
     $items[] = array('path' => 'admin/logs/watchdog', 'title' => t('recent log entries'),
       'description' => t('View events that have recently been logged.'),
       'callback' => 'watchdog_overview',
