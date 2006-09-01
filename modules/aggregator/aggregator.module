@@ -487,6 +487,9 @@ function aggregator_form_feed_validate($form_id, $form_values) {
       if (strcasecmp($feed->title, $form_values['title']) == 0) {
         form_set_error('title', t('A feed named %feed already exists. Please enter a unique title.', array('%feed' => $form_values['title'])));
       }
+      if (strcasecmp($feed->url, $form_values['url']) == 0) {
+        form_set_error('url', t('A feed with this URL %url already exists. Please enter a unique URL.', array('%url' => $form_values['url'])));
+      }
     }
   }
 }
