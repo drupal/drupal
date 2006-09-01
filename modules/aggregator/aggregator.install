@@ -1,6 +1,9 @@
 <?php
-// $Id: aggregator.install,v 1.6 2006/08/24 06:27:41 drumm Exp $
+// $Id: aggregator.install,v 1.7 2006/09/01 07:40:07 drumm Exp $
 
+/**
+ * Implementation of hook_install().
+ */
 function aggregator_install() {
   switch ($GLOBALS['db_type']) {
     case 'mysql':
@@ -111,4 +114,19 @@ function aggregator_install() {
 
       break;
   }
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function aggregator_uninstall() {
+  db_query('DROP TABLE {aggregator_category}');
+  db_query('DROP TABLE {aggregator_category_feed}');
+  db_query('DROP TABLE {aggregator_category_item}');
+  db_query('DROP TABLE {aggregator_feed}');
+  db_query('DROP TABLE {aggregator_item}');
+  variable_del('aggregator_allowed_html_tags');
+  variable_del('aggregator_summary_items');
+  variable_del('aggregator_clear');
+  variable_del('aggregator_category_selector');
 }

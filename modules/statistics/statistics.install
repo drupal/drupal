@@ -1,6 +1,9 @@
 <?php
-// $Id: statistics.install,v 1.5 2006/08/20 06:38:50 dries Exp $
+// $Id: statistics.install,v 1.6 2006/09/01 07:40:08 drumm Exp $
 
+/**
+ * Implementation of hook_install().
+ */
 function statistics_install() {
   switch ($GLOBALS['db_type']) {
     case 'mysql':
@@ -35,4 +38,18 @@ function statistics_install() {
       db_query("CREATE INDEX {accesslog}_accesslog_timestamp_idx ON {accesslog} (timestamp)");
       break;
   }
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function statistics_uninstall() {
+  db_query('DROP TABLE {accesslog}');
+  variable_del('statistics_count_content_views');
+  variable_del('statistics_enable_access_log');
+  variable_del('statistics_flush_accesslog_timer');
+  variable_del('statistics_day_timestamp');
+  variable_del('statistics_block_top_day_num');
+  variable_del('statistics_block_top_all_num');
+  variable_del('statistics_block_top_last_num');
 }

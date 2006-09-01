@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.17 2006/09/01 05:38:40 drumm Exp $
+// $Id: install.inc,v 1.18 2006/09/01 07:40:07 drumm Exp $
 
 define('SCHEMA_UNINSTALLED', -1);
 define('SCHEMA_INSTALLED', 0);
@@ -348,6 +348,18 @@ function drupal_install_module($module) {
     drupal_set_installed_schema_version($module, $versions ? max($versions) : SCHEMA_INSTALLED);
     module_enable($module);
   }
+}
+
+/**
+ * Calls the uninstall function and updates the system table for a given module.
+ *
+ * @param $module
+ *   The module to uninstall.
+ */
+function drupal_uninstall_module($module) {
+  module_load_install($module);
+  module_invoke($module, 'uninstall');
+  drupal_set_installed_schema_version($module, SCHEMA_UNINSTALLED);
 }
 
 /**

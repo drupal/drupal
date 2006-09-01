@@ -1,6 +1,9 @@
 <?php
-// $Id: system.install,v 1.17 2006/09/01 06:35:37 drumm Exp $
+// $Id: system.install,v 1.18 2006/09/01 07:40:08 drumm Exp $
 
+/**
+ * Implementation of hook_install().
+ */
 function system_install() {
   switch ($GLOBALS['db_type']) {
     case 'mysql':

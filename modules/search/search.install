@@ -1,6 +1,9 @@
 <?php
-// $Id: search.install,v 1.5 2006/08/20 06:38:50 dries Exp $
+// $Id: search.install,v 1.6 2006/09/01 07:40:08 drumm Exp $
 
+/**
+ * Implementation of hook_install().
+ */
 function search_install() {
   switch ($GLOBALS['db_type']) {
     case 'mysql':
@@ -57,4 +60,15 @@ function search_install() {
       )");
       break;
   }
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function search_uninstall() {
+  db_query('DROP TABLE {search_dataset}');
+  db_query('DROP TABLE {search_index}');
+  db_query('DROP TABLE {search_total}');
+  variable_del('minimum_word_size');
+  variable_del('overlap_cjk');
 }

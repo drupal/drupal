@@ -1,6 +1,9 @@
 <?php
-// $Id: book.install,v 1.5 2006/08/20 06:38:50 dries Exp $
+// $Id: book.install,v 1.6 2006/09/01 07:40:08 drumm Exp $
 
+/**
+ * Implementation of hook_install().
+ */
 function book_install() {
   switch ($GLOBALS['db_type']) {
     case 'mysql':
@@ -27,4 +30,11 @@ function book_install() {
       db_query("CREATE INDEX {book}_parent_idx ON {book} (parent)");
       break;
   }
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function book_uninstall() {
+  db_query('DROP TABLE {book}');
 }

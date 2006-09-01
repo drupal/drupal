@@ -1,6 +1,9 @@
 <?php
-// $Id: contact.install,v 1.4 2006/08/20 06:38:50 dries Exp $
+// $Id: contact.install,v 1.5 2006/09/01 07:40:08 drumm Exp $
 
+/**
+ * Implementation of hook_install().
+ */
 function contact_install() {
   switch ($GLOBALS['db_type']) {
     case 'mysql':
@@ -29,4 +32,14 @@ function contact_install() {
       )");
       break;
   }
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function contact_uninstall() {
+  db_query('DROP TABLE {contact}');
+  variable_del('contact_default_status');
+  variable_del('contact_form_information');
+  variable_del('contact_hourly_threshold');
 }
