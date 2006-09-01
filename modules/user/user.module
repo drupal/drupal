@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.668 2006/08/31 23:31:25 unconed Exp $
+// $Id: user.module,v 1.669 2006/09/01 06:12:47 drumm Exp $
 
 /**
  * @file
@@ -2272,7 +2272,7 @@ function user_help($section) {
     case 'admin/user/user/create':
     case 'admin/user/user/account/create':
       return t('<p>This web page allows the administrators to register a new users by hand. Note that you cannot have a user where either the e-mail address or the username match another user in the system.</p>');
-    case strstr($section, 'admin/user/rules'):
+    case 'admin/user/rules':
       return t('<p>Set up username and e-mail address access rules for new <em>and</em> existing accounts (currently logged in accounts will not be logged out). If a username or e-mail address for an account matches any deny rule, but not an allow rule, then the account will not be allowed to be created or to log in. A host rule is effective for every page view, not just registrations.</p>');
     case 'admin/user/access':
       return t('<p>Permissions let you control what users can do on your site. Each user role (defined on the <a href="@role">user roles page</a>) has its own set of permissions. For example, you could give users classified as "Administrators" permission to "administer nodes" but deny this power to ordinary, "authenticated" users. You can use permissions to reveal new features to privileged users (those with subscriptions, for example). Permissions also allow trusted users to share the administrative burden of running a busy site.</p>', array('@role' => url('admin/user/roles')));
