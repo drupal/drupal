@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.87 2006/08/31 21:58:36 dries Exp $
+// $Id: menu.module,v 1.88 2006/09/01 07:32:58 drumm Exp $
 
 /**
  * @file
@@ -210,7 +210,7 @@ function menu_form_alter($form_id, &$form) {
     $form['menu']['title'] = array('#type' => 'textfield',
       '#title' => t('Title'),
       '#default_value' => $item['title'],
-      '#description' => t('The name to display for this link.'),
+      '#description' => t('The name to display for this menu link.'),
     );
 
     $form['menu']['description'] = array('#type' => 'textfield',

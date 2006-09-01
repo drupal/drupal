@@ -1,5 +1,5 @@
 <?php
-// $Id: help.module,v 1.58 2006/08/31 20:22:35 dries Exp $
+// $Id: help.module,v 1.59 2006/09/01 07:32:57 drumm Exp $
 
 /**
  * @file
@@ -52,15 +52,15 @@ function help_main() {
    <dt>Moderation</dt>
    <dd>The activity of making sure a post to a Drupal site fits in with what is expected for that Drupal site.
     <dl>
-     <dt>Approved</dt><dd>A moderated post which has been accepted by the moderators for publication. (See published).</dd>
-     <dt>Waiting</dt><dd>A moderated post which is still being voted on to be accepted for publication. (See published.)</dd>
+     <dt>Approved</dt><dd>A moderated post which has been accepted by the moderators for publication (see published).</dd>
+     <dt>Waiting</dt><dd>A moderated post which is still being voted on to be accepted for publication (see published).</dd>
     </dl>
    </dd>
    <dt>Node</dt><dd>The basic data unit in Drupal. Everything is a node or an extension of a node.</dd>
    <dt>Public</dt><dd>See published.</dd>
-   <dt>Published</dt><dd>A node that is viewable by everyone. (See unpublished.)</dd>
+   <dt>Published</dt><dd>A node that is viewable by everyone (see unpublished).</dd>
    <dt>Role</dt><dd>A classification users are placed into for the purpose of setting users' permissions.</dd>
-   <dt>Taxonomy</dt><dd>A division of a collection of things into ordered, classified groups. (See <a href=\"@taxonomy\">taxonomy help</a>.)</dd>
+   <dt>Taxonomy</dt><dd>A division of a collection of things into ordered, classified groups (see <a href=\"@taxonomy\">taxonomy help</a>).</dd>
    <dt>Unpublished</dt><dd>A node that is only viewable by administrators and moderators.</dd>
    <dt>User</dt><dd>A person who has an account at your Drupal site, and is logged in with that account.</dd>
    <dt>Visitor</dt><dd>A person who does not have an account at your Drupal site or a person who has an account at your Drupal site but is <strong>not</strong> logged in with that account. Also termed \"anonymous user\".</dd>

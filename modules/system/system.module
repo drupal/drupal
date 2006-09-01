@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.359 2006/09/01 06:24:10 drumm Exp $
+// $Id: system.module,v 1.360 2006/09/01 07:32:58 drumm Exp $
 
 /**
  * @file
@@ -199,7 +199,7 @@ function system_menu($may_cache) {
     $items[] = array(
       'path' => 'admin/settings/error-reporting',
       'title' => t('error reporting'),
-      'description' => t('Control how Drupal deals with errors including 403/404 erros as well as PHP error reporting.'),
+      'description' => t('Control how Drupal deals with errors including 403/404 errors as well as PHP error reporting.'),
       'callback' => 'drupal_get_form',
       'callback arguments' => array('system_error_reporting_settings'));
     $items[] = array(
@@ -626,7 +626,7 @@ function system_file_system_settings() {
     '#title' => t('File system path'),
     '#default_value' => file_directory_path(),
     '#maxlength' => 255,
-    '#description' => t('A file system path where the files will be stored. This directory has to exist and be writable by Drupal. If the download method is set to public this directory has to be relative to Drupal installation directory, and be accessible over the web. When download method is set to private this directory should not be accessible over the web. Changing this location after the site has been in use will cause problems so only change this setting on an existing site if you know what you are doing.'),
+    '#description' => t('A file system path where the files will be stored. This directory has to exist and be writable by Drupal. If the download method is set to public this directory has to be relative to the Drupal installation directory, and be accessible over the web. When download method is set to private this directory should not be accessible over the web. Changing this location after the site has been in use will cause problems so only change this setting on an existing site if you know what you are doing.'),
     '#after_build' => array('system_check_directory'),
   );
 
@@ -643,7 +643,7 @@ function system_file_system_settings() {
     '#type' => 'radios',
     '#title' => t('Download method'),
     '#default_value' => variable_get('file_downloads', FILE_DOWNLOADS_PUBLIC),
-    '#options' => array(FILE_DOWNLOADS_PUBLIC => t('Public - files are available using http directly.'), FILE_DOWNLOADS_PRIVATE => t('Private - files are transferred by Drupal.')),
+    '#options' => array(FILE_DOWNLOADS_PUBLIC => t('Public - files are available using HTTP directly.'), FILE_DOWNLOADS_PRIVATE => t('Private - files are transferred by Drupal.')),
     '#description' => t('If you want any sort of access control on the downloading of files, this needs to be set to <em>private</em>. You can change this at any time, however all download URLs will change and there may be unexpected problems so it is not recommended.')
   );
 

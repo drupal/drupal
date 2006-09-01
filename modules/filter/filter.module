@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.142 2006/08/31 20:22:35 dries Exp $
+// $Id: filter.module,v 1.143 2006/09/01 07:32:57 drumm Exp $
 
 /**
  * @file
@@ -63,7 +63,7 @@ function filter_menu($may_cache) {
   if ($may_cache) {
     $items[] = array('path' => 'admin/settings/filters',
       'title' => t('input formats'),
-      'description' => t('Configure how content input by users is filtering, including allowed HTML tags, PHP code tags. Also allows enabling of module-provided filters.'),
+      'description' => t('Configure how content input by users is filtered, including allowed HTML tags, PHP code tags. Also allows enabling of module-provided filters.'),
       'callback' => 'drupal_get_form',
       'callback arguments' => array('filter_admin_overview'),
       'access' => user_access('administer filters'),
