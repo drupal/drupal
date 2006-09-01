@@ -261,7 +261,7 @@ function system_menu($may_cache) {
       'title' => t('status report'),
       'description' => t('Get a status report about your site\'s operation and any detected problems.'),
       'callback' => 'system_status',
-      'weight' => -11,
+      'weight' => 10,
       'access' => $access);
     $items[] = array(
       'path' => 'admin/logs/status/run-cron',
