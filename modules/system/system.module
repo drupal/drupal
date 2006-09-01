@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.361 2006/09/01 08:44:53 unconed Exp $
+// $Id: system.module,v 1.362 2006/09/01 09:23:45 unconed Exp $
 
 /**
  * @file
@@ -46,7 +46,7 @@ function system_help($section) {
       return t('<p>Modules are plugins for Drupal that extend its core functionality. Here you can select which modules are enabled. Click on the name of the module in the navigation menu for their individual configuration pages. Once a module is enabled, new <a href="@permissions">permissions</a> might be made available. Modules can automatically be temporarily disabled to reduce server load when your site becomes extremely busy by enabling the throttle.module and checking throttle. The auto-throttle functionality must be enabled on the <a href="@throttle">throttle configuration page</a> after having enabled the throttle module.</p>
 <p>It is important that <a href="@update-php">update.php</a> is run every time a module is updated to a newer version.</p>', array('@permissions' => url('admin/user/access'), '@throttle' => url('admin/settings/throttle'), '@update-php' => $base_url .'/update.php'));
     case 'admin/logs/status':
-      return t('<p>Here you can find a short overview of your Drupal site\'s parameters as well as any problems detected with your installation. It is useful for example to copy/paste this information when you need support.</p>');
+      return t('<p>Here you can find a short overview of your Drupal site\'s parameters as well as any problems detected with your installation. It is useful to copy/paste this information when you need support.</p>');
   }
 }
 
@@ -1427,6 +1427,7 @@ function theme_status_report(&$requirements) {
       $class = $i % 2 == 0 ? 'even' : 'odd';
 
       $classes = array(
+        REQUIREMENT_INFO => 'info',
         REQUIREMENT_OK => 'ok',
         REQUIREMENT_WARNING => 'warning',
         REQUIREMENT_ERROR => 'error',
