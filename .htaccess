@@ -58,12 +58,12 @@ DirectoryIndex index.php
   #
   # If you want the site to be accessed WITH the www. only, adapt and
   # uncomment the following:
-  # RewriteCond %{HTTP_HOST} !^www\.example\.com$ [NC]
+  # RewriteCond %{HTTP_HOST} ^example\.com$ [NC]
   # RewriteRule .* http://www.example.com/ [L,R=301]
   #
   # If you want the site to be accessed only WITHOUT the www. prefix, adapt
   # and uncomment the following:
-  # RewriteCond %{HTTP_HOST} !^example\.com$ [NC]
+  # RewriteCond %{HTTP_HOST} ^www\.example\.com$ [NC]
   # RewriteRule .* http://example.com/ [L,R=301]
 
   # Modify the RewriteBase if you are using Drupal in a subdirectory and
@@ -88,4 +88,4 @@ DirectoryIndex index.php
   RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
 </IfModule>
 
-# $Id: .htaccess,v 1.75 2006/07/14 01:03:28 drumm Exp $
+# $Id: .htaccess,v 1.76 2006/09/01 07:25:25 drumm Exp $
