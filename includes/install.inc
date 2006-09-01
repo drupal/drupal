@@ -4,6 +4,7 @@
 define('SCHEMA_UNINSTALLED', -1);
 define('SCHEMA_INSTALLED', 0);
 
+define('REQUIREMENT_INFO', -1);
 define('REQUIREMENT_OK', 0);
 define('REQUIREMENT_WARNING', 1);
 define('REQUIREMENT_ERROR', 2);

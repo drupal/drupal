@@ -19,18 +19,19 @@ function system_requirements($phase) {
     $requirements['drupal'] = array(
       'title' => $t('Drupal'),
       'value' => VERSION,
+      'severity' => REQUIREMENT_INFO
     );
   }
 
   // Test web server
+  $software = $_SERVER['SERVER_SOFTWARE'];
   $requirements['webserver'] = array(
     'title' => $t('Web server'),
+    'value' => $software
   );
   // Use server info string, if present.
-  if (isset($_SERVER['SERVER_SOFTWARE'])) {
-    $requirements['webserver']['value'] = $_SERVER['SERVER_SOFTWARE'];
-
-    list($server, $version) = split('[ /]', $_SERVER['SERVER_SOFTWARE']);
+  if ($software && preg_match('![0-9]!', $software)) {
+    list($server, $version) = split('[ /]', $software);
     switch ($server) {
       case 'Apache':
         if (version_compare($version, DRUPAL_MINIMUM_APACHE) < 0) {
@@ -46,8 +47,8 @@ function system_requirements($phase) {
     }
   }
   else {
-    $requirements['webserver']['value'] = $t('Unknown');
-    $requirements['webserver']['description'] = $t('Unable to determine your web server type. Drupal might not work properly.');
+    $requirements['webserver']['value'] = $software ? $software : $t('Unknown');
+    $requirements['webserver']['description'] = $t('Unable to determine your web server type and version. Drupal might not work properly.');
     $requirements['webserver']['severity'] = REQUIREMENT_WARNING;
   }
 

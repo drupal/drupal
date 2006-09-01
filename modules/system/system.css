@@ -51,9 +51,6 @@ div.warning, tr.warning {
 div.ok, tr.ok {
   background: #dfd;
 }
-.ok {
-  color: green;
-}
 .item-list .icon {
   color: #555;
   float: right;

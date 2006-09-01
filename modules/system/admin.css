@@ -58,3 +58,6 @@ table.system-status-report tr.error th {
 table.system-status-report tr.warning th {
   background-image: url('../../misc/watchdog-warning.png');
 }
+table.system-status-report tr.ok th {
+  background-image: url('../../misc/watchdog-ok.png');
+}
