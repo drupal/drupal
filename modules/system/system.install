@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.16 2006/08/31 14:53:28 dries Exp $
+// $Id: system.install,v 1.17 2006/09/01 06:35:37 drumm Exp $
 
 function system_install() {
   switch ($GLOBALS['db_type']) {
@@ -896,7 +896,7 @@ function system_install() {
 
   db_query("INSERT INTO {variable} (name, value) VALUES ('node_options_forum', '%s')", 'a:1:{i:0;s:6:"status";}');
 
-  db_query("INSERT INTO {menu} (pid, path, title, description, weight, type) VALUES (0, '', 'Primary links', '', 0, 115)");
+  db_query("INSERT INTO {menu} (mid, pid, path, title, description, weight, type) VALUES (2, 0, '', 'Primary links', '', 0, 115)");
   db_query("INSERT INTO {variable} VALUES ('menu_primary_menu', 'i:2;')");
   db_query("INSERT INTO {variable} VALUES ('menu_secondary_menu', 'i:2;')");
 }
@@ -3242,6 +3242,13 @@ function system_update_1010() {
     $ret[] = t('URL Filter module was disabled; this functionality has now been added to core.');
   }
 
+  return $ret;
+}
+
+function system_update_1011() {
+  $ret = array();
+  $ret[] = update_sql('UPDATE {menu} SET mid = 2 WHERE mid = 0');
+  cache_clear_all();
   return $ret;
 }
 
