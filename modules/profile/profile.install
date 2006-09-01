@@ -1,6 +1,9 @@
 <?php
 // $Id$
 
+/**
+ * Implementation of hook_install().
+ */
 function profile_install() {
   switch ($GLOBALS['db_type']) {
     case 'mysql':
@@ -62,4 +65,13 @@ function profile_install() {
       db_query("CREATE INDEX {profile_values}_fid_idx ON {profile_values} (fid)");
       break;
   }
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function profile_uninstall() {
+  db_query('DROP TABLE {profile_fields}');
+  db_query('DROP TABLE {profile_values}');
+  variable_del('profile_block_author_fields');
 }

@@ -1,6 +1,9 @@
 <?php
 // $Id$
 
+/**
+ * Implementation of hook_install().
+ */
 function poll_install() {
   switch ($GLOBALS['db_type']) {
     case 'mysql':
@@ -62,4 +65,13 @@ function poll_install() {
       db_query("CREATE INDEX {poll_choices}_nid_idx ON {poll_choices} (nid)");
       break;
   }
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function poll_uninstall() {
+  db_query('DROP TABLE {poll}');
+  db_query('DROP TABLE {poll_votes}');
+  db_query('DROP TABLE {poll_choices}');
 }

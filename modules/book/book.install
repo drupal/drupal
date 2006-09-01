@@ -1,6 +1,9 @@
 <?php
 // $Id$
 
+/**
+ * Implementation of hook_install().
+ */
 function book_install() {
   switch ($GLOBALS['db_type']) {
     case 'mysql':
@@ -27,4 +30,11 @@ function book_install() {
       db_query("CREATE INDEX {book}_parent_idx ON {book} (parent)");
       break;
   }
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function book_uninstall() {
+  db_query('DROP TABLE {book}');
 }

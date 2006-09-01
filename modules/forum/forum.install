@@ -1,6 +1,9 @@
 <?php
 // $Id$
 
+/**
+ * Implementation of hook_install().
+ */
 function forum_install() {
   switch ($GLOBALS['db_type']) {
     case 'mysql':
@@ -25,4 +28,19 @@ function forum_install() {
       db_query("CREATE INDEX {forum}_tid_idx ON {forum} (tid)");
       break;
   }
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function forum_uninstall() {
+  db_query('DROP TABLE {forum}');
+  db_query("DELETE FROM {node} WHERE type = 'forum'");
+  variable_del('forum_containers');
+  variable_del('forum_nav_vocabulary');
+  variable_del('forum_hot_topic');
+  variable_del('forum_per_page');
+  variable_del('forum_order');
+  variable_del('forum_block_num_0');
+  variable_del('forum_block_num_1');
 }

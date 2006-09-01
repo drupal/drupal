@@ -351,6 +351,18 @@ function drupal_install_module($module) {
 }
 
 /**
+ * Calls the uninstall function and updates the system table for a given module.
+ *
+ * @param $module
+ *   The module to uninstall.
+ */
+function drupal_uninstall_module($module) {
+  module_load_install($module);
+  module_invoke($module, 'uninstall');
+  drupal_set_installed_schema_version($module, SCHEMA_UNINSTALLED);
+}
+
+/**
  * Verify the state of the specified file.
  *
  * @param $file

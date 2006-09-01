@@ -1,6 +1,9 @@
 <?php
 // $Id$
 
+/**
+ * Implementation of hook_install().
+ */
 function locale_install() {
   switch ($GLOBALS['db_type']) {
     case 'mysql':
@@ -68,4 +71,13 @@ function locale_install() {
       break;
   }
   db_query("INSERT INTO {locales_meta} (locale, name, enabled, isdefault) VALUES ('en', 'English', '1', '1')");
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function locale_uninstall() {
+  db_query('DROP TABLE {locales_meta}');
+  db_query('DROP TABLE {locales_source}');
+  db_query('DROP TABLE {locales_target}');
 }

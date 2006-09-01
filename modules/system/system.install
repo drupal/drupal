@@ -1,6 +1,9 @@
 <?php
 // $Id$
 
+/**
+ * Implementation of hook_install().
+ */
 function system_install() {
   switch ($GLOBALS['db_type']) {
     case 'mysql':
