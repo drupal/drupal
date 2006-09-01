@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.362 2006/09/01 09:23:45 unconed Exp $
+// $Id: system.module,v 1.363 2006/09/01 17:23:29 unconed Exp $
 
 /**
  * @file
@@ -261,7 +261,7 @@ function system_menu($may_cache) {
       'title' => t('status report'),
       'description' => t('Get a status report about your site\'s operation and any detected problems.'),
       'callback' => 'system_status',
-      'weight' => -11,
+      'weight' => 10,
       'access' => $access);
     $items[] = array(
       'path' => 'admin/logs/status/run-cron',
