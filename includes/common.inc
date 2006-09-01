@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.571 2006/09/01 06:24:10 drumm Exp $
+// $Id: common.inc,v 1.572 2006/09/01 08:44:25 unconed Exp $
 
 /**
  * @file
@@ -1363,15 +1363,21 @@ function drupal_get_css($css = NULL) {
  *   far for $scope is returned.
  */
 function drupal_add_js($data = NULL, $type = 'module', $scope = 'header', $defer = FALSE, $cache = TRUE) {
+  if (!is_null($data)) {
+    _drupal_add_js('misc/jquery.js', 'core', 'header', FALSE, $cache);
+    _drupal_add_js('misc/drupal.js', 'core', 'header', FALSE, $cache);
+  }
+  return _drupal_add_js($data, $type, $scope, $defer, $cache);
+}
+
+/**
+ * Helper function for drupal_add_js().
+ */ 
+function _drupal_add_js($data, $type, $scope, $defer, $cache) {
   static $javascript = array();
 
   if (!isset($javascript[$scope])) {
     $javascript[$scope] = array('core' => array(), 'module' => array(), 'theme' => array(), 'setting' => array(), 'inline' => array());
-
-    if (empty($javascript['header']['core']['misc/drupal.js'])) {
-      drupal_add_js('misc/jquery.js', 'core', 'header', FALSE, $cache);
-      drupal_add_js('misc/drupal.js', 'core', 'header', FALSE, $cache);
-    }
   }
 
   if (!isset($javascript[$scope][$type])) {
