@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.303 2006/08/31 20:22:34 dries Exp $
+// $Id: aggregator.module,v 1.304 2006/09/01 03:30:16 drumm Exp $
 
 /**
  * @file
@@ -486,6 +486,9 @@ function aggregator_form_feed_validate($form_id, $form_values) {
     while ($feed = db_fetch_object($result)) {
       if (strcasecmp($feed->title, $form_values['title']) == 0) {
         form_set_error('title', t('A feed named %feed already exists. Please enter a unique title.', array('%feed' => $form_values['title'])));
+      }
+      if (strcasecmp($feed->url, $form_values['url']) == 0) {
+        form_set_error('url', t('A feed with this URL %url already exists. Please enter a unique URL.', array('%url' => $form_values['url'])));
       }
     }
   }
