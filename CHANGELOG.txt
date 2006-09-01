@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.159 2006/08/31 23:31:24 unconed Exp $
+// $Id: CHANGELOG.txt,v 1.160 2006/09/01 05:38:40 drumm Exp $
 
 Drupal x.x.x, xxxx-xx-xx (development version)
 ------------------------
@@ -8,6 +8,7 @@ Drupal x.x.x, xxxx-xx-xx (development version)
     * automatically generate the database configuration file
     * install pre-made 'install profiles' or distributions
     * import the database structure with automatic table prefixing
+    * be localized
 - included the jQuery JavaScript library and converted all core JavaScript to use it
 - introduced the ability to alter mail sent from system
 - moved core modules to their own directories to allow additional flexibility

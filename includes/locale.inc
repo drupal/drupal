@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.89 2006/08/30 08:46:16 dries Exp $
+// $Id: locale.inc,v 1.90 2006/09/01 05:38:40 drumm Exp $
 
 /**
  * @file
@@ -456,9 +456,12 @@ function _locale_string_delete($lid) {
 /**
  * Parses Gettext Portable Object file information and inserts into database
  *
- * @param $file Object contains properties of local file to be imported
- * @param $lang Language code
- * @param $mode should existing translations be replaced?
+ * @param $file
+ *   Drupal file object corresponding to the PO file to import
+ * @param $lang
+ *   Language code
+ * @param $mode
+ *   Should existing translations be replaced ('overwrite' or 'keep')
  */
 function _locale_import_po($file, $lang, $mode) {
   // If not in 'safe mode', increase the maximum execution time:
@@ -473,14 +476,14 @@ function _locale_import_po($file, $lang, $mode) {
   }
 
   // Get strings from file (returns on failure after a partial import, or on success)
-  $status = _locale_import_read_po($file, $mode, $lang);
+  $status = _locale_import_read_po('db-store', $file, $mode, $lang);
   if ($status === FALSE) {
     // error messages are set in _locale_import_read_po
     return FALSE;
   }
 
   // Get status information on import process
-  list($headerdone, $additions, $updates) = _locale_import_one_string('report', $mode);
+  list($headerdone, $additions, $updates) = _locale_import_one_string('db-report');
 
   if (!$headerdone) {
     drupal_set_message(t('The translation file %filename appears to have a missing or malformed header.', array('%filename' => $file->filename)), 'error');
@@ -500,15 +503,21 @@ function _locale_import_po($file, $lang, $mode) {
 /**
  * Parses Gettext Portable Object file into an array
  *
- * @param $file Object with properties of local file to parse
+ * @param $op
+ *   Storage operation type: db-store or mem-store
+ * @param $file
+ *   Drupal file object corresponding to the PO file to import
+ * @param $mode
+ *   Should existing translations be replaced ('overwrite' or 'keep')
+ * @param $lang
+ *   Language code
  * @author Jacobo Tarrio
  */
-function _locale_import_read_po($file, $mode, $lang) {
+function _locale_import_read_po($op, $file, $mode = NULL, $lang = NULL) {
 
-  $message = theme('placeholder', $file->filename);
   $fd = fopen($file->filepath, "rb"); // File will get closed by PHP on return
   if (!$fd) {
-    drupal_set_message(t('The translation import failed, because the file %filename could not be read.', array('%filename' => $message)), 'error');
+    _locale_import_message('The translation import failed, because the file %filename could not be read.', $file);
     return FALSE;
   }
 
@@ -527,25 +536,25 @@ function _locale_import_read_po($file, $mode, $lang) {
         $current["#"][] = substr($line, 1);
       }
       elseif (($context == "MSGSTR") || ($context == "MSGSTR_ARR")) { // End current entry, start a new one
-        _locale_import_one_string($current, $mode, $lang);
+        _locale_import_one_string($op, $current, $mode, $lang);
         $current = array();
         $current["#"][] = substr($line, 1);
         $context = "COMMENT";
       }
       else { // Parse error
-        drupal_set_message(t('The translation file %filename contains an error: "msgstr" was expected but not found on line %line.', array('%filename' => $message, '%line' => $lineno)), 'error');
+        _locale_import_message('The translation file %filename contains an error: "msgstr" was expected but not found on line %line.', $file, $lineno);
         return FALSE;
       }
     }
     elseif (!strncmp("msgid_plural", $line, 12)) {
       if ($context != "MSGID") { // Must be plural form for current entry
-        drupal_set_message(t('The translation file %filename contains an error: "msgid_plural" was expected but not found on line %line.', array('%filename' => $message, '%line' => $lineno)), 'error');
+        _locale_import_message('The translation file %filename contains an error: "msgid_plural" was expected but not found on line %line.', $file, $lineno);
         return FALSE;
       }
       $line = trim(substr($line, 12));
       $quoted = _locale_import_parse_quoted($line);
       if ($quoted === FALSE) {
-        drupal_set_message(t('The translation file %filename contains a syntax error on line %line.', array('%filename' => $message, '%line' => $lineno)), 'error');
+        _locale_import_message('The translation file %filename contains a syntax error on line %line.', $file, $lineno);
         return FALSE;
       }
       $current["msgid"] = $current["msgid"] ."\0". $quoted;
@@ -553,17 +562,17 @@ function _locale_import_read_po($file, $mode, $lang) {
     }
     elseif (!strncmp("msgid", $line, 5)) {
       if ($context == "MSGSTR") {   // End current entry, start a new one
-        _locale_import_one_string($current, $mode, $lang);
+        _locale_import_one_string($op, $current, $mode, $lang);
         $current = array();
       }
       elseif ($context == "MSGID") { // Already in this context? Parse error
-        drupal_set_message(t('The translation file %filename contains an error: "msgid" is unexpected on line %line.', array('%filename' => $message, '%line' => $lineno)), 'error');
+        _locale_import_message('The translation file %filename contains an error: "msgid" is unexpected on line %line.', $file, $lineno);
         return FALSE;
       }
       $line = trim(substr($line, 5));
       $quoted = _locale_import_parse_quoted($line);
       if ($quoted === FALSE) {
-        drupal_set_message(t('The translation file %filename contains a syntax error on line %line.', array('%filename' => $message, '%line' => $lineno)), 'error');
+        _locale_import_message('The translation file %filename contains a syntax error on line %line.', $file,  $lineno);
         return FALSE;
       }
       $current["msgid"] = $quoted;
@@ -571,11 +580,11 @@ function _locale_import_read_po($file, $mode, $lang) {
     }
     elseif (!strncmp("msgstr[", $line, 7)) {
       if (($context != "MSGID") && ($context != "MSGID_PLURAL") && ($context != "MSGSTR_ARR")) { // Must come after msgid, msgid_plural, or msgstr[]
-        drupal_set_message(t('The translation file %filename contains an error: "msgstr[]" is unexpected on line %line.', array('%filename' => $message, '%line' => $lineno)), 'error');
+        _locale_import_message('The translation file %filename contains an error: "msgstr[]" is unexpected on line %line.', $file, $lineno);
         return FALSE;
       }
       if (strpos($line, "]") === FALSE) {
-        drupal_set_message(t('The translation file %filename contains a syntax error on line %line.', array('%filename' => $message, '%line' => $lineno)), 'error');
+        _locale_import_message('The translation file %filename contains a syntax error on line %line.', $file, $lineno);
         return FALSE;
       }
       $frombracket = strstr($line, "[");
@@ -583,7 +592,7 @@ function _locale_import_read_po($file, $mode, $lang) {
       $line = trim(strstr($line, " "));
       $quoted = _locale_import_parse_quoted($line);
       if ($quoted === FALSE) {
-        drupal_set_message(t('The translation file %filename contains a syntax error on line %line.', array('%filename' => $message, '%line' => $lineno)), 'error');
+        _locale_import_message('The translation file %filename contains a syntax error on line %line.', $file, $lineno);
         return FALSE;
       }
       $current["msgstr"][$plural] = $quoted;
@@ -591,13 +600,13 @@ function _locale_import_read_po($file, $mode, $lang) {
     }
     elseif (!strncmp("msgstr", $line, 6)) {
       if ($context != "MSGID") {   // Should come just after a msgid block
-        drupal_set_message(t('The translation file %filename contains an error: "msgstr" is unexpected on line %line.', array('%filename' => $message, '%line' => $lineno)), 'error');
+        _locale_import_message('The translation file %filename contains an error: "msgstr" is unexpected on line %line.', $file, $lineno);
         return FALSE;
       }
       $line = trim(substr($line, 6));
       $quoted = _locale_import_parse_quoted($line);
       if ($quoted === FALSE) {
-        drupal_set_message(t('The translation file %filename contains a syntax error on line %line.', array('%filename' => $message, '%line' => $lineno)), 'error');
+        _locale_import_message('The translation file %filename contains a syntax error on line %line.', $file, $lineno);
         return FALSE;
       }
       $current["msgstr"] = $quoted;
@@ -606,7 +615,7 @@ function _locale_import_read_po($file, $mode, $lang) {
     elseif ($line != "") {
       $quoted = _locale_import_parse_quoted($line);
       if ($quoted === FALSE) {
-        drupal_set_message(t('The translation file %filename contains a syntax error on line %line.', array('%filename' => $message, '%line' => $lineno)), 'error');
+        _locale_import_message('The translation file %filename contains a syntax error on line %line.', $file, $lineno);
         return FALSE;
       }
       if (($context == "MSGID") || ($context == "MSGID_PLURAL")) {
@@ -619,7 +628,7 @@ function _locale_import_read_po($file, $mode, $lang) {
         $current["msgstr"][$plural] .= $quoted;
       }
       else {
-        drupal_set_message(t('The translation file %filename contains an error: there is an unexpected string on line %line.', array('%filename' => $message, '%line' => $lineno)), 'error');
+        _locale_import_message('The translation file %filename contains an error: there is an unexpected string on line %line.', $file, $lineno);
         return FALSE;
       }
     }
@@ -627,133 +636,174 @@ function _locale_import_read_po($file, $mode, $lang) {
 
   // End of PO file, flush last entry
   if (($context == "MSGSTR") || ($context == "MSGSTR_ARR")) {
-    _locale_import_one_string($current, $mode, $lang);
+    _locale_import_one_string($op, $current, $mode, $lang);
   }
   elseif ($context != "COMMENT") {
-    drupal_set_message(t('The translation file %filename ended unexpectedly at line %line.', array('%filename' => $message, '%line' => $lineno)), 'error');
+    _locale_import_message('The translation file %filename ended unexpectedly at line %line.', $file, $lineno);
     return FALSE;
   }
 
 }
 
 /**
+ * Sets an error message occured during locale file parsing.
+ *
+ * @param $message
+ *   The message to be translated
+ * @param $file
+ *   Drupal file object corresponding to the PO file to import
+ * @param $lineno
+ *   An optional line number argument
+ */
+function _locale_import_message($message, $file, $lineno = NULL) {
+  $vars = array('%filename' => $file->filename);
+  if (isset($lineno)) {
+    $vars['%line'] = $lineno;
+  }
+  $t = function_exists('installer_main') ? 'st' : 't';
+  drupal_set_message($t($message, $vars), 'error');
+}
+
+/**
  * Imports a string into the database
  *
- * @param $value Information about the string
+ * @param $op
+ *   Operation to perform: 'db-store', 'db-report', 'mem-store' or 'mem-report'
+ * @param $value
+ *   Details of the string stored
+ * @param $mode
+ *   Should existing translations be replaced ('overwrite' or 'keep')
+ * @param $lang
+ *   Language to store the string in
  * @author Jacobo Tarrio
  */
-function _locale_import_one_string($value, $mode, $lang = NULL) {
+function _locale_import_one_string($op, $value = NULL, $mode = NULL, $lang = NULL) {
   static $additions = 0;
   static $updates = 0;
   static $headerdone = FALSE;
+  static $strings = array();
 
-  // Report the changes made (called at end of import)
-  if ($value == 'report') {
-    return array($headerdone, $additions, $updates);
-  }
-  // Current string is the header information
-  elseif ($value['msgid'] == '') {
-    $hdr = _locale_import_parse_header($value['msgstr']);
+  switch ($op) {
+    // Return stored strings
+    case 'mem-report':
+      return $strings;
 
-    // Get the plural formula
-    if ($hdr["Plural-Forms"] && $p = _locale_import_parse_plural_forms($hdr["Plural-Forms"], $file->filename)) {
-      list($nplurals, $plural) = $p;
-      db_query("UPDATE {locales_meta} SET plurals = %d, formula = '%s' WHERE locale = '%s'", $nplurals, $plural, $lang);
-    }
-    else {
-      db_query("UPDATE {locales_meta} SET plurals = %d, formula = '%s' WHERE locale = '%s'", 0, '', $lang);
-    }
-    $headerdone = TRUE;
-  }
-  // Some real string to import
-  else {
-    $comments = filter_xss_admin(_locale_import_shorten_comments($value['#']));
+    // Store string in memory (only supports single strings)
+    case 'mem-store':
+      $strings[$value['msgid']] = $value['msgstr'];
+      return;
 
-    // Handle a translation for some plural string
-    if (strpos($value['msgid'], "\0")) {
-      $english = explode("\0", $value['msgid'], 2);
-      $entries = array_keys($value['msgstr']);
-      for ($i = 3; $i <= count($entries); $i++) {
-        $english[] = $english[1];
-      }
-      $translation = array_map('_locale_import_append_plural', $value['msgstr'], $entries);
-      $english = array_map('_locale_import_append_plural', $english, $entries);
-      foreach ($translation as $key => $trans) {
-        if ($key == 0) {
-          $plid = 0;
+    // Called at end of import to inform the user
+    case 'db-report':
+      return array($headerdone, $additions, $updates);
+
+    // Store the string we got in the database
+    case 'db-store':
+      // We got header information
+      if ($value['msgid'] == '') {
+        $hdr = _locale_import_parse_header($value['msgstr']);
+
+        // Get the plural formula
+        if ($hdr["Plural-Forms"] && $p = _locale_import_parse_plural_forms($hdr["Plural-Forms"], $file->filename)) {
+          list($nplurals, $plural) = $p;
+          db_query("UPDATE {locales_meta} SET plurals = %d, formula = '%s' WHERE locale = '%s'", $nplurals, $plural, $lang);
         }
-        $loc = db_fetch_object(db_query("SELECT lid FROM {locales_source} WHERE source = '%s'", $english[$key]));
-        if ($loc->lid) { // a string exists
-          $lid = $loc->lid;
-          // update location field
-          db_query("UPDATE {locales_source} SET location = '%s' WHERE lid = %d", $comments, $lid);
-          $trans2 = db_fetch_object(db_query("SELECT lid, translation, plid, plural FROM {locales_target} WHERE lid = %d AND locale = '%s'", $lid, $lang));
-          if (!$trans2->lid) { // no translation in current language
-            db_query("INSERT INTO {locales_target} (lid, locale, translation, plid, plural) VALUES (%d, '%s', '%s', %d, %d)", $lid, $lang, filter_xss_admin($trans), $plid, $key);
-            $additions++;
-          } // translation exists
-          else if ($mode == 'overwrite' || $trans2->translation == '') {
-            db_query("UPDATE {locales_target} SET translation = '%s', plid = %d, plural = %d WHERE locale = '%s' AND lid = %d", filter_xss_admin($trans), $plid, $key, $lang, $lid);
-            if ($trans2->translation == '') {
+        else {
+          db_query("UPDATE {locales_meta} SET plurals = %d, formula = '%s' WHERE locale = '%s'", 0, '', $lang);
+        }
+        $headerdone = TRUE;
+      }
+
+      // Some real string to import
+      else {
+        $comments = filter_xss_admin(_locale_import_shorten_comments($value['#']));
+
+        // Handle a translation for some plural string
+        if (strpos($value['msgid'], "\0")) {
+          $english = explode("\0", $value['msgid'], 2);
+          $entries = array_keys($value['msgstr']);
+          for ($i = 3; $i <= count($entries); $i++) {
+            $english[] = $english[1];
+          }
+          $translation = array_map('_locale_import_append_plural', $value['msgstr'], $entries);
+          $english = array_map('_locale_import_append_plural', $english, $entries);
+          foreach ($translation as $key => $trans) {
+            if ($key == 0) {
+              $plid = 0;
+            }
+            $loc = db_fetch_object(db_query("SELECT lid FROM {locales_source} WHERE source = '%s'", $english[$key]));
+            if ($loc->lid) { // a string exists
+              $lid = $loc->lid;
+              // update location field
+              db_query("UPDATE {locales_source} SET location = '%s' WHERE lid = %d", $comments, $lid);
+              $trans2 = db_fetch_object(db_query("SELECT lid, translation, plid, plural FROM {locales_target} WHERE lid = %d AND locale = '%s'", $lid, $lang));
+              if (!$trans2->lid) { // no translation in current language
+                db_query("INSERT INTO {locales_target} (lid, locale, translation, plid, plural) VALUES (%d, '%s', '%s', %d, %d)", $lid, $lang, filter_xss_admin($trans), $plid, $key);
+                $additions++;
+              } // translation exists
+              else if ($mode == 'overwrite' || $trans2->translation == '') {
+                db_query("UPDATE {locales_target} SET translation = '%s', plid = %d, plural = %d WHERE locale = '%s' AND lid = %d", filter_xss_admin($trans), $plid, $key, $lang, $lid);
+                if ($trans2->translation == '') {
+                  $additions++;
+                }
+                else {
+                  $updates++;
+                }
+              }
+            }
+            else { // no string
+              db_query("INSERT INTO {locales_source} (location, source) VALUES ('%s', '%s')", $comments, filter_xss_admin($english[$key]));
+              $loc = db_fetch_object(db_query("SELECT lid FROM {locales_source} WHERE source = '%s'", $english[$key]));
+              $lid = $loc->lid;
+              db_query("INSERT INTO {locales_target} (lid, locale, translation, plid, plural) VALUES (%d, '%s', '%s', %d, %d)", $lid, $lang, filter_xss_admin($trans), $plid, $key);
+              if ($trans != '') {
+                $additions++;
+              }
+            }
+            $plid = $lid;
+          }
+        }
+
+        // A simple translation
+        else {
+          $english = $value['msgid'];
+          $translation = $value['msgstr'];
+          $loc = db_fetch_object(db_query("SELECT lid FROM {locales_source} WHERE source = '%s'", $english));
+          if ($loc->lid) { // a string exists
+            $lid = $loc->lid;
+            // update location field
+            db_query("UPDATE {locales_source} SET location = '%s' WHERE source = '%s'", $comments, $english);
+            $trans = db_fetch_object(db_query("SELECT lid, translation FROM {locales_target} WHERE lid = %d AND locale = '%s'", $lid, $lang));
+            if (!$trans->lid) { // no translation in current language
+              db_query("INSERT INTO {locales_target} (lid, locale, translation) VALUES (%d, '%s', '%s')", $lid, $lang, filter_xss_admin($translation));
+              $additions++;
+            } // translation exists
+            else if ($mode == 'overwrite') { //overwrite in any case
+              db_query("UPDATE {locales_target} SET translation = '%s' WHERE locale = '%s' AND lid = %d", filter_xss_admin($translation), $lang, $lid);
+              if ($trans->translation == '') {
+                $additions++;
+              }
+              else {
+                $updates++;
+              }
+            } // overwrite if empty string
+            else if ($trans->translation == '') {
+              db_query("UPDATE {locales_target} SET translation = '%s' WHERE locale = '%s' AND lid = %d", $translation, $lang, $lid);
               $additions++;
             }
-            else {
-              $updates++;
+          }
+          else { // no string
+            db_query("INSERT INTO {locales_source} (location, source) VALUES ('%s', '%s')", $comments, $english);
+            $loc = db_fetch_object(db_query("SELECT lid FROM {locales_source} WHERE source = '%s'", $english));
+            $lid = $loc->lid;
+            db_query("INSERT INTO {locales_target} (lid, locale, translation) VALUES (%d, '%s', '%s')", $lid, $lang, filter_xss_admin($translation));
+            if ($translation != '') {
+              $additions++;
             }
           }
         }
-        else { // no string
-          db_query("INSERT INTO {locales_source} (location, source) VALUES ('%s', '%s')", $comments, filter_xss_admin($english[$key]));
-          $loc = db_fetch_object(db_query("SELECT lid FROM {locales_source} WHERE source = '%s'", $english[$key]));
-          $lid = $loc->lid;
-          db_query("INSERT INTO {locales_target} (lid, locale, translation, plid, plural) VALUES (%d, '%s', '%s', %d, %d)", $lid, $lang, filter_xss_admin($trans), $plid, $key);
-          if ($trans != '') {
-            $additions++;
-          }
-        }
-        $plid = $lid;
       }
-    }
-
-    // A simple translation
-    else {
-      $english = $value['msgid'];
-      $translation = $value['msgstr'];
-      $loc = db_fetch_object(db_query("SELECT lid FROM {locales_source} WHERE source = '%s'", $english));
-      if ($loc->lid) { // a string exists
-        $lid = $loc->lid;
-        // update location field
-        db_query("UPDATE {locales_source} SET location = '%s' WHERE source = '%s'", $comments, $english);
-        $trans = db_fetch_object(db_query("SELECT lid, translation FROM {locales_target} WHERE lid = %d AND locale = '%s'", $lid, $lang));
-        if (!$trans->lid) { // no translation in current language
-          db_query("INSERT INTO {locales_target} (lid, locale, translation) VALUES (%d, '%s', '%s')", $lid, $lang, filter_xss_admin($translation));
-          $additions++;
-        } // translation exists
-        else if ($mode == 'overwrite') { //overwrite in any case
-          db_query("UPDATE {locales_target} SET translation = '%s' WHERE locale = '%s' AND lid = %d", filter_xss_admin($translation), $lang, $lid);
-          if ($trans->translation == '') {
-            $additions++;
-          }
-          else {
-            $updates++;
-          }
-        } // overwrite if empty string
-        else if ($trans->translation == '') {
-          db_query("UPDATE {locales_target} SET translation = '%s' WHERE locale = '%s' AND lid = %d", $translation, $lang, $lid);
-          $additions++;
-        }
-      }
-      else { // no string
-        db_query("INSERT INTO {locales_source} (location, source) VALUES ('%s', '%s')", $comments, $english);
-        $loc = db_fetch_object(db_query("SELECT lid FROM {locales_source} WHERE source = '%s'", $english));
-        $lid = $loc->lid;
-        db_query("INSERT INTO {locales_target} (lid, locale, translation) VALUES (%d, '%s', '%s')", $lid, $lang, filter_xss_admin($translation));
-        if ($translation != '') {
-          $additions++;
-        }
-      }
-    }
-  }
+  } // end of db-store operation
 }
 
 /**
@@ -781,10 +831,13 @@ function _locale_import_parse_header($header) {
 /**
  * Parses a Plural-Forms entry from a Gettext Portable Object file header
  *
- * @param $pluralforms A string containing the Plural-Forms entry
- * @param $filename A string containing the filename
- * @return An array containing the number of plurals and a
- *         formula in PHP for computing the plural form
+ * @param $pluralforms
+ *   A string containing the Plural-Forms entry
+ * @param $filename
+ *   A string containing the filename
+ * @return
+ *   An array containing the number of plurals and a
+ *   formula in PHP for computing the plural form
  * @author Jacobo Tarrio
  */
 function _locale_import_parse_plural_forms($pluralforms, $filename) {

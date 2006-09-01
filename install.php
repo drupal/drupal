@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.11 2006/08/29 09:12:02 drumm Exp $
+// $Id: install.php,v 1.12 2006/09/01 05:38:40 drumm Exp $
 
 require_once './includes/install.inc';
 
@@ -15,7 +15,7 @@ require_once './includes/install.inc';
  *   The installation phase we should proceed to.
  */
 function install_main() {
-  global $profile;
+  global $profile, $install_locale;
   require_once './includes/bootstrap.inc';
   drupal_bootstrap(DRUPAL_BOOTSTRAP_CONFIGURATION);
   require_once './modules/system/system.install';
@@ -53,6 +53,15 @@ function install_main() {
   else {
     install_no_profile_error();
   }
+
+  // Locale selection
+  if (!empty($_GET['locale'])) {
+    $install_locale = preg_replace('/[^a-zA-Z_0-9]/', '', $_GET['locale']);
+  }
+  elseif (($install_locale = install_select_locale($profile)) !== FALSE) {
+    install_goto("install.php?profile=$profile&locale=$install_locale");
+  }
+
   // Load the profile.
   require_once "./profiles/$profile/$profile.profile";
 
@@ -62,7 +71,7 @@ function install_main() {
   }
 
   // Perform actual installation defined in the profile.
-  $modules = drupal_verify_profile($profile);
+  $modules = drupal_verify_profile($profile, $install_locale);
   drupal_install_profile($profile, $modules);
 
   // Warn about settings.php permissions risk
@@ -113,7 +122,7 @@ function install_verify_settings() {
  * Configure and rewrite settings.php.
  */
 function install_change_settings() {
-  global $profile, $db_url, $db_type, $db_prefix;
+  global $profile, $install_locale, $db_url, $db_type, $db_prefix;
 
   $url = parse_url($db_url);
   $db_user = urldecode($url['user']);
@@ -131,7 +140,7 @@ function install_change_settings() {
   if (!drupal_verify_install_file($settings_file, FILE_EXIST|FILE_READABLE|FILE_WRITABLE)) {
     drupal_set_message(st('The @drupal installer requires write permissions to %file during the installation process.', array('@drupal' => drupal_install_profile_name(), '%file' => $settings_file)), 'error');
 
-    drupal_set_title('Drupal database setup');
+    drupal_set_title(st('Drupal database setup'));
     print theme('install_page', '');
     exit;
   }
@@ -140,8 +149,8 @@ function install_change_settings() {
   if ($db_url == 'mysql://username:password@localhost/databasename') {
     $db_user = $db_pass = $db_path = '';
   }
-  $output = drupal_get_form('install_settings_form', $profile, $settings_file, $db_url, $db_type, $db_prefix, $db_user, $db_pass, $db_host, $db_path);
-  drupal_set_title('Database configuration');
+  $output = drupal_get_form('install_settings_form', $profile, $install_locale, $settings_file, $db_url, $db_type, $db_prefix, $db_user, $db_pass, $db_host, $db_path);
+  drupal_set_title(st('Database configuration'));
   print theme('install_page', $output);
   exit;
 }
@@ -150,18 +159,18 @@ function install_change_settings() {
 /**
  * Form API array definition for install_settings.
  */
-function install_settings_form($profile, $settings_file, $db_url, $db_type, $db_prefix, $db_user, $db_pass, $db_host, $db_path) {
+function install_settings_form($profile, $install_locale, $settings_file, $db_url, $db_type, $db_prefix, $db_user, $db_pass, $db_host, $db_path) {
   $db_types = drupal_detect_database_types();
   if (count($db_types) == 0) {
     $form['no_db_types'] = array(
       '#type' => 'markup',
-      '#value' => 'Your web server does not appear to support any common database types. Check with your hosting provider to see if they offer any databases that <a href="http://drupal.org/node/270#database">Drupal supports</a>.',
+      '#value' => st('Your web server does not appear to support any common database types. Check with your hosting provider to see if they offer any databases that <a href="@drupal-databases">Drupal supports</a>.', array('@drupal-databases' => 'http://drupal.org/node/270#database')),
     );
   }
   else {
     $form['basic_options'] = array(
       '#type' => 'fieldset',
-      '#title' => 'Basic options',
+      '#title' => st('Basic options'),
       '#description' => st('<p>To set up your @drupal database, enter the following information.</p>', array('@drupal' => drupal_install_profile_name())),
     );
 
@@ -169,7 +178,7 @@ function install_settings_form($profile, $settings_file, $db_url, $db_type, $db_
       // Database type
       $form['basic_options']['db_type'] = array(
         '#type' => 'radios',
-        '#title' => 'Database type',
+        '#title' => st('Database type'),
         '#required' => TRUE,
         '#options' => drupal_detect_database_types(),
         '#default_value' => $db_type,
@@ -191,7 +200,7 @@ function install_settings_form($profile, $settings_file, $db_url, $db_type, $db_
     // Database name
     $form['basic_options']['db_path'] = array(
       '#type' => 'textfield',
-      '#title' => 'Database name',
+      '#title' => st('Database name'),
       '#default_value' => $db_path,
       '#size' => 45,
       '#maxlength' => 45,
@@ -202,7 +211,7 @@ function install_settings_form($profile, $settings_file, $db_url, $db_type, $db_
     // Database username
     $form['basic_options']['db_user'] = array(
       '#type' => 'textfield',
-      '#title' => 'Database username',
+      '#title' => st('Database username'),
       '#default_value' => $db_user,
       '#size' => 45,
       '#maxlength' => 45,
@@ -212,7 +221,7 @@ function install_settings_form($profile, $settings_file, $db_url, $db_type, $db_
     // Database username
     $form['basic_options']['db_pass'] = array(
       '#type' => 'password',
-      '#title' => 'Database password',
+      '#title' => st('Database password'),
       '#default_value' => $db_pass,
       '#size' => 45,
       '#maxlength' => 45,
@@ -221,27 +230,27 @@ function install_settings_form($profile, $settings_file, $db_url, $db_type, $db_
 
     $form['advanced_options'] = array(
       '#type' => 'fieldset',
-      '#title' => 'Advanced options',
+      '#title' => st('Advanced options'),
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
-      '#description' => 'These options are only necessary for some sites. If you\'re not sure what you should enter here, leave the default settings or check with your hosting provider.'
+      '#description' => st('These options are only necessary for some sites. If you\'re not sure what you should enter here, leave the default settings or check with your hosting provider.')
     );
 
     // Database host
     $form['advanced_options']['db_host'] = array(
       '#type' => 'textfield',
-      '#title' => 'Database host',
+      '#title' => st('Database host'),
       '#default_value' => $db_host,
       '#size' => 45,
       '#maxlength' => 45,
       '#required' => TRUE,
-      '#description' => 'If your database is located on a different server, change this.',
+      '#description' => st('If your database is located on a different server, change this.'),
     );
 
     // Database prefix
     $form['advanced_options']['db_prefix'] = array(
       '#type' => 'textfield',
-      '#title' => 'Database prefix',
+      '#title' => st('Database prefix'),
       '#default_value' => $db_prefix,
       '#size' => 45,
       '#maxlength' => 45,
@@ -251,13 +260,13 @@ function install_settings_form($profile, $settings_file, $db_url, $db_type, $db_
 
     $form['save'] = array(
       '#type' => 'submit',
-      '#value' => 'Save configuration',
+      '#value' => st('Save configuration'),
     );
 
     $form['errors'] = array();
     $form['settings_file'] = array('#type' => 'value', '#value' => $settings_file);
     $form['_db_url'] = array('#type' => 'value');
-    $form['#action'] = "install.php?profile=$profile";
+    $form['#action'] = "install.php?profile=$profile" . ($install_locale ? "&locale=$install_locale" : '');
     $form['#redirect'] = NULL;
   }
   return $form;
@@ -318,7 +327,7 @@ function _install_settings_form_validate($db_prefix, $db_type, $db_user, $db_pas
  * Form API submit for install_settings form.
  */
 function install_settings_form_submit($form_id, $form_values) {
-  global $profile;
+  global $profile, $install_locale;
 
   // Update global settings array and save
   $settings['db_url'] = array(
@@ -332,7 +341,7 @@ function install_settings_form_submit($form_id, $form_values) {
   drupal_rewrite_settings($settings);
 
   // Continue to install profile step
-  install_goto("install.php?profile=$profile");
+  install_goto("install.php?profile=$profile" . ($install_locale ? "&locale=$install_locale" : ''));
 }
 
 /**
@@ -361,7 +370,7 @@ function install_select_profile() {
 
     drupal_maintenance_theme();
 
-    drupal_set_title('Select an installation profile');
+    drupal_set_title(st('Select an installation profile'));
     print theme('install_page', drupal_get_form('install_select_profile_form', $profiles));
     exit;
   }
@@ -388,7 +397,63 @@ function install_select_profile_form($profiles) {
   }
   $form['submit'] =  array(
     '#type' => 'submit',
-    '#value' => 'Save configuration',
+    '#value' => st('Save configuration'),
+  );
+  return $form;
+}
+
+/**
+ * Find all .po files for the current profile and allow admin to select which to use.
+ *
+ * @return
+ *   The selected language.
+ */
+function install_select_locale($profilename) {
+  include_once './includes/file.inc';
+  include_once './includes/form.inc';
+
+  // Collect possible locales, add default
+  $locales = file_scan_directory('./profiles/' . $profilename, '\.po$', array('.', '..', 'CVS'), 0, FALSE);
+  array_unshift($locales, (object) array('name' => 'en'));
+
+  // Don't need to choose locale if only one (English) is available.
+  if (sizeof($locales) == 1) {
+    return FALSE;
+  } else {
+    foreach ($locales as $locale) {
+      if ($_POST['locale'] == $locale->name) {
+        return $locale->name;
+      }
+    }
+
+    drupal_maintenance_theme();
+
+    drupal_set_title(st('Choose your preferred language'));
+    print theme('install_page', drupal_get_form('install_select_locale_form', $locales));
+    exit;
+  }
+}
+
+function install_select_locale_form($locales) {
+  include_once './includes/locale.inc';
+  $languages = _locale_get_iso639_list();
+  foreach ($locales as $locale) {
+    // Try to use verbose locale name
+    $name = $locale->name;
+    if (isset($languages[$name])) {
+      $name = $languages[$name][0] . (isset($languages[$name][1]) ? ' (' . $languages[$name][1] . ')' : '');
+    }
+    $form['locale'][$locale->name] = array(
+      '#type' => 'radio',
+      '#return_value' => $locale->name,
+      '#default_value' => ($locale->name == 'en' ? TRUE : FALSE),
+      '#title' => $name . ($locale->name == 'en' ? ' (built-in)' : ''),
+      '#parents' => array('locale')
+    );
+  }
+  $form['submit'] =  array(
+    '#type' => 'submit',
+    '#value' => st('Save configuration'),
   );
   return $form;
 }
@@ -398,8 +463,8 @@ function install_select_profile_form($profiles) {
  */
 function install_no_profile_error() {
   drupal_maintenance_theme();
-  drupal_set_title('No profiles available');
-  print theme('install_page', '<p>We were unable to find any installer profiles. Installer profiles tell us what modules to enable and what schema to install in the database. A profile is necessary to continue with the installation process.</p>');
+  drupal_set_title(st('No profiles available'));
+  print theme('install_page', st('<p>We were unable to find any installer profiles. Installer profiles tell us what modules to enable and what schema to install in the database. A profile is necessary to continue with the installation process.</p>'));
   exit;
 }
 
@@ -411,8 +476,8 @@ function install_already_done_error() {
   global $base_url;
 
   drupal_maintenance_theme();
-  drupal_set_title('Drupal already installed');
-  print theme('install_page', '<ul><li>To start over, you must empty your existing database.</li><li>To install to a different database, edit the appropriate <em>settings.php</em> file in the <em>sites</em> folder.</li><li>To upgrade an existing installation, proceed to the <a href="'. $base_url .'/update.php">update script</a>.</li></ul>');
+  drupal_set_title(st('Drupal already installed'));
+  print theme('install_page', st('<ul><li>To start over, you must empty your existing database.</li><li>To install to a different database, edit the appropriate <em>settings.php</em> file in the <em>sites</em> folder.</li><li>To upgrade an existing installation, proceed to the <a href="@base-url/update.php">update script</a>.</li></ul>', array('@base-url' => $base_url)));
   exit;
 }
 
@@ -432,7 +497,7 @@ function install_complete($profile) {
   // Build final page.
   drupal_maintenance_theme();
   drupal_set_title(st('@drupal installation complete', array('@drupal' => drupal_install_profile_name())));
-  $output = st('<p>Congratulations, @drupal has been successfully installed.</p>', array('@drupal' => drupal_install_profile_name()));
+  $output .= st('<p>Congratulations, @drupal has been successfully installed.</p>', array('@drupal' => drupal_install_profile_name()));
 
   // Show profile finalization info.
   $function = $profile .'_profile_final';
@@ -442,8 +507,7 @@ function install_complete($profile) {
   }
   else {
     // No more steps
-    $msg = drupal_set_message() ? 'Please review the messages above before continuing on to <a href="%url">your new site</a>.' : 'You may now visit <a href="%url">your new site</a>.';
-    $output .= strtr('<p>'. $msg .'</p>', array('%url' => url('')));
+    $output .= '<p>' . (drupal_set_message() ? st('Please review the messages above before continuing on to <a href="@url">your new site</a>.', array('@url' => url(''))) : st('You may now visit <a href="@url">your new site</a>.', array('@url' => url('')))) . '</p>';
   }
   // Output page.
   print theme('maintenance_page', $output);

@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.16 2006/08/23 08:25:44 drumm Exp $
+// $Id: install.inc,v 1.17 2006/09/01 05:38:40 drumm Exp $
 
 define('SCHEMA_UNINSTALLED', -1);
 define('SCHEMA_INSTALLED', 0);
@@ -253,10 +253,12 @@ function drupal_get_install_files($module_list = array()) {
  *
  * @param profile
  *   Name of profile to verify.
+ * @param locale
+ *   Name of locale used (if any).
  * @return
  *   The list of modules to install.
  */
-function drupal_verify_profile($profile) {
+function drupal_verify_profile($profile, $locale) {
   include_once './includes/file.inc';
 
   $profile_file = "./profiles/$profile/$profile.profile";
@@ -269,7 +271,7 @@ function drupal_verify_profile($profile) {
 
   // Get a list of modules required by this profile.
   $function = $profile .'_profile_modules';
-  $module_list = array_merge(array('system'), $function());
+  $module_list = array_merge(array('system'), $function(), ($locale ? array('locale') : array()));
 
   // Verify that all required modules exist.
   $modules_present = TRUE;
@@ -549,11 +551,25 @@ function install_goto($path) {
  * when the theme system is not available.
  */
 function st($string, $args = array()) {
+  static $locale_strings = NULL;
+  global $profile, $install_locale;
+
+  if (!isset($locale_strings)) {
+    $locale_strings = array();
+    $filename = './profiles/' . $profile . '/' . $install_locale . '.po';
+    if (file_exists($filename)) {
+      require_once './includes/locale.inc';
+      $file = (object) array('filepath' => $filename);
+      _locale_import_read_po('mem-store', $file);
+      $locale_strings = _locale_import_one_string('mem-report');
+    }
+  }
+
   require_once './includes/theme.inc';
   $GLOBALS['theme'] = 'theme';
   // Transform arguments before inserting them
   array_walk($args, '_st');
-  return strtr($string, $args);
+  return strtr((!empty($locale_strings[$string]) ? $locale_strings[$string] : $string), $args);
 }
 
 /**
