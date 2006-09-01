@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.570 2006/09/01 06:12:47 drumm Exp $
+// $Id: common.inc,v 1.571 2006/09/01 06:24:10 drumm Exp $
 
 /**
  * @file
@@ -318,14 +318,8 @@ function drupal_site_offline() {
  */
 function drupal_not_found() {
   drupal_set_header('HTTP/1.0 404 Not Found');
+
   watchdog('page not found', check_plain($_GET['q']), WATCHDOG_WARNING);
-
-  $return = '';
-
-  if (variable_get('site_404_message_display', TRUE)) {
-    $message = variable_get('site_404_message', t('We are sorry, the requested page was not found on this webserver. Either the URL does not exist or the page you were looking has been deleted.'));
-    drupal_set_message(filter_xss_admin($message));
-  }
 
   // Keep old path for reference
   if (!isset($_REQUEST['destination'])) {
@@ -333,7 +327,7 @@ function drupal_not_found() {
   }
 
   $path = drupal_get_normal_path(variable_get('site_404', ''));
-  if (!empty($path) && $path != $_GET['q']) {
+  if ($path && $path != $_GET['q']) {
     menu_set_active_item($path);
     $return = menu_execute_active_handler();
   }
@@ -342,9 +336,8 @@ function drupal_not_found() {
     menu_set_active_item('');
   }
 
-  if (empty($return) || $return == MENU_NOT_FOUND || $return == MENU_ACCESS_DENIED) {
-    drupal_set_title(t('404 - File not found'));
-    $return = '&nbsp;';
+  if (empty($return)) {
+    drupal_set_title(t('Page not found'));
   }
   // To conserve CPU and bandwidth, omit the blocks
   print theme('page', $return, FALSE);
@@ -357,20 +350,13 @@ function drupal_access_denied() {
   drupal_set_header('HTTP/1.0 403 Forbidden');
   watchdog('access denied', check_plain($_GET['q']), WATCHDOG_WARNING);
 
-  $return = '';
-
-  if (variable_get('site_403_message_display', TRUE)) {
-    $message = variable_get('site_403_message', t('We are sorry, you do not have access to this page. If you are not already logged in, please try to login and then visit this page again. If you think should be able to access this page, please contact site admins.'));
-    drupal_set_message(filter_xss_admin($message));
-  }
-
-  // Keep old path for reference
+// Keep old path for reference
   if (!isset($_REQUEST['destination'])) {
     $_REQUEST['destination'] = $_GET['q'];
   }
 
   $path = drupal_get_normal_path(variable_get('site_403', ''));
-  if (!empty($path) && $path != $_GET['q']) {
+  if ($path && $path != $_GET['q']) {
     menu_set_active_item($path);
     $return = menu_execute_active_handler();
   }
@@ -379,9 +365,9 @@ function drupal_access_denied() {
     menu_set_active_item('');
   }
 
-  if (empty($return) || $return == MENU_NOT_FOUND || $return == MENU_ACCESS_DENIED) {
-    drupal_set_title(t('403 - Access denied'));
-    $return = '&nbsp;';
+  if (empty($return)) {
+    drupal_set_title(t('Access denied'));
+    $return = t('You are not authorized to access this page.');
   }
   print theme('page', $return);
 }
