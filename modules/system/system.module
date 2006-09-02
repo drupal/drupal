@@ -6,7 +6,7 @@
  * Configuration system that lets administrators modify the workings of the site.
  */
 
-define('VERSION', '4.8.0 dev');
+define('VERSION', '5.0.0 dev');
 
 /**
  * Implementation of hook_help().
