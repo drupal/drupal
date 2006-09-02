@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.161 2006/09/01 08:44:53 unconed Exp $
+// $Id: CHANGELOG.txt,v 1.162 2006/09/02 17:10:51 dries Exp $
 
 Drupal x.x.x, xxxx-xx-xx (development version)
 ------------------------
@@ -22,6 +22,7 @@ Drupal x.x.x, xxxx-xx-xx (development version)
     * improved configurability of the contact forms.
     * reorganized the settings pages.
     * made it easy to investigate popopular search terms
+- integrated urlfilter.module in filter.module
 - block system:
     * extended the block visibility settings with a role specific settings.
     * made it possible to customize all block titles.
