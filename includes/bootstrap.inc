@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.122 2006/09/01 08:44:53 unconed Exp $
+// $Id: bootstrap.inc,v 1.123 2006/09/03 07:08:24 drumm Exp $
 
 /**
  * @file
@@ -140,7 +140,7 @@ function conf_path() {
 function drupal_unset_globals() {
   if (ini_get('register_globals')) {
     $allowed = array('_ENV' => 1, '_GET' => 1, '_POST' => 1, '_COOKIE' => 1, '_FILES' => 1, '_SERVER' => 1, '_REQUEST' => 1, 'access_check' => 1, 'GLOBALS' => 1);
-    foreach ($GLOBALS as $key) {
+    foreach ($GLOBALS as $key => $value) {
       if (!isset($allowed[$key])) {
         unset($GLOBALS[$key]);
       }
