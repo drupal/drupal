@@ -86,14 +86,14 @@ function forum_menu($may_cache) {
     if ($term) {
       $items[] = array('path' => 'admin/content/forum/edit/container',
         'title' => t('edit container'),
-        'callback' => 'forum_form_container',
-        'callback arguments' => array((array)$term),
+        'callback' => 'drupal_get_form',
+        'callback arguments' => array('forum_form_container', (array)$term),
         'access' => user_access('administer forums'),
         'type' => MENU_CALLBACK);
       $items[] = array('path' => 'admin/content/forum/edit/forum',
         'title' => t('edit forum'),
-        'callback' => 'forum_form_forum',
-        'callback arguments' => array((array)$term),
+        'callback' => 'drupal_get_form',
+        'callback arguments' => array('forum_form_forum', (array)$term),
         'access' => user_access('administer forums'),
         'type' => MENU_CALLBACK);
     }
