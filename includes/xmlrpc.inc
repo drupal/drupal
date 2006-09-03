@@ -1,5 +1,5 @@
 <?php
-// $Id: xmlrpc.inc,v 1.37 2006/07/13 18:24:23 dries Exp $
+// $Id: xmlrpc.inc,v 1.38 2006/09/03 08:21:18 dries Exp $
 
 /*
   Drupal XML-RPC library. Based on the IXR - The Incutio XML-RPC Library - (c) Incutio Ltd 2002-2005
@@ -418,7 +418,7 @@ function xmlrpc_base64_get_xml($xmlrpc_base64) {
 
 /**
  * Execute an XML remote procedural call. This is private function; call xmlrpc()
- * in common.inc instead of this functino.
+ * in common.inc instead of this function.
  *
  * @return
  *   A $xmlrpc_message object if the call succeeded; FALSE if the call failed
