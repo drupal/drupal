@@ -418,7 +418,7 @@ function xmlrpc_base64_get_xml($xmlrpc_base64) {
 
 /**
  * Execute an XML remote procedural call. This is private function; call xmlrpc()
- * in common.inc instead of this functino.
+ * in common.inc instead of this function.
  *
  * @return
  *   A $xmlrpc_message object if the call succeeded; FALSE if the call failed
