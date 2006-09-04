@@ -806,10 +806,6 @@ function node_link($type, $node = 0, $main = 0) {
   $links = array();
 
   if ($type == 'node') {
-    if (array_key_exists('links', $node)) {
-      $links = $node->links;
-    }
-
     if ($main == 1 && $node->teaser && $node->readmore) {
       $links[] = l(t('read more'), "node/$node->nid", array('title' => t('Read the rest of this posting.'), 'class' => 'read-more'));
     }
