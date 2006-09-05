@@ -1,4 +1,4 @@
-/* $Id: system.css,v 1.9 2006/09/01 09:23:45 unconed Exp $ */
+/* $Id: system.css,v 1.10 2006/09/05 03:50:57 unconed Exp $ */
 
 /*
 ** HTML elements
@@ -31,9 +31,6 @@ thead th {
 */
 .breadcrumb {
   padding-bottom: .5em
-}
-.container-inline div {
-  display: inline;
 }
 .error {
   color: #f00;
@@ -150,6 +147,13 @@ dl.multiselect dt, dl.multiselect dd {
 dl.multiselect .form-item {
   height: 1.75em;
   margin: 0;
+}
+
+/*
+** Inline items (need to override above)
+*/
+.container-inline div, .container-inline label {
+  display: inline;
 }
 
 /*

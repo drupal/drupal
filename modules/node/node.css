@@ -1,4 +1,4 @@
-/* $Id: node.css,v 1.1 2006/08/14 07:14:49 drumm Exp $ */
+/* $Id: node.css,v 1.2 2006/09/05 03:50:56 unconed Exp $ */
 
 .node-unpublished, .comment-unpublished {
   background-color: #fff4f4;
@@ -23,6 +23,10 @@ td.revision-current {
 .node-form .form-text {
   display: block;
   width: 95%;
+}
+.node-form .container-inline .form-text {
+  display: inline;
+  width: auto;
 }
 .node-form .standard {
   clear: both;
