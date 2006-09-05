@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.91 2006/09/05 02:15:04 drumm Exp $
+// $Id: locale.inc,v 1.92 2006/09/05 11:40:44 dries Exp $
 
 /**
  * @file
@@ -1119,13 +1119,10 @@ function _locale_export_po($language) {
     if ($child->source != '') {
       $parent[$child->lid]['comment'] = $child->location;
       $parent[$child->lid]['msgid'] = $child->source;
+      $parent[$child->lid]['translation'] = $child->translation;
       if ($child->plid) {
-        $parent[$child->lid][$child->plid]['plural'] = $child->lid;
-        $parent[$child->lid][$child->plid]['translation'] = $child->translation;
-        $parent[$child->lid][$child->plid]['msgid'] = $child->source;
-      }
-      else {
-        $parent[$child->lid]['translation'] = $child->translation;
+        $parent[$child->lid]['child'] = 1;
+        $parent[$child->plid]['plural'] = $child->lid;
       }
     }
   }
@@ -1147,7 +1144,7 @@ function _locale_export_po($language) {
     $header .= "\"Content-Type: text/plain; charset=utf-8\\n\"\n";
     $header .= "\"Content-Transfer-Encoding: 8bit\\n\"\n";
     if ($meta->formula && $meta->plurals) {
-      $header .= "\"Plural-Forms: nplurals=". $meta->plurals ."; plural=". strtr($meta->formula, '$', '') .";\\n\"\n";
+      $header .= "\"Plural-Forms: nplurals=". $meta->plurals ."; plural=". strtr($meta->formula, array('$' => '')) .";\\n\"\n";
     }
     $header .= "\n";
     watchdog('locale', t('Exported %locale translation file: %filename.', array('%locale' => $meta->name, '%filename' => $filename)));
@@ -1181,24 +1178,32 @@ function _locale_export_po($language) {
   print $header;
 
   foreach ($parent as $lid => $message) {
-    if (!isset($done[$lid])) {
+    if (!isset($message['child'])) {
       if ($message['comment']) {
         print '#: '. $message['comment'] ."\n";
       }
       print 'msgid '. _locale_export_print($message['msgid']);
-      if (isset($message[1]['plural'])) {
-        print 'msgid_plural '. _locale_export_print($message[1]['msgid']);
+      if ($plural = $message['plural']) {
+        print 'msgid_plural '. _locale_export_print($parent[$plural]['msgid']);
         if ($language) {
+          $translation = $message['translation'];
           for ($i = 0; $i < $meta->plurals; $i++) {
-            print 'msgstr['. $i .'] '. _locale_export_print(_locale_export_remove_plural($message[${i}]['translation']));
-            $done[$message[${i}]['plural']] = 1;
+            print 'msgstr['. $i .'] '. _locale_export_print($translation);
+            if ($plural) {
+              $translation = $parent[$plural]['translation'];
+              if ($i > 1) {
+                $translation = _locale_export_remove_plural($translation);
+              }
+              $plural = $parent[$plural]['plural'];
+            }
+            else {
+              $translation = '';
+            }
           }
         }
         else {
           print 'msgstr[0] ""'. "\n";
           print 'msgstr[1] ""'. "\n";
-          $done[$message[0]['plural']] = 1;
-          $done[$message[1]['plural']] = 1;
         }
       }
       else {
