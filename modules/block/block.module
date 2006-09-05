@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.226 2006/08/31 20:22:34 dries Exp $
+// $Id: block.module,v 1.227 2006/09/05 02:36:02 drumm Exp $
 
 /**
  * @file
@@ -565,6 +565,9 @@ function block_box_form($edit = array()) {
     '#description' => t('The content of the block as shown to the user.'),
     '#weight' => -17,
   );
+  if (!isset($edit['format'])) {
+    $edit['format'] = FILTER_FORMAT_DEFAULT;
+  }
   $form['body_filter']['format'] = filter_form($edit['format'], -16);
   $form['submit'] = array('#type' => 'submit', '#value' => t('Save block'));
 
