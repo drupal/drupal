@@ -631,7 +631,9 @@ function drupal_check_profile($profile) {
   $requirements = array();
   foreach ($installs as $install) {
     require_once $install->filename;
-    $requirements = array_merge($requirements, module_invoke($install->name, 'requirements', 'install'));
+    if (module_hook($install->name, 'requirements')) {
+      $requirements = array_merge($requirements, module_invoke($install->name, 'requirements', 'install'));
+    }
   }
   return $requirements;
 }
