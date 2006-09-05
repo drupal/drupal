@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.672 2006/09/05 10:14:53 dries Exp $
+// $Id: user.module,v 1.673 2006/09/05 11:37:08 dries Exp $
 
 /**
  * @file
@@ -905,7 +905,7 @@ function user_login_validate($form_id, $form_values) {
       $user = user_authenticate($form_values['name'], trim($form_values['pass']));
 
       if (!$user->uid) {
-        form_set_error('login', t('Sorry. Unrecognized username or password.') .' '. l(t('Have you forgotten your password?'), 'user/password'));
+        form_set_error('login', t('Sorry, unrecognized username or password.') .' '. l(t('Have you forgotten your password?'), 'user/password'));
         watchdog('user', t('Login attempt failed for %user.', array('%user' => $form_values['name'])));
       }
     }
@@ -1004,14 +1004,10 @@ function user_pass() {
 
   // Display form:
   $form['name'] = array('#type' => 'textfield',
-    '#title' => t('Username'),
+    '#title' => t('Username or e-mail address'),
     '#size' => 30,
     '#maxlength' => 60,
-  );
-  $form['mail'] = array('#type' => 'textfield',
-    '#title' => t('E-mail address'),
-    '#size' => 30,
-    '#maxlength' => 64,
+    '#required' => TRUE,
   );
   $form['submit'] = array('#type' => 'submit',
     '#value' => t('E-mail new password'),
@@ -1020,19 +1016,17 @@ function user_pass() {
   return $form;
 }
 
-function user_pass_validate() {
-  global $form_values;
-
+function user_pass_validate($form_id, $form_values) {
   $name = $form_values['name'];
-  $mail = $form_values['mail'];
-  if ($name && !($form_values['account'] = user_load(array('name' => $name, 'status' => 1)))) {
-    form_set_error('name', t('Sorry. The username %name is not recognized.', array('%name' => $name)));
+  $account = user_load(array('mail' => $name, 'status' => 1));
+  if (!$account) {
+    $account = user_load(array('name' => $name, 'status' => 1));
   }
-  else if ($mail && !($form_values['account'] = user_load(array('mail' => $mail, 'status' => 1)))) {
-    form_set_error('mail', t('Sorry. The e-mail address %email is not recognized.', array('%email' => $mail)));
+  if ($account->uid) {
+    form_set_value(array('#parents' => array('account')), $account);
   }
-  else if (!$mail && !$name) {
-    form_set_error('password', t('You must provide either a username or e-mail address.'));
+  else {
+    form_set_error('name', t('Sorry, %name is not recognized as a user name or an email address.', array('%name' => $name)));
   }
 }
 
@@ -1057,12 +1051,6 @@ function user_pass_submit($form_id, $form_values) {
     drupal_set_message(t('Unable to send mail. Please contact the site admin.'));
   }
   return 'user';
-}
-
-function theme_user_pass($form) {
-  $output = '<p>'. t('Enter your username <strong><em>or</em></strong> your e-mail address.') .'</p>';
-  $output .= drupal_render($form);
-  return $output;
 }
 
 /**
