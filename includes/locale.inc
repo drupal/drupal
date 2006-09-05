@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.90 2006/09/01 05:38:40 drumm Exp $
+// $Id: locale.inc,v 1.91 2006/09/05 02:15:04 drumm Exp $
 
 /**
  * @file
@@ -660,7 +660,7 @@ function _locale_import_message($message, $file, $lineno = NULL) {
   if (isset($lineno)) {
     $vars['%line'] = $lineno;
   }
-  $t = function_exists('installer_main') ? 'st' : 't';
+  $t = get_t();
   drupal_set_message($t($message, $vars), 'error');
 }
 
