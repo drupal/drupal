@@ -921,7 +921,7 @@ function theme_forum_display($forums, $topics, $parents, $tid, $sortby, $forum_p
       $output .= '<li>'. t('You are not allowed to post a new forum topic.') .'</li>';
     }
     else {
-      $output .= '<li>'. t('<a href="@login">Login</a> to post a new forum topic.', array('@login' => url('user/login'))) .'</li>';
+      $output .= '<li>'. t('<a href="@login">Login</a> to post a new forum topic.', array('@login' => url('user/login', drupal_get_destination()))) .'</li>';
     }
     $output .= '</ul>';
 
