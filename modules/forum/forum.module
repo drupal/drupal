@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.359 2006/09/03 14:42:12 dries Exp $
+// $Id: forum.module,v 1.360 2006/09/05 02:48:33 drumm Exp $
 
 /**
  * @file
@@ -921,7 +921,7 @@ function theme_forum_display($forums, $topics, $parents, $tid, $sortby, $forum_p
       $output .= '<li>'. t('You are not allowed to post a new forum topic.') .'</li>';
     }
     else {
-      $output .= '<li>'. t('<a href="@login">Login</a> to post a new forum topic.', array('@login' => url('user/login'))) .'</li>';
+      $output .= '<li>'. t('<a href="@login">Login</a> to post a new forum topic.', array('@login' => url('user/login', drupal_get_destination()))) .'</li>';
     }
     $output .= '</ul>';
 
