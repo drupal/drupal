@@ -19,16 +19,18 @@
  * Report database status.
  */
 function db_status_report() {
+  global $active_db;
+
   $t = get_t();
 
-  $info = mysqli_get_server_info($connection);
+  $info = mysqli_get_server_info($active_db);
   $form['mysql'] = array(
     'title' => $t('MySQL database'),
     'value' => ($phase == 'runtime') ? l($info, 'admin/logs/status/sql') : $info,
   );
 
   // Extract version number
-  list($version) = explode('-', mysqli_get_server_info($connection)); 
+  list($version) = explode('-', $info);
   if (version_compare($version, DRUPAL_MINIMUM_MYSQL) < 0) {
     $form['mysql']['severity'] = REQUIREMENT_ERROR;
     $form['mysql']['description'] = $t('Your MySQL Server is too old. Drupal requires at least MySQL %version.', array('%version' => DRUPAL_MINIMUM_MYSQL));
