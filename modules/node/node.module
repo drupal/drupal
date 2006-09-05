@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.696 2006/09/01 07:16:09 drumm Exp $
+// $Id: node.module,v 1.697 2006/09/05 02:43:18 drumm Exp $
 
 /**
  * @file
@@ -968,10 +968,6 @@ function node_link($type, $node = NULL, $teaser = FALSE) {
   $links = array();
 
   if ($type == 'node') {
-    if (array_key_exists('links', $node)) {
-      $links = $node->links;
-    }
-
     if ($teaser == 1 && $node->teaser && $node->readmore) {
       $links['node_read_more'] = array(
         'title' => t('read more'),
