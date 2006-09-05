@@ -391,7 +391,7 @@ function theme_page($content) {
   $output .= "\n<!-- end content -->\n";
 
   $output .= '</td></tr></table>';
-  $output .= theme_closure();
+  $output .= theme('closure');
   $output .= '</body></html>';
 
   return $output;
