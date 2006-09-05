@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.671 2006/09/05 02:30:17 drumm Exp $
+// $Id: user.module,v 1.672 2006/09/05 10:14:53 dries Exp $
 
 /**
  * @file
@@ -1935,8 +1935,6 @@ function user_admin_account() {
     return user_multiple_delete_confirm();
   }
 
-  $output = user_filter_form();
-
   $filter = user_build_filter_query();
 
   $header = array(
@@ -2241,7 +2239,8 @@ function user_admin($callback_arg = '') {
       $output = drupal_get_form('user_register');
       break;
     default:
-      $output = drupal_get_form('user_admin_account');
+      $output .= drupal_get_form('user_filter_form');
+      $output .= drupal_get_form('user_admin_account');
   }
   return $output;
 }
