@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.364 2006/09/02 08:02:05 dries Exp $
+// $Id: system.module,v 1.365 2006/09/05 10:06:03 dries Exp $
 
 /**
  * @file
@@ -1257,20 +1257,22 @@ function system_modules() {
 function theme_system_modules($form) {
   foreach (element_children($form['name']) as $key) {
     $row = array();
-    $row[] = drupal_render($form['name'][$key]);
-    $row[] = drupal_render($form['description'][$key]);
     $row[] = array('data' => drupal_render($form['status'][$key]), 'align' => 'center');
 
     if (module_exists('throttle')) {
       $row[] = array('data' => drupal_render($form['throttle'][$key]), 'align' => 'center');
     }
+    $row[] = drupal_render($form['name'][$key]);
+    $row[] = drupal_render($form['description'][$key]);
     $rows[] = $row;
   }
 
-  $header = array(t('Name'), t('Description'), t('Enabled'));
+  $header = array(t('Enabled'));
   if (module_exists('throttle')) {
     $header[] = t('Throttle');
   }
+  $header[] = t('Name');
+  $header[] = t('Description');
 
   $output = theme('table', $header, $rows);
   $output .= drupal_render($form);
