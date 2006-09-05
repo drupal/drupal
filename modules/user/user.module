@@ -1286,7 +1286,7 @@ function user_edit_form($uid, $edit, $register = FALSE) {
     '#title' => t('E-mail address'),
     '#default_value' => $edit['mail'],
     '#maxlength' => 64,
-    '#description' => t('Insert a valid e-mail address. All e-mails from the system will be sent to this address. The e-mail address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by e-mail.'),
+    '#description' => t('A valid e-mail address. All e-mails from the system will be sent to this address. The e-mail address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by e-mail.'),
     '#required' => TRUE,
   );
   if (!$register) {
