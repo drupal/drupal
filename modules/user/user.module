@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.673 2006/09/05 11:37:08 dries Exp $
+// $Id: user.module,v 1.674 2006/09/06 11:16:39 dries Exp $
 
 /**
  * @file
@@ -581,7 +581,7 @@ function user_block($op = 'list', $delta = 0, $edit = array()) {
           if ($authenticated_count && $max_users) {
             $items = array();
 
-            while ($max_users-- && $account = db_fetch_object($users)) {
+            while ($max_users-- && $account = db_fetch_object($authenticated_users)) {
               $items[] = $account;
             }
 
