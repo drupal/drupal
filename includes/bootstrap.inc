@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.123 2006/09/03 07:08:24 drumm Exp $
+// $Id: bootstrap.inc,v 1.124 2006/09/06 06:43:03 drumm Exp $
 
 /**
  * @file
@@ -60,7 +60,10 @@ function timer_read($name) {
   $stop = (float)$usec + (float)$sec;
   $diff = round(($stop - $timers[$name]['start']) * 1000, 2);
 
-  return $timers[$name]['time'] + $diff;
+  if (isset($timers[$name]['time'])) {
+    $diff += $timers[$name]['time'];
+  }
+  return $diff;
 }
 
 /**
