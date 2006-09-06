@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.304 2006/09/01 03:30:16 drumm Exp $
+// $Id: aggregator.module,v 1.305 2006/09/06 06:53:39 drumm Exp $
 
 /**
  * @file
@@ -1368,7 +1368,7 @@ function theme_aggregator_page_item($item) {
     $source_date = t('%ago ago', array('%ago' => format_interval(time() - $item->timestamp)));
   }
   else {
-    $source_date = format_date($item->timestamp, 'custom', variable_get('date_format_medium', 'D, Y-m-d H:i'));
+    $source_date = format_date($item->timestamp, 'custom', variable_get('date_format_medium', 'D, m/d/Y - H:i'));
   }
 
   $output .= "<div class=\"feed-item\">\n";

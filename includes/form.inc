@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.148 2006/08/31 14:59:28 dries Exp $
+// $Id: form.inc,v 1.149 2006/09/06 06:53:38 drumm Exp $
 
 /**
  * @defgroup form Form generation
@@ -1036,7 +1036,7 @@ function expand_date($element) {
   $element['#tree'] = TRUE;
 
   // Determine the order of day, month, year in the site's chosen date format.
-  $format = variable_get('date_format_short', 'm/d/Y');
+  $format = variable_get('date_format_short', 'm/d/Y - H:i');
   $sort = array();
   $sort['day'] = max(strpos($format, 'd'), strpos($format, 'j'));
   $sort['month'] = max(strpos($format, 'm'), strpos($format, 'M'));
