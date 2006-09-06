@@ -60,7 +60,10 @@ function timer_read($name) {
   $stop = (float)$usec + (float)$sec;
   $diff = round(($stop - $timers[$name]['start']) * 1000, 2);
 
-  return $timers[$name]['time'] + $diff;
+  if (isset($timers[$name]['time'])) {
+    $diff += $timers[$name]['time'];
+  }
+  return $diff;
 }
 
 /**
