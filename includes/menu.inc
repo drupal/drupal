@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.134 2006/08/30 08:46:16 dries Exp $
+// $Id: menu.inc,v 1.135 2006/09/06 08:32:51 drumm Exp $
 
 /**
  * @file
@@ -534,7 +534,10 @@ function menu_get_active_breadcrumb() {
     return array();
   }
 
-  $links[] = l(t('Home'), variable_get('site_frontpage', 'node'));
+  // We do *not* want to use "variable_get('site_frontpage', 'node)" here
+  // as that will create the link '/node'. This is unsightly and creates
+  // a second URL for the hompeage ('/' *and* '/node').
+  $links[] = l(t('Home'), '');
 
   $trail = _menu_get_active_trail();
   foreach ($trail as $mid) {
