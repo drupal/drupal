@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.13 2006/09/01 08:44:53 unconed Exp $
+// $Id: install.php,v 1.14 2006/09/06 07:36:17 dries Exp $
 
 require_once './includes/install.inc';
 
@@ -227,7 +227,6 @@ function install_settings_form($profile, $install_locale, $settings_file, $db_ur
       '#default_value' => $db_pass,
       '#size' => 45,
       '#maxlength' => 45,
-      '#required' => TRUE,
     );
 
     $form['advanced_options'] = array(
@@ -256,7 +255,6 @@ function install_settings_form($profile, $install_locale, $settings_file, $db_ur
       '#default_value' => $db_prefix,
       '#size' => 45,
       '#maxlength' => 45,
-      '#required' => FALSE,
       '#description' => st('If more than one @drupal web site will be sharing this database, enter a table prefix for your @drupal site here.', array('@drupal' => drupal_install_profile_name())),
     );
 
