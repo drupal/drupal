@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.697 2006/09/05 02:43:18 drumm Exp $
+// $Id: node.module,v 1.698 2006/09/06 07:27:41 drumm Exp $
 
 /**
  * @file
@@ -2012,8 +2012,8 @@ function node_add($type = NULL) {
     // Initialize settings:
     $node = array('uid' => $user->uid, 'name' => $user->name, 'type' => $type);
 
-    $output = drupal_get_form($type .'_node_form', $node);
     drupal_set_title(t('Submit @name', array('@name' => $types[$type]->name)));
+    $output = drupal_get_form($type .'_node_form', $node);
   }
   else {
     // If no (valid) node type has been provided, display a node type overview.
