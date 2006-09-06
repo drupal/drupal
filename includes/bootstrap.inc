@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.125 2006/09/06 07:53:01 dries Exp $
+// $Id: bootstrap.inc,v 1.126 2006/09/06 08:51:53 drumm Exp $
 
 /**
  * @file
@@ -631,7 +631,7 @@ function drupal_is_denied($type, $mask) {
   // (allowed).
   // The use of ORDER BY / LIMIT is more efficient than "MAX(status) = 0"
   // in PostgreSQL <= 8.0.
-  return (bool) db_result(db_query_range("SELECT NOT(status) FROM {access} WHERE type = '%s' AND LOWER('%s') LIKE LOWER(mask) ORDER BY status DESC", $type, $mask, 0, 1));
+  return (bool) db_result(db_query_range("SELECT (status = 0) FROM {access} WHERE type = '%s' AND LOWER('%s') LIKE LOWER(mask) ORDER BY status DESC", $type, $mask, 0, 1));
 }
 
 /**
