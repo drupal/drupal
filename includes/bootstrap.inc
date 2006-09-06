@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.124 2006/09/06 06:43:03 drumm Exp $
+// $Id: bootstrap.inc,v 1.125 2006/09/06 07:53:01 dries Exp $
 
 /**
  * @file
@@ -20,10 +20,11 @@ define('WATCHDOG_ERROR', 2);
 define('DRUPAL_BOOTSTRAP_CONFIGURATION', 0);
 define('DRUPAL_BOOTSTRAP_EARLY_PAGE_CACHE', 1);
 define('DRUPAL_BOOTSTRAP_DATABASE', 2);
-define('DRUPAL_BOOTSTRAP_SESSION', 3);
-define('DRUPAL_BOOTSTRAP_LATE_PAGE_CACHE', 4);
-define('DRUPAL_BOOTSTRAP_PATH', 5);
-define('DRUPAL_BOOTSTRAP_FULL', 6);
+define('DRUPAL_BOOTSTRAP_ACCESS', 3);
+define('DRUPAL_BOOTSTRAP_SESSION', 4);
+define('DRUPAL_BOOTSTRAP_LATE_PAGE_CACHE', 5);
+define('DRUPAL_BOOTSTRAP_PATH', 6);
+define('DRUPAL_BOOTSTRAP_FULL', 7);
 
 // These values should match the 'role' table
 define('DRUPAL_ANONYMOUS_RID', 1);
@@ -666,7 +667,7 @@ function drupal_anonymous_user($session = '') {
  *     DRUPAL_BOOTSTRAP_FULL: Drupal is fully loaded, validate and fix input data.
  */
 function drupal_bootstrap($phase) {
-  static $phases = array(DRUPAL_BOOTSTRAP_CONFIGURATION, DRUPAL_BOOTSTRAP_EARLY_PAGE_CACHE, DRUPAL_BOOTSTRAP_DATABASE, DRUPAL_BOOTSTRAP_SESSION, DRUPAL_BOOTSTRAP_LATE_PAGE_CACHE, DRUPAL_BOOTSTRAP_PATH, DRUPAL_BOOTSTRAP_FULL);
+  static $phases = array(DRUPAL_BOOTSTRAP_CONFIGURATION, DRUPAL_BOOTSTRAP_EARLY_PAGE_CACHE, DRUPAL_BOOTSTRAP_DATABASE, DRUPAL_BOOTSTRAP_ACCESS, DRUPAL_BOOTSTRAP_SESSION, DRUPAL_BOOTSTRAP_LATE_PAGE_CACHE, DRUPAL_BOOTSTRAP_PATH, DRUPAL_BOOTSTRAP_FULL);
 
   while (!is_null($current_phase = array_shift($phases))) {
     _drupal_bootstrap($current_phase);
@@ -697,6 +698,15 @@ function _drupal_bootstrap($phase) {
       db_set_active();
       break;
 
+    case DRUPAL_BOOTSTRAP_ACCESS:
+      // Deny access to hosts which were banned - t() is not yet available.
+      if (drupal_is_denied('host', $_SERVER['REMOTE_ADDR'])) {
+        header('HTTP/1.0 403 Forbidden');
+        print 'Sorry, '. $_SERVER['REMOTE_ADDR']. ' has been banned.';
+        exit();
+      }
+      break;
+
     case DRUPAL_BOOTSTRAP_SESSION:
       require_once './includes/session.inc';
       session_set_save_handler("sess_open", "sess_close", "sess_read", "sess_write", "sess_destroy", "sess_gc");
@@ -708,13 +718,6 @@ function _drupal_bootstrap($phase) {
       $conf = variable_init(isset($conf) ? $conf : array());
 
       _drupal_cache_init($phase);
-
-      // deny access to hosts which were banned. t() is not yet available.
-      if (drupal_is_denied('host', $_SERVER['REMOTE_ADDR'])) {
-        header('HTTP/1.0 403 Forbidden');
-        print 'Sorry, '. $_SERVER['REMOTE_ADDR']. ' has been banned.';
-        exit();
-      }
 
       // Start a page timer:
       timer_start('page');
