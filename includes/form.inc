@@ -1036,7 +1036,7 @@ function expand_date($element) {
   $element['#tree'] = TRUE;
 
   // Determine the order of day, month, year in the site's chosen date format.
-  $format = variable_get('date_format_short', 'm/d/Y');
+  $format = variable_get('date_format_short', 'm/d/Y - H:i');
   $sort = array();
   $sort['day'] = max(strpos($format, 'd'), strpos($format, 'j'));
   $sort['month'] = max(strpos($format, 'm'), strpos($format, 'M'));
