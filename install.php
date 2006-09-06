@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.14 2006/09/06 07:36:17 dries Exp $
+// $Id: install.php,v 1.15 2006/09/06 07:46:25 dries Exp $
 
 require_once './includes/install.inc';
 
@@ -109,10 +109,11 @@ function install_verify_settings() {
     $db_user = urldecode($url['user']);
     $db_pass = urldecode($url['pass']);
     $db_host = urldecode($url['host']);
+    $db_port = urldecode($url['port']);
     $db_path = ltrim(urldecode($url['path']), '/');
     $settings_file = './'. conf_path() .'/settings.php';
 
-    _install_settings_form_validate($db_prefix, $db_type, $db_user, $db_pass, $db_host, $db_path, $settings_file);
+    _install_settings_form_validate($db_prefix, $db_type, $db_user, $db_pass, $db_host, $db_port, $db_path, $settings_file);
     if (!form_get_errors()) {
       return TRUE;
     }
@@ -130,6 +131,7 @@ function install_change_settings() {
   $db_user = urldecode($url['user']);
   $db_pass = urldecode($url['pass']);
   $db_host = urldecode($url['host']);
+  $db_port = urldecode($url['port']);
   $db_path = ltrim(urldecode($url['path']), '/');
   $settings_file = './'. conf_path() .'/settings.php';
 
@@ -151,7 +153,7 @@ function install_change_settings() {
   if ($db_url == 'mysql://username:password@localhost/databasename') {
     $db_user = $db_pass = $db_path = '';
   }
-  $output = drupal_get_form('install_settings_form', $profile, $install_locale, $settings_file, $db_url, $db_type, $db_prefix, $db_user, $db_pass, $db_host, $db_path);
+  $output = drupal_get_form('install_settings_form', $profile, $install_locale, $settings_file, $db_url, $db_type, $db_prefix, $db_user, $db_pass, $db_host, $db_port, $db_path);
   drupal_set_title(st('Database configuration'));
   print theme('install_page', $output);
   exit;
@@ -161,7 +163,7 @@ function install_change_settings() {
 /**
  * Form API array definition for install_settings.
  */
-function install_settings_form($profile, $install_locale, $settings_file, $db_url, $db_type, $db_prefix, $db_user, $db_pass, $db_host, $db_path) {
+function install_settings_form($profile, $install_locale, $settings_file, $db_url, $db_type, $db_prefix, $db_user, $db_pass, $db_host, $db_port, $db_path) {
   $db_types = drupal_detect_database_types();
   if (count($db_types) == 0) {
     $form['no_db_types'] = array(
@@ -248,6 +250,16 @@ function install_settings_form($profile, $install_locale, $settings_file, $db_ur
       '#description' => st('If your database is located on a different server, change this.'),
     );
 
+    // Database port
+    $form['advanced_options']['db_port'] = array(
+      '#type' => 'textfield',
+      '#title' => st('Database port'),
+      '#default_value' => $db_port,
+      '#size' => 45,
+      '#maxlength' => 45,
+      '#description' => st('If your database server is listening to a non-standard port, enter its number.'),
+    );
+
     // Database prefix
     $form['advanced_options']['db_prefix'] = array(
       '#type' => 'textfield',
@@ -276,13 +288,13 @@ function install_settings_form($profile, $install_locale, $settings_file, $db_ur
  */
 function install_settings_form_validate($form_id, $form_values, $form) {
   global $db_url;
-  _install_settings_form_validate($form_values['db_prefix'], $form_values['db_type'], $form_values['db_user'], $form_values['db_pass'], $form_values['db_host'], $form_values['db_path'], $form_values['settings_file'], $form);
+  _install_settings_form_validate($form_values['db_prefix'], $form_values['db_type'], $form_values['db_user'], $form_values['db_pass'], $form_values['db_host'], $form_values['db_port'], $form_values['db_path'], $form_values['settings_file'], $form);
 }
 
 /**
  * Helper function for install_settings_validate.
  */
-function _install_settings_form_validate($db_prefix, $db_type, $db_user, $db_pass, $db_host, $db_path, $settings_file, $form = NULL) {
+function _install_settings_form_validate($db_prefix, $db_type, $db_user, $db_pass, $db_host, $db_port, $db_path, $settings_file, $form = NULL) {
   global $db_url;
 
   // Check for default username/password
@@ -295,6 +307,10 @@ function _install_settings_form_validate($db_prefix, $db_type, $db_user, $db_pas
     form_set_error('db_prefix', st('The database prefix you have entered, %db_prefix, is invalid. The database prefix can only contain alphanumeric characters and underscores.', array('%db_prefix' => $db_prefix)), 'error');
   }
 
+  if (!empty($db_port) && !is_numeric($db_port)) {
+    form_set_error('db_port', st('Database port must be a number.'));
+  }
+
   // Check database type
   if (!isset($form)) {
     $db_type = substr($db_url, 0, strpos($db_url, '://'));
@@ -305,7 +321,7 @@ function _install_settings_form_validate($db_prefix, $db_type, $db_user, $db_pas
   }
   else {
     // Verify
-    $db_url = $db_type .'://'. urlencode($db_user) .($db_pass ? ':'. urlencode($db_pass) : '') .'@'. ($db_host ? urlencode($db_host) : 'localhost') .'/'. urlencode($db_path);
+    $db_url = $db_type .'://'. urlencode($db_user) .($db_pass ? ':'. urlencode($db_pass) : '') .'@'. ($db_host ? urlencode($db_host) : 'localhost'). ($db_port ? ":$db_port" : '') .'/'. urlencode($db_path);
     if (isset($form)) {
       form_set_value($form['_db_url'], $db_url);
     }

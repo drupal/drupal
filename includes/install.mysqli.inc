@@ -1,5 +1,5 @@
 <?php
-// $Id: install.mysqli.inc,v 1.4 2006/08/20 06:38:50 dries Exp $
+// $Id: install.mysqli.inc,v 1.5 2006/09/06 07:46:24 dries Exp $
 
 // MySQLi specific install functions
 
@@ -33,15 +33,10 @@ function drupal_test_mysqli($url, &$success) {
   $url['host'] = urldecode($url['host']);
   $url['path'] = urldecode($url['path']);
 
-  // Allow for non-standard MySQL port.
-  if (isset($url['port'])) {
-     $url['host'] = $url['host'] .':'. $url['port'];
-  }
-
   $connection = mysqli_init();
   @mysqli_real_connect($connection, $url['host'], $url['user'], $url['pass'], substr($url['path'], 1), $url['port'], NULL, MYSQLI_CLIENT_FOUND_ROWS);
   if (mysqli_connect_errno() >= 2000 || mysqli_connect_errno() == 1045) {
-    drupal_set_message(st('Failure to connect to your MySQL database server. MySQL reports the following message: %error.<ul><li>Are you sure you have the correct username and password?</li><li>Are you sure that you have typed the correct database hostname?</li><li>Are you sure that the database server is running?</li></ul>For more help, see the <a href="http://drupal.org/node/258">Installation and upgrading handbook</a>. If you are unsure what these terms mean you should probably contact your hosting provider.', array('%error' => mysqli_errno())), 'error');
+    drupal_set_message(st('Failure to connect to your MySQL database server. MySQL reports the following message: %error.<ul><li>Are you sure you have the correct username and password?</li><li>Are you sure that you have typed the correct database hostname?</li><li>Are you sure that the database server is running?</li></ul>For more help, see the <a href="http://drupal.org/node/258">Installation and upgrading handbook</a>. If you are unsure what these terms mean you should probably contact your hosting provider.', array('%error' => mysqli_error($connection))), 'error');
     return FALSE;
   }
 
