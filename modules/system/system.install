@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.21 2006/09/01 09:27:04 unconed Exp $
+// $Id: system.install,v 1.22 2006/09/07 07:57:20 drumm Exp $
 
 define('DRUPAL_MINIMUM_PHP',    '4.3.3');
 define('DRUPAL_MINIMUM_MYSQL',  '3.23.17'); // If using MySQL
@@ -243,7 +243,8 @@ function system_install() {
         vid int unsigned NOT NULL default 0,
         description varchar(255) NOT NULL default '',
         list tinyint unsigned NOT NULL default 0,
-        PRIMARY KEY (fid, vid)
+        PRIMARY KEY (fid, vid),
+        KEY (vid)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {filter_formats} (
@@ -674,6 +675,7 @@ function system_install() {
         list smallint_unsigned NOT NULL default 0,
         PRIMARY KEY (fid, vid)
       )");
+      db_query("CREATE INDEX file_revisions_vid_idx ON file_revisions(vid)");
 
       db_query("CREATE TABLE {filter_formats} (
         format serial,
@@ -3364,6 +3366,20 @@ function system_update_1011() {
   $ret = array();
   $ret[] = update_sql('UPDATE {menu} SET mid = 2 WHERE mid = 0');
   cache_clear_all();
+  return $ret;
+}
+
+function system_update_1012() {
+  $ret = array();
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql("ALTER TABLE {file_revisions} ADD INDEX(vid)");
+      break;
+    case 'pgsql':
+      $ret[] = update_sql('CREATE INDEX {file_revisions}_vid_idx ON {file_revisions}(vid)');
+      break;
+  }
   return $ret;
 }
 
