@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.94 2006/08/31 21:58:36 dries Exp $
+// $Id: path.module,v 1.95 2006/09/07 08:03:08 drumm Exp $
 
 /**
  * @file
@@ -184,8 +184,23 @@ function path_set_alias($path = NULL, $alias = NULL, $pid = NULL) {
 function path_form($edit = '') {
   $form['#base'] = 'path_form';
 
-  $form['src'] = array('#type' => 'textfield', '#title' => t('Existing system path'), '#default_value' => $edit['src'], '#maxlength' => 64, '#description' => t('Specify the existing path you wish to alias. For example: node/28, forum/1, taxonomy/term/1+2.'));
-  $form['dst'] = array('#type' => 'textfield', '#default_value' => $edit['dst'], '#maxlength' => 64, '#description' => t('Specify an alternative path by which this data can be accessed. For example, type "about" when writing an about page. Use a relative path and don\'t add a trailing slash or the URL alias won\'t work.'));
+  $form['src'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Existing system path'),
+    '#default_value' => $edit['src'],
+    '#maxlength' => 64,
+    '#size' => 45,
+    '#description' => t('Specify the existing path you wish to alias. For example: node/28, forum/1, taxonomy/term/1+2.'),
+    '#field_prefix' => url(NULL, NULL, NULL, TRUE) . (variable_get('clean_url', 0) ? '' : '?q=')
+  );
+  $form['dst'] = array(
+    '#type' => 'textfield',
+    '#default_value' => $edit['dst'],
+    '#maxlength' => 64,
+    '#size' => 45,
+    '#description' => t('Specify an alternative path by which this data can be accessed. For example, type "about" when writing an about page. Use a relative path and don\'t add a trailing slash or the URL alias won\'t work.'),
+    '#field_prefix' => url(NULL, NULL, NULL, TRUE) . (variable_get('clean_url', 0) ? '' : '?q=')
+  );
 
   if ($edit['pid']) {
     $form['pid'] = array('#type' => 'hidden', '#value' => $edit['pid']);
