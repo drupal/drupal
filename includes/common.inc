@@ -1372,7 +1372,7 @@ function drupal_add_js($data = NULL, $type = 'module', $scope = 'header', $defer
 
 /**
  * Helper function for drupal_add_js().
- */ 
+ */
 function _drupal_add_js($data, $type, $scope, $defer, $cache) {
   static $javascript = array();
 

@@ -3,7 +3,7 @@
 Drupal.textareaAttach = function() {
   $('textarea.resizable:not(.processed)').each(function() {
     var textarea = $(this).addClass('processed'), staticOffset = null;
-    
+
     $(this).wrap('<div class="resizable-textarea"></div>')
       .parent().append($('<div class="grippie"></div>').mousedown(startDrag));
 

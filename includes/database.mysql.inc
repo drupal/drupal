@@ -25,7 +25,7 @@ function db_status_report($phase) {
   );
 
   // Extract version number
-  list($version) = explode('-', $info); 
+  list($version) = explode('-', $info);
   if (version_compare($version, DRUPAL_MINIMUM_MYSQL) < 0) {
     $form['mysql']['severity'] = REQUIREMENT_ERROR;
     $form['mysql']['description'] = $t('Your MySQL Server is too old. Drupal requires at least MySQL %version.', array('%version' => DRUPAL_MINIMUM_MYSQL));
