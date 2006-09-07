@@ -3237,7 +3237,7 @@ function system_update_1006() {
     $ret[] = update_sql("ALTER TABLE {blocks} ADD title VARCHAR(64) NOT NULL DEFAULT ''");
       break;
     case 'pgsql':
-      db_add_column($ret, 'blocks', 'title', 'varchar(64)', array('default' => '', 'not null' => TRUE));
+      db_add_column($ret, 'blocks', 'title', 'varchar(64)', array('default' => "''", 'not null' => TRUE));
       break;
   }
   // Migrate custom block titles to new column.
