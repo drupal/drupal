@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.23 2006/09/07 08:08:15 dries Exp $
+// $Id: system.install,v 1.24 2006/09/07 08:09:30 dries Exp $
 
 define('DRUPAL_MINIMUM_PHP',    '4.3.3');
 define('DRUPAL_MINIMUM_MYSQL',  '3.23.17'); // If using MySQL
@@ -3237,7 +3237,7 @@ function system_update_1006() {
     $ret[] = update_sql("ALTER TABLE {blocks} ADD title VARCHAR(64) NOT NULL DEFAULT ''");
       break;
     case 'pgsql':
-      db_add_column($ret, 'blocks', 'title', 'varchar(64)', array('default' => '', 'not null' => TRUE));
+      db_add_column($ret, 'blocks', 'title', 'varchar(64)', array('default' => "''", 'not null' => TRUE));
       break;
   }
   // Migrate custom block titles to new column.
