@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.675 2006/09/06 14:01:51 dries Exp $
+// $Id: user.module,v 1.676 2006/09/07 07:32:12 drumm Exp $
 
 /**
  * @file
@@ -1918,10 +1918,6 @@ function theme_user_admin_new_role($form) {
 }
 
 function user_admin_account() {
-  if ($_POST['accounts'] && $_POST['operation'] == 'delete') {
-    return user_multiple_delete_confirm();
-  }
-
   $filter = user_build_filter_query();
 
   $header = array(
@@ -2226,8 +2222,13 @@ function user_admin($callback_arg = '') {
       $output = drupal_get_form('user_register');
       break;
     default:
-      $output .= drupal_get_form('user_filter_form');
-      $output .= drupal_get_form('user_admin_account');
+      if ($_POST['accounts'] && $_POST['operation'] == 'delete') {
+        $output = drupal_get_form('user_multiple_delete_confirm');
+      }
+      else {
+        $output .= drupal_get_form('user_filter_form');
+        $output .= drupal_get_form('user_admin_account');
+      }
   }
   return $output;
 }
