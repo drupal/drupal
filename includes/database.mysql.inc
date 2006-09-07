@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysql.inc,v 1.57 2006/09/01 08:44:53 unconed Exp $
+// $Id: database.mysql.inc,v 1.58 2006/09/07 08:05:31 dries Exp $
 
 /**
  * @file
@@ -25,7 +25,7 @@ function db_status_report($phase) {
   );
 
   // Extract version number
-  list($version) = explode('-', $info); 
+  list($version) = explode('-', $info);
   if (version_compare($version, DRUPAL_MINIMUM_MYSQL) < 0) {
     $form['mysql']['severity'] = REQUIREMENT_ERROR;
     $form['mysql']['description'] = $t('Your MySQL Server is too old. Drupal requires at least MySQL %version.', array('%version' => DRUPAL_MINIMUM_MYSQL));

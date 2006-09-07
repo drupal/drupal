@@ -1,9 +1,9 @@
-// $Id: textarea.js,v 1.10 2006/08/31 23:31:25 unconed Exp $
+// $Id: textarea.js,v 1.11 2006/09/07 08:05:31 dries Exp $
 
 Drupal.textareaAttach = function() {
   $('textarea.resizable:not(.processed)').each(function() {
     var textarea = $(this).addClass('processed'), staticOffset = null;
-    
+
     $(this).wrap('<div class="resizable-textarea"></div>')
       .parent().append($('<div class="grippie"></div>').mousedown(startDrag));
 

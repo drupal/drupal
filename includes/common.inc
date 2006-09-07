@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.573 2006/09/07 07:11:15 drumm Exp $
+// $Id: common.inc,v 1.574 2006/09/07 08:05:31 dries Exp $
 
 /**
  * @file
@@ -1372,7 +1372,7 @@ function drupal_add_js($data = NULL, $type = 'module', $scope = 'header', $defer
 
 /**
  * Helper function for drupal_add_js().
- */ 
+ */
 function _drupal_add_js($data, $type, $scope, $defer, $cache) {
   static $javascript = array();
 
