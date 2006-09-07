@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.22 2006/09/07 07:57:20 drumm Exp $
+// $Id: system.install,v 1.23 2006/09/07 08:08:15 dries Exp $
 
 define('DRUPAL_MINIMUM_PHP',    '4.3.3');
 define('DRUPAL_MINIMUM_MYSQL',  '3.23.17'); // If using MySQL
@@ -3155,17 +3155,22 @@ function system_update_1005() {
       break;
 
     case 'pgsql':
+      // add new unsigned types for pgsql
+      $ret[] = update_sql("CREATE DOMAIN int_unsigned integer CHECK (VALUE >= 0)");
+      $ret[] = update_sql("CREATE DOMAIN smallint_unsigned smallint CHECK (VALUE >= 0)");
+      $ret[] = update_sql("CREATE DOMAIN bigint_unsigned bigint CHECK (VALUE >= 0)");
+
       $ret[] = update_sql("CREATE TABLE {node_type} (
         type varchar(32) NOT NULL,
         name varchar(255) NOT NULL,
         module varchar(255) NOT NULL,
         description text NOT NULL,
         help text NOT NULL,
-        has_title integer unsigned NOT NULL,
+        has_title smallint_unsigned NOT NULL,
         title_label varchar(255) NOT NULL default '',
-        has_body integer unsigned NOT NULL,
+        has_body smallint_unsigned NOT NULL,
         body_label varchar(255) NOT NULL default '',
-        min_word_count integer unsigned NOT NULL,
+        min_word_count smallint_unsigned NOT NULL,
         custom smallint NOT NULL DEFAULT '0',
         modified smallint NOT NULL DEFAULT '0',
         locked smallint NOT NULL DEFAULT '0',
