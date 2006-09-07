@@ -579,29 +579,23 @@ function st($string, $args = array()) {
   require_once './includes/theme.inc';
   $GLOBALS['theme'] = 'theme';
   // Transform arguments before inserting them
-  array_walk($args, '_st');
+  foreach($args as $key => $value) {
+    switch ($key[0]) {
+      // Escaped only
+      case '@':
+        $args[$key] = check_plain($value);
+        break;
+      // Escaped and placeholder
+      case '%':
+      default:
+        $args[$key] = '<em>'. check_plain($value) .'</em>';
+        break;
+      // Pass-through
+      case '!':
+    }
+  }
   return strtr((!empty($locale_strings[$string]) ? $locale_strings[$string] : $string), $args);
 }
-
-/**
- * Helper function: apply the appropriate transformation to st() and t() placeholders.
- */
-function _st(&$value, $key) {
-  switch ($key[0]) {
-    // Escaped only
-    case '@':
-      $value = check_plain($value);
-      return;
-    // Escaped and placeholder
-    case '%':
-    default:
-      $value = '<em>'. check_plain($value) .'</em>';
-      return;
-    // Pass-through
-    case '!':
-  }
-}
-
 
 /**
  * Check a profile's requirements.
