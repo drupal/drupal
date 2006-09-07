@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.127 2006/09/06 12:27:50 dries Exp $
+// $Id: bootstrap.inc,v 1.128 2006/09/07 07:11:15 drumm Exp $
 
 /**
  * @file
@@ -321,8 +321,6 @@ function variable_del($name) {
  *
  * Note: we do not serve cached pages when status messages are waiting (from
  * a redirected form submission which was completed).
- * Because the output handler is not activated, the resulting page will not
- * get cached either.
  */
 function page_get_cache() {
   global $user, $base_root;
@@ -585,15 +583,21 @@ function drupal_set_message($message = NULL, $type = 'status') {
  *
  * @param $type
  *   (optional) Only return messages of this type.
+ * @param $clear_queue
+ *   (optional) Set to FALSE if you do not want to clear the messages queue
  */
-function drupal_get_messages($type = NULL) {
+function drupal_get_messages($type = NULL, $clear_queue = TRUE) {
   if ($messages = drupal_set_message()) {
     if ($type) {
-      unset($_SESSION['messages'][$type]);
+      if ($clear_queue) {
+         unset($_SESSION['messages'][$type]);
+      }
       return array($type => $messages[$type]);
     }
     else {
-      unset($_SESSION['messages']);
+      if ($clear_queue) {
+         unset($_SESSION['messages']);
+      }
       return $messages;
     }
   }
