@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.698 2006/09/06 07:27:41 drumm Exp $
+// $Id: node.module,v 1.699 2006/09/07 07:24:22 drumm Exp $
 
 /**
  * @file
@@ -635,6 +635,8 @@ function node_save(&$node) {
 function node_view($node, $teaser = FALSE, $page = FALSE, $links = TRUE) {
   $node = (object)$node;
 
+  $node = node_build_content($node, $teaser, $page);
+
   if ($links) {
     $node->links = module_invoke_all('link', 'node', $node, !$page);
 
@@ -643,8 +645,6 @@ function node_view($node, $teaser = FALSE, $page = FALSE, $links = TRUE) {
       $function($node, $node->links);
     }
   }
-
-  $node = node_build_content($node, $teaser, $page);
 
   // Set the proper node part, then unset unused $node part so that a bad
   // theme can not open a security hole.
