@@ -1586,7 +1586,7 @@ function _drupal_bootstrap_full() {
 function page_set_cache() {
   global $user, $base_root;
 
-  if (!$user->uid && $_SERVER['REQUEST_METHOD'] == 'GET') {
+  if (!$user->uid && $_SERVER['REQUEST_METHOD'] == 'GET' && count(drupal_get_messages(NULL, FALSE)) == 0) {
     // This will fail in some cases, see page_get_cache() for the explanation.
     if ($data = ob_get_contents()) {
       $cache = TRUE;
