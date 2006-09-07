@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.574 2006/09/07 08:05:31 dries Exp $
+// $Id: common.inc,v 1.575 2006/09/07 08:23:54 drumm Exp $
 
 /**
  * @file
@@ -633,28 +633,22 @@ function t($string, $args = 0) {
   }
   else {
     // Transform arguments before inserting them
-    array_walk($args, '_t');
+    foreach($args as $key => $value) {
+      switch ($key[0]) {
+        // Escaped only
+        case '@':
+          $args[$key] = check_plain($value);
+        break;
+        // Escaped and placeholder
+        case '%':
+        default:
+          $args[$key] = theme('placeholder', $value);
+          break;
+        // Pass-through
+        case '!':
+      }
+    }
     return strtr($string, $args);
-  }
-}
-
-/**
- * Helper function: apply the appropriate transformation to st() and t()
- * placeholders.
- */
-function _t(&$value, $key) {
-  switch ($key[0]) {
-    // Escaped only
-    case '@':
-      $value = check_plain($value);
-      return;
-    // Escaped and placeholder
-    case '%':
-    default:
-      $value = theme('placeholder', $value);
-      return;
-    // Pass-through
-    case '!':
   }
 }
 
