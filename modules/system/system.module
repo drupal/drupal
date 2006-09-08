@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.367 2006/09/07 08:03:08 drumm Exp $
+// $Id: system.module,v 1.368 2006/09/08 16:33:02 dries Exp $
 
 /**
  * @file
@@ -1081,19 +1081,19 @@ function system_settings_form($form) {
   return $form;
 }
 
-function system_theme_settings_submit($form_id, $values) {
+function system_theme_settings_submit($form_id, $form_values) {
   $op = isset($_POST['op']) ? $_POST['op'] : '';
-  $key = $values['var'];
+  $key = $form_values['var'];
 
   // Exclude unnecessary elements.
-  unset($values['var'], $values['submit'], $values['reset'], $values['form_id']);
+  unset($form_values['var'], $form_values['submit'], $form_values['reset'], $form_values['form_id']);
 
   if ($op == t('Reset to defaults')) {
     variable_del($key);
     drupal_set_message(t('The configuration options have been reset to their default values.'));
   }
   else {
-    variable_set($key, $values);
+    variable_set($key, $form_values);
     drupal_set_message(t('The configuration options have been saved.'));
   }
 }
@@ -1105,18 +1105,18 @@ function system_theme_settings_submit($form_id, $values) {
  * add an array_filter value to your form.
  *
  */
-function system_settings_form_submit($form_id, $values) {
+function system_settings_form_submit($form_id, $form_values) {
   $op = isset($_POST['op']) ? $_POST['op'] : '';
 
   // Exclude unnecessary elements.
-  unset($values['submit'], $values['reset'], $values['form_id']);
+  unset($form_values['submit'], $form_values['reset'], $form_values['form_id']);
 
-  foreach ($values as $key => $value) {
+  foreach ($form_values as $key => $value) {
     if ($op == t('Reset to defaults')) {
       variable_del($key);
     }
     else {
-      if (is_array($value) && isset($values['array_filter'])) {
+      if (is_array($value) && isset($form_values['array_filter'])) {
         $value = array_keys(array_filter($value));
       }
       variable_set($key, $value);
@@ -1187,15 +1187,15 @@ function theme_system_themes($form) {
 }
 
 
-function system_themes_submit($form_id, $values) {
+function system_themes_submit($form_id, $form_values) {
 
   db_query("UPDATE {system} SET status = 0 WHERE type = 'theme'");
 
   if ($_POST['op'] == t('Save configuration')) {
-    if (is_array($values['status'])) {
-      foreach ($values['status'] as $key => $choice) {
+    if (is_array($form_values['status'])) {
+      foreach ($form_values['status'] as $key => $choice) {
         // Always enable the default theme, despite its status checkbox being checked:
-        if ($choice || $values['theme_default'] == $key) {
+        if ($choice || $form_values['theme_default'] == $key) {
           // If theme status is being set to 1 from 0, initialize block data for this theme if necessary.
           if (db_num_rows(db_query("SELECT status FROM {system} WHERE type = 'theme' AND name = '%s' AND status = 0", $key))) {
             system_initialize_theme_blocks($key);
@@ -1204,7 +1204,7 @@ function system_themes_submit($form_id, $values) {
         }
       }
     }
-    variable_set('theme_default', $values['theme_default']);
+    variable_set('theme_default', $form_values['theme_default']);
   }
   else {
     variable_del('theme_default');
@@ -1286,12 +1286,12 @@ function theme_system_modules($form) {
 }
 
 
-function system_modules_submit($form_id, $edit) {
+function system_modules_submit($form_id, $form_values) {
   include_once './includes/install.inc';
   $new_modules = array();
 
   // Enable/disable modules that have already been installed
-  foreach ($edit['status'] as $key => $choice) {
+  foreach ($form_values['status'] as $key => $choice) {
     if ($choice) {
       if (drupal_get_installed_schema_version($key) == SCHEMA_UNINSTALLED) {
         $new_modules[] = $key;
@@ -1314,8 +1314,8 @@ function system_modules_submit($form_id, $edit) {
     }
   }
 
-  if (is_array($edit['throttle'])) {
-    foreach ($edit['throttle'] as $key => $choice) {
+  if (is_array($form_values['throttle'])) {
+    foreach ($form_values['throttle'] as $key => $choice) {
       if ($choice) {
         db_query("UPDATE {system} SET throttle = 1 WHERE type = 'module' and name = '%s'", $key);
       }

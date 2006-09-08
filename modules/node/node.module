@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.699 2006/09/07 07:24:22 drumm Exp $
+// $Id: node.module,v 1.700 2006/09/08 16:33:02 dries Exp $
 
 /**
  * @file
@@ -1389,11 +1389,11 @@ function node_filter_form_submit() {
 /**
  * Submit the node administration update form.
  */
-function node_admin_nodes_submit($form_id, $edit) {
+function node_admin_nodes_submit($form_id, $form_values) {
   $operations = module_invoke_all('node_operations');
-  $operation = $operations[$edit['operation']];
+  $operation = $operations[$form_values['operation']];
   // Filter out unchecked nodes
-  $nodes = array_filter($edit['nodes']);
+  $nodes = array_filter($form_values['nodes']);
   if ($function = $operation['callback']) {
     // Add in callback arguments if present.
     if (isset($operation['callback arguments'])) {
@@ -1409,8 +1409,8 @@ function node_admin_nodes_submit($form_id, $edit) {
   }
 }
 
-function node_admin_nodes_validate($form_id, $edit) {
-  $nodes = array_filter($edit['nodes']);
+function node_admin_nodes_validate($form_id, $form_values) {
+  $nodes = array_filter($form_values['nodes']);
   if (count($nodes) == 0) {
     form_set_error('', t('No items selected.'));
   }
@@ -1515,9 +1515,9 @@ function node_multiple_delete_confirm() {
                       t('Delete all'), t('Cancel'));
 }
 
-function node_multiple_delete_confirm_submit($form_id, $edit) {
-  if ($edit['confirm']) {
-    foreach ($edit['nodes'] as $nid => $value) {
+function node_multiple_delete_confirm_submit($form_id, $form_values) {
+  if ($form_values['confirm']) {
+    foreach ($form_values['nodes'] as $nid => $value) {
       node_delete($nid);
     }
     drupal_set_message(t('The items have been deleted.'));
@@ -2113,11 +2113,11 @@ function theme_node_log_message($log) {
   return '<div class="log"><div class="title">'. t('Log') .':</div>'. $log .'</div>';
 }
 
-function node_form_submit($form_id, $edit) {
+function node_form_submit($form_id, $form_values) {
   global $user;
 
   // Fix up the node when required:
-  $node = node_submit($edit);
+  $node = node_submit($form_values);
 
   // Prepare the node's body:
   if ($node->nid) {

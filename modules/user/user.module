@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.676 2006/09/07 07:32:12 drumm Exp $
+// $Id: user.module,v 1.677 2006/09/08 16:33:02 dries Exp $
 
 /**
  * @file
@@ -1552,36 +1552,36 @@ function user_admin_access_check() {
   return $output;
 }
 
-function user_admin_access_check_validate($form_id, $edit) {
-  if (empty($edit['test'])) {
-    form_set_error($edit['type'], t('No value entered. Please enter a test string and try again.'));
+function user_admin_access_check_validate($form_id, $form_values) {
+  if (empty($form_values['test'])) {
+    form_set_error($form_values['type'], t('No value entered. Please enter a test string and try again.'));
   }
 }
 
-function user_admin_access_check_submit($form_id, $edit) {
-  switch ($edit['type']) {
+function user_admin_access_check_submit($form_id, $form_values) {
+  switch ($form_values['type']) {
     case 'user':
-      if (drupal_is_denied('user', $edit['test'])) {
-        drupal_set_message(t('The username %name is not allowed.', array('%name' => $edit['test'])));
+      if (drupal_is_denied('user', $form_values['test'])) {
+        drupal_set_message(t('The username %name is not allowed.', array('%name' => $form_values['test'])));
       }
       else {
-        drupal_set_message(t('The username %name is allowed.', array('%name' => $edit['test'])));
+        drupal_set_message(t('The username %name is allowed.', array('%name' => $form_values['test'])));
       }
       break;
     case 'mail':
-      if (drupal_is_denied('mail', $edit['test'])) {
-        drupal_set_message(t('The e-mail address %mail is not allowed.', array('%mail' => $edit['test'])));
+      if (drupal_is_denied('mail', $form_values['test'])) {
+        drupal_set_message(t('The e-mail address %mail is not allowed.', array('%mail' => $form_values['test'])));
       }
       else {
-        drupal_set_message(t('The e-mail address %mail is allowed.', array('%mail' => $edit['test'])));
+        drupal_set_message(t('The e-mail address %mail is allowed.', array('%mail' => $form_values['test'])));
       }
       break;
     case 'host':
-      if (drupal_is_denied('host', $edit['test'])) {
-        drupal_set_message(t('The hostname %host is not allowed.', array('%host' => $edit['test'])));
+      if (drupal_is_denied('host', $form_values['test'])) {
+        drupal_set_message(t('The hostname %host is not allowed.', array('%host' => $form_values['test'])));
       }
       else {
-        drupal_set_message(t('The hostname %host is allowed.', array('%host' => $edit['test'])));
+        drupal_set_message(t('The hostname %host is allowed.', array('%host' => $form_values['test'])));
       }
       break;
     default:
@@ -1629,8 +1629,8 @@ function user_admin_access_delete_confirm($aid = 0) {
   return $output;
 }
 
-function user_admin_access_delete_confirm_submit($form_id, $edit) {
-  db_query('DELETE FROM {access} WHERE aid = %d', $edit['aid']);
+function user_admin_access_delete_confirm_submit($form_id, $form_values) {
+  db_query('DELETE FROM {access} WHERE aid = %d', $form_values['aid']);
   drupal_set_message(t('The access rule has been deleted.'));
   return 'admin/user/rules';
 }
@@ -1825,21 +1825,21 @@ function theme_user_admin_perm($form) {
   return $output;
 }
 
-function user_admin_perm_submit($form_id, $edit) {
+function user_admin_perm_submit($form_id, $form_values) {
   // Save permissions:
   $result = db_query('SELECT * FROM {role}');
   while ($role = db_fetch_object($result)) {
-    if(isset($edit[$role->rid])) {
+    if(isset($form_values[$role->rid])) {
       // Delete, so if we clear every checkbox we reset that role;
       // otherwise permissions are active and denied everywhere.
       db_query('DELETE FROM {permission} WHERE rid = %d', $role->rid);
-      foreach ($edit[$role->rid] as $key => $value) {
+      foreach ($form_values[$role->rid] as $key => $value) {
         if (!$value) {
-          unset($edit[$role->rid][$key]);
+          unset($form_values[$role->rid][$key]);
         }
       }
-      if (count($edit[$role->rid])) {
-        db_query("INSERT INTO {permission} (rid, perm) VALUES (%d, '%s')", $role->rid, implode(', ', array_keys($edit[$role->rid])));
+      if (count($form_values[$role->rid])) {
+        db_query("INSERT INTO {permission} (rid, perm) VALUES (%d, '%s')", $role->rid, implode(', ', array_keys($form_values[$role->rid])));
       }
     }
   }
@@ -2029,11 +2029,11 @@ function theme_user_admin_account($form) {
 /**
  * Submit the user administration update form.
  */
-function user_admin_account_submit($form_id, $edit) {
+function user_admin_account_submit($form_id, $form_values) {
   $operations = module_invoke_all('user_operations');
-  $operation = $operations[$edit['operation']];
+  $operation = $operations[$form_values['operation']];
   // Filter out unchecked accounts.
-  $accounts = array_filter($edit['accounts']);
+  $accounts = array_filter($form_values['accounts']);
   if ($function = $operation['callback']) {
     // Add in callback arguments if present.
     if (isset($operation['callback arguments'])) {
@@ -2049,9 +2049,9 @@ function user_admin_account_submit($form_id, $edit) {
   }
 }
 
-function user_admin_account_validate($form_id, $edit) {
-  $edit['accounts'] = array_filter($edit['accounts']);
-  if (count($edit['accounts']) == 0) {
+function user_admin_account_validate($form_id, $form_values) {
+  $form_values['accounts'] = array_filter($form_values['accounts']);
+  if (count($form_values['accounts']) == 0) {
     form_set_error('', t('No users selected.'));
   }
 }
@@ -2163,10 +2163,10 @@ function user_multiple_delete_confirm() {
                       t('Delete all'), t('Cancel'));
 }
 
-function user_multiple_delete_confirm_submit($form_id, $edit) {
-  if ($edit['confirm']) {
-    foreach ($edit['accounts'] as $uid => $value) {
-      user_delete($edit, $uid);
+function user_multiple_delete_confirm_submit($form_id, $form_values) {
+  if ($form_values['confirm']) {
+    foreach ($form_values['accounts'] as $uid => $value) {
+      user_delete($form_values, $uid);
     }
     drupal_set_message(t('The users have been deleted.'));
   }

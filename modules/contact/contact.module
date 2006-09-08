@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.64 2006/08/31 20:22:35 dries Exp $
+// $Id: contact.module,v 1.65 2006/09/08 16:33:02 dries Exp $
 
 /**
  * @file
@@ -359,7 +359,7 @@ function contact_mail_user() {
 /**
  * Process the personal contact page form submission.
  */
-function contact_mail_user_submit($form_id, $edit) {
+function contact_mail_user_submit($form_id, $form_values) {
   global $user;
 
   $account = user_load(array('uid' => arg(1), 'status' => 1));
@@ -368,7 +368,7 @@ function contact_mail_user_submit($form_id, $edit) {
   $message[] = t("!name (!name-url) has sent you a message via your contact form (!form-url) at !site.", array('!name' => $user->name, '!name-url' => url("user/$user->uid", NULL, NULL, TRUE), '!form-url' => url($_GET['q'], NULL, NULL, TRUE), '!site' => variable_get('site_name', 'drupal')));
   $message[] = t("If you don't want to receive such e-mails, you can change your settings at !url.", array('!url' => url("user/$account->uid", NULL, NULL, TRUE)));
   $message[] = t('Message:');
-  $message[] = $edit['message'];
+  $message[] = $form_values['message'];
 
   // Tidy up the body:
   foreach ($message as $key => $value) {
@@ -380,7 +380,7 @@ function contact_mail_user_submit($form_id, $edit) {
   $from = $user->mail;
 
   // Format the subject:
-  $subject = '['. variable_get('site_name', 'drupal') .'] '. $edit['subject'];
+  $subject = '['. variable_get('site_name', 'drupal') .'] '. $form_values['subject'];
 
   // Prepare the body:
   $body = implode("\n\n", $message);
@@ -389,7 +389,7 @@ function contact_mail_user_submit($form_id, $edit) {
   drupal_mail('contact-user-mail', $to, $subject, $body, $from);
 
   // Send a copy if requested:
-  if ($edit['copy']) {
+  if ($form_values['copy']) {
     drupal_mail('contact-user-copy', $from, $subject, $body, $from);
   }
 
@@ -503,15 +503,15 @@ function contact_mail_page_validate($form_id, $form_values) {
 /**
  * Process the site-wide contact page form submission.
  */
-function contact_mail_page_submit($form_id, $edit) {
+function contact_mail_page_submit($form_id, $form_values) {
 
   // E-mail address of the sender: as the form field is a text field,
   // all instances of \r and \n have been automatically stripped from it.
-  $from = $edit['mail'];
+  $from = $form_values['mail'];
 
   // Compose the body:
-  $message[] = t("%name sent a message using the contact form at %form.", array('%name' => $edit['name'], '%form' => url($_GET['q'], NULL, NULL, TRUE)));
-  $message[] = $edit['message'];
+  $message[] = t("%name sent a message using the contact form at %form.", array('%name' => $form_values['name'], '%form' => url($_GET['q'], NULL, NULL, TRUE)));
+  $message[] = $form_values['message'];
 
   // Tidy up the body:
   foreach ($message as $key => $value) {
@@ -519,10 +519,10 @@ function contact_mail_page_submit($form_id, $edit) {
   }
 
   // Load the category information:
-  $contact = db_fetch_object(db_query("SELECT * FROM {contact} WHERE cid = %d", $edit['cid']));
+  $contact = db_fetch_object(db_query("SELECT * FROM {contact} WHERE cid = %d", $form_values['cid']));
 
   // Format the category:
-  $subject = t('[%category] %subject', array('%category' => $contact->category, '%subject' => $edit['subject']));
+  $subject = t('[%category] %subject', array('%category' => $contact->category, '%subject' => $form_values['subject']));
 
   // Prepare the body:
   $body = implode("\n\n", $message);
@@ -531,7 +531,7 @@ function contact_mail_page_submit($form_id, $edit) {
   drupal_mail('contact-page-mail', $contact->recipients, $subject, $body, $from);
 
   // If the user requests it, send a copy.
-  if ($edit['copy']) {
+  if ($form_values['copy']) {
     drupal_mail('contact-page-copy', $from, $subject, $body, $from);
   }
 
@@ -542,7 +542,7 @@ function contact_mail_page_submit($form_id, $edit) {
 
   // Log the operation:
   flood_register_event('contact');
-  watchdog('mail', t('%name-from sent an e-mail regarding %category.', array('%name-from' => $edit['name'] ." <$from>", '%category' => $contact->category)));
+  watchdog('mail', t('%name-from sent an e-mail regarding %category.', array('%name-from' => $form_values['name'] ." <$from>", '%category' => $contact->category)));
 
   // Update user:
   drupal_set_message(t('Your message has been sent.'));

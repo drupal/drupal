@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.95 2006/09/07 08:03:08 drumm Exp $
+// $Id: path.module,v 1.96 2006/09/08 16:33:02 dries Exp $
 
 /**
  * @file
@@ -340,10 +340,10 @@ function path_load($pid) {
 /**
  * Verify that a new URL alias is valid
  */
-function path_form_validate($form_id, $edit) {
-  $src = $edit['src'];
-  $dst = $edit['dst'];
-  $pid = $edit['pid'];
+function path_form_validate($form_id, $form_values) {
+  $src = $form_values['src'];
+  $dst = $form_values['dst'];
+  $pid = $form_values['pid'];
 
   if (!valid_url($src)) {
     form_set_error('src', t('The system path %path is invalid.', array('%path' => $src)));
@@ -361,8 +361,8 @@ function path_form_validate($form_id, $edit) {
 /**
  * Save a new URL alias to the database.
  */
-function path_form_submit($form_id, $edit) {
-  path_set_alias($edit['src'], $edit['dst'], $edit['pid']);
+function path_form_submit($form_id, $form_values) {
+  path_set_alias($form_values['src'], $form_values['dst'], $form_values['pid']);
 
   drupal_set_message(t('The alias has been saved.'));
   return 'admin/build/path';

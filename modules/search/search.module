@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.196 2006/08/31 20:22:36 dries Exp $
+// $Id: search.module,v 1.197 2006/09/08 16:33:02 dries Exp $
 
 /**
  * @file
@@ -197,15 +197,15 @@ function search_menu($may_cache) {
 }
 
 /**
- * Implementation of hook_validate().
+ * Validate callback.
  */
-function search_admin_settings_validate($form_id, &$form) {
+function search_admin_settings_validate($form_id, $form_values) {
   if ($_POST['op'] == t('Re-index site')) {
     drupal_goto('admin/settings/search/wipe');
   }
   // If these settings change, the index needs to be rebuilt.
-  if ((variable_get('minimum_word_size', 3) != $form['minimum_word_size']) ||
-      (variable_get('overlap_cjk', TRUE) != $form['overlap_cjk'])) {
+  if ((variable_get('minimum_word_size', 3) != $form_values['minimum_word_size']) ||
+      (variable_get('overlap_cjk', TRUE) != $form_values['overlap_cjk'])) {
     drupal_set_message(t('The index will be rebuilt.'));
     search_wipe();
   }

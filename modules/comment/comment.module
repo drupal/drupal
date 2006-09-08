@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.485 2006/09/05 02:36:02 drumm Exp $
+// $Id: comment.module,v 1.486 2006/09/08 16:33:02 dries Exp $
 
 /**
  * @file
@@ -1048,9 +1048,9 @@ function comment_admin_overview($type = 'new') {
 /**
  * We can't execute any 'Update options' if no comments were selected.
  */
-function comment_admin_overview_validate($form_id, $edit) {
-  $edit['comments'] = array_diff($edit['comments'], array(0));
-  if (count($edit['comments']) == 0) {
+function comment_admin_overview_validate($form_id, $form_values) {
+  $form_values['comments'] = array_diff($form_values['comments'], array(0));
+  if (count($form_values['comments']) == 0) {
     form_set_error('', t('Please select one or more comments to perform the update on.'));
     drupal_goto('admin/content/comment');
   }
@@ -1060,19 +1060,19 @@ function comment_admin_overview_validate($form_id, $edit) {
  * Execute the chosen 'Update option' on the selected comments, such as
  * publishing, unpublishing or deleting.
  */
-function comment_admin_overview_submit($form_id, $edit) {
+function comment_admin_overview_submit($form_id, $form_values) {
   $operations = comment_operations();
-  if ($operations[$edit['operation']][1]) {
+  if ($operations[$form_values['operation']][1]) {
     // extract the appropriate database query operation
-    $query = $operations[$edit['operation']][1];
-    foreach ($edit['comments'] as $cid => $value) {
+    $query = $operations[$form_values['operation']][1];
+    foreach ($form_values['comments'] as $cid => $value) {
       if ($value) {
         // perform the update action, then refresh node statistics
         db_query($query, $cid);
         $comment = _comment_load($cid);
         _comment_update_node_statistics($comment->nid);
         // Allow modules to respond to the updating of a comment.
-        comment_invoke_comment($comment, $edit['operation']);
+        comment_invoke_comment($comment, $form_values['operation']);
         // Add an entry to the watchdog log.
         watchdog('content', t('Comment: updated %subject.', array('%subject' => $comment->subject)), WATCHDOG_NOTICE, l(t('view'), 'node/'. $comment->nid, NULL, NULL, 'comment-'. $comment->cid));
       }
@@ -1145,7 +1145,7 @@ function comment_multiple_delete_confirm() {
 /**
  * Perform the actual comment deletion.
  */
-function comment_multiple_delete_confirm_submit($form_id, $edit) {
+function comment_multiple_delete_confirm_submit($form_id, $form_values) {
   if ($edit['confirm']) {
     foreach ($edit['comments'] as $cid => $value) {
       $comment = _comment_load($cid);
