@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.202 2006/08/31 23:31:24 unconed Exp $
+// $Id: update.php,v 1.203 2006/09/08 22:31:59 drumm Exp $
 
 /**
  * @file
@@ -678,6 +678,83 @@ function update_convert_table_utf8($table) {
   return $ret;
 }
 
+/**
+ * Create tables for the split cache.
+ *
+ * This is part of the Drupal 4.7 to 5.0 migration.
+ */
+function update_create_cache_tables() {
+
+  // If cache_filter exists, update is not necessary
+  if (db_table_exists('cache_filter')) {
+    return;
+  }
+
+  $ret = array();
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql("CREATE TABLE {cache_filter} (
+        cid varchar(255) NOT NULL default '',
+        data longblob,
+        expire int NOT NULL default '0',
+        created int NOT NULL default '0',
+        headers text,
+        PRIMARY KEY (cid),
+        INDEX expire (expire)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+      $ret[] = update_sql("CREATE TABLE {cache_menu} (
+        cid varchar(255) NOT NULL default '',
+        data longblob,
+        expire int NOT NULL default '0',
+        created int NOT NULL default '0',
+        headers text,
+        PRIMARY KEY (cid),
+        INDEX expire (expire)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+      $ret[] = update_sql("CREATE TABLE {cache_page} (
+        cid varchar(255) NOT NULL default '',
+        data longblob,
+        expire int NOT NULL default '0',
+         created int NOT NULL default '0',
+        headers text,
+        PRIMARY KEY (cid),
+        INDEX expire (expire)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+      break;
+    case 'pgsql':
+      $ret[] = update_sql("CREATE TABLE {cache_filter} (
+        cid varchar(255) NOT NULL default '',
+        data bytea,
+        expire int NOT NULL default '0',
+        created int NOT NULL default '0',
+        headers text,
+        PRIMARY KEY (cid)
+     )");
+     $ret[] = update_sql("CREATE TABLE {cache_menu} (
+       cid varchar(255) NOT NULL default '',
+       data bytea,
+       expire int NOT NULL default '0',
+       created int NOT NULL default '0',
+       headers text,
+       PRIMARY KEY (cid)
+     )");
+     $ret[] = update_sql("CREATE TABLE {cache_page} (
+       cid varchar(255) NOT NULL default '',
+       data bytea,
+       expire int NOT NULL default '0',
+       created int NOT NULL default '0',
+       headers text,
+       PRIMARY KEY (cid)
+     )");
+     $ret[] = update_sql("CREATE INDEX {cache_filter}_expire_idx ON {cache_filter} (expire)");
+     $ret[] = update_sql("CREATE INDEX {cache_menu}_expire_idx ON {cache_menu} (expire)");
+     $ret[] = update_sql("CREATE INDEX {cache_page}_expire_idx ON {cache_page} (expire)");
+     break;
+  }
+  return $ret;
+}
+
 // Some unavoidable errors happen because the database is not yet up-to-date.
 // Our custom error handler is not yet installed, so we just suppress them.
 ini_set('display_errors', FALSE);
@@ -691,6 +768,7 @@ drupal_maintenance_theme();
 // This must happen *after* drupal_bootstrap(), since it calls
 // variable_(get|set), which only works after a full bootstrap.
 update_fix_access_table();
+update_create_cache_tables();
 
 // Turn error reporting back on. From now on, only fatal errors (which are
 // not passed through the error handler) will cause a message to be printed.

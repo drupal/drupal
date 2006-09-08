@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.25 2006/09/08 16:34:43 dries Exp $
+// $Id: system.install,v 1.26 2006/09/08 22:31:59 drumm Exp $
 
 define('DRUPAL_MINIMUM_PHP',    '4.3.3');
 define('DRUPAL_MINIMUM_MYSQL',  '3.23.17'); // If using MySQL
@@ -3287,72 +3287,6 @@ function system_update_1008() {
   }
 
   return $ret;
-}
-
-function system_update_1009() {
- $ret = array();
- switch ($GLOBALS['db_type']) {
-   case 'mysql':
-   case 'mysqli':
-     $ret[] = update_sql("CREATE TABLE {cache_filter} (
-       cid varchar(255) NOT NULL default '',
-       data longblob,
-       expire int NOT NULL default '0',
-       created int NOT NULL default '0',
-       headers text,
-       PRIMARY KEY (cid),
-       INDEX expire (expire)
-     ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
-     $ret[] = update_sql("CREATE TABLE {cache_menu} (
-       cid varchar(255) NOT NULL default '',
-       data longblob,
-       expire int NOT NULL default '0',
-       created int NOT NULL default '0',
-       headers text,
-       PRIMARY KEY (cid),
-       INDEX expire (expire)
-     ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
-     $ret[] = update_sql("CREATE TABLE {cache_page} (
-       cid varchar(255) NOT NULL default '',
-       data longblob,
-       expire int NOT NULL default '0',
-       created int NOT NULL default '0',
-       headers text,
-       PRIMARY KEY (cid),
-       INDEX expire (expire)
-     ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
-     break;
-   case 'pgsql':
-     $ret[] = update_sql("CREATE TABLE {cache_filter} (
-       cid varchar(255) NOT NULL default '',
-       data bytea,
-       expire int NOT NULL default '0',
-       created int NOT NULL default '0',
-       headers text,
-       PRIMARY KEY (cid)
-     )");
-     $ret[] = update_sql("CREATE TABLE {cache_menu} (
-       cid varchar(255) NOT NULL default '',
-       data bytea,
-       expire int NOT NULL default '0',
-       created int NOT NULL default '0',
-       headers text,
-       PRIMARY KEY (cid)
-     )");
-     $ret[] = update_sql("CREATE TABLE {cache_page} (
-       cid varchar(255) NOT NULL default '',
-       data bytea,
-       expire int NOT NULL default '0',
-       created int NOT NULL default '0',
-       headers text,
-       PRIMARY KEY (cid)
-     )");
-     $ret[] = update_sql("CREATE INDEX {cache_filter}_expire_idx ON {cache_filter} (expire)");
-     $ret[] = update_sql("CREATE INDEX {cache_menu}_expire_idx ON {cache_menu} (expire)");
-     $ret[] = update_sql("CREATE INDEX {cache_page}_expire_idx ON {cache_page} (expire)");
-     break;
- }
- return $ret;
 }
 
 function system_update_1010() {
