@@ -279,7 +279,8 @@ function upload_file_download($file) {
         return array(
           'Content-Type: '. $type .'; name='. $name,
           'Content-Length: '. $file->filesize,
-          'Content-Disposition: '. $disposition .'; filename='. $name
+          'Content-Disposition: '. $disposition .'; filename='. $name,
+          'Cache-Control: private'
         );
       }
       else {
