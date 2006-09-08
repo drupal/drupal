@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.313 2006/09/06 07:22:41 drumm Exp $
+// $Id: taxonomy.module,v 1.314 2006/09/08 20:18:35 drumm Exp $
 
 /**
  * @file
@@ -427,7 +427,7 @@ function taxonomy_form_term_submit($form_id, $form_values) {
 function taxonomy_save_term(&$edit) {
   if ($edit['tid'] && $edit['name']) {
     db_query("UPDATE {term_data} SET name = '%s', description = '%s', weight = %d WHERE tid = %d", $edit['name'], $edit['description'], $edit['weight'], $edit['tid']);
-    module_invoke_all('taxonomy', 'update', 'term', $edit);
+    $hook = 'update';
     $status = SAVED_UPDATED;
   }
   else if ($edit['tid']) {
@@ -436,7 +436,7 @@ function taxonomy_save_term(&$edit) {
   else {
     $edit['tid'] = db_next_id('{term_data}_tid');
     db_query("INSERT INTO {term_data} (tid, name, description, vid, weight) VALUES (%d, '%s', '%s', %d, %d)", $edit['tid'], $edit['name'], $edit['description'], $edit['vid'], $edit['weight']);
-    module_invoke_all('taxonomy', 'insert', 'term', $edit);
+    $hook = 'insert';
     $status = SAVED_NEW;
   }
 
@@ -476,6 +476,10 @@ function taxonomy_save_term(&$edit) {
         db_query("INSERT INTO {term_synonym} (tid, name) VALUES (%d, '%s')", $edit['tid'], chop($synonym));
       }
     }
+  }
+
+  if (isset($hook)) {
+    module_invoke_all('taxonomy', $hook, 'term', $edit);
   }
 
   cache_clear_all();
