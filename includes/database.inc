@@ -198,23 +198,6 @@ function db_query($query) {
 }
 
 /**
- * Debugging version of db_query().
- *
- * Echoes the query to the browser.
- */
-function db_queryd($query) {
-  $args = func_get_args();
-  array_shift($args);
-  $query = db_prefix_tables($query);
-  if (isset($args[0]) and is_array($args[0])) { // 'All arguments in one array' syntax
-    $args = $args[0];
-  }
-  _db_query_callback($args, TRUE);
-  $query = preg_replace_callback(DB_QUERY_REGEXP, '_db_query_callback', $query);
-  return _db_query($query, 1);
-}
-
-/**
  * Helper function for db_rewrite_sql.
  *
  * Collects JOIN and WHERE statements via hook_sql.
