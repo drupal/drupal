@@ -577,7 +577,8 @@ function system_install() {
         custom smallint DEFAULT '0' NOT NULL,
         throttle smallint DEFAULT '0' NOT NULL,
         visibility smallint DEFAULT '0' NOT NULL,
-        pages text DEFAULT '' NOT NULL
+        pages text DEFAULT '' NOT NULL,
+        title varchar(64) DEFAULT '' NOT NULL
       )");
 
       db_query("CREATE TABLE {boxes} (
