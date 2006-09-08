@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.368 2006/09/08 16:33:02 dries Exp $
+// $Id: system.module,v 1.369 2006/09/08 23:13:00 drumm Exp $
 
 /**
  * @file
@@ -1429,6 +1429,7 @@ function system_status($check = FALSE) {
  * Theme status report
  */
 function theme_status_report(&$requirements) {
+  $i = 0;
   $output = '<table class="system-status-report">';
   foreach ($requirements as $requirement) {
     if ($requirement['#type'] == '') {
@@ -1727,6 +1728,7 @@ function system_admin_compact_mode() {
  * @themeable
  */
 function theme_admin_page($blocks) {
+  $stripe = 0;
   foreach ($blocks as $block) {
     if ($block_output = theme('admin_block', $block)) {
       if (!$block['position']) {
