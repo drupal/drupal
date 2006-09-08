@@ -1,5 +1,5 @@
 <?php
-// $Id: watchdog.module,v 1.156 2006/09/08 16:33:02 dries Exp $
+// $Id: watchdog.module,v 1.157 2006/09/08 23:07:25 drumm Exp $
 
 /**
  * @file
@@ -85,11 +85,6 @@ function watchdog_user($op, &$edit, &$user) {
 }
 
 function watchdog_form_overview() {
-  $icons = array(WATCHDOG_NOTICE  => '',
-                 WATCHDOG_WARNING => theme('image', 'misc/watchdog-warning.png', t('warning'), t('warning')),
-                 WATCHDOG_ERROR   => theme('image', 'misc/watchdog-error.png', t('error'), t('error')));
-  $classes = array(WATCHDOG_NOTICE => 'watchdog-notice', WATCHDOG_WARNING => 'watchdog-warning', WATCHDOG_ERROR => 'watchdog-error');
-
   $names['all'] = t('all messages');
   foreach (_watchdog_get_message_types() as $type) {
     $names[$type] = t('!type messages', array('!type' => t($type)));
@@ -114,6 +109,11 @@ function watchdog_form_overview() {
  * Menu callback; displays a listing of log messages.
  */
 function watchdog_overview() {
+  $icons = array(WATCHDOG_NOTICE  => '',
+                 WATCHDOG_WARNING => theme('image', 'misc/watchdog-warning.png', t('warning'), t('warning')),
+                 WATCHDOG_ERROR   => theme('image', 'misc/watchdog-error.png', t('error'), t('error')));
+  $classes = array(WATCHDOG_NOTICE => 'watchdog-notice', WATCHDOG_WARNING => 'watchdog-warning', WATCHDOG_ERROR => 'watchdog-error');
+
   $output = drupal_get_form('watchdog_form_overview');
 
   $header = array(
