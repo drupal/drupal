@@ -192,8 +192,7 @@ function theme_watchdog_form_overview($form) {
   return '<div class="container-inline">'. drupal_render($form) .'</div>';
 }
 
-function watchdog_form_overview_submit($form_id, $form) {
-  global $form_values;
+function watchdog_form_overview_submit($form_id, $form_values) {
   $_SESSION['watchdog_overview_filter'] = $form_values['filter'];
 }
 
