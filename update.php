@@ -420,7 +420,7 @@ function update_progress_page() {
  *   the overall percentage finished. The second element is a status message.
  */
 function update_do_updates() {
-  while (($update = reset($_SESSION['update_remaining']))) {
+  while (isset($_SESSION['update_remaining']) && ($update = reset($_SESSION['update_remaining']))) {
     $update_finished = update_data($update['module'], $update['version']);
     if ($update_finished == 1) {
       // Dequeue the completed update.
