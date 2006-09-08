@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.128 2006/08/31 21:58:36 dries Exp $
+// $Id: upload.module,v 1.129 2006/09/08 16:26:51 dries Exp $
 
 /**
  * @file
@@ -279,7 +279,8 @@ function upload_file_download($file) {
         return array(
           'Content-Type: '. $type .'; name='. $name,
           'Content-Length: '. $file->filesize,
-          'Content-Disposition: '. $disposition .'; filename='. $name
+          'Content-Disposition: '. $disposition .'; filename='. $name,
+          'Cache-Control: private'
         );
       }
       else {
