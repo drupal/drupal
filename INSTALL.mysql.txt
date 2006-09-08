@@ -1,85 +1,44 @@
-// $Id: INSTALL.mysql.txt,v 1.6 2006/04/17 20:48:25 dries Exp $
+// $Id: INSTALL.mysql.txt,v 1.7 2006/09/08 16:29:35 dries Exp $
 
-CONTENTS OF THIS FILE
----------------------
+CREATE THE MySQL DATABASE
+--------------------------
 
- * Introduction
- * Installation and configuration:
-    - Database and user creation
-    - Drupal schema loading
+This step is only necessary if you don't already have a database set-up (e.g. by
+your host). In the following examples, 'username' is an example MySQL user which
+has the CREATE and GRANT privileges. Use the appropriate user name for your
+system.
 
-INTRODUCTION
-------------
+First, you must create a new database for your Drupal site (here, 'databasename'
+is the name of the new database):
 
-This file describes how to create a MySQL database for Drupal.
+  mysqladmin -u username -p create databasename
 
-If you control your databases through a web-based control panel,
-check its documentation, as the following instructions are for the
-command line only.
+MySQL will prompt for the 'username' database password and then create the
+initial database files. Next you must login and set the access database rights:
 
-INSTALLATION AND CONFIGURATION
-------------------------------
+  mysql -u username -p
 
-1. CREATE THE DRUPAL DATABASE
+Again, you will be asked for the 'username' database password. At the MySQL
+prompt, enter following command:
 
-   This step is only necessary if you don't already have a database
-   set-up (e.g. by your host). In the following examples, 'dba_user' is
-   an example MySQL user which has the CREATE and GRANT privileges. Use
-   the appropriate user name for your system.
+  GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER, CREATE
+  TEMPORARY TABLES, LOCK TABLES
+  ON databasename.*
+  TO 'username'@'localhost' IDENTIFIED BY 'password';
 
-   First, you must create a new database for your Drupal site
-   (here, 'databasename' is the name of the new database):
+where
 
-     mysqladmin -u dba_user -p create databasename
+ 'databasename' is the name of your database
+ 'username@localhost' is the username of your MySQL account
+ 'password' is the password required for that username
 
-   MySQL will prompt for the 'dba_user' database password and then create
-   the initial database files. Next you must login and set the access
-   database rights:
+Note: Unless your database user has all of the privileges listed above, you will
+not be able to run Drupal.
 
-     mysql -u dba_user -p
+If successful, MySQL will reply with:
 
-   Again, you will be asked for the 'dba_user' database password.
-   At the MySQL prompt, enter following command:
+  Query OK, 0 rows affected
 
-     GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX,
-     ALTER, CREATE TEMPORARY TABLES, LOCK TABLES
-     ON databasename.*
-     TO 'username'@'localhost' IDENTIFIED BY 'password';
+To activate the new permissions, enter the following command:
 
-   where
-
-    'databasename' is the name of your database
-    'username@localhost' is the username of your MySQL account
-    'password' is the password required for that username
-
-   Note: Unless your database user has all of the privileges listed
-   above, you will not be able to run Drupal.
-
-   If successful, MySQL will reply with:
-
-     Query OK, 0 rows affected
-
-   To activate the new permissions, enter the following command:
-
-     FLUSH PRIVILEGES;
-
-2. LOAD THE DRUPAL DATABASE SCHEMA
-
-   Once you have a database, you must load the required tables into it.
-   Depending on the version of MySQL you are using, you must use the
-   file 'database.4.0.mysql' (for MySQL 4.0 or lower) or
-   'database.4.1.mysql' (for MySQL 4.1 or higher). Both files are
-   located in Drupal's database directory.
-
-   If you use a web-based control panel, you should be able to upload
-   the appropriate file and run it directly as SQL commands.
-
-   From the command line, use (again, replacing 'username' and
-   'databasename' with your MySQL username and database name):
-
-   for MySQL 4.0 or lower:
-     mysql -u username -p databasename < database/database.4.0.mysql
-
-   for MySQL 4.1 or higher:
-     mysql -u username -p databasename < database/database.4.1.mysql
-
+  FLUSH PRIVILEGES;

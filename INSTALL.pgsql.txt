@@ -1,31 +1,16 @@
-// $Id: INSTALL.pgsql.txt,v 1.5 2006/01/21 01:42:52 unconed Exp $
+// $Id: INSTALL.pgsql.txt,v 1.6 2006/09/08 16:29:35 dries Exp $
 
-CONTENTS OF THIS FILE
----------------------
-
- * Introduction
- * Installation and configuration:
-    - Database and user creation
-    - Drupal schema loading
-
-INTRODUCTION
-------------
-
-This file describes how to create a PostgreSQL database for Drupal.
-
-If you control your databases through a web-based control panel,
-check its documentation, as the following instructions are for the
-command line only.
-
-INSTALLATION AND CONFIGURATION
+CREATE THE PostgreSQL DATABASE
 ------------------------------
+
+Note that the database must be created with UTF-8 (Unicode) encoding.
 
 1. CREATE DATABASE USER
 
-   This step is only necessary if you don't already have a user setup
-   (e.g. by your host) or you want to create new user for use with Drupal
-   only. The following command creates a new user named "username" and
-   asks for a password for that user:
+   This step is only necessary if you don't already have a user setup (e.g.
+   by your host) or you want to create new user for use with Drupal only. The
+   following command creates a new user named "username" and asks for a
+   password for that user:
 
      createuser --pwprompt --encrypted --no-adduser --no-createdb username
 
@@ -33,21 +18,11 @@ INSTALLATION AND CONFIGURATION
 
 2. CREATE THE DRUPAL DATABASE
 
-   This step is only necessary if you don't already have a database
-   setup (e.g. by your host) or you want to create new database for
-   use with Drupal only. The following command creates a new database
-   named "databasename", which is owned by previously created "username":
+   This step is only necessary if you don't already have a database setup (e.g.
+   by your host) or you want to create new database for use with Drupal only.
+   The following command creates a new database named "databasename", which is
+   owned by previously created "username":
 
      createdb --encoding=UNICODE --owner=username databasename
 
    If everything works correctly, you'll see a "CREATE DATABASE" notice.
-   Note that the database must be created with UTF-8 (Unicode) encoding.
-
-3. LOAD THE DRUPAL DATABASE SCHEMA
-
-   Once the database has been created, load the required tables into it:
-
-     psql -q -f database/database.pgsql databasename username
-
-   If everything works correctly, you won't see any messages.
-
