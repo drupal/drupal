@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.7 2006/08/31 18:01:19 dries Exp $
+// $Id: content_types.inc,v 1.8 2006/09/09 08:25:23 dries Exp $
 
 /**
  * @file
@@ -228,17 +228,17 @@ function node_type_form_validate($form_id, $form_values) {
 
   if (!$form_values['locked']) {
     if (isset($types[$type->type]) && $type->type != $old_type) {
-      form_set_error('type', t('The machine-readable name %type is already taken.', array('%type' => theme('placeholder', $type->type))));
+      form_set_error('type', t('The machine-readable name %type is already taken.', array('%type' => $type->type)));
     }
     if (strpos($type->type, '-') !== FALSE) {
-      form_set_error('type', t('The machine-readable name cannot contain dashes.', array('%type' => theme('placeholder', $type->type))));
+      form_set_error('type', t('The machine-readable name cannot contain dashes.', array('%type' => $type->type)));
     }
   }
 
   $names = array_flip($types);
 
   if (isset($names[$type->name]) && $names[$type->name] != $old_type) {
-    form_set_error('name', t('The human-readable name %name is already taken.', array('%name' => theme('placeholder', $names[$type->name]))));
+    form_set_error('name', t('The human-readable name %name is already taken.', array('%name' => $names[$type->name])));
     break;
   }
 }
@@ -370,7 +370,7 @@ function node_type_delete_confirm($type) {
 
   $num_nodes = db_num_rows(db_query("SELECT * FROM {node} WHERE type = '%s'", $type->type));
   if ($num_nodes) {
-    $caption .= '<p>'. t('<strong>Warning:</strong> there %are currently %num_nodes %type %nodes on your site. %they may not be able to be displayed or edited correctly, once you have removed this content type.', array('%are' => format_plural($num_nodes, 'is', 'are'), '%num_nodes' => $num_nodes, '%type' => theme('placeholder', $type->name), '%nodes' => format_plural($num_nodes, 'node', 'nodes'), '%they' => format_plural($num_nodes, 'It', 'They'))) .'</p>';
+    $caption .= '<p>'. t('<strong>Warning:</strong> there %are currently %num_nodes %type %nodes on your site. %they may not be able to be displayed or edited correctly, once you have removed this content type.', array('%are' => format_plural($num_nodes, 'is', 'are'), '%num_nodes' => $num_nodes, '%type' => $type->name, '%nodes' => format_plural($num_nodes, 'node', 'nodes'), '%they' => format_plural($num_nodes, 'It', 'They'))) .'</p>';
   }
 
   $caption .= '<p>'. t('This action cannot be undone.') .'</p>';

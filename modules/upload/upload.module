@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.129 2006/09/08 16:26:51 dries Exp $
+// $Id: upload.module,v 1.130 2006/09/09 08:25:24 dries Exp $
 
 /**
  * @file
@@ -146,17 +146,17 @@ function upload_admin_settings_validate($form_id, $form_values) {
     $usersize = $form_values['upload_usersize_'. $rid];
 
     if (!is_numeric($uploadsize) || ($uploadsize <= 0)) {
-      form_set_error('upload_uploadsize_'. $rid, t('The %role file size limit must be a number and greater than zero.', array('%role' => theme('placeholder', $role))));
+      form_set_error('upload_uploadsize_'. $rid, t('The %role file size limit must be a number and greater than zero.', array('%role' => $role)));
     }
     if (!is_numeric($usersize) || ($usersize <= 0)) {
-      form_set_error('upload_usersize_'. $rid, t('The %role file size limit must be a number and greater than zero.', array('%role' => theme('placeholder', $role))));
+      form_set_error('upload_usersize_'. $rid, t('The %role file size limit must be a number and greater than zero.', array('%role' => $role)));
     }
     if ($uploadsize > file_upload_max_size()) {
      form_set_error('upload_uploadsize_'. $rid, $exceed_max_msg . $more_info);
      $more_info = '';
     }
     if ($uploadsize > $usersize) {
-     form_set_error('upload_uploadsize_'. $rid, t('The %role maximum file size per upload is greater than the total file size allowed per user', array('%role' => theme('placeholder', $role))));
+     form_set_error('upload_uploadsize_'. $rid, t('The %role maximum file size per upload is greater than the total file size allowed per user', array('%role' => $role)));
     }
   }
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.149 2006/09/06 06:53:38 drumm Exp $
+// $Id: form.inc,v 1.150 2006/09/09 08:25:23 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -497,7 +497,7 @@ function _form_validate($elements, $form_id = NULL) {
         }
         elseif (!isset($options[$elements['#value']])) {
           form_error($elements, t('An illegal choice has been detected. Please contact the site administrator.'));
-          watchdog('form', t('Illegal choice %choice in %name element.', array('%choice' => theme_placeholder(check_plain($elements['#value'])), '%name' => theme('placeholder', empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title']))), WATCHDOG_ERROR);
+          watchdog('form', t('Illegal choice %choice in %name element.', array('%choice' => $elements['#value'], '%name' => empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title'])), WATCHDOG_ERROR);
         }
       }
     }

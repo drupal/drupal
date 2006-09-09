@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.92 2006/09/05 11:40:44 dries Exp $
+// $Id: locale.inc,v 1.93 2006/09/09 08:25:23 dries Exp $
 
 /**
  * @file
@@ -867,7 +867,7 @@ function _locale_import_parse_plural_forms($pluralforms, $filename) {
     return array($nplurals, $plural);
   }
   else {
-    drupal_set_message(t('The translation file %filename contains an error: the plural formula could not be parsed.', array('%filename' => theme('placeholder', $filename))), 'error');
+    drupal_set_message(t('The translation file %filename contains an error: the plural formula could not be parsed.', array('%filename' => $filename)), 'error');
     return FALSE;
   }
 }

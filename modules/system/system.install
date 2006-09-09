@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.27 2006/09/08 23:25:25 drumm Exp $
+// $Id: system.install,v 1.28 2006/09/09 08:25:24 dries Exp $
 
 define('DRUPAL_MINIMUM_PHP',    '4.3.3');
 define('DRUPAL_MINIMUM_MYSQL',  '3.23.17'); // If using MySQL
@@ -24,10 +24,10 @@ function system_requirements($phase) {
 
     drupal_add_js("
         $(document).ready(function() {
-	     $('.system-jquery').ancestors('.warning').addClass('info').removeClass('warning')
-	     var version = $().jquery
-	     $('.system-jquery').html(version.substring(1,version.length-1))
-	});
+       $('.system-jquery').ancestors('.warning').addClass('info').removeClass('warning')
+       var version = $().jquery
+       $('.system-jquery').html(version.substring(1,version.length-1))
+  });
     ", 'inline');
 
     $requirements['jquery'] = array(
