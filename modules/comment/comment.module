@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.486 2006/09/08 16:33:02 dries Exp $
+// $Id: comment.module,v 1.487 2006/09/09 00:23:11 drumm Exp $
 
 /**
  * @file
@@ -1749,7 +1749,7 @@ function _comment_per_page() {
 function _comment_get_display_setting($setting) {
   global $user;
 
-  if ($_GET[$setting]) {
+  if (isset($_GET[$setting])) {
     $value = $_GET[$setting];
   }
   else {
