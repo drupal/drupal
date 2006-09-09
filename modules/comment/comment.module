@@ -1749,7 +1749,7 @@ function _comment_per_page() {
 function _comment_get_display_setting($setting) {
   global $user;
 
-  if ($_GET[$setting]) {
+  if (isset($_GET[$setting])) {
     $value = $_GET[$setting];
   }
   else {
