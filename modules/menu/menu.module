@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.88 2006/09/01 07:32:58 drumm Exp $
+// $Id: menu.module,v 1.89 2006/09/09 08:21:42 dries Exp $
 
 /**
  * @file
@@ -460,7 +460,7 @@ function menu_item_delete_form($mid) {
 function menu_item_delete_form_submit($form_id, $form_values) {
   menu_delete_item($form_values['mid']);
 
-  $t_args = array('%title' => theme('placeholder', $form_values['title']));
+  $t_args = array('%title' => $form_values['title']);
   if ($form_values['type'] & MENU_IS_ROOT) {
     drupal_set_message(t('The menu %title has been deleted.', $t_args));
     watchdog('menu', t('Deleted menu %title.', $t_args), WATCHDOG_NOTICE);
