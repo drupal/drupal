@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.130 2006/09/09 08:25:24 dries Exp $
+// $Id: upload.module,v 1.131 2006/09/10 07:38:52 dries Exp $
 
 /**
  * @file
@@ -586,8 +586,8 @@ function theme_upload_attachments($files) {
   $rows = array();
   foreach ($files as $file) {
     if ($file->list) {
-      $href = check_url(($file->fid ? file_create_url($file->filepath) : url(file_create_filename($file->filename, file_create_path()))));
-      $text = check_plain($file->description ? $file->description : $file->filename);
+      $href = $file->fid ? file_create_url($file->filepath) : url(file_create_filename($file->filename, file_create_path()));
+      $text = $file->description ? $file->description : $file->filename;
       $rows[] = array(l($text, $href), format_size($file->filesize));
     }
   }
