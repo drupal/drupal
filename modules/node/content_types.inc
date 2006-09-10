@@ -247,7 +247,7 @@ function node_type_form_validate($form_id, $form_values) {
  * Implementation of hook_form_submit().
  */
 function node_type_form_submit($form_id, $form_values) {
-  $op = isset($_POST['op']) ? $_POST['op'] : '';
+  $op = isset($form_values['op']) ? $form_values['op'] : '';
 
   $type = new stdClass();
 
