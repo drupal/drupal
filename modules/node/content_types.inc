@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.8 2006/09/09 08:25:23 dries Exp $
+// $Id: content_types.inc,v 1.9 2006/09/10 07:36:37 dries Exp $
 
 /**
  * @file
@@ -247,7 +247,7 @@ function node_type_form_validate($form_id, $form_values) {
  * Implementation of hook_form_submit().
  */
 function node_type_form_submit($form_id, $form_values) {
-  $op = isset($_POST['op']) ? $_POST['op'] : '';
+  $op = isset($form_values['op']) ? $form_values['op'] : '';
 
   $type = new stdClass();
 
