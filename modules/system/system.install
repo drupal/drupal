@@ -21,20 +21,6 @@ function system_requirements($phase) {
       'value' => VERSION,
       'severity' => REQUIREMENT_INFO
     );
-
-    drupal_add_js("
-        $(document).ready(function() {
-       $('.system-jquery').ancestors('.warning').addClass('info').removeClass('warning')
-       var version = $().jquery
-       $('.system-jquery').html(version.substring(1,version.length-1))
-  });
-    ", 'inline');
-
-    $requirements['jquery'] = array(
-      'title' => $t('jQuery'),
-      'value' => '<span class="system-jquery">'. $t('Javascript is not currently enabled.') .'</span>',
-      'severity' => REQUIREMENT_WARNING
-    );
   }
 
   // Test web server
