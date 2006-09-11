@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.16 2006/09/11 08:11:07 drumm Exp $
+// $Id: install.php,v 1.17 2006/09/11 10:53:19 unconed Exp $
 
 require_once './includes/install.inc';
 
@@ -64,13 +64,14 @@ function install_main() {
   // Load the profile.
   require_once "./profiles/$profile/$profile.profile";
 
+  // Check the installation requirements for Drupal and this profile.
+  install_check_requirements($profile);
+
   // Change the settings.php information if verification failed earlier.
+  // Note: will trigger a redirect if database credentials change.
   if (!$verify) {
     install_change_settings($profile, $install_locale);
   }
-
-  // Check the installation requirements for Drupal and this profile.
-  install_check_requirements($profile);
 
   // Perform actual installation defined in the profile.
   $modules = drupal_verify_profile($profile, $install_locale);
