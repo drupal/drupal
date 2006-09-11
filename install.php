@@ -66,7 +66,7 @@ function install_main() {
 
   // Change the settings.php information if verification failed earlier.
   if (!$verify) {
-    install_change_settings();
+    install_change_settings($profile, $install_locale);
   }
 
   // Check the installation requirements for Drupal and this profile.
@@ -124,8 +124,8 @@ function install_verify_settings() {
 /**
  * Configure and rewrite settings.php.
  */
-function install_change_settings() {
-  global $profile, $install_locale, $db_url, $db_type, $db_prefix;
+function install_change_settings($profile = 'default', $install_locale = '') {
+  global $db_url, $db_type, $db_prefix;
 
   $url = parse_url($db_url);
   $db_user = urldecode($url['user']);
