@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.680 2006/09/11 08:26:47 drumm Exp $
+// $Id: user.module,v 1.681 2006/09/11 09:05:46 drumm Exp $
 
 /**
  * @file
@@ -1900,17 +1900,38 @@ function user_admin_role() {
       form_set_error('name', t('You must specify a valid role name.'));
     }
   }
-  else if ($id) {
-    // Display the role form.
+  if ($id) {
+    // Display the edit role form.
     $role = db_fetch_object(db_query('SELECT * FROM {role} WHERE rid = %d', $id));
-    $form['name'] = array('#type' => 'textfield', '#title' => t('Role name'), '#default_value' => $role->name, '#size' => 30, '#maxlength' => 64, '#description' => t('The name for this role. Example: "moderator", "editorial board", "site architect".'));
-    $form['submit'] = array('#type' => 'submit', '#value' => t('Save role'));
-    $form['delete'] = array('#type' => 'submit', '#value' => t('Delete role'));
-
-    return $form;
+    $form['name'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Role name'),
+      '#default_value' => $role->name,
+      '#size' => 30,
+      '#required' => TRUE,
+      '#maxlength' => 64,
+      '#description' => t('The name for this role. Example: "moderator", "editorial board", "site architect".'),
+    );
+    $form['submit'] = array(
+      '#type' => 'submit',
+      '#value' => t('Save role'),
+    );
+    $form['delete'] = array(
+      '#type' => 'submit',
+      '#value' => t('Delete role'),
+    );
   }
-  $form['name'] = array('#type' => 'textfield', '#size' => 32, '#maxlength' => 64);
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Add role'));
+  else {
+    $form['name'] = array(
+      '#type' => 'textfield',
+      '#size' => 32,
+      '#maxlength' => 64,
+    );
+    $form['submit'] = array(
+      '#type' => 'submit',
+      '#value' => t('Add role'),
+    );
+  }
   return $form;
 }
 
