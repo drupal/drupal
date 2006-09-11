@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.679 2006/09/08 23:18:51 drumm Exp $
+// $Id: user.module,v 1.680 2006/09/11 08:26:47 drumm Exp $
 
 /**
  * @file
@@ -512,12 +512,24 @@ function user_block($op = 'list', $delta = 0, $edit = array()) {
 
      return $blocks;
   }
+  else if ($op == 'configure' && $delta == 2) {
+    $form['user_block_whois_new_count'] = array(
+      '#type' => 'select',
+      '#title' => t('Number of users to display'),
+      '#default_value' => variable_get('user_block_whois_new_count', 5),
+      '#options' => drupal_map_assoc(array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)),
+    );
+    return $form;
+  }
   else if ($op == 'configure' && $delta == 3) {
     $period = drupal_map_assoc(array(30, 60, 120, 180, 300, 600, 900, 1800, 2700, 3600, 5400, 7200, 10800, 21600, 43200, 86400), 'format_interval');
     $form['user_block_seconds_online'] = array('#type' => 'select', '#title' => t('User activity'), '#default_value' => variable_get('user_block_seconds_online', 900), '#options' => $period, '#description' => t('A user is considered online for this long after they have last viewed a page.'));
     $form['user_block_max_list_count'] = array('#type' => 'select', '#title' => t('User list length'), '#default_value' => variable_get('user_block_max_list_count', 10), '#options' => drupal_map_assoc(array(0, 5, 10, 15, 20, 25, 30, 40, 50, 75, 100)), '#description' => t('Maximum number of currently online users to display.'));
 
     return $form;
+  }
+  else if ($op == 'save' && $delta == 2) {
+    variable_set('user_block_whois_new_count', $edit['user_block_whois_new_count']);
   }
   else if ($op == 'save' && $delta == 3) {
     variable_set('user_block_seconds_online', $edit['user_block_seconds_online']);
@@ -546,7 +558,7 @@ function user_block($op = 'list', $delta = 0, $edit = array()) {
       case 2:
         if (user_access('access content')) {
           // Retrieve a list of new users who have subsequently accessed the site successfully.
-          $result = db_query_range('SELECT uid, name FROM {users} WHERE status != 0 AND access != 0 ORDER BY created DESC', 0, 5);
+          $result = db_query_range('SELECT uid, name FROM {users} WHERE status != 0 AND access != 0 ORDER BY created DESC', 0, variable_get('user_block_whois_new_count', 5));
           while ($account = db_fetch_object($result)) {
             $items[] = $account;
           }
