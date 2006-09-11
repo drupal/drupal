@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.15 2006/09/06 07:46:25 dries Exp $
+// $Id: install.php,v 1.16 2006/09/11 08:11:07 drumm Exp $
 
 require_once './includes/install.inc';
 
@@ -66,7 +66,7 @@ function install_main() {
 
   // Change the settings.php information if verification failed earlier.
   if (!$verify) {
-    install_change_settings();
+    install_change_settings($profile, $install_locale);
   }
 
   // Check the installation requirements for Drupal and this profile.
@@ -124,8 +124,8 @@ function install_verify_settings() {
 /**
  * Configure and rewrite settings.php.
  */
-function install_change_settings() {
-  global $profile, $install_locale, $db_url, $db_type, $db_prefix;
+function install_change_settings($profile = 'default', $install_locale = '') {
+  global $db_url, $db_type, $db_prefix;
 
   $url = parse_url($db_url);
   $db_user = urldecode($url['user']);
