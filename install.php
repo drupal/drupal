@@ -64,13 +64,14 @@ function install_main() {
   // Load the profile.
   require_once "./profiles/$profile/$profile.profile";
 
+  // Check the installation requirements for Drupal and this profile.
+  install_check_requirements($profile);
+
   // Change the settings.php information if verification failed earlier.
+  // Note: will trigger a redirect if database credentials change.
   if (!$verify) {
     install_change_settings($profile, $install_locale);
   }
-
-  // Check the installation requirements for Drupal and this profile.
-  install_check_requirements($profile);
 
   // Perform actual installation defined in the profile.
   $modules = drupal_verify_profile($profile, $install_locale);
