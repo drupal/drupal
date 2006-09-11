@@ -672,8 +672,21 @@ function taxonomy_form_alter($form_id, &$form) {
         $form['taxonomy'][$vocabulary->vid]['#required'] = $vocabulary->required;
       }
     }
-    if (isset($form['taxonomy'])) {
-      $form['taxonomy'] += array('#type' => 'fieldset', '#title' => t('Categories'), '#collapsible' => TRUE, '#collapsed' => FALSE, '#tree' => TRUE, '#weight' => -3);
+    if (is_array($form['taxonomy']) && !empty($form['taxonomy'])) {
+      if (count($form['taxonomy']) > 1) { // Add fieldset only if form has more than 1 element.
+        $form['taxonomy'] += array(
+          '#type' => 'fieldset',
+          '#title' => t('Categories'),
+          '#collapsible' => TRUE,
+          '#collapsed' => FALSE,
+          '#tree' => TRUE,
+          '#weight' => -3,
+        );
+      }
+      else {
+        $form['taxonomy'] = array_shift($form['taxonomy']);
+        $form['taxonomy']['#weight'] = -3;
+      }
     }
   }
 }
