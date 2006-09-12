@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.163 2006/09/11 06:29:03 drumm Exp $
+// $Id: CHANGELOG.txt,v 1.164 2006/09/12 20:35:17 unconed Exp $
 
 Drupal x.x.x, xxxx-xx-xx (development version)
 ------------------------
@@ -21,7 +21,7 @@ Drupal x.x.x, xxxx-xx-xx (development version)
     * made it possible to instantly assign roles to newly created user accounts.
     * improved configurability of the contact forms.
     * reorganized the settings pages.
-    * made it easy to investigate popopular search terms
+    * made it easy to investigate popular search terms
 - integrated urlfilter.module in filter.module
 - block system:
     * extended the block visibility settings with a role specific settings.
