@@ -18,7 +18,7 @@
 /**
  * Report database status.
  */
-function db_status_report() {
+function db_status_report($phase) {
   global $active_db;
 
   $t = get_t();
