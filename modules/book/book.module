@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.390 2006/09/05 10:01:48 dries Exp $
+// $Id: book.module,v 1.391 2006/09/13 01:30:21 drumm Exp $
 
 /**
  * @file
@@ -974,7 +974,7 @@ function book_admin_edit_submit($form_id, $form_values) {
  */
 function book_admin($nid = 0) {
   if ($nid) {
-    return book_admin_edit($nid);
+    return drupal_get_form('book_admin_edit', $nid);
   }
   else {
     return book_admin_overview();
