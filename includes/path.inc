@@ -1,5 +1,5 @@
 <?php
-// $Id: path.inc,v 1.8 2006/09/09 11:06:53 dries Exp $
+// $Id: path.inc,v 1.9 2006/09/13 01:07:23 drumm Exp $
 
 /**
  * @file
@@ -72,7 +72,7 @@ function drupal_lookup_path($action, $path = '') {
           return $src;
         }
         else {
-          $map[$path] = $path;
+          $map[$path] = FALSE;
         }
       }
     }
