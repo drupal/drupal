@@ -72,7 +72,7 @@ function drupal_lookup_path($action, $path = '') {
           return $src;
         }
         else {
-          $map[$path] = $path;
+          $map[$path] = FALSE;
         }
       }
     }
