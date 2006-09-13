@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysqli.inc,v 1.22 2006/09/05 02:22:53 drumm Exp $
+// $Id: database.mysqli.inc,v 1.23 2006/09/13 01:38:42 drumm Exp $
 
 /**
  * @file
@@ -18,7 +18,7 @@
 /**
  * Report database status.
  */
-function db_status_report() {
+function db_status_report($phase) {
   global $active_db;
 
   $t = get_t();
