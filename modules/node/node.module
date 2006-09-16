@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.700 2006/09/08 16:33:02 dries Exp $
+// $Id: node.module,v 1.701 2006/09/16 05:35:57 dries Exp $
 
 /**
  * @file
@@ -1809,7 +1809,7 @@ function node_validate($node, $form = array()) {
     form_set_error('body', t('The body of your @type is too short. You need at least %words words.', array('%words' => $type->min_word_count, '@type' => $type->name)));
   }
 
-  if (isset($node->nid) && (node_last_changed($node->nid) > $_POST['changed'])) {
+  if (isset($node->nid) && (node_last_changed($node->nid) > $node->changed)) {
     form_set_error('changed', t('This content has been modified by another user, changes cannot be saved.'));
   }
 
@@ -1873,7 +1873,7 @@ function node_form($node, $form_values = NULL) {
   }
 
   // Changed must be sent to the client, for later overwrite error checking.
-  $form['changed'] = array('#type' => 'hidden', '#value' => $node->changed);
+  $form['changed'] = array('#type' => 'hidden', '#default_value' => $node->changed);
 
   // Get the node-specific bits.
   $form = array_merge_recursive($form, node_invoke($node, 'form', $form_values));
