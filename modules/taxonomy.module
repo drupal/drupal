@@ -557,8 +557,8 @@ function taxonomy_form_all($free_tags = 0) {
   foreach ($vocabularies as $vid => $vocabulary) {
     if ($vocabulary->tags && !$free_tags) { continue; }
     $tree = taxonomy_get_tree($vid);
-    $options[$vocabulary->name] = array();
-    if ($tree) {
+    if ($tree && (count($tree) > 1)) {
+      $options[$vocabulary->name] = array();
       foreach ($tree as $term) {
         $options[$vocabulary->name][$term->tid] = _taxonomy_depth($term->depth, '-') . $term->name;
       }
