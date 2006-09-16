@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysql.inc,v 1.58 2006/09/07 08:05:31 dries Exp $
+// $Id: database.mysql.inc,v 1.59 2006/09/16 19:26:22 drumm Exp $
 
 /**
  * @file
@@ -56,7 +56,13 @@ function db_connect($url) {
 
   // Decode url-encoded information in the db connection string
   $url['user'] = urldecode($url['user']);
-  $url['pass'] = urldecode($url['pass']);
+  // Test if database url has a password.
+  if(isset($url['pass'])) {
+    $url['pass'] = urldecode($url['pass']);
+  }
+  else {
+    $url['pass'] = '';
+  }
   $url['host'] = urldecode($url['host']);
   $url['path'] = urldecode($url['path']);
 
