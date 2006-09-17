@@ -332,7 +332,7 @@ function book_outline($nid) {
  * Handles book outline form submissions.
  */
 function book_outline_submit($form_id, $form_values) {
-  $op = $_POST['op'];
+  $op = $form_values['op'];
   $node = node_load($form_values['nid']);
 
   switch ($op) {
