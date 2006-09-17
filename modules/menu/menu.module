@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.89 2006/09/09 08:21:42 dries Exp $
+// $Id: menu.module,v 1.90 2006/09/17 19:17:24 dries Exp $
 
 /**
  * @file
@@ -187,14 +187,11 @@ function menu_perm() {
  */
 function menu_form_alter($form_id, &$form) {
   if (isset($form['type']) && $form['type']['#value'] .'_node_form' == $form_id) {
-    $edit = isset($_POST) ? $_POST : '';
-    $edit['nid'] = $form['nid']['#value'];
-
     $item = array();
-    if ($edit['nid'] > 0) {
-      $item = db_fetch_array(db_query("SELECT * FROM {menu} WHERE path = 'node/%d'", $edit['nid']));
-      if (isset($edit['menu']) && is_array($edit['menu'])) {
-        $item = !is_array($item) ? $edit['menu'] : (($_POST['op'] == t('Preview')) ? array_merge($item, $edit['menu']) : array_merge($edit['menu'], $item));
+    if ($form['nid']['#value'] > 0) {
+      $item = db_fetch_array(db_query("SELECT * FROM {menu} WHERE path = 'node/%d'", $form['nid']['#value']));
+      if (isset($form['#post']['menu']) && is_array($form['#post']['menu'])) {
+        $item = !is_array($item) ? $form['#post']['menu'] : (($form['#post']['op'] == t('Preview')) ? array_merge($item, $form['#post']['menu']) : array_merge($form['#post']['menu'], $item));
       }
     }
 
