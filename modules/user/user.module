@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.681 2006/09/11 09:05:46 drumm Exp $
+// $Id: user.module,v 1.682 2006/09/17 19:14:16 dries Exp $
 
 /**
  * @file
@@ -2552,7 +2552,7 @@ function theme_user_filters($form) {
  * Process result from user administration filter form.
  */
 function user_filter_form_submit($form_id, $form_values) {
-  $op = $_POST['op'];
+  $op = $form_values['op'];
   $filters = user_filters();
   switch ($op) {
     case t('Filter'): case t('Refine'):

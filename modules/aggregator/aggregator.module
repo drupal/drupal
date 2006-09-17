@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.305 2006/09/06 06:53:39 drumm Exp $
+// $Id: aggregator.module,v 1.306 2006/09/17 19:14:15 dries Exp $
 
 /**
  * @file
@@ -344,7 +344,7 @@ function aggregator_block($op, $delta = 0, $edit = array()) {
  * Validate aggregator_form_feed form submissions.
  */
 function aggregator_form_category_validate($form_id, $form_values) {
-  if ($_POST['op'] == t('Submit')) {
+  if ($form_values['op'] == t('Submit')) {
     // Check for duplicate titles
     if (isset($form_values['cid'])) {
       $category = db_fetch_object(db_query("SELECT cid FROM {aggregator_category} WHERE title = '%s' AND cid != %d", $form_values['title'], $form_values['cid']));
@@ -363,7 +363,7 @@ function aggregator_form_category_validate($form_id, $form_values) {
  * @todo Add delete confirmation dialog.
  */
 function aggregator_form_category_submit($form_id, $form_values) {
-  if ($_POST['op'] == t('Delete')) {
+  if ($form_values['op'] == t('Delete')) {
     $title = $form_values['title'];
     // Unset the title:
     unset($form_values['title']);
@@ -475,7 +475,7 @@ function aggregator_form_feed($edit = array()) {
  * Validate aggregator_form_feed form submissions.
  */
 function aggregator_form_feed_validate($form_id, $form_values) {
-  if ($_POST['op'] == t('Submit')) {
+  if ($form_values['op'] == t('Submit')) {
     // Check for duplicate titles
     if (isset($form_values['fid'])) {
       $result = db_query("SELECT title, url FROM {aggregator_feed} WHERE (title = '%s' OR url='%s') AND fid != %d", $form_values['title'], $form_values['url'], $form_values['fid']);
@@ -499,7 +499,7 @@ function aggregator_form_feed_validate($form_id, $form_values) {
  * @todo Add delete confirmation dialog.
  */
 function aggregator_form_feed_submit($form_id, $form_values) {
-  if ($_POST['op'] == t('Delete')) {
+  if ($form_values['op'] == t('Delete')) {
     $title = $form_values['title'];
     // Unset the title:
     unset($form_values['title']);

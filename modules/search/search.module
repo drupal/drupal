@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.197 2006/09/08 16:33:02 dries Exp $
+// $Id: search.module,v 1.198 2006/09/17 19:14:15 dries Exp $
 
 /**
  * @file
@@ -200,7 +200,7 @@ function search_menu($may_cache) {
  * Validate callback.
  */
 function search_admin_settings_validate($form_id, $form_values) {
-  if ($_POST['op'] == t('Re-index site')) {
+  if ($form_values['op'] == t('Re-index site')) {
     drupal_goto('admin/settings/search/wipe');
   }
   // If these settings change, the index needs to be rebuilt.

@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.391 2006/09/13 01:30:21 drumm Exp $
+// $Id: book.module,v 1.392 2006/09/17 19:14:15 dries Exp $
 
 /**
  * @file
@@ -332,7 +332,7 @@ function book_outline($nid) {
  * Handles book outline form submissions.
  */
 function book_outline_submit($form_id, $form_values) {
-  $op = $_POST['op'];
+  $op = $form_values['op'];
   $node = node_load($form_values['nid']);
 
   switch ($op) {

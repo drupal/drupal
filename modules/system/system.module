@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.369 2006/09/08 23:13:00 drumm Exp $
+// $Id: system.module,v 1.370 2006/09/17 19:14:16 dries Exp $
 
 /**
  * @file
@@ -1106,7 +1106,7 @@ function system_theme_settings_submit($form_id, $form_values) {
  *
  */
 function system_settings_form_submit($form_id, $form_values) {
-  $op = isset($_POST['op']) ? $_POST['op'] : '';
+  $op = isset($form_values['op']) ? $form_values['op'] : '';
 
   // Exclude unnecessary elements.
   unset($form_values['submit'], $form_values['reset'], $form_values['form_id']);
@@ -1191,7 +1191,7 @@ function system_themes_submit($form_id, $form_values) {
 
   db_query("UPDATE {system} SET status = 0 WHERE type = 'theme'");
 
-  if ($_POST['op'] == t('Save configuration')) {
+  if ($form_values['op'] == t('Save configuration')) {
     if (is_array($form_values['status'])) {
       foreach ($form_values['status'] as $key => $choice) {
         // Always enable the default theme, despite its status checkbox being checked:
