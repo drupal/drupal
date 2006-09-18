@@ -1,5 +1,5 @@
 <?php
-// $Id: image.inc,v 1.14 2006/08/18 12:16:57 unconed Exp $
+// $Id: image.inc,v 1.15 2006/09/18 05:10:48 dries Exp $
 
 /**
  * Return a list of available toolkits.
@@ -223,6 +223,13 @@ function image_gd_resize($source, $destination, $width, $height) {
   }
 
   $res = imageCreateTrueColor($width, $height);
+  if ($info['extension'] == 'png') {
+    $transparency = imagecolorallocatealpha($res, 0, 0, 0, 127);
+    imagealphablending($res, FALSE);
+    imagefilledrectangle($res, 0, 0, $width, $height, $transparency);
+    imagealphablending($res, TRUE);
+    imagesavealpha($res, TRUE);
+  }
   imageCopyResampled($res, $im, 0, 0, 0, 0, $width, $height, $info['width'], $info['height']);
   $result = image_gd_close($res, $destination, $info['extension']);
 
