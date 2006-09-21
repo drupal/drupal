@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.316 2006/09/11 08:18:24 drumm Exp $
+// $Id: taxonomy.module,v 1.317 2006/09/21 15:31:24 drumm Exp $
 
 /**
  * @file
@@ -679,14 +679,10 @@ function taxonomy_form_alter($form_id, &$form) {
           '#title' => t('Categories'),
           '#collapsible' => TRUE,
           '#collapsed' => FALSE,
-          '#tree' => TRUE,
-          '#weight' => -3,
         );
       }
-      else {
-        $form['taxonomy'] = array_shift($form['taxonomy']);
-        $form['taxonomy']['#weight'] = -3;
-      }
+      $form['taxonomy']['#weight'] = -3;
+      $form['taxonomy']['#tree'] = TRUE;
     }
   }
 }
