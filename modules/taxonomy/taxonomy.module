@@ -679,14 +679,10 @@ function taxonomy_form_alter($form_id, &$form) {
           '#title' => t('Categories'),
           '#collapsible' => TRUE,
           '#collapsed' => FALSE,
-          '#tree' => TRUE,
-          '#weight' => -3,
         );
       }
-      else {
-        $form['taxonomy'] = array_shift($form['taxonomy']);
-        $form['taxonomy']['#weight'] = -3;
-      }
+      $form['taxonomy']['#weight'] = -3;
+      $form['taxonomy']['#tree'] = TRUE;
     }
   }
 }
