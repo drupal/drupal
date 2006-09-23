@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.150 2006/09/09 08:25:23 dries Exp $
+// $Id: form.inc,v 1.151 2006/09/23 07:50:16 drumm Exp $
 
 /**
  * @defgroup form Form generation
@@ -70,7 +70,7 @@ function drupal_get_form($form_id) {
   // then go on to the one that was requested if everything works.
 
   $form_build_id = md5(mt_rand());
-  if (isset($_POST['form_build_id']) && isset($_SESSION['form'][$_POST['form_build_id']])) {
+  if (isset($_POST['form_build_id']) && isset($_SESSION['form'][$_POST['form_build_id']]) && $_POST['form_id'] == $form_id) {
     // There's a previously stored multi-step form. We should handle
     // IT first.
     $stored = TRUE;
