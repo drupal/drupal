@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.216 2006/08/31 21:58:36 dries Exp $
+// $Id: poll.module,v 1.217 2006/09/23 07:43:30 drumm Exp $
 
 /**
  * @file
@@ -442,7 +442,7 @@ function theme_poll_results($title, $results, $votes, $links, $block, $nid, $vot
     $output .= $results;
     $output .= '<div class="total">'. t('Total votes: %votes', array('%votes' => $votes)) .'</div>';
     if (isset($vote) && $vote > -1 && user_access('cancel own vote')) {
-      $output .= drupal_get_form('poll_cancel_form', $nid, $vote);
+      $output .= drupal_get_form('poll_cancel_form', $nid);
     }
     $output .= '</div>';
   }
@@ -450,9 +450,8 @@ function theme_poll_results($title, $results, $votes, $links, $block, $nid, $vot
   return $output;
 }
 
-function poll_cancel_form($nid, $vote) {
+function poll_cancel_form($nid) {
   $form['#action'] = url("poll/cancel/$nid");
-  $form['choice'] = array('#type' => 'hidden', '#value' => $vote);
   $form['submit'] = array('#type' => 'submit', '#value' => t('Cancel your vote'));
   return $form;
 }
@@ -565,11 +564,7 @@ function poll_cancel(&$node) {
 
   $nid = arg(2);
   if ($node = node_load(array('nid' => $nid))) {
-    $edit = $_POST;
-    $choice = $edit['choice'];
-    $cancel = $_POST['cancel'];
-
-    if (isset($choice) && isset($node->choice[$choice])) {
+    if ($node->type == 'poll' && $node->allowvotes == FALSE) {
       if ($user->uid) {
         db_query('DELETE FROM {poll_votes} WHERE nid = %d and uid = %d', $node->nid, $user->uid);
       }
@@ -578,9 +573,9 @@ function poll_cancel(&$node) {
       }
 
       // Subtract from the votes.
-      db_query("UPDATE {poll_choices} SET chvotes = chvotes - 1 WHERE nid = %d AND chorder = %d", $node->nid, $choice);
+      db_query("UPDATE {poll_choices} SET chvotes = chvotes - 1 WHERE nid = %d AND chorder = %d", $node->nid, $node->vote);
       $node->allowvotes = TRUE;
-      $node->choice[$choice]['chvotes']--;
+      $node->choice[$node->vote]['chvotes']--;
       drupal_set_message(t('Your vote was canceled.'));
     }
     else {
