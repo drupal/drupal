@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.360 2006/09/05 02:48:33 drumm Exp $
+// $Id: forum.module,v 1.361 2006/09/23 08:10:40 drumm Exp $
 
 /**
  * @file
@@ -62,14 +62,14 @@ function forum_menu($may_cache) {
       'weight' => -10);
     $items[] = array('path' => 'admin/content/forum/add/container',
       'title' => t('add container'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('forum_form_container'),
+      'callback' => 'forum_form_main',
+      'callback arguments' => array('container'),
       'access' => user_access('administer forums'),
       'type' => MENU_LOCAL_TASK);
     $items[] = array('path' => 'admin/content/forum/add/forum',
       'title' => t('add forum'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('forum_form_forum'),
+      'callback' => 'forum_form_main',
+      'callback arguments' => array('forum'),
       'access' => user_access('administer forums'),
       'type' => MENU_LOCAL_TASK);
     $items[] = array('path' => 'admin/content/forum/settings',
@@ -86,14 +86,14 @@ function forum_menu($may_cache) {
     if ($term) {
       $items[] = array('path' => 'admin/content/forum/edit/container',
         'title' => t('edit container'),
-        'callback' => 'drupal_get_form',
-        'callback arguments' => array('forum_form_container', (array)$term),
+        'callback' => 'forum_form_main',
+        'callback arguments' => array('container', (array)$term),
         'access' => user_access('administer forums'),
         'type' => MENU_CALLBACK);
       $items[] = array('path' => 'admin/content/forum/edit/forum',
         'title' => t('edit forum'),
-        'callback' => 'drupal_get_form',
-        'callback arguments' => array('forum_form_forum', (array)$term),
+        'callback' => 'forum_form_main',
+        'callback arguments' => array('forum', (array)$term),
         'access' => user_access('administer forums'),
         'type' => MENU_CALLBACK);
     }
@@ -443,10 +443,6 @@ function forum_delete(&$node) {
  */
 function forum_form_container($edit = array()) {
   // Handle a delete operation.
-  if ($_POST['op'] == t('Delete') || $_POST['confirm']) {
-    return forum_confirm_delete($edit['tid']);
-  }
-
   $form['name'] = array(
     '#title' => t('Container name'),
     '#type' => 'textfield',
@@ -485,17 +481,26 @@ function forum_form_container($edit = array()) {
   return $form;
 }
 
+function forum_form_main($type, $edit = array()) {
+  if ($_POST['op'] == t('Delete') || $_POST['confirm']) {
+    return drupal_get_form('forum_confirm_delete', $edit['tid']);
+  }
+  switch ($type) {
+    case 'forum':
+      return drupal_get_form('forum_form_forum', $edit);
+      break;
+    case 'container':
+      return drupal_get_form('forum_form_container', $edit);
+      break;
+  }
+}
+
 /**
  * Returns a form for adding a forum to the forum vocabulary
  *
  * @param $edit Associative array containing a forum term to be added or edited.
  */
 function forum_form_forum($edit = array()) {
-  // Handle a delete operation.
-  if ($_POST['op'] == t('Delete') || $_POST['confirm']) {
-    return forum_confirm_delete($edit['tid']);
-  }
-
   $form['name'] = array('#type' => 'textfield',
     '#title' => t('Forum name'),
     '#default_value' => $edit['name'],
@@ -568,7 +573,7 @@ function forum_confirm_delete($tid) {
   $form['tid'] = array('#type' => 'value', '#value' => $tid);
   $form['name'] = array('#type' => 'value', '#value' => $term->name);
 
-  return confirm_form($form, t('Are you sure you want to delete the forum %name?', array('%name' => $term->name)), 'admin/content/forums', t('Deleting a forum or container will delete all sub-forums and associated posts as well. This action cannot be undone.'), t('Delete'), t('Cancel'));
+  return confirm_form($form, t('Are you sure you want to delete the forum %name?', array('%name' => $term->name)), 'admin/content/forum', t('Deleting a forum or container will delete all sub-forums and associated posts as well. This action cannot be undone.'), t('Delete'), t('Cancel'));
 }
 
 /**
