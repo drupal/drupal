@@ -44,6 +44,7 @@ function db_connect($url) {
   // Find all database connection errors and error 1045 for access denied for user account
   if (mysqli_connect_errno() >= 2000 || mysqli_connect_errno() == 1045) {
     drupal_maintenance_theme();
+    drupal_set_header('HTTP/1.1 503 Service Unavailable');
     drupal_set_title('Unable to connect to database server');
     print theme('maintenance_page', '<p>This either means that the username and password information in your <code>settings.php</code> file is incorrect or we can\'t contact the MySQL database server through the mysqli libraries. This could also mean your hosting provider\'s database server is down.</p>
 <p>The MySQL error was: '. theme('placeholder', mysqli_error($connection)) .'.</p>

@@ -52,6 +52,7 @@ function db_connect($url) {
   $connection = @mysql_connect($url['host'], $url['user'], $url['pass'], TRUE, 2);
   if (!$connection) {
     drupal_maintenance_theme();
+    drupal_set_header('HTTP/1.1 503 Service Unavailable');
     drupal_set_title('Unable to connect to database server');
     print theme('maintenance_page', '<p>This either means that the username and password information in your <code>settings.php</code> file is incorrect or we can\'t contact the MySQL database server. This could mean your hosting provider\'s database server is down.</p>
 <p>The MySQL error was: '. theme('placeholder', mysql_error()) .'.</p>
