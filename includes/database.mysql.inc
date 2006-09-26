@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysql.inc,v 1.59 2006/09/16 19:26:22 drumm Exp $
+// $Id: database.mysql.inc,v 1.60 2006/09/26 14:09:05 dries Exp $
 
 /**
  * @file
@@ -87,6 +87,7 @@ function db_connect($url) {
 
     // Show error screen otherwise
     drupal_maintenance_theme();
+    drupal_set_header('HTTP/1.1 503 Service Unavailable');
     drupal_set_title('Unable to connect to database server');
     print theme('maintenance_page', '<p>If you still have to install Drupal, proceed to the <a href="'. base_path() .'install.php">installation page</a>.</p>
 <p>If you have already finished installed Drupal, this either means that the username and password information in your <code>settings.php</code> file is incorrect or that we can\'t connect to the MySQL database server. This could mean your hosting provider\'s database server is down.</p>

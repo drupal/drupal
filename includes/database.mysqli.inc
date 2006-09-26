@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysqli.inc,v 1.24 2006/09/16 19:26:22 drumm Exp $
+// $Id: database.mysqli.inc,v 1.25 2006/09/26 14:09:05 dries Exp $
 
 /**
  * @file
@@ -73,6 +73,7 @@ function db_connect($url) {
   // Find all database connection errors and error 1045 for access denied for user account
   if (mysqli_connect_errno() >= 2000 || mysqli_connect_errno() == 1045) {
     drupal_maintenance_theme();
+    drupal_set_header('HTTP/1.1 503 Service Unavailable');
     drupal_set_title('Unable to connect to database server');
     print theme('maintenance_page', '<p>If you still have to install Drupal, proceed to the <a href="'. base_path() .'install.php">installation page</a>.</p>
 <p>If you have already finished installed Drupal, this either means that the username and password information in your <code>settings.php</code> file is incorrect or that we can\'t connect to the MySQL database server. This could mean your hosting provider\'s database server is down.</p>

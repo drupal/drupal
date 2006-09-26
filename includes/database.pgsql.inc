@@ -1,5 +1,5 @@
 <?php
-// $Id: database.pgsql.inc,v 1.36 2006/09/04 14:50:24 dries Exp $
+// $Id: database.pgsql.inc,v 1.37 2006/09/26 14:09:05 dries Exp $
 
 /**
  * @file
@@ -84,6 +84,7 @@ function db_connect($url) {
   $connection = @pg_connect($conn_string);
   if (!$connection) {
     drupal_maintenance_theme();
+    drupal_set_header('HTTP/1.1 503 Service Unavailable');
     drupal_set_title('Unable to connect to database');
     print theme('maintenance_page', '<p>If you still have to install Drupal, proceed to the <a href="'. base_path() .'install.php">installation page</a>.</p>
 <p>If you have already finished installed Drupal, this either means that the username and password information in your <code>settings.php</code> file is incorrect or that we can\'t connect to the PostgreSQL database server. This could mean your hosting provider\'s database server is down.</p>
