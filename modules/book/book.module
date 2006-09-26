@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.392 2006/09/17 19:14:15 dries Exp $
+// $Id: book.module,v 1.393 2006/09/26 14:14:30 dries Exp $
 
 /**
  * @file
@@ -861,7 +861,7 @@ function _book_admin_table_tree($node, $depth) {
     ),
   );
 
-  $children = db_query(db_rewrite_sql('SELECT n.nid, b.weight FROM {node} n INNER JOIN {book} b ON n.vid = b.vid WHERE b.parent = %d ORDER BY b.weight, n.title'), $node->nid);
+  $children = db_query(db_rewrite_sql('SELECT n.nid, n.title, b.weight FROM {node} n INNER JOIN {book} b ON n.vid = b.vid WHERE b.parent = %d ORDER BY b.weight, n.title'), $node->nid);
   while ($child = db_fetch_object($children)) {
     $form = array_merge($form, _book_admin_table_tree(node_load($child->nid), $depth + 1));
   }
