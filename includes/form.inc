@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.151 2006/09/23 07:50:16 drumm Exp $
+// $Id: form.inc,v 1.152 2006/09/26 14:20:20 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -1173,6 +1173,7 @@ function theme_checkbox($element) {
  *   A themed HTML string representing the checkbox set.
  */
 function theme_checkboxes($element) {
+  $element['#children'] = '<div class="form-checkboxes">'. $element['#children'] .'</div>';
   if ($element['#title'] || $element['#description']) {
     unset($element['#id']);
     return theme('form_element', $element, $element['#children']);
