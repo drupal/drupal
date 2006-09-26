@@ -331,7 +331,7 @@ function _upload_validate(&$node) {
           foreach ($user->roles as $rid => $name) {
             $extensions = variable_get("upload_extensions_$rid", 'jpg jpeg gif png txt html doc xls pdf ppt pps');
             $uploadsize = variable_get("upload_uploadsize_$rid", 1) * 1024 * 1024;
-            $usersize = variable_get("upload_usersize_$rid", 1) * 1024 * 1024;
+            $usersize = variable_get("upload_usersize_$rid", 10) * 1024 * 1024;
 
             $regex = '/\.('. ereg_replace(' +', '|', preg_quote($extensions)) .')$/i';
 
