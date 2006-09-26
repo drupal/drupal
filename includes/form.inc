@@ -1173,6 +1173,7 @@ function theme_checkbox($element) {
  *   A themed HTML string representing the checkbox set.
  */
 function theme_checkboxes($element) {
+  $element['#children'] = '<div class="form-checkboxes">'. $element['#children'] .'</div>';
   if ($element['#title'] || $element['#description']) {
     unset($element['#id']);
     return theme('form_element', $element, $element['#children']);
