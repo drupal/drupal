@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.install,v 1.7 2006/09/01 07:40:07 drumm Exp $
+// $Id: aggregator.install,v 1.8 2006/09/26 14:19:00 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -89,8 +89,8 @@ function aggregator_install() {
         refresh int NOT NULL default '0',
         checked int NOT NULL default '0',
         link varchar(255) NOT NULL default '',
-        description text NOT NULL,
-        image text NOT NULL,
+        description text NOT NULL default '',
+        image text NOT NULL default '',
         etag varchar(255) NOT NULL default '',
         modified int NOT NULL default '0',
         block smallint NOT NULL default '0',
