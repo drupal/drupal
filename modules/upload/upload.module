@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.131 2006/09/10 07:38:52 dries Exp $
+// $Id: upload.module,v 1.132 2006/09/26 14:11:58 dries Exp $
 
 /**
  * @file
@@ -167,7 +167,7 @@ function upload_admin_settings_validate($form_id, $form_values) {
 function upload_admin_settings() {
   $upload_extensions_default = variable_get('upload_extensions_default', 'jpg jpeg gif png txt html doc xls pdf ppt pps');
   $upload_uploadsize_default = variable_get('upload_uploadsize_default', 1);
-  $upload_usersize_default = variable_get('upload_usersize_default', 10);
+  $upload_usersize_default = variable_get('upload_usersize_default', 1);
 
   $form['settings_general'] = array(
     '#type' => 'fieldset',
@@ -418,7 +418,7 @@ function _upload_validate(&$node) {
           foreach ($user->roles as $rid => $name) {
             $extensions = variable_get("upload_extensions_$rid", variable_get('upload_extensions_default', 'jpg jpeg gif png txt html doc xls pdf ppt pps'));
             $uploadsize = variable_get("upload_uploadsize_$rid", variable_get('upload_uploadsize_default', 1)) * 1024 * 1024;
-            $usersize = variable_get("upload_usersize_$rid", variable_get('upload_usersize_default', 10)) * 1024 * 1024;
+            $usersize = variable_get("upload_usersize_$rid", variable_get('upload_usersize_default', 1)) * 1024 * 1024;
 
             $regex = '/\.('. ereg_replace(' +', '|', preg_quote($extensions)) .')$/i';
 
