@@ -563,6 +563,7 @@ function fix_gpc_magic() {
     array_walk($_POST, '_fix_gpc_magic');
     array_walk($_COOKIE, '_fix_gpc_magic');
     array_walk($_REQUEST, '_fix_gpc_magic');
+    array_walk($_FILES, '_fix_gpc_magic');
     $fixed = TRUE;
   }
 }
