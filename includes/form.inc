@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.152 2006/09/26 14:20:20 dries Exp $
+// $Id: form.inc,v 1.153 2006/10/02 11:49:50 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -107,7 +107,7 @@ function drupal_get_form($form_id) {
       $_SESSION['form'][$form_build_id] = $args;
       $form['#build_id'] = $form_build_id;
     }
-    drupal_process_form($args[0], $form);
+    drupal_prepare_form($args[0], $form);
   }
 
   return drupal_render_form($args[0], $form);

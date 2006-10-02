@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.93 2006/09/09 08:25:23 dries Exp $
+// $Id: locale.inc,v 1.94 2006/10/02 11:49:50 dries Exp $
 
 /**
  * @file
@@ -273,7 +273,7 @@ function _locale_admin_import_submit($form_id, $form_values) {
   return 'admin/settings/locale';
 }
 
-function _locale_export_po_form() {
+function _locale_export_po_form($languages) {
   $form['export'] = array('#type' => 'fieldset',
     '#title' => t('Export translation'),
     '#collapsible' => TRUE,
@@ -310,7 +310,7 @@ function _locale_admin_export_screen() {
   $output = '';
   // Offer language specific export if any language is set up
   if (count($languages)) {
-    $output = drupal_get_form('_locale_export_po_form');
+    $output = drupal_get_form('_locale_export_po_form', $languages);
   }
 
   $output .= drupal_get_form('_locale_export_pot_form');
