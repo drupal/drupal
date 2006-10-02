@@ -1,4 +1,4 @@
-/* $Id: admin.css,v 1.7 2006/09/06 08:35:59 drumm Exp $ */
+/* $Id: admin.css,v 1.8 2006/10/02 16:49:08 unconed Exp $ */
 
 /*
 ** Formatting for administration page
@@ -37,6 +37,20 @@ div.admin .expert-link {
   text-align: right;
   margin-right: 1em;
   padding-right: 4px;
+}
+
+div.admin-dependencies, div.admin-required {
+  font-size: 0.9em;
+  color: #444;
+}
+span.admin-disabled {
+  color: #800;
+}
+span.admin-enabled {
+  color: #080;
+}
+span.admin-missing {
+  color: #f00;
 }
 
 /**

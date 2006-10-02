@@ -1,4 +1,4 @@
-; $Id: forum.info,v 1.1 2006/08/31 20:22:35 dries Exp $
+; $Id: forum.info,v 1.2 2006/10/02 16:49:08 unconed Exp $
 name = Forum
 description = Enables threaded discussions about general topics.
-
+dependencies = taxonomy comment

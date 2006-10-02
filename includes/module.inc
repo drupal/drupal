@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.85 2006/08/31 22:12:15 dries Exp $
+// $Id: module.inc,v 1.86 2006/10/02 16:49:08 unconed Exp $
 
 /**
  * @file
@@ -130,7 +130,30 @@ function module_rebuild_cache() {
       db_query("INSERT INTO {system} (name, description, type, filename, status, throttle, bootstrap) VALUES ('%s', '%s', '%s', '%s', %d, %d, %d)", $file->name, $file->info['description'], 'module', $file->filename, $file->status, $file->throttle, $bootstrap);
     }
   }
+  $files = _module_build_dependents($files);
+  return $files;
+}
 
+/**
+ * Find dependents; modules that are required by other modules.
+ * Adds an array of dependents to the $file->info array.
+ *
+ * @return
+ *   The list of files array with dependents added where applicable.
+ */
+function _module_build_dependents($files) {
+  foreach ($files as $filename => $file) {
+    if (is_array($file->info['dependencies'])) {
+      foreach ($file->info['dependencies'] as $dependency) {
+        if (!empty($files[$dependency]) && is_array($files[$dependency]->info)) {
+          if (!isset($files[$dependency]->info['dependents'])) {
+            $files[$dependency]->info['dependents'] = array();
+          }
+          $files[$dependency]->info['dependents'][] = $filename;
+        }
+      }
+    }
+  }
   return $files;
 }
 
@@ -148,8 +171,18 @@ function module_rebuild_cache() {
  *   and variable_set() for that.
  * - You may not use double-quotes in a value.
  *
+ * Information stored in the module.info file:
+ * name - The real name of the module for display purposes.
+ * description - A brief description of the module.
+ * dependencies - A space delimited list of the short names (shortname) of other modules this module depends on.
+ *
+ * Example of .info file:
+ *   name = Forum
+ *   description = Enables threaded discussions about general topics.
+ *   dependencies = taxonomy comment
+ *
  * @param $filename
- *   The file we are parsing.  Accepts file with relative or absolute path.
+ *   The file we are parsing. Accepts file with relative or absolute path.
  * @return
  *   The info array.
  */
@@ -158,6 +191,9 @@ function _module_parse_info_file($filename) {
 
   if (file_exists($filename)) {
     $info = parse_ini_file($filename);
+  }
+  if (isset($info['dependencies'])) {
+    $info['dependencies'] = explode(" ", $info['dependencies']);
   }
   return $info;
 }

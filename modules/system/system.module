@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.371 2006/10/02 11:36:17 dries Exp $
+// $Id: system.module,v 1.372 2006/10/02 16:49:08 unconed Exp $
 
 /**
  * @file
@@ -43,8 +43,11 @@ function system_help($section) {
       $theme = array_pop($reference);
       return t('<p>These options control the display settings for the <code>%template</code> theme. When your site is displayed using this theme, these settings will be used. By clicking "Reset to defaults," you can choose to use the <a href="@global">global settings</a> for this theme.</p>', array('%template' => $theme, '@global' => url('admin/build/themes/settings')));
     case 'admin/settings/modules':
-      return t('<p>Modules are plugins for Drupal that extend its core functionality. Here you can select which modules are enabled. Click on the name of the module in the navigation menu for their individual configuration pages. Once a module is enabled, new <a href="@permissions">permissions</a> might be made available. Modules can automatically be temporarily disabled to reduce server load when your site becomes extremely busy by enabling the throttle.module and checking throttle. The auto-throttle functionality must be enabled on the <a href="@throttle">throttle configuration page</a> after having enabled the throttle module.</p>
+      if (empty($_POST) || $_POST['op'] != t('Save configuration')) {
+        return t('<p>Modules are plugins for Drupal that extend its core functionality. Here you can select which modules are enabled. Click on the name of the module in the navigation menu for their individual configuration pages. Once a module is enabled, new <a href="@permissions">permissions</a> might be made available. Modules can automatically be temporarily disabled to reduce server load when your site becomes extremely busy by enabling the throttle.module and checking throttle. The auto-throttle functionality must be enabled on the <a href="@throttle">throttle configuration page</a> after having enabled the throttle module.</p>
 <p>It is important that <a href="@update-php">update.php</a> is run every time a module is updated to a newer version.</p>', array('@permissions' => url('admin/user/access'), '@throttle' => url('admin/settings/throttle'), '@update-php' => $base_url .'/update.php'));
+      }
+      break;
     case 'admin/logs/status':
       return t('<p>Here you can find a short overview of your Drupal site\'s parameters as well as any problems detected with your installation. It is useful to copy/paste this information when you need support.</p>');
   }
@@ -1217,80 +1220,245 @@ function system_themes_submit($form_id, $form_values) {
 }
 
 /**
- * Menu callback; displays a listing of all modules.
+ * Menu callback; provides module enable/disable interface.
+ *
+ * Modules can be enabled or disabled and set for throttling if the throttle module is enabled.
+ * The list of modules gets populated by module.info files, which contain each module's name,
+ * description and dependencies.
+ * @sa _module_parse_info_file for information on module.info descriptors.
+ *
+ * Dependency checking is performed to ensure that a module cannot be enabled if the module has
+ * disabled dependencies and also to ensure that the module cannot be disabled if the module has
+ * enabled dependents.
+ *
+ * @return
+ *   The form array.
  */
-function system_modules() {
-  // Get current list of modules
+function system_modules($form_values = NULL) {
+  // Get current list of modules.
   $files = module_rebuild_cache();
+  if ($confirm_form = system_modules_confirm_form($files, $form_values)) {
+    return $confirm_form;
+  }
 
+  // Store module list for validation callback.
+  $form['validation_modules'] = array('#type' => 'value', '#value' => $files);
+
+  // Create storage for disabled modules as browser will disable checkboxes.
+  $form['disabled_modules'] = array('#type' => 'value', '#value' => array());
+
+  // Array for disabling checkboxes in callback system_module_disable.
+  $disabled = array();
+  // Traverse the files retrieved and build the form.
   foreach ($files as $filename => $file) {
-    $info = $file->info;
-    $form['name'][$file->name] = array('#value' => $info['name']);
-    $form['description'][$file->name] = array('#value' => t($info['description']));
-    $options[$file->name] = '';
+    $form['name'][$filename] = array('#value' => $file->info['name']);
+    $form['description'][$filename] = array('#value' => t($file->info['description']));
+    $options[$filename] = '';
     if ($file->status) {
       $status[] = $file->name;
     }
     if ($file->throttle) {
       $throttle[] = $file->name;
     }
-  }
 
-  // Handle status checkboxes, including overriding the generated
-  // checkboxes for required modules.
-  $form['status'] = array('#type' => 'checkboxes', '#default_value' => $status, '#options' => $options);
-  $required = array('block', 'filter', 'node', 'system', 'user', 'watchdog');
-  foreach ($required as $require) {
-    $form['status'][$require] = array('#type' => 'hidden', '#value' => 1, '#suffix' => t('required'));
-  }
+    $dependencies = array();
+    // Check for missing dependencies.
+    if (is_array($file->info['dependencies'])) {
+      foreach ($file->info['dependencies'] as $dependency) {
+        if (!isset($files[$dependency]) || !$files[$dependency]->status) {
+          if (isset($files[$dependency])) {
+            $dependencies[] = $files[$dependency]->info['name'] . t(' (<span class="admin-disabled">disabled</span>)');
+          }
+          else {
+            $dependencies[] = drupal_ucfirst($dependency) . t(' (<span class="admin-missing">missing</span>)');
+            $disabled[] = $filename;
+            $form['disabled_modules']['#value'][$filename] = FALSE;
+          }
+        }
+        else {
+          $dependencies[] = $files[$dependency]->info['name'] . t(' (<span class="admin-enabled">enabled</span>)');
+        }
+      }
 
-  /**
-   * Handle throttle checkboxes, including overriding the generated checkboxes for required modules.
-   */
-  if (module_exists('throttle')) {
-    $form['throttle'] = array('#type' => 'checkboxes', '#default_value' => $throttle, '#options' => $options);
-    $throttle_required = array_merge($required, array('throttle'));
-    foreach ($throttle_required as $require) {
-      $form['throttle'][$require] = array('#type' => 'hidden', '#value' => 0, '#suffix' => t('required'));
+      // Add text for dependencies.
+      if (!empty($dependencies)) {
+        $form['description'][$filename]['dependencies'] = array(
+          '#value' => t('Depends on: !dependencies', array('!dependencies' => implode(', ', $dependencies))),
+          '#prefix' => '<div class="admin-dependencies">',
+          '#suffix' => '</div>',
+        );
+      }
+    }
+
+    // Mark dependents disabled so user can not remove modules being depended on.
+    $dependents = array();
+    if (is_array($file->info['dependents'])) {
+      foreach ($file->info['dependents'] as $dependent) {
+        if ($files[$dependent]->status == 1) {
+          $dependents[] = $files[$dependent]->info['name'] . t(' (<span class="admin-enabled">enabled</span>)');
+          $disabled[] = $filename;
+          $form['disabled_modules']['#value'][$filename] = TRUE;
+        }
+        else {
+          $dependents[] = $files[$dependent]->info['name'] . t(' (<span class="admin-disabled">disabled</span>)');
+        }
+      }
+    }
+
+    // Add text for enabled dependents.
+    if (!empty($dependents)){
+      $form['description'][$filename]['required'] = array(
+        '#value' => t('Required by: !required', array('!required' => implode(', ', $dependents))),
+        '#prefix' => '<div class="admin-required">',
+        '#suffix' => '</div>',
+      );
     }
   }
 
-  $form['buttons']['submit'] = array('#type' => 'submit', '#value' => t('Save configuration'));
+  // Merge in required modules.
+  $modules_required = array('block', 'filter', 'node', 'system', 'user', 'watchdog');
+  foreach ($modules_required as $required) {
+    $form['description'][$required]['core'] = array(
+      '#value' => t('Required for Drupal core'),
+      '#prefix' => '<div class="admin-required">',
+      '#suffix' => '</div>',
+    );
+    $disabled[] = $required;
+    $form['disabled_modules']['#value'][$required] = TRUE;
+  }
+
+  // Handle status checkboxes, including overriding
+  // the generated checkboxes for required modules.
+  $form['status'] = array(
+    '#type' => 'checkboxes',
+    '#default_value' => $status,
+    '#options' => $options,
+    '#process' => array(
+      'expand_checkboxes' => array(),
+      'system_modules_disable' => array($disabled),
+    ),
+  );
+
+  // Handle throttle checkboxes, including overriding the
+  // generated checkboxes for required modules.
+  if (module_exists('throttle')) {
+    $form['throttle'] = array(
+      '#type' => 'checkboxes',
+      '#default_value' => $throttle,
+      '#options' => $options,
+      '#process' => array(
+        'expand_checkboxes' => array(),
+        'system_modules_disable' => array(array_merge($modules_required, array('throttle'))),
+      ),
+    );
+  }
+
+  $form['buttons']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save configuration'),
+  );
+  $form['#multistep'] = TRUE;
 
   return $form;
 }
 
-function theme_system_modules($form) {
-  foreach (element_children($form['name']) as $key) {
-    $row = array();
-    $row[] = array('data' => drupal_render($form['status'][$key]), 'align' => 'center');
-
-    if (module_exists('throttle')) {
-      $row[] = array('data' => drupal_render($form['throttle'][$key]), 'align' => 'center');
-    }
-    $row[] = drupal_render($form['name'][$key]);
-    $row[] = drupal_render($form['description'][$key]);
-    $rows[] = $row;
+/**
+ * Form process callback function to disable check boxes.
+ */
+function system_modules_disable($form, $edit, $disabled) {
+  foreach ($disabled as $key) {
+    $form[$key]['#attributes']['disabled'] = 'disabled';
   }
-
-  $header = array(t('Enabled'));
-  if (module_exists('throttle')) {
-    $header[] = t('Throttle');
-  }
-  $header[] = t('Name');
-  $header[] = t('Description');
-
-  $output = theme('table', $header, $rows);
-  $output .= drupal_render($form);
-  return $output;
+  return $form;
 }
 
+function system_modules_confirm_form($modules, $form_values = array()) {
+  $form = array();
+  $items = array();
 
+  // Check values for submitted dependency errors.
+  if ($dependencies = system_module_build_dependencies($modules, $form_values)) {
+    // preserve the already switched on modules
+    foreach ($modules as $name => $module) {
+      if ($module->status) {
+        $form['status'][$name] = array('#type' => 'hidden', '#value' => 1);
+      }
+    }
+
+    $form['validation_modules'] = array('#type' => 'value', '#value' => $modules);
+    $form['status']['#tree'] = TRUE;
+    foreach ($dependencies as $name => $missing_dependencies) {
+      $form['status'][$name] = array('#type' => 'hidden', '#value' => 1);
+      foreach ($missing_dependencies as $k => $dependency) {
+        $form['status'][$dependency] = array('#type' => 'hidden', '#value' => 1);
+        $info = $modules[$dependency]->info;
+        $missing_dependencies[$k] = $info['name'] ? $info['name'] : drupal_ucfirst($dependency);
+      }
+      $t_argument = array(
+        '%module' => $modules[$name]->info['name'],
+        '%dependencies' => implode(', ', $missing_dependencies),
+        '!modules' => format_plural(count($missing_dependencies), ' module', ' modules'),
+      );
+      $items[] = t('You must enable the %dependencies !modules to install %module.', $t_argument);
+    }
+    $form['text'] = array('#value' => theme('item_list', $items));
+  }
+
+  if ($form) {
+    // Set some default form values
+    $form = confirm_form(
+      $form,
+      t('Some required modules must be enabled'),
+      'admin/settings/modules',
+      t('Would you like to continue with enabling the above?'),
+      t('Continue'),
+      t('Cancel'));
+    return $form;
+  }
+}
+
+function system_module_build_dependencies($modules, $form_values) {
+  static $dependencies;
+
+  if (!isset($dependencies) && isset($form_values)) {
+    $dependencies = array();
+    foreach ($modules as $name => $module) {
+      // If the module is disabled, will be switched on and it has dependencies.
+      if (!$module->status && $form_values['status'][$name] && isset($module->info['dependencies'])) {
+        foreach ($module->info['dependencies'] as $dependency) {
+          if (!$form_values['status'][$dependency] && isset($modules[$dependency])) {
+            if (!isset($dependencies[$name])) {
+              $dependencies[$name] = array();
+            }
+            $dependencies[$name][] = $dependency;
+          }
+        }
+      }
+    }
+  }
+  return $dependencies;
+}
+
+/**
+ * Submit callback; handles modules form submission.
+ */
 function system_modules_submit($form_id, $form_values) {
   include_once './includes/install.inc';
   $new_modules = array();
 
-  // Enable/disable modules that have already been installed
+  // Merge in disabled active modules since they should be enabled.
+  // They don't appear because disabled checkboxes are not submited
+  // by browsers.
+  $form_values['status'] = array_merge($form_values['status'], $form_values['disabled_modules']);
+
+  // Check values for dependency that we can't install.
+  if ($dependencies = system_module_build_dependencies($form_values['validation_modules'], $form_values)) {
+    // These are the modules that depend on existing modules.
+    foreach (array_keys($dependencies) as $name) {
+      $form_values['status'][$name] = 0;
+    }
+  }
+
   foreach ($form_values['status'] as $key => $choice) {
     if ($choice) {
       if (drupal_get_installed_schema_version($key) == SCHEMA_UNINSTALLED) {
@@ -1305,28 +1473,66 @@ function system_modules_submit($form_id, $form_values) {
     }
   }
 
-  module_list(TRUE, FALSE);
+  $old_module_list = module_list();
 
-  // Install new modules
+  // Install new modules.
   foreach ($new_modules as $module) {
     if (drupal_check_module($module)) {
       drupal_install_module($module);
     }
   }
 
+  $current_module_list = module_list(TRUE, FALSE);
+
   if (is_array($form_values['throttle'])) {
     foreach ($form_values['throttle'] as $key => $choice) {
-      if ($choice) {
-        db_query("UPDATE {system} SET throttle = 1 WHERE type = 'module' and name = '%s'", $key);
-      }
+      db_query("UPDATE {system} SET throttle = %d WHERE type = 'module' and name = '%s'", $choice ? 1 : 0, $key);
     }
   }
 
-  menu_rebuild();
-  node_types_rebuild();
+  if ($old_module_list != $current_module_list) {
+    menu_rebuild();
+    node_types_rebuild();
+    drupal_set_message(t('The configuration options have been saved.'));
+  }
 
-  drupal_set_message(t('The configuration options have been saved.'));
+  // If there where unmet dependencies and they haven't confirmed don't redirect.
+  if ($dependencies && !isset($form_values['confirm'])) {
+    return FALSE;
+  }
   return 'admin/settings/modules';
+}
+
+/**
+ * Theme call back for the modules form.
+ */
+function theme_system_modules($form) {
+  if (isset($form['confirm'])) {
+    return drupal_render($form);
+  }
+
+  foreach (element_children($form['name']) as $key) {
+    $row = array();
+    $row[] = array('data' => drupal_render($form['status'][$key]), 'align' => 'center');
+
+    if (module_exists('throttle')) {
+      $row[] = array('data' => drupal_render($form['throttle'][$key]), 'align' => 'center');
+    }
+    $row[] = '<strong>'. drupal_render($form['name'][$key]) .'</strong>';
+    $row[] = drupal_render($form['description'][$key]);
+    $rows[] = $row;
+  }
+
+  $header = array(t('Enabled'));
+  if (module_exists('throttle')) {
+    $header[] = t('Throttle');
+  }
+  $header[] = t('Name');
+  $header[] = t('Description');
+
+  $output = theme('table', $header, $rows);
+  $output .= drupal_render($form);
+  return $output;
 }
 
 /**
