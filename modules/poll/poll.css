@@ -1,4 +1,4 @@
-/* $Id: poll.css,v 1.1 2006/08/14 07:14:49 drumm Exp $ */
+/* $Id: poll.css,v 1.2 2006/10/02 16:16:06 dries Exp $ */
 
 .poll .bar {
   height: 1em;
@@ -8,7 +8,6 @@
 .poll .bar .foreground {
   background-color: #000;
   height: 1em;
-  clear: left;
   float: left;
 }
 .poll .links {
