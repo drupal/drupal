@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.682 2006/09/17 19:14:16 dries Exp $
+// $Id: user.module,v 1.683 2006/10/02 11:53:56 dries Exp $
 
 /**
  * @file
@@ -843,13 +843,13 @@ function user_set_authmaps($account, $authmaps) {
   foreach ($authmaps as $key => $value) {
     $module = explode('_', $key, 2);
     if ($value) {
-      db_query("UPDATE {authmap} SET authname = '%s' WHERE uid = %d AND module = '%s'", $value, $account->uid, $module['1']);
+      db_query("UPDATE {authmap} SET authname = '%s' WHERE uid = %d AND module = '%s'", $value, $account->uid, $module[1]);
       if (!db_affected_rows()) {
         db_query("INSERT INTO {authmap} (authname, uid, module) VALUES ('%s', %d, '%s')", $value, $account->uid, $module[1]);
       }
     }
     else {
-      db_query("DELETE FROM {authmap} WHERE uid = %d AND module = '%s'", $account->uid, $module['1']);
+      db_query("DELETE FROM {authmap} WHERE uid = %d AND module = '%s'", $account->uid, $module[1]);
     }
   }
 }
@@ -858,7 +858,7 @@ function user_auth_help_links() {
   $links = array();
   foreach (module_list() as $module) {
     if (module_hook($module, 'auth')) {
-      $links[] = l(module_invoke($module, 'info', 'name'), "user/help#$module");
+      $links[] = l(module_invoke($module, 'info', 'name'), 'user/help', array(), NULL, $module);
     }
   }
   return $links;
