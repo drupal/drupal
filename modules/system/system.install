@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.29 2006/09/11 06:29:03 drumm Exp $
+// $Id: system.install,v 1.30 2006/10/02 11:31:35 dries Exp $
 
 define('DRUPAL_MINIMUM_PHP',    '4.3.3');
 define('DRUPAL_MINIMUM_MYSQL',  '3.23.17'); // If using MySQL
@@ -391,7 +391,7 @@ function system_install() {
 
       db_query("CREATE TABLE {sessions} (
         uid int unsigned NOT NULL,
-        sid varchar(32) NOT NULL default '',
+        sid varchar(64) NOT NULL default '',
         hostname varchar(128) NOT NULL default '',
         timestamp int NOT NULL default '0',
         cache int NOT NULL default '0',
@@ -822,7 +822,7 @@ function system_install() {
 
       db_query("CREATE TABLE {sessions} (
         uid int_unsigned NOT NULL,
-        sid varchar(32) NOT NULL default '',
+        sid varchar(64) NOT NULL default '',
         hostname varchar(128) NOT NULL default '',
         timestamp int NOT NULL default '0',
         cache int NOT NULL default '0',
@@ -3318,6 +3318,20 @@ function system_update_1012() {
       break;
     case 'pgsql':
       $ret[] = update_sql('CREATE INDEX {file_revisions}_vid_idx ON {file_revisions}(vid)');
+      break;
+  }
+  return $ret;
+}
+
+function system_update_1013() {
+  $ret = array();
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql('ALTER TABLE {sessions} CHANGE COLUMN sid sid varchar(64)');
+      break;
+    case 'pgsql':
+      $ret[] = update_sql('ALTER TABLE {sessions} ALTER COLUMN sid TYPE varchar(64)');
       break;
   }
   return $ret;
