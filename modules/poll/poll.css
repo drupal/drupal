@@ -8,7 +8,6 @@
 .poll .bar .foreground {
   background-color: #000;
   height: 1em;
-  clear: left;
   float: left;
 }
 .poll .links {
