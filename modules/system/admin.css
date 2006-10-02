@@ -39,6 +39,20 @@ div.admin .expert-link {
   padding-right: 4px;
 }
 
+div.admin-dependencies, div.admin-required {
+  font-size: 0.9em;
+  color: #444;
+}
+span.admin-disabled {
+  color: #800;
+}
+span.admin-enabled {
+  color: #080;
+}
+span.admin-missing {
+  color: #f00;
+}
+
 /**
  * Formatting for status report
  */
