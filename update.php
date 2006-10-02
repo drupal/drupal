@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.204 2006/09/08 23:05:22 drumm Exp $
+// $Id: update.php,v 1.205 2006/10/02 11:36:17 dries Exp $
 
 /**
  * @file
@@ -681,7 +681,7 @@ function update_convert_table_utf8($table) {
 /**
  * Create tables for the split cache.
  *
- * This is part of the Drupal 4.7 to 5.0 migration.
+ * This is part of the Drupal 4.7.x to 5.x migration.
  */
 function update_create_cache_tables() {
 
