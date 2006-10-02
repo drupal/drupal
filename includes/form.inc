@@ -107,7 +107,7 @@ function drupal_get_form($form_id) {
       $_SESSION['form'][$form_build_id] = $args;
       $form['#build_id'] = $form_build_id;
     }
-    drupal_process_form($args[0], $form);
+    drupal_prepare_form($args[0], $form);
   }
 
   return drupal_render_form($args[0], $form);
