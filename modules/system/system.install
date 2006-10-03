@@ -3337,6 +3337,11 @@ function system_update_1013() {
   return $ret;
 }
 
+function system_update_1014() {
+  variable_del('cron_busy');
+  return array();
+}
+
 /**
  * @} End of "defgroup updates-4.7-to-x.x"
  * The next series of updates should start at 2000.
