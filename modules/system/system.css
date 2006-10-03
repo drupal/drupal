@@ -103,6 +103,13 @@ tr.merge-up, tr.merge-up td, tr.merge-up th {
   display: inline;
   font-weight: normal;
 }
+.form-checkboxes, .form-radios {
+  margin: 1em 0;
+}
+.form-checkboxes .form-item, .form-radios .form-item {
+  margin-top: 0.4em;
+  margin-bottom: 0.4em;
+}
 .marker, .form-required {
   color: #f00;
 }

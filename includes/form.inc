@@ -943,6 +943,7 @@ function theme_radio($element) {
  *   A themed HTML string representing the radio button set.
  */
 function theme_radios($element) {
+  $element['#children'] = '<div class="form-radios">'. $element['#children'] .'</div>';
   if ($element['#title'] || $element['#description']) {
     unset($element['#id']);
     return theme('form_element', $element, $element['#children']);
