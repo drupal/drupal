@@ -1323,7 +1323,7 @@ function user_edit_form($uid, $edit) {
     '#title' => t('Password'),
     '#description' => t('To change the current user password, enter the new password in both fields.'),
   );
-  if (user_access('administer users')) {
+  if (user_access('administer users') && $uid != 1) {
     $form['account']['status'] = array('#type' => 'radios', '#title' => t('Status'), '#default_value' => $edit['status'], '#options' => array(t('Blocked'), t('Active')));
   }
   if (user_access('administer access control')) {
@@ -1407,6 +1407,9 @@ function user_edit($category = 'account') {
   $edit = $_POST['op'] ? $_POST['edit'] : (array)$account;
 
   if (arg(2) == 'delete') {
+    if ($account->uid == 1) {
+      return drupal_not_found();
+    }
     if ($edit['confirm']) {
       db_query('DELETE FROM {users} WHERE uid = %d', $account->uid);
       db_query('DELETE FROM {sessions} WHERE uid = %d', $account->uid);
@@ -1422,6 +1425,9 @@ function user_edit($category = 'account') {
     }
   }
   else if ($_POST['op'] == t('Delete')) {
+    if ($account->uid == 1) {
+      return drupal_not_found();
+    }
     if ($_REQUEST['destination']) {
       $destination = drupal_get_destination();
       unset($_REQUEST['destination']);
@@ -1434,7 +1440,7 @@ function user_edit($category = 'account') {
   $form['_category'] = array('#type' => 'value', '#value' => $category);
   $form['_account'] = array('#type' => 'value', '#value' => $account);
   $form['submit'] = array('#type' => 'submit', '#value' => t('Submit'), '#weight' => 30);
-  if (user_access('administer users')) {
+  if (user_access('administer users') && $account->uid != 1) {
     $form['delete'] = array('#type' => 'submit', '#value' => t('Delete'), '#weight' => 31);
   }
   $form['#attributes']['enctype'] = 'multipart/form-data';
