@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.576 2006/09/27 07:21:55 drumm Exp $
+// $Id: common.inc,v 1.577 2006/10/03 00:24:19 unconed Exp $
 
 /**
  * @file
@@ -1698,24 +1698,56 @@ function drupal_cron_run() {
     set_time_limit(240);
   }
 
-  // Check if the last cron run completed
-  if (variable_get('cron_busy', FALSE)) {
-    watchdog('cron', t('Last cron run did not complete.'), WATCHDOG_WARNING);
+  // Fetch the cron semaphore
+  $semaphore = variable_get('cron_semaphore', FALSE);
+
+  if ($semaphore) {
+    if (time() - $semaphore > 3600) {
+      // Either cron has been running for more than an hour or the semaphore
+      // was not reset due to a database error.
+      watchdog('cron', t('Cron has been running for more than an hour and is most likely stuck.'), WATCHDOG_ERROR);
+
+      // Release cron semaphore
+      variable_del('cron_semaphore');
+    }
+    else {
+      // Cron is still running normally.
+      watchdog('cron', t('Attempting to re-run cron while it is already running.'), WATCHDOG_WARNING);
+    }
   }
   else {
-    variable_set('cron_busy', TRUE);
+    // Register shutdown callback
+    register_shutdown_function('drupal_cron_cleanup');
+
+    // Lock cron semaphore
+    variable_set('cron_semaphore', time());
+
+    // Iterate through the modules calling their cron handlers (if any):
+    module_invoke_all('cron');
+
+    // Record cron time
+    variable_set('cron_last', time());
+    watchdog('cron', t('Cron run completed.'), WATCHDOG_NOTICE);
+
+    // Release cron semaphore
+    variable_del('cron_semaphore');
+
+    // Return TRUE so other functions can check if it did run successfully
+    return TRUE;
   }
+}
 
-  // Iterate through the modules calling their cron handlers (if any):
-  module_invoke_all('cron');
+/**
+ * Shutdown function for cron cleanup.
+ */
+function drupal_cron_cleanup() {
+  // See if the semaphore is still locked.
+  if (variable_get('cron_semaphore', FALSE)) {
+    watchdog('cron', t('Cron run exceeded the time limit and was aborted.'), WATCHDOG_WARNING);
 
-  // Clean up
-  variable_set('cron_busy', FALSE);
-  variable_set('cron_last', time());
-  watchdog('cron', t('Cron run completed.'), WATCHDOG_NOTICE);
-
-  // Return TRUE so other functions can check if it did run successfully
-  return TRUE;
+    // Release cron semaphore
+    variable_del('cron_semaphore');
+  }
 }
 
 /**
