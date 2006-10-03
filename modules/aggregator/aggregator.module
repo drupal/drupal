@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.306 2006/09/17 19:14:15 dries Exp $
+// $Id: aggregator.module,v 1.307 2006/10/03 21:06:27 kjartan Exp $
 
 /**
  * @file
@@ -137,13 +137,14 @@ function aggregator_menu($may_cache) {
             'weight' => -10);
           $items[] = array('path' => 'aggregator/sources/'. $feed['fid'] .'/categorize',
             'title' => t('categorize'),
-            'callback' => 'aggregator_page_source',
+            'callback' => 'drupal_get_form',
+            'callback arguments' => array('aggregator_page_source'),
             'access' => $edit,
             'type' => MENU_LOCAL_TASK);
           $items[] = array('path' => 'aggregator/sources/'. $feed['fid'] .'/configure',
             'title' => t('configure'),
-            'callback' => 'aggregator_form_feed',
-            'callback arguments' => array($feed),
+            'callback' => 'drupal_get_form',
+            'callback arguments' => array('aggregator_form_feed', $feed),
             'access' => $edit,
             'type' => MENU_LOCAL_TASK,
             'weight' => 1);
@@ -158,13 +159,14 @@ function aggregator_menu($may_cache) {
             'weight' => -10);
           $items[] = array('path' => 'aggregator/categories/'. $category['cid'] .'/categorize',
             'title' => t('categorize'),
-            'callback' => 'aggregator_page_category',
+            'callback' => 'drupal_get_form',
+            'callback arguments' => array('aggregator_page_category'),
             'access' => $edit,
             'type' => MENU_LOCAL_TASK);
           $items[] = array('path' => 'aggregator/categories/'. $category['cid'] .'/configure',
             'title' => t('configure'),
-            'callback' => 'aggregator_form_category',
-            'callback arguments' => array($category),
+            'callback' => 'drupal_get_form',
+            'callback arguments' => array('aggregator_form_category', $category),
             'access' => $edit,
             'type' => MENU_LOCAL_TASK,
             'weight' => 1);
@@ -1058,6 +1060,7 @@ function aggregator_page_category() {
 }
 
 function aggregator_page_list($sql, $header, $categorize) {
+  $form['#base'] = 'aggregator_page_list';
   $form['header'] = array('#value' => $header);
   $result = pager_query($sql, 20);
   $categories = array();
@@ -1097,7 +1100,7 @@ function aggregator_page_list($sql, $header, $categorize) {
  */
 function _aggregator_page_list($sql, $op, $header = '') {
   $categorize = (user_access('administer news feeds') && ($op == 'categorize'));
-  $form = drupal_retrieve_form('aggregator_page_list', $sql, $header, $categorize);
+  $form = aggregator_page_list($sql, $header, $categorize);
   if ($categorize) {
     return $form;
   }
@@ -1299,7 +1302,7 @@ function theme_aggregator_feed($feed) {
   $output .= '<div class="feed-url"><em>'. t('URL:') .'</em> '. l($feed->link, $feed->link, array(), NULL, NULL, TRUE) ."</div>\n";
 
   if ($feed->checked) {
-    $updated = t('%time ago', array('%time' => format_interval(time() - $feed->checked)));
+    $updated = t('@time ago', array('@time' => format_interval(time() - $feed->checked)));
   }
   else {
     $updated = t('never');
