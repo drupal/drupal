@@ -1,4 +1,4 @@
-/* $Id: system.css,v 1.10 2006/09/05 03:50:57 unconed Exp $ */
+/* $Id: system.css,v 1.11 2006/10/03 00:17:52 unconed Exp $ */
 
 /*
 ** HTML elements
@@ -102,6 +102,13 @@ tr.merge-up, tr.merge-up td, tr.merge-up th {
 .form-item label.option {
   display: inline;
   font-weight: normal;
+}
+.form-checkboxes, .form-radios {
+  margin: 1em 0;
+}
+.form-checkboxes .form-item, .form-radios .form-item {
+  margin-top: 0.4em;
+  margin-bottom: 0.4em;
 }
 .marker, .form-required {
   color: #f00;

@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.153 2006/10/02 11:49:50 dries Exp $
+// $Id: form.inc,v 1.154 2006/10/03 00:17:52 unconed Exp $
 
 /**
  * @defgroup form Form generation
@@ -943,6 +943,7 @@ function theme_radio($element) {
  *   A themed HTML string representing the radio button set.
  */
 function theme_radios($element) {
+  $element['#children'] = '<div class="form-radios">'. $element['#children'] .'</div>';
   if ($element['#title'] || $element['#description']) {
     unset($element['#id']);
     return theme('form_element', $element, $element['#children']);
