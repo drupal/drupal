@@ -1,4 +1,4 @@
-/* $Id: system.css,v 1.11 2006/10/03 00:17:52 unconed Exp $ */
+/* $Id: system.css,v 1.12 2006/10/04 06:46:42 dries Exp $ */
 
 /*
 ** HTML elements
@@ -53,14 +53,6 @@ div.ok, tr.ok {
   float: right;
   padding-left: 0.25em;
   clear: right;
-}
-.item-list .icon a {
-  color: #000;
-  text-decoration: none;
-}
-.item-list .icon a:hover {
-  color: #000;
-  text-decoration: none;
 }
 .item-list .title {
   font-weight: bold;
