@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.145 2006/08/31 20:22:35 dries Exp $
+// $Id: locale.module,v 1.146 2006/10/04 06:41:24 drumm Exp $
 
 /**
  * @file
@@ -114,18 +114,18 @@ function locale_menu($may_cache) {
     // We put this in !$may_cache so it's only added once per request
     drupal_add_css(drupal_get_path('module', 'locale') .'/locale.css');
 
-    if (is_numeric(arg(4))) {
+    if (is_numeric(arg(5))) {
       // String related callbacks
-      $items[] = array('path' => 'admin/settings/locale/string/edit/'. arg(4),
+      $items[] = array('path' => 'admin/settings/locale/string/edit/'. arg(5),
         'title' => t('edit string'),
-        'callback' => 'locale_admin_string_edit',
-        'callback arguments' => arg(4),
+        'callback' => 'drupal_get_form',
+        'callback arguments' => array('locale_admin_string_edit', arg(5)),
         'access' => $access,
         'type' => MENU_CALLBACK);
-      $items[] = array('path' => 'admin/settings/locale/string/delete/'. arg(4),
+      $items[] = array('path' => 'admin/settings/locale/string/delete/'. arg(5),
         'title' => t('delete string'),
         'callback' => 'locale_admin_string_delete',
-        'callback arguments' => arg(4),
+        'callback arguments' => array(arg(5)),
         'access' => $access,
         'type' => MENU_CALLBACK);
     }
@@ -410,6 +410,14 @@ function locale_string_search() {
 function locale_admin_string_edit($lid) {
   include_once './includes/locale.inc';
   return _locale_string_edit($lid);
+}
+
+/**
+ * Process the string edit form.
+ */
+function locale_admin_string_edit_submit($form_id, $form_values) {
+  include_once './includes/locale.inc';
+  return _locale_string_edit_submit($form_id, $form_values);
 }
 
 /**
