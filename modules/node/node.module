@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.701 2006/09/16 05:35:57 dries Exp $
+// $Id: node.module,v 1.702 2006/10/04 06:54:24 dries Exp $
 
 /**
  * @file
@@ -665,8 +665,22 @@ function node_view($node, $teaser = FALSE, $page = FALSE, $links = TRUE) {
  * Apply filters and build the node's standard elements.
  */
 function node_prepare($node, $teaser = FALSE) {
+  // First we'll overwrite the existing node teaser and body with
+  // the filtered copies! Then, we'll stick those into the content
+  // array and set the read more flag if appropriate.
+  if (strlen($node->teaser) < strlen($node->body)) {
+    $node->readmore = TRUE;
+  }
+
+  if ($teaser == FALSE) {
+    $node->body = check_markup($node->body, $node->format, FALSE);
+  }
+  else {
+    $node->teaser = check_markup($node->teaser, $node->format, FALSE);
+  }
+
   $node->content['body'] = array(
-    '#value' => check_markup($teaser ? $node->teaser : $node->body, $node->format, FALSE),
+    '#value' => $teaser ? $node->teaser : $node->body,
     '#weight' => 0,
   );
 
@@ -675,10 +689,6 @@ function node_prepare($node, $teaser = FALSE) {
       '#value' => theme('node_log_message', filter_xss($node->log)),
       '#weight' => 20,
     );
-  }
-
-  if (strlen($node->teaser) < strlen($node->body)) {
-    $node->readmore = TRUE;
   }
 
   return $node;
