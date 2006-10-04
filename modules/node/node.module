@@ -684,13 +684,6 @@ function node_prepare($node, $teaser = FALSE) {
     '#weight' => 0,
   );
 
-  if ($node->log != '' && !$teaser) {
-    $node->content['log_message'] = array(
-      '#value' => theme('node_log_message', filter_xss($node->log)),
-      '#weight' => 20,
-    );
-  }
-
   return $node;
 }
 
