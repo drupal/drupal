@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.361 2006/09/23 08:10:40 drumm Exp $
+// $Id: forum.module,v 1.362 2006/10/04 06:07:05 drumm Exp $
 
 /**
  * @file
@@ -782,7 +782,7 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
   global $user, $forum_topic_list_header;
 
   $forum_topic_list_header = array(
-    array('data' => '&nbsp;'),
+    array('data' => '&nbsp;', 'field' => NULL),
     array('data' => t('Topic'), 'field' => 'n.title'),
     array('data' => t('Replies'), 'field' => 'l.comment_count'),
     array('data' => t('Created'), 'field' => 'n.created'),
@@ -1024,13 +1024,13 @@ function theme_forum_topic_list($tid, $topics, $sortby, $forum_per_page) {
           array('data' => l($topic->title, "node/$topic->nid"), 'class' => 'topic'),
           array('data' => $topic->num_comments . ($topic->new_replies ? '<br />'. l(format_plural($topic->new_replies, '1 new', '@count new'), "node/$topic->nid", NULL, NULL, 'new') : ''), 'class' => 'replies'),
           array('data' => _forum_format($topic), 'class' => 'created'),
-          array('data' => _forum_format($topic->last_reply), 'class' => 'last-reply')
+          array('data' => _forum_format(isset($topic->last_reply) ? $topic->last_reply : NULL), 'class' => 'last-reply')
         );
       }
     }
   }
 
-  $output .= theme('table', $forum_topic_list_header, $rows);
+  $output = theme('table', $forum_topic_list_header, $rows);
   $output .= theme('pager', NULL, $forum_per_page, 0);
 
   return $output;
@@ -1127,7 +1127,7 @@ function _forum_user_last_visit($nid) {
       $history[$t->nid] = $t->timestamp > NODE_NEW_LIMIT ? $t->timestamp : NODE_NEW_LIMIT;
     }
   }
-  return $history[$nid] ? $history[$nid] : NODE_NEW_LIMIT;
+  return isset($history[$nid]) ? $history[$nid] : NODE_NEW_LIMIT;
 }
 
 function _forum_get_topic_order($sortby) {
