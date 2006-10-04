@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.17 2006/09/11 10:53:19 unconed Exp $
+// $Id: install.php,v 1.18 2006/10/04 07:10:23 drumm Exp $
 
 require_once './includes/install.inc';
 
@@ -106,7 +106,7 @@ function install_verify_settings() {
     // We need this because we want to run form_get_errors.
     include_once './includes/form.inc';
 
-    $url = parse_url($db_url);
+    $url = parse_url(is_array($db_url) ? $db_url['default'] : $db_url);
     $db_user = urldecode($url['user']);
     $db_pass = urldecode($url['pass']);
     $db_host = urldecode($url['host']);
@@ -128,7 +128,7 @@ function install_verify_settings() {
 function install_change_settings($profile = 'default', $install_locale = '') {
   global $db_url, $db_type, $db_prefix;
 
-  $url = parse_url($db_url);
+  $url = parse_url(is_array($db_url) ? $db_url['default'] : $db_url);
   $db_user = urldecode($url['user']);
   $db_pass = urldecode($url['pass']);
   $db_host = urldecode($url['host']);
@@ -304,7 +304,7 @@ function _install_settings_form_validate($db_prefix, $db_type, $db_user, $db_pas
   }
 
   // Verify database prefix
-  if (!empty($db_prefix) && preg_match('/[^A-Za-z0-9_]/', $db_prefix)) {
+  if (!empty($db_prefix) && is_string($db_prefix) && preg_match('/[^A-Za-z0-9_]/', $db_prefix)) {
     form_set_error('db_prefix', st('The database prefix you have entered, %db_prefix, is invalid. The database prefix can only contain alphanumeric characters and underscores.', array('%db_prefix' => $db_prefix)), 'error');
   }
 
@@ -314,7 +314,8 @@ function _install_settings_form_validate($db_prefix, $db_type, $db_user, $db_pas
 
   // Check database type
   if (!isset($form)) {
-    $db_type = substr($db_url, 0, strpos($db_url, '://'));
+    $_db_url = is_array($db_url) ? $db_url['default'] : $db_url;
+    $db_type = substr($_db_url, 0, strpos($_db_url, '://'));
   }
   $databases = drupal_detect_database_types();
   if (!in_array($db_type, $databases)) {
