@@ -54,14 +54,6 @@ div.ok, tr.ok {
   padding-left: 0.25em;
   clear: right;
 }
-.item-list .icon a {
-  color: #000;
-  text-decoration: none;
-}
-.item-list .icon a:hover {
-  color: #000;
-  text-decoration: none;
-}
 .item-list .title {
   font-weight: bold;
 }
