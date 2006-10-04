@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.702 2006/10/04 06:54:24 dries Exp $
+// $Id: node.module,v 1.703 2006/10/04 06:59:30 dries Exp $
 
 /**
  * @file
@@ -683,13 +683,6 @@ function node_prepare($node, $teaser = FALSE) {
     '#value' => $teaser ? $node->teaser : $node->body,
     '#weight' => 0,
   );
-
-  if ($node->log != '' && !$teaser) {
-    $node->content['log_message'] = array(
-      '#value' => theme('node_log_message', filter_xss($node->log)),
-      '#weight' => 20,
-    );
-  }
 
   return $node;
 }
