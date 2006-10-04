@@ -1,9 +1,10 @@
-// $Id: CHANGELOG.txt,v 1.165 2006/10/02 11:36:17 dries Exp $
+// $Id: CHANGELOG.txt,v 1.166 2006/10/04 20:34:56 unconed Exp $
 
 Drupal 5.0, xxxx-xx-xx (development version)
 ------------------------
 - completely retooled the administration page
     * /admin now contains an administration page which may be themed
+    * reorganised administration menu items by task and by module
     * added a status report page with detailed PHP/MySQL information
 - added web-based installer which can:
     * check installation requirements
@@ -13,7 +14,11 @@ Drupal 5.0, xxxx-xx-xx (development version)
     * be localized
 - included the jQuery JavaScript library 1.0.1 and converted all core JavaScript to use it
 - introduced the ability to alter mail sent from system
-- moved core modules to their own directories to allow additional flexibility
+- module system:
+    * added .info files for module meta-data
+    * added support for module dependencies
+    * improved module installation screen
+    * moved core modules to their own directories
 - added support for different cache backends
 - added support for a generic "sites/all" directory.
 - usability:
