@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.144 2006/09/09 08:25:23 dries Exp $
+// $Id: filter.module,v 1.145 2006/10/04 06:13:33 drumm Exp $
 
 /**
  * @file
@@ -809,7 +809,7 @@ function filter_form($value = FILTER_FORMAT_DEFAULT, $weight = NULL, $parents = 
   $value = filter_resolve_format($value);
   $formats = filter_formats();
 
-  $extra = l(t('More information about formatting options'), 'filter/tips');
+  $extra = theme('filter_tips_more_info');
 
   if (count($formats) > 1) {
     $form = array(
@@ -959,6 +959,16 @@ function theme_filter_tips($tips, $long = FALSE, $extra = '') {
   }
 
   return $output;
+}
+
+/**
+ * Format a link to the more extensive filter tips.
+ *
+ * @ingroup themeable
+ */
+
+function theme_filter_tips_more_info() {
+  return l(t('More information about formatting options'), 'filter/tips');
 }
 
 /**
