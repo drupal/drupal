@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.198 2006/09/17 19:14:15 dries Exp $
+// $Id: search.module,v 1.199 2006/10/05 14:49:52 dries Exp $
 
 /**
  * @file
@@ -1045,7 +1045,7 @@ function search_form_submit($form_id, $form_values) {
 /**
  * Output a search form for the search block and the theme's search box.
  */
-function search_box() {
+function search_box($form_id) {
   // Use search_keys instead of keys to avoid ID conflicts with the search block.
   $form[$form_id .'_keys'] = array(
     '#type' => 'textfield',
@@ -1285,7 +1285,13 @@ function theme_search_page($results, $type) {
 }
 
 function search_forms() {
-  $forms['search_theme_form']['callback'] = 'search_box';
-  $forms['search_block_form']['callback'] = 'search_box';
+  $forms['search_theme_form']= array(
+    'callback' => 'search_box',
+    'callback arguments' => array('search_theme_form'),
+  );
+  $forms['search_block_form']= array(
+    'callback' => 'search_box',
+    'callback arguments' => array('search_block_form'),
+  );
   return $forms;
 }
