@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.308 2006/10/05 14:45:13 dries Exp $
+// $Id: aggregator.module,v 1.309 2006/10/05 18:22:48 kjartan Exp $
 
 /**
  * @file
@@ -1064,14 +1064,13 @@ function aggregator_page_category() {
 function aggregator_page_list($sql, $header, $categorize) {
   $form['#base'] = 'aggregator_page_list';
   $form['header'] = array('#value' => $header);
-  $form['#id'] = 'aggregator';
   $result = pager_query($sql, 20);
   $categories = array();
   $done = FALSE;
   $form['items'] = array();
   while ($item = db_fetch_object($result)) {
-    $form[$item->iid]['items'] = array('#value' => theme('aggregator_page_item', $item));
-    $form[$item->iid]['categories'] = array();
+    $form['items'][$item->iid] = array('#value' => theme('aggregator_page_item', $item));
+    $form['categories'][$item->iid] = array();
     if ($categorize) {
       $categories_result = db_query('SELECT c.cid, c.title, ci.iid FROM {aggregator_category} c LEFT JOIN {aggregator_category_item} ci ON c.cid = ci.cid AND ci.iid = %d', $item->iid);
       $selected = array();
@@ -1084,7 +1083,7 @@ function aggregator_page_list($sql, $header, $categorize) {
         }
       }
       $done = TRUE;
-      $form[$item->iid]['categories'] = array(
+      $form['categories'][$item->iid] = array(
         '#type' => variable_get('aggregator_category_selector', 'checkboxes'),
         '#default_value' => $selected, '#options' => $categories,
         '#size' => 10, '#multiple' => TRUE
@@ -1110,8 +1109,8 @@ function _aggregator_page_list($sql, $op, $header = '') {
   else {
     $output = '<div id="aggregator">';
     $output .= $header;
-    foreach ($form as $item) {
-      $output .= $item['items']['#value'];
+    foreach ($form['items'] as $item) {
+      $output .= $item['#value'];
     }
     $output .= '</div>';
     $output .= $form['pager']['#value'];
