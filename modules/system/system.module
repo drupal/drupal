@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.374 2006/10/03 23:18:18 unconed Exp $
+// $Id: system.module,v 1.375 2006/10/05 15:33:30 dries Exp $
 
 /**
  * @file
@@ -1693,10 +1693,6 @@ function system_settings_overview() {
   $content = system_admin_menu_block($menu);
 
   $output = theme('admin_block_content', $content);
-  // TODO: remove this:
-  foreach (module_implements('settings') as $module) {
-    drupal_set_message("$module settings inaccessible: module needs updating because the _settings hook has been deprecated.");
-  }
 
   return $output;
 }
