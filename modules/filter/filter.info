@@ -1,4 +1,4 @@
-; $Id: filter.info,v 1.1 2006/08/31 20:22:35 dries Exp $
+; $Id: filter.info,v 1.2 2006/10/05 15:47:56 dries Exp $
 name = Filter
 description = Handles the filtering of content in preparation for display.
-
+package = Core - required

@@ -1,4 +1,4 @@
-; $Id: book.info,v 1.1 2006/08/31 20:22:34 dries Exp $
+; $Id: book.info,v 1.2 2006/10/05 15:47:55 dries Exp $
 name = Book
 description = Allows users to collaboratively author a book.
-
+package = Core - optional

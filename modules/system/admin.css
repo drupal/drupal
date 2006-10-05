@@ -1,4 +1,4 @@
-/* $Id: admin.css,v 1.8 2006/10/02 16:49:08 unconed Exp $ */
+/* $Id: admin.css,v 1.9 2006/10/05 15:47:57 dries Exp $ */
 
 /*
 ** Formatting for administration page
@@ -39,6 +39,12 @@ div.admin .expert-link {
   padding-right: 4px;
 }
 
+table.package {
+  width: 100%;
+}
+table.package .description {
+  width: 100%;
+}
 div.admin-dependencies, div.admin-required {
   font-size: 0.9em;
   color: #444;

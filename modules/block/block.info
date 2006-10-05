@@ -1,4 +1,4 @@
-; $Id: block.info,v 1.1 2006/08/31 20:22:34 dries Exp $
+; $Id: block.info,v 1.2 2006/10/05 15:47:55 dries Exp $
 name = Block
 description = Controls the boxes that are displayed around the main content.
-
+package = Core - required

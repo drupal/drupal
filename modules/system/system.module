@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.375 2006/10/05 15:33:30 dries Exp $
+// $Id: system.module,v 1.376 2006/10/05 15:47:57 dries Exp $
 
 /**
  * @file
@@ -1333,11 +1333,6 @@ function system_modules($form_values = NULL) {
   // Merge in required modules.
   $modules_required = array('block', 'filter', 'node', 'system', 'user', 'watchdog');
   foreach ($modules_required as $required) {
-    $form['description'][$required]['core'] = array(
-      '#value' => t('Required for Drupal core'),
-      '#prefix' => '<div class="admin-required">',
-      '#suffix' => '</div>',
-    );
     $disabled[] = $required;
     $form['disabled_modules']['#value'][$required] = TRUE;
   }
@@ -1526,18 +1521,7 @@ function theme_system_modules($form) {
     return drupal_render($form);
   }
 
-  foreach (element_children($form['name']) as $key) {
-    $row = array();
-    $row[] = array('data' => drupal_render($form['status'][$key]), 'align' => 'center');
-
-    if (module_exists('throttle')) {
-      $row[] = array('data' => drupal_render($form['throttle'][$key]), 'align' => 'center');
-    }
-    $row[] = '<strong>'. drupal_render($form['name'][$key]) .'</strong>';
-    $row[] = drupal_render($form['description'][$key]);
-    $rows[] = $row;
-  }
-
+  // Individual table headers.
   $header = array(t('Enabled'));
   if (module_exists('throttle')) {
     $header[] = t('Throttle');
@@ -1545,7 +1529,35 @@ function theme_system_modules($form) {
   $header[] = t('Name');
   $header[] = t('Description');
 
-  $output = theme('table', $header, $rows);
+  // Pull package information from module list and start grouping modules.
+  $modules = $form['validation_modules']['#value'];
+  foreach ($modules as $module) {
+    if (!isset($module->info['package'])) {
+      $module->info['package'] = 'Uncategorized';
+    }
+    $packages[$module->info['package']][$module->name] = $module->info;
+  }
+  ksort($packages);
+
+  // Display packages.
+  $output = '';
+  foreach ($packages as $package => $modules) {
+    $rows = array();
+    foreach ($modules as $key => $module) {
+      $row = array();
+      $row[] = array('data' => drupal_render($form['status'][$key]), 'align' => 'center');
+
+      if (module_exists('throttle')) {
+        $row[] = array('data' => drupal_render($form['throttle'][$key]), 'align' => 'center');
+      }
+      $row[] = '<strong>'. drupal_render($form['name'][$key]) .'</strong>';
+      $row[] = array('data' => drupal_render($form['description'][$key]), 'class' => 'description');
+      $rows[] = $row;
+    }
+    $output .= '<h2>'. t($package) .'</h2>';
+    $output .= theme('table', $header, $rows, array('class' => 'package'));
+  }
+
   $output .= drupal_render($form);
   return $output;
 }

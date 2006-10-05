@@ -1,4 +1,4 @@
-; $Id: comment.info,v 1.1 2006/08/31 20:22:35 dries Exp $
+; $Id: comment.info,v 1.2 2006/10/05 15:47:55 dries Exp $
 name = Comment
 description = Allows users to comment on and discuss published content.
-
+package = Core - optional
