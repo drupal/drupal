@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.307 2006/10/03 21:06:27 kjartan Exp $
+// $Id: aggregator.module,v 1.308 2006/10/05 14:45:13 dries Exp $
 
 /**
  * @file
@@ -658,7 +658,6 @@ function aggregator_element_end($parser, $name) {
  */
 function aggregator_element_data($parser, $data) {
   global $channel, $element, $items, $item, $image, $tag;
-
   switch ($element) {
     case 'ITEM':
       $items[$item][$tag] .= $data;
@@ -889,6 +888,9 @@ function aggregator_parse_feed(&$data, $feed) {
     else if ($item['SUMMARY']) {
       $item['DESCRIPTION'] = $item['SUMMARY'];
     }
+    else if ($item['CONTENT']) {
+      $item['DESCRIPTION'] = $item['CONTENT'];
+    }
 
     /*
     ** Try to resolve and parse the item's publication date. If no
@@ -1062,13 +1064,14 @@ function aggregator_page_category() {
 function aggregator_page_list($sql, $header, $categorize) {
   $form['#base'] = 'aggregator_page_list';
   $form['header'] = array('#value' => $header);
+  $form['#id'] = 'aggregator';
   $result = pager_query($sql, 20);
   $categories = array();
   $done = FALSE;
   $form['items'] = array();
   while ($item = db_fetch_object($result)) {
-    $form['items'][$item->iid] = array('#value' => theme('aggregator_page_item', $item));
-    $form['categories'][$item->iid] = array();
+    $form[$item->iid]['items'] = array('#value' => theme('aggregator_page_item', $item));
+    $form[$item->iid]['categories'] = array();
     if ($categorize) {
       $categories_result = db_query('SELECT c.cid, c.title, ci.iid FROM {aggregator_category} c LEFT JOIN {aggregator_category_item} ci ON c.cid = ci.cid AND ci.iid = %d', $item->iid);
       $selected = array();
@@ -1081,7 +1084,7 @@ function aggregator_page_list($sql, $header, $categorize) {
         }
       }
       $done = TRUE;
-      $form['categories'][$item->iid] = array(
+      $form[$item->iid]['categories'] = array(
         '#type' => variable_get('aggregator_category_selector', 'checkboxes'),
         '#default_value' => $selected, '#options' => $categories,
         '#size' => 10, '#multiple' => TRUE
@@ -1107,8 +1110,8 @@ function _aggregator_page_list($sql, $op, $header = '') {
   else {
     $output = '<div id="aggregator">';
     $output .= $header;
-    foreach ($form['items'] as $item) {
-      $output .= $item['#value'];
+    foreach ($form as $item) {
+      $output .= $item['items']['#value'];
     }
     $output .= '</div>';
     $output .= $form['pager']['#value'];
