@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.577 2006/10/03 00:24:19 unconed Exp $
+// $Id: common.inc,v 1.578 2006/10/05 15:26:17 dries Exp $
 
 /**
  * @file
@@ -1810,15 +1810,7 @@ function drupal_render(&$elements) {
   if (isset($content) && $content !== '') {
     $prefix = isset($elements['#prefix']) ? $elements['#prefix'] : '';
     $suffix = isset($elements['#suffix']) ? $elements['#suffix'] : '';
-    $content = $prefix . $content . $suffix;
-
-    if (isset($elements['#after_render'])) {
-      foreach ($elements['#after_render'] as $function) {
-        $function($elements, $content);
-      }
-    }
-
-    return $content;
+    return $prefix . $content . $suffix;
   }
 }
 

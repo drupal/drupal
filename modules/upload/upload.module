@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.132 2006/09/26 14:11:58 dries Exp $
+// $Id: upload.module,v 1.133 2006/10/05 15:26:17 dries Exp $
 
 /**
  * @file
@@ -497,30 +497,34 @@ function upload_nodeapi(&$node, $op, $teaser) {
               '#weight' => 50,
             );
           }
-          // Manipulate so that inline references work in preview
-          if (!variable_get('clean_url', 0)) {
-            $previews = array();
-            foreach ($node->files as $file) {
-              $file = (object)$file;
-              if (strpos($file->fid, 'upload') !== FALSE) {
-                $previews[] = $file;
-              }
+        }
+      }
+      break;
+    case 'alter':
+      if (isset($node->files) && user_access('view uploaded files')) {
+        // Manipulate so that inline references work in preview
+        if (!variable_get('clean_url', 0)) {
+          $previews = array();
+          foreach ($node->files as $file) {
+            if (strpos($file['fid'], 'upload') !== FALSE) {
+              $previews[] = $file;
             }
-            // URLs to files being previewed are actually Drupal paths. When Clean
-            // URLs are disabled, the two do not match. We perform an automatic
-            // replacement from temporary to permanent URLs. That way, the author
-            // can use the final URL in the body before having actually saved (to
-            // place inline images for example).
-            foreach ($previews as $file) {
-              $old = file_create_filename($file->filename, file_create_path());
-              $node->content['#upload_urls'][$old] = url($old);
-            }
-            $node->content['#after_render'][] = 'upload_fix_preview_urls';
+          }
+
+          // URLs to files being previewed are actually Drupal paths. When Clean
+          // URLs are disabled, the two do not match. We perform an automatic
+          // replacement from temporary to permanent URLs. That way, the author
+          // can use the final URL in the body before having actually saved (to
+          // place inline images for example).
+          foreach ($previews as $file) {
+            $old = file_create_filename($file['filename'], file_create_path());
+            $new = url($old);
+            $node->body = str_replace($old, $new, $node->body);
+            $node->teaser = str_replace($old, $new, $node->teaser);
           }
         }
       }
       break;
-
     case 'insert':
     case 'update':
       if (user_access('upload files')) {
@@ -563,18 +567,6 @@ function upload_nodeapi(&$node, $op, $teaser) {
         }
       }
       return array();
-  }
-}
-
-function upload_fix_preview_urls($elements, &$content) {
-  if (is_array($elements['#upload_urls'])) {
-    $old_list = array();
-    $new_list = array();
-    foreach ($elements['#upload_urls'] as $old => $new) {
-      $old_list[] = $old;
-      $new_list[] = $new;
-    }
-    $content = str_replace($old_list, $new_list, $content);
   }
 }
 

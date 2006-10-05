@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.703 2006/10/04 06:59:30 dries Exp $
+// $Id: node.module,v 1.704 2006/10/05 15:26:17 dries Exp $
 
 /**
  * @file
@@ -658,6 +658,9 @@ function node_view($node, $teaser = FALSE, $page = FALSE, $links = TRUE) {
     unset($node->teaser);
   }
 
+  // Allow modules to modify the fully-built node.
+  node_invoke_nodeapi($node, 'alter', $teaser, $page);
+
   return theme('node', $node, $teaser, $page);
 }
 
@@ -717,9 +720,6 @@ function node_build_content($node, $teaser = FALSE, $page = FALSE) {
 
   // Allow modules to make their own additions to the node.
   node_invoke_nodeapi($node, 'view', $teaser, $page);
-
-  // Allow modules to modify the fully-built node.
-  node_invoke_nodeapi($node, 'alter', $teaser, $page);
 
   return $node;
 }
