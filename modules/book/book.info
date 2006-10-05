@@ -1,4 +1,4 @@
 ; $Id$
 name = Book
 description = Allows users to collaboratively author a book.
-
+package = Core - optional

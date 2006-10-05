@@ -175,11 +175,13 @@ function _module_build_dependents($files) {
  * name - The real name of the module for display purposes.
  * description - A brief description of the module.
  * dependencies - A space delimited list of the short names (shortname) of other modules this module depends on.
+ * package - The name of the package of modules this module belongs to.
  *
  * Example of .info file:
  *   name = Forum
  *   description = Enables threaded discussions about general topics.
  *   dependencies = taxonomy comment
+ *   package = Core - optional
  *
  * @param $filename
  *   The file we are parsing. Accepts file with relative or absolute path.

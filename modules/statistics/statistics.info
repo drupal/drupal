@@ -1,4 +1,4 @@
 ; $Id$
 name = Statistics
 description = Logs access statistics for your site.
-
+package = Core - optional

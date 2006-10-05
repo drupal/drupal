@@ -39,6 +39,12 @@ div.admin .expert-link {
   padding-right: 4px;
 }
 
+table.package {
+  width: 100%;
+}
+table.package .description {
+  width: 100%;
+}
 div.admin-dependencies, div.admin-required {
   font-size: 0.9em;
   color: #444;
