@@ -1810,15 +1810,7 @@ function drupal_render(&$elements) {
   if (isset($content) && $content !== '') {
     $prefix = isset($elements['#prefix']) ? $elements['#prefix'] : '';
     $suffix = isset($elements['#suffix']) ? $elements['#suffix'] : '';
-    $content = $prefix . $content . $suffix;
-
-    if (isset($elements['#after_render'])) {
-      foreach ($elements['#after_render'] as $function) {
-        $function($elements, $content);
-      }
-    }
-
-    return $content;
+    return $prefix . $content . $suffix;
   }
 }
 
