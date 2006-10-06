@@ -1,4 +1,4 @@
-/* $Id: admin.css,v 1.9 2006/10/05 15:47:57 dries Exp $ */
+/* $Id: admin.css,v 1.10 2006/10/06 07:37:20 dries Exp $ */
 
 /*
 ** Formatting for administration page
@@ -15,7 +15,6 @@ div.admin-panel .description {
 
 div.admin-panel .body {
   padding: 0 4px 2px 8px;
-  line-height: 1.2em;
 }
 
 div.admin {
