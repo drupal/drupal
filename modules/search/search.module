@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.199 2006/10/05 14:49:52 dries Exp $
+// $Id: search.module,v 1.200 2006/10/07 13:39:04 dries Exp $
 
 /**
  * @file
@@ -150,13 +150,13 @@ function search_menu($may_cache) {
 
   if ($may_cache) {
     $items[] = array('path' => 'search',
-      'title' => t('search settings'),
+      'title' => t('search'),
       'callback' => 'drupal_get_form',
       'callback arguments' => array('search_view'),
       'access' => user_access('search content'),
       'type' => MENU_SUGGESTED_ITEM);
     $items[] = array('path' => 'admin/settings/search',
-      'title' => t('search'),
+      'title' => t('search settings'),
       'description' => t('Configure relevance settings for search and other indexing options'),
       'callback' => 'drupal_get_form',
       'callback arguments' => array('search_admin_settings'),
