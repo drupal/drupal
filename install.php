@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.20 2006/10/08 06:23:38 dries Exp $
+// $Id: install.php,v 1.21 2006/10/08 06:25:19 dries Exp $
 
 require_once './includes/install.inc';
 
@@ -303,9 +303,9 @@ function _install_settings_form_validate($db_prefix, $db_type, $db_user, $db_pas
     form_set_error('db_user', st('You have configured @drupal to use the default username and password. This is not allowed for security reasons.', array('@drupal' => drupal_install_profile_name())));
   }
 
-  // Verify database prefix
+  // Verify the table prefix
   if (!empty($db_prefix) && is_string($db_prefix) && preg_match('/[^A-Za-z0-9_]/', $db_prefix)) {
-    form_set_error('db_prefix', st('The database prefix you have entered, %db_prefix, is invalid. The database prefix can only contain alphanumeric characters and underscores.', array('%db_prefix' => $db_prefix)), 'error');
+    form_set_error('db_prefix', st('The database table prefix you have entered, %db_prefix, is invalid. The table prefix can only contain alphanumeric characters and underscores.', array('%db_prefix' => $db_prefix)), 'error');
   }
 
   if (!empty($db_port) && !is_numeric($db_port)) {
