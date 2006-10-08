@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.228 2006/09/05 02:53:01 drumm Exp $
+// $Id: block.module,v 1.229 2006/10/08 06:34:12 dries Exp $
 
 /**
  * @file
@@ -88,16 +88,18 @@ function block_menu($may_cache) {
       'callback' => 'drupal_get_form',
       'callback arguments' => array('block_box_form'),
       'type' => MENU_LOCAL_TASK);
+    $default = variable_get('theme_default', 'bluemarine');
     foreach (list_themes() as $key => $theme) {
       if ($theme->status) {
-        if ($key == variable_get('theme_default', 'bluemarine')) {
-          $items[] = array('path' => 'admin/build/block/list/'. $key, 'title' => t('!key settings', array('!key' => $key)),
-            'access' => user_access('administer blocks'), 'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
-        }
-        else {
-          $items[] = array('path' => 'admin/build/block/list/'. $key, 'title' => t('!key settings', array('!key' => $key)),
-            'access' => user_access('administer blocks'), 'type' => MENU_LOCAL_TASK);
-        }
+        $items[] = array(
+          'path' => 'admin/build/block/list/'. $key,
+          'title' => t('!key settings', array('!key' => $key)),
+          'callback' => 'drupal_get_form',
+          'callback arguments' => array('block_admin_display', $key),
+          'access' => user_access('administer blocks'),
+          'type' => $key== $default ? MENU_DEFAULT_LOCAL_TASK : MENU_LOCAL_TASK,
+          'weight' => $key == $default ? -10 : 0,
+        );
       }
     }
   }
