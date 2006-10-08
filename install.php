@@ -261,10 +261,10 @@ function install_settings_form($profile, $install_locale, $settings_file, $db_ur
       '#description' => st('If your database server is listening to a non-standard port, enter its number.'),
     );
 
-    // Database prefix
+    // Table prefix
     $form['advanced_options']['db_prefix'] = array(
       '#type' => 'textfield',
-      '#title' => st('Database prefix'),
+      '#title' => st('Table prefix'),
       '#default_value' => $db_prefix,
       '#size' => 45,
       '#maxlength' => 45,
