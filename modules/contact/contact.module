@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.65 2006/09/08 16:33:02 dries Exp $
+// $Id: contact.module,v 1.66 2006/10/08 06:09:41 dries Exp $
 
 /**
  * @file
@@ -40,7 +40,7 @@ function contact_help($section) {
  * Implementation of hook_perm
  */
 function contact_perm() {
-  return array('access site-wide contact form', 'access personal contact forms');
+  return array('access site-wide contact form');
 }
 /**
  * Implementation of hook_menu().
@@ -106,7 +106,7 @@ function contact_menu($may_cache) {
           'title' => t('contact'),
           'callback' => 'contact_user_page',
           'type' => MENU_LOCAL_TASK,
-          'access' => ($user->uid && user_access('access personal contact forms')),
+          'access' => $user->uid,
           'weight' => 2,
         );
       }
@@ -475,9 +475,13 @@ function contact_mail_page() {
       '#title' => t('Message'),
       '#required' => TRUE,
     );
-    $form['copy'] = array('#type' => 'checkbox',
-      '#title' => t('Send yourself a copy.'),
-    );
+    // We do not allow anonymous users to send themselves a copy
+    // because it can be abused to spam people.
+    if ($user->uid) {
+      $form['copy'] = array('#type' => 'checkbox',
+        '#title' => t('Send yourself a copy.'),
+      );
+    }
     $form['submit'] = array('#type' => 'submit',
       '#value' => t('Send e-mail'),
     );
