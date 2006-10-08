@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.19 2006/10/04 07:16:20 drumm Exp $
+// $Id: install.php,v 1.20 2006/10/08 06:23:38 dries Exp $
 
 require_once './includes/install.inc';
 
@@ -261,10 +261,10 @@ function install_settings_form($profile, $install_locale, $settings_file, $db_ur
       '#description' => st('If your database server is listening to a non-standard port, enter its number.'),
     );
 
-    // Database prefix
+    // Table prefix
     $form['advanced_options']['db_prefix'] = array(
       '#type' => 'textfield',
-      '#title' => st('Database prefix'),
+      '#title' => st('Table prefix'),
       '#default_value' => $db_prefix,
       '#size' => 45,
       '#maxlength' => 45,
