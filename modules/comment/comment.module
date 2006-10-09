@@ -656,7 +656,7 @@ function comment_save($edit) {
         $edit['cid'] = db_next_id('{comments}_cid');
         $edit['timestamp'] = time();
 
-        if ($edit['uid'] == $user->uid) {
+        if ($edit['uid'] === $user->uid) { // '===' because we want to modify anonymous users too
           $edit['name'] = $user->name;
         }
 
