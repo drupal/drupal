@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.376 2006/10/05 15:47:57 dries Exp $
+// $Id: system.module,v 1.377 2006/10/09 07:26:19 dries Exp $
 
 /**
  * @file
@@ -2127,7 +2127,6 @@ function theme_system_admin_by_module($menu_items) {
     $output .= $data;
     $output .= '</div>';
   }
-  $output .= '</div>';
   $output .= '</div>';
 
   return $output;
