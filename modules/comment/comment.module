@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.488 2006/09/17 19:09:34 dries Exp $
+// $Id: comment.module,v 1.489 2006/10/09 06:59:01 dries Exp $
 
 /**
  * @file
@@ -656,7 +656,7 @@ function comment_save($edit) {
         $edit['cid'] = db_next_id('{comments}_cid');
         $edit['timestamp'] = time();
 
-        if ($edit['uid'] == $user->uid) {
+        if ($edit['uid'] === $user->uid) { // '===' because we want to modify anonymous users too
           $edit['name'] = $user->name;
         }
 
