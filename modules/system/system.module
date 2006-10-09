@@ -2128,7 +2128,6 @@ function theme_system_admin_by_module($menu_items) {
     $output .= '</div>';
   }
   $output .= '</div>';
-  $output .= '</div>';
 
   return $output;
 }
