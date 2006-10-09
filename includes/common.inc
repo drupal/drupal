@@ -647,7 +647,7 @@ function valid_email_address($mail) {
  *   TRUE if the URL is in a valid format.
  */
 function valid_url($url, $absolute = FALSE) {
-  $allowed_characters = '[a-z0-9\/:_\-_\.\?\$,~=#&%\+]';
+  $allowed_characters = '[a-z0-9\/:_\-_\.\?\$,;~=#&%\+]';
   if ($absolute) {
     return preg_match("/^(http|https|ftp):\/\/". $allowed_characters ."+$/i", $url);
   }
@@ -1319,7 +1319,7 @@ function drupal_urlencode($text) {
                        urlencode($text));
   }
   else {
-    return str_replace('%2F', '/', urlencode($text));    
+    return str_replace('%2F', '/', urlencode($text));
   }
 }
 
