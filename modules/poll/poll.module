@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.217 2006/09/23 07:43:30 drumm Exp $
+// $Id: poll.module,v 1.218 2006/10/09 06:53:25 dries Exp $
 
 /**
  * @file
@@ -144,7 +144,7 @@ function poll_form($node, $form_values = NULL) {
 
   $form['choices'] = array(
     '#type' => 'hidden',
-    '#default_value' => $choices,
+    '#value' => $choices,
   );
 
   // Poll choices
@@ -163,7 +163,7 @@ function poll_form($node, $form_values = NULL) {
     '#type' => 'checkbox',
     '#parents' => array('morechoices'),
     '#title' => t('Need more choices'),
-    '#default_value' => 0,
+    '#value' => 0,
     '#description' => t("If the amount of boxes above isn't enough, check this box and click the Preview button below to add some more."),
     '#weight' => 1,
   );
