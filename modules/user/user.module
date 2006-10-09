@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.685 2006/10/04 06:20:38 dries Exp $
+// $Id: user.module,v 1.686 2006/10/09 07:20:45 dries Exp $
 
 /**
  * @file
@@ -697,11 +697,11 @@ function user_menu($may_cache) {
 
     // Registration and login pages.
     $items[] = array('path' => 'user/login', 'title' => t('log in'),
-      'callback' => 'drupal_get_form', 'callback arguments' => array('user_login'), 'type' => MENU_DEFAULT_LOCAL_TASK);
+      'callback' => 'drupal_get_form', 'callback arguments' => array('user_login'), 'access' => !$user->uid, 'type' => MENU_DEFAULT_LOCAL_TASK);
     $items[] = array('path' => 'user/register', 'title' => t('create new account'),
-      'callback' => 'drupal_get_form', 'callback arguments' => array('user_register'), 'access' => $user->uid == 0 && variable_get('user_register', 1), 'type' => MENU_LOCAL_TASK);
+      'callback' => 'drupal_get_form', 'callback arguments' => array('user_register'), 'access' => !$user->uid && variable_get('user_register', 1), 'type' => MENU_LOCAL_TASK);
     $items[] = array('path' => 'user/password', 'title' => t('request new password'),
-      'callback' => 'drupal_get_form', 'callback arguments' => array('user_pass'), 'access' => $user->uid == 0, 'type' => MENU_LOCAL_TASK);
+      'callback' => 'drupal_get_form', 'callback arguments' => array('user_pass'), 'access' => !$user->uid, 'type' => MENU_LOCAL_TASK);
     $items[] = array('path' => 'user/reset', 'title' => t('reset password'),
       'callback' => 'drupal_get_form', 'callback arguments' => array('user_pass_reset'), 'access' => TRUE, 'type' => MENU_CALLBACK);
     $items[] = array('path' => 'user/help', 'title' => t('help'),
@@ -771,7 +771,7 @@ function user_menu($may_cache) {
     }
 
     $items[] = array('path' => 'logout', 'title' => t('log out'),
-      'access' => $user->uid != 0,
+      'access' => $user->uid,
       'callback' => 'user_logout',
       'weight' => 10);
   }
@@ -900,6 +900,10 @@ function user_login($msg = '') {
     '#attributes' => array('tabindex' => '2'),
   );
   $form['submit'] = array('#type' => 'submit', '#value' => t('Log in'), '#weight' => 2, '#attributes' => array('tabindex' => '3'));
+
+  // We set the action to 'user' because 'user/login' is no longer accessible once logged in:
+  $form['#action'] = url('user');
+
   return $form;
 }
 
