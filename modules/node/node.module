@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.704 2006/10/05 15:26:17 dries Exp $
+// $Id: node.module,v 1.705 2006/10/10 21:06:45 dries Exp $
 
 /**
  * @file
@@ -2292,7 +2292,7 @@ function node_page_default() {
         </li>
       </ol>
       <p>For more information, please refer to the <a href="@help">help section</a>, or the <a href="@handbook">online Drupal handbooks</a>. You may also post at the <a href="@forum">Drupal forum</a>, or view the wide range of <a href="@support">other support options</a> available.</p>',
-      array('@drupal' => 'http://drupal.org/', '@register' => url('user/register'), '@admin' => url('admin'), '@config' => url('admin/settings'), '@modules' => url('admin/settings/modules'), '@download_modules' => 'http://drupal.org/project/modules', '@themes' => url('admin/build/themes'), '@download_themes' => 'http://drupal.org/project/themes', '@content' => url('node/add'), '@help' => url('admin/help'), '@handbook' => 'http://drupal.org/handbooks', '@forum' => 'http://drupal.org/forum', '@support' => 'http://drupal.org/support')
+      array('@drupal' => 'http://drupal.org/', '@register' => url('user/register'), '@admin' => url('admin'), '@config' => url('admin/settings'), '@modules' => url('admin/build/modules'), '@download_modules' => 'http://drupal.org/project/modules', '@themes' => url('admin/build/themes'), '@download_themes' => 'http://drupal.org/project/themes', '@content' => url('node/add'), '@help' => url('admin/help'), '@handbook' => 'http://drupal.org/handbooks', '@forum' => 'http://drupal.org/forum', '@support' => 'http://drupal.org/support')
     );
     $output = '<div id="first-time">'. $output .'</div>';
   }
