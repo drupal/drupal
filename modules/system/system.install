@@ -559,7 +559,7 @@ function system_install() {
         \'SELECT greatest($1, greatest($2, $3));\'
         LANGUAGE \'sql\''
       );
-      if (!db_result(db_query("SELECT COUNT(*) FROM pg_proc WHERE proname = 'concat'"))) {
+      if (!db_result(db_query("SELECT COUNT(*) FROM pg_proc WHERE proname = 'rand'"))) {
         db_query('CREATE OR REPLACE FUNCTION "rand"() RETURNS float AS
           \'SELECT random();\'
           LANGUAGE \'sql\''
