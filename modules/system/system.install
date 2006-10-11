@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.32 2006/10/09 20:05:14 dries Exp $
+// $Id: system.install,v 1.33 2006/10/11 13:14:47 dries Exp $
 
 define('DRUPAL_MINIMUM_PHP',    '4.3.3');
 define('DRUPAL_MINIMUM_MYSQL',  '3.23.17'); // If using MySQL
@@ -559,7 +559,7 @@ function system_install() {
         \'SELECT greatest($1, greatest($2, $3));\'
         LANGUAGE \'sql\''
       );
-      if (!db_result(db_query("SELECT COUNT(*) FROM pg_proc WHERE proname = 'concat'"))) {
+      if (!db_result(db_query("SELECT COUNT(*) FROM pg_proc WHERE proname = 'rand'"))) {
         db_query('CREATE OR REPLACE FUNCTION "rand"() RETURNS float AS
           \'SELECT random();\'
           LANGUAGE \'sql\''
