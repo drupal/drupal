@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.489 2006/10/09 06:59:01 dries Exp $
+// $Id: comment.module,v 1.490 2006/10/11 13:17:23 dries Exp $
 
 /**
  * @file
@@ -888,10 +888,22 @@ function comment_render($node, $cid = 0) {
         $output .= drupal_get_form('comment_controls', $mode, $order, $comments_per_page);
       }
 
+      $last_depth = 0;
+      drupal_add_css(drupal_get_path('module', 'comment') . '/comment.css');
       while ($comment = db_fetch_object($result)) {
         $comment = drupal_unpack($comment);
         $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
         $comment->depth = count(explode('.', $comment->thread)) - 1;
+
+        if ($comment->depth > $last_depth) {
+          $divs++;
+          $output .= '<div class="indented">';
+        }
+        else if ($comment->depth < $last_depth) {
+          $divs--;
+          $output .= '</div>';
+        }
+        $last_depth = $comment->depth;
 
         if ($mode == COMMENT_MODE_FLAT_COLLAPSED) {
           $output .= theme('comment_flat_collapsed', $comment);
@@ -906,7 +918,9 @@ function comment_render($node, $cid = 0) {
           $output .= theme('comment_thread_expanded', $comment);
         }
       }
-
+      for ($i = 0; $i < $divs; $i++) {
+        $output .= '</div>';
+      }
       $output .= theme('pager', NULL, $comments_per_page, 0);
 
       if (db_num_rows($result) && (variable_get('comment_controls', COMMENT_CONTROLS_HIDDEN) == COMMENT_CONTROLS_BELOW || variable_get('comment_controls', COMMENT_CONTROLS_HIDDEN) == COMMENT_CONTROLS_ABOVE_BELOW)) {
@@ -1639,23 +1653,13 @@ function theme_comment_flat_expanded($comment) {
 }
 
 function theme_comment_thread_collapsed($comment) {
-  $output  = '<div style="margin-left:'. ($comment->depth * 25) ."px;\">\n";
   $output .= theme('comment_view', $comment, '', 0);
-  $output .= "</div>\n";
   return $output;
 }
 
 function theme_comment_thread_expanded($comment) {
   $output = '';
-  if ($comment->depth) {
-    $output .= '<div style="margin-left:'. ($comment->depth * 25) ."px;\">\n";
-  }
-
   $output .= theme('comment_view', $comment, module_invoke_all('link', 'comment', $comment, 0));
-
-  if ($comment->depth) {
-    $output .= "</div>\n";
-  }
   return $output;
 }
 
