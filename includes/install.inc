@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.22 2006/09/07 08:23:54 drumm Exp $
+// $Id: install.inc,v 1.23 2006/10/12 15:20:08 dries Exp $
 
 define('SCHEMA_UNINSTALLED', -1);
 define('SCHEMA_INSTALLED', 0);
@@ -552,8 +552,8 @@ function drupal_install_fix_file($file, $mask, $message = TRUE) {
  *   An installer path.
  */
 function install_goto($path) {
-  global $base_path;
-  header('Location: '. $base_path . $path);
+  global $base_url;
+  header('Location: '. $base_url . '/' . $path);
   exit();
 }
 
