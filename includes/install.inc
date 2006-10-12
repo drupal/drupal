@@ -552,8 +552,8 @@ function drupal_install_fix_file($file, $mask, $message = TRUE) {
  *   An installer path.
  */
 function install_goto($path) {
-  global $base_path;
-  header('Location: '. $base_path . $path);
+  global $base_url;
+  header('Location: '. $base_url . '/' . $path);
   exit();
 }
 
