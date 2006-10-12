@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.154 2006/10/03 00:17:52 unconed Exp $
+// $Id: form.inc,v 1.155 2006/10/12 20:36:51 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -163,11 +163,31 @@ function drupal_execute($form_id, $form_values) {
 function drupal_retrieve_form($form_id) {
   static $forms;
 
+  // We save two copies of the incoming arguments: one for modules to use
+  // when mapping form ids to builder functions, and another to pass to
+  // the builder function itself. We shift out the first argument -- the
+  // $form_id itself -- from the list to pass into the builder function,
+  // since it's already known.
   $args = func_get_args();
+  $saved_args = $args;
   array_shift($args);
+
+  // We first check to see if there's a function named after the $form_id.
+  // If there is, we simply pass the arguments on to it to get the form.
   if (!function_exists($form_id)) {
-    if (!isset($forms)) {
-      $forms = module_invoke_all('forms');
+    // In cases where many form_ids need to share a central builder function,
+    // such as the node editing form, modules can implement hook_forms(). It
+    // maps one or more form_ids to the correct builder functions.
+    //
+    // We cache the results of that hook to save time, but that only works
+    // for modules that know all their form_ids in advance. (A module that
+    // adds a small 'rate this comment' form to each comment in a list
+    // would need a unique form_id for each one, for example.)
+    //
+    // So, we call the hook if $forms isn't yet populated, OR if it doesn't
+    // yet have an entry for the requested form_id.
+    if (!isset($forms) || !isset($forms[$form_id])) {
+      $forms = module_invoke_all('forms', $saved_args);
     }
     $form_definition = $forms[$form_id];
     if (isset($form_definition['callback arguments'])) {
@@ -177,14 +197,15 @@ function drupal_retrieve_form($form_id) {
       $callback = $form_definition['callback'];
     }
   }
-  // $callback comes from a hook_forms() implementation
+  // If $callback was returned by a hook_forms() implementation, call it.
+  // Otherwise, call the function named after the form id.
   $form = call_user_func_array(isset($callback) ? $callback : $form_id, $args);
 
   // We store the original function arguments, rather than the final $arg
   // value, so that form_alter functions can see what was originally
   // passed to drupal_retrieve_form(). This allows the contents of #parameters
   // to be saved and passed in at a later date to recreate the form.
-  $form['#parameters'] = func_get_args();
+  $form['#parameters'] = $saved_args;
   return $form;
 }
 
