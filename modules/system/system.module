@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.377 2006/10/09 07:26:19 dries Exp $
+// $Id: system.module,v 1.378 2006/10/12 20:31:36 dries Exp $
 
 /**
  * @file
@@ -1971,12 +1971,10 @@ function theme_admin_page($blocks) {
   $output = '<div class="admin">';
   $output .= '<div class="compact-link">';
   if (system_admin_compact_mode()) {
-    $alt = t('Produce a less compact layout that includes descriptions.');
-    $output .= l(t('Show descriptions'), 'admin/compact/off', array('alt' => $alt, 'title' => $alt));
+    $output .= l(t('Show descriptions'), 'admin/compact/off', array('title' => t('Produce a less compact layout that includes descriptions.')));
   }
   else {
-    $alt = t('Produce a more compact layout that doesn\'t include descriptions.');
-    $output .= l(t('Hide descriptions'), 'admin/compact/on', array('alt' => $alt, 'title' => $alt));
+    $output .= l(t('Hide descriptions'), 'admin/compact/on', array('title' => t('Produce a more compact layout that doesn\'t include descriptions.')));
   }
   $output .= '</div>';
 
@@ -2035,7 +2033,7 @@ function theme_admin_block_content($content) {
   if (system_admin_compact_mode()) {
     $output = '<ul class="menu">';
     foreach ($content as $item) {
-      $output .= '<li class="leaf">'. l($item['title'], $item['path'], array('alt' => $item['description'], 'title' => $item['description'])) .'</li>';
+      $output .= '<li class="leaf">'. l($item['title'], $item['path'], array('title' => $item['description'])) .'</li>';
     }
     $output .= '</ul>';
   }
