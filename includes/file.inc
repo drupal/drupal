@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.84 2006/08/31 07:30:49 drumm Exp $
+// $Id: file.inc,v 1.85 2006/10/12 15:06:12 dries Exp $
 
 /**
  * @file
@@ -113,7 +113,7 @@ function file_check_directory(&$directory, $mode = 0, $form_item = NULL) {
   }
 
   if ((file_directory_path() == $directory || file_directory_temp() == $directory) && !is_file("$directory/.htaccess")) {
-    $htaccess_lines = "SetHandler Drupal_Security_Do_Not_Remove_See_SA_2006_006\nOptions None\nOptions +FollowSymLinks\n<IfModule mod_rewrite.c>\n  RewriteEngine off\n</IfModule>";
+    $htaccess_lines = "SetHandler Drupal_Security_Do_Not_Remove_See_SA_2006_006\nOptions None\nOptions +FollowSymLinks";
     if (($fp = fopen("$directory/.htaccess", 'w')) && fputs($fp, $htaccess_lines)) {
       fclose($fp);
     }
