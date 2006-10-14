@@ -1,4 +1,4 @@
-// $Id: progress.js,v 1.11 2006/08/31 23:31:25 unconed Exp $
+// $Id: progress.js,v 1.12 2006/10/14 02:39:48 unconed Exp $
 
 /**
  * A progressbar object. Initialized with the given id. Must be inserted into
@@ -69,9 +69,9 @@ Drupal.progressBar.prototype.sendPing = function () {
     $.ajax({
       type: this.method,
       url: this.uri,
-      success: function (xmlhttp) {
+      success: function (data) {
         // Parse response
-        var progress = Drupal.parseJson(xmlhttp.responseText);
+        var progress = Drupal.parseJson(data);
         // Display errors
         if (progress.status == 0) {
           pb.displayError(progress.data);

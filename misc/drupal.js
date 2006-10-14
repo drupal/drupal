@@ -1,4 +1,4 @@
-// $Id: drupal.js,v 1.28 2006/08/31 23:31:24 unconed Exp $
+// $Id: drupal.js,v 1.29 2006/10/14 02:39:48 unconed Exp $
 
 var Drupal = Drupal || {};
 
@@ -19,7 +19,7 @@ Drupal.extend = function(obj) {
       this[i] = obj[i];
     }
   }
-},
+};
 
 /**
  * Redirects a button's form submission to a hidden iframe and displays the result
@@ -82,7 +82,7 @@ Drupal.redirectFormButton = function (uri, button, handler) {
   button.onmouseout = button.onblur = function() {
     button.onclick = null;
   }
-},
+};
 
 /**
  * Retrieves the absolute position of an element on the screen
@@ -103,21 +103,21 @@ Drupal.absolutePosition = function (el) {
     r.y += tmp.y;
   }
   return r;
-},
+};
 
 /**
  * Return the dimensions of an element on the screen
  */
 Drupal.dimensions = function (el) {
   return { width: el.offsetWidth, height: el.offsetHeight };
-},
+};
 
 /**
  *  Returns the position of the mouse cursor based on the event object passed
  */
 Drupal.mousePosition = function(e) {
   return { x: e.clientX + document.documentElement.scrollLeft, y: e.clientY + document.documentElement.scrollTop };
-},
+};
 
 /**
  * Parse a JSON response.
@@ -129,7 +129,7 @@ Drupal.parseJson = function (data) {
     return { status: 0, data: data.length ? data : 'Unspecified error' };
   }
   return eval('(' + data + ');');
-},
+};
 
 /**
  * Create an invisible iframe for form submissions.
@@ -157,14 +157,14 @@ Drupal.createIframe = function () {
       visibility: 'hidden'
     });
   $('body').append(div);
-},
+};
 
 /**
  * Delete the invisible iframe
  */
 Drupal.deleteIframe = function () {
   $('#redirect-holder').remove();
-},
+};
 
 /**
  * Freeze the current body height (as minimum height). Used to prevent
@@ -181,14 +181,14 @@ Drupal.freezeHeight = function () {
     height: $('body').css('height')
   }).attr('id', 'freeze-height');
   $('body').append(div);
-},
+};
 
 /**
  * Unfreeze the body height
  */
 Drupal.unfreezeHeight = function () {
   $('#freeze-height').remove();
-}
+};
 
 /**
  * Wrapper to address the mod_rewrite url encoding bug
@@ -198,7 +198,7 @@ Drupal.encodeURIComponent = function (item, uri) {
   uri = uri || location.href;
   item = encodeURIComponent(item).replace('%2F', '/');
   return uri.indexOf('?q=') ? item : item.replace('%26', '%2526').replace('%23', '%2523');
-}
+};
 
 // Global Killswitch on the <html> element
 if (Drupal.jsEnabled) {
