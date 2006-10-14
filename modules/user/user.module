@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.687 2006/10/11 12:08:29 dries Exp $
+// $Id: user.module,v 1.688 2006/10/14 10:05:48 dries Exp $
 
 /**
  * @file
@@ -1747,17 +1747,9 @@ function user_roles($membersonly = 0, $permission = 0) {
 /**
  * Menu callback: administer permissions.
  */
-function user_admin_perm($str_rids = NULL) {
-  if (preg_match('/^([0-9]+[+ ])*[0-9]+$/', $str_rids)) {
-    // The '+' character in a query string may be parsed as ' '.
-    $rids = preg_split('/[+ ]/', $str_rids);
-  }
-
-  if($rids) {
-    $breadcrumbs = drupal_get_breadcrumb();
-    $breadcrumbs[] = l(t('all roles'), 'admin/user/access');
-    drupal_set_breadcrumb($breadcrumbs);
-    $result = db_query('SELECT r.rid, p.perm FROM {role} r LEFT JOIN {permission} p ON r.rid = p.rid WHERE r.rid IN (%s) ORDER BY name', implode(', ', $rids));
+function user_admin_perm($rid = NULL) {
+  if ($rid) {
+    $result = db_query('SELECT r.rid, p.perm FROM {role} r LEFT JOIN {permission} p ON r.rid = p.rid WHERE r.rid = %d', $rid);
   }
   else {
     $result = db_query('SELECT r.rid, p.perm FROM {role} r LEFT JOIN {permission} p ON r.rid = p.rid ORDER BY name');
@@ -1768,12 +1760,13 @@ function user_admin_perm($str_rids = NULL) {
     $role_permissions[$role->rid] = $role->perm;
   }
 
-  if($rids) {
-    $result = db_query('SELECT rid, name FROM {role} r WHERE r.rid IN (%s) ORDER BY name', implode(', ', $rids));
+  if ($rid) {
+    $result = db_query('SELECT rid, name FROM {role} r WHERE r.rid = %d ORDER BY name', $rid);
   }
   else {
     $result = db_query('SELECT rid, name FROM {role} ORDER BY name');
   }
+
   $role_names = array();
   while ($role = db_fetch_object($result)) {
     $role_names[$role->rid] = $role->name;
@@ -1797,10 +1790,11 @@ function user_admin_perm($str_rids = NULL) {
       }
     }
   }
+
   // Have to build checkboxes here after checkbox arrays are built
   foreach ($role_names as $rid => $name) {
     $form['checkboxes'][$rid] = array('#type' => 'checkboxes', '#options' => $options, '#default_value' => $status[$rid]);
-    $form['role_names'][$rid] = array('#type' => 'markup', '#value' => l($name, 'admin/user/access/'. $rid), '#tree' => TRUE);
+    $form['role_names'][$rid] = array('#type' => 'markup', '#value' => $name, '#tree' => TRUE);
   }
   $form['submit'] = array('#type' => 'submit', '#value' => t('Save permissions'));
 
@@ -1815,7 +1809,6 @@ function theme_user_admin_perm($form) {
       // Module name
       if (is_numeric($key)) {
         $row[] = array('data' => drupal_render($form['permission'][$key]), 'class' => 'module', 'colspan' => count($form['role_names']) + 1);
-      // Permissions
       }
       else {
         $row[] = array('data' => drupal_render($form['permission'][$key]), 'class' => 'permission');
@@ -1876,7 +1869,7 @@ function user_admin_role() {
   if ($op == t('Save role')) {
     if ($edit['name']) {
       db_query("UPDATE {role} SET name = '%s' WHERE rid = %d", $edit['name'], $id);
-      drupal_set_message(t('The changes have been saved.'));
+      drupal_set_message(t('The role has been renamed.'));
       drupal_goto('admin/user/roles');
     }
     else {
@@ -1938,16 +1931,16 @@ function user_admin_role() {
 }
 
 function theme_user_admin_new_role($form) {
-  $header = array(t('Name'), t('Operations'));
+  $header = array(t('Name'), array('data' => t('Operations'), 'colspan' => 2));
   foreach (user_roles() as $rid => $name) {
     if (!in_array($rid, array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID))) {
-      $rows[] = array($name, l(t('edit'), 'admin/user/roles/edit/'. $rid));
+      $rows[] = array($name, l(t('edit'), 'admin/user/access/'. $rid), l(t('rename'), 'admin/user/roles/edit/'. $rid));
     }
     else {
-      $rows[] = array($name, '<span class="disabled">'. t('locked') .'</span>');
+      $rows[] = array($name, array('data' => t('locked'), 'colspan' => 2));
     }
   }
-  $rows[] = array(drupal_render($form['name']), drupal_render($form['submit']));
+  $rows[] = array(drupal_render($form['name']), array('data' => drupal_render($form['submit']), colspan => 2));
 
   return theme('table', $header, $rows);
 }
