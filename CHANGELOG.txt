@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.166 2006/10/04 20:34:56 unconed Exp $
+// $Id: CHANGELOG.txt,v 1.167 2006/10/14 02:41:36 unconed Exp $
 
 Drupal 5.0, xxxx-xx-xx (development version)
 ------------------------
@@ -12,7 +12,7 @@ Drupal 5.0, xxxx-xx-xx (development version)
     * install pre-made 'install profiles' or distributions
     * import the database structure with automatic table prefixing
     * be localized
-- included the jQuery JavaScript library 1.0.1 and converted all core JavaScript to use it
+- included the jQuery JavaScript library 1.0.2 and converted all core JavaScript to use it
 - introduced the ability to alter mail sent from system
 - module system:
     * added .info files for module meta-data
