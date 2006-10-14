@@ -82,3 +82,18 @@ table.system-status-report tr.warning th {
 table.system-status-report tr.ok th {
   background-image: url('../../misc/watchdog-ok.png');
 }
+
+/**
+ * Formatting for theme configuration
+ */
+.theme-settings-left {
+  float: left;
+  width: 49%;
+}
+.theme-settings-right {
+  float: right;
+  width: 49%;
+}
+.theme-settings-bottom {
+  clear: both;
+}
