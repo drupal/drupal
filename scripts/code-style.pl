@@ -1,5 +1,5 @@
 #!/usr/bin/perl -w
-# $Id: code-style.pl,v 1.11 2006/02/21 18:46:54 dries Exp $
+# $Id: code-style.pl,v 1.12 2006/10/14 10:03:27 dries Exp $
 
 # Author: Alexander Schwartz (alexander.schwartz@gmx.net)
 # Licence: GPL
@@ -9,7 +9,7 @@
 # code.  This program tries to show as many improvements as possible with
 # no false positives.
 
-# $Id: code-style.pl,v 1.11 2006/02/21 18:46:54 dries Exp $
+# $Id: code-style.pl,v 1.12 2006/10/14 10:03:27 dries Exp $
 
 $comment = 0;
 $program = 0;
@@ -116,7 +116,7 @@ while (<>) {
   elsif (/([\(\[]) / && $program) {
     $msg = "'$1 ' -> '$1'";
   }
-  elsif (/ ([\)\]])/ && $program) {
+  elsif (/\S ([\)\]])/ && $program) {
     $msg = "' $1' -> '$1'";
   }
   # but no brackets
