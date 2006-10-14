@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.378 2006/10/12 20:31:36 dries Exp $
+// $Id: system.module,v 1.379 2006/10/14 10:14:06 dries Exp $
 
 /**
  * @file
@@ -816,7 +816,7 @@ function system_site_maintenance_settings() {
 
   $form['site_offline'] = array(
     '#type' => 'radios',
-    '#title' => t('Site maintenance'),
+    '#title' => t('Site status'),
     '#default_value' => variable_get('site_offline', 0),
     '#options' => array(t('Online'), t('Off-line')),
     '#description' => t('When set to "Online", all visitors will be able to browse your site normally. When set to "Off-line", only users with the "administer site configuration" permission will be able to access your site to perform maintenance; all other visitors will see the site off-line message configured below. Authorized users can log in during "Off-line" mode directly via the <a href="@user-login">user login</a> page.', array('@user-login' => url('user'))),
