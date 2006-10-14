@@ -69,9 +69,9 @@ Drupal.progressBar.prototype.sendPing = function () {
     $.ajax({
       type: this.method,
       url: this.uri,
-      success: function (xmlhttp) {
+      success: function (data) {
         // Parse response
-        var progress = Drupal.parseJson(xmlhttp.responseText);
+        var progress = Drupal.parseJson(data);
         // Display errors
         if (progress.status == 0) {
           pb.displayError(progress.data);

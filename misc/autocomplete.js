@@ -264,9 +264,9 @@ Drupal.ACDB.prototype.search = function (searchString) {
     $.ajax({
       type: "GET",
       url: db.uri +'/'+ Drupal.encodeURIComponent(searchString),
-      success: function (xmlhttp) {
+      success: function (data) {
         // Parse back result
-        var matches = Drupal.parseJson(xmlhttp.responseText);
+        var matches = Drupal.parseJson(data);
         if (typeof matches['status'] == 'undefined' || matches['status'] != 0) {
           db.cache[searchString] = matches;
           // Verify if these are still the matches the user wants to see
