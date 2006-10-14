@@ -1,4 +1,4 @@
-/* $Id: admin.css,v 1.10 2006/10/06 07:37:20 dries Exp $ */
+/* $Id: admin.css,v 1.11 2006/10/14 05:17:48 unconed Exp $ */
 
 /*
 ** Formatting for administration page
@@ -81,4 +81,19 @@ table.system-status-report tr.warning th {
 }
 table.system-status-report tr.ok th {
   background-image: url('../../misc/watchdog-ok.png');
+}
+
+/**
+ * Formatting for theme configuration
+ */
+.theme-settings-left {
+  float: left;
+  width: 49%;
+}
+.theme-settings-right {
+  float: right;
+  width: 49%;
+}
+.theme-settings-bottom {
+  clear: both;
 }
