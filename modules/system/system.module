@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.379 2006/10/14 10:14:06 dries Exp $
+// $Id: system.module,v 1.380 2006/10/14 11:47:12 dries Exp $
 
 /**
  * @file
@@ -234,8 +234,8 @@ function system_menu($may_cache) {
       'callback' => 'drupal_get_form',
       'callback arguments' => array('system_image_toolkit_settings'));
     $items[] = array(
-      'path' => 'admin/content/rss-feed',
-      'title' => t('RSS feeds'),
+      'path' => 'admin/content/rss-publishing',
+      'title' => t('RSS publishing'),
       'description' => t('Configure the number of items per feed and whether feeds should be titles/teasers/full-text.'),
       'callback' => 'drupal_get_form',
       'callback arguments' => array('system_rss_feeds_settings'));
