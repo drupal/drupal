@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.688 2006/10/14 10:05:48 dries Exp $
+// $Id: user.module,v 1.689 2006/10/15 19:57:06 dries Exp $
 
 /**
  * @file
@@ -1934,7 +1934,7 @@ function theme_user_admin_new_role($form) {
   $header = array(t('Name'), array('data' => t('Operations'), 'colspan' => 2));
   foreach (user_roles() as $rid => $name) {
     if (!in_array($rid, array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID))) {
-      $rows[] = array($name, l(t('edit'), 'admin/user/access/'. $rid), l(t('rename'), 'admin/user/roles/edit/'. $rid));
+      $rows[] = array($name, l(t('edit permissions'), 'admin/user/access/'. $rid), l(t('edit role'), 'admin/user/roles/edit/'. $rid));
     }
     else {
       $rows[] = array($name, array('data' => t('locked'), 'colspan' => 2));
