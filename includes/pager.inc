@@ -114,7 +114,7 @@ function theme_pager($tags = array(), $limit = 10, $element = 0, $parameters = a
   $output = '';
 
   if ($pager_total[$element] > 1) {
-    $output .= '<div id="pager">';
+    $output .= '<div class="pager">';
     $output .= theme('pager_first', ($tags[0] ? $tags[0] : t('« first')), $limit, $element, $parameters);
     $output .= theme('pager_previous', ($tags[1] ? $tags[1] : t('‹ previous')), $limit, $element, 1, $parameters);
     $output .= theme('pager_list', $limit, $element, ($tags[2] ? $tags[2] : 9 ), '', $parameters);
