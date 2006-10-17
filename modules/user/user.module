@@ -24,7 +24,7 @@ function user_module_invoke($type, &$array, &$user, $category = NULL) {
 function user_external_load($authname) {
   $result = db_query("SELECT uid FROM {authmap} WHERE authname = '%s'", $authname);
 
-  if ($user = db_fetch_object($result)) {
+  if ($user = db_fetch_array($result)) {
     return user_load($user);
   }
   else {
