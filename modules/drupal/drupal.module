@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal.module,v 1.128 2006/08/31 20:22:35 dries Exp $
+// $Id: drupal.module,v 1.129 2006/10/17 08:29:55 drumm Exp $
 
 /**
  * @file
@@ -183,7 +183,7 @@ function drupal_client_ping($client, $system) {
   */
 
   if ($client['link'] && $client['name'] && $client['mail'] && $client['slogan'] && $client['mission']) {
-    $result = db_query(db_rewrite_sql("SELECT cid FROM {client} WHERE link = '%s'"), $client['link']);
+    $result = db_query("SELECT cid FROM {client} WHERE link = '%s'", $client['link']);
     if (db_num_rows($result)) {
       $record = db_fetch_object($result);
       $client['cid'] = $record->cid;
