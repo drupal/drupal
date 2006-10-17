@@ -539,7 +539,7 @@ function theme_links($links, $attributes = array('class' => 'links')) {
       }
 
       $i++;
-      $output .= '</li>';
+      $output .= "</li>\n";
     }
 
     $output .= '</ul>';
