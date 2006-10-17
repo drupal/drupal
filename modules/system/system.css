@@ -115,11 +115,11 @@ tr.merge-up, tr.merge-up td, tr.merge-up th {
 .nowrap {
   white-space: nowrap;
 }
-#pager {
+.pager {
   clear: both;
   text-align: center;
 }
-#pager a, #pager strong.pager-current {
+.pager a, .pager strong.pager-current {
   padding: 0.5em;
 }
 .tips {
