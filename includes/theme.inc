@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.315 2006/09/05 10:11:29 dries Exp $
+// $Id: theme.inc,v 1.316 2006/10/17 08:38:16 drumm Exp $
 
 /**
  * @file
@@ -539,7 +539,7 @@ function theme_links($links, $attributes = array('class' => 'links')) {
       }
 
       $i++;
-      $output .= '</li>';
+      $output .= "</li>\n";
     }
 
     $output .= '</ul>';
