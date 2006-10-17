@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.490 2006/10/11 13:17:23 dries Exp $
+// $Id: comment.module,v 1.491 2006/10/17 08:45:51 drumm Exp $
 
 /**
  * @file
@@ -942,7 +942,7 @@ function comment_render($node, $cid = 0) {
 /**
  * Menu callback; delete a comment.
  */
-function comment_delete($cid) {
+function comment_delete($cid = NULL) {
   $comment = db_fetch_object(db_query('SELECT c.*, u.name AS registered_name, u.uid FROM {comments} c INNER JOIN {users} u ON u.uid = c.uid WHERE c.cid = %d', $cid));
   $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
 
