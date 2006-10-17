@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.690 2006/10/15 20:09:18 dries Exp $
+// $Id: user.module,v 1.691 2006/10/17 08:31:49 drumm Exp $
 
 /**
  * @file
@@ -24,7 +24,7 @@ function user_module_invoke($type, &$array, &$user, $category = NULL) {
 function user_external_load($authname) {
   $result = db_query("SELECT uid FROM {authmap} WHERE authname = '%s'", $authname);
 
-  if ($user = db_fetch_object($result)) {
+  if ($user = db_fetch_array($result)) {
     return user_load($user);
   }
   else {
