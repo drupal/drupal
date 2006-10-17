@@ -127,6 +127,9 @@ function drupal_clear_path_cache() {
 
 /**
  * Set an HTTP response header for the current page.
+ *
+ * Note: when sending a Content-Type header, always include a 'charset' type
+ * too. This is necessary to avoid security bugs (e.g. UTF-7 XSS).
  */
 function drupal_set_header($header = NULL) {
   // We use an array to guarantee there are no leading or trailing delimiters.
