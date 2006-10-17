@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.581 2006/10/17 04:45:29 unconed Exp $
+// $Id: common.inc,v 1.582 2006/10/17 08:42:24 drumm Exp $
 
 /**
  * @file
@@ -1773,10 +1773,10 @@ function drupal_render(&$elements) {
   if (!isset($elements['#children'])) {
     $children = element_children($elements);
     /* Render all the children that use a theme function */
-    if (isset($elements['#theme']) && !$elements['#theme_used']) {
+    if (isset($elements['#theme']) && empty($elements['#theme_used'])) {
       $elements['#theme_used'] = TRUE;
 
-      $previous_value = $elements['#value'];
+      $previous_value = isset($elements['#value']) ? $elements['#value'] : NULL;
       $previous_type = $elements['#type'];
       // If we rendered a single element, then we will skip the renderer.
       if (empty($children)) {
@@ -1806,7 +1806,7 @@ function drupal_render(&$elements) {
 
   // Until now, we rendered the children, here we render the element itself
   if (!isset($elements['#printed'])) {
-    $content = theme(($elements['#type']) ? $elements['#type']: 'markup', $elements);
+    $content = theme(!empty($elements['#type']) ? $elements['#type'] : 'markup', $elements);
     $elements['#printed'] = TRUE;
   }
 
