@@ -698,7 +698,7 @@ function theme_menu_item($mid, $children = '', $leaf = TRUE) {
  * @ingroup themeable
  */
 function theme_menu_item_link($item, $link_item) {
-  return l($item['title'], $link_item['path'], isset($item['description']) ? array('title' => $item['description']) : array(), isset($item['query']) ? $item['query'] : NULL);
+  return l($item['title'], $link_item['path'], !empty($item['description']) ? array('title' => $item['description']) : array(), isset($item['query']) ? $item['query'] : NULL);
 }
 
 /**
@@ -725,7 +725,7 @@ function menu_item_link($mid, $theme = TRUE) {
     $link = array(
       'title' => $item['title'],
       'href' => $link_item['path'],
-      'attributes' => isset($item['description']) ? array('title' => $item['description']) : array()
+      'attributes' => !empty($item['description']) ? array('title' => $item['description']) : array()
     );
   }
 
