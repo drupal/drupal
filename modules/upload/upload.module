@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.133 2006/10/05 15:26:17 dries Exp $
+// $Id: upload.module,v 1.134 2006/10/17 08:20:42 drumm Exp $
 
 /**
  * @file
@@ -506,7 +506,7 @@ function upload_nodeapi(&$node, $op, $teaser) {
         if (!variable_get('clean_url', 0)) {
           $previews = array();
           foreach ($node->files as $file) {
-            if (strpos($file['fid'], 'upload') !== FALSE) {
+            if (strpos($file->fid, 'upload') !== FALSE) {
               $previews[] = $file;
             }
           }
@@ -517,7 +517,7 @@ function upload_nodeapi(&$node, $op, $teaser) {
           // can use the final URL in the body before having actually saved (to
           // place inline images for example).
           foreach ($previews as $file) {
-            $old = file_create_filename($file['filename'], file_create_path());
+            $old = file_create_filename($file->filename, file_create_path());
             $new = url($old);
             $node->body = str_replace($old, $new, $node->body);
             $node->teaser = str_replace($old, $new, $node->teaser);
