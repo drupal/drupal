@@ -1,3 +1,9 @@
+Drupal 4.6.10, 2006-10-18
+------------------------
+- fixed security issue (XSS), see SA-2006-024
+- fixed security issue (CSRF), see SA-2006-025
+- fixed security issue (Form action attribute injection), see SA-2006-026
+
 Drupal 4.6.9, 2006-08-02
 ------------------------
 - fixed security issue (XSS), see SA-2006-011

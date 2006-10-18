@@ -211,7 +211,7 @@ function statistics_user_tracker() {
       $rows[] = array(array('data' => $pager, 'colspan' => '3'));
     }
 
-    drupal_set_title($account->name);
+    drupal_set_title(check_plain($account->name));
     print theme('page', theme('table', $header, $rows));
   }
   else {

@@ -705,6 +705,16 @@ function node_menu($may_cache) {
             'access' => user_access('administer nodes'),
             'weight' => 2,
             'type' => MENU_LOCAL_TASK);
+          $items[] = array('path' => 'node/'. arg(1) .'/rollback-revision', 'title' => t('Revert revision'),
+            'callback' => 'node_page',
+            'access' => user_access('administer nodes'),
+            'weight' => 1,
+            'type' => MENU_CALLBACK);
+          $items[] = array('path' => 'node/'. arg(1) .'/delete-revision', 'title' => t('Delete revision'),
+            'callback' => 'node_page',
+            'access' => user_access('administer nodes'),
+            'weight' => 1,
+            'type' => MENU_CALLBACK);
         }
       }
     }
@@ -1026,31 +1036,33 @@ function node_revision_create($node) {
  */
 function node_revision_rollback($nid, $revision) {
   global $user;
-
   if (user_access('administer nodes')) {
     $node = node_load(array('nid' => $nid));
-
     // Extract the specified revision:
     $rev = $node->revisions[$revision]['node'];
-
-    // Inherit all the past revisions:
-    $rev->revisions = $node->revisions;
-
-    // Save the original/current node:
-    $rev->revisions[] = array('uid' => $user->uid, 'timestamp' => time(), 'node' => $node);
-
-    // Remove the specified revision:
-    unset($rev->revisions[$revision]);
-
-    // Save the node:
-    foreach ($node as $key => $value) {
-      $filter[] = $key;
+    if ($_POST['edit']['confirm']) {
+      // Inherit all the past revisions:
+      $rev->revisions = $node->revisions;
+      // Save the original/current node:
+      $rev->revisions[] = array('uid' => $user->uid, 'timestamp' => time(), 'node' => $node);
+      // Remove the specified revision:
+      unset($rev->revisions[$revision]);
+      // Save the node:
+      foreach ($node as $key => $value) {
+        $filter[] = $key;
+      }
+      node_save($rev, $filter);
+      drupal_set_message(t('Rolled back to revision %revision of %title', array('%revision' => "<em>#$revision</em>", '%title' => theme('placeholder', $node->title))));
+      drupal_goto('node/'. $nid .'/revisions');
     }
-
-    node_save($rev, $filter);
-
-    drupal_set_message(t('Rolled back to revision %revision of %title', array('%revision' => "<em>#$revision</em>", '%title' => theme('placeholder', $node->title))));
-    drupal_goto('node/'. $nid .'/revisions');
+    else {
+      $output = theme('confirm',
+                      t('Are you sure you want to revert %title? to the revision from %revision-date?', array('%title' => theme('placeholder', $node->title), '%revision-date' => theme('placeholder', format_date($node->revisions[$revision]['timestamp'])))),
+                      'node/'. $nid .'/revisions',
+                      t('This action cannot be undone.'),
+                      t('Revert'));
+      print theme('page', $output);
+    }
   }
 }
 
@@ -1060,18 +1072,27 @@ function node_revision_rollback($nid, $revision) {
 function node_revision_delete($nid, $revision) {
   if (user_access('administer nodes')) {
     $node = node_load(array('nid' => $nid));
+    if ($_POST['edit']['confirm']) {
+      unset($node->revisions[$revision]);
 
-    unset($node->revisions[$revision]);
+      // If the array is empty, replace the array by an empty string, or
+      // else we'll generate an SQL warning when we try to save the node.
+      if (count($node->revisions) == 0) {
+        $node->revisions = '';
+      }
+      node_save($node, array('nid', 'revisions'));
 
-    // If the array is empty, replace the array by an empty string, or
-    // else we'll generate an SQL warning when we try to save the node.
-    if (count($node->revisions) == 0) {
-      $node->revisions = '';
+      drupal_set_message(t('Deleted revision %revision of %title', array('%revision' => "<em>#$revision</em>", '%title' => theme('placeholder', $node->title))));
+      drupal_goto('node/'. $nid . (count($node->revisions) ? '/revisions' : ''));
     }
-    node_save($node, array('nid', 'revisions'));
-
-    drupal_set_message(t('Deleted revision %revision of %title', array('%revision' => "<em>#$revision</em>", '%title' => theme('placeholder', $node->title))));
-    drupal_goto('node/'. $nid . (count($node->revisions) ? '/revisions' : ''));
+    else {
+      $output = theme('confirm',
+                      t('Are you sure you want to delete the revision of %title from %revision-date?', array('%title' => theme('placeholder', $node->title), '%revision-date' => theme('placeholder', format_date($node->revisions[$revision]['timestamp'])))),
+                      'node/'. $nid .'/revisions',
+                      t('This action cannot be undone.'),
+                      t('Delete revision'));
+      print theme('page', $output);
+    }
   }
 }
 
@@ -1655,6 +1676,7 @@ function node_page_default() {
  * Menu callback; dispatches control to the appropriate operation handler.
  */
 function node_page() {
+  global $user;
   $op = $_POST['op'] ? $_POST['op'] : arg(1);
   $edit = $_POST['edit'];
 
@@ -1675,9 +1697,11 @@ function node_page() {
     case 'revisions':
       print theme('page', node_revision_overview(arg(1)));
       break;
+    case t('Revert'):
     case 'rollback-revision':
       node_revision_rollback(arg(1), arg(3));
       break;
+    case t('Delete revision'):
     case 'delete-revision':
       node_revision_delete(arg(1), arg(3));
       break;

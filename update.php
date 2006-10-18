@@ -209,6 +209,9 @@ if (isset($_GET["op"])) {
   include_once "includes/bootstrap.inc";
   include_once "includes/common.inc";
 
+  // Protect against cross site request forgeries
+  drupal_check_token();
+
   // Access check:
   if (($access_check == 0) || ($user->uid == 1)) {
     update_page();

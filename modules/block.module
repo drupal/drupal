@@ -110,6 +110,7 @@ function block_block($op = 'list', $delta = 0, $edit = array()) {
 }
 
 function block_admin_save($edit) {
+  unset($edit['token']);
   foreach ($edit as $module => $blocks) {
     foreach ($blocks as $delta => $block) {
       db_query("UPDATE {blocks} SET region = %d, status = %d, weight = %d, throttle = %d WHERE module = '%s' AND delta = '%s'",

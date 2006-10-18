@@ -55,10 +55,10 @@ function contact_mail_user() {
 
   if ($account = user_load(array('uid' => arg(1), 'status' => 1))) {
     if (!$account->contact && !user_access('administer users')) {
-      $output = t('%name is not accepting e-mails.', array('%name' => $account->name));
+      $output = t('%name is not accepting e-mails.', array('%name' => check_plain($account->name)));
     }
     else if (!$user->uid) {
-      $output = t('Please <a href="%login">login</a> or <a href="%register">register</a> to send %name a message.', array('%login' => url('user/login'), '%register' => url('user/register'), '%name' => $account->name));
+      $output = t('Please <a href="%login">login</a> or <a href="%register">register</a> to send %name a message.', array('%login' => url('user/login'), '%register' => url('user/register'), '%name' => check_plain($account->name)));
     }
     else if (!valid_email_address($user->mail)) {
       $output = t('You need to provide a valid e-mail address to contact other users. Please edit your <a href="%url">user information</a>.', array('%url' => url("user/$user->uid/edit")));
@@ -106,7 +106,7 @@ function contact_mail_user() {
 
           // Log the operation:
           flood_register_event('contact');
-          watchdog('mail', t('%name-from sent %name-to an e-mail.', array('%name-from' => $user->name, '%name-to' => $account->name)));
+          watchdog('mail', t('%name-from sent %name-to an e-mail.', array('%name-from' => theme('placeholder', $user->name), '%name-to' => theme('placeholder', $account->name))));
 
           // Set a status message:
           drupal_set_message(t('Your message has been sent.'));
@@ -119,8 +119,8 @@ function contact_mail_user() {
         $edit['mail'] = $user->mail;
       }
 
-      $output  = form_item(t('From'), $user->name .' &lt;'. $user->mail .'&gt;');
-      $output .= form_item(t('To'), $account->name);
+      $output  = form_item(t('From'), check_plain($user->name) .' &lt;'. $user->mail .'&gt;');
+      $output .= form_item(t('To'), check_plain($account->name));
       $output .= form_textfield(t('Subject'), 'subject', $edit['subject'], 50, 50, NULL, NULL, TRUE);
       $output .= form_textarea(t('Message'), 'message', $edit['message'], 70, 8, NULL, NULL, TRUE);
       $output .= form_submit(t('Send e-mail'));

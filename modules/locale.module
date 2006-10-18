@@ -430,9 +430,23 @@ function locale_admin_string() {
   $edit =& $_POST['edit'];
 
   switch ($op) {
+    case t('Delete'):
     case 'delete':
-      $output .= _locale_string_delete(db_escape_string(arg(4)));
-      $output .= _locale_string_seek();
+      if($edit['confirm']) {
+        $output .= _locale_string_delete(db_escape_string(arg(4)));
+        $output .= _locale_string_seek();
+        drupal_goto('admin/locale/string/search');
+      }
+      else {
+        $string = db_result(db_query("SELECT source FROM {locales_source} WHERE lid = %d", arg(4)));
+        $output = theme('confirm',
+                  t('Are you sure you want to delete the following string?'),
+                  'admin/locale/string/search',
+                  t('This action cannot be undone.'),
+                  t('Delete'),
+                  t('Cancel'),
+                  check_plain($string));
+      }
       break;
     case 'edit':
       $output .= _locale_string_edit(db_escape_string(arg(4)));

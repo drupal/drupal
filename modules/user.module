@@ -215,6 +215,18 @@ function user_validate_name($name) {
   if (substr($name, -1) == ' ') return t('The username cannot end with a space.');
   if (ereg('  ', $name)) return t('The username cannot contain multiple spaces in a row.');
   if (ereg("[^\x80-\xF7 [:alnum:]@_.-]", $name)) return t('The username contains an illegal character.');
+  if (preg_match('/[\x{80}-\x{A0}'.        // Non-printable ISO-8859-1 + NBSP
+                 '\x{AD}'.                 // Soft-hyphen
+                 '\x{2000}-\x{200F}'.      // Various space characters
+                 '\x{2028}-\x{202F}'.      // Bidirectional text overrides
+                 '\x{205F}-\x{206F}'.      // Various text hinting characters
+                 '\x{FEFF}'.               // Byte order mark
+                 '\x{FF01}-\x{FF60}'.      // Full-width latin
+                 '\x{FFF9}-\x{FFFD}'.      // Replacement characters
+                 '\x{0}]/u',               // NULL byte
+                 $name)) {
+    return t('The username contains an illegal character.');
+  }
   if (ereg('@', $name) && !eregi('@([0-9a-z](-?[0-9a-z])*.)+[a-z]{2}([zmuvtg]|fo|me)?$', $name)) return t('The username is not a valid authentication ID.');
   if (strlen($name) > 56) return t('The username %name is too long: it must be less than 56 characters.', array('%name' => theme('placeholder', $name)));
 }
@@ -523,7 +535,7 @@ function user_block($op = 'list', $delta = 0, $edit = array()) {
 
       case 1:
         if ($menu = theme('menu_tree')) {
-           $block['subject'] = $user->uid ? $user->name : t('Navigation');
+           $block['subject'] = $user->uid ? check_plain($user->name) : t('Navigation');
            $block['content'] = '<div class="menu">'. $menu .'</div>';
         }
         return $block;
@@ -1191,7 +1203,7 @@ function user_edit($category = 'account') {
   }
   $output = form($output, 'post', 0, array('enctype' => 'multipart/form-data'));
 
-  drupal_set_title($account->name);
+  drupal_set_title(check_plain($account->name));
   print theme('page', $output);
 }
 
@@ -1209,7 +1221,7 @@ function user_view($uid = 0) {
       }
     }
 
-    drupal_set_title($account->name);
+    drupal_set_title(check_plain($account->name));
     print theme('page', theme('user_profile', $account, $fields));
   }
   else {

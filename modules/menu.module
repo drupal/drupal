@@ -212,14 +212,26 @@ function menu_delete_item($mid) {
  * Menu callback; hide a menu item.
  */
 function menu_disable_item($mid) {
-  $menu = menu_get_menu();
-  $type = $menu['items'][$mid]['type'];
-  $type &= ~MENU_VISIBLE_IN_TREE;
-  $type &= ~MENU_VISIBLE_IN_BREADCRUMB;
-  $type |= MENU_MODIFIED_BY_ADMIN;
-  db_query('UPDATE {menu} SET type = %d WHERE mid = %d', $type, $mid);
-  drupal_set_message(t('Menu item disabled.'));
-  drupal_goto('admin/menu');
+  $op = $_POST['op'];  
+  $menu = menu_get_menu();  
+  switch ($op) {
+    case t('Disable'):
+      $type = $menu['items'][$mid]['type'];
+      $type &= ~MENU_VISIBLE_IN_TREE;
+      $type &= ~MENU_VISIBLE_IN_BREADCRUMB;
+      $type |= MENU_MODIFIED_BY_ADMIN;
+      db_query('UPDATE {menu} SET type = %d WHERE mid = %d', $type, $mid);
+      drupal_set_message(t('Menu item disabled.'));
+      drupal_goto('admin/menu');  
+      break;
+    default:      
+      $output = theme('confirm',
+                      t('Are you sure you want disable %menu-item?', array('%menu-item' => theme('placeholder', $menu['items'][$mid]['title']))),
+                      'admin/menu',
+                      ' ',
+                      t('Disable'));
+      print theme('page', $output);
+  }
 }
 
 /**

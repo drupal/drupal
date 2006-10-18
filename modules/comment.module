@@ -761,7 +761,7 @@ function comment_render($node, $cid = 0) {
       if ((comment_user_can_moderate($node)) && $user->uid != $comment->uid && !(comment_already_moderated($user->uid, $comment->users))) {
         $output .= '<div style="text-align: center;">'. form_submit(t('Moderate comment')) .'</div><br />';
       }
-      $output .= '</div></form>';
+      $output .= '</div>' . form_token() . '</form>';
     }
     else {
       // Multiple comment view
@@ -863,7 +863,7 @@ function comment_render($node, $cid = 0) {
         $output .= '<form method="post" action="'. url('comment') ."\"><div>\n";
         $output .= theme('comment_controls', $threshold, $mode, $order, $comments_per_page);
         $output .= form_hidden('nid', $nid);
-        $output .= '</div></form>';
+        $output .= '</div>' . form_token() . '</form>';
       }
 
       $output .= '<form method="post" action="'. url('comment') ."\"><div>\n";
@@ -898,13 +898,13 @@ function comment_render($node, $cid = 0) {
         $output .= '<div id="comment-moderation-button">'. form_submit(t('Moderate comments')) .'</div>';
       }
 
-      $output .= '</div></form>';
+      $output .= '</div>' . form_token() . '</form>';
 
       if (db_num_rows($result) && (variable_get('comment_controls', 3) == 1 || variable_get('comment_controls', 3) == 2)) {
         $output .= '<form method="post" action="'. url('comment') ."\"><div>\n";
         $output .= theme('comment_controls', $threshold, $mode, $order, $comments_per_page);
         $output .= form_hidden('nid', $nid);
-        $output .= '</div></form>';
+        $output .= '</div>' . form_token() . '</form>';
       }
     }
 
