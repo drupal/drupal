@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.66 2006/10/08 06:09:41 dries Exp $
+// $Id: contact.module,v 1.67 2006/10/18 17:57:05 dries Exp $
 
 /**
  * @file
@@ -316,7 +316,7 @@ function contact_user_page() {
     }
     else {
       drupal_set_title($account->name);
-      $output = drupal_get_form('contact_mail_user');
+      $output = drupal_get_form('contact_mail_user', $account);
     }
 
     return $output;
@@ -326,7 +326,7 @@ function contact_user_page() {
   }
 }
 
-function contact_mail_user() {
+function contact_mail_user($recipient) {
   global $user;
   $form['#token'] = $user->name . $user->mail;
   $form['from'] = array('#type' => 'item',
@@ -335,7 +335,7 @@ function contact_mail_user() {
   );
   $form['to'] = array('#type' => 'item',
     '#title' => t('To'),
-    '#value' => $account->name,
+    '#value' => $recipient->name,
   );
   $form['subject'] = array('#type' => 'textfield',
     '#title' => t('Subject'),
