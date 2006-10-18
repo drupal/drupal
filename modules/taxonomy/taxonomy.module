@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.318 2006/10/13 14:59:03 dries Exp $
+// $Id: taxonomy.module,v 1.319 2006/10/18 11:15:51 dries Exp $
 
 /**
  * @file
@@ -899,6 +899,7 @@ function taxonomy_get_children($tid, $vid = 0, $key = 'tid') {
  * @return
  *   An array of all term objects in the tree. Each term object is extended
  *   to have "depth" and "parents" attributes in addition to its normal ones.
+ *   Results are statically cached.
  */
 function taxonomy_get_tree($vid, $parent = 0, $depth = -1, $max_depth = NULL) {
   static $children, $parents, $terms;
@@ -963,7 +964,18 @@ function taxonomy_get_synonym_root($synonym) {
 }
 
 /**
- * Given a term id, count the number of published nodes in it.
+ * Count the number of published nodes classified by a term.
+ *
+ * @param $tid
+ *   The term's ID
+ *
+ * @param $type
+ *   The $node->type. If given, taxonomy_term_count_nodes only counts
+ *   nodes of $type that are classified with the term $tid.
+ *
+ * @return int
+ *   An integer representing a number of nodes.
+ *   Results are statically cached.
  */
 function taxonomy_term_count_nodes($tid, $type = 0) {
   static $count;
@@ -988,7 +1000,16 @@ function taxonomy_term_count_nodes($tid, $type = 0) {
 }
 
 /**
- * Helper for taxonomy_term_count_nodes().
+ * Helper for taxonomy_term_count_nodes(). Used to find out
+ * which terms are children of a parent term.
+ *
+ * @param $tid
+ *   The parent term's ID
+ *
+ * @return array
+ *   An array of term IDs representing the children of $tid.
+ *   Results are statically cached.
+ *
  */
 function _taxonomy_term_children($tid) {
   static $children;
@@ -1026,6 +1047,13 @@ function taxonomy_get_term_by_name($name) {
 
 /**
  * Return the vocabulary object matching a vocabulary ID.
+ *
+ * @param $vid
+ *   The vocabulary's ID
+ *
+ * @return Object
+ *   The vocabulary object with all of its metadata.
+ *   Results are statically cached.
  */
 function taxonomy_get_vocabulary($vid) {
   static $vocabularies = array();
@@ -1046,10 +1074,21 @@ function taxonomy_get_vocabulary($vid) {
 
 /**
  * Return the term object matching a term ID.
+ *
+ * @param $tid
+ *   A term's ID
+ *
+ * @return Object
+ *   A term object. Results are statically cached.
  */
 function taxonomy_get_term($tid) {
-  // simple cache using a static var?
-  return db_fetch_object(db_query('SELECT * FROM {term_data} WHERE tid = %d', $tid));
+  static $terms = array();
+
+  if (!isset($terms[$tid])) {
+    $terms[$tid] = db_fetch_object(db_query('SELECT * FROM {term_data} WHERE tid = %d', $tid));
+  }
+
+  return $terms[$tid];
 }
 
 function _taxonomy_term_select($title, $name, $value, $vocabulary_id, $description, $multiple, $blank, $exclude = array()) {
