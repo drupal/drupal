@@ -483,14 +483,22 @@ function menu_reset_item_form_submit($form_id, $form_values) {
 /**
  * Menu callback; hide a menu item.
  */
-function menu_disable_item($mid) {
+function menu_disable_item($mid, $token = NULL) {  
+  global $user;  
   $item = menu_get_item($mid);
-  $type = $item['type'];
+  $form = array();
+  $form['mid'] = array('#type' => 'value', '#value' => $mid);
+  $form['item'] = array('#type' => 'value', '#value' => $item);
+  return confirm_form('menu_disable_confirm', $form, t('Are you sure you want to disable the menu item %menu-item?', array('%menu-item' => theme('placeholder', $item['title']))), 'admin/menu', ' ', t('Disable'), t('Cancel'));  
+}
+
+function menu_disable_confirm_submit($form_id, $form_values) {
+  $type = $form_values['item']['type'];
   $type &= ~MENU_VISIBLE_IN_TREE;
   $type &= ~MENU_VISIBLE_IN_BREADCRUMB;
   $type |= MENU_MODIFIED_BY_ADMIN;
-  db_query('UPDATE {menu} SET type = %d WHERE mid = %d', $type, $mid);
-  drupal_set_message(t('The menu item has been disabled.'));
+  db_query('UPDATE {menu} SET type = %d WHERE mid = %d', $type, $form_values['mid']);
+  drupal_set_message(t('The menu item has been disabled.'));     
   drupal_goto('admin/menu');
 }
 

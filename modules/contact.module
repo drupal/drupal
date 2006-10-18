@@ -305,10 +305,10 @@ function contact_mail_user() {
       drupal_access_denied();
     }
     else if (!$account->contact && !$admin_access) {
-      $output = t('%name is not accepting e-mails.', array('%name' => $account->name));
+      $output = t('%name is not accepting e-mails.', array('%name' => check_plain($account->name)));
     }
     else if (!$user->uid) {
-      $output = t('Please <a href="%login">login</a> or <a href="%register">register</a> to send %name a message.', array('%login' => url('user/login'), '%register' => url('user/register'), '%name' => $account->name));
+      $output = t('Please <a href="%login">login</a> or <a href="%register">register</a> to send %name a message.', array('%login' => url('user/login'), '%register' => url('user/register'), '%name' => check_plain($account->name)));
     }
     else if (!valid_email_address($user->mail)) {
       $output = t('You need to provide a valid e-mail address to contact other users. Please update your <a href="%url">user information</a> and try again.', array('%url' => url("user/$user->uid/edit")));
@@ -317,16 +317,16 @@ function contact_mail_user() {
       $output = t('You cannot contact more than %number users per hour. Please try again later.', array('%number' => variable_get('contact_hourly_threshold', 3)));
     }
     else {
-      drupal_set_title($account->name);
+      drupal_set_title(check_plain($account->name));
 
       $form['#token'] = $user->name . $user->mail;
       $form['from'] = array('#type' => 'item',
         '#title' => t('From'),
-        '#value' => $user->name .' &lt;'. $user->mail .'&gt;',
+        '#value' => check_plain($user->name) .' &lt;'. $user->mail .'&gt;',
       );
       $form['to'] = array('#type' => 'item',
         '#title' => t('To'),
-        '#value' => $account->name,
+        '#value' => check_plain($account->name),
       );
       $form['subject'] = array('#type' => 'textfield',
         '#title' => t('Subject'),

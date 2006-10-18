@@ -70,19 +70,24 @@ function drupal_get_form($form_id, &$form, $callback = NULL) {
   $form_button_counter = array(0, 0);
 
   $form['#type'] = 'form';
+
+  // Add a token to any form displayed to authenticated users.
+  // This ensures that any submitted form was actually requested previously by the user to protect against
+  // cross site request forgeries. The default token can be bypassed by setting $form['#token'] to FALSE.
+
   if (isset($form['#token'])) {
-    if (variable_get('cache', 0) && !$user->uid && $_SERVER['REQUEST_METHOD'] == 'GET') {
+    if ($form['#token'] === FALSE || $user->uid == 0) {
       unset($form['#token']);
     }
     else {
-      // Make sure that a private key is set:
-      if (!variable_get('drupal_private_key', '')) {
-        variable_set('drupal_private_key', mt_rand());
-      }
-
-      $form['form_token'] = array('#type' => 'hidden', '#default_value' => md5(session_id() . $form['#token'] . variable_get('drupal_private_key', '')));
+      $form['form_token'] = array('#type' => 'token', '#default_value' => drupal_get_token($form['#token']));
     }
   }
+  else if ($user->uid) {
+    $form['#token'] = $form_id;
+    $form['form_token'] = array('#type' => 'token', '#default_value' => drupal_get_token($form['#token']));
+  }
+
   if (isset($form_id)) {
     $form['form_id'] = array('#type' => 'hidden', '#value' => $form_id, '#id' => str_replace('_', '-', "edit-$form_id"));
   }
@@ -177,8 +182,9 @@ function drupal_validate_form($form_id, $form, $callback = NULL) {
     return;
   }
 
+  // Check whether the form token is valid.
   if (isset($form['#token'])) {
-    if ($form_values['form_token'] != md5(session_id() . $form['#token'] . variable_get('drupal_private_key', ''))) {
+    if (!drupal_valid_token($form_values['form_token'], $form['#token'])) {
       // setting this error will cause the form to fail validation
       form_set_error('form_token', t('Validation error, please try again.  If this error persists, please contact the site administrator.'));
     }
@@ -375,6 +381,9 @@ function form_builder($form_id, $form) {
               $edit = str_replace(array("\r", "\n"), '', $edit);
               $form['#value'] = $edit;
             }
+            break;
+          case 'token':
+            $form['#value'] = (string)$edit;
             break;
           default:
             if (isset($edit)) {
@@ -999,6 +1008,10 @@ function theme_button($element) {
  */
 function theme_hidden($element) {
   return '<input type="hidden" name="'. $element['#name'] . '" id="'. $element['#id'] . '" value="'. check_plain($element['#value']) ."\" " . drupal_attributes($element['#attributes']) ." />\n";
+}
+
+function theme_token($element) {
+  return theme('hidden', $element);
 }
 
 /**

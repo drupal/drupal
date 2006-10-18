@@ -302,7 +302,7 @@ function theme_block_admin_display($form) {
   $last_region = '';
   $last_status = 1;
   foreach (element_children($form) as $i) {
-    $block = $form[$i];
+    $block = &$form[$i];
     // Only take form elements that are blocks.
     if (is_array($block['info'])) {
       // Fetch values
@@ -346,10 +346,7 @@ function theme_block_admin_display($form) {
 
   $output = theme('table', $header, $rows, array('id' => 'blocks'));
   $output .= form_render($form['submit']);
-  // Also render the form_id as there is no form_render($form) call (as form_render does not appear to handle the
-  // multi-dimensional block form array very well).
-  $output .= form_render($form['form_id']);
-
+  $output .= form_render($form);
   return $output;
 }
 

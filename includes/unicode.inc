@@ -128,7 +128,7 @@ function drupal_xml_parser_create(&$data) {
       $data = ereg_replace('^(<\?xml[^>]+encoding)="([^"]+)"', '\\1="utf-8"', $out);
     }
     else {
-      watchdog('php', t("Could not convert XML encoding '%s' to UTF-8.", array('%s' => $encoding)), WATCHDOG_WARNING);
+      watchdog('php', t("Could not convert XML encoding '%s' to UTF-8.", array('%s' => theme('placeholder', $encoding))), WATCHDOG_WARNING);
       return 0;
     }
   }

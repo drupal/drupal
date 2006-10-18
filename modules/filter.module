@@ -1348,15 +1348,20 @@ function filter_xss_bad_protocol($string, $decode = TRUE) {
   if ($decode) {
     $string = decode_entities($string);
   }
-  // Remove soft hyphen
-  $string = str_replace(chr(194) . chr(173), '', $string);
-  // Strip protocols
-
+  // Iteratively remove any invalid protocol found.
   do {
     $before = $string;
     $colonpos = strpos($string, ':');
     if ($colonpos > 0) {
+      // We found a colon, possibly a protocol. Verify.
       $protocol = substr($string, 0, $colonpos);
+      // If a colon is preceded by a slash, question mark or hash, it cannot
+      // possibly be part of the URL scheme. This must be a relative URL,
+      // which inherits the (safe) protocol of the base document.
+      if (preg_match('![/?#]!', $protocol)) {
+        break;
+      }
+      // Check if this is a disallowed protocol
       if (!isset($allowed_protocols[$protocol])) {
         $string = substr($string, $colonpos + 1);
       }

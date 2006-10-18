@@ -411,6 +411,26 @@ function locale_admin_string_edit($lid) {
  * Delete a string.
  */
 function locale_admin_string_delete($lid) {
+  $form = array();
+  $string = db_result(db_query("SELECT source FROM {locales_source} WHERE lid = %d", $lid));
+  
+  if ($string) {      
+    $form['lid'] = array('#type' => 'value', '#value' => $lid);
+    $form['string'] = array('#type' => 'item', '#value'=> check_plain($string, 150, FALSE, TRUE));
+    return confirm_form('locale_string_delete_confirm',
+                    $form,
+                    t('Are you sure you want to delete the following string?'),
+                    'admin/locale/string/search',
+                    '',
+                    t('Delete'),
+                    t('Cancel'));
+  }
+  else {
+    drupal_not_found();
+  }
+}
+
+function locale_string_delete_confirm_submit($form_id, $form_values) {
   include_once './includes/locale.inc';
-  _locale_string_delete($lid);
+  _locale_string_delete($form_values['lid']);
 }

@@ -292,7 +292,8 @@ function poll_teaser($node) {
  * Generates the voting form for a poll.
  */
 function poll_view_voting(&$node, $teaser, $page, $block) {
-  if ($_POST['op'] == t('Vote')) {
+  // Check for a valid form token to protect against cross site request forgeries.
+  if ($_POST['op'] == t('Vote') && drupal_valid_token($_POST['edit']['form_token'], 'poll_view_voting', TRUE)) {
     poll_vote($node);
   }
 

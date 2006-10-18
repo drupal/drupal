@@ -872,28 +872,14 @@ function comment_render($node, $cid = 0) {
  */
 function comment_delete($cid) {
   $comment = db_fetch_object(db_query('SELECT c.*, u.name AS registered_name, u.uid FROM {comments} c INNER JOIN {users} u ON u.uid = c.uid WHERE c.cid = %d', $cid));
-  $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
-
   $output = '';
 
-  // We'll only delete if the user has confirmed the
-  // deletion using the form in our else clause below.
-  if (is_object($comment) && is_numeric($comment->cid) && $_POST['edit']['confirm']) {
-    drupal_set_message(t('The comment and all its replies have been deleted.'));
-
-    // Delete comment and its replies.
-    _comment_delete_thread($comment);
-
-    _comment_update_node_statistics($comment->nid);
-
-    // Clear the cache so an anonymous user sees that his comment was deleted.
-    cache_clear_all();
-
-    drupal_goto("node/$comment->nid");
-  }
-  else if (is_object($comment) && is_numeric($comment->cid)) {
+  if (is_object($comment) && is_numeric($comment->cid)) {
+    $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
+    $form = array();
+    $form['comment'] = array('#type' => 'value', '#value' => $comment);
     $output = confirm_form('comment_confirm_delete',
-                    array(),
+                    $form,
                     t('Are you sure you want to delete the comment %title?', array('%title' => theme('placeholder', $comment->subject))),
                     'node/'. $comment->nid,
                     t('Any replies to this comment will be lost. This action cannot be undone.'),
@@ -905,6 +891,20 @@ function comment_delete($cid) {
   }
 
   return $output;
+}
+
+function comment_confirm_delete_submit($form_id, $form_values) {  
+  $comment = $form_values['comment'];  
+  
+  // Delete comment and its replies.
+  _comment_delete_thread($comment);
+
+  _comment_update_node_statistics($comment->nid);
+
+  // Clear the cache so an anonymous user sees that his comment was deleted.
+  cache_clear_all();
+  drupal_set_message(t('The comment and all its replies have been deleted.'));
+  return "node/$comment->nid";
 }
 
 /**
