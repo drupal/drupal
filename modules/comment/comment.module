@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.491 2006/10/17 08:45:51 drumm Exp $
+// $Id: comment.module,v 1.492 2006/10/18 18:00:40 dries Exp $
 
 /**
  * @file
@@ -230,7 +230,7 @@ function comment_link($type, $node = NULL, $teaser = FALSE) {
               );
             }
             else {
-              $links['comment_forbidden']['#title'] = theme('comment_post_forbidden', $node->nid);
+              $links['comment_forbidden']['title'] = theme('comment_post_forbidden', $node->nid);
             }
           }
         }
@@ -252,7 +252,7 @@ function comment_link($type, $node = NULL, $teaser = FALSE) {
           }
         }
         else {
-          $links['comment_forbidden']['#title'] = theme('comment_post_forbidden', $node->nid);
+          $links['comment_forbidden']['title'] = theme('comment_post_forbidden', $node->nid);
         }
       }
     }
@@ -260,6 +260,9 @@ function comment_link($type, $node = NULL, $teaser = FALSE) {
 
   if ($type == 'comment') {
     $links = comment_links($node, $teaser);
+  }
+  if (isset($links['comment_forbidden'])) {
+    $links['comment_forbidden']['html'] = TRUE;
   }
 
   return $links;
@@ -735,7 +738,7 @@ function comment_links($comment, $return = 1) {
       );
     }
     else {
-      $links['comment_forbidden']['#title'] = theme('comment_post_forbidden', $comment->nid);
+      $links['comment_forbidden']['title'] = theme('comment_post_forbidden', $comment->nid);
     }
   }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.316 2006/10/17 08:38:16 drumm Exp $
+// $Id: theme.inc,v 1.317 2006/10/18 18:00:39 dries Exp $
 
 /**
  * @file
@@ -530,12 +530,18 @@ function theme_links($links, $attributes = array('class' => 'links')) {
       $extra_class = ($i == 1) ? 'first ' : (($i == $num_links) ? 'last ' : '');
       $output .= '<li class="'. $extra_class . $class .'">';
 
+      // Is the title HTML?
+      $html = isset($link['html']) && $link['html'];
+
       if ($link['href']) {
-        $output .= l($link['title'], $link['href'], $link['attributes'], $link['query'], $link['fragment']);
+        $output .= l($link['title'], $link['href'], $link['attributes'], $link['query'], $link['fragment'], FALSE, $html);
       }
       else if ($link['title']) {
         //Some links are actually not links, but we wrap these in <span> for adding title and class attributes
-        $output .= '<span'. drupal_attributes($link['attributes']) .'>'. check_plain($link['title']) .'</span>';
+        if (!$html) {
+          $link['title'] = check_plain($link['title']);
+        }
+        $output .= '<span'. drupal_attributes($link['attributes']) .'>'. $link['title'] .'</span>';
       }
 
       $i++;
