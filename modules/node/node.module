@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.707 2006/10/14 11:09:09 unconed Exp $
+// $Id: node.module,v 1.708 2006/10/18 08:04:18 drumm Exp $
 
 /**
  * @file
@@ -1031,7 +1031,7 @@ function node_menu($may_cache) {
       'title' => t('content types'),
       'description' => t('Manage posts by content type, including default status, front page promotion, etc.'),
       'callback' => 'node_overview_types',
-      'access' => user_access('administer nodes'),
+      'access' => user_access('administer content types'),
     );
     $items[] = array(
       'path' => 'admin/content/types/list',
