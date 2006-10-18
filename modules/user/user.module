@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.691 2006/10/17 08:31:49 drumm Exp $
+// $Id: user.module,v 1.692 2006/10/18 11:46:18 dries Exp $
 
 /**
  * @file
@@ -2118,16 +2118,18 @@ function user_user_operations() {
       $remove_roles['remove_role-'. $key] = $value;
     }
 
-    $role_operations = array(
-      t('Add a role to the selected users') => array(
-        'label' => $add_roles,
-      ),
-      t('Remove a role from the selected users') => array(
-        'label' => $remove_roles,
-      ),
-    );
+    if (count($roles)) {
+      $role_operations = array(
+        t('Add a role to the selected users') => array(
+          'label' => $add_roles,
+        ),
+        t('Remove a role from the selected users') => array(
+          'label' => $remove_roles,
+        ),
+      );
 
-    $operations += $role_operations;
+      $operations += $role_operations;
+    }
   }
 
   // If the form has been posted, we need to insert the proper data for role editing if necessary.
