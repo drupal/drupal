@@ -890,6 +890,9 @@ function form_select_options($element, $choices = NULL) {
       $options .= form_select_options($element, $choice);
       $options .= '</optgroup>';
     }
+    elseif (is_object($choice)) {
+      $options .= form_select_options($element, $choice->option);
+    }
     else {
       $key = (string)$key;
       if ($value_valid && ($element['#value'] == $key || ($value_is_array && in_array($key, $element['#value'])))) {

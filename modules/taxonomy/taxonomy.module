@@ -1101,7 +1101,9 @@ function _taxonomy_term_select($title, $name, $value, $vocabulary_id, $descripti
   if ($tree) {
     foreach ($tree as $term) {
       if (!in_array($term->tid, $exclude)) {
-        $options[$term->tid] = str_repeat('-', $term->depth) . $term->name;
+        $choice = new stdClass();
+        $choice->option = array($term->tid => str_repeat('-', $term->depth) . $term->name);
+        $options[] = $choice;
       }
     }
     if (!$blank && !$value) {
