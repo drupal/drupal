@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.156 2006/10/18 11:43:27 dries Exp $
+// $Id: form.inc,v 1.157 2006/10/20 20:55:03 drumm Exp $
 
 /**
  * @defgroup form Form generation
@@ -889,6 +889,9 @@ function form_select_options($element, $choices = NULL) {
       $options .= '<optgroup label="'. $key .'">';
       $options .= form_select_options($element, $choice);
       $options .= '</optgroup>';
+    }
+    elseif (is_object($choice)) {
+      $options .= form_select_options($element, $choice->option);
     }
     else {
       $key = (string)$key;
