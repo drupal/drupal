@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.692 2006/10/18 11:46:18 dries Exp $
+// $Id: user.module,v 1.693 2006/10/20 21:00:17 drumm Exp $
 
 /**
  * @file
@@ -713,7 +713,7 @@ function user_menu($may_cache) {
       'description' => t('Manage your site\'s users, groups and access to site features.'),
       'position' => 'left',
       'callback' => 'system_admin_menu_block_page',
-      'access' => user_access('access configuration pages'),
+      'access' => user_access('administer site configuration'),
     );
     $items[] = array('path' => 'admin/user/user', 'title' => t('users'),
       'description' => t('List, add, and edit users.'),
