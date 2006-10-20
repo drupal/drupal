@@ -995,7 +995,7 @@ function node_menu($may_cache) {
       'position' => 'left',
       'weight' => -10,
       'callback' => 'system_admin_menu_block_page',
-      'access' => user_access('access configuration pages'),
+      'access' => user_access('administer site configuration'),
     );
 
     $items[] = array(

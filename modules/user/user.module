@@ -713,7 +713,7 @@ function user_menu($may_cache) {
       'description' => t('Manage your site\'s users, groups and access to site features.'),
       'position' => 'left',
       'callback' => 'system_admin_menu_block_page',
-      'access' => user_access('access configuration pages'),
+      'access' => user_access('administer site configuration'),
     );
     $items[] = array('path' => 'admin/user/user', 'title' => t('users'),
       'description' => t('List, add, and edit users.'),
