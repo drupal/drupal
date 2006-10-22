@@ -1,5 +1,5 @@
 <?php
-// $Id: watchdog.module,v 1.157 2006/09/08 23:07:25 drumm Exp $
+// $Id: watchdog.module,v 1.158 2006/10/22 08:28:47 unconed Exp $
 
 /**
  * @file
@@ -40,19 +40,19 @@ function watchdog_menu($may_cache) {
   $items = array();
 
   if ($may_cache) {
-    $items[] = array('path' => 'admin/logs/watchdog', 'title' => t('recent log entries'),
+    $items[] = array('path' => 'admin/logs/watchdog', 'title' => t('Recent log entries'),
       'description' => t('View events that have recently been logged.'),
       'callback' => 'watchdog_overview',
       'weight' => -1);
-    $items[] = array('path' => 'admin/logs/page-not-found', 'title' => t("top 'page not found' errors"),
+    $items[] = array('path' => 'admin/logs/page-not-found', 'title' => t("Top 'page not found' errors"),
       'description' => t("View 'page not found' errors (404s)."),
       'callback' => 'watchdog_top',
       'callback arguments' => array('page not found'));
-    $items[] = array('path' => 'admin/logs/access-denied', 'title' => t("top 'access denied' errors"),
+    $items[] = array('path' => 'admin/logs/access-denied', 'title' => t("Top 'access denied' errors"),
       'description' => t("View 'access denied' errors (403s)."),
       'callback' => 'watchdog_top',
       'callback arguments' => array('access denied'));
-    $items[] = array('path' => 'admin/logs/event', 'title' => t('details'),
+    $items[] = array('path' => 'admin/logs/event', 'title' => t('Details'),
       'callback' => 'watchdog_event',
       'type' => MENU_CALLBACK);
   }

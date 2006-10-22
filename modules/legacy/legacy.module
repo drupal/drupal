@@ -1,5 +1,5 @@
 <?php
-// $Id: legacy.module,v 1.13 2006/08/31 20:22:35 dries Exp $
+// $Id: legacy.module,v 1.14 2006/10/22 08:28:45 unconed Exp $
 
 /**
  * @file
@@ -40,35 +40,35 @@ function legacy_menu($may_cache) {
 
   if ($may_cache) {
     // Map "taxonomy/page/or/52,97" to "taxonomy/term/52+97".
-    $items[] = array('path' => 'taxonomy/page', 'title' => t('taxonomy'),
+    $items[] = array('path' => 'taxonomy/page', 'title' => t('Taxonomy'),
       'callback' => 'legacy_taxonomy_page',
       'access' => TRUE, 'type' => MENU_CALLBACK);
 
     // Map "taxonomy/feed/or/52,97" to "taxonomy/term/52+97/0/feed".
-    $items[] = array('path' => 'taxonomy/feed', 'title' => t('taxonomy'),
+    $items[] = array('path' => 'taxonomy/feed', 'title' => t('Taxonomy'),
       'callback' => 'legacy_taxonomy_feed',
       'access' => TRUE, 'type' => MENU_CALLBACK);
 
     // Map "blog/feed/52" to "blog/52/feed".
-    $items[] = array('path' => 'blog/feed', 'title' => t('blog'),
+    $items[] = array('path' => 'blog/feed', 'title' => t('Blog'),
       'callback' => 'legacy_blog_feed',
       'access' => TRUE, 'type' => MENU_CALLBACK);
   }
   else {
     // Map "node/view/52" to "node/52".
-    $items[] = array('path' => 'node/view', 'title' => t('view'),
+    $items[] = array('path' => 'node/view', 'title' => t('View'),
       'callback' => 'drupal_goto',
       'callback arguments' => array('node/'. arg(2), NULL, NULL),
       'access' => TRUE, 'type' => MENU_CALLBACK);
 
     // Map "book/view/52" to "node/52".
-    $items[] = array('path' => 'book/view', 'title' => t('view'),
+    $items[] = array('path' => 'book/view', 'title' => t('View'),
       'callback' => 'drupal_goto',
       'callback arguments' => array('node/'. arg(2), NULL, NULL),
       'access' => TRUE, 'type' => MENU_CALLBACK);
 
     // Map "user/view/52" to "user/52".
-    $items[] = array('path' => 'user/view', 'title' => t('view'),
+    $items[] = array('path' => 'user/view', 'title' => t('View'),
       'callback' => 'drupal_goto',
       'callback arguments' => array('user/'. arg(2), NULL, NULL),
       'access' => TRUE, 'type' => MENU_CALLBACK);

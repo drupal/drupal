@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.229 2006/10/08 06:34:12 dries Exp $
+// $Id: block.module,v 1.230 2006/10/22 08:28:44 unconed Exp $
 
 /**
  * @file
@@ -66,24 +66,24 @@ function block_menu($may_cache) {
   if ($may_cache) {
     $items[] = array(
       'path' => 'admin/build/block',
-      'title' => t('blocks'),
+      'title' => t('Blocks'),
       'access' => user_access('administer blocks'),
       'description' => t('Configure what block content appears in your site\'s sidebars and other regions.'),
       'callback' => 'drupal_get_form',
       'callback arguments' => array('block_admin_display'));
-    $items[] = array('path' => 'admin/build/block/list', 'title' => t('list'),
+    $items[] = array('path' => 'admin/build/block/list', 'title' => t('List'),
       'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
-    $items[] = array('path' => 'admin/build/block/configure', 'title' => t('configure block'),
+    $items[] = array('path' => 'admin/build/block/configure', 'title' => t('Configure block'),
       'access' => user_access('administer blocks'),
       'callback' => 'drupal_get_form',
       'callback arguments' => array('block_admin_configure'),
       'type' => MENU_CALLBACK);
-    $items[] = array('path' => 'admin/build/block/delete', 'title' => t('delete block'),
+    $items[] = array('path' => 'admin/build/block/delete', 'title' => t('Delete block'),
       'access' => user_access('administer blocks'),
       'callback' => 'drupal_get_form',
       'callback arguments' => array('block_box_delete'),
       'type' => MENU_CALLBACK);
-    $items[] = array('path' => 'admin/build/block/add', 'title' => t('add block'),
+    $items[] = array('path' => 'admin/build/block/add', 'title' => t('Add block'),
       'access' => user_access('administer blocks'),
       'callback' => 'drupal_get_form',
       'callback arguments' => array('block_box_form'),

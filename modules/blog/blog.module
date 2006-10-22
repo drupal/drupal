@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.265 2006/08/31 20:22:34 dries Exp $
+// $Id: blog.module,v 1.266 2006/10/22 08:28:44 unconed Exp $
 
 /**
  * @file
@@ -12,7 +12,7 @@
 function blog_node_info() {
   return array(
     'blog' => array(
-      'name' => t('blog entry'),
+      'name' => t('Blog entry'),
       'module' => 'blog',
       'description' => t('A blog is a regularly updated journal or diary made up of individual posts shown in reversed chronological order. Each member of the site may create and maintain a blog.'),
     )
@@ -104,7 +104,7 @@ function blog_feed_user($uid = 0) {
  */
 function blog_feed_last() {
   $result = db_query_range(db_rewrite_sql("SELECT n.nid, n.title, r.teaser, n.created, u.name, u.uid FROM {node} n INNER JOIN {node_revisions} r ON n.vid = r.vid INNER JOIN {users} u ON n.uid = u.uid WHERE n.type = 'blog' AND n.status = 1 ORDER BY n.created DESC"), 0, variable_get('feed_default_items', 10));
-  $channel['title'] = variable_get('site_name', 'drupal') .' blogs';
+  $channel['title'] = variable_get('site_name', 'Drupal') .' blogs';
   $channel['link'] = url('blog', NULL, NULL, TRUE);
   $channel['description'] = $term->description;
   node_feed($result, $channel);
@@ -228,7 +228,7 @@ function blog_form(&$node) {
 function blog_view($node, $teaser = FALSE, $page = FALSE) {
   if ($page) {
     // Breadcrumb navigation
-    $breadcrumb[] = array('path' => 'blog', 'title' => t('blogs'));
+    $breadcrumb[] = array('path' => 'blog', 'title' => t('Blogs'));
     $breadcrumb[] = array('path' => 'blog/'. $node->uid, 'title' => t("@name's blog", array('@name' => $node->name)));
     $breadcrumb[] = array('path' => 'node/'. $node->nid);
     menu_set_location($breadcrumb);
@@ -263,13 +263,13 @@ function blog_menu($may_cache) {
   $items = array();
 
   if ($may_cache) {
-    $items[] = array('path' => 'node/add/blog', 'title' => t('blog entry'),
+    $items[] = array('path' => 'node/add/blog', 'title' => t('Blog entry'),
       'access' => user_access('edit own blog'));
-    $items[] = array('path' => 'blog', 'title' => t('blogs'),
+    $items[] = array('path' => 'blog', 'title' => t('Blogs'),
       'callback' => 'blog_page',
       'access' => user_access('access content'),
       'type' => MENU_SUGGESTED_ITEM);
-    $items[] = array('path' => 'blog/'. $user->uid, 'title' => t('my blog'),
+    $items[] = array('path' => 'blog/'. $user->uid, 'title' => t('My blog'),
       'access' => user_access('edit own blog'),
       'type' => MENU_DYNAMIC_ITEM);
   }

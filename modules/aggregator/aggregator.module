@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.310 2006/10/17 19:15:27 dries Exp $
+// $Id: aggregator.module,v 1.311 2006/10/22 08:28:44 unconed Exp $
 
 /**
  * @file
@@ -51,33 +51,33 @@ function aggregator_menu($may_cache) {
       'callback' => 'aggregator_admin_overview',
       'access' => $edit);
     $items[] = array('path' => 'admin/content/aggregator/add/feed',
-      'title' => t('add feed'),
+      'title' => t('Add feed'),
       'callback' => 'drupal_get_form',
       'callback arguments' => array('aggregator_form_feed'),
       'access' => $edit,
       'type' => MENU_LOCAL_TASK);
     $items[] = array('path' => 'admin/content/aggregator/add/category',
-      'title' => t('add category'),
+      'title' => t('Add category'),
       'callback' => 'drupal_get_form',
       'callback arguments' => array('aggregator_form_category'),
       'access' => $edit,
       'type' => MENU_LOCAL_TASK);
     $items[] = array('path' => 'admin/content/aggregator/remove',
-      'title' => t('remove items'),
+      'title' => t('Remove items'),
       'callback' => 'aggregator_admin_remove_feed',
       'access' => $edit,
       'type' => MENU_CALLBACK);
     $items[] = array('path' => 'admin/content/aggregator/update',
-      'title' => t('update items'),
+      'title' => t('Update items'),
       'callback' => 'aggregator_admin_refresh_feed',
       'access' => $edit,
       'type' => MENU_CALLBACK);
     $items[] = array('path' => 'admin/content/aggregator/list',
-      'title' => t('list'),
+      'title' => t('List'),
       'type' => MENU_DEFAULT_LOCAL_TASK,
       'weight' => -10);
     $items[] = array('path' => 'admin/content/aggregator/settings',
-      'title' => t('settings'),
+      'title' => t('Settings'),
       'callback' => 'drupal_get_form',
       'callback arguments' => array('aggregator_admin_settings'),
       'type' => MENU_LOCAL_TASK,
@@ -85,16 +85,16 @@ function aggregator_menu($may_cache) {
       'access' => $edit);
 
     $items[] = array('path' => 'aggregator',
-      'title' => t('news aggregator'),
+      'title' => t('News aggregator'),
       'callback' => 'aggregator_page_last',
       'access' => $view,
       'weight' => 5);
     $items[] = array('path' => 'aggregator/sources',
-      'title' => t('sources'),
+      'title' => t('Sources'),
       'callback' => 'aggregator_page_sources',
       'access' => $view);
     $items[] = array('path' => 'aggregator/categories',
-      'title' => t('categories'),
+      'title' => t('Categories'),
       'callback' => 'aggregator_page_categories',
       'access' => $view,
       'type' => MENU_ITEM_GROUPING);
@@ -132,17 +132,17 @@ function aggregator_menu($may_cache) {
             'access' => $view,
             'type' => MENU_CALLBACK);
           $items[] = array('path' => 'aggregator/sources/'. $feed['fid'] .'/view',
-            'title' => t('view'),
+            'title' => t('View'),
             'type' => MENU_DEFAULT_LOCAL_TASK,
             'weight' => -10);
           $items[] = array('path' => 'aggregator/sources/'. $feed['fid'] .'/categorize',
-            'title' => t('categorize'),
+            'title' => t('Categorize'),
             'callback' => 'drupal_get_form',
             'callback arguments' => array('aggregator_page_source'),
             'access' => $edit,
             'type' => MENU_LOCAL_TASK);
           $items[] = array('path' => 'aggregator/sources/'. $feed['fid'] .'/configure',
-            'title' => t('configure'),
+            'title' => t('Configure'),
             'callback' => 'drupal_get_form',
             'callback arguments' => array('aggregator_form_feed', $feed),
             'access' => $edit,
@@ -154,17 +154,17 @@ function aggregator_menu($may_cache) {
         $category = aggregator_get_category(arg(2));
         if ($category) {
           $items[] = array('path' => 'aggregator/categories/'. $category['cid'] .'/view',
-            'title' => t('view'),
+            'title' => t('View'),
             'type' => MENU_DEFAULT_LOCAL_TASK,
             'weight' => -10);
           $items[] = array('path' => 'aggregator/categories/'. $category['cid'] .'/categorize',
-            'title' => t('categorize'),
+            'title' => t('Categorize'),
             'callback' => 'drupal_get_form',
             'callback arguments' => array('aggregator_page_category'),
             'access' => $edit,
             'type' => MENU_LOCAL_TASK);
           $items[] = array('path' => 'aggregator/categories/'. $category['cid'] .'/configure',
-            'title' => t('configure'),
+            'title' => t('Configure'),
             'callback' => 'drupal_get_form',
             'callback arguments' => array('aggregator_form_category', $category),
             'access' => $edit,
@@ -178,7 +178,7 @@ function aggregator_menu($may_cache) {
         $feed = aggregator_get_feed(arg(5));
         if ($feed) {
           $items[] = array('path' => 'admin/content/aggregator/edit/feed/'. $feed['fid'],
-            'title' => t('edit feed'),
+            'title' => t('Edit feed'),
             'callback' => 'drupal_get_form',
             'callback arguments' => array('aggregator_form_feed', $feed),
             'access' => $edit,
@@ -189,7 +189,7 @@ function aggregator_menu($may_cache) {
         $category = aggregator_get_category(arg(5));
         if ($category) {
           $items[] = array('path' => 'admin/content/aggregator/edit/category/'. $category['cid'],
-            'title' => t('edit category'),
+            'title' => t('Edit category'),
             'callback' => 'drupal_get_form',
             'callback arguments' => array('aggregator_form_category', $category),
             'access' => $edit,
@@ -1035,7 +1035,7 @@ function aggregator_admin_overview() {
  * Menu callback; displays the most recent items gathered from any feed.
  */
 function aggregator_page_last() {
-  drupal_add_feed(url('aggregator/rss'), variable_get('site_name', 'drupal') . ' ' . t('aggregator'));
+  drupal_add_feed(url('aggregator/rss'), variable_get('site_name', 'Drupal') . ' ' . t('aggregator'));
 
   return _aggregator_page_list('SELECT i.*, f.title AS ftitle, f.link AS flink FROM {aggregator_item} i INNER JOIN {aggregator_feed} f ON i.fid = f.fid ORDER BY i.timestamp DESC, i.iid DESC', arg(1));
 }
@@ -1056,7 +1056,7 @@ function aggregator_page_source() {
 function aggregator_page_category() {
   $category = db_fetch_object(db_query('SELECT cid, title FROM {aggregator_category} WHERE cid = %d', arg(2)));
 
-  drupal_add_feed(url('aggregator/rss/'. arg(2)), variable_get('site_name', 'drupal') . ' ' . t('aggregator - @title', array('@title' => $category->title)));
+  drupal_add_feed(url('aggregator/rss/'. arg(2)), variable_get('site_name', 'Drupal') . ' ' . t('aggregator - @title', array('@title' => $category->title)));
 
   return _aggregator_page_list('SELECT i.*, f.title AS ftitle, f.link AS flink FROM {aggregator_category_item} c LEFT JOIN {aggregator_item} i ON c.iid = i.iid LEFT JOIN {aggregator_feed} f ON i.fid = f.fid WHERE cid = '. $category->cid .' ORDER BY timestamp DESC, iid DESC', arg(3));
 }
@@ -1175,7 +1175,7 @@ function aggregator_page_sources() {
     $output .= theme('item_list', $list);
 
     $link['sources'] = array(
-      'title' => t('more'),
+      'title' => t('More'),
       'href' => 'aggregator/sources/'. $feed->fid
     );
 
@@ -1279,7 +1279,7 @@ function aggregator_page_categories() {
     }
 
     $link['categories'] = array(
-      'title' => t('more'),
+      'title' => t('More'),
       'href' => 'aggregator/categories/'. $category->cid
     );
 

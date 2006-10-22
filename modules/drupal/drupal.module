@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal.module,v 1.129 2006/10/17 08:29:55 drumm Exp $
+// $Id: drupal.module,v 1.130 2006/10/22 08:28:44 unconed Exp $
 
 /**
  * @file
@@ -54,7 +54,7 @@ print drupal_client_page();
 
 function drupal_sites_registry_settings() {
   // Check if all required fields are present
-  if ((variable_get('site_name', 'drupal') == 'drupal') || (variable_get('site_name', 'drupal') == '')) {
+  if ((variable_get('site_name', 'Drupal') == 'Drupal') || (variable_get('site_name', 'Drupal') == '')) {
     form_set_error('drupal_directory', t('You must set the name of your site on the <a href="@url">administer &raquo; settings &raquo; site information</a> page.', array('@url' => url('admin/settings/site-information'))));
   }
   else if (variable_get('site_mail', ini_get('sendmail_from')) == '') {
@@ -346,13 +346,13 @@ function drupal_menu($may_cache) {
   $items = array();
   if ($may_cache) {
     $items[] = array('path' => 'admin/settings/sites-registry',
-      'title' => t('sites registry'),
+      'title' => t('Sites registry'),
       'description' => t('Register with another Drupal site (drupal.org by default) for statistics sharing, or set up your server to be a central server for registrations.'),
       'callback' => 'drupal_get_form',
       'callback arguments' => array('drupal_sites_registry_settings'),
       'access' => user_access('administer site configuration'));
     $items[] = array('path' => 'admin/settings/distributed-authentication',
-      'title' => t('distributed authentication'),
+      'title' => t('Distributed authentication'),
       'description' => t('Allow your site to accept logins from other Drupal sites such as drupal.org.'),
       'callback' => 'drupal_get_form',
       'callback arguments' => array('drupal_distributed_authentication_settings'),

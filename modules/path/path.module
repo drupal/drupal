@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.96 2006/09/08 16:33:02 dries Exp $
+// $Id: path.module,v 1.97 2006/10/22 08:28:45 unconed Exp $
 
 /**
  * @file
@@ -48,23 +48,23 @@ function path_menu($may_cache) {
   $items = array();
 
   if ($may_cache) {
-    $items[] = array('path' => 'admin/build/path', 'title' => t('url aliases'),
+    $items[] = array('path' => 'admin/build/path', 'title' => t('URL aliases'),
       'description' => t('Change your site\'s URL paths by aliasing them.'),
       'callback' => 'path_admin',
       'access' => user_access('administer url aliases'));
-    $items[] = array('path' => 'admin/build/path/edit', 'title' => t('edit alias'),
+    $items[] = array('path' => 'admin/build/path/edit', 'title' => t('Edit alias'),
       'callback' => 'drupal_get_form',
       'callback arguments' => array('path_admin_edit'),
       'access' => user_access('administer url aliases'),
       'type' => MENU_CALLBACK);
-    $items[] = array('path' => 'admin/build/path/delete', 'title' => t('delete alias'),
+    $items[] = array('path' => 'admin/build/path/delete', 'title' => t('Delete alias'),
       'callback' => 'drupal_get_form',
       'callback arguments' => array('path_admin_delete_confirm'),
       'access' => user_access('administer url aliases'),
       'type' => MENU_CALLBACK);
-    $items[] = array('path' => 'admin/build/path/list', 'title' => t('list'),
+    $items[] = array('path' => 'admin/build/path/list', 'title' => t('List'),
       'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
-    $items[] = array('path' => 'admin/build/path/add', 'title' => t('add alias'),
+    $items[] = array('path' => 'admin/build/path/add', 'title' => t('Add alias'),
       'callback' => 'drupal_get_form',
       'callback arguments' => array('path_admin_edit'),
       'access' => user_access('administer url aliases'),

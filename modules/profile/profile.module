@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.174 2006/10/18 11:37:51 dries Exp $
+// $Id: profile.module,v 1.175 2006/10/22 08:28:45 unconed Exp $
 
 /**
  * @file
@@ -53,35 +53,35 @@ function profile_menu($may_cache) {
 
   if ($may_cache) {
     $items[] = array('path' => 'profile',
-      'title' => t('user list'),
+      'title' => t('User list'),
       'callback' => 'profile_browse',
       'access' => user_access('access user profiles'),
       'type' => MENU_SUGGESTED_ITEM);
     $items[] = array('path' => 'admin/user/profile',
-      'title' => t('profiles'),
+      'title' => t('Profiles'),
       'description' => t('Create customizable fields for your users.'),
       'callback' => 'profile_admin_overview');
     $items[] = array('path' => 'admin/user/profile/add',
-      'title' => t('add field'),
+      'title' => t('Add field'),
       'callback' => 'drupal_get_form',
       'callback arguments' => array('profile_field_form'),
       'type' => MENU_CALLBACK);
     $items[] = array('path' => 'admin/user/profile/autocomplete',
-      'title' => t('profile category autocomplete'),
+      'title' => t('Profile category autocomplete'),
       'callback' => 'profile_admin_settings_autocomplete',
       'access' => user_access('administer users'),
       'type' => MENU_CALLBACK);
     $items[] = array('path' => 'admin/user/profile/edit',
-      'title' => t('edit field'),
+      'title' => t('Edit field'),
       'callback' => 'drupal_get_form',
       'callback arguments' => array('profile_field_form'),
       'type' => MENU_CALLBACK);
     $items[] = array('path' => 'admin/user/profile/delete',
-      'title' => t('delete field'),
+      'title' => t('Delete field'),
       'callback' => 'drupal_get_form',
       'callback arguments' => array('profile_field_delete'),
       'type' => MENU_CALLBACK);
-    $items[] = array('path' => 'profile/autocomplete', 'title' => t('profile autocomplete'),
+    $items[] = array('path' => 'profile/autocomplete', 'title' => t('Profile autocomplete'),
       'callback' => 'profile_autocomplete',
       'access' => 1,
       'type' => MENU_CALLBACK);

@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.200 2006/10/07 13:39:04 dries Exp $
+// $Id: search.module,v 1.201 2006/10/22 08:28:46 unconed Exp $
 
 /**
  * @file
@@ -150,25 +150,25 @@ function search_menu($may_cache) {
 
   if ($may_cache) {
     $items[] = array('path' => 'search',
-      'title' => t('search'),
+      'title' => t('Search'),
       'callback' => 'drupal_get_form',
       'callback arguments' => array('search_view'),
       'access' => user_access('search content'),
       'type' => MENU_SUGGESTED_ITEM);
     $items[] = array('path' => 'admin/settings/search',
-      'title' => t('search settings'),
+      'title' => t('Search settings'),
       'description' => t('Configure relevance settings for search and other indexing options'),
       'callback' => 'drupal_get_form',
       'callback arguments' => array('search_admin_settings'),
       'access' => user_access('administer search'),
       'type' => MENU_NORMAL_ITEM);
     $items[] = array('path' => 'admin/settings/search/wipe',
-      'title' => t('clear index'),
+      'title' => t('Clear index'),
       'callback' => 'drupal_get_form',
       'callback arguments' => array('search_wipe_confirm'),
       'access' => user_access('administer search'),
       'type' => MENU_CALLBACK);
-    $items[] = array('path' => 'admin/logs/search', 'title' => t('top search phrases'),
+    $items[] = array('path' => 'admin/logs/search', 'title' => t('Top search phrases'),
       'description' => t('View most popular search phrases.'),
       'callback' => 'watchdog_top',
       'callback arguments' => array('search'));

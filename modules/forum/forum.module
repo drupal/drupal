@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.362 2006/10/04 06:07:05 drumm Exp $
+// $Id: forum.module,v 1.363 2006/10/22 08:28:45 unconed Exp $
 
 /**
  * @file
@@ -42,38 +42,38 @@ function forum_menu($may_cache) {
 
   if ($may_cache) {
     $items[] = array('path' => 'node/add/forum',
-      'title' => t('forum topic'),
+      'title' => t('Forum topic'),
       'access' => user_access('create forum topics'));
     $items[] = array('path' => 'forum',
-      'title' => t('forums'),
+      'title' => t('Forums'),
       'callback' => 'forum_page',
       'access' => user_access('access content'),
       'type' => MENU_SUGGESTED_ITEM);
     $items[] = array('path' => 'admin/content/forum',
-      'title' => t('forums'),
+      'title' => t('Forums'),
       'description' => t('Control forums and their hierarchy and change forum settings.'),
       'callback' => 'forum_overview',
       'access' => user_access('administer forums'),
       'type' => MENU_NORMAL_ITEM);
     $items[] = array('path' => 'admin/content/forum/list',
-      'title' => t('list'),
+      'title' => t('List'),
       'access' => user_access('administer forums'),
       'type' => MENU_DEFAULT_LOCAL_TASK,
       'weight' => -10);
     $items[] = array('path' => 'admin/content/forum/add/container',
-      'title' => t('add container'),
+      'title' => t('Add container'),
       'callback' => 'forum_form_main',
       'callback arguments' => array('container'),
       'access' => user_access('administer forums'),
       'type' => MENU_LOCAL_TASK);
     $items[] = array('path' => 'admin/content/forum/add/forum',
-      'title' => t('add forum'),
+      'title' => t('Add forum'),
       'callback' => 'forum_form_main',
       'callback arguments' => array('forum'),
       'access' => user_access('administer forums'),
       'type' => MENU_LOCAL_TASK);
     $items[] = array('path' => 'admin/content/forum/settings',
-      'title' => t('settings'),
+      'title' => t('Settings'),
       'callback' => 'drupal_get_form',
       'callback arguments' => array('forum_admin_settings'),
       'weight' => 5,
@@ -85,13 +85,13 @@ function forum_menu($may_cache) {
     // Check if this is a valid term.
     if ($term) {
       $items[] = array('path' => 'admin/content/forum/edit/container',
-        'title' => t('edit container'),
+        'title' => t('Edit container'),
         'callback' => 'forum_form_main',
         'callback arguments' => array('container', (array)$term),
         'access' => user_access('administer forums'),
         'type' => MENU_CALLBACK);
       $items[] = array('path' => 'admin/content/forum/edit/forum',
-        'title' => t('edit forum'),
+        'title' => t('Edit forum'),
         'callback' => 'forum_form_main',
         'callback arguments' => array('forum', (array)$term),
         'access' => user_access('administer forums'),
@@ -113,7 +113,7 @@ function forum_menu($may_cache) {
 function forum_node_info() {
   return array(
     'forum' => array(
-      'name' => t('forum topic'),
+      'name' => t('Forum topic'),
       'module' => 'forum',
       'description' => t('Create a new topic for discussion in the forums.'),
       'title_label' => t('Subject'),

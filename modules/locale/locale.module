@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.146 2006/10/04 06:41:24 drumm Exp $
+// $Id: locale.module,v 1.147 2006/10/22 08:28:45 unconed Exp $
 
 /**
  * @file
@@ -57,19 +57,19 @@ function locale_menu($may_cache) {
   if ($may_cache) {
     // Main admin menu item
     $items[] = array('path' => 'admin/settings/locale',
-      'title' => t('localization'),
+      'title' => t('Localization'),
       'description' => t('Configure site localization and user interface translation.'),
       'callback' => 'locale_admin_manage',
       'access' => $access);
 
     // Top level tabs
     $items[] = array('path' => 'admin/settings/locale/language',
-      'title' => t('manage languages'),
+      'title' => t('Manage languages'),
       'access' => $access,
       'weight' => -10,
       'type' => MENU_DEFAULT_LOCAL_TASK);
     $items[] = array('path' => 'admin/settings/locale/string/search',
-      'title' => t('manage strings'),
+      'title' => t('Manage strings'),
       'callback' => 'locale_string_search',
       'access' => $access,
       'weight' => 10,
@@ -77,25 +77,25 @@ function locale_menu($may_cache) {
 
     // Manage languages subtabs
     $items[] = array('path' => 'admin/settings/locale/language/overview',
-      'title' => t('list'),
+      'title' => t('List'),
       'callback' => 'locale_admin_manage',
       'access' => $access,
       'weight' => 0,
       'type' => MENU_DEFAULT_LOCAL_TASK);
     $items[] = array('path' => 'admin/settings/locale/language/add',
-      'title' => t('add language'),
+      'title' => t('Add language'),
       'callback' => 'locale_admin_manage_add',
       'access' => $access,
       'weight' => 5,
       'type' => MENU_LOCAL_TASK);
     $items[] = array('path' => 'admin/settings/locale/language/import',
-      'title' => t('import'),
+      'title' => t('Import'),
       'callback' => 'locale_admin_import',
       'access' => $access,
       'weight' => 10,
       'type' => MENU_LOCAL_TASK);
     $items[] = array('path' => 'admin/settings/locale/language/export',
-      'title' => t('export'),
+      'title' => t('Export'),
       'callback' => 'locale_admin_export',
       'access' => $access,
       'weight' => 20,
@@ -103,7 +103,7 @@ function locale_menu($may_cache) {
 
     // Language related callbacks
     $items[] = array('path' => 'admin/settings/locale/language/delete',
-      'title' => t('confirm'),
+      'title' => t('Confirm'),
       'callback' => 'drupal_get_form',
       'callback arguments' => array('locale_admin_manage_delete_form'),
       'access' => $access,
@@ -117,13 +117,13 @@ function locale_menu($may_cache) {
     if (is_numeric(arg(5))) {
       // String related callbacks
       $items[] = array('path' => 'admin/settings/locale/string/edit/'. arg(5),
-        'title' => t('edit string'),
+        'title' => t('Edit string'),
         'callback' => 'drupal_get_form',
         'callback arguments' => array('locale_admin_string_edit', arg(5)),
         'access' => $access,
         'type' => MENU_CALLBACK);
       $items[] = array('path' => 'admin/settings/locale/string/delete/'. arg(5),
-        'title' => t('delete string'),
+        'title' => t('Delete string'),
         'callback' => 'locale_admin_string_delete',
         'callback arguments' => array(arg(5)),
         'access' => $access,

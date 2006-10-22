@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.218 2006/10/09 06:53:25 dries Exp $
+// $Id: poll.module,v 1.219 2006/10/22 08:28:45 unconed Exp $
 
 /**
  * @file
@@ -237,21 +237,21 @@ function poll_menu($may_cache) {
   $items = array();
 
   if ($may_cache) {
-    $items[] = array('path' => 'node/add/poll', 'title' => t('poll'),
+    $items[] = array('path' => 'node/add/poll', 'title' => t('Poll'),
       'access' => user_access('create polls'));
-    $items[] = array('path' => 'poll', 'title' => t('polls'),
+    $items[] = array('path' => 'poll', 'title' => t('Polls'),
       'callback' => 'poll_page',
       'access' => user_access('access content'),
       'type' => MENU_SUGGESTED_ITEM);
 
     $items[] = array('path' => 'poll/vote',
-      'title' => t('vote'),
+      'title' => t('Vote'),
       'callback' => 'poll_vote',
       'access' => user_access('vote on polls'),
       'type' => MENU_CALLBACK);
 
     $items[] = array('path' => 'poll/cancel',
-      'title' => t('cancel'),
+      'title' => t('Cancel'),
       'callback' => 'poll_cancel',
       'access' => user_access('cancel own vote'),
       'type' => MENU_CALLBACK);
@@ -265,7 +265,7 @@ function poll_menu($may_cache) {
       $node = node_load(arg(1));
       if ($node->type == 'poll') {
         $items[] = array('path' => 'node/'. arg(1) .'/votes',
-          'title' => t('votes'),
+          'title' => t('Votes'),
           'callback' => 'poll_votes',
           'access' => user_access('inspect all votes'),
           'weight' => 3,
@@ -273,7 +273,7 @@ function poll_menu($may_cache) {
       }
       if ($node->type == 'poll' && $node->allowvotes) {
         $items[] = array('path' => 'node/'. arg(1) .'/results',
-          'title' => t('results'),
+          'title' => t('Results'),
           'callback' => 'poll_results',
           'access' => user_access('access content'),
           'weight' => 3,
@@ -325,7 +325,7 @@ function poll_load($node) {
 function poll_node_info() {
   return array(
     'poll' => array(
-      'name' => t("poll"),
+      'name' => t('Poll'),
       'module' => 'poll',
       'description' => t("A poll is a multiple-choice question which visitors can vote on."),
       'title_label' => t('Question'),
@@ -605,9 +605,9 @@ function poll_view($node, $teaser = FALSE, $page = FALSE, $block = FALSE) {
     $node->readmore = FALSE;
 
     $links = module_invoke_all('link', 'node', $node, 1);
-    $links[] = array('title' => t('older polls'), 'href' => 'poll', 'attributes' => array('title' => t('View the list of polls on this site.')));
+    $links[] = array('title' => t('Older polls'), 'href' => 'poll', 'attributes' => array('title' => t('View the list of polls on this site.')));
     if ($node->allowvotes && $block) {
-      $links[] = array('title' => t('results'), 'href' => 'node/'. $node->nid .'/results', 'attributes' => array('title' => t('View the current poll results.')));
+      $links[] = array('title' => t('Results'), 'href' => 'node/'. $node->nid .'/results', 'attributes' => array('title' => t('View the current poll results.')));
     }
 
     $node->links = $links;

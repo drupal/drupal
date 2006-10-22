@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.241 2006/08/31 21:58:36 dries Exp $
+// $Id: statistics.module,v 1.242 2006/10/22 08:28:46 unconed Exp $
 
 /**
  * @file
@@ -114,40 +114,40 @@ function statistics_menu($may_cache) {
   if ($may_cache) {
     $items[] = array(
       'path' => 'admin/logs/hits',
-      'title' => t('recent hits'),
+      'title' => t('Recent hits'),
       'description' => t('View pages that have recently been visited.'),
       'callback' => 'statistics_recent_hits',
       'access' => $access);
     $items[] = array(
       'path' => 'admin/logs/pages',
-      'title' => t('top pages'),
+      'title' => t('Top pages'),
       'description' => t('View pages that have been hit frequently.'),
       'callback' => 'statistics_top_pages',
       'access' => $access,
       'weight' => 1);
     $items[] = array(
       'path' => 'admin/logs/visitors',
-      'title' => t('top visitors'),
+      'title' => t('Top visitors'),
       'description' => t('View visitors that hit many pages.'),
       'callback' => 'statistics_top_visitors',
       'access' => $access,
       'weight' => 2);
     $items[] = array(
       'path' => 'admin/logs/referrers',
-      'title' => t('top referrers'),
+      'title' => t('Top referrers'),
       'description' => t('View top referrers.'),
       'callback' => 'statistics_top_referrers',
       'access' => $access);
     $items[] = array(
       'path' => 'admin/logs/access',
-      'title' => t('details'),
+      'title' => t('Details'),
       'description' => t('View access log.'),
       'callback' => 'statistics_access_log',
       'access' => $access,
       'type' => MENU_CALLBACK);
     $items[] = array(
       'path' => 'admin/logs/settings',
-      'title' => t('access log settings'),
+      'title' => t('Access log settings'),
       'description' => t('Control details about what and how your site logs.'),
       'callback' => 'drupal_get_form',
       'callback arguments' => array('statistics_access_logging_settings'),
@@ -159,7 +159,7 @@ function statistics_menu($may_cache) {
     if (arg(0) == 'user' && is_numeric(arg(1)) && variable_get('statistics_enable_access_log', 0)) {
       $items[] = array(
         'path' => 'user/'. arg(1) .'/track/navigation',
-        'title' => t('track page visits'),
+        'title' => t('Track page visits'),
         'callback' => 'statistics_user_tracker',
         'access' => $access,
         'type' => MENU_LOCAL_TASK,
@@ -168,7 +168,7 @@ function statistics_menu($may_cache) {
     if (arg(0) == 'node' && is_numeric(arg(1)) && variable_get('statistics_enable_access_log', 0)) {
       $items[] = array(
         'path' => 'node/'. arg(1) .'/track',
-        'title' => t('track'),
+        'title' => t('Track'),
         'callback' => 'statistics_node_tracker',
         'access' => $access,
         'type' => MENU_LOCAL_TASK,

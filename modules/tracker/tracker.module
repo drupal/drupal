@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.module,v 1.136 2006/08/31 20:22:36 dries Exp $
+// $Id: tracker.module,v 1.137 2006/10/22 08:28:46 unconed Exp $
 
 /**
  * @file
@@ -34,14 +34,14 @@ function tracker_menu($may_cache) {
   $items = array();
 
   if ($may_cache) {
-    $items[] = array('path' => 'tracker', 'title' => t('recent posts'),
+    $items[] = array('path' => 'tracker', 'title' => t('Recent posts'),
       'callback' => 'tracker_page', 'access' => user_access('access content'),
       'weight' => 1);
 
     if ($user->uid) {
-      $items[] = array('path' => 'tracker/all', 'title' => t('all recent posts'),
+      $items[] = array('path' => 'tracker/all', 'title' => t('All recent posts'),
         'type' => MENU_DEFAULT_LOCAL_TASK);
-      $items[] = array('path' => 'tracker/'. $user->uid, 'title' => t('my recent posts'),
+      $items[] = array('path' => 'tracker/'. $user->uid, 'title' => t('My recent posts'),
         'type' => MENU_LOCAL_TASK);
     }
   }
@@ -51,10 +51,10 @@ function tracker_menu($may_cache) {
     drupal_add_css(drupal_get_path('module', 'tracker') .'/tracker.css');
 
     if (arg(0) == 'user' && is_numeric(arg(1))) {
-      $items[] = array('path' => 'user/'. arg(1) .'/track', 'title' => t('track'),
+      $items[] = array('path' => 'user/'. arg(1) .'/track', 'title' => t('Track'),
           'callback' => 'tracker_track_user', 'access' => user_access('access content'),
           'type' => MENU_IS_LOCAL_TASK);
-      $items[] = array('path' => 'user/'. arg(1) .'/track/posts', 'title' => t('track posts'),
+      $items[] = array('path' => 'user/'. arg(1) .'/track/posts', 'title' => t('Track posts'),
           'type' => MENU_DEFAULT_LOCAL_TASK);
     }
   }

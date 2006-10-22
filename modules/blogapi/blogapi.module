@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.95 2006/08/31 20:22:34 dries Exp $
+// $Id: blogapi.module,v 1.96 2006/10/22 08:28:44 unconed Exp $
 
 /**
  * @file
@@ -576,7 +576,7 @@ function blogapi_menu($may_cache) {
       'type' => MENU_CALLBACK);
     $items[] = array(
       'path' => 'admin/settings/blogapi',
-      'title' => t('blog APIs'),
+      'title' => t('Blog APIs'),
       'description' => t('Configure which content types and engines external blog clients can use.'),
       'callback' => 'drupal_get_form',
       'callback arguments' => array('blogapi_admin_settings'),

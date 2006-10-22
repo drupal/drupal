@@ -1,5 +1,5 @@
 <?php
-// $Id: throttle.module,v 1.67 2006/08/31 20:22:36 dries Exp $
+// $Id: throttle.module,v 1.68 2006/10/22 08:28:46 unconed Exp $
 
 /**
  * @file
@@ -13,7 +13,7 @@ function throttle_menu($may_cache) {
     $items[] = array(
       'path' => 'admin/settings/throttle',
       'description' => t('Control how your site cuts out content during heavy load.'),
-      'title' => t('throttle'),
+      'title' => t('Throttle'),
       'callback' => 'drupal_get_form',
       'callback arguments' => array('throttle_admin_settings'),
       'access' => user_access('administer site configuration'),

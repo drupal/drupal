@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.393 2006/09/26 14:14:30 dries Exp $
+// $Id: book.module,v 1.394 2006/10/22 08:28:44 unconed Exp $
 
 /**
  * @file
@@ -12,7 +12,7 @@
 function book_node_info() {
   return array(
     'book' => array(
-      'name' => t('book page'),
+      'name' => t('Book page'),
       'module' => 'book',
       'description' => t("A book is a collaborative writing effort: users can collaborate writing the pages of the book, positioning the pages in the right order, and reviewing or modifying pages previously written. So when you have some information to share or when you read a page of the book and you didn't like it, or if you think a certain page could have been written better, you can do something about it."),
     )
@@ -65,13 +65,13 @@ function book_link($type, $node = NULL, $teaser = FALSE) {
     if (!$teaser) {
       if (book_access('create', $node)) {
         $links['book_add_child'] = array(
-          'title' => t('add child page'),
+          'title' => t('Add child page'),
           'href' => "node/add/book/parent/$node->nid"
         );
       }
       if (user_access('see printer-friendly version')) {
         $links['book_printer'] = array(
-          'title' => t('printer-friendly version'),
+          'title' => t('Printer-friendly version'),
           'href' => 'book/export/html/'. $node->nid,
           'attributes' => array('title' => t('Show a printer-friendly version of this book page and its sub-pages.'))
         );
@@ -91,24 +91,24 @@ function book_menu($may_cache) {
   if ($may_cache) {
     $items[] = array(
       'path' => 'admin/content/book',
-      'title' => t('books'),
+      'title' => t('Books'),
       'description' => t('Manage site\'s books and orphaned book pages.'),
       'callback' => 'book_admin',
       'access' => user_access('administer nodes'));
     $items[] = array(
       'path' => 'admin/content/book/list',
-      'title' => t('list'),
+      'title' => t('List'),
       'type' => MENU_DEFAULT_LOCAL_TASK);
     $items[] = array(
       'path' => 'admin/content/book/orphan',
-      'title' => t('orphan pages'),
+      'title' => t('Orphan pages'),
       'callback' => 'drupal_get_form',
       'callback arguments' => array('book_admin_orphan'),
       'type' => MENU_LOCAL_TASK,
       'weight' => 8);
     $items[] = array(
       'path' => 'book',
-      'title' => t('books'),
+      'title' => t('Books'),
       'callback' => 'book_render',
       'access' => user_access('access content'),
       'type' => MENU_SUGGESTED_ITEM);
@@ -131,7 +131,7 @@ function book_menu($may_cache) {
       if (db_num_rows($result) > 0) {
         $items[] = array(
           'path' => 'node/'. arg(1) .'/outline',
-          'title' => t('outline'),
+          'title' => t('Outline'),
           'callback' => 'drupal_get_form',
           'callback arguments' => array('book_outline', arg(1)),
           'access' => user_access('outline posts in books'),

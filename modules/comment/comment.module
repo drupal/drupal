@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.492 2006/10/18 18:00:40 dries Exp $
+// $Id: comment.module,v 1.493 2006/10/22 08:28:44 unconed Exp $
 
 /**
  * @file
@@ -100,20 +100,20 @@ function comment_menu($may_cache) {
     $access = user_access('administer comments');
     $items[] = array(
       'path' => 'admin/content/comment',
-      'title' => t('comments'),
+      'title' => t('Comments'),
       'description' => t('List and edit site comments and the comment moderation queue.'),
       'callback' => 'comment_admin',
       'access' => $access
     );
 
     // Tabs:
-    $items[] = array('path' => 'admin/content/comment/list', 'title' => t('list'),
+    $items[] = array('path' => 'admin/content/comment/list', 'title' => t('List'),
       'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
 
     // Subtabs:
-    $items[] = array('path' => 'admin/content/comment/list/new', 'title' => t('published comments'),
+    $items[] = array('path' => 'admin/content/comment/list/new', 'title' => t('Published comments'),
       'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
-    $items[] = array('path' => 'admin/content/comment/list/approval', 'title' => t('approval queue'),
+    $items[] = array('path' => 'admin/content/comment/list/approval', 'title' => t('Approval queue'),
       'callback' => 'comment_admin',
       'callback arguments' => array('approval'),
       'access' => $access,
@@ -121,18 +121,18 @@ function comment_menu($may_cache) {
 
     $items[] = array(
       'path' => 'admin/content/comment/settings',
-      'title' => t('settings'),
+      'title' => t('Settings'),
       'callback' => 'drupal_get_form',
       'callback arguments' => array('comment_admin_settings'),
       'access' => $access,
       'weight' => 10,
       'type' => MENU_LOCAL_TASK);
 
-    $items[] = array('path' => 'comment/delete', 'title' => t('delete comment'),
+    $items[] = array('path' => 'comment/delete', 'title' => t('Delete comment'),
       'callback' => 'comment_delete', 'access' => $access, 'type' => MENU_CALLBACK);
 
     $access = user_access('post comments');
-    $items[] = array('path' => 'comment/edit', 'title' => t('edit comment'),
+    $items[] = array('path' => 'comment/edit', 'title' => t('Edit comment'),
       'callback' => 'comment_edit',
       'access' => $access, 'type' => MENU_CALLBACK);
   }
@@ -140,12 +140,12 @@ function comment_menu($may_cache) {
     if (arg(0) == 'comment' && arg(1) == 'reply' && is_numeric(arg(2))) {
       $node = node_load(arg(2));
       if ($node->nid) {
-        $items[] = array('path' => 'comment/reply', 'title' => t('reply to comment'),
+        $items[] = array('path' => 'comment/reply', 'title' => t('Reply to comment'),
           'callback' => 'comment_reply', 'access' => node_access('view', $node), 'type' => MENU_CALLBACK);
       }
     }
     if ((arg(0) == 'node') && is_numeric(arg(1)) && is_numeric(arg(2))) {
-      $items[] = array('path' => ('node/'. arg(1) .'/'. arg(2)), 'title' => t('view'),
+      $items[] = array('path' => ('node/'. arg(1) .'/'. arg(2)), 'title' => t('View'),
         'callback' => 'node_page',
         'type' => MENU_CALLBACK);
     }
@@ -244,7 +244,7 @@ function comment_link($type, $node = NULL, $teaser = FALSE) {
         if (user_access('post comments')) {
           if (variable_get('comment_form_location', COMMENT_FORM_SEPARATE_PAGE) == COMMENT_FORM_SEPARATE_PAGE) {
             $links['comment_add'] = array(
-              'title' => t('add new comment'),
+              'title' => t('Add new comment'),
               'href' => "comment/reply/$node->nid",
               'attributes' => array('title' => t('Share your thoughts and opinions related to this posting.')),
               'fragment' => 'comment_form'

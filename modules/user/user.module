@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.693 2006/10/20 21:00:17 drumm Exp $
+// $Id: user.module,v 1.694 2006/10/22 08:28:46 unconed Exp $
 
 /**
  * @file
@@ -689,75 +689,75 @@ function user_menu($may_cache) {
   $view_access = user_access('access user profiles');
 
   if ($may_cache) {
-    $items[] = array('path' => 'user', 'title' => t('user account'),
+    $items[] = array('path' => 'user', 'title' => t('User account'),
       'callback' => 'drupal_get_form', 'callback arguments' => array('user_login'), 'access' => TRUE, 'type' => MENU_CALLBACK);
 
-    $items[] = array('path' => 'user/autocomplete', 'title' => t('user autocomplete'),
+    $items[] = array('path' => 'user/autocomplete', 'title' => t('User autocomplete'),
       'callback' => 'user_autocomplete', 'access' => $view_access, 'type' => MENU_CALLBACK);
 
     // Registration and login pages.
-    $items[] = array('path' => 'user/login', 'title' => t('log in'),
+    $items[] = array('path' => 'user/login', 'title' => t('Log in'),
       'callback' => 'drupal_get_form', 'callback arguments' => array('user_login'), 'access' => TRUE, 'type' => MENU_DEFAULT_LOCAL_TASK);
-    $items[] = array('path' => 'user/register', 'title' => t('create new account'),
+    $items[] = array('path' => 'user/register', 'title' => t('Create new account'),
       'callback' => 'drupal_get_form', 'callback arguments' => array('user_register'), 'access' => !$user->uid && variable_get('user_register', 1), 'type' => MENU_LOCAL_TASK);
-    $items[] = array('path' => 'user/password', 'title' => t('request new password'),
+    $items[] = array('path' => 'user/password', 'title' => t('Request new password'),
       'callback' => 'drupal_get_form', 'callback arguments' => array('user_pass'), 'access' => !$user->uid, 'type' => MENU_LOCAL_TASK);
-    $items[] = array('path' => 'user/reset', 'title' => t('reset password'),
+    $items[] = array('path' => 'user/reset', 'title' => t('Reset password'),
       'callback' => 'drupal_get_form', 'callback arguments' => array('user_pass_reset'), 'access' => TRUE, 'type' => MENU_CALLBACK);
-    $items[] = array('path' => 'user/help', 'title' => t('help'),
+    $items[] = array('path' => 'user/help', 'title' => t('Help'),
       'callback' => 'user_help_page', 'type' => MENU_CALLBACK);
 
     // Admin user pages
     $items[] = array('path' => 'admin/user',
-      'title' => t('user management'),
+      'title' => t('User management'),
       'description' => t('Manage your site\'s users, groups and access to site features.'),
       'position' => 'left',
       'callback' => 'system_admin_menu_block_page',
       'access' => user_access('administer site configuration'),
     );
-    $items[] = array('path' => 'admin/user/user', 'title' => t('users'),
+    $items[] = array('path' => 'admin/user/user', 'title' => t('Users'),
       'description' => t('List, add, and edit users.'),
       'callback' => 'user_admin', 'callback arguments' => array('list'), 'access' => $admin_access);
-    $items[] = array('path' => 'admin/user/user/list', 'title' => t('list'),
+    $items[] = array('path' => 'admin/user/user/list', 'title' => t('List'),
       'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
-    $items[] = array('path' => 'admin/user/user/create', 'title' => t('add user'),
+    $items[] = array('path' => 'admin/user/user/create', 'title' => t('Add user'),
       'callback' => 'user_admin', 'callback arguments' => array('create'), 'access' => $admin_access,
       'type' => MENU_LOCAL_TASK);
-    $items[] = array('path' => 'admin/user/settings', 'title' => t('user settings'),
+    $items[] = array('path' => 'admin/user/settings', 'title' => t('User settings'),
       'description' => t('Configure default behavior of users, including registration requirements, e-mails, and user pictures.'),
       'callback' => 'drupal_get_form', 'callback arguments' => array('user_admin_settings'));
 
     // Admin access pages
-    $items[] = array('path' => 'admin/user/access', 'title' => t('access control'),
+    $items[] = array('path' => 'admin/user/access', 'title' => t('Access control'),
       'description' => t('Determine access to features by selecting permissions for roles.'),
       'callback' => 'drupal_get_form', 'callback arguments' => array('user_admin_perm'), 'access' => $access_access);
-    $items[] = array('path' => 'admin/user/roles', 'title' => t('roles'),
+    $items[] = array('path' => 'admin/user/roles', 'title' => t('Roles'),
       'description' => t('List, edit, or add user roles.'),
       'callback' => 'drupal_get_form', 'callback arguments' => array('user_admin_new_role'), 'access' => $access_access,
       'type' => MENU_NORMAL_ITEM);
-    $items[] = array('path' => 'admin/user/roles/edit', 'title' => t('edit role'),
+    $items[] = array('path' => 'admin/user/roles/edit', 'title' => t('Edit role'),
        'callback' => 'drupal_get_form', 'callback arguments' => array('user_admin_role'), 'access' => $access_access,
       'type' => MENU_CALLBACK);
-    $items[] = array('path' => 'admin/user/rules', 'title' => t('access rules'),
+    $items[] = array('path' => 'admin/user/rules', 'title' => t('Access rules'),
       'description' => t('List and create rules to disallow usernames, e-mail addresses, and IP addresses.'),
       'callback' => 'user_admin_access', 'access' => $access_access);
-    $items[] = array('path' => 'admin/user/rules/list', 'title' => t('list'),
+    $items[] = array('path' => 'admin/user/rules/list', 'title' => t('List'),
       'access' => $access_access, 'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
-    $items[] = array('path' => 'admin/user/rules/add', 'title' => t('add rule'),
+    $items[] = array('path' => 'admin/user/rules/add', 'title' => t('Add rule'),
       'callback' => 'user_admin_access_add', 'access' => $access_access,
       'type' => MENU_LOCAL_TASK);
-    $items[] = array('path' => 'admin/user/rules/check', 'title' => t('check rules'),
+    $items[] = array('path' => 'admin/user/rules/check', 'title' => t('Check rules'),
       'callback' => 'user_admin_access_check', 'access' => $access_access,
       'type' => MENU_LOCAL_TASK);
-    $items[] = array('path' => 'admin/user/rules/edit', 'title' => t('edit rule'),
+    $items[] = array('path' => 'admin/user/rules/edit', 'title' => t('Edit rule'),
       'callback' => 'user_admin_access_edit', 'access' => $access_access,
       'type' => MENU_CALLBACK);
-    $items[] = array('path' => 'admin/user/rules/delete', 'title' => t('delete rule'),
+    $items[] = array('path' => 'admin/user/rules/delete', 'title' => t('Delete rule'),
       'callback' => 'drupal_get_form', 'callback arguments' => array('user_admin_access_delete_confirm'),
       'access' => $access_access, 'type' => MENU_CALLBACK);
 
     if (module_exists('search')) {
-      $items[] = array('path' => 'admin/user/search', 'title' => t('search users'),
+      $items[] = array('path' => 'admin/user/search', 'title' => t('Search users'),
         'description' => t('Search users by name.'),
         'callback' => 'user_admin', 'callback arguments' => array('search'), 'access' => $admin_access,
         'type' => MENU_NORMAL_ITEM);
@@ -765,12 +765,12 @@ function user_menu($may_cache) {
 
     // Your personal page
     if ($user->uid) {
-      $items[] = array('path' => 'user/'. $user->uid, 'title' => t('my account'),
+      $items[] = array('path' => 'user/'. $user->uid, 'title' => t('My account'),
         'callback' => 'user_view', 'callback arguments' => array(arg(1)), 'access' => TRUE,
         'type' => MENU_DYNAMIC_ITEM);
     }
 
-    $items[] = array('path' => 'logout', 'title' => t('log out'),
+    $items[] = array('path' => 'logout', 'title' => t('Log out'),
       'access' => $user->uid,
       'callback' => 'user_logout',
       'weight' => 10);
@@ -789,17 +789,17 @@ function user_menu($may_cache) {
         // Only admins can view blocked accounts
         $view_access &= $account->status || $admin_access;
 
-        $items[] = array('path' => 'user/'. arg(1), 'title' => t('user'),
+        $items[] = array('path' => 'user/'. arg(1), 'title' => t('User'),
           'type' => MENU_CALLBACK, 'callback' => 'user_view',
           'callback arguments' => array(arg(1)), 'access' => $view_access);
 
-        $items[] = array('path' => 'user/'. arg(1) .'/view', 'title' => t('view'),
+        $items[] = array('path' => 'user/'. arg(1) .'/view', 'title' => t('View'),
           'access' => $view_access, 'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
 
-        $items[] = array('path' => 'user/'. arg(1) .'/edit', 'title' => t('edit'),
+        $items[] = array('path' => 'user/'. arg(1) .'/edit', 'title' => t('Edit'),
           'callback' => 'drupal_get_form', 'callback arguments' => array('user_edit'),
           'access' => $admin_access || $user->uid == arg(1), 'type' => MENU_LOCAL_TASK);
-        $items[] = array('path' => 'user/'. arg(1) .'/delete', 'title' => t('delete'),
+        $items[] = array('path' => 'user/'. arg(1) .'/delete', 'title' => t('Delete'),
           'callback' => 'user_edit', 'access' => $admin_access,
           'type' => MENU_CALLBACK);
 
@@ -1051,7 +1051,7 @@ function user_pass_submit($form_id, $form_values) {
   $from = variable_get('site_mail', ini_get('sendmail_from'));
 
   // Mail one time login URL and instructions.
-  $variables = array('!username' => $account->name, '!site' => variable_get('site_name', 'drupal'), '!login_url' => user_pass_reset_url($account), '!uri' => $base_url, '!uri_brief' => substr($base_url, strlen('http://')), '!mailto' => $account->mail, '!date' => format_date(time()), '!login_uri' => url('user', NULL, NULL, TRUE), '!edit_uri' => url('user/'. $account->uid .'/edit', NULL, NULL, TRUE));
+  $variables = array('!username' => $account->name, '!site' => variable_get('site_name', 'Drupal'), '!login_url' => user_pass_reset_url($account), '!uri' => $base_url, '!uri_brief' => substr($base_url, strlen('http://')), '!mailto' => $account->mail, '!date' => format_date(time()), '!login_uri' => url('user', NULL, NULL, TRUE), '!edit_uri' => url('user/'. $account->uid .'/edit', NULL, NULL, TRUE));
   $subject = _user_mail_text('pass_subject', $variables);
   $body = _user_mail_text('pass_body', $variables);
   $mail_success = drupal_mail('user-pass', $account->mail, $subject, $body, $from);
@@ -1218,7 +1218,7 @@ function user_register_submit($form_id, $form_values) {
   $account = user_save('', array_merge($form_values, array('pass' => $pass, 'init' => $mail, 'roles' => $roles, 'status' => ($admin || variable_get('user_register', 1) == 1))));
   watchdog('user', t('New user: %name %email.', array('%name' => $name, '%email' => '<'. $mail .'>')), WATCHDOG_NOTICE, l(t('edit'), 'user/'. $account->uid .'/edit'));
 
-  $variables = array('!username' => $name, '!site' => variable_get('site_name', 'drupal'), '!password' => $pass, '!uri' => $base_url, '!uri_brief' => substr($base_url, strlen('http://')), '!mailto' => $mail, '!date' => format_date(time()), '!login_uri' => url('user', NULL, NULL, TRUE), '!edit_uri' => url('user/'. $account->uid .'/edit', NULL, NULL, TRUE), '!login_url' => user_pass_reset_url($account));
+  $variables = array('!username' => $name, '!site' => variable_get('site_name', 'Drupal'), '!password' => $pass, '!uri' => $base_url, '!uri_brief' => substr($base_url, strlen('http://')), '!mailto' => $mail, '!date' => format_date(time()), '!login_uri' => url('user', NULL, NULL, TRUE), '!edit_uri' => url('user/'. $account->uid .'/edit', NULL, NULL, TRUE), '!login_url' => user_pass_reset_url($account));
 
   // The first user may login immediately, and receives a customized welcome e-mail.
   if ($account->uid == 1) {

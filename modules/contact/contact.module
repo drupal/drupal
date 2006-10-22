@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.67 2006/10/18 17:57:05 dries Exp $
+// $Id: contact.module,v 1.68 2006/10/22 08:28:44 unconed Exp $
 
 /**
  * @file
@@ -49,19 +49,19 @@ function contact_menu($may_cache) {
   $items = array();
   if ($may_cache) {
     $items[] = array('path' => 'admin/build/contact',
-      'title' => t('contact form'),
+      'title' => t('Contact form'),
       'description' => t('Create a system contact form and set up categories for the form to use.'),
       'callback' => 'contact_admin_categories',
       'access' => user_access('administer site configuration'),
     );
     $items[] = array('path' => 'admin/build/contact/list',
-      'title' => t('list'),
+      'title' => t('List'),
       'callback' => 'contact_admin_categories',
       'access' => user_access('administer site configuration'),
       'type' => MENU_DEFAULT_LOCAL_TASK,
     );
     $items[] = array('path' => 'admin/build/contact/add',
-      'title' => t('add category'),
+      'title' => t('Add category'),
       'callback' => 'drupal_get_form',
       'callback arguments' => array('contact_admin_edit'),
       'access' => user_access('administer site configuration'),
@@ -69,21 +69,21 @@ function contact_menu($may_cache) {
       'weight' => 1,
     );
     $items[] = array('path' => 'admin/build/contact/edit',
-      'title' => t('edit contact category'),
+      'title' => t('Edit contact category'),
       'callback' => 'drupal_get_form',
       'callback arguments' => array('contact_admin_edit'),
       'access' => user_access('administer site configuration'),
       'type' => MENU_CALLBACK,
     );
     $items[] = array('path' => 'admin/build/contact/delete',
-      'title' => t('delete contact'),
+      'title' => t('Delete contact'),
       'callback' => 'drupal_get_form',
       'callback arguments' => array('contact_admin_delete'),
       'access' => user_access('administer site configuration'),
       'type' => MENU_CALLBACK,
     );
     $items[] = array('path' => 'admin/build/contact/settings',
-      'title' => t('settings'),
+      'title' => t('Settings'),
       'callback' => 'drupal_get_form',
       'callback arguments' => array('contact_admin_settings'),
       'access' => user_access('administer site configuration'),
@@ -91,7 +91,7 @@ function contact_menu($may_cache) {
       'weight' => 2,
     );
     $items[] = array('path' => 'contact',
-      'title' => t('contact'),
+      'title' => t('Contact'),
       'callback' => 'contact_site_page',
       'access' => user_access('access site-wide contact form'),
       'type' => MENU_SUGGESTED_ITEM,
@@ -103,7 +103,7 @@ function contact_menu($may_cache) {
       $account = user_load(array('uid' => arg(1)));
       if (($user->uid != $account->uid && $account->contact) || user_access('administer users')) {
         $items[] = array('path' => 'user/'. arg(1) .'/contact',
-          'title' => t('contact'),
+          'title' => t('Contact'),
           'callback' => 'contact_user_page',
           'type' => MENU_LOCAL_TASK,
           'access' => $user->uid,
@@ -365,7 +365,7 @@ function contact_mail_user_submit($form_id, $form_values) {
   $account = user_load(array('uid' => arg(1), 'status' => 1));
   // Compose the body:
   $message[] = "$account->name,";
-  $message[] = t("!name (!name-url) has sent you a message via your contact form (!form-url) at !site.", array('!name' => $user->name, '!name-url' => url("user/$user->uid", NULL, NULL, TRUE), '!form-url' => url($_GET['q'], NULL, NULL, TRUE), '!site' => variable_get('site_name', 'drupal')));
+  $message[] = t("!name (!name-url) has sent you a message via your contact form (!form-url) at !site.", array('!name' => $user->name, '!name-url' => url("user/$user->uid", NULL, NULL, TRUE), '!form-url' => url($_GET['q'], NULL, NULL, TRUE), '!site' => variable_get('site_name', 'Drupal')));
   $message[] = t("If you don't want to receive such e-mails, you can change your settings at !url.", array('!url' => url("user/$account->uid", NULL, NULL, TRUE)));
   $message[] = t('Message:');
   $message[] = $form_values['message'];
@@ -380,7 +380,7 @@ function contact_mail_user_submit($form_id, $form_values) {
   $from = $user->mail;
 
   // Format the subject:
-  $subject = '['. variable_get('site_name', 'drupal') .'] '. $form_values['subject'];
+  $subject = '['. variable_get('site_name', 'Drupal') .'] '. $form_values['subject'];
 
   // Prepare the body:
   $body = implode("\n\n", $message);
