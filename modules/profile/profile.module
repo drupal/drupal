@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.175 2006/10/22 08:28:45 unconed Exp $
+// $Id: profile.module,v 1.176 2006/10/22 17:47:51 kjartan Exp $
 
 /**
  * @file
@@ -631,7 +631,7 @@ function profile_form_profile($edit, $user, $category) {
   if (arg(0) == 'user' && arg(1) == 'register') {
     $result = db_query('SELECT * FROM {profile_fields} WHERE visibility != %d AND register = 1 ORDER BY category, weight', PROFILE_HIDDEN);
   }
-  elseif (arg(0) == 'admin' && arg(1) == 'user' && arg(2) == 'create') {
+  elseif (arg(0) == 'admin' && arg(1) == 'user' && arg(2) == 'user' && arg(3) == 'create') {
     $result = db_query('SELECT * FROM {profile_fields} WHERE register = 1 ORDER BY category, weight');
   }
   elseif (user_access('administer users')) {
