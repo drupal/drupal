@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.710 2006/10/22 08:28:45 unconed Exp $
+// $Id: node.module,v 1.711 2006/10/22 17:33:07 dries Exp $
 
 /**
  * @file
@@ -2354,7 +2354,7 @@ function node_update_index() {
   variable_set('node_cron_comments_scale', 1.0 / max(1, db_result(db_query('SELECT MAX(comment_count) FROM {node_comment_statistics}'))));
   variable_set('node_cron_views_scale', 1.0 / max(1, db_result(db_query('SELECT MAX(totalcount) FROM {node_counter}'))));
 
-  $result = db_query_range('SELECT GREATEST(c.last_comment_timestamp, n.changed) as last_change, n.nid FROM {node} n LEFT JOIN {node_comment_statistics} c ON n.nid = c.nid WHERE n.status = 1 AND ((GREATEST(n.changed, c.last_comment_timestamp) = %d AND n.nid > %d) OR (n.changed > %d OR c.last_comment_timestamp > %d)) ORDER BY GREATEST(n.changed, c.last_comment_timestamp) ASC, n.nid ASC', $last, $last_nid, $last, $last, $last, 0, $limit);
+  $result = db_query_range('SELECT GREATEST(IF(c.last_comment_timestamp IS NULL, 0, c.last_comment_timestamp), n.changed) as last_change, n.nid FROM {node} n LEFT JOIN {node_comment_statistics} c ON n.nid = c.nid WHERE n.status = 1 AND ((GREATEST(n.changed, c.last_comment_timestamp) = %d AND n.nid > %d) OR (n.changed > %d OR c.last_comment_timestamp > %d)) ORDER BY GREATEST(n.changed, c.last_comment_timestamp) ASC, n.nid ASC', $last, $last_nid, $last, $last, $last, 0, $limit);
 
   while ($node = db_fetch_object($result)) {
     $last_change = $node->last_change;
