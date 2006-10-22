@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.91 2006/10/22 08:28:45 unconed Exp $
+// $Id: menu.module,v 1.92 2006/10/22 09:02:29 unconed Exp $
 
 /**
  * @file
@@ -614,12 +614,12 @@ function menu_overview_tree() {
   foreach ($root_menus as $mid => $title) {
     $operations = array();
     if ($menu['items'][$mid]['type'] & MENU_MODIFIABLE_BY_ADMIN) {
-      $operations[] = l(t('edit'), 'admin/build/menu/menu/edit/'. $mid);
+      $operations[] = l(t('Edit'), 'admin/build/menu/menu/edit/'. $mid);
     }
     if ($menu['items'][$mid]['type'] & MENU_CREATED_BY_ADMIN) {
-      $operations[] = l(t('delete'), 'admin/build/menu/menu/delete/'. $mid);
+      $operations[] = l(t('Delete'), 'admin/build/menu/menu/delete/'. $mid);
     }
-    $operations[] = l(t('add item'), 'admin/build/menu/item/add/'. $mid);
+    $operations[] = l(t('Add item'), 'admin/build/menu/item/add/'. $mid);
     $table = theme('item_list', $operations);
     $table .= theme('table', $header, menu_overview_tree_rows($mid));
     $output .= theme('box', check_plain($title), $table);

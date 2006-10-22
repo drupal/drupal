@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.137 2006/10/17 08:27:24 drumm Exp $
+// $Id: menu.inc,v 1.138 2006/10/22 08:59:14 unconed Exp $
 
 /**
  * @file
@@ -872,7 +872,7 @@ function menu_primary_links($start_level = 1, $pid = 0) {
   // Special case - provide link to admin/build/menu if primary links is empty.
   if (empty($links) && $start_level == 1 && $pid == variable_get('menu_primary_menu', 0) && user_access('administer menu')) {
     $links['1-1'] = array(
-      'title' => t('edit primary links'),
+      'title' => t('Edit primary links'),
       'href' => 'admin/build/menu'
     );
   }
