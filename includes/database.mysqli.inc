@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysqli.inc,v 1.25 2006/09/26 14:09:05 dries Exp $
+// $Id: database.mysqli.inc,v 1.26 2006/10/22 16:46:41 dries Exp $
 
 /**
  * @file
@@ -19,23 +19,32 @@
  * Report database status.
  */
 function db_status_report($phase) {
-  global $active_db;
-
   $t = get_t();
 
-  $info = mysqli_get_server_info($active_db);
+  $version = db_version();
+
   $form['mysql'] = array(
     'title' => $t('MySQL database'),
-    'value' => ($phase == 'runtime') ? l($info, 'admin/logs/status/sql') : $info,
+    'value' => ($phase == 'runtime') ? l($version, 'admin/logs/status/sql') : $version,
   );
 
-  // Extract version number
-  list($version) = explode('-', $info);
   if (version_compare($version, DRUPAL_MINIMUM_MYSQL) < 0) {
     $form['mysql']['severity'] = REQUIREMENT_ERROR;
     $form['mysql']['description'] = $t('Your MySQL Server is too old. Drupal requires at least MySQL %version.', array('%version' => DRUPAL_MINIMUM_MYSQL));
   }
+
   return $form;
+}
+
+/**
+ * Returns the version of the database server currently in use.
+ *
+ * @return Database server version
+ */
+function db_version() {
+  global $active_db;
+  list($version) = explode('-', mysqli_get_server_info($active_db));
+  return $version;
 }
 
 /**
