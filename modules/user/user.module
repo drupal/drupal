@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.695 2006/10/23 06:21:58 dries Exp $
+// $Id: user.module,v 1.696 2006/10/23 06:33:41 dries Exp $
 
 /**
  * @file
@@ -482,6 +482,7 @@ function user_login_block() {
   );
   $form['pass'] = array('#type' => 'password',
     '#title' => t('Password'),
+    '#maxlength' => 60,
     '#size' => 15,
     '#required' => TRUE,
   );
