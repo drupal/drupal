@@ -1754,6 +1754,69 @@ function drupal_cron_cleanup() {
 }
 
 /**
+ * Returns an array of files objects of the given type from the site-wide
+ * directory (i.e. modules/), the all-sites directory (i.e.
+ * sites/all/modules/), the profiles directory, and site-specific directory
+ * (i.e. sites/somesite/modules/). The returned array will be keyed using the
+ * key specified (name, basename, filename). Using name or basename will cause
+ * site-specific files to be prioritized over similar files in the default
+ * directories. That is, if a file with the same name appears in both the
+ * site-wide directory and site-specific directory, only the site-specific
+ * version will be included.
+ *
+ * @param $mask
+ *   The regular expression of the files to find.
+ * @param $directory
+ *   The subdirectory name in which the files are found. For example,
+ *   'modules' will search in both modules/ and
+ *   sites/somesite/modules/.
+ * @param $key
+ *   The key to be passed to file_scan_directory().
+ * @param $min_depth
+ *   Minimum depth of directories to return files from.
+ *
+ * @return
+ *   An array of file objects of the specified type.
+ */
+function drupal_system_listing($mask, $directory, $key = 'name', $min_depth = 1) {
+  global $profile;
+  $config = conf_path();
+
+  // When this function is called during Drupal's initial installation process,
+  // the name of the profile that's about to be installed is stored in the global
+  // $profile variable. At all other times, the standard Drupal systems variable
+  // table contains the name of the current profile, and we can call variable_get()
+  // to determine what one is active.
+  if (!isset($profile)) {
+    $profile = variable_get('install_profile', 'default');
+  }
+  $searchdir = array($directory);
+  $files = array();
+
+  // Always search sites/all/* as well as the global directories
+  $searchdir[] = 'sites/all';
+
+  // The 'profiles' directory contains pristine collections of modules and
+  // themes as organized by a distribution.  It is pristine in the same way
+  // that /modules is pristine for core; users should avoid changing anything
+  // there in favor of sites/all or sites/<domain> directories.
+  if (file_exists("profiles/$profile/$directory")) {
+    $searchdir[] = "profiles/$profile/$directory";
+  }
+
+  if (file_exists("$config/$directory")) {
+    $searchdir[] = "$config/$directory";
+  }
+
+  // Get current list of items
+  foreach ($searchdir as $dir) {
+    $files = array_merge($files, file_scan_directory($dir, $mask, array('.', '..', 'CVS'), 0, TRUE, $key, $min_depth));
+  }
+
+  return $files;
+}
+
+/**
  * Renders HTML given a structured array tree. Recursively iterates over each
  * of the array elements, generating HTML code. This function is usually
  * called from within a another function, like drupal_get_form() or node_view().

@@ -14,7 +14,7 @@ function phptemplate_init($template) {
 }
 
 function phptemplate_templates($directory = 'themes') {
-  return system_listing('^page\.tpl\.php$', $directory, 'filename');
+  return drupal_system_listing('^page\.tpl\.php$', $directory, 'filename');
 }
 
 /**
