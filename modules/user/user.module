@@ -423,7 +423,7 @@ function user_search($op = 'search', $keys = NULL) {
   switch ($op) {
     case 'name':
       if (user_access('access user profiles')) {
-        return t('users');
+        return t('Users');
       }
     case 'search':
       if (user_access('access user profiles')) {
