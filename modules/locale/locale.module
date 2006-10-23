@@ -319,9 +319,8 @@ function locale_admin_manage() {
 /**
  * User interface for the language deletion confirmation screen.
  */
-function locale_admin_manage_delete_form() {
+function locale_admin_manage_delete_form($langcode) {
   include_once './includes/locale.inc';
-  $langcode = arg(4);
 
   // Do not allow deletion of English locale.
   if ($langcode == 'en') {
