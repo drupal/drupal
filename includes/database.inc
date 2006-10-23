@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.59 2006/09/08 20:48:30 drumm Exp $
+// $Id: database.inc,v 1.60 2006/10/23 18:38:44 drumm Exp $
 
 /**
  * @file
@@ -261,9 +261,7 @@ function db_rewrite_sql($query, $primary_table = 'n', $primary_field = 'nid',  $
   list($join, $where, $distinct) = _db_rewrite_sql($query, $primary_table, $primary_field, $args);
 
   if ($distinct) {
-    $field_to_select = 'DISTINCT('. $primary_table .'.'. $primary_field .')';
-    // (?<!text) is a negative look-behind (no need to rewrite queries that already use DISTINCT).
-    $query = preg_replace('/(SELECT.*)('. $primary_table .'\.)?(?<!DISTINCT\()(?<!DISTINCT\('. $primary_table .'\.)'. $primary_field .'(.*FROM )/AUsi', '\1'. $field_to_select .'\3', $query);
+    $query = db_distinct_field($primary_table, $primary_field, $query);
   }
 
   if (!empty($where) || !empty($join)) {

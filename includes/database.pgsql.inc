@@ -1,5 +1,5 @@
 <?php
-// $Id: database.pgsql.inc,v 1.38 2006/10/22 16:46:41 dries Exp $
+// $Id: database.pgsql.inc,v 1.39 2006/10/23 18:38:45 drumm Exp $
 
 /**
  * @file
@@ -398,6 +398,25 @@ function db_check_setup() {
   if (!in_array(strtolower($encoding), array('unicode', 'utf8'))) {
     drupal_set_message($t('Your PostgreSQL database is set up with the wrong character encoding (%encoding). It is possible it will not work as expected. It is advised to recreate it with UTF-8/Unicode encoding. More information can be found in the <a href="@url">PostgreSQL documentation</a>.', array('%encoding' => $encoding, '@url' => 'http://www.postgresql.org/docs/7.4/interactive/multibyte.html')), 'status');
   }
+}
+
+/**
+ * Wraps the given table.field entry with a DISTINCT(). The wrapper is added to
+ * the SELECT list entry of the given query and the resulting query is returned.
+ * This function only applies the wrapper if a DISTINCT doesn't already exist in
+ * the query.
+ *
+ * @param $table Table containing the field to set as DISTINCT
+ * @param $field Field to set as DISTINCT
+ * @param $query Query to apply the wrapper to
+ * @return SQL query with the DISTINCT wrapper surrounding the given table.field.
+ */
+function db_distinct_field($table, $field, $query) {
+  $field_to_select = 'DISTINCT ON ('. $table .'.'. $field .") $table.$field";
+  // (?<!text) is a negative look-behind (no need to rewrite queries that already use DISTINCT).
+  $query = preg_replace('/(SELECT.*)('. $table .'\.)?(?<!DISTINCT\()(?<!DISTINCT\('. $table .'\.)'. $field .'(.*FROM )/AUsi', '\1'. $field_to_select .'\3', $query);
+  $query = preg_replace('/(ORDER BY )(?!'.$table.'\.'.$field.')/', '\1'."$table.$field, ", $query);
+  return $query;
 }
 
 /**
