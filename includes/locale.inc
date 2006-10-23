@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.94 2006/10/02 11:49:50 dries Exp $
+// $Id: locale.inc,v 1.95 2006/10/23 15:52:35 dries Exp $
 
 /**
  * @file
@@ -511,7 +511,6 @@ function _locale_import_po($file, $lang, $mode) {
  *   Should existing translations be replaced ('overwrite' or 'keep')
  * @param $lang
  *   Language code
- * @author Jacobo Tarrio
  */
 function _locale_import_read_po($op, $file, $mode = NULL, $lang = NULL) {
 
@@ -675,7 +674,6 @@ function _locale_import_message($message, $file, $lineno = NULL) {
  *   Should existing translations be replaced ('overwrite' or 'keep')
  * @param $lang
  *   Language to store the string in
- * @author Jacobo Tarrio
  */
 function _locale_import_one_string($op, $value = NULL, $mode = NULL, $lang = NULL) {
   static $additions = 0;
@@ -811,7 +809,6 @@ function _locale_import_one_string($op, $value = NULL, $mode = NULL, $lang = NUL
  *
  * @param $header A string containing the complete header
  * @return An associative array of key-value pairs
- * @author Jacobo Tarrio
  */
 function _locale_import_parse_header($header) {
   $hdr = array();
@@ -838,7 +835,6 @@ function _locale_import_parse_header($header) {
  * @return
  *   An array containing the number of plurals and a
  *   formula in PHP for computing the plural form
- * @author Jacobo Tarrio
  */
 function _locale_import_parse_plural_forms($pluralforms, $filename) {
   // First, delete all whitespace
@@ -880,7 +876,6 @@ function _locale_import_parse_plural_forms($pluralforms, $filename) {
  *
  * @param $string A string containing the arithmetic formula
  * @return The PHP version of the formula
- * @author Jacobo Tarrio
  */
 function _locale_import_parse_arithmetic($string) {
   // Operator precedence table
@@ -976,7 +971,6 @@ function _locale_import_parse_arithmetic($string) {
  *
  * @param $string A string containing the arithmetic formula
  * @return The PHP version of the formula
- * @author Gerhard Killesreiter
  */
 function _locale_import_tokenize_formula($formula) {
   $formula = str_replace(" ", "", $formula);
@@ -1252,8 +1246,6 @@ function _locale_export_print($str) {
 
 /**
  * Custom word wrapping for Portable Object (Template) files.
- *
- * @author Jacobo Tarrio
  */
 function _locale_export_wrap($str, $len) {
   $words = explode(' ', $str);
