@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.146 2006/10/22 08:28:45 unconed Exp $
+// $Id: filter.module,v 1.147 2006/10/23 22:43:23 unconed Exp $
 
 /**
  * @file
@@ -458,7 +458,7 @@ function filter_admin_format_form($format = NULL) {
 
     // Composition tips (guidelines)
     $tips = _filter_tips($format->format, FALSE);
-    $extra = l(t('More information about formatting options'), 'filter/tips');
+    $extra = '<p>'. l(t('More information about formatting options'), 'filter/tips') .'</p>';
     $tiplist = theme('filter_tips', $tips, FALSE, $extra);
     if (!$tiplist) {
       $tiplist = t('<p>No guidelines available.</p>');
@@ -968,7 +968,7 @@ function theme_filter_tips($tips, $long = FALSE, $extra = '') {
  */
 
 function theme_filter_tips_more_info() {
-  return l(t('More information about formatting options'), 'filter/tips');
+  return '<p>'. l(t('More information about formatting options'), 'filter/tips') .'</p>';
 }
 
 /**
