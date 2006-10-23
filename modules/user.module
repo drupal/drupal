@@ -562,6 +562,7 @@ function user_block($op = 'list', $delta = 0, $edit = array()) {
           );
           $form['pass'] = array('#type' => 'password',
             '#title' => t('Password'),
+            '#maxlength' => 60,
             '#size' => 15,
             '#required' => TRUE,
           );
