@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.138 2006/10/22 08:59:14 unconed Exp $
+// $Id: menu.inc,v 1.139 2006/10/23 17:57:31 dries Exp $
 
 /**
  * @file
@@ -432,13 +432,17 @@ function menu_set_active_item($path = NULL) {
   static $stored_mid;
 
   if (!isset($stored_mid) || isset($path)) {
-    $menu = menu_get_menu();
     if (!isset($path)) {
       $path = $_GET['q'];
     }
     else {
       $_GET['q'] = $path;
+
+      // If we change ?q= we need to rebuild the contextual menu items
+      // because they are often variable depending on the value of ?q=.
+      _menu_append_contextual_items();
     }
+    $menu = menu_get_menu();
 
     while ($path && !isset($menu['path index'][$path])) {
       $path = substr($path, 0, strrpos($path, '/'));
