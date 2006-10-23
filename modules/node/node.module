@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.713 2006/10/23 06:41:28 dries Exp $
+// $Id: node.module,v 1.714 2006/10/23 20:44:30 dries Exp $
 
 /**
  * @file
@@ -1124,28 +1124,28 @@ function node_menu($may_cache) {
     if (arg(0) == 'node' && is_numeric(arg(1))) {
       $node = node_load(arg(1));
       if ($node->nid) {
-        $items[] = array('path' => 'node/'. arg(1), 'title' => t('view'),
+        $items[] = array('path' => 'node/'. arg(1), 'title' => t('View'),
           'callback' => 'node_page_view',
           'callback arguments' => array($node),
           'access' => node_access('view', $node),
           'type' => MENU_CALLBACK);
-        $items[] = array('path' => 'node/'. arg(1) .'/view', 'title' => t('view'),
+        $items[] = array('path' => 'node/'. arg(1) .'/view', 'title' => t('View'),
           'type' => MENU_DEFAULT_LOCAL_TASK,
           'weight' => -10);
-        $items[] = array('path' => 'node/'. arg(1) .'/edit', 'title' => t('edit'),
+        $items[] = array('path' => 'node/'. arg(1) .'/edit', 'title' => t('Edit'),
           'callback' => 'node_page_edit',
           'callback arguments' => array($node),
           'access' => node_access('update', $node),
           'weight' => 1,
           'type' => MENU_LOCAL_TASK);
-        $items[] = array('path' => 'node/'. arg(1) .'/delete', 'title' => t('delete'),
+        $items[] = array('path' => 'node/'. arg(1) .'/delete', 'title' => t('Delete'),
           'callback' => 'drupal_get_form',
           'callback arguments' => array('node_delete_confirm'),
           'access' => node_access('delete', $node),
           'weight' => 1,
           'type' => MENU_CALLBACK);
         $revisions_access = ((user_access('view revisions') || user_access('administer nodes')) && node_access('view', $node) && db_result(db_query('SELECT COUNT(vid) FROM {node_revisions} WHERE nid = %d', arg(1))) > 1);
-        $items[] = array('path' => 'node/'. arg(1) .'/revisions', 'title' => t('revisions'),
+        $items[] = array('path' => 'node/'. arg(1) .'/revisions', 'title' => t('Revisions'),
           'callback' => 'node_revisions',
           'access' => $revisions_access,
           'weight' => 2,
@@ -1175,7 +1175,7 @@ function node_menu($may_cache) {
           );
           $items[] = array(
             'path' => 'admin/content/types/'. $type_url_str .'/delete',
-            'title' => t('delete'),
+            'title' => t('Delete'),
             'callback' => 'drupal_get_form',
             'callback arguments' => array('node_type_delete_confirm', $type),
             'type' => MENU_CALLBACK,
