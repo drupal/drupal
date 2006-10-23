@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.382 2006/10/23 06:45:17 dries Exp $
+// $Id: system.module,v 1.383 2006/10/23 20:59:56 dries Exp $
 
 /**
  * @file
@@ -200,6 +200,16 @@ function system_menu($may_cache) {
       'description' => t('Enable or disable add-on modules for your site.'),
       'callback' => 'drupal_get_form',
       'callback arguments' => array('system_modules'),
+      'access' => $access);
+    $items[] = array('path' => 'admin/build/modules/list',
+      'title' => t('List'),
+      'type' => MENU_DEFAULT_LOCAL_TASK,
+      'access' => $access);
+    $items[] = array('path' => 'admin/build/modules/uninstall',
+      'title' => t('Uninstall'),
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('system_modules_uninstall'),
+      'type' => MENU_LOCAL_TASK,
       'access' => $access);
 
     // Settings:
@@ -1508,6 +1518,179 @@ function theme_system_modules($form) {
 
   $output .= drupal_render($form);
   return $output;
+}
+
+/**
+ * Uninstall functions
+ */
+
+/**
+ * Builds a form of currently disabled modules.
+ *
+ * @param
+ *   $form_values Submitted form values.
+ * @return
+ *   A form array representing the currently disabled modules.
+ */
+function system_modules_uninstall($form_values = NULL) {
+  // Make sure the install API is available.
+  include_once './includes/install.inc';
+
+  // Display the confirm form if any modules have been submitted.
+  if ($confirm_form = system_modules_uninstall_confirm_form($form_values)) {
+    return $confirm_form;
+  }
+
+  $form = array();
+
+  // Pull all disabled modules from the system table.
+  $disabled_modules = db_query("SELECT name, filename FROM {system} WHERE type = 'module' AND status = 0 AND schema_version > %d ORDER BY name", SCHEMA_UNINSTALLED);
+  while ($module = db_fetch_object($disabled_modules)) {
+
+    // Grab the .info file and set name and description.
+    $info = _module_parse_info_file(dirname($module->filename) .'/'. $module->name .'.info');
+
+    // Load the .install file, and check for an uninstall hook.
+    // If the hook exists, the module can be uninstalled.
+    module_load_install($module->name);
+    if (module_hook($module->name, 'uninstall')) {
+      $form['modules'][$module->name]['name'] = array('#value' => $info['name'] ? $info['name'] : $module->name);
+      $form['modules'][$module->name]['description'] = array('#value' => t($info['description']));
+      $options[$module->name] = '';
+    }
+  }
+
+  // Only build the rest of the form if there are any modules available to uninstall.
+  if (count($options)) {
+    $form['uninstall'] = array(
+      '#type' => 'checkboxes',
+      '#options' => $options,
+    );
+    $form['buttons']['submit'] = array(
+      '#type' => 'button',
+      '#value' => t('Uninstall'),
+    );
+    $form['#multistep'] = TRUE;
+  }
+
+  return $form;
+}
+
+/**
+ * Confirm uninstall of selected modules.
+ *
+ * @param
+ *   $form_values Submitted form values.
+ * @return
+ *   A form array representing modules to confirm.
+ */
+function system_modules_uninstall_confirm_form($form_values) {
+  // Nothing to build.
+  if (!isset($form_values)) {
+    return;
+  }
+
+  // Construct the hidden form elements and list items.
+  foreach (array_filter($form_values['uninstall']) as $module => $value) {
+    $info = _module_parse_info_file(dirname(drupal_get_filename('module', $module)) .'/'. $module .'.info');
+    $uninstall[] = $info['name'];
+    $form['uninstall'][$module] = array('#type' => 'hidden',
+      '#value' => 1,
+    );
+  }
+
+  // Display a confirm form if modules have been selected.
+  if (isset($uninstall)) {
+    $form['uninstall']['#tree'] = TRUE;
+    $form['#multistep'] = TRUE;
+    $form['#validate'] = array('system_modules_uninstall_validate' => array());
+    $form['#submit'] = array('system_modules_uninstall_submit' => array());
+    $form['modules'] = array('#value' => t('<p>The following modules will be completely uninstalled from your site, and all data from these modules will be lost!</p>').theme('item_list', $uninstall));
+    $form = confirm_form(
+      $form,
+      t('Confirm uninstall'),
+      'admin/build/modules/uninstall',
+      t('Would you like to continue with uninstalling the above?'),
+      t('Uninstall'),
+      t('Cancel'));
+    return $form;
+  }
+}
+
+/**
+ * Themes a table of currently disabled modules.
+ *
+ * @param
+ *   $form The form array representing the currently disabled modules.
+ * @return
+ *   An HTML string representing the table.
+ */
+function theme_system_modules_uninstall($form) {
+  // No theming for the confirm form.
+  if (isset($form['confirm'])) {
+    return drupal_render($form);
+  }
+
+  // Table headers.
+  $header = array(t('Uninstall'),
+    t('Name'),
+    t('Description'),
+  );
+
+  // Display table.
+  $rows = array();
+  foreach (element_children($form['modules']) as $module) {
+    $rows[] = array(
+      array('data' => drupal_render($form['uninstall'][$module]), 'align' => 'center'),
+      '<strong>'. drupal_render($form['modules'][$module]['name']) .'</strong>',
+      array('data' => drupal_render($form['modules'][$module]['description']), 'class' => 'description'),
+    );
+  }
+
+  // Only display table if there are modules that can be uninstalled.
+  if (!count($rows)) {
+    $rows[] = array(array('data' => t('No modules are available to uninstall.'), 'colspan' => '3', 'align' => 'center', 'class' => 'message'));
+  }
+
+  $output  = theme('table', $header, $rows);
+  $output .= drupal_render($form);
+
+  return $output;
+}
+
+/**
+ * Validates the submitted uninstall form.
+ *
+ * @param
+ *   $form_id The form ID.
+ * @param
+ *   $form_values Submitted form values.
+ */
+function system_modules_uninstall_validate($form_id, $form_values) {
+  // Form submitted, but no modules selected.
+  if (!count(array_filter($form_values['uninstall']))) {
+    drupal_set_message(t('No modules selected.'), 'error');
+    drupal_goto('admin/build/modules/uninstall');
+  }
+}
+
+/**
+ * Processes the submitted uninstall form.
+ *
+ * @param
+ *   $form_id The form ID.
+ * @param
+ *   $form_values Submitted form values.
+ */
+function system_modules_uninstall_submit($form_id, $form_values) {
+  // Make sure the install API is available.
+  include_once './includes/install.inc';
+
+  // Call the uninstall routine for each selected module.
+  foreach (array_filter($form_values['uninstall']) as $module => $value) {
+    drupal_uninstall_module($module);
+  }
+  drupal_set_message(t('The selected modules have been uninstalled.'));
 }
 
 /**

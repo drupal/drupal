@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.697 2006/10/23 06:37:34 dries Exp $
+// $Id: user.module,v 1.698 2006/10/23 20:59:56 dries Exp $
 
 /**
  * @file
@@ -423,7 +423,7 @@ function user_search($op = 'search', $keys = NULL) {
   switch ($op) {
     case 'name':
       if (user_access('access user profiles')) {
-        return t('users');
+        return t('Users');
       }
     case 'search':
       if (user_access('access user profiles')) {
