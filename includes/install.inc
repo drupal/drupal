@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.23 2006/10/12 15:20:08 dries Exp $
+// $Id: install.inc,v 1.24 2006/10/23 06:45:17 dries Exp $
 
 define('SCHEMA_UNINSTALLED', -1);
 define('SCHEMA_INSTALLED', 0);
@@ -259,6 +259,7 @@ function drupal_get_install_files($module_list = array()) {
  */
 function drupal_verify_profile($profile, $locale) {
   include_once './includes/file.inc';
+  include_once './includes/common.inc';
 
   $profile_file = "./profiles/$profile/$profile.profile";
 
@@ -272,17 +273,22 @@ function drupal_verify_profile($profile, $locale) {
   $function = $profile .'_profile_modules';
   $module_list = array_merge(array('system'), $function(), ($locale ? array('locale') : array()));
 
-  // Verify that all required modules exist.
-  $modules_present = TRUE;
-  foreach ($module_list as $module) {
-    $module_path = dirname(drupal_get_filename('module', $module, NULL, FALSE));
-    if (!$module_path) {
-      drupal_set_message(st('The %module module is required but was not found. Please move it into the <em>modules</em> subdirectory.', array('%module' => $module)), 'error');
-      $modules_present = FALSE;
-    }
+  // Get a list of modules that exist in Drupal's assorted subdirectories.
+  $present_modules = array();
+  foreach(drupal_system_listing('\.module$', 'modules', 'name', 0) as $present_module) {
+    $present_modules[] = $present_module->name;
   }
 
-  return $modules_present ? $module_list : NULL;
+  // Verify that all of the profile's required modules are present.
+  $missing_modules = array_diff($module_list, $present_modules);
+  if (count($missing_modules)) {
+    foreach($missing_modules as $module) {
+      drupal_set_message(st('The %module module is required but was not found. Please move it into the <em>modules</em> subdirectory.', array('%module' => $module)), 'error');
+    }
+  }
+  else {
+    return $module_list;
+  }
 }
 
 /**

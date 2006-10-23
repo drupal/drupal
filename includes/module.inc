@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.87 2006/10/05 15:47:55 dries Exp $
+// $Id: module.inc,v 1.88 2006/10/23 06:45:17 dries Exp $
 
 /**
  * @file
@@ -95,7 +95,7 @@ function module_list($refresh = FALSE, $bootstrap = TRUE, $sort = FALSE, $fixed_
  */
 function module_rebuild_cache() {
   // Get current list of modules
-  $files = system_listing('\.module$', 'modules', 'name', 0);
+  $files = drupal_system_listing('\.module$', 'modules', 'name', 0);
 
   // Extract current files from database.
   system_get_files_database($files, 'module');

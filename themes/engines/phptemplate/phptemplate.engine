@@ -1,5 +1,5 @@
 <?php
-// $Id: phptemplate.engine,v 1.49 2006/10/22 08:28:47 unconed Exp $
+// $Id: phptemplate.engine,v 1.50 2006/10/23 06:45:17 dries Exp $
 
 /**
  * @file
@@ -14,7 +14,7 @@ function phptemplate_init($template) {
 }
 
 function phptemplate_templates($directory = 'themes') {
-  return system_listing('^page\.tpl\.php$', $directory, 'filename');
+  return drupal_system_listing('^page\.tpl\.php$', $directory, 'filename');
 }
 
 /**
