@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.712 2006/10/23 06:31:37 dries Exp $
+// $Id: node.module,v 1.713 2006/10/23 06:41:28 dries Exp $
 
 /**
  * @file
@@ -930,14 +930,23 @@ function theme_node_search_admin($form) {
  * Menu callback; presents general node configuration options.
  */
 function node_configure() {
+  // Only show rebuild button if there is 0 or more than 2 rows in node_access table, or if there are modules that implement node_grant.
+  if (db_result(db_query('SELECT COUNT(*) FROM {node_access}')) != 1 || count(module_implements('node_grant'))) {
+    $status = '<p>'. t('If the site is experiencing problems with permissions to content, you may have to rebuild the permissions cache. Possible causes for permission problems are disabling modules or configuration changes to permissions. Rebuilding will remove all privileges to posts, and replace them with permissions based on the current modules and settings.') .'</p>';
+    $status .= '<p>'. t('Rebuilding may take some time if there is a lot of a content or complex permission settings. After rebuilding has completed posts will automatically use the new permissions.'). '</p>';
 
-  $form['default_nodes_main'] = array(
+    $form['access'] = array('#type' => 'fieldset', '#title' => t('Node access status'));
+    $form['access']['status'] = array('#value' => $status);
+    $form['access']['rebuild'] = array('#type' => 'submit', '#value' => t('Rebuild permissions'));
+  }
+
+  $form['settings'] = array('#type' => 'fieldset', '#title' => t('Settings'));
+  $form['settings']['default_nodes_main'] = array(
     '#type' => 'select', '#title' => t('Number of posts on main page'), '#default_value' => variable_get('default_nodes_main', 10),
     '#options' =>  drupal_map_assoc(array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30)),
     '#description' => t('The default maximum number of posts to display per page on overview pages such as the main page.')
   );
-
-  $form['teaser_length'] = array(
+  $form['settings']['teaser_length'] = array(
     '#type' => 'select', '#title' => t('Length of trimmed posts'), '#default_value' => variable_get('teaser_length', 600),
     '#options' => array(0 => t('Unlimited'), 200 => t('200 characters'), 400 => t('400 characters'), 600 => t('600 characters'),
       800 => t('800 characters'), 1000 => t('1000 characters'), 1200 => t('1200 characters'), 1400 => t('1400 characters'),
@@ -945,12 +954,38 @@ function node_configure() {
     '#description' => t("The maximum number of characters used in the trimmed version of a post. Drupal will use this setting to determine at which offset long posts should be trimmed. The trimmed version of a post is typically used as a teaser when displaying the post on the main page, in XML feeds, etc. To disable teasers, set to 'Unlimited'. Note that this setting will only affect new or updated content and will not affect existing teasers.")
   );
 
-  $form['node_preview'] = array(
+  $form['settings']['node_preview'] = array(
     '#type' => 'radios', '#title' => t('Preview post'), '#default_value' => variable_get('node_preview', 0),
     '#options' => array(t('Optional'), t('Required')), '#description' => t('Must users preview posts before submitting?')
   );
 
   return system_settings_form($form);
+}
+
+/**
+ * Form validate callback.
+ */
+function node_configure_validate($form_id, $form_values) {
+  if ($form_values['op'] == t('Rebuild permissions')) {
+    drupal_goto('admin/content/node-settings/rebuild');
+  }
+}
+
+/**
+ * Menu callback: confirm rebuilding of permissions.
+ */
+function node_configure_rebuild_confirm() {
+  return confirm_form(array(), t('Are you sure you want to rebuild node permissions on the site?'),
+                  'admin/content/node-settings', t('This will wipe all current node permissions and rebuild them based on current settings. Rebuilding the permissions may take a while so please be patient. This action cannot be undone.'), t('Rebuild permissions'), t('Cancel'));
+}
+
+/**
+ * Handler for wipe confirmation
+ */
+function node_configure_rebuild_confirm_submit($form_id, &$form) {
+  node_access_rebuild();
+  drupal_set_message(t('The node access table has been rebuilt.'));
+  return 'admin/content/node-settings';
 }
 
 /**
@@ -1025,6 +1060,13 @@ function node_menu($may_cache) {
       'callback arguments' => array('node_configure'),
       'access' => user_access('administer nodes')
     );
+    $items[] = array(
+      'path' => 'admin/content/node-settings/rebuild',
+      'title' => t('rebuild permissions'),
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('node_configure_rebuild_confirm'),
+      'access' => user_access('administer nodes'),
+      'type' => MENU_CALLBACK);
 
     $items[] = array(
       'path' => 'admin/content/types',
@@ -1141,15 +1183,7 @@ function node_menu($may_cache) {
         }
       }
     }
-
-    // There is no need to rebuild node_access if there is only 1 record in the table (the default configuration).
-    if (db_result(db_query('SELECT COUNT(*) FROM {node_access}')) > 1) {
-      $items[] = array('path' => 'admin/settings/node-access', 'title' => t('node access'),
-        'callback' => 'node_access_rebuild',
-        'access' => user_access('administer nodes'));
-    }
   }
-
   return $items;
 }
 
@@ -2797,28 +2831,11 @@ function node_access_write_grants($node, $grants, $realm = NULL, $delete = TRUE)
   }
 }
 
-function node_access_rebuild() {
-  $form['markup'] = array(
-    '#prefix' => '<p>',
-    '#value' => t('Rebuilding the node_access table is necessary immediately after uninstalling a module that utilizes the node_access system. Each node will have its access control recalculated. This may take a while if your site has many nodes.'),
-    '#suffix' => '</p>',
-  );
-  $form['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Rebuild node access'),
-  );
-  return $form;
-}
-
 /**
- * rebuild the node access database
+ * Rebuild the node access database. This is occasionally needed by modules
+ * that make system-wide changes to access levels.
  */
-function node_access_rebuild_submit() {
-  _node_access_rebuild();
-  drupal_set_message(t('The node access table has been rebuilt.'));
-}
-
-function _node_access_rebuild() {
+function node_access_rebuild() {
   db_query("DELETE FROM {node_access}");
   // only recalculate if site is using a node_access module
   if (count(module_implements('node_grants'))) {
