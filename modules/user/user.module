@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.694 2006/10/22 08:28:46 unconed Exp $
+// $Id: user.module,v 1.695 2006/10/23 06:21:58 dries Exp $
 
 /**
  * @file
@@ -375,10 +375,9 @@ function user_access($string, $account = NULL) {
  * @return boolean TRUE for blocked users, FALSE for active
  */
 function user_is_blocked($name) {
-  $allow = db_fetch_object(db_query("SELECT * FROM {users} WHERE status = 1 AND name = LOWER('%s')", $name));
-  $deny  = db_fetch_object(db_query("SELECT * FROM {users} WHERE status = 0 AND name = LOWER('%s')", $name));
+  $deny  = db_fetch_object(db_query("SELECT name FROM {users} WHERE status = 0 AND name = LOWER('%s')", $name));
 
-  return $deny && !$allow;
+  return $deny;
 }
 
 function user_fields() {
