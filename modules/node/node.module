@@ -2180,7 +2180,7 @@ function node_delete_confirm_submit($form_id, $form_values) {
     node_delete($form_values['nid']);
   }
 
-  return '';
+  return '<front>';
 }
 
 /**
