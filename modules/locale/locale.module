@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.147 2006/10/22 08:28:45 unconed Exp $
+// $Id: locale.module,v 1.148 2006/10/23 21:04:12 dries Exp $
 
 /**
  * @file
@@ -319,9 +319,8 @@ function locale_admin_manage() {
 /**
  * User interface for the language deletion confirmation screen.
  */
-function locale_admin_manage_delete_form() {
+function locale_admin_manage_delete_form($langcode) {
   include_once './includes/locale.inc';
-  $langcode = arg(4);
 
   // Do not allow deletion of English locale.
   if ($langcode == 'en') {
