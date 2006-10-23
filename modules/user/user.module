@@ -375,10 +375,9 @@ function user_access($string, $account = NULL) {
  * @return boolean TRUE for blocked users, FALSE for active
  */
 function user_is_blocked($name) {
-  $allow = db_fetch_object(db_query("SELECT * FROM {users} WHERE status = 1 AND name = LOWER('%s')", $name));
-  $deny  = db_fetch_object(db_query("SELECT * FROM {users} WHERE status = 0 AND name = LOWER('%s')", $name));
+  $deny  = db_fetch_object(db_query("SELECT name FROM {users} WHERE status = 0 AND name = LOWER('%s')", $name));
 
-  return $deny && !$allow;
+  return $deny;
 }
 
 function user_fields() {
