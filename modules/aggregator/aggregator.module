@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.311 2006/10/22 08:28:44 unconed Exp $
+// $Id: aggregator.module,v 1.312 2006/10/23 20:25:03 dries Exp $
 
 /**
  * @file
@@ -957,7 +957,7 @@ function aggregator_parse_feed(&$data, $feed) {
 
 function aggregator_save_item($edit) {
   if ($edit['iid'] && $edit['title']) {
-    db_query("UPDATE {aggregator_item} SET title = '%s', link = '%s', author = '%s', description = '%s', guid = '%s' WHERE iid = %d", $edit['title'], $edit['link'], $edit['author'], $edit['description'], $edit['iid'], $edit['gid']);
+    db_query("UPDATE {aggregator_item} SET title = '%s', link = '%s', author = '%s', description = '%s', guid = '%s', timestamp = %d WHERE iid = %d", $edit['title'], $edit['link'], $edit['author'], $edit['description'], $edit['iid'], $edit['timestamp'], $edit['gid']);
   }
   else if ($edit['iid']) {
     db_query('DELETE FROM {aggregator_item} WHERE iid = %d', $edit['iid']);
