@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.714 2006/10/23 20:44:30 dries Exp $
+// $Id: node.module,v 1.715 2006/10/23 20:45:08 dries Exp $
 
 /**
  * @file
@@ -764,7 +764,7 @@ function node_perm() {
 function node_search($op = 'search', $keys = NULL) {
   switch ($op) {
     case 'name':
-      return t('content');
+      return t('Content');
 
     case 'reset':
       variable_del('node_cron_last');
@@ -1041,11 +1041,11 @@ function node_menu($may_cache) {
       'access' => user_access('administer nodes')
     );
 
-    $items[] = array('path' => 'admin/content/node/overview', 'title' => t('list'),
+    $items[] = array('path' => 'admin/content/node/overview', 'title' => t('List'),
       'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
 
     if (module_exists('search')) {
-      $items[] = array('path' => 'admin/content/search', 'title' => t('search posts'),
+      $items[] = array('path' => 'admin/content/search', 'title' => t('Search posts'),
         'description' => t('Search posts by keyword.'),
         'callback' => 'node_admin_search',
         'access' => user_access('administer nodes'),
