@@ -1,4 +1,4 @@
-/* $Id: system.css,v 1.13 2006/10/17 12:46:07 dries Exp $ */
+/* $Id: system.css,v 1.14 2006/10/24 19:36:52 unconed Exp $ */
 
 /*
 ** HTML elements
@@ -217,6 +217,7 @@ ul.secondary a.active {
   position: absolute;
   border: 1px solid;
   overflow: hidden;
+  z-index: 100;
 }
 #autocomplete ul {
   margin: 0;
