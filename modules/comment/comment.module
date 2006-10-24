@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.493 2006/10/22 08:28:44 unconed Exp $
+// $Id: comment.module,v 1.494 2006/10/24 20:31:25 dries Exp $
 
 /**
  * @file
@@ -1019,7 +1019,7 @@ function comment_operations($action = NULL) {
 function comment_admin($type = 'new') {
   $edit = $_POST;
 
-  if ($edit['operation'] == 'delete') {
+  if ($edit['operation'] == 'delete' && $edit['comments']) {
     return drupal_get_form('comment_multiple_delete_confirm');
   }
   else {
