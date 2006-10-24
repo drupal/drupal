@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.383 2006/10/23 20:59:56 dries Exp $
+// $Id: system.module,v 1.384 2006/10/24 15:56:22 dries Exp $
 
 /**
  * @file
@@ -45,11 +45,10 @@ function system_help($section) {
       $theme = array_pop($reference);
       return t('<p>These options control the display settings for the <code>%template</code> theme. When your site is displayed using this theme, these settings will be used. By clicking "Reset to defaults," you can choose to use the <a href="@global">global settings</a> for this theme.</p>', array('%template' => $theme, '@global' => url('admin/build/themes/settings')));
     case 'admin/build/modules':
-      if (empty($_POST) || $_POST['op'] != t('Save configuration')) {
-        return t('<p>Modules are plugins for Drupal that extend its core functionality. Here you can select which modules are enabled. Click on the name of the module in the navigation menu for their individual configuration pages. Once a module is enabled, new <a href="@permissions">permissions</a> might be made available. Modules can automatically be temporarily disabled to reduce server load when your site becomes extremely busy by enabling the throttle.module and checking throttle. The auto-throttle functionality must be enabled on the <a href="@throttle">throttle configuration page</a> after having enabled the throttle module.</p>
+      return t('<p>Modules are plugins for Drupal that extend its core functionality. Here you can select which modules are enabled. Click on the name of the module in the navigation menu for their individual configuration pages. Once a module is enabled, new <a href="@permissions">permissions</a> might be made available. Modules can automatically be temporarily disabled to reduce server load when your site becomes extremely busy by enabling the throttle.module and checking throttle. The auto-throttle functionality must be enabled on the <a href="@throttle">throttle configuration page</a> after having enabled the throttle module.</p>
 <p>It is important that <a href="@update-php">update.php</a> is run every time a module is updated to a newer version.</p><p>You can find all administration tasks belonging to a particular module on the <a href="@by-module">administration by module page</a>.', array('@permissions' => url('admin/user/access'), '@throttle' => url('admin/settings/throttle'), '@update-php' => $base_url .'/update.php', '@by-module' => url('admin/by-module')));
-      }
-      break;
+    case 'admin/build/modules/uninstall':
+      return (t('<p>The uninstall process removes all data related to a module. To uninstall a module, you must first disable it. Not all modules support this feature.</p>'));
     case 'admin/logs/status':
       return t('<p>Here you can find a short overview of your Drupal site\'s parameters as well as any problems detected with your installation. It is useful to copy/paste this information when you need support.</p>');
   }
@@ -205,11 +204,23 @@ function system_menu($may_cache) {
       'title' => t('List'),
       'type' => MENU_DEFAULT_LOCAL_TASK,
       'access' => $access);
+    $items[] = array('path' => 'admin/build/modules/list/confirm',
+      'title' => t('List'),
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('system_modules'),
+      'type' => MENU_CALLBACK,
+      'access' => $access);
     $items[] = array('path' => 'admin/build/modules/uninstall',
       'title' => t('Uninstall'),
       'callback' => 'drupal_get_form',
       'callback arguments' => array('system_modules_uninstall'),
       'type' => MENU_LOCAL_TASK,
+      'access' => $access);
+    $items[] = array('path' => 'admin/build/modules/uninstall/confirm',
+      'title' => t('Uninstall'),
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('system_modules_uninstall'),
+      'type' => MENU_CALLBACK,
       'access' => $access);
 
     // Settings:
@@ -1326,6 +1337,7 @@ function system_modules($form_values = NULL) {
     '#value' => t('Save configuration'),
   );
   $form['#multistep'] = TRUE;
+  $form['#action'] = url('admin/build/modules/list/confirm');
 
   return $form;
 }
@@ -1571,6 +1583,7 @@ function system_modules_uninstall($form_values = NULL) {
       '#value' => t('Uninstall'),
     );
     $form['#multistep'] = TRUE;
+    $form['#action'] = url('admin/build/modules/uninstall/confirm');
   }
 
   return $form;
@@ -1603,9 +1616,7 @@ function system_modules_uninstall_confirm_form($form_values) {
   if (isset($uninstall)) {
     $form['uninstall']['#tree'] = TRUE;
     $form['#multistep'] = TRUE;
-    $form['#validate'] = array('system_modules_uninstall_validate' => array());
-    $form['#submit'] = array('system_modules_uninstall_submit' => array());
-    $form['modules'] = array('#value' => t('<p>The following modules will be completely uninstalled from your site, and all data from these modules will be lost!</p>').theme('item_list', $uninstall));
+    $form['modules'] = array('#value' => '<p>'. t('The following modules will be completely uninstalled from your site, and <em>all data from these modules will be lost</em>!') .'</p>'. theme('item_list', $uninstall));
     $form = confirm_form(
       $form,
       t('Confirm uninstall'),
@@ -1691,6 +1702,7 @@ function system_modules_uninstall_submit($form_id, $form_values) {
     drupal_uninstall_module($module);
   }
   drupal_set_message(t('The selected modules have been uninstalled.'));
+  drupal_goto('admin/build/modules/uninstall');
 }
 
 /**
