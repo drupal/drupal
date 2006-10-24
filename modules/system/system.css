@@ -217,6 +217,7 @@ ul.secondary a.active {
   position: absolute;
   border: 1px solid;
   overflow: hidden;
+  z-index: 100;
 }
 #autocomplete ul {
   margin: 0;
