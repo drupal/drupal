@@ -1,5 +1,5 @@
 <?php
-// $Id: session.inc,v 1.33 2006/10/24 15:31:35 dries Exp $
+// $Id: session.inc,v 1.34 2006/10/25 09:52:53 kjartan Exp $
 
 /**
  * @file
@@ -84,7 +84,6 @@ function sess_write($key, $value) {
  */
 function sess_regenerate() {
   $old_session_id = session_id();
-  session_regenerate_id();
 
   // We code around http://bugs.php.net/bug.php?id=32802 by destroying
   // the session cookie by setting expiration in the past (a negative
@@ -94,6 +93,8 @@ function sess_regenerate() {
   if (isset($_COOKIE[session_name()])) {
     setcookie(session_name(), '', time() - 42000, '/');
   }
+
+  session_regenerate_id();
 
   db_query("UPDATE {sessions} SET sid = '%s' WHERE sid = '%s'", session_id(), $old_session_id);
 }
