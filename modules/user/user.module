@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.698 2006/10/23 20:59:56 dries Exp $
+// $Id: user.module,v 1.699 2006/10/25 16:41:35 dries Exp $
 
 /**
  * @file
@@ -689,13 +689,17 @@ function user_menu($may_cache) {
   $view_access = user_access('access user profiles');
 
   if ($may_cache) {
-    $items[] = array('path' => 'user', 'title' => t('User account'),
-      'callback' => 'drupal_get_form', 'callback arguments' => array('user_login'), 'access' => TRUE, 'type' => MENU_CALLBACK);
+    $items[] = array('path' => 'user', 'title' => t('user account'),
+      'callback' => 'drupal_get_form', 'callback arguments' => array('user_login'),
+      'access' => !$user->uid, 'type' => MENU_CALLBACK);
 
     $items[] = array('path' => 'user/autocomplete', 'title' => t('User autocomplete'),
       'callback' => 'user_autocomplete', 'access' => $view_access, 'type' => MENU_CALLBACK);
 
     // Registration and login pages.
+    $items[] = array('path' => 'user/login', 'title' => t('log in'),
+      'callback' => 'drupal_get_form', 'callback arguments' => array('user_login'),
+      'access' => !$user->uid, 'type' => MENU_DEFAULT_LOCAL_TASK);
     $items[] = array('path' => 'user/login', 'title' => t('Log in'),
       'callback' => 'drupal_get_form', 'callback arguments' => array('user_login'), 'access' => TRUE, 'type' => MENU_DEFAULT_LOCAL_TASK);
     $items[] = array('path' => 'user/register', 'title' => t('Create new account'),
@@ -779,6 +783,12 @@ function user_menu($may_cache) {
     // Add the CSS for this module. We put this in !$may_cache so it is only
     // added once per request.
     drupal_add_css(drupal_get_path('module', 'user') .'/user.css', 'core');
+    if ($_GET['q'] == 'user' && $user->uid) {
+      // We want to make the current user's profile accessible without knowing
+      // their uid, so just linking to /user is enough. To achieve this goal,
+      // we do an internal redirect.
+      menu_set_active_item('user/'. $user->uid);
+    }
 
     if (arg(0) == 'user' && is_numeric(arg(1)) && arg(1) > 0) {
       $account = user_load(array('uid' => arg(1)));
