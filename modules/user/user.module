@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.699 2006/10/25 16:41:35 dries Exp $
+// $Id: user.module,v 1.700 2006/10/25 17:53:30 dries Exp $
 
 /**
  * @file
@@ -1639,7 +1639,7 @@ function user_admin_access_add($mask = NULL, $type = NULL) {
  * Menu callback: delete an access rule
  */
 function user_admin_access_delete_confirm($aid = 0) {
-  $access_types = array('user' => t('username'), 'mail' => t('e-mail'));
+  $access_types = array('user' => t('username'), 'mail' => t('e-mail'), 'host' => t('host'));
   $edit = db_fetch_object(db_query('SELECT aid, type, status, mask FROM {access} WHERE aid = %d', $aid));
 
   $form = array();
