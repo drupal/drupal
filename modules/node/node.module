@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.715 2006/10/23 20:45:08 dries Exp $
+// $Id: node.module,v 1.716 2006/10/25 16:44:07 dries Exp $
 
 /**
  * @file
@@ -748,7 +748,7 @@ function node_perm() {
 
   foreach (node_get_types() as $type) {
     if ($type->module == 'node') {
-      $name = check_plain($type->name);
+      $name = check_plain($type->type);
       $perms[] = 'create '. $name .' content';
       $perms[] = 'edit own '. $name .' content';
       $perms[] = 'edit '. $name .' content';
