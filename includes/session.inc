@@ -84,7 +84,6 @@ function sess_write($key, $value) {
  */
 function sess_regenerate() {
   $old_session_id = session_id();
-  session_regenerate_id();
 
   // We code around http://bugs.php.net/bug.php?id=32802 by destroying
   // the session cookie by setting expiration in the past (a negative
@@ -94,6 +93,8 @@ function sess_regenerate() {
   if (isset($_COOKIE[session_name()])) {
     setcookie(session_name(), '', time() - 42000, '/');
   }
+
+  session_regenerate_id();
 
   db_query("UPDATE {sessions} SET sid = '%s' WHERE sid = '%s'", session_id(), $old_session_id);
 }
