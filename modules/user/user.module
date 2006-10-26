@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.700 2006/10/25 17:53:30 dries Exp $
+// $Id: user.module,v 1.701 2006/10/26 04:16:34 dries Exp $
 
 /**
  * @file
@@ -700,8 +700,6 @@ function user_menu($may_cache) {
     $items[] = array('path' => 'user/login', 'title' => t('log in'),
       'callback' => 'drupal_get_form', 'callback arguments' => array('user_login'),
       'access' => !$user->uid, 'type' => MENU_DEFAULT_LOCAL_TASK);
-    $items[] = array('path' => 'user/login', 'title' => t('Log in'),
-      'callback' => 'drupal_get_form', 'callback arguments' => array('user_login'), 'access' => TRUE, 'type' => MENU_DEFAULT_LOCAL_TASK);
     $items[] = array('path' => 'user/register', 'title' => t('Create new account'),
       'callback' => 'drupal_get_form', 'callback arguments' => array('user_register'), 'access' => !$user->uid && variable_get('user_register', 1), 'type' => MENU_LOCAL_TASK);
     $items[] = array('path' => 'user/password', 'title' => t('Request new password'),
