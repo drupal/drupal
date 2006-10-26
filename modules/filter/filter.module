@@ -842,10 +842,7 @@ function filter_form($value = FILTER_FORMAT_DEFAULT, $weight = NULL, $parents = 
       '#value' => theme('filter_tips', $tips, FALSE, $extra),
     );
   }
-  $form[] = array(
-    '#type' => 'markup',
-    '#value' => $extra,
-  );
+  $form[] = array('#value' => $extra);
   return $form;
 }
 
