@@ -2255,7 +2255,7 @@ function theme_system_admin_by_module($menu_items) {
       if ($block_output = theme('admin_block', $block)) {
         if (!$block['position']) {
           // Perform automatic striping.
-          $block['position'] = $stripe++ % 2 ? 'left' : 'right';
+          $block['position'] = ++$stripe % 2 ? 'left' : 'right';
         }
         $container[$block['position']] .= $block_output;
       }
