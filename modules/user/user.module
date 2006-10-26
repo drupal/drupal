@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.701 2006/10/26 04:16:34 dries Exp $
+// $Id: user.module,v 1.702 2006/10/26 05:31:14 dries Exp $
 
 /**
  * @file
@@ -1156,12 +1156,12 @@ function user_register() {
 
   // Display the registration form.
   if (!$admin) {
-    $form['user_registration_help'] = array('#type' => 'markup', '#value' => filter_xss_admin(variable_get('user_registration_help', '')));
+    $form['user_registration_help'] = array('#value' => filter_xss_admin(variable_get('user_registration_help', '')));
   }
   $affiliates = user_auth_help_links();
   if (!$admin && count($affiliates) > 0) {
     $affiliates = implode(', ', $affiliates);
-    $form['affiliates'] = array('#type' => 'markup', '#value' => '<p>'. t('Note: if you have an account with one of our affiliates (!s), you may <a href="@login_uri">login now</a> instead of registering.', array('!s' => $affiliates, '@login_uri' => url('user'))) .'</p>');
+    $form['affiliates'] = array('#value' => '<p>'. t('Note: if you have an account with one of our affiliates (!s), you may <a href="@login_uri">login now</a> instead of registering.', array('!s' => $affiliates, '@login_uri' => url('user'))) .'</p>');
   }
   // Merge in the default user edit fields.
   $form = array_merge($form, user_edit_form(NULL, NULL, TRUE));
@@ -1327,7 +1327,7 @@ function user_edit_form($uid, $edit, $register = FALSE) {
     $form['picture'] = array('#type' => 'fieldset', '#title' => t('Picture'), '#weight' => 1);
     $picture = theme('user_picture', (object)$edit);
     if ($picture) {
-      $form['picture']['current_picture'] = array('#type' => 'markup', '#value' => $picture);
+      $form['picture']['current_picture'] = array('#value' => $picture);
       $form['picture']['picture_delete'] = array('#type' => 'checkbox', '#title' => t('Delete picture'), '#description' => t('Check this box to delete your current picture.'));
     } else {
       $form['picture']['picture_delete'] = array('#type' => 'hidden');
@@ -1784,11 +1784,11 @@ function user_admin_perm($rid = NULL) {
   $options = array();
   foreach (module_list(FALSE, FALSE, TRUE) as $module) {
     if ($permissions = module_invoke($module, 'perm')) {
-      $form['permission'][] = array('#type' => 'markup', '#value' => t('@module module', array('@module' => $module)));
+      $form['permission'][] = array('#value' => t('@module module', array('@module' => $module)));
       asort($permissions);
       foreach ($permissions as $perm) {
         $options[$perm] = '';
-        $form['permission'][$perm] = array('#type' => 'markup', '#value' => t($perm));
+        $form['permission'][$perm] = array('#value' => t($perm));
         foreach ($role_names as $rid => $name) {
           // Builds arrays for checked boxes for each role
           if (strstr($role_permissions[$rid], $perm)) {
@@ -1802,7 +1802,7 @@ function user_admin_perm($rid = NULL) {
   // Have to build checkboxes here after checkbox arrays are built
   foreach ($role_names as $rid => $name) {
     $form['checkboxes'][$rid] = array('#type' => 'checkboxes', '#options' => $options, '#default_value' => $status[$rid]);
-    $form['role_names'][$rid] = array('#type' => 'markup', '#value' => $name, '#tree' => TRUE);
+    $form['role_names'][$rid] = array('#value' => $name, '#tree' => TRUE);
   }
   $form['submit'] = array('#type' => 'submit', '#value' => t('Save permissions'));
 

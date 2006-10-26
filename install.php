@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.21 2006/10/08 06:25:19 dries Exp $
+// $Id: install.php,v 1.22 2006/10/26 05:31:13 dries Exp $
 
 require_once './includes/install.inc';
 
@@ -168,7 +168,6 @@ function install_settings_form($profile, $install_locale, $settings_file, $db_ur
   $db_types = drupal_detect_database_types();
   if (count($db_types) == 0) {
     $form['no_db_types'] = array(
-      '#type' => 'markup',
       '#value' => st('Your web server does not appear to support any common database types. Check with your hosting provider to see if they offer any databases that <a href="@drupal-databases">Drupal supports</a>.', array('@drupal-databases' => 'http://drupal.org/node/270#database')),
     );
   }

@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.135 2006/10/22 08:28:46 unconed Exp $
+// $Id: upload.module,v 1.136 2006/10/26 05:31:14 dries Exp $
 
 /**
  * @file
@@ -768,7 +768,7 @@ function _upload_form($node) {
       $description = "<small>". check_plain($description) ."</small>";
       $form['files'][$key]['description'] = array('#type' => 'textfield', '#default_value' => (strlen($file->description)) ? $file->description : $file->filename, '#maxlength' => 256, '#description' => $description );
 
-      $form['files'][$key]['size'] = array('#type' => 'markup', '#value' => format_size($file->filesize));
+      $form['files'][$key]['size'] = array('#value' => format_size($file->filesize));
       $form['files'][$key]['remove'] = array('#type' => 'checkbox', '#default_value' => $file->remove);
       $form['files'][$key]['list'] = array('#type' => 'checkbox',  '#default_value' => $file->list);
       // if the file was uploaded this page request, set value. this fixes the problem

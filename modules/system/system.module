@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.384 2006/10/24 15:56:22 dries Exp $
+// $Id: system.module,v 1.385 2006/10/26 05:31:14 dries Exp $
 
 /**
  * @file
@@ -498,7 +498,7 @@ function system_theme_select_form($description = '', $default_value = '', $weigh
         $info->screenshot = dirname($info->filename) . '/screenshot.png';
         $screenshot = file_exists($info->screenshot) ? theme('image', $info->screenshot, t('Screenshot for %theme theme', array('%theme' => $info->name)), '', array('class' => 'screenshot'), FALSE) : t('no screenshot');
 
-        $form['themes'][$info->key]['screenshot'] = array('#type' => 'markup', '#value' => $screenshot);
+        $form['themes'][$info->key]['screenshot'] = array('#value' => $screenshot);
         $form['themes'][$info->key]['description'] = array('#type' => 'item', '#title' => $info->name,  '#value' => dirname($info->filename) . ($info->name == variable_get('theme_default', 'bluemarine') ? t('<br /> <em>(site default theme)</em>') : ''));
         $options[$info->key] = '';
       }
@@ -1122,14 +1122,14 @@ function system_themes() {
     $info->screenshot = dirname($info->filename) . '/screenshot.png';
     $screenshot = file_exists($info->screenshot) ? theme('image', $info->screenshot, t('Screenshot for %theme theme', array('%theme' => $info->name)), '', array('class' => 'screenshot'), FALSE) : t('no screenshot');
 
-    $form[$info->name]['screenshot'] = array('#type' => 'markup', '#value' => $screenshot);
+    $form[$info->name]['screenshot'] = array('#value' => $screenshot);
     $form[$info->name]['description'] = array('#type' => 'item', '#title' => $info->name,  '#value' => dirname($info->filename));
     $options[$info->name] = '';
     if ($info->status) {
       $status[] = $info->name;
     }
     if ($info->status && (function_exists($info->prefix . '_settings') || function_exists($info->prefix . '_features'))) {
-      $form[$info->name]['operations'] = array('#type' => 'markup', '#value' => l(t('configure'), 'admin/build/themes/settings/' . $info->name) );
+      $form[$info->name]['operations'] = array('#value' => l(t('configure'), 'admin/build/themes/settings/' . $info->name) );
     }
     else {
       // Dummy element for drupal_render. Cleaner than adding a check in the theme function.
