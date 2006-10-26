@@ -708,7 +708,7 @@ function system_install() {
         list smallint_unsigned NOT NULL default 0,
         PRIMARY KEY (fid, vid)
       )");
-      db_query("CREATE INDEX file_revisions_vid_idx ON file_revisions(vid)");
+      db_query("CREATE INDEX {file_revisions}_vid_idx ON {file_revisions} (vid)");
 
       db_query("CREATE TABLE {filter_formats} (
         format serial,
@@ -3349,7 +3349,7 @@ function system_update_1012() {
       $ret[] = update_sql("ALTER TABLE {file_revisions} ADD INDEX(vid)");
       break;
     case 'pgsql':
-      $ret[] = update_sql('CREATE INDEX {file_revisions}_vid_idx ON {file_revisions}(vid)');
+      $ret[] = update_sql('CREATE INDEX {file_revisions}_vid_idx ON {file_revisions} (vid)');
       break;
   }
   return $ret;
