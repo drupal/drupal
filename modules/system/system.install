@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.34 2006/10/22 08:28:46 unconed Exp $
+// $Id: system.install,v 1.35 2006/10/26 23:32:43 dries Exp $
 
 define('DRUPAL_MINIMUM_PHP',    '4.3.3');
 define('DRUPAL_MINIMUM_MYSQL',  '3.23.17'); // If using MySQL
@@ -708,7 +708,7 @@ function system_install() {
         list smallint_unsigned NOT NULL default 0,
         PRIMARY KEY (fid, vid)
       )");
-      db_query("CREATE INDEX file_revisions_vid_idx ON file_revisions(vid)");
+      db_query("CREATE INDEX {file_revisions}_vid_idx ON {file_revisions} (vid)");
 
       db_query("CREATE TABLE {filter_formats} (
         format serial,
@@ -3349,7 +3349,7 @@ function system_update_1012() {
       $ret[] = update_sql("ALTER TABLE {file_revisions} ADD INDEX(vid)");
       break;
     case 'pgsql':
-      $ret[] = update_sql('CREATE INDEX {file_revisions}_vid_idx ON {file_revisions}(vid)');
+      $ret[] = update_sql('CREATE INDEX {file_revisions}_vid_idx ON {file_revisions} (vid)');
       break;
   }
   return $ret;
