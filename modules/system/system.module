@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.385 2006/10/26 05:31:14 dries Exp $
+// $Id: system.module,v 1.386 2006/10/26 22:07:03 unconed Exp $
 
 /**
  * @file
@@ -2255,7 +2255,7 @@ function theme_system_admin_by_module($menu_items) {
       if ($block_output = theme('admin_block', $block)) {
         if (!$block['position']) {
           // Perform automatic striping.
-          $block['position'] = $stripe++ % 2 ? 'left' : 'right';
+          $block['position'] = ++$stripe % 2 ? 'left' : 'right';
         }
         $container[$block['position']] .= $block_output;
       }
