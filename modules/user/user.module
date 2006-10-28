@@ -248,7 +248,8 @@ function user_validate_name($name) {
                    '\x{205F}-\x{206F}'.      // Various text hinting characters
                    '\x{FEFF}'.               // Byte order mark
                    '\x{FF01}-\x{FF60}'.      // Full-width latin
-                   '\x{FFF9}-\x{FFFD}]/u',   // Replacement characters
+                   '\x{FFF9}-\x{FFFD}'.      // Replacement characters
+                   '\x{0}]/u',               // NULL byte
                    $name)) {
     return t('The username contains an illegal character.');
   }
