@@ -1,4 +1,4 @@
-// $Id: farbtastic.js,v 1.1 2006/10/29 13:17:38 unconed Exp $
+// $Id: farbtastic.js,v 1.2 2006/10/29 15:13:01 unconed Exp $
 // Farbtastic 1.1
 
 jQuery.fn.farbtastic = function (callback) {
@@ -174,16 +174,16 @@ jQuery._farbtastic = function (container, callback) {
     // Get coordinates relative to color picker center
     var pos = fb.widgetCoords(event);
 
-	  // Set new HSL parameters
+    // Set new HSL parameters
     if (fb.circleDrag) {
-  	  var hue = Math.atan2(pos.x, -pos.y) / 6.28;
-  	  if (hue < 0) hue += 1;
-  	  fb.setHSL([hue, fb.hsl[1], fb.hsl[2]]);
+      var hue = Math.atan2(pos.x, -pos.y) / 6.28;
+      if (hue < 0) hue += 1;
+      fb.setHSL([hue, fb.hsl[1], fb.hsl[2]]);
     }
     else {
-  	  var sat = Math.max(0, Math.min(1, -(pos.x / fb.square) + .5));
-  	  var lum = Math.max(0, Math.min(1, -(pos.y / fb.square) + .5));
-  	  fb.setHSL([fb.hsl[0], sat, lum]);
+      var sat = Math.max(0, Math.min(1, -(pos.x / fb.square) + .5));
+      var lum = Math.max(0, Math.min(1, -(pos.y / fb.square) + .5));
+      fb.setHSL([fb.hsl[0], sat, lum]);
     }
     return false;
   }
@@ -257,20 +257,20 @@ jQuery._farbtastic = function (container, callback) {
     var g = Math.round(rgb[1] * 255);
     var b = Math.round(rgb[2] * 255);
     return '#' + (r < 16 ? '0' : '') + r.toString(16) +
-  			   (g < 16 ? '0' : '') + g.toString(16) +
-  			   (b < 16 ? '0' : '') + b.toString(16);
+           (g < 16 ? '0' : '') + g.toString(16) +
+           (b < 16 ? '0' : '') + b.toString(16);
   }
 
   fb.unpack = function (color) {
     if (color.length == 7) {
-  	  return [parseInt('0x' + color.substring(1, 3)) / 255,
-  			parseInt('0x' + color.substring(3, 5)) / 255,
-  			parseInt('0x' + color.substring(5, 7)) / 255];
+      return [parseInt('0x' + color.substring(1, 3)) / 255,
+        parseInt('0x' + color.substring(3, 5)) / 255,
+        parseInt('0x' + color.substring(5, 7)) / 255];
     }
     else if (color.length == 4) {
-  	  return [parseInt('0x' + color.substring(1, 2)) / 15,
-  			parseInt('0x' + color.substring(2, 3)) / 15,
-  			parseInt('0x' + color.substring(3, 4)) / 15];
+      return [parseInt('0x' + color.substring(1, 2)) / 15,
+        parseInt('0x' + color.substring(2, 3)) / 15,
+        parseInt('0x' + color.substring(3, 4)) / 15];
     }
   }
 
@@ -280,8 +280,8 @@ jQuery._farbtastic = function (container, callback) {
     m2 = (l <= 0.5) ? l * (s + 1) : l + s - l*s;
     m1 = l * 2 - m2;
     return [this.hueToRGB(m1, m2, h+0.33333),
-  		  this.hueToRGB(m1, m2, h),
-  		  this.hueToRGB(m1, m2, h-0.33333)];
+        this.hueToRGB(m1, m2, h),
+        this.hueToRGB(m1, m2, h-0.33333)];
   }
 
   fb.hueToRGB = function (m1, m2, h) {
@@ -301,14 +301,14 @@ jQuery._farbtastic = function (container, callback) {
     l = (min + max) / 2;
     s = 0;
     if (l > 0 && l < 1) {
-  	  s = delta / (l < 0.5 ? (2 * l) : (2 - 2 * l));
+      s = delta / (l < 0.5 ? (2 * l) : (2 - 2 * l));
     }
     h = 0;
     if (delta > 0) {
-  	  if (max == r && max != g) h += (g - b) / delta;
-  	  if (max == g && max != b) h += (2 + (b - r) / delta);
-  	  if (max == b && max != r) h += (4 + (r - g) / delta);
-  	  h /= 6;
+      if (max == r && max != g) h += (g - b) / delta;
+      if (max == g && max != b) h += (2 + (b - r) / delta);
+      if (max == b && max != r) h += (4 + (r - g) / delta);
+      h /= 6;
     }
     return [h, s, l];
   }

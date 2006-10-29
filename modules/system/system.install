@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.36 2006/10/29 13:17:38 unconed Exp $
+// $Id: system.install,v 1.37 2006/10/29 15:13:01 unconed Exp $
 
 define('DRUPAL_MINIMUM_PHP',    '4.3.3');
 define('DRUPAL_MINIMUM_MYSQL',  '3.23.17'); // If using MySQL
@@ -19,7 +19,8 @@ function system_requirements($phase) {
     $requirements['drupal'] = array(
       'title' => $t('Drupal'),
       'value' => VERSION,
-      'severity' => REQUIREMENT_INFO
+      'severity' => REQUIREMENT_INFO,
+      'weight' => -10,
     );
   }
 
@@ -27,7 +28,7 @@ function system_requirements($phase) {
   $software = $_SERVER['SERVER_SOFTWARE'];
   $requirements['webserver'] = array(
     'title' => $t('Web server'),
-    'value' => $software
+    'value' => $software,
   );
   // Use server info string, if present.
   if ($software && preg_match('![0-9]!', $software)) {

@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.387 2006/10/29 08:37:48 unconed Exp $
+// $Id: system.module,v 1.388 2006/10/29 15:13:01 unconed Exp $
 
 /**
  * @file
@@ -1793,12 +1793,20 @@ function system_status($check = FALSE) {
 
   // Check run-time requirements and status information
   $requirements = module_invoke_all('requirements', 'runtime');
+  usort($requirements, '_system_sort_requirements');
 
   if ($check) {
     return drupal_requirements_severity($requirements) == REQUIREMENT_ERROR;
   }
 
   return theme('status_report', $requirements);
+}
+
+/**
+ * Helper function to sort requirements.
+ */
+function _system_sort_requirements($a, $b) {
+  return (isset($a['weight']) || isset($b['weight'])) ? $a['weight'] - $b['weight'] : strcmp($a['title'], $b['title']);
 }
 
 /**
