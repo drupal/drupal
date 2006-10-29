@@ -210,7 +210,8 @@ function color_scheme_form_submit($form_id, $values) {
 
   // Prepare target locations for generated files
   $id = $theme .'-'. substr(md5(serialize($palette) . microtime()), 0, 8);
-  $paths['target'] = variable_get('file_directory_path', 'files') .'/color/'. $id .'/';
+  $paths['color'] = variable_get('file_directory_path', 'files') .'/color';
+  $paths['target'] = $paths['color'] .'/'. $id .'/';
   foreach ($paths as $path) {
     if (!is_dir($path)) {
       mkdir($path);
