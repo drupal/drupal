@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.386 2006/10/26 22:07:03 unconed Exp $
+// $Id: system.module,v 1.387 2006/10/29 08:37:48 unconed Exp $
 
 /**
  * @file
@@ -1809,7 +1809,7 @@ function theme_status_report(&$requirements) {
   $output = '<table class="system-status-report">';
   foreach ($requirements as $requirement) {
     if ($requirement['#type'] == '') {
-      $class = $i % 2 == 0 ? 'even' : 'odd';
+      $class = ++$i % 2 == 0 ? 'even' : 'odd';
 
       $classes = array(
         REQUIREMENT_INFO => 'info',
