@@ -1,0 +1,58 @@
+/* $Id$ */
+
+/* Positioning */
+#preview {
+  overflow: hidden;
+  max-width: 100%;
+}
+#preview, #preview #img {
+  width: 596px;
+  height: 371px;
+}
+#preview #gradient {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 19px;
+  height: 120px;
+  z-index: 2;
+}
+#preview #text {
+  position: absolute;
+  left: 80px;
+  width: 436px;
+  top: 160px;
+  height: 120px;
+  z-index: 4;
+}
+#preview #img {
+  position: relative;
+  z-index: 3;
+}
+#preview #gradient .gradient-line {
+  height: 10px;
+  overflow: hidden;
+}
+
+/* Basic styles to match */
+#preview {
+  font: 12px/170% Verdana;
+}
+#preview h2 {
+  margin: 0;
+  padding: 0;
+  font-weight: normal;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 160%;
+  line-height: 130%;
+}
+#preview p {
+  margin: .5em 0;
+}
+#preview a:link, #preview a:visited {
+  text-decoration: none;
+  font-weight: normal;
+}
+#preview a:hover {
+  text-decoration: underline;
+}

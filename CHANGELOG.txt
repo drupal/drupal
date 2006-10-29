@@ -12,6 +12,8 @@ Drupal 5.0, xxxx-xx-xx (development version)
     * install pre-made 'install profiles' or distributions
     * import the database structure with automatic table prefixing
     * be localized
+- added new default Garland theme
+- added color module to change some themes' color schemes
 - included the jQuery JavaScript library 1.0.2 and converted all core JavaScript to use it
 - introduced the ability to alter mail sent from system
 - module system:
