@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.35 2006/10/26 23:32:43 dries Exp $
+// $Id: system.install,v 1.36 2006/10/29 13:17:38 unconed Exp $
 
 define('DRUPAL_MINIMUM_PHP',    '4.3.3');
 define('DRUPAL_MINIMUM_MYSQL',  '3.23.17'); // If using MySQL
@@ -1010,7 +1010,7 @@ function system_install() {
   }
 
   db_query("INSERT INTO {system} (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES ('themes/engines/phptemplate/phptemplate.engine', 'phptemplate', 'theme_engine', '', 1, 0, 0, 0)");
-  db_query("INSERT INTO {system} (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES ('themes/bluemarine/page.tpl.php', 'bluemarine', 'theme', 'themes/engines/phptemplate/phptemplate.engine', 1, 0, 0, 0)");
+  db_query("INSERT INTO {system} (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES ('themes/garland/page.tpl.php', 'garland', 'theme', 'themes/engines/phptemplate/phptemplate.engine', 1, 0, 0, 0)");
 
   db_query("INSERT INTO {users} (uid,name,mail) VALUES(0,'','')");
 
@@ -1020,10 +1020,10 @@ function system_install() {
   db_query("INSERT INTO {permission} VALUES (1,'access content',0)");
   db_query("INSERT INTO {permission} VALUES (2,'access comments, access content, post comments, post comments without approval',0)");
 
-  db_query("INSERT INTO {variable} (name,value) VALUES('theme_default', 's:10:\"bluemarine\";')");
+  db_query("INSERT INTO {variable} (name,value) VALUES('theme_default', 's:7:\"garland\";')");
 
-  db_query("INSERT INTO {blocks} (module,delta,theme,status) VALUES('user', 0, 'bluemarine', 1)");
-  db_query("INSERT INTO {blocks} (module,delta,theme,status) VALUES('user', 1, 'bluemarine', 1)");
+  db_query("INSERT INTO {blocks} (module,delta,theme,status) VALUES('user', 0, 'garland', 1)");
+  db_query("INSERT INTO {blocks} (module,delta,theme,status) VALUES('user', 1, 'garland', 1)");
 
   db_query("INSERT INTO {node_access} VALUES (0, 0, 'all', 1, 0, 0)");
 
