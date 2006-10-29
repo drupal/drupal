@@ -1,0 +1,35 @@
+<?php
+/* $Id: color.install,v 1.1 2006/10/29 15:56:25 unconed Exp $ */
+
+function color_requirements($phase) {
+  $requirements = array();
+
+  if ($phase == 'runtime') {
+    // Check GD library
+    if (function_exists('imagegd2')) {
+      $info = gd_info();
+      $requirements['gd'] = array(
+        'value' => $info['GD Version'],
+      );
+
+      // Check PNG support
+      if (function_exists('imagecreatefrompng')) {
+        $requirements['gd']['severity'] = REQUIREMENT_OK;
+      }
+      else {
+        $requirements['gd']['severity'] = REQUIREMENT_ERROR;
+        $requirements['gd']['description'] = t('The GD library for PHP is enabled, but was compiled without PNG support. Please check the <a href="@url">PHP image documentation</a> for information on how to correct this.', array('@url' => 'http://be.php.net/manual/en/ref.image.php'));
+      }
+    }
+    else {
+      $requirements['gd'] = array(
+        'value' => t('Not installed'),
+        'severity' => REQUIREMENT_ERROR,
+        'description' => t('The GD library for PHP is missing or outdated. Please check the <a href="@url">PHP image documentation</a> for information on how to correct this.', array('@url' => 'http://be.php.net/manual/en/ref.image.php')),
+      );
+    }
+    $requirements['gd']['title'] = t('GD Library');
+  }
+
+  return $requirements;
+}
