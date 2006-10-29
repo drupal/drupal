@@ -1,5 +1,5 @@
 <?php
-// $Id: color.module,v 1.1 2006/10/29 13:17:38 unconed Exp $
+// $Id: color.module,v 1.2 2006/10/29 13:34:10 unconed Exp $
 
 /**
  * Implementation of hook_form_alter().
@@ -210,7 +210,8 @@ function color_scheme_form_submit($form_id, $values) {
 
   // Prepare target locations for generated files
   $id = $theme .'-'. substr(md5(serialize($palette) . microtime()), 0, 8);
-  $paths['target'] = variable_get('file_directory_path', 'files') .'/color/'. $id .'/';
+  $paths['color'] = variable_get('file_directory_path', 'files') .'/color';
+  $paths['target'] = $paths['color'] .'/'. $id .'/';
   foreach ($paths as $path) {
     if (!is_dir($path)) {
       mkdir($path);
