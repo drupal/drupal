@@ -19,7 +19,8 @@ function system_requirements($phase) {
     $requirements['drupal'] = array(
       'title' => $t('Drupal'),
       'value' => VERSION,
-      'severity' => REQUIREMENT_INFO
+      'severity' => REQUIREMENT_INFO,
+      'weight' => -10,
     );
   }
 
@@ -27,7 +28,7 @@ function system_requirements($phase) {
   $software = $_SERVER['SERVER_SOFTWARE'];
   $requirements['webserver'] = array(
     'title' => $t('Web server'),
-    'value' => $software
+    'value' => $software,
   );
   // Use server info string, if present.
   if ($software && preg_match('![0-9]!', $software)) {
