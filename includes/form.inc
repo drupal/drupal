@@ -843,7 +843,10 @@ function form_options_flatten($array, $reset = TRUE) {
   }
 
   foreach ($array as $key => $value) {
-    if (is_array($value)) {
+    if (is_object($value)) {
+      form_options_flatten($value->option, FALSE);
+    }
+    else if (is_array($value)) {
       form_options_flatten($value, FALSE);
     }
     else {
