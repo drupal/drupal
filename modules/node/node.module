@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.717 2006/10/26 05:31:14 dries Exp $
+// $Id: node.module,v 1.718 2006/10/31 17:01:04 drumm Exp $
 
 /**
  * @file
@@ -282,10 +282,14 @@ function node_type_save($info) {
 
   if ($is_existing) {
     db_query("UPDATE {node_type} SET type = '%s', name = '%s', module = '%s', has_title = %d, title_label = '%s', has_body = %d, body_label = '%s', description = '%s', help = '%s', min_word_count = %d, custom = %d, modified = %d, locked = %d WHERE type = '%s'", $info->type, $info->name, $info->module, $info->has_title, $info->title_label, $info->has_body, $info->body_label, $info->description, $info->help, $info->min_word_count, $info->custom, $info->modified, $info->locked, $existing_type);
+
+    module_invoke_all('node_type', 'update', $info);
     return SAVED_UPDATED;
   }
   else {
     db_query("INSERT INTO {node_type} (type, name, module, has_title, title_label, has_body, body_label, description, help, min_word_count, custom, modified, locked, orig_type) VALUES ('%s', '%s', '%s', %d, '%s', %d, '%s', '%s', '%s', %d, %d, %d, %d, '%s')", $info->type, $info->name, $info->module, $info->has_title, $info->title_label, $info->has_body, $info->body_label, $info->description, $info->help, $info->min_word_count, $info->custom, $info->modified, $info->locked, $info->orig_type);
+
+    module_invoke_all('node_type', 'insert', $info);
     return SAVED_NEW;
   }
 }

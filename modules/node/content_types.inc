@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.9 2006/09/10 07:36:37 dries Exp $
+// $Id: content_types.inc,v 1.10 2006/10/31 17:01:04 drumm Exp $
 
 /**
  * @file
@@ -275,16 +275,6 @@ function node_type_form_submit($form_id, $form_values) {
     return 'admin/content/types/'. str_replace('_', '-', $type->old_type) .'/delete';
   }
 
-  if (!empty($form_values['old_type'])) {
-    if ($type->old_type != $type->type) {
-      $update_count = node_type_update_nodes($type->old_type, $type->type);
-
-      if ($update_count) {
-        drupal_set_message(t('Changed the content type of %update_count %posts from %old_type to %type.', array('%update_count' => $update_count, '%posts' => format_plural($update_count, 'post', 'posts'), '%old_type' => $type->old_type, '%type' => $type->type)));
-      }
-    }
-  }
-
   $status = node_type_save($type);
 
   // Remove everything that's been saved already - whatever's left is assumed
@@ -335,6 +325,21 @@ function node_type_form_submit($form_id, $form_values) {
   }
 
   return 'admin/content/types';
+}
+
+/**
+ * Implementation of hook_node_type().
+ */
+function node_node_type($op, $info) {
+  if (!empty($info->old_type) && $info->old_type != $info->type) {
+    $update_count = node_type_update_nodes($info->old_type, $info->type);
+
+    if ($update_count) {
+      $substr_pre = 'Changed the content type of ';
+      $substr_post = strtr(' from %old-type to %type.', array('%old-type' => theme('placeholder', $info->old_type), '%type' => theme('placeholder', $info->type)));
+      drupal_set_message(format_plural($update_count, $substr_pre .'@count post'. $substr_post, $substr_pre .'@count posts'. $substr_post));
+    }
+  }
 }
 
 /**
