@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.584 2006/10/31 08:06:18 drumm Exp $
+// $Id: common.inc,v 1.585 2006/10/31 16:42:52 drumm Exp $
 
 /**
  * @file
@@ -287,10 +287,10 @@ function drupal_get_destination() {
  */
 function drupal_goto($path = '', $query = NULL, $fragment = NULL) {
   if (isset($_REQUEST['destination'])) {
-    extract(parse_url($_REQUEST['destination']));
+    extract(parse_url(urldecode($_REQUEST['destination'])));
   }
   else if (isset($_REQUEST['edit']['destination'])) {
-    extract(parse_url($_REQUEST['edit']['destination']));
+    extract(parse_url(urldecode($_REQUEST['edit']['destination'])));
   }
 
   $url = url($path, $query, $fragment, TRUE);
