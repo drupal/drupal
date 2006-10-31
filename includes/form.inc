@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.157 2006/10/20 20:55:03 drumm Exp $
+// $Id: form.inc,v 1.158 2006/10/31 07:37:25 drumm Exp $
 
 /**
  * @defgroup form Form generation
@@ -843,7 +843,10 @@ function form_options_flatten($array, $reset = TRUE) {
   }
 
   foreach ($array as $key => $value) {
-    if (is_array($value)) {
+    if (is_object($value)) {
+      form_options_flatten($value->option, FALSE);
+    }
+    else if (is_array($value)) {
       form_options_flatten($value, FALSE);
     }
     else {
