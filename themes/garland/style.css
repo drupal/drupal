@@ -508,10 +508,10 @@ ul.secondary-links li a:hover, ul.secondary-links li a.active {
  * Local tasks
  */
 ul.primary, ul.primary li, ul.secondary, ul.secondary li {
-	border: 0;
-	background: none;
-	margin: 0;
-	padding: 0;
+  border: 0;
+  background: none;
+  margin: 0;
+  padding: 0;
 }
 
 #tabs-wrapper {
