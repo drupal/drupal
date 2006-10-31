@@ -90,6 +90,7 @@ function system_elements() {
   $type['value'] = array('#input' => TRUE);
   $type['markup'] = array('#prefix' => '', '#suffix' => '');
   $type['fieldset'] = array('#collapsible' => FALSE, '#collapsed' => FALSE);
+  $type['token'] = array('#input'=> TRUE);
   return $type;
 }
 
