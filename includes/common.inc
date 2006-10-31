@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.583 2006/10/23 06:45:17 dries Exp $
+// $Id: common.inc,v 1.584 2006/10/31 08:06:18 drumm Exp $
 
 /**
  * @file
@@ -1505,6 +1505,48 @@ function drupal_urlencode($text) {
   else {
     return str_replace('%2F', '/', urlencode($text));
   }
+}
+
+/**
+ * Ensure the private key variable used to generate tokens is set.
+ *
+ * @return
+ *   The private key
+ */
+function drupal_get_private_key() {
+  if (!($key = variable_get('drupal_private_key', 0))) {
+    $key = md5(uniqid(mt_rand(), true)) . md5(uniqid(mt_rand(), true));
+    variable_set('drupal_private_key', $key);
+  }
+  return $key;
+}
+
+/**
+ * Generate a token based on $value, the current user session and private key.
+ *
+ * @param $value
+ *   An additional value to base the token on
+ */
+function drupal_get_token($value = '') {
+  $private_key = drupal_get_private_key();
+  return md5(session_id() . $value . $private_key);
+}
+
+/**
+ * Validate a token based on $value, the current user session and private key.
+ *
+ * @param $token
+ *   The token to be validated.
+ * @param $value
+ *   An additional value to base the token on.
+ * @param $skip_anonymous
+ *   Set to true to skip token validation for anonymous users.
+ * @return
+ *   True for a valid token, false for an invalid token. When $skip_anonymous is true, the return value will always be true for anonymous users.
+ */
+function drupal_valid_token($token, $value = '', $skip_anonymous = FALSE) {
+  global $user;
+  return (($skip_anonymous && $user->uid == 0) || ($token == md5(session_id() . $value . variable_get('drupal_private_key', ''))));
 }
 
 /**

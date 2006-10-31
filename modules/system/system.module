@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.389 2006/10/31 07:49:24 drumm Exp $
+// $Id: system.module,v 1.390 2006/10/31 08:06:18 drumm Exp $
 
 /**
  * @file
@@ -90,6 +90,7 @@ function system_elements() {
   $type['value'] = array('#input' => TRUE);
   $type['markup'] = array('#prefix' => '', '#suffix' => '');
   $type['fieldset'] = array('#collapsible' => FALSE, '#collapsed' => FALSE);
+  $type['token'] = array('#input'=> TRUE);
   return $type;
 }
 

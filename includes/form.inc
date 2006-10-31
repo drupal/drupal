@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.158 2006/10/31 07:37:25 drumm Exp $
+// $Id: form.inc,v 1.159 2006/10/31 08:06:18 drumm Exp $
 
 /**
  * @defgroup form Form generation
@@ -264,6 +264,8 @@ function drupal_process_form($form_id, &$form) {
  *   An associative array containing the structure of the form.
  */
 function drupal_prepare_form($form_id, &$form) {
+  global $user;
+
   $form['#type'] = 'form';
 
   if (!isset($form['#post'])) {
@@ -292,22 +294,27 @@ function drupal_prepare_form($form_id, &$form) {
     $base = $form['#base'];
   }
 
+  // Add a token, based on either #token or form_id, to any form displayed to authenticated users.
+  // This ensures that any submitted form was actually requested previously by the user and protects against
+  // cross site request forgeries.
+
   if (isset($form['#token'])) {
-    // If the page cache is on and an anonymous user issues a GET request,
-    // unset the token because the token in the cached page would not match,
-    // because the token is based on the session ID.
-    if (variable_get('cache', 0) && !$user->uid && $_SERVER['REQUEST_METHOD'] == 'GET') {
+    if ($form['#token'] === FALSE || $user->uid == 0 || $form['#programmed']) {
       unset($form['#token']);
     }
     else {
-      // Make sure that a private key is set:
-      if (!variable_get('drupal_private_key', '')) {
-        variable_set('drupal_private_key', mt_rand());
-      }
-
-      $form['form_token'] = array('#type' => 'hidden', '#default_value' => md5(session_id() . $form['#token'] . variable_get('drupal_private_key', '')));
+      $form['form_token'] = array('#type' => 'token', '#default_value' => drupal_get_token($form['#token']));
     }
   }
+  else if ($user->uid && !$form['#programmed']) {
+    $form['#token'] = $form_id;
+    $form['form_token'] = array(
+      '#id' => 'edit-'. str_replace('_', '-', $form_id) .'-form-token',
+      '#type' => 'token',
+      '#default_value' => drupal_get_token($form['#token']),
+    );
+  }
+
 
   if (isset($form_id)) {
     $form['form_id'] = array('#type' => 'hidden', '#value' => $form_id, '#id' => str_replace('_', '-', "edit-$form_id"));
@@ -369,7 +376,7 @@ function drupal_validate_form($form_id, $form) {
   // If the session token was set by drupal_prepare_form(), ensure that it
   // matches the current user's session
   if (isset($form['#token'])) {
-    if ($form_values['form_token'] != md5(session_id() . $form['#token'] . variable_get('drupal_private_key', ''))) {
+    if (!drupal_valid_token($form_values['form_token'], $form['#token'])) {
       // setting this error will cause the form to fail validation
       form_set_error('form_token', t('Validation error, please try again. If this error persists, please contact the site administrator.'));
     }
@@ -668,6 +675,10 @@ function form_builder($form_id, $form) {
                 $edit = str_replace(array("\r", "\n"), '', $edit);
                 $form['#value'] = $edit;
               }
+              break;
+
+            case 'token':
+              $form['#value'] = (string)$edit;
               break;
 
             default:
@@ -1254,6 +1265,10 @@ function theme_button($element) {
  */
 function theme_hidden($element) {
   return '<input type="hidden" name="'. $element['#name'] . '" id="'. $element['#id'] . '" value="'. check_plain($element['#value']) ."\" " . drupal_attributes($element['#attributes']) ." />\n";
+}
+
+function theme_token($element) {
+  return theme('hidden', $element);
 }
 
 /**
