@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.388 2006/10/29 15:13:01 unconed Exp $
+// $Id: system.module,v 1.389 2006/10/31 07:49:24 drumm Exp $
 
 /**
  * @file
@@ -393,7 +393,7 @@ function system_admin_menu_block($block) {
     usort($block['children'], '_menu_sort');
     foreach ($block['children'] as $mid) {
       $item = menu_get_item($mid);
-      if ($item['type'] & MENU_VISIBLE_IN_TREE) {
+      if (($item['type'] & MENU_VISIBLE_IN_TREE) && _menu_item_is_accessible($mid)) {
         $content[] = $item;
       }
     }
@@ -2204,7 +2204,9 @@ function theme_admin_block_content($content) {
  */
 function system_admin_by_module() {
   $modules = module_rebuild_cache();
+  $menu = menu_get_menu();
   $menu_items = array();
+  $admin_access = user_access('administer access control');
   foreach ($modules as $file) {
     $module = $file->name;
     if ($module == 'help') {
@@ -2213,7 +2215,7 @@ function system_admin_by_module() {
     $admin_tasks = array();
 
     // Check for permissions.
-    if (module_hook($module, 'perm')) {
+    if (module_hook($module, 'perm') && $admin_access) {
       $admin_tasks[-1] = l(t('Configure permissions'), 'admin/user/access');
     }
 
@@ -2222,7 +2224,7 @@ function system_admin_by_module() {
       foreach ($items as $item) {
         $parts = explode('/', $item['path']);
         $n = count($parts);
-        if ((!isset($item['type']) || ($item['type'] & MENU_VISIBLE_IN_TREE)) && ($parts[0] == 'admin') && ($n >= 3)) {
+        if ((!isset($item['type']) || ($item['type'] & MENU_VISIBLE_IN_TREE)) && ($parts[0] == 'admin') && ($n >= 3) && _menu_item_is_accessible($menu['path index'][$item['path']])) {
           $admin_tasks[$item['title']] = l($item['title'], $item['path']);
         }
       }
