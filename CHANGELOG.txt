@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.168 2006/10/29 13:21:46 unconed Exp $
+// $Id: CHANGELOG.txt,v 1.169 2006/11/01 08:42:35 unconed Exp $
 
 Drupal 5.0, xxxx-xx-xx (development version)
 ------------------------
@@ -21,6 +21,7 @@ Drupal 5.0, xxxx-xx-xx (development version)
     * added support for module dependencies
     * improved module installation screen
     * moved core modules to their own directories
+    * added support for module uninstalling
 - added support for different cache backends
 - added support for a generic "sites/all" directory.
 - usability:
