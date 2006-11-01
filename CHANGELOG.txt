@@ -21,6 +21,7 @@ Drupal 5.0, xxxx-xx-xx (development version)
     * added support for module dependencies
     * improved module installation screen
     * moved core modules to their own directories
+    * added support for module uninstalling
 - added support for different cache backends
 - added support for a generic "sites/all" directory.
 - usability:
