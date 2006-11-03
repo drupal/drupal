@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.176 2006/10/22 17:47:51 kjartan Exp $
+// $Id: profile.module,v 1.177 2006/11/03 01:35:17 unconed Exp $
 
 /**
  * @file
@@ -607,7 +607,7 @@ function profile_view_profile($user) {
         'value' => $value,
         'class' => $field->name,
       );
-      $fields[$field->category][] = $item;
+      $fields[$field->category][$field->name] = $item;
     }
   }
   return $fields;
