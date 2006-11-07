@@ -1,5 +1,5 @@
 <?php
-// $Id: color.module,v 1.5 2006/11/07 12:09:09 dries Exp $
+// $Id: color.module,v 1.6 2006/11/07 12:11:37 dries Exp $
 
 /**
  * Implementation of hook_form_alter().
@@ -47,7 +47,7 @@ function _color_page_alter(&$vars) {
   // Override logo
   $logo = variable_get('color_'. $theme_key .'_logo', NULL);
   if ($logo && $vars['logo'] && preg_match('!'. $theme_key .'/logo.png$!', $vars['logo'])) {
-    $vars['logo'] = $logo;
+    $vars['logo'] = base_path() . $logo;
   }
 }
 
