@@ -64,8 +64,9 @@ function _phptemplate_variables($hook, $vars) {
 
     // Hook into color.module
     if (module_exists('color')) {
-      return _color_page_alter($vars);
+      _color_page_alter($vars);
     }
+    return $vars;
   }
   return array();
 }

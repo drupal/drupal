@@ -1,5 +1,5 @@
 <?php
-// $Id: color.module,v 1.4 2006/11/07 07:31:59 drumm Exp $
+// $Id: color.module,v 1.5 2006/11/07 12:09:09 dries Exp $
 
 /**
  * Implementation of hook_form_alter().
@@ -49,8 +49,6 @@ function _color_page_alter(&$vars) {
   if ($logo && $vars['logo'] && preg_match('!'. $theme_key .'/logo.png$!', $vars['logo'])) {
     $vars['logo'] = $logo;
   }
-
-  return $vars;
 }
 
 /**
