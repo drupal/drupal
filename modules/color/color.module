@@ -1,5 +1,5 @@
 <?php
-// $Id: color.module,v 1.3 2006/10/29 15:13:01 unconed Exp $
+// $Id: color.module,v 1.4 2006/11/07 07:31:59 drumm Exp $
 
 /**
  * Implementation of hook_form_alter().
@@ -72,7 +72,8 @@ function color_get_palette($theme, $default = false) {
   // Fetch and expand default palette
   $fields = array('base', 'link', 'top', 'bottom', 'text');
   $info = color_get_info($theme);
-  foreach (explode(',', array_shift(array_keys($info['schemes']))) as $k => $scheme) {
+  $keys = array_keys($info['schemes']);
+  foreach (explode(',', array_shift($keys)) as $k => $scheme) {
     $palette[$fields[$k]] = $scheme;
   }
 
