@@ -522,11 +522,13 @@ function menu_overview() {
  * @return mid
  */
 function menu_edit_item_save($edit) {
-  if ($edit['expanded']) {
-    $edit['type'] |= MENU_EXPANDED;
-  }
-  else {
-    $edit['type'] &= ~MENU_EXPANDED;
+  if (isset($edit['expanded'])) {
+    if ($edit['expanded']) {
+      $edit['type'] |= MENU_EXPANDED;
+    }
+    else {
+      $edit['type'] &= ~MENU_EXPANDED;
+    }
   }
 
   $edit['type'] = $edit['type'] | MENU_MODIFIED_BY_ADMIN;
