@@ -1017,8 +1017,8 @@ function user_logout() {
   sess_destroy($user->uid);
   module_invoke_all('user', 'logout', NULL, $user);
 
-  // We have to use $GLOBALS to unset a global variable:
-  $user = user_load(array('uid' => 0));
+  // Load the anonymous user
+  $user = drupal_anonymous_user();
 
   drupal_goto();
 }
