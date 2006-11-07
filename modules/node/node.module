@@ -470,7 +470,7 @@ function node_load($param = array(), $revision = NULL, $reset = NULL) {
   if (is_numeric($param)) {
     $cachable = $revision == NULL;
     if ($cachable && isset($nodes[$param])) {
-      return $nodes[$param];
+      return drupal_clone($nodes[$param]);
     }
     $cond = 'n.nid = %d';
     $arguments[] = $param;
@@ -511,7 +511,7 @@ function node_load($param = array(), $revision = NULL, $reset = NULL) {
   }
 
   if ($cachable) {
-    $nodes[$param] = $node;
+    $nodes[$param] = drupal_clone($node);
   }
 
   return $node;
