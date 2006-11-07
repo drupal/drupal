@@ -3361,10 +3361,10 @@ function system_update_1013() {
   switch ($GLOBALS['db_type']) {
     case 'mysql':
     case 'mysqli':
-      $ret[] = update_sql('ALTER TABLE {sessions} CHANGE COLUMN sid sid varchar(64)');
+      $ret[] = update_sql("ALTER TABLE {sessions} CHANGE COLUMN sid sid varchar(64) NOT NULL default ''");
       break;
     case 'pgsql':
-      $ret[] = update_sql('ALTER TABLE {sessions} ALTER COLUMN sid TYPE varchar(64)');
+      db_change_column($ret, 'sessions', 'sid', 'sid', 'varchar(64)',  array('not null' => TRUE, 'default' => "''"));
       break;
   }
   return $ret;
