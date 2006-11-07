@@ -143,7 +143,7 @@ function module_rebuild_cache() {
  */
 function _module_build_dependents($files) {
   foreach ($files as $filename => $file) {
-    if (is_array($file->info['dependencies'])) {
+    if (isset($file->info['dependencies']) && is_array($file->info['dependencies'])) {
       foreach ($file->info['dependencies'] as $dependency) {
         if (!empty($files[$dependency]) && is_array($files[$dependency]->info)) {
           if (!isset($files[$dependency]->info['dependents'])) {
