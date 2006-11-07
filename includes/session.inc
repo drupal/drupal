@@ -41,7 +41,8 @@ function sess_read($key) {
   }
   // We didn't find the client's record (session has expired), or they are an anonymous user.
   else  {
-    $user = drupal_anonymous_user($user->session);
+    $session = isset($user->session) ? $user->session : '';
+    $user = drupal_anonymous_user($session);
   }
 
   return $user->session;
