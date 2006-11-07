@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.718 2006/10/31 17:01:04 drumm Exp $
+// $Id: node.module,v 1.719 2006/11/07 05:55:41 drumm Exp $
 
 /**
  * @file
@@ -2162,22 +2162,14 @@ function node_form_submit($form_id, $form_values) {
 
   // Prepare the node's body:
   if ($node->nid) {
-    // Check whether the current user has the proper access rights to
-    // perform this operation:
-    if (node_access('update', $node)) {
-      node_save($node);
-      watchdog('content', t('@type: updated %title.', array('@type' => t($node->type), '%title' => $node->title)), WATCHDOG_NOTICE, l(t('view'), 'node/'. $node->nid));
-      drupal_set_message(t('The %post has been updated.', array ('%post' => node_get_types('name', $node))));
-    }
+    node_save($node);
+    watchdog('content', t('@type: updated %title.', array('@type' => t($node->type), '%title' => $node->title)), WATCHDOG_NOTICE, l(t('view'), 'node/'. $node->nid));
+    drupal_set_message(t('The %post has been updated.', array ('%post' => node_get_types('name', $node))));
   }
   else {
-    // Check whether the current user has the proper access rights to
-    // perform this operation:
-    if (node_access('create', $node)) {
-      node_save($node);
-      watchdog('content', t('@type: added %title.', array('@type' => t($node->type), '%title' => $node->title)), WATCHDOG_NOTICE, l(t('view'), "node/$node->nid"));
-      drupal_set_message(t('Your %post has been created.', array ('%post' => node_get_types('name', $node))));
-    }
+    node_save($node);
+    watchdog('content', t('@type: added %title.', array('@type' => t($node->type), '%title' => $node->title)), WATCHDOG_NOTICE, l(t('view'), "node/$node->nid"));
+    drupal_set_message(t('Your %post has been created.', array ('%post' => node_get_types('name', $node))));
   }
   if ($node->nid) {
     if (node_access('view', $node)) {
