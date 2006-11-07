@@ -49,8 +49,6 @@ function _color_page_alter(&$vars) {
   if ($logo && $vars['logo'] && preg_match('!'. $theme_key .'/logo.png$!', $vars['logo'])) {
     $vars['logo'] = $logo;
   }
-
-  return $vars;
 }
 
 /**
