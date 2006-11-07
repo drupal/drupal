@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.38 2006/11/07 12:02:56 dries Exp $
+// $Id: system.install,v 1.39 2006/11/07 22:27:07 dries Exp $
 
 define('DRUPAL_MINIMUM_PHP',    '4.3.3');
 define('DRUPAL_MINIMUM_MYSQL',  '3.23.17'); // If using MySQL
@@ -3361,10 +3361,10 @@ function system_update_1013() {
   switch ($GLOBALS['db_type']) {
     case 'mysql':
     case 'mysqli':
-      $ret[] = update_sql('ALTER TABLE {sessions} CHANGE COLUMN sid sid varchar(64)');
+      $ret[] = update_sql("ALTER TABLE {sessions} CHANGE COLUMN sid sid varchar(64) NOT NULL default ''");
       break;
     case 'pgsql':
-      $ret[] = update_sql('ALTER TABLE {sessions} ALTER COLUMN sid TYPE varchar(64)');
+      db_change_column($ret, 'sessions', 'sid', 'sid', 'varchar(64)',  array('not null' => TRUE, 'default' => "''"));
       break;
   }
   return $ret;

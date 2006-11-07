@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.install,v 1.6 2006/09/01 07:40:08 drumm Exp $
+// $Id: statistics.install,v 1.7 2006/11/07 22:27:07 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -10,7 +10,7 @@ function statistics_install() {
     case 'mysqli':
       db_query("CREATE TABLE {accesslog} (
         aid int NOT NULL auto_increment,
-        sid varchar(32) NOT NULL default '',
+        sid varchar(64) NOT NULL default '',
         title varchar(255) default NULL,
         path varchar(255) default NULL,
         url varchar(255) default NULL,
@@ -25,7 +25,7 @@ function statistics_install() {
     case 'pgsql':
       db_query("CREATE TABLE {accesslog} (
         aid serial,
-        sid varchar(32) NOT NULL default '',
+        sid varchar(64) NOT NULL default '',
         title varchar(255) default NULL,
         path varchar(255) default NULL,
         url varchar(255) default NULL,
@@ -38,6 +38,25 @@ function statistics_install() {
       db_query("CREATE INDEX {accesslog}_accesslog_timestamp_idx ON {accesslog} (timestamp)");
       break;
   }
+}
+
+/**
+ * Changes session ID  field to VARCHAR(64) to add support for SHA-1 hashes.
+ */
+function statistics_update_1000() {
+  $ret = array();
+
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql("ALTER TABLE {accesslog} CHANGE COLUMN sid sid varchar(64) NOT NULL default ''");
+      break;
+    case 'pgsql':
+      db_change_column($ret, 'accesslog', 'sid', 'sid', 'varchar(64)', array('not null' => TRUE, 'default' => "''"));
+      break;
+  }
+
+  return $ret;
 }
 
 /**
