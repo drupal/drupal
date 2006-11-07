@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.705 2006/11/07 06:08:17 drumm Exp $
+// $Id: user.module,v 1.706 2006/11/07 12:02:56 dries Exp $
 
 /**
  * @file
@@ -690,7 +690,7 @@ function user_menu($may_cache) {
   $view_access = user_access('access user profiles');
 
   if ($may_cache) {
-    $items[] = array('path' => 'user', 'title' => t('user account'),
+    $items[] = array('path' => 'user', 'title' => t('User account'),
       'callback' => 'drupal_get_form', 'callback arguments' => array('user_login'),
       'access' => !$user->uid, 'type' => MENU_CALLBACK);
 
@@ -698,7 +698,7 @@ function user_menu($may_cache) {
       'callback' => 'user_autocomplete', 'access' => $view_access, 'type' => MENU_CALLBACK);
 
     // Registration and login pages.
-    $items[] = array('path' => 'user/login', 'title' => t('log in'),
+    $items[] = array('path' => 'user/login', 'title' => t('Log in'),
       'callback' => 'drupal_get_form', 'callback arguments' => array('user_login'),
       'access' => !$user->uid, 'type' => MENU_DEFAULT_LOCAL_TASK);
     $items[] = array('path' => 'user/register', 'title' => t('Create new account'),

@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.37 2006/10/29 15:13:01 unconed Exp $
+// $Id: system.install,v 1.38 2006/11/07 12:02:56 dries Exp $
 
 define('DRUPAL_MINIMUM_PHP',    '4.3.3');
 define('DRUPAL_MINIMUM_MYSQL',  '3.23.17'); // If using MySQL
@@ -1028,8 +1028,8 @@ function system_install() {
 
   db_query("INSERT INTO {node_access} VALUES (0, 0, 'all', 1, 0, 0)");
 
-  db_query("INSERT INTO {node_type} (type, name, module, description, help, has_title, title_label, has_body, body_label, min_word_count, custom, modified, locked, orig_type) VALUES ('page', 'page', 'node', 'If you want to add a static page, like a contact page or an about page, use a page.', '', 1, 'Title', 1, 'Body', 0, 1, 1, 0, 'page')");
-  db_query("INSERT INTO {node_type} (type, name, module, description, help, has_title, title_label, has_body, body_label, min_word_count, custom, modified, locked, orig_type) VALUES ('story', 'story', 'node', 'Stories are articles in their simplest form: they have a title, a teaser and a body, but can be extended by other modules. The teaser is part of the body too. Stories may be used as a personal blog or for news articles.', '', 1, 'Title', 1, 'Body', 0, 1, 1, 0, 'story')");
+  db_query("INSERT INTO {node_type} (type, name, module, description, help, has_title, title_label, has_body, body_label, min_word_count, custom, modified, locked, orig_type) VALUES ('page', 'Page', 'node', 'If you want to add a static page, like a contact page or an about page, use a page.', '', 1, 'Title', 1, 'Body', 0, 1, 1, 0, 'page')");
+  db_query("INSERT INTO {node_type} (type, name, module, description, help, has_title, title_label, has_body, body_label, min_word_count, custom, modified, locked, orig_type) VALUES ('story', 'Story', 'node', 'Stories are articles in their simplest form: they have a title, a teaser and a body, but can be extended by other modules. The teaser is part of the body too. Stories may be used as a personal blog or for news articles.', '', 1, 'Title', 1, 'Body', 0, 1, 1, 0, 'story')");
   db_query("INSERT INTO {filter_formats} (name, roles, cache) VALUES ('Filtered HTML',',1,2,',1)");
   db_query("INSERT INTO {filter_formats} (name, roles, cache) VALUES ('PHP code','',0)");
   db_query("INSERT INTO {filter_formats} (name, roles, cache) VALUES ('Full HTML','',1)");
