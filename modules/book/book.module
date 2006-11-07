@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.394 2006/10/22 08:28:44 unconed Exp $
+// $Id: book.module,v 1.395 2006/11/07 07:01:05 drumm Exp $
 
 /**
  * @file
@@ -181,36 +181,10 @@ function book_block($op = 'list', $delta = 0) {
 }
 
 /**
- * Implementation of hook_load().
- */
-function book_load($node) {
-  return db_fetch_object(db_query('SELECT * FROM {book} WHERE vid = %d', $node->vid));
-}
-
-/**
  * Implementation of hook_insert().
  */
 function book_insert($node) {
   db_query("INSERT INTO {book} (nid, vid, parent, weight) VALUES (%d, %d, %d, %d)", $node->nid, $node->vid, $node->parent, $node->weight);
-}
-
-/**
- * Implementation of hook_update().
- */
-function book_update($node) {
-  if ($node->revision) {
-    db_query("INSERT INTO {book} (nid, vid, parent, weight) VALUES (%d, %d, %d, %d)", $node->nid, $node->vid, $node->parent, $node->weight);
-  }
-  else {
-    db_query("UPDATE {book} SET parent = %d, weight = %d WHERE vid = %d", $node->parent, $node->weight, $node->vid);
-  }
-}
-
-/**
- * Implementation of hook_delete().
- */
-function book_delete(&$node) {
-  db_query('DELETE FROM {book} WHERE nid = %d', $node->nid);
 }
 
 /**
@@ -292,17 +266,16 @@ function book_form(&$node) {
  */
 function book_outline($nid) {
   $node = node_load($nid);
-  $page = book_load($node);
 
   $form['parent'] = array('#type' => 'select',
     '#title' => t('Parent'),
-    '#default_value' => $page->parent,
+    '#default_value' => $node->parent,
     '#options' => book_toc($node->nid),
     '#description' => t('The parent page in the book.'),
   );
   $form['weight'] = array('#type' => 'weight',
     '#title' => t('Weight'),
-    '#default_value' => $page->weight,
+    '#default_value' => $node->weight,
     '#delta' => 15,
     '#description' => t('Pages at a given level are ordered first by weight and then by title.'),
   );
@@ -312,7 +285,7 @@ function book_outline($nid) {
   );
 
   $form['nid'] = array('#type' => 'value', '#value' => $nid);
-  if ($page->nid) {
+  if ($node->parent) {
     $form['update'] = array('#type' => 'submit',
       '#value' => t('Update book outline'),
     );
@@ -462,14 +435,12 @@ function book_content($node, $teaser = FALSE) {
  */
 function book_nodeapi(&$node, $op, $teaser, $page) {
   switch ($op) {
+    case 'load':
+      return db_fetch_array(db_query('SELECT parent, weight FROM {book} WHERE vid = %d', $node->vid));
+      break;
     case 'view':
       if (!$teaser) {
-        $book = db_fetch_array(db_query('SELECT * FROM {book} WHERE vid = %d', $node->vid));
-        if ($book) {
-          foreach ($book as $key => $value) {
-            $node->$key = $value;
-          }
-
+        if (isset($node->parent)) {
           $path = book_location($node);
           // Construct the breadcrumb:
           $node->breadcrumb = array(); // Overwrite the trail with a book trail.
@@ -486,6 +457,16 @@ function book_nodeapi(&$node, $op, $teaser, $page) {
           if ($page) {
             menu_set_location($node->breadcrumb);
           }
+        }
+      }
+      break;
+    case 'update':
+      if (isset($node->parent)) {
+        if ($node->revision) {
+          db_query("INSERT INTO {book} (nid, vid, parent, weight) VALUES (%d, %d, %d, %d)", $node->nid, $node->vid, $node->parent, $node->weight);
+        }
+        else {
+          db_query("UPDATE {book} SET parent = %d, weight = %d WHERE vid = %d", $node->parent, $node->weight, $node->vid);
         }
       }
       break;
