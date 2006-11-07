@@ -72,7 +72,8 @@ function color_get_palette($theme, $default = false) {
   // Fetch and expand default palette
   $fields = array('base', 'link', 'top', 'bottom', 'text');
   $info = color_get_info($theme);
-  foreach (explode(',', array_shift(array_keys($info['schemes']))) as $k => $scheme) {
+  $keys = array_keys($info['schemes']);
+  foreach (explode(',', array_shift($keys)) as $k => $scheme) {
     $palette[$fields[$k]] = $scheme;
   }
 
