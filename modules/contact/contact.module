@@ -514,7 +514,7 @@ function contact_mail_page_submit($form_id, $form_values) {
   $from = $form_values['mail'];
 
   // Compose the body:
-  $message[] = t("%name sent a message using the contact form at %form.", array('%name' => $form_values['name'], '%form' => url($_GET['q'], NULL, NULL, TRUE)));
+  $message[] = t("!name sent a message using the contact form at !form.", array('!name' => $form_values['name'], '!form' => url($_GET['q'], NULL, NULL, TRUE)));
   $message[] = $form_values['message'];
 
   // Tidy up the body:
@@ -526,7 +526,7 @@ function contact_mail_page_submit($form_id, $form_values) {
   $contact = db_fetch_object(db_query("SELECT * FROM {contact} WHERE cid = %d", $form_values['cid']));
 
   // Format the category:
-  $subject = t('[%category] %subject', array('%category' => $contact->category, '%subject' => $form_values['subject']));
+  $subject = t('[!category] !subject', array('!category' => $contact->category, '!subject' => $form_values['subject']));
 
   // Prepare the body:
   $body = implode("\n\n", $message);
