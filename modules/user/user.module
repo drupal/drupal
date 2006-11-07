@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.703 2006/10/28 15:13:41 unconed Exp $
+// $Id: user.module,v 1.704 2006/11/07 05:48:53 drumm Exp $
 
 /**
  * @file
@@ -1017,8 +1017,8 @@ function user_logout() {
   sess_destroy($user->uid);
   module_invoke_all('user', 'logout', NULL, $user);
 
-  // We have to use $GLOBALS to unset a global variable:
-  $user = user_load(array('uid' => 0));
+  // Load the anonymous user
+  $user = drupal_anonymous_user();
 
   drupal_goto();
 }
