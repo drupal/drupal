@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.720 2006/11/07 06:24:08 drumm Exp $
+// $Id: node.module,v 1.721 2006/11/08 19:42:48 dries Exp $
 
 /**
  * @file
@@ -2561,12 +2561,10 @@ function node_search_validate($form_id, $form_values, $form) {
  * @param $node
  *   The node object (or node array) on which the operation is to be performed,
  *   or node type (e.g. 'forum') for "create" operation.
- * @param $uid
- *   The user ID on which the operation is to be performed.
  * @return
  *   TRUE if the operation may be performed.
  */
-function node_access($op, $node = NULL, $uid = NULL) {
+function node_access($op, $node = NULL) {
   // Convert the node to an object if necessary:
   if ($op != 'create') {
     $node = (object)$node;
