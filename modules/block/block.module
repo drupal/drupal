@@ -1,10 +1,12 @@
 <?php
-// $Id: block.module,v 1.232 2006/11/08 19:24:11 dries Exp $
+// $Id: block.module,v 1.233 2006/11/08 19:27:59 dries Exp $
 
 /**
  * @file
  * Controls the boxes that are displayed around the main content.
  */
+
+define('BLOCK_REGION_NONE', -1);
 
 /**
  * Implementation of hook_help().
@@ -229,7 +231,7 @@ function block_admin_display($theme = NULL) {
   usort($blocks, '_block_compare');
 
   $throttle = module_exists('throttle');
-  $block_regions = system_region_list($theme_key);
+  $block_regions = array(BLOCK_REGION_NONE => '<'. t('none') .'>') + system_region_list($theme_key);
 
   // Build form tree
   $form['#action'] = arg(3) ? url('admin/build/block/list/' . $theme_key) : url('admin/build/block');
@@ -238,11 +240,10 @@ function block_admin_display($theme = NULL) {
     $form[$i]['module'] = array('#type' => 'value', '#value' => $block['module']);
     $form[$i]['delta'] = array('#type' => 'value', '#value' => $block['delta']);
     $form[$i]['info'] = array('#value' => $block['info']);
-    $form[$i]['status'] = array('#type' => 'checkbox', '#default_value' => $block['status']);
     $form[$i]['theme'] = array('#type' => 'hidden', '#value' => $theme_key);
     $form[$i]['weight'] = array('#type' => 'weight', '#default_value' => $block['weight']);
     $form[$i]['region'] = array('#type' => 'select',
-      '#default_value' => isset($block['region']) ? $block['region'] : system_default_region($theme_key),
+      '#default_value' => $block['status'] ? (isset($block['region']) ? $block['region'] : system_default_region($theme_key)) : BLOCK_REGION_NONE,
       '#options' => $block_regions,
     );
 
@@ -287,6 +288,8 @@ function _block_compare($a, $b) {
  */
 function block_admin_display_submit($form_id, $form_values) {
   foreach ($form_values as $block) {
+    $block['status'] = $block['region'] != BLOCK_REGION_NONE;
+    $block['region'] = $block['status'] ? $block['region'] : '';
     db_query("UPDATE {blocks} SET status = %d, weight = %d, region = '%s', throttle = %d WHERE module = '%s' AND delta = '%s' AND theme = '%s'", $block['status'], $block['weight'], $block['region'], $block['throttle'], $block['module'], $block['delta'], $block['theme']);
   }
   drupal_set_message(t('The block settings have been updated.'));
@@ -320,7 +323,7 @@ function theme_block_admin_display($form) {
     if (is_array($block['info'])) {
       // Fetch values
       $region = $block['region']['#default_value'];
-      $status = $block['status']['#default_value'];
+      $status = $region != BLOCK_REGION_NONE;
 
       // Output region header
       if ($status && $region != $last_region) {
@@ -337,9 +340,8 @@ function theme_block_admin_display($form) {
       // Generate block row
       $row = array(
         array('data' => drupal_render($block['info']), 'class' => 'block'),
-        drupal_render($block['status']) . drupal_render($block['theme']),
+        drupal_render($block['region']) . drupal_render($block['theme']),
         drupal_render($block['weight']),
-        drupal_render($block['region'])
       );
       if ($throttle) {
         $row[] = drupal_render($block['throttle']);
@@ -351,7 +353,7 @@ function theme_block_admin_display($form) {
   }
 
   // Finish table
-  $header = array(t('Block'), t('Enabled'), t('Weight'), t('Region'));
+  $header = array(t('Block'), t('Region'), t('Weight'));
   if ($throttle) {
     $header[] = t('Throttle');
   }
