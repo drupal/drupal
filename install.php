@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.22 2006/10/26 05:31:13 dries Exp $
+// $Id: install.php,v 1.23 2006/11/08 19:21:07 dries Exp $
 
 require_once './includes/install.inc';
 
@@ -73,8 +73,13 @@ function install_main() {
     install_change_settings($profile, $install_locale);
   }
 
-  // Perform actual installation defined in the profile.
+  // Verify existence of all required modules.
   $modules = drupal_verify_profile($profile, $install_locale);
+  if (!$modules) {
+    install_missing_modules_error($profile);
+  }
+
+  // Perform actual installation defined in the profile.
   drupal_install_profile($profile, $modules);
 
   // Warn about settings.php permissions risk
@@ -495,6 +500,18 @@ function install_already_done_error() {
   drupal_maintenance_theme();
   drupal_set_title(st('Drupal already installed'));
   print theme('install_page', st('<ul><li>To start over, you must empty your existing database.</li><li>To install to a different database, edit the appropriate <em>settings.php</em> file in the <em>sites</em> folder.</li><li>To upgrade an existing installation, proceed to the <a href="@base-url/update.php">update script</a>.</li></ul>', array('@base-url' => $base_url)));
+  exit;
+}
+
+/**
+ * Show an error page when Drupal is missing required modules.
+ */
+function install_missing_modules_error($profile) {
+  global $base_url;
+
+  drupal_maintenance_theme();
+  drupal_set_title(st('Modules missing'));
+  print theme('install_page', '<p>'. st('One or more required modules are missing. Please check the error messages and <a href="!url">try again</a>.', array('!url' => "install.php?profile=$profile")) .'</p>');
   exit;
 }
 
