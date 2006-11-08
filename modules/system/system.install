@@ -1719,12 +1719,12 @@ function system_update_144() {
 }
 
 function system_update_145() {
-  $default_theme = variable_get('theme_default', 'bluemarine');
+  $default_theme = variable_get('theme_default', 'garland');
 
   $themes = list_themes();
   if (!array_key_exists($default_theme, $themes)) {
-      variable_set('theme_default', 'bluemarine');
-      $default_theme = 'bluemarine';
+      variable_set('theme_default', 'garland');
+      $default_theme = 'garland';
    }
 
   $ret = array();
