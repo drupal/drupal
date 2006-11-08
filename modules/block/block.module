@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.233 2006/11/08 19:27:59 dries Exp $
+// $Id: block.module,v 1.234 2006/11/08 19:49:13 dries Exp $
 
 /**
  * @file
@@ -500,7 +500,7 @@ function block_admin_configure_validate($form_id, $form_values) {
 
 function block_admin_configure_submit($form_id, $form_values) {
   if (!form_get_errors()) {
-    db_query("UPDATE {blocks} SET visibility = %d, pages = '%s', custom = %d, title = '%s' WHERE module = '%s' AND delta = '%s'", $form_values['visibility'], $form_values['pages'], $form_values['custom'], $form_values['title'], $form_values['module'], $form_values['delta']);
+    db_query("UPDATE {blocks} SET visibility = %d, pages = '%s', custom = %d, title = '%s' WHERE module = '%s' AND delta = '%s'", $form_values['visibility'], trim($form_values['pages']), $form_values['custom'], $form_values['title'], $form_values['module'], $form_values['delta']);
     db_query("DELETE FROM {blocks_roles} WHERE module = '%s' AND delta = '%s'", $form_values['module'], $form_values['delta']);
     foreach (array_filter($form_values['roles']) as $rid) {
       db_query("INSERT INTO {blocks_roles} (rid, module, delta) VALUES (%d, '%s', '%s')", $rid, $form_values['module'], $form_values['delta']);
