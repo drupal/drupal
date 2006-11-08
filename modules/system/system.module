@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.390 2006/10/31 08:06:18 drumm Exp $
+// $Id: system.module,v 1.391 2006/11/08 19:24:11 dries Exp $
 
 /**
  * @file
@@ -494,13 +494,13 @@ function system_theme_select_form($description = '', $default_value = '', $weigh
 
       foreach ($enabled as $info) {
         // For the default theme, revert to an empty string so the user's theme updates when the site theme is changed.
-        $info->key = $info->name == variable_get('theme_default', 'bluemarine') ? '' : $info->name;
+        $info->key = $info->name == variable_get('theme_default', 'garland') ? '' : $info->name;
 
         $info->screenshot = dirname($info->filename) . '/screenshot.png';
         $screenshot = file_exists($info->screenshot) ? theme('image', $info->screenshot, t('Screenshot for %theme theme', array('%theme' => $info->name)), '', array('class' => 'screenshot'), FALSE) : t('no screenshot');
 
         $form['themes'][$info->key]['screenshot'] = array('#value' => $screenshot);
-        $form['themes'][$info->key]['description'] = array('#type' => 'item', '#title' => $info->name,  '#value' => dirname($info->filename) . ($info->name == variable_get('theme_default', 'bluemarine') ? t('<br /> <em>(site default theme)</em>') : ''));
+        $form['themes'][$info->key]['description'] = array('#type' => 'item', '#title' => $info->name,  '#value' => dirname($info->filename) . ($info->name == variable_get('theme_default', 'garland') ? t('<br /> <em>(site default theme)</em>') : ''));
         $options[$info->key] = '';
       }
 
@@ -1034,7 +1034,7 @@ function system_default_region($theme) {
 function system_initialize_theme_blocks($theme) {
   // Initialize theme's blocks if none already registered.
   if (!(db_num_rows(db_query("SELECT module FROM {blocks} WHERE theme = '%s'", $theme)))) {
-    $default_theme = variable_get('theme_default', 'bluemarine');
+    $default_theme = variable_get('theme_default', 'garland');
     $regions = system_region_list($theme);
     $result = db_query("SELECT * FROM {blocks} WHERE theme = '%s'", $default_theme);
     while($block = db_fetch_array($result)) {
@@ -1139,7 +1139,7 @@ function system_themes() {
   }
 
   $form['status'] = array('#type' => 'checkboxes', '#options' => $options, '#default_value' => $status);
-  $form['theme_default'] = array('#type' => 'radios', '#options' => $options, '#default_value' => variable_get('theme_default', 'bluemarine'));
+  $form['theme_default'] = array('#type' => 'radios', '#options' => $options, '#default_value' => variable_get('theme_default', 'garland'));
   $form['buttons']['submit'] = array('#type' => 'submit', '#value' => t('Save configuration') );
   $form['buttons']['reset'] = array('#type' => 'submit', '#value' => t('Reset to defaults') );
 
@@ -1196,7 +1196,7 @@ function system_themes_submit($form_id, $form_values) {
   }
   else {
     variable_del('theme_default');
-    db_query("UPDATE {system} SET status = 1 WHERE type = 'theme' AND name = 'bluemarine'");
+    db_query("UPDATE {system} SET status = 1 WHERE type = 'theme' AND name = 'garland'");
   }
 
   menu_rebuild();

@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.231 2006/10/31 08:06:18 drumm Exp $
+// $Id: block.module,v 1.232 2006/11/08 19:24:11 dries Exp $
 
 /**
  * @file
@@ -88,7 +88,7 @@ function block_menu($may_cache) {
       'callback' => 'drupal_get_form',
       'callback arguments' => array('block_box_form'),
       'type' => MENU_LOCAL_TASK);
-    $default = variable_get('theme_default', 'bluemarine');
+    $default = variable_get('theme_default', 'garland');
     foreach (list_themes() as $key => $theme) {
       if ($theme->status) {
         $items[] = array(
@@ -220,7 +220,7 @@ function block_admin_display($theme = NULL) {
     $custom_theme = $theme;
   }
   else {
-    $custom_theme = variable_get('theme_default', 'bluemarine');
+    $custom_theme = variable_get('theme_default', 'garland');
   }
   init_theme();
 

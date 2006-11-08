@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.39 2006/11/07 22:27:07 dries Exp $
+// $Id: system.install,v 1.40 2006/11/08 19:24:11 dries Exp $
 
 define('DRUPAL_MINIMUM_PHP',    '4.3.3');
 define('DRUPAL_MINIMUM_MYSQL',  '3.23.17'); // If using MySQL
@@ -1719,12 +1719,12 @@ function system_update_144() {
 }
 
 function system_update_145() {
-  $default_theme = variable_get('theme_default', 'bluemarine');
+  $default_theme = variable_get('theme_default', 'garland');
 
   $themes = list_themes();
   if (!array_key_exists($default_theme, $themes)) {
-      variable_set('theme_default', 'bluemarine');
-      $default_theme = 'bluemarine';
+      variable_set('theme_default', 'garland');
+      $default_theme = 'garland';
    }
 
   $ret = array();
