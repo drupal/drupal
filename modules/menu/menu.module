@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.93 2006/11/07 05:46:31 drumm Exp $
+// $Id: menu.module,v 1.94 2006/11/10 08:34:07 drumm Exp $
 
 /**
  * @file
@@ -613,7 +613,8 @@ function menu_overview_tree() {
   $header = array(t('Menu item'), t('Expanded'), array('data' => t('Operations'), 'colspan' => '3'));
   $output = '';
 
-  foreach ($root_menus as $mid => $title) {
+  // We reverse the root menu to show user created menus first.
+  foreach (array_reverse($root_menus, true) as $mid => $title) {
     $operations = array();
     if ($menu['items'][$mid]['type'] & MENU_MODIFIABLE_BY_ADMIN) {
       $operations[] = l(t('Edit'), 'admin/build/menu/menu/edit/'. $mid);
@@ -623,7 +624,10 @@ function menu_overview_tree() {
     }
     $operations[] = l(t('Add item'), 'admin/build/menu/item/add/'. $mid);
     $table = theme('item_list', $operations);
-    $table .= theme('table', $header, menu_overview_tree_rows($mid));
+
+    $rows = menu_overview_tree_rows($mid);
+    $table .= theme('table', $header, $rows ? $rows : array(array(array('data' => t('No menu items defined.'), 'colspan' => 5))));
+
     $output .= theme('box', check_plain($title), $table);
   }
   return $output;
