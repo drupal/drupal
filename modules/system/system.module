@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.392 2006/11/10 08:16:51 drumm Exp $
+// $Id: system.module,v 1.393 2006/11/10 09:22:07 drumm Exp $
 
 /**
  * @file
@@ -1077,6 +1077,8 @@ function system_theme_settings_submit($form_id, $form_values) {
     variable_set($key, $form_values);
     drupal_set_message(t('The configuration options have been saved.'));
   }
+
+  cache_clear_all();
 }
 
 /**
