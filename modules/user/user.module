@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.706 2006/11/07 12:02:56 dries Exp $
+// $Id: user.module,v 1.707 2006/11/10 08:29:08 drumm Exp $
 
 /**
  * @file
@@ -1905,6 +1905,9 @@ function user_admin_role() {
     }
   }
   if ($id) {
+    if (DRUPAL_ANONYMOUS_RID == $id || DRUPAL_AUTHENTICATED_RID == $id) {
+      drupal_goto('admin/user/roles');
+    }
     // Display the edit role form.
     $role = db_fetch_object(db_query('SELECT * FROM {role} WHERE rid = %d', $id));
     $form['name'] = array(
