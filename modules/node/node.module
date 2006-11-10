@@ -295,6 +295,19 @@ function node_type_save($info) {
 }
 
 /**
+ * Deletes a node type from the database.
+ *
+ * @param $type
+ *   The machine-readable name of the node type to be deleted.
+ */
+function node_type_delete($type) {
+  db_query("DELETE FROM {node_type} WHERE type = '%s'", $type);
+
+  $info = node_get_types('type', $type);
+  module_invoke_all('node_type', 'delete', $info);
+}
+
+/**
  * Updates all nodes of one type to be of another type.
  *
  * @param $orig_type
