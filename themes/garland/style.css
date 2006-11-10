@@ -247,10 +247,12 @@ span.submitted, .description {
   margin: 2em 0.5em 1em 0;
 }
 
+.confirmation .form-submit,
+.search-form .form-submit,
 .poll .form-submit,
 fieldset .form-button, fieldset .form-submit,
 .sidebar .form-button, .sidebar .form-submit,
-table .form-button, table .form-submit, .confirmation .form-submit, .search-form .form-submit {
+table .form-button, table .form-submit {
   margin: 0;
 }
 
