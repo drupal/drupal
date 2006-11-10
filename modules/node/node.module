@@ -1333,6 +1333,10 @@ function node_filter_form() {
       $value = module_invoke('taxonomy', 'get_term', $value);
       $value = $value->name;
     }
+    else if ($type == 'type') {
+      // Remove the type option if it is already being filtered on.
+      unset($filters['type']);
+    }
     else {
       $value = $filters[$type]['options'][$value];
     }
