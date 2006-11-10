@@ -185,12 +185,13 @@ function install_settings_form($profile, $install_locale, $settings_file, $db_ur
 
     if (count($db_types) > 1) {
       // Database type
+      $db_types = drupal_detect_database_types();
       $form['basic_options']['db_type'] = array(
         '#type' => 'radios',
         '#title' => st('Database type'),
         '#required' => TRUE,
-        '#options' => drupal_detect_database_types(),
-        '#default_value' => $db_type,
+        '#options' => $db_types,
+        '#default_value' => ($db_type ? $db_type : current($db_types)),
         '#description' => st('The type of database your @drupal data will be stored in.', array('@drupal' => drupal_install_profile_name())),
       );
       $db_path_description = st('The name of the database your @drupal data will be stored in. It must exist on your server before @drupal can be installed.', array('@drupal' => drupal_install_profile_name()));
