@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.721 2006/11/08 19:42:48 dries Exp $
+// $Id: node.module,v 1.722 2006/11/10 08:59:18 drumm Exp $
 
 /**
  * @file
@@ -1332,6 +1332,10 @@ function node_filter_form() {
       // Load term name from DB rather than search and parse options array.
       $value = module_invoke('taxonomy', 'get_term', $value);
       $value = $value->name;
+    }
+    else if ($type == 'type') {
+      // Remove the type option if it is already being filtered on.
+      unset($filters['type']);
     }
     else {
       $value = $filters[$type]['options'][$value];
