@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.494 2006/10/24 20:31:25 dries Exp $
+// $Id: comment.module,v 1.495 2006/11/10 08:37:20 drumm Exp $
 
 /**
  * @file
@@ -223,7 +223,7 @@ function comment_link($type, $node = NULL, $teaser = FALSE) {
           if ($node->comment == COMMENT_NODE_READ_WRITE) {
             if (user_access('post comments')) {
               $links['comment_add'] = array(
-                'title' => t('add new comment'),
+                'title' => t('Add new comment'),
                 'href' => "comment/reply/$node->nid",
                 'attributes' => array('title' => t('Add a new comment to this page.')),
                 'fragment' => 'comment_form'
