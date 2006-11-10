@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.722 2006/11/10 08:59:18 drumm Exp $
+// $Id: node.module,v 1.723 2006/11/10 09:03:21 drumm Exp $
 
 /**
  * @file
@@ -2850,6 +2850,7 @@ function node_access_rebuild() {
     // not using any node_access modules. add the default grant.
     db_query("INSERT INTO {node_access} VALUES (0, 0, 'all', 1, 0, 0)");
   }
+  cache_clear_all();
 }
 /**
  * @} End of "defgroup node_access".
