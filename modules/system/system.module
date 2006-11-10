@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.391 2006/11/08 19:24:11 dries Exp $
+// $Id: system.module,v 1.392 2006/11/10 08:16:51 drumm Exp $
 
 /**
  * @file
@@ -1185,11 +1185,11 @@ function system_themes_submit($form_id, $form_values) {
         }
       }
     }
-    if (($admin_theme = variable_get('admin_theme', '0')) != '0') {
+    if (($admin_theme = variable_get('admin_theme', '0')) != '0' && $admin_theme != $form_values['theme_default']) {
       drupal_set_message(t('Please note that the <a href="!admin_theme_page">administration theme</a> is still set to the %admin_theme theme; consequently, the theme on this page remains unchanged. All non-administrative sections of the site, however, will show the selected %selected_theme theme by default.', array(
         '!admin_theme_page' => url('admin/settings/admin'),
         '%admin_theme' => $admin_theme,
-        '%selected_theme' => $values['theme_default'],
+        '%selected_theme' => $form_values['theme_default'],
       )));
     }
     variable_set('theme_default', $form_values['theme_default']);
