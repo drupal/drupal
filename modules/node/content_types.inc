@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.10 2006/10/31 17:01:04 drumm Exp $
+// $Id: content_types.inc,v 1.11 2006/11/10 19:40:23 drumm Exp $
 
 /**
  * @file
@@ -331,7 +331,7 @@ function node_type_form_submit($form_id, $form_values) {
  * Implementation of hook_node_type().
  */
 function node_node_type($op, $info) {
-  if (!empty($info->old_type) && $info->old_type != $info->type) {
+  if ($op != 'delete' && !empty($info->old_type) && $info->old_type != $info->type) {
     $update_count = node_type_update_nodes($info->old_type, $info->type);
 
     if ($update_count) {
@@ -387,7 +387,7 @@ function node_type_delete_confirm($type) {
  * Process content type delete confirm submissions.
  */
 function node_type_delete_confirm_submit($form_id, $form_values) {
-  db_query("DELETE FROM {node_type} WHERE type = '%s'", $form_values['type']);
+  node_type_delete($form_values['type']);
 
   $t_args = array('%name' => $form_values['name']);
   drupal_set_message(t('The content type %name has been deleted.', $t_args));
@@ -398,4 +398,3 @@ function node_type_delete_confirm_submit($form_id, $form_values) {
 
   return 'admin/content/types';
 }
-
