@@ -1,5 +1,5 @@
 <?php
-// $Id: cache.inc,v 1.4 2006/08/30 08:46:16 dries Exp $
+// $Id: cache.inc,v 1.5 2006/11/10 07:26:27 drumm Exp $
 
 /**
  * Return data from the persistent cache.
@@ -92,9 +92,9 @@ function cache_get($key, $table = 'cache') {
  */
 function cache_set($cid, $table = 'cache', $data, $expire = CACHE_PERMANENT, $headers = NULL) {
   db_lock_table($table);
-  db_query("UPDATE {%s} SET data = '%s', created = %d, expire = %d, headers = '%s' WHERE cid = '%s'", $table, $data, time(), $expire, $headers, $cid);
+  db_query("UPDATE {%s} SET data = %b, created = %d, expire = %d, headers = '%s' WHERE cid = '%s'", $table, $data, time(), $expire, $headers, $cid);
   if (!db_affected_rows()) {
-    @db_query("INSERT INTO {%s} (cid, data, created, expire, headers) VALUES ('%s', '%s', %d, %d, '%s')", $table, $cid, $data, time(), $expire, $headers);
+    @db_query("INSERT INTO {%s} (cid, data, created, expire, headers) VALUES ('%s', %b, %d, %d, '%s')", $table, $cid, $data, time(), $expire, $headers);
   }
   db_unlock_tables();
 }
