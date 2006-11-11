@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.393 2006/11/10 09:22:07 drumm Exp $
+// $Id: system.module,v 1.394 2006/11/11 23:52:11 drumm Exp $
 
 /**
  * @file
@@ -2219,7 +2219,7 @@ function system_admin_by_module() {
 
     // Check for permissions.
     if (module_hook($module, 'perm') && $admin_access) {
-      $admin_tasks[-1] = l(t('Configure permissions'), 'admin/user/access');
+      $admin_tasks[-1] = l(t('Configure permissions'), 'admin/user/access', NULL, NULL, 'module-'. $module);
     }
 
     // Check for menu items that are admin links.
