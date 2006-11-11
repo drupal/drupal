@@ -17,6 +17,11 @@ function sess_close() {
 function sess_read($key) {
   global $user;
 
+  // Write and Close handlers are called after destructing objects since PHP 5.0.5
+  // Thus destructors can use sessions but session handler can't use objects.
+  // So we are moving session closure before destructing objects.
+  register_shutdown_function('session_write_close');
+
   // Handle the case of first time visitors and clients that don't store cookies (eg. web crawlers).
   if (!isset($_COOKIE[session_name()])) {
     $user = drupal_anonymous_user();
