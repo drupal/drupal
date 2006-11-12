@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.177 2006/11/03 01:35:17 unconed Exp $
+// $Id: profile.module,v 1.178 2006/11/12 19:33:30 dries Exp $
 
 /**
  * @file
@@ -525,13 +525,7 @@ function profile_load_profile(&$user) {
 }
 
 function profile_save_profile(&$edit, &$user, $category) {
-  if ((arg(0) == 'user' && arg(1) == 'register') || (arg(0) == 'admin' && arg(1) == 'user' && arg(2) == 'create')) {
-    $result = db_query('SELECT fid, name, type FROM {profile_fields} WHERE register = 1 AND visibility != %d ORDER BY category, weight', PROFILE_HIDDEN);
-  }
-  else {
-    $result = db_query("SELECT fid, name, type FROM {profile_fields} WHERE LOWER(category) = LOWER('%s') AND visibility != %d", $category, PROFILE_HIDDEN);
-    // Use LOWER('%s') instead of PHP's strtolower() to avoid UTF-8 conversion issues.
-  }
+  $result = _profile_get_fields($category);
   while ($field = db_fetch_object($result)) {
     if (_profile_field_serialize($field->type)) {
        $edit[$field->name] = serialize($edit[$field->name]);
@@ -628,20 +622,7 @@ function _profile_form_explanation($field) {
 }
 
 function profile_form_profile($edit, $user, $category) {
-  if (arg(0) == 'user' && arg(1) == 'register') {
-    $result = db_query('SELECT * FROM {profile_fields} WHERE visibility != %d AND register = 1 ORDER BY category, weight', PROFILE_HIDDEN);
-  }
-  elseif (arg(0) == 'admin' && arg(1) == 'user' && arg(2) == 'user' && arg(3) == 'create') {
-    $result = db_query('SELECT * FROM {profile_fields} WHERE register = 1 ORDER BY category, weight');
-  }
-  elseif (user_access('administer users')) {
-    $result = db_query("SELECT * FROM {profile_fields} WHERE LOWER(category) = LOWER('%s') ORDER BY weight", $category);
-  }
-  else {
-    $result = db_query("SELECT * FROM {profile_fields} WHERE visibility != %d AND LOWER(category) = LOWER('%s') ORDER BY weight", PROFILE_HIDDEN, $category);
-    // Use LOWER('%s') instead of PHP's strtolower() to avoid UTF-8 conversion issues.
-  }
-
+  $result = _profile_get_fields($category);
   $w = 0;
   while ($field = db_fetch_object($result)) {
     $category = $field->category;
@@ -742,20 +723,7 @@ function _profile_update_user_fields($fields, $account) {
 }
 
 function profile_validate_profile($edit, $category) {
-  if (arg(0) == 'user' && arg(1) == 'register') {
-    $result = db_query('SELECT * FROM {profile_fields} WHERE visibility != %d AND register = 1 ORDER BY category, weight', PROFILE_HIDDEN);
-  }
-  elseif (arg(0) == 'admin' && arg(1) == 'user' && arg(2) == 'create') {
-    $result = db_query('SELECT * FROM {profile_fields} WHERE register = 1 ORDER BY category, weight');
-  }
-  elseif (user_access('administer users')) {
-    $result = db_query("SELECT * FROM {profile_fields} WHERE LOWER(category) = LOWER('%s') ORDER BY weight", $category);
-  }
-  else {
-    $result = db_query("SELECT * FROM {profile_fields} WHERE visibility != %d AND LOWER(category) = LOWER('%s') ORDER BY weight", PROFILE_HIDDEN, $category);
-    // Use LOWER('%s') instead of PHP's strtolower() to avoid UTF-8 conversion issues.
-  }
-
+  $result = _profile_get_fields($category);
   while ($field = db_fetch_object($result)) {
     if ($edit[$field->name]) {
       if ($field->type == 'url') {
@@ -828,6 +796,27 @@ function _profile_field_types($type = NULL) {
 
 function _profile_field_serialize($type = NULL) {
   return $type == 'date';
+}
+
+function _profile_get_fields($category) {
+  $args = array();
+  $sql = 'SELECT * FROM {profile_fields} WHERE ';
+  $filters = array();
+  if ((arg(0) == 'user' && arg(1) == 'register') || (arg(0) == 'admin' && arg(1) == 'user' && arg(2) == 'create')) {
+    $filters[] = 'register = 1';
+  }
+  else {
+    // Use LOWER('%s') instead of PHP's strtolower() to avoid UTF-8 conversion issues.
+    $filters[] = "LOWER(category) = LOWER('%s')";
+    $args[] = $category;
+  }
+  if (!user_access('administer users')) {
+    $filters[] = 'visibility != %d';
+    $args[] = PROFILE_HIDDEN;
+  }
+  $sql .= implode(' AND ', $filters);
+  $sql .= ' ORDER BY category, weight';
+  return db_query($sql, $args);
 }
 
 /**
