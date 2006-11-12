@@ -366,6 +366,22 @@ body.sidebars #squeeze {
   margin: 0.5em 0;
 }
 
+#sidebar-left .block-region {
+  margin: 0 15px 0 0px;
+}
+
+#sidebar-right .block-region {
+  margin: 0 0px 0 15px;
+}
+
+.block-region {
+  padding: 1em;
+  background: transparent;
+  border: 2px dashed #b4d7f0;
+  text-align: center;
+  font-size: 1.3em;
+}
+
 /* Now we add the backgrounds for the main content shading */
 #wrapper #container #center #squeeze {
   background: #fff url("images/bg-content.png") repeat-x 50% 0;
