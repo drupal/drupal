@@ -2614,7 +2614,7 @@ function node_access($op, $node = NULL) {
   // node_access table.
   if ($op != 'create' && $node->nid && $node->status) {
     $grants = array();
-    foreach (node_access_grants($op, $uid) as $realm => $gids) {
+    foreach (node_access_grants($op) as $realm => $gids) {
       foreach ($gids as $gid) {
         $grants[] = "(gid = $gid AND realm = '$realm')";
       }
