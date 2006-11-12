@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.724 2006/11/10 19:40:23 drumm Exp $
+// $Id: node.module,v 1.725 2006/11/12 19:07:29 drumm Exp $
 
 /**
  * @file
@@ -2614,7 +2614,7 @@ function node_access($op, $node = NULL) {
   // node_access table.
   if ($op != 'create' && $node->nid && $node->status) {
     $grants = array();
-    foreach (node_access_grants($op, $uid) as $realm => $gids) {
+    foreach (node_access_grants($op) as $realm => $gids) {
       foreach ($gids as $gid) {
         $grants[] = "(gid = $gid AND realm = '$realm')";
       }
