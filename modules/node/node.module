@@ -2906,6 +2906,7 @@ function node_content_access($op, $node) {
  */
 function node_content_form($node) {
   $type = node_get_types('type', $node);
+  $form = array();
 
   if ($type->has_title) {
     $form['title'] = array(
