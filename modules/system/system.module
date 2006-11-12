@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.394 2006/11/11 23:52:11 drumm Exp $
+// $Id: system.module,v 1.395 2006/11/12 20:18:57 dries Exp $
 
 /**
  * @file
@@ -1527,8 +1527,13 @@ function theme_system_modules($form) {
       $row[] = array('data' => drupal_render($form['description'][$key]), 'class' => 'description');
       $rows[] = $row;
     }
-    $output .= '<h2>'. t($package) .'</h2>';
-    $output .= theme('table', $header, $rows, array('class' => 'package'));
+    $fieldset = array (
+      '#title' => t($package),
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+      '#value' => theme('table', $header, $rows, array('class' => 'package'))
+    );
+    $output .= theme('fieldset', $fieldset);
   }
 
   $output .= drupal_render($form);
