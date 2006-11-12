@@ -499,8 +499,8 @@ function check_plain($text) {
 }
 
 /**
- * Since request_uri() is only available on Apache, we generate an
- * equivalent using other environment variables.
+ * Since $_SERVER['REQUEST_URI'] is only available on Apache, we
+ * generate an equivalent using other environment variables.
  */
 function request_uri() {
 
