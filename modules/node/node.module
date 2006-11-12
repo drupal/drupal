@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.726 2006/11/12 19:09:11 drumm Exp $
+// $Id: node.module,v 1.727 2006/11/12 19:56:07 dries Exp $
 
 /**
  * @file
@@ -2906,6 +2906,7 @@ function node_content_access($op, $node) {
  */
 function node_content_form($node) {
   $type = node_get_types('type', $node);
+  $form = array();
 
   if ($type->has_title) {
     $form['title'] = array(

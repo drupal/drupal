@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.11 2006/11/10 19:40:23 drumm Exp $
+// $Id: content_types.inc,v 1.12 2006/11/12 19:56:07 dries Exp $
 
 /**
  * @file
@@ -108,24 +108,25 @@ function node_type_form($type = NULL) {
     '#collapsible' => TRUE,
     '#collapsed' => FALSE,
   );
-  if ($type->has_title) {
-    $form['submission']['title_label'] = array(
-      '#title' => t('Title field label'),
-      '#type' => 'textfield',
-      '#default_value' => $type->title_label,
-      '#description' => t('The label for the title field of this content type.'),
-      '#required' => TRUE,
-    );
+  $form['submission']['title_label'] = array(
+    '#title' => t('Title field label'),
+    '#type' => 'textfield',
+    '#default_value' => $type->title_label,
+    '#required' => TRUE,
+  );
+  if (!$type->has_title) {
+    // Avoid overwriting a content type that intentionally does not have a
+    // title field.
+    $form['submission']['title_label']['#attributes'] = array('disabled' => 'disabled');
+    $form['submission']['title_label']['#description'] = t('This content type does not have a title field.');
+    $form['submission']['title_label']['#required'] = FALSE;
   }
-  if ($type->has_body) {
-    $form['submission']['body_label'] = array(
-      '#title' => t('Body field label'),
-      '#type' => 'textfield',
-      '#default_value' => $type->body_label,
-      '#description' => t('The label for the body field of this content type.'),
-      '#required' => TRUE,
-    );
-  }
+  $form['submission']['body_label'] = array(
+    '#title' => t('Body field label'),
+    '#type' => 'textfield',
+    '#default_value' => $type->body_label,
+    '#description' => t('To omit the body field for this content type, remove any text and leave this field blank.'),
+  );
   $form['submission']['description'] = array(
     '#title' => t('Description'),
     '#type' => 'textarea',
@@ -262,8 +263,12 @@ function node_type_form_submit($form_id, $form_values) {
   $type->title_label = $form_values['title_label'];
   $type->body_label = $form_values['body_label'];
 
+  // title_label is required in core; has_title will always be true, unless a
+  // module alters the title field.
+  $type->has_title = ($type->title_label != '');
+  $type->has_body = ($type->body_label != '');
+
   $type->module = !empty($form_values['module']) ? $form_values['module'] : 'node';
-  $type->has_title = $type->has_body = TRUE;
   $type->custom = $form_values['custom'];
   $type->modified = TRUE;
   $type->locked = $form_values['locked'];
