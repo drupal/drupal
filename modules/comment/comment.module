@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.495 2006/11/10 08:37:20 drumm Exp $
+// $Id: comment.module,v 1.496 2006/11/12 00:11:15 drumm Exp $
 
 /**
  * @file
@@ -891,6 +891,7 @@ function comment_render($node, $cid = 0) {
         $output .= drupal_get_form('comment_controls', $mode, $order, $comments_per_page);
       }
 
+      $divs = 0;
       $last_depth = 0;
       drupal_add_css(drupal_get_path('module', 'comment') . '/comment.css');
       while ($comment = db_fetch_object($result)) {
