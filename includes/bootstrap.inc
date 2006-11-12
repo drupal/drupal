@@ -57,14 +57,16 @@ function timer_start($name) {
 function timer_read($name) {
   global $timers;
 
-  list($usec, $sec) = explode(' ', microtime());
-  $stop = (float)$usec + (float)$sec;
-  $diff = round(($stop - $timers[$name]['start']) * 1000, 2);
+  if (isset($timers[$name]['start'])) {
+    list($usec, $sec) = explode(' ', microtime());
+    $stop = (float)$usec + (float)$sec;
+    $diff = round(($stop - $timers[$name]['start']) * 1000, 2);
 
-  if (isset($timers[$name]['time'])) {
-    $diff += $timers[$name]['time'];
+    if (isset($timers[$name]['time'])) {
+      $diff += $timers[$name]['time'];
+    }
+    return $diff;
   }
-  return $diff;
 }
 
 /**
