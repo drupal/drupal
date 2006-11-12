@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.129 2006/11/12 00:21:15 drumm Exp $
+// $Id: bootstrap.inc,v 1.130 2006/11/12 19:16:09 dries Exp $
 
 /**
  * @file
@@ -499,8 +499,8 @@ function check_plain($text) {
 }
 
 /**
- * Since request_uri() is only available on Apache, we generate an
- * equivalent using other environment variables.
+ * Since $_SERVER['REQUEST_URI'] is only available on Apache, we
+ * generate an equivalent using other environment variables.
  */
 function request_uri() {
 
