@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.395 2006/11/07 07:01:05 drumm Exp $
+// $Id: book.module,v 1.396 2006/11/14 06:30:10 drumm Exp $
 
 /**
  * @file
@@ -511,7 +511,7 @@ function theme_book_navigation($node) {
         $output .= $tree;
       }
       if (isset($links)) {
-        $output .= '<div class="page-links">'. $links .'</div>';
+        $output .= '<div class="page-links clear-block">'. $links .'</div>';
       }
       $output .= '</div>';
     }
