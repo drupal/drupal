@@ -1098,7 +1098,7 @@ function theme_forum_topic_navigation($node) {
   }
 
   if ($prev || $next) {
-    $output .= '<div class="forum-topic-navigation">';
+    $output .= '<div class="forum-topic-navigation clear-block">';
 
     if ($prev) {
       $output .= l(t('‹ ') . $prev->title, 'node/'. $prev->nid, array('class' => 'topic-previous', 'title' => t('Go to previous forum topic')));

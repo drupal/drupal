@@ -18,9 +18,12 @@
   padding: 0.5em;
 }
 .forum-topic-navigation .topic-previous {
-  margin-right: 4em;
   text-align: right;
+  float: left;
+  width: 46%;
 }
 .forum-topic-navigation .topic-next {
   text-align: left;
+  float: right;
+  width: 46%;
 }

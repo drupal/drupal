@@ -12,10 +12,19 @@
 }
 .book-navigation .page-previous {
   text-align: right;
+  width: 42%;
+  display: block;
+  float: left;
 }
 .book-navigation .page-up {
-  margin: 0 4em;
+  margin: 0 5%;
+  width: 4%;
+  display: block;
+  float: left;
 }
 .book-navigation .page-next {
   text-align: left;
+  width: 42%;
+  display: block;
+  float: left;
 }
