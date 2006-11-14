@@ -1872,7 +1872,8 @@ function node_form_submit($form_id, $edit) {
   if ($node->nid) {
     // Check whether the current user has the proper access rights to
     // perform this operation:
-    if (node_access('update', $node)) {
+    $original_node = node_load($node->nid); //check access rights using the unmodified node
+    if (node_access('update', $original_node)) {
       node_save($node);
       watchdog('content', t('%type: updated %title.', array('%type' => theme('placeholder', t($node->type)), '%title' => theme('placeholder', $node->title))), WATCHDOG_NOTICE, l(t('view'), 'node/'. $node->nid));
       drupal_set_message(t('The %post was updated.', array ('%post' => node_get_name($node))));
