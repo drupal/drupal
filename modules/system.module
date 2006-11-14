@@ -1007,7 +1007,7 @@ function system_modules_submit($form_id, $edit) {
 
   module_list(TRUE, FALSE);
 
-  include './includes/install.inc';
+  include_once './includes/install.inc';
   foreach ($new_modules as $module) {
     // Set the installed schema version for newly-enabled modules
     $versions = drupal_get_schema_versions($module);
