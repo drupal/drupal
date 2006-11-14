@@ -1,10 +1,13 @@
 <?php
-// $Id: locale.install,v 1.6 2006/09/01 07:40:08 drumm Exp $
+// $Id: locale.install,v 1.7 2006/11/14 06:20:40 drumm Exp $
 
 /**
  * Implementation of hook_install().
  */
 function locale_install() {
+  // locales_source.source and locales_target.target are not used as binary
+  // fields; non-MySQL database servers need to ensure the field type is text
+  // and that LIKE produces a case-sensitive comparison.
   switch ($GLOBALS['db_type']) {
     case 'mysql':
     case 'mysqli':
@@ -38,6 +41,7 @@ function locale_install() {
         KEY plural (plural)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
       break;
+
     case 'pgsql':
       db_query("CREATE TABLE {locales_meta} (
         locale varchar(12) NOT NULL default '',
@@ -52,13 +56,13 @@ function locale_install() {
       db_query("CREATE TABLE {locales_source} (
         lid serial,
         location varchar(255) NOT NULL default '',
-        source bytea NOT NULL,
+        source text NOT NULL,
         PRIMARY KEY (lid)
       )");
 
       db_query("CREATE TABLE {locales_target} (
         lid int NOT NULL default '0',
-        translation bytea NOT NULL,
+        translation text NOT NULL,
         locale varchar(12) NOT NULL default '',
         plid int NOT NULL default '0',
         plural int NOT NULL default '0'
