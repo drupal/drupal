@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.708 2006/11/11 23:52:11 drumm Exp $
+// $Id: user.module,v 1.709 2006/11/15 20:18:28 dries Exp $
 
 /**
  * @file
@@ -573,13 +573,13 @@ function user_block($op = 'list', $delta = 0, $edit = array()) {
       case 3:
         if (user_access('access content')) {
           // Count users with activity in the past defined period.
-          $time_period = time() - variable_get('user_block_seconds_online', 900);
+          $interval = time() - variable_get('user_block_seconds_online', 900);
 
-          // Perform database queries to gather online user lists.
-          $anonymous_count = sess_count($time_period);
-          $authenticated_count = sess_count($time_period, false);
-          $authenticated_users = db_query('SELECT uid, name, access FROM {users} WHERE access >= %d AND uid != 0 ORDER BY access DESC', time() - $time_period);
-
+          // Perform database queries to gather online user lists.  We use s.timestamp
+          // rather than u.access because it is much faster is much faster..
+          $anonymous_count = sess_count($interval);
+          $authenticated_users = db_query('SELECT u.uid, u.name FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.timestamp >= %d AND s.uid > 0 ORDER BY s.timestamp DESC', $interval);
+          $authenticated_count = db_num_rows($authenticated_users);
 
           // Format the output with proper grammar.
           if ($anonymous_count == 1 && $authenticated_count == 1) {
