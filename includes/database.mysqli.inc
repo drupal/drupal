@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysqli.inc,v 1.27 2006/10/23 18:38:45 drumm Exp $
+// $Id: database.mysqli.inc,v 1.28 2006/11/15 19:48:06 dries Exp $
 
 /**
  * @file
@@ -114,16 +114,6 @@ function db_connect($url) {
 
   /* Force UTF-8 */
   mysqli_query($connection, 'SET NAMES "utf8"');
-
-  /**
-   * from: http://bugs.php.net/bug.php?id=33772
-   * Write and Close handlers are called after destructing objects since PHP
-   * 5.0.5. Thus destructors can use sessions but session handler can't use
-   * objects. In prior versions, they were called in the opposite order. It
-   * is possible to call session_write_close() from the destructor to solve
-   * this chicken and egg problem.
-   */
-  register_shutdown_function('session_write_close');
 
   return $connection;
 }
