@@ -228,13 +228,14 @@ function archive_page($year = 0, $month = 0, $day = 0) {
 
   if ($year && $month && $day) {
     // Fetch nodes for the selected date, if one was specified.
-    $sql = 'SELECT n.nid, n.created FROM {node} n WHERE n.status = 1 AND n.created > %d AND n.created < %d ORDER BY n.created';
-    $sql = db_rewrite_sql($sql);
-    $result = db_query_range($sql, $date, $date_end, 0, 20);
+    $sql = db_rewrite_sql('SELECT n.nid, n.created FROM {node} n WHERE n.status = 1 AND n.created > %d AND n.created < %d ORDER BY n.created');
+    $countsql = db_rewrite_sql('SELECT count(n.nid) FROM {node} n WHERE n.status = 1 AND n.created > %d AND n.created < %d ORDER BY n.created');
+    $result = pager_query($sql, variable_get('default_nodes_main', 10), 0, $countsql, $date, $date_end);
     if (db_num_rows($result) > 0) {
       while ($nid = db_fetch_object($result)) {
         $output .= node_view(node_load($nid->nid), 1);
       }
+      $output .= theme('pager');
     }
     else {
       $output .= theme('box', t('No posts found.'), '');
