@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.159 2006/10/31 08:06:18 drumm Exp $
+// $Id: form.inc,v 1.160 2006/11/16 09:06:59 drumm Exp $
 
 /**
  * @defgroup form Form generation
@@ -497,7 +497,7 @@ function _form_validate($elements, $form_id = NULL) {
     }
   }
   /* Validate the current input */
-  if (!$elements['#validated']) {
+  if (!isset($elements['#validated']) || !$elements['#validated']) {
     if (isset($elements['#needs_validation'])) {
       // An empty textfield returns '' so we use empty(). An empty checkbox
       // and a textfield could return '0' and empty('0') returns TRUE so we
@@ -644,7 +644,7 @@ function form_builder($form_id, $form) {
     }
 
     if (!isset($form['#value']) && !array_key_exists('#value', $form)) {
-      if (($form['#programmed']) || ((!isset($form['#access']) || $form['#access']) && isset($form['#post']) && ($form['#post']['form_id'] == $form_id))) {
+      if (($form['#programmed']) || ((!isset($form['#access']) || $form['#access']) && isset($form['#post']) && (isset($form['#post']['form_id']) && $form['#post']['form_id'] == $form_id))) {
         $edit = $form['#post'];
         foreach ($form['#parents'] as $parent) {
           $edit = isset($edit[$parent]) ? $edit[$parent] : NULL;
@@ -698,7 +698,7 @@ function form_builder($form_id, $form) {
           $function($form);
         }
         else {
-          $form['#value'] = $form['#default_value'];
+          $form['#value'] = isset($form['#default_value']) ? $form['#default_value'] : '';
         }
       }
     }
@@ -1355,7 +1355,7 @@ function theme_textarea($element) {
  */
 
 function theme_markup($element) {
-  return $element['#value'] . $element['#children'];
+  return (isset($element['#value']) ? $element['#value'] : '') . (isset($element['#children']) ? $element['#children'] : '');
 }
 
 /**
