@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.709 2006/11/15 20:18:28 dries Exp $
+// $Id: user.module,v 1.710 2006/11/16 08:45:49 drumm Exp $
 
 /**
  * @file
@@ -1851,11 +1851,7 @@ function user_admin_perm_submit($form_id, $form_values) {
       // Delete, so if we clear every checkbox we reset that role;
       // otherwise permissions are active and denied everywhere.
       db_query('DELETE FROM {permission} WHERE rid = %d', $role->rid);
-      foreach ($form_values[$role->rid] as $key => $value) {
-        if (!$value) {
-          unset($form_values[$role->rid][$key]);
-        }
-      }
+      $form_values[$role->rid] = array_filter($form_values[$role->rid]);
       if (count($form_values[$role->rid])) {
         db_query("INSERT INTO {permission} (rid, perm) VALUES (%d, '%s')", $role->rid, implode(', ', array_keys($form_values[$role->rid])));
       }
