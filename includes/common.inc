@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.586 2006/11/16 08:54:04 drumm Exp $
+// $Id: common.inc,v 1.587 2006/11/16 09:18:22 drumm Exp $
 
 /**
  * @file
@@ -1854,7 +1854,7 @@ function drupal_system_listing($mask, $directory, $key = 'name', $min_depth = 1)
   $files = array();
 
   // Always search sites/all/* as well as the global directories
-  $searchdir[] = 'sites/all';
+  $searchdir[] = 'sites/all/'. $directory;
 
   // The 'profiles' directory contains pristine collections of modules and
   // themes as organized by a distribution.  It is pristine in the same way
