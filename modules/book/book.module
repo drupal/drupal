@@ -232,13 +232,6 @@ function book_form(&$node) {
   );
   $form['body_filter']['format'] = filter_form($node->format);
 
-  $form['log'] = array(
-    '#type' => 'textarea',
-    '#title' => t('Log message'),
-    '#weight' => 5,
-    '#description' => t('An explanation of the additions or updates being made to help other authors understand your motivations.'),
-  );
-
   if (user_access('administer nodes')) {
     $form['weight'] = array('#type' => 'weight',
       '#title' => t('Weight'),
