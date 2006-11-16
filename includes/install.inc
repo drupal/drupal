@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.24 2006/10/23 06:45:17 dries Exp $
+// $Id: install.inc,v 1.25 2006/11/16 08:28:07 drumm Exp $
 
 define('SCHEMA_UNINSTALLED', -1);
 define('SCHEMA_INSTALLED', 0);
@@ -328,31 +328,26 @@ function drupal_install_profile($profile, $module_list) {
 
 
 /**
- * Execute the install scripts for a set of modules.
+ * Calls the install function and updates the system table for a given list of
+ * modules.
  *
  * @param module_list
  *   The modules to install.
  */
 function drupal_install_modules($module_list = array()) {
-  foreach ($module_list as $module) {
-    drupal_install_module($module);
-  }
-}
+  $enable_modules = array();
 
-/**
- * Calls the install function and updates the system table for a given module.
- *
- * @param module
- *   The module to install.
- */
-function drupal_install_module($module) {
-  if (drupal_get_installed_schema_version($module, TRUE) == SCHEMA_UNINSTALLED) {
-    module_load_install($module);
-    module_invoke($module, 'install');
-    $versions = drupal_get_schema_versions($module);
-    drupal_set_installed_schema_version($module, $versions ? max($versions) : SCHEMA_INSTALLED);
-    module_enable($module);
+  foreach ($module_list as $module) {
+    if (drupal_get_installed_schema_version($module, TRUE) == SCHEMA_UNINSTALLED) {
+      module_load_install($module);
+      module_invoke($module, 'install');
+      $versions = drupal_get_schema_versions($module);
+      drupal_set_installed_schema_version($module, $versions ? max($versions) : SCHEMA_INSTALLED);
+      $enable_modules[] = $module;
+    }
   }
+
+  module_enable($enable_modules);
 }
 
 /**

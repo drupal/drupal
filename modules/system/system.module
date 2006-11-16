@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.396 2006/11/13 20:26:00 drumm Exp $
+// $Id: system.module,v 1.397 2006/11/16 08:28:08 drumm Exp $
 
 /**
  * @file
@@ -1442,13 +1442,14 @@ function system_modules_submit($form_id, $form_values) {
     }
   }
 
+  $enable_modules = array();
   foreach ($form_values['status'] as $key => $choice) {
     if ($choice) {
       if (drupal_get_installed_schema_version($key) == SCHEMA_UNINSTALLED) {
         $new_modules[] = $key;
       }
       else {
-        module_enable($key);
+        $enable_modules[] = $key;
       }
     }
     else {
@@ -1456,14 +1457,19 @@ function system_modules_submit($form_id, $form_values) {
     }
   }
 
+  if (!empty($enable_modules)) {
+    module_enable($enable_modules);
+  }
+
   $old_module_list = module_list();
 
   // Install new modules.
-  foreach ($new_modules as $module) {
-    if (drupal_check_module($module)) {
-      drupal_install_module($module);
+  foreach ($new_modules as $key => $module) {
+    if (!drupal_check_module($module)) {
+      unset($new_modules[$key]);
     }
   }
+  drupal_install_modules($new_modules);
 
   $current_module_list = module_list(TRUE, FALSE);
 
