@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.728 2006/11/16 08:32:19 drumm Exp $
+// $Id: node.module,v 1.729 2006/11/16 21:14:44 drumm Exp $
 
 /**
  * @file
@@ -571,12 +571,18 @@ function node_save(&$node) {
   // Split off revisions data to another structure
   $revisions_table_values = array('nid' => $node->nid, 'vid' => $node->vid,
                      'title' => $node->title, 'body' => $node->body,
-                     'teaser' => $node->teaser, 'log' => $node->log, 'timestamp' => $node->changed,
+                     'teaser' => $node->teaser, 'timestamp' => $node->changed,
                      'uid' => $user->uid, 'format' => $node->format);
   $revisions_table_types = array('nid' => '%d', 'vid' => '%d',
                      'title' => "'%s'", 'body' => "'%s'",
-                     'teaser' => "'%s'", 'log' => "'%s'", 'timestamp' => '%d',
+                     'teaser' => "'%s'", 'timestamp' => '%d',
                      'uid' => '%d', 'format' => '%d');
+  if (!empty($node->log)) {
+    // Only store the log message if there's something to store; this prevents existing
+    // log messages from being unintentionally overwritten by a blank message.
+    $revisions_table_values['log'] = $node->log;
+    $revisions_table_types['log'] = "'%s'";
+  }
   $node_table_values = array('nid' => $node->nid, 'vid' => $node->vid,
                     'title' => $node->title, 'type' => $node->type, 'uid' => $node->uid,
                     'status' => $node->status, 'created' => $node->created,
@@ -1954,6 +1960,18 @@ function node_form($node, $form_values = NULL) {
     $node->revision = in_array('revision', $node_options);
   }
   $form['#node'] = $node;
+
+  // Add a log field if the "Create new revisions" option is checked, or if the
+  // current user has the ability to check that option.
+  if ($node->revision || user_access('administer nodes')) {
+    $form['log'] = array(
+      '#type' => 'textarea',
+      '#title' => t('Log message'),
+      '#rows' => 2,
+      '#weight' => 20,
+      '#description' => t('An explanation of the additions or updates being made to help other authors understand your motivations.'),
+    );
+  }
 
   // Node author information for administrators
   $form['author'] = array(
