@@ -1854,7 +1854,7 @@ function drupal_system_listing($mask, $directory, $key = 'name', $min_depth = 1)
   $files = array();
 
   // Always search sites/all/* as well as the global directories
-  $searchdir[] = 'sites/all';
+  $searchdir[] = 'sites/all/'. $directory;
 
   // The 'profiles' directory contains pristine collections of modules and
   // themes as organized by a distribution.  It is pristine in the same way
