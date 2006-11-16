@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.139 2006/10/23 17:57:31 dries Exp $
+// $Id: menu.inc,v 1.140 2006/11/16 07:28:18 drumm Exp $
 
 /**
  * @file
@@ -1101,8 +1101,13 @@ function _menu_build() {
         if ($old_mid < 0) {
           // It had a temporary ID, so use a permanent one.
           $_menu['items'][$item->mid] = $_menu['items'][$old_mid];
-          unset($_menu['items'][$old_mid]);
-          $_menu['path index'][$item->path] = $item->mid;
+          if ($_menu['items'][$item->mid]['type'] & $item->type) {
+            // If the item is of the same type, delete the old item.
+            unset($_menu['items'][$old_mid]);
+            $_menu['path index'][$item->path] = $item->mid;
+          }
+          // The new menu item gets all the custom type flags from the database
+          $_menu['items'][$item->mid]['type'] &= $item->type;
         }
         else {
           // It has a permanent ID. Only replace with non-custom menu items.
@@ -1257,6 +1262,11 @@ function _menu_append_contextual_items() {
         if (isset($_menu['items'][$mid]['callback arguments'])) {
           $_menu['items'][$mid]['callback arguments'] = $item['callback arguments'];
         }
+      }
+      if ($item['type'] & MENU_LOCAL_TASK && !($_menu['items'][$mid]['type'] & MENU_LOCAL_TASK)) {
+        // A local task is in the menu table and the path is already present
+        $_menu['items'][$mid]['type'] = MENU_LOCAL_TASK;
+        $new_items[$mid] = $item;
       }
     }
   }
