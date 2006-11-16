@@ -227,22 +227,33 @@ function module_load_install($module) {
 }
 
 /**
- * Enable a given module.
+ * Enable a given list of modules.
  *
- * @param $module
- * Enable a given module and call its enable hook.
+ * @param $module_list
+ *   An array of module names.
  */
-function module_enable($module) {
-  $existing = db_fetch_object(db_query("SELECT name, status FROM {system} WHERE type = 'module' AND name = '%s'", $module));
-  if ($existing->status === '0') {
-    module_load_install($module);
-    db_query("UPDATE {system} SET status = 1, throttle = 0 WHERE type = 'module' AND name = '%s'", $module);
-    drupal_load('module', $module);
-    module_invoke($module, 'enable');
-    return TRUE;
+function module_enable($module_list) {
+  $invoke_modules = array();
+  foreach ($module_list as $module) {
+    $existing = db_fetch_object(db_query("SELECT name, status FROM {system} WHERE type = 'module' AND name = '%s'", $module));
+    if ($existing->status === '0') {
+      module_load_install($module);
+      db_query("UPDATE {system} SET status = 1, throttle = 0 WHERE type = 'module' AND name = '%s'", $module);
+      drupal_load('module', $module);
+      $invoke_modules[] = $module;
+    }
   }
-  else {
-    return FALSE;
+
+  if (!empty($invoke_modules)) {
+    // Refresh the module list to include the new enabled module.
+    module_list(TRUE, FALSE);
+    // Force to regenerate the stored list of hook implementations.
+    module_implements('', FALSE, TRUE);
+    cache_clear_all('*', 'cache_menu', TRUE);
+  }
+
+  foreach ($invoke_modules as $module) {
+    module_invoke($module, 'enable');
   }
 }
 
