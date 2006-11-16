@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.710 2006/11/16 08:45:49 drumm Exp $
+// $Id: user.module,v 1.711 2006/11/16 09:01:55 drumm Exp $
 
 /**
  * @file
@@ -1223,6 +1223,8 @@ function user_register_submit($form_id, $form_values) {
     watchdog('security', t('Detected malicious attempt to alter protected user fields.'), WATCHDOG_WARNING);
     return 'user/register';
   }
+  //the unset below is needed to prevent these form values from being saved as user data
+  unset($form_values['form_token'], $form_values['submit'], $form_values['op'], $form_values['notify'], $form_values['form_id'], $form_values['affiliates'], $form_values['destination']);
 
   $account = user_save('', array_merge($form_values, array('pass' => $pass, 'init' => $mail, 'roles' => $roles, 'status' => ($admin || variable_get('user_register', 1) == 1))));
   watchdog('user', t('New user: %name %email.', array('%name' => $name, '%email' => '<'. $mail .'>')), WATCHDOG_NOTICE, l(t('edit'), 'user/'. $account->uid .'/edit'));
@@ -1466,7 +1468,7 @@ function user_edit_validate($form_id, $form_values) {
 function user_edit_submit($form_id, $form_values) {
   $account = $form_values['_account'];
   $category = $form_values['_category'];
-  unset($form_values['_account'], $form_values['submit'], $form_values['delete'], $form_values['form_id'], $form_values['_category']);
+  unset($form_values['_account'], $form_values['op'], $form_values['submit'], $form_values['delete'], $form_values['form_token'], $form_values['form_id'], $form_values['_category']);
   user_module_invoke('submit', $form_values, $account, $category);
   user_save($account, $form_values, $category);
   // Delete that user's menu cache.
