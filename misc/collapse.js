@@ -44,7 +44,6 @@ Drupal.collapseAutoAttach = function () {
             .slideUp('medium', function () { $(fieldset).addClass('collapsed'); fieldset.animating = false; } )
             .show();
         }
-        this.blur();
         return false;
       })
       .html(this.innerHTML);
