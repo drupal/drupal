@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.729 2006/11/16 21:14:44 drumm Exp $
+// $Id: node.module,v 1.730 2006/11/17 05:28:26 drumm Exp $
 
 /**
  * @file
@@ -964,13 +964,12 @@ function node_configure() {
     $form['access']['rebuild'] = array('#type' => 'submit', '#value' => t('Rebuild permissions'));
   }
 
-  $form['settings'] = array('#type' => 'fieldset', '#title' => t('Settings'));
-  $form['settings']['default_nodes_main'] = array(
+  $form['default_nodes_main'] = array(
     '#type' => 'select', '#title' => t('Number of posts on main page'), '#default_value' => variable_get('default_nodes_main', 10),
     '#options' =>  drupal_map_assoc(array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30)),
     '#description' => t('The default maximum number of posts to display per page on overview pages such as the main page.')
   );
-  $form['settings']['teaser_length'] = array(
+  $form['teaser_length'] = array(
     '#type' => 'select', '#title' => t('Length of trimmed posts'), '#default_value' => variable_get('teaser_length', 600),
     '#options' => array(0 => t('Unlimited'), 200 => t('200 characters'), 400 => t('400 characters'), 600 => t('600 characters'),
       800 => t('800 characters'), 1000 => t('1000 characters'), 1200 => t('1200 characters'), 1400 => t('1400 characters'),
@@ -978,7 +977,7 @@ function node_configure() {
     '#description' => t("The maximum number of characters used in the trimmed version of a post. Drupal will use this setting to determine at which offset long posts should be trimmed. The trimmed version of a post is typically used as a teaser when displaying the post on the main page, in XML feeds, etc. To disable teasers, set to 'Unlimited'. Note that this setting will only affect new or updated content and will not affect existing teasers.")
   );
 
-  $form['settings']['node_preview'] = array(
+  $form['node_preview'] = array(
     '#type' => 'radios', '#title' => t('Preview post'), '#default_value' => variable_get('node_preview', 0),
     '#options' => array(t('Optional'), t('Required')), '#description' => t('Must users preview posts before submitting?')
   );
