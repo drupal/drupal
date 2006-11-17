@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.730 2006/11/17 05:28:26 drumm Exp $
+// $Id: node.module,v 1.731 2006/11/17 07:01:38 dries Exp $
 
 /**
  * @file
@@ -578,8 +578,9 @@ function node_save(&$node) {
                      'teaser' => "'%s'", 'timestamp' => '%d',
                      'uid' => '%d', 'format' => '%d');
   if (!empty($node->log)) {
-    // Only store the log message if there's something to store; this prevents existing
-    // log messages from being unintentionally overwritten by a blank message.
+    // Only store the log message if there's something to store; this prevents
+    // existing log messages from being unintentionally overwritten by a blank
+    // message. A new revision will have an empty log message (or $node->log).
     $revisions_table_values['log'] = $node->log;
     $revisions_table_types['log'] = "'%s'";
   }
@@ -1960,7 +1961,7 @@ function node_form($node, $form_values = NULL) {
   }
   $form['#node'] = $node;
 
-  // Add a log field if the "Create new revisions" option is checked, or if the
+  // Add a log field if the "Create new revision" option is checked, or if the
   // current user has the ability to check that option.
   if ($node->revision || user_access('administer nodes')) {
     $form['log'] = array(
