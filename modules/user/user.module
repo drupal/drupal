@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.711 2006/11/16 09:01:55 drumm Exp $
+// $Id: user.module,v 1.712 2006/11/17 21:46:32 dries Exp $
 
 /**
  * @file
@@ -1871,39 +1871,7 @@ function user_admin_perm_submit($form_id, $form_values) {
  * Menu callback: administer roles.
  */
 function user_admin_role() {
-  $edit = isset($_POST) ? $_POST : '';
-  $op = isset($_POST['op']) ? $_POST['op'] : '';
   $id = arg(4);
-
-  if ($op == t('Save role')) {
-    if ($edit['name']) {
-      db_query("UPDATE {role} SET name = '%s' WHERE rid = %d", $edit['name'], $id);
-      drupal_set_message(t('The role has been renamed.'));
-      drupal_goto('admin/user/roles');
-    }
-    else {
-      form_set_error('name', t('You must specify a valid role name.'));
-    }
-  }
-  else if ($op == t('Delete role')) {
-    db_query('DELETE FROM {role} WHERE rid = %d', $id);
-    db_query('DELETE FROM {permission} WHERE rid = %d', $id);
-    // Update the users who have this role set:
-    db_query('DELETE FROM {users_roles} WHERE rid = %d', $id);
-
-    drupal_set_message(t('The role has been deleted.'));
-    drupal_goto('admin/user/roles');
-  }
-  else if ($op == t('Add role')) {
-    if ($edit['name']) {
-      db_query("INSERT INTO {role} (name) VALUES ('%s')", $edit['name']);
-      drupal_set_message(t('The role has been added.'));
-      drupal_goto('admin/user/roles');
-    }
-    else {
-      form_set_error('name', t('You must specify a valid role name.'));
-    }
-  }
   if ($id) {
     if (DRUPAL_ANONYMOUS_RID == $id || DRUPAL_AUTHENTICATED_RID == $id) {
       drupal_goto('admin/user/roles');
@@ -1918,6 +1886,10 @@ function user_admin_role() {
       '#required' => TRUE,
       '#maxlength' => 64,
       '#description' => t('The name for this role. Example: "moderator", "editorial board", "site architect".'),
+    );
+    $form['rid'] = array(
+      '#type' => 'value',
+      '#value' => $id,
     );
     $form['submit'] = array(
       '#type' => 'submit',
@@ -1938,8 +1910,47 @@ function user_admin_role() {
       '#type' => 'submit',
       '#value' => t('Add role'),
     );
+    $form['#base'] = 'user_admin_role';
   }
   return $form;
+}
+
+function user_admin_role_validate($form_id, $form_values) {
+  if ($form_values['name']) {
+    if ($form_values['op'] == t('Save role')) {
+      if (db_result(db_query("SELECT COUNT(*) FROM {role} WHERE name = '%s' AND rid != %d", $form_values['name'], $form_values['rid']))) {
+        form_set_error('name', t('The role name %name already exists. Please choose another role name.', array('%name' => $form_values['name'])));
+      }
+    }
+    else if ($form_values['op'] == t('Add role')) {
+      if (db_result(db_query("SELECT COUNT(*) FROM {role} WHERE name = '%s'", $form_values['name']))) {
+        form_set_error('name', t('The role name %name already exists. Please choose another role name.', array('%name' => $form_values['name'])));
+      }
+    }
+  }
+  else {
+    form_set_error('name', t('You must specify a valid role name.'));
+  }
+}
+
+function user_admin_role_submit($form_id, $form_values) {
+  if ($form_values['op'] == t('Save role')) {
+    db_query("UPDATE {role} SET name = '%s' WHERE rid = %d", $form_values['name'], $form_values['rid']);
+    drupal_set_message(t('The role has been renamed.'));
+  }
+  else if ($form_values['op'] == t('Delete role')) {
+    db_query('DELETE FROM {role} WHERE rid = %d', $form_values['rid']);
+    db_query('DELETE FROM {permission} WHERE rid = %d', $form_values['rid']);
+    // Update the users who have this role set:
+    db_query('DELETE FROM {users_roles} WHERE rid = %d', $form_values['rid']);
+
+    drupal_set_message(t('The role has been deleted.'));
+  }
+  else if ($form_values['op'] == t('Add role')) {
+    db_query("INSERT INTO {role} (name) VALUES ('%s')", $form_values['name']);
+    drupal_set_message(t('The role has been added.'));
+  }
+  return 'admin/user/roles';
 }
 
 function theme_user_admin_new_role($form) {
@@ -1954,7 +1965,10 @@ function theme_user_admin_new_role($form) {
   }
   $rows[] = array(drupal_render($form['name']), array('data' => drupal_render($form['submit']), colspan => 2));
 
-  return theme('table', $header, $rows);
+  $output = drupal_render($form);
+  $output .= theme('table', $header, $rows);
+
+  return $output;
 }
 
 function user_admin_account() {
