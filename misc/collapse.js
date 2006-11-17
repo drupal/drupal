@@ -1,4 +1,4 @@
-// $Id: collapse.js,v 1.7 2006/08/31 23:31:24 unconed Exp $
+// $Id: collapse.js,v 1.8 2006/11/17 20:36:46 drumm Exp $
 
 Drupal.collapseAutoAttach = function () {
   $('fieldset.collapsible legend').each(function () {
@@ -44,7 +44,6 @@ Drupal.collapseAutoAttach = function () {
             .slideUp('medium', function () { $(fieldset).addClass('collapsed'); fieldset.animating = false; } )
             .show();
         }
-        this.blur();
         return false;
       })
       .html(this.innerHTML);
