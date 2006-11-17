@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.320 2006/11/17 01:03:59 drumm Exp $
+// $Id: theme.inc,v 1.321 2006/11/17 06:53:31 dries Exp $
 
 /**
  * @file
@@ -712,13 +712,10 @@ function theme_submenu($links) {
  *   An array of HTML attributes to apply to the table tag.
  * @param $caption
  *   A localized string to use for the <caption> tag.
- * @param $id
- *   A unique id used to identify the table. Use this in the case where
- *   multiple tables appear on one page.
  * @return
  *   An HTML string representing the table.
  */
-function theme_table($header, $rows, $attributes = array(), $caption = NULL, $id = '') {
+function theme_table($header, $rows, $attributes = array(), $caption = NULL) {
   $output = '<table'. drupal_attributes($attributes) .">\n";
 
   if (isset($caption)) {
@@ -727,7 +724,7 @@ function theme_table($header, $rows, $attributes = array(), $caption = NULL, $id
 
   // Format the table header:
   if (count($header)) {
-    $ts = tablesort_init($header, $id);
+    $ts = tablesort_init($header);
     $output .= ' <thead><tr>';
     foreach ($header as $cell) {
       $cell = tablesort_header($cell, $header, $ts);

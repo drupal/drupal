@@ -1,5 +1,5 @@
 <?php
-// $Id: tablesort.inc,v 1.41 2006/11/17 01:03:59 drumm Exp $
+// $Id: tablesort.inc,v 1.42 2006/11/17 06:53:31 dries Exp $
 
 /**
  * @file
@@ -12,14 +12,10 @@
 /**
  * Initialize the table sort context.
  */
-function tablesort_init($header, $id) {
-  if (strlen($id) > 0) {
-    $id = '-'. $id;
-  }
-  $ts = tablesort_get_order($header, $id);
-  $ts['sort'] = tablesort_get_sort($header, $id);
-  $ts['query_string'] = tablesort_get_querystring($id);
-  $ts['id'] = $id;
+function tablesort_init($header) {
+  $ts = tablesort_get_order($header);
+  $ts['sort'] = tablesort_get_sort($header);
+  $ts['query_string'] = tablesort_get_querystring();
   return $ts;
 }
 
@@ -35,16 +31,13 @@ function tablesort_init($header, $id) {
  * @param $before
  *   An SQL string to insert after ORDER BY and before the table sorting code.
  *   Useful for sorting by important attributes like "sticky" first.
- * @param $id
- *   A unique id used to identify the table. Use this in the case where
- *   multiple tables appear on one page.
  * @return
  *   An SQL string to append to the end of a query.
  *
  * @ingroup database
  */
-function tablesort_sql($header, $before = '', $id = '') {
-  $ts = tablesort_init($header, $id);
+function tablesort_sql($header, $before = '') {
+  $ts = tablesort_init($header);
   if ($ts['sql']) {
     $sql = db_escape_string($ts['sql']);
     $sort = drupal_strtoupper(db_escape_string($ts['sort']));
@@ -85,7 +78,7 @@ function tablesort_header($cell, $header, $ts) {
     if (!empty($ts['query_string'])) {
       $ts['query_string'] = '&'. $ts['query_string'];
     }
-    $cell['data'] = l($cell['data'] . $image, $_GET['q'], array('title' => $title), 'sort'. $ts['id'] .'='. $ts['sort'] .'&order'. $ts['id'] .'='. urlencode($cell['data']) . $ts['query_string'], NULL, FALSE, TRUE);
+    $cell['data'] = l($cell['data'] . $image, $_GET['q'], array('title' => $title), 'sort='. $ts['sort'] .'&order='. urlencode($cell['data']) . $ts['query_string'], NULL, FALSE, TRUE);
 
     unset($cell['field'], $cell['sort']);
   }
@@ -128,14 +121,12 @@ function tablesort_cell($cell, $header, $ts, $i) {
 /**
  * Compose a query string to append to table sorting requests.
  *
- * @param $id
- *   A unique id used to identify the table.
  * @return
  *   A query string that consists of all components of the current page request
  *   except for those pertaining to table sorting.
  */
-function tablesort_get_querystring($id) {
-  return drupal_query_string_encode($_REQUEST, array_merge(array('q', 'sort'. $id, 'order'. $id), array_keys($_COOKIE)));
+function tablesort_get_querystring() {
+  return drupal_query_string_encode($_REQUEST, array_merge(array('q', 'sort', 'order'), array_keys($_COOKIE)));
 }
 
 /**
@@ -143,15 +134,13 @@ function tablesort_get_querystring($id) {
  *
  * @param $headers
  *   An array of column headers in the format described in theme_table().
- * @param $id
- *   A unique id used to identify the table.
  * @return
  *   An associative array describing the criterion, containing the keys:
  *   - "name": The localized title of the table column.
  *   - "sql": The name of the database field to sort on.
  */
-function tablesort_get_order($headers, $id) {
-  $order = isset($_GET['order'. $id]) ? $_GET['order'. $id] : '';
+function tablesort_get_order($headers) {
+  $order = isset($_GET['order']) ? $_GET['order'] : '';
   foreach ($headers as $header) {
     if (isset($header['data']) && $order == $header['data']) {
       return array('name' => $header['data'], 'sql' => $header['field']);
@@ -181,14 +170,12 @@ function tablesort_get_order($headers, $id) {
  *
  * @param $headers
  *   An array of column headers in the format described in theme_table().
- * @param $id
- *   A unique id used to identify the table.
  * @return
  *   The current sort direction ("asc" or "desc").
  */
-function tablesort_get_sort($headers, $id) {
-  if (isset($_GET['sort'. $id])) {
-    return ($_GET['sort'. $id] == 'desc') ? 'desc' : 'asc';
+function tablesort_get_sort($headers) {
+  if (isset($_GET['sort'])) {
+    return ($_GET['sort'] == 'desc') ? 'desc' : 'asc';
   }
   // User has not specified a sort. Use default if specified; otherwise use "asc".
   else {
