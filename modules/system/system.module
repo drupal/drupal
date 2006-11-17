@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.397 2006/11/16 08:28:08 drumm Exp $
+// $Id: system.module,v 1.398 2006/11/17 17:22:45 dries Exp $
 
 /**
  * @file
@@ -2075,7 +2075,7 @@ function system_theme_settings($key = '') {
  * @param $question
  *   The question to ask the user (e.g. "Are you sure you want to delete the
  *   block <em>foo</em>?").
- * @param $path
+ * @param $destination
  *   The page to go to if the user denies the action.
  * @param $description
  *   Additional text to display (defaults to "This action cannot be undone.").
@@ -2089,8 +2089,9 @@ function system_theme_settings($key = '') {
  * @return
  *   The form.
  */
-function confirm_form($form, $question, $path, $description = NULL, $yes = NULL, $no = NULL, $name = 'confirm') {
+function confirm_form($form, $question, $destination, $description = NULL, $yes = NULL, $no = NULL, $name = 'confirm') {
   $description = ($description) ? $description : t('This action cannot be undone.');
+  extract(parse_url($destination));
   drupal_set_title($question);
   $form['#attributes'] = array('class' => 'confirmation');
   $form['description'] = array('#value' => $description);
@@ -2098,7 +2099,7 @@ function confirm_form($form, $question, $path, $description = NULL, $yes = NULL,
 
   $form['actions'] = array('#prefix' => '<div class="container-inline">', '#suffix' => '</div>');
   $form['actions']['submit'] = array('#type' => 'submit', '#value' => $yes ? $yes : t('Confirm'));
-  $form['actions']['cancel'] = array('#value' => l($no ? $no : t('Cancel'), $path));
+  $form['actions']['cancel'] = array('#value' => l($no ? $no : t('Cancel'), $path, null, $query, $fragment));
   $form['#base'] = 'confirm_form';
   return $form;
 }
