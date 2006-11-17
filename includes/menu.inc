@@ -517,9 +517,9 @@ function menu_get_active_help() {
         $output .= $temp . "\n";
       }
       if (module_hook('help', 'page')) {
-        if (substr($path, 0, 6) == "admin/") {
-          if (module_invoke($name, 'help', 'admin/help#' . substr($path, 6))) {
-            $output .= theme("more_help_link", url('admin/help/' . substr($path, 6)));
+        if (arg(0) == "admin") {
+          if (module_invoke($name, 'help', 'admin/help#' . arg(2))) {
+            $output .= theme("more_help_link", url('admin/help/' . arg(2)));
           }
         }
       }
