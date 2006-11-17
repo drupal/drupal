@@ -88,7 +88,7 @@ function path_admin_edit($pid = 0) {
   if ($pid) {
     $alias = path_load($pid);
     drupal_set_title($alias['dst']);
-    $output = path_form(path_load($pid));
+    $output = path_form($alias);
   }
   else {
     $output = path_form();
