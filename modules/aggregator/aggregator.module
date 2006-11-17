@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.312 2006/10/23 20:25:03 dries Exp $
+// $Id: aggregator.module,v 1.313 2006/11/17 00:21:44 drumm Exp $
 
 /**
  * @file
@@ -225,7 +225,7 @@ function aggregator_admin_settings() {
   );
 
   $form['aggregator_category_selector'] = array(
-    '#type' => 'radios', '#title' => t('Category selection type'), '#default_value' => variable_get('aggregator_category_selector', 'check'),
+    '#type' => 'radios', '#title' => t('Category selection type'), '#default_value' => variable_get('aggregator_category_selector', 'checkboxes'),
     '#options' => array('checkboxes' => t('checkboxes'), 'select' => t('multiple selector')),
     '#description' => t('The type of category selection widget which is shown on categorization pages. Checkboxes are easier to use; a multiple selector is good for working with large numbers of categories.')
   );
