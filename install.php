@@ -273,7 +273,7 @@ function install_settings_form($profile, $install_locale, $settings_file, $db_ur
       '#default_value' => $db_prefix,
       '#size' => 45,
       '#maxlength' => 45,
-      '#description' => st('If more than one @drupal web site will be sharing this database, enter a table prefix for your @drupal site here.', array('@drupal' => drupal_install_profile_name())),
+      '#description' => st('If more than one @drupal website will be sharing this database, enter a table prefix for your @drupal site here.', array('@drupal' => drupal_install_profile_name())),
     );
 
     $form['save'] = array(
