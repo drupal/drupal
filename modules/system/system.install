@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.40 2006/11/08 19:24:11 dries Exp $
+// $Id: system.install,v 1.41 2006/11/20 03:39:02 drumm Exp $
 
 define('DRUPAL_MINIMUM_PHP',    '4.3.3');
 define('DRUPAL_MINIMUM_MYSQL',  '3.23.17'); // If using MySQL
@@ -3069,7 +3069,7 @@ function system_update_182() {
 }
 
 /**
- * @defgroup updates-4.7-to-x.x System updates from 4.7 to x.x
+ * @defgroup updates-4.7-to-5.0 System updates from 4.7 to 5.0
  * @{
  */
 
@@ -3377,5 +3377,16 @@ function system_update_1014() {
 
 /**
  * @} End of "defgroup updates-4.7-to-x.x"
- * The next series of updates should start at 2000.
+ */
+
+
+/**
+ * @defgroup updates-5.0-to-x.x System updates from 5.0 to x.x
+ * @{
+ * @todo Start this series of updates at 2000.
+ */
+
+/**
+ * @} End of "defgroup updates-5.0-to-x.x"
+ * The next series of updates should start at 3000.
  */
