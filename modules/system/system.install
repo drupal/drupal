@@ -3069,7 +3069,7 @@ function system_update_182() {
 }
 
 /**
- * @defgroup updates-4.7-to-x.x System updates from 4.7 to x.x
+ * @defgroup updates-4.7-to-5.0 System updates from 4.7 to 5.0
  * @{
  */
 
@@ -3377,5 +3377,16 @@ function system_update_1014() {
 
 /**
  * @} End of "defgroup updates-4.7-to-x.x"
- * The next series of updates should start at 2000.
+ */
+
+
+/**
+ * @defgroup updates-5.0-to-x.x System updates from 5.0 to x.x
+ * @{
+ * @todo Start this series of updates at 2000.
+ */
+
+/**
+ * @} End of "defgroup updates-5.0-to-x.x"
+ * The next series of updates should start at 3000.
  */
