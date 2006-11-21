@@ -702,6 +702,9 @@ function valid_email_address($mail) {
 /**
  * Verify the syntax of the given URL.
  *
+ * This function should only be used on actual URLs. It should not be used for
+ * Drupal menu paths, which can contain arbitrary characters.
+ *
  * @param $url
  *   The URL to verify.
  * @param $absolute
