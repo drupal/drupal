@@ -1,5 +1,5 @@
 <?php
-// $Id: database.pgsql.inc,v 1.39 2006/10/23 18:38:45 drumm Exp $
+// $Id: database.pgsql.inc,v 1.40 2006/11/21 19:46:10 dries Exp $
 
 /**
  * @file
@@ -414,7 +414,7 @@ function db_check_setup() {
 function db_distinct_field($table, $field, $query) {
   $field_to_select = 'DISTINCT ON ('. $table .'.'. $field .") $table.$field";
   // (?<!text) is a negative look-behind (no need to rewrite queries that already use DISTINCT).
-  $query = preg_replace('/(SELECT.*)('. $table .'\.)?(?<!DISTINCT\()(?<!DISTINCT\('. $table .'\.)'. $field .'(.*FROM )/AUsi', '\1'. $field_to_select .'\3', $query);
+  $query = preg_replace('/(SELECT.*)(?:'. $table .'\.|\s)(?<!DISTINCT\()(?<!DISTINCT\('. $table .'\.)'. $field .'(.*FROM )/AUsi', '\1 '. $field_to_select .'\2', $query);
   $query = preg_replace('/(ORDER BY )(?!'.$table.'\.'.$field.')/', '\1'."$table.$field, ", $query);
   return $query;
 }
