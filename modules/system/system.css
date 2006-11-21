@@ -1,4 +1,4 @@
-/* $Id: system.css,v 1.14 2006/10/24 19:36:52 unconed Exp $ */
+/* $Id: system.css,v 1.15 2006/11/21 08:16:39 unconed Exp $ */
 
 /*
 ** HTML elements
@@ -324,4 +324,11 @@ html.js .resizable-textarea textarea {
 #first-time strong {
   display: block;
   padding: 1.5em 0 .5em;
+}
+
+/*
+** To be used with tableselect.js
+*/
+tr.selected td {
+  background: #ffc;
 }

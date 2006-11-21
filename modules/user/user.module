@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.712 2006/11/17 21:46:32 dries Exp $
+// $Id: user.module,v 1.713 2006/11/21 08:16:39 unconed Exp $
 
 /**
  * @file
@@ -2043,7 +2043,7 @@ function user_admin_account() {
 function theme_user_admin_account($form) {
   // Overview table:
   $header = array(
-    array(),
+    theme('table_select_header_cell'),
     array('data' => t('Username'), 'field' => 'u.name'),
     array('data' => t('Status'), 'field' => 'u.status'),
     t('Roles'),

@@ -840,6 +840,15 @@ table.system-status-report th {
   border-color: #d3e7f4;
 }
 
+#autocomplete li.selected, tr.selected td, tr.selected td.active {
+  background: #027ac6;
+  color: #fff;
+}
+
+tr.selected td a:link, tr.selected td a:visited, tr.selected td a:active {
+  color: #d3e7f4;
+}
+
 /**
  * CSS support
  */

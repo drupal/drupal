@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.731 2006/11/17 07:01:38 dries Exp $
+// $Id: node.module,v 1.732 2006/11/21 08:16:39 unconed Exp $
 
 /**
  * @file
@@ -1533,7 +1533,7 @@ function node_admin_nodes() {
  */
 function theme_node_admin_nodes($form) {
   // Overview table:
-  $header = array(NULL, t('Title'), t('Type'), t('Author'), t('Status'), t('Operations'));
+  $header = array(theme('table_select_header_cell'), t('Title'), t('Type'), t('Author'), t('Status'), t('Operations'));
 
   $output .= drupal_render($form['options']);
   if (isset($form['title']) && is_array($form['title'])) {

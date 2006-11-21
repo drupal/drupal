@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.170 2006/11/17 00:44:12 unconed Exp $
+// $Id: CHANGELOG.txt,v 1.171 2006/11/21 08:16:39 unconed Exp $
 
 Drupal 5.0, xxxx-xx-xx (development version)
 ------------------------
@@ -30,6 +30,7 @@ Drupal 5.0, xxxx-xx-xx (development version)
     * improved configurability of the contact forms.
     * reorganized the settings pages.
     * made it easy to investigate popular search terms
+    * added a 'select all' checkbox and a range select feature to administration tables.
 - integrated urlfilter.module in filter.module
 - block system:
     * extended the block visibility settings with a role specific settings.

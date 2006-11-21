@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.321 2006/11/17 06:53:31 dries Exp $
+// $Id: theme.inc,v 1.322 2006/11/21 08:16:39 unconed Exp $
 
 /**
  * @file
@@ -776,6 +776,16 @@ function theme_table($header, $rows, $attributes = array(), $caption = NULL) {
 
   $output .= "</tbody></table>\n";
   return $output;
+}
+
+/**
+ * Returns a header cell for tables that have a select all functionality.
+ */
+function theme_table_select_header_cell() {
+  drupal_add_js(array('tableSelect' => array('selectAll' => t('Select all rows in this table'), 'selectNone' => t('Deselect all rows in this table'))), 'setting');
+  drupal_add_js('misc/tableselect.js');
+
+  return array('class' => 'select-all');
 }
 
 /**
