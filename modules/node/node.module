@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.732 2006/11/21 08:16:39 unconed Exp $
+// $Id: node.module,v 1.733 2006/11/21 19:30:07 dries Exp $
 
 /**
  * @file
@@ -1424,11 +1424,9 @@ function theme_node_filters($form) {
 /**
  * Process result from node administration filter form.
  */
-function node_filter_form_submit() {
-  global $form_values;
-  $op = $_POST['op'];
+function node_filter_form_submit($form_id, $form_values) {
   $filters = node_filters();
-  switch ($op) {
+  switch ($form_values['op']) {
     case t('Filter'):
     case t('Refine'):
       if (isset($form_values['filter'])) {
