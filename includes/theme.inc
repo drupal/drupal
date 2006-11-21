@@ -507,7 +507,7 @@ function theme_status_messages($display = NULL) {
 function theme_links($links, $attributes = array('class' => 'links')) {
   $output = '';
 
-  if (is_array($links)) {
+  if (count($links) > 0) {
     $output = '<ul'. drupal_attributes($attributes) .'>';
 
     $num_links = count($links);
