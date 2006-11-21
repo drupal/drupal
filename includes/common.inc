@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.588 2006/11/21 19:12:00 dries Exp $
+// $Id: common.inc,v 1.589 2006/11/21 19:40:09 dries Exp $
 
 /**
  * @file
@@ -701,6 +701,9 @@ function valid_email_address($mail) {
 
 /**
  * Verify the syntax of the given URL.
+ *
+ * This function should only be used on actual URLs. It should not be used for
+ * Drupal menu paths, which can contain arbitrary characters.
  *
  * @param $url
  *   The URL to verify.
