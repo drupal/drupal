@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.25 2006/11/16 08:28:07 drumm Exp $
+// $Id: install.inc,v 1.26 2006/11/21 19:56:52 dries Exp $
 
 define('SCHEMA_UNINSTALLED', -1);
 define('SCHEMA_INSTALLED', 0);
@@ -37,6 +37,7 @@ function drupal_load_updates() {
  *   FALSE.
  */
 function drupal_get_schema_versions($module) {
+  $updates = array();
   $functions = get_defined_functions();
   foreach ($functions['user'] as $function) {
     if (strpos($function, $module .'_update_') === 0) {
