@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.243 2006/11/19 23:51:01 drumm Exp $
+// $Id: statistics.module,v 1.244 2006/11/21 20:03:11 dries Exp $
 
 /**
  * @file
@@ -46,7 +46,7 @@ function statistics_help($section) {
     case 'admin/logs/hits':
       return t('<p>This page shows you the most recent hits.</p>');
     case 'admin/logs/referrers':
-      return t('<p>This page shows you all external referrers. These are links pointing to your website from outside your website.</p>');
+      return t('<p>This page shows you all external referrers. These are links pointing to your web site from outside your web site.</p>');
     case 'admin/logs/visitors':
       return t("<p>When you ban a visitor, you prevent the visitor's IP address from accessing your site. Unlike blocking a user, banning a visitor works even for anonymous users. The most common use for this is to block bots/web crawlers that are consuming too many resources.</p>");
   }

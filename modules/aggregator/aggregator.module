@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.314 2006/11/19 23:51:01 drumm Exp $
+// $Id: aggregator.module,v 1.315 2006/11/21 20:03:10 dries Exp $
 
 /**
  * @file
@@ -430,7 +430,7 @@ function aggregator_form_feed($edit = array()) {
     '#title' => t('Title'),
     '#default_value' => $edit['title'],
     '#maxlength' => 64,
-    '#description' => t('The name of the feed; typically the name of the website you syndicate content from.'),
+    '#description' => t('The name of the feed; typically the name of the web site you syndicate content from.'),
     '#required' => TRUE,
   );
   $form['url'] = array('#type' => 'textfield',
