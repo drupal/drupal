@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.397 2006/11/16 21:14:42 drumm Exp $
+// $Id: book.module,v 1.398 2006/11/21 19:27:06 dries Exp $
 
 /**
  * @file
@@ -195,8 +195,7 @@ function book_submit(&$node) {
   // Set default values for non-administrators.
   if (!user_access('administer nodes')) {
     $node->revision = 1;
-    $book->uid = $user->uid;
-    $book->name = $user->uid ? $user->name : '';
+    $node->uid = $user->uid;
   }
 }
 
