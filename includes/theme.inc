@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.322 2006/11/21 08:16:39 unconed Exp $
+// $Id: theme.inc,v 1.323 2006/11/21 19:41:57 dries Exp $
 
 /**
  * @file
@@ -507,7 +507,7 @@ function theme_status_messages($display = NULL) {
 function theme_links($links, $attributes = array('class' => 'links')) {
   $output = '';
 
-  if (is_array($links)) {
+  if (count($links) > 0) {
     $output = '<ul'. drupal_attributes($attributes) .'>';
 
     $num_links = count($links);
