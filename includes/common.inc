@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.587 2006/11/16 09:18:22 drumm Exp $
+// $Id: common.inc,v 1.588 2006/11/21 19:12:00 dries Exp $
 
 /**
  * @file
@@ -1573,7 +1573,7 @@ function drupal_valid_token($token, $value = '', $skip_anonymous = FALSE) {
  * @param $url
  *   An absolute URL of the XML-RPC endpoint.
  *     Example:
- *     http://www.domain.com/xmlrpc.php
+ *     http://www.example.com/xmlrpc.php
  * @param ...
  *   For one request:
  *     The method name followed by a variable number of arguments to the method.

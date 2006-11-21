@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.69 2006/11/07 12:09:55 dries Exp $
+// $Id: contact.module,v 1.70 2006/11/21 19:12:01 dries Exp $
 
 /**
  * @file
@@ -174,7 +174,7 @@ function contact_admin_edit($cid = NULL) {
   $form['recipients'] = array('#type' => 'textarea',
     '#title' => t('Recipients'),
     '#default_value' => $edit['recipients'],
-    '#description' => t("Example: 'webmaster@yoursite.com' or 'sales@yoursite.com'. To specify multiple recipients, separate each e-mail address with a comma."),
+    '#description' => t("Example: 'webmaster@example.com' or 'sales@example.com,support@example.com'. To specify multiple recipients, separate each e-mail address with a comma."),
     '#required' => TRUE,
   );
   $form['reply'] = array('#type' => 'textarea',

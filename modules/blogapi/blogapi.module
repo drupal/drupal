@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.97 2006/11/08 20:07:48 dries Exp $
+// $Id: blogapi.module,v 1.98 2006/11/21 19:12:01 dries Exp $
 
 /**
  * @file
@@ -681,7 +681,7 @@ function _blogapi_get_post($node, $bodies = TRUE) {
     'link' => url('node/'.$node->nid, NULL, NULL, TRUE),
     'permaLink' => url('node/'.$node->nid, NULL, NULL, TRUE),
   );
-  if ($bodies) {    
+  if ($bodies) {
     if ($node->comment == 1) {
       $comment = 2;
     }
