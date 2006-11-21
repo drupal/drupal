@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.244 2006/11/21 20:03:11 dries Exp $
+// $Id: statistics.module,v 1.245 2006/11/21 20:14:19 dries Exp $
 
 /**
  * @file
@@ -31,14 +31,6 @@ function statistics_help($section) {
 <li>Enable node view counter allows you to turn on and off the node-counting functionality of this module. If it is turned on, an extra database query is added for each node displayed, which increments a counter.</li>
 </ul>
 ');
-      $output .= t('<p>You can</p>
-<ul>
-<li>administer statistics <a href="@admin-settings-statistics">administer &gt;&gt; logs &gt;&gt; access log settings</a>.</li>
-<li>access statistics logs <a href="@admin-logs">administer &gt;&gt; logs</a>.</li>
-<li>view recent hits <a href="@admin-logs-hits">administer &gt;&gt; logs &gt;&gt; recent hits</a>.</li>
-<li>enable \'popular content\' block in block administration <a href="@admin-block">administer &gt;&gt; site building &gt;&gt; blocks </a> but only after you have enabled \'Count content views\' in settings.</li>
-</ul>
-', array('@admin-settings-statistics' => url('admin/logs/settings'), '@admin-logs' => url('admin/logs'), '@admin-logs-hits' => url('admin/logs/hits'), '@admin-block' => url('admin/build/block')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@statistics">Statistics page</a>.', array('@statistics' => 'http://drupal.org/handbook/modules/statistics/')) .'</p>';
       return $output;
     case 'admin/logs/settings':

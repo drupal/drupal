@@ -1,5 +1,5 @@
 <?php
-// $Id: help.module,v 1.61 2006/10/22 08:28:45 unconed Exp $
+// $Id: help.module,v 1.62 2006/11/21 20:14:18 dries Exp $
 
 /**
  * @file
@@ -115,7 +115,6 @@ function help_help($section) {
 <li>The description of a post type (if applicable).</li>
 </ul>
 ');
-      $output .= '<p>'. t('You can not administer the help system.') .'</p>';
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@help">Help page</a>.', array('@help' => 'http://drupal.org/handbook/modules/help/')) .'</p>';
       return $output;
   }
@@ -135,6 +134,10 @@ function help_page() {
     else {
       $output .= $temp;
     }
+
+    $admin_tasks = system_get_module_admin_tasks($name);
+    ksort($admin_tasks);
+    $output .= theme('item_list', $admin_tasks, t('@module administration pages', array('@module' => $name)));
   }
   return $output;
 }

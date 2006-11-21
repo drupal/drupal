@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.136 2006/10/26 05:31:14 dries Exp $
+// $Id: upload.module,v 1.137 2006/11/21 20:14:19 dries Exp $
 
 /**
  * @file
@@ -15,13 +15,6 @@ function upload_help($section) {
     case 'admin/help#upload':
       $output = '<p>'. t('The upload module allows users to upload files to the site. The ability to upload files to a site is important for members of a community who want to share work. It is also useful to administrators who want to keep uploaded files connected to a node or page.') .'</p>';
       $output .= '<p>'. t('Users with the upload files permission can upload attachments. You can choose which post types can take attachments on the content types settings page. Each user role can be customized for the file size of uploads, and the dimension of image files.') .'</p>';
-      $output .= t('<p>You can</p>
-<ul>
-<li>administer user permissions at <a href="@admin-access">administer &gt;&gt; user management &gt;&gt; access control</a>.</li>
-<li>administer content at <a href="@admin-content-types">administer &gt;&gt; content management &gt;&gt; content types</a>.</li>
-<li>administer upload at <a href="@admin-upload">administer &gt;&gt; site configuration &gt;&gt; file upload</a>.</li>
-</ul>
-', array('@admin-access' => url('admin/user/access'), '@admin-content-types' => url('admin/settings/types'), '@admin-upload' => url('admin/settings/upload')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@upload">Upload page</a>.', array('@upload' => 'http://drupal.org/handbook/modules/upload/')) .'</p>';
       return $output;
     case 'admin/settings/upload':

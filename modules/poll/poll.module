@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.219 2006/10/22 08:28:45 unconed Exp $
+// $Id: poll.module,v 1.220 2006/11/21 20:14:18 dries Exp $
 
 /**
  * @file
@@ -15,12 +15,6 @@ function poll_help($section) {
     case 'admin/help#poll':
       $output = '<p>'. t('The poll module can be used to create simple polls for site users. A poll is a simple multiple choice questionnaire which displays the cumulative results of the answers to the poll. Having polls on the site is a good way to get instant feedback from community members.') .'</p>';
       $output .= '<p>'. t('Users can create a poll. The title of the poll should be the question, then enter the answers and the "base" vote counts. You can also choose the time period over which the vote will run.The <a href="@poll">poll</a> item in the navigation menu will take you to a page where you can see all the current polls, vote on them (if you haven\'t already) and view the results.', array('@poll' => url('poll'))) .'</p>';
-      $output .= t('<p>You can</p>
-<ul>
-<li>view the <a href="@poll">polls page</a>.</li>
-<li><a href="@admin-node-configure-types-poll">administer &gt;&gt; content management &gt;&gt; content types &gt;&gt; poll</a>.</li>
-</ul>
-', array('@poll' => url('poll'), '@admin-node-configure-types-poll' => url('admin/content/types/poll')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@poll">Poll page</a>.', array('@poll' => 'http://drupal.org/handbook/modules/poll/')) .'</p>';
       return $output;
   }

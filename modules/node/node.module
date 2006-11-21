@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.733 2006/11/21 19:30:07 dries Exp $
+// $Id: node.module,v 1.734 2006/11/21 20:14:18 dries Exp $
 
 /**
  * @file
@@ -25,12 +25,6 @@ function node_help($section) {
 <li>The search tab lets you search all content on your site</li>
 </ul>
 ');
-      $output .= t('<p>You can</p>
-<ul>
-<li>search for content at <a href="@search">search</a>.</li>
-<li>administer nodes at <a href="@admin-settings-content-types">administer &gt;&gt; content management &gt;&gt; content types</a>.</li>
-</ul>
-', array('@search' => url('search'), '@admin-settings-content-types' => url('admin/content/types')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@node">Node page</a>.', array('@node' => 'http://drupal.org/handbook/modules/node/')) .'</p>';
       return $output;
     case 'admin/content/search':

@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal.module,v 1.132 2006/11/21 20:03:11 dries Exp $
+// $Id: drupal.module,v 1.133 2006/11/21 20:14:17 dries Exp $
 
 /**
  * @file
@@ -22,13 +22,6 @@ function drupal_help($section) {
 </ul>
 ');
       $output .= '<p>'. t('The Drupal module administration page allows you to set the xml-rpc server page and other related options.') .'</p>';
-      $output .= t('<p>You can</p>
-<ul>
-  <li>run your cron job at your site\'s <a href="@file-cron">cron page</a></li>
-  <li>view your <a href="@file-xmlrpc">XML-RPC page</a>.</li>
-  <li>administer Drupal <a href="@admin-settings-drupal">administer &gt;&gt; site configuration &gt;&gt; distributed authentication</a>.</li>
-</ul>
-', array('@file-cron' => 'cron.php', '@file-xmlrpc' => 'xmlrpc.php', '@admin-settings-drupal' => url('admin/settings/distributed-authentication')));
       $output .= '<p>'. t('If you maintain a directory of sites, you can list them on a page using the <code>drupal_client_page()</code> function. Sample instructions:
 <ul>
   <li>Enable the page module. Select create content &gt;&gt; page.</li>

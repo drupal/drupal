@@ -1,5 +1,5 @@
 <?php
-// $Id: legacy.module,v 1.14 2006/10/22 08:28:45 unconed Exp $
+// $Id: legacy.module,v 1.15 2006/11/21 20:14:18 dries Exp $
 
 /**
  * @file
@@ -24,7 +24,6 @@ function legacy_help($section) {
 <li><em>user/view/52</em> to <em>user/52</em>.</li>
 </ul>
 ');
-      $output .= '<p>'. t('Legacy module has no configurable options.') .'</p>';
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@legacy">Legacy page</a>.', array('@legacy' => 'http://drupal.org/handbook/modules/legacy/')) .'</p>';
       return $output;
   }

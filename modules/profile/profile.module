@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.178 2006/11/12 19:33:30 dries Exp $
+// $Id: profile.module,v 1.179 2006/11/21 20:14:18 dries Exp $
 
 /**
  * @file
@@ -32,12 +32,6 @@ function profile_help($section) {
 <li>date</li>
 </ul>
 ');
-      $output .= t('<p>You can</p>
-<ul>
-<li>view user <a href="@profile">profiles</a>.</li>
-<li>administer profile settings: <a href="@admin-settings-profile">administer &gt;&gt; user management &gt;&gt; profiles</a>.</li>
-</ul>
-', array('@profile' => url('profile'), '@admin-settings-profile' => url('admin/user/profile')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@profile">Profile page</a>.', array('@profile' => 'http://drupal.org/handbook/modules/profile/')) .'</p>';
       return $output;
     case 'admin/user/profile':

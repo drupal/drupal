@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.398 2006/11/21 19:27:06 dries Exp $
+// $Id: book.module,v 1.399 2006/11/21 20:14:17 dries Exp $
 
 /**
  * @file
@@ -977,15 +977,6 @@ function book_help($section) {
       $output .= '<p>'. t('Books have additional <em>previous</em>, <em>up</em>, and <em>next</em> navigation elements at the bottom of each page for moving through the text. Additional navigation may be provided by enabling the <em>book navigation block</em> on the <a href="@admin-block">block administration page</a>.', array('@admin-block' => url('admin/build/block'))) .'</p>';
       $output .= '<p>'. t('Users can select the <em>printer-friendly version</em> link visible at the bottom of a book page to generate a printer-friendly display of the page and all of its subsections. ') .'</p>';
       $output .= '<p>'. t('Administrators can view a book outline, from which is it possible to change the titles of sections, and their <i>weight</i> (thus reordering sections). From this outline, it is also possible to edit and/or delete book pages. Many content types besides pages (for example, blog entries, stories, and polls) can be added to a collaborative book by choosing the <em>outline</em> tab when viewing the post.') .'</p>';
-      $output .= t('<p>You can</p>
-<ul>
-<li>create new book pages: <a href="@node-add-book">create content &gt;&gt; book page</a>.</li>
-<li>administer individual books (choose a book from list): <a href="@admin-node-book">administer &gt;&gt; content management &gt;&gt; books</a>.</li>
-<li>set workflow and other global book settings on the book configuration page: <a href="@admin-settings-content-types-book-page" title="book page content type">administer &gt;&gt; content management &gt;&gt; content types &gt;&gt; book page</a>.</li>
-<li>enable the book navigation block: <a href="@admin-block">administer &gt;&gt; site building &gt;&gt; blocks</a>.</li>
-<li>control who can create, edit, and outline posts in books by setting access permissions: <a href="@admin-access">administer &gt;&gt; user management &gt;&gt; access control</a>.</li>
-</ul>
-', array('@node-add-book' => url('node/add/book'), '@admin-node-book' => url('admin/content/book'), '@admin-settings-content-types-book-page' => url('admin/content/types/book'), '@admin-block' => url('admin/build/block'), '@admin-access' => url('admin/user/access')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@book">Book page</a>.', array('@book' => 'http://drupal.org/handbook/modules/book/')) .'</p>';
       return $output;
     case 'admin/content/book':

@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.364 2006/11/14 06:30:10 drumm Exp $
+// $Id: forum.module,v 1.365 2006/11/21 20:14:17 dries Exp $
 
 /**
  * @file
@@ -15,14 +15,6 @@ function forum_help($section) {
       $output = '<p>'. t('The forum module lets you create threaded discussion forums for a particular topic on your site. This is similar to a message board system such as phpBB. Forums are very useful because they allow community members to discuss topics with one another, and they are archived for future reference.') .'</p>';
       $output .= '<p>'. t('Forums can be organized under what are called <em>containers</em>. Containers hold forums and, in turn, forums hold threaded discussions. Both containers and forums can be placed inside other containers and forums. By planning the structure of your containers and forums well, you make it easier for users to find a topic area of interest to them. Forum topics can be moved by selecting a different forum and can be left in the existing forum by selecting <em>leave a shadow copy</em>. Forum topics can also have their own URL.') .'</p>';
       $output .= '<p>'. t('Forums module <strong>requires Taxonomy and Comments module</strong> be enabled.') .'</p>';
-      $output .= t('<p>You can</p>
-<ul>
-<li>administer forums at <a href="@admin-forum">administer &gt;&gt; content management &gt;&gt; forums</a>.</li>
-<li>enable the required comment and taxonomy modules at <a href="@admin-modules">administer &gt;&gt; site configuration &gt;&gt; modules</a>.</li>
-<li>read about the comment module at <a href="@admin-help-comment">administer &gt;&gt; help &gt;&gt; comment</a>.</li>
-<li>read about the taxonomy module at <a href="@admin-help-taxonomy">administer &gt;&gt; help &gt;&gt; taxonomy</a>.</li>
-</ul>
-', array('@admin-forum' => url('admin/content/forum'), '@admin-modules' => url('admin/settings/modules'), '@admin-help-comment' => url('admin/help/comment'), '@admin-help-taxonomy' => url('admin/help/taxonomy')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@forum">Forum page</a>.', array('@forum' => 'http://drupal.org/handbook/modules/forum/')) .'</p>';
       return $output;
     case 'admin/content/forum':
