@@ -1573,7 +1573,7 @@ function drupal_valid_token($token, $value = '', $skip_anonymous = FALSE) {
  * @param $url
  *   An absolute URL of the XML-RPC endpoint.
  *     Example:
- *     http://www.domain.com/xmlrpc.php
+ *     http://www.example.com/xmlrpc.php
  * @param ...
  *   For one request:
  *     The method name followed by a variable number of arguments to the method.

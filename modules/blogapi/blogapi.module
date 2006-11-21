@@ -681,7 +681,7 @@ function _blogapi_get_post($node, $bodies = TRUE) {
     'link' => url('node/'.$node->nid, NULL, NULL, TRUE),
     'permaLink' => url('node/'.$node->nid, NULL, NULL, TRUE),
   );
-  if ($bodies) {    
+  if ($bodies) {
     if ($node->comment == 1) {
       $comment = 2;
     }
