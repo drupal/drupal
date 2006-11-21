@@ -2043,7 +2043,7 @@ function user_admin_account() {
 function theme_user_admin_account($form) {
   // Overview table:
   $header = array(
-    array(),
+    theme('table_select_header_cell'),
     array('data' => t('Username'), 'field' => 'u.name'),
     array('data' => t('Status'), 'field' => 'u.status'),
     t('Roles'),

@@ -325,3 +325,10 @@ html.js .resizable-textarea textarea {
   display: block;
   padding: 1.5em 0 .5em;
 }
+
+/*
+** To be used with tableselect.js
+*/
+tr.selected td {
+  background: #ffc;
+}

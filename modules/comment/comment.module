@@ -1044,7 +1044,7 @@ function comment_admin_overview($type = 'new', $arg) {
   // load the comments that we want to display
   $status = ($type == 'approval') ? COMMENT_NOT_PUBLISHED : COMMENT_PUBLISHED;
   $form['header'] = array('#type' => 'value', '#value' => array(
-    NULL,
+    theme('table_select_header_cell'),
     array('data' => t('Subject'), 'field' => 'subject'),
     array('data' => t('Author'), 'field' => 'name'),
     array('data' => t('Time'), 'field' => 'timestamp', 'sort' => 'desc'),
