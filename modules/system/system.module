@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.401 2006/11/21 20:14:19 dries Exp $
+// $Id: system.module,v 1.402 2006/11/21 20:55:35 dries Exp $
 
 /**
  * @file
@@ -1230,6 +1230,7 @@ function system_modules($form_values = NULL) {
   // Traverse the files retrieved and build the form.
   foreach ($files as $filename => $file) {
     $form['name'][$filename] = array('#value' => $file->info['name']);
+    $form['version'][$filename] = array('#value' => $file->info['version']);
     $form['description'][$filename] = array('#value' => t($file->info['description']));
     $options[$filename] = '';
     if ($file->status) {
@@ -1497,6 +1498,7 @@ function theme_system_modules($form) {
     $header[] = t('Throttle');
   }
   $header[] = t('Name');
+  $header[] = t('Version');
   $header[] = t('Description');
 
   // Pull package information from module list and start grouping modules.
@@ -1521,6 +1523,7 @@ function theme_system_modules($form) {
         $row[] = array('data' => drupal_render($form['throttle'][$key]), 'align' => 'center');
       }
       $row[] = '<strong>'. drupal_render($form['name'][$key]) .'</strong>';
+      $row[] = drupal_render($form['version'][$key]);
       $row[] = array('data' => drupal_render($form['description'][$key]), 'class' => 'description');
       $rows[] = $row;
     }
