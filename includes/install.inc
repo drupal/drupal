@@ -37,6 +37,7 @@ function drupal_load_updates() {
  *   FALSE.
  */
 function drupal_get_schema_versions($module) {
+  $updates = array();
   $functions = get_defined_functions();
   foreach ($functions['user'] as $function) {
     if (strpos($function, $module .'_update_') === 0) {
