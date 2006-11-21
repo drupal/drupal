@@ -2,3 +2,4 @@
 name = Upload
 description = Allows users to upload and attach files to content.
 package = Core - optional
+version = VERSION

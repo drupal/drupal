@@ -2,3 +2,4 @@
 name = Taxonomy
 description = Enables the categorization of content.
 package = Core - optional
+version = VERSION

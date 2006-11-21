@@ -2,3 +2,4 @@
 name = Profile
 description = Supports configurable user profiles.
 package = Core - optional
+version = VERSION

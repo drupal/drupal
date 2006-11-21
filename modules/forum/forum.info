@@ -3,3 +3,4 @@ name = Forum
 description = Enables threaded discussions about general topics.
 dependencies = taxonomy comment
 package = Core - optional
+version = VERSION
