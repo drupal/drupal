@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.41 2006/11/20 03:39:02 drumm Exp $
+// $Id: system.install,v 1.42 2006/11/22 09:16:48 dries Exp $
 
 define('DRUPAL_MINIMUM_PHP',    '4.3.3');
 define('DRUPAL_MINIMUM_MYSQL',  '3.23.17'); // If using MySQL
@@ -122,7 +122,7 @@ function system_install() {
     case 'mysql':
     case 'mysqli':
       db_query("CREATE TABLE {access} (
-        aid tinyint NOT NULL auto_increment,
+        aid int NOT NULL auto_increment,
         mask varchar(255) NOT NULL default '',
         type varchar(255) NOT NULL default '',
         status tinyint NOT NULL default '0',
@@ -153,7 +153,7 @@ function system_install() {
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {boxes} (
-        bid tinyint NOT NULL auto_increment,
+        bid int NOT NULL auto_increment,
         body longtext,
         info varchar(128) NOT NULL default '',
         format int NOT NULL default '0',
@@ -3151,8 +3151,8 @@ function system_update_1004() {
   switch ($GLOBALS['db_type']) {
     case 'mysql':
     case 'mysqli':
-    $ret[] = update_sql("ALTER TABLE {access} CHANGE `aid` `aid` INT( 10 ) NOT NULL AUTO_INCREMENT ");
-    $ret[] = update_sql("ALTER TABLE {boxes} CHANGE `bid` `bid` INT( 10 ) NOT NULL AUTO_INCREMENT ");
+    $ret[] = update_sql("ALTER TABLE {access} CHANGE `aid` `aid` int  NOT NULL AUTO_INCREMENT ");
+    $ret[] = update_sql("ALTER TABLE {boxes} CHANGE `bid` `bid` int NOT NULL AUTO_INCREMENT ");
       break;
     case 'pgsql':
       // No database update required for PostgreSQL because it already uses big SERIAL numbers.
