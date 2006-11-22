@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.399 2006/11/21 20:14:17 dries Exp $
+// $Id: book.module,v 1.400 2006/11/22 09:58:48 dries Exp $
 
 /**
  * @file
@@ -973,16 +973,17 @@ function book_admin_overview() {
 function book_help($section) {
   switch ($section) {
     case 'admin/help#book':
-      $output = '<p>'. t('The <em>book</em> content type is suited for creating structured, multi-page hypertexts such as site resource guides, manuals, and Frequently Asked Questions (FAQs). It permits a document to have chapters, sections, subsections, etc. Authors with suitable permissions can add pages to a collaborative book,  placing them into the existing document by adding them to a table of contents menu. ') .'</p>';
-      $output .= '<p>'. t('Books have additional <em>previous</em>, <em>up</em>, and <em>next</em> navigation elements at the bottom of each page for moving through the text. Additional navigation may be provided by enabling the <em>book navigation block</em> on the <a href="@admin-block">block administration page</a>.', array('@admin-block' => url('admin/build/block'))) .'</p>';
+      $output = '<p>'. t('The <em>book</em> module is suited for creating structured, multi-page hypertexts such as site resource guides, manuals, and Frequently Asked Questions (FAQs). It permits a document to have chapters, sections, subsections, etc. Authors with suitable permissions can add pages to a collaborative book,  placing them into the existing document by adding them to a table of contents menu.') .'</p>';
+      $output .= '<p>'. t('Book pages have navigation elements at the bottom of the page for moving through the text.  These link to the previous and next pages in the book, as well as a link labeled <em>up</em>, leading to the level above in the structure.  More comprehensive navigation may be provided by enabling the <em>book navigation block</em> on the <a href="@admin-block">block administration page</a>.', array('@admin-block' => url('admin/build/block'))) .'</p>';
       $output .= '<p>'. t('Users can select the <em>printer-friendly version</em> link visible at the bottom of a book page to generate a printer-friendly display of the page and all of its subsections. ') .'</p>';
-      $output .= '<p>'. t('Administrators can view a book outline, from which is it possible to change the titles of sections, and their <i>weight</i> (thus reordering sections). From this outline, it is also possible to edit and/or delete book pages. Many content types besides pages (for example, blog entries, stories, and polls) can be added to a collaborative book by choosing the <em>outline</em> tab when viewing the post.') .'</p>';
+      $output .= '<p>'. t("Posts of type %book are automatically added to the book hierarchy. Users with the <em>outline posts in books</em> permission can also add content of any other type to a book, placing it into the existing book structure through the interface that's available by clicking on the <em>outline</em> tab while viewing that post.", array('%book' => node_get_types('name', 'book'))) .'</p>';
+      $output .= '<p>'. t('Administrators can view a list of all books on the <a href="@admin-node-book">book administration page</a>.  In this list there is a link to an outline page for each book, from which is it possible to change the titles of sections, or to change their weight, thus reordering sections. From this administrative interface, it is also possible to determine whether there are any orphan pages - pages that have become disconnected from the rest of the book structure.', array('@admin-node-book' => url('admin/content/book'))) .'</p>';
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@book">Book page</a>.', array('@book' => 'http://drupal.org/handbook/modules/book/')) .'</p>';
       return $output;
     case 'admin/content/book':
-      return t('<p>The book module offers a means to organize content, authored by many users, in an online manual, outline or FAQ.</p>');
+      return '<p>'. t('The book module offers a means to organize content, authored by many users, in an online manual, outline or FAQ.'). '</p>';
     case 'admin/content/book/orphan':
-      return t('<p>Pages in a book are like a tree. As pages are edited, reorganized and removed, child pages might be left with no link to the rest of the book. Such pages are referred to as "orphan pages". On this page, administrators can review their books for orphans and reattach those pages as desired.</p>');
+      return '<p>'. t('Pages in a book are like a tree. As pages are edited, reorganized and removed, child pages might be left with no link to the rest of the book. Such pages are referred to as "orphan pages". On this page, administrators can review their books for orphans and reattach those pages as desired.'). '</p>';
   }
 
   if (arg(0) == 'node' && is_numeric(arg(1)) && arg(2) == 'outline') {
