@@ -529,7 +529,7 @@ function theme_book_navigation($node) {
         $output .= $tree;
       }
       if (isset($links)) {
-        $output .= '<div class="page-links">'. $links .'</div>';
+        $output .= '<div class="page-links">'. $links .'<br class="clear" /></div>';
       }
       $output .= '</div>';
     }

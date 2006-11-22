@@ -1086,7 +1086,7 @@ function theme_forum_topic_navigation($node) {
       $output .= l($next->title . t(' ›'), 'node/'. $next->nid, array('class' => 'topic-next', 'title' => t('Go to next forum topic')));
     }
 
-    $output .= '</div>';
+    $output .= '<br class="clear" /></div>';
   }
 
   return $output;
