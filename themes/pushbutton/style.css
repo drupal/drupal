@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.21 2006/08/31 07:28:14 dries Exp $ */
+/* $Id: style.css,v 1.22 2006/11/23 11:05:46 dries Exp $ */
 
 /*
 ** HTML elements
@@ -240,7 +240,7 @@ ul.links li {
 }
 #site-info {
   background-color: #bdd3ea;
-  background-image: url('header-c.png');
+  background-image: url(header-c.png);
   font-family: "Trebuchet MS", Geneva, Arial, Helvetica, SunSans-Regular, Verdana, sans-serif;
 }
 .site-name {
