@@ -916,7 +916,7 @@ function node_last_changed($nid) {
 function node_operations() {
   $operations = array(
     'approve' =>   array(t('Approve the selected posts'), 'UPDATE {node} SET status = 1, moderate = 0 WHERE nid = %d'),
-    'promote' =>   array(t('Promote the selected posts'), 'UPDATE {node} SET status = 1, promote = 1 WHERE nid = %d'),
+    'promote' =>   array(t('Promote the selected posts'), 'UPDATE {node} SET status = 1, promote = 1, moderate = 0 WHERE nid = %d'),
     'sticky' =>    array(t('Make the selected posts sticky'), 'UPDATE {node} SET status = 1, sticky = 1 WHERE nid = %d'),
     'demote' =>    array(t('Demote the selected posts'), 'UPDATE {node} SET promote = 0 WHERE nid = %d'),
     'unpublish' => array(t('Unpublish the selected posts'), 'UPDATE {node} SET status = 0 WHERE nid = %d'),
