@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.716 2006/11/22 09:12:05 dries Exp $
+// $Id: user.module,v 1.717 2006/11/23 11:06:53 dries Exp $
 
 /**
  * @file
@@ -465,7 +465,7 @@ function user_user($type, &$edit, &$user, $category = NULL) {
   }
 
   if ($type == 'categories') {
-    return array(array('name' => 'account', 'title' => t('account settings'), 'weight' => 1));
+    return array(array('name' => 'account', 'title' => t('Account settings'), 'weight' => 1));
   }
 }
 
