@@ -465,7 +465,7 @@ function user_user($type, &$edit, &$user, $category = NULL) {
   }
 
   if ($type == 'categories') {
-    return array(array('name' => 'account', 'title' => t('account settings'), 'weight' => 1));
+    return array(array('name' => 'account', 'title' => t('Account settings'), 'weight' => 1));
   }
 }
 
