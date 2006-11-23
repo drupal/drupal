@@ -240,7 +240,7 @@ ul.links li {
 }
 #site-info {
   background-color: #bdd3ea;
-  background-image: url('header-c.png');
+  background-image: url(header-c.png);
   font-family: "Trebuchet MS", Geneva, Arial, Helvetica, SunSans-Regular, Verdana, sans-serif;
 }
 .site-name {

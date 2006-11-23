@@ -37,7 +37,7 @@
   height: 16px;
 }
 #palette .down, #palette .up, #palette .both {
-  background: url('images/hook.png') no-repeat 100% 0;
+  background: url(images/hook.png) no-repeat 100% 0;
 }
 #palette .up {
   background-position: 100% -27px;
@@ -53,7 +53,7 @@
   left: -10px;
   width: 20px;
   height: 25px;
-  background: url('images/lock.png') no-repeat 50% 2px;
+  background: url(images/lock.png) no-repeat 50% 2px;
   cursor: pointer;
 }
 #palette .unlocked {

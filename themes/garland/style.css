@@ -117,15 +117,15 @@ ul li, ul.menu li, .item-list ul li, li.leaf {
   padding: 0 0 .2em 1.5em;
   list-style-type: none;
   list-style-image: none;
-  background: transparent url("images/menu-leaf.gif") no-repeat 1px .35em;
+  background: transparent url(images/menu-leaf.gif) no-repeat 1px .35em;
 }
 
 ul li.expanded {
-  background: transparent url("images/menu-expanded.gif") no-repeat 1px .35em;
+  background: transparent url(images/menu-expanded.gif) no-repeat 1px .35em;
 }
 
 ul li.collapsed {
-  background: transparent url("images/menu-collapsed.gif") no-repeat 0px .35em;
+  background: transparent url(images/menu-collapsed.gif) no-repeat 0px .35em;
 }
 
 ul li.leaf a, ul li.expanded a, ul li.collapsed a {
@@ -266,11 +266,11 @@ table .form-button, table .form-submit {
 
 #navigation {
   height: 1em;
-  background: url("images/bg-navigation.png") repeat-x 50% 100%;
+  background: url(images/bg-navigation.png) repeat-x 50% 100%;
 }
 
 #wrapper {
-  background: #edf5fa url("images/body.png") repeat-x 50% 0;
+  background: #edf5fa url(images/body.png) repeat-x 50% 0;
 }
 
 #wrapper #container {
@@ -384,19 +384,19 @@ body.sidebars #squeeze {
 
 /* Now we add the backgrounds for the main content shading */
 #wrapper #container #center #squeeze {
-  background: #fff url("images/bg-content.png") repeat-x 50% 0;
+  background: #fff url(images/bg-content.png) repeat-x 50% 0;
   position: relative;
 }
 
 #wrapper #container #center .right-corner {
-  background: transparent url("images/bg-content-right.png") no-repeat 100% 0;
+  background: transparent url(images/bg-content-right.png) no-repeat 100% 0;
   position: relative;
   left: 10px;
 }
 
 #wrapper #container #center .right-corner .left-corner {
   padding: 60px 25px 5em 35px;
-  background: transparent url("images/bg-content-left.png") no-repeat 0 0;
+  background: transparent url(images/bg-content-left.png) no-repeat 0 0;
   margin-left: -10px;
   position: relative;
   left: -10px;
@@ -482,12 +482,12 @@ ul.primary-links li a, ul.primary-links li a:link, ul.primary-links li a:visited
   margin: 0 1em;
   padding: .75em 0 0;
   color: #fff;
-  background: transparent url("images/bg-navigation-item.png") no-repeat 50% 0;
+  background: transparent url(images/bg-navigation-item.png) no-repeat 50% 0;
 }
 
 ul.primary-links li a:hover, ul.primary-links li a.active {
   color: #fff;
-  background: transparent url("images/bg-navigation-item-hover.png") no-repeat 50% 0;
+  background: transparent url(images/bg-navigation-item-hover.png) no-repeat 50% 0;
 }
 
 /**
@@ -568,7 +568,7 @@ ul.secondary li a, ul.secondary li.active a, ul.secondary li a:hover, ul.seconda
 }
 ul.primary li.active a, ul.primary li.active a:link, ul.primary li.active a:visited, ul.primary li a:hover,
 ul.secondary li.active a, ul.secondary li.active a:link, ul.secondary li.active a:visited, ul.secondary li a:hover {
-  background: url('images/bg-tab.png') repeat-x 0 50%;
+  background: url(images/bg-tab.png) repeat-x 0 50%;
   color: #fff;
 }
 ul.primary li.active a,
@@ -647,7 +647,7 @@ ul.links li, ul.inline li {
 #comments h2.comments {
   margin: 0 -25px;
   padding: .5em 25px;
-  background: #fff url("images/gradient-inner.png") repeat-x 0 0;
+  background: #fff url(images/gradient-inner.png) repeat-x 0 0;
 }
 
 .comment {
@@ -698,7 +698,7 @@ ul.links li, ul.inline li {
   border: 1px solid #fff;
 }
 #palette .item-selected {
-  background: #fff url("images/gradient-inner.png") repeat-x 0 0;
+  background: #fff url(images/gradient-inner.png) repeat-x 0 0;
   border: 1px solid #d9eaf5;
 }
 
@@ -719,13 +719,13 @@ td.menu-disabled {
  * Poll.module
  */
 .poll .bar {
-  background: #fff url("images/bg-bar-white.png") repeat-x 0 0;
+  background: #fff url(images/bg-bar-white.png) repeat-x 0 0;
   border: solid #f0f0f0;
   border-width: 0 1px 1px;
 }
 
 .poll .bar .foreground {
-  background: #71a7cc url("images/bg-bar.png") repeat-x 0 100%;
+  background: #71a7cc url(images/bg-bar.png) repeat-x 0 100%;
 }
 
 .poll .percent {
@@ -748,7 +748,7 @@ fieldset {
   margin: 1em 0;
   padding: 1em;
   border: 1px solid #d9eaf5;
-  background: #fff url("images/gradient-inner.png") repeat-x 0 0;
+  background: #fff url(images/gradient-inner.png) repeat-x 0 0;
 }
 
 html.js fieldset.collapsed {
@@ -759,11 +759,11 @@ html.js fieldset.collapsed {
 
 html.js fieldset.collapsible legend a {
   padding-left: 2em;
-  background: url("images/menu-expanded.gif") no-repeat 0% 50%;
+  background: url(images/menu-expanded.gif) no-repeat 0% 50%;
 }
 
 html.js fieldset.collapsed legend a {
-  background: url("images/menu-collapsed.gif") no-repeat 0% 50%;
+  background: url(images/menu-collapsed.gif) no-repeat 0% 50%;
 }
 
 /**
@@ -819,7 +819,7 @@ div.admin .right {
 }
 
 div.admin-panel {
-  background: #fff url("images/gradient-inner.png") repeat-x 0 0;
+  background: #fff url(images/gradient-inner.png) repeat-x 0 0;
   padding: 1em 1em 1.5em;
 }
 div.admin-panel .description {
