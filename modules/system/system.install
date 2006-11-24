@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.42 2006/11/22 09:16:48 dries Exp $
+// $Id: system.install,v 1.43 2006/11/24 11:00:15 dries Exp $
 
 define('DRUPAL_MINIMUM_PHP',    '4.3.3');
 define('DRUPAL_MINIMUM_MYSQL',  '3.23.17'); // If using MySQL
@@ -541,7 +541,8 @@ function system_install() {
         referer varchar(128) NOT NULL default '',
         hostname varchar(128) NOT NULL default '',
         timestamp int NOT NULL default '0',
-        PRIMARY KEY (wid)
+        PRIMARY KEY (wid),
+        KEY (type)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       break;
@@ -1007,6 +1008,7 @@ function system_install() {
         timestamp int NOT NULL default '0',
         PRIMARY KEY (wid)
       )");
+      db_query("CREATE INDEX {watchdog}_type_idx ON {watchdog} (type)");
       break;
   }
 
@@ -3067,6 +3069,24 @@ function system_update_182() {
 
   return $ret;
 }
+
+/**
+ * Add an index on watchdog type.
+ */
+function system_update_183() {
+  $ret = array();
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql('ALTER TABLE {watchdog} ADD INDEX (type)');
+      break;
+    case 'pgsql':
+      $ret[] = update_sql('CREATE INDEX {watchdog}_type_idx ON {watchdog}(type)');
+      break;
+  }
+  return $ret;
+}
+
 
 /**
  * @defgroup updates-4.7-to-5.0 System updates from 4.7 to 5.0
