@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.95 2006/10/23 15:52:35 dries Exp $
+// $Id: locale.inc,v 1.96 2006/11/24 10:18:22 dries Exp $
 
 /**
  * @file
@@ -153,7 +153,7 @@ function locale_custom_language_form() {
     '#size' => 12,
     '#maxlength' => 60,
     '#required' => TRUE,
-    '#description' => t("Commonly this is an <a href=\"@iso-codes\">ISO 639 language code</a> with an optional country code for regional variants. Examples include 'en', 'en-US' and 'zh-cn'.", array('@iso-codes' => 'http://www.w3.org/WAI/ER/IG/ert/iso639.htm')),
+    '#description' => t('Commonly this is an <a href="@iso-codes">ISO 639 language code</a> with an optional country code for regional variants. Examples include "en", "en-US" and "zh-cn".', array('@iso-codes' => 'http://www.w3.org/WAI/ER/IG/ert/iso639.htm')),
   );
   $form['custom language']['langname'] = array('#type' => 'textfield',
     '#title' => t('Language name in English'),

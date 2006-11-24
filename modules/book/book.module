@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.400 2006/11/22 09:58:48 dries Exp $
+// $Id: book.module,v 1.401 2006/11/24 10:18:22 dries Exp $
 
 /**
  * @file
@@ -92,7 +92,7 @@ function book_menu($may_cache) {
     $items[] = array(
       'path' => 'admin/content/book',
       'title' => t('Books'),
-      'description' => t('Manage site\'s books and orphaned book pages.'),
+      'description' => t("Manage site's books and orphaned book pages."),
       'callback' => 'book_admin',
       'access' => user_access('administer nodes'));
     $items[] = array(

@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.735 2006/11/24 09:01:57 dries Exp $
+// $Id: node.module,v 1.736 2006/11/24 10:18:24 dries Exp $
 
 /**
  * @file
@@ -1044,7 +1044,7 @@ function node_menu($may_cache) {
   if ($may_cache) {
     $items[] = array('path' => 'admin/content',
       'title' => t('Content management'),
-      'description' => t('Manage your site\'s content.'),
+      'description' => t("Manage your site's content."),
       'position' => 'left',
       'weight' => -10,
       'callback' => 'system_admin_menu_block_page',
@@ -1054,7 +1054,7 @@ function node_menu($may_cache) {
     $items[] = array(
       'path' => 'admin/content/node',
       'title' => t('Posts'),
-      'description' => t('View, edit, and delete your site\'s content.'),
+      'description' => t("View, edit, and delete your site's content."),
       'callback' => 'node_admin_content',
       'access' => user_access('administer nodes')
     );

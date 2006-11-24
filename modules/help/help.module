@@ -1,5 +1,5 @@
 <?php
-// $Id: help.module,v 1.63 2006/11/24 09:30:17 dries Exp $
+// $Id: help.module,v 1.64 2006/11/24 10:18:23 dries Exp $
 
 /**
  * @file
@@ -41,7 +41,7 @@ function help_menu($may_cache) {
  * Menu callback; prints a page listing a glossary of Drupal terminology.
  */
 function help_main() {
-  $output = t("
+  $output = t('
   <h2>Help topics</h2>
   <p>Help is available on the following items:</p>
   !help_pages
@@ -59,12 +59,12 @@ function help_main() {
    <dt>Node</dt><dd>The basic data unit in Drupal. Everything is a node or an extension of a node.</dd>
    <dt>Public</dt><dd>See published.</dd>
    <dt>Published</dt><dd>A node that is viewable by everyone (see unpublished).</dd>
-   <dt>Role</dt><dd>A classification users are placed into for the purpose of setting users' permissions.</dd>
-   <dt>Taxonomy</dt><dd>A division of a collection of things into ordered, classified groups (see <a href=\"@taxonomy\">taxonomy help</a>).</dd>
+   <dt>Role</dt><dd>A classification users are placed into for the purpose of setting users\' permissions.</dd>
+   <dt>Taxonomy</dt><dd>A division of a collection of things into ordered, classified groups (see <a href="@taxonomy">taxonomy help</a>).</dd>
    <dt>Unpublished</dt><dd>A node that is only viewable by administrators and moderators.</dd>
    <dt>User</dt><dd>A person who has an account at your Drupal site, and is logged in with that account.</dd>
-   <dt>Visitor</dt><dd>A person who does not have an account at your Drupal site or a person who has an account at your Drupal site but is <strong>not</strong> logged in with that account. Also termed \"anonymous user\".</dd>
-  </dl>", array('!help_pages' => help_links_as_list(), '@taxonomy' => url('admin/help/taxonomy')));
+   <dt>Visitor</dt><dd>A person who does not have an account at your Drupal site or a person who has an account at your Drupal site but is <strong>not</strong> logged in with that account. Also termed "anonymous user".</dd>
+  </dl>', array('!help_pages' => help_links_as_list(), '@taxonomy' => url('admin/help/taxonomy')));
 
   return $output;
 }
@@ -106,15 +106,15 @@ function help_help($section) {
       return $output;
     case 'admin/help#help':
       $output = '<p>'. t('The help module displays context sensitive help information. Users can learn how to use modules and accomplish tasks quicker with less errors by clicking on links in provided by the help module.') .'</p>';
-      $output .= t('<p>Modules can make documentation available to other modules with this module. All user help should be presented using this module. Some examples of help: </p>
+      $output .= t("<p>Modules can make documentation available to other modules with this module. All user help should be presented using this module. Some examples of help: </p>
 <ul>
 <li>The name of a module (unused, but there).</li>
 <li>The description found on the admin/settings/modules page.</li>
-<li>The module\'s help text, displayed on the admin/help page and through the module\'s individual help link.</li>
+<li>The module's help text, displayed on the admin/help page and through the module\'s individual help link.</li>
 <li>The help for a distributed authorization module (if applicable).</li>
 <li>The description of a post type (if applicable).</li>
 </ul>
-');
+");
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@help">Help page</a>.', array('@help' => 'http://drupal.org/handbook/modules/help/')) .'</p>';
       return $output;
   }

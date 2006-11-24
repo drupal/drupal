@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal.module,v 1.133 2006/11/21 20:14:17 dries Exp $
+// $Id: drupal.module,v 1.134 2006/11/24 10:18:23 dries Exp $
 
 /**
  * @file
@@ -40,8 +40,8 @@ print drupal_client_page();
     case 'admin/settings/distributed-authentication':
       return t('<p>Using this your site can "call home" to another Drupal server. By calling home to drupal.org and sending a list of your installed modules and themes, you help rank projects on drupal.org and so assist all Drupal administrators to find the best components for meeting their needs. If you want to register with a different server, you can change the Drupal XML-RPC server setting -- but the server has to be able to handle Drupal XML. Some XML-RPC servers may present directories of all registered sites. To get all your site information listed, go to the <a href="@site-settings">site information settings page</a> and set the site name, the e-mail address, the slogan, and the mission statement.</p>', array('@site-settings' => url('admin/settings/site-information')));
     case 'user/help#drupal':
-      return variable_get('drupal_authentication_service', 0) ? t("<p><a href=\"@Drupal\">Drupal</a> is the name of the software that powers %this-site. There are Drupal web sites all over the world, and many of them share their registration databases so that users may freely log in to any Drupal site using a single <strong>Drupal ID</strong>.</p>
-<p>So please feel free to log in to your account here at %this-site with a username from another Drupal site. The format of a Drupal ID is similar to an e-mail address: <strong>username</strong>@<em>server</em>. An example of a valid Drupal ID is <strong>mwlily</strong>@<em>drupal.org</em>.</p>", array('@Drupal' => 'http://drupal.org', '%this-site' => variable_get('site_name', 'this web site'))) : '';
+      return variable_get('drupal_authentication_service', 0) ? t('<p><a href="@Drupal">Drupal</a> is the name of the software that powers %this-site. There are Drupal websites all over the world, and many of them share their registration databases so that users may freely log in to any Drupal site using a single <strong>Drupal ID</strong>.</p>
+<p>So please feel free to log in to your account here at %this-site with a username from another Drupal site. The format of a Drupal ID is similar to an e-mail address: <strong>username</strong>@<em>server</em>. An example of a valid Drupal ID is <strong>mwlily</strong>@<em>drupal.org</em>.</p>', array('@Drupal' => 'http://drupal.org', '%this-site' => variable_get('site_name', 'this website'))) : '';
   }
 }
 
@@ -129,7 +129,7 @@ function drupal_distributed_authentication_settings() {
     '#title' => t('Only allow authentication from default server'),
     '#default_value' => variable_get('drupal_default_da_server_only', 0),
     '#options' => $options,
-    '#description' => t('Only accept remote logins from the above specified default authentication server and not from any other server. Useful when an external system is the solitary authority on user accounts for this site. A common usage is to enable this setting and also enable an authentication module which talks to your company\'s directory server.')
+    '#description' => t("Only accept remote logins from the above specified default authentication server and not from any other server. Useful when an external system is the solitary authority on user accounts for this site. A common usage is to enable this setting and also enable an authentication module which talks to your company's directory server.")
   );
 
   return system_settings_form($form);

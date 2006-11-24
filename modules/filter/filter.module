@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.149 2006/11/21 20:14:17 dries Exp $
+// $Id: filter.module,v 1.150 2006/11/24 10:18:23 dries Exp $
 
 /**
  * @file
@@ -20,7 +20,7 @@ define('FILTER_HTML_ESCAPE', 2);
 function filter_help($section) {
   switch ($section) {
     case 'admin/help#filter':
-      $output = '<p>'. t('The filter module allows administrators to configure  text input formats for the site. For example, an administrator may want a filter to strip out malicious HTML from user\'s comments. Administrators may also want to make URLs linkable even if they are only entered in an unlinked format.') .'</p>';
+      $output = '<p>'. t("The filter module allows administrators to configure  text input formats for the site. For example, an administrator may want a filter to strip out malicious HTML from user's comments. Administrators may also want to make URLs linkable even if they are only entered in an unlinked format.") .'</p>';
       $output .= '<p>'. t('Users can choose between the available input formats when creating or editing content. Administrators can configure which input formats are available to which user roles, as well as choose a default input format. Administrators can also create new input formats. Each input format can be configured to use a selection of filters.') .'</p>';
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@filter">Filter page</a>.', array('@filter' => 'http://drupal.org/handbook/modules/filter/')) .'</p>';
       return $output;
@@ -39,12 +39,12 @@ function filter_help($section) {
 
     case 'admin/settings/filters/'. arg(3) .'/configure':
       return t('
-<p>If you cannot find the settings for a certain filter, make sure you\'ve enabled it on the <a href="@url">view tab</a> first.</p>', array('@url' => url('admin/settings/filters/'. arg(3))));
+<p>If you cannot find the settings for a certain filter, make sure you have enabled it on the <a href="@url">view tab</a> first.</p>', array('@url' => url('admin/settings/filters/'. arg(3))));
 
     case 'admin/settings/filters/'. arg(3) .'/order':
       return t('
 <p>Because of the flexible filtering system, you might encounter a situation where one filter prevents another from doing its job. For example: a word in an URL gets converted into a glossary term, before the URL can be converted in a clickable link. When this happens, you will need to rearrange the order in which filters get executed.</p>
-<p>Filters are executed from top-to-bottom. You can use the weight column to rearrange them: heavier filters \'sink\' to the bottom.</p>');
+<p>Filters are executed from top-to-bottom. You can use the weight column to rearrange them: heavier filters "sink" to the bottom.</p>');
   }
 }
 
@@ -66,7 +66,7 @@ function filter_menu($may_cache) {
       'title' => t('List'),
       'callback' => 'filter_admin_overview',
       'type' => MENU_DEFAULT_LOCAL_TASK,
-      'access' => user_access('administer filters'),
+'access' => user_access('administer filters'),
     );
     $items[] = array('path' => 'admin/settings/filters/add',
       'title' => t('Add input format'),
@@ -262,7 +262,7 @@ function filter_filter_tips($delta, $format, $long = FALSE) {
         case 1:
           return t('
 <h4>Using custom PHP code</h4>
-<p>If you know how to script in PHP, Drupal gives you the power to embed any script you like. It will be executed when the page is viewed and dynamically embedded into the page. This gives you amazing flexibility and power, but of course with that comes danger and insecurity if you don\'t write good code. If you are not familiar with PHP, SQL or with the site engine, avoid experimenting with PHP because you can corrupt your database or render your site insecure or even unusable! If you don\'t plan to do fancy stuff with your content then you\'re probably better off with straight HTML.</p>
+<p>If you know how to script in PHP, Drupal gives you the power to embed any script you like. It will be executed when the page is viewed and dynamically embedded into the page. This gives you amazing flexibility and power, but of course with that comes danger and insecurity if you do not write good code. If you are not familiar with PHP, SQL or with the site engine, avoid experimenting with PHP because you can corrupt your database or render your site insecure or even unusable! If you do not plan to do fancy stuff with your content then you are probably better off with straight HTML.</p>
 <p>Remember that the code within each PHP item must be valid PHP code - including things like correctly terminating statements with a semicolon. It is highly recommended that you develop your code separately using a simple test script on top of a test database before migrating to your production environment.</p>
 <p>Notes:</p><ul><li>You can use global variables, such as configuration parameters, within the scope of your PHP code but remember that global variables which have been given values in your code will retain these values in the engine afterwards.</li><li>register_globals is now set to <strong>off</strong> by default. If you need form information you need to get it from the "superglobals" $_POST, $_GET, etc.</li><li>You can either use the <code>print</code> or <code>return</code> statement to output the actual content for your item.</li></ul>
 <p>A basic example:</p>

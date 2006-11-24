@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.316 2006/11/21 20:14:17 dries Exp $
+// $Id: aggregator.module,v 1.317 2006/11/24 10:18:22 dries Exp $
 
 /**
  * @file
@@ -36,7 +36,7 @@ function aggregator_menu($may_cache) {
   if ($may_cache) {
     $items[] = array('path' => 'admin/content/aggregator',
       'title' => t('RSS aggregator'),
-      'description' => t('Configure which content your site aggregates from other sites, how often it polls them, and how they\'re categorized.'),
+      'description' => t("Configure which content your site aggregates from other sites, how often it polls them, and how they're categorized."),
       'callback' => 'aggregator_admin_overview',
       'access' => $edit);
     $items[] = array('path' => 'admin/content/aggregator/add/feed',
@@ -285,7 +285,7 @@ function aggregator_block($op = 'list', $delta = 0, $edit = array()) {
           if ($feed = db_fetch_object(db_query('SELECT fid, title, block FROM {aggregator_feed} WHERE fid = %d', $id))) {
             $block['subject'] = check_plain($feed->title);
             $result = db_query_range('SELECT * FROM {aggregator_item} WHERE fid = %d ORDER BY timestamp DESC, iid DESC', $feed->fid, 0, $feed->block);
-            $block['content'] = '<div class="more-link">'. l(t('more'), 'aggregator/sources/'. $feed->fid, array('title' => t('View this feed\'s recent news.'))) .'</div>';
+            $block['content'] = '<div class="more-link">'. l(t('more'), 'aggregator/sources/'. $feed->fid, array('title' => t("View this feed's recent news."))) .'</div>';
           }
           break;
 
@@ -293,7 +293,7 @@ function aggregator_block($op = 'list', $delta = 0, $edit = array()) {
           if ($category = db_fetch_object(db_query('SELECT cid, title, block FROM {aggregator_category} WHERE cid = %d', $id))) {
             $block['subject'] = check_plain($category->title);
             $result = db_query_range('SELECT i.* FROM {aggregator_category_item} ci LEFT JOIN {aggregator_item} i ON ci.iid = i.iid WHERE ci.cid = %d ORDER BY i.timestamp DESC, i.iid DESC', $category->cid, 0, $category->block);
-            $block['content'] = '<div class="more-link">'. l(t('more'), 'aggregator/categories/'. $category->cid, array('title' => t('View this category\'s recent news.'))) .'</div>';
+            $block['content'] = '<div class="more-link">'. l(t('more'), 'aggregator/categories/'. $category->cid, array('title' => t("View this category's recent news."))) .'</div>';
           }
           break;
       }

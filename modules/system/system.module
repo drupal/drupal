@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.404 2006/11/24 09:28:38 dries Exp $
+// $Id: system.module,v 1.405 2006/11/24 10:18:24 dries Exp $
 
 /**
  * @file
@@ -18,7 +18,7 @@ function system_help($section) {
     case 'admin/help#system':
       $output = '<p>'. t('The system module provides system-wide defaults such as running jobs at a particular time, and storing web pages to improve efficiency. The ability to run scheduled jobs makes administering the web site more usable, as administrators do not have to manually start jobs. The storing of web pages, or caching, allows the site to efficiently re-use web pages and improve web site performance. The settings module provides control over preferences, behaviours including visual and operational settings.') .'</p>';
       $output .= '<p>'. t('Some modules require regularly scheduled actions, such as cleaning up logfiles. Cron, which stands for chronograph, is a periodic command scheduler executing commands at intervals specified in seconds. It can be used to control the execution of daily, weekly and monthly jobs (or anything with a period measured in seconds). The aggregator module periodically updates feeds using cron. Ping periodically notifies services of new content on your site. Search periodically indexes the content on your site. Automating tasks is one of the best ways to keep a system running smoothly, and if most of your administration does not require your direct involvement, cron is an ideal solution. Cron can, if necessary, also be run manually.') .'</p>';
-      $output .= '<p>'. t('There is a caching mechanism which stores dynamically generated web pages in a database. By caching a web page, the system module does not have to create the page each time someone wants to view it, instead it takes only one SQL query to display it, reducing response time and the server\'s load. Only pages requested by <em>anonymous</em> users are cached. In order to reduce server load and save bandwidth, the system module stores and sends cached pages compressed.') .'</p>';
+      $output .= '<p>'. t("There is a caching mechanism which stores dynamically generated web pages in a database. By caching a web page, the system module does not have to create the page each time someone wants to view it, instead it takes only one SQL query to display it, reducing response time and the server's load. Only pages requested by <em>anonymous</em> users are cached. In order to reduce server load and save bandwidth, the system module stores and sends cached pages compressed.") .'</p>';
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@system">System page</a>.', array('@system' => 'http://drupal.org/handbook/modules/system/')) .'</p>';
       return $output;
     case 'admin':
@@ -41,7 +41,7 @@ function system_help($section) {
     case 'admin/build/modules/uninstall':
       return (t('<p>The uninstall process removes all data related to a module. To uninstall a module, you must first disable it. Not all modules support this feature.</p>'));
     case 'admin/logs/status':
-      return t('<p>Here you can find a short overview of your Drupal site\'s parameters as well as any problems detected with your installation. It is useful to copy/paste this information when you need support.</p>');
+      return t("<p>Here you can find a short overview of your Drupal site's parameters as well as any problems detected with your installation. It is useful to copy/paste this information when you need support.</p>");
   }
 }
 
@@ -255,7 +255,7 @@ function system_menu($may_cache) {
     $items[] = array(
       'path' => 'admin/settings/date-time',
       'title' => t('Date and time'),
-      'description' => t('Settings for how Drupal displays date and time, as well as the system\'s default timezone.'),
+      'description' => t("Settings for how Drupal displays date and time, as well as the system's default timezone."),
       'callback' => 'drupal_get_form',
       'callback arguments' => array('system_date_time_settings'));
     $items[] = array(
@@ -283,7 +283,7 @@ function system_menu($may_cache) {
     $items[] = array(
       'path' => 'admin/logs/status',
       'title' => t('Status report'),
-      'description' => t('Get a status report about your site\'s operation and any detected problems.'),
+      'description' => t("Get a status report about your site's operation and any detected problems."),
       'callback' => 'system_status',
       'weight' => 10,
       'access' => $access);
@@ -429,7 +429,7 @@ function system_admin_theme_settings() {
     '#type' => 'select',
     '#options' => $options,
     '#title' => t('Administration theme'),
-    '#description' => t('Choose which theme the administration pages should display in. If you choose "System default" the administration pages theme will display in the same theme the rest of the site uses.'),
+    '#description' => t('Choose which theme the administration pages should display in. If you choose "System default" the administration pages will use the same theme as the rest of the site.'),
     '#default_value' => variable_get('admin_theme', '0'),
   );
 
@@ -596,7 +596,7 @@ function system_clean_url_settings() {
       $form['clean_url']['#disabled'] = TRUE;
     }
     else {
-      $form['clean_url']['#description'] .= t(' You have successfully demonstrated that clean URLs work on your server. You are welcome to enable/disable them as you wish.');
+      $form['clean_url']['#description'] .= t(' You have successfully demonstrated that clean URLs work on your server. You may enable/disable them as you wish.');
       $form['#collapsed'] = FALSE;
     }
   }
@@ -651,10 +651,10 @@ function system_page_caching_settings() {
   sort($problem_modules);
 
   if (count($problem_modules) > 0) {
-    $description .= '<p>'. t("<strong class=\"error\">The following enabled modules are incompatible with aggressive mode caching and will not function properly: %modules</strong>", array('%modules' => implode(', ', $problem_modules))) .'.</p>';
+    $description .= '<p>'. t('<strong class="error">The following enabled modules are incompatible with aggressive mode caching and will not function properly: %modules</strong>', array('%modules' => implode(', ', $problem_modules))) .'.</p>';
   }
   else {
-    $description .= '<p>'. t("<strong class=\"ok\">Currently, all enabled modules are compatible with the aggressive caching policy.</strong> Please note, if you use aggressive caching and enable new modules, you'll need to check this page again to ensure compatibility.") .'</p>';
+    $description .= '<p>'. t('<strong class="ok">Currently, all enabled modules are compatible with the aggressive caching policy.</strong> Please note, if you use aggressive caching and enable new modules, you will need to check this page again to ensure compatibility.') .'</p>';
   }
 
   $form['cache'] = array(
@@ -2134,7 +2134,7 @@ function theme_admin_page($blocks) {
     $output .= l(t('Show descriptions'), 'admin/compact/off', array('title' => t('Produce a less compact layout that includes descriptions.')));
   }
   else {
-    $output .= l(t('Hide descriptions'), 'admin/compact/on', array('title' => t('Produce a more compact layout that doesn\'t include descriptions.')));
+    $output .= l(t('Hide descriptions'), 'admin/compact/on', array('title' => t("Produce a more compact layout that doesn't include descriptions.")));
   }
   $output .= '</div>';
 

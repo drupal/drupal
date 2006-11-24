@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.718 2006/11/24 09:01:57 dries Exp $
+// $Id: user.module,v 1.719 2006/11/24 10:18:24 dries Exp $
 
 /**
  * @file
@@ -2272,7 +2272,7 @@ function user_admin_settings() {
   $form['pictures']['user_picture_default'] = array('#type' => 'textfield', '#title' => t('Default picture'), '#default_value' => variable_get('user_picture_default', ''), '#size' => 30, '#maxlength' => 255, '#description' => t('URL of picture to display for users with no custom picture selected. Leave blank for none.'));
   $form['pictures']['user_picture_dimensions'] = array('#type' => 'textfield', '#title' => t('Picture maximum dimensions'), '#default_value' => variable_get('user_picture_dimensions', '85x85'), '#size' => 15, '#maxlength' => 10, '#description' => t('Maximum dimensions for pictures, in pixels.'));
   $form['pictures']['user_picture_file_size'] = array('#type' => 'textfield', '#title' => t('Picture maximum file size'), '#default_value' => variable_get('user_picture_file_size', '30'), '#size' => 15, '#maxlength' => 10, '#description' => t('Maximum file size for pictures, in kB.'));
-  $form['pictures']['user_picture_guidelines'] = array('#type' => 'textarea', '#title' => t('Picture guidelines'), '#default_value' => variable_get('user_picture_guidelines', ''), '#description' => t('This text is displayed at the picture upload form in addition to the default guidelines. It\'s useful for helping or instructing your users.'));
+  $form['pictures']['user_picture_guidelines'] = array('#type' => 'textarea', '#title' => t('Picture guidelines'), '#default_value' => variable_get('user_picture_guidelines', ''), '#description' => t("This text is displayed at the picture upload form in addition to the default guidelines. It's useful for helping or instructing your users."));
 
   return system_settings_form($form);
 }

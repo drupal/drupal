@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.27 2006/11/24 09:01:57 dries Exp $
+// $Id: install.php,v 1.28 2006/11/24 10:18:22 dries Exp $
 
 require_once './includes/install.inc';
 
@@ -242,7 +242,7 @@ function install_settings_form($profile, $install_locale, $settings_file, $db_ur
       '#title' => st('Advanced options'),
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
-      '#description' => st('These options are only necessary for some sites. If you\'re not sure what you should enter here, leave the default settings or check with your hosting provider.')
+      '#description' => st("These options are only necessary for some sites. If you're not sure what you should enter here, leave the default settings or check with your hosting provider.")
     );
 
     // Database host
