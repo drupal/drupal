@@ -242,7 +242,7 @@ function install_settings_form($profile, $install_locale, $settings_file, $db_ur
       '#title' => st('Advanced options'),
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
-      '#description' => st('These options are only necessary for some sites. If you\'re not sure what you should enter here, leave the default settings or check with your hosting provider.')
+      '#description' => st("These options are only necessary for some sites. If you're not sure what you should enter here, leave the default settings or check with your hosting provider.")
     );
 
     // Database host
