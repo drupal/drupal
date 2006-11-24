@@ -265,7 +265,7 @@ table .form-button, table .form-submit {
  */
 #header-region {
   min-height: 1em;
-  background: #d2e6f3 url("images/bg-navigation.png") repeat-x 50% 100%;
+  background: #d2e6f3 url(images/bg-navigation.png) repeat-x 50% 100%;
 }
 
 #header-region .block {
