@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.498 2006/11/21 20:14:17 dries Exp $
+// $Id: comment.module,v 1.499 2006/11/24 09:01:57 dries Exp $
 
 /**
  * @file
@@ -1384,7 +1384,7 @@ function comment_form($edit, $title = NULL) {
     }
   }
   else if (variable_get('comment_anonymous', COMMENT_ANONYMOUS_MAYNOT_CONTACT) == COMMENT_ANONYMOUS_MAY_CONTACT) {
-    $form['name'] = array('#type' => 'textfield', '#title' => t('Your name'), '#maxlength' => 60, '#size' => 30, '#default_value' => $edit['name'] ? $edit['name'] : variable_get('anonymous', 'Anonymous')
+    $form['name'] = array('#type' => 'textfield', '#title' => t('Your name'), '#maxlength' => 60, '#size' => 30, '#default_value' => $edit['name'] ? $edit['name'] : variable_get('anonymous', t('Anonymous'))
     );
 
     $form['mail'] = array('#type' => 'textfield', '#title' => t('E-mail'), '#maxlength' => 64, '#size' => 30, '#default_value' => $edit['mail'], '#description' => t('The content of this field is kept private and will not be shown publicly.')
@@ -1393,7 +1393,7 @@ function comment_form($edit, $title = NULL) {
     $form['homepage'] = array('#type' => 'textfield', '#title' => t('Homepage'), '#maxlength' => 255, '#size' => 30, '#default_value' => $edit['homepage']);
   }
   else if (variable_get('comment_anonymous', COMMENT_ANONYMOUS_MAYNOT_CONTACT) == COMMENT_ANONYMOUS_MUST_CONTACT) {
-    $form['name'] = array('#type' => 'textfield', '#title' => t('Your name'), '#maxlength' => 60, '#size' => 30, '#default_value' => $edit['name'] ? $edit['name'] : variable_get('anonymous', 'Anonymous'), '#required' => TRUE);
+    $form['name'] = array('#type' => 'textfield', '#title' => t('Your name'), '#maxlength' => 60, '#size' => 30, '#default_value' => $edit['name'] ? $edit['name'] : variable_get('anonymous', t('Anonymous')), '#required' => TRUE);
 
     $form['mail'] = array('#type' => 'textfield', '#title' => t('E-mail'), '#maxlength' => 64, '#size' => 30, '#default_value' => $edit['mail'],'#description' => t('The content of this field is kept private and will not be shown publicly.'), '#required' => TRUE);
 

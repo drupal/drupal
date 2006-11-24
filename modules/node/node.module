@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.734 2006/11/21 20:14:18 dries Exp $
+// $Id: node.module,v 1.735 2006/11/24 09:01:57 dries Exp $
 
 /**
  * @file
@@ -1974,7 +1974,7 @@ function node_form($node, $form_values = NULL) {
     '#collapsed' => TRUE,
     '#weight' => 20,
   );
-  $form['author']['name'] = array('#type' => 'textfield', '#title' => t('Authored by'), '#maxlength' => 60, '#autocomplete_path' => 'user/autocomplete', '#default_value' => $node->name ? $node->name : '', '#weight' => -1, '#description' => t('Leave blank for %anonymous.', array('%anonymous' => variable_get('anonymous', 'Anonymous'))));
+  $form['author']['name'] = array('#type' => 'textfield', '#title' => t('Authored by'), '#maxlength' => 60, '#autocomplete_path' => 'user/autocomplete', '#default_value' => $node->name ? $node->name : '', '#weight' => -1, '#description' => t('Leave blank for %anonymous.', array('%anonymous' => variable_get('anonymous', t('Anonymous')))));
   $form['author']['date'] = array('#type' => 'textfield', '#title' => t('Authored on'), '#maxlength' => 25, '#description' => t('Format: %time. Leave blank to use the time of form submission.', array('%time' => $node->date)));
 
   if (isset($node->nid)) {

@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.402 2006/11/21 20:55:35 dries Exp $
+// $Id: system.module,v 1.403 2006/11/24 09:01:57 dries Exp $
 
 /**
  * @file
@@ -565,7 +565,7 @@ function system_site_information_settings() {
   $form['anonymous'] = array(
     '#type' => 'textfield',
     '#title' => t('Anonymous user'),
-    '#default_value' => variable_get('anonymous', 'Anonymous'),
+    '#default_value' => variable_get('anonymous', t('Anonymous')),
     '#description' => t('The name used to indicate anonymous users.')
   );
   $form['site_frontpage'] = array(
