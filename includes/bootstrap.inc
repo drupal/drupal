@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.131 2006/11/22 09:07:03 dries Exp $
+// $Id: bootstrap.inc,v 1.132 2006/11/24 10:16:50 dries Exp $
 
 /**
  * @file
@@ -192,6 +192,18 @@ function conf_init() {
  * theme, etc.). The filename, whether provided, cached, or retrieved
  * from the database, is only returned if the file exists.
  *
+ * This function plays a key role in allowing Drupal's resources (modules
+ * and themes) to be located in different places depending on a site's
+ * configuration. For example, a module 'foo' may legally be be located
+ * in any of these three places:
+ *
+ * modules/foo/foo.module
+ * sites/all/modules/foo/foo.module
+ * sites/example.com/modules/foo/foo.module
+ *
+ * Calling drupal_get_filename('module', 'foo') will give you one of
+ * the above, depending on where the module is located.
+ *
  * @param $type
  *   The type of the item (i.e. theme, theme_engine, module).
  * @param $name
@@ -199,15 +211,13 @@ function conf_init() {
  * @param $filename
  *   The filename of the item if it is to be set explicitly rather
  *   than by consulting the database.
- * @param $check_db
- *   Allows the database search to be skipped (useful for pre-bootstrap
- *   checks where configuration paths must still be respected).
  *
  * @return
  *   The filename of the requested item.
  */
-function drupal_get_filename($type, $name, $filename = NULL, $check_db = TRUE) {
+function drupal_get_filename($type, $name, $filename = NULL) {
   static $files = array();
+  global $active_db;
 
   if (!isset($files[$type])) {
     $files[$type] = array();
@@ -219,10 +229,16 @@ function drupal_get_filename($type, $name, $filename = NULL, $check_db = TRUE) {
   elseif (isset($files[$type][$name])) {
     // nothing
   }
-  elseif ($check_db && (($file = db_result(db_query("SELECT filename FROM {system} WHERE name = '%s' AND type = '%s'", $name, $type))) && file_exists($file))) {
+  // Verify that we have an active database connection, before querying
+  // the database.  This is required because this function is called both
+  // before we have a database connection (i.e. during installation) and
+  // when a database connection fails.
+  elseif ($active_db && (($file = db_result(db_query("SELECT filename FROM {system} WHERE name = '%s' AND type = '%s'", $name, $type))) && file_exists($file))) {
     $files[$type][$name] = $file;
   }
   else {
+    // Fallback to searching the filesystem if the database connection is
+    // not established or the requested file is not found.
     $config = conf_path();
     $dir = (($type == 'theme_engine') ? 'themes/engines' : "${type}s");
     $file = (($type == 'theme_engine') ? "$name.engine" : "$name.$type");

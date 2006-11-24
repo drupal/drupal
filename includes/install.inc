@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.26 2006/11/21 19:56:52 dries Exp $
+// $Id: install.inc,v 1.27 2006/11/24 10:16:50 dries Exp $
 
 define('SCHEMA_UNINSTALLED', -1);
 define('SCHEMA_INSTALLED', 0);
@@ -306,7 +306,7 @@ function drupal_install_profile($profile, $module_list) {
   // installed, so we can't use the normal installation function.
   $module_list = array_diff($module_list, array('system'));
 
-  $system_path = dirname(drupal_get_filename('module', 'system', NULL, FALSE));
+  $system_path = dirname(drupal_get_filename('module', 'system', NULL));
   require_once './' . $system_path . '/system.install';
   module_invoke('system', 'install');
   $system_versions = drupal_get_schema_versions('system');
