@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.12 2006/11/12 19:56:07 dries Exp $
+// $Id: content_types.inc,v 1.13 2006/11/24 09:08:04 dries Exp $
 
 /**
  * @file
@@ -86,7 +86,7 @@ function node_type_form($type = NULL) {
       '#default_value' => $type->type,
       '#maxlength' => 32,
       '#required' => TRUE,
-      '#description' => t('The machine-readable name of this content type. This text will be used for constructing the URL of the <em>create content</em> page for this content type. It is recommended that this name consists only of lowercase letters, numbers, and <strong>underscores</strong>. Dashes are not allowed. Underscores will be converted into dashes when constructing the URL of the <em>create content</em> page. The name must be unique to this content type.'),
+      '#description' => t('The machine-readable name of this content type. This text will be used for constructing the URL of the <em>create content</em> page for this content type. This name may consist of only of lowercase letters, numbers, and underscores. Dashes are not allowed. Underscores will be converted into dashes when constructing the URL of the <em>create content</em> page. The name must be unique to this content type.'),
     );
   }
   else {
@@ -231,8 +231,8 @@ function node_type_form_validate($form_id, $form_values) {
     if (isset($types[$type->type]) && $type->type != $old_type) {
       form_set_error('type', t('The machine-readable name %type is already taken.', array('%type' => $type->type)));
     }
-    if (strpos($type->type, '-') !== FALSE) {
-      form_set_error('type', t('The machine-readable name cannot contain dashes.', array('%type' => $type->type)));
+    if (!preg_match('!a-z0-9_!', $type->type)) {
+      form_set_error('type', t('The machine-readable name can only consist of lowercase letters, underscores, and numbers.'));
     }
   }
 
