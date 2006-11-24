@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.13 2006/11/24 09:08:04 dries Exp $
+// $Id: content_types.inc,v 1.14 2006/11/24 16:32:30 dries Exp $
 
 /**
  * @file
@@ -231,7 +231,7 @@ function node_type_form_validate($form_id, $form_values) {
     if (isset($types[$type->type]) && $type->type != $old_type) {
       form_set_error('type', t('The machine-readable name %type is already taken.', array('%type' => $type->type)));
     }
-    if (!preg_match('!a-z0-9_!', $type->type)) {
+    if (!preg_match('!^[a-z0-9_]+$!', $type->type)) {
       form_set_error('type', t('The machine-readable name can only consist of lowercase letters, underscores, and numbers.'));
     }
   }
