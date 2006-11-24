@@ -263,10 +263,43 @@ table .form-button, table .form-submit {
 /**
  * Layout
  */
+#header-region {
+  min-height: 1em;
+  background: #d2e6f3 url("images/bg-navigation.png") repeat-x 50% 100%;
+}
 
-#navigation {
-  height: 1em;
-  background: url(images/bg-navigation.png) repeat-x 50% 100%;
+#header-region .block {
+  display: block;
+  margin: 0 1em;
+}
+
+#header-region .block-region {
+  display: block;
+  margin: 0 0.5em 1em;
+  padding: 0.5em;
+  position: relative;
+  top: 0.5em;
+}
+
+#header-region * {
+  display: inline;
+  line-height: 1.5em;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+#header-region p, #header-region img {
+  margin-top: 0.5em;
+}
+
+#header-region h2 {
+  margin: 0 1em 0 0;
+}
+
+#header-region h3, #header-region label, #header-region li {
+  margin: 0 1em;
+  padding: 0;
+  background: none;
 }
 
 #wrapper {

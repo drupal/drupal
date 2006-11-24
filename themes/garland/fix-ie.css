@@ -12,7 +12,7 @@ body {
   font-size: 80%;
 }
 
-#wrapper #container {
+#header-region, #wrapper #container {
   /* Reset text alignment */
   text-align: left;
 }
@@ -51,4 +51,9 @@ html.js fieldset.collapsed {
 td.menu-disabled {
   /* Use filter to emulate CSS3 opacity */
   filter: alpha(opacity=50);
+}
+
+#header-region {
+  /* Because of the lack of min-height, we use height as an alternative */
+  height: 1em;
 }
