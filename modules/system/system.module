@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.403 2006/11/24 09:01:57 dries Exp $
+// $Id: system.module,v 1.404 2006/11/24 09:28:38 dries Exp $
 
 /**
  * @file
@@ -2128,7 +2128,7 @@ function theme_admin_page($blocks) {
     }
   }
 
-  $output = '<div class="admin">';
+  $output = '<div class="admin clear-block">';
   $output .= '<div class="compact-link">';
   if (system_admin_compact_mode()) {
     $output .= l(t('Show descriptions'), 'admin/compact/off', array('title' => t('Produce a less compact layout that includes descriptions.')));
