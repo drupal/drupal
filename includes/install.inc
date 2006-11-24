@@ -306,7 +306,7 @@ function drupal_install_profile($profile, $module_list) {
   // installed, so we can't use the normal installation function.
   $module_list = array_diff($module_list, array('system'));
 
-  $system_path = dirname(drupal_get_filename('module', 'system', NULL, FALSE));
+  $system_path = dirname(drupal_get_filename('module', 'system', NULL));
   require_once './' . $system_path . '/system.install';
   module_invoke('system', 'install');
   $system_versions = drupal_get_schema_versions('system');
