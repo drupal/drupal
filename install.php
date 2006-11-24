@@ -464,13 +464,13 @@ function install_select_locale_form($locales) {
     // Try to use verbose locale name
     $name = $locale->name;
     if (isset($languages[$name])) {
-      $name = $languages[$name][0] . (isset($languages[$name][1]) ? ' (' . $languages[$name][1] . ')' : '');
+      $name = $languages[$name][0] . (isset($languages[$name][1]) ? ' '. st('(@language)', array('@language' => $languages[$name][1])) : '');
     }
     $form['locale'][$locale->name] = array(
       '#type' => 'radio',
       '#return_value' => $locale->name,
       '#default_value' => ($locale->name == 'en' ? TRUE : FALSE),
-      '#title' => $name . ($locale->name == 'en' ? ' (built-in)' : ''),
+      '#title' => $name . ($locale->name == 'en' ? ' '. st('(built-in)') : ''),
       '#parents' => array('locale')
     );
   }
@@ -565,7 +565,7 @@ function install_check_requirements($profile) {
       }
     }
 
-    drupal_set_title('Incompatible environment');
+    drupal_set_title(st('Incompatible environment'));
     print theme('install_page', '');
     exit;
   }

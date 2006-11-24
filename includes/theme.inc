@@ -1028,7 +1028,7 @@ function theme_username($object) {
     $output .= ' ('. t('not verified') .')';
   }
   else {
-    $output = variable_get('anonymous', 'Anonymous');
+    $output = variable_get('anonymous', t('Anonymous'));
   }
 
   return $output;

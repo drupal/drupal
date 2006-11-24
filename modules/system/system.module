@@ -565,7 +565,7 @@ function system_site_information_settings() {
   $form['anonymous'] = array(
     '#type' => 'textfield',
     '#title' => t('Anonymous user'),
-    '#default_value' => variable_get('anonymous', 'Anonymous'),
+    '#default_value' => variable_get('anonymous', t('Anonymous')),
     '#description' => t('The name used to indicate anonymous users.')
   );
   $form['site_frontpage'] = array(
