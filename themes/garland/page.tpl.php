@@ -13,7 +13,7 @@
   <body<?php print phptemplate_body_class($sidebar_left, $sidebar_right); ?>>
 
 <!-- Layout -->
-  <div id="navigation"></div>
+  <div id="header-region" class="clear-block"><?php print $header; ?></div>
 
     <div id="wrapper">
     <div id="container" class="clear-block">
