@@ -3071,24 +3071,6 @@ function system_update_182() {
 }
 
 /**
- * Add an index on watchdog type.
- */
-function system_update_183() {
-  $ret = array();
-  switch ($GLOBALS['db_type']) {
-    case 'mysql':
-    case 'mysqli':
-      $ret[] = update_sql('ALTER TABLE {watchdog} ADD INDEX (type)');
-      break;
-    case 'pgsql':
-      $ret[] = update_sql('CREATE INDEX {watchdog}_type_idx ON {watchdog}(type)');
-      break;
-  }
-  return $ret;
-}
-
-
-/**
  * @defgroup updates-4.7-to-5.0 System updates from 4.7 to 5.0
  * @{
  */
@@ -3393,6 +3375,24 @@ function system_update_1013() {
 function system_update_1014() {
   variable_del('cron_busy');
   return array();
+}
+
+
+/**
+ * Add an index on watchdog type.
+ */
+function system_update_1015() {
+  $ret = array();
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql('ALTER TABLE {watchdog} ADD INDEX (type)');
+      break;
+    case 'pgsql':
+      $ret[] = update_sql('CREATE INDEX {watchdog}_type_idx ON {watchdog}(type)');
+      break;
+  }
+  return $ret;
 }
 
 /**
