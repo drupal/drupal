@@ -903,14 +903,6 @@ function theme_forum_display($forums, $topics, $parents, $tid, $sortby, $forum_p
     $output  = '<div id="forum">';
     $output .= '<ul>';
 
-    if (module_exists('tracker')) {
-      if ($user->uid) {
-        $output .= ' <li>'. l(t('My discussions.'), "tracker/$user->uid") .'</li>';
-      }
-
-      $output .= ' <li>'. l(t('Active discussions.'), 'tracker') .'</li>';
-    }
-
     if (user_access('create forum topics')) {
       $output .= '<li>'. l(t('Post new forum topic.'), "node/add/forum/$tid") .'</li>';
     }
