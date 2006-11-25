@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.236 2006/11/24 10:18:22 dries Exp $
+// $Id: block.module,v 1.237 2006/11/25 08:46:31 drumm Exp $
 
 /**
  * @file
@@ -458,7 +458,7 @@ function block_admin_configure($module = NULL, $delta = 0) {
 
     if ($access) {
       $options[] = t('Show if the following PHP code returns <code>TRUE</code> (PHP-mode, experts only).');
-      $description .= t('If the PHP-mode is chosen, enter PHP code between %php. Note that executing incorrect PHP-code can break your Drupal site.', array('%php' => '<?php ?>'));
+      $description .= ' '. t('If the PHP-mode is chosen, enter PHP code between %php. Note that executing incorrect PHP-code can break your Drupal site.', array('%php' => '<?php ?>'));
     }
     $form['page_vis_settings']['visibility'] = array(
       '#type' => 'radios',
