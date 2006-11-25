@@ -1,5 +1,5 @@
 <?php
-// $Id: phptemplate.engine,v 1.50 2006/10/23 06:45:17 dries Exp $
+// $Id: phptemplate.engine,v 1.51 2006/11/25 09:04:22 drumm Exp $
 
 /**
  * @file
@@ -189,7 +189,7 @@ function phptemplate_page($content, $show_blocks = TRUE) {
     $head_title = array(strip_tags(drupal_get_title()), variable_get('site_name', 'Drupal'));
   }
   else {
-    $head_title = array(variable_get('site_name', 'drupal'));
+    $head_title = array(variable_get('site_name', 'Drupal'));
     if (variable_get('site_slogan', '')) {
       $head_title[] = variable_get('site_slogan', '');
     }

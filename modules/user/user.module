@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.719 2006/11/24 10:18:24 dries Exp $
+// $Id: user.module,v 1.720 2006/11/25 09:04:21 drumm Exp $
 
 /**
  * @file
@@ -897,10 +897,10 @@ function user_login($msg = '') {
     '#attributes' => array('tabindex' => '1'),
   );
   if (variable_get('drupal_authentication_service', FALSE) && count(user_auth_help_links()) > 0) {
-    $form['name']['#description'] = t('Enter your @s username, or an ID from one of our affiliates: !a.', array('@s' => variable_get('site_name', 'local'), '!a' => implode(', ', user_auth_help_links())));
+    $form['name']['#description'] = t('Enter your @s username, or an ID from one of our affiliates: !a.', array('@s' => variable_get('site_name', 'Drupal'), '!a' => implode(', ', user_auth_help_links())));
   }
   else {
-    $form['name']['#description'] = t('Enter your @s username.', array('@s' => variable_get('site_name', 'local')));
+    $form['name']['#description'] = t('Enter your @s username.', array('@s' => variable_get('site_name', 'Drupal')));
   }
   $form['pass'] = array('#type' => 'password',
     '#title' => t('Password'),
@@ -2331,7 +2331,7 @@ function user_help($section) {
     case 'admin/user/search':
       return t('<p>Enter a simple pattern ("*" may be used as a wildcard match) to search for a username. For example, one may search for "br" and Drupal might return "brian", "brad", and "brenda".</p>');
     case 'user/help#user':
-      $site = variable_get('site_name', 'this website');
+      $site = variable_get('site_name', 'Drupal');
 
       $affiliates = user_auth_help_links();
       if (count($affiliates)) {

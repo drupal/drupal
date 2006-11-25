@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.589 2006/11/21 19:40:09 dries Exp $
+// $Id: common.inc,v 1.590 2006/11/25 09:04:21 drumm Exp $
 
 /**
  * @file
@@ -313,7 +313,7 @@ function drupal_site_offline() {
   drupal_set_header('HTTP/1.0 503 Service unavailable');
   drupal_set_title(t('Site off-line'));
   print theme('maintenance_page', filter_xss_admin(variable_get('site_offline_message',
-    t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('@site' => variable_get('site_name', t('This Drupal site')))))));
+    t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('@site' => variable_get('site_name', 'Drupal'))))));
 }
 
 /**
