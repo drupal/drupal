@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.365 2006/11/21 20:14:17 dries Exp $
+// $Id: forum.module,v 1.366 2006/11/25 09:07:26 drumm Exp $
 
 /**
  * @file
@@ -902,14 +902,6 @@ function theme_forum_display($forums, $topics, $parents, $tid, $sortby, $forum_p
   if (count($forums) || count($parents)) {
     $output  = '<div id="forum">';
     $output .= '<ul>';
-
-    if (module_exists('tracker')) {
-      if ($user->uid) {
-        $output .= ' <li>'. l(t('My discussions.'), "tracker/$user->uid") .'</li>';
-      }
-
-      $output .= ' <li>'. l(t('Active discussions.'), 'tracker') .'</li>';
-    }
 
     if (user_access('create forum topics')) {
       $output .= '<li>'. l(t('Post new forum topic.'), "node/add/forum/$tid") .'</li>';
