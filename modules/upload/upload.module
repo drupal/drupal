@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.138 2006/11/26 02:20:01 drumm Exp $
+// $Id: upload.module,v 1.139 2006/11/26 02:43:48 drumm Exp $
 
 /**
  * @file
@@ -348,7 +348,7 @@ function upload_form_alter($form_id, &$form) {
     $form['workflow']['upload'] = array(
       '#type' => 'radios',
       '#title' => t('Attachments'),
-      '#default_value' => variable_get('upload_'. $form['identity']['type']['#default_value'], 1),
+      '#default_value' => variable_get('upload_'. $form['#node_type']->type, 1),
       '#options' => array(t('Disabled'), t('Enabled')),
     );
   }

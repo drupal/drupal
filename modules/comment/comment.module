@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.500 2006/11/24 10:18:23 dries Exp $
+// $Id: comment.module,v 1.501 2006/11/26 02:43:47 drumm Exp $
 
 /**
  * @file
@@ -267,7 +267,7 @@ function comment_form_alter($form_id, &$form) {
     $form['workflow']['comment'] = array(
       '#type' => 'radios',
       '#title' => t('Default comment setting'),
-      '#default_value' => variable_get('comment_'. $form['identity']['type']['#default_value'], COMMENT_NODE_READ_WRITE),
+      '#default_value' => variable_get('comment_'. $form['#node_type']->type, COMMENT_NODE_READ_WRITE),
       '#options' => array(t('Disabled'), t('Read only'), t('Read/Write')),
       '#description' => t('Users with the <em>administer comments</em> permission will be able to override this setting.'),
     );

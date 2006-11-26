@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.14 2006/11/24 16:32:30 dries Exp $
+// $Id: content_types.inc,v 1.15 2006/11/26 02:43:47 drumm Exp $
 
 /**
  * @file
@@ -66,6 +66,8 @@ function node_type_form($type = NULL) {
     $type->modified = FALSE;
     $type->locked = FALSE;
   }
+
+  $form['#node_type'] = $type; // Make the type object availabe to implementations of hook_form_alter.
 
   $form['identity'] = array(
     '#type' => 'fieldset',
