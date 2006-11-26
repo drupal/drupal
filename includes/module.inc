@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.90 2006/11/16 08:28:07 drumm Exp $
+// $Id: module.inc,v 1.91 2006/11/26 03:22:04 drumm Exp $
 
 /**
  * @file
@@ -196,6 +196,9 @@ function _module_parse_info_file($filename) {
   }
   if (isset($info['dependencies'])) {
     $info['dependencies'] = explode(" ", $info['dependencies']);
+  }
+  else {
+    $info['dependencies'] = NULL;
   }
   return $info;
 }
