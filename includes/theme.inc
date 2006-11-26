@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.324 2006/11/24 09:01:57 dries Exp $
+// $Id: theme.inc,v 1.325 2006/11/26 23:14:59 drumm Exp $
 
 /**
  * @file
@@ -532,6 +532,10 @@ function theme_links($links, $attributes = array('class' => 'links')) {
 
       // Is the title HTML?
       $html = isset($link['html']) && $link['html'];
+
+      // Initialize fragment and query variables.
+      $link['query'] = isset($link['query']) ? $link['query'] : NULL;
+      $link['fragment'] = isset($link['fragment']) ? $link['fragment'] : NULL;
 
       if ($link['href']) {
         $output .= l($link['title'], $link['href'], $link['attributes'], $link['query'], $link['fragment'], FALSE, $html);
