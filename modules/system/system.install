@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.44 2006/11/24 11:10:48 dries Exp $
+// $Id: system.install,v 1.45 2006/11/26 23:42:15 drumm Exp $
 
 define('DRUPAL_MINIMUM_PHP',    '4.3.3');
 define('DRUPAL_MINIMUM_MYSQL',  '3.23.17'); // If using MySQL
@@ -537,7 +537,7 @@ function system_install() {
         message longtext NOT NULL,
         severity tinyint unsigned NOT NULL default '0',
         link varchar(255) NOT NULL default '',
-        location varchar(128) NOT NULL default '',
+        location text NOT NULL default '',
         referer varchar(128) NOT NULL default '',
         hostname varchar(128) NOT NULL default '',
         timestamp int NOT NULL default '0',
@@ -1002,7 +1002,7 @@ function system_install() {
         message text NOT NULL,
         severity smallint_unsigned NOT NULL default '0',
         link varchar(255) NOT NULL default '',
-        location varchar(128) NOT NULL default '',
+        location text NOT NULL default '',
         referer varchar(128) NOT NULL default '',
         hostname varchar(128) NOT NULL default '',
         timestamp int NOT NULL default '0',
@@ -3396,7 +3396,24 @@ function system_update_1015() {
 }
 
 /**
- * @} End of "defgroup updates-4.7-to-x.x"
+ * Allow for longer URL encoded (%NN) UTF-8 characters in the location field of watchdog table.
+ */
+function system_update_1016() {
+  $ret = array();
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql("ALTER TABLE {watchdog} CHANGE COLUMN location location text NOT NULL default ''");
+      break;
+    case 'pgsql':
+      db_change_column($ret, 'watchdog', 'location', 'location', 'text',  array('not null' => TRUE, 'default' => "''"));
+      break;
+  }
+  return $ret;
+}
+
+/**
+ * @} End of "defgroup updates-4.7-to-5.0"
  */
 
 
