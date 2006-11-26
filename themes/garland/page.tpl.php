@@ -67,7 +67,7 @@
           <?php if ($title): print '<h2'. ($tabs ? ' class="with-tabs"' : '') .'>'. $title .'</h2>'; endif; ?>
           <?php if ($tabs): print $tabs .'</div>'; endif; ?>
 
-          <?php if ($tabs2): print $tabs2; endif; ?>
+          <?php if (isset($tabs2)): print $tabs2; endif; ?>
 
           <?php if ($help): print $help; endif; ?>
           <?php if ($messages): print $messages; endif; ?>
