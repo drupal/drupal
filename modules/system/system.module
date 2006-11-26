@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.408 2006/11/26 02:20:01 drumm Exp $
+// $Id: system.module,v 1.409 2006/11/26 23:10:29 drumm Exp $
 
 /**
  * @file
@@ -22,26 +22,26 @@ function system_help($section) {
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@system">System page</a>.', array('@system' => 'http://drupal.org/handbook/modules/system/')) .'</p>';
       return $output;
     case 'admin':
-      return t('<p>Welcome to the administration section. Here you may control how your site functions.</p>');
+      return '<p>'. t('Welcome to the administration section. Here you may control how your site functions.') .'</p>';
     case 'admin/by-module':
-      return t('<p>This page shows you all available administration tasks for each module.</p>');
+      return '<p>'. t('This page shows you all available administration tasks for each module.') .'</p>';
     case 'admin/settings/page-caching':
       return t('Enabling the cache will offer a sufficient performance boost. Drupal can store and send compressed cached pages requested by "anonymous" users. By caching a web page, Drupal does not have to create the page each time someone wants to view it.');
     case 'admin/build/themes':
-      return t('<p>Select which themes are available to your users and specify the default theme. To configure site-wide display settings, click the "configure" task above. Alternately, to override these settings in a specific theme, click the "configure" link for the corresponding theme. Note that different themes may have different regions available for rendering content like blocks. If you want consistency in what your users see, you may wish to enable only one theme.</p>');
+      return '<p>'. t('Select which themes are available to your users and specify the default theme. To configure site-wide display settings, click the "configure" task above. Alternately, to override these settings in a specific theme, click the "configure" link for the corresponding theme. Note that different themes may have different regions available for rendering content like blocks. If you want consistency in what your users see, you may wish to enable only one theme.') .'</p>';
     case 'admin/build/themes/settings':
-      return t('<p>These options control the default display settings for your entire site, across all themes. Unless they have been overridden by a specific theme, these settings will be used.</p>');
+      return '<p>'. t('These options control the default display settings for your entire site, across all themes. Unless they have been overridden by a specific theme, these settings will be used.') .'</p>';
     case 'admin/build/themes/settings/'. arg(3):
       $reference = explode('.', arg(3), 2);
       $theme = array_pop($reference);
-      return t('<p>These options control the display settings for the <code>%template</code> theme. When your site is displayed using this theme, these settings will be used. By clicking "Reset to defaults," you can choose to use the <a href="@global">global settings</a> for this theme.</p>', array('%template' => $theme, '@global' => url('admin/build/themes/settings')));
+      return '<p>'. t('These options control the display settings for the <code>%template</code> theme. When your site is displayed using this theme, these settings will be used. By clicking "Reset to defaults," you can choose to use the <a href="@global">global settings</a> for this theme.', array('%template' => $theme, '@global' => url('admin/build/themes/settings'))) .'</p>';
     case 'admin/build/modules':
       return t('<p>Modules are plugins for Drupal that extend its core functionality. Here you can select which modules are enabled. Click on the name of the module in the navigation menu for their individual configuration pages. Once a module is enabled, new <a href="@permissions">permissions</a> might be made available. Modules can automatically be temporarily disabled to reduce server load when your site becomes extremely busy by enabling the throttle.module and checking throttle. The auto-throttle functionality must be enabled on the <a href="@throttle">throttle configuration page</a> after having enabled the throttle module.</p>
 <p>It is important that <a href="@update-php">update.php</a> is run every time a module is updated to a newer version.</p><p>You can find all administration tasks belonging to a particular module on the <a href="@by-module">administration by module page</a>.</p>', array('@permissions' => url('admin/user/access'), '@throttle' => url('admin/settings/throttle'), '@update-php' => $base_url .'/update.php', '@by-module' => url('admin/by-module')));
     case 'admin/build/modules/uninstall':
-      return (t('<p>The uninstall process removes all data related to a module. To uninstall a module, you must first disable it. Not all modules support this feature.</p>'));
+      return '<p>'. t('The uninstall process removes all data related to a module. To uninstall a module, you must first disable it. Not all modules support this feature.') .'</p>';
     case 'admin/logs/status':
-      return t("<p>Here you can find a short overview of your Drupal site's parameters as well as any problems detected with your installation. It is useful to copy/paste this information when you need support.</p>");
+      return '<p>'. t("Here you can find a short overview of your Drupal site's parameters as well as any problems detected with your installation. It is useful to copy/paste this information when you need support.") .'</p>';
   }
 }
 
