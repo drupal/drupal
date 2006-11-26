@@ -58,7 +58,7 @@ function _unicode_check() {
   // Set appropriate configuration
   mb_internal_encoding('utf-8');
   mb_language('uni');
-  return array(UNICODE_MULTIBYTE);
+  return array(UNICODE_MULTIBYTE, '', REQUIREMENT_OK);
 }
 
 /**
