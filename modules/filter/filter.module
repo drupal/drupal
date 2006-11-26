@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.151 2006/11/26 02:20:00 drumm Exp $
+// $Id: filter.module,v 1.152 2006/11/26 23:01:42 drumm Exp $
 
 /**
  * @file
@@ -1076,7 +1076,7 @@ function _filter_url_settings($format) {
     '#title' => t('Maximum link text length'),
     '#default_value' => variable_get('filter_url_length_'. $format, 72),
     '#maxlength' => 4,
-    '#description' => t('URLs longer than this number of characters will be truncated to prevent long strings that break formatting. The link itself will be retained, just the text portion of the link will be truncated.'),
+    '#description' => t('URLs longer than this number of characters will be truncated to prevent long strings that break formatting. The link itself will be retained; just the text portion of the link will be truncated.'),
   );
   return $form;
 }
