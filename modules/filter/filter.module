@@ -455,9 +455,9 @@ function filter_admin_format_form($format = NULL) {
     $extra = '<p>'. l(t('More information about formatting options'), 'filter/tips') .'</p>';
     $tiplist = theme('filter_tips', $tips, FALSE, $extra);
     if (!$tiplist) {
-      $tiplist = t('<p>No guidelines available.</p>');
+      $tiplist = '<p>'. t('No guidelines available.') .'</p>';
     }
-    $group = t('<p>These are the guidelines that users will see for posting in this input format. They are automatically generated from the filter settings.</p>');
+    $group = '<p>'. t('These are the guidelines that users will see for posting in this input format. They are automatically generated from the filter settings.') .'</p>';
     $group .= $tiplist;
     $form['tips'] = array('#value' => '<h2>'. t('Formatting guidelines') .'</h2>'. $group);
   }
