@@ -1,5 +1,5 @@
 <?php
-// $Id: unicode.inc,v 1.20 2006/09/01 08:44:53 unconed Exp $
+// $Id: unicode.inc,v 1.21 2006/11/26 03:19:07 drumm Exp $
 
 define('UNICODE_ERROR', -1);
 define('UNICODE_SINGLEBYTE', 0);
@@ -58,7 +58,7 @@ function _unicode_check() {
   // Set appropriate configuration
   mb_internal_encoding('utf-8');
   mb_language('uni');
-  return array(UNICODE_MULTIBYTE);
+  return array(UNICODE_MULTIBYTE, '', REQUIREMENT_OK);
 }
 
 /**
