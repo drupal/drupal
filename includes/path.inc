@@ -1,5 +1,5 @@
 <?php
-// $Id: path.inc,v 1.10 2006/11/17 05:15:19 drumm Exp $
+// $Id: path.inc,v 1.11 2006/11/26 01:55:37 drumm Exp $
 
 /**
  * @file
@@ -24,7 +24,8 @@ function drupal_init_path() {
 
 /**
  * Given an alias, return its Drupal system URL if one exists. Given a Drupal
- * system URL return its alias if one exists.
+ * system URL return one of its aliases if such a one exists. Otherwise,
+ * return FALSE.
  *
  * @param $action
  *   One of the following values:
@@ -39,39 +40,44 @@ function drupal_init_path() {
  *   found.
  */
 function drupal_lookup_path($action, $path = '') {
-  static $map = array();
+  // $map keys are Drupal paths and the values are the corresponding aliases
+  static $map = array(), $no_src = array();
   static $count = NULL;
 
+  // Use $count to avoid looking up paths in subsequent calls if there simply are no aliases
   if ($count === NULL) {
     $count = db_result(db_query('SELECT COUNT(pid) FROM {url_alias}'));
   }
 
   if ($action == 'wipe') {
     $map = array();
+    $no_src = array();
   }
   elseif ($count > 0 && $path != '') {
     if ($action == 'alias') {
-      if (isset($map[$path])) {
+      if (isset($map[$path]) || array_key_exists($path, $map)) {
         return $map[$path];
       }
-      if ($alias = db_result(db_query("SELECT dst FROM {url_alias} WHERE src = '%s'", $path))) {
-        $map[$path] = $alias;
-        return $alias;
-      }
-      else {
-        $map[$path] = $path;
-      }
+      $alias = db_result(db_query("SELECT dst FROM {url_alias} WHERE src = '%s'", $path));
+      $map[$path] = $alias;
+      return $alias;
     }
-    elseif ($action == 'source') {
-      if ($alias = array_search($path, $map)) {
-        return $alias;
-      }
-      if (!isset($map[$path])) {
+    // Check $no_src for this $path in case we've already determined that there
+    // isn't a path that has this alias
+    elseif ($action == 'source' && !isset($no_src[$path])) {
+      // Look for the value $path within the cached $map
+      if (!$src = array_search($path, $map)) {
         if ($src = db_result(db_query("SELECT src FROM {url_alias} WHERE dst = '%s'", $path))) {
           $map[$src] = $path;
-          return $src;
+        }
+        else {
+          // We can't record anything into $map because we do not have a valid
+          // index and there is no need because we have not learned anything
+          // about any Drupal path. Thus cache to $no_src.
+          $no_src[$path] = TRUE;
         }
       }
+      return $src;
     }
   }
 
