@@ -197,6 +197,9 @@ function _module_parse_info_file($filename) {
   if (isset($info['dependencies'])) {
     $info['dependencies'] = explode(" ", $info['dependencies']);
   }
+  else {
+    $info['dependencies'] = NULL;
+  }
   return $info;
 }
 
