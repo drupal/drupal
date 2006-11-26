@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.325 2006/11/26 02:20:01 drumm Exp $
+// $Id: taxonomy.module,v 1.326 2006/11/26 23:53:20 drumm Exp $
 
 /**
  * @file
@@ -105,7 +105,7 @@ function taxonomy_menu($may_cache) {
       'type' => MENU_CALLBACK);
   }
   else {
-    if (is_numeric(arg(3))) {
+    if (arg(0) == 'admin' && arg(1) == 'content' && arg(2) == 'taxonomy' && is_numeric(arg(3))) {
       $vid = arg(3);
       $items[] = array('path' => 'admin/content/taxonomy/'. $vid,
         'title' => t('List terms'),
