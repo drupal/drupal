@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.160 2006/11/16 09:06:59 drumm Exp $
+// $Id: form.inc,v 1.161 2006/11/26 22:35:20 drumm Exp $
 
 /**
  * @defgroup form Form generation
@@ -17,25 +17,8 @@
  * $output = drupal_get_form('user_register');
  *
  * Forms can also be built and submitted programmatically without any user input
- * using the drupal_execute() function. Pass in the id of the form, the values to
- * submit to the form, and any parameters needed by the form's builder function.
- * For example:
+ * using the drupal_execute() function.
  *
- * // register a new user
- * $values['name'] = 'robo-user';
- * $values['mail'] = 'robouser@example.com';
- * $values['pass'] = 'password';
- * drupal_execute('user_register', $values);
- *
- * // Create a new node
- * $node = array('type' => 'story');
- * $values['title'] = 'My node';
- * $values['body'] = 'This is the body text!';
- * $values['name'] = 'robo-user';
- * drupal_execute('story_node_form', $values, $node);
- *
- * Calling form_get_errors() after execution will return an array of any
- * validation errors encountered.
  *
  * For information on the format of the structured arrays used to define forms,
  * and more detailed explanations of the Form API workflow, see the reference at
@@ -133,6 +116,21 @@ function drupal_get_form($form_id) {
  *   Any additional arguments needed by the form building function.
  * @return
  *   Any form validation errors encountered.
+ *
+ * For example:
+ *
+ * // register a new user
+ * $values['name'] = 'robo-user';
+ * $values['mail'] = 'robouser@example.com';
+ * $values['pass'] = 'password';
+ * drupal_execute('user_register', $values);
+ *
+ * // Create a new node
+ * $node = array('type' => 'story');
+ * $values['title'] = 'My node';
+ * $values['body'] = 'This is the body text!';
+ * $values['name'] = 'robo-user';
+ * drupal_execute('story_node_form', $values, $node);
  */
 function drupal_execute($form_id, $form_values) {
   $args = func_get_args();

@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.501 2006/11/26 02:43:47 drumm Exp $
+// $Id: comment.module,v 1.502 2006/11/26 22:35:20 drumm Exp $
 
 /**
  * @file
@@ -606,8 +606,8 @@ function comment_save($edit) {
 
         $users = serialize(array(0 => $score));
 
-        // Here we are building the thread field. See the comment
-        // in comment_render().
+        // Here we are building the thread field. See the documentation for
+        // comment_render().
         if ($edit['pid'] == 0) {
           // This is a comment with no parent comment (depth 0): we start
           // by retrieving the maximum thread level.
@@ -739,6 +739,68 @@ function comment_links($comment, $return = 1) {
   return $links;
 }
 
+/**
+ * Renders comment(s).
+ *
+ * @param $node
+ *   The node which comment(s) needs rendering.
+ * @param $cid
+ *   Optional, if given, only one comment is rendered.
+ *
+ * To display threaded comments in the correct order we keep a 'thread' field
+ * and order by that value. This field keeps this data in
+ * a way which is easy to update and convenient to use.
+ *
+ * A "thread" value starts at "1". If we add a child (A) to this comment,
+ * we assign it a "thread" = "1.1". A child of (A) will have "1.1.1". Next
+ * brother of (A) will get "1.2". Next brother of the parent of (A) will get
+ * "2" and so on.
+ *
+ * First of all note that the thread field stores the depth of the comment:
+ * depth 0 will be "X", depth 1 "X.X", depth 2 "X.X.X", etc.
+ *
+ * Now to get the ordering right, consider this example:
+ *
+ * 1
+ * 1.1
+ * 1.1.1
+ * 1.2
+ * 2
+ *
+ * If we "ORDER BY thread ASC" we get the above result, and this is the
+ * natural order sorted by time. However, if we "ORDER BY thread DESC"
+ * we get:
+ *
+ * 2
+ * 1.2
+ * 1.1.1
+ * 1.1
+ * 1
+ *
+ * Clearly, this is not a natural way to see a thread, and users will get
+ * confused. The natural order to show a thread by time desc would be:
+ *
+ * 2
+ * 1
+ * 1.2
+ * 1.1
+ * 1.1.1
+ *
+ * which is what we already did before the standard pager patch. To achieve
+ * this we simply add a "/" at the end of each "thread" value. This way out
+ * thread fields will look like depicted below:
+ *
+ * 1/
+ * 1.1/
+ * 1.1.1/
+ * 1.2/
+ * 2/
+ *
+ * we add "/" since this char is, in ASCII, higher than every number, so if
+ * now we "ORDER BY thread DESC" we get the correct order. However this would
+ * spoil the reverse ordering, "ORDER BY thread ASC" -- here, we do not need
+ * to consider the trailing "/" so we use a substring only.
+ */
 function comment_render($node, $cid = 0) {
   global $user;
 
@@ -791,69 +853,6 @@ function comment_render($node, $cid = 0) {
       }
 
       $query .= ' GROUP BY c.cid, c.pid, c.nid, c.subject, c.comment, c.format, c.timestamp, c.name, c.mail, u.picture, c.homepage, u.uid, u.name, u.picture, u.data, c.score, c.users, c.thread, c.status';
-
-      /*
-      ** We want to use the standard pager, but threads would need every
-      ** comment to build the thread structure, so we need to store some
-      ** extra info.
-      **
-      ** We use a "thread" field to store this extra info. The basic idea
-      ** is to store a value and to order by that value. The "thread" field
-      ** keeps this data in a way which is easy to update and convenient
-      ** to use.
-      **
-      ** A "thread" value starts at "1". If we add a child (A) to this
-      ** comment, we assign it a "thread" = "1.1". A child of (A) will have
-      ** "1.1.1". Next brother of (A) will get "1.2". Next brother of the
-      ** parent of (A) will get "2" and so on.
-      **
-      ** First of all note that the thread field stores the depth of the
-      ** comment: depth 0 will be "X", depth 1 "X.X", depth 2 "X.X.X", etc.
-      **
-      ** Now to get the ordering right, consider this example:
-      **
-      ** 1
-      ** 1.1
-      ** 1.1.1
-      ** 1.2
-      ** 2
-      **
-      ** If we "ORDER BY thread ASC" we get the above result, and this is
-      ** the natural order sorted by time. However, if we "ORDER BY thread
-      ** DESC" we get:
-      **
-      ** 2
-      ** 1.2
-      ** 1.1.1
-      ** 1.1
-      ** 1
-      **
-      ** Clearly, this is not a natural way to see a thread, and users
-      ** will get confused. The natural order to show a thread by time
-      ** desc would be:
-      **
-      ** 2
-      ** 1
-      ** 1.2
-      ** 1.1
-      ** 1.1.1
-      **
-      ** which is what we already did before the standard pager patch. To
-      ** achieve this we simply add a "/" at the end of each "thread" value.
-      ** This way out thread fields will look like depicted below:
-      **
-      ** 1/
-      ** 1.1/
-      ** 1.1.1/
-      ** 1.2/
-      ** 2/
-      **
-      ** we add "/" since this char is, in ASCII, higher than every number,
-      ** so if now we "ORDER BY thread DESC" we get the correct order. Try
-      ** it, it works ;). However this would spoil the "ORDER BY thread ASC"
-      ** Here, we do not need to consider the trailing "/" so we use a
-      ** substring only.
-      */
 
       if ($order == COMMENT_ORDER_NEWEST_FIRST) {
         if ($mode == COMMENT_MODE_FLAT_COLLAPSED || $mode == COMMENT_MODE_FLAT_EXPANDED) {
