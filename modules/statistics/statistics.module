@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.245 2006/11/21 20:14:19 dries Exp $
+// $Id: statistics.module,v 1.246 2006/11/26 02:20:01 drumm Exp $
 
 /**
  * @file
@@ -34,13 +34,13 @@ function statistics_help($section) {
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@statistics">Statistics page</a>.', array('@statistics' => 'http://drupal.org/handbook/modules/statistics/')) .'</p>';
       return $output;
     case 'admin/logs/settings':
-      return t('<p>Settings for the statistical information that Drupal will keep about the site. See <a href="@statistics">site statistics</a> for the actual information.</p>', array('@statistics' => url('admin/logs/hits')));
+      return '<p>'. t('Settings for the statistical information that Drupal will keep about the site. See <a href="@statistics">site statistics</a> for the actual information.', array('@statistics' => url('admin/logs/hits'))) .'</p>';
     case 'admin/logs/hits':
-      return t('<p>This page shows you the most recent hits.</p>');
+      return '<p>'. t('This page shows you the most recent hits.') .'</p>';
     case 'admin/logs/referrers':
-      return t('<p>This page shows you all external referrers. These are links pointing to your web site from outside your web site.</p>');
+      return '<p>'. t('This page shows you all external referrers. These are links pointing to your web site from outside your web site.') .'</p>';
     case 'admin/logs/visitors':
-      return t("<p>When you ban a visitor, you prevent the visitor's IP address from accessing your site. Unlike blocking a user, banning a visitor works even for anonymous users. The most common use for this is to block bots/web crawlers that are consuming too many resources.</p>");
+      return '<p>'. t("When you ban a visitor, you prevent the visitor's IP address from accessing your site. Unlike blocking a user, banning a visitor works even for anonymous users. The most common use for this is to block bots/web crawlers that are consuming too many resources.") .'</p>';
   }
 }
 

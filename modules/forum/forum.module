@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.366 2006/11/25 09:07:26 drumm Exp $
+// $Id: forum.module,v 1.367 2006/11/26 02:20:00 drumm Exp $
 
 /**
  * @file
@@ -18,11 +18,11 @@ function forum_help($section) {
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@forum">Forum page</a>.', array('@forum' => 'http://drupal.org/handbook/modules/forum/')) .'</p>';
       return $output;
     case 'admin/content/forum':
-      return t('<p>This is a list of existing containers and forums that you can edit. Containers hold forums and, in turn, forums hold threaded discussions. Both containers and forums can be placed inside other containers and forums. By planning the structure of your containers and forums well, you make it easier for users to find a topic area of interest to them.</p>');
+      return '<p>'. t('This is a list of existing containers and forums that you can edit. Containers hold forums and, in turn, forums hold threaded discussions. Both containers and forums can be placed inside other containers and forums. By planning the structure of your containers and forums well, you make it easier for users to find a topic area of interest to them.') .'</p>';
     case 'admin/content/forum/add/container':
-      return t('<p>Containers help you organize your forums. The job of a container is to hold, or contain, other forums that are related. For example, a container named "Food" might hold two forums named "Fruit" and "Vegetables".</p>');
+      return '<p>'. t('Containers help you organize your forums. The job of a container is to hold, or contain, other forums that are related. For example, a container named "Food" might hold two forums named "Fruit" and "Vegetables".') .'</p>';
     case 'admin/content/forum/add/forum':
-      return t('<p>A forum holds discussion topics that are related. For example, a forum named "Fruit" might contain topics titled "Apples" and "Bananas".</p>');
+      return '<p>'. t('A forum holds discussion topics that are related. For example, a forum named "Fruit" might contain topics titled "Apples" and "Bananas".') .'</p>';
   }
 }
 

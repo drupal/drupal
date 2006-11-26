@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.28 2006/11/24 10:18:22 dries Exp $
+// $Id: install.php,v 1.29 2006/11/26 02:19:59 drumm Exp $
 
 require_once './includes/install.inc';
 
@@ -180,7 +180,7 @@ function install_settings_form($profile, $install_locale, $settings_file, $db_ur
     $form['basic_options'] = array(
       '#type' => 'fieldset',
       '#title' => st('Basic options'),
-      '#description' => st('<p>To set up your @drupal database, enter the following information.</p>', array('@drupal' => drupal_install_profile_name())),
+      '#description' => '<p>'. st('To set up your @drupal database, enter the following information.', array('@drupal' => drupal_install_profile_name())) .'</p>',
     );
 
     if (count($db_types) > 1) {
@@ -487,7 +487,7 @@ function install_select_locale_form($locales) {
 function install_no_profile_error() {
   drupal_maintenance_theme();
   drupal_set_title(st('No profiles available'));
-  print theme('install_page', st('<p>We were unable to find any installer profiles. Installer profiles tell us what modules to enable and what schema to install in the database. A profile is necessary to continue with the installation process.</p>'));
+  print theme('install_page', '<p>'. st('We were unable to find any installer profiles. Installer profiles tell us what modules to enable and what schema to install in the database. A profile is necessary to continue with the installation process.') .'</p>');
   exit;
 }
 
@@ -532,7 +532,7 @@ function install_complete($profile) {
   // Build final page.
   drupal_maintenance_theme();
   drupal_set_title(st('@drupal installation complete', array('@drupal' => drupal_install_profile_name())));
-  $output .= st('<p>Congratulations, @drupal has been successfully installed.</p>', array('@drupal' => drupal_install_profile_name()));
+  $output .= '<p>'. st('Congratulations, @drupal has been successfully installed.', array('@drupal' => drupal_install_profile_name())) .'</p>';
 
   // Show profile finalization info.
   $function = $profile .'_profile_final';

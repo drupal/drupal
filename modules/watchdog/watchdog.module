@@ -1,5 +1,5 @@
 <?php
-// $Id: watchdog.module,v 1.161 2006/11/21 20:14:19 dries Exp $
+// $Id: watchdog.module,v 1.162 2006/11/26 02:20:01 drumm Exp $
 
 /**
  * @file
@@ -23,7 +23,7 @@ function watchdog_help($section) {
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@watchdog">Watchdog page</a>.', array('@watchdog' => 'http://drupal.org/handbook/modules/watchdog/')) .'</p>';
       return $output;
     case 'admin/logs':
-      return t('<p>The watchdog module monitors your web site, capturing system events in a log to be reviewed by an authorized individual at a later time. The watchdog log is simply a list of recorded events containing usage data, performance data, errors, warnings and operational information. It is vital to check the watchdog report on a regular basis as it is often the only way to tell what is going on.</p>');
+      return '<p>'. t('The watchdog module monitors your web site, capturing system events in a log to be reviewed by an authorized individual at a later time. The watchdog log is simply a list of recorded events containing usage data, performance data, errors, warnings and operational information. It is vital to check the watchdog report on a regular basis as it is often the only way to tell what is going on.') .'</p>';
   }
 }
 

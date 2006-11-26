@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.137 2006/11/21 20:14:19 dries Exp $
+// $Id: upload.module,v 1.138 2006/11/26 02:20:01 drumm Exp $
 
 /**
  * @file
@@ -18,7 +18,7 @@ function upload_help($section) {
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@upload">Upload page</a>.', array('@upload' => 'http://drupal.org/handbook/modules/upload/')) .'</p>';
       return $output;
     case 'admin/settings/upload':
-      return t('<p>Users with the <a href="@permissions">upload files permission</a> can upload attachments. Users with the <a href="@permissions">view uploaded files permission</a> can view uploaded attachments. You can choose which post types can take attachments on the <a href="@types">content types settings</a> page.</p>', array('@permissions' => url('admin/user/access'), '@types' => url('admin/settings/types')));
+      return '<p>'. t('Users with the <a href="@permissions">upload files permission</a> can upload attachments. Users with the <a href="@permissions">view uploaded files permission</a> can view uploaded attachments. You can choose which post types can take attachments on the <a href="@types">content types settings</a> page.', array('@permissions' => url('admin/user/access'), '@types' => url('admin/settings/types'))) .'</p>';
   }
 }
 
@@ -174,7 +174,7 @@ function upload_admin_settings() {
     '#size' => 15,
     '#maxlength' => 10,
     '#description' => t('The maximum allowed image size (e.g. 640x480). Set to 0 for no restriction.'),
-    '#field_suffix' => t('<kbd>WIDTHxHEIGHT</kbd>')
+    '#field_suffix' => '<kbd>'. t('WIDTHxHEIGHT') .'</kbd>'
   );
   $form['settings_general']['upload_list_default'] = array(
     '#type' => 'select',

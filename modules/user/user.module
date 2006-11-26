@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.720 2006/11/25 09:04:21 drumm Exp $
+// $Id: user.module,v 1.721 2006/11/26 02:20:01 drumm Exp $
 
 /**
  * @file
@@ -1115,7 +1115,7 @@ function user_pass_reset($uid, $timestamp, $hashed_pass, $action = NULL) {
         }
         else {
           $form['message'] = array('#value' => t('<p>This is a one-time login for %user_name and will expire on %expiration_date</p><p>Click on this button to login to the site and change your password.</p>', array('%user_name' => $account->name, '%expiration_date' => format_date($timestamp + $timeout))));
-          $form['help'] = array('#value' => t('<p>This login can be used only once.</p>'));
+          $form['help'] = array('#value' => '<p>'. t('This login can be used only once.')) .'</p>';
           $form['submit'] = array('#type' => 'submit', '#value' => t('Log in'));
           $form['#action'] = url("user/reset/$uid/$timestamp/$hashed_pass/login");
           return $form;
@@ -2314,14 +2314,14 @@ function user_help($section) {
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@user">User page</a>.', array('@user' => 'http://drupal.org/handbook/modules/user/')) .'</p>';
       return $output;
     case 'admin/user/user':
-      return t('<p>Drupal allows users to register, login, log out, maintain user profiles, etc. Users of the site may not use their own names to post content until they have signed up for a user account.</p>');
+      return '<p>'. t('Drupal allows users to register, login, log out, maintain user profiles, etc. Users of the site may not use their own names to post content until they have signed up for a user account.') .'</p>';
     case 'admin/user/user/create':
     case 'admin/user/user/account/create':
-      return t('<p>This web page allows the administrators to register a new users by hand. Note that you cannot have a user where either the e-mail address or the username match another user in the system.</p>');
+      return '<p>'. t('This web page allows the administrators to register a new users by hand. Note that you cannot have a user where either the e-mail address or the username match another user in the system.') .'</p>';
     case 'admin/user/rules':
-      return t('<p>Set up username and e-mail address access rules for new <em>and</em> existing accounts (currently logged in accounts will not be logged out). If a username or e-mail address for an account matches any deny rule, but not an allow rule, then the account will not be allowed to be created or to log in. A host rule is effective for every page view, not just registrations.</p>');
+      return '<p>'. t('Set up username and e-mail address access rules for new <em>and</em> existing accounts (currently logged in accounts will not be logged out). If a username or e-mail address for an account matches any deny rule, but not an allow rule, then the account will not be allowed to be created or to log in. A host rule is effective for every page view, not just registrations.') .'</p>';
     case 'admin/user/access':
-      return t('<p>Permissions let you control what users can do on your site. Each user role (defined on the <a href="@role">user roles page</a>) has its own set of permissions. For example, you could give users classified as "Administrators" permission to "administer nodes" but deny this power to ordinary, "authenticated" users. You can use permissions to reveal new features to privileged users (those with subscriptions, for example). Permissions also allow trusted users to share the administrative burden of running a busy site.</p>', array('@role' => url('admin/user/roles')));
+      return '<p>'. t('Permissions let you control what users can do on your site. Each user role (defined on the <a href="@role">user roles page</a>) has its own set of permissions. For example, you could give users classified as "Administrators" permission to "administer nodes" but deny this power to ordinary, "authenticated" users. You can use permissions to reveal new features to privileged users (those with subscriptions, for example). Permissions also allow trusted users to share the administrative burden of running a busy site.', array('@role' => url('admin/user/roles'))) .'</p>';
     case 'admin/user/roles':
       return t('<p>Roles allow you to fine tune the security and administration of Drupal. A role defines a group of users that have certain privileges as defined in <a href="@permissions">user permissions</a>. Examples of roles include: anonymous user, authenticated user, moderator, administrator and so on. In this area you will define the <em>role names</em> of the various roles. To delete a role choose "edit".</p><p>By default, Drupal comes with two user roles:</p>
       <ul>
@@ -2329,7 +2329,7 @@ function user_help($section) {
       <li>Authenticated user: this role is automatically granted to all logged in users.</li>
       </ul>', array('@permissions' => url('admin/user/access/permissions')));
     case 'admin/user/search':
-      return t('<p>Enter a simple pattern ("*" may be used as a wildcard match) to search for a username. For example, one may search for "br" and Drupal might return "brian", "brad", and "brenda".</p>');
+      return '<p>'. t('Enter a simple pattern ("*" may be used as a wildcard match) to search for a username. For example, one may search for "br" and Drupal might return "brian", "brad", and "brenda".') .'</p>';
     case 'user/help#user':
       $site = variable_get('site_name', 'Drupal');
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.318 2006/11/25 09:04:21 drumm Exp $
+// $Id: aggregator.module,v 1.319 2006/11/26 02:19:59 drumm Exp $
 
 /**
  * @file
@@ -17,11 +17,11 @@ function aggregator_help($section) {
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@aggregator">Aggregator page</a>.', array('@aggregator' => 'http://drupal.org/handbook/modules/aggregator/')) .'</p>';
       return $output;
     case 'admin/content/aggregator':
-      return t('<p>Thousands of sites (particularly news sites and weblogs) publish their latest headlines and/or stories in a machine-readable format so that other sites can easily link to them. This content is usually in the form of an <a href="http://blogs.law.harvard.edu/tech/rss">RSS</a> feed (which is an XML-based syndication standard). To display the feed or category in a block you must decide how many items to show by editing the feed or block and turning on the <a href="@block">feed\'s block</a>.</p>', array('@block' => url('admin/build/block')));
+      return '<p>'. t('Thousands of sites (particularly news sites and weblogs) publish their latest headlines and/or stories in a machine-readable format so that other sites can easily link to them. This content is usually in the form of an <a href="http://blogs.law.harvard.edu/tech/rss">RSS</a> feed (which is an XML-based syndication standard). To display the feed or category in a block you must decide how many items to show by editing the feed or block and turning on the <a href="@block">feed\'s block</a>.', array('@block' => url('admin/build/block'))) .'</p>';
     case 'admin/content/aggregator/add/feed':
-      return t('<p>Add a site that has an RSS/RDF/Atom feed. The URL is the full path to the feed file. For the feed to update automatically you must run "cron.php" on a regular basis. If you already have a feed with the URL you are planning to use, the system will not accept another feed with the same URL.</p>');
+      return '<p>'. t('Add a site that has an RSS/RDF/Atom feed. The URL is the full path to the feed file. For the feed to update automatically you must run "cron.php" on a regular basis. If you already have a feed with the URL you are planning to use, the system will not accept another feed with the same URL.') .'</p>';
     case 'admin/content/aggregator/add/category':
-      return t('<p>Categories provide a way to group items from different news feeds together. Each news category has its own feed page and block. For example, you could tag various sport-related feeds as belonging to a category called <em>Sports</em>. News items can be added to a category automatically by setting a feed to automatically place its item into that category, or by using the categorize items link in any listing of news items.</p>');
+      return '<p>'. t('Categories provide a way to group items from different news feeds together. Each news category has its own feed page and block. For example, you could tag various sport-related feeds as belonging to a category called <em>Sports</em>. News items can be added to a category automatically by setting a feed to automatically place its item into that category, or by using the categorize items link in any listing of news items.') .'</p>';
   }
 }
 

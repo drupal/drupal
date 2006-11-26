@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.152 2006/11/24 10:18:24 dries Exp $
+// $Id: locale.module,v 1.153 2006/11/26 02:20:00 drumm Exp $
 
 /**
  * @file
@@ -28,13 +28,13 @@ function locale_help($section) {
     case 'admin/settings/locale/language/overview':
       return t("<p>Drupal provides support for the translation of its interface text into different languages. This page provides an overview of the installed languages. You can add a language on the <a href=\"@add-language\">add language page</a>, or directly by <a href=\"@import\">importing a translation</a>. If multiple languages are enabled, registered users will be able to set their preferred language. The site default will be used for anonymous visitors and for users without their own settings.</p><p>Drupal interface translations may be added or extended by several courses: by <a href=\"@import\">importing</a> an existing translation, by <a href=\"@search\">translating everything</a> from scratch, or by a combination of these approaches.</p>", array("@search" => url("admin/settings/locale/string/search"), "@import" => url("admin/settings/locale/language/import"), "@add-language" => url("admin/settings/locale/language/add")));
     case 'admin/settings/locale/language/add':
-      return t("<p>You need to add all languages in which you would like to display the site interface. If you can't find the desired language in the quick-add dropdown, then you will need to provide the proper language code yourself. The language code may be used to negotiate with browsers and to present flags, etc., so it is important to pick a code that is standardised for the desired language. You can also add a language by <a href=\"@import\">importing a translation</a>.</p>", array("@import" => url("admin/settings/locale/language/import")));
+      return '<p>'. t("You need to add all languages in which you would like to display the site interface. If you can't find the desired language in the quick-add dropdown, then you will need to provide the proper language code yourself. The language code may be used to negotiate with browsers and to present flags, etc., so it is important to pick a code that is standardised for the desired language. You can also add a language by <a href=\"@import\">importing a translation</a>.", array("@import" => url("admin/settings/locale/language/import"))) .'</p>';
     case 'admin/settings/locale/language/import':
-      return t("<p>This page allows you to import a translation provided in the gettext Portable Object (.po) format. The easiest way to get your site translated is to obtain an existing Drupal translation and to import it. You can find existing translations on the <a href=\"@url\">Drupal translation page</a>. Note that importing a translation file might take a while.</p>", array('@url' => 'http://drupal.org/project/translations'));
+      return '<p>'. t("This page allows you to import a translation provided in the gettext Portable Object (.po) format. The easiest way to get your site translated is to obtain an existing Drupal translation and to import it. You can find existing translations on the <a href=\"@url\">Drupal translation page</a>. Note that importing a translation file might take a while.", array('@url' => 'http://drupal.org/project/translations')) .'</p>';
     case 'admin/settings/locale/language/export':
-      return t("<p>This page allows you to export Drupal strings. The first option is to export a translation so it can be shared. The second option generates a translation template, which contains all Drupal strings, but without their translations. You can use this template to start a new translation using various software packages designed for this task.</p>");
+      return '<p>'. t("This page allows you to export Drupal strings. The first option is to export a translation so it can be shared. The second option generates a translation template, which contains all Drupal strings, but without their translations. You can use this template to start a new translation using various software packages designed for this task.") .'</p>';
     case 'admin/settings/locale/string/search':
-      return t("<p>It is often convenient to get the strings from your setup on the <a href=\"@export\">export page</a>, and use a desktop Gettext translation editor to edit the translations. On this page you can search in the translated and untranslated strings, and the default English texts provided by Drupal.</p>", array("@export" => url("admin/settings/locale/language/export")));
+      return '<p>'. t("It is often convenient to get the strings from your setup on the <a href=\"@export\">export page</a>, and use a desktop Gettext translation editor to edit the translations. On this page you can search in the translated and untranslated strings, and the default English texts provided by Drupal.", array("@export" => url("admin/settings/locale/language/export"))) .'</p>';
   }
 }
 

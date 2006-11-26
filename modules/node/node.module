@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.736 2006/11/24 10:18:24 dries Exp $
+// $Id: node.module,v 1.737 2006/11/26 02:20:00 drumm Exp $
 
 /**
  * @file
@@ -28,7 +28,7 @@ function node_help($section) {
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@node">Node page</a>.', array('@node' => 'http://drupal.org/handbook/modules/node/')) .'</p>';
       return $output;
     case 'admin/content/search':
-      return t('<p>Enter a simple pattern to search for a post. Words are matched exactly. Phrases can be surrounded by quotes to do an exact search.</p>');
+      return '<p>'. t('Enter a simple pattern to search for a post. Words are matched exactly. Phrases can be surrounded by quotes to do an exact search.') .'</p>';
     case 'admin/content/types':
       return '<p>'. t('Below is a list of all the content types on your site. All posts that exist on your site are instances of one of these content types.') .'</p>';
     case 'admin/content/types/add':

@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.179 2006/11/21 20:14:18 dries Exp $
+// $Id: profile.module,v 1.180 2006/11/26 02:20:01 drumm Exp $
 
 /**
  * @file
@@ -35,7 +35,7 @@ function profile_help($section) {
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@profile">Profile page</a>.', array('@profile' => 'http://drupal.org/handbook/modules/profile/')) .'</p>';
       return $output;
     case 'admin/user/profile':
-      return t('<p>Here you can define custom fields that users can fill in in their user profile (such as <em>country</em>, <em>real name</em>, <em>age</em>, ...).</p>');
+      return '<p>'. t('Here you can define custom fields that users can fill in in their user profile (such as <em>country</em>, <em>real name</em>, <em>age</em>, ...).') .'</p>';
   }
 }
 

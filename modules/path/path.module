@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.102 2006/11/23 19:46:24 unconed Exp $
+// $Id: path.module,v 1.103 2006/11/26 02:20:01 drumm Exp $
 
 /**
  * @file
@@ -26,9 +26,9 @@ function path_help($section) {
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@path">Path page</a>.', array('@path' => 'http://drupal.org/handbook/modules/path/')) .'</p>';
       return $output;
     case 'admin/build/path':
-      return t("<p>Drupal provides users complete control over URLs through aliasing. This feature is typically used to make URLs human-readable or easy to remember. For example, one could map the relative URL 'node/1' onto 'about'. Each system path can have multiple aliases.</p>");
+      return '<p>'. t("Drupal provides users complete control over URLs through aliasing. This feature is typically used to make URLs human-readable or easy to remember. For example, one could map the relative URL 'node/1' onto 'about'. Each system path can have multiple aliases.") .'</p>';
     case 'admin/build/path/add':
-      return t('<p>Enter the path you wish to create the alias for, followed by the name of the new alias.</p>');
+      return '<p>'. t('Enter the path you wish to create the alias for, followed by the name of the new alias.') .'</p>';
   }
 }
 
