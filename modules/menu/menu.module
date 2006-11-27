@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.96 2006/11/24 10:18:24 dries Exp $
+// $Id: menu.module,v 1.97 2006/11/27 01:26:31 drumm Exp $
 
 /**
  * @file
@@ -124,7 +124,7 @@ function menu_block($op = 'list', $delta = 0) {
     foreach ($root_menus as $mid => $title) {
       // Default "Navigation" block is handled by user.module.
       if ($mid != 1) {
-        $blocks[$mid]['info'] = check_plain($title);
+        $blocks[$mid]['info'] = $title;
       }
     }
     return $blocks;

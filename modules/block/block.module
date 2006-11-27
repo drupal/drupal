@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.238 2006/11/26 02:20:00 drumm Exp $
+// $Id: block.module,v 1.239 2006/11/27 01:26:31 drumm Exp $
 
 /**
  * @file
@@ -118,7 +118,7 @@ function block_block($op = 'list', $delta = 0, $edit = array()) {
 
       $result = db_query('SELECT bid, info FROM {boxes} ORDER BY info');
       while ($block = db_fetch_object($result)) {
-        $blocks[$block->bid]['info'] = check_plain($block->info);
+        $blocks[$block->bid]['info'] = $block->info;
       }
       return $blocks;
 
@@ -231,7 +231,7 @@ function block_admin_display($theme = NULL) {
   foreach ($blocks as $i => $block) {
     $form[$i]['module'] = array('#type' => 'value', '#value' => $block['module']);
     $form[$i]['delta'] = array('#type' => 'value', '#value' => $block['delta']);
-    $form[$i]['info'] = array('#value' => $block['info']);
+    $form[$i]['info'] = array('#value' => check_plain($block['info']));
     $form[$i]['theme'] = array('#type' => 'hidden', '#value' => $theme_key);
     $form[$i]['weight'] = array('#type' => 'weight', '#default_value' => $block['weight']);
     $form[$i]['region'] = array('#type' => 'select',
@@ -600,7 +600,7 @@ function block_user($type, $edit, &$user, $category = NULL) {
           $data = module_invoke($block->module, 'block', 'list');
           if ($data[$block->delta]['info']) {
             $return = TRUE;
-            $form['block'][$block->module][$block->delta] = array('#type' => 'checkbox', '#title' => $data[$block->delta]['info'], '#default_value' => isset($user->block[$block->module][$block->delta]) ? $user->block[$block->module][$block->delta] : ($block->custom == 1));
+            $form['block'][$block->module][$block->delta] = array('#type' => 'checkbox', '#title' => check_plain($data[$block->delta]['info']), '#default_value' => isset($user->block[$block->module][$block->delta]) ? $user->block[$block->module][$block->delta] : ($block->custom == 1));
           }
         }
 
