@@ -1,5 +1,5 @@
 <?php
-// $Id: help.module,v 1.64 2006/11/24 10:18:23 dries Exp $
+// $Id: help.module,v 1.65 2006/11/27 02:08:25 drumm Exp $
 
 /**
  * @file
@@ -47,23 +47,15 @@ function help_main() {
   !help_pages
   <h2>Glossary of Drupal terminology</h2>
   <dl>
-   <dt>Block</dt><dd>A small box containing information or content placed in the left-hand or right-hand sidebar of a web page.</dd>
-   <dt>Comment</dt><dd>A note attached to a node. Usually intended to clarify, explain, criticize, or express an opinion on the original material.</dd>
-   <dt>Moderation</dt>
-   <dd>The activity of making sure a post to a Drupal site fits in with what is expected for that Drupal site.
-    <dl>
-     <dt>Approved</dt><dd>A moderated post which has been accepted by the moderators for publication (see published).</dd>
-     <dt>Waiting</dt><dd>A moderated post which is still being voted on to be accepted for publication (see published).</dd>
-    </dl>
-   </dd>
-   <dt>Node</dt><dd>The basic data unit in Drupal. Everything is a node or an extension of a node.</dd>
-   <dt>Public</dt><dd>See published.</dd>
-   <dt>Published</dt><dd>A node that is viewable by everyone (see unpublished).</dd>
-   <dt>Role</dt><dd>A classification users are placed into for the purpose of setting users\' permissions.</dd>
-   <dt>Taxonomy</dt><dd>A division of a collection of things into ordered, classified groups (see <a href="@taxonomy">taxonomy help</a>).</dd>
-   <dt>Unpublished</dt><dd>A node that is only viewable by administrators and moderators.</dd>
-   <dt>User</dt><dd>A person who has an account at your Drupal site, and is logged in with that account.</dd>
-   <dt>Visitor</dt><dd>A person who does not have an account at your Drupal site or a person who has an account at your Drupal site but is <strong>not</strong> logged in with that account. Also termed "anonymous user".</dd>
+   <dt>Block</dt><dd>A small box containing information or content placed in a region of a web page (e.g. in a sidebar, below or above the content, or in any other region the current theme allows).</dd>
+   <dt>Comment</dt><dd>Text attached to a post intended to clarify, explain, criticize, or express an opinion on the original post.</dd>
+   <dt>Node</dt><dd>The basic unit of content in Drupal, often referred to as a "post". All content that can be created using the "create content" menu is a node. Keep in mind that comments, blocks, and users are <em>not</em> nodes.</dd>
+   <dt>Published</dt><dd>A post that is viewable by every visitor of the site, regardless of whether he is logged in (see also "Unpublished").</dd>
+   <dt>Role</dt><dd>A classification users are placed into for the purpose of setting users\' permissions. A user receives the combined permissions of all roles to which he or she is subscribed.</dd>
+   <dt>Taxonomy</dt><dd>A categorization system that allows the building of complex hierarchial or relational structures and tagging of content (see <a href="@taxonomy">taxonomy help</a>).</dd>
+   <dt>Unpublished</dt><dd>A post that is only viewable by administrators and moderators.</dd>
+   <dt>User</dt><dd>A person who has an account at your Drupal site, and is currently logged in with that account.</dd>
+   <dt>Visitor</dt><dd>A person who does not have an account at your Drupal site or a person who has an account at your Drupal site but is <em>not</em> currently logged in with that account. A visitor is also called an "anonymous user".</dd>
   </dl>', array('!help_pages' => help_links_as_list(), '@taxonomy' => url('admin/help/taxonomy')));
 
   return $output;
@@ -100,7 +92,7 @@ function help_links_as_list() {
 function help_help($section) {
   switch ($section) {
     case 'admin/help':
-      $output = t('<p>This guide explains what the various modules in <a href="@Drupal">Drupal</a> do and how to configure them.</p>
+      $output = t('<p>This guide explains what the various modules in <a href="@Drupal">Drupal</a> do and how to configure them. Additionally, you will find a glossary of basic Drupal terminology to help get you started.</p>
 <p>It is not a substitute for the <a href="@handbook">Drupal handbook</a> available online and should be used in conjunction with it. The online reference handbook might be more up-to-date and has helpful user-contributed comments. It is your definitive reference point for all Drupal documentation.</p>
 ', array('@Drupal' => 'http://drupal.org', '@handbook' => 'http://drupal.org/handbook'));
       return $output;
