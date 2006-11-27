@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.503 2006/11/26 23:10:29 drumm Exp $
+// $Id: comment.module,v 1.504 2006/11/27 02:14:33 drumm Exp $
 
 /**
  * @file
@@ -1582,7 +1582,7 @@ function comment_controls($mode = COMMENT_MODE_THREADED_EXPANDED, $order = COMME
     '#weight' => 2,
   );
   foreach (_comment_per_page() as $i) {
-    $options[$i] = t('%a comments per page', array('%a' => $i));
+    $options[$i] = t('!a comments per page', array('!a' => $i));
   }
   $form['comments_per_page'] = array('#type' => 'select',
     '#default_value' => $comments_per_page,
