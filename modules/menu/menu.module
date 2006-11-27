@@ -124,7 +124,7 @@ function menu_block($op = 'list', $delta = 0) {
     foreach ($root_menus as $mid => $title) {
       // Default "Navigation" block is handled by user.module.
       if ($mid != 1) {
-        $blocks[$mid]['info'] = check_plain($title);
+        $blocks[$mid]['info'] = $title;
       }
     }
     return $blocks;
