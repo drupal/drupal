@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.139 2006/11/26 02:43:48 drumm Exp $
+// $Id: upload.module,v 1.140 2006/11/27 23:01:11 drumm Exp $
 
 /**
  * @file
@@ -663,7 +663,7 @@ function upload_unmunge_filename($filename) {
   return str_replace('_.', '.', $filename);
 }
 
-function upload_save($node) {
+function upload_save(&$node) {
   if (!is_array($node->files)) {
     return;
   }
@@ -698,6 +698,8 @@ function upload_save($node) {
         $file->fid = db_next_id('{files}_fid');
         db_query("INSERT INTO {files} (fid, nid, filename, filepath, filemime, filesize) VALUES (%d, %d, '%s', '%s', '%s', %d)", $file->fid, $node->nid, $file->filename, $file->filepath, $file->filemime, $file->filesize);
         db_query("INSERT INTO {file_revisions} (fid, vid, list, description) VALUES (%d, %d, %d, '%s')", $file->fid, $node->vid, $file->list, $file->description);
+        // Tell other modules where the file was stored.
+        $node->files[$fid] = $file;
       }
       unset($_SESSION['file_previews'][$fid]);
     }
