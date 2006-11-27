@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.409 2006/11/26 23:10:29 drumm Exp $
+// $Id: system.module,v 1.410 2006/11/27 01:55:45 drumm Exp $
 
 /**
  * @file
@@ -2051,6 +2051,25 @@ function system_theme_settings($key = '') {
   $form['#attributes'] = array('enctype' => 'multipart/form-data');
 
   return system_settings_form($form);
+}
+
+/**
+ * Implementation of hook_node_type().
+ *
+ * Updates theme settings after a node type change.
+ */
+function system_node_type($op, $info) {
+  if ($op == 'update' && !empty($info->old_type) && $info->type != $info->old_type) {
+    $old = 'toggle_node_info_'. $info->old_type;
+    $new = 'toggle_node_info_'. $info->type;
+
+    $theme_settings = variable_get('theme_settings', array());
+    if (isset($theme_settings[$old])) {
+      $theme_settings[$new] = $theme_settings[$old];
+      unset($theme_settings[$old]);
+      variable_set('theme_settings', $theme_settings);
+    }
+  }
 }
 
 /**
