@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.45 2006/11/26 23:42:15 drumm Exp $
+// $Id: system.install,v 1.46 2006/11/27 23:15:41 drumm Exp $
 
 define('DRUPAL_MINIMUM_PHP',    '4.3.3');
 define('DRUPAL_MINIMUM_MYSQL',  '3.23.17'); // If using MySQL
@@ -3329,7 +3329,7 @@ function system_update_1010() {
 
   // Disable urlfilter.module, if it exists.
   if (module_exists('urlfilter')) {
-    module_disable('urlfilter');
+    module_disable(array('urlfilter'));
     $ret[] = update_sql("UPDATE {filter_formats} SET module = 'filter', delta = 3 WHERE module = 'urlfilter'");
     $ret[] = t('URL Filter module was disabled; this functionality has now been added to core.');
   }
