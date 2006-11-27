@@ -1582,7 +1582,7 @@ function comment_controls($mode = COMMENT_MODE_THREADED_EXPANDED, $order = COMME
     '#weight' => 2,
   );
   foreach (_comment_per_page() as $i) {
-    $options[$i] = t('%a comments per page', array('%a' => $i));
+    $options[$i] = t('!a comments per page', array('!a' => $i));
   }
   $form['comments_per_page'] = array('#type' => 'select',
     '#default_value' => $comments_per_page,
