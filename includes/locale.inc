@@ -422,7 +422,7 @@ function _locale_string_edit($lid) {
 function _locale_string_edit_submit($form_id, $form_values) {
   $lid = $form_values['lid'];
   foreach ($form_values['translations'] as $key => $value) {
-    $value = filter_xss_admin($value);
+    $value = str_replace('&amp;', '&', filter_xss_admin($value));
     $trans = db_fetch_object(db_query("SELECT translation FROM {locales_target} WHERE lid = %d AND locale = '%s'", $lid, $key));
     if (isset($trans->translation)) {
       db_query("UPDATE {locales_target} SET translation = '%s' WHERE lid = %d AND locale = '%s'", $value, $lid, $key);
