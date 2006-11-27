@@ -1435,6 +1435,7 @@ function system_modules_submit($form_id, $form_values) {
   }
 
   $enable_modules = array();
+  $disable_modules = array();
   foreach ($form_values['status'] as $key => $choice) {
     if ($choice) {
       if (drupal_get_installed_schema_version($key) == SCHEMA_UNINSTALLED) {
@@ -1445,12 +1446,15 @@ function system_modules_submit($form_id, $form_values) {
       }
     }
     else {
-      module_disable($key);
+      $disable_modules[] = $key;
     }
   }
 
   if (!empty($enable_modules)) {
     module_enable($enable_modules);
+  }
+  if (!empty($disable_modules)) {
+    module_disable($disable_modules);
   }
 
   $old_module_list = module_list();

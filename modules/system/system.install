@@ -3329,7 +3329,7 @@ function system_update_1010() {
 
   // Disable urlfilter.module, if it exists.
   if (module_exists('urlfilter')) {
-    module_disable('urlfilter');
+    module_disable(array('urlfilter'));
     $ret[] = update_sql("UPDATE {filter_formats} SET module = 'filter', delta = 3 WHERE module = 'urlfilter'");
     $ret[] = t('URL Filter module was disabled; this functionality has now been added to core.');
   }
