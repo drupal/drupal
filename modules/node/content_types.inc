@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.15 2006/11/26 02:43:47 drumm Exp $
+// $Id: content_types.inc,v 1.16 2006/11/27 08:04:27 dries Exp $
 
 /**
  * @file
@@ -104,6 +104,13 @@ function node_type_form($type = NULL) {
     );
   }
 
+  $form['identity']['description'] = array(
+    '#title' => t('Description'),
+    '#type' => 'textarea',
+    '#default_value' => $type->description,
+    '#description' => t('A brief description of this content type. This text will be displayed as part of the list on the <em>create content</em> page.'),
+    );
+
   $form['submission'] = array(
     '#type' => 'fieldset',
     '#title' =>t('Submission form'),
@@ -129,24 +136,18 @@ function node_type_form($type = NULL) {
     '#default_value' => $type->body_label,
     '#description' => t('To omit the body field for this content type, remove any text and leave this field blank.'),
   );
-  $form['submission']['description'] = array(
-    '#title' => t('Description'),
-    '#type' => 'textarea',
-    '#default_value' => $type->description,
-    '#description' => t('A brief description of this content type. This text will be displayed as part of the list on the <em>create content</em> page.'),
-  );
-  $form['submission']['help']  = array(
-    '#type' => 'textarea',
-    '#title' => t('Explanation or submission guidelines'),
-    '#default_value' =>  $type->help,
-    '#description' => t('This text will be displayed at the top of the submission form for this content type. It is useful for helping or instructing your users.')
-  );
   $form['submission']['min_word_count'] = array(
     '#type' => 'select',
     '#title' => t('Minimum number of words'),
     '#default_value' => $type->min_word_count,
     '#options' => drupal_map_assoc(array(0, 10, 25, 50, 75, 100, 125, 150, 175, 200)),
     '#description' => t('The minimum number of words for the body field to be considered valid for this content type. This can be useful to rule out submissions that do not meet the site\'s standards, such as short test posts.')
+  );
+  $form['submission']['help']  = array(
+    '#type' => 'textarea',
+    '#title' => t('Explanation or submission guidelines'),
+    '#default_value' =>  $type->help,
+    '#description' => t('This text will be displayed at the top of the submission form for this content type. It is useful for helping or instructing your users.')
   );
   $form['workflow'] = array(
     '#type' => 'fieldset',
