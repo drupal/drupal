@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.326 2006/11/26 23:53:20 drumm Exp $
+// $Id: taxonomy.module,v 1.327 2006/11/28 13:15:31 dries Exp $
 
 /**
  * @file
@@ -384,17 +384,6 @@ function taxonomy_form_term($vocabulary_id, $edit = array()) {
 
   $form['synonyms'] = array('#type' => 'textarea', '#title' => t('Synonyms'), '#default_value' => implode("\n", taxonomy_get_synonyms($edit['tid'])), '#description' => t('<a href="@help-url">Synonyms</a> of this term, one synonym per line.', array('@help-url' => url('admin/help/taxonomy', NULL, NULL, 'synonyms'))));
   $form['weight'] = array('#type' => 'weight', '#title' => t('Weight'), '#default_value' => $edit['weight'], '#description' => t('In listings, the heavier terms will sink and the lighter terms will be positioned nearer the top.'));
-
-  // Add extra term form elements.
-  $extra = module_invoke_all('taxonomy', 'term', 'vocabulary');
-  if (is_array($extra)) {
-    foreach ($extra as $key => $element) {
-      $extra[$key]['#weight'] = isset($extra[$key]['#weight']) ? $extra[$key]['#weight'] : -18;
-    }
-    $form = array_merge($form, $extra);
-  }
-
-
   $form['vid'] = array('#type' => 'value', '#value' => $vocabulary->vid);
   $form['submit'] = array('#type' => 'submit', '#value' => t('Submit'));
 
