@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.738 2006/11/27 02:28:18 drumm Exp $
+// $Id: node.module,v 1.739 2006/11/28 03:08:15 drumm Exp $
 
 /**
  * @file
@@ -158,7 +158,7 @@ function node_teaser($body, $format = NULL) {
   // parse errors.
   if (isset($format)) {
     $filters = filter_list_format($format);
-    if (isset($filters['filter/1']) && (strpos($body, '<?') !== FALSE) && (strpos($body, '<?') < $delimiter)) {
+    if (isset($filters['filter/1']) && (strpos($body, '<?') !== FALSE) && ($delimiter === FALSE || strpos($body, '<?') < $delimiter)) {
       return $body;
     }
   }
