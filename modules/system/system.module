@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.411 2006/11/27 23:15:41 drumm Exp $
+// $Id: system.module,v 1.412 2006/11/28 09:41:11 dries Exp $
 
 /**
  * @file
@@ -1509,7 +1509,7 @@ function theme_system_modules($form) {
   $modules = $form['validation_modules']['#value'];
   foreach ($modules as $module) {
     if (!isset($module->info['package'])) {
-      $module->info['package'] = 'Uncategorized';
+      $module->info['package'] = 'Other';
     }
     $packages[$module->info['package']][$module->name] = $module->info;
   }
