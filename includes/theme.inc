@@ -205,6 +205,10 @@ function theme_get_function($function) {
 function path_to_theme() {
   global $theme;
 
+  if (!isset($theme)) {
+    init_theme();
+  }
+
   $themes = list_themes();
 
   return dirname($themes[$theme]->filename);
