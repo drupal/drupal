@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.239 2006/11/27 01:26:31 drumm Exp $
+// $Id: block.module,v 1.240 2006/11/28 11:12:38 dries Exp $
 
 /**
  * @file
@@ -40,7 +40,7 @@ function block_help($section) {
 <p>If you want certain blocks to disable themselves temporarily during high server loads, check the "Throttle" box. You can configure the auto-throttle on the <a href="@throttle">throttle configuration page</a> after having enabled the throttle module.</p>
 <p>You can configure the behaviour of each block (for example, specifying on which pages and for what users it will appear) by clicking the "configure" link for each block.</p>', array('@throttle' => url('admin/settings/throttle')));
     case 'admin/build/block/add':
-      return '<p>'. t('Here you can create a new block. Once you have created this block you must make it active and give it a place on the page using <a href="@overview">blocks</a>. The title is used when displaying the block. The description is used in the "block" column on the <a href="@overview">blocks</a> page.', array('@overview' => url('admin/build/block'))) .'</p>';
+      return '<p>'. t('Here you can create a new block. Once you have created this block you must make it active and give it a place on the page using <a href="@overview">blocks</a>. The description is used in the "block" column on the <a href="@overview">blocks</a> page.', array('@overview' => url('admin/build/block'))) .'</p>';
   }
 }
 
