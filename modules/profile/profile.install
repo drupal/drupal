@@ -12,7 +12,7 @@ function profile_install() {
         fid int NOT NULL auto_increment,
         title varchar(255) default NULL,
         name varchar(128) default NULL,
-        explanation TEXT default NULL,
+        explanation TEXT,
         category varchar(255) default NULL,
         page varchar(255) default NULL,
         type varchar(128) default NULL,
