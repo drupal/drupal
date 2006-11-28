@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.367 2006/11/26 02:20:00 drumm Exp $
+// $Id: forum.module,v 1.368 2006/11/28 09:48:45 dries Exp $
 
 /**
  * @file
@@ -23,6 +23,8 @@ function forum_help($section) {
       return '<p>'. t('Containers help you organize your forums. The job of a container is to hold, or contain, other forums that are related. For example, a container named "Food" might hold two forums named "Fruit" and "Vegetables".') .'</p>';
     case 'admin/content/forum/add/forum':
       return '<p>'. t('A forum holds discussion topics that are related. For example, a forum named "Fruit" might contain topics titled "Apples" and "Bananas".') .'</p>';
+    case 'admin/content/forum/settings':
+      return '<p>'. t('These settings provide the ability to fine tune the display of your forum topics.') .'</p>';
   }
 }
 
