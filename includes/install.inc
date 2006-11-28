@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.27 2006/11/24 10:16:50 dries Exp $
+// $Id: install.inc,v 1.28 2006/11/28 03:32:03 drumm Exp $
 
 define('SCHEMA_UNINSTALLED', -1);
 define('SCHEMA_INSTALLED', 0);
@@ -597,6 +597,60 @@ function st($string, $args = array()) {
     }
   }
   return strtr((!empty($locale_strings[$string]) ? $locale_strings[$string] : $string), $args);
+}
+
+/**
+ * Converts a set of tables to UTF-8 encoding.
+ *
+ * This update is designed to be re-usable by contrib modules and is
+ * used by system_update_169().
+ */
+function _system_update_utf8($tables) {
+  // Are we starting this update for the first time?
+  if (!isset($_SESSION['update_utf8'])) {
+    switch ($GLOBALS['db_type']) {
+      // Only for MySQL 4.1+
+      case 'mysqli':
+        break;
+      case 'mysql':
+        if (version_compare(mysql_get_server_info($GLOBALS['active_db']), '4.1.0', '<')) {
+          return array();
+        }
+        break;
+      case 'pgsql':
+        return array();
+    }
+
+    // See if database uses UTF-8 already
+    global $db_url;
+    $url = parse_url(is_array($db_url) ? $db_url['default'] : $db_url);
+    $db_name = substr($url['path'], 1);
+    $result = db_fetch_array(db_query('SHOW CREATE DATABASE `%s`', $db_name));
+    if (preg_match('/utf8/i', array_pop($result))) {
+      return array();
+    }
+
+    // Make list of tables to convert
+    $_SESSION['update_utf8'] = $tables;
+    // Keep track of total for progress bar
+    $_SESSION['update_utf8_total'] = count($tables);
+  }
+
+  // Fetch remaining tables list and convert next table
+  $list = &$_SESSION['update_utf8'];
+
+  $ret = update_convert_table_utf8(array_shift($list));
+
+  // Are we done?
+  if (count($list) == 0) {
+    unset($_SESSION['update_utf8']);
+    unset($_SESSION['update_utf8_total']);
+    return $ret;
+  }
+
+  // Progress percentage
+  $ret['#finished'] = 1 - (count($list) / $_SESSION['update_utf8_total']);
+  return $ret;
 }
 
 /**
