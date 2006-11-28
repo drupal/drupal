@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.140 2006/11/27 23:01:11 drumm Exp $
+// $Id: upload.module,v 1.141 2006/11/28 02:28:48 drumm Exp $
 
 /**
  * @file
@@ -377,8 +377,22 @@ function upload_form_alter($form_id, &$form) {
         '#prefix' => '<div id="attach-wrapper">',
         '#suffix' => '</div>',
       );
-      $form['attachments']['wrapper'] += _upload_form($node);
-      $form['#attributes']['enctype'] = 'multipart/form-data';
+
+      // Make sure necessary directories for upload.module exist and are
+      // writable before displaying the attachment form.
+      if (!file_check_directory(file_directory_path(), FILE_CREATE_DIRECTORY) || !file_check_directory(file_directory_temp(), FILE_CREATE_DIRECTORY)) {
+        $form['attachments']['#description'] =  t('File attachments are disabled. The file directories have not been properly configured.');
+        if (user_access('administer site configuration')) {
+          $form['attachments']['#description'] .= ' '. t('Please visit the <a href="@admin-file-system">file system configuration page</a>.', array('@admin-file-system' => url('admin/settings/file-system')));
+        }
+        else {
+          $form['attachments']['#description'] .= ' '. t('Please contact the site administrator.');
+        }
+      }
+      else {
+        $form['attachments']['wrapper'] += _upload_form($node);
+        $form['#attributes']['enctype'] = 'multipart/form-data';
+      }
     }
   }
 }
