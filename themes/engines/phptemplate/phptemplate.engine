@@ -1,5 +1,5 @@
 <?php
-// $Id: phptemplate.engine,v 1.51 2006/11/25 09:04:22 drumm Exp $
+// $Id: phptemplate.engine,v 1.52 2006/11/28 03:11:53 drumm Exp $
 
 /**
  * @file
@@ -63,7 +63,7 @@ function _phptemplate_callback($hook, $variables = array(), $suggestions = array
     $variables = array_merge($variables, call_user_func($variables_function, $hook, $variables));
   }
 
-  if (is_array($variables['template_files'])) {
+  if (isset($variables['template_files'])) {
     $suggestions = array_merge($suggestions, $variables['template_files']);
   }
 
