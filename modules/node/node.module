@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.739 2006/11/28 03:08:15 drumm Exp $
+// $Id: node.module,v 1.740 2006/11/28 03:20:08 drumm Exp $
 
 /**
  * @file
@@ -690,9 +690,7 @@ function node_prepare($node, $teaser = FALSE) {
   // First we'll overwrite the existing node teaser and body with
   // the filtered copies! Then, we'll stick those into the content
   // array and set the read more flag if appropriate.
-  if (strlen($node->teaser) < strlen($node->body)) {
-    $node->readmore = TRUE;
-  }
+  $node->readmore = (strlen($node->teaser) < strlen($node->body));
 
   if ($teaser == FALSE) {
     $node->body = check_markup($node->body, $node->format, FALSE);
