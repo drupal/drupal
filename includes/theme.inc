@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.325 2006/11/26 23:14:59 drumm Exp $
+// $Id: theme.inc,v 1.326 2006/11/28 10:13:11 dries Exp $
 
 /**
  * @file
@@ -204,6 +204,10 @@ function theme_get_function($function) {
  */
 function path_to_theme() {
   global $theme;
+
+  if (!isset($theme)) {
+    init_theme();
+  }
 
   $themes = list_themes();
 
