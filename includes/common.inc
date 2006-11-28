@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.590 2006/11/25 09:04:21 drumm Exp $
+// $Id: common.inc,v 1.591 2006/11/28 07:03:33 drumm Exp $
 
 /**
  * @file
@@ -619,18 +619,84 @@ function locale_initialize() {
 /**
  * Translate strings to the current locale.
  *
- * When using t(), try to put entire sentences and strings in one t() call.
- * This makes it easier for translators. HTML markup within translation strings
- * is acceptable, if necessary. The suggested syntax for a link embedded
- * within a translation string is:
+ * All human-readable text that will be displayed somewhere within a page should be
+ * run through the t() function.
+ *
+ * Examples:
  * @code
- *   $msg = t('You must log in below or <a href="@url">create a new
- *             account</a> before viewing the next page.', array('@url'
- *             => url('user/register')));
+ *   if (!$info || !$info['extension']) {
+ *     form_set_error('picture_upload', t('The uploaded file was not an image.'));
+ *   }
+ *
+ *   $form['submit'] = array(
+ *     '#type' => 'submit',
+ *     '#value' => t('Log in'),
+ *   );
  * @endcode
- * We suggest the same syntax for links to other sites. This makes it easy to
- * change link URLs if needed (which happens often) without requiring updates
- * to translations.
+ *
+ * Any text within t() can be extracted by translators and changed into
+ * the equivalent text in their native language.
+ *
+ * Special variables called "placeholders" are used to signal dynamic
+ * information in a string which should not be translated. Placeholders
+ * can also be used for text that that may change from time to time
+ * (such as link paths) to be changed without requiring updates to translations.
+ *
+ * For example:
+ * @code
+ *   $output = t('There are currently %members and %visitors online.', array(
+ *     '%members' => format_plural($total_users, '1 user', '@count users'),
+ *     '%visitors' => format_plural($guests->count, '1 guest', '@count guests')));
+ * @endcode
+ *
+ * There are three styles of placeholders:
+ * - !variable, which indicates that the text should be inserted as-is. This is
+ *   useful for inserting variables into things like e-mail.
+ *   @code
+ *     $message[] = t("If you don't want to receive such e-mails, you can change your settings at !url.", array('!url' => url("user/$account->uid", NULL, NULL, TRUE)));
+ *   @endcode
+ *
+ * - @variable, which indicates that the text should be run through check_plain,
+ *   to strip out HTML characters. Use this for any output that's displayed within
+ *   a Drupal page.
+ *   @code
+ *     drupal_set_title($title = t("@name's blog", array('@name' => $account->name)));
+ *   @endcode
+ *
+ * - %variable, which indicates that the string should be highlighted with
+ *   theme_placeholder() which shows up by default as <em>emphasized</em>.
+ *   @code
+ *     watchdog('mail', t('%name-from sent %name-to an e-mail.', array('%name-from' => $user->name, '%name-to' => $account->name)));
+ *   @endcode
+ *
+ * When using t(), try to put entire sentences and strings in one t() call.
+ * This makes it easier for translators, as it provides context as to what
+ * each word refers to. HTML markup within translation strings is allowed,
+ * but should be avoided if possible. The exception is embedded links; link
+ * titles add additional context for translators so should be kept in the main
+ * string.
+ *
+ * Here is an example of an incorrect use if t():
+ * @code
+ *   $output .= t('<p>Go to the @contact-page.</p>', array('@contact-page' => l(t('contact page'), 'contact')));
+ * @endcode
+ *
+ * Here is an example of t() used correctly:
+ * @code
+ *   $output .= '<p>'. t('Go to the <a href="@contact-page">contact page</a>.', array('@contact-page' => url('contact'))) .'</p>';
+ * @endcode
+ *
+ * Also avoid escaping quotation marks wherever possible.
+ *
+ * Incorrect:
+ * @code
+ *   $output .= t('Don\'t click me.');
+ * @endcode
+ *
+ * Correct:
+ * @code
+ *   $output .= t("Don't click me.");
+ * @endcode
  *
  * @param $string
  *   A string containing the English string to translate.
