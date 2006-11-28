@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.205 2006/10/02 11:36:17 dries Exp $
+// $Id: update.php,v 1.206 2006/11/28 20:52:51 drumm Exp $
 
 /**
  * @file
@@ -713,7 +713,7 @@ function update_create_cache_tables() {
         INDEX expire (expire)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
       $ret[] = update_sql("CREATE TABLE {cache_page} (
-        cid varchar(255) NOT NULL default '',
+        cid varchar(255) BINARY NOT NULL default '',
         data longblob,
         expire int NOT NULL default '0',
          created int NOT NULL default '0',

@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.48 2006/11/28 14:37:44 dries Exp $
+// $Id: system.install,v 1.49 2006/11/28 20:52:51 drumm Exp $
 
 define('DRUPAL_MINIMUM_PHP',    '4.3.3');
 define('DRUPAL_MINIMUM_MYSQL',  '3.23.17'); // If using MySQL
@@ -189,7 +189,7 @@ function system_install() {
         INDEX expire (expire)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
       db_query("CREATE TABLE {cache_page} (
-        cid varchar(255) NOT NULL default '',
+        cid varchar(255) BINARY NOT NULL default '',
         data longblob,
         expire int NOT NULL default '0',
         created int NOT NULL default '0',
