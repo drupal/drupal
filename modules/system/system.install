@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.47 2006/11/28 03:32:03 drumm Exp $
+// $Id: system.install,v 1.48 2006/11/28 14:37:44 dries Exp $
 
 define('DRUPAL_MINIMUM_PHP',    '4.3.3');
 define('DRUPAL_MINIMUM_MYSQL',  '3.23.17'); // If using MySQL
@@ -148,7 +148,7 @@ function system_install() {
         custom tinyint DEFAULT '0' NOT NULL,
         throttle tinyint DEFAULT '0' NOT NULL,
         visibility tinyint DEFAULT '0' NOT NULL,
-        pages text DEFAULT '' NOT NULL,
+        pages text NOT NULL,
         title varchar(64) DEFAULT '' NOT NULL
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
@@ -332,9 +332,9 @@ function system_install() {
         vid int unsigned NOT NULL,
         uid int NOT NULL default '0',
         title varchar(128) NOT NULL default '',
-        body longtext NOT NULL default '',
-        teaser longtext NOT NULL default '',
-        log longtext NOT NULL default '',
+        body longtext NOT NULL,
+        teaser longtext NOT NULL,
+        log longtext NOT NULL,
         timestamp int NOT NULL default '0',
         format int NOT NULL default '0',
         PRIMARY KEY  (vid),
@@ -1563,8 +1563,8 @@ function system_update_133() {
   if ($GLOBALS['db_type'] == 'mysql') {
     $ret[] = update_sql("CREATE TABLE {contact} (
       subject varchar(255) NOT NULL default '',
-      recipients longtext NOT NULL default '',
-      reply longtext NOT NULL default ''
+      recipients longtext NOT NULL,
+      reply longtext NOT NULL
       )");
     $ret[] = update_sql("ALTER TABLE {users} ADD login int NOT NULL default '0'");
   }
