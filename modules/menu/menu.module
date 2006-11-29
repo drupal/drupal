@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.97 2006/11/27 01:26:31 drumm Exp $
+// $Id: menu.module,v 1.98 2006/11/29 23:16:51 drumm Exp $
 
 /**
  * @file
@@ -756,7 +756,7 @@ function menu_parent_options($mid, $pid = 0, $depth = 0) {
   }
 
   // Add children of $pid to the list recursively.
-  if ($parent_item['children']) {
+  if (isset($parent_item['children'])) {
     usort($parent_item['children'], '_menu_sort');
     foreach ($parent_item['children'] as $child) {
       $options += menu_parent_options($mid, $child, $depth);
