@@ -1,5 +1,5 @@
 <?php
-// $Id: chameleon.theme,v 1.55 2006/11/25 09:04:22 drumm Exp $
+// $Id: chameleon.theme,v 1.56 2006/11/29 06:36:12 drumm Exp $
 
 /**
  * @file
@@ -31,6 +31,10 @@ function chameleon_page($content, $show_blocks = TRUE) {
   drupal_add_css(path_to_theme() .'/common.css', 'theme');
 
   $title = drupal_get_title();
+
+  // Get blocks before so that they can alter the header (JavaScript, Stylesheets etc.)
+  $blocks_left = theme_blocks('left');
+  $blocks_right = theme_blocks('right');
 
   $output  = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n";
   $output .= "<html xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"$language\" xml:lang=\"$language\">\n";
@@ -71,10 +75,8 @@ function chameleon_page($content, $show_blocks = TRUE) {
   $output .= " <table id=\"content\">\n";
   $output .= "  <tr>\n";
 
-  if ($show_blocks) {
-    if ($blocks = theme_blocks("left")) {
-      $output .= "   <td id=\"sidebar-left\">$blocks</td>\n";
-    }
+  if ($show_blocks && !empty($blocks_left)) {
+    $output .= "   <td id=\"sidebar-left\">$blocks_left</td>\n";
   }
 
   $output .= "   <td id=\"main\">\n";
@@ -103,10 +105,8 @@ function chameleon_page($content, $show_blocks = TRUE) {
 
   $output  .= "   </td>\n";
 
-  if ($show_blocks) {
-    if ($blocks = theme_blocks("right")) {
-      $output .= "   <td id=\"sidebar-right\">$blocks</td>\n";
-    }
+  if ($show_blocks && !empty($blocks_right)) {
+    $output .= "   <td id=\"sidebar-right\">$blocks_right</td>\n";
   }
 
   $output .= "  </tr>\n";

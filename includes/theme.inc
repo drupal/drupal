@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.326 2006/11/28 10:13:11 dries Exp $
+// $Id: theme.inc,v 1.327 2006/11/29 06:36:12 drumm Exp $
 
 /**
  * @file
@@ -363,6 +363,9 @@ function theme_placeholder($text) {
  *   A string containing the entire HTML page.
  */
 function theme_page($content) {
+  // Get blocks before so that they can alter the header (JavaScript, Stylesheets etc.)
+  $blocks = theme('blocks', 'all');
+
   $output = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
   $output .= '<html xmlns="http://www.w3.org/1999/xhtml">';
   $output .= '<head>';
@@ -375,7 +378,7 @@ function theme_page($content) {
   $output .= ' <body style="background-color: #fff; color: #000;">';
   $output .= '<table border="0" cellspacing="4" cellpadding="4"><tr><td style="vertical-align: top; width: 170px;">';
 
-  $output .= theme('blocks', 'all');
+  $output .= $blocks;
   $output .= '</td><td style="vertical-align: top;">';
 
   $output .= theme('breadcrumb', drupal_get_breadcrumb());
