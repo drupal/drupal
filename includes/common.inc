@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.591 2006/11/28 07:03:33 drumm Exp $
+// $Id: common.inc,v 1.592 2006/11/29 06:03:56 drumm Exp $
 
 /**
  * @file
@@ -639,7 +639,7 @@ function locale_initialize() {
  *
  * Special variables called "placeholders" are used to signal dynamic
  * information in a string which should not be translated. Placeholders
- * can also be used for text that that may change from time to time
+ * can also be used for text that may change from time to time
  * (such as link paths) to be changed without requiring updates to translations.
  *
  * For example:
