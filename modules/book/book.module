@@ -987,7 +987,7 @@ function book_help($section) {
   }
 
   if (arg(0) == 'node' && is_numeric(arg(1)) && arg(2) == 'outline') {
-    return t('The outline feature allows you to include posts in the <a href="@book">book hierarchy</a>.', array('@book' => url('book')));
+    return '<p>'. t('The outline feature allows you to include posts in the <a href="@book">book hierarchy</a>.', array('@book' => url('book'))) .'</p>';
   }
 }
 
