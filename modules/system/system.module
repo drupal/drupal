@@ -1083,7 +1083,7 @@ function system_settings_form_submit($form_id, $form_values) {
   $op = isset($form_values['op']) ? $form_values['op'] : '';
 
   // Exclude unnecessary elements.
-  unset($form_values['submit'], $form_values['reset'], $form_values['form_id']);
+  unset($form_values['submit'], $form_values['reset'], $form_values['form_id'], $form_values['op'], $form_values['form_token']);
 
   foreach ($form_values as $key => $value) {
     if ($op == t('Reset to defaults')) {
