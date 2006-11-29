@@ -2243,15 +2243,20 @@ function system_admin_by_module() {
     }
 
     $admin_tasks = system_get_module_admin_tasks($module);
-    // Check for help links.
-    if (module_invoke($module, 'help', "admin/help#$module")) {
-      $admin_tasks[100] = l(t('Get help'), "admin/help/$module");
+
+    // Only display a section if there are any available tasks.
+    if (count($admin_tasks)) {
+
+      // Check for help links.
+      if (module_invoke($module, 'help', "admin/help#$module")) {
+        $admin_tasks[100] = l(t('Get help'), "admin/help/$module");
+      }
+
+      // Sort.
+      ksort($admin_tasks);
+
+      $menu_items[$file->info['name']] = array($file->info['description'], $admin_tasks);
     }
-
-    // Sort
-    ksort($admin_tasks);
-
-    $menu_items[$file->info['name']] = array($file->info['description'], $admin_tasks);
   }
   return theme('system_admin_by_module', $menu_items);
 }
