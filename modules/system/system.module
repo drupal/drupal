@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.415 2006/11/29 20:36:30 drumm Exp $
+// $Id: system.module,v 1.416 2006/11/29 23:12:41 drumm Exp $
 
 /**
  * @file
@@ -1083,7 +1083,7 @@ function system_settings_form_submit($form_id, $form_values) {
   $op = isset($form_values['op']) ? $form_values['op'] : '';
 
   // Exclude unnecessary elements.
-  unset($form_values['submit'], $form_values['reset'], $form_values['form_id']);
+  unset($form_values['submit'], $form_values['reset'], $form_values['form_id'], $form_values['op'], $form_values['form_token']);
 
   foreach ($form_values as $key => $value) {
     if ($op == t('Reset to defaults')) {
