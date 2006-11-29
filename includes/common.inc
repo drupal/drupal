@@ -639,7 +639,7 @@ function locale_initialize() {
  *
  * Special variables called "placeholders" are used to signal dynamic
  * information in a string which should not be translated. Placeholders
- * can also be used for text that that may change from time to time
+ * can also be used for text that may change from time to time
  * (such as link paths) to be changed without requiring updates to translations.
  *
  * For example:
