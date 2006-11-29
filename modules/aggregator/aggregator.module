@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.320 2006/11/27 01:26:31 drumm Exp $
+// $Id: aggregator.module,v 1.321 2006/11/29 03:56:39 drumm Exp $
 
 /**
  * @file
@@ -285,7 +285,7 @@ function aggregator_block($op = 'list', $delta = 0, $edit = array()) {
           if ($feed = db_fetch_object(db_query('SELECT fid, title, block FROM {aggregator_feed} WHERE fid = %d', $id))) {
             $block['subject'] = check_plain($feed->title);
             $result = db_query_range('SELECT * FROM {aggregator_item} WHERE fid = %d ORDER BY timestamp DESC, iid DESC', $feed->fid, 0, $feed->block);
-            $block['content'] = '<div class="more-link">'. l(t('more'), 'aggregator/sources/'. $feed->fid, array('title' => t("View this feed's recent news."))) .'</div>';
+            $read_more = '<div class="more-link">'. l(t('more'), 'aggregator/sources/'. $feed->fid, array('title' => t("View this feed's recent news."))) .'</div>';
           }
           break;
 
@@ -293,7 +293,7 @@ function aggregator_block($op = 'list', $delta = 0, $edit = array()) {
           if ($category = db_fetch_object(db_query('SELECT cid, title, block FROM {aggregator_category} WHERE cid = %d', $id))) {
             $block['subject'] = check_plain($category->title);
             $result = db_query_range('SELECT i.* FROM {aggregator_category_item} ci LEFT JOIN {aggregator_item} i ON ci.iid = i.iid WHERE ci.cid = %d ORDER BY i.timestamp DESC, i.iid DESC', $category->cid, 0, $category->block);
-            $block['content'] = '<div class="more-link">'. l(t('more'), 'aggregator/categories/'. $category->cid, array('title' => t("View this category's recent news."))) .'</div>';
+            $read_more = '<div class="more-link">'. l(t('more'), 'aggregator/categories/'. $category->cid, array('title' => t("View this category's recent news."))) .'</div>';
           }
           break;
       }
@@ -301,7 +301,11 @@ function aggregator_block($op = 'list', $delta = 0, $edit = array()) {
       while ($item = db_fetch_object($result)) {
         $items[] = theme('aggregator_block_item', $item);
       }
-      $block['content'] = theme('item_list', $items) . $block['content'];
+
+      // Only display the block if there are items to show.
+      if (count($items) > 0) {
+        $block['content'] = theme('item_list', $items) . $read_more;
+      }
     }
     return $block;
   }
@@ -974,7 +978,7 @@ function aggregator_get_category($cid) {
 function aggregator_view() {
   $result = db_query('SELECT f.*, COUNT(i.iid) AS items FROM {aggregator_feed} f LEFT JOIN {aggregator_item} i ON f.fid = i.fid GROUP BY f.fid, f.title, f.url, f.refresh, f.checked, f.link, f.description, f.etag, f.modified, f.image, f.block ORDER BY f.title');
 
-  $output .= '<h3>'. t('Feed overview') .'</h3>';
+  $output = '<h3>'. t('Feed overview') .'</h3>';
 
   $header = array(t('Title'), t('Items'), t('Last update'), t('Next update'), array('data' => t('Operations'), 'colspan' => '3'));
   $rows = array();
