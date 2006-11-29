@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.327 2006/11/29 06:36:12 drumm Exp $
+// $Id: theme.inc,v 1.328 2006/11/29 20:39:37 drumm Exp $
 
 /**
  * @file
@@ -544,7 +544,7 @@ function theme_links($links, $attributes = array('class' => 'links')) {
       $link['query'] = isset($link['query']) ? $link['query'] : NULL;
       $link['fragment'] = isset($link['fragment']) ? $link['fragment'] : NULL;
 
-      if ($link['href']) {
+      if (isset($link['href'])) {
         $output .= l($link['title'], $link['href'], $link['attributes'], $link['query'], $link['fragment'], FALSE, $html);
       }
       else if ($link['title']) {
