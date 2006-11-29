@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.16 2006/11/27 08:04:27 dries Exp $
+// $Id: content_types.inc,v 1.17 2006/11/29 23:09:54 drumm Exp $
 
 /**
  * @file
@@ -77,7 +77,7 @@ function node_type_form($type = NULL) {
     '#title' => t('Name'),
     '#type' => 'textfield',
     '#default_value' => $type->name,
-    '#description' => t('The human-readable name of this content type. This text will be displayed as part of the list on the <em>create content</em> page. It is recommended that this name consists only of lowercase letters, numbers, and <strong>spaces</strong>. The name must be unique to this content type.'),
+    '#description' => t('The human-readable name of this content type. This text will be displayed as part of the list on the <em>create content</em> page. It is recommended that this name begins with a capital letter and consists only of letters, numbers, and <strong>spaces</strong>. This name must be unique to this content type.'),
     '#required' => TRUE,
   );
 
@@ -88,7 +88,7 @@ function node_type_form($type = NULL) {
       '#default_value' => $type->type,
       '#maxlength' => 32,
       '#required' => TRUE,
-      '#description' => t('The machine-readable name of this content type. This text will be used for constructing the URL of the <em>create content</em> page for this content type. This name may consist of only of lowercase letters, numbers, and underscores. Dashes are not allowed. Underscores will be converted into dashes when constructing the URL of the <em>create content</em> page. The name must be unique to this content type.'),
+      '#description' => t('The machine-readable name of this content type. This text will be used for constructing the URL of the <em>create content</em> page for this content type. This name may consist of only of lowercase letters, numbers, and underscores. Dashes are not allowed. Underscores will be converted into dashes when constructing the URL of the <em>create content</em> page. This name must be unique to this content type.'),
     );
   }
   else {
