@@ -63,7 +63,7 @@ function book_link($type, $node = NULL, $teaser = FALSE) {
 
   if ($type == 'node' && isset($node->parent)) {
     if (!$teaser) {
-      if (book_access('create', $node)) {
+      if (book_access('create', $node) && $node->status == 1) {
         $links['book_add_child'] = array(
           'title' => t('Add child page'),
           'href' => "node/add/book/parent/$node->nid"
