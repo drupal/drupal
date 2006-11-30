@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.327 2006/11/28 13:15:31 dries Exp $
+// $Id: taxonomy.module,v 1.328 2006/11/30 07:05:57 unconed Exp $
 
 /**
  * @file
@@ -151,7 +151,7 @@ function taxonomy_overview_vocabularies() {
     );
   }
   if (empty($rows)) {
-    $rows[] = array(array('data' => t('No categories available.'), 'colspan' => '5', 'class' => 'message'));
+    $rows[] = array(array('data' => t('No categories available.'), 'colspan' => '5'));
   }
   $header = array(t('Name'), t('Type'), array('data' => t('Operations'), 'colspan' => '3'));
 
