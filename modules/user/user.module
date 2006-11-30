@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.721 2006/11/26 02:20:01 drumm Exp $
+// $Id: user.module,v 1.722 2006/11/30 01:35:46 drumm Exp $
 
 /**
  * @file
@@ -2184,32 +2184,55 @@ function user_user_operations() {
  * Callback function for admin mass unblocking users.
  */
 function user_user_operations_unblock($accounts) {
-  db_query('UPDATE {users} SET status = 1 WHERE uid IN(%s)', implode(',', $accounts));
+  foreach ($accounts as $uid) {
+    $account = user_load(array('uid' => (int)$uid));
+    // Skip unblocking user if they are already unblocked.
+    if ($account !== FALSE && $account->status == 0) {
+      user_save($account, array('status' => 1));
+    }
+  }
 }
 
 /**
  * Callback function for admin mass blocking users.
  */
 function user_user_operations_block($accounts) {
-  db_query('UPDATE {users} SET status = 0 WHERE uid IN(%s)', implode(',', $accounts));
+  foreach ($accounts as $uid) {
+    $account = user_load(array('uid' => (int)$uid));
+    // Skip blocking user if they are already blocked.
+    if ($account !== FALSE && $account->status == 1) {
+      user_save($account, array('status' => 0));
+    }
+  }
 }
 
 /**
  * Callback function for admin mass adding/deleting a user role.
  */
 function user_multiple_role_edit($accounts, $operation, $rid) {
+  // The role name is not necessary as user_save() will reload the user
+  // object, but some modules' hook_user() may look at this first.
+  $role_name = db_result(db_query('SELECT name FROM {role} WHERE rid = %d', $rid));
+
   switch ($operation) {
     case 'add_role':
       foreach ($accounts as $uid) {
+        $account = user_load(array('uid' => (int)$uid));
         // Skip adding the role to the user if they already have it.
-        if (!db_result(db_query('SELECT uid FROM {users_roles} WHERE uid = %d AND rid = %d', $uid, $rid))) {
-          db_query('INSERT INTO {users_roles} VALUES (%d, %d)', $uid, $rid);
+        if ($account !== FALSE && !isset($account->roles[$rid])) {
+          $roles = $account->roles + array($rid => $role_name);
+          user_save($account, array('roles' => $roles));
         }
       }
       break;
     case 'remove_role':
       foreach ($accounts as $uid) {
-        db_query('DELETE FROM {users_roles} WHERE rid = %d AND uid IN(%s)', $rid, implode(',', $accounts));
+        $account = user_load(array('uid' => (int)$uid));
+        // Skip removing the role from the user if they already don't have it.
+        if ($account !== FALSE && isset($account->roles[$rid])) {
+          $roles = array_diff($account->roles, array($rid => $role_name));
+          user_save($account, array('roles' => $roles));
+        }
       }
       break;
   }
