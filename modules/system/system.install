@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.49 2006/11/28 20:52:51 drumm Exp $
+// $Id: system.install,v 1.50 2006/11/30 02:19:38 drumm Exp $
 
 define('DRUPAL_MINIMUM_PHP',    '4.3.3');
 define('DRUPAL_MINIMUM_MYSQL',  '3.23.17'); // If using MySQL
@@ -236,7 +236,8 @@ function system_install() {
         filepath varchar(255) NOT NULL default '',
         filemime varchar(255) NOT NULL default '',
         filesize int unsigned NOT NULL default 0,
-        PRIMARY KEY (fid)
+        PRIMARY KEY (fid),
+        KEY nid (nid)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {file_revisions} (
@@ -702,6 +703,7 @@ function system_install() {
         filesize int_unsigned NOT NULL default 0,
         PRIMARY KEY (fid)
       )");
+      db_query("CREATE INDEX {files}_nid_idx ON {files} (nid)");
 
       db_query("CREATE TABLE {file_revisions} (
         fid int_unsigned NOT NULL default 0,
@@ -3296,9 +3298,11 @@ function system_update_1012() {
     case 'mysql':
     case 'mysqli':
       $ret[] = update_sql("ALTER TABLE {file_revisions} ADD INDEX(vid)");
+      $ret[] = update_sql("ALTER TABLE {files} ADD INDEX(nid)");
       break;
     case 'pgsql':
       $ret[] = update_sql('CREATE INDEX {file_revisions}_vid_idx ON {file_revisions} (vid)');
+      $ret[] = update_sql('CREATE INDEX {files}_nid_idx ON {files} (nid)');
       break;
   }
   return $ret;
