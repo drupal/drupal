@@ -1,5 +1,5 @@
 <?php
-// $Id: color.module,v 1.8 2006/11/25 08:58:35 drumm Exp $
+// $Id: color.module,v 1.9 2006/11/30 17:41:03 unconed Exp $
 
 /**
  * Implementation of hook_form_alter().
@@ -359,6 +359,9 @@ function _color_render_images($theme, &$info, &$paths, $palette) {
   // Blend over template
   imagecopy($target, $source, 0, 0, 0, 0, $width, $height);
 
+  // Clean up template image
+  imagedestroy($source);
+
   // Cut out slices
   foreach ($info['slices'] as $file => $coord) {
     list($x, $y, $width, $height) = $coord;
@@ -385,8 +388,7 @@ function _color_render_images($theme, &$info, &$paths, $palette) {
     $paths['map'][$file] = $base;
   }
 
-  // Clean up
-  imagedestroy($source);
+  // Clean up target buffer
   imagedestroy($target);
 }
 
