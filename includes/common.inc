@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.592 2006/11/29 06:03:56 drumm Exp $
+// $Id: common.inc,v 1.593 2006/11/30 08:13:31 unconed Exp $
 
 /**
  * @file
@@ -282,10 +282,20 @@ function drupal_get_destination() {
  *   The query string component, if any.
  * @param $fragment
  *   The destination fragment identifier (named anchor).
- *
+ * @param $http_response_code
+ *   Valid values for an actual "goto" as per RFC 2616 section 10.3 are:
+ *   - 301 Moved Permanently (the recommended value for most redirects)
+ *   - 302 Found (default in Drupal and PHP, sometimes used for spamming search
+ *         engines)
+ *   - 303 See Other
+ *   - 304 Not Modified
+ *   - 305 Use Proxy
+ *   - 307 Temporary Redirect (an alternative to "503 Site Down for Maintenance")
+ *   Note: Other values are defined by RFC 2616, but are rarely used and poorly
+ *         supported.
  * @see drupal_get_destination()
  */
-function drupal_goto($path = '', $query = NULL, $fragment = NULL) {
+function drupal_goto($path = '', $query = NULL, $fragment = NULL, $http_response_code = 302) {
   if (isset($_REQUEST['destination'])) {
     extract(parse_url(urldecode($_REQUEST['destination'])));
   }
@@ -298,7 +308,7 @@ function drupal_goto($path = '', $query = NULL, $fragment = NULL) {
   // Before the redirect, allow modules to react to the end of the page request.
   module_invoke_all('exit', $url);
 
-  header('Location: '. $url);
+  header('Location: '. $url, TRUE, $http_response_code);
 
   // The "Location" header sends a REDIRECT status code to the http
   // daemon. In some cases this can go wrong, so we make sure none
