@@ -1675,7 +1675,7 @@ function _user_admin_access_form($edit) {
   $form['status'] = array(
     '#type' => 'radios',
     '#title' => t('Access type'),
-    '#default_value' => 0,
+    '#default_value' => $edit['status'],
     '#options' => array('1' => t('Allow'), '0' => t('Deny')),
   );
   $type_options = array('user' => t('Username'), 'mail' => t('E-mail'), 'host' => t('Host'));
