@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.722 2006/11/30 01:35:46 drumm Exp $
+// $Id: user.module,v 1.723 2006/11/30 01:37:56 drumm Exp $
 
 /**
  * @file
@@ -2052,7 +2052,7 @@ function theme_user_admin_account($form) {
     t('Operations')
   );
 
-  $output .= drupal_render($form['options']);
+  $output = drupal_render($form['options']);
   if (isset($form['name']) && is_array($form['name'])) {
     foreach (element_children($form['name']) as $key) {
       $rows[] = array(
@@ -2317,7 +2317,7 @@ function user_admin($callback_arg = '') {
         $output = drupal_get_form('user_multiple_delete_confirm');
       }
       else {
-        $output .= drupal_get_form('user_filter_form');
+        $output = drupal_get_form('user_filter_form');
         $output .= drupal_get_form('user_admin_account');
       }
   }
@@ -2559,7 +2559,7 @@ function user_filter_form() {
  * Theme user administration filter form.
  */
 function theme_user_filter_form($form) {
-  $output .= '<div id="user-admin-filter">';
+  $output = '<div id="user-admin-filter">';
   $output .= drupal_render($form['filters']);
   $output .= '</div>';
   $output .= drupal_render($form);
@@ -2570,7 +2570,7 @@ function theme_user_filter_form($form) {
  * Theme user administraton filter selector.
  */
 function theme_user_filters($form) {
-  $output .= '<ul class="clear-block">';
+  $output = '<ul class="clear-block">';
   if (sizeof($form['current'])) {
     foreach (element_children($form['current']) as $key) {
       $output .= '<li>'. drupal_render($form['current'][$key]) .'</li>';
