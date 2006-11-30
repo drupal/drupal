@@ -151,7 +151,7 @@ function taxonomy_overview_vocabularies() {
     );
   }
   if (empty($rows)) {
-    $rows[] = array(array('data' => t('No categories available.'), 'colspan' => '5', 'class' => 'message'));
+    $rows[] = array(array('data' => t('No categories available.'), 'colspan' => '5'));
   }
   $header = array(t('Name'), t('Type'), array('data' => t('Operations'), 'colspan' => '3'));
 
