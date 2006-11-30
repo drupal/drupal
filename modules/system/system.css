@@ -1,4 +1,4 @@
-/* $Id: system.css,v 1.15 2006/11/21 08:16:39 unconed Exp $ */
+/* $Id: system.css,v 1.16 2006/11/30 01:55:31 drumm Exp $ */
 
 /*
 ** HTML elements
@@ -153,6 +153,54 @@ dl.multiselect .form-item {
 */
 .container-inline div, .container-inline label {
   display: inline;
+}
+
+/*
+** Menus
+*/
+ul.menu {
+  list-style: none;
+  border: none;
+  text-align:left;
+}
+ul.menu li {
+  margin: 0 0 0 0.5em;
+}
+li.expanded {
+  list-style-type: circle;
+  list-style-image: url(../../misc/menu-expanded.png);
+  padding: 0.2em 0.5em 0 0;
+  margin: 0;
+}
+li.collapsed {
+  list-style-type: disc;
+  list-style-image: url(../../misc/menu-collapsed.png);
+  padding: 0.2em 0.5em 0 0;
+  margin: 0;
+}
+li.leaf {
+  list-style-type: square;
+  list-style-image: url(../../misc/menu-leaf.png);
+  padding: 0.2em 0.5em 0 0;
+  margin: 0;
+}
+li a.active {
+  color: #000;
+}
+td.menu-disabled {
+  background: #ccc;
+}
+ul.links {
+  margin: 0;
+  padding: 0;
+}
+ul.links.inline {
+  display: inline;
+}
+ul.links li {
+  display: inline;
+  list-style-type: none;
+  padding: 0 0.5em;
 }
 
 /*

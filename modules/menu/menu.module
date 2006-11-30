@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.98 2006/11/29 23:16:51 drumm Exp $
+// $Id: menu.module,v 1.99 2006/11/30 01:55:31 drumm Exp $
 
 /**
  * @file
@@ -104,11 +104,6 @@ function menu_menu($may_cache) {
       'type' => MENU_LOCAL_TASK,
       'weight' => 5,
     );
-  }
-  else {
-    // Add the CSS for this module
-    // We put this in !$may_cache so it's only added once per request
-    drupal_add_css(drupal_get_path('module', 'menu') .'/menu.css');
   }
 
   return $items;
