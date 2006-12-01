@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.203 2006/11/21 20:14:18 dries Exp $
+// $Id: search.module,v 1.204 2006/12/01 22:47:53 unconed Exp $
 
 /**
  * @file
@@ -179,11 +179,6 @@ function search_menu($may_cache) {
           'type' => MENU_LOCAL_TASK);
       }
     }
-  }
-  else {
-    // Add the CSS for this module
-    // We put this in !$may_cache so it's only added once per request
-    drupal_add_css(drupal_get_path('module', 'search') .'/search.css');
   }
 
   return $items;
@@ -1080,6 +1075,9 @@ function theme_search_block_form($form) {
  * Perform a standard search on the given keys, and return the formatted results.
  */
 function search_data($keys = NULL, $type = 'node') {
+  // Add CSS
+  drupal_add_css(drupal_get_path('module', 'search') .'/search.css');
+
   if (isset($keys)) {
     if (module_hook($type, 'search')) {
       $results = module_invoke($type, 'search', 'search', $keys);

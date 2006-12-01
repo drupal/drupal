@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.153 2006/11/26 02:20:00 drumm Exp $
+// $Id: locale.module,v 1.154 2006/12/01 22:47:53 unconed Exp $
 
 /**
  * @file
@@ -101,10 +101,6 @@ function locale_menu($may_cache) {
       'type' => MENU_CALLBACK);
   }
   else {
-    // Add the CSS for this module
-    // We put this in !$may_cache so it's only added once per request
-    drupal_add_css(drupal_get_path('module', 'locale') .'/locale.css');
-
     if (is_numeric(arg(5))) {
       // String related callbacks
       $items[] = array('path' => 'admin/settings/locale/string/edit/'. arg(5),
