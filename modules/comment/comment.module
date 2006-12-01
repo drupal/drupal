@@ -178,7 +178,9 @@ function theme_comment_block() {
   while ($comment = db_fetch_object($result)) {
     $items[] = l($comment->subject, 'node/'. $comment->nid, NULL, NULL, 'comment-'. $comment->cid) .'<br />'. t('@time ago', array('@time' => format_interval(time() - $comment->timestamp)));
   }
-  return theme('item_list', $items);
+  if ($items) {
+    return theme('item_list', $items);
+  }
 }
 
 /**
