@@ -212,8 +212,7 @@ function book_submit(&$node) {
   if (!user_access('administer nodes')) {
     $node->weight = 0;
     $node->revision = 1;
-    $book->uid = $user->uid;
-    $book->name = $user->uid ? $user->name : '';
+    $node->uid = $user->uid;
   }
 }
 
