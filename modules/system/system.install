@@ -106,6 +106,29 @@ function system_requirements($phase) {
     $requirements['cron']['title'] = $t('Cron maintenance tasks');
   }
 
+  // See if updates are available in update.php.
+  if ($phase == 'runtime') {
+    $requirements['update'] = array(
+      'title' => $t('Database schema'),
+      'severity' => REQUIREMENT_OK,
+      'value' => $t('Up to date'),
+    );
+
+    // Check installed modules.
+    foreach (module_list() as $module) {
+      $updates = drupal_get_schema_versions($module);
+      if ($updates !== FALSE) {
+        $default = drupal_get_installed_schema_version($module);
+        if (max($updates) > $default) {
+          $requirements['update']['severity'] = REQUIREMENT_ERROR;
+          $requirements['update']['value'] = $t('Out of date');
+          $requirements['update']['description'] = $t('Some modules have database schema updates to install. You should run the <a href="@update">database update script</a> immediately.', array('@update' => base_path() .'update.php'));
+          break;
+        }
+      }
+    }
+  }
+
   // Test Unicode library
   include_once './includes/unicode.inc';
   $requirements = array_merge($requirements, unicode_requirements());
