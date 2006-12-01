@@ -51,9 +51,10 @@ function watchdog_menu($may_cache) {
       'type' => MENU_CALLBACK);
   }
   else {
-    // Add the CSS for this module
-    // We put this in !$may_cache so it's only added once per request
-    drupal_add_css(drupal_get_path('module', 'watchdog') .'/watchdog.css');
+    if (arg(0) == 'admin' && arg(1) == 'logs') {
+      // Add the CSS for this module
+      drupal_add_css(drupal_get_path('module', 'watchdog') .'/watchdog.css');
+    }
   }
 
   return $items;
