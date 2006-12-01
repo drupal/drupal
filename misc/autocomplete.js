@@ -1,51 +1,76 @@
 // $Id$
 
+// Global Killswitch
+if (isJsEnabled()) {
+  addLoadEvent(autocompleteAutoAttach);
+}
+
 /**
  * Attaches the autocomplete behaviour to all required fields
  */
-Drupal.autocompleteAutoAttach = function () {
+function autocompleteAutoAttach() {
   var acdb = [];
-  $('input.autocomplete').each(function () {
-    var uri = this.value;
-    if (!acdb[uri]) {
-      acdb[uri] = new Drupal.ACDB(uri);
+  var inputs = document.getElementsByTagName('input');
+  for (i = 0; input = inputs[i]; i++) {
+    if (input && hasClass(input, 'autocomplete')) {
+      uri = input.value;
+      if (!acdb[uri]) {
+        acdb[uri] = new ACDB(uri);
+      }
+      input = $(input.id.substr(0, input.id.length - 13));
+      input.setAttribute('autocomplete', 'OFF');
+      addSubmitEvent(input.form, autocompleteSubmit);
+      new jsAC(input, acdb[uri]);
     }
-    var input = $('#' + this.id.substr(0, this.id.length - 13))
-      .attr('autocomplete', 'OFF')[0];
-    $(input.form).submit(Drupal.autocompleteSubmit);
-    new Drupal.jsAC(input, acdb[uri]);
-  });
+  }
 }
 
 /**
  * Prevents the form from submitting if the suggestions popup is open
- * and closes the suggestions popup when doing so.
  */
-Drupal.autocompleteSubmit = function () {
-  return $('#autocomplete').each(function () {
-    this.owner.hidePopup();
-  }).size() == 0;
+function autocompleteSubmit() {
+  var popup = document.getElementById('autocomplete');
+  if (popup) {
+    popup.owner.hidePopup();
+    return false;
+  }
+  return true;
 }
+
 
 /**
  * An AutoComplete object
  */
-Drupal.jsAC = function (input, db) {
+function jsAC(input, db) {
   var ac = this;
   this.input = input;
   this.db = db;
-
-  $(this.input)
-    .keydown(function (event) { return ac.onkeydown(this, event); })
-    .keyup(function (event) { ac.onkeyup(this, event) })
-    .blur(function () { ac.hidePopup(); ac.db.cancel(); });
-
+  this.input.onkeydown = function (event) { return ac.onkeydown(this, event); };
+  this.input.onkeyup = function (event) { ac.onkeyup(this, event) };
+  this.input.onblur = function () { ac.hidePopup(); ac.db.cancel(); };
+  this.popup = document.createElement('div');
+  this.popup.id = 'autocomplete';
+  this.popup.owner = this;
 };
+
+/**
+ * Hides the autocomplete suggestions
+ */
+jsAC.prototype.hidePopup = function (keycode) {
+  if (this.selected && ((keycode && keycode != 46 && keycode != 8 && keycode != 27) || !keycode)) {
+    this.input.value = this.selected.autocompleteValue;
+  }
+  if (this.popup.parentNode && this.popup.parentNode.tagName) {
+    removeNode(this.popup);
+  }
+  this.selected = false;
+}
+
 
 /**
  * Handler for the "keydown" event
  */
-Drupal.jsAC.prototype.onkeydown = function (input, e) {
+jsAC.prototype.onkeydown = function (input, e) {
   if (!e) {
     e = window.event;
   }
@@ -64,7 +89,7 @@ Drupal.jsAC.prototype.onkeydown = function (input, e) {
 /**
  * Handler for the "keyup" event
  */
-Drupal.jsAC.prototype.onkeyup = function (input, e) {
+jsAC.prototype.onkeyup = function (input, e) {
   if (!e) {
     e = window.event;
   }
@@ -101,21 +126,21 @@ Drupal.jsAC.prototype.onkeyup = function (input, e) {
 /**
  * Puts the currently highlighted suggestion into the autocomplete field
  */
-Drupal.jsAC.prototype.select = function (node) {
+jsAC.prototype.select = function (node) {
   this.input.value = node.autocompleteValue;
 }
 
 /**
  * Highlights the next suggestion
  */
-Drupal.jsAC.prototype.selectDown = function () {
+jsAC.prototype.selectDown = function () {
   if (this.selected && this.selected.nextSibling) {
     this.highlight(this.selected.nextSibling);
   }
   else {
-    var lis = $('li', this.popup);
-    if (lis.size() > 0) {
-      this.highlight(lis.get(0));
+    var lis = this.popup.getElementsByTagName('li');
+    if (lis.length > 0) {
+      this.highlight(lis[0]);
     }
   }
 }
@@ -123,7 +148,7 @@ Drupal.jsAC.prototype.selectDown = function () {
 /**
  * Highlights the previous suggestion
  */
-Drupal.jsAC.prototype.selectUp = function () {
+jsAC.prototype.selectUp = function () {
   if (this.selected && this.selected.previousSibling) {
     this.highlight(this.selected.previousSibling);
   }
@@ -132,61 +157,30 @@ Drupal.jsAC.prototype.selectUp = function () {
 /**
  * Highlights a suggestion
  */
-Drupal.jsAC.prototype.highlight = function (node) {
-  if (this.selected) {
-    $(this.selected).removeClass('selected');
-  }
-  $(node).addClass('selected');
+jsAC.prototype.highlight = function (node) {
+  removeClass(this.selected, 'selected');
+  addClass(node, 'selected');
   this.selected = node;
 }
 
 /**
  * Unhighlights a suggestion
  */
-Drupal.jsAC.prototype.unhighlight = function (node) {
-  $(node).removeClass('selected');
-  this.selected = false;
-}
-
-/**
- * Hides the autocomplete suggestions
- */
-Drupal.jsAC.prototype.hidePopup = function (keycode) {
-  // Select item if the right key or mousebutton was pressed
-  if (this.selected && ((keycode && keycode != 46 && keycode != 8 && keycode != 27) || !keycode)) {
-    this.input.value = this.selected.autocompleteValue;
-  }
-  // Hide popup
-  var popup = this.popup;
-  if (popup) {
-    this.popup = null;
-    $(popup).fadeOut('fast', function() { $(popup).remove(); });
-  }
+jsAC.prototype.unhighlight = function (node) {
+  removeClass(node, 'selected');
   this.selected = false;
 }
 
 /**
  * Positions the suggestions popup and starts a search
  */
-Drupal.jsAC.prototype.populatePopup = function () {
-  // Show popup
-  if (this.popup) {
-    $(this.popup).remove();
-  }
-  var pos = Drupal.absolutePosition(this.input);
+jsAC.prototype.populatePopup = function () {
+  var ac = this;
+  var pos = absolutePosition(this.input);
   this.selected = false;
-  this.popup = document.createElement('div');
-  this.popup.id = 'autocomplete';
-  this.popup.owner = this;
-  $(this.popup).css({
-    top: (pos.y + this.input.offsetHeight) +'px',
-    left: pos.x +'px',
-    width: (this.input.offsetWidth - 4) +'px',
-    display: 'none'
-  });
-  $('body').append(this.popup);
-
-  // Do search
+  this.popup.style.top   = (pos.y + this.input.offsetHeight) +'px';
+  this.popup.style.left  = pos.x +'px';
+  this.popup.style.width = (this.input.offsetWidth - 4) +'px';
   this.db.owner = this;
   this.db.search(this.input.value);
 }
@@ -194,48 +188,41 @@ Drupal.jsAC.prototype.populatePopup = function () {
 /**
  * Fills the suggestion popup with any matches received
  */
-Drupal.jsAC.prototype.found = function (matches) {
-  // Prepare matches
+jsAC.prototype.found = function (matches) {
+  while (this.popup.hasChildNodes()) {
+    this.popup.removeChild(this.popup.childNodes[0]);
+  }
+  if (!this.popup.parentNode || !this.popup.parentNode.tagName) {
+    document.getElementsByTagName('body')[0].appendChild(this.popup);
+  }
   var ul = document.createElement('ul');
   var ac = this;
+
   for (key in matches) {
     var li = document.createElement('li');
-    $(li)
-      .html('<div>'+ matches[key] +'</div>')
-      .mousedown(function () { ac.select(this); })
-      .mouseover(function () { ac.highlight(this); })
-      .mouseout(function () { ac.unhighlight(this); });
+    var div = document.createElement('div');
+    div.innerHTML = matches[key];
+    li.appendChild(div);
     li.autocompleteValue = key;
-    $(ul).append(li);
+    li.onmousedown = function() { ac.select(this); };
+    li.onmouseover = function() { ac.highlight(this); };
+    li.onmouseout  = function() { ac.unhighlight(this); };
+    ul.appendChild(li);
   }
 
-  // Show popup with matches, if any
   if (ul.childNodes.length > 0) {
-    $(this.popup).empty().append(ul).show();
+    this.popup.appendChild(ul);
   }
   else {
-    $(this.popup).css({visibility: 'hidden'});
     this.hidePopup();
   }
-}
-
-Drupal.jsAC.prototype.setStatus = function (status) {
-  switch (status) {
-    case 'begin':
-      $(this.input).addClass('throbbing');
-      break;
-    case 'cancel':
-    case 'error':
-    case 'found':
-      $(this.input).removeClass('throbbing');
-      break;
-  }
+  removeClass(this.input, 'throbbing');
 }
 
 /**
  * An AutoComplete DataBase object
  */
-Drupal.ACDB = function (uri) {
+function ACDB(uri) {
   this.uri = uri;
   this.delay = 300;
   this.cache = {};
@@ -244,55 +231,46 @@ Drupal.ACDB = function (uri) {
 /**
  * Performs a cached and delayed search
  */
-Drupal.ACDB.prototype.search = function (searchString) {
-  var db = this;
+ACDB.prototype.search = function(searchString) {
   this.searchString = searchString;
-
-  // See if this key has been searched for before
   if (this.cache[searchString]) {
     return this.owner.found(this.cache[searchString]);
   }
-
-  // Initiate delayed search
   if (this.timer) {
     clearTimeout(this.timer);
   }
+  var db = this;
   this.timer = setTimeout(function() {
-    db.owner.setStatus('begin');
-
-    // Ajax GET request for autocompletion
-    $.ajax({
-      type: "GET",
-      url: db.uri +'/'+ Drupal.encodeURIComponent(searchString),
-      success: function (data) {
-        // Parse back result
-        var matches = Drupal.parseJson(data);
-        if (typeof matches['status'] == 'undefined' || matches['status'] != 0) {
-          db.cache[searchString] = matches;
-          // Verify if these are still the matches the user wants to see
-          if (db.searchString == searchString) {
-            db.owner.found(matches);
-          }
-          db.owner.setStatus('found');
-        }
-      },
-      error: function (xmlhttp) {
-        alert('An HTTP error '+ xmlhttp.status +' occured.\n'+ db.uri);
-      }
-    });
+    addClass(db.owner.input, 'throbbing');
+    db.transport = HTTPGet(db.uri +'/'+ encodeURIComponent(searchString), db.receive, db);
   }, this.delay);
+}
+
+/**
+ * HTTP callback function. Passes suggestions to the autocomplete object
+ */
+ACDB.prototype.receive = function(string, xmlhttp, acdb) {
+  // Note: Safari returns 'undefined' status if the request returns no data.
+  if (xmlhttp.status != 200 && typeof xmlhttp.status != 'undefined') {
+    removeClass(acdb.owner.input, 'throbbing');
+    return alert('An HTTP error '+ xmlhttp.status +' occured.\n'+ acdb.uri);
+  }
+  // Parse back result
+  var matches = parseJson(string);
+  if (typeof matches['status'] == 'undefined' || matches['status'] != 0) {
+    acdb.cache[acdb.searchString] = matches;
+    acdb.owner.found(matches);
+  }
 }
 
 /**
  * Cancels the current autocomplete request
  */
-Drupal.ACDB.prototype.cancel = function() {
-  if (this.owner) this.owner.setStatus('cancel');
+ACDB.prototype.cancel = function() {
+  if (this.owner) removeClass(this.owner.input, 'throbbing');
   if (this.timer) clearTimeout(this.timer);
-  this.searchString = '';
-}
-
-// Global Killswitch
-if (Drupal.jsEnabled) {
-  $(document).ready(Drupal.autocompleteAutoAttach);
+  if (this.transport) {
+    this.transport.onreadystatechange = function() {};
+    this.transport.abort();
+  }
 }
