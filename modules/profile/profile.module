@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.181 2006/12/01 22:47:53 unconed Exp $
+// $Id: profile.module,v 1.182 2006/12/01 23:17:26 unconed Exp $
 
 /**
  * @file
@@ -79,11 +79,6 @@ function profile_menu($may_cache) {
       'callback' => 'profile_autocomplete',
       'access' => 1,
       'type' => MENU_CALLBACK);
-  }
-  else {
-    // Add the CSS for this module
-    // We put this in !$may_cache so it's only added once per request
-    drupal_add_css(drupal_get_path('module', 'profile') .'/profile.css');
   }
 
   return $items;
