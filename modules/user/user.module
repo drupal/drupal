@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.723 2006/11/30 01:37:56 drumm Exp $
+// $Id: user.module,v 1.724 2006/12/01 08:18:53 dries Exp $
 
 /**
  * @file
@@ -1115,7 +1115,7 @@ function user_pass_reset($uid, $timestamp, $hashed_pass, $action = NULL) {
         }
         else {
           $form['message'] = array('#value' => t('<p>This is a one-time login for %user_name and will expire on %expiration_date</p><p>Click on this button to login to the site and change your password.</p>', array('%user_name' => $account->name, '%expiration_date' => format_date($timestamp + $timeout))));
-          $form['help'] = array('#value' => '<p>'. t('This login can be used only once.')) .'</p>';
+          $form['help'] = array('#value' => '<p>'. t('This login can be used only once.') .'</p>');
           $form['submit'] = array('#type' => 'submit', '#value' => t('Log in'));
           $form['#action'] = url("user/reset/$uid/$timestamp/$hashed_pass/login");
           return $form;
