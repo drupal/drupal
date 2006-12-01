@@ -718,7 +718,7 @@ function system_install() {
       db_query("CREATE INDEX {node_comment_statistics}_node_comment_timestamp_idx ON {node_comment_statistics} (last_comment_timestamp)");
 
       db_query("CREATE TABLE {files} (
-        fid int_unsigned NOT NULL default 0,
+        fid serial CHECK (fid >= 0),
         nid int_unsigned NOT NULL default 0,
         filename varchar(255) NOT NULL default '',
         filepath varchar(255) NOT NULL default '',
