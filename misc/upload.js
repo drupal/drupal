@@ -1,116 +1,75 @@
 // $Id$
 
+// Global killswitch
+if (isJsEnabled()) {
+  addLoadEvent(uploadAutoAttach);
+}
+
 /**
  * Attaches the upload behaviour to the upload form.
  */
-Drupal.uploadAutoAttach = function() {
-  $('input.upload').each(function () {
-    var uri = this.value;
-    // Extract the base name from the id (edit-attach-url -> attach).
-    var base = this.id.substring(5, this.id.length - 4);
-    var button = base + '-button';
-    var wrapper = base + '-wrapper';
-    var hide = base + '-hide';
-    var upload = new Drupal.jsUpload(uri, button, wrapper, hide);
-  });
+function uploadAutoAttach() {
+  var inputs = document.getElementsByTagName('input');
+  for (i = 0; input = inputs[i]; i++) {
+    if (input && hasClass(input, 'upload')) {
+      var uri = input.value;
+      // Extract the button ID based on a substring of the input name: edit[foo][bar] -> foo-bar
+      var button = input.name.substr(5, input.name.length - 6).replace('][', '-');
+      var wrapper = button + '-wrapper';
+      var hide = button + '-hide';
+      var upload = new jsUpload(uri, button, wrapper, hide);
+    }
+  }
 }
 
 /**
  * JS upload object.
  */
-Drupal.jsUpload = function(uri, button, wrapper, hide) {
-  // Note: these elements are replaced after an upload, so we re-select them
-  // everytime they are needed.
-  this.button = '#'+ button;
-  this.wrapper = '#'+ wrapper;
-  this.hide = '#'+ hide;
-  Drupal.redirectFormButton(uri, $(this.button).get(0), this);
+function jsUpload(uri, button, wrapper, hide) {
+  this.button = button;
+  this.wrapper = wrapper;
+  this.hide = hide;
+  redirectFormButton(uri, $(button), this);
 }
 
 /**
  * Handler for the form redirection submission.
  */
-Drupal.jsUpload.prototype.onsubmit = function () {
+jsUpload.prototype.onsubmit = function () {
+  var hide = $(this.hide);
   // Insert progressbar and stretch to take the same space.
-  this.progress = new Drupal.progressBar('uploadprogress');
+  this.progress = new progressBar('uploadprogress');
   this.progress.setProgress(-1, 'Uploading file');
-
-  var hide = this.hide;
-  var el = this.progress.element;
-  var offset = $(hide).get(0).offsetHeight;
-  $(el).css({
-    width: '28em',
-    height: offset +'px',
-    paddingTop: '10px',
-    display: 'none'
-  });
-  $(hide).css('position', 'absolute');
-
-  $(hide).after(el);
-  $(el).fadeIn('slow');
-  $(hide).fadeOut('slow');
+  this.progress.element.style.width = '28em';
+  this.progress.element.style.height = hide.offsetHeight +'px';
+  hide.parentNode.insertBefore(this.progress.element, hide);
+  // Hide file form (cannot use display: none, this mysteriously aborts form
+  // submission in Konqueror)
+  hide.style.position = 'absolute';
+  hide.style.left = '-2000px';
 }
 
 /**
  * Handler for the form redirection completion.
  */
-Drupal.jsUpload.prototype.oncomplete = function (data) {
-  // Remove old form
-  Drupal.freezeHeight(); // Avoid unnecessary scrolling
-  $(this.wrapper).html('');
-
-  // Place HTML into temporary div
-  var div = document.createElement('div');
-  $(div).html(data);
-
-  // If uploading the first attachment fade in everything
-  if ($('tr', div).size() == 2) {
-    // Replace form and re-attach behaviour
-    $(div).hide();
-    $(this.wrapper).append(div);
-    $(div).fadeIn('slow');
-    Drupal.uploadAutoAttach();
-  }
-  // Else fade in only the last table row
-  else {
-    // Hide form and last table row
-    $('table tr:last-of-type td', div).hide();
-
-    // Note: workaround because jQuery's #id selector does not work outside of 'document'
-    // Should be: $(this.hide, div).hide();
-    var hide = this.hide;
-    $('div', div).each(function() {
-      if (('#'+ this.id) == hide) {
-        this.style.display = 'none';
-      }
-    });
-
-    // Replace form, fade in items and re-attach behaviour
-    $(this.wrapper).append(div);
-    $('table tr:last-of-type td', div).fadeIn('slow');
-    $(this.hide, div).fadeIn('slow');
-    Drupal.uploadAutoAttach();
-  }
-  Drupal.unfreezeHeight();
+jsUpload.prototype.oncomplete = function (data) {
+  // Remove progressbar
+  removeNode(this.progress.element);
+  this.progress = null;
+  // Replace form and re-attach behaviour
+  $(this.wrapper).innerHTML = data;
+  uploadAutoAttach();
 }
 
 /**
  * Handler for the form redirection error.
  */
-Drupal.jsUpload.prototype.onerror = function (error) {
+jsUpload.prototype.onerror = function (error) {
   alert('An error occurred:\n\n'+ error);
   // Remove progressbar
-  $(this.progress.element).remove();
+  removeNode(this.progress.element);
   this.progress = null;
   // Undo hide
-  $(this.hide).css({
-    position: 'static',
-    left: '0px'
-  });
-}
-
-
-// Global killswitch
-if (Drupal.jsEnabled) {
-  $(document).ready(Drupal.uploadAutoAttach);
+  $(this.hide).style.position = 'static';
+  $(this.hide).style.left = '0px';
 }
