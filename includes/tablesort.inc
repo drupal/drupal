@@ -66,7 +66,12 @@ function tablesort_header($cell, $header, $ts) {
     $title = t('sort by @s', array('@s' => $cell['data']));
     if ($cell['data'] == $ts['name']) {
       $ts['sort'] = (($ts['sort'] == 'asc') ? 'desc' : 'asc');
-      $cell['class'] = 'active';
+      if (isset($cell['class'])) {
+        $cell['class'] .= ' active';
+      }
+      else {
+        $cell['class'] = 'active';
+      }
       $image = theme('tablesort_indicator', $ts['sort']);
     }
     else {
