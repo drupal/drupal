@@ -1,5 +1,5 @@
 <?php
-// $Id: throttle.module,v 1.69 2006/11/21 20:14:19 dries Exp $
+// $Id: throttle.module,v 1.70 2006/12/04 10:43:34 dries Exp $
 
 /**
  * @file
@@ -127,7 +127,7 @@ function throttle_help($section) {
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@throttle">Throttle page</a>.', array('@throttle' => 'http://drupal.org/handbook/modules/throttle/')) .'</p>';
       return $output;
     case 'admin/settings/throttle':
-      return t('If your site gets linked to by a popular website, or otherwise comes under a "Denial of Service" (DoS) attack, your webserver might become overwhelmed. This module provides a congestion control throttling mechanism for automatically detecting a surge in incoming traffic. This mechanism is utilized by other Drupal modules to automatically optimize their performance by temporarily disabling CPU-intensive functionality.');
+      return '<p>'. t('If your site gets linked to by a popular website, or otherwise comes under a "Denial of Service" (DoS) attack, your webserver might become overwhelmed. This module provides a congestion control throttling mechanism for automatically detecting a surge in incoming traffic. This mechanism is utilized by other Drupal modules to automatically optimize their performance by temporarily disabling CPU-intensive functionality.') .'</p>';
   }
 }
 
