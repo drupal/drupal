@@ -1,5 +1,5 @@
 <?php
-// $Id: color.module,v 1.9 2006/11/30 17:41:03 unconed Exp $
+// $Id: color.module,v 1.10 2006/12/04 22:52:27 unconed Exp $
 
 /**
  * Implementation of hook_form_alter().
@@ -335,13 +335,13 @@ function _color_import_stylesheet($matches) {
  */
 function _color_render_images($theme, &$info, &$paths, $palette) {
 
-  // Prepare template image
+  // Prepare template image.
   $source = $paths['source'] .'/'. $info['base_image'];
   $source = imagecreatefrompng($source);
-
-  // Prepare target buffer
   $width = imagesx($source);
   $height = imagesy($source);
+
+  // Prepare target buffer.
   $target = imagecreatetruecolor($width, $height);
   imagealphablending($target, true);
 
@@ -350,25 +350,25 @@ function _color_render_images($theme, &$info, &$paths, $palette) {
     imagefilledrectangle($target, $fill[0], $fill[1], $fill[0] + $fill[2], $fill[1] + $fill[3], _color_gd($target, $palette[$color]));
   }
 
-  // Render gradient
+  // Render gradient.
   for ($y = 0; $y < $info['gradient'][3]; ++$y) {
     $color = _color_blend($target, $palette['top'], $palette['bottom'], $y / ($info['gradient'][3] - 1));
     imagefilledrectangle($target, $info['gradient'][0], $info['gradient'][1] + $y, $info['gradient'][2], $info['gradient'][1] + $y + 1, $color);
   }
 
-  // Blend over template
+  // Blend over template.
   imagecopy($target, $source, 0, 0, 0, 0, $width, $height);
 
-  // Clean up template image
+  // Clean up template image.
   imagedestroy($source);
 
-  // Cut out slices
+  // Cut out slices.
   foreach ($info['slices'] as $file => $coord) {
     list($x, $y, $width, $height) = $coord;
     $base = basename($file);
     $image = $paths['target'] . $base;
 
-    // Cut out slice
+    // Cut out slice.
     if ($file == 'screenshot.png') {
       $slice = imagecreatetruecolor(150, 90);
       imagecopyresampled($slice, $target, 0, 0, $x, $y, 150, 90, $width, $height);
@@ -379,7 +379,7 @@ function _color_render_images($theme, &$info, &$paths, $palette) {
       imagecopy($slice, $target, 0, 0, $x, $y, $width, $height);
     }
 
-    // Save image
+    // Save image.
     imagepng($slice, $image);
     imagedestroy($slice);
     $paths['files'][] = $image;
@@ -388,7 +388,7 @@ function _color_render_images($theme, &$info, &$paths, $palette) {
     $paths['map'][$file] = $base;
   }
 
-  // Clean up target buffer
+  // Clean up target buffer.
   imagedestroy($target);
 }
 
