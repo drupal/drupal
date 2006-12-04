@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.740 2006/11/28 03:20:08 drumm Exp $
+// $Id: node.module,v 1.741 2006/12/04 10:53:37 dries Exp $
 
 /**
  * @file
@@ -1156,7 +1156,7 @@ function node_menu($may_cache) {
           'type' => MENU_LOCAL_TASK);
         $items[] = array('path' => 'node/'. arg(1) .'/delete', 'title' => t('Delete'),
           'callback' => 'drupal_get_form',
-          'callback arguments' => array('node_delete_confirm'),
+          'callback arguments' => array('node_delete_confirm', $node),
           'access' => node_access('delete', $node),
           'weight' => 1,
           'type' => MENU_CALLBACK);
@@ -2212,20 +2212,14 @@ function node_form_submit($form_id, $form_values) {
 /**
  * Menu callback -- ask for confirmation of node deletion
  */
-function node_delete_confirm() {
-  $edit = $_POST;
-  $edit['nid'] = $edit['nid'] ? $edit['nid'] : arg(1);
-  $node = node_load($edit['nid']);
+function node_delete_confirm($node) {
+ $form['nid'] = array('#type' => 'value', '#value' => $node->nid);
 
-  if (node_access('delete', $node)) {
-    $form['nid'] = array('#type' => 'value', '#value' => $node->nid);
-    $output = confirm_form($form,
-                   t('Are you sure you want to delete %title?', array('%title' => $node->title)),
-                   $_GET['destination'] ? $_GET['destination'] : 'node/'. $node->nid, t('This action cannot be undone.'),
-                   t('Delete'), t('Cancel')  );
-  }
-
-  return $output;
+ return confirm_form($form,
+   t('Are you sure you want to delete %title?', array('%title' => $node->title)),
+   $_GET['destination'] ? $_GET['destination'] : 'node/'. $node->nid,
+   t('This action cannot be undone.'),
+   t('Delete'), t('Cancel'));
 }
 
 /**
