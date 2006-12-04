@@ -1,5 +1,5 @@
 <?php
-// $Id: path.inc,v 1.11 2006/11/26 01:55:37 drumm Exp $
+// $Id: path.inc,v 1.12 2006/12/04 10:48:28 dries Exp $
 
 /**
  * @file
@@ -55,10 +55,12 @@ function drupal_lookup_path($action, $path = '') {
   }
   elseif ($count > 0 && $path != '') {
     if ($action == 'alias') {
-      if (isset($map[$path]) || array_key_exists($path, $map)) {
+      if (isset($map[$path])) {
         return $map[$path];
       }
-      $alias = db_result(db_query("SELECT dst FROM {url_alias} WHERE src = '%s'", $path));
+      if (!$alias = db_result(db_query("SELECT dst FROM {url_alias} WHERE src = '%s'", $path))) {
+        $alias = FALSE;
+      }
       $map[$path] = $alias;
       return $alias;
     }
