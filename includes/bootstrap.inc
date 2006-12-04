@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.132 2006/11/24 10:16:50 dries Exp $
+// $Id: bootstrap.inc,v 1.133 2006/12/04 10:41:19 dries Exp $
 
 /**
  * @file
@@ -731,7 +731,7 @@ function _drupal_bootstrap($phase) {
 
     case DRUPAL_BOOTSTRAP_SESSION:
       require_once './includes/session.inc';
-      session_set_save_handler("sess_open", "sess_close", "sess_read", "sess_write", "sess_destroy", "sess_gc");
+      session_set_save_handler('sess_open', 'sess_close', 'sess_read', 'sess_write', 'sess_destroy_sid', 'sess_gc');
       session_start();
       break;
 

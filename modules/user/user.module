@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.724 2006/12/01 08:18:53 dries Exp $
+// $Id: user.module,v 1.725 2006/12/04 10:41:20 dries Exp $
 
 /**
  * @file
@@ -148,7 +148,7 @@ function user_save($account, $array = array(), $category = 'account') {
 
     // Delete a blocked user's sessions to kick them if they are online.
     if (isset($array['status']) && $array['status'] == 0) {
-      sess_destroy($account->uid);
+      sess_destroy_uid($account->uid);
     }
 
     // Refresh user object
@@ -1014,7 +1014,7 @@ function user_logout() {
   watchdog('user', t('Session closed for %name.', array('%name' => $user->name)));
 
   // Destroy the current session:
-  sess_destroy($user->uid);
+  session_destroy();
   module_invoke_all('user', 'logout', NULL, $user);
 
   // Load the anonymous user
@@ -1444,7 +1444,7 @@ function user_confirm_delete($name, $uid) {
  */
 function user_delete($edit, $uid) {
   $account = user_load(array('uid' => $uid));
-  sess_destroy($uid);
+  sess_destroy_uid($uid);
   db_query('DELETE FROM {users} WHERE uid = %d', $uid);
   db_query('DELETE FROM {users_roles} WHERE uid = %d', $uid);
   db_query('DELETE FROM {authmap} WHERE uid = %d', $uid);

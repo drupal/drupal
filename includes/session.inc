@@ -1,5 +1,5 @@
 <?php
-// $Id: session.inc,v 1.36 2006/11/11 22:41:20 drumm Exp $
+// $Id: session.inc,v 1.37 2006/12/04 10:41:19 dries Exp $
 
 /**
  * @file
@@ -125,13 +125,21 @@ function sess_count($timestamp = 0, $anonymous = true) {
 
 /**
  * Called by PHP session handling with the PHP session ID to end a user's session.
- * Can also be called directly, either with the PHP session ID or another identifier
- * such as uid to end a specific user's session.
+ *
+ * @param  string $sid
+ *   the session id
+ */
+function sess_destroy_sid($sid) {
+  db_query("DELETE FROM {sessions} WHERE sid = '%s'", $sid);
+}
+
+/**
+ * End a specific user's session
  *
  * @param  string $uid
  *   the user id
  */
-function sess_destroy($uid) {
+function sess_destroy_uid($uid) {
   db_query('DELETE FROM {sessions} WHERE uid = %d', $uid);
 }
 
