@@ -800,14 +800,14 @@ html.js fieldset.collapsed legend a {
 }
 
 /**
- * Syndication Block
+ * Syndication icons and block
  */
 #block-node-0 h2 {
   float: left;
   padding-right: 20px;
 }
 
-#block-node-0 img {
+#block-node-0 img, .feed-icon {
   float: right;
   padding-top: 4px;
 }

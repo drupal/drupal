@@ -73,6 +73,7 @@
           <?php if ($messages): print $messages; endif; ?>
           <?php print $content ?>
           <span class="clear"></span>
+          <?php print $feed_icons ?>
           <div id="footer"><?php print $footer_message ?></div>
       </div></div></div></div> <!-- /.left-corner, /.right-corner, /#squeeze, /#center -->
 
