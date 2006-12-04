@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysql.inc,v 1.63 2006/11/21 19:46:10 dries Exp $
+// $Id: database.mysql.inc,v 1.64 2006/12/04 11:06:29 dries Exp $
 
 /**
  * @file
@@ -225,12 +225,13 @@ function db_num_rows($result) {
  * @param $row
  *   The index of the row whose result is needed.
  * @return
- *   The resulting field.
+ *   The resulting field or FALSE.
  */
 function db_result($result, $row = 0) {
   if ($result && mysql_num_rows($result) > $row) {
     return mysql_result($result, $row);
   }
+  return FALSE;
 }
 
 /**
