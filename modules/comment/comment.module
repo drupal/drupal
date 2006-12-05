@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.505 2006/12/01 16:50:36 dries Exp $
+// $Id: comment.module,v 1.506 2006/12/05 17:48:03 dries Exp $
 
 /**
  * @file
@@ -1677,10 +1677,10 @@ function theme_comment_post_forbidden($nid) {
     }
 
     if (variable_get('user_register', 1)) {
-      return t('<a href="@login">login</a> or <a href="@register">register</a> to post comments', array('@login' => url('user/login', $destination), '@register' => url('user/register', $destination)));
+      return t('<a href="@login">Login</a> or <a href="@register">register</a> to post comments', array('@login' => url('user/login', $destination), '@register' => url('user/register', $destination)));
     }
     else {
-      return t('<a href="@login">login</a> to post comments', array('@login' => url('user/login', $destination)));
+      return t('<a href="@login">Login</a> to post comments', array('@login' => url('user/login', $destination)));
     }
   }
 }
