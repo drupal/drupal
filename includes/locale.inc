@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.98 2006/12/01 22:47:52 unconed Exp $
+// $Id: locale.inc,v 1.99 2006/12/05 05:47:37 dries Exp $
 
 /**
  * @file
@@ -645,7 +645,7 @@ function _locale_import_read_po($op, $file, $mode = NULL, $lang = NULL) {
 }
 
 /**
- * Sets an error message occured during locale file parsing.
+ * Sets an error message occurred during locale file parsing.
  *
  * @param $message
  *   The message to be translated

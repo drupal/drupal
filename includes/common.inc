@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.594 2006/12/05 05:45:05 dries Exp $
+// $Id: common.inc,v 1.595 2006/12/05 05:47:37 dries Exp $
 
 /**
  * @file
@@ -1752,7 +1752,7 @@ function page_set_cache() {
  * More information in the <a href="http://php.net/manual/en/function.mail.php">
  * PHP function reference for mail()</a>
  * @param $mailkey
- *   A key to indetify the mail sent, for altering
+ *   A key to identify the mail sent, for altering.
  * @param $to
  *   The mail address or addresses where the message will be send to. The
  *   formatting of this string must comply with RFC 2822. Some examples are:
@@ -1830,7 +1830,7 @@ function drupal_mail($mailkey, $to, $subject, $body, $from = NULL, $headers = ar
 }
 
 /**
- * Executs a cron run when called
+ * Executes a cron run when called
  * @return
  * Returns TRUE if ran successfully
  */

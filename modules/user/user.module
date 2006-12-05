@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.725 2006/12/04 10:41:20 dries Exp $
+// $Id: user.module,v 1.726 2006/12/05 05:47:37 dries Exp $
 
 /**
  * @file
@@ -2567,7 +2567,7 @@ function theme_user_filter_form($form) {
 }
 
 /**
- * Theme user administraton filter selector.
+ * Theme user administration filter selector.
  */
 function theme_user_filters($form) {
   $output = '<ul class="clear-block">';

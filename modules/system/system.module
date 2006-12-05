@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.417 2006/12/04 10:43:34 dries Exp $
+// $Id: system.module,v 1.418 2006/12/05 05:47:37 dries Exp $
 
 /**
  * @file
@@ -1422,7 +1422,7 @@ function system_modules_submit($form_id, $form_values) {
   $new_modules = array();
 
   // Merge in disabled active modules since they should be enabled.
-  // They don't appear because disabled checkboxes are not submited
+  // They don't appear because disabled checkboxes are not submitted
   // by browsers.
   $form_values['status'] = array_merge($form_values['status'], $form_values['disabled_modules']);
 

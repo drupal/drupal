@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.161 2006/11/26 22:35:20 drumm Exp $
+// $Id: form.inc,v 1.162 2006/12/05 05:47:37 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -30,7 +30,7 @@
 /**
  * Retrieves a form from a builder function, passes it on for
  * processing, and renders the form or redirects to its destination
- * as appropriate. In multi-step form scenerios, it handles properly
+ * as appropriate. In multi-step form scenarios, it handles properly
  * processing the values using the previous step's form definition,
  * then rendering the requested step for display.
  *
@@ -47,7 +47,7 @@
  *   The rendered form.
  */
 function drupal_get_form($form_id) {
-  // In multi-step form scenerios, the incoming $_POST values are not
+  // In multi-step form scenarios, the incoming $_POST values are not
   // necessarily intended for the current form. We need to build
   // a copy of the previously built form for validation and processing,
   // then go on to the one that was requested if everything works.
@@ -221,7 +221,7 @@ function drupal_retrieve_form($form_id) {
 function drupal_process_form($form_id, &$form) {
   global $form_values, $form_submitted, $user, $form_button_counter;
   static $saved_globals = array();
-  // In some scenerios, this function can be called recursively. Pushing any pre-existing
+  // In some scenarios, this function can be called recursively. Pushing any pre-existing
   // $form_values and form submission data lets us start fresh without clobbering work done
   // in earlier recursive calls.
   array_push($saved_globals, array($form_values, $form_submitted, $form_button_counter));
@@ -274,7 +274,7 @@ function drupal_prepare_form($form_id, &$form) {
     $form['#programmed'] = TRUE;
   }
 
-  // In multi-step form scenerios, this id is used to identify
+  // In multi-step form scenarios, this id is used to identify
   // a unique instance of a particular form for retrieval.
   if (isset($form['#build_id'])) {
     $form['form_build_id'] = array(

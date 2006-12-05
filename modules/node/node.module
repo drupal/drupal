@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.741 2006/12/04 10:53:37 dries Exp $
+// $Id: node.module,v 1.742 2006/12/05 05:47:37 dries Exp $
 
 /**
  * @file
@@ -1383,7 +1383,7 @@ function theme_node_filter_form($form) {
 }
 
 /**
- * Theme node administraton filter selector.
+ * Theme node administration filter selector.
  */
 function theme_node_filters($form) {
   $output .= '<ul class="clear-block">';
@@ -1992,7 +1992,7 @@ function node_form($node, $form_values = NULL) {
   $form['options']['promote']  = array('#type' => 'checkbox', '#title' => t('Promoted to front page'), '#default_value' => $node->promote);
   $form['options']['sticky']   = array('#type' => 'checkbox', '#title' => t('Sticky at top of lists'), '#default_value' => $node->sticky);
   $form['options']['revision'] = array('#type' => 'checkbox', '#title' => t('Create new revision'), '#default_value' => $node->revision);
-  // These values are used when the user has no administrator accesss.
+  // These values are used when the user has no administrator access.
   foreach (array('uid', 'created') as $key) {
     $form[$key] = array('#type' => 'value', '#value' => $node->$key);
   }

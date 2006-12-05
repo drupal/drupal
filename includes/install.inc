@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.28 2006/11/28 03:32:03 drumm Exp $
+// $Id: install.inc,v 1.29 2006/12/05 05:47:37 dries Exp $
 
 define('SCHEMA_UNINSTALLED', -1);
 define('SCHEMA_INSTALLED', 0);
@@ -373,7 +373,7 @@ function drupal_uninstall_module($module) {
  * @param $type
  *   The type of file. Can be file (default), dir, or link.
  * @return
- *   TRUE on success or FALSE on failure. A messsage is set for the latter.
+ *   TRUE on success or FALSE on failure. A message is set for the latter.
  */
 function drupal_verify_install_file($file, $mask = NULL, $type = 'file') {
   $return = TRUE;
