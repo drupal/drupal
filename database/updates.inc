@@ -508,8 +508,8 @@ function system_update_133() {
   if ($GLOBALS['db_type'] == 'mysql') {
     $ret[] = update_sql("CREATE TABLE {contact} (
       subject varchar(255) NOT NULL default '',
-      recipients longtext NOT NULL default '',
-      reply longtext NOT NULL default ''
+      recipients longtext NOT NULL,
+      reply longtext NOT NULL
       )");
     $ret[] = update_sql("ALTER TABLE {users} ADD login int(11) NOT NULL default '0'");
   }

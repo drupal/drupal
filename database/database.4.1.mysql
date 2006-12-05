@@ -133,7 +133,7 @@ CREATE TABLE blocks (
   custom tinyint(2) DEFAULT '0' NOT NULL,
   throttle tinyint(1) DEFAULT '0' NOT NULL,
   visibility tinyint(1) DEFAULT '0' NOT NULL,
-  pages text DEFAULT '' NOT NULL
+  pages text NOT NULL
 )
 DEFAULT CHARACTER SET utf8;
 
@@ -215,8 +215,8 @@ DEFAULT CHARACTER SET utf8;
 CREATE TABLE contact (
   cid int(10) unsigned NOT NULL auto_increment,
   category varchar(255) NOT NULL default '',
-  recipients longtext NOT NULL default '',
-  reply longtext NOT NULL default '',
+  recipients longtext NOT NULL,
+  reply longtext NOT NULL,
   weight tinyint(3) NOT NULL default '0',
   selected tinyint(1) NOT NULL default '0',
   PRIMARY KEY (cid),
@@ -479,9 +479,9 @@ CREATE TABLE node_revisions (
   vid int(10) unsigned NOT NULL,
   uid int(10) NOT NULL default '0',
   title varchar(128) NOT NULL default '',
-  body longtext NOT NULL default '',
-  teaser longtext NOT NULL default '',
-  log longtext NOT NULL default '',
+  body longtext NOT NULL,
+  teaser longtext NOT NULL,
+  log longtext NOT NULL,
   timestamp int(11) NOT NULL default '0',
   format int(4) NOT NULL default '0',
   PRIMARY KEY  (vid),
