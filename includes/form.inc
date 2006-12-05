@@ -85,7 +85,11 @@ function drupal_get_form($form_id, &$form, $callback = NULL) {
   }
   else if ($user->uid) {
     $form['#token'] = $form_id;
-    $form['form_token'] = array('#type' => 'token', '#default_value' => drupal_get_token($form['#token']));
+    $form['form_token'] = array(
+      '#id' => 'edit-'. str_replace('_', '-', $form_id) .'-form-token',
+      '#type' => 'token',
+      '#default_value' => drupal_get_token($form['#token']),
+    );
   }
 
   if (isset($form_id)) {
