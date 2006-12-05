@@ -333,8 +333,9 @@ html.js fieldset.collapsible legend a {
   width: 95%;
 }
 .resizable-textarea .grippie {
-  height: 14px;
-  background: #eee url(../../misc/grippie.png) no-repeat 100% 100%;
+  height: 9px;
+  overflow: hidden;
+  background: #eee url(../../misc/grippie.png) no-repeat center center;
   border: 1px solid #ddd;
   border-top-width: 0;
   cursor: s-resize;
@@ -342,6 +343,7 @@ html.js fieldset.collapsible legend a {
 html.js .resizable-textarea textarea {
   margin-bottom: 0;
   width: 100%;
+  display: block;
 }
 
 /*
