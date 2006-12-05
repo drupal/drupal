@@ -2567,7 +2567,7 @@ function theme_user_filter_form($form) {
 }
 
 /**
- * Theme user administraton filter selector.
+ * Theme user administration filter selector.
  */
 function theme_user_filters($form) {
   $output = '<ul class="clear-block">';

@@ -67,7 +67,7 @@ function node_type_form($type = NULL) {
     $type->locked = FALSE;
   }
 
-  $form['#node_type'] = $type; // Make the type object availabe to implementations of hook_form_alter.
+  $form['#node_type'] = $type; // Make the type object available to implementations of hook_form_alter.
 
   $form['identity'] = array(
     '#type' => 'fieldset',

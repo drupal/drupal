@@ -645,7 +645,7 @@ function _locale_import_read_po($op, $file, $mode = NULL, $lang = NULL) {
 }
 
 /**
- * Sets an error message occured during locale file parsing.
+ * Sets an error message occurred during locale file parsing.
  *
  * @param $message
  *   The message to be translated

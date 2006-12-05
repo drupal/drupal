@@ -1422,7 +1422,7 @@ function system_modules_submit($form_id, $form_values) {
   $new_modules = array();
 
   // Merge in disabled active modules since they should be enabled.
-  // They don't appear because disabled checkboxes are not submited
+  // They don't appear because disabled checkboxes are not submitted
   // by browsers.
   $form_values['status'] = array_merge($form_values['status'], $form_values['disabled_modules']);
 

@@ -69,7 +69,7 @@ INSTALLATION
    Drupal requires access to a database in order to be installed. Your database
    user will need sufficient privileges to run Drupal. Additional information
    about privileges, and instructions to create a database using the command
-   line are avaialable in INSTALL.mysql.txt (for MySQL) or INSTALL.pgsql.txt
+   line are available in INSTALL.mysql.txt (for MySQL) or INSTALL.pgsql.txt
    (for PostgreSQL).
 
    To create a database using PHPMyAdmin or a web-based control panel consult

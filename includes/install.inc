@@ -373,7 +373,7 @@ function drupal_uninstall_module($module) {
  * @param $type
  *   The type of file. Can be file (default), dir, or link.
  * @return
- *   TRUE on success or FALSE on failure. A messsage is set for the latter.
+ *   TRUE on success or FALSE on failure. A message is set for the latter.
  */
 function drupal_verify_install_file($file, $mask = NULL, $type = 'file') {
   $return = TRUE;

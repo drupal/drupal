@@ -540,7 +540,7 @@ function menu_get_active_breadcrumb() {
 
   // We do *not* want to use "variable_get('site_frontpage', 'node)" here
   // as that will create the link '/node'. This is unsightly and creates
-  // a second URL for the hompeage ('/' *and* '/node').
+  // a second URL for the homepage ('/' *and* '/node').
   $links[] = l(t('Home'), '');
 
   $trail = _menu_get_active_trail();
