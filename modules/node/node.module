@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.742 2006/12/05 05:47:37 dries Exp $
+// $Id: node.module,v 1.743 2006/12/05 05:55:04 dries Exp $
 
 /**
  * @file
@@ -1051,7 +1051,7 @@ function node_menu($may_cache) {
 
     $items[] = array(
       'path' => 'admin/content/node',
-      'title' => t('Posts'),
+      'title' => t('Content'),
       'description' => t("View, edit, and delete your site's content."),
       'callback' => 'node_admin_content',
       'access' => user_access('administer nodes')
@@ -1061,8 +1061,8 @@ function node_menu($may_cache) {
       'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
 
     if (module_exists('search')) {
-      $items[] = array('path' => 'admin/content/search', 'title' => t('Search posts'),
-        'description' => t('Search posts by keyword.'),
+      $items[] = array('path' => 'admin/content/search', 'title' => t('Search content'),
+        'description' => t('Search content by keyword.'),
         'callback' => 'node_admin_search',
         'access' => user_access('administer nodes'),
         'type' => MENU_NORMAL_ITEM);
