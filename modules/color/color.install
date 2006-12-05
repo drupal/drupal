@@ -1,5 +1,5 @@
 <?php
-/* $Id: color.install,v 1.1 2006/10/29 15:56:25 unconed Exp $ */
+/* $Id: color.install,v 1.2 2006/12/05 05:49:50 dries Exp $ */
 
 function color_requirements($phase) {
   $requirements = array();
@@ -18,17 +18,17 @@ function color_requirements($phase) {
       }
       else {
         $requirements['gd']['severity'] = REQUIREMENT_ERROR;
-        $requirements['gd']['description'] = t('The GD library for PHP is enabled, but was compiled without PNG support. Please check the <a href="@url">PHP image documentation</a> for information on how to correct this.', array('@url' => 'http://be.php.net/manual/en/ref.image.php'));
+        $requirements['gd']['description'] = t('The GD library for PHP is enabled, but was compiled without PNG support. Please check the <a href="@url">PHP image documentation</a> for information on how to correct this.', array('@url' => 'http://www.php.net/manual/en/ref.image.php'));
       }
     }
     else {
       $requirements['gd'] = array(
         'value' => t('Not installed'),
         'severity' => REQUIREMENT_ERROR,
-        'description' => t('The GD library for PHP is missing or outdated. Please check the <a href="@url">PHP image documentation</a> for information on how to correct this.', array('@url' => 'http://be.php.net/manual/en/ref.image.php')),
+        'description' => t('The GD library for PHP is missing or outdated. Please check the <a href="@url">PHP image documentation</a> for information on how to correct this.', array('@url' => 'http://www.php.net/manual/en/ref.image.php')),
       );
     }
-    $requirements['gd']['title'] = t('GD Library');
+    $requirements['gd']['title'] = t('GD library');
   }
 
   return $requirements;
