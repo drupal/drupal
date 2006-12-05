@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.142 2006/11/28 02:38:28 drumm Exp $
+// $Id: upload.module,v 1.143 2006/12/05 23:10:48 unconed Exp $
 
 /**
  * @file
@@ -377,7 +377,10 @@ function upload_form_alter($form_id, &$form) {
 
       // Make sure necessary directories for upload.module exist and are
       // writable before displaying the attachment form.
-      if (!file_check_directory(file_directory_path(), FILE_CREATE_DIRECTORY) || !file_check_directory(file_directory_temp(), FILE_CREATE_DIRECTORY)) {
+      $path = file_directory_path();
+      $temp = file_directory_temp();
+      // Note: pass by reference
+      if (!file_check_directory($path, FILE_CREATE_DIRECTORY) || !file_check_directory($temp, FILE_CREATE_DIRECTORY)) {
         $form['attachments']['#description'] =  t('File attachments are disabled. The file directories have not been properly configured.');
         if (user_access('administer site configuration')) {
           $form['attachments']['#description'] .= ' '. t('Please visit the <a href="@admin-file-system">file system configuration page</a>.', array('@admin-file-system' => url('admin/settings/file-system')));
