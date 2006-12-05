@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.593 2006/11/30 08:13:31 unconed Exp $
+// $Id: common.inc,v 1.594 2006/12/05 05:45:05 dries Exp $
 
 /**
  * @file
@@ -151,7 +151,7 @@ function drupal_get_headers() {
   return drupal_set_header();
 }
 
-/*
+/**
  * Add a feed URL for the current page.
  *
  * @param $url
