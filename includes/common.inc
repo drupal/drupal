@@ -151,7 +151,7 @@ function drupal_get_headers() {
   return drupal_set_header();
 }
 
-/*
+/**
  * Add a feed URL for the current page.
  *
  * @param $url
