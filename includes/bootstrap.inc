@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.133 2006/12/04 10:41:19 dries Exp $
+// $Id: bootstrap.inc,v 1.134 2006/12/06 16:14:11 dries Exp $
 
 /**
  * @file
@@ -683,9 +683,11 @@ function drupal_anonymous_user($session = '') {
  *     DRUPAL_BOOTSTRAP_CONFIGURATION: initialize configuration.
  *     DRUPAL_BOOTSTRAP_EARLY_PAGE_CACHE: try to call a non-database cache fetch routine.
  *     DRUPAL_BOOTSTRAP_DATABASE: initialize database layer.
+ *     DRUPAL_BOOTSTRAP_ACCESS: identify and reject banned hosts.
  *     DRUPAL_BOOTSTRAP_SESSION: initialize session handling.
  *     DRUPAL_BOOTSTRAP_LATE_PAGE_CACHE: load bootstrap.inc and module.inc, start
  *       the variable system and try to serve a page from the cache.
+ *     DRUPAL_BOOTSTRAP_PATH: set $_GET['q'] to Drupal path of request.
  *     DRUPAL_BOOTSTRAP_FULL: Drupal is fully loaded, validate and fix input data.
  */
 function drupal_bootstrap($phase) {
