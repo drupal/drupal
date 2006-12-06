@@ -1,8 +1,20 @@
 <?php
-// $Id: unicode.inc,v 1.22 2006/12/01 16:47:58 dries Exp $
+// $Id: unicode.inc,v 1.23 2006/12/06 16:15:52 dries Exp $
 
+/**
+ * Indicates an error during check for PHP unicode support.
+ */
 define('UNICODE_ERROR', -1);
+
+/**
+ * Indicates that standard PHP (emulated) unicode support is being used.
+ */
 define('UNICODE_SINGLEBYTE', 0);
+
+/**
+ * Indicates that full unicode support with the PHP mbstring extension is being
+ * used.
+ */
 define('UNICODE_MULTIBYTE', 1);
 
 /**
