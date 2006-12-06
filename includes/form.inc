@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.162 2006/12/05 05:47:37 dries Exp $
+// $Id: form.inc,v 1.163 2006/12/06 15:49:45 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -53,11 +53,11 @@ function drupal_get_form($form_id) {
   // then go on to the one that was requested if everything works.
 
   $form_build_id = md5(mt_rand());
-  if (isset($_POST['form_build_id']) && isset($_SESSION['form'][$_POST['form_build_id']]) && $_POST['form_id'] == $form_id) {
+  if (isset($_POST['form_build_id']) && isset($_SESSION['form'][$_POST['form_build_id']]['args']) && $_POST['form_id'] == $form_id) {
     // There's a previously stored multi-step form. We should handle
     // IT first.
     $stored = TRUE;
-    $args = $_SESSION['form'][$_POST['form_build_id']];
+    $args = $_SESSION['form'][$_POST['form_build_id']]['args'];
     $form = call_user_func_array('drupal_retrieve_form', $args);
   }
   else {
@@ -67,7 +67,9 @@ function drupal_get_form($form_id) {
     $args = func_get_args();
     $form = call_user_func_array('drupal_retrieve_form', $args);
     if (isset($form['#multistep']) && $form['#multistep']) {
-      $_SESSION['form'][$form_build_id] = $args;
+      // Clean up old multistep form session data.
+      _drupal_clean_form_sessions();
+      $_SESSION['form'][$form_build_id] = array('timestamp' => time(), 'args' => $args);
       $form['#build_id'] = $form_build_id;
     }
     $stored = FALSE;
@@ -94,6 +96,21 @@ function drupal_get_form($form_id) {
   }
 
   return drupal_render_form($args[0], $form);
+}
+
+
+/**
+ * Remove form information that's at least a day old from the
+ * $_SESSION['form'] array.
+ */
+function _drupal_clean_form_sessions() {
+  if (isset($_SESSION['form'])) {
+    foreach ($_SESSION['form'] as $build_id => $data) {
+      if ($data['timestamp'] < (time() - 84600)) {
+        unset($_SESSION['form'][$build_id]);
+      }
+    }
+  }
 }
 
 
