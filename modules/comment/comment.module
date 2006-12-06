@@ -139,9 +139,13 @@ function comment_menu($may_cache) {
       }
     }
     if ((arg(0) == 'node') && is_numeric(arg(1)) && is_numeric(arg(2))) {
-      $items[] = array('path' => ('node/'. arg(1) .'/'. arg(2)), 'title' => t('View'),
-        'callback' => 'node_page',
-        'type' => MENU_CALLBACK);
+      $items[] = array(
+        'path' => ('node/'. arg(1) .'/'. arg(2)),
+        'title' => t('View'),
+        'callback' => 'node_page_view',
+        'callback arguments' => array(node_load(arg(1)), arg(2)),
+        'type' => MENU_CALLBACK,
+      );
     }
   }
 
