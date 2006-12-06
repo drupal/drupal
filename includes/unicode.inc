@@ -1,8 +1,20 @@
 <?php
 // $Id$
 
+/**
+ * Indicates an error during check for PHP unicode support.
+ */
 define('UNICODE_ERROR', -1);
+
+/**
+ * Indicates that standard PHP (emulated) unicode support is being used.
+ */
 define('UNICODE_SINGLEBYTE', 0);
+
+/**
+ * Indicates that full unicode support with the PHP mbstring extension is being
+ * used.
+ */
 define('UNICODE_MULTIBYTE', 1);
 
 /**
