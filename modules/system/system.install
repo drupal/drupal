@@ -3138,6 +3138,24 @@ function system_update_1005() {
   // Add ability to create dynamic node types like the CCK module
   $ret = array();
 
+  // The node_type table may already exist for anyone who ever used CCK in 4.7,
+  // even if CCK is no longer installed. We need to make sure any previously
+  // created table gets renamed before we create the new node_type table in
+  // order to ensure that the new table gets created without errors.
+  // TODO: This check should be removed for Drupal 6.
+  if (db_table_exists('node_type')) {
+    switch ($GLOBALS['db_type']) {
+      case 'mysql':
+      case 'mysqli':
+        $ret[] = update_sql('RENAME TABLE {node_type} TO {node_type_content}');
+        break;
+
+      case 'pgsql':
+        $ret[] = update_sql('ALTER TABLE {node_type} RENAME TO {node_type_content}');
+        break;
+    }
+  }
+
   switch ($GLOBALS['db_type']) {
     case 'mysqli':
     case 'mysql':
