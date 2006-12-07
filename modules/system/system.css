@@ -202,6 +202,10 @@ ul.links li {
   list-style-type: none;
   padding: 0 0.5em;
 }
+.block ul {
+  margin: 0;
+  padding: 0 0 0.25em 1em;
+}
 
 /*
 ** Tab navigation
