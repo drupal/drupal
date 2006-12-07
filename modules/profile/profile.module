@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.182 2006/12/01 23:17:26 unconed Exp $
+// $Id: profile.module,v 1.183 2006/12/07 16:53:56 dries Exp $
 
 /**
  * @file
@@ -7,11 +7,23 @@
  */
 
 /**
- * Flags to define the visibility of a profile field.
+ * Private field, content only available to privileged users.
  */
 define('PROFILE_PRIVATE', 1);
+
+/**
+ * Public field, content shown on profile page but not used on member list pages.
+ */
 define('PROFILE_PUBLIC', 2);
+
+/**
+ * Public field, content shown on profile page and on member list pages.
+ */
 define('PROFILE_PUBLIC_LISTINGS', 3);
+
+/**
+ * Hidden profile field, only accessible by administrators, modules and themes.
+ */
 define('PROFILE_HIDDEN', 4);
 
 /**
