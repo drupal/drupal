@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.86 2006/10/17 19:29:26 dries Exp $
+// $Id: file.inc,v 1.87 2006/12/07 17:02:25 dries Exp $
 
 /**
  * @file
@@ -713,26 +713,6 @@ function file_directory_path() {
 }
 
 /**
- * Helper function for file_upload_max_size().
- */
-function _file_convert_to_mb($val){
-  $val = trim($val);
-  $last = strtolower($val[strlen($val) - 1]);
-  switch ($last) {
-    // The 'G' modifier is available since PHP 5.1.0
-    case 'g':
-      $size = $val * 1024;
-      break;
-    case 'k':
-      $size = $val / 1024;
-      break;
-    default:
-      $size = (int) $val;
-  }
-  return $size;
-}
-
-/**
  * Determine the maximum file upload size by querying the PHP settings.
  *
  * @return
@@ -742,9 +722,9 @@ function file_upload_max_size() {
   static $max_size = -1;
 
   if ($max_size < 0) {
-    $upload_max = _file_convert_to_mb(ini_get('upload_max_filesize'));
+    $upload_max = parse_size(ini_get('upload_max_filesize'));
     // sanity check- a single upload should not be more than 50% the size limit of the total post
-    $post_max = _file_convert_to_mb(ini_get('post_max_size')) / 2;
+    $post_max = parse_size(ini_get('post_max_size')) / 2;
     $max_size = ($upload_max < $post_max) ? $upload_max : $post_max;
   }
   return $max_size;
