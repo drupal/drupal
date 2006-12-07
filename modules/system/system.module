@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.418 2006/12/05 05:47:37 dries Exp $
+// $Id: system.module,v 1.419 2006/12/07 19:11:36 dries Exp $
 
 /**
  * @file
@@ -26,7 +26,7 @@ function system_help($section) {
     case 'admin/by-module':
       return '<p>'. t('This page shows you all available administration tasks for each module.') .'</p>';
     case 'admin/settings/page-caching':
-      return '<p>'. t('Enabling the cache will offer a sufficient performance boost. Drupal can store and send compressed cached pages requested by "anonymous" users. By caching a web page, Drupal does not have to create the page each time someone wants to view it.') .'</p>';
+      return '<p>'. t('Enabling the cache will offer a significant performance boost. Drupal can store and send compressed cached pages requested by "anonymous" users. By caching a web page, Drupal does not have to create the page each time someone wants to view it.') .'</p>';
     case 'admin/build/themes':
       return '<p>'. t('Select which themes are available to your users and specify the default theme. To configure site-wide display settings, click the "configure" task above. Alternately, to override these settings in a specific theme, click the "configure" link for the corresponding theme. Note that different themes may have different regions available for rendering content like blocks. If you want consistency in what your users see, you may wish to enable only one theme.') .'</p>';
     case 'admin/build/themes/settings':
