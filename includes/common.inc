@@ -960,6 +960,27 @@ function format_plural($count, $singular, $plural) {
 }
 
 /**
+ * Parse a given byte count.
+ *
+ * @param $size
+ *   The size expressed as a number of bytes with optional SI size and unit
+ *   suffix (e.g. 2, 3K, 5MB, 10G).
+ * @return
+ *   An integer representation of the size.
+ */
+function parse_size($size) {
+  $suffixes = array(
+    '' => 1,
+    'k' => 1024,
+    'm' => 1048576, // 1024 * 1024
+    'g' => 1073741824, // 1024 * 1024 * 1024
+  );
+  if (preg_match('/([0-9]+)\s*(k|m|g)?(b?(ytes?)?)/i', $size, $match)) {
+    return $match[1] * $suffixes[drupal_strtolower($match[2])];
+  }
+}
+
+/**
  * Generate a string representation for the given byte count.
  *
  * @param $size
