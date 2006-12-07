@@ -193,12 +193,13 @@ function _module_parse_info_file($filename) {
 
   if (file_exists($filename)) {
     $info = parse_ini_file($filename);
-  }
-  if (isset($info['dependencies'])) {
-    $info['dependencies'] = explode(" ", $info['dependencies']);
-  }
-  else {
-    $info['dependencies'] = NULL;
+
+    if (isset($info['dependencies'])) {
+      $info['dependencies'] = explode(" ", $info['dependencies']);
+    }
+    else {
+      $info['dependencies'] = NULL;
+    }
   }
   return $info;
 }
