@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.99 2006/12/05 05:47:37 dries Exp $
+// $Id: locale.inc,v 1.100 2006/12/07 17:10:29 dries Exp $
 
 /**
  * @file
@@ -1557,7 +1557,8 @@ function _locale_get_iso639_list() {
     "pi" => array("Pali"),
     "pl" => array("Polish", "Polski"),
     "ps" => array("Pashto", "پښتو"),
-    "pt" => array("Portuguese", "Português"),
+    "pt" => array("Portuguese, Portugal", "Português"),
+    "pt-br" => array("Portuguese, Brazil", "Português"),
     "qu" => array("Quechua"),
     "rm" => array("Rhaeto-Romance"),
     "rn" => array("Kirundi"),
