@@ -1,4 +1,4 @@
-/* $Id: system.css,v 1.17 2006/12/05 21:03:34 unconed Exp $ */
+/* $Id: system.css,v 1.18 2006/12/07 19:50:31 unconed Exp $ */
 
 /*
 ** HTML elements
@@ -201,6 +201,10 @@ ul.links li {
   display: inline;
   list-style-type: none;
   padding: 0 0.5em;
+}
+.block ul {
+  margin: 0;
+  padding: 0 0 0.25em 1em;
 }
 
 /*

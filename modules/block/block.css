@@ -1,4 +1,4 @@
-/* $Id: block.css,v 1.1 2006/08/14 07:14:49 drumm Exp $ */
+/* $Id: block.css,v 1.2 2006/12/07 19:50:31 unconed Exp $ */
 
 #blocks td.region {
   font-weight: bold;
@@ -11,8 +11,4 @@
   margin-top: 4px;
   margin-bottom: 4px;
   padding: 3px;
-}
-.block ul {
-  margin: 0;
-  padding: 0 0 0.25em 1em;
 }
