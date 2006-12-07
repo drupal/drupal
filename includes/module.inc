@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.92 2006/11/27 23:15:41 drumm Exp $
+// $Id: module.inc,v 1.93 2006/12/07 17:03:34 dries Exp $
 
 /**
  * @file
@@ -193,12 +193,13 @@ function _module_parse_info_file($filename) {
 
   if (file_exists($filename)) {
     $info = parse_ini_file($filename);
-  }
-  if (isset($info['dependencies'])) {
-    $info['dependencies'] = explode(" ", $info['dependencies']);
-  }
-  else {
-    $info['dependencies'] = NULL;
+
+    if (isset($info['dependencies'])) {
+      $info['dependencies'] = explode(" ", $info['dependencies']);
+    }
+    else {
+      $info['dependencies'] = NULL;
+    }
   }
   return $info;
 }
