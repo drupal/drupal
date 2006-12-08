@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.29 2006/12/05 05:47:37 dries Exp $
+// $Id: install.inc,v 1.30 2006/12/08 11:54:04 dries Exp $
 
 define('SCHEMA_UNINSTALLED', -1);
 define('SCHEMA_INSTALLED', 0);
@@ -485,6 +485,15 @@ function drupal_install_mkdir($file, $mask, $message = TRUE) {
 /**
  * Attempt to fix file permissions.
  *
+ * The general approach here is that, because we do not know the security
+ * setup of the webserver, we apply our permission changes to all three
+ * digits of the file permission (i.e. user, group and all).
+ *
+ * To ensure that the values behave as expected (and numbers don't carry
+ * from one digit to the next) we do the calculation on the octal value
+ * using bitwise operations. This lets us remove, for example, 0222 from
+ * 0700 and get the correct value of 0500.
+ *
  * @param $file
  *  The name of the file with permissions to fix.
  * @param $mask
@@ -496,48 +505,54 @@ function drupal_install_mkdir($file, $mask, $message = TRUE) {
  *  TRUE/FALSE whether or not we were able to fix the file's permissions.
  */
 function drupal_install_fix_file($file, $mask, $message = TRUE) {
-  $mod = substr(sprintf('%o', fileperms($file)), -4);
-  $prefix = substr($mod, 0, 1);
-  $mod = substr($mod, 1 ,4);
+  $mod = fileperms($file) & 0777;
   $masks = array(FILE_READABLE, FILE_WRITABLE, FILE_EXECUTABLE, FILE_NOT_READABLE, FILE_NOT_WRITABLE, FILE_NOT_EXECUTABLE);
+
+  // FILE_READABLE, FILE_WRITABLE, and FILE_EXECUTABLE permission strings
+  // can theoretically be 0400, 0200, and 0100 respectively, but to be safe
+  // we set all three access types in case the administrator intends to
+  // change the owner of settings.php after installation.
   foreach ($masks as $m) {
     if ($mask & $m) {
       switch ($m) {
         case FILE_READABLE:
           if (!is_readable($file)) {
-            $mod += 444;
+            $mod |= 0444;
           }
           break;
         case FILE_WRITABLE:
           if (!is_writable($file)) {
-            $mod += 222;
+            $mod |= 0222;
           }
           break;
         case FILE_EXECUTABLE:
           if (!is_executable($file)) {
-            $mod += 111;
+            $mod |= 0111;
           }
           break;
         case FILE_NOT_READABLE:
           if (is_readable($file)) {
-            $mod -= 444;
+            $mod &= ~0444;
           }
           break;
         case FILE_NOT_WRITABLE:
           if (is_writable($file)) {
-            $mod -= 222;
+            $mod &= ~0222;
           }
           break;
         case FILE_NOT_EXECUTABLE:
           if (is_executable($file)) {
-            $mod -= 111;
+            $mod &= ~0111;
           }
           break;
       }
     }
   }
 
-  if (@chmod($file, intval("$prefix$mod", 8))) {
+  // chmod() will work if the web server is running as owner of the file.
+  // If PHP safe_mode is enabled the currently executing script must also
+  // have the same owner.
+  if (@chmod($file, $mod)) {
     return TRUE;
   }
   else {
