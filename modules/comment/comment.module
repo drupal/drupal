@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.508 2006/12/08 15:32:10 dries Exp $
+// $Id: comment.module,v 1.509 2006/12/08 16:16:30 dries Exp $
 
 /**
  * @file
@@ -500,18 +500,39 @@ function comment_edit($cid) {
   }
 }
 
+/**
+ * This function is responsible for generating a comment reply form.
+ * There are several cases that have to be handled, including:
+ *   - replies to comments
+ *   - replies to nodes
+ *   - attempts to reply to nodes that can no longer accept comments
+ *   - respecting access permissions ('access comments', 'post comments', etc.)
+ *
+ * The node or comment that is being replied to must appear above the comment
+ * form to provide the user context while authoring the comment.
+ *
+ * @param $nid
+ *   Every comment belongs to a node. This is that node's id.
+ * @param $pid
+ *   Some comments are replies to other comments. In those cases, $pid is the parent
+ *   comment's cid.
+ *
+ * @return $output
+ *   The rendered parent node or comment plus the new comment form.
+ */
 function comment_reply($nid, $pid = NULL) {
-  // set the breadcrumb trail
+  // Load the parent node.
   $node = node_load($nid);
+
+  // Set the breadcrumb trail.
   menu_set_location(array(array('path' => "node/$nid", 'title' => $node->title), array('path' => "comment/reply/$nid")));
 
   $op = isset($_POST['op']) ? $_POST['op'] : '';
 
   $output = '';
 
-  // or are we merely showing the form?
   if (user_access('access comments')) {
-
+    // The user is previewing a comment prior to submitting it.
     if ($op == t('Preview comment')) {
       if (user_access('post comments')) {
         $output .= comment_form_box(array('pid' => $pid, 'nid' => $nid), NULL);
@@ -522,15 +543,18 @@ function comment_reply($nid, $pid = NULL) {
       }
     }
     else {
-      // if this is a reply to another comment, show that comment first
-      // else, we'll just show the user the node they're commenting on.
+      // $pid indicates that this is a reply to a comment.
       if ($pid) {
+        // load the comment whose cid = $pid
         if ($comment = db_fetch_object(db_query('SELECT c.*, u.uid, u.name AS registered_name, u.picture, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = %d', $pid, COMMENT_PUBLISHED))) {
+          // If that comment exists, make sure that the current comment and the parent comment both
+          // belong to the same parent node.
           if ($comment->nid != $nid) {
             // Attempting to reply to a comment not belonging to the current nid.
             drupal_set_message(t('The comment you are replying to does not exist.'), 'error');
             drupal_goto("node/$nid");
           }
+          // Display the parent comment
           $comment = drupal_unpack($comment);
           $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
           $output .= theme('comment_view', $comment);
@@ -540,11 +564,12 @@ function comment_reply($nid, $pid = NULL) {
           drupal_goto("node/$nid");
         }
       }
+      // This is the case where the comment is in response to a node. Display the node.
       else if (user_access('access content')) {
         $output .= node_view($node);
       }
 
-      // should we show the reply box?
+      // Should we show the reply box?
       if (node_comment_mode($nid) != COMMENT_NODE_READ_WRITE) {
         drupal_set_message(t("This discussion is closed: you can't post new comments."), 'error');
         drupal_goto("node/$nid");
