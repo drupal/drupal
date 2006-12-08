@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.743 2006/12/05 05:55:04 dries Exp $
+// $Id: node.module,v 1.744 2006/12/08 16:21:15 dries Exp $
 
 /**
  * @file
@@ -1213,38 +1213,49 @@ function node_last_changed($nid) {
  */
 function node_node_operations() {
   $operations = array(
-    'approve' => array(
-      'label' => t('Approve the selected posts'),
-      'callback' => 'node_operations_approve',
-    ),
-    'promote' => array(
-      'label' => t('Promote the selected posts'),
-      'callback' => 'node_operations_promote',
-    ),
-    'sticky' => array(
-      'label' => t('Make the selected posts sticky'),
-      'callback' => 'node_operations_sticky',
-    ),
-    'demote' => array(
-      'label' => t('Demote the selected posts'),
-      'callback' => 'node_operations_demote',
+    'publish' => array(
+      'label' => t('Publish'),
+      'callback' => 'node_operations_publish',
     ),
     'unpublish' => array(
-      'label' => t('Unpublish the selected posts'),
+      'label' => t('Unpublish'),
       'callback' => 'node_operations_unpublish',
     ),
+    'promote' => array(
+      'label' => t('Promote to front page'),
+      'callback' => 'node_operations_promote',
+    ),
+    'demote' => array(
+      'label' => t('Demote from front page'),
+      'callback' => 'node_operations_demote',
+    ),
+    'sticky' => array(
+      'label' => t('Make sticky'),
+      'callback' => 'node_operations_sticky',
+    ),
+    'unsticky' => array(
+      'label' => t('Remove stickiness'),
+      'callback' => 'node_operations_unsticky',
+    ),
     'delete' => array(
-      'label' => t('Delete the selected posts'),
+      'label' => t('Delete'),
     ),
   );
   return $operations;
 }
 
 /**
- * Callback function for admin mass approving nodes.
+ * Callback function for admin mass publishing nodes.
  */
-function node_operations_approve($nodes) {
+function node_operations_publish($nodes) {
   db_query('UPDATE {node} SET status = 1 WHERE nid IN(%s)', implode(',', $nodes));
+}
+
+/**
+ * Callback function for admin mass unpublishing nodes.
+ */
+function node_operations_unpublish($nodes) {
+  db_query('UPDATE {node} SET status = 0 WHERE nid IN(%s)', implode(',', $nodes));
 }
 
 /**
@@ -1255,13 +1266,6 @@ function node_operations_promote($nodes) {
 }
 
 /**
- * Callback function for admin mass editing nodes to be sticky.
- */
-function node_operations_sticky($nodes) {
-  db_query('UPDATE {node} SET status = 1, sticky = 1 WHERE nid IN(%s)', implode(',', $nodes));
-}
-
-/**
  * Callback function for admin mass demoting nodes.
  */
 function node_operations_demote($nodes) {
@@ -1269,10 +1273,17 @@ function node_operations_demote($nodes) {
 }
 
 /**
- * Callback function for admin mass unpublishing nodes.
+ * Callback function for admin mass editing nodes to be sticky.
  */
-function node_operations_unpublish($nodes) {
-  db_query('UPDATE {node} SET status = 0 WHERE nid IN(%s)', implode(',', $nodes));
+function node_operations_sticky($nodes) {
+  db_query('UPDATE {node} SET status = 1, sticky = 1 WHERE nid IN(%s)', implode(',', $nodes));
+}
+
+/**
+ * Callback function for admin mass editing nodes to remove stickiness.
+ */
+function node_operations_unsticky($nodes) {
+  db_query('UPDATE {node} SET sticky = 0 WHERE nid IN(%s)', implode(',', $nodes));
 }
 
 /**
