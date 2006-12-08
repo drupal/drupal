@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.135 2006/12/08 11:55:56 dries Exp $
+// $Id: bootstrap.inc,v 1.136 2006/12/08 12:09:54 dries Exp $
 
 /**
  * @file
@@ -17,13 +17,47 @@ define('WATCHDOG_NOTICE', 0);
 define('WATCHDOG_WARNING', 1);
 define('WATCHDOG_ERROR', 2);
 
+/**
+ * First bootstrap phase: initialize configuration.
+ */
 define('DRUPAL_BOOTSTRAP_CONFIGURATION', 0);
+
+/**
+ * Second bootstrap phase: try to call a non-database cache
+ * fetch routine.
+ */
 define('DRUPAL_BOOTSTRAP_EARLY_PAGE_CACHE', 1);
+
+/**
+ * Third bootstrap phase: initialize database layer.
+ */
 define('DRUPAL_BOOTSTRAP_DATABASE', 2);
+
+/**
+ * Fourth bootstrap phase: identify and reject banned hosts.
+ */
 define('DRUPAL_BOOTSTRAP_ACCESS', 3);
+
+/**
+ * Fifth bootstrap phase: initialize session handling.
+ */
 define('DRUPAL_BOOTSTRAP_SESSION', 4);
+
+/**
+ * Sixth bootstrap phase: load bootstrap.inc and module.inc, start
+ * the variable system and try to serve a page from the cache.
+ */
 define('DRUPAL_BOOTSTRAP_LATE_PAGE_CACHE', 5);
+
+/**
+ * Seventh bootstrap phase: set $_GET['q'] to Drupal path of request.
+ */
 define('DRUPAL_BOOTSTRAP_PATH', 6);
+
+/**
+ * Final bootstrap phase: Drupal is fully loaded; validate and fix
+ * input data.
+ */
 define('DRUPAL_BOOTSTRAP_FULL', 7);
 
 // These values should match the 'role' table
