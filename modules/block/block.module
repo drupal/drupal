@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.241 2006/12/01 22:47:53 unconed Exp $
+// $Id: block.module,v 1.242 2006/12/08 16:23:45 dries Exp $
 
 /**
  * @file
@@ -19,8 +19,8 @@ function block_help($section) {
       $output .= '<p>'. t('The block administration screen lets you specify the vertical placement of the blocks within a region. You do this by assigning a weight to each block. Lighter blocks (those having a smaller weight) "float up" towards the top of the region; heavier ones "sink".') .'</p>';
       $output .= t("<p>A block's visibility depends on:</p>
 <ul>
-<li>Its enabled checkbox. Disabled blocks are never shown.</li>
-<li>Its throttle checkbox. Throttled blocks are hidden during high server loads.</li>
+<li>Its region placement. Blocks with no region assigned to them are never shown.</li>
+<li>Its throttle checkbox when throttle module is enabled. Throttled blocks are hidden during high server loads.</li>
 <li>Its page visibility settings. Blocks can be configured to be visible/hidden on certain pages.</li>
 <li>Its custom visibility settings. Blocks can be configured to be visible only when specific conditions are true.</li>
 <li>Its user visibility settings. Administrators can choose to let users decide whether to show/hide certain blocks.</li>
