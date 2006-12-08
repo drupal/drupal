@@ -964,7 +964,7 @@ function theme_feed_icon($url) {
  * close of the body tag.
  *
  * @param $main (optional)
- *
+ *   Whether the current page is the front page of the site.
  * @return
  *   A string containing the results of the hook_footer() calls.
  */
