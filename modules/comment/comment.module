@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.507 2006/12/06 15:44:09 dries Exp $
+// $Id: comment.module,v 1.508 2006/12/08 15:32:10 dries Exp $
 
 /**
  * @file
@@ -831,7 +831,7 @@ function comment_render($node, $cid = 0) {
         $query .= ' AND c.status = %d';
         $query_args[] = COMMENT_PUBLISHED;
       }
-      $query .= ' GROUP BY c.cid, c.pid, c.nid, c.subject, c.comment, c.format, c.timestamp, c.name, c.mail, u.picture, c.homepage, u.uid, u.name, u.picture, u.data, c.score, c.users, c.status';
+
       $result = db_query($query, $query_args);
 
       if ($comment = db_fetch_object($result)) {
@@ -857,8 +857,6 @@ function comment_render($node, $cid = 0) {
         $query_count .= ' AND status = %d';
         $query_args[] = COMMENT_PUBLISHED;
       }
-
-      $query .= ' GROUP BY c.cid, c.pid, c.nid, c.subject, c.comment, c.format, c.timestamp, c.name, c.mail, u.picture, c.homepage, u.uid, u.name, u.picture, u.data, c.score, c.users, c.thread, c.status';
 
       if ($order == COMMENT_ORDER_NEWEST_FIRST) {
         if ($mode == COMMENT_MODE_FLAT_COLLAPSED || $mode == COMMENT_MODE_FLAT_EXPANDED) {
