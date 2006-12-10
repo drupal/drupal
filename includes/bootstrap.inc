@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.137 2006/12/10 09:54:32 unconed Exp $
+// $Id: bootstrap.inc,v 1.138 2006/12/10 20:13:36 dries Exp $
 
 /**
  * @file
@@ -549,30 +549,20 @@ function check_plain($text) {
 }
 
 /**
- * The value of $_SERVER['REQUEST_URI'] is inconsistent between various
- * web servers (Apache, IIS, iPlanet, etc.).
- *
- * For those cases where REQUEST_URI is provided, we inspect it to be sure
- * that it contains the QUERY_STRING as well as the actual REQUEST_URI.
- *
- * Where this value is not available we generate an equivalent using other
- * environment variables.
+ * Since $_SERVER['REQUEST_URI'] is only available on Apache, we
+ * generate an equivalent using other environment variables.
  */
 function request_uri() {
-  static $uri;
-  if (!isset($uri)) {
-    // If we have a REQUEST_URI and the query string is present in it, we use the value directly.
-    if (isset($_SERVER['REQUEST_URI']) && !empty($_SERVER['QUERY_STRING']) && strpos($_SERVER['REQUEST_URI'], $_SERVER['QUERY_STRING'])) {
-      $uri = $_SERVER['REQUEST_URI'];
+
+  if (isset($_SERVER['REQUEST_URI'])) {
+    $uri = $_SERVER['REQUEST_URI'];
+  }
+  else {
+    if (isset($_SERVER['argv'])) {
+      $uri = $_SERVER['PHP_SELF'] .'?'. $_SERVER['argv'][0];
     }
     else {
-      // Generate an equivalent.
-      if (isset($_SERVER['argv'])) {
-        $uri = $_SERVER['PHP_SELF'] .'?'. $_SERVER['argv'][0];
-      }
-      else {
-        $uri = $_SERVER['PHP_SELF'] .'?'. $_SERVER['QUERY_STRING'];
-      }
+      $uri = $_SERVER['PHP_SELF'] .'?'. $_SERVER['QUERY_STRING'];
     }
   }
 
