@@ -787,7 +787,7 @@ fieldset {
 html.js fieldset.collapsed {
   background: transparent;
   padding-top: 0;
-  padding-bottom: 3px;
+  padding-bottom: .6em;
 }
 
 html.js fieldset.collapsible legend a {
