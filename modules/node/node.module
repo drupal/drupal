@@ -2158,7 +2158,7 @@ function node_preview($node) {
       $output = theme('node_preview', $cloned_node);
     }
     drupal_set_title(t('Preview'));
-    drupal_set_breadcrumb(array(l(t('Home'), NULL), l(t('create content'), 'node/add'), l(t('Submit @name', array('@name' => node_get_types('name', $node))), 'node/add/'. $node->type)));
+    drupal_set_breadcrumb(array(l(t('Home'), NULL), l(t('Create content'), 'node/add'), l(t('Submit @name', array('@name' => node_get_types('name', $node))), 'node/add/'. $node->type)));
 
     return $output;
   }
