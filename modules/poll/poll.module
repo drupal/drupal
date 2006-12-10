@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.220 2006/11/21 20:14:18 dries Exp $
+// $Id: poll.module,v 1.221 2006/12/10 20:34:03 dries Exp $
 
 /**
  * @file
@@ -231,8 +231,6 @@ function poll_menu($may_cache) {
   $items = array();
 
   if ($may_cache) {
-    $items[] = array('path' => 'node/add/poll', 'title' => t('Poll'),
-      'access' => user_access('create polls'));
     $items[] = array('path' => 'poll', 'title' => t('Polls'),
       'callback' => 'poll_page',
       'access' => user_access('access content'),

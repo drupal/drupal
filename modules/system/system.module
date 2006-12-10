@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.420 2006/12/10 09:54:34 unconed Exp $
+// $Id: system.module,v 1.421 2006/12/10 20:34:03 dries Exp $
 
 /**
  * @file
@@ -659,7 +659,7 @@ function system_performance_settings() {
     '#title' => t('Page cache'),
     '#description' => t('Enabling the cache will offer a significant performance boost. Drupal can store and send compressed cached pages requested by <em>anonymous</em> users. By caching a web page, Drupal does not have to construct the page each time someone wants to view it.'),
   );
-  
+
   $form['page_cache']['cache'] = array(
     '#type' => 'radios',
     '#title' => t('Caching mode'),
@@ -677,15 +677,15 @@ function system_performance_settings() {
     '#options' => $period,
     '#description' => t('On high-traffic sites it can become necessary to enforce a minimum cache lifetime. The minimum cache lifetime is the minimum amount of time that will go by before the cache is emptied and recreated. A larger minimum cache lifetime offers better performance, but users will not see new content for a longer period of time.')
   );
-  
+
   $form['bandwidth_optimizations'] = array(
     '#type' => 'fieldset',
     '#title' => t('Bandwidth optimizations'),
     '#description' => t('These options can help reduce both the size and number of requests made to your website. This can reduce the server load, the bandwidth used, and the average page loading time for your visitors.')
   );
-  
+
   $directory = file_directory_path();
-  $is_writable = is_dir($directory) && is_writable($directory) && (variable_get('file_downloads', FILE_DOWNLOADS_PUBLIC) == FILE_DOWNLOADS_PUBLIC);  
+  $is_writable = is_dir($directory) && is_writable($directory) && (variable_get('file_downloads', FILE_DOWNLOADS_PUBLIC) == FILE_DOWNLOADS_PUBLIC);
   $form['bandwidth_optimizations']['preprocess_css'] = array(
     '#type' => 'radios',
     '#title' => t('Aggregate and compress CSS files'),

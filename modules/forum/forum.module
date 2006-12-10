@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.370 2006/12/01 23:17:26 unconed Exp $
+// $Id: forum.module,v 1.371 2006/12/10 20:34:02 dries Exp $
 
 /**
  * @file
@@ -35,9 +35,6 @@ function forum_menu($may_cache) {
   $items = array();
 
   if ($may_cache) {
-    $items[] = array('path' => 'node/add/forum',
-      'title' => t('Forum topic'),
-      'access' => user_access('create forum topics'));
     $items[] = array('path' => 'forum',
       'title' => t('Forums'),
       'callback' => 'forum_page',

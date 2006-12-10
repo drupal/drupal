@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.597 2006/12/10 09:54:32 unconed Exp $
+// $Id: common.inc,v 1.598 2006/12/10 20:34:02 dries Exp $
 
 /**
  * @file
@@ -1451,7 +1451,7 @@ function drupal_get_css($css = NULL) {
         }
       }
     }
-    
+
     if ($is_writable && $preprocess_css) {
       $filename = md5(serialize($types)) .'.css';
       $preprocess_file = drupal_build_css_cache($types, $filename);
@@ -1478,7 +1478,7 @@ function drupal_build_css_cache($types, $filename) {
   // Create the css/ within the files folder.
   $csspath = file_create_path('css');
   file_check_directory($csspath, FILE_CREATE_DIRECTORY);
-  
+
   if (!file_exists($csspath .'/'. $filename)) {
     // Build aggregate CSS file.
     foreach ($types as $type) {
@@ -1494,20 +1494,20 @@ function drupal_build_css_cache($types, $filename) {
         }
       }
     }
-  
+
     // @import rules must proceed any other style, so we move those to the top.
     $regexp = '/@import[^;]+;/i';
     preg_match_all($regexp, $data, $matches);
     $data = preg_replace($regexp, '', $data);
     $data = implode('', $matches[0]) . $data;
-  
+
     // Perform some safe CSS optimizations.
     $data = preg_replace('<
       \s*([@{}:;\)])\s* |          # Remove whitespace around separators.
       /\*([^*\\\\]|\*(?!/))+\*/ |  # Remove comments that are not CSS hacks.
       [\n\r]                       # Remove line breaks.
       >x', '\1', $data);
-  
+
     // Create the CSS file.
     file_save_data($data, $csspath .'/'. $filename, FILE_EXISTS_REPLACE);
   }

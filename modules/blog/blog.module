@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.270 2006/11/23 11:06:53 dries Exp $
+// $Id: blog.module,v 1.271 2006/12/10 20:34:02 dries Exp $
 
 /**
  * @file
@@ -254,8 +254,6 @@ function blog_menu($may_cache) {
   $items = array();
 
   if ($may_cache) {
-    $items[] = array('path' => 'node/add/blog', 'title' => t('Blog entry'),
-      'access' => user_access('edit own blog'));
     $items[] = array('path' => 'blog', 'title' => t('Blogs'),
       'callback' => 'blog_page',
       'access' => user_access('access content'),
