@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.206 2006/11/28 20:52:51 drumm Exp $
+// $Id: update.php,v 1.207 2006/12/10 09:54:31 unconed Exp $
 
 /**
  * @file
@@ -784,6 +784,9 @@ if (($access_check == FALSE) || ($user->uid == 1)) {
   update_fix_watchdog_115();
   update_fix_watchdog();
   update_fix_sessions();
+
+  // Clear any cached CSS files, in case any module updates its CSS as well.
+  drupal_clear_css_cache();
 
   $op = isset($_REQUEST['op']) ? $_REQUEST['op'] : '';
   switch ($op) {

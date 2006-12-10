@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.727 2006/12/07 19:06:34 dries Exp $
+// $Id: user.module,v 1.728 2006/12/10 09:54:34 unconed Exp $
 
 /**
  * @file
@@ -781,7 +781,7 @@ function user_menu($may_cache) {
   else {
     // Add the CSS for this module. We put this in !$may_cache so it is only
     // added once per request.
-    drupal_add_css(drupal_get_path('module', 'user') .'/user.css', 'core');
+    drupal_add_css(drupal_get_path('module', 'user') .'/user.css', 'module');
     if ($_GET['q'] == 'user' && $user->uid) {
       // We want to make the current user's profile accessible without knowing
       // their uid, so just linking to /user is enough. To achieve this goal,

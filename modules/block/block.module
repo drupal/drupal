@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.242 2006/12/08 16:23:45 dries Exp $
+// $Id: block.module,v 1.243 2006/12/10 09:54:33 unconed Exp $
 
 /**
  * @file
@@ -205,7 +205,7 @@ function block_admin_display($theme = NULL) {
   global $theme_key, $custom_theme;
 
   // Add CSS
-  drupal_add_css(drupal_get_path('module', 'block') .'/block.css');
+  drupal_add_css(drupal_get_path('module', 'block') .'/block.css', 'module', 'all', FALSE);
 
   // If non-default theme configuration has been selected, set the custom theme.
   if ($theme) {

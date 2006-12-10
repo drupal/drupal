@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.419 2006/12/07 19:11:36 dries Exp $
+// $Id: system.module,v 1.420 2006/12/10 09:54:34 unconed Exp $
 
 /**
  * @file
@@ -25,8 +25,6 @@ function system_help($section) {
       return '<p>'. t('Welcome to the administration section. Here you may control how your site functions.') .'</p>';
     case 'admin/by-module':
       return '<p>'. t('This page shows you all available administration tasks for each module.') .'</p>';
-    case 'admin/settings/page-caching':
-      return '<p>'. t('Enabling the cache will offer a significant performance boost. Drupal can store and send compressed cached pages requested by "anonymous" users. By caching a web page, Drupal does not have to create the page each time someone wants to view it.') .'</p>';
     case 'admin/build/themes':
       return '<p>'. t('Select which themes are available to your users and specify the default theme. To configure site-wide display settings, click the "configure" task above. Alternately, to override these settings in a specific theme, click the "configure" link for the corresponding theme. Note that different themes may have different regions available for rendering content like blocks. If you want consistency in what your users see, you may wish to enable only one theme.') .'</p>';
     case 'admin/build/themes/settings':
@@ -229,11 +227,11 @@ function system_menu($may_cache) {
       'callback' => 'drupal_get_form',
       'callback arguments' => array('system_error_reporting_settings'));
     $items[] = array(
-      'path' => 'admin/settings/page-caching',
-      'title' => t('Page caching'),
-      'description' => t('Enable or disable page caching for anonymous users.'),
+      'path' => 'admin/settings/performance',
+      'title' => t('Performance'),
+      'description' => t('Enable or disable page caching for anonymous users, and enable or disable CSS preprocessor.'),
       'callback' => 'drupal_get_form',
-      'callback arguments' => array('system_page_caching_settings'));
+      'callback arguments' => array('system_performance_settings'));
     $items[] = array(
       'path' => 'admin/settings/file-system',
       'title' => t('File system'),
@@ -310,13 +308,13 @@ function system_menu($may_cache) {
     if (arg(0) == 'admin') {
       global $custom_theme;
       $custom_theme = variable_get('admin_theme', '0');
-      drupal_add_css(drupal_get_path('module', 'system') .'/admin.css', 'core');
+      drupal_add_css(drupal_get_path('module', 'system') .'/admin.css', 'module');
     }
 
     // Add the CSS for this module. We put this in !$may_cache so it is only
     // added once per request.
-    drupal_add_css(drupal_get_path('module', 'system') .'/defaults.css', 'core');
-    drupal_add_css(drupal_get_path('module', 'system') .'/system.css', 'core');
+    drupal_add_css(drupal_get_path('module', 'system') .'/defaults.css', 'module');
+    drupal_add_css(drupal_get_path('module', 'system') .'/system.css', 'module');
   }
 
   return $items;
@@ -643,7 +641,7 @@ function system_error_reporting_settings() {
   return system_settings_form($form);
 }
 
-function system_page_caching_settings() {
+function system_performance_settings() {
 
   $description = '<p>'. t("The normal cache mode is suitable for most sites and does not cause any side effects. The aggressive cache mode causes Drupal to skip the loading (init) and unloading (exit) of enabled modules when serving a cached page. This results in an additional performance boost but can cause unwanted side effects.") .'</p>';
 
@@ -656,8 +654,13 @@ function system_page_caching_settings() {
   else {
     $description .= '<p>'. t('<strong class="ok">Currently, all enabled modules are compatible with the aggressive caching policy.</strong> Please note, if you use aggressive caching and enable new modules, you will need to check this page again to ensure compatibility.') .'</p>';
   }
-
-  $form['cache'] = array(
+  $form['page_cache'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Page cache'),
+    '#description' => t('Enabling the cache will offer a significant performance boost. Drupal can store and send compressed cached pages requested by <em>anonymous</em> users. By caching a web page, Drupal does not have to construct the page each time someone wants to view it.'),
+  );
+  
+  $form['page_cache']['cache'] = array(
     '#type' => 'radios',
     '#title' => t('Caching mode'),
     '#default_value' => variable_get('cache', CACHE_DISABLED),
@@ -667,13 +670,33 @@ function system_page_caching_settings() {
 
   $period = drupal_map_assoc(array(0, 60, 180, 300, 600, 900, 1800, 2700, 3600, 10800, 21600, 32400, 43200, 86400), 'format_interval');
   $period[0] = t('none');
-  $form['cache_lifetime'] = array(
+  $form['page_cache']['cache_lifetime'] = array(
     '#type' => 'select',
     '#title' => t('Minimum cache lifetime'),
     '#default_value' => variable_get('cache_lifetime', 0),
     '#options' => $period,
     '#description' => t('On high-traffic sites it can become necessary to enforce a minimum cache lifetime. The minimum cache lifetime is the minimum amount of time that will go by before the cache is emptied and recreated. A larger minimum cache lifetime offers better performance, but users will not see new content for a longer period of time.')
   );
+  
+  $form['bandwidth_optimizations'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Bandwidth optimizations'),
+    '#description' => t('These options can help reduce both the size and number of requests made to your website. This can reduce the server load, the bandwidth used, and the average page loading time for your visitors.')
+  );
+  
+  $directory = file_directory_path();
+  $is_writable = is_dir($directory) && is_writable($directory) && (variable_get('file_downloads', FILE_DOWNLOADS_PUBLIC) == FILE_DOWNLOADS_PUBLIC);  
+  $form['bandwidth_optimizations']['preprocess_css'] = array(
+    '#type' => 'radios',
+    '#title' => t('Aggregate and compress CSS files'),
+    '#default_value' => variable_get('preprocess_css', FALSE) && $is_writable,
+    '#disabled' => !$is_writable,
+    '#options' => array(t('Disabled'), t('Enabled')),
+    '#description' => t("Some Drupal modules include their own CSS files. When these modules are enabled, each module's CSS file adds an additional HTTP request to the page, which can increase the load time of each page. These HTTP requests can also slightly increase server load. It is recommended to only turn this option on when your site is in production, as it can interfere with theme development. This option is disabled if you have not set up your files directory, or if your download method is set to private."),
+  );
+
+  $form['#submit']['system_settings_form_submit'] = array();
+  $form['#submit']['drupal_clear_css_cache'] = array();
 
   return system_settings_form($form);
 }
@@ -1102,6 +1125,7 @@ function system_settings_form_submit($form_id, $form_values) {
   else {
     drupal_set_message(t('The configuration options have been saved.'));
   }
+
   menu_rebuild();
 }
 
@@ -1109,6 +1133,8 @@ function system_settings_form_submit($form_id, $form_values) {
  * Menu callback; displays a listing of all themes.
  */
 function system_themes() {
+
+  drupal_clear_css_cache();
   $themes = system_theme_data();
   ksort($themes);
 
@@ -1485,6 +1511,9 @@ function system_modules_submit($form_id, $form_values) {
   if ($dependencies && !isset($form_values['confirm'])) {
     return FALSE;
   }
+
+  drupal_clear_css_cache();
+
   return 'admin/build/modules';
 }
 

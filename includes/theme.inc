@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.329 2006/12/08 16:20:09 dries Exp $
+// $Id: theme.inc,v 1.330 2006/12/10 09:54:32 unconed Exp $
 
 /**
  * @file
@@ -406,7 +406,7 @@ function theme_page($content) {
 
 function theme_maintenance_page($content, $messages = TRUE, $partial = FALSE) {
   drupal_set_header('Content-Type: text/html; charset=utf-8');
-  drupal_add_css('misc/maintenance.css', 'core');
+  drupal_add_css('misc/maintenance.css', 'module', 'all', FALSE);
   drupal_set_html_head('<link rel="shortcut icon" href="'. base_path() .'misc/favicon.ico" type="image/x-icon" />');
 
   $output = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
@@ -437,7 +437,7 @@ function theme_maintenance_page($content, $messages = TRUE, $partial = FALSE) {
 
 function theme_install_page($content) {
   drupal_set_header('Content-Type: text/html; charset=utf-8');
-  drupal_add_css('misc/maintenance.css', 'core');
+  drupal_add_css('misc/maintenance.css', 'module', 'all', FALSE);
   drupal_set_html_head('<link rel="shortcut icon" href="'. base_path() .'misc/favicon.ico" type="image/x-icon" />');
   $output = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
   $output .= '<html xmlns="http://www.w3.org/1999/xhtml">';

@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.100 2006/12/07 17:10:29 dries Exp $
+// $Id: locale.inc,v 1.101 2006/12/10 09:54:32 unconed Exp $
 
 /**
  * @file
@@ -1284,7 +1284,7 @@ function _locale_export_remove_plural($entry) {
  */
 function _locale_string_language_list($translation) {
   // Add CSS
-  drupal_add_css(drupal_get_path('module', 'locale') .'/locale.css');
+  drupal_add_css(drupal_get_path('module', 'locale') .'/locale.css', 'module', 'all', FALSE);
 
   $languages = locale_supported_languages(FALSE, TRUE);
   unset($languages['name']['en']);

@@ -1,5 +1,5 @@
 <?php
-// $Id: watchdog.module,v 1.163 2006/12/01 23:17:26 unconed Exp $
+// $Id: watchdog.module,v 1.164 2006/12/10 09:54:35 unconed Exp $
 
 /**
  * @file
@@ -53,7 +53,7 @@ function watchdog_menu($may_cache) {
   else {
     if (arg(0) == 'admin' && arg(1) == 'logs') {
       // Add the CSS for this module
-      drupal_add_css(drupal_get_path('module', 'watchdog') .'/watchdog.css');
+      drupal_add_css(drupal_get_path('module', 'watchdog') .'/watchdog.css', 'module', 'all', FALSE);
     }
   }
 

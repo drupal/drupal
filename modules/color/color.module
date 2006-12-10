@@ -1,5 +1,5 @@
 <?php
-// $Id: color.module,v 1.11 2006/12/07 17:02:25 dries Exp $
+// $Id: color.module,v 1.12 2006/12/10 09:54:33 unconed Exp $
 
 /**
  * Implementation of hook_form_alter().
@@ -41,7 +41,7 @@ function _color_page_alter(&$vars) {
   // Override stylesheet
   $path = variable_get('color_'. $theme_key .'_stylesheet', NULL);
   if ($path) {
-    $vars['css']['theme'] = array($path => array('path' => $path, 'media' => 'all'));
+    $vars['css']['all']['theme'][$path] = TRUE;
     $vars['styles'] = drupal_get_css($vars['css']);
   }
 
@@ -88,11 +88,11 @@ function color_scheme_form($theme) {
   $info = color_get_info($theme);
 
   // Add Farbtastic color picker
-  drupal_add_css('misc/farbtastic/farbtastic.css');
+  drupal_add_css('misc/farbtastic/farbtastic.css', 'module', 'all', FALSE);
   drupal_add_js('misc/farbtastic/farbtastic.js');
 
   // Add custom CSS/JS
-  drupal_add_css($base .'/color.css', 'module');
+  drupal_add_css($base .'/color.css', 'module', 'all', FALSE);
   drupal_add_js($base .'/color.js');
   drupal_add_js(array('color' => array(
     'reference' => color_get_palette($theme, true)

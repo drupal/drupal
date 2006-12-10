@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.596 2006/12/07 17:02:25 dries Exp $
+// $Id: common.inc,v 1.597 2006/12/10 09:54:32 unconed Exp $
 
 /**
  * @file
@@ -1383,19 +1383,27 @@ function drupal_add_link($attributes) {
  * Adds a CSS file to the stylesheet queue.
  *
  * @param $path
- *   The path to the CSS file relative to the base_path(), e.g., /modules/devel/devel.css.
+ *   (optional) The path to the CSS file relative to the base_path(), e.g., /modules/devel/devel.css.
  * @param $type
- *   The type of stylesheet that is being added. Types are: core, module, and theme.
+ *   (optional) The type of stylesheet that is being added. Types are: module or theme.
  * @param $media
  *   (optional) The media type for the stylesheet, e.g., all, print, screen.
+ * @param $preprocess
+  *   (optional) Should this CSS file be aggregated and compressed if admin has enabled this feature?
  * @return
  *   An array of CSS files.
  */
-function drupal_add_css($path = NULL, $type = 'module', $media = 'all') {
-  static $css = array('core' => array(), 'module' => array(), 'theme' => array());
+function drupal_add_css($path = NULL, $type = 'module', $media = 'all', $preprocess = TRUE) {
+  static $css = array();
 
-  if (!is_null($path)) {
-    $css[$type][$path] = array('path' => $path, 'media' => $media);
+  // Create an array of CSS files for each media type first, since each type needs to be served
+  // to the browser differently.
+  if (isset($path)) {
+    // This check is necessary to ensure proper cascading of styles and is faster than an asort().
+    if (!isset($css[$media])) {
+      $css[$media] = array('module' => array(), 'theme' => array());
+    }
+    $css[$media][$type][$path] = $preprocess;
   }
 
   return $css;
@@ -1413,17 +1421,104 @@ function drupal_add_css($path = NULL, $type = 'module', $media = 'all') {
  */
 function drupal_get_css($css = NULL) {
   $output = '';
-  if (is_null($css)) {
+  if (!isset($css)) {
     $css = drupal_add_css();
   }
 
-  foreach ($css as $type) {
-    foreach ($type as $file) {
-      $output .= '<style type="text/css" media="'. $file['media'] .'">@import "'. base_path() . $file['path'] ."\";</style>\n";
+  $preprocess_css = variable_get('preprocess_css', FALSE);
+  $directory = file_directory_path();
+  $is_writable = is_dir($directory) && is_writable($directory) && (variable_get('file_downloads', FILE_DOWNLOADS_PUBLIC) == FILE_DOWNLOADS_PUBLIC);
+
+  foreach ($css as $media => $types) {
+    // If CSS preprocessing is off, we still need to output the styles.
+    // Additionally, go through any remaining styles if CSS preprocessing is on and output the non-cached ones.
+    foreach ($types as $type => $files) {
+      foreach ($types[$type] as $file => $preprocess) {
+        if (!$preprocess || !($is_writable && $preprocess_css)) {
+          // If a CSS file is not to be preprocessed and it's a module CSS file, it needs to *always* appear at the *top*,
+          // regardless of whether preprocessing is on or off.
+          if (!$preprocess && $type == 'module') {
+            $no_module_preprocess .= '<style type="text/css" media="'. $media .'">@import "'. base_path() . $file .'";</style>' ."\n";
+          }
+          // If a CSS file is not to be preprocessed and it's a theme CSS file, it needs to *always* appear at the *bottom*,
+          // regardless of whether preprocessing is on or off.
+          else if (!$preprocess && $type == 'theme') {
+            $no_theme_preprocess .= '<style type="text/css" media="'. $media .'">@import "'. base_path() . $file .'";</style>' ."\n";
+          }
+          else {
+            $output .= '<style type="text/css" media="'. $media .'">@import "'. base_path() . $file .'";</style>' ."\n";
+          }
+        }
+      }
+    }
+    
+    if ($is_writable && $preprocess_css) {
+      $filename = md5(serialize($types)) .'.css';
+      $preprocess_file = drupal_build_css_cache($types, $filename);
+      $output .= '<style type="text/css" media="'. $media .'">@import "'. base_path() . $preprocess_file .'";</style>'. "\n";
     }
   }
 
-  return $output;
+  return $no_module_preprocess . $output . $no_theme_preprocess;
+}
+
+/**
+ * Aggregate and optimize CSS files, putting them in the files directory.
+ *
+ * @param $types
+ *   An array of types of CSS files (e.g., screen, print) to aggregate and compress into one file.
+ * @param $filename
+ *   The name of the aggregate CSS file.
+ * @return
+ *   The name of the CSS file.
+ */
+function drupal_build_css_cache($types, $filename) {
+  $data = '';
+
+  // Create the css/ within the files folder.
+  $csspath = file_create_path('css');
+  file_check_directory($csspath, FILE_CREATE_DIRECTORY);
+  
+  if (!file_exists($csspath .'/'. $filename)) {
+    // Build aggregate CSS file.
+    foreach ($types as $type) {
+      foreach ($type as $file => $cache) {
+        if ($cache) {
+          $contents = file_get_contents($file);
+          // Return the path to where this CSS file originated from, stripping off the name of the file at the end of the path.
+          $path = base_path() . substr($file, 0, strrpos($file, '/')) .'/';
+          // Fix all paths within this CSS file, ignoring absolute paths.
+          $contents = preg_replace('/url\(([\'"]?)(?![a-z]+:)/i', 'url(\1'. $path . '\2', $contents);
+          // Fix any @import that don't use url() and is not absoslute.
+          $data .= preg_replace('/@import\s*([\'"]?)(?![a-z]+:)/i', '@import \1'. $path . '\2', $contents);
+        }
+      }
+    }
+  
+    // @import rules must proceed any other style, so we move those to the top.
+    $regexp = '/@import[^;]+;/i';
+    preg_match_all($regexp, $data, $matches);
+    $data = preg_replace($regexp, '', $data);
+    $data = implode('', $matches[0]) . $data;
+  
+    // Perform some safe CSS optimizations.
+    $data = preg_replace('<
+      \s*([@{}:;\)])\s* |          # Remove whitespace around separators.
+      /\*([^*\\\\]|\*(?!/))+\*/ |  # Remove comments that are not CSS hacks.
+      [\n\r]                       # Remove line breaks.
+      >x', '\1', $data);
+  
+    // Create the CSS file.
+    file_save_data($data, $csspath .'/'. $filename, FILE_EXISTS_REPLACE);
+  }
+  return $csspath .'/'. $filename;
+}
+
+/**
+ * Delete all cached CSS files.
+ */
+function drupal_clear_css_cache() {
+  file_scan_directory(file_create_path('css'), '.*', array('.', '..', 'CVS'), 'file_delete', TRUE);
 }
 
 /**
