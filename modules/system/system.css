@@ -329,6 +329,10 @@ html.js fieldset.collapsed legend a {
 html.js fieldset.collapsible legend a {
   display: block;
 }
+/* Avoid jumping around due to margins collapsing into collapsible fieldset border */
+html.js fieldset.collapsible .fieldset-wrapper {
+  overflow: auto;
+}
 
 /*
 ** Resizable text areas
