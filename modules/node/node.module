@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.745 2006/12/10 20:40:06 dries Exp $
+// $Id: node.module,v 1.746 2006/12/10 21:07:15 dries Exp $
 
 /**
  * @file
@@ -145,8 +145,8 @@ function node_teaser($body, $format = NULL) {
 
   $size = variable_get('teaser_length', 600);
 
-  // find where the delimiter is in the body
-  $delimiter = strpos($body, '<!--break-->');
+  // Find where the delimiter is in the body
+  $delimiter = strpos($body, '<break>');
 
   // If the size is zero, and there is no delimiter, the entire body is the teaser.
   if ($size == 0 && $delimiter === FALSE) {
@@ -723,8 +723,7 @@ function node_prepare($node, $teaser = FALSE) {
  */
 function node_build_content($node, $teaser = FALSE, $page = FALSE) {
   // Remove the delimiter (if any) that separates the teaser from the body.
-  // TODO: this strips legitimate uses of '<!--break-->' also.
-  $node->body = str_replace('<!--break-->', '', $node->body);
+  $node->body = str_replace('<break>', '', $node->body);
 
   // The 'view' hook can be implemented to overwrite the default function
   // to display nodes.
@@ -2173,7 +2172,7 @@ function node_preview($node) {
 function theme_node_preview($node) {
   $output = '<div class="preview">';
   if ($node->teaser && $node->teaser != $node->body) {
-    drupal_set_message(t('The trimmed version of your post shows what your post looks like when promoted to the main page or when exported for syndication. You can insert the delimiter "&lt;!--break--&gt;" (without the quotes) to fine-tune where your post gets split.'));
+    drupal_set_message(t('The trimmed version of your post shows what your post looks like when promoted to the main page or when exported for syndication. You can insert the delimiter "&lt;break&gt;" (without the quotes) to fine-tune where your post gets split.'));
     $output .= '<h3>'. t('Preview trimmed version') .'</h3>';
     $output .= node_view(drupal_clone($node), 1, FALSE, 0);
     $output .= '<h3>'. t('Preview full version') .'</h3>';
