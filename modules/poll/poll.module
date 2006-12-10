@@ -231,8 +231,6 @@ function poll_menu($may_cache) {
   $items = array();
 
   if ($may_cache) {
-    $items[] = array('path' => 'node/add/poll', 'title' => t('Poll'),
-      'access' => user_access('create polls'));
     $items[] = array('path' => 'poll', 'title' => t('Polls'),
       'callback' => 'poll_page',
       'access' => user_access('access content'),

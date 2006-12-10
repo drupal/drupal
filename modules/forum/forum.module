@@ -35,9 +35,6 @@ function forum_menu($may_cache) {
   $items = array();
 
   if ($may_cache) {
-    $items[] = array('path' => 'node/add/forum',
-      'title' => t('Forum topic'),
-      'access' => user_access('create forum topics'));
     $items[] = array('path' => 'forum',
       'title' => t('Forums'),
       'callback' => 'forum_page',

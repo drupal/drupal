@@ -254,8 +254,6 @@ function blog_menu($may_cache) {
   $items = array();
 
   if ($may_cache) {
-    $items[] = array('path' => 'node/add/blog', 'title' => t('Blog entry'),
-      'access' => user_access('edit own blog'));
     $items[] = array('path' => 'blog', 'title' => t('Blogs'),
       'callback' => 'blog_page',
       'access' => user_access('access content'),
