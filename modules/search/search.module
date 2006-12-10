@@ -1076,7 +1076,7 @@ function theme_search_block_form($form) {
  */
 function search_data($keys = NULL, $type = 'node') {
   // Add CSS
-  drupal_add_css(drupal_get_path('module', 'search') .'/search.css');
+  drupal_add_css(drupal_get_path('module', 'search') .'/search.css', 'module', 'all', FALSE);
 
   if (isset($keys)) {
     if (module_hook($type, 'search')) {

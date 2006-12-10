@@ -37,7 +37,7 @@ function help_menu($may_cache) {
  */
 function help_main() {
   // Add CSS
-  drupal_add_css(drupal_get_path('module', 'help') .'/help.css');
+  drupal_add_css(drupal_get_path('module', 'help') .'/help.css', 'module', 'all', FALSE);
 
   $output = t('
   <h2>Help topics</h2>

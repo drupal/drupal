@@ -53,7 +53,7 @@ function watchdog_menu($may_cache) {
   else {
     if (arg(0) == 'admin' && arg(1) == 'logs') {
       // Add the CSS for this module
-      drupal_add_css(drupal_get_path('module', 'watchdog') .'/watchdog.css');
+      drupal_add_css(drupal_get_path('module', 'watchdog') .'/watchdog.css', 'module', 'all', FALSE);
     }
   }
 

@@ -851,8 +851,8 @@ function drupal_maintenance_theme() {
   require_once './includes/unicode.inc';
   require_once './modules/filter/filter.module';
   unicode_check();
-  drupal_add_css(drupal_get_path('module', 'system') .'/defaults.css', 'core');
-  drupal_add_css(drupal_get_path('module', 'system') .'/system.css', 'core');
+  drupal_add_css(drupal_get_path('module', 'system') .'/defaults.css', 'module');
+  drupal_add_css(drupal_get_path('module', 'system') .'/system.css', 'module');
   $theme = '';
 }
 

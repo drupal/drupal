@@ -1284,7 +1284,7 @@ function _locale_export_remove_plural($entry) {
  */
 function _locale_string_language_list($translation) {
   // Add CSS
-  drupal_add_css(drupal_get_path('module', 'locale') .'/locale.css');
+  drupal_add_css(drupal_get_path('module', 'locale') .'/locale.css', 'module', 'all', FALSE);
 
   $languages = locale_supported_languages(FALSE, TRUE);
   unset($languages['name']['en']);

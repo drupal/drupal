@@ -785,6 +785,9 @@ if (($access_check == FALSE) || ($user->uid == 1)) {
   update_fix_watchdog();
   update_fix_sessions();
 
+  // Clear any cached CSS files, in case any module updates its CSS as well.
+  drupal_clear_css_cache();
+
   $op = isset($_REQUEST['op']) ? $_REQUEST['op'] : '';
   switch ($op) {
     case 'Update':
