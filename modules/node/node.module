@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.744 2006/12/08 16:21:15 dries Exp $
+// $Id: node.module,v 1.745 2006/12/10 20:40:06 dries Exp $
 
 /**
  * @file
@@ -2158,7 +2158,7 @@ function node_preview($node) {
       $output = theme('node_preview', $cloned_node);
     }
     drupal_set_title(t('Preview'));
-    drupal_set_breadcrumb(array(l(t('Home'), NULL), l(t('create content'), 'node/add'), l(t('Submit @name', array('@name' => node_get_types('name', $node))), 'node/add/'. $node->type)));
+    drupal_set_breadcrumb(array(l(t('Home'), NULL), l(t('Create content'), 'node/add'), l(t('Submit @name', array('@name' => node_get_types('name', $node))), 'node/add/'. $node->type)));
 
     return $output;
   }
