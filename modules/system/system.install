@@ -3421,6 +3421,15 @@ function system_update_1017() {
 }
 
 /**
+ * Change break tag.
+ */
+function system_update_1018() {
+  $ret = array();
+  $ret[] = update_sql("UPDATE {node_revisions} SET body = REPLACE(body, '<!--break-->', '<break>')");
+  return $ret;
+}
+
+/**
  * @} End of "defgroup updates-4.7-to-5.0"
  */
 
