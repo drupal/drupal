@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.138 2006/12/10 20:13:36 dries Exp $
+// $Id: bootstrap.inc,v 1.139 2006/12/11 12:00:07 dries Exp $
 
 /**
  * @file
@@ -60,8 +60,14 @@ define('DRUPAL_BOOTSTRAP_PATH', 6);
  */
 define('DRUPAL_BOOTSTRAP_FULL', 7);
 
-// These values should match the 'role' table
+/**
+ * Role ID for anonymous users; should match what's in the "role" table.
+ */
 define('DRUPAL_ANONYMOUS_RID', 1);
+
+/**
+ * Role ID for authenticated users; should match what's in the "role" table.
+ */
 define('DRUPAL_AUTHENTICATED_RID', 2);
 
 /**
