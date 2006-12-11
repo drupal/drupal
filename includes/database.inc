@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.60 2006/10/23 18:38:44 drumm Exp $
+// $Id: database.inc,v 1.61 2006/12/11 22:58:17 unconed Exp $
 
 /**
  * @file
@@ -159,6 +159,9 @@ function _db_query_callback($match, $init = FALSE) {
   }
 }
 
+/**
+ * Indicates the place holders that should be replaced in _db_query_callback().
+ */
 define('DB_QUERY_REGEXP', '/(%d|%s|%%|%f|%b)/');
 
 /**
