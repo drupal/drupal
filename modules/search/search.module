@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.205 2006/12/10 09:54:34 unconed Exp $
+// $Id: search.module,v 1.206 2006/12/11 16:57:42 dries Exp $
 
 /**
  * @file
@@ -101,9 +101,7 @@ function search_help($section) {
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@search">Search page</a>.', array('@search' => 'http://drupal.org/handbook/modules/search/')) .'</p>';
       return $output;
     case 'admin/settings/search':
-      return t('
-<p>The search engine works by maintaining an index of the words in your site\'s content. You can adjust the settings below to tweak the indexing behaviour. Note that the search requires cron to be set up correctly.</p>
-');
+      return '<p>'. t('The search engine works by maintaining an index of the words in your site\'s content. You can adjust the settings below to tweak the indexing behaviour. Note that the search requires cron to be set up correctly.') .'</p>';
     case 'search#noresults':
       return t('<ul>
 <li>Check if your spelling is correct.</li>

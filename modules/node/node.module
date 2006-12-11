@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.746 2006/12/10 21:07:15 dries Exp $
+// $Id: node.module,v 1.747 2006/12/11 16:57:42 dries Exp $
 
 /**
  * @file
@@ -32,16 +32,16 @@ function node_help($section) {
     case 'admin/content/types':
       return '<p>'. t('Below is a list of all the content types on your site. All posts that exist on your site are instances of one of these content types.') .'</p>';
     case 'admin/content/types/add':
-      return '<p>'. t('To create a new content type, enter the human-readable name, the machine-readable name, and all other relevant fields that are on this page. Once created, users of your site will be able to create posts that are instances of this content type.');
+      return '<p>'. t('To create a new content type, enter the human-readable name, the machine-readable name, and all other relevant fields that are on this page. Once created, users of your site will be able to create posts that are instances of this content type.') .'</p>';
   }
 
   if (arg(0) == 'node' && is_numeric(arg(1)) && arg(2) == 'revisions') {
-    return t('The revisions let you track differences between multiple versions of a post.');
+    return '<p>'. t('The revisions let you track differences between multiple versions of a post.') .'</p>';
   }
 
   if (arg(0) == 'node' && arg(1) == 'add' && $type = arg(2)) {
     $type = node_get_types('type', arg(2));
-    return filter_xss_admin($type->help);
+    return '<p>'. filter_xss_admin($type->help) .'</p>';
   }
 }
 

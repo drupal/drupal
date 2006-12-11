@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal.module,v 1.136 2006/11/26 02:20:00 drumm Exp $
+// $Id: drupal.module,v 1.137 2006/12/11 16:57:42 dries Exp $
 
 /**
  * @file
@@ -22,7 +22,7 @@ function drupal_help($section) {
 </ul>
 ');
       $output .= '<p>'. t('The Drupal module administration page allows you to set the xml-rpc server page and other related options.') .'</p>';
-      $output .= '<p>'. t('If you maintain a directory of sites, you can list them on a page using the <code>drupal_client_page()</code> function. Sample instructions:
+      $output .= t('<p>If you maintain a directory of sites, you can list them on a page using the <code>drupal_client_page()</code> function. Sample instructions: </p>
 <ul>
   <li>Enable the page module. Select create content &gt;&gt; page.</li>
   <li>For input format, select PHP code.</li>
@@ -33,7 +33,7 @@ print drupal_client_page();
 ?&gt;
 </pre>
   <li>Save the page.</li>
-</ul>') . '</p>';
+</ul>');
 
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@drupal">Drupal page</a>.', array('@drupal' => 'http://drupal.org/handbook/modules/drupal/')) .'</p>';
       return $output;
