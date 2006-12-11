@@ -381,7 +381,6 @@ function comment_admin_settings() {
     '#type' => 'fieldset',
     '#title' => t('Viewing options'),
     '#collapsible' => TRUE,
-    '#collapsed' => TRUE,
   );
 
   $form['viewing_options']['comment_default_mode'] = array(
@@ -424,7 +423,6 @@ function comment_admin_settings() {
     '#type' => 'fieldset',
     '#title' => t('Posting settings'),
     '#collapsible' => TRUE,
-    '#collapsed' => TRUE,
   );
 
   $form['posting_settings']['comment_anonymous'] = array(
