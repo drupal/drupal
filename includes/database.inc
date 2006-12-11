@@ -159,6 +159,9 @@ function _db_query_callback($match, $init = FALSE) {
   }
 }
 
+/**
+ * Indicates the place holders that should be replaced in _db_query_callback().
+ */
 define('DB_QUERY_REGEXP', '/(%d|%s|%%|%f|%b)/');
 
 /**
