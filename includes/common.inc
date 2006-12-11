@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.598 2006/12/10 20:34:02 dries Exp $
+// $Id: common.inc,v 1.599 2006/12/11 17:47:36 dries Exp $
 
 /**
  * @file
@@ -2094,8 +2094,10 @@ function drupal_render(&$elements) {
     if (isset($elements['#theme']) && empty($elements['#theme_used'])) {
       $elements['#theme_used'] = TRUE;
 
-      $previous_value = isset($elements['#value']) ? $elements['#value'] : NULL;
-      $previous_type = $elements['#type'];
+      $previous = array();
+      foreach (array('#value', '#type', '#prefix', '#suffix') as $key) {
+        $previous[$key] = isset($elements[$key]) ? $elements[$key] : NULL;
+      }
       // If we rendered a single element, then we will skip the renderer.
       if (empty($children)) {
         $elements['#printed'] = TRUE;
@@ -2105,11 +2107,12 @@ function drupal_render(&$elements) {
       }
       $elements['#type'] = 'markup';
 
+      unset($elements['#prefix'], $elements['#suffix']);
       $content = theme($elements['#theme'], $elements);
 
-      $elements['#value'] = $previous_value;
-      $elements['#type'] = $previous_type;
-      unset($elements['#prefix'], $elements['#suffix']);
+      foreach (array('#value', '#type', '#prefix', '#suffix') as $key) {
+        $elements[$key] = isset($previous[$key]) ? $previous[$key] : NULL;
+      }
     }
     /* render each of the children using drupal_render and concatenate them */
     if (!isset($content) || $content === '') {
