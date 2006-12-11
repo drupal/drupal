@@ -741,6 +741,7 @@ function system_image_toolkit_settings() {
       '#default_value' => variable_get('image_toolkit', image_get_toolkit()),
       '#options' => $toolkits_available
     );
+    $form['image_toolkit_settings'] = image_toolkit_invoke('settings');
 
     return system_settings_form($form);
   }
