@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.509 2006/12/08 16:16:30 dries Exp $
+// $Id: comment.module,v 1.510 2006/12/11 17:13:45 dries Exp $
 
 /**
  * @file
@@ -381,7 +381,6 @@ function comment_admin_settings() {
     '#type' => 'fieldset',
     '#title' => t('Viewing options'),
     '#collapsible' => TRUE,
-    '#collapsed' => TRUE,
   );
 
   $form['viewing_options']['comment_default_mode'] = array(
@@ -424,7 +423,6 @@ function comment_admin_settings() {
     '#type' => 'fieldset',
     '#title' => t('Posting settings'),
     '#collapsible' => TRUE,
-    '#collapsed' => TRUE,
   );
 
   $form['posting_settings']['comment_anonymous'] = array(
