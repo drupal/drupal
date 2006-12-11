@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.747 2006/12/11 16:57:42 dries Exp $
+// $Id: node.module,v 1.748 2006/12/11 17:48:52 dries Exp $
 
 /**
  * @file
@@ -2026,7 +2026,7 @@ function node_form_add_preview($form) {
     drupal_validate_form($form['form_id']['#value'], $form);
     if (!form_get_errors()) {
       // We pass the global $form_values here to preserve changes made during form validation
-      $form['node_preview'] = array('#value' => node_preview((object)$form_values), '#weight' => -100);
+      $form['#prefix'] = node_preview((object)$form_values);
     }
   }
   if (variable_get('node_preview', 0) && (form_get_errors() || $op != t('Preview'))) {
@@ -2037,9 +2037,6 @@ function node_form_add_preview($form) {
 
 function theme_node_form($form) {
   $output = "\n<div class=\"node-form\">\n";
-  if (isset($form['node_preview'])) {
-    $output .= drupal_render($form['node_preview']);
-  }
 
   // Admin form fields and submit buttons must be rendered first, because
   // they need to go to the bottom of the form, and so should not be part of
