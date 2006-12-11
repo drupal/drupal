@@ -1,13 +1,13 @@
-// $Id: CHANGELOG.txt,v 1.171 2006/11/21 08:16:39 unconed Exp $
+// $Id: CHANGELOG.txt,v 1.172 2006/12/11 20:53:17 unconed Exp $
 
 Drupal 5.0, xxxx-xx-xx (development version)
 ------------------------
 - completely retooled the administration page
     * /admin now contains an administration page which may be themed
     * reorganised administration menu items by task and by module
-    * added a status report page with detailed PHP/MySQL information
+    * added a status report page with detailed PHP/MySQL/Drupal information
 - added web-based installer which can:
-    * check installation requirements
+    * check installation and run-time requirements
     * automatically generate the database configuration file
     * install pre-made 'install profiles' or distributions
     * import the database structure with automatic table prefixing
@@ -29,11 +29,13 @@ Drupal 5.0, xxxx-xx-xx (development version)
     * made it possible to instantly assign roles to newly created user accounts.
     * improved configurability of the contact forms.
     * reorganized the settings pages.
-    * made it easy to investigate popular search terms
+    * made it easy to investigate popular search terms.
     * added a 'select all' checkbox and a range select feature to administration tables.
-- integrated urlfilter.module in filter.module
+    * simplified the 'break' tag to split teasers from body.
+    * use proper capitalization for titles, menu items and operations.
+- integrated urlfilter.module into filter.module
 - block system:
-    * extended the block visibility settings with a role specific settings.
+    * extended the block visibility settings with a role specific setting.
     * made it possible to customize all block titles.
 - poll module:
     * optionally allow people to inspect all votes.
@@ -63,6 +65,7 @@ Drupal 5.0, xxxx-xx-xx (development version)
     * made it possible to do memcached based session management.
     * omit sidebars when serving a '404 - Page not found': saves CPU cycles and bandwidth.
     * added an 'aggressive' caching policy.
+    * added a CSS aggregator and compressor (up to 40% faster page loads).
 - removed the archive module.
 - upgrade system:
     * created space for update branches.
