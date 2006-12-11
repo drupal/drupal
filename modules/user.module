@@ -1872,63 +1872,15 @@ function user_admin_perm_submit($form_id, $edit) {
  * Menu callback: administer roles.
  */
 function user_admin_role() {
-  $edit = isset($_POST['edit']) ? $_POST['edit'] : '';
-  $op = isset($_POST['op']) ? $_POST['op'] : '';
   $id = arg(4);
-
-  if ($op == t('Save role')) {
-    // Check for a valid form token to protect against cross site request forgeries.
-    if (drupal_valid_token($edit['form_token'], 'user_admin_role', TRUE)) {
-      if ($edit['name']) {
-        db_query("UPDATE {role} SET name = '%s' WHERE rid = %d", $edit['name'], $id);
-        drupal_set_message(t('The changes have been saved.'));
-        drupal_goto('admin/access/roles');
-      }
-      else {
-        form_set_error('name', t('You must specify a valid role name.'));
-      }
-    }
-    else {
-      form_set_error('form_token', t('Validation error, please try again.  If this error persists, please contact the site administrator.'));
-    }
-  }
-  else if ($op == t('Delete role')) {
-    // Check for a valid form token to protect against cross site request forgeries.
-    if (drupal_valid_token($edit['form_token'], 'user_admin_role', TRUE)) {
-      db_query('DELETE FROM {role} WHERE rid = %d', $id);
-      db_query('DELETE FROM {permission} WHERE rid = %d', $id);
-      // Update the users who have this role set:
-      db_query('DELETE FROM {users_roles} WHERE rid = %d', $id);
-      drupal_set_message(t('The role has been deleted.'));
-      drupal_goto('admin/access/roles');
-    }
-    else {
-      form_set_error('form_token', t('Validation error, please try again.  If this error persists, please contact the site administrator.'));
-    }
-  }
-  else if ($op == t('Add role')) {
-    // Check for a valid form token to protect against cross site request forgeries.
-    if (drupal_valid_token($edit['form_token'], 'user_admin_new_role', TRUE)) {
-      if ($edit['name']) {
-        db_query("INSERT INTO {role} (name) VALUES ('%s')", $edit['name']);
-        drupal_set_message(t('The role has been added.'));
-        drupal_goto('admin/access/roles');
-      }
-      else {
-        form_set_error('name', t('You must specify a valid role name.'));
-      }
-    }
-    else {
-      form_set_error('form_token', t('Validation error, please try again.  If this error persists, please contact the site administrator.'));
-    }
-  }
   if ($id) {
     // Display role edit form.
     $role = db_fetch_object(db_query('SELECT * FROM {role} WHERE rid = %d', $id));
     $form['name'] = array('#type' => 'textfield', '#title' => t('Role name'), '#default_value' => $role->name, '#size' => 30, '#required' => TRUE, '#maxlength' => 64, '#description' => t('The name for this role. Example: "moderator", "editorial board", "site architect".'));
+    $form['rid'] = array('#type' => 'value', '#value' => $id);
     $form['submit'] = array('#type' => 'submit', '#value' => t('Save role'));
     $form['delete'] = array('#type' => 'submit', '#value' => t('Delete role'));
-    return drupal_get_form('user_admin_role', $form);
+    return drupal_get_form('user_admin_edit_role', $form);
   }
   else {
     $form['name'] = array('#type' => 'textfield', '#size' => 32, '#maxlength' => 64);
@@ -1936,6 +1888,56 @@ function user_admin_role() {
     return drupal_get_form('user_admin_new_role', $form);
   }
 
+}
+
+function user_admin_edit_role_validate($form_id, $form_values) {
+  if (drupal_valid_token($form_values['form_token'], 'user_admin_edit_role', TRUE)) {
+    if (db_result(db_query("SELECT COUNT(*) FROM {role} WHERE name = '%s' AND rid != %d", $form_values['name'], $form_values['rid']))) {
+      form_set_error('name', t('The role name %name already exists. Please choose another role name.', array('%name' => $form_values['name'])));
+    }
+  }
+  else {
+    form_set_error('form_token', t('Validation error, please try again.  If this error persists, please contact the site administrator.'));
+  }
+}
+
+function user_admin_edit_role_submit($form_id, $form_values) {
+  $op = isset($_POST['op']) ? $_POST['op'] : '';
+
+  if ($op == t('Save role')) {
+    db_query("UPDATE {role} SET name = '%s' WHERE rid = %d", $form_values['name'], $form_values['rid']);
+    drupal_set_message(t('The role has been renamed.'));
+  }
+  else if ($op == t('Delete role')) {
+    db_query('DELETE FROM {role} WHERE rid = %d', $form_values['rid']);
+    db_query('DELETE FROM {permission} WHERE rid = %d', $form_values['rid']);
+    // Update the users who have this role set:
+    db_query('DELETE FROM {users_roles} WHERE rid = %d', $form_values['rid']);
+    drupal_set_message(t('The role has been deleted.'));
+  }
+  return 'admin/access/roles';
+}
+
+function user_admin_new_role_validate($form_id, $form_values) {
+  if ($form_values['name']) {
+    if (drupal_valid_token($form_values['form_token'], 'user_admin_new_role', TRUE)) {
+      if (db_result(db_query("SELECT COUNT(*) FROM {role} WHERE name = '%s'", $form_values['name']))) {
+        form_set_error('name', t('The role name %name already exists. Please choose another role name.', array('%name' => $form_values['name'])));
+      }
+    }
+    else {
+      form_set_error('form_token', t('Validation error, please try again.  If this error persists, please contact the site administrator.'));
+    }
+  }
+  else {
+    form_set_error('name', t('You must specify a valid role name.'));
+  }
+}
+
+function user_admin_new_role_submit($form_id, $form_values) {
+  db_query("INSERT INTO {role} (name) VALUES ('%s')", $form_values['name']);
+  drupal_set_message(t('The role has been added.'));
+  return 'admin/access/roles';
 }
 
 function theme_user_admin_new_role($form) {
