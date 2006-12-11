@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.87 2006/12/07 17:02:25 dries Exp $
+// $Id: file.inc,v 1.88 2006/12/11 16:45:17 dries Exp $
 
 /**
  * @file
@@ -602,8 +602,10 @@ function file_download() {
 
 
 /**
- * Finds all files that match a given mask in a given
- * directory.
+ * Finds all files that match a given mask in a given directory.
+ * Directories and files beginning with a period are excluded; this
+ * prevents hidden files and directories (such as SVN working directories)
+ * from being scanned.
  *
  * @param $dir
  *   The base directory for the scan.
@@ -637,7 +639,7 @@ function file_scan_directory($dir, $mask, $nomask = array('.', '..', 'CVS'), $ca
 
   if (is_dir($dir) && $handle = opendir($dir)) {
     while ($file = readdir($handle)) {
-      if (!in_array($file, $nomask)) {
+      if (!in_array($file, $nomask) && $file[0] != '.') {
         if (is_dir("$dir/$file") && $recurse) {
           $files = array_merge($files, file_scan_directory("$dir/$file", $mask, $nomask, $callback, $recurse, $key, $min_depth, $depth + 1));
         }
