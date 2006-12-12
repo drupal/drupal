@@ -381,6 +381,7 @@ function system_view_general() {
       '#type' => 'radios', '#title' => t('Select an image processing toolkit'),
       '#default_value' => variable_get('image_toolkit', image_get_toolkit()), '#options' => $toolkits_available
     );
+    $form['image']['settings'] = image_toolkit_invoke('settings');
   }
 
   // Feed settings
@@ -1202,7 +1203,6 @@ function system_theme_settings($key = '') {
       '#title' => t('Upload icon image'),
       '#description' => t("If you don't have direct file access to the server, use this field to upload your shortcut icon.")
     );
-    $form['image']['settings'] = image_toolkit_invoke('settings');
   }
 
   if ($key) {
