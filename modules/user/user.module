@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.730 2006/12/12 09:55:18 unconed Exp $
+// $Id: user.module,v 1.731 2006/12/12 10:11:43 unconed Exp $
 
 /**
  * @file
@@ -1769,7 +1769,7 @@ function user_roles($membersonly = 0, $permission = 0) {
  * Menu callback: administer permissions.
  */
 function user_admin_perm($rid = NULL) {
-  if ($rid) {
+  if (is_numeric($rid)) {
     $result = db_query('SELECT r.rid, p.perm FROM {role} r LEFT JOIN {permission} p ON r.rid = p.rid WHERE r.rid = %d', $rid);
   }
   else {
@@ -1781,7 +1781,7 @@ function user_admin_perm($rid = NULL) {
     $role_permissions[$role->rid] = $role->perm;
   }
 
-  if ($rid) {
+  if (is_numeric($rid)) {
     $result = db_query('SELECT rid, name FROM {role} r WHERE r.rid = %d ORDER BY name', $rid);
   }
   else {
@@ -2360,7 +2360,7 @@ function user_help($section) {
       <ul>
       <li>Anonymous user: this role is used for users that don\'t have a user account or that are not authenticated.</li>
       <li>Authenticated user: this role is automatically granted to all logged in users.</li>
-      </ul>', array('@permissions' => url('admin/user/access/permissions')));
+      </ul>', array('@permissions' => url('admin/user/access')));
     case 'admin/user/search':
       return '<p>'. t('Enter a simple pattern ("*" may be used as a wildcard match) to search for a username. For example, one may search for "br" and Drupal might return "brian", "brad", and "brenda".') .'</p>';
     case 'user/help#user':
