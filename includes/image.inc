@@ -117,7 +117,7 @@ function image_scale($source, $destination, $width, $height) {
   $info = image_get_info($source);
 
   // don't scale up
-  if ($width > $info['width'] && $height > $info['height']) {
+  if ($width >= $info['width'] && $height >= $info['height']) {
     return FALSE;
   }
 
