@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.510 2006/12/11 17:13:45 dries Exp $
+// $Id: comment.module,v 1.511 2006/12/12 05:39:45 unconed Exp $
 
 /**
  * @file
@@ -433,7 +433,7 @@ function comment_admin_settings() {
       COMMENT_ANONYMOUS_MAYNOT_CONTACT => t('Anonymous posters may not enter their contact information'),
       COMMENT_ANONYMOUS_MAY_CONTACT => t('Anonymous posters may leave their contact information'),
       COMMENT_ANONYMOUS_MUST_CONTACT => t('Anonymous posters must leave their contact information')),
-    '#description' => t('This option is enabled when anonymous users have permission to post comments on the <a href="@url">permissions page</a>.', array('@url' => url('admin/user/access'))),
+    '#description' => t('This option is enabled when anonymous users have permission to post comments on the <a href="@url">permissions page</a>.', array('@url' => url('admin/user/access', NULL, 'module-comment'))),
   );
   if (!user_access('post comments', user_load(array('uid' => 0)))) {
     $form['posting_settings']['comment_anonymous']['#disabled'] = TRUE;
