@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.163 2006/12/06 15:49:45 dries Exp $
+// $Id: form.inc,v 1.164 2006/12/12 04:52:38 unconed Exp $
 
 /**
  * @defgroup form Form generation
@@ -89,7 +89,7 @@ function drupal_get_form($form_id) {
     $form = call_user_func_array('drupal_retrieve_form', $args);
     unset($_SESSION['form'][$_POST['form_build_id']]);
     if (isset($form['#multistep']) && $form['#multistep']) {
-      $_SESSION['form'][$form_build_id] = $args;
+      $_SESSION['form'][$form_build_id] = array('timestamp' => time(), 'args' => $args);
       $form['#build_id'] = $form_build_id;
     }
     drupal_prepare_form($args[0], $form);
