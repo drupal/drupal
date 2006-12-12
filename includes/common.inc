@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.600 2006/12/12 04:44:46 unconed Exp $
+// $Id: common.inc,v 1.601 2006/12/12 06:13:34 unconed Exp $
 
 /**
  * @file
@@ -243,8 +243,8 @@ function drupal_get_destination() {
     return 'destination='. urlencode($_REQUEST['destination']);
   }
   else {
-    // Use $_REQUEST here to retrieve the original path.
-    $path = isset($_REQUEST['q']) ? drupal_get_path_alias($_REQUEST['q']) : '';
+    // Use $_GET here to retrieve the original path in source form.
+    $path = isset($_GET['q']) ? $_GET['q'] : '';
     $query = drupal_query_string_encode($_GET, array('q'));
     if ($query != '') {
       $path .= '?'. $query;
