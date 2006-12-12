@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.164 2006/12/12 04:52:38 unconed Exp $
+// $Id: form.inc,v 1.165 2006/12/12 09:39:50 unconed Exp $
 
 /**
  * @defgroup form Form generation
@@ -324,7 +324,7 @@ function drupal_prepare_form($form_id, &$form) {
   else if ($user->uid && !$form['#programmed']) {
     $form['#token'] = $form_id;
     $form['form_token'] = array(
-      '#id' => 'edit-'. str_replace('_', '-', $form_id) .'-form-token',
+      '#id' => form_clean_id('edit-'. $form_id .'-form-token'),
       '#type' => 'token',
       '#default_value' => drupal_get_token($form['#token']),
     );
@@ -332,10 +332,10 @@ function drupal_prepare_form($form_id, &$form) {
 
 
   if (isset($form_id)) {
-    $form['form_id'] = array('#type' => 'hidden', '#value' => $form_id, '#id' => str_replace('_', '-', "edit-$form_id"));
+    $form['form_id'] = array('#type' => 'hidden', '#value' => $form_id, '#id' => form_clean_id("edit-$form_id"));
   }
   if (!isset($form['#id'])) {
-    $form['#id'] = $form_id;
+    $form['#id'] = form_clean_id($form_id);
   }
 
   $form += _element_info('form');
@@ -651,7 +651,7 @@ function form_builder($form_id, $form) {
       array_unshift($form['#parents'], $name);
     }
     if (!isset($form['#id'])) {
-      $form['#id'] = 'edit-'. implode('-', $form['#parents']);
+      $form['#id'] = form_clean_id('edit-'. implode('-', $form['#parents']));
     }
 
     if (isset($form['#disabled']) && $form['#disabled']) {
@@ -1425,7 +1425,7 @@ function process_weight($element) {
  */
 function theme_file($element) {
   _form_set_class($element, array('form-file'));
-  return theme('form_element', $element, '<input type="file" name="'. $element['#name'] .'"'. ($element['#attributes'] ? ' '. drupal_attributes($element['#attributes']) : '') .' id="'. form_clean_id($element['#id']) .'" size="'. $element['#size'] ."\" />\n");
+  return theme('form_element', $element, '<input type="file" name="'. $element['#name'] .'"'. ($element['#attributes'] ? ' '. drupal_attributes($element['#attributes']) : '') .' id="'. $element['#id'] .'" size="'. $element['#size'] ."\" />\n");
 }
 
 /**
@@ -1446,7 +1446,7 @@ function theme_form_element($element, $value) {
   if (!empty($element['#title'])) {
     $title = $element['#title'];
     if (!empty($element['#id'])) {
-      $output .= ' <label for="'. form_clean_id($element['#id']) .'">'. t('!title: !required', array('!title' => $title, '!required' => $required)) ."</label>\n";
+      $output .= ' <label for="'. $element['#id'] .'">'. t('!title: !required', array('!title' => $title, '!required' => $required)) ."</label>\n";
     }
     else {
       $output .= ' <label>'. t('!title: !required', array('!title' => $title, '!required' => $required)) ."</label>\n";
@@ -1496,7 +1496,7 @@ function _form_set_class(&$element, $class = array()) {
  *   The cleaned ID
  */
 function form_clean_id($id = NULL) {
-  $id = str_replace('][', '-', $id);
+  $id = str_replace(array('][', '_', ' '), '-', $id);
   return $id;
 }
 
