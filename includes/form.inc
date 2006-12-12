@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.165 2006/12/12 09:39:50 unconed Exp $
+// $Id: form.inc,v 1.166 2006/12/12 10:01:38 unconed Exp $
 
 /**
  * @defgroup form Form generation
@@ -996,7 +996,11 @@ function theme_radio($element) {
  *   A themed HTML string representing the radio button set.
  */
 function theme_radios($element) {
-  $element['#children'] = '<div class="form-radios">'. $element['#children'] .'</div>';
+  $class = 'form-radios';
+  if (isset($element['#attributes']['class'])) {
+    $class .= ' '. $element['#attributes']['class'];
+  }
+  $element['#children'] = '<div class="'. $class .'">'. $element['#children'] .'</div>';
   if ($element['#title'] || $element['#description']) {
     unset($element['#id']);
     return theme('form_element', $element, $element['#children']);
@@ -1227,7 +1231,11 @@ function theme_checkbox($element) {
  *   A themed HTML string representing the checkbox set.
  */
 function theme_checkboxes($element) {
-  $element['#children'] = '<div class="form-checkboxes">'. $element['#children'] .'</div>';
+  $class = 'form-checkboxes';
+  if (isset($element['#attributes']['class'])) {
+    $class .= ' '. $element['#attributes']['class'];
+  }
+  $element['#children'] = '<div class="'. $class .'">'. $element['#children'] .'</div>';
   if ($element['#title'] || $element['#description']) {
     unset($element['#id']);
     return theme('form_element', $element, $element['#children']);
