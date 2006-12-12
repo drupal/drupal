@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.512 2006/12/12 06:06:41 unconed Exp $
+// $Id: comment.module,v 1.513 2006/12/12 06:14:21 unconed Exp $
 
 /**
  * @file
@@ -10,58 +10,114 @@
  * a forum topic, weblog post, story, collaborative book page, etc.
  */
 
-/*
- * Constants to define a comment's published state
+/**
+ * Comment is published.
  */
 define('COMMENT_PUBLISHED', 0);
+
+/**
+ * Comment is awaiting approval.
+ */
 define('COMMENT_NOT_PUBLISHED', 1);
 
 /**
- * Constants to define the viewing modes for comment listings
+ * Comments are displayed in a flat list - collapsed.
  */
 define('COMMENT_MODE_FLAT_COLLAPSED', 1);
+
+/**
+ * Comments are displayed in a flat list - expanded.
+ */
 define('COMMENT_MODE_FLAT_EXPANDED', 2);
+
+/**
+ * Comments are displayed as a threaded list - collapsed.
+ */
 define('COMMENT_MODE_THREADED_COLLAPSED', 3);
+
+/**
+ * Comments are displayed as a threaded list - expanded.
+ */
 define('COMMENT_MODE_THREADED_EXPANDED', 4);
 
 /**
- * Constants to define the viewing orders for comment listings
+ * Comments are ordered by date - newest first.
  */
 define('COMMENT_ORDER_NEWEST_FIRST', 1);
+
+/**
+ * Comments are ordered by date - oldest first.
+ */
 define('COMMENT_ORDER_OLDEST_FIRST', 2);
 
 /**
- * Constants to define the position of the comment controls
+ * Comment controls should be shown above the comment list.
  */
 define('COMMENT_CONTROLS_ABOVE', 0);
+
+/**
+ * Comment controls should be shown below the comment list.
+ */
 define('COMMENT_CONTROLS_BELOW', 1);
+
+/**
+ * Comment controls should be shown both above and below the comment list.
+ */
 define('COMMENT_CONTROLS_ABOVE_BELOW', 2);
+
+/**
+ * Comment controls are hidden.
+ */
 define('COMMENT_CONTROLS_HIDDEN', 3);
 
 /**
- * Constants to define the anonymous poster contact handling
+ * Anonymous posters may not enter their contact information.
  */
 define('COMMENT_ANONYMOUS_MAYNOT_CONTACT', 0);
+
+/**
+ * Anonymous posters may leave their contact information.
+ */
 define('COMMENT_ANONYMOUS_MAY_CONTACT', 1);
+
+/**
+ * Anonymous posters must leave their contact information.
+ */
 define('COMMENT_ANONYMOUS_MUST_CONTACT', 2);
 
 /**
- * Constants to define the comment form location
+ * Comment form should be displayed on a separate page.
  */
 define('COMMENT_FORM_SEPARATE_PAGE', 0);
+
+/**
+ * Comment form should be shown below post or list of comments.
+ */
 define('COMMENT_FORM_BELOW', 1);
 
 /**
- * Constants to define a node's comment state
+ * Comments for this node are disabled.
  */
 define('COMMENT_NODE_DISABLED', 0);
+
+/**
+ * Comments for this node are locked.
+ */
 define('COMMENT_NODE_READ_ONLY', 1);
+
+/**
+ * Comments are enabled on this node.
+ */
 define('COMMENT_NODE_READ_WRITE', 2);
 
 /**
- * Constants to define if comment preview is optional or required
+ * Comment preview is optional.
  */
 define('COMMENT_PREVIEW_OPTIONAL', 0);
+
+/**
+ * Comment preview is required.
+ */
 define('COMMENT_PREVIEW_REQUIRED', 1);
 
 /**
