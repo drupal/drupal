@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.422 2006/12/11 16:48:35 dries Exp $
+// $Id: system.module,v 1.423 2006/12/12 09:42:14 unconed Exp $
 
 /**
  * @file
@@ -1538,7 +1538,7 @@ function theme_system_modules($form) {
   // Pull package information from module list and start grouping modules.
   $modules = $form['validation_modules']['#value'];
   foreach ($modules as $module) {
-    if (!isset($module->info['package'])) {
+    if (!isset($module->info['package']) || !$module->info['package']) {
       $module->info['package'] = 'Other';
     }
     $packages[$module->info['package']][$module->name] = $module->info;
