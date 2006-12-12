@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.142 2006/12/05 05:47:37 dries Exp $
+// $Id: menu.inc,v 1.143 2006/12/12 06:02:52 unconed Exp $
 
 /**
  * @file
@@ -518,8 +518,8 @@ function menu_get_active_help() {
       }
       if (module_hook('help', 'page')) {
         if (arg(0) == "admin") {
-          if (module_invoke($name, 'help', 'admin/help#' . arg(2))) {
-            $output .= theme("more_help_link", url('admin/help/' . arg(2)));
+          if (module_invoke($name, 'help', 'admin/help#'. arg(2)) && !empty($output)) {
+            $output .= theme("more_help_link", url('admin/help/'. arg(2)));
           }
         }
       }
