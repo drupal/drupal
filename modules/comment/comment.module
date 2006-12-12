@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.513 2006/12/12 06:14:21 unconed Exp $
+// $Id: comment.module,v 1.514 2006/12/12 09:20:17 unconed Exp $
 
 /**
  * @file
@@ -978,12 +978,15 @@ function comment_render($node, $cid = 0) {
         if ($comment->depth > $last_depth) {
           $divs++;
           $output .= '<div class="indented">';
+          $last_depth++;
         }
-        else if ($comment->depth < $last_depth) {
-          $divs--;
-          $output .= '</div>';
+        else {
+          while ($comment->depth < $last_depth) {
+            $divs--;
+            $output .= '</div>';
+            $last_depth--;
+          }
         }
-        $last_depth = $comment->depth;
 
         if ($mode == COMMENT_MODE_FLAT_COLLAPSED) {
           $output .= theme('comment_flat_collapsed', $comment);
