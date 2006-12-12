@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.155 2006/12/11 17:13:45 dries Exp $
+// $Id: filter.module,v 1.156 2006/12/12 09:51:21 unconed Exp $
 
 /**
  * @file
@@ -1207,7 +1207,7 @@ function _filter_autop($text) {
       $chunk = preg_replace('!(</'. $block .'>)!', "$1\n\n", $chunk); // Space things out a little
       $chunk = preg_replace("/\n\n+/", "\n\n", $chunk); // take care of duplicates
       $chunk = preg_replace('/\n?(.+?)(?:\n\s*\n|\z)/s', "<p>$1</p>\n", $chunk); // make paragraphs, including one at the end
-      $chunk = preg_replace('|<p>\s*?</p>|', '', $chunk); // under certain strange conditions it could create a P of entirely whitespace
+      $chunk = preg_replace('|<p>\s*?</p>\n|', '', $chunk); // under certain strange conditions it could create a P of entirely whitespace
       $chunk = preg_replace("|<p>(<li.+?)</p>|", "$1", $chunk); // problem with nested lists
       $chunk = preg_replace('|<p><blockquote([^>]*)>|i', "<blockquote$1><p>", $chunk);
       $chunk = str_replace('</blockquote></p>', '</p></blockquote>', $chunk);
