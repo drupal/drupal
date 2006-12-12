@@ -66,9 +66,12 @@ Drupal.progressBar.prototype.sendPing = function () {
   }
   if (this.uri) {
     var pb = this;
+    // When doing a post request, you need non-null data. Otherwise a
+    // HTTP 411 or HTTP 406 (with Apache mod_security) error may result.
     $.ajax({
       type: this.method,
       url: this.uri,
+      data: '', 
       success: function (data) {
         // Parse response
         var progress = Drupal.parseJson(data);
