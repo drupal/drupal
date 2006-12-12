@@ -433,7 +433,7 @@ function user_search($op = 'search', $keys = NULL) {
         $keys = preg_replace('!\*+!', '%', $keys);
         $result = pager_query("SELECT * FROM {users} WHERE LOWER(name) LIKE LOWER('%%%s%%')", 15, 0, NULL, $keys);
         while ($account = db_fetch_object($result)) {
-          $find[] = array('title' => $account->name, 'link' => url('user/'. $account->uid));
+          $find[] = array('title' => $account->name, 'link' => url('user/'. $account->uid, NULL, NULL, TRUE));
         }
         return $find;
       }

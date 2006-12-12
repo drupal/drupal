@@ -919,7 +919,7 @@ function node_search($op = 'search', $keys = NULL) {
         $node->body .= module_invoke('taxonomy', 'nodeapi', $node, 'update index');
 
         $extra = node_invoke_nodeapi($node, 'search result');
-        $results[] = array('link' => url('node/'. $item->sid),
+        $results[] = array('link' => url('node/'. $item->sid, NULL, NULL, TRUE),
                            'type' => node_get_types('name', $node),
                            'title' => $node->title,
                            'user' => theme('username', $node),
