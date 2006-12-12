@@ -978,12 +978,15 @@ function comment_render($node, $cid = 0) {
         if ($comment->depth > $last_depth) {
           $divs++;
           $output .= '<div class="indented">';
+          $last_depth++;
         }
-        else if ($comment->depth < $last_depth) {
-          $divs--;
-          $output .= '</div>';
+        else {
+          while ($comment->depth < $last_depth) {
+            $divs--;
+            $output .= '</div>';
+            $last_depth--;
+          }
         }
-        $last_depth = $comment->depth;
 
         if ($mode == COMMENT_MODE_FLAT_COLLAPSED) {
           $output .= theme('comment_flat_collapsed', $comment);
