@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.423 2006/12/12 09:42:14 unconed Exp $
+// $Id: system.module,v 1.424 2006/12/12 09:48:47 unconed Exp $
 
 /**
  * @file
@@ -2124,6 +2124,7 @@ function system_node_type($op, $info) {
  *   block <em>foo</em>?").
  * @param $path
  *   The page to go to if the user denies the action.
+ *   Can be either a drupal path, or an array with the keys 'path', 'query', 'fragment'.
  * @param $description
  *   Additional text to display (defaults to "This action cannot be undone.").
  * @param $yes
@@ -2138,6 +2139,16 @@ function system_node_type($op, $info) {
  */
 function confirm_form($form, $question, $path, $description = NULL, $yes = NULL, $no = NULL, $name = 'confirm') {
   $description = ($description) ? $description : t('This action cannot be undone.');
+
+  // Prepare cancel link
+  $query = $fragment = NULL;
+  if (is_array($path)) {
+    $query = isset($path['query']) ? $path['query'] : NULL;
+    $fragment = isset($path['fragment']) ? $path['fragment'] : NULL;
+    $path = isset($path['path']) ? $path['path'] : NULL;
+  }
+  $cancel = l($no ? $no : t('Cancel'), $path, array(), $query, $fragment);
+
   drupal_set_title($question);
   $form['#attributes'] = array('class' => 'confirmation');
   $form['description'] = array('#value' => $description);
@@ -2145,7 +2156,7 @@ function confirm_form($form, $question, $path, $description = NULL, $yes = NULL,
 
   $form['actions'] = array('#prefix' => '<div class="container-inline">', '#suffix' => '</div>');
   $form['actions']['submit'] = array('#type' => 'submit', '#value' => $yes ? $yes : t('Confirm'));
-  $form['actions']['cancel'] = array('#value' => l($no ? $no : t('Cancel'), $path));
+  $form['actions']['cancel'] = array('#value' => $cancel);
   $form['#base'] = 'confirm_form';
   return $form;
 }
