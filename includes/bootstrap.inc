@@ -1,5 +1,5 @@
-_<?php
-// $Id: bootstrap.inc,v 1.141 2006/12/12 06:16:33 unconed Exp $
+<?php
+// $Id: bootstrap.inc,v 1.142 2006/12/12 06:27:17 unconed Exp $
 
 /**
  * @file

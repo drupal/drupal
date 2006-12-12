@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.321 2006/11/29 03:56:39 drumm Exp $
+// $Id: aggregator.module,v 1.322 2006/12/12 06:27:17 unconed Exp $
 
 /**
  * @file
@@ -1061,6 +1061,7 @@ function aggregator_page_list($sql, $header, $categorize) {
   $categories = array();
   $done = FALSE;
   $form['items'] = array();
+  $form['categories'] = array('#tree' => TRUE);
   while ($item = db_fetch_object($result)) {
     $form['items'][$item->iid] = array('#value' => theme('aggregator_page_item', $item));
     $form['categories'][$item->iid] = array();
@@ -1137,7 +1138,7 @@ function aggregator_page_list_validate($form_id, &$form) {
 }
 
 function aggregator_page_list_submit($form_id, $form_values) {
-  foreach ($form_values as $iid => $selection) {
+  foreach ($form_values['categories'] as $iid => $selection) {
     db_query('DELETE FROM {aggregator_category_item} WHERE iid = %d', $iid);
     foreach ($selection as $cid) {
       if ($cid) {
