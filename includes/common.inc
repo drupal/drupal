@@ -1503,9 +1503,9 @@ function drupal_build_css_cache($types, $filename) {
 
     // Perform some safe CSS optimizations.
     $data = preg_replace('<
-      \s*([@{}:;\)])\s* |          # Remove whitespace around separators.
-      /\*([^*\\\\]|\*(?!/))+\*/ |  # Remove comments that are not CSS hacks.
-      [\n\r]                       # Remove line breaks.
+      \s*([@{}:;,]|\)\s|\s\()\s* |  # Remove whitespace around separators, but keep space around parentheses.
+      /\*([^*\\\\]|\*(?!/))+\*/ |   # Remove comments that are not CSS hacks.
+      [\n\r]                        # Remove line breaks.
       >x', '\1', $data);
 
     // Create the CSS file.
