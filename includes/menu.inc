@@ -518,8 +518,8 @@ function menu_get_active_help() {
       }
       if (module_hook('help', 'page')) {
         if (arg(0) == "admin") {
-          if (module_invoke($name, 'help', 'admin/help#' . arg(2))) {
-            $output .= theme("more_help_link", url('admin/help/' . arg(2)));
+          if (module_invoke($name, 'help', 'admin/help#'. arg(2)) && !empty($output)) {
+            $output .= theme("more_help_link", url('admin/help/'. arg(2)));
           }
         }
       }
