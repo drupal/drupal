@@ -89,7 +89,7 @@ function drupal_get_form($form_id) {
     $form = call_user_func_array('drupal_retrieve_form', $args);
     unset($_SESSION['form'][$_POST['form_build_id']]);
     if (isset($form['#multistep']) && $form['#multistep']) {
-      $_SESSION['form'][$form_build_id] = $args;
+      $_SESSION['form'][$form_build_id] = array('timestamp' => time(), 'args' => $args);
       $form['#build_id'] = $form_build_id;
     }
     drupal_prepare_form($args[0], $form);
