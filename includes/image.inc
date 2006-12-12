@@ -1,5 +1,5 @@
 <?php
-// $Id: image.inc,v 1.15 2006/09/18 05:10:48 dries Exp $
+// $Id: image.inc,v 1.16 2006/12/12 01:03:34 unconed Exp $
 
 /**
  * Return a list of available toolkits.
@@ -117,7 +117,7 @@ function image_scale($source, $destination, $width, $height) {
   $info = image_get_info($source);
 
   // don't scale up
-  if ($width > $info['width'] && $height > $info['height']) {
+  if ($width >= $info['width'] && $height >= $info['height']) {
     return FALSE;
   }
 
