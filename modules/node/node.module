@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.749 2006/12/12 08:35:30 unconed Exp $
+// $Id: node.module,v 1.750 2006/12/12 09:55:18 unconed Exp $
 
 /**
  * @file
@@ -919,7 +919,7 @@ function node_search($op = 'search', $keys = NULL) {
         $node->body .= module_invoke('taxonomy', 'nodeapi', $node, 'update index');
 
         $extra = node_invoke_nodeapi($node, 'search result');
-        $results[] = array('link' => url('node/'. $item->sid),
+        $results[] = array('link' => url('node/'. $item->sid, NULL, NULL, TRUE),
                            'type' => node_get_types('name', $node),
                            'title' => $node->title,
                            'user' => theme('username', $node),
