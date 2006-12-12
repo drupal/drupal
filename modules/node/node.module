@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.750 2006/12/12 09:55:18 unconed Exp $
+// $Id: node.module,v 1.751 2006/12/12 10:05:26 unconed Exp $
 
 /**
  * @file
@@ -153,19 +153,19 @@ function node_teaser($body, $format = NULL) {
     return $body;
   }
 
+  // If a valid delimiter has been specified, use it to chop off the teaser.
+  if ($delimiter !== FALSE) {
+    return substr($body, 0, $delimiter);
+  }
+
   // We check for the presence of the PHP evaluator filter in the current
   // format. If the body contains PHP code, we do not split it up to prevent
   // parse errors.
   if (isset($format)) {
     $filters = filter_list_format($format);
-    if (isset($filters['filter/1']) && (strpos($body, '<?') !== FALSE) && ($delimiter === FALSE || strpos($body, '<?') < $delimiter)) {
+    if (isset($filters['filter/1']) && strpos($body, '<?') !== FALSE) {
       return $body;
     }
-  }
-
-  // If a valid delimiter has been specified, use it to chop of the teaser.
-  if ($delimiter !== FALSE) {
-    return substr($body, 0, $delimiter);
   }
 
   // If we have a short body, the entire body is the teaser.
