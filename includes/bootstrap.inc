@@ -1,4 +1,4 @@
-<?php
+_<?php
 // $Id$
 
 /**
@@ -6,11 +6,32 @@
  * Functions that need to be loaded on every Drupal request.
  */
 
+/**
+ * Indicates that the item should never be removed unless explicitly told to
+ * using cache_clear_all() with a cache ID.
+ */
 define('CACHE_PERMANENT', 0);
+
+/**
+ * Indicates that the item should be removed at the next general cache wipe.
+ */
 define('CACHE_TEMPORARY', -1);
 
+/**
+ * Indicates that page caching is disabled.
+ */
 define('CACHE_DISABLED', 0);
+
+/**
+ * Indicates that page caching is enabled, using "normal" mode.
+ */
 define('CACHE_NORMAL', 1);
+
+/**
+ * Indicates that page caching is using "aggressive" mode. This bypasses
+ * loading any modules for additional speed, which may break functionality in
+ * modules that expect to be run on each page load.
+ */
 define('CACHE_AGGRESSIVE', 2);
 
 /**
