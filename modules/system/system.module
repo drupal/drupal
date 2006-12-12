@@ -1538,7 +1538,7 @@ function theme_system_modules($form) {
   // Pull package information from module list and start grouping modules.
   $modules = $form['validation_modules']['#value'];
   foreach ($modules as $module) {
-    if (!isset($module->info['package'])) {
+    if (!isset($module->info['package']) || !$module->info['package']) {
       $module->info['package'] = 'Other';
     }
     $packages[$module->info['package']][$module->name] = $module->info;
