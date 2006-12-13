@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.184 2006/12/10 09:54:33 unconed Exp $
+// $Id: profile.module,v 1.185 2006/12/13 23:50:26 unconed Exp $
 
 /**
  * @file
@@ -170,7 +170,7 @@ function profile_user($type, &$edit, &$user, $category = NULL) {
     case 'load':
       return profile_load_profile($user);
     case 'register':
-      return profile_form_profile($edit, $user, $category);
+      return profile_form_profile($edit, $user, $category, TRUE);
     case 'update':
     case 'insert':
       return profile_save_profile($edit, $user, $category);
@@ -624,8 +624,8 @@ function _profile_form_explanation($field) {
   return $output;
 }
 
-function profile_form_profile($edit, $user, $category) {
-  $result = _profile_get_fields($category);
+function profile_form_profile($edit, $user, $category, $register = FALSE) {
+  $result = _profile_get_fields($category, $register);
   $w = 0;
   while ($field = db_fetch_object($result)) {
     $category = $field->category;
@@ -801,11 +801,11 @@ function _profile_field_serialize($type = NULL) {
   return $type == 'date';
 }
 
-function _profile_get_fields($category) {
+function _profile_get_fields($category, $register = FALSE) {
   $args = array();
   $sql = 'SELECT * FROM {profile_fields} WHERE ';
   $filters = array();
-  if ((arg(0) == 'user' && arg(1) == 'register') || (arg(0) == 'admin' && arg(1) == 'user' && arg(2) == 'create')) {
+  if ($register) {
     $filters[] = 'register = 1';
   }
   else {
