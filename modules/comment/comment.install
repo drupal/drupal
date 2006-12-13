@@ -1,10 +1,11 @@
 <?php
-// $Id: comment.install,v 1.1 2006/12/13 10:24:58 unconed Exp $
+// $Id: comment.install,v 1.2 2006/12/13 22:44:54 unconed Exp $
 
 /**
  * Implementation of hook_enable().
  */
 function comment_enable() {
   // Insert records into the node_comment_statistics for nodes that are missing.
-  db_query("INSERT INTO {node_comment_statistics} (nid, last_comment_timestamp, last_comment_name, last_comment_uid, comment_count) SELECT n.nid, n.created, NULL, n.uid, 0 FROM {node} n LEFT JOIN {node_comment_statistics} c ON n.nid = c.nid WHERE c.comment_count IS NULL");
+  db_query_temporary("SELECT n.nid, n.created, n.uid FROM {node} n LEFT JOIN {node_comment_statistics} c ON n.nid = c.nid WHERE c.comment_count IS NULL", 'missing_nids');
+  db_query("INSERT INTO {node_comment_statistics} (nid, last_comment_timestamp, last_comment_name, last_comment_uid, comment_count) SELECT n.nid, n.created, NULL, n.uid, 0 FROM missing_nids n");
 }
