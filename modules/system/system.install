@@ -3463,6 +3463,24 @@ function system_update_1018() {
 }
 
 /**
+ * Change variable format for user-defined e-mails.
+ */
+function system_update_1019() {
+  $message_ids = array('welcome_subject', 'welcome_body',
+                       'approval_subject', 'approval_body',
+                       'pass_subject', 'pass_body',
+  );
+  foreach ($message_ids as $id) {
+    // Replace all %vars with !vars
+    if ($message = variable_get('user_mail_'. $id, NULL)) {
+      $fixed = preg_replace('/%([A-Za-z_-]+)/', '!\1', $message);
+      variable_set('user_mail_'. $id, $fixed);
+    }
+  }
+  return array();
+}
+
+/**
  * @} End of "defgroup updates-4.7-to-5.0"
  */
 
