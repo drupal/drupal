@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.322 2006/12/12 06:27:17 unconed Exp $
+// $Id: aggregator.module,v 1.323 2006/12/14 13:41:02 dries Exp $
 
 /**
  * @file
@@ -35,7 +35,7 @@ function aggregator_menu($may_cache) {
 
   if ($may_cache) {
     $items[] = array('path' => 'admin/content/aggregator',
-      'title' => t('RSS aggregator'),
+      'title' => t('News aggregator'),
       'description' => t("Configure which content your site aggregates from other sites, how often it polls them, and how they're categorized."),
       'callback' => 'aggregator_admin_overview',
       'access' => $edit);
@@ -764,8 +764,8 @@ function aggregator_refresh($feed) {
       }
       break;
     default:
-      watchdog('aggregator', t('The RSS-feed from %site seems to be broken, due to "%error".', array('%site' => $feed['title'], '%error' => $result->code .' '. $result->error)), WATCHDOG_WARNING);
-      drupal_set_message(t('The RSS-feed from %site seems to be broken, because of error "%error".', array('%site' => $feed['title'], '%error' => $result->code .' '. $result->error)));
+      watchdog('aggregator', t('The feed from %site seems to be broken, due to "%error".', array('%site' => $feed['title'], '%error' => $result->code .' '. $result->error)), WATCHDOG_WARNING);
+      drupal_set_message(t('The feed from %site seems to be broken, because of error "%error".', array('%site' => $feed['title'], '%error' => $result->code .' '. $result->error)));
   }
 }
 
@@ -821,8 +821,8 @@ function aggregator_parse_feed(&$data, $feed) {
   xml_set_character_data_handler($xml_parser, 'aggregator_element_data');
 
   if (!xml_parse($xml_parser, $data, 1)) {
-    watchdog('aggregator', t('The RSS-feed from %site seems to be broken, due to an error "%error" on line %line.', array('%site' => $feed['title'], '%error' => xml_error_string(xml_get_error_code($xml_parser)), '%line' => xml_get_current_line_number($xml_parser))), WATCHDOG_WARNING);
-    drupal_set_message(t('The RSS-feed from %site seems to be broken, because of error "%error" on line %line.', array('%site' => $feed['title'], '%error' => xml_error_string(xml_get_error_code($xml_parser)), '%line' => xml_get_current_line_number($xml_parser))), 'error');
+    watchdog('aggregator', t('The feed from %site seems to be broken, due to an error "%error" on line %line.', array('%site' => $feed['title'], '%error' => xml_error_string(xml_get_error_code($xml_parser)), '%line' => xml_get_current_line_number($xml_parser))), WATCHDOG_WARNING);
+    drupal_set_message(t('The feed from %site seems to be broken, because of error "%error" on line %line.', array('%site' => $feed['title'], '%error' => xml_error_string(xml_get_error_code($xml_parser)), '%line' => xml_get_current_line_number($xml_parser))), 'error');
     return 0;
   }
   xml_parser_free($xml_parser);
