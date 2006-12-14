@@ -1,0 +1,53 @@
+/**
+ * Themetastic, for Drupal 5.0
+ * Stefan Nagtegaal, iStyledThis [dot] nl
+ * Steven Wittens, acko [dot] net`
+ *
+ * If you use a customized color scheme, you must regenerate it after
+ * modifying this file.
+ */
+
+body, input, textarea, select {
+  color: #000;
+  background: none;
+}
+
+ul.primary-links, ul.secondary-links,
+#header-region, .sidebar {
+  display: none;
+}
+
+body.sidebars, body.sideber-left, body.sidebar-right, body {
+  width: 640px;
+}
+
+body.sidebar-left #center, body.sidebar-right #center, body.sidebars #center,
+body.sidebar-left #squeeze, body.sidebar-right #squeeze, body.sidebars #squeeze {
+  margin: 0;
+}
+
+#wrapper,
+#wrapper #container .breadcrumb,
+#wrapper #container #center,
+#wrapper #container #center .right-corner,
+#wrapper #container #center .right-corner .left-corner,
+#wrapper #container #footer,
+#wrapper #container #center #squeeze {
+  position: static;
+  left: 0;
+  padding: 0;
+  margin: 0;
+  width: auto;
+  float: none;
+  clear: both;
+  background: none;
+}
+
+#wrapper #container #header {
+  height: 130px;
+}
+
+#wrapper #container #header h1, #wrapper #container #header h1 a:link, #wrapper #container #header h1 a:visited {
+  text-shadow: none;
+  color: #000;
+}

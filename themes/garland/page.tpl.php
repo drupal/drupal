@@ -6,6 +6,7 @@
     <?php print $head ?>
     <?php print $styles ?>
     <?php print $scripts ?>
+    <style type="text/css" media="print">@import "<?php print base_path() . path_to_theme() ?>/print.css";</style>
     <!--[if lt IE 7]>
     <style type="text/css" media="all">@import "<?php print base_path() . path_to_theme() ?>/fix-ie.css";</style>
     <![endif]-->
