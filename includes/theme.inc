@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.330 2006/12/10 09:54:32 unconed Exp $
+// $Id: theme.inc,v 1.331 2006/12/14 13:28:11 dries Exp $
 
 /**
  * @file
@@ -406,7 +406,7 @@ function theme_page($content) {
 
 function theme_maintenance_page($content, $messages = TRUE, $partial = FALSE) {
   drupal_set_header('Content-Type: text/html; charset=utf-8');
-  drupal_add_css('misc/maintenance.css', 'module', 'all', FALSE);
+  drupal_set_html_head('<style type="text/css" media="all">@import "'. base_path() .'misc/maintenance.css";</style>');
   drupal_set_html_head('<link rel="shortcut icon" href="'. base_path() .'misc/favicon.ico" type="image/x-icon" />');
 
   $output = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
@@ -414,7 +414,6 @@ function theme_maintenance_page($content, $messages = TRUE, $partial = FALSE) {
   $output .= '<head>';
   $output .= ' <title>'. strip_tags(drupal_get_title()) .'</title>';
   $output .= drupal_get_html_head();
-  $output .= drupal_get_css();
   $output .= drupal_get_js();
   $output .= '</head>';
   $output .= '<body>';
