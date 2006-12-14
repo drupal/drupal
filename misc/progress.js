@@ -71,7 +71,7 @@ Drupal.progressBar.prototype.sendPing = function () {
     $.ajax({
       type: this.method,
       url: this.uri,
-      data: '', 
+      data: '',
       success: function (data) {
         // Parse response
         var progress = Drupal.parseJson(data);
