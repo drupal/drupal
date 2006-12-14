@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.156 2006/12/12 09:51:21 unconed Exp $
+// $Id: filter.module,v 1.157 2006/12/14 10:14:05 unconed Exp $
 
 /**
  * @file
@@ -522,7 +522,7 @@ function filter_admin_format_form_submit($form_id, $form_values) {
       }
     }
   }
-  $roles = ','. implode(',', ($form_values['default_format'] ? user_roles() : $roles)) .',';
+  $roles = ','. implode(',', ($form_values['default_format'] ? array_keys(user_roles()) : $roles)) .',';
 
   db_query("UPDATE {filter_formats} SET cache = %d, name='%s', roles = '%s' WHERE format = %d", $cache, $name, $roles, $format);
 
