@@ -137,7 +137,7 @@ tr.odd .form-item, tr.even .form-item {
   margin-bottom: 0;
   white-space: nowrap;
 }
-.form-item input.error, .form-item textarea.error {
+.form-item input.error, .form-item textarea.error, .form-item select.error {
   border: 2px solid red;
 }
 .form-item .description {
