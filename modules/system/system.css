@@ -1,4 +1,4 @@
-/* $Id: system.css,v 1.19 2006/12/10 09:05:47 unconed Exp $ */
+/* $Id: system.css,v 1.20 2006/12/14 14:21:36 dries Exp $ */
 
 /*
 ** HTML elements
@@ -81,7 +81,7 @@ tr.merge-down, tr.merge-down td, tr.merge-down th {
 tr.merge-up, tr.merge-up td, tr.merge-up th {
   border-top-width: 0 !important;
 }
-.form-item input.error, .form-item textarea.error {
+.form-item input.error, .form-item textarea.error, .form-item select.error {
   border: 2px solid red;
 }
 .form-item .description {
