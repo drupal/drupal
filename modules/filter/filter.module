@@ -522,7 +522,7 @@ function filter_admin_format_form_submit($form_id, $form_values) {
       }
     }
   }
-  $roles = ','. implode(',', ($form_values['default_format'] ? user_roles() : $roles)) .',';
+  $roles = ','. implode(',', ($form_values['default_format'] ? array_keys(user_roles()) : $roles)) .',';
 
   db_query("UPDATE {filter_formats} SET cache = %d, name='%s', roles = '%s' WHERE format = %d", $cache, $name, $roles, $format);
 
