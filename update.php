@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.208 2006/12/15 07:48:30 unconed Exp $
+// $Id: update.php,v 1.209 2006/12/15 07:49:11 unconed Exp $
 
 /**
  * @file
@@ -515,7 +515,7 @@ function update_finished_page($success) {
   }
   else {
     $update = reset($_SESSION['update_remaining']);
-    $output = '<p class="error">The update process was aborted prematurely while running <strong>update #'. $update['version'] .' in '. $update['module'] .'.module</strong>. All other errors have been <a href="index.php?q=admin/logs">logged</a>. You may need to check the <code>watchdog</code> database table manually.</p>';
+    $output = '<p class="error">The update process was aborted prematurely while running <strong>update #'. $update['version'] .' in '. $update['module'] .'.module</strong>. All other errors have been <a href="index.php?q=admin/logs/watchdog">logged</a>. You may need to check the <code>watchdog</code> database table manually.</p>';
   }
 
   if ($GLOBALS['access_check'] == FALSE) {
