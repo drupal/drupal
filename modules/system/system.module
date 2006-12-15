@@ -2343,7 +2343,7 @@ function theme_system_admin_by_module($menu_items) {
       $block = array();
       $block['title'] = $module;
       $block['content'] = theme('item_list', $items);
-      $block['description'] = $description;
+      $block['description'] = t($description);
 
       if ($block_output = theme('admin_block', $block)) {
         if (!$block['position']) {
