@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.601 2006/12/12 06:13:34 unconed Exp $
+// $Id: common.inc,v 1.602 2006/12/15 07:47:08 unconed Exp $
 
 /**
  * @file
@@ -1487,10 +1487,10 @@ function drupal_build_css_cache($types, $filename) {
           $contents = file_get_contents($file);
           // Return the path to where this CSS file originated from, stripping off the name of the file at the end of the path.
           $path = base_path() . substr($file, 0, strrpos($file, '/')) .'/';
+          // Wraps all @import arguments in url().
+          $contents = preg_replace('/@import\s+(?!url)[\'"]?(\S*)\b[\'"]?/i', '@import url("\1")', $contents);
           // Fix all paths within this CSS file, ignoring absolute paths.
-          $contents = preg_replace('/url\(([\'"]?)(?![a-z]+:)/i', 'url(\1'. $path . '\2', $contents);
-          // Fix any @import that don't use url() and is not absoslute.
-          $data .= preg_replace('/@import\s*([\'"]?)(?![a-z]+:)/i', '@import \1'. $path . '\2', $contents);
+          $data .= preg_replace('/url\(([\'"]?)(?![a-z]+:)/i', 'url(\1'. $path . '\2', $contents);
         }
       }
     }
