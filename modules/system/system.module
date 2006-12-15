@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.426 2006/12/14 14:29:55 dries Exp $
+// $Id: system.module,v 1.427 2006/12/15 07:56:36 unconed Exp $
 
 /**
  * @file
@@ -2343,7 +2343,7 @@ function theme_system_admin_by_module($menu_items) {
       $block = array();
       $block['title'] = $module;
       $block['content'] = theme('item_list', $items);
-      $block['description'] = $description;
+      $block['description'] = t($description);
 
       if ($block_output = theme('admin_block', $block)) {
         if (!$block['position']) {
