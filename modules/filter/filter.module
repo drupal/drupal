@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.157 2006/12/14 10:14:05 unconed Exp $
+// $Id: filter.module,v 1.158 2006/12/16 01:05:11 unconed Exp $
 
 /**
  * @file
@@ -1278,7 +1278,7 @@ function filter_xss($string, $allowed_tags = array('a', 'em', 'strong', 'cite', 
 
   return preg_replace_callback('%
     (
-    <(?=[^a-zA-Z/])   # a lone <
+    <(?=[^a-zA-Z!/])  # a lone <
     |                 # or
     <[^>]*.(>|$)      # a string that starts with a <, up until the > or the end of the string
     |                 # or
