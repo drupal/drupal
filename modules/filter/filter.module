@@ -1278,7 +1278,7 @@ function filter_xss($string, $allowed_tags = array('a', 'em', 'strong', 'cite', 
 
   return preg_replace_callback('%
     (
-    <(?=[^a-zA-Z/])   # a lone <
+    <(?=[^a-zA-Z!/])  # a lone <
     |                 # or
     <[^>]*.(>|$)      # a string that starts with a <, up until the > or the end of the string
     |                 # or
