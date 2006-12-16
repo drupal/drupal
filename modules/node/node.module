@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.752 2006/12/14 14:07:57 dries Exp $
+// $Id: node.module,v 1.753 2006/12/16 09:51:22 unconed Exp $
 
 /**
  * @file
@@ -868,10 +868,12 @@ function node_search($op = 'search', $keys = NULL) {
       $join2 = '';
       // Used to avoid joining on node_comment_statistics twice
       $stats_join = FALSE;
+      $total = 0;
       if ($weight = (int)variable_get('node_rank_relevance', 5)) {
         // Average relevance values hover around 0.15
         $ranking[] = '%d * i.relevance';
         $arguments2[] = $weight;
+        $total += $weight;
       }
       if ($weight = (int)variable_get('node_rank_recent', 5)) {
         // Exponential decay with half-life of 6 months, starting at last indexed node
@@ -880,6 +882,7 @@ function node_search($op = 'search', $keys = NULL) {
         $arguments2[] = (int)variable_get('node_cron_last', 0);
         $join2 .= ' INNER JOIN {node} n ON n.nid = i.sid LEFT JOIN {node_comment_statistics} c ON c.nid = i.sid';
         $stats_join = TRUE;
+        $total += $weight;
       }
       if (module_exists('comment') && $weight = (int)variable_get('node_rank_comments', 5)) {
         // Inverse law that maps the highest reply count on the site to 1 and 0 to 0.
@@ -890,6 +893,7 @@ function node_search($op = 'search', $keys = NULL) {
         if (!$stats_join) {
           $join2 .= ' LEFT JOIN {node_comment_statistics} c ON c.nid = i.sid';
         }
+        $total += $weight;
       }
       if (module_exists('statistics') && variable_get('statistics_count_content_views', 0) &&
           $weight = (int)variable_get('node_rank_views', 5)) {
@@ -899,6 +903,7 @@ function node_search($op = 'search', $keys = NULL) {
         $arguments2[] = $weight;
         $arguments2[] = $scale;
         $join2 .= ' LEFT JOIN {node_counter} nc ON nc.nid = i.sid';
+        $total += $weight;
       }
       $select2 = (count($ranking) ? implode(' + ', $ranking) : 'i.relevance') . ' AS score';
 
@@ -926,6 +931,7 @@ function node_search($op = 'search', $keys = NULL) {
                            'date' => $node->changed,
                            'node' => $node,
                            'extra' => $extra,
+                           'score' => $item->score / $total,
                            'snippet' => search_excerpt($keys, $node->body));
       }
       return $results;
