@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.18 2006/12/05 05:47:37 dries Exp $
+// $Id: content_types.inc,v 1.19 2006/12/17 21:49:24 dries Exp $
 
 /**
  * @file
@@ -383,7 +383,7 @@ function node_type_delete_confirm($type) {
 
   $num_nodes = db_num_rows(db_query("SELECT * FROM {node} WHERE type = '%s'", $type->type));
   if ($num_nodes) {
-    $caption .= '<p>'. t('<strong>Warning:</strong> there %are currently %num_nodes %type %nodes on your site. %they may not be able to be displayed or edited correctly, once you have removed this content type.', array('%are' => format_plural($num_nodes, 'is', 'are'), '%num_nodes' => $num_nodes, '%type' => $type->name, '%nodes' => format_plural($num_nodes, 'node', 'nodes'), '%they' => format_plural($num_nodes, 'It', 'They'))) .'</p>';
+    $caption .= '<p>'. strtr(format_plural($num_nodes, '<strong>Warning:</strong> there is currently @count %type node on your site. It may not be able to be displayed or edited correctly, once you have removed this content type.', '<strong>Warning:</strong> there are currently @count %type nodes on your site. They may not be able to be displayed or edited correctly, once you have removed this content type.'), array('%type' => theme('placeholder', $type->name))) .'</p>';
   }
 
   $caption .= '<p>'. t('This action cannot be undone.') .'</p>';

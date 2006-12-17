@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.429 2006/12/15 08:58:01 unconed Exp $
+// $Id: system.module,v 1.430 2006/12/17 21:49:24 dries Exp $
 
 /**
  * @file
@@ -1399,9 +1399,8 @@ function system_modules_confirm_form($modules, $form_values = array()) {
       $t_argument = array(
         '%module' => $modules[$name]->info['name'],
         '%dependencies' => implode(', ', $missing_dependencies),
-        '!modules' => format_plural(count($missing_dependencies), ' module', ' modules'),
       );
-      $items[] = t('You must enable the %dependencies !modules to install %module.', $t_argument);
+      $items[] = strtr(format_plural(count($missing_dependencies), 'You must enable the %dependencies module to install %module.', 'You must enable the %dependencies modules to install %module.'), $t_argument);
     }
     $form['text'] = array('#value' => theme('item_list', $items));
   }
