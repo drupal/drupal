@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.244 2006/12/11 23:00:09 unconed Exp $
+// $Id: block.module,v 1.245 2006/12/18 21:49:39 dries Exp $
 
 /**
  * @file
@@ -88,17 +88,15 @@ function block_menu($may_cache) {
       'type' => MENU_LOCAL_TASK);
     $default = variable_get('theme_default', 'garland');
     foreach (list_themes() as $key => $theme) {
-      if ($theme->status) {
-        $items[] = array(
-          'path' => 'admin/build/block/list/'. $key,
-          'title' => t('!key settings', array('!key' => $key)),
-          'callback' => 'drupal_get_form',
-          'callback arguments' => array('block_admin_display', $key),
-          'access' => user_access('administer blocks'),
-          'type' => $key== $default ? MENU_DEFAULT_LOCAL_TASK : MENU_LOCAL_TASK,
-          'weight' => $key == $default ? -10 : 0,
-        );
-      }
+      $items[] = array(
+        'path' => 'admin/build/block/list/'. $key,
+        'title' => t('!key settings', array('!key' => $key)),
+        'callback' => 'drupal_get_form',
+        'callback arguments' => array('block_admin_display', $key),
+        'access' => user_access('administer blocks'),
+        'type' => $key == $default ? MENU_DEFAULT_LOCAL_TASK : MENU_LOCAL_TASK,
+        'weight' => $key == $default ? -10 : 0,
+      );
     }
   }
 
