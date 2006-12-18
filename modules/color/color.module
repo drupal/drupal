@@ -1,5 +1,5 @@
 <?php
-// $Id: color.module,v 1.12 2006/12/10 09:54:33 unconed Exp $
+// $Id: color.module,v 1.13 2006/12/18 11:59:07 unconed Exp $
 
 /**
  * Implementation of hook_form_alter().
@@ -201,7 +201,7 @@ function color_scheme_form_submit($form_id, $values) {
     $usage = memory_get_usage();
     $limit = parse_size(ini_get('memory_limit'));
     if ($usage + $required > $limit) {
-      drupal_set_message(t('There is not enough memory available to PHP to change this theme\'s color scheme. You need at least %size more. Check the <a href="%url">PHP documentation</a> for more information.', array('%size' => format_size($usage + $required - $limit), '%url' => 'http://www.php.net/manual/en/ini.core.php#ini.sect.resource-limits')), 'error');
+      drupal_set_message(t('There is not enough memory available to PHP to change this theme\'s color scheme. You need at least %size more. Check the <a href="@url">PHP documentation</a> for more information.', array('%size' => format_size($usage + $required - $limit), '@url' => 'http://www.php.net/manual/en/ini.core.php#ini.sect.resource-limits')), 'error');
       return;
     }
   }
