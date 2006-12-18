@@ -2790,7 +2790,7 @@ function system_update_177() {
       // Deleting is required, because _user_mail_text() checks for the existance of the variable.
       variable_del('user_mail_'. $message_id);
       $ret[] = array(
-        'query' => strtr('The mail template %message_id has been reset to the default. The old template <a href="%url">has been saved</a>.', array('%message_id' => 'user_mail_'. $message_id, '%url' => url('admin/logs/event/'. $last->wid))),
+        'query' => strtr('The mail template %message_id has been reset to the default. The old template <a href="@url">has been saved</a>.', array('%message_id' => 'user_mail_'. $message_id, '@url' => url('admin/logs/event/'. $last->wid))),
         'success' => TRUE
       );
     }
