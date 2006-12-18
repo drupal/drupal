@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.103 2006/11/26 02:20:01 drumm Exp $
+// $Id: path.module,v 1.104 2006/12/18 11:16:51 dries Exp $
 
 /**
  * @file
@@ -21,7 +21,7 @@ function path_help($section) {
 <li>node/3 =&gt; contact</li>
 </ul>
 ');
-      $output .= '<p>'. t('The path module enables an extra field for aliases in all node input and editing forms (when users have the appropriate permissions). It also provides an interface to view and edit all URL aliases. The two permissions are related to URL aliasing are "administer a list of URL aliases" and "add url aliases". ') .'</p>';
+      $output .= '<p>'. t('The path module enables an extra field for aliases in all node input and editing forms (when users have the appropriate permissions). It also provides an interface to view and edit all URL aliases. The two permissions related to URL aliasing are "administer url aliases" and "create url aliases". ') .'</p>';
       $output .= '<p>'. t('This module also comes with user-defined mass URL aliasing capabilities, which is useful if you wish to uniformly use URLs different from the default. For example, you may want to have your URLs presented in a different language. Access to the Drupal source code on the web server is required to set up these kinds of aliases. ') .'</p>';
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@path">Path page</a>.', array('@path' => 'http://drupal.org/handbook/modules/path/')) .'</p>';
       return $output;
