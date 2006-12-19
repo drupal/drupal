@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.206 2006/12/11 16:57:42 dries Exp $
+// $Id: search.module,v 1.207 2006/12/19 09:44:53 drumm Exp $
 
 /**
  * @file
@@ -142,8 +142,8 @@ function search_menu($may_cache) {
   if ($may_cache) {
     $items[] = array('path' => 'search',
       'title' => t('Search'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('search_view'),
+      'callback' => 'search_view',
+      'callback arguments' => array('node'),
       'access' => user_access('search content'),
       'type' => MENU_SUGGESTED_ITEM);
     $items[] = array('path' => 'admin/settings/search',
@@ -173,6 +173,7 @@ function search_menu($may_cache) {
       if (module_hook($name, 'search') && $title = module_invoke($name, 'search', 'name')) {
         $items[] = array('path' => 'search/'. $name . $keys, 'title' => $title,
           'callback' => 'search_view',
+          'callback arguments' => array($name),
           'access' => user_access('search content'),
           'type' => MENU_LOCAL_TASK);
       }
@@ -890,9 +891,7 @@ function search_get_keys() {
 /**
  * Menu callback; presents the search form and/or search results.
  */
-function search_view() {
-  $type = arg(1);
-
+function search_view($type = '') {
   // Search form submits with POST but redirects to GET. This way we can keep
   // the search query URL clean as a whistle:
   // search/type/keyword+keyword
