@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.515 2006/12/15 01:33:00 unconed Exp $
+// $Id: comment.module,v 1.516 2006/12/19 09:02:28 drumm Exp $
 
 /**
  * @file
@@ -232,10 +232,52 @@ function comment_block($op = 'list', $delta = 0) {
   }
 }
 
+/**
+ * Find a number of recent comments. This is done in two steps.
+ *   1. Find the n (specified by $number) nodes that have the most recent
+ *      comments.  This is done by querying node_comment_statistics which has
+ *      an index on last_comment_timestamp, and is thus a fast query.
+ *   2. Loading the information from the comments table based on the nids found
+ *      in step 1.
+ *
+ * @param $number (optional) The maximum number of comments to find.
+ * @return $comments An array of comment objects each containing a nid,
+ *   subject, cid, and timstamp, or an empty array if there are no recent
+ *   comments visible to the current user.
+ */
+function comment_get_recent($number = 10) {
+  // Select the $number nodes (visible to the current user) with the most
+  // recent comments. This is efficient due to the index on
+  // last_comment_timestamp.
+  $result = db_query_range(db_rewrite_sql("SELECT n.nid FROM {node_comment_statistics} n WHERE n.comment_count > 0 ORDER BY n.last_comment_timestamp DESC"), 0, $number);
+
+  $nids = array();
+  while ($row = db_fetch_object($result)) {
+    $nids[] = $row->nid;
+  }
+
+  $comments = array();
+  if (!empty($nids)) {
+    // From among the comments on the nodes selected in the first query,
+    // find the $number most recent comments.
+    $result = db_query_range('SELECT c.nid, c.subject, c.cid, c.timestamp FROM {comments} c INNER JOIN {node} n ON n.nid = c.nid WHERE c.nid IN ('. implode(',', $nids) .') AND n.status = 1 AND c.status = %d ORDER BY c.timestamp DESC', COMMENT_PUBLISHED, 0, $number);
+    while ($comment = db_fetch_object($result)) {
+      $comments[] = $comment;
+    }
+  }
+
+  return $comments;
+}
+
+/**
+ * Returns a formatted list of recent comments to be displayed in the comment
+ * block.
+ *
+ * @ingroup themeable
+ */
 function theme_comment_block() {
-  $result = db_query_range(db_rewrite_sql('SELECT c.nid, c.subject, c.cid, c.timestamp FROM {comments} c INNER JOIN {node} n ON n.nid = c.nid WHERE n.status = 1 AND c.status = %d ORDER BY c.timestamp DESC', 'c'), COMMENT_PUBLISHED, 0, 10);
   $items = array();
-  while ($comment = db_fetch_object($result)) {
+  foreach (comment_get_recent() as $comment) {
     $items[] = l($comment->subject, 'node/'. $comment->nid, NULL, NULL, 'comment-'. $comment->cid) .'<br />'. t('@time ago', array('@time' => format_interval(time() - $comment->timestamp)));
   }
   if ($items) {
