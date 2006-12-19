@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.753 2006/12/16 09:51:22 unconed Exp $
+// $Id: node.module,v 1.754 2006/12/19 20:14:26 dries Exp $
 
 /**
  * @file
@@ -2045,7 +2045,7 @@ function node_form_add_preview($form) {
   global $form_values;
 
   $op = isset($form_values['op']) ? $form_values['op'] : '';
-  if ($op == $form_values['preview']) {
+  if ($op == t('Preview')) {
     drupal_validate_form($form['form_id']['#value'], $form);
     if (!form_get_errors()) {
       // We pass the global $form_values here to preserve changes made during form validation
