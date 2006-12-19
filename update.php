@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.209 2006/12/15 07:49:11 unconed Exp $
+// $Id: update.php,v 1.210 2006/12/19 09:50:55 dries Exp $
 
 /**
  * @file
@@ -477,7 +477,7 @@ function update_progress_page_nojs() {
     // Error handling: if PHP dies, it will output whatever is in the output
     // buffer, followed by the error message.
     ob_start();
-    $fallback = '<p class="error">An unrecoverable error has occurred. You can find the error message below. It is advised to copy it to the clipboard for reference. Please continue to the <a href="update.php?op=error">update summary</a>.</p><p class="error">';
+    $fallback = '<p class="error">An unrecoverable error has occurred. You can find the error message below. It is advised to copy it to the clipboard for reference. Please continue to the <a href="update.php?op=error">update summary</a>.</p>';
     print theme('maintenance_page', $fallback, FALSE, TRUE);
 
     list($percentage, $message) = update_do_updates();
