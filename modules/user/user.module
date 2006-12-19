@@ -1296,7 +1296,7 @@ function user_edit_form($uid, $edit, $register = FALSE) {
       '#title' => t('Username'),
       '#default_value' => $edit['name'],
       '#maxlength' => 60,
-      '#description' => t('Your full name or your preferred username: only letters, numbers and spaces are allowed.'),
+      '#description' => t('Your preferred username; punctuation is not allowed except for periods, hyphens, and underscores.'),
       '#required' => TRUE,
     );
   }
