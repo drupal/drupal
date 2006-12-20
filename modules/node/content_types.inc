@@ -243,7 +243,6 @@ function node_type_form_validate($form_id, $form_values) {
 
   if (isset($names[$type->name]) && $names[$type->name] != $old_type) {
     form_set_error('name', t('The human-readable name %name is already taken.', array('%name' => $names[$type->name])));
-    break;
   }
 }
 
