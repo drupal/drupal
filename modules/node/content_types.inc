@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.19 2006/12/17 21:49:24 dries Exp $
+// $Id: content_types.inc,v 1.20 2006/12/20 06:28:54 unconed Exp $
 
 /**
  * @file
@@ -243,7 +243,6 @@ function node_type_form_validate($form_id, $form_values) {
 
   if (isset($names[$type->name]) && $names[$type->name] != $old_type) {
     form_set_error('name', t('The human-readable name %name is already taken.', array('%name' => $names[$type->name])));
-    break;
   }
 }
 
