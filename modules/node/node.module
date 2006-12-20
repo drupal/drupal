@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.754 2006/12/19 20:14:26 dries Exp $
+// $Id: node.module,v 1.755 2006/12/20 08:06:20 drumm Exp $
 
 /**
  * @file
@@ -2349,41 +2349,20 @@ function node_page_default() {
     // Check for existence of admin account.
     $admin = db_result(db_query('SELECT uid FROM {users} WHERE uid = 1'));
 
-    $default_message = '
-      <h1 class="title">Welcome to your new Drupal website!</h1>
-      <p>Please follow these steps to set up and start using your website:</p>
-      <ol>';
+    $default_message = t('<h1 class="title">Welcome to your new Drupal website!</h1><p>Please follow these steps to set up and start using your website:</p>');
+    $default_message .= '<ol>';
 
     if (!$admin) {
-      $default_message .= '
-        <li>
-          <strong>Create your administrator account</strong>
-          To begin, <a href="@register">create the first account</a>. This account will have full administration rights and will allow you to configure your website.
-        </li>';
+      $default_message .= '<li>'. t('<strong>Create your administrator account</strong> To begin, <a href="@register">create the first account</a>. This account will have full administration rights and will allow you to configure your website.', array('@register' => url('user/register'))) .'</li>';
     }
+    $default_message .= '<li>'. t('<strong>Configure your website</strong> Once logged in, visit the <a href="@admin">administration section</a>, where you can <a href="@config">customize and configure</a> all aspects of your website.', array('@admin' => url('admin'), '@config' => url('admin/settings'))) .'</li>';
+    $default_message .= '<li>'. t('<strong>Enable additional functionality</strong> Next, visit the <a href="@modules">module list</a> and enable features which suit your specific needs. You can find additional modules in the <a href="@download_modules">Drupal modules download section</a>.', array('@modules' => url('admin/build/modules'), '@download_modules' => 'http://drupal.org/project/modules')) .'</li>';
+    $default_message .= '<li>'. t('<strong>Customize your website design</strong> To change the "look and feel" of your website, visit the <a href="@themes">themes section</a>. You may choose from one of the included themes or download additional themes from the <a href="@download_themes">Drupal themes download section</a>.', array('@themes' => url('admin/build/themes'), '@download_themes' => 'http://drupal.org/project/themes')) .'</li>';
+    $default_message .= '<li>'. t('<strong>Start posting content</strong> Finally, you can <a href="@content">create content</a> for your website. This message will disappear once you have published your first post.', array('@content' => url('node/add'))) .'</li>';
+    $default_message .= '</ol>';
+    $default_message .= '<p>'. t('For more information, please refer to the <a href="@help">help section</a>, or the <a href="@handbook">online Drupal handbooks</a>. You may also post at the <a href="@forum">Drupal forum</a>, or view the wide range of <a href="@support">other support options</a> available.', array('@help' => url('admin/help'), '@handbook' => 'http://drupal.org/handbooks', '@forum' => 'http://drupal.org/forum', '@support' => 'http://drupal.org/support')) .'</p>';
 
-    $default_message .= '
-        <li>
-          <strong>Configure your website</strong>
-          Once logged in, visit the <a href="@admin">administration section</a>, where you can <a href="@config">customize and configure</a> all aspects of your website.
-        </li>
-        <li>
-          <strong>Enable additional functionality</strong>
-          Next, visit the <a href="@modules">module list</a> and enable features which suit your specific needs. You can find additional modules in the <a href="@download_modules">Drupal modules download section</a>.
-        </li>
-        <li>
-          <strong>Customize your website design</strong>
-          To change the "look and feel" of your website, visit the <a href="@themes">themes section</a>. You may choose from one of the included themes or download additional themes from the <a href="@download_themes">Drupal themes download section</a>.
-        </li>
-        <li>
-          <strong>Start posting content</strong>
-          Finally, you can <a href="@content">create content</a> for your website. This message will disappear once you have published your first post.
-        </li>
-      </ol>
-      <p>For more information, please refer to the <a href="@help">help section</a>, or the <a href="@handbook">online Drupal handbooks</a>. You may also post at the <a href="@forum">Drupal forum</a>, or view the wide range of <a href="@support">other support options</a> available.</p>';
-
-    $output = t($default_message, array('@drupal' => 'http://drupal.org/', '@register' => url('user/register'), '@admin' => url('admin'), '@config' => url('admin/settings'), '@modules' => url('admin/build/modules'), '@download_modules' => 'http://drupal.org/project/modules', '@themes' => url('admin/build/themes'), '@download_themes' => 'http://drupal.org/project/themes', '@content' => url('node/add'), '@help' => url('admin/help'), '@handbook' => 'http://drupal.org/handbooks', '@forum' => 'http://drupal.org/forum', '@support' => 'http://drupal.org/support'));
-    $output = '<div id="first-time">'. $output .'</div>';
+    $output = '<div id="first-time">'. $default_message .'</div>';
   }
   drupal_set_title('');
 
