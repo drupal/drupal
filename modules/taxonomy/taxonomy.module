@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.328 2006/11/30 07:05:57 unconed Exp $
+// $Id: taxonomy.module,v 1.329 2006/12/20 10:32:16 dries Exp $
 
 /**
  * @file
@@ -21,7 +21,8 @@ function taxonomy_perm() {
  * links with:
  *
  * if (module_exists('taxonomy')) {
- *   $this->links(taxonomy_link('taxonomy terms', $node));
+ *   $terms = taxonomy_link('taxonomy terms', $node);
+ *   print theme('links', $terms);
  * }
  */
 function taxonomy_link($type, $node = NULL) {
@@ -38,7 +39,7 @@ function taxonomy_link($type, $node = NULL) {
     }
 
     // We call this hook again because some modules and themes call taxonomy_link('taxonomy terms') directly
-    foreach (module_implements('link_alter') AS $module) {
+    foreach (module_implements('link_alter') as $module) {
       $function = $module .'_link_alter';
       $function($node, $links);
     }
@@ -46,6 +47,16 @@ function taxonomy_link($type, $node = NULL) {
     return $links;
   }
 }
+
+/**
+ * For vocabularies not maintained by taxonomy.module, give the maintaining
+ * module a chance to provide a path for terms in that vocabulary.
+ *
+ * @param $term
+ *   A term object.
+ * @return
+ *   An internal Drupal path.
+ */
 
 function taxonomy_term_path($term) {
   $vocabulary = taxonomy_get_vocabulary($term->vid);
@@ -180,7 +191,9 @@ function taxonomy_overview_terms($vid) {
   $tree = taxonomy_get_tree($vocabulary->vid);
   foreach ($tree as $term) {
     $total_entries++; // we're counting all-totals, not displayed
-    if (($start_from && ($start_from * $page_increment) >= $total_entries) || ($displayed_count == $page_increment)) { continue; }
+    if (($start_from && ($start_from * $page_increment) >= $total_entries) || ($displayed_count == $page_increment)) {
+      continue;
+    }
     $rows[] = array(str_repeat('--', $term->depth) . ' ' . l($term->name, "taxonomy/term/$term->tid"), l(t('edit'), "admin/content/taxonomy/edit/term/$term->tid", array(), $destination));
     $displayed_count++; // we're counting tids displayed
   }
@@ -275,12 +288,12 @@ function taxonomy_form_vocabulary_submit($form_id, $form_values) {
   // Fix up the nodes array to remove unchecked nodes.
   $form_values['nodes'] = array_filter($form_values['nodes']);
   switch (taxonomy_save_vocabulary($form_values)) {
-  case SAVED_NEW:
-    drupal_set_message(t('Created new vocabulary %name.', array('%name' => $form_values['name'])));
-    break;
-  case SAVED_UPDATED:
-    drupal_set_message(t('Updated vocabulary %name.', array('%name' => $form_values['name'])));
-    break;
+    case SAVED_NEW:
+      drupal_set_message(t('Created new vocabulary %name.', array('%name' => $form_values['name'])));
+      break;
+    case SAVED_UPDATED:
+      drupal_set_message(t('Updated vocabulary %name.', array('%name' => $form_values['name'])));
+      break;
   }
   return 'admin/content/taxonomy';
 }
@@ -315,6 +328,14 @@ function taxonomy_save_vocabulary(&$edit) {
   return $status;
 }
 
+/**
+ * Delete a vocabulary.
+ *
+ * @param $vid
+ *   A vocabulary ID.
+ * @return
+ *   Constant indicating items were deleted.
+ */
 function taxonomy_del_vocabulary($vid) {
   $vocabulary = (array) taxonomy_get_vocabulary($vid);
 
@@ -356,9 +377,19 @@ function taxonomy_vocabulary_confirm_delete_submit($form_id, $form_values) {
 function taxonomy_form_term($vocabulary_id, $edit = array()) {
   $vocabulary = taxonomy_get_vocabulary($vocabulary_id);
 
-  $form['name'] = array('#type' => 'textfield', '#title' => t('Term name'), '#default_value' => $edit['name'], '#maxlength' => 64, '#description' => t('The name for this term. Example: "Linux".'), '#required' => TRUE);
+  $form['name'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Term name'),
+    '#default_value' => $edit['name'],
+    '#maxlength' => 64,
+    '#description' => t('The name of this term.'),
+    '#required' => TRUE);
 
-  $form['description'] = array('#type' => 'textarea', '#title' => t('Description'), '#default_value' => $edit['description'], '#description' => t('A description of the term.'));
+  $form['description'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Description'),
+    '#default_value' => $edit['description'],
+    '#description' => t('A description of the term.'));
 
   if ($vocabulary->hierarchy) {
     $parent = array_keys(taxonomy_get_parents($edit['tid']));
@@ -382,14 +413,30 @@ function taxonomy_form_term($vocabulary_id, $edit = array()) {
     $form['relations'] = _taxonomy_term_select(t('Related terms'), 'relations', array_keys(taxonomy_get_related($edit['tid'])), $vocabulary_id, NULL, 1, '<'. t('none') .'>', array($edit['tid']));
   }
 
-  $form['synonyms'] = array('#type' => 'textarea', '#title' => t('Synonyms'), '#default_value' => implode("\n", taxonomy_get_synonyms($edit['tid'])), '#description' => t('<a href="@help-url">Synonyms</a> of this term, one synonym per line.', array('@help-url' => url('admin/help/taxonomy', NULL, NULL, 'synonyms'))));
-  $form['weight'] = array('#type' => 'weight', '#title' => t('Weight'), '#default_value' => $edit['weight'], '#description' => t('In listings, the heavier terms will sink and the lighter terms will be positioned nearer the top.'));
-  $form['vid'] = array('#type' => 'value', '#value' => $vocabulary->vid);
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Submit'));
+  $form['synonyms'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Synonyms'),
+    '#default_value' => implode("\n", taxonomy_get_synonyms($edit['tid'])),
+    '#description' => t('<a href="@help-url">Synonyms</a> of this term, one synonym per line.', array('@help-url' => url('admin/help/taxonomy', NULL, NULL, 'synonyms'))));
+  $form['weight'] = array(
+    '#type' => 'weight',
+    '#title' => t('Weight'),
+    '#default_value' => $edit['weight'],
+    '#description' => t('In listings, the heavier terms will sink and the lighter terms will be positioned nearer the top.'));
+  $form['vid'] = array(
+    '#type' => 'value',
+    '#value' => $vocabulary->vid);
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Submit'));
 
   if ($edit['tid']) {
-    $form['delete'] = array('#type' => 'submit', '#value' => t('Delete'));
-    $form['tid'] = array('#type' => 'value', '#value' => $edit['tid']);
+    $form['delete'] = array(
+      '#type' => 'submit',
+      '#value' => t('Delete'));
+    $form['tid'] = array(
+      '#type' => 'value',
+      '#value' => $edit['tid']);
   }
   else {
     $form['destination'] = array('#type' => 'hidden', '#value' => $_GET['q']);
@@ -413,62 +460,69 @@ function taxonomy_form_term_submit($form_id, $form_values) {
   return 'admin/content/taxonomy';
 }
 
-function taxonomy_save_term(&$edit) {
-  if ($edit['tid'] && $edit['name']) {
-    db_query("UPDATE {term_data} SET name = '%s', description = '%s', weight = %d WHERE tid = %d", $edit['name'], $edit['description'], $edit['weight'], $edit['tid']);
+/**
+ * Helper function for taxonomy_form_term_submit().
+ *
+ * @param $form_values
+ * @return
+ *   Status constant indicating if term was inserted or updated.
+ */
+function taxonomy_save_term(&$form_values) {
+  if ($form_values['tid'] && $form_values['name']) {
+    db_query("UPDATE {term_data} SET name = '%s', description = '%s', weight = %d WHERE tid = %d", $form_values['name'], $form_values['description'], $form_values['weight'], $form_values['tid']);
     $hook = 'update';
     $status = SAVED_UPDATED;
   }
-  else if ($edit['tid']) {
-    return taxonomy_del_term($edit['tid']);
+  else if ($form_values['tid']) {
+    return taxonomy_del_term($form_values['tid']);
   }
   else {
-    $edit['tid'] = db_next_id('{term_data}_tid');
-    db_query("INSERT INTO {term_data} (tid, name, description, vid, weight) VALUES (%d, '%s', '%s', %d, %d)", $edit['tid'], $edit['name'], $edit['description'], $edit['vid'], $edit['weight']);
+    $form_values['tid'] = db_next_id('{term_data}_tid');
+    db_query("INSERT INTO {term_data} (tid, name, description, vid, weight) VALUES (%d, '%s', '%s', %d, %d)", $form_values['tid'], $form_values['name'], $form_values['description'], $form_values['vid'], $form_values['weight']);
     $hook = 'insert';
     $status = SAVED_NEW;
   }
 
-  db_query('DELETE FROM {term_relation} WHERE tid1 = %d OR tid2 = %d', $edit['tid'], $edit['tid']);
-  if ($edit['relations']) {
-    foreach ($edit['relations'] as $related_id) {
+  db_query('DELETE FROM {term_relation} WHERE tid1 = %d OR tid2 = %d', $form_values['tid'], $form_values['tid']);
+  if ($form_values['relations']) {
+    foreach ($form_values['relations'] as $related_id) {
       if ($related_id != 0) {
-        db_query('INSERT INTO {term_relation} (tid1, tid2) VALUES (%d, %d)', $edit['tid'], $related_id);
+        db_query('INSERT INTO {term_relation} (tid1, tid2) VALUES (%d, %d)', $form_values['tid'], $related_id);
       }
     }
   }
 
-  db_query('DELETE FROM {term_hierarchy} WHERE tid = %d', $edit['tid']);
-  if (!isset($edit['parent']) || empty($edit['parent'])) {
-    $edit['parent'] = array(0);
+  db_query('DELETE FROM {term_hierarchy} WHERE tid = %d', $form_values['tid']);
+  if (!isset($form_values['parent']) || empty($form_values['parent'])) {
+    $form_values['parent'] = array(0);
   }
-  if (is_array($edit['parent'])) {
-    foreach ($edit['parent'] as $parent) {
+  if (is_array($form_values['parent'])) {
+    foreach ($form_values['parent'] as $parent) {
       if (is_array($parent)) {
         foreach ($parent as $tid) {
-          db_query('INSERT INTO {term_hierarchy} (tid, parent) VALUES (%d, %d)', $edit['tid'], $tid);
+          db_query('INSERT INTO {term_hierarchy} (tid, parent) VALUES (%d, %d)', $form_values['tid'], $tid);
         }
       }
       else {
-        db_query('INSERT INTO {term_hierarchy} (tid, parent) VALUES (%d, %d)', $edit['tid'], $parent);
+        db_query('INSERT INTO {term_hierarchy} (tid, parent) VALUES (%d, %d)', $form_values['tid'], $parent);
       }
     }
   }
   else {
-    db_query('INSERT INTO {term_hierarchy} (tid, parent) VALUES (%d, %d)', $edit['tid'], $edit['parent']);
+    db_query('INSERT INTO {term_hierarchy} (tid, parent) VALUES (%d, %d)', $form_values['tid'], $form_values['parent']);
   }
 
-  db_query('DELETE FROM {term_synonym} WHERE tid = %d', $edit['tid']);
-  if ($edit['synonyms']) {
-    foreach (explode ("\n", str_replace("\r", '', $edit['synonyms'])) as $synonym) {
+  db_query('DELETE FROM {term_synonym} WHERE tid = %d', $form_values['tid']);
+  if ($form_values['synonyms']) {
+    foreach (explode ("\n", str_replace("\r", '', $form_values['synonyms'])) as $synonym) {
       if ($synonym) {
-        db_query("INSERT INTO {term_synonym} (tid, name) VALUES (%d, '%s')", $edit['tid'], chop($synonym));
+        db_query("INSERT INTO {term_synonym} (tid, name) VALUES (%d, '%s')", $form_values['tid'], chop($synonym));
       }
     }
   }
 
   if (isset($hook)) {
-    module_invoke_all('taxonomy', $hook, 'term', $edit);
+    module_invoke_all('taxonomy', $hook, 'term', $form_values);
   }
 
   cache_clear_all();
@@ -476,6 +530,14 @@ function taxonomy_save_term(&$edit) {
   return $status;
 }
 
+/**
+ * Delete a term.
+ *
+ * @param $tid
+ *   The term ID.
+ * @return
+ *   Status constant indicating deletion.
+ */
 function taxonomy_del_term($tid) {
   $tids = array($tid);
   while ($tids) {
@@ -549,8 +611,7 @@ function taxonomy_form($vid, $value = 0, $help = NULL, $name = 'taxonomy') {
 }
 
 /**
- * Generate a set of options for selecting a term from all vocabularies. Can be
- * passed to form_select.
+ * Generate a set of options for selecting a term from all vocabularies.
  */
 function taxonomy_form_all($free_tags = 0) {
   $vocabularies = taxonomy_get_vocabularies();
@@ -595,6 +656,7 @@ function taxonomy_get_vocabularies($type = NULL) {
 }
 
 /**
+ * Implementation of hook_form_alter().
  * Generate a form for selecting terms to associate with a node.
  */
 function taxonomy_form_alter($form_id, &$form) {
@@ -677,7 +739,7 @@ function taxonomy_form_alter($form_id, &$form) {
 }
 
 /**
- * Find all terms associated to the given node, within one vocabulary.
+ * Find all terms associated with the given node, within one vocabulary.
  */
 function taxonomy_node_get_terms_by_vocabulary($nid, $vid, $key = 'tid') {
   $result = db_query(db_rewrite_sql('SELECT t.tid, t.* FROM {term_data} t INNER JOIN {term_node} r ON r.tid = t.tid WHERE t.vid = %d AND r.nid = %d ORDER BY weight', 't', 'tid'), $vid, $nid);
@@ -689,7 +751,7 @@ function taxonomy_node_get_terms_by_vocabulary($nid, $vid, $key = 'tid') {
 }
 
 /**
- * Find all terms associated to the given node, ordered by vocabulary and term weight.
+ * Find all terms associated with the given node, ordered by vocabulary and term weight.
  */
 function taxonomy_node_get_terms($nid, $key = 'tid') {
   static $terms;
@@ -746,15 +808,15 @@ function taxonomy_node_save($nid, $terms) {
       foreach ($typed_terms as $typed_term) {
         // If a user has escaped a term (to demonstrate that it is a group,
         // or includes a comma or quote character), we remove the escape
-        // formatting so to save the term into the DB as the user intends.
+        // formatting so to save the term into the database as the user intends.
         $typed_term = str_replace('""', '"', preg_replace('/^"(.*)"$/', '\1', $typed_term));
         $typed_term = trim($typed_term);
         if ($typed_term == "") { continue; }
 
         // See if the term exists in the chosen vocabulary
-        // and return the tid, otherwise, add a new record.
+        // and return the tid; otherwise, add a new record.
         $possibilities = taxonomy_get_term_by_name($typed_term);
-        $typed_term_tid = NULL; // tid match if any.
+        $typed_term_tid = NULL; // tid match, if any.
         foreach ($possibilities as $possibility) {
           if ($possibility->vid == $vid) {
             $typed_term_tid = $possibility->tid;
@@ -767,7 +829,7 @@ function taxonomy_node_save($nid, $terms) {
           $typed_term_tid = $edit['tid'];
         }
 
-        // Defend against duplicate, different cased tags
+        // Defend against duplicate, differently cased tags
         if (!isset($inserted[$typed_term_tid])) {
           db_query('INSERT INTO {term_node} (nid, tid) VALUES (%d, %d)', $nid, $typed_term_tid);
           $inserted[$typed_term_tid] = TRUE;
@@ -982,7 +1044,7 @@ function taxonomy_term_count_nodes($tid, $type = 0) {
   static $count;
 
   if (!isset($count[$type])) {
-    // $type == 0 always evaluates TRUE is $type is a string
+    // $type == 0 always evaluates TRUE if $type is a string
     if (is_numeric($type)) {
       $result = db_query(db_rewrite_sql('SELECT t.tid, COUNT(n.nid) AS c FROM {term_node} t INNER JOIN {node} n ON t.nid = n.nid WHERE n.status = 1 GROUP BY t.tid'));
     }
@@ -1125,6 +1187,9 @@ function _taxonomy_term_select($title, $name, $value, $vocabulary_id, $descripti
   );
 }
 
+/**
+ * We use the default selection field for choosing terms.
+ */
 function theme_taxonomy_term_select($element) {
   return theme('select', $element);
 }
@@ -1246,15 +1311,15 @@ function taxonomy_node_update_index(&$node) {
 }
 
 /**
- * Parses a comma or plus separated string of term ids.
+ * Parses a comma or plus separated string of term IDs.
  *
  * @param $str_tids
- *   An string of term ids, separated by plus or comma.
+ *   A string of term IDs, separated by plus or comma.
  *   comma (,) means AND
  *   plus (+) means OR
  *
- * @return an associative array with an <code>operator</code> key (either 'and'
- *   or 'or') and an array, <code>tids</code>, containing the term ids.
+ * @return an associative array with an operator key (either 'and'
+ *   or 'or') and a tid key containing an array of the term ids.
  */
 function taxonomy_terms_parse_string($str_tids) {
   $terms = array();
@@ -1330,7 +1395,7 @@ function taxonomy_term_page($str_tids = '', $depth = 0, $op = 'page') {
 }
 
 /**
- * Page to edit a vocabulary
+ * Page to edit a vocabulary.
  */
 function taxonomy_admin_vocabulary_edit($vid = NULL) {
   if ($_POST['op'] == t('Delete') || $_POST['confirm']) {
@@ -1343,7 +1408,7 @@ function taxonomy_admin_vocabulary_edit($vid = NULL) {
 }
 
 /**
- * Page to edit a vocabulary term
+ * Page to edit a vocabulary term.
  */
 function taxonomy_admin_term_edit($tid) {
   if ($_POST['op'] == t('Delete') || $_POST['confirm']) {
@@ -1356,7 +1421,7 @@ function taxonomy_admin_term_edit($tid) {
 }
 
 /**
- * Provides category information for rss feeds
+ * Provides category information for RSS feeds.
  */
 function taxonomy_rss_item($node) {
   $output = array();
@@ -1374,15 +1439,15 @@ function taxonomy_rss_item($node) {
 function taxonomy_help($section) {
   switch ($section) {
     case 'admin/help#taxonomy':
-      $output = '<p>'. t('The taxonomy module is one of the most popular features because users often want to create categories to organize content by type. It can automatically classify new content, which is very useful for organizing content on-the-fly. A simple example would be organizing a list of music reviews by musical genre.') .'</p>';
-      $output .= '<p>'. t('Taxonomy is also the study of classification. The taxonomy module allows you to define vocabularies (sets of categories) which are used to classify content. The module supports hierarchical classification and association between terms, allowing for truly flexible information retrieval and classification. The taxonomy module allows multiple lists of categories for classification (controlled vocabularies) and offers the possibility of creating thesauri (controlled vocabularies that indicate the relationship of terms) and taxonomies (controlled vocabularies where relationships are indicated hierarchically). To view and manage the terms of each vocabulary, click on the associated <em>list terms</em> link. To delete a vocabulary and all its terms, choose <em>edit vocabulary.</em>') .'</p>';
+      $output = '<p>'. t('The taxonomy module is one of the most popular features because users often want to create categories to organize content by type. A simple example would be organizing a list of music reviews by musical genre.') .'</p>';
+      $output .= '<p>'. t('Taxonomy is the study of classification. The taxonomy module allows you to define vocabularies (sets of categories) which are used to classify content. The module supports hierarchical classification and association between terms, allowing for truly flexible information retrieval and classification. The taxonomy module allows multiple lists of categories for classification (controlled vocabularies) and offers the possibility of creating thesauri (controlled vocabularies that indicate the relationship of terms) and taxonomies (controlled vocabularies where relationships are indicated hierarchically). To view and manage the terms of each vocabulary, click on the associated <em>list terms</em> link. To delete a vocabulary and all its terms, choose <em>edit vocabulary.</em>') .'</p>';
       $output .= '<p>'. t('A controlled vocabulary is a set of terms to use for describing content (known as descriptors in indexing lingo). Drupal allows you to describe each piece of content (blog, story, etc.) using one or many of these terms. For simple implementations, you might create a set of categories without subcategories, similar to Slashdot\'s sections. For more complex implementations, you might create a hierarchical list of categories.') .'</p>';
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@taxonomy">Taxonomy page</a>.', array('@taxonomy' => 'http://drupal.org/handbook/modules/taxonomy/')) .'</p>';
       return $output;
     case 'admin/content/taxonomy':
       return '<p>'. t('The taxonomy module allows you to classify content into categories and subcategories; it allows multiple lists of categories for classification (controlled vocabularies) and offers the possibility of creating thesauri (controlled vocabularies that indicate the relationship of terms), taxonomies (controlled vocabularies where relationships are indicated hierarchically), and free vocabularies where terms, or tags, are defined during content creation. To view and manage the terms of each vocabulary, click on the associated <em>list terms</em> link. To delete a vocabulary and all its terms, choose "edit vocabulary".') .'</p>';
     case 'admin/content/taxonomy/add/vocabulary':
-      return '<p>'. t("When you create a controlled vocabulary you are creating a set of terms to use for describing content (known as descriptors in indexing lingo). Drupal allows you to describe each piece of content (blog, story, etc.) using one or many of these terms. For simple implementations, you might create a set of categories without subcategories, similar to Slashdot.org's or Kuro5hin.org's sections. For more complex implementations, you might create a hierarchical list of categories.") .'</p>';
+      return '<p>'. t("When you create a controlled vocabulary you are creating a set of terms to use for describing content (known as descriptors in indexing lingo). Drupal allows you to describe each piece of content (blog, story, etc.) using one or many of these terms. For simple implementations, you might create a set of categories without subcategories. For more complex implementations, you might create a hierarchical list of categories.") .'</p>';
   }
 }
 
