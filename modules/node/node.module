@@ -490,10 +490,9 @@ function node_load($param = array(), $revision = NULL, $reset = NULL) {
     $nodes = array();
   }
 
-  $cachable = FALSE;
+  $cachable = ($revision == NULL);
   $arguments = array();
   if (is_numeric($param)) {
-    $cachable = $revision == NULL;
     if ($cachable && isset($nodes[$param])) {
       return is_object($nodes[$param]) ? drupal_clone($nodes[$param]) : $nodes[$param];
     }
@@ -533,10 +532,9 @@ function node_load($param = array(), $revision = NULL, $reset = NULL) {
         $node->$key = $value;
       }
     }
-  }
-
-  if ($cachable) {
-    $nodes[$param] = is_object($node) ? drupal_clone($node) : $node;
+    if ($cachable) {
+      $nodes[$node->nid] = is_object($node) ? drupal_clone($node) : $node;
+    }
   }
 
   return $node;
