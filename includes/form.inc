@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.166 2006/12/12 10:01:38 unconed Exp $
+// $Id: form.inc,v 1.167 2006/12/21 16:16:44 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -519,6 +519,11 @@ function _form_validate($elements, $form_id = NULL) {
       // need a special check for the '0' string.
       if ($elements['#required'] && empty($elements['#value']) && $elements['#value'] !== '0') {
         form_error($elements, t('!name field is required.', array('!name' => $elements['#title'])));
+      }
+
+      // Verify that the value is not longer than #maxlength.
+      if (isset($elements['#maxlength']) && drupal_strlen($elements['#value']) > $elements['#maxlength']) {
+        form_error($elements, t('!name cannot be longer than %max characters but is currently %length characters long.', array('!name' => empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title'], '%max' => $elements['#maxlength'], '%length' => drupal_strlen($elements['#value']))));
       }
 
       // Add legal choice check if element has #options. Can be skipped, but then you must validate your own element.
