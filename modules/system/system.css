@@ -1,4 +1,4 @@
-/* $Id: system.css,v 1.20 2006/12/14 14:21:36 dries Exp $ */
+/* $Id: system.css,v 1.21 2006/12/21 16:13:06 dries Exp $ */
 
 /*
 ** HTML elements
@@ -343,7 +343,7 @@ html.js fieldset.collapsible .fieldset-wrapper {
 .resizable-textarea .grippie {
   height: 9px;
   overflow: hidden;
-  background: #eee url(../../misc/grippie.png) no-repeat center center;
+  background: #eee url(../../misc/grippie.png) no-repeat center 2px;
   border: 1px solid #ddd;
   border-top-width: 0;
   cursor: s-resize;
