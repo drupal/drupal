@@ -278,7 +278,7 @@ function drupal_goto($path = '', $query = NULL, $fragment = NULL) {
  * Generates a site off-line message
  */
 function drupal_site_offline() {
-  drupal_set_header('HTTP/1.0 503 Service unavailable');
+  drupal_set_header('HTTP/1.1 503 Service unavailable');
   drupal_set_title(t('Site off-line'));
   print theme('maintenance_page', filter_xss_admin(variable_get('site_offline_message',
     t('%site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('%site' => variable_get('site_name', t('This Drupal site')))))));
@@ -288,7 +288,7 @@ function drupal_site_offline() {
  * Generates a 404 error if the request can not be handled.
  */
 function drupal_not_found() {
-  drupal_set_header('HTTP/1.0 404 Not Found');
+  drupal_set_header('HTTP/1.1 404 Not Found');
   watchdog('page not found', t('%page not found.', array('%page' => theme('placeholder', $_GET['q']))), WATCHDOG_WARNING);
 
   // Keep old path for reference
@@ -316,7 +316,7 @@ function drupal_not_found() {
  * Generates a 403 error if the request is not allowed.
  */
 function drupal_access_denied() {
-  drupal_set_header('HTTP/1.0 403 Forbidden');
+  drupal_set_header('HTTP/1.1 403 Forbidden');
   watchdog('access denied', t('%page denied access.', array('%page' => theme('placeholder', $_GET['q']))), WATCHDOG_WARNING, l(t('view'), $_GET['q']));
 
   // Keep old path for reference
@@ -410,7 +410,7 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
     $defaults[$header] = $header .': '. $value;
   }
 
-  $request = $method .' '. $path ." HTTP/1.0\r\n";
+  $request = $method .' '. $path ." HTTP/1.1\r\n";
   $request .= implode("\r\n", $defaults);
   $request .= "\r\n\r\n";
   if ($data) {
