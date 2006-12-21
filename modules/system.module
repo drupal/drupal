@@ -759,7 +759,7 @@ function system_theme_settings_submit($form_id, $values) {
   $key = $values['var'];
 
   // Exclude unnecessary elements.
-  unset($values['var'], $values['submit'], $values['reset'], $values['form_id']);
+  unset($values['var'], $values['submit'], $values['reset'], $values['form_id'], $values['op'], $values['form_token']);
 
   if ($op == t('Reset to defaults')) {
     variable_del($key);
