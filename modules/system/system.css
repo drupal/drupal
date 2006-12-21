@@ -343,7 +343,7 @@ html.js fieldset.collapsible .fieldset-wrapper {
 .resizable-textarea .grippie {
   height: 9px;
   overflow: hidden;
-  background: #eee url(../../misc/grippie.png) no-repeat center center;
+  background: #eee url(../../misc/grippie.png) no-repeat center 2px;
   border: 1px solid #ddd;
   border-top-width: 0;
   cursor: s-resize;
