@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.20 2006/12/20 06:28:54 unconed Exp $
+// $Id: content_types.inc,v 1.21 2006/12/23 15:39:35 dries Exp $
 
 /**
  * @file
@@ -284,18 +284,20 @@ function node_type_form_submit($form_id, $form_values) {
 
   $status = node_type_save($type);
 
+  $variables = $form_values;
+
   // Remove everything that's been saved already - whatever's left is assumed
   // to be a persistent variable.
-  foreach ($form_values as $key => $value) {
+  foreach ($variables as $key => $value) {
     if (isset($type->$key)) {
-      unset($form_values[$key]);
+      unset($variables[$key]);
     }
   }
 
-  unset($form_values['type_display'], $form_values['old_type'], $form_values['orig_type'], $form_values['submit'], $form_values['delete'], $form_values['reset'], $form_values['form_id']);
+  unset($variables['form_token'], $variables['op'], $variables['submit'], $variables['delete'], $variables['reset'], $variables['form_id']);
 
   // Save or reset persistent variable values.
-  foreach ($form_values as $key => $value) {
+  foreach ($variables as $key => $value) {
     $key .= '_'. $type->type;
     if ($op == t('Reset to defaults')) {
       variable_del($key);
