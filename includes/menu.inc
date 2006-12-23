@@ -437,10 +437,6 @@ function menu_set_active_item($path = NULL) {
     }
     else {
       $_GET['q'] = $path;
-
-      // If we change ?q= we need to rebuild the contextual menu items
-      // because they are often variable depending on the value of ?q=.
-      _menu_append_contextual_items();
     }
     $menu = menu_get_menu();
 
