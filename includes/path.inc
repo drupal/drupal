@@ -1,5 +1,5 @@
 <?php
-// $Id: path.inc,v 1.12 2006/12/04 10:48:28 dries Exp $
+// $Id: path.inc,v 1.13 2006/12/23 22:04:52 dries Exp $
 
 /**
  * @file
@@ -42,10 +42,10 @@ function drupal_init_path() {
 function drupal_lookup_path($action, $path = '') {
   // $map keys are Drupal paths and the values are the corresponding aliases
   static $map = array(), $no_src = array();
-  static $count = NULL;
+  static $count;
 
   // Use $count to avoid looking up paths in subsequent calls if there simply are no aliases
-  if ($count === NULL) {
+  if (!isset($count)) {
     $count = db_result(db_query('SELECT COUNT(pid) FROM {url_alias}'));
   }
 
@@ -58,9 +58,7 @@ function drupal_lookup_path($action, $path = '') {
       if (isset($map[$path])) {
         return $map[$path];
       }
-      if (!$alias = db_result(db_query("SELECT dst FROM {url_alias} WHERE src = '%s'", $path))) {
-        $alias = FALSE;
-      }
+      $alias = db_result(db_query("SELECT dst FROM {url_alias} WHERE src = '%s'", $path));
       $map[$path] = $alias;
       return $alias;
     }
