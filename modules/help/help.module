@@ -1,5 +1,5 @@
 <?php
-// $Id: help.module,v 1.68 2006/12/18 21:44:38 dries Exp $
+// $Id: help.module,v 1.69 2006/12/23 22:06:05 dries Exp $
 
 /**
  * @file
@@ -98,13 +98,11 @@ function help_help($section) {
       $output = '<p>'. t('The help module displays context sensitive help information. Users can learn how to use modules and accomplish tasks quicker with less errors by clicking on links in provided by the help module.') .'</p>';
       $output .= t("<p>Modules can make documentation available to other modules with this module. All user help should be presented using this module. Some examples of help: </p>
 <ul>
-<li>The name of a module (unused, but there).</li>
-<li>The description found on the <a href=\"@modules\">module administration page</a> page.</li>
 <li>The module's help text, displayed on the <a href=\"@help\">help page</a> and through the module's individual help link.</li>
+<li>More elaborate help text on sites a module defines.</li>
 <li>The help for a distributed authorization module (if applicable).</li>
-<li>The description of a post type (if applicable).</li>
 </ul>
-", array('@modules' => url('admin/settings/modules'), '@help' => url('admin/help')));
+", array('@help' => url('admin/help')));
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@help">Help page</a>.', array('@help' => 'http://drupal.org/handbook/modules/help/')) .'</p>';
       return $output;
   }
