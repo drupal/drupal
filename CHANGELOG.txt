@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.172 2006/12/11 20:53:17 unconed Exp $
+// $Id: CHANGELOG.txt,v 1.173 2006/12/23 22:07:37 dries Exp $
 
 Drupal 5.0, xxxx-xx-xx (development version)
 ------------------------
@@ -14,7 +14,7 @@ Drupal 5.0, xxxx-xx-xx (development version)
     * be localized
 - added new default Garland theme
 - added color module to change some themes' color schemes
-- included the jQuery JavaScript library 1.0.3 and converted all core JavaScript to use it
+- included the jQuery JavaScript library 1.0.4 and converted all core JavaScript to use it
 - introduced the ability to alter mail sent from system
 - module system:
     * added .info files for module meta-data
