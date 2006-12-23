@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.757 2006/12/21 22:22:14 dries Exp $
+// $Id: node.module,v 1.758 2006/12/23 17:49:47 dries Exp $
 
 /**
  * @file
@@ -2046,8 +2046,17 @@ function node_form_add_preview($form) {
   if ($op == t('Preview')) {
     drupal_validate_form($form['form_id']['#value'], $form);
     if (!form_get_errors()) {
-      // We pass the global $form_values here to preserve changes made during form validation
-      $form['#prefix'] = node_preview((object)$form_values);
+      // Because the node preview may display a form, we must render it
+      // outside the node submission form tags using the #prefix property
+      // (i.e. to prevent illegally nested forms).
+      // If the node form already has a #prefix, we must preserve it.
+      // In this case, we put the preview before the #prefix so we keep
+      // the #prefix as "close" to the rest of the form as possible,
+      // for example, to keep a <div> only around the form, not the
+      // preview. We pass the global $form_values here to preserve
+      // changes made during form validation.
+      $preview = node_preview((object)$form_values);
+      $form['#prefix'] = isset($form['#prefix']) ? $preview . $form['#prefix'] : $preview;
     }
   }
   if (variable_get('node_preview', 0) && (form_get_errors() || $op != t('Preview'))) {
