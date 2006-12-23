@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.143 2006/12/12 06:02:52 unconed Exp $
+// $Id: menu.inc,v 1.144 2006/12/23 17:27:03 dries Exp $
 
 /**
  * @file
@@ -437,10 +437,6 @@ function menu_set_active_item($path = NULL) {
     }
     else {
       $_GET['q'] = $path;
-
-      // If we change ?q= we need to rebuild the contextual menu items
-      // because they are often variable depending on the value of ?q=.
-      _menu_append_contextual_items();
     }
     $menu = menu_get_menu();
 
