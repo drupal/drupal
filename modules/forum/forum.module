@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.372 2006/12/23 19:30:46 dries Exp $
+// $Id: forum.module,v 1.373 2006/12/25 22:22:42 drumm Exp $
 
 /**
  * @file
@@ -590,10 +590,10 @@ function forum_overview() {
   if ($tree) {
     foreach ($tree as $term) {
       if (in_array($term->tid, variable_get('forum_containers', array()))) {
-        $rows[] = array(str_repeat(' -- ', $term->depth) .' '. check_plain($term->name), l(t('edit container'), "admin/content/forum/edit/container/$term->tid"));
+        $rows[] = array(str_repeat(' -- ', $term->depth) .' '. l(check_plain($term->name), 'forum/'. $term->tid), l(t('edit container'), 'admin/content/forum/edit/container/'. $term->tid));
       }
       else {
-        $rows[] = array(str_repeat(' -- ', $term->depth) .' '. check_plain($term->name), l(t('edit forum'), "admin/content/forum/edit/forum/$term->tid"));
+        $rows[] = array(str_repeat(' -- ', $term->depth) .' '. l(check_plain($term->name), 'forum/'. $term->tid), l(t('edit forum'), 'admin/content/forum/edit/forum/'. $term->tid));
        }
 
     }
