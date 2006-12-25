@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.221 2006/12/10 20:34:03 dries Exp $
+// $Id: poll.module,v 1.222 2006/12/25 09:48:42 drumm Exp $
 
 /**
  * @file
@@ -555,7 +555,7 @@ function poll_cancel(&$node) {
   global $user;
 
   $nid = arg(2);
-  if ($node = node_load(array('nid' => $nid))) {
+  if ($node = node_load($nid)) {
     if ($node->type == 'poll' && $node->allowvotes == FALSE) {
       if ($user->uid) {
         db_query('DELETE FROM {poll_votes} WHERE nid = %d and uid = %d', $node->nid, $user->uid);
