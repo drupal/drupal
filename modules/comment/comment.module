@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.516 2006/12/19 09:02:28 drumm Exp $
+// $Id: comment.module,v 1.517 2006/12/25 22:39:08 drumm Exp $
 
 /**
  * @file
@@ -701,13 +701,6 @@ function comment_save($edit) {
   global $user;
   if (user_access('post comments') && (user_access('administer comments') || node_comment_mode($edit['nid']) == COMMENT_NODE_READ_WRITE)) {
     if (!form_get_errors()) {
-      // Check for duplicate comments. Note that we have to use the
-      // validated/filtered data to perform such check.
-      $duplicate = db_result(db_query("SELECT COUNT(cid) FROM {comments} WHERE pid = %d AND nid = %d AND subject = '%s' AND comment = '%s'", $edit['pid'], $edit['nid'], $edit['subject'], $edit['comment']), 0);
-      if ($duplicate != 0) {
-        watchdog('content', t('Comment: duplicate %subject.', array('%subject' => $edit['subject'])), WATCHDOG_WARNING);
-      }
-
       if ($edit['cid']) {
         // Update the comment in the database.
         db_query("UPDATE {comments} SET status = %d, timestamp = %d, subject = '%s', comment = '%s', format = %d, uid = %d, name = '%s', mail = '%s', homepage = '%s' WHERE cid = %d", $edit['status'], $edit['timestamp'], $edit['subject'], $edit['comment'], $edit['format'], $edit['uid'], $edit['name'], $edit['mail'], $edit['homepage'], $edit['cid']);
@@ -717,11 +710,17 @@ function comment_save($edit) {
         // Allow modules to respond to the updating of a comment.
         comment_invoke_comment($edit, 'update');
 
-
         // Add an entry to the watchdog log.
         watchdog('content', t('Comment: updated %subject.', array('%subject' => $edit['subject'])), WATCHDOG_NOTICE, l(t('view'), 'node/'. $edit['nid'], NULL, NULL, 'comment-'. $edit['cid']));
       }
       else {
+        // Check for duplicate comments. Note that we have to use the
+        // validated/filtered data to perform such check.
+        $duplicate = db_result(db_query("SELECT COUNT(cid) FROM {comments} WHERE pid = %d AND nid = %d AND subject = '%s' AND comment = '%s'", $edit['pid'], $edit['nid'], $edit['subject'], $edit['comment']), 0);
+        if ($duplicate != 0) {
+          watchdog('content', t('Comment: duplicate %subject.', array('%subject' => $edit['subject'])), WATCHDOG_WARNING);
+        }
+
         // Add the comment to database.
         $status = user_access('post comments without approval') ? COMMENT_PUBLISHED : COMMENT_NOT_PUBLISHED;
         $roles = variable_get('comment_roles', array());
