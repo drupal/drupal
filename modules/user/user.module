@@ -1,10 +1,13 @@
 <?php
-// $Id: user.module,v 1.734 2006/12/23 17:27:03 dries Exp $
+// $Id: user.module,v 1.735 2006/12/25 10:04:03 drumm Exp $
 
 /**
  * @file
  * Enables the user registration and login system.
  */
+
+define('USERNAME_MAX_LENGTH', 60);
+define('EMAIL_MAX_LENGTH', 64);
 
 /**
  * Invokes hook_user() in every module.
@@ -254,7 +257,7 @@ function user_validate_name($name) {
     return t('The username contains an illegal character.');
   }
   if (ereg('@', $name) && !eregi('@([0-9a-z](-?[0-9a-z])*.)+[a-z]{2}([zmuvtg]|fo|me)?$', $name)) return t('The username is not a valid authentication ID.');
-  if (strlen($name) > 56) return t('The username %name is too long: it must be less than 56 characters.', array('%name' => $name));
+  if (strlen($name) > USERNAME_MAX_LENGTH) return t('The username %name is too long: it must be %max characters or less.', array('%name' => $name, '%max' => USERNAME_MAX_LENGTH));
 }
 
 function user_validate_mail($mail) {
@@ -477,7 +480,7 @@ function user_login_block() {
   );
   $form['name'] = array('#type' => 'textfield',
     '#title' => t('Username'),
-    '#maxlength' => 60,
+    '#maxlength' => USERNAME_MAX_LENGTH,
     '#size' => 15,
     '#required' => TRUE,
   );
@@ -891,7 +894,7 @@ function user_login($msg = '') {
   $form['name'] = array('#type' => 'textfield',
     '#title' => t('Username'),
     '#size' => 30,
-    '#maxlength' => 60,
+    '#maxlength' => USERNAME_MAX_LENGTH,
     '#required' => TRUE,
     '#attributes' => array('tabindex' => '1'),
   );
@@ -1028,7 +1031,7 @@ function user_pass() {
   $form['name'] = array('#type' => 'textfield',
     '#title' => t('Username or e-mail address'),
     '#size' => 30,
-    '#maxlength' => 60,
+    '#maxlength' => max(USERNAME_MAX_LENGTH, EMAIL_MAX_LENGTH),
     '#required' => TRUE,
   );
   $form['submit'] = array('#type' => 'submit',
@@ -1294,7 +1297,7 @@ function user_edit_form($uid, $edit, $register = FALSE) {
     $form['account']['name'] = array('#type' => 'textfield',
       '#title' => t('Username'),
       '#default_value' => $edit['name'],
-      '#maxlength' => 60,
+      '#maxlength' => USERNAME_MAX_LENGTH,
       '#description' => t('Your preferred username; punctuation is not allowed except for periods, hyphens, and underscores.'),
       '#required' => TRUE,
     );
@@ -1302,7 +1305,7 @@ function user_edit_form($uid, $edit, $register = FALSE) {
   $form['account']['mail'] = array('#type' => 'textfield',
     '#title' => t('E-mail address'),
     '#default_value' => $edit['mail'],
-    '#maxlength' => 64,
+    '#maxlength' => EMAIL_MAX_LENGTH,
     '#description' => t('A valid e-mail address. All e-mails from the system will be sent to this address. The e-mail address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by e-mail.'),
     '#required' => TRUE,
   );
@@ -1551,7 +1554,7 @@ function _user_mail_text($messageid, $variables = array()) {
 
 function user_admin_check_user() {
   $form['user'] = array('#type' => 'fieldset', '#title' => t('Username'));
-  $form['user']['test'] = array('#type' => 'textfield', '#title' => '', '#description' => t('Enter a username to check if it will be denied or allowed.'), '#size' => 30, '#maxlength' => 64);
+  $form['user']['test'] = array('#type' => 'textfield', '#title' => '', '#description' => t('Enter a username to check if it will be denied or allowed.'), '#size' => 30, '#maxlength' => USERNAME_MAX_LENGTH);
   $form['user']['type'] = array('#type' => 'hidden', '#value' => 'user');
   $form['user']['submit'] = array('#type' => 'submit', '#value' => t('Check username'));
   $form['#base'] = 'user_admin_access_check';
@@ -1560,7 +1563,7 @@ function user_admin_check_user() {
 
 function user_admin_check_mail() {
   $form['mail'] = array('#type' => 'fieldset', '#title' => t('E-mail'));
-  $form['mail']['test'] = array('#type' => 'textfield', '#title' => '', '#description' => t('Enter an e-mail address to check if it will be denied or allowed.'), '#size' => 30, '#maxlength' => 64);
+  $form['mail']['test'] = array('#type' => 'textfield', '#title' => '', '#description' => t('Enter an e-mail address to check if it will be denied or allowed.'), '#size' => 30, '#maxlength' => EMAIL_MAX_LENGTH);
   $form['mail']['type'] = array('#type' => 'hidden', '#value' => 'mail');
   $form['mail']['submit'] = array('#type' => 'submit', '#value' => t('Check e-mail'));
   $form['#base'] = 'user_admin_access_check';
