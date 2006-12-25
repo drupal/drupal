@@ -555,7 +555,7 @@ function poll_cancel(&$node) {
   global $user;
 
   $nid = arg(2);
-  if ($node = node_load(array('nid' => $nid))) {
+  if ($node = node_load($nid)) {
     if ($node->type == 'poll' && $node->allowvotes == FALSE) {
       if ($user->uid) {
         db_query('DELETE FROM {poll_votes} WHERE nid = %d and uid = %d', $node->nid, $user->uid);
