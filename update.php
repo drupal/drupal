@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.210 2006/12/19 09:50:55 dries Exp $
+// $Id: update.php,v 1.211 2006/12/25 21:22:03 drumm Exp $
 
 /**
  * @file
@@ -439,9 +439,13 @@ function update_do_updates() {
     $percentage = 100;
   }
 
-  // When no updates remain, clear the cache.
+  // When no updates remain, clear the caches in case the data has been updated.
   if (!isset($update['module'])) {
-    db_query('DELETE FROM {cache}');
+    cache_clear_all('*', 'cache', TRUE);
+    cache_clear_all('*', 'cache_page', TRUE);
+    cache_clear_all('*', 'cache_menu', TRUE);
+    cache_clear_all('*', 'cache_filter', TRUE);
+    drupal_clear_css_cache();
   }
 
   return array($percentage, isset($update['module']) ? 'Updating '. $update['module'] .' module' : 'Updating complete');
@@ -784,9 +788,6 @@ if (($access_check == FALSE) || ($user->uid == 1)) {
   update_fix_watchdog_115();
   update_fix_watchdog();
   update_fix_sessions();
-
-  // Clear any cached CSS files, in case any module updates its CSS as well.
-  drupal_clear_css_cache();
 
   $op = isset($_REQUEST['op']) ? $_REQUEST['op'] : '';
   switch ($op) {
