@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.758 2006/12/23 17:49:47 dries Exp $
+// $Id: node.module,v 1.759 2006/12/25 22:02:05 drumm Exp $
 
 /**
  * @file
@@ -2848,32 +2848,16 @@ function node_access_write_grants($node, $grants, $realm = NULL, $delete = TRUE)
     db_query($query, $node->nid, $realm);
   }
 
-  // only perform work when node_access modules are active
+  // Only perform work when node_access modules are active.
   if (count(module_implements('node_grants'))) {
-    // This optimization reduces the number of db inserts a little bit. We could
-    // optimize further for mass updates if we wanted.
-    $values = array();
-    $query = '';
     foreach ($grants as $grant) {
       if ($realm && $realm != $grant['realm']) {
         continue;
       }
       // Only write grants; denies are implicit.
       if ($grant['grant_view'] || $grant['grant_update'] || $grant['grant_delete']) {
-        $query .= ($query ? ', ' : '') . "(%d, '%s', %d, %d, %d, %d)";
-
-        $values[] = $node->nid;
-        $values[] = $grant['realm'];
-        $values[] = $grant['gid'];
-        $values[] = $grant['grant_view'];
-        $values[] = $grant['grant_update'];
-        $values[] = $grant['grant_delete'];
+        db_query("INSERT INTO {node_access} (nid, realm, gid, grant_view, grant_update, grant_delete) VALUES (%d, '%s', %d, %d, %d, %d)", $node->nid, $grant['realm'], $grant['gid'], $grant['grant_view'], $grant['grant_update'], $grant['grant_delete']);
       }
-    }
-
-    if ($values) {
-     $query = "INSERT INTO {node_access} (nid, realm, gid, grant_view, grant_update, grant_delete) VALUES " . $query;
-     db_query($query, $values);
     }
   }
 }
