@@ -2137,7 +2137,7 @@ function system_node_type($op, $info) {
  *   The form.
  */
 function confirm_form($form, $question, $path, $description = NULL, $yes = NULL, $no = NULL, $name = 'confirm') {
-  $description = ($description) ? $description : t('This action cannot be undone.');
+  $description = isset($description) ? $description : t('This action cannot be undone.');
 
   // Prepare cancel link
   $query = $fragment = NULL;
