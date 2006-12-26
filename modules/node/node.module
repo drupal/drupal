@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.760 2006/12/25 22:09:39 drumm Exp $
+// $Id: node.module,v 1.761 2006/12/26 00:29:49 drumm Exp $
 
 /**
  * @file
@@ -968,7 +968,7 @@ function theme_node_search_admin($form) {
  */
 function node_configure() {
   // Only show rebuild button if there is 0 or more than 2 rows in node_access table, or if there are modules that implement node_grant.
-  if (db_result(db_query('SELECT COUNT(*) FROM {node_access}')) != 1 || count(module_implements('node_grant'))) {
+  if (db_result(db_query('SELECT COUNT(*) FROM {node_access}')) != 1 || count(module_implements('node_grants')) > 0) {
     $status = '<p>'. t('If the site is experiencing problems with permissions to content, you may have to rebuild the permissions cache. Possible causes for permission problems are disabling modules or configuration changes to permissions. Rebuilding will remove all privileges to posts, and replace them with permissions based on the current modules and settings.') .'</p>';
     $status .= '<p>'. t('Rebuilding may take some time if there is a lot of content or complex permission settings. After rebuilding has completed posts will automatically use the new permissions.'). '</p>';
 
