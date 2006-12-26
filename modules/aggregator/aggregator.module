@@ -422,7 +422,7 @@ function aggregator_form_feed($edit = array()) {
   $form['title'] = array('#type' => 'textfield',
     '#title' => t('Title'),
     '#default_value' => $edit['title'],
-    '#maxlength' => 64,
+    '#maxlength' => 255,
     '#description' => t('The name of the feed; typically the name of the web site you syndicate content from.'),
     '#required' => TRUE,
   );
