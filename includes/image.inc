@@ -1,5 +1,5 @@
 <?php
-// $Id: image.inc,v 1.16 2006/12/12 01:03:34 unconed Exp $
+// $Id: image.inc,v 1.17 2006/12/26 14:01:41 dries Exp $
 
 /**
  * Return a list of available toolkits.
@@ -177,11 +177,24 @@ function image_crop($source, $destination, $x, $y, $width, $height) {
  */
 
 /**
- * Retrieve settings for the GD2 toolkit (not used).
+ * Retrieve settings for the GD2 toolkit.
  */
 function image_gd_settings() {
   if (image_gd_check_settings()) {
-    return t('The built-in GD2 toolkit is installed and working properly.');
+    $form = array();
+    $form['status'] = array('#value' => t('The built-in GD2 toolkit is installed and working properly.'));
+
+    $form['image_jpeg_quality'] = array(
+      '#type' => 'textfield',
+      '#title' => t('JPEG quality'),
+      '#description' => t('Define the image quality for JPEG manipulations. Ranges from 0 to 100. Higher values mean better image quality but bigger files.'),
+      '#size' => 10,
+      '#maxlength' => 3,
+      '#default_value' => variable_get('image_jpeg_quality', 75),
+      '#field_suffix' => t('%'),
+    );
+
+    return $form;
   }
   else {
     form_set_error('image_toolkit', t('The built-in GD image toolkit requires that the GD module for PHP be installed and configured properly. For more information see <a href="@url">PHP\'s image documentation</a>.', array('@url' => 'http://php.net/image')));
@@ -304,7 +317,12 @@ function image_gd_close($res, $destination, $extension) {
   if (!function_exists($close_func)) {
     return FALSE;
   }
-  return $close_func($res, $destination);
+  if ($extension == 'jpeg') {
+    return $close_func($res, $destination, variable_get('image_jpeg_quality', 75));
+  }
+  else {
+    return $close_func($res, $destination);
+  }
 }
 
 
