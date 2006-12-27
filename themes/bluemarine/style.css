@@ -243,7 +243,7 @@ ul.links li.first {
 .node .taxonomy {
   color: #999;
   font-size: 0.8em;
-  padding: 1.5em;
+  padding-left: 1.5em;
 }
 .node .picture {
   border: 1px solid #ddd;
