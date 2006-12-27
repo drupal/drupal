@@ -21,7 +21,7 @@ function pgsql_is_available() {
  */
 function drupal_test_pgsql($url, &$success) {
   if (!pgsql_is_available()) {
-    drupal_set_message('PHP PostgreSQL support not enabled.', 'error');
+    drupal_set_message(st('PHP PostgreSQL support not enabled.'), 'error');
     return FALSE;
   }
 

@@ -21,7 +21,7 @@ function mysql_is_available() {
  */
 function drupal_test_mysql($url, &$success) {
   if (!mysql_is_available()) {
-    drupal_set_message('PHP MySQL support not enabled.', 'error');
+    drupal_set_message(st('PHP MySQL support not enabled.'), 'error');
     return FALSE;
   }
 
