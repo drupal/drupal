@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysqli.inc,v 1.30 2006/12/04 11:06:29 dries Exp $
+// $Id: database.mysqli.inc,v 1.31 2006/12/27 22:13:56 dries Exp $
 
 /**
  * @file
@@ -234,6 +234,9 @@ function db_error() {
  * database tables. Instead, this function is used to return a new unique ID
  * of the type requested. If necessary, a new sequence with the given name
  * will be created.
+ *
+ * Note that the table name should be in curly brackets to preserve compatibility
+ * with table prefixes. For example, db_next_id('{node}_nid');
  */
 function db_next_id($name) {
   $name = db_prefix_tables($name);

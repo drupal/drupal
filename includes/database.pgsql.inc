@@ -1,5 +1,5 @@
 <?php
-// $Id: database.pgsql.inc,v 1.42 2006/12/14 13:26:41 dries Exp $
+// $Id: database.pgsql.inc,v 1.43 2006/12/27 22:13:56 dries Exp $
 
 /**
  * @file
@@ -228,6 +228,9 @@ function db_error() {
  * database tables. Instead, this function is used to return a new unique ID
  * of the type requested. If necessary, a new sequence with the given name
  * will be created.
+ *
+ * Note that the table name should be in curly brackets to preserve compatibility
+ * with table prefixes. For example, db_next_id('{node}_nid');
  */
 function db_next_id($name) {
   $id = db_result(db_query("SELECT nextval('%s_seq')", db_prefix_tables($name)));
