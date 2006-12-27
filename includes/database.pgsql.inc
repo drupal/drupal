@@ -228,6 +228,9 @@ function db_error() {
  * database tables. Instead, this function is used to return a new unique ID
  * of the type requested. If necessary, a new sequence with the given name
  * will be created.
+ *
+ * Note that the table name should be in curly brackets to preserve compatibility
+ * with table prefixes. For example, db_next_id('{node}_nid');
  */
 function db_next_id($name) {
   $id = db_result(db_query("SELECT nextval('%s_seq')", db_prefix_tables($name)));
