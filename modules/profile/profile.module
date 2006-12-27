@@ -421,9 +421,6 @@ function profile_admin_overview() {
  * Menu callback; display a list of user information.
  */
 function profile_browse() {
-  // Add CSS
-  drupal_add_css(drupal_get_path('module', 'profile') .'/profile.css', 'module', 'all', FALSE);
-
   $name = arg(1);
   list(,,$value) = explode('/', $_GET['q'], 3);
 
