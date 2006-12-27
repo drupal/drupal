@@ -2,7 +2,7 @@
 
 if (Drupal.jsEnabled) {
   $(document).ready(function() {
-    $('#edit-has_js').each(function() { this.value = 1; });
+    $('#edit-has-js').each(function() { this.value = 1; });
     $('#progress').each(function () {
       var holder = this;
 
