@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.21 2006/12/23 15:39:35 dries Exp $
+// $Id: content_types.inc,v 1.22 2006/12/27 12:56:10 drumm Exp $
 
 /**
  * @file
@@ -361,7 +361,7 @@ function node_node_type($op, $info) {
  *   then nothing happens.
  */
 function node_type_reset(&$type) {
-  $info_array = module_invoke($type->module, 'node_info');
+  $info_array = module_invoke_all('node_info');
   if (isset($info_array[$type->orig_type])) {
     $info = _node_type_set_defaults($info_array[$type->orig_type]);
     $info['type'] = $type->orig_type;
