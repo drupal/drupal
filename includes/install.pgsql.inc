@@ -1,5 +1,5 @@
 <?php
-// $Id: install.pgsql.inc,v 1.1 2006/08/04 06:58:43 dries Exp $
+// $Id: install.pgsql.inc,v 1.2 2006/12/27 13:02:34 drumm Exp $
 
 // PostgreSQL specific install functions
 
@@ -21,7 +21,7 @@ function pgsql_is_available() {
  */
 function drupal_test_pgsql($url, &$success) {
   if (!pgsql_is_available()) {
-    drupal_set_message('PHP PostgreSQL support not enabled.', 'error');
+    drupal_set_message(st('PHP PostgreSQL support not enabled.'), 'error');
     return FALSE;
   }
 

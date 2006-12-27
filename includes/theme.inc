@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.332 2006/12/15 01:06:33 unconed Exp $
+// $Id: theme.inc,v 1.333 2006/12/27 13:02:34 drumm Exp $
 
 /**
  * @file
@@ -453,14 +453,14 @@ function theme_install_page($content) {
 
   $messages = drupal_set_message();
   if (isset($messages['error'])) {
-    $errors = count($messages['error']) > 1 ? 'errors' : 'error';
-    $output .= "<h3>The following $errors must be resolved before you can continue the installation process:</h3>";
+    $title = count($messages['error']) > 1 ? st('The following errors must be resolved before you can continue the installation process') : st('The following error must be resolved before you can continue the installation process');
+    $output .= '<h3>' .$title. ':</h3>';
     $output .= theme('status_messages', 'error');
   }
 
   if (isset($messages['status'])) {
-    $warnings = count($messages['status']) > 1 ? 'warnings' : 'warning';
-    $output .= "<h4>The following installation $warnings should be carefully reviewed, but in most cases may be safely ignored:</h4>";
+    $warnings = count($messages['status']) > 1 ? st('The following installation warnings should be carefully reviewed, but in most cases may be safely ignored') : st('The following installation warning should be carefully reviewed, but in most cases may be safely ignored');
+    $output .= '<h4>' .$title. ':</h4>';
     $output .= theme('status_messages', 'status');
   }
 

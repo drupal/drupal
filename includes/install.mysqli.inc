@@ -1,5 +1,5 @@
 <?php
-// $Id: install.mysqli.inc,v 1.5 2006/09/06 07:46:24 dries Exp $
+// $Id: install.mysqli.inc,v 1.6 2006/12/27 13:02:34 drumm Exp $
 
 // MySQLi specific install functions
 
@@ -21,7 +21,7 @@ function mysqli_is_available() {
  */
 function drupal_test_mysqli($url, &$success) {
   if (!mysqli_is_available()) {
-    drupal_set_message('PHP MySQLi support not enabled.', 'error');
+    drupal_set_message(st('PHP MySQLi support not enabled.'), 'error');
     return FALSE;
   }
 

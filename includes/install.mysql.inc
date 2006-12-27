@@ -1,5 +1,5 @@
 <?php
-// $Id: install.mysql.inc,v 1.3 2006/08/20 06:38:50 dries Exp $
+// $Id: install.mysql.inc,v 1.4 2006/12/27 13:02:34 drumm Exp $
 
 // MySQL specific install functions
 
@@ -21,7 +21,7 @@ function mysql_is_available() {
  */
 function drupal_test_mysql($url, &$success) {
   if (!mysql_is_available()) {
-    drupal_set_message('PHP MySQL support not enabled.', 'error');
+    drupal_set_message(st('PHP MySQL support not enabled.'), 'error');
     return FALSE;
   }
 
