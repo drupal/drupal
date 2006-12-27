@@ -2178,6 +2178,8 @@ function system_admin_compact_mode() {
  */
 function theme_admin_page($blocks) {
   $stripe = 0;
+  $container = array();
+
   foreach ($blocks as $block) {
     if ($block_output = theme('admin_block', $block)) {
       if (!$block['position']) {
