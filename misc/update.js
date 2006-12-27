@@ -1,8 +1,8 @@
-// $Id: update.js,v 1.9 2006/08/31 23:31:25 unconed Exp $
+// $Id: update.js,v 1.10 2006/12/27 14:11:45 unconed Exp $
 
 if (Drupal.jsEnabled) {
   $(document).ready(function() {
-    $('#edit-has_js').each(function() { this.value = 1; });
+    $('#edit-has-js').each(function() { this.value = 1; });
     $('#progress').each(function () {
       var holder = this;
 
