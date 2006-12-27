@@ -279,11 +279,6 @@ function db_affected_rows() {
  * User-supplied arguments to the query should be passed in as separate parameters
  * so that they can be properly escaped to avoid SQL injection attacks.
  *
- * Note that if you need to know how many results were returned, you should do
- * a SELECT COUNT(*) on the temporary table afterwards. db_num_rows() and
- * db_affected_rows() do not give consistent result across different database
- * types in this case.
- *
  * @param $query
  *   A string containing an SQL query.
  * @param ...
