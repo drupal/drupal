@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.154 2006/12/01 22:47:53 unconed Exp $
+// $Id: locale.module,v 1.155 2006/12/27 13:11:59 drumm Exp $
 
 /**
  * @file
@@ -137,7 +137,7 @@ function locale_user($type, $edit, &$user, $category = NULL) {
     if ($user->language == '') {
       $user->language = key($languages['name']);
     }
-    $languages['name'] = array_map('check_plain', $languages['name']);
+    $languages['name'] = array_map('check_plain', array_map('t', $languages['name']));
     $form['locale'] = array('#type' => 'fieldset',
       '#title' => t('Interface language settings'),
       '#weight' => 1,
