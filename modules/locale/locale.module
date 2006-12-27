@@ -137,7 +137,7 @@ function locale_user($type, $edit, &$user, $category = NULL) {
     if ($user->language == '') {
       $user->language = key($languages['name']);
     }
-    $languages['name'] = array_map('check_plain', $languages['name']);
+    $languages['name'] = array_map('check_plain', array_map('t', $languages['name']));
     $form['locale'] = array('#type' => 'fieldset',
       '#title' => t('Interface language settings'),
       '#weight' => 1,
