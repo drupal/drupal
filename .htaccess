@@ -3,7 +3,7 @@
 #
 
 # Protect files and directories from prying eyes.
-<FilesMatch "(\.(engine|inc|info|install|module|profile|sh|.*sql|theme|tpl(\.php)?|xtmpl)|code-style\.pl|Entries.*|Repository|Root)$">
+<FilesMatch "(\.(engine|inc|info|install|module|profile|po|sh|.*sql|theme|tpl(\.php)?|xtmpl)|code-style\.pl|Entries.*|Repository|Root)$">
   Order allow,deny
 </FilesMatch>
 
@@ -87,4 +87,4 @@ DirectoryIndex index.php
   RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
 </IfModule>
 
-# $Id: .htaccess,v 1.78 2006/11/29 06:16:14 drumm Exp $
+# $Id: .htaccess,v 1.79 2006/12/28 07:47:19 drumm Exp $
