@@ -1781,7 +1781,7 @@ function node_feed($nodes = 0, $channel = array()) {
 
       // Filter and prepare node teaser
       if (node_hook($item, 'view')) {
-        node_invoke($item, 'view', $teaser, FALSE);
+        $item = node_invoke($item, 'view', $teaser, FALSE);
       }
       else {
         $item = node_prepare($item, $teaser);
