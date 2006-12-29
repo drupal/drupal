@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.333 2006/12/27 13:02:34 drumm Exp $
+// $Id: theme.inc,v 1.334 2006/12/29 08:18:28 drumm Exp $
 
 /**
  * @file
@@ -534,8 +534,14 @@ function theme_links($links, $attributes = array('class' => 'links')) {
         $class = $key;
       }
 
-      // Add first and last classes to the list of links to help out themers
-      $extra_class = ($i == 1) ? 'first ' : (($i == $num_links) ? 'last ' : '');
+      // Add first and last classes to the list of links to help out themers.
+      $extra_class = '';
+      if ($i == 1) {
+        $extra_class .= 'first ';
+      }
+      if ($i == $num_links) {
+        $extra_class .= 'last ';
+      }
       $output .= '<li class="'. $extra_class . $class .'">';
 
       // Is the title HTML?
