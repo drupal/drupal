@@ -237,6 +237,10 @@ function node_type_form_validate($form_id, $form_values) {
     if (!preg_match('!^[a-z0-9_]+$!', $type->type)) {
       form_set_error('type', t('The machine-readable name can only consist of lowercase letters, underscores, and numbers.'));
     }
+    // The type cannot be just the character '0', since elsewhere we check it using empty().
+    if ($type->type === '0') {
+      form_set_error('type', t("Invalid type. Please enter a type name other than '0' (the character zero)."));
+    }
   }
 
   $names = array_flip($types);
