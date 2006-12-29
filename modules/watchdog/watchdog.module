@@ -1,5 +1,5 @@
 <?php
-// $Id: watchdog.module,v 1.164 2006/12/10 09:54:35 unconed Exp $
+// $Id: watchdog.module,v 1.165 2006/12/29 17:22:20 dries Exp $
 
 /**
  * @file
@@ -120,7 +120,7 @@ function watchdog_overview() {
     array('data' => t('Operations'))
   );
 
-  $sql = "SELECT w.*, u.name, u.uid FROM {watchdog} w INNER JOIN {users} u ON w.uid = u.uid";
+  $sql = "SELECT w.wid, w.uid, w.severity, w.type, w.timestamp, w.message, w.link, u.name FROM {watchdog} w INNER JOIN {users} u ON w.uid = u.uid";
   $tablesort = tablesort_sql($header);
   $type = $_SESSION['watchdog_overview_filter'];
   if ($type != 'all') {
