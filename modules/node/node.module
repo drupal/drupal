@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.761 2006/12/26 00:29:49 drumm Exp $
+// $Id: node.module,v 1.762 2006/12/29 16:46:23 dries Exp $
 
 /**
  * @file
@@ -2936,7 +2936,7 @@ function node_content_form($node) {
       '#title' => check_plain($type->body_label),
       '#default_value' => $node->body,
       '#rows' => 20,
-      '#required' => TRUE);
+      '#required' => ($type->min_word_count > 0));
     $form['body_filter']['format'] = filter_form($node->format);
   }
 
