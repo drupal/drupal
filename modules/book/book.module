@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.403 2006/11/30 02:04:31 drumm Exp $
+// $Id: book.module,v 1.404 2006/12/29 07:41:44 drumm Exp $
 
 /**
  * @file
@@ -716,6 +716,8 @@ function theme_book_export_html($title, $content) {
  * title order). Finally appends the output of the $visit_post()
  * callback to the output before returning the generated output.
  *
+ * @todo This is duplicitous with node_build_content().
+ *
  * @param nid
  *  - the node id (nid) of the root node of the book hierarchy.
  * @param depth
@@ -778,19 +780,25 @@ function book_recurse($nid = 0, $depth = 1, $visit_pre, $visit_post) {
  *   - the HTML generated for the given node.
  */
 function book_node_visitor_html_pre($node, $depth, $nid) {
-  // Output the content:
-  if (node_hook($node, 'content')) {
-    $node = node_invoke($node, 'content');
+  // Remove the delimiter (if any) that separates the teaser from the body.
+  $node->body = str_replace('<break>', '', $node->body);
+
+  // The 'view' hook can be implemented to overwrite the default function
+  // to display nodes.
+  if (node_hook($node, 'view')) {
+    $node = node_invoke($node, 'view', FALSE, FALSE);
   }
-  // Allow modules to change $node->body before viewing.
-  node_invoke_nodeapi($node, 'print', $node->body, FALSE);
+  else {
+    $node = node_prepare($node, FALSE);
+  }
+
+  // Allow modules to make their own additions to the node.
+  node_invoke_nodeapi($node, 'print');
 
   $output .= "<div id=\"node-". $node->nid ."\" class=\"section-$depth\">\n";
   $output .= "<h1 class=\"book-heading\">". check_plain($node->title) ."</h1>\n";
+  $output .= drupal_render($node->content);
 
-  if ($node->body) {
-    $output .= drupal_render($node->content);
-  }
   return $output;
 }
 
