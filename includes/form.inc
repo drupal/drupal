@@ -942,6 +942,27 @@ function form_select_options($element, $choices = NULL) {
 }
 
 /**
+ * Traverses a select element's #option array looking for the object that 
+ * holds the given key. Returns FALSE if not found. As usual with functions
+ * that can return 0 or FALSE do not forget to use === and !== if needed. 
+ *
+ * @param $element
+ *   The select element.
+ * @param $key
+ *   The key to look for.
+ * @return
+ *   The index of the object that held the $key with some value, or FALSE.
+ */
+function form_get_option_key($element, $key) {
+  foreach ($element['#options'] as $index => $object) {
+    if (isset($object->option[$key])) {
+      return $index;
+    }
+  }
+  return FALSE;
+}
+
+/**
  * Format a group of form items.
  *
  * @param $element
