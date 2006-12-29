@@ -1605,7 +1605,7 @@ function system_update_132() {
       /**
        * Wipe the search index
        */
-      include_once './modules/search.module';
+      include_once './'. drupal_get_path('module', 'search') .'/search.module';
       search_wipe();
     }
 
@@ -2625,7 +2625,7 @@ function system_update_172() {
     $_SESSION['system_update_172_max'] = db_result(db_query('SELECT MAX(cid) FROM {comments}'));
   }
 
-  include_once './modules/comment.module';
+  include_once './'. drupal_get_path('module', 'comment') .'/comment.module';
 
   $limit = 20;
   $result = db_query_range("SELECT cid, thread FROM {comments} WHERE cid > %d ORDER BY cid ASC", $_SESSION['system_update_172'], 0, $limit);
