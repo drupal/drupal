@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.module,v 1.141 2006/12/10 09:54:34 unconed Exp $
+// $Id: tracker.module,v 1.142 2006/12/29 07:59:11 drumm Exp $
 
 /**
  * @file
@@ -76,15 +76,16 @@ function tracker_page($uid = 0) {
   // Add CSS
   drupal_add_css(drupal_get_path('module', 'tracker') .'/tracker.css', 'module', 'all', FALSE);
 
+  // TODO: These queries are very expensive, see http://drupal.org/node/105639
   if ($uid) {
-    $sql = 'SELECT DISTINCT(n.nid), n.title, n.type, n.changed, n.uid, u.name, l.last_comment_timestamp AS last_post, l.comment_count FROM {node} n INNER JOIN {node_comment_statistics} l ON n.nid = l.nid INNER JOIN {users} u ON n.uid = u.uid LEFT JOIN {comments} c ON n.nid = c.nid AND (c.status = %d OR c.status IS NULL) WHERE n.status = 1 AND (n.uid = %d OR c.uid = %d) ORDER BY last_post DESC';
+    $sql = 'SELECT DISTINCT(n.nid), n.title, n.type, n.changed, n.uid, u.name, GREATEST(n.changed, l.last_comment_timestamp) AS last_updated, l.comment_count FROM {node} n INNER JOIN {node_comment_statistics} l ON n.nid = l.nid INNER JOIN {users} u ON n.uid = u.uid LEFT JOIN {comments} c ON n.nid = c.nid AND (c.status = %d OR c.status IS NULL) WHERE n.status = 1 AND (n.uid = %d OR c.uid = %d) ORDER BY last_updated DESC';
     $sql = db_rewrite_sql($sql);
     $sql_count = 'SELECT COUNT(DISTINCT(n.nid)) FROM {node} n LEFT JOIN {comments} c ON n.nid = c.nid AND (c.status = %d OR c.status IS NULL) WHERE n.status = 1 AND (n.uid = %d OR c.uid = %d)';
     $sql_count = db_rewrite_sql($sql_count);
     $result = pager_query($sql, 25, 0, $sql_count, COMMENT_PUBLISHED, $uid, $uid);
   }
   else {
-    $sql = 'SELECT DISTINCT(n.nid), n.title, n.type, n.changed, n.uid, u.name, l.last_comment_timestamp AS last_post, l.comment_count FROM {node} n INNER JOIN {users} u ON n.uid = u.uid INNER JOIN {node_comment_statistics} l ON n.nid = l.nid WHERE n.status = 1 ORDER BY last_post DESC';
+    $sql = 'SELECT DISTINCT(n.nid), n.title, n.type, n.changed, n.uid, u.name, GREATEST(n.changed, l.last_comment_timestamp) AS last_updated, l.comment_count FROM {node} n INNER JOIN {users} u ON n.uid = u.uid INNER JOIN {node_comment_statistics} l ON n.nid = l.nid WHERE n.status = 1 ORDER BY last_updated DESC';
     $sql = db_rewrite_sql($sql);
     $sql_count = 'SELECT COUNT(n.nid) FROM {node} n WHERE n.status = 1';
     $sql_count = db_rewrite_sql($sql_count);
@@ -109,7 +110,7 @@ function tracker_page($uid = 0) {
       l($node->title, "node/$node->nid") .' '. theme('mark', node_mark($node->nid, $node->changed)),
       theme('username', $node),
       array('class' => 'replies', 'data' => $comments),
-      t('@time ago', array('@time' => format_interval(time() - $node->last_post)))
+      t('!time ago', array('!time' => format_interval(time() - $node->last_updated)))
     );
   }
 
@@ -117,7 +118,7 @@ function tracker_page($uid = 0) {
     $rows[] = array(array('data' => t('No posts available.'), 'colspan' => '5'));
   }
 
-  $header = array(t('Type'), t('Post'), t('Author'), t('Replies'), t('Last post'));
+  $header = array(t('Type'), t('Post'), t('Author'), t('Replies'), t('Last updated'));
 
   $output = '<div id="tracker">';
   $output .= theme('table', $header, $rows);
