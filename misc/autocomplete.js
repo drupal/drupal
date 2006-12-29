@@ -195,6 +195,11 @@ Drupal.jsAC.prototype.populatePopup = function () {
  * Fills the suggestion popup with any matches received
  */
 Drupal.jsAC.prototype.found = function (matches) {
+  // If no value in the textfield, do not show the popup.
+  if (!this.input.value.length) {
+    return false;
+  }
+
   // Prepare matches
   var ul = document.createElement('ul');
   var ac = this;
