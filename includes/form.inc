@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.167 2006/12/21 16:16:44 dries Exp $
+// $Id: form.inc,v 1.168 2006/12/29 00:19:58 unconed Exp $
 
 /**
  * @defgroup form Form generation
@@ -939,6 +939,27 @@ function form_select_options($element, $choices = NULL) {
     }
   }
   return $options;
+}
+
+/**
+ * Traverses a select element's #option array looking for the object that 
+ * holds the given key. Returns FALSE if not found. As usual with functions
+ * that can return 0 or FALSE do not forget to use === and !== if needed. 
+ *
+ * @param $element
+ *   The select element.
+ * @param $key
+ *   The key to look for.
+ * @return
+ *   The index of the object that held the $key with some value, or FALSE.
+ */
+function form_get_option_key($element, $key) {
+  foreach ($element['#options'] as $index => $object) {
+    if (isset($object->option[$key])) {
+      return $index;
+    }
+  }
+  return FALSE;
 }
 
 /**
