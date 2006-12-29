@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.61 2006/12/18 21:32:10 dries Exp $
+// $Id: system.install,v 1.62 2006/12/29 18:58:48 dries Exp $
 
 define('DRUPAL_MINIMUM_PHP',    '4.3.3');
 define('DRUPAL_MINIMUM_MYSQL',  '3.23.17'); // If using MySQL
@@ -1605,7 +1605,7 @@ function system_update_132() {
       /**
        * Wipe the search index
        */
-      include_once './modules/search.module';
+      include_once './'. drupal_get_path('module', 'search') .'/search.module';
       search_wipe();
     }
 
@@ -2625,7 +2625,7 @@ function system_update_172() {
     $_SESSION['system_update_172_max'] = db_result(db_query('SELECT MAX(cid) FROM {comments}'));
   }
 
-  include_once './modules/comment.module';
+  include_once './'. drupal_get_path('module', 'comment') .'/comment.module';
 
   $limit = 20;
   $result = db_query_range("SELECT cid, thread FROM {comments} WHERE cid > %d ORDER BY cid ASC", $_SESSION['system_update_172'], 0, $limit);

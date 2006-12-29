@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.168 2006/12/29 00:19:58 unconed Exp $
+// $Id: form.inc,v 1.169 2006/12/29 18:58:48 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -942,9 +942,9 @@ function form_select_options($element, $choices = NULL) {
 }
 
 /**
- * Traverses a select element's #option array looking for the object that 
+ * Traverses a select element's #option array looking for the object that
  * holds the given key. Returns FALSE if not found. As usual with functions
- * that can return 0 or FALSE do not forget to use === and !== if needed. 
+ * that can return 0 or FALSE do not forget to use === and !== if needed.
  *
  * @param $element
  *   The select element.
