@@ -1,4 +1,4 @@
-// $Id: autocomplete.js,v 1.14 2006/10/14 02:39:48 unconed Exp $
+// $Id: autocomplete.js,v 1.15 2006/12/29 07:20:26 drumm Exp $
 
 /**
  * Attaches the autocomplete behaviour to all required fields
@@ -195,6 +195,11 @@ Drupal.jsAC.prototype.populatePopup = function () {
  * Fills the suggestion popup with any matches received
  */
 Drupal.jsAC.prototype.found = function (matches) {
+  // If no value in the textfield, do not show the popup.
+  if (!this.input.value.length) {
+    return false;
+  }
+
   // Prepare matches
   var ul = document.createElement('ul');
   var ac = this;
