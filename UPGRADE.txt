@@ -1,77 +1,74 @@
-// $Id: UPGRADE.txt,v 1.4 2006/12/26 14:01:41 dries Exp $
+// $Id: UPGRADE.txt,v 1.5 2006/12/29 19:38:47 dries Exp $
 
 UPGRADING
 ---------
 
 1. Backup your database and Drupal directory - especially your
-   sites-directory which contains your configuration file and
-   added modules and themes, any contributed modules
-   in your modules-directory, and your files-directory which
-   contains uploaded files.
+   "sites" directory which contains your configuration file and
+   added modules and themes, any contributed modules in your
+   "modules" directory, and your "files" directory which contains
+   uploaded files.
 
-   Note:  For a single site setup the configuration file is the
+   Note: for a single site setup the configuration file is the
    "settings.php" file located at sites/default/settings.php.
-   For multisite configuration the configuration file is
-   located in a structure like the following:
-    sites/default/settings.php
-    sites/example.com/settings.php
-    sites/sub.example.com/settings.php
-    sites/sub.example.com.site3/settings.php
+   For multisite configuration the configuration file is located
+   in a structure like the following:
+
+     sites/default/settings.php
+     sites/example.com/settings.php
+     sites/sub.example.com/settings.php
+     sites/sub.example.com.path/settings.php
+
    More information on multisite configuration is located in
    the INSTALL.txt file.
 
 2. Disable contributed modules and switch to a core theme
-   (bluemarine or garland).
+   (Bluemarine or Garland).
 
-3. Log on as the user with user ID 1.  (User ID 1 is the first
-   account created and the main administrator account.)  User
+3. Log on as the user with user ID 1.  User ID 1 is the first
+   account created and the main administrator account.  User
    ID 1 needs to be logged in so that you can access update.php
-   file (step 8) which can only be run by user ID 1.  Do not
-   close your browser until step 9 is complete.
+   (step 8) which can only be run by user ID 1.  Do not close
+   your browser until step 9 is complete.
 
-4. Remove all of the old files and directories from the
-   Drupal installation directory.
+4. Remove all of the old files and directories from the Drupal
+   installation directory.
 
 5. Unpack the new Drupal files and directories into the Drupal
    installation directory.
 
-6. Copy the backed up files-directory and sites-directories to the
+6. Copy the backed up "files" and "sites" directories to the
    Drupal installation directory. If the original .htaccess or
    robots.txt files have been modified, copy the backed up
-   versions of these files to the installation directory
-   directory as well.
+   versions of these files to the installation directory as
+   well.
 
 7. Verify the new configuration file to make sure it has the
    latest and correct information.
 
-8. (Optional) Re-install contributed modules.
+8. Re-install contributed modules.
 
-   Note:  Make sure the version of a module matches your
+   Note: make sure the version of a module matches your
    version of Drupal.  Modules from previous versions may
    not be compatible with the current version.  Check
    http://drupal.org/project/Modules for the version of a
    module to match your version of Drupal.
 
 9. Run update.php by visiting http://www.example.com/update.php
-   (replace www.example.com with your drupal installations domain
-   name).  This step will update the database to the new Drupal
-   installation.
+   (replace www.example.com with your drupal installation's
+   domain name and path).  This step will update the database to
+   the new Drupal installation.
 
-   Note: If you are unable to access update.php as user ID 1
-   do the following:
+   Note: if you are unable to access update.php do the
+   following:
 
-   - With a text editor find the update.php file on your system.
-   It should be in the main Drupal directory that you installed
-   all the files into.
+   - Open update.php with a text editor.
 
    - There is a line near top of update.php that says
    $access_check = TRUE;. Change it to $access_check = FALSE;.
 
    - As soon as the script is done, you must change the update.php
    script back to its original form to $access_check = TRUE;.
-
-Note: Upgrading sequentially is recommended, one release at a time.
-It is possible to skip releases, but is not advised.
 
 For more information on upgrading visit the Drupal handbook at
 http://drupal.org/upgrade
