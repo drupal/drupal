@@ -1,5 +1,5 @@
 <?php
-// $Id: phptemplate.engine,v 1.53 2006/12/13 23:22:57 unconed Exp $
+// $Id: phptemplate.engine,v 1.54 2006/12/30 20:59:11 drumm Exp $
 
 /**
  * @file
@@ -376,12 +376,12 @@ function _phptemplate_default($hook, $variables, $suggestions = array(), $extens
     }
     else {
       if (in_array($hook, array('node', 'block', 'box', 'comment'))) {
-        $file = "themes/engines/$theme_engine/$hook$extension";
+        $file = path_to_engine() .'/'. $hook . $extension;
       }
       else {
         $variables['hook'] = $hook;
         watchdog('error', t('%engine.engine was instructed to override the %name theme function, but no valid template file was found.', array('%engine' => $theme_engine, '%name' => $hook)));
-        $file = "themes/engines/$theme_engine/default$extension";
+        $file = path_to_engine() .'/default'. $extension;
       }
     }
   }

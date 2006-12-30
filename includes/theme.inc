@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.334 2006/12/29 08:18:28 drumm Exp $
+// $Id: theme.inc,v 1.335 2006/12/30 20:59:10 drumm Exp $
 
 /**
  * @file
@@ -212,6 +212,21 @@ function path_to_theme() {
   $themes = list_themes();
 
   return dirname($themes[$theme]->filename);
+}
+
+/**
+ * Return the path to the currently selected engine.
+ */
+function path_to_engine() {
+  global $theme, $theme_engine;
+
+  if (!isset($theme)) {
+    init_theme();
+  }
+
+  $engines = list_theme_engines();
+
+  return dirname($engines[$theme_engine]->filename);
 }
 
 /**
