@@ -45,11 +45,11 @@ function statistics_help($section) {
 }
 
 /**
- * Implementation of hook_init().
+ * Implementation of hook_exit().
  *
  * This is where statistics are gathered on page accesses.
  */
-function statistics_init() {
+function statistics_exit() {
   global $user, $recent_activity;
 
   drupal_bootstrap(DRUPAL_BOOTSTRAP_PATH);
