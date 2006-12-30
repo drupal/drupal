@@ -215,6 +215,21 @@ function path_to_theme() {
 }
 
 /**
+ * Return the path to the currently selected engine.
+ */
+function path_to_engine() {
+  global $theme, $theme_engine;
+
+  if (!isset($theme)) {
+    init_theme();
+  }
+
+  $engines = list_theme_engines();
+
+  return dirname($engines[$theme_engine]->filename);
+}
+
+/**
  * Retrieve an associative array containing the settings for a theme.
  *
  * The final settings are arrived at by merging the default settings,
