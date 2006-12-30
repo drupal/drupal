@@ -87,6 +87,14 @@ INSTALLATION
    (i.e. http://www.example.com). You will be presented with the "Database
    Configuration" page.
 
+   The install script will attempt to write-protect the settings.php after
+   updating it with the information you provide in the installation routine.
+   If you make manual changes to that file later, be sure to protect it again
+   after making your modifications. Failure to remove write permissions to
+   that file is a security risk. The default location for the settings.php
+   file is at sites/default/settings.php, but it may be in another location
+   if you use the multi-site setup, as explained below.
+
 4. CONFIGURE DRUPAL
 
    When the install script succeeds, you will be directed to the "Welcome" page.
