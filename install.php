@@ -87,6 +87,9 @@ function install_main() {
   if (!drupal_verify_install_file($settings_file, FILE_EXIST|FILE_READABLE|FILE_NOT_WRITABLE)) {
     drupal_set_message(st('All necessary changes to %file have been made, so you should now remove write permissions to this file. Failure to remove write permissions to this file is a security risk.', array('%file' => $settings_file)), 'error');
   }
+  else {
+    drupal_set_message(st('All necessary changes to %file have been made. It has been set to read-only for security.', array('%file' => $settings_file)));
+  }
 
   // Show end page.
   install_complete($profile);
