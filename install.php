@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.30 2006/12/17 06:51:47 unconed Exp $
+// $Id: install.php,v 1.31 2006/12/30 08:27:37 dries Exp $
 
 require_once './includes/install.inc';
 
@@ -86,6 +86,9 @@ function install_main() {
   $settings_file = './'. conf_path() .'/settings.php';
   if (!drupal_verify_install_file($settings_file, FILE_EXIST|FILE_READABLE|FILE_NOT_WRITABLE)) {
     drupal_set_message(st('All necessary changes to %file have been made, so you should now remove write permissions to this file. Failure to remove write permissions to this file is a security risk.', array('%file' => $settings_file)), 'error');
+  }
+  else {
+    drupal_set_message(st('All necessary changes to %file have been made. It has been set to read-only for security.', array('%file' => $settings_file)));
   }
 
   // Show end page.
