@@ -749,7 +749,7 @@ function _locale_import_one_string($op, $value = NULL, $mode = NULL, $lang = NUL
               }
             }
             else { // no string
-              db_query("INSERT INTO {locales_source} (location, source) VALUES ('%s', '%s')", $comments, english[$key]);
+              db_query("INSERT INTO {locales_source} (location, source) VALUES ('%s', '%s')", $comments, $english[$key]);
               $loc = db_fetch_object(db_query("SELECT lid FROM {locales_source} WHERE source = '%s'", $english[$key]));
               $lid = $loc->lid;
               db_query("INSERT INTO {locales_target} (lid, locale, translation, plid, plural) VALUES (%d, '%s', '%s', %d, %d)", $lid, $lang, $trans, $plid, $key);
