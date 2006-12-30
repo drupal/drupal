@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.517 2006/12/25 22:39:08 drumm Exp $
+// $Id: comment.module,v 1.518 2006/12/30 21:20:38 drumm Exp $
 
 /**
  * @file
@@ -1679,10 +1679,14 @@ function theme_comment_preview($comment, $links = array(), $visible = 1) {
 };
 
 function theme_comment_view($comment, $links = array(), $visible = 1) {
+  static $first_new = TRUE;
 
-  // Emit selectors:
   $output = '';
-  if (($comment->new = node_mark($comment->nid, $comment->timestamp)) != MARK_READ) {
+  $comment->new = node_mark($comment->nid, $comment->timestamp);
+  if ($first_new && $comment->new != MARK_READ) {
+    // Assign the anchor only for the first new comment. This avoids duplicate
+    // id attributes on a page.
+    $first_new = FALSE;
     $output .= "<a id=\"new\"></a>\n";
   }
 
