@@ -173,18 +173,16 @@ Drupal.jsAC.prototype.populatePopup = function () {
   if (this.popup) {
     $(this.popup).remove();
   }
-  var pos = Drupal.absolutePosition(this.input);
   this.selected = false;
   this.popup = document.createElement('div');
   this.popup.id = 'autocomplete';
   this.popup.owner = this;
   $(this.popup).css({
-    top: (pos.y + this.input.offsetHeight) +'px',
-    left: pos.x +'px',
+    marginTop: this.input.offsetHeight +'px',
     width: (this.input.offsetWidth - 4) +'px',
     display: 'none'
   });
-  $('body').append(this.popup);
+  $(this.input).before(this.popup);
 
   // Do search
   this.db.owner = this;
