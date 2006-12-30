@@ -19,6 +19,7 @@ function install_main() {
   require_once './includes/bootstrap.inc';
   drupal_bootstrap(DRUPAL_BOOTSTRAP_CONFIGURATION);
   require_once './modules/system/system.install';
+  require_once './includes/file.inc';
 
   // Check existing settings.php.
   $verify = install_verify_settings();
@@ -377,7 +378,6 @@ function install_settings_form_submit($form_id, $form_values) {
  *   The selected profile.
  */
 function install_select_profile() {
-  include_once './includes/file.inc';
   include_once './includes/form.inc';
 
   $profiles = file_scan_directory('./profiles', '\.profile$', array('.', '..', 'CVS'), 0, TRUE, 'name', 0);
