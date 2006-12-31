@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.433 2006/12/27 21:59:32 dries Exp $
+// $Id: system.module,v 1.434 2006/12/31 13:44:33 dries Exp $
 
 /**
  * @file
@@ -1195,10 +1195,7 @@ function system_themes_submit($form_id, $form_values) {
       foreach ($form_values['status'] as $key => $choice) {
         // Always enable the default theme, despite its status checkbox being checked:
         if ($choice || $form_values['theme_default'] == $key) {
-          // If theme status is being set to 1 from 0, initialize block data for this theme if necessary.
-          if (db_num_rows(db_query("SELECT status FROM {system} WHERE type = 'theme' AND name = '%s' AND status = 0", $key))) {
-            system_initialize_theme_blocks($key);
-          }
+          system_initialize_theme_blocks($key);
           db_query("UPDATE {system} SET status = 1 WHERE type = 'theme' and name = '%s'", $key);
         }
       }
@@ -1474,14 +1471,14 @@ function system_modules_submit($form_id, $form_values) {
     }
   }
 
+  $old_module_list = module_list();
+
   if (!empty($enable_modules)) {
     module_enable($enable_modules);
   }
   if (!empty($disable_modules)) {
     module_disable($disable_modules);
   }
-
-  $old_module_list = module_list();
 
   // Install new modules.
   foreach ($new_modules as $key => $module) {
