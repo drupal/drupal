@@ -767,7 +767,7 @@ function _drupal_bootstrap($phase) {
 
       // deny access to hosts which were banned. t() is not yet available.
       if (drupal_is_denied('host', $_SERVER['REMOTE_ADDR'])) {
-        header('HTTP/1.1 403 Forbidden');
+        header('HTTP/1.0 403 Forbidden');
         print 'Sorry, '. $_SERVER['REMOTE_ADDR']. ' has been banned.';
         exit();
       }
