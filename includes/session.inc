@@ -79,6 +79,26 @@ function sess_write($key, $value) {
   return TRUE;
 }
 
+/**
+ * Called when an anonymous user becomes authenticated or vice-versa.
+ */
+function sess_regenerate() {
+  $old_session_id = session_id();
+
+  // We code around http://bugs.php.net/bug.php?id=32802 by destroying
+  // the session cookie by setting expiration in the past (a negative
+  // value).  This issue only arises in PHP versions before 4.4.0,
+  // regardless of the Drupal configuration.
+  // TODO: remove this when we require at least PHP 4.4.0
+  if (isset($_COOKIE[session_name()])) {
+    setcookie(session_name(), '', time() - 42000, '/');
+  }
+
+  session_regenerate_id();
+
+  db_query("UPDATE {sessions} SET sid = '%s' WHERE sid = '%s'", session_id(), $old_session_id);
+}
+
 function sess_destroy($key) {
   db_query("DELETE FROM {sessions} WHERE sid = '%s'", $key);
 }
