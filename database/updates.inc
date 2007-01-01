@@ -2013,3 +2013,18 @@ function system_update_182() {
 
   return $ret;
 }
+
+function system_update_183() {
+  $ret = array();
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql("ALTER TABLE {access} CHANGE aid aid int(10) NOT NULL AUTO_INCREMENT ");
+      $ret[] = update_sql("ALTER TABLE {boxes} CHANGE bid bid int NOT NULL AUTO_INCREMENT ");
+      break;
+    case 'pgsql':
+       // No database update required for PostgreSQL because it already uses big SERIAL numbers.
+  }
+
+  return $ret;
+}
