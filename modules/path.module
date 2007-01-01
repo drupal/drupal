@@ -319,10 +319,9 @@ function path_load($pid) {
 }
 
 /**
- * Verify that a new URL alias is valid, and save it to the database.
+ * Verify that URL alias is valid.
  */
-function path_form_submit() {
-  $edit = $GLOBALS['form_values'];
+function path_form_validate($form_id, $edit) {
   $src = $edit['src'];
   $dst = $edit['dst'];
   $pid = $edit['pid'];
@@ -338,16 +337,20 @@ function path_form_submit() {
   if (db_result(db_query("SELECT COUNT(dst) FROM {url_alias} WHERE pid != %d AND dst = '%s'", $pid, $dst))) {
     form_set_error('dst', t('The alias %alias is already in use.', array('%alias' => theme('placeholder', $dst))));
   }
+}
 
-  if (form_get_errors()) {
-    return path_form($edit);
-  }
-  else {
-    path_set_alias($src, $dst, $pid);
+/**
+ * Save URL alias to the database.
+ */
+function path_form_submit($form_id, $edit) {
+  $src = $edit['src'];
+  $dst = $edit['dst'];
+  $pid = $edit['pid'];
 
-    drupal_set_message(t('The alias has been saved.'));
-    return 'admin/path';
-  }
+  path_set_alias($src, $dst, $pid);
+
+  drupal_set_message(t('The alias has been saved.'));
+  return 'admin/path';
 }
 
 
