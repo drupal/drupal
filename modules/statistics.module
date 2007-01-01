@@ -475,7 +475,8 @@ function _statistics_link($path, $width = 35) {
 }
 
 function _statistics_format_item($title, $path) {
-  $path = ($path ? $path : '/');
+  global $base_url;
+  $path = ($path ? $path : $base_url);
   $output  = ($title ? "$title<br />" : '');
   $output .= _statistics_link($path);
   return $output;
