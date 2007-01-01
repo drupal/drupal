@@ -256,8 +256,6 @@ function node_get_name($node) {
 /**
  * Return the list of available node types.
  *
- * @param $node
- *   Either a node object, a node array, or a string containing the node type.
  * @return
  *   An array consisting ('#type' => name) pairs.
  */
