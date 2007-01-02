@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.install,v 1.5 2006/09/01 07:40:08 drumm Exp $
+// $Id: contact.install,v 1.6 2007/01/02 05:30:29 drumm Exp $
 
 /**
  * Implementation of hook_install().
@@ -11,8 +11,8 @@ function contact_install() {
       db_query("CREATE TABLE {contact} (
         cid int unsigned NOT NULL auto_increment,
         category varchar(255) NOT NULL default '',
-        recipients longtext NOT NULL default '',
-        reply longtext NOT NULL default '',
+        recipients longtext NOT NULL,
+        reply longtext NOT NULL,
         weight tinyint NOT NULL default '0',
         selected tinyint NOT NULL default '0',
         PRIMARY KEY (cid),
