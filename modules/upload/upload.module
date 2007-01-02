@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.146 2007/01/02 05:05:38 drumm Exp $
+// $Id: upload.module,v 1.147 2007/01/02 10:25:33 dries Exp $
 
 /**
  * @file
@@ -265,12 +265,10 @@ function upload_file_download($file) {
     if (user_access('view uploaded files')) {
       $node = node_load($file->nid);
       if (node_access('view', $node)) {
-        $name = mime_header_encode($file->filename);
         $type = mime_header_encode($file->filemime);
         return array(
-          'Content-Type: '. $type .'; name='. $name,
+          'Content-Type: '. $type,
           'Content-Length: '. $file->filesize,
-          'Cache-Control: private'
         );
       }
       else {
