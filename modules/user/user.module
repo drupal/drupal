@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.736 2006/12/29 08:27:19 drumm Exp $
+// $Id: user.module,v 1.737 2007/01/02 05:05:38 drumm Exp $
 
 /**
  * @file
@@ -2591,7 +2591,7 @@ function theme_user_filters($form) {
   }
 
   $output .= '<li><dl class="multiselect">' . (sizeof($form['current']) ? '<dt><em>'. t('and') .'</em> '. t('where') .'</dt>' : '') . '<dd class="a">';
-  foreach(element_children($form['filter']) as $key) {
+  foreach (element_children($form['filter']) as $key) {
     $output .= drupal_render($form['filter'][$key]);
   }
   $output .= '</dd>';

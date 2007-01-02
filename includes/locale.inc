@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.103 2006/12/30 08:43:14 unconed Exp $
+// $Id: locale.inc,v 1.104 2007/01/02 05:05:38 drumm Exp $
 
 /**
  * @file
@@ -103,7 +103,7 @@ function theme_locale_admin_manage_screen($form) {
 function _locale_admin_manage_screen_submit($form_id, $form_values) {
   // Save changes to existing languages.
   $languages = locale_supported_languages(FALSE, TRUE);
-  foreach($languages['name'] as $key => $value) {
+  foreach ($languages['name'] as $key => $value) {
     if ($form_values['site_default'] == $key) {
       $form_values['enabled'][$key] = 1; // autoenable the default language
     }
@@ -978,7 +978,7 @@ function _locale_import_tokenize_formula($formula) {
     if (is_numeric($formula[$i])) {
       $num = $formula[$i];
       $j = $i + 1;
-      while($j < strlen($formula) && is_numeric($formula[$j])) {
+      while ($j < strlen($formula) && is_numeric($formula[$j])) {
         $num .= $formula[$j];
         $j++;
       }

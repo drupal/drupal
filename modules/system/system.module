@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.434 2006/12/31 13:44:33 dries Exp $
+// $Id: system.module,v 1.435 2007/01/02 05:05:38 drumm Exp $
 
 /**
  * @file
@@ -1050,7 +1050,7 @@ function system_initialize_theme_blocks($theme) {
     $default_theme = variable_get('theme_default', 'garland');
     $regions = system_region_list($theme);
     $result = db_query("SELECT * FROM {blocks} WHERE theme = '%s'", $default_theme);
-    while($block = db_fetch_array($result)) {
+    while ($block = db_fetch_array($result)) {
       // If the region isn't supported by the theme, assign the block to the theme's default region.
       if (!array_key_exists($block['region'], $regions)) {
         $block['region'] = system_default_region($theme);

@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.335 2006/12/30 20:59:10 drumm Exp $
+// $Id: theme.inc,v 1.336 2007/01/02 05:05:38 drumm Exp $
 
 /**
  * @file
@@ -504,7 +504,7 @@ function theme_status_messages($display = NULL) {
     $output .= "<div class=\"messages $type\">\n";
     if (count($messages) > 1) {
       $output .= " <ul>\n";
-      foreach($messages as $message) {
+      foreach ($messages as $message) {
         $output .= '  <li>'. $message ."</li>\n";
       }
       $output .= " </ul>\n";

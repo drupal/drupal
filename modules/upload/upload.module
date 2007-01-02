@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.145 2006/12/14 13:30:59 dries Exp $
+// $Id: upload.module,v 1.146 2007/01/02 05:05:38 drumm Exp $
 
 /**
  * @file
@@ -293,7 +293,7 @@ function _upload_prepare(&$node) {
   // i.e. the user left the edit page, because they didn't want to upload anything.
   if(count($_POST) == 0) {
     if (is_array($_SESSION['file_previews']) && count($_SESSION['file_previews'])) {
-      foreach($_SESSION['file_previews'] as $fid => $file) {
+      foreach ($_SESSION['file_previews'] as $fid => $file) {
         file_delete($file->filepath);
       }
       unset($_SESSION['file_previews']);
@@ -329,7 +329,7 @@ function _upload_prepare(&$node) {
 
   // Attach file previews to node object.
   if (is_array($_SESSION['file_previews']) && count($_SESSION['file_previews'])) {
-    foreach($_SESSION['file_previews'] as $fid => $file) {
+    foreach ($_SESSION['file_previews'] as $fid => $file) {
       if ($user->uid != 1) {
         // Here something.php.pps becomes something.php_.pps
         $file->filename = upload_munge_filename($file->filename, NULL, 0);
@@ -404,7 +404,7 @@ function _upload_validate(&$node) {
   // Check if node->files exists, and if it contains something.
   if (is_array($node->files)) {
     // Update existing files with form data.
-    foreach($node->files as $fid => $file) {
+    foreach ($node->files as $fid => $file) {
       // Convert file to object for compatibility
       $file = (object)$file;
 
@@ -653,7 +653,7 @@ function upload_munge_filename($filename, $extensions = NULL, $alerts = 1) {
     $new_filename = array_shift($filename_parts); // Remove file basename.
     $final_extension = array_pop($filename_parts); // Remove final extension.
 
-    foreach($filename_parts as $filename_part) {
+    foreach ($filename_parts as $filename_part) {
       $new_filename .= ".$filename_part";
       if (!in_array($filename_part, $whitelist) && preg_match("/^[a-zA-Z]{2,5}\d?$/", $filename_part)) {
         $new_filename .= '_';

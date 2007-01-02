@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.30 2006/12/08 11:54:04 dries Exp $
+// $Id: install.inc,v 1.31 2007/01/02 05:05:38 drumm Exp $
 
 define('SCHEMA_UNINSTALLED', -1);
 define('SCHEMA_INSTALLED', 0);
@@ -276,14 +276,14 @@ function drupal_verify_profile($profile, $locale) {
 
   // Get a list of modules that exist in Drupal's assorted subdirectories.
   $present_modules = array();
-  foreach(drupal_system_listing('\.module$', 'modules', 'name', 0) as $present_module) {
+  foreach (drupal_system_listing('\.module$', 'modules', 'name', 0) as $present_module) {
     $present_modules[] = $present_module->name;
   }
 
   // Verify that all of the profile's required modules are present.
   $missing_modules = array_diff($module_list, $present_modules);
   if (count($missing_modules)) {
-    foreach($missing_modules as $module) {
+    foreach ($missing_modules as $module) {
       drupal_set_message(st('The %module module is required but was not found. Please move it into the <em>modules</em> subdirectory.', array('%module' => $module)), 'error');
     }
   }
@@ -596,7 +596,7 @@ function st($string, $args = array()) {
   require_once './includes/theme.inc';
   $GLOBALS['theme'] = 'theme';
   // Transform arguments before inserting them
-  foreach($args as $key => $value) {
+  foreach ($args as $key => $value) {
     switch ($key[0]) {
       // Escaped only
       case '@':

@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.604 2006/12/30 21:33:04 drumm Exp $
+// $Id: common.inc,v 1.605 2007/01/02 05:05:38 drumm Exp $
 
 /**
  * @file
@@ -731,7 +731,7 @@ function t($string, $args = 0) {
   }
   else {
     // Transform arguments before inserting them
-    foreach($args as $key => $value) {
+    foreach ($args as $key => $value) {
       switch ($key[0]) {
         // Escaped only
         case '@':
