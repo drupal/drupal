@@ -731,7 +731,7 @@ function t($string, $args = 0) {
   }
   else {
     // Transform arguments before inserting them
-    foreach($args as $key => $value) {
+    foreach ($args as $key => $value) {
       switch ($key[0]) {
         // Escaped only
         case '@':

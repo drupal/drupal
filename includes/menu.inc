@@ -609,7 +609,7 @@ function menu_rebuild() {
     // Save the new items updating the pids in each iteration
     while (($c = count($new_items)) && ($c != $old_count)) {
       $old_count = count($new_items);
-      foreach($new_items as $mid => $item) {
+      foreach ($new_items as $mid => $item) {
         // If the item has a valid parent, save it
         if ($item['pid'] >= 0) {
           // The new menu ID gets passed back by reference as $item['mid']

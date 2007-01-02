@@ -504,7 +504,7 @@ function theme_status_messages($display = NULL) {
     $output .= "<div class=\"messages $type\">\n";
     if (count($messages) > 1) {
       $output .= " <ul>\n";
-      foreach($messages as $message) {
+      foreach ($messages as $message) {
         $output .= '  <li>'. $message ."</li>\n";
       }
       $output .= " </ul>\n";

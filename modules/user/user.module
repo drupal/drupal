@@ -2591,7 +2591,7 @@ function theme_user_filters($form) {
   }
 
   $output .= '<li><dl class="multiselect">' . (sizeof($form['current']) ? '<dt><em>'. t('and') .'</em> '. t('where') .'</dt>' : '') . '<dd class="a">';
-  foreach(element_children($form['filter']) as $key) {
+  foreach (element_children($form['filter']) as $key) {
     $output .= drupal_render($form['filter'][$key]);
   }
   $output .= '</dd>';
