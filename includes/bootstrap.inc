@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.143 2006/12/21 22:20:19 dries Exp $
+// $Id: bootstrap.inc,v 1.144 2007/01/02 10:21:39 dries Exp $
 
 /**
  * @file
@@ -489,7 +489,6 @@ function drupal_page_header() {
   header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
   header("Cache-Control: no-store, no-cache, must-revalidate");
   header("Cache-Control: post-check=0, pre-check=0", FALSE);
-  header("Pragma: no-cache");
 }
 
 /**
