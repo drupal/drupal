@@ -192,10 +192,11 @@ function comment_link($type, $node = 0, $main = 0) {
 
       if (user_access('access comments')) {
         $all = comment_num_all($node->nid);
-        $new = comment_num_new($node->nid);
 
         if ($all) {
           $links[] = l(format_plural($all, '1 comment', '%count comments'), "node/$node->nid", array('title' => t('Jump to the first comment of this posting.')), NULL, 'comment');
+
+          $new = comment_num_new($node->nid);
 
           if ($new) {
             $links[] = l(format_plural($new, '1 new comment', '%count new comments'), "node/$node->nid", array('title' => t('Jump to the first new comment of this posting.')), NULL, 'new');
