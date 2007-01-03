@@ -298,7 +298,6 @@ function comment_link($type, $node = NULL, $teaser = FALSE) {
 
       if (user_access('access comments')) {
         $all = comment_num_all($node->nid);
-        $new = comment_num_new($node->nid);
 
         if ($all) {
           $links['comment_comments'] = array(
@@ -307,6 +306,8 @@ function comment_link($type, $node = NULL, $teaser = FALSE) {
             'attributes' => array('title' => t('Jump to the first comment of this posting.')),
             'fragment' => 'comments'
           );
+
+          $new = comment_num_new($node->nid);
 
           if ($new) {
             $links['comment_new_comments'] = array(
