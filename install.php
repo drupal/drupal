@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.32 2006/12/30 09:06:22 dries Exp $
+// $Id: install.php,v 1.33 2007/01/03 11:10:58 dries Exp $
 
 require_once './includes/install.inc';
 
@@ -541,7 +541,12 @@ function install_complete($profile) {
   $function = $profile .'_profile_final';
   if (function_exists($function)) {
     // More steps required
-    $output .= $function();
+    $profile_message = $function();
+  }
+
+  // If the profile returned a welcome message, use that instead of default.
+  if (isset($profile_message)) {
+    $output .= $profile_message;
   }
   else {
     // No more steps
