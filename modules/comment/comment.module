@@ -324,7 +324,7 @@ function comment_link($type, $node = NULL, $teaser = FALSE) {
                 'title' => t('Add new comment'),
                 'href' => "comment/reply/$node->nid",
                 'attributes' => array('title' => t('Add a new comment to this page.')),
-                'fragment' => 'comment_form'
+                'fragment' => 'comment-form'
               );
             }
             else {
@@ -345,7 +345,7 @@ function comment_link($type, $node = NULL, $teaser = FALSE) {
               'title' => t('Add new comment'),
               'href' => "comment/reply/$node->nid",
               'attributes' => array('title' => t('Share your thoughts and opinions related to this posting.')),
-              'fragment' => 'comment_form'
+              'fragment' => 'comment-form'
             );
           }
         }
