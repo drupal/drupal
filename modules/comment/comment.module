@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.519 2007/01/03 11:04:50 dries Exp $
+// $Id: comment.module,v 1.520 2007/01/03 11:32:38 dries Exp $
 
 /**
  * @file
@@ -298,7 +298,6 @@ function comment_link($type, $node = NULL, $teaser = FALSE) {
 
       if (user_access('access comments')) {
         $all = comment_num_all($node->nid);
-        $new = comment_num_new($node->nid);
 
         if ($all) {
           $links['comment_comments'] = array(
@@ -307,6 +306,8 @@ function comment_link($type, $node = NULL, $teaser = FALSE) {
             'attributes' => array('title' => t('Jump to the first comment of this posting.')),
             'fragment' => 'comments'
           );
+
+          $new = comment_num_new($node->nid);
 
           if ($new) {
             $links['comment_new_comments'] = array(
