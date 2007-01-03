@@ -321,7 +321,7 @@ function node_type_delete($type) {
 /**
  * Updates all nodes of one type to be of another type.
  *
- * @param $orig_type
+ * @param $old_type
  *   The current node type of the nodes.
  * @param $type
  *   The new node type of the nodes.
