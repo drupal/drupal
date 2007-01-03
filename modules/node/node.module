@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.763 2006/12/29 21:25:36 drumm Exp $
+// $Id: node.module,v 1.764 2007/01/03 11:03:26 dries Exp $
 
 /**
  * @file
@@ -321,7 +321,7 @@ function node_type_delete($type) {
 /**
  * Updates all nodes of one type to be of another type.
  *
- * @param $orig_type
+ * @param $old_type
  *   The current node type of the nodes.
  * @param $type
  *   The new node type of the nodes.
