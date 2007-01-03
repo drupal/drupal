@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.61 2006/12/11 22:58:17 unconed Exp $
+// $Id: database.inc,v 1.62 2007/01/03 10:59:02 dries Exp $
 
 /**
  * @file
@@ -269,30 +269,30 @@ function db_rewrite_sql($query, $primary_table = 'n', $primary_field = 'nid',  $
 
   if (!empty($where) || !empty($join)) {
     if (!empty($where)) {
-      $new = " WHERE $where ";
+      $new = "WHERE $where ";
     }
     $new = " $join $new";
     if (strpos($query, 'WHERE')) {
-      $replace = 'WHERE';
-      $add = 'AND';
+      $query = str_replace('WHERE', $new .'AND (', $query);
+      $insert = ') ';
     }
-    elseif (strpos($query, 'GROUP')) {
+    else {
+      $insert = $new;
+    }
+    if (strpos($query, 'GROUP')) {
       $replace = 'GROUP';
-      $add = 'GROUP';
     }
     elseif (strpos($query, 'ORDER')) {
       $replace = 'ORDER';
-      $add = 'ORDER';
     }
     elseif (strpos($query, 'LIMIT')) {
       $replace = 'LIMIT';
-      $add = 'LIMIT';
     }
     else {
-      $query .= $new;
+      $query .= $insert;
     }
     if (isset($replace)) {
-      $query = str_replace($replace, "$new $add ", $query);
+      $query = str_replace($replace, $insert . $replace, $query);
     }
   }
 
