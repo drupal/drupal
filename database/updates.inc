@@ -107,7 +107,8 @@ $sql_updates = array(
   "2005-03-21" => "update_128",
   "2005-04-14" => "update_129",
   "2005-05-06" => "update_130",
-  "2005-05-07" => "update_131"
+  "2005-05-07" => "update_131",
+  "2006-12-19" => "update_132",
 );
 
 function update_32() {
@@ -2389,6 +2390,19 @@ function update_131() {
     $ret[] = update_sql("ALTER TABLE {locales_source} ALTER location SET NOT NULL");
     $ret[] = update_sql("ALTER TABLE {locales_source} ALTER location SET DEFAULT ''");
     $ret[] = update_sql("ALTER TABLE {locales_source} DROP location_old");
+  }
+
+  return $ret;
+}
+
+/**
+ * Cid matching by MySQL should be case-sensitive.
+ */
+function update_132() {
+  $ret = array();
+
+  if ($GLOBALS['db_type'] == 'mysql') {
+    $ret[] = update_sql("ALTER TABLE {cache} CHANGE cid cid varchar(255) BINARY NOT NULL default ''");
   }
 
   return $ret;

@@ -31,11 +31,11 @@ function filter_help($section) {
     case 'admin/filters/'. arg(2):
       return t('
 <p>Every <em>filter</em> performs one particular change on the user input, for example stripping out malicious HTML or making URLs clickable. Choose which filters you want to apply to text in this input format.</p>
-<p>If you notice some filters are causing conflicts in the output, you can <a href="%order">rearrange them</a>.</p>', array('%configure' => url('admin/filters/'. arg(2) .'/configure'), '%order' => url('admin/filters/'. arg(2) .'/order')));
+<p>If you notice some filters are causing conflicts in the output, you can <a href="%order">rearrange them</a>.</p>', array('%order' => check_url(url('admin/filters/'. arg(2) .'/order'))));
 
     case 'admin/filters/'. arg(2) .'/configure':
       return t('
-<p>If you cannot find the settings for a certain filter, make sure you\'ve enabled it on the <a href="%url">list filters</a> tab first.</p>', array('%url' => url('admin/filters/'. arg(2) .'/list')));
+<p>If you cannot find the settings for a certain filter, make sure you\'ve enabled it on the <a href="%url">list filters</a> tab first.</p>', array('%url' => check_url(url('admin/filters/'. arg(2) .'/list'))));
 
     case 'admin/filters/'. arg(2) .'/order':
       return t('
