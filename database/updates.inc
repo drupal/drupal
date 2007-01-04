@@ -2014,7 +2014,21 @@ function system_update_182() {
   return $ret;
 }
 
+/**
+ * Cid matching by MySQL should be case-sensitive.
+ */
 function system_update_183() {
+  $ret = array();
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql("ALTER TABLE {cache} CHANGE cid cid varchar(255) BINARY NOT NULL default ''");
+      break;
+  }
+  return $ret;
+}
+
+function system_update_184() {
   $ret = array();
   switch ($GLOBALS['db_type']) {
     case 'mysql':

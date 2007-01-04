@@ -172,7 +172,7 @@ DEFAULT CHARACTER SET utf8;
 --
 
 CREATE TABLE cache (
-  cid varchar(255) NOT NULL default '',
+  cid varchar(255) BINARY NOT NULL default '',
   data longblob,
   expire int(11) NOT NULL default '0',
   created int(11) NOT NULL default '0',
