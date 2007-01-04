@@ -482,14 +482,18 @@ function poll_update($node) {
   db_query('UPDATE {poll} SET runtime = %d, active = %d WHERE nid = %d', $node->runtime, $node->active, $node->nid);
 
   db_query('DELETE FROM {poll_choices} WHERE nid = %d', $node->nid);
-  db_query('DELETE FROM {poll_votes} WHERE nid = %d', $node->nid);
+  $total_votes = 0;
   foreach ($node->choice as $choice) {
     $chvotes = (int)$choice['chvotes'];
     $chtext = $choice['chtext'];
+    $total_votes += $chvotes;
 
     if ($chtext != '') {
       db_query("INSERT INTO {poll_choices} (nid, chtext, chvotes, chorder) VALUES (%d, '%s', %d, %d)", $node->nid, $chtext, $chvotes, $i++);
     }
+  }
+  if (!$total_votes) {
+    db_query('DELETE FROM {poll_votes} WHERE nid = %d', $node->nid);
   }
 }
 
