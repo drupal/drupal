@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.605 2007/01/02 05:05:38 drumm Exp $
+// $Id: common.inc,v 1.606 2007/01/04 09:49:16 dries Exp $
 
 /**
  * @file
@@ -454,7 +454,7 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
     $defaults[$header] = $header .': '. $value;
   }
 
-  $request = $method .' '. $path ." HTTP/1.1\r\n";
+  $request = $method .' '. $path ." HTTP/1.0\r\n";
   $request .= implode("\r\n", $defaults);
   $request .= "\r\n\r\n";
   if ($data) {
