@@ -44,6 +44,15 @@ function image_get_toolkit() {
 }
 
 /**
+ * Validates toolkit selection.
+ */
+function image_toolkit_validate($formelement, $fieldname) {
+  if ($formelement['#value'] == 'gd' && image_gd_check_settings() == false) {
+    form_set_error('image_toolkit', t("The built-in GD image toolkit requires that the GD module for PHP be installed and configured properly. For more information see %url.", array('%url' => '<a href="http://php.net/image">http://php.net/image</a>')));
+  }
+}
+
+/**
  * Invokes the given method using the currently selected toolkit.
  *
  * @param $method A string containing the method to invoke.
@@ -181,11 +190,10 @@ function image_crop($source, $destination, $x, $y, $width, $height) {
  */
 function image_gd_settings() {
   if (image_gd_check_settings()) {
-    return t('The built-in GD2 toolkit is installed and working properly.');
+    return array('#type' => 'item', '#value' => t('The built-in GD2 toolkit is installed and working properly.'));
   }
   else {
-    form_set_error('image_toolkit', t("The built-in GD image toolkit requires that the GD module for PHP be installed and configured properly. For more information see %url.", array('%url' => '<a href="http://php.net/image">http://php.net/image</a>')));
-    return false;
+    return array('#type' => 'item', '#value' => t('The built-in GD image toolkit requires that the GD module for PHP be installed and configured properly. For more information see %url.', array('%url' => l('http://php.net/image', 'http://php.net/image'))));
   }
 }
 

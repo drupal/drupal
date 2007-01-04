@@ -379,7 +379,8 @@ function system_view_general() {
     $form['image'] = array('#type' => 'fieldset', '#title' => t('Image handling'), '#collapsible' => TRUE, '#collapsed' => true);
     $form['image']['image_toolkit'] = array(
       '#type' => 'radios', '#title' => t('Select an image processing toolkit'),
-      '#default_value' => variable_get('image_toolkit', image_get_toolkit()), '#options' => $toolkits_available
+      '#default_value' => variable_get('image_toolkit', image_get_toolkit()), '#options' => $toolkits_available,
+      '#validate' => array('image_toolkit_validate' => array('image_toolkit', 'image_toolkit')),
     );
     $form['image']['settings'] = image_toolkit_invoke('settings');
   }
