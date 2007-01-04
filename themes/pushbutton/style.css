@@ -604,6 +604,8 @@ table#footer-menu {
 }
 .calendar .day-selected {
   background-color: #369;
+}
+.calendar .day-selected a {
   color: #fff;
 }
 .calendar .header-week {
