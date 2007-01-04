@@ -22,6 +22,11 @@ function sess_close() {
 function sess_read($key) {
   global $user;
 
+  // Write and Close handlers are called after destructing objects since PHP 5.0.5
+  // Thus destructors can use sessions but session handler can't use objects.
+  // So we are moving session closure before destructing objects.
+  register_shutdown_function('session_write_close');
+
   $result = db_query_range("SELECT u.*, s.* FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.sid = '%s' AND u.status < 3", $key, 0, 1);
 
   if (!db_num_rows($result)) {
