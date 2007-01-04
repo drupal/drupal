@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.88 2006/12/11 16:45:17 dries Exp $
+// $Id: file.inc,v 1.89 2007/01/04 07:13:50 unconed Exp $
 
 /**
  * @file
@@ -116,6 +116,7 @@ function file_check_directory(&$directory, $mode = 0, $form_item = NULL) {
     $htaccess_lines = "SetHandler Drupal_Security_Do_Not_Remove_See_SA_2006_006\nOptions None\nOptions +FollowSymLinks";
     if (($fp = fopen("$directory/.htaccess", 'w')) && fputs($fp, $htaccess_lines)) {
       fclose($fp);
+      chmod($directory .'/.htaccess', 0664);
     }
     else {
       $message = t("Security warning: Couldn't write .htaccess file. Please create a .htaccess file in your %directory directory which contains the following lines: <code>!htaccess</code>", array('%directory' => $directory, '!htaccess' => '<br />'. nl2br(check_plain($htaccess_lines))));
