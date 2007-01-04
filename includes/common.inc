@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.606 2007/01/04 09:49:16 dries Exp $
+// $Id: common.inc,v 1.607 2007/01/04 09:58:55 dries Exp $
 
 /**
  * @file
@@ -1385,13 +1385,23 @@ function drupal_add_link($attributes) {
  * Adds a CSS file to the stylesheet queue.
  *
  * @param $path
- *   (optional) The path to the CSS file relative to the base_path(), e.g., /modules/devel/devel.css.
+ *   (optional) The path to the CSS file relative to the base_path(), e.g., 
+ *   /modules/devel/devel.css.
  * @param $type
- *   (optional) The type of stylesheet that is being added. Types are: module or theme.
+ *   (optional) The type of stylesheet that is being added. Types are: module 
+ *   or theme.
  * @param $media
  *   (optional) The media type for the stylesheet, e.g., all, print, screen.
  * @param $preprocess
-  *   (optional) Should this CSS file be aggregated and compressed if admin has enabled this feature?
+ *   (optional) Should this CSS file be aggregated and compressed if admin has 
+ *   enabled this feature?  Rules for preprocessing CSS files:
+ *     - CSS files that style content should be preprocessed. This applies to 
+ *       both modules and themes that include additional CSS files.
+ *     - Theme CSS files that are needed on just about every page should be 
+ *       preprocessed.
+ *     - Styles used on only a few pages should not be preprocessed. The extra 
+ *       overhead for a small, extra stylesheet is nothing compared to having 
+ *       to download a completely separate preprocessed file.
  * @return
  *   An array of CSS files.
  */
