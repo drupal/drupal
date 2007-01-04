@@ -53,6 +53,7 @@
           <input class="form-text" type="text" size="15" value="" name="edit[keys]" alt="{search_description}" />
           <input class="form-submit" type="submit" value="{search_button_text}" alt="submit" />
         </div>
+        {form_token}
       </form>
       <!-- END: search_box -->
     </td>
