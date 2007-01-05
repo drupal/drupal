@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.607 2007/01/04 09:58:55 dries Exp $
+// $Id: common.inc,v 1.608 2007/01/05 04:35:07 unconed Exp $
 
 /**
  * @file
@@ -1385,23 +1385,36 @@ function drupal_add_link($attributes) {
  * Adds a CSS file to the stylesheet queue.
  *
  * @param $path
- *   (optional) The path to the CSS file relative to the base_path(), e.g., 
+ *   (optional) The path to the CSS file relative to the base_path(), e.g.,
  *   /modules/devel/devel.css.
  * @param $type
- *   (optional) The type of stylesheet that is being added. Types are: module 
+ *   (optional) The type of stylesheet that is being added. Types are: module
  *   or theme.
  * @param $media
  *   (optional) The media type for the stylesheet, e.g., all, print, screen.
  * @param $preprocess
- *   (optional) Should this CSS file be aggregated and compressed if admin has 
- *   enabled this feature?  Rules for preprocessing CSS files:
- *     - CSS files that style content should be preprocessed. This applies to 
- *       both modules and themes that include additional CSS files.
- *     - Theme CSS files that are needed on just about every page should be 
- *       preprocessed.
- *     - Styles used on only a few pages should not be preprocessed. The extra 
- *       overhead for a small, extra stylesheet is nothing compared to having 
- *       to download a completely separate preprocessed file.
+ *   (optional) Should this CSS file be aggregated and compressed if this
+ *   feature has been turned on under the performance section?
+ *
+ *   What does this actually mean?
+ *   CSS preprocessing is the process of aggregating a bunch of separate CSS
+ *   files into one file that is then compressed by removing all extraneous
+ *   white space.
+ *
+ *   The reason for merging the CSS files is outlined quite thoroughly here:
+ *   http://www.die.net/musings/page_load_time/
+ *   "Load fewer external objects. Due to request overhead, one bigger file
+ *   just loads faster than two smaller ones half its size."
+ *
+ *   However, you should *not* preprocess every file as this can lead to
+ *   redundant caches. You should set $preprocess = FALSE when:
+ *
+ *     - Your styles are only used rarely on the site. This could be a special
+ *       admin page, the homepage, or a handful of pages that does not represent
+ *       the majority of the pages on your site.
+ *
+ *   Typical candidates for caching are for example styles for nodes across
+ *   the site, or used in the theme.
  * @return
  *   An array of CSS files.
  */
