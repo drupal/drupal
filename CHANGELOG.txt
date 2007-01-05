@@ -1,3 +1,8 @@
+Drupal 4.6.11, 2007-01-05
+-------------------------
+- fixed security issue (XSS), see SA-2007-001
+- fixed security issue (DoS), see SA-2007-002
+
 Drupal 4.6.10, 2006-10-18
 ------------------------
 - fixed security issue (XSS), see SA-2006-024
