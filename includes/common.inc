@@ -407,7 +407,7 @@ function drupal_access_denied() {
  *   data, and redirect status.
  */
 function drupal_http_request($url, $headers = array(), $method = 'GET', $data = NULL, $retry = 3) {
-  $result = new StdClass();
+  $result = new stdClass();
 
   // Parse the URL, and make sure we can handle the schema.
   $uri = parse_url($url);

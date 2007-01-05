@@ -220,7 +220,7 @@ function file_check_upload($source = 'upload') {
     }
 
     // Begin building file object.
-    $file = new StdClass();
+    $file = new stdClass();
     $file->filename = trim(basename($_FILES["files"]["name"][$source]), '.');
 
     // Create temporary name/path for newly uploaded files.
