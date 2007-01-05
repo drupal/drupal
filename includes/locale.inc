@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.104 2007/01/02 05:05:38 drumm Exp $
+// $Id: locale.inc,v 1.105 2007/01/05 05:32:22 unconed Exp $
 
 /**
  * @file
@@ -1305,7 +1305,7 @@ function _locale_string_seek_query() {
 
   if (!isset($query)) {
     $fields = array('string', 'language', 'searchin');
-    $query = new StdClass;
+    $query = new stdClass();
     if (is_array($_REQUEST['edit'])) {
       foreach ($_REQUEST['edit'] as $key => $value) {
         if (!empty($value) && in_array($key, $fields)) {

@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.373 2006/12/25 22:22:42 drumm Exp $
+// $Id: forum.module,v 1.374 2007/01/05 05:32:23 unconed Exp $
 
 /**
  * @file
@@ -749,7 +749,7 @@ function forum_get_forums($tid = 0) {
     $sql = db_rewrite_sql($sql);
     $topic = db_fetch_object(db_query_range($sql, $forum->tid, 0, 1));
 
-    $last_post = new StdClass();
+    $last_post = new stdClass();
     $last_post->timestamp = $topic->last_comment_timestamp;
     $last_post->name = $topic->last_comment_name;
     $last_post->uid = $topic->last_comment_uid;
@@ -818,7 +818,7 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
     }
 
     if ($topic->num_comments > 0) {
-      $last_reply = new StdClass();
+      $last_reply = new stdClass();
       $last_reply->timestamp = $topic->last_comment_timestamp;
       $last_reply->name = $topic->last_comment_name;
       $last_reply->uid = $topic->last_comment_uid;
@@ -1067,7 +1067,7 @@ function theme_forum_topic_navigation($node) {
   $stop = 0;
   while ($topic = db_fetch_object($result)) {
     if ($stop == 1) {
-      $next = new StdClass();
+      $next = new stdClass();
       $next->nid = $topic->nid;
       $next->title = $topic->title;
       break;
@@ -1076,7 +1076,7 @@ function theme_forum_topic_navigation($node) {
       $stop = 1;
     }
     else {
-      $prev = new StdClass();
+      $prev = new stdClass();
       $prev->nid = $topic->nid;
       $prev->title = $topic->title;
     }

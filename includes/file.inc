@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.89 2007/01/04 07:13:50 unconed Exp $
+// $Id: file.inc,v 1.90 2007/01/05 05:32:22 unconed Exp $
 
 /**
  * @file
@@ -220,7 +220,7 @@ function file_check_upload($source = 'upload') {
     }
 
     // Begin building file object.
-    $file = new StdClass();
+    $file = new stdClass();
     $file->filename = trim(basename($_FILES["files"]["name"][$source]), '.');
 
     // Create temporary name/path for newly uploaded files.

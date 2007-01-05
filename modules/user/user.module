@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.737 2007/01/02 05:05:38 drumm Exp $
+// $Id: user.module,v 1.738 2007/01/05 05:32:23 unconed Exp $
 
 /**
  * @file
@@ -2502,7 +2502,7 @@ function user_build_filter_query() {
     // This checks to see if this permission filter is an enabled permission for the authenticated role.
     // If so, then all users would be listed, and we can skip adding it to the filter query.
     if ($key == 'permission') {
-      $account = new StdClass();
+      $account = new stdClass();
       $account->uid = 'user_filter';
       $account->roles = array(DRUPAL_AUTHENTICATED_RID => 1);
       if (user_access($value, $account)) {
