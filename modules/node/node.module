@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.765 2007/01/04 09:53:58 dries Exp $
+// $Id: node.module,v 1.766 2007/01/05 22:01:02 unconed Exp $
 
 /**
  * @file
@@ -146,7 +146,7 @@ function node_teaser($body, $format = NULL) {
   $size = variable_get('teaser_length', 600);
 
   // Find where the delimiter is in the body
-  $delimiter = strpos($body, '<break>');
+  $delimiter = strpos($body, '<!--break-->');
 
   // If the size is zero, and there is no delimiter, the entire body is the teaser.
   if ($size == 0 && $delimiter === FALSE) {
@@ -738,7 +738,7 @@ function node_prepare($node, $teaser = FALSE) {
  */
 function node_build_content($node, $teaser = FALSE, $page = FALSE) {
   // Remove the delimiter (if any) that separates the teaser from the body.
-  $node->body = str_replace('<break>', '', $node->body);
+  $node->body = str_replace('<!--break-->', '', $node->body);
 
   // The 'view' hook can be implemented to overwrite the default function
   // to display nodes.
