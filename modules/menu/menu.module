@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.99 2006/11/30 01:55:31 drumm Exp $
+// $Id: menu.module,v 1.100 2007/01/05 19:05:54 dries Exp $
 
 /**
  * @file
@@ -40,7 +40,7 @@ function menu_menu($may_cache) {
   if ($may_cache) {
     $items[] = array('path' => 'admin/build/menu',
       'title' => t('Menus'),
-      'description' => t("Control your site's navigation menu, create menu blocks, as well as rename and reorganize menu items."),
+      'description' => t("Control your site's navigation menu, primary links and secondary links. as well as rename and reorganize menu items."),
       'callback' => 'menu_overview',
       'access' => user_access('administer menu'));
     $items[] = array('path' => 'admin/build/menu/list',
