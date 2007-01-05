@@ -2,7 +2,7 @@
 Drupal 4.7.5, 2007-01-05
 ------------------------
 - fixed security issue (XSS), see SA-2007-001
-- fixed security issue (DoS), see SA-2006-002
+- fixed security issue (DoS), see SA-2007-002
 
 Drupal 4.7.4, 2006-10-18
 ------------------------
