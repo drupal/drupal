@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.170 2007/01/02 05:58:53 drumm Exp $
+// $Id: form.inc,v 1.171 2007/01/05 19:08:30 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -942,24 +942,53 @@ function form_select_options($element, $choices = NULL) {
 }
 
 /**
- * Traverses a select element's #option array looking for the object that
- * holds the given key. Returns FALSE if not found. As usual with functions
- * that can return 0 or FALSE do not forget to use === and !== if needed.
+ * Traverses a select element's #option array looking for any values
+ * that hold the given key. Returns an array of indexes that match.
+ *
+ * This function is useful if you need to modify the options that are
+ * already in a form element, for example, to remove choices which are
+ * not valid because of additional filters imposed by another module.
+ * One example might be altering the choices in a taxonomy selector.
+ * To correctly handle the case of a multiple hierarchy taxonomy,
+ * #options arrays can now hold an array of objects, instead of a
+ * direct mapping of keys to labels, so that multiple choices in the
+ * selector can have the same key (and label). This makes it difficult
+ * to manipulate directly, which is why this helper function exists.
+ *
+ * This function does not support optgroups (when the elements of the
+ * #options array are themselves arrays), and will return FALSE if
+ * arrays are found. The caller must either flatten/restore or
+ * manually do their manipulations in this case, since returning the
+ * index is not sufficient, and supporting this would make the
+ * "helper" too complicated and cumbersome to be of any help.
+ *
+ * As usual with functions that can return array() or FALSE, do not
+ * forget to use === and !== if needed.
  *
  * @param $element
- *   The select element.
+ *   The select element to search.
  * @param $key
  *   The key to look for.
  * @return
- *   The index of the object that held the $key with some value, or FALSE.
+ *   An array of indexes that match the given $key. Array will be
+ *   empty if no elements were found. FALSE if optgroups were found.
  */
-function form_get_option_key($element, $key) {
-  foreach ($element['#options'] as $index => $object) {
-    if (isset($object->option[$key])) {
-      return $index;
+function form_get_options($element, $key) {
+  $keys = array();
+  foreach ($element['#options'] as $index => $choice) {
+    if (is_array($choice)) {
+      return FALSE;
+    }
+    else if (is_object($choice)) {
+      if (isset($choice->option[$key])) {
+        $keys[] = $index;
+      }
+    }
+    else if ($index == $key) {
+      $keys[] = $index;
     }
   }
-  return FALSE;
+  return $keys;
 }
 
 /**
