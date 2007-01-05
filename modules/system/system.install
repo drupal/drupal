@@ -3452,12 +3452,11 @@ function system_update_1017() {
 }
 
 /**
- * Change break tag.
+ * Change break tag (was removed, see 1020).
  */
 function system_update_1018() {
-  $ret = array();
-  $ret[] = update_sql("UPDATE {node_revisions} SET body = REPLACE(body, '<!--break-->', '<break>')");
-  return $ret;
+  variable_set('update_1020_ok', TRUE);
+  return array();
 }
 
 /**
@@ -3477,6 +3476,19 @@ function system_update_1019() {
   }
   return array();
 }
+
+/**
+ * Change break tag back (was removed from head).
+ */
+function system_update_1020() {
+  $ret = array();
+  if (!variable_get('update_1020_ok', FALSE)) {
+    $ret[] = update_sql("UPDATE {node_revisions} SET body = REPLACE(body, '<break>', '<!--break-->')");
+  }
+  variable_del('update_1020_ok');
+  return $ret;    
+}
+
 
 /**
  * @} End of "defgroup updates-4.7-to-5.0"
