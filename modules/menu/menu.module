@@ -40,7 +40,7 @@ function menu_menu($may_cache) {
   if ($may_cache) {
     $items[] = array('path' => 'admin/build/menu',
       'title' => t('Menus'),
-      'description' => t("Control your site's navigation menu, create menu blocks, as well as rename and reorganize menu items."),
+      'description' => t("Control your site's navigation menu, primary links and secondary links. as well as rename and reorganize menu items."),
       'callback' => 'menu_overview',
       'access' => user_access('administer menu'));
     $items[] = array('path' => 'admin/build/menu/list',
