@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.767 2007/01/05 22:03:06 unconed Exp $
+// $Id: node.module,v 1.768 2007/01/07 08:20:31 unconed Exp $
 
 /**
  * @file
@@ -136,6 +136,28 @@ function node_mark($nid, $timestamp) {
     return MARK_UPDATED;
   }
   return MARK_READ;
+}
+
+/**
+ * See if the user used JS to submit a teaser.
+ */
+function node_teaser_js(&$form, $form_values) {
+  // Glue the teaser to the body.
+  if (isset($form['#post']['teaser_js'])) {
+    if (trim($form_values['teaser_js'])) {
+      // Space the teaser from the body
+      $body = trim($form_values['teaser_js']) ."\r\n<!--break-->\r\n". trim($form_values['body']);
+    }
+    else {
+      // Empty teaser, no spaces.
+      $body = '<!--break-->'. $form_values['body'];
+    }
+    // Pass value onto preview/submit
+    form_set_value($form['body'], $body);
+    // Pass value back onto form
+    $form['body']['#value'] = $body;
+  }
+  return $form;
 }
 
 /**
@@ -2199,7 +2221,7 @@ function node_preview($node) {
 function theme_node_preview($node) {
   $output = '<div class="preview">';
   if ($node->teaser && $node->teaser != $node->body) {
-    drupal_set_message(t('The trimmed version of your post shows what your post looks like when promoted to the main page or when exported for syndication. You can insert the delimiter "&lt;!--break--&gt;" (without the quotes) to fine-tune where your post gets split.'));
+    drupal_set_message(t('The trimmed version of your post shows what your post looks like when promoted to the main page or when exported for syndication.<span class="no-js"> You can insert the delimiter "&lt;!--break--&gt;" (without the quotes) to fine-tune where your post gets split.</span>'));
     $output .= '<h3>'. t('Preview trimmed version') .'</h3>';
     $output .= node_view(drupal_clone($node), 1, FALSE, 0);
     $output .= '<h3>'. t('Preview full version') .'</h3>';
@@ -2931,13 +2953,23 @@ function node_content_form($node) {
   }
 
   if ($type->has_body) {
-    $form['body_filter']['body'] = array(
+    $form['body_field'] = array(
+      '#after_build' => array('node_teaser_js'));
+
+    $form['body_field']['teaser_js'] = array(
+      '#type' => 'textarea',
+      '#rows' => 10,
+      '#teaser' => 'edit-body',
+      '#disabled' => TRUE);
+
+    $form['body_field']['body'] = array(
       '#type' => 'textarea',
       '#title' => check_plain($type->body_label),
       '#default_value' => $node->body,
       '#rows' => 20,
       '#required' => ($type->min_word_count > 0));
-    $form['body_filter']['format'] = filter_form($node->format);
+
+    $form['body_field']['format'] = filter_form($node->format);
   }
 
   return $form;
