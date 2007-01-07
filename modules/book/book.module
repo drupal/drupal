@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.404 2006/12/29 07:41:44 drumm Exp $
+// $Id: book.module,v 1.405 2007/01/07 15:51:24 dries Exp $
 
 /**
  * @file
@@ -781,7 +781,7 @@ function book_recurse($nid = 0, $depth = 1, $visit_pre, $visit_post) {
  */
 function book_node_visitor_html_pre($node, $depth, $nid) {
   // Remove the delimiter (if any) that separates the teaser from the body.
-  $node->body = str_replace('<break>', '', $node->body);
+  $node->body = str_replace('<!--break-->', '', $node->body);
 
   // The 'view' hook can be implemented to overwrite the default function
   // to display nodes.
