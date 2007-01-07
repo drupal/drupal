@@ -1333,7 +1333,7 @@ function user_edit_form($uid, $edit, $register = FALSE) {
   }
 
   // Picture/avatar:
-  if (variable_get('user_pictures', 0)) {
+  if (variable_get('user_pictures', 0) && !$register) {
     $form['picture'] = array('#type' => 'fieldset', '#title' => t('Picture'), '#weight' => 1);
     $picture = theme('user_picture', (object)$edit);
     if ($picture) {
