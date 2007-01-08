@@ -1,4 +1,4 @@
-// $Id: INSTALL.txt,v 1.38 2006/12/30 15:28:33 dries Exp $
+// $Id: INSTALL.txt,v 1.39 2007/01/08 11:59:16 dries Exp $
 
 CONTENTS OF THIS FILE
 ---------------------
@@ -55,14 +55,14 @@ INSTALLATION
    are in .tar.gz format and can be extracted using most compression tools. On a
    typical Unix command line, use:
 
-     wget http://drupal.org/files/projects/drupal-x.x.x.tar.gz
-     tar -zxvf drupal-x.x.x.tar.gz
+     wget http://drupal.org/files/projects/drupal-x.x.tar.gz
+     tar -zxvf drupal-x.x.tar.gz
 
-   This will create a new directory drupal-x.x.x/ containing all Drupal files
+   This will create a new directory drupal-x.x/ containing all Drupal files
    and directories. Move the contents of that directory into a directory within
    your web server's document root or your public HTML directory:
 
-     mv drupal-x.x.x/* drupal-x.x.x/.htaccess /var/www/html
+     mv drupal-x.x/* drupal-x.x/.htaccess /var/www/html
 
 2. CREATE THE DRUPAL DATABASE
 
