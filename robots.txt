@@ -1,4 +1,4 @@
-# $Id: robots.txt,v 1.6 2006/08/16 22:03:56 dries Exp $
+# $Id: robots.txt,v 1.7 2007/01/08 12:02:18 dries Exp $
 #
 # robots.txt
 #
@@ -50,6 +50,7 @@ Disallow: /node/add/
 Disallow: /search/
 Disallow: /user/register/
 Disallow: /user/password/
+Disallow: /user/login/
 # Paths (no clean URLs)
 Disallow: /?q=admin/
 Disallow: /?q=aggregator/
@@ -60,3 +61,4 @@ Disallow: /?q=node/add/
 Disallow: /?q=search/
 Disallow: /?q=user/password/
 Disallow: /?q=user/register/
+Disallow: /?q=user/login/
