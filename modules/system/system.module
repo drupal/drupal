@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.435 2007/01/02 05:05:38 drumm Exp $
+// $Id: system.module,v 1.436 2007/01/08 12:07:42 dries Exp $
 
 /**
  * @file
@@ -1797,7 +1797,7 @@ function system_sql() {
 
   $output .= '<h2>'. t('Query performance') .'</h2>';
   $output .= _system_sql($data, array(
-   'Select_full_join' => t(' The number of joins without an index; should be zero.'),
+   'Select_full_join' => t('The number of joins without an index; should be zero.'),
    'Select_range_check' => t('The number of joins without an index; should be zero.'),
    'Sort_scan' => t('The number of sorts done without using an index; should be zero.'),
    'Table_locks_immediate' => t('The number of times a lock could be acquired immediately.'),
