@@ -1,4 +1,4 @@
-// $Id: UPGRADE.txt,v 1.6 2007/01/08 11:58:21 dries Exp $
+// $Id: UPGRADE.txt,v 1.7 2007/01/08 17:16:12 dries Exp $
 
 UPGRADING
 ---------
@@ -25,28 +25,31 @@ UPGRADING
 2. Log on as the user with user ID 1.  User ID 1 is the first
    account created and the main administrator account.  User
    ID 1 needs to be logged in so that you can access update.php
-   (step 8) which can only be run by user ID 1.  Do not close
-   your browser until step 9 is complete.
+   (step 9) which can only be run by user ID 1.  Do not close
+   your browser until step 10 is complete.
 
-3. Disable contributed modules and switch to a core theme
+3. Place the site in "Off-line" mode, to mask any errors from
+   site visitors.
+
+4. Disable contributed modules and switch to a core theme
    (Bluemarine or Garland).
 
-4. Remove all of the old files and directories from the Drupal
+5. Remove all of the old files and directories from the Drupal
    installation directory.
 
-5. Unpack the new Drupal files and directories into the Drupal
+6. Unpack the new Drupal files and directories into the Drupal
    installation directory.
 
-6. Copy the backed up "files" and "sites" directories to the
+7. Copy the backed up "files" and "sites" directories to the
    Drupal installation directory. If the original .htaccess or
    robots.txt files have been modified, copy the backed up
    versions of these files to the installation directory as
    well.
 
-7. Verify the new configuration file to make sure it has the
+8. Verify the new configuration file to make sure it has the
    latest and correct information.
 
-8. Re-install contributed modules.
+9. Re-install contributed modules.
 
    Note: make sure the version of a module matches your
    version of Drupal.  Modules from previous versions may
@@ -54,7 +57,7 @@ UPGRADING
    http://drupal.org/project/Modules for the version of a
    module to match your version of Drupal.
 
-9. Run update.php by visiting http://www.example.com/update.php
+10. Run update.php by visiting http://www.example.com/update.php
    (replace www.example.com with your drupal installation's
    domain name and path).  This step will update the database to
    the new Drupal installation.
@@ -69,6 +72,9 @@ UPGRADING
 
    - As soon as the script is done, you must change the update.php
    script back to its original form to $access_check = TRUE;.
+
+11. Finally, return site to "Online" mode so your visitors may resume
+    browsing.
 
 For more information on upgrading visit the Drupal handbook at
 http://drupal.org/upgrade
