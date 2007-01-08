@@ -1,4 +1,4 @@
-// $Id: UPGRADE.txt,v 1.5 2006/12/29 19:38:47 dries Exp $
+// $Id: UPGRADE.txt,v 1.6 2007/01/08 11:58:21 dries Exp $
 
 UPGRADING
 ---------
@@ -22,14 +22,14 @@ UPGRADING
    More information on multisite configuration is located in
    the INSTALL.txt file.
 
-2. Disable contributed modules and switch to a core theme
-   (Bluemarine or Garland).
-
-3. Log on as the user with user ID 1.  User ID 1 is the first
+2. Log on as the user with user ID 1.  User ID 1 is the first
    account created and the main administrator account.  User
    ID 1 needs to be logged in so that you can access update.php
    (step 8) which can only be run by user ID 1.  Do not close
    your browser until step 9 is complete.
+
+3. Disable contributed modules and switch to a core theme
+   (Bluemarine or Garland).
 
 4. Remove all of the old files and directories from the Drupal
    installation directory.
