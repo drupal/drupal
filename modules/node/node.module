@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.770 2007/01/09 08:14:18 drumm Exp $
+// $Id: node.module,v 1.771 2007/01/09 09:11:44 drumm Exp $
 
 /**
  * @file
@@ -40,7 +40,7 @@ function node_help($section) {
   }
 
   if (arg(0) == 'node' && arg(1) == 'add' && $type = arg(2)) {
-    $type = node_get_types('type', arg(2));
+    $type = node_get_types('type', str_replace('-', '_', arg(2)));
     return '<p>'. filter_xss_admin($type->help) .'</p>';
   }
 }
