@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.769 2007/01/07 08:21:38 unconed Exp $
+// $Id: node.module,v 1.770 2007/01/09 08:14:18 drumm Exp $
 
 /**
  * @file
@@ -2154,6 +2154,7 @@ function node_preview($node) {
       // user ID 0 denotes the anonymous user.
       if ($user = user_load(array('name' => $node->name))) {
         $node->uid = $user->uid;
+        $node->picture = $user->picture;
       }
       else {
         $node->uid = 0; // anonymous user
@@ -2162,6 +2163,7 @@ function node_preview($node) {
     else if ($node->uid) {
       $user = user_load(array('uid' => $node->uid));
       $node->name = $user->name;
+      $node->picture = $user->picture;
     }
 
     // Set the timestamps when needed:
