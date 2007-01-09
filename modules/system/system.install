@@ -3486,7 +3486,7 @@ function system_update_1020() {
     $ret[] = update_sql("UPDATE {node_revisions} SET body = REPLACE(body, '<break>', '<!--break-->')");
   }
   variable_del('update_1020_ok');
-  return $ret;    
+  return $ret;
 }
 
 
