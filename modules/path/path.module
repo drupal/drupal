@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.104 2006/12/18 11:16:51 dries Exp $
+// $Id: path.module,v 1.105 2007/01/09 08:34:03 dries Exp $
 
 /**
  * @file
@@ -78,7 +78,7 @@ function path_admin() {
 function path_admin_edit($pid = 0) {
   if ($pid) {
     $alias = path_load($pid);
-    drupal_set_title($alias['dst']);
+    drupal_set_title(check_plain($alias['dst']));
     $output = path_form($alias);
   }
   else {
@@ -306,7 +306,7 @@ function path_overview() {
 
   $destination = drupal_get_destination();
   while ($data = db_fetch_object($result)) {
-    $rows[] = array($data->dst, $data->src, l(t('edit'), "admin/build/path/edit/$data->pid", array(), $destination), l(t('delete'), "admin/build/path/delete/$data->pid", array(), $destination));
+    $rows[] = array(check_plain($data->dst), check_plain($data->src), l(t('edit'), "admin/build/path/edit/$data->pid", array(), $destination), l(t('delete'), "admin/build/path/delete/$data->pid", array(), $destination));
   }
 
   if (!$rows) {
