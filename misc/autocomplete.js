@@ -1,4 +1,4 @@
-// $Id: autocomplete.js,v 1.16 2006/12/30 12:10:00 unconed Exp $
+// $Id: autocomplete.js,v 1.17 2007/01/09 07:31:04 drumm Exp $
 
 /**
  * Attaches the autocomplete behaviour to all required fields
@@ -213,12 +213,14 @@ Drupal.jsAC.prototype.found = function (matches) {
   }
 
   // Show popup with matches, if any
-  if (ul.childNodes.length > 0) {
-    $(this.popup).empty().append(ul).show();
-  }
-  else {
-    $(this.popup).css({visibility: 'hidden'});
-    this.hidePopup();
+  if (this.popup) {
+    if (ul.childNodes.length > 0) {
+      $(this.popup).empty().append(ul).show();
+    }
+    else {
+      $(this.popup).css({visibility: 'hidden'});
+      this.hidePopup();
+    }
   }
 }
 
