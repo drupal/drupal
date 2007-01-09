@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.67 2007/01/05 22:01:02 unconed Exp $
+// $Id: system.install,v 1.68 2007/01/09 08:30:31 dries Exp $
 
 define('DRUPAL_MINIMUM_PHP',    '4.3.3');
 define('DRUPAL_MINIMUM_MYSQL',  '3.23.17'); // If using MySQL
@@ -3486,7 +3486,7 @@ function system_update_1020() {
     $ret[] = update_sql("UPDATE {node_revisions} SET body = REPLACE(body, '<break>', '<!--break-->')");
   }
   variable_del('update_1020_ok');
-  return $ret;    
+  return $ret;
 }
 
 

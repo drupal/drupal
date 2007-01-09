@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.609 2007/01/05 05:32:22 unconed Exp $
+// $Id: common.inc,v 1.610 2007/01/09 08:30:31 dries Exp $
 
 /**
  * @file
@@ -1142,8 +1142,9 @@ function url($path = NULL, $query = NULL, $fragment = NULL, $absolute = FALSE) {
   }
 
   // Return an external link if $path contains an allowed absolute URL.
-  // Only call the slow filter_xss_bad_protocol if $path contains a ':'.
-  if (strpos($path, ':') !== FALSE && filter_xss_bad_protocol($path, FALSE) == check_plain($path)) {
+  // Only call the slow filter_xss_bad_protocol if $path contains a ':' before any / ? or #.
+  $colonpos = strpos($path, ':');
+  if ($colonpos !== FALSE && !preg_match('![/?#]!', substr($path, 0, $colonpos)) && filter_xss_bad_protocol($path, FALSE) == check_plain($path)) {
     // Split off the fragment
     if (strpos($path, '#') !== FALSE) {
       list($path, $old_fragment) = explode('#', $path, 2);

@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.158 2006/12/16 01:05:11 unconed Exp $
+// $Id: filter.module,v 1.159 2007/01/09 08:30:31 dries Exp $
 
 /**
  * @file
@@ -1474,19 +1474,26 @@ function filter_xss_bad_protocol($string, $decode = TRUE) {
     $allowed_protocols = array_flip(variable_get('filter_allowed_protocols', array('http', 'https', 'ftp', 'news', 'nntp', 'telnet', 'mailto', 'irc', 'ssh', 'sftp', 'webcal')));
   }
 
-  // Get the plain text representation of the attribute value (i.e. its meaning)
+  // Get the plain text representation of the attribute value (i.e. its meaning).
   if ($decode) {
     $string = decode_entities($string);
   }
-  // Remove soft hyphen
-  $string = str_replace(chr(194) . chr(173), '', $string);
-  // Strip protocols
+
+  // Iteratively remove any invalid protocol found.
 
   do {
     $before = $string;
     $colonpos = strpos($string, ':');
     if ($colonpos > 0) {
+      // We found a colon, possibly a protocol. Verify.
       $protocol = substr($string, 0, $colonpos);
+      // If a colon is preceded by a slash, question mark or hash, it cannot
+      // possibly be part of the URL scheme. This must be a relative URL,
+      // which inherits the (safe) protocol of the base document.
+      if (preg_match('![/?#]!', $protocol)) {
+        break;
+      }
+      // Check if this is a disallowed protocol.
       if (!isset($allowed_protocols[$protocol])) {
         $string = substr($string, $colonpos + 1);
       }
