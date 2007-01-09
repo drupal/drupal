@@ -40,7 +40,7 @@ function node_help($section) {
   }
 
   if (arg(0) == 'node' && arg(1) == 'add' && $type = arg(2)) {
-    $type = node_get_types('type', arg(2));
+    $type = node_get_types('type', str_replace('-', '_', arg(2)));
     return '<p>'. filter_xss_admin($type->help) .'</p>';
   }
 }
