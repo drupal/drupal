@@ -213,12 +213,14 @@ Drupal.jsAC.prototype.found = function (matches) {
   }
 
   // Show popup with matches, if any
-  if (ul.childNodes.length > 0) {
-    $(this.popup).empty().append(ul).show();
-  }
-  else {
-    $(this.popup).css({visibility: 'hidden'});
-    this.hidePopup();
+  if (this.popup) {
+    if (ul.childNodes.length > 0) {
+      $(this.popup).empty().append(ul).show();
+    }
+    else {
+      $(this.popup).css({visibility: 'hidden'});
+      this.hidePopup();
+    }
   }
 }
 
