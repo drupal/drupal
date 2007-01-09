@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.405 2007/01/07 15:51:24 dries Exp $
+// $Id: book.module,v 1.406 2007/01/09 08:31:22 drumm Exp $
 
 /**
  * @file
@@ -644,7 +644,7 @@ function book_export($type = 'html', $nid = 0) {
       $node = db_fetch_object($node_result);
   }
   $depth = count(book_location($node)) + 1;
-  $export_function = 'book_export_' . $type;
+  $export_function = 'book_export_'. $type;
 
   if (function_exists($export_function)) {
     print call_user_func($export_function, $nid, $depth);
@@ -706,7 +706,7 @@ function theme_book_export_html($title, $content) {
   $html .= '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />';
   $html .= '<base href="'. $base_url .'/" />' . "\n";
   $html .= "<style type=\"text/css\">\n@import url(misc/print.css);\n</style>\n";
-  $html .= "</head>\n<body>\n". $content . "\n</body>\n</html>\n";
+  $html .= "</head>\n<body>\n". $content ."\n</body>\n</html>\n";
   return $html;
 }
 
@@ -989,9 +989,9 @@ function book_help($section) {
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@book">Book page</a>.', array('@book' => 'http://drupal.org/handbook/modules/book/')) .'</p>';
       return $output;
     case 'admin/content/book':
-      return '<p>'. t('The book module offers a means to organize content, authored by many users, in an online manual, outline or FAQ.'). '</p>';
+      return '<p>'. t('The book module offers a means to organize content, authored by many users, in an online manual, outline or FAQ.') .'</p>';
     case 'admin/content/book/orphan':
-      return '<p>'. t('Pages in a book are like a tree. As pages are edited, reorganized and removed, child pages might be left with no link to the rest of the book. Such pages are referred to as "orphan pages". On this page, administrators can review their books for orphans and reattach those pages as desired.'). '</p>';
+      return '<p>'. t('Pages in a book are like a tree. As pages are edited, reorganized and removed, child pages might be left with no link to the rest of the book. Such pages are referred to as "orphan pages". On this page, administrators can review their books for orphans and reattach those pages as desired.') .'</p>';
   }
 
   if (arg(0) == 'node' && is_numeric(arg(1)) && arg(2) == 'outline') {
