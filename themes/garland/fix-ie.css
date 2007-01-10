@@ -57,3 +57,8 @@ td.menu-disabled {
   /* Because of the lack of min-height, we use height as an alternative */
   height: 1em;
 }
+
+#attach-hide label, #uploadprogress div.message {
+  /* Fading elements in IE causes the text to bleed unless they have a background. */
+  background-color: #ffffff;
+}
