@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.248 2006/12/30 21:12:16 drumm Exp $
+// $Id: statistics.module,v 1.249 2007/01/10 15:17:51 dries Exp $
 
 /**
  * @file
@@ -242,7 +242,7 @@ function statistics_user_tracker() {
         l(t('details'), "admin/logs/access/$log->aid"));
     }
 
-    drupal_set_title($account->name);
+    drupal_set_title(check_plain($account->name));
     $output = theme('table', $header, $rows);
     $output .= theme('pager', NULL, 30, 0);
     return $output;

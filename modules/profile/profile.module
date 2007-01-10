@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.186 2006/12/27 12:55:52 dries Exp $
+// $Id: profile.module,v 1.187 2007/01/10 15:17:51 dries Exp $
 
 /**
  * @file
@@ -477,10 +477,10 @@ function profile_browse() {
     $output .= theme('pager', NULL, 20);
 
     if ($field->type == 'selection' || $field->type == 'list' || $field->type == 'textfield') {
-      $title = strtr($field->page, array('%value' => theme('placeholder', $value)));
+      $title = strtr(check_plain($field->page), array('%value' => theme('placeholder', $value)));
     }
     else {
-      $title = $field->page;
+      $title = check_plain($field->page);
     }
     $output .= '</div>';
 

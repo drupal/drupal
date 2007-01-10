@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.374 2007/01/05 05:32:23 unconed Exp $
+// $Id: forum.module,v 1.375 2007/01/10 15:17:51 dries Exp $
 
 /**
  * @file
@@ -895,7 +895,7 @@ function theme_forum_display($forums, $topics, $parents, $tid, $sortby, $forum_p
     }
   }
 
-  drupal_set_title($title);
+  drupal_set_title(check_plain($title));
 
   $breadcrumb[] = array('path' => $_GET['q']);
   menu_set_location($breadcrumb);

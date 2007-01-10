@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.73 2007/01/02 05:05:38 drumm Exp $
+// $Id: contact.module,v 1.74 2007/01/10 15:17:51 dries Exp $
 
 /**
  * @file
@@ -310,7 +310,7 @@ function contact_user_page() {
       $output = t('You cannot contact more than %number users per hour. Please try again later.', array('%number' => variable_get('contact_hourly_threshold', 3)));
     }
     else {
-      drupal_set_title($account->name);
+      drupal_set_title(check_plain($account->name));
       $output = drupal_get_form('contact_mail_user', $account);
     }
 
@@ -326,11 +326,11 @@ function contact_mail_user($recipient) {
   $form['#token'] = $user->name . $user->mail;
   $form['from'] = array('#type' => 'item',
     '#title' => t('From'),
-    '#value' => $user->name .' &lt;'. $user->mail .'&gt;',
+    '#value' => check_plain($user->name) .' &lt;'. check_plain($user->mail) .'&gt;',
   );
   $form['to'] = array('#type' => 'item',
     '#title' => t('To'),
-    '#value' => $recipient->name,
+    '#value' => check_plain($recipient->name),
   );
   $form['subject'] = array('#type' => 'textfield',
     '#title' => t('Subject'),

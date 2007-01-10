@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.741 2007/01/10 09:57:46 dries Exp $
+// $Id: user.module,v 1.742 2007/01/10 15:17:51 dries Exp $
 
 /**
  * @file
@@ -554,7 +554,7 @@ function user_block($op = 'list', $delta = 0, $edit = array()) {
 
       case 1:
         if ($menu = theme('menu_tree')) {
-           $block['subject'] = $user->uid ? $user->name : t('Navigation');
+           $block['subject'] = $user->uid ? check_plain($user->name) : t('Navigation');
            $block['content'] = $menu;
         }
         return $block;
@@ -1431,7 +1431,7 @@ function user_edit($category = 'account') {
   }
   $form['#attributes']['enctype'] = 'multipart/form-data';
 
-  drupal_set_title($account->name);
+  drupal_set_title(check_plain($account->name));
   return $form;
 }
 
@@ -1517,7 +1517,7 @@ function user_view($uid = 0) {
     $function($account, $fields);
   }
 
-  drupal_set_title($account->name);
+  drupal_set_title(check_plain($account->name));
   return theme('user_profile', $account, $fields);
 }
 
