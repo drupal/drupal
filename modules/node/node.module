@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.771 2007/01/09 09:11:44 drumm Exp $
+// $Id: node.module,v 1.772 2007/01/10 08:43:49 unconed Exp $
 
 /**
  * @file
@@ -1861,15 +1861,7 @@ function node_submit($node) {
     else {
       $node->uid = 0;
     }
-
     $node->created = $node->date ? strtotime($node->date) : NULL;
-  }
-  // Force defaults in case people modify the form:
-  $node_options = variable_get('node_options_'. $node->type, array('status', 'promote'));
-  foreach (array('status', 'promote', 'sticky', 'revision') as $key) {
-    if (!$access || !isset($node->$key)) {
-      $node->$key = in_array($key, $node_options);
-    }
   }
 
   // Do node-type-specific validation checks.
@@ -2232,6 +2224,14 @@ function node_form_submit($form_id, $form_values) {
     drupal_set_message(t('The %post has been updated.', array ('%post' => node_get_types('name', $node))));
   }
   else {
+    // Add defaults for new nodes
+    $access = user_access('administer nodes');
+    $node_options = variable_get('node_options_'. $node->type, array('status', 'promote'));
+    foreach (array('status', 'promote', 'sticky', 'revision') as $key) {
+      if (!$access || !isset($node->$key)) {
+        $node->$key = in_array($key, $node_options);
+      }
+    }
     node_save($node);
     watchdog('content', t('@type: added %title.', array('@type' => t($node->type), '%title' => $node->title)), WATCHDOG_NOTICE, l(t('view'), "node/$node->nid"));
     drupal_set_message(t('Your %post has been created.', array ('%post' => node_get_types('name', $node))));
