@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.68 2007/01/09 08:30:31 dries Exp $
+// $Id: system.install,v 1.69 2007/01/10 23:22:34 unconed Exp $
 
 define('DRUPAL_MINIMUM_PHP',    '4.3.3');
 define('DRUPAL_MINIMUM_MYSQL',  '3.23.17'); // If using MySQL
@@ -3489,6 +3489,20 @@ function system_update_1020() {
   return $ret;
 }
 
+/**
+ * Update two more variables that were missing from system_update_1019.
+ */
+function system_update_1021() {
+  $message_ids = array('admin_body', 'admin_subject');
+  foreach ($message_ids as $id) {
+    // Replace all %vars with !vars
+    if ($message = variable_get('user_mail_'. $id, NULL)) {
+      $fixed = preg_replace('/%([A-Za-z_-]+)/', '!\1', $message);
+      variable_set('user_mail_'. $id, $fixed);
+    }
+  }
+  return array();
+}
 
 /**
  * @} End of "defgroup updates-4.7-to-5.0"
