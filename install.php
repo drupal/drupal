@@ -21,6 +21,9 @@ function install_main() {
   require_once './modules/system/system.install';
   require_once './includes/file.inc';
 
+  // Ensure correct page headers are sent (e.g. caching)
+  drupal_page_header();
+
   // Check existing settings.php.
   $verify = install_verify_settings();
 
