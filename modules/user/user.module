@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.739 2007/01/07 08:20:31 unconed Exp $
+// $Id: user.module,v 1.740 2007/01/10 08:08:44 unconed Exp $
 
 /**
  * @file
@@ -2442,9 +2442,11 @@ function _user_forms(&$edit, $account, $category, $hook = 'form') {
  */
 function user_autocomplete($string = '') {
   $matches = array();
-  $result = db_query_range("SELECT name FROM {users} WHERE LOWER(name) LIKE LOWER('%s%%')", $string, 0, 10);
-  while ($user = db_fetch_object($result)) {
-    $matches[$user->name] = check_plain($user->name);
+  if ($string) {
+    $result = db_query_range("SELECT name FROM {users} WHERE LOWER(name) LIKE LOWER('%s%%')", $string, 0, 10);
+    while ($user = db_fetch_object($result)) {
+      $matches[$user->name] = check_plain($user->name);
+   }
   }
   print drupal_to_js($matches);
   exit();
