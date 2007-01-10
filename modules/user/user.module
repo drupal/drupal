@@ -893,7 +893,7 @@ function user_login($msg = '') {
   }
   $form['name'] = array('#type' => 'textfield',
     '#title' => t('Username'),
-    '#size' => 30,
+    '#size' => 60,
     '#maxlength' => USERNAME_MAX_LENGTH,
     '#required' => TRUE,
     '#attributes' => array('tabindex' => '1'),
@@ -1030,7 +1030,7 @@ function user_pass() {
   // Display form:
   $form['name'] = array('#type' => 'textfield',
     '#title' => t('Username or e-mail address'),
-    '#size' => 30,
+    '#size' => 60,
     '#maxlength' => max(USERNAME_MAX_LENGTH, EMAIL_MAX_LENGTH),
     '#required' => TRUE,
   );
