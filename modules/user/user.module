@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.740 2007/01/10 08:08:44 unconed Exp $
+// $Id: user.module,v 1.741 2007/01/10 09:57:46 dries Exp $
 
 /**
  * @file
@@ -893,7 +893,7 @@ function user_login($msg = '') {
   }
   $form['name'] = array('#type' => 'textfield',
     '#title' => t('Username'),
-    '#size' => 30,
+    '#size' => 60,
     '#maxlength' => USERNAME_MAX_LENGTH,
     '#required' => TRUE,
     '#attributes' => array('tabindex' => '1'),
@@ -1030,7 +1030,7 @@ function user_pass() {
   // Display form:
   $form['name'] = array('#type' => 'textfield',
     '#title' => t('Username or e-mail address'),
-    '#size' => 30,
+    '#size' => 60,
     '#maxlength' => max(USERNAME_MAX_LENGTH, EMAIL_MAX_LENGTH),
     '#required' => TRUE,
   );
