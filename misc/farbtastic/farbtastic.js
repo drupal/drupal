@@ -1,5 +1,5 @@
 // $Id$
-// Farbtastic 1.1
+// Farbtastic 1.2
 
 jQuery.fn.farbtastic = function (callback) {
   $.farbtastic(this, callback);
@@ -46,6 +46,9 @@ jQuery._farbtastic = function (container, callback) {
     if (typeof fb.callback == 'object') {
       $(fb.callback).unbind('keyup', fb.updateValue);
     }
+
+    // Reset color
+    fb.color = null;
 
     // Bind callback or elements
     if (typeof callback == 'function') {
