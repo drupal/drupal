@@ -2113,7 +2113,11 @@ function drupal_render(&$elements) {
   }
 
   $content = '';
-  uasort($elements, "_element_sort");
+  // Either the elements did not go through form_builder or one of the children
+  // has a #weight.
+  if (!isset($elements['#sorted'])) {
+    uasort($elements, "_element_sort");
+  }
   if (!isset($elements['#children'])) {
     $children = element_children($elements);
     /* Render all the children that use a theme function */
