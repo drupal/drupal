@@ -242,7 +242,7 @@ function statistics_user_tracker() {
         l(t('details'), "admin/logs/access/$log->aid"));
     }
 
-    drupal_set_title($account->name);
+    drupal_set_title(check_plain($account->name));
     $output = theme('table', $header, $rows);
     $output .= theme('pager', NULL, 30, 0);
     return $output;

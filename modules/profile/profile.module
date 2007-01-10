@@ -477,10 +477,10 @@ function profile_browse() {
     $output .= theme('pager', NULL, 20);
 
     if ($field->type == 'selection' || $field->type == 'list' || $field->type == 'textfield') {
-      $title = strtr($field->page, array('%value' => theme('placeholder', $value)));
+      $title = strtr(check_plain($field->page), array('%value' => theme('placeholder', $value)));
     }
     else {
-      $title = $field->page;
+      $title = check_plain($field->page);
     }
     $output .= '</div>';
 

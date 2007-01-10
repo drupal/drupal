@@ -57,7 +57,7 @@ function tracker_menu($may_cache) {
 function tracker_track_user() {
   if ($account = user_load(array('uid' => arg(1)))) {
     if ($account->status || user_access('administer users')) {
-      drupal_set_title($account->name);
+      drupal_set_title(check_plain($account->name));
       return tracker_page($account->uid);
     }
     else {
