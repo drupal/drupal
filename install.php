@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.33 2007/01/03 11:10:58 dries Exp $
+// $Id: install.php,v 1.34 2007/01/10 10:15:07 unconed Exp $
 
 require_once './includes/install.inc';
 
@@ -20,6 +20,9 @@ function install_main() {
   drupal_bootstrap(DRUPAL_BOOTSTRAP_CONFIGURATION);
   require_once './modules/system/system.install';
   require_once './includes/file.inc';
+
+  // Ensure correct page headers are sent (e.g. caching)
+  drupal_page_header();
 
   // Check existing settings.php.
   $verify = install_verify_settings();
