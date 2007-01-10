@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.171 2007/01/05 19:08:30 dries Exp $
+// $Id: form.inc,v 1.172 2007/01/10 23:30:07 unconed Exp $
 
 /**
  * @defgroup form Form generation
@@ -755,8 +755,11 @@ function form_builder($form_id, $form) {
     form_set_value($form, $form['#value']);
   }
 
+  // We start off assuming all form elements are in the correct order.
+  $form['#sorted'] = TRUE;
+
   // Recurse through all child elements.
-  $count  = 0;
+  $count = 0;
   foreach (element_children($form) as $key) {
     $form[$key]['#post'] = $form['#post'];
     $form[$key]['#programmed'] = $form['#programmed'];
@@ -779,6 +782,10 @@ function form_builder($form_id, $form) {
     // Assign a decimal placeholder weight to preserve original array order
     if (!isset($form[$key]['#weight'])) {
       $form[$key]['#weight'] = $count/1000;
+    }
+    else {
+      // If one the child elements has a weight then we will need to sort later.
+      unset($form['#sorted']);
     }
     $form[$key] = form_builder($form_id, $form[$key]);
     $count++;

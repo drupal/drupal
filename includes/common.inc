@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.610 2007/01/09 08:30:31 dries Exp $
+// $Id: common.inc,v 1.611 2007/01/10 23:30:07 unconed Exp $
 
 /**
  * @file
@@ -2113,7 +2113,11 @@ function drupal_render(&$elements) {
   }
 
   $content = '';
-  uasort($elements, "_element_sort");
+  // Either the elements did not go through form_builder or one of the children
+  // has a #weight.
+  if (!isset($elements['#sorted'])) {
+    uasort($elements, "_element_sort");
+  }
   if (!isset($elements['#children'])) {
     $children = element_children($elements);
     /* Render all the children that use a theme function */
