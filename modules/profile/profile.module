@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.187 2007/01/10 15:17:51 dries Exp $
+// $Id: profile.module,v 1.188 2007/01/11 03:16:50 unconed Exp $
 
 /**
  * @file
@@ -307,7 +307,7 @@ Unless you know what you are doing, it is highly recommended that you prefix the
 function profile_field_form_validate($form_id, $form_values) {
   // Validate the 'field name':
   if (eregi('[^a-z0-9_-]', $form_values['name'])) {
-    form_set_error('name', t('The specified form name contains one or more illegal characters. Spaces or any other special characters expect dash (-) and underscore (_) are not allowed.'));
+    form_set_error('name', t('The specified form name contains one or more illegal characters. Spaces or any other special characters except dash (-) and underscore (_) are not allowed.'));
   }
 
   if (in_array($form_values['name'], user_fields())) {
