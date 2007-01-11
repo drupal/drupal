@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.329 2006/12/20 10:32:16 dries Exp $
+// $Id: taxonomy.module,v 1.330 2007/01/11 03:29:15 unconed Exp $
 
 /**
  * @file
@@ -685,8 +685,8 @@ function taxonomy_form_alter($form_id, &$form) {
           if ($term->vid == $vocabulary->vid) {
 
             // Commas and quotes in terms are special cases, so encode 'em.
-            if (preg_match('/,/', $term->name) || preg_match('/"/', $term->name)) {
-              $term->name = '"'.preg_replace('/"/', '""', $term->name).'"';
+            if (strpos($term->name, ',') !== FALSE || strpos($term->name, '"') !== FALSE) {
+              $term->name = '"'.str_replace('"', '""', $term->name).'"';
             }
 
             $typed_terms[] = $term->name;
@@ -1480,8 +1480,8 @@ function taxonomy_autocomplete($vid, $string = '') {
     while ($tag = db_fetch_object($result)) {
       $n = $tag->name;
       // Commas and quotes in terms are special cases, so encode 'em.
-      if (preg_match('/,/', $tag->name) || preg_match('/"/', $tag->name)) {
-        $n = '"'. preg_replace('/"/', '""', $tag->name) .'"';
+      if (strpos($tag->name, ',') !== FALSE || strpos($tag->name, '"') !== FALSE) {
+        $n = '"'. str_replace('"', '""', $tag->name) .'"';
       }
       $matches[$prefix . $n] = check_plain($tag->name);
     }
