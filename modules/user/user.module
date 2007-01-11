@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.744 2007/01/11 03:27:05 unconed Exp $
+// $Id: user.module,v 1.745 2007/01/11 08:52:45 dries Exp $
 
 /**
  * @file
@@ -64,7 +64,7 @@ function user_load($array = array()) {
       $params[] = $value;
     }
   }
-  $result = db_query('SELECT * FROM {users} u WHERE ' . implode(' AND ', $query), $params);
+  $result = db_query('SELECT * FROM {users} u WHERE '. implode(' AND ', $query), $params);
 
   if (db_num_rows($result)) {
     $user = db_fetch_object($result);
@@ -169,7 +169,7 @@ function user_save($account, $array = array(), $category = 'account') {
     // fields from being saved there. We cannot invoke hook_user('insert') here
     // because we don't have a fully initialized user object yet.
     foreach ($array as $key => $value) {
-      switch($key) {
+      switch ($key) {
         case 'pass':
           $fields[] = $key;
           $values[] = md5($value);
@@ -1263,7 +1263,7 @@ function user_register_submit($form_id, $form_values) {
       $subject = $notify ? _user_mail_text('admin_subject', $variables) : _user_mail_text('welcome_subject', $variables);
       $body = $notify ? _user_mail_text('admin_body', $variables) : _user_mail_text('welcome_body', $variables);
 
-      drupal_mail(($notify ? 'user-register-notify' : 'user-register-welcome'), $mail,$subject, $body, $from);
+      drupal_mail(($notify ? 'user-register-notify' : 'user-register-welcome'), $mail, $subject, $body, $from);
 
       if ($notify) {
         drupal_set_message(t('Password and further instructions have been e-mailed to the new user %user.', array('%user' => $name)));
@@ -1341,7 +1341,8 @@ function user_edit_form($uid, $edit, $register = FALSE) {
     if ($picture) {
       $form['picture']['current_picture'] = array('#value' => $picture);
       $form['picture']['picture_delete'] = array('#type' => 'checkbox', '#title' => t('Delete picture'), '#description' => t('Check this box to delete your current picture.'));
-    } else {
+    }
+    else {
       $form['picture']['picture_delete'] = array('#type' => 'hidden');
     }
     $form['picture']['picture_upload'] = array('#type' => 'file', '#title' => t('Upload picture'), '#size' => 48, '#description' => t('Your virtual face or picture. Maximum dimensions are %dimensions and the maximum size is %size kB.', array('%dimensions' => variable_get('user_picture_dimensions', '85x85'), '%size' => variable_get('user_picture_file_size', '30'))) .' '. variable_get('user_picture_guidelines', ''));
@@ -1528,7 +1529,7 @@ function user_view($uid = 0) {
 function _user_mail_text($messageid, $variables = array()) {
 
   // Check if an admin setting overrides the default string.
-  if ($admin_setting = variable_get('user_mail_' . $messageid, FALSE)) {
+  if ($admin_setting = variable_get('user_mail_'. $messageid, FALSE)) {
     return strtr($admin_setting, $variables);
   }
   // No override, return with default strings.
@@ -1726,7 +1727,7 @@ function user_admin_access_form($edit, $submit) {
  * Menu callback: list all access rules
  */
 function user_admin_access() {
-  $header = array(array('data' => t('Access type'), 'field' => 'status'), array('data' => t('Rule type'), 'field' => 'type'), array('data' =>t('Mask'), 'field' => 'mask'), array('data' => t('Operations'), 'colspan' => 2));
+  $header = array(array('data' => t('Access type'), 'field' => 'status'), array('data' => t('Rule type'), 'field' => 'type'), array('data' => t('Mask'), 'field' => 'mask'), array('data' => t('Operations'), 'colspan' => 2));
   $result = db_query("SELECT aid, type, status, mask FROM {access}". tablesort_sql($header));
   $access_types = array('user' => t('username'), 'mail' => t('e-mail'), 'host' => t('host'));
   $rows = array();
@@ -1863,7 +1864,7 @@ function user_admin_perm_submit($form_id, $form_values) {
   // Save permissions:
   $result = db_query('SELECT * FROM {role}');
   while ($role = db_fetch_object($result)) {
-    if(isset($form_values[$role->rid])) {
+    if (isset($form_values[$role->rid])) {
       // Delete, so if we clear every checkbox we reset that role;
       // otherwise permissions are active and denied everywhere.
       db_query('DELETE FROM {permission} WHERE rid = %d', $role->rid);
@@ -2502,7 +2503,7 @@ function user_build_filter_query() {
   // Build query
   $where = $args = $join = array();
   foreach ($_SESSION['user_overview_filter'] as $filter) {
-    list ($key, $value) = $filter;
+    list($key, $value) = $filter;
     // This checks to see if this permission filter is an enabled permission for the authenticated role.
     // If so, then all users would be listed, and we can skip adding it to the filter query.
     if ($key == 'permission') {
@@ -2540,7 +2541,7 @@ function user_filter_form() {
                        '#theme' => 'user_filters',
                      );
   foreach ($session as $filter) {
-    list ($type, $value) = $filter;
+    list($type, $value) = $filter;
     $string = ($i++ ? '<em>and</em> where <strong>%a</strong> is <strong>%b</strong>' : '<strong>%a</strong> is <strong>%b</strong>');
     // Merge an array of arrays into one if necessary.
     $options = $type == 'permission' ? call_user_func_array('array_merge', $filters[$type]['options']) : $filters[$type]['options'];
@@ -2594,13 +2595,13 @@ function theme_user_filters($form) {
     }
   }
 
-  $output .= '<li><dl class="multiselect">' . (sizeof($form['current']) ? '<dt><em>'. t('and') .'</em> '. t('where') .'</dt>' : '') . '<dd class="a">';
+  $output .= '<li><dl class="multiselect">'. (sizeof($form['current']) ? '<dt><em>'. t('and') .'</em> '. t('where') .'</dt>' : '') .'<dd class="a">';
   foreach (element_children($form['filter']) as $key) {
     $output .= drupal_render($form['filter'][$key]);
   }
   $output .= '</dd>';
 
-  $output .= '<dt>'. t('is') .'</dt>' . '<dd class="b">';
+  $output .= '<dt>'. t('is') .'</dt><dd class="b">';
 
   foreach (element_children($form['status']) as $key) {
     $output .= drupal_render($form['status'][$key]);
