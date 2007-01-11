@@ -159,11 +159,15 @@ function list_theme_engines($refresh = FALSE) {
  *   An HTML string that generates the themed output.
  */
 function theme() {
+  static $functions;
   $args = func_get_args();
   $function = array_shift($args);
 
-  if ($func = theme_get_function($function)) {
-    return call_user_func_array($func, $args);
+  if (!isset($functions[$function])) {
+    $functions[$function] = theme_get_function($function);
+  }
+  if ($functions[$function]) {
+    return call_user_func_array($functions[$function], $args);
   }
 }
 
