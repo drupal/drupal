@@ -226,7 +226,7 @@ function block_admin_display($theme = NULL) {
   $block_regions = array(BLOCK_REGION_NONE => '<'. t('none') .'>') + system_region_list($theme_key);
 
   // Build form tree
-  $form['#action'] = arg(3) ? url('admin/build/block/list/' . $theme_key) : url('admin/build/block');
+  $form['#action'] = arg(3) ? url('admin/build/block/list/'. $theme_key) : url('admin/build/block');
   $form['#tree'] = TRUE;
   foreach ($blocks as $i => $block) {
     $form[$i]['module'] = array('#type' => 'value', '#value' => $block['module']);
@@ -302,7 +302,7 @@ function theme_block_admin_display($form) {
 
   // Highlight regions on page to provide visual reference.
   foreach ($block_regions as $key => $value) {
-    drupal_set_content($key, '<div class="block-region">' . $value . '</div>');
+    drupal_set_content($key, '<div class="block-region">'. $value .'</div>');
   }
 
   // Build rows
