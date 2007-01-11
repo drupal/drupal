@@ -1102,6 +1102,10 @@ function expand_password_confirm($element) {
   $element['#validate'] = array('password_confirm_validate' => array());
   $element['#tree'] = TRUE;
 
+  if (isset($element['#size'])) {
+    $element['pass1']['#size'] = $element['pass2']['#size'] = $element['#size'];
+  }
+
   return $element;
 }
 
