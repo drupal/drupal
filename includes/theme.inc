@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.336 2007/01/02 05:05:38 drumm Exp $
+// $Id: theme.inc,v 1.337 2007/01/11 03:36:06 unconed Exp $
 
 /**
  * @file
@@ -159,11 +159,15 @@ function list_theme_engines($refresh = FALSE) {
  *   An HTML string that generates the themed output.
  */
 function theme() {
+  static $functions;
   $args = func_get_args();
   $function = array_shift($args);
 
-  if ($func = theme_get_function($function)) {
-    return call_user_func_array($func, $args);
+  if (!isset($functions[$function])) {
+    $functions[$function] = theme_get_function($function);
+  }
+  if ($functions[$function]) {
+    return call_user_func_array($functions[$function], $args);
   }
 }
 
