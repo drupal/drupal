@@ -36,8 +36,8 @@ Drupal.toggleFieldset = function(fieldset) {
  * Scroll a given fieldset into view as much as possible.
  */
 Drupal.collapseScrollIntoView = function (node) {
-  var h = self.innerHeight || document.documentElement.clientHeight || document.body.clientHeight || 0;
-  var offset = self.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+  var h = self.innerHeight || document.documentElement.clientHeight || $('body')[0].clientHeight || 0;
+  var offset = self.pageYOffset || document.documentElement.scrollTop || $('body')[0].scrollTop || 0;
   var pos = Drupal.absolutePosition(node);
   var fudge = 55;
   if (pos.y + node.offsetHeight + fudge > h + offset) {
