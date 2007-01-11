@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.172 2007/01/10 23:30:07 unconed Exp $
+// $Id: form.inc,v 1.173 2007/01/11 03:24:42 unconed Exp $
 
 /**
  * @defgroup form Form generation
@@ -1101,6 +1101,10 @@ function expand_password_confirm($element) {
   );
   $element['#validate'] = array('password_confirm_validate' => array());
   $element['#tree'] = TRUE;
+
+  if (isset($element['#size'])) {
+    $element['pass1']['#size'] = $element['pass2']['#size'] = $element['#size'];
+  }
 
   return $element;
 }
