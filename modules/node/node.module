@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.773 2007/01/10 10:28:23 unconed Exp $
+// $Id: node.module,v 1.774 2007/01/11 08:51:31 dries Exp $
 
 /**
  * @file
@@ -903,7 +903,7 @@ function node_search($op = 'search', $keys = NULL) {
         $join2 .= ' LEFT JOIN {node_counter} nc ON nc.nid = i.sid';
         $total += $weight;
       }
-      $select2 = (count($ranking) ? implode(' + ', $ranking) : 'i.relevance') . ' AS score';
+      $select2 = (count($ranking) ? implode(' + ', $ranking) : 'i.relevance') .' AS score';
 
       // Do search
       $find = do_search($keys, 'node', 'INNER JOIN {node} n ON n.nid = i.sid '. $join1 .' INNER JOIN {users} u ON n.uid = u.uid', $conditions1 . (empty($where1) ? '' : ' AND '. $where1), $arguments1, $select2, $join2, $arguments2);
@@ -970,7 +970,7 @@ function node_configure() {
   // Only show rebuild button if there is 0 or more than 2 rows in node_access table, or if there are modules that implement node_grant.
   if (db_result(db_query('SELECT COUNT(*) FROM {node_access}')) != 1 || count(module_implements('node_grants')) > 0) {
     $status = '<p>'. t('If the site is experiencing problems with permissions to content, you may have to rebuild the permissions cache. Possible causes for permission problems are disabling modules or configuration changes to permissions. Rebuilding will remove all privileges to posts, and replace them with permissions based on the current modules and settings.') .'</p>';
-    $status .= '<p>'. t('Rebuilding may take some time if there is a lot of content or complex permission settings. After rebuilding has completed posts will automatically use the new permissions.'). '</p>';
+    $status .= '<p>'. t('Rebuilding may take some time if there is a lot of content or complex permission settings. After rebuilding has completed posts will automatically use the new permissions.') .'</p>';
 
     $form['access'] = array('#type' => 'fieldset', '#title' => t('Node access status'));
     $form['access']['status'] = array('#value' => $status);
@@ -1335,7 +1335,7 @@ function node_build_filter_query() {
   $join = '';
   foreach ($_SESSION['node_overview_filter'] as $index => $filter) {
     list($key, $value) = $filter;
-    switch($key) {
+    switch ($key) {
       case 'status':
         // Note: no exploitable hole as $key/$value have already been checked when submitted
         list($key, $value) = explode('-', $value, 2);
@@ -1420,17 +1420,17 @@ function theme_node_filters($form) {
   $output .= '<ul class="clear-block">';
   if (sizeof($form['current'])) {
     foreach (element_children($form['current']) as $key) {
-      $output .= '<li>' . drupal_render($form['current'][$key]) . '</li>';
+      $output .= '<li>'. drupal_render($form['current'][$key]) .'</li>';
     }
   }
 
-  $output .= '<li><dl class="multiselect">' . (sizeof($form['current']) ? '<dt><em>'. t('and') .'</em> '. t('where') .'</dt>' : '') . '<dd class="a">';
+  $output .= '<li><dl class="multiselect">'. (sizeof($form['current']) ? '<dt><em>'. t('and') .'</em> '. t('where') .'</dt>' : '') .'<dd class="a">';
   foreach (element_children($form['filter']) as $key) {
     $output .= drupal_render($form['filter'][$key]);
   }
   $output .= '</dd>';
 
-  $output .= '<dt>'. t('is') .'</dt>' . '<dd class="b">';
+  $output .= '<dt>'. t('is') .'</dt><dd class="b">';
 
   foreach (element_children($form['status']) as $key) {
     $output .= drupal_render($form['status'][$key]);
@@ -1793,7 +1793,7 @@ function node_feed($nodes = 0, $channel = array()) {
 
     // Allow modules to add additional item fields and/or modify $item
     $extra = node_invoke_nodeapi($item, 'rss item');
-    $extra = array_merge($extra, array(array('key' => 'pubDate', 'value' =>  date('r', $item->created)), array('key' => 'dc:creator', 'value' => $item->name), array('key' => 'guid', 'value' => $item->nid . ' at ' . $base_url, 'attributes' => array('isPermaLink' => 'false'))));
+    $extra = array_merge($extra, array(array('key' => 'pubDate', 'value' =>  date('r', $item->created)), array('key' => 'dc:creator', 'value' => $item->name), array('key' => 'guid', 'value' => $item->nid .' at '. $base_url, 'attributes' => array('isPermaLink' => 'false'))));
     foreach ($extra as $element) {
       if ($element['namespace']) {
         $namespaces = array_merge($namespaces, $element['namespace']);
@@ -1829,7 +1829,7 @@ function node_feed($nodes = 0, $channel = array()) {
   $channel = array_merge($channel_defaults, $channel);
 
   $output = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
-  $output .= "<rss version=\"". $channel["version"] . "\" xml:base=\"". $base_url ."\" ". implode(' ', $namespaces) .">\n";
+  $output .= "<rss version=\"". $channel["version"] ."\" xml:base=\"". $base_url ."\" ". implode(' ', $namespaces) .">\n";
   $output .= format_rss_channel($channel['title'], $channel['link'], $channel['description'], $items, $channel['language']);
   $output .= "</rss>\n";
 
@@ -2240,12 +2240,12 @@ function node_form_submit($form_id, $form_values) {
   if ($node->nid) {
     node_save($node);
     watchdog('content', t('@type: updated %title.', array('@type' => t($node->type), '%title' => $node->title)), WATCHDOG_NOTICE, l(t('view'), 'node/'. $node->nid));
-    drupal_set_message(t('The %post has been updated.', array ('%post' => node_get_types('name', $node))));
+    drupal_set_message(t('The %post has been updated.', array('%post' => node_get_types('name', $node))));
   }
   else {
     node_save($node);
     watchdog('content', t('@type: added %title.', array('@type' => t($node->type), '%title' => $node->title)), WATCHDOG_NOTICE, l(t('view'), "node/$node->nid"));
-    drupal_set_message(t('Your %post has been created.', array ('%post' => node_get_types('name', $node))));
+    drupal_set_message(t('Your %post has been created.', array('%post' => node_get_types('name', $node))));
   }
   if ($node->nid) {
     if (node_access('view', $node)) {
@@ -2411,7 +2411,7 @@ function node_page_edit($node) {
   }
 
   drupal_set_title(check_plain($node->title));
-  return drupal_get_form($node->type . '_node_form', $node);
+  return drupal_get_form($node->type .'_node_form', $node);
 }
 
 /**
