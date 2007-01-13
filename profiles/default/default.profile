@@ -1,5 +1,5 @@
 <?php
-// $Id: default.profile,v 1.3 2007/01/03 11:10:58 dries Exp $
+// $Id: default.profile,v 1.4 2007/01/13 10:21:32 unconed Exp $
 
 /**
  * Return an array of the modules to be enabled when this profile is installed.
@@ -36,18 +36,18 @@ function default_profile_final() {
   $types = array(
     array(
       'type' => 'page',
-      'name' => t('Page'),
+      'name' => st('Page'),
       'module' => 'node',
-      'description' => t('If you want to add a static page, like a contact page or an about page, use a page.'),
+      'description' => st('If you want to add a static page, like a contact page or an about page, use a page.'),
       'custom' => TRUE,
       'modified' => TRUE,
       'locked' => FALSE,
     ),
     array(
       'type' => 'story',
-      'name' => t('Story'),
+      'name' => st('Story'),
       'module' => 'node',
-      'description' => t('Stories are articles in their simplest form: they have a title, a teaser and a body, but can be extended by other modules. The teaser is part of the body too. Stories may be used as a personal blog or for news articles.'),
+      'description' => st('Stories are articles in their simplest form: they have a title, a teaser and a body, but can be extended by other modules. The teaser is part of the body too. Stories may be used as a personal blog or for news articles.'),
       'custom' => TRUE,
       'modified' => TRUE,
       'locked' => FALSE,

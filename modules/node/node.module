@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.774 2007/01/11 08:51:31 dries Exp $
+// $Id: node.module,v 1.775 2007/01/13 10:21:31 unconed Exp $
 
 /**
  * @file
@@ -1146,7 +1146,7 @@ function node_menu($may_cache) {
         $type_url_str = str_replace('_', '-', $type->type);
         $items[] = array(
           'path' => 'node/add/'. $type_url_str,
-          'title' => drupal_ucfirst(t($name)),
+          'title' => drupal_ucfirst($name),
           'access' => node_access('create', $type->type),
         );
       }
