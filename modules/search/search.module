@@ -174,7 +174,8 @@ function search_menu($may_cache) {
       $items[] = array('path' => 'search/'. $name . $keys, 'title' => $title,
         'callback' => 'search_view',
         'callback arguments' => array($name),
-        // Only allow access if the search hook returned a valid title.
+        // The search module only returns a title when the user is allowed to
+        // access that particular search type.
         'access' => user_access('search content') && $title,
         'type' => MENU_LOCAL_TASK,
       );
