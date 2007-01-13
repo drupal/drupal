@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.207 2006/12/19 09:44:53 drumm Exp $
+// $Id: search.module,v 1.208 2007/01/13 11:00:53 unconed Exp $
 
 /**
  * @file
@@ -169,14 +169,15 @@ function search_menu($may_cache) {
     // we dynamically add the keywords to the search tabs' paths.
     $keys = search_get_keys();
     $keys = strlen($keys) ? '/'. $keys : '';
-    foreach (module_list() as $name) {
-      if (module_hook($name, 'search') && $title = module_invoke($name, 'search', 'name')) {
-        $items[] = array('path' => 'search/'. $name . $keys, 'title' => $title,
-          'callback' => 'search_view',
-          'callback arguments' => array($name),
-          'access' => user_access('search content'),
-          'type' => MENU_LOCAL_TASK);
-      }
+    foreach (module_implements('search') as $name) {
+      $title = module_invoke($name, 'search', 'name');
+      $items[] = array('path' => 'search/'. $name . $keys, 'title' => $title,
+        'callback' => 'search_view',
+        'callback arguments' => array($name),
+        // Only allow access if the search hook returned a valid title.
+        'access' => user_access('search content') && $title,
+        'type' => MENU_LOCAL_TASK,
+      );
     }
   }
 
