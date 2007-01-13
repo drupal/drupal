@@ -1146,7 +1146,7 @@ function node_menu($may_cache) {
         $type_url_str = str_replace('_', '-', $type->type);
         $items[] = array(
           'path' => 'node/add/'. $type_url_str,
-          'title' => drupal_ucfirst(t($name)),
+          'title' => drupal_ucfirst($name),
           'access' => node_access('create', $type->type),
         );
       }
