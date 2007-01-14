@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.145 2007/01/02 05:05:38 drumm Exp $
+// $Id: menu.inc,v 1.146 2007/01/14 01:37:48 unconed Exp $
 
 /**
  * @file
@@ -1013,8 +1013,8 @@ function _menu_get_active_trail_in_submenu($pid) {
 function _menu_sort($a, $b) {
   $menu = menu_get_menu();
 
-  $a = &$menu['items'][$a];
-  $b = &$menu['items'][$b];
+  $a = $menu['items'][$a];
+  $b = $menu['items'][$b];
 
   if ($a['weight'] < $b['weight']) {
     return -1;
