@@ -1013,8 +1013,8 @@ function _menu_get_active_trail_in_submenu($pid) {
 function _menu_sort($a, $b) {
   $menu = menu_get_menu();
 
-  $a = &$menu['items'][$a];
-  $b = &$menu['items'][$b];
+  $a = $menu['items'][$a];
+  $b = $menu['items'][$b];
 
   if ($a['weight'] < $b['weight']) {
     return -1;
