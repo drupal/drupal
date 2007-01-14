@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.775 2007/01/13 10:21:31 unconed Exp $
+// $Id: node.module,v 1.776 2007/01/14 02:12:29 unconed Exp $
 
 /**
  * @file
@@ -1148,6 +1148,20 @@ function node_menu($may_cache) {
           'path' => 'node/add/'. $type_url_str,
           'title' => drupal_ucfirst($name),
           'access' => node_access('create', $type->type),
+        );
+      }
+    }
+    // Error pages must to be present in the menu cache and be accessible to
+    // all. More often than not these are individual nodes.
+    for ($error_code = 403; $error_code <= 404; $error_code++) {
+      if (preg_match('|^node/(?P<nid>\d+)(?:/view)?$|', drupal_get_normal_path(variable_get('site_'. $error_code, '')), $matches) && ($node = node_load($matches['nid']))) {
+        $items[] = array(
+          'path' => 'node/'. $node->nid,
+          'title' => t('View'),
+          'callback' => 'node_page_view',
+          'callback arguments' => array($node),
+          'access' => TRUE,
+          'type' => MENU_CALLBACK,
         );
       }
     }
