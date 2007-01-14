@@ -1151,6 +1151,20 @@ function node_menu($may_cache) {
         );
       }
     }
+    // Error pages must to be present in the menu cache and be accessible to
+    // all. More often than not these are individual nodes.
+    for ($error_code = 403; $error_code <= 404; $error_code++) {
+      if (preg_match('|^node/(?P<nid>\d+)(?:/view)?$|', drupal_get_normal_path(variable_get('site_'. $error_code, '')), $matches) && ($node = node_load($matches['nid']))) {
+        $items[] = array(
+          'path' => 'node/'. $node->nid,
+          'title' => t('View'),
+          'callback' => 'node_page_view',
+          'callback arguments' => array($node),
+          'access' => TRUE,
+          'type' => MENU_CALLBACK,
+        );
+      }
+    }
   }
   else {
     // Add the CSS for this module
