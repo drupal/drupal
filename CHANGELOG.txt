@@ -1,7 +1,11 @@
-// $Id: CHANGELOG.txt,v 1.173 2006/12/23 22:07:37 dries Exp $
+// $Id: CHANGELOG.txt,v 1.174 2007/01/15 12:12:41 unconed Exp $
 
-Drupal 5.0, xxxx-xx-xx (development version)
+Drupal 6.0, xxxx-xx-xx (development version)
 ------------------------
+
+
+Drupal 5.0, 2007-01-15
+----------------------
 - completely retooled the administration page
     * /admin now contains an administration page which may be themed
     * reorganised administration menu items by task and by module
