@@ -806,7 +806,7 @@ function _drupal_bootstrap($phase) {
       break;
 
     case DRUPAL_BOOTSTRAP_SESSION:
-      require_once './includes/session.inc';
+      require_once variable_get('session_inc', './includes/session.inc');
       session_set_save_handler('sess_open', 'sess_close', 'sess_read', 'sess_write', 'sess_destroy_sid', 'sess_gc');
       session_start();
       break;
