@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysql.inc,v 1.66 2006/12/27 22:50:09 dries Exp $
+// $Id: database.mysql.inc,v 1.67 2007/01/22 02:20:42 unconed Exp $
 
 /**
  * @file
@@ -53,16 +53,21 @@ function db_version() {
  * (e.g. your database and web server live on different machines).
  */
 function db_connect($url) {
+  $url = parse_url($url);
+
   // Check if MySQL support is present in PHP
   if (!function_exists('mysql_connect')) {
+    // Redirect to installer if using default DB credentials
+    if ($url['user'] == 'username' && $url['pass'] == 'password') {
+      include_once 'includes/install.inc';
+      install_goto('install.php');
+    }
     drupal_maintenance_theme();
     drupal_set_title('PHP MySQL support not enabled');
     print theme('maintenance_page', '<p>We were unable to use the MySQL database because the MySQL extension for PHP is not installed. Check your <code>PHP.ini</code> to see how you can enable it.</p>
 <p>For more help, see the <a href="http://drupal.org/node/258">Installation and upgrading handbook</a>. If you are unsure what these terms mean you should probably contact your hosting provider.</p>');
     exit;
   }
-
-  $url = parse_url($url);
 
   // Decode url-encoded information in the db connection string
   $url['user'] = urldecode($url['user']);
