@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.611 2007/01/10 23:30:07 unconed Exp $
+// $Id: common.inc,v 1.612 2007/01/23 19:21:50 dries Exp $
 
 /**
  * @file
@@ -543,7 +543,7 @@ function error_handler($errno, $message, $filename, $line) {
     return;
   }
 
-  if ($errno & (E_ALL ^ E_NOTICE)) {
+  if ($errno & (E_ALL)) {
     $types = array(1 => 'error', 2 => 'warning', 4 => 'parse error', 8 => 'notice', 16 => 'core error', 32 => 'core warning', 64 => 'compile error', 128 => 'compile warning', 256 => 'user error', 512 => 'user warning', 1024 => 'user notice', 2048 => 'strict warning');
     $entry = $types[$errno] .': '. $message .' in '. $filename .' on line '. $line .'.';
 
