@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.330 2007/01/11 03:29:15 unconed Exp $
+// $Id: taxonomy.module,v 1.331 2007/01/23 19:04:21 dries Exp $
 
 /**
  * @file
@@ -194,7 +194,7 @@ function taxonomy_overview_terms($vid) {
     if (($start_from && ($start_from * $page_increment) >= $total_entries) || ($displayed_count == $page_increment)) {
       continue;
     }
-    $rows[] = array(str_repeat('--', $term->depth) . ' ' . l($term->name, "taxonomy/term/$term->tid"), l(t('edit'), "admin/content/taxonomy/edit/term/$term->tid", array(), $destination));
+    $rows[] = array(str_repeat('--', $term->depth) .' '. l($term->name, "taxonomy/term/$term->tid"), l(t('edit'), "admin/content/taxonomy/edit/term/$term->tid", array(), $destination));
     $displayed_count++; // we're counting tids displayed
   }
 
@@ -1238,7 +1238,7 @@ function taxonomy_select_nodes($tids = array(), $operator = 'or', $depth = 0, $p
         $wheres .= ' AND tn'. $index .'.tid IN ('. implode(',', $tids) .')';
       }
       $sql = 'SELECT DISTINCT(n.nid), n.sticky, n.title, n.created FROM {node} n '. $joins .' WHERE n.status = 1 '. $wheres .' ORDER BY '. $order;
-      $sql_count = 'SELECT COUNT(DISTINCT(n.nid)) FROM {node} n '. $joins .' WHERE n.status = 1 ' . $wheres;
+      $sql_count = 'SELECT COUNT(DISTINCT(n.nid)) FROM {node} n '. $joins .' WHERE n.status = 1 '. $wheres;
     }
     $sql = db_rewrite_sql($sql);
     $sql_count = db_rewrite_sql($sql_count);
