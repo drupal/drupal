@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.246 2007/01/11 08:54:44 dries Exp $
+// $Id: block.module,v 1.247 2007/01/23 16:44:58 dries Exp $
 
 /**
  * @file
@@ -84,7 +84,7 @@ function block_menu($may_cache) {
     $items[] = array('path' => 'admin/build/block/add', 'title' => t('Add block'),
       'access' => user_access('administer blocks'),
       'callback' => 'drupal_get_form',
-      'callback arguments' => array('block_box_form'),
+      'callback arguments' => array('block_add_block_form'),
       'type' => MENU_LOCAL_TASK);
     $default = variable_get('theme_default', 'garland');
     foreach (list_themes() as $key => $theme) {
@@ -120,7 +120,10 @@ function block_block($op = 'list', $delta = 0, $edit = array()) {
       return $blocks;
 
     case 'configure':
-      $box = block_box_get($delta);
+      $box = array('format' => FILTER_FORMAT_DEFAULT);
+      if ($delta) {
+        $box = block_box_get($delta);
+      }
       if (filter_access($box['format'])) {
         return block_box_form($box);
       }
@@ -396,7 +399,9 @@ function block_admin_configure($module = NULL, $delta = 0) {
 
   // Get the block subject for the page title.
   $info = module_invoke($module, 'block', 'list');
-  drupal_set_title(t("'%name' block", array('%name' => $info[$delta]['info'])));
+  if (isset($info[$delta])) {
+    drupal_set_title(t("'%name' block", array('%name' => $info[$delta]['info'])));
+  }
 
   // Standard block configurations.
   $form['user_vis_settings'] = array(
@@ -504,19 +509,41 @@ function block_admin_configure_submit($form_id, $form_values) {
   }
 }
 
-function block_box_form_validate($form_id, $form_values) {
+/**
+ * Menu callback: display the custom block addition form.
+ */
+function block_add_block_form() {
+  return block_admin_configure('block', NULL);
+}
+
+function block_add_block_form_validate($form_id, $form_values) {
   if (empty($form_values['info']) || db_num_rows(db_query("SELECT info FROM {boxes} WHERE info = '%s'", $form_values['info']))) {
     form_set_error('info', t('Please ensure that each block description is unique.'));
   }
 }
 
-function block_box_form_submit($form_id, $form_values) {
-  if (!form_get_errors()) {
-    if (block_box_save($form_values)) {
-      drupal_set_message(t('The block has been created.'));
-      return 'admin/build/block';
+/**
+ * Save the new custom block.
+ */
+function block_add_block_form_submit($form_id, $form_values) {
+  $delta = db_next_id('{boxes}_bid');
+
+  foreach (list_themes() as $key => $theme) {
+    if ($theme->status) {
+      db_query("INSERT INTO {blocks} (visibility, pages, custom, title, module, theme, status, weight, delta) VALUES(%d, '%s', %d, '%s', '%s', '%s', %d, %d, %d)", $form_values['visibility'], trim($form_values['pages']), $form_values['custom'], $form_values['title'], $form_values['module'], $theme->name, 0, 0, $delta);
     }
   }
+
+  foreach (array_filter($form_values['roles']) as $rid) {
+    db_query("INSERT INTO {blocks_roles} (rid, module, delta) VALUES (%d, '%s', '%s')", $rid, $form_values['module'], $delta);
+  }
+
+  db_query("INSERT INTO {boxes} (bid, body, info, format) VALUES  (%d, '%s', '%s', %d)", $delta, $form_values['body'], $form_values['info'], $form_values['format']);
+
+  drupal_set_message(t('The block has been created.'));
+  cache_clear_all();
+
+  return 'admin/build/block';
 }
 
 /**
@@ -541,6 +568,9 @@ function block_box_delete_submit($form_id, $form_values) {
   return 'admin/build/block';
 };
 
+/**
+ * Define the custom block form.
+ */
 function block_box_form($edit = array()) {
   $form['info'] = array(
     '#type' => 'textfield',
@@ -564,22 +594,17 @@ function block_box_form($edit = array()) {
     $edit['format'] = FILTER_FORMAT_DEFAULT;
   }
   $form['body_filter']['format'] = filter_form($edit['format'], -16);
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Save block'));
 
   return $form;
 }
 
-function block_box_save($edit, $delta = NULL) {
+function block_box_save($edit, $delta) {
   if (!filter_access($edit['format'])) {
     $edit['format'] = FILTER_FORMAT_DEFAULT;
   }
 
-  if (isset($delta)) {
-    db_query("UPDATE {boxes} SET body = '%s', info = '%s', format = %d WHERE bid = %d", $edit['body'], $edit['info'], $edit['format'], $delta);
-  }
-  else {
-    db_query("INSERT INTO {boxes} (body, info, format) VALUES  ('%s', '%s', %d)", $edit['body'], $edit['info'], $edit['format']);
-  }
+  db_query("UPDATE {boxes} SET body = '%s', info = '%s', format = %d WHERE bid = %d", $edit['body'], $edit['info'], $edit['format'], $delta);
+
   return TRUE;
 }
 

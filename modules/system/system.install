@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.71 2007/01/23 16:43:17 dries Exp $
+// $Id: system.install,v 1.72 2007/01/23 16:44:58 dries Exp $
 
 define('DRUPAL_MINIMUM_PHP',    '4.3.3');
 define('DRUPAL_MINIMUM_MYSQL',  '4.1.0'); // If using MySQL
@@ -209,7 +209,7 @@ function system_install() {
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {boxes} (
-        bid int NOT NULL auto_increment,
+        bid int NOT NULL,
         body longtext,
         info varchar(128) NOT NULL default '',
         format int NOT NULL default '0',
@@ -3514,6 +3514,23 @@ function system_update_1021() {
  * @{
  * @todo Start this series of updates at 2000.
  */
+
+/**
+ * Remove auto_increment from {boxes} to allow adding custom blocks with
+ * visibility settings.
+ */
+function system_update_2000() {
+  $ret = array();
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      $max = (int)db_result(db_query('SELECT MAX(bid) FROM {boxes}'));
+      $ret[] = update_sql('ALTER TABLE {boxes} CHANGE COLUMN bid bid int NOT NULL');
+      $ret[] = update_sql("REPLACE INTO {sequences} VALUES ('{boxes}_bid', $max)");
+      break;
+  }
+  return $ret;
+}
 
 /**
  * @} End of "defgroup updates-5.0-to-x.x"
