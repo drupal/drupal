@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.174 2007/01/15 04:09:40 unconed Exp $
+// $Id: form.inc,v 1.175 2007/01/23 19:17:55 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -13,7 +13,7 @@
  * The drupal_get_form() function handles retrieving, processing, and
  * displaying a rendered HTML form for modules automatically. For example:
  *
- * // display the user registration form
+ * // Display the user registration form.
  * $output = drupal_get_form('user_register');
  *
  * Forms can also be built and submitted programmatically without any user input
@@ -309,10 +309,10 @@ function drupal_prepare_form($form_id, &$form) {
     $base = $form['#base'];
   }
 
-  // Add a token, based on either #token or form_id, to any form displayed to authenticated users.
-  // This ensures that any submitted form was actually requested previously by the user and protects against
-  // cross site request forgeries.
-
+  // Add a token, based on either #token or form_id, to any form displayed to
+  // authenticated users. This ensures that any submitted form was actually
+  // requested previously by the user and protects against cross site request
+  // forgeries.
   if (isset($form['#token'])) {
     if ($form['#token'] === FALSE || $user->uid == 0 || $form['#programmed']) {
       unset($form['#token']);
@@ -351,8 +351,7 @@ function drupal_prepare_form($form_id, &$form) {
 
   if (!isset($form['#submit'])) {
     if (function_exists($form_id .'_submit')) {
-      // we set submit here so that it can be altered but use reference for
-      // $form_values because it will change later
+      // We set submit here so that it can be altered.
       $form['#submit'] = array($form_id .'_submit' => array());
     }
     elseif (function_exists($base .'_submit')) {
@@ -389,10 +388,10 @@ function drupal_validate_form($form_id, $form) {
   }
 
   // If the session token was set by drupal_prepare_form(), ensure that it
-  // matches the current user's session
+  // matches the current user's session.
   if (isset($form['#token'])) {
     if (!drupal_valid_token($form_values['form_token'], $form['#token'])) {
-      // setting this error will cause the form to fail validation
+      // Setting this error will cause the form to fail validation.
       form_set_error('form_token', t('Validation error, please try again. If this error persists, please contact the site administrator.'));
     }
   }
@@ -423,7 +422,8 @@ function drupal_submit_form($form_id, $form) {
     foreach ($form['#submit'] as $function => $args) {
       if (function_exists($function)) {
         $args = array_merge($default_args, (array) $args);
-        // Since we can only redirect to one page, only the last redirect will work
+        // Since we can only redirect to one page, only the last redirect
+        // will work.
         $redirect = call_user_func_array($function, $args);
         if (isset($redirect)) {
           $goto = $redirect;
@@ -504,6 +504,17 @@ function drupal_redirect_form($form, $redirect = NULL) {
   }
 }
 
+/**
+ * Performs validation on form elements. First ensures required fields are
+ * completed, #maxlength is not exceeded, and selected options were in the
+ * list of options given to the user. Then calls user-defined validators.
+ *
+ * @param $elements
+ *   An associative array containing the structure of the form.
+ * @param $form_id
+ *   A unique string identifying the form for validation, submission,
+ *   theming, and hook_form_alter functions.
+ */
 function _form_validate($elements, $form_id = NULL) {
   // Recurse through all children.
   foreach (element_children($elements) as $key) {
@@ -526,7 +537,8 @@ function _form_validate($elements, $form_id = NULL) {
         form_error($elements, t('!name cannot be longer than %max characters but is currently %length characters long.', array('!name' => empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title'], '%max' => $elements['#maxlength'], '%length' => drupal_strlen($elements['#value']))));
       }
 
-      // Add legal choice check if element has #options. Can be skipped, but then you must validate your own element.
+       // Add legal choice check if element has #options. Can be skipped, but
+       // then you must validate your own element.
       if (isset($elements['#options']) && isset($elements['#value']) && !isset($elements['#DANGEROUS_SKIP_CHECK'])) {
         if ($elements['#type'] == 'select') {
           $options = form_options_flatten($elements['#options']);
@@ -550,11 +562,11 @@ function _form_validate($elements, $form_id = NULL) {
       }
     }
 
-    // User-applied checks.
+    // Call user-defined validators.
     if (isset($elements['#validate'])) {
       foreach ($elements['#validate'] as $function => $args) {
         $args = array_merge(array($elements), $args);
-        // for the full form we hand over a copy of $form_values
+        // For the full form we hand over a copy of $form_values.
         if (isset($form_id)) {
           $args = array_merge(array($form_id, $GLOBALS['form_values']), $args);
         }
@@ -618,7 +630,7 @@ function form_error(&$element, $message = '') {
 
 /**
  * Adds some required properties to each form element, which are used
- * internally in the form api. This function also automatically assigns
+ * internally in the form API. This function also automatically assigns
  * the value property from the $edit array, provided the element doesn't
  * already have an assigned value.
  *
@@ -636,7 +648,7 @@ function form_builder($form_id, $form) {
 
   /* Use element defaults */
   if ((!empty($form['#type'])) && ($info = _element_info($form['#type']))) {
-    // overlay $info onto $form, retaining preexisting keys in $form
+    // Overlay $info onto $form, retaining preexisting keys in $form.
     $form += $info;
   }
 
@@ -645,9 +657,9 @@ function form_builder($form_id, $form) {
       $name = array_shift($form['#parents']);
       $form['#name'] = $name;
       if ($form['#type'] == 'file') {
-        // to make it easier to handle $_FILES in file.inc, we place all
+        // To make it easier to handle $_FILES in file.inc, we place all
         // file fields in the 'files' array. Also, we do not support
-        // nested file names
+        // nested file names.
         $form['#name'] = 'files['. $form['#name'] .']';
       }
       elseif (count($form['#parents'])) {
@@ -691,7 +703,8 @@ function form_builder($form_id, $form) {
 
             case 'textfield':
               if (isset($edit)) {
-                // Equate $edit to the form value to ensure it's marked for validation
+                // Equate $edit to the form value to ensure it's marked for
+                // validation.
                 $edit = str_replace(array("\r", "\n"), '', $edit);
                 $form['#value'] = $edit;
               }
@@ -706,7 +719,7 @@ function form_builder($form_id, $form) {
                 $form['#value'] = $edit;
               }
           }
-          // Mark all posted values for validation
+          // Mark all posted values for validation.
           if ((isset($form['#value']) && $form['#value'] === $edit) || (isset($form['#required']) && $form['#required'])) {
             $form['#needs_validation'] = TRUE;
           }
@@ -723,21 +736,22 @@ function form_builder($form_id, $form) {
       }
     }
     if (isset($form['#executes_submit_callback'])) {
-      // Count submit and non-submit buttons
+      // Count submit and non-submit buttons.
       $form_button_counter[$form['#executes_submit_callback']]++;
-      // See if a submit button was pressed
+      // See if a submit button was pressed.
       if (isset($form['#post'][$form['#name']]) && $form['#post'][$form['#name']] == $form['#value']) {
         $form_submitted = $form_submitted || $form['#executes_submit_callback'];
 
-        // In most cases, we want to use form_set_value() to manipulate the global variables.
-        // In this special case, we want to make sure that the value of this element is listed
-        // in $form_variables under 'op'.
+        // In most cases, we want to use form_set_value() to manipulate the
+        // global variables. In this special case, we want to make sure that
+        // the value of this element is listed in $form_variables under 'op'.
         $form_values[$form['#name']] = $form['#value'];
       }
     }
   }
 
-  // Allow for elements to expand to multiple elements, e.g. radios, checkboxes and files.
+  // Allow for elements to expand to multiple elements, e.g., radios,
+  // checkboxes and files.
   if (isset($form['#process']) && !$form['#processed']) {
     foreach ($form['#process'] as $process => $args) {
       if (function_exists($process)) {
@@ -763,28 +777,30 @@ function form_builder($form_id, $form) {
   foreach (element_children($form) as $key) {
     $form[$key]['#post'] = $form['#post'];
     $form[$key]['#programmed'] = $form['#programmed'];
-    // don't squash an existing tree value
+    // Don't squash an existing tree value.
     if (!isset($form[$key]['#tree'])) {
       $form[$key]['#tree'] = $form['#tree'];
     }
 
-    // deny access to child elements if parent is denied
+    // Deny access to child elements if parent is denied.
     if (isset($form['#access']) && !$form['#access']) {
       $form[$key]['#access'] = FALSE;
     }
 
-    // don't squash existing parents value
+    // Don't squash existing parents value.
     if (!isset($form[$key]['#parents'])) {
-      // Check to see if a tree of child elements is present. If so, continue down the tree if required.
+      // Check to see if a tree of child elements is present. If so,
+      // continue down the tree if required.
       $form[$key]['#parents'] = $form[$key]['#tree'] && $form['#tree'] ? array_merge($form['#parents'], array($key)) : array($key);
     }
 
-    // Assign a decimal placeholder weight to preserve original array order
+    // Assign a decimal placeholder weight to preserve original array order.
     if (!isset($form[$key]['#weight'])) {
       $form[$key]['#weight'] = $count/1000;
     }
     else {
-      // If one the child elements has a weight then we will need to sort later.
+      // If one of the child elements has a weight then we will need to sort
+      // later.
       unset($form['#sorted']);
     }
     $form[$key] = form_builder($form_id, $form[$key]);
@@ -824,8 +840,8 @@ function form_set_value($form, $value) {
 /**
  * Helper function for form_set_value().
  *
- * We iterate of $parents and create nested arrays for them
- * in $form_values if needed. Then we insert the value in
+ * We iterate over $parents and create nested arrays for them
+ * in $form_values if needed. Then we insert the value into
  * the right array.
  */
 function _form_set_value(&$form_values, $form, $parents, $value) {
@@ -953,7 +969,7 @@ function form_select_options($element, $choices = NULL) {
  * that hold the given key. Returns an array of indexes that match.
  *
  * This function is useful if you need to modify the options that are
- * already in a form element, for example, to remove choices which are
+ * already in a form element; for example, to remove choices which are
  * not valid because of additional filters imposed by another module.
  * One example might be altering the choices in a taxonomy selector.
  * To correctly handle the case of a multiple hierarchy taxonomy,
@@ -1168,7 +1184,7 @@ function expand_date($element) {
   asort($sort);
   $order = array_keys($sort);
 
-  // Output multi-selector for date
+  // Output multi-selector for date.
   foreach ($order as $type) {
     switch ($type) {
       case 'day':
@@ -1211,7 +1227,7 @@ function map_month($month) {
 }
 
 /**
- * Helper function to load value from default value for checkboxes
+ * Helper function to load value from default value for checkboxes.
  */
 function checkboxes_value(&$form) {
   $value = array();
@@ -1509,9 +1525,9 @@ function theme_file($element) {
  *   An associative array containing the properties of the element.
  *   Properties used: title, description, id, required
  * @param $value
- *   the form element's data
+ *   The form element's data.
  * @return
- *   a string representing the form element
+ *   A string representing the form element.
  */
 function theme_form_element($element, $value) {
   $output  = '<div class="form-item">'."\n";
@@ -1544,9 +1560,9 @@ function theme_form_element($element, $value) {
  * Adds 'required' and 'error' classes as needed.
  *
  * @param &$element
- *   The form element
+ *   The form element.
  * @param $name
- *   Array of new class names to be added
+ *   Array of new class names to be added.
  */
 function _form_set_class(&$element, $class = array()) {
   if ($element['#required']) {
@@ -1565,9 +1581,9 @@ function _form_set_class(&$element, $class = array()) {
  * Remove invalid characters from an HTML ID attribute string.
  *
  * @param $id
- *   The ID to clean
+ *   The ID to clean.
  * @return
- *   The cleaned ID
+ *   The cleaned ID.
  */
 function form_clean_id($id = NULL) {
   $id = str_replace(array('][', '_', ' '), '-', $id);
