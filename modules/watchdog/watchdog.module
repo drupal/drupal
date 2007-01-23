@@ -95,7 +95,7 @@ function watchdog_form_overview() {
     '#options' => $names,
     '#default_value' => $_SESSION['watchdog_overview_filter']
   );
-  $form['submit'] = array('#type' => 'submit', '#value' =>t('Filter'));
+  $form['submit'] = array('#type' => 'submit', '#value' => t('Filter'));
   $form['#redirect'] = FALSE;
 
   return $form;
