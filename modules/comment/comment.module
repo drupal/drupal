@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.520 2007/01/03 11:32:38 dries Exp $
+// $Id: comment.module,v 1.521 2007/01/23 19:11:18 dries Exp $
 
 /**
  * @file
@@ -1011,7 +1011,7 @@ function comment_render($node, $cid = 0) {
 
       $divs = 0;
       $last_depth = 0;
-      drupal_add_css(drupal_get_path('module', 'comment') . '/comment.css');
+      drupal_add_css(drupal_get_path('module', 'comment') .'/comment.css');
       while ($comment = db_fetch_object($result)) {
         $comment = drupal_unpack($comment);
         $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
@@ -1524,7 +1524,7 @@ function comment_form($edit, $title = NULL) {
   else if (variable_get('comment_anonymous', COMMENT_ANONYMOUS_MAYNOT_CONTACT) == COMMENT_ANONYMOUS_MUST_CONTACT) {
     $form['name'] = array('#type' => 'textfield', '#title' => t('Your name'), '#maxlength' => 60, '#size' => 30, '#default_value' => $edit['name'] ? $edit['name'] : variable_get('anonymous', t('Anonymous')), '#required' => TRUE);
 
-    $form['mail'] = array('#type' => 'textfield', '#title' => t('E-mail'), '#maxlength' => 64, '#size' => 30, '#default_value' => $edit['mail'],'#description' => t('The content of this field is kept private and will not be shown publicly.'), '#required' => TRUE);
+    $form['mail'] = array('#type' => 'textfield', '#title' => t('E-mail'), '#maxlength' => 64, '#size' => 30, '#default_value' => $edit['mail'], '#description' => t('The content of this field is kept private and will not be shown publicly.'), '#required' => TRUE);
 
     $form['homepage'] = array('#type' => 'textfield', '#title' => t('Homepage'), '#maxlength' => 255, '#size' => 30, '#default_value' => $edit['homepage']);
   }
@@ -1545,7 +1545,7 @@ function comment_form($edit, $title = NULL) {
   $form['uid'] = array('#type' => 'value', '#value' => $edit['uid']);
 
   $form['preview'] = array('#type' => 'button', '#value' => t('Preview comment'), '#weight' => 19);
-  $form['#token'] = 'comment' . $edit['nid'] . $edit['pid'];
+  $form['#token'] = 'comment'. $edit['nid'] . $edit['pid'];
 
   // Only show post button if preview is optional or if we are in preview mode.
   // We show the post button in preview mode even if there are form errors so that
@@ -1765,7 +1765,7 @@ function comment_controls_submit($form_id, $form_values) {
 
 function theme_comment($comment, $links = array()) {
   $output  = '<div class="comment'. ($comment->status == COMMENT_NOT_PUBLISHED ? ' comment-unpublished' : '') .'">';
-  $output .= '<div class="subject">'. l($comment->subject, $_GET['q'], NULL, NULL, "comment-$comment->cid") . ' ' . theme('mark', $comment->new) ."</div>\n";
+  $output .= '<div class="subject">'. l($comment->subject, $_GET['q'], NULL, NULL, "comment-$comment->cid") .' '. theme('mark', $comment->new) ."</div>\n";
   $output .= '<div class="credit">'. t('by %a on %b', array('%a' => theme('username', $comment), '%b' => format_date($comment->timestamp))) ."</div>\n";
   $output .= '<div class="body">'. $comment->comment .'</div>';
   $output .= '<div class="links">'. theme('links', $links) .'</div>';
@@ -1775,7 +1775,7 @@ function theme_comment($comment, $links = array()) {
 
 function theme_comment_folded($comment) {
   $output  = "<div class=\"comment-folded\">\n";
-  $output .= ' <span class="subject">'. l($comment->subject, comment_node_url() .'/'. $comment->cid, NULL, NULL, "comment-$comment->cid") . ' '. theme('mark', $comment->new) .'</span> ';
+  $output .= ' <span class="subject">'. l($comment->subject, comment_node_url() .'/'. $comment->cid, NULL, NULL, "comment-$comment->cid") .' '. theme('mark', $comment->new) .'</span> ';
   $output .= '<span class="credit">'. t('by') .' '. theme('username', $comment) ."</span>\n";
   $output .= "</div>\n";
   return $output;
@@ -1827,7 +1827,7 @@ function theme_comment_post_forbidden($nid) {
  * Allow themable wrapping of all comments.
  */
 function theme_comment_wrapper($content) {
-  return '<div id="comments">' . $content . '</div>';
+  return '<div id="comments">'. $content .'</div>';
 }
 
 function _comment_delete_thread($comment) {
