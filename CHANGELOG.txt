@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.174 2007/01/15 12:12:41 unconed Exp $
+// $Id: CHANGELOG.txt,v 1.175 2007/01/23 18:58:35 dries Exp $
 
 Drupal 6.0, xxxx-xx-xx (development version)
 ------------------------
@@ -81,6 +81,33 @@ Drupal 5.0, 2007-01-15
     * added nested lists generation.
     * added a self-clearing block class.
 
+Drupal 4.7.5, 2007-01-05
+------------------------
+- fixed security issue (XSS), see SA-2007-001
+- fixed security issue (DoS), see SA-2007-002
+
+Drupal 4.7.4, 2006-10-18
+------------------------
+- fixed security issue (XSS), see SA-2006-024
+- fixed security issue (CSRF), see SA-2006-025
+- fixed security issue (Form action attribute injection), see SA-2006-026
+
+Drupal 4.7.3, 2006-08-02
+------------------------
+- fixed security issue (XSS), see SA-2006-011
+
+Drupal 4.7.2, 2006-06-01
+------------------------
+- fixed critical upload issue, see SA-2006-007
+- fixed taxonomy XSS issue, see SA-2006-008
+- fixed a variety of small bugs.
+
+Drupal 4.7.1, 2006-05-24
+------------------------
+- fixed critical SQL issue, see SA-2006-005
+- fixed a serious upgrade related bug.
+- fixed a variety of small bugs.
+
 Drupal 4.7.0, 2006-05-01
 ------------------------
 - added free tagging support.
@@ -147,6 +174,30 @@ Drupal 4.7.0, 2006-05-01
 - HTTP handling:
     * added support for a tolerant Base URL.
     * output URIs relative to the root, without a base tag.
+
+Drupal 4.6.11, 2007-01-05
+-------------------------
+- fixed security issue (XSS), see SA-2007-001
+- fixed security issue (DoS), see SA-2007-002
+
+Drupal 4.6.10, 2006-10-18
+------------------------
+- fixed security issue (XSS), see SA-2006-024
+- fixed security issue (CSRF), see SA-2006-025
+- fixed security issue (Form action attribute injection), see SA-2006-026
+
+Drupal 4.6.9, 2006-08-02
+------------------------
+- fixed security issue (XSS), see SA-2006-011
+
+Drupal 4.6.8, 2006-06-01
+------------------------
+- fixed critical upload issue, see SA-2006-007
+- fixed taxonomy XSS issue, see SA-2006-008
+
+Drupal 4.6.7, 2006-05-24
+------------------------
+- fixed critical SQL issue, see SA-2006-005
 
 Drupal 4.6.6, 2006-03-13
 ------------------------
