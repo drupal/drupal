@@ -1,5 +1,5 @@
 <?php
-// $Id: watchdog.module,v 1.165 2006/12/29 17:22:20 dries Exp $
+// $Id: watchdog.module,v 1.166 2007/01/23 19:07:20 dries Exp $
 
 /**
  * @file
@@ -95,7 +95,7 @@ function watchdog_form_overview() {
     '#options' => $names,
     '#default_value' => $_SESSION['watchdog_overview_filter']
   );
-  $form['submit'] = array('#type' => 'submit', '#value' =>t('Filter'));
+  $form['submit'] = array('#type' => 'submit', '#value' => t('Filter'));
   $form['#redirect'] = FALSE;
 
   return $form;
