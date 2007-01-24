@@ -249,19 +249,18 @@ function blog_link($type, $node = NULL, $teaser = FALSE) {
 /**
  * Implementation of hook_menu().
  */
-function blog_menu($may_cache) {
-  global $user;
-  $items = array();
-
-  if ($may_cache) {
-    $items[] = array('path' => 'blog', 'title' => t('Blogs'),
-      'callback' => 'blog_page',
-      'access' => user_access('access content'),
-      'type' => MENU_SUGGESTED_ITEM);
-    $items[] = array('path' => 'blog/'. $user->uid, 'title' => t('My blog'),
-      'access' => user_access('edit own blog'),
-      'type' => MENU_DYNAMIC_ITEM);
-  }
+function blog_menu() {
+  $items['blog'] = array(
+    'title' => t('Blogs'),
+    'page callback' => 'blog_page',
+    'access arguments' => array('access content'),
+    'type' => MENU_SUGGESTED_ITEM,
+  );
+  $items['blog/%'] = array(
+    'title' => t('My blog'),
+    'page arguments' => array(1),
+    'access arguments' => array('edit own blog'),
+  );
 
   return $items;
 }

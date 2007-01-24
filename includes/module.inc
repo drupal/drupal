@@ -253,7 +253,6 @@ function module_enable($module_list) {
     module_list(TRUE, FALSE);
     // Force to regenerate the stored list of hook implementations.
     module_implements('', FALSE, TRUE);
-    cache_clear_all('*', 'cache_menu', TRUE);
   }
 
   foreach ($invoke_modules as $module) {
@@ -283,7 +282,6 @@ function module_disable($module_list) {
     module_list(TRUE, FALSE);
     // Force to regenerate the stored list of hook implementations.
     module_implements('', FALSE, TRUE);
-    cache_clear_all('*', 'cache_menu', TRUE);
   }
 }
 

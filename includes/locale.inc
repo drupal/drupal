@@ -119,7 +119,6 @@ function _locale_admin_manage_screen_submit($form_id, $form_values) {
   drupal_set_message(t('Configuration saved.'));
 
   // Changing the locale settings impacts the interface:
-  cache_clear_all('*', 'cache_menu', TRUE);
   cache_clear_all('*', 'cache_page', TRUE);
 
   return 'admin/settings/locale/language/overview';
