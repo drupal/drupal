@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.441 2007/01/15 12:03:50 unconed Exp $
+// $Id: system.module,v 1.442 2007/01/24 07:51:53 dries Exp $
 
 /**
  * @file
@@ -79,7 +79,7 @@ function system_elements() {
   $type['value'] = array('#input' => TRUE);
   $type['markup'] = array('#prefix' => '', '#suffix' => '');
   $type['fieldset'] = array('#collapsible' => FALSE, '#collapsed' => FALSE);
-  $type['token'] = array('#input'=> TRUE);
+  $type['token'] = array('#input' => TRUE);
   return $type;
 }
 
@@ -493,7 +493,7 @@ function system_theme_select_form($description = '', $default_value = '', $weigh
         // For the default theme, revert to an empty string so the user's theme updates when the site theme is changed.
         $info->key = $info->name == variable_get('theme_default', 'garland') ? '' : $info->name;
 
-        $info->screenshot = dirname($info->filename) . '/screenshot.png';
+        $info->screenshot = dirname($info->filename) .'/screenshot.png';
         $screenshot = file_exists($info->screenshot) ? theme('image', $info->screenshot, t('Screenshot for %theme theme', array('%theme' => $info->name)), '', array('class' => 'screenshot'), FALSE) : t('no screenshot');
 
         $form['themes'][$info->key]['screenshot'] = array('#value' => $screenshot);
@@ -530,7 +530,7 @@ function _system_zonelist() {
   $zones = array();
   foreach ($zonelist as $offset) {
     $zone = $offset * 3600;
-    $zones[$zone] = format_date($timestamp, 'custom', variable_get('date_format_long', 'l, F j, Y - H:i') . ' O', $zone);
+    $zones[$zone] = format_date($timestamp, 'custom', variable_get('date_format_long', 'l, F j, Y - H:i') .' O', $zone);
   }
   return $zones;
 }
@@ -598,7 +598,7 @@ function system_clean_url_settings() {
 
   if (!variable_get('clean_url', 0)) {
     if (strpos(request_uri(), '?q=') !== FALSE) {
-      $form['clean_url']['#description'] .= t(' Before enabling clean URLs, you must perform a test to determine if your server is properly configured. If you are able to see this page again after clicking the "Run the clean URL test" link, the test has succeeded and the radio buttons above will be available. If instead you are directed to a "Page not found" error, you will need to change the configuration of your server. The <a href="@handbook">handbook page on Clean URLs</a> has additional troubleshooting information. !run-test', array('@handbook' => 'http://drupal.org/node/15365', '!run-test' => '<a href ="'. base_path() . 'admin/settings/clean-urls">'. t('Run the clean URL test') .'</a>'));
+      $form['clean_url']['#description'] .= t(' Before enabling clean URLs, you must perform a test to determine if your server is properly configured. If you are able to see this page again after clicking the "Run the clean URL test" link, the test has succeeded and the radio buttons above will be available. If instead you are directed to a "Page not found" error, you will need to change the configuration of your server. The <a href="@handbook">handbook page on Clean URLs</a> has additional troubleshooting information. !run-test', array('@handbook' => 'http://drupal.org/node/15365', '!run-test' => '<a href ="'. base_path() .'admin/settings/clean-urls">'. t('Run the clean URL test') .'</a>'));
       $form['clean_url']['#disabled'] = TRUE;
     }
     else {
@@ -769,7 +769,7 @@ function system_rss_feeds_settings() {
   $form['feed_item_length'] = array(
     '#type' => 'select',
     '#title' => t('Display of XML feed items'),
-    '#default_value' => variable_get('feed_item_length','teaser'),
+    '#default_value' => variable_get('feed_item_length', 'teaser'),
     '#options' => array('title' => t('Titles only'), 'teaser' => t('Titles plus teaser'), 'fulltext' => t('Full text')),
     '#description' => t('Global setting for the length of XML feed items that are output by default.')
   );
@@ -938,7 +938,7 @@ function system_theme_data() {
     db_query("INSERT INTO {system} (name, type, filename, status, throttle, bootstrap) VALUES ('%s', '%s', '%s', %d, %d, %d)", $engine->name, 'theme_engine', $engine->filename, 1, 0, 0);
 
     // Add templates to the site listing
-    foreach (call_user_func($engine->name . '_templates') as $template) {
+    foreach (call_user_func($engine->name .'_templates') as $template) {
       // Do not double-insert templates with theme files in their directory,
       // but do register their engine data.
       if (array_key_exists($template->name, $themes)) {
@@ -1005,21 +1005,21 @@ function system_region_list($theme_key) {
     }
 
     // If this is a custom theme, load it in before moving on.
-    if (file_exists($file = dirname($theme->filename) .'/' . $theme_key . '.theme')) {
+    if (file_exists($file = dirname($theme->filename) .'/'. $theme_key .'.theme')) {
       include_once "./$file";
     }
 
     $regions = array();
 
     // This theme has defined its own regions.
-    if (function_exists($theme_key . '_regions')) {
-      $regions = call_user_func($theme_key . '_regions');
+    if (function_exists($theme_key .'_regions')) {
+      $regions = call_user_func($theme_key .'_regions');
     }
     // File is an engine; include its regions.
     else if (strpos($theme->description, '.engine')) {
-      include_once './' . $theme->description;
+      include_once './'. $theme->description;
       $theme_engine = basename($theme->description, '.engine');
-      $regions = function_exists($theme_engine . '_regions') ? call_user_func($theme_engine . '_regions') : array();
+      $regions = function_exists($theme_engine .'_regions') ? call_user_func($theme_engine .'_regions') : array();
     }
 
     $list[$theme_key] = $regions;
@@ -1146,7 +1146,7 @@ function system_themes() {
   ksort($themes);
 
   foreach ($themes as $info) {
-    $info->screenshot = dirname($info->filename) . '/screenshot.png';
+    $info->screenshot = dirname($info->filename) .'/screenshot.png';
     $screenshot = file_exists($info->screenshot) ? theme('image', $info->screenshot, t('Screenshot for %theme theme', array('%theme' => $info->name)), '', array('class' => 'screenshot'), FALSE) : t('no screenshot');
 
     $form[$info->name]['screenshot'] = array('#value' => $screenshot);
@@ -1155,8 +1155,8 @@ function system_themes() {
     if ($info->status) {
       $status[] = $info->name;
     }
-    if ($info->status && (function_exists($info->prefix . '_settings') || function_exists($info->prefix . '_features'))) {
-      $form[$info->name]['operations'] = array('#value' => l(t('configure'), 'admin/build/themes/settings/' . $info->name) );
+    if ($info->status && (function_exists($info->prefix .'_settings') || function_exists($info->prefix .'_features'))) {
+      $form[$info->name]['operations'] = array('#value' => l(t('configure'), 'admin/build/themes/settings/'. $info->name) );
     }
     else {
       // Dummy element for drupal_render. Cleaner than adding a check in the theme function.
@@ -1315,7 +1315,7 @@ function system_modules($form_values = NULL) {
     }
 
     // Add text for enabled dependents.
-    if (!empty($dependents)){
+    if (!empty($dependents)) {
       $form['description'][$filename]['required'] = array(
         '#value' => t('Required by: !required', array('!required' => implode(', ', $dependents))),
         '#prefix' => '<div class="admin-required">',
@@ -1916,7 +1916,7 @@ function system_theme_settings($key = '') {
     $settings = theme_get_settings($key);
     $var = str_replace('/', '_', 'theme_'. $key .'_settings');
     $themes = system_theme_data();
-    $features = function_exists($themes[$key]->prefix . '_features') ? call_user_func($themes[$key]->prefix . '_features') : array();
+    $features = function_exists($themes[$key]->prefix .'_features') ? call_user_func($themes[$key]->prefix .'_features') : array();
   }
   else {
     $settings = theme_get_settings('');
@@ -1929,7 +1929,7 @@ function system_theme_settings($key = '') {
   if ($file = file_check_upload('logo_upload')) {
     if ($info = image_get_info($file->filepath)) {
       $parts = pathinfo($file->filename);
-      $filename = ($key) ? str_replace('/', '_', $key) . '_logo.' . $parts['extension'] : 'logo.' . $parts['extension'];
+      $filename = ($key) ? str_replace('/', '_', $key) .'_logo.'. $parts['extension'] : 'logo.'. $parts['extension'];
 
       if ($file = file_save_upload('logo_upload', $filename, 1)) {
         $_POST['default_logo'] = 0;
@@ -1945,7 +1945,7 @@ function system_theme_settings($key = '') {
   // Check for a new uploaded favicon, and use that instead.
   if ($file = file_check_upload('favicon_upload')) {
     $parts = pathinfo($file->filename);
-    $filename = ($key) ? str_replace('/', '_', $key) . '_favicon.' . $parts['extension'] : 'favicon.' . $parts['extension'];
+    $filename = ($key) ? str_replace('/', '_', $key) .'_favicon.'. $parts['extension'] : 'favicon.'. $parts['extension'];
 
     if ($file = file_save_upload('favicon_upload', $filename, 1)) {
       $_POST['default_favicon'] = 0;
