@@ -1,5 +1,5 @@
 <?php
-// $Id: legacy.module,v 1.15 2006/11/21 20:14:18 dries Exp $
+// $Id: legacy.module,v 1.16 2007/01/24 14:48:36 dries Exp $
 
 /**
  * @file
@@ -34,46 +34,63 @@ function legacy_help($section) {
  *
  * Registers menu paths used in earlier Drupal versions.
  */
-function legacy_menu($may_cache) {
-  $items = array();
+function legacy_menu() {
+  // Map "taxonomy/page/or/52,97" to "taxonomy/term/52+97".
+  $items['taxonomy/page'] = array(
+    'title' => t('Taxonomy'),
+    'page callback' => 'legacy_taxonomy_page',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
 
-  if ($may_cache) {
-    // Map "taxonomy/page/or/52,97" to "taxonomy/term/52+97".
-    $items[] = array('path' => 'taxonomy/page', 'title' => t('Taxonomy'),
-      'callback' => 'legacy_taxonomy_page',
-      'access' => TRUE, 'type' => MENU_CALLBACK);
+  // Map "taxonomy/feed/or/52,97" to "taxonomy/term/52+97/0/feed".
+  $items['taxonomy/feed'] = array(
+    'title' => t('Taxonomy'),
+    'page callback' => 'legacy_taxonomy_feed',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
 
-    // Map "taxonomy/feed/or/52,97" to "taxonomy/term/52+97/0/feed".
-    $items[] = array('path' => 'taxonomy/feed', 'title' => t('Taxonomy'),
-      'callback' => 'legacy_taxonomy_feed',
-      'access' => TRUE, 'type' => MENU_CALLBACK);
+  // Map "blog/feed/52" to "blog/52/feed".
+  $items['blog/feed'] = array(
+    'title' => t('Blog'),
+    'page callback' => 'legacy_blog_feed',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
 
-    // Map "blog/feed/52" to "blog/52/feed".
-    $items[] = array('path' => 'blog/feed', 'title' => t('Blog'),
-      'callback' => 'legacy_blog_feed',
-      'access' => TRUE, 'type' => MENU_CALLBACK);
-  }
-  else {
-    // Map "node/view/52" to "node/52".
-    $items[] = array('path' => 'node/view', 'title' => t('View'),
-      'callback' => 'drupal_goto',
-      'callback arguments' => array('node/'. arg(2), NULL, NULL),
-      'access' => TRUE, 'type' => MENU_CALLBACK);
+  // Map "node/view/52" to "node/52".
+  $items['node/view'] = array(
+    'title' => t('View'),
+    'page callback' => '_legacy_goto',
+    'page arguments' => array('node', 2),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
 
-    // Map "book/view/52" to "node/52".
-    $items[] = array('path' => 'book/view', 'title' => t('View'),
-      'callback' => 'drupal_goto',
-      'callback arguments' => array('node/'. arg(2), NULL, NULL),
-      'access' => TRUE, 'type' => MENU_CALLBACK);
+  // Map "book/view/52" to "node/52".
+  $items['book/view'] = array(
+    'title' => t('View'),
+    'page callback' => '_legacy_goto',
+    'page arguments' => array('node', 2),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
 
-    // Map "user/view/52" to "user/52".
-    $items[] = array('path' => 'user/view', 'title' => t('View'),
-      'callback' => 'drupal_goto',
-      'callback arguments' => array('user/'. arg(2), NULL, NULL),
-      'access' => TRUE, 'type' => MENU_CALLBACK);
-  }
+  // Map "user/view/52" to "user/52".
+  $items['user/view'] = array(
+    'title' => t('View'),
+    'page callback' => 'drupal_goto',
+    'page arguments' => array('user', 2),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
 
   return $items;
+}
+
+function _legacy_goto($type, $arg) {
+  drupal_goto("$type/$arg", NULL, NULL);
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.209 2007/01/13 11:02:30 unconed Exp $
+// $Id: search.module,v 1.210 2007/01/24 14:48:36 dries Exp $
 
 /**
  * @file
@@ -136,53 +136,62 @@ function search_block($op = 'list', $delta = 0) {
 /**
  * Implementation of hook_menu().
  */
-function search_menu($may_cache) {
-  $items = array();
+function search_menu() {
+  $items['search'] = array(
+    'title' => t('Search'),
+    'page callback' => 'search_view',
+    'page arguments' => array('node'),
+    'access arguments' => array('search content'),
+    'type' => MENU_SUGGESTED_ITEM,
+  );
+  $items['admin/settings/search'] = array(
+    'title' => t('Search settings'),
+    'description' => t('Configure relevance settings for search and other indexing options'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('search_admin_settings'),
+    'access arguments' => array('administer search'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  $items['admin/settings/search/wipe'] = array(
+    'title' => t('Clear index'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('search_wipe_confirm'),
+    'access arguments' => array('administer search'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['admin/logs/search'] = array(
+    'title' => t('Top search phrases'),
+    'description' => t('View most popular search phrases.'),
+    'page callback' => 'watchdog_top',
+    'page arguments' => array('search'),
+  );
 
-  if ($may_cache) {
-    $items[] = array('path' => 'search',
-      'title' => t('Search'),
-      'callback' => 'search_view',
-      'callback arguments' => array('node'),
-      'access' => user_access('search content'),
-      'type' => MENU_SUGGESTED_ITEM);
-    $items[] = array('path' => 'admin/settings/search',
-      'title' => t('Search settings'),
-      'description' => t('Configure relevance settings for search and other indexing options'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('search_admin_settings'),
-      'access' => user_access('administer search'),
-      'type' => MENU_NORMAL_ITEM);
-    $items[] = array('path' => 'admin/settings/search/wipe',
-      'title' => t('Clear index'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('search_wipe_confirm'),
-      'access' => user_access('administer search'),
-      'type' => MENU_CALLBACK);
-    $items[] = array('path' => 'admin/logs/search', 'title' => t('Top search phrases'),
-      'description' => t('View most popular search phrases.'),
-      'callback' => 'watchdog_top',
-      'callback arguments' => array('search'));
+  foreach (module_implements('search') as $name) {
+    $items['search/'. $name] = array(
+      'page callback' => 'search_view',
+      'page arguments' => array($name),
+      'access callback' => FALSE,
+      'type' => MENU_LOCAL_TASK,
+    );
   }
-  else if (arg(0) == 'search') {
-    // To remember the user's search keywords when switching across tabs,
-    // we dynamically add the keywords to the search tabs' paths.
+  return $items;
+}
+
+function search_init() {
+  // To remember the user's search keywords when switching across tabs,
+  // we dynamically add the keywords to the search tabs' paths.
+  if (arg(0) == 'search') {
     $keys = search_get_keys();
     $keys = strlen($keys) ? '/'. $keys : '';
     foreach (module_implements('search') as $name) {
       $title = module_invoke($name, 'search', 'name');
-      $items[] = array('path' => 'search/'. $name . $keys, 'title' => $title,
-        'callback' => 'search_view',
-        'callback arguments' => array($name),
-        // The search module only returns a title when the user is allowed to
-        // access that particular search type.
-        'access' => user_access('search content') && $title,
-        'type' => MENU_LOCAL_TASK,
-      );
+      $item = menu_get_item('search/'. $name);
+      $item->title = $title;
+      $item->access = user_access('search content') && $title;
+      menu_set_item('search/'. $name, $item);
+      menu_set_item('search/'. $name . $keys, $item);
     }
   }
-
-  return $items;
 }
 
 /**

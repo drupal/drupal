@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.34 2007/01/10 10:15:07 unconed Exp $
+// $Id: install.php,v 1.35 2007/01/24 14:48:35 dries Exp $
 
 require_once './includes/install.inc';
 
@@ -533,6 +533,7 @@ function install_complete($profile) {
   // Bootstrap newly installed Drupal, while preserving existing messages.
   $messages = $_SESSION['messages'];
   drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
+  menu_rebuild();
   $_SESSION['messages'] = $messages;
 
   // Build final page.

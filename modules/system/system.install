@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.72 2007/01/23 16:44:58 dries Exp $
+// $Id: system.install,v 1.73 2007/01/24 14:48:36 dries Exp $
 
 define('DRUPAL_MINIMUM_PHP',    '4.3.3');
 define('DRUPAL_MINIMUM_MYSQL',  '4.1.0'); // If using MySQL
@@ -235,15 +235,6 @@ function system_install() {
         PRIMARY KEY (cid),
         INDEX expire (expire)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
-      db_query("CREATE TABLE {cache_menu} (
-        cid varchar(255) NOT NULL default '',
-        data longblob,
-        expire int NOT NULL default '0',
-        created int NOT NULL default '0',
-        headers text,
-        PRIMARY KEY (cid),
-        INDEX expire (expire)
-      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
       db_query("CREATE TABLE {cache_page} (
         cid varchar(255) BINARY NOT NULL default '',
         data longblob,
@@ -336,16 +327,28 @@ function system_install() {
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {menu} (
-        mid int unsigned NOT NULL default '0',
-        pid int unsigned NOT NULL default '0',
         path varchar(255) NOT NULL default '',
-        title varchar(255) NOT NULL default '',
-        description varchar(255) NOT NULL default '',
-        weight tinyint NOT NULL default '0',
-        type int unsigned NOT NULL default '0',
-        PRIMARY KEY (mid)
+        access_callback varchar(255) NOT NULL default '',
+        access_arguments text,
+        page_callback varchar(255) NOT NULL default '',
+        page_arguments text,
+        map_callback varchar(255) NOT NULL default '',
+        map_arguments text,
+        fit int NOT NULL default '0',
+        number_parts int NOT NULL default '0',
+        vancode varchar(255) NOT NULL default '',
+        mid int NOT NULL default '0',
+        pid int NOT NULL default '0',
+        visible int NOT NULL default '0',
+        menu_link varchar(255) NOT NULL default '',
+        parents varchar(255) NOT NULL default '',
+        depth int NOT NULL default '0',
+        has_children int NOT NULL default '0',
+        PRIMARY KEY  (path),
+        KEY vancode (vancode),
+        KEY fit (fit),
+        KEY visible (visible)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
-
 
       db_query("CREATE TABLE {node} (
         nid int unsigned NOT NULL auto_increment,
@@ -698,14 +701,6 @@ function system_install() {
         headers text,
         PRIMARY KEY (cid)
       )");
-      db_query("CREATE TABLE {cache_menu} (
-        cid varchar(255) NOT NULL default '',
-        data bytea,
-        expire int NOT NULL default '0',
-        created int NOT NULL default '0',
-        headers text,
-        PRIMARY KEY (cid)
-      )");
       db_query("CREATE TABLE {cache_page} (
         cid varchar(255) NOT NULL default '',
         data bytea,
@@ -716,7 +711,6 @@ function system_install() {
       )");
       db_query("CREATE INDEX {cache}_expire_idx ON {cache} (expire)");
       db_query("CREATE INDEX {cache_filter}_expire_idx ON {cache_filter} (expire)");
-      db_query("CREATE INDEX {cache_menu}_expire_idx ON {cache_menu} (expire)");
       db_query("CREATE INDEX {cache_page}_expire_idx ON {cache_page} (expire)");
 
       db_query("CREATE TABLE {comments} (
@@ -801,16 +795,29 @@ function system_install() {
       )");
 
       db_query("CREATE TABLE {menu} (
-        mid serial CHECK (mid >= 0),
-        pid int_unsigned NOT NULL default '0',
+        mid int NOT NULL default '0',
+        pid int NOT NULL default '0',
         path varchar(255) NOT NULL default '',
-        title varchar(255) NOT NULL default '',
-        description varchar(255) NOT NULL default '',
-        weight smallint NOT NULL default '0',
-        type int_unsigned NOT NULL default '0',
-        PRIMARY KEY (mid)
+        access_callback varchar(255) NOT NULL default '',
+        access_arguments text,
+        page_callback varchar(255) NOT NULL default '',
+        page_arguments text,
+        map_callback varchar(255) NOT NULL default '',
+        map_arguments text,
+        fit int NOT NULL default 0,
+        number_parts int NOT NULL default 0,
+        vancode varchar(255) NOT NULL default '',
+        visible int(11) NOT NULL default '0',
+        menu_link varchar(255) NOT NULL default '',
+        parents varchar(255) NOT NULL default '',
+        depth int NOT NULL default '0',
+        has_children int NOT NULL default '0',
+        PRIMARY KEY (path)
       )");
-      db_query("ALTER SEQUENCE {menu}_mid_seq MINVALUE 2 RESTART 2");
+
+      db_query("CREATE INDEX {menu}_vancode_idx ON {menu} (vancode)");
+      db_query("CREATE INDEX {menu}_fit_idx ON {menu} (fit)");
+      db_query("CREATE INDEX {menu}_visible_idx ON {menu} (visible)");
 
       db_query("CREATE TABLE {node} (
         nid serial CHECK (nid >= 0),
@@ -1104,10 +1111,6 @@ function system_install() {
   db_query("INSERT INTO {variable} (name,value) VALUES ('filter_html_1','i:1;')");
 
   db_query("INSERT INTO {variable} (name, value) VALUES ('node_options_forum', '%s')", 'a:1:{i:0;s:6:"status";}');
-
-  db_query("INSERT INTO {menu} (mid, pid, path, title, description, weight, type) VALUES (2, 0, '', 'Primary links', '', 0, 115)");
-  db_query("INSERT INTO {variable} VALUES ('menu_primary_menu', 'i:2;')");
-  db_query("INSERT INTO {variable} VALUES ('menu_secondary_menu', 'i:2;')");
 }
 
 // Updates for core

@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.521 2007/01/23 19:11:18 dries Exp $
+// $Id: comment.module,v 1.522 2007/01/24 14:48:36 dries Exp $
 
 /**
  * @file
@@ -140,70 +140,77 @@ function comment_help($section) {
    }
 }
 
+function _comment_view_access($node, $cid) {
+  return $node && $cid;
+}
+
 /**
  * Implementation of hook_menu().
  */
-function comment_menu($may_cache) {
-  $items = array();
+function comment_menu() {
+  $items['admin/content/comment'] = array(
+    'title' => t('Comments'),
+    'description' => t('List and edit site comments and the comment moderation queue.'),
+    'page callback' => 'comment_admin',
+    'access arguments' => array('administer comments'),
+  );
 
-  if ($may_cache) {
-    $access = user_access('administer comments');
-    $items[] = array(
-      'path' => 'admin/content/comment',
-      'title' => t('Comments'),
-      'description' => t('List and edit site comments and the comment moderation queue.'),
-      'callback' => 'comment_admin',
-      'access' => $access
-    );
+  // Tabs:
+  $items['admin/content/comment/list'] = array(
+    'title' => t('List'),
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10,
+  );
 
-    // Tabs:
-    $items[] = array('path' => 'admin/content/comment/list', 'title' => t('List'),
-      'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
+  // Subtabs:
+  $items['admin/content/comment/list/new'] = array(
+    'title' => t('Published comments'),
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10,
+  );
+  $items['admin/content/comment/list/approval'] = array(
+    'title' => t('Approval queue'),
+    'page arguments' => array('approval'),
+    'type' => MENU_LOCAL_TASK,
+  );
 
-    // Subtabs:
-    $items[] = array('path' => 'admin/content/comment/list/new', 'title' => t('Published comments'),
-      'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
-    $items[] = array('path' => 'admin/content/comment/list/approval', 'title' => t('Approval queue'),
-      'callback' => 'comment_admin',
-      'callback arguments' => array('approval'),
-      'access' => $access,
-      'type' => MENU_LOCAL_TASK);
+  $items['admin/content/comment/settings'] = array(
+    'title' => t('Settings'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('comment_admin_settings'),
+    'weight' => 10,
+    'type' => MENU_LOCAL_TASK,
+  );
 
-    $items[] = array(
-      'path' => 'admin/content/comment/settings',
-      'title' => t('Settings'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('comment_admin_settings'),
-      'access' => $access,
-      'weight' => 10,
-      'type' => MENU_LOCAL_TASK);
+  $items['comment/delete'] = array(
+    'title' => t('Delete comment'),
+    'page callback' => 'comment_delete',
+    'access arguments' => array('administer comments'),
+    'type' => MENU_CALLBACK,
+  );
 
-    $items[] = array('path' => 'comment/delete', 'title' => t('Delete comment'),
-      'callback' => 'comment_delete', 'access' => $access, 'type' => MENU_CALLBACK);
-
-    $access = user_access('post comments');
-    $items[] = array('path' => 'comment/edit', 'title' => t('Edit comment'),
-      'callback' => 'comment_edit',
-      'access' => $access, 'type' => MENU_CALLBACK);
-  }
-  else {
-    if (arg(0) == 'comment' && arg(1) == 'reply' && is_numeric(arg(2))) {
-      $node = node_load(arg(2));
-      if ($node->nid) {
-        $items[] = array('path' => 'comment/reply', 'title' => t('Reply to comment'),
-          'callback' => 'comment_reply', 'access' => node_access('view', $node), 'type' => MENU_CALLBACK);
-      }
-    }
-    if ((arg(0) == 'node') && is_numeric(arg(1)) && is_numeric(arg(2))) {
-      $items[] = array(
-        'path' => ('node/'. arg(1) .'/'. arg(2)),
-        'title' => t('View'),
-        'callback' => 'node_page_view',
-        'callback arguments' => array(node_load(arg(1)), arg(2)),
-        'type' => MENU_CALLBACK,
-      );
-    }
-  }
+  $items['comment/edit'] = array(
+    'title' => t('Edit comment'),
+    'page callback' => 'comment_edit',
+    'access arguments' => array('post comments'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['comment/reply'] = array(
+    'title' => t('Reply to comment'),
+    'page callback' => 'comment_reply',
+    'access callback' => 'node_access',
+    'access arguments' => array('view', 2),
+    'map arguments' => array('node_load', 2),
+    'type' => MENU_CALLBACK,
+  );
+  $items['node/%/%'] = array(
+    'title' => t('View'),
+    'page callback' => 'node_page_view',
+    'page arguments' => array(1, 2),
+    'access callback' => '_comment_view_access',
+    'access arguments' => array(1, 2),
+    'type' => MENU_CALLBACK,
+  );
 
   return $items;
 }
@@ -1978,25 +1985,6 @@ function comment_invoke_comment(&$comment, $op) {
     }
   }
   return $return;
-}
-
-/**
- * Generate vancode.
- *
- * Consists of a leading character indicating length, followed by N digits
- * with a numerical value in base 36. Vancodes can be sorted as strings
- * without messing up numerical order.
- *
- * It goes:
- * 00, 01, 02, ..., 0y, 0z,
- * 110, 111, ... , 1zy, 1zz,
- * 2100, 2101, ..., 2zzy, 2zzz,
- * 31000, 31001, ...
- */
-function int2vancode($i = 0) {
-  $num = base_convert((int)$i, 10, 36);
-  $length = strlen($num);
-  return chr($length + ord('0') - 1) . $num;
 }
 
 /**

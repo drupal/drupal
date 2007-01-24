@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.776 2007/01/14 02:12:29 unconed Exp $
+// $Id: node.module,v 1.777 2007/01/24 14:48:36 dries Exp $
 
 /**
  * @file
@@ -1054,187 +1054,160 @@ function node_link($type, $node = NULL, $teaser = FALSE) {
   return $links;
 }
 
+function _node_revision_access($node) {
+  return (user_access('view revisions') || user_access('administer nodes')) && node_access('view', $node) && db_result(db_query('SELECT COUNT(vid) FROM {node_revisions} WHERE nid = %d', $node->nid)) > 1;
+}
+
 /**
  * Implementation of hook_menu().
  */
-function node_menu($may_cache) {
-  $items = array();
-  if ($may_cache) {
-    $items[] = array('path' => 'admin/content',
-      'title' => t('Content management'),
-      'description' => t("Manage your site's content."),
-      'position' => 'left',
-      'weight' => -10,
-      'callback' => 'system_admin_menu_block_page',
-      'access' => user_access('administer site configuration'),
-    );
+function node_menu() {
+  $items['admin/content'] = array(
+    'title' => t('Content management'),
+    'description' => t("Manage your site's content."),
+    'position' => 'left',
+    'weight' => -10,
+    'page callback' => 'system_admin_menu_block_page',
+    'access arguments' => array('administer site configuration'),
+  );
 
-    $items[] = array(
-      'path' => 'admin/content/node',
-      'title' => t('Content'),
-      'description' => t("View, edit, and delete your site's content."),
-      'callback' => 'node_admin_content',
-      'access' => user_access('administer nodes')
-    );
+  $items['admin/content/node'] = array(
+    'title' => t('Content'),
+    'description' => t("View, edit, and delete your site's content."),
+    'page callback' => 'node_admin_content',
+    'access arguments' => array('administer nodes'),
+  );
 
-    $items[] = array('path' => 'admin/content/node/overview', 'title' => t('List'),
-      'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
+  $items['admin/content/node/overview'] = array(
+    'title' => t('List'),
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10,
+  );
 
-    if (module_exists('search')) {
-      $items[] = array('path' => 'admin/content/search', 'title' => t('Search content'),
-        'description' => t('Search content by keyword.'),
-        'callback' => 'node_admin_search',
-        'access' => user_access('administer nodes'),
-        'type' => MENU_NORMAL_ITEM);
-    }
+  if (module_exists('search')) {
+    $items['admin/content/search'] = array(
+      'title' => t('Search content'),
+      'description' => t('Search content by keyword.'),
+      'page callback' => 'node_admin_search',
+      'access arguments' => array('administer nodes'),
+    );
+  }
 
-    $items[] = array(
-      'path' => 'admin/content/node-settings',
-      'title' => t('Post settings'),
-      'description' => t('Control posting behavior, such as teaser length, requiring previews before posting, and the number of posts on the front page.'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('node_configure'),
-      'access' => user_access('administer nodes')
-    );
-    $items[] = array(
-      'path' => 'admin/content/node-settings/rebuild',
-      'title' => t('rebuild permissions'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('node_configure_rebuild_confirm'),
-      'access' => user_access('administer nodes'),
-      'type' => MENU_CALLBACK);
+  $items['admin/content/node-settings'] = array(
+    'title' => t('Post settings'),
+    'description' => t('Control posting behavior, such as teaser length, requiring previews before posting, and the number of posts on the front page.'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('node_configure'),
+    'access arguments' => array('administer nodes'),
+  );
+  $items['admin/content/node-settings/rebuild'] = array(
+    'title' => t('rebuild permissions'),
+    'page arguments' => array('node_configure_rebuild_confirm'),
+    'type' => MENU_CALLBACK,
+  );
 
-    $items[] = array(
-      'path' => 'admin/content/types',
-      'title' => t('Content types'),
-      'description' => t('Manage posts by content type, including default status, front page promotion, etc.'),
-      'callback' => 'node_overview_types',
-      'access' => user_access('administer content types'),
-    );
-    $items[] = array(
-      'path' => 'admin/content/types/list',
-      'title' => t('List'),
-      'type' => MENU_DEFAULT_LOCAL_TASK,
-      'weight' => -10,
-    );
-    $items[] = array(
-      'path' => 'admin/content/types/add',
-      'title' => t('Add content type'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('node_type_form'),
-      'type' => MENU_LOCAL_TASK,
-    );
-    $items[] = array('path' => 'node',
-      'title' => t('Content'),
-      'callback' => 'node_page_default',
-      'access' => user_access('access content'),
-      'type' => MENU_MODIFIABLE_BY_ADMIN);
-    $items[] = array('path' => 'node/add',
-      'title' => t('Create content'),
-      'callback' => 'node_add',
-      'access' => user_access('access content'),
-      'type' => MENU_ITEM_GROUPING,
-      'weight' => 1);
-    $items[] = array('path' => 'rss.xml', 'title' => t('RSS feed'),
-      'callback' => 'node_feed',
-      'access' => user_access('access content'),
-      'type' => MENU_CALLBACK);
+  $items['admin/content/types'] = array(
+    'title' => t('Content types'),
+    'description' => t('Manage posts by content type, including default status, front page promotion, etc.'),
+    'page callback' => 'node_overview_types',
+    'access arguments' => array('administer content types'),
+  );
+  $items['admin/content/types/list'] = array(
+    'title' => t('List'),
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10,
+  );
+  $items['admin/content/types/add'] = array(
+    'title' => t('Add content type'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('node_type_form'),
+    'type' => MENU_LOCAL_TASK,
+  );
+  $items['node'] = array(
+    'title' => t('Content'),
+    'page callback' => 'node_page_default',
+    'access arguments' => array('access content'),
+    'type' => MENU_MODIFIABLE_BY_ADMIN,
+  );
+  $items['node/add'] = array(
+    'title' => t('Create content'),
+    'page callback' => 'node_add',
+    'access callback' => 'user_access',
+    'access arguments' => array('access content'),
+    'weight' => 1,
+  );
+  $items['rss.xml'] = array(
+    'title' => t('RSS feed'),
+    'page callback' => 'node_feed',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+  foreach (node_get_types() as $type) {
+    if (function_exists($type->module .'_form')) {
+      $name = check_plain($type->name);
+      $type_url_str = str_replace('_', '-', $type->type);
+      $items['node/add/'. $type_url_str] = array(
+        'title' => drupal_ucfirst($name),
+        'page arguments' => array(2),
+        'access callback' => 'node_access',
+        'access arguments' => array('create', $type->type),
+      );
+      $items['admin/content/types/'. $type_url_str] = array(
+        'title' => t($type->name),
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('node_type_form', $type),
+        'type' => MENU_CALLBACK,
+      );
+      $items['admin/content/types/'. $type_url_str .'/delete'] = array(
+        'title' => t('Delete'),
+        'page arguments' => array('node_type_delete_confirm', $type),
+        'type' => MENU_CALLBACK,
+      );
 
-    foreach (node_get_types() as $type) {
-      if (function_exists($type->module .'_form')) {
-        $name = check_plain($type->name);
-        $type_url_str = str_replace('_', '-', $type->type);
-        $items[] = array(
-          'path' => 'node/add/'. $type_url_str,
-          'title' => drupal_ucfirst($name),
-          'access' => node_access('create', $type->type),
-        );
-      }
-    }
-    // Error pages must to be present in the menu cache and be accessible to
-    // all. More often than not these are individual nodes.
-    for ($error_code = 403; $error_code <= 404; $error_code++) {
-      if (preg_match('|^node/(?P<nid>\d+)(?:/view)?$|', drupal_get_normal_path(variable_get('site_'. $error_code, '')), $matches) && ($node = node_load($matches['nid']))) {
-        $items[] = array(
-          'path' => 'node/'. $node->nid,
-          'title' => t('View'),
-          'callback' => 'node_page_view',
-          'callback arguments' => array($node),
-          'access' => TRUE,
-          'type' => MENU_CALLBACK,
-        );
-      }
     }
   }
-  else {
-    // Add the CSS for this module
-    // We put this in !$may_cache so it's only added once per request
-    drupal_add_css(drupal_get_path('module', 'node') .'/node.css');
-
-    if (arg(0) == 'node' && is_numeric(arg(1))) {
-      $node = node_load(arg(1));
-      if ($node->nid) {
-        $items[] = array('path' => 'node/'. arg(1), 'title' => t('View'),
-          'callback' => 'node_page_view',
-          'callback arguments' => array($node),
-          'access' => node_access('view', $node),
-          'type' => MENU_CALLBACK);
-        $items[] = array('path' => 'node/'. arg(1) .'/view', 'title' => t('View'),
-          'type' => MENU_DEFAULT_LOCAL_TASK,
-          'weight' => -10);
-        $items[] = array('path' => 'node/'. arg(1) .'/edit', 'title' => t('Edit'),
-          'callback' => 'node_page_edit',
-          'callback arguments' => array($node),
-          'access' => node_access('update', $node),
-          'weight' => 1,
-          'type' => MENU_LOCAL_TASK);
-        $items[] = array('path' => 'node/'. arg(1) .'/delete', 'title' => t('Delete'),
-          'callback' => 'drupal_get_form',
-          'callback arguments' => array('node_delete_confirm', $node),
-          'access' => node_access('delete', $node),
-          'weight' => 1,
-          'type' => MENU_CALLBACK);
-        $revisions_access = ((user_access('view revisions') || user_access('administer nodes')) && node_access('view', $node) && db_result(db_query('SELECT COUNT(vid) FROM {node_revisions} WHERE nid = %d', arg(1))) > 1);
-        $items[] = array('path' => 'node/'. arg(1) .'/revisions', 'title' => t('Revisions'),
-          'callback' => 'node_revisions',
-          'access' => $revisions_access,
-          'weight' => 2,
-          'type' => MENU_LOCAL_TASK);
-      }
-    }
-
-    // Content type configuration.
-    if (arg(0) == 'admin' && arg(1) == 'content' && arg(2) == 'types') {
-      include_once './'. drupal_get_path('module', 'node') .'/content_types.inc';
-
-      if (arg(3) != NULL) {
-        $type_name = arg(3);
-        $type_name = !empty($type_name) ? str_replace('-', '_', $type_name) : NULL;
-        $type = node_get_types('type', $type_name);
-
-        if (!empty($type)) {
-          $type->name = check_plain($type->name);
-          $type_url_str = str_replace('_', '-', $type->type);
-
-          $items[] = array(
-            'path' => 'admin/content/types/'. $type_url_str,
-            'title' => t($type->name),
-            'callback' => 'drupal_get_form',
-            'callback arguments' => array('node_type_form', $type),
-            'type' => MENU_CALLBACK,
-          );
-          $items[] = array(
-            'path' => 'admin/content/types/'. $type_url_str .'/delete',
-            'title' => t('Delete'),
-            'callback' => 'drupal_get_form',
-            'callback arguments' => array('node_type_delete_confirm', $type),
-            'type' => MENU_CALLBACK,
-          );
-        }
-      }
-    }
-  }
+  $items['node/%'] = array(
+    'title' => t('View'),
+    'page callback' => 'node_page_view',
+    'page arguments' => array(1),
+    'access callback' => 'node_access',
+    'access arguments' => array('view', 1),
+    'map arguments' => array('node_load', 1),
+    'type' => MENU_CALLBACK);
+  $items['node/%/view'] = array(
+    'title' => t('View'),
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10);
+  $items['node/%/edit'] = array(
+    'title' => t('Edit'),
+    'page callback' => 'node_page_edit',
+    'page arguments' => array(1),
+    'access arguments' => array('update', 1),
+    'weight' => 1,
+    'type' => MENU_LOCAL_TASK);
+  $items['node/%/delete'] = array(
+    'title' => t('Delete'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('node_delete_confirm', 1),
+    'access arguments' => array('delete', 1),
+    'weight' => 1,
+    'type' => MENU_CALLBACK);
+  $items['node/%/revisions'] = array(
+    'title' => t('Revisions'),
+    'page callback' => 'node_revisions',
+    'access callback' => '_node_revision_access',
+    'access arguments' => array(1),
+    'weight' => 2,
+    'type' => MENU_LOCAL_TASK,
+  );
   return $items;
+}
+
+function node_init() {
+  if (arg(0) == 'admin' && arg(1) == 'content' && arg(2) == 'types') {
+    include_once './'. drupal_get_path('module', 'node') .'/content_types.inc';
+  }
+  drupal_add_css(drupal_get_path('module', 'node') .'/node.css');
 }
 
 function node_last_changed($nid) {
@@ -2636,9 +2609,12 @@ function node_search_validate($form_id, $form_values, $form) {
  * @return
  *   TRUE if the operation may be performed.
  */
-function node_access($op, $node = NULL) {
+function node_access($op, $node) {
   global $user;
 
+  if (!$node) {
+    return FALSE;
+  }
   // Convert the node to an object if necessary:
   if ($op != 'create') {
     $node = (object)$node;

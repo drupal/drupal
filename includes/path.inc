@@ -1,5 +1,5 @@
 <?php
-// $Id: path.inc,v 1.13 2006/12/23 22:04:52 dries Exp $
+// $Id: path.inc,v 1.14 2007/01/24 14:48:35 dries Exp $
 
 /**
  * @file
@@ -145,16 +145,20 @@ function drupal_get_normal_path($path) {
  *   The component specified by $index, or FALSE if the specified component was
  *   not found.
  */
-function arg($index) {
-  static $arguments, $q;
+function arg($index = NULL, $path = NULL) {
+  static $arguments;
 
-  if (empty($arguments) || $q != $_GET['q']) {
-    $arguments = explode('/', $_GET['q']);
-    $q = $_GET['q'];
+  if (!isset($path)) {
+    $path = $_GET['q'];
   }
-
-  if (isset($arguments[$index])) {
-    return $arguments[$index];
+  if (!isset($arguments[$path])) {
+    $arguments[$path] = explode('/', $path);
+  }
+  if (!isset($index)) {
+    return $arguments[$path];
+  }
+  if (isset($arguments[$path][$index])) {
+    return $arguments[$path][$index];
   }
 }
 

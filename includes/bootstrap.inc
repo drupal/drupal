@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.145 2007/01/15 11:52:02 unconed Exp $
+// $Id: bootstrap.inc,v 1.146 2007/01/24 14:48:35 dries Exp $
 
 /**
  * @file
@@ -550,7 +550,7 @@ function drupal_page_cache_header($cache) {
  * Define the critical hooks that force modules to always be loaded.
  */
 function bootstrap_hooks() {
-  return array('init', 'exit');
+  return array('boot', 'exit');
 }
 
 /**
@@ -856,7 +856,7 @@ function _drupal_cache_init($phase) {
       }
       elseif (variable_get('cache', CACHE_DISABLED) == CACHE_NORMAL) {
         require_once './includes/module.inc';
-        bootstrap_invoke_all('init');
+        bootstrap_invoke_all('boot');
         drupal_page_cache_header($cache);
         bootstrap_invoke_all('exit');
         exit();

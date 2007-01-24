@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.375 2007/01/10 15:17:51 dries Exp $
+// $Id: forum.module,v 1.376 2007/01/24 14:48:36 dries Exp $
 
 /**
  * @file
@@ -31,71 +31,70 @@ function forum_help($section) {
 /**
  * Implementation of hook_menu().
  */
-function forum_menu($may_cache) {
-  $items = array();
-
-  if ($may_cache) {
-    $items[] = array('path' => 'forum',
-      'title' => t('Forums'),
-      'callback' => 'forum_page',
-      'access' => user_access('access content'),
-      'type' => MENU_SUGGESTED_ITEM);
-    $items[] = array('path' => 'admin/content/forum',
-      'title' => t('Forums'),
-      'description' => t('Control forums and their hierarchy and change forum settings.'),
-      'callback' => 'forum_overview',
-      'access' => user_access('administer forums'),
-      'type' => MENU_NORMAL_ITEM);
-    $items[] = array('path' => 'admin/content/forum/list',
-      'title' => t('List'),
-      'access' => user_access('administer forums'),
-      'type' => MENU_DEFAULT_LOCAL_TASK,
-      'weight' => -10);
-    $items[] = array('path' => 'admin/content/forum/add/container',
-      'title' => t('Add container'),
-      'callback' => 'forum_form_main',
-      'callback arguments' => array('container'),
-      'access' => user_access('administer forums'),
-      'type' => MENU_LOCAL_TASK);
-    $items[] = array('path' => 'admin/content/forum/add/forum',
-      'title' => t('Add forum'),
-      'callback' => 'forum_form_main',
-      'callback arguments' => array('forum'),
-      'access' => user_access('administer forums'),
-      'type' => MENU_LOCAL_TASK);
-    $items[] = array('path' => 'admin/content/forum/settings',
-      'title' => t('Settings'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('forum_admin_settings'),
-      'weight' => 5,
-      'access' => user_access('administer forums'),
-      'type' => MENU_LOCAL_TASK);
-  }
-  elseif (is_numeric(arg(5))) {
-    $term = taxonomy_get_term(arg(5));
-    // Check if this is a valid term.
-    if ($term) {
-      $items[] = array('path' => 'admin/content/forum/edit/container',
-        'title' => t('Edit container'),
-        'callback' => 'forum_form_main',
-        'callback arguments' => array('container', (array)$term),
-        'access' => user_access('administer forums'),
-        'type' => MENU_CALLBACK);
-      $items[] = array('path' => 'admin/content/forum/edit/forum',
-        'title' => t('Edit forum'),
-        'callback' => 'forum_form_main',
-        'callback arguments' => array('forum', (array)$term),
-        'access' => user_access('administer forums'),
-        'type' => MENU_CALLBACK);
-    }
-  }
-  else {
-    // Add the CSS for this module
-    // We put this in !$may_cache so it's only added once per request
-    drupal_add_css(drupal_get_path('module', 'forum') .'/forum.css');
-  }
-
+function forum_menu() {
+  $items['node/add/forum'] = array(
+    'title' => t('Forum topic'),
+    'access arguments' => array('create forum topics'),
+  );
+  $items['forum'] = array(
+    'title' => t('Forums'),
+    'page callback' => 'forum_page',
+    'access arguments' => array('access content'),
+    'type' => MENU_SUGGESTED_ITEM,
+  );
+  $items['admin/content/forum'] = array(
+    'title' => t('Forums'),
+    'description' => t('Control forums and their hierarchy and change forum settings.'),
+    'page callback' => 'forum_overview',
+    'access arguments' => array('administer forums'),
+  );
+  $items['admin/content/forum/list'] = array(
+    'title' => t('List'),
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10,
+  );
+  $items['admin/content/forum/add/container'] = array(
+    'title' => t('Add container'),
+    'page callback' => 'forum_form_main',
+    'page arguments' => array('container'),
+    'type' => MENU_LOCAL_TASK,
+  );
+  $items['admin/content/forum/add/forum'] = array(
+    'title' => t('Add forum'),
+    'page callback' => 'forum_form_main',
+    'page arguments' => array('forum'),
+    'type' => MENU_LOCAL_TASK,
+  );
+  $items['admin/content/forum/settings'] = array(
+    'title' => t('Settings'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('forum_admin_settings'),
+    'weight' => 5,
+    'type' => MENU_LOCAL_TASK,
+  );
+  $items['admin/content/forum/edit'] = array(
+    'page callback' => 'forum_form_main',
+    'map arguments' => array('_forum_get_term', 5, array()),
+    'type' => MENU_CALLBACK,
+  );
+  $items['admin/content/forum/edit/container/%'] = array(
+    'title' => t('Edit container'),
+    'page arguments' => array('container', 5),
+  );
+  $items['admin/content/forum/edit/forum/%'] = array(
+    'title' => t('Edit forum'),
+    'page callback' => 'forum_form_main',
+    'page arguments' => array('forum', 5),
+  );
   return $items;
+}
+
+function forum_init() {
+  drupal_add_css(drupal_get_path('module', 'forum') .'/forum.css');
+}
+
+function _forum_get_term($tid) {
+  return (array)taxonomy_get_term($tid);
 }
 
 /**

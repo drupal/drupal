@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.74 2007/01/10 15:17:51 dries Exp $
+// $Id: contact.module,v 1.75 2007/01/24 14:48:36 dries Exp $
 
 /**
  * @file
@@ -40,75 +40,66 @@ function contact_perm() {
 /**
  * Implementation of hook_menu().
  */
-function contact_menu($may_cache) {
-  $items = array();
-  if ($may_cache) {
-    $items[] = array('path' => 'admin/build/contact',
-      'title' => t('Contact form'),
-      'description' => t('Create a system contact form and set up categories for the form to use.'),
-      'callback' => 'contact_admin_categories',
-      'access' => user_access('administer site configuration'),
-    );
-    $items[] = array('path' => 'admin/build/contact/list',
-      'title' => t('List'),
-      'callback' => 'contact_admin_categories',
-      'access' => user_access('administer site configuration'),
-      'type' => MENU_DEFAULT_LOCAL_TASK,
-    );
-    $items[] = array('path' => 'admin/build/contact/add',
-      'title' => t('Add category'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('contact_admin_edit'),
-      'access' => user_access('administer site configuration'),
-      'type' => MENU_LOCAL_TASK,
-      'weight' => 1,
-    );
-    $items[] = array('path' => 'admin/build/contact/edit',
-      'title' => t('Edit contact category'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('contact_admin_edit'),
-      'access' => user_access('administer site configuration'),
-      'type' => MENU_CALLBACK,
-    );
-    $items[] = array('path' => 'admin/build/contact/delete',
-      'title' => t('Delete contact'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('contact_admin_delete'),
-      'access' => user_access('administer site configuration'),
-      'type' => MENU_CALLBACK,
-    );
-    $items[] = array('path' => 'admin/build/contact/settings',
-      'title' => t('Settings'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('contact_admin_settings'),
-      'access' => user_access('administer site configuration'),
-      'type' => MENU_LOCAL_TASK,
-      'weight' => 2,
-    );
-    $items[] = array('path' => 'contact',
-      'title' => t('Contact'),
-      'callback' => 'contact_site_page',
-      'access' => user_access('access site-wide contact form'),
-      'type' => MENU_SUGGESTED_ITEM,
-    );
-  }
-  else {
-    if (arg(0) == 'user' && is_numeric(arg(1))) {
-      global $user;
-      $account = user_load(array('uid' => arg(1)));
-      if (($user->uid != $account->uid && $account->contact) || user_access('administer users')) {
-        $items[] = array('path' => 'user/'. arg(1) .'/contact',
-          'title' => t('Contact'),
-          'callback' => 'contact_user_page',
-          'type' => MENU_LOCAL_TASK,
-          'access' => $user->uid,
-          'weight' => 2,
-        );
-      }
-    }
-  }
-
+function contact_menu() {
+  $items['admin/build/contact'] = array(
+    'title' => t('Contact form'),
+    'description' => t('Create a system contact form and set up categories for the form to use.'),
+    'page callback' => 'contact_admin_categories',
+    'access arguments' => array('administer site configuration'),
+  );
+  $items['admin/build/contact/list'] = array(
+    'title' => t('List'),
+    'page callback' => 'contact_admin_categories',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
+  $items['admin/build/contact/add'] = array(
+    'title' => t('Add category'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('contact_admin_edit'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 1,
+  );
+  $items['admin/build/contact/edit'] = array(
+    'title' => t('Edit contact category'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('contact_admin_edit'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['admin/build/contact/delete'] = array(
+    'title' => t('Delete contact'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('contact_admin_delete'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['admin/build/contact/settings'] = array(
+    'title' => t('Settings'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('contact_admin_settings'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 2,
+  );
+  $items['contact'] = array(
+    'title' => t('Contact'),
+    'page callback' => 'contact_site_page',
+    'access arguments' => array('access site-wide contact form'),
+    'type' => MENU_SUGGESTED_ITEM,
+  );
+  $items['user/%/contact'] = array(
+    'title' => t('Contact'),
+    'page callback' => 'contact_user_page',
+    'page arguments' => array(1),
+    'type' => MENU_LOCAL_TASK,
+    'access callback' => '_contact_user_tab_access',
+    'access arguments' => array(1),
+    'map arguments' => array('user_load', 1),
+    'weight' => 2,
+  );
   return $items;
+}
+
+function _contact_user_tab_access($account) {
+  global $user;
+  return $account && (($user->uid != $account->uid && $account->contact) || user_access('administer users'));
 }
 
 /**
@@ -299,26 +290,21 @@ function contact_admin_settings() {
 /**
  * Personal contact page.
  */
-function contact_user_page() {
+function contact_user_page($account) {
   global $user;
 
-  if ($account = user_load(array('uid' => arg(1)))) {
-    if (!valid_email_address($user->mail)) {
-      $output = t('You need to provide a valid e-mail address to contact other users. Please update your <a href="@url">user information</a> and try again.', array('@url' => url("user/$user->uid/edit")));
-    }
-    else if (!flood_is_allowed('contact', variable_get('contact_hourly_threshold', 3))) {
-      $output = t('You cannot contact more than %number users per hour. Please try again later.', array('%number' => variable_get('contact_hourly_threshold', 3)));
-    }
-    else {
-      drupal_set_title(check_plain($account->name));
-      $output = drupal_get_form('contact_mail_user', $account);
-    }
-
-    return $output;
+  if (!valid_email_address($user->mail)) {
+    $output = t('You need to provide a valid e-mail address to contact other users. Please update your <a href="@url">user information</a> and try again.', array('@url' => url("user/$user->uid/edit")));
+  }
+  else if (!flood_is_allowed('contact', variable_get('contact_hourly_threshold', 3))) {
+    $output = t('You cannot contact more than %number users per hour. Please try again later.', array('%number' => variable_get('contact_hourly_threshold', 3)));
   }
   else {
-    drupal_not_found();
+    drupal_set_title(check_plain($account->name));
+    $output = drupal_get_form('contact_mail_user', $account);
   }
+
+  return $output;
 }
 
 function contact_mail_user($recipient) {

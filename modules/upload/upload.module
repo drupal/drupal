@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.148 2007/01/15 11:22:34 unconed Exp $
+// $Id: upload.module,v 1.149 2007/01/24 14:48:36 dries Exp $
 
 /**
  * @file
@@ -59,49 +59,44 @@ function upload_link($type, $node = NULL, $teaser = FALSE) {
 /**
  * Implementation of hook_menu().
  */
-function upload_menu($may_cache) {
-  $items = array();
+function upload_menu() {
+  $items['upload/js'] = array(
+    'page callback' => 'upload_js',
+    'access arguments' => array('upload files'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['admin/settings/uploads'] = array(
+    'title' => t('File uploads'),
+    'description' => t('Control how files may be attached to content.'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('upload_admin_settings'),
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  return $items;
+}
 
-  if ($may_cache) {
-    $items[] = array(
-      'path' => 'upload/js',
-      'callback' => 'upload_js',
-      'access' => user_access('upload files'),
-      'type' => MENU_CALLBACK
-    );
-    $items[] = array('path' => 'admin/settings/uploads',
-      'title' => t('File uploads'),
-      'description' => t('Control how files may be attached to content.'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('upload_admin_settings'),
-      'access' => user_access('administer site configuration'),
-      'type' => MENU_NORMAL_ITEM);
-  }
-  else {
-    // Add handlers for previewing new uploads.
-    if (isset($_SESSION['file_previews'])) {
-      foreach ($_SESSION['file_previews'] as $fid => $file) {
-        $filename = file_create_filename($file->filename, file_create_path());
-        if (variable_get('file_downloads', FILE_DOWNLOADS_PUBLIC) ==  FILE_DOWNLOADS_PRIVATE) {
-          // strip file_directory_path() from filename. @see file_create_url
-          if (strpos($filename, file_directory_path()) !== FALSE) {
-            $filename = trim(substr($filename, strlen(file_directory_path())), '\\/');
-          }
-          $filename = 'system/files/' . $filename;
+function upload_menu_alter(&$items) {
+  $items['system/files']['page callback'] = 'upload_download';
+  $items['system/files']['access arguments'] = array('view uploaded files');
+}
+
+function upload_init() {
+  if (arg(0) == 'system' && arg(1) == 'files' && isset($_SESSION['file_previews'])) {
+    $item = menu_get_item('system/files');
+    foreach ($_SESSION['file_previews'] as $fid => $file) {
+      $filename = file_create_filename($file->filename, file_create_path());
+      if (variable_get('file_downloads', FILE_DOWNLOADS_PUBLIC) ==  FILE_DOWNLOADS_PRIVATE) {
+        // strip file_directory_path() from filename. @see file_create_url
+        if (strpos($filename, file_directory_path()) !== FALSE) {
+          $filename = trim(substr($filename, strlen(file_directory_path())), '\\/');
         }
-
-        $items[] = array(
-          'path' => $filename, 'title' => t('File download'),
-          'callback' => 'upload_download',
-          'access' => user_access('view uploaded files'),
-          'type' => MENU_CALLBACK
-        );
-        $_SESSION['file_previews'][$fid]->_filename = $filename;
+        $filename = 'system/files/' . $filename;
       }
+      $_SESSION['file_previews'][$fid]->_filename = $filename;
+      menu_set_item($filename, $item);
     }
   }
-
-  return $items;
 }
 
 /**

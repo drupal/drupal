@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.442 2007/01/24 07:51:53 dries Exp $
+// $Id: system.module,v 1.443 2007/01/24 14:48:36 dries Exp $
 
 /**
  * @file
@@ -86,238 +86,220 @@ function system_elements() {
 /**
  * Implementation of hook_menu().
  */
-function system_menu($may_cache) {
-  $items = array();
+function system_menu() {
+  $items['system/files'] = array(
+    'title' => t('File download'),
+    'page callback' => 'file_download',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  $items['admin'] = array(
+    'title' => t('Administer'),
+    'access arguments' => array('access administration pages'),
+    'page callback' => 'system_main_admin_page',
+    'weight' => 9,
+  );
+  $items['admin/compact'] = array(
+    'title' => t('Compact mode'),
+    'page callback' => 'system_admin_compact_page',
+    'type' => MENU_CALLBACK,
+  );
+  $items['admin/by-task'] = array(
+    'title' => t('By task'),
+    'page callback' => 'system_main_admin_page',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
+  $items['admin/by-module'] = array(
+    'title' => t('By module'),
+    'page callback' => 'system_admin_by_module',
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 2,
+  );
+  // menu items that are basically just menu blocks
+  $items['admin/settings'] = array(
+    'title' => t('Site configuration'),
+    'description' => t('Adjust basic site configuration options.'),
+    'position' => 'right',
+    'weight' => -5,
+    'page callback' => 'system_settings_overview',
+    'access arguments' => array('administer site configuration'),
+  );
+  $items['admin/build'] = array(
+    'title' => t('Site building'),
+    'description' => t('Control how your site looks and feels.'),
+    'position' => 'right',
+    'weight' => -10,
+    'page callback' => 'system_admin_menu_block_page',
+    'access arguments' => array('administer site configuration'),
+  );
+  $items['admin/settings/admin'] = array(
+    'title' => t('Administration theme'),
+    'description' => t('Settings for how your administrative pages should look.'),
+    'position' => 'left',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('system_admin_theme_settings'),
+    'block callback' => 'system_admin_theme_settings',
+  );
+  // Themes:
+  $items['admin/build/themes'] = array(
+    'title' => t('Themes'),
+    'description' => t('Change which theme your site uses or allows users to set.'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('system_themes'),
+  );
+  $items['admin/build/themes/select'] = array(
+    'title' => t('List'),
+    'description' => t('Select the default theme.'),
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -1,
+  );
+  $items['admin/build/themes/settings'] = array(
+    'title' => t('Configure'),
+    'page arguments' => array('system_theme_settings'),
+    'type' => MENU_LOCAL_TASK,
+  );
+  // Theme configuration subtabs
+  $items['admin/build/themes/settings/global'] = array(
+    'title' => t('Global settings'),
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -1,
+  );
 
-  if ($may_cache) {
-    $items[] = array('path' => 'system/files', 'title' => t('File download'),
-      'callback' => 'file_download',
-      'access' => TRUE,
-      'type' => MENU_CALLBACK);
-
-    $access = user_access('administer site configuration');
-
-    $items[] = array('path' => 'admin', 'title' => t('Administer'),
-      'access' => user_access('access administration pages'),
-      'callback' => 'system_main_admin_page',
-      'weight' => 9);
-    $items[] = array('path' => 'admin/compact', 'title' => t('Compact mode'),
-      'access' => user_access('access administration pages'),
-      'callback' => 'system_admin_compact_page',
-      'type' => MENU_CALLBACK);
-    $items[] = array('path' => 'admin/by-task', 'title' => t('By task'),
-      'callback' => 'system_main_admin_page',
-      'type' => MENU_DEFAULT_LOCAL_TASK);
-    $items[] = array('path' => 'admin/by-module', 'title' => t('By module'),
-      'callback' => 'system_admin_by_module',
-      'type' => MENU_LOCAL_TASK,
-      'weight' => 2);
-
-    // menu items that are basically just menu blocks
-    $items[] = array(
-      'path' => 'admin/settings',
-      'title' => t('Site configuration'),
-      'description' => t('Adjust basic site configuration options.'),
-      'position' => 'right',
-      'weight' => -5,
-      'callback' => 'system_settings_overview',
-      'access' => $access);
-
-    $items[] = array('path' => 'admin/build',
-      'title' => t('Site building'),
-      'description' => t('Control how your site looks and feels.'),
-      'position' => 'right',
-      'weight' => -10,
-      'callback' => 'system_admin_menu_block_page',
-      'access' => $access);
-
-    $items[] = array(
-      'path' => 'admin/settings/admin',
-      'title' => t('Administration theme'),
-      'description' => t('Settings for how your administrative pages should look.'),
-      'position' => 'left',
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('system_admin_theme_settings'),
-      'block callback' => 'system_admin_theme_settings',
-      'access' => $access);
-
-    // Themes:
-    $items[] = array(
-      'path' => 'admin/build/themes',
-      'title' => t('Themes'),
-      'description' => t('Change which theme your site uses or allows users to set.'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('system_themes'),
-      'access' => $access);
-
-    $items[] = array(
-      'path' => 'admin/build/themes/select',
-      'title' => t('List'),
-      'description' => t('Select the default theme.'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('system_themes'),
-      'access' => $access,
-      'type' => MENU_DEFAULT_LOCAL_TASK,
-      'weight' => -1);
-
-    $items[] = array('path' => 'admin/build/themes/settings',
-      'title' => t('Configure'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('system_theme_settings'),
-      'access' => $access,
-      'type' => MENU_LOCAL_TASK);
-
-    // Theme configuration subtabs
-    $items[] = array('path' => 'admin/build/themes/settings/global', 'title' => t('Global settings'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('system_theme_settings'),
-      'access' => $access,
-      'type' => MENU_DEFAULT_LOCAL_TASK,
-      'weight' => -1);
-
-    foreach (list_themes() as $theme) {
-      if ($theme->status) {
-        $items[] = array('path' => 'admin/build/themes/settings/'. $theme->name, 'title' => $theme->name,
-        'callback' => 'drupal_get_form', 'callback arguments' => array('system_theme_settings', $theme->name),
-        'access' => $access, 'type' => MENU_LOCAL_TASK);
-      }
+  foreach (list_themes() as $theme) {
+    if ($theme->status) {
+      $items['admin/build/themes/settings/'. $theme->name] = array(
+        'title' => $theme->name,
+        'page arguments' => array('system_theme_settings', $theme->name),
+        'type' => MENU_LOCAL_TASK,
+      );
     }
-
-    // Modules:
-    $items[] = array('path' => 'admin/build/modules',
-      'title' => t('Modules'),
-      'description' => t('Enable or disable add-on modules for your site.'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('system_modules'),
-      'access' => $access);
-    $items[] = array('path' => 'admin/build/modules/list',
-      'title' => t('List'),
-      'type' => MENU_DEFAULT_LOCAL_TASK,
-      'access' => $access);
-    $items[] = array('path' => 'admin/build/modules/list/confirm',
-      'title' => t('List'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('system_modules'),
-      'type' => MENU_CALLBACK,
-      'access' => $access);
-    $items[] = array('path' => 'admin/build/modules/uninstall',
-      'title' => t('Uninstall'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('system_modules_uninstall'),
-      'type' => MENU_LOCAL_TASK,
-      'access' => $access);
-    $items[] = array('path' => 'admin/build/modules/uninstall/confirm',
-      'title' => t('Uninstall'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('system_modules_uninstall'),
-      'type' => MENU_CALLBACK,
-      'access' => $access);
-
-    // Settings:
-    $items[] = array(
-      'path' => 'admin/settings/site-information',
-      'title' => t('Site information'),
-      'description' => t('Change basic site information, such as the site name, slogan, e-mail address, mission, front page and more.'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('system_site_information_settings'));
-    $items[] = array(
-      'path' => 'admin/settings/error-reporting',
-      'title' => t('Error reporting'),
-      'description' => t('Control how Drupal deals with errors including 403/404 errors as well as PHP error reporting.'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('system_error_reporting_settings'));
-    $items[] = array(
-      'path' => 'admin/settings/performance',
-      'title' => t('Performance'),
-      'description' => t('Enable or disable page caching for anonymous users, and enable or disable CSS preprocessor.'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('system_performance_settings'));
-    $items[] = array(
-      'path' => 'admin/settings/file-system',
-      'title' => t('File system'),
-      'description' => t('Tell Drupal where to store uploaded files and how they are accessed.'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('system_file_system_settings'));
-    $items[] = array(
-      'path' => 'admin/settings/image-toolkit',
-      'title' => t('Image toolkit'),
-      'description' => t('Choose which image toolkit to use if you have installed optional toolkits.'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('system_image_toolkit_settings'));
-    $items[] = array(
-      'path' => 'admin/content/rss-publishing',
-      'title' => t('RSS publishing'),
-      'description' => t('Configure the number of items per feed and whether feeds should be titles/teasers/full-text.'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('system_rss_feeds_settings'));
-    $items[] = array(
-      'path' => 'admin/settings/date-time',
-      'title' => t('Date and time'),
-      'description' => t("Settings for how Drupal displays date and time, as well as the system's default timezone."),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('system_date_time_settings'));
-    $items[] = array(
-      'path' => 'admin/settings/site-maintenance',
-      'title' => t('Site maintenance'),
-      'description' => t('Take the site off-line for maintenance or bring it back online.'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('system_site_maintenance_settings'));
-    $items[] = array(
-      'path' => 'admin/settings/clean-urls',
-      'title' => t('Clean URLs'),
-      'description' => t('Enable or disable clean URLs for your site.'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('system_clean_url_settings'));
-
-
-    // Logs:
-    $items[] = array(
-      'path' => 'admin/logs',
-      'title' => t('Logs'),
-      'description' => t('View system logs and other status information.'),
-      'callback' => 'system_admin_menu_block_page',
-      'weight' => 5,
-      'position' => 'left');
-    $items[] = array(
-      'path' => 'admin/logs/status',
-      'title' => t('Status report'),
-      'description' => t("Get a status report about your site's operation and any detected problems."),
-      'callback' => 'system_status',
-      'weight' => 10,
-      'access' => $access);
-    $items[] = array(
-      'path' => 'admin/logs/status/run-cron',
-      'title' => t('Run cron'),
-      'callback' => 'system_run_cron',
-      'type' => MENU_CALLBACK);
-    $items[] = array(
-      'path' => 'admin/logs/status/php',
-      'title' => t('PHP'),
-      'callback' => 'system_php',
-      'type' => MENU_CALLBACK);
-    $items[] = array(
-      'path' => 'admin/logs/status/sql',
-      'title' => t('SQL'),
-      'callback' => 'system_sql',
-      'type' => MENU_CALLBACK);
-  }
-  else {
-    /**
-     * Use the administrative theme if the user is looking at a page in the admin/* path.
-     */
-    if (arg(0) == 'admin') {
-      global $custom_theme;
-      $custom_theme = variable_get('admin_theme', '0');
-      drupal_add_css(drupal_get_path('module', 'system') .'/admin.css', 'module');
-    }
-
-    // Add the CSS for this module. We put this in !$may_cache so it is only
-    // added once per request.
-    drupal_add_css(drupal_get_path('module', 'system') .'/defaults.css', 'module');
-    drupal_add_css(drupal_get_path('module', 'system') .'/system.css', 'module');
   }
 
+  // Modules:
+  $items['admin/build/modules'] = array(
+    'title' => t('Modules'),
+    'description' => t('Enable or disable add-on modules for your site.'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('system_modules'),
+  );
+  $items['admin/build/modules/list'] = array(
+    'title' => t('List'),
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
+  $items['admin/build/modules/list/confirm'] = array(
+    'title' => t('List'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['admin/build/modules/uninstall'] = array(
+    'title' => t('Uninstall'),
+    'page arguments' => array('system_modules_uninstall'),
+    'type' => MENU_LOCAL_TASK,
+  );
+  $items['admin/build/modules/uninstall/confirm'] = array(
+    'title' => t('Uninstall'),
+    'type' => MENU_CALLBACK,
+  );
+
+  // Settings:
+  $items['admin/settings/site-information'] = array(
+    'title' => t('Site information'),
+    'description' => t('Change basic site information, such as the site name, slogan, e-mail address, mission, front page and more.'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('system_site_information_settings'),
+  );
+  $items['admin/settings/error-reporting'] = array(
+    'title' => t('Error reporting'),
+    'description' => t('Control how Drupal deals with errors including 403/404 errors as well as PHP error reporting.'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('system_error_reporting_settings'),
+  );
+  $items['admin/settings/performance'] = array(
+    'title' => t('Performance'),
+    'description' => t('Enable or disable page caching for anonymous users, and enable or disable CSS preprocessor.'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('system_performance_settings'),
+  );
+  $items['admin/settings/file-system'] = array(
+    'title' => t('File system'),
+    'description' => t('Tell Drupal where to store uploaded files and how they are accessed.'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('system_file_system_settings'),
+  );
+  $items['admin/settings/image-toolkit'] = array(
+    'title' => t('Image toolkit'),
+    'description' => t('Choose which image toolkit to use if you have installed optional toolkits.'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('system_image_toolkit_settings'),
+  );
+  $items['admin/content/rss-publishing'] = array(
+    'title' => t('RSS publishing'),
+    'description' => t('Configure the number of items per feed and whether feeds should be titles/teasers/full-text.'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('system_rss_feeds_settings'),
+  );
+  $items['admin/settings/date-time'] = array(
+    'title' => t('Date and time'),
+    'description' => t("Settings for how Drupal displays date and time, as well as the system's default timezone."),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('system_date_time_settings'),
+  );
+  $items['admin/settings/site-maintenance'] = array(
+    'title' => t('Site maintenance'),
+    'description' => t('Take the site off-line for maintenance or bring it back online.'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('system_site_maintenance_settings'),
+  );
+  $items['admin/settings/clean-urls'] = array(
+    'title' => t('Clean URLs'),
+    'description' => t('Enable or disable clean URLs for your site.'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('system_clean_url_settings'),
+  );
+
+  // Logs:
+  $items['admin/logs'] = array(
+    'title' => t('Logs'),
+    'description' => t('View system logs and other status information.'),
+    'page callback' => 'system_admin_menu_block_page',
+    'weight' => 5,
+    'position' => 'left',
+  );
+  $items['admin/logs/status'] = array(
+    'title' => t('Status report'),
+    'description' => t("Get a status report about your site's operation and any detected problems."),
+    'page callback' => 'system_status',
+    'weight' => 10,
+    'access arguments' => array('administer site configuration'),
+  );
+  $items['admin/logs/status/run-cron'] = array(
+    'title' => t('Run cron'),
+    'page callback' => 'system_run_cron',
+    'type' => MENU_CALLBACK,
+  );
+  $items['admin/logs/status/php'] = array(
+    'title' => t('PHP'),
+    'page callback' => 'system_php',
+    'type' => MENU_CALLBACK,
+  );
+  $items['admin/logs/status/sql'] = array(
+    'title' => t('SQL'),
+    'page callback' => 'system_sql',
+    'type' => MENU_CALLBACK,
+  );
   return $items;
+}
+
+function system_init() {
+  // Use the administrative theme if the user is looking at a page in the admin/* path.
+  if (arg(0) == 'admin') {
+    global $custom_theme;
+    $custom_theme = variable_get('admin_theme', '0');
+    drupal_add_css(drupal_get_path('module', 'system') .'/admin.css', 'module');
+  }
+
+  // Add the CSS for this module.
+  drupal_add_css(drupal_get_path('module', 'system') .'/defaults.css', 'module');
+  drupal_add_css(drupal_get_path('module', 'system') .'/system.css', 'module');
 }
 
 /**
@@ -354,6 +336,7 @@ function system_user($type, $edit, &$user, $category = NULL) {
  * Provide the administration overview page.
  */
 function system_main_admin_page($arg = NULL) {
+  return 'This page awaits rewrite'; // TODO: this needs to be rewritten for the new menu system.
   // If we received an argument, they probably meant some other page.
   // Let's 404 them since the menu system cannot be told we do not
   // accept arguments.
@@ -386,6 +369,7 @@ function system_main_admin_page($arg = NULL) {
  * Provide a single block on the administration overview page.
  */
 function system_admin_menu_block($block) {
+  return 'This page awaits rewrite'; // TODO: this needs to be rewritten for the new menu system.
   $content = array();
   if (is_array($block['children'])) {
     usort($block['children'], '_menu_sort');
@@ -407,6 +391,7 @@ function system_admin_menu_block($block) {
  * hidden, so we supply the contents of the block.
  */
 function system_admin_menu_block_page() {
+  return 'This page awaits rewrite'; // TODO: this needs to be rewritten for the new menu system.
   $menu = menu_get_item(NULL, $_GET['q']);
   $content = system_admin_menu_block($menu);
 
@@ -1890,7 +1875,7 @@ function theme_status_report(&$requirements) {
  * Menu callback; displays a module's settings page.
  */
 function system_settings_overview() {
-
+  return 'This page awaits rewrite'; // TODO: this needs to be rewritten for the new menu system.
   // Check database setup if necessary
   if (function_exists('db_check_setup') && empty($_POST)) {
     db_check_setup();
@@ -2279,6 +2264,7 @@ function theme_admin_block_content($content) {
  * Menu callback; prints a listing of admin tasks for each installed module.
  */
 function system_admin_by_module() {
+  return 'This page awaits rewrite'; // TODO: this needs to be rewritten for the new menu system.
   $modules = module_rebuild_cache();
   $menu_items = array();
   foreach ($modules as $file) {
@@ -2307,6 +2293,7 @@ function system_admin_by_module() {
 }
 
 function system_get_module_admin_tasks($module) {
+  return array(); // TODO: this needs to be rewritten for the new menu system.
   $admin_access = user_access('administer access control');
   $menu = menu_get_menu();
   $admin_tasks = array();

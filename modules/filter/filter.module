@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.160 2007/01/12 07:27:21 unconed Exp $
+// $Id: filter.module,v 1.161 2007/01/24 14:48:36 dries Exp $
 
 /**
  * @file
@@ -50,85 +50,62 @@ function filter_help($section) {
 /**
  * Implementation of hook_menu().
  */
-function filter_menu($may_cache) {
-  $items = array();
+function filter_menu() {
+  $items['admin/settings/filters'] = array(
+    'title' => t('Input formats'),
+    'description' => t('Configure how content input by users is filtered, including allowed HTML tags, PHP code tags. Also allows enabling of module-provided filters.'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('filter_admin_overview'),
+    'access arguments' => array('administer filters'),
+  );
+  $items['admin/settings/filters/list'] = array(
+    'title' => t('List'),
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
+  $items['admin/settings/filters/add'] = array(
+    'title' => t('Add input format'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('filter_admin_format_form'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 1,
+  );
+  $items['admin/settings/filters/delete'] = array(
+    'title' => t('Delete input format'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('filter_admin_delete'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['filter/tips'] = array(
+    'title' => t('Compose tips'),
+    'page callback' => 'filter_tips_long',
+    'access callback' => TRUE,
+    'type' => MENU_SUGGESTED_ITEM,
+  );
+  $items['admin/settings/filters/%'] = array(
+    'type' => MENU_CALLBACK,
+    'page arguments' => array('filter_admin_format_form', 3),
+    'access arguments' => array('administer filters'),
+    'map arguments' => array('filter_formats', 3),
+  );
 
-  if ($may_cache) {
-    $items[] = array('path' => 'admin/settings/filters',
-      'title' => t('Input formats'),
-      'description' => t('Configure how content input by users is filtered, including allowed HTML tags, PHP code tags. Also allows enabling of module-provided filters.'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('filter_admin_overview'),
-      'access' => user_access('administer filters'),
-    );
-    $items[] = array('path' => 'admin/settings/filters/list',
-      'title' => t('List'),
-      'callback' => 'filter_admin_overview',
-      'type' => MENU_DEFAULT_LOCAL_TASK,
-'access' => user_access('administer filters'),
-    );
-    $items[] = array('path' => 'admin/settings/filters/add',
-      'title' => t('Add input format'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('filter_admin_format_form'),
-      'type' => MENU_LOCAL_TASK,
-      'weight' => 1,
-      'access' => user_access('administer filters'),
-    );
-    $items[] = array('path' => 'admin/settings/filters/delete',
-      'title' => t('Delete input format'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('filter_admin_delete'),
-      'type' => MENU_CALLBACK,
-      'access' => user_access('administer filters'),
-    );
-    $items[] = array('path' => 'filter/tips',
-      'title' => t('Compose tips'),
-      'callback' => 'filter_tips_long',
-      'access' => TRUE,
-      'type' => MENU_SUGGESTED_ITEM,
-    );
-  }
-  else {
-    if (arg(0) == 'admin' && arg(1) == 'settings' && arg(2) == 'filters' && is_numeric(arg(3))) {
-      $formats = filter_formats();
-
-      if (isset($formats[arg(3)])) {
-        $items[] = array('path' => 'admin/settings/filters/'. arg(3),
-          'title' => t("!format input format", array('!format' => $formats[arg(3)]->name)),
-          'callback' => 'drupal_get_form',
-          'callback arguments' => array('filter_admin_format_form', $formats[arg(3)]),
-          'type' => MENU_CALLBACK,
-          'access' => user_access('administer filters'),
-        );
-        $items[] = array('path' => 'admin/settings/filters/'. arg(3) .'/list',
-          'title' => t('View'),
-          'callback' => 'drupal_get_form',
-          'callback arguments' => array('filter_admin_format_form', $formats[arg(3)]),
-          'type' => MENU_DEFAULT_LOCAL_TASK,
-          'weight' => 0,
-          'access' => user_access('administer filters'),
-        );
-        $items[] = array('path' => 'admin/settings/filters/'. arg(3) .'/configure',
-          'title' => t('Configure'),
-          'callback' => 'drupal_get_form',
-          'callback arguments' => array('filter_admin_configure'),
-          'type' => MENU_LOCAL_TASK,
-          'weight' => 1,
-          'access' => user_access('administer filters'),
-        );
-        $items[] = array('path' => 'admin/settings/filters/'. arg(3) .'/order',
-          'title' => t('Rearrange'),
-          'callback' => 'drupal_get_form',
-          'callback arguments' => array('filter_admin_order', 'format' => $formats[arg(3)]),
-          'type' => MENU_LOCAL_TASK,
-          'weight' => 2,
-          'access' => user_access('administer filters'),
-        );
-      }
-    }
-  }
-
+  $items['admin/settings/filters/%/list'] = array(
+    'title' => t('View'),
+    'page arguments' => array('filter_admin_format_form', 3),
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => 0,
+  );
+  $items['admin/settings/filters/%/configure'] = array(
+    'title' => t('Configure'),
+    'page arguments' => array('filter_admin_configure', 3),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 1,
+  );
+  $items['admin/settings/filters/%/order'] = array(
+    'title' => t('Rearrange'),
+    'page arguments' => array('filter_admin_order', 3),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 2,
+  );
   return $items;
 }
 
@@ -459,6 +436,7 @@ function filter_admin_format_form($format = NULL) {
     $group = '<p>'. t('These are the guidelines that users will see for posting in this input format. They are automatically generated from the filter settings.') .'</p>';
     $group .= $tiplist;
     $form['tips'] = array('#value' => '<h2>'. t('Formatting guidelines') .'</h2>'. $group);
+    drupal_set_title(t("!format input format", array('!format' => $format->name)));
   }
   $form['submit'] = array('#type' => 'submit', '#value' => t('Save configuration'));
 
@@ -590,13 +568,11 @@ function filter_admin_order_submit($form_id, $form_values) {
 /**
  * Menu callback; display settings defined by filters.
  */
-function filter_admin_configure() {
-  $format = arg(3);
-
-  $list = filter_list_format($format);
+function filter_admin_configure($format) {
+  $list = filter_list_format($format->format);
   $form = array();
   foreach ($list as $filter) {
-    $form_module = module_invoke($filter->module, 'filter', 'settings', $filter->delta, $format);
+    $form_module = module_invoke($filter->module, 'filter', 'settings', $filter->delta, $format->format);
     if (isset($form_module) && is_array($form_module)) {
       $form = array_merge($form, $form_module);
     }
@@ -615,7 +591,7 @@ function filter_admin_configure() {
 /**
  * Retrieve a list of input formats.
  */
-function filter_formats() {
+function filter_formats($index = NULL) {
   global $user;
   static $formats;
 
@@ -643,6 +619,9 @@ function filter_formats() {
     while ($format = db_fetch_object($result)) {
       $formats[$format->format] = $format;
     }
+  }
+  if (isset($index)) {
+    return isset($formats[$index]) ? $formats[$index] : FALSE;
   }
   return $formats;
 }
@@ -862,6 +841,7 @@ function filter_access($format) {
     return isset($formats[$format]);
   }
 }
+
 /**
  * @} End of "Filtering functions".
  */

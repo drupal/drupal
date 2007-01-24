@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.100 2007/01/05 19:05:54 dries Exp $
+// $Id: blogapi.module,v 1.101 2007/01/24 14:48:36 dries Exp $
 
 /**
  * @file
@@ -551,45 +551,31 @@ function blogapi_admin_settings() {
   return system_settings_form($form);
 }
 
-function blogapi_menu($may_cache) {
-  $items = array();
+function blogapi_menu() {
+  $items['blogapi/rsd'] = array(
+    'title' => t('RSD'),
+    'page callback' => 'blogapi_rsd',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['admin/settings/blogapi'] = array(
+    'title' => t('Blog APIs'),
+    'description' => t('Configure which content types and engines external blog clients can use.'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('blogapi_admin_settings'),
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_NORMAL_ITEM,
+  );
 
+  return $items;
+}
+
+function blogapi_init() {
   if (drupal_is_front_page()) {
     drupal_add_link(array('rel' => 'EditURI',
                           'type' => 'application/rsd+xml',
                           'title' => t('RSD'),
                           'href' => url('blogapi/rsd', NULL, NULL, TRUE)));
-  }
-
-  if ($may_cache) {
-   $items[] = array(
-      'path' => 'blogapi',
-      'title' => t('RSD'),
-      'callback' => 'blogapi_blogapi',
-      'access' => user_access('access content'),
-      'type' => MENU_CALLBACK);
-    $items[] = array(
-      'path' => 'admin/settings/blogapi',
-      'title' => t('Blog APIs'),
-      'description' => t('Configure which content types and engines external blog clients can use.'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('blogapi_admin_settings'),
-      'access' => user_access('administer site configuration'),
-      'type' => MENU_NORMAL_ITEM
-    );
-  }
-
-  return $items;
-}
-
-function blogapi_blogapi() {
-  switch (arg(1)) {
-    case 'rsd':
-      blogapi_rsd();
-      break;
-    default:
-      drupal_not_found();
-      break;
   }
 }
 

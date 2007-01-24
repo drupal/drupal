@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.247 2007/01/23 16:44:58 dries Exp $
+// $Id: block.module,v 1.248 2007/01/24 14:48:36 dries Exp $
 
 /**
  * @file
@@ -58,48 +58,43 @@ function block_perm() {
 /**
  * Implementation of hook_menu().
  */
-function block_menu($may_cache) {
-  $items = array();
-
-  if ($may_cache) {
-    $items[] = array(
-      'path' => 'admin/build/block',
-      'title' => t('Blocks'),
-      'access' => user_access('administer blocks'),
-      'description' => t('Configure what block content appears in your site\'s sidebars and other regions.'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('block_admin_display'));
-    $items[] = array('path' => 'admin/build/block/list', 'title' => t('List'),
-      'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
-    $items[] = array('path' => 'admin/build/block/configure', 'title' => t('Configure block'),
-      'access' => user_access('administer blocks'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('block_admin_configure'),
-      'type' => MENU_CALLBACK);
-    $items[] = array('path' => 'admin/build/block/delete', 'title' => t('Delete block'),
-      'access' => user_access('administer blocks'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('block_box_delete'),
-      'type' => MENU_CALLBACK);
-    $items[] = array('path' => 'admin/build/block/add', 'title' => t('Add block'),
-      'access' => user_access('administer blocks'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('block_add_block_form'),
-      'type' => MENU_LOCAL_TASK);
-    $default = variable_get('theme_default', 'garland');
-    foreach (list_themes() as $key => $theme) {
-      $items[] = array(
-        'path' => 'admin/build/block/list/'. $key,
-        'title' => t('!key settings', array('!key' => $key)),
-        'callback' => 'drupal_get_form',
-        'callback arguments' => array('block_admin_display', $key),
-        'access' => user_access('administer blocks'),
-        'type' => $key == $default ? MENU_DEFAULT_LOCAL_TASK : MENU_LOCAL_TASK,
-        'weight' => $key == $default ? -10 : 0,
-      );
-    }
+function block_menu() {
+  $items['admin/build/block'] = array(
+    'title' => t('Blocks'),
+    'description' => t('Configure what block content appears in your site\'s sidebars and other regions.'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('block_admin_display'),
+    'access arguments' => array('administer blocks'),
+  );
+  $items['admin/build/block/list'] = array(
+    'title' => t('List'),
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10,
+  );
+  $items['admin/build/block/configure'] = array(
+    'title' => t('Configure block'),
+    'page arguments' => array('block_admin_configure'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['admin/build/block/delete'] = array(
+    'title' => t('Delete block'),
+    'page arguments' => array('block_box_delete'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['admin/build/block/add'] = array(
+    'title' => t('Add block'),
+    'page arguments' => array('block_add_block_form'),
+    'type' => MENU_LOCAL_TASK,
+  );
+  $default = variable_get('theme_default', 'garland');
+  foreach (list_themes() as $key => $theme) {
+    $items['admin/build/block/list/'. $key] = array(
+      'title' => t('!key settings', array('!key' => $key)),
+      'page arguments' => array('block_admin_display', $key),
+      'type' => $key== $default ? MENU_DEFAULT_LOCAL_TASK : MENU_LOCAL_TASK,
+      'weight' => $key == $default ? -10 : 0,
+    );
   }
-
   return $items;
 }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.105 2007/01/05 05:32:22 unconed Exp $
+// $Id: locale.inc,v 1.106 2007/01/24 14:48:35 dries Exp $
 
 /**
  * @file
@@ -119,7 +119,6 @@ function _locale_admin_manage_screen_submit($form_id, $form_values) {
   drupal_set_message(t('Configuration saved.'));
 
   // Changing the locale settings impacts the interface:
-  cache_clear_all('*', 'cache_menu', TRUE);
   cache_clear_all('*', 'cache_page', TRUE);
 
   return 'admin/settings/locale/language/overview';

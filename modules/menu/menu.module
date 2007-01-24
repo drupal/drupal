@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.100 2007/01/05 19:05:54 dries Exp $
+// $Id: menu.module,v 1.101 2007/01/24 14:48:36 dries Exp $
 
 /**
  * @file
@@ -34,7 +34,8 @@ Menu administration tabs:
 /**
  * Implementation of hook_menu().
  */
-function menu_menu($may_cache) {
+function menu_menu() {
+  return;
   $items = array();
 
   if ($may_cache) {

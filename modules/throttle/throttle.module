@@ -1,26 +1,19 @@
 <?php
-// $Id: throttle.module,v 1.72 2006/12/20 10:29:31 dries Exp $
+// $Id: throttle.module,v 1.73 2007/01/24 14:48:36 dries Exp $
 
 /**
  * @file
  * Allows configuration of congestion control auto-throttle mechanism.
  */
 
-function throttle_menu($may_cache) {
-  $items = array();
-
-  if ($may_cache) {
-    $items[] = array(
-      'path' => 'admin/settings/throttle',
-      'description' => t('Control how your site cuts out content during heavy load.'),
-      'title' => t('Throttle'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('throttle_admin_settings'),
-      'access' => user_access('administer site configuration'),
-      'type' => MENU_NORMAL_ITEM
-    );
-  }
-
+function throttle_menu() {
+  $items['admin/settings/throttle'] = array(
+    'description' => t('Control how your site cuts out content during heavy load.'),
+    'title' => t('Throttle'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('throttle_admin_settings'),
+    'access arguments' => array('administer site configuration'),
+  );
   return $items;
 }
 

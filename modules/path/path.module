@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.105 2007/01/09 08:34:03 dries Exp $
+// $Id: path.module,v 1.106 2007/01/24 14:48:36 dries Exp $
 
 /**
  * @file
@@ -35,32 +35,37 @@ function path_help($section) {
 /**
  * Implementation of hook_menu().
  */
-function path_menu($may_cache) {
-  $items = array();
-
-  if ($may_cache) {
-    $items[] = array('path' => 'admin/build/path', 'title' => t('URL aliases'),
-      'description' => t('Change your site\'s URL paths by aliasing them.'),
-      'callback' => 'path_admin',
-      'access' => user_access('administer url aliases'));
-    $items[] = array('path' => 'admin/build/path/edit', 'title' => t('Edit alias'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('path_admin_edit'),
-      'access' => user_access('administer url aliases'),
-      'type' => MENU_CALLBACK);
-    $items[] = array('path' => 'admin/build/path/delete', 'title' => t('Delete alias'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('path_admin_delete_confirm'),
-      'access' => user_access('administer url aliases'),
-      'type' => MENU_CALLBACK);
-    $items[] = array('path' => 'admin/build/path/list', 'title' => t('List'),
-      'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
-    $items[] = array('path' => 'admin/build/path/add', 'title' => t('Add alias'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('path_admin_edit'),
-      'access' => user_access('administer url aliases'),
-      'type' => MENU_LOCAL_TASK);
-  }
+function path_menu() {
+  $items['admin/build/path'] = array(
+    'title' => t('URL aliases'),
+    'description' => t('Change your site\'s URL paths by aliasing them.'),
+    'page callback' => 'path_admin',
+    'access arguments' => array('administer url aliases'),
+  );
+  $items['admin/build/path/edit'] = array(
+    'title' => t('Edit alias'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('path_admin_edit'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['admin/build/path/delete'] = array(
+    'title' => t('Delete alias'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('path_admin_delete_confirm'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['admin/build/path/list'] = array(
+    'title' => t('List'),
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10,
+  );
+  $items['admin/build/path/add'] = array(
+    'title' => t('Add alias'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('path_admin_edit'),
+    'access arguments' => array('administer url aliases'),
+    'type' => MENU_LOCAL_TASK,
+  );
 
   return $items;
 }

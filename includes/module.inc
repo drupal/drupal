@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.93 2006/12/07 17:03:34 dries Exp $
+// $Id: module.inc,v 1.94 2007/01/24 14:48:35 dries Exp $
 
 /**
  * @file
@@ -253,7 +253,6 @@ function module_enable($module_list) {
     module_list(TRUE, FALSE);
     // Force to regenerate the stored list of hook implementations.
     module_implements('', FALSE, TRUE);
-    cache_clear_all('*', 'cache_menu', TRUE);
   }
 
   foreach ($invoke_modules as $module) {
@@ -283,7 +282,6 @@ function module_disable($module_list) {
     module_list(TRUE, FALSE);
     // Force to regenerate the stored list of hook implementations.
     module_implements('', FALSE, TRUE);
-    cache_clear_all('*', 'cache_menu', TRUE);
   }
 }
 

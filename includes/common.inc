@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.612 2007/01/23 19:21:50 dries Exp $
+// $Id: common.inc,v 1.613 2007/01/24 14:48:35 dries Exp $
 
 /**
  * @file
@@ -2208,4 +2208,23 @@ function element_child($key) {
  */
 function element_children($element) {
   return array_filter(array_keys((array) $element), 'element_child');
+}
+
+/**
+ * Generate vancode.
+ *
+ * Consists of a leading character indicating length, followed by N digits
+ * with a numerical value in base 36. Vancodes can be sorted as strings
+ * without messing up numerical order.
+ *
+ * It goes:
+ * 00, 01, 02, ..., 0y, 0z,
+ * 110, 111, ... , 1zy, 1zz,
+ * 2100, 2101, ..., 2zzy, 2zzz,
+ * 31000, 31001, ...
+ */
+function int2vancode($i = 0) {
+  $num = base_convert((int)$i, 10, 36);
+  $length = strlen($num);
+  return chr($length + ord('0') - 1) . $num;
 }

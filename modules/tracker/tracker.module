@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.module,v 1.143 2007/01/10 15:17:51 dries Exp $
+// $Id: tracker.module,v 1.144 2007/01/24 14:48:36 dries Exp $
 
 /**
  * @file
@@ -22,32 +22,34 @@ function tracker_help($section) {
 /**
  * Implementation of hook_menu().
  */
-function tracker_menu($may_cache) {
-  global $user;
-  $items = array();
+function tracker_menu() {
+  $items['tracker'] = array(
+    'title' => t('Recent posts'),
+    'page callback' => 'tracker_page',
+    'access arguments' => array('access content'),
+    'weight' => 1,
+  );
 
-  if ($may_cache) {
-    $items[] = array('path' => 'tracker', 'title' => t('Recent posts'),
-      'callback' => 'tracker_page', 'access' => user_access('access content'),
-      'weight' => 1);
-
-    if ($user->uid) {
-      $items[] = array('path' => 'tracker/all', 'title' => t('All recent posts'),
-        'type' => MENU_DEFAULT_LOCAL_TASK);
-      $items[] = array('path' => 'tracker/'. $user->uid, 'title' => t('My recent posts'),
-        'type' => MENU_LOCAL_TASK);
-    }
-  }
-  else {
-    if (arg(0) == 'user' && is_numeric(arg(1))) {
-      $items[] = array('path' => 'user/'. arg(1) .'/track', 'title' => t('Track'),
-          'callback' => 'tracker_track_user', 'access' => user_access('access content'),
-          'type' => MENU_IS_LOCAL_TASK);
-      $items[] = array('path' => 'user/'. arg(1) .'/track/posts', 'title' => t('Track posts'),
-          'type' => MENU_DEFAULT_LOCAL_TASK);
-    }
-  }
-
+  $items['tracker/all'] = array(
+    'title' => t('All recent posts'),
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'access callback' => 'user_is_logged_in',
+  );
+  $items['tracker/%'] = array(
+    'title' => t('My recent posts'),
+    'type' => MENU_LOCAL_TASK,
+    'access callback' => 'user_is_logged_in',
+  );
+  $items['user/%/track'] = array(
+    'title' => t('Track'),
+    'page callback' => 'tracker_track_user',
+    'access arguments' => array('access content'),
+    'type' => MENU_LOCAL_TASK,
+  );
+  $items['user/%/track/posts'] = array(
+    'title' => t('Track posts'),
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
   return $items;
 }
 

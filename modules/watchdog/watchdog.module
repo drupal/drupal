@@ -1,5 +1,5 @@
 <?php
-// $Id: watchdog.module,v 1.166 2007/01/23 19:07:20 dries Exp $
+// $Id: watchdog.module,v 1.167 2007/01/24 14:48:36 dries Exp $
 
 /**
  * @file
@@ -30,34 +30,39 @@ function watchdog_help($section) {
 /**
  * Implementation of hook_menu().
  */
-function watchdog_menu($may_cache) {
-  $items = array();
-
-  if ($may_cache) {
-    $items[] = array('path' => 'admin/logs/watchdog', 'title' => t('Recent log entries'),
-      'description' => t('View events that have recently been logged.'),
-      'callback' => 'watchdog_overview',
-      'weight' => -1);
-    $items[] = array('path' => 'admin/logs/page-not-found', 'title' => t("Top 'page not found' errors"),
-      'description' => t("View 'page not found' errors (404s)."),
-      'callback' => 'watchdog_top',
-      'callback arguments' => array('page not found'));
-    $items[] = array('path' => 'admin/logs/access-denied', 'title' => t("Top 'access denied' errors"),
-      'description' => t("View 'access denied' errors (403s)."),
-      'callback' => 'watchdog_top',
-      'callback arguments' => array('access denied'));
-    $items[] = array('path' => 'admin/logs/event', 'title' => t('Details'),
-      'callback' => 'watchdog_event',
-      'type' => MENU_CALLBACK);
-  }
-  else {
-    if (arg(0) == 'admin' && arg(1) == 'logs') {
-      // Add the CSS for this module
-      drupal_add_css(drupal_get_path('module', 'watchdog') .'/watchdog.css', 'module', 'all', FALSE);
-    }
-  }
-
+function watchdog_menu() {
+  $items['admin/logs/watchdog'] = array(
+    'title' => t('Recent log entries'),
+    'description' => t('View events that have recently been logged.'),
+    'page callback' => 'watchdog_overview',
+    'weight' => -1,
+  );
+  $items['admin/logs/page-not-found'] = array(
+    'title' => t("Top 'page not found' errors"),
+    'description' => t("View 'page not found' errors (404s)."),
+    'page callback' => 'watchdog_top',
+    'page arguments' => array('page not found'),
+  );
+  $items['admin/logs/access-denied'] = array(
+      'title' => t("Top 'access denied' errors"),
+    'description' => t("View 'access denied' errors (403s)."),
+    'page callback' => 'watchdog_top',
+    'page arguments' => array('access denied'),
+  );
+  $items['admin/logs/event/%'] = array(
+    'title' => t('Details'),
+    'page callback' => 'watchdog_event',
+    'page arguments' => array(3),
+    'type' => MENU_CALLBACK,
+  );
   return $items;
+}
+
+function watchdog_init() {
+  if (arg(0) == 'admin' && arg(1) == 'logs') {
+    // Add the CSS for this module
+    drupal_add_css(drupal_get_path('module', 'watchdog') .'/watchdog.css', 'module', 'all', FALSE);
+  }
 }
 
 /**
