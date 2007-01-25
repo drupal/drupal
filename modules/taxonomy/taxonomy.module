@@ -716,7 +716,7 @@ function taxonomy_form_alter($form_id, &$form) {
         $form['taxonomy'][$vocabulary->vid]['#required'] = $vocabulary->required;
       }
     }
-    if (is_array($form['taxonomy']) && !empty($form['taxonomy'])) {
+    if (isset($form['taxonomy']) && is_array($form['taxonomy']) && !empty($form['taxonomy'])) {
       if (count($form['taxonomy']) > 1) { // Add fieldset only if form has more than 1 element.
         $form['taxonomy'] += array(
           '#type' => 'fieldset',
