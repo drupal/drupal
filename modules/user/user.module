@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.746 2007/01/24 14:48:36 dries Exp $
+// $Id: user.module,v 1.747 2007/01/25 21:32:07 dries Exp $
 
 /**
  * @file
@@ -1275,12 +1275,9 @@ function user_register() {
 
   // Remove form_group around default fields if there are no other groups.
   if (!$extra) {
-    $form['name'] = $form['account']['name'];
-    $form['mail'] = $form['account']['mail'];
-    $form['pass'] = $form['account']['pass'];
-    $form['status'] = $form['account']['status'];
-    $form['roles'] = $form['account']['roles'];
-    $form['notify'] = $form['account']['notify'];
+    foreach ($form['account'] as $key => $value) {
+      $form[$key] = $value;
+    }
     unset($form['account']);
   }
   else {
@@ -1822,7 +1819,7 @@ function user_admin_access() {
   if (count($rows) == 0) {
     $rows[] = array(array('data' => '<em>'. t('There are currently no access rules.') .'</em>', 'colspan' => 5));
   }
-  $output .= theme('table', $header, $rows);
+  $output = theme('table', $header, $rows);
 
   return $output;
 }
@@ -2064,7 +2061,7 @@ function theme_user_admin_new_role($form) {
       $rows[] = array($name, t('locked'), $edit_permissions);
     }
   }
-  $rows[] = array(drupal_render($form['name']), array('data' => drupal_render($form['submit']), colspan => 2));
+  $rows[] = array(drupal_render($form['name']), array('data' => drupal_render($form['submit']), 'colspan' => 2));
 
   $output = drupal_render($form);
   $output .= theme('table', $header, $rows);
@@ -2413,7 +2410,7 @@ function user_admin($callback_arg = '') {
       $output = drupal_get_form('user_register');
       break;
     default:
-      if ($_POST['accounts'] && $_POST['operation'] == 'delete') {
+      if (isset($_POST['accounts']) && $_POST['operation'] == 'delete') {
         $output = drupal_get_form('user_multiple_delete_confirm');
       }
       else {
@@ -2673,7 +2670,7 @@ function theme_user_filter_form($form) {
  */
 function theme_user_filters($form) {
   $output = '<ul class="clear-block">';
-  if (sizeof($form['current'])) {
+  if (isset($form['current']) && sizeof($form['current'])) {
     foreach (element_children($form['current']) as $key) {
       $output .= '<li>'. drupal_render($form['current'][$key]) .'</li>';
     }

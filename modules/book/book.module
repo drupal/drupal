@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.407 2007/01/24 14:48:36 dries Exp $
+// $Id: book.module,v 1.408 2007/01/25 21:32:06 dries Exp $
 
 /**
  * @file
@@ -507,7 +507,7 @@ function theme_book_navigation($node) {
  * This is a helper function for book_toc().
  */
 function book_toc_recurse($nid, $indent, $toc, $children, $exclude) {
-  if ($children[$nid]) {
+  if (isset($children[$nid])) {
     foreach ($children[$nid] as $foo => $node) {
       if (!$exclude || $exclude != $node->nid) {
         $toc[$node->nid] = $indent .' '. $node->title;

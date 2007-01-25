@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.149 2007/01/24 14:48:36 dries Exp $
+// $Id: upload.module,v 1.150 2007/01/25 21:32:07 dries Exp $
 
 /**
  * @file
@@ -285,7 +285,7 @@ function _upload_prepare(&$node) {
   // Clean up old file previews if a post didn't get the user to this page.
   // i.e. the user left the edit page, because they didn't want to upload anything.
   if(count($_POST) == 0) {
-    if (is_array($_SESSION['file_previews']) && count($_SESSION['file_previews'])) {
+    if (isset($_SESSION['file_previews']) && is_array($_SESSION['file_previews']) && count($_SESSION['file_previews'])) {
       foreach ($_SESSION['file_previews'] as $fid => $file) {
         file_delete($file->filepath);
       }
@@ -321,7 +321,7 @@ function _upload_prepare(&$node) {
   }
 
   // Attach file previews to node object.
-  if (is_array($_SESSION['file_previews']) && count($_SESSION['file_previews'])) {
+  if (isset($_SESSION['file_previews']) && is_array($_SESSION['file_previews']) && count($_SESSION['file_previews'])) {
     foreach ($_SESSION['file_previews'] as $fid => $file) {
       if ($user->uid != 1) {
         // Here something.php.pps becomes something.php_.pps

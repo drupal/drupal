@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.147 2007/01/24 14:48:35 dries Exp $
+// $Id: menu.inc,v 1.148 2007/01/25 21:32:06 dries Exp $
 
 /**
  * @file
@@ -367,7 +367,7 @@ function _menu_tree($result = NULL, $depth = 0, $link = array('link' => '', 'has
       break;
     }
   }
-  if ($link['link']) {
+  if (isset($link['link'])) {
     $tree .= theme('menu_link', $link);
   }
   return array($remnant, $tree);

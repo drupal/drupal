@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.94 2007/01/24 14:48:35 dries Exp $
+// $Id: module.inc,v 1.95 2007/01/25 21:32:06 dries Exp $
 
 /**
  * @file
@@ -110,6 +110,9 @@ function module_rebuild_cache() {
       continue;
     }
     $files[$filename]->info = $file->info;
+    if (!isset($files[$filename]->info['version'])) {
+      $files[$filename]->info['version'] = NULL;
+    }
 
     // log the critical hooks implemented by this module
     $bootstrap = 0;

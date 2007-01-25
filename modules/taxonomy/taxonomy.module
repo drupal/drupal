@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.332 2007/01/24 14:48:36 dries Exp $
+// $Id: taxonomy.module,v 1.333 2007/01/25 21:32:07 dries Exp $
 
 /**
  * @file
@@ -716,7 +716,7 @@ function taxonomy_form_alter($form_id, &$form) {
         $form['taxonomy'][$vocabulary->vid]['#required'] = $vocabulary->required;
       }
     }
-    if (is_array($form['taxonomy']) && !empty($form['taxonomy'])) {
+    if (isset($form['taxonomy']) && is_array($form['taxonomy']) && !empty($form['taxonomy'])) {
       if (count($form['taxonomy']) > 1) { // Add fieldset only if form has more than 1 element.
         $form['taxonomy'] += array(
           '#type' => 'fieldset',

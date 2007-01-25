@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.777 2007/01/24 14:48:36 dries Exp $
+// $Id: node.module,v 1.778 2007/01/25 21:32:07 dries Exp $
 
 /**
  * @file
@@ -1393,7 +1393,7 @@ function node_filter_form() {
  * Theme node administration filter form.
  */
 function theme_node_filter_form($form) {
-  $output .= '<div id="node-admin-filter">';
+  $output = '<div id="node-admin-filter">';
   $output .= drupal_render($form['filters']);
   $output .= '</div>';
   $output .= drupal_render($form);
@@ -1404,8 +1404,8 @@ function theme_node_filter_form($form) {
  * Theme node administration filter selector.
  */
 function theme_node_filters($form) {
-  $output .= '<ul class="clear-block">';
-  if (sizeof($form['current'])) {
+  $output = '<ul class="clear-block">';
+  if (isset($form['current']) && sizeof($form['current'])) {
     foreach (element_children($form['current']) as $key) {
       $output .= '<li>'. drupal_render($form['current'][$key]) .'</li>';
     }
@@ -1495,7 +1495,7 @@ function node_admin_nodes_validate($form_id, $form_values) {
 function node_admin_content() {
   $output = drupal_get_form('node_filter_form');
 
-  if ($_POST['operation'] == 'delete' && $_POST['nodes']) {
+  if (isset($_POST['operation']) && $_POST['operation'] == 'delete' && $_POST['nodes']) {
     return drupal_get_form('node_multiple_delete_confirm');
   }
   // Call the form first, to allow for the form_values array to be populated.
@@ -1506,6 +1506,7 @@ function node_admin_content() {
 
 function node_admin_nodes() {
   global $form_values;
+
   $filter = node_build_filter_query();
 
   $result = pager_query('SELECT n.*, u.name, u.uid FROM {node} n '. $filter['join'] .' INNER JOIN {users} u ON n.uid = u.uid '. $filter['where'] .' ORDER BY n.changed DESC', 50, 0, NULL, $filter['args']);
@@ -1522,6 +1523,7 @@ function node_admin_nodes() {
   $form['options']['operation'] = array('#type' => 'select', '#options' => $options,  '#default_value' => 'approve');
   $form['options']['submit'] = array('#type' => 'submit', '#value' => t('Update'));
 
+  $nodes = array();
   $destination = drupal_get_destination();
   while ($node = db_fetch_object($result)) {
     $nodes[$node->nid] = '';
@@ -1543,7 +1545,7 @@ function theme_node_admin_nodes($form) {
   // Overview table:
   $header = array(theme('table_select_header_cell'), t('Title'), t('Type'), t('Author'), t('Status'), t('Operations'));
 
-  $output .= drupal_render($form['options']);
+  $output = drupal_render($form['options']);
   if (isset($form['title']) && is_array($form['title'])) {
     foreach (element_children($form['title']) as $key) {
       $row = array();
