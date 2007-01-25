@@ -219,7 +219,7 @@ function taxonomy_form_vocabulary($edit = array()) {
   $form['name'] = array('#type' => 'textfield',
     '#title' => t('Vocabulary name'),
     '#default_value' => $edit['name'],
-    '#maxlength' => 64,
+    '#maxlength' => 255,
     '#description' => t('The name for this vocabulary. Example: "Topic".'),
     '#required' => TRUE,
   );
@@ -381,7 +381,7 @@ function taxonomy_form_term($vocabulary_id, $edit = array()) {
     '#type' => 'textfield',
     '#title' => t('Term name'),
     '#default_value' => $edit['name'],
-    '#maxlength' => 64,
+    '#maxlength' => 255,
     '#description' => t('The name of this term.'),
     '#required' => TRUE);
 
