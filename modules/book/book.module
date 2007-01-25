@@ -507,7 +507,7 @@ function theme_book_navigation($node) {
  * This is a helper function for book_toc().
  */
 function book_toc_recurse($nid, $indent, $toc, $children, $exclude) {
-  if (isset($children[$nid])) {
+  if ($children[$nid]) {
     foreach ($children[$nid] as $foo => $node) {
       if (!$exclude || $exclude != $node->nid) {
         $toc[$node->nid] = $indent .' '. $node->title;

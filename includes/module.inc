@@ -110,9 +110,6 @@ function module_rebuild_cache() {
       continue;
     }
     $files[$filename]->info = $file->info;
-    if (!isset($files[$filename]->info['version'])) {
-      $files[$filename]->info['version'] = NULL;
-    }
 
     // log the critical hooks implemented by this module
     $bootstrap = 0;

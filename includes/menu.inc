@@ -367,7 +367,7 @@ function _menu_tree($result = NULL, $depth = 0, $link = array('link' => '', 'has
       break;
     }
   }
-  if (isset($link['link'])) {
+  if ($link['link']) {
     $tree .= theme('menu_link', $link);
   }
   return array($remnant, $tree);
