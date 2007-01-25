@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.338 2007/01/25 21:32:06 dries Exp $
+// $Id: theme.inc,v 1.339 2007/01/25 22:14:06 dries Exp $
 
 /**
  * @file
@@ -610,7 +610,6 @@ function theme_links($links, $attributes = array('class' => 'links')) {
 function theme_image($path, $alt = '', $title = '', $attributes = NULL, $getsize = TRUE) {
   if (!$getsize || (is_file($path) && (list($width, $height, $type, $image_attributes) = @getimagesize($path)))) {
     $attributes = drupal_attributes($attributes);
-    $image_attributes = isset($image_attributes) ? $image_attributes : '';
     $url = (url($path) == $path) ? $path : (base_path() . $path);
     return '<img src="'. check_url($url) .'" alt="'. check_plain($alt) .'" title="'. check_plain($title) .'" '. $image_attributes . $attributes .' />';
   }

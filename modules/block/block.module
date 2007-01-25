@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.249 2007/01/25 21:32:06 dries Exp $
+// $Id: block.module,v 1.250 2007/01/25 22:14:06 dries Exp $
 
 /**
  * @file
@@ -310,7 +310,7 @@ function theme_block_admin_display($form) {
   foreach (element_children($form) as $i) {
     $block = &$form[$i];
     // Only take form elements that are blocks.
-    if (isset($block['info']) && is_array($block['info'])) {
+    if (is_array($block['info'])) {
       // Fetch values
       $region = $block['region']['#default_value'];
       $status = $region != BLOCK_REGION_NONE;
@@ -337,7 +337,7 @@ function theme_block_admin_display($form) {
         $row[] = drupal_render($block['throttle']);
       }
       $row[] = drupal_render($block['configure']);
-      $row[] = isset($block['delete']) ? drupal_render($block['delete']) : '';
+      $row[] = $block['delete'] ? drupal_render($block['delete']) : '';
       $rows[] = $row;
     }
   }
@@ -570,7 +570,7 @@ function block_box_form($edit = array()) {
   $form['info'] = array(
     '#type' => 'textfield',
     '#title' => t('Block description'),
-    '#default_value' => isset($edit['info']) ? $edit['info'] : '',
+    '#default_value' => $edit['info'],
     '#maxlength' => 64,
     '#description' => t('A brief description of your block. Used on the <a href="@overview">block overview page</a>.', array('@overview' => url('admin/build/block'))),
     '#required' => TRUE,
@@ -580,7 +580,7 @@ function block_box_form($edit = array()) {
   $form['body_filter']['body'] = array(
     '#type' => 'textarea',
     '#title' => t('Block body'),
-    '#default_value' => isset($edit['body']) ? $edit['body'] : '',
+    '#default_value' => $edit['body'],
     '#rows' => 15,
     '#description' => t('The content of the block as shown to the user.'),
     '#weight' => -17,
@@ -631,7 +631,7 @@ function block_user($type, $edit, &$user, $category = NULL) {
 
       break;
     case 'validate':
-      if (!isset($edit['block'])) {
+      if (!$edit['block']) {
         $edit['block'] = array();
       }
       return $edit;

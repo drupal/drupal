@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.444 2007/01/25 21:32:07 dries Exp $
+// $Id: system.module,v 1.445 2007/01/25 22:14:06 dries Exp $
 
 /**
  * @file
@@ -354,10 +354,7 @@ function system_main_admin_page($arg = NULL) {
   usort($menu['children'], '_menu_sort');
   foreach ($menu['children'] as $mid) {
     $block = menu_get_item($mid);
-    if (!isset($block['content'])) {
-      $block['content'] = '';
-    }
-    if (isset($block['block callback']) && function_exists($block['block callback'])) {
+    if ($block['block callback'] && function_exists($block['block callback'])) {
       $arguments = isset($block['block arguments']) ? $block['block arguments'] : array();
       $block['content'] .= call_user_func_array($block['block callback'], $arguments);
     }
@@ -374,7 +371,7 @@ function system_main_admin_page($arg = NULL) {
 function system_admin_menu_block($block) {
   return 'This page awaits rewrite'; // TODO: this needs to be rewritten for the new menu system.
   $content = array();
-  if (isset($block['children']) && is_array($block['children'])) {
+  if (is_array($block['children'])) {
     usort($block['children'], '_menu_sort');
     foreach ($block['children'] as $mid) {
       $item = menu_get_item($mid);
@@ -952,7 +949,7 @@ function system_theme_data() {
       $style->template = isset($theme->template) ? $theme->template : FALSE;
       $style->name = basename(dirname($style->filename));
       $style->owner = $theme->filename;
-      $style->prefix = isset($theme->template) ? $theme->prefix : $theme->name;
+      $style->prefix = $theme->template ? $theme->prefix : $theme->name;
       // do not double-insert styles with theme files in their directory
       if (array_key_exists($style->name, $themes)) {
         continue;
@@ -1163,7 +1160,7 @@ function system_themes() {
 function theme_system_themes($form) {
   foreach (element_children($form) as $key) {
     $row = array();
-    if (isset($form[$key]['description']) && is_array($form[$key]['description'])) {
+    if (is_array($form[$key]['description'])) {
       $row[] = drupal_render($form[$key]['screenshot']);
       $row[] = drupal_render($form[$key]['description']);
       $row[] = array('data' => drupal_render($form['status'][$key]), 'align' => 'center');
@@ -1237,9 +1234,6 @@ function system_modules($form_values = NULL) {
     return $confirm_form;
   }
 
-  // Modules to throttle.
-  $throttle = array();
-
   // Store module list for validation callback.
   $form['validation_modules'] = array('#type' => 'value', '#value' => $files);
 
@@ -1292,7 +1286,7 @@ function system_modules($form_values = NULL) {
 
     // Mark dependents disabled so user can not remove modules being depended on.
     $dependents = array();
-    if (isset($file->info['dependents']) && is_array($file->info['dependents'])) {
+    if (is_array($file->info['dependents'])) {
       foreach ($file->info['dependents'] as $dependent) {
         if ($files[$dependent]->status == 1) {
           $dependents[] = $files[$dependent]->info['name'] . t(' (<span class="admin-enabled">enabled</span>)');
@@ -1489,7 +1483,7 @@ function system_modules_submit($form_id, $form_values) {
 
   $current_module_list = module_list(TRUE, FALSE);
 
-  if (isset($form_values['throttle']) && is_array($form_values['throttle'])) {
+  if (is_array($form_values['throttle'])) {
     foreach ($form_values['throttle'] as $key => $choice) {
       db_query("UPDATE {system} SET throttle = %d WHERE type = 'module' and name = '%s'", $choice ? 1 : 0, $key);
     }
@@ -1841,7 +1835,7 @@ function system_status($check = FALSE) {
  * Helper function to sort requirements.
  */
 function _system_sort_requirements($a, $b) {
-  return (isset($a['weight']) && isset($b['weight'])) ? $a['weight'] - $b['weight'] : strcmp($a['title'], $b['title']);
+  return (isset($a['weight']) || isset($b['weight'])) ? $a['weight'] - $b['weight'] : strcmp($a['title'], $b['title']);
 }
 
 /**
@@ -2174,7 +2168,7 @@ function system_admin_compact_mode() {
  */
 function theme_admin_page($blocks) {
   $stripe = 0;
-  $container = array('left' => '', 'right' => '');
+  $container = array();
 
   foreach ($blocks as $block) {
     if ($block_output = theme('admin_block', $block)) {
@@ -2329,7 +2323,7 @@ function system_get_module_admin_tasks($module) {
 function theme_system_admin_by_module($menu_items) {
   $stripe = 0;
   $output = '';
-  $container = array('left' => '', 'right' => '');
+  $container = array();
 
   // Iterate over all modules
   foreach ($menu_items as $module => $block) {
@@ -2343,7 +2337,7 @@ function theme_system_admin_by_module($menu_items) {
       $block['description'] = t($description);
 
       if ($block_output = theme('admin_block', $block)) {
-        if (!isset($block['position'])) {
+        if (!$block['position']) {
           // Perform automatic striping.
           $block['position'] = ++$stripe % 2 ? 'left' : 'right';
         }

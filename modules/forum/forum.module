@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.377 2007/01/25 21:49:32 dries Exp $
+// $Id: forum.module,v 1.378 2007/01/25 22:14:06 dries Exp $
 
 /**
  * @file
@@ -439,7 +439,7 @@ function forum_form_container($edit = array()) {
     '#title' => t('Container name'),
     '#type' => 'textfield',
     '#default_value' => $edit['name'],
-    '#maxlength' =>  64,
+    '#maxlength' => 255,
     '#description' => t('The container name is used to identify related forums.'),
     '#required' => TRUE
   );
@@ -496,7 +496,7 @@ function forum_form_forum($edit = array()) {
   $form['name'] = array('#type' => 'textfield',
     '#title' => t('Forum name'),
     '#default_value' => $edit['name'],
-    '#maxlength' =>  64,
+    '#maxlength' => 255,
     '#description' => t('The forum name is used to identify related discussions.'),
     '#required' => TRUE,
   );
