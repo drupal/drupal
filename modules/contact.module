@@ -469,9 +469,11 @@ function contact_mail_page() {
         '#title' => t('Message'),
         '#required' => TRUE,
       );
-      $form['copy'] = array('#type' => 'checkbox',
-        '#title' => t('Send me a copy.'),
-      );
+      if ($user->uid) {
+        $form['copy'] = array('#type' => 'checkbox',
+          '#title' => t('Send me a copy.'),
+        );
+      }
       $form['submit'] = array('#type' => 'submit',
         '#value' => t('Send e-mail'),
       );
