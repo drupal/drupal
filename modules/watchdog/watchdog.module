@@ -237,6 +237,10 @@ function watchdog_event($id) {
         array('data' => t('Hostname'), 'header' => TRUE),
         $watchdog->hostname,
       ),
+      array(
+        array('data' => t('Operations'), 'header' => TRUE),
+        $watchdog->link,
+      ),
     );
     $attributes = array('class' => 'watchdog-event');
     $output = theme('table', array(), $rows, $attributes);
