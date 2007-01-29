@@ -1724,6 +1724,10 @@ function node_form_add_preview($form) {
 
   $op = isset($_POST['op']) ? $_POST['op'] : '';
   if ($op == t('Preview')) {
+    // Invoke full validation for the form, to protect against cross site
+    // request forgeries (CSRF) and setting arbitrary values for fields such as
+    // the input format. Preview the node only when form validation does not
+    // set any errors.
     drupal_validate_form($form['form_id']['#value'], $form);
     if (!form_get_errors()) {
       // Because the node preview may display a form, we must render it
