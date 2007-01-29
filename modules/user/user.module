@@ -749,6 +749,7 @@ function user_menu() {
     'title' => t('Request new password'),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('user_pass'),
+    'access callback' => 'user_is_anonymous',
     'type' => MENU_LOCAL_TASK,
   );
   $items['user/reset/%/%/%'] = array(
