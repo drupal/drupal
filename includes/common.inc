@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.613 2007/01/24 14:48:35 dries Exp $
+// $Id: common.inc,v 1.614 2007/01/29 20:30:53 dries Exp $
 
 /**
  * @file
@@ -1511,7 +1511,8 @@ function drupal_build_css_cache($types, $filename) {
       foreach ($type as $file => $cache) {
         if ($cache) {
           $contents = file_get_contents($file);
-          // Return the path to where this CSS file originated from, stripping off the name of the file at the end of the path.
+          // Return the path to where this CSS file originated from, stripping
+          // off the name of the file at the end of the path.
           $path = base_path() . substr($file, 0, strrpos($file, '/')) .'/';
           // Wraps all @import arguments in url().
           $contents = preg_replace('/@import\s+(?!url)[\'"]?(\S*)\b[\'"]?/i', '@import url("\1")', $contents);
@@ -1521,6 +1522,7 @@ function drupal_build_css_cache($types, $filename) {
       }
     }
 
+    // Per the W3C specification at http://www.w3.org/TR/REC-CSS2/cascade.html#at-import,
     // @import rules must proceed any other style, so we move those to the top.
     $regexp = '/@import[^;]+;/i';
     preg_match_all($regexp, $data, $matches);
