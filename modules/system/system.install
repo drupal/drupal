@@ -807,7 +807,7 @@ function system_install() {
         fit int NOT NULL default 0,
         number_parts int NOT NULL default 0,
         vancode varchar(255) NOT NULL default '',
-        visible int(11) NOT NULL default '0',
+        visible int NOT NULL default '0',
         menu_link varchar(255) NOT NULL default '',
         parents varchar(255) NOT NULL default '',
         depth int NOT NULL default '0',
