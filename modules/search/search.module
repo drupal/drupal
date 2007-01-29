@@ -143,7 +143,6 @@ function search_menu($may_cache) {
     $items[] = array('path' => 'search',
       'title' => t('Search'),
       'callback' => 'search_view',
-      'callback arguments' => array('node'),
       'access' => user_access('search content'),
       'type' => MENU_SUGGESTED_ITEM);
     $items[] = array('path' => 'admin/settings/search',
@@ -169,23 +168,12 @@ function search_menu($may_cache) {
     // we dynamically add the keywords to the search tabs' paths.
     $keys = search_get_keys();
     $keys = strlen($keys) ? '/'. $keys : '';
-    foreach (module_implements('search') as $name) {
-      $title = module_invoke($name, 'search', 'name');
-      $items[] = array('path' => 'search/'. $name . $keys, 'title' => $title,
-        'callback' => 'search_view',
-        'callback arguments' => array($name),
-        // The search module only returns a title when the user is allowed to
-        // access that particular search type.
-        'access' => user_access('search content') && $title,
-        'type' => MENU_LOCAL_TASK,
-      );
-      if (arg(1) && $name == arg(1) && !arg(2) && $keys) {
-        // If the URL does not contain search keys, but they exist in
-        // $_POST, we need to redirect to the appropriate page so we
-        // use the right custom search (users vs. nodes, etc). Ideally,
-        // there would be a MENU_CALLBACK for just "search/$name", but
-        // that would destroy all the tabs we just registered.
-        drupal_goto('search/'. $name . $keys);
+    foreach (module_list() as $name) {
+      if (module_hook($name, 'search') && $title = module_invoke($name, 'search', 'name')) {
+        $items[] = array('path' => 'search/'. $name . $keys, 'title' => $title,
+          'callback' => 'search_view',
+          'access' => user_access('search content'),
+          'type' => MENU_LOCAL_TASK);
       }
     }
   }
@@ -901,7 +889,9 @@ function search_get_keys() {
 /**
  * Menu callback; presents the search form and/or search results.
  */
-function search_view($type = '') {
+function search_view() {
+  $type = arg(1);
+
   // Search form submits with POST but redirects to GET. This way we can keep
   // the search query URL clean as a whistle:
   // search/type/keyword+keyword
@@ -1030,7 +1020,11 @@ function search_form_submit($form_id, $form_values) {
   $keys = $form_values['processed_keys'];
   if ($keys == '') {
     form_set_error('keys', t('Please enter some keywords.'));
+    // Fall through to the drupal_goto() call.
   }
+
+  $type = $form_values['module'] ? $form_values['module'] : 'node';
+  return 'search/'. $type .'/'. $keys;
 }
 
 /**
