@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.748 2007/01/25 22:14:06 dries Exp $
+// $Id: user.module,v 1.749 2007/01/29 19:07:53 dries Exp $
 
 /**
  * @file
@@ -1867,8 +1867,11 @@ function user_admin_perm($rid = NULL) {
   }
 
   // Compile role array:
+  // Add a comma at the end so when searching for a permission, we can
+  // always search for "$perm," to make sure we do not confuse
+  // permissions that are substrings of each other.
   while ($role = db_fetch_object($result)) {
-    $role_permissions[$role->rid] = $role->perm;
+    $role_permissions[$role->rid] = $role->perm .',';
   }
 
   if (is_numeric($rid)) {
@@ -1896,7 +1899,7 @@ function user_admin_perm($rid = NULL) {
         $form['permission'][$perm] = array('#value' => t($perm));
         foreach ($role_names as $rid => $name) {
           // Builds arrays for checked boxes for each role
-          if (strstr($role_permissions[$rid], $perm)) {
+          if (strpos($role_permissions[$rid], $perm .',') !== FALSE) {
             $status[$rid][] = $perm;
           }
         }
