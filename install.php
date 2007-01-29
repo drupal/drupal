@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.35 2007/01/24 14:48:35 dries Exp $
+// $Id: install.php,v 1.36 2007/01/29 12:34:29 dries Exp $
 
 require_once './includes/install.inc';
 
@@ -533,7 +533,6 @@ function install_complete($profile) {
   // Bootstrap newly installed Drupal, while preserving existing messages.
   $messages = $_SESSION['messages'];
   drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
-  menu_rebuild();
   $_SESSION['messages'] = $messages;
 
   // Build final page.
@@ -548,6 +547,7 @@ function install_complete($profile) {
     $profile_message = $function();
   }
 
+  menu_rebuild();
   // If the profile returned a welcome message, use that instead of default.
   if (isset($profile_message)) {
     $output .= $profile_message;
