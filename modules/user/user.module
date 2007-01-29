@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.749 2007/01/29 19:07:53 dries Exp $
+// $Id: user.module,v 1.750 2007/01/29 19:17:55 dries Exp $
 
 /**
  * @file
@@ -749,6 +749,7 @@ function user_menu() {
     'title' => t('Request new password'),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('user_pass'),
+    'access callback' => 'user_is_anonymous',
     'type' => MENU_LOCAL_TASK,
   );
   $items['user/reset/%/%/%'] = array(
