@@ -74,22 +74,10 @@ DirectoryIndex index.php
   # the rewrite rules are not working properly.
   #RewriteBase /drupal
 
-  # Rewrite old-style URLs of the form 'node.php?id=x'.
-  #RewriteCond %{REQUEST_FILENAME} !-f
-  #RewriteCond %{REQUEST_FILENAME} !-d
-  #RewriteCond %{QUERY_STRING} ^id=([^&]+)$
-  #RewriteRule node.php index.php?q=node/view/%1 [L]
-
-  # Rewrite old-style URLs of the form 'module.php?mod=x'.
-  #RewriteCond %{REQUEST_FILENAME} !-f
-  #RewriteCond %{REQUEST_FILENAME} !-d
-  #RewriteCond %{QUERY_STRING} ^mod=([^&]+)$
-  #RewriteRule module.php index.php?q=%1 [L]
-
-  # Rewrite current-style URLs of the form 'index.php?q=x'.
+  # Rewrite URLs of the form 'index.php?q=x'.
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
 </IfModule>
 
-# $Id: .htaccess,v 1.81 2007/01/09 09:27:10 dries Exp $
+# $Id: .htaccess,v 1.82 2007/01/29 12:36:51 dries Exp $
