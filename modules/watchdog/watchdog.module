@@ -1,5 +1,5 @@
 <?php
-// $Id: watchdog.module,v 1.167 2007/01/24 14:48:36 dries Exp $
+// $Id: watchdog.module,v 1.168 2007/01/29 19:04:58 dries Exp $
 
 /**
  * @file
@@ -236,6 +236,10 @@ function watchdog_event($id) {
       array(
         array('data' => t('Hostname'), 'header' => TRUE),
         $watchdog->hostname,
+      ),
+      array(
+        array('data' => t('Operations'), 'header' => TRUE),
+        $watchdog->link,
       ),
     );
     $attributes = array('class' => 'watchdog-event');
