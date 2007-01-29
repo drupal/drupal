@@ -1764,9 +1764,11 @@ function user_admin_perm($str_rids = NULL) {
   }
 
   // Compile role array:
-  $roles = array();
+  // Add a comma at the end so when searching for a permission, we can
+  // always search for "$perm," to make sure we do not confuse
+  // permissions that are substrings of each other.
   while ($role = db_fetch_object($result)) {
-    $role_permissions[$role->rid] = $role->perm;
+    $role_permissions[$role->rid] = $role->perm .',';
   }
 
   if($rids) {
@@ -1791,7 +1793,7 @@ function user_admin_perm($str_rids = NULL) {
         $form['permission'][$perm] = array('#type' => 'markup', '#value' => t($perm));
         foreach ($role_names as $rid => $name) {
           // Builds arrays for checked boxes for each role
-          if (strstr($role_permissions[$rid], $perm)) {
+          if (strpos($role_permissions[$rid], $perm .',') !== FALSE) {
             $status[$rid][] = $perm;
           }
         }
