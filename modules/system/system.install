@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.73 2007/01/24 14:48:36 dries Exp $
+// $Id: system.install,v 1.74 2007/01/29 12:30:11 dries Exp $
 
 define('DRUPAL_MINIMUM_PHP',    '4.3.3');
 define('DRUPAL_MINIMUM_MYSQL',  '4.1.0'); // If using MySQL
@@ -807,7 +807,7 @@ function system_install() {
         fit int NOT NULL default 0,
         number_parts int NOT NULL default 0,
         vancode varchar(255) NOT NULL default '',
-        visible int(11) NOT NULL default '0',
+        visible int NOT NULL default '0',
         menu_link varchar(255) NOT NULL default '',
         parents varchar(255) NOT NULL default '',
         depth int NOT NULL default '0',
