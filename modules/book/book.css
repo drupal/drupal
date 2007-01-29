@@ -11,7 +11,7 @@
   padding: 0.5em;
 }
 .book-navigation .page-previous {
-  text-align: right;
+  text-align: left;
   width: 42%;
   display: block;
   float: left;
@@ -23,8 +23,8 @@
   float: left;
 }
 .book-navigation .page-next {
-  text-align: left;
+  text-align: right;
   width: 42%;
   display: block;
-  float: left;
+  float: right;
 }
