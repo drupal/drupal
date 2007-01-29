@@ -533,7 +533,6 @@ function install_complete($profile) {
   // Bootstrap newly installed Drupal, while preserving existing messages.
   $messages = $_SESSION['messages'];
   drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
-  menu_rebuild();
   $_SESSION['messages'] = $messages;
 
   // Build final page.
@@ -548,6 +547,7 @@ function install_complete($profile) {
     $profile_message = $function();
   }
 
+  menu_rebuild();
   // If the profile returned a welcome message, use that instead of default.
   if (isset($profile_message)) {
     $output .= $profile_message;
