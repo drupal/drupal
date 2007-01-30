@@ -1,5 +1,9 @@
 // $Id$
 
+Drupal 5.2, xxxx-xx-xx
+----------------------
+
+
 Drupal 5.1, 2007-01-29
 ----------------------
 - fixed security issue (code execution), see SA-2007-005
