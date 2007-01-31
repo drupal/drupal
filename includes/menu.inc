@@ -628,3 +628,7 @@ function menu_get_active_breadcrumb() {
   return array(l(t('Home'), ''));
 }
 
+function menu_get_active_title() {
+  $item = menu_get_item();
+  return $item->title;
+}
