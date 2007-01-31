@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.151 2007/01/31 21:26:55 dries Exp $
+// $Id: menu.inc,v 1.152 2007/01/31 21:55:37 dries Exp $
 
 /**
  * @file
@@ -628,3 +628,7 @@ function menu_get_active_breadcrumb() {
   return array(l(t('Home'), ''));
 }
 
+function menu_get_active_title() {
+  $item = menu_get_item();
+  return $item->title;
+}
