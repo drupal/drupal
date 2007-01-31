@@ -1,8 +1,8 @@
-// $Id: CHANGELOG.txt,v 1.175 2007/01/23 18:58:35 dries Exp $
+// $Id: CHANGELOG.txt,v 1.176 2007/01/31 16:01:16 dries Exp $
 
 Drupal 6.0, xxxx-xx-xx (development version)
 ------------------------
-
+- made it easier to theme the forum overview page
 
 Drupal 5.0, 2007-01-15
 ----------------------
