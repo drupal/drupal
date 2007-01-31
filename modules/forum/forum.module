@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.380 2007/01/31 16:01:17 dries Exp $
+// $Id: forum.module,v 1.381 2007/01/31 21:26:55 dries Exp $
 
 /**
  * @file
@@ -58,12 +58,14 @@ function forum_menu() {
     'page callback' => 'forum_form_main',
     'page arguments' => array('container'),
     'type' => MENU_LOCAL_TASK,
+    'parent' => 'admin/content/forum',
   );
   $items['admin/content/forum/add/forum'] = array(
     'title' => t('Add forum'),
     'page callback' => 'forum_form_main',
     'page arguments' => array('forum'),
     'type' => MENU_LOCAL_TASK,
+    'parent' => 'admin/content/forum',
   );
   $items['admin/content/forum/settings'] = array(
     'title' => t('Settings'),
@@ -71,6 +73,7 @@ function forum_menu() {
     'page arguments' => array('forum_admin_settings'),
     'weight' => 5,
     'type' => MENU_LOCAL_TASK,
+    'parent' => 'admin/content/forum',
   );
   $items['admin/content/forum/edit'] = array(
     'page callback' => 'forum_form_main',

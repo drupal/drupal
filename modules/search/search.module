@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.210 2007/01/24 14:48:36 dries Exp $
+// $Id: search.module,v 1.211 2007/01/31 21:26:56 dries Exp $
 
 /**
  * @file
@@ -168,30 +168,19 @@ function search_menu() {
 
   foreach (module_implements('search') as $name) {
     $items['search/'. $name] = array(
+      'title' => module_invoke($name, 'search', 'name', TRUE),
       'page callback' => 'search_view',
       'page arguments' => array($name),
-      'access callback' => FALSE,
-      'type' => MENU_LOCAL_TASK,
+      'access callback' => '_search_menu',
+      'access arguments' => array($name),
+      'type' => $name == 'node' ? MENU_DEFAULT_LOCAL_TASK : MENU_LOCAL_TASK,
     );
   }
   return $items;
 }
 
-function search_init() {
-  // To remember the user's search keywords when switching across tabs,
-  // we dynamically add the keywords to the search tabs' paths.
-  if (arg(0) == 'search') {
-    $keys = search_get_keys();
-    $keys = strlen($keys) ? '/'. $keys : '';
-    foreach (module_implements('search') as $name) {
-      $title = module_invoke($name, 'search', 'name');
-      $item = menu_get_item('search/'. $name);
-      $item->title = $title;
-      $item->access = user_access('search content') && $title;
-      menu_set_item('search/'. $name, $item);
-      menu_set_item('search/'. $name . $keys, $item);
-    }
-  }
+function _search_menu($name) {
+  return user_access('search content') && module_invoke($name, 'search', 'name');
 }
 
 /**

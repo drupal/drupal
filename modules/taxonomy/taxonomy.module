@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.336 2007/01/31 15:49:26 dries Exp $
+// $Id: taxonomy.module,v 1.337 2007/01/31 21:26:56 dries Exp $
 
 /**
  * @file
@@ -88,6 +88,7 @@ function taxonomy_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('taxonomy_form_vocabulary'),
     'type' => MENU_LOCAL_TASK,
+    'parent' => 'admin/content/taxonomy',
   );
 
   $items['admin/content/taxonomy/edit/vocabulary/%'] = array(
@@ -136,6 +137,7 @@ function taxonomy_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('taxonomy_form_term', 3),
     'type' => MENU_LOCAL_TASK,
+    'parent' => 'admin/content/taxonomy/%',
   );
 
   return $items;

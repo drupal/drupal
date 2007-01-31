@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.150 2007/01/31 15:49:22 dries Exp $
+// $Id: menu.inc,v 1.151 2007/01/31 21:26:55 dries Exp $
 
 /**
  * @file
@@ -544,6 +544,16 @@ function menu_rebuild() {
       $vancode = '';
       $link = '';
     }
+    $tab = ($item['type'] & MENU_IS_LOCAL_TASK) ? 1 : 0;
+    $default_tab = $item['type'] == MENU_DEFAULT_LOCAL_TASK;
+    if (!isset($item['parent'])) {
+      if ($tab) {
+        $item['parent'] = implode('/', array_slice($item['_parts'], 0, $item['_number_parts'] - 1));
+      }
+      else {
+        $item['parent'] = $path;
+      }
+    }
     $insert_item = $item + array(
       'access arguments' => array(),
       'access callback' => '',
@@ -552,8 +562,18 @@ function menu_rebuild() {
       'map arguments' => array(),
       'map callback' => '',
     );
-    db_query("INSERT INTO {menu} (mid, pid, path, access_callback, access_arguments, page_callback, page_arguments, map_callback, map_arguments, fit, number_parts, vancode, menu_link, visible, parents, depth, has_children) VALUES (%d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', %d, '%s', %d, %d)", $insert_item['_mid'], $insert_item['_pid'], $path, $insert_item['access callback'], serialize($insert_item['access arguments']), $insert_item['page callback'], serialize($insert_item['page arguments']), $insert_item['map callback'], serialize($insert_item['map arguments']), $insert_item['_fit'], $insert_item['_number_parts'], $vancode .'+', $link, $insert_item['_visible'], $insert_item['_parents'], $insert_item['_depth'], $insert_item['_has_children']);
-    // $item needs to be unset because of the reference above.
+    db_query("INSERT INTO {menu} (
+      mid, pid, path,
+      access_callback, access_arguments, page_callback, page_arguments, map_callback, map_arguments, fit,
+      number_parts, vancode, menu_link, visible, parents, depth, has_children, tab, default_tab, title, parent)
+      VALUES (%d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', %d, '%s', %d, %d, %d, %d, '%s', '%s')",
+      $insert_item['_mid'], $insert_item['_pid'], $path, $insert_item['access callback'],
+      serialize($insert_item['access arguments']), $insert_item['page callback'],
+      serialize($insert_item['page arguments']), $insert_item['map callback'],
+      serialize($insert_item['map arguments']), $insert_item['_fit'],
+      $insert_item['_number_parts'], $vancode .'+', $link, $insert_item['_visible'],
+      $insert_item['_parents'], $insert_item['_depth'], $insert_item['_has_children'],
+      $tab, $default_tab, $insert_item['title'], $insert_item['parent']);
     unset($item);
   }
 }
@@ -571,6 +591,28 @@ function menu_secondary_links() {
 }
 
 function menu_primary_local_tasks() {
+  $router_item = menu_get_item();
+  $result = db_query("SELECT * FROM {menu} WHERE parent = '%s' AND tab = 1 ORDER BY vancode", $router_item->parent);
+  $tabs = array();
+  while ($item = db_fetch_object($result)) {
+    $map = explode('/', $item->path);
+    foreach ($map as $key => $value) {
+      if ($value == '%') {
+        $map[$key] = arg($key);
+      }
+    }
+    $path = implode('/', $map);
+    if (_menu_access($item, $map, TRUE)) {
+      $link = l($item->title, $path);
+      if ((!$router_item->tab && $item->default_tab) || ($path == $_GET['q'])) {
+        $tabs[] = array('class' => 'active', 'data' => $link);
+      }
+      else {
+        $tabs[] = $link;
+      }
+    }
+  }
+  return theme('item_list', $tabs, NULL, 'ul', array('class' => 'tabs primary'));
 }
 
 function menu_secondary_local_tasks() {

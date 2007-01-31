@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.751 2007/01/31 15:49:26 dries Exp $
+// $Id: user.module,v 1.752 2007/01/31 21:26:56 dries Exp $
 
 /**
  * @file
@@ -427,10 +427,10 @@ function user_file_download($file) {
 /**
  * Implementation of hook_search().
  */
-function user_search($op = 'search', $keys = NULL) {
+function user_search($op = 'search', $keys = NULL, $skip_access_check = FALSE) {
   switch ($op) {
     case 'name':
-      if (user_access('access user profiles')) {
+      if ($skip_access_check || user_access('access user profiles')) {
         return t('Users');
       }
     case 'search':
