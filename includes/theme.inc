@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.339 2007/01/25 22:14:06 dries Exp $
+// $Id: theme.inc,v 1.340 2007/01/31 15:49:22 dries Exp $
 
 /**
  * @file
@@ -42,7 +42,7 @@ function init_theme() {
 
   // Only select the user selected theme if it is available in the
   // list of enabled themes.
-  $theme = $user->theme && $themes[$user->theme]->status ? $user->theme : variable_get('theme_default', 'garland');
+  $theme = !empty($user->theme) && $themes[$user->theme]->status ? $user->theme : variable_get('theme_default', 'garland');
 
   // Allow modules to override the present theme... only select custom theme
   // if it is available in the list of installed themes.
@@ -611,7 +611,7 @@ function theme_image($path, $alt = '', $title = '', $attributes = NULL, $getsize
   if (!$getsize || (is_file($path) && (list($width, $height, $type, $image_attributes) = @getimagesize($path)))) {
     $attributes = drupal_attributes($attributes);
     $url = (url($path) == $path) ? $path : (base_path() . $path);
-    return '<img src="'. check_url($url) .'" alt="'. check_plain($alt) .'" title="'. check_plain($title) .'" '. $image_attributes . $attributes .' />';
+    return '<img src="'. check_url($url) .'" alt="'. check_plain($alt) .'" title="'. check_plain($title) .'" '. (isset($image_attributes) ? $image_attributes : '') . $attributes .' />';
   }
 }
 
@@ -1089,7 +1089,7 @@ function _theme_table_cell($cell, $header = FALSE) {
   $attributes = '';
 
   if (is_array($cell)) {
-    $data = $cell['data'];
+    $data = isset($cell['data']) ? $cell['data'] : '';
     $header |= isset($cell['header']);
     unset($cell['data']);
     unset($cell['header']);

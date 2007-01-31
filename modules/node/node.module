@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.779 2007/01/25 22:14:06 dries Exp $
+// $Id: node.module,v 1.780 2007/01/31 15:49:25 dries Exp $
 
 /**
  * @file
@@ -41,7 +41,7 @@ function node_help($section) {
 
   if (arg(0) == 'node' && arg(1) == 'add' && $type = arg(2)) {
     $type = node_get_types('type', str_replace('-', '_', arg(2)));
-    return '<p>'. filter_xss_admin($type->help) .'</p>';
+    return '<p>'. (isset($type->help) ? filter_xss_admin($type->help) : '') .'</p>';
   }
 }
 
@@ -564,7 +564,7 @@ function node_save(&$node) {
     }
     $node = $node_current;
 
-    if ($node->revision) {
+    if (!empty($node->revision)) {
       $node->old_vid = $node->vid;
       $node->vid = db_next_id('{node_revisions}_vid');
     }
@@ -617,7 +617,7 @@ function node_save(&$node) {
     }
     $node_table_values[] = $node->nid;
     $node_query = 'UPDATE {node} SET '. implode(', ', $arr) .' WHERE nid = %d';
-    if ($node->revision) {
+    if (!empty($node->revision)) {
       $revisions_query = 'INSERT INTO {node_revisions} ('. implode(', ', array_keys($revisions_table_types)) .') VALUES ('. implode(', ', $revisions_table_types) .')';
     }
     else {
@@ -1393,6 +1393,7 @@ function node_filter_form() {
  * Theme node administration filter form.
  */
 function theme_node_filter_form($form) {
+  $output = '';
   $output .= '<div id="node-admin-filter">';
   $output .= drupal_render($form['filters']);
   $output .= '</div>';
@@ -1404,14 +1405,15 @@ function theme_node_filter_form($form) {
  * Theme node administration filter selector.
  */
 function theme_node_filters($form) {
+  $output = '';
   $output .= '<ul class="clear-block">';
-  if (sizeof($form['current'])) {
+  if (!empty($form['current'])) {
     foreach (element_children($form['current']) as $key) {
       $output .= '<li>'. drupal_render($form['current'][$key]) .'</li>';
     }
   }
 
-  $output .= '<li><dl class="multiselect">'. (sizeof($form['current']) ? '<dt><em>'. t('and') .'</em> '. t('where') .'</dt>' : '') .'<dd class="a">';
+  $output .= '<li><dl class="multiselect">'. (!empty($form['current']) ? '<dt><em>'. t('and') .'</em> '. t('where') .'</dt>' : '') .'<dd class="a">';
   foreach (element_children($form['filter']) as $key) {
     $output .= drupal_render($form['filter'][$key]);
   }
@@ -1495,7 +1497,7 @@ function node_admin_nodes_validate($form_id, $form_values) {
 function node_admin_content() {
   $output = drupal_get_form('node_filter_form');
 
-  if ($_POST['operation'] == 'delete' && $_POST['nodes']) {
+  if (isset($_POST['operation']) && ($_POST['operation'] == 'delete') && $_POST['nodes']) {
     return drupal_get_form('node_multiple_delete_confirm');
   }
   // Call the form first, to allow for the form_values array to be populated.
@@ -1542,6 +1544,7 @@ function node_admin_nodes() {
 function theme_node_admin_nodes($form) {
   // Overview table:
   $header = array(theme('table_select_header_cell'), t('Title'), t('Type'), t('Author'), t('Status'), t('Operations'));
+  $output = '';
 
   $output .= drupal_render($form['options']);
   if (isset($form['title']) && is_array($form['title'])) {
@@ -1720,7 +1723,8 @@ function node_revision_list($node) {
 }
 
 function node_admin_search() {
-  return drupal_get_form('search_form', url('admin/content/search'), $_POST['keys'], 'node') . search_data($_POST['keys'], 'node');
+  $keys = isset($_POST['keys']) ? $_POST['keys'] : NULL;
+  return drupal_get_form('search_form', url('admin/content/search'), $keys, 'node') . search_data($keys, 'node');
 }
 
 /**
@@ -1889,7 +1893,7 @@ function node_validate($node, $form = array()) {
 
   // Make sure the body has the minimum number of words.
   // todo use a better word counting algorithm that will work in other languages
-  if (isset($node->body) && count(explode(' ', $node->body)) < $type->min_word_count) {
+  if (!empty($type->min_word_count) && isset($node->body) && count(explode(' ', $node->body)) < $type->min_word_count) {
     form_set_error('body', t('The body of your @type is too short. You need at least %words words.', array('%words' => $type->min_word_count, '@type' => $type->name)));
   }
 
@@ -1953,12 +1957,14 @@ function node_form($node, $form_values = NULL) {
    * These elements are just values so they are not even sent to the client.
    */
   foreach (array('nid', 'vid', 'uid', 'created', 'type') as $key) {
-    $form[$key] = array('#type' => 'value', '#value' => $node->$key);
+    $form[$key] = array('#type' => 'value', '#value' => isset($node->$key) ? $node->$key : NULL);
   }
 
   // Changed must be sent to the client, for later overwrite error checking.
-  $form['changed'] = array('#type' => 'hidden', '#default_value' => $node->changed);
-
+  $form['changed'] = array('#type' => 'hidden', '#default_value' => isset($node->changed) ? $node->changed : NULL);
+  if (!isset($node->format)) {
+    $node->format = NULL;
+  }
   // Get the node-specific bits.
   $form = array_merge_recursive($form, node_invoke($node, 'form', $form_values));
   if (!isset($form['title']['#weight'])) {
@@ -2029,7 +2035,7 @@ function node_form($node, $form_values = NULL) {
   // Add the buttons.
   $form['preview'] = array('#type' => 'button', '#value' => t('Preview'), '#weight' => 40);
   $form['submit'] = array('#type' => 'submit', '#value' => t('Submit'), '#weight' => 45);
-  if ($node->nid && node_access('delete', $node)) {
+  if (!empty($node->nid) && node_access('delete', $node)) {
     $form['delete'] = array('#type' => 'button', '#value' => t('Delete'), '#weight' => 50);
   }
   $form['#after_build'] = array('node_form_add_preview');
@@ -2388,7 +2394,7 @@ function node_page_view($node, $cid = NULL) {
  * Menu callback; presents the node editing form, or redirects to delete confirmation.
  */
 function node_page_edit($node) {
-  if ($_POST['op'] == t('Delete')) {
+  if (isset($_POST['op']) && ($_POST['op'] == t('Delete'))) {
     // Note: we redirect from node/nid/edit to node/nid/delete to make the tabs disappear.
     if ($_REQUEST['destination']) {
       $destination = drupal_get_destination();

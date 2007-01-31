@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.161 2007/01/24 14:48:36 dries Exp $
+// $Id: filter.module,v 1.162 2007/01/31 15:49:24 dries Exp $
 
 /**
  * @file
@@ -507,12 +507,11 @@ function filter_admin_format_form_submit($form_id, $form_values) {
   cache_clear_all($format .':', 'cache_filter', TRUE);
 
   // If a new filter was added, return to the main list of filters. Otherwise, stay on edit filter page to show new changes.
-  if ($new) {
-    return 'admin/settings/filters/';
+  $return = 'admin/settings/filters';
+  if (!empty($new)) {
+    $return .= '/'. $format;
   }
-  else {
-    return 'admin/settings/filters/'. $format;
-  }
+  return $return;
 }
 
 /**

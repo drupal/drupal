@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.335 2007/01/25 22:14:06 dries Exp $
+// $Id: taxonomy.module,v 1.336 2007/01/31 15:49:26 dries Exp $
 
 /**
  * @file
@@ -296,7 +296,7 @@ function taxonomy_form_vocabulary_submit($form_id, $form_values) {
 function taxonomy_save_vocabulary(&$edit) {
   $edit['nodes'] = empty($edit['nodes']) ? array() : $edit['nodes'];
 
-  if ($edit['vid'] && $edit['name']) {
+  if (!empty($edit['vid']) && !empty($edit['name'])) {
     db_query("UPDATE {vocabulary} SET name = '%s', description = '%s', help = '%s', multiple = %d, required = %d, hierarchy = %d, relations = %d, tags = %d, weight = %d, module = '%s' WHERE vid = %d", $edit['name'], $edit['description'], $edit['help'], $edit['multiple'], $edit['required'], $edit['hierarchy'], $edit['relations'], $edit['tags'], $edit['weight'], isset($edit['module']) ? $edit['module'] : 'taxonomy', $edit['vid']);
     db_query("DELETE FROM {vocabulary_node_types} WHERE vid = %d", $edit['vid']);
     foreach ($edit['nodes'] as $type => $selected) {
@@ -305,12 +305,12 @@ function taxonomy_save_vocabulary(&$edit) {
     module_invoke_all('taxonomy', 'update', 'vocabulary', $edit);
     $status = SAVED_UPDATED;
   }
-  else if ($edit['vid']) {
+  else if (!empty($edit['vid'])) {
     $status = taxonomy_del_vocabulary($edit['vid']);
   }
   else {
     $edit['vid'] = db_next_id('{vocabulary}_vid');
-    db_query("INSERT INTO {vocabulary} (vid, name, description, help, multiple, required, hierarchy, relations, tags, weight, module) VALUES (%d, '%s', '%s', '%s', %d, %d, %d, %d, %d, %d, '%s')", $edit['vid'], $edit['name'], $edit['description'], $edit['help'], $edit['multiple'], $edit['required'], $edit['hierarchy'], $edit['relations'], $edit['tags'], $edit['weight'], isset($edit['module']) ? $edit['module'] : 'taxonomy');
+    db_query("INSERT INTO {vocabulary} (vid, name, description, help, multiple, required, hierarchy, relations, tags, weight, module) VALUES (%d, '%s', '%s', '%s', %d, %d, %d, %d, %d, %d, '%s')", $edit['vid'], $edit['name'], isset($edit['description']) ? $edit['description'] : NULL, isset($edit['help']) ? $edit['help'] : NULL, $edit['multiple'], $edit['required'], $edit['hierarchy'], $edit['relations'], isset($edit['tags']) ? $edit['tags'] : NULL, $edit['weight'], isset($edit['module']) ? $edit['module'] : 'taxonomy');
     foreach ($edit['nodes'] as $type => $selected) {
       db_query("INSERT INTO {vocabulary_node_types} (vid, type) VALUES (%d, '%s')", $edit['vid'], $type);
     }
@@ -657,12 +657,7 @@ function taxonomy_form_alter($form_id, &$form) {
     $node = $form['#node'];
 
     if (!isset($node->taxonomy)) {
-      if ($node->nid) {
-        $terms = taxonomy_node_get_terms($node->nid);
-      }
-      else {
-        $terms = array();
-      }
+      $terms = empty($node->nid) ? array() : taxonomy_node_get_terms($node->nid);
     }
     else {
       $terms = $node->taxonomy;
@@ -716,7 +711,7 @@ function taxonomy_form_alter($form_id, &$form) {
         $form['taxonomy'][$vocabulary->vid]['#required'] = $vocabulary->required;
       }
     }
-    if (is_array($form['taxonomy']) && !empty($form['taxonomy'])) {
+    if (!empty($form['taxonomy']) && is_array($form['taxonomy'])) {
       if (count($form['taxonomy']) > 1) { // Add fieldset only if form has more than 1 element.
         $form['taxonomy'] += array(
           '#type' => 'fieldset',
@@ -768,7 +763,7 @@ function taxonomy_node_validate(&$node) {
     if ($terms['tags']) {
       foreach ($terms['tags'] as $vid => $vid_value) {
         $vocabulary = taxonomy_get_vocabulary($vid);
-        if (!$vocabulary->tags) {
+        if (empty($vocabulary->tags)) {
           // see form_get_error $key = implode('][', $element['#parents']);
           // on why this is the key
           form_set_error("taxonomy][tags][$vid", t('The %name vocabulary can not be modified in this way.', array('%name' => $vocabulary->name)));
@@ -976,7 +971,8 @@ function taxonomy_get_tree($vid, $parent = 0, $depth = -1, $max_depth = NULL) {
   }
 
   $max_depth = (is_null($max_depth)) ? count($children[$vid]) : $max_depth;
-  if ($children[$vid][$parent]) {
+  $tree = array();
+  if (!empty($children[$vid][$parent])) {
     foreach ($children[$vid][$parent] as $child) {
       if ($max_depth > $depth) {
         $term = drupal_clone($terms[$vid][$child]);
@@ -986,14 +982,14 @@ function taxonomy_get_tree($vid, $parent = 0, $depth = -1, $max_depth = NULL) {
         $term->parents = $parents[$vid][$child];
         $tree[] = $term;
 
-        if ($children[$vid][$child]) {
+        if (!empty($children[$vid][$child])) {
           $tree = array_merge($tree, taxonomy_get_tree($vid, $child, $depth, $max_depth));
         }
       }
     }
   }
 
-  return $tree ? $tree : array();
+  return $tree;
 }
 
 /**

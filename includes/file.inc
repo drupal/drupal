@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.92 2007/01/25 22:14:06 dries Exp $
+// $Id: file.inc,v 1.93 2007/01/31 15:49:22 dries Exp $
 
 /**
  * @file
@@ -193,7 +193,7 @@ function file_check_upload($source = 'upload') {
   }
 
   // If a file was uploaded, process it.
-  if ($_FILES["files"]["name"][$source] && is_uploaded_file($_FILES["files"]["tmp_name"][$source])) {
+  if (isset($_FILES["files"]) && $_FILES["files"]["name"][$source] && is_uploaded_file($_FILES["files"]["tmp_name"][$source])) {
 
     // Check for file upload errors and return FALSE if a
     // lower level system error occurred.
@@ -253,7 +253,7 @@ function file_check_upload($source = 'upload') {
 
   else {
     // In case of previews return previous file object.
-    if (file_exists($_SESSION['file_uploads'][$source]->filepath)) {
+    if (isset($_SESSION['file_uploads']) && file_exists($_SESSION['file_uploads'][$source]->filepath)) {
       return $_SESSION['file_uploads'][$source];
     }
   }

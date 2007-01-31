@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.176 2007/01/29 19:10:22 dries Exp $
+// $Id: form.inc,v 1.177 2007/01/31 15:49:22 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -265,7 +265,9 @@ function drupal_process_form($form_id, &$form) {
   // We've finished calling functions that alter the global values, so we can
   // restore the ones that were there before this function was called.
   list($form_values, $form_submitted, $form_button_counter) = array_pop($saved_globals);
-  return $redirect;
+  if (isset($redirect)) {
+    return $redirect;
+  }
 }
 
 /**
@@ -306,9 +308,7 @@ function drupal_prepare_form($form_id, &$form) {
   // If $base is set, it is used in place of $form_id when constructing validation,
   // submission, and theming functions. Useful for mapping many similar or duplicate
   // forms with different $form_ids to the same processing functions.
-  if (isset($form['#base'])) {
-    $base = $form['#base'];
-  }
+  $base = isset($form['#base']) ? $form['#base'] : '';
 
   // Add a token, based on either #token or form_id, to any form displayed to
   // authenticated users. This ensures that any submitted form was actually
@@ -432,7 +432,9 @@ function drupal_submit_form($form_id, $form) {
       }
     }
   }
-  return $goto;
+  if (isset($goto)) {
+    return $goto;
+  }
 }
 
 /**
@@ -450,9 +452,7 @@ function drupal_submit_form($form_id, $form) {
  */
 function drupal_render_form($form_id, &$form) {
   // Don't override #theme if someone already set it.
-  if (isset($form['#base'])) {
-    $base = $form['#base'];
-  }
+  $base = isset($form['#base']) ? $form['#base'] : '';
 
   if (!isset($form['#theme'])) {
     if (theme_get_function($form_id)) {
@@ -492,16 +492,16 @@ function drupal_redirect_form($form, $redirect = NULL) {
   if (isset($form['#redirect'])) {
     $goto = $form['#redirect'];
   }
-  if ($goto !== FALSE) {
-    if (is_array($goto)) {
-      call_user_func_array('drupal_goto', $goto);
+  if (!isset($goto) || ($goto !== FALSE)) {
+    if (isset($goto)) {
+      if (is_array($goto)) {
+        call_user_func_array('drupal_goto', $goto);
+      }
+      else {
+        drupal_goto($goto);
+      }
     }
-    elseif (!isset($goto)) {
-      drupal_goto($_GET['q']);
-    }
-    else {
-      drupal_goto($goto);
-    }
+    drupal_goto($_GET['q']);
   }
 }
 
@@ -756,7 +756,7 @@ function form_builder($form_id, $form) {
   if (isset($form['#process']) && !$form['#processed']) {
     foreach ($form['#process'] as $process => $args) {
       if (function_exists($process)) {
-        $args = array_merge(array($form), array($edit), $args);
+        $args = array_merge(array($form), array(isset($edit) ? $edit : NULL), $args);
         $form = call_user_func_array($process, $args);
       }
     }
@@ -929,7 +929,7 @@ function theme_select($element) {
   $select = '';
   $size = $element['#size'] ? ' size="' . $element['#size'] . '"' : '';
   _form_set_class($element, array('form-select'));
-  $multiple = isset($element['#multiple']) && $element['#multiple'];
+  $multiple = $element['#multiple'];
   return theme('form_element', $element, '<select name="'. $element['#name'] .''. ($multiple ? '[]' : '') .'"'. ($multiple ? ' multiple="multiple" ' : '') . drupal_attributes($element['#attributes']) .' id="'. $element['#id'] .'" '. $size .'>'. form_select_options($element) .'</select>');
 }
 
@@ -1038,7 +1038,7 @@ function theme_fieldset($element) {
     }
   }
 
-  return '<fieldset' . drupal_attributes($element['#attributes']) .'>' . ($element['#title'] ? '<legend>'. $element['#title'] .'</legend>' : '') . ($element['#description'] ? '<div class="description">'. $element['#description'] .'</div>' : '') . $element['#children'] . $element['#value'] . "</fieldset>\n";
+  return '<fieldset' . drupal_attributes($element['#attributes']) .'>' . ($element['#title'] ? '<legend>'. $element['#title'] .'</legend>' : '') . ($element['#description'] ? '<div class="description">'. $element['#description'] .'</div>' : '') . (!empty($element['#children']) ? $element['#children'] : '') . $element['#value'] . "</fieldset>\n";
 }
 
 /**
@@ -1079,7 +1079,7 @@ function theme_radios($element) {
   if (isset($element['#attributes']['class'])) {
     $class .= ' '. $element['#attributes']['class'];
   }
-  $element['#children'] = '<div class="'. $class .'">'. $element['#children'] .'</div>';
+  $element['#children'] = '<div class="'. $class .'">'. (!empty($element['#children']) ? $element['#children'] : '') .'</div>';
   if ($element['#title'] || $element['#description']) {
     unset($element['#id']);
     return theme('form_element', $element, $element['#children']);
@@ -1232,10 +1232,16 @@ function map_month($month) {
  */
 function checkboxes_value(&$form) {
   $value = array();
-  foreach ((array)$form['#default_value'] as $key) {
+  $form += array('#default_value' => array());
+  foreach ($form['#default_value'] as $key) {
     $value[$key] = 1;
   }
   $form['#value'] = $value;
+}
+
+function password_confirm_value(&$form) {
+  $form += array('#default_value' => array());
+  $form['#value'] = $form['#default_value'] + array('pass1' => '', 'pass2' => '');
 }
 
 /**
@@ -1275,7 +1281,7 @@ function expand_radios($element) {
  *   A themed HTML string representing the form item.
  */
 function theme_item($element) {
-  return theme('form_element', $element, $element['#value'] . $element['#children']);
+  return theme('form_element', $element, $element['#value'] . (!empty($element['#children']) ? $element['#children'] : ''));
 }
 
 /**
@@ -1318,7 +1324,7 @@ function theme_checkboxes($element) {
   if (isset($element['#attributes']['class'])) {
     $class .= ' '. $element['#attributes']['class'];
   }
-  $element['#children'] = '<div class="'. $class .'">'. $element['#children'] .'</div>';
+  $element['#children'] = '<div class="'. $class .'">'. (!empty($element['#children']) ? $element['#children'] : '') .'</div>';
   if ($element['#title'] || $element['#description']) {
     unset($element['#id']);
     return theme('form_element', $element, $element['#children']);
@@ -1492,6 +1498,7 @@ function process_weight($element) {
   $element['#options'] = $weights;
   $element['#type'] = 'select';
   $element['#is_weight'] = TRUE;
+  $element += _element_info('select');
   return $element;
 }
 

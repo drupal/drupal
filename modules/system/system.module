@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.445 2007/01/25 22:14:06 dries Exp $
+// $Id: system.module,v 1.446 2007/01/31 15:49:25 dries Exp $
 
 /**
  * @file
@@ -62,23 +62,23 @@ function system_elements() {
   $type['submit'] = array('#input' => TRUE, '#name' => 'op', '#button_type' => 'submit', '#executes_submit_callback' => TRUE);
   $type['button'] = array('#input' => TRUE, '#name' => 'op', '#button_type' => 'submit', '#executes_submit_callback' => FALSE);
   $type['textfield'] = array('#input' => TRUE, '#size' => 60, '#maxlength' => 128, '#autocomplete_path' => FALSE);
-  $type['password'] = array('#input' => TRUE, '#size' => 60);
+  $type['password'] = array('#input' => TRUE, '#size' => 60, '#maxlength' => 128);
   $type['password_confirm'] = array('#input' => TRUE, '#process' => array('expand_password_confirm' => array()));
-  $type['textarea'] = array('#input' => TRUE, '#cols' => 60, '#rows' => 5);
+  $type['textarea'] = array('#input' => TRUE, '#cols' => 60, '#rows' => 5, '#resizable' => TRUE);
   $type['radios'] = array('#input' => TRUE, '#process' => array('expand_radios' => array()));
-  $type['radio'] = array('#input' => TRUE);
+  $type['radio'] = array('#input' => TRUE, '#default_value' => NULL);
   $type['checkboxes'] = array('#input' => TRUE, '#process' => array('expand_checkboxes' => array()), '#tree' => TRUE);
-  $type['select'] = array('#input' => TRUE);
+  $type['select'] = array('#input' => TRUE, '#size' => 0, '#multiple' => FALSE);
   $type['weight'] = array('#input' => TRUE, '#delta' => 10, '#default_value' => 0, '#process' => array('process_weight' => array()));
   $type['date'] = array('#input' => TRUE, '#process' => array('expand_date' => array()), '#validate' => array('date_validate' => array()));
   $type['file'] = array('#input' => TRUE, '#size' => 60);
 
   // Form structure
-  $type['item'] = array();
+  $type['item'] = array('#value' => '');
   $type['hidden'] = array('#input' => TRUE);
   $type['value'] = array('#input' => TRUE);
   $type['markup'] = array('#prefix' => '', '#suffix' => '');
-  $type['fieldset'] = array('#collapsible' => FALSE, '#collapsed' => FALSE);
+  $type['fieldset'] = array('#collapsible' => FALSE, '#collapsed' => FALSE, '#value' => NULL);
   $type['token'] = array('#input' => TRUE);
   return $type;
 }
@@ -309,7 +309,7 @@ function system_init() {
  */
 function system_user($type, $edit, &$user, $category = NULL) {
   if ($type == 'form' && $category == 'account') {
-    $form['theme_select'] = system_theme_select_form(t('Selecting a different theme will change the look and feel of the site.'), $edit['theme'], 2);
+    $form['theme_select'] = system_theme_select_form(t('Selecting a different theme will change the look and feel of the site.'), isset($edit['theme']) ? $edit['theme'] : NULL, 2);
 
     if (variable_get('configurable_timezones', 1)) {
       $zones = _system_zonelist();
@@ -496,7 +496,7 @@ function system_theme_select_form($description = '', $default_value = '', $weigh
 function theme_system_theme_select_form($form) {
   foreach (element_children($form) as $key) {
     $row = array();
-    if (is_array($form[$key]['description'])) {
+    if (isset($form[$key]['description']) && is_array($form[$key]['description'])) {
       $row[] = drupal_render($form[$key]['screenshot']);
       $row[] = drupal_render($form[$key]['description']);
       $row[] = drupal_render($form['theme'][$key]);
@@ -949,7 +949,7 @@ function system_theme_data() {
       $style->template = isset($theme->template) ? $theme->template : FALSE;
       $style->name = basename(dirname($style->filename));
       $style->owner = $theme->filename;
-      $style->prefix = $theme->template ? $theme->prefix : $theme->name;
+      $style->prefix = !empty($theme->template) ? $theme->prefix : $theme->name;
       // do not double-insert styles with theme files in their directory
       if (array_key_exists($style->name, $themes)) {
         continue;
@@ -1160,7 +1160,7 @@ function system_themes() {
 function theme_system_themes($form) {
   foreach (element_children($form) as $key) {
     $row = array();
-    if (is_array($form[$key]['description'])) {
+    if (isset($form[$key]['description']) && is_array($form[$key]['description'])) {
       $row[] = drupal_render($form[$key]['screenshot']);
       $row[] = drupal_render($form[$key]['description']);
       $row[] = array('data' => drupal_render($form['status'][$key]), 'align' => 'center');
@@ -1242,8 +1242,13 @@ function system_modules($form_values = NULL) {
 
   // Array for disabling checkboxes in callback system_module_disable.
   $disabled = array();
+  $throttle = array();
   // Traverse the files retrieved and build the form.
   foreach ($files as $filename => $file) {
+    $file->info += array(
+      'dependents' => array(),
+      'version' => NULL,
+    );
     $form['name'][$filename] = array('#value' => $file->info['name']);
     $form['version'][$filename] = array('#value' => $file->info['version']);
     $form['description'][$filename] = array('#value' => t($file->info['description']));
@@ -1286,16 +1291,14 @@ function system_modules($form_values = NULL) {
 
     // Mark dependents disabled so user can not remove modules being depended on.
     $dependents = array();
-    if (is_array($file->info['dependents'])) {
-      foreach ($file->info['dependents'] as $dependent) {
-        if ($files[$dependent]->status == 1) {
-          $dependents[] = $files[$dependent]->info['name'] . t(' (<span class="admin-enabled">enabled</span>)');
-          $disabled[] = $filename;
-          $form['disabled_modules']['#value'][$filename] = TRUE;
-        }
-        else {
-          $dependents[] = $files[$dependent]->info['name'] . t(' (<span class="admin-disabled">disabled</span>)');
-        }
+    foreach ($file->info['dependents'] as $dependent) {
+      if ($files[$dependent]->status == 1) {
+        $dependents[] = $files[$dependent]->info['name'] . t(' (<span class="admin-enabled">enabled</span>)');
+        $disabled[] = $filename;
+        $form['disabled_modules']['#value'][$filename] = TRUE;
+      }
+      else {
+        $dependents[] = $files[$dependent]->info['name'] . t(' (<span class="admin-disabled">disabled</span>)');
       }
     }
 
@@ -1602,7 +1605,7 @@ function system_modules_uninstall($form_values = NULL) {
   }
 
   // Only build the rest of the form if there are any modules available to uninstall.
-  if (count($options)) {
+  if (!empty($options)) {
     $form['uninstall'] = array(
       '#type' => 'checkboxes',
       '#options' => $options,
@@ -1613,6 +1616,9 @@ function system_modules_uninstall($form_values = NULL) {
     );
     $form['#multistep'] = TRUE;
     $form['#action'] = url('admin/build/modules/uninstall/confirm');
+  }
+  else {
+    $form['modules'] = array();
   }
 
   return $form;
@@ -1688,7 +1694,7 @@ function theme_system_modules_uninstall($form) {
   }
 
   // Only display table if there are modules that can be uninstalled.
-  if (!count($rows)) {
+  if (empty($rows)) {
     $rows[] = array(array('data' => t('No modules are available to uninstall.'), 'colspan' => '3', 'align' => 'center', 'class' => 'message'));
   }
 
@@ -1845,7 +1851,7 @@ function theme_status_report(&$requirements) {
   $i = 0;
   $output = '<table class="system-status-report">';
   foreach ($requirements as $requirement) {
-    if ($requirement['#type'] == '') {
+    if (empty($requirement['#type'])) {
       $class = ++$i % 2 == 0 ? 'even' : 'odd';
 
       $classes = array(
@@ -1854,10 +1860,10 @@ function theme_status_report(&$requirements) {
         REQUIREMENT_WARNING => 'warning',
         REQUIREMENT_ERROR => 'error',
       );
-      $class = $classes[(int)$requirement['severity']] .' '. $class;
+      $class = $classes[isset($requirement['severity']) ? (int)$requirement['severity'] : 0] .' '. $class;
 
       // Output table row(s)
-      if ($requirement['description']) {
+      if (empty($requirement['description'])) {
         $output .= '<tr class="'. $class .' merge-down"><th>'. $requirement['title'] .'</th><td>'. $requirement['value'] .'</td></tr>';
         $output .= '<tr class="'. $class .' merge-up"><td colspan="2">'. $requirement['description'] .'</td></tr>';
       }

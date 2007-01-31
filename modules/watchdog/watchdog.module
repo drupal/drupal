@@ -1,5 +1,5 @@
 <?php
-// $Id: watchdog.module,v 1.168 2007/01/29 19:04:58 dries Exp $
+// $Id: watchdog.module,v 1.169 2007/01/31 15:49:26 dries Exp $
 
 /**
  * @file
@@ -174,11 +174,12 @@ function watchdog_top($type) {
 
   $result = pager_query("SELECT COUNT(wid) AS count, message FROM {watchdog} WHERE type = '%s' GROUP BY message ". tablesort_sql($header), 30, 0, "SELECT COUNT(DISTINCT(message)) FROM {watchdog} WHERE type = '%s'", $type);
 
+  $rows = array();
   while ($watchdog = db_fetch_object($result)) {
     $rows[] = array($watchdog->count, truncate_utf8($watchdog->message, 56, TRUE, TRUE));
   }
 
-  if (!$rows) {
+  if (empty($rows)) {
     $rows[] = array(array('data' => t('No log messages available.'), 'colspan' => 2));
   }
 

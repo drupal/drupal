@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.409 2007/01/25 22:14:06 dries Exp $
+// $Id: book.module,v 1.410 2007/01/31 15:49:23 dries Exp $
 
 /**
  * @file
@@ -445,7 +445,7 @@ function book_nodeapi(&$node, $op, $teaser, $page) {
       break;
     case 'update':
       if (isset($node->parent)) {
-        if ($node->revision) {
+        if (!empty($node->revision)) {
           db_query("INSERT INTO {book} (nid, vid, parent, weight) VALUES (%d, %d, %d, %d)", $node->nid, $node->vid, $node->parent, $node->weight);
         }
         else {
@@ -507,7 +507,7 @@ function theme_book_navigation($node) {
  * This is a helper function for book_toc().
  */
 function book_toc_recurse($nid, $indent, $toc, $children, $exclude) {
-  if ($children[$nid]) {
+  if (!empty($children[$nid])) {
     foreach ($children[$nid] as $foo => $node) {
       if (!$exclude || $exclude != $node->nid) {
         $toc[$node->nid] = $indent .' '. $node->title;
@@ -527,7 +527,7 @@ function book_toc($exclude = 0) {
 
   $children = array();
   while ($node = db_fetch_object($result)) {
-    if (!$children[$node->parent]) {
+    if (empty($children[$node->parent])) {
       $children[$node->parent] = array();
     }
     $children[$node->parent][] = $node;
@@ -958,6 +958,7 @@ function book_admin($nid = 0) {
  */
 function book_admin_overview() {
   $result = db_query(db_rewrite_sql('SELECT n.nid, n.title, b.weight FROM {node} n INNER JOIN {book} b ON n.vid = b.vid WHERE b.parent = 0 ORDER BY b.weight, n.title'));
+  $rows = array();
   while ($book = db_fetch_object($result)) {
     $rows[] = array(l($book->title, "node/$book->nid"), l(t('outline'), "admin/content/book/$book->nid"));
   }

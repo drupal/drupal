@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.191 2007/01/24 14:48:36 dries Exp $
+// $Id: profile.module,v 1.192 2007/01/31 15:49:25 dries Exp $
 
 /**
  * @file
@@ -596,6 +596,7 @@ function profile_view_profile($user) {
     $result = db_query('SELECT * FROM {profile_fields} WHERE visibility != %d AND visibility != %d ORDER BY category, weight', PROFILE_PRIVATE, PROFILE_HIDDEN);
   }
 
+  $fields = array();
   while ($field = db_fetch_object($result)) {
     if ($value = profile_view_field($user, $field)) {
       $title = ($field->type != 'checkbox') ? check_plain($field->title) : NULL;
@@ -626,6 +627,7 @@ function _profile_form_explanation($field) {
 function profile_form_profile($edit, $user, $category, $register = FALSE) {
   $result = _profile_get_fields($category, $register);
   $w = 0;
+  $fields = array();
   while ($field = db_fetch_object($result)) {
     $category = $field->category;
     if (!isset($fields[$category])) {
@@ -744,6 +746,7 @@ function profile_validate_profile($edit, $category) {
 
 function profile_categories() {
   $result = db_query("SELECT DISTINCT(category) FROM {profile_fields}");
+  $data = array();
   while ($category = db_fetch_object($result)) {
     $data[] = array('name' => $category->category, 'title' => $category->category, 'weight' => 3);
   }

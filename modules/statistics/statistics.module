@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.250 2007/01/24 14:48:36 dries Exp $
+// $Id: statistics.module,v 1.251 2007/01/31 15:49:25 dries Exp $
 
 /**
  * @file
@@ -257,6 +257,7 @@ function statistics_recent_hits() {
   $sql = 'SELECT a.aid, a.path, a.title, a.uid, u.name, a.timestamp FROM {accesslog} a LEFT JOIN {users} u ON u.uid = a.uid' . tablesort_sql($header);
 
   $result = pager_query($sql, 30);
+  $rows = array();
   while ($log = db_fetch_object($result)) {
     $rows[] = array(
       array('data' => format_date($log->timestamp, 'small'), 'class' => 'nowrap'),
@@ -286,6 +287,7 @@ function statistics_top_pages() {
   $sql .= tablesort_sql($header);
   $result = pager_query($sql, 30, 0, $sql_cnt);
 
+  $rows = array();
   while ($page = db_fetch_object($result)) {
     $rows[] = array($page->hits, _statistics_format_item($page->title, $page->path), t('%time ms', array('%time' => round($page->average_time))), format_interval(round($page->total_time / 1000)));
   }
@@ -312,6 +314,7 @@ function statistics_top_visitors() {
   $sql_cnt = "SELECT COUNT(DISTINCT(CONCAT(uid, hostname))) FROM {accesslog}";
   $result = pager_query($sql, 30, 0, $sql_cnt);
 
+  $rows = array();
   while ($account = db_fetch_object($result)) {
     $qs = drupal_get_destination();
     $ban_link = $account->aid ? l(t('unban'), "admin/user/rules/delete/$account->aid", array(), $qs) : l(t('ban'), "admin/user/rules/add/$account->hostname/host", array(), $qs);
@@ -341,6 +344,7 @@ function statistics_top_referrers() {
   $query .= tablesort_sql($header);
   $result = pager_query($query, 30, 0, $query_cnt, $_SERVER['HTTP_HOST']);
 
+  $rows = array();
   while ($referrer = db_fetch_object($result)) {
     $rows[] = array($referrer->hits, _statistics_link($referrer->url), t('@time ago', array('@time' => format_interval(time() - $referrer->last))));
   }
@@ -452,8 +456,9 @@ function statistics_block($op = 'list', $delta = 0, $edit = array()) {
     case 'list':
       if (variable_get('statistics_count_content_views', 0)) {
         $blocks[0]['info'] = t('Popular content');
+        return $blocks;
       }
-      return $blocks;
+      break;
 
     case 'configure':
       // Popular content block settings

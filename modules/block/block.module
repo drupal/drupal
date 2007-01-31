@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.250 2007/01/25 22:14:06 dries Exp $
+// $Id: block.module,v 1.251 2007/01/31 15:49:22 dries Exp $
 
 /**
  * @file
@@ -160,7 +160,7 @@ function _block_rehash() {
         $block['module'] = $module;
         $block['delta']  = $delta;
         // If previously written to database, load values.
-        if ($old_blocks[$module][$delta]) {
+        if (!empty($old_blocks[$module][$delta])) {
           $block['status'] = $old_blocks[$module][$delta]->status;
           $block['weight'] = $old_blocks[$module][$delta]->weight;
           $block['region'] = $old_blocks[$module][$delta]->region;
@@ -310,7 +310,7 @@ function theme_block_admin_display($form) {
   foreach (element_children($form) as $i) {
     $block = &$form[$i];
     // Only take form elements that are blocks.
-    if (is_array($block['info'])) {
+    if (isset($block['info'])) {
       // Fetch values
       $region = $block['region']['#default_value'];
       $status = $region != BLOCK_REGION_NONE;
@@ -337,7 +337,7 @@ function theme_block_admin_display($form) {
         $row[] = drupal_render($block['throttle']);
       }
       $row[] = drupal_render($block['configure']);
-      $row[] = $block['delete'] ? drupal_render($block['delete']) : '';
+      $row[] = !empty($block['delete']) ? drupal_render($block['delete']) : '';
       $rows[] = $row;
     }
   }
@@ -624,14 +624,14 @@ function block_user($type, $edit, &$user, $category = NULL) {
           }
         }
 
-        if ($return) {
+        if (!empty($return)) {
           return $form;
         }
       }
 
       break;
     case 'validate':
-      if (!$edit['block']) {
+      if (empty($edit['block'])) {
         $edit['block'] = array();
       }
       return $edit;

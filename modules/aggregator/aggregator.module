@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.325 2007/01/24 14:48:36 dries Exp $
+// $Id: aggregator.module,v 1.326 2007/01/31 15:49:22 dries Exp $
 
 /**
  * @file
@@ -300,7 +300,9 @@ function aggregator_block($op = 'list', $delta = 0, $edit = array()) {
         $block['content'] = theme('item_list', $items) . $read_more;
       }
     }
-    return $block;
+    if (isset($block)) {
+      return $block;
+    }
   }
 }
 
@@ -1102,7 +1104,9 @@ function _aggregator_page_list($sql, $op, $header = '') {
     }
     $output .= '</div>';
     $output .= $form['pager']['#value'];
-    $output .= $form['feed_icon']['#value'];
+    if (isset($form['feed_icon']['#value'])) {
+      $output .= $form['feed_icon']['#value'];
+    }
     return $output;
   }
 }

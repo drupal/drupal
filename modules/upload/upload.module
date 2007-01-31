@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.151 2007/01/25 22:14:06 dries Exp $
+// $Id: upload.module,v 1.152 2007/01/31 15:49:26 dries Exp $
 
 /**
  * @file
@@ -285,7 +285,7 @@ function _upload_prepare(&$node) {
   // Clean up old file previews if a post didn't get the user to this page.
   // i.e. the user left the edit page, because they didn't want to upload anything.
   if(count($_POST) == 0) {
-    if (is_array($_SESSION['file_previews']) && count($_SESSION['file_previews'])) {
+    if (!empty($_SESSION['file_previews']) && is_array($_SESSION['file_previews'])) {
       foreach ($_SESSION['file_previews'] as $fid => $file) {
         file_delete($file->filepath);
       }
@@ -321,7 +321,7 @@ function _upload_prepare(&$node) {
   }
 
   // Attach file previews to node object.
-  if (is_array($_SESSION['file_previews']) && count($_SESSION['file_previews'])) {
+  if (!empty($_SESSION['file_previews']) && is_array($_SESSION['file_previews'])) {
     foreach ($_SESSION['file_previews'] as $fid => $file) {
       if ($user->uid != 1) {
         // Here something.php.pps becomes something.php_.pps
@@ -395,7 +395,7 @@ function _upload_validate(&$node) {
   $filesize = 0;
 
   // Check if node->files exists, and if it contains something.
-  if (is_array($node->files)) {
+  if (isset($node->files) && is_array($node->files)) {
     // Update existing files with form data.
     foreach ($node->files as $fid => $file) {
       // Convert file to object for compatibility
@@ -762,7 +762,7 @@ function _upload_form($node) {
 
   $form['#theme'] = 'upload_form_new';
 
-  if (is_array($node->files) && count($node->files)) {
+  if (!empty($node->files) && is_array($node->files)) {
     $form['files']['#theme'] = 'upload_form_current';
     $form['files']['#tree'] = TRUE;
     foreach ($node->files as $key => $file) {
@@ -799,7 +799,7 @@ function _upload_form($node) {
   }
 
   // Needed for JS
-  $form['current']['vid'] = array('#type' => 'hidden', '#value' => $node->vid);
+  $form['current']['vid'] = array('#type' => 'hidden', '#value' => isset($node->vid) ? $node->vid : 0);
   return $form;
 }
 

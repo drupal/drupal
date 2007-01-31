@@ -1,9 +1,9 @@
 <?php
-// $Id: system.install,v 1.74 2007/01/29 12:30:11 dries Exp $
+// $Id: system.install,v 1.75 2007/01/31 15:49:25 dries Exp $
 
 define('DRUPAL_MINIMUM_PHP',    '4.3.3');
 define('DRUPAL_MINIMUM_MYSQL',  '4.1.0'); // If using MySQL
-define('DRUPAL_MINIMUM_PGSQL',  '7.3');   // If using PostgreSQL
+define('DRUPAL_MINIMUM_PGSQL',  '7.4');   // If using PostgreSQL
 define('DRUPAL_MINIMUM_APACHE', '1.3');   // If using Apache
 
 /**

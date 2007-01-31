@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.614 2007/01/29 20:30:53 dries Exp $
+// $Id: common.inc,v 1.615 2007/01/31 15:49:22 dries Exp $
 
 /**
  * @file
@@ -1450,6 +1450,8 @@ function drupal_get_css($css = NULL) {
   if (!isset($css)) {
     $css = drupal_add_css();
   }
+  $no_module_preprocess = '';
+  $no_theme_preprocess = '';
 
   $preprocess_css = variable_get('preprocess_css', FALSE);
   $directory = file_directory_path();
@@ -2120,6 +2122,7 @@ function drupal_render(&$elements) {
   if (!isset($elements['#sorted'])) {
     uasort($elements, "_element_sort");
   }
+  $elements += array('#title' => NULL, '#description' => NULL);
   if (!isset($elements['#children'])) {
     $children = element_children($elements);
     /* Render all the children that use a theme function */
@@ -2201,7 +2204,7 @@ function element_properties($element) {
  * Check if the key is a child.
  */
 function element_child($key) {
-  return $key[0] != '#';
+  return !isset($key[0]) || $key[0] != '#';
 }
 
 /**

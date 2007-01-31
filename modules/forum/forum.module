@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.378 2007/01/25 22:14:06 dries Exp $
+// $Id: forum.module,v 1.379 2007/01/31 15:49:24 dries Exp $
 
 /**
  * @file
@@ -388,16 +388,16 @@ function forum_update($node) {
  */
 function forum_form(&$node) {
   $type = node_get_types('type', $node);
-  $form['title'] = array('#type' => 'textfield', '#title' => check_plain($type->title_label), '#default_value' => $node->title, '#required' => TRUE, '#weight' => -5);
+  $form['title'] = array('#type' => 'textfield', '#title' => check_plain($type->title_label), '#default_value' => !empty($node->title) ? $node->title : '', '#required' => TRUE, '#weight' => -5);
 
-  if ($node->nid) {
+  if (!empty($node->nid)) {
     $forum_terms = taxonomy_node_get_terms_by_vocabulary(_forum_get_vid(), $node->nid);
     // if editing, give option to leave shadows
     $shadow = (count($forum_terms) > 1);
     $form['shadow'] = array('#type' => 'checkbox', '#title' => t('Leave shadow copy'), '#default_value' => $shadow, '#description' => t('If you move this topic, you can leave a link in the old forum to the new forum.'));
   }
 
-  $form['body_filter']['body'] = array('#type' => 'textarea', '#title' => check_plain($type->body_label), '#default_value' => $node->body, '#rows' => 20, '#required' => TRUE);
+  $form['body_filter']['body'] = array('#type' => 'textarea', '#title' => check_plain($type->body_label), '#default_value' => !empty($node->body) ? $node->body : '', '#rows' => 20, '#required' => TRUE);
   $form['body_filter']['format'] = filter_form($node->format);
 
   return $form;
@@ -407,7 +407,7 @@ function forum_form(&$node) {
  * Implementation of hook_prepare; assign forum taxonomy when adding a topic from within a forum.
  */
 function forum_prepare(&$node) {
-  if (!$node->nid) {
+  if (empty($node->nid)) {
     // new topic
     $node->taxonomy[arg(3)]->vid = _forum_get_vid();
     $node->taxonomy[arg(3)]->tid = arg(3);

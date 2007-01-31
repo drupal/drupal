@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.272 2007/01/24 14:48:36 dries Exp $
+// $Id: blog.module,v 1.273 2007/01/31 15:49:23 dries Exp $
 
 /**
  * @file
@@ -185,7 +185,7 @@ function blog_page_last() {
  */
 function blog_form(&$node) {
   global $nid;
-  $iid = $_GET['iid'];
+  $iid = isset($_GET['iid']) ? (int)$_GET['iid'] : 0;
   $type = node_get_types('type', $node);
 
 
@@ -207,8 +207,8 @@ function blog_form(&$node) {
 
   }
 
-  $form['title'] = array('#type' => 'textfield', '#title' => check_plain($type->title_label), '#required' => TRUE, '#default_value' => $node->title, '#weight' => -5);
-  $form['body_filter']['body'] = array('#type' => 'textarea', '#title' => check_plain($type->body_label), '#default_value' => $node->body, '#rows' => 20, '#required' => TRUE);
+  $form['title'] = array('#type' => 'textfield', '#title' => check_plain($type->title_label), '#required' => TRUE, '#default_value' => !empty($node->title) ? $node->title : NULL, '#weight' => -5);
+  $form['body_filter']['body'] = array('#type' => 'textarea', '#title' => check_plain($type->body_label), '#default_value' => !empty($node->body) ? $node->title : NULL, '#rows' => 20, '#required' => TRUE);
   $form['body_filter']['filter'] = filter_form($node->format);
   return $form;
 }

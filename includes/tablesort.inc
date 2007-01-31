@@ -1,5 +1,5 @@
 <?php
-// $Id: tablesort.inc,v 1.43 2006/12/01 08:50:33 dries Exp $
+// $Id: tablesort.inc,v 1.44 2007/01/31 15:49:22 dries Exp $
 
 /**
  * @file
@@ -107,7 +107,7 @@ function tablesort_header($cell, $header, $ts) {
  *   A properly formatted cell, ready for _theme_table_cell().
  */
 function tablesort_cell($cell, $header, $ts, $i) {
-  if (isset($header[$i]) && $header[$i]['data'] == $ts['name'] && $header[$i]['field']) {
+  if (isset($header[$i]['data']) && $header[$i]['data'] == $ts['name'] && !empty($header[$i]['field'])) {
     if (is_array($cell)) {
       if (isset($cell['class'])) {
         $cell['class'] .= ' active';
@@ -162,6 +162,7 @@ function tablesort_get_order($headers) {
   else {
     // The first column specified is initial 'order by' field unless otherwise specified
     if (is_array($headers[0])) {
+      $headers[0] += array('data' => NULL, 'field' => NULL);
       return array('name' => $headers[0]['data'], 'sql' => $headers[0]['field']);
     }
     else {

@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.106 2007/01/24 14:48:36 dries Exp $
+// $Id: path.module,v 1.107 2007/01/31 15:49:25 dries Exp $
 
 /**
  * @file
@@ -244,7 +244,7 @@ function path_nodeapi(&$node, $op, $arg) {
         break;
 
       case 'update':
-        path_set_alias("node/$node->nid", $node->path, $node->pid);
+        path_set_alias("node/$node->nid", isset($node->path) ? $node->path : NULL, isset($node->pid) ? $node->pid : NULL);
         break;
 
       case 'delete':
@@ -262,7 +262,7 @@ function path_nodeapi(&$node, $op, $arg) {
  */
 function path_form_alter($form_id, &$form) {
   if (isset($form['type']) && $form['type']['#value'] .'_node_form' == $form_id) {
-    $path = $form['#node']->path;
+    $path = isset($form['#node']->path) ? $form['#node']->path : NULL;
     $form['path'] = array(
       '#type' => 'fieldset',
       '#title' => t('URL path settings'),
@@ -309,12 +309,13 @@ function path_overview() {
   $sql .= tablesort_sql($header);
   $result = pager_query($sql, 50);
 
+  $rows = array();
   $destination = drupal_get_destination();
   while ($data = db_fetch_object($result)) {
     $rows[] = array(check_plain($data->dst), check_plain($data->src), l(t('edit'), "admin/build/path/edit/$data->pid", array(), $destination), l(t('delete'), "admin/build/path/delete/$data->pid", array(), $destination));
   }
 
-  if (!$rows) {
+  if (empty($rows)) {
     $rows[] = array(array('data' => t('No URL aliases available.'), 'colspan' => '4'));
   }
 

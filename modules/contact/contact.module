@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.75 2007/01/24 14:48:36 dries Exp $
+// $Id: contact.module,v 1.76 2007/01/31 15:49:24 dries Exp $
 
 /**
  * @file
@@ -116,7 +116,7 @@ function contact_user($type, &$edit, &$user, $category = NULL) {
     );
     $form['contact']['contact'] = array('#type' => 'checkbox',
       '#title' => t('Personal contact form'),
-      '#default_value' => $edit['contact'],
+      '#default_value' => !empty($edit['contact']) ? $edit['contact'] : FALSE,
       '#description' => t('Allow other users to contact you by e-mail via <a href="@url">your personal contact form</a>. Note that while your e-mail address is not made public to other members of the community, privileged users such as site administrators are able to contact you even if you choose not to enable this feature.', array('@url' => url("user/$user->uid/contact"))),
     );
     return $form;

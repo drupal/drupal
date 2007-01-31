@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.149 2007/01/25 22:14:06 dries Exp $
+// $Id: menu.inc,v 1.150 2007/01/31 15:49:22 dries Exp $
 
 /**
  * @file
@@ -356,7 +356,7 @@ function _menu_tree($result = NULL, $depth = 0, $link = array('link' => '', 'has
       list($remnant, $menu) = _menu_tree($result, $item->depth, $menu_link);
       $tree .= theme('menu_tree', $link, $menu);
       $link = $remnant;
-      $remnant = '';
+      $remnant = array('link' => '', 'has_children' => FALSE);
     }
     elseif ($item->depth == $depth) {
       $tree .= theme('menu_link', $link);
@@ -496,6 +496,7 @@ function menu_rebuild() {
       '_has_children' => 0,
       'title' => '',
       'weight' => 0,
+      'type' => MENU_NORMAL_ITEM,
     );
     $sort[$path] = ($item['_visible'] ? $depth : $number_parts) . sprintf('%05d', $item['weight']) . $item['title'];
     unset($item);
@@ -527,11 +528,6 @@ function menu_rebuild() {
     if (!isset($item['map callback']) && isset($item['map arguments'])) {
       $item['map callback'] = 'menu_map';
     }
-    foreach (array('access', 'map', 'page') as $type) {
-      if (isset($item["$type callback"]) && !isset($item["$type arguments"])) {
-        $item["$type arguments"] = array();
-      }
-    }
     if (is_bool($item['access callback'])) {
       $item['access callback'] = intval($item['access callback']);
     }
@@ -548,7 +544,15 @@ function menu_rebuild() {
       $vancode = '';
       $link = '';
     }
-    db_query("INSERT INTO {menu} (mid, pid, path, access_callback, access_arguments, page_callback, page_arguments, map_callback, map_arguments, fit, number_parts, vancode, menu_link, visible, parents, depth, has_children) VALUES (%d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', %d, '%s', %d, %d)", $item['_mid'], $item['_pid'], $path, $item['access callback'], serialize($item['access arguments']), $item['page callback'], serialize($item['page arguments']), $item['map callback'], serialize($item['map arguments']), $item['_fit'], $item['_number_parts'], $vancode .'+', $link, $item['_visible'], $item['_parents'], $item['_depth'], $item['_has_children']);
+    $insert_item = $item + array(
+      'access arguments' => array(),
+      'access callback' => '',
+      'page arguments' => array(),
+      'page callback' => '',
+      'map arguments' => array(),
+      'map callback' => '',
+    );
+    db_query("INSERT INTO {menu} (mid, pid, path, access_callback, access_arguments, page_callback, page_arguments, map_callback, map_arguments, fit, number_parts, vancode, menu_link, visible, parents, depth, has_children) VALUES (%d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', %d, '%s', %d, %d)", $insert_item['_mid'], $insert_item['_pid'], $path, $insert_item['access callback'], serialize($insert_item['access arguments']), $insert_item['page callback'], serialize($insert_item['page arguments']), $insert_item['map callback'], serialize($insert_item['map arguments']), $insert_item['_fit'], $insert_item['_number_parts'], $vancode .'+', $link, $insert_item['_visible'], $insert_item['_parents'], $insert_item['_depth'], $insert_item['_has_children']);
     // $item needs to be unset because of the reference above.
     unset($item);
   }

@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.522 2007/01/24 14:48:36 dries Exp $
+// $Id: comment.module,v 1.523 2007/01/31 15:49:23 dries Exp $
 
 /**
  * @file
@@ -791,6 +791,7 @@ function comment_save($edit) {
           $edit['name'] = $user->name;
         }
 
+        $edit += array('mail' => '', 'homepage' => '');
         db_query("INSERT INTO {comments} (cid, nid, pid, uid, subject, comment, format, hostname, timestamp, status, score, users, thread, name, mail, homepage) VALUES (%d, %d, %d, %d, '%s', '%s', %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s')", $edit['cid'], $edit['nid'], $edit['pid'], $edit['uid'], $edit['subject'], $edit['comment'], $edit['format'], $_SERVER['REMOTE_ADDR'], $edit['timestamp'], $status, $score, $users, $thread, $edit['name'], $edit['mail'], $edit['homepage']);
 
         _comment_update_node_statistics($edit['nid']);
@@ -1150,7 +1151,7 @@ function comment_operations($action = NULL) {
 function comment_admin($type = 'new') {
   $edit = $_POST;
 
-  if ($edit['operation'] == 'delete' && $edit['comments']) {
+  if (isset($edit['operation']) && ($edit['operation'] == 'delete') && $edit['comments']) {
     return drupal_get_form('comment_multiple_delete_confirm');
   }
   else {
@@ -1192,7 +1193,7 @@ function comment_admin_overview($type = 'new', $arg) {
     $form['timestamp'][$comment->cid] = array('#value' => format_date($comment->timestamp, 'small'));
     $form['operations'][$comment->cid] = array('#value' => l(t('edit'), 'comment/edit/'. $comment->cid, array(), $destination));
   }
-  $form['comments'] = array('#type' => 'checkboxes', '#options' => $comments);
+  $form['comments'] = array('#type' => 'checkboxes', '#options' => isset($comments) ? $comments: array());
   $form['pager'] = array('#value' => theme('pager', NULL, 50, 0));
   return $form;
 }
@@ -1431,7 +1432,7 @@ function comment_form($edit, $title = NULL) {
   $op = isset($_POST['op']) ? $_POST['op'] : '';
 
   if ($user->uid) {
-    if ($edit['cid'] && user_access('administer comments')) {
+    if (!empty($edit['cid']) && user_access('administer comments')) {
       if ($edit['author']) {
         $author = $edit['author'];
       }
@@ -1537,19 +1538,19 @@ function comment_form($edit, $title = NULL) {
   }
 
   if (variable_get('comment_subject_field', 1) == 1) {
-    $form['subject'] = array('#type' => 'textfield', '#title' => t('Subject'), '#maxlength' => 64, '#default_value' => $edit['subject']);
+    $form['subject'] = array('#type' => 'textfield', '#title' => t('Subject'), '#maxlength' => 64, '#default_value' => !empty($edit['subject']) ? $edit['subject'] : '');
   }
 
-  $form['comment_filter']['comment'] = array('#type' => 'textarea', '#title' => t('Comment'), '#rows' => 15, '#default_value' => $edit['comment'] ? $edit['comment'] : $user->signature, '#required' => TRUE);
+  $form['comment_filter']['comment'] = array('#type' => 'textarea', '#title' => t('Comment'), '#rows' => 15, '#default_value' => !empty($edit['comment']) ? $edit['comment'] : $user->signature, '#required' => TRUE);
   if (!isset($edit['format'])) {
     $edit['format'] = FILTER_FORMAT_DEFAULT;
   }
   $form['comment_filter']['format'] = filter_form($edit['format']);
 
-  $form['cid'] = array('#type' => 'value', '#value' => $edit['cid']);
+  $form['cid'] = array('#type' => 'value', '#value' => !empty($edit['cid']) ? $edit['cid'] : NULL);
   $form['pid'] = array('#type' => 'value', '#value' => $edit['pid']);
   $form['nid'] = array('#type' => 'value', '#value' => $edit['nid']);
-  $form['uid'] = array('#type' => 'value', '#value' => $edit['uid']);
+  $form['uid'] = array('#type' => 'value', '#value' => !empty($edit['uid']) ? $edit['uid'] : NULL);
 
   $form['preview'] = array('#type' => 'button', '#value' => t('Preview comment'), '#weight' => 19);
   $form['#token'] = 'comment'. $edit['nid'] . $edit['pid'];
@@ -1565,7 +1566,7 @@ function comment_form($edit, $title = NULL) {
     $form['#after_build'] = array('comment_form_add_preview');
   }
 
-  if ($_REQUEST['destination']) {
+  if (!empty($_REQUEST['destination'])) {
     $form['#attributes']['destination'] = $_REQUEST['destination'];
   }
 
@@ -1603,7 +1604,7 @@ function comment_form_add_preview($form, $edit) {
     $comment->uid = $account->uid;
     $comment->name = check_plain($account->name);
   }
-  $comment->timestamp = $edit['timestamp'] ? $edit['timestamp'] : time();
+  $comment->timestamp = !empty($edit['timestamp']) ? $edit['timestamp'] : time();
 
   // Preview the comment with security check.
   if (!form_get_errors()) {
