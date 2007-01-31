@@ -240,7 +240,7 @@ function locale_supported_languages($reset = FALSE, $getall = FALSE) {
     unset($enabled); unset($all);
   }
 
-  if (is_null($enabled)) {
+  if (!isset($enabled)) {
     $enabled = $all = array();
     $all['name'] = $all['formula'] = $enabled['name'] = $enabled['formula'] = array();
     $result = db_query('SELECT locale, name, formula, enabled FROM {locales_meta} ORDER BY isdefault DESC, enabled DESC, name ASC');

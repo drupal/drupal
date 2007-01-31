@@ -127,7 +127,9 @@ function module_rebuild_cache() {
     }
     else {
       // This is a new module.
-      db_query("INSERT INTO {system} (name, description, type, filename, status, throttle, bootstrap) VALUES ('%s', '%s', '%s', '%s', %d, %d, %d)", $file->name, $file->info['description'], 'module', $file->filename, $file->status, $file->throttle, $bootstrap);
+      $files[$filename]->status = 0;
+      $files[$filename]->throttle = 0;
+      db_query("INSERT INTO {system} (name, description, type, filename, status, throttle, bootstrap) VALUES ('%s', '%s', '%s', '%s', %d, %d, %d)", $file->name, $file->info['description'], 'module', $file->filename, 0, 0, $bootstrap);
     }
   }
   $files = _module_build_dependents($files);

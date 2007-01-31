@@ -507,12 +507,11 @@ function filter_admin_format_form_submit($form_id, $form_values) {
   cache_clear_all($format .':', 'cache_filter', TRUE);
 
   // If a new filter was added, return to the main list of filters. Otherwise, stay on edit filter page to show new changes.
-  if ($new) {
-    return 'admin/settings/filters/';
+  $return = 'admin/settings/filters';
+  if (!empty($new)) {
+    $return .= '/'. $format;
   }
-  else {
-    return 'admin/settings/filters/'. $format;
-  }
+  return $return;
 }
 
 /**
