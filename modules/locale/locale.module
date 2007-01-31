@@ -61,6 +61,7 @@ function locale_menu() {
     'page callback' => 'locale_string_search',
     'weight' => 10,
     'type' => MENU_LOCAL_TASK,
+    'parent' => 'admin/settings/locale',
   );
 
   // Manage languages subtabs

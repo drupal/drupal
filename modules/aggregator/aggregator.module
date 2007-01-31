@@ -41,6 +41,7 @@ function aggregator_menu() {
     'page arguments' => array('aggregator_form_feed'),
     'access arguments' => array('administer news feeds'),
     'type' => MENU_LOCAL_TASK,
+    'parent' => 'admin/content/aggregator',
   );
   $items['admin/content/aggregator/add/category'] = array(
     'title' => t('Add category'),
@@ -48,6 +49,7 @@ function aggregator_menu() {
     'page arguments' => array('aggregator_form_category'),
     'access arguments' => array('administer news feeds'),
     'type' => MENU_LOCAL_TASK,
+    'parent' => 'admin/content/aggregator',
   );
   $items['admin/content/aggregator/remove/%'] = array(
     'title' => t('Remove items'),
