@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.192 2007/01/31 15:49:25 dries Exp $
+// $Id: profile.module,v 1.193 2007/02/02 15:25:25 dries Exp $
 
 /**
  * @file
@@ -92,7 +92,7 @@ function profile_menu() {
   $items['profile/autocomplete'] = array(
     'title' => t('Profile autocomplete'),
     'page callback' => 'profile_autocomplete',
-    'access callback' => TRUE,
+    'access arguments' => array('access user profiles'),
     'type' => MENU_CALLBACK,
   );
   return $items;

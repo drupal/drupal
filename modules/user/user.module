@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.752 2007/01/31 21:26:56 dries Exp $
+// $Id: user.module,v 1.753 2007/02/02 15:25:25 dries Exp $
 
 /**
  * @file
@@ -724,6 +724,7 @@ function user_menu() {
   $items['user/autocomplete'] = array(
     'title' => t('User autocomplete'),
     'page callback' => 'user_autocomplete',
+    'access callback' => 'user_access',
     'access arguments' => array('access user profiles'),
     'type' => MENU_CALLBACK,
   );
