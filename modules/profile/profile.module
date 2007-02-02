@@ -92,7 +92,7 @@ function profile_menu() {
   $items['profile/autocomplete'] = array(
     'title' => t('Profile autocomplete'),
     'page callback' => 'profile_autocomplete',
-    'access callback' => TRUE,
+    'access arguments' => array('access user profiles'),
     'type' => MENU_CALLBACK,
   );
   return $items;
