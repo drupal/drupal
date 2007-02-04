@@ -3,6 +3,7 @@
 Drupal 6.0, xxxx-xx-xx (development version)
 ------------------------
 - made it easier to theme the forum overview page
+- Drupal works with error reporting set to E_ALL
 
 Drupal 5.0, 2007-01-15
 ----------------------
