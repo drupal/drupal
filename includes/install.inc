@@ -62,10 +62,10 @@ function drupal_get_schema_versions($module) {
  *   The currently installed schema version.
  */
 function drupal_get_installed_schema_version($module, $reset = FALSE) {
-  static $versions;
+  static $versions = array();
 
   if ($reset) {
-    unset($versions);
+    $versions = array();
   }
 
   if (!$versions) {
