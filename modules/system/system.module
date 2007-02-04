@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.447 2007/02/01 21:43:07 dries Exp $
+// $Id: system.module,v 1.448 2007/02/04 21:20:50 dries Exp $
 
 /**
  * @file
@@ -1313,8 +1313,7 @@ function system_modules($form_values = NULL) {
   }
 
   // Merge in required modules.
-  $modules_required = array('block', 'filter', 'node', 'system', 'user', 'watchdog');
-  foreach ($modules_required as $required) {
+  foreach (drupal_required_modules() as $required) {
     $disabled[] = $required;
     $form['disabled_modules']['#value'][$required] = TRUE;
   }

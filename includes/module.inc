@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.97 2007/01/31 15:49:22 dries Exp $
+// $Id: module.inc,v 1.98 2007/02/04 21:20:50 dries Exp $
 
 /**
  * @file
@@ -419,4 +419,9 @@ function module_invoke_all() {
  * @} End of "defgroup hooks".
  */
 
-
+/**
+ * Array of modules required by core.
+ */
+function drupal_required_modules() {
+  return array('block', 'filter', 'node', 'system', 'user', 'watchdog');
+}
