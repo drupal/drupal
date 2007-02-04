@@ -1313,8 +1313,7 @@ function system_modules($form_values = NULL) {
   }
 
   // Merge in required modules.
-  $modules_required = array('block', 'filter', 'node', 'system', 'user', 'watchdog');
-  foreach ($modules_required as $required) {
+  foreach (drupal_required_modules() as $required) {
     $disabled[] = $required;
     $form['disabled_modules']['#value'][$required] = TRUE;
   }

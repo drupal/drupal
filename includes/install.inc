@@ -272,7 +272,7 @@ function drupal_verify_profile($profile, $locale) {
 
   // Get a list of modules required by this profile.
   $function = $profile .'_profile_modules';
-  $module_list = array_merge(array('system'), $function(), ($locale ? array('locale') : array()));
+  $module_list = array_merge(drupal_required_modules(), $function(), ($locale ? array('locale') : array()));
 
   // Get a list of modules that exist in Drupal's assorted subdirectories.
   $present_modules = array();
@@ -687,7 +687,7 @@ function drupal_check_profile($profile) {
 
   // Get a list of modules required by this profile.
   $function = $profile .'_profile_modules';
-  $module_list = array_unique(array_merge(array('system'), $function()));
+  $module_list = array_unique(array_merge(drupal_required_modules(), $function()));
 
   // Get a list of all .install files.
   $installs = drupal_get_install_files($module_list);

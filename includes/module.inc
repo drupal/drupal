@@ -419,4 +419,9 @@ function module_invoke_all() {
  * @} End of "defgroup hooks".
  */
 
-
+/**
+ * Array of modules required by core.
+ */
+function drupal_required_modules() {
+  return array('block', 'filter', 'node', 'system', 'user', 'watchdog');
+}

@@ -8,7 +8,7 @@
  *  An array of modules to be enabled.
  */
 function default_profile_modules() {
-  return array('block', 'color', 'comment', 'filter', 'help', 'node', 'system', 'taxonomy', 'user', 'watchdog');
+  return array('color', 'comment', 'help', 'taxonomy');
 }
 
 /**
