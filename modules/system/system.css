@@ -390,3 +390,10 @@ html.js .resizable-textarea textarea {
 tr.selected td {
   background: #ffc;
 }
+
+/*
+** Floating header for tableheader.js
+*/
+thead div.sticky-header {
+  background: #fff;
+}

@@ -761,6 +761,9 @@ function theme_table($header, $rows, $attributes = array(), $caption = NULL) {
 
   // Format the table header:
   if (count($header)) {
+    // Include JS for sticky headers.
+    drupal_add_js('misc/tableheader.js');
+
     $ts = tablesort_init($header);
     $output .= ' <thead><tr>';
     foreach ($header as $cell) {
