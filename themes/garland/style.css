@@ -785,6 +785,11 @@ fieldset {
   background: #fff url(images/gradient-inner.png) repeat-x 0 0;
 }
 
+fieldset legend {
+  /* Fix disappearing legend in FFox */
+  display: block;
+}
+
 html.js fieldset.collapsed {
   background: transparent;
   padding-top: 0;
