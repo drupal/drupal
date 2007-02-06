@@ -554,7 +554,7 @@ function node_save(&$node) {
     $node->is_new = TRUE;
 
     $node->nid = db_next_id('{node}_nid');
-    $node->vid = db_next_id('{node_revisions}_vid');;
+    $node->vid = db_next_id('{node_revisions}_vid');
   }
   else {
     // We need to ensure that all node fields are filled.
