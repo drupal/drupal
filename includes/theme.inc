@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.340 2007/01/31 15:49:22 dries Exp $
+// $Id: theme.inc,v 1.341 2007/02/06 08:35:13 dries Exp $
 
 /**
  * @file
@@ -761,6 +761,9 @@ function theme_table($header, $rows, $attributes = array(), $caption = NULL) {
 
   // Format the table header:
   if (count($header)) {
+    // Include JS for sticky headers.
+    drupal_add_js('misc/tableheader.js');
+
     $ts = tablesort_init($header);
     $output .= ' <thead><tr>';
     foreach ($header as $cell) {
