@@ -681,7 +681,6 @@ function system_install() {
 
       db_query("CREATE TABLE {boxes} (
         bid serial,
-        title varchar(64) NOT NULL default '',
         body text,
         info varchar(128) NOT NULL default '',
         format smallint NOT NULL default '0',
