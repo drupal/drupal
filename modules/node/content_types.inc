@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.24 2007/01/09 07:53:26 drumm Exp $
+// $Id: content_types.inc,v 1.25 2007/02/10 13:31:32 dries Exp $
 
 /**
  * @file
@@ -194,6 +194,7 @@ function node_type_form($type = NULL) {
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save content type'),
+    '#weight' => 40,
   );
 
   if ($type->custom) {
@@ -201,6 +202,7 @@ function node_type_form($type = NULL) {
       $form['delete'] = array(
         '#type' => 'submit',
         '#value' => t('Delete content type'),
+        '#weight' => 45,
       );
     }
   }
@@ -208,6 +210,7 @@ function node_type_form($type = NULL) {
     $form['reset'] = array(
       '#type' => 'submit',
       '#value' => t('Reset to defaults'),
+      '#weight' => 50,
     );
   }
 
