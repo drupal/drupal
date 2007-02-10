@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.76 2007/01/31 21:26:56 dries Exp $
+// $Id: system.install,v 1.77 2007/02/10 15:39:17 dries Exp $
 
 define('DRUPAL_MINIMUM_PHP',    '4.3.3');
 define('DRUPAL_MINIMUM_MYSQL',  '4.1.0'); // If using MySQL
@@ -681,7 +681,6 @@ function system_install() {
 
       db_query("CREATE TABLE {boxes} (
         bid serial,
-        title varchar(64) NOT NULL default '',
         body text,
         info varchar(128) NOT NULL default '',
         format smallint NOT NULL default '0',
