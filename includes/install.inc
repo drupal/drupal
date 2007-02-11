@@ -319,12 +319,6 @@ function drupal_install_profile($profile, $module_list) {
   // Install schemas for profile and all its modules.
   module_rebuild_cache();
   drupal_install_modules($module_list);
-
-  // And now, run the profile's install function.
-  $function = $profile .'_install';
-  if (function_exists($function)) {
-    $function();
-  }
 }
 
 
