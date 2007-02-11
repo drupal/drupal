@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.106 2007/01/24 14:48:35 dries Exp $
+// $Id: locale.inc,v 1.107 2007/02/11 08:44:32 dries Exp $
 
 /**
  * @file
@@ -87,7 +87,7 @@ function theme_locale_admin_manage_screen($form) {
   foreach ($form['name'] as $key => $element) {
     // Do not take form control structures.
     if (is_array($element) && element_child($key)) {
-      $rows[] = array(check_plain($key), drupal_render($form['name'][$key]), drupal_render($form['enabled'][$key]), drupal_render($form['site_default'][$key]), ($key != 'en' ? drupal_render($form['translation'][$key]) : t('n/a')), ($key != 'en' ? l(t('delete'), 'admin/settings/locale/language/delete/'. $key) : ''));
+      $rows[] = array(check_plain($key), drupal_render($form['name'][$key]), drupal_render($form['enabled'][$key]), drupal_render($form['site_default'][$key]), ($key != 'en' ? drupal_render($form['translation'][$key]) : t('n/a')), ($key != 'en' ? l(t('delete'), 'admin/build/locale/language/delete/'. $key) : ''));
     }
   }
   $header = array(array('data' => t('Code')), array('data' => t('English name')), array('data' => t('Enabled')), array('data' => t('Default')), array('data' => t('Translated')), array('data' => t('Operations')));
@@ -121,7 +121,7 @@ function _locale_admin_manage_screen_submit($form_id, $form_values) {
   // Changing the locale settings impacts the interface:
   cache_clear_all('*', 'cache_page', TRUE);
 
-  return 'admin/settings/locale/language/overview';
+  return 'admin/build/locale/language/overview';
 }
 
 function locale_add_language_form() {
@@ -204,7 +204,7 @@ function locale_add_language_form_submit($form_id, $form_values) {
     _locale_add_language($form_values['langcode'], $isocodes[$form_values['langcode']][0]);
   }
 
-  return 'admin/settings/locale';
+  return 'admin/build/locale';
 }
 
 /**
@@ -269,7 +269,7 @@ function _locale_admin_import_submit($form_id, $form_values) {
     watchdog('locale', $message, WATCHDOG_ERROR);
   }
 
-  return 'admin/settings/locale';
+  return 'admin/build/locale';
 }
 
 function _locale_export_po_form($languages) {
@@ -390,7 +390,7 @@ function _locale_string_edit($lid) {
   // Handle erroneous lid.
   if (!isset($orig)){
     drupal_set_message(t('String not found.'));
-    drupal_goto('admin/settings/locale/string/search');
+    drupal_goto('admin/build/locale/string/search');
   }
 
   // Add original text. Assign negative weight so that it floats to the top.
@@ -436,7 +436,7 @@ function _locale_string_edit_submit($form_id, $form_values) {
   // Rebuild the menu, strings may have changed.
   menu_rebuild();
 
-  return 'admin/settings/locale/string/search';
+  return 'admin/build/locale/string/search';
 }
 
 /**
@@ -448,7 +448,7 @@ function _locale_string_delete($lid) {
   locale_refresh_cache();
   drupal_set_message(t('The string has been removed.'));
 
-  drupal_goto('admin/settings/locale/string/search');
+  drupal_goto('admin/build/locale/string/search');
 }
 
 /**
@@ -1379,7 +1379,7 @@ function _locale_string_seek() {
       $arr[$locale->lid]['source'] = $locale->source;
     }
     foreach ($arr as $lid => $value) {
-      $rows[] = array(array('data' => check_plain(truncate_utf8($value['source'], 150, FALSE, TRUE)) .'<br /><small>'. $value['location'] .'</small>'), array('data' => _locale_string_language_list($value['locales']), 'align' => 'center'), array('data' => l(t('edit'), "admin/settings/locale/string/edit/$lid"), 'class' => 'nowrap'), array('data' => l(t('delete'), "admin/settings/locale/string/delete/$lid"), 'class' => 'nowrap'));
+      $rows[] = array(array('data' => check_plain(truncate_utf8($value['source'], 150, FALSE, TRUE)) .'<br /><small>'. $value['location'] .'</small>'), array('data' => _locale_string_language_list($value['locales']), 'align' => 'center'), array('data' => l(t('edit'), "admin/build/locale/string/edit/$lid"), 'class' => 'nowrap'), array('data' => l(t('delete'), "admin/build/locale/string/delete/$lid"), 'class' => 'nowrap'));
     }
 
     $request = array();
