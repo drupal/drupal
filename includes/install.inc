@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.33 2007/02/04 21:21:44 dries Exp $
+// $Id: install.inc,v 1.34 2007/02/11 08:48:36 dries Exp $
 
 define('SCHEMA_UNINSTALLED', -1);
 define('SCHEMA_INSTALLED', 0);
@@ -319,12 +319,6 @@ function drupal_install_profile($profile, $module_list) {
   // Install schemas for profile and all its modules.
   module_rebuild_cache();
   drupal_install_modules($module_list);
-
-  // And now, run the profile's install function.
-  $function = $profile .'_install';
-  if (function_exists($function)) {
-    $function();
-  }
 }
 
 
