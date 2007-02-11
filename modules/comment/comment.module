@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.523 2007/01/31 15:49:23 dries Exp $
+// $Id: comment.module,v 1.524 2007/02/11 09:30:51 dries Exp $
 
 /**
  * @file
@@ -195,15 +195,14 @@ function comment_menu() {
     'access arguments' => array('post comments'),
     'type' => MENU_CALLBACK,
   );
-  $items['comment/reply'] = array(
+  $items['comment/reply/%node'] = array(
     'title' => t('Reply to comment'),
     'page callback' => 'comment_reply',
     'access callback' => 'node_access',
     'access arguments' => array('view', 2),
-    'map arguments' => array('node_load', 2),
     'type' => MENU_CALLBACK,
   );
-  $items['node/%/%'] = array(
+  $items['node/%node/%'] = array(
     'title' => t('View'),
     'page callback' => 'node_page_view',
     'page arguments' => array(1, 2),

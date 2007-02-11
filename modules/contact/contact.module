@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.76 2007/01/31 15:49:24 dries Exp $
+// $Id: contact.module,v 1.77 2007/02/11 09:30:51 dries Exp $
 
 /**
  * @file
@@ -84,14 +84,13 @@ function contact_menu() {
     'access arguments' => array('access site-wide contact form'),
     'type' => MENU_SUGGESTED_ITEM,
   );
-  $items['user/%/contact'] = array(
+  $items['user/%user/contact'] = array(
     'title' => t('Contact'),
     'page callback' => 'contact_user_page',
     'page arguments' => array(1),
     'type' => MENU_LOCAL_TASK,
     'access callback' => '_contact_user_tab_access',
     'access arguments' => array(1),
-    'map arguments' => array('user_load', 1),
     'weight' => 2,
   );
   return $items;

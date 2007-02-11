@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.273 2007/01/31 15:49:23 dries Exp $
+// $Id: blog.module,v 1.274 2007/02/11 09:30:51 dries Exp $
 
 /**
  * @file
@@ -105,6 +105,9 @@ function blog_feed_last() {
  * Menu callback; displays a Drupal page containing recent blog entries.
  */
 function blog_page($a = NULL, $b = NULL) {
+  if (is_object($a)) {
+    $a = $a->uid;
+  }
 
   if (is_numeric($a)) { // $a is a user ID
     if ($b == 'feed') {
@@ -256,7 +259,7 @@ function blog_menu() {
     'access arguments' => array('access content'),
     'type' => MENU_SUGGESTED_ITEM,
   );
-  $items['blog/%'] = array(
+  $items['blog/%user_current'] = array(
     'title' => t('My blog'),
     'page arguments' => array(1),
     'access arguments' => array('edit own blog'),

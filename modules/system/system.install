@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.77 2007/02/10 15:39:17 dries Exp $
+// $Id: system.install,v 1.78 2007/02/11 09:30:51 dries Exp $
 
 define('DRUPAL_MINIMUM_PHP',    '4.3.3');
 define('DRUPAL_MINIMUM_MYSQL',  '4.1.0'); // If using MySQL
@@ -327,31 +327,32 @@ function system_install() {
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {menu} (
+        mid int NOT NULL default '0',
+        pid int NOT NULL default '0',
         path varchar(255) NOT NULL default '',
+        load_functions varchar(255) NOT NULL default '',
+        to_arg_functions varchar(255) NOT NULL default '',
         access_callback varchar(255) NOT NULL default '',
         access_arguments text,
         page_callback varchar(255) NOT NULL default '',
         page_arguments text,
-        map_callback varchar(255) NOT NULL default '',
-        map_arguments text,
         fit int NOT NULL default '0',
         number_parts int NOT NULL default '0',
         vancode varchar(255) NOT NULL default '',
-        mid int NOT NULL default '0',
-        pid int NOT NULL default '0',
         visible int NOT NULL default '0',
-        menu_link varchar(255) NOT NULL default '',
         parents varchar(255) NOT NULL default '',
         depth int NOT NULL default '0',
         has_children int NOT NULL default '0',
         tab int NOT NULL default 0,
         title varchar(255) NOT NULL default '',
-        default_tab int NOT NULL default '0',
         parent varchar(255) NOT NULL default '',
+        type int NOT NULL default 0,
         PRIMARY KEY  (path),
         KEY vancode (vancode),
         KEY fit (fit),
-        KEY visible (visible)
+        KEY visible (visible),
+        KEY pid (pid),
+        KEY parent (parent)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {node} (
@@ -801,30 +802,31 @@ function system_install() {
         mid int NOT NULL default '0',
         pid int NOT NULL default '0',
         path varchar(255) NOT NULL default '',
+        load_functions varchar(255) NOT NULL default '',
+        to_arg_functions varchar(255) NOT NULL default '',
         access_callback varchar(255) NOT NULL default '',
         access_arguments text,
         page_callback varchar(255) NOT NULL default '',
         page_arguments text,
-        map_callback varchar(255) NOT NULL default '',
-        map_arguments text,
-        fit int NOT NULL default 0,
-        number_parts int NOT NULL default 0,
+        fit int NOT NULL default '0',
+        number_parts int NOT NULL default '0',
         vancode varchar(255) NOT NULL default '',
         visible int NOT NULL default '0',
-        menu_link varchar(255) NOT NULL default '',
         parents varchar(255) NOT NULL default '',
         depth int NOT NULL default '0',
         has_children int NOT NULL default '0',
-        tab int NOT NULL default '0',
+        tab int NOT NULL default 0,
         title varchar(255) NOT NULL default '',
-        default_tab int NOT NULL default '0',
         parent varchar(255) NOT NULL default '',
+        type int NOT NULL default 0,
         PRIMARY KEY (path)
       )");
 
       db_query("CREATE INDEX {menu}_vancode_idx ON {menu} (vancode)");
       db_query("CREATE INDEX {menu}_fit_idx ON {menu} (fit)");
       db_query("CREATE INDEX {menu}_visible_idx ON {menu} (visible)");
+      db_query("CREATE INDEX {menu}_parent_idx ON {menu} (parent)");
+      db_query("CREATE INDEX {menu}_pid_idx ON {menu} (parent)");
 
       db_query("CREATE TABLE {node} (
         nid serial CHECK (nid >= 0),

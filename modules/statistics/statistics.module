@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.251 2007/01/31 15:49:25 dries Exp $
+// $Id: statistics.module,v 1.252 2007/02/11 09:30:51 dries Exp $
 
 /**
  * @file
@@ -143,14 +143,15 @@ function statistics_menu() {
     'type' => MENU_NORMAL_ITEM,
     'weight' => 3,
   );
-  $items['user/%/track/navigation'] = array(
+  $items['user/%user/track/navigation'] = array(
     'title' => t('Track page visits'),
     'page callback' => 'statistics_user_tracker',
+    'access callback' => 'user_access',
     'access arguments' => array('access statistics'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 2,
   );
-  $items['node/%/track'] = array(
+  $items['node/%node/track'] = array(
     'title' => t('Track'),
     'page callback' => 'statistics_node_tracker',
     'access callback' => 'user_access',

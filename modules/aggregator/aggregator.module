@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.327 2007/01/31 21:26:55 dries Exp $
+// $Id: aggregator.module,v 1.328 2007/02/11 09:30:51 dries Exp $
 
 /**
  * @file
@@ -51,19 +51,17 @@ function aggregator_menu() {
     'type' => MENU_LOCAL_TASK,
     'parent' => 'admin/content/aggregator',
   );
-  $items['admin/content/aggregator/remove/%'] = array(
+  $items['admin/content/aggregator/remove/%aggregator_feed'] = array(
     'title' => t('Remove items'),
     'page callback' => 'aggregator_admin_remove_feed',
     'page arguments' => array(4),
-    'map arguments' => array('aggregator_get_feed', 4),
     'access arguments' => array('administer news feeds'),
     'type' => MENU_CALLBACK,
   );
-  $items['admin/content/aggregator/update/%'] = array(
+  $items['admin/content/aggregator/update/%aggregator_feed'] = array(
     'title' => t('Update items'),
     'page callback' => 'aggregator_admin_refresh_feed',
     'page arguments' => array(4),
-    'map arguments' => array('aggregator_get_feed', 4),
     'access arguments' => array('administer news feeds'),
     'type' => MENU_CALLBACK,
   );
@@ -137,24 +135,23 @@ function aggregator_menu() {
       'weight' => 1,
     );
   }
-  $items['aggregator/sources/%'] = array(
+  $items['aggregator/sources/%aggregator_feed'] = array(
     'page callback' => 'aggregator_page_source',
-    'map arguments' => array('aggregator_get_feed', 2),
     'type' => MENU_CALLBACK,
   );
-  $items['aggregator/sources/%/view'] = array(
+  $items['aggregator/sources/%aggregator_feed/view'] = array(
     'title' => t('View'),
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10,
   );
-  $items['aggregator/sources/%/categorize'] = array(
+  $items['aggregator/sources/%aggregator_feed/categorize'] = array(
     'title' => t('Categorize'),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('aggregator_page_source'),
     'access arguments' => array('administer news feeds'),
     'type' => MENU_LOCAL_TASK,
   );
-  $items['aggregator/sources/%/configure'] = array(
+  $items['aggregator/sources/%aggregator_feed/configure'] = array(
     'title' => t('Configure'),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('aggregator_form_feed', 2),
@@ -162,20 +159,18 @@ function aggregator_menu() {
     'type' => MENU_LOCAL_TASK,
     'weight' => 1,
   );
-  $items['admin/content/aggregator/edit/feed/%'] = array(
+  $items['admin/content/aggregator/edit/feed/%aggregator_feed'] = array(
     'title' => t('Edit feed'),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('aggregator_form_feed', 5),
     'access arguments' => array('administer news feeds'),
-    'map arguments' => array('aggregator_get_feed', 5),
     'type' => MENU_CALLBACK,
   );
-  $items['admin/content/aggregator/edit/category/%'] = array(
+  $items['admin/content/aggregator/edit/category/%aggregator_category'] = array(
     'title' => t('Edit category'),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('aggregator_form_category', 5),
     'access arguments' => array('administer news feeds'),
-    'map arguments' => array('aggregator_get_category', 5),
     'type' => MENU_CALLBACK,
   );
 
@@ -964,11 +959,11 @@ function aggregator_save_item($edit) {
   }
 }
 
-function aggregator_get_feed($fid) {
+function aggregator_feed_load($fid) {
   return db_fetch_array(db_query('SELECT * FROM {aggregator_feed} WHERE fid = %d', $fid));
 }
 
-function aggregator_get_category($cid) {
+function aggregator_category_load($cid) {
   return db_fetch_array(db_query('SELECT * FROM {aggregator_category} WHERE cid = %d', $cid));
 }
 
@@ -1035,7 +1030,7 @@ function aggregator_page_last() {
  */
 function aggregator_page_source() {
   $feed = db_fetch_object(db_query('SELECT * FROM {aggregator_feed} WHERE fid = %d', arg(2)));
-  drupal_set_title($feed->title);
+  drupal_set_title(check_plain($feed->title));
   $info = theme('aggregator_feed', $feed);
 
   return _aggregator_page_list('SELECT * FROM {aggregator_item} WHERE fid = '. $feed->fid .' ORDER BY timestamp DESC, iid DESC', arg(3), $info);

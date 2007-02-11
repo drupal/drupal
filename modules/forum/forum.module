@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.382 2007/02/01 21:44:36 dries Exp $
+// $Id: forum.module,v 1.383 2007/02/11 09:30:51 dries Exp $
 
 /**
  * @file
@@ -75,19 +75,21 @@ function forum_menu() {
     'type' => MENU_LOCAL_TASK,
     'parent' => 'admin/content/forum',
   );
-  $items['admin/content/forum/edit'] = array(
+  $items['admin/content/forum/edit/%forum_term'] = array(
     'page callback' => 'forum_form_main',
-    'map arguments' => array('_forum_get_term', 5, array()),
     'type' => MENU_CALLBACK,
   );
-  $items['admin/content/forum/edit/container/%'] = array(
+  $items['admin/content/forum/edit/container/%forum_term'] = array(
     'title' => t('Edit container'),
+    'page callback' => 'forum_form_main',
     'page arguments' => array('container', 5),
+    'type' => MENU_CALLBACK,
   );
-  $items['admin/content/forum/edit/forum/%'] = array(
+  $items['admin/content/forum/edit/forum/%forum_term'] = array(
     'title' => t('Edit forum'),
     'page callback' => 'forum_form_main',
     'page arguments' => array('forum', 5),
+    'type' => MENU_CALLBACK,
   );
   return $items;
 }
@@ -96,7 +98,7 @@ function forum_init() {
   drupal_add_css(drupal_get_path('module', 'forum') .'/forum.css');
 }
 
-function _forum_get_term($tid) {
+function forum_term_load($tid) {
   return (array)taxonomy_get_term($tid);
 }
 
@@ -295,7 +297,7 @@ function forum_block($op = 'list', $delta = 0, $edit = array()) {
  */
 function forum_view(&$node, $teaser = FALSE, $page = FALSE) {
   if ($page) {
-    $vocabulary = taxonomy_get_vocabulary(variable_get('forum_nav_vocabulary', ''));
+    $vocabulary = taxonomy_vocabulary_load(variable_get('forum_nav_vocabulary', ''));
     // Breadcrumb navigation
     $breadcrumb = array();
     $breadcrumb[] = array('path' => 'forum', 'title' => $vocabulary->name);
@@ -876,7 +878,7 @@ function theme_forum_display($forums, $topics, $parents, $tid, $sortby, $forum_p
   global $user;
   // forum list, topics list, topic browser and 'add new topic' link
 
-  $vocabulary = taxonomy_get_vocabulary(variable_get('forum_nav_vocabulary', ''));
+  $vocabulary = taxonomy_vocabulary_load(variable_get('forum_nav_vocabulary', ''));
   $title = $vocabulary->name;
 
   // Breadcrumb navigation:

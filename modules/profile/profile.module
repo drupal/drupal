@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.193 2007/02/02 15:25:25 dries Exp $
+// $Id: profile.module,v 1.194 2007/02/11 09:30:51 dries Exp $
 
 /**
  * @file
@@ -355,6 +355,7 @@ function profile_field_form_submit($form_id, $form_values) {
     drupal_set_message(t('The field has been updated.'));
   }
   cache_clear_all();
+  menu_rebuild();
 
   return 'admin/user/profile';
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.162 2007/01/31 15:49:24 dries Exp $
+// $Id: filter.module,v 1.163 2007/02/11 09:30:51 dries Exp $
 
 /**
  * @file
@@ -81,32 +81,35 @@ function filter_menu() {
     'access callback' => TRUE,
     'type' => MENU_SUGGESTED_ITEM,
   );
-  $items['admin/settings/filters/%'] = array(
+  $items['admin/settings/filters/%filter_format'] = array(
     'type' => MENU_CALLBACK,
     'page arguments' => array('filter_admin_format_form', 3),
     'access arguments' => array('administer filters'),
-    'map arguments' => array('filter_formats', 3),
   );
 
-  $items['admin/settings/filters/%/list'] = array(
+  $items['admin/settings/filters/%filter_format/list'] = array(
     'title' => t('View'),
     'page arguments' => array('filter_admin_format_form', 3),
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => 0,
   );
-  $items['admin/settings/filters/%/configure'] = array(
+  $items['admin/settings/filters/%filter_format/configure'] = array(
     'title' => t('Configure'),
     'page arguments' => array('filter_admin_configure', 3),
     'type' => MENU_LOCAL_TASK,
     'weight' => 1,
   );
-  $items['admin/settings/filters/%/order'] = array(
+  $items['admin/settings/filters/%filter_format/order'] = array(
     'title' => t('Rearrange'),
     'page arguments' => array('filter_admin_order', 3),
     'type' => MENU_LOCAL_TASK,
     'weight' => 2,
   );
   return $items;
+}
+
+function filter_format_load($arg) {
+  return filter_formats($arg);
 }
 
 /**

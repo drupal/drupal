@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.223 2007/01/24 14:48:36 dries Exp $
+// $Id: poll.module,v 1.224 2007/02/11 09:30:51 dries Exp $
 
 /**
  * @file
@@ -239,14 +239,14 @@ function poll_menu() {
     'type' => MENU_SUGGESTED_ITEM,
   );
 
-  $items['poll/cancel/%'] = array(
+  $items['poll/cancel/%node'] = array(
     'title' => t('Cancel'),
     'page callback' => 'poll_cancel',
     'page arguments' => array(2),
     'access arguments' => array('cancel own vote'),
     'type' => MENU_CALLBACK,
   );
-  $items['node/%/votes'] = array(
+  $items['node/%node/votes'] = array(
     'title' => t('Votes'),
     'page callback' => 'poll_votes',
     'access callback' => '_poll_menu_access',
@@ -254,7 +254,7 @@ function poll_menu() {
     'weight' => 3,
     'type' => MENU_LOCAL_TASK,
   );
-  $items['node/%/results'] = array(
+  $items['node/%node/results'] = array(
     'title' => t('Results'),
     'page callback' => 'poll_results',
     'access callback' => '_poll_menu_access',

@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.410 2007/01/31 15:49:23 dries Exp $
+// $Id: book.module,v 1.411 2007/02/11 09:30:51 dries Exp $
 
 /**
  * @file
@@ -114,13 +114,12 @@ function book_menu() {
     'page arguments' => array(2, 3),
     'type' => MENU_CALLBACK,
   );
-  $items['node/%/outline'] = array(
+  $items['node/%node/outline'] = array(
     'title' => t('Outline'),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('book_outline', 1),
     'access callback' => '_book_outline_access',
     'access arguments' => array(1),
-    'map arguments' => array('node_load', 1),
     'type' => MENU_LOCAL_TASK,
     'weight' => 2,
   );

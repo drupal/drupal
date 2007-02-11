@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.781 2007/02/06 08:16:27 unconed Exp $
+// $Id: node.module,v 1.782 2007/02/11 09:30:51 dries Exp $
 
 /**
  * @file
@@ -1166,33 +1166,32 @@ function node_menu() {
 
     }
   }
-  $items['node/%'] = array(
+  $items['node/%node'] = array(
     'title' => t('View'),
     'page callback' => 'node_page_view',
     'page arguments' => array(1),
     'access callback' => 'node_access',
     'access arguments' => array('view', 1),
-    'map arguments' => array('node_load', 1),
     'type' => MENU_CALLBACK);
-  $items['node/%/view'] = array(
+  $items['node/%node/view'] = array(
     'title' => t('View'),
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10);
-  $items['node/%/edit'] = array(
+  $items['node/%node/edit'] = array(
     'title' => t('Edit'),
     'page callback' => 'node_page_edit',
     'page arguments' => array(1),
     'access arguments' => array('update', 1),
     'weight' => 1,
     'type' => MENU_LOCAL_TASK);
-  $items['node/%/delete'] = array(
+  $items['node/%node/delete'] = array(
     'title' => t('Delete'),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('node_delete_confirm', 1),
     'access arguments' => array('delete', 1),
     'weight' => 1,
     'type' => MENU_CALLBACK);
-  $items['node/%/revisions'] = array(
+  $items['node/%node/revisions'] = array(
     'title' => t('Revisions'),
     'page callback' => 'node_revisions',
     'access callback' => '_node_revision_access',
@@ -2464,7 +2463,7 @@ function node_update_index() {
  */
 function node_form_alter($form_id, &$form) {
   // Advanced node search form
-  if ($form_id == 'search_form' && arg(1) == 'node' && user_access('use advanced search')) {
+  if ($form_id == 'search_form' && $form['module']['#value'] == 'node' && user_access('use advanced search')) {
     // Keyword boxes:
     $form['advanced'] = array(
       '#type' => 'fieldset',

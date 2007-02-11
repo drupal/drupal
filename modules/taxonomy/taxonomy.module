@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.337 2007/01/31 21:26:56 dries Exp $
+// $Id: taxonomy.module,v 1.338 2007/02/11 09:30:51 dries Exp $
 
 /**
  * @file
@@ -59,7 +59,7 @@ function taxonomy_link($type, $node = NULL) {
  */
 
 function taxonomy_term_path($term) {
-  $vocabulary = taxonomy_get_vocabulary($term->vid);
+  $vocabulary = taxonomy_vocabulary_load($term->vid);
   if ($vocabulary->module != 'taxonomy' && $path = module_invoke($vocabulary->module, 'term_path', $term)) {
     return $path;
   }
@@ -91,7 +91,7 @@ function taxonomy_menu() {
     'parent' => 'admin/content/taxonomy',
   );
 
-  $items['admin/content/taxonomy/edit/vocabulary/%'] = array(
+  $items['admin/content/taxonomy/edit/vocabulary/%taxonomy_vocabulary'] = array(
     'title' => t('Edit vocabulary'),
     'page callback' => 'taxonomy_admin_vocabulary_edit',
     'page arguments' => array(5),
@@ -117,27 +117,26 @@ function taxonomy_menu() {
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
-  $items['admin/content/taxonomy/%'] = array(
+  $items['admin/content/taxonomy/%taxonomy_vocabulary'] = array(
     'title' => t('List terms'),
     'page callback' => 'taxonomy_overview_terms',
     'page arguments' => array(3),
     'access arguments' => array('administer taxonomy'),
-    'map arguments' => array('taxonomy_get_vocabulary', 3),
     'type' => MENU_CALLBACK,
   );
 
-  $items['admin/content/taxonomy/%/list'] = array(
+  $items['admin/content/taxonomy/%taxonomy_vocabulary/list'] = array(
     'title' => t('List'),
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10,
   );
 
-  $items['admin/content/taxonomy/%/add/term'] = array(
+  $items['admin/content/taxonomy/%taxonomy_vocabulary/add/term'] = array(
     'title' => t('Add term'),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('taxonomy_form_term', 3),
     'type' => MENU_LOCAL_TASK,
-    'parent' => 'admin/content/taxonomy/%',
+    'parent' => 'admin/content/taxonomy/%taxonomy_vocabulary',
   );
 
   return $items;
@@ -334,7 +333,7 @@ function taxonomy_save_vocabulary(&$edit) {
  *   Constant indicating items were deleted.
  */
 function taxonomy_del_vocabulary($vid) {
-  $vocabulary = (array) taxonomy_get_vocabulary($vid);
+  $vocabulary = (array) taxonomy_vocabulary_load($vid);
 
   db_query('DELETE FROM {vocabulary} WHERE vid = %d', $vid);
   db_query('DELETE FROM {vocabulary_node_types} WHERE vid = %d', $vid);
@@ -351,7 +350,7 @@ function taxonomy_del_vocabulary($vid) {
 }
 
 function taxonomy_vocabulary_confirm_delete($vid) {
-  $vocabulary = taxonomy_get_vocabulary($vid);
+  $vocabulary = taxonomy_vocabulary_load($vid);
 
   $form['type'] = array('#type' => 'value', '#value' => 'vocabulary');
   $form['vid'] = array('#type' => 'value', '#value' => $vid);
@@ -593,7 +592,7 @@ function taxonomy_term_confirm_delete_submit($form_id, $form_values) {
  * Generate a form element for selecting terms from a vocabulary.
  */
 function taxonomy_form($vid, $value = 0, $help = NULL, $name = 'taxonomy') {
-  $vocabulary = taxonomy_get_vocabulary($vid);
+  $vocabulary = taxonomy_vocabulary_load($vid);
   $help = ($help) ? $help : $vocabulary->help;
   if ($vocabulary->required) {
     $blank = 0;
@@ -764,7 +763,7 @@ function taxonomy_node_validate(&$node) {
     $terms = $node->taxonomy;
     if ($terms['tags']) {
       foreach ($terms['tags'] as $vid => $vid_value) {
-        $vocabulary = taxonomy_get_vocabulary($vid);
+        $vocabulary = taxonomy_vocabulary_load($vid);
         if (empty($vocabulary->tags)) {
           // see form_get_error $key = implode('][', $element['#parents']);
           // on why this is the key
@@ -1109,7 +1108,7 @@ function taxonomy_get_term_by_name($name) {
  *   The vocabulary object with all of its metadata.
  *   Results are statically cached.
  */
-function taxonomy_get_vocabulary($vid) {
+function taxonomy_vocabulary_load($vid) {
   static $vocabularies = array();
 
   if (!array_key_exists($vid, $vocabularies)) {
@@ -1388,14 +1387,11 @@ function taxonomy_term_page($str_tids = '', $depth = 0, $op = 'page') {
 /**
  * Page to edit a vocabulary.
  */
-function taxonomy_admin_vocabulary_edit($vid = NULL) {
+function taxonomy_admin_vocabulary_edit($vocabulary) {
   if ($_POST['op'] == t('Delete') || $_POST['confirm']) {
-    return drupal_get_form('taxonomy_vocabulary_confirm_delete', $vid);
+    return drupal_get_form('taxonomy_vocabulary_confirm_delete', $vocabulary->vid);
   }
-  if ($vocabulary = (array)taxonomy_get_vocabulary($vid)) {
-    return drupal_get_form('taxonomy_form_vocabulary', $vocabulary);
-  }
-  return drupal_not_found();
+  return drupal_get_form('taxonomy_form_vocabulary', (array)$vocabulary);
 }
 
 /**

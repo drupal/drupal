@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.152 2007/01/31 21:55:37 dries Exp $
+// $Id: menu.inc,v 1.153 2007/02/11 09:30:50 dries Exp $
 
 /**
  * @file
@@ -172,6 +172,19 @@ define('MENU_SITE_OFFLINE', 4);
  */
 
 /**
+ * @Name Menu operations
+ * @{
+ * Menu helper possible operations.
+ */
+
+define('MENU_HANDLE_REQUEST', 0);
+define('MENU_RENDER_LINK', 1);
+
+/**
+ * @} End of "Menu helper directions
+ */
+
+/**
  * Returns the ancestors (and relevant placeholders) for any given path.
  *
  * For example, the ancestors of node/12345/edit are:
@@ -195,7 +208,7 @@ define('MENU_SITE_OFFLINE', 4);
  *   array('node', '12345', 'edit').
  * @return
  *   An array which contains the ancestors and placeholders. Placeholders
- *   simply contain as many %s as the ancestors.
+ *   simply contain as many '%s' as the ancestors.
  */
 function menu_get_ancestors($parts) {
   $n1 = count($parts);
@@ -273,10 +286,10 @@ function menu_unserialize($data, $map) {
  *   with keys like title, access callback, access arguments etc.
  */
 function menu_set_item($path, $item) {
-  menu_get_item($path, TRUE, $item);
+  menu_get_item($path, $item);
 }
 
-function menu_get_item($path = NULL, $execute = TRUE, $item = NULL) {
+function menu_get_item($path = NULL, $item = NULL) {
   static $items;
   if (!isset($path)) {
     $path = $_GET['q'];
@@ -289,14 +302,13 @@ function menu_get_item($path = NULL, $execute = TRUE, $item = NULL) {
     $parts = array_slice($map, 0, 6);
     list($ancestors, $placeholders) = menu_get_ancestors($parts);
     if ($item = db_fetch_object(db_query_range('SELECT * FROM {menu} WHERE path IN ('. implode (',', $placeholders) .') ORDER BY fit DESC', $ancestors, 0, 1))) {
-      $item->access = _menu_access($item, $map);
+      list($item->access, $map) = _menu_translate($item, $map);
       if ($map === FALSE) {
         $items[$path] = FALSE;
         return FALSE;
       }
-      if ($execute) {
-        $item->page_arguments = array_merge(menu_unserialize($item->page_arguments, $map), array_slice($parts, $item->number_parts));
-      }
+      $item->map = $map;
+      $item->page_arguments = array_merge(menu_unserialize($item->page_arguments, $map), array_slice($parts, $item->number_parts));
     }
     $items[$path] = $item;
   }
@@ -313,45 +325,113 @@ function menu_execute_active_handler() {
   return MENU_NOT_FOUND;
 }
 
-function _menu_access($item, &$map) {
-  if ($item->map_callback) {
-    $map = call_user_func_array($item->map_callback, array_merge(array($map), unserialize($item->map_arguments)));
-    if ($map === FALSE) {
-      return FALSE;
+/**
+ * Handles dynamic path translation and menu access control.
+ *
+ * When a user arrives on a page such as node/5, this function determines
+ * what "5" corresponds to, by inspecting the page's menu path definition,
+ * node/%node. This will call node_load(5) to load the corresponding node
+ * object.
+ *
+ * It also works in reverse, to allow the display of tabs and menu items which
+ * contain these dynamic arguments, translating node/%node to node/5.
+ * This operation is called MENU_RENDER_LINK.
+ *
+ * @param $item
+ *   A menu item object
+ * @param $map
+ *   An array of path arguments (ex: array('node', '5'))
+ * @param $operation
+ *   The path translation operation to perform:
+ *   - MENU_HANDLE_REQUEST: An incoming page reqest; map with appropriate callback.
+ *   - MENU_RENDER_LINK: Render an internal path as a link.
+ * @return
+ *   Returns an array. The first value is the access, the second is the map
+ *   with objects loaded where appropriate and the third is the path ready for
+ *   printing.
+ */
+function _menu_translate($item, $map, $operation = MENU_HANDLE_REQUEST) {
+  $path = '';
+
+  // Check if there are dynamic arguments in the path that need to be calculated.
+  if ($item->load_functions || ($operation == MENU_RENDER_LINK && $item->to_arg_functions)) {
+    $load_functions = unserialize($item->load_functions);
+    $to_arg_functions = unserialize($item->to_arg_functions);
+    $path_map = ($operation == MENU_HANDLE_REQUEST) ? $map : explode('/', $item->path);
+    foreach ($load_functions as $index => $load_function) {
+      // Translate place-holders into real values.
+      if ($operation == MENU_RENDER_LINK) {
+        if (isset($to_arg_functions[$index])) {
+          $to_arg_function = $to_arg_functions[$index];
+          $return = $to_arg_function(!empty($map[$index]) ? $map[$index] : '');
+          if (!empty($map[$index]) || isset($return)) {
+            $path_map[$index] = $return;
+          }
+          else {
+            unset($path_map[$index]);
+          }
+        }
+        else {
+          $path_map[$index] = isset($map[$index]) ? $map[$index] : '';
+        }
+      }
+      // We now have a real path regardless of operation, map it.
+      if ($load_function) {
+        $return = $load_function(isset($path_map[$index]) ? $path_map[$index] : '');
+        // If callback returned an error or there is no callback, trigger 404.
+        if ($return === FALSE) {
+          return array(FALSE, FALSE, '');
+        }
+        $map[$index] = $return;
+      }
+    }
+    if ($operation != MENU_HANDLE_REQUEST) {
+      // Re-join the path with the new replacement value.
+      $path = implode('/', $path_map);
     }
   }
+  else {
+    $path = $item->path;
+  }
+
+  // Determine access callback, which will decide whether or not the current user has
+  // access to this path.
   $callback = $item->access_callback;
+  // Check for a TRUE or FALSE value.
   if (is_numeric($callback)) {
-    return $callback;
+    return array($callback, $map, $path);
   }
   $arguments = menu_unserialize($item->access_arguments, $map);
   // As call_user_func_array is quite slow and user_access is a very common
   // callback, it is worth making a special case for it.
   if ($callback == 'user_access') {
-    return (count($arguments) == 1) ? user_access($arguments[0]) : user_access($arguments[0], $arguments[1]);
+    $access = (count($arguments) == 1) ? user_access($arguments[0]) : user_access($arguments[0], $arguments[1]);
+    return array($access, $map, $path);
   }
-  return call_user_func_array($callback, $arguments);
+  return array(call_user_func_array($callback, $arguments), $map, $path);
 }
 
 /**
  * Returns a rendered menu tree.
  */
 function menu_tree() {
-  $item = menu_get_item();
-  list(, $menu) = _menu_tree(db_query('SELECT * FROM {menu} WHERE pid IN ('. $item->parents .') AND visible = 1 ORDER BY vancode'));
-  return $menu;
+  if ($item = menu_get_item()) {
+    list(, $menu) = _menu_tree(db_query('SELECT * FROM {menu} WHERE pid IN ('. $item->parents .') AND visible = 1 ORDER BY vancode'));
+    return $menu;
+  }
 }
 
 function _menu_tree($result = NULL, $depth = 0, $link = array('link' => '', 'has_children' => FALSE)) {
   static $original_map;
   $remnant = array('link' => '', 'has_children' => FALSE);
   $tree = '';
+  $map = arg(NULL);
   while ($item = db_fetch_object($result)) {
-    $map = arg(NULL, $item->path);
-    if (!_menu_access($item, $map)) {
+    list($access, , $path) = _menu_translate($item, $map, MENU_RENDER_LINK);
+    if (!$access) {
       continue;
     }
-    $menu_link = array('link' => $item->menu_link, 'has_children' => $item->has_children);
+    $menu_link = array('link' => l($item->title, $path), 'has_children' => $item->has_children);
     if ($item->depth > $depth) {
       list($remnant, $menu) = _menu_tree($result, $item->depth, $menu_link);
       $tree .= theme('menu_tree', $link, $menu);
@@ -385,7 +465,11 @@ function theme_menu_tree($link, $tree) {
  * Generate the HTML for a menu link.
  */
 function theme_menu_link($link, $menu = '') {
-  return '<li class="'. ($menu ? 'expanded' : ($link['has_children'] ? 'collapsed' : 'leaf')) .'">'. $link['link'] . $menu .'</li>' . "\n";
+  return '<li class="'. ($menu ? 'expanded' : (empty($link['has_children']) ? 'leaf': 'collapsed')) .'">'. $link['link'] . $menu .'</li>' . "\n";
+}
+
+function theme_menu_local_task($link, $active = FALSE) {
+  return '<li '. ($active ? 'class="active" ' : ''). '>'. $link .'</li>';
 }
 
 /**
@@ -430,47 +514,96 @@ function menu_rebuild() {
     $function($menu);
   }
   $mid = 1;
-  // First pass.
+  // First pass: separate callbacks from pathes, making pathes ready for
+  // matching. Calculate fitness, and fill some default values.
   foreach ($menu as $path => $item) {
-    $item = &$menu[$path];
     $parts = explode('/', $path, 6);
     $number_parts = count($parts);
-    // We store the highest index of parts here to save some work in the weight
+    // We store the highest index of parts here to save some work in the fit
     // calculation loop.
     $slashes = $number_parts - 1;
-    // If there is no %, it fits maximally.
-    if (strpos($path, '%') === FALSE) {
-      $fit = (1 << $number_parts) - 1;
-    }
-    else {
-      // We need to calculate the fitness.
-      $fit = 0;
-      foreach ($parts as $k => $part) {
-        // ($part != '%') is the bit we want and we shift it to its place
-        // by shifting to left by ($slashes - $k) bits.
-        $fit |=  ($part != '%') << ($slashes - $k);
+    $fit = 0;
+    $load_functions = array();
+    $to_arg_functions = array();
+    // extract functions
+    foreach ($parts as $k => $part) {
+      $match = FALSE;
+      if (preg_match('/^%([a-z_]*)$/', $part, $matches)) {
+        if (empty($matches[1])) {
+          $match = TRUE;
+        }
+        else {
+          if (function_exists($matches[1] .'_load')) {
+            $load_functions[$k] = $matches[1] .'_load';
+            $match = TRUE;
+          }
+          if (function_exists($matches[1] .'_to_arg')) {
+            $to_arg_functions[$k] = $matches[1].'_to_arg';
+            $match = TRUE;
+          }
+          if (!isset($load_functions[$k]) && isset($to_arg_functions[$k])) {
+            $load_functions[$k] = FALSE;
+          }
+        }
+      }
+      if ($match) {
+        $parts[$k] = '%';
+      }
+      else {
+        $fit |=  1 << ($slashes - $k);
       }
     }
-    if (!isset($item['_visible'])) {
-      $item['_visible'] = (!isset($item['type']) || ($item['type'] & MENU_VISIBLE_IN_TREE)) ? 1 : 0;
+    $item['load_functions'] = empty($load_functions) ? '' : serialize($load_functions);
+    $item['to_arg_functions'] = empty($to_arg_functions) ? '' : serialize($to_arg_functions);
+    // If there is no %, it fits maximally.
+    if (!$fit) {
+      $fit = (1 << $number_parts) - 1;
+      $move = FALSE;
+    }
+    else {
+      $move = TRUE;
+    }
+    $item += array(
+      'title' => '',
+      'weight' => 0,
+      'type' => MENU_NORMAL_ITEM,
+      '_number_parts' => $number_parts,
+      '_parts' => $parts,
+      '_fit' => $fit,
+      '_mid' => $mid++,
+    );
+    $item += array(
+      '_visible' => (bool)($item['type'] & MENU_VISIBLE_IN_TREE),
+      '_tab' => (bool)($item['type'] & MENU_IS_LOCAL_TASK),
+    );
+    if ($move) {
+      $new_path = implode('/', $item['_parts']);
+      unset($menu[$path]);
+    }
+    else {
+      $new_path = $path;
+    }
+    $menu[$new_path] = $item;
+  }
+  // Second pass: find visible parents and prepare for sorting.
+  foreach ($menu as $path => $item) {
+    $item = &$menu[$path];
+    $number_parts = $item['_number_parts'];
+    $parents = array($item['_mid']);
+    if ($item['_visible'] && isset($item['parent'])) {
+      $parent_parts = explode('/', $item['parent'], 6);
+      $slashes = count($parent_parts) - 1;
+    }
+    else {
+      $parent_parts = $item['_parts'];
+      $slashes = $number_parts -1;
     }
     $depth = 1;
-    if (!isset($item['_mid'])) {
-      $item['_mid'] = $mid++;
-    }
-    $parents = array($item['_mid']);
     for ($i = $slashes; $i; $i--) {
-      $parent_path = implode('/', array_slice($parts, 0, $i));
+      $parent_path = implode('/', array_slice($parent_parts, 0, $i));
       // We need to calculate depth to be able to sort. depth needs visibility.
       if (isset($menu[$parent_path])) {
         $parent = &$menu[$parent_path];
-        // It's possible that the parent was not processed yet.
-        if (!isset($parent['_mid'])) {
-          $parent['_mid'] = $mid++;
-        }
-        if (!isset($parent['_visible'])) {
-          $parent['_visible'] = (!isset($parent['type']) || ($parent['type'] & MENU_VISIBLE_IN_TREE)) ? 1 : 0;
-        }
         if ($item['_visible'] && $parent['_visible']) {
           $parent['_has_children'] = 1;
           $depth++;
@@ -487,22 +620,16 @@ function menu_rebuild() {
     $parents = implode(',', array_reverse($parents));
     // Store variables and set defaults.
     $item += array(
-      '_fit' => $fit,
-      '_number_parts' => $number_parts,
-      '_parts' => $parts,
       '_pid' => 0,
-      '_depth' => $depth,
+      '_depth' => $item['_visible'] ? $depth : $number_parts,
       '_parents' => $parents,
       '_has_children' => 0,
-      'title' => '',
-      'weight' => 0,
-      'type' => MENU_NORMAL_ITEM,
     );
-    $sort[$path] = ($item['_visible'] ? $depth : $number_parts) . sprintf('%05d', $item['weight']) . $item['title'];
+    $sort[$path] = $item['_depth'] . sprintf('%05d', $item['weight']) . $item['title'];
     unset($item);
   }
   array_multisort($sort, $menu);
-  // Second pass: calculate ancestors, vancode and store into the database.
+  // Third pass: calculate ancestors, vancode and store into the database.
   foreach ($menu as $path => $item) {
     $item = &$menu[$path];
     for ($i = $item['_number_parts'] - 1; $i; $i--) {
@@ -512,7 +639,7 @@ function menu_rebuild() {
         // If a callback is not found, we try to find the first parent that
         // has this callback. When found, its callback argument will also be
         // copied but only if there is none in the current item.
-        foreach (array('access', 'map', 'page') as $type) {
+        foreach (array('access', 'page') as $type) {
           if (!isset($item["$type callback"]) && isset($parent["$type callback"])) {
             $item["$type callback"] = $parent["$type callback"];
             if (!isset($item["$type arguments"]) && isset($parent["$type arguments"])) {
@@ -525,9 +652,6 @@ function menu_rebuild() {
     if (!isset($item['access callback'])) {
       $menu[$path]['access callback'] = isset($item['access arguments']) ? 'user_access' : 0;
     }
-    if (!isset($item['map callback']) && isset($item['map arguments'])) {
-      $item['map callback'] = 'menu_map';
-    }
     if (is_bool($item['access callback'])) {
       $item['access callback'] = intval($item['access callback']);
     }
@@ -538,42 +662,39 @@ function menu_rebuild() {
       }
       $vancode = $prefix . int2vancode($next[$prefix]++);
       $menu[$path]['_prefix'] = $vancode .'.';
-      $link = l($item['title'], $path, isset($item['attributes']) ? $item['attributes'] : array(), isset($item['query']) ? $item['query'] : NULL, isset($item['fragment']) ? $item['fragment'] : NULL);
     }
     else {
       $vancode = '';
-      $link = '';
     }
-    $tab = ($item['type'] & MENU_IS_LOCAL_TASK) ? 1 : 0;
-    $default_tab = $item['type'] == MENU_DEFAULT_LOCAL_TASK;
-    if (!isset($item['parent'])) {
-      if ($tab) {
+    if ($item['_tab']) {
+      if (!isset($item['parent'])) {
         $item['parent'] = implode('/', array_slice($item['_parts'], 0, $item['_number_parts'] - 1));
       }
-      else {
-        $item['parent'] = $path;
-      }
+    }
+    else {
+      // Non-tab items specified the parent for visible links, and it's
+      // stored in parents, parent stores the tab parent.
+      $item['parent'] = $path;
     }
     $insert_item = $item + array(
       'access arguments' => array(),
       'access callback' => '',
       'page arguments' => array(),
       'page callback' => '',
-      'map arguments' => array(),
-      'map callback' => '',
     );
     db_query("INSERT INTO {menu} (
-      mid, pid, path,
-      access_callback, access_arguments, page_callback, page_arguments, map_callback, map_arguments, fit,
-      number_parts, vancode, menu_link, visible, parents, depth, has_children, tab, default_tab, title, parent)
-      VALUES (%d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', '%s', %d, '%s', %d, %d, %d, %d, '%s', '%s')",
-      $insert_item['_mid'], $insert_item['_pid'], $path, $insert_item['access callback'],
-      serialize($insert_item['access arguments']), $insert_item['page callback'],
-      serialize($insert_item['page arguments']), $insert_item['map callback'],
-      serialize($insert_item['map arguments']), $insert_item['_fit'],
-      $insert_item['_number_parts'], $vancode .'+', $link, $insert_item['_visible'],
-      $insert_item['_parents'], $insert_item['_depth'], $insert_item['_has_children'],
-      $tab, $default_tab, $insert_item['title'], $insert_item['parent']);
+      mid, pid, path, load_functions, to_arg_functions,
+      access_callback, access_arguments, page_callback, page_arguments, fit,
+      number_parts, vancode, visible, parents, depth, has_children, tab, title, parent, type)
+      VALUES (%d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', %d, '%s', %d, %d, %d, '%s', '%s', '%s')",
+      $insert_item['_mid'], $insert_item['_pid'], $path,
+      $insert_item['load_functions'], $insert_item['to_arg_functions'],
+      $insert_item['access callback'], serialize($insert_item['access arguments']),
+      $insert_item['page callback'], serialize($insert_item['page arguments']),
+      $insert_item['_fit'], $insert_item['_number_parts'], $vancode .'+',
+      $insert_item['_visible'], $insert_item['_parents'], $insert_item['_depth'],
+      $insert_item['_has_children'], $item['_tab'], $insert_item['title'],
+      $insert_item['parent'], $insert_item['type']);
     unset($item);
   }
 }
@@ -590,32 +711,79 @@ function menu_primary_links() {
 function menu_secondary_links() {
 }
 
-function menu_primary_local_tasks() {
-  $router_item = menu_get_item();
-  $result = db_query("SELECT * FROM {menu} WHERE parent = '%s' AND tab = 1 ORDER BY vancode", $router_item->parent);
-  $tabs = array();
-  while ($item = db_fetch_object($result)) {
-    $map = explode('/', $item->path);
-    foreach ($map as $key => $value) {
-      if ($value == '%') {
-        $map[$key] = arg($key);
+/**
+ * Collects the local tasks (tabs) for a given level.
+ *
+ * @param $level
+     The level of tasks you ask for. Primary tasks are 0, secondary are 1...
+ * @return
+ *   An array of links to the tabs.
+ */
+function menu_local_tasks($level = 0) {
+  static $tabs = array(), $parents = array(), $parents_done = array();
+  if (empty($tabs)) {
+    $router_item = menu_get_item();
+    $map = arg(NULL);
+    do {
+      // Tabs are router items that have the same parent. If there is a new
+      // parent, let's add it the queue.
+      if (!empty($router_item->parent)) {
+        $parents[] = $router_item->parent;
+        // Do not add the same item twice.
+        $router_item->parent = '';
       }
-    }
-    $path = implode('/', $map);
-    if (_menu_access($item, $map, TRUE)) {
-      $link = l($item->title, $path);
-      if ((!$router_item->tab && $item->default_tab) || ($path == $_GET['q'])) {
-        $tabs[] = array('class' => 'active', 'data' => $link);
+      $parent = array_shift($parents);
+      // Do not process the same parent twice.
+      if (isset($parents_done[$parent])) {
+        continue;
       }
-      else {
-        $tabs[] = $link;
+      // This loads all the tabs.
+      $result = db_query("SELECT * FROM {menu} WHERE parent = '%s' AND tab = 1 ORDER BY vancode", $parent);
+      $tabs_current = '';
+      while ($item = db_fetch_object($result)) {
+        // This call changes the path from for example user/% to user/123 and
+        // also determines whether we are allowed to access it.
+        list($access, , $path) = _menu_translate($item, $map, MENU_RENDER_LINK);
+        if ($access) {
+          $depth = $item->depth;
+          $link = l($item->title, $path);
+          // We check for the active tab.
+          if ($item->path == $router_item->path || (!$router_item->tab && $item->type == MENU_DEFAULT_LOCAL_TASK) || $path == $_GET['q']) {
+            $tabs_current .= theme('menu_local_task', $link, TRUE);
+            // Let's try to find the router item one level up.
+            $next_router_item = db_fetch_object(db_query("SELECT path, tab, parent FROM {menu} WHERE path = '%s'", $item->parent));
+            // We will need to inspect one level down.
+            $parents[] = $item->path;
+          }
+          else {
+            $tabs_current .= theme('menu_local_task', $link);
+          }
+        }
       }
-    }
+      // If there are tabs, let's add them
+      if ($tabs_current) {
+        $tabs[$depth] = $tabs_current;
+      }
+      $parents_done[$parent] = TRUE;
+      if (isset($next_router_item)) {
+        $router_item = $next_router_item;
+      }
+      unset($next_router_item);
+    } while ($parents);
+    // Sort by depth
+    ksort($tabs);
+    // Remove the depth, we are interested only in their relative placement.
+    $tabs = array_values($tabs);
   }
-  return theme('item_list', $tabs, NULL, 'ul', array('class' => 'tabs primary'));
+  return isset($tabs[$level]) ? $tabs[$level] : array();
+}
+
+function menu_primary_local_tasks() {
+  return menu_local_tasks();
 }
 
 function menu_secondary_local_tasks() {
+  return menu_local_tasks(1);
 }
 
 function menu_set_active_item() {

@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.211 2007/01/31 21:26:56 dries Exp $
+// $Id: search.module,v 1.212 2007/02/11 09:30:51 dries Exp $
 
 /**
  * @file
@@ -140,7 +140,6 @@ function search_menu() {
   $items['search'] = array(
     'title' => t('Search'),
     'page callback' => 'search_view',
-    'page arguments' => array('node'),
     'access arguments' => array('search content'),
     'type' => MENU_SUGGESTED_ITEM,
   );
@@ -167,13 +166,14 @@ function search_menu() {
   );
 
   foreach (module_implements('search') as $name) {
-    $items['search/'. $name] = array(
+    $items['search/'. $name .'/%search'] = array(
       'title' => module_invoke($name, 'search', 'name', TRUE),
       'page callback' => 'search_view',
       'page arguments' => array($name),
       'access callback' => '_search_menu',
       'access arguments' => array($name),
       'type' => $name == 'node' ? MENU_DEFAULT_LOCAL_TASK : MENU_LOCAL_TASK,
+      'parent' => 'search',
     );
   }
   return $items;
@@ -181,6 +181,10 @@ function search_menu() {
 
 function _search_menu($name) {
   return user_access('search content') && module_invoke($name, 'search', 'name');
+}
+
+function search_to_arg() {
+  return search_get_keys();
 }
 
 /**
@@ -882,16 +886,21 @@ function do_search($keywords, $type, $join1 = '', $where1 = '1', $arguments1 = a
  * Helper function for grabbing search keys.
  */
 function search_get_keys() {
-  // Extract keys as remainder of path
-  // Note: support old GET format of searches for existing links.
-  $path = explode('/', $_GET['q'], 3);
-  return count($path) == 3 ? $path[2] : $_REQUEST['keys'];
+  static $return;
+  if (!isset($return)) {
+    // Extract keys as remainder of path
+    // Note: support old GET format of searches for existing links.
+    $path = explode('/', $_GET['q'], 3);
+    $keys = empty($_REQUEST['keys']) ? '' : $_REQUEST['keys'];
+    $return = count($path) == 3 ? $path[2] : $keys;
+  }
+  return $return;
 }
 
 /**
  * Menu callback; presents the search form and/or search results.
  */
-function search_view($type = '') {
+function search_view($type = 'node') {
   // Search form submits with POST but redirects to GET. This way we can keep
   // the search query URL clean as a whistle:
   // search/type/keyword+keyword
@@ -905,6 +914,7 @@ function search_view($type = '') {
 
     $keys = search_get_keys();
     // Only perform search if there is non-whitespace search term:
+    $results = '';
     if (trim($keys)) {
       // Log the search keys:
       watchdog('search', t('%keys (@type).', array('%keys' => $keys, '@type' => module_invoke($type, 'search', 'name'))), WATCHDOG_NOTICE, l(t('results'), 'search/'. $type .'/'. $keys));
