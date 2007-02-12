@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.383 2007/02/11 09:30:51 dries Exp $
+// $Id: forum.module,v 1.384 2007/02/12 17:47:07 dries Exp $
 
 /**
  * @file
@@ -396,7 +396,7 @@ function forum_form(&$node) {
   $form['title'] = array('#type' => 'textfield', '#title' => check_plain($type->title_label), '#default_value' => !empty($node->title) ? $node->title : '', '#required' => TRUE, '#weight' => -5);
 
   if (!empty($node->nid)) {
-    $forum_terms = taxonomy_node_get_terms_by_vocabulary(_forum_get_vid(), $node->nid);
+    $forum_terms = taxonomy_node_get_terms_by_vocabulary(_forum_get_vid(), $node);
     // if editing, give option to leave shadows
     $shadow = (count($forum_terms) > 1);
     $form['shadow'] = array('#type' => 'checkbox', '#title' => t('Leave shadow copy'), '#default_value' => $shadow, '#description' => t('If you move this topic, you can leave a link in the old forum to the new forum.'));

@@ -1,7 +1,8 @@
-// $Id: CHANGELOG.txt,v 1.177 2007/02/04 21:24:01 dries Exp $
+// $Id: CHANGELOG.txt,v 1.178 2007/02/12 17:47:07 dries Exp $
 
 Drupal 6.0, xxxx-xx-xx (development version)
 ------------------------
+- added versioning support to node terms
 - made it easier to theme the forum overview page
 - Drupal works with error reporting set to E_ALL
 
