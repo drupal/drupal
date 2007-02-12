@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.615 2007/01/31 15:49:22 dries Exp $
+// $Id: common.inc,v 1.616 2007/02/12 17:42:25 dries Exp $
 
 /**
  * @file
@@ -1164,7 +1164,7 @@ function url($path = NULL, $query = NULL, $fragment = NULL, $absolute = FALSE) {
   static $script;
   static $clean_url;
 
-  if (empty($script)) {
+  if (!isset($script)) {
     // On some web servers, such as IIS, we can't omit "index.php". So, we
     // generate "index.php?q=foo" instead of "?q=foo" on anything that is not
     // Apache.
