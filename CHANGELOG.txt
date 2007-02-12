@@ -2,6 +2,7 @@
 
 Drupal 6.0, xxxx-xx-xx (development version)
 ------------------------
+- added versioning support to node terms
 - made it easier to theme the forum overview page
 - Drupal works with error reporting set to E_ALL
 
