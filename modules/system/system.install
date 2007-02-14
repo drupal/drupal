@@ -4,7 +4,6 @@
 define('DRUPAL_MINIMUM_PHP',    '4.3.3');
 define('DRUPAL_MINIMUM_MYSQL',  '3.23.17'); // If using MySQL
 define('DRUPAL_MINIMUM_PGSQL',  '7.3');  // If using PostgreSQL
-define('DRUPAL_MINIMUM_APACHE', '1.3');  // If using Apache
 
 /**
  * Test and report Drupal installation requirements.
@@ -24,34 +23,12 @@ function system_requirements($phase) {
     );
   }
 
-  // Test web server
+  // Web server information.
   $software = $_SERVER['SERVER_SOFTWARE'];
   $requirements['webserver'] = array(
     'title' => $t('Web server'),
     'value' => $software,
   );
-  // Use server info string, if present.
-  if ($software && preg_match('![0-9]!', $software)) {
-    list($server, $version) = split('[ /]', $software);
-    switch ($server) {
-      case 'Apache':
-        if (version_compare($version, DRUPAL_MINIMUM_APACHE) < 0) {
-          $requirements['webserver']['description'] = $t('Your Apache server is too old. Drupal requires at least Apache %version.', array('%version' => DRUPAL_MINIMUM_APACHE));
-          $requirements['webserver']['severity'] = REQUIREMENT_ERROR;
-        }
-        break;
-
-      default:
-        $requirements['webserver']['description'] = $t('The web server you\'re using has not been tested with Drupal and might not work properly.');
-        $requirements['webserver']['severity'] = REQUIREMENT_WARNING;
-        break;
-    }
-  }
-  else {
-    $requirements['webserver']['value'] = $software ? $software : $t('Unknown');
-    $requirements['webserver']['description'] = $t('Unable to determine your web server type and version. Drupal might not work properly.');
-    $requirements['webserver']['severity'] = REQUIREMENT_WARNING;
-  }
 
   // Test PHP version
   $requirements['php'] = array(
