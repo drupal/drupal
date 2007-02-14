@@ -166,7 +166,7 @@ function search_menu() {
   );
 
   foreach (module_implements('search') as $name) {
-    $items['search/'. $name .'/%search'] = array(
+    $items['search/'. $name .'/%'] = array(
       'title' => module_invoke($name, 'search', 'name', TRUE),
       'page callback' => 'search_view',
       'page arguments' => array($name),
@@ -181,10 +181,6 @@ function search_menu() {
 
 function _search_menu($name) {
   return user_access('search content') && module_invoke($name, 'search', 'name');
-}
-
-function search_to_arg() {
-  return search_get_keys();
 }
 
 /**
