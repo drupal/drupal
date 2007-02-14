@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.153 2007/02/11 09:30:50 dries Exp $
+// $Id: menu.inc,v 1.154 2007/02/14 16:43:38 dries Exp $
 
 /**
  * @file
@@ -531,18 +531,18 @@ function menu_rebuild() {
       if (preg_match('/^%([a-z_]*)$/', $part, $matches)) {
         if (empty($matches[1])) {
           $match = TRUE;
+          $load_functions[$k] = NULL;
+          $to_arg_functions[$k] = NULL;
         }
         else {
+          if (function_exists($matches[1] .'_to_arg')) {
+            $to_arg_functions[$k] = $matches[1].'_to_arg';
+            $load_functions[$k] = NULL;
+            $match = TRUE;
+          }
           if (function_exists($matches[1] .'_load')) {
             $load_functions[$k] = $matches[1] .'_load';
             $match = TRUE;
-          }
-          if (function_exists($matches[1] .'_to_arg')) {
-            $to_arg_functions[$k] = $matches[1].'_to_arg';
-            $match = TRUE;
-          }
-          if (!isset($load_functions[$k]) && isset($to_arg_functions[$k])) {
-            $load_functions[$k] = FALSE;
           }
         }
       }
@@ -669,6 +669,9 @@ function menu_rebuild() {
     if ($item['_tab']) {
       if (!isset($item['parent'])) {
         $item['parent'] = implode('/', array_slice($item['_parts'], 0, $item['_number_parts'] - 1));
+      }
+      else {
+        $item['_depth'] = $item['parent'] ? $menu[$item['parent']]['_depth'] + 1 : 1;
       }
     }
     else {
