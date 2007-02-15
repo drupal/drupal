@@ -1,4 +1,4 @@
-// $Id: textarea.js,v 1.11 2006/09/07 08:05:31 dries Exp $
+// $Id: textarea.js,v 1.12 2007/02/15 07:10:11 dries Exp $
 
 Drupal.textareaAttach = function() {
   $('textarea.resizable:not(.processed)').each(function() {
@@ -23,7 +23,8 @@ Drupal.textareaAttach = function() {
     }
 
     function endDrag(e) {
-      $(document).unmousemove(performDrag).unmouseup(endDrag);
+      $(document).unbind("mousemove");
+      $(document).unbind("mouseup");
       textarea.css('opacity', 1);
     }
   });
