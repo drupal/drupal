@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.449 2007/02/13 07:33:33 dries Exp $
+// $Id: system.module,v 1.450 2007/02/15 07:31:59 dries Exp $
 
 /**
  * @file
@@ -29,8 +29,8 @@ function system_help($section) {
       return '<p>'. t('Select which themes are available to your users and specify the default theme. To configure site-wide display settings, click the "configure" task above. Alternately, to override these settings in a specific theme, click the "configure" link for the corresponding theme. Note that different themes may have different regions available for rendering content like blocks. If you want consistency in what your users see, you may wish to enable only one theme.') .'</p>';
     case 'admin/build/themes/settings':
       return '<p>'. t('These options control the default display settings for your entire site, across all themes. Unless they have been overridden by a specific theme, these settings will be used.') .'</p>';
-    case 'admin/build/themes/settings/'. arg(3):
-      $reference = explode('.', arg(3), 2);
+    case 'admin/build/themes/settings/'. arg(4):
+      $reference = explode('.', arg(4), 2);
       $theme = array_pop($reference);
       return '<p>'. t('These options control the display settings for the <code>%template</code> theme. When your site is displayed using this theme, these settings will be used. By clicking "Reset to defaults," you can choose to use the <a href="@global">global settings</a> for this theme.', array('%template' => $theme, '@global' => url('admin/build/themes/settings'))) .'</p>';
     case 'admin/build/modules':
