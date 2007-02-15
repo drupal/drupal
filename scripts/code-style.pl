@@ -1,25 +1,28 @@
 #!/usr/bin/perl -w
-# $Id: code-style.pl,v 1.12 2006/10/14 10:03:27 dries Exp $
+# $Id: code-style.pl,v 1.13 2007/02/15 07:15:53 dries Exp $
 
-# Author: Alexander Schwartz (alexander.schwartz@gmx.net)
-# Licence: GPL
-# First version: 2001-10-15
+use Pod::Usage;
+use Getopt::Long qw(GetOptions);
+Getopt::Long::Configure ("bundling");
 
-# Originally written for Drupal (http://drupal.org/) to ensure stylish
-# code.  This program tries to show as many improvements as possible with
-# no false positives.
+my %opt = (  "help" => 0,
+    'debug' => 0,
+  );
 
-# $Id: code-style.pl,v 1.12 2006/10/14 10:03:27 dries Exp $
-
-$comment = 0;
-$program = 0;
-if ($ARGV[0] eq '-debug') {
-  $debug=1;
-  shift (@ARGV);
+if(!GetOptions(\%opt,
+    'help|?',
+    'debug',
+    )) {
+  pod2usage(-exitval => 1, 'verbose'=>0);
 }
-else {
-  $debug=0;
-}
+
+pod2usage(-exitval => 0, -verbose => 2) if($opt{'help'});
+
+$debug = $opt{'debug'};
+
+$comment = 0; #flag used to signal we're inside /* */
+$program = 0; #flag used to signal we're inside <?php ?>
+#read the file
 while (<>) {
   $org=$_;
   s/\\["']//g;
@@ -160,3 +163,33 @@ while (<>) {
 } continue {
   close ARGV if eof;
 }
+
+__END__
+
+=head1 NAME
+
+code-style.pl - Review drupal code for style
+
+=head1 SYNOPSIS
+
+  code-style.pl [options] <filename>
+
+  Options:
+
+  -? --help  detailed help message
+
+=head1 DESCRIPTION
+
+Originally written for Drupal (http://drupal.org/) to ensure stylish
+code.  This program reviews PHP code, and tries to show as many code 
+improvements as possible with no false positives.
+
+=head1 OPTIONS
+
+  --comment
+
+=head1 EXAMPLES
+
+ ./code-style.pl ../index.php
+
+=cut
