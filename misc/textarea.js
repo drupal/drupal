@@ -23,7 +23,8 @@ Drupal.textareaAttach = function() {
     }
 
     function endDrag(e) {
-      $(document).unmousemove(performDrag).unmouseup(endDrag);
+      $(document).unbind("mousemove");
+      $(document).unbind("mouseup");
       textarea.css('opacity', 1);
     }
   });
