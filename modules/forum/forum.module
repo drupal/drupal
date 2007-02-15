@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.384 2007/02/12 17:47:07 dries Exp $
+// $Id: forum.module,v 1.385 2007/02/15 11:40:18 dries Exp $
 
 /**
  * @file
@@ -915,7 +915,7 @@ function theme_forum_display($forums, $topics, $parents, $tid, $sortby, $forum_p
       $output .= '<li>'. t('You are not allowed to post a new forum topic.') .'</li>';
     }
     else {
-      $output .= '<li>'. t('<a href="@login">Login</a> to post a new forum topic.', array('@login' => url('user/login', drupal_get_destination()))) .'</li>';
+      $output .= '<li>'. t('<a href="@login">Login</a> to post a new forum topic.', array('@login' => url('user/login', array('query' => drupal_get_destination())))) .'</li>';
     }
     $output .= '</ul>';
 
@@ -977,7 +977,7 @@ function theme_forum_list($forums, $parents, $tid) {
         $row = array(
           'data' => array(
             array('data' => $description, 'class' => 'forum'),
-            array('data' => $forum->num_topics . ($new_topics ? '<br />'. l(format_plural($new_topics, '1 new', '@count new'), "forum/$forum->tid", NULL, NULL, 'new') : ''), 'class' => 'topics'),
+            array('data' => $forum->num_topics . ($new_topics ? '<br />'. l(format_plural($new_topics, '1 new', '@count new'), "forum/$forum->tid", array('fragment' => 'new')) : ''), 'class' => 'topics'),
             array('data' => $forum->num_posts, 'class' => 'posts'),
             array('data' => _forum_format($forum->last_post), 'class' => 'last-reply'),
           ),
@@ -1018,7 +1018,7 @@ function theme_forum_topic_list($tid, $topics, $sortby, $forum_per_page) {
         $rows[] = array(
           array('data' => theme('forum_icon', $topic->new, $topic->num_comments, $topic->comment_mode, $topic->sticky), 'class' => 'icon'),
           array('data' => l($topic->title, "node/$topic->nid"), 'class' => 'topic'),
-          array('data' => $topic->num_comments . ($topic->new_replies ? '<br />'. l(format_plural($topic->new_replies, '1 new', '@count new'), "node/$topic->nid", NULL, NULL, 'new') : ''), 'class' => 'replies'),
+          array('data' => $topic->num_comments . ($topic->new_replies ? '<br />'. l(format_plural($topic->new_replies, '1 new', '@count new'), "node/$topic->nid", array('fragment' => 'new')) : ''), 'class' => 'replies'),
           array('data' => _forum_format($topic), 'class' => 'created'),
           array('data' => _forum_format(isset($topic->last_reply) ? $topic->last_reply : NULL), 'class' => 'last-reply')
         );

@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.252 2007/02/11 09:30:51 dries Exp $
+// $Id: statistics.module,v 1.253 2007/02/15 11:40:18 dries Exp $
 
 /**
  * @file
@@ -176,7 +176,7 @@ function statistics_access_log($aid) {
   $result = db_query('SELECT a.*, u.name FROM {accesslog} a LEFT JOIN {users} u ON a.uid = u.uid WHERE aid = %d', $aid);
   if ($access = db_fetch_object($result)) {
     $output  = '<table border="1" cellpadding="2" cellspacing="2">';
-    $output .= ' <tr><th>'. t('URL') ."</th><td>". l(url($access->path, NULL, NULL, TRUE), $access->path) ."</td></tr>";
+    $output .= ' <tr><th>'. t('URL') ."</th><td>". l(url($access->path, array('absolute' => TRUE)), $access->path) ."</td></tr>";
     $output .= ' <tr><th>'. t('Title') .'</th><td>'. $access->title .'</td></tr>'; // safe because it comes from drupal_get_title()
     $output .= ' <tr><th>'. t('Referrer') ."</th><td>". ($access->url ? l($access->url, $access->url) : '') ."</td></tr>";
     $output .= ' <tr><th>'. t('Date') .'</th><td>'. format_date($access->timestamp, 'large') .'</td></tr>';
@@ -318,7 +318,7 @@ function statistics_top_visitors() {
   $rows = array();
   while ($account = db_fetch_object($result)) {
     $qs = drupal_get_destination();
-    $ban_link = $account->aid ? l(t('unban'), "admin/user/rules/delete/$account->aid", array(), $qs) : l(t('ban'), "admin/user/rules/add/$account->hostname/host", array(), $qs);
+    $ban_link = $account->aid ? l(t('unban'), "admin/user/rules/delete/$account->aid", array('query' => $qs)) : l(t('ban'), "admin/user/rules/add/$account->hostname/host", array('query' => $qs));
     $rows[] = array($account->hits, ($account->uid ? theme('username', $account) : $account->hostname), format_interval(round($account->total / 1000)), $ban_link);
   }
 

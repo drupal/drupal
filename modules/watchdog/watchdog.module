@@ -1,5 +1,5 @@
 <?php
-// $Id: watchdog.module,v 1.169 2007/01/31 15:49:26 dries Exp $
+// $Id: watchdog.module,v 1.170 2007/02/15 11:40:18 dries Exp $
 
 /**
  * @file
@@ -142,7 +142,7 @@ function watchdog_overview() {
         $icons[$watchdog->severity],
         t($watchdog->type),
         format_date($watchdog->timestamp, 'small'),
-        l(truncate_utf8($watchdog->message, 56, TRUE, TRUE), 'admin/logs/event/'. $watchdog->wid, array(), NULL, NULL, FALSE, TRUE),
+        l(truncate_utf8($watchdog->message, 56, TRUE, TRUE), 'admin/logs/event/'. $watchdog->wid, array('html' => TRUE)),
         theme('username', $watchdog),
         $watchdog->link,
       ),

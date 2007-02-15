@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.616 2007/02/12 17:42:25 dries Exp $
+// $Id: common.inc,v 1.617 2007/02/15 11:40:17 dries Exp $
 
 /**
  * @file
@@ -303,7 +303,7 @@ function drupal_goto($path = '', $query = NULL, $fragment = NULL, $http_response
     extract(parse_url(urldecode($_REQUEST['edit']['destination'])));
   }
 
-  $url = url($path, $query, $fragment, TRUE);
+  $url = url($path, array('query' => $query, 'fragment' => $fragment, 'absolute' => TRUE));
 
   // Before the redirect, allow modules to react to the end of the page request.
   module_invoke_all('exit', $url);
@@ -663,7 +663,7 @@ function locale_initialize() {
  * - !variable, which indicates that the text should be inserted as-is. This is
  *   useful for inserting variables into things like e-mail.
  *   @code
- *     $message[] = t("If you don't want to receive such e-mails, you can change your settings at !url.", array('!url' => url("user/$account->uid", NULL, NULL, TRUE)));
+ *     $message[] = t("If you don't want to receive such e-mails, you can change your settings at !url.", array('!url' => url("user/$account->uid", array('absolute' => TRUE))));
  *   @endcode
  *
  * - @variable, which indicates that the text should be run through check_plain,
@@ -1120,25 +1120,39 @@ function format_date($timestamp, $type = 'medium', $format = '', $timezone = NUL
  * @param $path
  *   The Drupal path being linked to, such as "admin/content/node", or an existing URL
  *   like "http://drupal.org/".
- * @param $query
- *   A query string to append to the link or URL.
- * @param $fragment
- *   A fragment identifier (named anchor) to append to the link. If an existing
- *   URL with a fragment identifier is used, it will be replaced. Note, do not
- *   include the '#'.
- * @param $absolute
- *   Whether to force the output to be an absolute link (beginning with http:).
- *   Useful for links that will be displayed outside the site, such as in an
- *   RSS feed.
+ * @param $options
+ *   An associative array of additional options, with the following keys:
+ *     'query'
+ *       A query string to append to the link, or an array of query key/value
+ *       properties.
+ *     'fragment'
+ *       A fragment identifier (or named anchor) to append to the link.
+ *       Do not include the '#' character.
+ *     'absolute' (default FALSE)
+ *       Whether to force the output to be an absolute link (beginning with
+ *       http:). Useful for links that will be displayed outside the site, such
+ *       as in an RSS feed.
+ *     'alias' (default FALSE)
+ *       Whether the given path is an alias already.
  * @return
  *   a string containing a URL to the given path.
  *
  * When creating links in modules, consider whether l() could be a better
  * alternative than url().
  */
-function url($path = NULL, $query = NULL, $fragment = NULL, $absolute = FALSE) {
-  if (isset($fragment)) {
-    $fragment = '#'. $fragment;
+function url($path = NULL, $options = array()) {
+  // Merge in defaults
+  $options += array(
+      'fragment' => '',
+      'query' => '',
+      'absolute' => FALSE,
+      'alias' => FALSE,
+    );
+  if ($options['fragment']) {
+    $options['fragment'] = '#'. $options['fragment'];
+  }
+  if (is_array($options['query'])) {
+    $options['query'] = drupal_query_string_encode($options['query']);
   }
 
   // Return an external link if $path contains an allowed absolute URL.
@@ -1148,16 +1162,16 @@ function url($path = NULL, $query = NULL, $fragment = NULL, $absolute = FALSE) {
     // Split off the fragment
     if (strpos($path, '#') !== FALSE) {
       list($path, $old_fragment) = explode('#', $path, 2);
-      if (isset($old_fragment) && !isset($fragment)) {
-        $fragment = '#'. $old_fragment;
+      if (isset($old_fragment) && !$options['fragment']) {
+        $options['fragment'] = '#'. $old_fragment;
       }
     }
     // Append the query
-    if (isset($query)) {
-      $path .= (strpos($path, '?') !== FALSE ? '&' : '?') . $query;
+    if ($options['query']) {
+      $path .= (strpos($path, '?') !== FALSE ? '&' : '?') . $options['query'];
     }
     // Reassemble
-    return $path . $fragment;
+    return $path . $options['fragment'];
   }
 
   global $base_url;
@@ -1176,35 +1190,37 @@ function url($path = NULL, $query = NULL, $fragment = NULL, $absolute = FALSE) {
     $clean_url = (bool)variable_get('clean_url', '0');
   }
 
-  $base = ($absolute ? $base_url . '/' : base_path());
+  $base = $options['absolute'] ? $base_url . '/' : base_path();
 
   // The special path '<front>' links to the default front page.
   if (!empty($path) && $path != '<front>') {
-    $path = drupal_get_path_alias($path);
+    if (!$options['alias']) {
+      $path = drupal_get_path_alias($path);
+    }
     $path = drupal_urlencode($path);
     if (!$clean_url) {
-      if (isset($query)) {
-        return $base . $script .'?q='. $path .'&'. $query . $fragment;
+      if ($options['query']) {
+        return $base . $script .'?q='. $path .'&'. $options['query'] . $options['fragment'];
       }
       else {
-        return $base . $script .'?q='. $path . $fragment;
+        return $base . $script .'?q='. $path . $options['fragment'];
       }
     }
     else {
-      if (isset($query)) {
-        return $base . $path .'?'. $query . $fragment;
+      if ($options['query']) {
+        return $base . $path .'?'. $options['query'] . $options['fragment'];
       }
       else {
-        return $base . $path . $fragment;
+        return $base . $path . $options['fragment'];
       }
     }
   }
   else {
-    if (isset($query)) {
-      return $base . $script .'?'. $query . $fragment;
+    if ($options['query']) {
+      return $base . $script .'?'. $options['query'] . $options['fragment'];
     }
     else {
-      return $base . $fragment;
+      return $base . $options['fragment'];
     }
   }
 }
@@ -1237,40 +1253,54 @@ function drupal_attributes($attributes = array()) {
  * @param $text
  *   The text to be enclosed with the anchor tag.
  * @param $path
- *   The Drupal path being linked to, such as "admin/content/node". Can be an external
- *   or internal URL.
- *     - If you provide the full URL, it will be considered an
- *   external URL.
- *     - If you provide only the path (e.g. "admin/content/node"), it is considered an
- *   internal link. In this case, it must be a system URL as the url() function
- *   will generate the alias.
- * @param $attributes
- *   An associative array of HTML attributes to apply to the anchor tag.
- * @param $query
- *   A query string to append to the link.
- * @param $fragment
- *   A fragment identifier (named anchor) to append to the link.
- * @param $absolute
- *   Whether to force the output to be an absolute link (beginning with http:).
- *   Useful for links that will be displayed outside the site, such as in an RSS
- *   feed.
- * @param $html
- *   Whether the title is HTML, or just plain-text. For example for making an
- *   image a link, this must be set to TRUE, or else you will see the encoded
- *   HTML.
+ *   The Drupal path being linked to, such as "admin/content/node". Can be an
+ *   external or internal URL.
+ *     - If you provide the full URL, it will be considered an external URL.
+ *     - If you provide only the path (e.g. "admin/content/node"), it is
+ *       considered an internal link. In this case, it must be a system URL
+ *       as the url() function will generate the alias.
+ *     - If you provide a path, and 'alias' is set to TRUE (see below), it is
+ *       used as is.
+ * @param $options
+ *   An associative array of additional options, with the following keys:
+ *     'attributes'
+ *       An associative array of HTML attributes to apply to the anchor tag.
+ *     'query'
+ *       A query string to append to the link, or an array of query key/value
+ *       properties.
+ *     'fragment'
+ *       A fragment identifier (named anchor) to append to the link.
+ *       Do not include the '#' character.
+ *     'absolute' (default FALSE)
+ *       Whether to force the output to be an absolute link (beginning with
+ *       http:). Useful for links that will be displayed outside the site, such
+ *       as in an RSS feed.
+ *     'html' (default FALSE)
+ *       Whether the title is HTML, or just plain-text. For example for making
+ *       an image a link, this must be set to TRUE, or else you will see the
+ *       escaped HTML.
+ *     'alias' (default FALSE)
+ *       Whether the given path is an alias already.
  * @return
  *   an HTML string containing a link to the given path.
  */
-function l($text, $path, $attributes = array(), $query = NULL, $fragment = NULL, $absolute = FALSE, $html = FALSE) {
+function l($text, $path, $options = array()) {
+  // Merge in defaults
+  $options += array(
+      'attributes' => array(),
+      'html' => FALSE,
+    );
+
+  // Append active class
   if ($path == $_GET['q']) {
-    if (isset($attributes['class'])) {
-      $attributes['class'] .= ' active';
+    if (isset($options['attributes']['class'])) {
+      $options['attributes']['class'] .= ' active';
     }
     else {
-      $attributes['class'] = 'active';
+      $options['attributes']['class'] = 'active';
     }
   }
-  return '<a href="'. check_url(url($path, $query, $fragment, $absolute)) .'"'. drupal_attributes($attributes) .'>'. ($html ? $text : check_plain($text)) .'</a>';
+  return '<a href="'. check_url(url($path, $options)) .'"'. drupal_attributes($options['attributes']) .'>'. ($options['html'] ? $text : check_plain($text)) .'</a>';
 }
 
 /**

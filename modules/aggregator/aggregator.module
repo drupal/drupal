@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.328 2007/02/11 09:30:51 dries Exp $
+// $Id: aggregator.module,v 1.329 2007/02/15 11:40:17 dries Exp $
 
 /**
  * @file
@@ -1212,7 +1212,7 @@ function aggregator_page_rss() {
 
   $output .= "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
   $output .= "<rss version=\"2.0\">\n";
-  $output .= format_rss_channel(variable_get('site_name', 'Drupal') . ' ' . t('aggregator'), url('aggregator' . $url, NULL, NULL, TRUE), variable_get('site_name', 'Drupal') . ' - ' . t('aggregated feeds') . $title, $items, 'en');
+  $output .= format_rss_channel(variable_get('site_name', 'Drupal') . ' ' . t('aggregator'), url('aggregator' . $url, array('absolute' => TRUE)), variable_get('site_name', 'Drupal') . ' - ' . t('aggregated feeds') . $title, $items, 'en');
   $output .= "</rss>\n";
 
   drupal_set_header('Content-Type: application/rss+xml; charset=utf-8');
@@ -1290,7 +1290,7 @@ function theme_aggregator_feed($feed) {
   $output .= theme('feed_icon', $feed->url) ."\n";
   $output .= $feed->image;
   $output .= '<div class="feed-description">'. aggregator_filter_xss($feed->description) ."</div>\n";
-  $output .= '<div class="feed-url"><em>'. t('URL:') .'</em> '. l($feed->link, $feed->link, array(), NULL, NULL, TRUE) ."</div>\n";
+  $output .= '<div class="feed-url"><em>'. t('URL:') .'</em> '. l($feed->link, $feed->link, array('absolute' => TRUE)) ."</div>\n";
 
   if ($feed->checked) {
     $updated = t('@time ago', array('@time' => format_interval(time() - $feed->checked)));
@@ -1355,7 +1355,7 @@ function theme_aggregator_page_item($item) {
 
   $source = '';
   if ($item->ftitle && $item->fid) {
-    $source = l($item->ftitle, "aggregator/sources/$item->fid", array('class' => 'feed-item-source')) . ' -';
+    $source = l($item->ftitle, "aggregator/sources/$item->fid", array('attributes' => array('class' => 'feed-item-source'))) . ' -';
   }
 
   if (date('Ymd', $item->timestamp) == date('Ymd')) {

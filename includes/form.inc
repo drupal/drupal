@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.177 2007/01/31 15:49:22 dries Exp $
+// $Id: form.inc,v 1.178 2007/02/15 11:40:17 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -1038,7 +1038,7 @@ function theme_fieldset($element) {
     }
   }
 
-  return '<fieldset' . drupal_attributes($element['#attributes']) .'>' . ($element['#title'] ? '<legend>'. $element['#title'] .'</legend>' : '') . ($element['#description'] ? '<div class="description">'. $element['#description'] .'</div>' : '') . (!empty($element['#children']) ? $element['#children'] : '') . $element['#value'] . "</fieldset>\n";
+  return '<fieldset' . drupal_attributes($element['#attributes']) .'>' . ($element['#title'] ? '<legend>'. $element['#title'] .'</legend>' : '') . (isset($element['#description']) && $element['#description'] ? '<div class="description">'. $element['#description'] .'</div>' : '') . (!empty($element['#children']) ? $element['#children'] : '') . $element['#value'] . "</fieldset>\n";
 }
 
 /**
@@ -1401,7 +1401,7 @@ function theme_textfield($element) {
   if ($element['#autocomplete_path']) {
     drupal_add_js('misc/autocomplete.js');
     $class[] = 'form-autocomplete';
-    $extra =  '<input class="autocomplete" type="hidden" id="'. $element['#id'] .'-autocomplete" value="'. check_url(url($element['#autocomplete_path'], NULL, NULL, TRUE)) .'" disabled="disabled" />';
+    $extra =  '<input class="autocomplete" type="hidden" id="'. $element['#id'] .'-autocomplete" value="'. check_url(url($element['#autocomplete_path'], array('absolute' => TRUE))) .'" disabled="disabled" />';
   }
   _form_set_class($element, $class);
 

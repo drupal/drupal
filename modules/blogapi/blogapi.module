@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.101 2007/01/24 14:48:36 dries Exp $
+// $Id: blogapi.module,v 1.102 2007/02/15 11:40:18 dries Exp $
 
 /**
  * @file
@@ -138,7 +138,7 @@ function blogapi_blogger_get_users_blogs($appid, $username, $password) {
     $types = _blogapi_get_node_types();
     $structs = array();
     foreach ($types as $type) {
-      $structs[] = array('url' => url('blog/' . $user->uid, NULL, NULL, TRUE), 'blogid' => $type, 'blogName' => $user->name . ": " . $type);
+      $structs[] = array('url' => url('blog/' . $user->uid, array('absolute' => TRUE)), 'blogid' => $type, 'blogName' => $user->name . ": " . $type);
     }
     return $structs;
   }
@@ -161,7 +161,7 @@ function blogapi_blogger_get_user_info($appkey, $username, $password) {
       'firstname' => $name[0],
       'nickname' => $user->name,
       'email' => $user->mail,
-      'url' => url('blog/' . $user->uid, NULL, NULL, TRUE));
+      'url' => url('blog/' . $user->uid, array('absolute' => TRUE)));
   }
   else {
     return blogapi_error($user);
@@ -575,7 +575,7 @@ function blogapi_init() {
     drupal_add_link(array('rel' => 'EditURI',
                           'type' => 'application/rsd+xml',
                           'title' => t('RSD'),
-                          'href' => url('blogapi/rsd', NULL, NULL, TRUE)));
+                          'href' => url('blogapi/rsd', array('absolute' => TRUE))));
   }
 }
 
@@ -583,7 +583,7 @@ function blogapi_rsd() {
   global $base_url;
 
   $xmlrpc = $base_url .'/'. 'xmlrpc.php';
-  $base = url('', NULL, NULL, TRUE);
+  $base = url('', array('absolute' => TRUE));
   $blogid = 1; # until we figure out how to handle multiple bloggers
 
   drupal_set_header('Content-Type: application/rsd+xml; charset=utf-8');
@@ -658,8 +658,8 @@ function _blogapi_get_post($node, $bodies = TRUE) {
     'dateCreated' => xmlrpc_date($node->created),
     'title' => $node->title,
     'postid' => $node->nid,
-    'link' => url('node/'.$node->nid, NULL, NULL, TRUE),
-    'permaLink' => url('node/'.$node->nid, NULL, NULL, TRUE),
+    'link' => url('node/'.$node->nid, array('absolute' => TRUE)),
+    'permaLink' => url('node/'.$node->nid, array('absolute' => TRUE)),
   );
   if ($bodies) {
     if ($node->comment == 1) {

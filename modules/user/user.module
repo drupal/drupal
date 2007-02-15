@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.755 2007/02/11 09:30:51 dries Exp $
+// $Id: user.module,v 1.756 2007/02/15 11:40:18 dries Exp $
 
 /**
  * @file
@@ -440,7 +440,7 @@ function user_search($op = 'search', $keys = NULL, $skip_access_check = FALSE) {
         $keys = preg_replace('!\*+!', '%', $keys);
         $result = pager_query("SELECT * FROM {users} WHERE LOWER(name) LIKE LOWER('%%%s%%')", 15, 0, NULL, $keys);
         while ($account = db_fetch_object($result)) {
-          $find[] = array('title' => $account->name, 'link' => url('user/'. $account->uid, NULL, NULL, TRUE));
+          $find[] = array('title' => $account->name, 'link' => url('user/'. $account->uid, array('absolute' => TRUE)));
         }
         return $find;
       }
@@ -478,7 +478,7 @@ function user_user($type, &$edit, &$user, $category = NULL) {
 
 function user_login_block() {
   $form = array(
-    '#action' => url($_GET['q'], drupal_get_destination()),
+    '#action' => url($_GET['q'], array('query' => drupal_get_destination())),
     '#id' => 'user-login-form',
     '#base' => 'user_login',
   );
@@ -965,7 +965,7 @@ function user_auth_help_links() {
   $links = array();
   foreach (module_list() as $module) {
     if (module_hook($module, 'auth')) {
-      $links[] = l(module_invoke($module, 'info', 'name'), 'user/help', array(), NULL, $module);
+      $links[] = l(module_invoke($module, 'info', 'name'), 'user/help', array('fragment' => $module));
     }
   }
   return $links;
@@ -1158,7 +1158,7 @@ function user_pass_submit($form_id, $form_values) {
   $from = variable_get('site_mail', ini_get('sendmail_from'));
 
   // Mail one time login URL and instructions.
-  $variables = array('!username' => $account->name, '!site' => variable_get('site_name', 'Drupal'), '!login_url' => user_pass_reset_url($account), '!uri' => $base_url, '!uri_brief' => substr($base_url, strlen('http://')), '!mailto' => $account->mail, '!date' => format_date(time()), '!login_uri' => url('user', NULL, NULL, TRUE), '!edit_uri' => url('user/'. $account->uid .'/edit', NULL, NULL, TRUE));
+  $variables = array('!username' => $account->name, '!site' => variable_get('site_name', 'Drupal'), '!login_url' => user_pass_reset_url($account), '!uri' => $base_url, '!uri_brief' => substr($base_url, strlen('http://')), '!mailto' => $account->mail, '!date' => format_date(time()), '!login_uri' => url('user', array('absolute' => TRUE)), '!edit_uri' => url('user/'. $account->uid .'/edit', array('absolute' => TRUE)));
   $subject = _user_mail_text('pass_subject', $variables);
   $body = _user_mail_text('pass_body', $variables);
   $mail_success = drupal_mail('user-pass', $account->mail, $subject, $body, $from);
@@ -1234,7 +1234,7 @@ function user_pass_reset($uid, $timestamp, $hashed_pass, $action = NULL) {
 
 function user_pass_reset_url($account) {
   $timestamp = time();
-  return url("user/reset/$account->uid/$timestamp/".user_pass_rehash($account->pass, $timestamp, $account->login), NULL, NULL, TRUE);
+  return url("user/reset/$account->uid/$timestamp/".user_pass_rehash($account->pass, $timestamp, $account->login), array('absolute' => TRUE));
 }
 
 function user_pass_rehash($password, $timestamp, $login) {
@@ -1332,7 +1332,7 @@ function user_register_submit($form_id, $form_values) {
   $account = user_save('', array_merge($form_values, $merge_data));
   watchdog('user', t('New user: %name %email.', array('%name' => $name, '%email' => '<'. $mail .'>')), WATCHDOG_NOTICE, l(t('edit'), 'user/'. $account->uid .'/edit'));
 
-  $variables = array('!username' => $name, '!site' => variable_get('site_name', 'Drupal'), '!password' => $pass, '!uri' => $base_url, '!uri_brief' => substr($base_url, strlen('http://')), '!mailto' => $mail, '!date' => format_date(time()), '!login_uri' => url('user', NULL, NULL, TRUE), '!edit_uri' => url('user/'. $account->uid .'/edit', NULL, NULL, TRUE), '!login_url' => user_pass_reset_url($account));
+  $variables = array('!username' => $name, '!site' => variable_get('site_name', 'Drupal'), '!password' => $pass, '!uri' => $base_url, '!uri_brief' => substr($base_url, strlen('http://')), '!mailto' => $mail, '!date' => format_date(time()), '!login_uri' => url('user', array('absolute' => TRUE)), '!edit_uri' => url('user/'. $account->uid .'/edit', array('absolute' => TRUE)), '!login_url' => user_pass_reset_url($account));
 
   // The first user may login immediately, and receives a customized welcome e-mail.
   if ($account->uid == 1) {
@@ -2136,7 +2136,7 @@ function user_admin_account() {
     $form['roles'][$account->uid][0] = array('#value' => theme('item_list', $users_roles));
     $form['member_for'][$account->uid] = array('#value' => format_interval(time() - $account->created));
     $form['last_access'][$account->uid] =  array('#value' => $account->access ? t('@time ago', array('@time' => format_interval(time() - $account->access))) : t('never'));
-    $form['operations'][$account->uid] = array('#value' => l(t('edit'), "user/$account->uid/edit", array(), $destination));
+    $form['operations'][$account->uid] = array('#value' => l(t('edit'), "user/$account->uid/edit", array('query' => $destination)));
   }
   $form['accounts'] = array(
     '#type' => 'checkboxes',

@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.107 2007/01/31 15:49:25 dries Exp $
+// $Id: path.module,v 1.108 2007/02/15 11:40:18 dries Exp $
 
 /**
  * @file
@@ -187,7 +187,7 @@ function path_form($edit = '') {
     '#maxlength' => 64,
     '#size' => 45,
     '#description' => t('Specify the existing path you wish to alias. For example: node/28, forum/1, taxonomy/term/1+2.'),
-    '#field_prefix' => url(NULL, NULL, NULL, TRUE) . (variable_get('clean_url', 0) ? '' : '?q=')
+    '#field_prefix' => url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q=')
   );
   $form['dst'] = array(
     '#type' => 'textfield',
@@ -195,7 +195,7 @@ function path_form($edit = '') {
     '#maxlength' => 64,
     '#size' => 45,
     '#description' => t('Specify an alternative path by which this data can be accessed. For example, type "about" when writing an about page. Use a relative path and don\'t add a trailing slash or the URL alias won\'t work.'),
-    '#field_prefix' => url(NULL, NULL, NULL, TRUE) . (variable_get('clean_url', 0) ? '' : '?q=')
+    '#field_prefix' => url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q=')
   );
 
   if ($edit['pid']) {
@@ -312,7 +312,7 @@ function path_overview() {
   $rows = array();
   $destination = drupal_get_destination();
   while ($data = db_fetch_object($result)) {
-    $rows[] = array(check_plain($data->dst), check_plain($data->src), l(t('edit'), "admin/build/path/edit/$data->pid", array(), $destination), l(t('delete'), "admin/build/path/delete/$data->pid", array(), $destination));
+    $rows[] = array(check_plain($data->dst), check_plain($data->src), l(t('edit'), "admin/build/path/edit/$data->pid", array('query' => $destination)), l(t('delete'), "admin/build/path/delete/$data->pid", array('query' => $destination)));
   }
 
   if (empty($rows)) {

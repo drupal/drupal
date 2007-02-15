@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.274 2007/02/11 09:30:51 dries Exp $
+// $Id: blog.module,v 1.275 2007/02/15 11:40:17 dries Exp $
 
 /**
  * @file
@@ -85,7 +85,7 @@ function blog_feed_user($uid = 0) {
 
   $result = db_query_range(db_rewrite_sql("SELECT n.nid, n.created FROM {node} n  WHERE n.type = 'blog' AND n.uid = %d AND n.status = 1 ORDER BY n.created DESC"), $uid, 0, variable_get('feed_default_items', 10));
   $channel['title'] = $account->name ."'s blog";
-  $channel['link'] = url("blog/$uid", NULL, NULL, TRUE);
+  $channel['link'] = url("blog/$uid", array('absolute' => TRUE));
   $channel['description'] = $term->description;
   node_feed($result, $channel);
 }
@@ -96,7 +96,7 @@ function blog_feed_user($uid = 0) {
 function blog_feed_last() {
   $result = db_query_range(db_rewrite_sql("SELECT n.nid, n.created FROM {node} n WHERE n.type = 'blog' AND n.status = 1 ORDER BY n.created DESC"), 0, variable_get('feed_default_items', 10));
   $channel['title'] = variable_get('site_name', 'Drupal') .' blogs';
-  $channel['link'] = url('blog', NULL, NULL, TRUE);
+  $channel['link'] = url('blog', array('absolute' => TRUE));
   $channel['description'] = $term->description;
   node_feed($result, $channel);
 }

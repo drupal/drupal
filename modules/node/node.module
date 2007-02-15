@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.782 2007/02/11 09:30:51 dries Exp $
+// $Id: node.module,v 1.783 2007/02/15 11:40:18 dries Exp $
 
 /**
  * @file
@@ -922,7 +922,7 @@ function node_search($op = 'search', $keys = NULL) {
         $node->body .= module_invoke('taxonomy', 'nodeapi', $node, 'update index');
 
         $extra = node_invoke_nodeapi($node, 'search result');
-        $results[] = array('link' => url('node/'. $item->sid, NULL, NULL, TRUE),
+        $results[] = array('link' => url('node/'. $item->sid, array('absolute' => TRUE)),
                            'type' => node_get_types('name', $node),
                            'title' => $node->title,
                            'user' => theme('username', $node),
@@ -1530,7 +1530,7 @@ function node_admin_nodes() {
     $form['name'][$node->nid] =  array('#value' => node_get_types('name', $node));
     $form['username'][$node->nid] = array('#value' => theme('username', $node));
     $form['status'][$node->nid] =  array('#value' =>  ($node->status ? t('published') : t('not published')));
-    $form['operations'][$node->nid] = array('#value' => l(t('edit'), 'node/'. $node->nid .'/edit', array(), $destination));
+    $form['operations'][$node->nid] = array('#value' => l(t('edit'), 'node/'. $node->nid .'/edit', array('query' => $destination)));
   }
   $form['nodes'] = array('#type' => 'checkboxes', '#options' => $nodes);
   $form['pager'] = array('#value' => theme('pager', NULL, 50, 0));
@@ -1764,7 +1764,7 @@ function node_feed($nodes = 0, $channel = array()) {
   while ($node = db_fetch_object($nodes)) {
     // Load the specified node:
     $item = node_load($node->nid);
-    $link = url("node/$node->nid", NULL, NULL, 1);
+    $link = url("node/$node->nid", array('absolute' => TRUE));
 
     if ($item_length != 'title') {
       $teaser = ($item_length == 'teaser') ? TRUE : FALSE;
@@ -1798,7 +1798,7 @@ function node_feed($nodes = 0, $channel = array()) {
       case 'teaser':
         $item_text = $item->teaser;
         if ($item->readmore) {
-          $item_text .= '<p>'. l(t('read more'), 'node/'. $item->nid, NULL, NULL, NULL, TRUE) .'</p>';
+          $item_text .= '<p>'. l(t('read more'), 'node/'. $item->nid, array('absolute' => TRUE)) .'</p>';
         }
         break;
       case 'title':
@@ -2128,7 +2128,7 @@ function node_add($type = NULL) {
       if (function_exists($type->module .'_form') && node_access('create', $type->type)) {
         $type_url_str = str_replace('_', '-', $type->type);
         $title = t('Add a new @s.', array('@s' => $type->name));
-        $out = '<dt>'. l(drupal_ucfirst($type->name), "node/add/$type_url_str", array('title' => $title)) .'</dt>';
+        $out = '<dt>'. l(drupal_ucfirst($type->name), "node/add/$type_url_str", array('attributes' => array('title' => $title))) .'</dt>';
         $out .= '<dd>'. filter_xss_admin($type->description) .'</dd>';
         $item[$type->type] = $out;
       }
@@ -2348,7 +2348,7 @@ function node_page_default() {
   $result = pager_query(db_rewrite_sql('SELECT n.nid, n.sticky, n.created FROM {node} n WHERE n.promote = 1 AND n.status = 1 ORDER BY n.sticky DESC, n.created DESC'), variable_get('default_nodes_main', 10));
 
   if (db_num_rows($result)) {
-    $feed_url = url('rss.xml', NULL, NULL, TRUE);
+    $feed_url = url('rss.xml', array('absolute' => TRUE));
     drupal_add_feed($feed_url, variable_get('site_name', 'Drupal') .' '. t('RSS'));
 
     $output = '';

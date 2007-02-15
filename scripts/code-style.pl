@@ -1,5 +1,5 @@
 #!/usr/bin/perl -w
-# $Id: code-style.pl,v 1.13 2007/02/15 07:15:53 dries Exp $
+# $Id: code-style.pl,v 1.14 2007/02/15 11:40:19 dries Exp $
 
 use Pod::Usage;
 use Getopt::Long qw(GetOptions);
@@ -181,7 +181,7 @@ code-style.pl - Review drupal code for style
 =head1 DESCRIPTION
 
 Originally written for Drupal (http://drupal.org/) to ensure stylish
-code.  This program reviews PHP code, and tries to show as many code 
+code.  This program reviews PHP code, and tries to show as many code
 improvements as possible with no false positives.
 
 =head1 OPTIONS

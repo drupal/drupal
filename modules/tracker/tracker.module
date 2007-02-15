@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.module,v 1.145 2007/02/11 09:30:51 dries Exp $
+// $Id: tracker.module,v 1.146 2007/02/15 11:40:18 dries Exp $
 
 /**
  * @file
@@ -107,7 +107,7 @@ function tracker_page($uid = 0) {
 
       if ($new = comment_num_new($node->nid)) {
         $comments .= '<br />';
-        $comments .= l(format_plural($new, '1 new', '@count new'), "node/$node->nid", NULL, NULL, 'new');
+        $comments .= l(format_plural($new, '1 new', '@count new'), "node/$node->nid", array('fragment' => 'new'));
       }
     }
 

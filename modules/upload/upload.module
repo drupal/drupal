@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.152 2007/01/31 15:49:26 dries Exp $
+// $Id: upload.module,v 1.153 2007/02/15 11:40:18 dries Exp $
 
 /**
  * @file
@@ -795,7 +795,7 @@ function _upload_form($node) {
     $form['new']['upload'] = array('#type' => 'file', '#title' => t('Attach new file'), '#size' => 40);
     $form['new']['attach'] = array('#type' => 'button', '#value' => t('Attach'), '#name' => 'attach', '#id' => 'attach-button');
     // The class triggers the js upload behaviour.
-    $form['attach-url'] = array('#type' => 'hidden', '#value' => url('upload/js', NULL, NULL, TRUE), '#attributes' => array('class' => 'upload'));
+    $form['attach-url'] = array('#type' => 'hidden', '#value' => url('upload/js', array('absolute' => TRUE)), '#attributes' => array('class' => 'upload'));
   }
 
   // Needed for JS

@@ -1,5 +1,5 @@
 <?php
-// $Id: pager.inc,v 1.59 2006/10/15 19:57:05 dries Exp $
+// $Id: pager.inc,v 1.60 2007/02/15 11:40:17 dries Exp $
 
 /**
  * @file
@@ -392,7 +392,7 @@ function theme_pager_link($text, $page_new, $element, $parameters = array(), $at
     }
   }
 
-  return l($text, $_GET['q'], $attributes, count($query) ? implode('&', $query) : NULL);
+  return l($text, $_GET['q'], array('attributes' => $attributes, 'query' => count($query) ? implode('&', $query) : NULL));
 }
 
 /**
