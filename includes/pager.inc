@@ -392,7 +392,7 @@ function theme_pager_link($text, $page_new, $element, $parameters = array(), $at
     }
   }
 
-  return l($text, $_GET['q'], $attributes, count($query) ? implode('&', $query) : NULL);
+  return l($text, $_GET['q'], array('attributes' => $attributes, 'query' => count($query) ? implode('&', $query) : NULL));
 }
 
 /**

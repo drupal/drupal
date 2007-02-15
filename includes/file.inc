@@ -35,7 +35,7 @@ function file_create_url($path) {
     case FILE_DOWNLOADS_PUBLIC:
       return $GLOBALS['base_url'] .'/'. file_directory_path() .'/'. str_replace('\\', '/', $path);
     case FILE_DOWNLOADS_PRIVATE:
-      return url('system/files/'. $path, NULL, NULL, TRUE);
+      return url('system/files/'. $path, array('absolute' => TRUE));
   }
 }
 

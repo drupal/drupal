@@ -142,7 +142,7 @@ function watchdog_overview() {
         $icons[$watchdog->severity],
         t($watchdog->type),
         format_date($watchdog->timestamp, 'small'),
-        l(truncate_utf8($watchdog->message, 56, TRUE, TRUE), 'admin/logs/event/'. $watchdog->wid, array(), NULL, NULL, FALSE, TRUE),
+        l(truncate_utf8($watchdog->message, 56, TRUE, TRUE), 'admin/logs/event/'. $watchdog->wid, array('html' => TRUE)),
         theme('username', $watchdog),
         $watchdog->link,
       ),

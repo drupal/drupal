@@ -312,7 +312,7 @@ function phptemplate_comment($comment, $links = 0) {
     'submitted' => t('Submitted by !a on @b.',
                       array('!a' => theme('username', $comment),
                             '@b' => format_date($comment->timestamp))),
-    'title'     => l($comment->subject, $_GET['q'], NULL, NULL, "comment-$comment->cid")
+    'title'     => l($comment->subject, $_GET['q'], array('fragment' => "comment-$comment->cid"))
   ));
 }
 

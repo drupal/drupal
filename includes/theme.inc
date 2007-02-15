@@ -563,19 +563,13 @@ function theme_links($links, $attributes = array('class' => 'links')) {
       }
       $output .= '<li class="'. $extra_class . $class .'">';
 
-      // Is the title HTML?
-      $html = isset($link['html']) && $link['html'];
-
-      // Initialize fragment and query variables.
-      $link['query'] = isset($link['query']) ? $link['query'] : NULL;
-      $link['fragment'] = isset($link['fragment']) ? $link['fragment'] : NULL;
-
       if (isset($link['href'])) {
-        $output .= l($link['title'], $link['href'], $link['attributes'], $link['query'], $link['fragment'], FALSE, $html);
+        // Pass in $link as $options, they share the same keys.
+        $output .= l($link['title'], $link['href'], $link);
       }
       else if ($link['title']) {
-        //Some links are actually not links, but we wrap these in <span> for adding title and class attributes
-        if (!$html) {
+        // Some links are actually not links, but we wrap these in <span> for adding title and class attributes
+        if (empty($link['html'])) {
           $link['title'] = check_plain($link['title']);
         }
         $output .= '<span'. drupal_attributes($link['attributes']) .'>'. $link['title'] .'</span>';
