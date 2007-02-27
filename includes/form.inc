@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.178 2007/02/15 11:40:17 dries Exp $
+// $Id: form.inc,v 1.179 2007/02/27 12:45:13 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -285,6 +285,7 @@ function drupal_prepare_form($form_id, &$form) {
   global $user;
 
   $form['#type'] = 'form';
+  $form['#skip_duplicate_check'] = FALSE;
 
   if (!isset($form['#post'])) {
     $form['#post'] = $_POST;
@@ -397,6 +398,11 @@ function drupal_validate_form($form_id, $form) {
     }
   }
 
+  if (!$form['#programmed'] && !$form['#skip_duplicate_check'] && isset($_SESSION['last_submitted']['hash']) && $_SESSION['last_submitted']['hash'] == md5(serialize($form['form_id']['#post']))) {
+    // This is a repeat submission.
+    drupal_redirect_form(NULL, $_SESSION['last_submitted']['destination']);
+  }
+
   _form_validate($form, $form_id);
   $validated_forms[$form_id] = TRUE;
 }
@@ -418,6 +424,8 @@ function drupal_validate_form($form_id, $form) {
 function drupal_submit_form($form_id, $form) {
   global $form_values;
   $default_args = array($form_id, &$form_values);
+  $submitted = FALSE;
+  $goto = NULL;
 
   if (isset($form['#submit'])) {
     foreach ($form['#submit'] as $function => $args) {
@@ -426,12 +434,20 @@ function drupal_submit_form($form_id, $form) {
         // Since we can only redirect to one page, only the last redirect
         // will work.
         $redirect = call_user_func_array($function, $args);
+        $submitted = TRUE;
         if (isset($redirect)) {
           $goto = $redirect;
         }
       }
     }
   }
+  // Successful submit. Hash this form's POST and store the hash in the
+  // session. We'll use this hash later whenever this user submits another
+  // form to make sure no identical forms get submitted twice.
+  if ($submitted && !$form['#skip_duplicate_check']) {
+    $_SESSION['last_submitted'] = array('destination' => $goto, 'hash' => md5(serialize($form['form_id']['#post'])));
+  }
+
   if (isset($goto)) {
     return $goto;
   }
