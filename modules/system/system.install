@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.79 2007/02/12 17:47:07 dries Exp $
+// $Id: system.install,v 1.80 2007/02/27 12:34:45 dries Exp $
 
 define('DRUPAL_MINIMUM_PHP',    '4.3.3');
 define('DRUPAL_MINIMUM_MYSQL',  '4.1.0'); // If using MySQL
@@ -571,7 +571,7 @@ function system_install() {
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {variable} (
-        name varchar(48) NOT NULL default '',
+        name varchar(128) NOT NULL default '',
         value longtext NOT NULL,
         PRIMARY KEY (name)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
@@ -1047,7 +1047,7 @@ function system_install() {
       )");
 
       db_query("CREATE TABLE {variable} (
-        name varchar(48) NOT NULL default '',
+        name varchar(128) NOT NULL default '',
         value text NOT NULL,
         PRIMARY KEY (name)
       )");
@@ -3574,6 +3574,23 @@ function system_update_2001() {
   $nodes = db_query('SELECT nid, vid FROM {node}');
   while ($node = db_fetch_object($nodes)) {
     db_query('UPDATE {term_node} SET vid = %d WHERE nid = %d', $node->vid, $node->nid);
+  }
+  return $ret;
+}
+
+/**
+ * Increase the maximum length of variable names from 48 to 128.
+ */
+function system_update_2002() {
+  $ret = array();
+  switch ($GLOBALS['db_type']) {
+    case 'pgsql':
+      db_change_column($ret, 'variable', 'name', 'name', 'varchar(128)', array('not null' => TRUE, 'default' => "''"));
+      break;
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql("ALTER TABLE {variable} CHANGE name name varchar(128) NOT NULL default ''");
+      break;
   }
   return $ret;
 }
