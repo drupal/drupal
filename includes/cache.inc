@@ -1,5 +1,5 @@
 <?php
-// $Id: cache.inc,v 1.5 2006/11/10 07:26:27 drumm Exp $
+// $Id: cache.inc,v 1.6 2007/02/27 12:04:39 dries Exp $
 
 /**
  * Return data from the persistent cache.
@@ -153,7 +153,7 @@ function cache_clear_all($cid = NULL, $table = NULL, $wildcard = FALSE) {
   else {
     if ($wildcard) {
       if ($cid == '*') {
-        db_query("TRUNCATE TABLE {%s}", $table);
+        db_query("DELETE FROM {%s}", $table);
       }
       else {
         db_query("DELETE FROM {%s} WHERE cid LIKE '%s%%'", $table, $cid);
