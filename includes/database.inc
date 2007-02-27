@@ -203,7 +203,7 @@ function db_query($query) {
 /**
  * Helper function for db_rewrite_sql.
  *
- * Collects JOIN and WHERE statements via hook_sql.
+ * Collects JOIN and WHERE statements via hook_db_rewrite_sql()
  * Decides whether to select primary_key or DISTINCT(primary_key)
  *
  * @param $query
