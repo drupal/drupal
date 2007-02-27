@@ -619,7 +619,7 @@ function profile_form_profile($edit, $user, $category) {
     // Use LOWER('%s') instead of PHP's strtolower() to avoid UTF-8 conversion issues.
   }
 
-  $w = 0;
+  $w = 1;
   while ($field = db_fetch_object($result)) {
     $category = $field->category;
     if (!isset($fields[$category])) {
