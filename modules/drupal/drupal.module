@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal.module,v 1.139 2007/01/24 14:48:36 dries Exp $
+// $Id: drupal.module,v 1.140 2007/02/27 12:29:22 dries Exp $
 
 /**
  * @file
@@ -68,7 +68,7 @@ function drupal_sites_registry_settings() {
     '#title' => t('Register with a Drupal server'),
     '#default_value' => variable_get('drupal_register', 0),
     '#options' => $options,
-    '#description' => t("If enabled, your Drupal site will register itself with the specified Drupal XML-RPC server. For this to work properly, you must set your site's name, e-mail address, slogan and mission statement. When the Drupal XML-RPC server field is set to %drupal-xml-rpc, your web site will register itself with drupal.org. Requires the cron feature to be enabled.", array("%drupal-xml-rpc" => "http://drupal.org/xmlrpc.php"))
+    '#description' => t("If enabled, your Drupal site will register itself with the specified Drupal XML-RPC server. For this to work properly, you must set your site's name, e-mail address, slogan and mission statement. When the Drupal XML-RPC server field is set to %drupal-xml-rpc, your website will register itself with drupal.org. Requires the cron feature to be enabled.", array("%drupal-xml-rpc" => "http://drupal.org/xmlrpc.php"))
   );
 
   $form['drupal_server'] =  array(
