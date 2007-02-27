@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.340 2007/02/15 11:40:18 dries Exp $
+// $Id: taxonomy.module,v 1.341 2007/02/27 12:48:33 dries Exp $
 
 /**
  * @file
@@ -226,6 +226,7 @@ function taxonomy_form_vocabulary($edit = array()) {
   );
   $form['help'] = array('#type' => 'textfield',
     '#title' => t('Help text'),
+    '#maxlength' => 255,
     '#default_value' => $edit['help'],
     '#description' => t('Instructions to present to the user when choosing a term.'),
   );
