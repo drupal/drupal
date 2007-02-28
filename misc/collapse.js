@@ -7,17 +7,12 @@ Drupal.toggleFieldset = function(fieldset) {
   if ($(fieldset).is('.collapsed')) {
     var content = $('> div', fieldset).hide();
     $(fieldset).removeClass('collapsed');
-    content.slideDown(300, {
-      complete: function() {
+    content.slideDown(300,
+      function() {
         // Make sure we open to height auto
         $(this).css('height', 'auto');
         Drupal.collapseScrollIntoView(this.parentNode);
         this.parentNode.animating = false;
-      },
-      step: function() {
-         // Scroll the fieldset into view
-        Drupal.collapseScrollIntoView(this.parentNode);
-      }
     });
     if (typeof Drupal.textareaAttach != 'undefined') {
       // Initialize resizable textareas that are now revealed
