@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.525 2007/02/15 11:40:18 dries Exp $
+// $Id: comment.module,v 1.526 2007/03/01 19:53:04 dries Exp $
 
 /**
  * @file
@@ -1589,24 +1589,26 @@ function comment_form_add_preview($form, $edit) {
 
   $output = '';
 
-  comment_validate($edit);
-  $comment = (object)_comment_form_submit($edit);
-
-  // Attach the user and time information.
-  if ($edit['author']) {
-    $account = user_load(array('name' => $edit['author']));
-  }
-  elseif ($user->uid && !isset($edit['is_anonymous'])) {
-    $account = $user;
-  }
-  if ($account) {
-    $comment->uid = $account->uid;
-    $comment->name = check_plain($account->name);
-  }
-  $comment->timestamp = !empty($edit['timestamp']) ? $edit['timestamp'] : time();
-
-  // Preview the comment with security check.
+  // Invoke full validation for the form, to protect against cross site
+  // request forgeries (CSRF) and setting arbitrary values for fields such as
+  // the input format. Preview the comment only when form validation does not
+  // set any errors.
+  drupal_validate_form($form['form_id']['#value'], $form);
   if (!form_get_errors()) {
+    $comment = (object)_comment_form_submit($edit);
+
+    // Attach the user and time information.
+    if ($edit['author']) {
+      $account = user_load(array('name' => $edit['author']));
+    }
+    elseif ($user->uid && !isset($edit['is_anonymous'])) {
+      $account = $user;
+    }
+    if ($account) {
+      $comment->uid = $account->uid;
+      $comment->name = check_plain($account->name);
+    }
+    $comment->timestamp = $edit['timestamp'] ? $edit['timestamp'] : time();
     $output .= theme('comment_view', $comment);
   }
   $form['comment_preview'] = array(
