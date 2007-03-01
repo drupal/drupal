@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.783 2007/02/15 11:40:18 dries Exp $
+// $Id: node.module,v 1.784 2007/03/01 18:18:22 dries Exp $
 
 /**
  * @file
@@ -1842,8 +1842,7 @@ function node_submit($node) {
     $node->teaser = isset($node->body) ? node_teaser($node->body, isset($node->format) ? $node->format : NULL) : '';
   }
 
-  $access = user_access('administer nodes');
-  if ($access) {
+  if (user_access('administer nodes')) {
     // Populate the "authored by" field.
     if ($account = user_load(array('name' => $node->name))) {
       $node->uid = $account->uid;
@@ -1853,24 +1852,6 @@ function node_submit($node) {
     }
 
     $node->created = $node->date ? strtotime($node->date) : NULL;
-  }
-
-  // Process the workflow options and provide defaults. If the user
-  // can not administer nodes, ignore the form and either use the
-  // saved values if the node exists, or force the defaults.
-  if (!$access && $node->nid) {
-    $saved_node = node_load($node->nid);
-  }
-  else {
-    $node_options = variable_get('node_options_'. $node->type, array('status', 'promote'));
-  }
-  foreach (array('status', 'promote', 'sticky', 'revision') as $key) {
-    if (!$access && $node->nid) {
-      $node->$key = $saved_node->$key;
-    }
-    else if (!isset($node->$key) || !$access) {
-      $node->$key = in_array($key, $node_options);
-    }
   }
 
   // Do node-type-specific validation checks.
@@ -1973,16 +1954,15 @@ function node_form($node, $form_values = NULL) {
   $node_options = variable_get('node_options_'. $node->type, array('status', 'promote'));
   // If this is a new node, fill in the default values.
   if (!isset($node->nid)) {
-    foreach (array('status', 'promote', 'sticky', 'revision') as $key) {
+    foreach (array('status', 'promote', 'sticky') as $key) {
       $node->$key = in_array($key, $node_options);
     }
     global $user;
     $node->uid = $user->uid;
   }
-  else {
-    // Nodes being edited should always be preset with the default revision setting.
-    $node->revision = in_array('revision', $node_options);
-  }
+  // Always use the default revision setting.
+  $node->revision = in_array('revision', $node_options);
+
   $form['#node'] = $node;
 
   // Add a log field if the "Create new revision" option is checked, or if the
