@@ -1,11 +1,11 @@
-// $Id: CHANGELOG.txt,v 1.179 2007/03/01 09:15:41 dries Exp $
+// $Id: CHANGELOG.txt,v 1.180 2007/03/01 19:53:26 dries Exp $
 
 Drupal 6.0, xxxx-xx-xx (development version)
 ------------------------
 - added versioning support to node terms
 - made it easier to theme the forum overview page
 - Drupal works with error reporting set to E_ALL
-- Added scripts/drupal.sh to execute Drupal code from the command line.  Useful to use Drupal as a framework to build command-line tools. 
+- Added scripts/drupal.sh to execute Drupal code from the command line.  Useful to use Drupal as a framework to build command-line tools.
 
 Drupal 5.0, 2007-01-15
 ----------------------

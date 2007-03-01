@@ -1,14 +1,14 @@
 #!/usr/bin/php
 <?php
-// $Id: drupal.sh,v 1.1 2007/03/01 09:15:42 dries Exp $
+// $Id: drupal.sh,v 1.2 2007/03/01 19:53:26 dries Exp $
 
-/** 
+/**
  * Drupal shell execution script
- * 
+ *
  * Check for your PHP interpreter - on Windows you'll probably have to
  * replace line 1 with
  *   #!c:/program files/php/php.exe
- * 
+ *
  * @param path  Drupal's absolute root directory in local file system (optional).
  * @param URI   A URI to execute, including HTTP protocol prefix.
  */
@@ -29,7 +29,7 @@ All arguments are long options.
   --root      Set the working directory for the script to the specified path.
               To execute Drupal this has to be the root directory of your
               Drupal installation, f.e. /home/www/foo/drupal (assuming Drupal
-              running on Unix). Current directory is not required.  Use 
+              running on Unix). Current directory is not required.  Use
               surrounding quotation marks on Windows.
 
 
@@ -37,15 +37,15 @@ All arguments are long options.
               produce errors from setting the session.
 
   URI         The URI to execute, i.e. http://default/foo/bar for executing
-              the path '/foo/bar' in your site 'default'.  URI has to be 
-              enclosured by quotation marks if there are ampersands in it 
+              the path '/foo/bar' in your site 'default'.  URI has to be
+              enclosured by quotation marks if there are ampersands in it
               (f.e. index.php?q=node&foo=bar).  Prefix 'http://' is required,
               and the domain must exist in Drupal's sites-directory.
-              
+
               If the given path and file exists it will be executed directly,
-              i.e. if URI is set to http://default/bar/foo.php 
-              and bar/foo.php exists, this script will be executed without 
-              bootstrapping Drupal.  To execute Drupal's cron.php, specify 
+              i.e. if URI is set to http://default/bar/foo.php
+              and bar/foo.php exists, this script will be executed without
+              bootstrapping Drupal.  To execute Drupal's cron.php, specify
               http://default/cron.php as the URI.
 \n
 EOF;
@@ -86,7 +86,7 @@ while ($param = array_shift($_SERVER['argv'])) {
         echo "\nERROR: {$path} not found.\n\n";
       }
       break;
-      
+
     default:
       if (substr($param, 0, 2) == '--') {
         // ignore unknown options
@@ -95,19 +95,19 @@ while ($param = array_shift($_SERVER['argv'])) {
       else {
         // parse the URI
         $path = parse_url($param);
-        
+
         // set site name
         if (isset($path['host'])) {
           $_SERVER['HTTP_HOST'] = $path['host'];
         }
-        
+
         // set query string
         if (isset($path['query'])) {
           $_SERVER['QUERY_STRING'] = $path['query'];
           parse_str($path['query'], $_GET);
           $_REQUEST = $_GET;
         }
-        
+
         // set file to execute or Drupal path (clean urls enabled)
         if (isset($path['path']) && file_exists(substr($path['path'], 1))) {
           $_SERVER['PHP_SELF'] = $_SERVER['REQUEST_URI'] = $path['path'];
@@ -118,7 +118,7 @@ while ($param = array_shift($_SERVER['argv'])) {
             $_REQUEST['q'] = $_GET['q'] = $path['path'];
           }
         }
-        
+
         // display setup in verbose mode
         if ($_verbose_mode) {
           echo "Hostname set to: {$_SERVER['HTTP_HOST']}\n";
