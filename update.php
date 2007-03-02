@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.211 2006/12/25 21:22:03 drumm Exp $
+// $Id: update.php,v 1.212 2007/03/02 09:40:13 unconed Exp $
 
 /**
  * @file
@@ -325,6 +325,8 @@ function update_selection_page() {
   drupal_add_js('misc/update.js', 'core', 'header', FALSE, TRUE);
   $output .= drupal_get_form('update_script_selection_form');
 
+  update_task_list('select');
+
   return $output;
 }
 
@@ -475,27 +477,40 @@ function update_do_update_page() {
  */
 function update_progress_page_nojs() {
   drupal_set_title('Updating');
+  update_task_list('run');
 
   $new_op = 'do_update_nojs';
-  if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    // Error handling: if PHP dies, it will output whatever is in the output
-    // buffer, followed by the error message.
+  if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // This is the first page so return some output immediately.
+    $percentage = 0;
+    $message = 'Starting updates';
+  }
+  else {
+    // This is one of the later requests: do some updates first.
+
+    // Error handling: if PHP dies due to a fatal error (e.g. non-existant
+    // function), it will output whatever is in the output buffer,
+    // followed by the error message. So, we put an explanation in the
+    // buffer to guide the user when an error happens.
     ob_start();
     $fallback = '<p class="error">An unrecoverable error has occurred. You can find the error message below. It is advised to copy it to the clipboard for reference. Please continue to the <a href="update.php?op=error">update summary</a>.</p>';
-    print theme('maintenance_page', $fallback, FALSE, TRUE);
+    $fallback = theme('maintenance_page', $fallback, FALSE);
 
+    // We strip the end of the page using a marker in the template, so any
+    // additional HTML output by PHP shows up inside the page rather than
+    // below it. While this causes invalid HTML, the same would be true if
+    // we didn't, as content is not allowed to appear after </html> anyway.
+    list($fallback) = explode('<!--partial-->', $fallback);
+    print $fallback;
+
+    // Do updates
     list($percentage, $message) = update_do_updates();
     if ($percentage == 100) {
       $new_op = 'finished';
     }
 
-    // Updates successful; remove fallback
+    // Updates were successful; wipe the output buffer as it's unneeded.
     ob_end_clean();
-  }
-  else {
-    // This is the first page so return some output immediately.
-    $percentage = 0;
-    $message = 'Starting updates';
   }
 
   drupal_set_html_head('<meta http-equiv="Refresh" content="0; URL=update.php?op='. $new_op .'">');
@@ -513,6 +528,7 @@ function update_finished_page($success) {
   $links[] = '<a href="'. base_path() .'">main page</a>';
   $links[] = '<a href="'. base_path() .'?q=admin">administration pages</a>';
 
+  update_task_list();
   // Report end result
   if ($success) {
     $output = '<p>Updates were attempted. If you see no failures below, you may proceed happily to the <a href="index.php?q=admin">administration pages</a>. Otherwise, you may need to update your database manually. All errors have been <a href="index.php?q=admin/logs/watchdog">logged</a>.</p>';
@@ -559,6 +575,7 @@ function update_finished_page($success) {
 }
 
 function update_info_page() {
+  update_task_list('info');
   drupal_set_title('Drupal database update');
   $output = "<ol>\n";
   $output .= "<li>Use this script to <strong>upgrade an existing Drupal installation</strong>. You don't need this script when installing Drupal from scratch.</li>";
@@ -757,6 +774,21 @@ function update_create_cache_tables() {
      break;
   }
   return $ret;
+}
+
+/**
+ * Add the update task list to the current page.
+ */
+function update_task_list($active = NULL) {
+  // Default list of tasks.
+  $tasks = array(
+    'info' => 'Overview',
+    'select' => 'Select updates',
+    'run' => 'Run updates',
+    'finished' => 'Review log',
+  );
+
+  drupal_set_content('left', theme_task_list($tasks, $active));
 }
 
 // Some unavoidable errors happen because the database is not yet up-to-date.

@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.37 2007/02/27 12:29:22 dries Exp $
+// $Id: install.php,v 1.38 2007/03/02 09:40:13 unconed Exp $
 
 require_once './includes/install.inc';
 
@@ -151,6 +151,7 @@ function install_change_settings($profile = 'default', $install_locale = '') {
   // We always need this because we want to run form_get_errors.
   include_once './includes/form.inc';
   drupal_maintenance_theme();
+  install_task_list('database');
 
   // The existing database settings are not working, so we need write access
   // to settings.php to change them.
@@ -375,7 +376,14 @@ function install_settings_form_submit($form_id, $form_values) {
 }
 
 /**
- * Find all .profile files and allow admin to select which to install.
+ * Find all .profile files.
+ */
+function install_find_profiles() {
+  return file_scan_directory('./profiles', '\.profile$', array('.', '..', 'CVS'), 0, TRUE, 'name', 0);  
+}
+
+/**
+ * Allow admin to select which profile to install.
  *
  * @return
  *   The selected profile.
@@ -383,7 +391,7 @@ function install_settings_form_submit($form_id, $form_values) {
 function install_select_profile() {
   include_once './includes/form.inc';
 
-  $profiles = file_scan_directory('./profiles', '\.profile$', array('.', '..', 'CVS'), 0, TRUE, 'name', 0);
+  $profiles = install_find_profiles();
   // Don't need to choose profile if only one available.
   if (sizeof($profiles) == 1) {
     $profile = array_pop($profiles);
@@ -398,6 +406,7 @@ function install_select_profile() {
     }
 
     drupal_maintenance_theme();
+    install_task_list('profile');
 
     drupal_set_title(st('Select an installation profile'));
     print theme('install_page', drupal_get_form('install_select_profile_form', $profiles));
@@ -432,7 +441,16 @@ function install_select_profile_form($profiles) {
 }
 
 /**
- * Find all .po files for the current profile and allow admin to select which to use.
+ * Find all .po files for the current profile.
+ */
+function install_find_locales($profilename) {
+  $locales = file_scan_directory('./profiles/'. $profilename, '\.po$', array('.', '..', 'CVS'), 0, FALSE);
+  array_unshift($locales, (object) array('name' => 'en'));
+  return $locales;
+}
+
+/**
+ * Allow admin to select which locale to use for the current profile.
  *
  * @return
  *   The selected language.
@@ -441,9 +459,8 @@ function install_select_locale($profilename) {
   include_once './includes/file.inc';
   include_once './includes/form.inc';
 
-  // Collect possible locales, add default
-  $locales = file_scan_directory('./profiles/' . $profilename, '\.po$', array('.', '..', 'CVS'), 0, FALSE);
-  array_unshift($locales, (object) array('name' => 'en'));
+  // Find all available locales.
+  $locales = install_find_locales($profilename);
 
   // Don't need to choose locale if only one (English) is available.
   if (sizeof($locales) == 1) {
@@ -456,6 +473,7 @@ function install_select_locale($profilename) {
     }
 
     drupal_maintenance_theme();
+    install_task_list('locale');
 
     drupal_set_title(st('Choose your preferred language'));
     print theme('install_page', drupal_get_form('install_select_locale_form', $locales));
@@ -492,6 +510,7 @@ function install_select_locale_form($locales) {
  */
 function install_no_profile_error() {
   drupal_maintenance_theme();
+  install_task_list('profile');
   drupal_set_title(st('No profiles available'));
   print theme('install_page', '<p>'. st('We were unable to find any installer profiles. Installer profiles tell us what modules to enable and what schema to install in the database. A profile is necessary to continue with the installation process.') .'</p>');
   exit;
@@ -517,6 +536,7 @@ function install_missing_modules_error($profile) {
   global $base_url;
 
   drupal_maintenance_theme();
+  install_task_list('install');
   drupal_set_title(st('Modules missing'));
   print theme('install_page', '<p>'. st('One or more required modules are missing. Please check the error messages and <a href="!url">try again</a>.', array('!url' => "install.php?profile=$profile")) .'</p>');
   exit;
@@ -537,6 +557,7 @@ function install_complete($profile) {
 
   // Build final page.
   drupal_maintenance_theme();
+  install_task_list();
   drupal_set_title(st('@drupal installation complete', array('@drupal' => drupal_install_profile_name())));
   $output .= '<p>'. st('Congratulations, @drupal has been successfully installed.', array('@drupal' => drupal_install_profile_name())) .'</p>';
 
@@ -570,6 +591,7 @@ function install_check_requirements($profile) {
   // If there are issues, report them.
   if ($severity == REQUIREMENT_ERROR) {
     drupal_maintenance_theme();
+    install_task_list('requirements');
 
     foreach ($requirements as $requirement) {
       if (isset($requirement['severity']) && $requirement['severity'] == REQUIREMENT_ERROR) {
@@ -581,6 +603,32 @@ function install_check_requirements($profile) {
     print theme('install_page', '');
     exit;
   }
+}
+
+/**
+ * Add the installation task list to the current page.
+ */
+function install_task_list($active = NULL) {
+  // Default list of tasks.
+  $tasks = array(
+    'profile' => st('Choose profile'),
+    'locale' => st('Choose language'),
+    'requirements' => st('Verify requirements'),
+    'database' => st('Database setup'),
+    'install' => st('Installation'),
+  );
+  
+  // Remove profiles if only one profile exists.
+  if (count(install_find_profiles()) == 1) {
+    unset($tasks['profile']);
+  }
+
+  // Remove locale if no install profiles use them.
+  if (count(install_find_locales('.')) == 1) {
+    unset($tasks['locale']);
+  }
+
+  drupal_set_content('left', theme_task_list($tasks, $active));
 }
 
 install_main();

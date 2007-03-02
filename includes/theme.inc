@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.342 2007/02/15 11:40:17 dries Exp $
+// $Id: theme.inc,v 1.343 2007/03/02 09:40:13 unconed Exp $
 
 /**
  * @file
@@ -423,72 +423,116 @@ function theme_page($content) {
   return $output;
 }
 
-function theme_maintenance_page($content, $messages = TRUE, $partial = FALSE) {
+/**
+ * Generate a themed maintenance page.
+ *
+ * Note: this function is not themable.
+ *
+ * @param $content
+ *   The page content to show.
+ * @param $messages
+ *   Whether to output status and error messages.
+ */
+function theme_maintenance_page($content, $messages = TRUE) {
+  // Set required headers.
   drupal_set_header('Content-Type: text/html; charset=utf-8');
   drupal_set_html_head('<style type="text/css" media="all">@import "'. base_path() .'misc/maintenance.css";</style>');
   drupal_set_html_head('<style type="text/css" media="all">@import "'. base_path() . drupal_get_path('module', 'system') .'/defaults.css";</style>');
   drupal_set_html_head('<style type="text/css" media="all">@import "'. base_path() . drupal_get_path('module', 'system') .'/system.css";</style>');
   drupal_set_html_head('<link rel="shortcut icon" href="'. base_path() .'misc/favicon.ico" type="image/x-icon" />');
 
-  $output = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
-  $output .= '<html xmlns="http://www.w3.org/1999/xhtml">';
-  $output .= '<head>';
-  $output .= ' <title>'. strip_tags(drupal_get_title()) .'</title>';
-  $output .= drupal_get_html_head();
-  $output .= drupal_get_js();
-  $output .= '</head>';
-  $output .= '<body>';
-  $output .= '<h1>' . drupal_get_title() . '</h1>';
+  // Prepare variables.
+  $variables = array(
+    'head_title' => strip_tags(drupal_get_title()),
+    'head' => drupal_get_html_head(),
+    'styles' => '',
+    'scripts' => drupal_get_js(),
+    'sidebar_left' => drupal_get_content('left'),
+    'sidebar_right' => drupal_get_content('right'),
+    'base_path' => base_path(),
+    'path_to_theme' => base_path() .'themes/garland/minnelli',
+    'logo' => base_path() .'themes/garland/minnelli/logo.png',
+    'site_title' => t('Drupal'),
+    'title' => drupal_get_title(),
+    'messages' => theme('status_messages'),
+    'content' => $content,
+  );
 
-  if ($messages) {
-    $output .= theme('status_messages');
-  }
-
-  $output .= "\n<!-- begin content -->\n";
-  $output .= $content;
-  $output .= "\n<!-- end content -->\n";
-
-  if (!$partial) {
-    $output .= '</body></html>';
-  }
+  // Render simplified PHPTemplate.
+  include_once './themes/engines/phptemplate/phptemplate.engine';
+  $output = _phptemplate_render('misc/maintenance.tpl.php', $variables);
 
   return $output;
 }
 
+/**
+ * Generate a themed installation page.
+ *
+ * Note: this function is not themable.
+ *
+ * @param $content
+ *   The page content to show.
+ */
 function theme_install_page($content) {
   drupal_set_header('Content-Type: text/html; charset=utf-8');
   drupal_add_css('misc/maintenance.css', 'module', 'all', FALSE);
   drupal_set_html_head('<link rel="shortcut icon" href="'. base_path() .'misc/favicon.ico" type="image/x-icon" />');
-  $output = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
-  $output .= '<html xmlns="http://www.w3.org/1999/xhtml">';
-  $output .= '<head>';
-  $output .= ' <title>'. strip_tags(drupal_get_title()) .'</title>';
-  $output .= drupal_get_html_head();
-  $output .= drupal_get_css();
-  $output .= drupal_get_js();
-  $output .= '</head>';
-  $output .= '<body>';
-  $output .= '<h1>' . drupal_get_title() . '</h1>';
 
+  $variables = array(
+    'head_title' => strip_tags(drupal_get_title()),
+    'head' => drupal_get_html_head(),
+    'styles' => drupal_get_css(),
+    'scripts' => drupal_get_js(),
+    'sidebar_left' => drupal_get_content('left'),
+    'sidebar_right' => drupal_get_content('right'),
+    'base_path' => base_path(),
+    'path_to_theme' => base_path() .'themes/garland/minnelli',
+    'logo' => base_path() .'themes/garland/minnelli/logo.png',
+    'site_title' => st('Drupal Installation'),
+    'title' => drupal_get_title(),
+    'messages' => '',
+    'content' => $content,
+  );
+
+  // Special handling of error messages
   $messages = drupal_set_message();
   if (isset($messages['error'])) {
     $title = count($messages['error']) > 1 ? st('The following errors must be resolved before you can continue the installation process') : st('The following error must be resolved before you can continue the installation process');
-    $output .= '<h3>' .$title. ':</h3>';
-    $output .= theme('status_messages', 'error');
+    $variables['messages'] .= '<h3>'. $title .':</h3>';
+    $variables['messages'] .= theme('status_messages', 'error');
   }
 
+  // Special handling of status messages
   if (isset($messages['status'])) {
     $warnings = count($messages['status']) > 1 ? st('The following installation warnings should be carefully reviewed, but in most cases may be safely ignored') : st('The following installation warning should be carefully reviewed, but in most cases may be safely ignored');
-    $output .= '<h4>' .$title. ':</h4>';
-    $output .= theme('status_messages', 'status');
+    $variables['messages'] .= '<h4>'. $title .':</h4>';
+    $variables['messages'] .= theme('status_messages', 'status');
   }
 
-  $output .= "\n<!-- begin content -->\n";
-  $output .= $content;
-  $output .= "\n<!-- end content -->\n";
+  // Render simplified PHPTemplate.
+  include_once './themes/engines/phptemplate/phptemplate.engine';
+  return _phptemplate_render('misc/maintenance.tpl.php', $variables);
+}
 
-  $output .= '</body></html>';
-
+/**
+ * Return a themed list of maintenance tasks to perform.
+ *
+ * Note: this function is not themable.
+ */
+function theme_task_list($items, $active = NULL) {
+  $done = isset($items[$active]) || $active == NULL;
+  $output = '<ol class="task-list">';
+  foreach ($items as $k => $item) {
+    if ($active == $k) {
+      $class = 'active';
+      $done = false;
+    }
+    else {
+      $class = $done ? 'done' : '';
+    }
+    $output .= '<li class="'. $class .'">'. $item .'</li>';
+  }
+  $output .= '</ol>';
   return $output;
 }
 

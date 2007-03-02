@@ -1,4 +1,4 @@
-/* $Id: system.css,v 1.22 2007/02/06 08:35:13 dries Exp $ */
+/* $Id: system.css,v 1.23 2007/03/02 09:40:13 unconed Exp $ */
 
 /*
 ** HTML elements
@@ -65,6 +65,9 @@ div.ok, tr.ok {
   margin: 0 0 0.25em 1.5em;
   padding: 0;
   list-style: disc;
+}
+ol.task-list li.active {
+  font-weight: bold;
 }
 .form-item {
   margin-top: 1em;
