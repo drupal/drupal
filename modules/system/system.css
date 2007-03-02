@@ -66,6 +66,9 @@ div.ok, tr.ok {
   padding: 0;
   list-style: disc;
 }
+ol.task-list li.active {
+  font-weight: bold;
+}
 .form-item {
   margin-top: 1em;
   margin-bottom: 1em;

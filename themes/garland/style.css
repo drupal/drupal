@@ -96,7 +96,12 @@ ul {
   padding: 0;
 }
 
-ul li {
+ol {
+  margin: 0.75em 0 1.25em;
+  padding: 0;
+}
+
+ol li, ul li {
   margin: 0.4em 0 0.4em .5em;
 }
 
@@ -109,7 +114,7 @@ ul.menu ul, .item-list ul ul {
   margin-left: 0em;
 }
 
-ul li, ul.menu li, .item-list ul li, li.leaf {
+ol li, ul li, ul.menu li, .item-list ul li, li.leaf {
   margin: 0.15em 0 0.15em .5em;
 }
 
@@ -118,6 +123,11 @@ ul li, ul.menu li, .item-list ul li, li.leaf {
   list-style-type: none;
   list-style-image: none;
   background: transparent url(images/menu-leaf.gif) no-repeat 1px .35em;
+}
+
+ol li {
+  padding: 0 0 .3em;
+  margin-left: 2em;
 }
 
 ul li.expanded {
@@ -136,6 +146,25 @@ ul.inline li {
   background: none;
   margin: 0;
   padding: 0 1em 0 0;
+}
+
+ol.task-list {
+  margin-left: 0;
+  list-style-type: none;
+  list-style-image: none;
+}
+ol.task-list li {
+  padding: 0.5em 1em 0.5em 2em;
+}
+ol.task-list li.active {
+  background: transparent url(images/task-list.png) no-repeat 3px 50%;
+}
+ol.task-list li.done {
+  color: #393;
+  background: transparent url(../../misc/watchdog-ok.png) no-repeat 0px 50%;
+}
+ol.task-list li.active {
+  margin-right: 1em;
 }
 
 fieldset ul.clear-block li {
