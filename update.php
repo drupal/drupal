@@ -409,6 +409,7 @@ function update_progress_page() {
   drupal_add_js('misc/update.js', 'core', 'header', FALSE, TRUE);
 
   drupal_set_title('Updating');
+  update_task_list('run');
   $output = '<div id="progress"></div>';
   $output .= '<p id="wait">Please wait while your site is being updated.</p>';
   return $output;
