@@ -1,6 +1,6 @@
 #!/usr/bin/php
 <?php
-// $Id: drupal.sh,v 1.2 2007/03/01 19:53:26 dries Exp $
+// $Id: drupal.sh,v 1.3 2007/03/05 16:13:28 dries Exp $
 
 /**
  * Drupal shell execution script
@@ -12,15 +12,15 @@
  * @param path  Drupal's absolute root directory in local file system (optional).
  * @param URI   A URI to execute, including HTTP protocol prefix.
  */
-$script = array_shift($_SERVER['argv']);
+$script = basename(array_shift($_SERVER['argv']));
 
 if (in_array('--help', $_SERVER['argv'])) {
   echo <<<EOF
 
 Execute a Drupal page from the shell.
 
-Usage:    {$script} [OPTIONS] "<URI>"
-Example:  {$script} "http://mysite.org/node"
+Usage:        {$script} [OPTIONS] "<URI>"
+Example:      {$script} "http://mysite.org/node"
 
 All arguments are long options.
 
@@ -29,9 +29,8 @@ All arguments are long options.
   --root      Set the working directory for the script to the specified path.
               To execute Drupal this has to be the root directory of your
               Drupal installation, f.e. /home/www/foo/drupal (assuming Drupal
-              running on Unix). Current directory is not required.  Use
-              surrounding quotation marks on Windows.
-
+              running on Unix). Current directory is not required.
+              Use surrounding quotation marks on Windows.
 
   --verbose   This option displays the options as they are set, but will
               produce errors from setting the session.
@@ -47,6 +46,12 @@ All arguments are long options.
               and bar/foo.php exists, this script will be executed without
               bootstrapping Drupal.  To execute Drupal's cron.php, specify
               http://default/cron.php as the URI.
+
+
+To run this script without --root argument invoke it from the root directory
+of your Drupal installation with
+
+  ./scripts/{$script}
 \n
 EOF;
   exit;
