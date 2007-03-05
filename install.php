@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.38 2007/03/02 09:40:13 unconed Exp $
+// $Id: install.php,v 1.39 2007/03/05 16:15:22 dries Exp $
 
 require_once './includes/install.inc';
 
@@ -379,7 +379,7 @@ function install_settings_form_submit($form_id, $form_values) {
  * Find all .profile files.
  */
 function install_find_profiles() {
-  return file_scan_directory('./profiles', '\.profile$', array('.', '..', 'CVS'), 0, TRUE, 'name', 0);  
+  return file_scan_directory('./profiles', '\.profile$', array('.', '..', 'CVS'), 0, TRUE, 'name', 0);
 }
 
 /**
@@ -617,7 +617,7 @@ function install_task_list($active = NULL) {
     'database' => st('Database setup'),
     'install' => st('Installation'),
   );
-  
+
   // Remove profiles if only one profile exists.
   if (count(install_find_profiles()) == 1) {
     unset($tasks['profile']);
