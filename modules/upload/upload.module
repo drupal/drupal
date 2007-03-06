@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.153 2007/02/15 11:40:18 dries Exp $
+// $Id: upload.module,v 1.154 2007/03/06 16:43:10 dries Exp $
 
 /**
  * @file
@@ -577,8 +577,10 @@ function theme_upload_attachments($files) {
   $header = array(t('Attachment'), t('Size'));
   $rows = array();
   foreach ($files as $file) {
-    if ($file->list) {
-      $href = $file->fid ? file_create_url($file->filepath) : url(file_create_filename($file->filename, file_create_path()));
+   $file = (object)$file;
+   if ($file->list && !$file->remove) {
+      // Generate valid URL for both existing attachments and preview of new attachments (these have 'upload' in fid)
+      $href = file_create_url((strpos($file->fid, 'upload') === FALSE ? $file->filepath : file_create_filename($file->filename, file_create_path())));
       $text = $file->description ? $file->description : $file->filename;
       $rows[] = array(l($text, $href), format_size($file->filesize));
     }
@@ -766,6 +768,7 @@ function _upload_form($node) {
     $form['files']['#theme'] = 'upload_form_current';
     $form['files']['#tree'] = TRUE;
     foreach ($node->files as $key => $file) {
+      // Generate valid URL for both existing attachments and preview of new attachments (these have 'upload' in fid)
       $description = file_create_url((strpos($file->fid, 'upload') === FALSE ? $file->filepath : file_create_filename($file->filename, file_create_path())));
       $description = "<small>". check_plain($description) ."</small>";
       $form['files'][$key]['description'] = array('#type' => 'textfield', '#default_value' => (strlen($file->description)) ? $file->description : $file->filename, '#maxlength' => 256, '#description' => $description );
