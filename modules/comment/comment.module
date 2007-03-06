@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.527 2007/03/06 16:14:04 dries Exp $
+// $Id: comment.module,v 1.528 2007/03/06 16:15:19 dries Exp $
 
 /**
  * @file
@@ -256,7 +256,7 @@ function comment_get_recent($number = 10) {
   // Select the $number nodes (visible to the current user) with the most
   // recent comments. This is efficient due to the index on
   // last_comment_timestamp.
-  $result = db_query_range(db_rewrite_sql("SELECT n.nid FROM {node_comment_statistics} n WHERE n.comment_count > 0 ORDER BY n.last_comment_timestamp DESC"), 0, $number);
+  $result = db_query_range(db_rewrite_sql("SELECT nc.nid FROM {node_comment_statistics} nc WHERE nc.comment_count > 0 ORDER BY nc.last_comment_timestamp DESC", 'nc'), 0, $number);
 
   $nids = array();
   while ($row = db_fetch_object($result)) {
