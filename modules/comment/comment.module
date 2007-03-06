@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.526 2007/03/01 19:53:04 dries Exp $
+// $Id: comment.module,v 1.527 2007/03/06 16:14:04 dries Exp $
 
 /**
  * @file
@@ -198,6 +198,7 @@ function comment_menu() {
   $items['comment/reply/%node'] = array(
     'title' => t('Reply to comment'),
     'page callback' => 'comment_reply',
+    'page arguments' => array(2),
     'access callback' => 'node_access',
     'access arguments' => array('view', 2),
     'type' => MENU_CALLBACK,
@@ -614,8 +615,8 @@ function comment_edit($cid) {
  * The node or comment that is being replied to must appear above the comment
  * form to provide the user context while authoring the comment.
  *
- * @param $nid
- *   Every comment belongs to a node. This is that node's id.
+ * @param $node
+ *   Every comment belongs to a node. This is that node.
  * @param $pid
  *   Some comments are replies to other comments. In those cases, $pid is the parent
  *   comment's cid.
@@ -623,12 +624,9 @@ function comment_edit($cid) {
  * @return $output
  *   The rendered parent node or comment plus the new comment form.
  */
-function comment_reply($nid, $pid = NULL) {
-  // Load the parent node.
-  $node = node_load($nid);
-
+function comment_reply($node, $pid = NULL) {
   // Set the breadcrumb trail.
-  menu_set_location(array(array('path' => "node/$nid", 'title' => $node->title), array('path' => "comment/reply/$nid")));
+  menu_set_location(array(array('path' => "node/$node->nid", 'title' => $node->title), array('path' => "comment/reply/$node->nid")));
 
   $op = isset($_POST['op']) ? $_POST['op'] : '';
 
@@ -638,11 +636,11 @@ function comment_reply($nid, $pid = NULL) {
     // The user is previewing a comment prior to submitting it.
     if ($op == t('Preview comment')) {
       if (user_access('post comments')) {
-        $output .= comment_form_box(array('pid' => $pid, 'nid' => $nid), NULL);
+        $output .= comment_form_box(array('pid' => $pid, 'nid' => $node->nid), NULL);
       }
       else {
         drupal_set_message(t('You are not authorized to post comments.'), 'error');
-        drupal_goto("node/$nid");
+        drupal_goto("node/$node->nid");
       }
     }
     else {
@@ -652,10 +650,10 @@ function comment_reply($nid, $pid = NULL) {
         if ($comment = db_fetch_object(db_query('SELECT c.*, u.uid, u.name AS registered_name, u.picture, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = %d', $pid, COMMENT_PUBLISHED))) {
           // If that comment exists, make sure that the current comment and the parent comment both
           // belong to the same parent node.
-          if ($comment->nid != $nid) {
+          if ($comment->nid != $node->nid) {
             // Attempting to reply to a comment not belonging to the current nid.
             drupal_set_message(t('The comment you are replying to does not exist.'), 'error');
-            drupal_goto("node/$nid");
+            drupal_goto("node/$node->nid");
           }
           // Display the parent comment
           $comment = drupal_unpack($comment);
@@ -664,7 +662,7 @@ function comment_reply($nid, $pid = NULL) {
         }
         else {
           drupal_set_message(t('The comment you are replying to does not exist.'), 'error');
-          drupal_goto("node/$nid");
+          drupal_goto("node/$node->nid");
         }
       }
       // This is the case where the comment is in response to a node. Display the node.
@@ -673,22 +671,22 @@ function comment_reply($nid, $pid = NULL) {
       }
 
       // Should we show the reply box?
-      if (node_comment_mode($nid) != COMMENT_NODE_READ_WRITE) {
+      if (node_comment_mode($node->nid) != COMMENT_NODE_READ_WRITE) {
         drupal_set_message(t("This discussion is closed: you can't post new comments."), 'error');
-        drupal_goto("node/$nid");
+        drupal_goto("node/$node->nid");
       }
       else if (user_access('post comments')) {
-        $output .= comment_form_box(array('pid' => $pid, 'nid' => $nid), t('Reply'));
+        $output .= comment_form_box(array('pid' => $pid, 'nid' => $node->nid), t('Reply'));
       }
       else {
         drupal_set_message(t('You are not authorized to post comments.'), 'error');
-        drupal_goto("node/$nid");
+        drupal_goto("node/$node->nid");
       }
     }
   }
   else {
     drupal_set_message(t('You are not authorized to view comments.'), 'error');
-    drupal_goto("node/$nid");
+    drupal_goto("node/$node->nid");
   }
 
   return $output;
@@ -1432,24 +1430,24 @@ function comment_form($edit, $title = NULL) {
 
   if ($user->uid) {
     if (!empty($edit['cid']) && user_access('administer comments')) {
-      if ($edit['author']) {
+      if (!empty($edit['author'])) {
         $author = $edit['author'];
       }
-      elseif ($edit['name']) {
+      elseif (!empty($edit['name'])) {
         $author = $edit['name'];
       }
       else {
         $author = $edit['registered_name'];
       }
 
-      if ($edit['status']) {
+      if (!empty($edit['status'])) {
         $status = $edit['status'];
       }
       else {
         $status = 0;
       }
 
-      if ($edit['date']) {
+      if (!empty($edit['date'])) {
         $date = $edit['date'];
       }
       else {
@@ -1608,7 +1606,7 @@ function comment_form_add_preview($form, $edit) {
       $comment->uid = $account->uid;
       $comment->name = check_plain($account->name);
     }
-    $comment->timestamp = $edit['timestamp'] ? $edit['timestamp'] : time();
+    $comment->timestamp = !empty($edit['timestamp']) ? $edit['timestamp'] : time();
     $output .= theme('comment_view', $comment);
   }
   $form['comment_preview'] = array(
