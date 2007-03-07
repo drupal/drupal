@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.786 2007/03/05 16:22:20 dries Exp $
+// $Id: node.module,v 1.787 2007/03/07 12:27:31 dries Exp $
 
 /**
  * @file
@@ -103,7 +103,7 @@ function node_last_viewed($nid) {
   static $history;
 
   if (!isset($history[$nid])) {
-    $history[$nid] = db_fetch_object(db_query("SELECT timestamp FROM {history} WHERE uid = '$user->uid' AND nid = %d", $nid));
+    $history[$nid] = db_fetch_object(db_query("SELECT timestamp FROM {history} WHERE uid = %d AND nid = %d", $user->uid, $nid));
   }
 
   return (isset($history[$nid]->timestamp) ? $history[$nid]->timestamp : 0);
