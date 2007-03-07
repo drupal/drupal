@@ -21,10 +21,9 @@
  *
  *
  * For information on the format of the structured arrays used to define forms,
- * and more detailed explanations of the Form API workflow, see the reference at
- * http://api.drupal.org/api/HEAD/file/developer/topics/forms_api_reference.html
- * and the quickstart guide at
- * http://api.drupal.org/api/HEAD/file/developer/topics/forms_api.html
+ * and more detailed explanations of the Form API workflow, see the
+ * @link http://api.drupal.org/api/HEAD/file/developer/topics/forms_api_reference.html reference @endlink
+ * and the @link http://api.drupal.org/api/HEAD/file/developer/topics/forms_api.html quickstart guide. @endlink
  */
 
 /**
