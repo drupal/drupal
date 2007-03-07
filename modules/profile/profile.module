@@ -623,7 +623,7 @@ function _profile_form_explanation($field) {
 
 function profile_form_profile($edit, $user, $category, $register = FALSE) {
   $result = _profile_get_fields($category, $register);
-  $w = 0;
+  $w = 1;
   while ($field = db_fetch_object($result)) {
     $category = $field->category;
     if (!isset($fields[$category])) {
