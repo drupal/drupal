@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.80 2007/02/27 12:34:45 dries Exp $
+// $Id: system.install,v 1.81 2007/03/07 12:57:50 dries Exp $
 
 define('DRUPAL_MINIMUM_PHP',    '4.3.3');
 define('DRUPAL_MINIMUM_MYSQL',  '4.1.0'); // If using MySQL
@@ -263,7 +263,8 @@ function system_install() {
         mail varchar(64) default NULL,
         homepage varchar(255) default NULL,
         PRIMARY KEY (cid),
-        KEY lid (nid)
+        KEY lid (nid),
+        KEY status (status)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {node_comment_statistics} (
@@ -739,6 +740,7 @@ function system_install() {
         PRIMARY KEY (cid)
       )");
       db_query("CREATE INDEX {comments}_nid_idx ON {comments} (nid)");
+      db_query("CREATE INDEX {comments}_status_idx ON {comments} (status)");
 
       db_query("CREATE TABLE {node_comment_statistics} (
         nid serial CHECK (nid >= 0),
@@ -3590,6 +3592,24 @@ function system_update_2002() {
     case 'mysql':
     case 'mysqli':
       $ret[] = update_sql("ALTER TABLE {variable} CHANGE name name varchar(128) NOT NULL default ''");
+      break;
+  }
+  return $ret;
+}
+
+/**
+ * Add index on comments status column.
+ */
+function system_update_2003() {
+  $ret = array();
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql('ALTER TABLE {comments} ADD KEY status (status)');
+      break;
+
+    case 'pgsql':
+      $ret[] = update_sql("CREATE INDEX {comments}_status_idx ON {comments} (status)");
       break;
   }
   return $ret;
