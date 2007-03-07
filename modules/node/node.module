@@ -2120,7 +2120,7 @@ function node_add($type = NULL) {
 
     if (isset($item)) {
       uksort($item, 'strnatcasecmp');
-      $output = t('Choose the appropriate item from the list:') .'<dl>'. implode('', $item) .'</dl>';
+      $output = '<dl>'. implode('', $item) .'</dl>';
     }
     else {
       $output = t('No content types available.');
