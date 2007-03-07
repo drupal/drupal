@@ -285,7 +285,9 @@ function drupal_prepare_form($form_id, &$form) {
   global $user;
 
   $form['#type'] = 'form';
-  $form['#skip_duplicate_check'] = FALSE;
+  if (!isset($form['#skip_duplicate_check'])) {
+    $form['#skip_duplicate_check'] = FALSE;
+  }
 
   if (!isset($form['#post'])) {
     $form['#post'] = $_POST;
