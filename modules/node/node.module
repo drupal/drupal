@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.787 2007/03/07 12:27:31 dries Exp $
+// $Id: node.module,v 1.788 2007/03/07 13:09:32 dries Exp $
 
 /**
  * @file
@@ -2120,7 +2120,7 @@ function node_add($type = NULL) {
 
     if (isset($item)) {
       uksort($item, 'strnatcasecmp');
-      $output = t('Choose the appropriate item from the list:') .'<dl>'. implode('', $item) .'</dl>';
+      $output = '<dl>'. implode('', $item) .'</dl>';
     }
     else {
       $output = t('No content types available.');
