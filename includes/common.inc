@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.617 2007/02/15 11:40:17 dries Exp $
+// $Id: common.inc,v 1.618 2007/03/07 13:08:04 dries Exp $
 
 /**
  * @file
@@ -927,34 +927,63 @@ function format_xml_elements($array) {
  * This function ensures that the string is pluralized correctly. Since t() is
  * called by this function, make sure not to pass already-localized strings to it.
  *
+ * For example:
+ * @code
+ *   $output = format_plural($node->comment_count, '1 comment', '@count comments');
+ * @endcode
+ *
+ * Example with additional replacements:
+ * @code
+ *   $output = format_plural($update_count,
+ *     'Changed the content type of 1 post from %old-type to %new-type.',
+ *     'Changed the content type of @count posts from %old-type to %new-type.',
+ *     array('%old-type' => $info->old_type, '%new-type' => $info->new_type)));
+ * @endcode
+ *
  * @param $count
  *   The item count to display.
  * @param $singular
  *   The string for the singular case. Please make sure it is clear this is
  *   singular, to ease translation (e.g. use "1 new comment" instead of "1 new").
+ *   Do not use @count in the singluar string.
  * @param $plural
  *   The string for the plural case. Please make sure it is clear this is plural,
  *   to ease translation. Use @count in place of the item count, as in "@count
  *   new comments".
+ * @param $args
+ *   An associative array of replacements to make after translation. Incidences
+ *   of any key in this array are replaced with the corresponding value.
+ *   Based on the first character of the key, the value is escaped and/or themed:
+ *    - !variable: inserted as is
+ *    - @variable: escape plain text to HTML (check_plain)
+ *    - %variable: escape text and theme as a placeholder for user-submitted
+ *      content (check_plain + theme_placeholder)
+ *   Note that you do not need to include @count in this array.
+ *   This replacement is done automatically for the plural case.
  * @return
  *   A translated string.
  */
-function format_plural($count, $singular, $plural) {
-  if ($count == 1) return t($singular, array("@count" => $count));
+function format_plural($count, $singular, $plural, $args = array()) {
+  if ($count == 1) {
+    return t($singular, $args);
+  }
+  $args['@count'] = $count;
 
   // get the plural index through the gettext formula
   $index = (function_exists('locale_get_plural')) ? locale_get_plural($count) : -1;
   if ($index < 0) { // backward compatibility
-    return t($plural, array("@count" => $count));
+    return t($plural, $args);
   }
   else {
     switch ($index) {
       case "0":
-        return t($singular, array("@count" => $count));
+        return t($singular, $args);
       case "1":
-        return t($plural, array("@count" => $count));
+        return t($plural, $args);
       default:
-        return t(strtr($plural, array("@count" => '@count['. $index .']')), array('@count['. $index .']' => $count));
+        unset($args['@count']);
+        $args['@count['. $index .']'] = $count;
+        return t(strtr($plural, array('@count' => '@count['. $index .']')), $args);
     }
   }
 }

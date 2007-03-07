@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.452 2007/02/27 12:29:22 dries Exp $
+// $Id: system.module,v 1.453 2007/03/07 13:08:04 dries Exp $
 
 /**
  * @file
@@ -1398,10 +1398,10 @@ function system_modules_confirm_form($modules, $form_values = array()) {
         $missing_dependencies[$k] = $info['name'] ? $info['name'] : drupal_ucfirst($dependency);
       }
       $t_argument = array(
-        '%module' => $modules[$name]->info['name'],
-        '%dependencies' => implode(', ', $missing_dependencies),
+        '@module' => $modules[$name]->info['name'],
+        '@dependencies' => implode(', ', $missing_dependencies),
       );
-      $items[] = strtr(format_plural(count($missing_dependencies), 'You must enable the %dependencies module to install %module.', 'You must enable the %dependencies modules to install %module.'), $t_argument);
+      $items[] = format_plural(count($missing_dependencies), 'You must enable the @dependencies module to install @module.', 'You must enable the @dependencies modules to install @module.', $t_argument);
     }
     $form['text'] = array('#value' => theme('item_list', $items));
   }

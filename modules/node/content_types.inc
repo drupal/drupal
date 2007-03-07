@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.25 2007/02/10 13:31:32 dries Exp $
+// $Id: content_types.inc,v 1.26 2007/03/07 13:08:04 dries Exp $
 
 /**
  * @file
@@ -351,9 +351,7 @@ function node_node_type($op, $info) {
     $update_count = node_type_update_nodes($info->old_type, $info->type);
 
     if ($update_count) {
-      $substr_pre = 'Changed the content type of ';
-      $substr_post = strtr(' from %old-type to %type.', array('%old-type' => theme('placeholder', $info->old_type), '%type' => theme('placeholder', $info->type)));
-      drupal_set_message(format_plural($update_count, $substr_pre .'@count post'. $substr_post, $substr_pre .'@count posts'. $substr_post));
+      drupal_set_message(format_plural($update_count, 'Changed the content type of 1 post from %old-type to %type.', 'Changed the content type of @count posts from %old-type to %type.', array('%old-type' => $info->old_type, '%type' => $info->type)));
     }
   }
 }
@@ -391,7 +389,7 @@ function node_type_delete_confirm($type) {
 
   $num_nodes = db_num_rows(db_query("SELECT * FROM {node} WHERE type = '%s'", $type->type));
   if ($num_nodes) {
-    $caption .= '<p>'. strtr(format_plural($num_nodes, '<strong>Warning:</strong> there is currently @count %type post on your site. It may not be able to be displayed or edited correctly, once you have removed this content type.', '<strong>Warning:</strong> there are currently @count %type posts on your site. They may not be able to be displayed or edited correctly, once you have removed this content type.'), array('%type' => theme('placeholder', $type->name))) .'</p>';
+    $caption .= '<p>'. format_plural($num_nodes, '<strong>Warning:</strong> there is currently 1 %type post on your site. It may not be able to be displayed or edited correctly, once you have removed this content type.', '<strong>Warning:</strong> there are currently @count %type posts on your site. They may not be able to be displayed or edited correctly, once you have removed this content type.', array('%type' => $type->name)) .'</p>';
   }
 
   $caption .= '<p>'. t('This action cannot be undone.') .'</p>';
