@@ -735,6 +735,7 @@ function user_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('user_login'),
     'access callback' => 'user_is_anonymous',
+    'type' => MENU_CALLBACK,
   );
 
   $items['user/login'] = array(
