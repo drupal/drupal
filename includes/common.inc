@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.618 2007/03/07 13:08:04 dries Exp $
+// $Id: common.inc,v 1.619 2007/03/08 19:33:55 dries Exp $
 
 /**
  * @file
@@ -1762,14 +1762,17 @@ function drupal_to_js($var) {
                               array('\r', '\n', '\x3c', '\x3e', '\x26'),
                               addslashes($var)) .'"';
     case 'array':
-      if (array_keys($var) === range(0, sizeof($var) - 1)) {
+      // Arrays in JSON can't be associative. If the array is empty or if it
+      // has sequential whole number keys starting with 0, it's not associative
+      // so we can go ahead and convert it as an array.
+      if (empty ($var) || array_keys($var) === range(0, sizeof($var) - 1)) {
         $output = array();
         foreach ($var as $v) {
           $output[] = drupal_to_js($v);
         }
         return '[ '. implode(', ', $output) .' ]';
       }
-      // Fall through
+      // Otherwise, fall through to convert the array as an object.
     case 'object':
       $output = array();
       foreach ($var as $k => $v) {
