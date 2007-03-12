@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.330 2007/02/27 12:29:22 dries Exp $
+// $Id: aggregator.module,v 1.331 2007/03/12 13:01:10 dries Exp $
 
 /**
  * @file
@@ -91,8 +91,7 @@ function aggregator_menu() {
   $items['aggregator/categories'] = array(
     'title' => t('Categories'),
     'page callback' => 'aggregator_page_categories',
-    'access arguments' => array('access news feeds'),
-    'type' => MENU_ITEM_GROUPING,
+    'access callback' => '_aggregator_has_categories',
   );
   $items['aggregator/rss'] = array(
     'title' => t('RSS feed'),
@@ -112,6 +111,7 @@ function aggregator_menu() {
     $items[$path] = array(
       'title' => $category['title'],
       'page callback' => 'aggregator_page_category',
+      'access callback' => 'user_access',
       'access arguments' => array('access news feeds'),
     );
     $items[$path .'/view'] = array(
@@ -179,6 +179,10 @@ function aggregator_menu() {
 
 function aggregator_init() {
   drupal_add_css(drupal_get_path('module', 'aggregator') .'/aggregator.css');
+}
+
+function _aggregator_has_categories() {
+  return user_access('access news feeds') && db_result(db_query('SELECT COUNT(*) FROM {aggregator_category}'));
 }
 
 function aggregator_admin_settings() {

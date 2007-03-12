@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.82 2007/03/08 19:03:48 dries Exp $
+// $Id: system.install,v 1.83 2007/03/12 13:01:10 dries Exp $
 
 define('DRUPAL_MINIMUM_PHP',    '4.3.3');
 define('DRUPAL_MINIMUM_MYSQL',  '4.1.0'); // If using MySQL
@@ -100,6 +100,7 @@ function system_requirements($phase) {
         'value' => $t('Never run'),
       );
     }
+    $requirements['cron'] += array('description' => '');
 
     $requirements['cron']['description'] .= ' '. t('You can <a href="@cron">run cron manually</a>.', array('@cron' => url('admin/logs/status/run-cron')));
 
@@ -349,6 +350,14 @@ function system_install() {
         title varchar(255) NOT NULL default '',
         parent varchar(255) NOT NULL default '',
         type int NOT NULL default 0,
+        block_callback varchar(255) NOT NULL default '',
+        description varchar(255) NOT NULL default '',
+        link_path varchar(255) NOT NULL default '',
+        attributes varchar(255) NOT NULL default '',
+        query varchar(255) NOT NULL default '',
+        fragment varchar(255) NOT NULL default '',
+        absolute INT NOT NULL default 0,
+        html INT NOT NULL default 0,
         PRIMARY KEY  (path),
         KEY fit (fit),
         KEY visible (visible),
@@ -824,6 +833,14 @@ function system_install() {
         title varchar(255) NOT NULL default '',
         parent varchar(255) NOT NULL default '',
         type int NOT NULL default 0,
+        block_callback varchar(255) NOT NULL default '',
+        description varchar(255) NOT NULL default '',
+        link_path varchar(255) NOT NULL default '',
+        attributes varchar(255) NOT NULL default '',
+        query varchar(255) NOT NULL default '',
+        fragment varchar(255) NOT NULL default '',
+        absolute INT NOT NULL default 0,
+        html INT NOT NULL default 0,
         PRIMARY KEY (path)
       )");
 

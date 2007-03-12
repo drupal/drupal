@@ -86,3 +86,11 @@ function phptemplate_menu_local_tasks() {
 
   return $output;
 }
+
+function garland_username($object) {
+  return _phptemplate_callback('username',
+   array(
+    'username' => check_plain($object->name),
+    'userpage' => l($object->name, 'user/'. $object->uid)));
+}
+

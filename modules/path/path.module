@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.108 2007/02/15 11:40:18 dries Exp $
+// $Id: path.module,v 1.109 2007/03/12 13:01:10 dries Exp $
 
 /**
  * @file
@@ -135,41 +135,46 @@ function path_admin_delete($pid = 0) {
 function path_set_alias($path = NULL, $alias = NULL, $pid = NULL) {
   if ($path && !$alias) {
     db_query("DELETE FROM {url_alias} WHERE src = '%s'", $path);
+    db_query("UPDATE {menu} SET link_path = path WHERE path = '%s'", $path);
     drupal_clear_path_cache();
   }
   else if (!$path && $alias) {
     db_query("DELETE FROM {url_alias} WHERE dst = '%s'", $alias);
+    db_query("UPDATE {menu} SET link_path = path WHERE link_path = '%s'", $alias);
     drupal_clear_path_cache();
   }
   else if ($path && $alias) {
     $path = urldecode($path);
     $path_count = db_result(db_query("SELECT COUNT(src) FROM {url_alias} WHERE src = '%s'", $path));
     $alias = urldecode($alias);
+    // Alias count can only be 0 or 1.
     $alias_count = db_result(db_query("SELECT COUNT(dst) FROM {url_alias} WHERE dst = '%s'", $alias));
 
-    // We have an insert:
-    if ($path_count == 0 && $alias_count == 0) {
-      db_query("INSERT INTO {url_alias} (src, dst) VALUES ('%s', '%s')", $path, $alias);
-      drupal_clear_path_cache();
-    }
-    else if ($path_count >= 1 && $alias_count == 0) {
+    if ($alias_count == 0) {
       if ($pid) {
         db_query("UPDATE {url_alias} SET dst = '%s', src = '%s' WHERE pid = %d", $alias, $path, $pid);
       }
       else {
         db_query("INSERT INTO {url_alias} (src, dst) VALUES ('%s', '%s')", $path, $alias);
       }
-      drupal_clear_path_cache();
     }
-    else if ($path_count == 0 && $alias_count == 1) {
-      db_query("UPDATE {url_alias} SET src = '%s' WHERE dst = '%s'", $path, $alias);
-      drupal_clear_path_cache();
+    // The alias exists.
+    else {
+      // This path has no alias yet, so we redirect the alias here.
+      if ($path_count == 0) {
+        db_query("UPDATE {url_alias} SET src = '%s' WHERE dst = '%s'", $path, $alias);
+      }
+      else {
+        // This will delete the path that alias was originally pointing to.
+        path_set_alias(NULL, $alias);
+        // This will remove the current aliases of the path.
+        path_set_alias($path);
+        path_set_alias($path, $alias);
+      }
     }
-    else if ($path_count == 1 && $alias_count == 1) {
-      // This will delete the path that alias was originally pointing to:
-      path_set_alias(NULL, $alias);
-      path_set_alias($path);
-      path_set_alias($path, $alias);
+    if ($alias_count == 0 || $path_count == 0) {
+      drupal_clear_path_cache();
+      db_query("UPDATE {menu} SET link_path = '%s' WHERE path = '%s'", $alias, $path);
     }
   }
 }

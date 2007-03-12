@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.788 2007/03/07 13:09:32 dries Exp $
+// $Id: node.module,v 1.789 2007/03/12 13:01:10 dries Exp $
 
 /**
  * @file
@@ -1132,8 +1132,7 @@ function node_menu() {
   $items['node/add'] = array(
     'title' => t('Create content'),
     'page callback' => 'node_add',
-    'access callback' => 'user_access',
-    'access arguments' => array('access content'),
+    'access callback' => '_node_add_access',
     'weight' => 1,
   );
   $items['rss.xml'] = array(
@@ -2088,6 +2087,16 @@ function theme_node_form($form) {
   $output .= "</div>\n";
 
   return $output;
+}
+
+function _node_add_access() {
+  $types = node_get_types();
+  foreach ($types as $type) {
+    if (function_exists($type->module .'_form') && node_access('create', $type->type)) {
+      return TRUE;
+    }
+  }
+  return FALSE;
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.453 2007/03/07 13:08:04 dries Exp $
+// $Id: system.module,v 1.454 2007/03/12 13:01:10 dries Exp $
 
 /**
  * @file
@@ -336,7 +336,6 @@ function system_user($type, $edit, &$user, $category = NULL) {
  * Provide the administration overview page.
  */
 function system_main_admin_page($arg = NULL) {
-  return 'This page awaits rewrite'; // TODO: this needs to be rewritten for the new menu system.
   // If we received an argument, they probably meant some other page.
   // Let's 404 them since the menu system cannot be told we do not
   // accept arguments.
@@ -349,36 +348,38 @@ function system_main_admin_page($arg = NULL) {
     drupal_set_message(t('One or more problems were detected with your Drupal installation. Check the <a href="@status">status report</a> for more information.', array('@status' => url('admin/logs/status'))), 'error');
   }
 
-
-  $menu = menu_get_item(NULL, 'admin');
-  usort($menu['children'], '_menu_sort');
-  foreach ($menu['children'] as $mid) {
-    $block = menu_get_item($mid);
-    if ($block['block callback'] && function_exists($block['block callback'])) {
-      $arguments = isset($block['block arguments']) ? $block['block arguments'] : array();
-      $block['content'] .= call_user_func_array($block['block callback'], $arguments);
+  $map = arg(NULL);
+  $result = db_query("SELECT * FROM {menu} WHERE path LIKE 'admin/%%' AND depth = 2 AND visible = 1 AND path != 'admin/help' ORDER BY mleft");
+  while ($item = db_fetch_object($result)) {
+    _menu_translate($item, $map, MENU_RENDER_LINK);
+    if (!$item->access) {
+      continue;
     }
-    $block['content'] .= theme('admin_block_content', system_admin_menu_block($block));
+    $block = (array)$item;
+    $block['content'] = '';
+    if ($item->block_callback && function_exists($item->block_callback)) {
+      $function = $item->block_callback;
+      $block['content'] .= $function();
+    }
+    $block['content'] .= theme('admin_block_content', system_admin_menu_block($item));
     $blocks[] = $block;
   }
-
   return theme('admin_page', $blocks);
 }
 
 /**
  * Provide a single block on the administration overview page.
  */
-function system_admin_menu_block($block) {
-  return 'This page awaits rewrite'; // TODO: this needs to be rewritten for the new menu system.
+function system_admin_menu_block($item) {
+  $map = arg(NULL);
   $content = array();
-  if (is_array($block['children'])) {
-    usort($block['children'], '_menu_sort');
-    foreach ($block['children'] as $mid) {
-      $item = menu_get_item($mid);
-      if (($item['type'] & MENU_VISIBLE_IN_TREE) && _menu_item_is_accessible($mid)) {
-        $content[] = $item;
-      }
+  $result = db_query('SELECT * FROM {menu} WHERE depth = %d AND %d < mleft AND mright < %d ORDER BY mleft', $item->depth + 1, $item->mleft, $item->mright);
+  while ($item = db_fetch_object($result)) {
+    _menu_translate($item, $map, MENU_RENDER_LINK);
+    if (!$item->access) {
+      continue;
     }
+    $content[] = (array)$item;
   }
   return $content;
 }
@@ -391,9 +392,8 @@ function system_admin_menu_block($block) {
  * hidden, so we supply the contents of the block.
  */
 function system_admin_menu_block_page() {
-  return 'This page awaits rewrite'; // TODO: this needs to be rewritten for the new menu system.
-  $menu = menu_get_item(NULL, $_GET['q']);
-  $content = system_admin_menu_block($menu);
+  $item = menu_get_item();
+  $content = system_admin_menu_block($item);
 
   $output = theme('admin_block_content', $content);
   return $output;
@@ -1891,14 +1891,13 @@ function theme_status_report(&$requirements) {
  * Menu callback; displays a module's settings page.
  */
 function system_settings_overview() {
-  return 'This page awaits rewrite'; // TODO: this needs to be rewritten for the new menu system.
   // Check database setup if necessary
   if (function_exists('db_check_setup') && empty($_POST)) {
     db_check_setup();
   }
 
-  $menu = menu_get_item(NULL, 'admin/settings');
-  $content = system_admin_menu_block($menu);
+  $item = menu_get_item('admin/settings');
+  $content = system_admin_menu_block($item);
 
   $output = theme('admin_block_content', $content);
 
@@ -2188,9 +2187,9 @@ function theme_admin_page($blocks) {
 
   foreach ($blocks as $block) {
     if ($block_output = theme('admin_block', $block)) {
-      if (!$block['position']) {
+      if (empty($block['position'])) {
         // perform automatic striping.
-        $block['position'] = $stripe++ % 2 ? 'left' : 'right';
+        $block['position'] = ++$stripe % 2 ? 'left' : 'right';
       }
       $container[$block['position']] .= $block_output;
     }
@@ -2225,7 +2224,7 @@ function theme_admin_page($blocks) {
  */
 function theme_admin_block($block) {
   // Don't display the block if it has no content to display.
-  if (!$block['content']) {
+  if (empty($block['content'])) {
     return '';
   }
 
@@ -2261,14 +2260,18 @@ function theme_admin_block_content($content) {
   if (system_admin_compact_mode()) {
     $output = '<ul class="menu">';
     foreach ($content as $item) {
-      $output .= '<li class="leaf">'. l($item['title'], $item['path'], array('attributes' => array('title' => $item['description']))) .'</li>';
+      if (empty($item['attributes'])) {
+        $item['attributes'] = array();
+      }
+      $item['attributes'] += array('title' => $item['description']);
+      $output .= '<li class="leaf">'. l($item['title'], $item['path'], $item) .'</li>';
     }
     $output .= '</ul>';
   }
   else {
     $output = '<dl class="admin-list">';
     foreach ($content as $item) {
-      $output .= '<dt>'. l($item['title'], $item['path']) .'</dt>';
+      $output .= '<dt>'. l($item['title'], $item['path'], $item) .'</dt>';
       $output .= '<dd>'. $item['description'] .'</dd>';
     }
     $output .= '</dl>';
