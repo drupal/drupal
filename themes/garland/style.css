@@ -342,7 +342,7 @@ table .form-button, table .form-submit {
 body.sidebars {
   min-width: 980px;
 }
-/* With 2 columsn, require a minimum width of 800px. */
+/* With 2 columns, require a minimum width of 800px. */
 body.sidebar-left, body.sidebar-right {
   min-width: 780px;
 }
