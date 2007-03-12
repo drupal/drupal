@@ -1,5 +1,5 @@
 <?php
-// $Id: settings.php,v 1.45 2007/03/12 13:01:10 dries Exp $
+// $Id: settings.php,v 1.46 2007/03/12 13:51:04 dries Exp $
 
 /**
  * @file
@@ -90,7 +90,7 @@
  *   $db_url = 'mysqli://username:password@localhost/databasename';
  *   $db_url = 'pgsql://username:password@localhost/databasename';
  */
-$db_url = 'mysql://drupal:drupal@localhost/drupal_cvs';
+$db_url = 'mysql://drupal:drupal@localhost/drupal';
 $db_prefix = '';
 
 /**
