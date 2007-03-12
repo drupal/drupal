@@ -1475,8 +1475,9 @@ function filter_xss_bad_protocol($string, $decode = TRUE) {
       if (preg_match('![/?#]!', $protocol)) {
         break;
       }
+      // Per RFC2616, section 3.2.3 (URI Comparison) scheme comparison must be case-insensitive
       // Check if this is a disallowed protocol.
-      if (!isset($allowed_protocols[$protocol])) {
+      if (!isset($allowed_protocols[strtolower($protocol)])) {
         $string = substr($string, $colonpos + 1);
       }
     }
