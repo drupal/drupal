@@ -980,6 +980,10 @@ function search_view($type = 'node') {
  *   An HTML string containing the search form.
  */
 function search_form($action = '', $keys = '', $type = NULL, $prompt = NULL) {
+
+  // Add CSS
+  drupal_add_css(drupal_get_path('module', 'search') .'/search.css', 'module', 'all', FALSE);
+
   if (!$action) {
     $action = url('search/'. $type);
   }
@@ -1078,8 +1082,6 @@ function theme_search_block_form($form) {
  * Perform a standard search on the given keys, and return the formatted results.
  */
 function search_data($keys = NULL, $type = 'node') {
-  // Add CSS
-  drupal_add_css(drupal_get_path('module', 'search') .'/search.css', 'module', 'all', FALSE);
 
   if (isset($keys)) {
     if (module_hook($type, 'search')) {
