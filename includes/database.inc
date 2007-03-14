@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.63 2007/02/27 12:01:37 dries Exp $
+// $Id: database.inc,v 1.64 2007/03/14 19:24:51 dries Exp $
 
 /**
  * @file
@@ -191,12 +191,12 @@ define('DB_QUERY_REGEXP', '/(%d|%s|%%|%f|%b)/');
 function db_query($query) {
   $args = func_get_args();
   array_shift($args);
-  $query = db_prefix_tables($query);
   if (isset($args[0]) and is_array($args[0])) { // 'All arguments in one array' syntax
     $args = $args[0];
   }
   _db_query_callback($args, TRUE);
   $query = preg_replace_callback(DB_QUERY_REGEXP, '_db_query_callback', $query);
+  $query = db_prefix_tables($query);
   return _db_query($query);
 }
 
