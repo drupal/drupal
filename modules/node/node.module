@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.789 2007/03/12 13:01:10 dries Exp $
+// $Id: node.module,v 1.790 2007/03/14 21:41:06 dries Exp $
 
 /**
  * @file
@@ -2513,7 +2513,7 @@ function node_form_alter($form_id, &$form) {
     $form['advanced']['submit'] = array(
       '#type' => 'submit',
       '#value' => t('Advanced search'),
-      '#prefix' => '<div class="action clear-block">',
+      '#prefix' => '<div class="action">',
       '#suffix' => '</div>',
     );
 
