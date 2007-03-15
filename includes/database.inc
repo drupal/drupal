@@ -177,7 +177,7 @@ define('DB_QUERY_REGEXP', '/(%d|%s|%%|%f|%b)/');
  *   A variable number of arguments which are substituted into the query
  *   using printf() syntax. Instead of a variable number of query arguments,
  *   you may also pass a single array containing the query arguments.
-
+ *
  *   Valid %-modifiers are: %s, %d, %f, %b (binary data, do not enclose
  *   in '') and %%.
  *
@@ -191,12 +191,12 @@ define('DB_QUERY_REGEXP', '/(%d|%s|%%|%f|%b)/');
 function db_query($query) {
   $args = func_get_args();
   array_shift($args);
+  $query = db_prefix_tables($query);
   if (isset($args[0]) and is_array($args[0])) { // 'All arguments in one array' syntax
     $args = $args[0];
   }
   _db_query_callback($args, TRUE);
   $query = preg_replace_callback(DB_QUERY_REGEXP, '_db_query_callback', $query);
-  $query = db_prefix_tables($query);
   return _db_query($query);
 }
 
