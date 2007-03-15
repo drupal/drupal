@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.455 2007/03/13 13:41:39 dries Exp $
+// $Id: system.module,v 1.456 2007/03/15 15:10:38 unconed Exp $
 
 /**
  * @file
@@ -1873,7 +1873,7 @@ function theme_status_report(&$requirements) {
       $class = $classes[isset($requirement['severity']) ? (int)$requirement['severity'] : 0] .' '. $class;
 
       // Output table row(s)
-      if (empty($requirement['description'])) {
+      if (!empty($requirement['description'])) {
         $output .= '<tr class="'. $class .' merge-down"><th>'. $requirement['title'] .'</th><td>'. $requirement['value'] .'</td></tr>';
         $output .= '<tr class="'. $class .' merge-up"><td colspan="2">'. $requirement['description'] .'</td></tr>';
       }
