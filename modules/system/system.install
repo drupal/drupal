@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.83 2007/03/12 13:01:10 dries Exp $
+// $Id: system.install,v 1.84 2007/03/16 04:55:07 unconed Exp $
 
 define('DRUPAL_MINIMUM_PHP',    '4.3.3');
 define('DRUPAL_MINIMUM_MYSQL',  '4.1.0'); // If using MySQL
@@ -571,6 +571,7 @@ function system_install() {
         data longtext,
         PRIMARY KEY (uid),
         UNIQUE KEY name (name),
+        KEY created (created),
         KEY access (access)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
@@ -1058,6 +1059,7 @@ function system_install() {
         UNIQUE (name)
       )");
       db_query("CREATE INDEX {users}_access_idx ON {users} (access)");
+      db_query("CREATE INDEX {users}_created_idx ON {users} (created)");
 
       db_query("CREATE TABLE {users_roles} (
         uid int_unsigned NOT NULL default '0',
@@ -3545,6 +3547,35 @@ function system_update_1021() {
 
 
 /**
+ * @defgroup updates-5.x-extra Extra system updates for 5.x
+ * @{
+ */
+
+/**
+ * Add index on users created column.
+ */
+function system_update_1022() {
+  $ret = array();
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql('ALTER TABLE {users} ADD KEY created (created)');
+      break;
+
+    case 'pgsql':
+      $ret[] = update_sql("CREATE INDEX {users}_created_idx ON {users} (created)");
+      break;
+  }
+  // Also appears as system_update_2004(). Ensure we don't update twice.
+  variable_set('system_update_1022', TRUE);
+  return $ret;
+}
+
+/**
+ * @} End of "defgroup updates-5.x-extra"
+ */
+
+/**
  * @defgroup updates-5.0-to-x.x System updates from 5.0 to x.x
  * @{
  * @todo Start this series of updates at 2000.
@@ -3627,6 +3658,29 @@ function system_update_2003() {
 
     case 'pgsql':
       $ret[] = update_sql("CREATE INDEX {comments}_status_idx ON {comments} (status)");
+      break;
+  }
+  return $ret;
+}
+
+/**
+ * Add index on users created column.
+ */
+function system_update_2004() {
+  // Already run as system_update_1022?
+  if (variable_get('system_update_1022', FALSE)) {
+    variable_del('system_update_1022');
+    return array();
+  }
+  $ret = array();
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql('ALTER TABLE {users} ADD KEY created (created)');
+      break;
+
+    case 'pgsql':
+      $ret[] = update_sql("CREATE INDEX {users}_created_idx ON {users} (created)");
       break;
   }
   return $ret;
