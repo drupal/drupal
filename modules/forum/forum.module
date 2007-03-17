@@ -473,7 +473,9 @@ function forum_form_container($edit = array()) {
     $form['delete'] = array('#type' => 'submit', '#value' => t('Delete'));
     $form['tid'] = array('#type' => 'value', '#value' => $edit['tid']);
   }
-  $form['#base'] = 'forum_form';
+  $form['#submit']['forum_form_submit'] = array();
+  $form['#validate']['forum_form_validate'] = array();
+  $form['#theme'] = 'forum_form';
 
   return $form;
 }
@@ -524,7 +526,9 @@ function forum_form_forum($edit = array()) {
     $form['delete'] = array('#type' => 'submit', '#value' => t('Delete'));
     $form['tid'] = array('#type' => 'hidden', '#value' => $edit['tid']);
   }
-  $form['#base'] = 'forum_form';
+  $form['#submit']['forum_form_submit'] = array();
+  $form['#validate']['forum_form_validate'] = array();
+  $form['#theme'] = 'forum_form';
 
   return $form;
 }
