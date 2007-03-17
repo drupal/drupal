@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.386 2007/02/28 20:42:50 dries Exp $
+// $Id: forum.module,v 1.387 2007/03/17 18:30:14 dries Exp $
 
 /**
  * @file
@@ -473,7 +473,9 @@ function forum_form_container($edit = array()) {
     $form['delete'] = array('#type' => 'submit', '#value' => t('Delete'));
     $form['tid'] = array('#type' => 'value', '#value' => $edit['tid']);
   }
-  $form['#base'] = 'forum_form';
+  $form['#submit']['forum_form_submit'] = array();
+  $form['#validate']['forum_form_validate'] = array();
+  $form['#theme'] = 'forum_form';
 
   return $form;
 }
@@ -524,7 +526,9 @@ function forum_form_forum($edit = array()) {
     $form['delete'] = array('#type' => 'submit', '#value' => t('Delete'));
     $form['tid'] = array('#type' => 'hidden', '#value' => $edit['tid']);
   }
-  $form['#base'] = 'forum_form';
+  $form['#submit']['forum_form_submit'] = array();
+  $form['#validate']['forum_form_validate'] = array();
+  $form['#theme'] = 'forum_form';
 
   return $form;
 }

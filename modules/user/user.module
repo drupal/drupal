@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.758 2007/03/08 19:03:48 dries Exp $
+// $Id: user.module,v 1.759 2007/03/17 18:30:14 dries Exp $
 
 /**
  * @file
@@ -1652,7 +1652,9 @@ function user_admin_check_user() {
   $form['user']['test'] = array('#type' => 'textfield', '#title' => '', '#description' => t('Enter a username to check if it will be denied or allowed.'), '#size' => 30, '#maxlength' => USERNAME_MAX_LENGTH);
   $form['user']['type'] = array('#type' => 'hidden', '#value' => 'user');
   $form['user']['submit'] = array('#type' => 'submit', '#value' => t('Check username'));
-  $form['#base'] = 'user_admin_access_check';
+  $form['#submit']['user_admin_access_check_submit'] = array();
+  $form['#validate']['user_admin_access_check_validate'] = array();
+  $form['#theme'] = 'user_admin_access_check';
   return $form;
 }
 
@@ -1661,7 +1663,9 @@ function user_admin_check_mail() {
   $form['mail']['test'] = array('#type' => 'textfield', '#title' => '', '#description' => t('Enter an e-mail address to check if it will be denied or allowed.'), '#size' => 30, '#maxlength' => EMAIL_MAX_LENGTH);
   $form['mail']['type'] = array('#type' => 'hidden', '#value' => 'mail');
   $form['mail']['submit'] = array('#type' => 'submit', '#value' => t('Check e-mail'));
-  $form['#base'] = 'user_admin_access_check';
+  $form['#submit']['user_admin_access_check_submit'] = array();
+  $form['#validate']['user_admin_access_check_validate'] = array();
+  $form['#theme'] = 'user_admin_access_check';
   return $form;
 }
 
@@ -1670,7 +1674,9 @@ function user_admin_check_host() {
   $form['host']['test'] = array('#type' => 'textfield', '#title' => '', '#description' => t('Enter a hostname or IP address to check if it will be denied or allowed.'), '#size' => 30, '#maxlength' => 64);
   $form['host']['type'] = array('#type' => 'hidden', '#value' => 'host');
   $form['host']['submit'] = array('#type' => 'submit', '#value' => t('Check hostname'));
-  $form['#base'] = 'user_admin_access_check';
+  $form['#submit']['user_admin_access_check_submit'] = array();
+  $form['#validate']['user_admin_access_check_validate'] = array();
+  $form['#theme'] = 'user_admin_access_check';
   return $form;
 }
 
@@ -2020,7 +2026,9 @@ function user_admin_role() {
       '#type' => 'submit',
       '#value' => t('Add role'),
     );
-    $form['#base'] = 'user_admin_role';
+    $form['#submit']['user_admin_role_submit'] = array();
+    $form['#validate']['user_admin_role_validate'] = array();
+    $form['#theme'] = 'user_admin_role';
   }
   return $form;
 }

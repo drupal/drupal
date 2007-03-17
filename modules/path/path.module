@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.109 2007/03/12 13:01:10 dries Exp $
+// $Id: path.module,v 1.110 2007/03/17 18:30:14 dries Exp $
 
 /**
  * @file
@@ -183,7 +183,9 @@ function path_set_alias($path = NULL, $alias = NULL, $pid = NULL) {
  * Return a form for editing or creating an individual URL alias.
  */
 function path_form($edit = '') {
-  $form['#base'] = 'path_form';
+  $form['#submit']['path_form_submit'] = array();
+  $form['#validate']['path_form_validate'] = array();
+  $form['#theme'] = 'path_form';
 
   $form['src'] = array(
     '#type' => 'textfield',

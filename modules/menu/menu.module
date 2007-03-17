@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.102 2007/01/31 16:38:34 dries Exp $
+// $Id: menu.module,v 1.103 2007/03/17 18:30:14 dries Exp $
 
 /**
  * @file
@@ -324,7 +324,9 @@ function menu_edit_menu_form($type, $mid = 0) {
   $form['type'] = array('#type' => 'value', '#value' => $item['type']);
   $form['submit'] = array('#type' => 'submit', '#value' => t('Submit'));
   // Reuse the submit function of menu_edit_item_form.
-  $form['#base'] = 'menu_edit_item_form';
+  $form['#submit']['menu_edit_item_form_submit'] = array();
+  $form['#validate']['menu_edit_item_form_validate'] = array();
+  $form['#theme'] = 'menu_edit_item_form';
 
   return $form;
 }

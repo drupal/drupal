@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.181 2007/03/07 17:31:40 dries Exp $
+// $Id: form.inc,v 1.182 2007/03/17 18:30:14 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -248,7 +248,7 @@ function drupal_process_form($form_id, &$form) {
   $form_button_counter = array(0, 0);
 
   drupal_prepare_form($form_id, $form);
-  if (($form['#programmed']) || (!empty($_POST) && (($_POST['form_id'] == $form_id) || ($_POST['form_id'] == $form['#base'])))) {
+  if (($form['#programmed']) || (!empty($_POST) && (($_POST['form_id'] == $form_id)))) {
     drupal_validate_form($form_id, $form);
     // IE does not send a button value when there is only one submit button (and no non-submit buttons)
     // and you submit by pressing enter.
@@ -307,11 +307,6 @@ function drupal_prepare_form($form_id, &$form) {
     );
   }
 
-  // If $base is set, it is used in place of $form_id when constructing validation,
-  // submission, and theming functions. Useful for mapping many similar or duplicate
-  // forms with different $form_ids to the same processing functions.
-  $base = isset($form['#base']) ? $form['#base'] : '';
-
   // Add a token, based on either #token or form_id, to any form displayed to
   // authenticated users. This ensures that any submitted form was actually
   // requested previously by the user and protects against cross site request
@@ -347,18 +342,12 @@ function drupal_prepare_form($form_id, &$form) {
     if (function_exists($form_id .'_validate')) {
       $form['#validate'] = array($form_id .'_validate' => array());
     }
-    elseif (function_exists($base .'_validate')) {
-      $form['#validate'] = array($base .'_validate' => array());
-    }
   }
 
   if (!isset($form['#submit'])) {
     if (function_exists($form_id .'_submit')) {
       // We set submit here so that it can be altered.
       $form['#submit'] = array($form_id .'_submit' => array());
-    }
-    elseif (function_exists($base .'_submit')) {
-      $form['#submit'] = array($base .'_submit' => array());
     }
   }
 
@@ -469,14 +458,10 @@ function drupal_submit_form($form_id, $form) {
  */
 function drupal_render_form($form_id, &$form) {
   // Don't override #theme if someone already set it.
-  $base = isset($form['#base']) ? $form['#base'] : '';
 
   if (!isset($form['#theme'])) {
     if (theme_get_function($form_id)) {
       $form['#theme'] = $form_id;
-    }
-    elseif (theme_get_function($base)) {
-      $form['#theme'] = $base;
     }
   }
 

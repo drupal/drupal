@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.107 2007/02/11 08:44:32 dries Exp $
+// $Id: locale.inc,v 1.108 2007/03/17 18:30:14 dries Exp $
 
 /**
  * @file
@@ -75,7 +75,9 @@ function _locale_admin_manage_screen() {
     '#default_value' => $isdefault,
   );
   $form['submit'] = array('#type' => 'submit', '#value' => t('Save configuration'));
-  $form['#base'] = 'locale_admin_manage_screen';
+  $form['#submit']['locale_admin_manage_screen_submit'] = array();
+  $form['#validate']['locale_admin_manage_screen_validate'] = array();
+  $form['#theme'] = 'locale_admin_manage_screen';
 
   return $form;
 }
@@ -162,7 +164,9 @@ function locale_custom_language_form() {
   );
   $form['custom language']['submit'] = array('#type' => 'submit', '#value' => t('Add custom language'));
   // Use the validation and submit functions of the add language form.
-  $form['#base'] = 'locale_add_language_form';
+  $form['#submit']['locale_add_language_form_submit'] = array();
+  $form['#validate']['locale_add_language_form_validate'] = array();
+  $form['#theme'] = 'locale_add_language_form';
   return $form;
 }
 
@@ -294,7 +298,9 @@ function _locale_export_pot_form() {
     '#description' => t('Generate a gettext Portable Object Template (.pot) file with all the interface strings from the Drupal locale database.'),
   );
   $form['export']['submit'] = array('#type' => 'submit', '#value' => t('Export'));
-  $form['#base'] = '_locale_export_po_form';
+  $form['#submit']['_locale_export_po_form_submit'] = array();
+  $form['#validate']['_locale_export_po_form_validate'] = array();
+  $form['#theme'] = '_locale_export_po_form';
   return $form;
 }
 

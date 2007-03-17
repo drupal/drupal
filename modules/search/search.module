@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.214 2007/03/14 18:30:38 dries Exp $
+// $Id: search.module,v 1.215 2007/03/17 18:30:14 dries Exp $
 
 /**
  * @file
@@ -1052,7 +1052,9 @@ function search_box($form_id) {
   // Always go to the search page since the search form is not guaranteed to be
   // on every page.
   $form['#action'] = url('search/node');
-  $form['#base'] = 'search_box_form';
+  $form['#submit']['search_box_form_submit'] = array();
+  $form['#validate']['search_box_form_validate'] = array();
+  $form['#theme'] = 'search_box_form';
 
   return $form;
 }

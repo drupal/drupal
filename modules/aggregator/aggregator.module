@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.331 2007/03/12 13:01:10 dries Exp $
+// $Id: aggregator.module,v 1.332 2007/03/17 18:30:14 dries Exp $
 
 /**
  * @file
@@ -1052,7 +1052,9 @@ function aggregator_page_category() {
 }
 
 function aggregator_page_list($sql, $header, $categorize) {
-  $form['#base'] = 'aggregator_page_list';
+  $form['#submit']['aggregator_page_list_submit'] = array();
+  $form['#validate']['aggregator_page_list_validate'] = array();
+  $form['#theme'] = 'aggregator_page_list';
   $form['header'] = array('#value' => $header);
   $result = pager_query($sql, 20);
   $categories = array();

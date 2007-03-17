@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.456 2007/03/15 15:10:38 unconed Exp $
+// $Id: system.module,v 1.457 2007/03/17 18:30:14 dries Exp $
 
 /**
  * @file
@@ -1075,7 +1075,9 @@ function system_settings_form($form) {
   if (!empty($_POST) && form_get_errors()) {
     drupal_set_message(t('The settings have not been saved because of the errors.'), 'error');
   }
-  $form['#base'] = 'system_settings_form';
+  $form['#submit']['system_settings_form_submit'] = array();
+  $form['#validate']['system_settings_form_validate'] = array();
+  $form['#theme'] = 'system_settings_form';
   return $form;
 }
 
@@ -2163,7 +2165,9 @@ function confirm_form($form, $question, $path, $description = NULL, $yes = NULL,
   $form['actions'] = array('#prefix' => '<div class="container-inline">', '#suffix' => '</div>');
   $form['actions']['submit'] = array('#type' => 'submit', '#value' => $yes ? $yes : t('Confirm'));
   $form['actions']['cancel'] = array('#value' => $cancel);
-  $form['#base'] = 'confirm_form';
+  $form['#submit']['confirm_form_submit'] = array();
+  $form['#validate']['confirm_form_validate'] = array();
+  $form['#theme'] = 'confirm_form';
   return $form;
 }
 
