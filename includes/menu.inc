@@ -666,7 +666,9 @@ function menu_rebuild() {
       '_parent_parts' => $parent_parts,
       '_slashes' => $slashes,
     );
-    $sort[$path] = $item['_depth'] . sprintf('%05d', $item['weight']) . $item['title'];
+    // This sorting works correctly only with positive numbers,
+    // so we shift negative weights to be positive.
+    $sort[$path] = $item['_depth'] . sprintf('%05d', $item['weight'] + 50000) . $item['title'];
     unset($item);
   }
   array_multisort($sort, $menu);
@@ -743,6 +745,7 @@ function menu_rebuild() {
       '_mright' => 0,
       'block callback' => '',
       'description' => '',
+      'position' => '',
       'attributes' => '',
       'query' => '',
       'fragment' => '',
@@ -768,10 +771,10 @@ function menu_rebuild() {
       mid, pid, path, load_functions, to_arg_functions,
       access_callback, access_arguments, page_callback, page_arguments, fit,
       number_parts, visible, parents, depth, has_children, tab, title, parent,
-      type, mleft, mright, block_callback, description,
+      type, mleft, mright, block_callback, description, position,
       link_path, attributes, query, fragment, absolute, html)
       VALUES (%d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, %d,
-      '%s', %d, %d, %d, '%s', '%s', '%s', %d, %d, '%s', '%s',
+      '%s', %d, %d, %d, '%s', '%s', '%s', %d, %d, '%s', '%s', '%s',
       '%s', '%s', '%s', '%s', %d, %d)",
       $item['_mid'], $item['_pid'], $path, $item['load_functions'],
       $item['to_arg_functions'], $item['access callback'],
@@ -781,7 +784,8 @@ function menu_rebuild() {
       $item['_depth'], $has_children, $item['_tab'],
       $item['title'], $item['parent'], $item['type'], $item['_mleft'],
       $item['_mright'], $item['block callback'], $item['description'],
-      $link_path, $item['attributes'], $item['query'], $item['fragment'],
+      $item['position'], $link_path,
+      $item['attributes'], $item['query'], $item['fragment'],
       $item['absolute'], $item['html']);
   }
 }
