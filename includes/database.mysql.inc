@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysql.inc,v 1.67 2007/01/22 02:20:42 unconed Exp $
+// $Id: database.mysql.inc,v 1.68 2007/03/19 01:17:37 unconed Exp $
 
 /**
  * @file
@@ -358,7 +358,7 @@ function db_query_temporary($query) {
   $tablename = array_pop($args);
   array_shift($args);
 
-  $query = preg_replace('/^SELECT/i', 'CREATE TEMPORARY TABLE '. $tablename .' SELECT', db_prefix_tables($query));
+  $query = preg_replace('/^SELECT/i', 'CREATE TEMPORARY TABLE '. $tablename .' Engine=HEAP SELECT', db_prefix_tables($query));
   if (isset($args[0]) and is_array($args[0])) { // 'All arguments in one array' syntax
     $args = $args[0];
   }
