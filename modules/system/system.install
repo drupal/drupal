@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.84 2007/03/16 04:55:07 unconed Exp $
+// $Id: system.install,v 1.85 2007/03/19 01:13:28 unconed Exp $
 
 define('DRUPAL_MINIMUM_PHP',    '4.3.3');
 define('DRUPAL_MINIMUM_MYSQL',  '4.1.0'); // If using MySQL
@@ -352,6 +352,7 @@ function system_install() {
         type int NOT NULL default 0,
         block_callback varchar(255) NOT NULL default '',
         description varchar(255) NOT NULL default '',
+        position varchar(255) NOT NULL default '',
         link_path varchar(255) NOT NULL default '',
         attributes varchar(255) NOT NULL default '',
         query varchar(255) NOT NULL default '',
@@ -836,6 +837,7 @@ function system_install() {
         type int NOT NULL default 0,
         block_callback varchar(255) NOT NULL default '',
         description varchar(255) NOT NULL default '',
+        position varchar(255) NOT NULL default '',
         link_path varchar(255) NOT NULL default '',
         attributes varchar(255) NOT NULL default '',
         query varchar(255) NOT NULL default '',
