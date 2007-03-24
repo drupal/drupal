@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.759 2007/03/17 18:30:14 dries Exp $
+// $Id: user.module,v 1.760 2007/03/24 05:36:30 unconed Exp $
 
 /**
  * @file
@@ -480,7 +480,8 @@ function user_login_block() {
   $form = array(
     '#action' => url($_GET['q'], array('query' => drupal_get_destination())),
     '#id' => 'user-login-form',
-    '#base' => 'user_login',
+    '#validate' => array('user_login_validate' => array()),
+    '#submit' => array('user_login_submit' => array()),
   );
   $form['name'] = array('#type' => 'textfield',
     '#title' => t('Username'),
