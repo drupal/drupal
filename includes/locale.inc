@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.108 2007/03/17 18:30:14 dries Exp $
+// $Id: locale.inc,v 1.109 2007/03/24 19:07:34 unconed Exp $
 
 /**
  * @file
@@ -1549,7 +1549,8 @@ function _locale_get_iso639_list() {
     "ne" => array("Nepali"),
     "ng" => array("Ndonga"),
     "nl" => array("Dutch", "Nederlands"),
-    "no" => array("Norwegian", "Norsk"),
+    "nb" => array("Norwegian Bokmål", "Bokmål"),
+    "nn" => array("Norwegian Nynorsk", "Nynorsk"),
     "nr" => array("South Ndebele"),
     "nv" => array("Navajo"),
     "ny" => array("Chichewa"),
