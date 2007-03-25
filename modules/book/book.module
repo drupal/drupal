@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.412 2007/03/17 18:30:14 dries Exp $
+// $Id: book.module,v 1.413 2007/03/25 21:02:33 dries Exp $
 
 /**
  * @file
@@ -267,7 +267,7 @@ function book_outline($node) {
   );
 
   $form['nid'] = array('#type' => 'value', '#value' => $nid);
-  if ($node->parent) {
+  if (isset($node->parent)) {
     $form['update'] = array('#type' => 'submit',
       '#value' => t('Update book outline'),
     );
