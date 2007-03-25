@@ -547,6 +547,7 @@ function install_missing_modules_error($profile) {
  */
 function install_complete($profile) {
   global $base_url;
+  $output = '';
   // Store install profile for later use.
   variable_set('install_profile', $profile);
 
