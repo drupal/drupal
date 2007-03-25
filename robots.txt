@@ -1,4 +1,4 @@
-# $Id: robots.txt,v 1.7 2007/01/08 12:02:18 dries Exp $
+# $Id: robots.txt,v 1.8 2007/03/25 20:05:19 dries Exp $
 #
 # robots.txt
 #
@@ -34,6 +34,7 @@ Disallow: /xmlrpc.php
 Disallow: /cron.php
 Disallow: /update.php
 Disallow: /install.php
+Disallow: /INSTALL.txt
 Disallow: /INSTALL.mysql.txt
 Disallow: /INSTALL.pgsql.txt
 Disallow: /CHANGELOG.txt
