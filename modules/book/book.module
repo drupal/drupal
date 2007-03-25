@@ -267,7 +267,7 @@ function book_outline($node) {
   );
 
   $form['nid'] = array('#type' => 'value', '#value' => $nid);
-  if ($node->parent) {
+  if (isset($node->parent)) {
     $form['update'] = array('#type' => 'submit',
       '#value' => t('Update book outline'),
     );
