@@ -1,5 +1,5 @@
 <?php
-// $Id: phptemplate.engine,v 1.57 2007/02/15 11:40:19 dries Exp $
+// $Id: phptemplate.engine,v 1.58 2007/03/25 19:18:12 dries Exp $
 
 /**
  * @file
@@ -159,9 +159,8 @@ function phptemplate_page($content, $show_blocks = TRUE) {
     drupal_set_html_head('<link rel="shortcut icon" href="'. check_url(theme_get_setting('favicon')) .'" type="image/x-icon" />');
   }
 
-  /**
-  * Populate sidebars.
-  */
+  // Populate sidebars
+  $layout = 'none';
   if ($show_blocks) {
     global $sidebar_indicator;
     /**
@@ -179,9 +178,6 @@ function phptemplate_page($content, $show_blocks = TRUE) {
       $layout = ($layout == 'left') ? 'both' : 'right';
     }
     $sidebar_indicator = NULL;
-  }
-  else {
-   $layout = 'none';
   }
 
   // Construct page title
