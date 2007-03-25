@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.341 2007/02/27 12:48:33 dries Exp $
+// $Id: taxonomy.module,v 1.342 2007/03/25 19:06:53 dries Exp $
 
 /**
  * @file
@@ -398,7 +398,6 @@ function taxonomy_form_term($vocabulary, $edit = array()) {
 
     if ($vocabulary->hierarchy == 1) {
       $form['parent'] = _taxonomy_term_select(t('Parent'), 'parent', $parent, $vocabulary_id, l(t('Parent term'), 'admin/help/taxonomy', array('fragment' => 'parent')) .'.', 0, '<'. t('root') .'>', $exclude);
-      $form['parent'] = _taxonomy_term_select(t('Parent'), 'parent', $parent, $vocabulary->vid, l(t('Parent term'), 'admin/help/taxonomy', NULL, NULL, 'parent') .'.', 0, '<'. t('root') .'>', $exclude);
     }
     elseif ($vocabulary->hierarchy == 2) {
       $form['parent'] = _taxonomy_term_select(t('Parents'), 'parent', $parent, $vocabulary_id, l(t('Parent terms'), 'admin/help/taxonomy', array('fragment' => 'parent')) .'.', 1, '<'. t('root') .'>', $exclude);
