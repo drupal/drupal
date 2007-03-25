@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.147 2007/01/29 19:25:19 dries Exp $
+// $Id: bootstrap.inc,v 1.148 2007/03/25 20:54:33 dries Exp $
 
 /**
  * @file
@@ -742,6 +742,7 @@ function drupal_anonymous_user($session = '') {
   $user->roles = array();
   $user->roles[DRUPAL_ANONYMOUS_RID] = 'anonymous user';
   $user->session = $session;
+  $user->cache = 0;
   return $user;
 }
 
