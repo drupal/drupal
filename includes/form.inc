@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.182 2007/03/17 18:30:14 dries Exp $
+// $Id: form.inc,v 1.183 2007/03/25 19:57:56 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -1540,7 +1540,11 @@ function theme_file($element) {
  *   A string representing the form element.
  */
 function theme_form_element($element, $value) {
-  $output  = '<div class="form-item">'."\n";
+  $output  = '<div class="form-item"';
+  if (!empty($element['#id'])) {
+    $output .= ' id="'. $element['#id'] .'-wrapper"';
+  }
+  $output .= ">\n";
   $required = !empty($element['#required']) ? '<span class="form-required" title="'. t('This field is required.') .'">*</span>' : '';
 
   if (!empty($element['#title'])) {
