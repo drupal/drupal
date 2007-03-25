@@ -34,6 +34,7 @@ Disallow: /xmlrpc.php
 Disallow: /cron.php
 Disallow: /update.php
 Disallow: /install.php
+Disallow: /INSTALL.txt
 Disallow: /INSTALL.mysql.txt
 Disallow: /INSTALL.pgsql.txt
 Disallow: /CHANGELOG.txt
