@@ -32,7 +32,9 @@ function default_profile_details() {
  *   screen.
  */
 function default_profile_final() {
-  // Insert default user-defined node types into the database.
+  // Insert default user-defined node types into the database. For a complete
+  // list of available node type attributes, refer to the node type API
+  // documentation at: http://api.drupal.org/api/HEAD/function/hook_node_info.
   $types = array(
     array(
       'type' => 'page',
