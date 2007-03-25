@@ -1,5 +1,5 @@
 <?php
-// $Id: default.profile,v 1.6 2007/02/04 21:20:50 dries Exp $
+// $Id: default.profile,v 1.7 2007/03/25 20:49:06 dries Exp $
 
 /**
  * Return an array of the modules to be enabled when this profile is installed.
@@ -32,7 +32,9 @@ function default_profile_details() {
  *   screen.
  */
 function default_profile_final() {
-  // Insert default user-defined node types into the database.
+  // Insert default user-defined node types into the database. For a complete
+  // list of available node type attributes, refer to the node type API
+  // documentation at: http://api.drupal.org/api/HEAD/function/hook_node_info.
   $types = array(
     array(
       'type' => 'page',
