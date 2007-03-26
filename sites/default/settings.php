@@ -1,5 +1,5 @@
 <?php
-// $Id: settings.php,v 1.52 2007/03/26 06:39:10 dries Exp $
+// $Id: settings.php,v 1.53 2007/03/26 06:43:12 dries Exp $
 
 /**
  * @file
@@ -112,7 +112,7 @@ $db_prefix = '';
  * It is not allowed to have a trailing slash; Drupal will add it
  * for you.
  */
-$base_url = 'http://localhost';  // NO trailing slash!
+//$base_url = 'http://localhost';  // NO trailing slash!
 
 /**
  * PHP settings:
