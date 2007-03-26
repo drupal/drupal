@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.102 2007/02/15 11:40:18 dries Exp $
+// $Id: blogapi.module,v 1.103 2007/03/26 06:30:06 dries Exp $
 
 /**
  * @file
@@ -327,7 +327,7 @@ function blogapi_blogger_get_recent_posts($appkey, $blogid, $username, $password
   else {
     $result = db_query_range("SELECT n.nid, n.title, n.created, u.name FROM {node} n, {users} u WHERE n.uid = u.uid AND n.type = '%s' AND n.uid = %d ORDER BY n.created DESC", $type, $user->uid, 0, $number_of_posts);
   }
-  $blogs = array ();
+  $blogs = array();
   while ($blog = db_fetch_object($result)) {
     $blogs[] = _blogapi_get_post($blog, $bodies);
   }
@@ -383,7 +383,7 @@ function blogapi_metaweblog_get_category_list($blogid, $username, $password) {
       foreach ($terms as $term) {
         $term_name = $term->name;
         foreach (module_invoke('taxonomy', 'get_parents', $term->tid, 'tid') as $parent) {
-          $term_name = $parent->name . '/' . $term_name;
+          $term_name = $parent->name .'/'. $term_name;
         }
         $categories[] = array('categoryName' => $term_name, 'categoryId' => $term->tid);
       }
@@ -421,7 +421,7 @@ function blogapi_mt_get_post_categories($postid, $username, $password) {
   foreach ($terms as $term) {
     $term_name = $term->name;
     foreach (module_invoke('taxonomy', 'get_parents', $term->tid, 'tid') as $parent) {
-      $term_name = $parent->name . '/' . $term_name;
+      $term_name = $parent->name .'/'. $term_name;
     }
     $categories[] = array('categoryName' => $term_name, 'categoryId' => $term->tid, 'isPrimary' => TRUE);
   }
@@ -634,7 +634,7 @@ function _blogapi_mt_extra(&$node, $struct) {
     $node->body = $struct['mt_excerpt'] .'<!--break-->'.$node->body;
   }
   if ($struct['mt_text_more']) {
-    $node->body = $node->body . '<!--extended-->' . $struct['mt_text_more'];
+    $node->body = $node->body .'<!--extended-->'. $struct['mt_text_more'];
   }
 
   // mt_convert_breaks
@@ -653,7 +653,7 @@ function _blogapi_mt_extra(&$node, $struct) {
 }
 
 function _blogapi_get_post($node, $bodies = TRUE) {
-  $xmlrpcval = array (
+  $xmlrpcval = array(
     'userid' => $node->name,
     'dateCreated' => xmlrpc_date($node->created),
     'title' => $node->title,
