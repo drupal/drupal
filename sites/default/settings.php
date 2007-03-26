@@ -112,7 +112,7 @@ $db_prefix = '';
  * It is not allowed to have a trailing slash; Drupal will add it
  * for you.
  */
-$base_url = 'http://localhost/doug6lang';  // NO trailing slash!
+$base_url = 'http://localhost';  // NO trailing slash!
 
 /**
  * PHP settings:
