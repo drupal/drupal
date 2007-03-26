@@ -267,7 +267,7 @@ function path_nodeapi(&$node, $op, $arg) {
 /**
  * Implementation of hook_form_alter().
  */
-function path_form_alter($form_id, &$form) {
+function path_form_alter(&$form, $form_id) {
   if (isset($form['type']) && $form['type']['#value'] .'_node_form' == $form_id) {
     $path = isset($form['#node']->path) ? $form['#node']->path : NULL;
     $form['path'] = array(

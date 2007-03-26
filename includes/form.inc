@@ -351,10 +351,7 @@ function drupal_prepare_form($form_id, &$form) {
     }
   }
 
-  foreach (module_implements('form_alter') as $module) {
-    $function = $module .'_form_alter';
-    $function($form_id, $form);
-  }
+  drupal_alter('form', $form, $form_id);
 
   $form = form_builder($form_id, $form);
 }

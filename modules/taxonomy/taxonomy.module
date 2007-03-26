@@ -39,10 +39,7 @@ function taxonomy_link($type, $node = NULL) {
     }
 
     // We call this hook again because some modules and themes call taxonomy_link('taxonomy terms') directly
-    foreach (module_implements('link_alter') as $module) {
-      $function = $module .'_link_alter';
-      $function($node, $links);
-    }
+    drupal_alter('link', $links, $node);
 
     return $links;
   }
@@ -654,7 +651,7 @@ function taxonomy_get_vocabularies($type = NULL) {
  * Implementation of hook_form_alter().
  * Generate a form for selecting terms to associate with a node.
  */
-function taxonomy_form_alter($form_id, &$form) {
+function taxonomy_form_alter(&$form, $form_id) {
   if (isset($form['type']) && $form['type']['#value'] .'_node_form' == $form_id) {
     $node = $form['#node'];
 

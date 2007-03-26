@@ -172,7 +172,7 @@ function menu_perm() {
  * Implementation of hook_form_alter().
  * Add menu item fields to the node form.
  */
-function menu_form_alter($form_id, &$form) {
+function menu_form_alter(&$form, $form_id) {
   if (isset($form['type']) && $form['type']['#value'] .'_node_form' == $form_id) {
     $item = array();
     if ($form['nid']['#value'] > 0) {
