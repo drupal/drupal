@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.620 2007/03/26 00:35:58 dries Exp $
+// $Id: common.inc,v 1.621 2007/03/26 00:45:51 unconed Exp $
 
 /**
  * @file
@@ -2183,12 +2183,12 @@ function drupal_alter($type, &$data = array()) {
   // Hang onto a reference to the data array so that it isn't blown away later.
   $args = array(&$data);
 
-  // Now, use func_get_args() to pull in any aditional paramaters passed into
+  // Now, use func_get_args() to pull in any additional parameters passed into
   // the drupal_alter() call.
-  $aditional_args = func_get_args();
-  array_shift($aditional_args);
-  array_shift($aditional_args);
-  $args = array_merge($args, $aditional_args);
+  $additional_args = func_get_args();
+  array_shift($additional_args);
+  array_shift($additional_args);
+  $args = array_merge($args, $additional_args);
 
   foreach (module_implements($type .'_alter') as $module) {
     $function = $module .'_'. $type .'_alter';
