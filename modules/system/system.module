@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.457 2007/03/17 18:30:14 dries Exp $
+// $Id: system.module,v 1.458 2007/03/26 00:39:54 dries Exp $
 
 /**
  * @file
@@ -2165,8 +2165,6 @@ function confirm_form($form, $question, $path, $description = NULL, $yes = NULL,
   $form['actions'] = array('#prefix' => '<div class="container-inline">', '#suffix' => '</div>');
   $form['actions']['submit'] = array('#type' => 'submit', '#value' => $yes ? $yes : t('Confirm'));
   $form['actions']['cancel'] = array('#value' => $cancel);
-  $form['#submit']['confirm_form_submit'] = array();
-  $form['#validate']['confirm_form_validate'] = array();
   $form['#theme'] = 'confirm_form';
   return $form;
 }
