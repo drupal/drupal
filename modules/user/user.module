@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.760 2007/03/24 05:36:30 unconed Exp $
+// $Id: user.module,v 1.761 2007/03/26 00:35:59 dries Exp $
 
 /**
  * @file
@@ -1605,13 +1605,7 @@ function user_view($account) {
     }
   }
 
-  // Let modules change the returned fields - useful for personal privacy
-  // controls. Since modules communicate changes by reference, we cannot use
-  // module_invoke_all().
-  foreach (module_implements('profile_alter') as $module) {
-    $function = $module .'_profile_alter';
-    $function($account, $fields);
-  }
+  drupal_alter('profile', $fields, $account);
 
   drupal_set_title(check_plain($account->name));
   return theme('user_profile', $account, $fields);

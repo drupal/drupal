@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.791 2007/03/17 18:30:14 dries Exp $
+// $Id: node.module,v 1.792 2007/03/26 00:35:58 dries Exp $
 
 /**
  * @file
@@ -673,11 +673,7 @@ function node_view($node, $teaser = FALSE, $page = FALSE, $links = TRUE) {
 
   if ($links) {
     $node->links = module_invoke_all('link', 'node', $node, !$page);
-
-    foreach (module_implements('link_alter') AS $module) {
-      $function = $module .'_link_alter';
-      $function($node, $node->links);
-    }
+    drupal_alter('link', $node->links, $node);
   }
 
   // Set the proper node part, then unset unused $node part so that a bad
@@ -2456,7 +2452,7 @@ function node_update_index() {
 /**
  * Implementation of hook_form_alter().
  */
-function node_form_alter($form_id, &$form) {
+function node_form_alter(&$form, $form_id) {
   // Advanced node search form
   if ($form_id == 'search_form' && $form['module']['#value'] == 'node' && user_access('use advanced search')) {
     // Keyword boxes:

@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.619 2007/03/08 19:33:55 dries Exp $
+// $Id: common.inc,v 1.620 2007/03/26 00:35:58 dries Exp $
 
 /**
  * @file
@@ -1993,11 +1993,12 @@ function drupal_mail($mailkey, $to, $subject, $body, $from = NULL, $headers = ar
     $defaults['From'] = $defaults['Reply-To'] = $defaults['Return-Path'] = $defaults['Errors-To'] = $from;
   }
   $headers = array_merge($defaults, $headers);
-  // Custom hook traversal to allow pass by reference
-  foreach (module_implements('mail_alter') AS $module) {
-    $function = $module .'_mail_alter';
-    $function($mailkey, $to, $subject, $body, $from, $headers);
-  }
+
+  // Bundle up the variables into a structured array for altering.
+  $message = array('#mail_id' => $mailkey, '#to' => $to, '#subject' => $subject, '#body' => $body, '#from' => $from, '#headers' => $headers);
+  drupal_alter('mail', $message);
+  list($mailkey, $to, $subject, $body, $from, $headers) = $message;
+
   // Allow for custom mail backend
   if (variable_get('smtp_library', '') && file_exists(variable_get('smtp_library', ''))) {
     include_once './' . variable_get('smtp_library', '');
@@ -2162,6 +2163,39 @@ function drupal_system_listing($mask, $directory, $key = 'name', $min_depth = 1)
 
   return $files;
 }
+
+
+/**
+ * This dispatch function hands off structured Drupal arrays to
+ * type-specific *_alter implementations. It ensures a consistent
+ * interface for all altering operations.
+ *
+ * @param $type
+ *   The data type of the structured array. 'form', 'links',
+ *   'node_content', and so on are several examples.
+ * @param $data
+ *   The structured array to be altered.
+ * @param ...
+ *   Any additional params will be passed on to the called
+ *   hook_$type_alter functions.
+ */
+function drupal_alter($type, &$data = array()) {
+  // Hang onto a reference to the data array so that it isn't blown away later.
+  $args = array(&$data);
+
+  // Now, use func_get_args() to pull in any aditional paramaters passed into
+  // the drupal_alter() call.
+  $aditional_args = func_get_args();
+  array_shift($aditional_args);
+  array_shift($aditional_args);
+  $args = array_merge($args, $aditional_args);
+
+  foreach (module_implements($type .'_alter') as $module) {
+    $function = $module .'_'. $type .'_alter';
+    call_user_func_array($function, $args);
+  }
+}
+
 
 /**
  * Renders HTML given a structured array tree. Recursively iterates over each

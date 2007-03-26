@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.154 2007/03/06 16:43:10 dries Exp $
+// $Id: upload.module,v 1.155 2007/03/26 00:35:59 dries Exp $
 
 /**
  * @file
@@ -333,7 +333,7 @@ function _upload_prepare(&$node) {
   }
 }
 
-function upload_form_alter($form_id, &$form) {
+function upload_form_alter(&$form, $form_id) {
   if ($form_id == 'node_type_form' && isset($form['identity']['type'])) {
     $form['workflow']['upload'] = array(
       '#type' => 'radios',
@@ -883,10 +883,7 @@ function upload_js() {
   _upload_validate($node);
 
   $form = _upload_form($node);
-  foreach (module_implements('form_alter') as $module) {
-    $function = $module .'_form_alter';
-    $function('upload_js', $form);
-  }
+  drupal_alter('form', $form, 'upload_js');
   $form = form_builder('upload_js', $form);
   $output = theme('status_messages') . drupal_render($form);
   // We send the updated file attachments form.

@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.103 2007/03/17 18:30:14 dries Exp $
+// $Id: menu.module,v 1.104 2007/03/26 00:35:58 dries Exp $
 
 /**
  * @file
@@ -172,7 +172,7 @@ function menu_perm() {
  * Implementation of hook_form_alter().
  * Add menu item fields to the node form.
  */
-function menu_form_alter($form_id, &$form) {
+function menu_form_alter(&$form, $form_id) {
   if (isset($form['type']) && $form['type']['#value'] .'_node_form' == $form_id) {
     $item = array();
     if ($form['nid']['#value'] > 0) {

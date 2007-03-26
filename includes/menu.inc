@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.157 2007/03/19 01:13:28 unconed Exp $
+// $Id: menu.inc,v 1.158 2007/03/26 00:35:58 dries Exp $
 
 /**
  * @file
@@ -552,10 +552,7 @@ function menu_rebuild() {
   // TODO: split menu and menu links storage.
   db_query('DELETE FROM {menu}');
   $menu = module_invoke_all('menu');
-  foreach (module_implements('menu_alter') as $module) {
-    $function = $module .'_menu_alter';
-    $function($menu);
-  }
+  drupal_alter('menu', $menu);
   $mid = 1;
   // First pass: separate callbacks from pathes, making pathes ready for
   // matching. Calculate fitness, and fill some default values.

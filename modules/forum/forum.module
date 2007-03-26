@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.387 2007/03/17 18:30:14 dries Exp $
+// $Id: forum.module,v 1.388 2007/03/26 00:35:58 dries Exp $
 
 /**
  * @file
@@ -207,7 +207,7 @@ function forum_admin_settings() {
 /**
  * Implementation of hook_form_alter().
  */
-function forum_form_alter($form_id, &$form) {
+function forum_form_alter(&$form, $form_id) {
   // hide critical options from forum vocabulary
   if ($form_id == 'taxonomy_form_vocabulary') {
     if ($form['vid']['#value'] == _forum_get_vid()) {
@@ -657,7 +657,7 @@ function _forum_parent_select($tid, $title, $child_type) {
   return array('#type' => 'select', '#title' => $title, '#default_value' => $parent, '#options' => $options, '#description' => $description, '#required' => TRUE);
 }
 
-function forum_link_alter(&$node, &$links) {
+function forum_link_alter(&$links, $node) {
   foreach ($links as $module => $link) {
     if (strstr($module, 'taxonomy_term')) {
       // Link back to the forum and not the taxonomy term page. We'll only

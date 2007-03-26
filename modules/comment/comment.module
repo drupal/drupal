@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.529 2007/03/12 13:08:02 dries Exp $
+// $Id: comment.module,v 1.530 2007/03/26 00:35:58 dries Exp $
 
 /**
  * @file
@@ -374,7 +374,7 @@ function comment_link($type, $node = NULL, $teaser = FALSE) {
   return $links;
 }
 
-function comment_form_alter($form_id, &$form) {
+function comment_form_alter($form, $form_id) {
   if ($form_id == 'node_type_form' && isset($form['identity']['type'])) {
     $form['workflow']['comment'] = array(
       '#type' => 'radios',
@@ -403,6 +403,7 @@ function comment_form_alter($form_id, &$form) {
       );
     }
   }
+  return $form;
 }
 
 /**
@@ -963,11 +964,7 @@ function comment_render($node, $cid = 0) {
       if ($comment = db_fetch_object($result)) {
         $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
         $links = module_invoke_all('link', 'comment', $comment, 1);
-
-        foreach (module_implements('link_alter') as $module) {
-          $function = $module .'_link_alter';
-          $function($node, $links);
-        }
+        drupal_alter('link', $links, $node);
 
         $output .= theme('comment_view', $comment, $links);
       }
