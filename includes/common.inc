@@ -2179,7 +2179,7 @@ function drupal_system_listing($mask, $directory, $key = 'name', $min_depth = 1)
  *   Any additional params will be passed on to the called
  *   hook_$type_alter functions.
  */
-function drupal_alter($type, &$data = array()) {
+function drupal_alter($type, &$data) {
   // Hang onto a reference to the data array so that it isn't blown away later.
   $args = array(&$data);
 
