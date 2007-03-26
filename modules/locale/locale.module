@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.160 2007/02/27 12:29:22 dries Exp $
+// $Id: locale.module,v 1.161 2007/03/26 01:32:22 dries Exp $
 
 /**
  * @file
@@ -25,6 +25,7 @@ function locale_help($section) {
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@locale">Locale page</a>.', array('@locale' => 'http://drupal.org/handbook/modules/locale/')) .'</p>';
       return $output;
     case 'admin/build/locale':
+    case 'admin/build/locale/language':
     case 'admin/build/locale/language/overview':
       return t("<p>Drupal provides support for the translation of its interface text into different languages. This page provides an overview of the installed languages. You can add a language on the <a href=\"@add-language\">add language page</a>, or directly by <a href=\"@import\">importing a translation</a>. If multiple languages are enabled, registered users will be able to set their preferred language. The site default will be used for anonymous visitors and for users without their own settings.</p><p>Drupal interface translations may be added or extended by several courses: by <a href=\"@import\">importing</a> an existing translation, by <a href=\"@search\">translating everything</a> from scratch, or by a combination of these approaches.</p>", array("@search" => url("admin/build/locale/string/search"), "@import" => url("admin/build/locale/language/import"), "@add-language" => url("admin/build/locale/language/add")));
     case 'admin/build/locale/language/add':
@@ -35,6 +36,8 @@ function locale_help($section) {
       return '<p>'. t("This page allows you to export Drupal strings. The first option is to export a translation so it can be shared. The second option generates a translation template, which contains all Drupal strings, but without their translations. You can use this template to start a new translation using various software packages designed for this task.") .'</p>';
     case 'admin/build/locale/string/search':
       return '<p>'. t("It is often convenient to get the strings from your setup on the <a href=\"@export\">export page</a>, and use a desktop Gettext translation editor to edit the translations. On this page you can search in the translated and untranslated strings, and the default English texts provided by Drupal.", array("@export" => url("admin/build/locale/language/export"))) .'</p>';
+    case 'admin/build/locale/language/configure':
+      return '<p>'. t('The language used to display a web page is determined with a negotiation algorithm. You can choose how this algorithm should work. By default, there is no negotiation and the default language is used. You can use path prefixes (like "de" and "it" for German and Italian content) with different fallback options, so you can have web addresses like /de/contact and /it/contact. Alternatively you can use custom domains like de.example.com and it.example.com. Customize path prefixes and set domain names on the <a href="@languages">language editing pages</a>.', array('@languages' => url('admin/build/locale/language/overview'))) .'</p>';
   }
 }
 
@@ -44,8 +47,8 @@ function locale_help($section) {
 function locale_menu() {
   // Main admin menu item
   $items['admin/build/locale'] = array(
-    'title' => t('Localization'),
-    'description' => t('Configure site localization and user interface translation.'),
+    'title' => t('Languages'),
+    'description' => t('Configure languages and user interface translation.'),
     'page callback' => 'locale_admin_manage',
     'access arguments' => array('administer locales'),
   );
@@ -56,8 +59,8 @@ function locale_menu() {
     'weight' => -10,
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
-  $items['admin/build/locale/string/search'] = array(
-    'title' => t('Manage strings'),
+  $items['admin/build/locale/string'] = array(
+    'title' => t('Manage interface strings'),
     'page callback' => 'locale_string_search',
     'weight' => 10,
     'type' => MENU_LOCAL_TASK,
@@ -76,13 +79,32 @@ function locale_menu() {
     'weight' => 5,
     'type' => MENU_LOCAL_TASK,
   );
-  $items['admin/build/locale/language/import'] = array(
+  $items['admin/build/locale/language/configure'] = array(
+    'title' => t('Configure'),
+    'page callback' => 'locale_admin_manage_configure',
+    'weight' => 10,
+    'type' => MENU_LOCAL_TASK,
+  );
+  $items['admin/build/locale/language/edit/%'] = array(
+    'title' => t('Edit language'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('locale_admin_manage_edit', 5),
+    'type' => MENU_CALLBACK,
+  );
+
+  // Manage interface translations subtabs
+  $items['admin/build/locale/string/search'] = array(
+    'title' => t('Search'),
+    'weight' => 0,
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
+  $items['admin/build/locale/string/import'] = array(
     'title' => t('Import'),
     'page callback' => 'locale_admin_import',
     'weight' => 10,
     'type' => MENU_LOCAL_TASK,
   );
-  $items['admin/build/locale/language/export'] = array(
+  $items['admin/build/locale/string/export'] = array(
     'title' => t('Export'),
     'page callback' => 'locale_admin_export',
     'weight' => 20,
@@ -124,12 +146,17 @@ function locale_perm() {
  * Implementation of hook_user().
  */
 function locale_user($type, $edit, &$user, $category = NULL) {
-  $languages = locale_supported_languages();
-  if ($type == 'form' && $category == 'account' && count($languages['name']) > 1) {
+  if ($type == 'form' && $category == 'account' && variable_get('language_count', 1) > 1 && variable_get('language_negotiation', LANGUAGE_NEGOTIATION_NONE) == LANGUAGE_NEGOTIATION_PATH) {
+    $languages = language_list('enabled');
+    $languages = $languages['1'];
     if ($user->language == '') {
-      $user->language = key($languages['name']);
+      $default = language_default();
+      $user->language = $default->language;
     }
-    $languages['name'] = array_map('check_plain', array_map('t', $languages['name']));
+    $names = array();
+    foreach($languages as $langcode => $language) {
+      $names[$langcode] = t($language->name) .' ('. $language->native .')';
+    }
     $form['locale'] = array('#type' => 'fieldset',
       '#title' => t('Interface language settings'),
       '#weight' => 1,
@@ -137,12 +164,30 @@ function locale_user($type, $edit, &$user, $category = NULL) {
     $form['locale']['language'] = array('#type' => 'radios',
       '#title' => t('Language'),
       '#default_value' => $user->language,
-      '#options' => $languages['name'],
+      '#options' => $names,
       '#description' => t('Selecting a different locale will change the interface language of the site.'),
     );
     return $form;
   }
 }
+
+/**
+ * Implementation of hook_form_alter(). Adds language fields to forms.
+ */
+function locale_form_alter($form_id, &$form) {
+  switch ($form_id) {
+    case 'path_admin_edit':
+      $form['language'] = array(
+        '#type' => 'radios',
+        '#title' => t('Language'),
+        '#options' => array('' => t('All languages')) + locale_language_list('name'),
+        '#default_value' => $form['#alias'] ? $form['#alias']['language'] : '',
+        '#weight' => -10
+      );
+      break;
+  }
+}
+
 
 // ---------------------------------------------------------------------------------
 // Locale core functionality (needed on all page loads)
@@ -153,16 +198,14 @@ function locale_user($type, $edit, &$user, $category = NULL) {
  * This function is called from t() to translate a string if needed.
  */
 function locale($string) {
-  global $locale;
+  global $language;
   static $locale_t;
 
   // Store database cached translations in a static var.
   if (!isset($locale_t)) {
-    $cache = cache_get("locale:$locale", 'cache');
-
-    if (!$cache) {
+    if (!($cache = cache_get('locale:'. $language->language, 'cache'))) {
       locale_refresh_cache();
-      $cache = cache_get("locale:$locale", 'cache');
+      $cache = cache_get('locale:'. $language->language, 'cache');
     }
     $locale_t = unserialize($cache->data);
   }
@@ -175,7 +218,7 @@ function locale($string) {
 
   // We do not have this translation cached, so get it from the DB.
   else {
-    $result = db_query("SELECT s.lid, t.translation FROM {locales_source} s INNER JOIN {locales_target} t ON s.lid = t.lid WHERE s.source = '%s' AND t.locale = '%s'", $string, $locale);
+    $result = db_query("SELECT s.lid, t.translation FROM {locales_source} s INNER JOIN {locales_target} t ON s.lid = t.lid WHERE s.source = '%s' AND t.language = '%s'", $string, $language->language);
     // Translation found
     if ($trans = db_fetch_object($result)) {
       if (!empty($trans->translation)) {
@@ -189,20 +232,20 @@ function locale($string) {
       $result = db_query("SELECT lid, source FROM {locales_source} WHERE source = '%s'", $string);
       // We have no such translation
       if ($obj = db_fetch_object($result)) {
-        if ($locale) {
-          db_query("INSERT INTO {locales_target} (lid, locale, translation) VALUES (%d, '%s', '')", $obj->lid, $locale);
+        if ($language) {
+          db_query("INSERT INTO {locales_target} (lid, language, translation) VALUES (%d, '%s', '')", $obj->lid, $language->language);
         }
       }
       // We have no such source string
       else {
         db_query("INSERT INTO {locales_source} (location, source) VALUES ('%s', '%s')", request_uri(), $string);
-        if ($locale) {
+        if ($language) {
           $lid = db_fetch_object(db_query("SELECT lid FROM {locales_source} WHERE source = '%s'", $string));
-          db_query("INSERT INTO {locales_target} (lid, locale, translation) VALUES (%d, '%s', '')", $lid->lid, $locale);
+          db_query("INSERT INTO {locales_target} (lid, language, translation) VALUES (%d, '%s', '')", $lid->lid, $language->language);
         }
       }
       // Clear locale cache in DB
-      cache_clear_all("locale:$locale", 'cache');
+      cache_clear_all('locale:' . $language->language, 'cache');
     }
   }
 
@@ -215,46 +258,17 @@ function locale($string) {
  * We only store short strings to improve performance and consume less memory.
  */
 function locale_refresh_cache() {
-  $languages = locale_supported_languages();
+  $languages = language_list('enabled');
+  $languages = $languages['1'];
 
-  foreach (array_keys($languages['name']) as $locale) {
-    $result = db_query("SELECT s.source, t.translation, t.locale FROM {locales_source} s INNER JOIN {locales_target} t ON s.lid = t.lid WHERE t.locale = '%s' AND LENGTH(s.source) < 75", $locale);
+  foreach ($languages as $language) {
+    $result = db_query("SELECT s.source, t.translation, t.language FROM {locales_source} s INNER JOIN {locales_target} t ON s.lid = t.lid WHERE t.language = '%s' AND LENGTH(s.source) < 75", $language->language);
     $t = array();
     while ($data = db_fetch_object($result)) {
       $t[$data->source] = (empty($data->translation) ? TRUE : $data->translation);
     }
-    cache_set("locale:$locale", 'cache', serialize($t));
+    cache_set('locale:' . $language->language, 'cache', serialize($t));
   }
-}
-
-/**
- * Returns list of languages supported on this site.
- *
- * @param $reset Refresh cached language list.
- * @param $getall Return all languages (even disabled ones)
- */
-function locale_supported_languages($reset = FALSE, $getall = FALSE) {
-  static $enabled = NULL;
-  static $all = NULL;
-
-  if ($reset) {
-    unset($enabled); unset($all);
-  }
-
-  if (!isset($enabled)) {
-    $enabled = $all = array();
-    $all['name'] = $all['formula'] = $enabled['name'] = $enabled['formula'] = array();
-    $result = db_query('SELECT locale, name, formula, enabled FROM {locales_meta} ORDER BY isdefault DESC, enabled DESC, name ASC');
-    while ($row = db_fetch_object($result)) {
-      $all['name'][$row->locale] = $row->name;
-      $all['formula'][$row->locale] = $row->formula;
-      if ($row->enabled) {
-        $enabled['name'][$row->locale] = $row->name;
-        $enabled['formula'][$row->locale] = $row->formula;
-      }
-    }
-  }
-  return $getall ? $all : $enabled;
 }
 
 /**
@@ -263,13 +277,12 @@ function locale_supported_languages($reset = FALSE, $getall = FALSE) {
  * The index is computed from the formula of this language.
  */
 function locale_get_plural($count) {
-  global $locale;
+  global $language;
   static $locale_formula, $plurals = array();
 
   if (!isset($plurals[$count])) {
     if (!isset($locale_formula)) {
-      $languages = locale_supported_languages();
-      $locale_formula = $languages['formula'][$locale];
+      $locale_formula = $language->formula;
     }
     if ($locale_formula) {
       $n = $count;
@@ -282,6 +295,34 @@ function locale_get_plural($count) {
     }
   }
   return $plurals[$count];
+}
+
+
+/**
+ * Returns a language name
+ */
+function locale_language_name($lang) {
+  static $list = NULL;
+  if (!isset($list)) {
+    $list = locale_language_list();
+  }
+  return ($lang && isset($list[$lang])) ? $list[$lang] : t('All');
+}
+
+/**
+ * Returns array of language names
+ *
+ * @param $field
+ *   'name' => names in current language, localized
+ *   'native' => native names
+ */
+function locale_language_list($field = 'name') {
+  $languages = language_list('enabled');
+  $list = array();
+  foreach($languages[1] as $language) {
+    $list[$language->language] = ($field == 'name') ? t($language->name) : $language->$field;
+  }
+  return $list;
 }
 
 // ---------------------------------------------------------------------------------
@@ -308,14 +349,15 @@ function locale_admin_manage_delete_form($langcode) {
   }
 
   // For other locales, warn user that data loss is ahead.
-  $languages = locale_supported_languages(FALSE, TRUE);
+  $languages = language_list();
 
-  if (!isset($languages['name'][$langcode])) {
+  if (!isset($languages[$langcode])) {
     drupal_not_found();
   }
   else {
     $form['langcode'] = array('#type' => 'value', '#value' => $langcode);
-    return confirm_form($form, t('Are you sure you want to delete the language %name?', array('%name' => t($languages['name'][$langcode]))), 'admin/build/locale/language/overview', t('Deleting a language will remove all data associated with it. This action cannot be undone.'), t('Delete'), t('Cancel'));
+    $form['#submit']['locale_admin_manage_delete_form_submit'] = array();
+    return confirm_form($form, t('Are you sure you want to delete the language %name?', array('%name' => t($languages[$langcode]->name))), 'admin/build/locale/language/overview', t('Deleting a language will remove all data associated with it. This action cannot be undone.'), t('Delete'), t('Cancel'));
   }
 }
 
@@ -323,11 +365,11 @@ function locale_admin_manage_delete_form($langcode) {
  * Process language deletion submissions.
  */
 function locale_admin_manage_delete_form_submit($form_id, $form_values) {
-  $languages = locale_supported_languages(FALSE, TRUE);
-  if (isset($languages['name'][$form_values['langcode']])) {
-    db_query("DELETE FROM {locales_meta} WHERE locale = '%s'", $form_values['langcode']);
-    db_query("DELETE FROM {locales_target} WHERE locale = '%s'", $form_values['langcode']);
-    $message = t('The language %locale has been removed.', array('%locale' => t($languages['name'][$form_values['langcode']])));
+  $languages = language_list();
+  if (isset($languages[$form_values['langcode']])) {
+    db_query("DELETE FROM {languages} WHERE language = '%s'", $form_values['langcode']);
+    db_query("DELETE FROM {locales_target} WHERE language = '%s'", $form_values['langcode']);
+    $message = t('The language %locale has been removed.', array('%locale' => t($languages[$form_values['langcode']]->name)));
     drupal_set_message($message);
     watchdog('locale', $message);
   }
@@ -344,6 +386,16 @@ function locale_admin_manage_delete_form_submit($form_id, $form_values) {
 function locale_admin_manage_add() {
   include_once './includes/locale.inc';
   return _locale_admin_manage_add_screen();
+}
+
+function locale_admin_manage_edit($langcode) {
+  include_once './includes/locale.inc';
+  return _locale_admin_manage_edit_screen($langcode);
+}
+
+function locale_admin_manage_configure() {
+  include_once './includes/locale.inc';
+  return drupal_get_form("locale_configure_language_form");
 }
 
 // ---------------------------------------------------------------------------------

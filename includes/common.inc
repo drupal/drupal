@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.622 2007/03/26 01:11:23 dries Exp $
+// $Id: common.inc,v 1.623 2007/03/26 01:32:22 dries Exp $
 
 /**
  * @file
@@ -600,33 +600,6 @@ function fix_gpc_magic() {
 }
 
 /**
- * Initialize the localization system.
- */
-function locale_initialize() {
-  global $user;
-
-  if (function_exists('i18n_get_lang')) {
-    return i18n_get_lang();
-  }
-
-  if (function_exists('locale')) {
-    $languages = locale_supported_languages();
-    $languages = $languages['name'];
-  }
-  else {
-    // Ensure the locale/language is correctly returned, even without locale.module.
-    // Useful for e.g. XML/HTML 'lang' attributes.
-    $languages = array('en' => 'English');
-  }
-  if ($user->uid && isset($languages[$user->language])) {
-    return $user->language;
-  }
-  else {
-    return key($languages);
-  }
-}
-
-/**
  * Translate strings to the current locale.
  *
  * All human-readable text that will be displayed somewhere within a page should be
@@ -722,8 +695,8 @@ function locale_initialize() {
  *   The translated string.
  */
 function t($string, $args = 0) {
-  global $locale;
-  if (function_exists('locale') && $locale != 'en') {
+  global $language;
+  if (function_exists('locale') && $language->language != 'en') {
     $string = locale($string);
   }
   if (!$args) {
@@ -1177,6 +1150,11 @@ function url($path = NULL, $options = array()) {
       'absolute' => FALSE,
       'alias' => FALSE,
     );
+
+  // May need language dependant rewriting if language.inc is present
+  if (function_exists('language_url_rewrite')) {
+    language_url_rewrite($path, $options);
+  }
   if ($options['fragment']) {
     $options['fragment'] = '#'. $options['fragment'];
   }
@@ -1884,7 +1862,6 @@ function xmlrpc($url) {
 
 function _drupal_bootstrap_full() {
   static $called;
-  global $locale;
 
   if ($called) {
     return;
@@ -1908,8 +1885,6 @@ function _drupal_bootstrap_full() {
   fix_gpc_magic();
   // Load all enabled modules
   module_load_all();
-  // Initialize the localization system.  Depends on i18n.module being loaded already.
-  $locale = locale_initialize();
   // Let all modules take action before menu system handles the reqest
   module_invoke_all('init');
 

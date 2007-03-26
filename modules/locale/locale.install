@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.install,v 1.7 2006/11/14 06:20:40 drumm Exp $
+// $Id: locale.install,v 1.8 2007/03/26 01:32:22 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -11,14 +11,18 @@ function locale_install() {
   switch ($GLOBALS['db_type']) {
     case 'mysql':
     case 'mysqli':
-      db_query("CREATE TABLE {locales_meta} (
-        locale varchar(12) NOT NULL default '',
+      db_query("CREATE TABLE {languages} (
+        language varchar(12) NOT NULL default '',
         name varchar(64) NOT NULL default '',
+        native varchar(64) NOT NULL default '',
+        direction int NOT NULL default '0',
         enabled int NOT NULL default '0',
-        isdefault int NOT NULL default '0',
         plurals int NOT NULL default '0',
         formula varchar(128) NOT NULL default '',
-        PRIMARY KEY (locale)
+        domain varchar(128) NOT NULL default '',
+        prefix varchar(128) NOT NULL default '',
+        weight int NOT NULL default '0',
+        PRIMARY KEY (language)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {locales_source} (
@@ -32,25 +36,29 @@ function locale_install() {
       db_query("CREATE TABLE {locales_target} (
         lid int NOT NULL default '0',
         translation blob NOT NULL,
-        locale varchar(12) NOT NULL default '',
+        language varchar(12) NOT NULL default '',
         plid int NOT NULL default '0',
         plural int NOT NULL default '0',
         KEY lid (lid),
-        KEY lang (locale),
+        KEY lang (language),
         KEY plid (plid),
         KEY plural (plural)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
       break;
 
     case 'pgsql':
-      db_query("CREATE TABLE {locales_meta} (
-        locale varchar(12) NOT NULL default '',
+      db_query("CREATE TABLE {languages} (
+        language varchar(12) NOT NULL default '',
         name varchar(64) NOT NULL default '',
+        native varchar(64) NOT NULL default '',
+        direction int NOT NULL default '0',
         enabled int NOT NULL default '0',
-        isdefault int NOT NULL default '0',
         plurals int NOT NULL default '0',
         formula varchar(128) NOT NULL default '',
-        PRIMARY KEY (locale)
+        domain varchar(128) NOT NULL default '',
+        prefix varchar(128) NOT NULL default '',
+        weight int NOT NULL default '0',
+        PRIMARY KEY (language)
       )");
 
       db_query("CREATE TABLE {locales_source} (
@@ -63,25 +71,86 @@ function locale_install() {
       db_query("CREATE TABLE {locales_target} (
         lid int NOT NULL default '0',
         translation text NOT NULL,
-        locale varchar(12) NOT NULL default '',
+        language varchar(12) NOT NULL default '',
         plid int NOT NULL default '0',
         plural int NOT NULL default '0'
       )");
       db_query("CREATE INDEX {locales_target}_lid_idx ON {locales_target} (lid)");
-      db_query("CREATE INDEX {locales_target}_locale_idx ON {locales_target} (locale)");
+      db_query("CREATE INDEX {locales_target}_language_idx ON {locales_target} (language)");
       db_query("CREATE INDEX {locales_target}_plid_idx ON {locales_target} (plid)");
       db_query("CREATE INDEX {locales_target}_plural_idx ON {locales_target} (plural)");
       db_query("CREATE INDEX {locales_source}_source_idx ON {locales_source} (source)");
       break;
   }
-  db_query("INSERT INTO {locales_meta} (locale, name, enabled, isdefault) VALUES ('en', 'English', '1', '1')");
+  db_query("INSERT INTO {languages} (language, name, native, direction, enabled, weight) VALUES ('en', 'English', 'English', '0', '1', '0')");
 }
+
+/**
+ * @defgroup updates-5.0-to-x.x Locale updates from 5.0 to x.x
+ * @{
+ */
+
+function locale_update_2001() {
+  $ret = array();
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql("CREATE TABLE {languages} (
+        language varchar(12) NOT NULL default '',
+        name varchar(64) NOT NULL default '',
+        native varchar(64) NOT NULL default '',
+        direction int NOT NULL default '0',
+        enabled int NOT NULL default '0',
+        plurals int NOT NULL default '0',
+        formula varchar(128) NOT NULL default '',
+        domain varchar(128) NOT NULL default '',
+        prefix varchar(128) NOT NULL default '',
+        weight int NOT NULL default '0',
+        PRIMARY KEY (language)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+      break;
+    case 'pgsql':
+      $ret[] = update_sql("CREATE TABLE {languages} (
+        language varchar(12) NOT NULL default '',
+        name varchar(64) NOT NULL default '',
+        native varchar(64) NOT NULL default '',
+        direction int NOT NULL default '0',
+        enabled int NOT NULL default '0',
+        plurals int NOT NULL default '0',
+        formula varchar(128) NOT NULL default '',
+        domain varchar(128) NOT NULL default '',
+        prefix varchar(128) NOT NULL default '',
+        weight int NOT NULL default '0',
+        PRIMARY KEY (language)
+      )");
+      break;
+  }
+
+  // Save the languages
+  $ret[] = update_sql("INSERT INTO {languages} (language, name, native, direction, enabled, plurals, formula, domain, prefix, weight) SELECT locale, name, '', 0, enabled, plurals, formula, '', locale, 0 FROM {locales_meta}");
+
+  // Save the language count in the variable table
+  $count = db_result(db_query('SELECT COUNT(*) FROM {languages} WHERE enabled = 1'));
+  variable_set('language_count', $count);
+
+  // Save the default language in the variable table
+  $default = db_fetch_object(db_query('SELECT * FROM {locales_meta} WHERE isdefault = 1'));
+  variable_set('language_default', (object) array('language' => $default->locale, 'name' => $default->name, 'native' => '', 'direction' => 0, 'enabled' => 1, 'plurals' => $default->plurals, 'formula' => $default->formula, 'domain' => '', 'prefix' => $default->locale, 'weight' => 0));
+
+  $ret[] = update_sql("DROP TABLE {locales_meta}");
+  return $ret;
+}
+
+/**
+ * @} End of "defgroup updates-5.0-to-x.x"
+ * The next series of updates should start at 3000.
+ */
 
 /**
  * Implementation of hook_uninstall().
  */
 function locale_uninstall() {
-  db_query('DROP TABLE {locales_meta}');
+  db_query('DROP TABLE {languages}');
   db_query('DROP TABLE {locales_source}');
   db_query('DROP TABLE {locales_target}');
 }

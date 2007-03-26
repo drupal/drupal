@@ -1,5 +1,5 @@
 <?php
-// $Id: phptemplate.engine,v 1.58 2007/03/25 19:18:12 dries Exp $
+// $Id: phptemplate.engine,v 1.59 2007/03/26 01:32:22 dries Exp $
 
 /**
  * @file
@@ -201,7 +201,7 @@ function phptemplate_page($content, $show_blocks = TRUE) {
     'head'                => drupal_get_html_head(),
     'head_title'          => implode(' | ', $head_title),
     'help'                => theme('help'),
-    'language'            => $GLOBALS['locale'],
+    'language'            => $GLOBALS['language'],
     'layout'              => $layout,
     'logo'                => theme_get_setting('logo'),
     'messages'            => theme('status_messages'),

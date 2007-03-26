@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.148 2007/03/25 20:54:33 dries Exp $
+// $Id: bootstrap.inc,v 1.149 2007/03/26 01:32:22 dries Exp $
 
 /**
  * @file
@@ -85,15 +85,20 @@ define('DRUPAL_BOOTSTRAP_SESSION', 4);
 define('DRUPAL_BOOTSTRAP_LATE_PAGE_CACHE', 5);
 
 /**
- * Seventh bootstrap phase: set $_GET['q'] to Drupal path of request.
+ * Seventh bootstrap phase: find out language of the page.
  */
-define('DRUPAL_BOOTSTRAP_PATH', 6);
+define('DRUPAL_BOOTSTRAP_LANGUAGE', 6);
+
+/**
+ * Eighth bootstrap phase: set $_GET['q'] to Drupal path of request.
+ */
+define('DRUPAL_BOOTSTRAP_PATH', 7);
 
 /**
  * Final bootstrap phase: Drupal is fully loaded; validate and fix
  * input data.
  */
-define('DRUPAL_BOOTSTRAP_FULL', 7);
+define('DRUPAL_BOOTSTRAP_FULL', 8);
 
 /**
  * Role ID for anonymous users; should match what's in the "role" table.
@@ -104,6 +109,30 @@ define('DRUPAL_ANONYMOUS_RID', 1);
  * Role ID for authenticated users; should match what's in the "role" table.
  */
 define('DRUPAL_AUTHENTICATED_RID', 2);
+
+/**
+ * No language negotiation. The default language is used.
+ */
+define('LANGUAGE_NEGOTIATION_NONE', 0);
+
+/**
+ * Path based negotiation with fallback to default language
+ * if no defined path prefix identified.
+ */
+define('LANGUAGE_NEGOTIATION_PATH_DEFAULT', 1);
+
+/**
+ * Path based negotiation with fallback to user preferences
+ * and browser language detection if no defined path prefix
+ * identified.
+ */
+define('LANGUAGE_NEGOTIATION_PATH', 2);
+
+/**
+ * Domain based negotiation with fallback to default language
+ * if no language identified by domain.
+ */
+define('LANGUAGE_NEGOTIATION_DOMAIN', 3);
 
 /**
  * Start the timer with the specified name. If you start and stop
@@ -408,6 +437,7 @@ function variable_del($name) {
 
   unset($conf[$name]);
 }
+
 
 /**
  * Retrieve the current page from the cache.
@@ -762,11 +792,12 @@ function drupal_anonymous_user($session = '') {
  *     DRUPAL_BOOTSTRAP_SESSION: initialize session handling.
  *     DRUPAL_BOOTSTRAP_LATE_PAGE_CACHE: load bootstrap.inc and module.inc, start
  *       the variable system and try to serve a page from the cache.
+ *     DRUPAL_BOOTSTRAP_LANGUAGE: identify the language used on the page.
  *     DRUPAL_BOOTSTRAP_PATH: set $_GET['q'] to Drupal path of request.
  *     DRUPAL_BOOTSTRAP_FULL: Drupal is fully loaded, validate and fix input data.
  */
 function drupal_bootstrap($phase) {
-  static $phases = array(DRUPAL_BOOTSTRAP_CONFIGURATION, DRUPAL_BOOTSTRAP_EARLY_PAGE_CACHE, DRUPAL_BOOTSTRAP_DATABASE, DRUPAL_BOOTSTRAP_ACCESS, DRUPAL_BOOTSTRAP_SESSION, DRUPAL_BOOTSTRAP_LATE_PAGE_CACHE, DRUPAL_BOOTSTRAP_PATH, DRUPAL_BOOTSTRAP_FULL);
+  static $phases = array(DRUPAL_BOOTSTRAP_CONFIGURATION, DRUPAL_BOOTSTRAP_EARLY_PAGE_CACHE, DRUPAL_BOOTSTRAP_DATABASE, DRUPAL_BOOTSTRAP_ACCESS, DRUPAL_BOOTSTRAP_SESSION, DRUPAL_BOOTSTRAP_LATE_PAGE_CACHE, DRUPAL_BOOTSTRAP_LANGUAGE, DRUPAL_BOOTSTRAP_PATH, DRUPAL_BOOTSTRAP_FULL);
 
   while (!is_null($current_phase = array_shift($phases))) {
     _drupal_bootstrap($current_phase);
@@ -822,6 +853,10 @@ function _drupal_bootstrap($phase) {
       timer_start('page');
 
       drupal_page_header();
+      break;
+
+    case DRUPAL_BOOTSTRAP_LANGUAGE:
+      drupal_init_language();
       break;
 
     case DRUPAL_BOOTSTRAP_PATH:
@@ -897,4 +932,66 @@ function get_t() {
     $t = function_exists('install_main') ? 'st' : 't';
   }
   return $t;
+}
+
+/**
+ *  Choose a language for the current page, based on site and user preferences.
+ */
+function drupal_init_language() {
+  global $language, $user;
+
+  // Ensure the language is correctly returned, even without multilanguage support.
+  // Useful for eg. XML/HTML 'lang' attributes.
+  if (variable_get('language_count', 1) == 1) {
+    $language = language_default();
+  }
+  else {
+    include_once './includes/language.inc';
+    $language = language_initialize();
+  }
+}
+
+/**
+ * Get a list of languages set up indexed by the specified key
+ *
+ * @param $field The field to index the list with.
+ * @param $reset Boolean to request a reset of the list.
+ */
+function language_list($field = 'language', $reset = FALSE) {
+  static $languages = NULL;
+
+  // Reset language list
+  if ($reset) {
+    $languages = NULL;
+  }
+
+  // Init language list
+  if (!isset($languages)) {
+    $result = db_query('SELECT * FROM {languages} ORDER BY weight ASC, name ASC');
+    while ($row = db_fetch_object($result)) {
+      $languages['language'][$row->language] = $row;
+    }
+  }
+
+  // Return the array indexed by the right field
+  if (!isset($languages[$field])) {
+    $languages[$field] = array();
+    foreach($languages['language'] as $lang) {
+      // Some values should be collected into an array
+      if (in_array($field, array('enabled', 'weight'))) {
+        $languages[$field][$lang->$field][$lang->language] = $lang;
+      }
+      else {
+        $languages[$field][$lang->$field] = $lang;
+      }
+    }
+  }
+  return $languages[$field];
+}
+
+/**
+ * Default language used on the site
+ */
+function language_default() {
+  return variable_get('language_default', (object) array('language' => 'en', 'name' => 'English', 'direction' => 0, 'native' => 'English'));
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: path.inc,v 1.14 2007/01/24 14:48:35 dries Exp $
+// $Id: path.inc,v 1.15 2007/03/26 01:32:22 dries Exp $
 
 /**
  * @file
@@ -34,15 +34,21 @@ function drupal_init_path() {
  *   - source: return the Drupal system URL for a path alias (if one exists).
  * @param $path
  *   The path to investigate for corresponding aliases or system URLs.
+ * @param $path_language
+ *   Optional language code to search the path with. Defaults to the page language.
+ *   If there's no path defined for that language it will search paths without
+ *   language.
  *
  * @return
  *   Either a Drupal system path, an aliased path, or FALSE if no path was
  *   found.
  */
-function drupal_lookup_path($action, $path = '') {
-  // $map keys are Drupal paths and the values are the corresponding aliases
-  static $map = array(), $no_src = array();
-  static $count;
+function drupal_lookup_path($action, $path = '', $path_language = '') {
+  global $language;
+  // $map is an array with language keys, holding arrays of Drupal paths to alias relations
+  static $map = array(), $no_src = array(), $count;
+
+  $path_language = $path_language ? $path_language : $language->language;
 
   // Use $count to avoid looking up paths in subsequent calls if there simply are no aliases
   if (!isset($count)) {
@@ -55,26 +61,29 @@ function drupal_lookup_path($action, $path = '') {
   }
   elseif ($count > 0 && $path != '') {
     if ($action == 'alias') {
-      if (isset($map[$path])) {
-        return $map[$path];
+      if (isset($map[$path_language][$path])) {
+        return $map[$path_language][$path];
       }
-      $alias = db_result(db_query("SELECT dst FROM {url_alias} WHERE src = '%s'", $path));
-      $map[$path] = $alias;
+      // Get the most fitting result falling back with alias without language
+      $alias = db_result(db_query("SELECT dst FROM {url_alias} WHERE src = '%s' AND language IN('%s', '') ORDER BY language DESC", $path, $path_language));
+      $map[$path_language][$path] = $alias;
       return $alias;
     }
     // Check $no_src for this $path in case we've already determined that there
     // isn't a path that has this alias
-    elseif ($action == 'source' && !isset($no_src[$path])) {
+    elseif ($action == 'source' && !isset($no_src[$path_language][$path])) {
       // Look for the value $path within the cached $map
-      if (!$src = array_search($path, $map)) {
-        if ($src = db_result(db_query("SELECT src FROM {url_alias} WHERE dst = '%s'", $path))) {
-          $map[$src] = $path;
+      $src = '';
+      if (!isset($map[$path_language]) || !($src = array_search($path, $map[$path_language]))) {
+        // Get the most fitting result falling back with alias without language
+        if ($src = db_result(db_query("SELECT src FROM {url_alias} WHERE dst = '%s' AND language IN('%s', '') ORDER BY language DESC", $path, $path_language))) {
+          $map[$path_language][$src] = $path;
         }
         else {
           // We can't record anything into $map because we do not have a valid
           // index and there is no need because we have not learned anything
           // about any Drupal path. Thus cache to $no_src.
-          $no_src[$path] = TRUE;
+          $no_src[$path_language][$path] = TRUE;
         }
       }
       return $src;
@@ -89,18 +98,20 @@ function drupal_lookup_path($action, $path = '') {
  *
  * @param $path
  *   An internal Drupal path.
+ * @param $path_language
+ *   An optional language code to look up the path in.
  *
  * @return
  *   An aliased path if one was found, or the original path if no alias was
  *   found.
  */
-function drupal_get_path_alias($path) {
+function drupal_get_path_alias($path, $path_language = '') {
   $result = $path;
-  if ($alias = drupal_lookup_path('alias', $path)) {
+  if ($alias = drupal_lookup_path('alias', $path, $path_language)) {
     $result = $alias;
   }
   if (function_exists('custom_url_rewrite')) {
-    $result = custom_url_rewrite('alias', $result, $path);
+    $result = custom_url_rewrite('alias', $result, $path, $path_language);
   }
   return $result;
 }
@@ -110,18 +121,20 @@ function drupal_get_path_alias($path) {
  *
  * @param $path
  *   A Drupal path alias.
+ * @param $path_language
+ *   An optional language code to look up the path in.
  *
  * @return
  *   The internal path represented by the alias, or the original alias if no
  *   internal path was found.
  */
-function drupal_get_normal_path($path) {
+function drupal_get_normal_path($path, $path_language = '') {
   $result = $path;
-  if ($src = drupal_lookup_path('source', $path)) {
+  if ($src = drupal_lookup_path('source', $path, $path_language)) {
     $result = $src;
   }
   if (function_exists('custom_url_rewrite')) {
-    $result = custom_url_rewrite('source', $result, $path);
+    $result = custom_url_rewrite('source', $result, $path, $path_language);
   }
   return $result;
 }

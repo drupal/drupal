@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.111 2007/03/26 00:35:59 dries Exp $
+// $Id: path.module,v 1.112 2007/03/26 01:32:22 dries Exp $
 
 /**
  * @file
@@ -26,6 +26,7 @@ function path_help($section) {
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@path">Path page</a>.', array('@path' => 'http://drupal.org/handbook/modules/path/')) .'</p>';
       return $output;
     case 'admin/build/path':
+    case 'admin/build/path/list':
       return '<p>'. t("Drupal provides users complete control over URLs through aliasing. This feature is typically used to make URLs human-readable or easy to remember. For example, one could map the relative URL 'node/1' onto 'about'. Each system path can have multiple aliases.") .'</p>';
     case 'admin/build/path/add':
       return '<p>'. t('Enter the path you wish to create the alias for, followed by the name of the new alias.') .'</p>';
@@ -105,7 +106,6 @@ function path_admin_delete_confirm($pid) {
    $_GET['destination'] ? $_GET['destination'] : 'admin/build/path', t('This action cannot be undone.'),
   t('Delete'), t('Cancel') );
   }
-
   return $output;
 }
 
@@ -127,49 +127,51 @@ function path_admin_delete($pid = 0) {
   drupal_set_message(t('The alias has been deleted.'));
 }
 
-
-
 /**
  * Set an aliased path for a given Drupal path, preventing duplicates.
  */
-function path_set_alias($path = NULL, $alias = NULL, $pid = NULL) {
+function path_set_alias($path = NULL, $alias = NULL, $pid = NULL, $language = '') {
   if ($path && !$alias) {
-    db_query("DELETE FROM {url_alias} WHERE src = '%s'", $path);
+    // Delete based on path
+    db_query("DELETE FROM {url_alias} WHERE src = '%s' AND language = '%s'", $path, $language);
     db_query("UPDATE {menu} SET link_path = path WHERE path = '%s'", $path);
     drupal_clear_path_cache();
   }
   else if (!$path && $alias) {
-    db_query("DELETE FROM {url_alias} WHERE dst = '%s'", $alias);
+    // Delete based on alias
+    db_query("DELETE FROM {url_alias} WHERE dst = '%s' AND language = '%s'", $alias, $language);
     db_query("UPDATE {menu} SET link_path = path WHERE link_path = '%s'", $alias);
     drupal_clear_path_cache();
   }
   else if ($path && $alias) {
     $path = urldecode($path);
-    $path_count = db_result(db_query("SELECT COUNT(src) FROM {url_alias} WHERE src = '%s'", $path));
+    $path_count = db_result(db_query("SELECT COUNT(src) FROM {url_alias} WHERE src = '%s' AND language = '%s'", $path, $language));
     $alias = urldecode($alias);
     // Alias count can only be 0 or 1.
-    $alias_count = db_result(db_query("SELECT COUNT(dst) FROM {url_alias} WHERE dst = '%s'", $alias));
+    $alias_count = db_result(db_query("SELECT COUNT(dst) FROM {url_alias} WHERE dst = '%s' AND language = '%s'", $alias, $language));
 
     if ($alias_count == 0) {
       if ($pid) {
-        db_query("UPDATE {url_alias} SET dst = '%s', src = '%s' WHERE pid = %d", $alias, $path, $pid);
+        // Existing path changed data
+        db_query("UPDATE {url_alias} SET src = '%s', dst = '%s', language = '%s' WHERE pid = %d", $path, $alias, $language, $pid);
       }
       else {
-        db_query("INSERT INTO {url_alias} (src, dst) VALUES ('%s', '%s')", $path, $alias);
+        // No such alias yet in this language
+        db_query("INSERT INTO {url_alias} (src, dst, language) VALUES ('%s', '%s', '%s')", $path, $alias, $language);
       }
     }
     // The alias exists.
     else {
       // This path has no alias yet, so we redirect the alias here.
       if ($path_count == 0) {
-        db_query("UPDATE {url_alias} SET src = '%s' WHERE dst = '%s'", $path, $alias);
+        db_query("UPDATE {url_alias} SET src = '%s' WHERE dst = '%s' AND language = '%s'", $path, $alias, $language);
       }
       else {
         // This will delete the path that alias was originally pointing to.
-        path_set_alias(NULL, $alias);
+        path_set_alias(NULL, $alias, NULL, $language);
         // This will remove the current aliases of the path.
-        path_set_alias($path);
-        path_set_alias($path, $alias);
+        path_set_alias($path, NULL, NULL, $language);
+        path_set_alias($path, $alias, NULL, $language);
       }
     }
     if ($alias_count == 0 || $path_count == 0) {
@@ -186,6 +188,7 @@ function path_form($edit = '') {
   $form['#submit']['path_form_submit'] = array();
   $form['#validate']['path_form_validate'] = array();
   $form['#theme'] = 'path_form';
+  $form['#alias'] = $edit;
 
   $form['src'] = array(
     '#type' => 'textfield',
@@ -198,13 +201,13 @@ function path_form($edit = '') {
   );
   $form['dst'] = array(
     '#type' => 'textfield',
+    '#title' => t('Path alias'),
     '#default_value' => $edit['dst'],
     '#maxlength' => 64,
     '#size' => 45,
     '#description' => t('Specify an alternative path by which this data can be accessed. For example, type "about" when writing an about page. Use a relative path and don\'t add a trailing slash or the URL alias won\'t work.'),
     '#field_prefix' => url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q=')
   );
-
   if ($edit['pid']) {
     $form['pid'] = array('#type' => 'hidden', '#value' => $edit['pid']);
     $form['submit'] = array('#type' => 'submit', '#value' => t('Update alias'));
@@ -227,7 +230,8 @@ function path_nodeapi(&$node, $op, $arg) {
     switch ($op) {
       case 'validate':
         $node->path = trim($node->path);
-        if (db_result(db_query("SELECT COUNT(dst) FROM {url_alias} WHERE dst = '%s' AND src != '%s'", $node->path, "node/$node->nid"))) {
+        $language = isset($node->language) ? $node->language : '';
+        if (db_result(db_query("SELECT COUNT(dst) FROM {url_alias} WHERE dst = '%s' AND src != '%s' AND language = '%s'", $node->path, "node/$node->nid", $language))) {
           form_set_error('path', t('The path is already in use.'));
         }
         break;
@@ -307,23 +311,37 @@ function path_perm() {
  * Return a listing of all defined URL aliases.
  */
 function path_overview() {
+  // Enable language column if locale is enabled or if we have any alias with language
+  $count = db_result(db_query("SELECT COUNT(*) FROM {url_alias} WHERE language != ''"));
+  $multilanguage = (module_exists('locale') || $count);
+
   $sql = 'SELECT * FROM {url_alias}';
   $header = array(
     array('data' => t('Alias'), 'field' => 'dst', 'sort' => 'asc'),
     array('data' => t('System'), 'field' => 'src'),
     array('data' => t('Operations'), 'colspan' => '2')
   );
+  if ($multilanguage) {
+    $header[3] = $header[2];
+    $header[2] = array('data' => t('Language'), 'field' => 'language');
+  }
   $sql .= tablesort_sql($header);
   $result = pager_query($sql, 50);
 
   $rows = array();
   $destination = drupal_get_destination();
   while ($data = db_fetch_object($result)) {
-    $rows[] = array(check_plain($data->dst), check_plain($data->src), l(t('edit'), "admin/build/path/edit/$data->pid", array('query' => $destination)), l(t('delete'), "admin/build/path/delete/$data->pid", array('query' => $destination)));
+    $row = array(check_plain($data->dst), check_plain($data->src), l(t('edit'), "admin/build/path/edit/$data->pid", array('query' => $destination)), l(t('delete'), "admin/build/path/delete/$data->pid", array('query' => $destination)));
+    if ($multilanguage) {
+      $row[4] = $row[3];
+      $row[3] = $row[2];
+      $row[2] = module_invoke('locale', 'language_name', $data->language);
+    }
+    $rows[] = $row;
   }
 
   if (empty($rows)) {
-    $rows[] = array(array('data' => t('No URL aliases available.'), 'colspan' => '4'));
+    $rows[] = array(array('data' => t('No URL aliases available.'), 'colspan' => ($multilanguage ? 5 : 4)));
   }
 
   $output = theme('table', $header, $rows);
@@ -345,9 +363,11 @@ function path_form_validate($form_id, $form_values) {
   $src = $form_values['src'];
   $dst = $form_values['dst'];
   $pid = $form_values['pid'];
+  // Language is only set if locale module is enabled, otherwise save for all languages.
+  $language = isset($form_values['language']) ? $form_values['language'] : '';
 
-  if (db_result(db_query("SELECT COUNT(dst) FROM {url_alias} WHERE pid != %d AND dst = '%s'", $pid, $dst))) {
-    form_set_error('dst', t('The alias %alias is already in use.', array('%alias' => $dst)));
+  if (db_result(db_query("SELECT COUNT(dst) FROM {url_alias} WHERE pid != %d AND dst = '%s' AND language = '%s'", $pid, $dst, $language))) {
+    form_set_error('dst', t('The alias %alias is already in use in this language.', array('%alias' => $dst)));
   }
 }
 
@@ -355,7 +375,8 @@ function path_form_validate($form_id, $form_values) {
  * Save a new URL alias to the database.
  */
 function path_form_submit($form_id, $form_values) {
-  path_set_alias($form_values['src'], $form_values['dst'], $form_values['pid']);
+  // Language is only set if locale module is enabled
+  path_set_alias($form_values['src'], $form_values['dst'], $form_values['pid'], isset($form_values['language']) ? $form_values['language'] : '');
 
   drupal_set_message(t('The alias has been saved.'));
   return 'admin/build/path';

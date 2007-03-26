@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.792 2007/03/26 00:35:58 dries Exp $
+// $Id: node.module,v 1.793 2007/03/26 01:32:22 dries Exp $
 
 /**
  * @file
@@ -1747,7 +1747,7 @@ function node_block($op = 'list', $delta = 0) {
  *   The link should be an absolute URL.
  */
 function node_feed($nodes = 0, $channel = array()) {
-  global $base_url, $locale;
+  global $base_url, $language;
 
   if (!$nodes) {
     $nodes = db_query_range(db_rewrite_sql('SELECT n.nid, n.created FROM {node} n WHERE n.promote = 1 AND n.status = 1 ORDER BY n.created DESC'), 0, variable_get('feed_default_items', 10));
@@ -1809,7 +1809,7 @@ function node_feed($nodes = 0, $channel = array()) {
     'title'       => variable_get('site_name', 'Drupal') .' - '. variable_get('site_slogan', ''),
     'link'        => $base_url,
     'description' => variable_get('site_mission', ''),
-    'language'    => $locale
+    'language'    => $language->language
   );
   $channel = array_merge($channel_defaults, $channel);
 

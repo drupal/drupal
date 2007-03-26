@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.85 2007/03/19 01:13:28 unconed Exp $
+// $Id: system.install,v 1.86 2007/03/26 01:32:22 dries Exp $
 
 define('DRUPAL_MINIMUM_PHP',    '4.3.3');
 define('DRUPAL_MINIMUM_MYSQL',  '4.1.0'); // If using MySQL
@@ -440,8 +440,9 @@ function system_install() {
         pid int unsigned NOT NULL auto_increment,
         src varchar(128) NOT NULL default '',
         dst varchar(128) NOT NULL default '',
+        language varchar(12) NOT NULL default '',
         PRIMARY KEY (pid),
-        UNIQUE KEY dst (dst),
+        UNIQUE KEY dst_language (dst, language),
         KEY src (src)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
@@ -585,7 +586,8 @@ function system_install() {
       db_query("CREATE TABLE {variable} (
         name varchar(128) NOT NULL default '',
         value longtext NOT NULL,
-        PRIMARY KEY (name)
+        language varchar(12) NOT NULL default '',
+        PRIMARY KEY (name, language)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {vocabulary} (
@@ -926,10 +928,11 @@ function system_install() {
         pid serial CHECK (pid >= 0),
         src varchar(128) NOT NULL default '',
         dst varchar(128) NOT NULL default '',
-        PRIMARY KEY (pid),
-        UNIQUE (dst)
+        language varchar(12) NOT NULL default '',
+        PRIMARY KEY (pid)
       )");
       db_query("CREATE INDEX {url_alias}_src_idx ON {url_alias} (src)");
+      db_query("CREATE UNIQUE INDEX {url_alias}_dst_language_idx ON {url_alias} (dst, language)");
 
       db_query("CREATE TABLE {permission} (
         rid int_unsigned NOT NULL default '0',
@@ -1072,7 +1075,8 @@ function system_install() {
       db_query("CREATE TABLE {variable} (
         name varchar(128) NOT NULL default '',
         value text NOT NULL,
-        PRIMARY KEY (name)
+        language varchar(12) NOT NULL default '',
+        PRIMARY KEY (name, language)
       )");
 
       db_query("CREATE TABLE {vocabulary} (
@@ -3683,6 +3687,27 @@ function system_update_2004() {
 
     case 'pgsql':
       $ret[] = update_sql("CREATE INDEX {users}_created_idx ON {users} (created)");
+      break;
+  }
+  return $ret;
+}
+
+/**
+ * Add language to url_alias table and modify indexes.
+ */
+function system_update_2005() {
+  $ret = array();
+  switch ($GLOBALS['db_type']) {
+    case 'pgsql':
+      db_add_column($ret, 'url_alias', 'language', 'varchar(12)', array('default' => "''", 'not null' => TRUE));
+      $ret[] = update_sql('DROP INDEX {url_alias}_dst_idx');
+      $ret[] = update_sql('CREATE UNIQUE INDEX {url_alias}_dst_language_idx ON {url_alias}(dst, language)');
+      break;
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql("ALTER TABLE {url_alias} ADD language varchar(12) NOT NULL default ''");
+      $ret[] = update_sql("ALTER TABLE {url_alias} DROP INDEX dst");
+      $ret[] = update_sql("ALTER TABLE {url_alias} ADD UNIQUE dst_language (dst, language)");
       break;
   }
   return $ret;

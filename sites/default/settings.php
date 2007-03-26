@@ -1,5 +1,5 @@
 <?php
-// $Id: settings.php,v 1.49 2007/03/15 14:48:39 unconed Exp $
+// $Id: settings.php,v 1.50 2007/03/26 01:32:22 dries Exp $
 
 /**
  * @file
@@ -90,7 +90,7 @@
  *   $db_url = 'mysqli://username:password@localhost/databasename';
  *   $db_url = 'pgsql://username:password@localhost/databasename';
  */
-$db_url = 'mysql://username:password@localhost/databasename';
+$db_url = 'mysql://doug:civicactions@localhost/doug_drupal6_lang';
 $db_prefix = '';
 
 /**
@@ -112,7 +112,7 @@ $db_prefix = '';
  * It is not allowed to have a trailing slash; Drupal will add it
  * for you.
  */
-# $base_url = 'http://www.example.com';  // NO trailing slash!
+$base_url = 'http://localhost/doug6lang';  // NO trailing slash!
 
 /**
  * PHP settings:
@@ -135,6 +135,7 @@ ini_set('session.save_handler',     'user');
 ini_set('session.use_only_cookies', 1);
 ini_set('session.use_trans_sid',    0);
 ini_set('url_rewriter.tags',        '');
+ini_set('safe_mode', 1); // because my scripts actually take longer!
 
 /**
  * We try to set the correct cookie domain.
