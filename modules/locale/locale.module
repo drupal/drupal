@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.161 2007/03/26 01:32:22 dries Exp $
+// $Id: locale.module,v 1.162 2007/03/26 05:55:52 dries Exp $
 
 /**
  * @file
@@ -356,7 +356,6 @@ function locale_admin_manage_delete_form($langcode) {
   }
   else {
     $form['langcode'] = array('#type' => 'value', '#value' => $langcode);
-    $form['#submit']['locale_admin_manage_delete_form_submit'] = array();
     return confirm_form($form, t('Are you sure you want to delete the language %name?', array('%name' => t($languages[$langcode]->name))), 'admin/build/locale/language/overview', t('Deleting a language will remove all data associated with it. This action cannot be undone.'), t('Delete'), t('Cancel'));
   }
 }
