@@ -1301,7 +1301,7 @@ function _locale_import_parse_quoted($string) {
  */
 function _locale_export_po($language) {
   global $user;
-
+  $header = '';
   // Get language specific strings, or all strings
   if ($language) {
     $meta = db_fetch_object(db_query("SELECT * FROM {languages} WHERE language = '%s'", $language));

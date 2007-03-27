@@ -355,7 +355,9 @@ function drupal_get_filename($type, $name, $filename = NULL) {
     }
   }
 
-  return $files[$type][$name];
+  if (isset($files[$type][$name])) {
+    return $files[$type][$name];
+  }
 }
 
 /**

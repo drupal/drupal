@@ -319,7 +319,7 @@ function drupal_prepare_form($form_id, &$form) {
       $form['form_token'] = array('#type' => 'token', '#default_value' => drupal_get_token($form['#token']));
     }
   }
-  else if ($user->uid && !$form['#programmed']) {
+  else if (isset($user->uid) && $user->uid && !$form['#programmed']) {
     $form['#token'] = $form_id;
     $form['form_token'] = array(
       '#id' => form_clean_id('edit-'. $form_id .'-form-token'),
@@ -1263,7 +1263,14 @@ function expand_radios($element) {
   if (count($element['#options']) > 0) {
     foreach ($element['#options'] as $key => $choice) {
       if (!isset($element[$key])) {
-        $element[$key] = array('#type' => 'radio', '#title' => $choice, '#return_value' => $key, '#default_value' => $element['#default_value'], '#attributes' => $element['#attributes'], '#parents' => $element['#parents'], '#spawned' => TRUE);
+        $element[$key] = array(
+          '#type' => 'radio',
+          '#title' => $choice,
+          '#return_value' => $key,
+          '#default_value' => isset($element['#default_value']) ? $element['#default_value'] : NULL,
+          '#attributes' => $element['#attributes'],
+          '#parents' => $element['#parents'],
+        );
       }
     }
   }

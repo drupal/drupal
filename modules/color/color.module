@@ -145,7 +145,7 @@ function theme_color_scheme_form($form) {
   $info = $form['info']['#value'];
   $path = drupal_get_path('theme', $theme) .'/';
   drupal_add_css($path . $info['preview_css']);
-
+  $output = '';
   // Wrapper
   $output .= '<div class="color-form clear-block">';
 

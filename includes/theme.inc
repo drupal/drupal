@@ -611,7 +611,7 @@ function theme_links($links, $attributes = array('class' => 'links')) {
         // Pass in $link as $options, they share the same keys.
         $output .= l($link['title'], $link['href'], $link);
       }
-      else if ($link['title']) {
+      else if (!empty($link['title'])) {
         // Some links are actually not links, but we wrap these in <span> for adding title and class attributes
         if (empty($link['html'])) {
           $link['title'] = check_plain($link['title']);
@@ -809,6 +809,9 @@ function theme_table($header, $rows, $attributes = array(), $caption = NULL) {
       $output .= _theme_table_cell($cell, TRUE);
     }
     $output .= " </tr></thead>\n";
+  }
+  else {
+    $ts = array();
   }
 
   // Format the table rows:

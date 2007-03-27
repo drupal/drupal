@@ -44,6 +44,8 @@ function default_profile_final() {
       'custom' => TRUE,
       'modified' => TRUE,
       'locked' => FALSE,
+      'help' => '',
+      'min_word_count' => '',
     ),
     array(
       'type' => 'story',
@@ -53,6 +55,8 @@ function default_profile_final() {
       'custom' => TRUE,
       'modified' => TRUE,
       'locked' => FALSE,
+      'help' => '',
+      'min_word_count' => '',
     ),
   );
 

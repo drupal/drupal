@@ -382,7 +382,7 @@ function file_copy(&$source, $dest = 0, $replace = FILE_EXISTS_RENAME) {
     @chmod($dest, 0664);
   }
 
-  if (is_object($file)) {
+  if (isset($file) && is_object($file)) {
     $file->filename = $basename;
     $file->filepath = $dest;
     $source = $file;
