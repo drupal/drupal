@@ -1,5 +1,5 @@
 <?php
-// $Id: default.profile,v 1.7 2007/03/25 20:49:06 dries Exp $
+// $Id: default.profile,v 1.8 2007/03/27 05:13:54 unconed Exp $
 
 /**
  * Return an array of the modules to be enabled when this profile is installed.
@@ -44,6 +44,8 @@ function default_profile_final() {
       'custom' => TRUE,
       'modified' => TRUE,
       'locked' => FALSE,
+      'help' => '',
+      'min_word_count' => '',
     ),
     array(
       'type' => 'story',
@@ -53,6 +55,8 @@ function default_profile_final() {
       'custom' => TRUE,
       'modified' => TRUE,
       'locked' => FALSE,
+      'help' => '',
+      'min_word_count' => '',
     ),
   );
 

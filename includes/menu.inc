@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.158 2007/03/26 00:35:58 dries Exp $
+// $Id: menu.inc,v 1.159 2007/03/27 05:13:53 unconed Exp $
 
 /**
  * @file
@@ -632,7 +632,8 @@ function menu_rebuild() {
     $item = &$menu[$path];
     $number_parts = $item['_number_parts'];
     if (isset($item['parent'])) {
-      $parent_parts = explode('/', $menu_path_map[$item['parent']], 6);
+      $item['parent'] = $menu_path_map[$item['parent']];
+      $parent_parts = explode('/', $item['parent'], 6);
       $slashes = count($parent_parts) - 1;
     }
     else {
@@ -723,7 +724,7 @@ function menu_rebuild() {
         $item['parent'] = implode('/', array_slice($item['_parts'], 0, $item['_number_parts'] - 1));
       }
       else {
-        $item['_depth'] = $item['parent'] ? $menu[$menu_path_map[$item['parent']]]['_depth'] + 1 : 1;
+        $item['_depth'] = $item['parent'] ? $menu[$item['parent']]['_depth'] + 1 : 1;
       }
     }
     else {

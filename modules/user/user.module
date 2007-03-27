@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.761 2007/03/26 00:35:59 dries Exp $
+// $Id: user.module,v 1.762 2007/03/27 05:13:54 unconed Exp $
 
 /**
  * @file
@@ -111,7 +111,7 @@ function user_load($array = array()) {
 function user_save($account, $array = array(), $category = 'account') {
   // Dynamically compose a SQL query:
   $user_fields = user_fields();
-  if ($account->uid) {
+  if (is_object($account) && $account->uid) {
     user_module_invoke('update', $array, $account, $category);
     $query = '';
     $data = unserialize(db_result(db_query('SELECT data FROM {users} WHERE uid = %d', $account->uid)));
@@ -1281,12 +1281,11 @@ function user_register() {
 
   // Remove form_group around default fields if there are no other groups.
   if (!$extra) {
-    $form['name'] = $form['account']['name'];
-    $form['mail'] = $form['account']['mail'];
-    $form['pass'] = $form['account']['pass'];
-    $form['status'] = $form['account']['status'];
-    $form['roles'] = $form['account']['roles'];
-    $form['notify'] = $form['account']['notify'];
+    foreach (array('name', 'mail', 'pass', 'status', 'roles', 'notify') as $key) {
+      if (isset($form['account'][$key])) {
+        $form[$key] = $form['account'][$key];
+      }
+    }
     unset($form['account']);
   }
   else {
@@ -1313,10 +1312,13 @@ function user_register_submit($form_id, $form_values) {
   else {
     $pass = user_password();
   };
-  $notify = $form_values['notify'];
+  $notify = isset($form_values['notify']) ? $form_values['notify'] : NULL;
   $from = variable_get('site_mail', ini_get('sendmail_from'));
   if (isset($form_values['roles'])) {
     $roles = array_filter($form_values['roles']);     // Remove unset roles
+  }
+  else {
+    $roles = array();
   }
 
   if (!$admin && array_intersect(array_keys($form_values), array('uid', 'roles', 'init', 'session', 'status'))) {
@@ -1428,7 +1430,8 @@ function user_edit_form($uid, $edit, $register = FALSE) {
     $roles = user_roles(1);
     unset($roles[DRUPAL_AUTHENTICATED_RID]);
     if ($roles) {
-      $form['account']['roles'] = array('#type' => 'checkboxes', '#title' => t('Roles'), '#default_value' => array_keys((array)$edit['roles']), '#options' => $roles, '#description' => t('The user receives the combined permissions of the %au role, and all roles selected here.', array('%au' => t('authenticated user'))));
+      $default = empty($edit['roles']) ? array() : array_keys($edit['roles']);
+      $form['account']['roles'] = array('#type' => 'checkboxes', '#title' => t('Roles'), '#default_value' => $default, '#options' => $roles, '#description' => t('The user receives the combined permissions of the %au role, and all roles selected here.', array('%au' => t('authenticated user'))));
     }
   }
 
@@ -1792,7 +1795,7 @@ function user_admin_access_form($edit, $submit) {
   $form['status'] = array(
     '#type' => 'radios',
     '#title' => t('Access type'),
-    '#default_value' => $edit['status'],
+    '#default_value' => isset($edit['status']) ? $edit['status'] : array(),
     '#options' => array('1' => t('Allow'), '0' => t('Deny')),
   );
   $type_options = array('user' => t('Username'), 'mail' => t('E-mail'), 'host' => t('Host'));
@@ -1830,9 +1833,7 @@ function user_admin_access() {
   if (empty($rows)) {
     $rows[] = array(array('data' => '<em>'. t('There are currently no access rules.') .'</em>', 'colspan' => 5));
   }
-  $output .= theme('table', $header, $rows);
-
-  return $output;
+  return theme('table', $header, $rows);
 }
 
 /**
@@ -1917,7 +1918,7 @@ function user_admin_perm($rid = NULL) {
 
   // Have to build checkboxes here after checkbox arrays are built
   foreach ($role_names as $rid => $name) {
-    $form['checkboxes'][$rid] = array('#type' => 'checkboxes', '#options' => $options, '#default_value' => $status[$rid]);
+    $form['checkboxes'][$rid] = array('#type' => 'checkboxes', '#options' => $options, '#default_value' => isset($status[$rid]) ? $status[$rid] : array());
     $form['role_names'][$rid] = array('#value' => $name, '#tree' => TRUE);
   }
   $form['submit'] = array('#type' => 'submit', '#value' => t('Save permissions'));
@@ -2023,7 +2024,6 @@ function user_admin_role() {
     );
     $form['#submit']['user_admin_role_submit'] = array();
     $form['#validate']['user_admin_role_validate'] = array();
-    $form['#theme'] = 'user_admin_role';
   }
   return $form;
 }
@@ -2126,7 +2126,7 @@ function user_admin_account() {
 
   $status = array(t('blocked'), t('active'));
   $roles = user_roles(1);
-
+  $accounts = array();
   while ($account = db_fetch_object($result)) {
     $accounts[$account->uid] = '';
     $form['name'][$account->uid] = array('#value' => theme('username', $account));
@@ -2564,10 +2564,12 @@ function user_filters() {
   $roles = user_roles(1);
   unset($roles[DRUPAL_AUTHENTICATED_RID]); // Don't list authorized role.
   if (count($roles)) {
-    $filters['role'] = array('title' => t('role'),
-                         'where' => "ur.rid = %d",
-                         'options' => $roles,
-                       );
+    $filters['role'] = array(
+      'title' => t('role'),
+      'where' => "ur.rid = %d",
+      'options' => $roles,
+      'join' => '',
+    );
   }
 
   $options = array();
@@ -2581,16 +2583,19 @@ function user_filters() {
     }
   }
   ksort($options);
-  $filters['permission'] = array('title' => t('permission'),
-                             'join' => 'LEFT JOIN {permission} p ON ur.rid = p.rid',
-                             'where' => " ((p.perm IS NOT NULL AND p.perm LIKE '%%%s%%') OR u.uid = 1) ",
-                             'options' => $options,
-                           );
+  $filters['permission'] = array(
+    'title' => t('permission'),
+    'join' => 'LEFT JOIN {permission} p ON ur.rid = p.rid',
+    'where' => " ((p.perm IS NOT NULL AND p.perm LIKE '%%%s%%') OR u.uid = 1) ",
+    'options' => $options,
+  );
 
-  $filters['status'] = array('title' => t('status'),
-                         'where' => 'u.status = %d',
-                         'options' => array(1 => t('active'), 0 => t('blocked')),
-                       );
+  $filters['status'] = array(
+    'title' => t('status'),
+    'where' => 'u.status = %d',
+    'join' => '',
+    'options' => array(1 => t('active'), 0 => t('blocked')),
+  );
   return $filters;
 }
 
@@ -2618,8 +2623,8 @@ function user_build_filter_query() {
     $args[] = $value;
     $join[] = $filters[$key]['join'];
   }
-  $where = count($where) ? 'AND '. implode(' AND ', $where) : '';
-  $join = count($join) ? ' '. implode(' ', array_unique($join)) : '';
+  $where = !empty($where) ? 'AND '. implode(' AND ', $where) : '';
+  $join = !empty($join) ? ' '. implode(' ', array_unique($join)) : '';
 
   return array('where' => $where,
            'join' => $join,
@@ -2695,7 +2700,7 @@ function theme_user_filters($form) {
     }
   }
 
-  $output .= '<li><dl class="multiselect">'. (sizeof($form['current']) ? '<dt><em>'. t('and') .'</em> '. t('where') .'</dt>' : '') .'<dd class="a">';
+  $output .= '<li><dl class="multiselect">'. (!empty($form['current']) ? '<dt><em>'. t('and') .'</em> '. t('where') .'</dt>' : '') .'<dd class="a">';
   foreach (element_children($form['filter']) as $key) {
     $output .= drupal_render($form['filter'][$key]);
   }

@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.112 2007/03/26 01:32:22 dries Exp $
+// $Id: path.module,v 1.113 2007/03/27 05:13:54 unconed Exp $
 
 /**
  * @file
@@ -184,7 +184,7 @@ function path_set_alias($path = NULL, $alias = NULL, $pid = NULL, $language = ''
 /**
  * Return a form for editing or creating an individual URL alias.
  */
-function path_form($edit = '') {
+function path_form($edit = array('src' => '', 'dst' => '', 'pid' => NULL)) {
   $form['#submit']['path_form_submit'] = array();
   $form['#validate']['path_form_validate'] = array();
   $form['#theme'] = 'path_form';
@@ -272,7 +272,7 @@ function path_nodeapi(&$node, $op, $arg) {
  * Implementation of hook_form_alter().
  */
 function path_form_alter(&$form, $form_id) {
-  if (isset($form['type']) && $form['type']['#value'] .'_node_form' == $form_id) {
+  if (isset($form['type']) && isset($form['#node']) && $form['type']['#value'] .'_node_form' == $form_id) {
     $path = isset($form['#node']->path) ? $form['#node']->path : NULL;
     $form['path'] = array(
       '#type' => 'fieldset',
@@ -362,7 +362,7 @@ function path_load($pid) {
 function path_form_validate($form_id, $form_values) {
   $src = $form_values['src'];
   $dst = $form_values['dst'];
-  $pid = $form_values['pid'];
+  $pid = isset($form_values['pid']) ? $form_values['pid'] : 0;
   // Language is only set if locale module is enabled, otherwise save for all languages.
   $language = isset($form_values['language']) ? $form_values['language'] : '';
 
@@ -376,7 +376,7 @@ function path_form_validate($form_id, $form_values) {
  */
 function path_form_submit($form_id, $form_values) {
   // Language is only set if locale module is enabled
-  path_set_alias($form_values['src'], $form_values['dst'], $form_values['pid'], isset($form_values['language']) ? $form_values['language'] : '');
+  path_set_alias($form_values['src'], $form_values['dst'], isset($form_values['pid']) ? $form_values['pid'] : 0, isset($form_values['language']) ? $form_values['language'] : '');
 
   drupal_set_message(t('The alias has been saved.'));
   return 'admin/build/path';

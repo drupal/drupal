@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.530 2007/03/26 00:35:58 dries Exp $
+// $Id: comment.module,v 1.531 2007/03/27 05:13:53 unconed Exp $
 
 /**
  * @file
@@ -384,7 +384,7 @@ function comment_form_alter($form, $form_id) {
       '#description' => t('Users with the <em>administer comments</em> permission will be able to override this setting.'),
     );
   }
-  elseif (isset($form['type'])) {
+  elseif (isset($form['type']) && isset($form['#node'])) {
     if ($form['type']['#value'] .'_node_form' == $form_id) {
       $node = $form['#node'];
       $form['comment_settings'] = array(
@@ -1535,7 +1535,23 @@ function comment_form($edit, $title = NULL) {
     $form['subject'] = array('#type' => 'textfield', '#title' => t('Subject'), '#maxlength' => 64, '#default_value' => !empty($edit['subject']) ? $edit['subject'] : '');
   }
 
-  $form['comment_filter']['comment'] = array('#type' => 'textarea', '#title' => t('Comment'), '#rows' => 15, '#default_value' => !empty($edit['comment']) ? $edit['comment'] : $user->signature, '#required' => TRUE);
+  if (!empty($edit['comment'])) {
+    $default = $edit['comment'];
+  }
+  elseif (isset($user->signature)) {
+    $default = $user->signature;
+  }
+  else {
+    $default = '';
+  }
+
+  $form['comment_filter']['comment'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Comment'),
+    '#rows' => 15,
+    '#default_value' => $default,
+    '#required' => TRUE,
+  );
   if (!isset($edit['format'])) {
     $edit['format'] = FILTER_FORMAT_DEFAULT;
   }

@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.26 2007/03/07 13:08:04 dries Exp $
+// $Id: content_types.inc,v 1.27 2007/03/27 05:13:54 unconed Exp $
 
 /**
  * @file
@@ -20,24 +20,20 @@ function node_overview_types() {
     if (function_exists($type->module .'_form')) {
       $name = check_plain($name);
       $type_url_str = str_replace('_', '-', $type->type);
-      // Populate the operations field.
-      $operations = array();
-
+      $row = array(
+        l($name, 'admin/content/types/'. $type_url_str),
+        check_plain($type->type),
+        check_plain($type->description),
+      );
       // Set the edit column.
-      $operations[] = array('data' => l(t('edit'), 'admin/content/types/'. $type_url_str));
+      $row[] = array('data' => l(t('edit'), 'admin/content/types/'. $type_url_str));
 
       // Set the delete column.
       if ($type->custom) {
-        $operations[] = array('data' => l(t('delete'), 'admin/content/types/'. $type_url_str .'/delete'));
+        $row[] = array('data' => l(t('delete'), 'admin/content/types/'. $type_url_str .'/delete'));
       }
       else {
-        $operations[] = array('data' => '');
-      }
-
-      $row = array(array('data' => l($name, 'admin/content/types/'. $type_url_str), 'class' => $class), array('data' => check_plain($type->type), 'class' => $class), array('data' => check_plain($type->description), 'class' => $class));
-      foreach ($operations as $operation) {
-        $operation['class'] = $class;
-        $row[] = $operation;
+        $row[] = array('data' => '');
       }
       $rows[] = $row;
     }
@@ -172,7 +168,7 @@ function node_type_form($type = NULL) {
   );
   $form['orig_type'] = array(
     '#type' => 'value',
-    '#value' => $type->orig_type,
+    '#value' => isset($type->orig_type) ? $type->orig_type : '',
   );
   $form['module'] = array(
     '#type' => 'value',

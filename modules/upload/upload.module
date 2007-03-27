@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.155 2007/03/26 00:35:59 dries Exp $
+// $Id: upload.module,v 1.156 2007/03/27 05:13:54 unconed Exp $
 
 /**
  * @file
@@ -309,7 +309,7 @@ function _upload_prepare(&$node) {
     // Scale image uploads.
     $file = _upload_image($file);
 
-    $key = 'upload_'. count($_SESSION['file_previews']);
+    $key = 'upload_'. (isset($_SESSION['file_previews']) ? 0 : count($_SESSION['file_previews']));
     $file->fid = $key;
     $file->source = $key;
     $file->list = variable_get('upload_list_default',1);
@@ -343,7 +343,7 @@ function upload_form_alter(&$form, $form_id) {
     );
   }
 
-  if (isset($form['type'])) {
+  if (isset($form['type']) && isset($form['#node'])) {
     $node = $form['#node'];
     if ($form['type']['#value'] .'_node_form' == $form_id && variable_get("upload_$node->type", TRUE)) {
       drupal_add_js('misc/progress.js');
@@ -402,7 +402,7 @@ function _upload_validate(&$node) {
       $file = (object)$file;
 
       // Validate new uploads.
-      if (strpos($fid, 'upload') !== FALSE && !$file->remove) {
+      if (strpos($fid, 'upload') !== FALSE && empty($file->remove)) {
         global $user;
 
         // Bypass validation for uid  = 1.
@@ -673,7 +673,7 @@ function upload_unmunge_filename($filename) {
 }
 
 function upload_save(&$node) {
-  if (!is_array($node->files)) {
+  if (empty($node->files) || !is_array($node->files)) {
     return;
   }
 
@@ -771,14 +771,14 @@ function _upload_form($node) {
       // Generate valid URL for both existing attachments and preview of new attachments (these have 'upload' in fid)
       $description = file_create_url((strpos($file->fid, 'upload') === FALSE ? $file->filepath : file_create_filename($file->filename, file_create_path())));
       $description = "<small>". check_plain($description) ."</small>";
-      $form['files'][$key]['description'] = array('#type' => 'textfield', '#default_value' => (strlen($file->description)) ? $file->description : $file->filename, '#maxlength' => 256, '#description' => $description );
+      $form['files'][$key]['description'] = array('#type' => 'textfield', '#default_value' => !empty($file->description) ? $file->description : $file->filename, '#maxlength' => 256, '#description' => $description );
 
       $form['files'][$key]['size'] = array('#value' => format_size($file->filesize));
-      $form['files'][$key]['remove'] = array('#type' => 'checkbox', '#default_value' => $file->remove);
+      $form['files'][$key]['remove'] = array('#type' => 'checkbox', '#default_value' => !empty($file->remove));
       $form['files'][$key]['list'] = array('#type' => 'checkbox',  '#default_value' => $file->list);
       // if the file was uploaded this page request, set value. this fixes the problem
       // formapi has recognizing new checkboxes. see comments in _upload_prepare.
-      if ($_SESSION['file_current_upload'] == $file->fid) {
+      if (isset($_SESSION['file_current_upload']) && $_SESSION['file_current_upload'] == $file->fid) {
         $form['files'][$key]['list']['#value'] = variable_get('upload_list_default',1);
       }
       $form['files'][$key]['filename'] = array('#type' => 'value',  '#value' => $file->filename);
@@ -883,6 +883,13 @@ function upload_js() {
   _upload_validate($node);
 
   $form = _upload_form($node);
+  $form += array(
+    '#post' => $_POST,
+    '#programmed' => FALSE,
+    '#tree' => FALSE,
+    '#parents' => array(),
+  );
+  $GLOBALS['form_button_counter'] = array(0, 0);
   drupal_alter('form', $form, 'upload_js');
   $form = form_builder('upload_js', $form);
   $output = theme('status_messages') . drupal_render($form);

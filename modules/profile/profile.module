@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.194 2007/02/11 09:30:51 dries Exp $
+// $Id: profile.module,v 1.195 2007/03/27 05:13:54 unconed Exp $
 
 /**
  * @file
@@ -129,6 +129,7 @@ function profile_block($op = 'list', $delta = 0, $edit = array()) {
   }
   else if ($op == 'view') {
     if (user_access('access user profiles')) {
+      $output = '';
       if ((arg(0) == 'node') && is_numeric(arg(1)) && (arg(2) == NULL)) {
         $node = node_load(arg(1));
         $account = user_load(array('uid' => $node->uid));
@@ -225,6 +226,16 @@ function profile_field_form($arg = NULL) {
     $edit = array('name' => 'profile_');
     $form['type'] = array('#type' => 'value', '#value' => $type);
   }
+  $edit += array(
+    'category' => '',
+    'title' => '',
+    'explanation' => '',
+    'weight' => '',
+    'page' => '',
+    'autocomplete' => '',
+    'required' => '',
+    'register' => '',
+  );
   $form['fields'] = array('#type' => 'fieldset',
     '#title' => t('Field settings'),
   );

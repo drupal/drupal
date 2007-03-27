@@ -1,5 +1,5 @@
 <?php
-// $Id: phptemplate.engine,v 1.59 2007/03/26 01:32:22 dries Exp $
+// $Id: phptemplate.engine,v 1.60 2007/03/27 05:13:55 unconed Exp $
 
 /**
  * @file
@@ -202,15 +202,15 @@ function phptemplate_page($content, $show_blocks = TRUE) {
     'head_title'          => implode(' | ', $head_title),
     'help'                => theme('help'),
     'language'            => $GLOBALS['language'],
-    'layout'              => $layout,
+    'layout'              => isset($layout) ? $layout : NULL,
     'logo'                => theme_get_setting('logo'),
     'messages'            => theme('status_messages'),
     'mission'             => isset($mission) ? $mission : '',
     'primary_links'       => menu_primary_links(),
     'search_box'          => (theme_get_setting('toggle_search') ? drupal_get_form('search_theme_form') : ''),
     'secondary_links'     => menu_secondary_links(),
-    'sidebar_left'        => $sidebar_left,
-    'sidebar_right'       => $sidebar_right,
+    'sidebar_left'        => !empty($sidebar_left) ? $sidebar_left : '',
+    'sidebar_right'       => !empty($sidebar_right) ? $sidebar_right : '',
     'site_name'           => (theme_get_setting('toggle_name') ? variable_get('site_name', 'Drupal') : ''),
     'site_slogan'         => (theme_get_setting('toggle_slogan') ? variable_get('site_slogan', '') : ''),
     'css'                 => drupal_add_css(),
@@ -261,11 +261,20 @@ function phptemplate_node($node, $teaser = 0, $page = 0) {
   else {
     $taxonomy = array();
   }
+  if ($teaser && $node->teaser) {
+    $content = $node->teaser;
+  }
+  elseif (isset($node->body)) {
+    $content = $node->body;
+  }
+  else {
+    $content = '';
+  }
 
   $variables = array(
-    'content'        => ($teaser && $node->teaser) ? $node->teaser : $node->body,
+    'content'        => $content,
     'date'           => format_date($node->created),
-    'links'          => $node->links ? theme('links', $node->links, array('class' => 'links inline')) : '',
+    'links'          => !empty($node->links) ? theme('links', $node->links, array('class' => 'links inline')) : '',
     'name'           => theme('username', $node),
     'node'           => $node,  // we pass the actual node to allow more customization
     'node_url'       => url('node/'. $node->nid),

@@ -1,5 +1,5 @@
 <?php
-// $Id: color.module,v 1.16 2007/03/26 00:35:58 dries Exp $
+// $Id: color.module,v 1.17 2007/03/27 05:13:53 unconed Exp $
 
 /**
  * Implementation of hook_form_alter().
@@ -145,7 +145,7 @@ function theme_color_scheme_form($form) {
   $info = $form['info']['#value'];
   $path = drupal_get_path('theme', $theme) .'/';
   drupal_add_css($path . $info['preview_css']);
-
+  $output = '';
   // Wrapper
   $output .= '<div class="color-form clear-block">';
 

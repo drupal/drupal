@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.459 2007/03/26 06:26:45 dries Exp $
+// $Id: system.module,v 1.460 2007/03/27 05:13:54 unconed Exp $
 
 /**
  * @file
@@ -462,6 +462,7 @@ function system_admin_theme_submit($form_id, $form_values) {
  */
 function system_theme_select_form($description = '', $default_value = '', $weight = 0) {
   if (user_access('select different theme')) {
+    $enabled = array();
     foreach (list_themes() as $theme) {
       if ($theme->status) {
         $enabled[] = $theme;
@@ -980,7 +981,7 @@ function system_theme_data() {
   db_query("DELETE FROM {system} WHERE type = 'theme'");
 
   foreach ($themes as $theme) {
-    db_query("INSERT INTO {system} (name, description, type, filename, status, throttle, bootstrap) VALUES ('%s', '%s', '%s', '%s', %d, %d, %d)", $theme->name, $theme->owner, 'theme', $theme->filename, $theme->status, 0, 0);
+    db_query("INSERT INTO {system} (name, description, type, filename, status, throttle, bootstrap) VALUES ('%s', '%s', '%s', '%s', %d, %d, %d)", $theme->name, $theme->owner, 'theme', $theme->filename, isset($theme->status) ? $theme->status : 0, 0, 0);
   }
 
   return $themes;
@@ -1039,7 +1040,7 @@ function system_region_list($theme_key) {
  */
 function system_default_region($theme) {
   $regions = array_keys(system_region_list($theme));
-  return $regions[0];
+  return isset($regions[0]) ? $regions[0] : '';
 }
 
 /**
@@ -1147,6 +1148,7 @@ function system_themes() {
   drupal_clear_css_cache();
   $themes = system_theme_data();
   ksort($themes);
+  $status = array();
 
   foreach ($themes as $info) {
     $info->screenshot = dirname($info->filename) .'/screenshot.png';
@@ -1155,10 +1157,10 @@ function system_themes() {
     $form[$info->name]['screenshot'] = array('#value' => $screenshot);
     $form[$info->name]['description'] = array('#type' => 'item', '#title' => $info->name,  '#value' => dirname($info->filename));
     $options[$info->name] = '';
-    if ($info->status) {
+    if (!empty($info->status)) {
       $status[] = $info->name;
     }
-    if ($info->status && (function_exists($info->prefix .'_settings') || function_exists($info->prefix .'_features'))) {
+    if (!empty($info->status) && (function_exists($info->prefix .'_settings') || function_exists($info->prefix .'_features'))) {
       $form[$info->name]['operations'] = array('#value' => l(t('configure'), 'admin/build/themes/settings/'. $info->name) );
     }
     else {
@@ -1330,8 +1332,9 @@ function system_modules($form_values = NULL) {
     }
   }
 
+  $modules_required = drupal_required_modules();
   // Merge in required modules.
-  foreach (drupal_required_modules() as $required) {
+  foreach ($modules_required as $required) {
     $disabled[] = $required;
     $form['disabled_modules']['#value'][$required] = TRUE;
   }
@@ -1503,7 +1506,7 @@ function system_modules_submit($form_id, $form_values) {
 
   $current_module_list = module_list(TRUE, FALSE);
 
-  if (is_array($form_values['throttle'])) {
+  if (isset($form_values['throttle'])) {
     foreach ($form_values['throttle'] as $key => $choice) {
       db_query("UPDATE {system} SET throttle = %d WHERE type = 'module' and name = '%s'", $choice ? 1 : 0, $key);
     }
@@ -1858,7 +1861,13 @@ function system_status($check = FALSE) {
  * Helper function to sort requirements.
  */
 function _system_sort_requirements($a, $b) {
-  return (isset($a['weight']) || isset($b['weight'])) ? $a['weight'] - $b['weight'] : strcmp($a['title'], $b['title']);
+  if (!isset($a['weight'])) {
+    if (!isset($b['weight'])) {
+      return strcmp($a['title'], $b['title']);
+    }
+    return -$b['weight'];
+  }
+  return isset($b['weight']) ? $a['weight'] - $b['weight'] : $a['weight'];
 }
 
 /**
@@ -2201,6 +2210,9 @@ function theme_admin_page($blocks) {
       if (empty($block['position'])) {
         // perform automatic striping.
         $block['position'] = ++$stripe % 2 ? 'left' : 'right';
+      }
+      if (!isset($container[$block['position']])) {
+        $container[$block['position']] = '';
       }
       $container[$block['position']] .= $block_output;
     }

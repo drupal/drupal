@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.215 2007/03/17 18:30:14 dries Exp $
+// $Id: search.module,v 1.216 2007/03/27 05:13:54 unconed Exp $
 
 /**
  * @file
@@ -515,7 +515,7 @@ function search_index($sid, $type, $text) {
         }
       }
       else {
-        if ($tagstack[0] == $tagname) {
+        if (isset($tagstack[0]) && $tagstack[0] == $tagname) {
           // None of the tags we look for make sense when nested identically.
           // If they are, it's probably broken HTML.
           $tagstack = array();
@@ -575,6 +575,9 @@ function search_index($sid, $type, $text) {
               $results[$linknid][$word] += $score * $focus;
             }
             else {
+              if (!isset($results[0][$word])) {
+                $results[0][$word] = 0;
+              }
               $results[0][$word] += $score * $focus;
               // Focus is a decaying value in terms of the amount of unique words up to this point.
               // From 100 words and more, it decays, to e.g. 0.5 at 500 words and 0.3 at 1000 words.
@@ -933,7 +936,7 @@ function search_view($type = 'node') {
     return $output;
   }
 
-  return drupal_get_form('search_form', NULL, $keys, $type);
+  return drupal_get_form('search_form', NULL, empty($keys) ? array() : $keys, $type);
 }
 
 /**
@@ -1240,19 +1243,19 @@ function _search_excerpt_replace(&$text) {
 function theme_search_item($item, $type) {
   $output = ' <dt class="title"><a href="'. check_url($item['link']) .'">'. check_plain($item['title']) .'</a></dt>';
   $info = array();
-  if ($item['type']) {
+  if (!empty($item['type'])) {
     $info[] = $item['type'];
   }
-  if ($item['user']) {
+  if (!empty($item['user'])) {
     $info[] = $item['user'];
   }
-  if ($item['date']) {
+  if (!empty($item['date'])) {
     $info[] = format_date($item['date'], 'small');
   }
-  if (is_array($item['extra'])) {
+  if (isset($item['extra']) && is_array($item['extra'])) {
     $info = array_merge($info, $item['extra']);
   }
-  $output .= ' <dd>'. ($item['snippet'] ? '<p>'. $item['snippet'] . '</p>' : '') . '<p class="search-info">' . implode(' - ', $info) .'</p></dd>';
+  $output .= ' <dd>'. (!empty($item['snippet']) ? '<p>'. $item['snippet'] . '</p>' : '') . '<p class="search-info">' . implode(' - ', $info) .'</p></dd>';
   return $output;
 }
 

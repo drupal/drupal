@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.253 2007/03/25 21:11:26 dries Exp $
+// $Id: block.module,v 1.254 2007/03/27 05:13:53 unconed Exp $
 
 /**
  * @file
@@ -191,6 +191,10 @@ function _block_rehash() {
 
   // Reinsert new set of blocks into table.
   foreach ($blocks as $block) {
+    $block += array(
+      'visibility' => NULL,
+      'throttle' => NULL,
+    );
     db_query("INSERT INTO {blocks} (module, delta, theme, status, weight, region, visibility, pages, custom, throttle, title) VALUES ('%s', '%s', '%s', %d, %d, '%s', %d, '%s', %d, %d, '%s')", $block['module'], $block['delta'], $theme_key, $block['status'], $block['weight'], $block['region'], $block['visibility'], $block['pages'], $block['custom'], $block['throttle'], $block['title']);
   }
   db_unlock_tables();
@@ -238,7 +242,7 @@ function block_admin_display($theme = NULL) {
     );
 
     if ($throttle) {
-      $form[$i]['throttle'] = array('#type' => 'checkbox', '#default_value' => $block['throttle']);
+      $form[$i]['throttle'] = array('#type' => 'checkbox', '#default_value' => isset($block['throttle']) ? $block['throttle'] : FALSE);
     }
     $form[$i]['configure'] = array('#value' => l(t('configure'), 'admin/build/block/configure/'. $block['module'] .'/'. $block['delta']));
     if ($block['module'] == 'block') {
@@ -567,6 +571,10 @@ function block_box_delete_submit($form_id, $form_values) {
  * Define the custom block form.
  */
 function block_box_form($edit = array()) {
+  $edit += array(
+    'info' => '',
+    'body' => '',
+  );
   $form['info'] = array(
     '#type' => 'textfield',
     '#title' => t('Block description'),

@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.78 2007/02/15 11:40:18 dries Exp $
+// $Id: contact.module,v 1.79 2007/03/27 05:13:53 unconed Exp $
 
 /**
  * @file
@@ -98,7 +98,15 @@ function contact_menu() {
 
 function _contact_user_tab_access($account) {
   global $user;
-  return $account && (($user->uid != $account->uid && $account->contact) || user_access('administer users'));
+  if (!isset($account->contact)) {
+    $account->contact = FALSE;
+  }
+  return
+    $account &&
+    (
+      ($user->uid != $account->uid && $account->contact) ||
+      user_access('administer users')
+    );
 }
 
 /**
@@ -121,7 +129,7 @@ function contact_user($type, &$edit, &$user, $category = NULL) {
     return $form;
   }
   elseif ($type == 'validate') {
-    return array('contact' => $edit['contact']);
+    return array('contact' => isset($edit['contact']) ? $edit['contact'] : FALSE);
   }
   elseif ($type == 'insert') {
     $edit['contact'] = variable_get('contact_default_status', 1);
@@ -148,6 +156,16 @@ function contact_admin_categories() {
 function contact_admin_edit($cid = NULL) {
   if (arg(3) == "edit" && $cid > 0) {
     $edit = db_fetch_array(db_query("SELECT * FROM {contact} WHERE cid = %d", $cid));
+  }
+  else {
+    $edit = array(
+      'category' => '',
+      'recipients' => '',
+      'reply' => '',
+      'weight' => 0,
+      'selected' => 0,
+      'cid' => NULL,
+    );
   }
   $form['category'] = array('#type' => 'textfield',
     '#title' => t('Category'),

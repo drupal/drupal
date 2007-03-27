@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.110 2007/03/26 01:32:22 dries Exp $
+// $Id: locale.inc,v 1.111 2007/03/27 05:13:53 unconed Exp $
 
 /**
  * @file
@@ -1301,7 +1301,7 @@ function _locale_import_parse_quoted($string) {
  */
 function _locale_export_po($language) {
   global $user;
-
+  $header = '';
   // Get language specific strings, or all strings
   if ($language) {
     $meta = db_fetch_object(db_query("SELECT * FROM {languages} WHERE language = '%s'", $language));

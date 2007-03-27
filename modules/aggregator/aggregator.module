@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.332 2007/03/17 18:30:14 dries Exp $
+// $Id: aggregator.module,v 1.333 2007/03/27 05:13:53 unconed Exp $
 
 /**
  * @file
@@ -310,7 +310,7 @@ function aggregator_block($op = 'list', $delta = 0, $edit = array()) {
 /**
  * Generate a form to add/edit/delete aggregator categories.
  */
- function aggregator_form_category($edit = array()) {
+function aggregator_form_category($edit = array('title' => '', 'description' => '', 'cid' => NULL)) {
   $form['title'] = array('#type' => 'textfield',
     '#title' => t('Title'),
     '#default_value' => $edit['title'],
@@ -392,13 +392,13 @@ function aggregator_form_category_submit($form_id, $form_values) {
  * Add/edit/delete aggregator categories.
  */
 function aggregator_save_category($edit) {
-  if ($edit['cid'] && $edit['title']) {
+  if (!empty($edit['cid']) && !empty($edit['title'])) {
     db_query("UPDATE {aggregator_category} SET title = '%s', description = '%s' WHERE cid = %d", $edit['title'], $edit['description'], $edit['cid']);
   }
-  else if ($edit['cid']) {
+  else if (!empty($edit['cid'])) {
     db_query('DELETE FROM {aggregator_category} WHERE cid = %d', $edit['cid']);
   }
-  else if ($edit['title']) {
+  else if (!empty($edit['title'])) {
     // A single unique id for bundles and feeds, to use in blocks
     $next_id = db_next_id('{aggregator_category}_cid');
     db_query("INSERT INTO {aggregator_category} (cid, title, description, block) VALUES (%d, '%s', '%s', 5)", $next_id, $edit['title'], $edit['description']);
@@ -408,7 +408,7 @@ function aggregator_save_category($edit) {
 /**
  * Generate a form to add/edit feed sources.
  */
-function aggregator_form_feed($edit = array()) {
+function aggregator_form_feed($edit = array('refresh' => 900, 'title' => '', 'url' => '', 'fid' => NULL)) {
   $period = drupal_map_assoc(array(900, 1800, 3600, 7200, 10800, 21600, 32400, 43200, 64800, 86400, 172800, 259200, 604800, 1209600, 2419200), 'format_interval');
 
   if ($edit['refresh'] == '') {
@@ -568,7 +568,7 @@ function aggregator_remove($feed) {
   while ($item = db_fetch_object($result)) {
     $items[] = "iid = $item->iid";
   }
-  if ($items) {
+  if (!empty($items)) {
     db_query('DELETE FROM {aggregator_category_item} WHERE '. implode(' OR ', $items));
   }
   db_query('DELETE FROM {aggregator_item} WHERE fid = %d', $feed['fid']);
@@ -677,6 +677,7 @@ function aggregator_element_data($parser, $data) {
       // it or its contents will end up in the item array.
       break;
     default:
+      $channel += array($tag => '');
       $channel[$tag] .= $data;
   }
 }

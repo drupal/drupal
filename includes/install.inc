@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.34 2007/02/11 08:48:36 dries Exp $
+// $Id: install.inc,v 1.35 2007/03/27 05:13:53 unconed Exp $
 
 define('SCHEMA_UNINSTALLED', -1);
 define('SCHEMA_INSTALLED', 0);
@@ -204,7 +204,7 @@ function drupal_rewrite_settings($settings = array(), $prefix = '') {
           // Write new value to settings.php in the following format:
           //    $'setting' = 'value'; // 'comment'
           $setting = $settings[$variable[1]];
-          $buffer .= '$'. $variable[1] ." = '". $setting['value'] ."';". ($setting['comment'] ? ' // '. $setting['comment'] ."\n" : "\n");
+          $buffer .= '$'. $variable[1] ." = '". $setting['value'] ."';". (!empty($setting['comment']) ? ' // '. $setting['comment'] ."\n" : "\n");
           unset($settings[$variable[1]]);
         }
         else {

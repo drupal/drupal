@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.388 2007/03/26 00:35:58 dries Exp $
+// $Id: forum.module,v 1.389 2007/03/27 05:13:53 unconed Exp $
 
 /**
  * @file
@@ -210,7 +210,7 @@ function forum_admin_settings() {
 function forum_form_alter(&$form, $form_id) {
   // hide critical options from forum vocabulary
   if ($form_id == 'taxonomy_form_vocabulary') {
-    if ($form['vid']['#value'] == _forum_get_vid()) {
+    if (isset($form['vid']) && $form['vid']['#value'] == _forum_get_vid()) {
       $form['help_forum_vocab'] = array(
         '#value' => t('This is the designated forum vocabulary. Some of the normal vocabulary options have been removed.'),
         '#weight' => -1,
@@ -280,14 +280,12 @@ function forum_block($op = 'list', $delta = 0, $edit = array()) {
             break;
         }
 
-        if ($content) {
+        if (!empty($content)) {
           $content .= '<div class="more-link">'. l(t('more'), 'forum', array('title' => t('Read the latest forum topics.'))) .'</div>';
+          $block['subject'] = $title;
+          $block['content'] = $content;
+          return $block;
         }
-
-        $block['subject'] = $title;
-        $block['content'] = $content;
-
-        return $block;
       }
   }
 }
@@ -439,6 +437,12 @@ function forum_delete(&$node) {
  * @param $edit Associative array containing a container term to be added or edited.
  */
 function forum_form_container($edit = array()) {
+  $edit += array(
+    'name' => '',
+    'description' => '',
+    'tid' => 0,
+    'weight' => 0,
+  );
   // Handle a delete operation.
   $form['name'] = array(
     '#title' => t('Container name'),
@@ -481,7 +485,7 @@ function forum_form_container($edit = array()) {
 }
 
 function forum_form_main($type, $edit = array()) {
-  if ($_POST['op'] == t('Delete') || $_POST['confirm']) {
+  if ((isset($_POST['op']) && $_POST['op'] == t('Delete')) || !empty($_POST['confirm'])) {
     return drupal_get_form('forum_confirm_delete', $edit['tid']);
   }
   switch ($type) {
@@ -500,6 +504,12 @@ function forum_form_main($type, $edit = array()) {
  * @param $edit Associative array containing a forum term to be added or edited.
  */
 function forum_form_forum($edit = array()) {
+  $edit += array(
+    'name' => '', 
+    'description' => '', 
+    'tid' => NULL, 
+    'weight' => 0,
+  );
   $form['name'] = array('#type' => 'textfield',
     '#title' => t('Forum name'),
     '#default_value' => $edit['name'],
@@ -1077,7 +1087,7 @@ function theme_forum_topic_navigation($node) {
 
   // get previous and next topic
   $sql = "SELECT n.nid, n.title, n.sticky, l.comment_count, l.last_comment_timestamp FROM {node} n INNER JOIN {node_comment_statistics} l ON n.nid = l.nid INNER JOIN {term_node} r ON n.nid = r.nid AND r.tid = %d WHERE n.status = 1 AND n.type = 'forum' ORDER BY n.sticky DESC, ". _forum_get_topic_order_sql(variable_get('forum_order', 1));
-  $result = db_query(db_rewrite_sql($sql), $node->tid);
+  $result = db_query(db_rewrite_sql($sql), isset($node->tid) ? $node->tid : 0);
 
   $stop = 0;
   while ($topic = db_fetch_object($result)) {
@@ -1097,13 +1107,13 @@ function theme_forum_topic_navigation($node) {
     }
   }
 
-  if ($prev || $next) {
+  if (!empty($prev) || !empty($next)) {
     $output .= '<div class="forum-topic-navigation clear-block">';
 
-    if ($prev) {
+    if (!empty($prev)) {
       $output .= l(t('‹ ') . $prev->title, 'node/'. $prev->nid, array('class' => 'topic-previous', 'title' => t('Go to previous forum topic')));
     }
-    if ($prev && $next) {
+    if (!empty($prev) && !empty($next)) {
       // Word break (a is an inline element)
       $output .= ' ';
     }

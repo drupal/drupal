@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.254 2007/02/27 12:29:22 dries Exp $
+// $Id: statistics.module,v 1.255 2007/03/27 05:13:54 unconed Exp $
 
 /**
  * @file
@@ -200,6 +200,7 @@ function statistics_node_tracker() {
         array('data' => t('Operations')));
 
     $result = pager_query('SELECT a.aid, a.timestamp, a.url, a.uid, u.name FROM {accesslog} a LEFT JOIN {users} u ON a.uid = u.uid WHERE a.path LIKE \'node/%d%%\'' . tablesort_sql($header), 30, 0, NULL, $node->nid);
+    $rows = array();
     while ($log = db_fetch_object($result)) {
       $rows[] = array(
         array('data' => format_date($log->timestamp, 'small'), 'class' => 'nowrap'),
@@ -209,9 +210,11 @@ function statistics_node_tracker() {
     }
 
     drupal_set_title(check_plain($node->title));
-    $output = theme('table', $header, $rows);
-    $output .= theme('pager', NULL, 30, 0);
-    return $output;
+    if (!empty($rows)) {
+      $output = theme('table', $header, $rows);
+      $output .= theme('pager', NULL, 30, 0);
+      return $output;
+    }
   }
   else {
     drupal_not_found();

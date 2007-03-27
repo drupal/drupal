@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.149 2007/03/26 01:32:22 dries Exp $
+// $Id: bootstrap.inc,v 1.150 2007/03/27 05:13:53 unconed Exp $
 
 /**
  * @file
@@ -355,7 +355,9 @@ function drupal_get_filename($type, $name, $filename = NULL) {
     }
   }
 
-  return $files[$type][$name];
+  if (isset($files[$type][$name])) {
+    return $files[$type][$name];
+  }
 }
 
 /**

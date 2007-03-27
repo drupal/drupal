@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.343 2007/03/26 00:35:59 dries Exp $
+// $Id: taxonomy.module,v 1.344 2007/03/27 05:13:54 unconed Exp $
 
 /**
  * @file
@@ -28,8 +28,12 @@ function taxonomy_perm() {
 function taxonomy_link($type, $node = NULL) {
   if ($type == 'taxonomy terms' && $node != NULL) {
     $links = array();
-    if (array_key_exists('taxonomy', $node)) {
+    if (!empty($node->taxonomy)) {
       foreach ($node->taxonomy as $term) {
+        // On preview, we get tids.
+        if (is_numeric($term)) {
+          $term = taxonomy_get_term($term);
+        }
         $links['taxonomy_term_'. $term->tid] = array(
           'title' => $term->name,
           'href' => taxonomy_term_path($term),
@@ -176,7 +180,7 @@ function taxonomy_overview_terms($vocabulary) {
   $header = array(t('Name'), t('Operations'));
 
   drupal_set_title(check_plain($vocabulary->name));
-  $start_from      = $_GET['page'] ? $_GET['page'] : 0;
+  $start_from      = isset($_GET['page']) ? $_GET['page'] : 0;
   $total_entries   = 0;  // total count for pager
   $page_increment  = 25; // number of tids per page
   $displayed_count = 0;  // number of tids shown
@@ -191,7 +195,7 @@ function taxonomy_overview_terms($vocabulary) {
     $displayed_count++; // we're counting tids displayed
   }
 
-  if (!$rows) {
+  if (empty($rows)) {
     $rows[] = array(array('data' => t('No terms available.'), 'colspan' => '2'));
   }
 
@@ -209,6 +213,18 @@ function taxonomy_overview_terms($vocabulary) {
  * Display form for adding and editing vocabularies.
  */
 function taxonomy_form_vocabulary($edit = array()) {
+  $edit += array(
+    'name' => '',
+    'description' => '',
+    'help' => '',
+    'nodes' => array(),
+    'hierarchy' => 0,
+    'relations' => 0,
+    'tags' => 0,
+    'multiple' => 0,
+    'required' => 0,
+    'weight' => 0,
+  );
   $form['name'] = array('#type' => 'textfield',
     '#title' => t('Vocabulary name'),
     '#default_value' => $edit['name'],
@@ -267,7 +283,7 @@ function taxonomy_form_vocabulary($edit = array()) {
   );
 
   $form['submit'] = array('#type' => 'submit', '#value' => t('Submit'));
-  if ($edit['vid']) {
+  if (isset($edit['vid'])) {
     $form['delete'] = array('#type' => 'submit', '#value' => t('Delete'));
     $form['vid'] = array('#type' => 'value', '#value' => $edit['vid']);
     $form['module'] = array('#type' => 'value', '#value' => $edit['module']);
@@ -369,6 +385,12 @@ function taxonomy_vocabulary_confirm_delete_submit($form_id, $form_values) {
 }
 
 function taxonomy_form_term($vocabulary, $edit = array()) {
+  $edit += array(
+    'name' => '',
+    'description' => '',
+    'tid' => NULL,
+    'weight' => 0,
+  );
   $form['name'] = array(
     '#type' => 'textfield',
     '#title' => t('Term name'),
@@ -394,10 +416,10 @@ function taxonomy_form_term($vocabulary, $edit = array()) {
     $exclude[] = $edit['tid'];
 
     if ($vocabulary->hierarchy == 1) {
-      $form['parent'] = _taxonomy_term_select(t('Parent'), 'parent', $parent, $vocabulary_id, l(t('Parent term'), 'admin/help/taxonomy', array('fragment' => 'parent')) .'.', 0, '<'. t('root') .'>', $exclude);
+      $form['parent'] = _taxonomy_term_select(t('Parent'), 'parent', $parent, $vocabulary->vid, l(t('Parent term'), 'admin/help/taxonomy', array('fragment' => 'parent')) .'.', 0, '<'. t('root') .'>', $exclude);
     }
     elseif ($vocabulary->hierarchy == 2) {
-      $form['parent'] = _taxonomy_term_select(t('Parents'), 'parent', $parent, $vocabulary_id, l(t('Parent terms'), 'admin/help/taxonomy', array('fragment' => 'parent')) .'.', 1, '<'. t('root') .'>', $exclude);
+      $form['parent'] = _taxonomy_term_select(t('Parents'), 'parent', $parent, $vocabulary->vid, l(t('Parent terms'), 'admin/help/taxonomy', array('fragment' => 'parent')) .'.', 1, '<'. t('root') .'>', $exclude);
     }
   }
 
@@ -460,12 +482,12 @@ function taxonomy_form_term_submit($form_id, $form_values) {
  *   Status constant indicating if term was inserted or updated.
  */
 function taxonomy_save_term(&$form_values) {
-  if ($form_values['tid'] && $form_values['name']) {
+  if (!empty($form_values['tid']) && $form_values['name']) {
     db_query("UPDATE {term_data} SET name = '%s', description = '%s', weight = %d WHERE tid = %d", $form_values['name'], $form_values['description'], $form_values['weight'], $form_values['tid']);
     $hook = 'update';
     $status = SAVED_UPDATED;
   }
-  else if ($form_values['tid']) {
+  else if (!empty($form_values['tid'])) {
     return taxonomy_del_term($form_values['tid']);
   }
   else {
@@ -476,7 +498,7 @@ function taxonomy_save_term(&$form_values) {
   }
 
   db_query('DELETE FROM {term_relation} WHERE tid1 = %d OR tid2 = %d', $form_values['tid'], $form_values['tid']);
-  if ($form_values['relations']) {
+  if (!empty($form_values['relations'])) {
     foreach ($form_values['relations'] as $related_id) {
       if ($related_id != 0) {
         db_query('INSERT INTO {term_relation} (tid1, tid2) VALUES (%d, %d)', $form_values['tid'], $related_id);
@@ -505,7 +527,7 @@ function taxonomy_save_term(&$form_values) {
   }
 
   db_query('DELETE FROM {term_synonym} WHERE tid = %d', $form_values['tid']);
-  if ($form_values['synonyms']) {
+  if (!empty($form_values['synonyms'])) {
     foreach (explode ("\n", str_replace("\r", '', $form_values['synonyms'])) as $synonym) {
       if ($synonym) {
         db_query("INSERT INTO {term_synonym} (tid, name) VALUES (%d, '%s')", $form_values['tid'], chop($synonym));
@@ -652,7 +674,7 @@ function taxonomy_get_vocabularies($type = NULL) {
  * Generate a form for selecting terms to associate with a node.
  */
 function taxonomy_form_alter(&$form, $form_id) {
-  if (isset($form['type']) && $form['type']['#value'] .'_node_form' == $form_id) {
+  if (isset($form['type']) && isset($form['#node']) && $form['type']['#value'] .'_node_form' == $form_id) {
     $node = $form['#node'];
 
     if (!isset($node->taxonomy)) {
@@ -757,9 +779,9 @@ function taxonomy_node_get_terms($node, $key = 'tid') {
  * Make sure incoming vids are free tagging enabled.
  */
 function taxonomy_node_validate(&$node) {
-  if ($node->taxonomy) {
+  if (!empty($node->taxonomy)) {
     $terms = $node->taxonomy;
-    if ($terms['tags']) {
+    if (!empty($terms['tags'])) {
       foreach ($terms['tags'] as $vid => $vid_value) {
         $vocabulary = taxonomy_vocabulary_load($vid);
         if (empty($vocabulary->tags)) {
@@ -1276,11 +1298,15 @@ function taxonomy_nodeapi($node, $op, $arg = 0) {
      return $output;
 
     case 'insert':
-      taxonomy_node_save($node, $node->taxonomy);
+      if (!empty($node->taxonomy)) {
+        taxonomy_node_save($node, $node->taxonomy);
+      }
       break;
 
     case 'update':
-      taxonomy_node_save($node, $node->taxonomy);
+      if (!empty($node->taxonomy)) {
+        taxonomy_node_save($node, $node->taxonomy);
+      }
       break;
 
     case 'delete':

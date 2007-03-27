@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.94 2007/02/15 11:40:17 dries Exp $
+// $Id: file.inc,v 1.95 2007/03/27 05:13:53 unconed Exp $
 
 /**
  * @file
@@ -382,7 +382,7 @@ function file_copy(&$source, $dest = 0, $replace = FILE_EXISTS_RENAME) {
     @chmod($dest, 0664);
   }
 
-  if (is_object($file)) {
+  if (isset($file) && is_object($file)) {
     $file->filename = $basename;
     $file->filepath = $dest;
     $source = $file;

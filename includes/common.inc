@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.623 2007/03/26 01:32:22 dries Exp $
+// $Id: common.inc,v 1.624 2007/03/27 05:13:53 unconed Exp $
 
 /**
  * @file
@@ -351,6 +351,7 @@ function drupal_not_found() {
 
   if (empty($return)) {
     drupal_set_title(t('Page not found'));
+    $return = '';
   }
   // To conserve CPU and bandwidth, omit the blocks
   print theme('page', $return, FALSE);
@@ -871,6 +872,7 @@ function format_rss_item($title, $link, $description, $args = array()) {
  * with the same format as $array itself for nesting.
  */
 function format_xml_elements($array) {
+  $output = '';
   foreach ($array as $key => $value) {
     if (is_numeric($key)) {
       if ($value['key']) {
@@ -1972,7 +1974,12 @@ function drupal_mail($mailkey, $to, $subject, $body, $from = NULL, $headers = ar
   // Bundle up the variables into a structured array for altering.
   $message = array('#mail_id' => $mailkey, '#to' => $to, '#subject' => $subject, '#body' => $body, '#from' => $from, '#headers' => $headers);
   drupal_alter('mail', $message);
-  list($mailkey, $to, $subject, $body, $from, $headers) = $message;
+  $mailkey = $message['#mail_id'];
+  $to = $message['#to'];
+  $subject = $message['#subject'];
+  $body = $message['#body'];
+  $from = $message['#from'];
+  $headers = $message['#headers'];
 
   // Allow for custom mail backend
   if (variable_get('smtp_library', '') && file_exists(variable_get('smtp_library', ''))) {

@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.793 2007/03/26 01:32:22 dries Exp $
+// $Id: node.module,v 1.794 2007/03/27 05:13:54 unconed Exp $
 
 /**
  * @file
@@ -65,7 +65,7 @@ function node_cron() {
  */
 function node_title_list($result, $title = NULL) {
   while ($node = db_fetch_object($result)) {
-    $items[] = l($node->title, 'node/'. $node->nid, $node->comment_count ? array('title' => format_plural($node->comment_count, '1 comment', '@count comments')) : '');
+    $items[] = l($node->title, 'node/'. $node->nid, !empty($node->comment_count) ? array('title' => format_plural($node->comment_count, '1 comment', '@count comments')) : '');
   }
 
   return theme('node_list', $items, $title);
@@ -290,6 +290,15 @@ function node_type_save($info) {
   $is_existing = FALSE;
   $existing_type = !empty($info->old_type) ? $info->old_type : $info->type;
   $is_existing = db_num_rows(db_query("SELECT * FROM {node_type} WHERE type = '%s'", $existing_type));
+  if (!isset($info->help)) {
+    $info->help = '';
+  }
+  if (!isset($info->min_word_count)) {
+    $info->min_word_count = 0;
+  }
+  if (!isset($info->body_label)) {
+    $info->body_label = '';
+  }
 
   if ($is_existing) {
     db_query("UPDATE {node_type} SET type = '%s', name = '%s', module = '%s', has_title = %d, title_label = '%s', has_body = %d, body_label = '%s', description = '%s', help = '%s', min_word_count = %d, custom = %d, modified = %d, locked = %d WHERE type = '%s'", $info->type, $info->name, $info->module, $info->has_title, $info->title_label, $info->has_body, $info->body_label, $info->description, $info->help, $info->min_word_count, $info->custom, $info->modified, $info->locked, $existing_type);
@@ -734,7 +743,7 @@ function node_prepare($node, $teaser = FALSE) {
  */
 function node_build_content($node, $teaser = FALSE, $page = FALSE) {
   // Remove the delimiter (if any) that separates the teaser from the body.
-  $node->body = str_replace('<!--break-->', '', $node->body);
+  $node->body = isset($node->body) ? str_replace('<!--break-->', '', $node->body) : '';
 
   // The 'view' hook can be implemented to overwrite the default function
   // to display nodes.
@@ -1519,6 +1528,7 @@ function node_admin_nodes() {
   $form['options']['submit'] = array('#type' => 'submit', '#value' => t('Update'));
 
   $destination = drupal_get_destination();
+  $nodes = array();
   while ($node = db_fetch_object($result)) {
     $nodes[$node->nid] = '';
     $form['title'][$node->nid] = array('#value' => l($node->title, 'node/'. $node->nid) .' '. theme('mark', node_mark($node->nid, $node->changed)));
@@ -1756,6 +1766,7 @@ function node_feed($nodes = 0, $channel = array()) {
   $item_length = variable_get('feed_item_length', 'teaser');
   $namespaces = array('xmlns:dc="http://purl.org/dc/elements/1.1/"');
 
+  $items = '';
   while ($node = db_fetch_object($nodes)) {
     // Load the specified node:
     $item = node_load($node->nid);
@@ -1780,7 +1791,7 @@ function node_feed($nodes = 0, $channel = array()) {
     $extra = node_invoke_nodeapi($item, 'rss item');
     $extra = array_merge($extra, array(array('key' => 'pubDate', 'value' =>  date('r', $item->created)), array('key' => 'dc:creator', 'value' => $item->name), array('key' => 'guid', 'value' => $item->nid .' at '. $base_url, 'attributes' => array('isPermaLink' => 'false'))));
     foreach ($extra as $element) {
-      if ($element['namespace']) {
+      if (isset($element['namespace'])) {
         $namespaces = array_merge($namespaces, $element['namespace']);
       }
     }
@@ -1933,6 +1944,10 @@ function node_form($node, $form_values = NULL) {
    */
   foreach (array('nid', 'vid', 'uid', 'created', 'type') as $key) {
     $form[$key] = array('#type' => 'value', '#value' => isset($node->$key) ? $node->$key : NULL);
+  }
+  if (!isset($node->nid)) {
+    $node->body = NULL;
+    $node->title = NULL;
   }
 
   // Changed must be sent to the client, for later overwrite error checking.
@@ -2169,7 +2184,7 @@ function node_preview($node) {
     // Extract a teaser, if it hasn't been set (e.g. by a module-provided
     // 'teaser' form item).
     if (!isset($node->teaser)) {
-      $node->teaser = node_teaser($node->body, $node->format);
+      $node->teaser = empty($node->body) ? '' : node_teaser($node->body, $node->format);
     }
 
     // Display a preview of the node:

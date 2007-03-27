@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.224 2007/02/11 09:30:51 dries Exp $
+// $Id: poll.module,v 1.225 2007/03/27 05:13:54 unconed Exp $
 
 /**
  * @file
@@ -133,7 +133,7 @@ function poll_form($node, $form_values = NULL) {
     }
   }
   else {
-    $choices = max(2, count($node->choice) ? count($node->choice) : 5);
+    $choices = max(2, empty($node->choice) ? 5 : count($node->choice));
   }
 
   $form['choices'] = array(
@@ -166,14 +166,14 @@ function poll_form($node, $form_values = NULL) {
     $form['choice'][$a]['chtext'] = array(
       '#type' => 'textfield',
       '#title' => t('Choice @n', array('@n' => ($a + 1))),
-      '#default_value' => $node->choice[$a]['chtext'],
+      '#default_value' => isset($node->choice) ? $node->choice[$a]['chtext'] : '',
     );
 
     if ($admin) {
       $form['choice'][$a]['chvotes'] = array(
         '#type' => 'textfield',
         '#title' => t('Votes for choice @n', array('@n' => ($a + 1))),
-        '#default_value' => (int)$node->choice[$a]['chvotes'],
+        '#default_value' => isset($node->choice) ? (int)$node->choice[$a]['chvotes'] : 0,
         '#size' => 5, '#maxlength' => 7
       );
     }
@@ -197,7 +197,7 @@ function poll_form($node, $form_values = NULL) {
   $form['settings']['runtime'] = array(
     '#type' => 'select',
     '#title' => t('Poll duration'),
-    '#default_value' => $node->runtime,
+    '#default_value' => isset($node->runtime) ? $node->runtime : 0,
     '#options' => $_duration,
     '#description' => t('After this period, the poll will be closed automatically.'),
   );
@@ -396,23 +396,25 @@ function theme_poll_view_voting($form) {
  */
 function poll_view_results(&$node, $teaser, $page, $block) {
   // Count the votes and find the maximum
+  $total_votes = 0;
+  $max_votes = 0;
   foreach ($node->choice as $choice) {
     $total_votes += $choice['chvotes'];
     $max_votes = max($max_votes, $choice['chvotes']);
   }
 
+  $poll_results = '';
   foreach ($node->choice as $i => $choice) {
     if ($choice['chtext'] != '') {
       $poll_results .= theme('poll_bar', check_plain($choice['chtext']), round($choice['chvotes'] * 100 / max($total_votes, 1)), format_plural($choice['chvotes'], '1 vote', '@count votes'), $block);
     }
   }
 
-  $output .= theme('poll_results', check_plain($node->title), $poll_results, $total_votes, $node->links, $block, $node->nid, $node->vote);
-
-  return $output;
+  return theme('poll_results', check_plain($node->title), $poll_results, $total_votes, isset($node->links) ? $node->links : array(), $block, $node->nid, isset($node->vote) ? $node->vote : NULL);
 }
 
 function theme_poll_results($title, $results, $votes, $links, $block, $nid, $vote) {
+  $output = '';
   if ($block) {
     $output .= '<div class="poll">';
     $output .= '<div class="title">'. $title .'</div>';
@@ -597,7 +599,7 @@ function poll_view($node, $teaser = FALSE, $page = FALSE, $block = FALSE) {
     $node->links = $links;
   }
 
-  if ($node->allowvotes && ($block || arg(2) != 'results')) {
+  if (!empty($node->allowvotes) && ($block || arg(2) != 'results')) {
     if ($_POST['op'] == t('Vote')) {
       poll_vote($node);
     }

@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.276 2007/03/07 12:41:02 dries Exp $
+// $Id: blog.module,v 1.277 2007/03/27 05:13:53 unconed Exp $
 
 /**
  * @file
@@ -133,7 +133,7 @@ function blog_page_user($uid) {
 
   $account = user_load(array((is_numeric($uid) ? 'uid' : 'name') => $uid, 'status' => 1));
 
-  if ($account->uid) {
+  if (!empty($account->uid)) {
     drupal_set_title($title = t("@name's blog", array('@name' => $account->name)));
 
     if (($account->uid == $user->uid) && user_access('edit own blog')) {

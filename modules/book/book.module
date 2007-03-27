@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.413 2007/03/25 21:02:33 dries Exp $
+// $Id: book.module,v 1.414 2007/03/27 05:13:53 unconed Exp $
 
 /**
  * @file
@@ -196,14 +196,14 @@ function book_submit(&$node) {
  */
 function book_form(&$node) {
   $type = node_get_types('type', $node);
-  if ($node->nid && !$node->parent && !user_access('create new books')) {
+  if (!empty($node->nid) && !$node->parent && !user_access('create new books')) {
     $form['parent'] = array('#type' => 'value', '#value' => $node->parent);
   }
   else {
     $form['parent'] = array('#type' => 'select',
       '#title' => t('Parent'),
-      '#default_value' => ($node->parent ? $node->parent : arg(4)),
-      '#options' => book_toc($node->nid),
+      '#default_value' => (isset($node->parent) ? $node->parent : arg(4)),
+      '#options' => book_toc(isset($node->nid) ? $node->nid : 0),
       '#weight' => -4,
       '#description' => user_access('create new books') ? t('The parent section in which to place this page. Note that each page whose parent is &lt;top-level&gt; is an independent, top-level book.') : t('The parent that this page belongs in.'),
     );
@@ -226,7 +226,7 @@ function book_form(&$node) {
   if (user_access('administer nodes')) {
     $form['weight'] = array('#type' => 'weight',
       '#title' => t('Weight'),
-      '#default_value' => $node->weight,
+      '#default_value' => isset($node->weight) ? $node->weight : 0,
       '#delta' => 15,
       '#weight' => 5,
       '#description' => t('Pages at a given level are ordered first by weight and then by title.'),
@@ -251,13 +251,13 @@ function book_form(&$node) {
 function book_outline($node) {
   $form['parent'] = array('#type' => 'select',
     '#title' => t('Parent'),
-    '#default_value' => $node->parent,
+    '#default_value' => isset($node->parent) ? $node->parent : 0,
     '#options' => book_toc($node->nid),
     '#description' => t('The parent page in the book.'),
   );
   $form['weight'] = array('#type' => 'weight',
     '#title' => t('Weight'),
-    '#default_value' => $node->weight,
+    '#default_value' => isset($node->weight) ? $node->weight : 0,
     '#delta' => 15,
     '#description' => t('Pages at a given level are ordered first by weight and then by title.'),
   );
@@ -266,7 +266,7 @@ function book_outline($node) {
     '#description' => t('An explanation to help other authors understand your motivations to put this post into the book.'),
   );
 
-  $form['nid'] = array('#type' => 'value', '#value' => $nid);
+  $form['nid'] = array('#type' => 'value', '#value' => isset($node->nid) ? $node->nid : 0);
   if (isset($node->parent)) {
     $form['update'] = array('#type' => 'submit',
       '#value' => t('Update book outline'),
