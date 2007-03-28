@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.389 2007/03/27 05:13:53 unconed Exp $
+// $Id: forum.module,v 1.390 2007/03/28 14:08:22 dries Exp $
 
 /**
  * @file
@@ -505,9 +505,9 @@ function forum_form_main($type, $edit = array()) {
  */
 function forum_form_forum($edit = array()) {
   $edit += array(
-    'name' => '', 
-    'description' => '', 
-    'tid' => NULL, 
+    'name' => '',
+    'description' => '',
+    'tid' => NULL,
     'weight' => 0,
   );
   $form['name'] = array('#type' => 'textfield',

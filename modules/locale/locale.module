@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.162 2007/03/26 05:55:52 dries Exp $
+// $Id: locale.module,v 1.163 2007/03/28 14:08:22 dries Exp $
 
 /**
  * @file
@@ -34,6 +34,7 @@ function locale_help($section) {
       return '<p>'. t("This page allows you to import a translation provided in the gettext Portable Object (.po) format. The easiest way to get your site translated is to obtain an existing Drupal translation and to import it. You can find existing translations on the <a href=\"@url\">Drupal translation page</a>. Note that importing a translation file might take a while.", array('@url' => 'http://drupal.org/project/translations')) .'</p>';
     case 'admin/build/locale/language/export':
       return '<p>'. t("This page allows you to export Drupal strings. The first option is to export a translation so it can be shared. The second option generates a translation template, which contains all Drupal strings, but without their translations. You can use this template to start a new translation using various software packages designed for this task.") .'</p>';
+    case 'admin/build/locale/string':
     case 'admin/build/locale/string/search':
       return '<p>'. t("It is often convenient to get the strings from your setup on the <a href=\"@export\">export page</a>, and use a desktop Gettext translation editor to edit the translations. On this page you can search in the translated and untranslated strings, and the default English texts provided by Drupal.", array("@export" => url("admin/build/locale/language/export"))) .'</p>';
     case 'admin/build/locale/language/configure':
@@ -315,11 +316,19 @@ function locale_language_name($lang) {
  * @param $field
  *   'name' => names in current language, localized
  *   'native' => native names
+ * @param $all
+ *   Boolean to return all languages or only enabled ones
  */
-function locale_language_list($field = 'name') {
-  $languages = language_list('enabled');
+function locale_language_list($field = 'name', $all = FALSE) {
+  if ($all) {
+    $languages = language_list();
+  }
+  else {
+    $languages = language_list('enabled');
+    $languages = $languages[1];
+  }
   $list = array();
-  foreach($languages[1] as $language) {
+  foreach($languages as $language) {
     $list[$language->language] = ($field == 'name') ? t($language->name) : $language->$field;
   }
   return $list;

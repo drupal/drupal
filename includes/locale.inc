@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.111 2007/03/27 05:13:53 unconed Exp $
+// $Id: locale.inc,v 1.112 2007/03/28 14:08:21 dries Exp $
 
 /**
  * @file
@@ -185,7 +185,7 @@ function locale_custom_language_form() {
  * Editing screen for a particular language.
  *
  * @param $langcode
- *   Languauge code of the language to edit.
+ *   Language code of the language to edit.
  */
 function _locale_admin_manage_edit_screen($langcode) {
   if ($language = db_fetch_object(db_query("SELECT * FROM {languages} WHERE language = '%s'", $langcode))) {
@@ -239,14 +239,14 @@ function _locale_language_form(&$form, $language = NULL) {
       '#description' => t('This should be an <a href="@rfc4646">RFC 4646</a> compliant language identifier. Basic tags use a country code with an optional script or regional variant name, like "en", "en-US" and "zh-Hant".', array('@rfc4646' => 'http://www.ietf.org/rfc/rfc4646.txt')),
     );
   }
-  $form['langname'] = array('#type' => 'textfield',
+  $form['name'] = array('#type' => 'textfield',
     '#title' => t('Language name in English'),
     '#maxlength' => 64,
     '#default_value' => @$language->name,
     '#required' => TRUE,
     '#description' => t('Name of the language. Will be available for translation in all languages.'),
   );
-  $form['langnative'] = array('#type' => 'textfield',
+  $form['native'] = array('#type' => 'textfield',
     '#title' => t('Native language name'),
     '#maxlength' => 64,
     '#default_value' => @$language->native,
@@ -289,10 +289,10 @@ function _locale_admin_manage_add_screen() {
  */
 function locale_add_language_form_validate($form_id, $form_values) {
   if ($duplicate = db_num_rows(db_query("SELECT language FROM {languages} WHERE language = '%s'", $form_values['langcode'])) != 0) {
-    form_set_error('langcode', t('The language %language (%code) already exists.', array('%language' => $form_values['langname'], '%code' => $form_values['langcode'])));
+    form_set_error('langcode', t('The language %language (%code) already exists.', array('%language' => $form_values['name'], '%code' => $form_values['langcode'])));
   }
 
-  if (!isset($form_values['langname'])) {
+  if (!isset($form_values['name'])) {
     // Predefined language selection.
     $predefined = _locale_get_predefined_list();
     if (!isset($predefined[$form_values['langcode']])) {
@@ -309,9 +309,9 @@ function locale_add_language_form_validate($form_id, $form_values) {
  * Process the language addition form submission.
  */
 function locale_add_language_form_submit($form_id, $form_values) {
-  if (isset($form_values['langname'])) {
+  if (isset($form_values['name'])) {
     // Custom language form.
-    _locale_add_language($form_values['langcode'], $form_values['langname'], $form_values['langnative'], $form_values['direction'], $form_values['domain'], $form_values['prefix']);
+    _locale_add_language($form_values['langcode'], $form_values['name'], $form_values['native'], $form_values['direction'], $form_values['domain'], $form_values['prefix']);
   }
   else {
     // Predefined language selection.
@@ -346,14 +346,13 @@ function locale_edit_language_form_validate($form_id, $form_values) {
  * Process the language editing form submission.
  */
 function locale_edit_language_form_submit($form_id, $form_values) {
-  db_query("UPDATE {languages} SET name = '%s', native = '%s', domain = '%s', prefix = '%s', direction = %d WHERE language = '%s'", $form_values['langname'], $form_values['langnative'], $form_values['domain'], $form_values['prefix'], $form_values['direction'], $form_values['langcode']);
+  db_query("UPDATE {languages} SET name = '%s', native = '%s', domain = '%s', prefix = '%s', direction = %d WHERE language = '%s'", $form_values['name'], $form_values['native'], $form_values['domain'], $form_values['prefix'], $form_values['direction'], $form_values['langcode']);
   $default = language_default();
   if ($default->language == $form_values['langcode']) {
-    $default->name = $form_values['langname'];
-    $default->native = $form_values['langnative'];
-    $default->domain = $form_values['domain'];
-    $default->prefix = $form_values['prefix'];
-    $default->direction = $form_values['direction'];
+    $properties = array('name', 'native', 'direction', 'enabled', 'plurals', 'formula', 'domain', 'prefix', 'weight');
+    foreach($properties as $keyname) {
+      $default->$keyname = $form_values[$keyname];
+    }
     variable_set('language_default', $default);
   }
   return 'admin/build/locale';
@@ -397,23 +396,21 @@ function locale_configure_language_form_submit($form_id, $form_values) {
  * User interface for the translation import screen.
  */
 function _locale_admin_import() {
-  $languages = language_list();
-  $names = array();
-  foreach ($languages as $langcode => $language) {
-    $names[$langcode] = t($language->name);
-  }
   // English means the factory default strings,
   // we should not import into it.
-  unset($languages['en']);
+  $names = locale_language_list('name', TRUE);
+  unset($names['en']);
 
-  if (!count($languages)) {
+  if (!count($names)) {
     $languages = _locale_prepare_predefined_list();
+    $default = array_shift(array_keys($languages));
   }
   else {
     $languages = array(
-      t('Already added languages') => $languages,
+      t('Already added languages') => $names,
       t('Languages not yet added') => _locale_prepare_predefined_list()
     );
+    $default = array_shift(array_keys($names));
   }
 
   $form = array();
@@ -427,7 +424,8 @@ function _locale_admin_import() {
   );
   $form['import']['langcode'] = array('#type' => 'select',
     '#title' => t('Import into'),
-    '#options' => $names,
+    '#options' => $languages,
+    '#default_value' => $default,
     '#description' => t('Choose the language you want to add strings into. If you choose a language which is not yet set up, then it will be added.'),
   );
   $form['import']['mode'] = array('#type' => 'radios',
@@ -445,33 +443,40 @@ function _locale_admin_import() {
  * Process the locale import form submission.
  */
 function _locale_admin_import_submit($form_id, $form_values) {
-  // Add language, if not yet supported
-  $languages = language_list('language', TRUE);
-  if (!isset($languages[$form_values['langcode']])) {
-    $predefined = _locale_get_predefined_list();
-    $lang = &$predefined[$form_values['langcode']];
-    _locale_add_language($form_values['langcode'], $lang[0], isset($lang[1]) ? $lang[1] : '', isset($lang[2]) ? $lang[2] : 0, '', '', FALSE);
-  }
+  // Ensure we have the file uploaded
+  if ($file = file_check_upload('file')) {
 
-  // Now import strings into the language
-  $file = file_check_upload('file');
-  if ($ret = _locale_import_po($file, $form_values['langcode'], $form_values['mode']) == FALSE) {
-    $message = t('The translation import of %filename failed.', array('%filename' => $file->filename));
-    drupal_set_message($message, 'error');
-    watchdog('locale', $message, WATCHDOG_ERROR);
+    // Add language, if not yet supported
+    $languages = language_list('language', TRUE);
+    if (!isset($languages[$form_values['langcode']])) {
+      $predefined = _locale_get_predefined_list();
+      $lang = &$predefined[$form_values['langcode']];
+      _locale_add_language($form_values['langcode'], $lang[0], isset($lang[1]) ? $lang[1] : '', isset($lang[2]) ? $lang[2] : 0, '', '', FALSE);
+    }
+
+    // Now import strings into the language
+    if ($ret = _locale_import_po($file, $form_values['langcode'], $form_values['mode']) == FALSE) {
+      $message = t('The translation import of %filename failed.', array('%filename' => $file->filename));
+      drupal_set_message($message, 'error');
+      watchdog('locale', $message, WATCHDOG_ERROR);
+    }
+  }
+  else {
+    drupal_set_message(t('File to import not found.'), 'error');
+    return 'admin/build/locale/string/import';
   }
 
   return 'admin/build/locale';
 }
 
-function _locale_export_po_form($languages) {
+function _locale_export_po_form($names) {
   $form['export'] = array('#type' => 'fieldset',
     '#title' => t('Export translation'),
     '#collapsible' => TRUE,
   );
   $form['export']['langcode'] = array('#type' => 'select',
     '#title' => t('Language name'),
-    '#options' => array_keys($languages),
+    '#options' => $names,
     '#description' => t('Select the language you would like to export in gettext Portable Object (.po) format.'),
   );
   $form['export']['submit'] = array('#type' => 'submit', '#value' => t('Export'));
@@ -496,17 +501,14 @@ function _locale_export_pot_form() {
  * User interface for the translation export screen
  */
 function _locale_admin_export_screen() {
-  $languages = language_list();
-  $names = array();
-  foreach ($languages as $langcode => $language) {
-    $names[$langcode] = t($language->name);
-  }
-  unset($languages['en']);
+  // Omit English from the exportable languages list
+  $names = locale_language_list('name', TRUE);
+  unset($names['en']);
 
   $output = '';
   // Offer language specific export if any language is set up
-  if (count($languages)) {
-    $output = drupal_get_form('_locale_export_po_form', $languages);
+  if (count($names)) {
+    $output = drupal_get_form('_locale_export_po_form', $names);
   }
 
   $output .= drupal_get_form('_locale_export_pot_form');
@@ -515,10 +517,11 @@ function _locale_admin_export_screen() {
 }
 
 /**
- * Process a locale export form submissions.
+ * Process a locale export form submission.
  */
 function _locale_export_po_form_submit($form_id, $form_values) {
-  _locale_export_po($form_values['langcode']);
+  // If template is required, language code is not given
+  _locale_export_po(isset($form_values['langcode']) ? $form_values['langcode'] : NULL);
 }
 
 // ---------------------------------------------------------------------------------
@@ -624,7 +627,7 @@ function _locale_string_edit($lid) {
 function _locale_string_edit_submit($form_id, $form_values) {
   $lid = $form_values['lid'];
   foreach ($form_values['translations'] as $key => $value) {
-    $trans = db_fetch_object(db_query("SELECT translation FROM {locales_target} WHERE lid = %d AND languauge = '%s'", $lid, $key));
+    $trans = db_fetch_object(db_query("SELECT translation FROM {locales_target} WHERE lid = %d AND language = '%s'", $lid, $key));
     if (isset($trans->translation)) {
       db_query("UPDATE {locales_target} SET translation = '%s' WHERE lid = %d AND language = '%s'", $value, $lid, $key);
     }
@@ -1297,13 +1300,15 @@ function _locale_import_parse_quoted($string) {
 /**
  * Exports a Portable Object (Template) file for a language
  *
- * @param $language Selects a language to generate the output for
+ * @param $language
+ *   Language code to generate the output for, or NULL if generating
+ *   translation template.
  */
-function _locale_export_po($language) {
+function _locale_export_po($language = NULL) {
   global $user;
   $header = '';
   // Get language specific strings, or all strings
-  if ($language) {
+  if (isset($language)) {
     $meta = db_fetch_object(db_query("SELECT * FROM {languages} WHERE language = '%s'", $language));
     $result = db_query("SELECT s.lid, s.source, s.location, t.translation, t.plid, t.plural FROM {locales_source} s INNER JOIN {locales_target} t ON s.lid = t.lid WHERE t.language = '%s' ORDER BY t.plid, t.plural", $language);
   }
@@ -1326,9 +1331,9 @@ function _locale_export_po($language) {
   }
 
   // Generating Portable Object file for a language
-  if ($language) {
+  if (isset($language)) {
     $filename = $language .'.po';
-    $header .= "# $meta->name translation of ". variable_get('site_name', 'Drupal') ."\n";
+    $header = "# $meta->name translation of ". variable_get('site_name', 'Drupal') ."\n";
     $header .= '# Copyright (c) '. date('Y') .' '. $user->name .' <'. $user->mail .">\n";
     $header .= "#\n";
     $header .= "msgid \"\"\n";
@@ -1351,7 +1356,7 @@ function _locale_export_po($language) {
   // Generating Portable Object Template
   else {
     $filename = 'drupal.pot';
-    $header .= "# LANGUAGE translation of PROJECT\n";
+    $header = "# LANGUAGE translation of PROJECT\n";
     $header .= "# Copyright (c) YEAR NAME <EMAIL@ADDRESS>\n";
     $header .= "#\n";
     $header .= "msgid \"\"\n";
@@ -1381,9 +1386,10 @@ function _locale_export_po($language) {
         print '#: '. $message['comment'] ."\n";
       }
       print 'msgid '. _locale_export_print($message['msgid']);
-      if ($plural = $message['plural']) {
+      if (!empty($message['plural'])) {
+        $plural = $message['plural'];
         print 'msgid_plural '. _locale_export_print($parent[$plural]['msgid']);
-        if ($language) {
+        if (isset($language)) {
           $translation = $message['translation'];
           for ($i = 0; $i < $meta->plurals; $i++) {
             print 'msgstr['. $i .'] '. _locale_export_print($translation);
@@ -1405,7 +1411,7 @@ function _locale_export_po($language) {
         }
       }
       else {
-        if ($language) {
+        if (isset($language)) {
           print 'msgstr '. _locale_export_print($message['translation']);
         }
         else {
@@ -1440,11 +1446,17 @@ function _locale_export_print($str) {
     $parts = array_merge($parts, $curparts);
   }
 
+  // Multiline string
   if (count($parts) > 1) {
     return "\"\"\n\"". implode("\"\n\"", $parts) ."\"\n";
   }
-  else {
+  // Single line string
+  elseif (count($parts) == 1) {
     return "\"$parts[0]\"\n";
+  }
+  // No translation
+  else {
+    return "\"\"\n";
   }
 }
 
@@ -1510,7 +1522,9 @@ function _locale_string_seek_query() {
     $query = array();
     $fields = array('string', 'language', 'searchin');
     foreach ($fields as $field) {
-      $query[$field] = !empty($_REQUEST[$field]) ? $_REQUEST[$field] : '';
+      if (isset($_REQUEST[$field])) {
+        $query[$field] = $_REQUEST[$field];
+      }
     }
   }
   return $query;
@@ -1580,9 +1594,12 @@ function _locale_string_seek() {
 
     if (count($rows)) {
       $output .= theme('table', $header, $rows);
+      if ($pager = theme('pager', NULL, 50)) {
+        $output .= $pager;
+      }
     }
-    if ($pager = theme('pager', NULL, 50)) {
-      $output .= $pager;
+    else {
+      $output .= t('No strings found for your search.');
     }
   }
 

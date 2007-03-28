@@ -1,5 +1,5 @@
 <?php
-// $Id: language.inc,v 1.1 2007/03/26 01:32:22 dries Exp $
+// $Id: language.inc,v 1.2 2007/03/28 14:08:21 dries Exp $
 
 /**
  * @file
@@ -11,12 +11,12 @@
  */
 function language_initialize() {
   global $user;
-  
+
   $mode = variable_get('language_negotiation', LANGUAGE_NEGOTIATION_NONE);
   switch($mode) {
     case LANGUAGE_NEGOTIATION_NONE:
       return language_default();
-    
+
     case LANGUAGE_NEGOTIATION_DOMAIN:
       $languages = language_list();
       foreach($languages as $language) {
@@ -26,7 +26,7 @@ function language_initialize() {
         }
       }
       return language_default();
-    
+
     case LANGUAGE_NEGOTIATION_PATH_DEFAULT:
     case LANGUAGE_NEGOTIATION_PATH:
       $languages = language_list('prefix');
@@ -41,18 +41,18 @@ function language_initialize() {
       }
       break;
   }
-  
+
   // User language.
   $languages = language_list();
   if ($user->uid && isset($languages[$user->language])) {
     return $languages[$user->language];
   }
-  
+
   // Browser accept-language parsing.
   if ($language = language_from_browser()) {
     return $language;
   }
-  
+
   // Fall back on the default if everything else fails.
   return language_default();
 }
@@ -76,7 +76,7 @@ function language_from_browser() {
       }
     }
   }
- 
+
   // Order the codes by quality
   arsort($browser_langs);
 
@@ -121,12 +121,12 @@ function language_url_rewrite(&$path, &$options) {
         // Intentionally no break here.
 
       case LANGUAGE_NEGOTIATION_PATH:
-        if (isset($path_language->prefix) && $path_language->prefix) {        
+        if (isset($path_language->prefix) && $path_language->prefix) {
           // Get alias if not already aliased.
           if (!$options['alias']) {
             $path = drupal_get_path_alias($path, $path_language->language);
             $options['alias'] = TRUE;
-          }   
+          }
           $path = empty($path) ? $path_language->prefix : $path_language->prefix .'/'. $path;
         }
         break;

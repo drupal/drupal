@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.150 2007/03/27 05:13:53 unconed Exp $
+// $Id: bootstrap.inc,v 1.151 2007/03/28 14:08:21 dries Exp $
 
 /**
  * @file
@@ -995,5 +995,5 @@ function language_list($field = 'language', $reset = FALSE) {
  * Default language used on the site
  */
 function language_default() {
-  return variable_get('language_default', (object) array('language' => 'en', 'name' => 'English', 'direction' => 0, 'native' => 'English'));
+  return variable_get('language_default', (object) array('language' => 'en', 'name' => 'English', 'native' => 'English', 'direction' => 0, 'enabled' => 1, 'plurals' => 0, 'formula' => '', 'domain' => '', 'prefix' => '', 'weight' => 0));
 }
