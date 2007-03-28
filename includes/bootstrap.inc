@@ -995,5 +995,5 @@ function language_list($field = 'language', $reset = FALSE) {
  * Default language used on the site
  */
 function language_default() {
-  return variable_get('language_default', (object) array('language' => 'en', 'name' => 'English', 'direction' => 0, 'native' => 'English'));
+  return variable_get('language_default', (object) array('language' => 'en', 'name' => 'English', 'native' => 'English', 'direction' => 0, 'enabled' => 1, 'plurals' => 0, 'formula' => '', 'domain' => '', 'prefix' => '', 'weight' => 0));
 }
