@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.213 2007/03/02 09:54:01 unconed Exp $
+// $Id: update.php,v 1.214 2007/03/28 07:02:47 dries Exp $
 
 /**
  * @file
@@ -393,7 +393,9 @@ function update_update_page() {
   }
 
   // Keep track of total number of updates
-  $_SESSION['update_total'] = count($_SESSION['update_remaining']);
+  if (isset($_SESSION['update_remaining'])) {
+    $_SESSION['update_total'] = count($_SESSION['update_remaining']);
+  }
 
   if ($_POST['has_js']) {
     return update_progress_page();
@@ -546,7 +548,7 @@ function update_finished_page($success) {
   $output .= theme('item_list', $links);
 
   // Output a list of queries executed
-  if ($_SESSION['update_results']) {
+  if (!empty($_SESSION['update_results'])) {
     $output .= '<div id="update-results">';
     $output .= '<h2>The following queries were executed</h2>';
     foreach ($_SESSION['update_results'] as $module => $updates) {
