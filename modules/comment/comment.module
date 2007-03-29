@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.531 2007/03/27 05:13:53 unconed Exp $
+// $Id: comment.module,v 1.532 2007/03/29 23:19:33 dries Exp $
 
 /**
  * @file
@@ -374,7 +374,7 @@ function comment_link($type, $node = NULL, $teaser = FALSE) {
   return $links;
 }
 
-function comment_form_alter($form, $form_id) {
+function comment_form_alter(&$form, $form_id) {
   if ($form_id == 'node_type_form' && isset($form['identity']['type'])) {
     $form['workflow']['comment'] = array(
       '#type' => 'radios',
@@ -403,7 +403,6 @@ function comment_form_alter($form, $form_id) {
       );
     }
   }
-  return $form;
 }
 
 /**
