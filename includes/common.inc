@@ -538,7 +538,7 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
  *  0 = Log errors to database.
  *  1 = Log errors to database and to screen.
  */
-function error_handler($errno, $message, $filename, $line) {
+function drupal_error_handler($errno, $message, $filename, $line) {
   // If the @ error suppression operator was used, error_reporting is temporarily set to 0
   if (error_reporting() == 0) {
     return;
@@ -1878,7 +1878,7 @@ function _drupal_bootstrap_full() {
   require_once './includes/image.inc';
   require_once './includes/form.inc';
   // Set the Drupal custom error handler.
-  set_error_handler('error_handler');
+  set_error_handler('drupal_error_handler');
   // Emit the correct charset HTTP header.
   drupal_set_header('Content-Type: text/html; charset=utf-8');
   // Detect string handling method
