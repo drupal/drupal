@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.195 2007/03/27 05:13:54 unconed Exp $
+// $Id: profile.module,v 1.196 2007/03/30 09:38:13 dries Exp $
 
 /**
  * @file
@@ -175,8 +175,9 @@ function profile_user($type, &$edit, &$user, $category = NULL) {
     case 'register':
       return profile_form_profile($edit, $user, $category, TRUE);
     case 'update':
+    return profile_save_profile($edit, $user, $category);
     case 'insert':
-      return profile_save_profile($edit, $user, $category);
+      return profile_save_profile($edit, $user, $category, TRUE);
     case 'view':
       return profile_view_profile($user);
     case 'form':
@@ -538,8 +539,8 @@ function profile_load_profile(&$user) {
   }
 }
 
-function profile_save_profile(&$edit, &$user, $category) {
-  $result = _profile_get_fields($category);
+function profile_save_profile(&$edit, &$user, $category, $register = FALSE) {
+  $result = _profile_get_fields($category, $register);
   while ($field = db_fetch_object($result)) {
     if (_profile_field_serialize($field->type)) {
        $edit[$field->name] = serialize($edit[$field->name]);
