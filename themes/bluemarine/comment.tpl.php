@@ -4,6 +4,13 @@
   } ?>
 <h3 class="title"><?php print $title; ?></h3><?php if ($new != '') { ?><span class="new"><?php print $new; ?></span><?php } ?>
     <div class="submitted"><?php print $submitted; ?></div>
-    <div class="content"><?php print $content; ?></div>
+    <div class="content">
+     <?php print $content; ?>
+     <?php if ($signature): ?>
+      <div class="user-signature clear-block">
+       <?php print $signature ?>
+      </div>
+     <?php endif; ?>
+    </div>
     <div class="links">&raquo; <?php print $links; ?></div>
   </div>
