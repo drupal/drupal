@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.87 2007/03/26 06:48:36 dries Exp $
+// $Id: system.install,v 1.88 2007/03/30 08:47:58 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -485,10 +485,7 @@ function system_install() {
         totalcount bigint unsigned NOT NULL default '0',
         daycount mediumint unsigned NOT NULL default '0',
         timestamp int unsigned NOT NULL default '0',
-        PRIMARY KEY (nid),
-        KEY totalcount (totalcount),
-        KEY daycount (daycount),
-        KEY timestamp (timestamp)
+        PRIMARY KEY (nid)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {system} (
@@ -976,9 +973,6 @@ function system_install() {
         timestamp int_unsigned NOT NULL default '0',
         PRIMARY KEY (nid)
       )");
-      db_query("CREATE INDEX {node_counter}_totalcount_idx ON {node_counter} (totalcount)");
-      db_query("CREATE INDEX {node_counter}_daycount_idx ON {node_counter} (daycount)");
-      db_query("CREATE INDEX {node_counter}_timestamp_idx ON {node_counter} (timestamp)");
 
       db_query("CREATE TABLE {system} (
         filename varchar(255) NOT NULL default '',
@@ -3703,6 +3697,27 @@ function system_update_2005() {
       $ret[] = update_sql("ALTER TABLE {url_alias} ADD language varchar(12) NOT NULL default ''");
       $ret[] = update_sql("ALTER TABLE {url_alias} DROP INDEX dst");
       $ret[] = update_sql("ALTER TABLE {url_alias} ADD UNIQUE dst_language (dst, language)");
+      break;
+  }
+  return $ret;
+}
+
+/**
+ * Drop useless indices on node_counter table.
+ */
+function system_update_2006() {
+  $ret = array();
+  switch ($GLOBALS['db_type']) {
+    case 'pgsql':
+      $ret[] = update_sql('DROP INDEX {node_counter}_daycount_idx');
+      $ret[] = update_sql('DROP INDEX {node_counter}_totalcount_idx');
+      $ret[] = update_sql('DROP INDEX {node_counter}_timestamp_idx');
+      break;
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql("ALTER TABLE {node_counter} DROP INDEX daycount");
+      $ret[] = update_sql("ALTER TABLE {node_counter} DROP INDEX totalcount");
+      $ret[] = update_sql("ALTER TABLE {node_counter} DROP INDEX timestamp");
       break;
   }
   return $ret;
