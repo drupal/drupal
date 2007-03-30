@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.532 2007/03/29 23:19:33 dries Exp $
+// $Id: comment.module,v 1.533 2007/03/30 07:45:19 dries Exp $
 
 /**
  * @file
@@ -454,26 +454,9 @@ function comment_nodeapi(&$node, $op, $arg = 0) {
 
 /**
  * Implementation of hook_user().
- *
- * Provides signature customization for the user's comments.
  */
 function comment_user($type, $edit, &$user, $category = NULL) {
-  if ($type == 'form' && $category == 'account') {
-    // when user tries to edit his own data
-    $form['comment_settings'] = array(
-      '#type' => 'fieldset',
-      '#title' => t('Comment settings'),
-      '#collapsible' => TRUE,
-      '#weight' => 4);
-    $form['comment_settings']['signature'] = array(
-      '#type' => 'textarea',
-      '#title' => t('Signature'),
-      '#default_value' => $edit['signature'],
-      '#description' => t('Your signature will be publicly displayed at the end of your comments.'));
-
-    return $form;
-  }
-  elseif ($type == 'delete') {
+  if ($type == 'delete') {
     db_query('UPDATE {comments} SET uid = 0 WHERE uid = %d', $user->uid);
     db_query('UPDATE {node_comment_statistics} SET last_comment_uid = 0 WHERE last_comment_uid = %d', $user->uid);
   }
@@ -647,7 +630,7 @@ function comment_reply($node, $pid = NULL) {
       // $pid indicates that this is a reply to a comment.
       if ($pid) {
         // load the comment whose cid = $pid
-        if ($comment = db_fetch_object(db_query('SELECT c.*, u.uid, u.name AS registered_name, u.picture, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = %d', $pid, COMMENT_PUBLISHED))) {
+        if ($comment = db_fetch_object(db_query('SELECT c.*, u.uid, u.name AS registered_name, u.signature, u.picture, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = %d', $pid, COMMENT_PUBLISHED))) {
           // If that comment exists, make sure that the current comment and the parent comment both
           // belong to the same parent node.
           if ($comment->nid != $node->nid) {
@@ -658,6 +641,7 @@ function comment_reply($node, $pid = NULL) {
           // Display the parent comment
           $comment = drupal_unpack($comment);
           $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
+          $comment->signature = check_markup($comment->signature, $comment->format);
           $output .= theme('comment_view', $comment);
         }
         else {
@@ -951,7 +935,7 @@ function comment_render($node, $cid = 0) {
 
     if ($cid) {
       // Single comment view.
-      $query = 'SELECT c.cid, c.pid, c.nid, c.subject, c.comment, c.format, c.timestamp, c.name, c.mail, c.homepage, u.uid, u.name AS registered_name, u.picture, u.data, c.score, c.users, c.status FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d';
+      $query = 'SELECT c.cid, c.pid, c.nid, c.subject, c.comment, c.format, c.timestamp, c.name, c.mail, c.homepage, u.uid, u.name AS registered_name, u.signature, u.picture, u.data, c.score, c.users, c.status FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d';
       $query_args = array($cid);
       if (!user_access('administer comments')) {
         $query .= ' AND c.status = %d';
@@ -962,6 +946,7 @@ function comment_render($node, $cid = 0) {
 
       if ($comment = db_fetch_object($result)) {
         $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
+        $comment->signature = check_markup($comment->signature, $comment->format);
         $links = module_invoke_all('link', 'comment', $comment, 1);
         drupal_alter('link', $links, $node);
 
@@ -971,7 +956,7 @@ function comment_render($node, $cid = 0) {
     else {
       // Multiple comment view
       $query_count = 'SELECT COUNT(*) FROM {comments} WHERE nid = %d';
-      $query = 'SELECT c.cid as cid, c.pid, c.nid, c.subject, c.comment, c.format, c.timestamp, c.name, c.mail, c.homepage, u.uid, u.name AS registered_name, u.picture, u.data, c.score, c.users, c.thread, c.status FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.nid = %d';
+      $query = 'SELECT c.cid as cid, c.pid, c.nid, c.subject, c.comment, c.format, c.timestamp, c.name, c.mail, c.homepage, u.uid, u.name AS registered_name, u.signature, u.picture, u.data, c.score, c.users, c.thread, c.status FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.nid = %d';
 
       $query_args = array($nid);
       if (!user_access('administer comments')) {
@@ -1016,6 +1001,7 @@ function comment_render($node, $cid = 0) {
       while ($comment = db_fetch_object($result)) {
         $comment = drupal_unpack($comment);
         $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
+        $comment->signature = check_markup($comment->signature, $comment->format);
         $comment->depth = count(explode('.', $comment->thread)) - 1;
 
         if ($mode == COMMENT_MODE_THREADED_COLLAPSED || $mode == COMMENT_MODE_THREADED_EXPANDED) {
@@ -1537,9 +1523,6 @@ function comment_form($edit, $title = NULL) {
   if (!empty($edit['comment'])) {
     $default = $edit['comment'];
   }
-  elseif (isset($user->signature)) {
-    $default = $user->signature;
-  }
   else {
     $default = '';
   }
@@ -1617,6 +1600,11 @@ function comment_form_add_preview($form, $edit) {
     if ($account) {
       $comment->uid = $account->uid;
       $comment->name = check_plain($account->name);
+      $comment->signature = check_markup($account->signature, $comment->format);
+    }
+    else {
+      $comment->name = variable_get('anonymous', t('Anonymous'));
+      $comment->signature = '';
     }
     $comment->timestamp = !empty($edit['timestamp']) ? $edit['timestamp'] : time();
     $output .= theme('comment_view', $comment);
@@ -1631,9 +1619,10 @@ function comment_form_add_preview($form, $edit) {
   $output = '';
 
   if ($edit['pid']) {
-    $comment = db_fetch_object(db_query('SELECT c.*, u.uid, u.name AS registered_name, u.picture, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = %d', $edit['pid'], COMMENT_PUBLISHED));
+    $comment = db_fetch_object(db_query('SELECT c.*, u.uid, u.name AS registered_name, u.signature, u.picture, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = %d', $edit['pid'], COMMENT_PUBLISHED));
     $comment = drupal_unpack($comment);
     $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
+    $comment->signature = check_markup($comment->signature, $comment->format);
     $output .= theme('comment_view', $comment);
   }
   else {
@@ -1787,6 +1776,7 @@ function theme_comment($comment, $links = array()) {
   $output .= '<div class="subject">'. l($comment->subject, $_GET['q'], array('fragment' => "comment-$comment->cid")) . ' ' . theme('mark', $comment->new) ."</div>\n";
   $output .= '<div class="credit">'. t('by %a on %b', array('%a' => theme('username', $comment), '%b' => format_date($comment->timestamp))) ."</div>\n";
   $output .= '<div class="body">'. $comment->comment .'</div>';
+  $output .= '<div class="user-signature clear">'. $comment->signature .'</div>';
   $output .= '<div class="links">'. theme('links', $links) .'</div>';
   $output .= '</div>';
   return $output;
