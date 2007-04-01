@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.533 2007/03/30 07:45:19 dries Exp $
+// $Id: comment.module,v 1.534 2007/04/01 05:04:19 unconed Exp $
 
 /**
  * @file
@@ -1776,7 +1776,7 @@ function theme_comment($comment, $links = array()) {
   $output .= '<div class="subject">'. l($comment->subject, $_GET['q'], array('fragment' => "comment-$comment->cid")) . ' ' . theme('mark', $comment->new) ."</div>\n";
   $output .= '<div class="credit">'. t('by %a on %b', array('%a' => theme('username', $comment), '%b' => format_date($comment->timestamp))) ."</div>\n";
   $output .= '<div class="body">'. $comment->comment .'</div>';
-  $output .= '<div class="user-signature clear">'. $comment->signature .'</div>';
+  $output .= '<div class="clear"><div>—</div>'. $comment->signature .'</div>';
   $output .= '<div class="links">'. theme('links', $links) .'</div>';
   $output .= '</div>';
   return $output;

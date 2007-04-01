@@ -1,5 +1,5 @@
 <?php
-// $Id: chameleon.theme,v 1.57 2007/03/30 07:45:19 dries Exp $
+// $Id: chameleon.theme,v 1.58 2007/04/01 05:04:20 unconed Exp $
 
 /**
  * @file
@@ -165,7 +165,8 @@ function chameleon_comment($comment, $links = "") {
   $output .= " <h3 class=\"title\">". l($comment->subject, $_GET['q'], NULL, NULL, "comment-$comment->cid") ."</h3>\n";
   $output .= " <div class=\"content\">". $comment->comment;
   if ($signature) {
-    $output .= "  <div class=\"user-signature clear-block\">";
+    $output .= "  <div class=\"clear-block\">";
+    $output .= "<div>—</div>\n";
     $output .= $signature ."\n";
     $output .= "  </div>\n";
   }

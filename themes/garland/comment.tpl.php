@@ -17,12 +17,12 @@
     <div class="content">
       <?php print $content ?>
       <?php if ($signature): ?>
-      <div class="user-signature clear-block">
+      <div class="clear-block">
+        <div>—</div>
         <?php print $signature ?>
       </div>
       <?php endif; ?>
     </div>
-
   </div>
 
   <?php if ($links): ?>
