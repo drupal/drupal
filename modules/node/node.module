@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.794 2007/03/27 05:13:54 unconed Exp $
+// $Id: node.module,v 1.795 2007/04/02 15:15:39 dries Exp $
 
 /**
  * @file
@@ -1646,9 +1646,8 @@ function node_revision_overview($node) {
     }
     $rows[] = array_merge($row, $operations);
   }
-  $output .= theme('table', $header, $rows);
 
-  return $output;
+  return theme('table', $header, $rows);
 }
 
 /**
