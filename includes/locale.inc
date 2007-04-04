@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.112 2007/03/28 14:08:21 dries Exp $
+// $Id: locale.inc,v 1.113 2007/04/04 20:47:41 dries Exp $
 
 /**
  * @file
@@ -937,7 +937,7 @@ function _locale_import_one_string($op, $value = NULL, $mode = NULL, $lang = NUL
               $plid = 0;
             }
             $loc = db_fetch_object(db_query("SELECT lid FROM {locales_source} WHERE source = '%s'", $english[$key]));
-            if ($loc->lid) { // a string exists
+            if (!empty($loc->lid)) { // a string exists
               $lid = $loc->lid;
               // update location field
               db_query("UPDATE {locales_source} SET location = '%s' WHERE lid = %d", $comments, $lid);
@@ -974,7 +974,7 @@ function _locale_import_one_string($op, $value = NULL, $mode = NULL, $lang = NUL
           $english = $value['msgid'];
           $translation = $value['msgstr'];
           $loc = db_fetch_object(db_query("SELECT lid FROM {locales_source} WHERE source = '%s'", $english));
-          if ($loc->lid) { // a string exists
+          if (!empty($loc->lid)) { // a string exists
             $lid = $loc->lid;
             // update location field
             db_query("UPDATE {locales_source} SET location = '%s' WHERE source = '%s'", $comments, $english);
@@ -1116,7 +1116,7 @@ function _locale_import_parse_arithmetic($string) {
         $topop = array_pop($opstk);
       }
     }
-    elseif ($prec[$ctok]) {
+    elseif (!empty($prec[$ctok])) {
       // If it's an operator, then pop from $oparr into $elarr until the
       // precedence in $oparr is less than current, then push into $oparr
       $topop = array_pop($opstk);
