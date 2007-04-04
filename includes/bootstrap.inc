@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.151 2007/03/28 14:08:21 dries Exp $
+// $Id: bootstrap.inc,v 1.152 2007/04/04 20:50:53 dries Exp $
 
 /**
  * @file
@@ -709,6 +709,11 @@ function drupal_set_message($message = NULL, $type = 'status') {
  *   (optional) Only return messages of this type.
  * @param $clear_queue
  *   (optional) Set to FALSE if you do not want to clear the messages queue
+ * @return
+ *   An associative array, the key is the message type, the value an array
+ *   of messages. If the $type parameter is passed, you get only that type,
+ *   or an empty array if there are no such messages. If $type is not passed,
+ *   all message types are returned, or an empty array if none exist.
  */
 function drupal_get_messages($type = NULL, $clear_queue = TRUE) {
   if ($messages = drupal_set_message()) {
@@ -716,7 +721,9 @@ function drupal_get_messages($type = NULL, $clear_queue = TRUE) {
       if ($clear_queue) {
          unset($_SESSION['messages'][$type]);
       }
-      return array($type => $messages[$type]);
+      if (isset($messages[$type])) {
+        return array($type => $messages[$type]);
+      }
     }
     else {
       if ($clear_queue) {
