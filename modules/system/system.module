@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.460 2007/03/27 05:13:54 unconed Exp $
+// $Id: system.module,v 1.461 2007/04/06 04:39:51 unconed Exp $
 
 /**
  * @file
@@ -378,7 +378,7 @@ function system_main_admin_page($arg = NULL) {
 function system_admin_menu_block($item) {
   $map = arg(NULL);
   $content = array();
-  $result = db_query('SELECT * FROM {menu} WHERE depth = %d AND %d < mleft AND mright < %d ORDER BY mleft', $item->depth + 1, $item->mleft, $item->mright);
+  $result = db_query('SELECT * FROM {menu} WHERE depth = %d AND %d < mleft AND mright < %d AND visible = 1 ORDER BY mleft', $item->depth + 1, $item->mleft, $item->mright);
   while ($item = db_fetch_object($result)) {
     _menu_translate($item, $map, MENU_RENDER_LINK);
     if (!$item->access) {

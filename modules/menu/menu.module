@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.104 2007/03/26 00:35:58 dries Exp $
+// $Id: menu.module,v 1.105 2007/04/06 04:39:51 unconed Exp $
 
 /**
  * @file
@@ -32,53 +32,69 @@ Menu administration tabs:
 }
 
 /**
+ * Implementation of hook_perm().
+ */
+function menu_perm() {
+  return array('administer menu');
+}
+
+/**
  * Implementation of hook_menu().
  */
 function menu_menu() {
-  return;
-  $items = array();
-
-  if ($may_cache) {
-    $items[] = array('path' => 'admin/build/menu',
-      'title' => t('Menus'),
-      'description' => t("Control your site's navigation menu, primary links and secondary links. as well as rename and reorganize menu items."),
-      'callback' => 'menu_overview',
-      'access' => user_access('administer menu'));
-    $items[] = array('path' => 'admin/build/menu/list',
-      'title' => t('List'),
-      'type' => MENU_DEFAULT_LOCAL_TASK,
-      'weight' => -10);
-
-    $items[] = array('path' => 'admin/build/menu/item/add',
-      'title' => t('Add menu item'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('menu_edit_item_form', 'add'),
-      'access' => user_access('administer menu'),
-      'type' => MENU_LOCAL_TASK);
-    $items[] = array('path' => 'admin/build/menu/item/edit',
-      'title' => t('Edit menu item'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('menu_edit_item_form', 'edit'),
-      'access' => user_access('administer menu'),
-      'type' => MENU_CALLBACK);
-    $items[] = array('path' => 'admin/build/menu/item/reset',
-      'title' => t('Reset menu item'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('menu_reset_item'),
-      'access' => user_access('administer menu'),
-      'type' => MENU_CALLBACK);
-    $items[] = array('path' => 'admin/build/menu/item/disable',
-      'title' => t('Disable menu item'),
-      'callback' => 'menu_disable_item',
-      'access' => user_access('administer menu'),
-      'type' => MENU_CALLBACK);
-    $items[] = array('path' => 'admin/build/menu/item/delete',
-      'title' => t('Delete menu item'),
-      'callback' => 'drupal_get_form',
-      'callback arguments' => array('menu_item_delete_form'),
-      'access' => user_access('administer menu'),
-      'type' => MENU_CALLBACK);
-
+  $items['admin/build/menu'] = array(
+    'title' => t('Menus'),
+    'description' => t("Control your site's navigation menu, primary links and secondary links. as well as rename and reorganize menu items."),
+    'page callback' => 'menu_overview',
+    'access callback' => 'user_access',
+    'access arguments' => array('administer menu'),
+  );
+  $items['admin/build/menu/list'] = array(
+    'title' => t('List'),
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10,
+  );
+  $items['admin/build/menu/item/disable'] = array(
+    'title' => t('Disable menu item'),
+    'page callback' => 'menu_flip_item',
+    'page arguments' => array('0'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['admin/build/menu/item/enable'] = array(
+    'title' => t('Enable menu item'),
+    'page callback' => 'menu_flip_item',
+    'page arguments' => array('1'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['admin/build/menu/item/add'] = array(
+    'title' => t('Add menu item'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('menu_edit_item_form', 'add'),
+    'parent' => 'admin/build/menu',
+    'type' => MENU_LOCAL_TASK);
+  $items['admin/build/menu/item/edit'] = array(
+    'title' => t('Edit menu item'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('menu_edit_item_form', 'edit'),
+    'type' => MENU_CALLBACK);
+  $items['admin/build/menu/item/reset'] = array(
+    'title' => t('Reset menu item'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('menu_reset_item'),
+    'type' => MENU_CALLBACK);
+  $items['admin/build/menu/item/delete'] = array(
+    'title' => t('Delete menu item'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('menu_item_delete_form'),
+    'type' => MENU_CALLBACK);
+  $result = db_query('SELECT * FROM {menu_edit} WHERE admin = 1');
+  while ($item = db_fetch_array($result)) {
+    $item['access callback'] = 1;
+    $item['access inherited'] = TRUE;
+    $items[$item['path']] = $item;
+  }
+  return $items;
+/*
     $items[] = array('path' => 'admin/build/menu/menu/add',
       'title' => t('Add menu'),
       'callback' => 'drupal_get_form',
@@ -105,15 +121,417 @@ function menu_menu() {
       'type' => MENU_LOCAL_TASK,
       'weight' => 5,
     );
+*/
+}
+
+/**
+ * Implementation of hook_menu_alter.
+ */
+function menu_menu_alter(&$menu, $phase) {
+  if ($phase == MENU_ALTER_PREPROCESSED) {
+    $result = db_query('SELECT * FROM {menu_edit} me WHERE admin = 0');
+    while ($item = db_fetch_array($result)) {
+      $menu[$item['path']] = $item + $menu[$item['path']];
+    }
+  }
+}
+
+/**
+ * Menu callback which displays every menu element accessible to the current
+ * user and the relevant operations.
+ */
+function menu_overview() {
+  $header = array(t('Menu item'), t('Expanded'), array('data' => t('Operations'), 'colspan' => '3'));
+  $result = db_query('SELECT m.*, me.disabled FROM {menu} m LEFT JOIN {menu_edit} me ON m.path = me.path WHERE visible = 1 OR (disabled = 1 AND admin = 0) ORDER BY mleft');
+  $map = arg();
+  $rows = array();
+  while ($item = db_fetch_object($result)) {
+    _menu_translate($item, $map, MENU_RENDER_LINK);
+    if (!$item->access) {
+      continue;
+    }
+    $title = str_repeat('&nbsp;&nbsp;', $item->depth - 1) . ($item->depth > 1 ? '-&nbsp;' : '');
+    $title .= l($item->title, $item->path, (array)$item);
+    // Populate the operations field.
+    $operations = array();
+    // Set the edit column.
+    $operations[] = array('data' => l(t('edit'), 'admin/build/menu/item/edit/'. $item->mid));
+    if ($item->disabled) {
+      $title .= ' ('. t('disabled') .')';
+      $class = 'menu-disabled';
+      $operations[] = array('data' => l(t('enable'), 'admin/build/menu/item/enable/'. $item->mid));
+    }
+    else {
+      $class = 'menu-enabled';
+      $operations[] = array('data' => l(t('disable'), 'admin/build/menu/item/disable/'. $item->mid));
+    }
+    // Set the reset column.
+    if ($item->type & MENU_CREATED_BY_ADMIN) {
+      $operations[] = array('data' => l(t('delete'), 'admin/build/menu/item/delete/'. $item->mid));
+    }
+    else if ($item->type & MENU_MODIFIED_BY_ADMIN) {
+      $operations[] = array('data' => l(t('reset'), 'admin/build/menu/item/reset/'. $item->mid));
+    }
+    else {
+      $operations[] = array('data' => '');
+    }
+    $row = array(
+      array('data' => $title, 'class' => $class),
+      array('data' => ($item->has_children ? (($item->type & MENU_EXPANDED) ? t('Yes') : t('No')) : ''), 'class' => $class),
+    );
+    foreach ($operations as $operation) {
+      $operation['class'] = $class;
+      $row[] = $operation;
+    }
+    $rows[] = $row;
+  }
+  return theme('table', $header, $rows);
+}
+  
+/**
+ * Menu callback; enable/disable a menu item.
+ *
+ * @param $visible
+ *   0 to remove from the menu tree. 1 to make the item and its children
+ *   reappear in menu tree.
+ * @param $mid
+ *    mid of the menu item.
+ * @param $path
+ *    Optional. Path of the menu item. Only considered if mid is NULL.
+ */
+function menu_flip_item($visible, $mid, $path = NULL) {
+  if (isset($mid)) {
+    $parent = menu_get_item_by_mid($mid);
+  }
+  elseif (isset($path)) {
+    $parent = menu_get_item($path);
+  }
+  if (isset($parent) && $parent->access) {
+    $result = db_query('SELECT * FROM {menu} WHERE %d <= mleft AND mright <= %d', $parent->mleft, $parent->mright);
+    while ($item = db_fetch_object($result)) {
+      $update_result = db_query("UPDATE {menu_edit} SET disabled = %d WHERE path = '%s'", !$visible, $item->path);
+      if (!db_affected_rows($update_result)) {
+        db_query("INSERT INTO {menu_edit} (parent, path, title, description, weight, type, admin, disabled) VALUES ('%s', '%s', '%s', '%s', %d, %d, %d, %d)", $item->parent, $item->path, $item->title, $item->description, 0, $item->type, 0, !$visible);
+      }
+    }
+    menu_rebuild();
+    if (isset($mid)) {
+      drupal_set_message($visible ? t('The menu item has been enabled.') : t('The menu item has been disabled.'));
+      drupal_goto('admin/build/menu');
+    }
+  }
+}
+
+/**
+ * Present the menu item editing form.
+ */
+function menu_edit_item_form($type, $mid = 0) {
+  if ($type == 'edit') {
+    if (!($item = menu_get_item_by_mid($mid))) {
+      drupal_not_found();
+      return;
+    }
+  }
+  else {
+    // This is an add form.
+    // The mid argument (if set) will be the default pid to use.
+    $item = (object)array('mid' => 0, 'pid' => $mid ? $mid : 0, 'weight' => 0, 'type' => MENU_CUSTOM_ITEM, 'title' => '', 'description' => '', 'path' => '');
   }
 
-  return $items;
+  $form['title'] = array('#type' => 'textfield',
+    '#title' => t('Title'),
+    '#default_value' => $item->title,
+    '#description' => t('The name of the menu item.'),
+    '#required' => TRUE,
+  );
+  $form['description'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Description'),
+    '#default_value' => $item->description,
+    '#description' => t('The description displayed when hovering over a menu item.'),
+  );
+
+  if ($item->type & MENU_CREATED_BY_ADMIN) {
+    $form['path'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Path'),
+      '#default_value' => $item->path,
+      '#description' => t('The path this menu item links to. This can be an internal Drupal path such as %add-node or an external URL such as %drupal. Enter %front to link to the front page.', array('%front' => '<front>', '%add-node' => 'node/add', '%drupal' => 'http://drupal.org')),
+      '#required' => TRUE,
+    );
+  }
+  else {
+    $form['_path'] = array(
+      '#type' => 'item',
+      '#title' => t('Path'),
+      '#description' => l($item->path, $item->link_path, (array)$item),
+    );
+  }
+  $form['original_path'] = array('#type' => 'value', '#value' => $item->path);
+
+  $form['expanded'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Expanded'),
+    '#default_value' => $item->type & MENU_EXPANDED ? 1 : 0,
+    '#description' => t('If selected and this menu item has children, the menu will always appear expanded.'),
+  );
+
+  // Generate a list of possible parents (not including this item or descendants).
+  $options = menu_parent_options($item->mid);
+  $form['pid'] = array(
+    '#type' => 'select',
+    '#title' => t('Parent item'),
+    '#default_value' => $item->pid,
+    '#options' => $options,
+  );
+  $form['weight'] = array(
+    '#type' => 'weight',
+    '#title' => t('Weight'),
+    '#default_value' => isset($item->weight) ? $item->weight : 0,
+    '#description' => t('Optional. In the menu, the heavier items will sink and the lighter items will be positioned nearer the top.'),
+  );
+
+  // Always enable menu items (but not menus) when editing them.
+  if (!($item->type & MENU_IS_ROOT)) {
+    $item->type |= MENU_VISIBLE_IN_TREE | MENU_VISIBLE_IN_BREADCRUMB;
+  }
+
+  $form['type'] = array('#type' => 'value', '#value' => $item->type);
+  $form['submit'] = array('#type' => 'submit', '#value' => t('Submit'));
+
+  return $form;
 }
+
+function menu_edit_item_form_validate($form_id, $form_values) {
+  if (isset($form_values['path'])) {
+    $path = $form_values['path'];
+    // Skip external links.
+    $colonpos = strpos($path, ':');
+    if ($colonpos !== FALSE && !preg_match('![/?#]!', substr($path, 0, $colonpos))) {
+      return;
+    }
+    $item = menu_get_item($path);
+    if (!$item || !$item->access) {
+      form_set_error('path', t('This path is either invalid or you do not have access to it'));
+    }
+    elseif ($path != $form_values['original_path'] && $item->path == $path) {
+      form_set_error('path', t('There is already a menu item pointing to this path.'));
+    }
+  }
+}
+/**
+ * Process menu and menu item add/edit form submissions.
+ */
+function menu_edit_item_form_submit($form_id, $form_values) {
+  menu_edit_item_save($form_values);
+  return 'admin/build/menu';
+}
+
+/**
+ * Return a list of menu items that are valid possible parents for the
+ * given menu item. The list excludes the given item and its children.
+ *
+ * @param $mid
+ *   The menu item id for which to generate a list of parents.
+ *   If $mid == 0 then the complete tree is returned.
+ * @param $pid
+ *   The menu item id of the menu item at which to start the tree.
+ *   If $pid > 0 then this item will be included in the tree.
+ * @param $depth
+ *   The current depth in the tree - used when recursing to indent the tree.
+ * @return
+ *   An array of menu titles keyed on the mid.
+ */
+function menu_parent_options($mid, $pid = 0, $depth = 0) {
+  $options = array(0 => t('Root'));
+  // Exclude $mid and its children from the list unless $mid is 0.
+  if ($mid && $mid == $pid) {
+    return $options;
+  }
+  $sql = 'SELECT m.*, me.disabled FROM {menu} m LEFT JOIN {menu_edit} me ON m.path = me.path WHERE (m.visible = 1 OR (me.disabled = 1 AND me.admin = 0))';
+  if (!$mid) {
+    $params = array();
+  }
+  elseif ($item = menu_get_item_by_mid($mid)) {
+    $sql .=' AND (mleft < %d OR %d < mright)';
+    $params = array($item->mleft, $item->mright);
+  }
+  else {
+    return $options;
+  }
+  if ($parent_item = menu_get_item_by_mid($pid)) {
+    $sql .= ' AND %d <= mleft AND %d <= mright';
+    $params[] = $parent_item->mleft;
+    $params[] = $parent_item->mright;
+  }
+  $sql .= ' ORDER BY mleft';
+  $result = db_query($sql, $params);
+  $map = arg();
+
+  while ($item = db_fetch_object($result)) {
+    _menu_translate($item, $map, MENU_RENDER_LINK);
+    $title = str_repeat('--', $item->depth) .' '. $item->title;
+    if ($item->disabled) {
+      $title .= ' ('. t('disabled') .')';
+    }
+    $options[$item->mid] = $title;
+  }
+  return $options;
+}
+
+/**
+ * Save changes to a menu item into the database.
+ *
+ * @return mid
+ */
+function menu_edit_item_save($edit) {
+  if (isset($edit['expanded'])) {
+    if ($edit['expanded']) {
+      $edit['type'] |= MENU_EXPANDED;
+    }
+    else {
+      $edit['type'] &= ~MENU_EXPANDED;
+    }
+  }
+
+  $edit['type'] = $edit['type'] | MENU_MODIFIED_BY_ADMIN;
+
+  $parent = $edit['pid'] ? db_result(db_query('SELECT path FROM {menu} WHERE mid = %d', $edit['pid'])) : '';
+  $t_args = array('%title' => $edit['title']);
+  if (!empty($edit['original_path']) && db_num_rows(db_query("SELECT * FROM {menu_edit} WHERE path='%s'", $edit['original_path']))) {
+    db_query("UPDATE {menu_edit} SET parent = '%s', title = '%s', description = '%s', weight = %d, type = %d, path = '%s' WHERE path = '%s'", $parent, $edit['title'], $edit['description'], $edit['weight'], $edit['type'], isset($edit['path']) ? $edit['path'] : $edit['original_path'], $edit['original_path']);
+  }
+  else {
+    db_query("INSERT INTO {menu_edit} (parent, path, title, description, weight, type, admin) VALUES ('%s', '%s', '%s', '%s', %d, %d, %d)", $parent, isset($edit['path']) ? $edit['path'] : $edit['original_path'], $edit['title'], $edit['description'], $edit['weight'], $edit['type'], isset($edit['path']));
+  }
+  watchdog('menu', t('Saved menu item %title.', $t_args), WATCHDOG_NOTICE, l(t('view'), 'admin/build/menu'));
+  drupal_set_message(t('The menu item %title has been saved.', $t_args));
+  menu_rebuild();
+}
+
+/**
+ * Remove the menu item.
+ */
+function menu_node_form_delete($node) {
+  menu_delete_item(array('path' => 'node/'. $node->nid));
+}
+
+/**
+ * Menu callback; handle the adding/editing of a new menu.
+ */
+function menu_edit_menu_form($type, $mid = 0) {
+  if ($type == 'edit') {
+    if (!$item = menu_get_item_by_mid($mid)) {
+      drupal_not_found();
+      return;
+    }
+  }
+  else {
+    $item = array('mid' => 0, 'pid' => 0, 'path' => '', 'weight' => 0, 'type' => MENU_CUSTOM_MENU);
+  }
+  $form['title'] = array('#type' => 'textfield',
+    '#title' => t('Title'),
+    '#default_value' => $item['title'],
+    '#description' => t('The name of the menu.'),
+    '#required' => TRUE,
+  );
+  $form['mid'] = array('#type' => 'value', '#value' => $item['mid']);
+  $form['pid'] = array('#type' => 'value', '#value' => $item['pid']);
+  $form['path'] = array('#type' => 'value', '#value' => $item['path']);
+  $form['weight'] = array('#type' => 'value', '#value' => $item['weight']);
+  $form['type'] = array('#type' => 'value', '#value' => $item['type']);
+  $form['submit'] = array('#type' => 'submit', '#value' => t('Submit'));
+  // Reuse the submit function of menu_edit_item_form.
+  $form['#submit']['menu_edit_item_form_submit'] = array();
+  $form['#validate']['menu_edit_item_form_validate'] = array();
+  $form['#theme'] = 'menu_edit_item_form';
+
+  return $form;
+}
+
+/**
+ * Menu callback; delete a single custom item.
+ */
+function menu_item_delete_form($mid) {
+  if (!($menu = db_fetch_object(db_query('SELECT type, path, title FROM {menu} WHERE mid = %d', $mid)))) {
+    drupal_not_found();
+    return;
+  }
+
+  $form['path'] = array('#type' => 'value', '#value' => $menu->path);
+  $form['type'] = array('#type' => 'value', '#value' => $menu->type);
+  $form['title'] = array('#type' => 'value', '#value' => $menu->title);
+
+  if ($menu->type & MENU_IS_ROOT) {
+    $message = t('Are you sure you want to delete the menu %item?', array('%item' => $menu->title));
+  }
+  else {
+    $message = t('Are you sure you want to delete the custom menu item %item?', array('%item' => $menu->title));
+  }
+
+  return confirm_form($form, $message, 'admin/build/menu', t('This action cannot be undone.'), t('Delete'));
+}
+
+/**
+ * Process menu delete form submissions.
+ */
+function menu_item_delete_form_submit($form_id, $form_values) {
+  menu_delete_item($form_values['path']);
+
+  $t_args = array('%title' => $form_values['title']);
+  if ($form_values['type'] & MENU_IS_ROOT) {
+    drupal_set_message(t('The menu %title has been deleted.', $t_args));
+    watchdog('menu', t('Deleted menu %title.', $t_args), WATCHDOG_NOTICE);
+  }
+  else {
+    drupal_set_message(t('The menu item %title has been deleted.', $t_args));
+    watchdog('menu', t('Deleted menu item %title.', $t_args), WATCHDOG_NOTICE);
+  }
+
+  return 'admin/build/menu';
+}
+
+/**
+ * Menu callback; reset a single modified item.
+ */
+function menu_reset_item($mid) {
+  if (isset($mid) && $item = db_fetch_object(db_query('SELECT path, title FROM {menu} WHERE mid = %d', $mid))) {
+    $form['mid'] = array('#type' => 'value', '#value' => $item->path);
+    return confirm_form($form, t('Are you sure you want to reset the item %item to its default values?', array('%item' => $item->title)), 'admin/build/menu', t('Any customizations will be lost. This action cannot be undone.'), t('Reset'));
+  }
+  else {
+    drupal_not_found();
+  }
+}
+
+/**
+ * Process menu reset item form submissions.
+ */
+function menu_reset_item_submit($form_id, $form_values) {
+  menu_delete_item($form_values['mid']);
+  drupal_set_message(t('The menu item was reset to its default settings.'));
+
+  return 'admin/build/menu';
+}
+
+/**
+ * Delete a menu item from the database. If $item['mid'] is specified, then
+ * this is used to find the existing item; otherwise, $item['path'] is used.
+ *
+ * @param $item
+ *   The path to the menu item to be deleted.
+ */
+function menu_delete_item($path) {
+  db_query("DELETE FROM {menu_edit} WHERE path = '%s'", $path);
+  menu_rebuild();
+}
+
+// Conversion ends here.
 
 /**
  * Implementation of hook_block().
  */
-function menu_block($op = 'list', $delta = 0) {
+function _menu_block($op = 'list', $delta = 0) {
   if ($op == 'list') {
     $blocks = array();
     $root_menus = menu_get_root_menus();
@@ -136,7 +554,7 @@ function menu_block($op = 'list', $delta = 0) {
 /**
  * Implementation of hook_nodeapi().
  */
-function menu_nodeapi(&$node, $op) {
+function _menu_nodeapi(&$node, $op) {
 
   if (user_access('administer menu')) {
     switch ($op) {
@@ -162,17 +580,10 @@ function menu_nodeapi(&$node, $op) {
 }
 
 /**
- * Implementation of hook_perm().
- */
-function menu_perm() {
-  return array('administer menu');
-}
-
-/**
  * Implementation of hook_form_alter().
  * Add menu item fields to the node form.
  */
-function menu_form_alter(&$form, $form_id) {
+function _menu_form_alter(&$form, $form_id) {
   if (isset($form['type']) && $form['type']['#value'] .'_node_form' == $form_id) {
     $item = array();
     if ($form['nid']['#value'] > 0) {
@@ -299,304 +710,9 @@ function menu_configure() {
 }
 
 /**
- * Menu callback; handle the adding/editing of a new menu.
- */
-function menu_edit_menu_form($type, $mid = 0) {
-  if ($type == 'edit') {
-    if (!($item = db_fetch_array(db_query('SELECT * FROM {menu} WHERE mid = %d', $mid)))) {
-      drupal_not_found();
-      return;
-    }
-  }
-  else {
-    $item = array('mid' => 0, 'pid' => 0, 'path' => '', 'weight' => 0, 'type' => MENU_CUSTOM_MENU);
-  }
-  $form['title'] = array('#type' => 'textfield',
-    '#title' => t('Title'),
-    '#default_value' => $item['title'],
-    '#description' => t('The name of the menu.'),
-    '#required' => TRUE,
-  );
-  $form['mid'] = array('#type' => 'value', '#value' => $item['mid']);
-  $form['pid'] = array('#type' => 'value', '#value' => $item['pid']);
-  $form['path'] = array('#type' => 'value', '#value' => $item['path']);
-  $form['weight'] = array('#type' => 'value', '#value' => $item['weight']);
-  $form['type'] = array('#type' => 'value', '#value' => $item['type']);
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Submit'));
-  // Reuse the submit function of menu_edit_item_form.
-  $form['#submit']['menu_edit_item_form_submit'] = array();
-  $form['#validate']['menu_edit_item_form_validate'] = array();
-  $form['#theme'] = 'menu_edit_item_form';
-
-  return $form;
-}
-
-/**
- * Present the menu item editing form.
- */
-function menu_edit_item_form($type, $mid = 0) {
-  if ($type == 'edit') {
-    if (!($item = db_fetch_array(db_query('SELECT * FROM {menu} WHERE mid = %d', $mid)))) {
-      drupal_not_found();
-      return;
-    }
-  }
-  else {
-    // This is an add form.
-    // The mid argument (if set) will be the default pid to use.
-    // Otherwise, we default to the "Navigation" menu (pid #1).
-    $default_pid = $mid ? $mid : 1;
-    $item = array('mid' => 0, 'pid' => $default_pid, 'weight' => 0, 'type' => MENU_CUSTOM_ITEM);
-  }
-
-  $form['title'] = array('#type' => 'textfield',
-    '#title' => t('Title'),
-    '#default_value' => $item['title'],
-    '#description' => t('The name of the menu item.'),
-    '#required' => TRUE,
-  );
-  $form['description'] = array('#type' => 'textfield',
-    '#title' => t('Description'),
-    '#default_value' => $item['description'],
-    '#description' => t('The description displayed when hovering over a menu item.'),
-  );
-
-  if ($item['type'] & MENU_CREATED_BY_ADMIN) {
-    $form['path'] = array('#type' => 'textfield',
-      '#title' => t('Path'),
-      '#default_value' => $item['path'],
-      '#description' => t('The path this menu item links to. This can be an internal Drupal path such as %add-node or an external URL such as %drupal. Enter %front to link to the front page.', array('%front' => '<front>', '%add-node' => 'node/add', '%drupal' => 'http://drupal.org')),
-      '#required' => TRUE,
-    );
-  }
-  else {
-    $form['_path'] = array('#type' => 'item',
-      '#title' => t('Path'),
-      '#description' => l($item['path'], $item['path']),
-    );
-    $form['path'] = array('#type' => 'value', '#value' => $item['path']);
-  }
-
-  $expanded = $item['type'] & MENU_EXPANDED ? 1 : 0;
-  $form['expanded'] = array('#type' => 'checkbox',
-    '#title' => t('Expanded'),
-    '#default_value' => $expanded,
-    '#description' => t('If selected and this menu item has children, the menu will always appear expanded.'),
-  );
-
-  // Generate a list of possible parents (not including this item or descendants).
-  $options = menu_parent_options($item['mid']);
-  $form['pid'] = array('#type' => 'select',
-    '#title' => t('Parent item'),
-    '#default_value' => $item['pid'],
-    '#options' => $options,
-  );
-  $form['weight'] = array('#type' => 'weight',
-    '#title' => t('Weight'),
-    '#default_value' => $item['weight'],
-    '#description' => t('Optional. In the menu, the heavier items will sink and the lighter items will be positioned nearer the top.'),
-  );
-
-  // Always enable menu items (but not menus) when editing them.
-  if (!($item['type'] & MENU_IS_ROOT)) {
-    $item['type'] |= MENU_VISIBLE_IN_TREE | MENU_VISIBLE_IN_BREADCRUMB;
-  }
-
-  $form['type'] = array('#type' => 'value', '#value' => $item['type']);
-  $form['mid'] = array('#type' => 'value', '#value' => $item['mid']);
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Submit'));
-
-  return $form;
-}
-
-/**
- * Process menu and menu item add/edit form submissions.
- */
-function menu_edit_item_form_submit($form_id, $form_values) {
-  menu_edit_item_save($form_values);
-  return 'admin/build/menu';
-}
-
-/**
- * Menu callback; delete a single custom item.
- */
-function menu_item_delete_form($mid) {
-  if (!($menu = db_fetch_object(db_query('SELECT type, title FROM {menu} WHERE mid = %d', $mid)))) {
-    drupal_not_found();
-    return;
-  }
-
-  $form['mid'] = array('#type' => 'value', '#value' => $mid);
-  $form['type'] = array('#type' => 'value', '#value' => $menu->type);
-  $form['title'] = array('#type' => 'value', '#value' => $menu->title);
-
-  if ($menu->type & MENU_IS_ROOT) {
-    $message = t('Are you sure you want to delete the menu %item?', array('%item' => $menu->title));
-  }
-  else {
-    $message = t('Are you sure you want to delete the custom menu item %item?', array('%item' => $menu->title));
-  }
-
-  return confirm_form($form, $message, 'admin/build/menu', t('This action cannot be undone.'), t('Delete'));
-}
-
-/**
- * Process menu delete form submissions.
- */
-function menu_item_delete_form_submit($form_id, $form_values) {
-  menu_delete_item($form_values['mid']);
-
-  $t_args = array('%title' => $form_values['title']);
-  if ($form_values['type'] & MENU_IS_ROOT) {
-    drupal_set_message(t('The menu %title has been deleted.', $t_args));
-    watchdog('menu', t('Deleted menu %title.', $t_args), WATCHDOG_NOTICE);
-  }
-  else {
-    drupal_set_message(t('The menu item %title has been deleted.', $t_args));
-    watchdog('menu', t('Deleted menu item %title.', $t_args), WATCHDOG_NOTICE);
-  }
-
-  return 'admin/build/menu';
-}
-
-/**
- * Menu callback; reset a single modified item.
- */
-function menu_reset_item($mid) {
-  if (isset($mid) && $title = db_result(db_query('SELECT title FROM {menu} WHERE mid = %d', $mid))) {
-    $form['mid'] = array('#type' => 'value', '#value' => $mid);
-    return confirm_form($form, t('Are you sure you want to reset the item %item to its default values?', array('%item' => $title)), 'admin/build/menu', t('Any customizations will be lost. This action cannot be undone.'), t('Reset'));
-  }
-  else {
-    drupal_not_found();
-  }
-}
-
-/**
- * Process menu reset item form submissions.
- */
-function menu_reset_item_submit($form_id, $form_values) {
-  menu_delete_item($form_values['mid']);
-  drupal_set_message(t('The menu item was reset to its default settings.'));
-
-  return 'admin/build/menu';
-}
-
-/**
- * Menu callback; hide a menu item.
- */
-function menu_disable_item($mid) {
-  $item = menu_get_item($mid);
-  $type = $item['type'];
-  $type &= ~MENU_VISIBLE_IN_TREE;
-  $type &= ~MENU_VISIBLE_IN_BREADCRUMB;
-  $type |= MENU_MODIFIED_BY_ADMIN;
-  db_query('UPDATE {menu} SET type = %d WHERE mid = %d', $type, $mid);
-  drupal_set_message(t('The menu item has been disabled.'));
-  drupal_goto('admin/build/menu');
-}
-
-/**
- * Menu callback; present the main menu management page.
- */
-function menu_overview() {
-  menu_rebuild();
-
-  return menu_overview_tree();
-}
-
-/**
- * Save changes to a menu item into the database.
- *
- * @return mid
- */
-function menu_edit_item_save($edit) {
-  if (isset($edit['expanded'])) {
-    if ($edit['expanded']) {
-      $edit['type'] |= MENU_EXPANDED;
-    }
-    else {
-      $edit['type'] &= ~MENU_EXPANDED;
-    }
-  }
-
-  $edit['type'] = $edit['type'] | MENU_MODIFIED_BY_ADMIN;
-
-  $status = menu_save_item($edit);
-
-  $t_args = array('%title' => $edit['title']);
-  if ($status == SAVED_UPDATED) {
-    drupal_set_message(t('The menu item %title has been updated.', $t_args));
-  }
-  elseif ($status == SAVED_NEW) {
-    drupal_set_message(t('The menu item %title has been added.', $t_args));
-    watchdog('menu', t('Added menu item %title.', $t_args), WATCHDOG_NOTICE, l(t('view'), 'admin/build/menu'));
-  }
-  return $edit['mid'];
-}
-
-/**
- * Save a menu item to the database.
- *
- * @param $item
- *   The menu item to be saved. This is passed by reference, so that the newly
- *   generated $item['mid'] can be accessed after an insert takes place.
- *
- * @return $status
- *   The operation that was performed in saving. Either SAVED_NEW (if a new
- *   menu item was created), or SAVED_UPDATED (if an existing menu item was
- *   updated).
- */
-function menu_save_item(&$item) {
-  $existing_item = NULL;
-
-  // Check that the item already exists in the menu tree, if $item['mid'] is
-  // specified.
-  if (isset($item['mid'])) {
-    $existing_item = menu_get_item($item['mid']);
-  }
-
-  if ($item['mid'] && !empty($existing_item)) {
-    db_query("UPDATE {menu} SET pid = %d, path = '%s', title = '%s', description = '%s', weight = %d, type = %d WHERE mid = %d", $item['pid'], $item['path'], $item['title'], $item['description'], $item['weight'], $item['type'], $item['mid']);
-    return SAVED_UPDATED;
-  }
-  else {
-    $item['mid'] = db_next_id('{menu}_mid');
-    // Check explicitly for mid <= 2. If the database was improperly prefixed,
-    // this would cause a nasty infinite loop or duplicate mid errors.
-    // TODO: have automatic prefixing through an installer to prevent this.
-    while ($item['mid'] <= 2) {
-      $item['mid'] = db_next_id('{menu}_mid');
-    }
-    db_query("INSERT INTO {menu} (mid, pid, path, title, description, weight, type) VALUES (%d, %d, '%s', '%s', '%s', %d, %d)", $item['mid'], $item['pid'], $item['path'], $item['title'], $item['description'], $item['weight'], $item['type']);
-    return SAVED_NEW;
-  }
-}
-
-/**
- * Delete a menu item from the database. If $item['mid'] is specified, then
- * this is used to find the existing item; otherwise, $item['path'] is used.
- *
- * @param $item
- *   The menu item to be deleted.
- */
-function menu_delete_item($item) {
-  if (!is_array($item)) {
-    $item = array('mid' => $item);
-  }
-
-  if ($item['mid']) {
-    db_query('DELETE FROM {menu} WHERE mid = %d', $item['mid']);
-  }
-  elseif ($item['path']) {
-    db_query("DELETE FROM {menu} WHERE path = '%s'", $item['path']);
-  }
-}
-
-/**
  * Present the menu tree, rendered along with links to edit menu items.
  */
-function menu_overview_tree() {
+function _menu_overview_tree() {
   $menu = menu_get_menu();
   $root_menus = menu_get_root_menus();
   $header = array(t('Menu item'), t('Expanded'), array('data' => t('Operations'), 'colspan' => '3'));
@@ -620,153 +736,4 @@ function menu_overview_tree() {
     $output .= theme('box', check_plain($title), $table);
   }
   return $output;
-}
-
-function menu_overview_tree_rows($pid = 0, $depth = 0) {
-  $parent_item = menu_get_item($pid);
-  $rows = array();
-
-  if (isset($parent_item) && isset($parent_item['children'])) {
-    usort($parent_item['children'], '_menu_sort');
-    foreach ($parent_item['children'] as $mid) {
-      $item = menu_get_item($mid);
-      // Populate the title field.
-      $title = '';
-      if ($pid == 0) {
-        // Top-level items are menu names, and don't have an associated path.
-        $title .= check_plain($item['title']);
-      }
-      else {
-        $title .= l($item['title'], $item['path']);
-      }
-      if ($depth > 0) {
-        $title = '-&nbsp;'. $title;
-      }
-      for ($i = 1; $i < $depth; $i++) {
-        $title = '&nbsp;&nbsp;'. $title;
-      }
-
-      // Populate the operations field.
-      $operations = array();
-      if (!($item['type'] & MENU_MODIFIABLE_BY_ADMIN)) {
-        $operations[] = array('data' => t('locked'), 'colspan' => '3', 'align' => 'center');
-      }
-      else {
-        // Set the edit column.
-        if ($item['type'] & (MENU_VISIBLE_IN_TREE | MENU_VISIBLE_IF_HAS_CHILDREN)) {
-          $operations[] = array('data' => l(t('edit'), 'admin/build/menu/item/edit/'. $mid));
-        }
-        else {
-          $operations[] = array('data' => '');
-        }
-
-        // Set the disable column.
-        if ($item['type'] & (MENU_IS_ROOT | MENU_VISIBLE_IF_HAS_CHILDREN)) {
-          // Disabling entire menus is done from block admin page.
-          // MENU_VISIBLE_IF_HAS_CHILDREN menus are always enabled so hide this operation.
-          $operations[] = array('data' => '');
-        }
-        else if ($item['type'] & MENU_VISIBLE_IN_TREE) {
-          $operations[] = array('data' => l(t('disable'), 'admin/build/menu/item/disable/'. $mid));
-        }
-        else {
-          $operations[] = array('data' => l(t('enable'), 'admin/build/menu/item/edit/'. $mid));
-        }
-
-        // Set the reset column.
-        if ($item['type'] & MENU_CREATED_BY_ADMIN) {
-          $operations[] = array('data' => l(t('delete'), 'admin/build/menu/item/delete/'. $mid));
-        }
-        else if ($item['type'] & MENU_MODIFIED_BY_ADMIN) {
-          $operations[] = array('data' => l(t('reset'), 'admin/build/menu/item/reset/'. $mid));
-        }
-        else {
-          $operations[] = array('data' => '');
-        }
-      }
-
-      // Call out disabled items.
-      if ($item['type'] & (MENU_VISIBLE_IN_TREE | MENU_VISIBLE_IF_HAS_CHILDREN)) {
-        $class = 'menu-enabled';
-      }
-      else {
-        $title .= ' ('. t('disabled') .')';
-        $class = 'menu-disabled';
-      }
-
-      if ($item['type'] & (MENU_MODIFIABLE_BY_ADMIN | MENU_VISIBLE_IN_TREE)) {
-        $row = array(array('data' => $title, 'class' => $class), array('data' => ($item['children'] ? (($item['type'] & MENU_EXPANDED) ? t('Yes') : t('No')) : ''), 'class' => $class));
-        foreach ($operations as $operation) {
-          $operation['class'] = $class;
-          $row[] = $operation;
-        }
-        $rows[] = $row;
-        $rows = array_merge($rows, menu_overview_tree_rows($mid, $depth + 1));
-      }
-      else {
-        // Skip items that are hidden and locked; admins will never care about them.
-        $rows = array_merge($rows, menu_overview_tree_rows($mid, $depth));
-      }
-    }
-  }
-
-  return $rows;
-}
-
-/**
- * Return a list of menu items that are valid possible parents for the
- * given menu item. The list excludes the given item and its children.
- *
- * @param $mid
- *   The menu item id for which to generate a list of parents.
- *   If $mid == 0 then the complete tree is returned.
- * @param $pid
- *   The menu item id of the menu item at which to start the tree.
- *   If $pid > 0 then this item will be included in the tree.
- * @param $depth
- *   The current depth in the tree - used when recursing to indent the tree.
- * @return
- *   An array of menu titles keyed on the mid.
- */
-function menu_parent_options($mid, $pid = 0, $depth = 0) {
-  $options = array();
-
-  if (!($parent_item = menu_get_item($pid))) {
-    return $options;
-  }
-
-  // Exclude $mid and its children from the list unless $mid is 0.
-  if ($mid && $mid == $pid) {
-    return $options;
-  }
-
-  // Add the current $pid to the list.
-  if ($pid > 0 && ($parent_item['type'] & (MENU_MODIFIABLE_BY_ADMIN | MENU_IS_ROOT))) {
-    $title = ' '. $parent_item['title'];
-    for ($i = 0; $i < $depth; $i++) {
-      $title = '--'. $title;
-    }
-    if (!($parent_item['type'] & MENU_VISIBLE_IN_TREE)) {
-      $title .= ' ('. t('disabled') .')';
-    }
-    $options[$pid] = $title;
-    $depth ++;
-  }
-
-  // Add children of $pid to the list recursively.
-  if (isset($parent_item['children'])) {
-    usort($parent_item['children'], '_menu_sort');
-    foreach ($parent_item['children'] as $child) {
-      $options += menu_parent_options($mid, $child, $depth);
-    }
-  }
-
-  return $options;
-}
-
-/**
- * Remove the menu item.
- */
-function menu_node_form_delete($node) {
-  menu_delete_item(array('path' => 'node/'. $node->nid));
 }

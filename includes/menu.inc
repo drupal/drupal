@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.159 2007/03/27 05:13:53 unconed Exp $
+// $Id: menu.inc,v 1.160 2007/04/06 04:39:50 unconed Exp $
 
 /**
  * @file
@@ -167,7 +167,27 @@ define('MENU_HANDLE_REQUEST', 0);
 define('MENU_RENDER_LINK', 1);
 
 /**
- * @} End of "Menu helper directions
+ * @} End of "Menu operations."
+ */
+
+/**
+ * @Name Menu alterations
+ * @{
+ * Menu alter phases
+ */
+
+/**
+ * Alter the menu as defined in modules, keys are like user/%user.
+ */
+define('MENU_ALTER_MODULE_DEFINED', 0);
+
+/**
+ * Alter the menu after the first preprocessing phase, keys are like user/%.
+ */
+define('MENU_ALTER_PREPROCESSED', 1);
+
+/**
+ * @} End of "Menu alterations".
  */
 
 /**
@@ -290,7 +310,9 @@ function menu_get_item($path = NULL, $item = NULL) {
     if ($item = db_fetch_object(db_query_range('SELECT * FROM {menu} WHERE path IN ('. implode (',', $placeholders) .') ORDER BY fit DESC', $ancestors, 0, 1))) {
       // We need to access check the parents to match the navigation tree
       // behaviour. The last parent is always the item itself.
-      $result = db_query('SELECT * FROM {menu} WHERE mid IN ('. $item->parents .') ORDER BY mleft');
+      $args = explode(',', $item->parents);
+      $placeholders = implode(', ', array_fill(0, count($args), '%d'));
+      $result = db_query('SELECT * FROM {menu} WHERE mid IN ('. $placeholders .') ORDER BY mleft', $args);
       $item->access = TRUE;
       while ($item->access && ($parent = db_fetch_object($result)))  {
         $map = _menu_translate($parent, $original_map);
@@ -379,7 +401,8 @@ function _menu_translate(&$item, $map, $operation = MENU_HANDLE_REQUEST) {
         $return = $load_function(isset($path_map[$index]) ? $path_map[$index] : '');
         // If callback returned an error or there is no callback, trigger 404.
         if ($return === FALSE) {
-          return array(FALSE, FALSE, '');
+          $item->access = FALSE;
+          return FALSE;
         }
         $map[$index] = $return;
       }
@@ -414,7 +437,9 @@ function _menu_translate(&$item, $map, $operation = MENU_HANDLE_REQUEST) {
  */
 function menu_tree() {
   if ($item = menu_get_item()) {
-    list(, $menu) = _menu_tree(db_query('SELECT * FROM {menu} WHERE pid IN ('. $item->parents .') AND visible = 1 ORDER BY mleft'));
+    $args = explode(',', $item->parents);
+    $placeholders = implode(', ', array_fill(0, count($args), '%d'));
+    list(, $menu) = _menu_tree(db_query('SELECT * FROM {menu} WHERE pid IN ('. $placeholders .') AND visible = 1 ORDER BY mleft', $args));
     return $menu;
   }
 }
@@ -552,8 +577,11 @@ function menu_rebuild() {
   // TODO: split menu and menu links storage.
   db_query('DELETE FROM {menu}');
   $menu = module_invoke_all('menu');
-  drupal_alter('menu', $menu);
+
+  // Alter the menu as defined in modules, keys are like user/%user.
+  drupal_alter('menu', $menu, MENU_ALTER_MODULE_DEFINED);
   $mid = 1;
+
   // First pass: separate callbacks from pathes, making pathes ready for
   // matching. Calculate fitness, and fill some default values.
   foreach ($menu as $path => $item) {
@@ -626,15 +654,21 @@ function menu_rebuild() {
     $menu_path_map[$path] = $new_path;
     $menu[$new_path] = $item;
   }
+
+  // Alter the menu after the first preprocessing phase, keys are like user/%.
+  drupal_alter('menu', $menu, MENU_ALTER_PREPROCESSED);
+
   $menu_path_map[''] = '';
   // Second pass: prepare for sorting and find parents.
   foreach ($menu as $path => $item) {
     $item = &$menu[$path];
     $number_parts = $item['_number_parts'];
     if (isset($item['parent'])) {
-      $item['parent'] = $menu_path_map[$item['parent']];
+      if (isset($menu_path_map[$item['parent']])) {
+        $item['parent'] = $menu_path_map[$item['parent']];
+      }
       $parent_parts = explode('/', $item['parent'], 6);
-      $slashes = count($parent_parts) - 1;
+      $slashes = count($parent_parts);
     }
     else {
       $parent_parts = $item['_parts'];
@@ -670,6 +704,7 @@ function menu_rebuild() {
     unset($item);
   }
   array_multisort($sort, $menu);
+
   // We are now sorted, so let's build the tree.
   $children = array();
   foreach ($menu as $path => $item) {
@@ -678,6 +713,7 @@ function menu_rebuild() {
     }
   }
   menu_renumber($menu);
+
   // Apply inheritance rules.
   foreach ($menu as $path => $item) {
     $item = &$menu[$path];
@@ -718,6 +754,9 @@ function menu_rebuild() {
     }
     if (is_bool($item['access callback'])) {
       $item['access callback'] = intval($item['access callback']);
+    }
+    if (empty($item['page callback'])) {
+      $item['access callback'] = 0;
     }
     if ($item['_tab']) {
       if (!isset($item['parent'])) {
@@ -764,7 +803,11 @@ function menu_rebuild() {
         break;
       }
     }
-
+    // We remove disabled items here -- this way they will be numbered in the
+    // tree so the menu overview screen can show them.
+    if (!empty($item['disabled'])) {
+      $item['_visible'] = FALSE;
+    }
     db_query("INSERT INTO {menu} (
       mid, pid, path, load_functions, to_arg_functions,
       access_callback, access_arguments, page_callback, page_arguments, fit,
@@ -913,4 +956,24 @@ function menu_get_active_title() {
       return $item->title;
     }
   }
+}
+
+/**
+ * Get a menu item by its mid, access checked and link translated for
+ * rendering.
+ *
+ * @param $mid
+ *   The mid of the menu item.
+ * @return
+ *   A menu object, with $item->access filled and link translated for
+ *   rendering.
+ */
+function menu_get_item_by_mid($mid) {
+  if ($item = db_fetch_object(db_query('SELECT * FROM {menu} WHERE mid = %d', $mid))) {
+    _menu_translate($item, arg(), MENU_RENDER_LINK);
+    if ($item->access) {
+      return $item;
+    }
+  }
+  return FALSE;
 }

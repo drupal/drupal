@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.65 2007/03/15 15:23:38 unconed Exp $
+// $Id: database.inc,v 1.66 2007/04/06 04:39:50 unconed Exp $
 
 /**
  * @file
@@ -311,5 +311,4 @@ function db_escape_table($string) {
 /**
  * @} End of "defgroup database".
  */
-
 
