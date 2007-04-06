@@ -199,13 +199,13 @@ function _theme_build_registry($theme, $theme_engine) {
  *   An array of the currently available themes.
  */
 function list_themes($refresh = FALSE) {
-  static $list;
+  static $list = array();
 
   if ($refresh) {
-    unset($list);
+    $list = array();
   }
 
-  if (!$list) {
+  if (empty($list)) {
     $list = array();
     $result = db_query("SELECT * FROM {system} WHERE type = 'theme'");
     while ($theme = db_fetch_object($result)) {
