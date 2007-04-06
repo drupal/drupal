@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.764 2007/04/06 13:27:23 dries Exp $
+// $Id: user.module,v 1.765 2007/04/06 14:27:22 dries Exp $
 
 /**
  * @file
@@ -1049,17 +1049,17 @@ function user_login_validate($form_id, $form_values) {
   if ($form_values['name']) {
     if (user_is_blocked($form_values['name'])) {
       // blocked in user administration
-      form_set_error('login', t('The username %name has not been activated or is blocked.', array('%name' => $form_values['name'])));
+      form_set_error('name', t('The username %name has not been activated or is blocked.', array('%name' => $form_values['name'])));
     }
     else if (drupal_is_denied('user', $form_values['name'])) {
       // denied by access controls
-      form_set_error('login', t('The name %name is a reserved username.', array('%name' => $form_values['name'])));
+      form_set_error('name', t('The name %name is a reserved username.', array('%name' => $form_values['name'])));
     }
     else if ($form_values['pass']) {
       $user = user_authenticate($form_values['name'], trim($form_values['pass']));
 
       if (!$user->uid) {
-        form_set_error('login', t('Sorry, unrecognized username or password. <a href="@password">Have you forgotten your password?</a>', array('@password' => url('user/password'))));
+        form_set_error('name', t('Sorry, unrecognized username or password. <a href="@password">Have you forgotten your password?</a>', array('@password' => url('user/password'))));
         watchdog('user', t('Login attempt failed for %user.', array('%user' => $form_values['name'])));
       }
     }
