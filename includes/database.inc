@@ -312,4 +312,3 @@ function db_escape_table($string) {
  * @} End of "defgroup database".
  */
 
-
