@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.216 2007/03/27 05:13:54 unconed Exp $
+// $Id: search.module,v 1.217 2007/04/06 13:27:22 dries Exp $
 
 /**
  * @file
@@ -109,6 +109,26 @@ function search_help($section) {
 <li>Consider loosening your query with <em>OR</em>: <em>blue smurf</em> will match less than <em>blue OR smurf</em>.</li>
 </ul>');
   }
+}
+
+/**
+ * Implementation of hook_theme()
+ */
+function search_theme() {
+  return array(
+    'search_theme_form' => array(
+      'arguments' => array('form' => NULL),
+    ),
+    'search_block_form' => array(
+      'arguments' => array('form' => NULL),
+    ),
+    'search_item' => array(
+      'arguments' => array('item' => NULL, 'type' => NULL),
+    ),
+    'search_page' => array(
+      'arguments' => array('results' => NULL, 'type' => NULL),
+    ),
+  );
 }
 
 /**

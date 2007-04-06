@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.390 2007/03/28 14:08:22 dries Exp $
+// $Id: forum.module,v 1.391 2007/04/06 13:27:21 dries Exp $
 
 /**
  * @file
@@ -26,6 +26,29 @@ function forum_help($section) {
     case 'admin/content/forum/settings':
       return '<p>'. t('These settings provide the ability to fine tune the display of your forum topics.') .'</p>';
   }
+}
+
+/**
+ * Implementation of hook_theme()
+ */
+function forum_theme() {
+  return array(
+    'forum_display' => array(
+      'arguments' => array('forums' => NULL, 'topics' => NULL, 'parents' => NULL, 'tid' => NULL, 'sortby' => NULL, 'forum_per_page' => NULL),
+    ),
+    'forum_list' => array(
+      'arguments' => array('forums' => NULL, 'parents' => NULL, 'tid' => NULL),
+    ),
+    'forum_topic_list' => array(
+      'arguments' => array('tid' => NULL, 'topics' => NULL, 'sortby' => NULL, 'forum_per_page' => NULL),
+    ),
+    'forum_icon' => array(
+      'arguments' => array('new_posts' => NULL, 'num_posts' => 0, 'comment_mode' => 0, 'sticky' => 0),
+    ),
+    'forum_topic_navigation' => array(
+      'arguments' => array('node' => NULL),
+    ),
+  );
 }
 
 /**

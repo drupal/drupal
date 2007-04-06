@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.796 2007/04/06 04:39:51 unconed Exp $
+// $Id: node.module,v 1.797 2007/04/06 13:27:22 dries Exp $
 
 /**
  * @file
@@ -43,6 +43,38 @@ function node_help($section) {
     $type = node_get_types('type', str_replace('-', '_', arg(2)));
     return '<p>'. (isset($type->help) ? filter_xss_admin($type->help) : '') .'</p>';
   }
+}
+
+/**
+ * Implementation of hook_theme()
+ */
+function node_theme() {
+  return array(
+    'node_list' => array(
+      'arguments' => array('items' => NULL, 'title' => NULL),
+    ),
+    'node_search_admin' => array(
+      'arguments' => array('form' => NULL),
+    ),
+    'node_filter_form' => array(
+      'arguments' => array('form' => NULL),
+    ),
+    'node_filters' => array(
+      'arguments' => array('form' => NULL),
+    ),
+    'node_admin_nodes' => array(
+      'arguments' => array('form' => NULL),
+    ),
+    'node_form' => array(
+      'arguments' => array('form' => NULL),
+    ),
+    'node_preview' => array(
+      'arguments' => array('node' => NULL),
+    ),
+    'node_log_message' => array(
+      'arguments' => array('log' => NULL),
+    ),
+  );
 }
 
 /**
@@ -2349,7 +2381,6 @@ function node_revisions() {
  * Menu callback; Generate a listing of promoted nodes.
  */
 function node_page_default() {
-
   $result = pager_query(db_rewrite_sql('SELECT n.nid, n.sticky, n.created FROM {node} n WHERE n.promote = 1 AND n.status = 1 ORDER BY n.sticky DESC, n.created DESC'), variable_get('default_nodes_main', 10));
 
   if (db_num_rows($result)) {

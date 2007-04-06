@@ -1,10 +1,27 @@
 <?php
-// $Id: chameleon.theme,v 1.59 2007/04/01 05:09:58 unconed Exp $
+// $Id: chameleon.theme,v 1.60 2007/04/06 13:27:23 dries Exp $
 
 /**
  * @file
  * A slim, CSS-driven theme which does not depend on a template engine like phptemplate
  */
+
+/**
+ * Implementation of hook_theme. Auto-discover theme functions.
+ */
+function chameleon_theme($existing) {
+  $templates = array();
+  // Check for function overrides.
+  global $theme;
+  foreach ($existing as $hook => $info) {
+    if (function_exists($theme .'_'. $hook)) {
+      $templates[$hook] = array(
+        'function' => $theme .'_'. $hook,
+      );
+    }
+  }
+  return $templates;
+}
 
 function chameleon_features() {
   return array(
@@ -22,7 +39,7 @@ function chameleon_regions() {
 }
 
 function chameleon_page($content, $show_blocks = TRUE) {
-  $language = $GLOBALS['locale'];
+  $language = isset($GLOBALS['language']) ? $GLOBALS['language'] : NULL;
 
   if (theme_get_setting('toggle_favicon')) {
     drupal_set_html_head('<link rel="shortcut icon" href="'. check_url(theme_get_setting('favicon')) .'" type="image/x-icon" />');

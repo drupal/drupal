@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.345 2007/04/05 03:08:48 unconed Exp $
+// $Id: taxonomy.module,v 1.346 2007/04/06 13:27:22 dries Exp $
 
 /**
  * @file
@@ -11,6 +11,17 @@
  */
 function taxonomy_perm() {
   return array('administer taxonomy');
+}
+
+/**
+ * Implementation of hook_theme()
+ */
+function taxonomy_theme() {
+  return array(
+    'taxonomy_term_select' => array(
+      'arguments' => array('element' => NULL),
+    ),
+  );
 }
 
 /**
@@ -1516,7 +1527,7 @@ function taxonomy_explode_tags($tags) {
       $tags[] = $tag;
     }
   }
-  
+
   return $tags;
 }
 
@@ -1537,5 +1548,5 @@ function taxonomy_implode_tags($tags, $vid = NULL) {
       $typed_tags[] = $term->name;
     }
   }
-  return implode(', ', $typed_tags);  
+  return implode(', ', $typed_tags);
 }

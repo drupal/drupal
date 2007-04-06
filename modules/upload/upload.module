@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.156 2007/03/27 05:13:54 unconed Exp $
+// $Id: upload.module,v 1.157 2007/04/06 13:27:23 dries Exp $
 
 /**
  * @file
@@ -20,6 +20,23 @@ function upload_help($section) {
     case 'admin/settings/upload':
       return '<p>'. t('Users with the <a href="@permissions">upload files permission</a> can upload attachments. Users with the <a href="@permissions">view uploaded files permission</a> can view uploaded attachments. You can choose which post types can take attachments on the <a href="@types">content types settings</a> page.', array('@permissions' => url('admin/user/access'), '@types' => url('admin/settings/types'))) .'</p>';
   }
+}
+
+/**
+ * Implementation of hook_theme()
+ */
+function upload_theme() {
+  return array(
+    'upload_attachments' => array(
+      'arguments' => array('files' => NULL),
+    ),
+    'upload_form_current' => array(
+      'arguments' => array('form' => NULL),
+    ),
+    'upload_form_new' => array(
+      'arguments' => array('form' => NULL),
+    ),
+  );
 }
 
 /**

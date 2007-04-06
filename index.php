@@ -1,5 +1,5 @@
 <?php
-// $Id: index.php,v 1.92 2007/02/11 09:30:50 dries Exp $
+// $Id: index.php,v 1.93 2007/04/06 13:27:20 dries Exp $
 
 /**
  * @file
@@ -31,7 +31,6 @@ if (is_int($return)) {
 elseif (isset($return)) {
   // Print any value (including an empty string) except NULL or undefined:
   print theme('page', $return);
-
 }
 
 drupal_page_footer();

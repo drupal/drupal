@@ -1,6 +1,16 @@
 <?php
-// $Id: color.module,v 1.17 2007/03/27 05:13:53 unconed Exp $
+// $Id: color.module,v 1.18 2007/04/06 13:27:21 dries Exp $
 
+/**
+ * Implementation of hook_theme()
+ */
+function color_theme() {
+  return array(
+    'color_scheme_form' => array(
+      'arguments' => array('form' => NULL),
+    ),
+  );
+}
 /**
  * Implementation of hook_form_alter().
  */

@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.185 2007/03/27 05:13:53 unconed Exp $
+// $Id: form.inc,v 1.186 2007/04/06 13:27:20 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -457,7 +457,9 @@ function drupal_render_form($form_id, &$form) {
   // Don't override #theme if someone already set it.
 
   if (!isset($form['#theme'])) {
-    if (theme_get_function($form_id)) {
+    init_theme();
+    $registry = theme_get_registry();
+    if (isset($registry[$form_id])) {
       $form['#theme'] = $form_id;
     }
   }

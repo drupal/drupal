@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.461 2007/04/06 04:39:51 unconed Exp $
+// $Id: system.module,v 1.462 2007/04/06 13:27:22 dries Exp $
 
 /**
  * @file
@@ -48,6 +48,37 @@ function system_help($section) {
   }
 }
 
+function system_theme() {
+  return array_merge(drupal_common_themes(), array(
+    'system_theme_select_form' => array(
+      'arguments' => array('form' => NULL),
+    ),
+    'system_themes_form' => array(
+      'arguments' => array('form' => NULL),
+    ),
+    'system_modules' => array(
+      'arguments' => array('form' => NULL),
+    ),
+    'system_modules_uninstall' => array(
+      'arguments' => array('form' => NULL),
+    ),
+    'status_report' => array(
+      'arguments' => array('requirements' => NULL),
+    ),
+    'admin_page' => array(
+      'arguments' => array('blocks' => NULL),
+    ),
+    'admin_block' => array(
+      'arguments' => array('block' => NULL),
+    ),
+    'admin_block_content' => array(
+      'arguments' => array('content' => NULL),
+    ),
+    'system_admin_by_module' => array(
+      'arguments' => array('menu_items' => NULL),
+    ),
+  ));
+}
 /**
  * Implementation of hook_perm().
  */
@@ -150,7 +181,7 @@ function system_menu() {
     'title' => t('Themes'),
     'description' => t('Change which theme your site uses or allows users to set.'),
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('system_themes'),
+    'page arguments' => array('system_themes_form'),
   );
   $items['admin/build/themes/select'] = array(
     'title' => t('List'),
@@ -1137,13 +1168,13 @@ function system_settings_form_submit($form_id, $form_values) {
     drupal_set_message(t('The configuration options have been saved.'));
   }
 
-  menu_rebuild();
+  drupal_rebuild_theme_registry();
 }
 
 /**
  * Menu callback; displays a listing of all themes.
  */
-function system_themes() {
+function system_themes_form() {
 
   drupal_clear_css_cache();
   $themes = system_theme_data();
@@ -1177,7 +1208,7 @@ function system_themes() {
   return $form;
 }
 
-function theme_system_themes($form) {
+function theme_system_themes_form($form) {
   foreach (element_children($form) as $key) {
     $row = array();
     if (isset($form[$key]['description']) && is_array($form[$key]['description'])) {
@@ -1199,7 +1230,7 @@ function theme_system_themes($form) {
 }
 
 
-function system_themes_submit($form_id, $form_values) {
+function system_themes_form_submit($form_id, $form_values) {
 
   db_query("UPDATE {system} SET status = 0 WHERE type = 'theme'");
 
@@ -1513,6 +1544,7 @@ function system_modules_submit($form_id, $form_values) {
   }
 
   if ($old_module_list != $current_module_list) {
+    drupal_rebuild_theme_registry();
     menu_rebuild();
     node_types_rebuild();
     drupal_set_message(t('The configuration options have been saved.'));

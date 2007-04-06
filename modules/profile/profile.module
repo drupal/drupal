@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.196 2007/03/30 09:38:13 dries Exp $
+// $Id: profile.module,v 1.197 2007/04/06 13:27:22 dries Exp $
 
 /**
  * @file
@@ -49,6 +49,19 @@ function profile_help($section) {
     case 'admin/user/profile':
       return '<p>'. t('Here you can define custom fields that users can fill in in their user profile (such as <em>country</em>, <em>real name</em>, <em>age</em>, ...).') .'</p>';
   }
+}
+
+/**
+ * Implementation of hook_theme()
+ */
+function profile_theme() {
+  return array(
+    'profile_block' => array(
+      'arguments' => array('account' => NULL, 'fields' => array()),
+    ),
+    'profile_listing' => array(
+      'arguments' => array('account' => NULL, 'fields' => array()),
+    ),  );
 }
 
 /**

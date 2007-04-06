@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.344 2007/03/27 05:13:53 unconed Exp $
+// $Id: theme.inc,v 1.345 2007/04/06 13:27:20 dries Exp $
 
 /**
  * @file
@@ -72,6 +72,7 @@ function init_theme() {
   if (strpos($themes[$theme]->filename, '.theme')) {
    // file is a theme; include it
    include_once './' . $themes[$theme]->filename;
+   _theme_load_registry($theme);
   }
   elseif (strpos($themes[$theme]->description, '.engine')) {
     // file is a template; include its engine
@@ -80,7 +81,113 @@ function init_theme() {
     if (function_exists($theme_engine .'_init')) {
       call_user_func($theme_engine .'_init', $themes[$theme]);
     }
+   _theme_load_registry($theme, $theme_engine);
   }
+}
+
+/**
+ * Retrieve the stored theme registry. If the theme registry is already
+ * in memory it will be returned; otherwise it will attempt to load the
+ * registry from cache. If this fails, it will construct the registry and
+ * cache it.
+ */
+function theme_get_registry($registry = NULL) {
+  static $theme_registry = NULL;
+  if (isset($registry)) {
+    $theme_registry = $registry;
+  }
+
+  return $theme_registry;
+}
+
+/**
+ * Store the theme registry in memory.
+ */
+function _theme_set_registry($registry) {
+  // Pass through for setting of static variable.
+  return theme_get_registry($registry);
+}
+
+/**
+ * Get the theme_registry cache from the database; if it doesn't exist, build
+ * it.
+ */
+function _theme_load_registry($theme, $theme_engine = NULL) {
+  $cache = cache_get("theme_registry:$theme", 'cache');
+  if (isset($cache->data)) {
+    $registry = unserialize($cache->data);
+  }
+  else {
+    $registry = _theme_build_registry($theme, $theme_engine);
+    _theme_save_registry($theme, $registry);
+  }
+  _theme_set_registry($registry);
+}
+
+/**
+ * Write the theme_registry cache into the database.
+ */
+function _theme_save_registry($theme, $registry) {
+  cache_set("theme_registry:$theme", 'cache', serialize($registry));
+}
+
+/**
+ * Force the system to rebuild the theme registry; this should be called
+ * when modules are added to the system, or when a dynamic system needs
+ * to add more theme hooks.
+ */
+function drupal_rebuild_theme_registry() {
+  cache_clear_all('theme_registry', 'cache', TRUE);
+}
+
+/**
+ * Process a single invocation of the theme hook.
+ */
+function _theme_process_registry(&$cache, $name, $type) {
+  $function = $name .'_theme';
+  if (function_exists($function)) {
+    $result = $function($cache);
+
+    // Automatically find paths
+    $path = drupal_get_path($type, $name);
+    foreach ($result as $hook => $info) {
+      $result[$hook]['type'] = $type;
+      // if function and file are left out, default to standard naming
+      // conventions.
+      if (!isset($info['file']) && !isset($info['function'])) {
+        $result[$hook]['function'] = ($type == 'module' ? 'theme_' : $name .'_') . $hook;
+      }
+      if (isset($info['file']) && !isset($info['path'])) {
+        $result[$hook]['file'] = $path .'/'. $info['file'];
+      }
+      // If 'arguments' have been defined previously, carry them forward.
+      // This should happen if a theme overrides a Drupal defined theme
+      // function, for example.
+      if (!isset($info['arguments']) && isset($cache[$hook])) {
+        $result[$hook]['arguments'] = $cache[$hook]['arguments'];
+      }
+    }
+
+    $cache = array_merge($cache, $result);
+  }
+}
+
+/**
+ * Rebuild the hook theme_registry cache.
+ */
+function _theme_build_registry($theme, $theme_engine) {
+  $cache = array();
+  foreach (module_implements('theme') as $module) {
+    _theme_process_registry($cache, $module, 'module');
+  }
+
+  if ($theme_engine) {
+    _theme_process_registry($cache, $theme_engine, 'theme_engine');
+  }
+
+  _theme_process_registry($cache, $theme, 'theme');
+
+  return $cache;
 }
 
 /**
@@ -140,18 +247,48 @@ function list_theme_engines($refresh = FALSE) {
 }
 
 /**
- * Generate the themed representation of a Drupal object.
+ * Generate the themed output.
  *
- * All requests for themed functions must go through this function. It examines
- * the request and routes it to the appropriate theme function. If the current
- * theme does not implement the requested function, then the current theme
- * engine is checked. If neither the engine nor theme implement the requested
- * function, then the base theme function is called.
+ * All requests for theme hooks must go through this function. It examines
+ * the request and routes it to the appropriate theme function. The theme
+ * registry is checked to determine which implementation to use, which may
+ * be a function or a template.
  *
- * For example, to retrieve the HTML that is output by theme_page($output), a
- * module should call theme('page', $output).
+ * If the implementation is a function, it is executed and its return value
+ * passed along.
  *
- * @param $function
+ * If the implementation is a template, the arguments are converted to a
+ * $variables array. This array is then modified by the theme engine (if
+ * applicable) and the theme. The following functions may be used to modify
+ * the $variables array:
+ *
+ * ENGINE_engine_variables(&$variables)
+ *   This function should only be implemented by theme engines and is exists
+ *   so that the theme engine can set necessary variables. It is commonly
+ *   used to set global variables such as $directory and $is_front_page.
+ * ENGINE_engine_variables_HOOK(&$variables)
+ *   This is the same as the previous function, but is called only per hook.
+ * ENGINE_variables_HOOK(&$variables)
+ * ENGINE_variables(&$variables)
+ *   This is meant to be used by themes that utilize a theme engine; as it is
+ *   good practice for these themes to use the theme engine's name for
+ *   their functions so that they may share code. In PHPTemplate, these
+ *   functions will appear in template.php
+ * THEME_variables_HOOK(&$variables)
+ * THEME_variables(&$variables)
+ *   These functions are based upon the raw theme; they should primarily be
+ *   used by themes that do not use an engine or by themes that need small
+ *   changes to what has already been established in the theme engine version
+ *   of the function.
+ *
+ * There are two special variables that these hooks can set:
+ *   'template_file' and 'template_files'. These will be merged together
+ *   to form a list of 'suggested' alternate template files to use, in
+ *   reverse order of priority. template_file will always be a higher
+ *   priority than items in template_files. theme() will then look for these
+ *   files, one at a time, and use the first one
+ *   that exists.
+ * @param $hook
  *   The name of the theme function to call.
  * @param ...
  *   Additional arguments to pass along to the theme function.
@@ -159,48 +296,125 @@ function list_theme_engines($refresh = FALSE) {
  *   An HTML string that generates the themed output.
  */
 function theme() {
-  static $functions;
   $args = func_get_args();
-  $function = array_shift($args);
+  $hook = array_shift($args);
 
-  if (!isset($functions[$function])) {
-    $functions[$function] = theme_get_function($function);
+  static $hooks = NULL;
+  if (!isset($hooks)) {
+    init_theme();
+    $hooks = theme_get_registry();
   }
-  if ($functions[$function]) {
-    return call_user_func_array($functions[$function], $args);
+
+  if (!isset($hooks[$hook])) {
+    return;
+  }
+
+  $info = $hooks[$hook];
+
+  if (isset($info['function'])) {
+    // The theme call is a function.
+    // Include a file if this theme function is held elsewhere.
+    if (!empty($info['file'])) {
+      include_once($info['file']);
+    }
+    return call_user_func_array($info['function'], $args);
+  }
+  else {
+    // The theme call is a template.
+    $variables = array(
+      'template_files' => array()
+    );
+    if (!empty($info['arguments'])) {
+      $count = 0;
+      foreach ($info['arguments'] as $name => $default) {
+        $variables[$name] = isset($args[$count]) ? $args[$count] : $default;
+        $count++;
+      }
+    }
+
+    // default render function and extension.
+    $render_function = 'theme_render_template';
+    $extension = '.tpl.php';
+    $variables_list = array();
+
+    // Run through the theme engine variables, if necessary
+    global $theme_engine;
+    if (isset($theme_engine)) {
+      // Call each of our variable override functions. We allow
+      // several to create cleaner code.
+      $variables_list[] = $theme_engine .'_engine_variables';
+      $variables_list[] = $theme_engine .'_engine_variables_'. $hook;
+      $variables_list[] = $theme_engine .'_variables';
+      $variables_list[] = $theme_engine .'_variables_'. $hook;
+
+      // If theme or theme engine is implementing this, it may have
+      // a different extension and a different renderer.
+      if ($hooks[$hook]['type'] != 'module') {
+        if (function_exists($theme_engine .'_render_template')) {
+          $render_function = $theme_engine .'_render_template';
+        }
+        $extension_function = $theme_engine .'_extension';
+        if (function_exists($extension_function)) {
+          $extension = $extension_function();
+        }
+      }
+    }
+
+    // Add theme specific variable substitution:
+    global $theme;
+    $variables_list[] = $theme .'_variables';
+    $variables_list[] = $theme .'_variables_'. $hook;
+
+    // This construct ensures that we can keep a reference through
+    // call_user_func_array.
+    $args = array(&$variables, $hook);
+    foreach ($variables_list as $variables_function) {
+      if (function_exists($variables_function)) {
+        call_user_func_array($variables_function, $args);
+      }
+    }
+
+    // Get suggestions for alternate templates out of the variables
+    // that were set. This lets us dynamically choose a template
+    // from a list. The order is FILO, so this array is ordered from
+    // least appropriate first to most appropriate last.
+    $suggestions = array();
+
+    if (isset($variables['template_files'])) {
+      $suggestions = $variables['template_files'];
+    }
+    if (isset($variables['template_file'])) {
+      $suggestions[] = $variables['template_file'];
+    }
+
+    if ($suggestions) {
+      $template_file = drupal_discover_template($suggestions, $extension);
+    }
+
+    if (empty($template_file)) {
+      $template_file = $hooks[$hook]['file'] . $extension;
+      if (isset($hooks[$hook]['path'])) {
+        $template_file = $hooks[$hook]['path'] .'/'. $template_file;
+      }
+    }
+    return $render_function($template_file, $variables);
   }
 }
 
 /**
- * Determine if a theme function exists, and if so return which one was found.
- *
- * @param $function
- *   The name of the theme function to test.
- * @return
- *   The name of the theme function that should be used, or FALSE if no function exists.
+ * Choose which template file to actually render; these are all
+ * suggested templates from the theme.
  */
-function theme_get_function($function) {
-  global $theme, $theme_engine;
+function drupal_discover_template($suggestions, $extension = '.tpl.php') {
+  global $theme_engine;
 
-  // Because theme() is called a lot, calling init_theme() only to have it
-  // smartly return is a noticeable performance hit. Don't do it.
-  if (!isset($theme)) {
-    init_theme();
+  // Loop through any suggestions in FIFO order.
+  $suggestions = array_reverse($suggestions);
+  foreach ($suggestions as $suggestion) {
+    if (!empty($suggestion) && file_exists($file = path_to_theme() .'/'. $suggestion . $extension)) {
+      return $file;
+    }
   }
-
-  if (($theme != '') && function_exists($theme .'_'. $function)) {
-    // call theme function
-    return $theme .'_'. $function;
-  }
-  elseif (($theme != '') && isset($theme_engine) && function_exists($theme_engine .'_'. $function)) {
-    // call engine function
-    return $theme_engine .'_'. $function;
-  }
-  elseif (function_exists('theme_'. $function)){
-    // call Drupal function
-    return 'theme_'. $function;
-  }
-  return FALSE;
 }
 
 /**
@@ -348,16 +562,81 @@ function theme_get_setting($setting_name, $refresh = FALSE) {
 }
 
 /**
- * @defgroup themeable Themeable functions
- * @{
- * Functions that display HTML, and which can be customized by themes.
+ * Render a system default template, which is essentially a PHP template.
  *
- * All functions that produce HTML for display should be themeable. This means
- * that they should be named with the theme_ prefix, and invoked using theme()
- * rather than being called directly. This allows themes to override the display
- * of any Drupal object.
+ * @param $file
+ *   The filename of the template to render.
+ * @param $variables
+ *   A keyed array of variables that will appear in the output.
+ *
+ * @return
+ *   The output generated by the template.
+ */
+function theme_render_template($file, $variables) {
+  extract($variables, EXTR_SKIP);  // Extract the variables to a local namespace
+  ob_start();                      // Start output buffering
+  include "./$file";               // Include the file
+  $contents = ob_get_contents();   // Get the contents of the buffer
+  ob_end_clean();                  // End buffering and discard
+  return $contents;                // Return the contents
+}
+
+/**
+ * @defgroup themeable Default theme implementations
+ * @{
+ * Functions and templates that present output to the user, and can be
+ * implemented by themes.
+ *
+ * Drupal's presentation layer is a pluggable system known as the theme
+ * layer. Each theme can take control over most of Drupal's output, and
+ * has complete control over the CSS.
+ *
+ * Inside Drupal, the theme layer is utilized by the use of the theme()
+ * function, which is passed the name of a component (the theme hook)
+ * and several arguments. For example, theme('table', $header, $rows);
+ *
+ * As of Drupal 6, every theme hook is required to be registered by the
+ * module that owns it, so that Drupal can tell what to do with it and
+ * to make it simple for themes to identify and override the behavior
+ * for these calls.
+ *
+ * The theme hooks are registered via hook_theme(), which returns an
+ * array of arrays with information about the hook. It describes the
+ * arguments the function or template will need, and provides
+ * defaults for the template in case they are not filled in. If the default
+ * implementation is a function, by convention it is named theme_HOOK().
+ *
+ * Each module should provide a default implementation for themes that
+ * it registers. This implementation may be either a function or a template;
+ * if it is a function it must be specified via hook_theme(). By convention,
+ * default implementations of theme hooks are named theme_HOOK. Default
+ * template implementations are stored in the module directory.
+ *
+ * Drupal's default template renderer is a simple PHP parsing engine that
+ * includes the template and stores the output. Drupal's theme engines
+ * can provide alternate template engines, such as XTemplate, Smarty and
+ * PHPTal. The most common template engine is PHPTemplate (included with
+ * Drupal and implemented in phptemplate.engine, which uses Drupal's default
+ * template renderer.
+ *
+ * In order to create theme-specific implementations of these hooks,
+ * themes can implement their own version of theme hooks, either as functions
+ * or templates. These implementations will be used instead of the default
+ * implementation. If using a pure .theme without an engine, the .theme is
+ * required to implement its own version of hook_theme() to tell Drupal what
+ * it is implementing; themes utilizing an engine will have their well-named
+ * theming functions automatically registered for them. While this can vary
+ * based upon the theme engine, the standard set by phptemplate is that theme
+ * functions should be named either phptemplate_HOOK or THEMENAME_HOOK. For
+ * example, for Drupal's default theme (Garland) to implement the 'table' hook,
+ * the phptemplate.engine would find phptemplate_table() or garland_table().
+ * The ENGINE_HOOK() syntax is preferred, as this can be used by sub-themes
+ * (which are themes that share code but use different stylesheets).
  *
  * The theme system is described and defined in theme.inc.
+ *
+ * @see theme()
+ * @see hook_theme()
  */
 
 /**
@@ -458,9 +737,7 @@ function theme_maintenance_page($content, $messages = TRUE) {
     'content' => $content,
   );
 
-  // Render simplified PHPTemplate.
-  include_once './themes/engines/phptemplate/phptemplate.engine';
-  $output = _phptemplate_render('misc/maintenance.tpl.php', $variables);
+  $output = theme_render_template('misc/maintenance.tpl.php', $variables);
 
   return $output;
 }
@@ -509,9 +786,7 @@ function theme_install_page($content) {
     $variables['messages'] .= theme('status_messages', 'status');
   }
 
-  // Render simplified PHPTemplate.
-  include_once './themes/engines/phptemplate/phptemplate.engine';
-  return _phptemplate_render('misc/maintenance.tpl.php', $variables);
+  return theme_render_template('misc/maintenance.tpl.php', $variables);
 }
 
 /**

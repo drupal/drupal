@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.166 2007/03/12 11:31:02 dries Exp $
+// $Id: filter.module,v 1.167 2007/04/06 13:27:21 dries Exp $
 
 /**
  * @file
@@ -45,6 +45,26 @@ function filter_help($section) {
 <p>Because of the flexible filtering system, you might encounter a situation where one filter prevents another from doing its job. For example: a word in an URL gets converted into a glossary term, before the URL can be converted in a clickable link. When this happens, you will need to rearrange the order in which filters get executed.</p>
 <p>Filters are executed from top-to-bottom. You can use the weight column to rearrange them: heavier filters "sink" to the bottom.</p>');
   }
+}
+
+/**
+ * Implementation of hook_theme()
+ */
+function filter_theme() {
+  return array(
+    'filter_admin_overview' => array(
+      'arguments' => array('form' => NULL),
+    ),
+    'filter_admin_order' => array(
+      'arguments' => array('form' => NULL),
+    ),
+    'filter_tips' => array(
+      'arguments' => array('tips' => NULL, 'long' => FALSE, 'extra' => ''),
+    ),
+    'filter_tips_more_info' => array(
+      'arguments' => array(),
+    ),
+  );
 }
 
 /**

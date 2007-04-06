@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.105 2007/04/06 04:39:51 unconed Exp $
+// $Id: menu.module,v 1.106 2007/04/06 13:27:21 dries Exp $
 
 /**
  * @file
@@ -187,7 +187,7 @@ function menu_overview() {
   }
   return theme('table', $header, $rows);
 }
-  
+
 /**
  * Menu callback; enable/disable a menu item.
  *

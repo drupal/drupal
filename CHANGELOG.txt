@@ -1,7 +1,8 @@
-// $Id: CHANGELOG.txt,v 1.183 2007/03/28 14:08:21 dries Exp $
+// $Id: CHANGELOG.txt,v 1.184 2007/04/06 13:27:20 dries Exp $
 
 Drupal 6.0, xxxx-xx-xx (development version)
 ----------------------
+- Added theme registry: modules can directly provide .tpl.php files for their themes without having to create theme_ functions.
 - Added versioning support to node terms.
 - Made it easier to theme the forum overview page.
 - Drupal works with error reporting set to E_ALL.

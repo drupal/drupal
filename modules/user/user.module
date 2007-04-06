@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.763 2007/03/30 07:45:19 dries Exp $
+// $Id: user.module,v 1.764 2007/04/06 13:27:23 dries Exp $
 
 /**
  * @file
@@ -22,6 +22,38 @@ function user_module_invoke($type, &$array, &$user, $category = NULL) {
       $function($type, $array, $user, $category);
     }
   }
+}
+
+/**
+ * Implementation of hook_theme()
+ */
+function user_theme() {
+  return array(
+    'user_picture' => array(
+      'arguments' => array('account' => NULL),
+    ),
+    'user_profile' => array(
+      'arguments' => array('account' => NULL, 'fields' => NULL),
+    ),
+    'user_list' => array(
+      'arguments' => array('users' => NULL, 'title' => NULL),
+    ),
+    'user_admin_perm' => array(
+      'arguments' => array('form' => NULL),
+    ),
+    'user_admin_new_role' => array(
+      'arguments' => array('form' => NULL),
+    ),
+    'user_admin_account' => array(
+      'arguments' => array('form' => NULL),
+    ),
+    'user_filter_form' => array(
+      'arguments' => array('form' => NULL),
+    ),
+    'user_filters' => array(
+      'arguments' => array('form' => NULL),
+    ),
+  );
 }
 
 function user_external_load($authname) {

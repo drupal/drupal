@@ -1,5 +1,5 @@
 <?php
-// $Id: watchdog.module,v 1.171 2007/02/27 12:29:22 dries Exp $
+// $Id: watchdog.module,v 1.172 2007/04/06 13:27:23 dries Exp $
 
 /**
  * @file
@@ -25,6 +25,17 @@ function watchdog_help($section) {
     case 'admin/logs':
       return '<p>'. t('The watchdog module monitors your website, capturing system events in a log to be reviewed by an authorized individual at a later time. The watchdog log is simply a list of recorded events containing usage data, performance data, errors, warnings and operational information. It is vital to check the watchdog report on a regular basis as it is often the only way to tell what is going on.') .'</p>';
   }
+}
+
+/**
+ * Implementation of hook_theme()
+ */
+function watchdog_theme() {
+  return array(
+    'watchdog_form_overview' => array(
+      'arguments' => array('form' => NULL),
+    ),
+  );
 }
 
 /**

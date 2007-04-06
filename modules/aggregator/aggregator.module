@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.333 2007/03/27 05:13:53 unconed Exp $
+// $Id: aggregator.module,v 1.334 2007/04/06 13:27:20 dries Exp $
 
 /**
  * @file
@@ -24,6 +24,29 @@ function aggregator_help($section) {
       return '<p>'. t('Categories provide a way to group items from different news feeds together. Each news category has its own feed page and block. For example, you could tag various sport-related feeds as belonging to a category called <em>Sports</em>. News items can be added to a category automatically by setting a feed to automatically place its item into that category, or by using the categorize items link in any listing of news items.') .'</p>';
   }
 }
+
+/**
+ * Implementation of hook_theme()
+ */
+function aggregator_theme() {
+  return array(
+    'aggregator_page_list' => array(
+      'arguments' => array('form' => NULL),
+    ),
+    'aggregator_feed' => array(
+      'arguments' => array('feed' => NULL),
+    ),
+    'aggregator_block_item' => array(
+      'arguments' => array('item' => NULL, 'feed' => 0),
+    ),
+    'aggregator_summary_item' => array(
+      'arguments' => array('item' => NULL),
+    ),
+    'aggregator_page_item' => array(
+      'arguments' => array('item' => NULL),
+    ),
+
+  );
 
 /**
  * Implementation of hook_menu().

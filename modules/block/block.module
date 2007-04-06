@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.254 2007/03/27 05:13:53 unconed Exp $
+// $Id: block.module,v 1.255 2007/04/06 13:27:20 dries Exp $
 
 /**
  * @file
@@ -46,6 +46,17 @@ function block_help($section) {
     case 'admin/build/block/add':
       return '<p>'. t('Here you can create a new block. Once you have created this block you must make it active and give it a place on the page using <a href="@overview">blocks</a>. The description is used in the "block" column on the <a href="@overview">blocks</a> page.', array('@overview' => url('admin/build/block'))) .'</p>';
   }
+}
+
+/**
+ * Implementation of hook_theme()
+ */
+function block_theme() {
+  return array(
+    'block_admin_display' => array(
+      'arguments' => array('form' => NULL),
+    ),
+  );
 }
 
 /**

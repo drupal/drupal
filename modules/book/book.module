@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.414 2007/03/27 05:13:53 unconed Exp $
+// $Id: book.module,v 1.415 2007/04/06 13:27:21 dries Exp $
 
 /**
  * @file
@@ -16,6 +16,23 @@ function book_node_info() {
       'module' => 'book',
       'description' => t("A book is a collaborative writing effort: users can collaborate writing the pages of the book, positioning the pages in the right order, and reviewing or modifying pages previously written. So when you have some information to share or when you read a page of the book and you didn't like it, or if you think a certain page could have been written better, you can do something about it."),
     )
+  );
+}
+
+/**
+ * Implementation of hook_theme()
+ */
+function book_theme() {
+  return array(
+    'book_navigation' => array(
+      'arguments' => array('node' => NULL),
+    ),
+    'book_export_html' => array(
+      'arguments' => array('title' => NULL, 'content' => NULL),
+    ),
+    'book_admin_table' => array(
+      'arguments' => array('form' => NULL),
+    ),
   );
 }
 

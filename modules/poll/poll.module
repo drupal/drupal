@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.225 2007/03/27 05:13:54 unconed Exp $
+// $Id: poll.module,v 1.226 2007/04/06 13:27:22 dries Exp $
 
 /**
  * @file
@@ -18,6 +18,23 @@ function poll_help($section) {
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@poll">Poll page</a>.', array('@poll' => 'http://drupal.org/handbook/modules/poll/')) .'</p>';
       return $output;
   }
+}
+
+/**
+ * Implementation of hook_theme()
+ */
+function poll_theme() {
+  return array(
+    'poll_view_voting' => array(
+      'arguments' => array('form' => NULL),
+    ),
+    'poll_results' => array(
+      'arguments' => array('title' => NULL, 'results' => NULL, 'votes' => NULL, 'links' => NULL, 'block' => NULL, 'nid' => NULL, 'vote' => NULL),
+    ),
+    'poll_bar' => array(
+      'arguments' => array('title' => NULL, 'percentage' => NULL, 'votes' => NULL, 'block' => NULL),
+    ),
+  );
 }
 
 /**

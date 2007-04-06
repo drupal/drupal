@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.535 2007/04/06 04:39:50 unconed Exp $
+// $Id: comment.module,v 1.536 2007/04/06 13:27:21 dries Exp $
 
 /**
  * @file
@@ -138,6 +138,53 @@ function comment_help($section) {
     case 'admin/content/comment/settings':
       return '<p>'. t("Comments can be attached to any node, and their settings are below. The display comes in two types: a 'flat list' where everything is flush to the left side, and comments come in chronological order, and a 'threaded list' where replies to other comments are placed immediately below and slightly indented, forming an outline. They also come in two styles: 'expanded', where you see both the title and the contents, and 'collapsed' where you only see the title. Preview comment forces a user to look at their comment by clicking on a 'Preview' button before they can actually add the comment.") .'</p>';
    }
+}
+
+/**
+ * Implementation of hook_theme()
+ */
+function comment_theme() {
+  return array(
+    'comment_block' => array(
+      'arguments' => array(),
+    ),
+    'comment_admin_overview' => array(
+      'arguments' => array('form' => NULL),
+    ),
+    'comment_preview' => array(
+      'arguments' => array('comment' => NULL, 'links' => array(), 'visible' => 1),
+    ),
+    'comment_view' => array(
+      'arguments' => array('comment' => NULL, 'links' => array(), 'visible' => 1),
+    ),
+    'comment_controls' => array(
+      'arguments' => array('form' => NULL),
+    ),
+    'comment' => array(
+      'arguments' => array('comment' => NULL, 'links' => array()),
+    ),
+    'comment_folded' => array(
+      'arguments' => array('comment' => NULL),
+    ),
+    'comment_flat_collapsed' => array(
+      'arguments' => array('comment' => NULL),
+    ),
+    'comment_flat_expanded' => array(
+      'arguments' => array('comment' => NULL),
+    ),
+    'comment_thread_collapsed' => array(
+      'arguments' => array('comment' => NULL),
+    ),
+    'comment_thread_expanded' => array(
+      'arguments' => array('comment' => NULL),
+    ),
+    'comment_post_forbidden' => array(
+      'arguments' => array('nid' => NULL),
+    ),
+    'comment_wrapper' => array(
+      'arguments' => array('content' => NULL),
+    ),
+  );
 }
 
 function _comment_view_access($node, $cid) {

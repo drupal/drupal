@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal.module,v 1.140 2007/02/27 12:29:22 dries Exp $
+// $Id: drupal.module,v 1.141 2007/04/06 13:27:21 dries Exp $
 
 /**
  * @file
@@ -44,6 +44,17 @@ print drupal_client_page();
       return variable_get('drupal_authentication_service', 0) ? t('<p><a href="@Drupal">Drupal</a> is the name of the software that powers %this-site. There are Drupal websites all over the world, and many of them share their registration databases so that users may freely log in to any Drupal site using a single <strong>Drupal ID</strong>.</p>
 <p>So please feel free to log in to your account here at %this-site with a username from another Drupal site. The format of a Drupal ID is similar to an e-mail address: <strong>username</strong>@<em>server</em>. An example of a valid Drupal ID is <strong>mwlily</strong>@<em>drupal.org</em>.</p>', array('@Drupal' => 'http://drupal.org', '%this-site' => variable_get('site_name', 'Drupal'))) : '';
   }
+}
+
+/**
+ * Implementation of hook_theme()
+ */
+function drupal_theme() {
+  return array(
+    'client_list' => array(
+      'arguments' => array('clients' => NULL),
+    ),
+  );
 }
 
 function drupal_sites_registry_settings() {

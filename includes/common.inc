@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.626 2007/04/06 04:39:50 unconed Exp $
+// $Id: common.inc,v 1.627 2007/04/06 13:27:20 dries Exp $
 
 /**
  * @file
@@ -2291,4 +2291,194 @@ function element_child($key) {
  */
 function element_children($element) {
   return array_filter(array_keys((array) $element), 'element_child');
+}
+
+/**
+ * Provide theme registration for themes across .inc files.
+ */
+function drupal_common_themes() {
+  return array(
+    // theme.inc
+    'placeholder' => array(
+      'arguments' => array('text' => NULL)
+    ),
+    'page' => array(
+      'arguments' => array('content' => NULL, 'show_blocks' => TRUE),
+    ),
+    'maintenance_page' => array(
+      'arguments' => array('content' => NULL, 'messages' => TRUE),
+    ),
+    'install_page' => array(
+      'arguments' => array('content' => NULL),
+    ),
+    'task_list' => array(
+      'arguments' => array('items' => NULL, 'active' => NULL),
+    ),
+    'status_messages' => array(
+      'arguments' => array('display' => NULL),
+    ),
+    'links' => array(
+      'arguments' => array('links' => NULL, 'attributes' => array('class' => 'links')),
+    ),
+    'image' => array(
+      'arguments' => array('path' => NULL, 'alt' => '', 'title' => '', 'attributes' => NULL, 'getsize' => TRUE),
+    ),
+    'breadcrumb' => array(
+      'arguments' => array('breadcrumb' => NULL),
+    ),
+    'help' => array(
+      'arguments' => array(),
+    ),
+    'node' => array(
+      'arguments' => array('node' => NULL, 'teaser' => FALSE, 'page' => FALSE),
+    ),
+    'submenu' => array(
+      'arguments' => array('links' => NULL),
+    ),
+    'table' => array(
+      'arguments' => array('header' => NULL, 'rows' => NULL, 'attributes' => array(), 'caption' => NULL),
+    ),
+    'table_select_header_cell' => array(
+      'arguments' => array(),
+    ),
+    'tablesort_indicator' => array(
+      'arguments' => array('style' => NULL),
+    ),
+    'box' => array(
+      'arguments' => array('title' => NULL, 'content' => NULL, 'region' => 'main'),
+    ),
+    'block' => array(
+      'arguments' => array('block' => NULL),
+    ),
+    'mark' => array(
+      'arguments' => array('type' => MARK_NEW),
+    ),
+    'item_list' => array(
+      'arguments' => array('items' => array(), 'title' => NULL, 'type' => 'ul', 'attributes' => NULL),
+    ),
+    'more_help_link' => array(
+      'arguments' => array('url' => NULL),
+    ),
+    'xml_icon' => array(
+      'arguments' => array('url' => NULL),
+    ),
+    'feed_icon' => array(
+      'arguments' => array('url' => NULL),
+    ),
+    'closure' => array(
+      'arguments' => array('main' => 0),
+    ),
+    'blocks' => array(
+      'arguments' => array('region' => NULL),
+    ),
+    'username' => array(
+      'arguments' => array('object' => NULL),
+    ),
+    'progress_bar' => array(
+      'arguments' => array('percent' => NULL, 'message' => NULL),
+    ),
+    // from pager.inc
+    'pager' => array(
+      'arguments' => array('tags' => array(), 'limit' => 10, 'element' => 0, 'parameters' => array()),
+    ),
+    'pager_first' => array(
+      'arguments' => array('text' => NULL, 'limit' => NULL, 'element' => 0, 'parameters' => array()),
+    ),
+    'pager_previous' => array(
+      'arguments' => array('text' => NULL, 'limit' => NULL, 'element' => 0, 'interval' => 1, 'parameters' => array()),
+    ),
+    'pager_next' => array(
+      'arguments' => array('text' => NULL, 'limit' => NULL, 'element' => 0, 'interval' => 1, 'parameters' => array()),
+    ),
+    'pager_last' => array(
+      'arguments' => array('text' => NULL, 'limit' => NULL, 'element' => 0, 'parameters' => array()),
+    ),
+    'pager_list' => array(
+      'arguments' => array('limit' => NULL, 'element' => 0, 'quantity' => 5, 'text' => '', 'parameters' => array()),
+    ),
+    'pager_link' => array(
+      'arguments' => array('text' => NULL, 'page_new' => NULL, 'element' => NULL, 'parameters' => array(), 'attributes' => array()),
+    ),
+    // from locale.inc
+    'locale_admin_manage_screen' => array(
+      'arguments' => array('form' => NULL),
+    ),
+    // from menu.inc
+    'menu_item_link' => array(
+      'arguments' => array('item' => NULL),
+    ),
+    'menu_tree' => array(
+      'arguments' => array('tree' => NULL),
+    ),
+    'menu_item' => array(
+      'arguments' => array('link' => NULL, 'has_children' => NULL, 'menu' => ''),
+    ),
+    'menu_local_task' => array(
+      'arguments' => array('link' => NULL, 'active' => FALSE),
+    ),
+    'menu_local_tasks' => array(
+      'arguments' => array(),
+    ),
+    // from form.inc
+    'select' => array(
+      'arguments' => array('element' => NULL),
+    ),
+    'fieldset' => array(
+      'arguments' => array('element' => NULL),
+    ),
+    'radio' => array(
+      'arguments' => array('element' => NULL),
+    ),
+    'radios' => array(
+      'arguments' => array('element' => NULL),
+    ),
+    'password_confirm' => array(
+      'arguments' => array('element' => NULL),
+    ),
+    'date' => array(
+      'arguments' => array('element' => NULL),
+    ),
+    'item' => array(
+      'arguments' => array('element' => NULL),
+    ),
+    'checkbox' => array(
+      'arguments' => array('element' => NULL),
+    ),
+    'checkboxes' => array(
+      'arguments' => array('element' => NULL),
+    ),
+    'submit' => array(
+      'arguments' => array('element' => NULL),
+    ),
+    'button' => array(
+      'arguments' => array('element' => NULL),
+    ),
+    'hidden' => array(
+      'arguments' => array('element' => NULL),
+    ),
+    'token' => array(
+      'arguments' => array('element' => NULL),
+    ),
+    'textfield' => array(
+      'arguments' => array('element' => NULL),
+    ),
+    'form' => array(
+      'arguments' => array('element' => NULL),
+    ),
+    'textarea' => array(
+      'arguments' => array('element' => NULL),
+    ),
+    'markup' => array(
+      'arguments' => array('element' => NULL),
+    ),
+    'password' => array(
+      'arguments' => array('element' => NULL),
+    ),
+    'file' => array(
+      'arguments' => array('element' => NULL),
+    ),
+    'form_element' => array(
+      'arguments' => array('element' => NULL, 'value' => NULL),
+    ),
+  );
 }
