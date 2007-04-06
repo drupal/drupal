@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.462 2007/04/06 13:27:22 dries Exp $
+// $Id: system.module,v 1.463 2007/04/06 14:31:51 dries Exp $
 
 /**
  * @file
@@ -1258,6 +1258,7 @@ function system_themes_form_submit($form_id, $form_values) {
     db_query("UPDATE {system} SET status = 1 WHERE type = 'theme' AND name = 'garland'");
   }
 
+  list_themes(TRUE);
   menu_rebuild();
   drupal_set_message(t('The configuration options have been saved.'));
   return 'admin/build/themes';
