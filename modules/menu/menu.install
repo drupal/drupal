@@ -1,0 +1,45 @@
+<?php
+// $Id: menu.install,v 1.1 2007/04/06 05:29:22 unconed Exp $
+
+/**
+ * Implementation of hook_install().
+ */
+function menu_install() {
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      db_query("CREATE TABLE {menu_edit} (
+        path varchar(255) NOT NULL default '' ,
+        disabled int NOT NULL default 0,
+        title varchar(255) NOT NULL default '',
+        description varchar(255) NOT NULL default '',
+        weight int NOT NULL default 0 ,
+        type int NOT NULL default 0 ,
+        admin int NOT NULL default 0,
+        parent varchar(255) NOT NULL default '',
+        PRIMARY KEY (path)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+      break;
+    case 'pgsql':
+      db_query("CREATE TABLE {menu_edit} (
+        path varchar(255) NOT NULL default '' ,
+        disabled int NOT NULL default 0,
+        title varchar(255) NOT NULL default '',
+        description varchar(255) NOT NULL default '',
+        weight int NOT NULL default 0 ,
+        type int NOT NULL default 0 ,
+        admin int NOT NULL default 0,
+        parent varchar(255) NOT NULL default '',
+        PRIMARY KEY (path)
+      )");
+      break;
+  }
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function menu_uninstall() {
+  db_query('DROP TABLE {menu_edit}');
+  menu_rebuild();
+}
