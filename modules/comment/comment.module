@@ -140,6 +140,53 @@ function comment_help($section) {
    }
 }
 
+/**
+ * Implementation of hook_theme()
+ */
+function comment_theme() {
+  return array(
+    'comment_block' => array(
+      'arguments' => array(),
+    ),
+    'comment_admin_overview' => array(
+      'arguments' => array('form' => NULL),
+    ),
+    'comment_preview' => array(
+      'arguments' => array('comment' => NULL, 'links' => array(), 'visible' => 1),
+    ),
+    'comment_view' => array(
+      'arguments' => array('comment' => NULL, 'links' => array(), 'visible' => 1),
+    ),
+    'comment_controls' => array(
+      'arguments' => array('form' => NULL),
+    ),
+    'comment' => array(
+      'arguments' => array('comment' => NULL, 'links' => array()),
+    ),
+    'comment_folded' => array(
+      'arguments' => array('comment' => NULL),
+    ),
+    'comment_flat_collapsed' => array(
+      'arguments' => array('comment' => NULL),
+    ),
+    'comment_flat_expanded' => array(
+      'arguments' => array('comment' => NULL),
+    ),
+    'comment_thread_collapsed' => array(
+      'arguments' => array('comment' => NULL),
+    ),
+    'comment_thread_expanded' => array(
+      'arguments' => array('comment' => NULL),
+    ),
+    'comment_post_forbidden' => array(
+      'arguments' => array('nid' => NULL),
+    ),
+    'comment_wrapper' => array(
+      'arguments' => array('content' => NULL),
+    ),
+  );
+}
+
 function _comment_view_access($node, $cid) {
   return $node && $cid;
 }

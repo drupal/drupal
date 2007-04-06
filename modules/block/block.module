@@ -49,6 +49,17 @@ function block_help($section) {
 }
 
 /**
+ * Implementation of hook_theme()
+ */
+function block_theme() {
+  return array(
+    'block_admin_display' => array(
+      'arguments' => array('form' => NULL),
+    ),
+  );
+}
+
+/**
  * Implementation of hook_perm().
  */
 function block_perm() {

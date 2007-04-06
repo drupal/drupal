@@ -14,6 +14,17 @@ function taxonomy_perm() {
 }
 
 /**
+ * Implementation of hook_theme()
+ */
+function taxonomy_theme() {
+  return array(
+    'taxonomy_term_select' => array(
+      'arguments' => array('element' => NULL),
+    ),
+  );
+}
+
+/**
  * Implementation of hook_link().
  *
  * This hook is extended with $type = 'taxonomy terms' to allow themes to
@@ -1516,7 +1527,7 @@ function taxonomy_explode_tags($tags) {
       $tags[] = $tag;
     }
   }
-  
+
   return $tags;
 }
 
@@ -1537,5 +1548,5 @@ function taxonomy_implode_tags($tags, $vid = NULL) {
       $typed_tags[] = $term->name;
     }
   }
-  return implode(', ', $typed_tags);  
+  return implode(', ', $typed_tags);
 }

@@ -48,6 +48,26 @@ function filter_help($section) {
 }
 
 /**
+ * Implementation of hook_theme()
+ */
+function filter_theme() {
+  return array(
+    'filter_admin_overview' => array(
+      'arguments' => array('form' => NULL),
+    ),
+    'filter_admin_order' => array(
+      'arguments' => array('form' => NULL),
+    ),
+    'filter_tips' => array(
+      'arguments' => array('tips' => NULL, 'long' => FALSE, 'extra' => ''),
+    ),
+    'filter_tips_more_info' => array(
+      'arguments' => array(),
+    ),
+  );
+}
+
+/**
  * Implementation of hook_menu().
  */
 function filter_menu() {

@@ -457,7 +457,9 @@ function drupal_render_form($form_id, &$form) {
   // Don't override #theme if someone already set it.
 
   if (!isset($form['#theme'])) {
-    if (theme_get_function($form_id)) {
+    init_theme();
+    $registry = theme_get_registry();
+    if (isset($registry[$form_id])) {
       $form['#theme'] = $form_id;
     }
   }

@@ -52,6 +52,19 @@ function profile_help($section) {
 }
 
 /**
+ * Implementation of hook_theme()
+ */
+function profile_theme() {
+  return array(
+    'profile_block' => array(
+      'arguments' => array('account' => NULL, 'fields' => array()),
+    ),
+    'profile_listing' => array(
+      'arguments' => array('account' => NULL, 'fields' => array()),
+    ),  );
+}
+
+/**
  * Implementation of hook_menu().
  */
 function profile_menu() {

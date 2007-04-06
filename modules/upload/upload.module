@@ -23,6 +23,23 @@ function upload_help($section) {
 }
 
 /**
+ * Implementation of hook_theme()
+ */
+function upload_theme() {
+  return array(
+    'upload_attachments' => array(
+      'arguments' => array('files' => NULL),
+    ),
+    'upload_form_current' => array(
+      'arguments' => array('form' => NULL),
+    ),
+    'upload_form_new' => array(
+      'arguments' => array('form' => NULL),
+    ),
+  );
+}
+
+/**
  * Implementation of hook_perm().
  */
 function upload_perm() {

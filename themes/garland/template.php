@@ -1,4 +1,6 @@
 <?php
+// $Id
+
 /**
  * Sets the body-tag class attribute.
  *
@@ -53,22 +55,17 @@ function phptemplate_comment_wrapper($content, $type = null) {
 /**
  * Override or insert PHPTemplate variables into the templates.
  */
-function _phptemplate_variables($hook, $vars) {
-  if ($hook == 'page') {
-
-    if ($secondary = menu_secondary_local_tasks()) {
-      $output = '<span class="clear"></span>';
-      $output .= "<ul class=\"tabs secondary\">\n". $secondary ."</ul>\n";
-      $vars['tabs2'] = $output;
-    }
-
-    // Hook into color.module
-    if (module_exists('color')) {
-      _color_page_alter($vars);
-    }
-    return $vars;
+function phptemplate_variables_page(&$vars) {
+  if ($secondary = menu_secondary_local_tasks()) {
+    $output = '<span class="clear"></span>';
+    $output .= "<ul class=\"tabs secondary\">\n". $secondary ."</ul>\n";
+    $vars['tabs2'] = $output;
   }
-  return array();
+
+  // Hook into color.module
+  if (module_exists('color')) {
+    _color_page_alter($vars);
+  }
 }
 
 /**

@@ -2,6 +2,16 @@
 // $Id$
 
 /**
+ * Implementation of hook_theme()
+ */
+function color_theme() {
+  return array(
+    'color_scheme_form' => array(
+      'arguments' => array('form' => NULL),
+    ),
+  );
+}
+/**
  * Implementation of hook_form_alter().
  */
 function color_form_alter(&$form, $form_id) {

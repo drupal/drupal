@@ -28,6 +28,17 @@ function watchdog_help($section) {
 }
 
 /**
+ * Implementation of hook_theme()
+ */
+function watchdog_theme() {
+  return array(
+    'watchdog_form_overview' => array(
+      'arguments' => array('form' => NULL),
+    ),
+  );
+}
+
+/**
  * Implementation of hook_menu().
  */
 function watchdog_menu() {

@@ -929,6 +929,15 @@ function drupal_maintenance_theme() {
   drupal_add_css(drupal_get_path('module', 'system') .'/defaults.css', 'module');
   drupal_add_css(drupal_get_path('module', 'system') .'/system.css', 'module');
   $theme = '';
+
+  // Special case registry of theme functions used by the installer
+  $themes = drupal_common_themes();
+  foreach ($themes as $hook => $info) {
+    if (!isset($info['file']) && !isset($info['function'])) {
+      $themes[$hook]['function'] = 'theme_' . $hook;
+    }
+  }
+  _theme_set_registry($themes);
 }
 
 /**

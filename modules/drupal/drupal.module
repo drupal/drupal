@@ -46,6 +46,17 @@ print drupal_client_page();
   }
 }
 
+/**
+ * Implementation of hook_theme()
+ */
+function drupal_theme() {
+  return array(
+    'client_list' => array(
+      'arguments' => array('clients' => NULL),
+    ),
+  );
+}
+
 function drupal_sites_registry_settings() {
   // Check if all required fields are present
   if ((variable_get('site_name', 'Drupal') == 'Drupal') || (variable_get('site_name', 'Drupal') == '')) {

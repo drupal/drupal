@@ -112,6 +112,26 @@ function search_help($section) {
 }
 
 /**
+ * Implementation of hook_theme()
+ */
+function search_theme() {
+  return array(
+    'search_theme_form' => array(
+      'arguments' => array('form' => NULL),
+    ),
+    'search_block_form' => array(
+      'arguments' => array('form' => NULL),
+    ),
+    'search_item' => array(
+      'arguments' => array('item' => NULL, 'type' => NULL),
+    ),
+    'search_page' => array(
+      'arguments' => array('results' => NULL, 'type' => NULL),
+    ),
+  );
+}
+
+/**
  * Implementation of hook_perm().
  */
 function search_perm() {

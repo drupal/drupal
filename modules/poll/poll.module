@@ -21,6 +21,23 @@ function poll_help($section) {
 }
 
 /**
+ * Implementation of hook_theme()
+ */
+function poll_theme() {
+  return array(
+    'poll_view_voting' => array(
+      'arguments' => array('form' => NULL),
+    ),
+    'poll_results' => array(
+      'arguments' => array('title' => NULL, 'results' => NULL, 'votes' => NULL, 'links' => NULL, 'block' => NULL, 'nid' => NULL, 'vote' => NULL),
+    ),
+    'poll_bar' => array(
+      'arguments' => array('title' => NULL, 'percentage' => NULL, 'votes' => NULL, 'block' => NULL),
+    ),
+  );
+}
+
+/**
  * Implementation of hook_access().
  */
 function poll_access($op, $node) {

@@ -20,6 +20,23 @@ function book_node_info() {
 }
 
 /**
+ * Implementation of hook_theme()
+ */
+function book_theme() {
+  return array(
+    'book_navigation' => array(
+      'arguments' => array('node' => NULL),
+    ),
+    'book_export_html' => array(
+      'arguments' => array('title' => NULL, 'content' => NULL),
+    ),
+    'book_admin_table' => array(
+      'arguments' => array('form' => NULL),
+    ),
+  );
+}
+
+/**
  * Implementation of hook_perm().
  */
 function book_perm() {

@@ -24,6 +24,38 @@ function user_module_invoke($type, &$array, &$user, $category = NULL) {
   }
 }
 
+/**
+ * Implementation of hook_theme()
+ */
+function user_theme() {
+  return array(
+    'user_picture' => array(
+      'arguments' => array('account' => NULL),
+    ),
+    'user_profile' => array(
+      'arguments' => array('account' => NULL, 'fields' => NULL),
+    ),
+    'user_list' => array(
+      'arguments' => array('users' => NULL, 'title' => NULL),
+    ),
+    'user_admin_perm' => array(
+      'arguments' => array('form' => NULL),
+    ),
+    'user_admin_new_role' => array(
+      'arguments' => array('form' => NULL),
+    ),
+    'user_admin_account' => array(
+      'arguments' => array('form' => NULL),
+    ),
+    'user_filter_form' => array(
+      'arguments' => array('form' => NULL),
+    ),
+    'user_filters' => array(
+      'arguments' => array('form' => NULL),
+    ),
+  );
+}
+
 function user_external_load($authname) {
   $result = db_query("SELECT uid FROM {authmap} WHERE authname = '%s'", $authname);
 
