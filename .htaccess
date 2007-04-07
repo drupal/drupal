@@ -27,6 +27,9 @@ DirectoryIndex index.php
   php_value magic_quotes_gpc                0
   php_value register_globals                0
   php_value session.auto_start              0
+  php_value mbstring.http_input             pass
+  php_value mbstring.http_output            pass
+  php_value mbstring.encoding_translation   0
 </IfModule>
 
 # PHP 4, Apache 2.
@@ -34,6 +37,9 @@ DirectoryIndex index.php
   php_value magic_quotes_gpc                0
   php_value register_globals                0
   php_value session.auto_start              0
+  php_value mbstring.http_input             pass
+  php_value mbstring.http_output            pass
+  php_value mbstring.encoding_translation   0
 </IfModule>
 
 # PHP 5, Apache 1 and 2.
@@ -41,6 +47,9 @@ DirectoryIndex index.php
   php_value magic_quotes_gpc                0
   php_value register_globals                0
   php_value session.auto_start              0
+  php_value mbstring.http_input             pass
+  php_value mbstring.http_output            pass
+  php_value mbstring.encoding_translation   0
 </IfModule>
 
 # Requires mod_expires to be enabled.
