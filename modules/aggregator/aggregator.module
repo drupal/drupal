@@ -45,8 +45,8 @@ function aggregator_theme() {
     'aggregator_page_item' => array(
       'arguments' => array('item' => NULL),
     ),
-
   );
+}
 
 /**
  * Implementation of hook_menu().
