@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.334 2007/04/06 13:27:20 dries Exp $
+// $Id: aggregator.module,v 1.335 2007/04/07 07:38:36 unconed Exp $
 
 /**
  * @file
@@ -45,8 +45,8 @@ function aggregator_theme() {
     'aggregator_page_item' => array(
       'arguments' => array('item' => NULL),
     ),
-
   );
+}
 
 /**
  * Implementation of hook_menu().
