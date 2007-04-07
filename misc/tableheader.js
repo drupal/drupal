@@ -1,4 +1,4 @@
-// $Id: tableheader.js,v 1.1 2007/02/06 08:35:13 dries Exp $
+// $Id: tableheader.js,v 1.2 2007/04/07 03:03:40 unconed Exp $
 
 // Global Killswitch
 if (Drupal.jsEnabled) {
@@ -79,8 +79,7 @@ if (Drupal.jsEnabled) {
   var resize = function () {
     // Ensure minimum time between adjustments.
     if (time) {
-      clearTimeout(time);
-      time = null;
+      return;
     }
     time = setTimeout(function () {
 
@@ -103,6 +102,9 @@ if (Drupal.jsEnabled) {
         $(this).css('width', parseInt($(ref).width())
                            - parseInt($(this).css('paddingLeft')) +'px');
       });
+
+      // Reset timer
+      time = null;
     }, 250);
   };
   $(window).resize(resize);
