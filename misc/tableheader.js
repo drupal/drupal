@@ -79,8 +79,7 @@ if (Drupal.jsEnabled) {
   var resize = function () {
     // Ensure minimum time between adjustments.
     if (time) {
-      clearTimeout(time);
-      time = null;
+      return;
     }
     time = setTimeout(function () {
 
@@ -103,6 +102,9 @@ if (Drupal.jsEnabled) {
         $(this).css('width', parseInt($(ref).width())
                            - parseInt($(this).css('paddingLeft')) +'px');
       });
+
+      // Reset timer
+      time = null;
     }, 250);
   };
   $(window).resize(resize);
