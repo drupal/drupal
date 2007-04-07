@@ -27,6 +27,9 @@ DirectoryIndex index.php
   php_value magic_quotes_gpc                0
   php_value register_globals                0
   php_value session.auto_start              0
+  php_value mbstring.http_input             pass
+  php_value mbstring.http_output            pass
+  php_value mbstring.encoding_translation   0
 </IfModule>
 
 # PHP 4, Apache 2.
@@ -34,6 +37,9 @@ DirectoryIndex index.php
   php_value magic_quotes_gpc                0
   php_value register_globals                0
   php_value session.auto_start              0
+  php_value mbstring.http_input             pass
+  php_value mbstring.http_output            pass
+  php_value mbstring.encoding_translation   0
 </IfModule>
 
 # PHP 5, Apache 1 and 2.
@@ -41,6 +47,9 @@ DirectoryIndex index.php
   php_value magic_quotes_gpc                0
   php_value register_globals                0
   php_value session.auto_start              0
+  php_value mbstring.http_input             pass
+  php_value mbstring.http_output            pass
+  php_value mbstring.encoding_translation   0
 </IfModule>
 
 # Requires mod_expires to be enabled.
@@ -80,4 +89,4 @@ DirectoryIndex index.php
   RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
 </IfModule>
 
-# $Id: .htaccess,v 1.82 2007/01/29 12:36:51 dries Exp $
+# $Id: .htaccess,v 1.83 2007/04/07 11:05:06 unconed Exp $
