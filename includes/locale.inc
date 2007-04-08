@@ -534,7 +534,7 @@ function _locale_import_read_po($op, $file, $mode = NULL, $lang = NULL) {
         $current["#"][] = substr($line, 1);
       }
       elseif (($context == "MSGSTR") || ($context == "MSGSTR_ARR")) { // End current entry, start a new one
-        _locale_import_one_string($op, $current, $mode, $lang);
+        _locale_import_one_string($op, $current, $mode, $lang, $file);
         $current = array();
         $current["#"][] = substr($line, 1);
         $context = "COMMENT";
@@ -560,7 +560,7 @@ function _locale_import_read_po($op, $file, $mode = NULL, $lang = NULL) {
     }
     elseif (!strncmp("msgid", $line, 5)) {
       if ($context == "MSGSTR") {   // End current entry, start a new one
-        _locale_import_one_string($op, $current, $mode, $lang);
+        _locale_import_one_string($op, $current, $mode, $lang, $file);
         $current = array();
       }
       elseif ($context == "MSGID") { // Already in this context? Parse error
@@ -634,7 +634,7 @@ function _locale_import_read_po($op, $file, $mode = NULL, $lang = NULL) {
 
   // End of PO file, flush last entry
   if (($context == "MSGSTR") || ($context == "MSGSTR_ARR")) {
-    _locale_import_one_string($op, $current, $mode, $lang);
+    _locale_import_one_string($op, $current, $mode, $lang, $file);
   }
   elseif ($context != "COMMENT") {
     _locale_import_message('The translation file %filename ended unexpectedly at line %line.', $file, $lineno);
@@ -673,8 +673,10 @@ function _locale_import_message($message, $file, $lineno = NULL) {
  *   Should existing translations be replaced ('overwrite' or 'keep')
  * @param $lang
  *   Language to store the string in
+ * @param $file
+ *   Object representation of file being imported, only required when op is 'db-store'
  */
-function _locale_import_one_string($op, $value = NULL, $mode = NULL, $lang = NULL) {
+function _locale_import_one_string($op, $value = NULL, $mode = NULL, $lang = NULL, $file = NULL) {
   static $additions = 0;
   static $updates = 0;
   static $headerdone = FALSE;
