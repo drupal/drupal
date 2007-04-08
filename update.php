@@ -512,8 +512,8 @@ function update_progress_page_nojs() {
 function update_finished_page($success) {
   drupal_set_title('Drupal database update');
   // NOTE: we can't use l() here because the URL would point to 'update.php?q=admin'.
-  $links[] = '<a href="'. base_path() .'">main page</a>';
-  $links[] = '<a href="'. base_path() .'?q=admin">administration pages</a>';
+  $links[] = '<a href="'. base_path() .'">Main page</a>';
+  $links[] = '<a href="'. base_path() .'?q=admin">Administration pages</a>';
 
   // Report end result
   if ($success) {
