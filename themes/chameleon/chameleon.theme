@@ -175,5 +175,3 @@ function chameleon_help() {
     return '<div class="help">'. $help .'</div><hr />';
   }
 }
-
-?>
