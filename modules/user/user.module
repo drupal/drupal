@@ -2805,3 +2805,35 @@ function user_forms() {
   return $forms;
 }
 
+/**
+ * Implementation of hook_comments().
+ */
+function user_comment($comment, $op) {
+  // Validate signature.
+  if ($op == 'view') {
+    if (!empty($comment->signature)) {
+      $comment->signature = check_markup($comment->signature, $comment->format);
+    }
+    else {
+      $comment->signature = '';
+    }
+  }
+}
+
+/**
+ * Theme output of user signature.
+ *
+ * @ingroup themeable
+ */
+function theme_user_signature($signature) {
+  $output = '';
+  if ($signature) {
+    $output .= '<div class="clear">';
+    $output .= '<div>'. '—' .'</div>';
+    $output .= $signature;
+    $output .= '</div>';
+  }
+
+  return $output;
+}
+
