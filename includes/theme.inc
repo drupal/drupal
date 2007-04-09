@@ -1092,6 +1092,8 @@ function theme_table($header, $rows, $attributes = array(), $caption = NULL) {
   // Format the table rows:
   $output .= "<tbody>\n";
   if (count($rows)) {
+    $flip = array('even' => 'odd', 'odd' => 'even');
+    $class = 'even';
     foreach ($rows as $number => $row) {
       $attributes = array();
 
@@ -1111,7 +1113,7 @@ function theme_table($header, $rows, $attributes = array(), $caption = NULL) {
       }
 
       // Add odd/even class
-      $class = ($number % 2 == 1) ? 'even': 'odd';
+      $class = $flip[$class];
       if (isset($attributes['class'])) {
         $attributes['class'] .= ' '. $class;
       }
