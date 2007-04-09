@@ -211,8 +211,7 @@ function blog_form(&$node) {
   }
 
   $form['title'] = array('#type' => 'textfield', '#title' => check_plain($type->title_label), '#required' => TRUE, '#default_value' => !empty($node->title) ? $node->title : NULL, '#weight' => -5);
-  $form['body_filter']['body'] = array('#type' => 'textarea', '#title' => check_plain($type->body_label), '#default_value' => !empty($node->body) ? $node->title : NULL, '#rows' => 20, '#required' => TRUE);
-  $form['body_filter']['filter'] = filter_form($node->format);
+  $form['body_field'] = node_body_field($node, $type->body_label, $type->min_word_count);
   return $form;
 }
 

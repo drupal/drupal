@@ -7,6 +7,12 @@ Drupal.textareaAttach = function() {
     $(this).wrap('<div class="resizable-textarea"></div>')
       .parent().append($('<div class="grippie"></div>').mousedown(startDrag));
 
+    // Inherit visibility
+    if ($(this).is(':hidden')) {
+      $(this).parent().hide();
+      $(this).show();
+    }
+
     var grippie = $('div.grippie', $(this).parent())[0];
     grippie.style.marginRight = (grippie.offsetWidth - $(this)[0].offsetWidth) +'px';
 

@@ -1452,6 +1452,18 @@ function theme_form($element) {
  */
 function theme_textarea($element) {
   $class = array('form-textarea');
+
+  // Add teaser behaviour (must come before resizable)
+  if (!empty($element['#teaser'])) {
+    drupal_add_js('misc/teaser.js');
+    // Note: arrays are merged in drupal_get_js().
+    drupal_add_js(array('teaserButton' => array(t('Join summary'), t('Split summary at cursor'))), 'setting');
+    drupal_add_js(array('teaserCheckbox' => array($element['#id'] => $element['#teaser_checkbox'])), 'setting');
+    drupal_add_js(array('teaser' => array($element['#id'] => $element['#teaser'])), 'setting');
+    $class[] = 'teaser';
+  }
+
+  // Add resizable behaviour
   if ($element['#resizable'] !== FALSE) {
     drupal_add_js('misc/textarea.js');
     $class[] = 'resizable';
