@@ -357,6 +357,12 @@ function locale_admin_manage_delete_form($langcode) {
     drupal_goto('admin/build/locale/language/overview');
   }
 
+  $default = language_default();
+  if ($default->language == $langcode) {
+    drupal_set_message(t('The default language cannot be deleted.'));
+    drupal_goto('admin/build/locale/language/overview');
+  }
+
   // For other locales, warn user that data loss is ahead.
   $languages = language_list();
 
