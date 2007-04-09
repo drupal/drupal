@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.114 2007/04/06 14:15:43 dries Exp $
+// $Id: locale.inc,v 1.115 2007/04/09 14:46:55 dries Exp $
 
 /**
  * @file
@@ -95,10 +95,11 @@ function _locale_admin_manage_screen() {
  * Theme the admin langauge manager form.
  */
 function theme_locale_admin_manage_screen($form) {
+  $default = language_default();
   foreach ($form['name'] as $key => $element) {
     // Do not take form control structures.
     if (is_array($element) && element_child($key)) {
-      $rows[] = array(array('data' => drupal_render($form['enabled'][$key]), 'align' => 'center'), check_plain($key), '<strong>'. drupal_render($form['name'][$key]) .'</strong>', drupal_render($form['native'][$key]), drupal_render($form['direction'][$key]), drupal_render($form['site_default'][$key]), drupal_render($form['weight'][$key]), l(t('edit'), 'admin/build/locale/language/edit/'. $key). ($key != 'en' ? ' ' .l(t('delete'), 'admin/build/locale/language/delete/'. $key) : ''));
+      $rows[] = array(array('data' => drupal_render($form['enabled'][$key]), 'align' => 'center'), check_plain($key), '<strong>'. drupal_render($form['name'][$key]) .'</strong>', drupal_render($form['native'][$key]), drupal_render($form['direction'][$key]), drupal_render($form['site_default'][$key]), drupal_render($form['weight'][$key]), l(t('edit'), 'admin/build/locale/language/edit/'. $key). (($key != 'en' && $key != $default->language) ? ' '. l(t('delete') ,'admin/build/locale/language/delete/'. $key) : ''));
     }
   }
   $header = array(array('data' => t('Enabled')), array('data' => t('Code')), array('data' => t('English name')), array('data' => t('Native name')), array('data' => t('Direction')), array('data' => t('Default')), array('data' => t('Weight')), array('data' => t('Operations')));

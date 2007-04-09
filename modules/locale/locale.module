@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.163 2007/03/28 14:08:22 dries Exp $
+// $Id: locale.module,v 1.164 2007/04/09 14:46:55 dries Exp $
 
 /**
  * @file
@@ -354,6 +354,12 @@ function locale_admin_manage_delete_form($langcode) {
   // Do not allow deletion of English locale.
   if ($langcode == 'en') {
     drupal_set_message(t('The English locale cannot be deleted.'));
+    drupal_goto('admin/build/locale/language/overview');
+  }
+
+  $default = language_default();
+  if ($default->language == $langcode) {
+    drupal_set_message(t('The default language cannot be deleted.'));
     drupal_goto('admin/build/locale/language/overview');
   }
 
