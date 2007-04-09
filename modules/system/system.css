@@ -1,4 +1,4 @@
-/* $Id: system.css,v 1.23 2007/03/02 09:40:13 unconed Exp $ */
+/* $Id: system.css,v 1.24 2007/04/09 13:58:03 dries Exp $ */
 
 /*
 ** HTML elements
@@ -355,6 +355,31 @@ html.js .resizable-textarea textarea {
   margin-bottom: 0;
   width: 100%;
   display: block;
+}
+
+/*
+** Teaser splitter
+*/
+.joined + .grippie {
+  height: 5px;
+  background-position: center 1px;
+  margin-bottom: -2px;
+}
+div.teaser-button-wrapper {
+  float: right;
+  padding-right: 5%;
+  margin: 0;
+}
+.teaser-checkbox div.form-item {
+  float: right;
+  margin: 0 5% 0 0;
+  padding: 0;
+}
+textarea.teaser {
+  display: none;
+}
+html.js .no-js {
+  display: none;
 }
 
 /*

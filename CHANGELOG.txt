@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.184 2007/04/06 13:27:20 dries Exp $
+// $Id: CHANGELOG.txt,v 1.185 2007/04/09 13:58:02 dries Exp $
 
 Drupal 6.0, xxxx-xx-xx (development version)
 ----------------------
@@ -8,6 +8,7 @@ Drupal 6.0, xxxx-xx-xx (development version)
 - Drupal works with error reporting set to E_ALL.
 - Added scripts/drupal.sh to execute Drupal code from the command line. Useful to use Drupal as a framework to build command-line tools.
 - Used the Garland theme for the installation and maintenance pages.
+- Improved handling of teasers in posts.
 - Added generic language management functionality.
     * Support for right to left scripts.
     * Language detection based on parts of the URL.

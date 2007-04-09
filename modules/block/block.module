@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.255 2007/04/06 13:27:20 dries Exp $
+// $Id: block.module,v 1.256 2007/04/09 13:58:02 dries Exp $
 
 /**
  * @file
@@ -595,8 +595,8 @@ function block_box_form($edit = array()) {
     '#required' => TRUE,
     '#weight' => -19,
   );
-  $form['body_filter']['#weight'] = -17;
-  $form['body_filter']['body'] = array(
+  $form['body_field']['#weight'] = -17;
+  $form['body_field']['body'] = array(
     '#type' => 'textarea',
     '#title' => t('Block body'),
     '#default_value' => $edit['body'],
@@ -607,7 +607,7 @@ function block_box_form($edit = array()) {
   if (!isset($edit['format'])) {
     $edit['format'] = FILTER_FORMAT_DEFAULT;
   }
-  $form['body_filter']['format'] = filter_form($edit['format'], -16);
+  $form['body_field']['format'] = filter_form($edit['format'], -16);
 
   return $form;
 }

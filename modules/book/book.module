@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.415 2007/04/06 13:27:21 dries Exp $
+// $Id: book.module,v 1.416 2007/04/09 13:58:02 dries Exp $
 
 /**
  * @file
@@ -232,13 +232,8 @@ function book_form(&$node) {
     '#default_value' => $node->title,
     '#weight' => -5,
   );
-  $form['body_filter']['body'] = array('#type' => 'textarea',
-    '#title' => check_plain($type->body_label),
-    '#default_value' => $node->body,
-    '#rows' => 20,
-    '#required' => TRUE,
-  );
-  $form['body_filter']['format'] = filter_form($node->format);
+
+  $form['body_field'] = node_body_field($node, $type->body_label, 1);
 
   if (user_access('administer nodes')) {
     $form['weight'] = array('#type' => 'weight',

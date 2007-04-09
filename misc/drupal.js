@@ -1,4 +1,4 @@
-// $Id: drupal.js,v 1.29 2006/10/14 02:39:48 unconed Exp $
+// $Id: drupal.js,v 1.30 2007/04/09 13:58:02 dries Exp $
 
 var Drupal = Drupal || {};
 
@@ -199,6 +199,26 @@ Drupal.encodeURIComponent = function (item, uri) {
   item = encodeURIComponent(item).replace('%2F', '/');
   return uri.indexOf('?q=') ? item : item.replace('%26', '%2526').replace('%23', '%2523');
 };
+
+/**
+ * Get the text selection in a textarea.
+ */
+Drupal.getSelection = function (element) {
+  if (typeof(element.selectionStart) != 'number' && document.selection) {
+    // The current selection
+    var range1 = document.selection.createRange();
+    var range2 = range1.duplicate();
+    // Select all text.
+    range2.moveToElementText(element);
+    // Now move 'dummy' end point to end point of original range.
+    range2.setEndPoint('EndToEnd', range1);
+    // Now we can calculate start and end points.
+    var start = range2.text.length - range1.text.length;
+    var end = start + range1.text.length;
+    return { 'start': start, 'end': end };
+  }
+  return { 'start': element.selectionStart, 'end': element.selectionEnd };
+}
 
 // Global Killswitch on the <html> element
 if (Drupal.jsEnabled) {

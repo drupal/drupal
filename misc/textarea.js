@@ -1,4 +1,4 @@
-// $Id: textarea.js,v 1.12 2007/02/15 07:10:11 dries Exp $
+// $Id: textarea.js,v 1.13 2007/04/09 13:58:02 dries Exp $
 
 Drupal.textareaAttach = function() {
   $('textarea.resizable:not(.processed)').each(function() {
@@ -6,6 +6,12 @@ Drupal.textareaAttach = function() {
 
     $(this).wrap('<div class="resizable-textarea"></div>')
       .parent().append($('<div class="grippie"></div>').mousedown(startDrag));
+
+    // Inherit visibility
+    if ($(this).is(':hidden')) {
+      $(this).parent().hide();
+      $(this).show();
+    }
 
     var grippie = $('div.grippie', $(this).parent())[0];
     grippie.style.marginRight = (grippie.offsetWidth - $(this)[0].offsetWidth) +'px';

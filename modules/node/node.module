@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.797 2007/04/06 13:27:22 dries Exp $
+// $Id: node.module,v 1.798 2007/04/09 13:58:03 dries Exp $
 
 /**
  * @file
@@ -168,6 +168,28 @@ function node_mark($nid, $timestamp) {
     return MARK_UPDATED;
   }
   return MARK_READ;
+}
+
+/**
+ * See if the user used JS to submit a teaser.
+ */
+function node_teaser_js(&$form, $form_values) {
+  // Glue the teaser to the body.
+  if (isset($form['#post']['teaser_js'])) {
+    if (trim($form_values['teaser_js'])) {
+      // Space the teaser from the body
+      $body = trim($form_values['teaser_js']) ."\r\n<!--break-->\r\n". trim($form_values['body']);
+    }
+    else {
+      // Empty teaser, no spaces.
+      $body = '<!--break-->'. $form_values['body'];
+    }
+    // Pass value onto preview/submit
+    form_set_value($form['body'], $body);
+    // Pass value back onto form
+    $form['body']['#value'] = $body;
+  }
+  return $form;
 }
 
 /**
@@ -1876,7 +1898,16 @@ function node_submit($node) {
   // Auto-generate the teaser, but only if it hasn't been set (e.g. by a
   // module-provided 'teaser' form item).
   if (!isset($node->teaser)) {
-    $node->teaser = isset($node->body) ? node_teaser($node->body, isset($node->format) ? $node->format : NULL) : '';
+    if (isset($node->body)) {
+      $node->teaser = node_teaser($node->body, isset($node->format) ? $node->format : NULL);
+      // Chop off the teaser from the body if needed.
+      if (!$node->teaser_include && $node->teaser == substr($node->body, 0, strlen($node->teaser))) {
+        $node->body = substr($node->body, strlen($node->teaser));
+      }
+    }
+    else {
+      $node->teaser = '';
+    }
   }
 
   if (user_access('administer nodes')) {
@@ -2216,6 +2247,10 @@ function node_preview($node) {
     // 'teaser' form item).
     if (!isset($node->teaser)) {
       $node->teaser = empty($node->body) ? '' : node_teaser($node->body, $node->format);
+       // Chop off the teaser from the body if needed.
+       if (!$node->teaser_include && $node->teaser == substr($node->body, 0, strlen($node->teaser))) {
+         $node->body = substr($node->body, strlen($node->teaser));
+       }
     }
 
     // Display a preview of the node:
@@ -2241,7 +2276,7 @@ function node_preview($node) {
 function theme_node_preview($node) {
   $output = '<div class="preview">';
   if ($node->teaser && $node->teaser != $node->body) {
-    drupal_set_message(t('The trimmed version of your post shows what your post looks like when promoted to the main page or when exported for syndication. You can insert the delimiter "&lt;!--break--&gt;" (without the quotes) to fine-tune where your post gets split.'));
+    drupal_set_message(t('The trimmed version of your post shows what your post looks like when promoted to the main page or when exported for syndication.<span class="no-js"> You can insert the delimiter "&lt;!--break--&gt;" (without the quotes) to fine-tune where your post gets split.</span>'));
     $output .= '<h3>'. t('Preview trimmed version') .'</h3>';
     $output .= node_view(drupal_clone($node), 1, FALSE, 0);
     $output .= '<h3>'. t('Preview full version') .'</h3>';
@@ -2958,6 +2993,43 @@ function node_content_access($op, $node) {
 }
 
 /**
+ * Return a node body field, with format and teaser.
+ */
+function node_body_field(&$node, $label, $word_count) {
+
+  // Check if we need to restore the teaser at the beginning of the body.
+  $include = !isset($node->teaser) || ($node->teaser == substr($node->body, 0, strlen($node->teaser)));
+
+  $form = array(
+    '#after_build' => array('node_teaser_js'));
+
+  $form['teaser_js'] = array(
+    '#type' => 'textarea',
+    '#rows' => 10,
+    '#teaser' => 'edit-body',
+    '#teaser_checkbox' => 'edit-teaser-include',
+    '#disabled' => TRUE);
+
+  $form['teaser_include'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Show summary in full view'),
+    '#default_value' => $include,
+    '#prefix' => '<div class="teaser-checkbox">',
+    '#suffix' => '</div>',
+  );
+
+  $form['body'] = array(
+    '#type' => 'textarea',
+    '#title' => check_plain($label),
+    '#default_value' => $include ? $node->body : ($node->teaser . $node->body),
+    '#rows' => 20,
+    '#required' => ($word_count > 0));
+
+  $form['format'] = filter_form($node->format);
+
+  return $form;
+}
+/**
  * Implementation of hook_form().
  */
 function node_content_form($node) {
@@ -2975,13 +3047,7 @@ function node_content_form($node) {
   }
 
   if ($type->has_body) {
-    $form['body_filter']['body'] = array(
-      '#type' => 'textarea',
-      '#title' => check_plain($type->body_label),
-      '#default_value' => $node->body,
-      '#rows' => 20,
-      '#required' => ($type->min_word_count > 0));
-    $form['body_filter']['format'] = filter_form($node->format);
+    $form['body_field'] = node_body_field($node, $type->body_label, $type->min_word_count);
   }
 
   return $form;

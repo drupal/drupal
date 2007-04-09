@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.277 2007/03/27 05:13:53 unconed Exp $
+// $Id: blog.module,v 1.278 2007/04/09 13:58:02 dries Exp $
 
 /**
  * @file
@@ -211,8 +211,7 @@ function blog_form(&$node) {
   }
 
   $form['title'] = array('#type' => 'textfield', '#title' => check_plain($type->title_label), '#required' => TRUE, '#default_value' => !empty($node->title) ? $node->title : NULL, '#weight' => -5);
-  $form['body_filter']['body'] = array('#type' => 'textarea', '#title' => check_plain($type->body_label), '#default_value' => !empty($node->body) ? $node->title : NULL, '#rows' => 20, '#required' => TRUE);
-  $form['body_filter']['filter'] = filter_form($node->format);
+  $form['body_field'] = node_body_field($node, $type->body_label, $type->min_word_count);
   return $form;
 }
 
