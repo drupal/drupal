@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.765 2007/04/06 14:27:22 dries Exp $
+// $Id: user.module,v 1.766 2007/04/09 13:41:10 dries Exp $
 
 /**
  * @file
@@ -2803,5 +2803,37 @@ function user_forms() {
   $forms['user_admin_access_edit_form']['callback'] = 'user_admin_access_form';
   $forms['user_admin_new_role']['callback'] = 'user_admin_role';
   return $forms;
+}
+
+/**
+ * Implementation of hook_comments().
+ */
+function user_comment($comment, $op) {
+  // Validate signature.
+  if ($op == 'view') {
+    if (!empty($comment->signature)) {
+      $comment->signature = check_markup($comment->signature, $comment->format);
+    }
+    else {
+      $comment->signature = '';
+    }
+  }
+}
+
+/**
+ * Theme output of user signature.
+ *
+ * @ingroup themeable
+ */
+function theme_user_signature($signature) {
+  $output = '';
+  if ($signature) {
+    $output .= '<div class="clear">';
+    $output .= '<div>'. '—' .'</div>';
+    $output .= $signature;
+    $output .= '</div>';
+  }
+
+  return $output;
 }
 

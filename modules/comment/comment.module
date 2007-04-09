@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.536 2007/04/06 13:27:21 dries Exp $
+// $Id: comment.module,v 1.537 2007/04/09 13:41:10 dries Exp $
 
 /**
  * @file
@@ -688,7 +688,6 @@ function comment_reply($node, $pid = NULL) {
           // Display the parent comment
           $comment = drupal_unpack($comment);
           $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
-          $comment->signature = check_markup($comment->signature, $comment->format);
           $output .= theme('comment_view', $comment);
         }
         else {
@@ -993,7 +992,6 @@ function comment_render($node, $cid = 0) {
 
       if ($comment = db_fetch_object($result)) {
         $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
-        $comment->signature = check_markup($comment->signature, $comment->format);
         $links = module_invoke_all('link', 'comment', $comment, 1);
         drupal_alter('link', $links, $node);
 
@@ -1048,7 +1046,6 @@ function comment_render($node, $cid = 0) {
       while ($comment = db_fetch_object($result)) {
         $comment = drupal_unpack($comment);
         $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
-        $comment->signature = check_markup($comment->signature, $comment->format);
         $comment->depth = count(explode('.', $comment->thread)) - 1;
 
         if ($mode == COMMENT_MODE_THREADED_COLLAPSED || $mode == COMMENT_MODE_THREADED_EXPANDED) {
@@ -1647,11 +1644,9 @@ function comment_form_add_preview($form, $edit) {
     if ($account) {
       $comment->uid = $account->uid;
       $comment->name = check_plain($account->name);
-      $comment->signature = check_markup($account->signature, $comment->format);
     }
     else {
       $comment->name = variable_get('anonymous', t('Anonymous'));
-      $comment->signature = '';
     }
     $comment->timestamp = !empty($edit['timestamp']) ? $edit['timestamp'] : time();
     $output .= theme('comment_view', $comment);
@@ -1669,7 +1664,6 @@ function comment_form_add_preview($form, $edit) {
     $comment = db_fetch_object(db_query('SELECT c.*, u.uid, u.name AS registered_name, u.signature, u.picture, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = %d', $edit['pid'], COMMENT_PUBLISHED));
     $comment = drupal_unpack($comment);
     $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
-    $comment->signature = check_markup($comment->signature, $comment->format);
     $output .= theme('comment_view', $comment);
   }
   else {
@@ -1823,7 +1817,7 @@ function theme_comment($comment, $links = array()) {
   $output .= '<div class="subject">'. l($comment->subject, $_GET['q'], array('fragment' => "comment-$comment->cid")) . ' ' . theme('mark', $comment->new) ."</div>\n";
   $output .= '<div class="credit">'. t('by %a on %b', array('%a' => theme('username', $comment), '%b' => format_date($comment->timestamp))) ."</div>\n";
   $output .= '<div class="body">'. $comment->comment .'</div>';
-  $output .= '<div class="clear"><div>—</div>'. $comment->signature .'</div>';
+  $output .= theme('user_signature', $comment->signature);
   $output .= '<div class="links">'. theme('links', $links) .'</div>';
   $output .= '</div>';
   return $output;
