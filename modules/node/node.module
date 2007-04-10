@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.798 2007/04/09 13:58:03 dries Exp $
+// $Id: node.module,v 1.799 2007/04/10 12:08:38 dries Exp $
 
 /**
  * @file
@@ -1190,7 +1190,7 @@ function node_menu() {
   );
   $items['node/add'] = array(
     'title' => t('Create content'),
-    'page callback' => 'node_add',
+    'page callback' => 'system_admin_menu_block_page',
     'access callback' => '_node_add_access',
     'weight' => 1,
   );
@@ -1206,9 +1206,11 @@ function node_menu() {
       $type_url_str = str_replace('_', '-', $type->type);
       $items['node/add/'. $type_url_str] = array(
         'title' => drupal_ucfirst($name),
+        'page callback' => 'node_add',
         'page arguments' => array(2),
         'access callback' => 'node_access',
         'access arguments' => array('create', $type->type),
+        'description' => $type->description,
       );
       $items['admin/content/types/'. $type_url_str] = array(
         'title' => t($type->name),
@@ -2177,7 +2179,7 @@ function _node_add_access() {
 /**
  * Present a node submission form or a set of links to such forms.
  */
-function node_add($type = NULL) {
+function node_add($type) {
   global $user;
 
   $types = node_get_types();
@@ -2189,26 +2191,6 @@ function node_add($type = NULL) {
 
     drupal_set_title(t('Submit @name', array('@name' => $types[$type]->name)));
     $output = drupal_get_form($type .'_node_form', $node);
-  }
-  else {
-    // If no (valid) node type has been provided, display a node type overview.
-    foreach ($types as $type) {
-      if (function_exists($type->module .'_form') && node_access('create', $type->type)) {
-        $type_url_str = str_replace('_', '-', $type->type);
-        $title = t('Add a new @s.', array('@s' => $type->name));
-        $out = '<dt>'. l(drupal_ucfirst($type->name), "node/add/$type_url_str", array('attributes' => array('title' => $title))) .'</dt>';
-        $out .= '<dd>'. filter_xss_admin($type->description) .'</dd>';
-        $item[$type->type] = $out;
-      }
-    }
-
-    if (isset($item)) {
-      uksort($item, 'strnatcasecmp');
-      $output = '<dl>'. implode('', $item) .'</dl>';
-    }
-    else {
-      $output = t('No content types available.');
-    }
   }
 
   return $output;
