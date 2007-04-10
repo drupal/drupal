@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.186 2007/04/10 10:10:26 dries Exp $
+// $Id: CHANGELOG.txt,v 1.187 2007/04/10 10:40:40 dries Exp $
 
 Drupal 6.0, xxxx-xx-xx (development version)
 ----------------------
@@ -14,6 +14,7 @@ Drupal 6.0, xxxx-xx-xx (development version)
 - Added scripts/drupal.sh to execute Drupal code from the command line. Useful to use Drupal as a framework to build command-line tools.
 - Used the Garland theme for the installation and maintenance pages.
 - Improved handling of teasers in posts.
+- Made signature support optional and made it possible to theme signatures.
 - Added generic language management functionality.
     * Support for right to left scripts.
     * Language detection based on parts of the URL.

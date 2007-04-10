@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.767 2007/04/09 13:45:30 dries Exp $
+// $Id: user.module,v 1.768 2007/04/10 10:40:40 dries Exp $
 
 /**
  * @file
@@ -1468,7 +1468,7 @@ function user_edit_form($uid, $edit, $register = FALSE) {
   }
 
   // Signature:
-  if (module_exists('comment') && !$register) {
+  if (variable_get('user_signatures', 0) && module_exists('comment') && !$register) {
     $form['signature_settings'] = array(
       '#type' => 'fieldset',
       '#title' => t('Signature settings'),
@@ -2443,6 +2443,19 @@ function user_admin_settings() {
   $form['email']['user_mail_pass_subject'] = array('#type' => 'textfield', '#title' => t('Subject of password recovery e-mail'), '#default_value' => _user_mail_text('pass_subject'), '#maxlength' => 180, '#description' => t('Customize the subject of your forgotten password e-mail.') .' '. t('Available variables are:') .' !username, !site, !login_url, !uri, !uri_brief, !mailto, !date, !login_uri, !edit_uri.');
   $form['email']['user_mail_pass_body'] = array('#type' => 'textarea', '#title' => t('Body of password recovery e-mail'), '#default_value' => _user_mail_text('pass_body'), '#rows' => 15, '#description' => t('Customize the body of the forgotten password e-mail.') .' '. t('Available variables are:') .' !username, !site, !login_url, !uri, !uri_brief, !mailto, !login_uri, !edit_uri.');
 
+  // User signatures.
+  $form['signatures'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Signatures'),
+  );
+  $form['signatures']['user_signatures'] = array(
+    '#type' => 'radios',
+    '#title' => t('Signature support'),
+    '#default_value' => variable_get('user_signatures', 0),
+    '#options' => array(t('Disabled'), t('Enabled')),
+    '#description' => t('Enable signature support.'),
+  );
+
   // If picture support is enabled, check whether the picture directory exists:
   if (variable_get('user_pictures', 0)) {
     $picture_path = file_create_path(variable_get('user_picture_path', 'pictures'));
@@ -2811,7 +2824,7 @@ function user_forms() {
 function user_comment($comment, $op) {
   // Validate signature.
   if ($op == 'view') {
-    if (!empty($comment->signature)) {
+    if (variable_get('user_signatures', 0) && !empty($comment->signature)) {
       $comment->signature = check_markup($comment->signature, $comment->format);
     }
     else {
