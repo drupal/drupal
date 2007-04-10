@@ -1,10 +1,17 @@
 <?php
-// $Id: syslog.module,v 1.1 2007/04/10 10:10:27 dries Exp $
+// $Id: syslog.module,v 1.2 2007/04/10 15:13:14 dries Exp $
 
 /**
  * @file
  * Redirects logging messages to syslog.
  */
+
+if (defined('LOG_LOCAL0')) {
+  define('DEFAULT_SYSLOG_FACILITY', LOG_LOCAL0);
+}
+else {
+  define('DEFAULT_SYSLOG_FACILITY', LOG_USER);
+}
 
 /**
  * Implementation of hook_help().
@@ -27,10 +34,10 @@ function syslog_menu() {
 }
 
 function syslog_admin_settings() {
-  $form['syslog_faclity'] = array(
+  $form['syslog_facility'] = array(
     '#type'          => 'select',
     '#title'         => t('Syslog facility to send to'),
-    '#default_value' => variable_get('syslog_faclity', LOG_LOCAL0),
+    '#default_value' => variable_get('syslog_facility', DEFAULT_SYSLOG_FACILITY),
     '#options'       => syslog_facility_list(),
     '#description'   => t('Select the syslog facility to send Drupal\'s messages to. For more information on syslog facilities, See !syslog_conf and !php', array(
       '!php'         => l("PHP's syslog", 'http://www.php.net/manual/en/function.openlog.php'),
@@ -41,17 +48,22 @@ function syslog_admin_settings() {
 }
 
 function syslog_facility_list() {
-  return array(
+  $facility_list = array(
     LOG_USER   => t('LOG_USER - User level messages. Use this for Windows.'),
-    LOG_LOCAL0 => t('LOG_LOCAL0 - Local 0'),
-    LOG_LOCAL1 => t('LOG_LOCAL1 - Local 1'),
-    LOG_LOCAL2 => t('LOG_LOCAL2 - Local 2'),
-    LOG_LOCAL3 => t('LOG_LOCAL3 - Local 3'),
-    LOG_LOCAL4 => t('LOG_LOCAL4 - Local 4'),
-    LOG_LOCAL5 => t('LOG_LOCAL5 - Local 5'),
-    LOG_LOCAL6 => t('LOG_LOCAL6 - Local 6'),
-    LOG_LOCAL7 => t('LOG_LOCAL7 - Local 7'),
   );
+  if (defined('LOG_LOCAL0')) {
+    $facility_list += array(
+      LOG_LOCAL0 => t('LOG_LOCAL0 - Local 0'),
+      LOG_LOCAL1 => t('LOG_LOCAL1 - Local 1'),
+      LOG_LOCAL2 => t('LOG_LOCAL2 - Local 2'),
+      LOG_LOCAL3 => t('LOG_LOCAL3 - Local 3'),
+      LOG_LOCAL4 => t('LOG_LOCAL4 - Local 4'),
+      LOG_LOCAL5 => t('LOG_LOCAL5 - Local 5'),
+      LOG_LOCAL6 => t('LOG_LOCAL6 - Local 6'),
+      LOG_LOCAL7 => t('LOG_LOCAL7 - Local 7'),
+    );
+  }
+  return $facility_list;
 }
 
 function syslog_watchdog($entry) {
@@ -59,7 +71,7 @@ function syslog_watchdog($entry) {
 
   if (!$log_init) {
     $log_init = TRUE;
-    openlog('drupal', LOG_NDELAY, variable_get('syslog_faclity', LOG_LOCAL0));
+    openlog('drupal', LOG_NDELAY, variable_get('syslog_facility', DEFAULT_SYSLOG_FACILITY));
   }
 
   syslog($entry['severity'], theme('syslog_format', $entry));
