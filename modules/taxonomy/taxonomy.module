@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.346 2007/04/06 13:27:22 dries Exp $
+// $Id: taxonomy.module,v 1.347 2007/04/10 10:16:29 dries Exp $
 
 /**
  * @file
@@ -255,11 +255,10 @@ function taxonomy_form_vocabulary($edit = array()) {
     '#description' => t('Instructions to present to the user when choosing a term.'),
   );
   $form['nodes'] = array('#type' => 'checkboxes',
-    '#title' => t('Types'),
+    '#title' => t('Content types'),
     '#default_value' => $edit['nodes'],
     '#options' => node_get_types('names'),
-    '#description' => t('A list of node types you want to associate with this vocabulary.'),
-    '#required' => TRUE,
+    '#description' => t('A list of content types you would like to categorize using this vocabulary.'),
   );
   $form['hierarchy'] = array('#type' => 'radios',
     '#title' => t('Hierarchy'),
@@ -316,6 +315,7 @@ function taxonomy_form_vocabulary_submit($form_id, $form_values) {
       drupal_set_message(t('Updated vocabulary %name.', array('%name' => $form_values['name'])));
       break;
   }
+
   return 'admin/content/taxonomy';
 }
 
@@ -1135,7 +1135,9 @@ function taxonomy_vocabulary_load($vid) {
     $result = db_query('SELECT v.*, n.type FROM {vocabulary} v LEFT JOIN {vocabulary_node_types} n ON v.vid = n.vid WHERE v.vid = %d ORDER BY v.weight, v.name', $vid);
     $node_types = array();
     while ($voc = db_fetch_object($result)) {
-      $node_types[] = $voc->type;
+      if (!empty($voc->type)) {
+        $node_types[] = $voc->type;
+      }
       unset($voc->type);
       $voc->nodes = $node_types;
       $vocabularies[$vid] = $voc;
