@@ -2020,7 +2020,9 @@ function node_form($node, $form_values = NULL) {
     $node->format = NULL;
   }
   // Get the node-specific bits.
-  $form = array_merge_recursive($form, node_invoke($node, 'form', $form_values));
+  if ($extra = node_invoke($node, 'form', $form_values)) {
+    $form = array_merge_recursive($form, $extra);
+  }
   if (!isset($form['title']['#weight'])) {
     $form['title']['#weight'] = -5;
   }
