@@ -8,7 +8,7 @@
  *  An array of modules to be enabled.
  */
 function default_profile_modules() {
-  return array('color', 'comment', 'help', 'taxonomy');
+  return array('color', 'comment', 'help', 'taxonomy', 'dblog');
 }
 
 /**

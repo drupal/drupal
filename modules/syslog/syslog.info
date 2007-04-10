@@ -1,0 +1,5 @@
+; $Id$
+name = Syslog
+description = Logs and records system events to syslog.
+package = Core - optional
+version = VERSION
