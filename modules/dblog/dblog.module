@@ -1,11 +1,11 @@
 <?php
-// $Id: watchdog.module,v 1.172 2007/04/06 13:27:23 dries Exp $
+// $Id: dblog.module,v 1.1 2007/04/10 10:10:27 dries Exp $
 
 /**
  * @file
  * System monitoring and logging for administrators.
  *
- * The watchdog module monitors your site and keeps a list of
+ * The dblog module monitors your site and keeps a list of
  * recorded events containing usage and performance data, errors,
  * warnings, and similar operational information.
  *
@@ -15,24 +15,24 @@
 /**
  * Implementation of hook_help().
  */
-function watchdog_help($section) {
+function dblog_help($section) {
   switch ($section) {
-    case 'admin/help#watchdog':
-      $output = '<p>'. t('The watchdog module monitors your system, capturing system events in a log to be reviewed by an authorized individual at a later time. This is useful for site administrators who want a quick overview of activities on their site. The logs also record the sequence of events, so it can be useful for debugging site errors.') .'</p>';
-      $output .= '<p>'. t('The watchdog log is simply a list of recorded events containing usage data, performance data, errors, warnings and operational information. Administrators should check the watchdog report on a regular basis to ensure their site is working properly.') .'</p>';
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@watchdog">Watchdog page</a>.', array('@watchdog' => 'http://drupal.org/handbook/modules/watchdog/')) .'</p>';
+    case 'admin/help#dblog':
+      $output = '<p>'. t('The dblog module monitors your system, capturing system events in a log to be reviewed by an authorized individual at a later time. This is useful for site administrators who want a quick overview of activities on their site. The logs also record the sequence of events, so it can be useful for debugging site errors.') .'</p>';
+      $output .= '<p>'. t('The dblog log is simply a list of recorded events containing usage data, performance data, errors, warnings and operational information. Administrators should check the dblog report on a regular basis to ensure their site is working properly.') .'</p>';
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@dblog">Dblog page</a>.', array('@dblog' => 'http://drupal.org/handbook/modules/dblog/')) .'</p>';
       return $output;
     case 'admin/logs':
-      return '<p>'. t('The watchdog module monitors your website, capturing system events in a log to be reviewed by an authorized individual at a later time. The watchdog log is simply a list of recorded events containing usage data, performance data, errors, warnings and operational information. It is vital to check the watchdog report on a regular basis as it is often the only way to tell what is going on.') .'</p>';
+      return '<p>'. t('The dblog module monitors your website, capturing system events in a log to be reviewed by an authorized individual at a later time. The dblog log is simply a list of recorded events containing usage data, performance data, errors, warnings and operational information. It is vital to check the dblog report on a regular basis as it is often the only way to tell what is going on.') .'</p>';
   }
 }
 
 /**
  * Implementation of hook_theme()
  */
-function watchdog_theme() {
+function dblog_theme() {
   return array(
-    'watchdog_form_overview' => array(
+    'dblog_form_overview' => array(
       'arguments' => array('form' => NULL),
     ),
   );
@@ -41,39 +41,58 @@ function watchdog_theme() {
 /**
  * Implementation of hook_menu().
  */
-function watchdog_menu() {
-  $items['admin/logs/watchdog'] = array(
+function dblog_menu() {
+  $items['admin/settings/logging/dblog'] = array(
+    'title' => t('Database logging'),
+    'description' => t('Settings for logging to the Drupal database logs.'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('dblog_admin_settings'),
+  );
+
+  $items['admin/logs/dblog'] = array(
     'title' => t('Recent log entries'),
     'description' => t('View events that have recently been logged.'),
-    'page callback' => 'watchdog_overview',
+    'page callback' => 'dblog_overview',
     'weight' => -1,
   );
   $items['admin/logs/page-not-found'] = array(
     'title' => t("Top 'page not found' errors"),
     'description' => t("View 'page not found' errors (404s)."),
-    'page callback' => 'watchdog_top',
+    'page callback' => 'dblog_top',
     'page arguments' => array('page not found'),
   );
   $items['admin/logs/access-denied'] = array(
       'title' => t("Top 'access denied' errors"),
     'description' => t("View 'access denied' errors (403s)."),
-    'page callback' => 'watchdog_top',
+    'page callback' => 'dblog_top',
     'page arguments' => array('access denied'),
   );
   $items['admin/logs/event/%'] = array(
     'title' => t('Details'),
-    'page callback' => 'watchdog_event',
+    'page callback' => 'dblog_event',
     'page arguments' => array(3),
     'type' => MENU_CALLBACK,
   );
   return $items;
 }
 
-function watchdog_init() {
+function dblog_init() {
   if (arg(0) == 'admin' && arg(1) == 'logs') {
     // Add the CSS for this module
-    drupal_add_css(drupal_get_path('module', 'watchdog') .'/watchdog.css', 'module', 'all', FALSE);
+    drupal_add_css(drupal_get_path('module', 'dblog') .'/dblog.css', 'module', 'all', FALSE);
   }
+}
+
+function dblog_admin_settings() {
+  $form['dblog_row_limit'] = array(
+    '#type' => 'select',
+    '#title' => t('Discard log entries above the following row limit'),
+    '#default_value' => variable_get('dblog_row_limit', 1000),
+    '#options' => drupal_map_assoc(array(100, 1000, 10000, 100000, 1000000)),
+    '#description' => t('The maximum number of rows to keep in the database log. Older entries will be automatically discarded. Requires crontab.')
+  );
+
+  return system_settings_form($form);
 }
 
 /**
@@ -81,35 +100,43 @@ function watchdog_init() {
  *
  * Remove expired log messages and flood control events.
  */
-function watchdog_cron() {
-  db_query('DELETE FROM {watchdog} WHERE timestamp < %d', time() - variable_get('watchdog_clear', 604800));
-  db_query('DELETE FROM {flood} WHERE timestamp < %d', time() - 3600);
+function dblog_cron() {
+  // Cleanup the watchdog table
+  $min = db_result(db_query('SELECT MIN(wid) FROM {watchdog}'));
+  if ($min) {
+    $max = db_result(db_query('SELECT MAX(wid) FROM {watchdog}'));
+    if ($max) {
+      if (($max - $min) > variable_get('dblog_row_limit', 1000)) {
+        db_query('DELETE FROM {watchdog} WHERE wid < %d', $max - $min);
+      }
+    }
+  }
 }
 
 /**
  * Implementation of hook_user().
  */
-function watchdog_user($op, &$edit, &$user) {
+function dblog_user($op, &$edit, &$user) {
   if ($op == 'delete') {
     db_query('UPDATE {watchdog} SET uid = 0 WHERE uid = %d', $user->uid);
   }
 }
 
-function watchdog_form_overview() {
+function dblog_form_overview() {
   $names['all'] = t('all messages');
-  foreach (_watchdog_get_message_types() as $type) {
+  foreach (_dblog_get_message_types() as $type) {
     $names[$type] = t('!type messages', array('!type' => t($type)));
   }
 
-  if (empty($_SESSION['watchdog_overview_filter'])) {
-    $_SESSION['watchdog_overview_filter'] = 'all';
+  if (empty($_SESSION['dblog_overview_filter'])) {
+    $_SESSION['dblog_overview_filter'] = 'all';
   }
 
   $form['filter'] = array(
     '#type' => 'select',
     '#title' => t('Filter by message type'),
     '#options' => $names,
-    '#default_value' => $_SESSION['watchdog_overview_filter']
+    '#default_value' => $_SESSION['dblog_overview_filter']
   );
   $form['submit'] = array('#type' => 'submit', '#value' => t('Filter'));
   $form['#redirect'] = FALSE;
@@ -119,13 +146,14 @@ function watchdog_form_overview() {
 /**
  * Menu callback; displays a listing of log messages.
  */
-function watchdog_overview() {
+function dblog_overview() {
+  $rows = array();
   $icons = array(WATCHDOG_NOTICE  => '',
                  WATCHDOG_WARNING => theme('image', 'misc/watchdog-warning.png', t('warning'), t('warning')),
                  WATCHDOG_ERROR   => theme('image', 'misc/watchdog-error.png', t('error'), t('error')));
-  $classes = array(WATCHDOG_NOTICE => 'watchdog-notice', WATCHDOG_WARNING => 'watchdog-warning', WATCHDOG_ERROR => 'watchdog-error');
+  $classes = array(WATCHDOG_NOTICE => 'dblog-notice', WATCHDOG_WARNING => 'dblog-warning', WATCHDOG_ERROR => 'dblog-error');
 
-  $output = drupal_get_form('watchdog_form_overview');
+  $output = drupal_get_form('dblog_form_overview');
 
   $header = array(
     ' ',
@@ -138,7 +166,7 @@ function watchdog_overview() {
 
   $sql = "SELECT w.wid, w.uid, w.severity, w.type, w.timestamp, w.message, w.link, u.name FROM {watchdog} w INNER JOIN {users} u ON w.uid = u.uid";
   $tablesort = tablesort_sql($header);
-  $type = $_SESSION['watchdog_overview_filter'];
+  $type = $_SESSION['dblog_overview_filter'];
   if ($type != 'all') {
     $result = pager_query($sql ." WHERE w.type = '%s'". $tablesort, 50, 0, NULL, $type);
   }
@@ -146,19 +174,19 @@ function watchdog_overview() {
     $result = pager_query($sql . $tablesort, 50);
   }
 
-  while ($watchdog = db_fetch_object($result)) {
+  while ($dblog = db_fetch_object($result)) {
     $rows[] = array('data' =>
       array(
         // Cells
-        $icons[$watchdog->severity],
-        t($watchdog->type),
-        format_date($watchdog->timestamp, 'small'),
-        l(truncate_utf8($watchdog->message, 56, TRUE, TRUE), 'admin/logs/event/'. $watchdog->wid, array('html' => TRUE)),
-        theme('username', $watchdog),
-        $watchdog->link,
+        $icons[$dblog->severity],
+        t($dblog->type),
+        format_date($dblog->timestamp, 'small'),
+        l(truncate_utf8($dblog->message, 56, TRUE, TRUE), 'admin/logs/event/'. $dblog->wid, array('html' => TRUE)),
+        theme('username', $dblog),
+        $dblog->link,
       ),
       // Attributes for tr
-      'class' => "watchdog-". preg_replace('/[^a-z]/i', '-', $watchdog->type) .' '. $classes[$watchdog->severity]
+      'class' => "dblog-". preg_replace('/[^a-z]/i', '-', $dblog->type) .' '. $classes[$dblog->severity]
     );
   }
 
@@ -174,9 +202,9 @@ function watchdog_overview() {
 
 /**
  * Menu callback; generic function to display a page of the most frequent
- * watchdog events of a specified type.
+ * dblog events of a specified type.
  */
-function watchdog_top($type) {
+function dblog_top($type) {
 
   $header = array(
     array('data' => t('Count'), 'field' => 'count', 'sort' => 'desc'),
@@ -186,8 +214,8 @@ function watchdog_top($type) {
   $result = pager_query("SELECT COUNT(wid) AS count, message FROM {watchdog} WHERE type = '%s' GROUP BY message ". tablesort_sql($header), 30, 0, "SELECT COUNT(DISTINCT(message)) FROM {watchdog} WHERE type = '%s'", $type);
 
   $rows = array();
-  while ($watchdog = db_fetch_object($result)) {
-    $rows[] = array($watchdog->count, truncate_utf8($watchdog->message, 56, TRUE, TRUE));
+  while ($dblog = db_fetch_object($result)) {
+    $rows[] = array($dblog->count, truncate_utf8($dblog->message, 56, TRUE, TRUE));
   }
 
   if (empty($rows)) {
@@ -200,67 +228,67 @@ function watchdog_top($type) {
   return $output;
 }
 
-function theme_watchdog_form_overview($form) {
+function theme_dblog_form_overview($form) {
   return '<div class="container-inline">'. drupal_render($form) .'</div>';
 }
 
-function watchdog_form_overview_submit($form_id, $form_values) {
-  $_SESSION['watchdog_overview_filter'] = $form_values['filter'];
+function dblog_form_overview_submit($form_id, $form_values) {
+  $_SESSION['dblog_overview_filter'] = $form_values['filter'];
 }
 
 /**
  * Menu callback; displays details about a log message.
  */
-function watchdog_event($id) {
+function dblog_event($id) {
   $severity = array(WATCHDOG_NOTICE => t('notice'), WATCHDOG_WARNING => t('warning'), WATCHDOG_ERROR => t('error'));
   $output = '';
   $result = db_query('SELECT w.*, u.name, u.uid FROM {watchdog} w INNER JOIN {users} u ON w.uid = u.uid WHERE w.wid = %d', $id);
-  if ($watchdog = db_fetch_object($result)) {
+  if ($dblog = db_fetch_object($result)) {
     $rows = array(
       array(
         array('data' => t('Type'), 'header' => TRUE),
-        t($watchdog->type),
+        t($dblog->type),
       ),
       array(
         array('data' => t('Date'), 'header' => TRUE),
-        format_date($watchdog->timestamp, 'large'),
+        format_date($dblog->timestamp, 'large'),
       ),
       array(
         array('data' => t('User'), 'header' => TRUE),
-        theme('username', $watchdog),
+        theme('username', $dblog),
       ),
       array(
         array('data' => t('Location'), 'header' => TRUE),
-        l($watchdog->location, $watchdog->location),
+        l($dblog->location, $dblog->location),
       ),
       array(
         array('data' => t('Referrer'), 'header' => TRUE),
-        l($watchdog->referer, $watchdog->referer),
+        l($dblog->referer, $dblog->referer),
       ),
       array(
         array('data' => t('Message'), 'header' => TRUE),
-        $watchdog->message,
+        $dblog->message,
       ),
       array(
         array('data' => t('Severity'), 'header' => TRUE),
-        $severity[$watchdog->severity],
+        $severity[$dblog->severity],
       ),
       array(
         array('data' => t('Hostname'), 'header' => TRUE),
-        $watchdog->hostname,
+        $dblog->hostname,
       ),
       array(
         array('data' => t('Operations'), 'header' => TRUE),
-        $watchdog->link,
+        $dblog->link,
       ),
     );
-    $attributes = array('class' => 'watchdog-event');
+    $attributes = array('class' => 'dblog-event');
     $output = theme('table', array(), $rows, $attributes);
   }
   return $output;
 }
 
-function _watchdog_get_message_types() {
+function _dblog_get_message_types() {
   $types = array();
 
   $result = db_query('SELECT DISTINCT(type) FROM {watchdog} ORDER BY type');
@@ -269,4 +297,25 @@ function _watchdog_get_message_types() {
   }
 
   return $types;
+}
+
+function dblog_watchdog($log = array()) {
+  $current_db = db_set_active();
+  db_query("INSERT INTO {watchdog}
+    (uid, type, message, severity, link, location, referer, hostname, timestamp)
+    VALUES
+    (%d, '%s', '%s', %d, '%s', '%s', '%s', '%s', %d)",
+    $log['user']->uid,
+    $log['type'],
+    $log['message'],
+    $log['severity'],
+    $log['link'],
+    $log['request_uri'],
+    $log['referer'],
+    $log['ip'],
+    $log['timestamp']);
+
+  if ($current_db) {
+    db_set_active($current_db);
+  }
 }

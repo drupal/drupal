@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.98 2007/02/04 21:20:50 dries Exp $
+// $Id: module.inc,v 1.99 2007/04/10 10:10:27 dries Exp $
 
 /**
  * @file
@@ -423,5 +423,5 @@ function module_invoke_all() {
  * Array of modules required by core.
  */
 function drupal_required_modules() {
-  return array('block', 'filter', 'node', 'system', 'user', 'watchdog');
+  return array('block', 'filter', 'node', 'system', 'user');
 }

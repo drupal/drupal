@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.88 2007/03/30 08:47:58 dries Exp $
+// $Id: system.install,v 1.89 2007/04/10 10:10:27 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -603,21 +603,6 @@ function system_install() {
         PRIMARY KEY (vid, type)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
-      db_query("CREATE TABLE {watchdog} (
-        wid int NOT NULL auto_increment,
-        uid int NOT NULL default '0',
-        type varchar(16) NOT NULL default '',
-        message longtext NOT NULL,
-        severity tinyint unsigned NOT NULL default '0',
-        link varchar(255) NOT NULL default '',
-        location text NOT NULL,
-        referer varchar(128) NOT NULL default '',
-        hostname varchar(128) NOT NULL default '',
-        timestamp int NOT NULL default '0',
-        PRIMARY KEY (wid),
-        KEY (type)
-      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
-
       break;
     case 'pgsql':
       /* create unsigned types */
@@ -1089,20 +1074,6 @@ function system_install() {
         PRIMARY KEY (vid, type)
       )");
 
-      db_query("CREATE TABLE {watchdog} (
-        wid serial,
-        uid int NOT NULL default '0',
-        type varchar(16) NOT NULL default '',
-        message text NOT NULL,
-        severity smallint_unsigned NOT NULL default '0',
-        link varchar(255) NOT NULL default '',
-        location text NOT NULL default '',
-        referer varchar(128) NOT NULL default '',
-        hostname varchar(128) NOT NULL default '',
-        timestamp int NOT NULL default '0',
-        PRIMARY KEY (wid)
-      )");
-      db_query("CREATE INDEX {watchdog}_type_idx ON {watchdog} (type)");
       break;
   }
 
@@ -3720,6 +3691,17 @@ function system_update_2006() {
       $ret[] = update_sql("ALTER TABLE {node_counter} DROP INDEX timestamp");
       break;
   }
+  return $ret;
+}
+
+/**
+ * Change the severity column in the watchdog table to the new values.
+ */
+function system_update_2007() {
+  $ret = array();
+  $ret[] = update_sql("UPDATE {watchdog} SET severity = %d WHERE severity = 0", WATCHDOG_NOTICE);
+  $ret[] = update_sql("UPDATE {watchdog} SET severity = %d WHERE severity = 1", WATCHDOG_WARNING);
+  $ret[] = update_sql("UPDATE {watchdog} SET severity = %d WHERE severity = 2", WATCHDOG_ERROR);
   return $ret;
 }
 

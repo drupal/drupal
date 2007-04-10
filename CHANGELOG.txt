@@ -1,7 +1,12 @@
-// $Id: CHANGELOG.txt,v 1.185 2007/04/09 13:58:02 dries Exp $
+// $Id: CHANGELOG.txt,v 1.186 2007/04/10 10:10:26 dries Exp $
 
 Drupal 6.0, xxxx-xx-xx (development version)
 ----------------------
+- New watchdog as a hook functionality.
+  * New hook_watchdog that can be implemented by any module to route log messages to various destinations.
+  * Expands the severity levels from 3 (Error, Warning, Notice) to the 8 levels defined in RFC 3164.
+  * The watchdog module is now called dblog, and is optional, but enabled by default in the default install profile.
+  * New optional syslog.module now in core.
 - Added theme registry: modules can directly provide .tpl.php files for their themes without having to create theme_ functions.
 - Added versioning support to node terms.
 - Made it easier to theme the forum overview page.

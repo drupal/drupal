@@ -1,5 +1,0 @@
-; $Id: watchdog.info,v 1.3 2006/11/21 20:55:36 dries Exp $
-name = Watchdog
-description = Logs and records system events.
-package = Core - required
-version = VERSION

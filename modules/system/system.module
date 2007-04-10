@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.463 2007/04/06 14:31:51 dries Exp $
+// $Id: system.module,v 1.464 2007/04/10 10:10:27 dries Exp $
 
 /**
  * @file
@@ -248,6 +248,11 @@ function system_menu() {
     'description' => t('Control how Drupal deals with errors including 403/404 errors as well as PHP error reporting.'),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_error_reporting_settings'),
+  );
+  $items['admin/settings/logging'] = array(
+    'title' => t('Logging and alerts'),
+    'description' => t('Settings for logging and alerts modules'),
+    'page callback' => 'system_logging_overview',
   );
   $items['admin/settings/performance'] = array(
     'title' => t('Performance'),
@@ -667,16 +672,6 @@ function system_error_reporting_settings() {
     '#type' => 'select', '#title' => t('Error reporting'), '#default_value' => variable_get('error_level', 1),
     '#options' => array(t('Write errors to the log'), t('Write errors to the log and to the screen')),
     '#description' =>  t('Where Drupal, PHP and SQL errors are logged. On a production server it is recommended that errors are only written to the error log. On a test server it can be helpful to write logs to the screen.')
-  );
-
-  $period = drupal_map_assoc(array(3600, 10800, 21600, 32400, 43200, 86400, 172800, 259200, 604800, 1209600, 2419200), 'format_interval');
-  $period['1000000000'] = t('Never');
-  $form['watchdog_clear'] = array(
-    '#type' => 'select',
-    '#title' => t('Discard log entries older than'),
-    '#default_value' => variable_get('watchdog_clear', 604800),
-    '#options' => $period,
-    '#description' => t('The time log entries should be kept. Older entries will be automatically discarded. Requires crontab.')
   );
 
   return system_settings_form($form);
@@ -1953,6 +1948,14 @@ function system_settings_overview() {
   return $output;
 }
 
+function system_logging_overview() {
+  $item = menu_get_item('admin/settings/logging');
+  $content = system_admin_menu_block($item);
+
+  $output = theme('admin_block_content', $content);
+
+  return $output;
+}
 /**
  * Menu callback; display theme configuration for entire site and individual themes.
  */
@@ -2431,3 +2434,14 @@ function theme_system_admin_by_module($menu_items) {
 
   return $output;
 }
+
+/**
+ * Implementation of hook_cron().
+ *
+ * Remove older rows from flood table
+ */
+function system_cron() {
+  // Cleanup the flood
+  db_query('DELETE FROM {flood} WHERE timestamp < %d', time() - 3600);
+}
+

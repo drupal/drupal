@@ -1,0 +1,26 @@
+/* $Id: dblog.css,v 1.1 2007/04/10 10:10:27 dries Exp $ */
+
+tr.dblog-user {
+  background: #ffd;
+}
+tr.dblog-user .active {
+  background: #eed;
+}
+tr.dblog-content {
+  background: #ddf;
+}
+tr.dblog-content .active {
+  background: #cce;
+}
+tr.dblog-page-not-found, tr.dblog-access-denied {
+  background: #dfd;
+}
+tr.dblog-page-not-found .active, tr.dblog-access-denied .active {
+  background: #cec;
+}
+tr.dblog-error {
+  background: #ffc9c9;
+}
+tr.dblog-error .active {
+  background: #eeb9b9;
+}

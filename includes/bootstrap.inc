@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.153 2007/04/06 13:27:20 dries Exp $
+// $Id: bootstrap.inc,v 1.154 2007/04/10 10:10:27 dries Exp $
 
 /**
  * @file
@@ -35,22 +35,17 @@ define('CACHE_NORMAL', 1);
 define('CACHE_AGGRESSIVE', 2);
 
 /**
- * Indicates a notice-level watchdog event; these are normally notifications
- * of normal system events that have occurred and can usually be safely ignored.
+ *
+ * Severity levels, as defined in RFC 3164 http://www.faqs.org/rfcs/rfc3164.html
  */
-define('WATCHDOG_NOTICE', 0);
-
-/**
- * Indicates a warning-level watchdog event; this can be triggered by an error
- * in a module that does not impact the overall functionality of the site.
- */
-define('WATCHDOG_WARNING', 1);
-
-/**
- * Indicates an error-level watchdog event; could be indicative of an attempt
- * to compromise the security of the site, or a serious system error.
- */
-define('WATCHDOG_ERROR', 2);
+define('WATCHDOG_EMERG',    0); // Emergency: system is unusable
+define('WATCHDOG_ALERT',    1); // Alert: action must be taken immediately
+define('WATCHDOG_CRITICAL', 2); // Critical: critical conditions
+define('WATCHDOG_ERROR',    3); // Error: error conditions
+define('WATCHDOG_WARNING',  4); // Warning: warning conditions
+define('WATCHDOG_NOTICE',   5); // Notice: normal but significant condition
+define('WATCHDOG_INFO',     6); // Informational: informational messages
+define('WATCHDOG_DEBUG',    7); // Debug: debug-level messages
 
 /**
  * First bootstrap phase: initialize configuration.
@@ -649,25 +644,29 @@ function request_uri() {
  * @param $message
  *   The message to store in the log.
  * @param $severity
- *   The severity of the message. One of the following values:
- *   - WATCHDOG_NOTICE
- *   - WATCHDOG_WARNING
- *   - WATCHDOG_ERROR
+ *   The severity of the message, as per RFC 3164
  * @param $link
  *   A link to associate with the message.
  */
 function watchdog($type, $message, $severity = WATCHDOG_NOTICE, $link = NULL) {
   global $user, $base_root;
 
-  $current_db = db_set_active();
+  // Prepare the fields to be logged
+  $log_message = array(
+    'type'        => $type,
+    'message'     => $message,
+    'severity'    => $severity,
+    'link'        => $link,
+    'user'        => $user,
+    'request_uri' => $base_root . request_uri(),
+    'referer'     => referer_uri(),
+    'ip'          => $_SERVER['REMOTE_ADDR'],
+    'timestamp'   => time(),
+    );
 
-  // Note: log the exact, entire absolute URL.
-  $request_uri = $base_root . request_uri();
-
-  db_query("INSERT INTO {watchdog} (uid, type, message, severity, link, location, referer, hostname, timestamp) VALUES (%d, '%s', '%s', %d, '%s', '%s', '%s', '%s', %d)", $user->uid, $type, $message, $severity, $link, $request_uri, referer_uri(), $_SERVER['REMOTE_ADDR'], time());
-
-  if ($current_db) {
-    db_set_active($current_db);
+  // Call the logging hooks to log/process the message
+  foreach (module_implements('watchdog', TRUE) as $module) {
+    module_invoke($module, 'watchdog', $log_message);
   }
 }
 
