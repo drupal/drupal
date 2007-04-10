@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.799 2007/04/10 12:08:38 dries Exp $
+// $Id: node.module,v 1.800 2007/04/10 12:11:42 dries Exp $
 
 /**
  * @file
@@ -2020,7 +2020,9 @@ function node_form($node, $form_values = NULL) {
     $node->format = NULL;
   }
   // Get the node-specific bits.
-  $form = array_merge_recursive($form, node_invoke($node, 'form', $form_values));
+  if ($extra = node_invoke($node, 'form', $form_values)) {
+    $form = array_merge_recursive($form, $extra);
+  }
   if (!isset($form['title']['#weight'])) {
     $form['title']['#weight'] = -5;
   }
