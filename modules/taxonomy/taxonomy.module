@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.348 2007/04/10 11:28:18 dries Exp $
+// $Id: taxonomy.module,v 1.349 2007/04/11 09:17:53 unconed Exp $
 
 /**
  * @file
@@ -1546,14 +1546,14 @@ function taxonomy_implode_tags($tags, $vid = NULL) {
   $typed_tags = array();
   foreach ($tags as $tag) {
     // Extract terms belonging to the vocabulary in question.
-    if (is_null($vid) || $term->vid == $vid) {
+    if (is_null($vid) || $tag->vid == $vid) {
 
-      // Commas and quotes in terms are special cases, so encode 'em.
-      if (strpos($term->name, ',') !== FALSE || strpos($term->name, '"') !== FALSE) {
-        $term->name = '"'. str_replace('"', '""', $term->name) .'"';
+      // Commas and quotes in tag names are special cases, so encode 'em.
+      if (strpos($tag->name, ',') !== FALSE || strpos($tag->name, '"') !== FALSE) {
+        $tag->name = '"'. str_replace('"', '""', $tag->name) .'"';
       }
 
-      $typed_tags[] = $term->name;
+      $typed_tags[] = $tag->name;
     }
   }
   return implode(', ', $typed_tags);
