@@ -1,5 +1,5 @@
 <?php
-// $Id: chameleon.theme,v 1.61 2007/04/13 08:30:52 dries Exp $
+// $Id: chameleon.theme,v 1.62 2007/04/13 08:38:05 dries Exp $
 
 /**
  * @file
@@ -39,7 +39,7 @@ function chameleon_regions() {
 }
 
 function chameleon_page($content, $show_blocks = TRUE) {
-  $language = isset($GLOBALS['language']) ? $GLOBALS['language'] : NULL;
+  $language = isset($GLOBALS['language']) ? $GLOBALS['language']->language : NULL;
 
   if (theme_get_setting('toggle_favicon')) {
     drupal_set_html_head('<link rel="shortcut icon" href="'. check_url(theme_get_setting('favicon')) .'" type="image/x-icon" />');
