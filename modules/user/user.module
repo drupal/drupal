@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.768 2007/04/10 10:40:40 dries Exp $
+// $Id: user.module,v 1.769 2007/04/13 08:26:34 dries Exp $
 
 /**
  * @file
@@ -470,7 +470,7 @@ function user_search($op = 'search', $keys = NULL, $skip_access_check = FALSE) {
         $find = array();
         // Replace wildcards with MySQL/PostgreSQL wildcards.
         $keys = preg_replace('!\*+!', '%', $keys);
-        $result = pager_query("SELECT * FROM {users} WHERE LOWER(name) LIKE LOWER('%%%s%%')", 15, 0, NULL, $keys);
+        $result = pager_query("SELECT uid, name FROM {users} WHERE LOWER(name) LIKE LOWER('%%%s%%')", 15, 0, NULL, $keys);
         while ($account = db_fetch_object($result)) {
           $find[] = array('title' => $account->name, 'link' => url('user/'. $account->uid, array('absolute' => TRUE)));
         }
