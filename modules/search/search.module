@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.217 2007/04/06 13:27:22 dries Exp $
+// $Id: search.module,v 1.218 2007/04/13 08:56:59 dries Exp $
 
 /**
  * @file
@@ -233,7 +233,7 @@ function search_admin_settings() {
     }
   }
   $count = format_plural($remaining, 'There is 1 item left to index.', 'There are @count items left to index.');
-  $percentage = ((int)min(100, 100 * ($total - $remaining) / max(1, $total))) . '%';
+  $percentage = ((int)min(100, 100 * ($total - $remaining) / max(1, $total))) .'%';
   $status = '<p><strong>'. t('%percentage of the site has been indexed.', array('%percentage' => $percentage)) .' '. $count .'</strong></p>';
   $form['status'] = array('#type' => 'fieldset', '#title' => t('Indexing status'));
   $form['status']['status'] = array('#value' => $status);
@@ -385,7 +385,7 @@ function search_simplify($text) {
 
   // With the exception of the rules above, we consider all punctuation,
   // marks, spacers, etc, to be a word boundary.
-  $text = preg_replace('/['. PREG_CLASS_SEARCH_EXCLUDE . ']+/u', ' ', $text);
+  $text = preg_replace('/['. PREG_CLASS_SEARCH_EXCLUDE .']+/u', ' ', $text);
 
   return $text;
 }
@@ -1198,7 +1198,7 @@ function search_excerpt($keys, $text) {
 
   // If we didn't find anything, return the beginning.
   if (count($ranges) == 0) {
-    return truncate_utf8($text, 256) . ' ...';
+    return truncate_utf8($text, 256) .' ...';
   }
 
   // Sort the text ranges by starting position.
@@ -1228,7 +1228,7 @@ function search_excerpt($keys, $text) {
   foreach ($newranges as $from => $to) {
     $out[] = substr($text, $from, $to - $from);
   }
-  $text = (isset($newranges[0]) ? '' : '... '). implode(' ... ', $out) .' ...';
+  $text = (isset($newranges[0]) ? '' : '... ') . implode(' ... ', $out) .' ...';
 
   // Highlight keywords. Must be done at once to prevent conflicts ('strong' and '<strong>').
   $text = preg_replace('/'. $boundary .'('. implode('|', $keys) .')'. $boundary .'/iu', '<strong>\0</strong>', $text);
@@ -1275,7 +1275,7 @@ function theme_search_item($item, $type) {
   if (isset($item['extra']) && is_array($item['extra'])) {
     $info = array_merge($info, $item['extra']);
   }
-  $output .= ' <dd>'. (!empty($item['snippet']) ? '<p>'. $item['snippet'] . '</p>' : '') . '<p class="search-info">' . implode(' - ', $info) .'</p></dd>';
+  $output .= ' <dd>'. (!empty($item['snippet']) ? '<p>'. $item['snippet'] .'</p>' : '') .'<p class="search-info">'. implode(' - ', $info) .'</p></dd>';
   return $output;
 }
 

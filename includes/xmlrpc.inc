@@ -1,5 +1,5 @@
 <?php
-// $Id: xmlrpc.inc,v 1.38 2006/09/03 08:21:18 dries Exp $
+// $Id: xmlrpc.inc,v 1.39 2007/04/13 08:56:57 dries Exp $
 
 /*
   Drupal XML-RPC library. Based on the IXR - The Incutio XML-RPC Library - (c) Incutio Ltd 2002-2005
@@ -114,7 +114,7 @@ function xmlrpc_value_get_xml($xmlrpc_value) {
       $return = '<struct>'."\n";
       foreach ($xmlrpc_value->data as $name => $value) {
         $return .= "  <member><name>". check_plain($name) ."</name><value>";
-        $return .= xmlrpc_value_get_xml($value)."</value></member>\n";
+        $return .= xmlrpc_value_get_xml($value) ."</value></member>\n";
       }
       $return .= '</struct>';
       return $return;
@@ -207,7 +207,7 @@ function xmlrpc_message_tag_open($parser, $tag, $attr) {
   $xmlrpc_message = xmlrpc_message_get();
   $xmlrpc_message->current_tag_contents = '';
   $xmlrpc_message->last_open = $tag;
-  switch($tag) {
+  switch ($tag) {
     case 'methodCall':
     case 'methodResponse':
     case 'fault':
@@ -235,7 +235,7 @@ function xmlrpc_message_cdata($parser, $cdata) {
 function xmlrpc_message_tag_close($parser, $tag) {
   $xmlrpc_message = xmlrpc_message_get();
   $value_flag = FALSE;
-  switch($tag) {
+  switch ($tag) {
     case 'int':
     case 'i4':
       $value = (int)trim($xmlrpc_message->current_tag_contents);
@@ -355,7 +355,7 @@ function xmlrpc_error($code = NULL, $message = NULL) {
 }
 
 function xmlrpc_error_get_xml($xmlrpc_error) {
-    return <<<EOD
+  return <<<EOD
 <methodResponse>
   <fault>
   <value>

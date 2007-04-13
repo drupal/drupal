@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.40 2007/03/25 23:34:17 dries Exp $
+// $Id: install.php,v 1.41 2007/04/13 08:56:57 dries Exp $
 
 require_once './includes/install.inc';
 
@@ -336,7 +336,7 @@ function _install_settings_form_validate($db_prefix, $db_type, $db_user, $db_pas
   }
   else {
     // Verify
-    $db_url = $db_type .'://'. urlencode($db_user) .($db_pass ? ':'. urlencode($db_pass) : '') .'@'. ($db_host ? urlencode($db_host) : 'localhost'). ($db_port ? ":$db_port" : '') .'/'. urlencode($db_path);
+    $db_url = $db_type .'://'. urlencode($db_user) . ($db_pass ? ':'. urlencode($db_pass) : '') .'@'. ($db_host ? urlencode($db_host) : 'localhost') . ($db_port ? ":$db_port" : '') .'/'. urlencode($db_path);
     if (isset($form)) {
       form_set_value($form['_db_url'], $db_url);
     }
@@ -465,7 +465,8 @@ function install_select_locale($profilename) {
   // Don't need to choose locale if only one (English) is available.
   if (sizeof($locales) == 1) {
     return FALSE;
-  } else {
+  }
+  else {
     foreach ($locales as $locale) {
       if ($_POST['locale'] == $locale->name) {
         return $locale->name;
@@ -576,7 +577,7 @@ function install_complete($profile) {
   }
   else {
     // No more steps
-    $output .= '<p>' . (drupal_set_message() ? st('Please review the messages above before continuing on to <a href="@url">your new site</a>.', array('@url' => url(''))) : st('You may now visit <a href="@url">your new site</a>.', array('@url' => url('')))) . '</p>';
+    $output .= '<p>'. (drupal_set_message() ? st('Please review the messages above before continuing on to <a href="@url">your new site</a>.', array('@url' => url(''))) : st('You may now visit <a href="@url">your new site</a>.', array('@url' => url('')))) .'</p>';
   }
   // Output page.
   print theme('maintenance_page', $output);

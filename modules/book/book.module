@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.416 2007/04/09 13:58:02 dries Exp $
+// $Id: book.module,v 1.417 2007/04/13 08:56:57 dries Exp $
 
 /**
  * @file
@@ -706,7 +706,7 @@ function theme_book_export_html($title, $content) {
   $html .= '<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">';
   $html .= "<head>\n<title>". $title ."</title>\n";
   $html .= '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />';
-  $html .= '<base href="'. $base_url .'/" />' . "\n";
+  $html .= '<base href="'. $base_url .'/" />'."\n";
   $html .= "<style type=\"text/css\">\n@import url(misc/print.css);\n</style>\n";
   $html .= "</head>\n<body>\n". $content ."\n</body>\n</html>\n";
   return $html;
@@ -864,7 +864,7 @@ function theme_book_admin_table($form) {
       drupal_render($form[$key]['weight']),
       l(t('view'), 'node/'. $nid),
       l(t('edit'), 'node/'. $nid .'/edit'),
-      l(t('delete'), 'node/'. $nid .'/delete', NULL, 'destination=admin/content/book'. (arg(3) == 'orphan' ? '/orphan' : '') . ($pid != $nid ? '/'.$pid : ''))
+      l(t('delete'), 'node/'. $nid .'/delete', NULL, 'destination=admin/content/book'. (arg(3) == 'orphan' ? '/orphan' : '') . ($pid != $nid ? '/'. $pid : ''))
     );
   }
 

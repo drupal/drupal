@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.255 2007/03/27 05:13:54 unconed Exp $
+// $Id: statistics.module,v 1.256 2007/04/13 08:56:59 dries Exp $
 
 /**
  * @file
@@ -199,7 +199,7 @@ function statistics_node_tracker() {
         array('data' => t('User'), 'field' => 'u.name'),
         array('data' => t('Operations')));
 
-    $result = pager_query('SELECT a.aid, a.timestamp, a.url, a.uid, u.name FROM {accesslog} a LEFT JOIN {users} u ON a.uid = u.uid WHERE a.path LIKE \'node/%d%%\'' . tablesort_sql($header), 30, 0, NULL, $node->nid);
+    $result = pager_query('SELECT a.aid, a.timestamp, a.url, a.uid, u.name FROM {accesslog} a LEFT JOIN {users} u ON a.uid = u.uid WHERE a.path LIKE \'node/%d%%\''. tablesort_sql($header), 30, 0, NULL, $node->nid);
     $rows = array();
     while ($log = db_fetch_object($result)) {
       $rows[] = array(
@@ -229,7 +229,7 @@ function statistics_user_tracker() {
         array('data' => t('Page'), 'field' => 'path'),
         array('data' => t('Operations')));
 
-    $result = pager_query('SELECT aid, timestamp, path, title FROM {accesslog} WHERE uid = %d' . tablesort_sql($header), 30, 0, NULL, $account->uid);
+    $result = pager_query('SELECT aid, timestamp, path, title FROM {accesslog} WHERE uid = %d'. tablesort_sql($header), 30, 0, NULL, $account->uid);
     while ($log = db_fetch_object($result)) {
       $rows[] = array(
         array('data' => format_date($log->timestamp, 'small'), 'class' => 'nowrap'),
@@ -258,7 +258,7 @@ function statistics_recent_hits() {
     array('data' => t('Operations'))
   );
 
-  $sql = 'SELECT a.aid, a.path, a.title, a.uid, u.name, a.timestamp FROM {accesslog} a LEFT JOIN {users} u ON u.uid = a.uid' . tablesort_sql($header);
+  $sql = 'SELECT a.aid, a.path, a.title, a.uid, u.name, a.timestamp FROM {accesslog} a LEFT JOIN {users} u ON u.uid = a.uid'. tablesort_sql($header);
 
   $result = pager_query($sql, 30);
   $rows = array();

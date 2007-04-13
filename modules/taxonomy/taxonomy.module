@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.349 2007/04/11 09:17:53 unconed Exp $
+// $Id: taxonomy.module,v 1.350 2007/04/13 08:56:59 dries Exp $
 
 /**
  * @file
@@ -202,7 +202,7 @@ function taxonomy_overview_terms($vocabulary) {
     if (($start_from && ($start_from * $page_increment) >= $total_entries) || ($displayed_count == $page_increment)) {
       continue;
     }
-    $rows[] = array(str_repeat('--', $term->depth) . ' ' . l($term->name, "taxonomy/term/$term->tid"), l(t('edit'), "admin/content/taxonomy/edit/term/$term->tid", array('query' => $destination)));
+    $rows[] = array(str_repeat('--', $term->depth) .' '. l($term->name, "taxonomy/term/$term->tid"), l(t('edit'), "admin/content/taxonomy/edit/term/$term->tid", array('query' => $destination)));
     $displayed_count++; // we're counting tids displayed
   }
 

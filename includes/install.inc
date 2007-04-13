@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.35 2007/03/27 05:13:53 unconed Exp $
+// $Id: install.inc,v 1.36 2007/04/13 08:56:57 dries Exp $
 
 define('SCHEMA_UNINSTALLED', -1);
 define('SCHEMA_INSTALLED', 0);
@@ -307,11 +307,11 @@ function drupal_install_profile($profile, $module_list) {
   $module_list = array_diff($module_list, array('system'));
 
   $system_path = dirname(drupal_get_filename('module', 'system', NULL));
-  require_once './' . $system_path . '/system.install';
+  require_once './'. $system_path .'/system.install';
   module_invoke('system', 'install');
   $system_versions = drupal_get_schema_versions('system');
   $system_version = $system_versions ? max($system_versions) : SCHEMA_INSTALLED;
-  db_query("INSERT INTO {system} (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES('%s', '%s', 'module', '', 1, 0, 0, %d)", $system_path . '/system.module', 'system', $system_version);
+  db_query("INSERT INTO {system} (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES('%s', '%s', 'module', '', 1, 0, 0, %d)", $system_path .'/system.module', 'system', $system_version);
 
   // Now that we've installed things properly, bootstrap the full Drupal environment
   drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
@@ -564,7 +564,7 @@ function drupal_install_fix_file($file, $mask, $message = TRUE) {
  */
 function install_goto($path) {
   global $base_url;
-  header('Location: '. $base_url . '/' . $path);
+  header('Location: '. $base_url .'/'. $path);
   exit();
 }
 
@@ -578,7 +578,7 @@ function st($string, $args = array()) {
 
   if (!isset($locale_strings)) {
     $locale_strings = array();
-    $filename = './profiles/' . $profile . '/' . $install_locale . '.po';
+    $filename = './profiles/'. $profile .'/'. $install_locale .'.po';
     if (file_exists($filename)) {
       require_once './includes/locale.inc';
       $file = (object) array('filepath' => $filename);

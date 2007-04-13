@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.103 2007/03/26 06:30:06 dries Exp $
+// $Id: blogapi.module,v 1.104 2007/04/13 08:56:57 dries Exp $
 
 /**
  * @file
@@ -138,7 +138,7 @@ function blogapi_blogger_get_users_blogs($appid, $username, $password) {
     $types = _blogapi_get_node_types();
     $structs = array();
     foreach ($types as $type) {
-      $structs[] = array('url' => url('blog/' . $user->uid, array('absolute' => TRUE)), 'blogid' => $type, 'blogName' => $user->name . ": " . $type);
+      $structs[] = array('url' => url('blog/'. $user->uid, array('absolute' => TRUE)), 'blogid' => $type, 'blogName' => $user->name .": ". $type);
     }
     return $structs;
   }
@@ -161,7 +161,7 @@ function blogapi_blogger_get_user_info($appkey, $username, $password) {
       'firstname' => $name[0],
       'nickname' => $user->name,
       'email' => $user->mail,
-      'url' => url('blog/' . $user->uid, array('absolute' => TRUE)));
+      'url' => url('blog/'. $user->uid, array('absolute' => TRUE)));
   }
   else {
     return blogapi_error($user);
@@ -582,7 +582,7 @@ function blogapi_init() {
 function blogapi_rsd() {
   global $base_url;
 
-  $xmlrpc = $base_url .'/'. 'xmlrpc.php';
+  $xmlrpc = $base_url .'/xmlrpc.php';
   $base = url('', array('absolute' => TRUE));
   $blogid = 1; # until we figure out how to handle multiple bloggers
 

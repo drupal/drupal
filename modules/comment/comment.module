@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.537 2007/04/09 13:41:10 dries Exp $
+// $Id: comment.module,v 1.538 2007/04/13 08:56:58 dries Exp $
 
 /**
  * @file
@@ -1814,7 +1814,7 @@ function comment_controls_submit($form_id, $form_values) {
 
 function theme_comment($comment, $links = array()) {
   $output  = '<div class="comment'. ($comment->status == COMMENT_NOT_PUBLISHED ? ' comment-unpublished' : '') .'">';
-  $output .= '<div class="subject">'. l($comment->subject, $_GET['q'], array('fragment' => "comment-$comment->cid")) . ' ' . theme('mark', $comment->new) ."</div>\n";
+  $output .= '<div class="subject">'. l($comment->subject, $_GET['q'], array('fragment' => "comment-$comment->cid")) .' '. theme('mark', $comment->new) ."</div>\n";
   $output .= '<div class="credit">'. t('by %a on %b', array('%a' => theme('username', $comment), '%b' => format_date($comment->timestamp))) ."</div>\n";
   $output .= '<div class="body">'. $comment->comment .'</div>';
   $output .= theme('user_signature', $comment->signature);
@@ -1825,7 +1825,7 @@ function theme_comment($comment, $links = array()) {
 
 function theme_comment_folded($comment) {
   $output  = "<div class=\"comment-folded\">\n";
-  $output .= ' <span class="subject">'. l($comment->subject, comment_node_url() .'/'. $comment->cid, array('fragment' => "comment-$comment->cid")) . ' '. theme('mark', $comment->new) .'</span> ';
+  $output .= ' <span class="subject">'. l($comment->subject, comment_node_url() .'/'. $comment->cid, array('fragment' => "comment-$comment->cid")) .' '. theme('mark', $comment->new) .'</span> ';
   $output .= '<span class="credit">'. t('by') .' '. theme('username', $comment) ."</span>\n";
   $output .= "</div>\n";
   return $output;

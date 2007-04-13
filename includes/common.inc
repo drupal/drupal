@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.627 2007/04/06 13:27:20 dries Exp $
+// $Id: common.inc,v 1.628 2007/04/13 08:56:57 dries Exp $
 
 /**
  * @file
@@ -1199,7 +1199,7 @@ function url($path = NULL, $options = array()) {
     $clean_url = (bool)variable_get('clean_url', '0');
   }
 
-  $base = $options['absolute'] ? $base_url . '/' : base_path();
+  $base = $options['absolute'] ? $base_url .'/' : base_path();
 
   // The special path '<front>' links to the default front page.
   if (!empty($path) && $path != '<front>') {

@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.770 2007/04/13 08:42:36 dries Exp $
+// $Id: user.module,v 1.771 2007/04/13 08:56:59 dries Exp $
 
 /**
  * @file
@@ -1267,7 +1267,7 @@ function user_pass_reset($uid, $timestamp, $hashed_pass, $action = NULL) {
 
 function user_pass_reset_url($account) {
   $timestamp = time();
-  return url("user/reset/$account->uid/$timestamp/".user_pass_rehash($account->pass, $timestamp, $account->login), array('absolute' => TRUE));
+  return url("user/reset/$account->uid/$timestamp/". user_pass_rehash($account->pass, $timestamp, $account->login), array('absolute' => TRUE));
 }
 
 function user_pass_rehash($password, $timestamp, $login) {

@@ -1,5 +1,5 @@
 <?php
-// $Id: language.inc,v 1.2 2007/03/28 14:08:21 dries Exp $
+// $Id: language.inc,v 1.3 2007/04/13 08:56:57 dries Exp $
 
 /**
  * @file
@@ -13,13 +13,13 @@ function language_initialize() {
   global $user;
 
   $mode = variable_get('language_negotiation', LANGUAGE_NEGOTIATION_NONE);
-  switch($mode) {
+  switch ($mode) {
     case LANGUAGE_NEGOTIATION_NONE:
       return language_default();
 
     case LANGUAGE_NEGOTIATION_DOMAIN:
       $languages = language_list();
-      foreach($languages as $language) {
+      foreach ($languages as $language) {
         $parts = parse_url($language->domain);
         if ($_SERVER['SERVER_NAME'] == $parts['host']) {
           return $language;
@@ -101,7 +101,7 @@ function language_url_rewrite(&$path, &$options) {
 
     // Language can be passed as an option, or we go for current language.
     $path_language = isset($options['language']) ? $options['language'] : $language;
-    switch(variable_get('language_negotiation', LANGUAGE_NEGOTIATION_NONE)) {
+    switch (variable_get('language_negotiation', LANGUAGE_NEGOTIATION_NONE)) {
 
       case LANGUAGE_NEGOTIATION_NONE:
         break;

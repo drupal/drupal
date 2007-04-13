@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.167 2007/04/06 13:27:21 dries Exp $
+// $Id: filter.module,v 1.168 2007/04/13 08:56:58 dries Exp $
 
 /**
  * @file
@@ -173,7 +173,7 @@ function filter_filter_tips($delta, $format, $long = FALSE) {
                 'a' => array( t('Anchors are used to make links to other pages.'), '<a href="'. $base_url .'">'. variable_get('site_name', 'Drupal') .'</a>'),
                 'br' => array( t('By default line break tags are automatically added, so use this tag to add additional ones. Use of this tag is different because it is not used with an open/close pair like all the others. Use the extra " /" inside the tag to maintain XHTML 1.0 compatibility'), t('Text with <br />line break')),
                 'p' => array( t('By default paragraph tags are automatically added, so use this tag to add additional ones.'), '<p>'. t('Paragraph one.') .'</p> <p>'. t('Paragraph two.') .'</p>'),
-                'strong' => array( t('Strong'), '<strong>'. t('Strong'). '</strong>'),
+                'strong' => array( t('Strong'), '<strong>'. t('Strong') .'</strong>'),
                 'em' => array( t('Emphasized'), '<em>'. t('Emphasized') .'</em>'),
                 'cite' => array( t('Cited'), '<cite>'. t('Cited') .'</cite>'),
                 'code' => array( t('Coded text used to show programming source code'), '<code>'. t('Coded') .'</code>'),
@@ -315,7 +315,7 @@ function filter_admin_overview() {
     $default = ($id == variable_get('filter_default_format', 1));
     $options[$id] = '';
     $form[$format->name]['id'] = array('#value' => $id);
-    $form[$format->name]['roles'] = array('#value' => $default ? t('All roles may use default format') : ($roles ? implode(', ',$roles) : t('No roles may use this format')));
+    $form[$format->name]['roles'] = array('#value' => $default ? t('All roles may use default format') : ($roles ? implode(', ', $roles) : t('No roles may use this format')));
     $form[$format->name]['configure'] = array('#value' => l(t('configure'), 'admin/settings/filters/'. $id));
     $form[$format->name]['delete'] = array('#value' => $default ? '' : l(t('delete'), 'admin/settings/filters/delete/'. $id));
   }
@@ -633,7 +633,7 @@ function filter_formats($index = NULL) {
         $where[] = "roles LIKE '%%,%d,%%'";
         $args[] = $rid;
       }
-      $query .= ' WHERE '. implode(' OR ', $where) . ' OR format = %d';
+      $query .= ' WHERE '. implode(' OR ', $where) .' OR format = %d';
       $args[] = variable_get('filter_default_format', 1);
     }
 
@@ -934,7 +934,7 @@ function theme_filter_tips($tips, $long = FALSE, $extra = '') {
 
       $tips = '';
       foreach ($tiplist as $tip) {
-        $tips .= '<li'. ($long ? ' id="filter-'. str_replace("/", "-", $tip['id']) .'">' : '>') . $tip['tip'] . '</li>';
+        $tips .= '<li'. ($long ? ' id="filter-'. str_replace("/", "-", $tip['id']) .'">' : '>') . $tip['tip'] .'</li>';
       }
 
       if ($tips) {

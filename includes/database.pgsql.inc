@@ -1,5 +1,5 @@
 <?php
-// $Id: database.pgsql.inc,v 1.43 2006/12/27 22:13:56 dries Exp $
+// $Id: database.pgsql.inc,v 1.44 2007/04/13 08:56:57 dries Exp $
 
 /**
  * @file
@@ -65,19 +65,19 @@ function db_connect($url) {
 
   // Decode url-encoded information in the db connection string
   if (isset($url['user'])) {
-    $conn_string .= ' user=' . urldecode($url['user']);
+    $conn_string .= ' user='. urldecode($url['user']);
   }
   if (isset($url['pass'])) {
-    $conn_string .= ' password=' . urldecode($url['pass']);
+    $conn_string .= ' password='. urldecode($url['pass']);
   }
   if (isset($url['host'])) {
-    $conn_string .= ' host=' . urldecode($url['host']);
+    $conn_string .= ' host='. urldecode($url['host']);
   }
   if (isset($url['path'])) {
-    $conn_string .= ' dbname=' . substr(urldecode($url['path']), 1);
+    $conn_string .= ' dbname='. substr(urldecode($url['path']), 1);
   }
   if (isset($url['port'])) {
-    $conn_string .= ' port=' . urldecode($url['port']);
+    $conn_string .= ' port='. urldecode($url['port']);
   }
 
   // pg_last_error() does not return a useful error message for database
@@ -126,7 +126,7 @@ function _db_query($query, $debug = 0) {
 
   if (variable_get('dev_query', 0)) {
     $bt = debug_backtrace();
-    $query = $bt[2]['function'] . "\n" . $query;
+    $query = $bt[2]['function'] ."\n". $query;
     list($usec, $sec) = explode(' ', microtime());
     $stop = (float)$usec + (float)$sec;
     $diff = $stop - $timer;
@@ -391,7 +391,7 @@ function db_unlock_tables() {
  * Check if a table exists.
  */
 function db_table_exists($table) {
-  return db_num_rows(db_query("SELECT relname FROM pg_class WHERE relname = '{" . db_escape_table($table) . "}'"));
+  return db_num_rows(db_query("SELECT relname FROM pg_class WHERE relname = '{". db_escape_table($table) ."}'"));
 }
 
 /**
@@ -421,7 +421,7 @@ function db_distinct_field($table, $field, $query) {
   $field_to_select = 'DISTINCT ON ('. $table .'.'. $field .") $table.$field";
   // (?<!text) is a negative look-behind (no need to rewrite queries that already use DISTINCT).
   $query = preg_replace('/(SELECT.*)(?:'. $table .'\.|\s)(?<!DISTINCT\()(?<!DISTINCT\('. $table .'\.)'. $field .'(.*FROM )/AUsi', '\1 '. $field_to_select .'\2', $query);
-  $query = preg_replace('/(ORDER BY )(?!'.$table.'\.'.$field.')/', '\1'."$table.$field, ", $query);
+  $query = preg_replace('/(ORDER BY )(?!'. $table .'\.'. $field .')/', '\1'."$table.$field, ", $query);
   return $query;
 }
 

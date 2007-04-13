@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.116 2007/04/13 08:03:21 dries Exp $
+// $Id: locale.inc,v 1.117 2007/04/13 08:56:57 dries Exp $
 
 /**
  * @file
@@ -351,7 +351,7 @@ function locale_edit_language_form_submit($form_id, $form_values) {
   $default = language_default();
   if ($default->language == $form_values['langcode']) {
     $properties = array('name', 'native', 'direction', 'enabled', 'plurals', 'formula', 'domain', 'prefix', 'weight');
-    foreach($properties as $keyname) {
+    foreach ($properties as $keyname) {
       $default->$keyname = $form_values[$keyname];
     }
     variable_set('language_default', $default);
@@ -595,7 +595,7 @@ function _locale_string_edit($lid) {
   }
 
   // Handle erroneous lid.
-  if (!isset($orig)){
+  if (!isset($orig)) {
     drupal_set_message(t('String not found.'));
     drupal_goto('admin/build/locale/string/search');
   }
@@ -1409,8 +1409,8 @@ function _locale_export_po($language = NULL) {
           }
         }
         else {
-          print 'msgstr[0] ""'. "\n";
-          print 'msgstr[1] ""'. "\n";
+          print 'msgstr[0] ""'."\n";
+          print 'msgstr[1] ""'."\n";
         }
       }
       else {
@@ -1418,7 +1418,7 @@ function _locale_export_po($language = NULL) {
           print 'msgstr '. _locale_export_print($message['translation']);
         }
         else {
-          print 'msgstr ""'. "\n";
+          print 'msgstr ""'."\n";
         }
       }
       print "\n";
@@ -1479,7 +1479,7 @@ function _locale_export_wrap($str, $len) {
       $nstr = 0;
     }
     elseif (strlen("$cur $word") > $len) {
-      $ret[] = $cur . " ";
+      $ret[] = $cur ." ";
       $cur = $word;
     }
     else {

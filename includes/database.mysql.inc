@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysql.inc,v 1.68 2007/03/19 01:17:37 unconed Exp $
+// $Id: database.mysql.inc,v 1.69 2007/04/13 08:56:57 dries Exp $
 
 /**
  * @file
@@ -72,7 +72,7 @@ function db_connect($url) {
   // Decode url-encoded information in the db connection string
   $url['user'] = urldecode($url['user']);
   // Test if database url has a password.
-  if(isset($url['pass'])) {
+  if (isset($url['pass'])) {
     $url['pass'] = urldecode($url['pass']);
   }
   else {
@@ -154,7 +154,7 @@ function _db_query($query, $debug = 0) {
 
   if (variable_get('dev_query', 0)) {
     $bt = debug_backtrace();
-    $query = $bt[2]['function'] . "\n" . $query;
+    $query = $bt[2]['function'] ."\n". $query;
     list($usec, $sec) = explode(' ', microtime());
     $stop = (float)$usec + (float)$sec;
     $diff = $stop - $timer;
@@ -377,7 +377,7 @@ function db_query_temporary($query) {
  */
 function db_encode_blob($data) {
   global $active_db;
-  return "'" . mysql_real_escape_string($data, $active_db) . "'";
+  return "'". mysql_real_escape_string($data, $active_db) ."'";
 }
 
 /**
@@ -418,7 +418,7 @@ function db_unlock_tables() {
  * Check if a table exists.
  */
 function db_table_exists($table) {
-  return db_num_rows(db_query("SHOW TABLES LIKE '{" . db_escape_table($table) . "}'"));
+  return db_num_rows(db_query("SHOW TABLES LIKE '{". db_escape_table($table) ."}'"));
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.335 2007/04/07 07:38:36 unconed Exp $
+// $Id: aggregator.module,v 1.336 2007/04/13 08:56:57 dries Exp $
 
 /**
  * @file
@@ -1048,7 +1048,7 @@ function aggregator_admin_overview() {
  * Menu callback; displays the most recent items gathered from any feed.
  */
 function aggregator_page_last() {
-  drupal_add_feed(url('aggregator/rss'), variable_get('site_name', 'Drupal') . ' ' . t('aggregator'));
+  drupal_add_feed(url('aggregator/rss'), variable_get('site_name', 'Drupal') .' '. t('aggregator'));
 
   return _aggregator_page_list('SELECT i.*, f.title AS ftitle, f.link AS flink FROM {aggregator_item} i INNER JOIN {aggregator_feed} f ON i.fid = f.fid ORDER BY i.timestamp DESC, i.iid DESC', arg(1));
 }
@@ -1070,7 +1070,7 @@ function aggregator_page_source() {
 function aggregator_page_category() {
   $category = db_fetch_object(db_query('SELECT cid, title FROM {aggregator_category} WHERE cid = %d', arg(2)));
 
-  drupal_add_feed(url('aggregator/rss/'. arg(2)), variable_get('site_name', 'Drupal') . ' ' . t('aggregator - @title', array('@title' => $category->title)));
+  drupal_add_feed(url('aggregator/rss/'. arg(2)), variable_get('site_name', 'Drupal') .' '. t('aggregator - @title', array('@title' => $category->title)));
 
   return _aggregator_page_list('SELECT i.*, f.title AS ftitle, f.link AS flink FROM {aggregator_category_item} c LEFT JOIN {aggregator_item} i ON c.iid = i.iid LEFT JOIN {aggregator_feed} f ON i.fid = f.fid WHERE cid = '. $category->cid .' ORDER BY timestamp DESC, iid DESC', arg(3));
 }
@@ -1213,8 +1213,8 @@ function aggregator_page_rss() {
   $result = NULL;
   if (arg(2)) {
     $category = db_fetch_object(db_query('SELECT cid, title FROM {aggregator_category} WHERE cid = %d', arg(2)));
-    $url = '/categories/' . $category->cid;
-    $title = ' ' . t('in category') . ' ' . $category->title;
+    $url = '/categories/'. $category->cid;
+    $title = ' '. t('in category') .' '. $category->title;
     $sql = 'SELECT i.*, f.title AS ftitle, f.link AS flink FROM {aggregator_category_item} c LEFT JOIN {aggregator_item} i ON c.iid = i.iid LEFT JOIN {aggregator_feed} f ON i.fid = f.fid WHERE cid = %d ORDER BY timestamp DESC, iid DESC';
     $result = db_query_range($sql, $category->cid, 0, variable_get('feed_default_items', 10));
   }
@@ -1237,7 +1237,7 @@ function aggregator_page_rss() {
         $item->description = '';
         break;
     }
-    $items .= format_rss_item($item->ftitle . ': ' . $item->title, $item->link, $item->description, array('pubDate' => date('r', $item->timestamp)));
+    $items .= format_rss_item($item->ftitle .': '. $item->title, $item->link, $item->description, array('pubDate' => date('r', $item->timestamp)));
   }
 
   $output .= "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
@@ -1421,7 +1421,7 @@ function theme_aggregator_page_item($item) {
  * Safely render HTML content, as allowed.
  */
 function aggregator_filter_xss($value) {
-  return filter_xss($value, preg_split('/\s+|<|>/', variable_get("aggregator_allowed_html_tags", '<a> <b> <br> <dd> <dl> <dt> <em> <i> <li> <ol> <p> <strong> <u> <ul>'), -1, PREG_SPLIT_NO_EMPTY));
+  return filter_xss($value, preg_split('/\s+|<|>/', variable_get('aggregator_allowed_html_tags', '<a> <b> <br> <dd> <dl> <dt> <em> <i> <li> <ol> <p> <strong> <u> <ul>'), -1, PREG_SPLIT_NO_EMPTY));
 }
 
 /**

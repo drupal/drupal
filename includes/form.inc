@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.187 2007/04/09 13:58:02 dries Exp $
+// $Id: form.inc,v 1.188 2007/04/13 08:56:57 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -728,7 +728,7 @@ function form_builder($form_id, $form) {
         }
       }
       if (!isset($form['#value'])) {
-        $function = $form['#type'] . '_value';
+        $function = $form['#type'] .'_value';
         if (function_exists($function)) {
           $function($form);
         }
@@ -928,7 +928,7 @@ function form_options_flatten($array, $reset = TRUE) {
  */
 function theme_select($element) {
   $select = '';
-  $size = $element['#size'] ? ' size="' . $element['#size'] . '"' : '';
+  $size = $element['#size'] ? ' size="'. $element['#size'] .'"' : '';
   _form_set_class($element, array('form-select'));
   $multiple = $element['#multiple'];
   return theme('form_element', $element, '<select name="'. $element['#name'] .''. ($multiple ? '[]' : '') .'"'. ($multiple ? ' multiple="multiple" ' : '') . drupal_attributes($element['#attributes']) .' id="'. $element['#id'] .'" '. $size .'>'. form_select_options($element) .'</select>');
@@ -1039,7 +1039,7 @@ function theme_fieldset($element) {
     }
   }
 
-  return '<fieldset' . drupal_attributes($element['#attributes']) .'>' . ($element['#title'] ? '<legend>'. $element['#title'] .'</legend>' : '') . (isset($element['#description']) && $element['#description'] ? '<div class="description">'. $element['#description'] .'</div>' : '') . (!empty($element['#children']) ? $element['#children'] : '') . $element['#value'] . "</fieldset>\n";
+  return '<fieldset'. drupal_attributes($element['#attributes']) .'>'. ($element['#title'] ? '<legend>'. $element['#title'] .'</legend>' : '') . (isset($element['#description']) && $element['#description'] ? '<div class="description">'. $element['#description'] .'</div>' : '') . (!empty($element['#children']) ? $element['#children'] : '') . $element['#value'] ."</fieldset>\n";
 }
 
 /**
@@ -1054,7 +1054,7 @@ function theme_fieldset($element) {
 function theme_radio($element) {
   _form_set_class($element, array('form-radio'));
   $output = '<input type="radio" ';
-  $output .= 'name="' . $element['#name'] .'" ';
+  $output .= 'name="'. $element['#name'] .'" ';
   $output .= 'value="'. $element['#return_value'] .'" ';
   $output .= ($element['#value'] == $element['#return_value']) ? ' checked="checked" ' : ' ';
   $output .= drupal_attributes($element['#attributes']) .' />';
@@ -1306,10 +1306,10 @@ function theme_checkbox($element) {
   $checkbox = '<input ';
   $checkbox .= 'type="checkbox" ';
   $checkbox .= 'name="'. $element['#name'] .'" ';
-  $checkbox .= 'id="'. $element['#id'].'" ' ;
+  $checkbox .= 'id="'. $element['#id'] .'" ' ;
   $checkbox .= 'value="'. $element['#return_value'] .'" ';
   $checkbox .= $element['#value'] ? ' checked="checked" ' : ' ';
-  $checkbox .= drupal_attributes($element['#attributes']) . ' />';
+  $checkbox .= drupal_attributes($element['#attributes']) .' />';
 
   if (!is_null($element['#title'])) {
     $checkbox = '<label class="option">'. $checkbox .' '. $element['#title'] .'</label>';
@@ -1371,7 +1371,7 @@ function theme_button($element) {
     $element['#attributes']['class'] = 'form-'. $element['#button_type'];
   }
 
-  return '<input type="submit" '. (empty($element['#name']) ? '' : 'name="'. $element['#name'] .'" ')  .'id="'. $element['#id'].'" value="'. check_plain($element['#value']) .'" '. drupal_attributes($element['#attributes']) ." />\n";
+  return '<input type="submit" '. (empty($element['#name']) ? '' : 'name="'. $element['#name'] .'" ') .'id="'. $element['#id'] .'" value="'. check_plain($element['#value']) .'" '. drupal_attributes($element['#attributes']) ." />\n";
 }
 
 /**
@@ -1384,7 +1384,7 @@ function theme_button($element) {
  *   A themed HTML string representing the hidden form field.
  */
 function theme_hidden($element) {
-  return '<input type="hidden" name="'. $element['#name'] . '" id="'. $element['#id'] . '" value="'. check_plain($element['#value']) ."\" " . drupal_attributes($element['#attributes']) ." />\n";
+  return '<input type="hidden" name="'. $element['#name'] .'" id="'. $element['#id'] .'" value="'. check_plain($element['#value']) ."\" ". drupal_attributes($element['#attributes']) ." />\n";
 }
 
 function theme_token($element) {
@@ -1401,7 +1401,7 @@ function theme_token($element) {
  *   A themed HTML string representing the textfield.
  */
 function theme_textfield($element) {
-  $size = $element['#size'] ? ' size="' . $element['#size'] . '"' : '';
+  $size = $element['#size'] ? ' size="'. $element['#size'] .'"' : '';
   $class = array('form-text');
   $extra = '';
   $output = '';
@@ -1423,7 +1423,7 @@ function theme_textfield($element) {
     $output .= ' <span class="field-suffix">'. $element['#field_suffix'] .'</span>';
   }
 
-  return theme('form_element', $element, $output). $extra;
+  return theme('form_element', $element, $output) . $extra;
 }
 
 /**
@@ -1437,8 +1437,8 @@ function theme_textfield($element) {
  */
 function theme_form($element) {
   // Anonymous div to satisfy XHTML compliance.
-  $action = $element['#action'] ? 'action="' . check_url($element['#action']) . '" ' : '';
-  return '<form '. $action . ' method="'. $element['#method'] .'" '. 'id="'. $element['#id'] .'"'. drupal_attributes($element['#attributes']) .">\n<div>". $element['#children'] ."\n</div></form>\n";
+  $action = $element['#action'] ? 'action="'. check_url($element['#action']) .'" ' : '';
+  return '<form '. $action .' method="'. $element['#method'] .'" id="'. $element['#id'] .'"'. drupal_attributes($element['#attributes']) .">\n<div>". $element['#children'] ."\n</div></form>\n";
 }
 
 /**
@@ -1600,7 +1600,7 @@ function _form_set_class(&$element, $class = array()) {
   if ($element['#required']) {
     $class[] = 'required';
   }
-  if (form_get_error($element)){
+  if (form_get_error($element)) {
     $class[] = 'error';
   }
   if (isset($element['#attributes']['class'])) {

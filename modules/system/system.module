@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.466 2007/04/13 08:50:36 dries Exp $
+// $Id: system.module,v 1.467 2007/04/13 08:56:59 dries Exp $
 
 /**
  * @file
@@ -355,7 +355,7 @@ function system_user($type, $edit, &$user, $category = NULL) {
     if (variable_get('configurable_timezones', 1)) {
       $zones = _system_zonelist();
       $form['timezone'] = array(
-        '#type'=>'fieldset',
+        '#type' => 'fieldset',
         '#title' => t('Locale settings'),
         '#weight' => 6,
         '#collapsible' => TRUE,

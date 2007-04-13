@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.392 2007/04/09 13:58:02 dries Exp $
+// $Id: forum.module,v 1.393 2007/04/13 08:56:58 dries Exp $
 
 /**
  * @file
@@ -217,7 +217,7 @@ function forum_admin_settings() {
     '#options' => $number,
     '#description' => t('The default number of topics displayed per page; links to browse older messages are automatically being displayed.'),
   );
-  $forder = array(1 => t('Date - newest first'), 2 => t('Date - oldest first'), 3 => t('Posts - most active first'), 4=> t('Posts - least active first'));
+  $forder = array(1 => t('Date - newest first'), 2 => t('Date - oldest first'), 3 => t('Posts - most active first'), 4 => t('Posts - least active first'));
   $form['forum_order'] = array('#type' => 'radios',
     '#title' => t('Default order'),
     '#default_value' => variable_get('forum_order', '1'),
@@ -365,7 +365,7 @@ function forum_submit(&$node) {
         $node->tid = $term;
       }
     }
-    $old_tid = db_result(db_query_range("SELECT tid FROM {forum} WHERE nid = %d ORDER BY vid DESC", $node->nid, 0,1));
+    $old_tid = db_result(db_query_range("SELECT tid FROM {forum} WHERE nid = %d ORDER BY vid DESC", $node->nid, 0, 1));
     if ($old_tid) {
       if (($node->tid != $old_tid) && $node->shadow) {
         // A shadow copy needs to be created. Retain new term and add old term.
@@ -639,7 +639,7 @@ function forum_overview() {
     }
   }
   else {
-    $rows[] = array(array('data' => '<em>' . t('There are no existing containers or forums. You may add some on the <a href="@container">add container</a> or <a href="@forum">add forum</a> pages.', array('@container' => url('admin/content/forum/add/container'), '@forum' => url('admin/content/forum/add/forum'))) . '</em>', 'colspan' => 2));
+    $rows[] = array(array('data' => '<em>'. t('There are no existing containers or forums. You may add some on the <a href="@container">add container</a> or <a href="@forum">add forum</a> pages.', array('@container' => url('admin/content/forum/add/container'), '@forum' => url('admin/content/forum/add/forum'))) .'</em>', 'colspan' => 2));
   }
   return theme('table', $header, $rows);
 }

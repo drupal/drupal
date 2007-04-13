@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.95 2007/03/27 05:13:53 unconed Exp $
+// $Id: file.inc,v 1.96 2007/04/13 08:56:57 dries Exp $
 
 /**
  * @file
@@ -28,7 +28,7 @@ define('FILE_EXISTS_ERROR', 2);
  */
 function file_create_url($path) {
   // Strip file_directory_path from $path. We only include relative paths in urls.
-  if (strpos($path, file_directory_path() . '/') === 0) {
+  if (strpos($path, file_directory_path() .'/') === 0) {
     $path = trim(substr($path, strlen(file_directory_path())), '\\/');
   }
   switch (variable_get('file_downloads', FILE_DOWNLOADS_PUBLIC)) {
@@ -63,8 +63,8 @@ function file_create_path($dest = 0) {
     return $dest;
   }
   // Not found, try again with prefixed directory path.
-  else if (file_check_location($file_path . '/' . $dest, $file_path)) {
-    return $file_path . '/' . $dest;
+  else if (file_check_location($file_path .'/'. $dest, $file_path)) {
+    return $file_path .'/'. $dest;
   }
   // File not found.
   return FALSE;
@@ -215,7 +215,7 @@ function file_check_upload($source = 'upload') {
 
       // Unknown error
       default:
-        drupal_set_message(t('The file %file could not be saved. An unknown error has occurred.', array('%file' => $source)),'error');
+        drupal_set_message(t('The file %file could not be saved. An unknown error has occurred.', array('%file' => $source)), 'error');
         return 0;
     }
 
@@ -699,7 +699,7 @@ function file_directory_temp() {
     }
 
     // if a directory has been found, use it, otherwise default to 'files/tmp' or 'files\\tmp';
-    $temporary_directory = $temporary_directory ? $temporary_directory : file_directory_path() . $path_delimiter . 'tmp';
+    $temporary_directory = $temporary_directory ? $temporary_directory : file_directory_path() . $path_delimiter .'tmp';
     variable_set('file_directory_temp', $temporary_directory);
   }
 

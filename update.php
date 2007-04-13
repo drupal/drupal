@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.215 2007/04/02 15:15:50 dries Exp $
+// $Id: update.php,v 1.216 2007/04/13 08:56:57 dries Exp $
 
 /**
  * @file
@@ -358,7 +358,7 @@ function update_script_selection_form() {
 
       $form['start'][$module] = array(
         '#type' => 'select',
-        '#title' => $module . ' module',
+        '#title' => $module .' module',
         '#default_value' => $default,
         '#options' => $updates,
       );

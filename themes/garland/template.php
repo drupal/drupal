@@ -1,5 +1,5 @@
 <?php
-// $Id: template.php,v 1.8 2007/04/13 07:33:24 dries Exp $
+// $Id: template.php,v 1.9 2007/04/13 08:56:59 dries Exp $
 
 /**
  * Sets the body-tag class attribute.
@@ -45,7 +45,7 @@ function phptemplate_comment_wrapper($content, $type = null) {
   if (isset($type)) $node_type = $type;
 
   if (!$content || $node_type == 'forum') {
-    return '<div id="comments">'. $content . '</div>';
+    return '<div id="comments">'. $content .'</div>';
   }
   else {
     return '<div id="comments"><h2 class="comments">'. t('Comments') .'</h2>'. $content .'</div>';

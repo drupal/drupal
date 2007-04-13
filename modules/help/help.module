@@ -1,5 +1,5 @@
 <?php
-// $Id: help.module,v 1.70 2007/01/24 14:48:36 dries Exp $
+// $Id: help.module,v 1.71 2007/04/13 08:56:58 dries Exp $
 
 /**
  * @file
@@ -111,7 +111,7 @@ function help_page() {
   $name = arg(2);
   $output = '';
   if (module_hook($name, 'help')) {
-    $module = _module_parse_info_file(drupal_get_path('module', $name).'/'. $name .'.info');
+    $module = _module_parse_info_file(drupal_get_path('module', $name) .'/'. $name .'.info');
     drupal_set_title($module['name']);
 
     $temp = module_invoke($name, 'help', "admin/help#$name");

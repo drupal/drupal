@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.347 2007/04/09 13:43:57 dries Exp $
+// $Id: theme.inc,v 1.348 2007/04/13 08:56:57 dries Exp $
 
 /**
  * @file
@@ -71,12 +71,12 @@ function init_theme() {
 
   if (strpos($themes[$theme]->filename, '.theme')) {
    // file is a theme; include it
-   include_once './' . $themes[$theme]->filename;
+   include_once './'. $themes[$theme]->filename;
    _theme_load_registry($theme);
   }
   elseif (strpos($themes[$theme]->description, '.engine')) {
     // file is a template; include its engine
-    include_once './' . $themes[$theme]->description;
+    include_once './'. $themes[$theme]->description;
     $theme_engine = basename($themes[$theme]->description, '.engine');
     if (function_exists($theme_engine .'_init')) {
       call_user_func($theme_engine .'_init', $themes[$theme]);
@@ -483,7 +483,7 @@ function theme_get_settings($key = NULL) {
 
   if (module_exists('node')) {
     foreach (node_get_types() as $type => $name) {
-      $defaults['toggle_node_info_' . $type] = 1;
+      $defaults['toggle_node_info_'. $type] = 1;
     }
   }
   $settings = array_merge($defaults, variable_get('theme_settings', array()));
@@ -549,7 +549,7 @@ function theme_get_setting($setting_name, $refresh = FALSE) {
           $settings['favicon'] = base_path() . $favicon;
         }
         else {
-          $settings['favicon'] = base_path() . 'misc/favicon.ico';
+          $settings['favicon'] = base_path() .'misc/favicon.ico';
         }
       }
       elseif ($settings['favicon_path']) {
@@ -680,7 +680,7 @@ function theme_page($content) {
   $output .= '</td><td style="vertical-align: top;">';
 
   $output .= theme('breadcrumb', drupal_get_breadcrumb());
-  $output .= '<h1>' . drupal_get_title() . '</h1>';
+  $output .= '<h1>'. drupal_get_title() .'</h1>';
 
   if ($tabs = theme('menu_local_tasks')) {
    $output .= $tabs;
@@ -864,7 +864,7 @@ function theme_links($links, $attributes = array('class' => 'links')) {
 
       // Automatically add a class to each link and also to each LI
       if (isset($link['attributes']) && isset($link['attributes']['class'])) {
-        $link['attributes']['class'] .= ' ' . $key;
+        $link['attributes']['class'] .= ' '. $key;
         $class = $key;
       }
       else {
@@ -1155,7 +1155,7 @@ function theme_table_select_header_cell() {
  *   A themed sort icon.
  */
 function theme_tablesort_indicator($style) {
-  if ($style == "asc"){
+  if ($style == "asc") {
     return theme('image', 'misc/arrow-asc.png', t('sort icon'), t('sort ascending'));
   }
   else {
@@ -1250,7 +1250,7 @@ function theme_item_list($items = array(), $title = NULL, $type = 'ul', $attribu
   }
 
   if (!empty($items)) {
-    $output .= "<$type" . drupal_attributes($attributes) . '>';
+    $output .= "<$type". drupal_attributes($attributes) .'>';
     foreach ($items as $item) {
       $attributes = array();
       $children = array();
@@ -1273,7 +1273,7 @@ function theme_item_list($items = array(), $title = NULL, $type = 'ul', $attribu
       if (count($children) > 0) {
         $data .= theme_item_list($children, NULL, $type, $attributes); // Render nested list
       }
-      $output .= '<li' . drupal_attributes($attributes) . '>'. $data .'</li>';
+      $output .= '<li'. drupal_attributes($attributes) .'>'. $data .'</li>';
     }
     $output .= "</$type>";
   }
@@ -1285,7 +1285,7 @@ function theme_item_list($items = array(), $title = NULL, $type = 'ul', $attribu
  * Returns code that emits the 'more help'-link.
  */
 function theme_more_help_link($url) {
-  return '<div class="more-help-link">' . t('[<a href="@link">more help...</a>]', array('@link' => check_url($url))) . '</div>';
+  return '<div class="more-help-link">'. t('[<a href="@link">more help...</a>]', array('@link' => check_url($url))) .'</div>';
 }
 
 /**
@@ -1293,7 +1293,7 @@ function theme_more_help_link($url) {
  */
 function theme_xml_icon($url) {
   if ($image = theme('image', 'misc/xml.png', t('XML feed'), t('XML feed'))) {
-    return '<a href="'. check_url($url) .'" class="xml-icon">'. $image. '</a>';
+    return '<a href="'. check_url($url) .'" class="xml-icon">'. $image .'</a>';
   }
 }
 
@@ -1302,7 +1302,7 @@ function theme_xml_icon($url) {
  */
 function theme_feed_icon($url) {
   if ($image = theme('image', 'misc/feed.png', t('Syndicate content'), t('Syndicate content'))) {
-    return '<a href="'. check_url($url) .'" class="feed-icon">'. $image. '</a>';
+    return '<a href="'. check_url($url) .'" class="feed-icon">'. $image .'</a>';
   }
 }
 

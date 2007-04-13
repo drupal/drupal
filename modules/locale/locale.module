@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.164 2007/04/09 14:46:55 dries Exp $
+// $Id: locale.module,v 1.165 2007/04/13 08:56:58 dries Exp $
 
 /**
  * @file
@@ -155,7 +155,7 @@ function locale_user($type, $edit, &$user, $category = NULL) {
       $user->language = $default->language;
     }
     $names = array();
-    foreach($languages as $langcode => $language) {
+    foreach ($languages as $langcode => $language) {
       $names[$langcode] = t($language->name) .' ('. $language->native .')';
     }
     $form['locale'] = array('#type' => 'fieldset',
@@ -246,7 +246,7 @@ function locale($string) {
         }
       }
       // Clear locale cache in DB
-      cache_clear_all('locale:' . $language->language, 'cache');
+      cache_clear_all('locale:'. $language->language, 'cache');
     }
   }
 
@@ -268,7 +268,7 @@ function locale_refresh_cache() {
     while ($data = db_fetch_object($result)) {
       $t[$data->source] = (empty($data->translation) ? TRUE : $data->translation);
     }
-    cache_set('locale:' . $language->language, 'cache', serialize($t));
+    cache_set('locale:'. $language->language, 'cache', serialize($t));
   }
 }
 
@@ -328,7 +328,7 @@ function locale_language_list($field = 'name', $all = FALSE) {
     $languages = $languages[1];
   }
   $list = array();
-  foreach($languages as $language) {
+  foreach ($languages as $language) {
     $list[$language->language] = ($field == 'name') ? t($language->name) : $language->$field;
   }
   return $list;

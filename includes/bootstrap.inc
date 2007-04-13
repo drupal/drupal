@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.154 2007/04/10 10:10:27 dries Exp $
+// $Id: bootstrap.inc,v 1.155 2007/04/13 08:56:57 dries Exp $
 
 /**
  * @file
@@ -267,7 +267,7 @@ function conf_init() {
     if (!isset($parts['path'])) {
       $parts['path'] = '';
     }
-    $base_path = $parts['path'] . '/';
+    $base_path = $parts['path'] .'/';
     // Build $base_root (everything until first slash after "scheme://").
     $base_root = substr($base_url, 0, strlen($base_url) - strlen($parts['path']));
   }
@@ -513,7 +513,7 @@ function drupal_load($type, $name) {
  */
 function drupal_page_header() {
   header("Expires: Sun, 19 Nov 1978 05:00:00 GMT");
-  header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+  header("Last-Modified: ". gmdate("D, d M Y H:i:s") ." GMT");
   header("Cache-Control: store, no-cache, must-revalidate");
   header("Cache-Control: post-check=0, pre-check=0", FALSE);
 }
@@ -530,7 +530,7 @@ function drupal_page_header() {
 function drupal_page_cache_header($cache) {
   // Set default values:
   $last_modified = gmdate('D, d M Y H:i:s', $cache->created) .' GMT';
-  $etag = '"'.md5($last_modified).'"';
+  $etag = '"'. md5($last_modified) .'"';
 
   // See if the client has provided the required HTTP headers:
   $if_modified_since = isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? stripslashes($_SERVER['HTTP_IF_MODIFIED_SINCE']) : FALSE;
@@ -840,7 +840,7 @@ function _drupal_bootstrap($phase) {
       // Deny access to hosts which were banned - t() is not yet available.
       if (drupal_is_denied('host', $_SERVER['REMOTE_ADDR'])) {
         header('HTTP/1.1 403 Forbidden');
-        print 'Sorry, '. $_SERVER['REMOTE_ADDR']. ' has been banned.';
+        print 'Sorry, '. $_SERVER['REMOTE_ADDR'] .' has been banned.';
         exit();
       }
       break;
@@ -933,7 +933,7 @@ function drupal_maintenance_theme() {
   $themes = drupal_common_themes();
   foreach ($themes as $hook => $info) {
     if (!isset($info['file']) && !isset($info['function'])) {
-      $themes[$hook]['function'] = 'theme_' . $hook;
+      $themes[$hook]['function'] = 'theme_'. $hook;
     }
   }
   _theme_set_registry($themes);
@@ -993,7 +993,7 @@ function language_list($field = 'language', $reset = FALSE) {
   // Return the array indexed by the right field
   if (!isset($languages[$field])) {
     $languages[$field] = array();
-    foreach($languages['language'] as $lang) {
+    foreach ($languages['language'] as $lang) {
       // Some values should be collected into an array
       if (in_array($field, array('enabled', 'weight'))) {
         $languages[$field][$lang->$field][$lang->language] = $lang;

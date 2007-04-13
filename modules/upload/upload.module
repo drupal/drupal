@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.157 2007/04/06 13:27:23 dries Exp $
+// $Id: upload.module,v 1.158 2007/04/13 08:56:59 dries Exp $
 
 /**
  * @file
@@ -108,7 +108,7 @@ function upload_init() {
         if (strpos($filename, file_directory_path()) !== FALSE) {
           $filename = trim(substr($filename, strlen(file_directory_path())), '\\/');
         }
-        $filename = 'system/files/' . $filename;
+        $filename = 'system/files/'. $filename;
       }
       $_SESSION['file_previews'][$fid]->_filename = $filename;
       menu_set_item($filename, $item);
@@ -129,7 +129,7 @@ function upload_admin_settings_validate($form_id, $form_values) {
   $default_uploadsize = $form_values['upload_uploadsize_default'];
   $default_usersize = $form_values['upload_usersize_default'];
 
-  $exceed_max_msg = t('Your PHP settings limit the maximum file size per upload to %size MB.', array('%size' => file_upload_max_size())).'<br/>';
+  $exceed_max_msg = t('Your PHP settings limit the maximum file size per upload to %size MB.', array('%size' => file_upload_max_size())) .'<br/>';
   $more_info = t("Depending on your sever environment, these settings may be changed in the system-wide php.ini file, a php.ini file in your Drupal root directory, in your Drupal site's settings.php file, or in the .htaccess file in your Drupal root directory.");
 
   if (!is_numeric($default_uploadsize) || ($default_uploadsize <= 0)) {
@@ -222,7 +222,7 @@ function upload_admin_settings() {
     '#field_suffix' => t('MB')
   );
 
-  $form['settings_general']['upload_max_size'] = array('#value' => '<p>'. t('Your PHP settings limit the maximum file size per upload to %size.', array('%size' => format_size(file_upload_max_size()))).'</p>');
+  $form['settings_general']['upload_max_size'] = array('#value' => '<p>'. t('Your PHP settings limit the maximum file size per upload to %size.', array('%size' => format_size(file_upload_max_size()))) .'</p>');
 
   $roles = user_roles(0, 'upload files');
   $form['roles'] = array('#type' => 'value', '#value' => $roles);
@@ -301,7 +301,7 @@ function _upload_prepare(&$node) {
 
   // Clean up old file previews if a post didn't get the user to this page.
   // i.e. the user left the edit page, because they didn't want to upload anything.
-  if(count($_POST) == 0) {
+  if (count($_POST) == 0) {
     if (!empty($_SESSION['file_previews']) && is_array($_SESSION['file_previews'])) {
       foreach ($_SESSION['file_previews'] as $fid => $file) {
         file_delete($file->filepath);
@@ -329,7 +329,7 @@ function _upload_prepare(&$node) {
     $key = 'upload_'. (isset($_SESSION['file_previews']) ? 0 : count($_SESSION['file_previews']));
     $file->fid = $key;
     $file->source = $key;
-    $file->list = variable_get('upload_list_default',1);
+    $file->list = variable_get('upload_list_default', 1);
     $_SESSION['file_previews'][$key] = $file;
 
     // Store the uploaded fid for this page request in case of submit without
@@ -796,7 +796,7 @@ function _upload_form($node) {
       // if the file was uploaded this page request, set value. this fixes the problem
       // formapi has recognizing new checkboxes. see comments in _upload_prepare.
       if (isset($_SESSION['file_current_upload']) && $_SESSION['file_current_upload'] == $file->fid) {
-        $form['files'][$key]['list']['#value'] = variable_get('upload_list_default',1);
+        $form['files'][$key]['list']['#value'] = variable_get('upload_list_default', 1);
       }
       $form['files'][$key]['filename'] = array('#type' => 'value',  '#value' => $file->filename);
       $form['files'][$key]['filepath'] = array('#type' => 'value',  '#value' => $file->filepath);
