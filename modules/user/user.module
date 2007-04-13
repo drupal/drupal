@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.769 2007/04/13 08:26:34 dries Exp $
+// $Id: user.module,v 1.770 2007/04/13 08:42:36 dries Exp $
 
 /**
  * @file
@@ -1156,32 +1156,31 @@ function user_logout() {
 }
 
 function user_pass() {
-
-  // Display form:
-  $form['name'] = array('#type' => 'textfield',
+  $form['name'] = array(
+    '#type' => 'textfield',
     '#title' => t('Username or e-mail address'),
     '#size' => 60,
     '#maxlength' => max(USERNAME_MAX_LENGTH, EMAIL_MAX_LENGTH),
     '#required' => TRUE,
   );
-  $form['submit'] = array('#type' => 'submit',
-    '#value' => t('E-mail new password'),
-    '#weight' => 2,
-  );
+  $form['submit'] = array('#type' => 'submit', '#value' => t('E-mail new password'));
+
   return $form;
 }
 
 function user_pass_validate($form_id, $form_values) {
-  $name = $form_values['name'];
-  $account = user_load(array('mail' => $name, 'status' => 1));
-  if (!$account) {
+  $name = trim($form_values['name']);
+  if (valid_email_address($name)) {
+    $account = user_load(array('mail' => $name, 'status' => 1));
+  }
+  else {
     $account = user_load(array('name' => $name, 'status' => 1));
   }
-  if ($account->uid) {
+  if (isset($account->uid)) {
     form_set_value(array('#parents' => array('account')), $account);
   }
   else {
-    form_set_error('name', t('Sorry, %name is not recognized as a user name or an email address.', array('%name' => $name)));
+    form_set_error('name', t('Sorry, %name is not recognized as a user name or an e-mail address.', array('%name' => $name)));
   }
 }
 
