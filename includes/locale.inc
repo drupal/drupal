@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.115 2007/04/09 14:46:55 dries Exp $
+// $Id: locale.inc,v 1.116 2007/04/13 08:03:21 dries Exp $
 
 /**
  * @file
@@ -945,7 +945,7 @@ function _locale_import_one_string($op, $value = NULL, $mode = NULL, $lang = NUL
               // update location field
               db_query("UPDATE {locales_source} SET location = '%s' WHERE lid = %d", $comments, $lid);
               $trans2 = db_fetch_object(db_query("SELECT lid, translation, plid, plural FROM {locales_target} WHERE lid = %d AND language = '%s'", $lid, $lang));
-              if (!$trans2->lid) { // no translation in current language
+              if (!isset($trans2->lid)) { // no translation in current language
                 db_query("INSERT INTO {locales_target} (lid, language, translation, plid, plural) VALUES (%d, '%s', '%s', %d, %d)", $lid, $lang, $trans, $plid, $key);
                 $additions++;
               } // translation exists
@@ -982,7 +982,7 @@ function _locale_import_one_string($op, $value = NULL, $mode = NULL, $lang = NUL
             // update location field
             db_query("UPDATE {locales_source} SET location = '%s' WHERE source = '%s'", $comments, $english);
             $trans = db_fetch_object(db_query("SELECT lid, translation FROM {locales_target} WHERE lid = %d AND language = '%s'", $lid, $lang));
-            if (!$trans->lid) { // no translation in current language
+            if (!isset($trans->lid)) { // no translation in current language
               db_query("INSERT INTO {locales_target} (lid, language, translation) VALUES (%d, '%s', '%s')", $lid, $lang, $translation);
               $additions++;
             } // translation exists
