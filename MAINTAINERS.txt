@@ -1,4 +1,4 @@
-// $Id: MAINTAINERS.txt,v 1.14 2006/12/11 17:09:29 dries Exp $
+// $Id: MAINTAINERS.txt,v 1.15 2007/04/13 08:23:14 dries Exp $
 
 List of maintainers
 --------------------------------------------------------------------------------
@@ -42,8 +42,12 @@ LOCALE MODULE
 M: Gabor Hojtsy <goba@php.net>
 S: maintained
 
+LOGGING
+M: Khalid Baheyeldin <drupal@2bits.com>
+S: maintained
+
 MENU SYSTEM
-M: Richard Archer <drupal@juggernaut.com.au>
+M: Károly Négyesi <chx@mail.tvnet.hu>
 S: maintained
 
 PATH MODULE
