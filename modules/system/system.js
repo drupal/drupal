@@ -1,3 +1,5 @@
+// $Id: system.js,v 1.2 2007/04/13 07:33:23 dries Exp $
+
 /**
  * Internal function to check using Ajax if clean URLs can be enabled on the
  * settings page.

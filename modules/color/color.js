@@ -1,3 +1,5 @@
+// $Id: color.js,v 1.2 2007/04/13 07:33:23 dries Exp $
+
 if (Drupal.jsEnabled) {
   $(document).ready(function () {
     var form = $('#color_scheme_form .color-form');
