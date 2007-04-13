@@ -1,5 +1,5 @@
 <?php
-// $Id: chameleon.theme,v 1.60 2007/04/06 13:27:23 dries Exp $
+// $Id: chameleon.theme,v 1.61 2007/04/13 08:30:52 dries Exp $
 
 /**
  * @file
@@ -138,7 +138,7 @@ function chameleon_page($content, $show_blocks = TRUE) {
 
 function chameleon_node($node, $teaser = 0, $page = 0) {
 
-  $output  = "<div class=\"node". ((!$node->status) ? ' node-unpublished' : '') ."\">\n";
+  $output  = "<div class=\"node". ((!$node->status) ? ' node-unpublished' : '') . (($node->sticky) ? ' sticky' : '') ."\">\n";
 
   if (!$page) {
     $output .= " <h2 class=\"title\">". ($teaser ? l($node->title, "node/$node->nid") : check_plain($node->title)) ."</h2>\n";
