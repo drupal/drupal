@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.465 2007/04/13 08:27:18 dries Exp $
+// $Id: system.module,v 1.466 2007/04/13 08:50:36 dries Exp $
 
 /**
  * @file
@@ -2098,8 +2098,11 @@ function system_theme_settings($key = '') {
 
   // Icon settings
   if ((!$key) || in_array('toggle_favicon', $features)) {
-    $form['favicon'] = array('#type' => 'fieldset', '#title' => t('Shortcut icon settings'));
-    $form['favicon']['text'] = array('#value' => t('Your shortcut icon or \'favicon\' is displayed in the address bar and bookmarks of most browsers.'));
+    $form['favicon'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Shortcut icon settings'),
+      '#description' => t("Your shortcut icon or 'favicon' is displayed in the address bar and bookmarks of most browsers.")
+    );
     $form['favicon']['default_favicon'] = array(
       '#type' => 'checkbox',
       '#title' => t('Use the default shortcut icon.'),
