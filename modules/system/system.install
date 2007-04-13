@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.89 2007/04/10 10:10:27 dries Exp $
+// $Id: system.install,v 1.90 2007/04/13 08:53:24 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -3542,16 +3542,15 @@ function system_update_1022() {
  */
 
 /**
- * @defgroup updates-5.0-to-x.x System updates from 5.0 to x.x
+ * @defgroup updates-5.x-to-6.x System updates from 5.x to 6.x
  * @{
- * @todo Start this series of updates at 2000.
  */
 
 /**
  * Remove auto_increment from {boxes} to allow adding custom blocks with
  * visibility settings.
  */
-function system_update_2000() {
+function system_update_6000() {
   $ret = array();
   switch ($GLOBALS['db_type']) {
     case 'mysql':
@@ -3567,7 +3566,7 @@ function system_update_2000() {
 /**
  * Add version id column to {term_node} to allow taxonomy module to use revisions.
  */
-function system_update_2001() {
+function system_update_6001() {
   $ret = array();
   // Add revision id to term-node relation.
   switch ($GLOBALS['db_type']) {
@@ -3597,7 +3596,7 @@ function system_update_2001() {
 /**
  * Increase the maximum length of variable names from 48 to 128.
  */
-function system_update_2002() {
+function system_update_6002() {
   $ret = array();
   switch ($GLOBALS['db_type']) {
     case 'pgsql':
@@ -3614,7 +3613,7 @@ function system_update_2002() {
 /**
  * Add index on comments status column.
  */
-function system_update_2003() {
+function system_update_6003() {
   $ret = array();
   switch ($GLOBALS['db_type']) {
     case 'mysql':
@@ -3632,7 +3631,7 @@ function system_update_2003() {
 /**
  * Add index on users created column.
  */
-function system_update_2004() {
+function system_update_6004() {
   // Already run as system_update_1022?
   if (variable_get('system_update_1022', FALSE)) {
     variable_del('system_update_1022');
@@ -3655,7 +3654,7 @@ function system_update_2004() {
 /**
  * Add language to url_alias table and modify indexes.
  */
-function system_update_2005() {
+function system_update_6005() {
   $ret = array();
   switch ($GLOBALS['db_type']) {
     case 'pgsql':
@@ -3676,7 +3675,7 @@ function system_update_2005() {
 /**
  * Drop useless indices on node_counter table.
  */
-function system_update_2006() {
+function system_update_6006() {
   $ret = array();
   switch ($GLOBALS['db_type']) {
     case 'pgsql':
@@ -3697,7 +3696,7 @@ function system_update_2006() {
 /**
  * Change the severity column in the watchdog table to the new values.
  */
-function system_update_2007() {
+function system_update_6007() {
   $ret = array();
   $ret[] = update_sql("UPDATE {watchdog} SET severity = %d WHERE severity = 0", WATCHDOG_NOTICE);
   $ret[] = update_sql("UPDATE {watchdog} SET severity = %d WHERE severity = 1", WATCHDOG_WARNING);
@@ -3706,6 +3705,6 @@ function system_update_2007() {
 }
 
 /**
- * @} End of "defgroup updates-5.0-to-x.x"
- * The next series of updates should start at 3000.
+ * @} End of "defgroup updates-5.x-to-6.x"
+ * The next series of updates should start at 7000.
  */
