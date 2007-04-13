@@ -1199,7 +1199,7 @@ function url($path = NULL, $options = array()) {
     $clean_url = (bool)variable_get('clean_url', '0');
   }
 
-  $base = $options['absolute'] ? $base_url . '/' : base_path();
+  $base = $options['absolute'] ? $base_url .'/' : base_path();
 
   // The special path '<front>' links to the default front page.
   if (!empty($path) && $path != '<front>') {

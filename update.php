@@ -358,7 +358,7 @@ function update_script_selection_form() {
 
       $form['start'][$module] = array(
         '#type' => 'select',
-        '#title' => $module . ' module',
+        '#title' => $module .' module',
         '#default_value' => $default,
         '#options' => $updates,
       );

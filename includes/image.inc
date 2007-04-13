@@ -31,7 +31,7 @@ function image_get_toolkit() {
   static $toolkit;
   if (!$toolkit) {
     $toolkit = variable_get('image_toolkit', 'gd');
-   $toolkit_file = './includes/image.'.$toolkit.'.inc';
+    $toolkit_file = './includes/image.'. $toolkit .'.inc';
     if ($toolkit != 'gd' && file_exists($toolkit_file)) {
       include_once $toolkit_file;
     }

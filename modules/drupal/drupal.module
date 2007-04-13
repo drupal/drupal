@@ -240,8 +240,8 @@ function theme_client_list($clients) {
   // The mission is stripped of any HTML tags to keep the output simple and consistent.
   $output = "\n<dl>\n";
   foreach ($clients as $client) {
-    $output .= '  <dt><a href="' . check_url($client->link) . '">' . check_plain($client->name) . '</a> - ' . check_plain($client->slogan) . "</dt>\n";
-    $output .= '  <dd>' . strip_tags($client->mission) . "</dd>\n";
+    $output .= '  <dt><a href="'. check_url($client->link) .'">'. check_plain($client->name) .'</a> - '. check_plain($client->slogan) ."</dt>\n";
+    $output .= '  <dd>'. strip_tags($client->mission) ."</dd>\n";
   }
   $output .= "</dl>\n";
   return $output;

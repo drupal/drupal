@@ -64,13 +64,13 @@ function db_prefix_tables($sql) {
       $tmp = $db_prefix;
       unset($tmp['default']);
       foreach ($tmp as $key => $val) {
-        $sql = strtr($sql, array('{'. $key. '}' => $val. $key));
+        $sql = strtr($sql, array('{'. $key .'}' => $val . $key));
       }
       return strtr($sql, array('{' => $db_prefix['default'], '}' => ''));
     }
     else {
       foreach ($db_prefix as $key => $val) {
-        $sql = strtr($sql, array('{'. $key. '}' => $val. $key));
+        $sql = strtr($sql, array('{'. $key .'}' => $val . $key));
       }
       return strtr($sql, array('{' => '', '}' => ''));
     }

@@ -109,7 +109,7 @@ function node_type_form($type = NULL) {
 
   $form['submission'] = array(
     '#type' => 'fieldset',
-    '#title' =>t('Submission form'),
+    '#title' => t('Submission form'),
     '#collapsible' => TRUE,
     '#collapsed' => FALSE,
   );
@@ -147,7 +147,7 @@ function node_type_form($type = NULL) {
   );
   $form['workflow'] = array(
     '#type' => 'fieldset',
-    '#title' =>t('Workflow'),
+    '#title' => t('Workflow'),
     '#collapsible' => TRUE,
   );
   $form['workflow']['node_options'] = array('#type' => 'checkboxes',

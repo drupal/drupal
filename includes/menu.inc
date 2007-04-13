@@ -533,11 +533,11 @@ function theme_menu_tree($tree) {
  * Generate the HTML output for a menu item and submenu.
  */
 function theme_menu_item($link, $has_children, $menu = '') {
-  return '<li class="'. ($menu ? 'expanded' : ($has_children ? 'collapsed' : 'leaf')) .'">'. $link . $menu .'</li>' . "\n";
+  return '<li class="'. ($menu ? 'expanded' : ($has_children ? 'collapsed' : 'leaf')) .'">'. $link . $menu .'</li>'."\n";
 }
 
 function theme_menu_local_task($link, $active = FALSE) {
-  return '<li '. ($active ? 'class="active" ' : ''). '>'. $link .'</li>';
+  return '<li '. ($active ? 'class="active" ' : '') .'>'. $link .'</li>';
 }
 
 /**
@@ -603,7 +603,7 @@ function menu_rebuild() {
         }
         else {
           if (function_exists($matches[1] .'_to_arg')) {
-            $to_arg_functions[$k] = $matches[1].'_to_arg';
+            $to_arg_functions[$k] = $matches[1] .'_to_arg';
             $load_functions[$k] = NULL;
             $match = TRUE;
           }

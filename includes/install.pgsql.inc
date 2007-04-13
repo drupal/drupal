@@ -34,8 +34,8 @@ function drupal_test_pgsql($url, &$success) {
   $url['path'] = urldecode($url['path']);
 
   // Build pgsql connection string and allow for non-standard PostgreSQL port.
-  $conn_string = ' user='. $url['user'] .' dbname='. substr($url['path'], 1) .' password='. $url['pass'] . ' host=' . $url['host'];
-  $conn_string .= isset($url['port']) ? ' port=' . $url['port'] : '';
+  $conn_string = ' user='. $url['user'] .' dbname='. substr($url['path'], 1) .' password='. $url['pass'] .' host='. $url['host'];
+  $conn_string .= isset($url['port']) ? ' port='. $url['port'] : '';
 
   // Test connecting to the database.
   $connection = @pg_connect($conn_string);

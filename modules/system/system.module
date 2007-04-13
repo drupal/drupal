@@ -355,7 +355,7 @@ function system_user($type, $edit, &$user, $category = NULL) {
     if (variable_get('configurable_timezones', 1)) {
       $zones = _system_zonelist();
       $form['timezone'] = array(
-        '#type'=>'fieldset',
+        '#type' => 'fieldset',
         '#title' => t('Locale settings'),
         '#weight' => 6,
         '#collapsible' => TRUE,
