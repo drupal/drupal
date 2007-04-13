@@ -1,5 +1,5 @@
 <?php
-// $Id
+// $Id$
 
 /**
  * Sets the body-tag class attribute.

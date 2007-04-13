@@ -1,3 +1,5 @@
+// $Id$
+
 if (Drupal.jsEnabled) {
   $(document).ready(function () {
     var form = $('#color_scheme_form .color-form');
