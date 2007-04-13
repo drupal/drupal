@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.module,v 1.1 2007/04/10 10:10:27 dries Exp $
+// $Id: dblog.module,v 1.2 2007/04/13 08:27:18 dries Exp $
 
 /**
  * @file
@@ -44,7 +44,7 @@ function dblog_theme() {
 function dblog_menu() {
   $items['admin/settings/logging/dblog'] = array(
     'title' => t('Database logging'),
-    'description' => t('Settings for logging to the Drupal database logs.'),
+    'description' => t('Settings for logging to the Drupal database logs. This is the most common method for small to medium sites on shared hosting. The logs are viewable from the admin pages.'),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('dblog_admin_settings'),
   );

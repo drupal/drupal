@@ -1,5 +1,5 @@
 <?php
-// $Id: syslog.module,v 1.2 2007/04/10 15:13:14 dries Exp $
+// $Id: syslog.module,v 1.3 2007/04/13 08:27:18 dries Exp $
 
 /**
  * @file
@@ -26,7 +26,7 @@ function syslog_help($section) {
 function syslog_menu() {
   $items['admin/settings/logging/syslog'] = array(
     'title'          => t('Syslog'),
-    'description'    => t('Settings for syslog logging.'),
+    'description'    => t('Settings for syslog logging. Syslog is a system administration logging tool, where messages are routed by facility and severity. It is more suitable for medium to large sites, and would not be suitable for shared hosting environments.'),
     'page callback'  => 'drupal_get_form',
     'page arguments' => array('syslog_admin_settings'),
   );
@@ -36,10 +36,10 @@ function syslog_menu() {
 function syslog_admin_settings() {
   $form['syslog_facility'] = array(
     '#type'          => 'select',
-    '#title'         => t('Syslog facility to send to'),
+    '#title'         => t('Syslog facility to send events to'),
     '#default_value' => variable_get('syslog_facility', DEFAULT_SYSLOG_FACILITY),
     '#options'       => syslog_facility_list(),
-    '#description'   => t('Select the syslog facility to send Drupal\'s messages to. For more information on syslog facilities, See !syslog_conf and !php', array(
+    '#description'   => t('Select the syslog facility to send Drupal\'s messages to. Syslog is a system administration logging tool, where messages are routed by facility and severity. It is more suitable for medium to large sites, and would not be suitable for shared hosting environments. In the file /etc/syslog.conf you define where messages go for any combination of facility and severity. For UNIX/Linux systems, Drupal can use the facilities user, local0 to local7, for Windows, you can only use the user facility. For more information on syslog facilities, severity levels, and how to setup a syslog.conf files, see !syslog_conf and !php', array(
       '!php'         => l("PHP's syslog", 'http://www.php.net/manual/en/function.openlog.php'),
       '!syslog_conf' => l('UNIX/Linux syslog.conf', 'http://www.rt.com/man/syslog.5.html'),
       )),

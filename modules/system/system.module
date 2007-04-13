@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.464 2007/04/10 10:10:27 dries Exp $
+// $Id: system.module,v 1.465 2007/04/13 08:27:18 dries Exp $
 
 /**
  * @file
@@ -251,7 +251,7 @@ function system_menu() {
   );
   $items['admin/settings/logging'] = array(
     'title' => t('Logging and alerts'),
-    'description' => t('Settings for logging and alerts modules'),
+    'description' => t('Settings for logging and alerts modules. Various modules can route Drupal\'s system events to different destination, such as syslog, database, email, ...etc.'),
     'page callback' => 'system_logging_overview',
   );
   $items['admin/settings/performance'] = array(
