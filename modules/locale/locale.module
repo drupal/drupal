@@ -268,7 +268,7 @@ function locale_refresh_cache() {
     while ($data = db_fetch_object($result)) {
       $t[$data->source] = (empty($data->translation) ? TRUE : $data->translation);
     }
-    cache_set('locale:'. $language->language, 'cache', serialize($t));
+    cache_set('locale:'. $language->language, serialize($t));
   }
 }
 

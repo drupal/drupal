@@ -1926,7 +1926,7 @@ function page_set_cache() {
       }
       ob_end_flush();
       if ($cache && $data) {
-        cache_set($base_root . request_uri(), 'cache_page', $data, CACHE_TEMPORARY, drupal_get_headers());
+        cache_set($base_root . request_uri(), $data, 'cache_page', CACHE_TEMPORARY, drupal_get_headers());
       }
     }
   }

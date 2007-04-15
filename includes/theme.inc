@@ -128,7 +128,7 @@ function _theme_load_registry($theme, $theme_engine = NULL) {
  * Write the theme_registry cache into the database.
  */
 function _theme_save_registry($theme, $registry) {
-  cache_set("theme_registry:$theme", 'cache', serialize($registry));
+  cache_set("theme_registry:$theme", serialize($registry));
 }
 
 /**

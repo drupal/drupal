@@ -372,7 +372,7 @@ function variable_init($conf = array()) {
     while ($variable = db_fetch_object($result)) {
       $variables[$variable->name] = unserialize($variable->value);
     }
-    cache_set('variables', 'cache', serialize($variables));
+    cache_set('variables', serialize($variables));
   }
 
   foreach ($conf as $name => $value) {
