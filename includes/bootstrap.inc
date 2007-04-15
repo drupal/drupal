@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.155 2007/04/13 08:56:57 dries Exp $
+// $Id: bootstrap.inc,v 1.156 2007/04/15 15:36:10 dries Exp $
 
 /**
  * @file
@@ -372,7 +372,7 @@ function variable_init($conf = array()) {
     while ($variable = db_fetch_object($result)) {
       $variables[$variable->name] = unserialize($variable->value);
     }
-    cache_set('variables', 'cache', serialize($variables));
+    cache_set('variables', serialize($variables));
   }
 
   foreach ($conf as $name => $value) {

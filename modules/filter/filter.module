@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.168 2007/04/13 08:56:58 dries Exp $
+// $Id: filter.module,v 1.169 2007/04/15 15:36:10 dries Exp $
 
 /**
  * @file
@@ -777,7 +777,7 @@ function check_markup($text, $format = FILTER_FORMAT_DEFAULT, $check = TRUE) {
 
     // Store in cache with a minimum expiration time of 1 day.
     if ($cache) {
-      cache_set($id, 'cache_filter', $text, time() + (60 * 60 * 24));
+      cache_set($id, $text, 'cache_filter', time() + (60 * 60 * 24));
     }
   }
   else {

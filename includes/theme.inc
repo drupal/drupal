@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.348 2007/04/13 08:56:57 dries Exp $
+// $Id: theme.inc,v 1.349 2007/04/15 15:36:10 dries Exp $
 
 /**
  * @file
@@ -128,7 +128,7 @@ function _theme_load_registry($theme, $theme_engine = NULL) {
  * Write the theme_registry cache into the database.
  */
 function _theme_save_registry($theme, $registry) {
-  cache_set("theme_registry:$theme", 'cache', serialize($registry));
+  cache_set("theme_registry:$theme", serialize($registry));
 }
 
 /**

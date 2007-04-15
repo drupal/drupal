@@ -1,5 +1,5 @@
 <?php
-// $Id: cache.inc,v 1.6 2007/02/27 12:04:39 dries Exp $
+// $Id: cache.inc,v 1.7 2007/04/15 15:36:10 dries Exp $
 
 /**
  * Return data from the persistent cache.
@@ -74,11 +74,11 @@ function cache_get($key, $table = 'cache') {
  *
  * @param $cid
  *   The cache ID of the data to store.
+ * @param $data
+ *   The data to store in the cache. Complex data types must be serialized first.
  * @param $table
  *   The table $table to store the data in. Valid core values are 'cache_filter',
  *   'cache_menu', 'cache_page', or 'cache'.
- * @param $data
- *   The data to store in the cache. Complex data types must be serialized first.
  * @param $expire
  *   One of the following values:
  *   - CACHE_PERMANENT: Indicates that the item should never be removed unless
@@ -90,7 +90,7 @@ function cache_get($key, $table = 'cache') {
  * @param $headers
  *   A string containing HTTP header information for cached pages.
  */
-function cache_set($cid, $table = 'cache', $data, $expire = CACHE_PERMANENT, $headers = NULL) {
+function cache_set($cid, $data, $table = 'cache', $expire = CACHE_PERMANENT, $headers = NULL) {
   db_lock_table($table);
   db_query("UPDATE {%s} SET data = %b, created = %d, expire = %d, headers = '%s' WHERE cid = '%s'", $table, $data, time(), $expire, $headers, $cid);
   if (!db_affected_rows()) {

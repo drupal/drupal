@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.165 2007/04/13 08:56:58 dries Exp $
+// $Id: locale.module,v 1.166 2007/04/15 15:36:10 dries Exp $
 
 /**
  * @file
@@ -268,7 +268,7 @@ function locale_refresh_cache() {
     while ($data = db_fetch_object($result)) {
       $t[$data->source] = (empty($data->translation) ? TRUE : $data->translation);
     }
-    cache_set('locale:'. $language->language, 'cache', serialize($t));
+    cache_set('locale:'. $language->language, serialize($t));
   }
 }
 
