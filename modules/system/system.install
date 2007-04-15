@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.90 2007/04/13 08:53:24 dries Exp $
+// $Id: system.install,v 1.91 2007/04/15 14:38:16 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -343,6 +343,8 @@ function system_install() {
         has_children int NOT NULL default 0,
         tab int NOT NULL default 0,
         title varchar(255) NOT NULL default '',
+        title_callback varchar(255) NOT NULL default '',
+        title_arguments varchar(255) NOT NULL default '',
         parent varchar(255) NOT NULL default '',
         type int NOT NULL default 0,
         block_callback varchar(255) NOT NULL default '',
@@ -812,6 +814,8 @@ function system_install() {
         has_children int NOT NULL default 0,
         tab int NOT NULL default 0,
         title varchar(255) NOT NULL default '',
+        title_callback varchar(255) NOT NULL default '',
+        title_arguments varchar(255) NOT NULL default '',
         parent varchar(255) NOT NULL default '',
         type int NOT NULL default 0,
         block_callback varchar(255) NOT NULL default '',

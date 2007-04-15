@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.106 2007/04/06 13:27:21 dries Exp $
+// $Id: menu.module,v 1.107 2007/04/15 14:38:16 dries Exp $
 
 /**
  * @file
@@ -87,12 +87,13 @@ function menu_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('menu_item_delete_form'),
     'type' => MENU_CALLBACK);
-  $result = db_query('SELECT * FROM {menu_edit} WHERE admin = 1');
+  $result = db_query('SELECT * FROM {menu_custom} WHERE admin = 1');
   while ($item = db_fetch_array($result)) {
-    $item['access callback'] = 1;
-    $item['access inherited'] = TRUE;
+    $item['_custom_item'] = TRUE;
+    $item['_external'] = menu_path_is_external($item['path']);
     $items[$item['path']] = $item;
   }
+
   return $items;
 /*
     $items[] = array('path' => 'admin/build/menu/menu/add',
@@ -128,11 +129,29 @@ function menu_menu() {
  * Implementation of hook_menu_alter.
  */
 function menu_menu_alter(&$menu, $phase) {
-  if ($phase == MENU_ALTER_PREPROCESSED) {
-    $result = db_query('SELECT * FROM {menu_edit} me WHERE admin = 0');
-    while ($item = db_fetch_array($result)) {
-      $menu[$item['path']] = $item + $menu[$item['path']];
-    }
+  switch ($phase) {
+    case MENU_ALTER_MODULE_DEFINED:
+      foreach ($menu as $path => $item) {
+        if (isset($item['_custom_item']) && $item['_custom_item'] && !$item['_external']) {
+          list($ancestors, $placeholders) = menu_get_ancestors(explode('/', $path, 6));
+          // Remove the item itself, custom items need to inherit from an existing item.
+          array_shift($ancestors);
+          array_shift($placeholders);
+          $inherit_item = db_fetch_object(db_query_range('SELECT * FROM {menu} WHERE path IN ('. implode (',', $placeholders) .') ORDER BY fit DESC', $ancestors, 0, 1));
+          drupal_set_message(var_export($inherit_item, TRUE));
+          $menu[$path]['access callback'] = $inherit_item->access_callback;
+          $menu[$path]['access arguments'] = unserialize($inherit_item->access_arguments);
+          $menu[$path]['page callback'] = $inherit_item->page_callback;
+          $menu[$path]['page arguments'] = unserialize($inherit_item->page_arguments);
+        }
+      }
+      break;
+    case MENU_ALTER_PREPROCESSED:
+      $result = db_query('SELECT * FROM {menu_custom} me WHERE admin = 0');
+      while ($item = db_fetch_array($result)) {
+        $menu[$item['path']] = $item + $menu[$item['path']];
+      }
+      break;
   }
 }
 
@@ -142,7 +161,7 @@ function menu_menu_alter(&$menu, $phase) {
  */
 function menu_overview() {
   $header = array(t('Menu item'), t('Expanded'), array('data' => t('Operations'), 'colspan' => '3'));
-  $result = db_query('SELECT m.*, me.disabled FROM {menu} m LEFT JOIN {menu_edit} me ON m.path = me.path WHERE visible = 1 OR (disabled = 1 AND admin = 0) ORDER BY mleft');
+  $result = db_query('SELECT m.*, me.disabled FROM {menu} m LEFT JOIN {menu_custom} me ON m.path = me.path WHERE visible = 1 OR (disabled = 1 AND admin = 0) ORDER BY mleft');
   $map = arg();
   $rows = array();
   while ($item = db_fetch_object($result)) {
@@ -201,17 +220,17 @@ function menu_overview() {
  */
 function menu_flip_item($visible, $mid, $path = NULL) {
   if (isset($mid)) {
-    $parent = menu_get_item_by_mid($mid);
+    $item = menu_get_item_by_mid($mid);
   }
   elseif (isset($path)) {
-    $parent = menu_get_item($path);
+    $item = menu_get_item($path);
   }
-  if (isset($parent) && $parent->access) {
-    $result = db_query('SELECT * FROM {menu} WHERE %d <= mleft AND mright <= %d', $parent->mleft, $parent->mright);
+  if (isset($item) && $item->access) {
+    $result = db_query('SELECT child.*, parent.path AS parent_path FROM {menu} child INNER JOIN {menu} parent ON child.pid = parent.mid WHERE %d <= child.mleft AND child.mright <= %d', $item->mleft, $item->mright);
     while ($item = db_fetch_object($result)) {
-      $update_result = db_query("UPDATE {menu_edit} SET disabled = %d WHERE path = '%s'", !$visible, $item->path);
+      $update_result = db_query("UPDATE {menu_custom} SET disabled = %d WHERE path = '%s'", !$visible, $item->path);
       if (!db_affected_rows($update_result)) {
-        db_query("INSERT INTO {menu_edit} (parent, path, title, description, weight, type, admin, disabled) VALUES ('%s', '%s', '%s', '%s', %d, %d, %d, %d)", $item->parent, $item->path, $item->title, $item->description, 0, $item->type, 0, !$visible);
+        db_query("INSERT INTO {menu_custom} (parent, path, title, description, weight, type, admin, disabled) VALUES ('%s', '%s', '%s', '%s', %d, %d, %d, %d)", $item->parent_path, $item->path, $item->title, $item->description, 0, $item->type, 0, !$visible);
       }
     }
     menu_rebuild();
@@ -348,7 +367,7 @@ function menu_parent_options($mid, $pid = 0, $depth = 0) {
   if ($mid && $mid == $pid) {
     return $options;
   }
-  $sql = 'SELECT m.*, me.disabled FROM {menu} m LEFT JOIN {menu_edit} me ON m.path = me.path WHERE (m.visible = 1 OR (me.disabled = 1 AND me.admin = 0))';
+  $sql = 'SELECT m.*, me.disabled FROM {menu} m LEFT JOIN {menu_custom} me ON m.path = me.path WHERE (m.visible = 1 OR (me.disabled = 1 AND me.admin = 0))';
   if (!$mid) {
     $params = array();
   }
@@ -398,11 +417,11 @@ function menu_edit_item_save($edit) {
 
   $parent = $edit['pid'] ? db_result(db_query('SELECT path FROM {menu} WHERE mid = %d', $edit['pid'])) : '';
   $t_args = array('%title' => $edit['title']);
-  if (!empty($edit['original_path']) && db_num_rows(db_query("SELECT * FROM {menu_edit} WHERE path='%s'", $edit['original_path']))) {
-    db_query("UPDATE {menu_edit} SET parent = '%s', title = '%s', description = '%s', weight = %d, type = %d, path = '%s' WHERE path = '%s'", $parent, $edit['title'], $edit['description'], $edit['weight'], $edit['type'], isset($edit['path']) ? $edit['path'] : $edit['original_path'], $edit['original_path']);
+  if (!empty($edit['original_path']) && db_num_rows(db_query("SELECT * FROM {menu_custom} WHERE path='%s'", $edit['original_path']))) {
+    db_query("UPDATE {menu_custom} SET parent = '%s', title = '%s', description = '%s', weight = %d, type = %d, path = '%s' WHERE path = '%s'", $parent, $edit['title'], $edit['description'], $edit['weight'], $edit['type'], isset($edit['path']) ? $edit['path'] : $edit['original_path'], $edit['original_path']);
   }
   else {
-    db_query("INSERT INTO {menu_edit} (parent, path, title, description, weight, type, admin) VALUES ('%s', '%s', '%s', '%s', %d, %d, %d)", $parent, isset($edit['path']) ? $edit['path'] : $edit['original_path'], $edit['title'], $edit['description'], $edit['weight'], $edit['type'], isset($edit['path']));
+    db_query("INSERT INTO {menu_custom} (parent, path, title, description, weight, type, admin) VALUES ('%s', '%s', '%s', '%s', %d, %d, %d)", $parent, isset($edit['path']) ? $edit['path'] : $edit['original_path'], $edit['title'], $edit['description'], $edit['weight'], $edit['type'], isset($edit['path']));
   }
   watchdog('menu', t('Saved menu item %title.', $t_args), WATCHDOG_NOTICE, l(t('view'), 'admin/build/menu'));
   drupal_set_message(t('The menu item %title has been saved.', $t_args));
@@ -522,7 +541,7 @@ function menu_reset_item_submit($form_id, $form_values) {
  *   The path to the menu item to be deleted.
  */
 function menu_delete_item($path) {
-  db_query("DELETE FROM {menu_edit} WHERE path = '%s'", $path);
+  db_query("DELETE FROM {menu_custom} WHERE path = '%s'", $path);
   menu_rebuild();
 }
 

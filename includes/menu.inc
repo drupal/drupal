@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.161 2007/04/13 08:56:57 dries Exp $
+// $Id: menu.inc,v 1.162 2007/04/15 14:38:16 dries Exp $
 
 /**
  * @file
@@ -307,6 +307,7 @@ function menu_get_item($path = NULL, $item = NULL) {
     $original_map = arg(NULL, $path);
     $parts = array_slice($original_map, 0, 6);
     list($ancestors, $placeholders) = menu_get_ancestors($parts);
+    $item->active_trail = array();
     if ($item = db_fetch_object(db_query_range('SELECT * FROM {menu} WHERE path IN ('. implode (',', $placeholders) .') ORDER BY fit DESC', $ancestors, 0, 1))) {
       // We need to access check the parents to match the navigation tree
       // behaviour. The last parent is always the item itself.
@@ -320,8 +321,12 @@ function menu_get_item($path = NULL, $item = NULL) {
           $items[$path] = FALSE;
           return FALSE;
         }
-        $item->access = $item->access && $parent->access;
-        $item->active_trail[] = $parent;
+        if ($parent->access) {
+          $item->active_trail[] = $parent;
+        }
+        else {
+          $item->access = FALSE;
+        }
       }
       if ($item->access) {
         $item->map = $map;
@@ -437,8 +442,15 @@ function _menu_translate(&$item, $map, $operation = MENU_HANDLE_REQUEST) {
  */
 function menu_tree() {
   if ($item = menu_get_item()) {
-    $args = explode(',', $item->parents);
-    $placeholders = implode(', ', array_fill(0, count($args), '%d'));
+    if ($item->access) {
+      $args = explode(',', $item->parents);
+      $placeholders = implode(', ', array_fill(0, count($args), '%d'));
+    }
+    // Show the root menu for access denied.
+    else {
+      $args = 0;
+      $placeholders = '%d';
+    }
     list(, $menu) = _menu_tree(db_query('SELECT * FROM {menu} WHERE pid IN ('. $placeholders .') AND visible = 1 ORDER BY mleft', $args));
     return $menu;
   }
@@ -548,7 +560,7 @@ function menu_get_active_help() {
   $output = '';
   $item = menu_get_item();
 
-  if (!$item->access) {
+  if (!$item || !$item->access) {
     // Don't return help text for areas the user cannot access.
     return;
   }
@@ -570,66 +582,80 @@ function menu_get_active_help() {
   return $output;
 }
 
+function menu_path_is_external($path) {
+  $colonpos = strpos($path, ':');
+  return $colonpos !== FALSE && !preg_match('![/?#]!', substr($path, 0, $colonpos)) && filter_xss_bad_protocol($path, FALSE) == check_plain($path);
+}
+
 /**
  * Populate the database representation of the menu.
  */
 function menu_rebuild() {
   // TODO: split menu and menu links storage.
-  db_query('DELETE FROM {menu}');
   $menu = module_invoke_all('menu');
 
   // Alter the menu as defined in modules, keys are like user/%user.
   drupal_alter('menu', $menu, MENU_ALTER_MODULE_DEFINED);
+  db_query('DELETE FROM {menu}');
   $mid = 1;
 
   // First pass: separate callbacks from pathes, making pathes ready for
   // matching. Calculate fitness, and fill some default values.
   foreach ($menu as $path => $item) {
-    $parts = explode('/', $path, 6);
-    $number_parts = count($parts);
-    // We store the highest index of parts here to save some work in the fit
-    // calculation loop.
-    $slashes = $number_parts - 1;
-    $fit = 0;
     $load_functions = array();
     $to_arg_functions = array();
-    // extract functions
-    foreach ($parts as $k => $part) {
-      $match = FALSE;
-      if (preg_match('/^%([a-z_]*)$/', $part, $matches)) {
-        if (empty($matches[1])) {
-          $match = TRUE;
-          $load_functions[$k] = NULL;
+    $fit = 0;
+    $move = FALSE;
+    if (!isset($item['_external'])) {
+      $item['_external'] = menu_path_is_external($path);
+    }
+    if ($item['_external']) {
+      $number_parts = 0;
+      $parts = array();
+    }
+    else {
+      $parts = explode('/', $path, 6);
+      $number_parts = count($parts);
+      // We store the highest index of parts here to save some work in the fit
+      // calculation loop.
+      $slashes = $number_parts - 1;
+      // extract functions
+      foreach ($parts as $k => $part) {
+        $match = FALSE;
+        if (preg_match('/^%([a-z_]*)$/', $part, $matches)) {
+          if (empty($matches[1])) {
+            $match = TRUE;
+            $load_functions[$k] = NULL;
+          }
+          else {
+            if (function_exists($matches[1] .'_to_arg')) {
+              $to_arg_functions[$k] = $matches[1] .'_to_arg';
+              $load_functions[$k] = NULL;
+              $match = TRUE;
+            }
+            if (function_exists($matches[1] .'_load')) {
+              $load_functions[$k] = $matches[1] .'_load';
+              $match = TRUE;
+            }
+          }
+        }
+        if ($match) {
+          $parts[$k] = '%';
         }
         else {
-          if (function_exists($matches[1] .'_to_arg')) {
-            $to_arg_functions[$k] = $matches[1] .'_to_arg';
-            $load_functions[$k] = NULL;
-            $match = TRUE;
-          }
-          if (function_exists($matches[1] .'_load')) {
-            $load_functions[$k] = $matches[1] .'_load';
-            $match = TRUE;
-          }
+          $fit |=  1 << ($slashes - $k);
         }
       }
-      if ($match) {
-        $parts[$k] = '%';
+      if ($fit) {
+        $move = TRUE;
       }
       else {
-        $fit |=  1 << ($slashes - $k);
+        // If there is no %, it fits maximally.
+        $fit = (1 << $number_parts) - 1;
       }
     }
     $item['load_functions'] = empty($load_functions) ? '' : serialize($load_functions);
     $item['to_arg_functions'] = empty($to_arg_functions) ? '' : serialize($to_arg_functions);
-    // If there is no %, it fits maximally.
-    if (!$fit) {
-      $fit = (1 << $number_parts) - 1;
-      $move = FALSE;
-    }
-    else {
-      $move = TRUE;
-    }
     $item += array(
       'title' => '',
       'weight' => 0,
@@ -662,29 +688,31 @@ function menu_rebuild() {
   // Second pass: prepare for sorting and find parents.
   foreach ($menu as $path => $item) {
     $item = &$menu[$path];
-    $number_parts = $item['_number_parts'];
-    if (isset($item['parent'])) {
-      if (isset($menu_path_map[$item['parent']])) {
-        $item['parent'] = $menu_path_map[$item['parent']];
-      }
-      $parent_parts = explode('/', $item['parent'], 6);
-      $slashes = count($parent_parts);
-    }
-    else {
-      $parent_parts = $item['_parts'];
-      $slashes = $number_parts - 1;
-    }
-    $depth = 1;
+    $parent_path = $path;
     $parents = array($item['_mid']);
-    for ($i = $slashes; $i; $i--) {
-      $parent_path = implode('/', array_slice($parent_parts, 0, $i));
-      if (isset($menu[$parent_path]) && $menu[$parent_path]['_visible']) {
-        $parent = $menu[$parent_path];
-        $parents[] = $parent['_mid'];
-        $depth++;
-        if (!isset($item['_pid'])) {
-          $item['_pid'] = $parent['_mid'];
-          $item['_visible_parent_path'] = $parent_path;
+    $depth = 1;
+    if (isset($item['parent']) && isset($menu_path_map[$item['parent']])) {
+      $item['parent'] = $menu_path_map[$item['parent']];
+    }
+    if ($item['_visible'] || $item['_tab']) {
+      while ($parent_path) {
+        if (isset($menu[$parent_path]['parent'])) {
+          if (isset($menu_path_map[$menu[$parent_path]['parent']])) {
+            $menu[$parent_path]['parent'] = $menu_path_map[$menu[$parent_path]['parent']];
+          }
+          $parent_path = $menu[$parent_path]['parent'];
+        }
+        else {
+          $parent_path = substr($parent_path, 0, strrpos($parent_path, '/'));
+        }
+        if (isset($menu[$parent_path]) && $menu[$parent_path]['_visible']) {
+          $parent = $menu[$parent_path];
+          $parents[] = $parent['_mid'];
+          $depth++;
+          if (!isset($item['_pid'])) {
+            $item['_pid'] = $parent['_mid'];
+            $item['_visible_parent_path'] = $parent_path;
+          }
         }
       }
     }
@@ -693,9 +721,8 @@ function menu_rebuild() {
     // Store variables and set defaults.
     $item += array(
       '_pid' => 0,
-      '_depth' => ($item['_visible'] ? $depth : $number_parts),
+      '_depth' => ($item['_visible'] ? $depth : $item['_number_parts']),
       '_parents' => $parents,
-      '_parent_parts' => $parent_parts,
       '_slashes' => $slashes,
     );
     // This sorting works correctly only with positive numbers,
@@ -708,7 +735,7 @@ function menu_rebuild() {
   // We are now sorted, so let's build the tree.
   $children = array();
   foreach ($menu as $path => $item) {
-    if ($item['_pid']) {
+    if (!empty($item['_pid'])) {
       $menu[$item['_visible_parent_path']]['_children'][] = $path;
     }
   }
@@ -716,54 +743,60 @@ function menu_rebuild() {
 
   // Apply inheritance rules.
   foreach ($menu as $path => $item) {
-    $item = &$menu[$path];
-    for ($i = $item['_number_parts'] - 1; $i; $i--) {
-      $parent_path = implode('/', array_slice($item['_parts'], 0, $i));
-      if (isset($menu[$parent_path])) {
-        $parent = $menu[$parent_path];
-        // If a callback is not found, we try to find the first parent that
-        // has this callback. When found, its callback argument will also be
-        // copied but only if there is none in the current item.
+    if ($item['_external']) {
+      $item['access callback'] = 1;
+    }
+    else {
+      $item = &$menu[$path];
+      for ($i = $item['_number_parts'] - 1; $i; $i--) {
+        $parent_path = implode('/', array_slice($item['_parts'], 0, $i));
+        if (isset($menu[$parent_path])) {
+          $parent = $menu[$parent_path];
+          // If a callback is not found, we try to find the first parent that
+          // has this callback. When found, its callback argument will also be
+          // copied but only if there is none in the current item.
 
-        // Because access is checked for each parent as well, we only inherit
-        // if arguments were given without a callback. Otherwise the inherited
-        // check would be identical to that of the parent.
-        if (!isset($item['access callback']) && isset($parent['access callback']) && !isset($parent['access inherited'])) {
-          if (isset($item['access arguments'])) {
-            $item['access callback'] = $parent['access callback'];
+          // Because access is checked for each visible parent as well, we only
+          // inherit if arguments were given without a callback. Otherwise the
+          // inherited check would be identical to that of the parent.
+          if (!isset($item['access callback']) && isset($parent['access callback']) && !isset($parent['access inherited'])) {
+            if (isset($item['access arguments']) || !$parent['_visible']) {
+              $item['access callback'] = $parent['access callback'];
+            }
+            else {
+              $item['access callback'] = 1;
+              // If a children of this element has an argument, we need to pair
+              // that with a real callback, not the 1 we set above.
+              $item['access inherited'] = TRUE;
+            }
           }
-          else {
-            $item['access callback'] = 1;
-            // If a children of this element has an argument, we need to pair
-            // that with a real callback, not the 1 we set above.
-            $item['access inherited'] = TRUE;
-          }
-        }
 
-        // Unlike access callbacks, there are no shortcuts for page callbacks.
-        if (!isset($item['page callback']) && isset($parent['page callback'])) {
-          $item['page callback'] = $parent['page callback'];
-          if (!isset($item['page arguments']) && isset($parent['page arguments'])) {
-            $item['page arguments'] = $parent['page arguments'];
+          // Unlike access callbacks, there are no shortcuts for page callbacks.
+          if (!isset($item['page callback']) && isset($parent['page callback'])) {
+            $item['page callback'] = $parent['page callback'];
+            if (!isset($item['page arguments']) && isset($parent['page arguments'])) {
+              $item['page arguments'] = $parent['page arguments'];
+            }
           }
         }
       }
+      if (!isset($item['access callback'])) {
+        $item['access callback'] = isset($item['access arguments']) ? 'user_access' : 0;
+      }
+      if (is_bool($item['access callback'])) {
+        $item['access callback'] = intval($item['access callback']);
+      }
+      if (empty($item['page callback'])) {
+        $item['access callback'] = 0;
+      }
     }
-    if (!isset($item['access callback'])) {
-      $item['access callback'] = isset($item['access arguments']) ? 'user_access' : 0;
-    }
-    if (is_bool($item['access callback'])) {
-      $item['access callback'] = intval($item['access callback']);
-    }
-    if (empty($item['page callback'])) {
-      $item['access callback'] = 0;
-    }
+
     if ($item['_tab']) {
-      if (!isset($item['parent'])) {
-        $item['parent'] = implode('/', array_slice($item['_parts'], 0, $item['_number_parts'] - 1));
+      if (isset($item['parent'])) {
+        $item['_depth'] = $item['parent'] ? $menu[$item['parent']]['_depth'] + 1 : 1;
       }
       else {
-        $item['_depth'] = $item['parent'] ? $menu[$item['parent']]['_depth'] + 1 : 1;
+        $item['parent'] = implode('/', array_slice($item['_parts'], 0, $item['_number_parts'] - 1));
       }
     }
     else {
@@ -771,6 +804,7 @@ function menu_rebuild() {
       // stored in parents, parent stores the tab parent.
       $item['parent'] = $path;
     }
+
     $insert_item = $item;
     unset($item);
     $item = $insert_item + array(
@@ -871,6 +905,9 @@ function menu_local_tasks($level = 0) {
   static $tabs = array(), $parents = array(), $parents_done = array();
   if (empty($tabs)) {
     $router_item = menu_get_item();
+    if (!$router_item || !$router_item->access) {
+      return array();
+    }
     $map = arg(NULL);
     do {
       // Tabs are router items that have the same parent. If there is a new
@@ -943,8 +980,10 @@ function menu_set_location() {
 function menu_get_active_breadcrumb() {
   $breadcrumb = array(l(t('Home'), ''));
   $item = menu_get_item();
-  foreach ($item->active_trail as $parent) {
-    $breadcrumb[] = l($parent->title, $parent->link_path, (array)$parent);
+  if ($item && $item->access) {
+    foreach ($item->active_trail as $parent) {
+      $breadcrumb[] = l($parent->title, $parent->link_path, (array)$parent);
+    }
   }
   return $breadcrumb;
 }
