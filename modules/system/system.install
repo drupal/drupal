@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.91 2007/04/15 14:38:16 dries Exp $
+// $Id: system.install,v 1.92 2007/04/15 14:41:13 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -3536,7 +3536,7 @@ function system_update_1022() {
       $ret[] = update_sql("CREATE INDEX {users}_created_idx ON {users} (created)");
       break;
   }
-  // Also appears as system_update_2004(). Ensure we don't update twice.
+  // Also appears as system_update_6004(). Ensure we don't update twice.
   variable_set('system_update_1022', TRUE);
   return $ret;
 }
