@@ -97,3 +97,16 @@ table.system-status-report tr.ok th {
 .theme-settings-bottom {
   clear: both;
 }
+
+/**
+ * Formatting for theme overview
+ */
+table.screenshot {
+  margin-right: 1em;
+}
+.theme-info h2 {
+  margin-bottom: 0;
+}
+.theme-info p {
+  margin-top: 0;
+}

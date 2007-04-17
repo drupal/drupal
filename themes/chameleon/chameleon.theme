@@ -23,21 +23,6 @@ function chameleon_theme($existing) {
   return $templates;
 }
 
-function chameleon_features() {
-  return array(
-       'toggle_logo',
-       'toggle_favicon',
-       'toggle_name',
-       'toggle_slogan');
-}
-
-function chameleon_regions() {
-  return array(
-       'left' => t('left sidebar'),
-       'right' => t('right sidebar')
-  );
-}
-
 function chameleon_page($content, $show_blocks = TRUE) {
   $language = isset($GLOBALS['language']) ? $GLOBALS['language']->language : NULL;
 

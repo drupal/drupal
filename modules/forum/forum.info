@@ -1,6 +1,7 @@
 ; $Id$
 name = Forum
 description = Enables threaded discussions about general topics.
-dependencies = taxonomy comment
+dependencies[] = taxonomy
+dependencies[] = comment
 package = Core - optional
 version = VERSION
