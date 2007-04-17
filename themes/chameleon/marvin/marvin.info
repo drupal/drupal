@@ -1,0 +1,5 @@
+; $Id$
+name = Marvin
+description = Boxy tabled theme in all grays.
+regions[left] = Left sidebar
+regions[right] = Right sidebar
