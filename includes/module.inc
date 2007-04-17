@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.99 2007/04/10 10:10:27 dries Exp $
+// $Id: module.inc,v 1.100 2007/04/17 07:19:38 dries Exp $
 
 /**
  * @file
@@ -102,16 +102,27 @@ function module_rebuild_cache() {
 
   ksort($files);
 
+  // Set defaults for module info
+  $defaults = array(
+    'dependencies' => array(),
+    'dependents' => array(),
+    'description' => '',
+    'version' => NULL
+  );
+
   foreach ($files as $filename => $file) {
-    $file->info = _module_parse_info_file(dirname($file->filename) .'/'. $file->name .'.info');
+    // Look for the info file.
+    $file->info = drupal_parse_info_file(dirname($file->filename) .'/'. $file->name .'.info');
+
     // Skip modules that don't provide info.
     if (empty($file->info)) {
       unset($files[$filename]);
       continue;
     }
-    $files[$filename]->info = $file->info;
+    // Merge in defaults and save.
+    $files[$filename]->info = $file->info + $defaults;
 
-    // log the critical hooks implemented by this module
+    // Log the critical hooks implemented by this module.
     $bootstrap = 0;
     foreach (bootstrap_hooks() as $hook) {
       if (module_hook($file->name, $hook)) {
@@ -121,15 +132,14 @@ function module_rebuild_cache() {
     }
 
     // Update the contents of the system table:
-    // TODO: We shouldn't actually need this description field anymore. Remove me next release.
     if (isset($file->status) || (isset($file->old_filename) && $file->old_filename != $file->filename)) {
-      db_query("UPDATE {system} SET description = '%s', name = '%s', filename = '%s', bootstrap = %d WHERE filename = '%s'", $file->info['description'], $file->name, $file->filename, $bootstrap, $file->old_filename);
+      db_query("UPDATE {system} SET info = '%s', name = '%s', filename = '%s', bootstrap = %d WHERE filename = '%s'", serialize($file->info), $file->name, $file->filename, $bootstrap, $file->old_filename);
     }
     else {
       // This is a new module.
       $files[$filename]->status = 0;
       $files[$filename]->throttle = 0;
-      db_query("INSERT INTO {system} (name, description, type, filename, status, throttle, bootstrap) VALUES ('%s', '%s', '%s', '%s', %d, %d, %d)", $file->name, $file->info['description'], 'module', $file->filename, 0, 0, $bootstrap);
+      db_query("INSERT INTO {system} (name, info, type, filename, status, throttle, bootstrap) VALUES ('%s', '%s', '%s', '%s', %d, %d, %d)", $file->name, serialize($file->info), 'module', $file->filename, 0, 0, $bootstrap);
     }
   }
   $files = _module_build_dependents($files);
@@ -157,53 +167,6 @@ function _module_build_dependents($files) {
     }
   }
   return $files;
-}
-
-/**
- * Parse Drupal info file format.
- * Uses ini parser provided by php's parse_ini_file().
- *
- * Files should use the ini format to specify values.
- * e.g.
- * key = "value"
- * key2 = value2
- *
- * Some things to be aware of:
- * - This function is NOT for placing arbitrary module-specific settings. Use variable_get()
- *   and variable_set() for that.
- * - You may not use double-quotes in a value.
- *
- * Information stored in the module.info file:
- * name - The real name of the module for display purposes.
- * description - A brief description of the module.
- * dependencies - A space delimited list of the short names (shortname) of other modules this module depends on.
- * package - The name of the package of modules this module belongs to.
- *
- * Example of .info file:
- *   name = Forum
- *   description = Enables threaded discussions about general topics.
- *   dependencies = taxonomy comment
- *   package = Core - optional
- *
- * @param $filename
- *   The file we are parsing. Accepts file with relative or absolute path.
- * @return
- *   The info array.
- */
-function _module_parse_info_file($filename) {
-  $info = array();
-
-  if (file_exists($filename)) {
-    $info = parse_ini_file($filename);
-
-    if (isset($info['dependencies'])) {
-      $info['dependencies'] = explode(" ", $info['dependencies']);
-    }
-    else {
-      $info['dependencies'] = NULL;
-    }
-  }
-  return $info;
 }
 
 /**

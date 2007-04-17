@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.467 2007/04/13 08:56:59 dries Exp $
+// $Id: system.module,v 1.468 2007/04/17 07:19:39 dries Exp $
 
 /**
  * @file
@@ -204,7 +204,7 @@ function system_menu() {
   foreach (list_themes() as $theme) {
     if ($theme->status) {
       $items['admin/build/themes/settings/'. $theme->name] = array(
-        'title' => $theme->name,
+        'title' => $theme->info['name'],
         'page arguments' => array('system_theme_settings', $theme->name),
         'type' => MENU_LOCAL_TASK,
       );
@@ -454,7 +454,7 @@ function system_admin_theme_settings() {
   ksort($themes);
   $options[0] = t('System default');
   foreach ($themes as $theme) {
-    $options[$theme->name] = $theme->name;
+    $options[$theme->name] = $theme->info['name'];
   }
 
   $form['admin_theme'] = array(
@@ -936,6 +936,30 @@ function system_get_files_database(&$files, $type) {
   }
 }
 
+function system_theme_default() {
+  // Prepare defaults for themes.
+  return array(
+    'regions' => array(
+      'left' => 'Left sidebar',
+      'right' => 'Right sidebar',
+      'content' => 'Content',
+      'header' => 'Header',
+      'footer' => 'Footer',
+    ),
+    'description' => '',
+    'features' => array(
+      'comment_user_picture',
+      'favicon',
+      'mission',
+      'logo',
+      'name',
+      'node_user_picture',
+      'search',
+      'slogan'
+    ),
+  );
+}
+
 /**
  * Collect data about all currently available themes
  */
@@ -1004,10 +1028,16 @@ function system_theme_data() {
   // Extract current files from database.
   system_get_files_database($themes, 'theme');
 
+  $defaults = system_theme_default();
+  // Read info files for the owner
+  foreach (array_keys($themes) as $key) {
+    $themes[$key]->info = drupal_parse_info_file(dirname($themes[$key]->filename) .'/'. $themes[$key]->name .'.info') + $defaults;
+  }
+
   db_query("DELETE FROM {system} WHERE type = 'theme'");
 
   foreach ($themes as $theme) {
-    db_query("INSERT INTO {system} (name, description, type, filename, status, throttle, bootstrap) VALUES ('%s', '%s', '%s', '%s', %d, %d, %d)", $theme->name, $theme->owner, 'theme', $theme->filename, isset($theme->status) ? $theme->status : 0, 0, 0);
+    db_query("INSERT INTO {system} (name, owner, info, type, filename, status, throttle, bootstrap) VALUES ('%s', '%s', '%s', '%s', '%s', %d, %d, %d)", $theme->name, $theme->owner, serialize($theme->info), 'theme', $theme->filename, isset($theme->status) ? $theme->status : 0, 0, 0);
   }
 
   return $themes;
@@ -1025,32 +1055,8 @@ function system_region_list($theme_key) {
   static $list = array();
 
   if (!array_key_exists($theme_key, $list)) {
-    $theme = db_fetch_object(db_query("SELECT * FROM {system} WHERE type = 'theme' AND name = '%s'", $theme_key));
-
-    // Stylesheets can't have regions; use its theme.
-    if (strpos($theme->filename, '.css')) {
-      return system_region_list(basename(dirname($theme->description)));
-    }
-
-    // If this is a custom theme, load it in before moving on.
-    if (file_exists($file = dirname($theme->filename) .'/'. $theme_key .'.theme')) {
-      include_once "./$file";
-    }
-
-    $regions = array();
-
-    // This theme has defined its own regions.
-    if (function_exists($theme_key .'_regions')) {
-      $regions = call_user_func($theme_key .'_regions');
-    }
-    // File is an engine; include its regions.
-    else if (strpos($theme->description, '.engine')) {
-      include_once './'. $theme->description;
-      $theme_engine = basename($theme->description, '.engine');
-      $regions = function_exists($theme_engine .'_regions') ? call_user_func($theme_engine .'_regions') : array();
-    }
-
-    $list[$theme_key] = $regions;
+    $info = unserialize(db_result(db_query("SELECT info FROM {system} WHERE type = 'theme' AND name = '%s'", $theme_key)));
+    $list[$theme_key] = array_map('t', $info['regions']);
   }
 
   return $list[$theme_key];
@@ -1176,22 +1182,22 @@ function system_themes_form() {
   ksort($themes);
   $status = array();
 
-  foreach ($themes as $info) {
-    $info->screenshot = dirname($info->filename) .'/screenshot.png';
-    $screenshot = file_exists($info->screenshot) ? theme('image', $info->screenshot, t('Screenshot for %theme theme', array('%theme' => $info->name)), '', array('class' => 'screenshot'), FALSE) : t('no screenshot');
+  foreach ($themes as $theme) {
+    $theme->screenshot = dirname($theme->filename) .'/screenshot.png';
+    $screenshot = file_exists($theme->screenshot) ? theme('image', $theme->screenshot, t('Screenshot for %theme theme', array('%theme' => $theme->info['name'])), '', array('class' => 'screenshot'), FALSE) : t('no screenshot');
 
-    $form[$info->name]['screenshot'] = array('#value' => $screenshot);
-    $form[$info->name]['description'] = array('#type' => 'item', '#title' => $info->name,  '#value' => dirname($info->filename));
-    $options[$info->name] = '';
-    if (!empty($info->status)) {
-      $status[] = $info->name;
+    $form[$theme->name]['screenshot'] = array('#value' => $screenshot);
+    $form[$theme->name]['info'] = array('#type' => 'value', '#value' => $theme->info);
+    $options[$theme->name] = '';
+    if (!empty($theme->status)) {
+      $status[] = $theme->name;
     }
-    if (!empty($info->status) && (function_exists($info->prefix .'_settings') || function_exists($info->prefix .'_features'))) {
-      $form[$info->name]['operations'] = array('#value' => l(t('configure'), 'admin/build/themes/settings/'. $info->name) );
+    if (!empty($theme->status)) {
+      $form[$theme->name]['operations'] = array('#value' => l(t('configure'), 'admin/build/themes/settings/'. $theme->name) );
     }
     else {
       // Dummy element for drupal_render. Cleaner than adding a check in the theme function.
-      $form[$info->name]['operations'] = array();
+      $form[$theme->name]['operations'] = array();
     }
   }
 
@@ -1205,15 +1211,25 @@ function system_themes_form() {
 
 function theme_system_themes_form($form) {
   foreach (element_children($form) as $key) {
+    // Only look for themes
+    if (!isset($form[$key]['info'])) {
+      continue;
+    }
+
+    // Fetch info
+    $info = $form[$key]['info']['#value'];
+
+    // Style theme info
+    $theme = '<div class="theme-info"><h2>'. $info['name'] .'</h2><div class="description">'. $info['description'] .'</div></div>';
+
+    // Build rows
     $row = array();
-    if (isset($form[$key]['description']) && is_array($form[$key]['description'])) {
-      $row[] = drupal_render($form[$key]['screenshot']);
-      $row[] = drupal_render($form[$key]['description']);
-      $row[] = array('data' => drupal_render($form['status'][$key]), 'align' => 'center');
-      if ($form['theme_default']) {
-        $row[] = array('data' => drupal_render($form['theme_default'][$key]), 'align' => 'center');
-        $row[] = array('data' => drupal_render($form[$key]['operations']), 'align' => 'center');
-      }
+    $row[] = drupal_render($form[$key]['screenshot']);
+    $row[] = $theme;
+    $row[] = array('data' => drupal_render($form['status'][$key]), 'align' => 'center');
+    if ($form['theme_default']) {
+      $row[] = array('data' => drupal_render($form['theme_default'][$key]), 'align' => 'center');
+      $row[] = array('data' => drupal_render($form[$key]['operations']), 'align' => 'center');
     }
     $rows[] = $row;
   }
@@ -1292,10 +1308,6 @@ function system_modules($form_values = NULL) {
   $throttle = array();
   // Traverse the files retrieved and build the form.
   foreach ($files as $filename => $file) {
-    $file->info += array(
-      'dependents' => array(),
-      'version' => NULL,
-    );
     $form['name'][$filename] = array('#value' => $file->info['name']);
     $form['version'][$filename] = array('#value' => $file->info['version']);
     $form['description'][$filename] = array('#value' => t($file->info['description']));
@@ -1636,11 +1648,11 @@ function system_modules_uninstall($form_values = NULL) {
   $form = array();
 
   // Pull all disabled modules from the system table.
-  $disabled_modules = db_query("SELECT name, filename FROM {system} WHERE type = 'module' AND status = 0 AND schema_version > %d ORDER BY name", SCHEMA_UNINSTALLED);
+  $disabled_modules = db_query("SELECT name, filename, info FROM {system} WHERE type = 'module' AND status = 0 AND schema_version > %d ORDER BY name", SCHEMA_UNINSTALLED);
   while ($module = db_fetch_object($disabled_modules)) {
 
-    // Grab the .info file and set name and description.
-    $info = _module_parse_info_file(dirname($module->filename) .'/'. $module->name .'.info');
+    // Grab the module info
+    $info = unserialize($module->info);
 
     // Load the .install file, and check for an uninstall hook.
     // If the hook exists, the module can be uninstalled.
@@ -1968,7 +1980,7 @@ function system_theme_settings($key = '') {
     $settings = theme_get_settings($key);
     $var = str_replace('/', '_', 'theme_'. $key .'_settings');
     $themes = system_theme_data();
-    $features = function_exists($themes[$key]->prefix .'_features') ? call_user_func($themes[$key]->prefix .'_features') : array();
+    $features = $themes[$key]->info['features'];
   }
   else {
     $settings = theme_get_settings('');
@@ -2008,14 +2020,14 @@ function system_theme_settings($key = '') {
 
   // Toggle settings
   $toggles = array(
-    'toggle_logo'                 => t('Logo'),
-    'toggle_name'                 => t('Site name'),
-    'toggle_slogan'               => t('Site slogan'),
-    'toggle_mission'              => t('Mission statement'),
-    'toggle_node_user_picture'    => t('User pictures in posts'),
-    'toggle_comment_user_picture' => t('User pictures in comments'),
-    'toggle_search'               => t('Search box'),
-    'toggle_favicon'              => t('Shortcut icon')
+    'logo'                 => t('Logo'),
+    'name'                 => t('Site name'),
+    'slogan'               => t('Site slogan'),
+    'mission'              => t('Mission statement'),
+    'node_user_picture'    => t('User pictures in posts'),
+    'comment_user_picture' => t('User pictures in comments'),
+    'search'               => t('Search box'),
+    'favicon'              => t('Shortcut icon')
   );
 
   // Some features are not always available
@@ -2036,9 +2048,9 @@ function system_theme_settings($key = '') {
   foreach ($toggles as $name => $title) {
     if ((!$key) || in_array($name, $features)) {
       // disable search box if search.module is disabled
-      $form['theme_settings'][$name] = array('#type' => 'checkbox', '#title' => $title, '#default_value' => $settings[$name]);
+      $form['theme_settings']['toggle_'. $name] = array('#type' => 'checkbox', '#title' => $title, '#default_value' => $settings['toggle_'. $name]);
       if (isset($disabled[$name])) {
-        $form['theme_settings'][$name]['#disabled'] = TRUE;
+        $form['theme_settings']['toggle_'. $name]['#disabled'] = TRUE;
       }
     }
   }
@@ -2068,7 +2080,7 @@ function system_theme_settings($key = '') {
   }
 
   // Logo settings
-  if ((!$key) || in_array('toggle_logo', $features)) {
+  if ((!$key) || in_array('logo', $features)) {
     $form['logo'] = array(
       '#type' => 'fieldset',
       '#title' => t('Logo image settings'),
@@ -2096,8 +2108,7 @@ function system_theme_settings($key = '') {
     );
   }
 
-  // Icon settings
-  if ((!$key) || in_array('toggle_favicon', $features)) {
+  if ((!$key) || in_array('favicon', $features)) {
     $form['favicon'] = array(
       '#type' => 'fieldset',
       '#title' => t('Shortcut icon settings'),

@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.256 2007/04/09 13:58:02 dries Exp $
+// $Id: block.module,v 1.257 2007/04/17 07:19:38 dries Exp $
 
 /**
  * @file
@@ -100,9 +100,9 @@ function block_menu() {
   $default = variable_get('theme_default', 'garland');
   foreach (list_themes() as $key => $theme) {
     $items['admin/build/block/list/'. $key] = array(
-      'title' => t('!key settings', array('!key' => $key)),
+      'title' => t('!key settings', array('!key' => $theme->info['name'])),
       'page arguments' => array('block_admin_display', $key),
-      'type' => $key== $default ? MENU_DEFAULT_LOCAL_TASK : MENU_LOCAL_TASK,
+      'type' => $key == $default ? MENU_DEFAULT_LOCAL_TASK : MENU_LOCAL_TASK,
       'weight' => $key == $default ? -10 : 0,
     );
   }

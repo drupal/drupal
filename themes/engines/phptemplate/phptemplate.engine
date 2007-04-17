@@ -1,5 +1,5 @@
 <?php
-// $Id: phptemplate.engine,v 1.62 2007/04/06 13:27:23 dries Exp $
+// $Id: phptemplate.engine,v 1.63 2007/04/17 07:19:39 dries Exp $
 
 /**
  * @file
@@ -14,23 +14,6 @@ function phptemplate_init($template) {
 }
 
 /**
- * @return
- *  Array of template features
- */
-function phptemplate_features() {
-  return array(
-    'toggle_logo',
-    'toggle_comment_user_picture',
-    'toggle_favicon',
-    'toggle_mission',
-    'toggle_name',
-    'toggle_node_user_picture',
-    'toggle_search',
-    'toggle_slogan'
-  );
-}
-
-/**
  * Implementation of hook_themes to tell Drupal what templates the engine
  * and the current theme use. The $existing argument will contain hooks
  * pre-defined by Drupal so that we can use that information if
@@ -38,7 +21,6 @@ function phptemplate_features() {
  */
 function phptemplate_theme($existing) {
   $templates = array(
-    'regions' => array('function' => 'phptemplate_regions'),
     'box' => array('file' => 'box'),
     'node' => array('file' => 'node'),
     'comment' => array('file' => 'comment'),
@@ -79,22 +61,6 @@ function phptemplate_theme($existing) {
 
 function phptemplate_templates($directory = 'themes') {
   return drupal_system_listing('^page\.tpl\.php$', $directory, 'filename');
-}
-
-/**
- * Declare the available regions implemented by this engine.
- *
- * @return
- *  An array of regions. The first array element will be used as the default region for themes.
- */
-function phptemplate_regions() {
-  return array(
-       'left' => t('left sidebar'),
-       'right' => t('right sidebar'),
-       'content' => t('content'),
-       'header' => t('header'),
-       'footer' => t('footer')
-  );
 }
 
 /**

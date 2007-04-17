@@ -1,4 +1,4 @@
-/* $Id: admin.css,v 1.12 2006/11/23 11:05:46 dries Exp $ */
+/* $Id: admin.css,v 1.13 2007/04/17 07:19:39 dries Exp $ */
 
 /*
 ** Formatting for administration page
@@ -96,4 +96,17 @@ table.system-status-report tr.ok th {
 }
 .theme-settings-bottom {
   clear: both;
+}
+
+/**
+ * Formatting for theme overview
+ */
+table.screenshot {
+  margin-right: 1em;
+}
+.theme-info h2 {
+  margin-bottom: 0;
+}
+.theme-info p {
+  margin-top: 0;
 }

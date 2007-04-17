@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.92 2007/04/15 14:41:13 dries Exp $
+// $Id: system.install,v 1.93 2007/04/17 07:19:39 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -494,12 +494,13 @@ function system_install() {
         filename varchar(255) NOT NULL default '',
         name varchar(255) NOT NULL default '',
         type varchar(255) NOT NULL default '',
-        description varchar(255) NOT NULL default '',
+        owner varchar(255) NOT NULL default '',
         status int NOT NULL default '0',
         throttle tinyint DEFAULT '0' NOT NULL,
         bootstrap int NOT NULL default '0',
         schema_version smallint NOT NULL default -1,
         weight int NOT NULL default '0',
+        info text,
         PRIMARY KEY (filename),
         KEY (weight)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
@@ -967,12 +968,13 @@ function system_install() {
         filename varchar(255) NOT NULL default '',
         name varchar(255) NOT NULL default '',
         type varchar(255) NOT NULL default '',
-        description varchar(255) NOT NULL default '',
+        owner varchar(255) NOT NULL default '',
         status int NOT NULL default '0',
         throttle smallint DEFAULT '0' NOT NULL,
         bootstrap int NOT NULL default '0',
         schema_version smallint NOT NULL default -1,
         weight int NOT NULL default '0',
+        info text,
         PRIMARY KEY (filename)
       )");
       db_query("CREATE INDEX {system}_weight_idx ON {system} (weight)");
@@ -1081,8 +1083,8 @@ function system_install() {
       break;
   }
 
-  db_query("INSERT INTO {system} (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES ('themes/engines/phptemplate/phptemplate.engine', 'phptemplate', 'theme_engine', '', 1, 0, 0, 0)");
-  db_query("INSERT INTO {system} (filename, name, type, description, status, throttle, bootstrap, schema_version) VALUES ('themes/garland/page.tpl.php', 'garland', 'theme', 'themes/engines/phptemplate/phptemplate.engine', 1, 0, 0, 0)");
+  db_query("INSERT INTO {system} (filename, name, type, owner, status, throttle, bootstrap, schema_version) VALUES ('themes/engines/phptemplate/phptemplate.engine', 'phptemplate', 'theme_engine', '', 1, 0, 0, 0)");
+  db_query("INSERT INTO {system} (filename, name, type, owner, status, throttle, bootstrap, schema_version, info) VALUES ('themes/garland/page.tpl.php', 'garland', 'theme', 'themes/engines/phptemplate/phptemplate.engine', 1, 0, 0, 0, '%s')", serialize(drupal_parse_info_file('themes/garland/garland.info') + system_theme_default()));
 
   db_query("INSERT INTO {users} (uid,name,mail) VALUES(0,'','')");
 
@@ -3705,6 +3707,32 @@ function system_update_6007() {
   $ret[] = update_sql("UPDATE {watchdog} SET severity = %d WHERE severity = 0", WATCHDOG_NOTICE);
   $ret[] = update_sql("UPDATE {watchdog} SET severity = %d WHERE severity = 1", WATCHDOG_WARNING);
   $ret[] = update_sql("UPDATE {watchdog} SET severity = %d WHERE severity = 2", WATCHDOG_ERROR);
+  return $ret;
+}
+
+/**
+ * Add info files to themes.
+ */
+function system_update_6008() {
+  $ret = array();
+
+  // Alter system table.
+  switch ($GLOBALS['db_type']) {
+    case 'pgsql':
+      db_add_column($ret, 'system', 'info', 'text');
+      db_change_column($ret, 'system', 'description', 'owner', 'varchar(255)', array('not null' => TRUE, 'default' => "''"));
+      break;
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql("ALTER TABLE {system} ADD info longtext");
+      $ret[] = update_sql("ALTER TABLE {system} CHANGE description owner varchar(255) NOT NULL default ''");
+      break;
+  }
+
+  // Rebuild system table contents.
+  module_rebuild_cache();
+  system_theme_data();
+
   return $ret;
 }
 

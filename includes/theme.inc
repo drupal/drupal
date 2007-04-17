@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.349 2007/04/15 15:36:10 dries Exp $
+// $Id: theme.inc,v 1.350 2007/04/17 07:19:38 dries Exp $
 
 /**
  * @file
@@ -59,7 +59,7 @@ function init_theme() {
     // File is a style; loads its CSS.
     // Set theme to its template/theme
     drupal_add_css($themes[$theme]->filename, 'theme');
-    $theme = basename(dirname($themes[$theme]->description));
+    $theme = basename(dirname($themes[$theme]->owner));
   }
   else {
     // File is a template/theme
@@ -74,10 +74,10 @@ function init_theme() {
    include_once './'. $themes[$theme]->filename;
    _theme_load_registry($theme);
   }
-  elseif (strpos($themes[$theme]->description, '.engine')) {
+  elseif (strpos($themes[$theme]->owner, '.engine')) {
     // file is a template; include its engine
-    include_once './'. $themes[$theme]->description;
-    $theme_engine = basename($themes[$theme]->description, '.engine');
+    include_once './'. $themes[$theme]->owner;
+    $theme_engine = basename($themes[$theme]->owner, '.engine');
     if (function_exists($theme_engine .'_init')) {
       call_user_func($theme_engine .'_init', $themes[$theme]);
     }
@@ -210,6 +210,7 @@ function list_themes($refresh = FALSE) {
     $result = db_query("SELECT * FROM {system} WHERE type = 'theme'");
     while ($theme = db_fetch_object($result)) {
       if (file_exists($theme->filename)) {
+        $theme->info = unserialize($theme->info);
         $list[$theme->name] = $theme;
       }
     }
@@ -238,6 +239,7 @@ function list_theme_engines($refresh = FALSE) {
     $result = db_query("SELECT * FROM {system} WHERE type = 'theme_engine' AND status = '1' ORDER BY name");
     while ($engine = db_fetch_object($result)) {
       if (file_exists($engine->filename)) {
+        $engine->info = unserialize($engine->info);
         $list[$engine->name] = $engine;
       }
     }

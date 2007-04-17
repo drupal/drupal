@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.629 2007/04/15 15:36:10 dries Exp $
+// $Id: common.inc,v 1.630 2007/04/17 07:19:38 dries Exp $
 
 /**
  * @file
@@ -2481,4 +2481,115 @@ function drupal_common_themes() {
       'arguments' => array('element' => NULL, 'value' => NULL),
     ),
   );
+}
+
+/**
+ * Parse Drupal info file format.
+ *
+ * Files should use an ini-like format to specify values.
+ * White-space generally doesn't matter, except inside values.
+ * e.g.
+ * key = value
+ * key = "value"
+ * key = 'value'
+ * key = "multi-line
+ *
+ * value"
+ * key = 'multi-line
+ *
+ * value'
+ *
+ * Arrays are created using a GET-like syntax:
+ *
+ * key[] = "numeric array"
+ * key[index] = "associative array"
+ * key[index][] = "nested numeric array"
+ * key[index][index] = "nested associative array"
+ *
+ * PHP constants are substituted in, but only when used as the entire value.
+ *
+ * Comments should start with a semi-colon at the beginning of a line.
+ *
+ * This function is NOT for placing arbitrary module-specific settings. Use
+ * variable_get() and variable_set() for that.
+ *
+ * Information stored in the module.info file:
+ *   name         - The real name of the module for display purposes.
+ *   description  - A brief description of the module.
+ *   dependencies - An array of short names (shortname) of other modules this
+ *                  module depends on.
+ *   package      - The name of the package of modules this module belongs to.
+ *
+ * Example of .info file:
+ *   name = Forum
+ *   description = Enables threaded discussions about general topics.
+ *   dependencies[] = taxonomy
+ *   dependencies[] = comment
+ *   package = Core - optional
+ *   version = VERSION
+ *
+ * @param $filename
+ *   The file we are parsing. Accepts file with relative or absolute path.
+ * @return
+ *   The info array.
+ */
+function drupal_parse_info_file($filename) {
+  $info = array();
+
+  if (!file_exists($filename)) {
+    return $info;
+  }
+
+  $data = file_get_contents($filename);
+  if (preg_match_all('
+    @^\s*                           # Start at the beginning of a line, ignoring leading whitespace
+    ((?:
+      [^=;\[\]]|                    # Key names cannot contain equal signs, semi-colons or square brackets,
+      \[[^\[\]]*\]                  # unless they are balanced and not nested
+    )+?)
+    \s*=\s*                         # Key/value pairs are separated by equal signs (ignoring white-space)
+    (?:
+      ("(?:[^"]|(?<=\\\\)")*")|     # Double-quoted string, which may contain slash-escaped quotes/slashes
+      (\'(?:[^\']|(?<=\\\\)\')*\')| # Single-quoted string, which may contain slash-escaped quotes/slashes
+      ([^\r\n]*?)                   # Non-quoted string
+    )\s*$                           # Stop at the next end of a line, ignoring trailing whitespace
+    @msx', $data, $matches, PREG_SET_ORDER)) {
+    foreach ($matches as $match) {
+      // Fetch the key and value string
+      $i = 0;
+      foreach (array('key', 'value1', 'value2', 'value3') as $var) {
+        $$var = isset($match[++$i]) ? $match[$i] : '';
+      }
+      $value = stripslashes(substr($value1, 1, -1)) . stripslashes(substr($value2, 1, -1)) . $value3;
+
+      // Parse array syntax
+      $keys = preg_split('/\]?\[/', rtrim($key, ']'));
+      $last = array_pop($keys);
+      $parent = &$info;
+
+      // Create nested arrays
+      foreach ($keys as $key) {
+        if ($key == '') {
+          $key = count($parent);
+        }
+        if (!isset($parent[$key]) || !is_array($parent[$key])) {
+          $parent[$key] = array();
+        }
+        $parent = &$parent[$key];
+      }
+
+      // Handle PHP constants
+      if (defined($value)) {
+        $value = constant($value);
+      }
+
+      // Insert actual value
+      if ($last == '') {
+        $last = count($parent);
+      }
+      $parent[$last] = $value;
+    }
+  }
+
+  return $info;
 }
