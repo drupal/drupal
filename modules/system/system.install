@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.93 2007/04/17 07:19:39 dries Exp $
+// $Id: system.install,v 1.94 2007/04/17 08:13:11 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -3704,9 +3704,9 @@ function system_update_6006() {
  */
 function system_update_6007() {
   $ret = array();
-  $ret[] = update_sql("UPDATE {watchdog} SET severity = %d WHERE severity = 0", WATCHDOG_NOTICE);
-  $ret[] = update_sql("UPDATE {watchdog} SET severity = %d WHERE severity = 1", WATCHDOG_WARNING);
-  $ret[] = update_sql("UPDATE {watchdog} SET severity = %d WHERE severity = 2", WATCHDOG_ERROR);
+  $ret[] = update_sql("UPDATE {watchdog} SET severity = ". WATCHDOG_NOTICE ." WHERE severity = 0");
+  $ret[] = update_sql("UPDATE {watchdog} SET severity = ". WATCHDOG_WARNING ." WHERE severity = 1");
+  $ret[] = update_sql("UPDATE {watchdog} SET severity = ". WATCHDOG_ERROR ." WHERE severity = 2");
   return $ret;
 }
 
