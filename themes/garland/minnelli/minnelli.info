@@ -1,0 +1,3 @@
+; $Id: minnelli.info,v 1.1 2007/04/17 08:08:02 dries Exp $
+name = Minnelli
+description = Tableless, recolorable, multi-column, fixed width theme.

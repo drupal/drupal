@@ -1,0 +1,9 @@
+; $Id: chameleon.info,v 1.1 2007/04/17 08:08:02 dries Exp $
+name = Chameleon
+description = Minimalist tabled theme with light colors.
+regions[left] = Left sidebar
+regions[right] = Right sidebar
+features[] = logo
+features[] = favicon
+features[] = name
+features[] = slogan

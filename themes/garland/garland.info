@@ -1,0 +1,3 @@
+; $Id: garland.info,v 1.1 2007/04/17 08:08:02 dries Exp $
+name = Garland
+description = Tableless, recolorable, multi-column, fluid width theme (default).

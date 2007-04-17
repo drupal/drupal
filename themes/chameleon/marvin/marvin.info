@@ -1,0 +1,5 @@
+; $Id: marvin.info,v 1.1 2007/04/17 08:08:02 dries Exp $
+name = Marvin
+description = Boxy tabled theme in all grays.
+regions[left] = Left sidebar
+regions[right] = Right sidebar
