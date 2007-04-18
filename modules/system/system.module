@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.468 2007/04/17 07:19:39 dries Exp $
+// $Id: system.module,v 1.469 2007/04/18 20:42:23 dries Exp $
 
 /**
  * @file
@@ -1281,7 +1281,7 @@ function system_themes_form_submit($form_id, $form_values) {
  * Modules can be enabled or disabled and set for throttling if the throttle module is enabled.
  * The list of modules gets populated by module.info files, which contain each module's name,
  * description and dependencies.
- * @sa _module_parse_info_file for information on module.info descriptors.
+ * @sa drupal_parse_info_file for information on module.info descriptors.
  *
  * Dependency checking is performed to ensure that a module cannot be enabled if the module has
  * disabled dependencies and also to ensure that the module cannot be disabled if the module has
@@ -1700,7 +1700,7 @@ function system_modules_uninstall_confirm_form($form_values) {
 
   // Construct the hidden form elements and list items.
   foreach (array_filter($form_values['uninstall']) as $module => $value) {
-    $info = _module_parse_info_file(dirname(drupal_get_filename('module', $module)) .'/'. $module .'.info');
+    $info = drupal_parse_info_file(dirname(drupal_get_filename('module', $module)) .'/'. $module .'.info');
     $uninstall[] = $info['name'];
     $form['uninstall'][$module] = array('#type' => 'hidden',
       '#value' => 1,
