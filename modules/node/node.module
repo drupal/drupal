@@ -2350,7 +2350,11 @@ function node_revisions() {
 /**
  * Menu callback; Generate a listing of promoted nodes.
  */
-function node_page_default() {
+function node_page_default($arg = NULL) {
+  // Prevent fallback to this page for node/*.
+  if (isset($arg)) {
+    return MENU_NOT_FOUND;
+  }
 
   $result = pager_query(db_rewrite_sql('SELECT n.nid, n.sticky, n.created FROM {node} n WHERE n.promote = 1 AND n.status = 1 ORDER BY n.sticky DESC, n.created DESC'), variable_get('default_nodes_main', 10));
 
