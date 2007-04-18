@@ -1,5 +1,5 @@
 <?php
-// $Id: language.inc,v 1.3 2007/04/13 08:56:57 dries Exp $
+// $Id: language.inc,v 1.4 2007/04/18 21:56:18 goba Exp $
 
 /**
  * @file
@@ -107,7 +107,7 @@ function language_url_rewrite(&$path, &$options) {
         break;
 
       case LANGUAGE_NEGOTIATION_DOMAIN:
-        if ($rewritelang->domain) {
+        if ($path_language->domain) {
           $options['absolute'] = TRUE;
           $path = $path_language->domain .'/'. $path;
         }
