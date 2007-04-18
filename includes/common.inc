@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.630 2007/04/17 07:19:38 dries Exp $
+// $Id: common.inc,v 1.631 2007/04/18 02:49:33 unconed Exp $
 
 /**
  * @file
@@ -2489,24 +2489,32 @@ function drupal_common_themes() {
  * Files should use an ini-like format to specify values.
  * White-space generally doesn't matter, except inside values.
  * e.g.
- * key = value
- * key = "value"
- * key = 'value'
- * key = "multi-line
  *
- * value"
- * key = 'multi-line
+ * @verbatim
+ *   key = value
+ *   key = "value"
+ *   key = 'value'
+ *   key = "multi-line
  *
- * value'
+ *   value"
+ *   key = 'multi-line
+ *
+ *   value'
+ *   key
+ *   =
+ *   'value'
+ * @endverbatim
  *
  * Arrays are created using a GET-like syntax:
  *
- * key[] = "numeric array"
- * key[index] = "associative array"
- * key[index][] = "nested numeric array"
- * key[index][index] = "nested associative array"
+ * @verbatim
+ *   key[] = "numeric array"
+ *   key[index] = "associative array"
+ *   key[index][] = "nested numeric array"
+ *   key[index][index] = "nested associative array"
+ * @endverbatim
  *
- * PHP constants are substituted in, but only when used as the entire value.
+ * PHP constants are substituted in, but only when used as the entire value:
  *
  * Comments should start with a semi-colon at the beginning of a line.
  *
@@ -2514,19 +2522,20 @@ function drupal_common_themes() {
  * variable_get() and variable_set() for that.
  *
  * Information stored in the module.info file:
- *   name         - The real name of the module for display purposes.
- *   description  - A brief description of the module.
- *   dependencies - An array of short names (shortname) of other modules this
- *                  module depends on.
- *   package      - The name of the package of modules this module belongs to.
+ * - name: The real name of the module for display purposes.
+ * - description: A brief description of the module.
+ * - dependencies: An array of shortnames of other modules this module depends on.
+ * - package: The name of the package of modules this module belongs to.
  *
  * Example of .info file:
+ * @verbatim
  *   name = Forum
  *   description = Enables threaded discussions about general topics.
  *   dependencies[] = taxonomy
  *   dependencies[] = comment
  *   package = Core - optional
  *   version = VERSION
+ * @endverbatim
  *
  * @param $filename
  *   The file we are parsing. Accepts file with relative or absolute path.
