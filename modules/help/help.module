@@ -111,7 +111,7 @@ function help_page() {
   $name = arg(2);
   $output = '';
   if (module_hook($name, 'help')) {
-    $module = _module_parse_info_file(drupal_get_path('module', $name) .'/'. $name .'.info');
+    $module = drupal_parse_info_file(drupal_get_path('module', $name) .'/'. $name .'.info');
     drupal_set_title($module['name']);
 
     $temp = module_invoke($name, 'help', "admin/help#$name");
