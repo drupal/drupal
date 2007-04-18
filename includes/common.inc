@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.631 2007/04/18 02:49:33 unconed Exp $
+// $Id: common.inc,v 1.632 2007/04/18 20:35:45 dries Exp $
 
 /**
  * @file
@@ -431,7 +431,10 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
 
   // Make sure the socket opened properly.
   if (!$fp) {
-    $result->error = trim($errno .' '. $errstr);
+    // When a network error occurs, we make sure that it is a negative
+    // number so it can clash with the HTTP status codes.
+    $result->code = -$errno;
+    $result->error = trim($errstr);
     return $result;
   }
 
