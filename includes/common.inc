@@ -429,6 +429,7 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
   // Make sure the socket opened properly.
   if (!$fp) {
     $result->error = trim($errno .' '. $errstr);
+    $result->code = -$errno;
     return $result;
   }
 
