@@ -1,3 +1,4 @@
-; $Id: pushbutton.info,v 1.1 2007/04/17 08:08:02 dries Exp $
+; $Id: pushbutton.info,v 1.2 2007/04/20 08:44:01 dries Exp $
 name = Pushbutton
 description = Tabled, multi-column theme in blue and orange tones.
+version = VERSION

@@ -1,3 +1,4 @@
-; $Id: bluemarine.info,v 1.1 2007/04/17 08:08:01 dries Exp $
+; $Id: bluemarine.info,v 1.2 2007/04/20 08:44:01 dries Exp $
 name = Bluemarine
 description = Table-based multi-column theme with a marine and ash color scheme.
+version = VERSION
