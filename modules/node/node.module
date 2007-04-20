@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.800 2007/04/10 12:11:42 dries Exp $
+// $Id: node.module,v 1.801 2007/04/20 08:50:08 dries Exp $
 
 /**
  * @file
@@ -649,7 +649,7 @@ function node_save(&$node) {
                      'title' => "'%s'", 'body' => "'%s'",
                      'teaser' => "'%s'", 'timestamp' => '%d',
                      'uid' => '%d', 'format' => '%d');
-  if (!empty($node->log) || $node->is_new) {
+  if (!empty($node->log) || $node->is_new || $node->revision) {
     // Only store the log message if there's something to store; this prevents
     // existing log messages from being unintentionally overwritten by a blank
     // message. A new revision will have an empty log message (or $node->log).
