@@ -1226,6 +1226,7 @@ function theme_system_themes_form($form) {
     $row = array();
     $row[] = drupal_render($form[$key]['screenshot']);
     $row[] = $theme;
+    $row[] = $info['version'];
     $row[] = array('data' => drupal_render($form['status'][$key]), 'align' => 'center');
     if ($form['theme_default']) {
       $row[] = array('data' => drupal_render($form['theme_default'][$key]), 'align' => 'center');
@@ -1234,7 +1235,7 @@ function theme_system_themes_form($form) {
     $rows[] = $row;
   }
 
-  $header = array(t('Screenshot'), t('Name'), t('Enabled'), t('Default'), t('Operations'));
+  $header = array(t('Screenshot'), t('Name'), t('Version'), t('Enabled'), t('Default'), t('Operations'));
   $output = theme('table', $header, $rows);
   $output .= drupal_render($form);
   return $output;

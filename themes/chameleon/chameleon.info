@@ -7,3 +7,4 @@ features[] = logo
 features[] = favicon
 features[] = name
 features[] = slogan
+version = VERSION
