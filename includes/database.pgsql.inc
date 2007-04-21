@@ -395,6 +395,13 @@ function db_table_exists($table) {
 }
 
 /**
+ * Check if a column exists in the given table.
+ */
+function db_column_exists($table, $column) {
+  return db_result(db_query("SELECT COUNT(pg_attribute.attname) FROM pg_class, pg_attribute WHERE pg_attribute.attrelid = pg_class.oid AND pg_class.relname = '{". db_escape_table($table) ."}' AND attname='%s'", $column));
+}
+
+/**
  * Verify if the database is set up correctly.
  */
 function db_check_setup() {

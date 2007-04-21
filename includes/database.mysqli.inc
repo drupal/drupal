@@ -402,6 +402,13 @@ function db_table_exists($table) {
 }
 
 /**
+ * Check if a column exists in the given table.
+ */
+function db_column_exists($table, $column) {
+  return db_num_rows(db_query("SHOW COLUMNS FROM {%s} LIKE '%s'", $table, $column));
+}
+
+/**
  * Wraps the given table.field entry with a DISTINCT(). The wrapper is added to
  * the SELECT list entry of the given query and the resulting query is returned.
  * This function only applies the wrapper if a DISTINCT doesn't already exist in
