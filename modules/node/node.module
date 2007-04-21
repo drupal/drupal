@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.802 2007/04/21 18:00:22 dries Exp $
+// $Id: node.module,v 1.803 2007/04/21 18:10:53 dries Exp $
 
 /**
  * @file
@@ -1422,15 +1422,15 @@ function node_filter_form() {
       $value = module_invoke('taxonomy', 'get_term', $value);
       $value = $value->name;
     }
-    else if ($type == 'type') {
-      // Remove the type option if it is already being filtered on.
-      unset($filters['type']);
-    }
     else {
       $value = $filters[$type]['options'][$value];
     }
     $string = ($i++ ? '<em>and</em> where <strong>%a</strong> is <strong>%b</strong>' : '<strong>%a</strong> is <strong>%b</strong>');
     $form['filters']['current'][] = array('#value' => t($string, array('%a' => $filters[$type]['title'] , '%b' => $value)));
+    if ($type == 'type') {
+      // Remove the type option if it is already being filtered on.
+      unset($filters['type']);
+    }
   }
 
   foreach ($filters as $key => $filter) {
