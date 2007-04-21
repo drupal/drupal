@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.771 2007/04/13 08:56:59 dries Exp $
+// $Id: user.module,v 1.772 2007/04/21 20:47:30 goba Exp $
 
 /**
  * @file
@@ -331,7 +331,7 @@ function user_validate_picture($file, &$edit, $user) {
       $form_values['picture'] = $file->filepath;
     }
     else {
-      form_set_error('picture_upload', t("Failed to upload the picture image; the %directory directory doesn't exist.", array('%directory' => variable_get('user_picture_path', 'pictures'))));
+      form_set_error('picture_upload', t("Failed to upload the picture image; the %directory directory doesn't exist or is not writable.", array('%directory' => variable_get('user_picture_path', 'pictures'))));
     }
   }
 }
