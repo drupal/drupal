@@ -1,5 +1,5 @@
 <?php
-// $Id: database.pgsql.inc,v 1.44 2007/04/13 08:56:57 dries Exp $
+// $Id: database.pgsql.inc,v 1.45 2007/04/21 18:08:41 dries Exp $
 
 /**
  * @file
@@ -392,6 +392,13 @@ function db_unlock_tables() {
  */
 function db_table_exists($table) {
   return db_num_rows(db_query("SELECT relname FROM pg_class WHERE relname = '{". db_escape_table($table) ."}'"));
+}
+
+/**
+ * Check if a column exists in the given table.
+ */
+function db_column_exists($table, $column) {
+  return db_result(db_query("SELECT COUNT(pg_attribute.attname) FROM pg_class, pg_attribute WHERE pg_attribute.attrelid = pg_class.oid AND pg_class.relname = '{". db_escape_table($table) ."}' AND attname='%s'", $column));
 }
 
 /**

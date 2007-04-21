@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysql.inc,v 1.69 2007/04/13 08:56:57 dries Exp $
+// $Id: database.mysql.inc,v 1.70 2007/04/21 18:08:41 dries Exp $
 
 /**
  * @file
@@ -419,6 +419,13 @@ function db_unlock_tables() {
  */
 function db_table_exists($table) {
   return db_num_rows(db_query("SHOW TABLES LIKE '{". db_escape_table($table) ."}'"));
+}
+
+/**
+ * Check if a column exists in the given table.
+ */
+function db_column_exists($table, $column) {
+  return db_num_rows(db_query("SHOW COLUMNS FROM {%s} LIKE '%s'", $table, $column));
 }
 
 /**
