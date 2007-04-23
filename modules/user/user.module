@@ -53,6 +53,9 @@ function user_theme() {
     'user_filters' => array(
       'arguments' => array('form' => NULL),
     ),
+    'user_signature' => array(
+      'arguments' => array('signature' => NULL),
+    ),
   );
 }
 
