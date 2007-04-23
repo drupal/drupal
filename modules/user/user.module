@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.772 2007/04/21 20:47:30 goba Exp $
+// $Id: user.module,v 1.773 2007/04/23 16:58:10 dries Exp $
 
 /**
  * @file
@@ -52,6 +52,9 @@ function user_theme() {
     ),
     'user_filters' => array(
       'arguments' => array('form' => NULL),
+    ),
+    'user_signature' => array(
+      'arguments' => array('signature' => NULL),
     ),
   );
 }
