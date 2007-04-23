@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.188 2007/04/13 08:56:57 dries Exp $
+// $Id: form.inc,v 1.189 2007/04/23 17:00:36 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -954,7 +954,7 @@ function form_select_options($element, $choices = NULL) {
     }
     else {
       $key = (string)$key;
-      if ($value_valid && ((string)$element['#value'] === $key || ($value_is_array && in_array($key, $element['#value'])))) {
+      if ($value_valid && (!$value_is_array && (string)$element['#value'] === $key || ($value_is_array && in_array($key, $element['#value'])))) {
         $selected = ' selected="selected"';
       }
       else {
