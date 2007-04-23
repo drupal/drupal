@@ -193,6 +193,13 @@ function user_save($account, $array = array(), $category = 'account') {
       sess_destroy_uid($account->uid);
     }
 
+    // If the password changed, delete all open sessions and recreate
+    // the current one.
+    if (isset($array['pass'])) {
+      sess_destroy_uid($account->uid);
+      sess_regenerate();
+    }
+
     // Refresh user object
     $user = user_load(array('uid' => $account->uid));
     user_module_invoke('after_update', $array, $user, $category);
