@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.159 2007/04/24 13:53:10 dries Exp $
+// $Id: bootstrap.inc,v 1.160 2007/04/24 15:53:53 goba Exp $
 
 /**
  * @file
@@ -648,7 +648,7 @@ function request_uri() {
  * @param $message
  *   The message to store in the log. See t() for documentation
  *   on how $message and $variables interact. Keep $message
- *   translateable by not concatenating dynamic values into it!
+ *   translatable by not concatenating dynamic values into it!
  * @param $variables
  *   Array of variables to replace in the message on display or
  *   NULL if message is already translated or not possible to

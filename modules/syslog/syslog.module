@@ -1,5 +1,5 @@
 <?php
-// $Id: syslog.module,v 1.4 2007/04/24 13:53:14 dries Exp $
+// $Id: syslog.module,v 1.5 2007/04/24 15:53:53 goba Exp $
 
 /**
  * @file
@@ -98,8 +98,8 @@ function theme_syslog_format($entry) {
       '@referer_uri' => $entry['referer'],
       '@uid'         => $entry['user']->uid,
       '@link'        => strip_tags($entry['link']),
-      // Keep message English, but replace variable components.
-      '@message'     => strip_tags(strtr($entry['message'], $entry['variables'])),
+      // Keep message English, but replace variable components, if present.
+      '@message'     => strip_tags(is_null($entry['variables']) ? $entry['message'] : strtr($entry['message'], $entry['variables'])),
     ));
   return $message;
 }

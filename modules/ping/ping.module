@@ -1,5 +1,5 @@
 <?php
-// $Id: ping.module,v 1.46 2007/04/24 13:53:14 dries Exp $
+// $Id: ping.module,v 1.47 2007/04/24 15:53:53 goba Exp $
 
 /**
  * @file
@@ -52,7 +52,7 @@ function ping_ping($name = '', $url = '') {
   $result = xmlrpc('http://rpc.pingomatic.com', 'weblogUpdates.ping', $name, $url);
 
   if ($result === FALSE) {
-    watchdog('directory ping', 'Failed to notify pingomatic.com (site).', WATCHDOG_WARNING);
+    watchdog('directory ping', 'Failed to notify pingomatic.com (site).', array(), WATCHDOG_WARNING);
   }
 }
 
