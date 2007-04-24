@@ -3780,7 +3780,7 @@ function system_update_6009() {
 /**
  * Add variable replacement for watchdog messages.
  */
-function system_update_6009() {
+function system_update_6010() {
   $ret = array();
   switch ($GLOBALS['db_type']) {
     case 'pgsql':

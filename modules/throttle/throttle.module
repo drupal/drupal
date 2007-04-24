@@ -106,7 +106,7 @@ function throttle_exit() {
     }
     if ($message) {
       cache_clear_all();
-      watchdog('throttle', t('Throttle') .': '. $message);
+      watchdog('throttle', 'Throttle: %message', array('%message' => $message));
     }
   }
 }
