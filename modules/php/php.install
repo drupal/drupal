@@ -1,0 +1,29 @@
+<?php
+// $Id: php.install,v 1.1 2007/04/24 10:54:34 dries Exp $
+
+/**
+ * Implementation of hook_install().
+ */
+function php_install() {
+  $format_exists = db_result(db_query("SELECT COUNT(*) FROM {filter_formats} WHERE name = 'PHP code'"));
+  // Add a PHP code input format, if it does not exist. Do this only for the
+  // first install (or if the format has been manually deleted) as there is no
+  // reliable method to identify the format in an uninstall hook or in
+  // subsequent clean installs.
+  if (!$format_exists) {
+    db_query("INSERT INTO {filter_formats} (name, roles, cache) VALUES ('PHP code', '', 0)");
+    $format = db_result(db_query("SELECT MAX(format) FROM {filter_formats}"));
+
+    // Enable the PHP evaluator filter.
+    db_query("INSERT INTO {filters} (format, module, delta, weight) VALUES (%d, 'php', 0, 0)", $format);
+
+    drupal_set_message(t('A !php-code input format has been created.', array('!php-code' => l('PHP code', 'admin/settings/filters/'. $format))));
+  }
+}
+
+/**
+ * Implementation of hook_disable().
+ */
+function php_disable() {
+  drupal_set_message(t('The PHP module has been disabled. Please note that any existing content that was using the PHP filter will now be visible in plain text. This might pose a security risk by exposing sensitive information, if any, used in the PHP code.'));
+}

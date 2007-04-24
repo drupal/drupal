@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.94 2007/04/17 08:13:11 dries Exp $
+// $Id: system.install,v 1.95 2007/04/24 10:54:35 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -1101,18 +1101,25 @@ function system_install() {
 
   db_query("INSERT INTO {node_access} VALUES (0, 0, 'all', 1, 0, 0)");
 
-  db_query("INSERT INTO {filter_formats} (name, roles, cache) VALUES ('Filtered HTML',',1,2,',1)");
-  db_query("INSERT INTO {filter_formats} (name, roles, cache) VALUES ('PHP code','',0)");
-  db_query("INSERT INTO {filter_formats} (name, roles, cache) VALUES ('Full HTML','',1)");
+  // Add input formats.
+  db_query("INSERT INTO {filter_formats} (name, roles, cache) VALUES ('Filtered HTML', ',1,2,', 1)");
+  db_query("INSERT INTO {filter_formats} (name, roles, cache) VALUES ('Full HTML', '', 1)");
 
-  db_query("INSERT INTO {filters} VALUES (1,'filter',3,0)");
-  db_query("INSERT INTO {filters} VALUES (1,'filter',0,1)");
-  db_query("INSERT INTO {filters} VALUES (1,'filter',2,2)");
+  // Enable filters for each input format.
 
-  db_query("INSERT INTO {filters} VALUES (2,'filter',1,0)");
+  // Filtered HTML:
+  // URL filter.
+  db_query("INSERT INTO {filters} (format, module, delta, weight) VALUES (1, 'filter', 2, 0)");
+  // HTML filter.
+  db_query("INSERT INTO {filters} (format, module, delta, weight) VALUES (1, 'filter', 0, 1)");
+  // Line break filter.
+  db_query("INSERT INTO {filters} (format, module, delta, weight) VALUES (1, 'filter', 1, 2)");
 
-  db_query("INSERT INTO {filters} VALUES (3,'filter',3,0)");
-  db_query("INSERT INTO {filters} VALUES (3,'filter',2,1)");
+  // Full HTML:
+  // URL filter.
+  db_query("INSERT INTO {filters} (format, module, delta, weight) VALUES (2, 'filter', 2, 0)");
+  // Line break filter.
+  db_query("INSERT INTO {filters} (format, module, delta, weight) VALUES (2, 'filter', 1, 1)");
 
   db_query("INSERT INTO {variable} (name,value) VALUES ('filter_html_1','i:1;')");
 
@@ -3732,6 +3739,40 @@ function system_update_6008() {
   // Rebuild system table contents.
   module_rebuild_cache();
   system_theme_data();
+
+  return $ret;
+}
+
+/**
+ * The PHP filter is now a separate module.
+ */
+function system_update_6009() {
+  $ret = array();
+
+  // Delete existing PHP filter and input format.
+  $ret[] = update_sql("DELETE FROM {filter_formats} WHERE format = 2");
+  $ret[] = update_sql("DELETE FROM {filters} WHERE format = 2");
+
+  // Enable the PHP filter module.
+  $ret[] = update_sql("UPDATE {system} SET status = 1 WHERE name = 'php' AND type = 'module'");
+
+  // Add the PHP Code input format.
+  $ret[] = update_sql("INSERT INTO {filter_formats} (name, roles, cache) VALUES ('PHP code', '', 0)");
+  $format = db_result(db_query("SELECT MAX(format) FROM {filter_formats}"));
+
+  // Enable the PHP evaluator filter.
+  db_query("INSERT INTO {filters} (format, module, delta, weight) VALUES (%d, 'php', 0, 0)", $format);
+
+  // If any other input formats use the PHP evaluator, update them accordingly.
+  $ret[] = update_sql("UPDATE {filters} SET delta = 0, module = 'php' WHERE module = 'filter' AND delta = 1");
+
+  // With the removal of the PHP evaluator filter, the deltas of the line break
+  // and URL filter have changed.
+  $ret[] = update_sql("UPDATE {filters} SET delta = 1 WHERE module = 'filter' AND delta = 2");
+  $ret[] = update_sql("UPDATE {filters} SET delta = 2 WHERE module = 'filter' AND delta = 3");
+
+  // Update any nodes associated with the PHP input format.
+  db_query("UPDATE {node_revisions} SET format = %d WHERE format = 2", $format);
 
   return $ret;
 }

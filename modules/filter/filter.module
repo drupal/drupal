@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.169 2007/04/15 15:36:10 dries Exp $
+// $Id: filter.module,v 1.170 2007/04/24 10:54:34 dries Exp $
 
 /**
  * @file
@@ -73,7 +73,7 @@ function filter_theme() {
 function filter_menu() {
   $items['admin/settings/filters'] = array(
     'title' => t('Input formats'),
-    'description' => t('Configure how content input by users is filtered, including allowed HTML tags, PHP code tags. Also allows enabling of module-provided filters.'),
+    'description' => t('Configure how content input by users is filtered, including allowed HTML tags. Also allows enabling of module-provided filters.'),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('filter_admin_overview'),
     'access arguments' => array('administer filters'),
@@ -257,40 +257,12 @@ function filter_filter_tips($delta, $format, $long = FALSE) {
     case 1:
       switch ($long) {
         case 0:
-          return t('You may post PHP code. You should include &lt;?php ?&gt; tags.');
-        case 1:
-          return t('
-<h4>Using custom PHP code</h4>
-<p>If you know how to script in PHP, Drupal gives you the power to embed any script you like. It will be executed when the page is viewed and dynamically embedded into the page. This gives you amazing flexibility and power, but of course with that comes danger and insecurity if you do not write good code. If you are not familiar with PHP, SQL or with the site engine, avoid experimenting with PHP because you can corrupt your database or render your site insecure or even unusable! If you do not plan to do fancy stuff with your content then you are probably better off with straight HTML.</p>
-<p>Remember that the code within each PHP item must be valid PHP code - including things like correctly terminating statements with a semicolon. It is highly recommended that you develop your code separately using a simple test script on top of a test database before migrating to your production environment.</p>
-<p>Notes:</p><ul><li>You can use global variables, such as configuration parameters, within the scope of your PHP code but remember that global variables which have been given values in your code will retain these values in the engine afterwards.</li><li>register_globals is now set to <strong>off</strong> by default. If you need form information you need to get it from the "superglobals" $_POST, $_GET, etc.</li><li>You can either use the <code>print</code> or <code>return</code> statement to output the actual content for your item.</li></ul>
-<p>A basic example:</p>
-<blockquote><p>You want to have a box with the title "Welcome" that you use to greet your visitors. The content for this box could be created by going:</p>
-<pre>
-  print t("Welcome visitor, ... welcome message goes here ...");
-</pre>
-<p>If we are however dealing with a registered user, we can customize the message by using:</p>
-<pre>
-  global $user;
-  if ($user->uid) {
-    print t("Welcome $user->name, ... welcome message goes here ...");
-  }
-  else {
-    print t("Welcome visitor, ... welcome message goes here ...");
-  }
-</pre></blockquote>
-<p>For more in-depth examples, we recommend that you check the existing Drupal code and use it as a starting point, especially for sidebar boxes.</p>');
-      }
-
-    case 2:
-      switch ($long) {
-        case 0:
           return t('Lines and paragraphs break automatically.');
         case 1:
           return t('Lines and paragraphs are automatically recognized. The &lt;br /&gt; line break, &lt;p&gt; paragraph and &lt;/p&gt; close paragraph tags are inserted automatically. If paragraphs are not recognized simply add a couple blank lines.');
       }
-
-    case 3:
+      break;
+    case 2:
        return t('Web page addresses and e-mail addresses turn into links automatically.');
   }
 }
@@ -973,28 +945,23 @@ function theme_filter_tips_more_info() {
  * Implementation of hook_filter(). Contains a basic set of essential filters.
  * - HTML filter:
  *     Validates user-supplied HTML, transforming it as necessary.
- * - PHP evaluator:
- *     Executes PHP code.
  * - Line break converter:
+ *     Converts newlines into paragraph and break tags.
+ * - URL and e-mail address filter:
  *     Converts newlines into paragraph and break tags.
  */
 function filter_filter($op, $delta = 0, $format = -1, $text = '') {
   switch ($op) {
     case 'list':
-      return array(0 => t('HTML filter'), 1 => t('PHP evaluator'), 2 => t('Line break converter'), 3 => t('URL filter'));
-
-    case 'no cache':
-      return $delta == 1; // No caching for the PHP evaluator.
+      return array(0 => t('HTML filter'), 1 => t('Line break converter'), 2 => t('URL filter'));
 
     case 'description':
       switch ($delta) {
         case 0:
           return t('Allows you to restrict if users can post HTML and which tags to filter out.');
         case 1:
-          return t('Runs a piece of PHP code. The usage of this filter should be restricted to administrators only!');
-        case 2:
           return t('Converts line breaks into HTML (i.e. &lt;br&gt; and &lt;p&gt; tags).');
-        case 3:
+        case 2:
           return t('Turns web and e-mail addresses into clickable links.');
         default:
           return;
@@ -1005,10 +972,8 @@ function filter_filter($op, $delta = 0, $format = -1, $text = '') {
         case 0:
           return _filter_html($text, $format);
         case 1:
-          return drupal_eval($text);
-        case 2:
           return _filter_autop($text);
-        case 3:
+        case 2:
           return _filter_url($text, $format);
         default:
           return $text;
@@ -1018,7 +983,7 @@ function filter_filter($op, $delta = 0, $format = -1, $text = '') {
       switch ($delta) {
         case 0:
           return _filter_html_settings($format);
-        case 3:
+        case 2:
           return _filter_url_settings($format);
         default:
           return;

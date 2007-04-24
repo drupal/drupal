@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.188 2007/04/17 07:19:38 dries Exp $
+// $Id: CHANGELOG.txt,v 1.189 2007/04/24 10:54:34 dries Exp $
 
 Drupal 6.0, xxxx-xx-xx (development version)
 ----------------------
@@ -19,6 +19,7 @@ Drupal 6.0, xxxx-xx-xx (development version)
     * Support for right to left scripts.
     * Language detection based on parts of the URL.
     * Browser based language detection.
+- Moved "PHP input filter" to a stand-alone module so it can be deleted for security reasons.
 - Language dependent path aliases.
 - Added .info files to themes and made it easier to specify regions and features.
 

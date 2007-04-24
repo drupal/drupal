@@ -1,0 +1,74 @@
+<?php
+// $Id: php.module,v 1.1 2007/04/24 10:54:34 dries Exp $
+
+/**
+ * @file
+ * Additional filter for PHP input.
+ */
+
+
+/**
+ * Implementation of hook_help().
+ */
+function php_help($section) {
+  switch ($section) {
+    case 'admin/help#php':
+      return t('Adds a filter option to include PHP in content.');
+  }
+}
+
+/**
+ * Implementation of hook_filter_tips().
+ */
+function php_filter_tips($delta, $format, $long = false) {
+  global $base_url;
+  if ($delta == 0) {
+    switch ($long) {
+      case 0:
+        return t('You may post PHP code. You should include &lt;?php ?&gt; tags.');
+      case 1:
+        return t('
+<h4>Using custom PHP code</h4>
+<p>If you know how to script in PHP, Drupal gives you the power to embed any script you like. It will be executed when the page is viewed and dynamically embedded into the page. This gives you amazing flexibility and power, but of course with that comes danger and insecurity if you don\'t write good code. If you are not familiar with PHP, SQL or with the site engine, avoid experimenting with PHP because you can corrupt your database or render your site insecure or even unusable! If you don\'t plan to do fancy stuff with your content then you\'re probably better off with straight HTML.</p>
+<p>Remember that the code within each PHP item must be valid PHP code - including things like correctly terminating statements with a semicolon. It is highly recommended that you develop your code separately using a simple test script on top of a test database before migrating to your production environment.</p>
+<p>Notes:</p><ul><li>You can use global variables, such as configuration parameters, within the scope of your PHP code but remember that global variables which have been given values in your code will retain these values in the engine afterwards.</li><li>register_globals is now set to <strong>off</strong> by default. If you need form information you need to get it from the "superglobals" $_POST, $_GET, etc.</li><li>You can either use the <code>print</code> or <code>return</code> statement to output the actual content for your item.</li></ul>
+<p>A basic example:</p>
+<blockquote><p>You want to have a box with the title "Welcome" that you use to greet your visitors. The content for this box could be created by going:</p>
+<pre>
+print t("Welcome visitor, ... welcome message goes here ...");
+</pre>
+<p>If we are however dealing with a registered user, we can customize the message by using:</p>
+<pre>
+global $user;
+if ($user->uid) {
+  print t("Welcome $user->name, ... welcome message goes here ...");
+}
+else {
+  print t("Welcome visitor, ... welcome message goes here ...");
+}
+</pre></blockquote>
+<p>For more in-depth examples, we recommend that you check the existing Drupal code and use it as a starting point, especially for sidebar boxes.</p>');
+    }
+  }
+}
+
+/**
+ * Implementation of hook_filter(). Contains a basic PHP evaluator.
+ *
+ * Executes PHP code. Use with care.
+ */
+function php_filter($op, $delta = 0, $format = -1, $text = '') {
+  switch ($op) {
+    case 'list':
+      return array(0 => t('PHP evaluator'));
+    case 'no cache':
+      // No caching for the PHP evaluator.
+      return $delta == 0;
+    case 'description':
+      return t('Executes a piece of PHP code. The usage of this filter should be restricted to administrators only!');
+    case 'process':
+      return drupal_eval($text);
+    default:
+      return $text;
+  }
+}

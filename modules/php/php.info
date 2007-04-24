@@ -1,0 +1,5 @@
+; $Id: php.info,v 1.1 2007/04/24 10:54:34 dries Exp $
+name = PHP filter
+description = Allows embedded PHP code/snippets to be evaluated.
+package = Core - optional
+version = VERSION
