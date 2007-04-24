@@ -648,7 +648,7 @@ function request_uri() {
  * @param $message
  *   The message to store in the log. See t() for documentation
  *   on how $message and $variables interact. Keep $message
- *   translateable by not concatenating dynamic values into it!
+ *   translatable by not concatenating dynamic values into it!
  * @param $variables
  *   Array of variables to replace in the message on display or
  *   NULL if message is already translated or not possible to
