@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.470 2007/04/20 08:44:01 dries Exp $
+// $Id: system.module,v 1.471 2007/04/24 19:49:01 dries Exp $
 
 /**
  * @file
@@ -574,7 +574,8 @@ function system_site_information_settings() {
     '#type' => 'textfield',
     '#title' => t('E-mail address'),
     '#default_value' => variable_get('site_mail', ini_get('sendmail_from')),
-    '#description' => t('A valid e-mail address for this website, used by the auto-mailer during registration, new password requests, notifications, etc.')
+    '#description' => t('A valid e-mail address to be used as the "From" address by the auto-mailer during registration, new password requests, notifications, etc.  To lessen the likelihood of e-mail being marked as spam, this e-mail address should use the same domain as the website.'),
+    '#required' => TRUE,
   );
   $form['site_slogan'] = array(
     '#type' => 'textfield',

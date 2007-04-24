@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.633 2007/04/24 13:53:10 dries Exp $
+// $Id: common.inc,v 1.634 2007/04/24 19:49:01 dries Exp $
 
 /**
  * @file
@@ -1969,8 +1969,15 @@ function drupal_mail($mailkey, $to, $subject, $body, $from = NULL, $headers = ar
     'Content-Transfer-Encoding' => '8Bit',
     'X-Mailer' => 'Drupal'
   );
-  if (isset($from)) {
-    $defaults['From'] = $defaults['Reply-To'] = $defaults['Return-Path'] = $defaults['Errors-To'] = $from;
+  // To prevent e-mail from looking like spam, the addresses in the Sender and
+  // Return-Path headers should have a domain authorized to use the originating
+  // SMTP server.  Errors-To is redundant, but shouldn't hurt.
+  $default_from = variable_get('site_mail', ini_get('sendmail_from'));
+  if ($default_from) {
+    $defaults['From'] = $defaults['Reply-To'] = $defaults['Sender'] = $defaults['Return-Path'] = $defaults['Errors-To'] = $default_from;
+  }
+  if ($from) {
+    $defaults['From'] = $defaults['Reply-To'] = $from
   }
   $headers = array_merge($defaults, $headers);
 
