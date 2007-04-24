@@ -257,8 +257,8 @@ function drupal_unset_globals() {
  * Loads the configuration and sets the base URL correctly.
  */
 function conf_init() {
-  global $db_url, $db_prefix, $base_url, $base_path, $base_root, $conf, $installed_profile;
-  $conf = array();
+  global $base_url, $base_path, $base_root;
+
   include_once './'. conf_path() .'/settings.php';
 
   if (isset($base_url)) {
