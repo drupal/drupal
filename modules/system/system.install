@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.97 2007/04/24 13:55:36 dries Exp $
+// $Id: system.install,v 1.96 2007/04/24 13:53:15 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -3780,7 +3780,7 @@ function system_update_6009() {
 /**
  * Add variable replacement for watchdog messages.
  */
-function system_update_6010() {
+function system_update_6009() {
   $ret = array();
   switch ($GLOBALS['db_type']) {
     case 'pgsql':
