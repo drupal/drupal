@@ -1,0 +1,5 @@
+; $Id$
+name = PHP filter
+description = Allows embedded PHP code/snippets to be evaluated.
+package = Core - optional
+version = VERSION
