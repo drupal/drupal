@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.538 2007/04/13 08:56:58 dries Exp $
+// $Id: comment.module,v 1.539 2007/04/24 18:23:48 goba Exp $
 
 /**
  * @file
@@ -746,14 +746,14 @@ function comment_save($edit) {
         comment_invoke_comment($edit, 'update');
 
         // Add an entry to the watchdog log.
-        watchdog('content', t('Comment: updated %subject.', array('%subject' => $edit['subject'])), WATCHDOG_NOTICE, l(t('view'), 'node/'. $edit['nid'], array('fragment' => 'comment-'. $edit['cid'])));
+        watchdog('content', 'Comment: updated %subject.', array('%subject' => $edit['subject']), WATCHDOG_NOTICE, l(t('view'), 'node/'. $edit['nid'], array('fragment' => 'comment-'. $edit['cid'])));
       }
       else {
         // Check for duplicate comments. Note that we have to use the
         // validated/filtered data to perform such check.
         $duplicate = db_result(db_query("SELECT COUNT(cid) FROM {comments} WHERE pid = %d AND nid = %d AND subject = '%s' AND comment = '%s'", $edit['pid'], $edit['nid'], $edit['subject'], $edit['comment']), 0);
         if ($duplicate != 0) {
-          watchdog('content', t('Comment: duplicate %subject.', array('%subject' => $edit['subject'])), WATCHDOG_WARNING);
+          watchdog('content', 'Comment: duplicate %subject.', array('%subject' => $edit['subject']), WATCHDOG_WARNING);
         }
 
         // Add the comment to database.
@@ -827,7 +827,7 @@ function comment_save($edit) {
         comment_invoke_comment($edit, 'insert');
 
         // Add an entry to the watchdog log.
-        watchdog('content', t('Comment: added %subject.', array('%subject' => $edit['subject'])), WATCHDOG_NOTICE, l(t('view'), 'node/'. $edit['nid'], array('fragment' => 'comment-'. $edit['cid'])));
+        watchdog('content', 'Comment: added %subject.', array('%subject' => $edit['subject']), WATCHDOG_NOTICE, l(t('view'), 'node/'. $edit['nid'], array('fragment' => 'comment-'. $edit['cid'])));
       }
 
       // Clear the cache so an anonymous user can see his comment being added.
@@ -845,9 +845,8 @@ function comment_save($edit) {
     }
   }
   else {
-    $txt = t('Comment: unauthorized comment submitted or comment submitted to a closed node %subject.', array('%subject' => $edit['subject']));
-    watchdog('content', $txt, WATCHDOG_WARNING);
-    drupal_set_message($txt, 'error');
+    watchdog('content', 'Comment: unauthorized comment submitted or comment submitted to a closed node %subject.', array('%subject' => $edit['subject']), WATCHDOG_WARNING);
+    drupal_set_message(t('Comment: unauthorized comment submitted or comment submitted to a closed node %subject.', array('%subject' => $edit['subject'])), 'error');
     return FALSE;
   }
 }
@@ -1250,7 +1249,7 @@ function comment_admin_overview_submit($form_id, $form_values) {
         // Allow modules to respond to the updating of a comment.
         comment_invoke_comment($comment, $form_values['operation']);
         // Add an entry to the watchdog log.
-        watchdog('content', t('Comment: updated %subject.', array('%subject' => $comment->subject)), WATCHDOG_NOTICE, l(t('view'), 'node/'. $comment->nid, array('fragment' => 'comment-'. $comment->cid)));
+        watchdog('content', 'Comment: updated %subject.', array('%subject' => $comment->subject), WATCHDOG_NOTICE, l(t('view'), 'node/'. $comment->nid, array('fragment' => 'comment-'. $comment->cid)));
       }
     }
     cache_clear_all();
@@ -1882,13 +1881,13 @@ function theme_comment_wrapper($content) {
 
 function _comment_delete_thread($comment) {
   if (!is_object($comment) || !is_numeric($comment->cid)) {
-    watchdog('content', t('Can not delete non-existent comment.'), WATCHDOG_WARNING);
+    watchdog('content', 'Can not delete non-existent comment.', WATCHDOG_WARNING);
     return;
   }
 
   // Delete the comment:
   db_query('DELETE FROM {comments} WHERE cid = %d', $comment->cid);
-  watchdog('content', t('Comment: deleted %subject.', array('%subject' => $comment->subject)));
+  watchdog('content', 'Comment: deleted %subject.', array('%subject' => $comment->subject));
 
   comment_invoke_comment($comment, 'delete');
 
