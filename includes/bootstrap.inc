@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.157 2007/04/24 08:43:31 dries Exp $
+// $Id: bootstrap.inc,v 1.158 2007/04/24 10:45:20 dries Exp $
 
 /**
  * @file
@@ -258,6 +258,10 @@ function drupal_unset_globals() {
  */
 function conf_init() {
   global $base_url, $base_path, $base_root;
+
+  // Export the following settings.php variables to the global namespace
+  global $db_url, $db_prefix, $conf, $installed_profile;
+  $conf = array();
 
   include_once './'. conf_path() .'/settings.php';
 
