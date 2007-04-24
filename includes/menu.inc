@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.162 2007/04/15 14:38:16 dries Exp $
+// $Id: menu.inc,v 1.163 2007/04/24 08:26:58 dries Exp $
 
 /**
  * @file
@@ -758,9 +758,10 @@ function menu_rebuild() {
 
           // Because access is checked for each visible parent as well, we only
           // inherit if arguments were given without a callback. Otherwise the
-          // inherited check would be identical to that of the parent.
-          if (!isset($item['access callback']) && isset($parent['access callback']) && !isset($parent['access inherited'])) {
-            if (isset($item['access arguments']) || !$parent['_visible']) {
+          // inherited check would be identical to that of the parent. We do
+          // not inherit from visible parents which are themselves inherited.
+          if (!isset($item['access callback']) && isset($parent['access callback']) && !(isset($parent['access inherited']) && $parent['_visible'])) {
+            if (isset($item['access arguments'])) {
               $item['access callback'] = $parent['access callback'];
             }
             else {
