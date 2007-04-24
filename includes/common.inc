@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.632 2007/04/18 20:35:45 dries Exp $
+// $Id: common.inc,v 1.633 2007/04/24 13:53:10 dries Exp $
 
 /**
  * @file
@@ -332,7 +332,7 @@ function drupal_site_offline() {
 function drupal_not_found() {
   drupal_set_header('HTTP/1.1 404 Not Found');
 
-  watchdog('page not found', check_plain($_GET['q']), WATCHDOG_WARNING);
+  watchdog('page not found', check_plain($_GET['q']), NULL, WATCHDOG_WARNING);
 
   // Keep old path for reference
   if (!isset($_REQUEST['destination'])) {
@@ -362,7 +362,7 @@ function drupal_not_found() {
  */
 function drupal_access_denied() {
   drupal_set_header('HTTP/1.1 403 Forbidden');
-  watchdog('access denied', check_plain($_GET['q']), WATCHDOG_WARNING);
+  watchdog('access denied', check_plain($_GET['q']), NULL, WATCHDOG_WARNING);
 
 // Keep old path for reference
   if (!isset($_REQUEST['destination'])) {
@@ -556,7 +556,7 @@ function drupal_error_handler($errno, $message, $filename, $line) {
       drupal_set_message($entry, 'error');
     }
 
-    watchdog('php', t('%message in %file on line %line.', array('%error' => $types[$errno], '%message' => $message, '%file' => $filename, '%line' => $line)), WATCHDOG_ERROR);
+    watchdog('php', '%message in %file on line %line.', array('%error' => $types[$errno], '%message' => $message, '%file' => $filename, '%line' => $line), WATCHDOG_ERROR);
   }
 }
 
@@ -653,7 +653,7 @@ function fix_gpc_magic() {
  * - %variable, which indicates that the string should be highlighted with
  *   theme_placeholder() which shows up by default as <em>emphasized</em>.
  *   @code
- *     watchdog('mail', t('%name-from sent %name-to an e-mail.', array('%name-from' => $user->name, '%name-to' => $account->name)));
+ *     $message = t('%name-from sent %name-to an e-mail.', array('%name-from' => $user->name, '%name-to' => $account->name));
  *   @endcode
  *
  * When using t(), try to put entire sentences and strings in one t() call.
@@ -2041,14 +2041,14 @@ function drupal_cron_run() {
     if (time() - $semaphore > 3600) {
       // Either cron has been running for more than an hour or the semaphore
       // was not reset due to a database error.
-      watchdog('cron', t('Cron has been running for more than an hour and is most likely stuck.'), WATCHDOG_ERROR);
+      watchdog('cron', 'Cron has been running for more than an hour and is most likely stuck.', array(), WATCHDOG_ERROR);
 
       // Release cron semaphore
       variable_del('cron_semaphore');
     }
     else {
       // Cron is still running normally.
-      watchdog('cron', t('Attempting to re-run cron while it is already running.'), WATCHDOG_WARNING);
+      watchdog('cron', 'Attempting to re-run cron while it is already running.', array(), WATCHDOG_WARNING);
     }
   }
   else {
@@ -2063,7 +2063,7 @@ function drupal_cron_run() {
 
     // Record cron time
     variable_set('cron_last', time());
-    watchdog('cron', t('Cron run completed.'), WATCHDOG_NOTICE);
+    watchdog('cron', 'Cron run completed.', array(), WATCHDOG_NOTICE);
 
     // Release cron semaphore
     variable_del('cron_semaphore');
@@ -2079,7 +2079,7 @@ function drupal_cron_run() {
 function drupal_cron_cleanup() {
   // See if the semaphore is still locked.
   if (variable_get('cron_semaphore', FALSE)) {
-    watchdog('cron', t('Cron run exceeded the time limit and was aborted.'), WATCHDOG_WARNING);
+    watchdog('cron', 'Cron run exceeded the time limit and was aborted.', array(), WATCHDOG_WARNING);
 
     // Release cron semaphore
     variable_del('cron_semaphore');

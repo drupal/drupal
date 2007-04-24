@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.117 2007/04/13 08:56:57 dries Exp $
+// $Id: locale.inc,v 1.118 2007/04/24 13:53:10 dries Exp $
 
 /**
  * @file
@@ -50,7 +50,7 @@ function _locale_add_language($code, $name, $native, $direction = 0, $domain = '
     drupal_set_message(t('The language %language has been created.', array('%language' => t($name))));
   }
 
-  watchdog('locale', t('The %language language (%code) has been created.', array('%language' => t($name), '%code' => $code)));
+  watchdog('locale', 'The %language language (%code) has been created.', array('%language' => $name, '%code' => $code));
 }
 
 /**
@@ -457,9 +457,9 @@ function _locale_admin_import_submit($form_id, $form_values) {
 
     // Now import strings into the language
     if ($ret = _locale_import_po($file, $form_values['langcode'], $form_values['mode']) == FALSE) {
-      $message = t('The translation import of %filename failed.', array('%filename' => $file->filename));
-      drupal_set_message($message, 'error');
-      watchdog('locale', $message, WATCHDOG_ERROR);
+      $variables = array('%filename' => $file->filename);
+      drupal_set_message(t('The translation import of %filename failed.', $variables), 'error');
+      watchdog('locale', 'The translation import of %filename failed.', $variables, WATCHDOG_ERROR);
     }
   }
   else {
@@ -704,7 +704,7 @@ function _locale_import_po($file, $lang, $mode) {
   menu_rebuild();
 
   drupal_set_message(t('The translation was successfully imported. There are %number newly created translated strings and %update strings were updated.', array('%number' => $additions, '%update' => $updates)));
-  watchdog('locale', t('Imported %file into %locale: %number new strings added and %update updated.', array('%file' => $file->filename, '%locale' => $lang, '%number' => $additions, '%update' => $updates)));
+  watchdog('locale', 'Imported %file into %locale: %number new strings added and %update updated.', array('%file' => $file->filename, '%locale' => $lang, '%number' => $additions, '%update' => $updates));
   return TRUE;
 }
 
@@ -1353,7 +1353,7 @@ function _locale_export_po($language = NULL) {
       $header .= "\"Plural-Forms: nplurals=". $meta->plurals ."; plural=". strtr($meta->formula, array('$' => '')) .";\\n\"\n";
     }
     $header .= "\n";
-    watchdog('locale', t('Exported %locale translation file: %filename.', array('%locale' => $meta->name, '%filename' => $filename)));
+    watchdog('locale', 'Exported %locale translation file: %filename.', array('%locale' => $meta->name, '%filename' => $filename));
   }
 
   // Generating Portable Object Template
@@ -1374,7 +1374,7 @@ function _locale_export_po($language = NULL) {
     $header .= "\"Content-Transfer-Encoding: 8bit\\n\"\n";
     $header .= "\"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\\n\"\n";
     $header .= "\n";
-    watchdog('locale', t('Exported translation file: %filename.', array('%filename' => $filename)));
+    watchdog('locale', 'Exported translation file: %filename.', array('%filename' => $filename));
   }
 
   // Start download process

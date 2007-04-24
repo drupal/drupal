@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.336 2007/04/13 08:56:57 dries Exp $
+// $Id: aggregator.module,v 1.337 2007/04/24 13:53:11 dries Exp $
 
 /**
  * @file
@@ -395,7 +395,7 @@ function aggregator_form_category_submit($form_id, $form_values) {
       }
     }
     else {
-      watchdog('aggregator', t('Category %category deleted.', array('%category' => $title)));
+      watchdog('aggregator', 'Category %category deleted.', array('%category' => $title));
       drupal_set_message(t('The category %category has been deleted.', array('%category' => $title)));
       if (arg(0) == 'admin') {
         return 'admin/content/aggregator/';
@@ -406,7 +406,7 @@ function aggregator_form_category_submit($form_id, $form_values) {
     }
   }
   else {
-    watchdog('aggregator', t('Category %category added.', array('%category' => $form_values['title'])), WATCHDOG_NOTICE, l(t('view'), 'admin/content/aggregator'));
+    watchdog('aggregator', 'Category %category added.', array('%category' => $form_values['title']), WATCHDOG_NOTICE, l(t('view'), 'admin/content/aggregator'));
     drupal_set_message(t('The category %category has been added.', array('%category' => $form_values['title'])));
   }
 }
@@ -531,7 +531,7 @@ function aggregator_form_feed_submit($form_id, $form_values) {
       }
     }
     else {
-      watchdog('aggregator', t('Feed %feed deleted.', array('%feed' => $title)));
+      watchdog('aggregator', 'Feed %feed deleted.', array('%feed' => $title));
       drupal_set_message(t('The feed %feed has been deleted.', array('%feed' => $title)));
       if (arg(0) == 'admin') {
         return 'admin/content/aggregator/';
@@ -542,7 +542,7 @@ function aggregator_form_feed_submit($form_id, $form_values) {
     }
   }
   else {
-    watchdog('aggregator', t('Feed %feed added.', array('%feed' => $form_values['title'])), WATCHDOG_NOTICE, l(t('view'), 'admin/content/aggregator'));
+    watchdog('aggregator', 'Feed %feed added.', array('%feed' => $form_values['title']), WATCHDOG_NOTICE, l(t('view'), 'admin/content/aggregator'));
     drupal_set_message(t('The feed %feed has been added.', array('%feed' => $form_values['title'])));
   }
 }
@@ -731,7 +731,7 @@ function aggregator_refresh($feed) {
       break;
     case 301:
       $feed['url'] = $result->redirect_url;
-      watchdog('aggregator', t('Updated URL for feed %title to %url.', array('%title' => $feed['title'], '%url' => $feed['url'])));
+      watchdog('aggregator', 'Updated URL for feed %title to %url.', array('%title' => $feed['title'], '%url' => $feed['url']));
 
     case 200:
     case 302:
@@ -779,12 +779,12 @@ function aggregator_refresh($feed) {
 
         cache_clear_all();
 
-        watchdog('aggregator', t('There is new syndicated content from %site.', array('%site' => $feed['title'])));
+        watchdog('aggregator', 'There is new syndicated content from %site.', array('%site' => $feed['title']));
         drupal_set_message(t('There is new syndicated content from %site.', array('%site' => $feed['title'])));
       }
       break;
     default:
-      watchdog('aggregator', t('The feed from %site seems to be broken, due to "%error".', array('%site' => $feed['title'], '%error' => $result->code .' '. $result->error)), WATCHDOG_WARNING);
+      watchdog('aggregator', 'The feed from %site seems to be broken, due to "%error".', array('%site' => $feed['title'], '%error' => $result->code .' '. $result->error), WATCHDOG_WARNING);
       drupal_set_message(t('The feed from %site seems to be broken, because of error "%error".', array('%site' => $feed['title'], '%error' => $result->code .' '. $result->error)));
   }
 }
@@ -841,7 +841,7 @@ function aggregator_parse_feed(&$data, $feed) {
   xml_set_character_data_handler($xml_parser, 'aggregator_element_data');
 
   if (!xml_parse($xml_parser, $data, 1)) {
-    watchdog('aggregator', t('The feed from %site seems to be broken, due to an error "%error" on line %line.', array('%site' => $feed['title'], '%error' => xml_error_string(xml_get_error_code($xml_parser)), '%line' => xml_get_current_line_number($xml_parser))), WATCHDOG_WARNING);
+    watchdog('aggregator', 'The feed from %site seems to be broken, due to an error "%error" on line %line.', array('%site' => $feed['title'], '%error' => xml_error_string(xml_get_error_code($xml_parser)), '%line' => xml_get_current_line_number($xml_parser)), WATCHDOG_WARNING);
     drupal_set_message(t('The feed from %site seems to be broken, because of error "%error" on line %line.', array('%site' => $feed['title'], '%error' => xml_error_string(xml_get_error_code($xml_parser)), '%line' => xml_get_current_line_number($xml_parser))), 'error');
     return 0;
   }

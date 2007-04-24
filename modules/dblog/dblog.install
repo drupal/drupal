@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.install,v 1.1 2007/04/10 10:10:27 dries Exp $
+// $Id: dblog.install,v 1.2 2007/04/24 13:53:11 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -13,6 +13,7 @@ function dblog_install() {
         uid int NOT NULL default '0',
         type varchar(16) NOT NULL default '',
         message longtext NOT NULL,
+        variables longtext NOT NULL,
         severity tinyint unsigned NOT NULL default '0',
         link varchar(255) NOT NULL default '',
         location text NOT NULL,
@@ -30,6 +31,7 @@ function dblog_install() {
         uid int NOT NULL default '0',
         type varchar(16) NOT NULL default '',
         message text NOT NULL,
+        variables text NOT NULL,
         severity smallint_unsigned NOT NULL default '0',
         link varchar(255) NOT NULL default '',
         location text NOT NULL default '',

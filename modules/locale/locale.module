@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.166 2007/04/15 15:36:10 dries Exp $
+// $Id: locale.module,v 1.167 2007/04/24 13:53:12 dries Exp $
 
 /**
  * @file
@@ -383,9 +383,9 @@ function locale_admin_manage_delete_form_submit($form_id, $form_values) {
   if (isset($languages[$form_values['langcode']])) {
     db_query("DELETE FROM {languages} WHERE language = '%s'", $form_values['langcode']);
     db_query("DELETE FROM {locales_target} WHERE language = '%s'", $form_values['langcode']);
-    $message = t('The language %locale has been removed.', array('%locale' => t($languages[$form_values['langcode']]->name)));
-    drupal_set_message($message);
-    watchdog('locale', $message);
+    $variables = array('%locale' => $languages[$form_values['langcode']]->name);
+    drupal_set_message(t('The language %locale has been removed.', $variables));
+    watchdog('locale', 'The language %locale has been removed.', $variables);
   }
 
   // Changing the locale settings impacts the interface:

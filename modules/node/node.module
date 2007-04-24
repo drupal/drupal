@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.803 2007/04/21 18:10:53 dries Exp $
+// $Id: node.module,v 1.804 2007/04/24 13:53:14 dries Exp $
 
 /**
  * @file
@@ -1724,7 +1724,7 @@ function node_revision_revert($nid, $revision) {
       node_save($node);
 
       drupal_set_message(t('%title has been reverted back to the revision from %revision-date', array('%revision-date' => format_date($node->revision_timestamp), '%title' => $node->title)));
-      watchdog('content', t('@type: reverted %title revision %revision.', array('@type' => t($node->type), '%title' => $node->title, '%revision' => $revision)));
+      watchdog('content', '@type: reverted %title revision %revision.', array('@type' => $node->type, '%title' => $node->title, '%revision' => $revision));
     }
     else {
       drupal_set_message(t('You tried to revert to an invalid revision.'), 'error');
@@ -1749,7 +1749,7 @@ function node_revision_delete($nid, $revision) {
         db_query("DELETE FROM {node_revisions} WHERE nid = %d AND vid = %d", $nid, $revision);
         node_invoke_nodeapi($node, 'delete revision');
         drupal_set_message(t('Deleted %title revision %revision.', array('%title' => $node->title, '%revision' => $revision)));
-        watchdog('content', t('@type: deleted %title revision %revision.', array('@type' => t($node->type), '%title' => $node->title, '%revision' => $revision)));
+        watchdog('content', '@type: deleted %title revision %revision.', array('@type' => $node->type, '%title' => $node->title, '%revision' => $revision));
       }
 
       else {
@@ -2286,12 +2286,12 @@ function node_form_submit($form_id, $form_values) {
   // Prepare the node's body:
   if ($node->nid) {
     node_save($node);
-    watchdog('content', t('@type: updated %title.', array('@type' => t($node->type), '%title' => $node->title)), WATCHDOG_NOTICE, l(t('view'), 'node/'. $node->nid));
+    watchdog('content', '@type: updated %title.', array('@type' => $node->type, '%title' => $node->title), WATCHDOG_NOTICE, l(t('view'), 'node/'. $node->nid));
     drupal_set_message(t('The %post has been updated.', array('%post' => node_get_types('name', $node))));
   }
   else {
     node_save($node);
-    watchdog('content', t('@type: added %title.', array('@type' => t($node->type), '%title' => $node->title)), WATCHDOG_NOTICE, l(t('view'), "node/$node->nid"));
+    watchdog('content', '@type: added %title.', array('@type' => $node->type, '%title' => $node->title), WATCHDOG_NOTICE, l(t('view'), "node/$node->nid"));
     drupal_set_message(t('Your %post has been created.', array('%post' => node_get_types('name', $node))));
   }
   if ($node->nid) {
@@ -2353,7 +2353,7 @@ function node_delete($nid) {
       search_wipe($node->nid, 'node');
     }
     drupal_set_message(t('%title has been deleted.', array('%title' => $node->title)));
-    watchdog('content', t('@type: deleted %title.', array('@type' => t($node->type), '%title' => $node->title)));
+    watchdog('content', '@type: deleted %title.', array('@type' => $node->type, '%title' => $node->title));
   }
 }
 

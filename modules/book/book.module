@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.417 2007/04/13 08:56:57 dries Exp $
+// $Id: book.module,v 1.418 2007/04/24 13:53:11 dries Exp $
 
 /**
  * @file
@@ -939,7 +939,7 @@ function book_admin_edit_submit($form_id, $form_values) {
       $node->weight = $row['weight'];
 
       node_save($node);
-      watchdog('content', t('%type: updated %title.', array('%type' => t('book'), '%title' => $node->title)), WATCHDOG_NOTICE, l(t('view'), 'node/'. $node->nid));
+      watchdog('content', 'book: updated %title.', array('%title' => $node->title), WATCHDOG_NOTICE, l(t('view'), 'node/'. $node->nid));
     }
   }
 

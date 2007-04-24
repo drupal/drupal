@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.774 2007/04/23 17:07:57 dries Exp $
+// $Id: user.module,v 1.775 2007/04/24 13:53:15 dries Exp $
 
 /**
  * @file
@@ -1070,7 +1070,7 @@ function user_login_validate($form_id, $form_values) {
 
       if (!$user->uid) {
         form_set_error('name', t('Sorry, unrecognized username or password. <a href="@password">Have you forgotten your password?</a>', array('@password' => url('user/password'))));
-        watchdog('user', t('Login attempt failed for %user.', array('%user' => $form_values['name'])));
+        watchdog('user', 'Login attempt failed for %user.', array('%user' => $form_values['name']));
       }
     }
   }
@@ -1079,15 +1079,7 @@ function user_login_validate($form_id, $form_values) {
 function user_login_submit($form_id, $form_values) {
   global $user;
   if ($user->uid) {
-    // To handle the edge case where this function is called during a
-    // bootstrap, check for the existence of t().
-    if (function_exists('t')) {
-      $message = t('Session opened for %name.', array('%name' => $user->name));
-    }
-    else {
-       $message = "Session opened for ". check_plain($user->name);
-    }
-    watchdog('user', $message);
+    watchdog('user', 'Session opened for %name.', array('%name' => $user->name));
 
     // Update the user table timestamp noting user has logged in.
     db_query("UPDATE {users} SET login = %d WHERE uid = %d", time(), $user->uid);
@@ -1119,7 +1111,7 @@ function user_authenticate($name, $pass) {
   if ($server && ($result = user_get_authmaps("$name@$server"))) {
     if (module_invoke(key($result), 'auth', $name, $pass, $server)) {
       $user = user_external_load("$name@$server");
-      watchdog('user', t('External load by %user using module %module.', array('%user' => $name .'@'. $server, '%module' => key($result))));
+      watchdog('user', 'External load by %user using module %module.', array('%user' => $name .'@'. $server, '%module' => key($result)));
     }
   }
 
@@ -1138,7 +1130,7 @@ function user_authenticate($name, $pass) {
             $userinfo["authname_$module"] = $name;
           }
           $user = user_save('', $userinfo);
-          watchdog('user', t('New external user: %user using module %module.', array('%user' => $name, '%module' => $module)), WATCHDOG_NOTICE, l(t('edit'), 'user/'. $user->uid .'/edit'));
+          watchdog('user', 'New external user: %user using module %module.', array('%user' => $name, '%module' => $module), WATCHDOG_NOTICE, l(t('edit'), 'user/'. $user->uid .'/edit'));
           break;
         }
       }
@@ -1153,7 +1145,7 @@ function user_authenticate($name, $pass) {
 function user_logout() {
   global $user;
 
-  watchdog('user', t('Session closed for %name.', array('%name' => $user->name)));
+  watchdog('user', 'Session closed for %name.', array('%name' => $user->name));
 
   // Destroy the current session:
   session_destroy();
@@ -1207,11 +1199,11 @@ function user_pass_submit($form_id, $form_values) {
   $mail_success = drupal_mail('user-pass', $account->mail, $subject, $body, $from);
 
   if ($mail_success) {
-    watchdog('user', t('Password reset instructions mailed to %name at %email.', array('%name' => $account->name, '%email' => $account->mail)));
+    watchdog('user', 'Password reset instructions mailed to %name at %email.', array('%name' => $account->name, '%email' => $account->mail));
     drupal_set_message(t('Further instructions have been sent to your e-mail address.'));
   }
   else {
-    watchdog('user', t('Error mailing password reset instructions to %name at %email.', array('%name' => $account->name, '%email' => $account->mail)), WATCHDOG_ERROR);
+    watchdog('user', 'Error mailing password reset instructions to %name at %email.', array('%name' => $account->name, '%email' => $account->mail), WATCHDOG_ERROR);
     drupal_set_message(t('Unable to send mail. Please contact the site admin.'));
   }
   return 'user';
@@ -1242,7 +1234,7 @@ function user_pass_reset($uid, $timestamp, $hashed_pass, $action = NULL) {
       else if ($account->uid && $timestamp > $account->login && $timestamp < $current && $hashed_pass == user_pass_rehash($account->pass, $timestamp, $account->login)) {
         // First stage is a confirmation form, then login
         if ($action == 'login') {
-          watchdog('user', t('User %name used one-time login link at time %timestamp.', array('%name' => $account->name, '%timestamp' => $timestamp)));
+          watchdog('user', 'User %name used one-time login link at time %timestamp.', array('%name' => $account->name, '%timestamp' => $timestamp));
           // Update the user table noting user has logged in.
           // And this also makes this hashed password a one-time-only login.
           db_query("UPDATE {users} SET login = %d WHERE uid = %d", time(), $account->uid);
@@ -1363,7 +1355,7 @@ function user_register_submit($form_id, $form_values) {
   }
 
   if (!$admin && array_intersect(array_keys($form_values), array('uid', 'roles', 'init', 'session', 'status'))) {
-    watchdog('security', t('Detected malicious attempt to alter protected user fields.'), WATCHDOG_WARNING);
+    watchdog('security', 'Detected malicious attempt to alter protected user fields.', array(), WATCHDOG_WARNING);
     return 'user/register';
   }
   //the unset below is needed to prevent these form values from being saved as user data
@@ -1375,7 +1367,7 @@ function user_register_submit($form_id, $form_values) {
     $merge_data['status'] = variable_get('user_register', 1) == 1;
   }
   $account = user_save('', array_merge($form_values, $merge_data));
-  watchdog('user', t('New user: %name %email.', array('%name' => $name, '%email' => '<'. $mail .'>')), WATCHDOG_NOTICE, l(t('edit'), 'user/'. $account->uid .'/edit'));
+  watchdog('user', 'New user: %name %email.', array('%name' => $name, '%email' => '<'. $mail .'>'), WATCHDOG_NOTICE, l(t('edit'), 'user/'. $account->uid .'/edit'));
 
   $variables = array('!username' => $name, '!site' => variable_get('site_name', 'Drupal'), '!password' => $pass, '!uri' => $base_url, '!uri_brief' => substr($base_url, strlen('http://')), '!mailto' => $mail, '!date' => format_date(time()), '!login_uri' => url('user', array('absolute' => TRUE)), '!edit_uri' => url('user/'. $account->uid .'/edit', array('absolute' => TRUE)), '!login_url' => user_pass_reset_url($account));
 
@@ -1616,9 +1608,9 @@ function user_delete($edit, $uid) {
   db_query('DELETE FROM {users} WHERE uid = %d', $uid);
   db_query('DELETE FROM {users_roles} WHERE uid = %d', $uid);
   db_query('DELETE FROM {authmap} WHERE uid = %d', $uid);
-  $array = array('%name' => $account->name, '%email' => '<'. $account->mail .'>');
-  watchdog('user', t('Deleted user: %name %email.', $array), WATCHDOG_NOTICE);
-  drupal_set_message(t('%name has been deleted.', $array));
+  $variables = array('%name' => $account->name, '%email' => '<'. $account->mail .'>');
+  watchdog('user', 'Deleted user: %name %email.', $variables, WATCHDOG_NOTICE);
+  drupal_set_message(t('%name has been deleted.', $variables));
   module_invoke_all('user', 'delete', $edit, $account);
 }
 
@@ -1626,10 +1618,9 @@ function user_edit_validate($form_id, $form_values) {
   user_module_invoke('validate', $form_values, $form_values['_account'], $form_values['_category']);
   // Validate input to ensure that non-privileged users can't alter protected data.
   if ((!user_access('administer users') && array_intersect(array_keys($form_values), array('uid', 'init', 'session'))) || (!user_access('administer access control') && isset($form_values['roles']))) {
-    $message = t('Detected malicious attempt to alter protected user fields.');
-    watchdog('security', $message, WATCHDOG_WARNING);
+    watchdog('security', 'Detected malicious attempt to alter protected user fields.', array(), WATCHDOG_WARNING);
     // set this to a value type field
-    form_set_error('category', $message);
+    form_set_error('category', t('Detected malicious attempt to alter protected user fields.'));
   }
 }
 
@@ -2340,7 +2331,7 @@ function user_user_operations() {
         );
       }
       else {
-        watchdog('security', t('Detected malicious attempt to alter protected user fields.'), WATCHDOG_WARNING);
+        watchdog('security', 'Detected malicious attempt to alter protected user fields.', array(), WATCHDOG_WARNING);
         return;
       }
     }

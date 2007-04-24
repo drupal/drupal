@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.107 2007/04/15 14:38:16 dries Exp $
+// $Id: menu.module,v 1.108 2007/04/24 13:53:12 dries Exp $
 
 /**
  * @file
@@ -423,7 +423,7 @@ function menu_edit_item_save($edit) {
   else {
     db_query("INSERT INTO {menu_custom} (parent, path, title, description, weight, type, admin) VALUES ('%s', '%s', '%s', '%s', %d, %d, %d)", $parent, isset($edit['path']) ? $edit['path'] : $edit['original_path'], $edit['title'], $edit['description'], $edit['weight'], $edit['type'], isset($edit['path']));
   }
-  watchdog('menu', t('Saved menu item %title.', $t_args), WATCHDOG_NOTICE, l(t('view'), 'admin/build/menu'));
+  watchdog('menu', 'Saved menu item %title.', $t_args, WATCHDOG_NOTICE, l(t('view'), 'admin/build/menu'));
   drupal_set_message(t('The menu item %title has been saved.', $t_args));
   menu_rebuild();
 }
@@ -500,11 +500,11 @@ function menu_item_delete_form_submit($form_id, $form_values) {
   $t_args = array('%title' => $form_values['title']);
   if ($form_values['type'] & MENU_IS_ROOT) {
     drupal_set_message(t('The menu %title has been deleted.', $t_args));
-    watchdog('menu', t('Deleted menu %title.', $t_args), WATCHDOG_NOTICE);
+    watchdog('menu', 'Deleted menu %title.', $t_args, WATCHDOG_NOTICE);
   }
   else {
     drupal_set_message(t('The menu item %title has been deleted.', $t_args));
-    watchdog('menu', t('Deleted menu item %title.', $t_args), WATCHDOG_NOTICE);
+    watchdog('menu', 'Deleted menu item %title.', $t_args, WATCHDOG_NOTICE);
   }
 
   return 'admin/build/menu';

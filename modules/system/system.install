@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.95 2007/04/24 10:54:35 dries Exp $
+// $Id: system.install,v 1.97 2007/04/24 13:55:36 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -2353,7 +2353,7 @@ function system_update_159() {
       }
       else {
         db_query('UPDATE {old_revisions} SET done = 1 WHERE nid = %d', $node->nid);
-        watchdog('php', "Recovering old revisions for node $node->nid failed.", WATCHDOG_WARNING);
+        watchdog('php', "Recovering old revisions for node %nid failed.", array('%nid' => $node->nid), WATCHDOG_WARNING);
       }
     }
   }
@@ -2583,7 +2583,7 @@ function system_update_169() {
     $encoding = db_result(db_query('SHOW server_encoding'));
     if (!in_array(strtolower($encoding), array('unicode', 'utf8'))) {
       $msg = 'Your PostgreSQL database is set up with the wrong character encoding ('. $encoding .'). It is possible it will not work as expected. It is advised to recreate it with UTF-8/Unicode encoding. More information can be found in the <a href="http://www.postgresql.org/docs/7.4/interactive/multibyte.html">PostgreSQL documentation</a>.';
-      watchdog('php', $msg, WATCHDOG_WARNING);
+      watchdog('php', $msg, array(), WATCHDOG_WARNING);
       drupal_set_message($msg, 'status');
     }
   }
@@ -3774,6 +3774,26 @@ function system_update_6009() {
   // Update any nodes associated with the PHP input format.
   db_query("UPDATE {node_revisions} SET format = %d WHERE format = 2", $format);
 
+  return $ret;
+}
+
+/**
+ * Add variable replacement for watchdog messages.
+ */
+function system_update_6010() {
+  $ret = array();
+  switch ($GLOBALS['db_type']) {
+    case 'pgsql':
+      db_add_column($ret, 'watchdog', 'variables', 'text', array('not null' => TRUE));
+      break;
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql("ALTER TABLE {watchdog} ADD variables longtext NOT NULL");
+      break;
+  }
+  // Ensure we have 'N;' (serialize(NULL)) as the default, so existing
+  // log messages will not get translated in the new system.
+  $ret[] = update_sql("UPDATE {watchdog} SET variables = 'N;'");
   return $ret;
 }
 

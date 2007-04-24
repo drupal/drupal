@@ -1,5 +1,5 @@
 <?php
-// $Id: throttle.module,v 1.73 2007/01/24 14:48:36 dries Exp $
+// $Id: throttle.module,v 1.74 2007/04/24 13:53:15 dries Exp $
 
 /**
  * @file
@@ -106,7 +106,7 @@ function throttle_exit() {
     }
     if ($message) {
       cache_clear_all();
-      watchdog('throttle', t('Throttle') .': '. $message);
+      watchdog('throttle', 'Throttle: %message', array('%message' => $message));
     }
   }
 }

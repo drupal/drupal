@@ -1,5 +1,5 @@
 <?php
-// $Id: unicode.inc,v 1.23 2006/12/06 16:15:52 dries Exp $
+// $Id: unicode.inc,v 1.24 2007/04/24 13:53:10 dries Exp $
 
 /**
  * Indicates an error during check for PHP unicode support.
@@ -148,7 +148,7 @@ function drupal_xml_parser_create(&$data) {
       $data = ereg_replace('^(<\?xml[^>]+encoding)="([^"]+)"', '\\1="utf-8"', $out);
     }
     else {
-      watchdog('php', t("Could not convert XML encoding %s to UTF-8.", array('%s' => $encoding)), WATCHDOG_WARNING);
+      watchdog('php', 'Could not convert XML encoding %s to UTF-8.', array('%s' => $encoding), WATCHDOG_WARNING);
       return 0;
     }
   }
@@ -181,7 +181,7 @@ function drupal_convert_to_utf8($data, $encoding) {
     $out = @recode_string($encoding .'..utf-8', $data);
   }
   else {
-    watchdog('php', t("Unsupported encoding %s. Please install iconv, GNU recode or mbstring for PHP.", array('%s' => $encoding)), WATCHDOG_ERROR);
+    watchdog('php', 'Unsupported encoding %s. Please install iconv, GNU recode or mbstring for PHP.', array('%s' => $encoding), WATCHDOG_ERROR);
     return FALSE;
   }
 

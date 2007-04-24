@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.218 2007/04/13 08:56:59 dries Exp $
+// $Id: search.module,v 1.219 2007/04/24 13:53:14 dries Exp $
 
 /**
  * @file
@@ -936,7 +936,7 @@ function search_view($type = 'node') {
     $results = '';
     if (trim($keys)) {
       // Log the search keys:
-      watchdog('search', t('%keys (@type).', array('%keys' => $keys, '@type' => module_invoke($type, 'search', 'name'))), WATCHDOG_NOTICE, l(t('results'), 'search/'. $type .'/'. $keys));
+      watchdog('search', '%keys (@type).', array('%keys' => $keys, '@type' => module_invoke($type, 'search', 'name')), WATCHDOG_NOTICE, l(t('results'), 'search/'. $type .'/'. $keys));
 
       // Collect the search results:
       $results = search_data($keys, $type);

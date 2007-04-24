@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.module,v 1.2 2007/04/13 08:27:18 dries Exp $
+// $Id: dblog.module,v 1.3 2007/04/24 13:53:11 dries Exp $
 
 /**
  * @file
@@ -159,12 +159,12 @@ function dblog_overview() {
     ' ',
     array('data' => t('Type'), 'field' => 'w.type'),
     array('data' => t('Date'), 'field' => 'w.wid', 'sort' => 'desc'),
-    array('data' => t('Message'), 'field' => 'w.message'),
+    t('Message'),
     array('data' => t('User'), 'field' => 'u.name'),
     array('data' => t('Operations'))
   );
 
-  $sql = "SELECT w.wid, w.uid, w.severity, w.type, w.timestamp, w.message, w.link, u.name FROM {watchdog} w INNER JOIN {users} u ON w.uid = u.uid";
+  $sql = "SELECT w.wid, w.uid, w.severity, w.type, w.timestamp, w.message, w.variables, w.link, u.name FROM {watchdog} w INNER JOIN {users} u ON w.uid = u.uid";
   $tablesort = tablesort_sql($header);
   $type = $_SESSION['dblog_overview_filter'];
   if ($type != 'all') {
@@ -181,7 +181,7 @@ function dblog_overview() {
         $icons[$dblog->severity],
         t($dblog->type),
         format_date($dblog->timestamp, 'small'),
-        l(truncate_utf8($dblog->message, 56, TRUE, TRUE), 'admin/logs/event/'. $dblog->wid, array('html' => TRUE)),
+        l(truncate_utf8(_dblog_format_message($dblog), 56, TRUE, TRUE), 'admin/logs/event/'. $dblog->wid, array('html' => TRUE)),
         theme('username', $dblog),
         $dblog->link,
       ),
@@ -211,11 +211,11 @@ function dblog_top($type) {
     array('data' => t('Message'), 'field' => 'message')
   );
 
-  $result = pager_query("SELECT COUNT(wid) AS count, message FROM {watchdog} WHERE type = '%s' GROUP BY message ". tablesort_sql($header), 30, 0, "SELECT COUNT(DISTINCT(message)) FROM {watchdog} WHERE type = '%s'", $type);
+  $result = pager_query("SELECT COUNT(wid) AS count, message, variables FROM {watchdog} WHERE type = '%s' GROUP BY message ". tablesort_sql($header), 30, 0, "SELECT COUNT(DISTINCT(message)) FROM {watchdog} WHERE type = '%s'", $type);
 
   $rows = array();
   while ($dblog = db_fetch_object($result)) {
-    $rows[] = array($dblog->count, truncate_utf8($dblog->message, 56, TRUE, TRUE));
+    $rows[] = array($dblog->count, truncate_utf8(_dblog_format_message($dblog), 56, TRUE, TRUE));
   }
 
   if (empty($rows)) {
@@ -267,7 +267,7 @@ function dblog_event($id) {
       ),
       array(
         array('data' => t('Message'), 'header' => TRUE),
-        $dblog->message,
+        _dblog_format_message($dblog),
       ),
       array(
         array('data' => t('Severity'), 'header' => TRUE),
@@ -302,12 +302,13 @@ function _dblog_get_message_types() {
 function dblog_watchdog($log = array()) {
   $current_db = db_set_active();
   db_query("INSERT INTO {watchdog}
-    (uid, type, message, severity, link, location, referer, hostname, timestamp)
+    (uid, type, message, variables, severity, link, location, referer, hostname, timestamp)
     VALUES
-    (%d, '%s', '%s', %d, '%s', '%s', '%s', '%s', %d)",
+    (%d, '%s', '%s', '%s', %d, '%s', '%s', '%s', '%s', %d)",
     $log['user']->uid,
     $log['type'],
     $log['message'],
+    serialize($log['variables']),
     $log['severity'],
     $log['link'],
     $log['request_uri'],
@@ -317,5 +318,22 @@ function dblog_watchdog($log = array()) {
 
   if ($current_db) {
     db_set_active($current_db);
+  }
+}
+
+/**
+ * Formats a log message for display.
+ *
+ * @param $dblog
+ *   An object with at least the message and variables properties
+ */
+function _dblog_format_message($dblog) {
+  // Legacy messages and user specified text
+  if ($dblog->variables === 'N;') {
+    return $dblog->message;
+  }
+  // Message to translate with injected variables
+  else {
+    return t($dblog->message, unserialize($dblog->variables));
   }
 }

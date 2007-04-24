@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.104 2007/04/13 08:56:57 dries Exp $
+// $Id: blogapi.module,v 1.105 2007/04/24 13:53:11 dries Exp $
 
 /**
  * @file
@@ -218,7 +218,7 @@ function blogapi_blogger_new_post($appkey, $blogid, $username, $password, $conte
   $node = node_submit($edit);
   node_save($node);
   if ($node->nid) {
-    watchdog('content', t('@type: added %title using blog API.', array('@type' => t($node->type), '%title' => $node->title)), WATCHDOG_NOTICE, l(t('view'), "node/$node->nid"));
+    watchdog('content', '@type: added %title using blog API.', array('@type' => $node->type, '%title' => $node->title), WATCHDOG_NOTICE, l(t('view'), "node/$node->nid"));
     // blogger.newPost returns a string so we cast the nid to a string by putting it in double quotes:
     return "$node->nid";
   }
@@ -274,7 +274,7 @@ function blogapi_blogger_edit_post($appkey, $postid, $username, $password, $cont
   $node = node_submit($node);
   node_save($node);
   if ($node->nid) {
-    watchdog('content', t('@type: updated %title using blog API.', array('@type' => t($node->type), '%title' => $node->title)), WATCHDOG_NOTICE, l(t('view'), "node/$node->nid"));
+    watchdog('content', '@type: updated %title using blog API.', array('@type' => $node->type, '%title' => $node->title), WATCHDOG_NOTICE, l(t('view'), "node/$node->nid"));
     return TRUE;
   }
 

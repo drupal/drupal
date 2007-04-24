@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.80 2007/04/13 08:56:58 dries Exp $
+// $Id: contact.module,v 1.81 2007/04/24 13:53:11 dries Exp $
 
 /**
  * @file
@@ -243,13 +243,13 @@ function contact_admin_edit_submit($form_id, $form_values) {
   if (arg(3) == 'add') {
     db_query("INSERT INTO {contact} (category, recipients, reply, weight, selected) VALUES ('%s', '%s', '%s', %d, %d)", $form_values['category'], $form_values['recipients'], $form_values['reply'], $form_values['weight'], $form_values['selected']);
     drupal_set_message(t('Category %category has been added.', array('%category' => $form_values['category'])));
-    watchdog('mail', t('Contact form: category %category added.', array('%category' => $form_values['category'])), WATCHDOG_NOTICE, l(t('view'), 'admin/build/contact'));
+    watchdog('mail', 'Contact form: category %category added.', array('%category' => $form_values['category']), WATCHDOG_NOTICE, l(t('view'), 'admin/build/contact'));
 
   }
   else {
     db_query("UPDATE {contact} SET category = '%s', recipients = '%s', reply = '%s', weight = %d, selected = %d WHERE cid = %d", $form_values['category'], $form_values['recipients'], $form_values['reply'], $form_values['weight'], $form_values['selected'], $form_values['cid']);
     drupal_set_message(t('Category %category has been updated.', array('%category' => $form_values['category'])));
-    watchdog('mail', t('Contact form: category %category updated.', array('%category' => $form_values['category'])), WATCHDOG_NOTICE, l(t('view'), 'admin/build/contact'));
+    watchdog('mail', 'Contact form: category %category updated.', array('%category' => $form_values['category']), WATCHDOG_NOTICE, l(t('view'), 'admin/build/contact'));
   }
 
   return 'admin/build/contact';
@@ -278,7 +278,7 @@ function contact_admin_delete($cid = NULL) {
 function contact_admin_delete_submit($form_id, $form_values) {
   db_query("DELETE FROM {contact} WHERE cid = %d", arg(4));
   drupal_set_message(t('Category %category has been deleted.', array('%category' => $form_values['category'])));
-  watchdog('mail', t('Contact form: category %category deleted.', array('%category' => $form_values['category'])), WATCHDOG_NOTICE);
+  watchdog('mail', 'Contact form: category %category deleted.', array('%category' => $form_values['category']), WATCHDOG_NOTICE);
 
   return 'admin/build/contact';
 }
@@ -393,7 +393,7 @@ function contact_mail_user_submit($form_id, $form_values) {
 
   // Log the operation:
   flood_register_event('contact');
-  watchdog('mail', t('%name-from sent %name-to an e-mail.', array('%name-from' => $user->name, '%name-to' => $account->name)));
+  watchdog('mail', '%name-from sent %name-to an e-mail.', array('%name-from' => $user->name, '%name-to' => $account->name));
 
   // Set a status message:
   drupal_set_message(t('The message has been sent.'));
@@ -544,7 +544,7 @@ function contact_mail_page_submit($form_id, $form_values) {
 
   // Log the operation:
   flood_register_event('contact');
-  watchdog('mail', t('%name-from sent an e-mail regarding %category.', array('%name-from' => $form_values['name'] ." <$from>", '%category' => $contact->category)));
+  watchdog('mail', '%name-from sent an e-mail regarding %category.', array('%name-from' => $form_values['name'] ." <$from>", '%category' => $contact->category));
 
   // Update user:
   drupal_set_message(t('Your message has been sent.'));

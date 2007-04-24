@@ -1,5 +1,5 @@
 <?php
-// $Id: image.inc,v 1.18 2007/04/13 08:56:57 dries Exp $
+// $Id: image.inc,v 1.19 2007/04/24 13:53:10 dries Exp $
 
 /**
  * Return a list of available toolkits.
@@ -58,7 +58,7 @@ function image_toolkit_invoke($method, $params = array()) {
       return call_user_func_array($function, $params);
     }
     else {
-      watchdog('php', t("The selected image handling toolkit %toolkit can not correctly process %function.", array('%toolkit' => $toolkit, '%function' => $function)), WATCHDOG_ERROR);
+      watchdog('php', 'The selected image handling toolkit %toolkit can not correctly process %function.', array('%toolkit' => $toolkit, '%function' => $function), WATCHDOG_ERROR);
       return FALSE;
     }
   }

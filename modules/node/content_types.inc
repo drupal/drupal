@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.28 2007/04/13 08:56:58 dries Exp $
+// $Id: content_types.inc,v 1.29 2007/04/24 13:53:13 dries Exp $
 
 /**
  * @file
@@ -333,7 +333,7 @@ function node_type_form_submit($form_id, $form_values) {
   }
   elseif ($status == SAVED_NEW) {
     drupal_set_message(t('The content type %name has been added.', $t_args));
-    watchdog('node', t('Added content type %name.', $t_args), WATCHDOG_NOTICE, l(t('view'), 'admin/content/types'));
+    watchdog('node', 'Added content type %name.', $t_args, WATCHDOG_NOTICE, l(t('view'), 'admin/content/types'));
   }
 
   return 'admin/content/types';
@@ -401,7 +401,7 @@ function node_type_delete_confirm_submit($form_id, $form_values) {
 
   $t_args = array('%name' => $form_values['name']);
   drupal_set_message(t('The content type %name has been deleted.', $t_args));
-  watchdog('menu', t('Deleted content type %name.', $t_args), WATCHDOG_NOTICE);
+  watchdog('menu', 'Deleted content type %name.', $t_args, WATCHDOG_NOTICE);
 
   node_types_rebuild();
   menu_rebuild();

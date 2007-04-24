@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.170 2007/04/24 10:54:34 dries Exp $
+// $Id: filter.module,v 1.171 2007/04/24 13:53:11 dries Exp $
 
 /**
  * @file
@@ -819,7 +819,7 @@ function filter_form_validate($form) {
     }
   }
   form_error($form, t('An illegal choice has been detected. Please contact the site administrator.'));
-  watchdog('form', t('Illegal choice %choice in %name element.', array('%choice' => $form[$key]['#value'], '%name' => empty($form['#title']) ? $form['#parents'][0] : $form['#title'])), WATCHDOG_ERROR);
+  watchdog('form', 'Illegal choice %choice in %name element.', array('%choice' => $form[$key]['#value'], '%name' => empty($form['#title']) ? $form['#parents'][0] : $form['#title']), WATCHDOG_ERROR);
 }
 
 /**
