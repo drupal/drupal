@@ -971,7 +971,7 @@ function form_select_options($element, $choices = NULL) {
     }
     else {
       $key = (string)$key;
-      if ($value_valid && ((string)$element['#value'] === $key || ($value_is_array && in_array($key, $element['#value'])))) {
+      if ($value_valid && (!$value_is_array && (string)$element['#value'] === $key || ($value_is_array && in_array($key, $element['#value'])))) {
         $selected = ' selected="selected"';
       }
       else {
