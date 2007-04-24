@@ -58,7 +58,7 @@ function image_toolkit_invoke($method, $params = array()) {
       return call_user_func_array($function, $params);
     }
     else {
-      watchdog('php', t("The selected image handling toolkit %toolkit can not correctly process %function.", array('%toolkit' => $toolkit, '%function' => $function)), WATCHDOG_ERROR);
+      watchdog('php', 'The selected image handling toolkit %toolkit can not correctly process %function.', array('%toolkit' => $toolkit, '%function' => $function), WATCHDOG_ERROR);
       return FALSE;
     }
   }

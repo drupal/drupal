@@ -98,7 +98,8 @@ function theme_syslog_format($entry) {
       '@referer_uri' => $entry['referer'],
       '@uid'         => $entry['user']->uid,
       '@link'        => strip_tags($entry['link']),
-      '@message'     => strip_tags($entry['message']),
+      // Keep message English, but replace variable components.
+      '@message'     => strip_tags(strtr($entry['message'], $entry['variables'])),
     ));
   return $message;
 }

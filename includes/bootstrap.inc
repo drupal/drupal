@@ -646,19 +646,26 @@ function request_uri() {
  * @param $type
  *   The category to which this message belongs.
  * @param $message
- *   The message to store in the log.
+ *   The message to store in the log. See t() for documentation
+ *   on how $message and $variables interact. Keep $message
+ *   translateable by not concatenating dynamic values into it!
+ * @param $variables
+ *   Array of variables to replace in the message on display or
+ *   NULL if message is already translated or not possible to
+ *   translate.
  * @param $severity
  *   The severity of the message, as per RFC 3164
  * @param $link
  *   A link to associate with the message.
  */
-function watchdog($type, $message, $severity = WATCHDOG_NOTICE, $link = NULL) {
+function watchdog($type, $message, $variables = array(), $severity = WATCHDOG_NOTICE, $link = NULL) {
   global $user, $base_root;
 
   // Prepare the fields to be logged
   $log_message = array(
     'type'        => $type,
     'message'     => $message,
+    'variables'   => $variables,
     'severity'    => $severity,
     'link'        => $link,
     'user'        => $user,

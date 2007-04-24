@@ -939,7 +939,7 @@ function book_admin_edit_submit($form_id, $form_values) {
       $node->weight = $row['weight'];
 
       node_save($node);
-      watchdog('content', t('%type: updated %title.', array('%type' => t('book'), '%title' => $node->title)), WATCHDOG_NOTICE, l(t('view'), 'node/'. $node->nid));
+      watchdog('content', 'book: updated %title.', array('%title' => $node->title), WATCHDOG_NOTICE, l(t('view'), 'node/'. $node->nid));
     }
   }
 

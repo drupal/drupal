@@ -936,7 +936,7 @@ function search_view($type = 'node') {
     $results = '';
     if (trim($keys)) {
       // Log the search keys:
-      watchdog('search', t('%keys (@type).', array('%keys' => $keys, '@type' => module_invoke($type, 'search', 'name'))), WATCHDOG_NOTICE, l(t('results'), 'search/'. $type .'/'. $keys));
+      watchdog('search', '%keys (@type).', array('%keys' => $keys, '@type' => module_invoke($type, 'search', 'name')), WATCHDOG_NOTICE, l(t('results'), 'search/'. $type .'/'. $keys));
 
       // Collect the search results:
       $results = search_data($keys, $type);
