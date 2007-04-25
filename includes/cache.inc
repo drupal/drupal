@@ -1,8 +1,9 @@
 <?php
-// $Id: cache.inc,v 1.8 2007/04/15 15:38:35 dries Exp $
+// $Id: cache.inc,v 1.9 2007/04/25 21:34:32 dries Exp $
 
 /**
- * Return data from the persistent cache.
+ * Return data from the persistent cache. Data may be stored as either plain text or as serialized data.
+ * cache_get will automatically return unserialized objects and arrays.
  *
  * @param $key
  *   The cache ID of the data to retrieve.
@@ -21,12 +22,15 @@ function cache_get($key, $table = 'cache') {
     variable_set('cache_flush', 0);
   }
 
-  $cache = db_fetch_object(db_query("SELECT data, created, headers, expire FROM {$table} WHERE cid = '%s'", $key));
+  $cache = db_fetch_object(db_query("SELECT data, created, headers, expire, serialized FROM {$table} WHERE cid = '%s'", $key));
   if (isset($cache->data)) {
     // If the data is permanent or we're not enforcing a minimum cache lifetime
     // always return the cached data.
     if ($cache->expire == CACHE_PERMANENT || !variable_get('cache_lifetime', 0)) {
       $cache->data = db_decode_blob($cache->data);
+      if ($cache->serialized) {
+        $cache->data = unserialize($cache->data);
+      }
     }
     // If enforcing a minimum cache lifetime, validate that the data is
     // currently valid for this user before we return it by making sure the
@@ -40,6 +44,9 @@ function cache_get($key, $table = 'cache') {
       }
       else {
         $cache->data = db_decode_blob($cache->data);
+        if ($cache->serialized) {
+          $cache->data = unserialize($cache->data);
+        }
       }
     }
     return $cache;
@@ -75,7 +82,8 @@ function cache_get($key, $table = 'cache') {
  * @param $cid
  *   The cache ID of the data to store.
  * @param $data
- *   The data to store in the cache. Complex data types must be serialized first.
+ *   The data to store in the cache. Complex data types will be automatically serialized before insertion.
+ *   Strings will be stored as plain text and not serialized.
  * @param $table
  *   The table $table to store the data in. Valid core values are 'cache_filter',
  *   'cache_menu', 'cache_page', or 'cache'.
@@ -91,10 +99,15 @@ function cache_get($key, $table = 'cache') {
  *   A string containing HTTP header information for cached pages.
  */
 function cache_set($cid, $data, $table = 'cache', $expire = CACHE_PERMANENT, $headers = NULL) {
+  $serialized = 0;
+  if (is_object($data) || is_array($data)) {
+    $data = serialize($data);
+    $serialized = 1;
+  }
   db_lock_table($table);
-  db_query("UPDATE {$table} SET data = %b, created = %d, expire = %d, headers = '%s' WHERE cid = '%s'", $data, time(), $expire, $headers, $cid);
+  db_query("UPDATE {$table} SET data = %b, created = %d, expire = %d, headers = '%s', serialized = %d WHERE cid = '%s'", $data, time(), $expire, $headers, $serialized, $cid);
   if (!db_affected_rows()) {
-    @db_query("INSERT INTO {$table} (cid, data, created, expire, headers) VALUES ('%s', %b, %d, %d, '%s')", $cid, $data, time(), $expire, $headers);
+    @db_query("INSERT INTO {$table} (cid, data, created, expire, headers, serialized) VALUES ('%s', %b, %d, %d, '%s', %d)", $cid, $data, time(), $expire, $headers, $serialized);
   }
   db_unlock_tables();
 }

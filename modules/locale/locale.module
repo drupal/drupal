@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.168 2007/04/25 21:28:00 dries Exp $
+// $Id: locale.module,v 1.169 2007/04/25 21:34:32 dries Exp $
 
 /**
  * @file
@@ -245,7 +245,7 @@ function locale($string) {
       locale_refresh_cache();
       $cache = cache_get('locale:'. $language->language, 'cache');
     }
-    $locale_t = unserialize($cache->data);
+    $locale_t = $cache->data;
   }
 
   // We have the translation cached (if it is TRUE, then there is no
@@ -305,7 +305,7 @@ function locale_refresh_cache() {
     while ($data = db_fetch_object($result)) {
       $t[$data->source] = (empty($data->translation) ? TRUE : $data->translation);
     }
-    cache_set('locale:'. $language->language, serialize($t));
+    cache_set('locale:'. $language->language, $t);
   }
 }
 

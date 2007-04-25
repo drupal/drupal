@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.160 2007/04/24 15:53:53 goba Exp $
+// $Id: bootstrap.inc,v 1.161 2007/04/25 21:34:31 dries Exp $
 
 /**
  * @file
@@ -369,14 +369,14 @@ function drupal_get_filename($type, $name, $filename = NULL) {
 function variable_init($conf = array()) {
   // NOTE: caching the variables improves performance by 20% when serving cached pages.
   if ($cached = cache_get('variables', 'cache')) {
-    $variables = unserialize($cached->data);
+    $variables = $cached->data;
   }
   else {
     $result = db_query('SELECT * FROM {variable}');
     while ($variable = db_fetch_object($result)) {
       $variables[$variable->name] = unserialize($variable->value);
     }
-    cache_set('variables', serialize($variables));
+    cache_set('variables', $variables);
   }
 
   foreach ($conf as $name => $value) {
