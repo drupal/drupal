@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.167 2007/04/24 13:53:12 dries Exp $
+// $Id: locale.module,v 1.168 2007/04/25 21:28:00 dries Exp $
 
 /**
  * @file
@@ -175,17 +175,54 @@ function locale_user($type, $edit, &$user, $category = NULL) {
 /**
  * Implementation of hook_form_alter(). Adds language fields to forms.
  */
-function locale_form_alter($form_id, &$form) {
+function locale_form_alter(&$form, $form_id) {
   switch ($form_id) {
+
+    // Language field for paths
     case 'path_admin_edit':
       $form['language'] = array(
-        '#type' => 'radios',
+        '#type' => 'select',
         '#title' => t('Language'),
         '#options' => array('' => t('All languages')) + locale_language_list('name'),
-        '#default_value' => $form['#alias'] ? $form['#alias']['language'] : '',
-        '#weight' => -10
+        '#default_value' => $form['language']['#value'],
+        '#weight' => -10,
+        '#description' => t('Path aliases added for languages take precedence over path aliases added for all languages for the same Drupal path.'),
       );
       break;
+
+    // Language setting for content types
+    case 'node_type_form':
+      if (isset($form['identity']['type'])) {
+        $form['workflow']['language'] = array(
+          '#type' => 'radios',
+          '#title' => t('Multilingual support'),
+          '#default_value' => variable_get('language_'. $form['#node_type']->type, 0),
+          '#options' => array(t('Disabled'), t('Enabled')),
+          '#description' => t('Enable multilingual support for this content type. If enabled, a language selection field will be added to the editing form, allowing you to select from one of the <a href="!languages">enabled languages</a>. If disabled, new posts are saved with the default language. Existing content will not be affected by changing this option.', array('!languages' => url('admin/build/locale'))),
+        );
+      }
+      break;
+
+    // Language field for nodes
+    default:
+      if ($form['#id'] == 'node-form') {
+        if (variable_get('language_' . $form['#node']->type, 0)) {
+          $form['language'] = array(
+            '#type' => 'select',
+            '#title' => t('Language'),
+            '#default_value' => (isset($form['#node']->language) ? $form['#node']->language : ''),
+            '#options' => array('' => t('Language neutral')) + locale_language_list('name'),
+          );
+        }
+        // Node type without language selector: assign the default for new nodes
+        elseif (!isset($form['#node']->nid)) {
+          $default = language_default();
+          $form['language'] = array(
+            '#type' => 'value',
+            '#value' => $default->language
+          );
+        }
+      }
   }
 }
 

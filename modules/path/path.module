@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.113 2007/03/27 05:13:54 unconed Exp $
+// $Id: path.module,v 1.114 2007/04/25 21:28:00 dries Exp $
 
 /**
  * @file
@@ -184,7 +184,7 @@ function path_set_alias($path = NULL, $alias = NULL, $pid = NULL, $language = ''
 /**
  * Return a form for editing or creating an individual URL alias.
  */
-function path_form($edit = array('src' => '', 'dst' => '', 'pid' => NULL)) {
+function path_form($edit = array('src' => '', 'dst' => '', 'language' => '', 'pid' => NULL)) {
   $form['#submit']['path_form_submit'] = array();
   $form['#validate']['path_form_validate'] = array();
   $form['#theme'] = 'path_form';
@@ -207,6 +207,11 @@ function path_form($edit = array('src' => '', 'dst' => '', 'pid' => NULL)) {
     '#size' => 45,
     '#description' => t('Specify an alternative path by which this data can be accessed. For example, type "about" when writing an about page. Use a relative path and don\'t add a trailing slash or the URL alias won\'t work.'),
     '#field_prefix' => url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q=')
+  );
+  // This will be a hidden value unless locale module is enabled
+  $form['language'] = array(
+    '#type' => 'value',
+    '#value' => $edit['language']
   );
   if ($edit['pid']) {
     $form['pid'] = array('#type' => 'hidden', '#value' => $edit['pid']);

@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.804 2007/04/24 13:53:14 dries Exp $
+// $Id: node.module,v 1.805 2007/04/25 21:28:00 dries Exp $
 
 /**
  * @file
@@ -575,10 +575,10 @@ function node_load($param = array(), $revision = NULL, $reset = NULL) {
   // No db_rewrite_sql is applied so as to get complete indexing for search.
   if ($revision) {
     array_unshift($arguments, $revision);
-    $node = db_fetch_object(db_query('SELECT n.nid, r.vid, n.type, n.status, n.created, n.changed, n.comment, n.promote, n.sticky, r.timestamp AS revision_timestamp, r.title, r.body, r.teaser, r.log, r.format, u.uid, u.name, u.picture, u.data FROM {node} n INNER JOIN {users} u ON u.uid = n.uid INNER JOIN {node_revisions} r ON r.nid = n.nid AND r.vid = %d WHERE '. $cond, $arguments));
+    $node = db_fetch_object(db_query('SELECT n.nid, r.vid, n.type, n.status, n.language, n.created, n.changed, n.comment, n.promote, n.sticky, r.timestamp AS revision_timestamp, r.title, r.body, r.teaser, r.log, r.format, u.uid, u.name, u.picture, u.data FROM {node} n INNER JOIN {users} u ON u.uid = n.uid INNER JOIN {node_revisions} r ON r.nid = n.nid AND r.vid = %d WHERE '. $cond, $arguments));
   }
   else {
-    $node = db_fetch_object(db_query('SELECT n.nid, n.vid, n.type, n.status, n.created, n.changed, n.comment, n.promote, n.sticky, r.timestamp AS revision_timestamp, r.title, r.body, r.teaser, r.log, r.format, u.uid, u.name, u.picture, u.data FROM {node} n INNER JOIN {users} u ON u.uid = n.uid INNER JOIN {node_revisions} r ON r.vid = n.vid WHERE '. $cond, $arguments));
+    $node = db_fetch_object(db_query('SELECT n.nid, n.vid, n.type, n.status, n.language, n.created, n.changed, n.comment, n.promote, n.sticky, r.timestamp AS revision_timestamp, r.title, r.body, r.teaser, r.log, r.format, u.uid, u.name, u.picture, u.data FROM {node} n INNER JOIN {users} u ON u.uid = n.uid INNER JOIN {node_revisions} r ON r.vid = n.vid WHERE '. $cond, $arguments));
   }
 
   if ($node && $node->nid) {
@@ -658,12 +658,12 @@ function node_save(&$node) {
   }
   $node_table_values = array('nid' => $node->nid, 'vid' => $node->vid,
                     'title' => $node->title, 'type' => $node->type, 'uid' => $node->uid,
-                    'status' => $node->status, 'created' => $node->created,
+                    'status' => $node->status, 'language' => $node->language, 'created' => $node->created,
                     'changed' => $node->changed, 'comment' => $node->comment,
                     'promote' => $node->promote, 'sticky' => $node->sticky);
   $node_table_types = array('nid' => '%d', 'vid' => '%d',
                     'title' => "'%s'", 'type' => "'%s'", 'uid' => '%d',
-                    'status' => '%d', 'created' => '%d',
+                    'status' => '%d', 'language' => "'%s'",'created' => '%d',
                     'changed' => '%d', 'comment' => '%d',
                     'promote' => '%d', 'sticky' => '%d');
 
@@ -1366,7 +1366,11 @@ function node_filters() {
   if ($taxonomy = module_invoke('taxonomy', 'form_all', 1)) {
     $filters['category'] = array('title' => t('category'), 'options' => $taxonomy);
   }
-
+  // Language filter if there is a list of languages
+  if ($languages = module_invoke('locale', 'language_list')) {
+    $languages = array('' => t('Language neutral')) + $languages;
+    $filters['language'] = array('title' => t('language'), 'options' => $languages);
+  }
   return $filters;
 }
 
@@ -1394,6 +1398,8 @@ function node_build_filter_query() {
         break;
       case 'type':
         $where[] = "n.type = '%s'";
+      case 'language':
+        $where[] = "n.language = '%s'";
     }
     $args[] = $value;
   }
@@ -1422,13 +1428,20 @@ function node_filter_form() {
       $value = module_invoke('taxonomy', 'get_term', $value);
       $value = $value->name;
     }
+    else if ($type == 'language') {
+      $value = empty($value) ? t('Language neutral') : module_invoke('locale', 'language_name', $value);
+    }
     else {
       $value = $filters[$type]['options'][$value];
     }
-    $string = ($i++ ? '<em>and</em> where <strong>%a</strong> is <strong>%b</strong>' : '<strong>%a</strong> is <strong>%b</strong>');
-    $form['filters']['current'][] = array('#value' => t($string, array('%a' => $filters[$type]['title'] , '%b' => $value)));
-    if ($type == 'type') {
-      // Remove the type option if it is already being filtered on.
+    if ($i++) {
+      $form['filters']['current'][] = array('#value' => t('<em>and</em> where <strong>%a</strong> is <strong>%b</strong>', array('%a' => $filters[$type]['title'], '%b' => $value)));
+    }
+    else {
+      $form['filters']['current'][] = array('#value' => t('<strong>%a</strong> is <strong>%b</strong>', array('%a' => $filters[$type]['title'], '%b' => $value)));
+    }
+    if (in_array($type, array('type', 'language'))) {
+      // Remove the option if it is already being filtered on.
       unset($filters['type']);
     }
   }
@@ -1570,6 +1583,10 @@ function node_admin_nodes() {
 
   $result = pager_query('SELECT n.*, u.name, u.uid FROM {node} n '. $filter['join'] .' INNER JOIN {users} u ON n.uid = u.uid '. $filter['where'] .' ORDER BY n.changed DESC', 50, 0, NULL, $filter['args']);
 
+  // Enable language column if locale is enabled or if we have any node with language
+  $count = db_result(db_query("SELECT COUNT(*) FROM {node} n WHERE language != ''"));
+  $multilanguage = (module_exists('locale') || $count);
+
   $form['options'] = array('#type' => 'fieldset',
     '#title' => t('Update options'),
     '#prefix' => '<div class="container-inline">',
@@ -1590,6 +1607,9 @@ function node_admin_nodes() {
     $form['name'][$node->nid] =  array('#value' => node_get_types('name', $node));
     $form['username'][$node->nid] = array('#value' => theme('username', $node));
     $form['status'][$node->nid] =  array('#value' =>  ($node->status ? t('published') : t('not published')));
+    if ($multilanguage) {
+      $form['language'][$node->nid] = array('#value' => empty($node->language) ? t('Language neutral') : module_invoke('locale', 'language_name', $node->language));
+    }
     $form['operations'][$node->nid] = array('#value' => l(t('edit'), 'node/'. $node->nid .'/edit', array('query' => $destination)));
   }
   $form['nodes'] = array('#type' => 'checkboxes', '#options' => $nodes);
@@ -1602,7 +1622,11 @@ function node_admin_nodes() {
  */
 function theme_node_admin_nodes($form) {
   // Overview table:
-  $header = array(theme('table_select_header_cell'), t('Title'), t('Type'), t('Author'), t('Status'), t('Operations'));
+  $header = array(theme('table_select_header_cell'), t('Title'), t('Type'), t('Author'), t('Status'));
+  if (isset($form['language'])) {
+    $header[] = t('Language');
+  }
+  $header[] = t('Operations');
   $output = '';
 
   $output .= drupal_render($form['options']);
@@ -1614,6 +1638,9 @@ function theme_node_admin_nodes($form) {
       $row[] = drupal_render($form['name'][$key]);
       $row[] = drupal_render($form['username'][$key]);
       $row[] = drupal_render($form['status'][$key]);
+      if (isset($form['language'])) {
+        $row[] = drupal_render($form['language'][$key]);
+      }
       $row[] = drupal_render($form['operations'][$key]);
       $rows[] = $row;
     }
@@ -1996,6 +2023,11 @@ function node_form($node, $form_values = NULL) {
   global $user;
 
   $node = (object)$node;
+  foreach (array('body', 'title', 'format') as $key) {
+    if (!isset($node->$key)) {
+      $node->$key = NULL;
+    }
+  }
   node_object_prepare($node);
 
   // Set the id of the top-level form tag
@@ -2005,19 +2037,12 @@ function node_form($node, $form_values = NULL) {
    * Basic node information.
    * These elements are just values so they are not even sent to the client.
    */
-  foreach (array('nid', 'vid', 'uid', 'created', 'type') as $key) {
+  foreach (array('nid', 'vid', 'uid', 'created', 'type', 'language') as $key) {
     $form[$key] = array('#type' => 'value', '#value' => isset($node->$key) ? $node->$key : NULL);
-  }
-  if (!isset($node->nid)) {
-    $node->body = NULL;
-    $node->title = NULL;
   }
 
   // Changed must be sent to the client, for later overwrite error checking.
   $form['changed'] = array('#type' => 'hidden', '#default_value' => isset($node->changed) ? $node->changed : NULL);
-  if (!isset($node->format)) {
-    $node->format = NULL;
-  }
   // Get the node-specific bits.
   if ($extra = node_invoke($node, 'form', $form_values)) {
     $form = array_merge_recursive($form, $extra);
@@ -2188,7 +2213,7 @@ function node_add($type) {
   // If a node type has been specified, validate its existence.
   if (isset($types[$type]) && node_access('create', $type)) {
     // Initialize settings:
-    $node = array('uid' => $user->uid, 'name' => $user->name, 'type' => $type);
+    $node = array('uid' => $user->uid, 'name' => $user->name, 'type' => $type, 'language' => '');
 
     drupal_set_title(t('Submit @name', array('@name' => $types[$type]->name)));
     $output = drupal_get_form($type .'_node_form', $node);
