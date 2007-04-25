@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.634 2007/04/24 19:49:01 dries Exp $
+// $Id: common.inc,v 1.635 2007/04/25 05:02:41 dries Exp $
 
 /**
  * @file
@@ -1977,7 +1977,7 @@ function drupal_mail($mailkey, $to, $subject, $body, $from = NULL, $headers = ar
     $defaults['From'] = $defaults['Reply-To'] = $defaults['Sender'] = $defaults['Return-Path'] = $defaults['Errors-To'] = $default_from;
   }
   if ($from) {
-    $defaults['From'] = $defaults['Reply-To'] = $from
+    $defaults['From'] = $defaults['Reply-To'] = $from;
   }
   $headers = array_merge($defaults, $headers);
 
