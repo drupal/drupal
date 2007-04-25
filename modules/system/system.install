@@ -367,6 +367,7 @@ function system_install() {
         nid int unsigned NOT NULL auto_increment,
         vid int unsigned NOT NULL default '0',
         type varchar(32) NOT NULL default '',
+        language varchar(12) NOT NULL default '',
         title varchar(128) NOT NULL default '',
         uid int NOT NULL default '0',
         status int NOT NULL default '1',
@@ -840,6 +841,7 @@ function system_install() {
         nid serial CHECK (nid >= 0),
         vid int_unsigned NOT NULL default '0',
         type varchar(32) NOT NULL default '',
+        language varchar(12) NOT NULL default '',
         title varchar(128) NOT NULL default '',
         uid int NOT NULL default '0',
         status int NOT NULL default '1',
@@ -3794,6 +3796,23 @@ function system_update_6010() {
   // Ensure we have 'N;' (serialize(NULL)) as the default, so existing
   // log messages will not get translated in the new system.
   $ret[] = update_sql("UPDATE {watchdog} SET variables = 'N;'");
+  return $ret;
+}
+
+/**
+ * Add language support to nodes
+ */
+function system_update_6011() {
+  $ret = array();
+  switch ($GLOBALS['db_type']) {
+    case 'pgsql':
+      db_add_column($ret, 'node', 'language', 'varchar(12)', array('default' => "''", 'not null' => TRUE));
+      break;
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql("ALTER TABLE {node} ADD language varchar(12) NOT NULL default ''");
+      break;
+  }
   return $ret;
 }
 

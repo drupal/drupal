@@ -448,7 +448,6 @@ function update_do_updates() {
   if (!isset($update['module'])) {
     cache_clear_all('*', 'cache', TRUE);
     cache_clear_all('*', 'cache_page', TRUE);
-    cache_clear_all('*', 'cache_menu', TRUE);
     cache_clear_all('*', 'cache_filter', TRUE);
     drupal_clear_css_cache();
   }
