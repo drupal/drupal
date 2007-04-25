@@ -1,12 +1,12 @@
-// $Id: CHANGELOG.txt,v 1.189 2007/04/24 10:54:34 dries Exp $
+// $Id: CHANGELOG.txt,v 1.190 2007/04/25 21:36:57 dries Exp $
 
 Drupal 6.0, xxxx-xx-xx (development version)
 ----------------------
 - New watchdog as a hook functionality.
-  * New hook_watchdog that can be implemented by any module to route log messages to various destinations.
-  * Expands the severity levels from 3 (Error, Warning, Notice) to the 8 levels defined in RFC 3164.
-  * The watchdog module is now called dblog, and is optional, but enabled by default in the default install profile.
-  * New optional syslog.module now in core.
+   * New hook_watchdog that can be implemented by any module to route log messages to various destinations.
+   * Expands the severity levels from 3 (Error, Warning, Notice) to the 8 levels defined in RFC 3164.
+   * The watchdog module is now called dblog, and is optional, but enabled by default in the default install profile.
+   * New optional syslog.module now in core.
 - Added theme registry: modules can directly provide .tpl.php files for their themes without having to create theme_ functions.
 - Added versioning support to node terms.
 - Made it easier to theme the forum overview page.
@@ -16,9 +16,10 @@ Drupal 6.0, xxxx-xx-xx (development version)
 - Improved handling of teasers in posts.
 - Made signature support optional and made it possible to theme signatures.
 - Added generic language management functionality.
-    * Support for right to left scripts.
+    * Support for right to left languages.
     * Language detection based on parts of the URL.
     * Browser based language detection.
+    * Made it possible to specify a node's language.
 - Moved "PHP input filter" to a stand-alone module so it can be deleted for security reasons.
 - Language dependent path aliases.
 - Added .info files to themes and made it easier to specify regions and features.
