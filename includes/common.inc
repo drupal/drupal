@@ -1977,7 +1977,7 @@ function drupal_mail($mailkey, $to, $subject, $body, $from = NULL, $headers = ar
     $defaults['From'] = $defaults['Reply-To'] = $defaults['Sender'] = $defaults['Return-Path'] = $defaults['Errors-To'] = $default_from;
   }
   if ($from) {
-    $defaults['From'] = $defaults['Reply-To'] = $from
+    $defaults['From'] = $defaults['Reply-To'] = $from;
   }
   $headers = array_merge($defaults, $headers);
 
