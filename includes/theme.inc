@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.351 2007/04/25 21:34:32 dries Exp $
+// $Id: theme.inc,v 1.352 2007/04/27 07:42:54 dries Exp $
 
 /**
  * @file
@@ -166,6 +166,32 @@ function _theme_process_registry(&$cache, $name, $type) {
       if (!isset($info['arguments']) && isset($cache[$hook])) {
         $result[$hook]['arguments'] = $cache[$hook]['arguments'];
       }
+      // Check for default _preprocess_ functions. Ensure arrayness.
+      if (!isset($info['preprocess functions']) || !is_array($info['preprocess functions'])) {
+        $info['preprocess functions'] = array();
+        $prefix = ($type == 'module' ? 'template' : $name);
+        // It would be too much of a performance hit to let every module have
+        // a generic preprocess function; themes and theme engines can do that.
+        if ($type != 'module' && function_exists($prefix .'_preprocess')) {
+          $info['preprocess functions'][] = $prefix .'_preprocess';
+        }
+        if (function_exists($prefix .'_preprocess_'. $hook)) {
+          $info['preprocess functions'][] = $prefix .'_preprocess_'. $hook;
+        }
+        // theme engines get an extra set.
+        if ($type == 'theme_engine') {
+          if (function_exists($prefix .'_engine_preprocess')) {
+            $info['preprocess functions'][] = $prefix .'_engine_preprocess';
+          }
+          if (function_exists($prefix .'_engine_preprocess_'. $hook)) {
+            $info['preprocess functions'][] = $prefix .'_engine_preprocess_'. $hook;
+          }
+        }
+      }
+      if (isset($cache[$hook]['preprocess functions']) && is_array($cache[$hook]['preprocess functions']) && empty($cache[$hook]['override preprocess functions'])) {
+        $info['preprocess functions'] = array_merge($cache[$hook]['preprocess functions'], $info['preprocess functions']);
+      }
+      $result[$hook]['preprocess functions'] = $info['preprocess functions'];
     }
 
     $cache = array_merge($cache, $result);
@@ -264,24 +290,30 @@ function list_theme_engines($refresh = FALSE) {
  * applicable) and the theme. The following functions may be used to modify
  * the $variables array:
  *
- * ENGINE_engine_variables(&$variables)
+ * ENGINE_engine_preprocess(&$variables)
  *   This function should only be implemented by theme engines and is exists
  *   so that the theme engine can set necessary variables. It is commonly
  *   used to set global variables such as $directory and $is_front_page.
- * ENGINE_engine_variables_HOOK(&$variables)
+ * ENGINE_engine_preprocess_HOOK(&$variables)
  *   This is the same as the previous function, but is called only per hook.
- * ENGINE_variables_HOOK(&$variables)
- * ENGINE_variables(&$variables)
+ * ENGINE_preprocess_HOOK(&$variables)
+ * ENGINE_preprocess(&$variables)
  *   This is meant to be used by themes that utilize a theme engine; as it is
  *   good practice for these themes to use the theme engine's name for
  *   their functions so that they may share code. In PHPTemplate, these
  *   functions will appear in template.php
- * THEME_variables_HOOK(&$variables)
- * THEME_variables(&$variables)
+ * THEME_preprocess_HOOK(&$variables)
+ * THEME_preprocess(&$variables)
  *   These functions are based upon the raw theme; they should primarily be
  *   used by themes that do not use an engine or by themes that need small
  *   changes to what has already been established in the theme engine version
  *   of the function.
+ * template_preprocess(&$variables)
+ *   This function will only be called for theme functions registered by
+ *   the named module. In general it is preferred to use the following
+ *   function if possible, but it may not always be the case.
+ * template_preprocess_HOOK(&$variables)
+ *   This is the same as the previous function, but is called only per hook.
  *
  * There are two special variables that these hooks can set:
  *   'template_file' and 'template_files'. These will be merged together
@@ -337,18 +369,10 @@ function theme() {
     // default render function and extension.
     $render_function = 'theme_render_template';
     $extension = '.tpl.php';
-    $variables_list = array();
 
     // Run through the theme engine variables, if necessary
     global $theme_engine;
     if (isset($theme_engine)) {
-      // Call each of our variable override functions. We allow
-      // several to create cleaner code.
-      $variables_list[] = $theme_engine .'_engine_variables';
-      $variables_list[] = $theme_engine .'_engine_variables_'. $hook;
-      $variables_list[] = $theme_engine .'_variables';
-      $variables_list[] = $theme_engine .'_variables_'. $hook;
-
       // If theme or theme engine is implementing this, it may have
       // a different extension and a different renderer.
       if ($hooks[$hook]['type'] != 'module') {
@@ -362,17 +386,14 @@ function theme() {
       }
     }
 
-    // Add theme specific variable substitution:
-    global $theme;
-    $variables_list[] = $theme .'_variables';
-    $variables_list[] = $theme .'_variables_'. $hook;
-
-    // This construct ensures that we can keep a reference through
-    // call_user_func_array.
-    $args = array(&$variables, $hook);
-    foreach ($variables_list as $variables_function) {
-      if (function_exists($variables_function)) {
-        call_user_func_array($variables_function, $args);
+    if (isset($info['preprocess functions']) && is_array($info['preprocess functions'])) {
+      // This construct ensures that we can keep a reference through
+      // call_user_func_array.
+      $args = array(&$variables, $hook);
+      foreach ($info['preprocess functions'] as $preprocess_function) {
+        if (function_exists($preprocess_function)) {
+          call_user_func_array($preprocess_function, $args);
+        }
       }
     }
 
@@ -655,56 +676,6 @@ function theme_placeholder($text) {
 }
 
 /**
- * Return an entire Drupal page displaying the supplied content.
- *
- * @param $content
- *   A string to display in the main content area of the page.
- * @return
- *   A string containing the entire HTML page.
- */
-function theme_page($content) {
-  // Get blocks before so that they can alter the header (JavaScript, Stylesheets etc.)
-  $blocks = theme('blocks', 'all');
-
-  $output = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
-  $output .= '<html xmlns="http://www.w3.org/1999/xhtml">';
-  $output .= '<head>';
-  $output .= ' <title>'. (drupal_get_title() ? strip_tags(drupal_get_title()) : variable_get('site_name', 'Drupal')) .'</title>';
-  $output .= drupal_get_html_head();
-  $output .= drupal_get_css();
-  $output .= drupal_get_js();
-
-  $output .= ' </head>';
-  $output .= ' <body style="background-color: #fff; color: #000;">';
-  $output .= '<table border="0" cellspacing="4" cellpadding="4"><tr><td style="vertical-align: top; width: 170px;">';
-
-  $output .= $blocks;
-  $output .= '</td><td style="vertical-align: top;">';
-
-  $output .= theme('breadcrumb', drupal_get_breadcrumb());
-  $output .= '<h1>'. drupal_get_title() .'</h1>';
-
-  if ($tabs = theme('menu_local_tasks')) {
-   $output .= $tabs;
-  }
-
-  $output .= theme('help');
-
-  $output .= theme('status_messages');
-
-  $output .= "\n<!-- begin content -->\n";
-  $output .= $content;
-  $output .= drupal_get_feeds();
-  $output .= "\n<!-- end content -->\n";
-
-  $output .= '</td></tr></table>';
-  $output .= theme('closure');
-  $output .= '</body></html>';
-
-  return $output;
-}
-
-/**
  * Generate a themed maintenance page.
  *
  * Note: this function is not themable.
@@ -955,66 +926,6 @@ function theme_help() {
 }
 
 /**
- * Return a themed node.
- *
- * @param $node
- *   An object providing all relevant information for displaying a node:
- *   - $node->nid: The ID of the node.
- *   - $node->type: The content type (story, blog, forum...).
- *   - $node->title: The title of the node.
- *   - $node->created: The creation date, as a UNIX timestamp.
- *   - $node->teaser: A shortened version of the node body.
- *   - $node->body: The entire node contents.
- *   - $node->changed: The last modification date, as a UNIX timestamp.
- *   - $node->uid: The ID of the author.
- *   - $node->username: The username of the author.
- * @param $teaser
- *   Whether to display the teaser only, as on the main page.
- * @param $page
- *   Whether to display the node as a standalone page. If TRUE, do not display
- *   the title because it will be provided by the menu system.
- * @return
- *   A string containing the node output.
- */
-function theme_node($node, $teaser = FALSE, $page = FALSE) {
-  if (!$node->status) {
-    $output  = '<div class="node-unpublished">';
-  }
-
-  if (module_exists('taxonomy')) {
-    $terms = taxonomy_link('taxonomy terms', $node);
-  }
-
-  if ($page == 0) {
-    $output .= t('!title by !name', array('!title' => '<h2 class="title">'. check_plain($node->title) .'</h2>', '!name' => theme('username', $node)));
-  }
-  else {
-    $output .= t('by !name', array('!name' => theme('username', $node)));
-  }
-
-  if (count($terms)) {
-    $output .= ' <small>('. theme('links', $terms) .')</small><br />';
-  }
-
-  if ($teaser && $node->teaser) {
-    $output .= $node->teaser;
-  }
-  else {
-    $output .= $node->body;
-  }
-
-  if ($node->links) {
-    $output .= '<div class="links">'. theme('links', $node->links) .'</div>';
-  }
-
-  if (!$node->status) {
-    $output .= '</div>';
-  }
-
-  return $output;
-}
-
-/**
  * Return a themed submenu, typically displayed under the tabs.
  *
  * @param $links
@@ -1179,29 +1090,6 @@ function theme_tablesort_indicator($style) {
  */
 function theme_box($title, $content, $region = 'main') {
   $output = '<h2 class="title">'. $title .'</h2><div>'. $content .'</div>';
-  return $output;
-}
-
-/**
- * Return a themed block.
- *
- * You can style your blocks by defining .block (all blocks),
- * .block-<i>module</i> (all blocks of module <i>module</i>), and
- * \#block-<i>module</i>-<i>delta</i> (specific block of module <i>module</i>
- * with delta <i>delta</i>) in your theme's CSS.
- *
- * @param $block
- *   An object populated with fields from the "blocks" database table
- *   ($block->module, $block->delta ...) and fields returned by
- *   <i>module</i>_block('view') ($block->subject, $block->content, ...).
- * @return
- *   A string containing the block output.
- */
-function theme_block($block) {
-  $output  = "<div class=\"block block-$block->module\" id=\"block-$block->module-$block->delta\">\n";
-  $output .= " <h2 class=\"title\">$block->subject</h2>\n";
-  $output .= " <div class=\"content\">$block->content</div>\n";
-  $output .= "</div>\n";
   return $output;
 }
 
@@ -1432,3 +1320,186 @@ function _theme_table_cell($cell, $header = FALSE) {
   return $output;
 }
 
+/**
+ * Prepare the variables passed to the page.tpl.php template. Uses the arg()
+ * function to generate a series of page template files suggestions based on
+ * the current path.
+ */
+function template_preprocess_page(&$variables) {
+  /* Set title and breadcrumb to declared values */
+  if (drupal_is_front_page()) {
+    $variables['mission'] = filter_xss_admin(theme_get_setting('mission'));
+  }
+
+  /* Add favicon */
+  if (theme_get_setting('toggle_favicon')) {
+    drupal_set_html_head('<link rel="shortcut icon" href="'. check_url(theme_get_setting('favicon')) .'" type="image/x-icon" />');
+  }
+
+  /**
+  * Populate sidebars.
+  */
+  $variables['sidebar_left'] = NULL;
+  $variables['sidebar_right'] = NULL;
+  $layout = 'none';
+  if ($variables['show_blocks']) {
+    global $sidebar_indicator;
+    /**
+     * Sidebar_indicator tells the block counting code to count sidebars separately.
+     */
+    $sidebar_indicator = 'left';
+    $variables['sidebar_left'] = theme('blocks', 'left');
+    if ($variables['sidebar_left'] != '') {
+      $layout = 'left';
+    }
+
+    $sidebar_indicator = 'right';
+    $variables['sidebar_right'] = theme('blocks', 'right');
+    if ($variables['sidebar_right'] != '') {
+      $variables['layout'] = ($layout == 'left') ? 'both' : 'right';
+    }
+    $sidebar_indicator = NULL;
+  }
+  $variables['layout'] = $layout;
+
+  global $theme;
+  // Populate the rest of the regions.
+  $regions = system_region_list($theme);
+  // Load all region content assigned via blocks.
+  foreach (array_keys($regions) as $region) {
+    // Skip blocks in this region that have already been loaded.
+    // This pre-loading is necessary because phptemplate uses variable names different from
+    // the region names, e.g., 'sidebar_left' instead of 'left'.
+    if (!in_array($region, array('left', 'right', 'footer'))) {
+      isset($variables[$region]) ? $variables[$region] .= theme('blocks', $region) : $variables[$region] = theme('blocks', $region);
+    }
+  }
+
+  // Construct page title
+  if (drupal_get_title()) {
+    $head_title = array(strip_tags(drupal_get_title()), variable_get('site_name', 'Drupal'));
+  }
+  else {
+    $head_title = array(variable_get('site_name', 'Drupal'));
+    if (variable_get('site_slogan', '')) {
+      $head_title[] = variable_get('site_slogan', '');
+    }
+  }
+  $variables['head_title']        = implode(' | ', $head_title);
+  $variables['base_path']         = base_path();
+  $variables['breadcrumb']        = theme('breadcrumb', drupal_get_breadcrumb());
+  $variables['closure']           = theme('closure');
+  $variables['feed_icons']        = drupal_get_feeds();
+  $variables['footer_message']    = filter_xss_admin(variable_get('site_footer', FALSE)) . "\n" . theme('blocks', 'footer');
+  $variables['head']              = drupal_get_html_head();
+  $variables['help']              = theme('help');
+  $variables['language']          = $GLOBALS['language'];
+  $variables['logo']              = theme_get_setting('logo');
+  $variables['messages']          = theme('status_messages');
+  $variables['mission']           = isset($mission) ? $mission : '';
+  $variables['primary_links']     = menu_primary_links();
+  $variables['search_box']        = (theme_get_setting('toggle_search') ? drupal_get_form('search_theme_form') : '');
+  $variables['secondary_links']   = menu_secondary_links();
+  $variables['site_name']         = (theme_get_setting('toggle_name') ? variable_get('site_name', 'Drupal') : '');
+  $variables['site_slogan']       = (theme_get_setting('toggle_slogan') ? variable_get('site_slogan', '') : '');
+  $variables['css']               = drupal_add_css();
+  $variables['styles']            = drupal_get_css();
+  $variables['scripts']           = drupal_get_js();
+  $variables['tabs']              = theme('menu_local_tasks');
+  $variables['title']             = drupal_get_title();
+
+  if ((arg(0) == 'node') && is_numeric(arg(1))) {
+    $variables['node'] = node_load(arg(1));
+  }
+
+  // Build a list of suggested template files in order of specificity. One
+  // suggestion is made for every element of the current path, though
+  // numeric elements are not carried to subsequent suggestions. For example,
+  // http://www.example.com/node/1/edit would result in the following
+  // suggestions:
+  //
+  // page-node-edit.tpl.php
+  // page-node-1.tpl.php
+  // page-node.tpl.php
+  // page.tpl.php
+  $i = 0;
+  $suggestion = 'page';
+  $suggestions = array();
+  while ($arg = arg($i++)) {
+    $suggestions[] = $suggestion . '-' . $arg;
+    if (!is_numeric($arg)) {
+      $suggestion .= '-' . $arg;
+    }
+  }
+  if (drupal_is_front_page()) {
+    $suggestions[] = 'page-front';
+  }
+
+  if ($suggestions) {
+    $variables['template_files'] = $suggestions;
+  }
+}
+
+/*
+ * Prepare the values passed to the theme_node function to be passed
+ * into standard template files.
+ */
+function template_preprocess_node(&$variables) {
+  $node = $variables['node'];
+  if (module_exists('taxonomy')) {
+    $variables['taxonomy'] = taxonomy_link('taxonomy terms', $node);
+  }
+  else {
+    $variables['taxonomy'] = array();
+  }
+
+  if ($variables['teaser'] && $node->teaser) {
+    $variables['content'] = $node->teaser;
+  }
+  elseif (isset($node->body)) {
+    $variables['content'] = $node->body;
+  }
+  else {
+    $variables['content'] = '';
+  }
+
+  $variables['date']      = format_date($node->created);
+  $variables['links']     = !empty($node->links) ? theme('links', $node->links, array('class' => 'links inline')) : '';
+  $variables['name']      = theme('username', $node);
+  $variables['node_url']  = url('node/'. $node->nid);
+  $variables['terms']     = theme('links', $variables['taxonomy'], array('class' => 'links inline'));
+  $variables['title']     = check_plain($node->title);
+
+  // Flatten the node object's member fields.
+  $variables = array_merge((array)$node, $variables);
+
+  // Display info only on certain node types.
+  if (theme_get_setting('toggle_node_info_' . $node->type)) {
+    $variables['submitted'] = t('Submitted by !a on @b.', array('!a' => theme('username', $node), '@b' => format_date($node->created)));
+    $variables['picture'] = theme_get_setting('toggle_node_user_picture') ? theme('user_picture', $node) : '';
+  }
+  else {
+    $variables['submitted'] = '';
+    $variables['picture'] = '';
+  }
+
+  $variables['template_files'][] = 'node-'. $node->type;
+}
+
+/**
+ * Prepare the values passed to the theme_block function to be passed
+ * into a pluggable template engine. Uses block properties to generate a
+ * series of template file suggestions. If none are found, the default
+ * block.tpl.php is used.
+ */
+function template_preprocess_block(&$variables) {
+  global $sidebar_indicator;
+  $count['block_counter'][$sidebar_indicator] = isset($count['block_counter'][$sidebar_indicator]) && is_int($count['block_counter'][$sidebar_indicator]) ? $count['block_counter'][$sidebar_indicator] : 1;
+
+  $variables['block_zebra'] = ($count['block_counter'][$sidebar_indicator] % 2) ? 'odd' : 'even';
+
+  $variables['block_id'] = $count['block_counter'][$sidebar_indicator]++;
+  $variables['template_files'][] = 'block-' . $variables['block']->region;
+  $variables['template_files'][] = 'block-' . $variables['block']->module;
+  $variables['template_files'][] = 'block-' . $variables['block']->module .'-'. $variables['block']->delta;
+}

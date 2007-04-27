@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.539 2007/04/24 18:23:48 goba Exp $
+// $Id: comment.module,v 1.540 2007/04/27 07:42:54 dries Exp $
 
 /**
  * @file
@@ -162,6 +162,7 @@ function comment_theme() {
     ),
     'comment' => array(
       'arguments' => array('comment' => NULL, 'links' => array()),
+      'file' => 'comment.tpl.php',
     ),
     'comment_folded' => array(
       'arguments' => array('comment' => NULL),
@@ -1811,15 +1812,23 @@ function comment_controls_submit($form_id, $form_values) {
   }
 }
 
-function theme_comment($comment, $links = array()) {
-  $output  = '<div class="comment'. ($comment->status == COMMENT_NOT_PUBLISHED ? ' comment-unpublished' : '') .'">';
-  $output .= '<div class="subject">'. l($comment->subject, $_GET['q'], array('fragment' => "comment-$comment->cid")) .' '. theme('mark', $comment->new) ."</div>\n";
-  $output .= '<div class="credit">'. t('by %a on %b', array('%a' => theme('username', $comment), '%b' => format_date($comment->timestamp))) ."</div>\n";
-  $output .= '<div class="body">'. $comment->comment .'</div>';
-  $output .= theme('user_signature', $comment->signature);
-  $output .= '<div class="links">'. theme('links', $links) .'</div>';
-  $output .= '</div>';
-  return $output;
+/**
+ * Prepare values for comment.tpl.php
+ */
+function template_preprocess_comment(&$variables) {
+  $comment = $variables['comment'];
+  $variables['author']    = theme('username', $comment);
+  $variables['comment']   = $comment;
+  $variables['content']   = $comment->comment;
+  $variables['date']      = format_date($comment->timestamp);
+  $variables['links']     = isset($variables['links']) ? theme('links', $variables['links']) : '';
+  $variables['new']       = $comment->new ? t('new') : '';
+  $variables['picture']   = theme_get_setting('toggle_comment_user_picture') ? theme('user_picture', $comment) : '';
+  $variables['signature'] = $comment->signature;
+  $variables['submitted'] = t('Submitted by !a on @b.',
+                      array('!a' => theme('username', $comment),
+                            '@b' => format_date($comment->timestamp)));
+  $variables['title']     = l($comment->subject, $_GET['q'], array('fragment' => "comment-$comment->cid"));
 }
 
 function theme_comment_folded($comment) {

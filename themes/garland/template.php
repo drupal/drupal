@@ -1,5 +1,5 @@
 <?php
-// $Id: template.php,v 1.9 2007/04/13 08:56:59 dries Exp $
+// $Id: template.php,v 1.10 2007/04/27 07:42:54 dries Exp $
 
 /**
  * Sets the body-tag class attribute.
@@ -55,7 +55,7 @@ function phptemplate_comment_wrapper($content, $type = null) {
 /**
  * Override or insert PHPTemplate variables into the templates.
  */
-function phptemplate_variables_page(&$vars) {
+function phptemplate_preprocess_page(&$vars) {
   if ($secondary = menu_secondary_local_tasks()) {
     $output = '<span class="clear"></span>';
     $output .= "<ul class=\"tabs secondary\">\n". $secondary ."</ul>\n";
