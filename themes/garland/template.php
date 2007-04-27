@@ -55,7 +55,7 @@ function phptemplate_comment_wrapper($content, $type = null) {
 /**
  * Override or insert PHPTemplate variables into the templates.
  */
-function phptemplate_variables_page(&$vars) {
+function phptemplate_preprocess_page(&$vars) {
   if ($secondary = menu_secondary_local_tasks()) {
     $output = '<span class="clear"></span>';
     $output .= "<ul class=\"tabs secondary\">\n". $secondary ."</ul>\n";
