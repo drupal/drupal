@@ -11,7 +11,7 @@ Drupal.cleanURLsSettingsCheck = function() {
   var url = location.pathname +"admin/settings/clean-urls";
   $("#clean-url .description span").html('<div id="testing">'+ Drupal.settings.cleanURL.testing +"</div>");
   $("#clean-url p").hide();
-  $.ajax({url: location.protocol +"//"+ location.hostname + url, type: "GET", data: " ", complete: function(response) {
+  $.ajax({url: location.protocol +"//"+ location.host + url, type: "GET", data: " ", complete: function(response) {
     $("#testing").toggle();
     if (response.status == 200) {
       // Check was successful.
