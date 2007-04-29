@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.352 2007/04/27 07:42:54 dries Exp $
+// $Id: theme.inc,v 1.353 2007/04/29 16:13:12 dries Exp $
 
 /**
  * @file
@@ -291,7 +291,7 @@ function list_theme_engines($refresh = FALSE) {
  * the $variables array:
  *
  * ENGINE_engine_preprocess(&$variables)
- *   This function should only be implemented by theme engines and is exists
+ *   This function should only be implemented by theme engines and exists
  *   so that the theme engine can set necessary variables. It is commonly
  *   used to set global variables such as $directory and $is_front_page.
  * ENGINE_engine_preprocess_HOOK(&$variables)
@@ -349,7 +349,11 @@ function theme() {
     // The theme call is a function.
     // Include a file if this theme function is held elsewhere.
     if (!empty($info['file'])) {
-      include_once($info['file']);
+      $function_file = $info['file'];
+      if (isset($info['path'])) {
+        $function_file = $info['path'] .'/'. $function_file;
+      }
+      include_once($function_file);
     }
     return call_user_func_array($info['function'], $args);
   }
