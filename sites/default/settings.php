@@ -1,5 +1,5 @@
 <?php
-// $Id: settings.php,v 1.54 2007/03/28 14:08:22 dries Exp $
+// $Id: settings.php,v 1.55 2007/04/30 14:37:36 dries Exp $
 
 /**
  * @file
@@ -137,27 +137,15 @@ ini_set('session.use_trans_sid',    0);
 ini_set('url_rewriter.tags',        '');
 
 /**
- * We try to set the correct cookie domain.
- */
-if (isset($_SERVER['HTTP_HOST'])) {
-  $domain = '.'. preg_replace('`^www\.`', '', $_SERVER['HTTP_HOST']);
-  // Per RFC 2109, cookie domains must contain at least one dot other than the
-  // first. For hosts such as 'localhost', we don't set a cookie domain.
-  if (count(explode('.', $domain)) > 2) {
-    ini_set('session.cookie_domain', $domain);
-  }
-}
+ * Drupal automatically generates a unique session cookie name for each site
+ * based on on its full domain name. If you have multiple domains pointing at
+ * the same Drupal site, you can either redirect them all to a single
+ * domain (see comment in .htaccess), or uncomment the line below and specify
+ * their shared base domain. Doing so assures that users remain logged in as they
+ * cross between your various domains.
+*/
 
-/**
- * On some sites, multiple domains or subdomains may point to the same site.
- * For instance, example.com may redirect to foo.example.com. In that case,
- * the browser may confuse the cookies between the two domains, resulting in
- * an inability to log in. In that case, uncomment the line below and set
- * it to the more generic domain name. For instance, .example.com is more
- * generic than .foo.example.com. Remember the leading period on the domain
- * name, even if you wouldn't type it in your browser.
- */
-#ini_set('session.cookie_domain', '.example.com');
+#$cookie_domain = 'example.com';
 
 /**
  * Variable overrides:
