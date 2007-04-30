@@ -1,5 +1,5 @@
 <?php
-// $Id: syslog.module,v 1.6 2007/04/30 14:25:13 dries Exp $
+// $Id: syslog.module,v 1.7 2007/04/30 17:03:28 dries Exp $
 
 /**
  * @file
@@ -25,8 +25,8 @@ function syslog_help($section) {
 
 function syslog_menu() {
   $items['admin/settings/logging/syslog'] = array(
-    'title'          => t('Syslog'),
-    'description'    => t('Settings for syslog logging. Syslog is a system administration logging tool, where messages are routed by facility and severity. It is more suitable for medium to large sites, and would not be suitable for shared hosting environments.'),
+    'title'          => 'Syslog',
+    'description'    => 'Settings for syslog logging. Syslog is a system administration logging tool, where messages are routed by facility and severity. It is more suitable for medium to large sites, and would not be suitable for shared hosting environments.',
     'page callback'  => 'drupal_get_form',
     'page arguments' => array('syslog_admin_settings'),
   );

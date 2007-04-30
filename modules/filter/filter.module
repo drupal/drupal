@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.171 2007/04/24 13:53:11 dries Exp $
+// $Id: filter.module,v 1.172 2007/04/30 17:03:24 dries Exp $
 
 /**
  * @file
@@ -72,31 +72,31 @@ function filter_theme() {
  */
 function filter_menu() {
   $items['admin/settings/filters'] = array(
-    'title' => t('Input formats'),
-    'description' => t('Configure how content input by users is filtered, including allowed HTML tags. Also allows enabling of module-provided filters.'),
+    'title' => 'Input formats',
+    'description' => 'Configure how content input by users is filtered, including allowed HTML tags. Also allows enabling of module-provided filters.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('filter_admin_overview'),
     'access arguments' => array('administer filters'),
   );
   $items['admin/settings/filters/list'] = array(
-    'title' => t('List'),
+    'title' => 'List',
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
   $items['admin/settings/filters/add'] = array(
-    'title' => t('Add input format'),
+    'title' => 'Add input format',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('filter_admin_format_form'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 1,
   );
   $items['admin/settings/filters/delete'] = array(
-    'title' => t('Delete input format'),
+    'title' => 'Delete input format',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('filter_admin_delete'),
     'type' => MENU_CALLBACK,
   );
   $items['filter/tips'] = array(
-    'title' => t('Compose tips'),
+    'title' => 'Compose tips',
     'page callback' => 'filter_tips_long',
     'access callback' => TRUE,
     'type' => MENU_SUGGESTED_ITEM,
@@ -108,19 +108,19 @@ function filter_menu() {
   );
 
   $items['admin/settings/filters/%filter_format/list'] = array(
-    'title' => t('View'),
+    'title' => 'View',
     'page arguments' => array('filter_admin_format_form', 3),
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => 0,
   );
   $items['admin/settings/filters/%filter_format/configure'] = array(
-    'title' => t('Configure'),
+    'title' => 'Configure',
     'page arguments' => array('filter_admin_configure', 3),
     'type' => MENU_LOCAL_TASK,
     'weight' => 1,
   );
   $items['admin/settings/filters/%filter_format/order'] = array(
-    'title' => t('Rearrange'),
+    'title' => 'Rearrange',
     'page arguments' => array('filter_admin_order', 3),
     'type' => MENU_LOCAL_TASK,
     'weight' => 2,

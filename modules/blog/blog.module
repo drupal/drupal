@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.279 2007/04/23 17:04:34 dries Exp $
+// $Id: blog.module,v 1.280 2007/04/30 17:03:23 dries Exp $
 
 /**
  * @file
@@ -253,13 +253,13 @@ function blog_link($type, $node = NULL, $teaser = FALSE) {
  */
 function blog_menu() {
   $items['blog'] = array(
-    'title' => t('Blogs'),
+    'title' => 'Blogs',
     'page callback' => 'blog_page',
     'access arguments' => array('access content'),
     'type' => MENU_SUGGESTED_ITEM,
   );
   $items['blog/%user_current'] = array(
-    'title' => t('My blog'),
+    'title' => 'My blog',
     'page arguments' => array(1),
     'access arguments' => array('edit own blog'),
   );

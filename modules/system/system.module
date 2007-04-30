@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.471 2007/04/24 19:49:01 dries Exp $
+// $Id: system.module,v 1.472 2007/04/30 17:03:28 dries Exp $
 
 /**
  * @file
@@ -124,53 +124,53 @@ function system_elements() {
  */
 function system_menu() {
   $items['system/files'] = array(
-    'title' => t('File download'),
+    'title' => 'File download',
     'page callback' => 'file_download',
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
   $items['admin'] = array(
-    'title' => t('Administer'),
+    'title' => 'Administer',
     'access arguments' => array('access administration pages'),
     'page callback' => 'system_main_admin_page',
     'weight' => 9,
   );
   $items['admin/compact'] = array(
-    'title' => t('Compact mode'),
+    'title' => 'Compact mode',
     'page callback' => 'system_admin_compact_page',
     'type' => MENU_CALLBACK,
   );
   $items['admin/by-task'] = array(
-    'title' => t('By task'),
+    'title' => 'By task',
     'page callback' => 'system_main_admin_page',
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
   $items['admin/by-module'] = array(
-    'title' => t('By module'),
+    'title' => 'By module',
     'page callback' => 'system_admin_by_module',
     'type' => MENU_LOCAL_TASK,
     'weight' => 2,
   );
   // menu items that are basically just menu blocks
   $items['admin/settings'] = array(
-    'title' => t('Site configuration'),
-    'description' => t('Adjust basic site configuration options.'),
+    'title' => 'Site configuration',
+    'description' => 'Adjust basic site configuration options.',
     'position' => 'right',
     'weight' => -5,
     'page callback' => 'system_settings_overview',
     'access arguments' => array('administer site configuration'),
   );
   $items['admin/build'] = array(
-    'title' => t('Site building'),
-    'description' => t('Control how your site looks and feels.'),
+    'title' => 'Site building',
+    'description' => 'Control how your site looks and feels.',
     'position' => 'right',
     'weight' => -10,
     'page callback' => 'system_admin_menu_block_page',
     'access arguments' => array('administer site configuration'),
   );
   $items['admin/settings/admin'] = array(
-    'title' => t('Administration theme'),
-    'description' => t('Settings for how your administrative pages should look.'),
+    'title' => 'Administration theme',
+    'description' => 'Settings for how your administrative pages should look.',
     'position' => 'left',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_admin_theme_settings'),
@@ -178,25 +178,25 @@ function system_menu() {
   );
   // Themes:
   $items['admin/build/themes'] = array(
-    'title' => t('Themes'),
-    'description' => t('Change which theme your site uses or allows users to set.'),
+    'title' => 'Themes',
+    'description' => 'Change which theme your site uses or allows users to set.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_themes_form'),
   );
   $items['admin/build/themes/select'] = array(
-    'title' => t('List'),
-    'description' => t('Select the default theme.'),
+    'title' => 'List',
+    'description' => 'Select the default theme.',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -1,
   );
   $items['admin/build/themes/settings'] = array(
-    'title' => t('Configure'),
+    'title' => 'Configure',
     'page arguments' => array('system_theme_settings'),
     'type' => MENU_LOCAL_TASK,
   );
   // Theme configuration subtabs
   $items['admin/build/themes/settings/global'] = array(
-    'title' => t('Global settings'),
+    'title' => 'Global settings',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -1,
   );
@@ -213,117 +213,117 @@ function system_menu() {
 
   // Modules:
   $items['admin/build/modules'] = array(
-    'title' => t('Modules'),
-    'description' => t('Enable or disable add-on modules for your site.'),
+    'title' => 'Modules',
+    'description' => 'Enable or disable add-on modules for your site.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_modules'),
   );
   $items['admin/build/modules/list'] = array(
-    'title' => t('List'),
+    'title' => 'List',
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
   $items['admin/build/modules/list/confirm'] = array(
-    'title' => t('List'),
+    'title' => 'List',
     'type' => MENU_CALLBACK,
   );
   $items['admin/build/modules/uninstall'] = array(
-    'title' => t('Uninstall'),
+    'title' => 'Uninstall',
     'page arguments' => array('system_modules_uninstall'),
     'type' => MENU_LOCAL_TASK,
   );
   $items['admin/build/modules/uninstall/confirm'] = array(
-    'title' => t('Uninstall'),
+    'title' => 'Uninstall',
     'type' => MENU_CALLBACK,
   );
 
   // Settings:
   $items['admin/settings/site-information'] = array(
-    'title' => t('Site information'),
-    'description' => t('Change basic site information, such as the site name, slogan, e-mail address, mission, front page and more.'),
+    'title' => 'Site information',
+    'description' => 'Change basic site information, such as the site name, slogan, e-mail address, mission, front page and more.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_site_information_settings'),
   );
   $items['admin/settings/error-reporting'] = array(
-    'title' => t('Error reporting'),
-    'description' => t('Control how Drupal deals with errors including 403/404 errors as well as PHP error reporting.'),
+    'title' => 'Error reporting',
+    'description' => 'Control how Drupal deals with errors including 403/404 errors as well as PHP error reporting.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_error_reporting_settings'),
   );
   $items['admin/settings/logging'] = array(
-    'title' => t('Logging and alerts'),
-    'description' => t('Settings for logging and alerts modules. Various modules can route Drupal\'s system events to different destination, such as syslog, database, email, ...etc.'),
+    'title' => 'Logging and alerts',
+    'description' => "Settings for logging and alerts modules. Various modules can route Drupal's system events to different destination, such as syslog, database, email, ...etc.",
     'page callback' => 'system_logging_overview',
   );
   $items['admin/settings/performance'] = array(
-    'title' => t('Performance'),
-    'description' => t('Enable or disable page caching for anonymous users, and enable or disable CSS preprocessor.'),
+    'title' => 'Performance',
+    'description' => 'Enable or disable page caching for anonymous users, and enable or disable CSS preprocessor.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_performance_settings'),
   );
   $items['admin/settings/file-system'] = array(
-    'title' => t('File system'),
-    'description' => t('Tell Drupal where to store uploaded files and how they are accessed.'),
+    'title' => 'File system',
+    'description' => 'Tell Drupal where to store uploaded files and how they are accessed.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_file_system_settings'),
   );
   $items['admin/settings/image-toolkit'] = array(
-    'title' => t('Image toolkit'),
-    'description' => t('Choose which image toolkit to use if you have installed optional toolkits.'),
+    'title' => 'Image toolkit',
+    'description' => 'Choose which image toolkit to use if you have installed optional toolkits.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_image_toolkit_settings'),
   );
   $items['admin/content/rss-publishing'] = array(
-    'title' => t('RSS publishing'),
-    'description' => t('Configure the number of items per feed and whether feeds should be titles/teasers/full-text.'),
+    'title' => 'RSS publishing',
+    'description' => 'Configure the number of items per feed and whether feeds should be titles/teasers/full-text.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_rss_feeds_settings'),
   );
   $items['admin/settings/date-time'] = array(
-    'title' => t('Date and time'),
-    'description' => t("Settings for how Drupal displays date and time, as well as the system's default timezone."),
+    'title' => 'Date and time',
+    'description' => "Settings for how Drupal displays date and time, as well as the system's default timezone.",
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_date_time_settings'),
   );
   $items['admin/settings/site-maintenance'] = array(
-    'title' => t('Site maintenance'),
-    'description' => t('Take the site off-line for maintenance or bring it back online.'),
+    'title' => 'Site maintenance',
+    'description' => 'Take the site off-line for maintenance or bring it back online.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_site_maintenance_settings'),
   );
   $items['admin/settings/clean-urls'] = array(
-    'title' => t('Clean URLs'),
-    'description' => t('Enable or disable clean URLs for your site.'),
+    'title' => 'Clean URLs',
+    'description' => 'Enable or disable clean URLs for your site.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_clean_url_settings'),
   );
 
   // Logs:
   $items['admin/logs'] = array(
-    'title' => t('Logs'),
-    'description' => t('View system logs and other status information.'),
+    'title' => 'Logs',
+    'description' => 'View system logs and other status information.',
     'page callback' => 'system_admin_menu_block_page',
     'weight' => 5,
     'position' => 'left',
   );
   $items['admin/logs/status'] = array(
-    'title' => t('Status report'),
-    'description' => t("Get a status report about your site's operation and any detected problems."),
+    'title' => 'Status report',
+    'description' => "Get a status report about your site's operation and any detected problems.",
     'page callback' => 'system_status',
     'weight' => 10,
     'access arguments' => array('administer site configuration'),
   );
   $items['admin/logs/status/run-cron'] = array(
-    'title' => t('Run cron'),
+    'title' => 'Run cron',
     'page callback' => 'system_run_cron',
     'type' => MENU_CALLBACK,
   );
   $items['admin/logs/status/php'] = array(
-    'title' => t('PHP'),
+    'title' => 'PHP',
     'page callback' => 'system_php',
     'type' => MENU_CALLBACK,
   );
   $items['admin/logs/status/sql'] = array(
-    'title' => t('SQL'),
+    'title' => 'SQL',
     'page callback' => 'system_sql',
     'type' => MENU_CALLBACK,
   );

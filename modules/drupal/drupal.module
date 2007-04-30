@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal.module,v 1.143 2007/04/24 13:53:11 dries Exp $
+// $Id: drupal.module,v 1.144 2007/04/30 17:03:24 dries Exp $
 
 /**
  * @file
@@ -349,22 +349,22 @@ function drupal_auth($username, $password, $server = FALSE) {
  */
 function drupal_menu() {
   $items['admin/settings/sites-registry'] = array(
-    'title' => t('Sites registry'),
-    'description' => t('Register with another Drupal site (drupal.org by default) for statistics sharing, or set up your server to be a central server for registrations.'),
+    'title' => 'Sites registry',
+    'description' => 'Register with another Drupal site (drupal.org by default) for statistics sharing, or set up your server to be a central server for registrations.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('drupal_sites_registry_settings'),
     'access arguments' => array('administer site configuration'),
   );
   $items['admin/settings/distributed-authentication'] = array(
-    'title' => t('Distributed authentication'),
-    'description' => t('Allow your site to accept logins from other Drupal sites such as drupal.org.'),
+    'title' => 'Distributed authentication',
+    'description' => 'Allow your site to accept logins from other Drupal sites such as drupal.org.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('drupal_distributed_authentication_settings'),
     'access arguments' => array('administer site configuration'),
   );
   if (variable_get('drupal_authentication_service', 0)) {
     $items['drupal'] = array(
-      'title' => t('Drupal'),
+      'title' => 'Drupal',
       'page callback' => 'drupal_page_help',
       'access callback' => TRUE,
       'type' => MENU_SUGGESTED_ITEM,

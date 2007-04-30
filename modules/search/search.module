@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.219 2007/04/24 13:53:14 dries Exp $
+// $Id: search.module,v 1.220 2007/04/30 17:03:27 dries Exp $
 
 /**
  * @file
@@ -158,36 +158,37 @@ function search_block($op = 'list', $delta = 0) {
  */
 function search_menu() {
   $items['search'] = array(
-    'title' => t('Search'),
+    'title' => 'Search',
     'page callback' => 'search_view',
     'access arguments' => array('search content'),
     'type' => MENU_SUGGESTED_ITEM,
   );
   $items['admin/settings/search'] = array(
-    'title' => t('Search settings'),
-    'description' => t('Configure relevance settings for search and other indexing options'),
+    'title' => 'Search settings',
+    'description' => 'Configure relevance settings for search and other indexing options',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('search_admin_settings'),
     'access arguments' => array('administer search'),
     'type' => MENU_NORMAL_ITEM,
   );
   $items['admin/settings/search/wipe'] = array(
-    'title' => t('Clear index'),
+    'title' => 'Clear index',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('search_wipe_confirm'),
     'access arguments' => array('administer search'),
     'type' => MENU_CALLBACK,
   );
   $items['admin/logs/search'] = array(
-    'title' => t('Top search phrases'),
-    'description' => t('View most popular search phrases.'),
+    'title' => 'Top search phrases',
+    'description' => 'View most popular search phrases.',
     'page callback' => 'watchdog_top',
     'page arguments' => array('search'),
   );
 
   foreach (module_implements('search') as $name) {
     $items['search/'. $name .'/%'] = array(
-      'title' => module_invoke($name, 'search', 'name', TRUE),
+      'title callback' => 'module_invoke',
+      'title arguments' => array($name, 'search', 'name', TRUE),
       'page callback' => 'search_view',
       'page arguments' => array($name),
       'access callback' => '_search_menu',

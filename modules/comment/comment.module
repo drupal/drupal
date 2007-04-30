@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.540 2007/04/27 07:42:54 dries Exp $
+// $Id: comment.module,v 1.541 2007/04/30 17:03:24 dries Exp $
 
 /**
  * @file
@@ -197,33 +197,33 @@ function _comment_view_access($node, $cid) {
  */
 function comment_menu() {
   $items['admin/content/comment'] = array(
-    'title' => t('Comments'),
-    'description' => t('List and edit site comments and the comment moderation queue.'),
+    'title' => 'Comments',
+    'description' => 'List and edit site comments and the comment moderation queue.',
     'page callback' => 'comment_admin',
     'access arguments' => array('administer comments'),
   );
 
   // Tabs:
   $items['admin/content/comment/list'] = array(
-    'title' => t('List'),
+    'title' => 'List',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10,
   );
 
   // Subtabs:
   $items['admin/content/comment/list/new'] = array(
-    'title' => t('Published comments'),
+    'title' => 'Published comments',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10,
   );
   $items['admin/content/comment/list/approval'] = array(
-    'title' => t('Approval queue'),
+    'title' => 'Approval queue',
     'page arguments' => array('approval'),
     'type' => MENU_LOCAL_TASK,
   );
 
   $items['admin/content/comment/settings'] = array(
-    'title' => t('Settings'),
+    'title' => 'Settings',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('comment_admin_settings'),
     'weight' => 10,
@@ -231,20 +231,20 @@ function comment_menu() {
   );
 
   $items['comment/delete'] = array(
-    'title' => t('Delete comment'),
+    'title' => 'Delete comment',
     'page callback' => 'comment_delete',
     'access arguments' => array('administer comments'),
     'type' => MENU_CALLBACK,
   );
 
   $items['comment/edit'] = array(
-    'title' => t('Edit comment'),
+    'title' => 'Edit comment',
     'page callback' => 'comment_edit',
     'access arguments' => array('post comments'),
     'type' => MENU_CALLBACK,
   );
   $items['comment/reply/%node'] = array(
-    'title' => t('Reply to comment'),
+    'title' => 'Reply to comment',
     'page callback' => 'comment_reply',
     'page arguments' => array(2),
     'access callback' => 'node_access',
@@ -252,7 +252,7 @@ function comment_menu() {
     'type' => MENU_CALLBACK,
   );
   $items['node/%node/%'] = array(
-    'title' => t('View'),
+    'title' => 'View',
     'page callback' => 'node_page_view',
     'page arguments' => array(1, 2),
     'access callback' => '_comment_view_access',

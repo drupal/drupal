@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.199 2007/04/24 13:53:14 dries Exp $
+// $Id: profile.module,v 1.200 2007/04/30 17:03:27 dries Exp $
 
 /**
  * @file
@@ -69,41 +69,41 @@ function profile_theme() {
  */
 function profile_menu() {
   $items['profile'] = array(
-    'title' => t('User list'),
+    'title' => 'User list',
     'page callback' => 'profile_browse',
     'access arguments' => array('access user profiles'),
     'type' => MENU_SUGGESTED_ITEM,
   );
   $items['admin/user/profile'] = array(
-    'title' => t('Profiles'),
-    'description' => t('Create customizable fields for your users.'),
+    'title' => 'Profiles',
+    'description' => 'Create customizable fields for your users.',
     'page callback' => 'profile_admin_overview',
   );
   $items['admin/user/profile/add'] = array(
-    'title' => t('Add field'),
+    'title' => 'Add field',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('profile_field_form'),
     'type' => MENU_CALLBACK,
   );
   $items['admin/user/profile/autocomplete'] = array(
-    'title' => t('Profile category autocomplete'),
+    'title' => 'Profile category autocomplete',
     'page callback' => 'profile_admin_settings_autocomplete',
     'type' => MENU_CALLBACK,
   );
   $items['admin/user/profile/edit'] = array(
-    'title' => t('Edit field'),
+    'title' => 'Edit field',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('profile_field_form'),
     'type' => MENU_CALLBACK,
   );
   $items['admin/user/profile/delete'] = array(
-    'title' => t('Delete field'),
+    'title' => 'Delete field',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('profile_field_delete'),
     'type' => MENU_CALLBACK,
   );
   $items['profile/autocomplete'] = array(
-    'title' => t('Profile autocomplete'),
+    'title' => 'Profile autocomplete',
     'page callback' => 'profile_autocomplete',
     'access arguments' => array('access user profiles'),
     'type' => MENU_CALLBACK,

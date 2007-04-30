@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.257 2007/04/30 11:26:06 dries Exp $
+// $Id: statistics.module,v 1.258 2007/04/30 17:03:27 dries Exp $
 
 /**
  * @file
@@ -101,42 +101,42 @@ function statistics_link($type, $node = NULL, $teaser = FALSE) {
  */
 function statistics_menu() {
   $items['admin/logs/hits'] = array(
-    'title' => t('Recent hits'),
-    'description' => t('View pages that have recently been visited.'),
+    'title' => 'Recent hits',
+    'description' => 'View pages that have recently been visited.',
     'page callback' => 'statistics_recent_hits',
     'access arguments' => array('access statistics'),
   );
   $items['admin/logs/pages'] = array(
-    'title' => t('Top pages'),
-    'description' => t('View pages that have been hit frequently.'),
+    'title' => 'Top pages',
+    'description' => 'View pages that have been hit frequently.',
     'page callback' => 'statistics_top_pages',
     'access arguments' => array('access statistics'),
     'weight' => 1,
   );
   $items['admin/logs/visitors'] = array(
-    'title' => t('Top visitors'),
-    'description' => t('View visitors that hit many pages.'),
+    'title' => 'Top visitors',
+    'description' => 'View visitors that hit many pages.',
     'page callback' => 'statistics_top_visitors',
     'access arguments' => array('access statistics'),
     'weight' => 2,
   );
   $items['admin/logs/referrers'] = array(
-    'title' => t('Top referrers'),
-    'description' => t('View top referrers.'),
+    'title' => 'Top referrers',
+    'description' => 'View top referrers.',
     'page callback' => 'statistics_top_referrers',
     'access arguments' => array('access statistics'),
   );
   $items['admin/logs/access/%'] = array(
-    'title' => t('Details'),
-    'description' => t('View access log.'),
+    'title' => 'Details',
+    'description' => 'View access log.',
     'page callback' => 'statistics_access_log',
     'page arguments' => array(3),
     'access arguments' => array('access statistics'),
     'type' => MENU_CALLBACK,
   );
   $items['admin/logs/settings'] = array(
-    'title' => t('Access log settings'),
-    'description' => t('Control details about what and how your site logs.'),
+    'title' => 'Access log settings',
+    'description' => 'Control details about what and how your site logs.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('statistics_access_logging_settings'),
     'access arguments' => array('administer site configuration'),
@@ -144,7 +144,7 @@ function statistics_menu() {
     'weight' => 3,
   );
   $items['user/%user/track/navigation'] = array(
-    'title' => t('Track page visits'),
+    'title' => 'Track page visits',
     'page callback' => 'statistics_user_tracker',
     'access callback' => 'user_access',
     'access arguments' => array('access statistics'),
@@ -152,7 +152,7 @@ function statistics_menu() {
     'weight' => 2,
   );
   $items['node/%node/track'] = array(
-    'title' => t('Track'),
+    'title' => 'Track',
     'page callback' => 'statistics_node_tracker',
     'access callback' => 'user_access',
     'access arguments' => array('access statistics'),

@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.394 2007/04/24 13:53:12 dries Exp $
+// $Id: forum.module,v 1.395 2007/04/30 17:03:25 dries Exp $
 
 /**
  * @file
@@ -56,42 +56,42 @@ function forum_theme() {
  */
 function forum_menu() {
   $items['node/add/forum'] = array(
-    'title' => t('Forum topic'),
+    'title' => 'Forum topic',
     'access arguments' => array('create forum topics'),
   );
   $items['forum'] = array(
-    'title' => t('Forums'),
+    'title' => 'Forums',
     'page callback' => 'forum_page',
     'access arguments' => array('access content'),
     'type' => MENU_SUGGESTED_ITEM,
   );
   $items['admin/content/forum'] = array(
-    'title' => t('Forums'),
-    'description' => t('Control forums and their hierarchy and change forum settings.'),
+    'title' => 'Forums',
+    'description' => 'Control forums and their hierarchy and change forum settings.',
     'page callback' => 'forum_overview',
     'access arguments' => array('administer forums'),
   );
   $items['admin/content/forum/list'] = array(
-    'title' => t('List'),
+    'title' => 'List',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10,
   );
   $items['admin/content/forum/add/container'] = array(
-    'title' => t('Add container'),
+    'title' => 'Add container',
     'page callback' => 'forum_form_main',
     'page arguments' => array('container'),
     'type' => MENU_LOCAL_TASK,
     'parent' => 'admin/content/forum',
   );
   $items['admin/content/forum/add/forum'] = array(
-    'title' => t('Add forum'),
+    'title' => 'Add forum',
     'page callback' => 'forum_form_main',
     'page arguments' => array('forum'),
     'type' => MENU_LOCAL_TASK,
     'parent' => 'admin/content/forum',
   );
   $items['admin/content/forum/settings'] = array(
-    'title' => t('Settings'),
+    'title' => 'Settings',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('forum_admin_settings'),
     'weight' => 5,
@@ -103,13 +103,13 @@ function forum_menu() {
     'type' => MENU_CALLBACK,
   );
   $items['admin/content/forum/edit/container/%forum_term'] = array(
-    'title' => t('Edit container'),
+    'title' => 'Edit container',
     'page callback' => 'forum_form_main',
     'page arguments' => array('container', 5),
     'type' => MENU_CALLBACK,
   );
   $items['admin/content/forum/edit/forum/%forum_term'] = array(
-    'title' => t('Edit forum'),
+    'title' => 'Edit forum',
     'page callback' => 'forum_form_main',
     'page arguments' => array('forum', 5),
     'type' => MENU_CALLBACK,

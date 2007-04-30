@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.82 2007/04/30 14:25:13 dries Exp $
+// $Id: contact.module,v 1.83 2007/04/30 17:03:24 dries Exp $
 
 /**
  * @file
@@ -42,50 +42,50 @@ function contact_perm() {
  */
 function contact_menu() {
   $items['admin/build/contact'] = array(
-    'title' => t('Contact form'),
-    'description' => t('Create a system contact form and set up categories for the form to use.'),
+    'title' => 'Contact form',
+    'description' => 'Create a system contact form and set up categories for the form to use.',
     'page callback' => 'contact_admin_categories',
     'access arguments' => array('administer site configuration'),
   );
   $items['admin/build/contact/list'] = array(
-    'title' => t('List'),
+    'title' => 'List',
     'page callback' => 'contact_admin_categories',
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
   $items['admin/build/contact/add'] = array(
-    'title' => t('Add category'),
+    'title' => 'Add category',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('contact_admin_edit'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 1,
   );
   $items['admin/build/contact/edit'] = array(
-    'title' => t('Edit contact category'),
+    'title' => 'Edit contact category',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('contact_admin_edit'),
     'type' => MENU_CALLBACK,
   );
   $items['admin/build/contact/delete'] = array(
-    'title' => t('Delete contact'),
+    'title' => 'Delete contact',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('contact_admin_delete'),
     'type' => MENU_CALLBACK,
   );
   $items['admin/build/contact/settings'] = array(
-    'title' => t('Settings'),
+    'title' => 'Settings',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('contact_admin_settings'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 2,
   );
   $items['contact'] = array(
-    'title' => t('Contact'),
+    'title' => 'Contact',
     'page callback' => 'contact_site_page',
     'access arguments' => array('access site-wide contact form'),
     'type' => MENU_SUGGESTED_ITEM,
   );
   $items['user/%user/contact'] = array(
-    'title' => t('Contact'),
+    'title' => 'Contact',
     'page callback' => 'contact_user_page',
     'page arguments' => array(1),
     'type' => MENU_LOCAL_TASK,

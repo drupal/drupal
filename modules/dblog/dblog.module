@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.module,v 1.4 2007/04/30 11:12:35 dries Exp $
+// $Id: dblog.module,v 1.5 2007/04/30 17:03:24 dries Exp $
 
 /**
  * @file
@@ -43,32 +43,32 @@ function dblog_theme() {
  */
 function dblog_menu() {
   $items['admin/settings/logging/dblog'] = array(
-    'title' => t('Database logging'),
-    'description' => t('Settings for logging to the Drupal database logs. This is the most common method for small to medium sites on shared hosting. The logs are viewable from the admin pages.'),
+    'title' => 'Database logging',
+    'description' => 'Settings for logging to the Drupal database logs. This is the most common method for small to medium sites on shared hosting. The logs are viewable from the admin pages.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('dblog_admin_settings'),
   );
 
   $items['admin/logs/dblog'] = array(
-    'title' => t('Recent log entries'),
-    'description' => t('View events that have recently been logged.'),
+    'title' => 'Recent log entries',
+    'description' => 'View events that have recently been logged.',
     'page callback' => 'dblog_overview',
     'weight' => -1,
   );
   $items['admin/logs/page-not-found'] = array(
-    'title' => t("Top 'page not found' errors"),
-    'description' => t("View 'page not found' errors (404s)."),
+    'title' => "Top 'page not found' errors",
+    'description' => "View 'page not found' errors (404s).",
     'page callback' => 'dblog_top',
     'page arguments' => array('page not found'),
   );
   $items['admin/logs/access-denied'] = array(
-      'title' => t("Top 'access denied' errors"),
-    'description' => t("View 'access denied' errors (403s)."),
+      'title' => "Top 'access denied' errors",
+    'description' => "View 'access denied' errors (403s).",
     'page callback' => 'dblog_top',
     'page arguments' => array('access denied'),
   );
   $items['admin/logs/event/%'] = array(
-    'title' => t('Details'),
+    'title' => 'Details',
     'page callback' => 'dblog_event',
     'page arguments' => array(3),
     'type' => MENU_CALLBACK,

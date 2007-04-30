@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.776 2007/04/30 14:25:14 dries Exp $
+// $Id: user.module,v 1.777 2007/04/30 17:03:29 dries Exp $
 
 /**
  * @file
@@ -765,7 +765,7 @@ function user_load_self($arg) {
  */
 function user_menu() {
   $items['user/autocomplete'] = array(
-    'title' => t('User autocomplete'),
+    'title' => 'User autocomplete',
     'page callback' => 'user_autocomplete',
     'access callback' => 'user_access',
     'access arguments' => array('access user profiles'),
@@ -774,7 +774,7 @@ function user_menu() {
 
   // Registration and login pages.
   $items['user'] = array(
-    'title' => t('Log in'),
+    'title' => 'Log in',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('user_login'),
     'access callback' => 'user_is_anonymous',
@@ -782,12 +782,12 @@ function user_menu() {
   );
 
   $items['user/login'] = array(
-    'title' => t('Log in'),
+    'title' => 'Log in',
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
 
   $items['user/register'] = array(
-    'title' => t('Create new account'),
+    'title' => 'Create new account',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('user_register'),
     'access callback' => 'user_register_access',
@@ -795,104 +795,104 @@ function user_menu() {
   );
 
   $items['user/password'] = array(
-    'title' => t('Request new password'),
+    'title' => 'Request new password',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('user_pass'),
     'access callback' => 'user_is_anonymous',
     'type' => MENU_LOCAL_TASK,
   );
   $items['user/reset/%/%/%'] = array(
-    'title' => t('Reset password'),
+    'title' => 'Reset password',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('user_pass_reset', 2, 3, 4),
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
   $items['user/help'] = array(
-    'title' => t('Help'),
+    'title' => 'Help',
     'page callback' => 'user_help_page',
     'type' => MENU_CALLBACK,
   );
 
   // Admin user pages
   $items['admin/user'] = array(
-    'title' => t('User management'),
-    'description' => t('Manage your site\'s users, groups and access to site features.'),
+    'title' => 'User management',
+    'description' => "Manage your site's users, groups and access to site features.",
     'position' => 'left',
     'page callback' => 'system_admin_menu_block_page',
     'access arguments' => array('administer site configuration'),
   );
   $items['admin/user/user'] = array(
-    'title' => t('Users'),
-    'description' => t('List, add, and edit users.'),
+    'title' => 'Users',
+    'description' => 'List, add, and edit users.',
     'page callback' => 'user_admin',
     'page arguments' => array('list'),
     'access arguments' => array('administer users'));
   $items['admin/user/user/list'] = array(
-    'title' => t('List'),
+    'title' => 'List',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10,
   );
   $items['admin/user/user/create'] = array(
-    'title' => t('Add user'),
+    'title' => 'Add user',
     'page arguments' => array('create'),
     'type' => MENU_LOCAL_TASK,
   );
   $items['admin/user/settings'] = array(
-    'title' => t('User settings'),
-    'description' => t('Configure default behavior of users, including registration requirements, e-mails, and user pictures.'),
+    'title' => 'User settings',
+    'description' => 'Configure default behavior of users, including registration requirements, e-mails, and user pictures.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('user_admin_settings'),
   );
 
   // Admin access pages
   $items['admin/user/access'] = array(
-    'title' => t('Access control'),
-    'description' => t('Determine access to features by selecting permissions for roles.'),
+    'title' => 'Access control',
+    'description' => 'Determine access to features by selecting permissions for roles.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('user_admin_perm'),
     'access arguments' => array('administer access control'),
   );
   $items['admin/user/roles'] = array(
-    'title' => t('Roles'),
-    'description' => t('List, edit, or add user roles.'),
+    'title' => 'Roles',
+    'description' => 'List, edit, or add user roles.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('user_admin_new_role'),
     'access arguments' => array('administer access control'),
   );
   $items['admin/user/roles/edit'] = array(
-    'title' => t('Edit role'),
+    'title' => 'Edit role',
     'page arguments' => array('user_admin_role'),
     'type' => MENU_CALLBACK,
   );
   $items['admin/user/rules'] = array(
-    'title' => t('Access rules'),
-    'description' => t('List and create rules to disallow usernames, e-mail addresses, and IP addresses.'),
+    'title' => 'Access rules',
+    'description' => 'List and create rules to disallow usernames, e-mail addresses, and IP addresses.',
     'page callback' => 'user_admin_access',
     'access arguments' => array('administer access control'),
   );
   $items['admin/user/rules/list'] = array(
-    'title' => t('List'),
+    'title' => 'List',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10,
   );
   $items['admin/user/rules/add'] = array(
-    'title' => t('Add rule'),
+    'title' => 'Add rule',
     'page callback' => 'user_admin_access_add',
     'type' => MENU_LOCAL_TASK,
   );
   $items['admin/user/rules/check'] = array(
-    'title' => t('Check rules'),
+    'title' => 'Check rules',
     'page callback' => 'user_admin_access_check',
     'type' => MENU_LOCAL_TASK,
   );
   $items['admin/user/rules/edit'] = array(
-    'title' => t('Edit rule'),
+    'title' => 'Edit rule',
     'page callback' => 'user_admin_access_edit',
     'type' => MENU_CALLBACK,
   );
   $items['admin/user/rules/delete'] = array(
-    'title' => t('Delete rule'),
+    'title' => 'Delete rule',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('user_admin_access_delete_confirm'),
     'type' => MENU_CALLBACK,
@@ -900,8 +900,8 @@ function user_menu() {
 
   if (module_exists('search')) {
     $items['admin/user/search'] = array(
-      'title' => t('Search users'),
-      'description' => t('Search users by name.'),
+      'title' => 'Search users',
+      'description' => 'Search users by name.',
       'page callback' => 'user_admin',
       'page arguments' => array('search'),
       'access arguments' => array('administer users'),
@@ -909,14 +909,14 @@ function user_menu() {
   }
 
   $items['logout'] = array(
-    'title' => t('Log out'),
+    'title' => 'Log out',
     'access callback' => 'user_is_logged_in',
     'page callback' => 'user_logout',
     'weight' => 10,
   );
 
   $items['user/%user_current'] = array(
-    'title' => t('My account'),
+    'title' => 'My account',
     'page callback' => 'user_view',
     'page arguments' => array(1),
     'access callback' => 'user_view_access',
@@ -925,13 +925,13 @@ function user_menu() {
   );
 
   $items['user/%user/view'] = array(
-    'title' => t('View'),
+    'title' => 'View',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10,
   );
 
   $items['user/%user/delete'] = array(
-    'title' => t('Delete'),
+    'title' => 'Delete',
     'page callback' => 'user_edit',
     'access callback' => 'user_access',
     'access arguments' => array('administer users'),
@@ -939,7 +939,7 @@ function user_menu() {
   );
 
   $items['user/%user/edit'] = array(
-    'title' => t('Edit'),
+    'title' => 'Edit',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('user_edit'),
     'access callback' => 'user_edit_access',
@@ -951,7 +951,8 @@ function user_menu() {
   if (($categories = _user_categories($empty_account)) && (count($categories) > 1)) {
     foreach ($categories as $key => $category) {
       $items['user/%user/edit/'. $category['name']] = array(
-        'title' => $category['title'],
+        'title callback' => 'check_plain',
+        'title arguments' => array($category['title']),
         'page arguments' => array('user_edit', 3),
         'type' => $category['name'] == 'account' ? MENU_DEFAULT_LOCAL_TASK : MENU_LOCAL_TASK,
         'weight' => $category['weight'],

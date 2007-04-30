@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.114 2007/04/25 21:28:00 dries Exp $
+// $Id: path.module,v 1.115 2007/04/30 17:03:26 dries Exp $
 
 /**
  * @file
@@ -38,30 +38,30 @@ function path_help($section) {
  */
 function path_menu() {
   $items['admin/build/path'] = array(
-    'title' => t('URL aliases'),
-    'description' => t('Change your site\'s URL paths by aliasing them.'),
+    'title' => 'URL aliases',
+    'description' => "Change your site's URL paths by aliasing them.",
     'page callback' => 'path_admin',
     'access arguments' => array('administer url aliases'),
   );
   $items['admin/build/path/edit'] = array(
-    'title' => t('Edit alias'),
+    'title' => 'Edit alias',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('path_admin_edit'),
     'type' => MENU_CALLBACK,
   );
   $items['admin/build/path/delete'] = array(
-    'title' => t('Delete alias'),
+    'title' => 'Delete alias',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('path_admin_delete_confirm'),
     'type' => MENU_CALLBACK,
   );
   $items['admin/build/path/list'] = array(
-    'title' => t('List'),
+    'title' => 'List',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10,
   );
   $items['admin/build/path/add'] = array(
-    'title' => t('Add alias'),
+    'title' => 'Add alias',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('path_admin_edit'),
     'access arguments' => array('administer url aliases'),

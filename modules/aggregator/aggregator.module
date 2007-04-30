@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.337 2007/04/24 13:53:11 dries Exp $
+// $Id: aggregator.module,v 1.338 2007/04/30 17:03:22 dries Exp $
 
 /**
  * @file
@@ -53,13 +53,13 @@ function aggregator_theme() {
  */
 function aggregator_menu() {
   $items['admin/content/aggregator'] = array(
-    'title' => t('News aggregator'),
-    'description' => t("Configure which content your site aggregates from other sites, how often it polls them, and how they're categorized."),
+    'title' => 'News aggregator',
+    'description' => "Configure which content your site aggregates from other sites, how often it polls them, and how they're categorized.",
     'page callback' => 'aggregator_admin_overview',
     'access arguments' => array('administer news feeds'),
   );
   $items['admin/content/aggregator/add/feed'] = array(
-    'title' => t('Add feed'),
+    'title' => 'Add feed',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('aggregator_form_feed'),
     'access arguments' => array('administer news feeds'),
@@ -67,7 +67,7 @@ function aggregator_menu() {
     'parent' => 'admin/content/aggregator',
   );
   $items['admin/content/aggregator/add/category'] = array(
-    'title' => t('Add category'),
+    'title' => 'Add category',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('aggregator_form_category'),
     'access arguments' => array('administer news feeds'),
@@ -75,26 +75,26 @@ function aggregator_menu() {
     'parent' => 'admin/content/aggregator',
   );
   $items['admin/content/aggregator/remove/%aggregator_feed'] = array(
-    'title' => t('Remove items'),
+    'title' => 'Remove items',
     'page callback' => 'aggregator_admin_remove_feed',
     'page arguments' => array(4),
     'access arguments' => array('administer news feeds'),
     'type' => MENU_CALLBACK,
   );
   $items['admin/content/aggregator/update/%aggregator_feed'] = array(
-    'title' => t('Update items'),
+    'title' => 'Update items',
     'page callback' => 'aggregator_admin_refresh_feed',
     'page arguments' => array(4),
     'access arguments' => array('administer news feeds'),
     'type' => MENU_CALLBACK,
   );
   $items['admin/content/aggregator/list'] = array(
-    'title' => t('List'),
+    'title' => 'List',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10,
   );
   $items['admin/content/aggregator/settings'] = array(
-    'title' => t('Settings'),
+    'title' => 'Settings',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('aggregator_admin_settings'),
     'type' => MENU_LOCAL_TASK,
@@ -102,28 +102,28 @@ function aggregator_menu() {
     'access arguments' => array('administer news feeds'),
   );
   $items['aggregator'] = array(
-    'title' => t('News aggregator'),
+    'title' => 'News aggregator',
     'page callback' => 'aggregator_page_last',
     'access arguments' => array('access news feeds'),
     'weight' => 5,
   );
   $items['aggregator/sources'] = array(
-    'title' => t('Sources'),
+    'title' => 'Sources',
     'page callback' => 'aggregator_page_sources',
     'access arguments' => array('access news feeds'));
   $items['aggregator/categories'] = array(
-    'title' => t('Categories'),
+    'title' => 'Categories',
     'page callback' => 'aggregator_page_categories',
     'access callback' => '_aggregator_has_categories',
   );
   $items['aggregator/rss'] = array(
-    'title' => t('RSS feed'),
+    'title' => 'RSS feed',
     'page callback' => 'aggregator_page_rss',
     'access arguments' => array('access news feeds'),
     'type' => MENU_CALLBACK,
   );
   $items['aggregator/opml'] = array(
-    'title' => t('OPML feed'),
+    'title' => 'OPML feed',
     'page callback' => 'aggregator_page_opml',
     'access arguments' => array('access news feeds'),
     'type' => MENU_CALLBACK,
@@ -138,19 +138,19 @@ function aggregator_menu() {
       'access arguments' => array('access news feeds'),
     );
     $items[$path .'/view'] = array(
-      'title' => t('View'),
+      'title' => 'View',
       'type' => MENU_DEFAULT_LOCAL_TASK,
       'weight' => -10,
     );
     $items[$path .'/categorize'] = array(
-      'title' => t('Categorize'),
+      'title' => 'Categorize',
       'page callback' => 'drupal_get_form',
       'page arguments' => array('aggregator_page_category'),
       'access arguments' => array('administer news feeds', 2),
       'type' => MENU_LOCAL_TASK,
     );
     $items[$path .'/configure'] = array(
-      'title' => t('Configure'),
+      'title' => 'Configure',
       'page callback' => 'drupal_get_form',
       'page arguments' => array('aggregator_form_category', 2),
       'access arguments' => array('administer news feeds', 2),
@@ -163,19 +163,19 @@ function aggregator_menu() {
     'type' => MENU_CALLBACK,
   );
   $items['aggregator/sources/%aggregator_feed/view'] = array(
-    'title' => t('View'),
+    'title' => 'View',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10,
   );
   $items['aggregator/sources/%aggregator_feed/categorize'] = array(
-    'title' => t('Categorize'),
+    'title' => 'Categorize',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('aggregator_page_source'),
     'access arguments' => array('administer news feeds'),
     'type' => MENU_LOCAL_TASK,
   );
   $items['aggregator/sources/%aggregator_feed/configure'] = array(
-    'title' => t('Configure'),
+    'title' => 'Configure',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('aggregator_form_feed', 2),
     'access arguments' => array('administer news feeds'),
@@ -183,14 +183,14 @@ function aggregator_menu() {
     'weight' => 1,
   );
   $items['admin/content/aggregator/edit/feed/%aggregator_feed'] = array(
-    'title' => t('Edit feed'),
+    'title' => 'Edit feed',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('aggregator_form_feed', 5),
     'access arguments' => array('administer news feeds'),
     'type' => MENU_CALLBACK,
   );
   $items['admin/content/aggregator/edit/category/%aggregator_category'] = array(
-    'title' => t('Edit category'),
+    'title' => 'Edit category',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('aggregator_form_category', 5),
     'access arguments' => array('administer news feeds'),

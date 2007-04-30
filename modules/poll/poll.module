@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.226 2007/04/06 13:27:22 dries Exp $
+// $Id: poll.module,v 1.227 2007/04/30 17:03:27 dries Exp $
 
 /**
  * @file
@@ -250,21 +250,21 @@ function _poll_menu_access($node, $perm, $inspect_allowvotes) {
  */
 function poll_menu() {
   $items['poll'] = array(
-    'title' => t('Polls'),
+    'title' => 'Polls',
     'page callback' => 'poll_page',
     'access arguments' => array('access content'),
     'type' => MENU_SUGGESTED_ITEM,
   );
 
   $items['poll/cancel/%node'] = array(
-    'title' => t('Cancel'),
+    'title' => 'Cancel',
     'page callback' => 'poll_cancel',
     'page arguments' => array(2),
     'access arguments' => array('cancel own vote'),
     'type' => MENU_CALLBACK,
   );
   $items['node/%node/votes'] = array(
-    'title' => t('Votes'),
+    'title' => 'Votes',
     'page callback' => 'poll_votes',
     'access callback' => '_poll_menu_access',
     'access arguments' => array(1, 'inspect all votes', FALSE),
@@ -272,7 +272,7 @@ function poll_menu() {
     'type' => MENU_LOCAL_TASK,
   );
   $items['node/%node/results'] = array(
-    'title' => t('Results'),
+    'title' => 'Results',
     'page callback' => 'poll_results',
     'access callback' => '_poll_menu_access',
     'access arguments' => array(1, 'access content', TRUE),

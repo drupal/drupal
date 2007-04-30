@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.169 2007/04/25 21:34:32 dries Exp $
+// $Id: locale.module,v 1.170 2007/04/30 17:03:25 dries Exp $
 
 /**
  * @file
@@ -48,20 +48,20 @@ function locale_help($section) {
 function locale_menu() {
   // Main admin menu item
   $items['admin/build/locale'] = array(
-    'title' => t('Languages'),
-    'description' => t('Configure languages and user interface translation.'),
+    'title' => 'Languages',
+    'description' => 'Configure languages and user interface translation.',
     'page callback' => 'locale_admin_manage',
     'access arguments' => array('administer locales'),
   );
 
   // Top level tabs
   $items['admin/build/locale/language'] = array(
-    'title' => t('Manage languages'),
+    'title' => 'Manage languages',
     'weight' => -10,
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
   $items['admin/build/locale/string'] = array(
-    'title' => t('Manage interface strings'),
+    'title' => 'Manage interface strings',
     'page callback' => 'locale_string_search',
     'weight' => 10,
     'type' => MENU_LOCAL_TASK,
@@ -70,24 +70,24 @@ function locale_menu() {
 
   // Manage languages subtabs
   $items['admin/build/locale/language/overview'] = array(
-    'title' => t('List'),
+    'title' => 'List',
     'weight' => 0,
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
   $items['admin/build/locale/language/add'] = array(
-    'title' => t('Add language'),
+    'title' => 'Add language',
     'page callback' => 'locale_admin_manage_add',
     'weight' => 5,
     'type' => MENU_LOCAL_TASK,
   );
   $items['admin/build/locale/language/configure'] = array(
-    'title' => t('Configure'),
+    'title' => 'Configure',
     'page callback' => 'locale_admin_manage_configure',
     'weight' => 10,
     'type' => MENU_LOCAL_TASK,
   );
   $items['admin/build/locale/language/edit/%'] = array(
-    'title' => t('Edit language'),
+    'title' => 'Edit language',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('locale_admin_manage_edit', 5),
     'type' => MENU_CALLBACK,
@@ -95,18 +95,18 @@ function locale_menu() {
 
   // Manage interface translations subtabs
   $items['admin/build/locale/string/search'] = array(
-    'title' => t('Search'),
+    'title' => 'Search',
     'weight' => 0,
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
   $items['admin/build/locale/string/import'] = array(
-    'title' => t('Import'),
+    'title' => 'Import',
     'page callback' => 'locale_admin_import',
     'weight' => 10,
     'type' => MENU_LOCAL_TASK,
   );
   $items['admin/build/locale/string/export'] = array(
-    'title' => t('Export'),
+    'title' => 'Export',
     'page callback' => 'locale_admin_export',
     'weight' => 20,
     'type' => MENU_LOCAL_TASK,
@@ -114,20 +114,20 @@ function locale_menu() {
 
   // Language related callbacks
   $items['admin/build/locale/language/delete'] = array(
-    'title' => t('Confirm'),
+    'title' => 'Confirm',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('locale_admin_manage_delete_form'),
     'type' => MENU_CALLBACK,
   );
   // String related callbacks
   $items['admin/build/locale/string/edit/%'] = array(
-    'title' => t('Edit string'),
+    'title' => 'Edit string',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('locale_admin_string_edit', 5),
     'type' => MENU_CALLBACK,
   );
   $items['admin/build/locale/string/delete/%'] = array(
-    'title' => t('Delete string'),
+    'title' => 'Delete string',
     'page callback' => 'locale_admin_string_delete',
     'page arguments' => array(5),
     'type' => MENU_CALLBACK,

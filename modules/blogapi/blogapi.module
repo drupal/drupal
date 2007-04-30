@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.105 2007/04/24 13:53:11 dries Exp $
+// $Id: blogapi.module,v 1.106 2007/04/30 17:03:23 dries Exp $
 
 /**
  * @file
@@ -553,14 +553,14 @@ function blogapi_admin_settings() {
 
 function blogapi_menu() {
   $items['blogapi/rsd'] = array(
-    'title' => t('RSD'),
+    'title' => 'RSD',
     'page callback' => 'blogapi_rsd',
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
   $items['admin/settings/blogapi'] = array(
-    'title' => t('Blog APIs'),
-    'description' => t('Configure which content types and engines external blog clients can use.'),
+    'title' => 'Blog APIs',
+    'description' => 'Configure which content types and engines external blog clients can use.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('blogapi_admin_settings'),
     'access arguments' => array('administer site configuration'),

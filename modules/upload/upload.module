@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.158 2007/04/13 08:56:59 dries Exp $
+// $Id: upload.module,v 1.159 2007/04/30 17:03:29 dries Exp $
 
 /**
  * @file
@@ -83,8 +83,8 @@ function upload_menu() {
     'type' => MENU_CALLBACK,
   );
   $items['admin/settings/uploads'] = array(
-    'title' => t('File uploads'),
-    'description' => t('Control how files may be attached to content.'),
+    'title' => 'File uploads',
+    'description' => 'Control how files may be attached to content.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('upload_admin_settings'),
     'access arguments' => array('administer site configuration'),

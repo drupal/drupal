@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.418 2007/04/24 13:53:11 dries Exp $
+// $Id: book.module,v 1.419 2007/04/30 17:03:24 dries Exp $
 
 /**
  * @file
@@ -104,24 +104,24 @@ function book_link($type, $node = NULL, $teaser = FALSE) {
  */
 function book_menu() {
   $items['admin/content/book'] = array(
-    'title' => t('Books'),
-    'description' => t("Manage site's books and orphaned book pages."),
+    'title' => 'Books',
+    'description' => "Manage site's books and orphaned book pages.",
     'page callback' => 'book_admin',
     'access arguments' => array('administer nodes'),
   );
   $items['admin/content/book/list'] = array(
-    'title' => t('List'),
+    'title' => 'List',
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
   $items['admin/content/book/orphan'] = array(
-    'title' => t('Orphan pages'),
+    'title' => 'Orphan pages',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('book_admin_orphan'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 8,
   );
   $items['book'] = array(
-    'title' => t('Books'),
+    'title' => 'Books',
     'page callback' => 'book_render',
     'access arguments' => array('access content'),
     'type' => MENU_SUGGESTED_ITEM,
@@ -132,7 +132,7 @@ function book_menu() {
     'type' => MENU_CALLBACK,
   );
   $items['node/%node/outline'] = array(
-    'title' => t('Outline'),
+    'title' => 'Outline',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('book_outline', 1),
     'access callback' => '_book_outline_access',

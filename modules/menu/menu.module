@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.108 2007/04/24 13:53:12 dries Exp $
+// $Id: menu.module,v 1.109 2007/04/30 17:03:25 dries Exp $
 
 /**
  * @file
@@ -43,47 +43,47 @@ function menu_perm() {
  */
 function menu_menu() {
   $items['admin/build/menu'] = array(
-    'title' => t('Menus'),
-    'description' => t("Control your site's navigation menu, primary links and secondary links. as well as rename and reorganize menu items."),
+    'title' => 'Menus',
+    'description' => "Control your site's navigation menu, primary links and secondary links. as well as rename and reorganize menu items.",
     'page callback' => 'menu_overview',
     'access callback' => 'user_access',
     'access arguments' => array('administer menu'),
   );
   $items['admin/build/menu/list'] = array(
-    'title' => t('List'),
+    'title' => 'List',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10,
   );
   $items['admin/build/menu/item/disable'] = array(
-    'title' => t('Disable menu item'),
+    'title' => 'Disable menu item',
     'page callback' => 'menu_flip_item',
     'page arguments' => array('0'),
     'type' => MENU_CALLBACK,
   );
   $items['admin/build/menu/item/enable'] = array(
-    'title' => t('Enable menu item'),
+    'title' => 'Enable menu item',
     'page callback' => 'menu_flip_item',
     'page arguments' => array('1'),
     'type' => MENU_CALLBACK,
   );
   $items['admin/build/menu/item/add'] = array(
-    'title' => t('Add menu item'),
+    'title' => 'Add menu item',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('menu_edit_item_form', 'add'),
     'parent' => 'admin/build/menu',
     'type' => MENU_LOCAL_TASK);
   $items['admin/build/menu/item/edit'] = array(
-    'title' => t('Edit menu item'),
+    'title' => 'Edit menu item',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('menu_edit_item_form', 'edit'),
     'type' => MENU_CALLBACK);
   $items['admin/build/menu/item/reset'] = array(
-    'title' => t('Reset menu item'),
+    'title' => 'Reset menu item',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('menu_reset_item'),
     'type' => MENU_CALLBACK);
   $items['admin/build/menu/item/delete'] = array(
-    'title' => t('Delete menu item'),
+    'title' => 'Delete menu item',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('menu_item_delete_form'),
     'type' => MENU_CALLBACK);
@@ -97,26 +97,26 @@ function menu_menu() {
   return $items;
 /*
     $items[] = array('path' => 'admin/build/menu/menu/add',
-      'title' => t('Add menu'),
+      'title' => 'Add menu',
       'callback' => 'drupal_get_form',
       'callback arguments' => array('menu_edit_menu_form', 'add'),
       'access' => user_access('administer menu'),
       'type' => MENU_LOCAL_TASK);
     $items[] = array('path' => 'admin/build/menu/menu/edit',
-      'title' => t('Edit menu'),
+      'title' => 'Edit menu',
       'callback' => 'drupal_get_form',
       'callback arguments' => array('menu_edit_menu_form', 'edit'),
       'access' => user_access('administer menu'),
       'type' => MENU_CALLBACK);
     $items[] = array('path' => 'admin/build/menu/menu/delete',
-      'title' => t('Delete menu'),
+      'title' => 'Delete menu',
       'callback' => 'drupal_get_form',
       'callback arguments' => array('menu_item_delete_form'),
       'access' => user_access('administer menu'),
       'type' => MENU_CALLBACK);
 
     $items[] = array('path' => 'admin/build/menu/settings',
-      'title' => t('Settings'),
+      'title' => 'Settings',
       'callback' => 'drupal_get_form',
       'callback arguments' => array('menu_configure'),
       'type' => MENU_LOCAL_TASK,

@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.163 2007/04/24 08:26:58 dries Exp $
+// $Id: menu.inc,v 1.164 2007/04/30 17:03:22 dries Exp $
 
 /**
  * @file
@@ -349,7 +349,8 @@ function menu_execute_active_handler() {
 }
 
 /**
- * Handles dynamic path translation and menu access control.
+ * Handles dynamic path translation, title and description translation and
+ * menu access control.
  *
  * When a user arrives on a page such as node/5, this function determines
  * what "5" corresponds to, by inspecting the page's menu path definition,
@@ -359,6 +360,10 @@ function menu_execute_active_handler() {
  * It also works in reverse, to allow the display of tabs and menu items which
  * contain these dynamic arguments, translating node/%node to node/5.
  * This operation is called MENU_RENDER_LINK.
+ *
+ * Translation of menu item titles and descriptions are done here to
+ * allow for storage of English strings in the database, and be able to
+ * generate menus in the language required to generate the current page.
  *
  * @param $item
  *   A menu item object
@@ -434,6 +439,35 @@ function _menu_translate(&$item, $map, $operation = MENU_HANDLE_REQUEST) {
     }
   }
   $item->alias = TRUE;
+
+  // Translate the title to allow storage of English title strings
+  // in the database, yet be able to display them in the language
+  // required to generate the page in.
+  $callback = $item->title_callback;
+  // t() is a special case. Since it is used very close to all the time,
+  // we handle it directly instead of using indirect, slower methods.
+  if ($callback == 't') {
+    if (empty($item->title_arguments)) {
+      $item->title = t($item->title);
+    }
+    else {
+      $item->title = t($item->title, unserialize($item->title_arguments));
+    }
+  }
+  else {
+    if (empty($item->title_arguments)) {
+      $item->title = $callback($item->title);
+    }
+    else {
+      $item->title = call_user_func_array($callback, unserialize($item->title_arguments));
+    }
+  }
+
+  // Translate description, see the motivation above.
+  if (!empty($item->description)) {
+    $item->description = t($item->description);
+  }
+
   return $map;
 }
 
@@ -816,6 +850,8 @@ function menu_rebuild() {
       '_mleft' => 0,
       '_mright' => 0,
       'block callback' => '',
+      'title arguments' => array(),
+      'title callback' => 't',
       'description' => '',
       'position' => '',
       'attributes' => '',
@@ -825,6 +861,8 @@ function menu_rebuild() {
       'html' => '',
     );
     $link_path = $item['to_arg_functions'] ? $path : drupal_get_path_alias($path);
+
+    $item['title arguments'] = empty($item['title arguments']) ? '' : serialize($item['title arguments']);
 
     if ($item['attributes']) {
       $item['attributes'] = serialize($item['attributes']);
@@ -845,17 +883,19 @@ function menu_rebuild() {
     }
     db_query("INSERT INTO {menu} (
       mid, pid, path, load_functions, to_arg_functions,
-      access_callback, access_arguments, page_callback, page_arguments, fit,
-      number_parts, visible, parents, depth, has_children, tab, title, parent,
+      access_callback, access_arguments, page_callback, page_arguments,
+      title_callback, title_arguments, fit, number_parts, visible,
+      parents, depth, has_children, tab, title, parent,
       type, mleft, mright, block_callback, description, position,
       link_path, attributes, query, fragment, absolute, html)
-      VALUES (%d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d, %d, %d,
-      '%s', %d, %d, %d, '%s', '%s', '%s', %d, %d, '%s', '%s', '%s',
-      '%s', '%s', '%s', '%s', %d, %d)",
+      VALUES (%d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s',
+      %d, %d, %d, '%s', %d, %d, %d, '%s', '%s', '%s', %d, %d, '%s', '%s',
+      '%s', '%s', '%s', '%s', '%s', %d, %d)",
       $item['_mid'], $item['_pid'], $path, $item['load_functions'],
       $item['to_arg_functions'], $item['access callback'],
       serialize($item['access arguments']), $item['page callback'],
-      serialize($item['page arguments']), $item['_fit'],
+      serialize($item['page arguments']), $item['title callback'],
+      $item['title arguments'], $item['_fit'],
       $item['_number_parts'], $item['_visible'], $item['_parents'],
       $item['_depth'], $has_children, $item['_tab'],
       $item['title'], $item['parent'], $item['type'], $item['_mleft'],
@@ -865,8 +905,6 @@ function menu_rebuild() {
       $item['absolute'], $item['html']);
   }
 }
-
-
 
 function menu_renumber(&$tree) {
   foreach ($tree as $key => $element) {
