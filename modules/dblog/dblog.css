@@ -1,5 +1,10 @@
 /* $Id$ */
 
+#dblog-filter-form .form-item {
+  float: left;
+  padding-right: .8em;
+  margin: 0.1em;
+}
 tr.dblog-user {
   background: #ffd;
 }

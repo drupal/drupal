@@ -2616,3 +2616,22 @@ function drupal_parse_info_file($filename) {
 
   return $info;
 }
+
+/**
+ * @return
+ *   Array of the possible severity levels for log messages.
+ *
+ * @see watchdog
+ */
+function watchdog_severity_levels() {
+  return array(
+    WATCHDOG_EMERG    => t('emergency'),
+    WATCHDOG_ALERT    => t('alert'),
+    WATCHDOG_CRITICAL => t('critical'),
+    WATCHDOG_ERROR    => t('error'),
+    WATCHDOG_WARNING  => t('warning'),
+    WATCHDOG_NOTICE   => t('notice'),
+    WATCHDOG_INFO     => t('info'),
+    WATCHDOG_DEBUG    => t('debug'),
+  );
+}

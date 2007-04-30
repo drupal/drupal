@@ -37,6 +37,8 @@ define('CACHE_AGGRESSIVE', 2);
 /**
  *
  * Severity levels, as defined in RFC 3164 http://www.faqs.org/rfcs/rfc3164.html
+ * @see watchdog
+ * @see watchdog_severity_levels
  */
 define('WATCHDOG_EMERG',    0); // Emergency: system is unusable
 define('WATCHDOG_ALERT',    1); // Alert: action must be taken immediately
@@ -657,6 +659,8 @@ function request_uri() {
  *   The severity of the message, as per RFC 3164
  * @param $link
  *   A link to associate with the message.
+ *
+ * @see watchdog_severity_levels
  */
 function watchdog($type, $message, $variables = array(), $severity = WATCHDOG_NOTICE, $link = NULL) {
   global $user, $base_root;
