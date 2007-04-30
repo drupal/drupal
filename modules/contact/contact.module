@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.81 2007/04/24 13:53:11 dries Exp $
+// $Id: contact.module,v 1.82 2007/04/30 14:25:13 dries Exp $
 
 /**
  * @file
@@ -544,7 +544,7 @@ function contact_mail_page_submit($form_id, $form_values) {
 
   // Log the operation:
   flood_register_event('contact');
-  watchdog('mail', '%name-from sent an e-mail regarding %category.', array('%name-from' => $form_values['name'] ." <$from>", '%category' => $contact->category));
+  watchdog('mail', '%name-from sent an e-mail regarding %category.', array('%name-from' => $form_values['name'] ." [$from]", '%category' => $contact->category));
 
   // Update user:
   drupal_set_message(t('Your message has been sent.'));

@@ -1,5 +1,5 @@
 <?php
-// $Id: syslog.module,v 1.5 2007/04/24 15:53:53 goba Exp $
+// $Id: syslog.module,v 1.6 2007/04/30 14:25:13 dries Exp $
 
 /**
  * @file
@@ -88,18 +88,15 @@ function syslog_theme() {
 function theme_syslog_format($entry) {
   global $base_url;
 
-  $message = t('@base_url|@timestamp|@type|@uid|@ip|@request_uri|@referer_uri|@link|@message',
-    array(
-      '@base_url'    => $base_url,
-      '@timestamp'   => $entry['timestamp'],
-      '@type'        => $entry['type'],
-      '@ip'          => $entry['ip'],
-      '@request_uri' => $entry['request_uri'],
-      '@referer_uri' => $entry['referer'],
-      '@uid'         => $entry['user']->uid,
-      '@link'        => strip_tags($entry['link']),
-      // Keep message English, but replace variable components, if present.
-      '@message'     => strip_tags(is_null($entry['variables']) ? $entry['message'] : strtr($entry['message'], $entry['variables'])),
-    ));
+  $message  = $base_url;
+  $message .= '|' . $entry['timestamp'];
+  $message .= '|' . $entry['type'];
+  $message .= '|' . $entry['ip'];
+  $message .= '|' . $entry['request_uri'];
+  $message .= '|' . $entry['referer'];
+  $message .= '|' . $entry['user']->uid;
+  $message .= '|' . strip_tags($entry['link']);
+  $message .= '|' . strip_tags(is_null($entry['variables']) ? $entry['message'] : strtr($entry['message'], $entry['variables']));
+
   return $message;
 }

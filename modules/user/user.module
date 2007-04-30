@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.775 2007/04/24 13:53:15 dries Exp $
+// $Id: user.module,v 1.776 2007/04/30 14:25:14 dries Exp $
 
 /**
  * @file
@@ -1367,7 +1367,7 @@ function user_register_submit($form_id, $form_values) {
     $merge_data['status'] = variable_get('user_register', 1) == 1;
   }
   $account = user_save('', array_merge($form_values, $merge_data));
-  watchdog('user', 'New user: %name %email.', array('%name' => $name, '%email' => '<'. $mail .'>'), WATCHDOG_NOTICE, l(t('edit'), 'user/'. $account->uid .'/edit'));
+  watchdog('user', 'New user: %name (%email).', array('%name' => $name, '%email' => $mail), WATCHDOG_NOTICE, l(t('edit'), 'user/'. $account->uid .'/edit'));
 
   $variables = array('!username' => $name, '!site' => variable_get('site_name', 'Drupal'), '!password' => $pass, '!uri' => $base_url, '!uri_brief' => substr($base_url, strlen('http://')), '!mailto' => $mail, '!date' => format_date(time()), '!login_uri' => url('user', array('absolute' => TRUE)), '!edit_uri' => url('user/'. $account->uid .'/edit', array('absolute' => TRUE)), '!login_url' => user_pass_reset_url($account));
 
