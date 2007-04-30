@@ -8,8 +8,8 @@
 
 function throttle_menu() {
   $items['admin/settings/throttle'] = array(
-    'description' => t('Control how your site cuts out content during heavy load.'),
-    'title' => t('Throttle'),
+    'title' => 'Throttle',
+    'description' => 'Control how your site cuts out content during heavy load.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('throttle_admin_settings'),
     'access arguments' => array('administer site configuration'),

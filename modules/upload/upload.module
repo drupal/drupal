@@ -83,8 +83,8 @@ function upload_menu() {
     'type' => MENU_CALLBACK,
   );
   $items['admin/settings/uploads'] = array(
-    'title' => t('File uploads'),
-    'description' => t('Control how files may be attached to content.'),
+    'title' => 'File uploads',
+    'description' => 'Control how files may be attached to content.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('upload_admin_settings'),
     'access arguments' => array('administer site configuration'),
