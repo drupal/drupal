@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.module,v 1.3 2007/04/24 13:53:11 dries Exp $
+// $Id: dblog.module,v 1.4 2007/04/30 11:12:35 dries Exp $
 
 /**
  * @file
@@ -32,7 +32,7 @@ function dblog_help($section) {
  */
 function dblog_theme() {
   return array(
-    'dblog_form_overview' => array(
+    'dblog_filters' => array(
       'arguments' => array('form' => NULL),
     ),
   );
@@ -122,38 +122,24 @@ function dblog_user($op, &$edit, &$user) {
   }
 }
 
-function dblog_form_overview() {
-  $names['all'] = t('all messages');
-  foreach (_dblog_get_message_types() as $type) {
-    $names[$type] = t('!type messages', array('!type' => t($type)));
-  }
-
-  if (empty($_SESSION['dblog_overview_filter'])) {
-    $_SESSION['dblog_overview_filter'] = 'all';
-  }
-
-  $form['filter'] = array(
-    '#type' => 'select',
-    '#title' => t('Filter by message type'),
-    '#options' => $names,
-    '#default_value' => $_SESSION['dblog_overview_filter']
-  );
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Filter'));
-  $form['#redirect'] = FALSE;
-
-  return $form;
-}
 /**
  * Menu callback; displays a listing of log messages.
  */
 function dblog_overview() {
+  $filter = dblog_build_filter_query();
   $rows = array();
-  $icons = array(WATCHDOG_NOTICE  => '',
-                 WATCHDOG_WARNING => theme('image', 'misc/watchdog-warning.png', t('warning'), t('warning')),
-                 WATCHDOG_ERROR   => theme('image', 'misc/watchdog-error.png', t('error'), t('error')));
-  $classes = array(WATCHDOG_NOTICE => 'dblog-notice', WATCHDOG_WARNING => 'dblog-warning', WATCHDOG_ERROR => 'dblog-error');
+  $icons = array(
+    WATCHDOG_NOTICE  => '',
+    WATCHDOG_WARNING => theme('image', 'misc/watchdog-warning.png', t('warning'), t('warning')),
+    WATCHDOG_ERROR   => theme('image', 'misc/watchdog-error.png', t('error'), t('error')),
+  );
+  $classes = array(
+    WATCHDOG_NOTICE => 'dblog-notice',
+    WATCHDOG_WARNING => 'dblog-warning',
+    WATCHDOG_ERROR => 'dblog-error',
+  );
 
-  $output = drupal_get_form('dblog_form_overview');
+  $output = drupal_get_form('dblog_filter_form');
 
   $header = array(
     ' ',
@@ -161,14 +147,13 @@ function dblog_overview() {
     array('data' => t('Date'), 'field' => 'w.wid', 'sort' => 'desc'),
     t('Message'),
     array('data' => t('User'), 'field' => 'u.name'),
-    array('data' => t('Operations'))
+    array('data' => t('Operations')),
   );
 
   $sql = "SELECT w.wid, w.uid, w.severity, w.type, w.timestamp, w.message, w.variables, w.link, u.name FROM {watchdog} w INNER JOIN {users} u ON w.uid = u.uid";
   $tablesort = tablesort_sql($header);
-  $type = $_SESSION['dblog_overview_filter'];
-  if ($type != 'all') {
-    $result = pager_query($sql ." WHERE w.type = '%s'". $tablesort, 50, 0, NULL, $type);
+  if (!empty($filter['where'])) {
+    $result = pager_query($sql ." WHERE ". $filter['where'] . $tablesort, 50, 0, NULL, $filter['args']);
   }
   else {
     $result = pager_query($sql . $tablesort, 50);
@@ -228,19 +213,11 @@ function dblog_top($type) {
   return $output;
 }
 
-function theme_dblog_form_overview($form) {
-  return '<div class="container-inline">'. drupal_render($form) .'</div>';
-}
-
-function dblog_form_overview_submit($form_id, $form_values) {
-  $_SESSION['dblog_overview_filter'] = $form_values['filter'];
-}
-
 /**
  * Menu callback; displays details about a log message.
  */
 function dblog_event($id) {
-  $severity = array(WATCHDOG_NOTICE => t('notice'), WATCHDOG_WARNING => t('warning'), WATCHDOG_ERROR => t('error'));
+  $severity = watchdog_severity_levels();
   $output = '';
   $result = db_query('SELECT w.*, u.name, u.uid FROM {watchdog} w INNER JOIN {users} u ON w.uid = u.uid WHERE w.wid = %d', $id);
   if ($dblog = db_fetch_object($result)) {
@@ -336,4 +313,142 @@ function _dblog_format_message($dblog) {
   else {
     return t($dblog->message, unserialize($dblog->variables));
   }
+}
+
+/**
+ * Return form for dblog administration filters.
+ */
+function dblog_filter_form() {
+  $session = &$_SESSION['dblog_overview_filter'];
+  $session = is_array($session) ? $session : array();
+  $filters = dblog_filters();
+
+  $form['filters'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Filter log messages'),
+    '#theme' => 'dblog_filters',
+    '#collapsible' => TRUE,
+    '#collapsed' => empty($session),
+  );
+  foreach ($filters as $key => $filter) {
+    $form['filters']['status'][$key] = array(
+      '#title' => $filter['title'],
+      '#type' => 'select',
+      '#multiple' => TRUE,
+      '#size' => 8,
+      '#options' => $filter['options'],
+    );
+    if (!empty($session[$key])) {
+      $form['filters']['status'][$key]['#default_value'] = $session[$key];
+    }
+  }
+
+  $form['filters']['buttons']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Filter'),
+  );
+  if (!empty($session)) {
+    $form['filters']['buttons']['reset'] = array(
+      '#type' => 'submit',
+      '#value' => t('Reset')
+    );
+  }
+
+  return $form;
+}
+
+/**
+ * Theme dblog administration filter selector.
+ */
+function theme_dblog_filters($form) {
+  $output = '';
+  foreach (element_children($form['status']) as $key) {
+    $output .= drupal_render($form['status'][$key]);
+  }
+  $output .= '<div id="dblog-admin-buttons">'. drupal_render($form['buttons']) .'</div>';
+  return $output;
+}
+
+function dblog_filter_form_validate($form_id, $form_values) {
+  if ($form_values['op'] == t('Filter') && empty($form_values['type']) && empty($form_values['severity'])) {
+    form_set_error('type', t('You must select something to filter by.'));
+  }
+}
+
+/**
+ * Process result from dblog administration filter form.
+ */
+function dblog_filter_form_submit($form_id, $form_values) {
+  $op = $form_values['op'];
+  $filters = dblog_filters();
+  switch ($op) {
+    case t('Filter'):
+      foreach ($filters as $name => $filter) {
+        if (isset($form_values[$name])) {
+          $_SESSION['dblog_overview_filter'][$name] = $form_values[$name];
+        }
+      }
+      break;
+    case t('Reset'):
+      $_SESSION['dblog_overview_filter'] = array();
+      break;
+  }
+  return 'admin/logs/dblog';
+}
+
+/**
+ * List dblog administration filters that can be applied.
+ */
+function dblog_filters() {
+  $filters = array();
+
+  foreach(_dblog_get_message_types() as $type) {
+    $types[$type] = $type;
+  }
+
+  if (!empty($types)) {
+    $filters['type'] = array(
+      'title' => t('Type'),
+      'where' => "w.type = '%s'",
+      'options' => $types,
+    );
+  }
+
+  $filters['severity'] = array(
+    'title' => t('Severity'),
+    'where' => 'w.severity = %d',
+    'options' => watchdog_severity_levels(),
+  );
+
+  return $filters;
+}
+
+/**
+ * Build query for dblog administration filters based on session.
+ */
+function dblog_build_filter_query() {
+  if (empty($_SESSION['dblog_overview_filter'])) {
+    return;
+  }
+
+  $filters = dblog_filters();
+
+  // Build query
+  $where = $args = array();
+  foreach ($_SESSION['dblog_overview_filter'] as $key => $filter) {
+    $filter_where = array();
+    foreach ($filter as $value) {
+      $filter_where[] = $filters[$key]['where'];
+      $args[] = $value;
+    }
+    if (!empty($filter_where)) {
+      $where[] = '('. implode(' OR ', $filter_where) .')';
+    }
+  }
+  $where = !empty($where) ? implode(' AND ', $where) : '';
+
+  return array(
+    'where' => $where,
+    'args' => $args,
+  );
 }

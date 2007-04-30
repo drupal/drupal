@@ -1,5 +1,10 @@
-/* $Id: dblog.css,v 1.1 2007/04/10 10:10:27 dries Exp $ */
+/* $Id: dblog.css,v 1.2 2007/04/30 11:12:35 dries Exp $ */
 
+#dblog-filter-form .form-item {
+  float: left;
+  padding-right: .8em;
+  margin: 0.1em;
+}
 tr.dblog-user {
   background: #ffd;
 }
