@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.637 2007/04/30 11:12:35 dries Exp $
+// $Id: common.inc,v 1.638 2007/05/01 06:53:02 dries Exp $
 
 /**
  * @file
@@ -2406,9 +2406,6 @@ function drupal_common_themes() {
     ),
     'pager_last' => array(
       'arguments' => array('text' => NULL, 'limit' => NULL, 'element' => 0, 'parameters' => array()),
-    ),
-    'pager_list' => array(
-      'arguments' => array('limit' => NULL, 'element' => 0, 'quantity' => 5, 'text' => '', 'parameters' => array()),
     ),
     'pager_link' => array(
       'arguments' => array('text' => NULL, 'page_new' => NULL, 'element' => NULL, 'parameters' => array(), 'attributes' => array()),

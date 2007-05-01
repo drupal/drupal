@@ -1,4 +1,4 @@
-/* $Id: system.css,v 1.24 2007/04/09 13:58:03 dries Exp $ */
+/* $Id: system.css,v 1.25 2007/05/01 06:53:03 dries Exp $ */
 
 /*
 ** HTML elements
@@ -118,12 +118,18 @@ tr.merge-up, tr.merge-up td, tr.merge-up th {
 .nowrap {
   white-space: nowrap;
 }
-.pager {
+.item-list .pager {
   clear: both;
   text-align: center;
 }
-.pager a, .pager strong.pager-current {
+.item-list .pager li {
+  background-image:none;
+  display:inline;
+  list-style-type:none;
   padding: 0.5em;
+}
+.pager-current {
+  font-weight:bold;
 }
 .tips {
   margin-top: 0;
