@@ -118,12 +118,18 @@ tr.merge-up, tr.merge-up td, tr.merge-up th {
 .nowrap {
   white-space: nowrap;
 }
-.pager {
+.item-list .pager {
   clear: both;
   text-align: center;
 }
-.pager a, .pager strong.pager-current {
+.item-list .pager li {
+  background-image:none;
+  display:inline;
+  list-style-type:none;
   padding: 0.5em;
+}
+.pager-current {
+  font-weight:bold;
 }
 .tips {
   margin-top: 0;

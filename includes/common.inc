@@ -2407,9 +2407,6 @@ function drupal_common_themes() {
     'pager_last' => array(
       'arguments' => array('text' => NULL, 'limit' => NULL, 'element' => 0, 'parameters' => array()),
     ),
-    'pager_list' => array(
-      'arguments' => array('limit' => NULL, 'element' => 0, 'quantity' => 5, 'text' => '', 'parameters' => array()),
-    ),
     'pager_link' => array(
       'arguments' => array('text' => NULL, 'page_new' => NULL, 'element' => NULL, 'parameters' => array(), 'attributes' => array()),
     ),
