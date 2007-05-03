@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.install,v 1.8 2007/03/26 01:32:22 dries Exp $
+// $Id: locale.install,v 1.9 2007/05/03 09:51:08 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -28,6 +28,7 @@ function locale_install() {
       db_query("CREATE TABLE {locales_source} (
         lid int NOT NULL auto_increment,
         location varchar(255) NOT NULL default '',
+        textgroup varchar(255) NOT NULL default '',
         source blob NOT NULL,
         PRIMARY KEY (lid),
         KEY source (source(30))
@@ -64,6 +65,7 @@ function locale_install() {
       db_query("CREATE TABLE {locales_source} (
         lid serial,
         location varchar(255) NOT NULL default '',
+        textgroup varchar(255) NOT NULL default '',
         source text NOT NULL,
         PRIMARY KEY (lid)
       )");
@@ -86,11 +88,14 @@ function locale_install() {
 }
 
 /**
- * @defgroup updates-5.0-to-x.x Locale updates from 5.0 to x.x
+ * @defgroup updates-5.x-to-6.x Locale updates from 5.x to 6.x
  * @{
  */
 
-function locale_update_2001() {
+/**
+ * {locales_meta} table became {languages}.
+ */
+function locale_update_6001() {
   $ret = array();
   switch ($GLOBALS['db_type']) {
     case 'mysql':
@@ -142,8 +147,24 @@ function locale_update_2001() {
 }
 
 /**
- * @} End of "defgroup updates-5.0-to-x.x"
- * The next series of updates should start at 3000.
+ * Add multiple text group support to allow for user defined string translation.
+ */
+function locale_update_6002() {
+  $ret = array();
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      db_add_column($ret, 'locales_source', 'textgroup', 'varchar(255)', array('default' => "''", 'not null' => TRUE));
+      break;
+    case 'pgsql':
+      $ret[] = update_sql("ALTER TABLE {locales_source} ADD textgroup varchar(255) NOT NULL default ''");
+      break;
+  }
+  return $ret;
+}
+
+/**
+ * @} End of "defgroup updates-5.x-to-6.x"
  */
 
 /**

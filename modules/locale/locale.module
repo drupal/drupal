@@ -1,17 +1,30 @@
 <?php
-// $Id: locale.module,v 1.170 2007/04/30 17:03:25 dries Exp $
+// $Id: locale.module,v 1.171 2007/05/03 09:51:08 dries Exp $
 
 /**
  * @file
- * Enables administrators to manage the site interface languages.
+ *   Add language handling functionality and enables the translation of the
+ *   user interface to languages other than English.
  *
- * When enabled, the site interface can be displayed in different
- * languages. The setup of languages and translations is completely
- * web based. Gettext portable object files are supported.
+ *   When enabled, multiple languages can be set up. The site interface
+ *   can be displayed in different languages, as well as nodes can have languages
+ *   assigned. The setup of languages and translations is completely web based.
+ *   Gettext portable object files are supported.
  */
 
+/**
+ * Language written left to right. Possible value of $language->direction.
+ */
+define('LANGUAGE_LTR', 0);
+
+/**
+ * Language written right to left. Possible value of $language->direction.
+ */
+define('LANGUAGE_RTL', 1);
+
+
 // ---------------------------------------------------------------------------------
-// Hook implementations (needed on all page loads)
+// Hook implementations
 
 /**
  * Implementation of hook_help().
@@ -24,112 +37,118 @@ function locale_help($section) {
       $output .= '<p>'. t("If an existing translation does not meet your needs, the <em>.po</em> files are easily edited with special editing tools. The locale module's import feature allows you to add strings from such files into your site's database. The export functionality enables you to share your translations with others, generating Portable Object files from your site strings.") .'</p>';
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@locale">Locale page</a>.', array('@locale' => 'http://drupal.org/handbook/modules/locale/')) .'</p>';
       return $output;
-    case 'admin/build/locale':
-    case 'admin/build/locale/language':
-    case 'admin/build/locale/language/overview':
-      return t("<p>Drupal provides support for the translation of its interface text into different languages. This page provides an overview of the installed languages. You can add a language on the <a href=\"@add-language\">add language page</a>, or directly by <a href=\"@import\">importing a translation</a>. If multiple languages are enabled, registered users will be able to set their preferred language. The site default will be used for anonymous visitors and for users without their own settings.</p><p>Drupal interface translations may be added or extended by several courses: by <a href=\"@import\">importing</a> an existing translation, by <a href=\"@search\">translating everything</a> from scratch, or by a combination of these approaches.</p>", array("@search" => url("admin/build/locale/string/search"), "@import" => url("admin/build/locale/language/import"), "@add-language" => url("admin/build/locale/language/add")));
-    case 'admin/build/locale/language/add':
-      return '<p>'. t("You need to add all languages in which you would like to display the site interface. If you can't find the desired language in the quick-add dropdown, then you will need to provide the proper language code yourself. The language code may be used to negotiate with browsers and to present flags, etc., so it is important to pick a code that is standardised for the desired language. You can also add a language by <a href=\"@import\">importing a translation</a>.", array("@import" => url("admin/build/locale/language/import"))) .'</p>';
-    case 'admin/build/locale/language/import':
+
+    case 'admin/settings/language':
+    case 'admin/settings/language/overview':
+      return t("<p>Drupal provides support for the translation of its interface text into different languages. This page provides an overview of the installed languages. You can add a language on the <a href=\"@add-language\">add language page</a>, or directly by <a href=\"@import\">importing a translation</a>. If multiple languages are enabled, registered users will be able to set their preferred language. The site default will be used for anonymous visitors and for users without their own settings.</p><p>Drupal interface translations may be added or extended by several courses: by <a href=\"@import\">importing</a> an existing translation, by <a href=\"@search\">translating everything</a> from scratch, or by a combination of these approaches.</p>", array("@search" => url("admin/build/translate/search"), "@import" => url("admin/build/translate/import"), "@add-language" => url("admin/settings/language/add")));
+    case 'admin/settings/language/add':
+      return '<p>'. t("You need to add all languages in which you would like to display the site interface. If you can't find the desired language in the quick-add dropdown, then you will need to provide the proper language code yourself. The language code may be used to negotiate with browsers and to present flags, etc., so it is important to pick a code that is standardised for the desired language. You can also add a language by <a href=\"@import\">importing a translation</a>.", array("@import" => url("admin/build/translate/import"))) .'</p>';
+    case 'admin/settings/language/configure':
+      return '<p>'. t('The language used to display a web page is determined with a negotiation algorithm. You can choose how this algorithm should work. By default, there is no negotiation and the default language is used. You can use path prefixes (like "de" and "it" for German and Italian content) with different fallback options, so you can have web addresses like /de/contact and /it/contact. Alternatively you can use custom domains like de.example.com and it.example.com. Customize path prefixes and set domain names on the <a href="@languages">language editing pages</a>.', array('@languages' => url('admin/settings/language'))) .'</p>';
+
+    case 'admin/build/translate':
+    case 'admin/build/translate/overview':
+      return '<p>'. t("This page provides an overview of interface translation on the site. Drupal groups all translatable strings in so called 'text groups'. Text groups are useful, because you can focus your translation efforts on the groups of text you care most about.  For example, a translation team could choose not to fully translate the text group that includes all the long help texts on the administration pages. Similarly, text groups are useful to ensure that certain aspects of the site are always fully translated.") . '</p>';
+    case 'admin/build/translate/import':
       return '<p>'. t("This page allows you to import a translation provided in the gettext Portable Object (.po) format. The easiest way to get your site translated is to obtain an existing Drupal translation and to import it. You can find existing translations on the <a href=\"@url\">Drupal translation page</a>. Note that importing a translation file might take a while.", array('@url' => 'http://drupal.org/project/translations')) .'</p>';
-    case 'admin/build/locale/language/export':
+    case 'admin/build/translate/export':
       return '<p>'. t("This page allows you to export Drupal strings. The first option is to export a translation so it can be shared. The second option generates a translation template, which contains all Drupal strings, but without their translations. You can use this template to start a new translation using various software packages designed for this task.") .'</p>';
-    case 'admin/build/locale/string':
-    case 'admin/build/locale/string/search':
-      return '<p>'. t("It is often convenient to get the strings from your setup on the <a href=\"@export\">export page</a>, and use a desktop Gettext translation editor to edit the translations. On this page you can search in the translated and untranslated strings, and the default English texts provided by Drupal.", array("@export" => url("admin/build/locale/language/export"))) .'</p>';
-    case 'admin/build/locale/language/configure':
-      return '<p>'. t('The language used to display a web page is determined with a negotiation algorithm. You can choose how this algorithm should work. By default, there is no negotiation and the default language is used. You can use path prefixes (like "de" and "it" for German and Italian content) with different fallback options, so you can have web addresses like /de/contact and /it/contact. Alternatively you can use custom domains like de.example.com and it.example.com. Customize path prefixes and set domain names on the <a href="@languages">language editing pages</a>.', array('@languages' => url('admin/build/locale/language/overview'))) .'</p>';
+    case 'admin/build/translate/search':
+      return '<p>'. t("It is often convenient to get the strings from your setup on the <a href=\"@export\">export page</a>, and use a desktop Gettext translation editor to edit the translations. On this page you can search in the translated and untranslated strings, and the default English texts provided by Drupal.", array("@export" => url("admin/build/translate/export"))) .'</p>';
   }
 }
 
 /**
  * Implementation of hook_menu().
+ *
+ * Locale module only provides administrative menu items, so all
+ * menu items are invoked through locale_inc_callback().
  */
 function locale_menu() {
-  // Main admin menu item
-  $items['admin/build/locale'] = array(
+  // Manage languages
+  $items['admin/settings/language'] = array(
     'title' => 'Languages',
-    'description' => 'Configure languages and user interface translation.',
-    'page callback' => 'locale_admin_manage',
-    'access arguments' => array('administer locales'),
+    'description' => 'Configure languages for content and the user interface.',
+    'page callback' => 'locale_inc_callback',
+    'page arguments' => array('drupal_get_form', 'locale_languages_overview_form'),
+    'access arguments' => array('administer languages'),
   );
-
-  // Top level tabs
-  $items['admin/build/locale/language'] = array(
-    'title' => 'Manage languages',
-    'weight' => -10,
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
-  $items['admin/build/locale/string'] = array(
-    'title' => 'Manage interface strings',
-    'page callback' => 'locale_string_search',
-    'weight' => 10,
-    'type' => MENU_LOCAL_TASK,
-    'parent' => 'admin/build/locale',
-  );
-
-  // Manage languages subtabs
-  $items['admin/build/locale/language/overview'] = array(
+  $items['admin/settings/language/overview'] = array(
     'title' => 'List',
     'weight' => 0,
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
-  $items['admin/build/locale/language/add'] = array(
+  $items['admin/settings/language/add'] = array(
     'title' => 'Add language',
-    'page callback' => 'locale_admin_manage_add',
+    'page callback' => 'locale_inc_callback',
+    'page arguments' => array('locale_languages_add_screen'), // two forms concatenated
     'weight' => 5,
     'type' => MENU_LOCAL_TASK,
   );
-  $items['admin/build/locale/language/configure'] = array(
+  $items['admin/settings/language/configure'] = array(
     'title' => 'Configure',
-    'page callback' => 'locale_admin_manage_configure',
+    'page callback' => 'locale_inc_callback',
+    'page arguments' => array('drupal_get_form', 'locale_languages_configure_form'),
     'weight' => 10,
     'type' => MENU_LOCAL_TASK,
   );
-  $items['admin/build/locale/language/edit/%'] = array(
+  $items['admin/settings/language/edit/%'] = array(
     'title' => 'Edit language',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('locale_admin_manage_edit', 5),
+    'page callback' => 'locale_inc_callback',
+    'page arguments' => array('drupal_get_form', 'locale_languages_edit_form', 4),
+    'type' => MENU_CALLBACK,
+  );
+  $items['admin/settings/language/delete/%'] = array(
+    'title' => 'Confirm',
+    'page callback' => 'locale_inc_callback',
+    'page arguments' => array('drupal_get_form', 'locale_languages_delete_form', 4),
     'type' => MENU_CALLBACK,
   );
 
-  // Manage interface translations subtabs
-  $items['admin/build/locale/string/search'] = array(
-    'title' => 'Search',
+  // Translation functionality
+  $items['admin/build/translate'] = array(
+    'title' => 'Translate interface',
+    'description' => 'Translate the built in interface as well as menu items and taxonomies.',
+    'page callback' => 'locale_inc_callback',
+    'page arguments' => array('locale_translate_overview_screen'), // not a form, just a table
+    'access arguments' => array('translate interface'),
+  );
+  $items['admin/build/translate/overview'] = array(
+    'title' => 'Overview',
     'weight' => 0,
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
-  $items['admin/build/locale/string/import'] = array(
-    'title' => 'Import',
-    'page callback' => 'locale_admin_import',
+  $items['admin/build/translate/search'] = array(
+    'title' => 'Search',
     'weight' => 10,
     'type' => MENU_LOCAL_TASK,
+    'page callback' => 'locale_inc_callback',
+    'page arguments' => array('locale_translate_seek_screen'), // search results and form concatenated
   );
-  $items['admin/build/locale/string/export'] = array(
-    'title' => 'Export',
-    'page callback' => 'locale_admin_export',
+  $items['admin/build/translate/import'] = array(
+    'title' => 'Import',
+    'page callback' => 'locale_inc_callback',
+    'page arguments' => array('drupal_get_form', 'locale_translate_import_form'),
     'weight' => 20,
     'type' => MENU_LOCAL_TASK,
   );
-
-  // Language related callbacks
-  $items['admin/build/locale/language/delete'] = array(
-    'title' => 'Confirm',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('locale_admin_manage_delete_form'),
-    'type' => MENU_CALLBACK,
+  $items['admin/build/translate/export'] = array(
+    'title' => 'Export',
+    'page callback' => 'locale_inc_callback',
+    'page arguments' => array('locale_translate_export_screen'), // possibly multiple forms concatenated
+    'weight' => 30,
+    'type' => MENU_LOCAL_TASK,
   );
-  // String related callbacks
-  $items['admin/build/locale/string/edit/%'] = array(
+  $items['admin/build/translate/edit/%'] = array(
     'title' => 'Edit string',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('locale_admin_string_edit', 5),
+    'page callback' => 'locale_inc_callback',
+    'page arguments' => array('drupal_get_form', 'locale_translate_edit_form', 4),
     'type' => MENU_CALLBACK,
   );
-  $items['admin/build/locale/string/delete/%'] = array(
+  $items['admin/build/translate/delete/%'] = array(
     'title' => 'Delete string',
-    'page callback' => 'locale_admin_string_delete',
-    'page arguments' => array(5),
+    'page callback' => 'locale_inc_callback',
+    'page arguments' => array('locale_translate_delete', 4),  // directly deletes, no confirmation
     'type' => MENU_CALLBACK,
   );
 
@@ -137,10 +156,30 @@ function locale_menu() {
 }
 
 /**
+ * Wrapper function to be able to set callbacks in locale.inc
+ */
+function locale_inc_callback() {
+  $args = func_get_args();
+  $function = array_shift($args);
+  include_once './includes/locale.inc';
+  return call_user_func_array($function, $args);
+}
+
+/**
  * Implementation of hook_perm().
  */
 function locale_perm() {
-  return array('administer locales');
+  return array('administer languages', 'translate interface');
+}
+
+/**
+ * Implementation of hook_locale().
+ */
+function locale_locale($op = 'groups') {
+  switch ($op) {
+    case 'groups':
+      return array('default' => t('Built-in interface'));
+  }
 }
 
 /**
@@ -198,7 +237,7 @@ function locale_form_alter(&$form, $form_id) {
           '#title' => t('Multilingual support'),
           '#default_value' => variable_get('language_'. $form['#node_type']->type, 0),
           '#options' => array(t('Disabled'), t('Enabled')),
-          '#description' => t('Enable multilingual support for this content type. If enabled, a language selection field will be added to the editing form, allowing you to select from one of the <a href="!languages">enabled languages</a>. If disabled, new posts are saved with the default language. Existing content will not be affected by changing this option.', array('!languages' => url('admin/build/locale'))),
+          '#description' => t('Enable multilingual support for this content type. If enabled, a language selection field will be added to the editing form, allowing you to select from one of the <a href="!languages">enabled languages</a>. If disabled, new posts are saved with the default language. Existing content will not be affected by changing this option.', array('!languages' => url('admin/settings/language'))),
         );
       }
       break;
@@ -206,7 +245,7 @@ function locale_form_alter(&$form, $form_id) {
     // Language field for nodes
     default:
       if ($form['#id'] == 'node-form') {
-        if (variable_get('language_' . $form['#node']->type, 0)) {
+        if (isset($form['#node']->type) && variable_get('language_' . $form['#node']->type, 0)) {
           $form['language'] = array(
             '#type' => 'select',
             '#title' => t('Language'),
@@ -226,9 +265,19 @@ function locale_form_alter(&$form, $form_id) {
   }
 }
 
+/**
+ * Implementation of hook_theme()
+ */
+function locale_theme() {
+  return array(
+    'locale_languages_overview_form' => array(
+      'arguments' => array('form' => array()),
+    ),
+  );
+}
 
 // ---------------------------------------------------------------------------------
-// Locale core functionality (needed on all page loads)
+// Locale core functionality
 
 /**
  * Provides interface translation services.
@@ -241,11 +290,14 @@ function locale($string) {
 
   // Store database cached translations in a static var.
   if (!isset($locale_t)) {
+    $locale_t = array();
     if (!($cache = cache_get('locale:'. $language->language, 'cache'))) {
       locale_refresh_cache();
       $cache = cache_get('locale:'. $language->language, 'cache');
     }
-    $locale_t = $cache->data;
+    if ($cache) {
+      $locale_t = $cache->data;
+    }
   }
 
   // We have the translation cached (if it is TRUE, then there is no
@@ -256,7 +308,7 @@ function locale($string) {
 
   // We do not have this translation cached, so get it from the DB.
   else {
-    $result = db_query("SELECT s.lid, t.translation FROM {locales_source} s INNER JOIN {locales_target} t ON s.lid = t.lid WHERE s.source = '%s' AND t.language = '%s'", $string, $language->language);
+    $result = db_query("SELECT s.lid, t.translation FROM {locales_source} s INNER JOIN {locales_target} t ON s.lid = t.lid WHERE s.source = '%s' AND t.language = '%s' AND s.textgroup = 'default'", $string, $language->language);
     // Translation found
     if ($trans = db_fetch_object($result)) {
       if (!empty($trans->translation)) {
@@ -267,7 +319,7 @@ function locale($string) {
 
     // Either we have no such source string, or no translation
     else {
-      $result = db_query("SELECT lid, source FROM {locales_source} WHERE source = '%s'", $string);
+      $result = db_query("SELECT lid, source FROM {locales_source} WHERE source = '%s' AND textgroup = 'default'", $string);
       // We have no such translation
       if ($obj = db_fetch_object($result)) {
         if ($language) {
@@ -276,9 +328,9 @@ function locale($string) {
       }
       // We have no such source string
       else {
-        db_query("INSERT INTO {locales_source} (location, source) VALUES ('%s', '%s')", request_uri(), $string);
+        db_query("INSERT INTO {locales_source} (location, source, textgroup) VALUES ('%s', '%s', 'default')", request_uri(), $string);
         if ($language) {
-          $lid = db_fetch_object(db_query("SELECT lid FROM {locales_source} WHERE source = '%s'", $string));
+          $lid = db_fetch_object(db_query("SELECT lid FROM {locales_source} WHERE source = '%s' AND textgroup = 'default'", $string));
           db_query("INSERT INTO {locales_target} (lid, language, translation) VALUES (%d, '%s', '')", $lid->lid, $language->language);
         }
       }
@@ -300,7 +352,7 @@ function locale_refresh_cache() {
   $languages = $languages['1'];
 
   foreach ($languages as $language) {
-    $result = db_query("SELECT s.source, t.translation, t.language FROM {locales_source} s INNER JOIN {locales_target} t ON s.lid = t.lid WHERE t.language = '%s' AND LENGTH(s.source) < 75", $language->language);
+    $result = db_query("SELECT s.source, t.translation, t.language FROM {locales_source} s INNER JOIN {locales_target} t ON s.lid = t.lid WHERE t.language = '%s' AND s.textgroup = 'default' AND LENGTH(s.source) < 75", $language->language);
     $t = array();
     while ($data = db_fetch_object($result)) {
       $t[$data->source] = (empty($data->translation) ? TRUE : $data->translation);
@@ -369,141 +421,4 @@ function locale_language_list($field = 'name', $all = FALSE) {
     $list[$language->language] = ($field == 'name') ? t($language->name) : $language->$field;
   }
   return $list;
-}
-
-// ---------------------------------------------------------------------------------
-// Language management functionality (administration only)
-
-/**
- * Page handler for the language management screen.
- */
-function locale_admin_manage() {
-  include_once './includes/locale.inc';
-  return drupal_get_form('_locale_admin_manage_screen');
-}
-
-/**
- * User interface for the language deletion confirmation screen.
- */
-function locale_admin_manage_delete_form($langcode) {
-  include_once './includes/locale.inc';
-
-  // Do not allow deletion of English locale.
-  if ($langcode == 'en') {
-    drupal_set_message(t('The English locale cannot be deleted.'));
-    drupal_goto('admin/build/locale/language/overview');
-  }
-
-  $default = language_default();
-  if ($default->language == $langcode) {
-    drupal_set_message(t('The default language cannot be deleted.'));
-    drupal_goto('admin/build/locale/language/overview');
-  }
-
-  // For other locales, warn user that data loss is ahead.
-  $languages = language_list();
-
-  if (!isset($languages[$langcode])) {
-    drupal_not_found();
-  }
-  else {
-    $form['langcode'] = array('#type' => 'value', '#value' => $langcode);
-    return confirm_form($form, t('Are you sure you want to delete the language %name?', array('%name' => t($languages[$langcode]->name))), 'admin/build/locale/language/overview', t('Deleting a language will remove all data associated with it. This action cannot be undone.'), t('Delete'), t('Cancel'));
-  }
-}
-
-/**
- * Process language deletion submissions.
- */
-function locale_admin_manage_delete_form_submit($form_id, $form_values) {
-  $languages = language_list();
-  if (isset($languages[$form_values['langcode']])) {
-    db_query("DELETE FROM {languages} WHERE language = '%s'", $form_values['langcode']);
-    db_query("DELETE FROM {locales_target} WHERE language = '%s'", $form_values['langcode']);
-    $variables = array('%locale' => $languages[$form_values['langcode']]->name);
-    drupal_set_message(t('The language %locale has been removed.', $variables));
-    watchdog('locale', 'The language %locale has been removed.', $variables);
-  }
-
-  // Changing the locale settings impacts the interface:
-  cache_clear_all('*', 'cache_page', TRUE);
-
-  return 'admin/build/locale/language/overview';
-}
-
-/**
- * Page handler for the language addition screen
- */
-function locale_admin_manage_add() {
-  include_once './includes/locale.inc';
-  return _locale_admin_manage_add_screen();
-}
-
-function locale_admin_manage_edit($langcode) {
-  include_once './includes/locale.inc';
-  return _locale_admin_manage_edit_screen($langcode);
-}
-
-function locale_admin_manage_configure() {
-  include_once './includes/locale.inc';
-  return drupal_get_form("locale_configure_language_form");
-}
-
-// ---------------------------------------------------------------------------------
-// Gettext Portable Object import functionality (administration only)
-
-/**
- * Page handler for the translation import screen
- */
-function locale_admin_import() {
-  include_once './includes/locale.inc';
-  return drupal_get_form('_locale_admin_import');
-}
-
-// ---------------------------------------------------------------------------------
-// Gettext Portable Object export functionality (administration only)
-
-/**
- * Page handler for the translation export screen
- */
-function locale_admin_export() {
-  include_once './includes/locale.inc';
-  return _locale_admin_export_screen();
-}
-
-// ---------------------------------------------------------------------------------
-// String search and editing functionality (administration only)
-
-/**
- * Page handler for the string search.
- */
-function locale_string_search() {
-  include_once './includes/locale.inc';
-  $output = _locale_string_seek();
-  $output .= drupal_get_form('_locale_string_seek_form');
-  return $output;
-}
-
-/**
- * Display the string edit form.
- */
-function locale_admin_string_edit($lid) {
-  include_once './includes/locale.inc';
-  return _locale_string_edit($lid);
-}
-
-/**
- * Process the string edit form.
- */
-function locale_admin_string_edit_submit($form_id, $form_values) {
-  include_once './includes/locale.inc';
-  return _locale_string_edit_submit($form_id, $form_values);
-}
-
-/**
- * Delete a string.
- */
-function locale_admin_string_delete($lid) {
-  include_once './includes/locale.inc';
-  _locale_string_delete($lid);
 }
