@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.191 2007/04/30 11:12:35 dries Exp $
+// $Id: CHANGELOG.txt,v 1.192 2007/05/03 10:52:56 unconed Exp $
 
 Drupal 6.0, xxxx-xx-xx (development version)
 ----------------------
@@ -8,22 +8,26 @@ Drupal 6.0, xxxx-xx-xx (development version)
    * The watchdog module is now called dblog, and is optional, but enabled by default in the default install profile.
    * Extended the database log module so log messages can be filtered.
    * Added syslog module: useful for monitoring large Drupal installations.
-- Added theme registry: modules can directly provide .tpl.php files for their themes without having to create theme_ functions.
 - Added versioning support to node terms.
 - Made it easier to theme the forum overview page.
 - Drupal works with error reporting set to E_ALL.
 - Added scripts/drupal.sh to execute Drupal code from the command line. Useful to use Drupal as a framework to build command-line tools.
-- Used the Garland theme for the installation and maintenance pages.
-- Improved handling of teasers in posts.
 - Made signature support optional and made it possible to theme signatures.
-- Added generic language management functionality.
+- Language system improvements:
     * Support for right to left languages.
     * Language detection based on parts of the URL.
     * Browser based language detection.
     * Made it possible to specify a node's language.
+    * Language dependent path aliases.
 - Moved "PHP input filter" to a stand-alone module so it can be deleted for security reasons.
-- Language dependent path aliases.
-- Added .info files to themes and made it easier to specify regions and features.
+- Usability:
+    * Improved handling of teasers in posts.
+    * Added sticky table headers.
+    * Check for clean URL support automatically with JavaScript.
+- Theme system:
+    * Added .info files to themes and made it easier to specify regions and features.
+    * Added theme registry: modules can directly provide .tpl.php files for their themes without having to create theme_ functions.
+    * Used the Garland theme for the installation and maintenance pages.
 
 Drupal 5.0, 2007-01-15
 ----------------------
