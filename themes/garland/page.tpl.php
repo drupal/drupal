@@ -71,7 +71,7 @@
           <?php if (isset($tabs2)): print $tabs2; endif; ?>
 
           <?php if ($help): print $help; endif; ?>
-          <?php if ($messages): print $messages; endif; ?>
+          <?php if ($show_messages && $messages): print $messages; endif; ?>
           <?php print $content ?>
           <span class="clear"></span>
           <?php print $feed_icons ?>

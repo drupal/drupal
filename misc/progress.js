@@ -20,9 +20,9 @@ Drupal.progressBar = function (id, updateCallback, method, errorCallback) {
   this.element = document.createElement('div');
   this.element.id = id;
   this.element.className = 'progress';
-  $(this.element).html('<div class="percentage"></div>'+
-                       '<div class="message">&nbsp;</div>'+
-                       '<div class="bar"><div class="filled"></div></div>');
+  $(this.element).html('<div class="bar"><div class="filled"></div></div>'+
+                       '<div class="percentage"></div>'+
+                       '<div class="message">&nbsp;</div>');
 }
 
 /**

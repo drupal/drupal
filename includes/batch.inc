@@ -1,0 +1,297 @@
+<?php
+
+/**
+ * @file Batch processing API for processes to run in multiple HTTP requests.
+ */
+
+/**
+ * State based dispatcher for batches.
+ */
+function _batch_page() {
+  global $user;
+
+  $batch =& batch_get();
+
+  if (isset($_REQUEST['id']) && $data = db_result(db_query("SELECT batch FROM {batch} WHERE bid = %d AND sid = %d", $_REQUEST['id'], $user->sid))) {
+    $batch = unserialize($data);
+  }
+  else {
+    return FALSE;
+  }
+
+  // Register database update for end of processing.
+  register_shutdown_function('_batch_shutdown');
+
+  $op = isset($_REQUEST['op']) ? $_REQUEST['op'] : '';
+  switch ($op) {
+    case 'start':
+      $output = _batch_start();
+      break;
+
+    case 'do':
+      $output = _batch_do();
+      break;
+
+    case 'do_nojs':
+      $output = _batch_progress_page_nojs();
+      break;
+
+    case 'finished':
+      $output = _batch_finished();
+      break;
+  }
+
+  return $output;
+}
+
+/**
+ * Initiate the batch processing
+ */
+function _batch_start() {
+  // Choose between the JS and non-JS version.
+  // JS-enabled users are identified through the 'has_js' cookie set in drupal.js.
+  // If the user did not visit any JS enabled page during his browser session,
+  // he gets the non-JS version...
+  if (isset($_COOKIE['has_js']) && $_COOKIE['has_js']) {
+    return _batch_progress_page_js();
+  }
+  else {
+    return _batch_progress_page_nojs();
+  }
+}
+
+/**
+ * Batch processing page with JavaScript support.
+ */
+function _batch_progress_page_js() {
+  $batch = batch_get();
+  $current_set = _batch_current_set();
+
+  drupal_set_title($current_set['title']);
+  drupal_add_js('misc/progress.js', 'core', 'header');
+
+  $url = url($batch['url'], array('query' => array('id' => $batch['id'])));
+  $js_setting = array(
+    'batch' => array(
+      'errorMessage' => $current_set['error_message'] .'<br/>'. $batch['error_message'],
+      'initMessage' => $current_set['init_message'],
+      'uri' => $url,
+    ),
+  );
+  drupal_add_js($js_setting, 'setting');
+  drupal_add_js('misc/batch.js', 'core', 'header', FALSE, TRUE);
+
+  $output = '<div id="progress"></div>';
+  return $output;
+}
+
+/**
+ * Do one pass of execution and inform back the browser about progression.
+ */
+function _batch_do() {
+  // HTTP POST required
+  if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+    drupal_set_message(t('HTTP POST is required.'), 'error');
+    drupal_set_title(t('Error'));
+    return '';
+  }
+
+  list($percentage, $message) = _batch_process();
+
+  drupal_set_header('Content-Type: text/plain; charset=utf-8');
+  print drupal_to_js(array('status' => TRUE, 'percentage' => $percentage, 'message' => $message));
+  exit();
+}
+
+/**
+ * Batch processing page without JavaScript support.
+ */
+function _batch_progress_page_nojs() {
+  $batch =& batch_get();
+  $current_set = _batch_current_set();
+
+  drupal_set_title($current_set['title']);
+
+  $new_op = 'do_nojs';
+
+  if (!isset($batch['running'])) {
+    // This is the first page so return some output immediately.
+    $percentage = 0;
+    $message = $current_set['init_message'];
+    $batch['running'] = TRUE;
+  }
+  else {
+    // This is one of the later requests: do some processing first.
+
+    // Error handling: if PHP dies due to a fatal error (e.g. non-existant
+    // function), it will output whatever is in the output buffer,
+    // followed by the error message.
+    ob_start();
+    $fallback = $current_set['error_message'] .'<br/>'. $batch['error_message'];
+    $fallback = theme('maintenance_page', $fallback, FALSE);
+
+    // We strip the end of the page using a marker in the template, so any
+    // additional HTML output by PHP shows up inside the page rather than
+    // below it. While this causes invalid HTML, the same would be true if
+    // we didn't, as content is not allowed to appear after </html> anyway.
+    list($fallback) = explode('<!--partial-->', $fallback);
+    print $fallback;
+
+    list($percentage, $message) = _batch_process($batch);
+    if ($percentage == 100) {
+      $new_op = 'finished';
+    }
+
+    // Processing successful; remove fallback.
+    ob_end_clean();
+  }
+
+  $url = url($batch['url'], array('query' => array('id' => $batch['id'], 'op' => $new_op)));
+  drupal_set_html_head('<meta http-equiv="Refresh" content="0; URL='. $url .'">');
+  $output = theme('progress_bar', $percentage, $message);
+  return $output;
+}
+
+/**
+ * Advance batch processing for 1 second (or process the whole batch if it
+ * was not set for progressive execution).
+ */
+function _batch_process() {
+  $batch =& batch_get();
+  $current_set =& _batch_current_set();
+
+  while (!$current_set['success']) {
+    $task_message = NULL;
+    $finished = 1;
+    if ((list($function, $args) = reset($current_set['operations'])) && function_exists($function)) {
+      // Build the 'batch context' array, execute the function call, and retrieve the user message.
+      $batch_context = array('sandbox' => &$current_set['sandbox'], 'results' => &$current_set['results'], 'finished' => &$finished, 'message' => '');
+      call_user_func_array($function, array_merge($args, array(&$batch_context)));
+      $task_message = $batch_context['message'];
+    }
+    if ($finished == 1) {
+      // Make sure this step isn't counted double.
+      $finished = 0;
+      // Remove the operation, and clear the sandbox to reduce the stored data.
+      array_shift($current_set['operations']);
+      $current_set['sandbox'] = array();
+
+      // If the batch set is completed, browse through the remaining sets
+      // until we find one that acually has operations.
+      while (empty($current_set['operations']) && ($current_set['success'] = TRUE) && _batch_next_set()) {
+        $current_set =& _batch_current_set();
+      }
+    }
+    // Progressive mode : stop after 1 second
+    if ($batch['progressive'] && timer_read('page') > 1000) {
+      break;
+    }
+  }
+
+  if ($batch['progressive']) {
+    $remaining  = count($current_set['operations']);
+    $total      = $current_set['total'];
+    $current    = $total - $remaining + $finished;
+    $percentage = $total ? floor($current / $total * 100) : 100;
+    $values = array(
+      '@remaining'  => $remaining,
+      '@total'      => $total,
+      '@current'    => floor($current),
+      '@percentage' => $percentage,
+      );
+    $progress_message = strtr($current_set['progress_message'], $values);
+
+    $message = $progress_message .'<br/>';
+    $message.= $task_message ? $task_message : '&nbsp';
+
+    return array($percentage, $message);
+  }
+  else {
+    return _batch_finished();
+  }
+
+}
+
+/**
+ * Retrieve the batch set being currently processed.
+ */
+function &_batch_current_set() {
+  $batch =& batch_get();
+  return $batch['sets'][$batch['current_set']];
+}
+
+/**
+ * Move execution to the next batch set if any, executing the stored
+ * form _submit callbacks along the way (possibly inserting additional batch sets)
+ */
+function _batch_next_set() {
+  $batch =& batch_get();
+  if (isset($batch['sets'][$batch['current_set']+1])) {
+    $batch['current_set']++;
+    $current_set =& _batch_current_set();
+    if (isset($current_set['form submit']) && (list($function, $args) = $current_set['form submit']) && function_exists($function)) {
+      // We have to keep our own copy of $form_values, to account
+      // for possible alteration by the submit callback.
+      if (isset($batch['form_values'])) {
+        $args[1] = $batch['form_values'];
+      }
+      $redirect = call_user_func_array($function, $args);
+      // Store the form_values only if needed, to limit the
+      // amount of data we store in the batch.
+      if (isset($batch['sets'][$batch['current_set']+1])) {
+        $batch['form_values'] = $args[1];
+      }
+      if (isset($redirect)) {
+        $batch['redirect'] = $redirect;
+      }
+    }
+    return TRUE;
+  }
+}
+
+/**
+ * End the batch :
+ * Call the 'finished' callbacks to allow custom handling of results,
+ * and resolve page redirection.
+ */
+function _batch_finished() {
+  $batch =& batch_get();
+
+  // Execute the 'finished' callbacks.
+  foreach($batch['sets'] as $key => $batch_set) {
+    if (isset($batch_set['finished']) && function_exists($batch_set['finished'])) {
+      $batch_set['finished']($batch_set['success'], $batch_set['results'], $batch_set['operations']);
+    }
+  }
+
+  // Cleanup the batch table and unset the global $batch variable.
+  db_query("DELETE FROM {batch} WHERE bid = %d", $batch['id']);
+  $_batch = $batch;
+  $batch = NULL;
+
+  // Redirect if needed.
+  if ($_batch['progressive']) {
+    if (isset($_batch['destination'])) {
+      $_REQUEST['destination'] = $_batch['destination'];
+    }
+    $redirect = isset($_batch['redirect']) ? $_batch['redirect'] : $_batch['source_page'];
+    $form_redirect = isset($_batch['form_redirect']) ? $_batch['form_redirect'] : NULL;
+    // Let drupal_redirect_form handle redirection logic, using a bare pseudo form
+    // to limit the amount of data we store in the batch.
+    drupal_redirect_form(array('#redirect' => $form_redirect), $redirect);
+
+    // If we get here, $form['redirect']['#redirect'] was FALSE, and we are most
+    // probably dealing with a multistep form - not supported at the moment.
+    // Redirect to the originating page - first step of the form.
+    drupal_goto($_batch['source_page']);
+  }
+}
+
+/**
+ * Store tha batch data for next request, or clear the table if the batch is finished.
+ */
+function _batch_shutdown() {
+  if ($batch = batch_get()) {
+    db_query("UPDATE {batch} SET batch = '%s' WHERE bid = %d", serialize($batch), $batch['id']);
+  }
+}

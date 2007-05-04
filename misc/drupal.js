@@ -222,5 +222,8 @@ Drupal.getSelection = function (element) {
 
 // Global Killswitch on the <html> element
 if (Drupal.jsEnabled) {
+  // Global Killswitch on the <html> element
   document.documentElement.className = 'js';
+  // 'js enabled' cookie
+  document.cookie = 'has_js=1';
 }
