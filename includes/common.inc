@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.638 2007/05/01 06:53:02 dries Exp $
+// $Id: common.inc,v 1.639 2007/05/04 08:31:59 goba Exp $
 
 /**
  * @file
@@ -700,7 +700,21 @@ function fix_gpc_magic() {
  */
 function t($string, $args = 0) {
   global $language;
-  if (function_exists('locale') && $language->language != 'en') {
+  static $custom_strings;
+
+  // First, check for an array of customized strings. If present, use the array
+  // *instead of* database lookups. This is a high performance way to provide a
+  // handful of string replacements. See settings.php for examples.
+  // Cache the $custom_strings variable to improve performance.
+  if (!isset($custom_strings)) {
+    $custom_strings = variable_get('locale_custom_strings_'. $language->language, array());
+  }
+  // Custom strings work for English too, even if locale module is disabled.
+  if (isset($custom_strings[$string])) {
+    $string = $custom_strings[$string];
+  }
+  // Translate with locale module if enabled.
+  elseif (function_exists('locale') && $language->language != 'en') {
     $string = locale($string);
   }
   if (!$args) {
