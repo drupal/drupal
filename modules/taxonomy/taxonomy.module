@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.353 2007/04/30 17:03:28 dries Exp $
+// $Id: taxonomy.module,v 1.354 2007/05/04 08:38:34 dries Exp $
 
 /**
  * @file
@@ -774,14 +774,14 @@ function taxonomy_node_get_terms_by_vocabulary($node, $vid, $key = 'tid') {
 function taxonomy_node_get_terms($node, $key = 'tid') {
   static $terms;
 
-  if (!isset($terms[$node->vid])) {
+  if (!isset($terms[$node->vid][$key])) {
     $result = db_query(db_rewrite_sql('SELECT t.* FROM {term_node} r INNER JOIN {term_data} t ON r.tid = t.tid INNER JOIN {vocabulary} v ON t.vid = v.vid WHERE r.vid = %d ORDER BY v.weight, t.weight, t.name', 't', 'tid'), $node->vid);
-    $terms[$node->vid] = array();
+    $terms[$node->vid][$key] = array();
     while ($term = db_fetch_object($result)) {
-      $terms[$node->vid][$term->$key] = $term;
+      $terms[$node->vid][$key][$term->$key] = $term;
     }
   }
-  return $terms[$node->vid];
+  return $terms[$node->vid][$key];
 }
 
 /**
