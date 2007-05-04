@@ -1,4 +1,4 @@
-// $Id: drupal.js,v 1.30 2007/04/09 13:58:02 dries Exp $
+// $Id: drupal.js,v 1.31 2007/05/04 09:41:36 goba Exp $
 
 var Drupal = Drupal || {};
 
@@ -222,5 +222,8 @@ Drupal.getSelection = function (element) {
 
 // Global Killswitch on the <html> element
 if (Drupal.jsEnabled) {
+  // Global Killswitch on the <html> element
   document.documentElement.className = 'js';
+  // 'js enabled' cookie
+  document.cookie = 'has_js=1';
 }

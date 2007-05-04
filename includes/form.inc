@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.190 2007/04/24 13:53:10 dries Exp $
+// $Id: form.inc,v 1.191 2007/05/04 09:41:36 goba Exp $
 
 /**
  * @defgroup form Form generation
@@ -255,6 +255,12 @@ function drupal_process_form($form_id, &$form) {
     // In that case we accept a submission without button values.
     if ((($form['#programmed']) || $form_submitted || (!$form_button_counter[0] && $form_button_counter[1])) && !form_get_errors()) {
       $redirect = drupal_submit_form($form_id, $form);
+      if ($batch =& batch_get()) {
+        $batch['progressive'] = !$form['#programmed'];
+        batch_process();
+        // Progressive batch processing redirects to the progress page.
+        // Execution continues only if programmed form.
+      }
       if (!$form['#programmed']) {
         drupal_redirect_form($form, $redirect);
       }
@@ -420,7 +426,19 @@ function drupal_submit_form($form_id, $form) {
         $args = array_merge($default_args, (array) $args);
         // Since we can only redirect to one page, only the last redirect
         // will work.
-        $redirect = call_user_func_array($function, $args);
+        if ($batch =& batch_get()) {
+          // Some previous _submit callback has set a batch.
+          // We store the call in a special 'control' batch set for execution
+          // at the correct time during the batch processing workflow.
+          $batch['sets'][] = array('form submit' => array($function, $args));
+        }
+        else {
+          $redirect = call_user_func_array($function, $args);
+          if ($batch =& batch_get()) {
+            // The _submit callback has opened a batch: store the needed form info.
+            $batch['form_redirect'] = isset($form['#redirect']) ? $form['#redirect'] : NULL;
+          }
+        }
         $submitted = TRUE;
         if (isset($redirect)) {
           $goto = $redirect;
@@ -1491,14 +1509,14 @@ function theme_markup($element) {
 }
 
 /**
-* Format a password field.
-*
-* @param $element
-*   An associative array containing the properties of the element.
-*   Properties used:  title, value, description, size, maxlength, required, attributes
-* @return
-*   A themed HTML string representing the form.
-*/
+ * Format a password field.
+ *
+ * @param $element
+ *   An associative array containing the properties of the element.
+ *   Properties used:  title, value, description, size, maxlength, required, attributes
+ * @return
+ *   A themed HTML string representing the form.
+ */
 function theme_password($element) {
   $size = $element['#size'] ? ' size="'. $element['#size'] .'" ' : '';
   $maxlength = $element['#maxlength'] ? ' maxlength="'. $element['#maxlength'] .'" ' : '';
@@ -1624,4 +1642,253 @@ function form_clean_id($id = NULL) {
 
 /**
  * @} End of "defgroup form".
+ */
+
+/**
+ * @defgroup batch Batch operations
+ * @{
+ * Functions allowing forms processing to be spread out over several page
+ * requests, thus ensuring that the processing does not get interrupted
+ * because of a PHP timeout, while allowing the user to receive feedback
+ * on the progress of the ongoing operations.
+ *
+ * The API is primarily designed to integrate nicely with the Form API
+ * workflow, but can also be used by non-FAPI scripts (like update.php)
+ * or even simple page callbacks (which should probably be used sparingly).
+ *
+ * Example:
+ * @code
+ * $batch = array(
+ *   'title' => t('Exporting'),
+ *   'operations' => array(
+ *     array('my_function_1', array($account->uid, 'story')),
+ *     array('my_function_2', array()),
+ *   ),
+ *   'finished' => 'my_finished_callback',
+ * );
+ * batch_set($batch);
+ * // only needed if not inside a form _submit callback :
+ * batch_process();
+ * @endcode
+ *
+ * Sample batch operations:
+ * @code
+ * // Simple and artificial: load a node of a given type for a given user
+ * function my_function_1($uid, $type, &$context) {
+ *   // The $context array gathers batch context information about the execution (read),
+ *   // as well as 'return values' for the current operation (write)
+ *   // The following keys are provided :
+ *   // 'results' (read / write): The array of results gathered so far by
+ *   //   the batch processing, for the curent operation to append its own.
+ *   // 'message' (write): A text message displayed in the progress page.
+ *   // The following keys allow for multi-step operations :
+ *   // 'sandbox' (read / write): An array that can be freely used to
+ *   //   store persistent data between iterations. It is recommended to
+ *   //   use this instead of $_SESSION, which is unsafe if the user
+ *   //   continues browsing in a separate window while the batch is processing.
+ *   // 'finished' (write): A float number between 0 and 1 informing
+ *   //   the processing engine of the completion level for the operation.
+ *   //   1 means the operation is finished and processing can continue
+ *   //   to the next operation. This value always be 1 if not specified
+ *   //   by the batch operation (a single-step operation), so that will
+ *   //   be considered as finished.
+ *   $node = node_load(array('uid' => $uid, 'type' => $type));
+ *   $context['results'][] = $node->nid .' : '. $node->title;
+ *   $context['message'] = $node->title;
+ * }
+ *
+ * // More advanced example: mutli-step operation - load all nodes, five by five
+ * function my_function_2(&$context) {
+ *   if (empty($context['sandbox'])) {
+ *     $context['sandbox']['progress'] = 0;
+ *     $context['sandbox']['current_node'] = 0;
+ *     $context['sandbox']['max'] = db_result(db_query('SELECT COUNT(DISTINCT nid) FROM {node}'));
+ *   }
+ *   $limit = 5;
+ *   $result = db_query_range("SELECT nid FROM {node} WHERE nid > %d ORDER BY nid ASC", $context['sandbox']['current_node'], 0, $limit);
+ *   while ($row = db_fetch_array($result)) {
+ *     $node = node_load($row['nid'], NULL, TRUE);
+ *     $context['results'][] = $node->nid .' : '. $node->title;
+ *     $context['sandbox']['progress']++;
+ *     $context['sandbox']['current_node'] = $node->nid;
+ *     $context['message'] = $node->title;
+ *   }
+ *   if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
+ *     $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+ *   }
+ * }
+ * @endcode
+ *
+ * Sample 'finished' callback:
+ * @code
+ * function batch_test_finished($success, $results, $operations) {
+ *   if ($success) {
+ *     $message = format_plural(count($results), 'One node processed.', '@count nodes processed.');
+ *   }
+ *   else {
+ *     $message = t('Finished with an error.');
+ *   }
+ *   drupal_set_message($message);
+ *   // Provinding data for the redirected page is done through $_SESSION.
+ *   foreach ($results as $result) {
+ *     $items[] = t('Loaded node %title.', array('%title' => $result));
+ *   }
+ *   $_SESSION['my_batch_results'] = $items;
+ * }
+ * @endcode
+ */
+
+/**
+ * Open a new batch.
+ *
+ * @param $batch
+ *   An array defining the batch. The following keys can be used:
+ *     'operations': an array of function calls to be performed.
+ *        Example:
+ *        @code
+ *        array(
+ *          array('my_function_1', array($arg1)),
+ *          array('my_function_2', array($arg2_1, $arg2_2)),
+ *        )
+ *        @endcode
+ *     All the other values below are optional.
+ *     batch_init() provides default values for the messages.
+ *     'title': title for the progress page.
+ *       Defaults to t('Processing').
+ *     'init_message': message displayed while the processing is initialized.
+ *       Defaults to t('Initializing.').
+ *     'progress_message': message displayed while processing the batch.
+ *       Available placeholders are @current, @remaining, @total and @percent.
+ *       Defaults to t('Remaining @remaining of @total.').
+ *     'error_message': message displayed if an error occurred while processing the batch.
+ *       Defaults to t('An error has occurred.').
+ *     'finished': the name of a function to be executed after the batch has completed.
+ *       This should be used to perform any result massaging that may be needed,
+ *       and possibly save data in $_SESSION for display after final page redirection.
+ *
+ * Operations are added as new batch sets. Batch sets are used to ensure
+ * clean code independency, ensuring that several batches submitted by
+ * different parts of the code (core / contrib modules) can be processed
+ * correctly while not interfering or having to cope with each other. Each
+ * batch set gets to specify his own UI messages, operates on it's own set
+ * of operations and results, and triggers it's own 'finished' callback.
+ * Batch sets are processed sequentially, with the progress bar starting
+ * fresh for every new set.
+ */
+function batch_set($batch_definition) {
+  if ($batch_definition) {
+    $batch =& batch_get();
+    // Initialize the batch
+    if (empty($batch)) {
+      $batch = array(
+        'id' => db_next_id('{batch}_bid'),
+        'sets' => array(),
+      );
+    }
+
+    $init = array(
+      'sandbox' => array(),
+      'results' => array(),
+      'success' => FALSE,
+    );
+    // Use get_t() to allow batches at install time.
+    $t = get_t();
+    $defaults = array(
+      'title' => $t('Processing'),
+      'init_message' => $t('Initializing.'),
+      'progress_message' => $t('Remaining @remaining of @total.'),
+      'error_message' => $t('An error has occurred.'),
+    );
+    $batch_set = $init + $batch_definition + $defaults;
+
+    // Tweak init_message to avoid the bottom of the page flickering down after init phase.
+    $batch_set['init_message'] .= '<br/>&nbsp;';
+    $batch_set['total'] = count($batch_set['operations']);
+
+    // If the batch is being processed (meaning we are executing a stored submit callback),
+    // insert the new set after the current one.
+    if (isset($batch['current_set'])) {
+      // array_insert does not exist...
+      $slice1 = array_slice($batch['sets'], 0, $batch['current_set'] + 1);
+      $slice2 = array_slice($batch['sets'], $batch['current_set'] + 1);
+      $batch['sets'] = array_merge($slice1, array($batch_set), $slice2);
+    }
+    else {
+      $batch['sets'][] = $batch_set;
+    }
+  }
+}
+
+/**
+ * Process the batch.
+ * 
+ * Unless the batch has been markes with 'progressive' = FALSE, the function
+ * isses a drupal_goto and thus ends page execution.
+ *
+ * This function is not needed in form submit callbacks; Form API takes care
+ * of batches issued during form submission.
+ *
+ * @param $redirect
+ *   (optional) Path to redirect to when the batch has finished processing.
+ * @param $url
+ *   (optional - should ony be used for separate scripts like update.php)
+ *   URL of the batch processing page.
+ */
+function batch_process($redirect = NULL, $url = NULL) {
+  global $form_values, $user;
+  $batch =& batch_get();
+
+  // batch_process should not be called inside form _submit callbacks, or while a
+  // batch is already running. Neutralize the call if it is the case.
+  if (isset($batch['current_set']) || (isset($form_values) && !isset($batch['progressive']))) {
+    return;
+  }
+
+  if (isset($batch)) {
+    // Add process information
+    $t = get_t();
+    $url = isset($url) ? $url : 'batch';
+    $process_info = array(
+      'current_set' => 0,
+      'progressive' => TRUE,
+      'url' => isset($url) ? $url : 'batch',
+      'source_page' => $_GET['q'],
+      'redirect' => $redirect,
+      'error_message' => $t('Please continue to <a href="!error_url">the error page</a>', array('!error_url' => url($url, array('query' => array('id' => $batch['id'], 'op' => 'error'))))),
+    );
+    $batch += $process_info;
+
+    if ($batch['progressive']) {
+      // Save and unset the destination if any. drupal_goto looks for redirection
+      // in $_REQUEST['destination'] and $_REQUEST['edit']['destination'].
+      if (isset($_REQUEST['destination'])) {
+        $batch['destination'] = $_REQUEST['destination'];
+        unset($_REQUEST['destination']);
+      }
+      elseif (isset($_REQUEST['edit']['destination'])) {
+        $batch['destination'] = $_REQUEST['edit']['destination'];
+        unset($_REQUEST['edit']['destination']);
+      }
+      db_query("INSERT INTO {batch} (bid, sid, timestamp, batch) VALUES (%d, %d, %d, '%s')", $batch['id'], $user->sid, time(), serialize($batch));
+      drupal_goto($batch['url'], 'op=start&id='. $batch['id']);
+    }
+    else {
+      // Non-progressive execution: bypass the whole progressbar workflow
+      // and execute the batch in one pass.
+      require_once './includes/batch.inc';
+      _batch_process();
+    }
+  }
+}
+
+/**
+ * Retrive the current batch.
+ */
+function &batch_get() {
+  static $batch = array();
+  return $batch;
+}
+
+/**
+ * @} End of "defgroup batch".
  */

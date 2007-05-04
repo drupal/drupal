@@ -1,4 +1,4 @@
-// $Id: progress.js,v 1.14 2006/12/14 14:21:36 dries Exp $
+// $Id: progress.js,v 1.15 2007/05/04 09:41:36 goba Exp $
 
 /**
  * A progressbar object. Initialized with the given id. Must be inserted into
@@ -20,9 +20,9 @@ Drupal.progressBar = function (id, updateCallback, method, errorCallback) {
   this.element = document.createElement('div');
   this.element.id = id;
   this.element.className = 'progress';
-  $(this.element).html('<div class="percentage"></div>'+
-                       '<div class="message">&nbsp;</div>'+
-                       '<div class="bar"><div class="filled"></div></div>');
+  $(this.element).html('<div class="bar"><div class="filled"></div></div>'+
+                       '<div class="percentage"></div>'+
+                       '<div class="message">&nbsp;</div>');
 }
 
 /**

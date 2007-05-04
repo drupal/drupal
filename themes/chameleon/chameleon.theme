@@ -1,5 +1,5 @@
 <?php
-// $Id: chameleon.theme,v 1.63 2007/04/17 07:19:39 dries Exp $
+// $Id: chameleon.theme,v 1.64 2007/05/04 09:41:37 goba Exp $
 
 /**
  * @file
@@ -23,7 +23,7 @@ function chameleon_theme($existing) {
   return $templates;
 }
 
-function chameleon_page($content, $show_blocks = TRUE) {
+function chameleon_page($content, $show_blocks = TRUE, $show_messages = TRUE) {
   $language = isset($GLOBALS['language']) ? $GLOBALS['language']->language : NULL;
 
   if (theme_get_setting('toggle_favicon')) {
@@ -94,7 +94,9 @@ function chameleon_page($content, $show_blocks = TRUE) {
 
   $output .= theme('help');
 
-  $output .= theme('status_messages');
+  if ($show_messages) {
+    $output .= theme('status_messages');
+  }
 
   $output .= "\n<!-- begin content -->\n";
   $output .= $content;

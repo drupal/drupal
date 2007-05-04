@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.472 2007/04/30 17:03:28 dries Exp $
+// $Id: system.module,v 1.473 2007/05/04 09:41:37 goba Exp $
 
 /**
  * @file
@@ -325,6 +325,12 @@ function system_menu() {
   $items['admin/logs/status/sql'] = array(
     'title' => 'SQL',
     'page callback' => 'system_sql',
+    'type' => MENU_CALLBACK,
+  );
+  // Default page for batch operations
+  $items['batch'] = array(
+    'page callback' => 'system_batch_page',
+    'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
   return $items;
@@ -2459,5 +2465,22 @@ function theme_system_admin_by_module($menu_items) {
 function system_cron() {
   // Cleanup the flood
   db_query('DELETE FROM {flood} WHERE timestamp < %d', time() - 3600);
+  // Cleanup the batch table
+  db_query('DELETE FROM {batch} WHERE timestamp < %d', time() - 864000);
 }
 
+/**
+ * Default page callback for batches.
+ */
+function system_batch_page() {
+  require_once './includes/batch.inc';
+  $output = _batch_page();
+  if ($output === FALSE) {
+    drupal_access_denied();
+  }
+  else {
+    // Force a page without blocks or messages to
+    // display a list of collected messages later.
+    print theme('page', $output, FALSE, FALSE);
+  }
+}

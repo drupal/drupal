@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.353 2007/04/29 16:13:12 dries Exp $
+// $Id: theme.inc,v 1.354 2007/05/04 09:41:36 goba Exp $
 
 /**
  * @file
@@ -686,10 +686,11 @@ function theme_placeholder($text) {
  *
  * @param $content
  *   The page content to show.
- * @param $messages
+ * @param $show_messages
  *   Whether to output status and error messages.
+ *   FALSE can be useful to postpone the messages to a subsequent page.
  */
-function theme_maintenance_page($content, $messages = TRUE) {
+function theme_maintenance_page($content, $show_messages = TRUE) {
   // Set required headers.
   drupal_set_header('Content-Type: text/html; charset=utf-8');
   drupal_set_html_head('<style type="text/css" media="all">@import "'. base_path() .'misc/maintenance.css";</style>');
@@ -710,7 +711,7 @@ function theme_maintenance_page($content, $messages = TRUE) {
     'logo' => base_path() .'themes/garland/minnelli/logo.png',
     'site_title' => t('Drupal'),
     'title' => drupal_get_title(),
-    'messages' => theme('status_messages'),
+    'messages' => $show_messages ? theme('status_messages') : '',
     'content' => $content,
   );
 
@@ -1288,9 +1289,9 @@ function theme_username($object) {
 
 function theme_progress_bar($percent, $message) {
   $output = '<div id="progress" class="progress">';
-  $output .= '<div class="percentage">'. $percent .'%</div>';
-  $output .= '<div class="status">'. $message .'</div>';
   $output .= '<div class="bar"><div class="filled" style="width: '. $percent .'%"></div></div>';
+  $output .= '<div class="percentage">'. $percent .'%</div>';
+  $output .= '<div class="message">'. $message .'</div>';
   $output .= '</div>';
 
   return $output;
@@ -1399,7 +1400,7 @@ function template_preprocess_page(&$variables) {
   $variables['help']              = theme('help');
   $variables['language']          = $GLOBALS['language'];
   $variables['logo']              = theme_get_setting('logo');
-  $variables['messages']          = theme('status_messages');
+  $variables['messages']          = $variables['show_messages'] ? theme('status_messages') : '';
   $variables['mission']           = isset($mission) ? $mission : '';
   $variables['primary_links']     = menu_primary_links();
   $variables['search_box']        = (theme_get_setting('toggle_search') ? drupal_get_form('search_theme_form') : '');

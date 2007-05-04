@@ -76,7 +76,7 @@
             <div id="help"><?php print $help ?></div>
         <?php endif; ?>
 
-        <?php if ($messages != ""): ?>
+        <?php if ($show_messages && $messages != ""): ?>
           <?php print $messages ?>
         <?php endif; ?>
 

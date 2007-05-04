@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.192 2007/05/03 10:52:56 unconed Exp $
+// $Id: CHANGELOG.txt,v 1.193 2007/05/04 09:41:36 goba Exp $
 
 Drupal 6.0, xxxx-xx-xx (development version)
 ----------------------
@@ -28,6 +28,7 @@ Drupal 6.0, xxxx-xx-xx (development version)
     * Added .info files to themes and made it easier to specify regions and features.
     * Added theme registry: modules can directly provide .tpl.php files for their themes without having to create theme_ functions.
     * Used the Garland theme for the installation and maintenance pages.
+- Refactored update.php to a generic batch API to be able to run time consuming operations in multiple subsequent HTTP requests
 
 Drupal 5.0, 2007-01-15
 ----------------------

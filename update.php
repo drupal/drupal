@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.217 2007/04/25 21:28:00 dries Exp $
+// $Id: update.php,v 1.218 2007/05/04 09:41:36 goba Exp $
 
 /**
  * @file
@@ -283,37 +283,34 @@ function update_fix_watchdog() {
  *   The module whose update will be run.
  * @param $number
  *   The update number to run.
- *
- * @return
- *   TRUE if the update was finished. Otherwise, FALSE.
+ * @param $context
+ *   The batch conetxt array
  */
-function update_data($module, $number) {
-  $ret = module_invoke($module, 'update_'. $number);
-  // Assume the update finished unless the update results indicate otherwise.
-  $finished = 1;
+function update_do_one($module, $number, &$context) {
+  $function = $module .'_update_'. $number;
+  if (function_exists($function)) {
+    $ret = $function(&$context['sandbox']);
+  }
+
   if (isset($ret['#finished'])) {
-    $finished = $ret['#finished'];
+    $context['finished'] = $ret['#finished'];
     unset($ret['#finished']);
   }
 
-  // Save the query and results for display by update_finished_page().
-  if (!isset($_SESSION['update_results'])) {
-    $_SESSION['update_results'] = array();
+  if (!isset($context['results'][$module])) {
+    $context['results'][$module] = array();
   }
-  if (!isset($_SESSION['update_results'][$module])) {
-    $_SESSION['update_results'][$module] = array();
+  if (!isset($context['results'][$module][$number])) {
+    $context['results'][$module][$number] = array();
   }
-  if (!isset($_SESSION['update_results'][$module][$number])) {
-    $_SESSION['update_results'][$module][$number] = array();
-  }
-  $_SESSION['update_results'][$module][$number] = array_merge($_SESSION['update_results'][$module][$number], $ret);
+  $context['results'][$module][$number] = array_merge($context['results'][$module][$number], $ret);;
 
-  if ($finished == 1) {
+  if ($context['finished'] == 1) {
     // Update the installed version
     drupal_set_installed_schema_version($module, $number);
   }
 
-  return $finished;
+  $context['message'] = t('Updating @module module', array('@module' => $module));
 }
 
 function update_selection_page() {
@@ -321,8 +318,6 @@ function update_selection_page() {
   $output .= '<p>Click Update to start the update process.</p>';
 
   drupal_set_title('Drupal database update');
-  // Prevent browser from using cached drupal.js or update.js
-  drupal_add_js('misc/update.js', 'core', 'header', FALSE, TRUE);
   $output .= drupal_get_form('update_script_selection_form');
 
   update_task_list('select');
@@ -377,7 +372,10 @@ function update_script_selection_form() {
   return $form;
 }
 
-function update_update_page() {
+function update_batch() {
+  global $base_url;
+
+  $operations = array();
   // Set the installed version so updates start at the correct place.
   foreach ($_POST['start'] as $module => $version) {
     drupal_set_installed_schema_version($module, $version - 1);
@@ -386,145 +384,35 @@ function update_update_page() {
     if ($version <= $max_version) {
       foreach ($updates as $update) {
         if ($update >= $version) {
-          $_SESSION['update_remaining'][] = array('module' => $module, 'version' => $update);
+          $operations[] = array('update_do_one', array($module, $update));
         }
       }
     }
   }
-
-  // Keep track of total number of updates
-  if (isset($_SESSION['update_remaining'])) {
-    $_SESSION['update_total'] = count($_SESSION['update_remaining']);
-  }
-
-  if ($_POST['has_js']) {
-    return update_progress_page();
-  }
-  else {
-    return update_progress_page_nojs();
-  }
+  $batch = array(
+    'operations' => $operations,
+    'title' => 'Updating',
+    'init_message' => 'Starting updates',
+    'error_message' => 'An unrecoverable error has occured. You can find the error message below. It is advised to copy it to the clipboard for reference.',
+    'finished' => 'update_finished',
+  );
+  batch_set($batch);
+  batch_process($base_url .'/update.php?op=results', $base_url .'/update.php');
 }
 
-function update_progress_page() {
-  // Prevent browser from using cached drupal.js or update.js
-  drupal_add_js('misc/progress.js', 'core', 'header', FALSE, TRUE);
-  drupal_add_js('misc/update.js', 'core', 'header', FALSE, TRUE);
+function update_finished($success, $results, $operations) {
+  // clear the caches in case the data has been updated.
+  cache_clear_all('*', 'cache', TRUE);
+  cache_clear_all('*', 'cache_page', TRUE);
+  cache_clear_all('*', 'cache_filter', TRUE);
+  drupal_clear_css_cache();
 
-  drupal_set_title('Updating');
-  update_task_list('run');
-  $output = '<div id="progress"></div>';
-  $output .= '<p id="wait">Please wait while your site is being updated.</p>';
-  return $output;
+  $_SESSION['update_results'] = $results;
+  $_SESSION['update_success'] = $success;
+  $_SESSION['updates_remaining'] = $operations;
 }
 
-/**
- * Perform updates for one second or until finished.
- *
- * @return
- *   An array indicating the status after doing updates. The first element is
- *   the overall percentage finished. The second element is a status message.
- */
-function update_do_updates() {
-  while (isset($_SESSION['update_remaining']) && ($update = reset($_SESSION['update_remaining']))) {
-    $update_finished = update_data($update['module'], $update['version']);
-    if ($update_finished == 1) {
-      // Dequeue the completed update.
-      unset($_SESSION['update_remaining'][key($_SESSION['update_remaining'])]);
-      $update_finished = 0; // Make sure this step isn't counted double
-    }
-    if (timer_read('page') > 1000) {
-      break;
-    }
-  }
-
-  if ($_SESSION['update_total']) {
-    $percentage = floor(($_SESSION['update_total'] - count($_SESSION['update_remaining']) + $update_finished) / $_SESSION['update_total'] * 100);
-  }
-  else {
-    $percentage = 100;
-  }
-
-  // When no updates remain, clear the caches in case the data has been updated.
-  if (!isset($update['module'])) {
-    cache_clear_all('*', 'cache', TRUE);
-    cache_clear_all('*', 'cache_page', TRUE);
-    cache_clear_all('*', 'cache_filter', TRUE);
-    drupal_clear_css_cache();
-  }
-
-  return array($percentage, isset($update['module']) ? 'Updating '. $update['module'] .' module' : 'Updating complete');
-}
-
-/**
- * Perform updates for the JS version and return progress.
- */
-function update_do_update_page() {
-  global $conf;
-
-  // HTTP Post required
-  if ($_SERVER['REQUEST_METHOD'] != 'POST') {
-    drupal_set_message('HTTP Post is required.', 'error');
-    drupal_set_title('Error');
-    return '';
-  }
-
-  // Error handling: if PHP dies, the output will fail to parse as JSON, and
-  // the Javascript will tell the user to continue to the op=error page.
-  list($percentage, $message) = update_do_updates();
-  print drupal_to_js(array('status' => TRUE, 'percentage' => $percentage, 'message' => $message));
-}
-
-/**
- * Perform updates for the non-JS version and return the status page.
- */
-function update_progress_page_nojs() {
-  drupal_set_title('Updating');
-  update_task_list('run');
-
-  $new_op = 'do_update_nojs';
-  if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // This is the first page so return some output immediately.
-    $percentage = 0;
-    $message = 'Starting updates';
-  }
-  else {
-    // This is one of the later requests: do some updates first.
-
-    // Error handling: if PHP dies due to a fatal error (e.g. non-existant
-    // function), it will output whatever is in the output buffer,
-    // followed by the error message. So, we put an explanation in the
-    // buffer to guide the user when an error happens.
-    ob_start();
-    $fallback = '<p class="error">An unrecoverable error has occurred. You can find the error message below. It is advised to copy it to the clipboard for reference. Please continue to the <a href="update.php?op=error">update summary</a>.</p>';
-    $fallback = theme('maintenance_page', $fallback, FALSE);
-
-    // We strip the end of the page using a marker in the template, so any
-    // additional HTML output by PHP shows up inside the page rather than
-    // below it. While this causes invalid HTML, the same would be true if
-    // we didn't, as content is not allowed to appear after </html> anyway.
-    list($fallback) = explode('<!--partial-->', $fallback);
-    print $fallback;
-
-    // Do updates
-    list($percentage, $message) = update_do_updates();
-    if ($percentage == 100) {
-      $new_op = 'finished';
-    }
-
-    // Updates were successful; wipe the output buffer as it's unneeded.
-    ob_end_clean();
-  }
-
-  drupal_set_html_head('<meta http-equiv="Refresh" content="0; URL=update.php?op='. $new_op .'">');
-  $output = theme('progress_bar', $percentage, $message);
-  $output .= '<p>Updating your site will take a few seconds.</p>';
-
-  // Note: do not output drupal_set_message()s until the summary page.
-  print theme('maintenance_page', $output, FALSE);
-  return NULL;
-}
-
-function update_finished_page($success) {
+function update_results_page() {
   drupal_set_title('Drupal database update');
   // NOTE: we can't use l() here because the URL would point to 'update.php?q=admin'.
   $links[] = '<a href="'. base_path() .'">Main page</a>';
@@ -532,18 +420,18 @@ function update_finished_page($success) {
 
   update_task_list();
   // Report end result
-  if ($success) {
+  if ($_SESSION['update_success']) {
     $output = '<p>Updates were attempted. If you see no failures below, you may proceed happily to the <a href="index.php?q=admin">administration pages</a>. Otherwise, you may need to update your database manually. All errors have been <a href="index.php?q=admin/logs/watchdog">logged</a>.</p>';
   }
   else {
-    $update = reset($_SESSION['update_remaining']);
-    $output = '<p class="error">The update process was aborted prematurely while running <strong>update #'. $update['version'] .' in '. $update['module'] .'.module</strong>. All other errors have been <a href="index.php?q=admin/logs/watchdog">logged</a>. You may need to check the <code>watchdog</code> database table manually.</p>';
+    list($module, $version) = array_pop(reset($_SESSION['updates_remaining']));
+    $output = '<p class="error">The update process was aborted prematurely while running <strong>update #'. $version .' in '. $module .'.module</strong>. All other errors have been <a href="index.php?q=admin/logs/watchdog">logged</a>. You may need to check the <code>watchdog</code> database table manually.</p>';
   }
 
   if ($GLOBALS['access_check'] == FALSE) {
     $output .= "<p><strong>Reminder: don't forget to set the <code>\$access_check</code> value at the top of <code>update.php</code> back to <code>TRUE</code>.</strong></p>";
   }
-
+  
   $output .= theme('item_list', $links);
 
   // Output a list of queries executed
@@ -570,8 +458,9 @@ function update_finished_page($success) {
       }
     }
     $output .= '</div>';
-    unset($_SESSION['update_results']);
   }
+  unset($_SESSION['update_results']);
+  unset($_SESSION['update_success']);
 
   return $output;
 }
@@ -779,6 +668,45 @@ function update_create_cache_tables() {
 }
 
 /**
+ * Create the batch table.
+ *
+ * This is part of the Drupal 5.x to 6.x migration.
+ */
+function update_create_batch_table() {
+
+  // If batch table exists, update is not necessary
+  if (db_table_exists('batch')) {
+    return;
+  }
+
+  $ret = array();
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql("CREATE TABLE {batch} (
+        bid int(11) NOT NULL,
+        sid varchar(64) NOT NULL,
+        timestamp int(11) NOT NULL,
+        batch longtext,
+        PRIMARY KEY  (bid),
+        KEY sid (sid)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+      break;
+    case 'pgsql':
+      $ret[] = update_sql("CREATE TABLE {batch} (
+        bid int NOT NULL default '0',
+        sid varchar(64) NOT NULL default '',
+        timestamp int NOT NULL default '0',
+        batch text,
+        PRIMARY KEY (bid),
+      )");
+      $ret[] = update_sql("CREATE INDEX {batch}_sid_idx ON {batch} (sid)");
+     break;
+  }
+  return $ret;
+}
+
+/**
  * Add the update task list to the current page.
  */
 function update_task_list($active = NULL) {
@@ -807,6 +735,7 @@ drupal_maintenance_theme();
 // variable_(get|set), which only works after a full bootstrap.
 update_fix_access_table();
 update_create_cache_tables();
+update_create_batch_table();
 
 // Turn error reporting back on. From now on, only fatal errors (which are
 // not passed through the error handler) will cause a message to be printed.
@@ -816,6 +745,7 @@ ini_set('display_errors', TRUE);
 if (($access_check == FALSE) || ($user->uid == 1)) {
 
   include_once './includes/install.inc';
+  include_once './includes/batch.inc';
   drupal_load_updates();
 
   update_fix_schema_version();
@@ -825,39 +755,33 @@ if (($access_check == FALSE) || ($user->uid == 1)) {
 
   $op = isset($_REQUEST['op']) ? $_REQUEST['op'] : '';
   switch ($op) {
-    case 'Update':
-      $output = update_update_page();
-      break;
-
-    case 'finished':
-      $output = update_finished_page(TRUE);
-      break;
-
-    case 'error':
-      $output = update_finished_page(FALSE);
-      break;
-
-    case 'do_update':
-      $output = update_do_update_page();
-      break;
-
-    case 'do_update_nojs':
-      $output = update_progress_page_nojs();
+    // update.php ops
+    case '':
+      $output = update_info_page();
       break;
 
     case 'selection':
       $output = update_selection_page();
       break;
 
+    case 'Update':
+      update_batch();
+      break;
+
+    case 'results':
+      $output = update_results_page();
+      break;
+
+    // Regular batch ops : defer to batch processing API
     default:
-      $output = update_info_page();
+      update_task_list('run');
+      $output = _batch_page();
       break;
   }
 }
 else {
   $output = update_access_denied_page();
 }
-
-if (isset($output)) {
+if (isset($output) && $output) {
   print theme('maintenance_page', $output);
 }
