@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.119 2007/05/03 09:51:07 dries Exp $
+// $Id: locale.inc,v 1.120 2007/05/05 08:55:15 goba Exp $
 
 /**
  * @file
@@ -143,6 +143,7 @@ function locale_languages_custom_form() {
   $form['custom language'] = array('#type' => 'fieldset',
     '#title' => t('Custom language'),
     '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
   );
   _locale_languages_common_controls($form['custom language']);
   $form['custom language']['submit'] = array(
