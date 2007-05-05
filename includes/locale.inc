@@ -143,6 +143,7 @@ function locale_languages_custom_form() {
   $form['custom language'] = array('#type' => 'fieldset',
     '#title' => t('Custom language'),
     '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
   );
   _locale_languages_common_controls($form['custom language']);
   $form['custom language']['submit'] = array(
