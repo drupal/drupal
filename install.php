@@ -484,7 +484,7 @@ function install_select_locale($profilename) {
 
 function install_select_locale_form($locales) {
   include_once './includes/locale.inc';
-  $languages = _locale_get_iso639_list();
+  $languages = _locale_get_predefined_list();
   foreach ($locales as $locale) {
     // Try to use verbose locale name
     $name = $locale->name;
