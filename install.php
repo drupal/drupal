@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.41 2007/04/13 08:56:57 dries Exp $
+// $Id: install.php,v 1.42 2007/05/06 11:56:41 goba Exp $
 
 require_once './includes/install.inc';
 
@@ -484,7 +484,7 @@ function install_select_locale($profilename) {
 
 function install_select_locale_form($locales) {
   include_once './includes/locale.inc';
-  $languages = _locale_get_iso639_list();
+  $languages = _locale_get_predefined_list();
   foreach ($locales as $locale) {
     // Try to use verbose locale name
     $name = $locale->name;
