@@ -1821,7 +1821,7 @@ function batch_set($batch_definition) {
 
 /**
  * Process the batch.
- * 
+ *
  * Unless the batch has been markes with 'progressive' = FALSE, the function
  * isses a drupal_goto and thus ends page execution.
  *

@@ -2,3 +2,4 @@
 name = Minnelli
 description = Tableless, recolorable, multi-column, fixed width theme.
 version = VERSION
+base theme = garland

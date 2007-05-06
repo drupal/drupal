@@ -431,7 +431,7 @@ function update_results_page() {
   if ($GLOBALS['access_check'] == FALSE) {
     $output .= "<p><strong>Reminder: don't forget to set the <code>\$access_check</code> value at the top of <code>update.php</code> back to <code>TRUE</code>.</strong></p>";
   }
-  
+
   $output .= theme('item_list', $links);
 
   // Output a list of queries executed

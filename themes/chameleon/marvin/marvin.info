@@ -4,3 +4,4 @@ description = Boxy tabled theme in all grays.
 regions[left] = Left sidebar
 regions[right] = Right sidebar
 version = VERSION
+base theme = chameleon

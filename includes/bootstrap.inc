@@ -975,6 +975,7 @@ function drupal_maintenance_theme() {
   foreach ($themes as $hook => $info) {
     if (!isset($info['file']) && !isset($info['function'])) {
       $themes[$hook]['function'] = 'theme_'. $hook;
+      $themes[$hook]['theme path'] = 'misc';
     }
   }
   _theme_set_registry($themes);
