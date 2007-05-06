@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.164 2007/04/30 17:03:22 dries Exp $
+// $Id: menu.inc,v 1.165 2007/05/06 05:47:51 dries Exp $
 
 /**
  * @file
@@ -1054,4 +1054,23 @@ function menu_get_item_by_mid($mid) {
     }
   }
   return FALSE;
+}
+
+/**
+ * Returns the rendered local tasks. The default implementation renders
+ * them as tabs.
+ *
+ * @ingroup themeable
+ */
+function theme_menu_local_tasks() {
+  $output = '';
+
+  if ($primary = menu_primary_local_tasks()) {
+    $output .= "<ul class=\"tabs primary\">\n". $primary ."</ul>\n";
+  }
+  if ($secondary = menu_secondary_local_tasks()) {
+    $output .= "<ul class=\"tabs secondary\">\n". $secondary ."</ul>\n";
+  }
+
+  return $output;
 }

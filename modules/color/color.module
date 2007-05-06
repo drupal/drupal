@@ -1,5 +1,5 @@
 <?php
-// $Id: color.module,v 1.18 2007/04/06 13:27:21 dries Exp $
+// $Id: color.module,v 1.19 2007/05/06 05:47:51 dries Exp $
 
 /**
  * Implementation of hook_theme()
@@ -279,7 +279,8 @@ function color_scheme_form_submit($form_id, $values) {
  */
 function _color_rewrite_stylesheet($theme, &$info, &$paths, $palette) {
   // Load stylesheet
-  $style = file_get_contents($paths['source'] .'style.css');
+  $themes = list_themes();
+  $style = file_get_contents($themes[$theme]->stylesheet);
 
   // Prepare color conversion table
   $conversion = $palette;

@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.163 2007/04/30 14:37:36 dries Exp $
+// $Id: bootstrap.inc,v 1.164 2007/05/06 05:47:51 dries Exp $
 
 /**
  * @file
@@ -975,6 +975,7 @@ function drupal_maintenance_theme() {
   foreach ($themes as $hook => $info) {
     if (!isset($info['file']) && !isset($info['function'])) {
       $themes[$hook]['function'] = 'theme_'. $hook;
+      $themes[$hook]['theme path'] = 'misc';
     }
   }
   _theme_set_registry($themes);

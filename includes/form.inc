@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.191 2007/05/04 09:41:36 goba Exp $
+// $Id: form.inc,v 1.192 2007/05/06 05:47:51 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -1821,7 +1821,7 @@ function batch_set($batch_definition) {
 
 /**
  * Process the batch.
- * 
+ *
  * Unless the batch has been markes with 'progressive' = FALSE, the function
  * isses a drupal_goto and thus ends page execution.
  *

@@ -1,6 +1,7 @@
-; $Id: marvin.info,v 1.2 2007/04/20 08:44:01 dries Exp $
+; $Id: marvin.info,v 1.3 2007/05/06 05:47:52 dries Exp $
 name = Marvin
 description = Boxy tabled theme in all grays.
 regions[left] = Left sidebar
 regions[right] = Right sidebar
 version = VERSION
+base theme = chameleon

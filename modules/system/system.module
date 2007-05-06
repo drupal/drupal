@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.473 2007/05/04 09:41:37 goba Exp $
+// $Id: system.module,v 1.474 2007/05/06 05:47:52 dries Exp $
 
 /**
  * @file
@@ -505,7 +505,9 @@ function system_admin_theme_submit($form_id, $form_values) {
 function system_theme_select_form($description = '', $default_value = '', $weight = 0) {
   if (user_access('select different theme')) {
     $enabled = array();
-    foreach (list_themes() as $theme) {
+    $themes = list_themes();
+
+    foreach ($themes as $theme) {
       if ($theme->status) {
         $enabled[] = $theme;
       }
@@ -526,8 +528,17 @@ function system_theme_select_form($description = '', $default_value = '', $weigh
         // For the default theme, revert to an empty string so the user's theme updates when the site theme is changed.
         $info->key = $info->name == variable_get('theme_default', 'garland') ? '' : $info->name;
 
-        $info->screenshot = dirname($info->filename) .'/screenshot.png';
-        $screenshot = file_exists($info->screenshot) ? theme('image', $info->screenshot, t('Screenshot for %theme theme', array('%theme' => $info->name)), '', array('class' => 'screenshot'), FALSE) : t('no screenshot');
+        $screenshot = NULL;
+        $theme_key = $info->name;
+        while ($theme_key) {
+          if (file_exists($themes[$theme_key]->info['screenshot'])) {
+            $screenshot = $themes[$theme_key]->info['screenshot'];
+            break;
+          }
+          $theme_key = isset($themes[$theme_key]->info['base theme']) ? $themes[$theme_key]->info['base theme'] : NULL;
+        }
+
+        $screenshot = $screenshot ? theme('image', $screenshot, t('Screenshot for %theme theme', array('%theme' => $info->name)), '', array('class' => 'screenshot'), FALSE) : t('no screenshot');
 
         $form['themes'][$info->key]['screenshot'] = array('#value' => $screenshot);
         $form['themes'][$info->key]['description'] = array('#type' => 'item', '#title' => $info->name,  '#value' => dirname($info->filename) . ($info->name == variable_get('theme_default', 'garland') ? '<br /> <em>'. t('(site default theme)') .'</em>' : ''));
@@ -964,6 +975,8 @@ function system_theme_default() {
       'search',
       'slogan'
     ),
+    'stylesheet' => 'style.css',
+    'screenshot' => 'screenshot.png',
   );
 }
 
@@ -971,21 +984,11 @@ function system_theme_default() {
  * Collect data about all currently available themes
  */
 function system_theme_data() {
-  include_once './includes/install.inc';
-
   // Find themes
-  $themes = drupal_system_listing('\.theme$', 'themes');
+  $themes = drupal_system_listing('\.info$', 'themes');
 
   // Find theme engines
   $engines = drupal_system_listing('\.engine$', 'themes/engines');
-
-  // can't iterate over array itself as it uses a copy of the array items
-  foreach (array_keys($themes) as $key) {
-    drupal_get_filename('theme', $themes[$key]->name, $themes[$key]->filename);
-    drupal_load('theme', $themes[$key]->name);
-    $themes[$key]->owner = $themes[$key]->filename;
-    $themes[$key]->prefix = $key;
-  }
 
   // Remove all theme engines from the system table
   db_query("DELETE FROM {system} WHERE type = 'theme_engine'");
@@ -995,59 +998,104 @@ function system_theme_data() {
     drupal_get_filename('theme_engine', $engine->name, $engine->filename);
     drupal_load('theme_engine', $engine->name);
     db_query("INSERT INTO {system} (name, type, filename, status, throttle, bootstrap) VALUES ('%s', '%s', '%s', %d, %d, %d)", $engine->name, 'theme_engine', $engine->filename, 1, 0, 0);
+  }
 
-    // Add templates to the site listing
-    foreach (call_user_func($engine->name .'_templates') as $template) {
-      // Do not double-insert templates with theme files in their directory,
-      // but do register their engine data.
-      if (array_key_exists($template->name, $themes)) {
-        $themes[$template->name]->template = TRUE;
-        $themes[$template->name]->owner = $engine->filename;
-        $themes[$template->name]->prefix = $engine->name;
-      }
-      else {
-        $template->template = TRUE;
-        $template->name = basename(dirname($template->filename));
-        $template->owner = $engine->filename;
-        $template->prefix = $engine->name;
+  $defaults = system_theme_default();
 
-        $themes[$template->name] = $template;
+  $sub_themes = array();
+  // Read info files for each theme
+  foreach ($themes as $key => $theme) {
+    $themes[$key]->info = drupal_parse_info_file($theme->filename) + $defaults;
+    if (!empty($themes[$key]->info['base theme'])) {
+      $sub_themes[] = $key;
+    }
+    if (empty($themes[$key]->info['engine'])) {
+      $filename = dirname($themes[$key]->filename) .'/'. $themes[$key]->name .'.theme';
+      if (file_exists($filename)) {
+        $themes[$key]->owner = $filename;
+        $themes[$key]->prefix = $key;
       }
+    }
+    else {
+      $engine = $themes[$key]->info['engine'];
+      if (isset($engines[$engine])) {
+        $themes[$key]->owner = $engines[$engine]->filename;
+        $themes[$key]->prefix = $engines[$engine]->name;
+        $themes[$key]->template = TRUE;
+      }
+    }
+
+    // Give the stylesheet proper path information.
+    if (!empty($themes[$key]->info['stylesheet'])) {
+      $themes[$key]->info['stylesheet'] = dirname($themes[$key]->filename) .'/'. $themes[$key]->info['stylesheet'];
+    }
+    // Give the screenshot proper path information.
+    if (!empty($themes[$key]->info['screenshot'])) {
+      $themes[$key]->info['screenshot'] = dirname($themes[$key]->filename) .'/'. $themes[$key]->info['screenshot'];
     }
   }
 
-  // Find styles in each theme's directory.
-  foreach ($themes as $theme) {
-    foreach (file_scan_directory(dirname($theme->filename), 'style.css$') as $style) {
-      $style->style = TRUE;
-      $style->template = isset($theme->template) ? $theme->template : FALSE;
-      $style->name = basename(dirname($style->filename));
-      $style->owner = $theme->filename;
-      $style->prefix = !empty($theme->template) ? $theme->prefix : $theme->name;
-      // do not double-insert styles with theme files in their directory
-      if (array_key_exists($style->name, $themes)) {
-        continue;
+  // Now that we've established all our master themes, go back and fill in
+  // data for subthemes.
+  foreach ($sub_themes as $key) {
+    $base_key = system_find_base_theme($themes, $key);
+    if (!$base_key) {
+      continue;
+    }
+    // Copy the 'owner' and 'engine' over if the top level theme uses a
+    // theme engine.
+    if (isset($themes[$base_key]->owner)) {
+      if (isset($themes[$base_key]->info['engine'])) {
+        $themes[$key]->info['engine'] = $themes[$base_key]->info['engine'];
+        $themes[$key]->owner = $themes[$base_key]->owner;
+        $themes[$key]->prefix = $themes[$base_key]->prefix;
       }
-      $themes[$style->name] = $style;
+      else {
+        $themes[$key]->prefix = $key;
+      }
     }
   }
 
   // Extract current files from database.
   system_get_files_database($themes, 'theme');
 
-  $defaults = system_theme_default();
-  // Read info files for the owner
-  foreach (array_keys($themes) as $key) {
-    $themes[$key]->info = drupal_parse_info_file(dirname($themes[$key]->filename) .'/'. $themes[$key]->name .'.info') + $defaults;
-  }
-
   db_query("DELETE FROM {system} WHERE type = 'theme'");
 
   foreach ($themes as $theme) {
+    if (!isset($theme->owner)) {
+      $theme->owner = '';
+    }
+
     db_query("INSERT INTO {system} (name, owner, info, type, filename, status, throttle, bootstrap) VALUES ('%s', '%s', '%s', '%s', '%s', %d, %d, %d)", $theme->name, $theme->owner, serialize($theme->info), 'theme', $theme->filename, isset($theme->status) ? $theme->status : 0, 0, 0);
   }
 
   return $themes;
+}
+
+/**
+ * Recursive function to find the top level base theme. Themes can inherit
+ * templates and function implementations from earlier themes; this function
+ * finds the top level parent that has no ancestor, or returns NULL if there
+ * isn't a valid parent.
+ */
+function system_find_base_theme($themes, $key, $used_keys = array()) {
+  $base_key = $themes[$key]->info['base theme'];
+  // Does the base theme exist?
+  if (!isset($themes[$base_key])) {
+    return NULL;
+  }
+
+  // Is the base theme itself a child of another theme?
+  if (isset($themes[$base_key]->info['base theme'])) {
+    // Prevent loops.
+    if ($used_keys[$base_key]) {
+      return NULL;
+    }
+    $used_keys[$base_key] = TRUE;
+    return system_find_base_theme($themes, $base_key, $used_keys);
+  }
+  // If we get here, then this is our parent theme.
+  return $base_key;
 }
 
 /**
@@ -1190,8 +1238,16 @@ function system_themes_form() {
   $status = array();
 
   foreach ($themes as $theme) {
-    $theme->screenshot = dirname($theme->filename) .'/screenshot.png';
-    $screenshot = file_exists($theme->screenshot) ? theme('image', $theme->screenshot, t('Screenshot for %theme theme', array('%theme' => $theme->info['name'])), '', array('class' => 'screenshot'), FALSE) : t('no screenshot');
+    $screenshot = NULL;
+    $theme_key = $theme->name;
+    while ($theme_key) {
+      if (file_exists($themes[$theme_key]->info['screenshot'])) {
+        $screenshot = $themes[$theme_key]->info['screenshot'];
+        break;
+      }
+      $theme_key = isset($themes[$theme_key]->info['base theme']) ? $themes[$theme_key]->info['base theme'] : NULL;
+    }
+    $screenshot = $screenshot ? theme('image', $screenshot, t('Screenshot for %theme theme', array('%theme' => $theme->info['name'])), '', array('class' => 'screenshot'), FALSE) : t('no screenshot');
 
     $form[$theme->name]['screenshot'] = array('#value' => $screenshot);
     $form[$theme->name]['info'] = array('#type' => 'value', '#value' => $theme->info);

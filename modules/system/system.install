@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.100 2007/05/04 09:41:36 goba Exp $
+// $Id: system.install,v 1.101 2007/05/06 05:47:52 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -1109,8 +1109,8 @@ function system_install() {
       break;
   }
 
-  db_query("INSERT INTO {system} (filename, name, type, owner, status, throttle, bootstrap, schema_version) VALUES ('themes/engines/phptemplate/phptemplate.engine', 'phptemplate', 'theme_engine', '', 1, 0, 0, 0)");
-  db_query("INSERT INTO {system} (filename, name, type, owner, status, throttle, bootstrap, schema_version, info) VALUES ('themes/garland/page.tpl.php', 'garland', 'theme', 'themes/engines/phptemplate/phptemplate.engine', 1, 0, 0, 0, '%s')", serialize(drupal_parse_info_file('themes/garland/garland.info') + system_theme_default()));
+  // Load system theme data appropriately.
+  system_theme_data();
 
   db_query("INSERT INTO {users} (uid,name,mail) VALUES(0,'','')");
 
@@ -3863,6 +3863,16 @@ function system_update_6012() {
 
   return $ret;
 }
+
+/**
+ * Rebuild cache data for theme system changes
+ */
+function system_update_6013() {
+  // Rebuild system table contents.
+  module_rebuild_cache();
+  system_theme_data();
+}
+
 
 /**
  * @} End of "defgroup updates-5.x-to-6.x"

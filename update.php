@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.218 2007/05/04 09:41:36 goba Exp $
+// $Id: update.php,v 1.219 2007/05/06 05:47:51 dries Exp $
 
 /**
  * @file
@@ -431,7 +431,7 @@ function update_results_page() {
   if ($GLOBALS['access_check'] == FALSE) {
     $output .= "<p><strong>Reminder: don't forget to set the <code>\$access_check</code> value at the top of <code>update.php</code> back to <code>TRUE</code>.</strong></p>";
   }
-  
+
   $output .= theme('item_list', $links);
 
   // Output a list of queries executed
