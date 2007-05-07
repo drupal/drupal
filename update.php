@@ -289,7 +289,7 @@ function update_fix_watchdog() {
 function update_do_one($module, $number, &$context) {
   $function = $module .'_update_'. $number;
   if (function_exists($function)) {
-    $ret = $function(&$context['sandbox']);
+    $ret = $function($context['sandbox']);
   }
 
   if (isset($ret['#finished'])) {
