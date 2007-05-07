@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.100 2007/04/17 07:19:38 dries Exp $
+// $Id: module.inc,v 1.101 2007/05/07 11:59:40 dries Exp $
 
 /**
  * @file
@@ -58,10 +58,10 @@ function module_list($refresh = FALSE, $bootstrap = TRUE, $sort = FALSE, $fixed_
     }
     else {
       if ($bootstrap) {
-        $result = db_query("SELECT name, filename, throttle, bootstrap FROM {system} WHERE type = 'module' AND status = 1 AND bootstrap = 1 ORDER BY weight ASC, filename ASC");
+        $result = db_query("SELECT name, filename, throttle FROM {system} WHERE type = 'module' AND status = 1 AND bootstrap = 1 ORDER BY weight ASC, filename ASC");
       }
       else {
-        $result = db_query("SELECT name, filename, throttle, bootstrap FROM {system} WHERE type = 'module' AND status = 1 ORDER BY weight ASC, filename ASC");
+        $result = db_query("SELECT name, filename, throttle FROM {system} WHERE type = 'module' AND status = 1 ORDER BY weight ASC, filename ASC");
       }
       while ($module = db_fetch_object($result)) {
         if (file_exists($module->filename)) {
@@ -204,7 +204,7 @@ function module_load_install($module) {
 function module_enable($module_list) {
   $invoke_modules = array();
   foreach ($module_list as $module) {
-    $existing = db_fetch_object(db_query("SELECT name, status FROM {system} WHERE type = 'module' AND name = '%s'", $module));
+    $existing = db_fetch_object(db_query("SELECT status FROM {system} WHERE type = 'module' AND name = '%s'", $module));
     if ($existing->status === '0') {
       module_load_install($module);
       db_query("UPDATE {system} SET status = 1, throttle = 0 WHERE type = 'module' AND name = '%s'", $module);
