@@ -2157,9 +2157,6 @@ function confirm_form($form, $question, $path, $description = NULL, $yes = NULL,
 
   drupal_set_title($question);
 
-  // Confirm form fails duplication check, as the form values rarely change -- so skip it.
-  $form['#skip_duplicate_check'] = TRUE;
-
   $form['#attributes'] = array('class' => 'confirmation');
   $form['description'] = array('#value' => $description);
   $form[$name] = array('#type' => 'hidden', '#value' => 1);

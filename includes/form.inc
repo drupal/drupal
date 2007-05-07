@@ -282,9 +282,6 @@ function drupal_prepare_form($form_id, &$form) {
   global $user;
 
   $form['#type'] = 'form';
-  if (!isset($form['#skip_duplicate_check'])) {
-    $form['#skip_duplicate_check'] = FALSE;
-  }
 
   if (!isset($form['#post'])) {
     $form['#post'] = $_POST;
@@ -399,11 +396,6 @@ function drupal_validate_form($form_id, $form) {
     }
   }
 
-  if (!$form['#programmed'] && !$form['#skip_duplicate_check'] && isset($_SESSION['last_submitted']['hash']) && $_SESSION['last_submitted']['hash'] == md5(serialize($form['form_id']['#post']))) {
-    // This is a repeat submission.
-    drupal_redirect_form(NULL, $_SESSION['last_submitted']['destination']);
-  }
-
   _form_validate($form, $form_id);
   $validated_forms[$form_id] = TRUE;
 }
@@ -441,13 +433,6 @@ function drupal_submit_form($form_id, $form) {
         }
       }
     }
-  }
-
-  // Successful submit. Hash this form's POST and store the hash in the
-  // session. We'll use this hash later whenever this user submits another
-  // form to make sure no identical forms get submitted twice.
-  if ($submitted && !$form['#skip_duplicate_check']) {
-    $_SESSION['last_submitted'] = array('destination' => $goto, 'hash' => md5(serialize($form['form_id']['#post'])));
   }
 
   return $goto;
