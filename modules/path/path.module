@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.115 2007/04/30 17:03:26 dries Exp $
+// $Id: path.module,v 1.116 2007/05/07 12:29:20 dries Exp $
 
 /**
  * @file
@@ -40,7 +40,7 @@ function path_menu() {
   $items['admin/build/path'] = array(
     'title' => 'URL aliases',
     'description' => "Change your site's URL paths by aliasing them.",
-    'page callback' => 'path_admin',
+    'page callback' => 'path_admin_overview',
     'access arguments' => array('administer url aliases'),
   );
   $items['admin/build/path/edit'] = array(
@@ -69,13 +69,6 @@ function path_menu() {
   );
 
   return $items;
-}
-
-/**
- * Menu callback; presents an overview of all URL aliases.
- */
-function path_admin() {
-  return path_overview();
 }
 
 /**
@@ -187,7 +180,6 @@ function path_set_alias($path = NULL, $alias = NULL, $pid = NULL, $language = ''
 function path_form($edit = array('src' => '', 'dst' => '', 'language' => '', 'pid' => NULL)) {
   $form['#submit']['path_form_submit'] = array();
   $form['#validate']['path_form_validate'] = array();
-  $form['#theme'] = 'path_form';
   $form['#alias'] = $edit;
 
   $form['src'] = array(
@@ -314,13 +306,24 @@ function path_perm() {
 
 /**
  * Return a listing of all defined URL aliases.
+ * When filter key passed, perform a standard search on the given key,
+ * and return the list of matching URL aliases.
  */
-function path_overview() {
+function path_admin_overview($keys = NULL) {
+  // Add the filter form above the overview table.
+  $output = drupal_get_form('path_admin_filter_form', $keys);
   // Enable language column if locale is enabled or if we have any alias with language
   $count = db_result(db_query("SELECT COUNT(*) FROM {url_alias} WHERE language != ''"));
   $multilanguage = (module_exists('locale') || $count);
 
-  $sql = 'SELECT * FROM {url_alias}';
+  if ($keys) {
+    // Replace wildcards with MySQL/PostgreSQL wildcards.
+    $keys = preg_replace('!\*+!', '%', $keys);
+    $sql = "SELECT * FROM {url_alias} WHERE dst LIKE '%%%s%%'";
+  }
+  else {
+    $sql = 'SELECT * FROM {url_alias}';
+  }
   $header = array(
     array('data' => t('Alias'), 'field' => 'dst', 'sort' => 'asc'),
     array('data' => t('System'), 'field' => 'src'),
@@ -331,7 +334,7 @@ function path_overview() {
     $header[2] = array('data' => t('Language'), 'field' => 'language');
   }
   $sql .= tablesort_sql($header);
-  $result = pager_query($sql, 50);
+  $result = pager_query($sql, 50, 0 , NULL, $keys);
 
   $rows = array();
   $destination = drupal_get_destination();
@@ -346,11 +349,13 @@ function path_overview() {
   }
 
   if (empty($rows)) {
-    $rows[] = array(array('data' => t('No URL aliases available.'), 'colspan' => ($multilanguage ? 5 : 4)));
+    $empty_message = $keys ? t('No URL aliases found.') : t('No URL aliases available.') ;
+    $rows[] = array(array('data' => $empty_message, 'colspan' => ($multilanguage ? 5 : 4)));
   }
 
-  $output = theme('table', $header, $rows);
+  $output .= theme('table', $header, $rows);
   $output .= theme('pager', NULL, 50, 0);
+
   return $output;
 }
 
@@ -386,3 +391,41 @@ function path_form_submit($form_id, $form_values) {
   drupal_set_message(t('The alias has been saved.'));
   return 'admin/build/path';
 }
+
+/**
+ * Return a form to filter URL aliases.
+ */
+function path_admin_filter_form($keys = '') {
+  $form['#attributes'] = array('class' => 'search-form');
+  $form['basic'] = array('#type' => 'fieldset',
+    '#title' => t('Filter aliases')
+  );
+  $form['basic']['inline'] = array('#prefix' => '<div class="container-inline">', '#suffix' => '</div>');
+  $form['basic']['inline']['filter'] = array(
+    '#type' => 'textfield',
+    '#title' => '',
+    '#default_value' => $keys,
+    '#maxlength' => 64,
+    '#size' => 25,
+  );
+  $form['basic']['inline']['submit'] = array('#type' => 'submit', '#value' => t('Filter'));
+
+  return $form;
+}
+
+/**
+ * Process filter form submission.
+ */
+function path_admin_filter_form_submit($form_id, $form_values) {
+  return 'admin/build/path/list/'. trim($form_values['filter']);
+}
+
+/**
+ * Helper function for grabbing filter keys.
+ */
+function path_admin_filter_get_keys() {
+  // Extract keys as remainder of path
+  $path = explode('/', $_GET['q'], 5);
+  return count($path) == 5 ? $path[4] : '';
+}
+

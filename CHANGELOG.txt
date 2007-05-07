@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.193 2007/05/04 09:41:36 goba Exp $
+// $Id: CHANGELOG.txt,v 1.194 2007/05/07 12:29:20 dries Exp $
 
 Drupal 6.0, xxxx-xx-xx (development version)
 ----------------------
@@ -13,6 +13,7 @@ Drupal 6.0, xxxx-xx-xx (development version)
 - Drupal works with error reporting set to E_ALL.
 - Added scripts/drupal.sh to execute Drupal code from the command line. Useful to use Drupal as a framework to build command-line tools.
 - Made signature support optional and made it possible to theme signatures.
+- Made it possible to filter the URL aliases on the URL alias administration screen.
 - Language system improvements:
     * Support for right to left languages.
     * Language detection based on parts of the URL.
