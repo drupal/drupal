@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.192 2007/05/06 05:47:51 dries Exp $
+// $Id: form.inc,v 1.193 2007/05/07 07:29:23 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -1187,7 +1187,7 @@ function theme_date($element) {
  */
 function expand_date($element) {
   // Default to current date
-  if (!isset($element['#value'])) {
+  if (empty($element['#value'])) {
     $element['#value'] = array('day' => format_date(time(), 'custom', 'j'),
                             'month' => format_date(time(), 'custom', 'n'),
                             'year' => format_date(time(), 'custom', 'Y'));
