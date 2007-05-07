@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.219 2007/05/06 05:47:51 dries Exp $
+// $Id: update.php,v 1.220 2007/05/07 10:06:00 goba Exp $
 
 /**
  * @file
@@ -289,7 +289,7 @@ function update_fix_watchdog() {
 function update_do_one($module, $number, &$context) {
   $function = $module .'_update_'. $number;
   if (function_exists($function)) {
-    $ret = $function(&$context['sandbox']);
+    $ret = $function($context['sandbox']);
   }
 
   if (isset($ret['#finished'])) {
