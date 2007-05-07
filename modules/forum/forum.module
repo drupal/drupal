@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.395 2007/04/30 17:03:25 dries Exp $
+// $Id: forum.module,v 1.396 2007/05/07 17:02:54 dries Exp $
 
 /**
  * @file
@@ -350,7 +350,7 @@ function forum_view(&$node, $teaser = FALSE, $page = FALSE) {
  */
 function forum_submit(&$node) {
   // Make sure all fields are set properly:
-  $node->icon = $node->icon ? $node->icon : '';
+  $node->icon = !empty($node->icon) ? $node->icon : '';
 
   if ($node->taxonomy) {
     // Get the forum terms from the (cached) tree
@@ -838,7 +838,7 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
   $sql_count = db_rewrite_sql("SELECT COUNT(n.nid) FROM {node} n INNER JOIN {term_node} r ON n.nid = r.nid AND r.tid = %d WHERE n.status = 1 AND n.type = 'forum'");
 
   $result = pager_query($sql, $forum_per_page, 0, $sql_count, $tid);
-
+  $topics = array();
   while ($topic = db_fetch_object($result)) {
     if ($user->uid) {
       // folder is new if topic is new or there are new comments since last visit
@@ -1038,7 +1038,7 @@ function theme_forum_list($forums, $parents, $tid) {
  */
 function theme_forum_topic_list($tid, $topics, $sortby, $forum_per_page) {
   global $forum_topic_list_header;
-
+  $rows = array();
   if ($topics) {
 
     foreach ($topics as $topic) {
@@ -1139,7 +1139,7 @@ function theme_forum_topic_navigation($node) {
       // Word break (a is an inline element)
       $output .= ' ';
     }
-    if ($next) {
+    if (!empty($next)) {
       $output .= l($next->title . t(' ›'), 'node/'. $next->nid, array('class' => 'topic-next', 'title' => t('Go to next forum topic')));
     }
 
