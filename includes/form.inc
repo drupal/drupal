@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.193 2007/05/07 07:29:23 dries Exp $
+// $Id: form.inc,v 1.194 2007/05/07 10:15:57 goba Exp $
 
 /**
  * @defgroup form Form generation
@@ -1688,10 +1688,9 @@ function form_clean_id($id = NULL) {
  *   //   continues browsing in a separate window while the batch is processing.
  *   // 'finished' (write): A float number between 0 and 1 informing
  *   //   the processing engine of the completion level for the operation.
- *   //   1 means the operation is finished and processing can continue
- *   //   to the next operation. This value always be 1 if not specified
- *   //   by the batch operation (a single-step operation), so that will
- *   //   be considered as finished.
+ *   //   1 (or no value explicitly set) means the operation is finished
+ *   //   and the batch processing can continue to the next operation.
+ *
  *   $node = node_load(array('uid' => $uid, 'type' => $type));
  *   $context['results'][] = $node->nid .' : '. $node->title;
  *   $context['message'] = $node->title;
@@ -1854,7 +1853,7 @@ function batch_process($redirect = NULL, $url = NULL) {
       'url' => isset($url) ? $url : 'batch',
       'source_page' => $_GET['q'],
       'redirect' => $redirect,
-      'error_message' => $t('Please continue to <a href="!error_url">the error page</a>', array('!error_url' => url($url, array('query' => array('id' => $batch['id'], 'op' => 'error'))))),
+      'error_message' => $t('Please continue to <a href="@error_url">the error page</a>', array('@error_url' => url($url, array('query' => array('id' => $batch['id'], 'op' => 'error'))))),
     );
     $batch += $process_info;
 
