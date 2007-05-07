@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.29 2007/04/24 13:53:13 dries Exp $
+// $Id: content_types.inc,v 1.30 2007/05/07 12:32:55 dries Exp $
 
 /**
  * @file
@@ -84,7 +84,7 @@ function node_type_form($type = NULL) {
       '#default_value' => $type->type,
       '#maxlength' => 32,
       '#required' => TRUE,
-      '#description' => t('The machine-readable name of this content type. This text will be used for constructing the URL of the <em>create content</em> page for this content type. This name may consist of only of lowercase letters, numbers, and underscores. Dashes are not allowed. Underscores will be converted into dashes when constructing the URL of the <em>create content</em> page. This name must be unique to this content type.'),
+      '#description' => t('The machine-readable name of this content type. This text will be used for constructing the URL of the <em>create content</em> page for this content type. This name may consist of only of lowercase letters, numbers, and underscores. Hyphens are not allowed. Underscores will be converted into hyphens when constructing the URL of the <em>create content</em> page. This name must be unique to this content type.'),
     );
   }
   else {
