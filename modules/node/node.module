@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.806 2007/04/30 17:03:26 dries Exp $
+// $Id: node.module,v 1.807 2007/05/08 17:08:14 dries Exp $
 
 /**
  * @file
@@ -449,6 +449,12 @@ function _node_type_set_defaults($info) {
     $info['body_label'] = t('Body');
   }
 
+  if (!isset($info['help'])) {
+    $info['help'] = '';
+  }
+  if (!isset($info['min_word_count'])) {
+    $info['min_word_count'] = 0;
+  }
   if (!isset($info['custom'])) {
     $info['custom'] = FALSE;
   }
