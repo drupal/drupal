@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.43 2007/05/08 16:36:55 dries Exp $
+// $Id: install.php,v 1.44 2007/05/08 22:10:22 goba Exp $
 
 require_once './includes/install.inc';
 
@@ -156,23 +156,23 @@ function install_change_settings($profile = 'default', $install_locale = '') {
 
   // The existing database settings are not working, so we need write access
   // to settings.php to change them.
-  $writeable = FALSE;
+  $writable = FALSE;
   $file = $conf_path;
   // Verify the directory exists.
   if (drupal_verify_install_file($conf_path, FILE_EXIST, 'dir')) {
     // Check to see if a settings.php already exists
     if (drupal_verify_install_file($settings_file, FILE_EXIST)) {
-      // If it does, make sure it is writeable
-      $writeable = drupal_verify_install_file($settings_file, FILE_READABLE|FILE_WRITEABLE);
+      // If it does, make sure it is writable
+      $writable = drupal_verify_install_file($settings_file, FILE_READABLE|FILE_WRITABLE);
       $file = $settings_file;
     }
     else {
       // If not, makes sure the directory is.
-      $writeable = drupal_verify_install_file($conf_path, FILE_READABLE|FILE_WRITEABLE, 'dir');
+      $writable = drupal_verify_install_file($conf_path, FILE_READABLE|FILE_WRITABLE, 'dir');
     }
   }
 
-  if (!$writeable) {
+  if (!$writable) {
     drupal_set_message(st('The @drupal installer requires write permissions to %file during the installation process.', array('@drupal' => drupal_install_profile_name(), '%file' => $file)), 'error');
 
     drupal_set_title(st('Drupal database setup'));
