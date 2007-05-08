@@ -102,6 +102,11 @@ function db_set_active($name = 'default') {
   global $db_url, $db_type, $active_db;
   static $db_conns;
 
+  if (empty($db_url)) {
+    include_once 'includes/install.inc';
+    install_goto('install.php');
+  }
+
   if (!isset($db_conns[$name])) {
     // Initiate a new connection, using the named DB URL specified.
     if (is_array($db_url)) {

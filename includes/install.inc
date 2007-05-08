@@ -165,6 +165,7 @@ function drupal_detect_database_types() {
  *   An array of settings that need to be updated.
  */
 function drupal_rewrite_settings($settings = array(), $prefix = '') {
+  $default_settings = './sites/default/default.settings.php';
   $settings_file = './'. conf_path() .'/'. $prefix .'settings.php';
 
   // Build list of setting names and insert the values into the global namespace.
@@ -176,7 +177,7 @@ function drupal_rewrite_settings($settings = array(), $prefix = '') {
 
   $buffer = NULL;
   $first = TRUE;
-  if ($fp = @fopen($settings_file, 'r+')) {
+  if ($fp = fopen($default_settings, 'r')) {
     // Step line by line through settings.php.
     while (!feof($fp)) {
       $line = fgets($fp);
