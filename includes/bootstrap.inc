@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.164 2007/05/06 05:47:51 dries Exp $
+// $Id: bootstrap.inc,v 1.165 2007/05/08 16:36:55 dries Exp $
 
 /**
  * @file
@@ -266,7 +266,9 @@ function conf_init() {
   global $db_url, $db_prefix, $cookie_domain, $conf, $installed_profile;
   $conf = array();
 
-  include_once './'. conf_path() .'/settings.php';
+  if (file_exists('./'. conf_path() .'/settings.php')) {
+    include_once './'. conf_path() .'/settings.php';
+  }
 
   if (isset($base_url)) {
     // Parse fixed base URL from settings.php.

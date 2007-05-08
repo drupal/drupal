@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.67 2007/04/13 08:56:57 dries Exp $
+// $Id: database.inc,v 1.68 2007/05/08 16:36:55 dries Exp $
 
 /**
  * @file
@@ -101,6 +101,11 @@ function db_prefix_tables($sql) {
 function db_set_active($name = 'default') {
   global $db_url, $db_type, $active_db;
   static $db_conns;
+
+  if (empty($db_url)) {
+    include_once 'includes/install.inc';
+    install_goto('install.php');
+  }
 
   if (!isset($db_conns[$name])) {
     // Initiate a new connection, using the named DB URL specified.

@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysql.inc,v 1.70 2007/04/21 18:08:41 dries Exp $
+// $Id: database.mysql.inc,v 1.71 2007/05/08 16:36:55 dries Exp $
 
 /**
  * @file
@@ -57,11 +57,6 @@ function db_connect($url) {
 
   // Check if MySQL support is present in PHP
   if (!function_exists('mysql_connect')) {
-    // Redirect to installer if using default DB credentials
-    if ($url['user'] == 'username' && $url['pass'] == 'password') {
-      include_once 'includes/install.inc';
-      install_goto('install.php');
-    }
     drupal_maintenance_theme();
     drupal_set_title('PHP MySQL support not enabled');
     print theme('maintenance_page', '<p>We were unable to use the MySQL database because the MySQL extension for PHP is not installed. Check your <code>PHP.ini</code> to see how you can enable it.</p>
@@ -94,12 +89,6 @@ function db_connect($url) {
   //   (matched) rows, not the number of affected rows.
   $connection = @mysql_connect($url['host'], $url['user'], $url['pass'], TRUE, 2);
   if (!$connection) {
-    // Redirect to installer if using default DB credentials
-    if ($url['user'] == 'username' && $url['pass'] == 'password') {
-      include_once 'includes/install.inc';
-      install_goto('install.php');
-    }
-
     // Show error screen otherwise
     drupal_maintenance_theme();
     drupal_set_header('HTTP/1.1 503 Service Unavailable');

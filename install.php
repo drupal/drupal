@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.42 2007/05/06 11:56:41 goba Exp $
+// $Id: install.php,v 1.43 2007/05/08 16:36:55 dries Exp $
 
 require_once './includes/install.inc';
 
@@ -114,7 +114,7 @@ function install_verify_settings() {
   global $db_prefix, $db_type, $db_url;
 
   // Verify existing settings (if any).
-  if ($_SERVER['REQUEST_METHOD'] == 'GET' && $db_url != 'mysql://username:password@localhost/databasename') {
+  if ($_SERVER['REQUEST_METHOD'] == 'GET' && !empty($db_url)) {
     // We need this because we want to run form_get_errors.
     include_once './includes/form.inc';
 
@@ -146,7 +146,8 @@ function install_change_settings($profile = 'default', $install_locale = '') {
   $db_host = urldecode($url['host']);
   $db_port = isset($url['port']) ? urldecode($url['port']) : '';
   $db_path = ltrim(urldecode($url['path']), '/');
-  $settings_file = './'. conf_path() .'/settings.php';
+  $conf_path = './'. conf_path();
+  $settings_file = $conf_path .'/settings.php';
 
   // We always need this because we want to run form_get_errors.
   include_once './includes/form.inc';
@@ -155,18 +156,30 @@ function install_change_settings($profile = 'default', $install_locale = '') {
 
   // The existing database settings are not working, so we need write access
   // to settings.php to change them.
-  if (!drupal_verify_install_file($settings_file, FILE_EXIST|FILE_READABLE|FILE_WRITABLE)) {
-    drupal_set_message(st('The @drupal installer requires write permissions to %file during the installation process.', array('@drupal' => drupal_install_profile_name(), '%file' => $settings_file)), 'error');
+  $writeable = FALSE;
+  $file = $conf_path;
+  // Verify the directory exists.
+  if (drupal_verify_install_file($conf_path, FILE_EXIST, 'dir')) {
+    // Check to see if a settings.php already exists
+    if (drupal_verify_install_file($settings_file, FILE_EXIST)) {
+      // If it does, make sure it is writeable
+      $writeable = drupal_verify_install_file($settings_file, FILE_READABLE|FILE_WRITEABLE);
+      $file = $settings_file;
+    }
+    else {
+      // If not, makes sure the directory is.
+      $writeable = drupal_verify_install_file($conf_path, FILE_READABLE|FILE_WRITEABLE, 'dir');
+    }
+  }
+
+  if (!$writeable) {
+    drupal_set_message(st('The @drupal installer requires write permissions to %file during the installation process.', array('@drupal' => drupal_install_profile_name(), '%file' => $file)), 'error');
 
     drupal_set_title(st('Drupal database setup'));
     print theme('install_page', '');
     exit;
   }
 
-  // Don't fill in placeholders
-  if ($db_url == 'mysql://username:password@localhost/databasename') {
-    $db_user = $db_pass = $db_path = '';
-  }
   $output = drupal_get_form('install_settings_form', $profile, $install_locale, $settings_file, $db_url, $db_type, $db_prefix, $db_user, $db_pass, $db_host, $db_port, $db_path);
   drupal_set_title(st('Database configuration'));
   print theme('install_page', $output);
@@ -178,6 +191,9 @@ function install_change_settings($profile = 'default', $install_locale = '') {
  * Form API array definition for install_settings.
  */
 function install_settings_form($profile, $install_locale, $settings_file, $db_url, $db_type, $db_prefix, $db_user, $db_pass, $db_host, $db_port, $db_path) {
+  if (empty($db_host)) {
+    $db_host = 'localhost';
+  }
   $db_types = drupal_detect_database_types();
   if (count($db_types) == 0) {
     $form['no_db_types'] = array(
@@ -310,11 +326,6 @@ function install_settings_form_validate($form_id, $form_values, $form) {
  */
 function _install_settings_form_validate($db_prefix, $db_type, $db_user, $db_pass, $db_host, $db_port, $db_path, $settings_file, $form = NULL) {
   global $db_url;
-
-  // Check for default username/password
-  if ($db_user == 'username' && $db_pass == 'password') {
-    form_set_error('db_user', st('You have configured @drupal to use the default username and password. This is not allowed for security reasons.', array('@drupal' => drupal_install_profile_name())));
-  }
 
   // Verify the table prefix
   if (!empty($db_prefix) && is_string($db_prefix) && !preg_match('/^[A-Za-z0-9_.]+$/', $db_prefix)) {

@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.37 2007/04/17 07:19:38 dries Exp $
+// $Id: install.inc,v 1.38 2007/05/08 16:36:55 dries Exp $
 
 define('SCHEMA_UNINSTALLED', -1);
 define('SCHEMA_INSTALLED', 0);
@@ -165,6 +165,7 @@ function drupal_detect_database_types() {
  *   An array of settings that need to be updated.
  */
 function drupal_rewrite_settings($settings = array(), $prefix = '') {
+  $default_settings = './sites/default/default.settings.php';
   $settings_file = './'. conf_path() .'/'. $prefix .'settings.php';
 
   // Build list of setting names and insert the values into the global namespace.
@@ -176,7 +177,7 @@ function drupal_rewrite_settings($settings = array(), $prefix = '') {
 
   $buffer = NULL;
   $first = TRUE;
-  if ($fp = @fopen($settings_file, 'r+')) {
+  if ($fp = fopen($default_settings, 'r')) {
     // Step line by line through settings.php.
     while (!feof($fp)) {
       $line = fgets($fp);

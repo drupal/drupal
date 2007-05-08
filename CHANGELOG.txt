@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.194 2007/05/07 12:29:20 dries Exp $
+// $Id: CHANGELOG.txt,v 1.195 2007/05/08 16:36:55 dries Exp $
 
 Drupal 6.0, xxxx-xx-xx (development version)
 ----------------------
@@ -25,10 +25,12 @@ Drupal 6.0, xxxx-xx-xx (development version)
     * Improved handling of teasers in posts.
     * Added sticky table headers.
     * Check for clean URL support automatically with JavaScript.
+    * Removed default/settings.php. Instead the installer will create it from default.settings.php.
 - Theme system:
     * Added .info files to themes and made it easier to specify regions and features.
     * Added theme registry: modules can directly provide .tpl.php files for their themes without having to create theme_ functions.
     * Used the Garland theme for the installation and maintenance pages.
+    * Added theme preprocess functions for themes that are templates
 - Refactored update.php to a generic batch API to be able to run time consuming operations in multiple subsequent HTTP requests
 
 Drupal 5.0, 2007-01-15

@@ -1,5 +1,5 @@
 <?php
-// $Id: settings.php,v 1.56 2007/05/04 08:32:00 goba Exp $
+// $Id: default.settings.php,v 1.1 2007/05/08 16:36:55 dries Exp $
 
 /**
  * @file
