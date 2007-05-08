@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.121 2007/05/08 09:46:24 goba Exp $
+// $Id: locale.inc,v 1.122 2007/05/08 09:48:14 goba Exp $
 
 /**
  * @file
@@ -831,7 +831,7 @@ function locale_translate_delete($lid) {
 function locale_add_language($langcode, $name, $native, $direction = LANGUAGE_RTL, $domain = '', $prefix = '', $verbose = TRUE) {
   // Default prefix on language code.
   if (empty($prefix)) {
-    $prefix = $code;
+    $prefix = $langcode;
   }
 
   db_query("INSERT INTO {languages} (language, name, native, direction, domain, prefix) VALUES ('%s', '%s', '%s', %d, '%s', '%s')", $langcode, $name, $native, $direction, $domain, $prefix);
@@ -839,7 +839,7 @@ function locale_add_language($langcode, $name, $native, $direction = LANGUAGE_RT
   // Add empty translations for strings (to optimize locale())
   $result = db_query("SELECT lid FROM {locales_source}");
   while ($string = db_fetch_object($result)) {
-    db_query("INSERT INTO {locales_target} (lid, language, translation) VALUES (%d,'%s', '')", $string->lid, $code);
+    db_query("INSERT INTO {locales_target} (lid, language, translation) VALUES (%d,'%s', '')", $string->lid, $langcode);
   }
 
   // Set message depending on the verbosity required.
@@ -1130,7 +1130,7 @@ function _locale_import_one_string($op, $value = NULL, $mode = NULL, $lang = NUL
 
       // Some real string to import
       else {
-        $comments = _locale_import_shorten_comments($value['#']);
+        $comments = _locale_import_shorten_comments(empty($value['#']) ? array() : $value['#']);
 
         // Handle a translation for some plural string
         if (strpos($value['msgid'], "\0")) {
