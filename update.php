@@ -698,7 +698,7 @@ function update_create_batch_table() {
         sid varchar(64) NOT NULL default '',
         timestamp int NOT NULL default '0',
         batch text,
-        PRIMARY KEY (bid),
+        PRIMARY KEY (bid)
       )");
       $ret[] = update_sql("CREATE INDEX {batch}_sid_idx ON {batch} (sid)");
      break;
