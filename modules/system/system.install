@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.102 2007/05/06 05:50:43 dries Exp $
+// $Id: system.install,v 1.103 2007/05/09 11:39:23 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -680,7 +680,7 @@ function system_install() {
         sid varchar(64) NOT NULL default '',
         timestamp int NOT NULL default '0',
         batch text,
-        PRIMARY KEY (bid),
+        PRIMARY KEY (bid)
       )");
       db_query("CREATE INDEX {batch}_sid_idx ON {batch} (sid)");
 

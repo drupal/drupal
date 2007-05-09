@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.220 2007/05/07 10:06:00 goba Exp $
+// $Id: update.php,v 1.221 2007/05/09 11:39:23 goba Exp $
 
 /**
  * @file
@@ -698,7 +698,7 @@ function update_create_batch_table() {
         sid varchar(64) NOT NULL default '',
         timestamp int NOT NULL default '0',
         batch text,
-        PRIMARY KEY (bid),
+        PRIMARY KEY (bid)
       )");
       $ret[] = update_sql("CREATE INDEX {batch}_sid_idx ON {batch} (sid)");
      break;
