@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.116 2007/05/07 12:29:20 dries Exp $
+// $Id: path.module,v 1.117 2007/05/10 10:00:50 dries Exp $
 
 /**
  * @file
@@ -96,7 +96,7 @@ function path_admin_delete_confirm($pid) {
     $form['pid'] = array('#type' => 'value', '#value' => $pid);
     $output = confirm_form($form,
   t('Are you sure you want to delete path alias %title?', array('%title' => $path['dst'])),
-   $_GET['destination'] ? $_GET['destination'] : 'admin/build/path', t('This action cannot be undone.'),
+   isset($_GET['destination']) ? $_GET['destination'] : 'admin/build/path', t('This action cannot be undone.'),
   t('Delete'), t('Cancel') );
   }
   return $output;

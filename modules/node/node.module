@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.807 2007/05/08 17:08:14 dries Exp $
+// $Id: node.module,v 1.808 2007/05/10 10:00:49 dries Exp $
 
 /**
  * @file
@@ -2345,7 +2345,7 @@ function node_delete_confirm($node) {
 
  return confirm_form($form,
    t('Are you sure you want to delete %title?', array('%title' => $node->title)),
-   $_GET['destination'] ? $_GET['destination'] : 'node/'. $node->nid,
+   isset($_GET['destination']) ? $_GET['destination'] : 'node/'. $node->nid,
    t('This action cannot be undone.'),
    t('Delete'), t('Cancel'));
 }
@@ -2479,8 +2479,9 @@ function node_page_view($node, $cid = NULL) {
  */
 function node_page_edit($node) {
   if (isset($_POST['op']) && ($_POST['op'] == t('Delete'))) {
+    $destination = '';
     // Note: we redirect from node/nid/edit to node/nid/delete to make the tabs disappear.
-    if ($_REQUEST['destination']) {
+    if (isset($_REQUEST['destination'])) {
       $destination = drupal_get_destination();
       unset($_REQUEST['destination']);
     }
