@@ -78,7 +78,7 @@ function _unicode_check() {
  */
 function unicode_requirements() {
   // Ensure translations don't break at install time
-  $t = function_exists('install_main') ? 'st' : 't';
+  $t = get_t();
 
   $libraries = array(
     UNICODE_SINGLEBYTE => $t('Standard PHP'),
