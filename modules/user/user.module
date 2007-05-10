@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.778 2007/05/10 10:00:50 dries Exp $
+// $Id: user.module,v 1.779 2007/05/10 19:55:23 dries Exp $
 
 /**
  * @file
@@ -1374,8 +1374,10 @@ function user_register_submit($form_id, $form_values) {
 
   // The first user may login immediately, and receives a customized welcome e-mail.
   if ($account->uid == 1) {
-    drupal_mail('user-register-admin', $mail, t('Drupal user account details for !s', array('!s' => $name)), strtr(t("!username,\n\nYou may now login to !uri using the following username and password:\n\n  username: !username\n  password: !password\n\n!edit_uri\n\n--drupal"), $variables), $from);
-    drupal_set_message(t('<p>Welcome to Drupal. You are user #1, which gives you full and immediate access. All future registrants will receive their passwords via e-mail, so please make sure your website e-mail address is set properly under the general settings on the <a href="@settings">site information settings page</a>.</p><p> Your password is <strong>%pass</strong>. You may change your password below.</p>', array('%pass' => $pass, '@settings' => url('admin/settings/site-information'))));
+    drupal_set_message(t('<p>Welcome to Drupal. You are now logged in as user #1, which gives you full control over your website.</p>'));
+    if (variable_get('user_email_verification', TRUE)) {
+      drupal_set_message(t('</p><p> Your password is <strong>%pass</strong>. You may change your password below.</p>', array('%pass' => $pass)));
+    }
     user_authenticate($account->name, trim($pass));
 
     return 'user/1/edit';

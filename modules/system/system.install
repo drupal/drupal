@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.103 2007/05/09 11:39:23 goba Exp $
+// $Id: system.install,v 1.104 2007/05/10 19:55:23 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -3871,6 +3871,14 @@ function system_update_6013() {
   // Rebuild system table contents.
   module_rebuild_cache();
   system_theme_data();
+}
+
+/**
+ * Record that the installer is done, so it is not
+ * possible to run the installer on upgraded sites.
+ */
+function system_update_6014() {
+  variable_set('install_task', 'done');
 }
 
 

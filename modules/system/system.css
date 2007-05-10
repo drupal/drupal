@@ -1,4 +1,4 @@
-/* $Id: system.css,v 1.25 2007/05/01 06:53:03 dries Exp $ */
+/* $Id: system.css,v 1.26 2007/05/10 19:55:23 dries Exp $ */
 
 /*
 ** HTML elements
@@ -430,4 +430,11 @@ tr.selected td {
 */
 thead div.sticky-header {
   background: #fff;
+}
+
+/*
+** Installation clean URLs
+*/
+#clean-url.install {
+  display: none;
 }
