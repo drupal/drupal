@@ -1,5 +1,5 @@
 <?php
-// $Id: unicode.inc,v 1.24 2007/04/24 13:53:10 dries Exp $
+// $Id: unicode.inc,v 1.25 2007/05/10 07:00:21 unconed Exp $
 
 /**
  * Indicates an error during check for PHP unicode support.
@@ -78,7 +78,7 @@ function _unicode_check() {
  */
 function unicode_requirements() {
   // Ensure translations don't break at install time
-  $t = function_exists('install_main') ? 'st' : 't';
+  $t = get_t();
 
   $libraries = array(
     UNICODE_SINGLEBYTE => $t('Standard PHP'),
