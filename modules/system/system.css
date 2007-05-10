@@ -431,3 +431,10 @@ tr.selected td {
 thead div.sticky-header {
   background: #fff;
 }
+
+/*
+** Installation clean URLs
+*/
+#clean-url.install {
+  display: none;
+}

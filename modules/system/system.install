@@ -3873,6 +3873,14 @@ function system_update_6013() {
   system_theme_data();
 }
 
+/**
+ * Record that the installer is done, so it is not
+ * possible to run the installer on upgraded sites.
+ */
+function system_update_6014() {
+  variable_set('install_task', 'done');
+}
+
 
 /**
  * @} End of "defgroup updates-5.x-to-6.x"
