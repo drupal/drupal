@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.809 2007/05/10 19:55:23 dries Exp $
+// $Id: node.module,v 1.810 2007/05/10 19:57:13 dries Exp $
 
 /**
  * @file
@@ -97,7 +97,7 @@ function node_cron() {
  */
 function node_title_list($result, $title = NULL) {
   while ($node = db_fetch_object($result)) {
-    $items[] = l($node->title, 'node/'. $node->nid, !empty($node->comment_count) ? array('title' => format_plural($node->comment_count, '1 comment', '@count comments')) : '');
+    $items[] = l($node->title, 'node/'. $node->nid, !empty($node->comment_count) ? array('title' => format_plural($node->comment_count, '1 comment', '@count comments')) : array());
   }
 
   return theme('node_list', $items, $title);
