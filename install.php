@@ -584,6 +584,8 @@ function install_tasks($profile, $task) {
 
   if ($task == 'configure') {
     drupal_set_title(st('Configure site'));
+    // Build menu to allow clean URL check.
+    menu_rebuild();
 
     // We break the form up so we can tell when it's been successfully
     // submitted.
@@ -633,6 +635,8 @@ function install_tasks($profile, $task) {
 
     // The end of the install process. Remember profile used.
     if ($task == 'done') {
+      // Rebuild menu to get content type links registered by the profile,
+      // and possibly any other menu items created through the tasks.
       menu_rebuild();
       variable_set('install_profile', $profile);
     }
