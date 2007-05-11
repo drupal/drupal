@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.45 2007/05/10 19:55:23 dries Exp $
+// $Id: install.php,v 1.46 2007/05/11 07:33:46 goba Exp $
 
 require_once './includes/install.inc';
 
@@ -584,7 +584,6 @@ function install_tasks($profile, $task) {
 
   if ($task == 'configure') {
     drupal_set_title(st('Configure site'));
-    menu_rebuild();
 
     // We break the form up so we can tell when it's been successfully
     // submitted.
@@ -634,6 +633,7 @@ function install_tasks($profile, $task) {
 
     // The end of the install process. Remember profile used.
     if ($task == 'done') {
+      menu_rebuild();
       variable_set('install_profile', $profile);
     }
 
@@ -679,7 +679,7 @@ function install_task_list($active = NULL) {
     'profile' => st('Choose profile'),
     'locale' => st('Choose language'),
     'requirements' => st('Verify requirements'),
-    'database' => st('Database setup'),
+    'database' => st('Setup database'),
     'configure' => st('Configure site'),
   );
 
