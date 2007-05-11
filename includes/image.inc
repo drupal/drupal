@@ -1,5 +1,5 @@
 <?php
-// $Id: image.inc,v 1.19 2007/04/24 13:53:10 dries Exp $
+// $Id: image.inc,v 1.20 2007/05/11 11:45:11 dries Exp $
 
 /**
  * Return a list of available toolkits.
@@ -103,10 +103,40 @@ function image_get_info($file) {
 }
 
 /**
+ * Scales an image to the exact width and height given. Maintains the
+ * original file's aspect ratio by cropping the image equally on both
+ * sides, or equally on the top and bottom.  This function is, for
+ * example, useful to create uniform sized avatars from larger images.
+ *
+ * The resulting image always has the exact target dimensions.
+ *
+ * @param $source         The file path of the source image
+ * @param $destination    The file path of the destination image
+ * @param $width          The target width
+ * @param $height         The target height
+ *
+ * @return TRUE or FALSE, based on success
+ */
+function image_scale_and_crop($source, $destination, $width, $height) {
+  $info = image_get_info($source);
+
+  $scale = max($width / $info['width'], $height / $info['height']);
+  $x = round(($info['width'] * $scale - $width) / 2);
+  $y = round(($info['height'] * $scale - $height) / 2);
+
+  if (image_toolkit_invoke('resize', array($source, $destination, $info['width'] * $scale, $info['height'] * $scale))) {
+    return image_toolkit_invoke('crop', array($destination, $destination, $x, $y, $width, $height));
+  }
+  return FALSE;
+}
+
+/**
  * Scales an image to the given width and height while maintaining aspect
  * ratio.
  *
- * @param $source         The filepath of the source image
+ * The resulting image can be smaller for one or both target dimensions.
+ *
+ * @param $source         The file path of the source image
  * @param $destination    The file path of the destination image
  * @param $width          The target width
  * @param $height         The target height
@@ -116,7 +146,7 @@ function image_get_info($file) {
 function image_scale($source, $destination, $width, $height) {
   $info = image_get_info($source);
 
-  // don't scale up
+  // Don't scale up.
   if ($width >= $info['width'] && $height >= $info['height']) {
     return FALSE;
   }
