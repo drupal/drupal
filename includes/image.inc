@@ -1,5 +1,5 @@
 <?php
-// $Id: image.inc,v 1.20 2007/05/11 11:45:11 dries Exp $
+// $Id: image.inc,v 1.21 2007/05/12 05:51:20 dries Exp $
 
 /**
  * Return a list of available toolkits.
@@ -103,8 +103,8 @@ function image_get_info($file) {
 }
 
 /**
- * Scales an image to the exact width and height given. Maintains the
- * original file's aspect ratio by cropping the image equally on both
+ * Scales an image to the exact width and height given. Achieves the
+ * target aspect ratio by cropping the original image equally on both
  * sides, or equally on the top and bottom.  This function is, for
  * example, useful to create uniform sized avatars from larger images.
  *
