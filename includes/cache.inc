@@ -1,5 +1,5 @@
 <?php
-// $Id: cache.inc,v 1.10 2007/05/12 12:43:07 goba Exp $
+// $Id: cache.inc,v 1.11 2007/05/12 18:26:15 goba Exp $
 
 /**
  * Return data from the persistent cache. Data may be stored as either plain text or as serialized data.
@@ -18,11 +18,11 @@ function cache_get($key, $table = 'cache') {
   $cache_flush = variable_get('cache_flush', 0);
   if ($cache_flush && ($cache_flush + variable_get('cache_lifetime', 0) <= time())) {
     // Time to flush old cache data
-    db_query("DELETE FROM {".$table."} WHERE expire != %d AND expire <= %d", CACHE_PERMANENT, $cache_flush);
+    db_query("DELETE FROM {". $table ."} WHERE expire != %d AND expire <= %d", CACHE_PERMANENT, $cache_flush);
     variable_set('cache_flush', 0);
   }
 
-  $cache = db_fetch_object(db_query("SELECT data, created, headers, expire, serialized FROM {".$table."} WHERE cid = '%s'", $key));
+  $cache = db_fetch_object(db_query("SELECT data, created, headers, expire, serialized FROM {". $table ."} WHERE cid = '%s'", $key));
   if (isset($cache->data)) {
     // If the data is permanent or we're not enforcing a minimum cache lifetime
     // always return the cached data.
@@ -105,9 +105,9 @@ function cache_set($cid, $data, $table = 'cache', $expire = CACHE_PERMANENT, $he
     $serialized = 1;
   }
   db_lock_table($table);
-  db_query("UPDATE {".$table."} SET data = %b, created = %d, expire = %d, headers = '%s', serialized = %d WHERE cid = '%s'", $data, time(), $expire, $headers, $serialized, $cid);
+  db_query("UPDATE {". $table ."} SET data = %b, created = %d, expire = %d, headers = '%s', serialized = %d WHERE cid = '%s'", $data, time(), $expire, $headers, $serialized, $cid);
   if (!db_affected_rows()) {
-    @db_query("INSERT INTO {".$table."} (cid, data, created, expire, headers, serialized) VALUES ('%s', %b, %d, %d, '%s', %d)", $cid, $data, time(), $expire, $headers, $serialized);
+    @db_query("INSERT INTO {". $table ."} (cid, data, created, expire, headers, serialized) VALUES ('%s', %b, %d, %d, '%s', %d)", $cid, $data, time(), $expire, $headers, $serialized);
   }
   db_unlock_tables();
 }
@@ -154,26 +154,26 @@ function cache_clear_all($cid = NULL, $table = NULL, $wildcard = FALSE) {
       else if (time() > ($cache_flush + variable_get('cache_lifetime', 0))) {
         // Clear the cache for everyone, cache_flush_delay seconds have
         // passed since the first request to clear the cache.
-        db_query("DELETE FROM {".$table."} WHERE expire != %d AND expire < %d", CACHE_PERMANENT, time());
+        db_query("DELETE FROM {". $table ."} WHERE expire != %d AND expire < %d", CACHE_PERMANENT, time());
         variable_set('cache_flush', 0);
       }
     }
     else {
       // No minimum cache lifetime, flush all temporary cache entries now.
-      db_query("DELETE FROM {".$table."} WHERE expire != %d AND expire < %d", CACHE_PERMANENT, time());
+      db_query("DELETE FROM {". $table ."} WHERE expire != %d AND expire < %d", CACHE_PERMANENT, time());
     }
   }
   else {
     if ($wildcard) {
       if ($cid == '*') {
-        db_query("DELETE FROM {".$table."}");
+        db_query("DELETE FROM {". $table ."}");
       }
       else {
-        db_query("DELETE FROM {".$table."} WHERE cid LIKE '%s%%'", $cid);
+        db_query("DELETE FROM {". $table ."} WHERE cid LIKE '%s%%'", $cid);
       }
     }
     else {
-      db_query("DELETE FROM {".$table."} WHERE cid = '%s'", $cid);
+      db_query("DELETE FROM {". $table ."} WHERE cid = '%s'", $cid);
     }
   }
 }
