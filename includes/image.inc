@@ -103,8 +103,8 @@ function image_get_info($file) {
 }
 
 /**
- * Scales an image to the exact width and height given. Maintains the
- * original file's aspect ratio by cropping the image equally on both
+ * Scales an image to the exact width and height given. Achieves the
+ * target aspect ratio by cropping the original image equally on both
  * sides, or equally on the top and bottom.  This function is, for
  * example, useful to create uniform sized avatars from larger images.
  *
