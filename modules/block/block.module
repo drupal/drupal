@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.259 2007/05/14 13:43:33 dries Exp $
+// $Id: block.module,v 1.260 2007/05/14 13:53:01 dries Exp $
 
 /**
  * @file
@@ -296,7 +296,7 @@ function block_admin_display_submit($form_values, $form, &$form_state) {
   foreach ($form_values as $block) {
     $block['status'] = $block['region'] != BLOCK_REGION_NONE;
     $block['region'] = $block['status'] ? $block['region'] : '';
-    db_query("UPDATE {blocks} SET status = %d, weight = %d, region = '%s', throttle = %d WHERE module = '%s' AND delta = '%s' AND theme = '%s'", $block['status'], $block['weight'], $block['region'], $block['throttle'], $block['module'], $block['delta'], $block['theme']);
+    db_query("UPDATE {blocks} SET status = %d, weight = %d, region = '%s', throttle = %d WHERE module = '%s' AND delta = '%s' AND theme = '%s'", $block['status'], $block['weight'], $block['region'], isset($block['throttle']) ? $block['throttle'] : 0, $block['module'], $block['delta'], $block['theme']);
   }
   drupal_set_message(t('The block settings have been updated.'));
   cache_clear_all();
