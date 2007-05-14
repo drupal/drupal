@@ -110,3 +110,29 @@ table.screenshot {
 .theme-info p {
   margin-top: 0;
 }
+
+
+/**
+ * Date and time settings page
+ */
+div.date-container {
+  overflow: auto;
+}
+
+div.date-container > div {
+  float: left;
+}
+
+html.js div.custom-container {
+  display: none;
+}
+
+html.js div.custom-container .form-item label {
+  visibility: hidden;
+}
+
+div.custom-container {
+  margin-left: 15px;
+  width: 50%;
+}
+

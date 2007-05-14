@@ -56,3 +56,25 @@ Drupal.installDefaultTimezone = function() {
   var offset = new Date().getTimezoneOffset() * -60;
   $("#edit-date-default-timezone").val(offset);
 }
+
+/**
+ * Show/hide custom format sections on the date-time settings page.
+ */
+Drupal.dateTimeAutoAttach = function() {
+  // Show/hide custom format depending on the select's value.
+  $("select.date-format").change(function() {
+    $(this).parents("div.date-container").children("div.custom-container")[$(this).val() == "custom" ? "show" : "hide"]();
+  });
+
+  // Attach keyup handler to custom format inputs.
+  $("input.custom-format").keyup(function() {
+    var input = $(this);
+    var url = Drupal.settings.dateTime.lookup +(Drupal.settings.dateTime.lookup.match(/\?q=/) ? "&format=" : "?format=") + Drupal.encodeURIComponent(input.val());
+    $.getJSON(url, function(data) {
+      $("div.description span", input.parent()).html(data);
+    });
+  });
+
+  // Trigger the event handler to show the form input if necessary.
+  $("select.date-format").trigger("change");
+}
