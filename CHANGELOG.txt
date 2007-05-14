@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.196 2007/05/10 19:55:23 dries Exp $
+// $Id: CHANGELOG.txt,v 1.197 2007/05/14 16:22:25 dries Exp $
 
 Drupal 6.0, xxxx-xx-xx (development version)
 ----------------------
@@ -26,6 +26,7 @@ Drupal 6.0, xxxx-xx-xx (development version)
     * Added sticky table headers.
     * Check for clean URL support automatically with JavaScript.
     * Removed default/settings.php. Instead the installer will create it from default.settings.php.
+    * Made it possible to configure your own date formats.
 - Theme system:
     * Added .info files to themes and made it easier to specify regions and features.
     * Added theme registry: modules can directly provide .tpl.php files for their themes without having to create theme_ functions.

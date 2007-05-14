@@ -1,4 +1,4 @@
-/* $Id: admin.css,v 1.13 2007/04/17 07:19:39 dries Exp $ */
+/* $Id: admin.css,v 1.14 2007/05/14 16:22:26 dries Exp $ */
 
 /*
 ** Formatting for administration page
@@ -110,3 +110,29 @@ table.screenshot {
 .theme-info p {
   margin-top: 0;
 }
+
+
+/**
+ * Date and time settings page
+ */
+div.date-container {
+  overflow: auto;
+}
+
+div.date-container > div {
+  float: left;
+}
+
+html.js div.custom-container {
+  display: none;
+}
+
+html.js div.custom-container .form-item label {
+  visibility: hidden;
+}
+
+div.custom-container {
+  margin-left: 15px;
+  width: 50%;
+}
+
