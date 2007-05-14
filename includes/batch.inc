@@ -188,6 +188,7 @@ function _batch_process() {
     }
   }
 
+  // TODO : if the last set was a 'form_submit', there is no 'operations', 'total', 'progress message' in $current_set => warnings
   if ($batch['progressive']) {
     $remaining  = count($current_set['operations']);
     $total      = $current_set['total'];
@@ -222,28 +223,18 @@ function &_batch_current_set() {
 
 /**
  * Move execution to the next batch set if any, executing the stored
- * form _submit callbacks along the way (possibly inserting additional batch sets)
+ * form _submit handlers along the way (thus possibly inserting
+ * additional batch sets)
  */
 function _batch_next_set() {
   $batch =& batch_get();
-  if (isset($batch['sets'][$batch['current_set']+1])) {
+  if (isset($batch['sets'][$batch['current_set'] + 1])) {
     $batch['current_set']++;
     $current_set =& _batch_current_set();
-    if (isset($current_set['form submit']) && (list($function, $args) = $current_set['form submit']) && function_exists($function)) {
-      // We have to keep our own copy of $form_values, to account
-      // for possible alteration by the submit callback.
-      if (isset($batch['form_values'])) {
-        $args[1] = $batch['form_values'];
-      }
-      $redirect = call_user_func_array($function, $args);
-      // Store the form_values only if needed, to limit the
-      // amount of data we store in the batch.
-      if (isset($batch['sets'][$batch['current_set']+1])) {
-        $batch['form_values'] = $args[1];
-      }
-      if (isset($redirect)) {
-        $batch['redirect'] = $redirect;
-      }
+    if (isset($current_set['form_submit']) && ($function = $current_set['form_submit']) && function_exists($function)) {
+      // We use our stored copies of $form and $form_state, to account for
+      // possible alteration by the submit handlers.
+      $function($batch['form_state']['values'], $batch['form'], $batch['form_state']);
     }
     return TRUE;
   }
@@ -274,15 +265,27 @@ function _batch_finished() {
     if (isset($_batch['destination'])) {
       $_REQUEST['destination'] = $_batch['destination'];
     }
-    $redirect = isset($_batch['redirect']) ? $_batch['redirect'] : $_batch['source_page'];
-    $form_redirect = isset($_batch['form_redirect']) ? $_batch['form_redirect'] : NULL;
-    // Let drupal_redirect_form handle redirection logic, using a bare pseudo form
-    // to limit the amount of data we store in the batch.
-    drupal_redirect_form(array('#redirect' => $form_redirect), $redirect);
 
-    // If we get here, $form['redirect']['#redirect'] was FALSE, and we are most
-    // probably dealing with a multistep form - not supported at the moment.
-    // Redirect to the originating page - first step of the form.
+    // Use $_batch['form_state']['redirect'], or $_batch['redirect'], or $_batch['source_page'].
+    if (isset($_batch['form_state']['redirect'])) {
+      $redirect = $_batch['form_state']['redirect'];
+    }
+    elseif (isset($_batch['redirect'])) {
+      $redirect = $_batch['redirect'];
+    }
+    else {
+      $redirect = $_batch['source_page'];
+    }
+
+    // Let drupal_redirect_form handle redirection logic.
+    $form = isset($batch['form']) ? $batch['form'] : array();
+    if (empty($_batch['form_state']['rebuild']) && empty($_batch['form_state']['storage'])) {
+      drupal_redirect_form($form, $redirect);
+    }
+
+    // We get here if $form['#redirect'] was FALSE, or if
+    // Save the final $form_state value, Redirect to the originating page.
+    $_SESSION['batch_form_state'] = $_batch['form_state'];
     drupal_goto($_batch['source_page']);
   }
 }
