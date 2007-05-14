@@ -1,5 +1,5 @@
 <?php
-// $Id: throttle.module,v 1.75 2007/04/30 17:03:29 dries Exp $
+// $Id: throttle.module,v 1.76 2007/05/14 13:43:37 dries Exp $
 
 /**
  * @file
@@ -156,7 +156,7 @@ function throttle_admin_settings() {
   return system_settings_form($form);
 }
 
-function throttle_admin_settings_validate($form_id, $form_values) {
+function throttle_admin_settings_validate($form_values, $form, &$form_state) {
   if (!is_numeric($form_values['throttle_anonymous']) || $form_values['throttle_anonymous'] < 0) {
     form_set_error('throttle_anonymous', t("%value is not a valid auto-throttle setting. Please enter a positive numeric value.", array('%value' => $form_values['throttle_anonymous'])));
   }

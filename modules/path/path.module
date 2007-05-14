@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.117 2007/05/10 10:00:50 dries Exp $
+// $Id: path.module,v 1.118 2007/05/14 13:43:36 dries Exp $
 
 /**
  * @file
@@ -105,10 +105,11 @@ function path_admin_delete_confirm($pid) {
 /**
  * Execute URL alias deletion
  **/
-function path_admin_delete_confirm_submit($form_id, $form_values) {
+function path_admin_delete_confirm_submit($form_values, $form, &$form_state) {
   if ($form_values['confirm']) {
     path_admin_delete($form_values['pid']);
-    return 'admin/build/path';
+    $form_state['redirect'] = 'admin/build/path';
+    return;
   }
 }
 
@@ -178,8 +179,8 @@ function path_set_alias($path = NULL, $alias = NULL, $pid = NULL, $language = ''
  * Return a form for editing or creating an individual URL alias.
  */
 function path_form($edit = array('src' => '', 'dst' => '', 'language' => '', 'pid' => NULL)) {
-  $form['#submit']['path_form_submit'] = array();
-  $form['#validate']['path_form_validate'] = array();
+  $form['#submit'][] = 'path_form_submit';
+  $form['#validate'][] = 'path_form_validate';
   $form['#alias'] = $edit;
 
   $form['src'] = array(
@@ -369,7 +370,7 @@ function path_load($pid) {
 /**
  * Verify that a new URL alias is valid
  */
-function path_form_validate($form_id, $form_values) {
+function path_form_validate($form_values, $form, &$form_state) {
   $src = $form_values['src'];
   $dst = $form_values['dst'];
   $pid = isset($form_values['pid']) ? $form_values['pid'] : 0;
@@ -384,12 +385,13 @@ function path_form_validate($form_id, $form_values) {
 /**
  * Save a new URL alias to the database.
  */
-function path_form_submit($form_id, $form_values) {
+function path_form_submit($form_values, $form, &$form_state) {
   // Language is only set if locale module is enabled
   path_set_alias($form_values['src'], $form_values['dst'], isset($form_values['pid']) ? $form_values['pid'] : 0, isset($form_values['language']) ? $form_values['language'] : '');
 
   drupal_set_message(t('The alias has been saved.'));
-  return 'admin/build/path';
+  $form_state['redirect'] = 'admin/build/path';
+  return;
 }
 
 /**

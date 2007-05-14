@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.194 2007/05/07 10:15:57 goba Exp $
+// $Id: form.inc,v 1.195 2007/05/14 13:43:32 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -19,7 +19,6 @@
  * Forms can also be built and submitted programmatically without any user input
  * using the drupal_execute() function.
  *
- *
  * For information on the format of the structured arrays used to define forms,
  * and more detailed explanations of the Form API workflow, see the
  * @link http://api.drupal.org/api/HEAD/file/developer/topics/forms_api_reference.html reference @endlink
@@ -27,95 +26,118 @@
  */
 
 /**
- * Retrieves a form from a builder function, passes it on for
- * processing, and renders the form or redirects to its destination
- * as appropriate. In multi-step form scenarios, it handles properly
- * processing the values using the previous step's form definition,
- * then rendering the requested step for display.
+ * Retrieves a form from a constructor function, or from the cache if
+ * the form was built in a previous page-load. The form is then passesed
+ * on for processing, after and rendered for display if necessary.
  *
  * @param $form_id
  *   The unique string identifying the desired form. If a function
  *   with that name exists, it is called to build the form array.
  *   Modules that need to generate the same form (or very similar forms)
  *   using different $form_ids can implement hook_forms(), which maps
- *   different $form_id values to the proper form building function. Examples
+ *   different $form_id values to the proper form constructor function. Examples
  *   may be found in node_forms(), search_forms(), and user_forms().
  * @param ...
- *   Any additional arguments needed by the form building function.
+ *   Any additional arguments needed by the form constructor function.
  * @return
  *   The rendered form.
  */
 function drupal_get_form($form_id) {
-  // In multi-step form scenarios, the incoming $_POST values are not
-  // necessarily intended for the current form. We need to build
-  // a copy of the previously built form for validation and processing,
-  // then go on to the one that was requested if everything works.
+  $form_state = array('storage' => NULL, 'submitted' => FALSE);
+  $expire = max(ini_get('session.cookie_lifetime'), 86400);
 
-  $form_build_id = md5(mt_rand());
-  if (isset($_POST['form_build_id']) && isset($_SESSION['form'][$_POST['form_build_id']]['args']) && $_POST['form_id'] == $form_id) {
-    // There's a previously stored multi-step form. We should handle
-    // IT first.
-    $stored = TRUE;
-    $args = $_SESSION['form'][$_POST['form_build_id']]['args'];
-    $form = call_user_func_array('drupal_retrieve_form', $args);
-    $form['#build_id'] = $_POST['form_build_id'];
+  $args = func_get_args();
+
+  if (isset($_SESSION['batch_form_state'])) {
+    // We've been redirected here after a batch processing : the form has
+    // already been processed, so we grab the post-process $form_state value
+    // and move on to form display. See _batch_finished() function.
+    $form_state = $_SESSION['batch_form_state'];
+    unset($_SESSION['batch_form_state']);
   }
   else {
-    // We're coming in fresh; build things as they would be. If the
-    // form's #multistep flag is set, store the build parameters so
-    // the same form can be reconstituted for validation.
-    $args = func_get_args();
-    $form = call_user_func_array('drupal_retrieve_form', $args);
-    if (isset($form['#multistep']) && $form['#multistep']) {
-      // Clean up old multistep form session data.
-      _drupal_clean_form_sessions();
-      $_SESSION['form'][$form_build_id] = array('timestamp' => time(), 'args' => $args);
-      $form['#build_id'] = $form_build_id;
-    }
-    $stored = FALSE;
-  }
-
-  // Process the form, submit it, and store any errors if necessary.
-  drupal_process_form($args[0], $form);
-
-  if ($stored && !form_get_errors()) {
-    // If it's a stored form and there were no errors, we processed the
-    // stored form successfully. Now we need to build the form that was
-    // actually requested. We always pass in the current $_POST values
-    // to the builder function, as values from one stage of a multistep
-    // form can determine how subsequent steps are displayed.
-    $args = func_get_args();
-    $args[] = $_POST;
-    $form = call_user_func_array('drupal_retrieve_form', $args);
-    unset($_SESSION['form'][$_POST['form_build_id']]);
-    if (isset($form['#multistep']) && $form['#multistep']) {
-      $_SESSION['form'][$form_build_id] = array('timestamp' => time(), 'args' => $args);
-      $form['#build_id'] = $form_build_id;
-    }
-    drupal_prepare_form($args[0], $form);
-  }
-
-  return drupal_render_form($args[0], $form);
-}
-
-
-/**
- * Remove form information that's at least a day old from the
- * $_SESSION['form'] array.
- */
-function _drupal_clean_form_sessions() {
-  if (isset($_SESSION['form'])) {
-    foreach ($_SESSION['form'] as $build_id => $data) {
-      if ($data['timestamp'] < (time() - 84600)) {
-        unset($_SESSION['form'][$build_id]);
+    // If the incoming $_POST contains a form_build_id, we'll check the
+    // cache for a copy of the form in question. If it's there, we don't
+    // have to rebuild the form to proceed. In addition, if there is stored
+    // form_state data from a previous step, we'll retrieve it so it can
+    // be passed on to the form processing code.
+    if (isset($_POST['form_id']) && $_POST['form_id'] == $form_id && !empty($_POST['form_build_id'])) {
+      if ($cached = cache_get('form_'. $_POST['form_build_id'], 'cache_form')) {
+        $form = $cached->data;
+        if ($cached = cache_get('storage_'. $_POST['form_build_id'], 'cache_form')) {
+          $form_state['storage'] = $cached->data;
+        }
       }
     }
+
+    // If the previous bit of code didn't result in a populated $form
+    // object, we're hitting the form for the first time and we need
+    // to build it from scratch.
+    if (!isset($form)) {
+      $form = call_user_func_array('drupal_retrieve_form', $args);
+      $form_build_id = md5(mt_rand());
+      $form['#build_id'] = $form_build_id;
+      drupal_prepare_form($form_id, $form, $form_state);
+      if (!empty($form['#cache'])) {
+        cache_set('form_'. $form_build_id, $form, 'cache_form', $expire);
+      }
+    }
+    $form['#post'] = $_POST;
+
+    // Now that we know we have a form, we'll process it (validating,
+    // submitting, and handling the results returned by its submission
+    // handlers. Submit handlers accumulate data in the form_state by
+    // altering the $form_state variable, which is passed into them by
+    // reference.
+    drupal_process_form($form_id, $form, $form_state);
   }
+
+  // Most simple, single-step forms will be finished by this point --
+  // drupal_process_form() usually redirects to another page (or to
+  // a 'fresh' copy of the form) once processing is complete. If one
+  // of the form's handlers has set $form_state['redirect'] to FALSE,
+  // the form will simply be re-rendered with the values still in its
+  // fields.
+  //
+  // If $form_state['storage'] or $form_state['rebuild'] have been
+  // set by any submit or validate handlers, however, we know that
+  // we're in a complex multi-part process of some sort and the form's
+  // workflow is NOT complete. We need to construct a fresh copy of
+  // the form, passing in the latest $form_state in addition to any
+  // other variables passed into drupal_get_form().
+
+  if (!empty($form_state['rebuild']) || !empty($form_state['storage'])) {
+    $args[] = $form_state;
+    $form = call_user_func_array('drupal_retrieve_form', $args);
+
+    // We need a new build_id for the new version of the form.
+    $form_build_id = md5(mt_rand());
+    $form['#build_id'] = $form_build_id;
+    drupal_prepare_form($form_id, $form, $form_state);
+
+    // Now, we cache the form structure so it can be retrieved later for
+    // validation. If $form_state['storage'] is populated, we'll also cache
+    // it so that it can be used to resume complex multi-step processes.
+    cache_set('form_'. $form_build_id, $form, 'cache_form', $expire);
+    if (!empty($form_state['storage'])) {
+      cache_set('storage_'. $form_build_id, $form_state['storage'], 'cache_form', $expire);
+    }
+
+    // Clear out all post data, as we don't want the previous step's
+    // data to pollute this one and trigger validate/submit handling,
+    // then process the form for rendering.
+    $_POST = array();
+    $form['#post'] = array();
+    drupal_process_form($form_id, $form, $form_state);
+  }
+
+  // If we haven't redirected to a new location by now, we want to
+  // render whatever form array is currently in hand.
+  return drupal_render_form($form_id, $form);
 }
 
-
 /**
- * Retrieves a form using a form_id, populates it with $form_values,
+ * Retrieves a form using a form_id, populates it with $form_state['values'],
  * processes it, and returns any validation errors encountered. This
  * function is the programmatic counterpart to drupal_get_form().
  *
@@ -124,43 +146,47 @@ function _drupal_clean_form_sessions() {
  *   with that name exists, it is called to build the form array.
  *   Modules that need to generate the same form (or very similar forms)
  *   using different $form_ids can implement hook_forms(), which maps
- *   different $form_id values to the proper form building function. Examples
+ *   different $form_id values to the proper form constructor function. Examples
  *   may be found in node_forms(), search_forms(), and user_forms().
- * @param $form_values
- *   An array of values mirroring the values returned by a given form
- *   when it is submitted by a user.
+ * @param $form_state
+ *   A keyed array containing the current state of the form. Most
+ *   important is the $form_state['values'] collection, a tree of data
+ *   used to simulate the incoming $_POST information from a user's
+ *   form submission.
  * @param ...
- *   Any additional arguments needed by the form building function.
- * @return
- *   Any form validation errors encountered.
+ *   Any additional arguments needed by the form constructor function.
  *
  * For example:
  *
  * // register a new user
- * $values['name'] = 'robo-user';
- * $values['mail'] = 'robouser@example.com';
- * $values['pass'] = 'password';
- * drupal_execute('user_register', $values);
+ * $form_state = array();
+ * $form_state['values']['name'] = 'robo-user';
+ * $form_state['values']['mail'] = 'robouser@example.com';
+ * $form_state['values']['pass'] = 'password';
+ * drupal_execute('user_register', $form_state);
  *
  * // Create a new node
+ * $form_state = array();
  * $node = array('type' => 'story');
- * $values['title'] = 'My node';
- * $values['body'] = 'This is the body text!';
- * $values['name'] = 'robo-user';
- * drupal_execute('story_node_form', $values, $node);
+ * $form_state['values']['title'] = 'My node';
+ * $form_state['values']['body'] = 'This is the body text!';
+ * $form_state['values']['name'] = 'robo-user';
+ * drupal_execute('story_node_form', $form_state, $node);
  */
-function drupal_execute($form_id, $form_values) {
+function drupal_execute($form_id, &$form_state) {
   $args = func_get_args();
 
-  $form_id = array_shift($args);
-  $form_values = array_shift($args);
+  // We do a bit of juggling here because drupal_retrieve_form() expects
+  // the $form_state to be the last parameter, while drupal_execute()
+  // always takes it in as the second parameter.
+  $args = array_slice($args, 3);
   array_unshift($args, $form_id);
+  $args[] = $form_state;
 
-  if (isset($form_values)) {
-    $form = call_user_func_array('drupal_retrieve_form', $args);
-    $form['#post'] = $form_values;
-    return drupal_process_form($form_id, $form);
-  }
+  $form = call_user_func_array('drupal_retrieve_form', $args);
+  $form['#post'] = $form_state['values'];
+  drupal_prepare_form($form_id, $form, $form_state);
+  drupal_process_form($form_id, $form, $form_state);
 }
 
 /**
@@ -171,17 +197,17 @@ function drupal_execute($form_id, $form_values) {
  *   with that name exists, it is called to build the form array.
  *   Modules that need to generate the same form (or very similar forms)
  *   using different $form_ids can implement hook_forms(), which maps
- *   different $form_id values to the proper form building function.
+ *   different $form_id values to the proper form constructor function.
  * @param ...
- *   Any additional arguments needed by the form building function.
+ *   Any additional arguments needed by the form constructor function.
  */
 function drupal_retrieve_form($form_id) {
   static $forms;
 
   // We save two copies of the incoming arguments: one for modules to use
-  // when mapping form ids to builder functions, and another to pass to
-  // the builder function itself. We shift out the first argument -- the
-  // $form_id itself -- from the list to pass into the builder function,
+  // when mapping form ids to constructor functions, and another to pass to
+  // the constructor function itself. We shift out the first argument -- the
+  // $form_id itself -- from the list to pass into the constructor function,
   // since it's already known.
   $args = func_get_args();
   $saved_args = $args;
@@ -190,9 +216,9 @@ function drupal_retrieve_form($form_id) {
   // We first check to see if there's a function named after the $form_id.
   // If there is, we simply pass the arguments on to it to get the form.
   if (!function_exists($form_id)) {
-    // In cases where many form_ids need to share a central builder function,
+    // In cases where many form_ids need to share a central constructor function,
     // such as the node editing form, modules can implement hook_forms(). It
-    // maps one or more form_ids to the correct builder functions.
+    // maps one or more form_ids to the correct constructor functions.
     //
     // We cache the results of that hook to save time, but that only works
     // for modules that know all their form_ids in advance. (A module that
@@ -202,7 +228,7 @@ function drupal_retrieve_form($form_id) {
     // So, we call the hook if $forms isn't yet populated, OR if it doesn't
     // yet have an entry for the requested form_id.
     if (!isset($forms) || !isset($forms[$form_id])) {
-      $forms = module_invoke_all('forms', $saved_args);
+      $forms = module_invoke_all('forms', $form_id, $args);
     }
     $form_definition = $forms[$form_id];
     if (isset($form_definition['callback arguments'])) {
@@ -232,46 +258,58 @@ function drupal_retrieve_form($form_id) {
  *   The unique string identifying the current form.
  * @param $form
  *   An associative array containing the structure of the form.
- * @return
- *   The path to redirect the user to upon completion.
+ * @param $form_state
+ *   A keyed array containing the current state of the form. This
+ *   includes the current persistant storage data for the form, and
+ *   any data passed along by earlier steps when displaying a
+ *   multi-step form. Additional information, like the sanitized $_POST
+ *   data, is also accumulated here.
  */
-function drupal_process_form($form_id, &$form) {
-  global $form_values, $form_submitted, $user, $form_button_counter;
-  static $saved_globals = array();
-  // In some scenarios, this function can be called recursively. Pushing any pre-existing
-  // $form_values and form submission data lets us start fresh without clobbering work done
-  // in earlier recursive calls.
-  array_push($saved_globals, array($form_values, $form_submitted, $form_button_counter));
+function drupal_process_form($form_id, &$form, &$form_state) {
+  $form_state['values'] = array();
 
-  $form_values = array();
-  $form_submitted = FALSE;
-  $form_button_counter = array(0, 0);
+  $form = form_builder($form_id, $form, $form_state);
+  if ((!empty($form['#programmed'])) || (!empty($form['#post']) && (($form['#post']['form_id'] == $form_id)))) {
+    drupal_validate_form($form_id, $form, $form_state);
 
-  drupal_prepare_form($form_id, $form);
-  if (($form['#programmed']) || (!empty($_POST) && (($_POST['form_id'] == $form_id)))) {
-    drupal_validate_form($form_id, $form);
-    // IE does not send a button value when there is only one submit button (and no non-submit buttons)
-    // and you submit by pressing enter.
-    // In that case we accept a submission without button values.
-    if ((($form['#programmed']) || $form_submitted || (!$form_button_counter[0] && $form_button_counter[1])) && !form_get_errors()) {
-      $redirect = drupal_submit_form($form_id, $form);
+    if ((!empty($form_state['submitted'])) && !form_get_errors() && empty($form_state['rebuild'])) {
+      $form_state['redirect'] = NULL;
+      form_execute_handlers('submit', $form, $form_state);
+
+      // We'll clear out the cached copies of the form and its stored data
+      // here, as we've finished with them. The in-memory copies are still
+      // here, though.
+      if (variable_get('cache', CACHE_DISABLED) == CACHE_DISABLED) {
+        cache_clear_all('form_'. $form_state['values']['form_build_id'], 'cache_form');
+        cache_clear_all('storage_'. $form_state['values']['form_build_id'], 'cache_form');
+      }
+
+      // If batches were set in the submit handlers, we process them now,
+      // possibly ending execution.
       if ($batch =& batch_get()) {
+        // The batch uses its own copies of $form and $form_state for
+        // late execution of submit handers and post-batch redirection.
+        $batch['form'] = $form;
+        $batch['form_state'] = $form_state;
         $batch['progressive'] = !$form['#programmed'];
         batch_process();
-        // Progressive batch processing redirects to the progress page.
-        // Execution continues only if programmed form.
+        // Execution continues only for programmatic forms.
+        // For 'regular' forms, we get redirected to the batch processing
+        // page. Form redirection will be handled in _batch_finished(),
+        // after the batch is processed.
       }
-      if (!$form['#programmed']) {
-        drupal_redirect_form($form, $redirect);
+
+      // If no submit handlers have populated the $form_state['storage']
+      // bundle, and the $form_state['rebuild'] flag has not been set,
+      // we're finished and should redirect to a new destination page
+      // if one has been set (and a fresh, unpopulated copy of the form
+      // if one hasn't). If the form was called by drupal_execute(),
+      // however, we'll skip this and let the calling function examine
+      // the resulting $form_state bundle itself.
+      if (!$form['#programmed'] && empty($form_state['rebuild']) && empty($form_state['storage'])) {
+         drupal_redirect_form($form, $form_state['redirect']);
       }
     }
-  }
-
-  // We've finished calling functions that alter the global values, so we can
-  // restore the ones that were there before this function was called.
-  list($form_values, $form_submitted, $form_button_counter) = array_pop($saved_globals);
-  if (isset($redirect)) {
-    return $redirect;
   }
 }
 
@@ -285,25 +323,16 @@ function drupal_process_form($form_id, &$form) {
  *   theming, and hook_form_alter functions.
  * @param $form
  *   An associative array containing the structure of the form.
+ * @param $form_state
+ *   A keyed array containing the current state of the form. Passed
+ *   in here so that hook_form_alter() calls can use it, as well.
  */
-function drupal_prepare_form($form_id, &$form) {
+function drupal_prepare_form($form_id, &$form, &$form_state) {
   global $user;
 
   $form['#type'] = 'form';
-  if (!isset($form['#skip_duplicate_check'])) {
-    $form['#skip_duplicate_check'] = FALSE;
-  }
+  $form['#programmed'] = isset($form['#post']);
 
-  if (!isset($form['#post'])) {
-    $form['#post'] = $_POST;
-    $form['#programmed'] = FALSE;
-  }
-  else {
-    $form['#programmed'] = TRUE;
-  }
-
-  // In multi-step form scenarios, this id is used to identify
-  // a unique instance of a particular form for retrieval.
   if (isset($form['#build_id'])) {
     $form['form_build_id'] = array(
       '#type' => 'hidden',
@@ -334,9 +363,12 @@ function drupal_prepare_form($form_id, &$form) {
     );
   }
 
-
   if (isset($form_id)) {
-    $form['form_id'] = array('#type' => 'hidden', '#value' => $form_id, '#id' => form_clean_id("edit-$form_id"));
+    $form['form_id'] = array(
+      '#type' => 'hidden',
+      '#value' => $form_id,
+      '#id' => form_clean_id("edit-$form_id"),
+    );
   }
   if (!isset($form['#id'])) {
     $form['#id'] = form_clean_id($form_id);
@@ -346,25 +378,24 @@ function drupal_prepare_form($form_id, &$form) {
 
   if (!isset($form['#validate'])) {
     if (function_exists($form_id .'_validate')) {
-      $form['#validate'] = array($form_id .'_validate' => array());
+      $form['#validate'] = array($form_id .'_validate');
     }
   }
 
   if (!isset($form['#submit'])) {
     if (function_exists($form_id .'_submit')) {
       // We set submit here so that it can be altered.
-      $form['#submit'] = array($form_id .'_submit' => array());
+      $form['#submit'] = array($form_id .'_submit');
     }
   }
 
-  drupal_alter('form', $form, $form_id);
-
-  $form = form_builder($form_id, $form);
+  drupal_alter('form_'. $form_id, $form, $form_state);
+  drupal_alter('form', $form, $form_id, $form_state);
 }
 
 
 /**
- * Validates user-submitted form data from a global variable using
+ * Validates user-submitted form data from the $form_state using
  * the validate functions defined in a structured form array.
  *
  * @param $form_id
@@ -372,10 +403,18 @@ function drupal_prepare_form($form_id, &$form) {
  *   theming, and hook_form_alter functions.
  * @param $form
  *   An associative array containing the structure of the form.
- *
+ * @param $form_state
+ *   A keyed array containing the current state of the form. The current
+ *   user-submitted data is stored in $form_state['values'], though
+ *   form validation functions are passed an explicit copy of the
+ *   values for the sake of simplicity. Validation handlers can also
+ *   $form_state to pass information on to submit handlers. For example:
+ *     $form_state['data_for_submision'] = $data;
+ *   This technique is useful when validation requires file parsing,
+ *   web service requests, or other expensive requests that should
+ *   not be repeated in the submission step.
  */
-function drupal_validate_form($form_id, $form) {
-  global $form_values;
+function drupal_validate_form($form_id, $form, &$form_state) {
   static $validated_forms = array();
 
   if (isset($validated_forms[$form_id])) {
@@ -385,77 +424,14 @@ function drupal_validate_form($form_id, $form) {
   // If the session token was set by drupal_prepare_form(), ensure that it
   // matches the current user's session.
   if (isset($form['#token'])) {
-    if (!drupal_valid_token($form_values['form_token'], $form['#token'])) {
+    if (!drupal_valid_token($form_state['values']['form_token'], $form['#token'])) {
       // Setting this error will cause the form to fail validation.
       form_set_error('form_token', t('Validation error, please try again. If this error persists, please contact the site administrator.'));
     }
   }
 
-  if (!$form['#programmed'] && !$form['#skip_duplicate_check'] && isset($_SESSION['last_submitted']['hash']) && $_SESSION['last_submitted']['hash'] == md5(serialize($form['form_id']['#post']))) {
-    // This is a repeat submission.
-    drupal_redirect_form(NULL, $_SESSION['last_submitted']['destination']);
-  }
-
-  _form_validate($form, $form_id);
+  _form_validate($form, $form_state, $form_id);
   $validated_forms[$form_id] = TRUE;
-}
-
-/**
- * Processes user-submitted form data from a global variable using
- * the submit functions defined in a structured form array.
- *
- * @param $form_id
- *   A unique string identifying the form for validation, submission,
- *   theming, and hook_form_alter functions.
- * @param $form
- *   An associative array containing the structure of the form.
- * @return
- *   A string containing the path of the page to display when processing
- *   is complete.
- *
- */
-function drupal_submit_form($form_id, $form) {
-  global $form_values;
-  $default_args = array($form_id, &$form_values);
-  $submitted = FALSE;
-  $goto = NULL;
-
-  if (isset($form['#submit'])) {
-    foreach ($form['#submit'] as $function => $args) {
-      if (function_exists($function)) {
-        $args = array_merge($default_args, (array) $args);
-        // Since we can only redirect to one page, only the last redirect
-        // will work.
-        if ($batch =& batch_get()) {
-          // Some previous _submit callback has set a batch.
-          // We store the call in a special 'control' batch set for execution
-          // at the correct time during the batch processing workflow.
-          $batch['sets'][] = array('form submit' => array($function, $args));
-        }
-        else {
-          $redirect = call_user_func_array($function, $args);
-          if ($batch =& batch_get()) {
-            // The _submit callback has opened a batch: store the needed form info.
-            $batch['form_redirect'] = isset($form['#redirect']) ? $form['#redirect'] : NULL;
-          }
-        }
-        $submitted = TRUE;
-        if (isset($redirect)) {
-          $goto = $redirect;
-        }
-      }
-    }
-  }
-  // Successful submit. Hash this form's POST and store the hash in the
-  // session. We'll use this hash later whenever this user submits another
-  // form to make sure no identical forms get submitted twice.
-  if ($submitted && !$form['#skip_duplicate_check']) {
-    $_SESSION['last_submitted'] = array('destination' => $goto, 'hash' => md5(serialize($form['form_id']['#post'])));
-  }
-
-  if (isset($goto)) {
-    return $goto;
-  }
 }
 
 /**
@@ -469,24 +445,14 @@ function drupal_submit_form($form_id, $form) {
  * @return
  *   A string containing the path of the page to display when processing
  *   is complete.
- *
  */
 function drupal_render_form($form_id, &$form) {
   // Don't override #theme if someone already set it.
-
   if (!isset($form['#theme'])) {
     init_theme();
     $registry = theme_get_registry();
     if (isset($registry[$form_id])) {
       $form['#theme'] = $form_id;
-    }
-  }
-
-  if (isset($form['#pre_render'])) {
-    foreach ($form['#pre_render'] as $function) {
-      if (function_exists($function)) {
-        $function($form_id, $form);
-      }
     }
   }
 
@@ -500,15 +466,15 @@ function drupal_render_form($form_id, &$form) {
  * @param $form
  *   An associative array containing the structure of the form.
  * @param $redirect
- *   An optional string containing the destination path to redirect
+ *   An optional value containing the destination path to redirect
  *   to if none is specified by the form.
- *
  */
 function drupal_redirect_form($form, $redirect = NULL) {
+  $goto = NULL;
   if (isset($redirect)) {
     $goto = $redirect;
   }
-  if (isset($form['#redirect'])) {
+  if ($goto !== FALSE && isset($form['#redirect'])) {
     $goto = $form['#redirect'];
   }
   if (!isset($goto) || ($goto !== FALSE)) {
@@ -531,15 +497,25 @@ function drupal_redirect_form($form, $redirect = NULL) {
  *
  * @param $elements
  *   An associative array containing the structure of the form.
+ * @param $form_state
+ *   A keyed array containing the current state of the form. The current
+ *   user-submitted data is stored in $form_state['values'], though
+ *   form validation functions are passed an explicit copy of the
+ *   values for the sake of simplicity. Validation handlers can also
+ *   $form_state to pass information on to submit handlers. For example:
+ *     $form_state['data_for_submision'] = $data;
+ *   This technique is useful when validation requires file parsing,
+ *   web service requests, or other expensive requests that should
+ *   not be repeated in the submission step.
  * @param $form_id
  *   A unique string identifying the form for validation, submission,
  *   theming, and hook_form_alter functions.
  */
-function _form_validate($elements, $form_id = NULL) {
+function _form_validate($elements, &$form_state, $form_id = NULL) {
   // Recurse through all children.
   foreach (element_children($elements) as $key) {
     if (isset($elements[$key]) && $elements[$key]) {
-      _form_validate($elements[$key]);
+      _form_validate($elements[$key], $form_state);
     }
   }
   /* Validate the current input */
@@ -571,32 +547,76 @@ function _form_validate($elements, $form_id = NULL) {
           foreach ($value as $v) {
             if (!isset($options[$v])) {
               form_error($elements, t('An illegal choice has been detected. Please contact the site administrator.'));
-              watchdog('form', 'Illegal choice %choice in !name element.', array('%choice' => $v, '!name' => empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title']), WATCHDOG_ERROR);
+              watchdog('form', t('Illegal choice %choice in !name element.', array('%choice' => $v, '!name' => empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title'])), WATCHDOG_ERROR);
             }
           }
         }
         elseif (!isset($options[$elements['#value']])) {
           form_error($elements, t('An illegal choice has been detected. Please contact the site administrator.'));
-          watchdog('form', 'Illegal choice %choice in %name element.', array('%choice' => $elements['#value'], '%name' => empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title']), WATCHDOG_ERROR);
+          watchdog('form', t('Illegal choice %choice in %name element.', array('%choice' => $elements['#value'], '%name' => empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title'])), WATCHDOG_ERROR);
         }
       }
     }
 
-    // Call user-defined validators.
-    if (isset($elements['#validate'])) {
-      foreach ($elements['#validate'] as $function => $args) {
-        $args = array_merge(array($elements), $args);
-        // For the full form we hand over a copy of $form_values.
-        if (isset($form_id)) {
-          $args = array_merge(array($form_id, $GLOBALS['form_values']), $args);
-        }
+    // Call user-defined form level validators.
+    if (isset($form_id)) {
+      form_execute_handlers('validate', $elements, $form_state);
+    }
+    // Call any element-specific validators. These must act on the element
+    // #value data.
+    elseif (isset($elements['#element_validate'])) {
+      foreach ($elements['#element_validate'] as $function) {
         if (function_exists($function))  {
-          call_user_func_array($function, $args);
+          $function($elements, $form_state);
         }
       }
     }
     $elements['#validated'] = TRUE;
   }
+}
+
+/**
+ * A helper function used to execute custom validation and submission
+ * handlers for a given form. Button-specific handlers are checked
+ * first. If none exist, the function falls back to form-level handlers.
+ *
+ * @param $type
+ *   The type of handler to execute. 'validate' or 'submit' are the
+ *   defaults used by Form API.
+ * @param $form
+ *   An associative array containing the structure of the form.
+ * @param $form_state
+ *   A keyed array containing the current state of the form. If the user
+ *   submitted the form by clicking a button with custom handler functions
+ *   defined, those handlers will be stored here.
+ */
+function form_execute_handlers($type, &$form, &$form_state) {
+  $return = FALSE;
+  if (isset($form_state[$type .'_handlers'])) {
+    $handlers = $form_state[$type .'_handlers'];
+  }
+  elseif (isset($form['#'. $type])) {
+    $handlers = $form['#'. $type];
+  }
+  else {
+    $handlers = array();
+  }
+
+  foreach ($handlers as $function) {
+    if (function_exists($function))  {
+      if ($type == 'submit' && ($batch =& batch_get())) {
+        // Some previous _submit handler has set a batch. We store the call
+        // in a special 'control' batch set, for execution at the correct
+        // time during the batch processing workflow.
+        $batch['sets'][] = array('form_submit' => array($function));
+      }
+      else {
+        $function($form_state['values'], $form, $form_state);
+      }
+      $return = TRUE;
+    }
+  }
+  return $return;
 }
 
 /**
@@ -649,20 +669,22 @@ function form_error(&$element, $message = '') {
 }
 
 /**
- * Adds some required properties to each form element, which are used
- * internally in the form API. This function also automatically assigns
- * the value property from the $edit array, provided the element doesn't
- * already have an assigned value.
+ * Walk through the structured form array, adding any required
+ * properties to each element and mapping the incoming $_POST
+ * data to the proper elements.
  *
  * @param $form_id
  *   A unique string identifying the form for validation, submission,
  *   theming, and hook_form_alter functions.
  * @param $form
  *   An associative array containing the structure of the form.
+ * @param $form_state
+ *   A keyed array containing the current state of the form. In this
+ *   context, it is used to accumulate information about which button
+ *   was clicked when the form was submitted, as well as the sanitized
+ *   $_POST data.
  */
-function form_builder($form_id, $form) {
-  global $form_values, $form_submitted, $form_button_counter;
-
+function form_builder($form_id, $form, &$form_state) {
   // Initialize as unprocessed.
   $form['#processed'] = FALSE;
 
@@ -673,120 +695,7 @@ function form_builder($form_id, $form) {
   }
 
   if (isset($form['#input']) && $form['#input']) {
-    if (!isset($form['#name'])) {
-      $name = array_shift($form['#parents']);
-      $form['#name'] = $name;
-      if ($form['#type'] == 'file') {
-        // To make it easier to handle $_FILES in file.inc, we place all
-        // file fields in the 'files' array. Also, we do not support
-        // nested file names.
-        $form['#name'] = 'files['. $form['#name'] .']';
-      }
-      elseif (count($form['#parents'])) {
-        $form['#name'] .= '['. implode('][', $form['#parents']) .']';
-      }
-      array_unshift($form['#parents'], $name);
-    }
-    if (!isset($form['#id'])) {
-      $form['#id'] = form_clean_id('edit-'. implode('-', $form['#parents']));
-    }
-
-    if (isset($form['#disabled']) && $form['#disabled']) {
-      $form['#attributes']['disabled'] = 'disabled';
-    }
-
-    if (!isset($form['#value']) && !array_key_exists('#value', $form)) {
-      if (($form['#programmed']) || ((!isset($form['#access']) || $form['#access']) && isset($form['#post']) && (isset($form['#post']['form_id']) && $form['#post']['form_id'] == $form_id))) {
-        $edit = $form['#post'];
-        foreach ($form['#parents'] as $parent) {
-          $edit = isset($edit[$parent]) ? $edit[$parent] : NULL;
-        }
-        if (!$form['#programmed'] || isset($edit)) {
-          switch ($form['#type']) {
-            case 'checkbox':
-              $form['#value'] = !empty($edit) ? $form['#return_value'] : 0;
-              break;
-
-            case 'select':
-              if (isset($form['#multiple']) && $form['#multiple']) {
-                if (isset($edit) && is_array($edit)) {
-                  $form['#value'] = drupal_map_assoc($edit);
-                }
-                else {
-                  $form['#value'] = array();
-                }
-              }
-              elseif (isset($edit)) {
-                $form['#value'] = $edit;
-              }
-              break;
-
-            case 'textfield':
-              if (isset($edit)) {
-                // Equate $edit to the form value to ensure it's marked for
-                // validation.
-                $edit = str_replace(array("\r", "\n"), '', $edit);
-                $form['#value'] = $edit;
-              }
-              break;
-
-            case 'token':
-              $form['#value'] = (string)$edit;
-              break;
-
-            default:
-              if (isset($edit)) {
-                $form['#value'] = $edit;
-              }
-          }
-          // Mark all posted values for validation.
-          if ((isset($form['#value']) && $form['#value'] === $edit) || (isset($form['#required']) && $form['#required'])) {
-            $form['#needs_validation'] = TRUE;
-          }
-        }
-      }
-      if (!isset($form['#value'])) {
-        $function = $form['#type'] .'_value';
-        if (function_exists($function)) {
-          $function($form);
-        }
-        else {
-          $form['#value'] = isset($form['#default_value']) ? $form['#default_value'] : '';
-        }
-      }
-    }
-    if (isset($form['#executes_submit_callback'])) {
-      // Count submit and non-submit buttons.
-      $form_button_counter[$form['#executes_submit_callback']]++;
-      // See if a submit button was pressed.
-      if (isset($form['#post'][$form['#name']]) && $form['#post'][$form['#name']] == $form['#value']) {
-        $form_submitted = $form_submitted || $form['#executes_submit_callback'];
-
-        // In most cases, we want to use form_set_value() to manipulate the
-        // global variables. In this special case, we want to make sure that
-        // the value of this element is listed in $form_variables under 'op'.
-        $form_values[$form['#name']] = $form['#value'];
-      }
-    }
-  }
-
-  // Allow for elements to expand to multiple elements, e.g., radios,
-  // checkboxes and files.
-  if (isset($form['#process']) && !$form['#processed']) {
-    foreach ($form['#process'] as $process => $args) {
-      if (function_exists($process)) {
-        $args = array_merge(array($form), array(isset($edit) ? $edit : NULL), $args);
-        $form = call_user_func_array($process, $args);
-      }
-    }
-    $form['#processed'] = TRUE;
-  }
-
-  // Set the $form_values key that gets passed to validate and submit.
-  // We call this after #process gets called so that #process has a
-  // chance to update #value if desired.
-  if (isset($form['#input']) && $form['#input']) {
-    form_set_value($form, $form['#value']);
+    _form_builder_handle_input_element($form_id, $form, $form_state);
   }
 
   // We start off assuming all form elements are in the correct order.
@@ -823,25 +732,187 @@ function form_builder($form_id, $form) {
       // later.
       unset($form['#sorted']);
     }
-    $form[$key] = form_builder($form_id, $form[$key]);
+    $form[$key] = form_builder($form_id, $form[$key], $form_state);
     $count++;
   }
 
+  // The #after_build flag allows any piece of a form to be altered
+  // after normal input parsing has been completed.
   if (isset($form['#after_build']) && !isset($form['#after_build_done'])) {
     foreach ($form['#after_build'] as $function) {
-      if (function_exists($function)) {
-        $form = $function($form, $form_values);
-      }
+      $form = $function($form, $form_state['values'], $form_state);
+      $form['#after_build_done'] = TRUE;
     }
-    $form['#after_build_done'] = TRUE;
   }
+
+  // Now that we've processed everything, we can go back to handle the funky
+  // Internet Explorer button-click scenerio.
+  _form_builder_ie_cleanup($form, $form_state);
 
   return $form;
 }
 
 /**
+ * Populate the #value and #name properties of input elements so they
+ * can be processed and rendered. Also, execute any #process handlers
+ * attached to a specific element.
+ */
+function _form_builder_handle_input_element($form_id, &$form, &$form_state) {
+  if (isset($form['#type']) && $form['#type'] == 'form' && !empty($form['#programed'])) {
+    $form_state['submitted'] = TRUE;
+  }
+
+  if (!isset($form['#name'])) {
+    $name = array_shift($form['#parents']);
+    $form['#name'] = $name;
+    if ($form['#type'] == 'file') {
+      // To make it easier to handle $_FILES in file.inc, we place all
+      // file fields in the 'files' array. Also, we do not support
+      // nested file names.
+      $form['#name'] = 'files['. $form['#name'] .']';
+    }
+    elseif (count($form['#parents'])) {
+      $form['#name'] .= '['. implode('][', $form['#parents']) .']';
+    }
+    array_unshift($form['#parents'], $name);
+  }
+  if (!isset($form['#id'])) {
+    $form['#id'] = form_clean_id('edit-'. implode('-', $form['#parents']));
+  }
+
+  if (!empty($form['#disabled'])) {
+    $form['#attributes']['disabled'] = 'disabled';
+  }
+
+  if (!isset($form['#value']) && !array_key_exists('#value', $form)) {
+    if (($form['#programmed']) || ((!isset($form['#access']) || $form['#access']) && isset($form['#post']) && (isset($form['#post']['form_id']) && $form['#post']['form_id'] == $form_id))) {
+      $edit = $form['#post'];
+      foreach ($form['#parents'] as $parent) {
+        $edit = isset($edit[$parent]) ? $edit[$parent] : NULL;
+      }
+      if (!$form['#programmed'] || isset($edit)) {
+        switch ($form['#type']) {
+          case 'checkbox':
+            $form['#value'] = !empty($edit) ? $form['#return_value'] : 0;
+            break;
+
+          case 'select':
+            if (isset($form['#multiple']) && $form['#multiple']) {
+              if (isset($edit) && is_array($edit)) {
+                $form['#value'] = drupal_map_assoc($edit);
+              }
+              else {
+                $form['#value'] = array();
+              }
+            }
+            elseif (isset($edit)) {
+              $form['#value'] = $edit;
+            }
+            break;
+
+          case 'textfield':
+            if (isset($edit)) {
+              // Equate $edit to the form value to ensure it's marked for
+              // validation.
+              $edit = str_replace(array("\r", "\n"), '', $edit);
+              $form['#value'] = $edit;
+            }
+            break;
+
+          case 'token':
+            $form['#value'] = (string)$edit;
+            break;
+
+          default:
+            if (isset($edit)) {
+              $form['#value'] = $edit;
+            }
+        }
+        // Mark all posted values for validation.
+        if ((isset($form['#value']) && $form['#value'] === $edit) || (isset($form['#required']) && $form['#required'])) {
+          $form['#needs_validation'] = TRUE;
+        }
+      }
+    }
+    if (!isset($form['#value'])) {
+      $function = 'form_'. $form['#type'] .'_value';
+      if (function_exists($function)) {
+        $function($form);
+      }
+      else {
+        $form['#value'] = isset($form['#default_value']) ? $form['#default_value'] : '';
+      }
+    }
+  }
+
+  // Determine which button (if any) was clicked to submit the form.
+  // We compare the incoming values with the buttons defined in the form,
+  // and flag the one that matches. We have to do some funky tricks to
+  // deal with Internet Explorer's handling of single-button forms, though.
+  if (!empty($form['#post']) && isset($form['#executes_submit_callback'])) {
+    // First, accumulate a collection of buttons, divided into two bins:
+    // those that execute full submit callbacks and those that only validate.
+    $button_type = $form['#executes_submit_callback'] ? 'submit' : 'button';
+    $form_state['buttons'][$button_type][] = $form;
+
+    // See if a submit button was clicked. In Internet Explorer, if ONLY
+    // one submit button is present, AND the enter key is used to submit
+    // the form, no form value is sent for it and we'll never detect a
+    // match. In most cases, though, the following code will properly handle
+    // finding the clicked button and storing any custom validate and
+    // submit handlers it has defined.
+    if (isset($form['#post'][$form['#name']]) && $form['#post'][$form['#name']] == $form['#value']) {
+      $form_state['submitted'] = $form_state['submitted'] || $form['#executes_submit_callback'];
+
+      // In most cases, we want to use form_set_value() to manipulate
+      // the global variables. In this special case, we want to make sure that
+      // the value of this element is listed in $form_variables under 'op'.
+      $form_state['values'][$form['#name']] = $form['#value'];
+
+      if (isset($form['#validate'])) {
+        $form_state['validate_handlers'] = $form['#validate'];
+      }
+      if (isset($form['#submit'])) {
+        $form_state['submit_handlers'] = $form['#submit'];
+      }
+    }
+  }
+  // Allow for elements to expand to multiple elements, e.g., radios,
+  // checkboxes and files.
+  if (isset($form['#process']) && !$form['#processed']) {
+    foreach ($form['#process'] as $process) {
+      if (function_exists($process)) {
+        $args = array_merge(array($form), array(isset($edit) ? $edit : NULL), array($form_state));
+        $form = call_user_func_array($process, $args);
+      }
+    }
+    $form['#processed'] = TRUE;
+  }
+  form_set_value($form, $form['#value'], $form_state);
+}
+
+/**
+ * Handle the special Internet Explorer one-button-form hit-enter-
+ * instead-of-clicking scenerio.
+ */
+function _form_builder_ie_cleanup($form, &$form_state) {
+  if (!empty($form['#type']) && $form['#type'] == 'form') {
+    // If the 'submitted' flag isn't tripped, but there is only one submit button...
+    if (empty($form_state['submitted']) && !empty($form_state['buttons']['submit']) && empty($form_state['buttons']['button'])) {
+      $button = $form_state['buttons']['submit'][0];
+      $form_state['submitted'] = TRUE;
+      $form_state['submit_handlers'] = empty($button['#submit']) ? NULL : $button['#submit'];
+      $form_state['validate_handlers'] = empty($button['#validate']) ? NULL : $button['#validate'];
+      $form_state['values'][$button['#name']] = $button['#value'];
+    }
+    // After handling the special IE case, we no longer need the buttons collection.
+    unset($form_state['buttons']);
+  }
+}
+
+/**
  * Use this function to make changes to form values in the form validate
- * phase, so they will be available in the submit phase in $form_values.
+ * phase, so they will be available in the submit phase in $form_state.
  *
  * Specifically, if $form['#parents'] is array('foo', 'bar')
  * and $value is 'baz' then this function will make
@@ -852,9 +923,8 @@ function form_builder($form_id, $form) {
  * @param $value
  *   The value for the form item.
  */
-function form_set_value($form, $value) {
-  global $form_values;
-  _form_set_value($form_values, $form, $form['#parents'], $value);
+function form_set_value($form, $value, &$form_state) {
+  _form_set_value($form_state['values'], $form, $form['#parents'], $value);
 }
 
 /**
@@ -875,7 +945,6 @@ function _form_set_value(&$form_values, $form, $parents, $value) {
     }
     _form_set_value($form_values[$parent], $form, $parents, $value);
   }
-  return $form;
 }
 
 /**
@@ -1128,14 +1197,14 @@ function expand_password_confirm($element) {
   $element['pass1'] =  array(
     '#type' => 'password',
     '#title' => t('Password'),
-    '#value' => $element['#value']['pass1'],
+    '#value' => empty($element['#value']) ? NULL : $element['#value']['pass1'],
   );
   $element['pass2'] =  array(
     '#type' => 'password',
     '#title' => t('Confirm password'),
-    '#value' => $element['#value']['pass2'],
+    '#value' => empty($element['#value']) ? NULL : $element['#value']['pass2'],
   );
-  $element['#validate'] = array('password_confirm_validate' => array());
+  $element['#element_validate'] = array('password_confirm_validate');
   $element['#tree'] = TRUE;
 
   if (isset($element['#size'])) {
@@ -1148,7 +1217,7 @@ function expand_password_confirm($element) {
 /**
  * Validate password_confirm element.
  */
-function password_confirm_validate($form) {
+function password_confirm_validate($form, &$form_state) {
   $pass1 = trim($form['pass1']['#value']);
   if (!empty($pass1)) {
     $pass2 = trim($form['pass2']['#value']);
@@ -1162,9 +1231,9 @@ function password_confirm_validate($form) {
 
   // Password field must be converted from a two-element array into a single
   // string regardless of validation results.
-  form_set_value($form['pass1'], NULL);
-  form_set_value($form['pass2'], NULL);
-  form_set_value($form, $pass1);
+  form_set_value($form['pass1'], NULL, $form_state);
+  form_set_value($form['pass2'], NULL, $form_state);
+  form_set_value($form, $pass1, $form_state);
 
   return $form;
 }
@@ -1249,7 +1318,7 @@ function map_month($month) {
 /**
  * Helper function to load value from default value for checkboxes.
  */
-function checkboxes_value(&$form) {
+function form_checkboxes_value(&$form) {
   $value = array();
   $form += array('#default_value' => array());
   foreach ($form['#default_value'] as $key) {
@@ -1667,7 +1736,7 @@ function form_clean_id($id = NULL) {
  *   'finished' => 'my_finished_callback',
  * );
  * batch_set($batch);
- * // only needed if not inside a form _submit callback :
+ * // only needed if not inside a form _submit handler :
  * batch_process();
  * @endcode
  *
@@ -1804,7 +1873,7 @@ function batch_set($batch_definition) {
     $batch_set['init_message'] .= '<br/>&nbsp;';
     $batch_set['total'] = count($batch_set['operations']);
 
-    // If the batch is being processed (meaning we are executing a stored submit callback),
+    // If the batch is being processed (meaning we are executing a stored submit handler),
     // insert the new set after the current one.
     if (isset($batch['current_set'])) {
       // array_insert does not exist...
@@ -1824,7 +1893,7 @@ function batch_set($batch_definition) {
  * Unless the batch has been markes with 'progressive' = FALSE, the function
  * isses a drupal_goto and thus ends page execution.
  *
- * This function is not needed in form submit callbacks; Form API takes care
+ * This function is not needed in form submit handlers; Form API takes care
  * of batches issued during form submission.
  *
  * @param $redirect
@@ -1834,14 +1903,8 @@ function batch_set($batch_definition) {
  *   URL of the batch processing page.
  */
 function batch_process($redirect = NULL, $url = NULL) {
-  global $form_values, $user;
+  global $user;
   $batch =& batch_get();
-
-  // batch_process should not be called inside form _submit callbacks, or while a
-  // batch is already running. Neutralize the call if it is the case.
-  if (isset($batch['current_set']) || (isset($form_values) && !isset($batch['progressive']))) {
-    return;
-  }
 
   if (isset($batch)) {
     // Add process information
@@ -1868,6 +1931,7 @@ function batch_process($redirect = NULL, $url = NULL) {
         $batch['destination'] = $_REQUEST['edit']['destination'];
         unset($_REQUEST['edit']['destination']);
       }
+
       db_query("INSERT INTO {batch} (bid, sid, timestamp, batch) VALUES (%d, %d, %d, '%s')", $batch['id'], $user->sid, time(), serialize($batch));
       drupal_goto($batch['url'], 'op=start&id='. $batch['id']);
     }

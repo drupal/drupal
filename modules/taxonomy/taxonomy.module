@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.354 2007/05/04 08:38:34 dries Exp $
+// $Id: taxonomy.module,v 1.355 2007/05/14 13:43:37 dries Exp $
 
 /**
  * @file
@@ -304,7 +304,7 @@ function taxonomy_form_vocabulary($edit = array()) {
 /**
  * Accept the form submission for a vocabulary and save the results.
  */
-function taxonomy_form_vocabulary_submit($form_id, $form_values) {
+function taxonomy_form_vocabulary_submit($form_values, $form, &$form_state) {
   // Fix up the nodes array to remove unchecked nodes.
   $form_values['nodes'] = array_filter($form_values['nodes']);
   switch (taxonomy_save_vocabulary($form_values)) {
@@ -318,7 +318,9 @@ function taxonomy_form_vocabulary_submit($form_id, $form_values) {
       break;
   }
 
-  return 'admin/content/taxonomy';
+  $form_state['vid'] = $form_values['vid'];
+  $form_state['redirect'] = 'admin/content/taxonomy';
+  return;
 }
 
 function taxonomy_save_vocabulary(&$edit) {
@@ -391,11 +393,12 @@ function taxonomy_vocabulary_confirm_delete($vid) {
                   t('Cancel'));
 }
 
-function taxonomy_vocabulary_confirm_delete_submit($form_id, $form_values) {
+function taxonomy_vocabulary_confirm_delete_submit($form_values, $form, &$form_state) {
   $status = taxonomy_del_vocabulary($form_values['vid']);
   drupal_set_message(t('Deleted vocabulary %name.', array('%name' => $form_values['name'])));
   watchdog('taxonomy', 'Deleted vocabulary %name.', array('%name' => $form_values['name']), WATCHDOG_NOTICE);
-  return 'admin/content/taxonomy';
+  $form_state['redirect'] = 'admin/content/taxonomy';
+  return;
 }
 
 function taxonomy_form_term($vocabulary, $edit = array()) {
@@ -476,7 +479,7 @@ function taxonomy_form_term($vocabulary, $edit = array()) {
 /**
  * Accept the form submission for a taxonomy term and save the result.
  */
-function taxonomy_form_term_submit($form_id, $form_values) {
+function taxonomy_form_term_submit($form_values, $form, &$form_state) {
   switch (taxonomy_save_term($form_values)) {
     case SAVED_NEW:
       drupal_set_message(t('Created new term %term.', array('%term' => $form_values['name'])));
@@ -487,7 +490,10 @@ function taxonomy_form_term_submit($form_id, $form_values) {
       watchdog('taxonomy', 'Updated term %term.', array('%term' => $form_values['name']), WATCHDOG_NOTICE, l(t('edit'), 'admin/content/taxonomy/edit/term/'. $form_values['tid']));
       break;
   }
-  return 'admin/content/taxonomy';
+
+  $form_state['tid'] = $form_values['tid'];
+  $form_state['redirect'] = 'admin/content/taxonomy';
+  return;
 }
 
 /**
@@ -623,11 +629,12 @@ function taxonomy_term_confirm_delete($tid) {
                   t('Cancel'));
 }
 
-function taxonomy_term_confirm_delete_submit($form_id, $form_values) {
+function taxonomy_term_confirm_delete_submit($form_values, $form, &$form_state) {
   taxonomy_del_term($form_values['tid']);
   drupal_set_message(t('Deleted term %name.', array('%name' => $form_values['name'])));
   watchdog('taxonomy', 'Deleted term %name.', array('%name' => $form_values['name']), WATCHDOG_NOTICE);
-  return 'admin/content/taxonomy';
+  $form_state['redirect'] = 'admin/content/taxonomy';
+  return;
 }
 
 /**

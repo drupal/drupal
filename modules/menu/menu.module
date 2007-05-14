@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.109 2007/04/30 17:03:25 dries Exp $
+// $Id: menu.module,v 1.110 2007/05/14 13:43:36 dries Exp $
 
 /**
  * @file
@@ -321,7 +321,7 @@ function menu_edit_item_form($type, $mid = 0) {
   return $form;
 }
 
-function menu_edit_item_form_validate($form_id, $form_values) {
+function menu_edit_item_form_validate($form_values, $form, &$form_state) {
   if (isset($form_values['path'])) {
     $path = $form_values['path'];
     // Skip external links.
@@ -341,9 +341,10 @@ function menu_edit_item_form_validate($form_id, $form_values) {
 /**
  * Process menu and menu item add/edit form submissions.
  */
-function menu_edit_item_form_submit($form_id, $form_values) {
+function menu_edit_item_form_submit($form_values, $form, &$form_state) {
   menu_edit_item_save($form_values);
-  return 'admin/build/menu';
+  $form_state['redirect'] = 'admin/build/menu';
+  return;
 }
 
 /**
@@ -461,8 +462,8 @@ function menu_edit_menu_form($type, $mid = 0) {
   $form['type'] = array('#type' => 'value', '#value' => $item['type']);
   $form['submit'] = array('#type' => 'submit', '#value' => t('Submit'));
   // Reuse the submit function of menu_edit_item_form.
-  $form['#submit']['menu_edit_item_form_submit'] = array();
-  $form['#validate']['menu_edit_item_form_validate'] = array();
+  $form['#submit'][] = 'menu_edit_item_form_submit';
+  $form['#validate'][] = 'menu_edit_item_form_validate';
   $form['#theme'] = 'menu_edit_item_form';
 
   return $form;
@@ -494,7 +495,7 @@ function menu_item_delete_form($mid) {
 /**
  * Process menu delete form submissions.
  */
-function menu_item_delete_form_submit($form_id, $form_values) {
+function menu_item_delete_form_submit($form_values, $form, &$form_state) {
   menu_delete_item($form_values['path']);
 
   $t_args = array('%title' => $form_values['title']);
@@ -507,7 +508,8 @@ function menu_item_delete_form_submit($form_id, $form_values) {
     watchdog('menu', 'Deleted menu item %title.', $t_args, WATCHDOG_NOTICE);
   }
 
-  return 'admin/build/menu';
+  $form_state['redirect'] = 'admin/build/menu';
+  return;
 }
 
 /**
@@ -526,11 +528,12 @@ function menu_reset_item($mid) {
 /**
  * Process menu reset item form submissions.
  */
-function menu_reset_item_submit($form_id, $form_values) {
+function menu_reset_item_submit($form_values, $form, &$form_state) {
   menu_delete_item($form_values['mid']);
   drupal_set_message(t('The menu item was reset to its default settings.'));
 
-  return 'admin/build/menu';
+  $form_state['redirect'] = 'admin/build/menu';
+  return;
 }
 
 /**

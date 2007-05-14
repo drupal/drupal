@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.541 2007/04/30 17:03:24 dries Exp $
+// $Id: comment.module,v 1.542 2007/05/14 13:43:35 dries Exp $
 
 /**
  * @file
@@ -1106,23 +1106,8 @@ function comment_delete($cid = NULL) {
 
   $output = '';
 
-  // We'll only delete if the user has confirmed the
-  // deletion using the form in our else clause below.
-  if (is_object($comment) && is_numeric($comment->cid) && $_POST['confirm']) {
-    drupal_set_message(t('The comment and all its replies have been deleted.'));
-
-    // Delete comment and its replies.
-    _comment_delete_thread($comment);
-
-    _comment_update_node_statistics($comment->nid);
-
-    // Clear the cache so an anonymous user sees that his comment was deleted.
-    cache_clear_all();
-
-    drupal_goto("node/$comment->nid");
-  }
-  else if (is_object($comment) && is_numeric($comment->cid)) {
-    $output = drupal_get_form('comment_confirm_delete', $comment->subject, $comment->nid);
+  if (is_object($comment) && is_numeric($comment->cid)) {
+    $output = drupal_get_form('comment_confirm_delete', $comment);
   }
   else {
     drupal_set_message(t('The comment no longer exists.'));
@@ -1131,14 +1116,34 @@ function comment_delete($cid = NULL) {
   return $output;
 }
 
-function comment_confirm_delete($subject, $nid) {
+function comment_confirm_delete($comment) {
+  $form = array();
+  $form['#comment'] = $comment;
   return confirm_form(
-    array(),
-    t('Are you sure you want to delete the comment %title?', array('%title' => $subject)),
-    'node/'. $nid,
+    $form,
+    t('Are you sure you want to delete the comment %title?', array('%title' => $comment->subject)),
+    'node/'. $comment->nid,
     t('Any replies to this comment will be lost. This action cannot be undone.'),
     t('Delete'),
-    t('Cancel'));
+    t('Cancel'),
+    'comment_confirm_delete');
+}
+
+function comment_confirm_delete_submit($form_values, $form, &$form_state) {
+  drupal_set_message(t('The comment and all its replies have been deleted.'));
+
+  $comment = $form['#comment'];
+
+  // Delete comment and its replies.
+  _comment_delete_thread($comment);
+
+  _comment_update_node_statistics($comment->nid);
+
+  // Clear the cache so an anonymous user sees that his comment was deleted.
+  cache_clear_all();
+
+  $form_state['redirect'] = "node/$comment->nid";
+  return;
 }
 
 /**
@@ -1224,7 +1229,7 @@ function comment_admin_overview($type = 'new', $arg) {
 /**
  * We can't execute any 'Update options' if no comments were selected.
  */
-function comment_admin_overview_validate($form_id, $form_values) {
+function comment_admin_overview_validate($form_values, $form, &$form_state) {
   $form_values['comments'] = array_diff($form_values['comments'], array(0));
   if (count($form_values['comments']) == 0) {
     form_set_error('', t('Please select one or more comments to perform the update on.'));
@@ -1236,7 +1241,7 @@ function comment_admin_overview_validate($form_id, $form_values) {
  * Execute the chosen 'Update option' on the selected comments, such as
  * publishing, unpublishing or deleting.
  */
-function comment_admin_overview_submit($form_id, $form_values) {
+function comment_admin_overview_submit($form_values, $form, &$form_state) {
   $operations = comment_operations();
   if ($operations[$form_values['operation']][1]) {
     // extract the appropriate database query operation
@@ -1321,7 +1326,7 @@ function comment_multiple_delete_confirm() {
 /**
  * Perform the actual comment deletion.
  */
-function comment_multiple_delete_confirm_submit($form_id, $form_values) {
+function comment_multiple_delete_confirm_submit($form_values, $form, &$form_state) {
   if ($form_values['confirm']) {
     foreach ($form_values['comments'] as $cid => $value) {
       $comment = _comment_load($cid);
@@ -1448,7 +1453,6 @@ function comment_validate($edit) {
 ** Generate the basic commenting form, for appending to a node or display on a separate page.
 ** This is rendered by theme_comment_form.
 */
-
 function comment_form($edit, $title = NULL) {
   global $user;
 
@@ -1619,7 +1623,7 @@ function comment_form_box($edit, $title = NULL) {
   return theme('box', $title, drupal_get_form('comment_form', $edit, $title));
 }
 
-function comment_form_add_preview($form, $edit) {
+function comment_form_add_preview($form, $edit, &$form_state) {
   global $user;
 
   drupal_set_title(t('Preview comment'));
@@ -1630,7 +1634,7 @@ function comment_form_add_preview($form, $edit) {
   // request forgeries (CSRF) and setting arbitrary values for fields such as
   // the input format. Preview the comment only when form validation does not
   // set any errors.
-  drupal_validate_form($form['form_id']['#value'], $form);
+  drupal_validate_form($form['form_id']['#value'], $form, $form_state);
   if (!form_get_errors()) {
     $comment = (object)_comment_form_submit($edit);
 
@@ -1676,7 +1680,7 @@ function comment_form_add_preview($form, $edit) {
   return $form;
 }
 
-function comment_form_validate($form_id, $form_values) {
+function comment_form_validate($form_values, $form, &$form_state) {
   comment_validate($form_values);
 }
 
@@ -1709,10 +1713,11 @@ function _comment_form_submit($form_values) {
   return $form_values;
 }
 
-function comment_form_submit($form_id, $form_values) {
+function comment_form_submit(&$form_values, $form, &$form_state) {
   $form_values = _comment_form_submit($form_values);
   if ($cid = comment_save($form_values)) {
-    return array('node/'. $form_values['nid'], NULL, "comment-$cid");
+    $form_state['redirect'] = array('node/'. $form_values['nid'], NULL, "comment-$cid");
+    return;
   }
 }
 
@@ -1795,7 +1800,7 @@ function theme_comment_controls($form) {
   return theme('box', t('Comment viewing options'), $output);
 }
 
-function comment_controls_submit($form_id, $form_values) {
+function comment_controls_submit($form_values, $form, &$form_state) {
   global $user;
 
   $mode = $form_values['mode'];

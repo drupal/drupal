@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.338 2007/04/30 17:03:22 dries Exp $
+// $Id: aggregator.module,v 1.339 2007/05/14 13:43:33 dries Exp $
 
 /**
  * @file
@@ -357,7 +357,7 @@ function aggregator_form_category($edit = array('title' => '', 'description' => 
 /**
  * Validate aggregator_form_feed form submissions.
  */
-function aggregator_form_category_validate($form_id, $form_values) {
+function aggregator_form_category_validate($form_values, $form, &$form_state) {
   if ($form_values['op'] == t('Submit')) {
     // Check for duplicate titles
     if (isset($form_values['cid'])) {
@@ -376,7 +376,7 @@ function aggregator_form_category_validate($form_id, $form_values) {
  * Process aggregator_form_category form submissions.
  * @todo Add delete confirmation dialog.
  */
-function aggregator_form_category_submit($form_id, $form_values) {
+function aggregator_form_category_submit($form_values, $form, &$form_state) {
   if ($form_values['op'] == t('Delete')) {
     $title = $form_values['title'];
     // Unset the title:
@@ -388,20 +388,24 @@ function aggregator_form_category_submit($form_id, $form_values) {
     if (isset($form_values['title'])) {
       drupal_set_message(t('The category %category has been updated.', array('%category' => $form_values['title'])));
       if (arg(0) == 'admin') {
-        return 'admin/content/aggregator/';
+        $form_state['redirect'] = 'admin/content/aggregator/';
+        return;
       }
       else {
-        return 'aggregator/categories/'. $form_values['cid'];
+        $form_state['redirect'] = 'aggregator/categories/'. $form_values['cid'];
+        return;
       }
     }
     else {
       watchdog('aggregator', 'Category %category deleted.', array('%category' => $title));
       drupal_set_message(t('The category %category has been deleted.', array('%category' => $title)));
       if (arg(0) == 'admin') {
-        return 'admin/content/aggregator/';
+        $form_state['redirect'] = 'admin/content/aggregator/';
+        return;
       }
       else {
-        return 'aggregator/categories/';
+        $form_state['redirect'] = 'aggregator/categories/';
+        return;
       }
     }
   }
@@ -488,7 +492,7 @@ function aggregator_form_feed($edit = array('refresh' => 900, 'title' => '', 'ur
 /**
  * Validate aggregator_form_feed form submissions.
  */
-function aggregator_form_feed_validate($form_id, $form_values) {
+function aggregator_form_feed_validate($form_values, $form, &$form_state) {
   if ($form_values['op'] == t('Submit')) {
     // Check for duplicate titles
     if (isset($form_values['fid'])) {
@@ -512,7 +516,7 @@ function aggregator_form_feed_validate($form_id, $form_values) {
  * Process aggregator_form_feed form submissions.
  * @todo Add delete confirmation dialog.
  */
-function aggregator_form_feed_submit($form_id, $form_values) {
+function aggregator_form_feed_submit($form_values, $form, &$form_state) {
   if ($form_values['op'] == t('Delete')) {
     $title = $form_values['title'];
     // Unset the title:
@@ -524,20 +528,24 @@ function aggregator_form_feed_submit($form_id, $form_values) {
     if (isset($form_values['title'])) {
       drupal_set_message(t('The feed %feed has been updated.', array('%feed' => $form_values['title'])));
       if (arg(0) == 'admin') {
-        return 'admin/content/aggregator/';
+        $form_state['redirect'] = 'admin/content/aggregator/';
+        return;
       }
       else {
-        return 'aggregator/sources/'. $form_values['fid'];
+        $form_state['redirect'] = 'aggregator/sources/'. $form_values['fid'];
+        return;
       }
     }
     else {
       watchdog('aggregator', 'Feed %feed deleted.', array('%feed' => $title));
       drupal_set_message(t('The feed %feed has been deleted.', array('%feed' => $title)));
       if (arg(0) == 'admin') {
-        return 'admin/content/aggregator/';
+        $form_state['redirect'] = 'admin/content/aggregator/';
+        return;
       }
       else {
-        return 'aggregator/sources/';
+        $form_state['redirect'] = 'aggregator/sources/';
+        return;
       }
     }
   }
@@ -1076,8 +1084,8 @@ function aggregator_page_category() {
 }
 
 function aggregator_page_list($sql, $header, $categorize) {
-  $form['#submit']['aggregator_page_list_submit'] = array();
-  $form['#validate']['aggregator_page_list_validate'] = array();
+  $form['#submit'][] = 'aggregator_page_list_submit';
+  $form['#validate'][] = 'aggregator_page_list_validate';
   $form['#theme'] = 'aggregator_page_list';
   $form['header'] = array('#value' => $header);
   $result = pager_query($sql, 20);
@@ -1162,7 +1170,7 @@ function aggregator_page_list_validate($form_id, &$form) {
   }
 }
 
-function aggregator_page_list_submit($form_id, $form_values) {
+function aggregator_page_list_submit($form_values, $form, &$form_state) {
   foreach ($form_values['categories'] as $iid => $selection) {
     db_query('DELETE FROM {aggregator_category_item} WHERE iid = %d', $iid);
     foreach ($selection as $cid) {

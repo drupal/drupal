@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.159 2007/04/30 17:03:29 dries Exp $
+// $Id: upload.module,v 1.160 2007/05/14 13:43:38 dries Exp $
 
 /**
  * @file
@@ -119,7 +119,7 @@ function upload_init() {
 /**
  * Form API callback to validate the upload settings form.
  */
-function upload_admin_settings_validate($form_id, $form_values) {
+function upload_admin_settings_validate($form_values, $form, &$form_state) {
   if (($form_values['upload_max_resolution'] != '0')) {
     if (!preg_match('/^[0-9]+x[0-9]+$/', $form_values['upload_max_resolution'])) {
       form_set_error('upload_max_resolution', t('The maximum allowed image size expressed as WIDTHxHEIGHT (e.g. 640x480). Set to 0 for no restriction.'));
@@ -326,7 +326,7 @@ function _upload_prepare(&$node) {
     // Scale image uploads.
     $file = _upload_image($file);
 
-    $key = 'upload_'. (isset($_SESSION['file_previews']) ? 0 : count($_SESSION['file_previews']));
+    $key = 'upload_'. (!isset($_SESSION['file_previews']) ? 0 : count($_SESSION['file_previews']));
     $file->fid = $key;
     $file->source = $key;
     $file->list = variable_get('upload_list_default', 1);
@@ -813,7 +813,13 @@ function _upload_form($node) {
       '#suffix' => '</div>',
     );
     $form['new']['upload'] = array('#type' => 'file', '#title' => t('Attach new file'), '#size' => 40);
-    $form['new']['attach'] = array('#type' => 'button', '#value' => t('Attach'), '#name' => 'attach', '#id' => 'attach-button');
+    $form['new']['attach'] = array(
+      '#type' => 'submit',
+      '#value' => t('Attach'),
+      '#name' => 'attach',
+      '#id' => 'attach-button',
+      '#submit' => array(),
+    );
     // The class triggers the js upload behaviour.
     $form['attach-url'] = array('#type' => 'hidden', '#value' => url('upload/js', array('absolute' => TRUE)), '#attributes' => array('class' => 'upload'));
   }
@@ -872,7 +878,7 @@ function _upload_image($file) {
   $info = image_get_info($file->filepath);
 
   if ($info) {
-    list($width, $height) = explode('x', variable_get('upload_max_resolution', 0));
+    list($width, $height) = explode('x', variable_get('upload_max_resolution', '0x0'));
     if ($width && $height) {
       $result = image_scale($file->filepath, $file->filepath, $width, $height);
       if ($result) {
@@ -906,9 +912,9 @@ function upload_js() {
     '#tree' => FALSE,
     '#parents' => array(),
   );
-  $GLOBALS['form_button_counter'] = array(0, 0);
   drupal_alter('form', $form, 'upload_js');
-  $form = form_builder('upload_js', $form);
+  $form_state = array('submitted' => FALSE);
+  $form = form_builder('upload_js', $form, $form_state);
   $output = theme('status_messages') . drupal_render($form);
   // We send the updated file attachments form.
   print drupal_to_js(array('status' => TRUE, 'data' => $output));

@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.30 2007/05/07 12:32:55 dries Exp $
+// $Id: content_types.inc,v 1.31 2007/05/14 13:43:36 dries Exp $
 
 /**
  * @file
@@ -216,7 +216,7 @@ function node_type_form($type = NULL) {
 /**
  * Implementation of hook_form_validate().
  */
-function node_type_form_validate($form_id, $form_values) {
+function node_type_form_validate($form_values, $form, &$form_state) {
   $type = new stdClass();
   $type->type = trim($form_values['type']);
   $type->name = trim($form_values['name']);
@@ -252,7 +252,7 @@ function node_type_form_validate($form_id, $form_values) {
 /**
  * Implementation of hook_form_submit().
  */
-function node_type_form_submit($form_id, $form_values) {
+function node_type_form_submit($form_values, $form, &$form_state) {
   $op = isset($form_values['op']) ? $form_values['op'] : '';
 
   $type = new stdClass();
@@ -282,7 +282,8 @@ function node_type_form_submit($form_id, $form_values) {
     node_type_reset($type);
   }
   elseif ($op == t('Delete content type')) {
-    return 'admin/content/types/'. str_replace('_', '-', $type->old_type) .'/delete';
+    $form_state['redirect'] = 'admin/content/types/'. str_replace('_', '-', $type->old_type) .'/delete';
+    return;
   }
 
   $status = node_type_save($type);
@@ -336,7 +337,8 @@ function node_type_form_submit($form_id, $form_values) {
     watchdog('node', 'Added content type %name.', $t_args, WATCHDOG_NOTICE, l(t('view'), 'admin/content/types'));
   }
 
-  return 'admin/content/types';
+  $form_state['redirect'] = 'admin/content/types';
+  return;
 }
 
 /**
@@ -396,7 +398,7 @@ function node_type_delete_confirm($type) {
 /**
  * Process content type delete confirm submissions.
  */
-function node_type_delete_confirm_submit($form_id, $form_values) {
+function node_type_delete_confirm_submit($form_values, $form, &$form_state) {
   node_type_delete($form_values['type']);
 
   $t_args = array('%name' => $form_values['name']);
@@ -406,5 +408,6 @@ function node_type_delete_confirm_submit($form_id, $form_values) {
   node_types_rebuild();
   menu_rebuild();
 
-  return 'admin/content/types';
+  $form_state['redirect'] = 'admin/content/types';
+  return;
 }

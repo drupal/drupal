@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.83 2007/04/30 17:03:24 dries Exp $
+// $Id: contact.module,v 1.84 2007/05/14 13:43:35 dries Exp $
 
 /**
  * @file
@@ -209,7 +209,7 @@ function contact_admin_edit($cid = NULL) {
 /**
  * Validate the contact category edit page form submission.
  */
-function contact_admin_edit_validate($form_id, $form_values) {
+function contact_admin_edit_validate($form_values, $form, &$form_state) {
   if (empty($form_values['category'])) {
     form_set_error('category', t('You must enter a category.'));
   }
@@ -229,7 +229,7 @@ function contact_admin_edit_validate($form_id, $form_values) {
 /**
  * Process the contact category edit page form submission.
  */
-function contact_admin_edit_submit($form_id, $form_values) {
+function contact_admin_edit_submit($form_values, $form, &$form_state) {
   if ($form_values['selected']) {
     // Unselect all other contact categories.
     db_query('UPDATE {contact} SET selected = 0');
@@ -252,7 +252,8 @@ function contact_admin_edit_submit($form_id, $form_values) {
     watchdog('mail', 'Contact form: category %category updated.', array('%category' => $form_values['category']), WATCHDOG_NOTICE, l(t('view'), 'admin/build/contact'));
   }
 
-  return 'admin/build/contact';
+  $form_state['redirect'] = 'admin/build/contact';
+  return;
 }
 
 /**
@@ -275,12 +276,13 @@ function contact_admin_delete($cid = NULL) {
 /**
  * Process category delete form submission.
  */
-function contact_admin_delete_submit($form_id, $form_values) {
+function contact_admin_delete_submit($form_values, $form, &$form_state) {
   db_query("DELETE FROM {contact} WHERE cid = %d", arg(4));
   drupal_set_message(t('Category %category has been deleted.', array('%category' => $form_values['category'])));
   watchdog('mail', 'Contact form: category %category deleted.', array('%category' => $form_values['category']), WATCHDOG_NOTICE);
 
-  return 'admin/build/contact';
+  $form_state['redirect'] = 'admin/build/contact';
+  return;
 }
 
 function contact_admin_settings() {
@@ -357,7 +359,7 @@ function contact_mail_user($recipient) {
 /**
  * Process the personal contact page form submission.
  */
-function contact_mail_user_submit($form_id, $form_values) {
+function contact_mail_user_submit($form_values, $form, &$form_state) {
   global $user;
 
   $account = user_load(array('uid' => arg(1), 'status' => 1));
@@ -399,7 +401,8 @@ function contact_mail_user_submit($form_id, $form_values) {
   drupal_set_message(t('The message has been sent.'));
 
   // Jump to the user's profile page:
-  return "user/$account->uid";
+  $form_state['redirect'] = "user/$account->uid";
+  return;
 }
 
 /**
@@ -493,7 +496,7 @@ function contact_mail_page() {
 /**
  * Validate the site-wide contact page form submission.
  */
-function contact_mail_page_validate($form_id, $form_values) {
+function contact_mail_page_validate($form_values, $form, &$form_state) {
   if (!$form_values['cid']) {
     form_set_error('category', t('You must select a valid category.'));
   }
@@ -505,7 +508,7 @@ function contact_mail_page_validate($form_id, $form_values) {
 /**
  * Process the site-wide contact page form submission.
  */
-function contact_mail_page_submit($form_id, $form_values) {
+function contact_mail_page_submit($form_values, $form, &$form_state) {
 
   // E-mail address of the sender: as the form field is a text field,
   // all instances of \r and \n have been automatically stripped from it.
@@ -550,6 +553,7 @@ function contact_mail_page_submit($form_id, $form_values) {
   drupal_set_message(t('Your message has been sent.'));
 
   // Jump to home page rather than back to contact page to avoid contradictory messages if flood control has been activated.
-  return '';
+  $form_state['redirect'] = '';
+  return;
 }
 

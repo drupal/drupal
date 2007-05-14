@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.396 2007/05/07 17:02:54 dries Exp $
+// $Id: forum.module,v 1.397 2007/05/14 13:43:36 dries Exp $
 
 /**
  * @file
@@ -348,11 +348,11 @@ function forum_view(&$node, $teaser = FALSE, $page = FALSE) {
  * Check in particular that only a "leaf" term in the associated taxonomy
  * vocabulary is selected, not a "container" term.
  */
-function forum_submit(&$node) {
+function forum_submit(&$form_values) {
   // Make sure all fields are set properly:
-  $node->icon = !empty($node->icon) ? $node->icon : '';
+  $form_values['icon'] = $form_values['icon'] ? $form_values['icon'] : '';
 
-  if ($node->taxonomy) {
+  if ($form_values['taxonomy']) {
     // Get the forum terms from the (cached) tree
     $tree = taxonomy_get_tree(_forum_get_vid());
     if ($tree) {
@@ -360,16 +360,16 @@ function forum_submit(&$node) {
         $forum_terms[] = $term->tid;
       }
     }
-    foreach ($node->taxonomy as $term) {
+    foreach ($form_values['taxonomy'] as $term) {
       if (in_array($term, $forum_terms)) {
-        $node->tid = $term;
+        $form_values['tid'] = $term;
       }
     }
-    $old_tid = db_result(db_query_range("SELECT tid FROM {forum} WHERE nid = %d ORDER BY vid DESC", $node->nid, 0, 1));
+    $old_tid = db_result(db_query_range("SELECT tid FROM {forum} WHERE nid = %d ORDER BY vid DESC", $form_values['nid'], 0, 1));
     if ($old_tid) {
-      if (($node->tid != $old_tid) && $node->shadow) {
+      if (($form_values['tid'] != $old_tid) && $form_values['shadow']) {
         // A shadow copy needs to be created. Retain new term and add old term.
-        $node->taxonomy[] = $old_tid;
+        $form_values['taxonomy'][] = $old_tid;
       }
     }
   }
@@ -499,8 +499,8 @@ function forum_form_container($edit = array()) {
     $form['delete'] = array('#type' => 'submit', '#value' => t('Delete'));
     $form['tid'] = array('#type' => 'value', '#value' => $edit['tid']);
   }
-  $form['#submit']['forum_form_submit'] = array();
-  $form['#validate']['forum_form_validate'] = array();
+  $form['#submit'][] = 'forum_form_submit';
+  $form['#validate'][] = 'forum_form_validate';
   $form['#theme'] = 'forum_form';
 
   return $form;
@@ -558,8 +558,8 @@ function forum_form_forum($edit = array()) {
     $form['delete'] = array('#type' => 'submit', '#value' => t('Delete'));
     $form['tid'] = array('#type' => 'hidden', '#value' => $edit['tid']);
   }
-  $form['#submit']['forum_form_submit'] = array();
-  $form['#validate']['forum_form_validate'] = array();
+  $form['#submit'][] = 'forum_form_submit';
+  $form['#validate'][] = 'forum_form_validate';
   $form['#theme'] = 'forum_form';
 
   return $form;
@@ -568,8 +568,8 @@ function forum_form_forum($edit = array()) {
 /**
  * Process forum form and container form submissions.
  */
-function forum_form_submit($form_id, $form_values) {
-  if ($form_id == 'forum_form_container') {
+function forum_form_submit($form_values, $form, &$form_state) {
+  if ($form['form_id'] == 'forum_form_container') {
     $container = TRUE;
     $type = t('forum container');
   }
@@ -592,7 +592,8 @@ function forum_form_submit($form_id, $form_values) {
       drupal_set_message(t('The @type %term has been updated.', array('%term' => $form_values['name'], '@type' => $type)));
       break;
   }
-  return 'admin/content/forum';
+  $form_state['redirect'] = 'admin/content/forum';
+  return;
 }
 
 /**
@@ -612,12 +613,13 @@ function forum_confirm_delete($tid) {
 /**
  * Implementation of forms api _submit call. Deletes a forum after confirmation.
  */
-function forum_confirm_delete_submit($form_id, $form_values) {
+function forum_confirm_delete_submit($form_values, $form, &$form_state) {
   taxonomy_del_term($form_values['tid']);
   drupal_set_message(t('The forum %term and all sub-forums and associated posts have been deleted.', array('%term' => $form_values['name'])));
   watchdog('content', 'forum: deleted %term and all its sub-forums and associated posts.', array('%term' => $form_values['name']));
 
-  return 'admin/content/forum';
+  $form_state['redirect'] = 'admin/content/forum';
+  return;
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.200 2007/04/30 17:03:27 dries Exp $
+// $Id: profile.module,v 1.201 2007/05/14 13:43:36 dries Exp $
 
 /**
  * @file
@@ -331,7 +331,7 @@ Unless you know what you are doing, it is highly recommended that you prefix the
 /**
  * Validate profile_field_form submissions.
  */
-function profile_field_form_validate($form_id, $form_values) {
+function profile_field_form_validate($form_values, $form, &$form_state) {
   // Validate the 'field name':
   if (preg_match('/[^a-zA-Z0-9_-]/', $form_values['name'])) {
     form_set_error('name', t('The specified form name contains one or more illegal characters. Spaces or any other special characters except dash (-) and underscore (_) are not allowed.'));
@@ -367,7 +367,7 @@ function profile_field_form_validate($form_id, $form_values) {
 /**
  * Process profile_field_form submissions.
  */
-function profile_field_form_submit($form_id, $form_values) {
+function profile_field_form_submit($form_values, $form, &$form_state) {
   if (!isset($form_values['fid'])) {
     db_query("INSERT INTO {profile_fields} (title, name, explanation, category, type, weight, required, register, visibility, autocomplete, options, page) VALUES ('%s', '%s', '%s', '%s', '%s', %d, %d, %d, %d, %d, '%s', '%s')", $form_values['title'], $form_values['name'], $form_values['explanation'], $form_values['category'], $form_values['type'], $form_values['weight'], $form_values['required'], $form_values['register'], $form_values['visibility'], $form_values['autocomplete'], $form_values['options'], $form_values['page']);
 
@@ -382,7 +382,8 @@ function profile_field_form_submit($form_id, $form_values) {
   cache_clear_all();
   menu_rebuild();
 
-  return 'admin/user/profile';
+  $form_state['redirect'] = 'admin/user/profile';
+  return;
 }
 
 /**
@@ -406,7 +407,7 @@ function profile_field_delete($fid) {
 /**
  * Process a field delete form submission.
  */
-function profile_field_delete_submit($form_id, $form_values) {
+function profile_field_delete_submit($form_values, $form, &$form_state) {
   db_query('DELETE FROM {profile_fields} WHERE fid = %d', $form_values['fid']);
   db_query('DELETE FROM {profile_values} WHERE fid = %d', $form_values['fid']);
 
@@ -415,7 +416,8 @@ function profile_field_delete_submit($form_id, $form_values) {
   drupal_set_message(t('The field %field has been deleted.', array('%field' => $form_values['title'])));
   watchdog('profile', 'Profile field %field deleted.', array('%field' => $form_values['title']), WATCHDOG_NOTICE, l(t('view'), 'admin/user/profile'));
 
-  return 'admin/user/profile';
+  $form_state['redirect'] = 'admin/user/profile';
+  return;
 }
 
 /**

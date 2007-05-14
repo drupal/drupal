@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.811 2007/05/11 16:55:58 dries Exp $
+// $Id: node.module,v 1.812 2007/05/14 13:43:36 dries Exp $
 
 /**
  * @file
@@ -173,7 +173,7 @@ function node_mark($nid, $timestamp) {
 /**
  * See if the user used JS to submit a teaser.
  */
-function node_teaser_js(&$form, $form_values) {
+function node_teaser_js(&$form, $form_values, &$form_state) {
   // Glue the teaser to the body.
   if (isset($form['#post']['teaser_js'])) {
     if (trim($form_values['teaser_js'])) {
@@ -185,7 +185,7 @@ function node_teaser_js(&$form, $form_values) {
       $body = '<!--break-->'. $form_values['body'];
     }
     // Pass value onto preview/submit
-    form_set_value($form['body'], $body);
+    form_set_value($form['body'], $body, $form_state);
     // Pass value back onto form
     $form['body']['#value'] = $body;
   }
@@ -1066,7 +1066,7 @@ function node_configure() {
 /**
  * Form validate callback.
  */
-function node_configure_validate($form_id, $form_values) {
+function node_configure_validate($form_values, $form, &$form_state) {
   if ($form_values['op'] == t('Rebuild permissions')) {
     drupal_goto('admin/content/node-settings/rebuild');
   }
@@ -1083,10 +1083,11 @@ function node_configure_rebuild_confirm() {
 /**
  * Handler for wipe confirmation
  */
-function node_configure_rebuild_confirm_submit($form_id, &$form) {
+function node_configure_rebuild_confirm_submit(&$form, $form, &$form_state) {
   node_access_rebuild();
   drupal_set_message(t('The node access table has been rebuilt.'));
-  return 'admin/content/node-settings';
+  $form_state['redirect'] = 'admin/content/node-settings';
+  return;
 }
 
 /**
@@ -1514,7 +1515,7 @@ function theme_node_filters($form) {
 /**
  * Process result from node administration filter form.
  */
-function node_filter_form_submit($form_id, $form_values) {
+function node_filter_form_submit($form_values, $form, &$form_state) {
   $filters = node_filters();
   switch ($form_values['op']) {
     case t('Filter'):
@@ -1542,7 +1543,7 @@ function node_filter_form_submit($form_id, $form_values) {
 /**
  * Submit the node administration update form.
  */
-function node_admin_nodes_submit($form_id, $form_values) {
+function node_admin_nodes_submit($form_values, $form, &$form_state) {
   $operations = module_invoke_all('node_operations');
   $operation = $operations[$form_values['operation']];
   // Filter out unchecked nodes
@@ -1562,7 +1563,7 @@ function node_admin_nodes_submit($form_id, $form_values) {
   }
 }
 
-function node_admin_nodes_validate($form_id, $form_values) {
+function node_admin_nodes_validate($form_values, $form, &$form_state) {
   $nodes = array_filter($form_values['nodes']);
   if (count($nodes) == 0) {
     form_set_error('', t('No items selected.'));
@@ -1683,14 +1684,15 @@ function node_multiple_delete_confirm() {
                       t('Delete all'), t('Cancel'));
 }
 
-function node_multiple_delete_confirm_submit($form_id, $form_values) {
+function node_multiple_delete_confirm_submit($form_values, $form, &$form_state) {
   if ($form_values['confirm']) {
     foreach ($form_values['nodes'] as $nid => $value) {
       node_delete($nid);
     }
     drupal_set_message(t('The items have been deleted.'));
   }
-  return 'admin/content/node';
+  $form_state['redirect'] = 'admin/content/node';
+  return;
 }
 
 /**
@@ -1956,10 +1958,6 @@ function node_submit($node) {
     $node->created = $node->date ? strtotime($node->date) : NULL;
   }
 
-  // Do node-type-specific validation checks.
-  node_invoke($node, 'submit');
-  node_invoke_nodeapi($node, 'submit');
-
   $node->validated = TRUE;
 
   return $node;
@@ -2003,7 +2001,7 @@ function node_validate($node, $form = array()) {
   node_invoke_nodeapi($node, 'validate', $form);
 }
 
-function node_form_validate($form_id, $form_values, $form) {
+function node_form_validate($form_values, $form, &$form_state) {
   node_validate($form_values, $form);
 }
 
@@ -2025,9 +2023,15 @@ function node_object_prepare(&$node) {
 /**
  * Generate the node add/edit form array.
  */
-function node_form($node, $form_values = NULL) {
+function node_form($node, $form_state = NULL) {
   global $user;
 
+  if (isset($form_state['node'])) {
+    $node = $form_state['node'] + (array)$node;
+  }
+  if (isset($form_state['node_preview'])) {
+    $form['#prefix'] = $form_state['node_preview'];
+  }
   $node = (object)$node;
   foreach (array('body', 'title', 'format') as $key) {
     if (!isset($node->$key)) {
@@ -2050,7 +2054,7 @@ function node_form($node, $form_values = NULL) {
   // Changed must be sent to the client, for later overwrite error checking.
   $form['changed'] = array('#type' => 'hidden', '#default_value' => isset($node->changed) ? $node->changed : NULL);
   // Get the node-specific bits.
-  if ($extra = node_invoke($node, 'form', $form_values)) {
+  if ($extra = node_invoke($node, 'form', $form_state)) {
     $form = array_merge_recursive($form, $extra);
   }
   if (!isset($form['title']['#weight'])) {
@@ -2118,46 +2122,43 @@ function node_form($node, $form_values = NULL) {
   }
 
   // Add the buttons.
-  $form['preview'] = array('#type' => 'button', '#value' => t('Preview'), '#weight' => 40);
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Submit'), '#weight' => 45);
+  $form['preview'] = array(
+    '#type' => 'submit',
+    '#value' => t('Preview'),
+    '#weight' => 40,
+    '#submit' => array('node_form_build_preview'),
+  );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Submit'),
+    '#weight' => 45,
+    '#submit' => array('node_form_submit'),
+  );
   if (!empty($node->nid) && node_access('delete', $node)) {
     $form['delete'] = array('#type' => 'button', '#value' => t('Delete'), '#weight' => 50);
   }
-  $form['#after_build'] = array('node_form_add_preview');
-  $form['#submit']['node_form_submit'] = array();
-  $form['#validate']['node_form_validate'] = array();
+  $form['#validate'][] = 'node_form_validate';
   $form['#theme'] = 'node_form';
   return $form;
 }
 
-function node_form_add_preview($form) {
-  global $form_values;
-
-  $op = isset($form_values['op']) ? $form_values['op'] : '';
-  if ($op == t('Preview')) {
-    // Invoke full validation for the form, to protect against cross site
-    // request forgeries (CSRF) and setting arbitrary values for fields such as
-    // the input format. Preview the node only when form validation does not
-    // set any errors.
-    drupal_validate_form($form['form_id']['#value'], $form);
-    if (!form_get_errors()) {
-      // Because the node preview may display a form, we must render it
-      // outside the node submission form tags using the #prefix property
-      // (i.e. to prevent illegally nested forms).
-      // If the node form already has a #prefix, we must preserve it.
-      // In this case, we put the preview before the #prefix so we keep
-      // the #prefix as "close" to the rest of the form as possible,
-      // for example, to keep a <div> only around the form, not the
-      // preview. We pass the global $form_values here to preserve
-      // changes made during form validation.
-      $preview = node_preview((object)$form_values);
-      $form['#prefix'] = isset($form['#prefix']) ? $preview . $form['#prefix'] : $preview;
-    }
-  }
-  if (variable_get('node_preview', 0) && (form_get_errors() || $op != t('Preview'))) {
-    unset($form['submit']);
-  }
-  return $form;
+function node_form_build_preview($form_values, $form, &$form_state) {
+  // We do not want to execute button level handlers, we want the form level
+  // handlers to go in and change the submitted values.
+  unset($form_state['submit_handlers']);
+  form_execute_handlers('submit', $form, $form_state);
+  // Because the node preview may display a form, we must render it
+  // outside the node submission form tags using the #prefix property
+  // (i.e. to prevent illegally nested forms).
+  // If the node form already has a #prefix, we must preserve it.
+  // In this case, we put the preview before the #prefix so we keep
+  // the #prefix as "close" to the rest of the form as possible,
+  // for example, to keep a <div> only around the form, not the
+  // preview. We pass the global $form_values here to preserve
+  // changes made during form validation.
+  $form_state['node_preview'] = node_preview((object)$form_state['values']);
+  $form_state['rebuild'] = TRUE;
+  $form_state['node'] = $form_state['values'];
 }
 
 function theme_node_form($form) {
@@ -2289,7 +2290,7 @@ function node_preview($node) {
  */
 function theme_node_preview($node) {
   $output = '<div class="preview">';
-  if ($node->teaser && $node->teaser != $node->body) {
+  if (!empty($node->teaser) && !empty($node->body) && $node->teaser != $node->body) {
     drupal_set_message(t('The trimmed version of your post shows what your post looks like when promoted to the main page or when exported for syndication.<span class="no-js"> You can insert the delimiter "&lt;!--break--&gt;" (without the quotes) to fine-tune where your post gets split.</span>'));
     $output .= '<h3>'. t('Preview trimmed version') .'</h3>';
     $output .= node_view(drupal_clone($node), 1, FALSE, 0);
@@ -2308,7 +2309,7 @@ function theme_node_log_message($log) {
   return '<div class="log"><div class="title">'. t('Log') .':</div>'. $log .'</div>';
 }
 
-function node_form_submit($form_id, $form_values) {
+function node_form_submit($form_values, $form, &$form_state) {
   global $user;
 
   // Fix up the node when required:
@@ -2327,10 +2328,7 @@ function node_form_submit($form_id, $form_values) {
   }
   if ($node->nid) {
     if (node_access('view', $node)) {
-      return 'node/'. $node->nid;
-    }
-    else {
-      return '';
+      $form_state['redirect'] = 'node/'. $node->nid;
     }
   }
   // it is very unlikely we get here
@@ -2448,6 +2446,7 @@ function node_page_default() {
 
     $default_message = t('<h1 class="title">Welcome to your new Drupal website!</h1><p>Please follow these steps to set up and start using your website:</p>');
     $default_message .= '<ol>';
+
     $default_message .= '<li>'. t('<strong>Configure your website</strong> Once logged in, visit the <a href="@admin">administration section</a>, where you can <a href="@config">customize and configure</a> all aspects of your website.', array('@admin' => url('admin'), '@config' => url('admin/settings'))) .'</li>';
     $default_message .= '<li>'. t('<strong>Enable additional functionality</strong> Next, visit the <a href="@modules">module list</a> and enable features which suit your specific needs. You can find additional modules in the <a href="@download_modules">Drupal modules download section</a>.', array('@modules' => url('admin/build/modules'), '@download_modules' => 'http://drupal.org/project/modules')) .'</li>';
     $default_message .= '<li>'. t('<strong>Customize your website design</strong> To change the "look and feel" of your website, visit the <a href="@themes">themes section</a>. You may choose from one of the included themes or download additional themes from the <a href="@download_themes">Drupal themes download section</a>.', array('@themes' => url('admin/build/themes'), '@download_themes' => 'http://drupal.org/project/themes')) .'</li>';
@@ -2606,14 +2605,14 @@ function node_form_alter(&$form, $form_id) {
       '#suffix' => '</div>',
     );
 
-    $form['#validate']['node_search_validate'] = array();
+    $form['#validate'][] = 'node_search_validate';
   }
 }
 
 /**
  * Form API callback for the search form. Registered in node_form_alter().
  */
-function node_search_validate($form_id, $form_values, $form) {
+function node_search_validate($form_values, $form, &$form_state) {
   // Initialise using any existing basic search keywords.
   $keys = $form_values['processed_keys'];
 
@@ -2643,7 +2642,7 @@ function node_search_validate($form_id, $form_values, $form) {
     $keys .= ' "'. str_replace('"', ' ', $form_values['phrase']) .'"';
   }
   if (!empty($keys)) {
-    form_set_value($form['basic']['inline']['processed_keys'], trim($keys));
+    form_set_value($form['basic']['inline']['processed_keys'], trim($keys), $form_state);
   }
 }
 

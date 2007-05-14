@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.258 2007/04/30 17:03:23 dries Exp $
+// $Id: block.module,v 1.259 2007/05/14 13:43:33 dries Exp $
 
 /**
  * @file
@@ -292,7 +292,7 @@ function _block_compare($a, $b) {
 /**
  * Process main block administration form submission.
  */
-function block_admin_display_submit($form_id, $form_values) {
+function block_admin_display_submit($form_values, $form, &$form_state) {
   foreach ($form_values as $block) {
     $block['status'] = $block['region'] != BLOCK_REGION_NONE;
     $block['region'] = $block['status'] ? $block['region'] : '';
@@ -498,7 +498,7 @@ function block_admin_configure($module = NULL, $delta = 0) {
   return $form;
 }
 
-function block_admin_configure_validate($form_id, $form_values) {
+function block_admin_configure_validate($form_values, $form, &$form_state) {
   if ($form_values['module'] == 'block') {
     if (empty($form_values['info']) || db_num_rows(db_query("SELECT bid FROM {boxes} WHERE bid != %d AND info = '%s'", $form_values['delta'], $form_values['info']))) {
       form_set_error('info', t('Please ensure that each block description is unique.'));
@@ -506,7 +506,7 @@ function block_admin_configure_validate($form_id, $form_values) {
   }
 }
 
-function block_admin_configure_submit($form_id, $form_values) {
+function block_admin_configure_submit($form_values, $form, &$form_state) {
   if (!form_get_errors()) {
     db_query("UPDATE {blocks} SET visibility = %d, pages = '%s', custom = %d, title = '%s' WHERE module = '%s' AND delta = '%s'", $form_values['visibility'], trim($form_values['pages']), $form_values['custom'], $form_values['title'], $form_values['module'], $form_values['delta']);
     db_query("DELETE FROM {blocks_roles} WHERE module = '%s' AND delta = '%s'", $form_values['module'], $form_values['delta']);
@@ -516,7 +516,8 @@ function block_admin_configure_submit($form_id, $form_values) {
     module_invoke($form_values['module'], 'block', 'save', $form_values['delta'], $form_values);
     drupal_set_message(t('The block configuration has been saved.'));
     cache_clear_all();
-    return 'admin/build/block';
+    $form_state['redirect'] = 'admin/build/block';
+    return;
   }
 }
 
@@ -527,7 +528,7 @@ function block_add_block_form() {
   return block_admin_configure('block', NULL);
 }
 
-function block_add_block_form_validate($form_id, $form_values) {
+function block_add_block_form_validate($form_values, $form, &$form_state) {
   if (empty($form_values['info']) || db_num_rows(db_query("SELECT info FROM {boxes} WHERE info = '%s'", $form_values['info']))) {
     form_set_error('info', t('Please ensure that each block description is unique.'));
   }
@@ -536,7 +537,7 @@ function block_add_block_form_validate($form_id, $form_values) {
 /**
  * Save the new custom block.
  */
-function block_add_block_form_submit($form_id, $form_values) {
+function block_add_block_form_submit($form_values, $form, &$form_state) {
   $delta = db_next_id('{boxes}_bid');
 
   foreach (list_themes() as $key => $theme) {
@@ -554,7 +555,8 @@ function block_add_block_form_submit($form_id, $form_values) {
   drupal_set_message(t('The block has been created.'));
   cache_clear_all();
 
-  return 'admin/build/block';
+  $form_state['redirect'] = 'admin/build/block';
+  return;
 }
 
 /**
@@ -571,12 +573,13 @@ function block_box_delete($bid = 0) {
 /**
  * Deletion of custom blocks.
  */
-function block_box_delete_submit($form_id, $form_values) {
+function block_box_delete_submit($form_values, $form, &$form_state) {
   db_query('DELETE FROM {boxes} WHERE bid = %d', $form_values['bid']);
   db_query("DELETE FROM {blocks} WHERE module = 'block' AND delta = %d", $form_values['bid']);
   drupal_set_message(t('The block %name has been removed.', array('%name' => $form_values['info'])));
   cache_clear_all();
-  return 'admin/build/block';
+  $form_state['redirect'] = 'admin/build/block';
+  return;
 };
 
 /**

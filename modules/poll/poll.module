@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.227 2007/04/30 17:03:27 dries Exp $
+// $Id: poll.module,v 1.228 2007/05/14 13:43:36 dries Exp $
 
 /**
  * @file
@@ -99,10 +99,14 @@ function poll_delete($node) {
 /**
  * Implementation of hook_submit().
  */
-function poll_submit(&$node) {
+function poll_node_form_submit(&$form_values, $form, &$form_state) {
   // Renumber fields
-  $node->choice = array_values($node->choice);
-  $node->teaser = poll_teaser($node);
+  $form_values['choice'] = array_values($form_values['choice']);
+  $form_values['teaser'] = poll_teaser((object)$form_values);
+  $form_state['choices'] = $form_values['choices'];
+  if ($form_values['morechoices']) {
+    $form_state['choices'] *= 2;
+  }
 }
 
 /**
@@ -132,7 +136,7 @@ function poll_validate($node) {
 /**
  * Implementation of hook_form().
  */
-function poll_form($node, $form_values = NULL) {
+function poll_form($node, $form_state = NULL) {
   $admin = user_access('administer nodes');
   $type = node_get_types('type', $node);
   $form['title'] = array(
@@ -143,11 +147,8 @@ function poll_form($node, $form_values = NULL) {
     '#weight' => -1
   );
 
-  if (isset($form_values)) {
-    $choices = $form_values['choices'];
-    if ($form_values['morechoices']) {
-      $choices *= 2;
-    }
+  if (isset($form_state['choices'])) {
+    $choices = $form_state['choices'];
   }
   else {
     $choices = max(2, empty($node->choice) ? 5 : count($node->choice));
@@ -174,7 +175,7 @@ function poll_form($node, $form_values = NULL) {
     '#type' => 'checkbox',
     '#parents' => array('morechoices'),
     '#title' => t('Need more choices'),
-    '#value' => 0,
+    '#default_value' => 0,
     '#description' => t("If the amount of boxes above isn't enough, check this box and click the Preview button below to add some more."),
     '#weight' => 1,
   );
@@ -183,14 +184,14 @@ function poll_form($node, $form_values = NULL) {
     $form['choice'][$a]['chtext'] = array(
       '#type' => 'textfield',
       '#title' => t('Choice @n', array('@n' => ($a + 1))),
-      '#default_value' => isset($node->choice) ? $node->choice[$a]['chtext'] : '',
+      '#default_value' => isset($node->choice[$a]) ? $node->choice[$a]['chtext'] : '',
     );
 
     if ($admin) {
       $form['choice'][$a]['chvotes'] = array(
         '#type' => 'textfield',
         '#title' => t('Votes for choice @n', array('@n' => ($a + 1))),
-        '#default_value' => isset($node->choice) ? (int)$node->choice[$a]['chvotes'] : 0,
+        '#default_value' => isset($node->choice[$a]) ? (int)$node->choice[$a]['chvotes'] : 0,
         '#size' => 5, '#maxlength' => 7
       );
     }

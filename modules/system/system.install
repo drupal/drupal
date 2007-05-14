@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.105 2007/05/11 07:33:46 goba Exp $
+// $Id: system.install,v 1.106 2007/05/14 13:43:37 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -243,6 +243,16 @@ function system_install() {
         INDEX expire (expire)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
       db_query("CREATE TABLE {cache_page} (
+        cid varchar(255) BINARY NOT NULL default '',
+        data longblob,
+        expire int NOT NULL default '0',
+        created int NOT NULL default '0',
+        headers text,
+        serialized int(1) NOT NULL default '0',
+        PRIMARY KEY (cid),
+        INDEX expire (expire)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+      db_query("CREATE TABLE {cache_form} (
         cid varchar(255) BINARY NOT NULL default '',
         data longblob,
         expire int NOT NULL default '0',
@@ -734,9 +744,19 @@ function system_install() {
         serialized smallint NOT NULL default '0',
         PRIMARY KEY (cid)
       )");
+      db_query("CREATE TABLE {cache_form} (
+        cid varchar(255) NOT NULL default '',
+        data bytea,
+        expire int NOT NULL default '0',
+        created int NOT NULL default '0',
+        headers text,
+        serialized int(1) NOT NULL default '0',
+        PRIMARY KEY (cid)
+      )");
       db_query("CREATE INDEX {cache}_expire_idx ON {cache} (expire)");
       db_query("CREATE INDEX {cache_filter}_expire_idx ON {cache_filter} (expire)");
       db_query("CREATE INDEX {cache_page}_expire_idx ON {cache_page} (expire)");
+      db_query("CREATE INDEX {cache_form}_expire_idx ON {cache_form} (expire)");
 
       db_query("CREATE TABLE {comments} (
         cid serial,
@@ -3885,6 +3905,42 @@ function system_update_6014() {
   return array();
 }
 
+/**
+ * Add the form cache table.
+ */
+function system_update_6015() {
+  $ret = array();
+
+  switch ($GLOBALS['db_type']) {
+    case 'pgsql':
+      $ret[] = update_sql("CREATE TABLE {cache_form} (
+        cid varchar(255) NOT NULL default '',
+        data bytea,
+        expire int NOT NULL default '0',
+        created int NOT NULL default '0',
+        headers text,
+        serialized int(1) NOT NULL default '0',
+        PRIMARY KEY (cid)
+    )");
+      $ret[] = update_sql("CREATE INDEX {cache_form}_expire_idx ON {cache_form} (expire)");
+      break;
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql("CREATE TABLE {cache_form} (
+        cid varchar(255) NOT NULL default '',
+        data longblob,
+        expire int NOT NULL default '0',
+        created int NOT NULL default '0',
+        headers text,
+        serialized int(1) NOT NULL default '0',
+        PRIMARY KEY (cid),
+        INDEX expire (expire)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+      break;
+  }
+
+  return $ret;
+}
 
 /**
  * @} End of "defgroup updates-5.x-to-6.x"

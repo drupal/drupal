@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.47 2007/05/11 17:25:14 goba Exp $
+// $Id: install.php,v 1.48 2007/05/14 13:43:29 dries Exp $
 
 require_once './includes/install.inc';
 
@@ -15,9 +15,17 @@ require_once './includes/install.inc';
  *   The installation phase we should proceed to.
  */
 function install_main() {
-  global $profile, $install_locale;
+  global $profile, $install_locale, $conf;
+  require_once './includes/cache-install.inc';
   require_once './includes/bootstrap.inc';
   drupal_bootstrap(DRUPAL_BOOTSTRAP_CONFIGURATION);
+
+  // Because no persistent storage is available yet, functions
+  // that check for cached data will fail. During the installation
+  // process, we temporarily replace the normal cache system with
+  // a stubbed-out version that short-circuits the actual caching
+  // process and avoids any errors.
+  $conf['cache_inc'] = './includes/cache-install.inc';
   require_once './modules/system/system.install';
   require_once './includes/file.inc';
 
@@ -135,7 +143,8 @@ function install_verify_settings() {
     $db_path = ltrim(urldecode($url['path']), '/');
     $settings_file = './'. conf_path() .'/settings.php';
 
-    _install_settings_form_validate($db_prefix, $db_type, $db_user, $db_pass, $db_host, $db_port, $db_path, $settings_file);
+    $form_state = array();
+    _install_settings_form_validate($db_prefix, $db_type, $db_user, $db_pass, $db_host, $db_port, $db_path, $settings_file, $form_state);
     if (!form_get_errors()) {
       return TRUE;
     }
@@ -318,22 +327,23 @@ function install_settings_form($profile, $install_locale, $settings_file, $db_ur
     $form['settings_file'] = array('#type' => 'value', '#value' => $settings_file);
     $form['_db_url'] = array('#type' => 'value');
     $form['#action'] = "install.php?profile=$profile" . ($install_locale ? "&locale=$install_locale" : '');
-    $form['#redirect'] = NULL;
+    $form['#redirect'] = FALSE;
   }
   return $form;
 }
+
 /**
  * Form API validate for install_settings form.
  */
-function install_settings_form_validate($form_id, $form_values, $form) {
+function install_settings_form_validate($form_values, $form, &$form_state) {
   global $db_url;
-  _install_settings_form_validate($form_values['db_prefix'], $form_values['db_type'], $form_values['db_user'], $form_values['db_pass'], $form_values['db_host'], $form_values['db_port'], $form_values['db_path'], $form_values['settings_file'], $form);
+  _install_settings_form_validate($form_values['db_prefix'], $form_values['db_type'], $form_values['db_user'], $form_values['db_pass'], $form_values['db_host'], $form_values['db_port'], $form_values['db_path'], $form_values['settings_file'], $form_state, $form);
 }
 
 /**
  * Helper function for install_settings_validate.
  */
-function _install_settings_form_validate($db_prefix, $db_type, $db_user, $db_pass, $db_host, $db_port, $db_path, $settings_file, $form = NULL) {
+function _install_settings_form_validate($db_prefix, $db_type, $db_user, $db_pass, $db_host, $db_port, $db_path, $settings_file, &$form_state, $form = NULL) {
   global $db_url;
 
   // Verify the table prefix
@@ -358,7 +368,7 @@ function _install_settings_form_validate($db_prefix, $db_type, $db_user, $db_pas
     // Verify
     $db_url = $db_type .'://'. urlencode($db_user) . ($db_pass ? ':'. urlencode($db_pass) : '') .'@'. ($db_host ? urlencode($db_host) : 'localhost') . ($db_port ? ":$db_port" : '') .'/'. urlencode($db_path);
     if (isset($form)) {
-      form_set_value($form['_db_url'], $db_url);
+      form_set_value($form['_db_url'], $db_url, $form_state);
     }
     $success = array();
 
@@ -377,7 +387,7 @@ function _install_settings_form_validate($db_prefix, $db_type, $db_user, $db_pas
 /**
  * Form API submit for install_settings form.
  */
-function install_settings_form_submit($form_id, $form_values) {
+function install_settings_form_submit($form_values) {
   global $profile, $install_locale;
 
   // Update global settings array and save
@@ -589,17 +599,27 @@ function install_tasks($profile, $task) {
 
     // We break the form up so we can tell when it's been successfully
     // submitted.
+
+    $form_state = array('storage' => NULL, 'submitted' => FALSE);
+
     $form = drupal_retrieve_form('install_configure_form');
+    $form_build_id = md5(mt_rand());
+    $form['#build_id'] = $form_build_id;
+    drupal_prepare_form('install_configure_form', $form, $form_state);
 
     // In order to find out if the form was successfully submitted or not,
     // we do a little song and dance to set the form to 'programmed' and check
     // to make sure this is really the form being submitted. It'd better be.
-    if ($_POST && $_POST['form_id'] == 'install_configure_form') {
+    if (!empty($_POST) && $_POST['form_id'] == 'install_configure_form') {
       $form['#programmed'] = TRUE;
       $form['#post'] = $_POST;
     }
+    else {
+      $form['#post'] = array();
+    }
 
-    if (!drupal_process_form('install_configure_form', $form)) {
+    drupal_process_form('install_configure_form', $form, $form_state);
+    if (empty($form_state['redirect'])) {
       $output = drupal_render_form('install_configure_form', $form);
       install_task_list('configure');
     }
@@ -832,7 +852,7 @@ if (Drupal.jsEnabled) {
   return $form;
 }
 
-function install_configure_form_validate($form_id, $form_values, $form) {
+function install_configure_form_validate($form_values, $form, &$form_state) {
   if ($error = user_validate_name($form_values['account']['name'])) {
     form_error($form['admin_account']['account']['name'], $error);
   }
@@ -844,13 +864,13 @@ function install_configure_form_validate($form_id, $form_values, $form) {
   }
 }
 
-function install_configure_form_submit($form_id, $form_values) {
+function install_configure_form_submit($form_values, $form, &$form_state) {
   variable_set('site_name', $form_values['site_name']);
   variable_set('site_mail', $form_values['site_mail']);
   variable_set('date_default_timezone', $form_values['date_default_timezone']);
   // Turn this off temporarily so that we can pass a password through.
   variable_set('user_email_verification', FALSE);
-  user_register_submit('user_register', $form_values['account']);
+  user_register_submit($form_values['account'], $form, $form_state);
   variable_set('user_email_verification', TRUE);
   if (isset($form_values['clean_url'])) {
     variable_set('clean_url', $form_values['clean_url']);

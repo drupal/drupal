@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.474 2007/05/06 05:47:52 dries Exp $
+// $Id: system.module,v 1.475 2007/05/14 13:43:37 dries Exp $
 
 /**
  * @file
@@ -99,14 +99,14 @@ function system_elements() {
   $type['button'] = array('#input' => TRUE, '#name' => 'op', '#button_type' => 'submit', '#executes_submit_callback' => FALSE);
   $type['textfield'] = array('#input' => TRUE, '#size' => 60, '#maxlength' => 128, '#autocomplete_path' => FALSE);
   $type['password'] = array('#input' => TRUE, '#size' => 60, '#maxlength' => 128);
-  $type['password_confirm'] = array('#input' => TRUE, '#process' => array('expand_password_confirm' => array()));
+  $type['password_confirm'] = array('#input' => TRUE, '#process' => array('expand_password_confirm'));
   $type['textarea'] = array('#input' => TRUE, '#cols' => 60, '#rows' => 5, '#resizable' => TRUE);
-  $type['radios'] = array('#input' => TRUE, '#process' => array('expand_radios' => array()));
+  $type['radios'] = array('#input' => TRUE, '#process' => array('expand_radios'));
   $type['radio'] = array('#input' => TRUE, '#default_value' => NULL);
-  $type['checkboxes'] = array('#input' => TRUE, '#process' => array('expand_checkboxes' => array()), '#tree' => TRUE);
+  $type['checkboxes'] = array('#input' => TRUE, '#process' => array('expand_checkboxes'), '#tree' => TRUE);
   $type['select'] = array('#input' => TRUE, '#size' => 0, '#multiple' => FALSE);
-  $type['weight'] = array('#input' => TRUE, '#delta' => 10, '#default_value' => 0, '#process' => array('process_weight' => array()));
-  $type['date'] = array('#input' => TRUE, '#process' => array('expand_date' => array()), '#validate' => array('date_validate' => array()));
+  $type['weight'] = array('#input' => TRUE, '#delta' => 10, '#default_value' => 0, '#process' => array('process_weight'));
+  $type['date'] = array('#input' => TRUE, '#process' => array('expand_date' => array()), '#element_validate' => array('date_validate'));
   $type['file'] = array('#input' => TRUE, '#size' => 60);
 
   // Form structure
@@ -474,13 +474,13 @@ function system_admin_theme_settings() {
   // In order to give it our own submit, we have to give it the default submit
   // too because the presence of a #submit will prevent the default #submit
   // from being used. Also we want ours first.
-  $form['#submit']['system_admin_theme_submit'] = array();
-  $form['#submit']['system_settings_form_submit'] = array();
+  $form['#submit'][] = 'system_admin_theme_submit';
+  $form['#submit'][] = 'system_settings_form_submit';
   return system_settings_form($form);
 }
 
 
-function system_admin_theme_submit($form_id, $form_values) {
+function system_admin_theme_submit($form_values, $form, &$form_state) {
   // If we're changing themes, make sure the theme has its blocks initialized.
   if ($form_values['admin_theme'] != variable_get('admin_theme', '0')) {
     $result = db_query("SELECT status FROM {blocks} WHERE theme = '%s'", $form_values['admin_theme']);
@@ -749,8 +749,8 @@ function system_performance_settings() {
     '#description' => t("Some Drupal modules include their own CSS files. When these modules are enabled, each module's CSS file adds an additional HTTP request to the page, which can increase the load time of each page. These HTTP requests can also slightly increase server load. It is recommended to only turn this option on when your site is in production, as it can interfere with theme development. This option is disabled if you have not set up your files directory, or if your download method is set to private."),
   );
 
-  $form['#submit']['system_settings_form_submit'] = array();
-  $form['#submit']['drupal_clear_css_cache'] = array();
+  $form['#submit'][] = 'system_settings_form_submit';
+  $form['#submit'][] = 'drupal_clear_css_cache';
 
   return system_settings_form($form);
 }
@@ -1168,13 +1168,13 @@ function system_settings_form($form) {
   if (!empty($_POST) && form_get_errors()) {
     drupal_set_message(t('The settings have not been saved because of the errors.'), 'error');
   }
-  $form['#submit']['system_settings_form_submit'] = array();
-  $form['#validate']['system_settings_form_validate'] = array();
+  $form['#submit'][] = 'system_settings_form_submit';
+  $form['#validate'][] = 'system_settings_form_validate';
   $form['#theme'] = 'system_settings_form';
   return $form;
 }
 
-function system_theme_settings_submit($form_id, $form_values) {
+function system_theme_settings_submit($form_values, $form, &$form_state) {
   $op = isset($_POST['op']) ? $_POST['op'] : '';
   $key = $form_values['var'];
 
@@ -1200,7 +1200,7 @@ function system_theme_settings_submit($form_id, $form_values) {
  * add an array_filter value to your form.
  *
  */
-function system_settings_form_submit($form_id, $form_values) {
+function system_settings_form_submit($form_values, $form, &$form_state) {
   $op = isset($form_values['op']) ? $form_values['op'] : '';
 
   // Exclude unnecessary elements.
@@ -1305,7 +1305,7 @@ function theme_system_themes_form($form) {
 }
 
 
-function system_themes_form_submit($form_id, $form_values) {
+function system_themes_form_submit($form_values, $form, &$form_state) {
 
   db_query("UPDATE {system} SET status = 0 WHERE type = 'theme'");
 
@@ -1336,7 +1336,8 @@ function system_themes_form_submit($form_id, $form_values) {
   list_themes(TRUE);
   menu_rebuild();
   drupal_set_message(t('The configuration options have been saved.'));
-  return 'admin/build/themes';
+  $form_state['redirect'] = 'admin/build/themes';
+  return;
 }
 
 /**
@@ -1354,12 +1355,13 @@ function system_themes_form_submit($form_id, $form_values) {
  * @return
  *   The form array.
  */
-function system_modules($form_values = NULL) {
+function system_modules($form_state = array()) {
   // Get current list of modules.
   $files = module_rebuild_cache();
-  if ($confirm_form = system_modules_confirm_form($files, $form_values)) {
-    return $confirm_form;
+  if (!empty($form_state['storage'])) {
+    return system_modules_confirm_form($files, $form_state['storage']);
   }
+  $dependencies = array();
 
   // Store module list for validation callback.
   $form['validation_modules'] = array('#type' => 'value', '#value' => $files);
@@ -1449,9 +1451,10 @@ function system_modules($form_values = NULL) {
     '#default_value' => $status,
     '#options' => $options,
     '#process' => array(
-      'expand_checkboxes' => array(),
-      'system_modules_disable' => array($disabled),
+      'expand_checkboxes',
+      'system_modules_disable',
     ),
+    '#disabled_modules' => $disabled,
   );
 
   // Handle throttle checkboxes, including overriding the
@@ -1462,9 +1465,10 @@ function system_modules($form_values = NULL) {
       '#default_value' => $throttle,
       '#options' => $options,
       '#process' => array(
-        'expand_checkboxes' => array(),
-        'system_modules_disable' => array(array_merge($modules_required, array('throttle'))),
+        'expand_checkboxes',
+        'system_modules_disable',
       ),
+      '#disabled_modules' => array_merge($modules_required, array('throttle')),
     );
   }
 
@@ -1472,7 +1476,6 @@ function system_modules($form_values = NULL) {
     '#type' => 'submit',
     '#value' => t('Save configuration'),
   );
-  $form['#multistep'] = TRUE;
   $form['#action'] = url('admin/build/modules/list/confirm');
 
   return $form;
@@ -1481,43 +1484,33 @@ function system_modules($form_values = NULL) {
 /**
  * Form process callback function to disable check boxes.
  */
-function system_modules_disable($form, $edit, $disabled) {
-  foreach ($disabled as $key) {
+function system_modules_disable($form, $edit) {
+  foreach ($form['#disabled_modules'] as $key) {
     $form[$key]['#attributes']['disabled'] = 'disabled';
   }
   return $form;
 }
 
-function system_modules_confirm_form($modules, $form_values = array()) {
+function system_modules_confirm_form($modules, $dependencies) {
   $form = array();
   $items = array();
 
-  // Check values for submitted dependency errors.
-  if ($dependencies = system_module_build_dependencies($modules, $form_values)) {
-    // preserve the already switched on modules
-    foreach ($modules as $name => $module) {
-      if ($module->status) {
-        $form['status'][$name] = array('#type' => 'hidden', '#value' => 1);
-      }
+  $form['validation_modules'] = array('#type' => 'value', '#value' => $modules);
+  $form['status']['#tree'] = TRUE;
+  foreach ($dependencies as $name => $missing_dependencies) {
+    $form['status'][$name] = array('#type' => 'hidden', '#value' => 1);
+    foreach ($missing_dependencies as $k => $dependency) {
+      $form['status'][$dependency] = array('#type' => 'hidden', '#value' => 1);
+      $info = $modules[$dependency]->info;
+      $missing_dependencies[$k] = $info['name'] ? $info['name'] : drupal_ucfirst($dependency);
     }
-
-    $form['validation_modules'] = array('#type' => 'value', '#value' => $modules);
-    $form['status']['#tree'] = TRUE;
-    foreach ($dependencies as $name => $missing_dependencies) {
-      $form['status'][$name] = array('#type' => 'hidden', '#value' => 1);
-      foreach ($missing_dependencies as $k => $dependency) {
-        $form['status'][$dependency] = array('#type' => 'hidden', '#value' => 1);
-        $info = $modules[$dependency]->info;
-        $missing_dependencies[$k] = $info['name'] ? $info['name'] : drupal_ucfirst($dependency);
-      }
-      $t_argument = array(
-        '@module' => $modules[$name]->info['name'],
-        '@dependencies' => implode(', ', $missing_dependencies),
-      );
-      $items[] = format_plural(count($missing_dependencies), 'You must enable the @dependencies module to install @module.', 'You must enable the @dependencies modules to install @module.', $t_argument);
-    }
-    $form['text'] = array('#value' => theme('item_list', $items));
+    $t_argument = array(
+      '@module' => $modules[$name]->info['name'],
+      '@dependencies' => implode(', ', $missing_dependencies),
+    );
+    $items[] = format_plural(count($missing_dependencies), 'You must enable the @dependencies module to install @module.', 'You must enable the @dependencies modules to install @module.', $t_argument);
   }
+  $form['text'] = array('#value' => theme('item_list', $items));
 
   if ($form) {
     // Set some default form values
@@ -1557,21 +1550,27 @@ function system_module_build_dependencies($modules, $form_values) {
 /**
  * Submit callback; handles modules form submission.
  */
-function system_modules_submit($form_id, $form_values) {
+function system_modules_submit($form_values, $form, &$form_state) {
   include_once './includes/install.inc';
   $new_modules = array();
 
-  // Merge in disabled active modules since they should be enabled.
-  // They don't appear because disabled checkboxes are not submitted
-  // by browsers.
-  $form_values['status'] = array_merge($form_values['status'], $form_values['disabled_modules']);
+  // If we are coming from the confirm form...
+  if (!isset($form_state['storage'])) {
+    // Merge in disabled active modules since they should be enabled.
+    // They don't appear because disabled checkboxes are not submitted
+    // by browsers.
+    $form_values['status'] = array_merge($form_values['status'], $form_values['disabled_modules']);
 
-  // Check values for dependency that we can't install.
-  if ($dependencies = system_module_build_dependencies($form_values['validation_modules'], $form_values)) {
-    // These are the modules that depend on existing modules.
-    foreach (array_keys($dependencies) as $name) {
-      $form_values['status'][$name] = 0;
+    // Check values for dependency that we can't install.
+    if ($dependencies = system_module_build_dependencies($form_values['validation_modules'], $form_values)) {
+      // These are the modules that depend on existing modules.
+      foreach (array_keys($dependencies) as $name) {
+        $form_values['status'][$name] = 0;
+      }
     }
+  }
+  else {
+    $dependencies = NULL;
   }
 
   $enable_modules = array();
@@ -1624,12 +1623,16 @@ function system_modules_submit($form_id, $form_values) {
 
   // If there where unmet dependencies and they haven't confirmed don't redirect.
   if ($dependencies && !isset($form_values['confirm'])) {
-    return FALSE;
+    $form_state['storage'] = $dependencies;
+    return;
   }
 
   drupal_clear_css_cache();
 
-  return 'admin/build/modules';
+  // Unset storage to indicate this form cycle is over.
+  unset($form_state['storage']);
+  $form_state['redirect'] = 'admin/build/modules';
+  return;
 }
 
 /**
@@ -1700,12 +1703,12 @@ function theme_system_modules($form) {
  * @return
  *   A form array representing the currently disabled modules.
  */
-function system_modules_uninstall($form_values = NULL) {
+function system_modules_uninstall($form_state = NULL) {
   // Make sure the install API is available.
   include_once './includes/install.inc';
 
   // Display the confirm form if any modules have been submitted.
-  if ($confirm_form = system_modules_uninstall_confirm_form($form_values)) {
+  if (isset($form_state) && $confirm_form = system_modules_uninstall_confirm_form($form_state['storage'])) {
     return $confirm_form;
   }
 
@@ -1735,10 +1738,9 @@ function system_modules_uninstall($form_values = NULL) {
       '#options' => $options,
     );
     $form['buttons']['submit'] = array(
-      '#type' => 'button',
+      '#type' => 'submit',
       '#value' => t('Uninstall'),
     );
-    $form['#multistep'] = TRUE;
     $form['#action'] = url('admin/build/modules/uninstall/confirm');
   }
   else {
@@ -1756,14 +1758,14 @@ function system_modules_uninstall($form_values = NULL) {
  * @return
  *   A form array representing modules to confirm.
  */
-function system_modules_uninstall_confirm_form($form_values) {
+function system_modules_uninstall_confirm_form($storage) {
   // Nothing to build.
-  if (!isset($form_values)) {
+  if (!isset($storage)) {
     return;
   }
 
   // Construct the hidden form elements and list items.
-  foreach (array_filter($form_values['uninstall']) as $module => $value) {
+  foreach (array_filter($storage['uninstall']) as $module => $value) {
     $info = drupal_parse_info_file(dirname(drupal_get_filename('module', $module)) .'/'. $module .'.info');
     $uninstall[] = $info['name'];
     $form['uninstall'][$module] = array('#type' => 'hidden',
@@ -1773,8 +1775,8 @@ function system_modules_uninstall_confirm_form($form_values) {
 
   // Display a confirm form if modules have been selected.
   if (isset($uninstall)) {
+    $form['#confirmed'] = TRUE;
     $form['uninstall']['#tree'] = TRUE;
-    $form['#multistep'] = TRUE;
     $form['modules'] = array('#value' => '<p>'. t('The following modules will be completely uninstalled from your site, and <em>all data from these modules will be lost</em>!') .'</p>'. theme('item_list', $uninstall));
     $form = confirm_form(
       $form,
@@ -1836,7 +1838,7 @@ function theme_system_modules_uninstall($form) {
  * @param
  *   $form_values Submitted form values.
  */
-function system_modules_uninstall_validate($form_id, $form_values) {
+function system_modules_uninstall_validate($form_values, $form, &$form_state) {
   // Form submitted, but no modules selected.
   if (!count(array_filter($form_values['uninstall']))) {
     drupal_set_message(t('No modules selected.'), 'error');
@@ -1852,16 +1854,23 @@ function system_modules_uninstall_validate($form_id, $form_values) {
  * @param
  *   $form_values Submitted form values.
  */
-function system_modules_uninstall_submit($form_id, $form_values) {
+function system_modules_uninstall_submit($form_values, $form, &$form_state) {
   // Make sure the install API is available.
   include_once './includes/install.inc';
 
-  // Call the uninstall routine for each selected module.
-  foreach (array_filter($form_values['uninstall']) as $module => $value) {
-    drupal_uninstall_module($module);
+  if (!empty($form['#confirmed'])) {
+    // Call the uninstall routine for each selected module.
+    foreach (array_filter($form_values['uninstall']) as $module => $value) {
+      drupal_uninstall_module($module);
+    }
+    drupal_set_message(t('The selected modules have been uninstalled.'));
+
+    unset($form_state['storage']);
+    $form_state['redirect'] = 'admin/build/modules/uninstall';
   }
-  drupal_set_message(t('The selected modules have been uninstalled.'));
-  drupal_goto('admin/build/modules/uninstall');
+  else {
+    $form_state['storage'] = $form_values;
+  }
 }
 
 /**

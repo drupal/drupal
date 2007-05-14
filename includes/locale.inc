@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.122 2007/05/08 09:48:14 goba Exp $
+// $Id: locale.inc,v 1.123 2007/05/14 13:43:32 dries Exp $
 
 /**
  * @file
@@ -69,7 +69,7 @@ function theme_locale_languages_overview_form($form) {
 /**
  * Process language overview form submissions, updating existing languages.
  */
-function locale_languages_overview_form_submit($form_id, $form_values) {
+function locale_languages_overview_form_submit($form_values, $form, &$form_state) {
   $languages = language_list();
   $enabled_count = 0;
   foreach ($languages as $langcode => $language) {
@@ -95,7 +95,8 @@ function locale_languages_overview_form_submit($form_id, $form_values) {
   // Changing the language settings impacts the interface.
   cache_clear_all('*', 'cache_page', TRUE);
 
-  return 'admin/settings/language';
+  $form_state['redirect'] = 'admin/settings/language';
+  return;
 }
 /**
  * @} End of "locale-language-overview"
@@ -151,8 +152,8 @@ function locale_languages_custom_form() {
     '#value' => t('Add custom language')
   );
   // Reuse the validation and submit functions of the predefined language setup form.
-  $form['#submit']['locale_languages_predefined_form_submit'] = array();
-  $form['#validate']['locale_languages_predefined_form_validate'] = array();
+  $form['#submit'][] = 'locale_languages_predefined_form_submit';
+  $form['#validate'][] = 'locale_languages_predefined_form_validate';
   return $form;
 }
 
@@ -170,8 +171,8 @@ function locale_languages_edit_form($langcode) {
       '#type' => 'submit',
       '#value' => t('Save language')
     );
-    $form['#submit']['locale_languages_edit_form_submit'] = array();
-    $form['#validate']['locale_languages_edit_form_validate'] = array();
+    $form['#submit'][] = 'locale_languages_edit_form_submit';
+    $form['#validate'][] = 'locale_languages_edit_form_validate';
     return $form;
   }
   else {
@@ -252,7 +253,7 @@ function _locale_languages_common_controls(&$form, $language = NULL) {
 /**
  * Validate the language addition form.
  */
-function locale_languages_predefined_form_validate($form_id, $form_values) {
+function locale_languages_predefined_form_validate($form_values, $form, &$form_state) {
   $langcode = $form_values['langcode'];
 
   if ($duplicate = db_num_rows(db_query("SELECT language FROM {languages} WHERE language = '%s'", $langcode)) != 0) {
@@ -268,14 +269,14 @@ function locale_languages_predefined_form_validate($form_id, $form_values) {
   }
   else {
     // Reuse the editing form validation routine if we add a custom language.
-    locale_languages_edit_form_validate($form_id, $form_values);
+    locale_languages_edit_form_validate($form_values, $form, $form_state);
   }
 }
 
 /**
  * Process the language addition form submission.
  */
-function locale_languages_predefined_form_submit($form_id, $form_values) {
+function locale_languages_predefined_form_submit($form_values, $form, &$form_state) {
   $langcode = $form_values['langcode'];
   if (isset($form_values['name'])) {
     // Custom language form.
@@ -288,13 +289,14 @@ function locale_languages_predefined_form_submit($form_id, $form_values) {
     locale_add_language($langcode, $lang[0], isset($lang[1]) ? $lang[1] : $lang[0], isset($lang[2]) ? $lang[2] : 0, '', $langcode);
   }
 
-  return 'admin/settings/language';
+  $form_state['redirect'] = 'admin/settings/language';
+  return;
 }
 
 /**
  * Validate the language editing form. Reused for custom language addition too.
  */
-function locale_languages_edit_form_validate($form_id, $form_values) {
+function locale_languages_edit_form_validate($form_values, $form, &$form_state) {
   if (!empty($form_values['domain']) && !empty($form_values['prefix'])) {
     form_set_error('prefix', t('Domain and path prefix values should not be set at the same time.'));
   }
@@ -313,7 +315,7 @@ function locale_languages_edit_form_validate($form_id, $form_values) {
 /**
  * Process the language editing form submission.
  */
-function locale_languages_edit_form_submit($form_id, $form_values) {
+function locale_languages_edit_form_submit($form_values, $form, &$form_state) {
   db_query("UPDATE {languages} SET name = '%s', native = '%s', domain = '%s', prefix = '%s', direction = %d WHERE language = '%s'", $form_values['name'], $form_values['native'], $form_values['domain'], $form_values['prefix'], $form_values['direction'], $form_values['langcode']);
   $default = language_default();
   if ($default->language == $form_values['langcode']) {
@@ -323,7 +325,8 @@ function locale_languages_edit_form_submit($form_id, $form_values) {
     }
     variable_set('language_default', $default);
   }
-  return 'admin/settings/language';
+  $form_state['redirect'] = 'admin/settings/language';
+  return;
 }
 /**
  * @} End of "locale-language-add-edit"
@@ -366,7 +369,7 @@ function locale_languages_delete_form($langcode) {
 /**
  * Process language deletion submissions.
  */
-function locale_languages_delete_form_submit($form_id, $form_values) {
+function locale_languages_delete_form_submit($form_values, $form, &$form_state) {
   $languages = language_list();
   if (isset($languages[$form_values['langcode']])) {
     db_query("DELETE FROM {languages} WHERE language = '%s'", $form_values['langcode']);
@@ -380,7 +383,8 @@ function locale_languages_delete_form_submit($form_id, $form_values) {
   // Changing the language settings impacts the interface:
   cache_clear_all('*', 'cache_page', TRUE);
 
-  return 'admin/settings/language';
+  $form_state['redirect'] = 'admin/settings/language';
+  return;
 }
 /**
  * @} End of "locale-language-add-edit"
@@ -416,10 +420,11 @@ function locale_languages_configure_form() {
 /**
  * Submit function for language negotiation settings.
  */
-function locale_languages_configure_form_submit($form_id, $form_values) {
+function locale_languages_configure_form_submit($form_values, $form, &$form_state) {
   variable_set('language_negotiation', $form_values['language_negotiation']);
   drupal_set_message(t('Language negotiation configuration saved.'));
-  return 'admin/settings/language';
+  $form_state['redirect'] = 'admin/settings/language';
+  return;
 }
 /**
  * @} End of "locale-languages-negotiation"
@@ -588,7 +593,7 @@ function locale_translate_import_form() {
 /**
  * Process the locale import form submission.
  */
-function locale_translate_import_form_submit($form_id, $form_values) {
+function locale_translate_import_form_submit($form_values, $form, &$form_state) {
   // Ensure we have the file uploaded
   if ($file = file_check_upload('file')) {
 
@@ -613,7 +618,8 @@ function locale_translate_import_form_submit($form_id, $form_values) {
     return 'admin/build/translate/import';
   }
 
-  return 'admin/build/translate';
+  $form_state['redirect'] = 'admin/build/translate';
+  return;
 }
 /**
  * @} End of "locale-translate-import"
@@ -682,15 +688,15 @@ function locale_translate_export_pot_form() {
   );
   $form['export']['submit'] = array('#type' => 'submit', '#value' => t('Export'));
   // Reuse PO export submission callback.
-  $form['#submit']['locale_translate_export_po_form_submit'] = array();
-  $form['#validate']['locale_translate_export_po_form_validate'] = array();
+  $form['#submit'][] = 'locale_translate_export_po_form_submit';
+  $form['#validate'][] = 'locale_translate_export_po_form_validate';
   return $form;
 }
 
 /**
  * Process a translation (or template) export form submission.
  */
-function locale_translate_export_po_form_submit($form_id, $form_values) {
+function locale_translate_export_po_form_submit($form_values, $form, &$form_state) {
   // If template is required, language code is not given.
   _locale_export_po(isset($form_values['langcode']) ? $form_values['langcode'] : NULL, $form_values['group']);
 }
@@ -759,7 +765,7 @@ function locale_translate_edit_form($lid) {
  * Process string editing form submissions.
  * Saves all translations of one string submitted from a form.
  */
-function locale_translate_edit_form_submit($form_id, $form_values) {
+function locale_translate_edit_form_submit($form_values, $form, &$form_state) {
   $lid = $form_values['lid'];
   foreach ($form_values['translations'] as $key => $value) {
     $trans = db_fetch_object(db_query("SELECT translation FROM {locales_target} WHERE lid = %d AND language = '%s'", $lid, $key));
@@ -777,7 +783,8 @@ function locale_translate_edit_form_submit($form_id, $form_values) {
   // Rebuild the menu, strings may have changed.
   menu_rebuild();
 
-  return 'admin/build/translate/search';
+  $form_state['redirect'] = 'admin/build/translate/search';
+  return;
 }
 /**
  * @} End of "locale-translate-edit"

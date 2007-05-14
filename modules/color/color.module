@@ -1,5 +1,5 @@
 <?php
-// $Id: color.module,v 1.19 2007/05/06 05:47:51 dries Exp $
+// $Id: color.module,v 1.20 2007/05/14 13:43:34 dries Exp $
 
 /**
  * Implementation of hook_theme()
@@ -26,7 +26,7 @@ function color_form_alter(&$form, $form_id) {
       '#theme' => 'color_scheme_form',
     );
     $form['color'] += color_scheme_form(arg(4));
-    $form['#submit']['color_scheme_form_submit'] = array();
+    $form['#submit'][] = 'color_scheme_form_submit';
   }
 
   // Use the generated screenshot in the theme list
@@ -183,7 +183,7 @@ function theme_color_scheme_form($form) {
 /**
  * Submit handler for color change form.
  */
-function color_scheme_form_submit($form_id, $values) {
+function color_scheme_form_submit($values, $form, &$form_state) {
   // Get theme coloring info
   if (!isset($values['info'])) {
     return;

@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.220 2007/04/30 17:03:27 dries Exp $
+// $Id: search.module,v 1.221 2007/05/14 13:43:37 dries Exp $
 
 /**
  * @file
@@ -207,7 +207,7 @@ function _search_menu($name) {
 /**
  * Validate callback.
  */
-function search_admin_settings_validate($form_id, $form_values) {
+function search_admin_settings_validate($form_values, $form, &$form_state) {
   if ($form_values['op'] == t('Re-index site')) {
     drupal_goto('admin/settings/search/wipe');
   }
@@ -268,11 +268,12 @@ function search_wipe_confirm() {
 /**
  * Handler for wipe confirmation
  */
-function search_wipe_confirm_submit($form_id, &$form) {
+function search_wipe_confirm_submit(&$form, $form, &$form_state) {
   if ($form['confirm']) {
     search_wipe();
     drupal_set_message(t('The index will be rebuilt.'));
-    return 'admin/settings/search';
+    $form_state['redirect'] = 'admin/settings/search';
+    return;
   }
 }
 
@@ -1043,14 +1044,14 @@ function search_form($action = '', $keys = '', $type = NULL, $prompt = NULL) {
  * search_form_validate() is used solely to set the 'processed_keys' form
  * value for the basic search form.
  */
-function search_form_validate($form_id, $form_values, $form) {
-  form_set_value($form['basic']['inline']['processed_keys'], trim($form_values['keys']));
+function search_form_validate($form_values, $form, &$form_state) {
+  form_set_value($form['basic']['inline']['processed_keys'], trim($form_values['keys'], $form_state));
 }
 
 /**
  * Process a search form submission.
  */
-function search_form_submit($form_id, $form_values) {
+function search_form_submit($form_values, $form, &$form_state) {
   $keys = $form_values['processed_keys'];
   if ($keys == '') {
     form_set_error('keys', t('Please enter some keywords.'));
@@ -1058,7 +1059,8 @@ function search_form_submit($form_id, $form_values) {
   }
 
   $type = $form_values['module'] ? $form_values['module'] : 'node';
-  return 'search/'. $type .'/'. $keys;
+  $form_state['redirect'] = 'search/'. $type .'/'. $keys;
+  return;
 }
 
 /**
@@ -1076,8 +1078,8 @@ function search_box($form_id) {
   // Always go to the search page since the search form is not guaranteed to be
   // on every page.
   $form['#action'] = url('search/node');
-  $form['#submit']['search_box_form_submit'] = array();
-  $form['#validate']['search_box_form_validate'] = array();
+  $form['#submit'][] = 'search_box_form_submit';
+  $form['#validate'][] = 'search_box_form_validate';
   $form['#theme'] = 'search_box_form';
 
   return $form;
@@ -1086,8 +1088,9 @@ function search_box($form_id) {
 /**
  * Process a block search form submission.
  */
-function search_box_form_submit($form_id, $form_values) {
-  return 'search/node/'. trim($form_values[$form_id .'_keys']);
+function search_box_form_submit($form_values, $form, &$form_state) {
+  $form_state['redirect'] = 'search/node/'. trim($form_values[$form_id .'_keys']);
+  return;
 }
 
 /**

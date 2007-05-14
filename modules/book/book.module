@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.419 2007/04/30 17:03:24 dries Exp $
+// $Id: book.module,v 1.420 2007/05/14 13:43:34 dries Exp $
 
 /**
  * @file
@@ -199,12 +199,12 @@ function book_insert($node) {
 /**
  * Implementation of hook_submit().
  */
-function book_submit(&$node) {
+function book_submit(&$form_values) {
   global $user;
   // Set default values for non-administrators.
   if (!user_access('administer nodes')) {
-    $node->revision = 1;
-    $node->uid = $user->uid;
+    $form_values['revision'] = 1;
+    $form_values['uid'] = $user->uid;
   }
 }
 
@@ -298,7 +298,7 @@ function book_outline($node) {
 /**
  * Handles book outline form submissions.
  */
-function book_outline_submit($form_id, $form_values) {
+function book_outline_submit($form_values, $form, &$form_state) {
   $op = $form_values['op'];
   $node = node_load($form_values['nid']);
 
@@ -318,7 +318,8 @@ function book_outline_submit($form_id, $form_values) {
       drupal_set_message(t('The post has been removed from the book.'));
       break;
   }
-  return "node/$node->nid";
+  $form_state['redirect'] = "node/$node->nid";
+  return;
 }
 
 /**
@@ -924,13 +925,13 @@ function book_admin_orphan() {
   else {
     $form['error'] = array('#value' => '<p>'. t('There are no orphan pages.') .'</p>');
   }
-  $form['#submit']['book_admin_edit_submit'] = array();
-  $form['#validate']['book_admin_edit_validate'] = array();
+  $form['#submit'][] = 'book_admin_edit_submit';
+  $form['#validate'][] = 'book_admin_edit_validate';
   $form['#theme'] = 'book_admin_edit';
   return $form;
 }
 
-function book_admin_edit_submit($form_id, $form_values) {
+function book_admin_edit_submit($form_values, $form, &$form_state) {
   foreach ($form_values['table'] as $row) {
     $node = node_load($row['nid']);
 

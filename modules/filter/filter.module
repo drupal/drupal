@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.172 2007/04/30 17:03:24 dries Exp $
+// $Id: filter.module,v 1.173 2007/05/14 13:43:35 dries Exp $
 
 /**
  * @file
@@ -296,7 +296,7 @@ function filter_admin_overview() {
   return $form;
 }
 
-function filter_admin_overview_submit($form_id, $form_values) {
+function filter_admin_overview_submit($form_values, $form, &$form_state) {
   // Process form submission to set the default format
   if (is_numeric($form_values['default'])) {
     drupal_set_message(t('Default format updated.'));
@@ -352,7 +352,7 @@ function filter_admin_delete() {
 /**
  * Process filter delete form submission.
  */
-function filter_admin_delete_submit($form_id, $form_values) {
+function filter_admin_delete_submit($form_values, $form, &$form_state) {
   db_query("DELETE FROM {filter_formats} WHERE format = %d", $form_values['format']);
   db_query("DELETE FROM {filters} WHERE format = %d", $form_values['format']);
 
@@ -365,7 +365,8 @@ function filter_admin_delete_submit($form_id, $form_values) {
   cache_clear_all($form_values['format'] .':', 'cache_filter', TRUE);
   drupal_set_message(t('Deleted input format %format.', array('%format' => $form_values['name'])));
 
-  return 'admin/settings/filters';
+  $form_state['redirect'] = 'admin/settings/filters';
+  return;
 }
 
 /**
@@ -441,7 +442,7 @@ function filter_admin_format_form($format = NULL) {
 /**
  * Validate filter format form submissions.
  */
-function filter_admin_format_form_validate($form_id, $form_values) {
+function filter_admin_format_form_validate($form_values, $form, &$form_state) {
   if (!isset($form_values['format'])) {
     $name = trim($form_values['name']);
     $result = db_fetch_object(db_query("SELECT format FROM {filter_formats} WHERE name='%s'", $name));
@@ -454,7 +455,7 @@ function filter_admin_format_form_validate($form_id, $form_values) {
 /**
  * Process filter format form submissions.
  */
-function filter_admin_format_form_submit($form_id, $form_values) {
+function filter_admin_format_form_submit($form_values, $form, &$form_state) {
   $format = isset($form_values['format']) ? $form_values['format'] : NULL;
   $current = filter_list_format($format);
   $name = trim($form_values['name']);
@@ -506,7 +507,8 @@ function filter_admin_format_form_submit($form_id, $form_values) {
   if (!empty($new)) {
     $return .= '/'. $format;
   }
-  return $return;
+  $form_state['redirect'] = $return;
+  return;
 }
 
 /**
@@ -549,7 +551,7 @@ function theme_filter_admin_order($form) {
 /**
  * Process filter order configuration form submission.
  */
-function filter_admin_order_submit($form_id, $form_values) {
+function filter_admin_order_submit($form_values, $form, &$form_state) {
   foreach ($form_values['weights'] as $id => $weight) {
     list($module, $delta) = explode('/', $id);
     db_query("UPDATE {filters} SET weight = %d WHERE format = %d AND module = '%s' AND delta = %d", $weight, $form_values['format'], $module, $delta);
@@ -784,7 +786,7 @@ function filter_form($value = FILTER_FORMAT_DEFAULT, $weight = NULL, $parents = 
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
       '#weight' => $weight,
-      '#validate' => array('filter_form_validate' => array()),
+      '#element_validate' => array('filter_form_validate'),
     );
     // Multiple formats available: display radio buttons with tips.
     foreach ($formats as $format) {
