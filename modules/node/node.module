@@ -2351,12 +2351,13 @@ function node_delete_confirm($node) {
 /**
  * Execute node deletion
  */
-function node_delete_confirm_submit($form_id, $form_values) {
+function node_delete_confirm_submit($form_values, $form, &$form_state) {
   if ($form_values['confirm']) {
     node_delete($form_values['nid']);
   }
 
-  return '<front>';
+  $form_state['redirect'] = '<front>';
+  return;
 }
 
 /**
