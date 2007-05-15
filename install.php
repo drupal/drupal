@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.48 2007/05/14 13:43:29 dries Exp $
+// $Id: install.php,v 1.49 2007/05/15 05:43:54 dries Exp $
 
 require_once './includes/install.inc';
 
@@ -847,7 +847,7 @@ if (Drupal.jsEnabled) {
   );
   $hook_form_alter = $_GET['profile'] .'_form_alter';
   if (function_exists($hook_form_alter)) {
-    $form = $hook_form_alter($form, 'install_configure');
+    $hook_form_alter($form, 'install_configure');
   }
   return $form;
 }
