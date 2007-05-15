@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.123 2007/05/14 13:43:32 dries Exp $
+// $Id: locale.inc,v 1.124 2007/05/15 15:29:47 dries Exp $
 
 /**
  * @file
@@ -281,12 +281,13 @@ function locale_languages_predefined_form_submit($form_values, $form, &$form_sta
   if (isset($form_values['name'])) {
     // Custom language form.
     locale_add_language($langcode, $form_values['name'], $form_values['native'], $form_values['direction'], $form_values['domain'], $form_values['prefix']);
+    drupal_set_message(t('The language %language has been created and can now be used. More information is available on the <a href="@locale-help">help screen</a>.', array('%language' => t($form_values['name']), '@locale-help' => url('admin/help/locale'))));
   }
   else {
     // Predefined language selection.
     $predefined = _locale_get_predefined_list();
-    $lang = &$predefined[$langcode];
-    locale_add_language($langcode, $lang[0], isset($lang[1]) ? $lang[1] : $lang[0], isset($lang[2]) ? $lang[2] : 0, '', $langcode);
+    locale_add_language($langcode);
+    drupal_set_message(t('The language %language has been created and can now be used. More information is available on the <a href="@locale-help">help screen</a>.', array('%language' => t($predefined[$langcode][0]), '@locale-help' => url('admin/help/locale'))));
   }
 
   $form_state['redirect'] = 'admin/settings/language';
@@ -602,8 +603,8 @@ function locale_translate_import_form_submit($form_values, $form, &$form_state) 
     $langcode = $form_values['langcode'];
     if (!isset($languages[$langcode])) {
       $predefined = _locale_get_predefined_list();
-      $lang = &$predefined[$langcode];
-      locale_add_language($langcode, $lang[0], isset($lang[1]) ? $lang[1] : '', isset($lang[2]) ? $lang[2] : 0, '', '', FALSE);
+      locale_add_language($langcode);
+      drupal_set_message(t('The language %language has been created.', array('%language' => t($predefined[$langcode][0]))));
     }
 
     // Now import strings into the language
@@ -831,17 +832,26 @@ function locale_translate_delete($lid) {
  * @param $prefix
  *   Optional path prefix for the language. Defaults to the
  *   language code if omitted.
- * @param $verbose
- *   Switch to omit the verbose message to the user when used
- *   only as a utility function.
+ * @param $enabled
+ *   Optionally TRUE to enable the language when created or FALSE to disable.
+ * @param $default
+ *   Optionall set this language to be the default.
  */
-function locale_add_language($langcode, $name, $native, $direction = LANGUAGE_RTL, $domain = '', $prefix = '', $verbose = TRUE) {
+function locale_add_language($langcode, $name = NULL, $native = NULL, $direction = LANGUAGE_RTL, $domain = '', $prefix = '', $enabled = FALSE, $default = FALSE) {
   // Default prefix on language code.
   if (empty($prefix)) {
     $prefix = $langcode;
   }
 
-  db_query("INSERT INTO {languages} (language, name, native, direction, domain, prefix) VALUES ('%s', '%s', '%s', %d, '%s', '%s')", $langcode, $name, $native, $direction, $domain, $prefix);
+  // If name was not set, we add a predefined language.
+  if (!isset($name)) {
+    $predefined = _locale_get_predefined_list();
+    $name = $predefined[$langcode][0];
+    $native = isset($predefined[$langcode][1]) ? $predefined[$langcode][1] : $predefined[$langcode][0];
+    $direction = isset($predefined[$langcode][2]) ? $predefined[$langcode][2] : LANGUAGE_RTL;
+  }
+
+  db_query("INSERT INTO {languages} (language, name, native, direction, domain, prefix, enabled) VALUES ('%s', '%s', '%s', %d, '%s', '%s', %d)", $langcode, $name, $native, $direction, $domain, $prefix, $enabled);
 
   // Add empty translations for strings (to optimize locale())
   $result = db_query("SELECT lid FROM {locales_source}");
@@ -849,13 +859,13 @@ function locale_add_language($langcode, $name, $native, $direction = LANGUAGE_RT
     db_query("INSERT INTO {locales_target} (lid, language, translation) VALUES (%d,'%s', '')", $string->lid, $langcode);
   }
 
-  // Set message depending on the verbosity required.
-  if ($verbose) {
-    drupal_set_message(t('The language %language has been created and can now be used. More information is available on the <a href="@locale-help">help screen</a>.', array('%language' => t($name), '@locale-help' => url('admin/help/locale'))));
+  // Only set it as default if enabled.
+  if ($enabled && $default) {
+    variable_set('language_default', (object) array('language' => $langcode, 'name' => $name, 'native' => $native, 'direction' => $direction, 'enabled' => (int) $enabled, 'plurals' => 0, 'formula' => '', 'domain' => '', 'prefix' => $prefix, 'weight' => 0));
   }
-  else {
-    drupal_set_message(t('The language %language has been created.', array('%language' => t($name))));
-  }
+
+  // Increment count of enabled languages.
+  variable_set('language_count', variable_get('language_count', 1) + 1);
 
   watchdog('locale', 'The %language language (%code) has been created.', array('%language' => $name, '%code' => $langcode));
 }
@@ -1906,7 +1916,7 @@ function _locale_get_predefined_list() {
     "af" => array("Afrikaans"),
     "ak" => array("Akan"),
     "am" => array("Amharic", "አማርኛ"),
-    "ar" => array("Arabic", /* Left-to-right marker "‭" */ "العربية", 1),
+    "ar" => array("Arabic", /* Left-to-right marker "‭" */ "العربية", LANGUAGE_RTL),
     "as" => array("Assamese"),
     "av" => array("Avar"),
     "ay" => array("Aymara"),
@@ -1941,7 +1951,7 @@ function _locale_get_predefined_list() {
     "es" => array("Spanish", "Español"),
     "et" => array("Estonian", "Eesti"),
     "eu" => array("Basque", "Euskera"),
-    "fa" => array("Persian", /* Left-to-right marker "‭" */ "فارسی", 1),
+    "fa" => array("Persian", /* Left-to-right marker "‭" */ "فارسی", LANGUAGE_RTL),
     "ff" => array("Fulah", "Fulfulde"),
     "fi" => array("Finnish", "Suomi"),
     "fj" => array("Fiji"),
@@ -1955,7 +1965,7 @@ function _locale_get_predefined_list() {
     "gu" => array("Gujarati"),
     "gv" => array("Manx"),
     "ha" => array("Hausa"),
-    "he" => array("Hebrew", /* Left-to-right marker "‭" */ "עברית", 1),
+    "he" => array("Hebrew", /* Left-to-right marker "‭" */ "עברית", LANGUAGE_RTL),
     "hi" => array("Hindi", "हिन्दी"),
     "ho" => array("Hiri Motu"),
     "hr" => array("Croatian", "Hrvatski"),
@@ -2022,7 +2032,7 @@ function _locale_get_predefined_list() {
     "pa" => array("Punjabi"),
     "pi" => array("Pali"),
     "pl" => array("Polish", "Polski"),
-    "ps" => array("Pashto", /* Left-to-right marker "‭" */ "پښتو", 1),
+    "ps" => array("Pashto", /* Left-to-right marker "‭" */ "پښتو", LANGUAGE_RTL),
     "pt" => array("Portuguese, Portugal", "Português"),
     "pt-br" => array("Portuguese, Brazil", "Português"),
     "qu" => array("Quechua"),
@@ -2066,7 +2076,7 @@ function _locale_get_predefined_list() {
     "ty" => array("Tahitian"),
     "ug" => array("Uighur"),
     "uk" => array("Ukrainian", "Українська"),
-    "ur" => array("Urdu", /* Left-to-right marker "‭" */ "اردو", 1),
+    "ur" => array("Urdu", /* Left-to-right marker "‭" */ "اردو", LANGUAGE_RTL),
     "uz" => array("Uzbek", "o'zbek"),
     "ve" => array("Venda"),
     "vi" => array("Vietnamese", "Tiếng Việt"),
@@ -2082,4 +2092,96 @@ function _locale_get_predefined_list() {
 }
 /**
  * @} End of "locale-api-languages-predefined"
+ */
+
+/**
+ * @defgroup locale-autoimport Automatic interface translation import
+ * @{
+ */
+
+/**
+ * Prepare a batch to use to import translations.
+ *
+ * @param $langcode
+ *   Language code to import translations for.
+ * @return
+ *   A batch structure or FALSE if no files found.
+ */
+function locale_batch_installer($langcode) {
+
+  // Collect all files to import for all enabled modules and themes.
+  $files = array();
+  $result = db_query("SELECT name, filename FROM {system} WHERE status = 1");
+  while ($component = db_fetch_object($result)) {
+    // Collect all files for all components, names as $langcode.po or
+    // with names ending with $langcode.po. This allows for filenames
+    // like node-module.de.po to let translators use small files and
+    // be able to import in smaller chunks.
+    $files = array_merge($files, file_scan_directory(dirname($component->filename) .'/po/', '(^|\.)'. $langcode .'\.po$', array('.', '..', 'CVS'), 0, FALSE));
+  }
+
+  if (count($files)) {
+    $$operations = array();
+    foreach($files as $file) {
+      // We call _locale_batch_import for every batch operation
+      // with the file name and language code.
+      $operations[] = array('_locale_batch_import', array($file->filename, $langcode));
+    }
+    return _locale_batch_build($operations, '_locale_batch_installer_finished');
+  }
+
+  // Found nothing to import.
+  return FALSE;
+}
+
+/**
+ * Build a locale batch from an array of files.
+ *
+ * @param $operations
+ *   Array of operations to perform
+ * @param $finished
+ *   A finished callback to use for the batch
+ * @return
+ *   A batch structure
+ */
+function _locale_batch_build($operations, $finished) {
+  $t = get_t();
+  if (count($operations)) {
+    $batch = array(
+      'operations'    => $operations,
+      'title'         => $t('Importing interface translations'),
+      'init_message'  => $t('Starting import'),
+      'error_message' => $t('Error importing interface translations'),
+      'finished'      => $finished,
+    );
+    return $batch;
+  }
+  return FALSE;
+}
+
+/**
+ * Perform interface translation import as a batch step.
+ *
+ * @param $filepath
+ *   Path to a file to import.
+ * @param $langcode
+ *   Language to import file into.
+ * @param $results
+ *   Contains a list of files imported.
+ */
+function _locale_batch_import($filepath, $langcode, &$context) {
+  $file = (object) array('filename' => basename($filepath), 'filepath' => $filepath);
+  _locale_import_read_po('db-store', $file, 'keep', $langcode);
+  $context['results'][] = $filepath;
+}
+
+/**
+ * Batch callback invoked when installer import processing finishes.
+ * Advance installer task to the finished screen.
+ */
+function _locale_batch_installer_finished($success, $results) {
+  variable_set('install_task', 'finished');
+}
+/**
+ * @} End of "locale-autoimport"
  */

@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.38 2007/05/08 16:36:55 dries Exp $
+// $Id: install.inc,v 1.39 2007/05/15 15:29:47 dries Exp $
 
 define('SCHEMA_UNINSTALLED', -1);
 define('SCHEMA_INSTALLED', 0);
@@ -578,7 +578,7 @@ function st($string, $args = array()) {
 
   if (!isset($locale_strings)) {
     $locale_strings = array();
-    $filename = './profiles/'. $profile .'/'. $install_locale .'.po';
+    $filename = './profiles/'. $profile .'/po/'. $install_locale .'.po';
     if (file_exists($filename)) {
       require_once './includes/locale.inc';
       $file = (object) array('filepath' => $filename);

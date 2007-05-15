@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.197 2007/05/14 16:22:25 dries Exp $
+// $Id: CHANGELOG.txt,v 1.198 2007/05/15 15:29:47 dries Exp $
 
 Drupal 6.0, xxxx-xx-xx (development version)
 ----------------------
@@ -37,6 +37,7 @@ Drupal 6.0, xxxx-xx-xx (development version)
     * Themed the installer with the Garland theme.
     * Added form to provide initial site information during installation.
     * Added ability to provide extra installation steps programmatically.
+    * Made it possible to import interface translations at install time.
 
 Drupal 5.0, 2007-01-15
 ----------------------

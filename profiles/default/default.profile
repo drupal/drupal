@@ -1,5 +1,5 @@
 <?php
-// $Id: default.profile,v 1.10 2007/05/10 19:55:24 dries Exp $
+// $Id: default.profile,v 1.11 2007/05/15 15:29:49 dries Exp $
 
 /**
  * Return an array of the modules to be enabled when this profile is installed.
@@ -28,7 +28,10 @@ function default_profile_details() {
  * Return a list of tasks that this profile supports.
  *
  * @return
- *   A keyed array of tasks the profile will perform during the _final stage.
+ *   A keyed array of tasks the profile will perform during
+ *   the final stage. The keys of the array will be used internally,
+ *   while the values will be displayed to the user in the installer
+ *   task list.
  */
 function default_profile_task_list() {
 }
@@ -36,19 +39,23 @@ function default_profile_task_list() {
 /**
  * Perform any final installation tasks for this profile.
  *
- * You can implement a state machine here to walk the user through
- * more tasks, by setting $task to something other then the reserved
- * 'configure', 'finished' and 'done' values. The installer goes
- * through the configure-finished-done tasks in this order, if you
- * don't modify $task. If you implement your custom tasks, this
- * function will get called in every HTTP request (for form
- * processing, printing your information screens and so on) until
- * you advance to the 'finished' or 'done' tasks. Once ready with
- * your profile's tasks, set $task to 'finished' and optionally
- * return a final message to be included on the default final
- * install page. Alternatively you can set $task to 'done' and
- * return a completely custom finished page. In both cases, you
- * hand the control back to the installer.
+ * The installer goes through the configure -> locale-import ->
+ * locale-batch -> finished -> done tasks in this order, if you
+ * don't implement this function in your profile.
+ *
+ * If this function is implemented, you can have any number of
+ * custom tasks to perform, implementing a state machine here to
+ * walk the user through those tasks, by setting $task to something
+ * other then the reserved tasks listed in install_reserved_tasks()
+ * and the 'profile' task this function gets called with for first
+ * time. If you implement your custom tasks, this function will get called
+ * in every HTTP request (for form processing, printing your
+ * information screens and so on) until you advance to the
+ * 'locale-import' task, with which you hand control back to the
+ * installer.
+ *
+ * You should define the list of custom tasks you implement by
+ * returning an array of them in hook_profile_task_list().
  *
  * Should a profile want to display a form here, it can; it should set
  * the task using variable_set('install_task', 'new_task') and use
@@ -56,16 +63,14 @@ function default_profile_task_list() {
  * drupal_get_form().
  *
  * @param $task
- *   The current $task of the install system. When hook_profile_final()
- *   is first called, this is 'configure' (the last built-in task of
- *   the Drupal installer).
+ *   The current $task of the install system. When hook_profile_tasks()
+ *   is first called, this is 'profile'.
  *
  * @return
- *   An optional HTML string to display to the user. Used as part of the
- *   completed page if $task is set to 'finished', or used to display a
- *   complete page in all other cases.
+ *   An optional HTML string to display to the user. Only used if you
+ *   modify the $task, otherwise discarded.
  */
-function default_profile_final(&$task) {
+function default_profile_tasks(&$task) {
 
   // Insert default user-defined node types into the database. For a complete
   // list of available node type attributes, refer to the node type API
@@ -108,7 +113,4 @@ function default_profile_final(&$task) {
   $theme_settings = variable_get('theme_settings', array());
   $theme_settings['toggle_node_info_page'] = FALSE;
   variable_set('theme_settings', $theme_settings);
-
-  // Let the installer know we're finished:
-  $task = 'finished';
 }

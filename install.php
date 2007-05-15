@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.49 2007/05/15 05:43:54 dries Exp $
+// $Id: install.php,v 1.50 2007/05/15 15:29:47 dries Exp $
 
 require_once './includes/install.inc';
 
@@ -436,7 +436,7 @@ function install_select_profile() {
     }
 
     drupal_maintenance_theme();
-    install_task_list('profile');
+    install_task_list('profile-select');
 
     drupal_set_title(st('Select an installation profile'));
     print theme('install_page', drupal_get_form('install_select_profile_form', $profiles));
@@ -474,7 +474,7 @@ function install_select_profile_form($profiles) {
  * Find all .po files for the current profile.
  */
 function install_find_locales($profilename) {
-  $locales = file_scan_directory('./profiles/'. $profilename, '\.po$', array('.', '..', 'CVS'), 0, FALSE);
+  $locales = file_scan_directory('./profiles/'. $profilename .'/po', '\.po$', array('.', '..', 'CVS'), 0, FALSE);
   array_unshift($locales, (object) array('name' => 'en'));
   return $locales;
 }
@@ -492,8 +492,26 @@ function install_select_locale($profilename) {
   // Find all available locales.
   $locales = install_find_locales($profilename);
 
-  // Don't need to choose locale if only one (English) is available.
-  if (sizeof($locales) == 1) {
+  // If only the built-in (English) language is available,
+  // and we are using the default profile, inform the user
+  // that the installer can be localized. Otherwise we assume
+  // the user know what he is doing.
+  if (count($locales) == 1) {
+    if ($profilename == 'default') {
+      drupal_maintenance_theme();
+      install_task_list('profile-select');
+      drupal_set_title(st('Localization of the Drupal installer'));
+      $output = '<p>'. st('Drupal is capable of being installed in any language from the start, not only English. A language pack might be available in your language already. To be able to install Drupal and use it in your language from the start, follow these steps:') . '</p>';
+      $output .= '<ul><li>'. st('Check whether <a href="@translations" target="_blank">a translation of this Drupal version</a> is available in your language.', array('@translations' => 'http://drupal.org/project/Translations')) .'</li>';
+      $output .= '<li>'. st('If available, download the translation pack and extract it to your Drupal root directory. Translation files will get placed into different directories.') .'</li>';
+      $output .= '<li>'. st('Continue the installation by reloading this page and select from the listed languages.') .'</li>';
+      $output .= '</ul><p>' . st('How should the installation continue?') .'</p>';
+      $output .= '<ul><li><a href="install.php?profile='. $profilename . '&amp;locale=en">'. st('Continue installation in English') .'</a></li><li><a href="install.php?profile='. $profilename . '">'. st('Reload this page to select a language') .'</a></li></ul>';
+      print theme('install_page', $output);
+      exit;
+    }
+    // One language, but not the default profile, assume
+    // the user knows what he is doing.
     return FALSE;
   }
   else {
@@ -504,7 +522,7 @@ function install_select_locale($profilename) {
     }
 
     drupal_maintenance_theme();
-    install_task_list('locale');
+    install_task_list('locale-select');
 
     drupal_set_title(st('Choose your preferred language'));
     print theme('install_page', drupal_get_form('install_select_locale_form', $locales));
@@ -531,7 +549,7 @@ function install_select_locale_form($locales) {
   }
   $form['submit'] =  array(
     '#type' => 'submit',
-    '#value' => st('Save configuration'),
+    '#value' => st('Select language'),
   );
   return $form;
 }
@@ -541,7 +559,7 @@ function install_select_locale_form($locales) {
  */
 function install_no_profile_error() {
   drupal_maintenance_theme();
-  install_task_list('profile');
+  install_task_list('profile-select');
   drupal_set_title(st('No profiles available'));
   print theme('install_page', '<p>'. st('We were unable to find any installer profiles. Installer profiles tell us what modules to enable and what schema to install in the database. A profile is necessary to continue with the installation process.') .'</p>');
   exit;
@@ -577,7 +595,7 @@ function install_missing_modules_error($profile) {
  * Tasks performed after the database is initialized. Called from install.php.
  */
 function install_tasks($profile, $task) {
-  global $base_url;
+  global $base_url, $install_locale;
   $output = '';
 
   // Bootstrap newly installed Drupal, while preserving existing messages.
@@ -591,6 +609,9 @@ function install_tasks($profile, $task) {
     variable_set('install_task', 'configure');
     $task = 'configure';
   }
+
+  // We are using a list of if constructs here to allow for
+  // passing from one task to the other in the same request.
 
   if ($task == 'configure') {
     drupal_set_title(st('Configure site'));
@@ -621,53 +642,93 @@ function install_tasks($profile, $task) {
     drupal_process_form('install_configure_form', $form, $form_state);
     if (empty($form_state['redirect'])) {
       $output = drupal_render_form('install_configure_form', $form);
-      install_task_list('configure');
+    }
+    else {
+      $task = 'profile';
     }
   }
 
-  // If we have no output, then install.php is done and now we turn to
-  // our profile to run it's own tasks.
-  if (empty($output)) {
-    // Profile might define more tasks.
-    $function = $profile .'_profile_final';
+  // If found an unknown task or the 'profile-custom' task, which is
+  // reserved for profiles, hand over the control to the profile,
+  // so it can run any number of custom tasks it defines.
+  if (!in_array($task, install_reserved_tasks())) {
+    $function = $profile .'_profile_tasks';
     if (function_exists($function)) {
-      // More tasks are required by this profile.
+      // The profile needs to run more code, maybe even more tasks.
       // $task is sent through as a reference and may be changed!
       $output = $function($task);
     }
 
-    // Safety: if the profile doesn't do anything, catch it.
-    if ($task == 'configure') {
-      $task = 'finished';
+    // If the profile doesn't move on to a new task we assume
+    // that it is done: we let the installer regain control and
+    // proceed with the locale import.
+    if ($task == 'profile') {
+      $task = 'locale-import';
     }
-
-    // Display default 'finished' page to user. A custom finished page
-    // can be displayed by skipping this step and going to 'done' directly.
-    if ($task == 'finished') {
-      drupal_set_title(st('@drupal installation complete', array('@drupal' => drupal_install_profile_name())));
-      $page = '<p>'. st('Congratulations, @drupal has been successfully installed.', array('@drupal' => drupal_install_profile_name())) .'</p>';
-      $page .= $output;
-      $messages = drupal_set_message();
-      $page .= '<p>'. (isset($messages['error']) ? st('Please review the messages above before continuing on to <a href="@url">your new site</a>.', array('@url' => url(''))) : st('You may now visit <a href="@url">your new site</a>.', array('@url' => url('')))) .'</p>';
-      $output = $page;
-      $task = 'done';
-    }
-
-    // The end of the install process. Remember profile used.
-    if ($task == 'done') {
-      // Rebuild menu to get content type links registered by the profile,
-      // and possibly any other menu items created through the tasks.
-      menu_rebuild();
-      variable_set('install_profile', $profile);
-    }
-
-    // Set task for user, and remember the task in the database.
-    install_task_list($task);
-    variable_set('install_task', $task);
-
   }
+
+  // Import interface translations for the enabled modules, after
+  // any changes made by the profile through the profile forms.
+  if ($task == 'locale-import') {
+    if (!empty($install_locale) && ($install_locale != 'en')) {
+      include_once 'includes/locale.inc';
+      // Enable installation language as default site language.
+      locale_add_language($install_locale, NULL, NULL, NULL, NULL, NULL, 1, TRUE);
+      // Collect files to import for this language.
+      $batch = locale_batch_installer($install_locale);
+      if (!empty($batch)) {
+        // Start a batch, switch to 'locale-batch' task. We need to
+        // set the variable here, because batch_process() redirects.
+        variable_set('install_task', 'locale-batch');
+        batch_set($batch);
+        $path = $base_url .'/install.php?locale='. $install_locale .'&profile='. $profile;
+        batch_process($path, $path);
+      }
+    }
+    // Found nothing to import or not foreign language, go to next task.
+   $task = 'finished';
+  }
+
+  // We are running a batch import of interface translation files.
+  // This might run in multiple HTTP requests, constantly redirecting
+  // to the same address, until the batch finished callback is invoked
+  // and the task advances to 'finished'.
+  if ($task == 'locale-batch') {
+    include_once 'includes/batch.inc';
+    include_once 'includes/locale.inc';
+    $output .= _batch_page();
+  }
+
+  // Display a 'finished' page to user.
+  if ($task == 'finished') {
+    drupal_set_title(st('@drupal installation complete', array('@drupal' => drupal_install_profile_name())));
+    $output = '<p>'. st('Congratulations, @drupal has been successfully installed.', array('@drupal' => drupal_install_profile_name())) .'</p>';
+    $messages = drupal_set_message();
+    $output .= '<p>'. (isset($messages['error']) ? st('Please review the messages above before continuing on to <a href="@url">your new site</a>.', array('@url' => url(''))) : st('You may now visit <a href="@url">your new site</a>.', array('@url' => url('')))) .'</p>';
+    $task = 'done';
+  }
+
+  // The end of the install process. Remember profile used.
+  if ($task == 'done') {
+    // Rebuild menu to get content type links registered by the profile,
+    // and possibly any other menu items created through the tasks.
+    menu_rebuild();
+    variable_set('install_profile', $profile);
+  }
+
+  // Set task for user, and remember the task in the database.
+  install_task_list($task);
+  variable_set('install_task', $task);
+
   // Output page.
   print theme('maintenance_page', $output);
+}
+
+/**
+ * The list of reserved tasks to run in the installer.
+ */
+function install_reserved_tasks() {
+  return array('configure', 'locale-import', 'locale-batch', 'finished', 'done');
 }
 
 /**
@@ -700,25 +761,28 @@ function install_check_requirements($profile) {
 function install_task_list($active = NULL) {
   // Default list of tasks.
   $tasks = array(
-    'profile' => st('Choose profile'),
-    'locale' => st('Choose language'),
-    'requirements' => st('Verify requirements'),
-    'database' => st('Setup database'),
-    'configure' => st('Configure site'),
+    'profile-select' => st('Choose profile'),
+    'locale-select'  => st('Choose language'),
+    'requirements'   => st('Verify requirements'),
+    'database'       => st('Setup database'),
+    'configure'      => st('Configure site'),
   );
 
   $profiles = install_find_profiles();
-  // Remove profiles if only one profile exists.
-  if (count($profiles) == 1) {
-    unset($tasks['profile']);
-  }
-
-  // Remove locale if no install profiles use them.
   $profile = isset($_GET['profile']) && isset($profiles[$_GET['profile']]) ? $_GET['profile'] : '.';
-  if (count(install_find_locales($profile)) == 1) {
-    unset($tasks['locale']);
+  $locales = install_find_locales($profile);
+
+  // Keep the profile selection task if we have more profiles or only the
+  // default profile is available and with only the built-in language, in
+  // which case we use this screen to present information about translations.
+  if (count($profiles) == 1) {
+    $first_profile = array_shift($profiles);
+    if ($first_profile->name != 'default' || count($locales) > 1) {
+      unset($tasks['profile-select']);
+    }
   }
 
+  // Add tasks defined by the profile.
   if ($profile) {
     $function = $profile .'_profile_task_list';
     if (function_exists($function)) {
@@ -730,7 +794,16 @@ function install_task_list($active = NULL) {
   }
 
   // Add finished step as the last task.
-  $tasks += array('finished' => st('Finished'));
+  $tasks += array(
+    'locale-batch' => st('Import translations'),
+    'finished'     => st('Finished')
+  );
+
+  // Remove locale related tasks if the install profile does not use them.
+  if (count($locales) == 1) {
+    unset($tasks['locale-select']);
+    unset($tasks['locale-batch']);
+  }
 
   // Let the theming function know that 'finished' and 'done'
   // include everything, so every step is completed.
@@ -865,6 +938,8 @@ function install_configure_form_validate($form_values, $form, &$form_state) {
 }
 
 function install_configure_form_submit($form_values, $form, &$form_state) {
+  global $user;
+
   variable_set('site_name', $form_values['site_name']);
   variable_set('site_mail', $form_values['site_mail']);
   variable_set('date_default_timezone', $form_values['date_default_timezone']);
@@ -875,6 +950,9 @@ function install_configure_form_submit($form_values, $form, &$form_state) {
   if (isset($form_values['clean_url'])) {
     variable_set('clean_url', $form_values['clean_url']);
   }
+  // The user is now logged in, but has no session ID yet, which
+  // would be required later in the request, so remember it.
+  $user->sid = session_id();
 
   return 'finished';
 }
