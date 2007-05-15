@@ -847,7 +847,7 @@ if (Drupal.jsEnabled) {
   );
   $hook_form_alter = $_GET['profile'] .'_form_alter';
   if (function_exists($hook_form_alter)) {
-    $form = $hook_form_alter($form, 'install_configure');
+    $hook_form_alter($form, 'install_configure');
   }
   return $form;
 }
