@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.221 2007/05/14 13:43:37 dries Exp $
+// $Id: search.module,v 1.222 2007/05/15 05:43:16 dries Exp $
 
 /**
  * @file
@@ -1045,7 +1045,7 @@ function search_form($action = '', $keys = '', $type = NULL, $prompt = NULL) {
  * value for the basic search form.
  */
 function search_form_validate($form_values, $form, &$form_state) {
-  form_set_value($form['basic']['inline']['processed_keys'], trim($form_values['keys'], $form_state));
+  form_set_value($form['basic']['inline']['processed_keys'], trim($form_values['keys']), $form_state);
 }
 
 /**
@@ -1089,6 +1089,7 @@ function search_box($form_id) {
  * Process a block search form submission.
  */
 function search_box_form_submit($form_values, $form, &$form_state) {
+  $form_id = $form['form_id']['#value'];
   $form_state['redirect'] = 'search/node/'. trim($form_values[$form_id .'_keys']);
   return;
 }
