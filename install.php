@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.50 2007/05/15 15:29:47 dries Exp $
+// $Id: install.php,v 1.51 2007/05/15 19:44:23 goba Exp $
 
 require_once './includes/install.inc';
 
@@ -615,8 +615,6 @@ function install_tasks($profile, $task) {
 
   if ($task == 'configure') {
     drupal_set_title(st('Configure site'));
-    // Build menu to allow clean URL check.
-    menu_rebuild();
 
     // We break the form up so we can tell when it's been successfully
     // submitted.
@@ -641,6 +639,8 @@ function install_tasks($profile, $task) {
 
     drupal_process_form('install_configure_form', $form, $form_state);
     if (empty($form_state['redirect'])) {
+      // Build menu to allow clean URL check.
+      menu_rebuild();
       $output = drupal_render_form('install_configure_form', $form);
     }
     else {
