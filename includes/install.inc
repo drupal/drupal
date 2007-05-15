@@ -578,7 +578,7 @@ function st($string, $args = array()) {
 
   if (!isset($locale_strings)) {
     $locale_strings = array();
-    $filename = './profiles/'. $profile .'/'. $install_locale .'.po';
+    $filename = './profiles/'. $profile .'/po/'. $install_locale .'.po';
     if (file_exists($filename)) {
       require_once './includes/locale.inc';
       $file = (object) array('filepath' => $filename);
