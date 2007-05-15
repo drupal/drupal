@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.640 2007/05/04 09:41:36 goba Exp $
+// $Id: common.inc,v 1.641 2007/05/15 20:19:47 goba Exp $
 
 /**
  * @file
@@ -604,7 +604,7 @@ function fix_gpc_magic() {
 }
 
 /**
- * Translate strings to the current locale.
+ * Translate strings to the page language or a given language.
  *
  * All human-readable text that will be displayed somewhere within a page should be
  * run through the t() function.
@@ -695,27 +695,32 @@ function fix_gpc_magic() {
  *    - @variable: escape plain text to HTML (check_plain)
  *    - %variable: escape text and theme as a placeholder for user-submitted
  *      content (check_plain + theme_placeholder)
+ * @param $langcode
+ *   Optional language code to translate to a language other than
+ *   what is used to display the page.
  * @return
  *   The translated string.
  */
-function t($string, $args = 0) {
+function t($string, $args = 0, $langcode = NULL) {
   global $language;
   static $custom_strings;
+
+  $langcode = isset($langcode) ? $langcode : $language->language;
 
   // First, check for an array of customized strings. If present, use the array
   // *instead of* database lookups. This is a high performance way to provide a
   // handful of string replacements. See settings.php for examples.
   // Cache the $custom_strings variable to improve performance.
-  if (!isset($custom_strings)) {
-    $custom_strings = variable_get('locale_custom_strings_'. $language->language, array());
+  if (!isset($custom_strings[$langcode])) {
+    $custom_strings[$langcode] = variable_get('locale_custom_strings_'. $langcode, array());
   }
   // Custom strings work for English too, even if locale module is disabled.
-  if (isset($custom_strings[$string])) {
-    $string = $custom_strings[$string];
+  if (isset($custom_strings[$langcode][$string])) {
+    $string = $custom_strings[$langcode][$string];
   }
   // Translate with locale module if enabled.
-  elseif (function_exists('locale') && $language->language != 'en') {
-    $string = locale($string);
+  elseif (function_exists('locale') && $langcode != 'en') {
+    $string = locale($string, $langcode);
   }
   if (!$args) {
     return $string;
