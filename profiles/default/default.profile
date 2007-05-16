@@ -113,4 +113,7 @@ function default_profile_tasks(&$task) {
   $theme_settings = variable_get('theme_settings', array());
   $theme_settings['toggle_node_info_page'] = FALSE;
   variable_set('theme_settings', $theme_settings);
+
+  // Update the menu router information.
+  menu_rebuild();
 }

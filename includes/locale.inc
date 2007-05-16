@@ -781,8 +781,6 @@ function locale_translate_edit_form_submit($form_values, $form, &$form_state) {
 
   // Refresh the locale cache.
   locale_refresh_cache();
-  // Rebuild the menu, strings may have changed.
-  menu_rebuild();
 
   $form_state['redirect'] = 'admin/build/translate/search';
   return;

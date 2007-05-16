@@ -40,7 +40,6 @@ function tracker_menu() {
     'title' => 'My recent posts',
     'type' => MENU_LOCAL_TASK,
     'access callback' => 'user_is_logged_in',
-    'access arguments' => array(1),
   );
 
   $items['user/%user/track'] = array(

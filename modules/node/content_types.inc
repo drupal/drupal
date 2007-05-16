@@ -320,7 +320,7 @@ function node_type_form_submit($form_values, $form, &$form_state) {
   }
 
   node_types_rebuild();
-  // menu_rebuild clears the cache, too
+  cache_clear_all();
   menu_rebuild();
   $t_args = array('%name' => $type->name);
 
