@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.195 2007/05/14 13:43:32 dries Exp $
+// $Id: form.inc,v 1.196 2007/05/16 07:56:19 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -608,7 +608,7 @@ function form_execute_handlers($type, &$form, &$form_state) {
         // Some previous _submit handler has set a batch. We store the call
         // in a special 'control' batch set, for execution at the correct
         // time during the batch processing workflow.
-        $batch['sets'][] = array('form_submit' => array($function));
+        $batch['sets'][] = array('form_submit' => $function);
       }
       else {
         $function($form_state['values'], $form, $form_state);
@@ -1903,7 +1903,6 @@ function batch_set($batch_definition) {
  *   URL of the batch processing page.
  */
 function batch_process($redirect = NULL, $url = NULL) {
-  global $user;
   $batch =& batch_get();
 
   if (isset($batch)) {
@@ -1931,8 +1930,7 @@ function batch_process($redirect = NULL, $url = NULL) {
         $batch['destination'] = $_REQUEST['edit']['destination'];
         unset($_REQUEST['edit']['destination']);
       }
-
-      db_query("INSERT INTO {batch} (bid, sid, timestamp, batch) VALUES (%d, %d, %d, '%s')", $batch['id'], $user->sid, time(), serialize($batch));
+      db_query("INSERT INTO {batch} (bid, token, timestamp, batch) VALUES (%d, %d, %d, '%s')", $batch['id'], drupal_get_token($batch['id']), time(), serialize($batch));
       drupal_goto($batch['url'], 'op=start&id='. $batch['id']);
     }
     else {

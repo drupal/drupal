@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.221 2007/05/09 11:39:23 goba Exp $
+// $Id: update.php,v 1.222 2007/05/16 07:56:19 dries Exp $
 
 /**
  * @file
@@ -685,22 +685,22 @@ function update_create_batch_table() {
     case 'mysqli':
       $ret[] = update_sql("CREATE TABLE {batch} (
         bid int(11) NOT NULL,
-        sid varchar(64) NOT NULL,
+        token varchar(64) NOT NULL,
         timestamp int(11) NOT NULL,
         batch longtext,
         PRIMARY KEY  (bid),
-        KEY sid (sid)
+        KEY token (token)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
       break;
     case 'pgsql':
       $ret[] = update_sql("CREATE TABLE {batch} (
-        bid int NOT NULL default '0',
-        sid varchar(64) NOT NULL default '',
+        bid serial CHECK (bid >= 0),
+        token varchar(64) NOT NULL default '',
         timestamp int NOT NULL default '0',
         batch text,
         PRIMARY KEY (bid)
       )");
-      $ret[] = update_sql("CREATE INDEX {batch}_sid_idx ON {batch} (sid)");
+      $ret[] = update_sql("CREATE INDEX {batch}_token_idx ON {batch} (token)");
      break;
   }
   return $ret;

@@ -8,11 +8,9 @@
  * State based dispatcher for batches.
  */
 function _batch_page() {
-  global $user;
-
   $batch =& batch_get();
 
-  if (isset($_REQUEST['id']) && $data = db_result(db_query("SELECT batch FROM {batch} WHERE bid = %d AND sid = %d", $_REQUEST['id'], $user->sid))) {
+  if (isset($_REQUEST['id']) && $data = db_result(db_query("SELECT batch FROM {batch} WHERE bid = %d AND token = %d", $_REQUEST['id'], drupal_get_token($_REQUEST['id'])))) {
     $batch = unserialize($data);
   }
   else {
@@ -161,37 +159,42 @@ function _batch_process() {
   $current_set =& _batch_current_set();
 
   while (!$current_set['success']) {
-    $task_message = NULL;
     $finished = 1;
+    $task_message = '';
     if ((list($function, $args) = reset($current_set['operations'])) && function_exists($function)) {
       // Build the 'batch context' array, execute the function call, and retrieve the user message.
-      $batch_context = array('sandbox' => &$current_set['sandbox'], 'results' => &$current_set['results'], 'finished' => &$finished, 'message' => '');
+      $batch_context = array('sandbox' => &$current_set['sandbox'], 'results' => &$current_set['results'], 'finished' => &$finished, 'message' => &$task_message);
       call_user_func_array($function, array_merge($args, array(&$batch_context)));
-      $task_message = $batch_context['message'];
     }
+
     if ($finished == 1) {
       // Make sure this step isn't counted double.
       $finished = 0;
       // Remove the operation, and clear the sandbox to reduce the stored data.
       array_shift($current_set['operations']);
       $current_set['sandbox'] = array();
-
-      // If the batch set is completed, browse through the remaining sets
-      // until we find one that acually has operations.
-      while (empty($current_set['operations']) && ($current_set['success'] = TRUE) && _batch_next_set()) {
-        $current_set =& _batch_current_set();
-      }
     }
+
+    // Make sure we display progress information about a batch set that
+    // actually has operations, and not about a 'control' set (form submit
+    // handler).
+    $remaining = count($current_set['operations']);
+    $progress_message = $current_set['progress_message'];
+    $total = $current_set['total'];
+
+    // If the batch set is completed, browse through the remaining sets
+    // until we find one that acually has operations.
+    while (empty($current_set['operations']) && ($current_set['success'] = TRUE) && _batch_next_set()) {
+      $current_set =& _batch_current_set();
+    }
+
     // Progressive mode : stop after 1 second
     if ($batch['progressive'] && timer_read('page') > 1000) {
       break;
     }
   }
 
-  // TODO : if the last set was a 'form_submit', there is no 'operations', 'total', 'progress message' in $current_set => warnings
   if ($batch['progressive']) {
-    $remaining  = count($current_set['operations']);
-    $total      = $current_set['total'];
     $current    = $total - $remaining + $finished;
     $percentage = $total ? floor($current / $total * 100) : 100;
     $values = array(
@@ -200,9 +203,7 @@ function _batch_process() {
       '@current'    => floor($current),
       '@percentage' => $percentage,
       );
-    $progress_message = strtr($current_set['progress_message'], $values);
-
-    $message = $progress_message .'<br/>';
+    $message = strtr($progress_message, $values) .'<br/>';
     $message.= $task_message ? $task_message : '&nbsp';
 
     return array($percentage, $message);

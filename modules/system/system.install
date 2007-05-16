@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.107 2007/05/14 16:22:26 dries Exp $
+// $Id: system.install,v 1.108 2007/05/16 07:56:19 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -192,11 +192,11 @@ function system_install() {
 
       db_query("CREATE TABLE {batch} (
         bid int(11) NOT NULL,
-        sid varchar(64) NOT NULL,
+        token varchar(64) NOT NULL,
         timestamp int(11) NOT NULL,
         batch longtext,
         PRIMARY KEY  (bid),
-        KEY sid (sid)
+        KEY token (token)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {blocks} (
@@ -686,13 +686,13 @@ function system_install() {
       )");
 
       db_query("CREATE TABLE {batch} (
-        bid int NOT NULL default '0',
-        sid varchar(64) NOT NULL default '',
+        bid serial CHECK (bid >= 0),
+        token varchar(64) NOT NULL default '',
         timestamp int NOT NULL default '0',
         batch text,
         PRIMARY KEY (bid)
       )");
-      db_query("CREATE INDEX {batch}_sid_idx ON {batch} (sid)");
+      db_query("CREATE INDEX {batch}_token_idx ON {batch} (token)");
 
       db_query("CREATE TABLE {blocks} (
         module varchar(64) DEFAULT '' NOT NULL,
