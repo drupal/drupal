@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.109 2007/05/16 13:45:16 dries Exp $
+// $Id: system.install,v 1.110 2007/05/16 14:41:38 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -200,6 +200,7 @@ function system_install() {
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {blocks} (
+        bid int NOT NULL AUTO_INCREMENT,
         module varchar(64) DEFAULT '' NOT NULL,
         delta varchar(32) NOT NULL default '0',
         theme varchar(255) NOT NULL default '',
@@ -210,7 +211,8 @@ function system_install() {
         throttle tinyint DEFAULT '0' NOT NULL,
         visibility tinyint DEFAULT '0' NOT NULL,
         pages text NOT NULL,
-        title varchar(64) DEFAULT '' NOT NULL
+        title varchar(64) DEFAULT '' NOT NULL,
+        PRIMARY KEY (bid)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {boxes} (
@@ -325,17 +327,21 @@ function system_install() {
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {filters} (
+        fid int NOT NULL AUTO_INCREMENT,
         format int NOT NULL default '0',
         module varchar(64) NOT NULL default '',
         delta tinyint DEFAULT '0' NOT NULL,
         weight tinyint DEFAULT '0' NOT NULL,
+        PRIMARY KEY (fid),
         INDEX (weight)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {flood} (
+        fid int NOT NULL AUTO_INCREMENT,
         event varchar(64) NOT NULL default '',
         hostname varchar(128) NOT NULL default '',
-        timestamp int NOT NULL default '0'
+        timestamp int NOT NULL default '0',
+        PRIMARY KEY (fid)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {history} (
@@ -411,7 +417,8 @@ function system_install() {
         promote int NOT NULL default '0',
         moderate int NOT NULL default '0',
         sticky int NOT NULL default '0',
-        PRIMARY KEY  (nid, vid),
+        PRIMARY KEY  (nid),
+        UNIQUE KEY nid_vid (nid, vid),
         UNIQUE KEY vid (vid),
         KEY node_type (type(4)),
         KEY node_title_type (title, type(4)),
@@ -479,9 +486,11 @@ function system_install() {
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {permission} (
+        pid int NOT NULL AUTO_INCREMENT,
         rid int unsigned NOT NULL default '0',
         perm longtext,
         tid int unsigned NOT NULL default '0',
+        PRIMARY KEY (pid),
         KEY rid (rid)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
@@ -569,15 +578,19 @@ function system_install() {
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {term_relation} (
+        trid int NOT NULL AUTO_INCREMENT,
         tid1 int unsigned NOT NULL default '0',
         tid2 int unsigned NOT NULL default '0',
+        PRIMARY KEY (trid),
         KEY tid1 (tid1),
         KEY tid2 (tid2)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {term_synonym} (
+        tsid int NOT NULL AUTO_INCREMENT,
         tid int unsigned NOT NULL default '0',
         name varchar(255) NOT NULL default '',
+        PRIMARY KEY (tsid),
         KEY tid (tid),
         KEY name (name(3))
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
@@ -707,6 +720,7 @@ function system_install() {
       db_query("CREATE INDEX {batch}_token_idx ON {batch} (token)");
 
       db_query("CREATE TABLE {blocks} (
+        bid serial,
         module varchar(64) DEFAULT '' NOT NULL,
         delta varchar(32) NOT NULL default '0',
         theme varchar(255) NOT NULL default '',
@@ -717,7 +731,8 @@ function system_install() {
         throttle smallint DEFAULT '0' NOT NULL,
         visibility smallint DEFAULT '0' NOT NULL,
         pages text DEFAULT '' NOT NULL,
-        title varchar(64) DEFAULT '' NOT NULL
+        title varchar(64) DEFAULT '' NOT NULL,
+        PRIMARY KEY (bid)
       )");
 
       db_query("CREATE TABLE {boxes} (
@@ -832,17 +847,21 @@ function system_install() {
       )");
 
       db_query("CREATE TABLE {filters} (
+        fid serial,
         format int NOT NULL default '0',
         module varchar(64) NOT NULL default '',
         delta smallint DEFAULT '0' NOT NULL,
-        weight smallint DEFAULT '0' NOT NULL
+        weight smallint DEFAULT '0' NOT NULL,
+        PRIMARY KEY (fid)
       )");
       db_query("CREATE INDEX {filters}_weight_idx ON {filters} (weight)");
 
       db_query("CREATE TABLE {flood} (
+        fid serial,
         event varchar(64) NOT NULL default '',
         hostname varchar(128) NOT NULL default '',
-        timestamp int NOT NULL default '0'
+        timestamp int NOT NULL default '0',
+        PRIMARY KEY (fid)
       )");
 
       db_query("CREATE TABLE {history} (
@@ -918,7 +937,8 @@ function system_install() {
         promote int NOT NULL default '0',
         moderate int NOT NULL default '0',
         sticky int NOT NULL default '0',
-        PRIMARY KEY (nid, vid),
+        PRIMARY KEY (nid),
+        UNIQUE (nid, vid),
         UNIQUE (vid)
       )");
       db_query("CREATE INDEX {node}_node_type_idx ON {node} (substr (type, 1, 4))");
@@ -986,9 +1006,11 @@ function system_install() {
       db_query("CREATE UNIQUE INDEX {url_alias}_dst_language_idx ON {url_alias} (dst, language)");
 
       db_query("CREATE TABLE {permission} (
+        pid serial,
         rid int_unsigned NOT NULL default '0',
         perm text,
-        tid int_unsigned NOT NULL default '0'
+        tid int_unsigned NOT NULL default '0',
+        PRIMARY KEY (pid)
       )");
       db_query("CREATE INDEX {permission}_rid_idx ON {permission} (rid)");
 
@@ -1077,15 +1099,19 @@ function system_install() {
       db_query("CREATE INDEX {term_node}_tid_idx ON {term_node} (tid)");
 
       db_query("CREATE TABLE {term_relation} (
+        trid serial,
         tid1 int_unsigned NOT NULL default '0',
-        tid2 int_unsigned NOT NULL default '0'
+        tid2 int_unsigned NOT NULL default '0',
+        PRIMARY KEY (trid)
       )");
       db_query("CREATE INDEX {term_relation}_tid1_idx ON {term_relation} (tid1)");
       db_query("CREATE INDEX {term_relation}_tid2_idx ON {term_relation} (tid2)");
 
       db_query("CREATE TABLE {term_synonym} (
+        tsid serial,
         tid int_unsigned NOT NULL default '0',
-        name varchar(255) NOT NULL default ''
+        name varchar(255) NOT NULL default '',
+        PRIMARY KEY (tsid)
       )");
       db_query("CREATE INDEX {term_synonym}_tid_idx ON {term_synonym} (tid)");
       db_query("CREATE INDEX {term_synonym}_name_idx ON {term_synonym} (substr(name, 1, 3))");
@@ -1160,8 +1186,8 @@ function system_install() {
   db_query("INSERT INTO {role} (name) VALUES ('anonymous user')");
   db_query("INSERT INTO {role} (name) VALUES ('authenticated user')");
 
-  db_query("INSERT INTO {permission} VALUES (1,'access content',0)");
-  db_query("INSERT INTO {permission} VALUES (2,'access comments, access content, post comments, post comments without approval',0)");
+  db_query("INSERT INTO {permission} (rid,perm,tid) VALUES (1,'access content',0)");
+  db_query("INSERT INTO {permission} (rid,perm,tid) VALUES (2,'access comments, access content, post comments, post comments without approval',0)");
 
   db_query("INSERT INTO {variable} (name,value) VALUES('theme_default', 's:7:\"garland\";')");
 
@@ -3484,7 +3510,6 @@ function system_update_1014() {
   return array();
 }
 
-
 /**
  * Add an index on watchdog type.
  */
@@ -3959,6 +3984,48 @@ function system_update_6015() {
         PRIMARY KEY (cid),
         INDEX expire (expire)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+      break;
+  }
+
+  return $ret;
+}
+
+/**
+ * Make {node}'s primary key be nid, change nid,vid to a unique key.
+ * Add primary keys to block, filters, flood, permission, and term_relation.
+ */
+function system_update_6016() {
+  $ret = array();
+
+  switch ($GLOBALS['db_type']) {
+    case 'pgsql':
+      $ret[] = update_sql("ALTER TABLE {node} DROP CONSTRAINT {node}_pkey");
+      $ret[] = update_sql("ALTER TABLE {node} ADD PRIMARY KEY (nid)");
+      $ret[] = update_sql("ALTER TABLE {node} ADD CONSTRAINT {node}_nid_vid_key UNIQUE (nid, vid)");
+      db_add_column($ret, 'blocks', 'bid', 'serial');
+      $ret[] = update_sql("ALTER TABLE {blocks} ADD PRIMARY KEY (bid)");
+      db_add_column($ret, 'filters', 'fid', 'serial');
+      $ret[] = update_sql("ALTER TABLE {filters} ADD PRIMARY KEY (fid)");
+      db_add_column($ret, 'flood', 'fid', 'serial');
+      $ret[] = update_sql("ALTER TABLE {flood} ADD PRIMARY KEY (fid)");
+      db_add_column($ret, 'permission', 'pid', 'serial');
+      $ret[] = update_sql("ALTER TABLE {permission} ADD PRIMARY KEY (pid)");
+      db_add_column($ret, 'term_relation', 'trid', 'serial');
+      $ret[] = update_sql("ALTER TABLE {term_relation} ADD PRIMARY KEY (trid)");
+      db_add_column($ret, 'term_synonym', 'tsid', 'serial');
+      $ret[] = update_sql("ALTER TABLE {term_synonym} ADD PRIMARY KEY (tsid)");
+      break;
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql('ALTER TABLE {node} DROP PRIMARY KEY');
+      $ret[] = update_sql('ALTER TABLE {node} ADD PRIMARY KEY (nid)');
+      $ret[] = update_sql('ALTER TABLE {node} ADD UNIQUE KEY nid_vid (nid, vid)');
+      $ret[] = update_sql("ALTER TABLE {blocks} ADD bid int NOT NULL AUTO_INCREMENT PRIMARY KEY");
+      $ret[] = update_sql("ALTER TABLE {filters} ADD fid int NOT NULL AUTO_INCREMENT PRIMARY KEY");
+      $ret[] = update_sql("ALTER TABLE {flood} ADD fid int NOT NULL AUTO_INCREMENT PRIMARY KEY");
+      $ret[] = update_sql("ALTER TABLE {permission} ADD pid int NOT NULL AUTO_INCREMENT PRIMARY KEY");
+      $ret[] = update_sql("ALTER TABLE {term_relation} ADD trid int NOT NULL AUTO_INCREMENT PRIMARY KEY");
+      $ret[] = update_sql("ALTER TABLE {term_synonym} ADD tsid int NOT NULL AUTO_INCREMENT PRIMARY KEY");
       break;
   }
 
