@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.118 2007/05/14 13:43:36 dries Exp $
+// $Id: path.module,v 1.119 2007/05/16 13:45:16 dries Exp $
 
 /**
  * @file
@@ -128,13 +128,11 @@ function path_set_alias($path = NULL, $alias = NULL, $pid = NULL, $language = ''
   if ($path && !$alias) {
     // Delete based on path
     db_query("DELETE FROM {url_alias} WHERE src = '%s' AND language = '%s'", $path, $language);
-    db_query("UPDATE {menu} SET link_path = path WHERE path = '%s'", $path);
     drupal_clear_path_cache();
   }
   else if (!$path && $alias) {
     // Delete based on alias
     db_query("DELETE FROM {url_alias} WHERE dst = '%s' AND language = '%s'", $alias, $language);
-    db_query("UPDATE {menu} SET link_path = path WHERE link_path = '%s'", $alias);
     drupal_clear_path_cache();
   }
   else if ($path && $alias) {
@@ -170,7 +168,6 @@ function path_set_alias($path = NULL, $alias = NULL, $pid = NULL, $language = ''
     }
     if ($alias_count == 0 || $path_count == 0) {
       drupal_clear_path_cache();
-      db_query("UPDATE {menu} SET link_path = '%s' WHERE path = '%s'", $alias, $path);
     }
   }
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.780 2007/05/14 13:43:38 dries Exp $
+// $Id: user.module,v 1.781 2007/05/16 13:45:16 dries Exp $
 
 /**
  * @file
@@ -966,10 +966,14 @@ function user_init() {
 }
 
 function user_current_load($arg) {
-  return user_load($arg);
+  return $arg ? user_load($arg) : user_load($GLOBALS['user']->uid);
 }
 
-function user_current_to_arg() {
+function user_current_to_arg($arg) {
+
+  if (is_numeric($arg)) {
+    return $arg;
+  }
   return $GLOBALS['user']->uid;
 }
 
@@ -2034,8 +2038,8 @@ function user_admin_perm_submit($form_values, $form, &$form_state) {
 
   drupal_set_message(t('The changes have been saved.'));
 
-  // Clear the cached pages and menus:
-  menu_rebuild();
+  // Clear the cached pages
+  cache_clear_all();
 
 }
 

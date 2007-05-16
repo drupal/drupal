@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.108 2007/05/16 07:56:19 dries Exp $
+// $Id: system.install,v 1.109 2007/05/16 13:45:16 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -345,9 +345,7 @@ function system_install() {
         PRIMARY KEY (uid,nid)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
-      db_query("CREATE TABLE {menu} (
-        mid int NOT NULL default 0,
-        pid int NOT NULL default 0,
+      db_query("CREATE TABLE {menu_router} (
         path varchar(255) NOT NULL default '',
         load_functions varchar(255) NOT NULL default '',
         to_arg_functions varchar(255) NOT NULL default '',
@@ -357,32 +355,46 @@ function system_install() {
         page_arguments text,
         fit int NOT NULL default 0,
         number_parts int NOT NULL default 0,
-        mleft int NOT NULL default 0,
-        mright int NOT NULL default 0,
-        visible int NOT NULL default 0,
-        parents varchar(255) NOT NULL default '',
-        depth int NOT NULL default 0,
-        has_children int NOT NULL default 0,
-        tab int NOT NULL default 0,
+        tab_parent varchar(255) NOT NULL default '',
+        tab_root varchar(255) NOT NULL default '',
         title varchar(255) NOT NULL default '',
         title_callback varchar(255) NOT NULL default '',
         title_arguments varchar(255) NOT NULL default '',
-        parent varchar(255) NOT NULL default '',
         type int NOT NULL default 0,
         block_callback varchar(255) NOT NULL default '',
         description varchar(255) NOT NULL default '',
         position varchar(255) NOT NULL default '',
-        link_path varchar(255) NOT NULL default '',
-        attributes varchar(255) NOT NULL default '',
-        query varchar(255) NOT NULL default '',
-        fragment varchar(255) NOT NULL default '',
-        absolute INT NOT NULL default 0,
-        html INT NOT NULL default 0,
+        weight int NOT NULL default 0,
         PRIMARY KEY  (path),
         KEY fit (fit),
-        KEY visible (visible),
-        KEY pid (pid),
-        KEY parent (parent)
+        KEY tab_parent (tab_parent)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+
+      db_query("CREATE TABLE {menu_links} (
+        menu_name varchar(64) NOT NULL default '',
+        mlid int NOT NULL default '0',
+        plid int NOT NULL default '0',
+        href varchar(255) NOT NULL default '',
+        router_path varchar(255) NOT NULL default '',
+        hidden smallint NOT NULL default '0',
+        external smallint NOT NULL default '0',
+        has_children int NOT NULL default '0',
+        expanded smallint NOT NULL default '0',
+        weight int NOT NULL default '0',
+        depth int NOT NULL default '0',
+        p1 int NOT NULL default '0',
+        p2 int NOT NULL default '0',
+        p3 int NOT NULL default '0',
+        p4 int NOT NULL default '0',
+        p5 int NOT NULL default '0',
+        p6 int NOT NULL default '0',
+        module varchar(255) NOT NULL default 'system',
+        link_title varchar(255) NOT NULL default '',
+        options text,
+        PRIMARY KEY (mlid),
+        KEY parents (plid, p1, p2, p3, p4, p5),
+        KEY menu_name_path (menu_name, href),
+        KEY menu_expanded_children (expanded, has_children)
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
       db_query("CREATE TABLE {node} (
@@ -840,9 +852,7 @@ function system_install() {
         PRIMARY KEY (uid,nid)
       )");
 
-      db_query("CREATE TABLE {menu} (
-        mid int NOT NULL default 0,
-        pid int NOT NULL default 0,
+      db_query("CREATE TABLE {menu_router} (
         path varchar(255) NOT NULL default '',
         load_functions varchar(255) NOT NULL default '',
         to_arg_functions varchar(255) NOT NULL default '',
@@ -852,34 +862,47 @@ function system_install() {
         page_arguments text,
         fit int NOT NULL default 0,
         number_parts int NOT NULL default 0,
-        mleft int NOT NULL default 0,
-        mright int NOT NULL default 0,
-        visible int NOT NULL default 0,
-        parents varchar(255) NOT NULL default '',
-        depth int NOT NULL default 0,
-        has_children int NOT NULL default 0,
-        tab int NOT NULL default 0,
+        tab_parent varchar(255) NOT NULL default '',
+        tab_root varchar(255) NOT NULL default '',
         title varchar(255) NOT NULL default '',
         title_callback varchar(255) NOT NULL default '',
         title_arguments varchar(255) NOT NULL default '',
-        parent varchar(255) NOT NULL default '',
         type int NOT NULL default 0,
         block_callback varchar(255) NOT NULL default '',
         description varchar(255) NOT NULL default '',
         position varchar(255) NOT NULL default '',
-        link_path varchar(255) NOT NULL default '',
-        attributes varchar(255) NOT NULL default '',
-        query varchar(255) NOT NULL default '',
-        fragment varchar(255) NOT NULL default '',
-        absolute INT NOT NULL default 0,
-        html INT NOT NULL default 0,
-        PRIMARY KEY (path)
+        weight int NOT NULL default 0,
+        PRIMARY KEY  (path),
       )");
+      db_query("CREATE INDEX {menu_router}_fit_idx ON {menu_router} (fit)");
+      db_query("CREATE INDEX {menu_router}_tab_parent_idx ON {menu_router} (tab_parent)");
 
-      db_query("CREATE INDEX {menu}_fit_idx ON {menu} (fit)");
-      db_query("CREATE INDEX {menu}_visible_idx ON {menu} (visible)");
-      db_query("CREATE INDEX {menu}_parent_idx ON {menu} (parent)");
-      db_query("CREATE INDEX {menu}_pid_idx ON {menu} (parent)");
+      db_query("CREATE TABLE {menu_link} (
+        menu_name varchar(64) NOT NULL default '',
+        mlid int NOT NULL default '0',
+        plid int NOT NULL default '0',
+        href varchar(255) NOT NULL default '',
+        router_path varchar(255) NOT NULL default '',
+        hidden smallint NOT NULL default '0',
+        external smallint NOT NULL default '0',
+        has_children int NOT NULL default '0',
+        expanded smallint NOT NULL default '0',
+        weight int NOT NULL default '0',
+        depth int NOT NULL default '0',
+        p1 int NOT NULL default '0',
+        p2 int NOT NULL default '0',
+        p3 int NOT NULL default '0',
+        p4 int NOT NULL default '0',
+        p5 int NOT NULL default '0',
+        p6 int NOT NULL default '0',
+        module varchar(255) NOT NULL default 'system',
+        link_title varchar(255) NOT NULL default '',
+        options text,
+        PRIMARY KEY (mlid)
+      )");
+      db_query("CREATE INDEX {menu_link}_parents_idx ON {menu_link} (plid, p1, p2, p3, p4, p5)");
+      db_query("CREATE INDEX {menu_link}_menu_name_idx ON {menu_link} (menu_name, href)");
+      db_query("CREATE INDEX {menu_link}_expanded_children_idx ON {menu_link} (expanded, has_children)");
 
       db_query("CREATE TABLE {node} (
         nid serial CHECK (nid >= 0),
@@ -2146,15 +2169,15 @@ function system_update_151() {
         $num_inserted ++;
         $node_unalias = db_fetch_array(db_query("SELECT src FROM {url_alias} WHERE dst = '%s'", $links['link'][$i]));
         if (isset($node_unalias) && is_array($node_unalias)) {
-          $link_path = $node_unalias['src'];
+          $href = $node_unalias['src'];
         }
         else {
-          $link_path = $links['link'][$i];
+          $href = $links['link'][$i];
         }
 
         $mid = db_next_id('{menu}_mid');
         $ret[] = update_sql("INSERT INTO {menu} (mid, pid, path, title, description, weight, type) " .
-                             "VALUES ($mid, {$menus[$loop]['pid']}, '" . db_escape_string($link_path) .
+                             "VALUES ($mid, {$menus[$loop]['pid']}, '" . db_escape_string($href) .
                              "', '" . db_escape_string($links['text'][$i]) .
                              "', '" . db_escape_string($links['description'][$i]) . "', 0, 118)");
       }

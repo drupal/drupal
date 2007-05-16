@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.31 2007/05/14 13:43:36 dries Exp $
+// $Id: content_types.inc,v 1.32 2007/05/16 13:45:16 dries Exp $
 
 /**
  * @file
@@ -320,7 +320,7 @@ function node_type_form_submit($form_values, $form, &$form_state) {
   }
 
   node_types_rebuild();
-  // menu_rebuild clears the cache, too
+  cache_clear_all();
   menu_rebuild();
   $t_args = array('%name' => $type->name);
 

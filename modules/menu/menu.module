@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.110 2007/05/14 13:43:36 dries Exp $
+// $Id: menu.module,v 1.111 2007/05/16 13:45:16 dries Exp $
 
 /**
  * @file
@@ -125,35 +125,6 @@ function menu_menu() {
 */
 }
 
-/**
- * Implementation of hook_menu_alter.
- */
-function menu_menu_alter(&$menu, $phase) {
-  switch ($phase) {
-    case MENU_ALTER_MODULE_DEFINED:
-      foreach ($menu as $path => $item) {
-        if (isset($item['_custom_item']) && $item['_custom_item'] && !$item['_external']) {
-          list($ancestors, $placeholders) = menu_get_ancestors(explode('/', $path, 6));
-          // Remove the item itself, custom items need to inherit from an existing item.
-          array_shift($ancestors);
-          array_shift($placeholders);
-          $inherit_item = db_fetch_object(db_query_range('SELECT * FROM {menu} WHERE path IN ('. implode (',', $placeholders) .') ORDER BY fit DESC', $ancestors, 0, 1));
-          drupal_set_message(var_export($inherit_item, TRUE));
-          $menu[$path]['access callback'] = $inherit_item->access_callback;
-          $menu[$path]['access arguments'] = unserialize($inherit_item->access_arguments);
-          $menu[$path]['page callback'] = $inherit_item->page_callback;
-          $menu[$path]['page arguments'] = unserialize($inherit_item->page_arguments);
-        }
-      }
-      break;
-    case MENU_ALTER_PREPROCESSED:
-      $result = db_query('SELECT * FROM {menu_custom} me WHERE admin = 0');
-      while ($item = db_fetch_array($result)) {
-        $menu[$item['path']] = $item + $menu[$item['path']];
-      }
-      break;
-  }
-}
 
 /**
  * Menu callback which displays every menu element accessible to the current
@@ -161,6 +132,8 @@ function menu_menu_alter(&$menu, $phase) {
  */
 function menu_overview() {
   $header = array(t('Menu item'), t('Expanded'), array('data' => t('Operations'), 'colspan' => '3'));
+
+
   $result = db_query('SELECT m.*, me.disabled FROM {menu} m LEFT JOIN {menu_custom} me ON m.path = me.path WHERE visible = 1 OR (disabled = 1 AND admin = 0) ORDER BY mleft');
   $map = arg();
   $rows = array();
@@ -675,6 +648,10 @@ function _menu_form_alter(&$form, $form_id) {
       );
     }
   }
+}
+
+function menu_get_root_menus() {
+  return array();
 }
 
 /**

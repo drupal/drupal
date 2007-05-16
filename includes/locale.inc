@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.124 2007/05/15 15:29:47 dries Exp $
+// $Id: locale.inc,v 1.125 2007/05/16 13:45:15 dries Exp $
 
 /**
  * @file
@@ -781,8 +781,6 @@ function locale_translate_edit_form_submit($form_values, $form, &$form_state) {
 
   // Refresh the locale cache.
   locale_refresh_cache();
-  // Rebuild the menu, strings may have changed.
-  menu_rebuild();
 
   $form_state['redirect'] = 'admin/build/translate/search';
   return;

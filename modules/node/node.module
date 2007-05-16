@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.813 2007/05/15 05:43:16 dries Exp $
+// $Id: node.module,v 1.814 2007/05/16 13:45:16 dries Exp $
 
 /**
  * @file
@@ -1248,6 +1248,7 @@ function node_menu() {
     'title' => 'Edit',
     'page callback' => 'node_page_edit',
     'page arguments' => array(1),
+    'access callback' => 'node_access',
     'access arguments' => array('update', 1),
     'weight' => 1,
     'type' => MENU_LOCAL_TASK);
@@ -1255,6 +1256,7 @@ function node_menu() {
     'title' => 'Delete',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('node_delete_confirm', 1),
+    'access callback' => 'node_access',
     'access arguments' => array('delete', 1),
     'weight' => 1,
     'type' => MENU_CALLBACK);

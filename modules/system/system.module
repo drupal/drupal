@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.476 2007/05/14 16:22:26 dries Exp $
+// $Id: system.module,v 1.477 2007/05/16 13:45:16 dries Exp $
 
 /**
  * @file
@@ -399,11 +399,11 @@ function system_main_admin_page($arg = NULL) {
   if (system_status(TRUE)) {
     drupal_set_message(t('One or more problems were detected with your Drupal installation. Check the <a href="@status">status report</a> for more information.', array('@status' => url('admin/logs/status'))), 'error');
   }
-
-  $map = arg(NULL);
-  $result = db_query("SELECT * FROM {menu} WHERE path LIKE 'admin/%%' AND depth = 2 AND visible = 1 AND path != 'admin/help' ORDER BY mleft");
+  $result = db_query("SELECT * FROM {menu_links} ml INNER JOIN {menu_router} m ON ml.router_path = m.path
+                      WHERE ml.href like 'admin/%' AND ml.href != 'admin/help' AND ml.depth = 2 AND ml.menu_name = 'navigation'
+                      ORDER BY p1 ASC, p2 ASC, p3 ASC");
   while ($item = db_fetch_object($result)) {
-    _menu_translate($item, $map, MENU_RENDER_LINK);
+    _menu_link_translate($item);
     if (!$item->access) {
       continue;
     }
@@ -423,11 +423,14 @@ function system_main_admin_page($arg = NULL) {
  * Provide a single block on the administration overview page.
  */
 function system_admin_menu_block($item) {
-  $map = arg(NULL);
   $content = array();
-  $result = db_query('SELECT * FROM {menu} WHERE depth = %d AND %d < mleft AND mright < %d AND visible = 1 ORDER BY mleft', $item->depth + 1, $item->mleft, $item->mright);
+  if (!isset($item->mlid)) {
+    $item->mlid = db_result(db_query("SELECT mlid FROM {menu_links} ml WHERE ml.router_path = '%s' AND menu_name = 'navigation'", $item->path));
+  }
+  $result = db_query("SELECT * FROM {menu_links} ml INNER JOIN {menu_router} m ON ml.router_path = m.path
+                      WHERE ml.plid = '%s' AND ml.menu_name = 'navigation' ORDER BY m.weight, m.title", $item->mlid);
   while ($item = db_fetch_object($result)) {
-    _menu_translate($item, $map, MENU_RENDER_LINK);
+    _menu_link_translate($item);
     if (!$item->access) {
       continue;
     }
@@ -1657,6 +1660,8 @@ function system_modules_submit($form_values, $form, &$form_state) {
     $dependencies = NULL;
   }
 
+  // Temporarily disable menu module while it's broken.
+  unset($form_values['status']['menu']);
   $enable_modules = array();
   $disable_modules = array();
   foreach ($form_values['status'] as $key => $choice) {
@@ -1700,8 +1705,8 @@ function system_modules_submit($form_values, $form, &$form_state) {
 
   if ($old_module_list != $current_module_list) {
     drupal_rebuild_theme_registry();
-    menu_rebuild();
     node_types_rebuild();
+    menu_rebuild();
     drupal_set_message(t('The configuration options have been saved.'));
   }
 
@@ -2494,14 +2499,14 @@ function theme_admin_block_content($content) {
         $item['attributes'] = array();
       }
       $item['attributes'] += array('title' => $item['description']);
-      $output .= '<li class="leaf">'. l($item['title'], $item['path'], $item) .'</li>';
+      $output .= '<li class="leaf">'. l($item['title'], $item['href'], $item['options']) .'</li>';
     }
     $output .= '</ul>';
   }
   else {
     $output = '<dl class="admin-list">';
     foreach ($content as $item) {
-      $output .= '<dt>'. l($item['title'], $item['path'], $item) .'</dt>';
+      $output .= '<dt>'. l($item['title'], $item['href'], $item['options']) .'</dt>';
       $output .= '<dd>'. $item['description'] .'</dd>';
     }
     $output .= '</dl>';

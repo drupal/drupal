@@ -1,5 +1,5 @@
 <?php
-// $Id: default.profile,v 1.11 2007/05/15 15:29:49 dries Exp $
+// $Id: default.profile,v 1.12 2007/05/16 13:45:17 dries Exp $
 
 /**
  * Return an array of the modules to be enabled when this profile is installed.
@@ -113,4 +113,7 @@ function default_profile_tasks(&$task) {
   $theme_settings = variable_get('theme_settings', array());
   $theme_settings['toggle_node_info_page'] = FALSE;
   variable_set('theme_settings', $theme_settings);
+
+  // Update the menu router information.
+  menu_rebuild();
 }

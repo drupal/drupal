@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.module,v 1.147 2007/04/30 17:03:29 dries Exp $
+// $Id: tracker.module,v 1.148 2007/05/16 13:45:16 dries Exp $
 
 /**
  * @file
@@ -40,7 +40,6 @@ function tracker_menu() {
     'title' => 'My recent posts',
     'type' => MENU_LOCAL_TASK,
     'access callback' => 'user_is_logged_in',
-    'access arguments' => array(1),
   );
 
   $items['user/%user/track'] = array(
