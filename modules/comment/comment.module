@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.542 2007/05/14 13:43:35 dries Exp $
+// $Id: comment.module,v 1.543 2007/05/17 20:57:19 dries Exp $
 
 /**
  * @file
@@ -1458,6 +1458,10 @@ function comment_form($edit, $title = NULL) {
 
   $op = isset($_POST['op']) ? $_POST['op'] : '';
 
+  if (!$user->uid && variable_get('comment_anonymous', COMMENT_ANONYMOUS_MAYNOT_CONTACT) != COMMENT_ANONYMOUS_MAYNOT_CONTACT) {
+    drupal_add_js(drupal_get_path('module', 'comment') . '/comment.js');
+  }
+
   if ($user->uid) {
     if (!empty($edit['cid']) && user_access('administer comments')) {
       if (!empty($edit['author'])) {
@@ -1681,6 +1685,10 @@ function comment_form_add_preview($form, $edit, &$form_state) {
 }
 
 function comment_form_validate($form_values, $form, &$form_state) {
+  foreach (array('name', 'homepage', 'mail') as $field) {
+    //set cookie for 365 days
+    setrawcookie('comment_info_' . $field, rawurlencode($form_values[$field]), time() + 31536000);
+  }
   comment_validate($form_values);
 }
 

@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.198 2007/05/15 15:29:47 dries Exp $
+// $Id: CHANGELOG.txt,v 1.199 2007/05/17 20:57:19 dries Exp $
 
 Drupal 6.0, xxxx-xx-xx (development version)
 ----------------------
@@ -27,6 +27,7 @@ Drupal 6.0, xxxx-xx-xx (development version)
     * Check for clean URL support automatically with JavaScript.
     * Removed default/settings.php. Instead the installer will create it from default.settings.php.
     * Made it possible to configure your own date formats.
+    * Remember anonymous comment posters.
 - Theme system:
     * Added .info files to themes and made it easier to specify regions and features.
     * Added theme registry: modules can directly provide .tpl.php files for their themes without having to create theme_ functions.
