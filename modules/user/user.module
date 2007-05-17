@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.781 2007/05/16 13:45:16 dries Exp $
+// $Id: user.module,v 1.782 2007/05/17 21:33:59 dries Exp $
 
 /**
  * @file
@@ -2452,15 +2452,69 @@ function user_admin_settings() {
   $form['registration']['user_registration_help'] = array('#type' => 'textarea', '#title' => t('User registration guidelines'), '#default_value' => variable_get('user_registration_help', ''), '#description' => t("This text is displayed at the top of the user registration form. It's useful for helping or instructing your users."));
 
   // User e-mail settings.
-  $form['email'] = array('#type' => 'fieldset', '#title' => t('User e-mail settings'));
-  $form['email']['user_mail_welcome_subject'] = array('#type' => 'textfield', '#title' => t('Subject of welcome e-mail'), '#default_value' => _user_mail_text('welcome_subject'), '#maxlength' => 180, '#description' => t('Customize the subject of your welcome e-mail, which is sent to new members upon registering.') .' '. t('Available variables are:') .' !username, !site, !password, !uri, !uri_brief, !mailto, !date, !login_uri, !edit_uri, !login_url.');
-  $form['email']['user_mail_welcome_body'] = array('#type' => 'textarea', '#title' => t('Body of welcome e-mail'), '#default_value' => _user_mail_text('welcome_body'), '#rows' => 15, '#description' => t('Customize the body of the welcome e-mail, which is sent to new members upon registering.') .' '. t('Available variables are:') .' !username, !site, !password, !uri, !uri_brief, !mailto, !login_uri, !edit_uri, !login_url.');
-  $form['email']['user_mail_admin_subject'] = array('#type' => 'textfield', '#title' => t('Subject of welcome e-mail (user created by administrator)'), '#default_value' => _user_mail_text('admin_subject'), '#maxlength' => 180, '#description' => t('Customize the subject of your welcome e-mail, which is sent to new member accounts created by an administrator.') .' '. t('Available variables are:') .' !username, !site, !password, !uri, !uri_brief, !mailto, !date, !login_uri, !edit_uri, !login_url.');
-  $form['email']['user_mail_admin_body'] = array('#type' => 'textarea', '#title' => t('Body of welcome e-mail (user created by administrator)'), '#default_value' => _user_mail_text('admin_body'), '#rows' => 15, '#description' => t('Customize the body of the welcome e-mail, which is sent to new member accounts created by an administrator.') .' '. t('Available variables are:') .' !username, !site, !password, !uri, !uri_brief, !mailto, !login_uri, !edit_uri, !login_url.');
-  $form['email']['user_mail_approval_subject'] = array('#type' => 'textfield', '#title' => t('Subject of welcome e-mail (awaiting admin approval)'), '#default_value' => _user_mail_text('approval_subject'), '#maxlength' => 180, '#description' => t('Customize the subject of your awaiting approval welcome e-mail, which is sent to new members upon registering.') .' '. t('Available variables are:') .' !username, !site, !password, !uri, !uri_brief, !mailto, !date, !login_uri, !edit_uri, !login_url.');
-  $form['email']['user_mail_approval_body'] = array('#type' => 'textarea', '#title' => t('Body of welcome e-mail (awaiting admin approval)'), '#default_value' => _user_mail_text('approval_body'), '#rows' => 15, '#description' => t('Customize the body of the awaiting approval welcome e-mail, which is sent to new members upon registering.') .' '. t('Available variables are:') .' !username, !site, !password, !uri, !uri_brief, !mailto, !login_uri, !edit_uri, !login_url.');
-  $form['email']['user_mail_pass_subject'] = array('#type' => 'textfield', '#title' => t('Subject of password recovery e-mail'), '#default_value' => _user_mail_text('pass_subject'), '#maxlength' => 180, '#description' => t('Customize the subject of your forgotten password e-mail.') .' '. t('Available variables are:') .' !username, !site, !login_url, !uri, !uri_brief, !mailto, !date, !login_uri, !edit_uri.');
-  $form['email']['user_mail_pass_body'] = array('#type' => 'textarea', '#title' => t('Body of password recovery e-mail'), '#default_value' => _user_mail_text('pass_body'), '#rows' => 15, '#description' => t('Customize the body of the forgotten password e-mail.') .' '. t('Available variables are:') .' !username, !site, !login_url, !uri, !uri_brief, !mailto, !login_uri, !edit_uri.');
+  $form['email'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('User e-mail settings'),
+  );
+  // These email tokens are shared for all settings, so just define
+  // the list once to help ensure they stay in sync.
+  $email_token_help = t('Available variables are:') .' !username, !site, !password, !uri, !uri_brief, !mailto, !date, !login_uri, !edit_uri, !login_url.';
+  $form['email']['user_mail_welcome_subject'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Subject of welcome e-mail'),
+    '#default_value' => _user_mail_text('welcome_subject'),
+    '#maxlength' => 180,
+    '#description' => t('Customize the subject of your welcome e-mail, which is sent to new members upon registering.') .' '. $email_token_help
+  );
+  $form['email']['user_mail_welcome_body'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Body of welcome e-mail'),
+    '#default_value' => _user_mail_text('welcome_body'),
+    '#rows' => 15,
+    '#description' => t('Customize the body of the welcome e-mail, which is sent to new members upon registering.') .' '. $email_token_help,
+  );
+  $form['email']['user_mail_admin_subject'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Subject of welcome e-mail (user created by administrator)'),
+    '#default_value' => _user_mail_text('admin_subject'),
+    '#maxlength' => 180,
+    '#description' => t('Customize the subject of your welcome e-mail, which is sent to new member accounts created by an administrator.') .' '. $email_token_help,
+  );
+  $form['email']['user_mail_admin_body'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Body of welcome e-mail (user created by administrator)'),
+    '#default_value' => _user_mail_text('admin_body'),
+    '#rows' => 15,
+    '#description' => t('Customize the body of the welcome e-mail, which is sent to new member accounts created by an administrator.') .' '. $email_token_help,
+  );
+  $form['email']['user_mail_approval_subject'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Subject of welcome e-mail (awaiting admin approval)'),
+    '#default_value' => _user_mail_text('approval_subject'),
+    '#maxlength' => 180,
+    '#description' => t('Customize the subject of your awaiting approval welcome e-mail, which is sent to new members upon registering.') .' '. $email_token_help,
+  );
+  $form['email']['user_mail_approval_body'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Body of welcome e-mail (awaiting admin approval)'),
+    '#default_value' => _user_mail_text('approval_body'),
+    '#rows' => 15,
+    '#description' => t('Customize the body of the awaiting approval welcome e-mail, which is sent to new members upon registering.') .' '. $email_token_help,
+  );
+  $form['email']['user_mail_pass_subject'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Subject of password recovery e-mail'),
+    '#default_value' => _user_mail_text('pass_subject'),
+    '#maxlength' => 180,
+    '#description' => t('Customize the subject of your forgotten password e-mail.') .' '. $email_token_help,
+  );
+  $form['email']['user_mail_pass_body'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Body of password recovery e-mail'),
+    '#default_value' => _user_mail_text('pass_body'),
+    '#rows' => 15,
+    '#description' => t('Customize the body of the forgotten password e-mail.') .' '. $email_token_help,
+  );
 
   // User signatures.
   $form['signatures'] = array(
