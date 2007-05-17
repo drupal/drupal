@@ -117,9 +117,15 @@ table.screenshot {
  */
 div.date-container {
   overflow: auto;
+  clear: left;
 }
 
-div.date-container > div {
+div.date-container > div, div.date-container > div > div {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+div.date-container div {
   float: left;
 }
 
