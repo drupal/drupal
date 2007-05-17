@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.125 2007/05/16 13:45:15 dries Exp $
+// $Id: locale.inc,v 1.126 2007/05/17 08:34:43 goba Exp $
 
 /**
  * @file
@@ -835,7 +835,7 @@ function locale_translate_delete($lid) {
  * @param $default
  *   Optionall set this language to be the default.
  */
-function locale_add_language($langcode, $name = NULL, $native = NULL, $direction = LANGUAGE_RTL, $domain = '', $prefix = '', $enabled = FALSE, $default = FALSE) {
+function locale_add_language($langcode, $name = NULL, $native = NULL, $direction = LANGUAGE_LTR, $domain = '', $prefix = '', $enabled = FALSE, $default = FALSE) {
   // Default prefix on language code.
   if (empty($prefix)) {
     $prefix = $langcode;
@@ -846,7 +846,7 @@ function locale_add_language($langcode, $name = NULL, $native = NULL, $direction
     $predefined = _locale_get_predefined_list();
     $name = $predefined[$langcode][0];
     $native = isset($predefined[$langcode][1]) ? $predefined[$langcode][1] : $predefined[$langcode][0];
-    $direction = isset($predefined[$langcode][2]) ? $predefined[$langcode][2] : LANGUAGE_RTL;
+    $direction = isset($predefined[$langcode][2]) ? $predefined[$langcode][2] : LANGUAGE_LTR;
   }
 
   db_query("INSERT INTO {languages} (language, name, native, direction, domain, prefix, enabled) VALUES ('%s', '%s', '%s', %d, '%s', '%s', %d)", $langcode, $name, $native, $direction, $domain, $prefix, $enabled);
