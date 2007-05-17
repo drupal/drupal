@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.51 2007/05/15 19:44:23 goba Exp $
+// $Id: install.php,v 1.52 2007/05/17 06:35:05 dries Exp $
 
 require_once './includes/install.inc';
 
@@ -501,11 +501,12 @@ function install_select_locale($profilename) {
       drupal_maintenance_theme();
       install_task_list('profile-select');
       drupal_set_title(st('Localization of the Drupal installer'));
-      $output = '<p>'. st('Drupal is capable of being installed in any language from the start, not only English. A language pack might be available in your language already. To be able to install Drupal and use it in your language from the start, follow these steps:') . '</p>';
-      $output .= '<ul><li>'. st('Check whether <a href="@translations" target="_blank">a translation of this Drupal version</a> is available in your language.', array('@translations' => 'http://drupal.org/project/Translations')) .'</li>';
-      $output .= '<li>'. st('If available, download the translation pack and extract it to your Drupal root directory. Translation files will get placed into different directories.') .'</li>';
-      $output .= '<li>'. st('Continue the installation by reloading this page and select from the listed languages.') .'</li>';
-      $output .= '</ul><p>' . st('How should the installation continue?') .'</p>';
+      $output = '<p>'. st('With the addition of an appropriate language pack, this installer is capable of proceeding in another language of your choice. To install and use Drupal in a language other than English:') . '</p>';
+      $output .= '<ul><li>'. st('Determine if <a href="@translations" target="_blank">a translation of this Drupal version</a> is available in your language of choice. A translation is provided via a translation pack; each translation pack enables the display of a specific version of Drupal in a specific language. Not all languages are available for every version of Drupal.', array('@translations' => 'http://drupal.org/project/Translations')) .'</li>';
+      $output .= '<li>'. st('If an alternative language pack of your choice is available, download and extract its contents to your Drupal root directory.') .'</li>';
+      $output .= '<li>'. st('Reload this page using the second link below and select your desired language from the displayed list. Reloading the page allows the list to automatically adjust to the presence of new language packs.') .'</li>';
+      $output .= '</ul><p>' . st('Alternatively, to install and use Drupal in English, or to defer the selection of an alternative language until after installation, select the first link below.') .'</p>';
+      $output .= '<p>' . st('How should the installation continue?') .'</p>';
       $output .= '<ul><li><a href="install.php?profile='. $profilename . '&amp;locale=en">'. st('Continue installation in English') .'</a></li><li><a href="install.php?profile='. $profilename . '">'. st('Reload this page to select a language') .'</a></li></ul>';
       print theme('install_page', $output);
       exit;
