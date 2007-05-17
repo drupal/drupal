@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.477 2007/05/16 13:45:16 dries Exp $
+// $Id: system.module,v 1.478 2007/05/17 07:28:42 dries Exp $
 
 /**
  * @file
@@ -867,7 +867,12 @@ if (Drupal.jsEnabled) {
 
   $date_long_choices['custom'] = $date_medium_choices['custom'] = $date_short_choices['custom'] = t('Custom format');
 
-  $form['date_default_timezone'] = array(
+  $form['locale'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Locale settings'),
+  );
+
+  $form['locale']['date_default_timezone'] = array(
     '#type' => 'select',
     '#title' => t('Default time zone'),
     '#default_value' => variable_get('date_default_timezone', 0),
@@ -875,16 +880,29 @@ if (Drupal.jsEnabled) {
     '#description' => t('Select the default site time zone.')
   );
 
-  $form['configurable_timezones'] = array(
+  $form['locale']['configurable_timezones'] = array(
     '#type' => 'radios',
-    '#title' => t('Configurable time zones'),
+    '#title' => t('User-configurable time zones'),
     '#default_value' => variable_get('configurable_timezones', 1),
     '#options' => array(t('Disabled'), t('Enabled')),
-    '#description' => t('Enable or disable user-configurable time zones. When enabled, users can set their own time zone and dates will be updated accordingly.')
+    '#description' => t('When enabled, users can set their own time zone and dates will be displayed accordingly.')
+  );
+
+  $form['locale']['date_first_day'] = array(
+    '#type' => 'select',
+    '#title' => t('First day of week'),
+    '#default_value' => variable_get('date_first_day', 0),
+    '#options' => array(0 => t('Sunday'), 1 => t('Monday'), 2 => t('Tuesday'), 3 => t('Wednesday'), 4 => t('Thursday'), 5 => t('Friday'), 6 => t('Saturday')),
+    '#description' => t('The first day of the week for calendar views.')
+  );
+
+  $form['date_formats'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Formatting'),
   );
 
   $date_format_short = variable_get('date_format_short', $date_short[1]);
-  $form['date_format_short'] = array(
+  $form['date_formats']['date_format_short'] = array(
     '#prefix' => '<div class="date-container"><div>',
     '#suffix' => '</div>',
     '#type' => 'select',
@@ -896,7 +914,7 @@ if (Drupal.jsEnabled) {
   );
 
   $default_short_custom = variable_get('date_format_short_custom', (isset($date_short_choices[$date_format_short]) ? $date_format_short : ''));
-  $form['date_format_short_custom'] = array(
+  $form['date_formats']['date_format_short_custom'] = array(
     '#prefix' => '<div class="custom-container">',
     '#suffix' => '</div></div>',
     '#type' => 'textfield',
@@ -907,7 +925,7 @@ if (Drupal.jsEnabled) {
   );
 
   $date_format_medium = variable_get('date_format_medium', $date_medium[1]);
-  $form['date_format_medium'] = array(
+  $form['date_formats']['date_format_medium'] = array(
     '#prefix' => '<div class="date-container"><div>',
     '#suffix' => '</div>',
     '#type' => 'select',
@@ -919,7 +937,7 @@ if (Drupal.jsEnabled) {
   );
 
   $default_medium_custom = variable_get('date_format_medium_custom', (isset($date_medium_choices[$date_format_medium]) ? $date_format_medium : ''));
-  $form['date_format_medium_custom'] = array(
+  $form['date_formats']['date_format_medium_custom'] = array(
     '#prefix' => '<div class="custom-container">',
     '#suffix' => '</div></div>',
     '#type' => 'textfield',
@@ -930,7 +948,7 @@ if (Drupal.jsEnabled) {
   );
 
   $date_format_long = variable_get('date_format_long', $date_long[0]);
-  $form['date_format_long'] = array(
+  $form['date_formats']['date_format_long'] = array(
     '#prefix' => '<div class="date-container"><div>',
     '#suffix' => '</div>',
     '#type' => 'select',
@@ -942,7 +960,7 @@ if (Drupal.jsEnabled) {
   );
 
   $default_long_custom = variable_get('date_format_long_custom', (isset($date_long_choices[$date_format_long]) ? $date_format_long : ''));
-  $form['date_format_long_custom'] = array(
+  $form['date_formats']['date_format_long_custom'] = array(
     '#prefix' => '<div class="custom-container">',
     '#suffix' => '</div></div>',
     '#type' => 'textfield',
@@ -952,21 +970,13 @@ if (Drupal.jsEnabled) {
     '#description' => t('A user-defined long date format. See the <a href="@url">PHP manual</a> for available options. This format is currently set to display as <span>%date</span>.', array('@url' => 'http://php.net/manual/function.date.php', '%date' => format_date(time(), 'custom', $default_long_custom))),
   );
 
-  $form['date_first_day'] = array(
-    '#type' => 'select',
-    '#title' => t('First day of week'),
-    '#default_value' => variable_get('date_first_day', 0),
-    '#options' => array(0 => t('Sunday'), 1 => t('Monday'), 2 => t('Tuesday'), 3 => t('Wednesday'), 4 => t('Thursday'), 5 => t('Friday'), 6 => t('Saturday')),
-    '#description' => t('The first day of the week for calendar views.')
-  );
   $form = system_settings_form($form);
   // We will call system_settings_form_submit() manually, so remove it for now.
-  unset($form['#submit']['system_settings_form_submit']);
-  $form['#submit']['system_date_time_settings_submit'] = array();
+  unset($form['#submit']);
   return $form;
 }
 
-function system_date_time_settings_submit($form_id, $form_values) {
+function system_date_time_settings_submit($form_values, $form, &$form_state) {
   if ($form_values['date_format_short'] == 'custom') {
     $form_values['date_format_short'] = $form_values['date_format_short_custom'];
   }
@@ -976,7 +986,7 @@ function system_date_time_settings_submit($form_id, $form_values) {
   if ($form_values['date_format_long'] == 'custom') {
     $form_values['date_format_long'] = $form_values['date_format_long_custom'];
   }
-  return system_settings_form_submit($form_id, $form_values);
+  return system_settings_form_submit($form_values, $form, $form_state);
 }
 
 /**

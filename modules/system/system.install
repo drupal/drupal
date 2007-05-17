@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.110 2007/05/16 14:41:38 dries Exp $
+// $Id: system.install,v 1.111 2007/05/17 07:28:42 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -891,14 +891,14 @@ function system_install() {
         description varchar(255) NOT NULL default '',
         position varchar(255) NOT NULL default '',
         weight int NOT NULL default 0,
-        PRIMARY KEY  (path),
+        PRIMARY KEY (path)
       )");
       db_query("CREATE INDEX {menu_router}_fit_idx ON {menu_router} (fit)");
       db_query("CREATE INDEX {menu_router}_tab_parent_idx ON {menu_router} (tab_parent)");
 
-      db_query("CREATE TABLE {menu_link} (
+      db_query("CREATE TABLE {menu_links} (
         menu_name varchar(64) NOT NULL default '',
-        mlid int NOT NULL default '0',
+        mlid serial,
         plid int NOT NULL default '0',
         href varchar(255) NOT NULL default '',
         router_path varchar(255) NOT NULL default '',
@@ -919,9 +919,9 @@ function system_install() {
         options text,
         PRIMARY KEY (mlid)
       )");
-      db_query("CREATE INDEX {menu_link}_parents_idx ON {menu_link} (plid, p1, p2, p3, p4, p5)");
-      db_query("CREATE INDEX {menu_link}_menu_name_idx ON {menu_link} (menu_name, href)");
-      db_query("CREATE INDEX {menu_link}_expanded_children_idx ON {menu_link} (expanded, has_children)");
+      db_query("CREATE INDEX {menu_links}_parents_idx ON {menu_links} (plid, p1, p2, p3, p4, p5)");
+      db_query("CREATE INDEX {menu_links}_menu_name_idx ON {menu_links} (menu_name, href)");
+      db_query("CREATE INDEX {menu_links}_expanded_children_idx ON {menu_links} (expanded, has_children)");
 
       db_query("CREATE TABLE {node} (
         nid serial CHECK (nid >= 0),

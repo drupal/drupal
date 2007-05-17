@@ -1,4 +1,4 @@
-/* $Id: admin.css,v 1.14 2007/05/14 16:22:26 dries Exp $ */
+/* $Id: admin.css,v 1.15 2007/05/17 07:28:42 dries Exp $ */
 
 /*
 ** Formatting for administration page
@@ -117,9 +117,15 @@ table.screenshot {
  */
 div.date-container {
   overflow: auto;
+  clear: left;
 }
 
-div.date-container > div {
+div.date-container > div, div.date-container > div > div {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+div.date-container div {
   float: left;
 }
 
