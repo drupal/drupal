@@ -66,18 +66,21 @@ DirectoryIndex index.php
 <IfModule mod_rewrite.c>
   RewriteEngine on
 
-  # If your site can be accessed both with and without the prefix www. you
-  # can use one of the following settings to force user to use only one option:
+  # If your site can be accessed both with and without the 'www.' prefix, you
+  # can use one of the following settings to redirect users to your preferred
+  # URL, either WITH or WITHOUT the 'www.' prefix. Choose ONLY one option:
   #
-  # If you want the site to be accessed WITH the www. only, adapt and
-  # uncomment the following:
+  # To redirect all users to access the site WITH the 'www.' prefix,
+  # (http://example.com/... will be redirected to http://www.example.com/...)
+  # adapt and uncomment the following:
   # RewriteCond %{HTTP_HOST} ^example\.com$ [NC]
-  # RewriteRule .* http://www.example.com/ [L,R=301]
+  # RewriteRule ^(.*)$ http://www.example.com/$1 [L,R=301]
   #
-  # If you want the site to be accessed only WITHOUT the www. prefix, adapt
-  # and uncomment the following:
+  # To force users to access the site WITHOUT the 'www.' prefix,
+  # (http://www.example.com/... will be redirected to http://example.com/...)
+  # adapt and uncomment the following:
   # RewriteCond %{HTTP_HOST} ^www\.example\.com$ [NC]
-  # RewriteRule .* http://example.com/ [L,R=301]
+  # RewriteRule ^(.*)$ http://example.com/$1 [L,R=301]
 
   # Modify the RewriteBase if you are using Drupal in a subdirectory and
   # the rewrite rules are not working properly.
@@ -89,4 +92,4 @@ DirectoryIndex index.php
   RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
 </IfModule>
 
-# $Id: .htaccess,v 1.83 2007/04/07 11:05:06 unconed Exp $
+# $Id: .htaccess,v 1.84 2007/05/18 17:44:29 dries Exp $
