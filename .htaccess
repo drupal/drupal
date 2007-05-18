@@ -76,7 +76,7 @@ DirectoryIndex index.php
   # RewriteCond %{HTTP_HOST} ^example\.com$ [NC]
   # RewriteRule ^(.*)$ http://www.example.com/$1 [L,R=301]
   #
-  # To force users to access the site WITHOUT the 'www.' prefix,
+  # To redirect all users to access the site WITHOUT the 'www.' prefix,
   # (http://www.example.com/... will be redirected to http://example.com/...)
   # adapt and uncomment the following:
   # RewriteCond %{HTTP_HOST} ^www\.example\.com$ [NC]
