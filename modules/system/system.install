@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.111 2007/05/17 07:28:42 dries Exp $
+// $Id: system.install,v 1.112 2007/05/18 07:03:21 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -368,7 +368,7 @@ function system_install() {
         title_arguments varchar(255) NOT NULL default '',
         type int NOT NULL default 0,
         block_callback varchar(255) NOT NULL default '',
-        description varchar(255) NOT NULL default '',
+        description TEXT,
         position varchar(255) NOT NULL default '',
         weight int NOT NULL default 0,
         PRIMARY KEY  (path),
@@ -888,7 +888,7 @@ function system_install() {
         title_arguments varchar(255) NOT NULL default '',
         type int NOT NULL default 0,
         block_callback varchar(255) NOT NULL default '',
-        description varchar(255) NOT NULL default '',
+        description TEXT,
         position varchar(255) NOT NULL default '',
         weight int NOT NULL default 0,
         PRIMARY KEY (path)
