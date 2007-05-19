@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.814 2007/05/16 13:45:16 dries Exp $
+// $Id: node.module,v 1.815 2007/05/19 13:31:51 goba Exp $
 
 /**
  * @file
@@ -1451,7 +1451,7 @@ function node_filter_form() {
     }
     if (in_array($type, array('type', 'language'))) {
       // Remove the option if it is already being filtered on.
-      unset($filters['type']);
+      unset($filters[$type]);
     }
   }
 
