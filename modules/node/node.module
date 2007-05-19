@@ -1451,7 +1451,7 @@ function node_filter_form() {
     }
     if (in_array($type, array('type', 'language'))) {
       // Remove the option if it is already being filtered on.
-      unset($filters['type']);
+      unset($filters[$type]);
     }
   }
 
