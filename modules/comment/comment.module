@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.543 2007/05/17 20:57:19 dries Exp $
+// $Id: comment.module,v 1.544 2007/05/20 07:30:03 dries Exp $
 
 /**
  * @file
@@ -1687,7 +1687,7 @@ function comment_form_add_preview($form, $edit, &$form_state) {
 function comment_form_validate($form_values, $form, &$form_state) {
   foreach (array('name', 'homepage', 'mail') as $field) {
     //set cookie for 365 days
-    setrawcookie('comment_info_' . $field, rawurlencode($form_values[$field]), time() + 31536000);
+    setcookie('comment_info_'. $field, $form_values[$field], time() + 31536000);
   }
   comment_validate($form_values);
 }
