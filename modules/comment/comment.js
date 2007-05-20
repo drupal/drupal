@@ -26,7 +26,7 @@ Drupal.comment.getCookie = function(name) {
       if (end == -1) {
         end = document.cookie.length;
       }
-      returnValue = unescape(document.cookie.substring(offset, end));
+      returnValue = decodeURIComponent(document.cookie.substring(offset, end).replace(/\+/g, '%20'));
     }
   }
 
