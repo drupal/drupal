@@ -1,4 +1,4 @@
-/* $Id: system.css,v 1.26 2007/05/10 19:55:23 dries Exp $ */
+/* $Id: system.css,v 1.27 2007/05/20 16:38:19 dries Exp $ */
 
 /*
 ** HTML elements
@@ -436,5 +436,13 @@ thead div.sticky-header {
 ** Installation clean URLs
 */
 #clean-url.install {
+  display: none;
+}
+
+/*
+** For anything you want to hide on page load when JS is enabled, so
+** that you can use the JS to control visibility and avoid flicker.
+*/
+html.js .js-hide {
   display: none;
 }
