@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.200 2007/05/20 12:34:47 dries Exp $
+// $Id: CHANGELOG.txt,v 1.201 2007/05/20 16:44:35 dries Exp $
 
 Drupal 6.0, xxxx-xx-xx (development version)
 ----------------------
@@ -40,6 +40,9 @@ Drupal 6.0, xxxx-xx-xx (development version)
     * Added form to provide initial site information during installation.
     * Added ability to provide extra installation steps programmatically.
     * Made it possible to import interface translations at install time.
+- Added the HTML corrector filter:
+    * Fixes faulty and chopped off HTML in postings.
+    * Tags are now automatically closed at the end of the teaser.
 
 Drupal 5.0, 2007-01-15
 ----------------------

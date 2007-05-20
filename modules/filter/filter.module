@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.173 2007/05/14 13:43:35 dries Exp $
+// $Id: filter.module,v 1.174 2007/05/20 16:44:35 dries Exp $
 
 /**
  * @file
@@ -955,7 +955,7 @@ function theme_filter_tips_more_info() {
 function filter_filter($op, $delta = 0, $format = -1, $text = '') {
   switch ($op) {
     case 'list':
-      return array(0 => t('HTML filter'), 1 => t('Line break converter'), 2 => t('URL filter'));
+      return array(0 => t('HTML filter'), 1 => t('Line break converter'), 2 => t('URL filter'), 3 => t('HTML corrector'));
 
     case 'description':
       switch ($delta) {
@@ -965,6 +965,8 @@ function filter_filter($op, $delta = 0, $format = -1, $text = '') {
           return t('Converts line breaks into HTML (i.e. &lt;br&gt; and &lt;p&gt; tags).');
         case 2:
           return t('Turns web and e-mail addresses into clickable links.');
+        case 3:
+          return t('Corrects faulty and chopped off HTML in postings.');
         default:
           return;
       }
@@ -977,6 +979,8 @@ function filter_filter($op, $delta = 0, $format = -1, $text = '') {
           return _filter_autop($text);
         case 2:
           return _filter_url($text, $format);
+        case 3:
+          return _filter_htmlcorrector($text);
         default:
           return $text;
       }
@@ -1096,6 +1100,80 @@ function _filter_url($text, $format) {
   $text = substr($text, 1, -1);
 
   return $text;
+}
+
+/**
+ * Scan input and make sure that all HTML tags are properly closed and nested.
+ */
+function _filter_htmlcorrector($text) {
+  // Prepare tag lists.
+  static $no_nesting, $single_use;
+  if (!isset($no_nesting)) {
+    // Tags which cannot be nested but are typically left unclosed.
+    $no_nesting = drupal_map_assoc(array('li', 'p'));
+
+    // Single use tags in HTML4
+    $single_use = drupal_map_assoc(array('base', 'meta', 'link', 'hr', 'br', 'param', 'img', 'area', 'input', 'col', 'frame'));
+  }
+
+  // Properly entify angles.
+  $text = preg_replace('!<([^a-zA-Z/])!', '&lt;\1', $text);
+
+  // Split tags from text.
+  $split = preg_split('/<([^>]+?)>/', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
+  // Note: PHP ensures the array consists of alternating delimiters and literals
+  // and begins and ends with a literal (inserting $null as required).
+
+  $tag = false; // Odd/even counter. Tag or no tag.
+  $stack = array();
+  $output = '';
+  foreach ($split as $value) {
+    // Process HTML tags.
+    if ($tag) {
+      list($tagname) = explode(' ', strtolower($value), 2);
+      // Closing tag
+      if ($tagname{0} == '/') {
+        $tagname = substr($tagname, 1);
+        // Discard XHTML closing tags for single use tags.
+        if (!isset($single_use[$tagname])) {
+          // See if we possibly have a matching opening tag on the stack.
+          if (in_array($tagname, $stack)) {
+            // Close other tags lingering first.
+            do {
+              $output .= '</'. $stack[0] .'>';
+            } while (array_shift($stack) != $tagname);
+          }
+          // Otherwise, discard it.
+        }
+      }
+      // Opening tag
+      else {
+        // See if we have an identical 'no nesting' tag already open and close it if found.
+        if (count($stack) && ($stack[0] == $tagname) && isset($no_nesting[$stack[0]])) {
+          $output .= '</'. array_shift($stack) .'>';
+        }
+        // Push non-single-use tags onto the stack
+        if (!isset($single_use[$tagname])) {
+          array_unshift($stack, $tagname);
+        }
+        // Add trailing slash to single-use tags as per X(HT)ML.
+        else {
+          $value = rtrim($value, ' /') . ' /';
+        }
+        $output .= '<'. $value .'>';
+      }
+    }
+    else {
+      // Passthrough all text.
+      $output .= $value;
+    }
+    $tag = !$tag;
+  }
+  // Close remaining tags.
+  while (count($stack) > 0) {
+    $output .= '</'. array_shift($stack) .'>';
+  }
+  return $output;
 }
 
 /**

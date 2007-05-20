@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.113 2007/05/20 12:34:47 dries Exp $
+// $Id: system.install,v 1.114 2007/05/20 16:44:35 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -1209,12 +1209,16 @@ function system_install() {
   db_query("INSERT INTO {filters} (format, module, delta, weight) VALUES (1, 'filter', 0, 1)");
   // Line break filter.
   db_query("INSERT INTO {filters} (format, module, delta, weight) VALUES (1, 'filter', 1, 2)");
+  // HTML corrector filter.
+  db_query("INSERT INTO {filters} (format, module, delta, weight) VALUES (1, 'filter', 3, 10)");
 
   // Full HTML:
   // URL filter.
   db_query("INSERT INTO {filters} (format, module, delta, weight) VALUES (2, 'filter', 2, 0)");
   // Line break filter.
   db_query("INSERT INTO {filters} (format, module, delta, weight) VALUES (2, 'filter', 1, 1)");
+  // HTML corrector filter.
+  db_query("INSERT INTO {filters} (format, module, delta, weight) VALUES (1, 'filter', 3, 10)");
 
   db_query("INSERT INTO {variable} (name,value) VALUES ('filter_html_1','i:1;')");
 
@@ -4059,6 +4063,30 @@ function system_update_6017() {
       }
     }
   }
+  return $ret;
+}
+
+/**
+ * Add HTML corrector to HTML formats or replace the old module if it was in use.
+ */
+function system_update_6018() {
+  $ret = array();
+
+  // Disable htmlcorrector.module, if it exists and replace its filter.
+  if (module_exists('htmlcorrector')) {
+    module_disable(array('htmlcorrector'));
+    $ret[] = update_sql("UPDATE {filter_formats} SET module = 'filter', delta = 3 WHERE module = 'htmlcorrector'");
+    $ret[] = t('HTML Corrector module was disabled; this functionality has now been added to core.');
+    return $ret;
+  }
+
+  // Otherwise, find any format with 'HTML' in its name and add the filter at the end.
+  $result = db_query("SELECT format FROM {filter_formats} WHERE name LIKE '%HTML%'");
+  while ($format = db_fetch_object($result)) {
+    $weight = db_result(db_query("SELECT MAX(weight) FROM {filters} WHERE format = %d", $format->format));
+    db_query("INSERT INTO {filters} (format, module, delta, weight) VALUES (%d, '%s', %d, %d)", $format->format, 'filter', 3, max(10, $weight + 1));
+  }
+
   return $ret;
 }
 
