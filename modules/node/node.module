@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.816 2007/05/20 07:28:05 dries Exp $
+// $Id: node.module,v 1.817 2007/05/20 16:46:03 dries Exp $
 
 /**
  * @file
@@ -2318,6 +2318,12 @@ function node_form_submit($form_values, $form, &$form_state) {
   // handlers to go in and change the submitted values.
   unset($form_state['submit_handlers']);
   form_execute_handlers('submit', $form, $form_state);
+
+  // Normally, we don't want people doing anything even remotely like this.
+  // For the node submission form, however, it's necessary. Submit handlers
+  // alter the $form_values collection to determine what ultimately makes it
+  // into the final $node object.
+  $form_values = $form_state['values'];
 
   // Fix up the node when required:
   $node = node_submit($form_values);
