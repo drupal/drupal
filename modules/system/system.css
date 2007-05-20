@@ -438,3 +438,11 @@ thead div.sticky-header {
 #clean-url.install {
   display: none;
 }
+
+/*
+** For anything you want to hide on page load when JS is enabled, so
+** that you can use the JS to control visibility and avoid flicker.
+*/
+html.js .js-hide {
+  display: none;
+}
