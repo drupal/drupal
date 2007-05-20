@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.815 2007/05/19 13:31:51 goba Exp $
+// $Id: node.module,v 1.816 2007/05/20 07:28:05 dries Exp $
 
 /**
  * @file
@@ -2313,6 +2313,11 @@ function theme_node_log_message($log) {
 
 function node_form_submit($form_values, $form, &$form_state) {
   global $user;
+
+  // We do not want to execute button level handlers, we want the form level
+  // handlers to go in and change the submitted values.
+  unset($form_state['submit_handlers']);
+  form_execute_handlers('submit', $form, $form_state);
 
   // Fix up the node when required:
   $node = node_submit($form_values);
