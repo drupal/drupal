@@ -1,4 +1,4 @@
-// $Id: comment.js,v 1.1 2007/05/17 21:05:38 dries Exp $
+// $Id: comment.js,v 1.2 2007/05/20 12:34:47 dries Exp $
 if (Drupal.jsEnabled) {
   $(document).ready(function() {
     var parts = new Array("name", "homepage", "mail");
@@ -26,7 +26,7 @@ Drupal.comment.getCookie = function(name) {
       if (end == -1) {
         end = document.cookie.length;
       }
-      returnValue = unescape(document.cookie.substring(offset, end));
+      returnValue = decodeURIComponent(document.cookie.substring(offset, end).replace(/\+/g, '%20'));
     }
   }
 

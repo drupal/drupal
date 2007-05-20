@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.199 2007/05/17 20:57:19 dries Exp $
+// $Id: CHANGELOG.txt,v 1.200 2007/05/20 12:34:47 dries Exp $
 
 Drupal 6.0, xxxx-xx-xx (development version)
 ----------------------
@@ -8,6 +8,7 @@ Drupal 6.0, xxxx-xx-xx (development version)
    * The watchdog module is now called dblog, and is optional, but enabled by default in the default install profile.
    * Extended the database log module so log messages can be filtered.
    * Added syslog module: useful for monitoring large Drupal installations.
+- Added optional e-mail notifications when user are approved, blocked, or deleted.
 - Added versioning support to node terms.
 - Made it easier to theme the forum overview page.
 - Drupal works with error reporting set to E_ALL.

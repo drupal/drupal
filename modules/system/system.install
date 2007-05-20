@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.112 2007/05/18 07:03:21 dries Exp $
+// $Id: system.install,v 1.113 2007/05/20 12:34:47 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -4029,6 +4029,36 @@ function system_update_6016() {
       break;
   }
 
+  return $ret;
+}
+
+/**
+ * Rename settings related to user.module email notifications.
+ */
+function system_update_6017() {
+  $ret = array();
+  // Maps old names to new ones.
+  $var_names = array(
+    'admin'    => 'register_admin_created',
+    'approval' => 'register_pending_approval',
+    'welcome'  => 'register_no_approval_required',
+    'pass'     => 'password_reset',
+  );
+  foreach ($var_names as $old => $new) {
+    foreach (array('_subject', '_body') as $suffix) {
+      $old_name = 'user_mail_'. $old . $suffix;
+      $new_name = 'user_mail_'. $new . $suffix;
+      if ($old_val = variable_get($old_name, FALSE)) {
+        variable_set($new_name, $old_val);
+        variable_del($old_name);
+        $ret[] = array('success' => TRUE, 'query' => "variable_set($new_name)");
+        $ret[] = array('success' => TRUE, 'query' => "variable_del($old_name)");
+        if ($old_name == 'user_mail_approval_body') {
+          drupal_set_message(t('Saving an old value of the welcome message body for users that are pending administrator approval. However, you should consider modifying this text, since Drupal can now be configured to automatically notify users and send them their login infomation when their accounts are approved.  See the !admin_user_settings page for details.', array('!admin_user_settings' => l(t('User settings'), 'admin/user/settings'))));
+        }
+      }
+    }
+  }
   return $ret;
 }
 

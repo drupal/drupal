@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.782 2007/05/17 21:33:59 dries Exp $
+// $Id: user.module,v 1.783 2007/05/20 12:34:48 dries Exp $
 
 /**
  * @file
@@ -148,6 +148,11 @@ function user_save($account, $array = array(), $category = 'account') {
   $user_fields = user_fields();
   if (is_object($account) && $account->uid) {
     user_module_invoke('update', $array, $account, $category);
+    if (isset($array['status']) && $array['status'] != $account->status) {
+      // The user's status is changing, conditionally send notification email.
+      $op = $array['status'] == 1 ? 'status_activated' : 'status_blocked';
+      _user_mail_notify($op, $account);
+    }
     $query = '';
     $data = unserialize(db_result(db_query('SELECT data FROM {users} WHERE uid = %d', $account->uid)));
     foreach ($array as $key => $value) {
@@ -1192,17 +1197,9 @@ function user_pass_validate($form_values, $form, &$form_state) {
 }
 
 function user_pass_submit($form_values, $form, &$form_state) {
-  global $base_url;
-
   $account = $form_values['account'];
-  $from = variable_get('site_mail', ini_get('sendmail_from'));
-
   // Mail one time login URL and instructions.
-  $variables = array('!username' => $account->name, '!site' => variable_get('site_name', 'Drupal'), '!login_url' => user_pass_reset_url($account), '!uri' => $base_url, '!uri_brief' => substr($base_url, strlen('http://')), '!mailto' => $account->mail, '!date' => format_date(time()), '!login_uri' => url('user', array('absolute' => TRUE)), '!edit_uri' => url('user/'. $account->uid .'/edit', array('absolute' => TRUE)));
-  $subject = _user_mail_text('pass_subject', $variables);
-  $body = _user_mail_text('pass_body', $variables);
-  $mail_success = drupal_mail('user-pass', $account->mail, $subject, $body, $from);
-
+  $mail_success = _user_mail_notify('password_reset', $account);
   if ($mail_success) {
     watchdog('user', 'Password reset instructions mailed to %name at %email.', array('%name' => $account->name, '%email' => $account->mail));
     drupal_set_message(t('Further instructions have been sent to your e-mail address.'));
@@ -1379,8 +1376,6 @@ function user_register_submit($form_values, $form, &$form_state) {
 
   watchdog('user', 'New user: %name (%email).', array('%name' => $name, '%email' => $mail), WATCHDOG_NOTICE, l(t('edit'), 'user/'. $account->uid .'/edit'));
 
-  $variables = array('!username' => $name, '!site' => variable_get('site_name', 'Drupal'), '!password' => $pass, '!uri' => $base_url, '!uri_brief' => substr($base_url, strlen('http://')), '!mailto' => $mail, '!date' => format_date(time()), '!login_uri' => url('user', array('absolute' => TRUE)), '!edit_uri' => url('user/'. $account->uid .'/edit', array('absolute' => TRUE)), '!login_url' => user_pass_reset_url($account));
-
   // The first user may login immediately, and receives a customized welcome e-mail.
   if ($account->uid == 1) {
     drupal_set_message(t('<p>Welcome to Drupal. You are now logged in as user #1, which gives you full control over your website.</p>'));
@@ -1399,20 +1394,15 @@ function user_register_submit($form_values, $form, &$form_state) {
     }
     else if (!variable_get('user_email_verification', TRUE) && $account->status && !$admin) {
       // No e-mail verification is required, create new user account, and login user immediately.
-      $subject = _user_mail_text('welcome_subject', $variables);
-      $body = _user_mail_text('welcome_body', $variables);
-      drupal_mail('user-register-welcome', $mail, $subject, $body, $from);
+      _user_mail_notify('register_no_approval_required', $account, $pass);
       user_authenticate($account->name, trim($pass));
       $form_state['redirect'] = '';
       return;
     }
     else if ($account->status || $notify) {
       // Create new user account, no administrator approval required.
-      $subject = $notify ? _user_mail_text('admin_subject', $variables) : _user_mail_text('welcome_subject', $variables);
-      $body = $notify ? _user_mail_text('admin_body', $variables) : _user_mail_text('welcome_body', $variables);
-
-      drupal_mail(($notify ? 'user-register-notify' : 'user-register-welcome'), $mail, $subject, $body, $from);
-
+      $op = $notify ? 'register_admin_created' : 'register_no_approval_required';
+      _user_mail_notify($op, $account, $pass);
       if ($notify) {
         drupal_set_message(t('Password and further instructions have been e-mailed to the new user %user.', array('%user' => $name)));
       }
@@ -1424,11 +1414,7 @@ function user_register_submit($form_values, $form, &$form_state) {
     }
     else {
       // Create new user account, administrator approval required.
-      $subject = _user_mail_text('approval_subject', $variables);
-      $body = _user_mail_text('approval_body', $variables);
-
-      drupal_mail('user-register-approval-user', $mail, $subject, $body, $from);
-      drupal_mail('user-register-approval-admin', $from, $subject, t("!username has applied for an account.\n\n!edit_uri", $variables), $from);
+      _user_mail_notify('register_pending_approval', $account, $pass);
       drupal_set_message(t('Thank you for applying for an account. Your account is currently pending approval by the site administrator.<br />In the meantime, your password and further instructions have been sent to your e-mail address.'));
 
     }
@@ -1620,6 +1606,7 @@ function user_confirm_delete($name, $uid) {
 function user_delete($edit, $uid) {
   $account = user_load(array('uid' => $uid));
   sess_destroy_uid($uid);
+  _user_mail_notify('status_deleted', $account);
   db_query('DELETE FROM {users} WHERE uid = %d', $uid);
   db_query('DELETE FROM {users_roles} WHERE uid = %d', $uid);
   db_query('DELETE FROM {authmap} WHERE uid = %d', $uid);
@@ -1688,22 +1675,34 @@ function _user_mail_text($messageid, $variables = array()) {
   // No override, return with default strings.
   else {
     switch ($messageid) {
-      case 'welcome_subject':
+      case 'register_no_approval_required_subject':
         return t('Account details for !username at !site', $variables);
-      case 'welcome_body':
+      case 'register_no_approval_required_body':
         return t("!username,\n\nThank you for registering at !site. You may now log in to !login_uri using the following username and password:\n\nusername: !username\npassword: !password\n\nYou may also log in by clicking on this link or copying and pasting it in your browser:\n\n!login_url\n\nThis is a one-time login, so it can be used only once.\n\nAfter logging in, you will be redirected to !edit_uri so you can change your password.\n\n\n--  !site team", $variables);
-      case 'admin_subject':
+      case 'register_admin_created_subject':
         return t('An administrator created an account for you at !site', $variables);
-      case 'admin_body':
+      case 'register_admin_created_body':
         return t("!username,\n\nA site administrator at !site has created an account for you. You may now log in to !login_uri using the following username and password:\n\nusername: !username\npassword: !password\n\nYou may also log in by clicking on this link or copying and pasting it in your browser:\n\n!login_url\n\nThis is a one-time login, so it can be used only once.\n\nAfter logging in, you will be redirected to !edit_uri so you can change your password.\n\n\n--  !site team", $variables);
-      case 'approval_subject':
+      case 'register_pending_approval_subject':
         return t('Account details for !username at !site (pending admin approval)', $variables);
-      case 'approval_body':
-        return t("!username,\n\nThank you for registering at !site. Your application for an account is currently pending approval. Once it has been granted, you may log in to !login_uri using the following username and password:\n\nusername: !username\npassword: !password\n\nYou may also log in by clicking on this link or copying and pasting it in your browser:\n\n!login_url\n\nThis is a one-time login, so it can be used only once.\n\nAfter logging in, you may wish to change your password at !edit_uri\n\n\n--  !site team", $variables);
-      case 'pass_subject':
+      case 'register_pending_approval_body':
+        return t("!username,\n\nThank you for registering at !site. Your application for an account is currently pending approval. Once it has been approved, you will receive another e-mail containing information about how to log in, set your password, and other details.\n\n\n--  !site team", $variables);
+      case 'password_reset_subject':
         return t('Replacement login information for !username at !site', $variables);
-      case 'pass_body':
+      case 'password_reset_body':
         return t("!username,\n\nA request to reset the password for your account has been made at !site.\n\nYou may now log in to !uri_brief clicking on this link or copying and pasting it in your browser:\n\n!login_url\n\nThis is a one-time login, so it can be used only once. It expires after one day and nothing will happen if it's not used.\n\nAfter logging in, you will be redirected to !edit_uri so you can change your password.", $variables);
+      case 'status_activated_subject':
+        return t('Account details for !username at !site (approved)', $variables);
+      case 'status_activated_body':
+        return "!username,\n\nYour account at !site has been activated.\n\nYou may now log in by clicking on this link or copying and pasting it in your browser:\n\n!login_url\n\nThis is a one-time login, so it can be used only once.\n\nAfter logging in, you will be redirected to !edit_uri so you can change your password.\n\nOnce you have set your own password, you will be able to log in to !login_uri in the future using the following username:\n\nusername: !username\n";
+      case 'status_blocked_subject':
+        return t('Account details for !username at !site (blocked)', $variables);
+      case 'status_blocked_body':
+        return "!username,\n\nYour account on !site has been blocked.";
+      case 'status_deleted_subject':
+        return t('Account details for !username at !site (deleted)', $variables);
+      case 'status_deleted_body':
+        return "!username,\n\nYour account on !site has been deleted.";
     }
   }
 }
@@ -2455,65 +2454,165 @@ function user_admin_settings() {
   $form['email'] = array(
     '#type' => 'fieldset',
     '#title' => t('User e-mail settings'),
+    '#description' => t('Drupal sends emails whenever new users register on your site. Here you can customize the contents of these messages. You can also set notifications for user account changes, which is useful when your site requires administrator approval for new accounts.'),
   );
   // These email tokens are shared for all settings, so just define
   // the list once to help ensure they stay in sync.
   $email_token_help = t('Available variables are:') .' !username, !site, !password, !uri, !uri_brief, !mailto, !date, !login_uri, !edit_uri, !login_url.';
-  $form['email']['user_mail_welcome_subject'] = array(
+
+  $form['email']['admin_created'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Welcome, new user created by administrator'),
+    '#collapsible' => TRUE,
+    '#collapsed' => (variable_get('user_register', 1) != 0),
+    '#description' => t('Customize the welcome e-mail message that is sent to new member accounts created by an administrator.') .' '. $email_token_help,
+  );
+  $form['email']['admin_created']['user_mail_register_admin_created_subject'] = array(
     '#type' => 'textfield',
-    '#title' => t('Subject of welcome e-mail'),
-    '#default_value' => _user_mail_text('welcome_subject'),
+    '#title' => t('Subject'),
+    '#default_value' => _user_mail_text('register_admin_created_subject'),
     '#maxlength' => 180,
-    '#description' => t('Customize the subject of your welcome e-mail, which is sent to new members upon registering.') .' '. $email_token_help
   );
-  $form['email']['user_mail_welcome_body'] = array(
+  $form['email']['admin_created']['user_mail_register_admin_created_body'] = array(
     '#type' => 'textarea',
-    '#title' => t('Body of welcome e-mail'),
-    '#default_value' => _user_mail_text('welcome_body'),
+    '#title' => t('Body'),
+    '#default_value' => _user_mail_text('register_admin_created_body'),
     '#rows' => 15,
-    '#description' => t('Customize the body of the welcome e-mail, which is sent to new members upon registering.') .' '. $email_token_help,
   );
-  $form['email']['user_mail_admin_subject'] = array(
+
+  $form['email']['no_approval_required'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Welcome, no approval required'),
+    '#collapsible' => TRUE,
+    '#collapsed' => (variable_get('user_register', 1) != 1),
+    '#description' => t('Customize the welcome e-mail message that is sent to new members upon registering when no administrator approval is required.') .' '. $email_token_help
+  );
+  $form['email']['no_approval_required']['user_mail_register_no_approval_required_subject'] = array(
     '#type' => 'textfield',
-    '#title' => t('Subject of welcome e-mail (user created by administrator)'),
-    '#default_value' => _user_mail_text('admin_subject'),
+    '#title' => t('Subject'),
+    '#default_value' => _user_mail_text('register_no_approval_required_subject'),
     '#maxlength' => 180,
-    '#description' => t('Customize the subject of your welcome e-mail, which is sent to new member accounts created by an administrator.') .' '. $email_token_help,
   );
-  $form['email']['user_mail_admin_body'] = array(
+  $form['email']['no_approval_required']['user_mail_register_no_approval_required_body'] = array(
     '#type' => 'textarea',
-    '#title' => t('Body of welcome e-mail (user created by administrator)'),
-    '#default_value' => _user_mail_text('admin_body'),
+    '#title' => t('Body'),
+    '#default_value' => _user_mail_text('register_no_approval_required_body'),
     '#rows' => 15,
-    '#description' => t('Customize the body of the welcome e-mail, which is sent to new member accounts created by an administrator.') .' '. $email_token_help,
   );
-  $form['email']['user_mail_approval_subject'] = array(
+
+  $form['email']['pending_approval'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Welcome, awaiting administrator approval'),
+    '#collapsible' => TRUE,
+    '#collapsed' => (variable_get('user_register', 1) != 2),
+    '#description' => t('Customize the welcome message which is sent to new members that are awaiting approval.') .' '. $email_token_help,
+  );
+  $form['email']['pending_approval']['user_mail_register_pending_approval_subject'] = array(
     '#type' => 'textfield',
-    '#title' => t('Subject of welcome e-mail (awaiting admin approval)'),
-    '#default_value' => _user_mail_text('approval_subject'),
+    '#title' => t('Subject'),
+    '#default_value' => _user_mail_text('register_pending_approval_subject'),
     '#maxlength' => 180,
-    '#description' => t('Customize the subject of your awaiting approval welcome e-mail, which is sent to new members upon registering.') .' '. $email_token_help,
   );
-  $form['email']['user_mail_approval_body'] = array(
+  $form['email']['pending_approval']['user_mail_register_pending_approval_body'] = array(
     '#type' => 'textarea',
-    '#title' => t('Body of welcome e-mail (awaiting admin approval)'),
-    '#default_value' => _user_mail_text('approval_body'),
-    '#rows' => 15,
-    '#description' => t('Customize the body of the awaiting approval welcome e-mail, which is sent to new members upon registering.') .' '. $email_token_help,
+    '#title' => t('Body'),
+    '#default_value' => _user_mail_text('register_pending_approval_body'),
+    '#rows' => 8,
   );
-  $form['email']['user_mail_pass_subject'] = array(
+
+  $form['email']['password_reset'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Password recovery email'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#description' => t('Customize the e-mail message sent to users that request a new password.') .' '. $email_token_help,
+  );
+  $form['email']['password_reset']['user_mail_password_reset_subject'] = array(
     '#type' => 'textfield',
-    '#title' => t('Subject of password recovery e-mail'),
-    '#default_value' => _user_mail_text('pass_subject'),
+    '#title' => t('Subject'),
+    '#default_value' => _user_mail_text('password_reset_subject'),
     '#maxlength' => 180,
-    '#description' => t('Customize the subject of your forgotten password e-mail.') .' '. $email_token_help,
   );
-  $form['email']['user_mail_pass_body'] = array(
+  $form['email']['password_reset']['user_mail_password_reset_body'] = array(
     '#type' => 'textarea',
-    '#title' => t('Body of password recovery e-mail'),
-    '#default_value' => _user_mail_text('pass_body'),
+    '#title' => t('Body'),
+    '#default_value' => _user_mail_text('password_reset_body'),
+    '#rows' => 12,
+  );
+
+  $form['email']['activated'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Account activation email'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#description' => t('Configure if an e-mail message should be sent to users when their accounts are activated, and if so, what the subject and body should be. This is particularly useful if your site requires administrator approval for new account requests.') .' '. $email_token_help,
+  );
+  $form['email']['activated']['user_mail_status_activated_notify'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Notify user when account is activated.'),
+    '#default_value' => variable_get('user_mail_status_activated_notify', TRUE),
+  );
+  $form['email']['activated']['user_mail_status_activated_subject'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Subject'),
+    '#default_value' => _user_mail_text('status_activated_subject'),
+    '#maxlength' => 180,
+  );
+  $form['email']['activated']['user_mail_status_activated_body'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Body'),
+    '#default_value' => _user_mail_text('status_activated_body'),
     '#rows' => 15,
-    '#description' => t('Customize the body of the forgotten password e-mail.') .' '. $email_token_help,
+  );
+
+  $form['email']['blocked'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Account blocked email'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#description' => t('Configure if an e-mail message should be sent to users when their accounts are blocked, and if so, what the subject and body should be.') .' '. $email_token_help,
+  );
+  $form['email']['blocked']['user_mail_status_blocked_notify'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Notify user when account is blocked.'),
+    '#default_value' => variable_get('user_mail_status_blocked_notify', FALSE),
+  );
+  $form['email']['blocked']['user_mail_status_blocked_subject'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Subject'),
+    '#default_value' => _user_mail_text('status_blocked_subject'),
+    '#maxlength' => 180,
+  );
+  $form['email']['blocked']['user_mail_status_blocked_body'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Body'),
+    '#default_value' => _user_mail_text('status_blocked_body'),
+    '#rows' => 3,
+  );
+
+  $form['email']['deleted'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Account deleted email'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#description' => t('Configure if an e-mail message should be sent to users when their accounts are deleted, and if so, what the subject and body should be.') .' '. $email_token_help,
+  );
+  $form['email']['deleted']['user_mail_status_deleted_notify'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Notify user when account is deleted.'),
+    '#default_value' => variable_get('user_mail_status_deleted_notify', FALSE),
+  );
+  $form['email']['deleted']['user_mail_status_deleted_subject'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Subject'),
+    '#default_value' => _user_mail_text('status_deleted_subject'),
+    '#maxlength' => 180,
+  );
+  $form['email']['deleted']['user_mail_status_deleted_body'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Body'),
+    '#default_value' => _user_mail_text('status_deleted_body'),
+    '#rows' => 3,
   );
 
   // User signatures.
@@ -2924,3 +3023,84 @@ function theme_user_signature($signature) {
   return $output;
 }
 
+/**
+ * Return an array of token to value mappings for user e-mail messages.
+ *
+ * @param $account
+ *  The user object of the account being notified.  Must contain at
+ *  least the fields 'uid', 'name', and 'mail'.
+ * @param $password
+ *  Optional string containing the user's current password (if known).
+ * @return
+ *  Array of mappings from token names to values (for use with strtr()).
+ */
+function user_mail_tokens($account, $password = NULL) {
+  global $base_url;
+  $tokens = array(
+    '!username' => $account->name,
+    '!site' => variable_get('site_name', 'Drupal'),
+    '!login_url' => user_pass_reset_url($account),
+    '!uri' => $base_url,
+    '!uri_brief' => substr($base_url, strlen('http://')),
+    '!mailto' => $account->mail,
+    '!date' => format_date(time()),
+    '!login_uri' => url('user', array('absolute' => TRUE)),
+    '!edit_uri' => url('user/'. $account->uid .'/edit', array('absolute' => TRUE)),
+  );
+  if (!empty($password)) {
+    $tokens['!password'] = $password;
+  }
+  return $tokens;
+}
+
+/**
+ * Conditionally create and send a notification email when a certain
+ * operation happens on the given user account.
+ *
+ * @see user_mail_tokens()
+ * @see drupal_mail()
+ *
+ * @param $op
+ *  The operation being performed on the account.  Possible values:
+ *  'register_admin_created': Welcome message for user created by the admin
+ *  'register_no_approval_required': Welcome message when user self-registers
+ *  'register_pending_approval': Welcome message, user pending admin approval
+ *  'password_reset': Password recovery request
+ *  'status_activated': Account activated
+ *  'status_blocked': Account blocked
+ *  'status_deleted': Account deleted
+ *
+ * @param $account
+ *  The user object of the account being notified.  Must contain at
+ *  least the fields 'uid', 'name', and 'mail'.
+ *
+ * @param $password
+ *  Optional string containing the user's current password (if known).
+ *
+ * @return
+ *  The return value from drupal_mail(), if ends up being called.
+ */
+function _user_mail_notify($op, $account, $password = NULL) {
+  $mail_id = 'user-'. strtr($op, '_', '-');
+  if ($op == 'register_pending_approval') {
+    // Special case, since we need to distinguish what we send to the
+    // user and what we send to the administrator, handled below.
+    $mail_id .= '-user';
+  }
+  // By default, we always notify except for deleted and blocked.
+  $default_notify = ($op != 'status_deleted' && $op != 'status_blocked');
+  $notify = variable_get('user_mail_'. $op .'_notify', $default_notify);
+  $result = NULL;
+  if ($notify) {
+    $from = variable_get('site_mail', ini_get('sendmail_from'));
+    $variables = user_mail_tokens($account, $password);
+    $subject = _user_mail_text($op .'_subject', $variables);
+    $body = _user_mail_text($op .'_body', $variables);
+    $result = drupal_mail($mail_id, $account->mail, $subject, $body, $from);
+    if ($op == 'register_pending_approval') {
+      // If a user registered requiring admin approval, notify the admin, too.
+      drupal_mail('user-register-approval-admin', $from, $subject, t("!username has applied for an account.\n\n!edit_uri", $variables), $from);
+    }
+  }
+  return $result;
+}
