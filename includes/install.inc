@@ -273,7 +273,7 @@ function drupal_verify_profile($profile, $locale) {
 
   // Get a list of modules required by this profile.
   $function = $profile .'_profile_modules';
-  $module_list = array_merge(drupal_required_modules(), $function(), ($locale ? array('locale') : array()));
+  $module_list = array_merge(drupal_required_modules(), $function(), ($locale != 'en' ? array('locale') : array()));
 
   // Get a list of modules that exist in Drupal's assorted subdirectories.
   $present_modules = array();
