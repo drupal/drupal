@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.478 2007/05/17 07:28:42 dries Exp $
+// $Id: system.module,v 1.479 2007/05/21 10:56:05 goba Exp $
 
 /**
  * @file
@@ -1404,6 +1404,13 @@ function theme_system_themes_form($form) {
 
 function system_themes_form_submit($form_values, $form, &$form_state) {
 
+  // Store list of previously enabled themes and disable all themes
+  $old_theme_list = $new_theme_list = array();
+  foreach (list_themes() as $theme) {
+    if ($theme->status) {
+      $old_theme_list[] = $theme->name;
+    }
+  }
   db_query("UPDATE {system} SET status = 0 WHERE type = 'theme'");
 
   if ($form_values['op'] == t('Save configuration')) {
@@ -1412,6 +1419,7 @@ function system_themes_form_submit($form_values, $form, &$form_state) {
         // Always enable the default theme, despite its status checkbox being checked:
         if ($choice || $form_values['theme_default'] == $key) {
           system_initialize_theme_blocks($key);
+          $new_theme_list[] = $key;
           db_query("UPDATE {system} SET status = 1 WHERE type = 'theme' and name = '%s'", $key);
         }
       }
@@ -1426,14 +1434,22 @@ function system_themes_form_submit($form_values, $form, &$form_state) {
     variable_set('theme_default', $form_values['theme_default']);
   }
   else {
+    // Revert to defaults: only Garland is enabled.
     variable_del('theme_default');
     db_query("UPDATE {system} SET status = 1 WHERE type = 'theme' AND name = 'garland'");
+    $new_theme_list = array('garland');
   }
 
   list_themes(TRUE);
   menu_rebuild();
   drupal_set_message(t('The configuration options have been saved.'));
   $form_state['redirect'] = 'admin/build/themes';
+  
+  // Notify locale module about new themes being enabled, so translations can
+  // be imported. This might start a batch, and only return to the redirect
+  // path after that.
+  module_invoke('locale', 'system_update', array_diff($new_theme_list, $old_theme_list));
+ 
   return;
 }
 
@@ -1588,12 +1604,27 @@ function system_modules_disable($form, $edit) {
   return $form;
 }
 
-function system_modules_confirm_form($modules, $dependencies) {
+/**
+ * Display confirmation form for dependencies.
+ *
+ * @param $modules
+ *   Array of module file objects as returned from module_rebuild_cache().
+ * @param $storage
+ *   The contents of $form_state['storage']; an array with two
+ *   elements: the list of dependencies and the list of status
+ *   form field values from the previous screen.
+ */
+function system_modules_confirm_form($modules, $storage) {
   $form = array();
   $items = array();
 
+  list($dependencies, $status) = $storage;
   $form['validation_modules'] = array('#type' => 'value', '#value' => $modules);
   $form['status']['#tree'] = TRUE;
+  // Remember list of modules selected on the module listing page already.
+  foreach ($status as $key => $choice) {
+    $form['status'][$key] = array('#type' => 'value', '#value' => $choice);
+  }
   foreach ($dependencies as $name => $missing_dependencies) {
     $form['status'][$name] = array('#type' => 'hidden', '#value' => 1);
     foreach ($missing_dependencies as $k => $dependency) {
@@ -1670,8 +1701,31 @@ function system_modules_submit($form_values, $form, &$form_state) {
     $dependencies = NULL;
   }
 
+  // Update throttle settings, if present
+  if (isset($form_values['throttle'])) {
+    foreach ($form_values['throttle'] as $key => $choice) {
+      db_query("UPDATE {system} SET throttle = %d WHERE type = 'module' and name = '%s'", $choice ? 1 : 0, $key);
+    }
+  }
+
   // Temporarily disable menu module while it's broken.
   unset($form_values['status']['menu']);
+
+  // If there where unmet dependencies and they haven't confirmed don't process
+  // the submission yet. Store the form submission data needed later.
+  if ($dependencies) {
+    if (!isset($form_values['confirm'])) {
+      $form_state['storage'] = array($dependencies, $form_values['status']);
+      return;
+    }
+    else {
+      $form_values['status'] = array_merge($form_values['status'], $form_storage[1]);
+    }
+  }
+  // If we have no dependencies, or the dependencies are confirmed
+  // to be installed, we don't need the temporary storage anymore.
+  unset($form_state['storage']);
+
   $enable_modules = array();
   $disable_modules = array();
   foreach ($form_values['status'] as $key => $choice) {
@@ -1706,13 +1760,6 @@ function system_modules_submit($form_values, $form, &$form_state) {
   drupal_install_modules($new_modules);
 
   $current_module_list = module_list(TRUE, FALSE);
-
-  if (isset($form_values['throttle'])) {
-    foreach ($form_values['throttle'] as $key => $choice) {
-      db_query("UPDATE {system} SET throttle = %d WHERE type = 'module' and name = '%s'", $choice ? 1 : 0, $key);
-    }
-  }
-
   if ($old_module_list != $current_module_list) {
     drupal_rebuild_theme_registry();
     node_types_rebuild();
@@ -1720,17 +1767,15 @@ function system_modules_submit($form_values, $form, &$form_state) {
     drupal_set_message(t('The configuration options have been saved.'));
   }
 
-  // If there where unmet dependencies and they haven't confirmed don't redirect.
-  if ($dependencies && !isset($form_values['confirm'])) {
-    $form_state['storage'] = $dependencies;
-    return;
-  }
-
   drupal_clear_css_cache();
 
-  // Unset storage to indicate this form cycle is over.
-  unset($form_state['storage']);
   $form_state['redirect'] = 'admin/build/modules';
+
+  // Notify locale module about module changes, so translations can be
+  // imported. This might start a batch, and only return to the redirect
+  // path after that.
+  module_invoke('locale', 'system_update', $new_modules);
+
   return;
 }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.126 2007/05/17 08:34:43 goba Exp $
+// $Id: locale.inc,v 1.127 2007/05/21 10:56:05 goba Exp $
 
 /**
  * @file
@@ -2098,7 +2098,7 @@ function _locale_get_predefined_list() {
  */
 
 /**
- * Prepare a batch to use to import translations.
+ * Prepare a batch to use to import translations on install time.
  *
  * @param $langcode
  *   Language code to import translations for.
@@ -2118,59 +2118,38 @@ function locale_batch_installer($langcode) {
     $files = array_merge($files, file_scan_directory(dirname($component->filename) .'/po/', '(^|\.)'. $langcode .'\.po$', array('.', '..', 'CVS'), 0, FALSE));
   }
 
-  if (count($files)) {
-    $$operations = array();
-    foreach($files as $file) {
-      // We call _locale_batch_import for every batch operation
-      // with the file name and language code.
-      $operations[] = array('_locale_batch_import', array($file->filename, $langcode));
-    }
-    return _locale_batch_build($operations, '_locale_batch_installer_finished');
-  }
-
-  // Found nothing to import.
-  return FALSE;
+  return _locale_batch_build($files, '_locale_batch_installer_finished');
 }
 
 /**
  * Build a locale batch from an array of files.
  *
- * @param $operations
- *   Array of operations to perform
+ * @param $files
+ *   Array of files to import
  * @param $finished
  *   A finished callback to use for the batch
  * @return
  *   A batch structure
  */
-function _locale_batch_build($operations, $finished) {
+function _locale_batch_build($files, $finished = NULL) {
   $t = get_t();
-  if (count($operations)) {
-    $batch = array(
-      'operations'    => $operations,
-      'title'         => $t('Importing interface translations'),
-      'init_message'  => $t('Starting import'),
-      'error_message' => $t('Error importing interface translations'),
-      'finished'      => $finished,
-    );
+  if (count($files)) {
+    $operations = array();
+    foreach($files as $file) {
+      // We call _locale_batch_import for every batch operation.
+      $operations[] = array('_locale_batch_import', array($file->filename));    }
+      $batch = array(
+        'operations'    => $operations,
+        'title'         => $t('Importing interface translations'),
+        'init_message'  => $t('Starting import'),
+        'error_message' => $t('Error importing interface translations'),
+      );
+      if (isset($finished)) {
+        $batch['finished'] = $finished;
+      }
     return $batch;
   }
   return FALSE;
-}
-
-/**
- * Perform interface translation import as a batch step.
- *
- * @param $filepath
- *   Path to a file to import.
- * @param $langcode
- *   Language to import file into.
- * @param $results
- *   Contains a list of files imported.
- */
-function _locale_batch_import($filepath, $langcode, &$context) {
-  $file = (object) array('filename' => basename($filepath), 'filepath' => $filepath);
-  _locale_import_read_po('db-store', $file, 'keep', $langcode);
-  $context['results'][] = $filepath;
 }
 
 /**
@@ -2179,6 +2158,37 @@ function _locale_batch_import($filepath, $langcode, &$context) {
  */
 function _locale_batch_installer_finished($success, $results) {
   variable_set('install_task', 'finished');
+}
+
+/**
+ * Prepare a batch to run when installing modules or enabling themes.
+ * This batch will import translations for the newly added components
+ * in all the languages already set up on the site.
+ *
+ * @param $components
+ *   An array of component (theme and/or module) names to import
+ *   translations for.
+ */
+function locale_batch_system($components) {
+  $files = array();
+  $languages = language_list('enabled');
+  unset($languages[1]['en']);
+  if (count($languages[1])) {
+    $language_list = join('|', array_keys($languages[1]));
+    // Collect all files to import for all $components.
+    $result = db_query("SELECT name, filename FROM {system} WHERE status = 1");
+    while ($component = db_fetch_object($result)) {
+      if (in_array($component->name, $components)) {
+        // Collect all files for this component in all enabled languages, named
+        // as $langcode.po or with names ending with $langcode.po. This allows
+        // for filenames like node-module.de.po to let translators use small
+        // files and be able to import in smaller chunks.
+        $files = array_merge($files, file_scan_directory(dirname($component->filename) .'/po/', '(^|\.)('. $language_list .')\.po$', array('.', '..', 'CVS'), 0, FALSE));
+      }
+    }
+    return _locale_batch_build($files, '_locale_batch_system_finished');
+  }
+  return FALSE;
 }
 /**
  * @} End of "locale-autoimport"
