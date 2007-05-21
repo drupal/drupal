@@ -1415,7 +1415,7 @@ function user_edit($category = 'account') {
   $edit = $_POST['op'] ? $_POST : (array)$account;
 
   if (arg(2) == 'delete') {
-    if ($edit['confirm']) {
+    if (!empty($edit['confirm'])) {
       user_delete($edit, $account->uid);
       drupal_goto('admin/user/user');
     }
