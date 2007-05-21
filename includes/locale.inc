@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.127 2007/05/21 10:56:05 goba Exp $
+// $Id: locale.inc,v 1.128 2007/05/21 20:21:39 goba Exp $
 
 /**
  * @file
@@ -56,7 +56,20 @@ function theme_locale_languages_overview_form($form) {
   foreach ($form['name'] as $key => $element) {
     // Do not take form control structures.
     if (is_array($element) && element_child($key)) {
-      $rows[] = array(array('data' => drupal_render($form['enabled'][$key]), 'align' => 'center'), check_plain($key), '<strong>'. drupal_render($form['name'][$key]) .'</strong>', drupal_render($form['native'][$key]), drupal_render($form['direction'][$key]), drupal_render($form['site_default'][$key]), drupal_render($form['weight'][$key]), l(t('edit'), 'admin/settings/language/edit/'. $key). (($key != 'en' && $key != $default->language) ? ' '. l(t('delete') ,'admin/settings/language/delete/'. $key) : ''));
+      // Disable checkbox for the default language, because it cannot be disabled.
+      if ($key == $default->language) {
+        $form['enabled'][$key]['#attributes']['disabled'] = TRUE;
+      }
+      $rows[] = array(
+        array('data' => drupal_render($form['enabled'][$key]), 'align' => 'center'),
+        check_plain($key),
+        '<strong>'. drupal_render($form['name'][$key]) .'</strong>',
+        drupal_render($form['native'][$key]),
+        drupal_render($form['direction'][$key]),
+        drupal_render($form['site_default'][$key]),
+        drupal_render($form['weight'][$key]),
+        l(t('edit'), 'admin/settings/language/edit/'. $key). (($key != 'en' && $key != $default->language) ? ' '. l(t('delete') ,'admin/settings/language/delete/'. $key) : '')
+      );
     }
   }
   $header = array(array('data' => t('Enabled')), array('data' => t('Code')), array('data' => t('English name')), array('data' => t('Native name')), array('data' => t('Direction')), array('data' => t('Default')), array('data' => t('Weight')), array('data' => t('Operations')));
