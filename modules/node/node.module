@@ -386,6 +386,12 @@ function _node_type_set_defaults($info) {
     $info['body_label'] = t('Body');
   }
 
+  if (!isset($info['help'])) {
+    $info['help'] = '';
+  }
+  if (!isset($info['min_word_count'])) {
+    $info['min_word_count'] = 0;
+  }
   if (!isset($info['custom'])) {
     $info['custom'] = FALSE;
   }
