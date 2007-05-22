@@ -685,6 +685,9 @@ function theme_get_setting($setting_name, $refresh = FALSE) {
       elseif ($settings['favicon_path']) {
         $settings['favicon'] = base_path() . $settings['favicon_path'];
       }
+      else {
+        $settings['toggle_favicon'] = FALSE;
+      }
     }
   }
 
