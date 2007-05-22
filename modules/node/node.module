@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.817 2007/05/20 16:46:03 dries Exp $
+// $Id: node.module,v 1.818 2007/05/22 05:52:16 dries Exp $
 
 /**
  * @file
@@ -1135,6 +1135,8 @@ function node_menu() {
     'weight' => -10,
     'page callback' => 'system_admin_menu_block_page',
     'access arguments' => array('administer site configuration'),
+    'file' => 'system.admin.inc',
+    'file path' => drupal_get_path('module', 'system'),
   );
 
   $items['admin/content/node'] = array(

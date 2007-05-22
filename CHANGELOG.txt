@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.201 2007/05/20 16:44:35 dries Exp $
+// $Id: CHANGELOG.txt,v 1.202 2007/05/22 05:52:16 dries Exp $
 
 Drupal 6.0, xxxx-xx-xx (development version)
 ----------------------
@@ -43,6 +43,8 @@ Drupal 6.0, xxxx-xx-xx (development version)
 - Added the HTML corrector filter:
     * Fixes faulty and chopped off HTML in postings.
     * Tags are now automatically closed at the end of the teaser.
+- Performance:
+    * Made it easier to conditionally load include files.
 
 Drupal 5.0, 2007-01-15
 ----------------------

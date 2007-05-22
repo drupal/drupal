@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.166 2007/05/16 13:45:16 dries Exp $
+// $Id: menu.inc,v 1.167 2007/05/22 05:52:16 dries Exp $
 
 /**
  * @file
@@ -306,7 +306,15 @@ function menu_get_item($path = NULL) {
  */
 function menu_execute_active_handler() {
   if ($item = menu_get_item()) {
-    return $item->access ? call_user_func_array($item->page_callback, $item->page_arguments) : MENU_ACCESS_DENIED;
+    if ($item->access) {
+      if ($item->file) {
+        include_once($item->file);
+      }
+      return call_user_func_array($item->page_callback, $item->page_arguments);
+    }
+    else {
+      return MENU_ACCESS_DENIED;
+    }
   }
   return MENU_NOT_FOUND;
 }
@@ -1060,7 +1068,17 @@ function menu_rebuild() {
  */
 function menu_router_build() {
   db_query('DELETE FROM {menu_router}');
-  $callbacks = module_invoke_all('menu');
+  // We need to manually call each module so that we can know which module a given item came from.
+  $callbacks = array();
+  foreach (module_implements('menu') as $module) {
+    $items = call_user_func($module . '_menu');
+    if (isset($items) && is_array($items)) {
+      foreach (array_keys($items) as $path) {
+        $items[$path]['module'] = $module;
+      }
+      $callbacks = array_merge($callbacks, $items);
+    }
+  }
   // Alter the menu as defined in modules, keys are like user/%user.
   drupal_alter('menu', $callbacks);
   $menu = _menu_router_build($callbacks);
@@ -1380,6 +1398,12 @@ function _menu_router_build($callbacks) {
           if (!isset($item['page arguments']) && isset($parent['page arguments'])) {
             $item['page arguments'] = $parent['page arguments'];
           }
+          if (!isset($item['file']) && isset($parent['file'])) {
+            $item['file'] = $parent['file'];
+          }
+          if (!isset($item['file path']) && isset($parent['file path'])) {
+            $item['file path'] = $parent['file path'];
+          }
         }
       }
     }
@@ -1403,23 +1427,33 @@ function _menu_router_build($callbacks) {
       'tab_parent' => '',
       'tab_root' => $path,
       'path' => $path,
+      'file' => '',
+      'file path' => '',
+      'include file' => '',
     );
+
+    // Calculate out the file to be included for each callback, if any.
+    if ($item['file']) {
+      $file_path = $item['file path'] ? $item['file path'] : drupal_get_path('module', $item['module']);
+      $item['include file'] = $file_path . '/' . $item['file'];
+    }
+
     db_query("INSERT INTO {menu_router}
       (path, load_functions, to_arg_functions, access_callback,
       access_arguments, page_callback, page_arguments, fit,
       number_parts, tab_parent, tab_root,
       title, title_callback, title_arguments,
-      type, block_callback, description, position, weight)
+      type, block_callback, description, position, weight, file)
       VALUES ('%s', '%s', '%s', '%s',
       '%s', '%s', '%s', %d,
       %d, '%s', '%s',
       '%s', '%s', '%s',
-      %d, '%s', '%s', '%s', %d)",
+      %d, '%s', '%s', '%s', %d, '%s')",
       $path, $item['load_functions'], $item['to_arg_functions'], $item['access callback'],
       serialize($item['access arguments']), $item['page callback'], serialize($item['page arguments']), $item['_fit'],
       $item['_number_parts'], $item['tab_parent'], $item['tab_root'],
       $item['title'], $item['title callback'], serialize($item['title arguments']),
-      $item['type'], $item['block callback'], $item['description'], $item['position'], $item['weight']);
+      $item['type'], $item['block callback'], $item['description'], $item['position'], $item['weight'], $item['include file']);
   }
   return $menu;
 }

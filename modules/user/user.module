@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.784 2007/05/20 16:38:19 dries Exp $
+// $Id: user.module,v 1.785 2007/05/22 05:52:17 dries Exp $
 
 /**
  * @file
@@ -825,6 +825,8 @@ function user_menu() {
     'position' => 'left',
     'page callback' => 'system_admin_menu_block_page',
     'access arguments' => array('administer site configuration'),
+    'file' => 'system.admin.inc',
+    'file path' => drupal_get_path('module', 'system'),
   );
   $items['admin/user/user'] = array(
     'title' => 'Users',
