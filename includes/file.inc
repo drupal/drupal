@@ -553,7 +553,7 @@ function file_transfer($source, $headers) {
     // not followed by a space or a tab.
     // See http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2
     $header = preg_replace('/\r?\n(?!\t| )/', '', $header);
-    header($header);
+    drupal_set_header($header);
   }
 
   $source = file_create_path($source);
