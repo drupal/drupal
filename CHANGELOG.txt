@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.202 2007/05/22 05:52:16 dries Exp $
+// $Id: CHANGELOG.txt,v 1.203 2007/05/22 07:42:36 dries Exp $
 
 Drupal 6.0, xxxx-xx-xx (development version)
 ----------------------
@@ -21,6 +21,8 @@ Drupal 6.0, xxxx-xx-xx (development version)
     * Browser based language detection.
     * Made it possible to specify a node's language.
     * Language dependent path aliases.
+    * Automatically import translations when enabling new modules.
+    * Automatically import translations when adding a new language.
 - Moved "PHP input filter" to a stand-alone module so it can be deleted for security reasons.
 - Usability:
     * Improved handling of teasers in posts.

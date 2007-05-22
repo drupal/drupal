@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.128 2007/05/21 20:21:39 goba Exp $
+// $Id: locale.inc,v 1.129 2007/05/22 07:42:36 dries Exp $
 
 /**
  * @file
@@ -301,6 +301,12 @@ function locale_languages_predefined_form_submit($form_values, $form, &$form_sta
     $predefined = _locale_get_predefined_list();
     locale_add_language($langcode);
     drupal_set_message(t('The language %language has been created and can now be used. More information is available on the <a href="@locale-help">help screen</a>.', array('%language' => t($predefined[$langcode][0]), '@locale-help' => url('admin/help/locale'))));
+  }
+
+  // See if we have language files to import for the newly added
+  // language, collect and import them.
+  if ($batch = locale_batch_by_language($langcode, '_locale_batch_language_finished')) {
+    batch_set($batch);
   }
 
   $form_state['redirect'] = 'admin/settings/language';
@@ -848,7 +854,7 @@ function locale_translate_delete($lid) {
  * @param $default
  *   Optionall set this language to be the default.
  */
-function locale_add_language($langcode, $name = NULL, $native = NULL, $direction = LANGUAGE_LTR, $domain = '', $prefix = '', $enabled = FALSE, $default = FALSE) {
+function locale_add_language($langcode, $name = NULL, $native = NULL, $direction = LANGUAGE_LTR, $domain = '', $prefix = '', $enabled = TRUE, $default = FALSE) {
   // Default prefix on language code.
   if (empty($prefix)) {
     $prefix = $langcode;
@@ -2111,14 +2117,17 @@ function _locale_get_predefined_list() {
  */
 
 /**
- * Prepare a batch to use to import translations on install time.
+ * Prepare a batch to import translations for all enabled
+ * modules in a given language.
  *
  * @param $langcode
  *   Language code to import translations for.
+ * @param $finished
+ *   Optional finished callback for the batch.
  * @return
  *   A batch structure or FALSE if no files found.
  */
-function locale_batch_installer($langcode) {
+function locale_batch_by_language($langcode, $finished = '_locale_batch_installer_finished') {
 
   // Collect all files to import for all enabled modules and themes.
   $files = array();
@@ -2131,7 +2140,7 @@ function locale_batch_installer($langcode) {
     $files = array_merge($files, file_scan_directory(dirname($component->filename) .'/po/', '(^|\.)'. $langcode .'\.po$', array('.', '..', 'CVS'), 0, FALSE));
   }
 
-  return _locale_batch_build($files, '_locale_batch_installer_finished');
+  return _locale_batch_build($files, $finished);
 }
 
 /**
@@ -2140,7 +2149,7 @@ function locale_batch_installer($langcode) {
  * @param $files
  *   Array of files to import
  * @param $finished
- *   A finished callback to use for the batch
+ *   Optional finished callback for the batch.
  * @return
  *   A batch structure
  */
@@ -2181,8 +2190,10 @@ function _locale_batch_installer_finished($success, $results) {
  * @param $components
  *   An array of component (theme and/or module) names to import
  *   translations for.
+ * @param $finished
+ *   Optional finished callback for the batch.
  */
-function locale_batch_system($components) {
+function locale_batch_by_component($components, $finished = '_locale_batch_system_finished') {
   $files = array();
   $languages = language_list('enabled');
   unset($languages[1]['en']);
@@ -2199,7 +2210,7 @@ function locale_batch_system($components) {
         $files = array_merge($files, file_scan_directory(dirname($component->filename) .'/po/', '(^|\.)('. $language_list .')\.po$', array('.', '..', 'CVS'), 0, FALSE));
       }
     }
-    return _locale_batch_build($files, '_locale_batch_system_finished');
+    return _locale_batch_build($files, $finished);
   }
   return FALSE;
 }
