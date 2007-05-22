@@ -21,6 +21,8 @@ Drupal 6.0, xxxx-xx-xx (development version)
     * Browser based language detection.
     * Made it possible to specify a node's language.
     * Language dependent path aliases.
+    * Automatically import translations when enabling new modules.
+    * Automatically import translations when adding a new language.
 - Moved "PHP input filter" to a stand-alone module so it can be deleted for security reasons.
 - Usability:
     * Improved handling of teasers in posts.

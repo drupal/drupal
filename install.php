@@ -676,7 +676,7 @@ function install_tasks($profile, $task) {
       // Enable installation language as default site language.
       locale_add_language($install_locale, NULL, NULL, NULL, NULL, NULL, 1, TRUE);
       // Collect files to import for this language.
-      $batch = locale_batch_installer($install_locale);
+      $batch = locale_batch_by_language($install_locale);
       if (!empty($batch)) {
         // Start a batch, switch to 'locale-batch' task. We need to
         // set the variable here, because batch_process() redirects.
