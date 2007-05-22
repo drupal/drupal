@@ -43,6 +43,8 @@ Drupal 6.0, xxxx-xx-xx (development version)
 - Added the HTML corrector filter:
     * Fixes faulty and chopped off HTML in postings.
     * Tags are now automatically closed at the end of the teaser.
+- Performance:
+    * Made it easier to conditionally load include files.
 
 Drupal 5.0, 2007-01-15
 ----------------------
