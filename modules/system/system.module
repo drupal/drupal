@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.480 2007/05/22 05:52:17 dries Exp $
+// $Id: system.module,v 1.481 2007/05/23 08:00:46 dries Exp $
 
 /**
  * @file
@@ -432,11 +432,7 @@ function system_admin_theme_settings() {
     '#default_value' => variable_get('admin_theme', '0'),
   );
 
-  // In order to give it our own submit, we have to give it the default submit
-  // too because the presence of a #submit will prevent the default #submit
-  // from being used. Also we want ours first.
   $form['#submit'][] = 'system_admin_theme_submit';
-  $form['#submit'][] = 'system_settings_form_submit';
   return system_settings_form($form);
 }
 
@@ -710,7 +706,6 @@ function system_performance_settings() {
     '#description' => t("Some Drupal modules include their own CSS files. When these modules are enabled, each module's CSS file adds an additional HTTP request to the page, which can increase the load time of each page. These HTTP requests can also slightly increase server load. It is recommended to only turn this option on when your site is in production, as it can interfere with theme development. This option is disabled if you have not set up your files directory, or if your download method is set to private."),
   );
 
-  $form['#submit'][] = 'system_settings_form_submit';
   $form['#submit'][] = 'drupal_clear_css_cache';
 
   return system_settings_form($form);
@@ -2322,7 +2317,10 @@ function system_theme_settings($key = '') {
   }
   $form['#attributes'] = array('enctype' => 'multipart/form-data');
 
-  return system_settings_form($form);
+  $form = system_settings_form($form);
+  // We don't want to call system_settings_form_submit(), so change #submit.
+  $form['#submit'] = array('system_theme_settings_submit');
+  return $form;
 }
 
 /**
