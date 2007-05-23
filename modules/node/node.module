@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.818 2007/05/22 05:52:16 dries Exp $
+// $Id: node.module,v 1.819 2007/05/23 07:55:08 dries Exp $
 
 /**
  * @file
@@ -1202,6 +1202,8 @@ function node_menu() {
     'page callback' => 'system_admin_menu_block_page',
     'access callback' => '_node_add_access',
     'weight' => 1,
+    'file' => 'system.admin.inc',
+    'file path' => drupal_get_path('module', 'system'),
   );
   $items['rss.xml'] = array(
     'title' => 'RSS feed',
