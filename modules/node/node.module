@@ -1202,6 +1202,8 @@ function node_menu() {
     'page callback' => 'system_admin_menu_block_page',
     'access callback' => '_node_add_access',
     'weight' => 1,
+    'file' => 'system.admin.inc',
+    'file path' => drupal_get_path('module', 'system'),
   );
   $items['rss.xml'] = array(
     'title' => 'RSS feed',
