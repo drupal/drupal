@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.68 2007/05/08 16:36:55 dries Exp $
+// $Id: database.inc,v 1.69 2007/05/25 12:46:43 dries Exp $
 
 /**
  * @file
@@ -42,6 +42,22 @@
  * so that is abstracted into db_query_range() arguments. Finally, note the
  * common pattern of iterating over the result set using db_fetch_object().
  */
+
+/**
+ * Perform an SQL query and return success or failure.
+ *
+ * @param $sql
+ *   A string containing a complete SQL query.  %-substitution
+ *   parameters are not supported.
+ * @return
+ *   An array containing the keys:
+ *      success: a boolean indicating whether the query succeeded
+ *      query: the SQL query executed, passed through check_plain()
+ */
+function update_sql($sql) {
+  $result = db_query($sql, true);
+  return array('success' => $result !== FALSE, 'query' => check_plain($sql));
+}
 
 /**
  * Append a database prefix to all tables in a query.
@@ -317,3 +333,144 @@ function db_escape_table($string) {
  * @} End of "defgroup database".
  */
 
+/**
+ * @defgroup schemaapi Schema API
+ * @{
+ *
+ * A Drupal schema definition is an array structure representing one or
+ * more tables and their related keys and indexes. A schema is defined by
+ * hook_schema(), which usually lives in a modulename.schema file.
+ *
+ * By implenting hook_schema() and specifying the tables your module
+ * declares, you can easily create and drop these tables on all
+ * supported database engines. You don't have to deal with the
+ * different SQL dialects for table creation and alteration of the
+ * supported database engines.
+ *
+ * hook_schema() should return an array with a key for each table that
+ * the module defines.
+ *
+ * The following keys in the table definition are processed during
+ * table creation:
+ *
+ *   - 'fields': An associative array ('fieldname' => specification)
+ *     that describes the table's database columns.  The specification
+ *     is also an array.  The following specification parameters are defined:
+ *
+ *     - 'type': The generic datatype: 'varchar', 'int', 'serial'
+ *       'float', 'numeric', 'text', 'blob' or 'datetime'.  Most types
+ *       just map to the according database engine specific
+ *       datatypes.  Use 'serial' for auto incrementing fields. This
+ *       will expand to 'int auto_increment' on mysql.
+ *     - 'size': The data size: 'tiny', 'small', 'medium', 'normal',
+ *       'big'.  This is a hint about the largest value the field will
+ *       store and determines which of the database engine specific
+ *       datatypes will be used (e.g. on MySQL, TINYINT vs. INT vs. BIGINT).
+ *       'normal', the default, selects the base type (e.g. on MySQL,
+ *       INT, VARCHAR, BLOB, etc.).
+ *
+ *       Not all sizes are available for all data types. See
+ *       db_type_map() for possible combinations.
+ *     - 'not null': If true, no NULL values will be allowed in this
+ *       database column.  Defaults to false.
+ *     - 'default': The field's default value.  The PHP type of the
+ *       value matters: '', '0', and 0 are all different.  If you
+ *       specify '0' as the default value for a type 'int' field it
+ *       will not work because '0' is a string containing the
+ *       character "zero", not an integer.
+ *     - 'length': The maximal length of a type 'varchar' or 'text'
+ *       field.  Ignored for other field types.
+ *     - 'unsigned': A boolean indicating whether a type 'int', 'float'
+ *       and 'numeric' only is signed or unsigned.  Defaults to
+ *       FALSE.  Ignored for other field types.
+ *     - 'precision', 'scale': For type 'numeric' fields, indicates
+ *       the precision (total number of significant digits) and scale
+ *       (decimal digits right of the decimal point).  Both values are
+ *       mandatory.  Ignored for other field types.
+ *
+ *     All parameters apart from 'type' are optional except that type
+ *     'numeric' columns must specify 'precision' and 'scale'.
+ *
+ *  - 'primary key': An array of one or more key column specifers (see below)
+ *    that form the primary key.
+ *  - 'unique key': An associative array of unique keys ('keyname' =>
+ *    specification).  Each specification is an array of one or more
+ *    key column specifiers (see below) that form a unique key on the table.
+ *  - 'indexes':  An associative array of indexes ('indexame' =>
+ *    specification).  Each specification is an array of one or more
+ *    key column specifiers (see below) that form an index on the
+ *    table.
+ *
+ * A key column specifier is either a string naming a column or an
+ * array of two elements, column name and length, specifying a prefix
+ * of the named column.
+ *
+ * As an example, here is a SUBSET of the schema definition for
+ * Drupal's 'node' table.  It show four fields (nid, vid, type, and
+ * title), the primary key on field 'nid', a unique key named 'vid' on
+ * field 'vid', and two indexes, one named 'nid' on field 'nid' and
+ * one named 'node_title_type' on the field 'title' and the first four
+ * bytes of the field 'type':
+ *
+ * $schema['node'] = array(
+ *   'fields' => array(
+ *     'nid'      => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
+ *     'vid'      => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+ *     'type'     => array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''),
+      'title'    => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
+ *   ),
+ *   'primary key' => array('nid'),
+ *   'unique keys' => array(
+ *     'vid'     => array('vid')
+ *   ),
+ *   'indexes' => array(
+ *     'nid'                 => array('nid'),
+ *     'node_title_type'     => array('title', array('type', 4)),
+ *   ),
+ * );
+ *
+ * @see drupal_install_schema()
+ */
+
+ /**
+ * Create a new table from a Drupal table definition.
+ *
+ * @param $ret
+ *   Array to which query results will be added.
+ * @param $table
+ *   A valid and processed table schema definition array.
+ */
+function db_create_table(&$ret, $table) {
+  $statements = db_create_table_sql($table);
+  foreach ($statements as $statement) {
+    $ret[] = update_sql($statement);
+  }
+}
+
+/**
+ * Return an array of field names from an array of key/index column
+ * specifiers.  This is usually an identity function but if a
+ * key/index uses a column prefix specification, this function
+ * extracts just the name.
+ *
+ * @param $fields
+ *   An array of key/index column specifiers.
+ * @return
+ *   An array of field names.
+ */
+function db_field_names($fields) {
+  $ret = array();
+  foreach ($fields as $field) {
+    if (is_array($field)) {
+      $ret[] = $field[0];
+    }
+    else {
+      $ret[] = $field;
+    }
+  }
+  return $ret;
+}
+
+/**
+ * @} End of "defgroup schemaapi".
+ */

@@ -1,55 +1,18 @@
 <?php
-// $Id: dblog.install,v 1.2 2007/04/24 13:53:11 dries Exp $
+// $Id: dblog.install,v 1.3 2007/05/25 12:46:44 dries Exp $
 
 /**
  * Implementation of hook_install().
  */
 function dblog_install() {
-  switch ($GLOBALS['db_type']) {
-    case 'mysql':
-    case 'mysqli':
-      db_query("CREATE TABLE {watchdog} (
-        wid int NOT NULL auto_increment,
-        uid int NOT NULL default '0',
-        type varchar(16) NOT NULL default '',
-        message longtext NOT NULL,
-        variables longtext NOT NULL,
-        severity tinyint unsigned NOT NULL default '0',
-        link varchar(255) NOT NULL default '',
-        location text NOT NULL,
-        referer varchar(128) NOT NULL default '',
-        hostname varchar(128) NOT NULL default '',
-        timestamp int NOT NULL default '0',
-        PRIMARY KEY (wid),
-        KEY (type)
-      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
-      break;
-
-    case 'pgsql':
-      db_query("CREATE TABLE {watchdog} (
-        wid serial,
-        uid int NOT NULL default '0',
-        type varchar(16) NOT NULL default '',
-        message text NOT NULL,
-        variables text NOT NULL,
-        severity smallint_unsigned NOT NULL default '0',
-        link varchar(255) NOT NULL default '',
-        location text NOT NULL default '',
-        referer varchar(128) NOT NULL default '',
-        hostname varchar(128) NOT NULL default '',
-        timestamp int NOT NULL default '0',
-        PRIMARY KEY (wid)
-      )");
-      db_query("CREATE INDEX {watchdog}_type_idx ON {watchdog} (type)");
-
-
-      break;
-  }
+  // Create tables.
+  drupal_install_schema('dblog');
 }
 
 /**
  * Implementation of hook_uninstall().
  */
 function dblog_uninstall() {
-  db_query('DROP TABLE {watchdog}');
+  // Remove tables.
+  drupal_uninstall_schema('dblog');
 }

@@ -1,0 +1,45 @@
+<?php
+// $Id: comment.schema,v 1.1 2007/05/25 12:46:44 dries Exp $
+
+function comment_schema() {
+  $schema['comments'] = array(
+    'fields' => array(
+      'cid'       => array('type' => 'serial', 'not null' => TRUE),
+      'pid'       => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'nid'       => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'uid'       => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'subject'   => array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''),
+      'comment'   => array('type' => 'text', 'not null' => TRUE, 'size' => 'big'),
+      'hostname'  => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
+      'timestamp' => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'score'     => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'medium'),
+      'status'    => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0, 'size' => 'tiny'),
+      'format'    => array('type' => 'int', 'size' => 'small', 'not null' => TRUE, 'default' => 0),
+      'thread'    => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE),
+      'users'     => array('type' => 'text', 'not null' => FALSE, 'size' => 'big'),
+      'name'      => array('type' => 'varchar', 'length' => 60, 'not null' => FALSE),
+      'mail'      => array('type' => 'varchar', 'length' => 64, 'not null' => FALSE),
+      'homepage'  => array('type' => 'varchar', 'length' => 255, 'not null' => FALSE)
+    ),
+    'indexes' => array(
+      'nid'    => array('nid'),
+      'status' => array('status')
+    ),
+    'primary key' => array('cid'),
+  );
+
+  $schema['node_comment_statistics'] = array(
+    'fields' => array(
+      'nid'                    => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
+      'last_comment_timestamp' => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'last_comment_name'      => array('type' => 'varchar', 'length' => 60, 'not null' => FALSE),
+      'last_comment_uid'       => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'comment_count'          => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0)
+    ),
+    'indexes' => array('node_comment_timestamp' => array('last_comment_timestamp')),
+    'primary key' => array('nid'),
+  );
+
+  return $schema;
+}
+

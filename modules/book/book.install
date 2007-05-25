@@ -1,40 +1,18 @@
 <?php
-// $Id: book.install,v 1.6 2006/09/01 07:40:08 drumm Exp $
+// $Id: book.install,v 1.7 2007/05/25 12:46:43 dries Exp $
 
 /**
  * Implementation of hook_install().
  */
 function book_install() {
-  switch ($GLOBALS['db_type']) {
-    case 'mysql':
-    case 'mysqli':
-      db_query("CREATE TABLE {book} (
-        vid int unsigned NOT NULL default '0',
-        nid int unsigned NOT NULL default '0',
-        parent int NOT NULL default '0',
-        weight tinyint NOT NULL default '0',
-        PRIMARY KEY (vid),
-        KEY nid (nid),
-        KEY parent (parent)
-      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
-      break;
-    case 'pgsql':
-      db_query("CREATE TABLE {book} (
-        vid int_unsigned NOT NULL default '0',
-        nid int_unsigned NOT NULL default '0',
-        parent int NOT NULL default '0',
-        weight smallint NOT NULL default '0',
-        PRIMARY KEY (vid)
-      )");
-      db_query("CREATE INDEX {book}_nid_idx ON {book} (nid)");
-      db_query("CREATE INDEX {book}_parent_idx ON {book} (parent)");
-      break;
-  }
+  // Create tables.
+  drupal_install_schema('book');
 }
 
 /**
  * Implementation of hook_uninstall().
  */
 function book_uninstall() {
-  db_query('DROP TABLE {book}');
+  // Remove tables.
+  drupal_uninstall_schema('book');
 }

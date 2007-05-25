@@ -1,74 +1,21 @@
 <?php
-// $Id: search.install,v 1.6 2006/09/01 07:40:08 drumm Exp $
+// $Id: search.install,v 1.7 2007/05/25 12:46:45 dries Exp $
 
 /**
  * Implementation of hook_install().
  */
 function search_install() {
-  switch ($GLOBALS['db_type']) {
-    case 'mysql':
-    case 'mysqli':
-      db_query("CREATE TABLE {search_dataset} (
-        sid int unsigned NOT NULL default '0',
-        type varchar(16) default NULL,
-        data longtext NOT NULL,
-        KEY sid_type (sid, type)
-      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
-
-      db_query("CREATE TABLE {search_index} (
-        word varchar(50) NOT NULL default '',
-        sid int unsigned NOT NULL default '0',
-        type varchar(16) default NULL,
-        fromsid int unsigned NOT NULL default '0',
-        fromtype varchar(16) default NULL,
-        score float default NULL,
-        KEY sid_type (sid, type),
-        KEY from_sid_type (fromsid, fromtype),
-        KEY word (word)
-      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
-
-      db_query("CREATE TABLE {search_total} (
-        word varchar(50) NOT NULL default '',
-        count float default NULL,
-        PRIMARY KEY (word)
-      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
-      break;
-    case 'pgsql':
-      db_query("CREATE TABLE {search_dataset} (
-        sid int_unsigned NOT NULL default '0',
-        type varchar(16) default NULL,
-        data text NOT NULL
-      )");
-      db_query("CREATE INDEX {search_dataset}_sid_type_idx ON {search_dataset} (sid, type)");
-
-      db_query("CREATE TABLE {search_index} (
-        word varchar(50) NOT NULL default '',
-        sid int_unsigned NOT NULL default '0',
-        type varchar(16) default NULL,
-        fromsid int_unsigned NOT NULL default '0',
-        fromtype varchar(16) default NULL,
-        score float default NULL
-      )");
-      db_query("CREATE INDEX {search_index}_sid_type_idx ON {search_index} (sid, type)");
-      db_query("CREATE INDEX {search_index}_from_sid_type_idx ON {search_index} (fromsid, fromtype)");
-      db_query("CREATE INDEX {search_index}_word_idx ON {search_index} (word)");
-
-      db_query("CREATE TABLE {search_total} (
-        word varchar(50) NOT NULL default '',
-        count float default NULL,
-        PRIMARY KEY (word)
-      )");
-      break;
-  }
+  // Create tables.
+  drupal_install_schema('search');
 }
 
 /**
  * Implementation of hook_uninstall().
  */
 function search_uninstall() {
-  db_query('DROP TABLE {search_dataset}');
-  db_query('DROP TABLE {search_index}');
-  db_query('DROP TABLE {search_total}');
+  // Remove tables.
+  drupal_uninstall_schema('search');
+
   variable_del('minimum_word_size');
   variable_del('overlap_cjk');
 }

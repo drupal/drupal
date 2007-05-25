@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysqli.inc,v 1.35 2007/04/21 18:08:41 dries Exp $
+// $Id: database.mysqli.inc,v 1.36 2007/05/25 12:46:43 dries Exp $
 
 /**
  * @file
@@ -14,6 +14,9 @@
  * @ingroup database
  * @{
  */
+
+// Include functions shared between mysql and mysqli.
+require_once './includes/database.mysql-common.inc';
 
 /**
  * Report database status.

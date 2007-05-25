@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysql.inc,v 1.71 2007/05/08 16:36:55 dries Exp $
+// $Id: database.mysql.inc,v 1.72 2007/05/25 12:46:43 dries Exp $
 
 /**
  * @file
@@ -11,6 +11,8 @@
  * @{
  */
 
+// Include functions shared between mysql and mysqli.
+require_once './includes/database.mysql-common.inc';
 
 /**
  * Report database status.
@@ -437,5 +439,3 @@ function db_distinct_field($table, $field, $query) {
 /**
  * @} End of "ingroup database".
  */
-
-

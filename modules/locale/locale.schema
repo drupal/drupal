@@ -1,0 +1,51 @@
+<?php
+// $Id: locale.schema,v 1.1 2007/05/25 12:46:44 dries Exp $
+
+function locale_schema() {
+  $schema['languages'] = array(
+    'fields' => array(
+      'language'  => array('type' => 'varchar', 'length' => 12, 'not null' => TRUE, 'default' => ''),
+      'name'      => array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''),
+      'native'    => array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''),
+      'direction' => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'enabled'   => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'plurals'   => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'formula'   => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
+      'domain'    => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
+      'prefix'    => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
+      'weight'    => array('type' => 'int', 'not null' => TRUE, 'default' => 0)
+    ),
+    'primary key' => array('language'),
+  );
+
+  $schema['locales_source'] = array(
+    'fields' => array(
+      'lid'       => array('type' => 'serial', 'not null' => TRUE),
+      'location'  => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'textgroup' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'source'    => array('type' => 'text', 'mysql_type' => 'blob', 'not null' => TRUE),
+    ),
+    'primary key' => array('lid'),
+    'indexes' => array
+        ('source' => array(array('source', 30))),
+  );
+
+  $schema['locales_target'] = array(
+    'fields' => array(
+      'lid'         => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'translation' => array('type' => 'text', 'mysql_type' => 'blob', 'not null' => TRUE),
+      'language'    => array('type' => 'varchar', 'length' => 12, 'not null' => TRUE, 'default' => ''),
+      'plid'        => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'plural'      => array('type' => 'int', 'not null' => TRUE, 'default' => 0)
+    ),
+    'indexes' => array(
+      'language'   => array('language'),
+      'lid'    => array('lid'),
+      'plid'   => array('plid'),
+      'plural' => array('plural')
+    ),
+  );
+
+  return $schema;
+}
+

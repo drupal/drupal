@@ -1,0 +1,23 @@
+<?php
+// $Id: statistics.schema,v 1.1 2007/05/25 12:46:45 dries Exp $
+
+function statistics_schema() {
+  $schema['accesslog'] = array(
+    'fields' => array(
+      'aid'       => array('type' => 'serial', 'not null' => TRUE),
+      'sid'       => array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''),
+      'title'     => array('type' => 'varchar', 'length' => 255, 'not null' => FALSE),
+      'path'      => array('type' => 'varchar', 'length' => 255, 'not null' => FALSE),
+      'url'       => array('type' => 'varchar', 'length' => 255, 'not null' => FALSE),
+      'hostname'  => array('type' => 'varchar', 'length' => 128, 'not null' => FALSE),
+      'uid'       => array('type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE, 'default' => 0),
+      'timer'     => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+      'timestamp' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0)
+    ),
+    'indexes' => array('accesslog_timestamp' => array('timestamp')),
+    'primary key' => array('aid'),
+  );
+
+  return $schema;
+}
+

@@ -1,0 +1,70 @@
+<?php
+// $Id: aggregator.schema,v 1.1 2007/05/25 12:46:43 dries Exp $
+
+function aggregator_schema() {
+  $schema['aggregator_category'] = array(
+    'fields' => array(
+      'cid'         => array('type' => 'serial', 'not null' => TRUE),
+      'title'       => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'description' => array('type' => 'text', 'not null' => TRUE, 'size' => 'big'),
+      'block'       => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny')
+    ),
+    'primary key' => array('cid'),
+    'unique keys' => array('title' => array('title')),
+  );
+
+  $schema['aggregator_category_feed'] = array(
+    'fields' => array(
+      'fid' => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'cid' => array('type' => 'int', 'not null' => TRUE, 'default' => 0)
+    ),
+    'primary key' => array('fid', 'cid'),
+  );
+
+  $schema['aggregator_category_item'] = array(
+    'fields' => array(
+      'iid' => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'cid' => array('type' => 'int', 'not null' => TRUE, 'default' => 0)
+    ),
+    'primary key' => array('iid', 'cid'),
+  );
+
+  $schema['aggregator_feed'] = array(
+    'fields' => array(
+      'fid'         => array('type' => 'serial', 'not null' => TRUE),
+      'title'       => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'url'         => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'refresh'     => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'checked'     => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'link'        => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'description' => array('type' => 'text', 'not null' => TRUE, 'size' => 'big'),
+      'image'       => array('type' => 'text', 'not null' => TRUE, 'size' => 'big'),
+      'etag'        => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'modified'    => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'block'       => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny')
+    ),
+    'unique keys' => array(
+      'url'  => array('url'),
+      'title' => array('title')
+    ),
+    'primary key' => array('fid'),
+  );
+
+  $schema['aggregator_item'] = array(
+    'fields' => array(
+      'iid'         => array('type' => 'serial', 'not null' => TRUE),
+      'fid'         => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'title'       => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'link'        => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'author'      => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'description' => array('type' => 'text', 'not null' => TRUE, 'size' => 'big'),
+      'timestamp'   => array('type' => 'int', 'not null' => FALSE),
+      'guid'        => array('type' => 'varchar', 'length' => 255, 'not null' => FALSE)
+    ),
+    'indexes' => array('fid' => array('fid')),
+    'primary key' => array('iid'),
+  );
+
+  return $schema;
+}
+

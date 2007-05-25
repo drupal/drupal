@@ -1,45 +1,19 @@
 <?php
-// $Id: menu.install,v 1.2 2007/04/15 14:38:16 dries Exp $
+// $Id: menu.install,v 1.3 2007/05/25 12:46:45 dries Exp $
 
 /**
  * Implementation of hook_install().
  */
 function menu_install() {
-  switch ($GLOBALS['db_type']) {
-    case 'mysql':
-    case 'mysqli':
-      db_query("CREATE TABLE {menu_custom} (
-        path varchar(255) NOT NULL default '' ,
-        disabled int NOT NULL default 0,
-        title varchar(255) NOT NULL default '',
-        description varchar(255) NOT NULL default '',
-        weight int NOT NULL default 0 ,
-        type int NOT NULL default 0 ,
-        admin int NOT NULL default 0,
-        parent varchar(255) NOT NULL default '',
-        PRIMARY KEY (path)
-      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
-      break;
-    case 'pgsql':
-      db_query("CREATE TABLE {menu_custom} (
-        path varchar(255) NOT NULL default '' ,
-        disabled int NOT NULL default 0,
-        title varchar(255) NOT NULL default '',
-        description varchar(255) NOT NULL default '',
-        weight int NOT NULL default 0 ,
-        type int NOT NULL default 0 ,
-        admin int NOT NULL default 0,
-        parent varchar(255) NOT NULL default '',
-        PRIMARY KEY (path)
-      )");
-      break;
-  }
+  // Create tables.
+  drupal_install_schema('menu');
 }
 
 /**
  * Implementation of hook_uninstall().
  */
 function menu_uninstall() {
-  db_query('DROP TABLE {menu_custom}');
+  // Remove tables.
+  drupal_uninstall_schema('menu');
   menu_rebuild();
 }

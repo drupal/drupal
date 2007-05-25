@@ -1,77 +1,20 @@
 <?php
-// $Id: profile.install,v 1.8 2006/11/28 14:37:44 dries Exp $
+// $Id: profile.install,v 1.9 2007/05/25 12:46:45 dries Exp $
 
 /**
  * Implementation of hook_install().
  */
 function profile_install() {
-  switch ($GLOBALS['db_type']) {
-    case 'mysql':
-    case 'mysqli':
-      db_query("CREATE TABLE {profile_fields} (
-        fid int NOT NULL auto_increment,
-        title varchar(255) default NULL,
-        name varchar(128) default NULL,
-        explanation TEXT,
-        category varchar(255) default NULL,
-        page varchar(255) default NULL,
-        type varchar(128) default NULL,
-        weight tinyint DEFAULT '0' NOT NULL,
-        required tinyint DEFAULT '0' NOT NULL,
-        register tinyint DEFAULT '0' NOT NULL,
-        visibility tinyint DEFAULT '0' NOT NULL,
-        autocomplete tinyint DEFAULT '0' NOT NULL,
-        options text,
-        KEY category (category),
-        UNIQUE KEY name (name),
-        PRIMARY KEY (fid)
-      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
-
-      db_query("CREATE TABLE {profile_values} (
-        fid int unsigned default '0',
-        uid int unsigned default '0',
-        value text,
-        KEY uid (uid),
-        KEY fid (fid)
-      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
-      break;
-
-    case 'pgsql':
-      db_query("CREATE TABLE {profile_fields} (
-        fid serial,
-        title varchar(255) default NULL,
-        name varchar(128) default NULL,
-        explanation TEXT default NULL,
-        category varchar(255) default NULL,
-        page varchar(255) default NULL,
-        type varchar(128) default NULL,
-        weight smallint DEFAULT '0' NOT NULL,
-        required smallint DEFAULT '0' NOT NULL,
-        register smallint DEFAULT '0' NOT NULL,
-        visibility smallint DEFAULT '0' NOT NULL,
-        autocomplete smallint DEFAULT '0' NOT NULL,
-        options text,
-        UNIQUE (name),
-        PRIMARY KEY (fid)
-      )");
-      db_query("CREATE INDEX {profile_fields}_category_idx ON {profile_fields} (category)");
-
-      db_query("CREATE TABLE {profile_values} (
-        fid int_unsigned default '0',
-        uid int_unsigned default '0',
-        value text
-      )");
-      db_query("CREATE INDEX {profile_values}_uid_idx ON {profile_values} (uid)");
-      db_query("CREATE INDEX {profile_values}_fid_idx ON {profile_values} (fid)");
-      break;
-  }
+  // Create tables.
+  drupal_install_schema('profile');
 }
 
 /**
  * Implementation of hook_uninstall().
  */
 function profile_uninstall() {
-  db_query('DROP TABLE {profile_fields}');
-  db_query('DROP TABLE {profile_values}');
+  // Remove tables
+  drupal_uninstall_schema('profile');
+
   variable_del('profile_block_author_fields');
 }

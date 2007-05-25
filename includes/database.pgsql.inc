@@ -1,5 +1,5 @@
 <?php
-// $Id: database.pgsql.inc,v 1.45 2007/04/21 18:08:41 dries Exp $
+// $Id: database.pgsql.inc,v 1.46 2007/05/25 12:46:43 dries Exp $
 
 /**
  * @file
@@ -436,4 +436,422 @@ function db_distinct_field($table, $field, $query) {
  * @} End of "ingroup database".
  */
 
+/**
+ * @ingroup schemaapi
+ * @{
+ */
+
+/**
+ * This maps a generic data type in combination with its data size
+ * to the engine-specific data type.
+ */
+function db_type_map() {
+  // Put :normal last so it gets preserved by array_flip.  This makes
+  // it much easier for modules (such as schema.module) to map
+  // database types back into schema types.
+  $map = array(
+    'varchar:normal' => 'varchar',
+
+    'text:tiny' => 'text',
+    'text:small' => 'text',
+    'text:medium' => 'text',
+    'text:big' => 'text',
+    'text:normal' => 'text',
+
+    'int:tiny' => 'smallint',
+    'int:small' => 'smallint',
+    'int:medium' => 'int',
+    'int:big' => 'bigint',
+    'int:normal' => 'int',
+
+    'float:tiny' => 'real',
+    'float:small' => 'real',
+    'float:medium' => 'real',
+    'float:big' => 'double precision',
+    'float:normal' => 'real',
+
+    'numeric:normal'  => 'numeric',
+
+    'blob:big' => 'bytea',
+    'blob:normal' => 'bytea',
+
+    'datetime:normal' => 'timestamp',
+
+    'serial:tiny' => 'serial',
+    'serial:small' => 'serial',
+    'serial:medium' => 'serial',
+    'serial:big' => 'bigserial',
+    'serial:normal' => 'serial',
+  );
+  return $map;
+}
+
+/**
+ *  Generate SQL to create a new table from a Drupal schema definition.
+ *
+ * @param $table
+ *   A valid Drupal table definition array.
+ * @return
+ *   An array of SQL statements to create the table.
+ */
+function db_create_table_sql($table) {
+  $sql_fields = array();
+  foreach ($table['fields'] as $name => $field) {
+    $sql_fields[] = _db_create_field_sql($name, _db_process_field($field));
+  }
+
+  $sql_keys = array();
+  if (isset($table['primary key']) && is_array($table['primary key'])) {
+    $sql_keys[] = 'PRIMARY KEY ('. implode(', ', $table['primary key']) .')';
+  }
+  if (isset($table['unique keys']) && is_array($table['unique keys'])) {
+    foreach ($table['unique keys'] as $keyname => $key) {
+      $sql_keys[] = 'CONSTRAINT {'. $table['name'] .'}_'. $keyname .'_key UNIQUE ('. implode(', ', $key) .')';
+    }
+  }
+
+  $sql = "CREATE TABLE {". $table['name'] ."} (\n\t";
+  $sql .= implode(",\n\t", $sql_fields);
+  if (count($sql_keys) > 0) {
+    $sql .= ",\n\t";
+  }
+  $sql .= implode(",\n\t", $sql_keys);
+  $sql .= "\n)";
+  $statements[] = $sql;
+
+  if (isset($table['indexes']) && is_array($table['indexes'])) {
+    foreach ($table['indexes'] as $keyname => $key) {
+      $statements[] = _db_create_index_sql($table['name'], $keyname, $key);
+    }
+  }
+
+  return $statements;
+}
+
+function _db_create_index_sql($table, $name, $fields) {
+  $query = 'CREATE INDEX {'. $table .'}_'. $name .'_idx ON {'. $table .'} (';
+  $query .= _db_create_key_sql($fields) .')';
+  return $query;
+}
+
+function _db_create_key_sql($fields) {
+  $ret = array();
+  foreach ($fields as $field) {
+    if (is_array($field)) {
+      $ret[] = 'substr('. $field[0] .', 1, '. $field[1] .')';
+    }
+    else {
+      $ret[] = $field;
+    }
+  }
+  return implode(', ', $ret);
+}
+
+/**
+ * Set database-engine specific properties for a field.
+ *
+ * @param $field
+ *   A field description array, as specified in the schema documentation.
+ */
+function _db_process_field($field) {
+  if (!isset($field['size'])) {
+    $field['size'] = 'normal';
+  }
+  // Set the correct database-engine specific datatype.
+  if (!isset($field['pgsql_type'])) {
+    $map = db_type_map();
+    $field['pgsql_type'] = $map[$field['type'] .':'. $field['size']];
+  }
+  if ($field['type'] == 'serial') {
+    unset($field['not null']);
+  }
+  return $field;
+}
+
+/**
+ * Create an SQL string for a field to be used in table creation or alteration.
+ *
+ * Before passing a field out of a schema definition into this function it has
+ * to be processed by _db_process_field().
+ *
+ * @param $name
+ *    Name of the field.
+ * @param $spec
+ *    The field specification, as per the schema data structure format.
+ */
+function _db_create_field_sql($name, $spec) {
+  $sql = $name .' '. $spec['pgsql_type'];
+
+  if ($spec['type'] == 'serial') {
+    unset($spec['not null']);
+  }
+  if (!empty($spec['unsigned'])) {
+    if ($spec['type'] == 'serial') {
+      $sql .= " CHECK ($name >= 0)";
+    }
+    else {
+      $sql .= '_unsigned';
+    }
+  }
+
+  if (!empty($spec['length'])) {
+    $sql .= '('. $spec['length'] .')';
+  }
+  elseif (isset($spec['precision']) && isset($spec['scale'])) {
+    $sql .= '('. $spec['scale'] .', '. $spec['precision'] .')';
+  }
+
+  if (isset($spec['not null']) && $spec['not null']) {
+   $sql .= ' NOT NULL';
+  }
+  if (isset($spec['default'])) {
+    $default = is_string($spec['default']) ? "'". $spec['default'] ."'" : $spec['default'];
+    $sql .= " default $default";
+  }
+
+  return $sql;
+}
+
+/**
+ * Drop a table.
+ *
+ * @param $ret
+ *   Array to which query results will be added.
+ * @param $table
+ *   The table to be dropped.
+ */
+function db_drop_table(&$ret, $table) {
+  $ret[] = update_sql('DROP TABLE {'. $table .'}');
+}
+
+/**
+ * Add a new field to a table.
+ *
+ * @param $ret
+ *   Array to which query results will be added.
+ * @param $table
+ *   Name of the table to be altered.
+ * @param $field
+ *   Name of the field to be added.
+ * @param $spec
+ *   The field specification array, as taken from a schema definition
+ */
+function db_add_field(&$ret, $table, $field, $spec) {
+  $query = 'ALTER TABLE {'. $table .'} ADD COLUMN ';
+  $query .= _db_create_field_sql($field, _db_process_field($spec));
+  $ret[] = update_sql($query);
+}
+
+/**
+ * Drop a field.
+ *
+ * @param $ret
+ *   Array to which query results will be added.
+ * @param $table
+ *   The table to be altered.
+ * @param $field
+ *   The field to be dropped.
+ */
+function db_drop_field(&$ret, $table, $field) {
+  $ret[] = update_sql('ALTER TABLE {'. $table .'} DROP COLUMN '. $field);
+}
+
+/**
+ * Set the default value for a field.
+ *
+ * @param $ret
+ *   Array to which query results will be added.
+ * @param $table
+ *   The table to be altered.
+ * @param $field
+ *   The field to be altered.
+ * @param $default
+ *   Default value to be set. NULL for 'default NULL'.
+ */
+function db_field_set_default(&$ret, $table, $field, $default) {
+  if ($default == NULL) {
+    $default = 'NULL';
+  }
+  else {
+    $default = is_string($default) ? "'$default'" : $default;
+  }
+
+  $ret[] = update_sql('ALTER TABLE {'. $table .'} ALTER COLUMN '. $field .' SET DEFAULT '. $default);
+}
+
+/**
+ * Set a field to have no default value.
+ *
+ * @param $ret
+ *   Array to which query results will be added.
+ * @param $table
+ *   The table to be altered.
+ * @param $field
+ *   The field to be altered.
+ */
+function db_field_set_no_default(&$ret, $table, $field) {
+  $ret[] = update_sql('ALTER TABLE {'. $table .'} ALTER COLUMN '. $field .' DROP DEFAULT');
+}
+
+/**
+ * Add a primary key.
+ *
+ * @param $ret
+ *   Array to which query results will be added.
+ * @param $table
+ *   The table to be altered.
+ * @param $fields
+ *   Fields for the primary key.
+ */
+function db_add_primary_key(&$ret, $table, $fields) {
+  $ret[] = update_sql('ALTER TABLE {'. $table .'} ADD PRIMARY KEY ('.
+    implode(',', $fields) .')');
+}
+
+/**
+ * Drop the primary key.
+ *
+ * @param $ret
+ *   Array to which query results will be added.
+ * @param $table
+ *   The table to be altered.
+ */
+function db_drop_primary_key(&$ret, $table) {
+  $ret[] = update_sql('ALTER TABLE {'. $table .'} DROP CONSTRAINT {'. $table .'}_pkey');
+}
+
+/**
+ * Add a unique key.
+ *
+ * @param $ret
+ *   Array to which query results will be added.
+ * @param $table
+ *   The table to be altered.
+ * @param $name
+ *   The name of the key.
+ * @param $fields
+ *   An array of field names.
+ */
+function db_add_unique_key(&$ret, $table, $name, $fields) {
+  $name = '{'. $table .'}_'. $name .'_key';
+  $ret[] = update_sql('ALTER TABLE {'. $table .'} ADD CONSTRAINT '.
+    $name .' UNIQUE ('. implode(',', $fields) .')');
+}
+
+/**
+ * Drop a unique key.
+ *
+ * @param $ret
+ *   Array to which query results will be added.
+ * @param $table
+ *   The table to be altered.
+ * @param $name
+ *   The name of the key.
+ */
+function db_drop_unique_key(&$ret, $table, $name) {
+  $name = '{'. $table .'}_'. $name .'_key';
+  $ret[] = update_sql('ALTER TABLE {'. $table .'} DROP CONSTRAINT '. $name);
+}
+
+/**
+ * Add an index.
+ *
+ * @param $ret
+ *   Array to which query results will be added.
+ * @param $table
+ *   The table to be altered.
+ * @param $name
+ *   The name of the index.
+ * @param $fields
+ *   An array of field names.
+ */
+function db_add_index(&$ret, $table, $name, $fields) {
+  $ret[] = update_sql(_db_create_index_sql($table, $name, $fields));
+}
+
+/**
+ * Drop an index.
+ *
+ * @param $ret
+ *   Array to which query results will be added.
+ * @param $table
+ *   The table to be altered.
+ * @param $name
+ *   The name of the index.
+ */
+function db_drop_index(&$ret, $table, $name) {
+  $name = '{'. $table .'}_'. $name .'_idx';
+  $ret[] = update_sql('DROP INDEX '. $name);
+}
+
+/**
+ * Change a field definition.
+ *
+ * Remember that changing a field definition involves adding a new field
+ * and dropping an old one. This means that any indices, primary keys and
+ * sequences from serial-type fields are dropped and might need to be
+ * recreated.
+ *
+ * @param $ret
+ *   Array to which query results will be added.
+ * @param $table
+ *   Name of the table.
+ * @param $field
+ *   Name of the field to change.
+ * @param $field_new
+ *   New name for the field (set to the same as $field if you don't want to change the name).
+ * @param $spec
+ *   The field specification for the new field.
+ */
+function db_change_field(&$ret, $table, $field, $field_new, $spec) {
+  $ret[] = update_sql("ALTER TABLE {". $table ."} RENAME $field TO ". $field ."_old");
+  $not_null = isset($spec['not null']) ? $spec['not null'] : FALSE;
+  unset($spec['not null']);
+  db_add_field($ret, $table, "$field_new", $spec);
+  $ret[] = update_sql("UPDATE {". $table ."} SET $field_new = ". $field ."_old");
+  if ($not_null) {
+    $ret[] = update_sql("ALTER TABLE {". $table ."} ALTER $field_new SET NOT NULL");
+  }
+  db_drop_field($ret, $table, $field .'_old');
+}
+
+/**
+ * Update a field definition to match its schema. If the field is
+ * involved in any keys or indexes, recreate them if necessary.
+ *
+ * @param $ret
+ *   Array to which query results will be added.
+ * @param $table
+ *   Name of the table.
+ * @param $field
+ *   Name of the field to update.
+ */
+function db_update_field(&$ret, $table, $field) {
+  $spec = drupal_get_schema($table);
+
+  db_change_field($ret, $table, $field, $field, $spec['fields'][$field]);
+  if (isset($spec['primary key'])) {
+    if (array_search($field, db_field_names($spec['primary key'])) !== FALSE) {
+      db_add_primary_key($ret, $table, $spec['primary key']);
+    }
+  }
+  if (isset($spec['unique keys'])) {
+    foreach ($spec['unique keys'] as $name => $fields) {
+      if (array_search($field, db_field_names($fields)) !== FALSE) {
+        db_add_unique_key($ret, $table, $fields);
+      }
+    }
+  }
+  if (isset($spec['indexes'])) {
+    foreach ($spec['indexes'] as $name => $fields) {
+      if (array_search($field, db_field_names($fields)) !== FALSE) {
+        db_add_index($ret, $table, $fields);
+      }
+    }
+  }
+}
+
+/**
+ * @} End of "ingroup schemaapi".
+ */
 

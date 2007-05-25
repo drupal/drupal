@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.install,v 1.9 2007/05/03 09:51:08 dries Exp $
+// $Id: locale.install,v 1.10 2007/05/25 12:46:44 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -8,82 +8,10 @@ function locale_install() {
   // locales_source.source and locales_target.target are not used as binary
   // fields; non-MySQL database servers need to ensure the field type is text
   // and that LIKE produces a case-sensitive comparison.
-  switch ($GLOBALS['db_type']) {
-    case 'mysql':
-    case 'mysqli':
-      db_query("CREATE TABLE {languages} (
-        language varchar(12) NOT NULL default '',
-        name varchar(64) NOT NULL default '',
-        native varchar(64) NOT NULL default '',
-        direction int NOT NULL default '0',
-        enabled int NOT NULL default '0',
-        plurals int NOT NULL default '0',
-        formula varchar(128) NOT NULL default '',
-        domain varchar(128) NOT NULL default '',
-        prefix varchar(128) NOT NULL default '',
-        weight int NOT NULL default '0',
-        PRIMARY KEY (language)
-      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
 
-      db_query("CREATE TABLE {locales_source} (
-        lid int NOT NULL auto_increment,
-        location varchar(255) NOT NULL default '',
-        textgroup varchar(255) NOT NULL default '',
-        source blob NOT NULL,
-        PRIMARY KEY (lid),
-        KEY source (source(30))
-      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+  // Create tables.
+  drupal_install_schema('locale');
 
-      db_query("CREATE TABLE {locales_target} (
-        lid int NOT NULL default '0',
-        translation blob NOT NULL,
-        language varchar(12) NOT NULL default '',
-        plid int NOT NULL default '0',
-        plural int NOT NULL default '0',
-        KEY lid (lid),
-        KEY lang (language),
-        KEY plid (plid),
-        KEY plural (plural)
-      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
-      break;
-
-    case 'pgsql':
-      db_query("CREATE TABLE {languages} (
-        language varchar(12) NOT NULL default '',
-        name varchar(64) NOT NULL default '',
-        native varchar(64) NOT NULL default '',
-        direction int NOT NULL default '0',
-        enabled int NOT NULL default '0',
-        plurals int NOT NULL default '0',
-        formula varchar(128) NOT NULL default '',
-        domain varchar(128) NOT NULL default '',
-        prefix varchar(128) NOT NULL default '',
-        weight int NOT NULL default '0',
-        PRIMARY KEY (language)
-      )");
-
-      db_query("CREATE TABLE {locales_source} (
-        lid serial,
-        location varchar(255) NOT NULL default '',
-        textgroup varchar(255) NOT NULL default '',
-        source text NOT NULL,
-        PRIMARY KEY (lid)
-      )");
-
-      db_query("CREATE TABLE {locales_target} (
-        lid int NOT NULL default '0',
-        translation text NOT NULL,
-        language varchar(12) NOT NULL default '',
-        plid int NOT NULL default '0',
-        plural int NOT NULL default '0'
-      )");
-      db_query("CREATE INDEX {locales_target}_lid_idx ON {locales_target} (lid)");
-      db_query("CREATE INDEX {locales_target}_language_idx ON {locales_target} (language)");
-      db_query("CREATE INDEX {locales_target}_plid_idx ON {locales_target} (plid)");
-      db_query("CREATE INDEX {locales_target}_plural_idx ON {locales_target} (plural)");
-      db_query("CREATE INDEX {locales_source}_source_idx ON {locales_source} (source)");
-      break;
-  }
   db_query("INSERT INTO {languages} (language, name, native, direction, enabled, weight) VALUES ('en', 'English', 'English', '0', '1', '0')");
 }
 
@@ -171,7 +99,6 @@ function locale_update_6002() {
  * Implementation of hook_uninstall().
  */
 function locale_uninstall() {
-  db_query('DROP TABLE {languages}');
-  db_query('DROP TABLE {locales_source}');
-  db_query('DROP TABLE {locales_target}');
+  // Remove tables.
+  drupal_uninstall_schema('locale');
 }

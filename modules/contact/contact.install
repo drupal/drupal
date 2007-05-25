@@ -1,44 +1,21 @@
 <?php
-// $Id: contact.install,v 1.6 2007/01/02 05:30:29 drumm Exp $
+// $Id: contact.install,v 1.7 2007/05/25 12:46:44 dries Exp $
 
 /**
  * Implementation of hook_install().
  */
 function contact_install() {
-  switch ($GLOBALS['db_type']) {
-    case 'mysql':
-    case 'mysqli':
-      db_query("CREATE TABLE {contact} (
-        cid int unsigned NOT NULL auto_increment,
-        category varchar(255) NOT NULL default '',
-        recipients longtext NOT NULL,
-        reply longtext NOT NULL,
-        weight tinyint NOT NULL default '0',
-        selected tinyint NOT NULL default '0',
-        PRIMARY KEY (cid),
-        UNIQUE KEY category (category)
-      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
-      break;
-    case 'pgsql':
-      db_query("CREATE TABLE {contact} (
-        cid serial CHECK (cid >= 0),
-        category varchar(255) NOT NULL default '',
-        recipients text NOT NULL default '',
-        reply text NOT NULL default '',
-        weight smallint NOT NULL default '0',
-        selected smallint NOT NULL default '0',
-        PRIMARY KEY (cid),
-        UNIQUE (category)
-      )");
-      break;
-  }
+  // Create tables.
+  drupal_install_schema('contact');
 }
 
 /**
  * Implementation of hook_uninstall().
  */
 function contact_uninstall() {
-  db_query('DROP TABLE {contact}');
+  // Remove tables.
+  drupal_uninstall_schema('contact');
+
   variable_del('contact_default_status');
   variable_del('contact_form_information');
   variable_del('contact_hourly_threshold');

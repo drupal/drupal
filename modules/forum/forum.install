@@ -1,40 +1,21 @@
 <?php
-// $Id: forum.install,v 1.6 2006/09/01 07:40:08 drumm Exp $
+// $Id: forum.install,v 1.7 2007/05/25 12:46:44 dries Exp $
 
 /**
  * Implementation of hook_install().
  */
 function forum_install() {
-  switch ($GLOBALS['db_type']) {
-    case 'mysql':
-    case 'mysqli':
-      db_query("CREATE TABLE {forum} (
-        nid int unsigned NOT NULL default '0',
-        vid int unsigned NOT NULL default '0',
-        tid int unsigned NOT NULL default '0',
-        PRIMARY KEY (vid),
-        KEY nid (nid),
-        KEY tid (tid)
-      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
-      break;
-    case 'pgsql':
-      db_query("CREATE TABLE {forum} (
-        nid int_unsigned NOT NULL default '0',
-        vid int_unsigned NOT NULL default '0',
-        tid int_unsigned NOT NULL default '0',
-        PRIMARY KEY (vid)
-      )");
-      db_query("CREATE INDEX {forum}_nid_idx ON {forum} (nid)");
-      db_query("CREATE INDEX {forum}_tid_idx ON {forum} (tid)");
-      break;
-  }
+  // Create tables.
+  drupal_install_schema('forum');
 }
 
 /**
  * Implementation of hook_uninstall().
  */
 function forum_uninstall() {
-  db_query('DROP TABLE {forum}');
+  // Remove tables.
+  drupal_uninstall_schema('forum');
+
   db_query("DELETE FROM {node} WHERE type = 'forum'");
   variable_del('forum_containers');
   variable_del('forum_nav_vocabulary');

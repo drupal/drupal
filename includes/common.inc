@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.641 2007/05/15 20:19:47 goba Exp $
+// $Id: common.inc,v 1.642 2007/05/25 12:46:43 dries Exp $
 
 /**
  * @file
@@ -2512,6 +2512,160 @@ function drupal_common_themes() {
     ),
   );
 }
+
+/**
+ * @ingroup schemaapi
+ * @{
+ */
+
+/**
+ * Get the schema defintion of a table, or the whole database schema.
+ * The returned schema will include any modifications made by any
+ * module that implements hook_schema_alter().
+ *
+ * @param $name
+ *   The name of the table. If not given, the schema of all tables is returned.
+ * @param $rebuild
+ *   If true, the schema will be rebuilt instead of retreived from the cache.
+ */
+function drupal_get_schema($name = NULL, $rebuild = FALSE) {
+  static $schema = array();
+
+  if (empty($schema) || $rebuild) {
+    // Try to load the schema from cache.
+    if (!$rebuild && $cached = cache_get('schema')) {
+      $schema = $cached->data;
+    }
+    // Otherwise, rebuild the schema cache.
+    else {
+      // Load the .schema files.
+      module_load_all_includes('schema');
+
+      // Invoke hook_schema for all modules.
+      foreach (module_implements('schema') as $module) {
+        $current = module_invoke($module, 'schema');
+        _drupal_initialize_schema($module, $current);
+        $schema = array_merge($current, $schema);
+      }
+
+      drupal_alter('schema', $schema);
+      cache_set('schema', $schema);
+    }
+  }
+
+  if (!isset($name)) {
+    return $schema;
+  }
+  elseif (isset($schema[$name])) {
+    return $schema[$name];
+  }
+  else {
+    return FALSE;
+  }
+}
+
+/**
+ * Create all tables that a module defines in its hook_schema().
+ *
+ * Note: This function does not pass the module's schema through
+ * hook_schema_alter().  The module's tables will be created exactly
+ * as the module defines them.
+ *
+ * @param $module
+ *  The module for which the tables will be created.
+ */
+function drupal_install_schema($module) {
+  $schema = drupal_get_schema_unprocessed($module);
+  _drupal_initialize_schema($module, $schema);
+
+  $ret = array();
+  foreach ($schema as $table) {
+    db_create_table($ret, $table);
+  }
+}
+
+/**
+ * Remove all tables that a module defines in its hook_schema().
+ *
+ * Note: This function does not pass the module's schema through
+ * hook_schema_alter().  The module's tables will be created exactly
+ * as the module defines them.
+ *
+ * @param $module
+ *  The module for which the tables will be removed.
+ */
+function drupal_uninstall_schema($module) {
+  $schema = drupal_get_schema_unprocessed($module);
+  _drupal_initialize_schema($module, $schema);
+
+  $ret = array();
+  foreach ($schema as $table) {
+    db_drop_table($ret, $table['name']);
+  }
+}
+
+/**
+ * Returns the unprocessed and unaltered version of a module's schema.
+ *
+ * Use this function only if you explicitly need the original
+ * specification of a schema, as it was defined in a module's
+ * hook_schema(). No additional default values will be set,
+ * hook_schema_alter() is not invoked and these unprocessed
+ * definitions won't be cached.
+ *
+ * This function can be used to retrieve a schema specification in
+ * hook_schema(), so it allows you to derive your tables from existing
+ * specifications.
+ *
+ * It is also used by drupal_install_schema() and
+ * drupal_uninstall_schema() to ensure that a module's tables are
+ * created exactly as specified without any changes introduced by a
+ * module that implements hook_schema_alter().
+ *
+ * @param $module
+ *   The module to which the table belongs.
+ * @param $table
+ *   The name of the table. If not given, the module's complete schema
+ *   is returned.
+ */
+function drupal_get_schema_unprocessed($module, $table = NULL) {
+  // Load the .schema file.
+  module_load_include('schema', $module);
+  $schema = module_invoke($module, 'schema');
+
+  if (!is_null($table) && isset($schema[$table])) {
+    return $schema[$table];
+  }
+  else {
+    return $schema;
+  }
+}
+
+/**
+ * Fill in required default values for table definitions returned by
+ * hook_schema().
+ *
+ * @param $module
+ *   The module for which hook_schema() was invoked.
+ * @param $schema
+ *   The schema definition array as it was returned by the module's
+ *   hook_schema().
+ */
+function _drupal_initialize_schema($module, &$schema) {
+  // Set the name and module key for all tables.
+  foreach ($schema as $name => $table) {
+    if (empty($table['module'])) {
+      $schema[$name]['module'] = $module;
+    }
+    if (!isset($table['name'])) {
+      $schema[$name]['name'] = $name;
+    }
+  }
+}
+
+/**
+ * @} End of "ingroup schemaapi".
+ */
 
 /**
  * Parse Drupal info file format.

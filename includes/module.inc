@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.101 2007/05/07 11:59:40 dries Exp $
+// $Id: module.inc,v 1.102 2007/05/25 12:46:43 dries Exp $
 
 /**
  * @file
@@ -189,9 +189,42 @@ function module_load_install($module) {
   // Make sure the installation API is available
   include_once './includes/install.inc';
 
-  $install_file = './'. drupal_get_path('module', $module) .'/'. $module .'.install';
-  if (is_file($install_file)) {
-    include_once $install_file;
+  module_load_include('install', $module);
+}
+
+/**
+ * Load a module include file.
+ *
+ * @param $type
+ *   The include file's type (file extension).
+ * @param $module
+ *   The module to which the include file belongs.
+ * @param $name
+ *   Optionally, specify the file name. If not set, the module's name is used.
+ */
+function module_load_include($type, $module, $name = NULL) {
+  if (empty($name)) {
+    $name = $module;
+  }
+
+  $file = './'. drupal_get_path('module', $module) ."/$name.$type";
+
+  if (is_file($file)) {
+    require_once $file;
+  }
+  else {
+    return FALSE;
+  }
+}
+
+/**
+ * Load an include file for each of the modules that have been enabled in
+ * the system table.
+ */
+function module_load_all_includes($type, $name = NULL) {
+  $modules = module_list();
+  foreach ($modules as $module) {
+    module_load_include($type, $module, $name);
   }
 }
 

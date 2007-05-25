@@ -1,67 +1,21 @@
 <?php
-// $Id: drupal.install,v 1.5 2006/09/01 07:40:08 drumm Exp $
+// $Id: drupal.install,v 1.6 2007/05/25 12:46:44 dries Exp $
 
 /**
  * Implementation of hook_install().
  */
 function drupal_install() {
-  switch ($GLOBALS['db_type']) {
-    case 'mysql':
-    case 'mysqli':
-      db_query("CREATE TABLE {client} (
-        cid int unsigned NOT NULL auto_increment,
-        link varchar(255) NOT NULL default '',
-        name varchar(128) NOT NULL default '',
-        mail varchar(128) NOT NULL default '',
-        slogan longtext NOT NULL,
-        mission longtext NOT NULL,
-        users int NOT NULL default '0',
-        nodes int NOT NULL default '0',
-        version varchar(35) NOT NULL default'',
-        created int NOT NULL default '0',
-        changed int NOT NULL default '0',
-        PRIMARY KEY (cid)
-      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
-
-      db_query("CREATE TABLE {client_system} (
-        cid int NOT NULL default '0',
-        name varchar(255) NOT NULL default '',
-        type varchar(255) NOT NULL default '',
-        PRIMARY KEY (cid,name)
-      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
-      break;
-    case 'pgsql':
-      db_query("CREATE TABLE {client} (
-        cid serial CHECK (cid >= 0),
-        link varchar(255) NOT NULL default '',
-        name varchar(128) NOT NULL default '',
-        mail varchar(128) NOT NULL default '',
-        slogan text NOT NULL,
-        mission text NOT NULL,
-        users int NOT NULL default '0',
-        nodes int NOT NULL default '0',
-        version varchar(35) NOT NULL default'',
-        created int NOT NULL default '0',
-        changed int NOT NULL default '0',
-        PRIMARY KEY (cid)
-      )");
-
-      db_query("CREATE TABLE {client_system} (
-        cid int NOT NULL default '0',
-        name varchar(255) NOT NULL default '',
-        type varchar(255) NOT NULL default '',
-        PRIMARY KEY (cid,name)
-      )");
-      break;
-  }
+  // Create tables.
+  drupal_install_schema('drupal');
 }
 
 /**
  * Implementation of hook_uninstall().
  */
 function drupal_uninstall() {
-  db_query('DROP TABLE {client}');
-  db_query('DROP TABLE {client_system}');
+  // Remove tables.
+  drupal_uninstall_schema('drupal');
+
   variable_del('drupal_authentication_service');
   variable_del('drupal_directory');
   variable_del('drupal_register');

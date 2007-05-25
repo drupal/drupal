@@ -1,0 +1,49 @@
+<?php
+// $Id: block.schema,v 1.1 2007/05/25 12:46:43 dries Exp $
+
+function block_schema() {
+  $schema['blocks'] = array(
+    'fields' => array(
+      'bid'        => array('type' => 'serial', 'not null' => TRUE),
+      'module'     => array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''),
+      'delta'      => array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => '0'),
+      'theme'      => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'status'     => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny'),
+      'weight'     => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny'),
+      'region'     => array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => 'left'),
+      'custom'     => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny'),
+      'throttle'   => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny'),
+      'visibility' => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny'),
+      'pages'      => array('type' => 'text', 'not null' => TRUE),
+      'title'      => array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => '')
+    ),
+    'primary key' => array('bid'),
+  );
+
+  $schema['blocks_roles'] = array(
+    'fields' => array(
+      'module' => array('type' => 'varchar', 'length' => 64, 'not null' => TRUE),
+      'delta'  => array('type' => 'varchar', 'length' => 32, 'not null' => TRUE),
+      'rid'    => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE)
+    ),
+    'primary key' => array(
+      'module',
+      'delta',
+      'rid'
+    ),
+  );
+
+  $schema['boxes'] = array(
+    'fields' => array(
+      'bid'    => array('type' => 'serial', 'not null' => TRUE),
+      'body'   => array('type' => 'text', 'not null' => FALSE, 'size' => 'big'),
+      'info'   => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
+      'format' => array('type' => 'int', 'size' => 'small', 'not null' => TRUE, 'default' => 0)
+    ),
+    'unique keys' => array('info' => array('info')),
+    'primary key' => array('bid'),
+  );
+
+  return $schema;
+}
+

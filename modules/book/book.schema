@@ -1,0 +1,21 @@
+<?php
+// $Id: book.schema,v 1.1 2007/05/25 12:46:43 dries Exp $
+
+function book_schema() {
+  $schema['book'] = array(
+    'fields' => array(
+      'vid'    => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+      'nid'    => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+      'parent' => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'weight' => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny')
+    ),
+    'indexes' => array(
+      'nid'    => array('nid'),
+      'parent' => array('parent')
+    ),
+    'primary key' => array('vid'),
+  );
+
+  return $schema;
+}
+

@@ -1,77 +1,18 @@
 <?php
-// $Id: poll.install,v 1.7 2006/09/01 07:40:08 drumm Exp $
+// $Id: poll.install,v 1.8 2007/05/25 12:46:45 dries Exp $
 
 /**
  * Implementation of hook_install().
  */
 function poll_install() {
-  switch ($GLOBALS['db_type']) {
-    case 'mysql':
-    case 'mysqli':
-      db_query("CREATE TABLE {poll} (
-        nid int unsigned NOT NULL default '0',
-        runtime int NOT NULL default '0',
-        active int unsigned NOT NULL default '0',
-        PRIMARY KEY (nid)
-      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
-
-      db_query("CREATE TABLE {poll_votes} (
-        nid int unsigned NOT NULL,
-        uid int unsigned NOT NULL default 0,
-        chorder int NOT NULL default -1,
-        hostname varchar(128) NOT NULL default '',
-        INDEX (nid),
-        INDEX (uid),
-        INDEX (hostname)
-      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
-
-      db_query("CREATE TABLE {poll_choices} (
-        chid int unsigned NOT NULL auto_increment,
-        nid int unsigned NOT NULL default '0',
-        chtext varchar(128) NOT NULL default '',
-        chvotes int NOT NULL default '0',
-        chorder int NOT NULL default '0',
-        PRIMARY KEY (chid),
-        KEY nid (nid)
-      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
-      break;
-
-    case 'pgsql':
-      db_query("CREATE TABLE {poll} (
-        nid int_unsigned NOT NULL default '0',
-        runtime int NOT NULL default '0',
-        active int_unsigned NOT NULL default '0',
-        PRIMARY KEY (nid)
-      )");
-
-      db_query("CREATE TABLE {poll_votes} (
-        nid int_unsigned NOT NULL,
-        uid int_unsigned NOT NULL default 0,
-        chorder int NOT NULL default -1,
-        hostname varchar(128) NOT NULL default ''
-      )");
-      db_query("CREATE INDEX {poll_votes}_nid_idx ON {poll_votes} (nid)");
-      db_query("CREATE INDEX {poll_votes}_uid_idx ON {poll_votes} (uid)");
-      db_query("CREATE INDEX {poll_votes}_hostname_idx ON {poll_votes} (hostname)");
-
-      db_query("CREATE TABLE {poll_choices} (
-        chid serial CHECK (chid >= 0),
-        nid int_unsigned NOT NULL default '0',
-        chtext varchar(128) NOT NULL default '',
-        chvotes int NOT NULL default '0',
-        chorder int NOT NULL default '0',
-        PRIMARY KEY (chid)
-      )");
-      db_query("CREATE INDEX {poll_choices}_nid_idx ON {poll_choices} (nid)");
-      break;
-  }
+  // Create tables.
+  drupal_install_schema('poll');
 }
 
 /**
  * Implementation of hook_uninstall().
  */
 function poll_uninstall() {
-  db_query('DROP TABLE {poll}');
-  db_query('DROP TABLE {poll_votes}');
-  db_query('DROP TABLE {poll_choices}');
+  // Remove tables.
+  drupal_uninstall_schema('poll');
 }

@@ -1,43 +1,12 @@
 <?php
-// $Id: statistics.install,v 1.7 2006/11/07 22:27:07 dries Exp $
+// $Id: statistics.install,v 1.8 2007/05/25 12:46:45 dries Exp $
 
 /**
  * Implementation of hook_install().
  */
 function statistics_install() {
-  switch ($GLOBALS['db_type']) {
-    case 'mysql':
-    case 'mysqli':
-      db_query("CREATE TABLE {accesslog} (
-        aid int NOT NULL auto_increment,
-        sid varchar(64) NOT NULL default '',
-        title varchar(255) default NULL,
-        path varchar(255) default NULL,
-        url varchar(255) default NULL,
-        hostname varchar(128) default NULL,
-        uid int unsigned default '0',
-        timer int unsigned NOT NULL default '0',
-        timestamp int unsigned NOT NULL default '0',
-        KEY accesslog_timestamp (timestamp),
-        PRIMARY KEY (aid)
-      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
-      break;
-    case 'pgsql':
-      db_query("CREATE TABLE {accesslog} (
-        aid serial,
-        sid varchar(64) NOT NULL default '',
-        title varchar(255) default NULL,
-        path varchar(255) default NULL,
-        url varchar(255) default NULL,
-        hostname varchar(128) default NULL,
-        uid int_unsigned default '0',
-        timer int_unsigned NOT NULL default '0',
-        timestamp int_unsigned NOT NULL default '0',
-        PRIMARY KEY (aid)
-      )");
-      db_query("CREATE INDEX {accesslog}_accesslog_timestamp_idx ON {accesslog} (timestamp)");
-      break;
-  }
+  // Create tables.
+  drupal_install_schema('statistics');
 }
 
 /**
@@ -63,7 +32,9 @@ function statistics_update_1000() {
  * Implementation of hook_uninstall().
  */
 function statistics_uninstall() {
-  db_query('DROP TABLE {accesslog}');
+  // Remove tables.
+  drupal_uninstall_schema('statistics');
+
   variable_del('statistics_count_content_views');
   variable_del('statistics_enable_access_log');
   variable_del('statistics_flush_accesslog_timer');

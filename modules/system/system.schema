@@ -1,0 +1,139 @@
+<?php
+// $Id: system.schema,v 1.1 2007/05/25 12:46:45 dries Exp $
+
+function system_schema() {
+  $schema['batch'] = array(
+    'fields' => array(
+      'bid'       => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
+      'token'     => array('type' => 'varchar', 'length' => 64, 'not null' => TRUE),
+      'timestamp' => array('type' => 'int', 'not null' => TRUE),
+      'batch'     => array('type' => 'text', 'not null' => FALSE, 'size' => 'big')
+    ),
+    'primary key' => array('bid'),
+    'indexes' => array('token' => array('token')),
+  );
+
+  $schema['cache'] = array(
+    'fields' => array(
+      'cid'        => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'data'       => array('type' => 'blob', 'not null' => FALSE, 'size' => 'big'),
+      'expire'     => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'created'    => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'headers'    => array('type' => 'text', 'not null' => FALSE),
+      'serialized' => array('type' => 'int', 'size' => 'small', 'not null' => TRUE, 'default' => 0)
+    ),
+    'indexes' => array('expire' => array('expire')),
+    'primary key' => array('cid'),
+  );
+
+  $schema['cache_form'] = $schema['cache'];
+  $schema['cache_page'] = $schema['cache'];
+
+  $schema['files'] = array(
+    'fields' => array(
+      'fid'      => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
+      'nid'      => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+      'filename' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'filepath' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'filemime' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'filesize' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0)
+    ),
+    'indexes' => array('nid' => array('nid')),
+    'primary key' => array('fid'),
+  );
+
+  $schema['file_revisions'] = array(
+    'fields' => array(
+      'fid'         => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+      'vid'         => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+      'description' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'list'        => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0, 'size' => 'tiny')
+    ),
+    'primary key' => array('fid', 'vid'),
+    'indexes' => array('vid' => array('vid')),
+  );
+
+  $schema['flood'] = array(
+    'fields' => array(
+      'fid'       => array('type' => 'serial', 'not null' => TRUE),
+      'event'     => array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''),
+      'hostname'  => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
+      'timestamp' => array('type' => 'int', 'not null' => TRUE, 'default' => 0)
+    ),
+    'primary key' => array('fid'),
+  );
+
+  $schema['history'] = array(
+    'fields' => array(
+      'uid'       => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'nid'       => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'timestamp' => array('type' => 'int', 'not null' => TRUE, 'default' => 0)
+    ),
+    'primary key' => array('uid', 'nid'),
+  );
+
+  $schema['sequences'] = array(
+    'fields' => array(
+      'name' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'id'   => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0)
+    ),
+    'primary key' => array('name'),
+  );
+
+  $schema['sessions'] = array(
+    'fields' => array(
+      'uid'       => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
+      'sid'       => array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''),
+      'hostname'  => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
+      'timestamp' => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'cache'     => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'session'   => array('type' => 'text', 'not null' => FALSE, 'size' => 'big')
+    ),
+    'primary key' => array('sid'),
+    'indexes' => array(
+      'timestamp' => array('timestamp'),
+      'uid'       => array('uid')
+    ),
+  );
+
+  $schema['system'] = array(
+    'fields' => array(
+      'filename'       => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'name'           => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'type'           => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'owner'          => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'status'         => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'throttle'       => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny'),
+      'bootstrap'      => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'schema_version' => array('type' => 'int', 'not null' => TRUE, 'default' => -1, 'size' => 'small'),
+      'weight'         => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'info'           => array('type' => 'text', 'not null' => FALSE)
+    ),
+    'primary key' => array('filename'),
+    'indexes' => array('weight' => array('weight')),
+  );
+
+  $schema['url_alias'] = array(
+    'fields' => array(
+      'pid'      => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
+      'src'      => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
+      'dst'      => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
+      'language' => array('type' => 'varchar', 'length' => 12, 'not null' => TRUE, 'default' => '')
+    ),
+    'unique keys' => array('dst_language' => array('dst', 'language')),
+    'primary key' => array('pid'),
+    'indexes' => array('src' => array('src')),
+  );
+
+  $schema['variable'] = array(
+    'fields' => array(
+      'name'     => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
+      'value'    => array('type' => 'text', 'not null' => TRUE, 'size' => 'big'),
+      'language' => array('type' => 'varchar', 'length' => 12, 'not null' => TRUE, 'default' => '')
+    ),
+    'primary key' => array('name', 'language'),
+  );
+
+  return $schema;
+}
+
