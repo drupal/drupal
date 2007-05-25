@@ -1509,7 +1509,7 @@ function user_edit_form($uid, $edit, $register = FALSE) {
 function _user_edit_validate($uid, &$edit) {
   $user = user_load(array('uid' => $uid));
   // Validate the username:
-  if (user_access('change own username') || user_access('administer users') || arg(1) == 'register') {
+  if (user_access('change own username') || user_access('administer users') || !$user->uid) {
     if ($error = user_validate_name($edit['name'])) {
       form_set_error('name', $error);
     }
