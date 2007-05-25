@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.196 2007/05/16 07:56:19 dries Exp $
+// $Id: form.inc,v 1.197 2007/05/25 15:39:34 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -74,6 +74,7 @@ function drupal_get_form($form_id) {
     // object, we're hitting the form for the first time and we need
     // to build it from scratch.
     if (!isset($form)) {
+      $form_state['post'] = $_POST;
       $form = call_user_func_array('drupal_retrieve_form', $args);
       $form_build_id = md5(mt_rand());
       $form['#build_id'] = $form_build_id;
@@ -81,6 +82,7 @@ function drupal_get_form($form_id) {
       if (!empty($form['#cache'])) {
         cache_set('form_'. $form_build_id, $form, 'cache_form', $expire);
       }
+      unset($form_state['post']);
     }
     $form['#post'] = $_POST;
 
