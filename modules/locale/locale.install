@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.install,v 1.10 2007/05/25 12:46:44 dries Exp $
+// $Id: locale.install,v 1.11 2007/05/25 15:47:56 goba Exp $
 
 /**
  * Implementation of hook_install().
@@ -82,10 +82,10 @@ function locale_update_6002() {
   switch ($GLOBALS['db_type']) {
     case 'mysql':
     case 'mysqli':
-      db_add_column($ret, 'locales_source', 'textgroup', 'varchar(255)', array('default' => "''", 'not null' => TRUE));
+      $ret[] = update_sql("ALTER TABLE {locales_source} ADD textgroup varchar(255) NOT NULL default ''");
       break;
     case 'pgsql':
-      $ret[] = update_sql("ALTER TABLE {locales_source} ADD textgroup varchar(255) NOT NULL default ''");
+      db_add_column($ret, 'locales_source', 'textgroup', 'varchar(255)', array('default' => "''", 'not null' => TRUE));
       break;
   }
   return $ret;
