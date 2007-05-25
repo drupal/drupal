@@ -1,5 +1,5 @@
 <?php
-// $Id: session.inc,v 1.39 2007/04/27 07:47:38 dries Exp $
+// $Id: session.inc,v 1.40 2007/05/25 15:04:41 dries Exp $
 
 /**
  * @file
@@ -69,11 +69,11 @@ function sess_write($key, $value) {
     // and gives more useful statistics. We can't eliminate anonymous session
     // table rows without breaking throttle module and "Who's Online" block.
     if ($user->uid || $value || count($_COOKIE)) {
-      db_query("INSERT INTO {sessions} (sid, uid, cache, hostname, session, timestamp) VALUES ('%s', %d, %d, '%s', '%s', %d)", $key, $user->uid, isset($user->cache) ? $user->cache : '', $_SERVER["REMOTE_ADDR"], $value, time());
+      db_query("INSERT INTO {sessions} (sid, uid, cache, hostname, session, timestamp) VALUES ('%s', %d, %d, '%s', '%s', %d)", $key, $user->uid, isset($user->cache) ? $user->cache : '', ip_address(), $value, time());
     }
   }
   else {
-    db_query("UPDATE {sessions} SET uid = %d, cache = %d, hostname = '%s', session = '%s', timestamp = %d WHERE sid = '%s'", $user->uid, isset($user->cache) ? $user->cache : '', $_SERVER["REMOTE_ADDR"], $value, time(), $key);
+    db_query("UPDATE {sessions} SET uid = %d, cache = %d, hostname = '%s', session = '%s', timestamp = %d WHERE sid = '%s'", $user->uid, isset($user->cache) ? $user->cache : '', ip_address(), $value, time(), $key);
 
     // TODO: this can be an expensive query. Perhaps only execute it every x minutes. Requires investigation into cache expiration.
     if ($user->uid) {

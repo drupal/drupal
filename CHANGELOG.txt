@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.203 2007/05/22 07:42:36 dries Exp $
+// $Id: CHANGELOG.txt,v 1.204 2007/05/25 15:04:41 dries Exp $
 
 Drupal 6.0, xxxx-xx-xx (development version)
 ----------------------
@@ -11,6 +11,7 @@ Drupal 6.0, xxxx-xx-xx (development version)
 - Added optional e-mail notifications when user are approved, blocked, or deleted.
 - Added versioning support to node terms.
 - Made it easier to theme the forum overview page.
+- Made Drupal work correctly when running behind a reverse proxy like Squid or Pound.
 - Drupal works with error reporting set to E_ALL.
 - Added scripts/drupal.sh to execute Drupal code from the command line. Useful to use Drupal as a framework to build command-line tools.
 - Made signature support optional and made it possible to theme signatures.

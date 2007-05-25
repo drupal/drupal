@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.165 2007/05/08 16:36:55 dries Exp $
+// $Id: bootstrap.inc,v 1.166 2007/05/25 15:04:41 dries Exp $
 
 /**
  * @file
@@ -703,7 +703,7 @@ function watchdog($type, $message, $variables = array(), $severity = WATCHDOG_NO
     'user'        => $user,
     'request_uri' => $base_root . request_uri(),
     'referer'     => referer_uri(),
-    'ip'          => $_SERVER['REMOTE_ADDR'],
+    'ip'          => ip_address(),
     'timestamp'   => time(),
     );
 
@@ -819,7 +819,7 @@ function drupal_is_denied($type, $mask) {
 function drupal_anonymous_user($session = '') {
   $user = new stdClass();
   $user->uid = 0;
-  $user->hostname = $_SERVER['REMOTE_ADDR'];
+  $user->hostname = ip_address();
   $user->roles = array();
   $user->roles[DRUPAL_ANONYMOUS_RID] = 'anonymous user';
   $user->session = $session;
@@ -881,9 +881,9 @@ function _drupal_bootstrap($phase) {
 
     case DRUPAL_BOOTSTRAP_ACCESS:
       // Deny access to hosts which were banned - t() is not yet available.
-      if (drupal_is_denied('host', $_SERVER['REMOTE_ADDR'])) {
+      if (drupal_is_denied('host', ip_address())) {
         header('HTTP/1.1 403 Forbidden');
-        print 'Sorry, '. $_SERVER['REMOTE_ADDR'] .' has been banned.';
+        print 'Sorry, '. ip_address() .' has been banned.';
         exit();
       }
       break;
@@ -1055,4 +1055,33 @@ function language_list($field = 'language', $reset = FALSE) {
  */
 function language_default() {
   return variable_get('language_default', (object) array('language' => 'en', 'name' => 'English', 'native' => 'English', 'direction' => 0, 'enabled' => 1, 'plurals' => 0, 'formula' => '', 'domain' => '', 'prefix' => '', 'weight' => 0));
+}
+
+
+/**
+ * If Drupal is behind a reverse proxy, we use the X-Forwarded-For header
+ * instead of $_SERVER['REMOTE_ADDR'], which would be the IP address
+ * of the proxy server, and not the client's.
+ *
+ * @return
+ *   IP address of client machine, adjusted for reverse proxy.
+ */
+function ip_address() {
+  static $remote_ip;
+
+  if ($remote_ip) {
+    // We have been here before, so just return the one we processed before
+    return $remote_ip;
+  }
+  else {
+    $remote_ip = $_SERVER['REMOTE_ADDR'];
+    if (variable_get('reverse_proxy', FALSE) && array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER)) {
+      $ip_array = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+      // If there are several arguments, the leftmost one is the farthest client
+      $remote_ip = $ip_array[0];
+    }
+  }
+  // Store the satnized version in the static variable
+  $remote_ip = check_plain($remote_ip);
+  return $remote_ip;
 }

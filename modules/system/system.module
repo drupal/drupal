@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.481 2007/05/23 08:00:46 dries Exp $
+// $Id: system.module,v 1.482 2007/05/25 15:04:42 dries Exp $
 
 /**
  * @file
@@ -704,6 +704,20 @@ function system_performance_settings() {
     '#disabled' => !$is_writable,
     '#options' => array(t('Disabled'), t('Enabled')),
     '#description' => t("Some Drupal modules include their own CSS files. When these modules are enabled, each module's CSS file adds an additional HTTP request to the page, which can increase the load time of each page. These HTTP requests can also slightly increase server load. It is recommended to only turn this option on when your site is in production, as it can interfere with theme development. This option is disabled if you have not set up your files directory, or if your download method is set to private."),
+  );
+
+  $form['reverse_proxy'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Reverse proxy'),
+    '#description' => t('Proper extraction of client IP addresses when Drupal is behind a reverse proxy.'),
+  );
+
+  $form['reverse_proxy']['reverse_proxy'] = array(
+    '#type' => 'radios',
+    '#title' => t('Reverse proxy'),
+    '#default_value' => variable_get('reverse_proxy', FALSE),
+    '#options' => array(t('Disabled'), t('Enabled')),
+    '#description' => t('Enable this setting to determine the correct IP address of the remote client by examining information stored in the X-Forwarded-For headers. X-Forwarded-For headers are a standard mechanism for identifying client systems connecting through a reverse proxy server, such as Squid or Pound. Reverse proxy servers are often used to enhance the performance of heavily visited sites and may also provide other site caching, security or encryption benefits. If this Drupal installation operates behind a reverse proxy, this setting should be enabled so that correct IP address information is captured in Drupal\'s session management, logging, statistics and access management systems; if you are unsure about this setting, do not have a reverse proxy, or Drupal operates in a shared hosting environment, this setting should be set to disabled.'),
   );
 
   $form['#submit'][] = 'drupal_clear_css_cache';

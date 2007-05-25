@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.228 2007/05/14 13:43:36 dries Exp $
+// $Id: poll.module,v 1.229 2007/05/25 15:04:42 dries Exp $
 
 /**
  * @file
@@ -308,7 +308,7 @@ function poll_load($node) {
       $result = db_fetch_object(db_query('SELECT chorder FROM {poll_votes} WHERE nid = %d AND uid = %d', $node->nid, $user->uid));
     }
     else {
-      $result = db_fetch_object(db_query("SELECT chorder FROM {poll_votes} WHERE nid = %d AND hostname = '%s'", $node->nid, $_SERVER['REMOTE_ADDR']));
+      $result = db_fetch_object(db_query("SELECT chorder FROM {poll_votes} WHERE nid = %d AND hostname = '%s'", $node->nid, ip_address()));
     }
     if (isset($result->chorder)) {
       $poll->vote = $result->chorder;
@@ -534,7 +534,7 @@ function poll_vote(&$node) {
           db_query('INSERT INTO {poll_votes} (nid, chorder, uid) VALUES (%d, %d, %d)', $node->nid, $choice, $user->uid);
         }
         else {
-          db_query("INSERT INTO {poll_votes} (nid, chorder, hostname) VALUES (%d, %d, '%s')", $node->nid, $choice, $_SERVER['REMOTE_ADDR']);
+          db_query("INSERT INTO {poll_votes} (nid, chorder, hostname) VALUES (%d, %d, '%s')", $node->nid, $choice, ip_address());
         }
 
         // Add one to the votes.
@@ -573,7 +573,7 @@ function poll_cancel(&$node) {
         db_query('DELETE FROM {poll_votes} WHERE nid = %d and uid = %d', $node->nid, $user->uid);
       }
       else {
-        db_query("DELETE FROM {poll_votes} WHERE nid = %d and hostname = '%s'", $node->nid, $_SERVER['REMOTE_ADDR']);
+        db_query("DELETE FROM {poll_votes} WHERE nid = %d and hostname = '%s'", $node->nid, ip_address());
       }
 
       // Subtract from the votes.

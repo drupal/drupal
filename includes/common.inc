@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.642 2007/05/25 12:46:43 dries Exp $
+// $Id: common.inc,v 1.643 2007/05/25 15:04:41 dries Exp $
 
 /**
  * @file
@@ -801,7 +801,7 @@ function valid_url($url, $absolute = FALSE) {
  *   The name of the event.
  */
 function flood_register_event($name) {
-  db_query("INSERT INTO {flood} (event, hostname, timestamp) VALUES ('%s', '%s', %d)", $name, $_SERVER['REMOTE_ADDR'], time());
+  db_query("INSERT INTO {flood} (event, hostname, timestamp) VALUES ('%s', '%s', %d)", $name, ip_address(), time());
 }
 
 /**
@@ -817,7 +817,7 @@ function flood_register_event($name) {
  *   True if the user did not exceed the hourly threshold. False otherwise.
  */
 function flood_is_allowed($name, $threshold) {
-  $number = db_num_rows(db_query("SELECT event FROM {flood} WHERE event = '%s' AND hostname = '%s' AND timestamp > %d", $name, $_SERVER['REMOTE_ADDR'], time() - 3600));
+  $number = db_num_rows(db_query("SELECT event FROM {flood} WHERE event = '%s' AND hostname = '%s' AND timestamp > %d", $name, ip_address(), time() - 3600));
   return ($number < $threshold ? TRUE : FALSE);
 }
 
@@ -2805,3 +2805,4 @@ function watchdog_severity_levels() {
     WATCHDOG_DEBUG    => t('debug'),
   );
 }
+
