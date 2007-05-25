@@ -1,6 +1,6 @@
 <?php
 
-// $Id: database.mysql-common.inc,v 1.1 2007/05/25 12:46:43 dries Exp $
+// $Id: database.mysql-common.inc,v 1.2 2007/05/25 20:52:44 dries Exp $
 
 /**
  * @file
@@ -209,7 +209,7 @@ function db_drop_table(&$ret, $table) {
  *   The field specification array, as taken from a schema definition
  */
 function db_add_field(&$ret, $table, $field, $spec) {
-  $query = 'ALTER TABLE {'. $table .'} ADD '. $field .' ';
+  $query = 'ALTER TABLE {'. $table .'} ADD ';
   $query .= _db_create_field_sql($field, _db_process_field($spec));
   $ret[] = update_sql($query);
 }
@@ -364,11 +364,6 @@ function db_drop_index(&$ret, $table, $name) {
 
 /**
  * Change a field definition.
- *
- * Remember that changing a field definition involves adding a new field
- * and dropping an old one. This means that any indices, primary keys and
- * sequences from serial-type fields are dropped and might need to be
- * recreated.
  *
  * @param $ret
  *   Array to which query results will be added.
