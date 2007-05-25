@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysqli.inc,v 1.36 2007/05/25 12:46:43 dries Exp $
+// $Id: database.mysqli.inc,v 1.37 2007/05/25 21:01:30 dries Exp $
 
 /**
  * @file
@@ -242,13 +242,11 @@ function db_error() {
  * with table prefixes. For example, db_next_id('{node}_nid');
  */
 function db_next_id($name) {
+  global $active_db;
   $name = db_prefix_tables($name);
-  db_query('LOCK TABLES {sequences} WRITE');
-  $id = db_result(db_query("SELECT id FROM {sequences} WHERE name = '%s'", $name)) + 1;
-  db_query("REPLACE INTO {sequences} VALUES ('%s', %d)", $name, $id);
-  db_query('UNLOCK TABLES');
+  db_query('INSERT INTO {sequences} VALUES ("%s", LAST_INSERT_ID(1)) ON DUPLICATE KEY UPDATE id = LAST_INSERT_ID(id + 1)', $name);
 
-  return $id;
+  return mysqli_insert_id($active_db);
 }
 
 /**

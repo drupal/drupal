@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.166 2007/05/25 15:04:41 dries Exp $
+// $Id: bootstrap.inc,v 1.167 2007/05/25 21:01:29 dries Exp $
 
 /**
  * @file
@@ -444,10 +444,11 @@ function variable_get($name, $default) {
 function variable_set($name, $value) {
   global $conf;
 
-  db_lock_table('variable');
-  db_query("DELETE FROM {variable} WHERE name = '%s'", $name);
-  db_query("INSERT INTO {variable} (name, value) VALUES ('%s', '%s')", $name, serialize($value));
-  db_unlock_tables();
+  $serialized_value = serialize($value);
+  db_query("UPDATE {variable} SET value = '%s' WHERE name = '%s'", $serialized_value, $name);
+  if (!db_affected_rows()) {
+    @db_query("INSERT INTO {variable} (name, value) VALUES ('%s', '%s')", $name, $serialized_value);
+  }
 
   cache_clear_all('variables', 'cache');
 
