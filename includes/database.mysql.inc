@@ -11,6 +11,8 @@
  * @{
  */
 
+// Include functions shared between mysql and mysqli.
+require_once './includes/database.mysql-common.inc';
 
 /**
  * Report database status.
@@ -437,5 +439,3 @@ function db_distinct_field($table, $field, $query) {
 /**
  * @} End of "ingroup database".
  */
-
-

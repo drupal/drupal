@@ -17,12 +17,6 @@
 // Enforce access checking?
 $access_check = TRUE;
 
-
-function update_sql($sql) {
-  $result = db_query($sql);
-  return array('success' => $result !== FALSE, 'query' => check_plain($sql));
-}
-
 /**
  * Add a column to a database using syntax appropriate for PostgreSQL.
  * Save result of SQL commands in $ret array.
