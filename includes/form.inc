@@ -74,6 +74,7 @@ function drupal_get_form($form_id) {
     // object, we're hitting the form for the first time and we need
     // to build it from scratch.
     if (!isset($form)) {
+      $form_state['post'] = $_POST;
       $form = call_user_func_array('drupal_retrieve_form', $args);
       $form_build_id = md5(mt_rand());
       $form['#build_id'] = $form_build_id;
@@ -81,6 +82,7 @@ function drupal_get_form($form_id) {
       if (!empty($form['#cache'])) {
         cache_set('form_'. $form_build_id, $form, 'cache_form', $expire);
       }
+      unset($form_state['post']);
     }
     $form['#post'] = $_POST;
 
