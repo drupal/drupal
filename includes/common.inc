@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.643 2007/05/25 15:04:41 dries Exp $
+// $Id: common.inc,v 1.644 2007/05/26 10:54:12 dries Exp $
 
 /**
  * @file
@@ -320,6 +320,7 @@ function drupal_goto($path = '', $query = NULL, $fragment = NULL, $http_response
  * Generates a site off-line message
  */
 function drupal_site_offline() {
+  drupal_maintenance_theme();
   drupal_set_header('HTTP/1.1 503 Service unavailable');
   drupal_set_title(t('Site off-line'));
   print theme('maintenance_page', filter_xss_admin(variable_get('site_offline_message',

@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.167 2007/05/22 05:52:16 dries Exp $
+// $Id: menu.inc,v 1.168 2007/05/26 10:54:12 dries Exp $
 
 /**
  * @file
@@ -305,6 +305,10 @@ function menu_get_item($path = NULL) {
  * Execute the page callback associated with the current path
  */
 function menu_execute_active_handler() {
+  if (_menu_site_is_offline()) {
+    return MENU_SITE_OFFLINE;
+  }
+
   if ($item = menu_get_item()) {
     if ($item->access) {
       if ($item->file) {
@@ -1461,4 +1465,29 @@ function _menu_router_build($callbacks) {
 function menu_path_is_external($path) {
   $colonpos = strpos($path, ':');
   return $colonpos !== FALSE && !preg_match('![/?#]!', substr($path, 0, $colonpos)) && filter_xss_bad_protocol($path, FALSE) == check_plain($path);
+}
+
+/**
+ * Returns TRUE if the site is off-line for maintenance.
+ */
+function _menu_site_is_offline() {
+  // Check if site is set to off-line mode
+  if (variable_get('site_offline', 0)) {
+    // Check if the user has administration privileges
+    if (!user_access('administer site configuration')) {
+      // Check if this is an attempt to login
+      if (drupal_get_normal_path($_GET['q']) != 'user') {
+        return TRUE;
+      }
+    }
+    else {
+      $offline_message = t('Operating in off-line mode.');
+      $messages = drupal_set_message();
+      // Ensure that the off-line message is displayed only once [allowing for page redirects].
+      if (!isset($messages) || !isset($messages['status']) || !in_array($offline_message, $messages['status'])) {
+        drupal_set_message($offline_message);
+      }
+    }
+  }
+  return FALSE;
 }
