@@ -15,18 +15,21 @@ function system_main_admin_page($arg = NULL) {
   if (system_status(TRUE)) {
     drupal_set_message(t('One or more problems were detected with your Drupal installation. Check the <a href="@status">status report</a> for more information.', array('@status' => url('admin/logs/status'))), 'error');
   }
-  $result = db_query("SELECT * FROM {menu_links} ml INNER JOIN {menu_router} m ON ml.router_path = m.path
-                      WHERE ml.href like 'admin/%' AND ml.href != 'admin/help' AND ml.depth = 2 AND ml.menu_name = 'navigation'
-                      ORDER BY p1 ASC, p2 ASC, p3 ASC");
-  while ($item = db_fetch_object($result)) {
+  $result = db_query("
+    SELECT *
+    FROM {menu_links} ml
+    INNER JOIN {menu_router} m ON ml.router_path = m.path
+    WHERE ml.link_path like 'admin/%' AND ml.link_path != 'admin/help' AND ml.depth = 2 AND ml.menu_name = 'navigation' AND hidden = 0
+    ORDER BY p1 ASC, p2 ASC, p3 ASC");
+  while ($item = db_fetch_array($result)) {
     _menu_link_translate($item);
-    if (!$item->access) {
+    if (!$item['access']) {
       continue;
     }
-    $block = (array)$item;
+    $block = $item;
     $block['content'] = '';
-    if ($item->block_callback && function_exists($item->block_callback)) {
-      $function = $item->block_callback;
+    if ($item['block_callback'] && function_exists($item['block_callback'])) {
+      $function = $item['block_callback'];
       $block['content'] .= $function();
     }
     $block['content'] .= theme('admin_block_content', system_admin_menu_block($item));
