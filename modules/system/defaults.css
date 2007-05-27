@@ -22,8 +22,8 @@ table {
   border-collapse: collapse;
 }
 th {
-  text-align: left;
-  padding-right: 1em;
+  text-align: left; /* LTR */
+  padding-right: 1em; /* LTR */
   border-bottom: 3px solid #ccc;
 }
 

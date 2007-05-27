@@ -1,0 +1,11 @@
+/* $Id $ */
+
+.poll .bar .foreground {
+  float: right;
+}
+.poll .percent {
+  text-align: left;
+}
+.poll .vote-form .choices {
+  text-align: right;
+}

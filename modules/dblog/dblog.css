@@ -1,8 +1,8 @@
 /* $Id$ */
 
 #dblog-filter-form .form-item {
-  float: left;
-  padding-right: .8em;
+  float: left; /* LTR */
+  padding-right: .8em; /* LTR */
   margin: 0.1em;
 }
 tr.dblog-user {

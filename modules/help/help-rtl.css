@@ -1,0 +1,11 @@
+/* $Id$ */
+
+.help-items {
+  float: right;
+  padding-right: inherit;
+  padding-left: 3%;
+}
+.help-items-last {
+  padding-right: inherit;
+  padding-left: 0;
+}

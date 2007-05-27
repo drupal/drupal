@@ -1,0 +1,8 @@
+/* $Id $ */
+
+#node-admin-buttons {
+  float: right;
+  margin-left: inherit;
+  margin-right: 0.5em;
+  clear: left;
+}

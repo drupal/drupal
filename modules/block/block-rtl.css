@@ -1,0 +1,6 @@
+/* $Id$ */
+
+#blocks td.block {
+  padding-left: inherit;
+  padding-right: 1.5em;
+}

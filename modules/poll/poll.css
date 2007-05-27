@@ -8,13 +8,13 @@
 .poll .bar .foreground {
   background-color: #000;
   height: 1em;
-  float: left;
+  float: left; /* LTR */
 }
 .poll .links {
   text-align: center;
 }
 .poll .percent {
-  text-align: right;
+  text-align: right; /* LTR */
 }
 .poll .total {
   text-align: center;
@@ -23,7 +23,7 @@
   text-align: center;
 }
 .poll .vote-form .choices {
-  text-align: left;
+  text-align: left; /* LTR */
   margin: 0 auto;
   display: table;
 }

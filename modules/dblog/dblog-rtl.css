@@ -1,0 +1,7 @@
+/* $Id$ */
+
+#dblog-filter-form .form-item {
+  float: right;
+  padding-right: inherit;
+  padding-left: .8em;
+}

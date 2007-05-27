@@ -1,0 +1,38 @@
+/* $Id $ */
+
+div.admin-panel .body {
+  padding: 0 8px 2px 4px;
+}
+
+div.admin .expert-link {
+  text-align: left;
+  margin-right: inherit;
+  margin-left: 1em;
+  padding-right: inherit;
+  padding-left: 4px;
+}
+
+table.system-status-report th, table.system-status-report tr.merge-up td {
+  padding-right: 30px;
+}
+
+table.system-status-report th  {
+  background-position: 95% 50%;
+}
+
+table.screenshot {
+  margin-left: 1em;
+}
+
+div.date-container {
+  clear: right;
+}
+
+div.date-container div {
+  float: right;
+}
+div.custom-container {
+  margin-left: inherit;
+  margin-right: 15px;
+}
+

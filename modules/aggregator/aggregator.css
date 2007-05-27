@@ -7,7 +7,7 @@
   margin-bottom: 0.75em;
 }
 #aggregator .feed-source .feed-icon {
-  float: right;
+  float: right; /* LTR */
   display: block;
 }
 #aggregator .feed-item {

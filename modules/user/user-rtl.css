@@ -1,0 +1,22 @@
+/* $Id $ */
+
+#permissions td.permission {
+  padding-left: inherit;
+  padding-right: 1.5em;
+}
+#access-rules .access-type, #access-rules .rule-type {
+  margin-right: inherit;
+  margin-left: 1em;
+  float: right;
+}
+#user-admin-buttons {
+  float: right;
+  margin-left: inherit;
+  margin-right: 0.5em;
+  clear: left;
+}
+
+.profile .picture {
+  float: left;
+  margin: 0 0 1em 1em;
+}

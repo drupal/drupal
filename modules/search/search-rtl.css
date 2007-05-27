@@ -1,0 +1,11 @@
+/* $Id $ */
+
+.search-advanced .criterion {
+  float: right;
+  margin-right: inherit;
+  margin-left: 2em;
+}
+.search-advanced .action {
+  float: right;
+  clear: right;
+}

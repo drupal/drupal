@@ -14,13 +14,13 @@
   text-align: left;
   width: 42%;
   display: block;
-  float: left;
+  float: left; /* LTR */
 }
 .book-navigation .page-up {
   margin: 0 5%;
   width: 4%;
   display: block;
-  float: left;
+  float: left; /* LTR */
 }
 .book-navigation .page-next {
   text-align: right;

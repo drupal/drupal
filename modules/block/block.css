@@ -4,7 +4,7 @@
   font-weight: bold;
 }
 #blocks td.block {
-  padding-left: 1.5em;
+  padding-left: 1.5em; /* LTR */
 }
 .block-region {
   background-color: #ff6;
