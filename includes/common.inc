@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.645 2007/05/27 17:57:47 goba Exp $
+// $Id: common.inc,v 1.646 2007/05/27 20:31:13 dries Exp $
 
 /**
  * @file
@@ -342,12 +342,7 @@ function drupal_not_found() {
 
   $path = drupal_get_normal_path(variable_get('site_404', ''));
   if ($path && $path != $_GET['q']) {
-    menu_set_active_item($path);
-    $return = menu_execute_active_handler();
-  }
-  else {
-    // Redirect to a non-existent menu item to make possible tabs disappear.
-    menu_set_active_item('');
+    $return = menu_execute_active_handler($path);
   }
 
   if (empty($return)) {
@@ -372,12 +367,7 @@ function drupal_access_denied() {
 
   $path = drupal_get_normal_path(variable_get('site_403', ''));
   if ($path && $path != $_GET['q']) {
-    menu_set_active_item($path);
-    $return = menu_execute_active_handler();
-  }
-  else {
-    // Redirect to a non-existent menu item to make possible tabs disappear.
-    menu_set_active_item('');
+    $return = menu_execute_active_handler($path);
   }
 
   if (empty($return)) {
@@ -1451,10 +1441,10 @@ function drupal_add_link($attributes) {
  *   (optional) The path to the CSS file relative to the base_path(), e.g.,
  *   /modules/devel/devel.css.
  *
- *   If the direction of the current language is right-to-left (Hebrew, 
- *   Arabic, etc.), the function will also look for an RTL CSS file and append 
+ *   If the direction of the current language is right-to-left (Hebrew,
+ *   Arabic, etc.), the function will also look for an RTL CSS file and append
  *   it to the list. The name of this file should have an '-rtl.css' suffix.
- *   For example a CSS file called 'name.css' will have a 'name-rtl.css' 
+ *   For example a CSS file called 'name.css' will have a 'name-rtl.css'
  *   file added to the list, if exists in the same directory. This CSS file
  *   should contain overrides for properties which should be reversed or
  *   otherwise different in a right-to-left display.
@@ -1491,7 +1481,7 @@ function drupal_add_link($attributes) {
  */
 function drupal_add_css($path = NULL, $type = 'module', $media = 'all', $preprocess = TRUE) {
   static $css = array();
-  global $language;	
+  global $language;
 
   // Create an array of CSS files for each media type first, since each type needs to be served
   // to the browser differently.
@@ -1510,7 +1500,7 @@ function drupal_add_css($path = NULL, $type = 'module', $media = 'all', $preproc
       }
     }
   }
-  
+
   return $css;
 }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.482 2007/05/25 15:04:42 dries Exp $
+// $Id: system.module,v 1.483 2007/05/27 20:31:13 dries Exp $
 
 /**
  * @file
@@ -144,6 +144,7 @@ function system_menu() {
   $items['admin/by-task'] = array(
     'title' => 'By task',
     'page callback' => 'system_main_admin_page',
+    'file' => 'system.admin.inc',
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
   $items['admin/by-module'] = array(
@@ -392,14 +393,18 @@ function system_user($type, $edit, &$user, $category = NULL) {
  */
 function system_admin_menu_block($item) {
   $content = array();
-  if (!isset($item->mlid)) {
-    $item->mlid = db_result(db_query("SELECT mlid FROM {menu_links} ml WHERE ml.router_path = '%s' AND menu_name = 'navigation'", $item->path));
+  if (!isset($item['mlid'])) {
+    $item['mlid'] = db_result(db_query("SELECT mlid FROM {menu_links} ml WHERE ml.router_path = '%s' AND menu_name = 'navigation'", $item['path']));
   }
-  $result = db_query("SELECT * FROM {menu_links} ml INNER JOIN {menu_router} m ON ml.router_path = m.path
-                      WHERE ml.plid = '%s' AND ml.menu_name = 'navigation' ORDER BY m.weight, m.title", $item->mlid);
-  while ($item = db_fetch_object($result)) {
+  $result = db_query("
+    SELECT *
+    FROM {menu_links} ml
+    INNER JOIN {menu_router} m ON ml.router_path = m.path
+    WHERE ml.plid = %d AND ml.menu_name = 'navigation' AND hidden = 0
+    ORDER BY m.weight, m.title", $item['mlid']);
+  while ($item = db_fetch_array($result)) {
     _menu_link_translate($item);
-    if (!$item->access) {
+    if (!$item['access']) {
       continue;
     }
     $content[] = (array)$item;
@@ -1669,9 +1674,6 @@ function system_modules_submit($form_values, $form, &$form_state) {
       db_query("UPDATE {system} SET throttle = %d WHERE type = 'module' and name = '%s'", $choice ? 1 : 0, $key);
     }
   }
-
-  // Temporarily disable menu module while it's broken.
-  unset($form_values['status']['menu']);
 
   // If there where unmet dependencies and they haven't confirmed don't process
   // the submission yet. Store the form submission data needed later.

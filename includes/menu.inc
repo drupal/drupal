@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.168 2007/05/26 10:54:12 dries Exp $
+// $Id: menu.inc,v 1.169 2007/05/27 20:31:13 dries Exp $
 
 /**
  * @file
@@ -149,11 +149,6 @@ define('MENU_SITE_OFFLINE', 4);
  * @} End of "Menu status codes".
  */
 
-
-/**
- * @} End of "Menu operations."
- */
-
 /**
  * @Name Menu tree parameters
  * @{
@@ -275,46 +270,45 @@ function menu_unserialize($data, $map) {
  *   A path, or NULL for the current path
  */
 function menu_get_item($path = NULL) {
-  static $items;
+  static $router_items;
   if (!isset($path)) {
     $path = $_GET['q'];
   }
-  if (!isset($items[$path])) {
+  if (!isset($router_items[$path])) {
     $original_map = arg(NULL, $path);
     $parts = array_slice($original_map, 0, MENU_MAX_PARTS);
     list($ancestors, $placeholders) = menu_get_ancestors($parts);
 
-    if ($item = db_fetch_object(db_query_range('SELECT * FROM {menu_router} WHERE path IN ('. implode (',', $placeholders) .') ORDER BY fit DESC', $ancestors, 0, 1))) {
-
-      $map = _menu_translate($item, $original_map);
+    if ($router_item = db_fetch_array(db_query_range('SELECT * FROM {menu_router} WHERE path IN ('. implode (',', $placeholders) .') ORDER BY fit DESC', $ancestors, 0, 1))) {
+//var_dump($router_item);
+      $map = _menu_translate($router_item, $original_map);
       if ($map === FALSE) {
-        $items[$path] = FALSE;
+        $router_items[$path] = FALSE;
         return FALSE;
       }
-      if ($item->access) {
-        $item->map = $map;
-        $item->page_arguments = array_merge(menu_unserialize($item->page_arguments, $map), array_slice($parts, $item->number_parts));
+      if ($router_item['access']) {
+        $router_item['map'] = $map;
+        $router_item['page_arguments'] = array_merge(menu_unserialize($router_item['page_arguments'], $map), array_slice($map, $router_item['number_parts']));
       }
     }
-    $items[$path] = $item;
+    $router_items[$path] = $router_item;
   }
-  return drupal_clone($items[$path]);
+  return $router_items[$path];
 }
 
 /**
  * Execute the page callback associated with the current path
  */
-function menu_execute_active_handler() {
+
+function menu_execute_active_handler($path = NULL) {
   if (_menu_site_is_offline()) {
     return MENU_SITE_OFFLINE;
-  }
-
-  if ($item = menu_get_item()) {
-    if ($item->access) {
-      if ($item->file) {
-        include_once($item->file);
+  }  if ($router_item = menu_get_item($path)) {
+    if ($router_item['access']) {
+      if ($router_item['file']) {
+        require_once($router_item['file']);
       }
-      return call_user_func_array($item->page_callback, $item->page_arguments);
+      return call_user_func_array($router_item['page_callback'], $router_item['page_arguments']);
     }
     else {
       return MENU_ACCESS_DENIED;
@@ -324,18 +318,18 @@ function menu_execute_active_handler() {
 }
 
 /**
- * Loads objects into the map as defined in the $item->load_functions.
+ * Loads objects into the map as defined in the $item['load_functions'].
  *
  * @param $item
- *   A menu item object
+ *   A menu router or menu link item
  * @param $map
  *   An array of path arguments (ex: array('node', '5'))
  * @return
  *   Returns TRUE for success, FALSE if an object cannot be loaded
  */
 function _menu_load_objects($item, &$map) {
-  if ($item->load_functions) {
-    $load_functions = unserialize($item->load_functions);
+  if ($item['load_functions']) {
+    $load_functions = unserialize($item['load_functions']);
     $path_map = $map;
     foreach ($load_functions as $index => $function) {
       if ($function) {
@@ -343,7 +337,7 @@ function _menu_load_objects($item, &$map) {
         $return = $function(isset($path_map[$index]) ? $path_map[$index] : '');
         // If callback returned an error or there is no callback, trigger 404.
         if ($return === FALSE) {
-          $item->access = FALSE;
+          $item['access'] = FALSE;
           $map = FALSE;
           return FALSE;
         }
@@ -358,29 +352,29 @@ function _menu_load_objects($item, &$map) {
  * Check access to a menu item using the access callback
  *
  * @param $item
- *   A menu item object
+ *   A menu router or menu link item
  * @param $map
  *   An array of path arguments (ex: array('node', '5'))
  * @return
- *   $item->access becomes TRUE if the item is accessible, FALSE otherwise.
+ *   $item['access'] becomes TRUE if the item is accessible, FALSE otherwise.
  */
 function _menu_check_access(&$item, $map) {
   // Determine access callback, which will decide whether or not the current user has
   // access to this path.
-  $callback = $item->access_callback;
+  $callback = trim($item['access_callback']);
   // Check for a TRUE or FALSE value.
   if (is_numeric($callback)) {
-    $item->access = $callback;
+    $item['access'] = $callback;
   }
   else {
-    $arguments = menu_unserialize($item->access_arguments, $map);
+    $arguments = menu_unserialize($item['access_arguments'], $map);
     // As call_user_func_array is quite slow and user_access is a very common
     // callback, it is worth making a special case for it.
     if ($callback == 'user_access') {
-      $item->access = (count($arguments) == 1) ? user_access($arguments[0]) : user_access($arguments[0], $arguments[1]);
+      $item['access'] = (count($arguments) == 1) ? user_access($arguments[0]) : user_access($arguments[0], $arguments[1]);
     }
     else {
-      $item->access = call_user_func_array($callback, $arguments);
+      $item['access'] = call_user_func_array($callback, $arguments);
     }
   }
 }
@@ -389,29 +383,29 @@ function _menu_item_localize(&$item) {
   // Translate the title to allow storage of English title strings
   // in the database, yet display of them in the language required
   // by the current user.
-  $callback = $item->title_callback;
+  $callback = $item['title_callback'];
   // t() is a special case. Since it is used very close to all the time,
   // we handle it directly instead of using indirect, slower methods.
   if ($callback == 't') {
-    if (empty($item->title_arguments)) {
-      $item->title = t($item->title);
+    if (empty($item['title_arguments'])) {
+      $item['title'] = t($item['title']);
     }
     else {
-      $item->title = t($item->title, unserialize($item->title_arguments));
+      $item['title'] = t($item['title'], unserialize($item['title_arguments']));
     }
   }
   else {
-    if (empty($item->title_arguments)) {
-      $item->title = $callback($item->title);
+    if (empty($item['title_arguments'])) {
+      $item['title'] = $callback($item['title']);
     }
     else {
-      $item->title = call_user_func_array($callback, unserialize($item->title_arguments));
+      $item['title'] = call_user_func_array($callback, unserialize($item['title_arguments']));
     }
   }
 
   // Translate description, see the motivation above.
-  if (!empty($item->description)) {
-    $item->description = t($item->description);
+  if (!empty($item['description'])) {
+    $item['description'] = t($item['description']);
   }
 }
 
@@ -430,42 +424,42 @@ function _menu_item_localize(&$item) {
  * allow for storage of English strings in the database, and translation
  * to the language required to generate the current page
  *
- * @param $item
- *   A menu item object
+ * @param $router_item
+ *   A menu router item
  * @param $map
  *   An array of path arguments (ex: array('node', '5'))
  * @param $to_arg
- *   Execute $item->to_arg_functions or not. Use only if you want to render a
+ *   Execute $item['to_arg_functions'] or not. Use only if you want to render a
  *   path from the menu table, for example tabs.
  * @return
  *   Returns the map with objects loaded as defined in the
- *   $item->load_functions. $item->access becomes TRUE if the item is
- *   accessible, FALSE otherwise. $item->href is set according to the map.
+ *   $item['load_functions. $item['access'] becomes TRUE if the item is
+ *   accessible, FALSE otherwise. $item['href'] is set according to the map.
  *   If an error occurs during calling the load_functions (like trying to load
  *   a non existing node) then this function return FALSE.
  */
-function _menu_translate(&$item, $map, $to_arg = FALSE) {
+function _menu_translate(&$router_item, $map, $to_arg = FALSE) {
   $path_map = $map;
-  if (!_menu_load_objects($item, $map)) {
+  if (!_menu_load_objects($router_item, $map)) {
     // An error occurred loading an object.
-    $item->access = FALSE;
+    $router_item['access'] = FALSE;
     return FALSE;
   }
   if ($to_arg) {
-    _menu_link_map_translate($path_map, $item->to_arg_functions);
+    _menu_link_map_translate($path_map, $router_item['to_arg_functions']);
   }
 
   // Generate the link path for the page request or local tasks.
-  $link_map = explode('/', $item->path);
-  for ($i = 0; $i < $item->number_parts; $i++) {
+  $link_map = explode('/', $router_item['path']);
+  for ($i = 0; $i < $router_item['number_parts']; $i++) {
     if ($link_map[$i] == '%') {
       $link_map[$i] = $path_map[$i];
     }
   }
-  $item->href = implode('/', $link_map);
-  _menu_check_access($item, $map);
+  $router_item['href'] = implode('/', $link_map);
+  _menu_check_access($router_item, $map);
 
-  _menu_item_localize($item);
+  _menu_item_localize($router_item);
 
   return $map;
 }
@@ -501,44 +495,49 @@ function _menu_link_map_translate(&$map, $to_arg_functions) {
  * preparation such as always calling to_arg functions
  *
  * @param $item
- *   A menu item object
+ *   A menu link
  * @return
  *   Returns the map of path arguments with objects loaded as defined in the
- *   $item->load_functions.
- *   $item->access becomes TRUE if the item is accessible, FALSE otherwise.
- *   $item->href is altered if there is a to_arg function.
+ *   $item['load_functions'].
+ *   $item['access'] becomes TRUE if the item is accessible, FALSE otherwise.
+ *   $item['href'] is generated from link_path, possibly by to_arg functions.
+ *   $item['title'] is generated from link_title, and may be localized.
  */
 function _menu_link_translate(&$item) {
-  if ($item->external) {
-    $item->access = 1;
+  if ($item['external']) {
+    $item['access'] = 1;
     $map = array();
+    $item['href'] = $item['link_path'];
+    $item['title'] = $item['link_title'];
   }
   else {
-    $map = explode('/', $item->href);
-    _menu_link_map_translate($map, $item->to_arg_functions);
-    $item->href = implode('/', $map);
+    $map = explode('/', $item['link_path']);
+    _menu_link_map_translate($map, $item['to_arg_functions']);
+    $item['href'] = implode('/', $map);
 
     // Note- skip callbacks without real values for their arguments
-    if (strpos($item->href, '%') !== FALSE) {
-      $item->access = FALSE;
+    if (strpos($item['href'], '%') !== FALSE) {
+      $item['access'] = FALSE;
       return FALSE;
     }
-    if (!_menu_load_objects($item, $map)) {
-      // An error occured loading an object
-      $item->access = FALSE;
-      return FALSE;
-    }
-    // TODO: menu_tree may set this ahead of time for links to nodes
-    if (!isset($item->access)) {
+    // TODO: menu_tree_data may set this ahead of time for links to nodes
+    if (!isset($item['access'])) {
+      if (!_menu_load_objects($item, $map)) {
+        // An error occured loading an object
+        $item['access'] = FALSE;
+        return FALSE;
+      }
       _menu_check_access($item, $map);
     }
     // If the link title matches that of a router item, localize it.
-    if (isset($item->title) && ($item->title == $item->link_title)) {
+    if (isset($item['title']) && ($item['title'] == $item['link_title'])) {
       _menu_item_localize($item);
-      $item->link_title = $item->title;
+    }
+    else {
+      $item['title'] = $item['link_title'];
     }
   }
-  $item->options = unserialize($item->options);
+  $item['options'] = unserialize($item['options']);
 
   return $map;
 }
@@ -558,7 +557,7 @@ function menu_tree($menu_name = 'navigation') {
   static $menu_output = array();
 
   if (!isset($menu_output[$menu_name])) {
-    $tree = menu_tree_data($menu_name);
+    $tree = menu_tree_page_data($menu_name);
     $menu_output[$menu_name] = menu_tree_output($tree);
   }
   return $menu_output[$menu_name];
@@ -576,17 +575,78 @@ function menu_tree_output($tree) {
   $output = '';
 
   foreach ($tree as $data) {
-    if (!$data['link']->hidden) {
+    if (!$data['link']['hidden']) {
       $link = theme('menu_item_link', $data['link']);
       if ($data['below']) {
-        $output .= theme('menu_item', $link, $data['link']->has_children, menu_tree_output($data['below']));
+        $output .= theme('menu_item', $link, $data['link']['has_children'], menu_tree_output($data['below']), $data['link']['in_active_trail']);
       }
       else {
-        $output .= theme('menu_item', $link, $data['link']->has_children);
+        $output .= theme('menu_item', $link, $data['link']['has_children'], '', $data['link']['in_active_trail']);
       }
     }
   }
   return $output ? theme('menu_tree', $output) : '';
+}
+
+/**
+ * Get the data structure representing a named menu tree. Since this can be
+ * the full tree including hidden items, the data returned may be used for
+ * generating an an admin interface or a select.
+ *
+ * @param $menu_name
+ *   The named menu links to return
+ * @param $item
+ *   A fully loaded menu link, or NULL.  If a link is supplied, only the
+ *   path to root will be included in the returned tree- as if this link
+ *   represented the current page in a visible menu.
+ * @param $show_hidden
+ *   Show disabled links (such as suggested menu items).
+ * @return
+ *   An tree of menu links in an array, in the order they should be rendered.
+ */
+function menu_tree_all_data($menu_name = 'navigation', $item = NULL, $show_hidden = FALSE) {
+  static $tree = array();
+
+  $mlid = isset($item['mlid']) ? $item['mlid'] : 0;
+  $cid = 'links:'. $menu_name .':all:'. $mlid .':'. (int)$show_hidden;
+
+  if (!isset($tree[$cid])) {
+    $cache = cache_get($cid, 'cache_menu');
+    if ($cache && isset($cache->data)) {
+      $tree[$cid] = $cache->data;
+    }
+    else {
+      if ($mlid) {
+        $args = array(0, $item['p1'], $item['p2'], $item['p3'], $item['p4'], $item['p5']);
+        $args = array_unique($args);
+        $placeholders = implode(', ', array_fill(0, count($args), '%d'));
+        $where = ' AND ml.plid IN ('. $placeholders .')';
+        $parents = $args;
+        $parents[] = $item['mlid'];
+      }
+      else {
+        $where = '';
+        $args = array();
+        $parents = array();
+      }
+      if (!$show_hidden) {
+        $where .= ' AND ml.hidden = 0';
+      }
+      else {
+        $where .= ' AND ml.hidden > 0';
+      }
+      array_unshift($args, $menu_name);
+      list(, $tree[$cid]) = _menu_tree_data(db_query("
+        SELECT *, ml.weight + 50000 AS weight FROM {menu_links} ml LEFT JOIN {menu_router} m ON m.path = ml.router_path
+        WHERE ml.menu_name = '%s'". $where ."
+        ORDER BY p1 ASC, p2 ASC, p3 ASC, p4 ASC, p5 ASC", $args), $parents);
+      cache_set($cid, $tree[$cid], 'cache_menu');
+    }
+    // TODO: special case node links and access check via db_rewite_sql()
+    _menu_tree_check_access($tree[$cid]);
+  }
+
+  return $tree[$cid];
 }
 
 /**
@@ -603,54 +663,76 @@ function menu_tree_output($tree) {
  *   submenu below the link if there is one and it is a similar list that was
  *   described so far.
  */
-function menu_tree_data($menu_name = 'navigation') {
+function menu_tree_page_data($menu_name = 'navigation') {
   static $tree = array();
 
   if ($item = menu_get_item()) {
-    if (!isset($tree[$menu_name])) {
-      if ($item->access) {
-        $parents = db_fetch_array(db_query("SELECT p1, p2, p3, p4, p5 FROM {menu_links} WHERE menu_name = '%s' AND href = '%s'", $menu_name, $item->href));
-        // We may be on a local task that's not in the links
-        // TODO how do we handle the case like a local task on a specific node in the menu?
-        if (empty($parents)) {
-          $parents = db_fetch_array(db_query("SELECT p1, p2, p3, p4, p5 FROM {menu_links} WHERE menu_name = '%s' AND href = '%s'", $menu_name, $item->tab_root));
-        }
-        $parents[] = '0';
+    $cid = 'links:'. $menu_name .':page:'. $item['href'] .':'. (int)$item['access'];
 
-        $args = $parents = array_unique($parents);
-        $placeholders = implode(', ', array_fill(0, count($args), '%d'));
-        $expanded = variable_get('menu_expanded', array());
-        if (in_array($menu_name, $expanded)) {
-          do {
-            $result = db_query("SELECT mlid FROM {menu_links} WHERE expanded != 0 AND AND has_children != 0 AND menu_name = '%s' AND plid IN (". $placeholders .') AND mlid NOT IN ('. $placeholders .')', array_merge(array($menu_name), $args, $args));
-            while ($item = db_fetch_array($result)) {
-              $args[] = $item['mlid'];
-            }
-            $placeholders = implode(', ', array_fill(0, count($args), '%d'));
-          } while (db_num_rows($result));
-        }
-        array_unshift($args, $menu_name);
+    if (!isset($tree[$cid])) {
+      $cache = cache_get($cid, 'cache_menu');
+      if ($cache && isset($cache->data)) {
+        $tree[$cid] = $cache->data;
       }
-      // Show the root menu for access denied.
       else {
-        $args = array('navigation', '0');
-        $placeholders = '%d';
-      }
-      // LEFT JOIN since there is no match in {menu_router} for an external link.
-      // No need to order by p6 - there is a sort by weight later.
-      list(, $tree[$menu_name]) = _menu_tree_data(db_query("
-        SELECT *, ml.weight + 50000 AS weight FROM {menu_links} ml LEFT JOIN {menu_router} m ON m.path = ml.router_path
-        WHERE ml.menu_name = '%s' AND ml.plid IN (". $placeholders .")
-        ORDER BY p1 ASC, p2 ASC, p3 ASC, p4 ASC, p5 ASC", $args), $parents);
+        if ($item['access']) {
+          $parents = db_fetch_array(db_query("SELECT p1, p2, p3, p4, p5, p6 FROM {menu_links} WHERE menu_name = '%s' AND link_path = '%s'", $menu_name, $item['href']));
+          // We may be on a local task that's not in the links
+          // TODO how do we handle the case like a local task on a specific node in the menu?
+          if (empty($parents)) {
+            $parents = db_fetch_array(db_query("SELECT p1, p2, p3, p4, p5, p6 FROM {menu_links} WHERE menu_name = '%s' AND link_path = '%s'", $menu_name, $item['tab_root']));
+          }
+          $parents[] = '0';
 
-      // TODO: cache_set() for the untranslated links
+          $args = $parents = array_unique($parents);
+          $placeholders = implode(', ', array_fill(0, count($args), '%d'));
+          $expanded = variable_get('menu_expanded', array());
+          if (in_array($menu_name, $expanded)) {
+            do {
+              $result = db_query("SELECT mlid FROM {menu_links} WHERE expanded != 0 AND has_children != 0 AND menu_name = '%s' AND plid IN (". $placeholders .') AND mlid NOT IN ('. $placeholders .')', array_merge(array($menu_name), $args, $args));
+              while ($item = db_fetch_array($result)) {
+                $args[] = $item['mlid'];
+              }
+              $placeholders = implode(', ', array_fill(0, count($args), '%d'));
+            } while (db_num_rows($result));
+          }
+          array_unshift($args, $menu_name);
+        }
+        // Show the root menu for access denied.
+        else {
+          $args = array('navigation', '0');
+          $placeholders = '%d';
+          $parents = array();
+        }
+        // LEFT JOIN since there is no match in {menu_router} for an external link.
+        // No need to order by p6 - there is a sort by weight later.
+        list(, $tree[$cid]) = _menu_tree_data(db_query("
+          SELECT *, ml.weight + 50000 AS weight FROM {menu_links} ml LEFT JOIN {menu_router} m ON m.path = ml.router_path
+          WHERE ml.menu_name = '%s' AND ml.plid IN (". $placeholders .") AND ml.hidden = 0
+          ORDER BY p1 ASC, p2 ASC, p3 ASC, p4 ASC, p5 ASC", $args), $parents);
+        cache_set($cid, $tree[$cid], 'cache_menu');
+      }
       // TODO: special case node links and access check via db_rewite_sql()
-      // TODO: access check / _menu_link_translate on each here
+      _menu_tree_check_access($tree[$cid]);
     }
-    return $tree[$menu_name];
+    return $tree[$cid];
   }
+
+  return array();
 }
 
+function _menu_tree_check_access(&$tree) {
+  foreach ($tree as $key => $v) {
+    $item = &$tree[$key]['link'];
+    _menu_link_translate($item);
+    if (!$item['access']) {
+      unset($tree[$key]);
+    }
+    elseif ($tree[$key]['below']) {
+      _menu_tree_check_access($tree[$key]['below']);
+    }
+  }
+}
 
 /**
  * Build the data representing a menu tree.
@@ -674,30 +756,23 @@ function menu_tree_data($menu_name = 'navigation') {
 function _menu_tree_data($result = NULL, $parents = array(), $depth = 1, $previous_element = '') {
   $remnant = NULL;
   $tree = array();
-  while ($item = db_fetch_object($result)) {
-    // Access check and handle dynamic path translation.
-    // TODO - move this to the parent function, so the untranslated link data
-    // can be cached.
-    _menu_link_translate($item);
-    if (!$item->access) {
-      continue;
-    }
+  while ($item = db_fetch_array($result)) {
     // We need to determine if we're on the path to root so we can later build
     // the correct active trail and breadcrumb.
-    $item->path_to_root = in_array($item->mlid, $parents);
+    $item['in_active_trail'] = in_array($item['mlid'], $parents);
     // The weights are uniform 5 digits because of the 50000 offset in the
     // query. We add mlid at the end of the index to insure uniqueness.
-    $index = $previous_element ? ($previous_element->weight .' '. $previous_element->title . $previous_element->mlid) : '';
+    $index = $previous_element ? ($previous_element['weight'] .' '. $previous_element['title'] . $previous_element['mlid']) : '';
     // The current item is the first in a new submenu.
-    if ($item->depth > $depth) {
+    if ($item['depth'] > $depth) {
       // _menu_tree returns an item and the menu tree structure.
-      list($item, $below) = _menu_tree_data($result, $parents, $item->depth, $item);
+      list($item, $below) = _menu_tree_data($result, $parents, $item['depth'], $item);
       $tree[$index] = array(
         'link' => $previous_element,
         'below' => $below,
       );
       // We need to fall back one level.
-      if ($item->depth < $depth) {
+      if (!isset($item) || $item['depth'] < $depth) {
         ksort($tree);
         return array($item, $tree);
       }
@@ -705,7 +780,7 @@ function _menu_tree_data($result = NULL, $parents = array(), $depth = 1, $previo
       $previous_element = $item;
     }
     // We are in the same menu. We render the previous element, $previous_element.
-    elseif ($item->depth == $depth) {
+    elseif ($item['depth'] == $depth) {
       if ($previous_element) { // Only the first time
         $tree[$index] = array(
           'link' => $previous_element,
@@ -723,7 +798,7 @@ function _menu_tree_data($result = NULL, $parents = array(), $depth = 1, $previo
   }
   if ($previous_element) {
     // We have one more link dangling.
-    $tree[$previous_element->weight .' '. $previous_element->title .' '. $previous_element->mlid] = array(
+    $tree[$previous_element['weight'] .' '. $previous_element['title'] .' '. $previous_element['mlid']] = array(
       'link' => $previous_element,
       'below' => '',
     );
@@ -736,7 +811,7 @@ function _menu_tree_data($result = NULL, $parents = array(), $depth = 1, $previo
  * Generate the HTML output for a single menu link.
  */
 function theme_menu_item_link($link) {
-  return l($link->link_title, $link->href, $link->options);
+  return l($link['title'], $link['href'], $link['options']);
 }
 
 /**
@@ -749,8 +824,12 @@ function theme_menu_tree($tree) {
 /**
  * Generate the HTML output for a menu item and submenu.
  */
-function theme_menu_item($link, $has_children, $menu = '') {
-  return '<li class="'. ($menu ? 'expanded' : ($has_children ? 'collapsed' : 'leaf')) .'">'. $link . $menu .'</li>'."\n";
+function theme_menu_item($link, $has_children, $menu = '', $in_active_trail = FALSE) {
+  $class = ($menu ? 'expanded' : ($has_children ? 'collapsed' : 'leaf'));
+  if ($in_active_trail) {
+    $class .= ' active-trail';
+  }
+  return '<li class="'. $class .'">'. $link . $menu .'</li>'."\n";
 }
 
 function theme_menu_local_task($link, $active = FALSE) {
@@ -765,11 +844,11 @@ function menu_get_active_help() {
   $output = '';
   $item = menu_get_item();
 
-  if (!$item || !$item->access) {
+  if (!$item || !$item['access']) {
     // Don't return help text for areas the user cannot access.
     return;
   }
-  $path = ($item->type == MENU_DEFAULT_LOCAL_TASK) ? $item->tab_parent : $item->path;
+  $path = ($item['type'] == MENU_DEFAULT_LOCAL_TASK) ? $item['tab_parent'] : $item['path'];
 
   foreach (module_list() as $name) {
     if (module_hook($name, 'help')) {
@@ -793,7 +872,6 @@ function menu_get_active_help() {
  */
 function menu_get_names($reset = FALSE) {
   static $names;
-  // TODO - use cache system to save this
 
   if ($reset || empty($names)) {
     $names = array();
@@ -806,13 +884,27 @@ function menu_get_names($reset = FALSE) {
 }
 
 function menu_primary_links() {
-  $tree = menu_tree_data('primary links');
-  return array();
+  $tree = menu_tree_page_data('primary_links');
+  $links = array();
+  foreach ($tree as $item) {
+    $l = $item['link']['options'];
+    $l['href'] = $item['link']['href'];
+    $l['title'] = $item['link']['title'];
+    $links[] = $l;
+  }
+  return $links;
 }
 
 function menu_secondary_links() {
-  $tree = menu_tree_data('secondary links');
-  return array();
+  $tree = menu_tree_page_data('secondary_links');
+  $links = array();
+  foreach ($tree as $item) {
+    $l = $item['link']['options'];
+    $l['href'] = $item['link']['href'];
+    $l['title'] = $item['link']['title'];
+    $links[] = $l;
+  }
+  return $links;
 }
 
 /**
@@ -828,33 +920,33 @@ function menu_local_tasks($level = 0) {
 
   if (empty($tabs)) {
     $router_item = menu_get_item();
-    if (!$router_item || !$router_item->access) {
+    if (!$router_item || !$router_item['access']) {
       return array();
     }
     // Get all tabs
-    $result = db_query("SELECT * FROM {menu_router} WHERE tab_root = '%s' AND tab_parent != '' ORDER BY weight, title", $router_item->tab_root);
+    $result = db_query("SELECT * FROM {menu_router} WHERE tab_root = '%s' AND tab_parent != '' ORDER BY weight, title", $router_item['tab_root']);
     $map = arg();
     $children = array();
     $tab_parent = array();
 
-    while ($item = db_fetch_object($result)) {
-      $children[$item->tab_parent][$item->path] = $item;
-      $tab_parent[$item->path] = $item->tab_parent;
+    while ($item = db_fetch_array($result)) {
+      $children[$item['tab_parent']][$item['path']] = $item;
+      $tab_parent[$item['path']] = $item['tab_parent'];
     }
 
     // Find all tabs below the current path
-    $path = $router_item->path;
+    $path = $router_item['path'];
     while (isset($children[$path])) {
       $tabs_current = '';
       $next_path = '';
       foreach ($children[$path] as $item) {
          _menu_translate($item, $map, TRUE);
-        if ($item->access) {
-          $link = l($item->title, $item->href); // TODO options?
+        if ($item['access']) {
+          $link = l($item['title'], $item['href']); // TODO options?
           // The default task is always active.
-          if ($item->type == MENU_DEFAULT_LOCAL_TASK) {
+          if ($item['type'] == MENU_DEFAULT_LOCAL_TASK) {
             $tabs_current .= theme('menu_local_task', $link, TRUE);
-            $next_path = $item->path;
+            $next_path = $item['path'];
           }
           else {
             $tabs_current .= theme('menu_local_task', $link);
@@ -862,12 +954,12 @@ function menu_local_tasks($level = 0) {
         }
       }
       $path = $next_path;
-      $tabs[$item->number_parts] = $tabs_current;
+      $tabs[$item['number_parts']] = $tabs_current;
     }
 
     // Find all tabs at the same level or above the current one
-    $parent = $router_item->tab_parent;
-    $path = $router_item->path;
+    $parent = $router_item['tab_parent'];
+    $path = $router_item['path'];
     $current = $router_item;
     while (isset($children[$parent])) {
       $tabs_current = '';
@@ -875,12 +967,12 @@ function menu_local_tasks($level = 0) {
       $next_parent = '';
       foreach ($children[$parent] as $item) {
          _menu_translate($item, $map, TRUE);
-        if ($item->access) {
-          $link = l($item->title, $item->href); // TODO options?
+        if ($item['access']) {
+          $link = l($item['title'], $item['href']); // TODO options?
           // We check for the active tab.
-          if ($item->path == $path) {
+          if ($item['path'] == $path) {
             $tabs_current .= theme('menu_local_task', $link, TRUE);
-            $next_path = $item->tab_parent;
+            $next_path = $item['tab_parent'];
             if (isset($tab_parent[$next_path])) {
               $next_parent = $tab_parent[$next_path];
             }
@@ -892,7 +984,7 @@ function menu_local_tasks($level = 0) {
       }
       $path = $next_path;
       $parent = $next_parent;
-      $tabs[$item->number_parts] = $tabs_current;
+      $tabs[$item['number_parts']] = $tabs_current;
     }
     // Sort by depth
     ksort($tabs);
@@ -908,6 +1000,25 @@ function menu_primary_local_tasks() {
 
 function menu_secondary_local_tasks() {
   return menu_local_tasks(1);
+}
+
+/**
+ * Returns the rendered local tasks. The default implementation renders
+ * them as tabs.
+ *
+ * @ingroup themeable
+ */
+function theme_menu_local_tasks() {
+ $output = '';
+
+ if ($primary = menu_primary_local_tasks()) {
+   $output .= "<ul class=\"tabs primary\">\n". $primary ."</ul>\n";
+ }
+ if ($secondary = menu_secondary_local_tasks()) {
+   $output .= "<ul class=\"tabs secondary\">\n". $secondary ."</ul>\n";
+ }
+
+ return $output;
 }
 
 function menu_set_active_menu_name($menu_name = NULL) {
@@ -937,26 +1048,25 @@ function menu_set_active_trail($new_trail = NULL) {
   }
   elseif (!isset($trail)) {
     $trail = array();
-    $h = array('link_title' => t('Home'), 'href' => '<front>', 'options' => array(), 'type' => 0, 'title' => '');
-    $trail[] = (object)$h;
+    $trail[] = array('title' => t('Home'), 'href' => '<front>', 'options' => array(), 'type' => 0);
     $item = menu_get_item();
     // We are on a tab.
-    if ($item->tab_parent) {
-      $href = $item->tab_root;
+    if ($item['tab_parent']) {
+      $href = $item['tab_root'];
     }
     else {
-      $href = $item->href;
+      $href = $item['href'];
     }
-    $tree = menu_tree_data(menu_get_active_menu_name());
+    $tree = menu_tree_page_data(menu_get_active_menu_name());
     $curr = array_shift($tree);
 
     while ($curr) {
-      if ($curr['link']->href == $href){
+      if ($curr['link']['href'] == $href) {
         $trail[] = $curr['link'];
         $curr = FALSE;
       }
       else {
-        if ($curr['below'] && $curr['link']->path_to_root) {
+        if ($curr['below'] && $curr['link']['in_active_trail']) {
           $trail[] = $curr['link'];
           $tree = $curr['below'];
         }
@@ -977,16 +1087,16 @@ function menu_set_location() {
 function menu_get_active_breadcrumb() {
   $breadcrumb = array();
   $item = menu_get_item();
-  if ($item && $item->access) {
+  if ($item && $item['access']) {
     $active_trail = menu_get_active_trail();
 
     foreach ($active_trail as $parent) {
-      $breadcrumb[] = l($parent->link_title, $parent->href, $parent->options);
+      $breadcrumb[] = l($parent['title'], $parent['href'], $parent['options']);
     }
     $end = end($active_trail);
 
     // Don't show a link to the current page in the breadcrumb trail.
-    if ($item->href == $end->href || ($item->type == MENU_DEFAULT_LOCAL_TASK && $end->href != '<front>')) {
+    if ($item['href'] == $end['href'] || ($item['type'] == MENU_DEFAULT_LOCAL_TASK && $end['href'] != '<front>')) {
       array_pop($breadcrumb);
     }
   }
@@ -997,55 +1107,33 @@ function menu_get_active_title() {
   $active_trail = menu_get_active_trail();
 
   foreach (array_reverse($active_trail) as $item) {
-    if (!(bool)($item->type & MENU_IS_LOCAL_TASK)) {
-      return $item->title;
+    if (!(bool)($item['type'] & MENU_IS_LOCAL_TASK)) {
+      return $item['title'];
     }
   }
 }
 
 /**
- * Get a menu item by its mlid, access checked and link translated for
+ * Get a menu link by its mlid, access checked and link translated for
  * rendering.
  *
  * @param $mlid
  *   The mlid of the menu item.
  * @return
- *   A menu object, with $item->access filled and link translated for
+ *   A menu link, with $item['access'] filled and link translated for
  *   rendering.
  */
-function menu_get_item_by_mlid($mlid) {
-  if ($item = db_fetch_object(db_query("SELECT * FROM {menu_links} ml LEFT JOIN {menu_router} m ON m.path = ml.router_path WHERE mlid = %d", $mlid))) {
+function menu_link_load($mlid) {
+  if ($item = db_fetch_array(db_query("SELECT * FROM {menu_links} ml LEFT JOIN {menu_router} m ON m.path = ml.router_path WHERE ml.mlid = %d", $mlid))) {
     _menu_link_translate($item);
-    if ($item->access) {
-      return $item;
-    }
+    return $item;
   }
   return FALSE;
 }
 
-/**
- * Returns the rendered local tasks. The default implementation renders
- * them as tabs.
- *
- * @ingroup themeable
- */
-function theme_menu_local_tasks() {
- $output = '';
-
- if ($primary = menu_primary_local_tasks()) {
-   $output .= "<ul class=\"tabs primary\">\n". $primary ."</ul>\n";
- }
- if ($secondary = menu_secondary_local_tasks()) {
-   $output .= "<ul class=\"tabs secondary\">\n". $secondary ."</ul>\n";
- }
-
- return $output;
-}
-
 function menu_cache_clear($menu_name = 'navigation') {
-  // TODO: starting stub.  This will be called whenever an item is added to or
-  // moved from a named menu
 
+  cache_clear_all('links:'. $menu_name .':', 'cache_menu', TRUE);
 }
 
 /**
@@ -1053,8 +1141,7 @@ function menu_cache_clear($menu_name = 'navigation') {
  * router items or menu links.
  */
 function menu_cache_clear_all() {
-  cache_clear_all('*', 'menu_links', TRUE);
-  cache_clear_all('*', 'menu_router', TRUE);
+  cache_clear_all('*', 'cache_menu', TRUE);
 }
 
 /**
@@ -1070,22 +1157,33 @@ function menu_rebuild() {
 /**
  * Collect, alter and store the menu definitions.
  */
-function menu_router_build() {
-  db_query('DELETE FROM {menu_router}');
-  // We need to manually call each module so that we can know which module a given item came from.
-  $callbacks = array();
-  foreach (module_implements('menu') as $module) {
-    $items = call_user_func($module . '_menu');
-    if (isset($items) && is_array($items)) {
-      foreach (array_keys($items) as $path) {
-        $items[$path]['module'] = $module;
+function menu_router_build($reset = FALSE) {
+  static $menu;
+
+  if (!isset($menu) || $reset) {
+    $cache = cache_get('router:', 'cache_menu');
+    if (!$reset && $cache && isset($cache->data)) {
+      $menu = $cache->data;
+    }
+    else {
+      db_query('DELETE FROM {menu_router}');
+      // We need to manually call each module so that we can know which module a given item came from.
+      $callbacks = array();
+      foreach (module_implements('menu') as $module) {
+        $router_items = call_user_func($module . '_menu');
+        if (isset($router_items) && is_array($router_items)) {
+          foreach (array_keys($router_items) as $path) {
+            $router_items[$path]['module'] = $module;
+          }
+          $callbacks = array_merge($callbacks, $router_items);
+        }
       }
-      $callbacks = array_merge($callbacks, $items);
+      // Alter the menu as defined in modules, keys are like user/%user.
+      drupal_alter('menu', $callbacks);
+      $menu = _menu_router_build($callbacks);
+      cache_set('router:', $menu, 'cache_menu');
     }
   }
-  // Alter the menu as defined in modules, keys are like user/%user.
-  drupal_alter('menu', $callbacks);
-  $menu = _menu_router_build($callbacks);
   return $menu;
 }
 
@@ -1093,18 +1191,24 @@ function _menu_navigation_links_rebuild($menu) {
   // Add normal and suggested items as links.
   $menu_links = array();
   foreach ($menu as $path => $item) {
-    if ($item['type'] == MENU_CALLBACK || $item['type'] == MENU_SUGGESTED_ITEM) {
-      $item['hidden'] = $item['type'];
+    if ($item['type'] == MENU_CALLBACK) {
+      $item['hidden'] = -1;
     }
+    elseif  ($item['type'] == MENU_SUGGESTED_ITEM) {
+      $item['hidden'] = 1;
+    }
+    // Note, we set this as 'system', so that we can be sure to distinguish all
+    // the menu links generated automatically from entries in {menu_router}.
+    $item['module'] = 'system';
     $item += array(
-      'menu name' => 'navigation',
+      'menu_name' => 'navigation',
       'link_title' => $item['title'],
-      'href' => $path,
-      'module' => 'system',
+      'link_path' => $path,
       'hidden' => 0,
+      'options' => empty($item['description']) ? array() : array('attributes' => array('title' => $item['description'])),
     );
     // We add nonexisting items.
-    if ($item['_visible'] && !db_result(db_query("SELECT COUNT(*) FROM {menu_links} WHERE menu_name = '%s' AND href = '%s'", $item['menu name'], $item['href']))) {
+    if ($item['_visible'] && !db_result(db_query("SELECT COUNT(*) FROM {menu_links} WHERE menu_name = '%s' AND link_path = '%s'", $item['menu_name'], $item['link_path']))) {
       $menu_links[$path] = $item;
       $sort[$path] = $item['_number_parts'];
     }
@@ -1114,7 +1218,7 @@ function _menu_navigation_links_rebuild($menu) {
     array_multisort($sort, SORT_NUMERIC, $menu_links);
 
     foreach ($menu_links as $item) {
-      menu_link_save($item, $menu);
+      menu_link_save($item);
     }
   }
   $placeholders = implode(', ', array_fill(0, count($menu), "'%s'"));
@@ -1123,12 +1227,51 @@ function _menu_navigation_links_rebuild($menu) {
 }
 
 /**
+ * Delete one or several menu links.
+ *
+ * @param $mlid
+ *   A valid menu link mlid or NULL. If NULL, $path is used.
+ * @param $path
+ *   The path to the menu items to be deleted. $mlid must be NULL.
+ */
+function menu_link_delete($mlid, $path = NULL) {
+  if (isset($mlid)) {
+    _menu_delete_item(db_fetch_array(db_query("SELECT * FROM {menu_links} WHERE mlid = %d", $mlid)));
+  }
+  else {
+    $result = db_query("SELECT * FROM {menu_links} WHERE link_path = '%s'", $path);
+    while ($link = db_fetch_array($result)) {
+      _menu_delete_item($link);
+    }
+  }
+}
+
+function _menu_delete_item($item) {
+
+  // System-created items get automatically deleted, but only on menu rebuild.
+  if ($item && $item['module'] != 'system') {
+
+    // Children get re-attached to the item's parent
+    if ($item['has_children']) {
+      $result = db_query("SELECT mlid FROM {menu_links} WHERE plid = %d", $item['mlid']);
+      while ($m = db_fetch_array($result)) {
+        $child = menu_link_load($m['mlid']);
+        $child['plid'] = $item['plid'];
+        menu_link_save($child);
+      }
+    }
+    db_query('DELETE FROM {menu_links} WHERE mlid = %d', $item['mlid']);
+    menu_cache_clear($item['menu_name']);
+  }
+}
+
+/**
  * Save a menu link.
  *
  * @param $item
- *   An array representing a menu link item. The only mandatory keys are href
- *   and link_title. Possible keys are
- *     menu name   default is navigation
+ *   An array representing a menu link item. The only mandatory keys are
+ *   link_path and link_title. Possible keys are
+ *     menu_name   default is navigation
  *     weight      default is 0
  *     expanded    whether the item is expanded.
  *     options     An array of options, @see l for more.
@@ -1137,58 +1280,53 @@ function _menu_navigation_links_rebuild($menu) {
  *     plid        The mlid of the parent.
  *     router_path The path of the relevant router item.
  */
-function menu_link_save(&$item, $_menu = NULL) {
-  static $menu;
-
-  if (isset($_menu)) {
-    $menu = $_menu;
-  }
-  elseif (!isset($menu)) {
-    $menu = menu_router_build();
-  }
+function menu_link_save(&$item) {
+  $menu = menu_router_build();
 
   drupal_alter('menu_link', $item, $menu);
 
-  $item['_external'] = menu_path_is_external($item['href']);
+  $item['_external'] = menu_path_is_external($item['link_path']);
   // Load defaults.
   $item += array(
-    'menu name' => 'navigation',
+    'menu_name' => 'navigation',
     'weight' => 0,
     'link_title' => '',
     'hidden' => 0,
     'has_children' => 0,
     'expanded' => 0,
-    'options' => empty($item['description']) ? array() : array('attributes' => array('title' => $item['description'])),
+    'options' => array(),
+    'module' => 'menu',
   );
-  $existing_item = array();
+  $menu_name = $item['menu_name'];
+  $existing_item = FALSE;
   if (isset($item['mlid'])) {
     $existing_item = db_fetch_array(db_query("SELECT * FROM {menu_links} WHERE mlid = %d", $item['mlid']));
   }
   else {
-    $existing_item = db_fetch_array(db_query("SELECT * FROM {menu_links} WHERE menu_name = '%s' AND href = '%s'", $item['menu name'], $item['href']));
+    $existing_item = db_fetch_array(db_query("SELECT * FROM {menu_links} WHERE menu_name = '%s' AND link_path = '%s'", $menu_name, $item['link_path']));
   }
 
-  if (empty($existing_item)) {
+  if (!$existing_item) {
     $item['mlid'] = db_next_id('{menu_links}_mlid');
   }
-
-  $menu_name = $item['menu name'];
-  $new_path = !$existing_item || ($existing_item['href'] != $item['href']);
-
-  // Find the parent.
-  if (isset($item['plid'])) {
-    $parent = db_fetch_array(db_query("SELECT * FROM {menu_links} WHERE mlid = %d", $item['plid']));
+  else {
+    $item['mlid'] = $existing_item['mlid'];
   }
-  else { //
-    $parent_path = $item['href'];
+
+  // Find the parent - it must be in the same menu.
+  if (isset($item['plid'])) {
+    $parent = db_fetch_array(db_query("SELECT * FROM {menu_links} WHERE menu_name = '%s' AND mlid = %d", $menu_name, $item['plid']));
+  }
+  else {
+    $parent_path = $item['link_path'];
     do {
       $parent_path = substr($parent_path, 0, strrpos($parent_path, '/'));
-      $parent = db_fetch_array(db_query("SELECT * FROM {menu_links} WHERE menu_name = '%s' AND href = '%s'", $menu_name, $parent_path));
+      $parent = db_fetch_array(db_query("SELECT * FROM {menu_links} WHERE menu_name = '%s' AND link_path = '%s'", $menu_name, $parent_path));
     } while ($parent === FALSE && $parent_path);
   }
   // Menu callbacks need to be in the links table for breadcrumbs, but can't
   // be parents if they are generated directly from a router item
-  if (empty($parent['mlid']) || $parent['hidden'] == MENU_CALLBACK) {
+  if (empty($parent['mlid']) || $parent['hidden'] < 0) {
     $item['plid'] =  0;
   }
   else {
@@ -1202,32 +1340,35 @@ function menu_link_save(&$item, $_menu = NULL) {
   }
   else {
     // Cannot add beyond the maximum depth.
-    if ($parent['depth'] >= (MENU_MAX_DEPTH)) {
+    if ($item['has_children'] && $existing_item) {
+      $limit = MENU_MAX_DEPTH - menu_link_children_relative_depth($existing_item) - 1;
+    }
+    else {
+      $limit = MENU_MAX_DEPTH - 1;
+    }
+    if ($parent['depth'] > $limit) {
       return FALSE;
     }
     $item['depth'] = $parent['depth'] + 1;
-    _menu_parents_copy($item, $parent);
-    $item['p'. $item['depth']] = $item['mlid'];
+    _menu_link_parents_set($item, $parent);
   }
-
-  if ($item['plid'] != $existing_item['plid']) {
-
-    // TODO: UPDATE the parents of the children of the current item
-    // TODO: check the has_children status of the previous parent
+  // Need to check both plid and menu_name, since plid can be 0 in any menu.
+  if ($existing_item && ($item['plid'] != $existing_item['plid'] || $menu_name != $existing_item['menu_name'])) {
+    _menu_link_move_children($item, $existing_item);
   }
   // Find the callback.
-  if (empty($item['router_path']) || $new_path) {
+  if (empty($item['router_path']) || !$existing_item || ($existing_item['link_path'] != $item['link_path'])) {
     if ($item['_external']) {
       $item['router_path'] = '';
     }
     else {
       // Find the router path which will serve this path.
-      $item['parts'] = explode('/', $item['href'], MENU_MAX_PARTS);
-      $item['router_path'] = $item['href'];
+      $item['parts'] = explode('/', $item['link_path'], MENU_MAX_PARTS);
+      $item['router_path'] = $item['link_path'];
       if (!isset($menu[$item['router_path']])) {
         list($ancestors) = menu_get_ancestors($item['parts']);
-        while ($ancestors && (!isset($menu[$item['router_path']]))) {
-          $item['router_path'] = array_pop($ancestors);
+        while ($ancestors && (empty($menu[$item['router_path']]))) {
+          $item['router_path'] = array_shift($ancestors);
         }
       }
       if (empty($item['router_path'])) {
@@ -1235,21 +1376,21 @@ function menu_link_save(&$item, $_menu = NULL) {
       }
     }
   }
-  if (!empty($existing_item)) {
-    db_query("UPDATE {menu_links} SET menu_name = '%s', plid = %d, href = '%s',
+  if ($existing_item) {
+    db_query("UPDATE {menu_links} SET menu_name = '%s', plid = %d, link_path = '%s',
       router_path = '%s', hidden = %d, external = %d, has_children = %d,
       expanded = %d, weight = %d,  depth = %d,
       p1 = %d, p2 = %d, p3 = %d, p4 = %d, p5 = %d, p6 = %d,
       module = '%s', link_title = '%s', options = '%s' WHERE mlid = %d",
-      $item['menu name'], $item['plid'], $item['href'],
+      $item['menu_name'], $item['plid'], $item['link_path'],
       $item['router_path'], $item['hidden'], $item['_external'], $item['has_children'],
-      $item['expanded'],$item['weight'],  $item['depth'],
+      $item['expanded'], $item['weight'],  $item['depth'],
       $item['p1'], $item['p2'], $item['p3'], $item['p4'], $item['p5'], $item['p6'],
       $item['module'],  $item['link_title'], serialize($item['options']), $item['mlid']);
   }
   else {
     db_query("INSERT INTO {menu_links} (
-      menu_name, mlid, plid, href,
+      menu_name, mlid, plid, link_path,
       router_path, hidden, external, has_children,
       expanded, weight, depth,
       p1, p2, p3, p4, p5, p6,
@@ -1259,18 +1400,22 @@ function menu_link_save(&$item, $_menu = NULL) {
       %d, %d, %d,
       %d, %d, %d, %d, %d, %d,
       '%s', '%s', '%s')",
-      $item['menu name'], $item['mlid'], $item['plid'], $item['href'],
+      $item['menu_name'], $item['mlid'], $item['plid'], $item['link_path'],
       $item['router_path'], $item['hidden'], $item['_external'], $item['has_children'],
-      $item['expanded'],$item['weight'],  $item['depth'],
+      $item['expanded'], $item['weight'],  $item['depth'],
       $item['p1'], $item['p2'], $item['p3'], $item['p4'], $item['p5'], $item['p6'],
       $item['module'],  $item['link_title'], serialize($item['options']));
- }
-
-  if ($item['plid'] && !$item['hidden']) {
-    db_query("UPDATE {menu_links} SET has_children = 1 WHERE mlid = %d", $item['plid']);
   }
-
-  // Keep track of which menus have expanded items
+  // Check the has_children status of the parent.
+  if ($item['plid']) {
+    $parent_has_children = (bool)db_result(db_query("SELECT COUNT(*) FROM {menu_links} WHERE plid = %d AND hidden = 0", $item['plid']));
+    db_query("UPDATE {menu_links} SET has_children = %d WHERE mlid = %d", $parent_has_children, $item['plid']);
+  }
+  menu_cache_clear($menu_name);
+  if ($existing_item && $menu_name != $existing_item['menu_name']) {
+    menu_cache_clear($existing_item['menu_name']);
+  }
+  // Keep track of which menus have expanded items.
   $names = array();
   $result = db_query("SELECT menu_name FROM {menu_links} WHERE expanded != 0 GROUP BY menu_name");
   while ($n = db_fetch_array($result)) {
@@ -1280,12 +1425,95 @@ function menu_link_save(&$item, $_menu = NULL) {
   return TRUE;
 }
 
-function _menu_parents_copy(&$dest, $source, $offset = 0){
-  $i = 1 + $offset;
-  $depth = 0;
-  for ($j = 1; $i <= MENU_MAX_DEPTH; $i++) {
-    $dest['p'. $i] = $source['p'. $j];
-    $j++;
+/**
+ * Find the depth of an item's children relative to its depth.  For example, if
+ * the item has a depth of 2, and the maximum of any child in the menu link tree
+ * is 5, the relative depth is 3.
+ *
+ * @param $item
+ *   An array representing a menu link item.
+ * @return
+ *   The relative depth, or zero.
+ *
+ */
+function menu_link_children_relative_depth($item) {
+  $i = 1;
+  $match = '';
+  $args[] = $item['menu_name'];
+  $p = 'p1';
+  while ($i <= MENU_MAX_DEPTH && $item[$p]) {
+    $match .= " AND $p = %d";
+    $args[] = $item[$p];
+    $p = 'p'. ++$i;
+  }
+
+  $max_depth = db_result(db_query_range("SELECT depth FROM {menu_links} WHERE menu_name = '%s'". $match ." ORDER BY depth DESC", $args, 0, 1));
+
+  return ($max_depth > $item['depth']) ? $max_depth - $item['depth'] : 0;
+}
+
+/**
+ * Update the menu name, parents (p1 - p6), and depth for the children of
+ * a menu link that's being moved in the tree and check the has_children status
+ * of the previous parent.
+ */
+function _menu_link_move_children($item, $existing_item) {
+
+  $args[] = $item['menu_name'];
+  $set = '';
+  $shift = $item['depth'] - $existing_item['depth'];
+  if ($shift < 0) {
+    $args[] = -$shift;
+    $set = ', depth = depth - %d';
+  }
+  elseif ($shift > 0) {
+    $args[] = $shift;
+    $set = ', depth = depth + %d';
+  }
+  $i = 1;
+  while ($i <= $item['depth']) {
+    $p = 'p'. $i++;
+    $set .= ", $p = %d";
+    $args[] = $item[$p];
+  }
+  $j = $existing_item['depth'] + 1;
+  while ($i <= MENU_MAX_DEPTH && $j <= MENU_MAX_DEPTH) {
+    $set .= ', p'. $i++ .' = p'. $j++;
+  }
+  while ($i <= MENU_MAX_DEPTH) {
+    $set .= ', p'. $i++ .' = 0';
+  }
+
+  $args[] = $existing_item['menu_name'];
+  $i = 1;
+  $match = '';
+  $p = 'p1';
+  while ($i <= MENU_MAX_DEPTH && $existing_item[$p]) {
+    $match .= " AND $p = %d";
+    $args[] = $existing_item[$p];
+    $p = 'p'. ++$i;
+  }
+
+  db_query("UPDATE {menu_links} SET menu_name = '%s'". $set ." WHERE menu_name = '%s'". $match, $args);
+
+  if ($existing_item['plid']) {
+    $parent_has_children = (bool)db_result(db_query("SELECT COUNT(*) FROM {menu_links} WHERE plid = %d AND hidden = 0 AND mlid != %d", $existing_item['plid'], $existing_item['mlid']));
+    db_query("UPDATE {menu_links} SET has_children = %d WHERE mlid = %d", $parent_has_children, $existing_item['plid']);
+  }
+}
+
+function _menu_link_parents_set(&$item, $parent) {
+  $i = 1;
+  while ($i < $item['depth']) {
+    $p = 'p'. $i++;
+    $item[$p] = $parent[$p];
+  }
+  $p = 'p'. $i++;
+  // The parent (p1 - p6) corresponding to the depth always equals the mlid.
+  $item[$p] = $item['mlid'];
+  while ($i <= MENU_MAX_DEPTH) {
+    $p = 'p'. $i++;
+    $item[$p] = 0;
   }
 }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.117 2007/05/25 12:46:45 dries Exp $
+// $Id: system.install,v 1.118 2007/05/27 20:31:13 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -227,7 +227,7 @@ function system_install() {
   }
 
   // Create tables.
-  $modules = array('system', 'filter', 'block', 'user', 'node', 'menu', 'comment', 'taxonomy');
+  $modules = array('system', 'filter', 'block', 'user', 'node', 'comment', 'taxonomy');
   foreach ($modules as $module) {
     drupal_install_schema($module);
   }
@@ -2977,14 +2977,15 @@ function system_update_6012() {
       db_add_column($ret, 'cache', 'serialized', 'smallint', array('default' => "'0'", 'not null' => TRUE));
       db_add_column($ret, 'cache_filter', 'serialized', 'smallint', array('default' => "'0'", 'not null' => TRUE));
       db_add_column($ret, 'cache_page', 'serialized', 'smallint', array('default' => "'0'", 'not null' => TRUE));
+      db_add_column($ret, 'cache_menu', 'serialized', 'smallint', array('default' => "'0'", 'not null' => TRUE));
       break;
     case 'mysql':
     case 'mysqli':
       $ret[] = update_sql("ALTER TABLE {cache} ADD serialized int(1) NOT NULL default '0'");
       $ret[] = update_sql("ALTER TABLE {cache_filter} ADD serialized int(1) NOT NULL default '0'");
       $ret[] = update_sql("ALTER TABLE {cache_page} ADD serialized int(1) NOT NULL default '0'");
+      $ret[] = update_sql("ALTER TABLE {cache_menu} ADD serialized int(1) NOT NULL default '0'");
       break;
-
   }
 
   return $ret;
@@ -3284,6 +3285,26 @@ function system_update_6019() {
   return $ret;
 }
 
+function system_update_6020() {
+  $ret = array();
+
+  $schema['menu_router'] = drupal_get_schema_unprocessed('system', 'menu_router');
+  $schema['menu_links'] = drupal_get_schema_unprocessed('system', 'menu_links');
+  _drupal_initialize_schema('system', $schema);
+  $ret = array();
+  foreach ($schema as $table) {
+    db_create_table($ret, $table);
+  }
+  return $ret;
+}
+
+function system_update_6021() {
+  $ret = array();
+  // TODO - menu module updates. These need to happen before we do the menu_rebuild
+
+  menu_rebuild();
+  return $ret;
+}
 
 /**
  * @} End of "defgroup updates-5.x-to-6.x"
