@@ -1,4 +1,4 @@
-/* $Id: system.css,v 1.27 2007/05/20 16:38:19 dries Exp $ */
+/* $Id: system.css,v 1.28 2007/05/27 17:57:48 goba Exp $ */
 
 /*
 ** HTML elements
@@ -21,8 +21,8 @@ tbody th {
   border-bottom: 1px solid #ccc;
 }
 thead th {
-  text-align: left;
-  padding-right: 1em;
+  text-align: left; /* LTR */
+  padding-right: 1em; /* LTR */
   border-bottom: 3px solid #ccc;
 }
 
@@ -50,9 +50,9 @@ div.ok, tr.ok {
 }
 .item-list .icon {
   color: #555;
-  float: right;
-  padding-left: 0.25em;
-  clear: right;
+  float: right; /* LTR */
+  padding-left: 0.25em; /* LTR */
+  clear: right; /* LTR */
 }
 .item-list .title {
   font-weight: bold;
@@ -62,7 +62,7 @@ div.ok, tr.ok {
   padding: 0;
 }
 .item-list ul li {
-  margin: 0 0 0.25em 1.5em;
+  margin: 0 0 0.25em 1.5em; /* LTR */
   padding: 0;
   list-style: disc;
 }
@@ -109,11 +109,11 @@ tr.merge-up, tr.merge-up td, tr.merge-up th {
   color: #f00;
 }
 .more-link {
-  text-align: right;
+  text-align: right; /* LTR */
 }
 .more-help-link {
   font-size: 0.85em;
-  text-align: right;
+  text-align: right; /* LTR */
 }
 .nowrap {
   white-space: nowrap;
@@ -147,10 +147,10 @@ dl.multiselect dd.a, dl.multiselect dd.a .form-item {
   width: 8em;
 }
 dl.multiselect dt, dl.multiselect dd {
-  float: left;
+  float: left; /* LTR */
   line-height: 1.75em;
   padding: 0;
-  margin: 0 1em 0 0;
+  margin: 0 1em 0 0; /* LTR */
 }
 dl.multiselect .form-item {
   height: 1.75em;
@@ -170,27 +170,27 @@ dl.multiselect .form-item {
 ul.menu {
   list-style: none;
   border: none;
-  text-align:left;
+  text-align:left; /* LTR */
 }
 ul.menu li {
-  margin: 0 0 0 0.5em;
+  margin: 0 0 0 0.5em; /* LTR */
 }
 li.expanded {
   list-style-type: circle;
   list-style-image: url(../../misc/menu-expanded.png);
-  padding: 0.2em 0.5em 0 0;
+  padding: 0.2em 0.5em 0 0; /* LTR */
   margin: 0;
 }
 li.collapsed {
   list-style-type: disc;
-  list-style-image: url(../../misc/menu-collapsed.png);
-  padding: 0.2em 0.5em 0 0;
+  list-style-image: url(../../misc/menu-collapsed.png); /* LTR */
+  padding: 0.2em 0.5em 0 0; /* LTR */
   margin: 0;
 }
 li.leaf {
   list-style-type: square;
   list-style-image: url(../../misc/menu-leaf.png);
-  padding: 0.2em 0.5em 0 0;
+  padding: 0.2em 0.5em 0 0; /* LTR */
   margin: 0;
 }
 li a.active {
@@ -213,7 +213,7 @@ ul.links li {
 }
 .block ul {
   margin: 0;
-  padding: 0 0 0.25em 1em;
+  padding: 0 0 0.25em 1em; /* LTR */
 }
 
 /*
@@ -221,7 +221,7 @@ ul.links li {
 */
 ul.primary {
   border-collapse: collapse;
-  padding: 0 0 0 1em;
+  padding: 0 0 0 1em; /* LTR */
   white-space: nowrap;
   list-style: none;
   margin: 5px;
@@ -238,7 +238,7 @@ ul.primary li a {
   border-width: 1px;
   border-style: solid solid none solid;
   height: auto;
-  margin-right: 0.5em;
+  margin-right: 0.5em; /* LTR */
   padding: 0 1em;
   text-decoration: none;
 }
@@ -260,7 +260,7 @@ ul.secondary {
 ul.secondary li {
   display: inline;
   padding: 0 1em;
-  border-right: 1px solid #ccc;
+  border-right: 1px solid #ccc; /* LTR */
 }
 ul.secondary a {
   padding: 0;
@@ -299,10 +299,10 @@ ul.secondary a.active {
 html.js input.form-autocomplete {
   background-image: url(../../misc/throbber.gif);
   background-repeat: no-repeat;
-  background-position: 100% 2px;
+  background-position: 100% 2px; /* LTR */
 }
 html.js input.throbbing {
-  background-position: 100% -18px;
+  background-position: 100% -18px; /* LTR */
 }
 
 /*
@@ -322,12 +322,12 @@ html.js fieldset.collapsed legend {
   display: block;
 }
 html.js fieldset.collapsible legend a {
-  padding-left: 15px;
-  background: url(../../misc/menu-expanded.png) 5px 75% no-repeat;
+  padding-left: 15px; /* LTR */
+  background: url(../../misc/menu-expanded.png) 5px 75% no-repeat; /* LTR */
 }
 html.js fieldset.collapsed legend a {
-  background-image: url(../../misc/menu-collapsed.png);
-  background-position: 5px 50%;
+  background-image: url(../../misc/menu-collapsed.png); /* LTR */
+  background-position: 5px 50%; /* LTR */
 }
 /* Note: IE-only fix due to '* html' (breaks Konqueror otherwise). */
 * html.js fieldset.collapsed legend,
@@ -372,13 +372,13 @@ html.js .resizable-textarea textarea {
   margin-bottom: -2px;
 }
 div.teaser-button-wrapper {
-  float: right;
-  padding-right: 5%;
+  float: right; /* LTR */
+  padding-right: 5%; /* LTR */
   margin: 0;
 }
 .teaser-checkbox div.form-item {
-  float: right;
-  margin: 0 5% 0 0;
+  float: right; /* LTR */
+  margin: 0 5% 0 0; /* LTR */
   padding: 0;
 }
 textarea.teaser {
@@ -407,7 +407,7 @@ html.js .no-js {
   width: 0%;
 }
 .progress .percentage {
-  float: right;
+  float: right; /* LTR */
 }
 
 /*

@@ -1,4 +1,4 @@
-/* $Id: admin.css,v 1.15 2007/05/17 07:28:42 dries Exp $ */
+/* $Id: admin.css,v 1.16 2007/05/27 17:57:48 goba Exp $ */
 
 /*
 ** Formatting for administration page
@@ -14,7 +14,7 @@ div.admin-panel .description {
 }
 
 div.admin-panel .body {
-  padding: 0 4px 2px 8px;
+  padding: 0 4px 2px 8px; /* LTR */
 }
 
 div.admin {
@@ -33,9 +33,9 @@ div.admin .right {
 }
 
 div.admin .expert-link {
-  text-align: right;
-  margin-right: 1em;
-  padding-right: 4px;
+  text-align: right; /* LTR */
+  margin-right: 1em; /* LTR */
+  padding-right: 4px; /* LTR */
 }
 
 table.package {
@@ -65,11 +65,11 @@ table.system-status-report th {
   border-bottom: 1px solid #ccc;
 }
 table.system-status-report th, table.system-status-report tr.merge-up td {
-  padding-left: 30px;
+  padding-left: 30px; /* LTR */
 }
 table.system-status-report th  {
   background-repeat: no-repeat;
-  background-position: 5px 50%;
+  background-position: 5px 50%; /* LTR */
   padding-top: 6px;
   padding-bottom: 6px;
 }
@@ -102,7 +102,7 @@ table.system-status-report tr.ok th {
  * Formatting for theme overview
  */
 table.screenshot {
-  margin-right: 1em;
+  margin-right: 1em; /* LTR */
 }
 .theme-info h2 {
   margin-bottom: 0;
@@ -117,7 +117,7 @@ table.screenshot {
  */
 div.date-container {
   overflow: auto;
-  clear: left;
+  clear: left; /* LTR */
 }
 
 div.date-container > div, div.date-container > div > div {
@@ -126,7 +126,7 @@ div.date-container > div, div.date-container > div > div {
 }
 
 div.date-container div {
-  float: left;
+  float: left; /* LTR */
 }
 
 html.js div.custom-container {
@@ -138,7 +138,7 @@ html.js div.custom-container .form-item label {
 }
 
 div.custom-container {
-  margin-left: 15px;
+  margin-left: 15px; /* LTR */
   width: 50%;
 }
 

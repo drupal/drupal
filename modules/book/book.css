@@ -1,4 +1,4 @@
-/* $Id: book.css,v 1.3 2007/01/29 18:53:38 dries Exp $ */
+/* $Id: book.css,v 1.4 2007/05/27 17:57:48 goba Exp $ */
 
 .book-navigation .menu {
   border-top: 1px solid #888;
@@ -14,13 +14,13 @@
   text-align: left;
   width: 42%;
   display: block;
-  float: left;
+  float: left; /* LTR */
 }
 .book-navigation .page-up {
   margin: 0 5%;
   width: 4%;
   display: block;
-  float: left;
+  float: left; /* LTR */
 }
 .book-navigation .page-next {
   text-align: right;

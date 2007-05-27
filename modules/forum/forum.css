@@ -1,4 +1,4 @@
-/* $Id: forum.css,v 1.3 2007/01/31 16:01:17 dries Exp $ */
+/* $Id: forum.css,v 1.4 2007/05/27 17:57:48 goba Exp $ */
 
 #forum .description {
   font-size: 0.9em;
@@ -11,8 +11,8 @@
   text-align: center;
 }
 #forum tr td.forum {
-  padding-left: 25px;
-  background-position: 2px 2px;
+  padding-left: 25px; /* LTR */
+  background-position: 2px 2px; /* LTR */
   background-image: url(../../misc/forum-default.png);
   background-repeat: no-repeat;
 }
@@ -20,19 +20,19 @@
   background-image: url(../../misc/forum-new.png);
 }
 .forum-topic-navigation {
-  padding: 1em 0 0 3em;
+  padding: 1em 0 0 3em; /* LTR */
   border-top: 1px solid #888;
   border-bottom: 1px solid #888;
   text-align: center;
   padding: 0.5em;
 }
 .forum-topic-navigation .topic-previous {
-  text-align: right;
-  float: left;
+  text-align: right; /* LTR */
+  float: left; /* LTR */
   width: 46%;
 }
 .forum-topic-navigation .topic-next {
-  text-align: left;
-  float: right;
+  text-align: left; /* LTR */
+  float: right; /* LTR */
   width: 46%;
 }

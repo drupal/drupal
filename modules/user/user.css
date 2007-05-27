@@ -1,14 +1,14 @@
-/* $Id: user.css,v 1.5 2007/05/20 12:34:48 dries Exp $ */
+/* $Id: user.css,v 1.6 2007/05/27 17:57:48 goba Exp $ */
 
 #permissions td.module {
   font-weight: bold;
 }
 #permissions td.permission {
-  padding-left: 1.5em;
+  padding-left: 1.5em; /* LTR */
 }
 #access-rules .access-type, #access-rules .rule-type {
-  margin-right: 1em;
-  float: left;
+  margin-right: 1em; /* LTR */
+  float: left; /* LTR */
 }
 #access-rules .access-type .form-item, #access-rules .rule-type .form-item {
   margin-top: 0;
@@ -26,9 +26,9 @@
   width: 100%;
 }
 #user-admin-buttons {
-  float: left;
-  margin-left: 0.5em;
-  clear: right;
+  float: left; /* LTR */
+  margin-left: 0.5em; /* LTR */
+  clear: right; /* LTR */
 }
 #user-admin-settings fieldset .description {
   font-size: 0.85em;
@@ -41,8 +41,8 @@
   margin: 1em 0;
 }
 .profile .picture {
-  float: right;
-  margin: 0 1em 1em 0;
+  float: right; /* LTR */
+  margin: 0 1em 1em 0; /* LTR */
 }
 .profile dt {
   margin: 1em 0 0.2em 0;

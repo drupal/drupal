@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.644 2007/05/26 10:54:12 dries Exp $
+// $Id: common.inc,v 1.645 2007/05/27 17:57:47 goba Exp $
 
 /**
  * @file
@@ -1450,6 +1450,14 @@ function drupal_add_link($attributes) {
  * @param $path
  *   (optional) The path to the CSS file relative to the base_path(), e.g.,
  *   /modules/devel/devel.css.
+ *
+ *   If the direction of the current language is right-to-left (Hebrew, 
+ *   Arabic, etc.), the function will also look for an RTL CSS file and append 
+ *   it to the list. The name of this file should have an '-rtl.css' suffix.
+ *   For example a CSS file called 'name.css' will have a 'name-rtl.css' 
+ *   file added to the list, if exists in the same directory. This CSS file
+ *   should contain overrides for properties which should be reversed or
+ *   otherwise different in a right-to-left display.
  * @param $type
  *   (optional) The type of stylesheet that is being added. Types are: module
  *   or theme.
@@ -1483,6 +1491,7 @@ function drupal_add_link($attributes) {
  */
 function drupal_add_css($path = NULL, $type = 'module', $media = 'all', $preprocess = TRUE) {
   static $css = array();
+  global $language;	
 
   // Create an array of CSS files for each media type first, since each type needs to be served
   // to the browser differently.
@@ -1492,8 +1501,16 @@ function drupal_add_css($path = NULL, $type = 'module', $media = 'all', $preproc
       $css[$media] = array('module' => array(), 'theme' => array());
     }
     $css[$media][$type][$path] = $preprocess;
-  }
 
+    // If the current language is RTL, add the CSS file with RTL overrides.
+    if (defined('LANGUAGE_RTL') && $language->direction == LANGUAGE_RTL) {
+      $rtl_path = str_replace('.css', '-rtl.css', $path);
+      if (file_exists($rtl_path)) {
+        $css[$media][$type][$rtl_path] = $preprocess;
+      }
+    }
+  }
+  
   return $css;
 }
 

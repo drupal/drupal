@@ -1,10 +1,10 @@
-/* $Id: help.css,v 1.1 2006/08/14 07:14:49 drumm Exp $ */
+/* $Id: help.css,v 1.2 2007/05/27 17:57:48 goba Exp $ */
 
 .help-items {
-  float: left;
+  float: left; /* LTR */
   width: 22%;
-  padding-right: 3%;
+  padding-right: 3%; /* LTR */
 }
 .help-items-last {
-  padding-right: 0;
+  padding-right: 0; /* LTR */
 }

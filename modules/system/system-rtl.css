@@ -1,0 +1,85 @@
+/* $Id $ */
+
+.item-list .icon {
+  float: left;
+  padding-left: inherit;
+  padding-right: 0.25em;
+  clear: left;
+}
+.item-list ul li {
+  margin: 0 1.5em 0.25em 0;
+}
+
+.more-link {
+  text-align: left;
+}
+.more-help-link {
+  text-align: left;
+}
+
+dl.multiselect dt, dl.multiselect dd {
+  float: right;
+  margin: 0 0 0 1em;
+}
+ul.menu {
+  text-align:right;
+}
+ul.menu li {
+  margin: 0 0.5em 0 0;
+}
+li.expanded {
+  padding: 0.2em 0 0 0.5em;
+}
+li.collapsed {
+  list-style-image: url(../../misc/menu-collapsed-rtl.png);
+  padding: 0.2em 0 0 0.5em;
+}
+li.leaf {
+  padding: 0.2em 0 0 0.5em;
+}
+.block ul {
+  padding: 0 1em 0.25em 0;
+}
+
+ul.primary {
+  padding: 0 1em 0 0;
+}
+ul.primary li a {
+  margin-right: inherit;
+  margin-left: 0.5em;
+}
+ul.secondary li {
+  display: inline;
+  padding: 0 1em;
+  border-right: inherit;
+  border-left: 1px solid #ccc;
+}
+html.js input.form-autocomplete {
+  background-position: 0% 2px;
+}
+html.js input.throbbing {
+  background-position: 0% -18px;
+}
+
+html.js fieldset.collapsible legend a {
+  padding-left: inherit;
+  padding-right: 15px;
+  background-position: 98% 75%;
+}
+html.js fieldset.collapsed legend a {
+  background-image: url(../../misc/menu-collapsed-rtl.png);
+  background-position: 98% 50%;
+}
+
+div.teaser-button-wrapper {
+  float: left;
+  padding-right: inherit;
+  padding-left: 5%;
+}
+.teaser-checkbox div.form-item {
+  float: left;
+  margin: 0 0 0 5%;
+}
+.progress .percentage {
+  float: left;
+}
