@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.198 2007/05/28 06:08:37 dries Exp $
+// $Id: form.inc,v 1.199 2007/05/28 06:20:28 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -760,7 +760,7 @@ function form_builder($form_id, $form, &$form_state) {
  * attached to a specific element.
  */
 function _form_builder_handle_input_element($form_id, &$form, &$form_state) {
-  if (isset($form['#type']) && $form['#type'] == 'form' && !empty($form['#programed'])) {
+  if (isset($form['#type']) && $form['#type'] == 'form' && !empty($form['#programmed'])) {
     $form_state['submitted'] = TRUE;
   }
 
