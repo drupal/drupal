@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.398 2007/05/28 06:08:42 dries Exp $
+// $Id: forum.module,v 1.399 2007/05/28 06:19:05 dries Exp $
 
 /**
  * @file
@@ -889,22 +889,16 @@ function _forum_new($tid) {
  * Menu callback; prints a forum listing.
  */
 function forum_page($tid = 0) {
-  if (module_exists('taxonomy') && module_exists('comment')) {
-    $forum_per_page = variable_get('forum_per_page', 25);
-    $sortby = variable_get('forum_order', 1);
+  $forum_per_page = variable_get('forum_per_page', 25);
+  $sortby = variable_get('forum_order', 1);
 
-    $forums = forum_get_forums($tid);
-    $parents = taxonomy_get_parents_all($tid);
-    if ($tid && !in_array($tid, variable_get('forum_containers', array()))) {
-      $topics = forum_get_topics($tid, $sortby, $forum_per_page);
-    }
+  $forums = forum_get_forums($tid);
+  $parents = taxonomy_get_parents_all($tid);
+  if ($tid && !in_array($tid, variable_get('forum_containers', array()))) {
+    $topics = forum_get_topics($tid, $sortby, $forum_per_page);
+  }
 
-    return theme('forum_display', $forums, $topics, $parents, $tid, $sortby, $forum_per_page);
-  }
-  else {
-    drupal_set_message(t('The forum module requires both the taxonomy module and the comment module to be enabled and configured.'), 'error');
-    return ' ';
-  }
+  return theme('forum_display', $forums, $topics, $parents, $tid, $sortby, $forum_per_page);
 }
 
 /**
