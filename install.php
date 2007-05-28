@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.54 2007/05/28 06:08:37 dries Exp $
+// $Id: install.php,v 1.55 2007/05/28 18:50:49 dries Exp $
 
 require_once './includes/install.inc';
 
@@ -387,7 +387,7 @@ function _install_settings_form_validate($db_prefix, $db_type, $db_user, $db_pas
 /**
  * Form API submit for install_settings form.
  */
-function install_settings_form_submit($form_values) {
+function install_settings_form_submit($form, &$form_state, $form_values) {
   global $profile, $install_locale;
 
   // Update global settings array and save
@@ -946,7 +946,7 @@ function install_configure_form_submit($form, &$form_state, $form_values) {
   variable_set('date_default_timezone', $form_values['date_default_timezone']);
   // Turn this off temporarily so that we can pass a password through.
   variable_set('user_email_verification', FALSE);
-  user_register_submit($form_values['account'], $form, $form_state);
+  user_register_submit($form, $form_state, $form_values['account']);
   variable_set('user_email_verification', TRUE);
   if (isset($form_values['clean_url'])) {
     variable_set('clean_url', $form_values['clean_url']);
