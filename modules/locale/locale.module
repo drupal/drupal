@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.174 2007/05/22 07:42:37 dries Exp $
+// $Id: locale.module,v 1.175 2007/05/28 06:08:42 dries Exp $
 
 /**
  * @file
@@ -214,7 +214,7 @@ function locale_user($type, $edit, &$user, $category = NULL) {
 /**
  * Implementation of hook_form_alter(). Adds language fields to forms.
  */
-function locale_form_alter(&$form, $form_id) {
+function locale_form_alter(&$form, $form_state, $form_id) {
   switch ($form_id) {
 
     // Language field for paths

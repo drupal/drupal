@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.119 2007/05/16 13:45:16 dries Exp $
+// $Id: path.module,v 1.120 2007/05/28 06:08:43 dries Exp $
 
 /**
  * @file
@@ -105,7 +105,7 @@ function path_admin_delete_confirm($pid) {
 /**
  * Execute URL alias deletion
  **/
-function path_admin_delete_confirm_submit($form_values, $form, &$form_state) {
+function path_admin_delete_confirm_submit($form, &$form_state, $form_values) {
   if ($form_values['confirm']) {
     path_admin_delete($form_values['pid']);
     $form_state['redirect'] = 'admin/build/path';
@@ -266,7 +266,7 @@ function path_nodeapi(&$node, $op, $arg) {
 /**
  * Implementation of hook_form_alter().
  */
-function path_form_alter(&$form, $form_id) {
+function path_form_alter(&$form, $form_state, $form_id) {
   if (isset($form['type']) && isset($form['#node']) && $form['type']['#value'] .'_node_form' == $form_id) {
     $path = isset($form['#node']->path) ? $form['#node']->path : NULL;
     $form['path'] = array(
@@ -367,7 +367,7 @@ function path_load($pid) {
 /**
  * Verify that a new URL alias is valid
  */
-function path_form_validate($form_values, $form, &$form_state) {
+function path_form_validate($form, &$form_state, $form_values) {
   $src = $form_values['src'];
   $dst = $form_values['dst'];
   $pid = isset($form_values['pid']) ? $form_values['pid'] : 0;
@@ -382,7 +382,7 @@ function path_form_validate($form_values, $form, &$form_state) {
 /**
  * Save a new URL alias to the database.
  */
-function path_form_submit($form_values, $form, &$form_state) {
+function path_form_submit($form, &$form_state, $form_values) {
   // Language is only set if locale module is enabled
   path_set_alias($form_values['src'], $form_values['dst'], isset($form_values['pid']) ? $form_values['pid'] : 0, isset($form_values['language']) ? $form_values['language'] : '');
 

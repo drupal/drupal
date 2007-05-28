@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.355 2007/05/14 13:43:37 dries Exp $
+// $Id: taxonomy.module,v 1.356 2007/05/28 06:08:46 dries Exp $
 
 /**
  * @file
@@ -304,7 +304,7 @@ function taxonomy_form_vocabulary($edit = array()) {
 /**
  * Accept the form submission for a vocabulary and save the results.
  */
-function taxonomy_form_vocabulary_submit($form_values, $form, &$form_state) {
+function taxonomy_form_vocabulary_submit($form, &$form_state, $form_values) {
   // Fix up the nodes array to remove unchecked nodes.
   $form_values['nodes'] = array_filter($form_values['nodes']);
   switch (taxonomy_save_vocabulary($form_values)) {
@@ -393,7 +393,7 @@ function taxonomy_vocabulary_confirm_delete($vid) {
                   t('Cancel'));
 }
 
-function taxonomy_vocabulary_confirm_delete_submit($form_values, $form, &$form_state) {
+function taxonomy_vocabulary_confirm_delete_submit($form, &$form_state, $form_values) {
   $status = taxonomy_del_vocabulary($form_values['vid']);
   drupal_set_message(t('Deleted vocabulary %name.', array('%name' => $form_values['name'])));
   watchdog('taxonomy', 'Deleted vocabulary %name.', array('%name' => $form_values['name']), WATCHDOG_NOTICE);
@@ -479,7 +479,7 @@ function taxonomy_form_term($vocabulary, $edit = array()) {
 /**
  * Accept the form submission for a taxonomy term and save the result.
  */
-function taxonomy_form_term_submit($form_values, $form, &$form_state) {
+function taxonomy_form_term_submit($form, &$form_state, $form_values) {
   switch (taxonomy_save_term($form_values)) {
     case SAVED_NEW:
       drupal_set_message(t('Created new term %term.', array('%term' => $form_values['name'])));
@@ -629,7 +629,7 @@ function taxonomy_term_confirm_delete($tid) {
                   t('Cancel'));
 }
 
-function taxonomy_term_confirm_delete_submit($form_values, $form, &$form_state) {
+function taxonomy_term_confirm_delete_submit($form, &$form_state, $form_values) {
   taxonomy_del_term($form_values['tid']);
   drupal_set_message(t('Deleted term %name.', array('%name' => $form_values['name'])));
   watchdog('taxonomy', 'Deleted term %name.', array('%name' => $form_values['name']), WATCHDOG_NOTICE);
@@ -702,7 +702,7 @@ function taxonomy_get_vocabularies($type = NULL) {
  * Implementation of hook_form_alter().
  * Generate a form for selecting terms to associate with a node.
  */
-function taxonomy_form_alter(&$form, $form_id) {
+function taxonomy_form_alter(&$form, $form_state, $form_id) {
   if (isset($form['type']) && isset($form['#node']) && $form['type']['#value'] .'_node_form' == $form_id) {
     $node = $form['#node'];
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.397 2007/05/14 13:43:36 dries Exp $
+// $Id: forum.module,v 1.398 2007/05/28 06:08:42 dries Exp $
 
 /**
  * @file
@@ -230,7 +230,7 @@ function forum_admin_settings() {
 /**
  * Implementation of hook_form_alter().
  */
-function forum_form_alter(&$form, $form_id) {
+function forum_form_alter(&$form, $form_state, $form_id) {
   // hide critical options from forum vocabulary
   if ($form_id == 'taxonomy_form_vocabulary') {
     if (isset($form['vid']) && $form['vid']['#value'] == _forum_get_vid()) {
@@ -568,7 +568,7 @@ function forum_form_forum($edit = array()) {
 /**
  * Process forum form and container form submissions.
  */
-function forum_form_submit($form_values, $form, &$form_state) {
+function forum_form_submit($form, &$form_state, $form_values) {
   if ($form['form_id'] == 'forum_form_container') {
     $container = TRUE;
     $type = t('forum container');
@@ -613,7 +613,7 @@ function forum_confirm_delete($tid) {
 /**
  * Implementation of forms api _submit call. Deletes a forum after confirmation.
  */
-function forum_confirm_delete_submit($form_values, $form, &$form_state) {
+function forum_confirm_delete_submit($form, &$form_state, $form_values) {
   taxonomy_del_term($form_values['tid']);
   drupal_set_message(t('The forum %term and all sub-forums and associated posts have been deleted.', array('%term' => $form_values['name'])));
   watchdog('content', 'forum: deleted %term and all its sub-forums and associated posts.', array('%term' => $form_values['name']));

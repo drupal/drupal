@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.32 2007/05/16 13:45:16 dries Exp $
+// $Id: content_types.inc,v 1.33 2007/05/28 06:08:43 dries Exp $
 
 /**
  * @file
@@ -216,7 +216,7 @@ function node_type_form($type = NULL) {
 /**
  * Implementation of hook_form_validate().
  */
-function node_type_form_validate($form_values, $form, &$form_state) {
+function node_type_form_validate($form, &$form_state, $form_values) {
   $type = new stdClass();
   $type->type = trim($form_values['type']);
   $type->name = trim($form_values['name']);
@@ -252,7 +252,7 @@ function node_type_form_validate($form_values, $form, &$form_state) {
 /**
  * Implementation of hook_form_submit().
  */
-function node_type_form_submit($form_values, $form, &$form_state) {
+function node_type_form_submit($form, &$form_state, $form_values) {
   $op = isset($form_values['op']) ? $form_values['op'] : '';
 
   $type = new stdClass();
@@ -398,7 +398,7 @@ function node_type_delete_confirm($type) {
 /**
  * Process content type delete confirm submissions.
  */
-function node_type_delete_confirm_submit($form_values, $form, &$form_state) {
+function node_type_delete_confirm_submit($form, &$form_state, $form_values) {
   node_type_delete($form_values['type']);
 
   $t_args = array('%name' => $form_values['name']);

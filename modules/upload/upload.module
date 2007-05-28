@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.160 2007/05/14 13:43:38 dries Exp $
+// $Id: upload.module,v 1.161 2007/05/28 06:08:47 dries Exp $
 
 /**
  * @file
@@ -119,7 +119,7 @@ function upload_init() {
 /**
  * Form API callback to validate the upload settings form.
  */
-function upload_admin_settings_validate($form_values, $form, &$form_state) {
+function upload_admin_settings_validate($form, &$form_state, $form_values) {
   if (($form_values['upload_max_resolution'] != '0')) {
     if (!preg_match('/^[0-9]+x[0-9]+$/', $form_values['upload_max_resolution'])) {
       form_set_error('upload_max_resolution', t('The maximum allowed image size expressed as WIDTHxHEIGHT (e.g. 640x480). Set to 0 for no restriction.'));
@@ -350,7 +350,7 @@ function _upload_prepare(&$node) {
   }
 }
 
-function upload_form_alter(&$form, $form_id) {
+function upload_form_alter(&$form, $form_state, $form_id) {
   if ($form_id == 'node_type_form' && isset($form['identity']['type'])) {
     $form['workflow']['upload'] = array(
       '#type' => 'radios',
@@ -912,9 +912,9 @@ function upload_js() {
     '#tree' => FALSE,
     '#parents' => array(),
   );
-  drupal_alter('form', $form, 'upload_js');
+  drupal_alter('form', $form, array(), 'upload_js');
   $form_state = array('submitted' => FALSE);
-  $form = form_builder('upload_js', $form, $form_state);
+  $form = form_builder('upload_js', $form, array());
   $output = theme('status_messages') . drupal_render($form);
   // We send the updated file attachments form.
   print drupal_to_js(array('status' => TRUE, 'data' => $output));

@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.84 2007/05/14 13:43:35 dries Exp $
+// $Id: contact.module,v 1.85 2007/05/28 06:08:42 dries Exp $
 
 /**
  * @file
@@ -209,7 +209,7 @@ function contact_admin_edit($cid = NULL) {
 /**
  * Validate the contact category edit page form submission.
  */
-function contact_admin_edit_validate($form_values, $form, &$form_state) {
+function contact_admin_edit_validate($form, &$form_state, $form_values) {
   if (empty($form_values['category'])) {
     form_set_error('category', t('You must enter a category.'));
   }
@@ -229,7 +229,7 @@ function contact_admin_edit_validate($form_values, $form, &$form_state) {
 /**
  * Process the contact category edit page form submission.
  */
-function contact_admin_edit_submit($form_values, $form, &$form_state) {
+function contact_admin_edit_submit($form, &$form_state, $form_values) {
   if ($form_values['selected']) {
     // Unselect all other contact categories.
     db_query('UPDATE {contact} SET selected = 0');
@@ -276,7 +276,7 @@ function contact_admin_delete($cid = NULL) {
 /**
  * Process category delete form submission.
  */
-function contact_admin_delete_submit($form_values, $form, &$form_state) {
+function contact_admin_delete_submit($form, &$form_state, $form_values) {
   db_query("DELETE FROM {contact} WHERE cid = %d", arg(4));
   drupal_set_message(t('Category %category has been deleted.', array('%category' => $form_values['category'])));
   watchdog('mail', 'Contact form: category %category deleted.', array('%category' => $form_values['category']), WATCHDOG_NOTICE);
@@ -359,7 +359,7 @@ function contact_mail_user($recipient) {
 /**
  * Process the personal contact page form submission.
  */
-function contact_mail_user_submit($form_values, $form, &$form_state) {
+function contact_mail_user_submit($form, &$form_state, $form_values) {
   global $user;
 
   $account = user_load(array('uid' => arg(1), 'status' => 1));
@@ -496,7 +496,7 @@ function contact_mail_page() {
 /**
  * Validate the site-wide contact page form submission.
  */
-function contact_mail_page_validate($form_values, $form, &$form_state) {
+function contact_mail_page_validate($form, &$form_state, $form_values) {
   if (!$form_values['cid']) {
     form_set_error('category', t('You must select a valid category.'));
   }
@@ -508,7 +508,7 @@ function contact_mail_page_validate($form_values, $form, &$form_state) {
 /**
  * Process the site-wide contact page form submission.
  */
-function contact_mail_page_submit($form_values, $form, &$form_state) {
+function contact_mail_page_submit($form, &$form_state, $form_values) {
 
   // E-mail address of the sender: as the form field is a text field,
   // all instances of \r and \n have been automatically stripped from it.

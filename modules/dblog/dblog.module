@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.module,v 1.6 2007/05/14 13:43:35 dries Exp $
+// $Id: dblog.module,v 1.7 2007/05/28 06:08:42 dries Exp $
 
 /**
  * @file
@@ -369,7 +369,7 @@ function theme_dblog_filters($form) {
   return $output;
 }
 
-function dblog_filter_form_validate($form_values, $form, &$form_state) {
+function dblog_filter_form_validate($form, &$form_state, $form_values) {
   if ($form_values['op'] == t('Filter') && empty($form_values['type']) && empty($form_values['severity'])) {
     form_set_error('type', t('You must select something to filter by.'));
   }

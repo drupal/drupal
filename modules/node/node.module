@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.819 2007/05/23 07:55:08 dries Exp $
+// $Id: node.module,v 1.820 2007/05/28 06:08:43 dries Exp $
 
 /**
  * @file
@@ -1066,7 +1066,7 @@ function node_configure() {
 /**
  * Form validate callback.
  */
-function node_configure_validate($form_values, $form, &$form_state) {
+function node_configure_validate($form, &$form_state, $form_values) {
   if ($form_values['op'] == t('Rebuild permissions')) {
     drupal_goto('admin/content/node-settings/rebuild');
   }
@@ -1521,7 +1521,7 @@ function theme_node_filters($form) {
 /**
  * Process result from node administration filter form.
  */
-function node_filter_form_submit($form_values, $form, &$form_state) {
+function node_filter_form_submit($form, &$form_state, $form_values) {
   $filters = node_filters();
   switch ($form_values['op']) {
     case t('Filter'):
@@ -1549,7 +1549,7 @@ function node_filter_form_submit($form_values, $form, &$form_state) {
 /**
  * Submit the node administration update form.
  */
-function node_admin_nodes_submit($form_values, $form, &$form_state) {
+function node_admin_nodes_submit($form, &$form_state, $form_values) {
   $operations = module_invoke_all('node_operations');
   $operation = $operations[$form_values['operation']];
   // Filter out unchecked nodes
@@ -1569,7 +1569,7 @@ function node_admin_nodes_submit($form_values, $form, &$form_state) {
   }
 }
 
-function node_admin_nodes_validate($form_values, $form, &$form_state) {
+function node_admin_nodes_validate($form, &$form_state, $form_values) {
   $nodes = array_filter($form_values['nodes']);
   if (count($nodes) == 0) {
     form_set_error('', t('No items selected.'));
@@ -1690,7 +1690,7 @@ function node_multiple_delete_confirm() {
                       t('Delete all'), t('Cancel'));
 }
 
-function node_multiple_delete_confirm_submit($form_values, $form, &$form_state) {
+function node_multiple_delete_confirm_submit($form, &$form_state, $form_values) {
   if ($form_values['confirm']) {
     foreach ($form_values['nodes'] as $nid => $value) {
       node_delete($nid);
@@ -2007,7 +2007,7 @@ function node_validate($node, $form = array()) {
   node_invoke_nodeapi($node, 'validate', $form);
 }
 
-function node_form_validate($form_values, $form, &$form_state) {
+function node_form_validate($form, &$form_state, $form_values) {
   node_validate($form_values, $form);
 }
 
@@ -2148,7 +2148,7 @@ function node_form($node, $form_state = NULL) {
   return $form;
 }
 
-function node_form_build_preview($form_values, $form, &$form_state) {
+function node_form_build_preview($form, &$form_state, $form_values) {
   // We do not want to execute button level handlers, we want the form level
   // handlers to go in and change the submitted values.
   unset($form_state['submit_handlers']);
@@ -2315,7 +2315,7 @@ function theme_node_log_message($log) {
   return '<div class="log"><div class="title">'. t('Log') .':</div>'. $log .'</div>';
 }
 
-function node_form_submit($form_values, $form, &$form_state) {
+function node_form_submit($form, &$form_state, $form_values) {
   global $user;
 
   // We do not want to execute button level handlers, we want the form level
@@ -2368,7 +2368,7 @@ function node_delete_confirm($node) {
 /**
  * Execute node deletion
  */
-function node_delete_confirm_submit($form_values, $form, &$form_state) {
+function node_delete_confirm_submit($form, &$form_state, $form_values) {
   if ($form_values['confirm']) {
     node_delete($form_values['nid']);
   }
@@ -2560,7 +2560,7 @@ function node_update_index() {
 /**
  * Implementation of hook_form_alter().
  */
-function node_form_alter(&$form, $form_id) {
+function node_form_alter(&$form, $form_state, $form_id) {
   // Advanced node search form
   if ($form_id == 'search_form' && $form['module']['#value'] == 'node' && user_access('use advanced search')) {
     // Keyword boxes:
@@ -2630,7 +2630,7 @@ function node_form_alter(&$form, $form_id) {
 /**
  * Form API callback for the search form. Registered in node_form_alter().
  */
-function node_search_validate($form_values, $form, &$form_state) {
+function node_search_validate($form, &$form_state, $form_values) {
   // Initialise using any existing basic search keywords.
   $keys = $form_values['processed_keys'];
 

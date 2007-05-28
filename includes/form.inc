@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.197 2007/05/25 15:39:34 dries Exp $
+// $Id: form.inc,v 1.198 2007/05/28 06:08:37 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -392,7 +392,7 @@ function drupal_prepare_form($form_id, &$form, &$form_state) {
   }
 
   drupal_alter('form_'. $form_id, $form, $form_state);
-  drupal_alter('form', $form, $form_id, $form_state);
+  drupal_alter('form', $form, $form_state, $form_id);
 }
 
 
@@ -613,7 +613,7 @@ function form_execute_handlers($type, &$form, &$form_state) {
         $batch['sets'][] = array('form_submit' => $function);
       }
       else {
-        $function($form_state['values'], $form, $form_state);
+        $function($form, $form_state, $form_state['values']);
       }
       $return = TRUE;
     }
@@ -1238,6 +1238,7 @@ function password_confirm_validate($form, &$form_state) {
   form_set_value($form, $pass1, $form_state);
 
   return $form;
+
 }
 
 /**

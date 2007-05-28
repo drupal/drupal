@@ -1,5 +1,5 @@
 <?php
-// $Id: color.module,v 1.20 2007/05/14 13:43:34 dries Exp $
+// $Id: color.module,v 1.21 2007/05/28 06:08:41 dries Exp $
 
 /**
  * Implementation of hook_theme()
@@ -14,7 +14,7 @@ function color_theme() {
 /**
  * Implementation of hook_form_alter().
  */
-function color_form_alter(&$form, $form_id) {
+function color_form_alter(&$form, $form_state, $form_id) {
   // Insert the color changer into the theme settings page.
   // TODO: Last condition in the following if disables color changer when private files are used this should be solved in a different way. See issue #92059.
   if ($form_id == 'system_theme_settings' && color_get_info(arg(4)) && function_exists('gd_info') && variable_get('file_downloads', FILE_DOWNLOADS_PUBLIC) == FILE_DOWNLOADS_PUBLIC) {

@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.420 2007/05/14 13:43:34 dries Exp $
+// $Id: book.module,v 1.421 2007/05/28 06:08:40 dries Exp $
 
 /**
  * @file
@@ -298,7 +298,7 @@ function book_outline($node) {
 /**
  * Handles book outline form submissions.
  */
-function book_outline_submit($form_values, $form, &$form_state) {
+function book_outline_submit($form, &$form_state, $form_values) {
   $op = $form_values['op'];
   $node = node_load($form_values['nid']);
 
@@ -931,7 +931,7 @@ function book_admin_orphan() {
   return $form;
 }
 
-function book_admin_edit_submit($form_values, $form, &$form_state) {
+function book_admin_edit_submit($form, &$form_state, $form_values) {
   foreach ($form_values['table'] as $row) {
     $node = node_load($row['nid']);
 

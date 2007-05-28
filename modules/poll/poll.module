@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.229 2007/05/25 15:04:42 dries Exp $
+// $Id: poll.module,v 1.230 2007/05/28 06:08:43 dries Exp $
 
 /**
  * @file
@@ -99,7 +99,7 @@ function poll_delete($node) {
 /**
  * Implementation of hook_submit().
  */
-function poll_node_form_submit(&$form_values, $form, &$form_state) {
+function poll_node_form_submit(&$form, &$form_state, $form_values) {
   // Renumber fields
   $form_values['choice'] = array_values($form_values['choice']);
   $form_values['teaser'] = poll_teaser((object)$form_values);

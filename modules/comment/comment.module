@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.545 2007/05/25 15:04:41 dries Exp $
+// $Id: comment.module,v 1.546 2007/05/28 06:08:41 dries Exp $
 
 /**
  * @file
@@ -422,7 +422,7 @@ function comment_link($type, $node = NULL, $teaser = FALSE) {
   return $links;
 }
 
-function comment_form_alter(&$form, $form_id) {
+function comment_form_alter(&$form, $form_state, $form_id) {
   if ($form_id == 'node_type_form' && isset($form['identity']['type'])) {
     $form['workflow']['comment'] = array(
       '#type' => 'radios',
@@ -1129,7 +1129,7 @@ function comment_confirm_delete($comment) {
     'comment_confirm_delete');
 }
 
-function comment_confirm_delete_submit($form_values, $form, &$form_state) {
+function comment_confirm_delete_submit($form, &$form_state, $form_values) {
   drupal_set_message(t('The comment and all its replies have been deleted.'));
 
   $comment = $form['#comment'];
@@ -1229,7 +1229,7 @@ function comment_admin_overview($type = 'new', $arg) {
 /**
  * We can't execute any 'Update options' if no comments were selected.
  */
-function comment_admin_overview_validate($form_values, $form, &$form_state) {
+function comment_admin_overview_validate($form, &$form_state, $form_values) {
   $form_values['comments'] = array_diff($form_values['comments'], array(0));
   if (count($form_values['comments']) == 0) {
     form_set_error('', t('Please select one or more comments to perform the update on.'));
@@ -1241,7 +1241,7 @@ function comment_admin_overview_validate($form_values, $form, &$form_state) {
  * Execute the chosen 'Update option' on the selected comments, such as
  * publishing, unpublishing or deleting.
  */
-function comment_admin_overview_submit($form_values, $form, &$form_state) {
+function comment_admin_overview_submit($form, &$form_state, $form_values) {
   $operations = comment_operations();
   if ($operations[$form_values['operation']][1]) {
     // extract the appropriate database query operation
@@ -1326,7 +1326,7 @@ function comment_multiple_delete_confirm() {
 /**
  * Perform the actual comment deletion.
  */
-function comment_multiple_delete_confirm_submit($form_values, $form, &$form_state) {
+function comment_multiple_delete_confirm_submit($form, &$form_state, $form_values) {
   if ($form_values['confirm']) {
     foreach ($form_values['comments'] as $cid => $value) {
       $comment = _comment_load($cid);
@@ -1684,7 +1684,7 @@ function comment_form_add_preview($form, $edit, &$form_state) {
   return $form;
 }
 
-function comment_form_validate($form_values, $form, &$form_state) {
+function comment_form_validate($form, &$form_state, $form_values) {
   foreach (array('name', 'homepage', 'mail') as $field) {
     //set cookie for 365 days
     setcookie('comment_info_'. $field, $form_values[$field], time() + 31536000);
@@ -1692,7 +1692,7 @@ function comment_form_validate($form_values, $form, &$form_state) {
   comment_validate($form_values);
 }
 
-function _comment_form_submit($form_values) {
+function _comment_form_submit(&$form_values) {
   if (!isset($form_values['date'])) {
     $form_values['date'] = 'now';
   }
@@ -1717,12 +1717,10 @@ function _comment_form_submit($form_values) {
       $form_values['subject'] = t('(No subject)');
     }
   }
-
-  return $form_values;
 }
 
-function comment_form_submit(&$form_values, $form, &$form_state) {
-  $form_values = _comment_form_submit($form_values);
+function comment_form_submit($form, &$form_state, $form_values) {
+  _comment_form_submit($form_state['values']);
   if ($cid = comment_save($form_values)) {
     $form_state['redirect'] = array('node/'. $form_values['nid'], NULL, "comment-$cid");
     return;
@@ -1808,7 +1806,7 @@ function theme_comment_controls($form) {
   return theme('box', t('Comment viewing options'), $output);
 }
 
-function comment_controls_submit($form_values, $form, &$form_state) {
+function comment_controls_submit($form, &$form_state, $form_values) {
   global $user;
 
   $mode = $form_values['mode'];

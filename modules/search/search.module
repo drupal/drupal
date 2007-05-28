@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.222 2007/05/15 05:43:16 dries Exp $
+// $Id: search.module,v 1.223 2007/05/28 06:08:44 dries Exp $
 
 /**
  * @file
@@ -207,7 +207,7 @@ function _search_menu($name) {
 /**
  * Validate callback.
  */
-function search_admin_settings_validate($form_values, $form, &$form_state) {
+function search_admin_settings_validate($form, &$form_state, $form_values) {
   if ($form_values['op'] == t('Re-index site')) {
     drupal_goto('admin/settings/search/wipe');
   }
@@ -1044,14 +1044,14 @@ function search_form($action = '', $keys = '', $type = NULL, $prompt = NULL) {
  * search_form_validate() is used solely to set the 'processed_keys' form
  * value for the basic search form.
  */
-function search_form_validate($form_values, $form, &$form_state) {
+function search_form_validate($form, &$form_state, $form_values) {
   form_set_value($form['basic']['inline']['processed_keys'], trim($form_values['keys']), $form_state);
 }
 
 /**
  * Process a search form submission.
  */
-function search_form_submit($form_values, $form, &$form_state) {
+function search_form_submit($form, &$form_state, $form_values) {
   $keys = $form_values['processed_keys'];
   if ($keys == '') {
     form_set_error('keys', t('Please enter some keywords.'));
@@ -1088,7 +1088,7 @@ function search_box($form_id) {
 /**
  * Process a block search form submission.
  */
-function search_box_form_submit($form_values, $form, &$form_state) {
+function search_box_form_submit($form, &$form_state, $form_values) {
   $form_id = $form['form_id']['#value'];
   $form_state['redirect'] = 'search/node/'. trim($form_values[$form_id .'_keys']);
   return;

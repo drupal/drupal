@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.53 2007/05/22 07:42:36 dries Exp $
+// $Id: install.php,v 1.54 2007/05/28 06:08:37 dries Exp $
 
 require_once './includes/install.inc';
 
@@ -335,7 +335,7 @@ function install_settings_form($profile, $install_locale, $settings_file, $db_ur
 /**
  * Form API validate for install_settings form.
  */
-function install_settings_form_validate($form_values, $form, &$form_state) {
+function install_settings_form_validate($form, &$form_state, $form_values) {
   global $db_url;
   _install_settings_form_validate($form_values['db_prefix'], $form_values['db_type'], $form_values['db_user'], $form_values['db_pass'], $form_values['db_host'], $form_values['db_port'], $form_values['db_path'], $form_values['settings_file'], $form_state, $form);
 }
@@ -926,7 +926,7 @@ if (Drupal.jsEnabled) {
   return $form;
 }
 
-function install_configure_form_validate($form_values, $form, &$form_state) {
+function install_configure_form_validate($form, &$form_state, $form_values) {
   if ($error = user_validate_name($form_values['account']['name'])) {
     form_error($form['admin_account']['account']['name'], $error);
   }
@@ -938,7 +938,7 @@ function install_configure_form_validate($form_values, $form, &$form_state) {
   }
 }
 
-function install_configure_form_submit($form_values, $form, &$form_state) {
+function install_configure_form_submit($form, &$form_state, $form_values) {
   global $user;
 
   variable_set('site_name', $form_values['site_name']);
