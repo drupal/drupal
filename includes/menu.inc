@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.169 2007/05/27 20:31:13 dries Exp $
+// $Id: menu.inc,v 1.170 2007/05/28 06:24:41 dries Exp $
 
 /**
  * @file
@@ -1261,6 +1261,11 @@ function _menu_delete_item($item) {
       }
     }
     db_query('DELETE FROM {menu_links} WHERE mlid = %d', $item['mlid']);
+
+    // Update the has_children status of the parent
+    $children = (bool)db_result(db_query("SELECT COUNT(*) FROM {menu_links} WHERE plid = %d AND hidden = 0", $item['plid']));
+    db_query("UPDATE {menu_links} SET has_children = %d WHERE mlid = %d", $children, $item['plid']);
+
     menu_cache_clear($item['menu_name']);
   }
 }
