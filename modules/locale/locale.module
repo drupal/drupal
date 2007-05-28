@@ -214,7 +214,7 @@ function locale_user($type, $edit, &$user, $category = NULL) {
 /**
  * Implementation of hook_form_alter(). Adds language fields to forms.
  */
-function locale_form_alter(&$form, $form_id) {
+function locale_form_alter(&$form, $form_state, $form_id) {
   switch ($form_id) {
 
     // Language field for paths
