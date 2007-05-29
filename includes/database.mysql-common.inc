@@ -185,6 +185,20 @@ function db_type_map() {
 }
 
 /**
+ * Rename a table.
+ *
+ * @param $ret
+ *   Array to which query results will be added.
+ * @param $table
+ *   The table to be renamed.
+ * @param $new_name
+ *   The new name for the table.
+ */
+function db_rename_table(&$ret, $table, $new_name) {
+  $ret[] = update_sql('ALTER TABLE {'. $table .'} RENAME TO {'. $new_name .'}');
+}
+
+/**
  * Drop a table.
  *
  * @param $ret
