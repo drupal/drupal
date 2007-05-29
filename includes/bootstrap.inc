@@ -1053,9 +1053,13 @@ function language_list($field = 'language', $reset = FALSE) {
 
 /**
  * Default language used on the site
+ * 
+ * @param $property
+ *   Optional property of the language object to return
  */
-function language_default() {
-  return variable_get('language_default', (object) array('language' => 'en', 'name' => 'English', 'native' => 'English', 'direction' => 0, 'enabled' => 1, 'plurals' => 0, 'formula' => '', 'domain' => '', 'prefix' => '', 'weight' => 0));
+function language_default($property = NULL) {
+  $language = variable_get('language_default', (object) array('language' => 'en', 'name' => 'English', 'native' => 'English', 'direction' => 0, 'enabled' => 1, 'plurals' => 0, 'formula' => '', 'domain' => '', 'prefix' => '', 'weight' => 0));
+  return $property ? $language->$property : $language;
 }
 
 
