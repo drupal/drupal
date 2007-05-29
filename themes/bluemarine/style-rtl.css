@@ -1,0 +1,37 @@
+/* $Id: style-rtl.css,v 1.1 2007/05/29 14:58:25 goba Exp $ */
+body {
+  direction: rtl;
+}
+#logo img {
+  float: right; 
+}
+#menu {
+  padding: 0.5em 0.5em 0 0.5em; 
+  text-align: left; 
+}
+#navlist {
+  padding: 0 0 1.2em 0.8em; 
+}
+#subnavlist {
+  padding: 0.5em 0 0.4em 1.2em; 
+}
+ul.links li {
+  border-right: 1px solid #9cf; 
+  border-left: inherit;
+}
+.block, .box {
+  padding: 0 1.5em 0 0;
+}
+.node .taxonomy {
+  padding-right: 1.5em; 
+}
+.node .picture {
+  float: left;
+}
+.comment .new {
+  text-align: left;
+  float: left; 
+}
+.comment .picture {
+  float: left; 
+}
