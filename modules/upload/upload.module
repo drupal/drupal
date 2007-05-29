@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.161 2007/05/28 06:08:47 dries Exp $
+// $Id: upload.module,v 1.162 2007/05/29 16:06:07 dries Exp $
 
 /**
  * @file
@@ -914,7 +914,7 @@ function upload_js() {
   );
   drupal_alter('form', $form, array(), 'upload_js');
   $form_state = array('submitted' => FALSE);
-  $form = form_builder('upload_js', $form, array());
+  $form = form_builder('upload_js', $form, $form_state);
   $output = theme('status_messages') . drupal_render($form);
   // We send the updated file attachments form.
   print drupal_to_js(array('status' => TRUE, 'data' => $output));
