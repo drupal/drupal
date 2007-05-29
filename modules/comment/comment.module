@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.546 2007/05/28 06:08:41 dries Exp $
+// $Id: comment.module,v 1.547 2007/05/29 06:27:37 dries Exp $
 
 /**
  * @file
@@ -1685,9 +1685,12 @@ function comment_form_add_preview($form, $edit, &$form_state) {
 }
 
 function comment_form_validate($form, &$form_state, $form_values) {
-  foreach (array('name', 'homepage', 'mail') as $field) {
-    //set cookie for 365 days
-    setcookie('comment_info_'. $field, $form_values[$field], time() + 31536000);
+  global $user;
+  if ($user->uid === 0) {
+    foreach (array('name', 'homepage', 'mail') as $field) {
+      //set cookie for 365 days
+      setcookie('comment_info_'. $field, $form_values[$field], time() + 31536000);
+    }
   }
   comment_validate($form_values);
 }
@@ -2075,4 +2078,3 @@ function int2vancode($i = 0) {
 function vancode2int($c = '00') {
   return base_convert(substr($c, 1), 36, 10);
 }
-
