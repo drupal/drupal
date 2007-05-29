@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.19 2006/12/27 13:17:15 drumm Exp $ */
+/* $Id: style.css,v 1.20 2007/05/29 14:57:50 goba Exp $ */
 
 /*
 ** HTML elements
@@ -85,18 +85,18 @@ table {
   border: 0;
 }
 #logo img {
-  float: left;
+  float: left; /* LTR */
   padding: 0 1em;
   border: 0;
 }
 #menu {
-  padding: 0.5em 0.5em 0 0.5em;
-  text-align: right;
+  padding: 0.5em 0.5em 0 0.5em; /* LTR */
+  text-align: right; /* LTR */
   vertical-align: middle;
 }
 #navlist {
   font-size: 1.0em;
-  padding: 0 0.8em 1.2em 0;
+  padding: 0 0.8em 1.2em 0; /* LTR */
   color: #9cf;
 }
 #navlist a {
@@ -104,7 +104,7 @@ table {
   color: #fff;
 }
 #subnavlist {
-  padding: 0.5em 1.2em 0.4em 0;
+  padding: 0.5em 1.2em 0.4em 0; /* LTR */
   font-size: 0.8em;
   color: #9cf;
 }
@@ -113,7 +113,7 @@ table {
   color: #9cf;
 }
 ul.links li {
-  border-left: 1px solid #9cf;
+  border-left: 1px solid #9cf; /* LTR */
 }
 ul.links li.first {
   border: none;
@@ -138,7 +138,7 @@ ul.links li.first {
   font-weight: bold;
 }
 .site-name {
-  margin: 0.6em 0 0 0;
+  margin: 0.6em 0 0 ; 
   padding: 0;
   font-size: 2em;
 }
@@ -216,7 +216,7 @@ ul.links li.first {
   font-weight: bold;
 }
 .block, .box {
-  padding: 0 0 1.5em 0;
+  padding: 0 0 1.5em 0; /* LTR */
 }
 .block {
   border-bottom: 1px solid #bbb;
@@ -230,7 +230,7 @@ ul.links li.first {
   font-size: 1.1em;
 }
 .node {
-  margin: .5em 0 2em 0;
+  margin: .5em 0 2em; /* LTR */
 }
 .sticky {
   padding: .5em;
@@ -238,16 +238,16 @@ ul.links li.first {
   border: solid 1px #ddd;
 }
 .node .content, .comment .content {
-  margin: .5em 0 .5em 0;
+  margin: .5em 0 .5em;
 }
 .node .taxonomy {
   color: #999;
   font-size: 0.8em;
-  padding-left: 1.5em;
+  padding-left: 1.5em; /* LTR */
 }
 .node .picture {
   border: 1px solid #ddd;
-  float: right;
+  float: right; /* LTR */
   margin: 0.5em;
 }
 .comment {
@@ -260,15 +260,15 @@ ul.links li.first {
   font-weight: normal;
 }
 .comment .new {
-  text-align: right;
+  text-align: right; /* LTR */
   font-weight: bold;
   font-size: 0.8em;
-  float: right;
+  float: right; /* LTR */
   color: red;
 }
 .comment .picture {
   border: 1px solid #abc;
-  float: right;
+  float: right; /* LTR */
   margin: 0.5em;
 }
 
