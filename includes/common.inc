@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.646 2007/05/27 20:31:13 dries Exp $
+// $Id: common.inc,v 1.647 2007/05/29 14:37:49 goba Exp $
 
 /**
  * @file
@@ -692,7 +692,7 @@ function fix_gpc_magic() {
  * @return
  *   The translated string.
  */
-function t($string, $args = 0, $langcode = NULL) {
+function t($string, $args = array(), $langcode = NULL) {
   global $language;
   static $custom_strings;
 
@@ -713,7 +713,7 @@ function t($string, $args = 0, $langcode = NULL) {
   elseif (function_exists('locale') && $langcode != 'en') {
     $string = locale($string, $langcode);
   }
-  if (!$args) {
+  if (empty($args)) {
     return $string;
   }
   else {
@@ -835,8 +835,9 @@ function check_url($uri) {
  *
  * Arbitrary elements may be added using the $args associative array.
  */
-function format_rss_channel($title, $link, $description, $items, $language = 'en', $args = array()) {
-  // arbitrary elements may be added using the $args associative array
+function format_rss_channel($title, $link, $description, $items, $langcode = NULL, $args = array()) {
+  global $language;
+  $langcode = $langcode ? $langcode : $language->language;
 
   $output = "<channel>\n";
   $output .= ' <title>'. check_plain($title) ."</title>\n";
@@ -846,7 +847,7 @@ function format_rss_channel($title, $link, $description, $items, $language = 'en
   // We strip all HTML tags, but need to prevent double encoding from properly
   // escaped source data (such as &amp becoming &amp;amp;).
   $output .= ' <description>'. check_plain(decode_entities(strip_tags($description))) ."</description>\n";
-  $output .= ' <language>'. check_plain($language) ."</language>\n";
+  $output .= ' <language>'. check_plain($langcode) ."</language>\n";
   $output .= format_xml_elements($args);
   $output .= $items;
   $output .= "</channel>\n";
@@ -948,30 +949,33 @@ function format_xml_elements($array) {
  *      content (check_plain + theme_placeholder)
  *   Note that you do not need to include @count in this array.
  *   This replacement is done automatically for the plural case.
+ * @param $langcode
+ *   Optional language code to translate to a language other than
+ *   what is used to display the page.
  * @return
  *   A translated string.
  */
-function format_plural($count, $singular, $plural, $args = array()) {
+function format_plural($count, $singular, $plural, $args = array(), $langcode = NULL) {
   if ($count == 1) {
     return t($singular, $args);
   }
   $args['@count'] = $count;
 
   // get the plural index through the gettext formula
-  $index = (function_exists('locale_get_plural')) ? locale_get_plural($count) : -1;
+  $index = (function_exists('locale_get_plural')) ? locale_get_plural($count, $langcode) : -1;
   if ($index < 0) { // backward compatibility
-    return t($plural, $args);
+    return t($plural, $args, $langcode);
   }
   else {
     switch ($index) {
       case "0":
-        return t($singular, $args);
+        return t($singular, $args, $langcode);
       case "1":
-        return t($plural, $args);
+        return t($plural, $args, $langcode);
       default:
         unset($args['@count']);
         $args['@count['. $index .']'] = $count;
-        return t(strtr($plural, array('@count' => '@count['. $index .']')), $args);
+        return t(strtr($plural, array('@count' => '@count['. $index .']')), $args, $langcode);
     }
   }
 }
@@ -1002,21 +1006,24 @@ function parse_size($size) {
  *
  * @param $size
  *   The size in bytes.
+ * @param $langcode
+ *   Optional language code to translate to a language other than
+ *   what is used to display the page.
  * @return
  *   A translated string representation of the size.
  */
-function format_size($size) {
+function format_size($size, $langcode = NULL) {
   if ($size < 1024) {
-    return format_plural($size, '1 byte', '@count bytes');
+    return format_plural($size, '1 byte', '@count bytes', array(), $langcode);
   }
   else {
     $size = round($size / 1024, 2);
-    $suffix = t('KB');
+    $suffix = t('KB', array(), $langcode);
     if ($size >= 1024) {
       $size = round($size / 1024, 2);
-      $suffix = t('MB');
+      $suffix = t('MB', array(), $langcode);
     }
-    return t('@size @suffix', array('@size' => $size, '@suffix' => $suffix));
+    return t('@size @suffix', array('@size' => $size, '@suffix' => $suffix), $langcode);
   }
 }
 
@@ -1027,16 +1034,19 @@ function format_size($size) {
  *   The length of the interval in seconds.
  * @param $granularity
  *   How many different units to display in the string.
+ * @param $langcode
+ *   Optional language code to translate to a language other than
+ *   what is used to display the page.
  * @return
  *   A translated string representation of the interval.
  */
-function format_interval($timestamp, $granularity = 2) {
+function format_interval($timestamp, $granularity = 2, $langcode = NULL) {
   $units = array('1 year|@count years' => 31536000, '1 week|@count weeks' => 604800, '1 day|@count days' => 86400, '1 hour|@count hours' => 3600, '1 min|@count min' => 60, '1 sec|@count sec' => 1);
   $output = '';
   foreach ($units as $key => $value) {
     $key = explode('|', $key);
     if ($timestamp >= $value) {
-      $output .= ($output ? ' ' : '') . format_plural(floor($timestamp / $value), $key[0], $key[1]);
+      $output .= ($output ? ' ' : '') . format_plural(floor($timestamp / $value), $key[0], $key[1], array(), $langcode);
       $timestamp %= $value;
       $granularity--;
     }
@@ -1045,7 +1055,7 @@ function format_interval($timestamp, $granularity = 2) {
       break;
     }
   }
-  return $output ? $output : t('0 sec');
+  return $output ? $output : t('0 sec', array(), $langcode);
 }
 
 /**
@@ -1066,10 +1076,13 @@ function format_interval($timestamp, $granularity = 2) {
  *   format.
  * @param $timezone
  *   Time zone offset in seconds; if omitted, the user's time zone is used.
+ * @param $langcode
+ *   Optional language code to translate to a language other than
+ *   what is used to display the page.
  * @return
  *   A translated date string in the requested format.
  */
-function format_date($timestamp, $type = 'medium', $format = '', $timezone = NULL) {
+function format_date($timestamp, $type = 'medium', $format = '', $timezone = NULL, $langcode = NULL) {
   if (!isset($timezone)) {
     global $user;
     if (variable_get('configurable_timezones', 1) && $user->uid && strlen($user->timezone)) {
@@ -1102,7 +1115,7 @@ function format_date($timestamp, $type = 'medium', $format = '', $timezone = NUL
   for ($i = 0; $i < $max; $i++) {
     $c = $format[$i];
     if (strpos('AaDFlM', $c) !== FALSE) {
-      $date .= t(gmdate($c, $timestamp));
+      $date .= t(gmdate($c, $timestamp), array(), $langcode);
     }
     else if (strpos('BdgGhHiIjLmnsStTUwWYyz', $c) !== FALSE) {
       $date .= gmdate($c, $timestamp);

@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.175 2007/05/28 06:08:42 dries Exp $
+// $Id: locale.module,v 1.176 2007/05/29 14:37:49 goba Exp $
 
 /**
  * @file
@@ -190,8 +190,7 @@ function locale_user($type, $edit, &$user, $category = NULL) {
     $languages = language_list('enabled');
     $languages = $languages['1'];
     if ($user->language == '') {
-      $default = language_default();
-      $user->language = $default->language;
+      $user->language = language_default('language');
     }
     $names = array();
     foreach ($languages as $langcode => $language) {
@@ -367,26 +366,35 @@ function locale_refresh_cache() {
  * Returns plural form index for a specific number.
  *
  * The index is computed from the formula of this language.
+ * 
+ * @param $count
+ *   Number to return plural for.
+ * @param $langcode
+ *   Optional language code to translate to a language other than
+ *   what is used to display the page.
  */
-function locale_get_plural($count) {
+function locale_get_plural($count, $langcode = NULL) {
   global $language;
   static $locale_formula, $plurals = array();
 
-  if (!isset($plurals[$count])) {
+  $langcode = $langcode ? $langcode : $language->language;
+  
+  if (!isset($plurals[$langcode][$count])) {
     if (!isset($locale_formula)) {
-      $locale_formula = $language->formula;
+      $language_list = language_list();
+      $locale_formula[$langcode] = $language_list[$langcode]->formula;
     }
-    if ($locale_formula) {
+    if ($locale_formula[$langcode]) {
       $n = $count;
-      $plurals[$count] = @eval("return intval($locale_formula);");
-      return $plurals[$count];
+      $plurals[$langcode][$count] = @eval('return intval('. $locale_formula[$langcode] .');');
+      return $plurals[$langcode][$count];
     }
     else {
-      $plurals[$count] = -1;
+      $plurals[$langcode][$count] = -1;
       return -1;
     }
   }
-  return $plurals[$count];
+  return $plurals[$langcode][$count];
 }
 
 

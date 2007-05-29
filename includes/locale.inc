@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.130 2007/05/28 06:08:38 dries Exp $
+// $Id: locale.inc,v 1.131 2007/05/29 14:37:49 goba Exp $
 
 /**
  * @file
@@ -37,10 +37,9 @@ function locale_languages_overview_form() {
     '#options' => $options,
     '#default_value' => $enabled,
   );
-  $default = language_default();
   $form['site_default'] = array('#type' => 'radios',
     '#options' => $options,
-    '#default_value' => $default->language,
+    '#default_value' => language_default('language'),
   );
   $form['submit'] = array('#type' => 'submit', '#value' => t('Save configuration'));
   $form['#theme'] = 'locale_languages_overview_form';
@@ -323,8 +322,7 @@ function locale_languages_edit_form_validate($form, &$form_state, $form_values) 
   if (!empty($form_values['domain']) && $duplicate = db_fetch_object(db_query("SELECT language FROM {languages} WHERE domain = '%s' AND language != '%s'", $form_values['domain'], $form_values['langcode']))) {
     form_set_error('domain', t('The domain (%domain) is already tied to a language (%language).', array('%domain' => $form_values['domain'], '%language' => $duplicate->language)));
   }
-  $default = language_default();
-  if (empty($form_values['prefix']) && $default->language != $form_values['langcode'] && empty($form_values['domain'])) {
+  if (empty($form_values['prefix']) && language_default('language') != $form_values['langcode'] && empty($form_values['domain'])) {
     form_set_error('prefix', t('Only the default language can have both the domain and prefix empty.'));
   }
   if (!empty($form_values['prefix']) && $duplicate = db_fetch_object(db_query("SELECT language FROM {languages} WHERE prefix = '%s' AND language != '%s'", $form_values['prefix'], $form_values['langcode']))) {
@@ -368,8 +366,7 @@ function locale_languages_delete_form($langcode) {
     drupal_goto('admin/settings/language');
   }
 
-  $default = language_default();
-  if ($default->language == $langcode) {
+  if (language_default('language') == $langcode) {
     drupal_set_message(t('The default language cannot be deleted.'));
     drupal_goto('admin/settings/language');
   }
