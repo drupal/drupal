@@ -1,5 +1,5 @@
 <?php
-// $Id: database.pgsql.inc,v 1.46 2007/05/25 12:46:43 dries Exp $
+// $Id: database.pgsql.inc,v 1.47 2007/05/29 11:36:33 dries Exp $
 
 /**
  * @file
@@ -610,6 +610,20 @@ function _db_create_field_sql($name, $spec) {
   }
 
   return $sql;
+}
+
+/**
+ * Rename a table.
+ *
+ * @param $ret
+ *   Array to which query results will be added.
+ * @param $table
+ *   The table to be renamed.
+ * @param $new_name
+ *   The new name for the table.
+ */
+function db_rename_table(&$ret, $table, $new_name) {
+  $ret[] = update_sql('ALTER TABLE {'. $table .'} RENAME TO {'. $new_name .'}');
 }
 
 /**
