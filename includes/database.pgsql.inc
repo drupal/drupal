@@ -1,5 +1,5 @@
 <?php
-// $Id: database.pgsql.inc,v 1.47 2007/05/29 11:36:33 dries Exp $
+// $Id: database.pgsql.inc,v 1.48 2007/05/30 09:11:21 dries Exp $
 
 /**
  * @file
@@ -109,6 +109,42 @@ function db_connect($url) {
   ini_set('track_errors', $track_errors_previous);
 
   return $connection;
+}
+
+/**
+ * Runs a basic query in the active database.
+ *
+ * User-supplied arguments to the query should be passed in as separate
+ * parameters so that they can be properly escaped to avoid SQL injection
+ * attacks.
+ *
+ * @param $query
+ *   A string containing an SQL query.
+ * @param ...
+ *   A variable number of arguments which are substituted into the query
+ *   using printf() syntax. Instead of a variable number of query arguments,
+ *   you may also pass a single array containing the query arguments.
+ *
+ *   Valid %-modifiers are: %s, %d, %f, %b (binary data, do not enclose
+ *   in '') and %%.
+ *
+ *   NOTE: using this syntax will cast NULL and FALSE values to decimal 0,
+ *   and TRUE values to decimal 1.
+ *
+ * @return
+ *   A database query result resource, or FALSE if the query was not
+ *   executed correctly.
+ */
+function db_query($query) {
+  $args = func_get_args();
+  array_shift($args);
+  $query = db_prefix_tables($query);
+  if (isset($args[0]) and is_array($args[0])) { // 'All arguments in one array' syntax
+    $args = $args[0];
+  }
+  _db_query_callback($args, TRUE);
+  $query = preg_replace_callback(DB_QUERY_REGEXP, '_db_query_callback', $query);
+  return _db_query($query);
 }
 
 /**
