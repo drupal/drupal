@@ -1053,7 +1053,7 @@ function language_list($field = 'language', $reset = FALSE) {
 
 /**
  * Default language used on the site
- * 
+ *
  * @param $property
  *   Optional property of the language object to return
  */

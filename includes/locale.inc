@@ -612,7 +612,7 @@ function locale_translate_import_form() {
  */
 function locale_translate_import_form_submit($form, &$form_state, $form_values) {
   // Ensure we have the file uploaded
-  if ($file = file_check_upload('file')) {
+  if ($file = file_save_upload('file')) {
 
     // Add language, if not yet supported
     $languages = language_list('language', TRUE);
