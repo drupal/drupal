@@ -1,0 +1,18 @@
+<?php
+// $Id: upload.install,v 1.1 2007/05/30 08:08:59 dries Exp $
+
+/**
+ * Implementation of hook_install().
+ */
+function upload_install() {
+  // Create tables.
+  drupal_install_schema('upload');
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function upload_uninstall() {
+  // Remove tables.
+  drupal_uninstall_schema('upload');
+}

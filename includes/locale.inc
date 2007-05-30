@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.131 2007/05/29 14:37:49 goba Exp $
+// $Id: locale.inc,v 1.132 2007/05/30 08:08:57 dries Exp $
 
 /**
  * @file
@@ -612,7 +612,7 @@ function locale_translate_import_form() {
  */
 function locale_translate_import_form_submit($form, &$form_state, $form_values) {
   // Ensure we have the file uploaded
-  if ($file = file_check_upload('file')) {
+  if ($file = file_save_upload('file')) {
 
     // Add language, if not yet supported
     $languages = language_list('language', TRUE);

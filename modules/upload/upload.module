@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.162 2007/05/29 16:06:07 dries Exp $
+// $Id: upload.module,v 1.163 2007/05/30 08:08:59 dries Exp $
 
 /**
  * @file
@@ -94,26 +94,7 @@ function upload_menu() {
 }
 
 function upload_menu_alter(&$items) {
-  $items['system/files']['page callback'] = 'upload_download';
   $items['system/files']['access arguments'] = array('view uploaded files');
-}
-
-function upload_init() {
-  if (arg(0) == 'system' && arg(1) == 'files' && isset($_SESSION['file_previews'])) {
-    $item = menu_get_item('system/files');
-    foreach ($_SESSION['file_previews'] as $fid => $file) {
-      $filename = file_create_filename($file->filename, file_create_path());
-      if (variable_get('file_downloads', FILE_DOWNLOADS_PUBLIC) ==  FILE_DOWNLOADS_PRIVATE) {
-        // strip file_directory_path() from filename. @see file_create_url
-        if (strpos($filename, file_directory_path()) !== FALSE) {
-          $filename = trim(substr($filename, strlen(file_directory_path())), '\\/');
-        }
-        $filename = 'system/files/'. $filename;
-      }
-      $_SESSION['file_previews'][$fid]->_filename = $filename;
-      menu_set_item($filename, $item);
-    }
-  }
 }
 
 /**
@@ -139,11 +120,11 @@ function upload_admin_settings_validate($form, &$form_state, $form_values) {
     form_set_error('upload_usersize_default', t('The %role file size limit must be a number and greater than zero.', array('%role' => t('default'))));
   }
   if ($default_uploadsize > file_upload_max_size()) {
-   form_set_error('upload_uploadsize_default', $exceed_max_msg . $more_info);
-   $more_info = '';
+    form_set_error('upload_uploadsize_default', $exceed_max_msg . $more_info);
+    $more_info = '';
   }
   if ($default_uploadsize > $default_usersize) {
-   form_set_error('upload_uploadsize_default', t('The %role maximum file size per upload is greater than the total file size allowed per user', array('%role' => t('default'))));
+    form_set_error('upload_uploadsize_default', t('The %role maximum file size per upload is greater than the total file size allowed per user', array('%role' => t('default'))));
   }
 
   foreach ($form_values['roles'] as $rid => $role) {
@@ -157,11 +138,11 @@ function upload_admin_settings_validate($form, &$form_state, $form_values) {
       form_set_error('upload_usersize_'. $rid, t('The %role file size limit must be a number and greater than zero.', array('%role' => $role)));
     }
     if ($uploadsize > file_upload_max_size()) {
-     form_set_error('upload_uploadsize_'. $rid, $exceed_max_msg . $more_info);
-     $more_info = '';
+      form_set_error('upload_uploadsize_'. $rid, $exceed_max_msg . $more_info);
+      $more_info = '';
     }
     if ($uploadsize > $usersize) {
-     form_set_error('upload_uploadsize_'. $rid, t('The %role maximum file size per upload is greater than the total file size allowed per user', array('%role' => $role)));
+      form_set_error('upload_uploadsize_'. $rid, t('The %role maximum file size per upload is greater than the total file size allowed per user', array('%role' => $role)));
     }
   }
 }
@@ -185,7 +166,7 @@ function upload_admin_settings() {
     '#default_value' => variable_get('upload_max_resolution', 0),
     '#size' => 15,
     '#maxlength' => 10,
-    '#description' => t('The maximum allowed image size (e.g. 640x480). Set to 0 for no restriction.'),
+    '#description' => t('The maximum allowed image size (e.g. 640x480). Set to 0 for no restriction. If an <a href="!image-toolkit-link">image toolkit</a> is installed, files exceeding this value will be scalled down to fit.', array('!image-toolkit-link' => url('admin/settings/image-toolkit'))),
     '#field_suffix' => '<kbd>'. t('WIDTHxHEIGHT') .'</kbd>'
   );
   $form['settings_general']['upload_list_default'] = array(
@@ -209,8 +190,8 @@ function upload_admin_settings() {
     '#default_value' => $upload_uploadsize_default,
     '#size' => 5,
     '#maxlength' => 5,
-    '#description' => t('The default maximum file size a user can upload.'),
-    '#field_suffix' => t('MB')
+    '#description' => t('The default maximum file size a user can upload. If an image is uploaded and a maximum resolution is set, the size will be checked after the file has been resized.'),
+    '#field_suffix' => t('MB'),
   );
   $form['settings_general']['upload_usersize_default'] = array(
     '#type' => 'textfield',
@@ -219,7 +200,7 @@ function upload_admin_settings() {
     '#size' => 5,
     '#maxlength' => 5,
     '#description' => t('The default maximum size of all files a user can have on the site.'),
-    '#field_suffix' => t('MB')
+    '#field_suffix' => t('MB'),
   );
 
   $form['settings_general']['upload_max_size'] = array('#value' => '<p>'. t('Your PHP settings limit the maximum file size per upload to %size.', array('%size' => format_size(file_upload_max_size()))) .'</p>');
@@ -247,7 +228,8 @@ function upload_admin_settings() {
       '#default_value' => variable_get('upload_uploadsize_'. $rid, $upload_uploadsize_default),
       '#size' => 5,
       '#maxlength' => 5,
-      '#description' => t('The maximum size of a file a user can upload (in megabytes).'),
+      '#description' => t('The maximum size of a file a user can upload. If an image is uploaded and a maximum resolution is set, the size will be checked after the file has been resized.'),
+      '#field_suffix' => t('MB'),
     );
     $form['settings_role_'. $rid]['upload_usersize_'. $rid] = array(
       '#type' => 'textfield',
@@ -255,96 +237,117 @@ function upload_admin_settings() {
       '#default_value' => variable_get('upload_usersize_'. $rid, $upload_usersize_default),
       '#size' => 5,
       '#maxlength' => 5,
-      '#description' => t('The maximum size of all files a user can have on the site (in megabytes).'),
+      '#description' => t('The maximum size of all files a user can have on the site.'),
+      '#field_suffix' => t('MB'),
     );
   }
 
   return system_settings_form($form);
 }
 
-function upload_download() {
-  foreach ($_SESSION['file_previews'] as $file) {
-    if ($file->_filename == $_GET['q']) {
-      file_transfer($file->filepath, array('Content-Type: '. mime_header_encode($file->filemime), 'Content-Length: '. $file->filesize));
-    }
+/**
+ * Determine the limitations on files that a given user may upload. The user
+ * may be in multiple roles so we select the most permissive limitations from
+ * all of their roles.
+ *
+ * @param $user
+ *   A Drupal user object.
+ * @return
+ *   An associative array with the following keys:
+ *     'extensions'
+ *       A white space separated string containing all the file extensions this
+ *       user may upload.
+ *     'file_size'
+ *       The maximum size of a file upload in bytes.
+ *     'user_size'
+ *       The total number of bytes for all for a user's files.
+ *     'resolution'
+ *       A string specifying the maximum resolution of images.
+ */
+function _upload_file_limits($user) {
+  $file_limit = variable_get('upload_uploadsize_default', 1);
+  $user_limit = variable_get('upload_usersize_default', 1);
+  $all_extensions = explode(' ', variable_get('upload_extensions_default', 'jpg jpeg gif png txt html doc xls pdf ppt pps odt ods odp'));
+  foreach ($user->roles as $rid => $name) {
+    $extensions = variable_get("upload_extensions_$rid", variable_get('upload_extensions_default', 'jpg jpeg gif png txt html doc xls pdf ppt pps odt ods odp'));
+    $all_extensions = array_merge($all_extensions, explode(' ', $extensions));
+
+    // A zero value indicates no limit, take the least restrictive limit.
+    $file_size = variable_get("upload_uploadsize_$rid", variable_get('upload_uploadsize_default', 1)) * 1024 * 1024;
+    $file_limit = ($file_limit && $file_size) ? max($file_limit, $file_size) : 0;
+
+    $user_size = variable_get("upload_usersize_$rid", variable_get('upload_usersize_default', 1)) * 1024 * 1024;
+    $user_limit = ($user_limit && $user_size) ? max($user_limit, $user_size) : 0;
   }
+  $all_extensions = implode(' ', array_unique($all_extensions));
+  return array(
+    'extensions' => $all_extensions,
+    'file_size' => $file_limit,
+    'user_size' => $user_limit,
+    'resolution' => variable_get('upload_max_resolution', 0),
+  );
 }
 
+/**
+ * Implementation of hook_file_download().
+ */
 function upload_file_download($file) {
+  if (!user_access('view uploaded files')) {
+    return -1;
+  }
   $file = file_create_path($file);
-  $result = db_query("SELECT f.* FROM {files} f WHERE filepath = '%s'", $file);
+  $result = db_query("SELECT f.* FROM {files} f INNER JOIN {upload} u ON f.fid = u.uid WHERE filepath = '%s'", $file);
   if ($file = db_fetch_object($result)) {
-    if (user_access('view uploaded files')) {
-      $node = node_load($file->nid);
-      if (node_access('view', $node)) {
-        $type = mime_header_encode($file->filemime);
-        return array(
-          'Content-Type: '. $type,
-          'Content-Length: '. $file->filesize,
-        );
-      }
-      else {
-        return -1;
-      }
-    }
-    else {
-      return -1;
-    }
+    return array(
+      'Content-Type: '. $file->filemime,
+      'Content-Length: '. $file->filesize,
+    );
   }
 }
 
 /**
- * Save new uploads and attach them to the node object.
- * append file_previews to the node object as well.
+ * Save new uploads and store them in the session to be associated to the node
+ * on upload_save.
+ *
+ * @param $node
+ *   A node object to associate with uploaded files.
  */
 function _upload_prepare(&$node) {
+  global $user;
 
-  // Clean up old file previews if a post didn't get the user to this page.
-  // i.e. the user left the edit page, because they didn't want to upload anything.
-  if (count($_POST) == 0) {
-    if (!empty($_SESSION['file_previews']) && is_array($_SESSION['file_previews'])) {
-      foreach ($_SESSION['file_previews'] as $fid => $file) {
-        file_delete($file->filepath);
-      }
-      unset($_SESSION['file_previews']);
-    }
+  // Initialize _SESSION['upload_files'] if no post occured.
+  // This clears the variable from old forms and makes sure it
+  // is an array to prevent notices and errors in other parts
+  // of upload.module.
+  if (!$_POST) {
+    $_SESSION['upload_files'] = array();
   }
 
-  // $_SESSION['file_current_upload'] tracks the fid of the file submitted this page request.
+  // $_SESSION['upload_current_file'] tracks the fid of the file submitted this page request.
   // form_builder sets the value of file->list to 0 for checkboxes added to a form after
   // it has been submitted. Since unchecked checkboxes have no return value and do not
   // get a key in _POST form_builder has no way of knowing the difference between a check
   // box that wasn't present on the last form build, and a checkbox that is unchecked.
+  unset($_SESSION['upload_current_file']);
 
-  unset($_SESSION['file_current_upload']);
+  $limits = _upload_file_limits($user);
+  $validators = array(
+    'file_validate_extensions' => array($limits['extensions']),
+    'file_validate_image_resolution' => array($limits['resolution']),
+    'file_validate_size' => array($limits['file_size'], $limits['user_size']),
+  );
 
-  global $user;
-
-  // Save new file uploads to tmp dir.
-  if (($file = file_check_upload()) && user_access('upload files')) {
-
-    // Scale image uploads.
-    $file = _upload_image($file);
-
-    $key = 'upload_'. (!isset($_SESSION['file_previews']) ? 0 : count($_SESSION['file_previews']));
-    $file->fid = $key;
-    $file->source = $key;
-    $file->list = variable_get('upload_list_default', 1);
-    $_SESSION['file_previews'][$key] = $file;
-
-    // Store the uploaded fid for this page request in case of submit without
-    // preview or attach. See earlier notes.
-    $_SESSION['file_current_upload'] = $key;
+  // Save new file uploads.
+  if (($user->uid != 1 || user_access('upload files')) && ($file = file_save_upload('upload', $validators))) {
+    $file->list = variable_get('upload_list_default',1);
+    $file->description = $file->filename;
+    $_SESSION['upload_current_file'] = $file->fid;
+    $_SESSION['upload_files'][$file->fid] = $file;
   }
 
-  // Attach file previews to node object.
-  if (!empty($_SESSION['file_previews']) && is_array($_SESSION['file_previews'])) {
-    foreach ($_SESSION['file_previews'] as $fid => $file) {
-      if ($user->uid != 1) {
-        // Here something.php.pps becomes something.php_.pps
-        $file->filename = upload_munge_filename($file->filename, NULL, 0);
-        $file->description = $file->filename;
-      }
+  // attach session files to node.
+  if (count($_SESSION['upload_files'])) {
+    foreach($_SESSION['upload_files'] as $fid => $file) {
       $node->files[$fid] = $file;
     }
   }
@@ -407,80 +410,6 @@ function upload_form_alter(&$form, $form_state, $form_id) {
   }
 }
 
-function _upload_validate(&$node) {
-  // Accumulator for disk space quotas.
-  $filesize = 0;
-
-  // Check if node->files exists, and if it contains something.
-  if (isset($node->files) && is_array($node->files)) {
-    // Update existing files with form data.
-    foreach ($node->files as $fid => $file) {
-      // Convert file to object for compatibility
-      $file = (object)$file;
-
-      // Validate new uploads.
-      if (strpos($fid, 'upload') !== FALSE && empty($file->remove)) {
-        global $user;
-
-        // Bypass validation for uid  = 1.
-        if ($user->uid != 1) {
-          // Update filesize accumulator.
-          $filesize += $file->filesize;
-
-          // Validate file against all users roles.
-          // Only denies an upload when all roles prevent it.
-
-          $total_usersize = upload_space_used($user->uid) + $filesize;
-          $error = array();
-          foreach ($user->roles as $rid => $name) {
-            $extensions = variable_get("upload_extensions_$rid", variable_get('upload_extensions_default', 'jpg jpeg gif png txt html doc xls pdf ppt pps odt ods odp'));
-            $uploadsize = variable_get("upload_uploadsize_$rid", variable_get('upload_uploadsize_default', 1)) * 1024 * 1024;
-            $usersize = variable_get("upload_usersize_$rid", variable_get('upload_usersize_default', 1)) * 1024 * 1024;
-
-            $regex = '/\.('. ereg_replace(' +', '|', preg_quote($extensions)) .')$/i';
-
-            if (!preg_match($regex, $file->filename)) {
-              $error['extension']++;
-            }
-
-            if ($uploadsize && $file->filesize > $uploadsize) {
-              $error['uploadsize']++;
-            }
-
-            if ($usersize && $total_usersize + $file->filesize > $usersize) {
-              $error['usersize']++;
-            }
-          }
-
-          $user_roles = count($user->roles);
-          $valid = TRUE;
-          if ($error['extension'] == $user_roles) {
-            form_set_error('upload', t('The selected file %name can not be attached to this post, because it is only possible to attach files with the following extensions: %files-allowed.', array('%name' => $file->filename, '%files-allowed' => $extensions)));
-            $valid = FALSE;
-          }
-          elseif ($error['uploadsize'] == $user_roles) {
-            form_set_error('upload', t('The selected file %name can not be attached to this post, because it exceeded the maximum filesize of %maxsize.', array('%name' => $file->filename, '%maxsize' => format_size($uploadsize))));
-            $valid = FALSE;
-          }
-          elseif ($error['usersize'] == $user_roles) {
-            form_set_error('upload', t('The selected file %name can not be attached to this post, because the disk quota of %quota has been reached.', array('%name' => $file->filename, '%quota' => format_size($usersize))));
-            $valid = FALSE;
-          }
-          elseif (strlen($file->filename) > 255) {
-            form_set_error('upload', t('The selected file %name can not be attached to this post, because the filename is too long.', array('%name' => $file->filename)));
-            $valid = FALSE;
-          }
-
-          if (!$valid) {
-            unset($node->files[$fid], $_SESSION['file_previews'][$fid]);
-            file_delete($file->filepath);
-          }
-        }
-      }
-    }
-  }
-}
-
 /**
  * Implementation of hook_nodeapi().
  */
@@ -499,10 +428,6 @@ function upload_nodeapi(&$node, $op, $teaser) {
       _upload_prepare($node);
       break;
 
-    case 'validate':
-      _upload_validate($node);
-      break;
-
     case 'view':
       if (isset($node->files) && user_access('view uploaded files')) {
         // Add the attachments list to node body with a heavy
@@ -517,31 +442,7 @@ function upload_nodeapi(&$node, $op, $teaser) {
         }
       }
       break;
-    case 'alter':
-      if (isset($node->files) && user_access('view uploaded files')) {
-        // Manipulate so that inline references work in preview
-        if (!variable_get('clean_url', 0)) {
-          $previews = array();
-          foreach ($node->files as $file) {
-            if (strpos($file->fid, 'upload') !== FALSE) {
-              $previews[] = $file;
-            }
-          }
 
-          // URLs to files being previewed are actually Drupal paths. When Clean
-          // URLs are disabled, the two do not match. We perform an automatic
-          // replacement from temporary to permanent URLs. That way, the author
-          // can use the final URL in the body before having actually saved (to
-          // place inline images for example).
-          foreach ($previews as $file) {
-            $old = file_create_filename($file->filename, file_create_path());
-            $new = url($old);
-            $node->body = str_replace($old, $new, $node->body);
-            $node->teaser = str_replace($old, $new, $node->teaser);
-          }
-        }
-      }
-      break;
     case 'insert':
     case 'update':
       if (user_access('upload files')) {
@@ -595,7 +496,7 @@ function theme_upload_attachments($files) {
   $rows = array();
   foreach ($files as $file) {
    $file = (object)$file;
-   if ($file->list && !$file->remove) {
+   if ($file->list && empty($file->remove)) {
       // Generate valid URL for both existing attachments and preview of new attachments (these have 'upload' in fid)
       $href = file_create_url((strpos($file->fid, 'upload') === FALSE ? $file->filepath : file_create_filename($file->filename, file_create_path())));
       $text = $file->description ? $file->description : $file->filename;
@@ -616,7 +517,7 @@ function theme_upload_attachments($files) {
  *   The amount of disk space used by the user in bytes.
  */
 function upload_space_used($uid) {
-  return db_result(db_query('SELECT SUM(filesize) FROM {files} f INNER JOIN {node} n ON f.nid = n.nid WHERE n.uid = %d', $uid));
+  return file_space_used($uid);
 }
 
 /**
@@ -626,67 +527,7 @@ function upload_space_used($uid) {
  *   The amount of disk space used by uploaded files in bytes.
  */
 function upload_total_space_used() {
-  return db_result(db_query('SELECT SUM(filesize) FROM {files}'));
-}
-
-/**
- * Munge the filename as needed for security purposes.
- *
- * @param $filename
- *   The name of a file to modify.
- * @param $extensions
- *   A space separated list of valid extensions. If this is blank, we'll use
- *   the admin-defined defaults for the user role from upload_extensions_$rid.
- * @param $alerts
- *   Whether alerts (watchdog, drupal_set_message()) should be displayed.
- * @return $filename
- *   The potentially modified $filename.
- */
-function upload_munge_filename($filename, $extensions = NULL, $alerts = 1) {
-  global $user;
-
-  $original = $filename;
-
-  // Allow potentially insecure uploads for very savvy users and admin
-  if (!variable_get('allow_insecure_uploads', 0)) {
-
-    if (!isset($extensions)) {
-      $extensions = '';
-      foreach ($user->roles as $rid => $name) {
-        $extensions .= ' '. variable_get("upload_extensions_$rid", variable_get('upload_extensions_default', 'jpg jpeg gif png txt html doc xls pdf ppt pps odt ods odp'));
-      }
-
-    }
-
-    $whitelist = array_unique(explode(' ', trim($extensions)));
-
-    $filename_parts = explode('.', $filename);
-
-    $new_filename = array_shift($filename_parts); // Remove file basename.
-    $final_extension = array_pop($filename_parts); // Remove final extension.
-
-    foreach ($filename_parts as $filename_part) {
-      $new_filename .= ".$filename_part";
-      if (!in_array($filename_part, $whitelist) && preg_match("/^[a-zA-Z]{2,5}\d?$/", $filename_part)) {
-        $new_filename .= '_';
-      }
-    }
-    $filename = "$new_filename.$final_extension";
-  }
-
-  if ($alerts && $original != $filename) {
-    $message = t('Your filename has been renamed to conform to site policy.');
-    drupal_set_message($message);
-  }
-
-  return $filename;
-}
-
-/**
- * Undo the effect of upload_munge_filename().
- */
-function upload_unmunge_filename($filename) {
-  return str_replace('_.', '.', $filename);
+  return db_result(db_query('SELECT SUM(f.filesize) FROM {files} f INNER JOIN {upload} u ON f.fid = u.fid'));
 }
 
 function upload_save(&$node) {
@@ -701,69 +542,52 @@ function upload_save(&$node) {
     // Remove file. Process removals first since no further processing
     // will be required.
     if ($file->remove) {
-      // Remove file previews...
-      if (strpos($file->fid, 'upload') !== FALSE) {
-        file_delete($file->filepath);
-      }
-
-      // Remove managed files.
-      else {
-        db_query('DELETE FROM {file_revisions} WHERE fid = %d AND vid = %d', $fid, $node->vid);
-        // Only delete a file if it isn't used by any revision
-        $count = db_result(db_query('SELECT COUNT(fid) FROM {file_revisions} WHERE fid = %d', $fid));
-        if ($count < 1) {
-          db_query('DELETE FROM {files} WHERE fid = %d', $fid);
-          file_delete($file->filepath);
-        }
-      }
+      db_query('DELETE FROM {upload} WHERE fid = %d AND vid = %d', $fid, $node->vid);
+      // Remove it from the session in the case of new uploads,
+      // that you want to disassociate before node submission.
+      unset($_SESSION['upload_files'][$fid]);
+      // Move on, so the removed file won't be added to new revisions.
+      continue;
     }
 
-    // New file upload
-    elseif (strpos($file->fid, 'upload') !== FALSE) {
-      if ($file = file_save_upload($file, $file->filename)) {
-        $file->fid = db_next_id('{files}_fid');
-        db_query("INSERT INTO {files} (fid, nid, filename, filepath, filemime, filesize) VALUES (%d, %d, '%s', '%s', '%s', %d)", $file->fid, $node->nid, $file->filename, $file->filepath, $file->filemime, $file->filesize);
-        db_query("INSERT INTO {file_revisions} (fid, vid, list, description) VALUES (%d, %d, %d, '%s')", $file->fid, $node->vid, $file->list, $file->description);
-        // Tell other modules where the file was stored.
-        $node->files[$fid] = $file;
-      }
-      unset($_SESSION['file_previews'][$fid]);
+    // Create a new revision, or associate a new file needed.
+    if (!empty($node->old_vid) || array_key_exists($fid, $_SESSION['upload_files'])) {
+      db_query("INSERT INTO {upload} (fid, nid, vid, list, description) VALUES (%d, %d, %d, %d, '%s')", $file->fid, $node->nid, $node->vid, $file->list, $file->description);
+      file_set_status($file, FILE_STATUS_PERMANENT);
     }
-
-    // Create a new revision, as needed
-    elseif ($node->old_vid && is_numeric($fid)) {
-      db_query("INSERT INTO {file_revisions} (fid, vid, list, description) VALUES (%d, %d, %d, '%s')", $file->fid, $node->vid, $file->list, $file->description);
-    }
-
-    // Update existing revision
+    // Update existing revision.
     else {
-      db_query("UPDATE {file_revisions} SET list = %d, description = '%s' WHERE fid = %d AND vid = %d", $file->list, $file->description, $file->fid, $node->vid);
+      db_query("UPDATE {upload} SET list = %d, description = '%s' WHERE fid = %d AND vid = %d", $file->list, $file->description, $file->fid, $node->vid);
+      file_set_status($file, FILE_STATUS_PERMANENT);
     }
   }
+  // Empty the session storage after save. We use this variable to track files
+  // that haven't been related to the node yet.
+  unset($_SESSION['upload_files']);
 }
 
 function upload_delete($node) {
   $files = array();
-  $result = db_query('SELECT * FROM {files} WHERE nid = %d', $node->nid);
+  $result = db_query('SELECT DISTINCT f.* FROM upload u INNER JOIN files f ON u.fid = f.fid WHERE u.nid = %d', $node->nid);
   while ($file = db_fetch_object($result)) {
     $files[$file->fid] = $file;
   }
 
   foreach ($files as $fid => $file) {
-    // Delete all file revision information associated with the node
-    db_query('DELETE FROM {file_revisions} WHERE fid = %d', $fid);
+    // Delete all files associated with the node
+    db_query('DELETE FROM {files} WHERE fid = %d', $fid);
     file_delete($file->filepath);
   }
 
-  // Delete all files associated with the node
-  db_query('DELETE FROM {files} WHERE nid = %d', $node->nid);
+  // Delete all file revision information associated with the node
+  db_query('DELETE FROM {upload} WHERE nid = %d', $node->nid);
 }
 
 function upload_delete_revision($node) {
   if (is_array($node->files)) {
     foreach ($node->files as $file) {
       // Check if the file will be used after this revision is deleted
-      $count = db_result(db_query('SELECT COUNT(fid) FROM {file_revisions} WHERE fid = %d', $file->fid));
+      $count = db_result(db_query('SELECT COUNT(fid) FROM {upload} WHERE fid = %d', $file->fid));
 
       // if the file won't be used, delete it
       if ($count < 2) {
@@ -774,10 +598,11 @@ function upload_delete_revision($node) {
   }
 
   // delete the revision
-  db_query('DELETE FROM {file_revisions} WHERE vid = %d', $node->vid);
+  db_query('DELETE FROM {upload} WHERE vid = %d', $node->vid);
 }
 
 function _upload_form($node) {
+  global $user;
 
   $form['#theme'] = 'upload_form_new';
 
@@ -785,7 +610,8 @@ function _upload_form($node) {
     $form['files']['#theme'] = 'upload_form_current';
     $form['files']['#tree'] = TRUE;
     foreach ($node->files as $key => $file) {
-      // Generate valid URL for both existing attachments and preview of new attachments (these have 'upload' in fid)
+      // Generate valid URL for both existing attachments and preview of new
+      // attachments (these have 'upload' in fid).
       $description = file_create_url((strpos($file->fid, 'upload') === FALSE ? $file->filepath : file_create_filename($file->filename, file_create_path())));
       $description = "<small>". check_plain($description) ."</small>";
       $form['files'][$key]['description'] = array('#type' => 'textfield', '#default_value' => !empty($file->description) ? $file->description : $file->filename, '#maxlength' => 256, '#description' => $description );
@@ -793,9 +619,10 @@ function _upload_form($node) {
       $form['files'][$key]['size'] = array('#value' => format_size($file->filesize));
       $form['files'][$key]['remove'] = array('#type' => 'checkbox', '#default_value' => !empty($file->remove));
       $form['files'][$key]['list'] = array('#type' => 'checkbox',  '#default_value' => $file->list);
-      // if the file was uploaded this page request, set value. this fixes the problem
-      // formapi has recognizing new checkboxes. see comments in _upload_prepare.
-      if (isset($_SESSION['file_current_upload']) && $_SESSION['file_current_upload'] == $file->fid) {
+      // If the file was uploaded this page request, set value. this fixes the
+      // problem formapi has recognizing new checkboxes. see comments in
+      // _upload_prepare.
+      if (isset($_SESSION['upload_current_file']) && $_SESSION['upload_current_file'] == $file->fid) {
         $form['files'][$key]['list']['#value'] = variable_get('upload_list_default', 1);
       }
       $form['files'][$key]['filename'] = array('#type' => 'value',  '#value' => $file->filename);
@@ -807,12 +634,19 @@ function _upload_form($node) {
   }
 
   if (user_access('upload files')) {
+    $limits = _upload_file_limits($user);
+
     // This div is hidden when the user uploads through JS.
     $form['new'] = array(
       '#prefix' => '<div id="attach-hide">',
       '#suffix' => '</div>',
     );
-    $form['new']['upload'] = array('#type' => 'file', '#title' => t('Attach new file'), '#size' => 40);
+    $form['new']['upload'] = array(
+      '#type' => 'file',
+      '#title' => t('Attach new file'),
+      '#size' => 40,
+      '#description' => ($limits['resolution'] ? t('Images are larger than %resolution will be resized. ', array('%resolution' => $limits['resolution'])) : '') . t('The maximum upload size is %filesize. Only files with the following extensions may be uploaded: %extensions. ', array('%extensions' => $limits['extensions'], '%filesize' => format_size($limits['file_size']))),
+    );
     $form['new']['attach'] = array(
       '#type' => 'submit',
       '#value' => t('Attach'),
@@ -824,7 +658,7 @@ function _upload_form($node) {
     $form['attach-url'] = array('#type' => 'hidden', '#value' => url('upload/js', array('absolute' => TRUE)), '#attributes' => array('class' => 'upload'));
   }
 
-  // Needed for JS
+  // Needed for JS.
   $form['current']['vid'] = array('#type' => 'hidden', '#value' => isset($node->vid) ? $node->vid : 0);
   return $form;
 }
@@ -861,34 +695,13 @@ function upload_load($node) {
   $files = array();
 
   if ($node->vid) {
-    $result = db_query('SELECT * FROM {files} f INNER JOIN {file_revisions} r ON f.fid = r.fid WHERE r.vid = %d ORDER BY f.fid', $node->vid);
+    $result = db_query('SELECT * FROM {files} f INNER JOIN {upload} r ON f.fid = r.fid WHERE r.vid = %d ORDER BY f.fid', $node->vid);
     while ($file = db_fetch_object($result)) {
       $files[$file->fid] = $file;
     }
   }
 
   return $files;
-}
-
-/**
- * Check an upload, if it is an image, make sure it fits within the
- * maximum dimensions allowed.
- */
-function _upload_image($file) {
-  $info = image_get_info($file->filepath);
-
-  if ($info) {
-    list($width, $height) = explode('x', variable_get('upload_max_resolution', '0x0'));
-    if ($width && $height) {
-      $result = image_scale($file->filepath, $file->filepath, $width, $height);
-      if ($result) {
-        $file->filesize = filesize($file->filepath);
-        drupal_set_message(t('The image was resized to fit within the maximum allowed resolution of %resolution pixels.', array('%resolution' => variable_get('upload_max_resolution', 0))));
-      }
-    }
-  }
-
-  return $file;
 }
 
 /**
@@ -903,7 +716,6 @@ function upload_js() {
 
   // Handle new uploads, and merge tmp files into node-files.
   _upload_prepare($node);
-  _upload_validate($node);
 
   $form = _upload_form($node);
   $form += array(
@@ -915,6 +727,8 @@ function upload_js() {
   drupal_alter('form', $form, array(), 'upload_js');
   $form_state = array('submitted' => FALSE);
   $form = form_builder('upload_js', $form, $form_state);
+  // @todo: Put status messages inside wrapper, instead of above so they do not
+  // persist across ajax reloads.
   $output = theme('status_messages') . drupal_render($form);
   // We send the updated file attachments form.
   print drupal_to_js(array('status' => TRUE, 'data' => $output));

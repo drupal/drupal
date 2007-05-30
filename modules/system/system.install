@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.118 2007/05/27 20:31:13 dries Exp $
+// $Id: system.install,v 1.119 2007/05/30 08:08:58 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -3306,6 +3306,39 @@ function system_update_6021() {
   return $ret;
 }
 
+/**
+ * Update files tables to associate files to a uid by default instead of a nid.
+ * Rename file_revisions to upload since it should only be used by the upload
+ * module used by upload to link files to nodes.
+ */
+function system_update_6022() {
+  $ret = array();
+
+  // Rename the nid field to vid, add status and timestamp fields, and indexes.
+  db_drop_index($ret, 'files', 'nid');
+  db_change_field($ret, 'files', 'nid', 'uid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0));
+  db_add_field($ret, 'files', 'status', array('type' => 'int', 'not null' => TRUE, 'default' => 0));
+  db_add_field($ret, 'files', 'timestamp', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0));
+  db_add_index($ret, 'files', 'uid', array('uid'));
+  db_add_index($ret, 'files', 'status', array('status'));
+  db_add_index($ret, 'files', 'timestamp', array('timestamp'));
+
+  // Rename the file_revisions table to upload then add nid column. Since we're
+  // changing the table name we need to drop and re-add the vid index so both
+  // pgsql ends up with the corect index name.
+  db_drop_index($ret, 'file_revisions', 'vid');
+  db_rename_table($ret, 'file_revisions', 'upload');
+  db_add_field($ret, 'upload', 'nid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0));
+  db_add_index($ret, 'upload', 'nid', array('nid'));
+  db_add_index($ret, 'upload', 'vid', array('vid'));
+
+  // The nid column was renamed to uid. Use the old nid to find the node's uid.
+  $ret[] = update_sql('UPDATE {files} f JOIN {node} n ON f.uid = n.nid SET f.uid = n.uid');
+  // Use the existing vid to find the nid.
+  $ret[] = update_sql('UPDATE {upload} u JOIN {node_revisions} r ON u.vid = r.vid SET u.nid = r.nid');
+
+  return $ret;
+}
 /**
  * @} End of "defgroup updates-5.x-to-6.x"
  * The next series of updates should start at 7000.

@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.341 2007/05/29 14:37:49 goba Exp $
+// $Id: aggregator.module,v 1.342 2007/05/30 08:08:58 dries Exp $
 
 /**
  * @file
@@ -1080,7 +1080,7 @@ function aggregator_page_category() {
 
   drupal_add_feed(url('aggregator/rss/'. arg(2)), variable_get('site_name', 'Drupal') .' '. t('aggregator - @title', array('@title' => $category->title)));
 
-  return _aggregator_page_list('SELECT i.*, f.title AS ftitle, f.link AS flink FROM {aggregator_category_item} c LEFT JOIN {aggregator_item} i ON c.iid = i.iid LEFT JOIN {aggregator_feed} f ON i.fid = f.fid WHERE cid = '. $category->cid .' ORDER BY timestamp DESC, iid DESC', arg(3));
+  return _aggregator_page_list('SELECT i.*, f.title AS ftitle, f.link AS flink FROM {aggregator_category_item} c LEFT JOIN {aggregator_item} i ON c.iid = i.iid LEFT JOIN {aggregator_feed} f ON i.fid = f.fid WHERE cid = '. $category->cid .' ORDER BY timestamp DESC, i.iid DESC', arg(3));
 }
 
 function aggregator_page_list($sql, $header, $categorize) {
@@ -1223,7 +1223,7 @@ function aggregator_page_rss() {
     $category = db_fetch_object(db_query('SELECT cid, title FROM {aggregator_category} WHERE cid = %d', arg(2)));
     $url = '/categories/'. $category->cid;
     $title = ' '. t('in category') .' '. $category->title;
-    $sql = 'SELECT i.*, f.title AS ftitle, f.link AS flink FROM {aggregator_category_item} c LEFT JOIN {aggregator_item} i ON c.iid = i.iid LEFT JOIN {aggregator_feed} f ON i.fid = f.fid WHERE cid = %d ORDER BY timestamp DESC, iid DESC';
+    $sql = 'SELECT i.*, f.title AS ftitle, f.link AS flink FROM {aggregator_category_item} c LEFT JOIN {aggregator_item} i ON c.iid = i.iid LEFT JOIN {aggregator_feed} f ON i.fid = f.fid WHERE cid = %d ORDER BY timestamp DESC, i.iid DESC';
     $result = db_query_range($sql, $category->cid, 0, variable_get('feed_default_items', 10));
   }
   // or, get the default aggregator items

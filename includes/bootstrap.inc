@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.168 2007/05/29 14:37:49 goba Exp $
+// $Id: bootstrap.inc,v 1.169 2007/05/30 08:08:57 dries Exp $
 
 /**
  * @file
@@ -1053,7 +1053,7 @@ function language_list($field = 'language', $reset = FALSE) {
 
 /**
  * Default language used on the site
- * 
+ *
  * @param $property
  *   Optional property of the language object to return
  */

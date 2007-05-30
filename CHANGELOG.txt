@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.204 2007/05/25 15:04:41 dries Exp $
+// $Id: CHANGELOG.txt,v 1.205 2007/05/30 08:08:57 dries Exp $
 
 Drupal 6.0, xxxx-xx-xx (development version)
 ----------------------
@@ -48,6 +48,9 @@ Drupal 6.0, xxxx-xx-xx (development version)
     * Tags are now automatically closed at the end of the teaser.
 - Performance:
     * Made it easier to conditionally load include files.
+- File handling improvements:
+    * Entries in the files table are now keyed to a user, and not a node.
+    * Added re-usable validation functions to check for uploaded file sizes, extensions, and image resolution.
 
 Drupal 5.0, 2007-01-15
 ----------------------

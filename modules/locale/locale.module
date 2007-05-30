@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.176 2007/05/29 14:37:49 goba Exp $
+// $Id: locale.module,v 1.177 2007/05/30 08:08:58 dries Exp $
 
 /**
  * @file
@@ -366,7 +366,7 @@ function locale_refresh_cache() {
  * Returns plural form index for a specific number.
  *
  * The index is computed from the formula of this language.
- * 
+ *
  * @param $count
  *   Number to return plural for.
  * @param $langcode
@@ -378,7 +378,7 @@ function locale_get_plural($count, $langcode = NULL) {
   static $locale_formula, $plurals = array();
 
   $langcode = $langcode ? $langcode : $language->language;
-  
+
   if (!isset($plurals[$langcode][$count])) {
     if (!isset($locale_formula)) {
       $language_list = language_list();

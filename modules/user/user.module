@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.787 2007/05/28 06:08:47 dries Exp $
+// $Id: user.module,v 1.788 2007/05/30 08:08:59 dries Exp $
 
 /**
  * @file
@@ -320,32 +320,22 @@ function user_validate_mail($mail) {
 
 function user_validate_picture(&$form, &$form_state, $form_values) {
   // If required, validate the uploaded picture.
-  if (isset($form['picture']) && ($file = file_check_upload('picture_upload'))) {
-    // Check that uploaded file is an image, with a maximum file size
-    // and maximum height/width.
+  $validators = array(
+    'file_validate_is_image' => array(),
+    'file_validate_image_resolution' => array(variable_get('user_picture_dimensions', '85x85')),
+    'file_validate_size' => array(variable_get('user_picture_file_size', '30') * 1024),
+  );
+  if ($file = file_save_upload('picture_upload', $validators)) {
+    // The image was saved using file_save_upload() and was added to the
+    // files table as a temorary file. We'll make a copy and let the garbage
+    // collector delete the original upload.
     $info = image_get_info($file->filepath);
-    list($maxwidth, $maxheight) = explode('x', variable_get('user_picture_dimensions', '85x85'));
-
-    if (!$info || !$info['extension']) {
-      form_set_error('picture_upload', t('The uploaded file was not an image.'));
+    $destination = variable_get('user_picture_path', 'pictures') .'/picture-'. $form['#uid'] .'.'. $info['extension'];
+    if (file_copy($file, $destination, FILE_EXISTS_REPLACE)) {
+      $form_values['picture'] = $file->filepath;
     }
-    else if (image_get_toolkit()) {
-      image_scale($file->filepath, $file->filepath, $maxwidth, $maxheight);
-    }
-    else if (filesize($file->filepath) > (variable_get('user_picture_file_size', '30') * 1000)) {
-      form_set_error('picture_upload', t('The uploaded image is too large; the maximum file size is %size kB.', array('%size' => variable_get('user_picture_file_size', '30'))));
-    }
-    else if ($info['width'] > $maxwidth || $info['height'] > $maxheight) {
-      form_set_error('picture_upload', t('The uploaded image is too large; the maximum dimensions are %dimensions pixels.', array('%dimensions' => variable_get('user_picture_dimensions', '85x85'))));
-    }
-
-    if (!form_get_errors()) {
-      if ($file = file_save_upload('picture_upload', variable_get('user_picture_path', 'pictures') .'/picture-'. $form['#uid'] .'.'. $info['extension'], 1)) {
-        $form_values['picture'] = $file->filepath;
-      }
-      else {
-        form_set_error('picture_upload', t("Failed to upload the picture image; the %directory directory doesn't exist or is not writable.", array('%directory' => variable_get('user_picture_path', 'pictures'))));
-      }
+    else {
+      form_set_error('picture_upload', t("Failed to upload the picture image; the %directory directory doesn't exist or is not writable.", array('%directory' => variable_get('user_picture_path', 'pictures'))));
     }
   }
 }
