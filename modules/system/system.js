@@ -34,7 +34,7 @@ Drupal.cleanURLsSettingsCheck = function() {
  */
 Drupal.cleanURLsInstallCheck = function() {
   var pathname = location.pathname +"";
-  var url = pathname.replace(/\/[^\/]*?$/, '/') +"node";
+  var url = pathname.replace(/\/[^/]*$/, "/") +"node";
   $("#clean-url .description").append('<span><div id="testing">'+ Drupal.settings.cleanURL.testing +"</div></span>");
   $("#clean-url.install").css("display", "block");
   $.ajax({url: location.protocol +"//"+ location.host + url, type: "GET", data: " ", complete: function(response) {
