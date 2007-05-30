@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.170 2007/05/28 06:24:41 dries Exp $
+// $Id: menu.inc,v 1.171 2007/05/30 08:35:56 dries Exp $
 
 /**
  * @file
@@ -637,7 +637,8 @@ function menu_tree_all_data($menu_name = 'navigation', $item = NULL, $show_hidde
       }
       array_unshift($args, $menu_name);
       list(, $tree[$cid]) = _menu_tree_data(db_query("
-        SELECT *, ml.weight + 50000 AS weight FROM {menu_links} ml LEFT JOIN {menu_router} m ON m.path = ml.router_path
+        SELECT m.*, ml.menu_name, ml.mlid, ml.plid, ml.href, ml.router_path, ml.hidden, ml.external, ml.has_children, ml.expanded, ml.weight + 50000 AS weight, ml.depth, ml.p1, ml.p2, ml.p3, ml.p4, ml.p5, ml.p6, ml.module, ml.link_title, ml.options
+        FROM {menu_links} ml LEFT JOIN {menu_router} m ON m.path = ml.router_path
         WHERE ml.menu_name = '%s'". $where ."
         ORDER BY p1 ASC, p2 ASC, p3 ASC, p4 ASC, p5 ASC", $args), $parents);
       cache_set($cid, $tree[$cid], 'cache_menu');
@@ -924,7 +925,7 @@ function menu_local_tasks($level = 0) {
       return array();
     }
     // Get all tabs
-    $result = db_query("SELECT * FROM {menu_router} WHERE tab_root = '%s' AND tab_parent != '' ORDER BY weight, title", $router_item['tab_root']);
+    $result = db_query("SELECT * FROM {menu_router} WHERE tab_root = '%s' AND tab_parent IS NOT NULL ORDER BY weight, title", $router_item['tab_root']);
     $map = arg();
     $children = array();
     $tab_parent = array();
