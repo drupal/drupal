@@ -925,7 +925,7 @@ function menu_local_tasks($level = 0) {
       return array();
     }
     // Get all tabs
-    $result = db_query("SELECT * FROM {menu_router} WHERE tab_root = '%s' AND tab_parent IS NOT NULL ORDER BY weight, title", $router_item['tab_root']);
+    $result = db_query("SELECT * FROM {menu_router} WHERE tab_root = '%s' AND tab_parent != '' ORDER BY weight, title", $router_item['tab_root']);
     $map = arg();
     $children = array();
     $tab_parent = array();
