@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.module,v 1.7 2007/05/28 06:08:42 dries Exp $
+// $Id: dblog.module,v 1.8 2007/05/30 08:34:12 dries Exp $
 
 /**
  * @file
@@ -196,7 +196,7 @@ function dblog_top($type) {
     array('data' => t('Message'), 'field' => 'message')
   );
 
-  $result = pager_query("SELECT COUNT(wid) AS count, message, variables FROM {watchdog} WHERE type = '%s' GROUP BY message ". tablesort_sql($header), 30, 0, "SELECT COUNT(DISTINCT(message)) FROM {watchdog} WHERE type = '%s'", $type);
+  $result = pager_query("SELECT COUNT(wid) AS count, message, variables FROM {watchdog} WHERE type = '%s' GROUP BY (message, variables) ". tablesort_sql($header), 30, 0, "SELECT COUNT(DISTINCT(message)) FROM {watchdog} WHERE type = '%s'", $type);
 
   $rows = array();
   while ($dblog = db_fetch_object($result)) {
