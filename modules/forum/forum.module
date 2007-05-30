@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.399 2007/05/28 06:19:05 dries Exp $
+// $Id: forum.module,v 1.400 2007/05/30 08:04:38 dries Exp $
 
 /**
  * @file
@@ -350,7 +350,7 @@ function forum_view(&$node, $teaser = FALSE, $page = FALSE) {
  */
 function forum_submit(&$form_values) {
   // Make sure all fields are set properly:
-  $form_values['icon'] = $form_values['icon'] ? $form_values['icon'] : '';
+  $form_values['icon'] = !empty($form_values['icon']) ? $form_values['icon'] : '';
 
   if ($form_values['taxonomy']) {
     // Get the forum terms from the (cached) tree
@@ -417,13 +417,16 @@ function forum_form(&$node) {
   $form['title'] = array('#type' => 'textfield', '#title' => check_plain($type->title_label), '#default_value' => !empty($node->title) ? $node->title : '', '#required' => TRUE, '#weight' => -5);
 
   if (!empty($node->nid)) {
-    $forum_terms = taxonomy_node_get_terms_by_vocabulary(_forum_get_vid(), $node);
+    $forum_terms = taxonomy_node_get_terms_by_vocabulary($node, _forum_get_vid());
     // if editing, give option to leave shadows
     $shadow = (count($forum_terms) > 1);
     $form['shadow'] = array('#type' => 'checkbox', '#title' => t('Leave shadow copy'), '#default_value' => $shadow, '#description' => t('If you move this topic, you can leave a link in the old forum to the new forum.'));
   }
 
   $form['body_field'] = node_body_field($node, $type->body_label, 1);
+
+  $form['#submit'][] = 'forum_submit';
+  // Assign the forum topic submit handler.
 
   return $form;
 }
@@ -462,7 +465,7 @@ function forum_form_container($edit = array()) {
   $edit += array(
     'name' => '',
     'description' => '',
-    'tid' => 0,
+    'tid' => NULL,
     'weight' => 0,
   );
   // Handle a delete operation.
@@ -569,7 +572,7 @@ function forum_form_forum($edit = array()) {
  * Process forum form and container form submissions.
  */
 function forum_form_submit($form, &$form_state, $form_values) {
-  if ($form['form_id'] == 'forum_form_container') {
+  if ($form['form_id']['#value'] == 'forum_form_container') {
     $container = TRUE;
     $type = t('forum container');
   }
@@ -732,7 +735,7 @@ function _forum_get_vid() {
  * @TODO Give a better description. Not sure where this function is used yet.
  */
 function _forum_format($topic) {
-  if ($topic && $topic->timestamp) {
+  if ($topic && !empty($topic->timestamp)) {
     return t('@time ago<br />by !author', array('@time' => format_interval(time() - $topic->timestamp), '!author' => theme('username', $topic)));
   }
   else {
@@ -764,7 +767,7 @@ function forum_get_forums($tid = 0) {
 
     $sql = "SELECT r.tid, COUNT(n.nid) AS topic_count, SUM(l.comment_count) AS comment_count FROM {node} n INNER JOIN {node_comment_statistics} l ON n.nid = l.nid INNER JOIN {term_node} r ON n.nid = r.nid WHERE n.status = 1 AND n.type = 'forum' GROUP BY r.tid";
     $sql = db_rewrite_sql($sql);
-    $_counts = db_query($sql, $forum->tid);
+    $_counts = db_query($sql);
     while ($count = db_fetch_object($_counts)) {
       $counts[$count->tid] = $count;
     }
@@ -775,7 +778,7 @@ function forum_get_forums($tid = 0) {
       $forum->container = 1;
     }
 
-    if ($counts[$forum->tid]) {
+    if (!empty($counts[$forum->tid])) {
       $forum->num_topics = $counts[$forum->tid]->topic_count;
       $forum->num_posts = $counts[$forum->tid]->topic_count + $counts[$forum->tid]->comment_count;
     }
@@ -792,9 +795,11 @@ function forum_get_forums($tid = 0) {
     $topic = db_fetch_object(db_query_range($sql, $forum->tid, 0, 1));
 
     $last_post = new stdClass();
-    $last_post->timestamp = $topic->last_comment_timestamp;
-    $last_post->name = $topic->last_comment_name;
-    $last_post->uid = $topic->last_comment_uid;
+    if (!empty($topic->last_comment_timestamp)) {
+      $last_post->timestamp = $topic->last_comment_timestamp;
+      $last_post->name = $topic->last_comment_name;
+      $last_post->uid = $topic->last_comment_uid;
+    }
     $forum->last_post = $last_post;
 
     $forums[$forum->tid] = $forum;
@@ -889,6 +894,7 @@ function _forum_new($tid) {
  * Menu callback; prints a forum listing.
  */
 function forum_page($tid = 0) {
+  $topics = '';
   $forum_per_page = variable_get('forum_per_page', 25);
   $sortby = variable_get('forum_order', 1);
 
@@ -911,7 +917,7 @@ function theme_forum_display($forums, $topics, $parents, $tid, $sortby, $forum_p
   // forum list, topics list, topic browser and 'add new topic' link
 
   $vocabulary = taxonomy_vocabulary_load(variable_get('forum_nav_vocabulary', ''));
-  $title = $vocabulary->name;
+  $title = !empty($vocabulary->name) ? $vocabulary->name : '';
 
   // Breadcrumb navigation:
   $breadcrumb = array();
@@ -980,11 +986,11 @@ function theme_forum_list($forums, $parents, $tid) {
     $header = array(t('Forum'), t('Topics'), t('Posts'), t('Last post'));
 
     foreach ($forums as $forum) {
-      if ($forum->container) {
+      if (!empty($forum->container)) {
         $description  = '<div style="margin-left: '. ($forum->depth * 30) ."px;\">\n";
         $description .= ' <div class="name">'. l($forum->name, "forum/$forum->tid") ."</div>\n";
 
-        if ($forum->description) {
+        if (!empty($forum->description)) {
           $description .= ' <div class="description">'. filter_xss_admin($forum->description) ."</div>\n";
         }
         $description .= "</div>\n";
@@ -1001,7 +1007,7 @@ function theme_forum_list($forums, $parents, $tid) {
         $description  = '<div style="margin-left: '. ($forum->depth * 30) ."px;\">\n";
         $description .= ' <div class="name">'. l($forum->name, "forum/$forum->tid") ."</div>\n";
 
-        if ($forum->description) {
+        if (!empty($forum->description)) {
           $description .= ' <div class="description">'. filter_xss_admin($forum->description) ."</div>\n";
         }
         $description .= "</div>\n";
