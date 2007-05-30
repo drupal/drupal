@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.171 2007/05/30 08:35:56 dries Exp $
+// $Id: menu.inc,v 1.172 2007/05/30 15:26:33 dries Exp $
 
 /**
  * @file
@@ -925,7 +925,7 @@ function menu_local_tasks($level = 0) {
       return array();
     }
     // Get all tabs
-    $result = db_query("SELECT * FROM {menu_router} WHERE tab_root = '%s' AND tab_parent IS NOT NULL ORDER BY weight, title", $router_item['tab_root']);
+    $result = db_query("SELECT * FROM {menu_router} WHERE tab_root = '%s' AND tab_parent != '' ORDER BY weight, title", $router_item['tab_root']);
     $map = arg();
     $children = array();
     $tab_parent = array();
