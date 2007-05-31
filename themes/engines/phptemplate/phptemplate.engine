@@ -250,7 +250,7 @@ function phptemplate_page($content, $show_blocks = TRUE) {
   return _phptemplate_callback('page', $variables, $suggestions);
 }
 
-/*
+/**
  * Prepare the values passed to the theme_node function to be passed
  * into a pluggable template engine.
  */
