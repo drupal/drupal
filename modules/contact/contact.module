@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.85 2007/05/28 06:08:42 dries Exp $
+// $Id: contact.module,v 1.86 2007/05/31 12:03:18 dries Exp $
 
 /**
  * @file
@@ -434,7 +434,7 @@ function contact_mail_page() {
 
   if (count($categories) > 0) {
     $form['#token'] = $user->name . $user->mail;
-    $form['contact_information'] = array('#value' => filter_xss_admin(variable_get('contact_form_information', t('You can leave us a message using the contact form below.'))));
+    $form['contact_information'] = array('#value' => filter_xss_admin(variable_get('contact_form_information', t('You can leave a message using the contact form below.'))));
     $form['name'] = array('#type' => 'textfield',
       '#title' => t('Your name'),
       '#maxlength' => 255,
