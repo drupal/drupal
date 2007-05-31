@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.356 2007/05/22 19:56:00 dries Exp $
+// $Id: theme.inc,v 1.357 2007/05/31 12:14:04 dries Exp $
 
 /**
  * @file
@@ -1300,9 +1300,14 @@ function theme_xml_icon($url) {
 
 /**
  * Return code that emits an feed icon.
- */
-function theme_feed_icon($url) {
-  if ($image = theme('image', 'misc/feed.png', t('Syndicate content'), t('Syndicate content'))) {
+ *
+ * @param $url
+ *   The url of the feed.
+ * @param $title
+ *   A descriptive title of the feed.
+  */
+function theme_feed_icon($url, $title) {
+  if ($image = theme('image', 'misc/feed.png', t('Syndicate content'), $title)) {
     return '<a href="'. check_url($url) .'" class="feed-icon">'. $image .'</a>';
   }
 }

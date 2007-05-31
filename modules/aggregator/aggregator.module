@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.342 2007/05/30 08:08:58 dries Exp $
+// $Id: aggregator.module,v 1.343 2007/05/31 12:14:04 dries Exp $
 
 /**
  * @file
@@ -1325,7 +1325,7 @@ function aggregator_page_categories() {
  */
 function theme_aggregator_feed($feed) {
   $output  = '<div class="feed-source">';
-  $output .= theme('feed_icon', $feed->url) ."\n";
+  $output .= theme('feed_icon', $feed->url, t('!title feed', array('!title' => $feed->title))) ."\n";
   $output .= $feed->image;
   $output .= '<div class="feed-description">'. aggregator_filter_xss($feed->description) ."</div>\n";
   $output .= '<div class="feed-url"><em>'. t('URL:') .'</em> '. l($feed->link, $feed->link, array('absolute' => TRUE)) ."</div>\n";
