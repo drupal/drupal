@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.200 2007/05/28 18:53:29 dries Exp $
+// $Id: form.inc,v 1.201 2007/05/31 12:36:18 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -1200,11 +1200,13 @@ function expand_password_confirm($element) {
     '#type' => 'password',
     '#title' => t('Password'),
     '#value' => empty($element['#value']) ? NULL : $element['#value']['pass1'],
+    '#required' => $element['#required'],
   );
   $element['pass2'] =  array(
     '#type' => 'password',
     '#title' => t('Confirm password'),
     '#value' => empty($element['#value']) ? NULL : $element['#value']['pass2'],
+    '#required' => $element['#required'],
   );
   $element['#element_validate'] = array('password_confirm_validate');
   $element['#tree'] = TRUE;
