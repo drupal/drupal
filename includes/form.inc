@@ -1200,11 +1200,13 @@ function expand_password_confirm($element) {
     '#type' => 'password',
     '#title' => t('Password'),
     '#value' => empty($element['#value']) ? NULL : $element['#value']['pass1'],
+    '#required' => $element['#required'],
   );
   $element['pass2'] =  array(
     '#type' => 'password',
     '#title' => t('Confirm password'),
     '#value' => empty($element['#value']) ? NULL : $element['#value']['pass2'],
+    '#required' => $element['#required'],
   );
   $element['#element_validate'] = array('password_confirm_validate');
   $element['#tree'] = TRUE;
