@@ -163,7 +163,7 @@ function drupal_add_feed($url = NULL, $title = '') {
   static $stored_feed_links = array();
 
   if (!is_null($url)) {
-    $stored_feed_links[$url] = theme('feed_icon', $url);
+    $stored_feed_links[$url] = theme('feed_icon', $url, $title);
 
     drupal_add_link(array('rel' => 'alternate',
                           'type' => 'application/rss+xml',
@@ -2417,7 +2417,7 @@ function drupal_common_themes() {
       'arguments' => array('url' => NULL),
     ),
     'feed_icon' => array(
-      'arguments' => array('url' => NULL),
+      'arguments' => array('url' => NULL, 'title' => NULL),
     ),
     'closure' => array(
       'arguments' => array('main' => 0),

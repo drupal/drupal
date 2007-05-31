@@ -1836,7 +1836,7 @@ function node_block($op = 'list', $delta = 0) {
   }
   else if ($op == 'view') {
     $block['subject'] = t('Syndicate');
-    $block['content'] = theme('feed_icon', url('rss.xml'));
+    $block['content'] = theme('feed_icon', url('rss.xml'), t('Syndicate'));
 
     return $block;
   }
