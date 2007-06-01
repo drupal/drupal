@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.649 2007/06/01 09:05:44 unconed Exp $
+// $Id: common.inc,v 1.650 2007/06/01 09:49:11 unconed Exp $
 
 /**
  * @file
@@ -1850,7 +1850,7 @@ function _drupal_compress_js($script) {
     array('/\\s+(\\/[^\\/\\n\\r\\*][^\\/\\n\\r]*\\/g?i?)/', '$1'),
     array('/[^\\w\\x24\\/\'"*)\\?:]\\/[^\\/\\n\\r\\*][^\\/\\n\\r]*\\/g?i?/', '$0'),
     // Protect spaces between keywords and variables
-    array('/(\\b|\\x24)\\s+(\\b|\\x24)/', '$1 $2'),
+    array('/(?<=[A-Za-z0-9_$])\\s+(?=[A-Za-z0-9_$])/', ' '),
     array('/([+\\-])\\s+([+\\-])/', '$1 $2'),
     // Remove all other white-space
     array('/\\s+/', ''),
