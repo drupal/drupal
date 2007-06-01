@@ -23,7 +23,7 @@ Drupal.cleanURLsSettingsCheck = function() {
       $("#clean-url .description span").append('<div class="warning">'+ Drupal.settings.cleanURL.failure +"</div>");
     }
   }});
-}
+};
 
 /**
  * Internal function to check using Ajax if clean URLs can be enabled on the
@@ -50,12 +50,12 @@ Drupal.cleanURLsInstallCheck = function() {
       $("#clean-url .description span").append('<div class="warning">'+ Drupal.settings.cleanURL.failure +"</div>");
     }
   }});
-}
+};
 
 Drupal.installDefaultTimezone = function() {
   var offset = new Date().getTimezoneOffset() * -60;
   $("#edit-date-default-timezone").val(offset);
-}
+};
 
 /**
  * Show/hide custom format sections on the date-time settings page.

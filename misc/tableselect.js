@@ -40,7 +40,7 @@ Drupal.tableSelect = function() {
     // Keep track of the last checked checkbox.
     lastChecked = e.target;
   });
-}
+};
 
 Drupal.tableSelectRange = function(from, to, state) {
   // We determine the looping mode based on the the order of from and to.
@@ -65,7 +65,7 @@ Drupal.tableSelectRange = function(from, to, state) {
     else if (jQuery.filter(to, [i]).r.length) break;
 
   }
-}
+};
 
 // Global Killswitch
 if (Drupal.jsEnabled) {

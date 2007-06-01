@@ -400,6 +400,7 @@ function update_finished($success, $results, $operations) {
   cache_clear_all('*', 'cache_page', TRUE);
   cache_clear_all('*', 'cache_filter', TRUE);
   drupal_clear_css_cache();
+  drupal_clear_js_cache();
 
   $_SESSION['update_results'] = $results;
   $_SESSION['update_success'] = $success;

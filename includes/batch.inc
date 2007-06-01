@@ -66,7 +66,7 @@ function _batch_progress_page_js() {
   $current_set = _batch_current_set();
 
   drupal_set_title($current_set['title']);
-  drupal_add_js('misc/progress.js', 'core', 'header');
+  drupal_add_js('misc/progress.js', 'core', 'header', FALSE, FALSE);
 
   $url = url($batch['url'], array('query' => array('id' => $batch['id'])));
   $js_setting = array(
@@ -77,7 +77,7 @@ function _batch_progress_page_js() {
     ),
   );
   drupal_add_js($js_setting, 'setting');
-  drupal_add_js('misc/batch.js', 'core', 'header', FALSE, TRUE);
+  drupal_add_js('misc/batch.js', 'core', 'header', FALSE, FALSE);
 
   $output = '<div id="progress"></div>';
   return $output;

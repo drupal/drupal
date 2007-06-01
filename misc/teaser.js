@@ -73,7 +73,7 @@ Drupal.teaserAttach = function() {
     }
 
   });
-}
+};
 
 if (Drupal.jsEnabled) {
   $(document).ready(Drupal.teaserAttach);

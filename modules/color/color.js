@@ -223,7 +223,7 @@ if (Drupal.jsEnabled) {
         );
         $(this).after(lock);
         locks.push(lock);
-      }
+      };
 
       // Add hook
       var hook = $('<div class="hook"></div>');
@@ -236,7 +236,7 @@ if (Drupal.jsEnabled) {
     })
     .focus(focus);
 
-    $('#palette label', form)
+    $('#palette label', form);
 
     // Focus first color
     focus.call(inputs[0]);

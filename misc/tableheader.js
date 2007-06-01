@@ -86,7 +86,7 @@ if (Drupal.jsEnabled) {
       // Precalculate table heights
       $('table.sticky-table').each(function () {
         this.height = $(this).height();
-      })
+      });
 
       $(cells).each(function () {
         // Get position.

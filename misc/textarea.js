@@ -36,7 +36,7 @@ Drupal.textareaAttach = function() {
       textarea.css('opacity', 1);
     }
   });
-}
+};
 
 if (Drupal.jsEnabled) {
   $(document).ready(Drupal.textareaAttach);
