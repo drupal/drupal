@@ -1,4 +1,4 @@
-// $Id: autocomplete.js,v 1.17 2007/01/09 07:31:04 drumm Exp $
+// $Id: autocomplete.js,v 1.18 2007/06/01 09:05:45 unconed Exp $
 
 /**
  * Attaches the autocomplete behaviour to all required fields
@@ -15,7 +15,7 @@ Drupal.autocompleteAutoAttach = function () {
     $(input.form).submit(Drupal.autocompleteSubmit);
     new Drupal.jsAC(input, acdb[uri]);
   });
-}
+};
 
 /**
  * Prevents the form from submitting if the suggestions popup is open
@@ -25,7 +25,7 @@ Drupal.autocompleteSubmit = function () {
   return $('#autocomplete').each(function () {
     this.owner.hidePopup();
   }).size() == 0;
-}
+};
 
 /**
  * An AutoComplete object
@@ -59,7 +59,7 @@ Drupal.jsAC.prototype.onkeydown = function (input, e) {
     default: // all other keys
       return true;
   }
-}
+};
 
 /**
  * Handler for the "keyup" event
@@ -96,14 +96,14 @@ Drupal.jsAC.prototype.onkeyup = function (input, e) {
         this.hidePopup(e.keyCode);
       return true;
   }
-}
+};
 
 /**
  * Puts the currently highlighted suggestion into the autocomplete field
  */
 Drupal.jsAC.prototype.select = function (node) {
   this.input.value = node.autocompleteValue;
-}
+};
 
 /**
  * Highlights the next suggestion
@@ -118,7 +118,7 @@ Drupal.jsAC.prototype.selectDown = function () {
       this.highlight(lis.get(0));
     }
   }
-}
+};
 
 /**
  * Highlights the previous suggestion
@@ -127,7 +127,7 @@ Drupal.jsAC.prototype.selectUp = function () {
   if (this.selected && this.selected.previousSibling) {
     this.highlight(this.selected.previousSibling);
   }
-}
+};
 
 /**
  * Highlights a suggestion
@@ -138,7 +138,7 @@ Drupal.jsAC.prototype.highlight = function (node) {
   }
   $(node).addClass('selected');
   this.selected = node;
-}
+};
 
 /**
  * Unhighlights a suggestion
@@ -146,7 +146,7 @@ Drupal.jsAC.prototype.highlight = function (node) {
 Drupal.jsAC.prototype.unhighlight = function (node) {
   $(node).removeClass('selected');
   this.selected = false;
-}
+};
 
 /**
  * Hides the autocomplete suggestions
@@ -163,7 +163,7 @@ Drupal.jsAC.prototype.hidePopup = function (keycode) {
     $(popup).fadeOut('fast', function() { $(popup).remove(); });
   }
   this.selected = false;
-}
+};
 
 /**
  * Positions the suggestions popup and starts a search
@@ -187,7 +187,7 @@ Drupal.jsAC.prototype.populatePopup = function () {
   // Do search
   this.db.owner = this;
   this.db.search(this.input.value);
-}
+};
 
 /**
  * Fills the suggestion popup with any matches received
@@ -222,7 +222,7 @@ Drupal.jsAC.prototype.found = function (matches) {
       this.hidePopup();
     }
   }
-}
+};
 
 Drupal.jsAC.prototype.setStatus = function (status) {
   switch (status) {
@@ -235,7 +235,7 @@ Drupal.jsAC.prototype.setStatus = function (status) {
       $(this.input).removeClass('throbbing');
       break;
   }
-}
+};
 
 /**
  * An AutoComplete DataBase object
@@ -244,7 +244,7 @@ Drupal.ACDB = function (uri) {
   this.uri = uri;
   this.delay = 300;
   this.cache = {};
-}
+};
 
 /**
  * Performs a cached and delayed search
@@ -286,7 +286,7 @@ Drupal.ACDB.prototype.search = function (searchString) {
       }
     });
   }, this.delay);
-}
+};
 
 /**
  * Cancels the current autocomplete request
@@ -295,7 +295,7 @@ Drupal.ACDB.prototype.cancel = function() {
   if (this.owner) this.owner.setStatus('cancel');
   if (this.timer) clearTimeout(this.timer);
   this.searchString = '';
-}
+};
 
 // Global Killswitch
 if (Drupal.jsEnabled) {

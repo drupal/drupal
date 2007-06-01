@@ -1,4 +1,4 @@
-// $Id: tableheader.js,v 1.2 2007/04/07 03:03:40 unconed Exp $
+// $Id: tableheader.js,v 1.3 2007/06/01 09:05:45 unconed Exp $
 
 // Global Killswitch
 if (Drupal.jsEnabled) {
@@ -86,7 +86,7 @@ if (Drupal.jsEnabled) {
       // Precalculate table heights
       $('table.sticky-table').each(function () {
         this.height = $(this).height();
-      })
+      });
 
       $(cells).each(function () {
         // Get position.

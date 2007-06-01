@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.648 2007/05/31 12:14:03 dries Exp $
+// $Id: common.inc,v 1.649 2007/06/01 09:05:44 unconed Exp $
 
 /**
  * @file
@@ -1681,24 +1681,26 @@ function drupal_clear_css_cache() {
  *   (optional) If set to FALSE, the JavaScript file is loaded anew on every page
  *   call, that means, it is not cached. Defaults to TRUE. Used only when $type
  *   references a JavaScript file.
+ * @param $preprocess
+ *   (optional) Should this JS file be aggregated if this
+ *   feature has been turned on under the performance section?
  * @return
  *   If the first parameter is NULL, the JavaScript array that has been built so
  *   far for $scope is returned.
  */
-function drupal_add_js($data = NULL, $type = 'module', $scope = 'header', $defer = FALSE, $cache = TRUE) {
-  if (!is_null($data)) {
-    _drupal_add_js('misc/jquery.js', 'core', 'header', FALSE, $cache);
-    _drupal_add_js('misc/drupal.js', 'core', 'header', FALSE, $cache);
-  }
-  return _drupal_add_js($data, $type, $scope, $defer, $cache);
-}
-
-/**
- * Helper function for drupal_add_js().
- */
-function _drupal_add_js($data, $type, $scope, $defer, $cache) {
+function drupal_add_js($data = NULL, $type = 'module', $scope = 'header', $defer = FALSE, $cache = TRUE, $preprocess = TRUE) {
   static $javascript = array();
 
+  // Add jquery.js and drupal.js the first time a Javascript file is added.
+  if ($data && empty($javascript)) {
+    $javascript['header'] = array(
+      'core' => array(
+        'misc/jquery.js' => array('cache' => TRUE, 'defer' => FALSE, 'preprocess' => TRUE),
+        'misc/drupal.js' => array('cache' => TRUE, 'defer' => FALSE, 'preprocess' => TRUE),
+      ),
+      'module' => array(), 'theme' => array(), 'setting' => array(), 'inline' => array(),
+    );
+  }
   if (!isset($javascript[$scope])) {
     $javascript[$scope] = array('core' => array(), 'module' => array(), 'theme' => array(), 'setting' => array(), 'inline' => array());
   }
@@ -1707,7 +1709,7 @@ function _drupal_add_js($data, $type, $scope, $defer, $cache) {
     $javascript[$scope][$type] = array();
   }
 
-  if (!is_null($data)) {
+  if (isset($data)) {
     switch ($type) {
       case 'setting':
         $javascript[$scope][$type][] = $data;
@@ -1716,7 +1718,8 @@ function _drupal_add_js($data, $type, $scope, $defer, $cache) {
         $javascript[$scope][$type][] = array('code' => $data, 'defer' => $defer);
         break;
       default:
-        $javascript[$scope][$type][$data] = array('cache' => $cache, 'defer' => $defer);
+        // If cache is FALSE, don't preprocess the JS file.
+        $javascript[$scope][$type][$data] = array('cache' => $cache, 'defer' => $defer, 'preprocess' => (!$cache ? FALSE : $preprocess));
     }
   }
 
@@ -1739,13 +1742,25 @@ function _drupal_add_js($data, $type, $scope, $defer, $cache) {
  * @return
  *   All JavaScript code segments and includes for the scope as HTML tags.
  */
-function drupal_get_js($scope = 'header', $javascript = NULL) {
-  $output = '';
-  if (is_null($javascript)) {
+function drupal_get_js($scope = 'header', $javascript = NULL) { 
+  if (!isset($javascript)) {
     $javascript = drupal_add_js(NULL, NULL, $scope);
   }
 
+  if (count($javascript) < 1) {
+    return '';
+  }                                                    
+  
+  $output = '';
+  $preprocessed = '';
+  $no_preprocess = array('core' => '', 'module' => '', 'theme' => '');
+  $files = array();
+  $preprocess_js = variable_get('preprocess_js', FALSE);
+  $directory = file_directory_path();
+  $is_writable = is_dir($directory) && is_writable($directory) && (variable_get('file_downloads', FILE_DOWNLOADS_PUBLIC) == FILE_DOWNLOADS_PUBLIC);
+
   foreach ($javascript as $type => $data) {
+    
     if (!$data) continue;
 
     switch ($type) {
@@ -1758,13 +1773,295 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
         }
         break;
       default:
+        // If JS preprocessing is off, we still need to output the scripts.
+        // Additionally, go through any remaining scripts if JS preprocessing is on and output the non-cached ones.
         foreach ($data as $path => $info) {
-          $output .= '<script type="text/javascript"'. ($info['defer'] ? ' defer="defer"' : '') .' src="'. check_url(base_path() . $path) . ($info['cache'] ? '' : '?'. time()) ."\"></script>\n";
+          if (!$info['preprocess'] || !$is_writable || !$preprocess_js) {   
+            $no_preprocess[$type] .= '<script type="text/javascript"'. ($info['defer'] ? ' defer="defer"' : '') .' src="'. base_path() . $path . ($info['cache'] ? '' : '?'. time()) ."\"></script>\n";
+          }
+          else {             
+            $files[$path] = $info;
+          }
         }
     }
   }
-
+  
+  // Aggregate any remaining JS files that haven't already been output.
+  if ($is_writable && $preprocess_js && count($files) > 0) {     
+    $filename = md5(serialize($files)) .'.js';
+    $preprocess_file = drupal_build_js_cache($files, $filename);
+    $preprocessed .= '<script type="text/javascript" src="'. base_path() . $preprocess_file .'"></script>'. "\n";
+  }
+  
+  // Keep the order of JS files consistent as some are preprocessed and others are not.
+  // Make sure any inline or JS setting variables appear last after libraries have loaded.
+  $output = $preprocessed . implode('', $no_preprocess) . $output;
+  
   return $output;
+}
+
+/**
+ * Aggregate JS files, putting them in the files directory.
+ *
+ * @param $files
+ *   An array of JS files to aggregate and compress into one file.
+ * @param $filename
+ *   The name of the aggregate JS file.
+ * @return
+ *   The name of the JS file.
+ */
+function drupal_build_js_cache($files, $filename) {
+  $contents = '';
+
+  // Create the js/ within the files folder.
+  $jspath = file_create_path('js');
+  file_check_directory($jspath, FILE_CREATE_DIRECTORY);
+
+  if (!file_exists($jspath .'/'. $filename)) {
+    // Build aggregate JS file.               
+    foreach ($files as $path => $info) {       
+      if ($info['preprocess']) {                                       
+        // Append a ';' after each JS file to prevent them from running together.
+        $contents .= _drupal_compress_js(file_get_contents($path). ';');
+      }
+    }
+
+    // Create the JS file.
+    file_save_data($contents, $jspath .'/'. $filename, FILE_EXISTS_REPLACE);
+  }
+
+  return $jspath .'/'. $filename;
+}
+
+/**
+ * Perform basic code compression for JavaScript.
+ *
+ * Helper function for drupal_pack_js().
+ */
+function _drupal_compress_js($script) {
+  $regexps = array(
+    // Protect strings.
+    array('/\'[^\'\\n\\r]*\'/', '$0'),
+    array('/"[^"\\n\\r]*"/', '$0'),
+    // Remove comments.
+    array('/\\/\\/[^\\n\\r]*[\\n\\r]/', ''),
+    array('/\\/\\*[^*]*\\*+((?:[^\\/][^*]*\\*+)*)\\//', ''),
+    // Protect regular expressions
+    array('/\\s+(\\/[^\\/\\n\\r\\*][^\\/\\n\\r]*\\/g?i?)/', '$1'),
+    array('/[^\\w\\x24\\/\'"*)\\?:]\\/[^\\/\\n\\r\\*][^\\/\\n\\r]*\\/g?i?/', '$0'),
+    // Protect spaces between keywords and variables
+    array('/(\\b|\\x24)\\s+(\\b|\\x24)/', '$1 $2'),
+    array('/([+\\-])\\s+([+\\-])/', '$1 $2'),
+    // Remove all other white-space
+    array('/\\s+/', ''),
+  );
+  $script = _packer_apply($script, $regexps, TRUE);
+
+  return $script;
+}     
+  
+/**
+ * Multi-regexp replacements.
+ *
+ * Allows you to perform multiple regular expression replacements at once,
+ * without overlapping matches.
+ *
+ * @param $script
+ *   The text to modify.
+ * @param $regexps
+ *   An array of replacement instructions, each being a tuple with values:
+ *     - A stand-alone regular expression without modifiers (slash-delimited)
+ *     - A replacement expression, which may include placeholders.
+ * @param $escape
+ *   Whether to ignore slash-escaped characters for matching. This allows you
+ *   to match e.g. quote-delimited strings with /'[^']+'/ without having to
+ *   worry about \'. Otherwise, you'd have to mess with look-aheads and
+ *   look-behinds to match these.
+ */
+function _packer_apply($script, $regexps, $escape = FALSE) {
+
+  $_regexps = array();
+  // Process all regexps
+  foreach ($regexps as $regexp) {
+    list($expression, $replacement) = $regexp;
+
+    // Count the number of matching groups (including the whole).
+    $length = 1 + preg_match_all('/(?<!\\\\)\((?!\?)/', $expression, $out);
+    
+    // Treat only strings $replacement
+    if (is_string($replacement)) {
+      // Does the pattern deal with sub-expressions?
+      if (preg_match('/\$\d/', $replacement)) {
+        if (preg_match('/^\$\d+$/', $replacement)) {
+          // A simple lookup (e.g. "$2")
+          // Store the index (used for fast retrieval of matched strings)
+          $replacement = (int)(substr($replacement, 1));
+        }
+        else {
+          // A complicated lookup (e.g. "Hello $2 $1").
+          // Build a function to do the lookup.
+          $replacement = array(
+            'fn' => 'backreferences',
+            'data' => array(
+              'replacement' => $replacement,
+              'length' => $length,
+            )
+          );
+        }
+      }
+    }
+    // Store the modified expression.
+    if (!empty($expression)) {
+      $_regexps[] = array($expression, $replacement, $length);
+    }
+    else {
+      $_regexps[] = array('/^$/', $replacement, $length);
+    }
+  }
+  
+  // Execute the global replacement
+  
+  // Build one mega-regexp out of the smaller ones.
+  $regexp = '/';
+  foreach ($_regexps as $_regexp) {
+    list($expression) = $_regexp;
+    $regexp .= '(' . substr($expression, 1, -1) . ')|';
+  }
+  $regexp = substr($regexp, 0, -1) . '/';
+  
+  // In order to simplify the regexps that look e.g. for quoted strings, we
+  // remove all escaped characters (such as \' or \") from the data. Then, we
+  // put them back as they were.
+
+  if ($escape) {
+    // Remove escaped characters
+    $script = preg_replace_callback(
+      '/\\\\(.)' .'/',
+      '_packer_escape_char',
+      $script
+    );
+    $escaped = _packer_escape_char(NULL, TRUE);
+  }
+
+  _packer_replacement(NULL, $_regexps, $escape);
+  $script = preg_replace_callback(
+    $regexp,
+    '_packer_replacement',
+    $script
+  );
+
+  if ($escape) {
+    // Restore escaped characters
+    _packer_unescape_char(NULL, $escaped);
+    $script = preg_replace_callback(
+      '/\\\\' .'/',
+      '_packer_unescape_char',
+      $script
+    );
+
+    // We only delete portions of data afterwards to ensure the escaped character
+    // replacements don't go out of sync. We mark all sections to delete with
+    // ASCII 01 bytes.
+    $script = preg_replace('/\\x01[^\\x01]*\\x01/', '', $script);
+  }
+
+  return $script;
+}
+
+/**
+ * Helper function for _packer_apply().
+ */
+function _packer_escape_char($match, $return = FALSE) {
+  // Build array of escaped characters that were removed.
+  static $_escaped = array();
+  if ($return) {
+    $escaped = $_escaped;
+    $_escaped = array();
+    return $escaped;
+  }
+  else {
+    $_escaped[] = $match[1];
+    return '\\';
+  }
+}      
+
+/**
+ * Helper function for _packer_apply().
+ *
+ * Performs replacements for the multi-regexp.
+ */
+function _packer_replacement($arguments, $regexps = NULL, $escape = NULL) {
+  // Cache regexps
+  static $_regexps, $_escape;
+  if (isset($regexps)) {
+    $_regexps = $regexps;
+  }
+  if (isset($escape)) {
+    $_escape = $escape;
+  }
+
+  if (empty($arguments)) {
+    return '';
+  }
+  
+  $i = 1; $j = 0;
+  // Loop through the regexps
+  while (isset($_regexps[$j])) {
+    list($expression, $replacement, $length) = $_regexps[$j++];
+    
+    // Do we have a result?
+    if (isset($arguments[$i]) && ($arguments[$i] != '')) {
+      if (is_array($replacement) && isset($replacement['fn'])) {
+        return call_user_func('_packer_'. $replacement['fn'], $arguments, $i, $replacement['data']);
+      }
+      elseif (is_int($replacement)) {
+        return $arguments[$replacement + $i];
+      }
+      else {
+        $delete = !$escape || strpos($arguments[$i], '\\') === FALSE
+                  ? '' : "\x01" . $arguments[$i] . "\x01";
+        return $delete . $replacement;
+      }
+    // skip over references to sub-expressions
+    }
+    else {
+      $i += $length;
+    }
+  }
+}
+
+/**
+ * Helper function for _packer_apply().
+ */
+function _packer_unescape_char($match, $escaped = NULL) {
+  // Store array of escaped characters to insert back.
+  static $_escaped, $i;
+  if ($escaped) {
+    $_escaped = $escaped;
+    $i = 0;
+  }
+  else {
+    return '\\'. array_shift($_escaped);
+  }
+}           
+
+/**
+ * Helper function for _packer_replacement().
+ */
+function _packer_backreferences($match, $offset, $data) {
+  $replacement = $data['replacement'];
+  $i = $data['length'];
+  while ($i) {
+    $replacement = str_replace('$'.$i--, $match[$offset + $i], $replacement);
+  }
+  return $replacement;
+}
+
+/**
+ * Delete all cached JS files.
+ */
+function drupal_clear_js_cache() {
+  file_scan_directory(file_create_path('js'), '.*', array('.', '..', 'CVS'), 'file_delete', TRUE);
 }
 
 /**

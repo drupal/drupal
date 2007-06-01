@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.485 2007/05/30 08:08:58 dries Exp $
+// $Id: system.module,v 1.486 2007/06/01 09:05:45 unconed Exp $
 
 /**
  * @file
@@ -262,7 +262,7 @@ function system_menu() {
   );
   $items['admin/settings/performance'] = array(
     'title' => 'Performance',
-    'description' => 'Enable or disable page caching for anonymous users, and enable or disable CSS preprocessor.',
+    'description' => 'Enable or disable page caching for anonymous users and set CSS and JS bandwidth optimization options.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_performance_settings'),
   );
@@ -700,18 +700,26 @@ function system_performance_settings() {
   $form['bandwidth_optimizations'] = array(
     '#type' => 'fieldset',
     '#title' => t('Bandwidth optimizations'),
-    '#description' => t('These options can help reduce both the size and number of requests made to your website. This can reduce the server load, the bandwidth used, and the average page loading time for your visitors.')
+    '#description' => t('<p>Drupal can automatically aggregate and compress external resources like CSS and JavaScript into a single cached file. This can help reduce both the size and number of requests made to your website. This in turn reduces the server load, the bandwidth used, and the average page loading time for your visitors.</p><p>These options are disabled if you have not set up your files directory, or if your download method is set to private.</p>')
   );
 
   $directory = file_directory_path();
   $is_writable = is_dir($directory) && is_writable($directory) && (variable_get('file_downloads', FILE_DOWNLOADS_PUBLIC) == FILE_DOWNLOADS_PUBLIC);
   $form['bandwidth_optimizations']['preprocess_css'] = array(
     '#type' => 'radios',
-    '#title' => t('Aggregate and compress CSS files'),
-    '#default_value' => variable_get('preprocess_css', FALSE) && $is_writable,
+    '#title' => t('Optimize CSS files'),
+    '#default_value' => variable_get('preprocess_css', 0) && $is_writable,
     '#disabled' => !$is_writable,
     '#options' => array(t('Disabled'), t('Enabled')),
-    '#description' => t("Some Drupal modules include their own CSS files. When these modules are enabled, each module's CSS file adds an additional HTTP request to the page, which can increase the load time of each page. These HTTP requests can also slightly increase server load. It is recommended to only turn this option on when your site is in production, as it can interfere with theme development. This option is disabled if you have not set up your files directory, or if your download method is set to private."),
+    '#description' => t("This option can interfere with theme development. It is recommended to only turn this on when your site is complete."),
+  );
+  $form['bandwidth_optimizations']['preprocess_js'] = array(
+    '#type' => 'radios',
+    '#title' => t('Optimize JavaScript files'),
+    '#default_value' => variable_get('preprocess_js', 0) && $is_writable,
+    '#disabled' => !$is_writable,
+    '#options' => array(t('Disabled'), t('Enabled')),
+    '#description' => t("This option can interfere with module development. It is recommended to only turn this on when your site is complete."),
   );
 
   $form['reverse_proxy'] = array(
@@ -729,6 +737,7 @@ function system_performance_settings() {
   );
 
   $form['#submit'][] = 'drupal_clear_css_cache';
+  $form['#submit'][] = 'drupal_clear_js_cache';
 
   return system_settings_form($form);
 }
@@ -1735,6 +1744,7 @@ function system_modules_submit($form, &$form_state, $form_values) {
   }
 
   drupal_clear_css_cache();
+  drupal_clear_js_cache();
 
   $form_state['redirect'] = 'admin/build/modules';
 

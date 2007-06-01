@@ -1,4 +1,4 @@
-// $Id: collapse.js,v 1.11 2007/02/28 20:29:38 dries Exp $
+// $Id: collapse.js,v 1.12 2007/06/01 09:05:45 unconed Exp $
 
 /**
  * Toggle the visibility of a fieldset using smooth animations
@@ -14,7 +14,7 @@ Drupal.toggleFieldset = function(fieldset) {
         Drupal.collapseScrollIntoView(this.parentNode);
         this.parentNode.animating = false;
     });
-    if (typeof Drupal.textareaAttach != 'undefined') {
+    if (typeof(Drupal.textareaAttach) != 'undefined') {
       // Initialize resizable textareas that are now revealed
       Drupal.textareaAttach(null, fieldset);
     }
@@ -25,7 +25,7 @@ Drupal.toggleFieldset = function(fieldset) {
       this.parentNode.animating = false;
     });
   }
-}
+};
 
 /**
  * Scroll a given fieldset into view as much as possible.
@@ -42,7 +42,7 @@ Drupal.collapseScrollIntoView = function (node) {
       window.scrollTo(0, pos.y + node.offsetHeight - h + fudge);
     }
   }
-}
+};
 
 // Global Killswitch
 if (Drupal.jsEnabled) {

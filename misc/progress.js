@@ -1,4 +1,4 @@
-// $Id: progress.js,v 1.15 2007/05/04 09:41:36 goba Exp $
+// $Id: progress.js,v 1.16 2007/06/01 09:05:45 unconed Exp $
 
 /**
  * A progressbar object. Initialized with the given id. Must be inserted into
@@ -23,7 +23,7 @@ Drupal.progressBar = function (id, updateCallback, method, errorCallback) {
   $(this.element).html('<div class="bar"><div class="filled"></div></div>'+
                        '<div class="percentage"></div>'+
                        '<div class="message">&nbsp;</div>');
-}
+};
 
 /**
  * Set the percentage and status message for the progressbar.
@@ -37,7 +37,7 @@ Drupal.progressBar.prototype.setProgress = function (percentage, message) {
   if (this.updateCallback) {
     this.updateCallback(percentage, message, this);
   }
-}
+};
 
 /**
  * Start monitoring progress via Ajax.
@@ -46,7 +46,7 @@ Drupal.progressBar.prototype.startMonitoring = function (uri, delay) {
   this.delay = delay;
   this.uri = uri;
   this.sendPing();
-}
+};
 
 /**
  * Stop monitoring progress via Ajax.
@@ -55,7 +55,7 @@ Drupal.progressBar.prototype.stopMonitoring = function () {
   clearTimeout(this.timer);
   // This allows monitoring to be stopped from within the callback
   this.uri = null;
-}
+};
 
 /**
  * Request progress data from server.
@@ -90,7 +90,7 @@ Drupal.progressBar.prototype.sendPing = function () {
       }
     });
   }
-}
+};
 
 /**
  * Display errors on the page.
@@ -105,4 +105,4 @@ Drupal.progressBar.prototype.displayError = function (string) {
   if (this.errorCallback) {
     this.errorCallback(this);
   }
-}
+};

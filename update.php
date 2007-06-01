@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.223 2007/05/25 12:46:43 dries Exp $
+// $Id: update.php,v 1.224 2007/06/01 09:05:44 unconed Exp $
 
 /**
  * @file
@@ -400,6 +400,7 @@ function update_finished($success, $results, $operations) {
   cache_clear_all('*', 'cache_page', TRUE);
   cache_clear_all('*', 'cache_filter', TRUE);
   drupal_clear_css_cache();
+  drupal_clear_js_cache();
 
   $_SESSION['update_results'] = $results;
   $_SESSION['update_success'] = $success;

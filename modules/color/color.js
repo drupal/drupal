@@ -1,4 +1,4 @@
-// $Id: color.js,v 1.2 2007/04/13 07:33:23 dries Exp $
+// $Id: color.js,v 1.3 2007/06/01 09:05:45 unconed Exp $
 
 if (Drupal.jsEnabled) {
   $(document).ready(function () {
@@ -223,7 +223,7 @@ if (Drupal.jsEnabled) {
         );
         $(this).after(lock);
         locks.push(lock);
-      }
+      };
 
       // Add hook
       var hook = $('<div class="hook"></div>');
@@ -236,7 +236,7 @@ if (Drupal.jsEnabled) {
     })
     .focus(focus);
 
-    $('#palette label', form)
+    $('#palette label', form);
 
     // Focus first color
     focus.call(inputs[0]);

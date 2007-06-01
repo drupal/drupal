@@ -1,4 +1,4 @@
-// $Id: textarea.js,v 1.14 2007/04/10 11:24:16 dries Exp $
+// $Id: textarea.js,v 1.15 2007/06/01 09:05:45 unconed Exp $
 
 Drupal.textareaAttach = function() {
   $('textarea.resizable:not(.processed)').each(function() {
@@ -36,7 +36,7 @@ Drupal.textareaAttach = function() {
       textarea.css('opacity', 1);
     }
   });
-}
+};
 
 if (Drupal.jsEnabled) {
   $(document).ready(Drupal.textareaAttach);

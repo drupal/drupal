@@ -1,4 +1,4 @@
-// $Id: tableselect.js,v 1.1 2006/11/21 08:16:39 unconed Exp $
+// $Id: tableselect.js,v 1.2 2007/06/01 09:05:45 unconed Exp $
 
 Drupal.tableSelect = function() {
   // Keep track of the table, which checkbox is checked and alias the settings.
@@ -40,7 +40,7 @@ Drupal.tableSelect = function() {
     // Keep track of the last checked checkbox.
     lastChecked = e.target;
   });
-}
+};
 
 Drupal.tableSelectRange = function(from, to, state) {
   // We determine the looping mode based on the the order of from and to.
@@ -65,7 +65,7 @@ Drupal.tableSelectRange = function(from, to, state) {
     else if (jQuery.filter(to, [i]).r.length) break;
 
   }
-}
+};
 
 // Global Killswitch
 if (Drupal.jsEnabled) {

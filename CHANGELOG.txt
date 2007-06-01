@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.205 2007/05/30 08:08:57 dries Exp $
+// $Id: CHANGELOG.txt,v 1.206 2007/06/01 09:05:44 unconed Exp $
 
 Drupal 6.0, xxxx-xx-xx (development version)
 ----------------------
@@ -36,8 +36,8 @@ Drupal 6.0, xxxx-xx-xx (development version)
     * Added .info files to themes and made it easier to specify regions and features.
     * Added theme registry: modules can directly provide .tpl.php files for their themes without having to create theme_ functions.
     * Used the Garland theme for the installation and maintenance pages.
-    * Added theme preprocess functions for themes that are templates
-- Refactored update.php to a generic batch API to be able to run time consuming operations in multiple subsequent HTTP requests
+    * Added theme preprocess functions for themes that are templates.
+- Refactored update.php to a generic batch API to be able to run time consuming operations in multiple subsequent HTTP requests.
 - Installer:
     * Themed the installer with the Garland theme.
     * Added form to provide initial site information during installation.
@@ -48,6 +48,7 @@ Drupal 6.0, xxxx-xx-xx (development version)
     * Tags are now automatically closed at the end of the teaser.
 - Performance:
     * Made it easier to conditionally load include files.
+    * Added a JavaScript aggregator and compressor.
 - File handling improvements:
     * Entries in the files table are now keyed to a user, and not a node.
     * Added re-usable validation functions to check for uploaded file sizes, extensions, and image resolution.

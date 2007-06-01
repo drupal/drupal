@@ -1,4 +1,4 @@
-// $Id: upload.js,v 1.11 2006/08/31 23:31:25 unconed Exp $
+// $Id: upload.js,v 1.12 2007/06/01 09:05:45 unconed Exp $
 
 /**
  * Attaches the upload behaviour to the upload form.
@@ -13,7 +13,7 @@ Drupal.uploadAutoAttach = function() {
     var hide = base + '-hide';
     var upload = new Drupal.jsUpload(uri, button, wrapper, hide);
   });
-}
+};
 
 /**
  * JS upload object.
@@ -25,7 +25,7 @@ Drupal.jsUpload = function(uri, button, wrapper, hide) {
   this.wrapper = '#'+ wrapper;
   this.hide = '#'+ hide;
   Drupal.redirectFormButton(uri, $(this.button).get(0), this);
-}
+};
 
 /**
  * Handler for the form redirection submission.
@@ -49,7 +49,7 @@ Drupal.jsUpload.prototype.onsubmit = function () {
   $(hide).after(el);
   $(el).fadeIn('slow');
   $(hide).fadeOut('slow');
-}
+};
 
 /**
  * Handler for the form redirection completion.
@@ -92,7 +92,7 @@ Drupal.jsUpload.prototype.oncomplete = function (data) {
     Drupal.uploadAutoAttach();
   }
   Drupal.unfreezeHeight();
-}
+};
 
 /**
  * Handler for the form redirection error.
@@ -107,7 +107,7 @@ Drupal.jsUpload.prototype.onerror = function (error) {
     position: 'static',
     left: '0px'
   });
-}
+};
 
 
 // Global killswitch

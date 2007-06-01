@@ -1,4 +1,4 @@
-// $Id: system.js,v 1.6 2007/05/30 20:18:14 dries Exp $
+// $Id: system.js,v 1.7 2007/06/01 09:05:45 unconed Exp $
 
 /**
  * Internal function to check using Ajax if clean URLs can be enabled on the
@@ -23,7 +23,7 @@ Drupal.cleanURLsSettingsCheck = function() {
       $("#clean-url .description span").append('<div class="warning">'+ Drupal.settings.cleanURL.failure +"</div>");
     }
   }});
-}
+};
 
 /**
  * Internal function to check using Ajax if clean URLs can be enabled on the
@@ -50,12 +50,12 @@ Drupal.cleanURLsInstallCheck = function() {
       $("#clean-url .description span").append('<div class="warning">'+ Drupal.settings.cleanURL.failure +"</div>");
     }
   }});
-}
+};
 
 Drupal.installDefaultTimezone = function() {
   var offset = new Date().getTimezoneOffset() * -60;
   $("#edit-date-default-timezone").val(offset);
-}
+};
 
 /**
  * Show/hide custom format sections on the date-time settings page.

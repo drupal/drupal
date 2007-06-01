@@ -1,4 +1,4 @@
-// $Id: drupal.js,v 1.31 2007/05/04 09:41:36 goba Exp $
+// $Id: drupal.js,v 1.32 2007/06/01 09:05:45 unconed Exp $
 
 var Drupal = Drupal || {};
 
@@ -50,7 +50,7 @@ Drupal.redirectFormButton = function (uri, button, handler) {
         // Restore form submission
         button.form.action = action;
         button.form.target = target;
-
+      
         // Get response from iframe body
         try {
           response = (iframe.contentWindow || iframe.contentDocument || iframe).document.body.innerHTML;
@@ -64,7 +64,7 @@ Drupal.redirectFormButton = function (uri, button, handler) {
         catch (e) {
           response = null;
         }
-
+ 
         response = Drupal.parseJson(response);
         // Check response code
         if (response.status == 0) {
@@ -74,14 +74,14 @@ Drupal.redirectFormButton = function (uri, button, handler) {
         handler.oncomplete(response.data);
 
         return true;
-      }
+      };
 
       return true;
-    }
-  }
+    };
+  };
   button.onmouseout = button.onblur = function() {
     button.onclick = null;
-  }
+  };
 };
 
 /**
@@ -218,7 +218,7 @@ Drupal.getSelection = function (element) {
     return { 'start': start, 'end': end };
   }
   return { 'start': element.selectionStart, 'end': element.selectionEnd };
-}
+};
 
 // Global Killswitch on the <html> element
 if (Drupal.jsEnabled) {

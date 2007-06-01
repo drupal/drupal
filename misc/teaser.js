@@ -1,4 +1,4 @@
-// $Id: teaser.js,v 1.3 2007/04/09 13:58:02 dries Exp $
+// $Id: teaser.js,v 1.4 2007/06/01 09:05:45 unconed Exp $
 
 /**
  * Auto-attach for teaser behaviour.
@@ -73,7 +73,7 @@ Drupal.teaserAttach = function() {
     }
 
   });
-}
+};
 
 if (Drupal.jsEnabled) {
   $(document).ready(Drupal.teaserAttach);

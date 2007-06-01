@@ -12,7 +12,7 @@ if (Drupal.jsEnabled) {
           pb.stopMonitoring();
           window.location = uri+'&op=finished';
         }
-      }
+      };
 
       var errorCallback = function (pb) {
         var div = document.createElement('p');
@@ -20,7 +20,7 @@ if (Drupal.jsEnabled) {
         $(div).html(errorMessage);
         $(holder).prepend(div);
         $('#wait').hide();
-      }
+      };
 
       var progress = new Drupal.progressBar('updateprogress', updateCallback, "POST", errorCallback);
       progress.setProgress(-1, initMessage);
