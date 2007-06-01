@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.173 2007/05/31 11:54:39 dries Exp $
+// $Id: menu.inc,v 1.174 2007/06/01 09:40:40 dries Exp $
 
 /**
  * @file
@@ -708,7 +708,8 @@ function menu_tree_page_data($menu_name = 'navigation') {
         // LEFT JOIN since there is no match in {menu_router} for an external link.
         // No need to order by p6 - there is a sort by weight later.
         list(, $tree[$cid]) = _menu_tree_data(db_query("
-          SELECT *, ml.weight + 50000 AS weight FROM {menu_links} ml LEFT JOIN {menu_router} m ON m.path = ml.router_path
+          SELECT m.*, ml.menu_name, ml.mlid, ml.plid, ml.link_path, ml.router_path, ml.hidden, ml.external, ml.has_children, ml.expanded, ml.weight + 50000 AS weight, ml.depth, ml.p1, ml.p2, ml.p3, ml.p4, ml.p5, ml.p6, ml.module, ml.link_title, ml.options
+          FROM {menu_links} ml LEFT JOIN {menu_router} m ON m.path = ml.router_path
           WHERE ml.menu_name = '%s' AND ml.plid IN (". $placeholders .") AND ml.hidden = 0
           ORDER BY p1 ASC, p2 ASC, p3 ASC, p4 ASC, p5 ASC", $args), $parents);
         cache_set($cid, $tree[$cid], 'cache_menu');
