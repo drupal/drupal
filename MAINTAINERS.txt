@@ -1,4 +1,4 @@
-// $Id: MAINTAINERS.txt,v 1.15 2007/04/13 08:23:14 dries Exp $
+// $Id: MAINTAINERS.txt,v 1.16 2007/06/01 09:42:44 dries Exp $
 
 List of maintainers
 --------------------------------------------------------------------------------
@@ -67,7 +67,7 @@ M: Jeremy Andrews <jeremy@kerneltrap.com>
 S: maintained
 
 XML-RPC SERVER/CLIENT
-M: Károly Négyesi <chx@mail.tvnet.hu>
+M: John VanDyk <http://drupal.org/user/2375/contact>
 S: maintained
 
 DEBIAN PACKAGE
