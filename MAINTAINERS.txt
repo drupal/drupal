@@ -67,7 +67,7 @@ M: Jeremy Andrews <jeremy@kerneltrap.com>
 S: maintained
 
 XML-RPC SERVER/CLIENT
-M: Károly Négyesi <chx@mail.tvnet.hu>
+M: John VanDyk <http://drupal.org/user/2375/contact>
 S: maintained
 
 DEBIAN PACKAGE
