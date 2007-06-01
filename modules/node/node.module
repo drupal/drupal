@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.822 2007/05/31 12:14:04 dries Exp $
+// $Id: node.module,v 1.823 2007/06/01 11:17:44 goba Exp $
 
 /**
  * @file
@@ -1594,7 +1594,7 @@ function node_admin_content() {
 function node_admin_nodes() {
   $filter = node_build_filter_query();
 
-  $result = pager_query('SELECT n.*, u.name FROM {node} n '. $filter['join'] .' INNER JOIN {users} u ON n.uid = u.uid '. $filter['where'] .' ORDER BY n.changed DESC', 50, 0, NULL, $filter['args']);
+  $result = pager_query(db_rewrite_sql('SELECT n.*, u.name FROM {node} n '. $filter['join'] .' INNER JOIN {users} u ON n.uid = u.uid '. $filter['where'] .' ORDER BY n.changed DESC'), 50, 0, NULL, $filter['args']);
 
   // Enable language column if locale is enabled or if we have any node with language
   $count = db_result(db_query("SELECT COUNT(*) FROM {node} n WHERE language != ''"));
