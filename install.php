@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.55 2007/05/28 18:50:49 dries Exp $
+// $Id: install.php,v 1.56 2007/06/02 11:06:39 dries Exp $
 
 require_once './includes/install.inc';
 
@@ -159,9 +159,9 @@ function install_change_settings($profile = 'default', $install_locale = '') {
   global $db_url, $db_type, $db_prefix;
 
   $url = parse_url(is_array($db_url) ? $db_url['default'] : $db_url);
-  $db_user = urldecode($url['user']);
-  $db_pass = urldecode($url['pass']);
-  $db_host = urldecode($url['host']);
+  $db_user = isset($url['user']) ? urldecode($url['user']) : '';
+  $db_pass = isset($url['pass']) ? urldecode($url['pass']) : '';
+  $db_host = isset($url['host']) ? urldecode($url['host']) : '';
   $db_port = isset($url['port']) ? urldecode($url['port']) : '';
   $db_path = ltrim(urldecode($url['path']), '/');
   $conf_path = './'. conf_path();
@@ -600,7 +600,7 @@ function install_tasks($profile, $task) {
   $output = '';
 
   // Bootstrap newly installed Drupal, while preserving existing messages.
-  $messages = $_SESSION['messages'];
+  $messages = isset($_SESSION['messages']) ? $_SESSION['messages'] : '';
   drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
   $_SESSION['messages'] = $messages;
 
