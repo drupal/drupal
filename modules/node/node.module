@@ -2093,6 +2093,7 @@ function node_form(&$form_state, $node) {
       '#weight' => 20,
     );
     $form['revision_information']['revision'] = array(
+      '#access' =>  user_access('administer nodes'),
       '#type' => 'checkbox',
       '#title' => t('Create new revision'),
       '#default_value' => $node->revision,
