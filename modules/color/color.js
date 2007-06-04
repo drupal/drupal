@@ -1,4 +1,4 @@
-// $Id: color.js,v 1.3 2007/06/01 09:05:45 unconed Exp $
+// $Id: color.js,v 1.4 2007/06/04 10:36:42 goba Exp $
 
 if (Drupal.jsEnabled) {
   $(document).ready(function () {
@@ -131,7 +131,7 @@ if (Drupal.jsEnabled) {
       // Set background/foreground color
       $(input).css({
         backgroundColor: color,
-        color: farb.RGBToHSL(farb.unpack(color))[2] > 0.5 ? '#000' : '#fff'
+        'color': farb.RGBToHSL(farb.unpack(color))[2] > 0.5 ? '#000' : '#fff'
       });
 
       // Change input value

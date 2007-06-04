@@ -1,4 +1,4 @@
-/* $Id: system.css,v 1.28 2007/05/27 17:57:48 goba Exp $ */
+/* $Id: system.css,v 1.29 2007/06/04 10:36:42 goba Exp $ */
 
 /*
 ** HTML elements
@@ -360,7 +360,6 @@ html.js fieldset.collapsible .fieldset-wrapper {
 html.js .resizable-textarea textarea {
   margin-bottom: 0;
   width: 100%;
-  display: block;
 }
 
 /*

@@ -1,4 +1,4 @@
-// $Id: collapse.js,v 1.12 2007/06/01 09:05:45 unconed Exp $
+// $Id: collapse.js,v 1.13 2007/06/04 10:36:42 goba Exp $
 
 /**
  * Toggle the visibility of a fieldset using smooth animations
@@ -7,12 +7,18 @@ Drupal.toggleFieldset = function(fieldset) {
   if ($(fieldset).is('.collapsed')) {
     var content = $('> div', fieldset).hide();
     $(fieldset).removeClass('collapsed');
-    content.slideDown(300,
-      function() {
+    content.slideDown( {
+      duration: 300,
+      complete: function() {
         // Make sure we open to height auto
         $(this).css('height', 'auto');
         Drupal.collapseScrollIntoView(this.parentNode);
         this.parentNode.animating = false;
+      },
+      step: function() {
+        // Scroll the fieldset into view
+        Drupal.collapseScrollIntoView(this.parentNode);
+      }
     });
     if (typeof(Drupal.textareaAttach) != 'undefined') {
       // Initialize resizable textareas that are now revealed
