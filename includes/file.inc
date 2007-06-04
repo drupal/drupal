@@ -574,7 +574,7 @@ function file_save_upload($source, $validators = array(), $dest = FALSE, $replac
     }
 
     // If we made it this far it's safe to record this file in the database.
-    $file->fid = db_next_id('fid');
+    $file->fid = db_next_id('{files}_fid');
     db_query("INSERT INTO {files} (fid, uid, filename, filepath, filemime, filesize, status, timestamp) VALUES (%d, %d, '%s', '%s', '%s', %d, %d, %d)", $file->fid, $user->uid, $file->filename, $file->filepath, $file->filemime, $file->filesize, FILE_STATUS_TEMPORARY, time());
 
     // Add file to the cache.
