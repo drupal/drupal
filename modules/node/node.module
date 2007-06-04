@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.823 2007/06/01 11:17:44 goba Exp $
+// $Id: node.module,v 1.824 2007/06/04 07:22:20 dries Exp $
 
 /**
  * @file
@@ -173,16 +173,16 @@ function node_mark($nid, $timestamp) {
 /**
  * See if the user used JS to submit a teaser.
  */
-function node_teaser_js(&$form, $form_values, &$form_state) {
+function node_teaser_js(&$form, &$form_state) {
   // Glue the teaser to the body.
   if (isset($form['#post']['teaser_js'])) {
-    if (trim($form_values['teaser_js'])) {
+    if (trim($form_state['values']['teaser_js'])) {
       // Space the teaser from the body
-      $body = trim($form_values['teaser_js']) ."\r\n<!--break-->\r\n". trim($form_values['body']);
+      $body = trim($form_state['values']['teaser_js']) ."\r\n<!--break-->\r\n". trim($form_state['values']['body']);
     }
     else {
       // Empty teaser, no spaces.
-      $body = '<!--break-->'. $form_values['body'];
+      $body = '<!--break-->'. $form_state['values']['body'];
     }
     // Pass value onto preview/submit
     form_set_value($form['body'], $body, $form_state);
@@ -1066,8 +1066,8 @@ function node_configure() {
 /**
  * Form validate callback.
  */
-function node_configure_validate($form, &$form_state, $form_values) {
-  if ($form_values['op'] == t('Rebuild permissions')) {
+function node_configure_validate($form, &$form_state) {
+  if ($form_state['values']['op'] == t('Rebuild permissions')) {
     drupal_goto('admin/content/node-settings/rebuild');
   }
 }
@@ -1521,19 +1521,19 @@ function theme_node_filters($form) {
 /**
  * Process result from node administration filter form.
  */
-function node_filter_form_submit($form, &$form_state, $form_values) {
+function node_filter_form_submit($form, &$form_state) {
   $filters = node_filters();
-  switch ($form_values['op']) {
+  switch ($form_state['values']['op']) {
     case t('Filter'):
     case t('Refine'):
-      if (isset($form_values['filter'])) {
-        $filter = $form_values['filter'];
+      if (isset($form_state['values']['filter'])) {
+        $filter = $form_state['values']['filter'];
 
         // Flatten the options array to accommodate hierarchical/nested options.
         $flat_options = form_options_flatten($filters[$filter]['options']);
 
-        if (isset($flat_options[$form_values[$filter]])) {
-          $_SESSION['node_overview_filter'][] = array($filter, $form_values[$filter]);
+        if (isset($flat_options[$form_state['values'][$filter]])) {
+          $_SESSION['node_overview_filter'][] = array($filter, $form_state['values'][$filter]);
         }
       }
       break;
@@ -1549,11 +1549,11 @@ function node_filter_form_submit($form, &$form_state, $form_values) {
 /**
  * Submit the node administration update form.
  */
-function node_admin_nodes_submit($form, &$form_state, $form_values) {
+function node_admin_nodes_submit($form, &$form_state) {
   $operations = module_invoke_all('node_operations');
-  $operation = $operations[$form_values['operation']];
+  $operation = $operations[$form_state['values']['operation']];
   // Filter out unchecked nodes
-  $nodes = array_filter($form_values['nodes']);
+  $nodes = array_filter($form_state['values']['nodes']);
   if ($function = $operation['callback']) {
     // Add in callback arguments if present.
     if (isset($operation['callback arguments'])) {
@@ -1569,8 +1569,8 @@ function node_admin_nodes_submit($form, &$form_state, $form_values) {
   }
 }
 
-function node_admin_nodes_validate($form, &$form_state, $form_values) {
-  $nodes = array_filter($form_values['nodes']);
+function node_admin_nodes_validate($form, &$form_state) {
+  $nodes = array_filter($form_state['values']['nodes']);
   if (count($nodes) == 0) {
     form_set_error('', t('No items selected.'));
   }
@@ -1690,9 +1690,9 @@ function node_multiple_delete_confirm() {
                       t('Delete all'), t('Cancel'));
 }
 
-function node_multiple_delete_confirm_submit($form, &$form_state, $form_values) {
-  if ($form_values['confirm']) {
-    foreach ($form_values['nodes'] as $nid => $value) {
+function node_multiple_delete_confirm_submit($form, &$form_state) {
+  if ($form_state['values']['confirm']) {
+    foreach ($form_state['values']['nodes'] as $nid => $value) {
       node_delete($nid);
     }
     drupal_set_message(t('The items have been deleted.'));
@@ -2007,8 +2007,8 @@ function node_validate($node, $form = array()) {
   node_invoke_nodeapi($node, 'validate', $form);
 }
 
-function node_form_validate($form, &$form_state, $form_values) {
-  node_validate($form_values, $form);
+function node_form_validate($form, &$form_state) {
+  node_validate($form_state['values'], $form);
 }
 
 function node_object_prepare(&$node) {
@@ -2029,7 +2029,7 @@ function node_object_prepare(&$node) {
 /**
  * Generate the node add/edit form array.
  */
-function node_form($node, $form_state = NULL) {
+function node_form(&$form_state, $node) {
   global $user;
 
   if (isset($form_state['node'])) {
@@ -2148,20 +2148,12 @@ function node_form($node, $form_state = NULL) {
   return $form;
 }
 
-function node_form_build_preview($form, &$form_state, $form_values) {
+function node_form_build_preview($form, &$form_state) {
   // We do not want to execute button level handlers, we want the form level
   // handlers to go in and change the submitted values.
   unset($form_state['submit_handlers']);
   form_execute_handlers('submit', $form, $form_state);
-  // Because the node preview may display a form, we must render it
-  // outside the node submission form tags using the #prefix property
-  // (i.e. to prevent illegally nested forms).
-  // If the node form already has a #prefix, we must preserve it.
-  // In this case, we put the preview before the #prefix so we keep
-  // the #prefix as "close" to the rest of the form as possible,
-  // for example, to keep a <div> only around the form, not the
-  // preview. We pass the global $form_values here to preserve
-  // changes made during form validation.
+
   $form_state['node_preview'] = node_preview((object)$form_state['values']);
   $form_state['rebuild'] = TRUE;
   $form_state['node'] = $form_state['values'];
@@ -2315,7 +2307,7 @@ function theme_node_log_message($log) {
   return '<div class="log"><div class="title">'. t('Log') .':</div>'. $log .'</div>';
 }
 
-function node_form_submit($form, &$form_state, $form_values) {
+function node_form_submit($form, &$form_state) {
   global $user;
 
   // We do not want to execute button level handlers, we want the form level
@@ -2325,12 +2317,12 @@ function node_form_submit($form, &$form_state, $form_values) {
 
   // Normally, we don't want people doing anything even remotely like this.
   // For the node submission form, however, it's necessary. Submit handlers
-  // alter the $form_values collection to determine what ultimately makes it
+  // alter the $form_state['values'] collection to determine what ultimately makes it
   // into the final $node object.
-  $form_values = $form_state['values'];
+  $form_state['values'] = $form_state['values'];
 
   // Fix up the node when required:
-  $node = node_submit($form_values);
+  $node = node_submit($form_state['values']);
 
   // Prepare the node's body:
   if ($node->nid) {
@@ -2368,9 +2360,9 @@ function node_delete_confirm($node) {
 /**
  * Execute node deletion
  */
-function node_delete_confirm_submit($form, &$form_state, $form_values) {
-  if ($form_values['confirm']) {
-    node_delete($form_values['nid']);
+function node_delete_confirm_submit($form, &$form_state) {
+  if ($form_state['values']['confirm']) {
+    node_delete($form_state['values']['nid']);
   }
 
   $form_state['redirect'] = '<front>';
@@ -2630,34 +2622,34 @@ function node_form_alter(&$form, $form_state, $form_id) {
 /**
  * Form API callback for the search form. Registered in node_form_alter().
  */
-function node_search_validate($form, &$form_state, $form_values) {
+function node_search_validate($form, &$form_state) {
   // Initialise using any existing basic search keywords.
-  $keys = $form_values['processed_keys'];
+  $keys = $form_state['values']['processed_keys'];
 
   // Insert extra restrictions into the search keywords string.
-  if (isset($form_values['type']) && is_array($form_values['type'])) {
+  if (isset($form_state['values']['type']) && is_array($form_state['values']['type'])) {
     // Retrieve selected types - Forms API sets the value of unselected checkboxes to 0.
-    $form_values['type'] = array_filter($form_values['type']);
-    if (count($form_values['type'])) {
-      $keys = search_query_insert($keys, 'type', implode(',', array_keys($form_values['type'])));
+    $form_state['values']['type'] = array_filter($form_state['values']['type']);
+    if (count($form_state['values']['type'])) {
+      $keys = search_query_insert($keys, 'type', implode(',', array_keys($form_state['values']['type'])));
     }
   }
 
-  if (isset($form_values['category']) && is_array($form_values['category'])) {
-    $keys = search_query_insert($keys, 'category', implode(',', $form_values['category']));
+  if (isset($form_state['values']['category']) && is_array($form_state['values']['category'])) {
+    $keys = search_query_insert($keys, 'category', implode(',', $form_state['values']['category']));
   }
-  if ($form_values['or'] != '') {
-    if (preg_match_all('/ ("[^"]+"|[^" ]+)/i', ' '. $form_values['or'], $matches)) {
+  if ($form_state['values']['or'] != '') {
+    if (preg_match_all('/ ("[^"]+"|[^" ]+)/i', ' '. $form_state['values']['or'], $matches)) {
       $keys .= ' '. implode(' OR ', $matches[1]);
     }
   }
-  if ($form_values['negative'] != '') {
-    if (preg_match_all('/ ("[^"]+"|[^" ]+)/i', ' '. $form_values['negative'], $matches)) {
+  if ($form_state['values']['negative'] != '') {
+    if (preg_match_all('/ ("[^"]+"|[^" ]+)/i', ' '. $form_state['values']['negative'], $matches)) {
       $keys .= ' -'. implode(' -', $matches[1]);
     }
   }
-  if ($form_values['phrase'] != '') {
-    $keys .= ' "'. str_replace('"', ' ', $form_values['phrase']) .'"';
+  if ($form_state['values']['phrase'] != '') {
+    $keys .= ' "'. str_replace('"', ' ', $form_state['values']['phrase']) .'"';
   }
   if (!empty($keys)) {
     form_set_value($form['basic']['inline']['processed_keys'], trim($keys), $form_state);
@@ -3060,7 +3052,7 @@ function node_body_field(&$node, $label, $word_count) {
 /**
  * Implementation of hook_form().
  */
-function node_content_form($node) {
+function node_content_form($node, $form_state) {
   $type = node_get_types('type', $node);
   $form = array();
 

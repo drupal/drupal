@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.56 2007/06/02 11:06:39 dries Exp $
+// $Id: install.php,v 1.57 2007/06/04 07:22:16 dries Exp $
 
 require_once './includes/install.inc';
 
@@ -208,7 +208,7 @@ function install_change_settings($profile = 'default', $install_locale = '') {
 /**
  * Form API array definition for install_settings.
  */
-function install_settings_form($profile, $install_locale, $settings_file, $db_url, $db_type, $db_prefix, $db_user, $db_pass, $db_host, $db_port, $db_path) {
+function install_settings_form(&$form_state, $profile, $install_locale, $settings_file, $db_url, $db_type, $db_prefix, $db_user, $db_pass, $db_host, $db_port, $db_path) {
   if (empty($db_host)) {
     $db_host = 'localhost';
   }
@@ -335,9 +335,9 @@ function install_settings_form($profile, $install_locale, $settings_file, $db_ur
 /**
  * Form API validate for install_settings form.
  */
-function install_settings_form_validate($form, &$form_state, $form_values) {
+function install_settings_form_validate($form, &$form_state) {
   global $db_url;
-  _install_settings_form_validate($form_values['db_prefix'], $form_values['db_type'], $form_values['db_user'], $form_values['db_pass'], $form_values['db_host'], $form_values['db_port'], $form_values['db_path'], $form_values['settings_file'], $form_state, $form);
+  _install_settings_form_validate($form_state['values']['db_prefix'], $form_state['values']['db_type'], $form_state['values']['db_user'], $form_state['values']['db_pass'], $form_state['values']['db_host'], $form_state['values']['db_port'], $form_state['values']['db_path'], $form_state['values']['settings_file'], $form_state, $form);
 }
 
 /**
@@ -387,16 +387,16 @@ function _install_settings_form_validate($db_prefix, $db_type, $db_user, $db_pas
 /**
  * Form API submit for install_settings form.
  */
-function install_settings_form_submit($form, &$form_state, $form_values) {
+function install_settings_form_submit($form, &$form_state) {
   global $profile, $install_locale;
 
   // Update global settings array and save
   $settings['db_url'] = array(
-    'value'    => $form_values['_db_url'],
+    'value'    => $form_state['values']['_db_url'],
     'required' => TRUE,
   );
   $settings['db_prefix'] = array(
-    'value'    => $form_values['db_prefix'],
+    'value'    => $form_state['values']['db_prefix'],
     'required' => TRUE,
   );
   drupal_rewrite_settings($settings);
@@ -444,7 +444,7 @@ function install_select_profile() {
   }
 }
 
-function install_select_profile_form($profiles) {
+function install_select_profile_form(&$form_state, $profiles) {
   foreach ($profiles as $profile) {
     include_once($profile->filename);
     // Load profile details.
@@ -531,7 +531,7 @@ function install_select_locale($profilename) {
   }
 }
 
-function install_select_locale_form($locales) {
+function install_select_locale_form(&$form_state, $locales) {
   include_once './includes/locale.inc';
   $languages = _locale_get_predefined_list();
   foreach ($locales as $locale) {
@@ -622,7 +622,7 @@ function install_tasks($profile, $task) {
 
     $form_state = array('storage' => NULL, 'submitted' => FALSE);
 
-    $form = drupal_retrieve_form('install_configure_form');
+    $form = drupal_retrieve_form('install_configure_form', $form_state);
     $form_build_id = md5(mt_rand());
     $form['#build_id'] = $form_build_id;
     drupal_prepare_form('install_configure_form', $form, $form_state);
@@ -926,36 +926,42 @@ if (Drupal.jsEnabled) {
   return $form;
 }
 
-function install_configure_form_validate($form, &$form_state, $form_values) {
-  if ($error = user_validate_name($form_values['account']['name'])) {
+function install_configure_form_validate($form, &$form_state) {
+  if ($error = user_validate_name($form_state['values']['account']['name'])) {
     form_error($form['admin_account']['account']['name'], $error);
   }
-  if ($error = user_validate_mail($form_values['account']['mail'])) {
+  if ($error = user_validate_mail($form_state['values']['account']['mail'])) {
     form_error($form['admin_account']['account']['mail'], $error);
   }
-  if ($error = user_validate_mail($form_values['site_mail'])) {
+  if ($error = user_validate_mail($form_state['values']['site_mail'])) {
     form_error($form['site_information']['site_mail'], $error);
   }
 }
 
-function install_configure_form_submit($form, &$form_state, $form_values) {
+function install_configure_form_submit($form, &$form_state) {
   global $user;
 
-  variable_set('site_name', $form_values['site_name']);
-  variable_set('site_mail', $form_values['site_mail']);
-  variable_set('date_default_timezone', $form_values['date_default_timezone']);
+  variable_set('site_name', $form_state['values']['site_name']);
+  variable_set('site_mail', $form_state['values']['site_mail']);
+  variable_set('date_default_timezone', $form_state['values']['date_default_timezone']);
+
   // Turn this off temporarily so that we can pass a password through.
   variable_set('user_email_verification', FALSE);
-  user_register_submit($form, $form_state, $form_values['account']);
+  $form_state['old_values'] = $form_state['values'];
+  $form_state['values'] = $form_state['values']['account'];
+  user_register_submit($form, $form_state);
+  $form_state['values'] = $form_state['old_values'];
+  unset($form_state['old_values']);
   variable_set('user_email_verification', TRUE);
-  if (isset($form_values['clean_url'])) {
-    variable_set('clean_url', $form_values['clean_url']);
+
+  if (isset($form_state['values']['clean_url'])) {
+    variable_set('clean_url', $form_state['values']['clean_url']);
   }
   // The user is now logged in, but has no session ID yet, which
   // would be required later in the request, so remember it.
   $user->sid = session_id();
 
-  return 'finished';
+  $form_state['redirect'] = 'finished';
 }
 
 install_main();

@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.120 2007/05/28 06:08:43 dries Exp $
+// $Id: path.module,v 1.121 2007/06/04 07:22:20 dries Exp $
 
 /**
  * @file
@@ -105,9 +105,9 @@ function path_admin_delete_confirm($pid) {
 /**
  * Execute URL alias deletion
  **/
-function path_admin_delete_confirm_submit($form, &$form_state, $form_values) {
-  if ($form_values['confirm']) {
-    path_admin_delete($form_values['pid']);
+function path_admin_delete_confirm_submit($form, &$form_state) {
+  if ($form_state['values']['confirm']) {
+    path_admin_delete($form_state['values']['pid']);
     $form_state['redirect'] = 'admin/build/path';
     return;
   }
@@ -175,7 +175,7 @@ function path_set_alias($path = NULL, $alias = NULL, $pid = NULL, $language = ''
 /**
  * Return a form for editing or creating an individual URL alias.
  */
-function path_form($edit = array('src' => '', 'dst' => '', 'language' => '', 'pid' => NULL)) {
+function path_form(&$form_state, $edit = array('src' => '', 'dst' => '', 'language' => '', 'pid' => NULL)) {
   $form['#submit'][] = 'path_form_submit';
   $form['#validate'][] = 'path_form_validate';
   $form['#alias'] = $edit;
@@ -367,12 +367,12 @@ function path_load($pid) {
 /**
  * Verify that a new URL alias is valid
  */
-function path_form_validate($form, &$form_state, $form_values) {
-  $src = $form_values['src'];
-  $dst = $form_values['dst'];
-  $pid = isset($form_values['pid']) ? $form_values['pid'] : 0;
+function path_form_validate($form, &$form_state) {
+  $src = $form_state['values']['src'];
+  $dst = $form_state['values']['dst'];
+  $pid = isset($form_state['values']['pid']) ? $form_state['values']['pid'] : 0;
   // Language is only set if locale module is enabled, otherwise save for all languages.
-  $language = isset($form_values['language']) ? $form_values['language'] : '';
+  $language = isset($form_state['values']['language']) ? $form_state['values']['language'] : '';
 
   if (db_result(db_query("SELECT COUNT(dst) FROM {url_alias} WHERE pid != %d AND dst = '%s' AND language = '%s'", $pid, $dst, $language))) {
     form_set_error('dst', t('The alias %alias is already in use in this language.', array('%alias' => $dst)));
@@ -382,9 +382,9 @@ function path_form_validate($form, &$form_state, $form_values) {
 /**
  * Save a new URL alias to the database.
  */
-function path_form_submit($form, &$form_state, $form_values) {
+function path_form_submit($form, &$form_state) {
   // Language is only set if locale module is enabled
-  path_set_alias($form_values['src'], $form_values['dst'], isset($form_values['pid']) ? $form_values['pid'] : 0, isset($form_values['language']) ? $form_values['language'] : '');
+  path_set_alias($form_state['values']['src'], $form_state['values']['dst'], isset($form_state['values']['pid']) ? $form_state['values']['pid'] : 0, isset($form_state['values']['language']) ? $form_state['values']['language'] : '');
 
   drupal_set_message(t('The alias has been saved.'));
   $form_state['redirect'] = 'admin/build/path';
@@ -394,7 +394,7 @@ function path_form_submit($form, &$form_state, $form_values) {
 /**
  * Return a form to filter URL aliases.
  */
-function path_admin_filter_form($keys = '') {
+function path_admin_filter_form(&$form_state, $keys = '') {
   $form['#attributes'] = array('class' => 'search-form');
   $form['basic'] = array('#type' => 'fieldset',
     '#title' => t('Filter aliases')
@@ -415,8 +415,8 @@ function path_admin_filter_form($keys = '') {
 /**
  * Process filter form submission.
  */
-function path_admin_filter_form_submit($form_id, $form_values) {
-  return 'admin/build/path/list/'. trim($form_values['filter']);
+function path_admin_filter_form_submit($form, &$form_state) {
+  return 'admin/build/path/list/'. trim($form_state['values']['filter']);
 }
 
 /**
@@ -427,4 +427,3 @@ function path_admin_filter_get_keys() {
   $path = explode('/', $_GET['q'], 5);
   return count($path) == 5 ? $path[4] : '';
 }
-

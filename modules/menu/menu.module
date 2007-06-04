@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.112 2007/05/28 06:08:43 dries Exp $
+// $Id: menu.module,v 1.113 2007/06/04 07:22:19 dries Exp $
 
 /**
  * @file
@@ -217,7 +217,7 @@ function menu_flip_item($visible, $mid, $path = NULL) {
 /**
  * Present the menu item editing form.
  */
-function menu_edit_item_form($type, $mid = 0) {
+function menu_edit_item_form(&$form_state, $type, $mid = 0) {
   if ($type == 'edit') {
     if (!($item = menu_get_item_by_mid($mid))) {
       drupal_not_found();
@@ -294,9 +294,9 @@ function menu_edit_item_form($type, $mid = 0) {
   return $form;
 }
 
-function menu_edit_item_form_validate($form, &$form_state, $form_values) {
-  if (isset($form_values['path'])) {
-    $path = $form_values['path'];
+function menu_edit_item_form_validate($form, &$form_state) {
+  if (isset($form_state['values']['path'])) {
+    $path = $form_state['values']['path'];
     // Skip external links.
     $colonpos = strpos($path, ':');
     if ($colonpos !== FALSE && !preg_match('![/?#]!', substr($path, 0, $colonpos))) {
@@ -306,7 +306,7 @@ function menu_edit_item_form_validate($form, &$form_state, $form_values) {
     if (!$item || !$item->access) {
       form_set_error('path', t('This path is either invalid or you do not have access to it'));
     }
-    elseif ($path != $form_values['original_path'] && $item->path == $path) {
+    elseif ($path != $form_state['values']['original_path'] && $item->path == $path) {
       form_set_error('path', t('There is already a menu item pointing to this path.'));
     }
   }
@@ -314,8 +314,8 @@ function menu_edit_item_form_validate($form, &$form_state, $form_values) {
 /**
  * Process menu and menu item add/edit form submissions.
  */
-function menu_edit_item_form_submit($form, &$form_state, $form_values) {
-  menu_edit_item_save($form_values);
+function menu_edit_item_form_submit($form, &$form_state) {
+  menu_edit_item_save($form_state['values']);
   $form_state['redirect'] = 'admin/build/menu';
   return;
 }
@@ -412,7 +412,7 @@ function menu_node_form_delete($node) {
 /**
  * Menu callback; handle the adding/editing of a new menu.
  */
-function menu_edit_menu_form($type, $mid = 0) {
+function menu_edit_menu_form(&$form_state, $type, $mid = 0) {
   if ($type == 'edit') {
     if (!$item = menu_get_item_by_mid($mid)) {
       drupal_not_found();
@@ -445,7 +445,7 @@ function menu_edit_menu_form($type, $mid = 0) {
 /**
  * Menu callback; delete a single custom item.
  */
-function menu_item_delete_form($mid) {
+function menu_item_delete_form(&$form_state, $mid) {
   if (!($menu = db_fetch_object(db_query('SELECT type, path, title FROM {menu} WHERE mid = %d', $mid)))) {
     drupal_not_found();
     return;
@@ -468,11 +468,11 @@ function menu_item_delete_form($mid) {
 /**
  * Process menu delete form submissions.
  */
-function menu_item_delete_form_submit($form, &$form_state, $form_values) {
-  menu_delete_item($form_values['path']);
+function menu_item_delete_form_submit($form, &$form_state) {
+  menu_delete_item($form_state['values']['path']);
 
-  $t_args = array('%title' => $form_values['title']);
-  if ($form_values['type'] & MENU_IS_ROOT) {
+  $t_args = array('%title' => $form_state['values']['title']);
+  if ($form_state['values']['type'] & MENU_IS_ROOT) {
     drupal_set_message(t('The menu %title has been deleted.', $t_args));
     watchdog('menu', 'Deleted menu %title.', $t_args, WATCHDOG_NOTICE);
   }
@@ -501,8 +501,8 @@ function menu_reset_item($mid) {
 /**
  * Process menu reset item form submissions.
  */
-function menu_reset_item_submit($form, &$form_state, $form_values) {
-  menu_delete_item($form_values['mid']);
+function menu_reset_item_submit($form, &$form_state) {
+  menu_delete_item($form_state['values']['mid']);
   drupal_set_message(t('The menu item was reset to its default settings.'));
 
   $form_state['redirect'] = 'admin/build/menu';

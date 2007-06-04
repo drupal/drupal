@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.421 2007/05/28 06:08:40 dries Exp $
+// $Id: book.module,v 1.422 2007/06/04 07:22:17 dries Exp $
 
 /**
  * @file
@@ -260,7 +260,7 @@ function book_form(&$node) {
  * Implementation of function book_outline()
  * Handles all book outline operations.
  */
-function book_outline($node) {
+function book_outline($form_state, $node) {
   $form['parent'] = array('#type' => 'select',
     '#title' => t('Parent'),
     '#default_value' => isset($node->parent) ? $node->parent : 0,
@@ -298,19 +298,19 @@ function book_outline($node) {
 /**
  * Handles book outline form submissions.
  */
-function book_outline_submit($form, &$form_state, $form_values) {
-  $op = $form_values['op'];
-  $node = node_load($form_values['nid']);
+function book_outline_submit($form, &$form_state) {
+  $op = $form_state['values']['op'];
+  $node = node_load($form_state['values']['nid']);
 
   switch ($op) {
     case t('Add to book outline'):
-      db_query('INSERT INTO {book} (nid, vid, parent, weight) VALUES (%d, %d, %d, %d)', $node->nid, $node->vid, $form_values['parent'], $form_values['weight']);
-      db_query("UPDATE {node_revisions} SET log = '%s' WHERE vid = %d", $form_values['log'], $node->vid);
+      db_query('INSERT INTO {book} (nid, vid, parent, weight) VALUES (%d, %d, %d, %d)', $node->nid, $node->vid, $form_state['values']['parent'], $form_state['values']['weight']);
+      db_query("UPDATE {node_revisions} SET log = '%s' WHERE vid = %d", $form_state['values']['log'], $node->vid);
       drupal_set_message(t('The post has been added to the book.'));
       break;
     case t('Update book outline'):
-      db_query('UPDATE {book} SET parent = %d, weight = %d WHERE vid = %d', $form_values['parent'], $form_values['weight'], $node->vid);
-      db_query("UPDATE {node_revisions} SET log = '%s' WHERE vid = %d", $form_values['log'], $node->vid);
+      db_query('UPDATE {book} SET parent = %d, weight = %d WHERE vid = %d', $form_state['values']['parent'], $form_state['values']['weight'], $node->vid);
+      db_query("UPDATE {node_revisions} SET log = '%s' WHERE vid = %d", $form_state['values']['log'], $node->vid);
       drupal_set_message(t('The book outline has been updated.'));
       break;
     case t('Remove from book outline'):
@@ -875,7 +875,7 @@ function theme_book_admin_table($form) {
 /**
  * Display an administrative view of the hierarchy of a book.
  */
-function book_admin_edit($nid) {
+function book_admin_edit($form_state, $nid) {
   $node = node_load($nid);
   if ($node->nid) {
     drupal_set_title(check_plain($node->title));
@@ -931,8 +931,8 @@ function book_admin_orphan() {
   return $form;
 }
 
-function book_admin_edit_submit($form, &$form_state, $form_values) {
-  foreach ($form_values['table'] as $row) {
+function book_admin_edit_submit($form, &$form_state) {
+  foreach ($form_state['values']['table'] as $row) {
     $node = node_load($row['nid']);
 
     if ($row['title'] != $node->title || $row['weight'] != $node->weight) {
@@ -1004,5 +1004,3 @@ function book_help($section) {
     return '<p>'. t('The outline feature allows you to include posts in the <a href="@book">book hierarchy</a>.', array('@book' => url('book'))) .'</p>';
   }
 }
-
-

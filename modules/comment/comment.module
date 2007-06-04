@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.547 2007/05/29 06:27:37 dries Exp $
+// $Id: comment.module,v 1.548 2007/06/04 07:22:17 dries Exp $
 
 /**
  * @file
@@ -1129,7 +1129,7 @@ function comment_confirm_delete($comment) {
     'comment_confirm_delete');
 }
 
-function comment_confirm_delete_submit($form, &$form_state, $form_values) {
+function comment_confirm_delete_submit($form, &$form_state) {
   drupal_set_message(t('The comment and all its replies have been deleted.'));
 
   $comment = $form['#comment'];
@@ -1229,9 +1229,9 @@ function comment_admin_overview($type = 'new', $arg) {
 /**
  * We can't execute any 'Update options' if no comments were selected.
  */
-function comment_admin_overview_validate($form, &$form_state, $form_values) {
-  $form_values['comments'] = array_diff($form_values['comments'], array(0));
-  if (count($form_values['comments']) == 0) {
+function comment_admin_overview_validate($form, &$form_state) {
+  $form_state['values']['comments'] = array_diff($form_state['values']['comments'], array(0));
+  if (count($form_state['values']['comments']) == 0) {
     form_set_error('', t('Please select one or more comments to perform the update on.'));
     drupal_goto('admin/content/comment');
   }
@@ -1241,19 +1241,19 @@ function comment_admin_overview_validate($form, &$form_state, $form_values) {
  * Execute the chosen 'Update option' on the selected comments, such as
  * publishing, unpublishing or deleting.
  */
-function comment_admin_overview_submit($form, &$form_state, $form_values) {
+function comment_admin_overview_submit($form, &$form_state) {
   $operations = comment_operations();
-  if ($operations[$form_values['operation']][1]) {
+  if ($operations[$form_state['values']['operation']][1]) {
     // extract the appropriate database query operation
-    $query = $operations[$form_values['operation']][1];
-    foreach ($form_values['comments'] as $cid => $value) {
+    $query = $operations[$form_state['values']['operation']][1];
+    foreach ($form_state['values']['comments'] as $cid => $value) {
       if ($value) {
         // perform the update action, then refresh node statistics
         db_query($query, $cid);
         $comment = _comment_load($cid);
         _comment_update_node_statistics($comment->nid);
         // Allow modules to respond to the updating of a comment.
-        comment_invoke_comment($comment, $form_values['operation']);
+        comment_invoke_comment($comment, $form_state['values']['operation']);
         // Add an entry to the watchdog log.
         watchdog('content', 'Comment: updated %subject.', array('%subject' => $comment->subject), WATCHDOG_NOTICE, l(t('view'), 'node/'. $comment->nid, array('fragment' => 'comment-'. $comment->cid)));
       }
@@ -1326,9 +1326,9 @@ function comment_multiple_delete_confirm() {
 /**
  * Perform the actual comment deletion.
  */
-function comment_multiple_delete_confirm_submit($form, &$form_state, $form_values) {
-  if ($form_values['confirm']) {
-    foreach ($form_values['comments'] as $cid => $value) {
+function comment_multiple_delete_confirm_submit($form, &$form_state) {
+  if ($form_state['values']['confirm']) {
+    foreach ($form_state['values']['comments'] as $cid => $value) {
       $comment = _comment_load($cid);
       _comment_delete_thread($comment);
       _comment_update_node_statistics($comment->nid);
@@ -1453,7 +1453,7 @@ function comment_validate($edit) {
 ** Generate the basic commenting form, for appending to a node or display on a separate page.
 ** This is rendered by theme_comment_form.
 */
-function comment_form($edit, $title = NULL) {
+function comment_form(&$form_state, $edit, $title = NULL) {
   global $user;
 
   $op = isset($_POST['op']) ? $_POST['op'] : '';
@@ -1684,48 +1684,48 @@ function comment_form_add_preview($form, $edit, &$form_state) {
   return $form;
 }
 
-function comment_form_validate($form, &$form_state, $form_values) {
+function comment_form_validate($form, &$form_state) {
   global $user;
   if ($user->uid === 0) {
     foreach (array('name', 'homepage', 'mail') as $field) {
       //set cookie for 365 days
-      setcookie('comment_info_'. $field, $form_values[$field], time() + 31536000);
+      setcookie('comment_info_'. $field, $form_state['values'][$field], time() + 31536000);
     }
   }
-  comment_validate($form_values);
+  comment_validate($form_state['values']);
 }
 
-function _comment_form_submit(&$form_values) {
-  if (!isset($form_values['date'])) {
-    $form_values['date'] = 'now';
+function _comment_form_submit(&$comment_values) {
+  if (!isset($comment_values['date'])) {
+    $comment_values['date'] = 'now';
   }
-  $form_values['timestamp'] = strtotime($form_values['date']);
-  if (isset($form_values['author'])) {
-    $account = user_load(array('name' => $form_values['author']));
-    $form_values['uid'] = $account->uid;
-    $form_values['name'] = $form_values['author'];
+  $comment_values['timestamp'] = strtotime($comment_values['date']);
+  if (isset($comment_values['author'])) {
+    $account = user_load(array('name' => $comment_values['author']));
+    $comment_values['uid'] = $account->uid;
+    $comment_values['name'] = $comment_values['author'];
   }
   // Validate the comment's subject. If not specified, extract
   // one from the comment's body.
-  if (trim($form_values['subject']) == '') {
+  if (trim($comment_values['subject']) == '') {
     // The body may be in any format, so we:
     // 1) Filter it into HTML
     // 2) Strip out all HTML tags
     // 3) Convert entities back to plain-text.
     // Note: format is checked by check_markup().
-    $form_values['subject'] = trim(truncate_utf8(decode_entities(strip_tags(check_markup($form_values['comment'], $form_values['format']))), 29, TRUE));
+    $comment_values['subject'] = trim(truncate_utf8(decode_entities(strip_tags(check_markup($comment_values['comment'], $comment_values['format']))), 29, TRUE));
     // Edge cases where the comment body is populated only by HTML tags will
     // require a default subject.
-    if ($form_values['subject'] == '') {
-      $form_values['subject'] = t('(No subject)');
+    if ($comment_values['subject'] == '') {
+      $comment_values['subject'] = t('(No subject)');
     }
   }
 }
 
-function comment_form_submit($form, &$form_state, $form_values) {
+function comment_form_submit($form, &$form_state) {
   _comment_form_submit($form_state['values']);
-  if ($cid = comment_save($form_values)) {
-    $form_state['redirect'] = array('node/'. $form_values['nid'], NULL, "comment-$cid");
+  if ($cid = comment_save($form_state['values'])) {
+    $form_state['redirect'] = array('node/'. $form_state['values']['nid'], NULL, "comment-$cid");
     return;
   }
 }
@@ -1809,12 +1809,12 @@ function theme_comment_controls($form) {
   return theme('box', t('Comment viewing options'), $output);
 }
 
-function comment_controls_submit($form, &$form_state, $form_values) {
+function comment_controls_submit($form, &$form_state) {
   global $user;
 
-  $mode = $form_values['mode'];
-  $order = $form_values['order'];
-  $comments_per_page = $form_values['comments_per_page'];
+  $mode = $form_state['values']['mode'];
+  $order = $form_state['values']['order'];
+  $comments_per_page = $form_state['values']['comments_per_page'];
 
   if ($user->uid) {
     $user = user_save($user, array('mode' => $mode, 'sort' => $order, 'comments_per_page' => $comments_per_page));

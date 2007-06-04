@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.33 2007/05/28 06:08:43 dries Exp $
+// $Id: content_types.inc,v 1.34 2007/06/04 07:22:20 dries Exp $
 
 /**
  * @file
@@ -49,7 +49,7 @@ function node_overview_types() {
 /**
  * Generates the node type editing form.
  */
-function node_type_form($type = NULL) {
+function node_type_form(&$form_state, $type = NULL) {
   if (!isset($type->type)) {
     $type = new stdClass();
     $type->type = $type->name = $type->module = $type->description = $type->help = '';
@@ -216,20 +216,20 @@ function node_type_form($type = NULL) {
 /**
  * Implementation of hook_form_validate().
  */
-function node_type_form_validate($form, &$form_state, $form_values) {
+function node_type_form_validate($form, &$form_state) {
   $type = new stdClass();
-  $type->type = trim($form_values['type']);
-  $type->name = trim($form_values['name']);
+  $type->type = trim($form_state['values']['type']);
+  $type->name = trim($form_state['values']['name']);
 
   // Work out what the type was before the user submitted this form
-  $old_type = trim($form_values['old_type']);
+  $old_type = trim($form_state['values']['old_type']);
   if (empty($old_type)) {
     $old_type = $type->type;
   }
 
   $types = node_get_types('names');
 
-  if (!$form_values['locked']) {
+  if (!$form_state['values']['locked']) {
     if (isset($types[$type->type]) && $type->type != $old_type) {
       form_set_error('type', t('The machine-readable name %type is already taken.', array('%type' => $type->type)));
     }
@@ -252,31 +252,31 @@ function node_type_form_validate($form, &$form_state, $form_values) {
 /**
  * Implementation of hook_form_submit().
  */
-function node_type_form_submit($form, &$form_state, $form_values) {
-  $op = isset($form_values['op']) ? $form_values['op'] : '';
+function node_type_form_submit($form, &$form_state) {
+  $op = isset($form_state['values']['op']) ? $form_state['values']['op'] : '';
 
   $type = new stdClass();
 
-  $type->type = trim($form_values['type']);
-  $type->name = trim($form_values['name']);
-  $type->orig_type = trim($form_values['orig_type']);
-  $type->old_type = isset($form_values['old_type']) ? $form_values['old_type'] : $type->type;
+  $type->type = trim($form_state['values']['type']);
+  $type->name = trim($form_state['values']['name']);
+  $type->orig_type = trim($form_state['values']['orig_type']);
+  $type->old_type = isset($form_state['values']['old_type']) ? $form_state['values']['old_type'] : $type->type;
 
-  $type->description = $form_values['description'];
-  $type->help = $form_values['help'];
-  $type->min_word_count = $form_values['min_word_count'];
-  $type->title_label = $form_values['title_label'];
-  $type->body_label = $form_values['body_label'];
+  $type->description = $form_state['values']['description'];
+  $type->help = $form_state['values']['help'];
+  $type->min_word_count = $form_state['values']['min_word_count'];
+  $type->title_label = $form_state['values']['title_label'];
+  $type->body_label = $form_state['values']['body_label'];
 
   // title_label is required in core; has_title will always be true, unless a
   // module alters the title field.
   $type->has_title = ($type->title_label != '');
   $type->has_body = ($type->body_label != '');
 
-  $type->module = !empty($form_values['module']) ? $form_values['module'] : 'node';
-  $type->custom = $form_values['custom'];
+  $type->module = !empty($form_state['values']['module']) ? $form_state['values']['module'] : 'node';
+  $type->custom = $form_state['values']['custom'];
   $type->modified = TRUE;
-  $type->locked = $form_values['locked'];
+  $type->locked = $form_state['values']['locked'];
 
   if ($op == t('Reset to defaults')) {
     node_type_reset($type);
@@ -288,7 +288,7 @@ function node_type_form_submit($form, &$form_state, $form_values) {
 
   $status = node_type_save($type);
 
-  $variables = $form_values;
+  $variables = $form_state['values'];
 
   // Remove everything that's been saved already - whatever's left is assumed
   // to be a persistent variable.
@@ -398,10 +398,10 @@ function node_type_delete_confirm($type) {
 /**
  * Process content type delete confirm submissions.
  */
-function node_type_delete_confirm_submit($form, &$form_state, $form_values) {
-  node_type_delete($form_values['type']);
+function node_type_delete_confirm_submit($form, &$form_state) {
+  node_type_delete($form_state['values']['type']);
 
-  $t_args = array('%name' => $form_values['name']);
+  $t_args = array('%name' => $form_state['values']['name']);
   drupal_set_message(t('The content type %name has been deleted.', $t_args));
   watchdog('menu', 'Deleted content type %name.', $t_args, WATCHDOG_NOTICE);
 

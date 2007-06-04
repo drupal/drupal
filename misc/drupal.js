@@ -1,4 +1,4 @@
-// $Id: drupal.js,v 1.32 2007/06/01 09:05:45 unconed Exp $
+// $Id: drupal.js,v 1.33 2007/06/04 07:22:16 dries Exp $
 
 var Drupal = Drupal || {};
 
@@ -50,7 +50,7 @@ Drupal.redirectFormButton = function (uri, button, handler) {
         // Restore form submission
         button.form.action = action;
         button.form.target = target;
-      
+
         // Get response from iframe body
         try {
           response = (iframe.contentWindow || iframe.contentDocument || iframe).document.body.innerHTML;
@@ -64,7 +64,7 @@ Drupal.redirectFormButton = function (uri, button, handler) {
         catch (e) {
           response = null;
         }
- 
+
         response = Drupal.parseJson(response);
         // Check response code
         if (response.status == 0) {

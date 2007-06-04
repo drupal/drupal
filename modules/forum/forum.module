@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.400 2007/05/30 08:04:38 dries Exp $
+// $Id: forum.module,v 1.401 2007/06/04 07:22:17 dries Exp $
 
 /**
  * @file
@@ -412,7 +412,7 @@ function forum_update($node) {
 /**
  * Implementation of hook_form().
  */
-function forum_form(&$node) {
+function forum_form(&$node, $form_state) {
   $type = node_get_types('type', $node);
   $form['title'] = array('#type' => 'textfield', '#title' => check_plain($type->title_label), '#default_value' => !empty($node->title) ? $node->title : '', '#required' => TRUE, '#weight' => -5);
 
@@ -461,7 +461,7 @@ function forum_delete(&$node) {
  *
  * @param $edit Associative array containing a container term to be added or edited.
  */
-function forum_form_container($edit = array()) {
+function forum_form_container(&$form_state, $edit = array()) {
   $edit += array(
     'name' => '',
     'description' => '',
@@ -528,7 +528,7 @@ function forum_form_main($type, $edit = array()) {
  *
  * @param $edit Associative array containing a forum term to be added or edited.
  */
-function forum_form_forum($edit = array()) {
+function forum_form_forum(&$form_state, $edit = array()) {
   $edit += array(
     'name' => '',
     'description' => '',
@@ -571,7 +571,7 @@ function forum_form_forum($edit = array()) {
 /**
  * Process forum form and container form submissions.
  */
-function forum_form_submit($form, &$form_state, $form_values) {
+function forum_form_submit($form, &$form_state) {
   if ($form['form_id']['#value'] == 'forum_form_container') {
     $container = TRUE;
     $type = t('forum container');
@@ -581,18 +581,18 @@ function forum_form_submit($form, &$form_state, $form_values) {
     $type = t('forum');
   }
 
-  $status = taxonomy_save_term($form_values);
+  $status = taxonomy_save_term($form_state['values']);
   switch ($status) {
     case SAVED_NEW:
       if ($container) {
         $containers = variable_get('forum_containers', array());
-        $containers[] = $form_values['tid'];
+        $containers[] = $form_state['values']['tid'];
         variable_set('forum_containers', $containers);
       }
-      drupal_set_message(t('Created new @type %term.', array('%term' => $form_values['name'], '@type' => $type)));
+      drupal_set_message(t('Created new @type %term.', array('%term' => $form_state['values']['name'], '@type' => $type)));
       break;
     case SAVED_UPDATED:
-      drupal_set_message(t('The @type %term has been updated.', array('%term' => $form_values['name'], '@type' => $type)));
+      drupal_set_message(t('The @type %term has been updated.', array('%term' => $form_state['values']['name'], '@type' => $type)));
       break;
   }
   $form_state['redirect'] = 'admin/content/forum';
@@ -616,10 +616,10 @@ function forum_confirm_delete($tid) {
 /**
  * Implementation of forms api _submit call. Deletes a forum after confirmation.
  */
-function forum_confirm_delete_submit($form, &$form_state, $form_values) {
-  taxonomy_del_term($form_values['tid']);
-  drupal_set_message(t('The forum %term and all sub-forums and associated posts have been deleted.', array('%term' => $form_values['name'])));
-  watchdog('content', 'forum: deleted %term and all its sub-forums and associated posts.', array('%term' => $form_values['name']));
+function forum_confirm_delete_submit($form, &$form_state) {
+  taxonomy_del_term($form_state['values']['tid']);
+  drupal_set_message(t('The forum %term and all sub-forums and associated posts have been deleted.', array('%term' => $form_state['values']['name'])));
+  watchdog('content', 'forum: deleted %term and all its sub-forums and associated posts.', array('%term' => $form_state['values']['name']));
 
   $form_state['redirect'] = 'admin/content/forum';
   return;
@@ -1185,5 +1185,3 @@ function _forum_get_topic_order_sql($sortby) {
   $order = _forum_get_topic_order($sortby);
   return $order['field'] .' '. $order['sort'];
 }
-
-

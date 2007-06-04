@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.789 2007/06/03 06:17:58 dries Exp $
+// $Id: user.module,v 1.790 2007/06/04 07:22:23 dries Exp $
 
 /**
  * @file
@@ -318,7 +318,7 @@ function user_validate_mail($mail) {
   }
 }
 
-function user_validate_picture(&$form, &$form_state, $form_values) {
+function user_validate_picture(&$form, &$form_state) {
   // If required, validate the uploaded picture.
   $validators = array(
     'file_validate_is_image' => array(),
@@ -332,7 +332,7 @@ function user_validate_picture(&$form, &$form_state, $form_values) {
     $info = image_get_info($file->filepath);
     $destination = variable_get('user_picture_path', 'pictures') .'/picture-'. $form['#uid'] .'.'. $info['extension'];
     if (file_copy($file, $destination, FILE_EXISTS_REPLACE)) {
-      $form_values['picture'] = $file->filepath;
+      $form_state['values']['picture'] = $file->filepath;
     }
     else {
       form_set_error('picture_upload', t("Failed to upload the picture image; the %directory directory doesn't exist or is not writable.", array('%directory' => variable_get('user_picture_path', 'pictures'))));
@@ -496,7 +496,8 @@ function user_user($type, &$edit, &$user, $category = NULL) {
     return array(t('History') => $items);
   }
   if ($type == 'form' && $category == 'account') {
-    return user_edit_form(arg(1), $edit);
+    $form_state = array();
+    return user_edit_form($form_state, arg(1), $edit);
   }
 
   if ($type == 'validate' && $category == 'account') {
@@ -1056,28 +1057,28 @@ function user_login($msg = '') {
   return $form;
 }
 
-function user_login_validate($form, &$form_state, $form_values) {
-  if ($form_values['name']) {
-    if (user_is_blocked($form_values['name'])) {
+function user_login_validate($form, &$form_state) {
+  if ($form_state['values']['name']) {
+    if (user_is_blocked($form_state['values']['name'])) {
       // blocked in user administration
-      form_set_error('name', t('The username %name has not been activated or is blocked.', array('%name' => $form_values['name'])));
+      form_set_error('name', t('The username %name has not been activated or is blocked.', array('%name' => $form_state['values']['name'])));
     }
-    else if (drupal_is_denied('user', $form_values['name'])) {
+    else if (drupal_is_denied('user', $form_state['values']['name'])) {
       // denied by access controls
-      form_set_error('name', t('The name %name is a reserved username.', array('%name' => $form_values['name'])));
+      form_set_error('name', t('The name %name is a reserved username.', array('%name' => $form_state['values']['name'])));
     }
-    else if ($form_values['pass']) {
-      $user = user_authenticate($form_values['name'], trim($form_values['pass']));
+    else if ($form_state['values']['pass']) {
+      $user = user_authenticate($form_state['values']['name'], trim($form_state['values']['pass']));
 
       if (!$user->uid) {
         form_set_error('name', t('Sorry, unrecognized username or password. <a href="@password">Have you forgotten your password?</a>', array('@password' => url('user/password'))));
-        watchdog('user', 'Login attempt failed for %user.', array('%user' => $form_values['name']));
+        watchdog('user', 'Login attempt failed for %user.', array('%user' => $form_state['values']['name']));
       }
     }
   }
 }
 
-function user_login_submit($form, &$form_state, $form_values) {
+function user_login_submit($form, &$form_state) {
   global $user;
   if ($user->uid) {
     watchdog('user', 'Session opened for %name.', array('%name' => $user->name));
@@ -1085,7 +1086,7 @@ function user_login_submit($form, &$form_state, $form_values) {
     // Update the user table timestamp noting user has logged in.
     db_query("UPDATE {users} SET login = %d WHERE uid = %d", time(), $user->uid);
 
-    user_module_invoke('login', $form_values, $user);
+    user_module_invoke('login', $form_state['values'], $user);
 
     sess_regenerate();
     $form_state['redirect'] = 'user/'. $user->uid;
@@ -1172,8 +1173,8 @@ function user_pass() {
   return $form;
 }
 
-function user_pass_validate($form, &$form_state, $form_values) {
-  $name = trim($form_values['name']);
+function user_pass_validate($form, &$form_state) {
+  $name = trim($form_state['values']['name']);
   if (valid_email_address($name)) {
     $account = user_load(array('mail' => $name, 'status' => 1));
   }
@@ -1188,8 +1189,8 @@ function user_pass_validate($form, &$form_state, $form_values) {
   }
 }
 
-function user_pass_submit($form, &$form_state, $form_values) {
-  $account = $form_values['account'];
+function user_pass_submit($form, &$form_state) {
+  $account = $form_state['values']['account'];
   // Mail one time login URL and instructions.
   $mail_success = _user_mail_notify('password_reset', $account);
   if ($mail_success) {
@@ -1293,7 +1294,7 @@ function user_register() {
     $form['affiliates'] = array('#value' => '<p>'. t('Note: if you have an account with one of our affiliates (!s), you may <a href="@login_uri">login now</a> instead of registering.', array('!s' => $affiliates, '@login_uri' => url('user'))) .'</p>');
   }
   // Merge in the default user edit fields.
-  $form = array_merge($form, user_edit_form(NULL, NULL, TRUE));
+  $form = array_merge($form, user_edit_form($form_state, NULL, NULL, TRUE));
   if ($admin) {
     $form['account']['notify'] = array(
      '#type' => 'checkbox',
@@ -1325,45 +1326,45 @@ function user_register() {
   return $form;
 }
 
-function user_register_validate($form, &$form_state, $form_values) {
-  user_module_invoke('validate', $form_values, $form_values, 'account');
+function user_register_validate($form, &$form_state) {
+  user_module_invoke('validate', $form_state['values'], $form_state['values'], 'account');
 }
 
-function user_register_submit($form, &$form_state, $form_values) {
+function user_register_submit($form, &$form_state) {
   global $base_url;
   $admin = user_access('administer users');
 
-  $mail = $form_values['mail'];
-  $name = $form_values['name'];
+  $mail = $form_state['values']['mail'];
+  $name = $form_state['values']['name'];
   if (!variable_get('user_email_verification', TRUE) || $admin) {
-    $pass = $form_values['pass'];
+    $pass = $form_state['values']['pass'];
   }
   else {
     $pass = user_password();
   };
-  $notify = isset($form_values['notify']) ? $form_values['notify'] : NULL;
+  $notify = isset($form_state['values']['notify']) ? $form_state['values']['notify'] : NULL;
   $from = variable_get('site_mail', ini_get('sendmail_from'));
-  if (isset($form_values['roles'])) {
-    $roles = array_filter($form_values['roles']);     // Remove unset roles
+  if (isset($form_state['values']['roles'])) {
+    $roles = array_filter($form_state['values']['roles']);     // Remove unset roles
   }
   else {
     $roles = array();
   }
 
-  if (!$admin && array_intersect(array_keys($form_values), array('uid', 'roles', 'init', 'session', 'status'))) {
+  if (!$admin && array_intersect(array_keys($form_state['values']), array('uid', 'roles', 'init', 'session', 'status'))) {
     watchdog('security', 'Detected malicious attempt to alter protected user fields.', array(), WATCHDOG_WARNING);
     $form_state['redirect'] = 'user/register';
     return;
   }
   //the unset below is needed to prevent these form values from being saved as user data
-  unset($form_values['form_token'], $form_values['submit'], $form_values['op'], $form_values['notify'], $form_values['form_id'], $form_values['affiliates'], $form_values['destination']);
+  unset($form_state['values']['form_token'], $form_state['values']['submit'], $form_state['values']['op'], $form_state['values']['notify'], $form_state['values']['form_id'], $form_state['values']['affiliates'], $form_state['values']['destination']);
 
   $merge_data = array('pass' => $pass, 'init' => $mail, 'roles' => $roles);
   if (!$admin) {
     // Set the user's status because it was not displayed in the form.
     $merge_data['status'] = variable_get('user_register', 1) == 1;
   }
-  $account = user_save('', array_merge($form_values, $merge_data));
+  $account = user_save('', array_merge($form_state['values'], $merge_data));
   $form_state['user'] = $account;
 
   watchdog('user', 'New user: %name (%email).', array('%name' => $name, '%email' => $mail), WATCHDOG_NOTICE, l(t('edit'), 'user/'. $account->uid .'/edit'));
@@ -1413,7 +1414,7 @@ function user_register_submit($form, &$form_state, $form_values) {
   }
 }
 
-function user_edit_form($uid, $edit, $register = FALSE) {
+function user_edit_form(&$form_state, $uid, $edit, $register = FALSE) {
   $admin = user_access('administer users');
 
   // Account information:
@@ -1537,7 +1538,7 @@ function _user_edit_submit($uid, &$edit) {
   }
 }
 
-function user_edit($category = 'account') {
+function user_edit($form_state, $category = 'account') {
   global $user;
 
   $account = user_load(array('uid' => arg(1)));
@@ -1608,22 +1609,22 @@ function user_delete($edit, $uid) {
   module_invoke_all('user', 'delete', $edit, $account);
 }
 
-function user_edit_validate($form, &$form_state, $form_values) {
-  user_module_invoke('validate', $form_values, $form_values['_account'], $form_values['_category']);
+function user_edit_validate($form, &$form_state) {
+  user_module_invoke('validate', $form_state['values'], $form_state['values']['_account'], $form_state['values']['_category']);
   // Validate input to ensure that non-privileged users can't alter protected data.
-  if ((!user_access('administer users') && array_intersect(array_keys($form_values), array('uid', 'init', 'session'))) || (!user_access('administer access control') && isset($form_values['roles']))) {
+  if ((!user_access('administer users') && array_intersect(array_keys($form_state['values']), array('uid', 'init', 'session'))) || (!user_access('administer access control') && isset($form_state['values']['roles']))) {
     watchdog('security', 'Detected malicious attempt to alter protected user fields.', array(), WATCHDOG_WARNING);
     // set this to a value type field
     form_set_error('category', t('Detected malicious attempt to alter protected user fields.'));
   }
 }
 
-function user_edit_submit($form, &$form_state, $form_values) {
-  $account = $form_values['_account'];
-  $category = $form_values['_category'];
-  unset($form_values['_account'], $form_values['op'], $form_values['submit'], $form_values['delete'], $form_values['form_token'], $form_values['form_id'], $form_values['_category']);
-  user_module_invoke('submit', $form_values, $account, $category);
-  user_save($account, $form_values, $category);
+function user_edit_submit($form, &$form_state) {
+  $account = $form_state['values']['_account'];
+  $category = $form_state['values']['_category'];
+  unset($form_state['values']['_account'], $form_state['values']['op'], $form_state['values']['submit'], $form_state['values']['delete'], $form_state['values']['form_token'], $form_state['values']['form_id'], $form_state['values']['_category']);
+  user_module_invoke('submit', $form_state['values'], $account, $category);
+  user_save($account, $form_state['values'], $category);
 
   // Clear the page cache because pages can contain usernames and/or profile information:
   cache_clear_all();
@@ -1742,36 +1743,36 @@ function user_admin_access_check() {
   return $output;
 }
 
-function user_admin_access_check_validate($form, &$form_state, $form_values) {
-  if (empty($form_values['test'])) {
-    form_set_error($form_values['type'], t('No value entered. Please enter a test string and try again.'));
+function user_admin_access_check_validate($form, &$form_state) {
+  if (empty($form_state['values']['test'])) {
+    form_set_error($form_state['values']['type'], t('No value entered. Please enter a test string and try again.'));
   }
 }
 
-function user_admin_access_check_submit($form, &$form_state, $form_values) {
-  switch ($form_values['type']) {
+function user_admin_access_check_submit($form, &$form_state) {
+  switch ($form_state['values']['type']) {
     case 'user':
-      if (drupal_is_denied('user', $form_values['test'])) {
-        drupal_set_message(t('The username %name is not allowed.', array('%name' => $form_values['test'])));
+      if (drupal_is_denied('user', $form_state['values']['test'])) {
+        drupal_set_message(t('The username %name is not allowed.', array('%name' => $form_state['values']['test'])));
       }
       else {
-        drupal_set_message(t('The username %name is allowed.', array('%name' => $form_values['test'])));
+        drupal_set_message(t('The username %name is allowed.', array('%name' => $form_state['values']['test'])));
       }
       break;
     case 'mail':
-      if (drupal_is_denied('mail', $form_values['test'])) {
-        drupal_set_message(t('The e-mail address %mail is not allowed.', array('%mail' => $form_values['test'])));
+      if (drupal_is_denied('mail', $form_state['values']['test'])) {
+        drupal_set_message(t('The e-mail address %mail is not allowed.', array('%mail' => $form_state['values']['test'])));
       }
       else {
-        drupal_set_message(t('The e-mail address %mail is allowed.', array('%mail' => $form_values['test'])));
+        drupal_set_message(t('The e-mail address %mail is allowed.', array('%mail' => $form_state['values']['test'])));
       }
       break;
     case 'host':
-      if (drupal_is_denied('host', $form_values['test'])) {
-        drupal_set_message(t('The hostname %host is not allowed.', array('%host' => $form_values['test'])));
+      if (drupal_is_denied('host', $form_state['values']['test'])) {
+        drupal_set_message(t('The hostname %host is not allowed.', array('%host' => $form_state['values']['test'])));
       }
       else {
-        drupal_set_message(t('The hostname %host is allowed.', array('%host' => $form_values['test'])));
+        drupal_set_message(t('The hostname %host is allowed.', array('%host' => $form_state['values']['test'])));
       }
       break;
     default:
@@ -1819,8 +1820,8 @@ function user_admin_access_delete_confirm($aid = 0) {
   return $output;
 }
 
-function user_admin_access_delete_confirm_submit($form, &$form_state, $form_values) {
-  db_query('DELETE FROM {access} WHERE aid = %d', $form_values['aid']);
+function user_admin_access_delete_confirm_submit($form, &$form_state) {
+  db_query('DELETE FROM {access} WHERE aid = %d', $form_state['values']['aid']);
   drupal_set_message(t('The access rule has been deleted.'));
   $form_state['redirect'] = 'admin/user/rules';
   return;
@@ -1846,7 +1847,7 @@ function user_admin_access_edit($aid = 0) {
   return drupal_get_form('user_admin_access_edit_form', $edit, t('Save rule'));
 }
 
-function user_admin_access_form($edit, $submit) {
+function user_admin_access_form(&$form_state, $edit, $submit) {
   $form['status'] = array(
     '#type' => 'radios',
     '#title' => t('Access type'),
@@ -2012,17 +2013,17 @@ function theme_user_admin_perm($form) {
   return $output;
 }
 
-function user_admin_perm_submit($form, &$form_state, $form_values) {
+function user_admin_perm_submit($form, &$form_state) {
   // Save permissions:
   $result = db_query('SELECT * FROM {role}');
   while ($role = db_fetch_object($result)) {
-    if (isset($form_values[$role->rid])) {
+    if (isset($form_state['values'][$role->rid])) {
       // Delete, so if we clear every checkbox we reset that role;
       // otherwise permissions are active and denied everywhere.
       db_query('DELETE FROM {permission} WHERE rid = %d', $role->rid);
-      $form_values[$role->rid] = array_filter($form_values[$role->rid]);
-      if (count($form_values[$role->rid])) {
-        db_query("INSERT INTO {permission} (rid, perm) VALUES (%d, '%s')", $role->rid, implode(', ', array_keys($form_values[$role->rid])));
+      $form_state['values'][$role->rid] = array_filter($form_state['values'][$role->rid]);
+      if (count($form_state['values'][$role->rid])) {
+        db_query("INSERT INTO {permission} (rid, perm) VALUES (%d, '%s')", $role->rid, implode(', ', array_keys($form_state['values'][$role->rid])));
       }
     }
   }
@@ -2083,16 +2084,16 @@ function user_admin_role() {
   return $form;
 }
 
-function user_admin_role_validate($form, &$form_state, $form_values) {
-  if ($form_values['name']) {
-    if ($form_values['op'] == t('Save role')) {
-      if (db_result(db_query("SELECT COUNT(*) FROM {role} WHERE name = '%s' AND rid != %d", $form_values['name'], $form_values['rid']))) {
-        form_set_error('name', t('The role name %name already exists. Please choose another role name.', array('%name' => $form_values['name'])));
+function user_admin_role_validate($form, &$form_state) {
+  if ($form_state['values']['name']) {
+    if ($form_state['values']['op'] == t('Save role')) {
+      if (db_result(db_query("SELECT COUNT(*) FROM {role} WHERE name = '%s' AND rid != %d", $form_state['values']['name'], $form_state['values']['rid']))) {
+        form_set_error('name', t('The role name %name already exists. Please choose another role name.', array('%name' => $form_state['values']['name'])));
       }
     }
-    else if ($form_values['op'] == t('Add role')) {
-      if (db_result(db_query("SELECT COUNT(*) FROM {role} WHERE name = '%s'", $form_values['name']))) {
-        form_set_error('name', t('The role name %name already exists. Please choose another role name.', array('%name' => $form_values['name'])));
+    else if ($form_state['values']['op'] == t('Add role')) {
+      if (db_result(db_query("SELECT COUNT(*) FROM {role} WHERE name = '%s'", $form_state['values']['name']))) {
+        form_set_error('name', t('The role name %name already exists. Please choose another role name.', array('%name' => $form_state['values']['name'])));
       }
     }
   }
@@ -2101,21 +2102,21 @@ function user_admin_role_validate($form, &$form_state, $form_values) {
   }
 }
 
-function user_admin_role_submit($form, &$form_state, $form_values) {
-  if ($form_values['op'] == t('Save role')) {
-    db_query("UPDATE {role} SET name = '%s' WHERE rid = %d", $form_values['name'], $form_values['rid']);
+function user_admin_role_submit($form, &$form_state) {
+  if ($form_state['values']['op'] == t('Save role')) {
+    db_query("UPDATE {role} SET name = '%s' WHERE rid = %d", $form_state['values']['name'], $form_state['values']['rid']);
     drupal_set_message(t('The role has been renamed.'));
   }
-  else if ($form_values['op'] == t('Delete role')) {
-    db_query('DELETE FROM {role} WHERE rid = %d', $form_values['rid']);
-    db_query('DELETE FROM {permission} WHERE rid = %d', $form_values['rid']);
+  else if ($form_state['values']['op'] == t('Delete role')) {
+    db_query('DELETE FROM {role} WHERE rid = %d', $form_state['values']['rid']);
+    db_query('DELETE FROM {permission} WHERE rid = %d', $form_state['values']['rid']);
     // Update the users who have this role set:
-    db_query('DELETE FROM {users_roles} WHERE rid = %d', $form_values['rid']);
+    db_query('DELETE FROM {users_roles} WHERE rid = %d', $form_state['values']['rid']);
 
     drupal_set_message(t('The role has been deleted.'));
   }
-  else if ($form_values['op'] == t('Add role')) {
-    db_query("INSERT INTO {role} (name) VALUES ('%s')", $form_values['name']);
+  else if ($form_state['values']['op'] == t('Add role')) {
+    db_query("INSERT INTO {role} (name) VALUES ('%s')", $form_state['values']['name']);
     drupal_set_message(t('The role has been added.'));
   }
   $form_state['redirect'] = 'admin/user/roles';
@@ -2253,11 +2254,11 @@ function theme_user_admin_account($form) {
 /**
  * Submit the user administration update form.
  */
-function user_admin_account_submit($form, &$form_state, $form_values) {
+function user_admin_account_submit($form, &$form_state) {
   $operations = module_invoke_all('user_operations');
-  $operation = $operations[$form_values['operation']];
+  $operation = $operations[$form_state['values']['operation']];
   // Filter out unchecked accounts.
-  $accounts = array_filter($form_values['accounts']);
+  $accounts = array_filter($form_state['values']['accounts']);
   if ($function = $operation['callback']) {
     // Add in callback arguments if present.
     if (isset($operation['callback arguments'])) {
@@ -2272,9 +2273,9 @@ function user_admin_account_submit($form, &$form_state, $form_values) {
   }
 }
 
-function user_admin_account_validate($form, &$form_state, $form_values) {
-  $form_values['accounts'] = array_filter($form_values['accounts']);
-  if (count($form_values['accounts']) == 0) {
+function user_admin_account_validate($form, &$form_state) {
+  $form_state['values']['accounts'] = array_filter($form_state['values']['accounts']);
+  if (count($form_state['values']['accounts']) == 0) {
     form_set_error('', t('No users selected.'));
   }
 }
@@ -2424,10 +2425,10 @@ function user_multiple_delete_confirm() {
                       t('Delete all'), t('Cancel'));
 }
 
-function user_multiple_delete_confirm_submit($form, &$form_state, $form_values) {
-  if ($form_values['confirm']) {
-    foreach ($form_values['accounts'] as $uid => $value) {
-      user_delete($form_values, $uid);
+function user_multiple_delete_confirm_submit($form, &$form_state) {
+  if ($form_state['values']['confirm']) {
+    foreach ($form_state['values']['accounts'] as $uid => $value) {
+      user_delete($form_state['values'], $uid);
     }
     drupal_set_message(t('The users have been deleted.'));
   }
@@ -3002,17 +3003,17 @@ function theme_user_filters($form) {
 /**
  * Process result from user administration filter form.
  */
-function user_filter_form_submit($form, &$form_state, $form_values) {
-  $op = $form_values['op'];
+function user_filter_form_submit($form, &$form_state) {
+  $op = $form_state['values']['op'];
   $filters = user_filters();
   switch ($op) {
     case t('Filter'): case t('Refine'):
-      if (isset($form_values['filter'])) {
-        $filter = $form_values['filter'];
+      if (isset($form_state['values']['filter'])) {
+        $filter = $form_state['values']['filter'];
         // Merge an array of arrays into one if necessary.
         $options = $filter == 'permission' ? call_user_func_array('array_merge', $filters[$filter]['options']) : $filters[$filter]['options'];
-        if (isset($options[$form_values[$filter]])) {
-          $_SESSION['user_overview_filter'][] = array($filter, $form_values[$filter]);
+        if (isset($options[$form_state['values'][$filter]])) {
+          $_SESSION['user_overview_filter'][] = array($filter, $form_state['values'][$filter]);
         }
       }
       break;

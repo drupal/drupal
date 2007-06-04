@@ -1,5 +1,5 @@
 <?php
-// $Id: throttle.module,v 1.77 2007/05/28 06:08:46 dries Exp $
+// $Id: throttle.module,v 1.78 2007/06/04 07:22:22 dries Exp $
 
 /**
  * @file
@@ -156,11 +156,11 @@ function throttle_admin_settings() {
   return system_settings_form($form);
 }
 
-function throttle_admin_settings_validate($form, &$form_state, $form_values) {
-  if (!is_numeric($form_values['throttle_anonymous']) || $form_values['throttle_anonymous'] < 0) {
-    form_set_error('throttle_anonymous', t("%value is not a valid auto-throttle setting. Please enter a positive numeric value.", array('%value' => $form_values['throttle_anonymous'])));
+function throttle_admin_settings_validate($form, &$form_state) {
+  if (!is_numeric($form_state['values']['throttle_anonymous']) || $form_state['values']['throttle_anonymous'] < 0) {
+    form_set_error('throttle_anonymous', t("%value is not a valid auto-throttle setting. Please enter a positive numeric value.", array('%value' => $form_state['values']['throttle_anonymous'])));
   }
-  if (!is_numeric($form_values['throttle_user']) || $form_values['throttle_user'] < 0) {
-    form_set_error('throttle_user', t("%value is not a valid auto-throttle setting. Please enter a positive numeric value.", array('%value' => $form_values['throttle_user'])));
+  if (!is_numeric($form_state['values']['throttle_user']) || $form_state['values']['throttle_user'] < 0) {
+    form_set_error('throttle_user', t("%value is not a valid auto-throttle setting. Please enter a positive numeric value.", array('%value' => $form_state['values']['throttle_user'])));
   }
 }

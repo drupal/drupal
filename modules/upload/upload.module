@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.163 2007/05/30 08:08:59 dries Exp $
+// $Id: upload.module,v 1.164 2007/06/04 07:22:22 dries Exp $
 
 /**
  * @file
@@ -100,15 +100,15 @@ function upload_menu_alter(&$items) {
 /**
  * Form API callback to validate the upload settings form.
  */
-function upload_admin_settings_validate($form, &$form_state, $form_values) {
-  if (($form_values['upload_max_resolution'] != '0')) {
-    if (!preg_match('/^[0-9]+x[0-9]+$/', $form_values['upload_max_resolution'])) {
+function upload_admin_settings_validate($form, &$form_state) {
+  if (($form_state['values']['upload_max_resolution'] != '0')) {
+    if (!preg_match('/^[0-9]+x[0-9]+$/', $form_state['values']['upload_max_resolution'])) {
       form_set_error('upload_max_resolution', t('The maximum allowed image size expressed as WIDTHxHEIGHT (e.g. 640x480). Set to 0 for no restriction.'));
     }
   }
 
-  $default_uploadsize = $form_values['upload_uploadsize_default'];
-  $default_usersize = $form_values['upload_usersize_default'];
+  $default_uploadsize = $form_state['values']['upload_uploadsize_default'];
+  $default_usersize = $form_state['values']['upload_usersize_default'];
 
   $exceed_max_msg = t('Your PHP settings limit the maximum file size per upload to %size MB.', array('%size' => file_upload_max_size())) .'<br/>';
   $more_info = t("Depending on your sever environment, these settings may be changed in the system-wide php.ini file, a php.ini file in your Drupal root directory, in your Drupal site's settings.php file, or in the .htaccess file in your Drupal root directory.");
@@ -127,9 +127,9 @@ function upload_admin_settings_validate($form, &$form_state, $form_values) {
     form_set_error('upload_uploadsize_default', t('The %role maximum file size per upload is greater than the total file size allowed per user', array('%role' => t('default'))));
   }
 
-  foreach ($form_values['roles'] as $rid => $role) {
-    $uploadsize = $form_values['upload_uploadsize_'. $rid];
-    $usersize = $form_values['upload_usersize_'. $rid];
+  foreach ($form_state['values']['roles'] as $rid => $role) {
+    $uploadsize = $form_state['values']['upload_uploadsize_'. $rid];
+    $usersize = $form_state['values']['upload_usersize_'. $rid];
 
     if (!is_numeric($uploadsize) || ($uploadsize <= 0)) {
       form_set_error('upload_uploadsize_'. $rid, t('The %role file size limit must be a number and greater than zero.', array('%role' => $role)));

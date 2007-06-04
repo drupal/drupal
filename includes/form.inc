@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.201 2007/05/31 12:36:18 dries Exp $
+// $Id: form.inc,v 1.202 2007/06/04 07:22:16 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -75,6 +75,10 @@ function drupal_get_form($form_id) {
     // to build it from scratch.
     if (!isset($form)) {
       $form_state['post'] = $_POST;
+      array_shift($args);
+      array_unshift($args, $form_state);
+      array_unshift($args, $form_id);
+
       $form = call_user_func_array('drupal_retrieve_form', $args);
       $form_build_id = 'form-'. md5(mt_rand());
       $form['#build_id'] = $form_build_id;
@@ -109,7 +113,9 @@ function drupal_get_form($form_id) {
   // other variables passed into drupal_get_form().
 
   if (!empty($form_state['rebuild']) || !empty($form_state['storage'])) {
-    $args[] = $form_state;
+    array_shift($args);
+    array_unshift($args, $form_state);
+    array_unshift($args, $form_id);
     $form = call_user_func_array('drupal_retrieve_form', $args);
 
     // We need a new build_id for the new version of the form.
@@ -182,8 +188,7 @@ function drupal_execute($form_id, &$form_state) {
   // the $form_state to be the last parameter, while drupal_execute()
   // always takes it in as the second parameter.
   $args = array_slice($args, 3);
-  array_unshift($args, $form_id);
-  $args[] = $form_state;
+  $args[1] = $form_state;
 
   $form = call_user_func_array('drupal_retrieve_form', $args);
   $form['#post'] = $form_state['values'];
@@ -200,10 +205,12 @@ function drupal_execute($form_id, &$form_state) {
  *   Modules that need to generate the same form (or very similar forms)
  *   using different $form_ids can implement hook_forms(), which maps
  *   different $form_id values to the proper form constructor function.
+ * @param $form_state
+ *   A keyed array containing the current state of the form.
  * @param ...
  *   Any additional arguments needed by the form constructor function.
  */
-function drupal_retrieve_form($form_id) {
+function drupal_retrieve_form($form_id, &$form_state) {
   static $forms;
 
   // We save two copies of the incoming arguments: one for modules to use
@@ -214,6 +221,9 @@ function drupal_retrieve_form($form_id) {
   $args = func_get_args();
   $saved_args = $args;
   array_shift($args);
+  if (isset($form_state)) {
+    array_shift($args);
+  }
 
   // We first check to see if there's a function named after the $form_id.
   // If there is, we simply pass the arguments on to it to get the form.
@@ -240,6 +250,9 @@ function drupal_retrieve_form($form_id) {
       $callback = $form_definition['callback'];
     }
   }
+
+  array_unshift($args, $form_state);
+
   // If $callback was returned by a hook_forms() implementation, call it.
   // Otherwise, call the function named after the form id.
   $form = call_user_func_array(isset($callback) ? $callback : $form_id, $args);
@@ -613,7 +626,7 @@ function form_execute_handlers($type, &$form, &$form_state) {
         $batch['sets'][] = array('form_submit' => $function);
       }
       else {
-        $function($form, $form_state, $form_state['values']);
+        $function($form, $form_state);
       }
       $return = TRUE;
     }
@@ -742,7 +755,7 @@ function form_builder($form_id, $form, &$form_state) {
   // after normal input parsing has been completed.
   if (isset($form['#after_build']) && !isset($form['#after_build_done'])) {
     foreach ($form['#after_build'] as $function) {
-      $form = $function($form, $form_state['values'], $form_state);
+      $form = $function($form, $form_state);
       $form['#after_build_done'] = TRUE;
     }
   }
@@ -918,7 +931,7 @@ function _form_builder_ie_cleanup($form, &$form_state) {
  *
  * Specifically, if $form['#parents'] is array('foo', 'bar')
  * and $value is 'baz' then this function will make
- * $form_values['foo']['bar'] to be 'baz'.
+ * $form_state['values']['foo']['bar'] to be 'baz'.
  *
  * @param $form
  *   The form item. Keys used: #parents, #value
@@ -933,7 +946,7 @@ function form_set_value($form, $value, &$form_state) {
  * Helper function for form_set_value().
  *
  * We iterate over $parents and create nested arrays for them
- * in $form_values if needed. Then we insert the value into
+ * in $form_state['values'] if needed. Then we insert the value into
  * the right array.
  */
 function _form_set_value(&$form_values, $form, $parents, $value) {

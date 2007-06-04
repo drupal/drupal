@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.650 2007/06/01 09:49:11 unconed Exp $
+// $Id: common.inc,v 1.651 2007/06/04 07:22:16 dries Exp $
 
 /**
  * @file
@@ -1742,15 +1742,15 @@ function drupal_add_js($data = NULL, $type = 'module', $scope = 'header', $defer
  * @return
  *   All JavaScript code segments and includes for the scope as HTML tags.
  */
-function drupal_get_js($scope = 'header', $javascript = NULL) { 
+function drupal_get_js($scope = 'header', $javascript = NULL) {
   if (!isset($javascript)) {
     $javascript = drupal_add_js(NULL, NULL, $scope);
   }
 
   if (count($javascript) < 1) {
     return '';
-  }                                                    
-  
+  }
+
   $output = '';
   $preprocessed = '';
   $no_preprocess = array('core' => '', 'module' => '', 'theme' => '');
@@ -1760,7 +1760,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
   $is_writable = is_dir($directory) && is_writable($directory) && (variable_get('file_downloads', FILE_DOWNLOADS_PUBLIC) == FILE_DOWNLOADS_PUBLIC);
 
   foreach ($javascript as $type => $data) {
-    
+
     if (!$data) continue;
 
     switch ($type) {
@@ -1776,27 +1776,27 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
         // If JS preprocessing is off, we still need to output the scripts.
         // Additionally, go through any remaining scripts if JS preprocessing is on and output the non-cached ones.
         foreach ($data as $path => $info) {
-          if (!$info['preprocess'] || !$is_writable || !$preprocess_js) {   
+          if (!$info['preprocess'] || !$is_writable || !$preprocess_js) {
             $no_preprocess[$type] .= '<script type="text/javascript"'. ($info['defer'] ? ' defer="defer"' : '') .' src="'. base_path() . $path . ($info['cache'] ? '' : '?'. time()) ."\"></script>\n";
           }
-          else {             
+          else {
             $files[$path] = $info;
           }
         }
     }
   }
-  
+
   // Aggregate any remaining JS files that haven't already been output.
-  if ($is_writable && $preprocess_js && count($files) > 0) {     
+  if ($is_writable && $preprocess_js && count($files) > 0) {
     $filename = md5(serialize($files)) .'.js';
     $preprocess_file = drupal_build_js_cache($files, $filename);
     $preprocessed .= '<script type="text/javascript" src="'. base_path() . $preprocess_file .'"></script>'. "\n";
   }
-  
+
   // Keep the order of JS files consistent as some are preprocessed and others are not.
   // Make sure any inline or JS setting variables appear last after libraries have loaded.
   $output = $preprocessed . implode('', $no_preprocess) . $output;
-  
+
   return $output;
 }
 
@@ -1818,9 +1818,9 @@ function drupal_build_js_cache($files, $filename) {
   file_check_directory($jspath, FILE_CREATE_DIRECTORY);
 
   if (!file_exists($jspath .'/'. $filename)) {
-    // Build aggregate JS file.               
-    foreach ($files as $path => $info) {       
-      if ($info['preprocess']) {                                       
+    // Build aggregate JS file.
+    foreach ($files as $path => $info) {
+      if ($info['preprocess']) {
         // Append a ';' after each JS file to prevent them from running together.
         $contents .= _drupal_compress_js(file_get_contents($path). ';');
       }
@@ -1858,8 +1858,8 @@ function _drupal_compress_js($script) {
   $script = _packer_apply($script, $regexps, TRUE);
 
   return $script;
-}     
-  
+}
+
 /**
  * Multi-regexp replacements.
  *
@@ -1887,7 +1887,7 @@ function _packer_apply($script, $regexps, $escape = FALSE) {
 
     // Count the number of matching groups (including the whole).
     $length = 1 + preg_match_all('/(?<!\\\\)\((?!\?)/', $expression, $out);
-    
+
     // Treat only strings $replacement
     if (is_string($replacement)) {
       // Does the pattern deal with sub-expressions?
@@ -1918,9 +1918,9 @@ function _packer_apply($script, $regexps, $escape = FALSE) {
       $_regexps[] = array('/^$/', $replacement, $length);
     }
   }
-  
+
   // Execute the global replacement
-  
+
   // Build one mega-regexp out of the smaller ones.
   $regexp = '/';
   foreach ($_regexps as $_regexp) {
@@ -1928,7 +1928,7 @@ function _packer_apply($script, $regexps, $escape = FALSE) {
     $regexp .= '(' . substr($expression, 1, -1) . ')|';
   }
   $regexp = substr($regexp, 0, -1) . '/';
-  
+
   // In order to simplify the regexps that look e.g. for quoted strings, we
   // remove all escaped characters (such as \' or \") from the data. Then, we
   // put them back as they were.
@@ -1983,7 +1983,7 @@ function _packer_escape_char($match, $return = FALSE) {
     $_escaped[] = $match[1];
     return '\\';
   }
-}      
+}
 
 /**
  * Helper function for _packer_apply().
@@ -2003,12 +2003,12 @@ function _packer_replacement($arguments, $regexps = NULL, $escape = NULL) {
   if (empty($arguments)) {
     return '';
   }
-  
+
   $i = 1; $j = 0;
   // Loop through the regexps
   while (isset($_regexps[$j])) {
     list($expression, $replacement, $length) = $_regexps[$j++];
-    
+
     // Do we have a result?
     if (isset($arguments[$i]) && ($arguments[$i] != '')) {
       if (is_array($replacement) && isset($replacement['fn'])) {
@@ -2043,7 +2043,7 @@ function _packer_unescape_char($match, $escaped = NULL) {
   else {
     return '\\'. array_shift($_escaped);
   }
-}           
+}
 
 /**
  * Helper function for _packer_replacement().

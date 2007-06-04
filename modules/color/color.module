@@ -1,5 +1,5 @@
 <?php
-// $Id: color.module,v 1.21 2007/05/28 06:08:41 dries Exp $
+// $Id: color.module,v 1.22 2007/06/04 07:22:17 dries Exp $
 
 /**
  * Implementation of hook_theme()
@@ -25,7 +25,7 @@ function color_form_alter(&$form, $form_state, $form_id) {
       '#attributes' => array('id' => 'color_scheme_form'),
       '#theme' => 'color_scheme_form',
     );
-    $form['color'] += color_scheme_form(arg(4));
+    $form['color'] += color_scheme_form($form_state, arg(4));
     $form['#submit'][] = 'color_scheme_form_submit';
   }
 
@@ -93,7 +93,7 @@ function color_get_palette($theme, $default = false) {
 /**
  * Form callback. Returns the configuration form.
  */
-function color_scheme_form($theme) {
+function color_scheme_form(&$form_state, $theme) {
   $base = drupal_get_path('module', 'color');
   $info = color_get_info($theme);
 
@@ -183,18 +183,18 @@ function theme_color_scheme_form($form) {
 /**
  * Submit handler for color change form.
  */
-function color_scheme_form_submit($values, $form, &$form_state) {
+function color_scheme_form_submit($form, &$form_state) {
   // Get theme coloring info
-  if (!isset($values['info'])) {
+  if (!isset($form_state['values']['info'])) {
     return;
   }
-  $theme = $values['theme'];
-  $info = $values['info'];
+  $theme = $form_state['values']['theme'];
+  $info = $form_state['values']['info'];
 
   // Resolve palette
-  $palette = $values['palette'];
-  if ($values['scheme'] != '') {
-    $scheme = explode(',', $values['scheme']);
+  $palette = $form_state['values']['palette'];
+  if ($form_state['values']['scheme'] != '') {
+    $scheme = explode(',', $form_state['values']['scheme']);
     foreach ($palette as $k => $color) {
       $palette[$k] = array_shift($scheme);
     }
@@ -227,7 +227,7 @@ function color_scheme_form_submit($values, $form, &$form_state) {
 
   // Don't render the default colorscheme, use the standard theme instead.
   if (implode(',', color_get_palette($theme, true)) == implode(',', $palette)
-    || $values['op'] == t('Reset to defaults')) {
+    || $form_state['values']['op'] == t('Reset to defaults')) {
     variable_del('color_'. $theme .'_palette');
     variable_del('color_'. $theme .'_stylesheet');
     variable_del('color_'. $theme .'_logo');

@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.module,v 1.9 2007/05/31 11:56:12 dries Exp $
+// $Id: dblog.module,v 1.10 2007/06/04 07:22:17 dries Exp $
 
 /**
  * @file
@@ -369,8 +369,8 @@ function theme_dblog_filters($form) {
   return $output;
 }
 
-function dblog_filter_form_validate($form, &$form_state, $form_values) {
-  if ($form_values['op'] == t('Filter') && empty($form_values['type']) && empty($form_values['severity'])) {
+function dblog_filter_form_validate($form, &$form_state) {
+  if ($form_state['values']['op'] == t('Filter') && empty($form_state['values']['type']) && empty($form_state['values']['severity'])) {
     form_set_error('type', t('You must select something to filter by.'));
   }
 }
@@ -378,14 +378,14 @@ function dblog_filter_form_validate($form, &$form_state, $form_values) {
 /**
  * Process result from dblog administration filter form.
  */
-function dblog_filter_form_submit($form_id, $form_values, &$form_state) {
-  $op = $form_values['op'];
+function dblog_filter_form_submit($form, &$form_state) {
+  $op = $form_state['values']['op'];
   $filters = dblog_filters();
   switch ($op) {
     case t('Filter'):
       foreach ($filters as $name => $filter) {
-        if (isset($form_values[$name])) {
-          $_SESSION['dblog_overview_filter'][$name] = $form_values[$name];
+        if (isset($form_state['values'][$name])) {
+          $_SESSION['dblog_overview_filter'][$name] = $form_state['values'][$name];
         }
       }
       break;

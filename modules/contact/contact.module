@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.86 2007/05/31 12:03:18 dries Exp $
+// $Id: contact.module,v 1.87 2007/06/04 07:22:17 dries Exp $
 
 /**
  * @file
@@ -209,15 +209,15 @@ function contact_admin_edit($cid = NULL) {
 /**
  * Validate the contact category edit page form submission.
  */
-function contact_admin_edit_validate($form, &$form_state, $form_values) {
-  if (empty($form_values['category'])) {
+function contact_admin_edit_validate($form, &$form_state) {
+  if (empty($form_state['values']['category'])) {
     form_set_error('category', t('You must enter a category.'));
   }
-  if (empty($form_values['recipients'])) {
+  if (empty($form_state['values']['recipients'])) {
     form_set_error('recipients', t('You must enter one or more recipients.'));
   }
   else {
-    $recipients = explode(',', $form_values['recipients']);
+    $recipients = explode(',', $form_state['values']['recipients']);
     foreach ($recipients as $recipient) {
       if (!valid_email_address(trim($recipient))) {
         form_set_error('recipients', t('%recipient is an invalid e-mail address.', array('%recipient' => $recipient)));
@@ -229,27 +229,27 @@ function contact_admin_edit_validate($form, &$form_state, $form_values) {
 /**
  * Process the contact category edit page form submission.
  */
-function contact_admin_edit_submit($form, &$form_state, $form_values) {
-  if ($form_values['selected']) {
+function contact_admin_edit_submit($form, &$form_state) {
+  if ($form_state['values']['selected']) {
     // Unselect all other contact categories.
     db_query('UPDATE {contact} SET selected = 0');
   }
-  $recipients = explode(',', $form_values['recipients']);
+  $recipients = explode(',', $form_state['values']['recipients']);
   foreach ($recipients as $key => $recipient) {
     // E-mail address validation has already been done in _validate.
     $recipients[$key] = trim($recipient);
   }
-  $form_values['recipients'] = implode(',', $recipients);
+  $form_state['values']['recipients'] = implode(',', $recipients);
   if (arg(3) == 'add') {
-    db_query("INSERT INTO {contact} (category, recipients, reply, weight, selected) VALUES ('%s', '%s', '%s', %d, %d)", $form_values['category'], $form_values['recipients'], $form_values['reply'], $form_values['weight'], $form_values['selected']);
-    drupal_set_message(t('Category %category has been added.', array('%category' => $form_values['category'])));
-    watchdog('mail', 'Contact form: category %category added.', array('%category' => $form_values['category']), WATCHDOG_NOTICE, l(t('view'), 'admin/build/contact'));
+    db_query("INSERT INTO {contact} (category, recipients, reply, weight, selected) VALUES ('%s', '%s', '%s', %d, %d)", $form_state['values']['category'], $form_state['values']['recipients'], $form_state['values']['reply'], $form_state['values']['weight'], $form_state['values']['selected']);
+    drupal_set_message(t('Category %category has been added.', array('%category' => $form_state['values']['category'])));
+    watchdog('mail', 'Contact form: category %category added.', array('%category' => $form_state['values']['category']), WATCHDOG_NOTICE, l(t('view'), 'admin/build/contact'));
 
   }
   else {
-    db_query("UPDATE {contact} SET category = '%s', recipients = '%s', reply = '%s', weight = %d, selected = %d WHERE cid = %d", $form_values['category'], $form_values['recipients'], $form_values['reply'], $form_values['weight'], $form_values['selected'], $form_values['cid']);
-    drupal_set_message(t('Category %category has been updated.', array('%category' => $form_values['category'])));
-    watchdog('mail', 'Contact form: category %category updated.', array('%category' => $form_values['category']), WATCHDOG_NOTICE, l(t('view'), 'admin/build/contact'));
+    db_query("UPDATE {contact} SET category = '%s', recipients = '%s', reply = '%s', weight = %d, selected = %d WHERE cid = %d", $form_state['values']['category'], $form_state['values']['recipients'], $form_state['values']['reply'], $form_state['values']['weight'], $form_state['values']['selected'], $form_state['values']['cid']);
+    drupal_set_message(t('Category %category has been updated.', array('%category' => $form_state['values']['category'])));
+    watchdog('mail', 'Contact form: category %category updated.', array('%category' => $form_state['values']['category']), WATCHDOG_NOTICE, l(t('view'), 'admin/build/contact'));
   }
 
   $form_state['redirect'] = 'admin/build/contact';
@@ -276,10 +276,10 @@ function contact_admin_delete($cid = NULL) {
 /**
  * Process category delete form submission.
  */
-function contact_admin_delete_submit($form, &$form_state, $form_values) {
+function contact_admin_delete_submit($form, &$form_state) {
   db_query("DELETE FROM {contact} WHERE cid = %d", arg(4));
-  drupal_set_message(t('Category %category has been deleted.', array('%category' => $form_values['category'])));
-  watchdog('mail', 'Contact form: category %category deleted.', array('%category' => $form_values['category']), WATCHDOG_NOTICE);
+  drupal_set_message(t('Category %category has been deleted.', array('%category' => $form_state['values']['category'])));
+  watchdog('mail', 'Contact form: category %category deleted.', array('%category' => $form_state['values']['category']), WATCHDOG_NOTICE);
 
   $form_state['redirect'] = 'admin/build/contact';
   return;
@@ -359,7 +359,7 @@ function contact_mail_user($recipient) {
 /**
  * Process the personal contact page form submission.
  */
-function contact_mail_user_submit($form, &$form_state, $form_values) {
+function contact_mail_user_submit($form, &$form_state) {
   global $user;
 
   $account = user_load(array('uid' => arg(1), 'status' => 1));
@@ -368,7 +368,7 @@ function contact_mail_user_submit($form, &$form_state, $form_values) {
   $message[] = t("!name (!name-url) has sent you a message via your contact form (!form-url) at !site.", array('!name' => $user->name, '!name-url' => url("user/$user->uid", array('absolute' => TRUE)), '!form-url' => url($_GET['q'], array('absolute' => TRUE)), '!site' => variable_get('site_name', 'Drupal')));
   $message[] = t("If you don't want to receive such e-mails, you can change your settings at !url.", array('!url' => url("user/$account->uid", array('absolute' => TRUE))));
   $message[] = t('Message:');
-  $message[] = $form_values['message'];
+  $message[] = $form_state['values']['message'];
 
   // Tidy up the body:
   foreach ($message as $key => $value) {
@@ -380,7 +380,7 @@ function contact_mail_user_submit($form, &$form_state, $form_values) {
   $from = $user->mail;
 
   // Format the subject:
-  $subject = '['. variable_get('site_name', 'Drupal') .'] '. $form_values['subject'];
+  $subject = '['. variable_get('site_name', 'Drupal') .'] '. $form_state['values']['subject'];
 
   // Prepare the body:
   $body = implode("\n\n", $message);
@@ -389,7 +389,7 @@ function contact_mail_user_submit($form, &$form_state, $form_values) {
   drupal_mail('contact-user-mail', $to, $subject, $body, $from);
 
   // Send a copy if requested:
-  if ($form_values['copy']) {
+  if ($form_state['values']['copy']) {
     drupal_mail('contact-user-copy', $from, $subject, $body, $from);
   }
 
@@ -496,11 +496,11 @@ function contact_mail_page() {
 /**
  * Validate the site-wide contact page form submission.
  */
-function contact_mail_page_validate($form, &$form_state, $form_values) {
-  if (!$form_values['cid']) {
+function contact_mail_page_validate($form, &$form_state) {
+  if (!$form_state['values']['cid']) {
     form_set_error('category', t('You must select a valid category.'));
   }
-  if (!valid_email_address($form_values['mail'])) {
+  if (!valid_email_address($form_state['values']['mail'])) {
     form_set_error('mail', t('You must enter a valid e-mail address.'));
   }
 }
@@ -508,15 +508,15 @@ function contact_mail_page_validate($form, &$form_state, $form_values) {
 /**
  * Process the site-wide contact page form submission.
  */
-function contact_mail_page_submit($form, &$form_state, $form_values) {
+function contact_mail_page_submit($form, &$form_state) {
 
   // E-mail address of the sender: as the form field is a text field,
   // all instances of \r and \n have been automatically stripped from it.
-  $from = $form_values['mail'];
+  $from = $form_state['values']['mail'];
 
   // Compose the body:
-  $message[] = t("!name sent a message using the contact form at !form.", array('!name' => $form_values['name'], '!form' => url($_GET['q'], array('absolute' => TRUE))));
-  $message[] = $form_values['message'];
+  $message[] = t("!name sent a message using the contact form at !form.", array('!name' => $form_state['values']['name'], '!form' => url($_GET['q'], array('absolute' => TRUE))));
+  $message[] = $form_state['values']['message'];
 
   // Tidy up the body:
   foreach ($message as $key => $value) {
@@ -524,10 +524,10 @@ function contact_mail_page_submit($form, &$form_state, $form_values) {
   }
 
   // Load the category information:
-  $contact = db_fetch_object(db_query("SELECT * FROM {contact} WHERE cid = %d", $form_values['cid']));
+  $contact = db_fetch_object(db_query("SELECT * FROM {contact} WHERE cid = %d", $form_state['values']['cid']));
 
   // Format the category:
-  $subject = t('[!category] !subject', array('!category' => $contact->category, '!subject' => $form_values['subject']));
+  $subject = t('[!category] !subject', array('!category' => $contact->category, '!subject' => $form_state['values']['subject']));
 
   // Prepare the body:
   $body = implode("\n\n", $message);
@@ -536,7 +536,7 @@ function contact_mail_page_submit($form, &$form_state, $form_values) {
   drupal_mail('contact-page-mail', $contact->recipients, $subject, $body, $from);
 
   // If the user requests it, send a copy.
-  if ($form_values['copy']) {
+  if ($form_state['values']['copy']) {
     drupal_mail('contact-page-copy', $from, $subject, $body, $from);
   }
 
@@ -547,7 +547,7 @@ function contact_mail_page_submit($form, &$form_state, $form_values) {
 
   // Log the operation:
   flood_register_event('contact');
-  watchdog('mail', '%name-from sent an e-mail regarding %category.', array('%name-from' => $form_values['name'] ." [$from]", '%category' => $contact->category));
+  watchdog('mail', '%name-from sent an e-mail regarding %category.', array('%name-from' => $form_state['values']['name'] ." [$from]", '%category' => $contact->category));
 
   // Update user:
   drupal_set_message(t('Your message has been sent.'));

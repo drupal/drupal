@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.487 2007/06/01 09:37:16 dries Exp $
+// $Id: system.module,v 1.488 2007/06/04 07:22:22 dries Exp $
 
 /**
  * @file
@@ -350,7 +350,7 @@ function system_menu() {
 
 function system_init() {
   // Use the administrative theme if the user is looking at a page in the admin/* path.
-  if (arg(0) == 'admin') {
+  if (arg(0) == 'admin' || (variable_get('node_admin_theme', '0') && arg(0) == 'node' && (arg(1) == 'add' || arg(2) == 'edit'))) {
     global $custom_theme;
     $custom_theme = variable_get('admin_theme', '0');
     drupal_add_css(drupal_get_path('module', 'system') .'/admin.css', 'module');
@@ -440,17 +440,24 @@ function system_admin_theme_settings() {
     '#default_value' => variable_get('admin_theme', '0'),
   );
 
+  $form['node_admin_theme'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Use administration theme for content editing'),
+    '#description' => t('Use the administration theme when editing existing nodes or creating new ones..'),
+    '#default_value' => variable_get('node_admin_theme', '0'),
+  );
+
   $form['#submit'][] = 'system_admin_theme_submit';
   return system_settings_form($form);
 }
 
 
-function system_admin_theme_submit($form, &$form_state, $form_values) {
+function system_admin_theme_submit($form, &$form_state) {
   // If we're changing themes, make sure the theme has its blocks initialized.
-  if ($form_values['admin_theme'] != variable_get('admin_theme', '0')) {
-    $result = db_query("SELECT status FROM {blocks} WHERE theme = '%s'", $form_values['admin_theme']);
+  if ($form_state['values']['admin_theme'] != variable_get('admin_theme', '0')) {
+    $result = db_query("SELECT status FROM {blocks} WHERE theme = '%s'", $form_state['values']['admin_theme']);
     if (!db_num_rows($result)) {
-      system_initialize_theme_blocks($form_values['admin_theme']);
+      system_initialize_theme_blocks($form_state['values']['admin_theme']);
     }
   }
 }
@@ -467,7 +474,7 @@ function system_admin_theme_submit($form, &$form_state, $form_values) {
  * @return
  *    a form array
  */
-function system_theme_select_form($description = '', $default_value = '', $weight = 0) {
+function system_theme_select_form(&$form_state, $description = '', $default_value = '', $weight = 0) {
   if (user_access('select different theme')) {
     $enabled = array();
     $themes = list_themes();
@@ -955,17 +962,17 @@ if (Drupal.jsEnabled) {
   return $form;
 }
 
-function system_date_time_settings_submit($form, &$form_state, $form_values) {
-  if ($form_values['date_format_short'] == 'custom') {
-    $form_values['date_format_short'] = $form_values['date_format_short_custom'];
+function system_date_time_settings_submit($form, &$form_state) {
+  if ($form_state['values']['date_format_short'] == 'custom') {
+    $form_state['values']['date_format_short'] = $form_state['values']['date_format_short_custom'];
   }
-  if ($form_values['date_format_medium'] == 'custom') {
-    $form_values['date_format_medium'] = $form_values['date_format_medium_custom'];
+  if ($form_state['values']['date_format_medium'] == 'custom') {
+    $form_state['values']['date_format_medium'] = $form_state['values']['date_format_medium_custom'];
   }
-  if ($form_values['date_format_long'] == 'custom') {
-    $form_values['date_format_long'] = $form_values['date_format_long_custom'];
+  if ($form_state['values']['date_format_long'] == 'custom') {
+    $form_state['values']['date_format_long'] = $form_state['values']['date_format_long_custom'];
   }
-  return system_settings_form_submit($form_values, $form, $form_state);
+  return system_settings_form_submit($form_state['values'], $form, $form_state);
 }
 
 /**
@@ -1250,19 +1257,19 @@ function system_settings_form($form) {
   return $form;
 }
 
-function system_theme_settings_submit($form, &$form_state, $form_values) {
+function system_theme_settings_submit($form, &$form_state) {
   $op = isset($_POST['op']) ? $_POST['op'] : '';
-  $key = $form_values['var'];
+  $key = $form_state['values']['var'];
 
   // Exclude unnecessary elements.
-  unset($form_values['var'], $form_values['submit'], $form_values['reset'], $form_values['form_id']);
+  unset($form_state['values']['var'], $form_state['values']['submit'], $form_state['values']['reset'], $form_state['values']['form_id']);
 
   if ($op == t('Reset to defaults')) {
     variable_del($key);
     drupal_set_message(t('The configuration options have been reset to their default values.'));
   }
   else {
-    variable_set($key, $form_values);
+    variable_set($key, $form_state['values']);
     drupal_set_message(t('The configuration options have been saved.'));
   }
 
@@ -1276,18 +1283,18 @@ function system_theme_settings_submit($form, &$form_state, $form_values) {
  * add an array_filter value to your form.
  *
  */
-function system_settings_form_submit($form, &$form_state, $form_values) {
-  $op = isset($form_values['op']) ? $form_values['op'] : '';
+function system_settings_form_submit($form, &$form_state) {
+  $op = isset($form_state['values']['op']) ? $form_state['values']['op'] : '';
 
   // Exclude unnecessary elements.
-  unset($form_values['submit'], $form_values['reset'], $form_values['form_id'], $form_values['op'], $form_values['form_token']);
+  unset($form_state['values']['submit'], $form_state['values']['reset'], $form_state['values']['form_id'], $form_state['values']['op'], $form_state['values']['form_token']);
 
-  foreach ($form_values as $key => $value) {
+  foreach ($form_state['values'] as $key => $value) {
     if ($op == t('Reset to defaults')) {
       variable_del($key);
     }
     else {
-      if (is_array($value) && isset($form_values['array_filter'])) {
+      if (is_array($value) && isset($form_state['values']['array_filter'])) {
         $value = array_keys(array_filter($value));
       }
       variable_set($key, $value);
@@ -1381,7 +1388,7 @@ function theme_system_themes_form($form) {
 }
 
 
-function system_themes_form_submit($form, &$form_state, $form_values) {
+function system_themes_form_submit($form, &$form_state) {
 
   // Store list of previously enabled themes and disable all themes
   $old_theme_list = $new_theme_list = array();
@@ -1392,25 +1399,25 @@ function system_themes_form_submit($form, &$form_state, $form_values) {
   }
   db_query("UPDATE {system} SET status = 0 WHERE type = 'theme'");
 
-  if ($form_values['op'] == t('Save configuration')) {
-    if (is_array($form_values['status'])) {
-      foreach ($form_values['status'] as $key => $choice) {
+  if ($form_state['values']['op'] == t('Save configuration')) {
+    if (is_array($form_state['values']['status'])) {
+      foreach ($form_state['values']['status'] as $key => $choice) {
         // Always enable the default theme, despite its status checkbox being checked:
-        if ($choice || $form_values['theme_default'] == $key) {
+        if ($choice || $form_state['values']['theme_default'] == $key) {
           system_initialize_theme_blocks($key);
           $new_theme_list[] = $key;
           db_query("UPDATE {system} SET status = 1 WHERE type = 'theme' and name = '%s'", $key);
         }
       }
     }
-    if (($admin_theme = variable_get('admin_theme', '0')) != '0' && $admin_theme != $form_values['theme_default']) {
+    if (($admin_theme = variable_get('admin_theme', '0')) != '0' && $admin_theme != $form_state['values']['theme_default']) {
       drupal_set_message(t('Please note that the <a href="!admin_theme_page">administration theme</a> is still set to the %admin_theme theme; consequently, the theme on this page remains unchanged. All non-administrative sections of the site, however, will show the selected %selected_theme theme by default.', array(
         '!admin_theme_page' => url('admin/settings/admin'),
         '%admin_theme' => $admin_theme,
-        '%selected_theme' => $form_values['theme_default'],
+        '%selected_theme' => $form_state['values']['theme_default'],
       )));
     }
-    variable_set('theme_default', $form_values['theme_default']);
+    variable_set('theme_default', $form_state['values']['theme_default']);
   }
   else {
     // Revert to defaults: only Garland is enabled.
@@ -1657,7 +1664,7 @@ function system_module_build_dependencies($modules, $form_values) {
 /**
  * Submit callback; handles modules form submission.
  */
-function system_modules_submit($form, &$form_state, $form_values) {
+function system_modules_submit($form, &$form_state) {
   include_once './includes/install.inc';
   $new_modules = array();
 
@@ -1666,13 +1673,13 @@ function system_modules_submit($form, &$form_state, $form_values) {
     // Merge in disabled active modules since they should be enabled.
     // They don't appear because disabled checkboxes are not submitted
     // by browsers.
-    $form_values['status'] = array_merge($form_values['status'], $form_values['disabled_modules']);
+    $form_state['values']['status'] = array_merge($form_state['values']['status'], $form_state['values']['disabled_modules']);
 
     // Check values for dependency that we can't install.
-    if ($dependencies = system_module_build_dependencies($form_values['validation_modules'], $form_values)) {
+    if ($dependencies = system_module_build_dependencies($form_state['values']['validation_modules'], $form_state['values'])) {
       // These are the modules that depend on existing modules.
       foreach (array_keys($dependencies) as $name) {
-        $form_values['status'][$name] = 0;
+        $form_state['values']['status'][$name] = 0;
       }
     }
   }
@@ -1681,8 +1688,8 @@ function system_modules_submit($form, &$form_state, $form_values) {
   }
 
   // Update throttle settings, if present
-  if (isset($form_values['throttle'])) {
-    foreach ($form_values['throttle'] as $key => $choice) {
+  if (isset($form_state['values']['throttle'])) {
+    foreach ($form_state['values']['throttle'] as $key => $choice) {
       db_query("UPDATE {system} SET throttle = %d WHERE type = 'module' and name = '%s'", $choice ? 1 : 0, $key);
     }
   }
@@ -1690,12 +1697,12 @@ function system_modules_submit($form, &$form_state, $form_values) {
   // If there where unmet dependencies and they haven't confirmed don't process
   // the submission yet. Store the form submission data needed later.
   if ($dependencies) {
-    if (!isset($form_values['confirm'])) {
-      $form_state['storage'] = array($dependencies, $form_values['status']);
+    if (!isset($form_state['values']['confirm'])) {
+      $form_state['storage'] = array($dependencies, $form_state['values']['status']);
       return;
     }
     else {
-      $form_values['status'] = array_merge($form_values['status'], $form_storage[1]);
+      $form_state['values']['status'] = array_merge($form_state['values']['status'], $form_storage[1]);
     }
   }
   // If we have no dependencies, or the dependencies are confirmed
@@ -1704,7 +1711,7 @@ function system_modules_submit($form, &$form_state, $form_values) {
 
   $enable_modules = array();
   $disable_modules = array();
-  foreach ($form_values['status'] as $key => $choice) {
+  foreach ($form_state['values']['status'] as $key => $choice) {
     if ($choice) {
       if (drupal_get_installed_schema_version($key) == SCHEMA_UNINSTALLED) {
         $new_modules[] = $key;
@@ -1821,7 +1828,7 @@ function theme_system_modules($form) {
  * Builds a form of currently disabled modules.
  *
  * @param
- *   $form_values Submitted form values.
+ *   $form_state['values'] Submitted form values.
  * @return
  *   A form array representing the currently disabled modules.
  */
@@ -1876,7 +1883,7 @@ function system_modules_uninstall($form_state = NULL) {
  * Confirm uninstall of selected modules.
  *
  * @param
- *   $form_values Submitted form values.
+ *   $form_state['values'] Submitted form values.
  * @return
  *   A form array representing modules to confirm.
  */
@@ -1958,11 +1965,11 @@ function theme_system_modules_uninstall($form) {
  * @param
  *   $form_id The form ID.
  * @param
- *   $form_values Submitted form values.
+ *   $form_state['values'] Submitted form values.
  */
-function system_modules_uninstall_validate($form, &$form_state, $form_values) {
+function system_modules_uninstall_validate($form, &$form_state) {
   // Form submitted, but no modules selected.
-  if (!count(array_filter($form_values['uninstall']))) {
+  if (!count(array_filter($form_state['values']['uninstall']))) {
     drupal_set_message(t('No modules selected.'), 'error');
     drupal_goto('admin/build/modules/uninstall');
   }
@@ -1974,15 +1981,15 @@ function system_modules_uninstall_validate($form, &$form_state, $form_values) {
  * @param
  *   $form_id The form ID.
  * @param
- *   $form_values Submitted form values.
+ *   $form_state['values'] Submitted form values.
  */
-function system_modules_uninstall_submit($form, &$form_state, $form_values) {
+function system_modules_uninstall_submit($form, &$form_state) {
   // Make sure the install API is available.
   include_once './includes/install.inc';
 
   if (!empty($form['#confirmed'])) {
     // Call the uninstall routine for each selected module.
-    foreach (array_filter($form_values['uninstall']) as $module => $value) {
+    foreach (array_filter($form_state['values']['uninstall']) as $module => $value) {
       drupal_uninstall_module($module);
     }
     drupal_set_message(t('The selected modules have been uninstalled.'));
@@ -1991,7 +1998,7 @@ function system_modules_uninstall_submit($form, &$form_state, $form_values) {
     $form_state['redirect'] = 'admin/build/modules/uninstall';
   }
   else {
-    $form_state['storage'] = $form_values;
+    $form_state['storage'] = $form_state['values'];
   }
 }
 
@@ -2166,7 +2173,7 @@ function system_logging_overview() {
 /**
  * Menu callback; display theme configuration for entire site and individual themes.
  */
-function system_theme_settings($key = '') {
+function system_theme_settings(&$form_state, $key = '') {
   $directory_path = file_directory_path();
   file_check_directory($directory_path, FILE_CREATE_DIRECTORY, 'file_directory_path');
 

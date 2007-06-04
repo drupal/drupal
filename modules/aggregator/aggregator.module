@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.343 2007/05/31 12:14:04 dries Exp $
+// $Id: aggregator.module,v 1.344 2007/06/04 07:22:16 dries Exp $
 
 /**
  * @file
@@ -357,17 +357,17 @@ function aggregator_form_category($edit = array('title' => '', 'description' => 
 /**
  * Validate aggregator_form_feed form submissions.
  */
-function aggregator_form_category_validate($form, &$form_state, $form_values) {
-  if ($form_values['op'] == t('Submit')) {
+function aggregator_form_category_validate($form, &$form_state) {
+  if ($form_state['values']['op'] == t('Submit')) {
     // Check for duplicate titles
-    if (isset($form_values['cid'])) {
-      $category = db_fetch_object(db_query("SELECT cid FROM {aggregator_category} WHERE title = '%s' AND cid != %d", $form_values['title'], $form_values['cid']));
+    if (isset($form_state['values']['cid'])) {
+      $category = db_fetch_object(db_query("SELECT cid FROM {aggregator_category} WHERE title = '%s' AND cid != %d", $form_state['values']['title'], $form_state['values']['cid']));
     }
     else {
-      $category = db_fetch_object(db_query("SELECT cid FROM {aggregator_category} WHERE title = '%s'", $form_values['title']));
+      $category = db_fetch_object(db_query("SELECT cid FROM {aggregator_category} WHERE title = '%s'", $form_state['values']['title']));
     }
     if ($category) {
-      form_set_error('title', t('A category named %category already exists. Please enter a unique title.', array('%category' => $form_values['title'])));
+      form_set_error('title', t('A category named %category already exists. Please enter a unique title.', array('%category' => $form_state['values']['title'])));
     }
   }
 }
@@ -376,23 +376,23 @@ function aggregator_form_category_validate($form, &$form_state, $form_values) {
  * Process aggregator_form_category form submissions.
  * @todo Add delete confirmation dialog.
  */
-function aggregator_form_category_submit($form, &$form_state, $form_values) {
-  if ($form_values['op'] == t('Delete')) {
-    $title = $form_values['title'];
+function aggregator_form_category_submit($form, &$form_state) {
+  if ($form_state['values']['op'] == t('Delete')) {
+    $title = $form_state['values']['title'];
     // Unset the title:
-    unset($form_values['title']);
+    unset($form_state['values']['title']);
   }
-  aggregator_save_category($form_values);
+  aggregator_save_category($form_state['values']);
   menu_rebuild();
-  if (isset($form_values['cid'])) {
-    if (isset($form_values['title'])) {
-      drupal_set_message(t('The category %category has been updated.', array('%category' => $form_values['title'])));
+  if (isset($form_state['values']['cid'])) {
+    if (isset($form_state['values']['title'])) {
+      drupal_set_message(t('The category %category has been updated.', array('%category' => $form_state['values']['title'])));
       if (arg(0) == 'admin') {
         $form_state['redirect'] = 'admin/content/aggregator/';
         return;
       }
       else {
-        $form_state['redirect'] = 'aggregator/categories/'. $form_values['cid'];
+        $form_state['redirect'] = 'aggregator/categories/'. $form_state['values']['cid'];
         return;
       }
     }
@@ -410,8 +410,8 @@ function aggregator_form_category_submit($form, &$form_state, $form_values) {
     }
   }
   else {
-    watchdog('aggregator', 'Category %category added.', array('%category' => $form_values['title']), WATCHDOG_NOTICE, l(t('view'), 'admin/content/aggregator'));
-    drupal_set_message(t('The category %category has been added.', array('%category' => $form_values['title'])));
+    watchdog('aggregator', 'Category %category added.', array('%category' => $form_state['values']['title']), WATCHDOG_NOTICE, l(t('view'), 'admin/content/aggregator'));
+    drupal_set_message(t('The category %category has been added.', array('%category' => $form_state['values']['title'])));
   }
 }
 
@@ -492,21 +492,21 @@ function aggregator_form_feed($edit = array('refresh' => 900, 'title' => '', 'ur
 /**
  * Validate aggregator_form_feed form submissions.
  */
-function aggregator_form_feed_validate($form, &$form_state, $form_values) {
-  if ($form_values['op'] == t('Submit')) {
+function aggregator_form_feed_validate($form, &$form_state) {
+  if ($form_state['values']['op'] == t('Submit')) {
     // Check for duplicate titles
-    if (isset($form_values['fid'])) {
-      $result = db_query("SELECT title, url FROM {aggregator_feed} WHERE (title = '%s' OR url='%s') AND fid != %d", $form_values['title'], $form_values['url'], $form_values['fid']);
+    if (isset($form_state['values']['fid'])) {
+      $result = db_query("SELECT title, url FROM {aggregator_feed} WHERE (title = '%s' OR url='%s') AND fid != %d", $form_state['values']['title'], $form_state['values']['url'], $form_state['values']['fid']);
     }
     else {
-      $result = db_query("SELECT title, url FROM {aggregator_feed} WHERE title = '%s' OR url='%s'", $form_values['title'], $form_values['url']);
+      $result = db_query("SELECT title, url FROM {aggregator_feed} WHERE title = '%s' OR url='%s'", $form_state['values']['title'], $form_state['values']['url']);
     }
     while ($feed = db_fetch_object($result)) {
-      if (strcasecmp($feed->title, $form_values['title']) == 0) {
-        form_set_error('title', t('A feed named %feed already exists. Please enter a unique title.', array('%feed' => $form_values['title'])));
+      if (strcasecmp($feed->title, $form_state['values']['title']) == 0) {
+        form_set_error('title', t('A feed named %feed already exists. Please enter a unique title.', array('%feed' => $form_state['values']['title'])));
       }
-      if (strcasecmp($feed->url, $form_values['url']) == 0) {
-        form_set_error('url', t('A feed with this URL %url already exists. Please enter a unique URL.', array('%url' => $form_values['url'])));
+      if (strcasecmp($feed->url, $form_state['values']['url']) == 0) {
+        form_set_error('url', t('A feed with this URL %url already exists. Please enter a unique URL.', array('%url' => $form_state['values']['url'])));
       }
     }
   }
@@ -516,23 +516,23 @@ function aggregator_form_feed_validate($form, &$form_state, $form_values) {
  * Process aggregator_form_feed form submissions.
  * @todo Add delete confirmation dialog.
  */
-function aggregator_form_feed_submit($form, &$form_state, $form_values) {
-  if ($form_values['op'] == t('Delete')) {
-    $title = $form_values['title'];
+function aggregator_form_feed_submit($form, &$form_state) {
+  if ($form_state['values']['op'] == t('Delete')) {
+    $title = $form_state['values']['title'];
     // Unset the title:
-    unset($form_values['title']);
+    unset($form_state['values']['title']);
   }
-  aggregator_save_feed($form_values);
+  aggregator_save_feed($form_state['values']);
   menu_rebuild();
-  if (isset($form_values['fid'])) {
-    if (isset($form_values['title'])) {
-      drupal_set_message(t('The feed %feed has been updated.', array('%feed' => $form_values['title'])));
+  if (isset($form_state['values']['fid'])) {
+    if (isset($form_state['values']['title'])) {
+      drupal_set_message(t('The feed %feed has been updated.', array('%feed' => $form_state['values']['title'])));
       if (arg(0) == 'admin') {
         $form_state['redirect'] = 'admin/content/aggregator/';
         return;
       }
       else {
-        $form_state['redirect'] = 'aggregator/sources/'. $form_values['fid'];
+        $form_state['redirect'] = 'aggregator/sources/'. $form_state['values']['fid'];
         return;
       }
     }
@@ -550,8 +550,8 @@ function aggregator_form_feed_submit($form, &$form_state, $form_values) {
     }
   }
   else {
-    watchdog('aggregator', 'Feed %feed added.', array('%feed' => $form_values['title']), WATCHDOG_NOTICE, l(t('view'), 'admin/content/aggregator'));
-    drupal_set_message(t('The feed %feed has been added.', array('%feed' => $form_values['title'])));
+    watchdog('aggregator', 'Feed %feed added.', array('%feed' => $form_state['values']['title']), WATCHDOG_NOTICE, l(t('view'), 'admin/content/aggregator'));
+    drupal_set_message(t('The feed %feed has been added.', array('%feed' => $form_state['values']['title'])));
   }
 }
 
@@ -1170,8 +1170,8 @@ function aggregator_page_list_validate($form_id, &$form) {
   }
 }
 
-function aggregator_page_list_submit($form, &$form_state, $form_values) {
-  foreach ($form_values['categories'] as $iid => $selection) {
+function aggregator_page_list_submit($form, &$form_state) {
+  foreach ($form_state['values']['categories'] as $iid => $selection) {
     db_query('DELETE FROM {aggregator_category_item} WHERE iid = %d', $iid);
     foreach ($selection as $cid) {
       if ($cid) {

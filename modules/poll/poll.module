@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.230 2007/05/28 06:08:43 dries Exp $
+// $Id: poll.module,v 1.231 2007/06/04 07:22:21 dries Exp $
 
 /**
  * @file
@@ -99,12 +99,12 @@ function poll_delete($node) {
 /**
  * Implementation of hook_submit().
  */
-function poll_node_form_submit(&$form, &$form_state, $form_values) {
+function poll_node_form_submit(&$form, &$form_state) {
   // Renumber fields
-  $form_values['choice'] = array_values($form_values['choice']);
-  $form_values['teaser'] = poll_teaser((object)$form_values);
-  $form_state['choices'] = $form_values['choices'];
-  if ($form_values['morechoices']) {
+  $form_state['values']['choice'] = array_values($form_state['values']['choice']);
+  $form_state['values']['teaser'] = poll_teaser((object)$form_state['values']);
+  $form_state['choices'] = $form_state['values']['choices'];
+  if ($form_state['values']['morechoices']) {
     $form_state['choices'] *= 2;
   }
 }
@@ -136,7 +136,7 @@ function poll_validate($node) {
 /**
  * Implementation of hook_form().
  */
-function poll_form($node, $form_state = NULL) {
+function poll_form(&$node, $form_state) {
   $admin = user_access('administer nodes');
   $type = node_get_types('type', $node);
   $form['title'] = array(
@@ -170,7 +170,7 @@ function poll_form($node, $form_state = NULL) {
 
   // We'll manually set the #parents property of this checkbox so that
   // it appears in the fieldset visually, but its value won't pollute
-  // the $form_values['choice'] array.
+  // the $form_state['values']['choice'] array.
   $form['choice']['morechoices'] = array(
     '#type' => 'checkbox',
     '#parents' => array('morechoices'),
@@ -220,7 +220,6 @@ function poll_form($node, $form_state = NULL) {
     '#description' => t('After this period, the poll will be closed automatically.'),
   );
 
-  $form['#multistep'] = TRUE;
   return $form;
 }
 
@@ -454,7 +453,7 @@ function theme_poll_results($title, $results, $votes, $links, $block, $nid, $vot
   return $output;
 }
 
-function poll_cancel_form($nid) {
+function poll_cancel_form(&$form_state, $nid) {
   $form['#action'] = url("poll/cancel/$nid");
   $form['submit'] = array('#type' => 'submit', '#value' => t('Cancel your vote'));
   return $form;
