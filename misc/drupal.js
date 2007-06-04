@@ -50,7 +50,7 @@ Drupal.redirectFormButton = function (uri, button, handler) {
         // Restore form submission
         button.form.action = action;
         button.form.target = target;
-      
+
         // Get response from iframe body
         try {
           response = (iframe.contentWindow || iframe.contentDocument || iframe).document.body.innerHTML;
@@ -64,7 +64,7 @@ Drupal.redirectFormButton = function (uri, button, handler) {
         catch (e) {
           response = null;
         }
- 
+
         response = Drupal.parseJson(response);
         // Check response code
         if (response.status == 0) {
