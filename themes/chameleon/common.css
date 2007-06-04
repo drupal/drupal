@@ -1,4 +1,4 @@
-/* $Id: common.css,v 1.11 2006/08/30 07:37:14 drumm Exp $ */
+/* $Id: common.css,v 1.12 2007/06/04 11:10:38 goba Exp $ */
 
 /*
 ** HTML elements
@@ -117,24 +117,24 @@ ul.links.inline {
 ** Common navigation links added on the admin/build/themes/settings page
 */
 .navlinks {
-  padding: 0em 0.5em 1.5em 0em;
+  padding: 0em 0.5em 1.5em 0em; /* LTR */
   clear: both;
 }
 .primary a {
   font-size: 1.0em;
-  padding: 0em 0.5em 0em 0em;
+  padding: 0em 0.5em 0em 0em; /* LTR */
 }
 .secondary a {
   font-size: 0.9em;
-  padding: 0em 0.5em 0em 0em;
+  padding: 0em 0.5em 0em 0em; /* LTR */
 }
 
 /*
 ** Logo Image Positioning
 */
 #header img {
-  float: left;
-  padding: 0em 2em .5em 0em;
+  float: left; /* LTR */
+  padding: 0em 2em .5em 0em; /* LTR */
 }
 #header {
   clear: both;

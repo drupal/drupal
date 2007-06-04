@@ -1,0 +1,29 @@
+/* $Id: style-rtl.css,v 1.1 2007/06/04 11:10:38 goba Exp $ */
+
+body {
+  padding: 5em 3em 0 0;
+}
+/**
+ * Yes - right is on the left and left is on the right! 
+ * Welcome to design by tables..
+ */
+#sidebar-left {
+  border-right: inherit;
+  border-left: 1px solid gray;
+}
+#sidebar-right {
+  border-left: inherit;
+  border-right: 1px solid gray;
+}
+
+ul.links li {
+  border-left: inherit;
+  border-right: 1px solid #000;
+}
+ul.links li.first {
+  border-left: inherit;
+  border-right: none;
+}
+div.links {
+  text-align: left;
+}

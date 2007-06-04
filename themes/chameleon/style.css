@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.6 2006/08/30 07:37:14 drumm Exp $ */
+/* $Id: style.css,v 1.7 2007/06/04 11:10:38 goba Exp $ */
 
 /*
 ** HTML elements
@@ -10,7 +10,7 @@ a:visited {
   color: #630;
 }
 body {
-  padding: 5em 0 0 3em;
+  padding: 5em 0 0 3em; /* LTR */
   background-image: url(background.png);
   background-repeat: repeat-x;
   font-family: trebuchet ms, tahoma, verdana, arial, helvetica;
@@ -27,10 +27,10 @@ ul {
   width: 500px;
 }
 #sidebar-left {
-  border-right: 1px solid gray;
+  border-right: 1px solid gray; /* LTR */
 }
 #sidebar-right {
-  border-left: 1px solid gray;
+  border-left: 1px solid gray; /* LTR */
 }
 
 /*
@@ -59,10 +59,10 @@ ul {
   font-size: 0.8em;
 }
 ul.links li {
-  border-left: 1px solid #000;
+  border-left: 1px solid #000; /* LTR */
 }
 ul.links li.first {
-  border-left: none;
+  border-left: none; /* LTR */
 }
 .node .title {
   font-size: 1.2em;
@@ -79,7 +79,7 @@ ul.links li.first {
 }
 div.links {
   margin: 1em 0 3em 0;
-  text-align: right;
+  text-align: right; /* LTR */
 }
 .comment .content, .block .content, .menu {
   font-size: 0.9em;

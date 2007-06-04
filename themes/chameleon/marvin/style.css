@@ -1,10 +1,10 @@
-/* $Id: style.css,v 1.7 2006/08/31 07:28:14 dries Exp $ */
+/* $Id: style.css,v 1.8 2007/06/04 11:10:38 goba Exp $ */
 
 /*
 ** HTML elements
 */
 body {
-  background: #fff url(druplicon-watermark.png) no-repeat top right;
+  background: #fff url(druplicon-watermark.png) no-repeat top right; /* LTR */
   font-family: arial, helvetica, sans-serif;
 }
 a:link {
@@ -29,7 +29,7 @@ h2.title {
   margin-top: 1em;
 }
 p {
-  margin: 0 1em 1em 0;
+  margin: 0 1em 1em 0; /* LTR */
   padding: 0;
 }
 table {
@@ -49,7 +49,7 @@ table {
   font-size: 0.8em;
 }
 ul.links li {
-  border-left: 1px solid #888;
+  border-left: 1px solid #888; /* LTR */
 }
 ul.links li.first {
   border: none;
@@ -61,20 +61,20 @@ ul.links li.first {
 .node .submitted {
   color: #7c7c7c;
   font-size: 0.9em;
-  float: left;
-  padding: 0.5em 0em 0.5em 1em;
+  float: left; /* LTR */
+  padding: 0.5em 0em 0.5em 1em; /* LTR */
 }
 .node .taxonomy {
   color: #7c7c7c;
   font-size: 0.9em;
-  float: right;
+  float: right; /* LTR */
 }
 .node .content {
   clear: both;
-  padding-left: 1em;
+  padding-left: 1em; /* LTR */
 }
 .node .links {
-  padding: 1em 0 1em 0.2em;
+  padding: 1em 0 1em 0.2em; /* LTR */
 }
 .comment {
   border: solid 1px #777;

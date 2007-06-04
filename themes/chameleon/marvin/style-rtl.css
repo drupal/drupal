@@ -1,0 +1,33 @@
+/* $Id: style-rtl.css,v 1.1 2007/06/04 11:10:38 goba Exp $ */
+
+body {
+  background-image: url(druplicon-watermark-rtl.png);
+  background-position: top left;
+}
+
+p {
+  margin: 0 0 1em 1em;
+}
+
+ul.links li {
+  border-left: inherit;
+  border-right: 1px solid #888;
+}
+
+/*
+** Common declarations for child classes of node, comment, block, box etc
+*/
+.node .submitted {
+  float: right;
+  padding: 0.5em 1em 0.5em 0;
+}
+.node .taxonomy {
+  float: left;
+}
+.node .content {
+  padding-left: inherit;
+  padding-right: 1em;
+}
+.node .links {
+  padding: 1em 0.2em 1em 0;
+}
