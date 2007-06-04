@@ -488,7 +488,7 @@ function menu_item_delete_form_submit($form, &$form_state) {
 /**
  * Menu callback; reset a single modified item.
  */
-function menu_reset_item($mid) {
+function menu_reset_item(&$form_state, $mid) {
   if (isset($mid) && $item = db_fetch_object(db_query('SELECT path, title FROM {menu} WHERE mid = %d', $mid))) {
     $form['mid'] = array('#type' => 'value', '#value' => $item->path);
     return confirm_form($form, t('Are you sure you want to reset the item %item to its default values?', array('%item' => $item->title)), 'admin/build/menu', t('Any customizations will be lost. This action cannot be undone.'), t('Reset'));

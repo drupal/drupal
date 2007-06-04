@@ -259,7 +259,7 @@ function contact_admin_edit_submit($form, &$form_state) {
 /**
  * Category delete page.
  */
-function contact_admin_delete($cid = NULL) {
+function contact_admin_delete(&$form_state, $cid = NULL) {
   if ($info = db_fetch_object(db_query("SELECT category FROM {contact} WHERE cid = %d", $cid))) {
     $form['category'] = array('#type' => 'value',
       '#value' => $info->category,
@@ -556,4 +556,3 @@ function contact_mail_page_submit($form, &$form_state) {
   $form_state['redirect'] = '';
   return;
 }
-

@@ -378,7 +378,7 @@ function node_type_reset(&$type) {
 /**
  * Menu callback; delete a single content type.
  */
-function node_type_delete_confirm($type) {
+function node_type_delete_confirm(&$form_state, $type) {
   $form['type'] = array('#type' => 'value', '#value' => $type->type);
   $form['name'] = array('#type' => 'value', '#value' => $type->name);
 
