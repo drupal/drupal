@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.824 2007/06/04 07:22:20 dries Exp $
+// $Id: node.module,v 1.825 2007/06/04 07:46:33 dries Exp $
 
 /**
  * @file
@@ -2084,11 +2084,23 @@ function node_form(&$form_state, $node) {
   // Add a log field if the "Create new revision" option is checked, or if the
   // current user has the ability to check that option.
   if ($node->revision || user_access('administer nodes')) {
-    $form['log'] = array(
+    $form['revision_information'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Revision information'),
+      '#collapsible' => TRUE,
+      // Collapsed by default when "Create new revision" is unchecked
+      '#collapsed' => !$node->revision,
+      '#weight' => 20,
+    );
+    $form['revision_information']['revision'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Create new revision'),
+      '#default_value' => $node->revision,
+    );
+    $form['revision_information']['log'] = array(
       '#type' => 'textarea',
       '#title' => t('Log message'),
       '#rows' => 2,
-      '#weight' => 20,
       '#description' => t('An explanation of the additions or updates being made to help other authors understand your motivations.'),
     );
   }
@@ -2121,7 +2133,7 @@ function node_form(&$form_state, $node) {
   $form['options']['status']   = array('#type' => 'checkbox', '#title' => t('Published'), '#default_value' => $node->status);
   $form['options']['promote']  = array('#type' => 'checkbox', '#title' => t('Promoted to front page'), '#default_value' => $node->promote);
   $form['options']['sticky']   = array('#type' => 'checkbox', '#title' => t('Sticky at top of lists'), '#default_value' => $node->sticky);
-  $form['options']['revision'] = array('#type' => 'checkbox', '#title' => t('Create new revision'), '#default_value' => $node->revision);
+
   // These values are used when the user has no administrator access.
   foreach (array('uid', 'created') as $key) {
     $form[$key] = array('#type' => 'value', '#value' => $node->$key);
