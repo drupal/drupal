@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.87 2007/06/04 07:22:17 dries Exp $
+// $Id: contact.module,v 1.88 2007/06/04 15:56:32 dries Exp $
 
 /**
  * @file
@@ -259,7 +259,7 @@ function contact_admin_edit_submit($form, &$form_state) {
 /**
  * Category delete page.
  */
-function contact_admin_delete($cid = NULL) {
+function contact_admin_delete(&$form_state, $cid = NULL) {
   if ($info = db_fetch_object(db_query("SELECT category FROM {contact} WHERE cid = %d", $cid))) {
     $form['category'] = array('#type' => 'value',
       '#value' => $info->category,
@@ -556,4 +556,3 @@ function contact_mail_page_submit($form, &$form_state) {
   $form_state['redirect'] = '';
   return;
 }
-

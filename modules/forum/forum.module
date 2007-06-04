@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.401 2007/06/04 07:22:17 dries Exp $
+// $Id: forum.module,v 1.402 2007/06/04 15:56:32 dries Exp $
 
 /**
  * @file
@@ -604,7 +604,7 @@ function forum_form_submit($form, &$form_state) {
  *
  * @param $tid ID of the term to be deleted
  */
-function forum_confirm_delete($tid) {
+function forum_confirm_delete(&$form_state, $tid) {
   $term = taxonomy_get_term($tid);
 
   $form['tid'] = array('#type' => 'value', '#value' => $tid);

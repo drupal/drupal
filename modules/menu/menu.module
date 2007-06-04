@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.113 2007/06/04 07:22:19 dries Exp $
+// $Id: menu.module,v 1.114 2007/06/04 15:56:32 dries Exp $
 
 /**
  * @file
@@ -488,7 +488,7 @@ function menu_item_delete_form_submit($form, &$form_state) {
 /**
  * Menu callback; reset a single modified item.
  */
-function menu_reset_item($mid) {
+function menu_reset_item(&$form_state, $mid) {
   if (isset($mid) && $item = db_fetch_object(db_query('SELECT path, title FROM {menu} WHERE mid = %d', $mid))) {
     $form['mid'] = array('#type' => 'value', '#value' => $item->path);
     return confirm_form($form, t('Are you sure you want to reset the item %item to its default values?', array('%item' => $item->title)), 'admin/build/menu', t('Any customizations will be lost. This action cannot be undone.'), t('Reset'));

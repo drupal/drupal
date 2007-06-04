@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.548 2007/06/04 07:22:17 dries Exp $
+// $Id: comment.module,v 1.549 2007/06/04 15:56:31 dries Exp $
 
 /**
  * @file
@@ -1116,7 +1116,7 @@ function comment_delete($cid = NULL) {
   return $output;
 }
 
-function comment_confirm_delete($comment) {
+function comment_confirm_delete(&$form_state, $comment) {
   $form = array();
   $form['#comment'] = $comment;
   return confirm_form(
@@ -1295,8 +1295,8 @@ function theme_comment_admin_overview($form) {
  * List the selected comments and verify that the admin really wants to delete
  * them.
  */
-function comment_multiple_delete_confirm() {
-  $edit = $_POST;
+function comment_multiple_delete_confirm(&$form_state) {
+  $edit = $form_state['post'];
 
   $form['comments'] = array('#prefix' => '<ul>', '#suffix' => '</ul>', '#tree' => TRUE);
   // array_filter() returns only elements with actual values
@@ -1627,9 +1627,9 @@ function comment_form_box($edit, $title = NULL) {
   return theme('box', $title, drupal_get_form('comment_form', $edit, $title));
 }
 
-function comment_form_add_preview($form, $edit, &$form_state) {
+function comment_form_add_preview($form, &$form_state) {
   global $user;
-
+  $edit = $form_state['values'];
   drupal_set_title(t('Preview comment'));
 
   $output = '';
@@ -1640,7 +1640,8 @@ function comment_form_add_preview($form, $edit, &$form_state) {
   // set any errors.
   drupal_validate_form($form['form_id']['#value'], $form, $form_state);
   if (!form_get_errors()) {
-    $comment = (object)_comment_form_submit($edit);
+    _comment_form_submit($edit);
+    $comment = (object)$edit;
 
     // Attach the user and time information.
     if ($edit['author']) {

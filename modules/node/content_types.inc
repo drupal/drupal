@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.34 2007/06/04 07:22:20 dries Exp $
+// $Id: content_types.inc,v 1.35 2007/06/04 15:56:33 dries Exp $
 
 /**
  * @file
@@ -378,7 +378,7 @@ function node_type_reset(&$type) {
 /**
  * Menu callback; delete a single content type.
  */
-function node_type_delete_confirm($type) {
+function node_type_delete_confirm(&$form_state, $type) {
   $form['type'] = array('#type' => 'value', '#value' => $type->type);
   $form['name'] = array('#type' => 'value', '#value' => $type->name);
 

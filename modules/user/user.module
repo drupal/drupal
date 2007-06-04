@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.791 2007/06/04 07:24:53 dries Exp $
+// $Id: user.module,v 1.792 2007/06/04 15:56:34 dries Exp $
 
 /**
  * @file
@@ -1021,7 +1021,7 @@ function user_auth_help_links() {
 
 
 
-function user_login($msg = '') {
+function user_login(&$form_state, $msg = '') {
   global $user;
 
   // If we are already logged on, go to the user page instead.
@@ -2408,8 +2408,8 @@ function user_multiple_role_edit($accounts, $operation, $rid) {
   }
 }
 
-function user_multiple_delete_confirm() {
-  $edit = $_POST;
+function user_multiple_delete_confirm(&$form_state) {
+  $edit = $form_state['post'];
 
   $form['accounts'] = array('#prefix' => '<ul>', '#suffix' => '</ul>', '#tree' => TRUE);
   // array_filter returns only elements with TRUE values

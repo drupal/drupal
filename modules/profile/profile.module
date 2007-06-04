@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.203 2007/06/04 07:22:21 dries Exp $
+// $Id: profile.module,v 1.204 2007/06/04 15:56:34 dries Exp $
 
 /**
  * @file
@@ -389,7 +389,7 @@ function profile_field_form_submit($form, &$form_state) {
 /**
  * Menu callback; deletes a field from all user profiles.
  */
-function profile_field_delete($fid) {
+function profile_field_delete(&$form_state, $fid) {
   $field = db_fetch_object(db_query("SELECT title FROM {profile_fields} WHERE fid = %d", $fid));
   if (!$field) {
     drupal_not_found();

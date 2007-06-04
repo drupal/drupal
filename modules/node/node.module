@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.825 2007/06/04 07:46:33 dries Exp $
+// $Id: node.module,v 1.826 2007/06/04 15:56:33 dries Exp $
 
 /**
  * @file
@@ -1673,8 +1673,8 @@ function theme_node_admin_nodes($form) {
   return $output;
 }
 
-function node_multiple_delete_confirm() {
-  $edit = $_POST;
+function node_multiple_delete_confirm(&$form_state) {
+  $edit = $form_state['post'];
 
   $form['nodes'] = array('#prefix' => '<ul>', '#suffix' => '</ul>', '#tree' => TRUE);
   // array_filter returns only elements with TRUE values
@@ -2359,7 +2359,7 @@ function node_form_submit($form, &$form_state) {
 /**
  * Menu callback -- ask for confirmation of node deletion
  */
-function node_delete_confirm($node) {
+function node_delete_confirm(&$form_state, $node) {
  $form['nid'] = array('#type' => 'value', '#value' => $node->nid);
 
  return confirm_form($form,
