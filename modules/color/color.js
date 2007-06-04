@@ -131,7 +131,7 @@ if (Drupal.jsEnabled) {
       // Set background/foreground color
       $(input).css({
         backgroundColor: color,
-        color: farb.RGBToHSL(farb.unpack(color))[2] > 0.5 ? '#000' : '#fff'
+        'color': farb.RGBToHSL(farb.unpack(color))[2] > 0.5 ? '#000' : '#fff'
       });
 
       // Change input value
