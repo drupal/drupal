@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.826 2007/06/04 15:56:33 dries Exp $
+// $Id: node.module,v 1.827 2007/06/04 16:46:48 dries Exp $
 
 /**
  * @file
@@ -2093,6 +2093,7 @@ function node_form(&$form_state, $node) {
       '#weight' => 20,
     );
     $form['revision_information']['revision'] = array(
+      '#access' =>  user_access('administer nodes'),
       '#type' => 'checkbox',
       '#title' => t('Create new revision'),
       '#default_value' => $node->revision,
