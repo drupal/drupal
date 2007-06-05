@@ -1867,7 +1867,6 @@ function batch_set($batch_definition) {
     // Initialize the batch
     if (empty($batch)) {
       $batch = array(
-        'id' => db_next_id('{batch}_bid'),
         'sets' => array(),
       );
     }
@@ -1948,7 +1947,9 @@ function batch_process($redirect = NULL, $url = NULL) {
         $batch['destination'] = $_REQUEST['edit']['destination'];
         unset($_REQUEST['edit']['destination']);
       }
-      db_query("INSERT INTO {batch} (bid, token, timestamp, batch) VALUES (%d, %d, %d, '%s')", $batch['id'], drupal_get_token($batch['id']), time(), serialize($batch));
+      db_query('INSERT INTO {batch} (timestamp) VALUES (%d)', time());
+      $batch['id'] = db_last_insert_id('batch', 'bid');
+      db_query("UPDATE {batch} SET token = '%s', batch = '%s' WHERE bid = %d", drupal_get_token($batch['id']), serialize($batch), $batch['id']);
       drupal_goto($batch['url'], 'op=start&id='. $batch['id']);
     }
     else {

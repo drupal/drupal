@@ -448,6 +448,18 @@ function db_update_field(&$ret, $table, $field) {
 }
 
 /**
+ * Returns the last insert id.
+ *
+ * @param $table
+ *   The name of the table you inserted into.
+ * @param $field
+ *   The name of the autoincrement field.
+ */
+function db_last_insert_id($table, $field) {
+  return db_result(db_query('SELECT LAST_INSERT_ID()'));
+}
+
+/**
  * @} End of "ingroup schemaapi".
  */
 
