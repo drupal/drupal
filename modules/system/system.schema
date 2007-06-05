@@ -1,5 +1,5 @@
 <?php
-// $Id: system.schema,v 1.4 2007/05/30 08:08:59 dries Exp $
+// $Id: system.schema,v 1.5 2007/06/05 09:33:57 dries Exp $
 
 function system_schema() {
   $schema['batch'] = array(
@@ -85,7 +85,7 @@ function system_schema() {
       'title_arguments'  => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
       'type'             => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
       'block_callback'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'description'      => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'description'      => array('type' => 'text', 'not null' => TRUE),
       'position'         => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
       'weight'           => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
       'file'             => array('type' => 'text', 'size' => 'medium')
