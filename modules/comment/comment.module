@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.549 2007/06/04 15:56:31 dries Exp $
+// $Id: comment.module,v 1.550 2007/06/05 09:22:22 dries Exp $
 
 /**
  * @file
@@ -750,13 +750,6 @@ function comment_save($edit) {
         watchdog('content', 'Comment: updated %subject.', array('%subject' => $edit['subject']), WATCHDOG_NOTICE, l(t('view'), 'node/'. $edit['nid'], array('fragment' => 'comment-'. $edit['cid'])));
       }
       else {
-        // Check for duplicate comments. Note that we have to use the
-        // validated/filtered data to perform such check.
-        $duplicate = db_result(db_query("SELECT COUNT(cid) FROM {comments} WHERE pid = %d AND nid = %d AND subject = '%s' AND comment = '%s'", $edit['pid'], $edit['nid'], $edit['subject'], $edit['comment']), 0);
-        if ($duplicate != 0) {
-          watchdog('content', 'Comment: duplicate %subject.', array('%subject' => $edit['subject']), WATCHDOG_WARNING);
-        }
-
         // Add the comment to database.
         $status = user_access('post comments without approval') ? COMMENT_PUBLISHED : COMMENT_NOT_PUBLISHED;
         $roles = variable_get('comment_roles', array());
