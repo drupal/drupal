@@ -10,7 +10,7 @@
 function _batch_page() {
   $batch =& batch_get();
 
-  if (isset($_REQUEST['id']) && $data = db_result(db_query("SELECT batch FROM {batch} WHERE bid = %d AND token = %d", $_REQUEST['id'], drupal_get_token($_REQUEST['id'])))) {
+  if (isset($_REQUEST['id']) && $data = db_result(db_query("SELECT batch FROM {batch} WHERE bid = %d AND token = '%s'", $_REQUEST['id'], drupal_get_token($_REQUEST['id'])))) {
     $batch = unserialize($data);
   }
   else {
