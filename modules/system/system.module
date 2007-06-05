@@ -462,7 +462,7 @@ function system_admin_theme_submit($form, &$form_state) {
   }
 }
 
-/*
+/**
  * Returns a fieldset containing the theme select form.
  *
  * @param $description
