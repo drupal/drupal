@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.57 2007/06/04 07:22:16 dries Exp $
+// $Id: install.php,v 1.58 2007/06/05 09:26:42 dries Exp $
 
 require_once './includes/install.inc';
 
@@ -213,6 +213,12 @@ function install_settings_form(&$form_state, $profile, $install_locale, $setting
     $db_host = 'localhost';
   }
   $db_types = drupal_detect_database_types();
+
+  // If both 'mysql' and 'mysqli' are available, we disable 'mysql':
+  if (isset($db_types['mysqli'])) {
+    unset($db_types['mysql']);
+  }
+
   if (count($db_types) == 0) {
     $form['no_db_types'] = array(
       '#value' => st('Your web server does not appear to support any common database types. Check with your hosting provider to see if they offer any databases that <a href="@drupal-databases">Drupal supports</a>.', array('@drupal-databases' => 'http://drupal.org/node/270#database')),
@@ -226,8 +232,6 @@ function install_settings_form(&$form_state, $profile, $install_locale, $setting
     );
 
     if (count($db_types) > 1) {
-      // Database type
-      $db_types = drupal_detect_database_types();
       $form['basic_options']['db_type'] = array(
         '#type' => 'radios',
         '#title' => st('Database type'),
