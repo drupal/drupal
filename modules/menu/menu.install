@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.install,v 1.4 2007/05/27 20:31:13 dries Exp $
+// $Id: menu.install,v 1.5 2007/06/05 09:15:02 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -8,8 +8,8 @@ function menu_install() {
   // Create tables.
   drupal_install_schema('menu');
   db_query("INSERT INTO {menu_custom} (menu_name, title, description) VALUES ('navigation', 'Navigation', 'The navigation menu is provided by Drupal and is the main interactive menu for any site. It is usually the only menu that contains personalized links for authenticated users, and is often not even visible to anonymous users.')");
-  db_query("INSERT INTO {menu_custom} (menu_name, title, description) VALUES ('primary_links', 'Primary links', 'Primary links are often used at the theme layer to show the major sections of a site. A typical representation for primary links would be tabs along the top.')");
-  db_query("INSERT INTO {menu_custom} (menu_name, title, description) VALUES ('secondary_links', 'Secondary links', 'Secondary links are often used for pages like legal notices, contact details, and other secondary navigation items that play a lesser role than primary links')");
+  db_query("INSERT INTO {menu_custom} (menu_name, title, description) VALUES ('primary-links', 'Primary links', 'Primary links are often used at the theme layer to show the major sections of a site. A typical representation for primary links would be tabs along the top.')");
+  db_query("INSERT INTO {menu_custom} (menu_name, title, description) VALUES ('secondary-links', 'Secondary links', 'Secondary links are often used for pages like legal notices, contact details, and other secondary navigation items that play a lesser role than primary links')");
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.488 2007/06/04 07:22:22 dries Exp $
+// $Id: system.module,v 1.489 2007/06/05 09:15:02 dries Exp $
 
 /**
  * @file
@@ -462,7 +462,7 @@ function system_admin_theme_submit($form, &$form_state) {
   }
 }
 
-/*
+/**
  * Returns a fieldset containing the theme select form.
  *
  * @param $description

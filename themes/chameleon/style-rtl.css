@@ -1,10 +1,10 @@
-/* $Id: style-rtl.css,v 1.1 2007/06/04 11:10:38 goba Exp $ */
+/* $Id: style-rtl.css,v 1.2 2007/06/05 09:15:02 dries Exp $ */
 
 body {
   padding: 5em 3em 0 0;
 }
 /**
- * Yes - right is on the left and left is on the right! 
+ * Yes - right is on the left and left is on the right!
  * Welcome to design by tables..
  */
 #sidebar-left {

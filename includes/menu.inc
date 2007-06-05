@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.174 2007/06/01 09:40:40 dries Exp $
+// $Id: menu.inc,v 1.175 2007/06/05 09:15:01 dries Exp $
 
 /**
  * @file
@@ -80,12 +80,11 @@
 define('MENU_IS_ROOT', 0x0001);
 define('MENU_VISIBLE_IN_TREE', 0x0002);
 define('MENU_VISIBLE_IN_BREADCRUMB', 0x0004);
-define('MENU_MODIFIED_BY_ADMIN', 0x0008);
+define('MENU_LINKS_TO_PARENT', 0x0008);
 define('MENU_MODIFIABLE_BY_ADMIN', 0x0010);
-define('MENU_CREATED_BY_ADMIN', 0x0020);
-define('MENU_IS_LOCAL_TASK', 0x0040);
-define('MENU_EXPANDED', 0x0080);
-define('MENU_LINKS_TO_PARENT', 0x00100);
+define('MENU_MODIFIED_BY_ADMIN', 0x0020);
+define('MENU_CREATED_BY_ADMIN', 0x0040);
+define('MENU_IS_LOCAL_TASK', 0x0080);
 
 /**
  * @} End of "Menu flags".
@@ -303,7 +302,8 @@ function menu_get_item($path = NULL) {
 function menu_execute_active_handler($path = NULL) {
   if (_menu_site_is_offline()) {
     return MENU_SITE_OFFLINE;
-  }  if ($router_item = menu_get_item($path)) {
+  }
+  if ($router_item = menu_get_item($path)) {
     if ($router_item['access']) {
       if ($router_item['file']) {
         require_once($router_item['file']);
@@ -886,7 +886,7 @@ function menu_get_names($reset = FALSE) {
 }
 
 function menu_primary_links() {
-  $tree = menu_tree_page_data('primary_links');
+  $tree = menu_tree_page_data('primary-links');
   $links = array();
   foreach ($tree as $item) {
     $l = $item['link']['options'];
@@ -898,7 +898,7 @@ function menu_primary_links() {
 }
 
 function menu_secondary_links() {
-  $tree = menu_tree_page_data('secondary_links');
+  $tree = menu_tree_page_data('secondary-links');
   $links = array();
   foreach ($tree as $item) {
     $l = $item['link']['options'];
@@ -1134,7 +1134,6 @@ function menu_link_load($mlid) {
 }
 
 function menu_cache_clear($menu_name = 'navigation') {
-
   cache_clear_all('links:'. $menu_name .':', 'cache_menu', TRUE);
 }
 
@@ -1189,26 +1188,34 @@ function menu_router_build($reset = FALSE) {
   return $menu;
 }
 
+/**
+ * Builds a link from a router item.
+ */
+function _menu_link_build($item) {
+  if ($item['type'] == MENU_CALLBACK) {
+    $item['hidden'] = -1;
+  }
+  elseif ($item['type'] == MENU_SUGGESTED_ITEM) {
+    $item['hidden'] = 1;
+  }
+  // Note, we set this as 'system', so that we can be sure to distinguish all
+  // the menu links generated automatically from entries in {menu_router}.
+  $item['module'] = 'system';
+  $item += array(
+    'menu_name' => 'navigation',
+    'link_title' => $item['title'],
+    'link_path' => $item['path'],
+    'hidden' => 0,
+    'options' => empty($item['description']) ? array() : array('attributes' => array('title' => $item['description'])),
+  );
+  return $item;
+}
+
 function _menu_navigation_links_rebuild($menu) {
   // Add normal and suggested items as links.
   $menu_links = array();
   foreach ($menu as $path => $item) {
-    if ($item['type'] == MENU_CALLBACK) {
-      $item['hidden'] = -1;
-    }
-    elseif  ($item['type'] == MENU_SUGGESTED_ITEM) {
-      $item['hidden'] = 1;
-    }
-    // Note, we set this as 'system', so that we can be sure to distinguish all
-    // the menu links generated automatically from entries in {menu_router}.
-    $item['module'] = 'system';
-    $item += array(
-      'menu_name' => 'navigation',
-      'link_title' => $item['title'],
-      'link_path' => $path,
-      'hidden' => 0,
-      'options' => empty($item['description']) ? array() : array('attributes' => array('title' => $item['description'])),
-    );
+    $item = _menu_link_build($item);
     // We add nonexisting items.
     if ($item['_visible'] && !db_result(db_query("SELECT COUNT(*) FROM {menu_links} WHERE menu_name = '%s' AND link_path = '%s'", $item['menu_name'], $item['link_path']))) {
       $menu_links[$path] = $item;
@@ -1249,7 +1256,6 @@ function menu_link_delete($mlid, $path = NULL) {
 }
 
 function _menu_delete_item($item) {
-
   // System-created items get automatically deleted, but only on menu rebuild.
   if ($item && $item['module'] != 'system') {
 
@@ -1263,6 +1269,7 @@ function _menu_delete_item($item) {
       }
     }
     db_query('DELETE FROM {menu_links} WHERE mlid = %d', $item['mlid']);
+
 
     // Update the has_children status of the parent
     $children = (bool)db_result(db_query("SELECT COUNT(*) FROM {menu_links} WHERE plid = %d AND hidden = 0", $item['plid']));
@@ -1429,7 +1436,7 @@ function menu_link_save(&$item) {
     $names[] = $n['menu_name'];
   }
   variable_set('menu_expanded', $names);
-  return TRUE;
+  return $item['mlid'];
 }
 
 /**

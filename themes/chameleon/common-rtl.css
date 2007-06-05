@@ -1,4 +1,4 @@
-/* $Id: common-rtl.css,v 1.1 2007/06/04 11:10:38 goba Exp $ */
+/* $Id: common-rtl.css,v 1.2 2007/06/05 09:15:02 dries Exp $ */
 
 body {
   direction: rtl;
@@ -15,5 +15,5 @@ body {
 
 #header img {
   float: right;
-  padding: 0em 0em .5em 2em; 
+  padding: 0em 0em .5em 2em;
 }
