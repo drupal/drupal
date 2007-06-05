@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.175 2007/06/05 09:15:01 dries Exp $
+// $Id: menu.inc,v 1.176 2007/06/05 12:13:20 dries Exp $
 
 /**
  * @file
@@ -1320,10 +1320,7 @@ function menu_link_save(&$item) {
     $existing_item = db_fetch_array(db_query("SELECT * FROM {menu_links} WHERE menu_name = '%s' AND link_path = '%s'", $menu_name, $item['link_path']));
   }
 
-  if (!$existing_item) {
-    $item['mlid'] = db_next_id('{menu_links}_mlid');
-  }
-  else {
+  if ($existing_item) {
     $item['mlid'] = $existing_item['mlid'];
   }
 
@@ -1346,6 +1343,21 @@ function menu_link_save(&$item) {
   else {
     $item['plid'] = $parent['mlid'];
   }
+  db_query("INSERT INTO {menu_links} (
+    menu_name, plid, link_path,
+    hidden, external, has_children,
+    expanded, weight,
+    module, link_title, options) VALUES (
+    '%s', %d, '%s',
+    %d, %d, %d,
+    %d, %d,
+    '%s', '%s', '%s')",
+    $item['menu_name'], $item['plid'], $item['link_path'],
+    $item['hidden'], $item['_external'], $item['has_children'],
+    $item['expanded'], $item['weight'],
+    $item['module'],  $item['link_title'], serialize($item['options']));
+  $item['mlid'] = db_last_insert_id('menu_links', 'mlid');
+
 
   if (!$item['plid']) {
     $item['p1'] = $item['mlid'];
@@ -1390,36 +1402,16 @@ function menu_link_save(&$item) {
       }
     }
   }
-  if ($existing_item) {
-    db_query("UPDATE {menu_links} SET menu_name = '%s', plid = %d, link_path = '%s',
-      router_path = '%s', hidden = %d, external = %d, has_children = %d,
-      expanded = %d, weight = %d,  depth = %d,
-      p1 = %d, p2 = %d, p3 = %d, p4 = %d, p5 = %d, p6 = %d,
-      module = '%s', link_title = '%s', options = '%s' WHERE mlid = %d",
-      $item['menu_name'], $item['plid'], $item['link_path'],
-      $item['router_path'], $item['hidden'], $item['_external'], $item['has_children'],
-      $item['expanded'], $item['weight'],  $item['depth'],
-      $item['p1'], $item['p2'], $item['p3'], $item['p4'], $item['p5'], $item['p6'],
-      $item['module'],  $item['link_title'], serialize($item['options']), $item['mlid']);
-  }
-  else {
-    db_query("INSERT INTO {menu_links} (
-      menu_name, mlid, plid, link_path,
-      router_path, hidden, external, has_children,
-      expanded, weight, depth,
-      p1, p2, p3, p4, p5, p6,
-      module, link_title, options) VALUES (
-      '%s', %d, %d, '%s',
-      '%s', %d, %d, %d,
-      %d, %d, %d,
-      %d, %d, %d, %d, %d, %d,
-      '%s', '%s', '%s')",
-      $item['menu_name'], $item['mlid'], $item['plid'], $item['link_path'],
-      $item['router_path'], $item['hidden'], $item['_external'], $item['has_children'],
-      $item['expanded'], $item['weight'],  $item['depth'],
-      $item['p1'], $item['p2'], $item['p3'], $item['p4'], $item['p5'], $item['p6'],
-      $item['module'],  $item['link_title'], serialize($item['options']));
-  }
+  db_query("UPDATE {menu_links} SET menu_name = '%s', plid = %d, link_path = '%s',
+    router_path = '%s', hidden = %d, external = %d, has_children = %d,
+    expanded = %d, weight = %d,  depth = %d,
+    p1 = %d, p2 = %d, p3 = %d, p4 = %d, p5 = %d, p6 = %d,
+    module = '%s', link_title = '%s', options = '%s' WHERE mlid = %d",
+    $item['menu_name'], $item['plid'], $item['link_path'],
+    $item['router_path'], $item['hidden'], $item['_external'], $item['has_children'],
+    $item['expanded'], $item['weight'],  $item['depth'],
+    $item['p1'], $item['p2'], $item['p3'], $item['p4'], $item['p5'], $item['p6'],
+    $item['module'],  $item['link_title'], serialize($item['options']), $item['mlid']);
   // Check the has_children status of the parent.
   if ($item['plid']) {
     $parent_has_children = (bool)db_result(db_query("SELECT COUNT(*) FROM {menu_links} WHERE plid = %d AND hidden = 0", $item['plid']));

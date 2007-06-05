@@ -1,5 +1,5 @@
 <?php
-// $Id: database.pgsql.inc,v 1.48 2007/05/30 09:11:21 dries Exp $
+// $Id: database.pgsql.inc,v 1.49 2007/06/05 12:13:20 dries Exp $
 
 /**
  * @file
@@ -43,12 +43,6 @@ function db_version() {
 
 /**
  * Initialize a database connection.
- *
- * Note that you can change the pg_connect() call to pg_pconnect() if you
- * want to use persistent connections. This is not recommended on shared hosts,
- * and might require additional database/webserver tuning. It can increase
- * performance, however, when the overhead to connect to your database is high
- * (e.g. your database and web server live on different machines).
  */
 function db_connect($url) {
    // Check if MySQL support is present in PHP
@@ -258,19 +252,15 @@ function db_error() {
 }
 
 /**
- * Return a new unique ID in the given sequence.
+ * Returns the last insert id. This function is thread safe.
  *
- * For compatibility reasons, Drupal does not use auto-numbered fields in its
- * database tables. Instead, this function is used to return a new unique ID
- * of the type requested. If necessary, a new sequence with the given name
- * will be created.
- *
- * Note that the table name should be in curly brackets to preserve compatibility
- * with table prefixes. For example, db_next_id('{node}_nid');
+ * @param $table
+ *   The name of the table you inserted into.
+ * @param $field
+ *   The name of the autoincrement field.
  */
-function db_next_id($name) {
-  $id = db_result(db_query("SELECT nextval('%s_seq')", db_prefix_tables($name)));
-  return $id;
+function db_last_insert_id($table, $field) {
+  return db_result(db_query("SELECT currval('%s_seq')", db_prefix_tables('{'. $table .'}') . '_'. $field));
 }
 
 /**

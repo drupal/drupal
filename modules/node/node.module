@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.827 2007/06/04 16:46:48 dries Exp $
+// $Id: node.module,v 1.828 2007/06/05 12:13:22 dries Exp $
 
 /**
  * @file
@@ -621,9 +621,6 @@ function node_save(&$node) {
   if (empty($node->nid)) {
     // Insert a new node.
     $node->is_new = TRUE;
-
-    $node->nid = db_next_id('{node}_nid');
-    $node->vid = db_next_id('{node_revisions}_vid');
   }
   else {
     // We need to ensure that all node fields are filled.
@@ -635,7 +632,6 @@ function node_save(&$node) {
 
     if (!empty($node->revision)) {
       $node->old_vid = $node->vid;
-      $node->vid = db_next_id('{node_revisions}_vid');
     }
   }
 
@@ -647,11 +643,11 @@ function node_save(&$node) {
   $node->changed = time();
 
   // Split off revisions data to another structure
-  $revisions_table_values = array('nid' => $node->nid, 'vid' => $node->vid,
+  $revisions_table_values = array('nid' => &$node->nid,
                      'title' => $node->title, 'body' => $node->body,
                      'teaser' => $node->teaser, 'timestamp' => $node->changed,
                      'uid' => $user->uid, 'format' => $node->format);
-  $revisions_table_types = array('nid' => '%d', 'vid' => '%d',
+  $revisions_table_types = array('nid' => '%d',
                      'title' => "'%s'", 'body' => "'%s'",
                      'teaser' => "'%s'", 'timestamp' => '%d',
                      'uid' => '%d', 'format' => '%d');
@@ -662,22 +658,27 @@ function node_save(&$node) {
     $revisions_table_values['log'] = $node->log;
     $revisions_table_types['log'] = "'%s'";
   }
-  $node_table_values = array('nid' => $node->nid, 'vid' => $node->vid,
+  $node_table_values = array(
                     'title' => $node->title, 'type' => $node->type, 'uid' => $node->uid,
                     'status' => $node->status, 'language' => $node->language, 'created' => $node->created,
                     'changed' => $node->changed, 'comment' => $node->comment,
                     'promote' => $node->promote, 'sticky' => $node->sticky);
-  $node_table_types = array('nid' => '%d', 'vid' => '%d',
+  $node_table_types = array(
                     'title' => "'%s'", 'type' => "'%s'", 'uid' => '%d',
                     'status' => '%d', 'language' => "'%s'",'created' => '%d',
                     'changed' => '%d', 'comment' => '%d',
                     'promote' => '%d', 'sticky' => '%d');
-
+  $update_node = TRUE;
   //Generate the node table query and the
   //the node_revisions table query
   if ($node->is_new) {
-    $node_query = 'INSERT INTO {node} ('. implode(', ', array_keys($node_table_types)) .') VALUES ('. implode(', ', $node_table_types) .')';
+    $node_query = 'INSERT INTO {node} (vid, '. implode(', ', array_keys($node_table_types)) .') VALUES (NULL, '. implode(', ', $node_table_types) .')';
+    db_query($node_query, $node_table_values);
+    $node->nid = db_last_insert_id('node', 'nid');
     $revisions_query = 'INSERT INTO {node_revisions} ('. implode(', ', array_keys($revisions_table_types)) .') VALUES ('. implode(', ', $revisions_table_types) .')';
+    db_query($revisions_query, $revisions_table_values);
+    $node->vid = db_last_insert_id('node_revisions', 'vid');
+    $op = 'insert';
   }
   else {
     $arr = array();
@@ -686,8 +687,11 @@ function node_save(&$node) {
     }
     $node_table_values[] = $node->nid;
     $node_query = 'UPDATE {node} SET '. implode(', ', $arr) .' WHERE nid = %d';
+    db_query($node_query, $node_table_values);
     if (!empty($node->revision)) {
       $revisions_query = 'INSERT INTO {node_revisions} ('. implode(', ', array_keys($revisions_table_types)) .') VALUES ('. implode(', ', $revisions_table_types) .')';
+      db_query($revisions_query, $revisions_table_values);
+      $node->vid = db_last_insert_id('node_revisions', 'vid');
     }
     else {
       $arr = array();
@@ -696,22 +700,18 @@ function node_save(&$node) {
       }
       $revisions_table_values[] = $node->vid;
       $revisions_query = 'UPDATE {node_revisions} SET '. implode(', ', $arr) .' WHERE vid = %d';
+      db_query($revisions_query, $revisions_table_values);
+      $update_node = FALSE;
     }
+    $op = 'update';
+  }
+  if ($update_node) {
+    db_query('UPDATE node SET vid = %d WHERE nid = %d', $node->vid, $node->nid);
   }
 
-  // Insert the node into the database:
-  db_query($node_query, $node_table_values);
-  db_query($revisions_query, $revisions_table_values);
-
-  // Call the node specific callback (if any):
-  if ($node->is_new) {
-    node_invoke($node, 'insert');
-    node_invoke_nodeapi($node, 'insert');
-  }
-  else {
-    node_invoke($node, 'update');
-    node_invoke_nodeapi($node, 'update');
-  }
+ // Call the node specific callback (if any):
+  node_invoke($node, $op);
+  node_invoke_nodeapi($node, $op);
 
   // Update the node access table for this node.
   node_access_acquire_grants($node);

@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.263 2007/06/04 07:22:16 dries Exp $
+// $Id: block.module,v 1.264 2007/06/05 12:13:21 dries Exp $
 
 /**
  * @file
@@ -538,7 +538,8 @@ function block_add_block_form_validate($form, &$form_state) {
  * Save the new custom block.
  */
 function block_add_block_form_submit($form, &$form_state) {
-  $delta = db_next_id('{boxes}_bid');
+  db_query("INSERT INTO {boxes} (body, info, format) VALUES  ('%s', '%s', %d)", $form_state['values']['body'], $form_state['values']['info'], $form_state['values']['format']);
+  $delta = db_last_insert_id('boxes', 'bid');
 
   foreach (list_themes() as $key => $theme) {
     if ($theme->status) {
@@ -549,8 +550,6 @@ function block_add_block_form_submit($form, &$form_state) {
   foreach (array_filter($form_state['values']['roles']) as $rid) {
     db_query("INSERT INTO {blocks_roles} (rid, module, delta) VALUES (%d, '%s', '%s')", $rid, $form_state['values']['module'], $delta);
   }
-
-  db_query("INSERT INTO {boxes} (bid, body, info, format) VALUES  (%d, '%s', '%s', %d)", $delta, $form_state['values']['body'], $form_state['values']['info'], $form_state['values']['format']);
 
   drupal_set_message(t('The block has been created.'));
   cache_clear_all();

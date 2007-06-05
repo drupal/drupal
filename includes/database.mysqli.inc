@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysqli.inc,v 1.37 2007/05/25 21:01:30 dries Exp $
+// $Id: database.mysqli.inc,v 1.38 2007/06/05 12:13:20 dries Exp $
 
 /**
  * @file
@@ -228,25 +228,6 @@ function db_result($result, $row = 0) {
 function db_error() {
   global $active_db;
   return mysqli_errno($active_db);
-}
-
-/**
- * Return a new unique ID in the given sequence.
- *
- * For compatibility reasons, Drupal does not use auto-numbered fields in its
- * database tables. Instead, this function is used to return a new unique ID
- * of the type requested. If necessary, a new sequence with the given name
- * will be created.
- *
- * Note that the table name should be in curly brackets to preserve compatibility
- * with table prefixes. For example, db_next_id('{node}_nid');
- */
-function db_next_id($name) {
-  global $active_db;
-  $name = db_prefix_tables($name);
-  db_query('INSERT INTO {sequences} VALUES ("%s", LAST_INSERT_ID(1)) ON DUPLICATE KEY UPDATE id = LAST_INSERT_ID(id + 1)', $name);
-
-  return mysqli_insert_id($active_db);
 }
 
 /**

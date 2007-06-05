@@ -1,11 +1,11 @@
 <?php
-// $Id: node.schema,v 1.1 2007/05/25 12:46:45 dries Exp $
+// $Id: node.schema,v 1.2 2007/06/05 12:13:22 dries Exp $
 
 function node_schema() {
   $schema['node'] = array(
     'fields' => array(
       'nid'      => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
-      'vid'      => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+      'vid'      => array('type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE, 'default' => 0),
       'type'     => array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''),
       'language' => array('type' => 'varchar', 'length' => 12, 'not null' => TRUE, 'default' => ''),
       'title'    => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
@@ -65,7 +65,7 @@ function node_schema() {
 
   $schema['node_revisions'] = array(
     'fields' => array(
-      'nid'       => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
+      'nid'       => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
       'vid'       => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
       'uid'       => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
       'title'     => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),

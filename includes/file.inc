@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.100 2007/06/04 07:31:59 dries Exp $
+// $Id: file.inc,v 1.101 2007/06/05 12:13:20 dries Exp $
 
 /**
  * @file
@@ -574,8 +574,8 @@ function file_save_upload($source, $validators = array(), $dest = FALSE, $replac
     }
 
     // If we made it this far it's safe to record this file in the database.
-    $file->fid = db_next_id('{files}_fid');
-    db_query("INSERT INTO {files} (fid, uid, filename, filepath, filemime, filesize, status, timestamp) VALUES (%d, %d, '%s', '%s', '%s', %d, %d, %d)", $file->fid, $user->uid, $file->filename, $file->filepath, $file->filemime, $file->filesize, FILE_STATUS_TEMPORARY, time());
+    db_query("INSERT INTO {files} (uid, filename, filepath, filemime, filesize, status, timestamp) VALUES (%d, '%s', '%s', '%s', %d, %d, %d)", $user->uid, $file->filename, $file->filepath, $file->filemime, $file->filesize, FILE_STATUS_TEMPORARY, time());
+    $file->fid = db_last_insert_id('files', 'fid');
 
     // Add file to the cache.
     $upload_cache[$source] = $file;

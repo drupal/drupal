@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.792 2007/06/04 15:56:34 dries Exp $
+// $Id: user.module,v 1.793 2007/06/05 12:13:23 dries Exp $
 
 /**
  * @file
@@ -210,8 +210,6 @@ function user_save($account, $array = array(), $category = 'account') {
     user_module_invoke('after_update', $array, $user, $category);
   }
   else {
-    $array['uid'] = db_next_id('{users}_uid');
-
     if (!isset($array['created'])) {    // Allow 'created' to be set by hook_auth
       $array['created'] = time();
     }
@@ -226,7 +224,7 @@ function user_save($account, $array = array(), $category = 'account') {
           $values[] = md5($value);
           $s[] = "'%s'";
           break;
-        case 'uid':        case 'mode':     case 'sort':
+        case 'mode':     case 'sort':
         case 'threshold':  case 'created':  case 'access':
         case 'login':      case 'status':
           $fields[] = $key;
@@ -243,6 +241,7 @@ function user_save($account, $array = array(), $category = 'account') {
       }
     }
     db_query('INSERT INTO {users} ('. implode(', ', $fields) .') VALUES ('. implode(', ', $s) .')', $values);
+    $array['uid'] = db_last_insert_id('users', 'uid');
 
     // Build the initial user object.
     $user = user_load(array('uid' => $array['uid']));
@@ -1789,8 +1788,8 @@ function user_admin_access_add($mask = NULL, $type = NULL) {
       form_set_error('mask', t('You must enter a mask.'));
     }
     else {
-      $aid = db_next_id('{access}_aid');
       db_query("INSERT INTO {access} (aid, mask, type, status) VALUES ('%s', '%s', '%s', %d)", $aid, $edit['mask'], $edit['type'], $edit['status']);
+      $aid = db_last_insert_id('access', 'aid');
       drupal_set_message(t('The access rule has been added.'));
       drupal_goto('admin/user/rules');
     }

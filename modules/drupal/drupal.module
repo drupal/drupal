@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal.module,v 1.144 2007/04/30 17:03:24 dries Exp $
+// $Id: drupal.module,v 1.145 2007/06/05 12:13:22 dries Exp $
 
 /**
  * @file
@@ -196,8 +196,8 @@ function drupal_client_ping($client, $system) {
       db_query("UPDATE {client} SET link = '%s', name = '%s', mail = '%s', slogan = '%s', mission = '%s', users = %d, nodes = %d, version = '%s', changed = '%s' WHERE cid = %d", $client['uid'], $client['link'], $client['name'], $client['mail'], $client['slogan'], $client['mission'], $client['users'], $client['nodes'], $client['version'], time(), $client['cid']);
     }
     else {
-      $client['cid'] = db_next_id('{client}_cid');
-      db_query("INSERT INTO {client} (cid, link, name, mail, slogan, mission, users, nodes, version, created, changed) VALUES (%d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')", $client['cid'], $client['link'], $client['name'], $client['mail'], $client['slogan'], $client['mission'], $client['users'], $client['nodes'], $client['version'], time(), time());
+      db_query("INSERT INTO {client} (link, name, mail, slogan, mission, users, nodes, version, created, changed) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')", $client['link'], $client['name'], $client['mail'], $client['slogan'], $client['mission'], $client['users'], $client['nodes'], $client['version'], time(), time());
+      $client['cid'] = db_last_insert_id('client', 'cid');
     }
     if (is_array($system)) {
       db_query("DELETE FROM {client_system} WHERE cid = %d", $client['cid']);

@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.119 2007/05/30 08:08:58 dries Exp $
+// $Id: system.install,v 1.120 2007/06/05 12:13:22 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -3339,6 +3339,16 @@ function system_update_6022() {
 
   return $ret;
 }
+
+function system_update_6023() {
+  $ret = array();
+  // vid is NULL
+  db_change_field($ret, 'node', 'vid');
+  // nid is DEFAULT 0
+  db_change_field($ret, 'node_revisions', 'nid');
+  return $ret;
+}
+
 /**
  * @} End of "defgroup updates-5.x-to-6.x"
  * The next series of updates should start at 7000.

@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.550 2007/06/05 09:22:22 dries Exp $
+// $Id: comment.module,v 1.551 2007/06/05 12:13:21 dries Exp $
 
 /**
  * @file
@@ -805,7 +805,6 @@ function comment_save($edit) {
           }
         }
 
-        $edit['cid'] = db_next_id('{comments}_cid');
         $edit['timestamp'] = time();
 
         if ($edit['uid'] === $user->uid) { // '===' because we want to modify anonymous users too
@@ -813,7 +812,8 @@ function comment_save($edit) {
         }
 
         $edit += array('mail' => '', 'homepage' => '');
-        db_query("INSERT INTO {comments} (cid, nid, pid, uid, subject, comment, format, hostname, timestamp, status, score, users, thread, name, mail, homepage) VALUES (%d, %d, %d, %d, '%s', '%s', %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s')", $edit['cid'], $edit['nid'], $edit['pid'], $edit['uid'], $edit['subject'], $edit['comment'], $edit['format'], ip_address(), $edit['timestamp'], $status, $score, $users, $thread, $edit['name'], $edit['mail'], $edit['homepage']);
+        db_query("INSERT INTO {comments} (nid, pid, uid, subject, comment, format, hostname, timestamp, status, score, users, thread, name, mail, homepage) VALUES (%d, %d, %d, '%s', '%s', %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s')", $edit['nid'], $edit['pid'], $edit['uid'], $edit['subject'], $edit['comment'], $edit['format'], ip_address(), $edit['timestamp'], $status, $score, $users, $thread, $edit['name'], $edit['mail'], $edit['homepage']);
+        $edit['cid'] = db_last_insert_id('comments', 'cid');
 
         _comment_update_node_statistics($edit['nid']);
 

@@ -1,6 +1,6 @@
 <?php
 
-// $Id: database.mysql-common.inc,v 1.4 2007/05/30 09:11:21 dries Exp $
+// $Id: database.mysql-common.inc,v 1.5 2007/06/05 12:13:20 dries Exp $
 
 /**
  * @file
@@ -445,6 +445,18 @@ function db_change_field(&$ret, $table, $field, $field_new, $spec) {
 function db_update_field(&$ret, $table, $field) {
   $spec = drupal_get_schema($table);
   db_change_field($ret, $table, $field, $field, $spec['fields'][$field]);
+}
+
+/**
+ * Returns the last insert id.
+ *
+ * @param $table
+ *   The name of the table you inserted into.
+ * @param $field
+ *   The name of the autoincrement field.
+ */
+function db_last_insert_id($table, $field) {
+  return db_result(db_query('SELECT LAST_INSERT_ID()'));
 }
 
 /**
