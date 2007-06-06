@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.115 2007/06/05 09:15:02 dries Exp $
+// $Id: menu.module,v 1.116 2007/06/06 06:18:47 dries Exp $
 
 /**
  * @file
@@ -306,14 +306,11 @@ function menu_edit_item(&$form_state, $type, $id = 0) {
 
 function menu_edit_item_validate($form, &$form_state) {
   $item = $form_state['values'];
-  if (isset($item['path']) && !menu_path_is_external($item['path'])) {
-    $path = $item['path'];
+  if (isset($item['link_path']) && !menu_path_is_external($item['link_path'])) {
+    $path = $item['link_path'];
     $item = menu_get_item($path);
     if (!$item || !$item['access']) {
       form_set_error('path', t('This path is either invalid or you do not have access to it'));
-    }
-    elseif ($path != $item['original_path'] && $item['path'] == $path) {
-      form_set_error('path', t('There is already a menu item pointing to this path.'));
     }
   }
 }
