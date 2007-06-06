@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.176 2007/06/05 12:13:20 dries Exp $
+// $Id: menu.inc,v 1.177 2007/06/06 06:26:15 dries Exp $
 
 /**
  * @file
@@ -1343,21 +1343,23 @@ function menu_link_save(&$item) {
   else {
     $item['plid'] = $parent['mlid'];
   }
-  db_query("INSERT INTO {menu_links} (
-    menu_name, plid, link_path,
-    hidden, external, has_children,
-    expanded, weight,
-    module, link_title, options) VALUES (
-    '%s', %d, '%s',
-    %d, %d, %d,
-    %d, %d,
-    '%s', '%s', '%s')",
-    $item['menu_name'], $item['plid'], $item['link_path'],
-    $item['hidden'], $item['_external'], $item['has_children'],
-    $item['expanded'], $item['weight'],
-    $item['module'],  $item['link_title'], serialize($item['options']));
-  $item['mlid'] = db_last_insert_id('menu_links', 'mlid');
 
+  if (!$existing_item) {
+    db_query("INSERT INTO {menu_links} (
+       menu_name, plid, link_path,
+      hidden, external, has_children,
+      expanded, weight,
+      module, link_title, options) VALUES (
+      '%s', %d, '%s',
+      %d, %d, %d,
+      %d, %d,
+      '%s', '%s', '%s')",
+      $item['menu_name'], $item['plid'], $item['link_path'],
+      $item['hidden'], $item['_external'], $item['has_children'],
+      $item['expanded'], $item['weight'],
+      $item['module'],  $item['link_title'], serialize($item['options']));
+    $item['mlid'] = db_last_insert_id('menu_links', 'mlid');
+  }
 
   if (!$item['plid']) {
     $item['p1'] = $item['mlid'];
