@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.828 2007/06/05 12:13:22 dries Exp $
+// $Id: node.module,v 1.829 2007/06/07 03:45:57 dries Exp $
 
 /**
  * @file
@@ -2022,6 +2022,19 @@ function node_object_prepare(&$node) {
       $node->date = format_date($node->created, 'custom', 'Y-m-d H:i:s O');
     }
   }
+
+  $node_options = variable_get('node_options_'. $node->type, array('status', 'promote'));
+  // If this is a new node, fill in the default values.
+  if (!isset($node->nid)) {
+    foreach (array('status', 'promote', 'sticky') as $key) {
+      $node->$key = in_array($key, $node_options);
+    }
+    global $user;
+    $node->uid = $user->uid;
+  }
+  // Always use the default revision setting.
+  $node->revision = in_array('revision', $node_options);
+
   node_invoke($node, 'prepare');
   node_invoke_nodeapi($node, 'prepare');
 }
@@ -2066,18 +2079,6 @@ function node_form(&$form_state, $node) {
   if (!isset($form['title']['#weight'])) {
     $form['title']['#weight'] = -5;
   }
-
-  $node_options = variable_get('node_options_'. $node->type, array('status', 'promote'));
-  // If this is a new node, fill in the default values.
-  if (!isset($node->nid)) {
-    foreach (array('status', 'promote', 'sticky') as $key) {
-      $node->$key = in_array($key, $node_options);
-    }
-    global $user;
-    $node->uid = $user->uid;
-  }
-  // Always use the default revision setting.
-  $node->revision = in_array('revision', $node_options);
 
   $form['#node'] = $node;
 
