@@ -822,6 +822,8 @@ function install_configure_form() {
   // This is necessary to add the task to the $_GET args so the install
   // system will know that it is done and we've taken over.
 
+  _user_password_dynamic_validation();
+
   $form['intro'] = array(
     '#value' => st('To configure your web site, please provide the following information.'),
     '#weight' => -10,

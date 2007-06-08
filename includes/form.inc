@@ -1214,12 +1214,14 @@ function expand_password_confirm($element) {
     '#title' => t('Password'),
     '#value' => empty($element['#value']) ? NULL : $element['#value']['pass1'],
     '#required' => $element['#required'],
+    '#attributes' => array('class' => 'password-field'),
   );
   $element['pass2'] =  array(
     '#type' => 'password',
     '#title' => t('Confirm password'),
     '#value' => empty($element['#value']) ? NULL : $element['#value']['pass2'],
     '#required' => $element['#required'],
+    '#attributes' => array('class' => 'password-confirm'),
   );
   $element['#element_validate'] = array('password_confirm_validate');
   $element['#tree'] = TRUE;

@@ -83,3 +83,11 @@ div.teaser-button-wrapper {
 .progress .percentage {
   float: left;
 }
+input.password-field {
+  margin-left: 10px;
+  margin-right: inherit;
+}
+input.password-confirm {
+  margin-left: 10px;
+  margin-right: inherit;
+}
