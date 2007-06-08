@@ -86,7 +86,7 @@ Drupal.progressBar.prototype.sendPing = function () {
         pb.timer = setTimeout(function() { pb.sendPing(); }, pb.delay);
       },
       error: function (xmlhttp) {
-        pb.displayError('An HTTP error '+ xmlhttp.status +' occured.\n'+ pb.uri);
+        pb.displayError(Drupal.t("An HTTP error @status occured. \n@uri", { '@status': xmlhttp.status, '@uri': pb.uri }));
       }
     });
   }

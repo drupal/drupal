@@ -33,7 +33,7 @@ Drupal.jsUpload = function(uri, button, wrapper, hide) {
 Drupal.jsUpload.prototype.onsubmit = function () {
   // Insert progressbar and stretch to take the same space.
   this.progress = new Drupal.progressBar('uploadprogress');
-  this.progress.setProgress(-1, 'Uploading file');
+  this.progress.setProgress(-1, Drupal.t('Uploading file'));
 
   var hide = this.hide;
   var el = this.progress.element;
@@ -98,7 +98,7 @@ Drupal.jsUpload.prototype.oncomplete = function (data) {
  * Handler for the form redirection error.
  */
 Drupal.jsUpload.prototype.onerror = function (error) {
-  alert('An error occurred:\n\n'+ error);
+  alert(Drupal.t('An error occurred:\n\n@error', { '@error': error }));
   // Remove progressbar
   $(this.progress.element).remove();
   this.progress = null;
