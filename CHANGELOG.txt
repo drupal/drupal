@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.207 2007/06/08 05:50:53 dries Exp $
+// $Id: CHANGELOG.txt,v 1.208 2007/06/08 06:04:14 dries Exp $
 
 Drupal 6.0, xxxx-xx-xx (development version)
 ----------------------
@@ -33,6 +33,7 @@ Drupal 6.0, xxxx-xx-xx (development version)
     * Made it possible to configure your own date formats.
     * Remember anonymous comment posters.
     * Only allow modules and themes to be enabled that have explicitly been ported to the right core API version.
+    * Dynamically check password strength and confirmation.
 - Theme system:
     * Added .info files to themes and made it easier to specify regions and features.
     * Added theme registry: modules can directly provide .tpl.php files for their themes without having to create theme_ functions.

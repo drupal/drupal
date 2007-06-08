@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.58 2007/06/05 09:26:42 dries Exp $
+// $Id: install.php,v 1.59 2007/06/08 06:04:14 dries Exp $
 
 require_once './includes/install.inc';
 
@@ -821,6 +821,8 @@ function install_task_list($active = NULL) {
 function install_configure_form() {
   // This is necessary to add the task to the $_GET args so the install
   // system will know that it is done and we've taken over.
+
+  _user_password_dynamic_validation();
 
   $form['intro'] = array(
     '#value' => st('To configure your web site, please provide the following information.'),

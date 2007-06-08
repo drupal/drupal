@@ -1,4 +1,4 @@
-/* $Id: system.css,v 1.30 2007/06/08 05:50:56 dries Exp $ */
+/* $Id: system.css,v 1.31 2007/06/08 06:04:15 dries Exp $ */
 
 /*
 ** HTML elements
@@ -33,7 +33,7 @@ thead th {
   padding-bottom: .5em
 }
 .error {
-  color: #f00;
+  color: #e55;
 }
 div.error {
   border: 1px solid #d77;
@@ -41,12 +41,29 @@ div.error {
 div.error, tr.error {
   background: #fcc;
   color: #200;
+  padding: 2px;
+}
+.warning {
+  color: #e09010;
+}
+div.warning {
+  border: 1px solid #f0c020;
 }
 div.warning, tr.warning {
   background: #ffd;
+  color: #220;
+  padding: 2px;
+}
+.ok {
+  color: #008000;
+}
+div.ok {
+  border: 1px solid #00aa00;
 }
 div.ok, tr.ok {
   background: #dfd;
+  color: #020;
+  padding: 2px;
 }
 .item-list .icon {
   color: #555;
@@ -451,4 +468,41 @@ html.js .js-hide {
 */
 #system-modules div.incompatible {
   font-weight: bold;
+}
+
+/*
+** Password strength indicator
+*/
+span.password-strength {
+  visibility: hidden;
+}
+input.password-field {
+  margin-right: 10px; /* LTR */
+}
+div.password-description {
+  padding: 0 2px;
+  margin: 4px 0 0 0;
+  font-size: 0.85em;
+  max-width: 500px;
+}
+div.password-description ul {
+  margin-bottom: 0;
+}
+.password-parent {
+  margin: 0 0 0 0;
+}
+/*
+** Password confirmation checker
+*/
+input.password-confirm {
+  margin-right: 10px; /* LTR */
+}
+.confirm-parent {
+  margin: 5px 0 0 0;
+}
+span.password-confirm {
+  visibility: hidden;
+}
+span.password-confirm span {
+  font-weight: normal;
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.793 2007/06/05 12:13:23 dries Exp $
+// $Id: user.module,v 1.794 2007/06/08 06:04:15 dries Exp $
 
 /**
  * @file
@@ -1414,6 +1414,7 @@ function user_register_submit($form, &$form_state) {
 }
 
 function user_edit_form(&$form_state, $uid, $edit, $register = FALSE) {
+  _user_password_dynamic_validation();
   $admin = user_access('administer users');
 
   // Account information:
@@ -3150,4 +3151,38 @@ function _user_mail_notify($op, $account, $password = NULL) {
     }
   }
   return $result;
+}
+
+/**
+ * Add javascript and string translations for dynamic password validation (strength and confirmation checking).
+ *
+ * This is an internal function that makes it easier to manage the translation
+ * strings that need to be passed to the javascript code.
+ */
+function _user_password_dynamic_validation() {
+  static $complete = FALSE;
+  global $user;
+  // Only need to do once per page.
+  if (!$complete) {
+    drupal_add_js(drupal_get_path('module', 'user') .'/user.js', 'module');
+
+    drupal_add_js(array(
+      'password' => array(
+        'strengthTitle' => t('Password strength:'),
+        'lowStrength' => t('Low'),
+        'mediumStrength' => t('Medium'),
+        'highStrength' => t('High'),
+        'tooShort' => t('It is recommended to choose a password that contains at least six characters. It should include numbers, punctuation, and both upper and lowercase letters.'),
+        'needsMoreVariation' => t('The password does not include enough variation to be secure. Try:'),
+        'addLetters' => t('Adding both upper and lowercase letters.'),
+        'addNumbers' => t('Adding numbers.'),
+        'addPunctuation' => t('Adding punctuation.'),
+        'sameAsUsername' => t('It is recommended to choose a password different from the username.'),
+        'confirmSuccess' => t('Yes'),
+        'confirmFailure' => t('No'),
+        'confirmTitle' => t('Passwords match:'),
+        'username' => (isset($user->name) ? $user->name : ''))),
+      'setting');
+    $complete = TRUE;
+  }
 }
