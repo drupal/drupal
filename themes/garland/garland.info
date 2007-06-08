@@ -2,4 +2,5 @@
 name = Garland
 description = Tableless, recolorable, multi-column, fluid width theme (default).
 version = VERSION
+core = 6.x
 engine = phptemplate

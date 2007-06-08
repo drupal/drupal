@@ -8,3 +8,4 @@ features[] = favicon
 features[] = name
 features[] = slogan
 version = VERSION
+core = 6.x
