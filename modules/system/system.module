@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.489 2007/06/05 09:15:02 dries Exp $
+// $Id: system.module,v 1.490 2007/06/08 05:50:56 dries Exp $
 
 /**
  * @file
@@ -7,6 +7,7 @@
  */
 
 define('VERSION', '6.0-dev');
+define('DRUPAL_CORE_COMPATIBILITY', '6.x');
 
 define('DRUPAL_MINIMUM_PHP',    '4.3.3');
 define('DRUPAL_MINIMUM_MYSQL',  '4.1.0'); // If using MySQL
@@ -1471,12 +1472,20 @@ function system_modules($form_state = array()) {
   // Array for disabling checkboxes in callback system_module_disable.
   $disabled = array();
   $throttle = array();
+  $incompatible = array();
   // Traverse the files retrieved and build the form.
   foreach ($files as $filename => $file) {
     $form['name'][$filename] = array('#value' => $file->info['name']);
     $form['version'][$filename] = array('#value' => $file->info['version']);
     $form['description'][$filename] = array('#value' => t($file->info['description']));
     $options[$filename] = '';
+    // Ensure this module is compatible with this version of core.
+    if (!isset($file->info['core']) || $file->info['core'] != DRUPAL_CORE_COMPATIBILITY) {
+      $incompatible[] = $file->name;
+      $disabled[] = $file->name;
+      // Nothing else in this loop matters, so move to the next module.
+      continue;
+    }
     if ($file->status) {
       $status[] = $file->name;
     }
@@ -1554,6 +1563,7 @@ function system_modules($form_state = array()) {
       'system_modules_disable',
     ),
     '#disabled_modules' => $disabled,
+    '#incompatible_modules' => drupal_map_assoc($incompatible),
   );
 
   // Handle throttle checkboxes, including overriding the
@@ -1797,14 +1807,22 @@ function theme_system_modules($form) {
     $rows = array();
     foreach ($modules as $key => $module) {
       $row = array();
-      $row[] = array('data' => drupal_render($form['status'][$key]), 'align' => 'center');
-
+      $description = drupal_render($form['description'][$key]);
+      if (isset($form['status']['#incompatible_modules'][$key])) {
+        unset($form['status'][$key]);
+        $status = theme('image', 'misc/watchdog-error.png', t('incompatible'), t('Incompatible with this version of Drupal core'));
+        $description .= '<div class="incompatible">'. t('This version is incompatible with the !core_version version of Drupal core.', array('!core_version' => VERSION)) .'</div>';
+      }
+      else {
+        $status = drupal_render($form['status'][$key]);
+      }
+      $row[] = array('data' => $status, 'align' => 'center');
       if (module_exists('throttle')) {
         $row[] = array('data' => drupal_render($form['throttle'][$key]), 'align' => 'center');
       }
       $row[] = '<strong>'. drupal_render($form['name'][$key]) .'</strong>';
       $row[] = drupal_render($form['version'][$key]);
-      $row[] = array('data' => drupal_render($form['description'][$key]), 'class' => 'description');
+      $row[] = array('data' => $description, 'class' => 'description');
       $rows[] = $row;
     }
     $fieldset = array(

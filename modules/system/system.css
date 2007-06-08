@@ -1,4 +1,4 @@
-/* $Id: system.css,v 1.29 2007/06/04 10:36:42 goba Exp $ */
+/* $Id: system.css,v 1.30 2007/06/08 05:50:56 dries Exp $ */
 
 /*
 ** HTML elements
@@ -444,4 +444,11 @@ thead div.sticky-header {
 */
 html.js .js-hide {
   display: none;
+}
+
+/*
+** Styles for the system modules page (admin/build/modules)
+*/
+#system-modules div.incompatible {
+  font-weight: bold;
 }

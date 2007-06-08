@@ -1,5 +1,6 @@
-; $Id: garland.info,v 1.3 2007/05/06 05:47:52 dries Exp $
+; $Id: garland.info,v 1.4 2007/06/08 05:50:57 dries Exp $
 name = Garland
 description = Tableless, recolorable, multi-column, fluid width theme (default).
 version = VERSION
+core = 6.x
 engine = phptemplate

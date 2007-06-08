@@ -1,5 +1,6 @@
-; $Id: syslog.info,v 1.1 2007/04/10 10:10:27 dries Exp $
+; $Id: syslog.info,v 1.2 2007/06/08 05:50:56 dries Exp $
 name = Syslog
 description = Logs and records system events to syslog.
 package = Core - optional
 version = VERSION
+core = 6.x

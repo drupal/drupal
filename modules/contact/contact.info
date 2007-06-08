@@ -1,5 +1,6 @@
-; $Id: contact.info,v 1.3 2006/11/21 20:55:34 dries Exp $
+; $Id: contact.info,v 1.4 2007/06/08 05:50:54 dries Exp $
 name = Contact
 description = Enables the use of both personal and site-wide contact forms.
 package = Core - optional
 version = VERSION
+core = 6.x

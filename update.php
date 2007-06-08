@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.224 2007/06/01 09:05:44 unconed Exp $
+// $Id: update.php,v 1.225 2007/06/08 05:50:53 dries Exp $
 
 /**
  * @file
@@ -702,6 +702,37 @@ function update_create_batch_table() {
 }
 
 /**
+ * Disable anything in the {system} table that is not compatible with the
+ * current version of Drupal core.
+ */
+function update_fix_compatibility() {
+  $ret = array();
+  $incompatible = array();
+  $themes = system_theme_data();
+  $modules = module_rebuild_cache();
+  $query = db_query("SELECT name, type, status FROM {system} WHERE status = 1 AND type IN ('module','theme')");
+  while ($result = db_fetch_object($query)) {
+    $name = $result->name;
+    $file = array();
+    if ($result->type == 'module' && isset($modules[$name])) {
+      $file = $modules[$name];
+    }
+    else if ($result->type == 'theme' && isset($themes[$name])) {
+      $file = $themes[$name];
+    }
+    if (!isset($file)
+        || !isset($file->info['core'])
+        || $file->info['core'] != DRUPAL_CORE_COMPATIBILITY) {
+      $incompatible[] = $name;
+    }
+  }
+  if (!empty($incompatible)) {
+    $ret[] = update_sql("UPDATE {system} SET status = 0 WHERE name IN ('". implode("','", $incompatible) ."')");
+  }
+  return $ret;
+}
+
+/**
  * Add the update task list to the current page.
  */
 function update_task_list($active = NULL) {
@@ -747,6 +778,7 @@ if (($access_check == FALSE) || ($user->uid == 1)) {
   update_fix_watchdog_115();
   update_fix_watchdog();
   update_fix_sessions();
+  update_fix_compatibility();
 
   $op = isset($_REQUEST['op']) ? $_REQUEST['op'] : '';
   switch ($op) {
