@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.490 2007/06/08 05:50:56 dries Exp $
+// $Id: system.module,v 1.491 2007/06/08 12:51:59 goba Exp $
 
 /**
  * @file
@@ -615,7 +615,6 @@ function system_clean_url_settings() {
 
   if (!variable_get('clean_url', 0)) {
     if (strpos(request_uri(), '?q=') !== FALSE) {
-      drupal_add_js(array('cleanURL' => array('success' => t('Your server has been successfully tested to support this feature.'), 'failure' => t('Your system configuration does not currently support this feature. The <a href="http://drupal.org/node/15365">handbook page on Clean URLs</a> has additional troubleshooting information.'), 'testing' => t('Testing clean URLs...'))), 'setting');
       drupal_add_js(drupal_get_path('module', 'system') .'/system.js', 'module');
       drupal_add_js('
 // Global Killswitch
@@ -1060,6 +1059,7 @@ function system_theme_default() {
       'slogan'
     ),
     'stylesheet' => 'style.css',
+    'script' => 'script.js',
     'screenshot' => 'screenshot.png',
   );
 }
@@ -1112,6 +1112,10 @@ function system_theme_data() {
     // Give the stylesheet proper path information.
     if (!empty($themes[$key]->info['stylesheet'])) {
       $themes[$key]->info['stylesheet'] = dirname($themes[$key]->filename) .'/'. $themes[$key]->info['stylesheet'];
+    }
+    // Give the script proper path information.
+    if (!empty($themes[$key]->info['script'])) {
+      $themes[$key]->info['script'] = dirname($themes[$key]->filename) .'/'. $themes[$key]->info['script'];
     }
     // Give the screenshot proper path information.
     if (!empty($themes[$key]->info['screenshot'])) {

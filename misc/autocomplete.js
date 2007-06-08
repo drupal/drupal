@@ -1,4 +1,4 @@
-// $Id: autocomplete.js,v 1.18 2007/06/01 09:05:45 unconed Exp $
+// $Id: autocomplete.js,v 1.19 2007/06/08 12:51:59 goba Exp $
 
 /**
  * Attaches the autocomplete behaviour to all required fields
@@ -282,7 +282,7 @@ Drupal.ACDB.prototype.search = function (searchString) {
         }
       },
       error: function (xmlhttp) {
-        alert('An HTTP error '+ xmlhttp.status +' occured.\n'+ db.uri);
+        alert(Drupal.t("An HTTP error @status occured. \n@uri", { '@status': xmlhttp.status, '@uri': db.uri }));
       }
     });
   }, this.delay);

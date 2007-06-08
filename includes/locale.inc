@@ -1,10 +1,12 @@
 <?php
-// $Id: locale.inc,v 1.133 2007/06/04 07:22:16 dries Exp $
+// $Id: locale.inc,v 1.134 2007/06/08 12:51:58 goba Exp $
 
 /**
  * @file
  *   Administration functions for locale.module.
  */
+
+define('LOCALE_JS_STRING', '(?:(?:\'(?:\\\\\'|[^\'])*\'|"(?:\\\\"|[^"])*")(?:\s*\+\s*)?)+');
 
 /**
  * @defgroup locale-language-overview Language overview functionality
@@ -792,7 +794,11 @@ function locale_translate_edit_form_submit($form, &$form_state) {
     else {
       db_query("INSERT INTO {locales_target} (lid, translation, language) VALUES (%d, '%s', '%s')", $lid, $value, $key);
     }
+
+    // Refresh the JS file for this language.
+    _locale_rebuild_js($key);
   }
+
   drupal_set_message(t('The string has been saved.'));
 
   // Refresh the locale cache.
@@ -814,8 +820,12 @@ function locale_translate_edit_form_submit($form, &$form_state) {
  * Delete a language string.
  */
 function locale_translate_delete($lid) {
+  $langcode = db_result(db_query('SELECT language FROM {locales_source} WHERE lid = %d', $lid));
   db_query('DELETE FROM {locales_source} WHERE lid = %d', $lid);
   db_query('DELETE FROM {locales_target} WHERE lid = %d', $lid);
+  if ($langcode) {
+    _locale_rebuild_js($langcode);
+  }
   locale_refresh_cache();
   drupal_set_message(t('The string has been removed.'));
   drupal_goto('admin/build/translate/search');
@@ -897,47 +907,48 @@ function locale_add_language($langcode, $name = NULL, $native = NULL, $direction
  *
  * @param $file
  *   Drupal file object corresponding to the PO file to import
- * @param $lang
+ * @param $langcode
  *   Language code
  * @param $mode
  *   Should existing translations be replaced ('overwrite' or 'keep')
  * @param $group
  *   Text group to import PO file into (eg. 'default' for interface translations)
  */
-function _locale_import_po($file, $lang, $mode, $group = NULL) {
-  // If not in 'safe mode', increase the maximum execution time:
+function _locale_import_po($file, $langcode, $mode, $group = NULL) {
+  // If not in 'safe mode', increase the maximum execution time.
   if (!ini_get('safe_mode')) {
     set_time_limit(240);
   }
 
-  // Check if we have the language already in the database
-  if (!db_fetch_object(db_query("SELECT language FROM {languages} WHERE language = '%s'", $lang))) {
+  // Check if we have the language already in the database.
+  if (!db_fetch_object(db_query("SELECT language FROM {languages} WHERE language = '%s'", $langcode))) {
     drupal_set_message(t('The language selected for import is not supported.'), 'error');
     return FALSE;
   }
 
   // Get strings from file (returns on failure after a partial import, or on success)
-  $status = _locale_import_read_po('db-store', $file, $mode, $lang, $group);
+  $status = _locale_import_read_po('db-store', $file, $mode, $langcode, $group);
   if ($status === FALSE) {
-    // error messages are set in _locale_import_read_po
+    // Error messages are set in _locale_import_read_po().
     return FALSE;
   }
 
-  // Get status information on import process
+  // Get status information on import process.
   list($headerdone, $additions, $updates) = _locale_import_one_string('db-report');
 
   if (!$headerdone) {
     drupal_set_message(t('The translation file %filename appears to have a missing or malformed header.', array('%filename' => $file->filename)), 'error');
   }
 
-  // rebuild locale cache
-  cache_clear_all("locale:$lang", 'cache');
+  // Rebuild locale cache.
+  _locale_rebuild_js($langcode);
+  cache_clear_all("locale:$langcode", 'cache');
 
-  // rebuild the menu, strings may have changed
+  // Rebuild the menu, strings may have changed.
   menu_rebuild();
 
   drupal_set_message(t('The translation was successfully imported. There are %number newly created translated strings and %update strings were updated.', array('%number' => $additions, '%update' => $updates)));
-  watchdog('locale', 'Imported %file into %locale: %number new strings added and %update updated.', array('%file' => $file->filename, '%locale' => $lang, '%number' => $additions, '%update' => $updates));
+  watchdog('locale', 'Imported %file into %locale: %number new strings added and %update updated.', array('%file' => $file->filename, '%locale' => $langcode, '%number' => $additions, '%update' => $updates));
   return TRUE;
 }
 
@@ -1553,6 +1564,102 @@ function _locale_import_parse_quoted($string) {
  */
 
 /**
+ * This function checks all JavaScript files currently added via drupal_add_js()
+ * and invokes parsing if they have not yet been parsed for Drupal.t() calls.
+ */
+function _locale_update_js_files() {
+  global $language;
+
+  $parsed = variable_get('javascript_parsed', array());
+
+  // The first three parameters are NULL in order to get an array with all
+  // scopes. This is necessary to prevent recreation of JS translation files
+  // when new files are added for example in the footer.
+  $javascript = drupal_add_js(NULL, NULL, NULL);
+  $files = FALSE;
+  $parsed = array();
+
+  foreach ($javascript as $scope) {
+    foreach ($scope as $type => $data) {
+      if ($type != 'setting' && $type != 'inline') {
+        foreach ($data as $filepath => $info) {
+          $files = TRUE;
+          if (!in_array($filepath, $parsed)) {
+            _locale_parse_js_file($filepath);
+            watchdog('locale', 'Parsed JavaScript file %file.', array('%file' => $filepath));
+            $parsed[] = $filepath;
+          }
+        }
+      }
+    }
+  }
+
+  // Update the parsed files storage array.
+  variable_set('javascript_parsed', $parsed);
+  _locale_rebuild_js();
+
+  // Add the translation JavaScript file to the page.
+  if ($files && !empty($language->javascript)) {
+    drupal_add_js(file_create_path(variable_get('locale_js_directory', 'languages') .'/'. $language->language .'_'. $language->javascript .'.js'), 'core');
+  }
+}
+
+/**
+ * Parses a JavaScript file, extracts strings wrapped in Drupal.t() and
+ * Drupal.formatPlural() and inserts them into the database.
+ */
+function _locale_parse_js_file($filepath) {
+  global $language;
+
+  // Load the JavaScript file.
+  $file = file_get_contents($filepath);
+
+  // Match all calls to Drupal.t() in an array.
+  // Note: \s also matches newlines with the 's' modifier.
+  preg_match_all('~[^\w]Drupal\s*\.\s*t\s*\(\s*('. LOCALE_JS_STRING .')\s*[,\)]~s', $file, $t_matches);
+
+  // Match all Drupal.formatPlural() calls in another array.
+  preg_match_all('~[^\w]Drupal\s*\.\s*formatPlural\s*\(\s*.+?\s*,\s*('. LOCALE_JS_STRING .')\s*,\s*((?:(?:\'(?:\\\\\'|[^\'])*@count(?:\\\\\'|[^\'])*\'|"(?:\\\\"|[^"])*@count(?:\\\\"|[^"])*")(?:\s*\+\s*)?)+)\s*[,\)]~s', $file, $plural_matches);
+
+  // Loop through all matches and process them.
+  $all_matches = array_merge($plural_matches[1], $t_matches[1]);
+  foreach ($all_matches as $key => $string) {
+    $strings = array($string);
+
+    // If there is also a plural version of this string, add it to the strings array.
+    if (isset($plural_matches[2][$key])) {
+      $strings[] = $plural_matches[2][$key];
+    }
+
+    foreach ($strings as $key => $string) {
+      // Remove the quotes and string concatenations from the string.
+      $string = implode('', preg_split('~(?<!\\\\)[\'"]\s*\+\s*[\'"]~s', substr($string, 1, -1)));
+
+      $result = db_query("SELECT lid, location FROM {locales_source} WHERE source = '%s' AND textgroup = 'default'", $string);
+      if ($source = db_fetch_object($result)) {
+        // We already have this source string and now have to add the location
+        // to the location column, if this file is not yet present in there.
+        $locations = preg_split('~\s*;\s*~', $source->location);
+
+        if (!in_array($filepath, $locations)) {
+          $locations[] = $filepath;
+          $locations = implode('; ', $locations);
+
+          // Save the new locations string to the database.
+          db_query("UPDATE {locales_source} SET location = '%s' WHERE lid = %d", $locations, $source->lid);
+        }
+      }
+      else {
+        // We don't have the source string yet, thus we insert it into the database.
+        db_query("INSERT INTO {locales_source} (location, source, textgroup) VALUES ('%s', '%s', 'default')", $filepath, $string);
+        $lid = db_result(db_query("SELECT lid FROM {locales_source} WHERE source = '%s' AND textgroup = 'default'", $string));
+        db_query("INSERT INTO {locales_target} (lid, language, translation) VALUES (%d, '%s', '')", $lid, $language->language);
+      }
+    }
+  }
+}
+
+/**
  * @defgroup locale-api-export Translation (template) export API.
  * @{
  */
@@ -1866,6 +1973,128 @@ function _locale_translate_seek_query() {
     }
   }
   return $query;
+}
+
+/**
+ * (Re-)Creates the JavaScript translation file for a language.
+ *
+ * @param $language
+ *   The language, the translation file should be (re)created for.
+ */
+function _locale_rebuild_js($langcode = NULL) {
+  if (!isset($langcode)) {
+    global $language;
+  }
+  else {
+    // Get information about the locale.
+    $languages = language_list();
+    $language = $languages[$langcode];
+  }
+
+  // Construct the array for JavaScript translations.
+  // We sort on plural so that we have all plural forms before singular forms.
+  $result = db_query("SELECT s.lid, s.source, t.plid, t.plural, t.translation FROM {locales_source} s INNER JOIN {locales_target} t ON s.lid = t.lid WHERE t.language = '%s' AND s.location LIKE '%%.js%%' AND s.textgroup = 'default' ORDER BY t.plural DESC", $language->language);
+
+  $translations = $plurals = array();
+  while ($data = db_fetch_object($result)) {
+    // Only add this to the translations array when there is actually a translation.
+    if (!empty($data->translation)) {
+      if ($data->plural) {
+        // When the translation is a plural form, first add it to another array and
+        // wait for the singular (parent) translation.
+        if (!isset($plurals[$data->plid])) {
+          $plurals[$data->plid] = array($data->plural => $data->translation);
+        }
+        else {
+          $plurals[$data->plid] += array($data->plural => $data->translation);
+        }
+      }
+      elseif (isset($plurals[$data->lid])) {
+        // There are plural translations for this translation, so get them from
+        // the plurals array and add them to the final translations array.
+        $translations[$data->source] = array($data->plural => $data->translation) + $plurals[$data->lid];
+        unset($plurals[$data->lid]);
+      }
+      else {
+        // There are no plural forms for this translation, so just add it to
+        // the translations array.
+        $translations[$data->source] = $data->translation;
+      }
+    }
+  }
+
+  // Only operate when there are translations.
+  if (!empty($translations)) {
+    // Construct the JavaScript file.
+    $data = "Drupal.locale = { ";
+
+    if (!empty($language->formula)) {
+      $data .= "'pluralFormula': function(\$n) { return Number({$language->formula}); }, ";
+    }
+
+    $data .= "'strings': ". drupal_to_js($translations) ." };";
+
+    // Construct the directory where JS translation files are stored.
+    // There is (on purpose) no front end to edit that variable.
+    $dir = file_create_path(variable_get('locale_js_directory', 'languages'));
+
+    // Only create a new file if the content has changed.
+    $data_hash = md5($data);
+    if ($language->javascript != $data_hash) {
+      if (!empty($language->javascript)) {
+        // We are recreating the new file, so delete the old one.
+        file_delete(file_create_path($dir .'/'. $language->language .'_'. $language->javascript .'.js'));
+        $language->javascript = '';
+      }
+      else {
+        // The directory might not exist when there has not been a translation
+        // file before, so create it.
+        file_check_directory($dir, TRUE);
+      }
+
+      // The file name of the new JavaScript translation file.
+      $dest = $dir .'/'. $language->language .'_'. $data_hash .'.js';
+      $filepath = file_save_data($data, $dest);
+
+      // Update the global $language object.
+      $language->javascript = $filepath ? $data_hash : '';
+
+      // Save the new JavaScript hash.
+      db_query("UPDATE {languages} SET javascript = '%s' WHERE language = '%s'", $language->javascript, $language->language);
+
+      // Update the default language variable if the default language has been altered.
+      // This is necessary to keep the variable consistent with the database
+      // version of the language and to prevent checking against an outdated hash.
+      $default_langcode = language_default('language');
+      if ($default_langcode == $language->language) {
+        $default = db_fetch_object(db_query("SELECT * FROM {languages} WHERE language = '%s'", $default_langcode));
+        variable_set('language_default', $default);
+      }
+
+      // Only report updated or creation when there is actually a file created.
+      if ($filepath) {
+        // There has already been a translation file before.
+        if (!empty($language->javascript)) {
+          watchdog('locale', t('Updated JavaScript translation file for the language %language.', array('%language' => t($language->name))));
+        }
+        else {
+          watchdog('locale', t('Created JavaScript translation file for the language %language.', array('%language' => t($language->name))));
+        }
+      }
+      else {
+        watchdog('locale', t('An error occured during creation of the JavaScript translation file for the language %language.', array('%language' => t($language->name))));
+      }
+    }
+  }
+
+  // There are no strings for JavaScript translation. However, if there is a file,
+  // delete it and reset the database.
+  elseif (!empty($language->javascript)) {
+    // Delete the old JavaScript file
+    file_delete(file_create_path(variable_get('locale_js_directory', 'languages') .'/'. $language->language .'_'. $language->javascript .'.js'));
+    db_query("UPDATE {languages} SET javascript = '' WHERE language = '%s'", $language->language);
+    watchdog('locale', t('Deleted JavaScript translation file for the locale %language.', array('%language' => t($language->name))));
+  }
 }
 
 /**

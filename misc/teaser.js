@@ -1,4 +1,4 @@
-// $Id: teaser.js,v 1.4 2007/06/01 09:05:45 unconed Exp $
+// $Id: teaser.js,v 1.5 2007/06/08 12:51:59 goba Exp $
 
 /**
  * Auto-attach for teaser behaviour.
@@ -29,7 +29,7 @@ Drupal.teaserAttach = function() {
       $(teaser).attr('disabled', 'disabled');
       $(teaser).parent().slideUp('fast');
       // Change label
-      $(this).val(Drupal.settings.teaserButton[1]);
+      $(this).val(Drupal.t('Split summary at cursor'));
       // Show separate teaser checkbox
       $(checkbox).hide();
     }
@@ -48,7 +48,7 @@ Drupal.teaserAttach = function() {
       $(teaser).attr('disabled', '');
       $(teaser).parent().slideDown('fast');
       // Change label
-      $(this).val(Drupal.settings.teaserButton[0]);
+      $(this).val(Drupal.t('Join summary'));
       // Show separate teaser checkbox
       $(checkbox).show();
     }
@@ -64,11 +64,11 @@ Drupal.teaserAttach = function() {
       teaser[0].value = trim(text[0]);
       body[0].value = trim(text[1]);
       $(teaser).attr('disabled', '');
-      $('input', button).val(Drupal.settings.teaserButton[0]).toggle(join_teaser, split_teaser);
+      $('input', button).val(Drupal.t('Join summary')).toggle(join_teaser, split_teaser);
     }
     else {
       $(teaser).hide();
-      $('input', button).val(Drupal.settings.teaserButton[1]).toggle(split_teaser, join_teaser);
+      $('input', button).val(Drupal.t('Split summary at cursor')).toggle(split_teaser, join_teaser);
       $(checkbox).hide();
     }
 

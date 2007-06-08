@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.204 2007/06/08 06:04:14 dries Exp $
+// $Id: form.inc,v 1.205 2007/06/08 12:51:58 goba Exp $
 
 /**
  * @defgroup form Form generation
@@ -1564,7 +1564,6 @@ function theme_textarea($element) {
   if (!empty($element['#teaser'])) {
     drupal_add_js('misc/teaser.js');
     // Note: arrays are merged in drupal_get_js().
-    drupal_add_js(array('teaserButton' => array(t('Join summary'), t('Split summary at cursor'))), 'setting');
     drupal_add_js(array('teaserCheckbox' => array($element['#id'] => $element['#teaser_checkbox'])), 'setting');
     drupal_add_js(array('teaser' => array($element['#id'] => $element['#teaser'])), 'setting');
     $class[] = 'teaser';

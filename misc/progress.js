@@ -1,4 +1,4 @@
-// $Id: progress.js,v 1.16 2007/06/01 09:05:45 unconed Exp $
+// $Id: progress.js,v 1.17 2007/06/08 12:51:59 goba Exp $
 
 /**
  * A progressbar object. Initialized with the given id. Must be inserted into
@@ -86,7 +86,7 @@ Drupal.progressBar.prototype.sendPing = function () {
         pb.timer = setTimeout(function() { pb.sendPing(); }, pb.delay);
       },
       error: function (xmlhttp) {
-        pb.displayError('An HTTP error '+ xmlhttp.status +' occured.\n'+ pb.uri);
+        pb.displayError(Drupal.t("An HTTP error @status occured. \n@uri", { '@status': xmlhttp.status, '@uri': pb.uri }));
       }
     });
   }

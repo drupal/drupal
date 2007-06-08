@@ -1,19 +1,20 @@
 <?php
-// $Id: locale.schema,v 1.1 2007/05/25 12:46:44 dries Exp $
+// $Id: locale.schema,v 1.2 2007/06/08 12:51:59 goba Exp $
 
 function locale_schema() {
   $schema['languages'] = array(
     'fields' => array(
-      'language'  => array('type' => 'varchar', 'length' => 12, 'not null' => TRUE, 'default' => ''),
-      'name'      => array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''),
-      'native'    => array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''),
-      'direction' => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      'enabled'   => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      'plurals'   => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      'formula'   => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
-      'domain'    => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
-      'prefix'    => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
-      'weight'    => array('type' => 'int', 'not null' => TRUE, 'default' => 0)
+      'language'   => array('type' => 'varchar', 'length' => 12, 'not null' => TRUE, 'default' => ''),
+      'name'       => array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''),
+      'native'     => array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''),
+      'direction'  => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'enabled'    => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'plurals'    => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'formula'    => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
+      'domain'     => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
+      'prefix'     => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
+      'weight'     => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'javascript' => array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''),
     ),
     'primary key' => array('language'),
   );

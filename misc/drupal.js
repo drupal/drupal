@@ -1,6 +1,6 @@
-// $Id: drupal.js,v 1.33 2007/06/04 07:22:16 dries Exp $
+// $Id: drupal.js,v 1.34 2007/06/08 12:51:59 goba Exp $
 
-var Drupal = Drupal || {};
+var Drupal = Drupal || { 'settings': {}, 'themes': {}, 'locale': {} };
 
 /**
  * Set the variable that indicates if JavaScript behaviors should be applied
@@ -19,6 +19,142 @@ Drupal.extend = function(obj) {
       this[i] = obj[i];
     }
   }
+};
+
+/**
+ * Encode special characters in a plain-text string for display as HTML.
+ */
+Drupal.checkPlain = function(str) {
+  str = String(str);
+  var replace = { '&': '&amp;', '"': '&quot;', '<': '&lt;', '>': '&gt;' };
+  for (var character in replace) {
+    str = str.replace(character, replace[character]);
+  }
+  return str;
+};
+
+/**
+ * Translate strings to the page language or a given language.
+ *
+ * See the documentation of the server-side t() function for further details.
+ *
+ * @param str
+ *   A string containing the English string to translate.
+ * @param args
+ *   An object of replacements pairs to make after translation. Incidences
+ *   of any key in this array are replaced with the corresponding value.
+ *   Based on the first character of the key, the value is escaped and/or themed:
+ *    - !variable: inserted as is
+ *    - @variable: escape plain text to HTML (Drupal.checkPlain)
+ *    - %variable: escape text and theme as a placeholder for user-submitted
+ *      content (checkPlain + Drupal.theme('placeholder'))
+ * @return
+ *   The translated string.
+ */
+Drupal.t = function(str, args) {
+  // Fetch the localized version of the string.
+  if (Drupal.locale.strings && Drupal.locale.strings[str]) {
+    str = Drupal.locale.strings[str];
+  }
+
+  if (args) {
+    // Transform arguments before inserting them
+    for (var key in args) {
+      switch (key.charAt(0)) {
+        // Escaped only
+        case '@':
+          args[key] = Drupal.checkPlain(args[key]);
+        break;
+        // Pass-through
+        case '!':
+          break;
+        // Escaped and placeholder
+        case '%':
+        default:
+          args[key] = Drupal.theme('placeholder', args[key]);
+          break;
+      }
+      str = str.replace(key, args[key]);
+    }
+  }
+  return str;
+};
+
+/**
+ * Format a string containing a count of items.
+ *
+ * This function ensures that the string is pluralized correctly. Since Drupal.t() is
+ * called by this function, make sure not to pass already-localized strings to it.
+ *
+ * See the documentation of the server-side format_plural() function for further details.
+ *
+ * @param count
+ *   The item count to display.
+ * @param singular
+ *   The string for the singular case. Please make sure it is clear this is
+ *   singular, to ease translation (e.g. use "1 new comment" instead of "1 new").
+ *   Do not use @count in the singular string.
+ * @param plural
+ *   The string for the plural case. Please make sure it is clear this is plural,
+ *   to ease translation. Use @count in place of the item count, as in "@count
+ *   new comments".
+ * @param args
+ *   An object of replacements pairs to make after translation. Incidences
+ *   of any key in this array are replaced with the corresponding value.
+ *   Based on the first character of the key, the value is escaped and/or themed:
+ *    - !variable: inserted as is
+ *    - @variable: escape plain text to HTML (Drupal.checkPlain)
+ *    - %variable: escape text and theme as a placeholder for user-submitted
+ *      content (checkPlain + Drupal.theme('placeholder'))
+ *   Note that you do not need to include @count in this array.
+ *   This replacement is done automatically for the plural case.
+ * @return
+ *   A translated string.
+ */
+Drupal.formatPlural = function(count, singular, plural, args) {
+  var args = ars || {};
+  args['@count'] = count;
+  // Determine the index of the plural form.
+  var index = Drupal.locale.pluralFormula ? Drupal.locale.pluralFormula(args['@count']) : ((args['@count'] == 1) ? 0 : 1);
+
+  if (index == 0) {
+    return Drupal.t(singular, args);
+  }
+  else if (index == 1) {
+    return Drupal.t(plural, args);
+  }
+  else {
+    args['@count['+ index +']'] = args['@count'];
+    delete args['@count'];
+    return Drupal.t(plural.replace('@count', '@count['+ index +']'));
+  }
+};
+
+/**
+ * Generate the themed representation of a Drupal object.
+ *
+ * All requests for themed output must go through this function. It examines
+ * the request and routes it to the appropriate theme function. If the current
+ * theme does not provide an override function, the generic theme function is
+ * called.
+ *
+ * For example, to retrieve the HTML that is output by theme_placeholder(text),
+ * call Drupal.theme('placeholder', text).
+ *
+ * @param func
+ *   The name of the theme function to call.
+ * @param ...
+ *   Additional arguments to pass along to the theme function.
+ * @return
+ *   Any data the theme function returns. This could be a plain HTML string,
+ *   but also a complex object.
+ */
+Drupal.theme = function(func) {
+  for (var i = 1, args = []; i < arguments.length; i++) {
+    args.push(arguments[i]);
+  }
+
+  return (Drupal.theme[func] || Drupal.theme.prototype[func]).apply(this, args);
 };
 
 /**
@@ -126,7 +262,7 @@ Drupal.mousePosition = function(e) {
  */
 Drupal.parseJson = function (data) {
   if ((data.substring(0, 1) != '{') && (data.substring(0, 1) != '[')) {
-    return { status: 0, data: data.length ? data : 'Unspecified error' };
+    return { status: 0, data: data.length ? data : Drupal.t('Unspecified error') };
   }
   return eval('(' + data + ');');
 };
@@ -227,3 +363,21 @@ if (Drupal.jsEnabled) {
   // 'js enabled' cookie
   document.cookie = 'has_js=1';
 }
+
+/**
+ * The default themes.
+ */
+Drupal.theme.prototype = {
+
+  /**
+   * Formats text for emphasized display in a placeholder inside a sentence.
+   *
+   * @param str
+   *   The text to format (plain-text).
+   * @return
+   *   The formatted text (html).
+   */
+  placeholder: function(str) {
+    return '<em>' + Drupal.checkPlain(str) + '</em>';
+  }
+};

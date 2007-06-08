@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.59 2007/06/08 06:04:14 dries Exp $
+// $Id: install.php,v 1.60 2007/06/08 12:51:58 goba Exp $
 
 require_once './includes/install.inc';
 
@@ -898,6 +898,8 @@ function install_configure_form() {
   );
 
   drupal_add_js(drupal_get_path('module', 'system') .'/system.js', 'module');
+  // We add these strings as settings because JavaScript translation does not
+  // work on install time.
   drupal_add_js(array('cleanURL' => array('success' => st('Your server has been successfully tested to support this feature.'), 'failure' => st('Your system configuration does not currently support this feature. The <a href="http://drupal.org/node/15365">handbook page on Clean URLs</a> has additional troubleshooting information.'), 'testing' => st('Testing clean URLs...'))), 'setting');
   drupal_add_js('
 // Global Killswitch

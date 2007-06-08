@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.651 2007/06/04 07:22:16 dries Exp $
+// $Id: common.inc,v 1.652 2007/06/08 12:51:58 goba Exp $
 
 /**
  * @file
@@ -1686,13 +1686,14 @@ function drupal_clear_css_cache() {
  *   feature has been turned on under the performance section?
  * @return
  *   If the first parameter is NULL, the JavaScript array that has been built so
- *   far for $scope is returned.
+ *   far for $scope is returned. If the first three parameters are NULL,
+ *   an array with all scopes is returned.
  */
 function drupal_add_js($data = NULL, $type = 'module', $scope = 'header', $defer = FALSE, $cache = TRUE, $preprocess = TRUE) {
   static $javascript = array();
 
   // Add jquery.js and drupal.js the first time a Javascript file is added.
-  if ($data && empty($javascript)) {
+  if (isset($data) && empty($javascript)) {
     $javascript['header'] = array(
       'core' => array(
         'misc/jquery.js' => array('cache' => TRUE, 'defer' => FALSE, 'preprocess' => TRUE),
@@ -1701,11 +1702,11 @@ function drupal_add_js($data = NULL, $type = 'module', $scope = 'header', $defer
       'module' => array(), 'theme' => array(), 'setting' => array(), 'inline' => array(),
     );
   }
-  if (!isset($javascript[$scope])) {
+  if (isset($scope) && !isset($javascript[$scope])) {
     $javascript[$scope] = array('core' => array(), 'module' => array(), 'theme' => array(), 'setting' => array(), 'inline' => array());
   }
 
-  if (!isset($javascript[$scope][$type])) {
+  if (isset($type) && isset($scope) && !isset($javascript[$scope][$type])) {
     $javascript[$scope][$type] = array();
   }
 
@@ -1723,7 +1724,12 @@ function drupal_add_js($data = NULL, $type = 'module', $scope = 'header', $defer
     }
   }
 
-  return $javascript[$scope];
+  if (isset($scope)) {
+    return $javascript[$scope];
+  }
+  else {
+    return $javascript;
+  }
 }
 
 /**
@@ -1743,6 +1749,10 @@ function drupal_add_js($data = NULL, $type = 'module', $scope = 'header', $defer
  *   All JavaScript code segments and includes for the scope as HTML tags.
  */
 function drupal_get_js($scope = 'header', $javascript = NULL) {
+  if (function_exists('locale_inc_callback')) {
+    locale_inc_callback('_locale_update_js_files');
+  }
+ 
   if (!isset($javascript)) {
     $javascript = drupal_add_js(NULL, NULL, $scope);
   }
@@ -2062,6 +2072,7 @@ function _packer_backreferences($match, $offset, $data) {
  */
 function drupal_clear_js_cache() {
   file_scan_directory(file_create_path('js'), '.*', array('.', '..', 'CVS'), 'file_delete', TRUE);
+  variable_set('javascript_parsed', '');
 }
 
 /**

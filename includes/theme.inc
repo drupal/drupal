@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.357 2007/05/31 12:14:04 dries Exp $
+// $Id: theme.inc,v 1.358 2007/06/08 12:51:58 goba Exp $
 
 /**
  * @file
@@ -110,6 +110,21 @@ function _init_theme($theme, $base_theme = array()) {
     foreach ($base_theme as $base) {
       if (!empty($base->stylesheet)) {
         drupal_add_css($base->stylesheet, 'theme');
+        break;
+      }
+    }
+  }
+
+  // Add the default script
+  if (!empty($theme->script)) {
+    drupal_add_js($theme->script, 'theme');
+  }
+  else {
+    // If we don't have a script of our own, look for the first
+    // base to have one and use its.
+    foreach ($base_theme as $base) {
+      if (!empty($base->script)) {
+        drupal_add_js($base->script, 'theme');
         break;
       }
     }
@@ -341,8 +356,11 @@ function list_themes($refresh = FALSE) {
     while ($theme = db_fetch_object($result)) {
       if (file_exists($theme->filename)) {
         $theme->info = unserialize($theme->info);
-        if (isset($theme->info['stylesheet'])) {
+        if (!empty($theme->info['stylesheet']) && file_exists($theme->info['stylesheet'])) {
           $theme->stylesheet = $theme->info['stylesheet'];
+        }
+        if (!empty($theme->info['script']) && file_exists($theme->info['script'])) {
+          $theme->script = $theme->info['script'];
         }
         if (isset($theme->info['engine'])) {
           $theme->engine = $theme->info['engine'];
@@ -1164,7 +1182,6 @@ function theme_table($header, $rows, $attributes = array(), $caption = NULL) {
  * Returns a header cell for tables that have a select all functionality.
  */
 function theme_table_select_header_cell() {
-  drupal_add_js(array('tableSelect' => array('selectAll' => t('Select all rows in this table'), 'selectNone' => t('Deselect all rows in this table'))), 'setting');
   drupal_add_js('misc/tableselect.js');
 
   return array('class' => 'select-all');

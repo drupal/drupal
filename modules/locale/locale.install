@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.install,v 1.11 2007/05/25 15:47:56 goba Exp $
+// $Id: locale.install,v 1.12 2007/06/08 12:51:59 goba Exp $
 
 /**
  * Implementation of hook_install().
@@ -12,7 +12,7 @@ function locale_install() {
   // Create tables.
   drupal_install_schema('locale');
 
-  db_query("INSERT INTO {languages} (language, name, native, direction, enabled, weight) VALUES ('en', 'English', 'English', '0', '1', '0')");
+  db_query("INSERT INTO {languages} (language, name, native, direction, enabled, weight, javascript) VALUES ('en', 'English', 'English', '0', '1', '0', '')");
 }
 
 /**
@@ -92,6 +92,15 @@ function locale_update_6002() {
 }
 
 /**
+ * Adds a column to store the filename of the JavaScript translation file.
+ */
+function locale_update_6003() {
+  $ret = array();
+  db_add_field($rest, 'languages', 'javascript', array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''));
+  return $ret;
+}
+
+/**
  * @} End of "defgroup updates-5.x-to-6.x"
  */
 
@@ -99,6 +108,14 @@ function locale_update_6002() {
  * Implementation of hook_uninstall().
  */
 function locale_uninstall() {
+  // Delete all JavaScript translation files
+  $files = db_query('SELECT javascript FROM {languages}');
+  while ($file = db_fetch_object($files)) {
+    if (!empty($file)) {
+      file_delete(file_create_path($file->javascript));
+    }
+  }
+
   // Remove tables.
   drupal_uninstall_schema('locale');
 }
