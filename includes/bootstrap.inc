@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.169 2007/05/30 08:08:57 dries Exp $
+// $Id: bootstrap.inc,v 1.170 2007/06/09 07:26:36 dries Exp $
 
 /**
  * @file
@@ -311,7 +311,8 @@ function conf_init() {
   if (strpos($cookie_domain, 'www.') === 0) {
     $cookie_domain = substr($cookie_domain, 4);
   }
-  $cookie_domain = '.'. array_shift(explode(':', $cookie_domain));
+  $cookie_domain = explode(':', $cookie_domain);
+  $cookie_domain = '.'. array_shift($cookie_domain);
   // Per RFC 2109, cookie domains must contain at least one dot other than the
   // first. For hosts such as 'localhost' or IP Addresses we don't set a cookie domain.
   if (count(explode('.', $cookie_domain)) > 2 && !is_numeric(str_replace('.', '', $cookie_domain))) {
