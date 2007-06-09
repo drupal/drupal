@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.134 2007/06/08 12:51:58 goba Exp $
+// $Id: locale.inc,v 1.135 2007/06/09 09:44:28 goba Exp $
 
 /**
  * @file
@@ -732,51 +732,60 @@ function locale_translate_export_po_form_submit($form, &$form_state) {
  * User interface for string editing.
  */
 function locale_translate_edit_form(&$form_state, $lid) {
-  $languages = language_list();
-  unset($languages['en']);
-
-  $result = db_query('SELECT DISTINCT s.source, t.translation, t.language FROM {locales_source} s INNER JOIN {locales_target} t ON s.lid = t.lid WHERE s.lid = %d', $lid);
-  $form = array();
-  $form['translations'] = array('#tree' => TRUE);
-  while ($translation = db_fetch_object($result)) {
-    $orig = $translation->source;
-
-    // Approximate the number of rows in a textfield with a maximum of 10.
-    $rows = min(ceil(str_word_count($orig) / 12), 10);
-
-    $form['translations'][$translation->language] = array(
-      '#type' => 'textarea',
-      '#title' => $languages[$translation->language]->name,
-      '#default_value' => $translation->translation,
-      '#rows' => $rows,
-    );
-    unset($languages[$translation->language]);
-  }
-
-  // Handle erroneous lid.
-  if (!isset($orig)) {
+  // Fetch source string, if possible.
+  $source = db_fetch_object(db_query('SELECT source, textgroup, location FROM {locales_source} WHERE lid = %d', $lid));
+  if (!$source) {
     drupal_set_message(t('String not found.'), 'error');
     drupal_goto('admin/build/translate/search');
   }
 
-  // Add original text. Assign negative weight so that it floats to the top.
-  $form['item'] = array('#type' => 'item',
-    '#title' => t('Original text'),
-    '#value' => check_plain(wordwrap($orig, 0)),
-    '#weight' => -1,
+  // Add original text to the top and some values for form altering.
+  $form = array(
+    'original' => array(
+      '#type'  => 'item',
+      '#title' => t('Original text'),
+      '#value' => check_plain(wordwrap($source->source, 0)),
+    ),
+    'lid' => array(
+      '#type'  => 'value',
+      '#value' => $lid
+    ),
+    'textgroup' => array(
+      '#type'  => 'value',
+      '#value' => $source->textgroup,
+    ),
+    'location' => array(
+      '#type'  => 'value',
+      '#value' => $source->location
+    ),
   );
 
+  // Include default form controls with empty values for all languages.
+  // This ensures that the languages are always in the same order in forms.
+  $languages = language_list();
+  $default = language_default();
+  // We don't need the default language value, that value is in $source.
+  $omit = $source->textgroup == 'default' ? 'en' : $default->language;
+  unset($languages[($omit)]);
+  $form['translations'] = array('#tree' => TRUE);
+  // Approximate the number of rows to use in the default textarea.
+  $rows = min(ceil(str_word_count($source->source) / 12), 10);
   foreach ($languages as $langcode => $language) {
     $form['translations'][$langcode] = array(
       '#type' => 'textarea',
       '#title' => t($language->name),
       '#rows' => $rows,
+      '#default_value' => '',
     );
   }
+ 
+  // Fetch translations and fill in default values in the form.
+  $result = db_query("SELECT DISTINCT translation, language FROM {locales_target} WHERE lid = %d AND language != '%s'", $lid, $omit);
+  while ($translation = db_fetch_object($result)) {
+    $form['translations'][$translation->language]['#default_value'] = $translation->translation;
+  }
 
-  $form['lid'] = array('#type' => 'value', '#value' => $lid);
   $form['submit'] = array('#type' => 'submit', '#value' => t('Save translations'));
-
   return $form;
 }
 
