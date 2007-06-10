@@ -1,0 +1,8 @@
+/* $Id: print-rtl.css,v 1.1 2007/06/10 08:55:55 goba Exp $ */
+
+body {
+  direction: rtl;
+}
+th {
+  text-align: right;
+}

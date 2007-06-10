@@ -1,11 +1,11 @@
-/* $Id: print.css,v 1.5 2005/06/19 08:50:46 dries Exp $ */
+/* $Id: print.css,v 1.6 2007/06/10 08:55:55 goba Exp $ */
 
 body {
   margin: 1em;
   background-color: #fff;
 }
 th {
-  text-align: left;
+  text-align: left; /* LTR */
   color: #006;
   border-bottom: 1px solid #ccc;
 }
