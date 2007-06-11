@@ -1,5 +1,5 @@
 <?php
-// $Id: chameleon.theme,v 1.65 2007/05/06 05:47:52 dries Exp $
+// $Id: chameleon.theme,v 1.66 2007/06/11 15:21:14 dries Exp $
 
 /**
  * @file
@@ -141,7 +141,9 @@ function chameleon_node($node, $teaser = 0, $page = 0) {
 
   $output .= " </div>\n";
 
-  $submitted['node_submitted'] = theme_get_setting("toggle_node_info_$node->type") ? array('#title' => t("By !author at @date", array('!author' => theme('username', $node), '@date' => format_date($node->created, 'small')))) : array();
+  $submitted['node_submitted'] = theme_get_setting("toggle_node_info_$node->type") ? array(
+    'title' => t("By !author at @date", array('!author' => theme('username', $node), '@date' => format_date($node->created, 'small'))),
+    'html' => TRUE) : array();
 
   $terms = array();
   if (module_exists('taxonomy')) {
@@ -162,7 +164,9 @@ function chameleon_node($node, $teaser = 0, $page = 0) {
 }
 
 function chameleon_comment($comment, $links = "") {
-  $submitted['comment_submitted'] = array('#title' => t('By !author at @date', array('!author' => theme('username', $comment), '@date' => format_date($comment->timestamp, 'small'))));
+  $submitted['comment_submitted'] = array(
+    'title' => t('By !author at @date', array('!author' => theme('username', $comment), '@date' => format_date($comment->timestamp, 'small'))),
+    'html' => TRUE);
 
   $output  = "<div class=\"comment". ($comment->status == COMMENT_NOT_PUBLISHED ? ' comment-unpublished' : '') ."\">\n";
   $output .= " <h3 class=\"title\">". l($comment->subject, $_GET['q'], NULL, NULL, "comment-$comment->cid") ."</h3>\n";

@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.135 2007/06/09 09:44:28 goba Exp $
+// $Id: locale.inc,v 1.136 2007/06/11 15:21:14 dries Exp $
 
 /**
  * @file
@@ -778,7 +778,7 @@ function locale_translate_edit_form(&$form_state, $lid) {
       '#default_value' => '',
     );
   }
- 
+
   // Fetch translations and fill in default values in the form.
   $result = db_query("SELECT DISTINCT translation, language FROM {locales_target} WHERE lid = %d AND language != '%s'", $lid, $omit);
   while ($translation = db_fetch_object($result)) {

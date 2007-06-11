@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.170 2007/06/09 07:26:36 dries Exp $
+// $Id: bootstrap.inc,v 1.171 2007/06/11 15:21:13 dries Exp $
 
 /**
  * @file
@@ -253,6 +253,32 @@ function drupal_unset_globals() {
       }
     }
   }
+
+  if ($cookie_domain) {
+    // If the user specifies the cookie domain, also use it for session name.
+    $session_name = $cookie_domain;
+  }
+  else {
+    // Otherwise use $base_url for session name.
+    $session_name = $base_url;
+    // We try to set the cookie domain to the hostname.
+    if (!empty($_SERVER['HTTP_HOST'])) {
+      $cookie_domain = $_SERVER['HTTP_HOST'];
+    }
+  }
+  // Strip leading periods, www., and port numbers from cookie domain.
+  $cookie_domain = ltrim($cookie_domain, '.');
+  if (strpos($cookie_domain, 'www.') === 0) {
+    $cookie_domain = substr($cookie_domain, 4);
+  }
+  $cookie_domain = explode(':', $cookie_domain);
+  $cookie_domain = '.'. array_shift($cookie_domain);
+  // Per RFC 2109, cookie domains must contain at least one dot other than the
+  // first. For hosts such as 'localhost' or IP Addresses we don't set a cookie domain.
+  if (count(explode('.', $cookie_domain)) > 2 && !is_numeric(str_replace('.', '', $cookie_domain))) {
+    ini_set('session.cookie_domain', $cookie_domain);
+  }
+  session_name('SESS'. md5($session_name));
 }
 
 /**
