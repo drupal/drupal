@@ -1752,7 +1752,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
   if (function_exists('locale_inc_callback')) {
     locale_inc_callback('_locale_update_js_files');
   }
- 
+
   if (!isset($javascript)) {
     $javascript = drupal_add_js(NULL, NULL, $scope);
   }
