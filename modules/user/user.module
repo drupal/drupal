@@ -1207,7 +1207,7 @@ function user_pass_submit($form, &$form_state) {
 /**
  * Menu callback; process one time login link and redirects to the user page on success.
  */
-function user_pass_reset($uid, $timestamp, $hashed_pass, $action = NULL) {
+function user_pass_reset(&$form_state, $uid, $timestamp, $hashed_pass, $action = NULL) {
   global $user;
 
   // Check if the user is already logged in. The back button is often the culprit here.
