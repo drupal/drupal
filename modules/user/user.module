@@ -1630,7 +1630,6 @@ function user_edit_submit($form, &$form_state) {
   cache_clear_all();
 
   drupal_set_message(t('The changes have been saved.'));
-  $form_state['redirect'] = 'user/'. $account->uid;
   return;
 }
 
