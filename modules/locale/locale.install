@@ -96,7 +96,7 @@ function locale_update_6002() {
  */
 function locale_update_6003() {
   $ret = array();
-  db_add_field($rest, 'languages', 'javascript', array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''));
+  db_add_field($ret, 'languages', 'javascript', array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''));
   return $ret;
 }
 
