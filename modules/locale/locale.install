@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.install,v 1.12 2007/06/08 12:51:59 goba Exp $
+// $Id: locale.install,v 1.13 2007/06/11 07:30:40 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -96,7 +96,7 @@ function locale_update_6002() {
  */
 function locale_update_6003() {
   $ret = array();
-  db_add_field($rest, 'languages', 'javascript', array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''));
+  db_add_field($ret, 'languages', 'javascript', array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''));
   return $ret;
 }
 
