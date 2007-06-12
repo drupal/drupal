@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.491 2007/06/08 12:51:59 goba Exp $
+// $Id: system.module,v 1.492 2007/06/12 22:27:14 dries Exp $
 
 /**
  * @file
@@ -972,7 +972,7 @@ function system_date_time_settings_submit($form, &$form_state) {
   if ($form_state['values']['date_format_long'] == 'custom') {
     $form_state['values']['date_format_long'] = $form_state['values']['date_format_long_custom'];
   }
-  return system_settings_form_submit($form_state['values'], $form, $form_state);
+  return system_settings_form_submit($form, $form_state);
 }
 
 /**
