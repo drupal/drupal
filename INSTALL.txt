@@ -1,4 +1,4 @@
-// $Id: INSTALL.txt,v 1.39 2007/01/08 11:59:16 dries Exp $
+// $Id: INSTALL.txt,v 1.40 2007/06/12 20:25:32 dries Exp $
 
 CONTENTS OF THIS FILE
 ---------------------
@@ -120,7 +120,7 @@ INSTALLATION
    following example crontab line will activate the cron tasks automatically on
    the hour:
 
-   0   *   *   *   *   wget -O - -q http://www.example.com/cron.php
+   0   *   *   *   *   wget -O - -q -t 1 http://www.example.com/cron.php
 
    More information about the cron scripts are available in the admin help pages
    and in the Drupal handbook at drupal.org. Example scripts can be found in the
