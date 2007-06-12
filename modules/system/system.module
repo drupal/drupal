@@ -972,7 +972,7 @@ function system_date_time_settings_submit($form, &$form_state) {
   if ($form_state['values']['date_format_long'] == 'custom') {
     $form_state['values']['date_format_long'] = $form_state['values']['date_format_long_custom'];
   }
-  return system_settings_form_submit($form_state['values'], $form, $form_state);
+  return system_settings_form_submit($form, $form_state);
 }
 
 /**
