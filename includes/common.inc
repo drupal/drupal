@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.653 2007/06/11 15:21:14 dries Exp $
+// $Id: common.inc,v 1.654 2007/06/14 01:35:24 unconed Exp $
 
 /**
  * @file
@@ -2345,26 +2345,24 @@ function drupal_mail($mailkey, $to, $subject, $body, $from = NULL, $headers = ar
     return drupal_mail_wrapper($mailkey, $to, $subject, $body, $from, $headers);
   }
   else {
-    /*
-    ** Note: if you are having problems with sending mail, or mails look wrong
-    ** when they are received you may have to modify the str_replace to suit
-    ** your systems.
-    **  - \r\n will work under dos and windows.
-    **  - \n will work for linux, unix and BSDs.
-    **  - \r will work for macs.
-    **
-    ** According to RFC 2646, it's quite rude to not wrap your e-mails:
-    **
-    ** "The Text/Plain media type is the lowest common denominator of
-    ** Internet e-mail, with lines of no more than 997 characters (by
-    ** convention usually no more than 80), and where the CRLF sequence
-    ** represents a line break [MIME-IMT]."
-    **
-    ** CRLF === \r\n
-    **
-    ** http://www.rfc-editor.org/rfc/rfc2646.txt
-    **
-    */
+    // Note: if you are having problems with sending mail, or mails look wrong
+    // when they are received you may have to modify the str_replace to suit
+    // your systems.
+    //  - \r\n will work under dos and windows.
+    //  - \n will work for linux, unix and BSDs.
+    //  - \r will work for macs.
+    //
+    // According to RFC 2646, it's quite rude to not wrap your e-mails:
+    //
+    // "The Text/Plain media type is the lowest common denominator of
+    // Internet e-mail, with lines of no more than 997 characters (by
+    // convention usually no more than 80), and where the CRLF sequence
+    // represents a line break [MIME-IMT]."
+    //
+    // CRLF === \r\n
+    //
+    // http://www.rfc-editor.org/rfc/rfc2646.txt
+    
     $mimeheaders = array();
     foreach ($headers as $name => $value) {
       $mimeheaders[] = $name .': '. mime_header_encode($value);
