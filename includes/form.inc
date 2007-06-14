@@ -1113,11 +1113,13 @@ function expand_password_confirm($element) {
     '#type' => 'password',
     '#title' => t('Password'),
     '#value' => $element['#value']['pass1'],
+    '#required' => $element['#required'],
   );
   $element['pass2'] =  array(
     '#type' => 'password',
     '#title' => t('Confirm password'),
     '#value' => $element['#value']['pass2'],
+    '#required' => $element['#required'],
   );
   $element['#validate'] = array('password_confirm_validate' => array());
   $element['#tree'] = TRUE;
