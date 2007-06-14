@@ -326,7 +326,7 @@ function contact_user_page($account) {
   return $output;
 }
 
-function contact_mail_user($recipient) {
+function contact_mail_user(&$form_state, $recipient) {
   global $user;
   $form['#token'] = $user->name . $user->mail;
   $form['from'] = array('#type' => 'item',
