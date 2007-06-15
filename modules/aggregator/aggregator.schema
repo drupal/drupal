@@ -38,7 +38,7 @@ function aggregator_schema() {
       'checked'     => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
       'link'        => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
       'description' => array('type' => 'text', 'not null' => TRUE, 'size' => 'big'),
-      'image'       => array('type' => 'text', 'not null' => TRUE, 'size' => 'big'),
+      'image'       => array('type' => 'text', 'not null' => TRUE, 'size' => 'medium'),
       'etag'        => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
       'modified'    => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
       'block'       => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny')

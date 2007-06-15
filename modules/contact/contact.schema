@@ -6,7 +6,7 @@ function contact_schema() {
     'fields' => array(
       'cid'        => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
       'category'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'recipients' => array('type' => 'text', 'not null' => TRUE, 'size' => 'big'),
+      'recipients' => array('type' => 'text', 'not null' => TRUE, 'size' => 'medium'),
       'reply'      => array('type' => 'text', 'not null' => TRUE, 'size' => 'big'),
       'weight'     => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny'),
       'selected'   => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny')

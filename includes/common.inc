@@ -2362,7 +2362,7 @@ function drupal_mail($mailkey, $to, $subject, $body, $from = NULL, $headers = ar
     // CRLF === \r\n
     //
     // http://www.rfc-editor.org/rfc/rfc2646.txt
-    
+
     $mimeheaders = array();
     foreach ($headers as $name => $value) {
       $mimeheaders[] = $name .': '. mime_header_encode($value);
