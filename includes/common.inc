@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.654 2007/06/14 01:35:24 unconed Exp $
+// $Id: common.inc,v 1.655 2007/06/15 07:15:24 dries Exp $
 
 /**
  * @file
@@ -2362,7 +2362,7 @@ function drupal_mail($mailkey, $to, $subject, $body, $from = NULL, $headers = ar
     // CRLF === \r\n
     //
     // http://www.rfc-editor.org/rfc/rfc2646.txt
-    
+
     $mimeheaders = array();
     foreach ($headers as $name => $value) {
       $mimeheaders[] = $name .': '. mime_header_encode($value);

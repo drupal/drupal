@@ -1,5 +1,5 @@
 <?php
-// $Id: user.schema,v 1.1 2007/05/25 12:46:46 dries Exp $
+// $Id: user.schema,v 1.2 2007/06/15 07:15:25 dries Exp $
 
 function user_schema() {
   $schema['access'] = array(
@@ -27,7 +27,7 @@ function user_schema() {
     'fields' => array(
       'pid'  => array('type' => 'serial', 'not null' => TRUE),
       'rid'  => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
-      'perm' => array('type' => 'text', 'not null' => FALSE, 'size' => 'big'),
+      'perm' => array('type' => 'text', 'not null' => FALSE, 'size' => 'medium'),
       'tid'  => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0)
     ),
     'primary key' => array('pid'),
@@ -62,7 +62,7 @@ function user_schema() {
       'language'  => array('type' => 'varchar', 'length' => 12, 'not null' => TRUE, 'default' => ''),
       'picture'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
       'init'      => array('type' => 'varchar', 'length' => 64, 'not null' => FALSE, 'default' => ''),
-      'data'      => array('type' => 'text', 'not null' => FALSE, 'size' => 'big')
+      'data'      => array('type' => 'text', 'not null' => FALSE, 'size' => 'medium')
     ),
     'indexes' => array(
       'access'  => array('access'),

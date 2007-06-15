@@ -1,12 +1,12 @@
 <?php
-// $Id: search.schema,v 1.1 2007/05/25 12:46:45 dries Exp $
+// $Id: search.schema,v 1.2 2007/06/15 07:15:24 dries Exp $
 
 function search_schema() {
   $schema['search_dataset'] = array(
     'fields' => array(
       'sid'  => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
       'type' => array('type' => 'varchar', 'length' => 16, 'not null' => FALSE),
-      'data' => array('type' => 'text', 'not null' => TRUE, 'size' => 'big')
+      'data' => array('type' => 'text', 'not null' => TRUE, 'size' => 'medium')
     ),
     'indexes' => array('sid_type' => array('sid', 'type')),
   );

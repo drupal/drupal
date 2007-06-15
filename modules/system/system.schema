@@ -1,5 +1,5 @@
 <?php
-// $Id: system.schema,v 1.5 2007/06/05 09:33:57 dries Exp $
+// $Id: system.schema,v 1.6 2007/06/15 07:15:24 dries Exp $
 
 function system_schema() {
   $schema['batch'] = array(
@@ -7,7 +7,7 @@ function system_schema() {
       'bid'       => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
       'token'     => array('type' => 'varchar', 'length' => 64, 'not null' => TRUE),
       'timestamp' => array('type' => 'int', 'not null' => TRUE),
-      'batch'     => array('type' => 'text', 'not null' => FALSE, 'size' => 'big')
+      'batch'     => array('type' => 'text', 'not null' => FALSE, 'size' => 'medium')
     ),
     'primary key' => array('bid'),
     'indexes' => array('token' => array('token')),
@@ -145,7 +145,7 @@ function system_schema() {
       'hostname'  => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
       'timestamp' => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
       'cache'     => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      'session'   => array('type' => 'text', 'not null' => FALSE, 'size' => 'big')
+      'session'   => array('type' => 'text', 'not null' => FALSE, 'size' => 'medium')
     ),
     'primary key' => array('sid'),
     'indexes' => array(
@@ -186,7 +186,7 @@ function system_schema() {
   $schema['variable'] = array(
     'fields' => array(
       'name'     => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
-      'value'    => array('type' => 'text', 'not null' => TRUE, 'size' => 'big'),
+      'value'    => array('type' => 'text', 'not null' => TRUE, 'size' => 'medium'),
     ),
     'primary key' => array('name'),
   );
