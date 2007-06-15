@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.797 2007/06/12 20:37:07 dries Exp $
+// $Id: user.module,v 1.798 2007/06/15 06:53:26 dries Exp $
 
 /**
  * @file
@@ -68,6 +68,33 @@ function user_external_load($authname) {
   else {
     return 0;
   }
+}
+
+/**
+* Perform standard Drupal login operations for a user object.  The
+* user object must already be authenticated. This function verifies
+* that the user account is not blocked/denied and then performs the login,
+* updates the login timestamp in the database, invokes hook_user('login'),
+* regenerates the session, etc.
+*
+* @param $account
+*    An authenticated user object to be set as the currently logged
+*    in user.
+* @return boolean
+*    TRUE if the login succeeds, FALSE otherwise.
+*/
+function user_external_login($account) {
+  $form = drupal_get_form('user_login');
+
+  $state = array();
+  user_login_name_validate($form, $state, (array)$account);
+  if (form_get_errors()) {
+    return FALSE;
+  }
+  global $user;
+  $user = $account;
+  user_login_submit($form, $state, (array)$account);
+  return TRUE;
 }
 
 /**
@@ -210,7 +237,7 @@ function user_save($account, $array = array(), $category = 'account') {
     user_module_invoke('after_update', $array, $user, $category);
   }
   else {
-    if (!isset($array['created'])) {    // Allow 'created' to be set by hook_auth
+    if (!isset($array['created'])) {    // Allow 'created' to be set by the caller
       $array['created'] = time();
     }
 
@@ -258,7 +285,7 @@ function user_save($account, $array = array(), $category = 'account') {
     db_query("UPDATE {users} SET data = '%s' WHERE uid = %d", serialize($data), $user->uid);
 
     // Save user roles (delete just to be safe).
-    if (is_array($array['roles'])) {
+    if (isset($roles) && is_array($array['roles'])) {
       db_query('DELETE FROM {users_roles} WHERE uid = %d', $array['uid']);
       foreach (array_keys($array['roles']) as $rid) {
         if (!in_array($rid, array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID))) {
@@ -516,7 +543,7 @@ function user_login_block() {
   $form = array(
     '#action' => url($_GET['q'], array('query' => drupal_get_destination())),
     '#id' => 'user-login-form',
-    '#validate' => array('user_login_validate'),
+    '#validate' => user_login_default_validators(),
     '#submit' => array('user_login_submit'),
   );
   $form['name'] = array('#type' => 'textfield',
@@ -802,11 +829,6 @@ function user_menu() {
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
-  $items['user/help'] = array(
-    'title' => 'Help',
-    'page callback' => 'user_help_page',
-    'type' => MENU_CALLBACK,
-  );
 
   // Admin user pages
   $items['admin/user'] = array(
@@ -1006,20 +1028,6 @@ function user_set_authmaps($account, $authmaps) {
   }
 }
 
-function user_auth_help_links() {
-  $links = array();
-  foreach (module_list() as $module) {
-    if (module_hook($module, 'auth')) {
-      $links[] = l(module_invoke($module, 'info', 'name'), 'user/help', array('fragment' => $module));
-    }
-  }
-  return $links;
-}
-
-/*** User features *********************************************************/
-
-
-
 function user_login(&$form_state, $msg = '') {
   global $user;
 
@@ -1039,25 +1047,47 @@ function user_login(&$form_state, $msg = '') {
     '#required' => TRUE,
     '#attributes' => array('tabindex' => '1'),
   );
-  if (variable_get('drupal_authentication_service', FALSE) && count(user_auth_help_links()) > 0) {
-    $form['name']['#description'] = t('Enter your @s username, or an ID from one of our affiliates: !a.', array('@s' => variable_get('site_name', 'Drupal'), '!a' => implode(', ', user_auth_help_links())));
-  }
-  else {
-    $form['name']['#description'] = t('Enter your @s username.', array('@s' => variable_get('site_name', 'Drupal')));
-  }
+
+  $form['name']['#description'] = t('Enter your @s username.', array('@s' => variable_get('site_name', 'Drupal')));
   $form['pass'] = array('#type' => 'password',
     '#title' => t('Password'),
     '#description' => t('Enter the password that accompanies your username.'),
     '#required' => TRUE,
     '#attributes' => array('tabindex' => '2'),
   );
+  $form['#validate'] = user_login_default_validators();
   $form['submit'] = array('#type' => 'submit', '#value' => t('Log in'), '#weight' => 2, '#attributes' => array('tabindex' => '3'));
 
   return $form;
 }
 
-function user_login_validate($form, &$form_state) {
-  if ($form_state['values']['name']) {
+/**
+ * Setup a series for validators which check for blocked/denied users,
+ * then authenticate against local database, then return an error if
+ * authentication fails. Distributed authentication modules (e.g.
+ * drupal.module) are welcome to use hook_form_alter() to change this
+ * series in order to authenticate against their user database instead
+ * of local users table.
+ *
+ * We use three validators instead of one since external authentication
+ * modules usually only need to alter the second validator. See
+ * drupal_form_alter() in drupal.module for an example of altering
+ * this series of validators.
+ *
+ * @return array
+ *   A simple list of validate functions.
+ **/
+function user_login_default_validators() {
+  return array('user_login_name_validate', 'user_login_authenticate_validate', 'user_login_final_validate');
+}
+
+/**
+ * A FAPI validate handler. Sets an error is supplied username has been blocked or denied access.
+ *
+ * @return void
+ **/
+ function user_login_name_validate($form, &$form_state) {
+  if (isset($form_state['values']['name'])) {
     if (user_is_blocked($form_state['values']['name'])) {
       // blocked in user administration
       form_set_error('name', t('The username %name has not been activated or is blocked.', array('%name' => $form_state['values']['name'])));
@@ -1066,17 +1096,56 @@ function user_login_validate($form, &$form_state) {
       // denied by access controls
       form_set_error('name', t('The name %name is a reserved username.', array('%name' => $form_state['values']['name'])));
     }
-    else if ($form_state['values']['pass']) {
-      $user = user_authenticate($form_state['values']['name'], trim($form_state['values']['pass']));
-
-      if (!$user->uid) {
-        form_set_error('name', t('Sorry, unrecognized username or password. <a href="@password">Have you forgotten your password?</a>', array('@password' => url('user/password'))));
-        watchdog('user', 'Login attempt failed for %user.', array('%user' => $form_state['values']['name']));
-      }
-    }
   }
 }
 
+/**
+ * A validate handler on the login form. Check supplied username/password against local users table.
+ * If successful, sets the global $user object.
+
+ * @return void
+ **/
+function user_login_authenticate_validate($form, &$form_state) {
+  global $user;
+  if ($account = user_authenticate($form_state['values']['name'], trim($form_state['values']['pass']))) {
+    $user = $account;
+  }
+}
+
+/**
+ * A validate handler on the login form. Should be the last validator. Sets an error if
+ * user has not been authenticated yet.
+ *
+ * @return void
+ **/
+function user_login_final_validate($form, &$form_state) {
+  global $user;
+  if (!$user->uid) {
+    form_set_error('name', t('Sorry, unrecognized username or password. <a href="@password">Have you forgotten your password?</a>', array('@password' => url('user/password'))));
+    watchdog('user', 'Login attempt failed for %user.', array('%user' => $form_state['values']['name']));
+  }
+}
+
+/**
+ * Try to log in the user locally.
+ *
+ * @return
+ *   A $user object, if successful.
+ **/
+function user_authenticate($name, $pass) {
+  global $user;
+
+  if ($account = user_load(array('name' => $name, 'pass' => $pass, 'status' => 1))) {
+    $user = $account;
+    return $user;
+  }
+}
+
+/**
+ * A validate handler on the login form. Update user's login timestamp, fire hook_user('login), and generate new session ID.
+ *
+ * @return void
+ **/
 function user_login_submit($form, &$form_state) {
   global $user;
   if ($user->uid) {
@@ -1093,52 +1162,22 @@ function user_login_submit($form, &$form_state) {
   }
 }
 
-function user_authenticate($name, $pass) {
+/**
+ * Helper function for authentication modules. Either login in or registers the current user, based on username.
+ * Either way, the global $user object is populated based on $name.
+ *
+ * @return void
+ **/
+function user_external_login_register($name, $module) {
   global $user;
 
-  // Try to log in the user locally. Don't set $user unless successful.
-  if ($account = user_load(array('name' => $name, 'pass' => $pass, 'status' => 1))) {
-    $user = $account;
-    return $user;
+  $user = user_load(array('name' => $name));
+  if (!isset($user->uid)) {
+    // Register this new user.
+    $userinfo = array('name' => $name, 'pass' => user_password(), 'init' => $name, 'status' => 1, "authname_$module" => $name);
+    $user = user_save('', $userinfo);
+    watchdog('user', 'New external user: %name using module %module.', array('%name' => $name, '%module' => $module), WATCHDOG_NOTICE, l(t('edit'), 'user/'. $user->uid .'/edit'));
   }
-
-  // Strip name and server from ID:
-  if ($server = strrchr($name, '@')) {
-    $name = substr($name, 0, strlen($name) - strlen($server));
-    $server = substr($server, 1);
-  }
-
-  // When possible, determine corresponding external auth source. Invoke
-  // source, and log in user if successful:
-  if ($server && ($result = user_get_authmaps("$name@$server"))) {
-    if (module_invoke(key($result), 'auth', $name, $pass, $server)) {
-      $user = user_external_load("$name@$server");
-      watchdog('user', 'External load by %user using module %module.', array('%user' => $name .'@'. $server, '%module' => key($result)));
-    }
-  }
-
-  // Try each external authentication source in series. Register user if
-  // successful.
-  else {
-    foreach (module_implements('auth') as $module) {
-      if (module_invoke($module, 'auth', $name, $pass, $server)) {
-        if ($server) {
-          $name .= '@'. $server;
-        }
-        $user = user_load(array('name' => $name));
-        if (!$user->uid) { // Register this new user.
-          $userinfo = array('name' => $name, 'pass' => user_password(), 'init' => $name, 'status' => 1);
-          if ($server) {
-            $userinfo["authname_$module"] = $name;
-          }
-          $user = user_save('', $userinfo);
-          watchdog('user', 'New external user: %user using module %module.', array('%user' => $name, '%module' => $module), WATCHDOG_NOTICE, l(t('edit'), 'user/'. $user->uid .'/edit'));
-          break;
-        }
-      }
-    }
-  }
-  return $user;
 }
 
 /**
@@ -1287,11 +1326,7 @@ function user_register() {
   if (!$admin) {
     $form['user_registration_help'] = array('#value' => filter_xss_admin(variable_get('user_registration_help', '')));
   }
-  $affiliates = user_auth_help_links();
-  if (!$admin && count($affiliates) > 0) {
-    $affiliates = implode(', ', $affiliates);
-    $form['affiliates'] = array('#value' => '<p>'. t('Note: if you have an account with one of our affiliates (!s), you may <a href="@login_uri">login now</a> instead of registering.', array('!s' => $affiliates, '@login_uri' => url('user'))) .'</p>');
-  }
+
   // Merge in the default user edit fields.
   $form = array_merge($form, user_edit_form($form_state, NULL, NULL, TRUE));
   if ($admin) {
@@ -2746,39 +2781,7 @@ function user_help($section) {
       </ul>', array('@permissions' => url('admin/user/access')));
     case 'admin/user/search':
       return '<p>'. t('Enter a simple pattern ("*" may be used as a wildcard match) to search for a username. For example, one may search for "br" and Drupal might return "brian", "brad", and "brenda".') .'</p>';
-    case 'user/help#user':
-      $site = variable_get('site_name', 'Drupal');
-
-      $affiliates = user_auth_help_links();
-      if (count($affiliates)) {
-        $affiliate_info = implode(', ', user_auth_help_links());
-      }
-      else {
-        $affiliate_info = t('one of our affiliates');
-      }
-
-      $output = t('
-      <h3>Distributed authentication<a id="da"></a></h3>
-      <p>One of the more tedious moments in visiting a new website is filling out the registration form. Here at @site, you do not have to fill out a registration form if you are already a member of !affiliate-info. This capability is called <em>distributed authentication</em>, and <a href="@drupal">Drupal</a>, the software which powers @site, fully supports it.</p>
-      <p>Distributed authentication enables a new user to input a username and password into the login box, and immediately be recognized, even if that user never registered at @site. This works because Drupal knows how to communicate with external registration databases. For example, lets say that new user \'Joe\' is already a registered member of <a href="@delphi-forums">Delphi Forums</a>. Drupal informs Joe on registration and login screens that he may login with his Delphi ID instead of registering with @site. Joe likes that idea, and logs in with a username of joe@remote.delphiforums.com and his usual Delphi password. Drupal then contacts the <em>remote.delphiforums.com</em> server behind the scenes (usually using <a href="@xml">XML-RPC</a>, <a href="@http-post">HTTP POST</a>, or <a href="@soap">SOAP</a>) and asks: "Is the password for user Joe correct?". If Delphi replies yes, then we create a new @site account for Joe and log him into it. Joe may keep on logging into @site in the same manner, and he will always be logged into the same account.</p>', array('!affiliate-info' => $affiliate_info, '@site' => $site, '@drupal' => 'http://drupal.org', '@delphi-forums' => 'http://www.delphiforums.com', '@xml' => 'http://www.xmlrpc.com', '@http-post' => 'http://www.w3.org/Protocols/', '@soap' => 'http://www.soapware.org'));
-
-        foreach (module_list() as $module) {
-          if (module_hook($module, 'auth')) {
-            $output .= "<h4><a id=\"$module\"></a>". module_invoke($module, 'info', 'name') .'</h4>';
-            $output .= module_invoke($module, 'help', "user/help#$module");
-          }
-        }
-
-        return $output;
   }
-
-}
-
-/**
- * Menu callback; Prints user-specific help information.
- */
-function user_help_page() {
-  return user_help('user/help#user');
 }
 
 /**

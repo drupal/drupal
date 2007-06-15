@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal.module,v 1.145 2007/06/05 12:13:22 dries Exp $
+// $Id: drupal.module,v 1.146 2007/06/15 06:53:26 dries Exp $
 
 /**
  * @file
@@ -40,9 +40,11 @@ print drupal_client_page();
       return $output;
     case 'admin/settings/distributed-authentication':
       return '<p>'. t('Using this your site can "call home" to another Drupal server. By calling home to drupal.org and sending a list of your installed modules and themes, you help rank projects on drupal.org and so assist all Drupal administrators to find the best components for meeting their needs. If you want to register with a different server, you can change the Drupal XML-RPC server setting -- but the server has to be able to handle Drupal XML. Some XML-RPC servers may present directories of all registered sites. To get all your site information listed, go to the <a href="@site-settings">site information settings page</a> and set the site name, the e-mail address, the slogan, and the mission statement.', array('@site-settings' => url('admin/settings/site-information'))) .'</p>';
-    case 'user/help#drupal':
-      return variable_get('drupal_authentication_service', 0) ? t('<p><a href="@Drupal">Drupal</a> is the name of the software that powers %this-site. There are Drupal websites all over the world, and many of them share their registration databases so that users may freely log in to any Drupal site using a single <strong>Drupal ID</strong>.</p>
-<p>So please feel free to log in to your account here at %this-site with a username from another Drupal site. The format of a Drupal ID is similar to an e-mail address: <strong>username</strong>@<em>server</em>. An example of a valid Drupal ID is <strong>mwlily</strong>@<em>drupal.org</em>.</p>', array('@Drupal' => 'http://drupal.org', '%this-site' => variable_get('site_name', 'Drupal'))) : '';
+    case 'user/register':
+      if (!user_access('administer users')) {
+        return t('Note: if you have an account with another Drupal site, you may be able to <a href="!login">log in</a> with its username and password instead of registering.', array('!login' => url('user/login')));
+      }
+      break;
   }
 }
 
@@ -145,6 +147,66 @@ function drupal_distributed_authentication_settings() {
   );
 
   return system_settings_form($form);
+}
+
+function drupal_form_alter(&$form, $form_state, $form_id) {
+  if ($form_id == 'user_login_block' || $form_id == 'user_login') {
+    // Splice in our validate handler for authentication if user is performing a distributed login.
+    // Remove the local authentication handler added by user.module
+    if (!empty($form_state['post']['name']) && drupal_is_distributed_login($form_state['post']['name'])) {
+      $key = array_search('user_login_authenticate_validate', $form['#validate']);
+      $form['#validate']['key'] = 'drupal_distributed_validate';
+    }
+  }
+}
+
+/**
+ * When login form is shown on full page, let users know that Drupal IDs are accepted.
+ *
+ * @return void
+ **/
+function drupal_form_user_login_alter(&$form, $form_state) {
+  if (variable_get('drupal_authentication_service', FALSE)) {
+    $form['name']['#description'] = t('Enter your @s username, or a Drupal ID from another web site.', array('@s' => variable_get('site_name', 'Drupal')));
+  }
+}
+
+/**
+ * Given a username, determine if user is attempting a distributed login.
+ *
+ * @return boolean
+ **/
+function drupal_is_distributed_login($name) {
+  return variable_get('drupal_authentication_service', FALSE) && (strpos($name, '@') || variable_get('drupal_default_da_server', ''));
+}
+
+/**
+ * A custom validate handler on the login form. Checks supplied username/password against a remote Drupal site.
+ *
+ * @return boolean
+ **/
+function drupal_distributed_validate($form, &$form_state) {
+  global $user;
+
+  if ($user->uid) {
+    return;
+  }
+
+  $name = $form_state['values']['name'];
+  $pass = trim($form_state['values']['pass']);
+  // Strip name and server from ID:
+  if ($server = strrchr($name, '@')) {
+    $name = substr($name, 0, strlen($name) - strlen($server));
+    $server = substr($server, 1);
+  }
+
+  if (drupal_auth($name, $pass, $server)) {
+    // We have a successful authentication. Login or register the user.
+    if ($server) {
+      $name .= '@'. $server;
+    }
+    user_external_login_register($name, 'drupal');
+  }
 }
 
 /**
@@ -305,23 +367,10 @@ function drupal_notify($server) {
 }
 
 /**
- * Implementation of hook_info().
- */
-function drupal_info($field = 0) {
-  $info['name'] = 'Drupal';
-  $info['protocol'] = 'XML-RPC';
-
-  if ($field) {
-    return $info[$field];
-  }
-  else {
-    return $info;
-  }
-}
-
-/**
- * Implementation of hook_auth().
- */
+  * Attempt to authenticate using the presented credentials and Drupal site.
+  *
+  * @return boolean
+  **/
 function drupal_auth($username, $password, $server = FALSE) {
   if (variable_get('drupal_authentication_service', 0)) {
     if (!$server) {
@@ -363,21 +412,21 @@ function drupal_menu() {
     'access arguments' => array('administer site configuration'),
   );
   if (variable_get('drupal_authentication_service', 0)) {
-    $items['drupal'] = array(
-      'title' => 'Drupal',
-      'page callback' => 'drupal_page_help',
-      'access callback' => TRUE,
-      'type' => MENU_SUGGESTED_ITEM,
+    $items['drupal/help'] = array(
+       'title' => t('External login tips'),
+       'page callback' => 'drupal_page_help',
+       'type' => MENU_CALLBACK,
     );
   }
   return $items;
 }
 
 /**
- * Menu callback; print Drupal-authentication-specific information from user/help.
+ * Menu callback; print Drupal-authentication-specific information.
  */
 function drupal_page_help() {
-  return drupal_help('user/help#drupal');
+  return t('<p><a href="@Drupal">Drupal</a> is the name of the software that powers %this-site. There are Drupal websites all over the world, and many of them share their registration databases so that users may freely log in to any Drupal site using a single <strong>Drupal ID</strong>.</p>
+<p>So please feel free to log in to your account here at %this-site with a username from another Drupal site. The format of a Drupal ID is similar to an e-mail address: <strong>username</strong>@<em>server</em>. An example of a valid Drupal ID is <strong>mwlily</strong>@<em>drupal.org</em>.</p>', array('@Drupal' => 'http://drupal.org', '%this-site' => variable_get('site_name', 'Drupal')));
 }
 
 /**
@@ -387,11 +436,6 @@ function drupal_page_help() {
  */
 function drupal_login($username, $password) {
   if (variable_get('drupal_authentication_service', 0)) {
-    if ($user = user_load(array('name' => $username, 'pass' => $password, 'status' => 1))) {
-      return $user->uid;
-    }
-    else {
-      return 0;
-    }
+    return user_authenticate($username, $password);
   }
 }
