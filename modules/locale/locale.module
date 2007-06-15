@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.177 2007/05/30 08:08:58 dries Exp $
+// $Id: locale.module,v 1.178 2007/06/15 19:02:47 goba Exp $
 
 /**
  * @file
@@ -282,22 +282,40 @@ function locale_theme() {
  * Provides interface translation services.
  *
  * This function is called from t() to translate a string if needed.
+ *
+ * @param $string
+ *   A string to look up translation for. If omitted, all the
+ *   cached strings will be returned in all languages already 
+ *   used on the page.
+ * @param $langcode
+ *   Language code to use for the lookup.
  */
-function locale($string, $langcode = NULL) {
+function locale($string = NULL, $langcode = NULL) {
   global $language;
   static $locale_t;
+
+  // Return all cached strings if no string was specified
+  if (!isset($string)) {
+    return $locale_t;
+  }
 
   $langcode = isset($langcode) ? $langcode : $language->language;
 
   // Store database cached translations in a static var.
   if (!isset($locale_t[$langcode])) {
     $locale_t[$langcode] = array();
-    if (!($cache = cache_get('locale:'. $langcode, 'cache'))) {
-      locale_refresh_cache();
-      $cache = cache_get('locale:'. $langcode, 'cache');
-    }
-    if ($cache) {
-      $locale_t[$langcode] = $cache->data;
+    // Disabling the usage of string caching allows a module to watch for 
+    // the exact list of strings used on a page. From a performance 
+    // perspective that is a really bad idea, so we have no user 
+    // interface for this. Be careful when turning this option off!
+    if (variable_get('locale_cache_strings', 1) == 1) {
+      if (!($cache = cache_get('locale:'. $langcode, 'cache'))) {
+        locale_refresh_cache();
+        $cache = cache_get('locale:'. $langcode, 'cache');
+      }
+      if ($cache) {
+        $locale_t[$langcode] = $cache->data;
+      }
     }
   }
 
