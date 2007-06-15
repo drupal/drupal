@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.552 2007/06/11 14:56:40 dries Exp $
+// $Id: comment.module,v 1.553 2007/06/15 07:10:47 dries Exp $
 
 /**
  * @file
@@ -1611,8 +1611,6 @@ function comment_form(&$form_state, $edit, $title = NULL) {
     $form['#action'] = url('comment/reply/'. $edit['nid']);
   }
 
-  // Graft in extra form additions
-  $form = array_merge($form, comment_invoke_comment($form, 'form'));
   return $form;
 }
 
