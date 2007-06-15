@@ -3350,6 +3350,18 @@ function system_update_6023() {
 }
 
 /**
+ * Add translation fields to nodes used by translation module.
+ */
+function system_update_6024() {
+  $ret = array();
+  db_add_field($ret, 'node', 'tnid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0));
+  db_add_field($ret, 'node', 'translate', array('type' => 'int', 'not null' => TRUE, 'default' => 0));
+  db_add_index($ret, 'node', 'tnid', array('tnid'));
+  db_add_index($ret, 'node', 'translate', array('translate'));
+  return $ret;
+}
+
+/**
  * @} End of "defgroup updates-5.x-to-6.x"
  * The next series of updates should start at 7000.
  */
