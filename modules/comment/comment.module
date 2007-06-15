@@ -1611,8 +1611,6 @@ function comment_form(&$form_state, $edit, $title = NULL) {
     $form['#action'] = url('comment/reply/'. $edit['nid']);
   }
 
-  // Graft in extra form additions
-  $form = array_merge($form, comment_invoke_comment($form, 'form'));
   return $form;
 }
 
