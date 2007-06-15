@@ -1060,6 +1060,8 @@ function node_configure() {
     '#options' => array(t('Optional'), t('Required')), '#description' => t('Must users preview posts before submitting?')
   );
 
+  $form['#validate'] = array('node_configure_validate');
+
   return system_settings_form($form);
 }
 

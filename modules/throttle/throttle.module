@@ -153,6 +153,8 @@ function throttle_admin_settings() {
     '#description' => t('The auto-throttle probability limiter is an efficiency mechanism to statistically reduce the overhead of the auto-throttle. The limiter is expressed as a percentage of page views, so for example if set to the default of 10% we only perform the extra database queries to update the throttle status 1 out of every 10 page views. The busier your site, the lower you should set the limiter value.')
   );
 
+  $form['#validate'] = array('throttle_admin_settings_validate');
+
   return system_settings_form($form);
 }
 
