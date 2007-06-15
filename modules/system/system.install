@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.121 2007/06/07 03:44:13 dries Exp $
+// $Id: system.install,v 1.122 2007/06/15 18:40:14 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -3346,6 +3346,18 @@ function system_update_6023() {
   db_change_field($ret, 'node', 'vid', 'vid', array('type' => 'int', 'unsigned' => TRUE, 'default' => 0));
   // nid is DEFAULT 0
   db_change_field($ret, 'node_revisions', 'nid', 'nid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0));
+  return $ret;
+}
+
+/**
+ * Add translation fields to nodes used by translation module.
+ */
+function system_update_6024() {
+  $ret = array();
+  db_add_field($ret, 'node', 'tnid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0));
+  db_add_field($ret, 'node', 'translate', array('type' => 'int', 'not null' => TRUE, 'default' => 0));
+  db_add_index($ret, 'node', 'tnid', array('tnid'));
+  db_add_index($ret, 'node', 'translate', array('translate'));
   return $ret;
 }
 

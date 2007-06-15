@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.829 2007/06/07 03:45:57 dries Exp $
+// $Id: node.module,v 1.830 2007/06/15 18:40:14 goba Exp $
 
 /**
  * @file
@@ -581,10 +581,10 @@ function node_load($param = array(), $revision = NULL, $reset = NULL) {
   // No db_rewrite_sql is applied so as to get complete indexing for search.
   if ($revision) {
     array_unshift($arguments, $revision);
-    $node = db_fetch_object(db_query('SELECT n.nid, r.vid, n.type, n.status, n.language, n.created, n.changed, n.comment, n.promote, n.sticky, r.timestamp AS revision_timestamp, r.title, r.body, r.teaser, r.log, r.format, u.uid, u.name, u.picture, u.data FROM {node} n INNER JOIN {users} u ON u.uid = n.uid INNER JOIN {node_revisions} r ON r.nid = n.nid AND r.vid = %d WHERE '. $cond, $arguments));
+    $node = db_fetch_object(db_query('SELECT n.nid, r.vid, n.type, n.status, n.language, n.created, n.changed, n.comment, n.promote, n.sticky, n.tnid, n.translate, r.timestamp AS revision_timestamp, r.title, r.body, r.teaser, r.log, r.format, u.uid, u.name, u.picture, u.data FROM {node} n INNER JOIN {users} u ON u.uid = n.uid INNER JOIN {node_revisions} r ON r.nid = n.nid AND r.vid = %d WHERE '. $cond, $arguments));
   }
   else {
-    $node = db_fetch_object(db_query('SELECT n.nid, n.vid, n.type, n.status, n.language, n.created, n.changed, n.comment, n.promote, n.sticky, r.timestamp AS revision_timestamp, r.title, r.body, r.teaser, r.log, r.format, u.uid, u.name, u.picture, u.data FROM {node} n INNER JOIN {users} u ON u.uid = n.uid INNER JOIN {node_revisions} r ON r.vid = n.vid WHERE '. $cond, $arguments));
+    $node = db_fetch_object(db_query('SELECT n.nid, n.vid, n.type, n.status, n.language, n.created, n.changed, n.comment, n.promote, n.sticky, n.tnid, n.translate, r.timestamp AS revision_timestamp, r.title, r.body, r.teaser, r.log, r.format, u.uid, u.name, u.picture, u.data FROM {node} n INNER JOIN {users} u ON u.uid = n.uid INNER JOIN {node_revisions} r ON r.vid = n.vid WHERE '. $cond, $arguments));
   }
 
   if ($node && $node->nid) {
@@ -1371,10 +1371,17 @@ function node_operations_unsticky($nodes) {
 function node_filters() {
   // Regular filters
   $filters['status'] = array('title' => t('status'),
-    'options' => array('status-1'   => t('published'),     'status-0' => t('not published'),
-                       'promote-1'  => t('promoted'),      'promote-0' => t('not promoted'),
-                       'sticky-1'   => t('sticky'),        'sticky-0' => t('not sticky')));
+    'options' => array('status-1'   => t('published'), 'status-0' => t('not published'),
+                       'promote-1'  => t('promoted'),  'promote-0' => t('not promoted'),
+                       'sticky-1'   => t('sticky'),    'sticky-0' => t('not sticky'))
+  );
+  // Include translation states if we have this module enabled
+  if (module_exists('translation')) {
+    $filters['status']['options'] += array('translate-0' => t('up to date translation'), 'translate-1' => t('outdated translation'));
+  }
+
   $filters['type'] = array('title' => t('type'), 'options' => node_get_types('names'));
+  
   // The taxonomy filter
   if ($taxonomy = module_invoke('taxonomy', 'form_all', 1)) {
     $filters['category'] = array('title' => t('category'), 'options' => $taxonomy);

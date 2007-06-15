@@ -1,0 +1,338 @@
+<?php
+// $Id: translation.module,v 1.1 2007/06/15 18:40:14 goba Exp $
+
+/**
+ * @file
+ *   Manages content translations.
+ *
+ *   Translations are managed in sets of posts, which represent the same
+ *   information in different languages. Only content types for which the
+ *   administrator explicitly enabled translations could have translations
+ *   associated. Translations are managed in sets with exactly one source
+ *   post per set. The source post is used to translate to different
+ *   languages, so if the source post is significantly updated, the
+ *   editor can decide to mark all translations outdated.
+ *
+ *   The node table stores the values used by this module:
+ *    - 'tnid' is the translation set id, which equals the node id
+ *      of the source post.
+ *    - 'translate' is a flag, either indicating that the translation
+ *      is up to date (0) or needs to be updated (1).
+ */
+
+/**
+ * Identifies a content type which has translation support enabled.
+ */
+define ('TRANSLATION_ENABLED', 2);
+
+/**
+ * Implementation of hook_help().
+ */
+function translation_help($section) {
+  switch ($section) {
+    case 'admin/help#translation':
+      $output = '<p>'. t('The <em>translation</em> module allows content translation for multilingual sites.') .'</p>';
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@translation">Translation page</a>.', array('@translation' => 'http://drupal.org/handbook/modules/translation/')) .'</p>';
+      return $output;
+    case 'node/%/translate':
+      $output = '<p>'. t('Translations of a piece of content are managed with translation sets. Each translation set has one source post and any number of translations in any of the <a href="!languages">enabled languages</a>. All translations are tracked to be up to date or oudated based on whether the source post was modified significantly.', array('!languages' => url('admin/settings/language'))) .'</p>';
+      return $output;
+  }
+}
+
+/**
+ * Implementation of hook_menu().
+ */
+function translation_menu() {
+  $items = array();
+  $items['node/%node/translate'] = array(
+    'title' => 'Translate',
+    'page callback' => 'translation_node_overview',
+    'page arguments' => array(1),
+    'access callback' => '_translation_tab_access',
+    'access arguments' => array(1),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 2,
+  );
+  return $items;
+}
+
+/**
+ * Menu access callback.
+ *
+ * Only display translation tab for node types, which have translation enabled
+ * and where the current node is not language neutral (which should span
+ * all languages).
+ */
+function _translation_tab_access($node) {
+  if (!empty($node->language) && translation_supported_type($node->type)) {
+    return user_access('translate content');
+  }
+  return FALSE;
+}
+
+/**
+ * Implementation of hook_perm().
+ */
+function translation_perm() {
+  return array('translate content');
+}
+
+/**
+ * Implementation of hook_form_alter().
+ *
+ * - Add translation option to content type form.
+ * - Alters language fields on node forms when a translation
+ *   is about to be created.
+ */
+function translation_form_alter(&$form, $form_state, $form_id) {
+  if ($form_id == 'node_type_form') {
+    // Add translation option to content type form.
+    $form['workflow']['language']['#options'][TRANSLATION_ENABLED] = t('Enabled, with translation');
+    // Description based on text from locale.module.
+    $form['workflow']['language']['#description'] = t('Enable multilingual support for this content type. If enabled, a language selection field will be added to the editing form, allowing you to select from one of the <a href="!languages">enabled languages</a>. You can also turn on translation for this content type, which lets you have content translated to any of the enabled languages. If disabled, new posts are saved with the default language. Existing content will not be affected by changing this option.', array('!languages' => url('admin/settings/language')));
+  }
+  elseif ($form['#id'] == 'node-form' && translation_supported_type($form['#node']->type)) {
+    $node = $form['#node'];
+    if (!empty($node->translation_source)) {
+      // We are creating a translation. Add values and lock language field.
+      $form['translation_source'] = array('#type' => 'value', '#value' => $node->translation_source);
+      $form['language']['#disabled'] = TRUE;
+    }
+    elseif (!empty($node->nid) && !empty($node->tnid)) {
+      // Disable languages for existing translations, so it is not possible to switch this
+      // node to some language which is already in the translation set. Also remove the
+      // language neutral option.
+      unset($form['language']['#options']['']);
+      foreach (translation_node_get_translations($node->tnid) as $translation) {
+        if ($translation->nid != $node->nid) {
+          unset($form['language']['#options'][$translation->language]);
+        }
+      }
+      // Add translation values and workflow options.
+      $form['translation'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Translation settings'),
+        '#access' => user_access('translate content'),
+        '#collapsible' => TRUE,
+        '#collapsed' => !$node->translate,
+        '#tree' => TRUE,
+        '#weight' => 30,
+      );
+      $form['translation']['tnid'] = array('#type' => 'value', '#value' => $node->tnid);
+      if ($node->tnid == $node->nid) {
+        // This is the source node of the translation
+        $form['translation']['retranslate'] = array(
+          '#type' => 'checkbox',
+          '#title' => t('Flag translations as outdated'),
+          '#default_value' => 0,
+          '#description' => t('If you made a significant change, which means translations should be updated, you can flag all translations of this post as outdated. This will not change any other property of those posts, like whether they are published or not.'),
+        );
+        $form['translation']['status'] = array('#type' => 'value', '#value' => 0);
+      }
+      else {
+        $form['translation']['status'] = array(
+          '#type' => 'checkbox',
+          '#title' => t('This translation needs to be updated'),
+          '#default_value' => $node->translate,
+          '#description' => t('When this option is checked, this translation needs to be updated because the source post has changed. Uncheck when the translation is up to date again.'),
+        );
+      }
+    }
+  }
+}
+
+/**
+ * Implementation of hook_link().
+ *
+ * Display translation links with native language names, if this node
+ * is part of a translation set.
+ */
+function translation_link($type, $node = NULL, $teaser = FALSE) {
+  $links = array();
+  if ($type == 'node' && ($node->tnid) && $translations = translation_node_get_translations($node->tnid)) {
+    // Do not show link to the same node.
+    unset($translations[$node->language]);
+    $languages = locale_language_list('native');
+    foreach ($translations as $language => $translation) {
+      $links["node_translation_$language"] = array(
+        'title' => $languages[$language],
+        'href' => "node/$translation->nid",
+        'attributes' => array('title' => $translation->title, 'class' => 'translation-link')
+      );
+    }
+  }
+  return $links;
+}
+
+/**
+ * Overview page for a node's translations.
+ *
+ * @param $node
+ *   Node object.
+ */
+function translation_node_overview($node) {
+  if ($node->tnid) {
+    // Already part of a set, grab that set.
+    $tnid = $node->tnid;
+    $translations = translation_node_get_translations($node->tnid);
+  }
+  else {
+    // We have no translation source nid, this could be a new set, emulate that.
+    $tnid = $node->nid;
+    $translations = array($node->language => $node);
+  }
+
+  $header = array(t('Language'), t('Title'), t('Status'), t('Operations'));
+
+  foreach (language_list() as $language) {
+    $options = array();
+    $language_name = $language->name;
+    if (isset($translations[$language->language])) {
+      // Existing translation in the translation set: display status.
+      // We load the full node to check whether the user can edit it.
+      $translation_node = node_load($translations[$language->language]->nid);
+      $title = l($translation_node->title, 'node/'. $translation_node->nid);
+      if (node_access('update', $translation_node)) {
+        $options[] = l(t('edit'), "node/$translation_node->nid/edit");
+      }
+      $status = $translation_node->status ? t('Published') : t('Not published');
+      $status .= $translation_node->translate ? ' - <span class="marker">'. t('outdated') .'</span>' : '';
+      if ($translation_node->nid == $tnid) {
+        $language_name = '<strong>'. $language_name . '</strong> (source)';
+      }
+    }
+    else {
+      // No such translation in the set yet: help user to create it.
+      $title = t('n/a');
+      if (node_access('create', $node)) {
+        $options[] = l(t('add translation'), 'node/add/'. $node->type, array('query' => "translation=$node->nid&language=$language->language"));
+      }
+      $status = t('Not translated');
+    }
+    $rows[] = array($language_name, $title, $status, implode(" | ", $options));
+  }
+
+  drupal_set_title(t('Translations of %title', array('%title' => $node->title)));
+  return theme('table', $header, $rows);
+}
+
+/**
+ * Implementation of hook_nodeapi().
+ *
+ * Manages translation information for nodes.
+ */
+function translation_nodeapi(&$node, $op, $teaser, $page) {
+  // Only act if we are dealing with a content type supporting translations.
+  if (!translation_supported_type($node->type)) {
+    return;
+  }
+
+  switch ($op) {
+   case 'prepare':
+      if (empty($node->nid) && isset($_GET['translation']) && isset($_GET['language']) &&
+          ($source_nid = $_GET['translation']) && ($language = $_GET['language']) &&
+          (user_access('translate content'))) {
+        // We are translating a node from a source node, so
+        // load the node to be translated and populate fields.
+        $node->language = $language;
+        $node->translation_source = node_load($source_nid);
+        $node->title = $node->translation_source->title;
+        $node->body = $node->translation_source->body;
+        // Let every module add custom translated fields.
+        node_invoke_nodeapi($node, 'prepare translation');
+      }
+      break;
+
+    case 'insert':
+      if (!empty($node->translation_source)) {
+        if ($node->translation_source->tnid) {
+          // Add node to existing translation set.
+          $tnid = $node->translation_source->tnid;
+        }
+        else {
+          // Create new translation set, using nid from the source node.
+          $tnid = $node->translation_source->nid;
+          db_query("UPDATE {node} SET tnid = %d, translate = %d WHERE nid = %d", $tnid, 0, $node->translation_source->nid);
+        }
+        db_query("UPDATE {node} SET tnid = %d, translate = %d WHERE nid = %d", $tnid, 0, $node->nid);
+      }
+      break;
+
+    case 'update':
+      if (isset($node->translation) && $node->translation && !empty($node->language) && $node->tnid) {
+        // Update translation information.
+        db_query("UPDATE {node} SET tnid = %d, translate = %d WHERE nid = %d", $node->tnid, $node->translation['status'], $node->nid);
+        if (!empty($node->translation['retranslate'])) {
+          // This is the source node, asking to mark all translations outdated.
+          db_query("UPDATE {node} SET translate = 1 WHERE tnid = %d AND nid != %d", $node->tnid, $node->nid);
+        }
+      }
+      break;
+
+    case 'delete':
+      translation_remove_from_set($node);
+      break;
+  }
+}
+
+/**
+ * Remove a node from its translation set (if any)
+ * and update the set accordingly.
+ */
+function translation_remove_from_set($node) {
+  if (isset($node->tnid)) {
+    if (db_num_rows(db_query('SELECT tnid FROM {node} WHERE tnid = %d', $node->tnid)) <= 2) {
+      // There would only be one node left in the set: remove the set altogether.
+      db_query('UPDATE {node} SET tnid = 0, translate = 0 WHERE tnid = %d', $node->tnid);
+    }
+    else {
+      db_query('UPDATE {node} SET tnid = 0, translate = 0 WHERE nid = %d', $node->nid);
+
+      // If the node being removed was the source of the translation set,
+      // we pick a new source - preferably one that is up to date.
+      if ($node->tnid == $node->nid) {
+        $new_tnid = db_result(db_query('SELECT nid FROM {node} WHERE tnid = %d ORDER BY translate ASC, nid ASC', $node->tnid));
+        db_query('UPDATE {node} SET tnid = %d WHERE tnid = %d', $new_tnid, $node->tnid);
+      }
+    }
+  }
+}
+
+/**
+ * Get all nodes in a translation set, represented by $tnid.
+ *
+ * @param $tnid
+ *   The translation source nid of the translation set, the identifier
+ *   of the node used to derive all translations in the set.
+ * @return
+ *  Array of partial node objects (nid, title, language) representing
+ *  all nodes in the translation set, in effect all translations
+ *  of node $tnid, including node $tnid itself. Because these are
+ *  not partial nodes, you need to node_load() the full node, if you
+ *  need more properties. The array is indexed by language code.
+ */
+function translation_node_get_translations($tnid) {
+  static $translations = array();
+
+  if (is_numeric($tnid) && $tnid) {
+    if (!isset($translations[$tnid])) {
+      $translations[$tnid] = array();
+      $result = db_query(db_rewrite_sql('SELECT nid, title, language FROM {node} WHERE tnid = %d'), $tnid);
+      while ($node = db_fetch_object($result)) {
+        $translations[$tnid][$node->language] = $node;
+      }
+    }
+    return $translations[$tnid];
+  }
+}
+
+/**
+ * Returns whether the given content type has support for translations.
+ *
+ * @return
+ *   Boolean value.
+ */
+function translation_supported_type($type) {
+  return variable_get('language_' . $type, 0) == TRANSLATION_ENABLED;
+}
