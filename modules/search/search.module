@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.224 2007/06/04 07:22:22 dries Exp $
+// $Id: search.module,v 1.225 2007/06/15 22:00:30 dries Exp $
 
 /**
  * @file
@@ -251,9 +251,10 @@ function search_admin_settings() {
   $form['indexing_settings']['minimum_word_size'] = array('#type' => 'textfield', '#title' => t('Minimum word length to index'), '#default_value' => variable_get('minimum_word_size', 3), '#size' => 5, '#maxlength' => 3, '#description' => t('The number of characters a word has to be to be indexed. A lower setting means better search result ranking, but also a larger database. Each search query must contain at least one keyword that is this size (or longer).'));
   $form['indexing_settings']['overlap_cjk'] = array('#type' => 'checkbox', '#title' => t('Simple CJK handling'), '#default_value' => variable_get('overlap_cjk', TRUE), '#description' => t('Whether to apply a simple Chinese/Japanese/Korean tokenizer based on overlapping sequences. Turn this off if you want to use an external preprocessor for this instead. Does not affect other languages.'));
 
+  $form['#validate'] = array('search_admin_settings_validate');
+
   // Per module settings
   $form = array_merge($form, module_invoke_all('search', 'admin'));
-
   return system_settings_form($form);
 }
 
@@ -268,7 +269,7 @@ function search_wipe_confirm() {
 /**
  * Handler for wipe confirmation
  */
-function search_wipe_confirm_submit(&$form, $form, &$form_state) {
+function search_wipe_confirm_submit(&$form, &$form_state) {
   if ($form['confirm']) {
     search_wipe();
     drupal_set_message(t('The index will be rebuilt.'));

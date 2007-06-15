@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.164 2007/06/04 07:22:22 dries Exp $
+// $Id: upload.module,v 1.165 2007/06/15 22:00:30 dries Exp $
 
 /**
  * @file
@@ -241,6 +241,8 @@ function upload_admin_settings() {
       '#field_suffix' => t('MB'),
     );
   }
+
+  $form['#validate'] = array('upload_admin_settings_validate');
 
   return system_settings_form($form);
 }

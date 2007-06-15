@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.830 2007/06/15 18:40:14 goba Exp $
+// $Id: node.module,v 1.831 2007/06/15 22:00:30 dries Exp $
 
 /**
  * @file
@@ -1059,6 +1059,8 @@ function node_configure() {
     '#type' => 'radios', '#title' => t('Preview post'), '#default_value' => variable_get('node_preview', 0),
     '#options' => array(t('Optional'), t('Required')), '#description' => t('Must users preview posts before submitting?')
   );
+
+  $form['#validate'] = array('node_configure_validate');
 
   return system_settings_form($form);
 }

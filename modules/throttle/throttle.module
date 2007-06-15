@@ -1,5 +1,5 @@
 <?php
-// $Id: throttle.module,v 1.78 2007/06/04 07:22:22 dries Exp $
+// $Id: throttle.module,v 1.79 2007/06/15 22:00:30 dries Exp $
 
 /**
  * @file
@@ -152,6 +152,8 @@ function throttle_admin_settings() {
     '#options' => $probabilities,
     '#description' => t('The auto-throttle probability limiter is an efficiency mechanism to statistically reduce the overhead of the auto-throttle. The limiter is expressed as a percentage of page views, so for example if set to the default of 10% we only perform the extra database queries to update the throttle status 1 out of every 10 page views. The busier your site, the lower you should set the limiter value.')
   );
+
+  $form['#validate'] = array('throttle_admin_settings_validate');
 
   return system_settings_form($form);
 }
