@@ -148,11 +148,11 @@ function tablesort_get_order($headers) {
   $order = isset($_GET['order']) ? $_GET['order'] : '';
   foreach ($headers as $header) {
     if (isset($header['data']) && $order == $header['data']) {
-      return array('name' => $header['data'], 'sql' => $header['field']);
+      return array('name' => $header['data'], 'sql' => isset($header['field']) ? $header['field'] : '');
     }
 
     if (isset($header['sort']) && ($header['sort'] == 'asc' || $header['sort'] == 'desc')) {
-      $default = array('name' => $header['data'], 'sql' => $header['field']);
+      $default = array('name' => $header['data'], 'sql' => isset($header['field']) ? $header['field'] : '');
     }
   }
 
