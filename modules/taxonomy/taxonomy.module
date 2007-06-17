@@ -640,7 +640,7 @@ function taxonomy_term_confirm_delete_submit($form, &$form_state) {
 /**
  * Generate a form element for selecting terms from a vocabulary.
  */
-function taxonomy_form(&$form_state, $vid, $value = 0, $help = NULL, $name = 'taxonomy') {
+function taxonomy_form($vid, $value = 0, $help = NULL, $name = 'taxonomy') {
   $vocabulary = taxonomy_vocabulary_load($vid);
   $help = ($help) ? $help : $vocabulary->help;
   if ($vocabulary->required) {
