@@ -396,7 +396,7 @@ function menu_execute_active_handler() {
     $path = substr($path, 0, strrpos($path, '/'));
   }
 
-  if (!isset($menu['callbacks'][$path])) {
+  if ($path === '' || !isset($menu['callbacks'][$path])) {
     return MENU_NOT_FOUND;
   }
 
