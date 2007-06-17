@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.208 2007/06/08 06:04:14 dries Exp $
+// $Id: CHANGELOG.txt,v 1.209 2007/06/17 15:43:31 goba Exp $
 
 Drupal 6.0, xxxx-xx-xx (development version)
 ----------------------
@@ -21,9 +21,11 @@ Drupal 6.0, xxxx-xx-xx (development version)
     * Language detection based on parts of the URL.
     * Browser based language detection.
     * Made it possible to specify a node's language.
+    * Support for translating posts on the site to different languages.
     * Language dependent path aliases.
     * Automatically import translations when enabling new modules.
     * Automatically import translations when adding a new language.
+    * JavaScript interface translation.
 - Moved "PHP input filter" to a stand-alone module so it can be deleted for security reasons.
 - Usability:
     * Improved handling of teasers in posts.
@@ -39,6 +41,7 @@ Drupal 6.0, xxxx-xx-xx (development version)
     * Added theme registry: modules can directly provide .tpl.php files for their themes without having to create theme_ functions.
     * Used the Garland theme for the installation and maintenance pages.
     * Added theme preprocess functions for themes that are templates.
+    * Added support for themeable functions in JavaScript.
 - Refactored update.php to a generic batch API to be able to run time consuming operations in multiple subsequent HTTP requests.
 - Installer:
     * Themed the installer with the Garland theme.
