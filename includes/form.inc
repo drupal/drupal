@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.205 2007/06/08 12:51:58 goba Exp $
+// $Id: form.inc,v 1.206 2007/06/17 12:07:51 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -183,13 +183,6 @@ function drupal_get_form($form_id) {
  */
 function drupal_execute($form_id, &$form_state) {
   $args = func_get_args();
-
-  // We do a bit of juggling here because drupal_retrieve_form() expects
-  // the $form_state to be the last parameter, while drupal_execute()
-  // always takes it in as the second parameter.
-  $args = array_slice($args, 3);
-  $args[1] = $form_state;
-
   $form = call_user_func_array('drupal_retrieve_form', $args);
   $form['#post'] = $form_state['values'];
   drupal_prepare_form($form_id, $form, $form_state);
@@ -294,7 +287,7 @@ function drupal_process_form($form_id, &$form, &$form_state) {
       // We'll clear out the cached copies of the form and its stored data
       // here, as we've finished with them. The in-memory copies are still
       // here, though.
-      if (variable_get('cache', CACHE_DISABLED) == CACHE_DISABLED) {
+      if (variable_get('cache', CACHE_DISABLED) == CACHE_DISABLED && !empty($form_state['values']['form_build_id'])) {
         cache_clear_all('form_'. $form_state['values']['form_build_id'], 'cache_form');
         cache_clear_all('storage_'. $form_state['values']['form_build_id'], 'cache_form');
       }
@@ -709,6 +702,10 @@ function form_builder($form_id, $form, &$form_state) {
     $form += $info;
   }
 
+  if (isset($form['#type']) && $form['#type'] == 'form' && !empty($form['#programmed'])) {
+    $form_state['submitted'] = TRUE;
+  }
+
   if (isset($form['#input']) && $form['#input']) {
     _form_builder_handle_input_element($form_id, $form, $form_state);
   }
@@ -773,10 +770,6 @@ function form_builder($form_id, $form, &$form_state) {
  * attached to a specific element.
  */
 function _form_builder_handle_input_element($form_id, &$form, &$form_state) {
-  if (isset($form['#type']) && $form['#type'] == 'form' && !empty($form['#programmed'])) {
-    $form_state['submitted'] = TRUE;
-  }
-
   if (!isset($form['#name'])) {
     $name = array_shift($form['#parents']);
     $form['#name'] = $name;
