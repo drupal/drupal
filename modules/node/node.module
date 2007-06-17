@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.831 2007/06/15 22:00:30 dries Exp $
+// $Id: node.module,v 1.832 2007/06/17 14:37:33 goba Exp $
 
 /**
  * @file
@@ -706,7 +706,7 @@ function node_save(&$node) {
     $op = 'update';
   }
   if ($update_node) {
-    db_query('UPDATE node SET vid = %d WHERE nid = %d', $node->vid, $node->nid);
+    db_query('UPDATE {node} SET vid = %d WHERE nid = %d', $node->vid, $node->nid);
   }
 
  // Call the node specific callback (if any):
