@@ -706,7 +706,7 @@ function node_save(&$node) {
     $op = 'update';
   }
   if ($update_node) {
-    db_query('UPDATE node SET vid = %d WHERE nid = %d', $node->vid, $node->nid);
+    db_query('UPDATE {node} SET vid = %d WHERE nid = %d', $node->vid, $node->nid);
   }
 
  // Call the node specific callback (if any):
