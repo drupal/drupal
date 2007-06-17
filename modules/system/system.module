@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.492 2007/06/12 22:27:14 dries Exp $
+// $Id: system.module,v 1.493 2007/06/17 10:49:49 dries Exp $
 
 /**
  * @file
@@ -1450,7 +1450,7 @@ function system_themes_form_submit($form, &$form_state) {
  * Modules can be enabled or disabled and set for throttling if the throttle module is enabled.
  * The list of modules gets populated by module.info files, which contain each module's name,
  * description and dependencies.
- * @sa drupal_parse_info_file for information on module.info descriptors.
+ * @see drupal_parse_info_file for information on module.info descriptors.
  *
  * Dependency checking is performed to ensure that a module cannot be enabled if the module has
  * disabled dependencies and also to ensure that the module cannot be disabled if the module has
