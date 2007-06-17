@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.178 2007/06/12 20:51:27 dries Exp $
+// $Id: menu.inc,v 1.179 2007/06/17 14:55:39 goba Exp $
 
 /**
  * @file
@@ -914,7 +914,7 @@ function menu_secondary_links() {
  * @param $level
  *   The level of tasks you ask for. Primary tasks are 0, secondary are 1.
  * @return
- *   An array of links to the tabs.
+ *   Themed output corresponding to the tabs of the requested level.
  */
 function menu_local_tasks($level = 0) {
   static $tabs = array();
@@ -924,32 +924,39 @@ function menu_local_tasks($level = 0) {
     if (!$router_item || !$router_item['access']) {
       return array();
     }
-    // Get all tabs
-    $result = db_query("SELECT * FROM {menu_router} WHERE tab_root = '%s' AND tab_parent != '' ORDER BY weight, title", $router_item['tab_root']);
+    // Get all tabs and the root page.
+    $result = db_query("SELECT * FROM {menu_router} WHERE tab_root = '%s' ORDER BY weight, title", $router_item['tab_root']);
     $map = arg();
     $children = array();
-    $tab_parent = array();
+    $tasks = array();
 
     while ($item = db_fetch_array($result)) {
-      $children[$item['tab_parent']][$item['path']] = $item;
-      $tab_parent[$item['path']] = $item['tab_parent'];
+      _menu_translate($item, $map, TRUE);
+      if ($item['tab_parent']) {
+        // All tabs, but not the root page.
+        $children[$item['tab_parent']][$item['path']] = $item;
+      }
+      // Store the translated item for later use.
+      $tasks[$item['path']] = $item;
     }
 
-    // Find all tabs below the current path
+    // Find all tabs below the current path.
     $path = $router_item['path'];
     while (isset($children[$path])) {
       $tabs_current = '';
       $next_path = '';
       foreach ($children[$path] as $item) {
-         _menu_translate($item, $map, TRUE);
         if ($item['access']) {
-          $link = l($item['title'], $item['href']); // TODO options?
           // The default task is always active.
           if ($item['type'] == MENU_DEFAULT_LOCAL_TASK) {
+            // Find the first parent which is not a default local task.
+            for ($p = $item['tab_parent']; $tasks[$p]['type'] == MENU_DEFAULT_LOCAL_TASK; $p = $tasks[$p]['tab_parent']);
+            $link = l($item['title'], $tasks[$p]['href']);
             $tabs_current .= theme('menu_local_task', $link, TRUE);
             $next_path = $item['path'];
           }
           else {
+            $link = l($item['title'], $item['href']);
             $tabs_current .= theme('menu_local_task', $link);
           }
         }
@@ -967,15 +974,21 @@ function menu_local_tasks($level = 0) {
       $next_path = '';
       $next_parent = '';
       foreach ($children[$parent] as $item) {
-         _menu_translate($item, $map, TRUE);
         if ($item['access']) {
-          $link = l($item['title'], $item['href']); // TODO options?
+          if ($item['type'] == MENU_DEFAULT_LOCAL_TASK) {
+            // Find the first parent which is not a default local task.
+            for ($p = $item['tab_parent']; $tasks[$p]['type'] == MENU_DEFAULT_LOCAL_TASK; $p = $tasks[$p]['tab_parent']);
+            $link = l($item['title'], $tasks[$p]['href']);
+          }
+          else {
+            $link = l($item['title'], $item['href']);
+          }
           // We check for the active tab.
           if ($item['path'] == $path) {
             $tabs_current .= theme('menu_local_task', $link, TRUE);
             $next_path = $item['tab_parent'];
-            if (isset($tab_parent[$next_path])) {
-              $next_parent = $tab_parent[$next_path];
+            if (isset($tasks[$next_path])) {
+              $next_parent = $tasks[$next_path]['tab_parent'];
             }
           }
           else {
@@ -987,7 +1000,7 @@ function menu_local_tasks($level = 0) {
       $parent = $next_parent;
       $tabs[$item['number_parts']] = $tabs_current;
     }
-    // Sort by depth
+    // Sort by depth.
     ksort($tabs);
     // Remove the depth, we are interested only in their relative placement.
     $tabs = array_values($tabs);
