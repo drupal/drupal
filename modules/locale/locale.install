@@ -101,6 +101,15 @@ function locale_update_6003() {
 }
 
 /**
+ * Remove empty translations, we don't need these anymore.
+ */
+function locale_update_6004() {
+  $ret = array();
+  $ret[] = update_sql("DELETE FROM {locales_target} WHERE translation = ''");
+  return $ret;
+}
+
+/**
  * @} End of "defgroup updates-5.x-to-6.x"
  */
 
