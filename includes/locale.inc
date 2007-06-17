@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.137 2007/06/13 19:39:04 goba Exp $
+// $Id: locale.inc,v 1.138 2007/06/17 17:34:12 goba Exp $
 
 /**
  * @file
@@ -829,7 +829,7 @@ function locale_translate_edit_form_submit($form, &$form_state) {
  * Delete a language string.
  */
 function locale_translate_delete($lid) {
-  $langcode = db_result(db_query('SELECT language FROM {locales_source} WHERE lid = %d', $lid));
+  $langcode = db_result(db_query('SELECT language FROM {locales_target} WHERE lid = %d', $lid));
   db_query('DELETE FROM {locales_source} WHERE lid = %d', $lid);
   db_query('DELETE FROM {locales_target} WHERE lid = %d', $lid);
   if ($langcode) {
