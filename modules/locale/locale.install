@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.install,v 1.13 2007/06/11 07:30:40 dries Exp $
+// $Id: locale.install,v 1.14 2007/06/17 17:41:40 goba Exp $
 
 /**
  * Implementation of hook_install().
@@ -97,6 +97,15 @@ function locale_update_6002() {
 function locale_update_6003() {
   $ret = array();
   db_add_field($ret, 'languages', 'javascript', array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''));
+  return $ret;
+}
+
+/**
+ * Remove empty translations, we don't need these anymore.
+ */
+function locale_update_6004() {
+  $ret = array();
+  $ret[] = update_sql("DELETE FROM {locales_target} WHERE translation = ''");
   return $ret;
 }
 

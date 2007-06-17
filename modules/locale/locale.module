@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.178 2007/06/15 19:02:47 goba Exp $
+// $Id: locale.module,v 1.179 2007/06/17 17:41:40 goba Exp $
 
 /**
  * @file
@@ -327,33 +327,20 @@ function locale($string = NULL, $langcode = NULL) {
 
   // We do not have this translation cached, so get it from the DB.
   else {
-    $result = db_query("SELECT s.lid, t.translation FROM {locales_source} s INNER JOIN {locales_target} t ON s.lid = t.lid WHERE s.source = '%s' AND t.language = '%s' AND s.textgroup = 'default'", $string, $langcode);
-    // Translation found
-    if ($trans = db_fetch_object($result)) {
-      if (!empty($trans->translation)) {
-        $locale_t[$langcode][$string] = $trans->translation;
-        $string = $trans->translation;
+    $translation = db_fetch_object(db_query("SELECT s.lid, t.translation FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid WHERE s.source = '%s' AND t.language = '%s' AND s.textgroup = 'default'", $string, $langcode));
+    if ($translation) {
+      // We have the source string at least.
+      if ($translation->lid) {
+        // Cache translation string or TRUE if no translation exists.
+        $translation = (empty($translation->translation) ? TRUE : $translation->translation);
+        $locale_t[$langcode][$string] = $translation;
       }
     }
-
-    // Either we have no such source string, or no translation
     else {
-      $result = db_query("SELECT lid, source FROM {locales_source} WHERE source = '%s' AND textgroup = 'default'", $string);
-      // We have no such translation
-      if ($obj = db_fetch_object($result)) {
-        if ($langcode) {
-          db_query("INSERT INTO {locales_target} (lid, language, translation) VALUES (%d, '%s', '')", $obj->lid, $langcode);
-        }
-      }
-      // We have no such source string
-      else {
-        db_query("INSERT INTO {locales_source} (location, source, textgroup) VALUES ('%s', '%s', 'default')", request_uri(), $string);
-        if ($langcode) {
-          $lid = db_fetch_object(db_query("SELECT lid FROM {locales_source} WHERE source = '%s' AND textgroup = 'default'", $string));
-          db_query("INSERT INTO {locales_target} (lid, language, translation) VALUES (%d, '%s', '')", $lid->lid, $langcode);
-        }
-      }
-      // Clear locale cache in DB
+      // We don't have the source string, cache this as untranslated.
+      db_query("INSERT INTO {locales_source} (location, source, textgroup) VALUES ('%s', '%s', 'default')", request_uri(), $string);
+      $locale_t[$langcode][$string] = TRUE;
+      // Clear locale cache so this string can be added in a later request.
       cache_clear_all('locale:'. $langcode, 'cache');
     }
   }
@@ -371,7 +358,7 @@ function locale_refresh_cache() {
   $languages = $languages['1'];
 
   foreach ($languages as $language) {
-    $result = db_query("SELECT s.source, t.translation, t.language FROM {locales_source} s INNER JOIN {locales_target} t ON s.lid = t.lid WHERE t.language = '%s' AND s.textgroup = 'default' AND LENGTH(s.source) < 75", $language->language);
+    $result = db_query("SELECT s.source, t.translation, t.language FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid WHERE t.language = '%s' AND s.textgroup = 'default' AND LENGTH(s.source) < 75", $language->language);
     $t = array();
     while ($data = db_fetch_object($result)) {
       $t[$data->source] = (empty($data->translation) ? TRUE : $data->translation);
@@ -502,7 +489,7 @@ function _locale_batch_import($filepath, &$context) {
   // we can extract the language code to use for the import from the end.
   if (preg_match('!(/|\.)([^\.]+)\.po$!', $filepath, $langcode)) {
     $file = (object) array('filename' => basename($filepath), 'filepath' => $filepath);
-    _locale_import_read_po('db-store', $file, 'keep', $langcode[2]);
+    _locale_import_read_po('db-store', $file, LOCALE_IMPORT_KEEP, $langcode[2]);
     $context['results'][] = $filepath;
   }
 }

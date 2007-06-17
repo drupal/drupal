@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.138 2007/06/17 17:34:12 goba Exp $
+// $Id: locale.inc,v 1.139 2007/06/17 17:41:40 goba Exp $
 
 /**
  * @file
@@ -7,6 +7,18 @@
  */
 
 define('LOCALE_JS_STRING', '(?:(?:\'(?:\\\\\'|[^\'])*\'|"(?:\\\\"|[^"])*")(?:\s*\+\s*)?)+');
+
+/**
+ * Translation import mode overwriting all existing translations
+ * if new translated version available.
+ */
+define('LOCALE_IMPORT_OVERWRITE', 0);
+
+/**
+ * Translation import mode keeping existing translations and only
+ * inserting new strings.
+ */
+define('LOCALE_IMPORT_KEEP', 1);
 
 /**
  * @defgroup locale-language-overview Language overview functionality
@@ -601,7 +613,7 @@ function locale_translate_import_form() {
   $form['import']['mode'] = array('#type' => 'radios',
     '#title' => t('Mode'),
     '#default_value' => 'overwrite',
-    '#options' => array('overwrite' => t('Strings in the uploaded file replace existing ones, new ones are added'), 'keep' => t('Existing strings are kept, only new strings are added')),
+    '#options' => array(LOCALE_IMPORT_OVERWRITE => t('Strings in the uploaded file replace existing ones, new ones are added'), LOCALE_IMPORT_KEEP => t('Existing strings are kept, only new strings are added')),
   );
   $form['import']['submit'] = array('#type' => 'submit', '#value' => t('Import'));
   $form['#attributes']['enctype'] = 'multipart/form-data';
@@ -796,12 +808,19 @@ function locale_translate_edit_form(&$form_state, $lid) {
 function locale_translate_edit_form_submit($form, &$form_state) {
   $lid = $form_state['values']['lid'];
   foreach ($form_state['values']['translations'] as $key => $value) {
-    $trans = db_fetch_object(db_query("SELECT translation FROM {locales_target} WHERE lid = %d AND language = '%s'", $lid, $key));
-    if (isset($trans->translation)) {
-      db_query("UPDATE {locales_target} SET translation = '%s' WHERE lid = %d AND language = '%s'", $value, $lid, $key);
+    $translation = db_result(db_query("SELECT translation FROM {locales_target} WHERE lid = %d AND language = '%s'", $lid, $key));
+    if (!empty($value)) {
+      // Only update or insert if we have a value to use.
+      if (!empty($translation)) {
+        db_query("UPDATE {locales_target} SET translation = '%s' WHERE lid = %d AND language = '%s'", $value, $lid, $key);
+      }
+      else {
+        db_query("INSERT INTO {locales_target} (lid, translation, language) VALUES (%d, '%s', '%s')", $lid, $value, $key);
+      }
     }
-    else {
-      db_query("INSERT INTO {locales_target} (lid, translation, language) VALUES (%d, '%s', '%s')", $lid, $value, $key);
+    elseif (!empty($translation)) {
+      // Empty translation entered: remove existing entry from database.
+      db_query("DELETE FROM {locales_target} WHERE lid = %d AND language = '%s'", $lid, $key);
     }
 
     // Refresh the JS file for this language.
@@ -886,12 +905,6 @@ function locale_add_language($langcode, $name = NULL, $native = NULL, $direction
 
   db_query("INSERT INTO {languages} (language, name, native, direction, domain, prefix, enabled) VALUES ('%s', '%s', '%s', %d, '%s', '%s', %d)", $langcode, $name, $native, $direction, $domain, $prefix, $enabled);
 
-  // Add empty translations for strings (to optimize locale())
-  $result = db_query("SELECT lid FROM {locales_source}");
-  while ($string = db_fetch_object($result)) {
-    db_query("INSERT INTO {locales_target} (lid, language, translation) VALUES (%d,'%s', '')", $string->lid, $langcode);
-  }
-
   // Only set it as default if enabled.
   if ($enabled && $default) {
     variable_set('language_default', (object) array('language' => $langcode, 'name' => $name, 'native' => $native, 'direction' => $direction, 'enabled' => (int) $enabled, 'plurals' => 0, 'formula' => '', 'domain' => '', 'prefix' => $prefix, 'weight' => 0));
@@ -919,7 +932,7 @@ function locale_add_language($langcode, $name = NULL, $native = NULL, $direction
  * @param $langcode
  *   Language code
  * @param $mode
- *   Should existing translations be replaced ('overwrite' or 'keep')
+ *   Should existing translations be replaced LOCALE_IMPORT_KEEP or LOCALE_IMPORT_OVERWRITE
  * @param $group
  *   Text group to import PO file into (eg. 'default' for interface translations)
  */
@@ -943,7 +956,7 @@ function _locale_import_po($file, $langcode, $mode, $group = NULL) {
   }
 
   // Get status information on import process.
-  list($headerdone, $additions, $updates) = _locale_import_one_string('db-report');
+  list($headerdone, $additions, $updates, $deletes) = _locale_import_one_string('db-report');
 
   if (!$headerdone) {
     drupal_set_message(t('The translation file %filename appears to have a missing or malformed header.', array('%filename' => $file->filename)), 'error');
@@ -956,8 +969,8 @@ function _locale_import_po($file, $langcode, $mode, $group = NULL) {
   // Rebuild the menu, strings may have changed.
   menu_rebuild();
 
-  drupal_set_message(t('The translation was successfully imported. There are %number newly created translated strings and %update strings were updated.', array('%number' => $additions, '%update' => $updates)));
-  watchdog('locale', 'Imported %file into %locale: %number new strings added and %update updated.', array('%file' => $file->filename, '%locale' => $langcode, '%number' => $additions, '%update' => $updates));
+  drupal_set_message(t('The translation was successfully imported. There are %number newly created translated strings, %update strings were updated and %delete strings were removed.', array('%number' => $additions, '%update' => $updates, '%delete' => $deletes)));
+  watchdog('locale', 'Imported %file into %locale: %number new strings added, %update updated and %delete removed.', array('%file' => $file->filename, '%locale' => $langcode, '%number' => $additions, '%update' => $updates, '%delete' => $deletes));
   return TRUE;
 }
 
@@ -969,7 +982,7 @@ function _locale_import_po($file, $langcode, $mode, $group = NULL) {
  * @param $file
  *   Drupal file object corresponding to the PO file to import
  * @param $mode
- *   Should existing translations be replaced ('overwrite' or 'keep')
+ *   Should existing translations be replaced LOCALE_IMPORT_KEEP or LOCALE_IMPORT_OVERWRITE
  * @param $lang
  *   Language code
  * @param $group
@@ -1134,7 +1147,7 @@ function _locale_import_message($message, $file, $lineno = NULL) {
  * @param $value
  *   Details of the string stored
  * @param $mode
- *   Should existing translations be replaced ('overwrite' or 'keep')
+ *   Should existing translations be replaced LOCALE_IMPORT_KEEP or LOCALE_IMPORT_OVERWRITE
  * @param $lang
  *   Language to store the string in
  * @param $file
@@ -1143,8 +1156,7 @@ function _locale_import_message($message, $file, $lineno = NULL) {
  *   Text group to import PO file into (eg. 'default' for interface translations)
  */
 function _locale_import_one_string($op, $value = NULL, $mode = NULL, $lang = NULL, $file = NULL, $group = 'default') {
-  static $additions = 0;
-  static $updates = 0;
+  static $report = array(0, 0, 0);
   static $headerdone = FALSE;
   static $strings = array();
 
@@ -1160,16 +1172,16 @@ function _locale_import_one_string($op, $value = NULL, $mode = NULL, $lang = NUL
 
     // Called at end of import to inform the user
     case 'db-report':
-      return array($headerdone, $additions, $updates);
+      return array($headerdone, $report[0], $report[1], $report[2]);
 
-    // Store the string we got in the database
+    // Store the string we got in the database.
     case 'db-store':
-      // We got header information
+      // We got header information.
       if ($value['msgid'] == '') {
-        $hdr = _locale_import_parse_header($value['msgstr']);
+        $header = _locale_import_parse_header($value['msgstr']);
 
-        // Get the plural formula
-        if (isset($hdr["Plural-Forms"]) && $p = _locale_import_parse_plural_forms($hdr["Plural-Forms"], $file->filename)) {
+        // Get the plural formula and update in database.
+        if (isset($header["Plural-Forms"]) && $p = _locale_import_parse_plural_forms($header["Plural-Forms"], $file->filename)) {
           list($nplurals, $plural) = $p;
           db_query("UPDATE {languages} SET plurals = %d, formula = '%s' WHERE language = '%s'", $nplurals, $plural, $lang);
         }
@@ -1179,12 +1191,12 @@ function _locale_import_one_string($op, $value = NULL, $mode = NULL, $lang = NUL
         $headerdone = TRUE;
       }
 
-      // Some real string to import
       else {
+        // Some real string to import.
         $comments = _locale_import_shorten_comments(empty($value['#']) ? array() : $value['#']);
-
-        // Handle a translation for some plural string
+        
         if (strpos($value['msgid'], "\0")) {
+          // This string has plural versions.
           $english = explode("\0", $value['msgid'], 2);
           $entries = array_keys($value['msgstr']);
           for ($i = 3; $i <= count($entries); $i++) {
@@ -1196,79 +1208,79 @@ function _locale_import_one_string($op, $value = NULL, $mode = NULL, $lang = NUL
             if ($key == 0) {
               $plid = 0;
             }
-            $loc = db_fetch_object(db_query("SELECT lid FROM {locales_source} WHERE source = '%s' AND textgroup = '%s'", $english[$key], $group));
-            if (!empty($loc->lid)) { // a string exists
-              $lid = $loc->lid;
-              // update location field
-              db_query("UPDATE {locales_source} SET location = '%s' WHERE lid = %d", $comments, $lid);
-              $trans2 = db_fetch_object(db_query("SELECT lid, translation, plid, plural FROM {locales_target} WHERE lid = %d AND language = '%s'", $lid, $lang));
-              if (!isset($trans2->lid)) { // no translation in current language
-                db_query("INSERT INTO {locales_target} (lid, language, translation, plid, plural) VALUES (%d, '%s', '%s', %d, %d)", $lid, $lang, $trans, $plid, $key);
-                $additions++;
-              } // translation exists
-              else if ($mode == 'overwrite' || $trans2->translation == '') {
-                db_query("UPDATE {locales_target} SET translation = '%s', plid = %d, plural = %d WHERE language = '%s' AND lid = %d", $trans, $plid, $key, $lang, $lid);
-                if ($trans2->translation == '') {
-                  $additions++;
-                }
-                else {
-                  $updates++;
-                }
-              }
-            }
-            else { // no string
-              db_query("INSERT INTO {locales_source} (location, source, textgroup) VALUES ('%s', '%s', '%s')", $comments, $english[$key], $group);
-              $loc = db_fetch_object(db_query("SELECT lid FROM {locales_source} WHERE source = '%s' AND textgroup = '%s'", $english[$key], $group));
-              $lid = $loc->lid;
-              db_query("INSERT INTO {locales_target} (lid, language, translation, plid, plural) VALUES (%d, '%s', '%s', %d, %d)", $lid, $lang, $trans, $plid, $key);
-              if ($trans != '') {
-                $additions++;
-              }
-            }
-            $plid = $lid;
+            $plid = _locale_import_one_string_db($report, $lang, $english[$key], $trans, $group, $comments, $mode, $plid, $key);
           }
         }
 
-        // A simple translation
         else {
+          // A simple string to import.
           $english = $value['msgid'];
           $translation = $value['msgstr'];
-          $loc = db_fetch_object(db_query("SELECT lid FROM {locales_source} WHERE source = '%s' AND textgroup = '%s'", $english, $group));
-          if (!empty($loc->lid)) { // a string exists
-            $lid = $loc->lid;
-            // update location field
-            db_query("UPDATE {locales_source} SET location = '%s' WHERE source = '%s'", $comments, $english);
-            $trans = db_fetch_object(db_query("SELECT lid, translation FROM {locales_target} WHERE lid = %d AND language = '%s'", $lid, $lang));
-            if (!isset($trans->lid)) { // no translation in current language
-              db_query("INSERT INTO {locales_target} (lid, language, translation) VALUES (%d, '%s', '%s')", $lid, $lang, $translation);
-              $additions++;
-            } // translation exists
-            else if ($mode == 'overwrite') { //overwrite in any case
-              db_query("UPDATE {locales_target} SET translation = '%s' WHERE language = '%s' AND lid = %d", $translation, $lang, $lid);
-              if ($trans->translation == '') {
-                $additions++;
-              }
-              else {
-                $updates++;
-              }
-            } // overwrite if empty string
-            else if ($trans->translation == '') {
-              db_query("UPDATE {locales_target} SET translation = '%s' WHERE language = '%s' AND lid = %d", $translation, $lang, $lid);
-              $additions++;
-            }
-          }
-          else { // no string
-            db_query("INSERT INTO {locales_source} (location, source, textgroup) VALUES ('%s', '%s', '%s')", $comments, $english, $group);
-            $loc = db_fetch_object(db_query("SELECT lid FROM {locales_source} WHERE source = '%s' AND textgroup = '%s'", $english, $group));
-            $lid = $loc->lid;
-            db_query("INSERT INTO {locales_target} (lid, language, translation) VALUES (%d, '%s', '%s')", $lid, $lang, $translation);
-            if ($translation != '') {
-              $additions++;
-            }
-          }
+          _locale_import_one_string_db($report, $lang, $english, $translation, $group, $comments, $mode);
         }
       }
   } // end of db-store operation
+}
+
+/**
+ * Import one string into the database.
+ *
+ * @param $report
+ *   Report array summarizing the number of changes done in the form:
+ *   array(inserts, updates, deletes).
+ * @param $langcode
+ *   Language code to import string into.
+ * @param $source
+ *   Source string.
+ * @param $translation
+ *   Translation to language specified in $langcode.
+ * @param $textgroup
+ *   Name of textgroup to store translation in.
+ * @param $location
+ *   Location value to save with source string.
+ * @param $mode
+ *   Import mode to use, LOCALE_IMPORT_KEEP or LOCALE_IMPORT_OVERWRITE.
+ * @param $plid
+ *   Optional plural ID to use.
+ * @param $plural
+ *   Optional plural value to use.
+ * @return
+ *   The string ID of the existing string modified or the new string added.
+ */
+function _locale_import_one_string_db(&$report, $langcode, $source, $translation, $textgroup, $location, $mode, $plid = NULL, $plural = NULL) {
+  $lid = db_result(db_query("SELECT lid FROM {locales_source} WHERE source = '%s' AND textgroup = '%s'", $source, $textgroup));
+
+  if (!empty($translation)) {
+    if ($lid) {
+      // We have this source string saved already.
+      db_query("UPDATE {locales_source} SET location = '%s' WHERE lid = %d", $location, $lid);
+      $exists = (bool) db_result(db_query("SELECT lid FROM {locales_target} WHERE lid = %d AND language = '%s'", $lid, $langcode));
+      if (!$exists) {
+        // No translation in this language.
+        db_query("INSERT INTO {locales_target} (lid, language, translation, plid, plural) VALUES (%d, '%s', '%s', %d, %d)", $lid, $langcode, $translation, $plid, $plural);
+        $report[0]++;
+      }
+      else if ($mode == LOCALE_IMPORT_OVERWRITE) {
+        // Translation exists, only overvwrite if instructed.
+        db_query("UPDATE {locales_target} SET translation = '%s', plid = %d, plural = %d WHERE language = '%s' AND lid = %d", $translation, $plid, $plural, $langcode, $lid);
+        $report[1]++;
+      }
+    }
+    else {
+      // No such source string in the database yet.
+      db_query("INSERT INTO {locales_source} (location, source, textgroup) VALUES ('%s', '%s', '%s')", $location, $source, $textgroup);
+      $lid = db_result(db_query("SELECT lid FROM {locales_source} WHERE source = '%s' AND textgroup = '%s'", $source, $textgroup));
+      db_query("INSERT INTO {locales_target} (lid, language, translation, plid, plural) VALUES (%d, '%s', '%s', %d, %d)", $lid, $langcode, $translation, $plid, $plural);
+      $report[0]++;
+    }
+  }
+  elseif ($mode == LOCALE_IMPORT_OVERWRITE) {
+    // Empty translation, remove existing if instructed.
+    db_query("DELETE FROM {locales_target} WHERE language = '%s' AND lid = %d AND plid = %d AND plural = %d", $translation, $langcode, $lid, $plid, $plural);
+    $report[2]++;
+  }
+  
+  return $lid;
 }
 
 /**
@@ -1280,18 +1292,15 @@ function _locale_import_one_string($op, $value = NULL, $mode = NULL, $lang = NUL
  *   An associative array of key-value pairs
  */
 function _locale_import_parse_header($header) {
-  $hdr = array();
-
-  $lines = explode("\n", $header);
+  $header_parsed = array();
+  $lines = array_map('trim', explode("\n", $header));
   foreach ($lines as $line) {
-    $line = trim($line);
     if ($line) {
       list($tag, $contents) = explode(":", $line, 2);
-      $hdr[trim($tag)] = trim($contents);
+      $header_parsed[trim($tag)] = trim($contents);
     }
   }
-
-  return $hdr;
+  return $header_parsed;
 }
 
 /**
@@ -1661,8 +1670,6 @@ function _locale_parse_js_file($filepath) {
       else {
         // We don't have the source string yet, thus we insert it into the database.
         db_query("INSERT INTO {locales_source} (location, source, textgroup) VALUES ('%s', '%s', 'default')", $filepath, $string);
-        $lid = db_result(db_query("SELECT lid FROM {locales_source} WHERE source = '%s' AND textgroup = 'default'", $string));
-        db_query("INSERT INTO {locales_target} (lid, language, translation) VALUES (%d, '%s', '')", $lid, $language->language);
       }
     }
   }
@@ -1688,10 +1695,10 @@ function _locale_export_po($language = NULL, $group = 'default') {
   // Get language specific strings, or all strings
   if (isset($language)) {
     $meta = db_fetch_object(db_query("SELECT * FROM {languages} WHERE language = '%s'", $language));
-    $result = db_query("SELECT s.lid, s.source, s.location, t.translation, t.plid, t.plural FROM {locales_source} s INNER JOIN {locales_target} t ON s.lid = t.lid WHERE t.language = '%s' AND s.textgroup = '%s' ORDER BY t.plid, t.plural", $language, $group);
+    $result = db_query("SELECT s.lid, s.source, s.location, t.translation, t.plid, t.plural FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid WHERE t.language = '%s' AND s.textgroup = '%s' ORDER BY t.plid, t.plural", $language, $group);
   }
   else {
-    $result = db_query("SELECT s.lid, s.source, s.location, t.plid, t.plural FROM {locales_source} s INNER JOIN {locales_target} t ON s.lid = t.lid WHERE s.textgroup = '%s' ORDER BY t.plid, t.plural", $group);
+    $result = db_query("SELECT s.lid, s.source, s.location, t.plid, t.plural FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid WHERE s.textgroup = '%s' ORDER BY t.plid, t.plural", $group);
   }
 
   // Build array out of the database results
@@ -1889,7 +1896,7 @@ function _locale_translate_seek() {
 
   // We have at least one criterion to match
   if ($query = _locale_translate_seek_query()) {
-    $join = "SELECT s.source, s.location, s.lid, s.textgroup, t.translation, t.language FROM {locales_source} s INNER JOIN {locales_target} t ON s.lid = t.lid ";
+    $join = "SELECT s.source, s.location, s.lid, s.textgroup, t.translation, t.language FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid ";
 
     $arguments = array();
     // Compute LIKE section
@@ -2002,7 +2009,7 @@ function _locale_rebuild_js($langcode = NULL) {
 
   // Construct the array for JavaScript translations.
   // We sort on plural so that we have all plural forms before singular forms.
-  $result = db_query("SELECT s.lid, s.source, t.plid, t.plural, t.translation FROM {locales_source} s INNER JOIN {locales_target} t ON s.lid = t.lid WHERE t.language = '%s' AND s.location LIKE '%%.js%%' AND s.textgroup = 'default' ORDER BY t.plural DESC", $language->language);
+  $result = db_query("SELECT s.lid, s.source, t.plid, t.plural, t.translation FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid WHERE t.language = '%s' AND s.location LIKE '%%.js%%' AND s.textgroup = 'default' ORDER BY t.plural DESC", $language->language);
 
   $translations = $plurals = array();
   while ($data = db_fetch_object($result)) {
