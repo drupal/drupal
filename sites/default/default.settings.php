@@ -139,13 +139,12 @@ ini_set('url_rewriter.tags',        '');
 /**
  * Drupal automatically generates a unique session cookie name for each site
  * based on on its full domain name. If you have multiple domains pointing at
- * the same Drupal site, you can either redirect them all to a single
- * domain (see comment in .htaccess), or uncomment the line below and specify
- * their shared base domain. Doing so assures that users remain logged in as they
+ * the same Drupal site, you can either redirect them all to a single domain
+ * (see comment in .htaccess), or uncomment the line below and specify their
+ * shared base domain. Doing so assures that users remain logged in as they
  * cross between your various domains.
-*/
-
-#$cookie_domain = 'example.com';
+ */
+# $cookie_domain = 'example.com';
 
 /**
  * Variable overrides:
