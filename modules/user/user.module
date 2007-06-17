@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.798 2007/06/15 06:53:26 dries Exp $
+// $Id: user.module,v 1.799 2007/06/17 11:59:05 dries Exp $
 
 /**
  * @file
@@ -2289,7 +2289,7 @@ function theme_user_admin_account($form) {
  * Submit the user administration update form.
  */
 function user_admin_account_submit($form, &$form_state) {
-  $operations = module_invoke_all('user_operations');
+  $operations = module_invoke_all('user_operations', $form_state);
   $operation = $operations[$form_state['values']['operation']];
   // Filter out unchecked accounts.
   $accounts = array_filter($form_state['values']['accounts']);
@@ -2317,9 +2317,7 @@ function user_admin_account_validate($form, &$form_state) {
 /**
  * Implementation of hook_user_operations().
  */
-function user_user_operations() {
-  global $form_values;
-
+function user_user_operations($form_state = array()) {
   $operations = array(
     'unblock' => array(
       'label' => t('Unblock the selected users'),
@@ -2363,13 +2361,13 @@ function user_user_operations() {
   }
 
   // If the form has been posted, we need to insert the proper data for role editing if necessary.
-  if ($form_values) {
-    $operation_rid = explode('-', $form_values['operation']);
+  if (!empty($form_state['submitted'])) {
+    $operation_rid = explode('-', $form_state['values']['operation']);
     $operation = $operation_rid[0];
-    $rid = $operation_rid[1];
     if ($operation == 'add_role' || $operation == 'remove_role') {
+      $rid = $operation_rid[1];
       if (user_access('administer access control')) {
-        $operations[$form_values['operation']] = array(
+        $operations[$form_state['values']['operation']] = array(
           'callback' => 'user_multiple_role_edit',
           'callback arguments' => array($operation, $rid),
         );
