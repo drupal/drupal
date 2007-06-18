@@ -1,5 +1,5 @@
 <?php
-// $Id: path.inc,v 1.15 2007/03/26 01:32:22 dries Exp $
+// $Id: path.inc,v 1.16 2007/06/18 06:59:11 goba Exp $
 
 /**
  * @file
@@ -110,9 +110,6 @@ function drupal_get_path_alias($path, $path_language = '') {
   if ($alias = drupal_lookup_path('alias', $path, $path_language)) {
     $result = $alias;
   }
-  if (function_exists('custom_url_rewrite')) {
-    $result = custom_url_rewrite('alias', $result, $path, $path_language);
-  }
   return $result;
 }
 
@@ -133,8 +130,9 @@ function drupal_get_normal_path($path, $path_language = '') {
   if ($src = drupal_lookup_path('source', $path, $path_language)) {
     $result = $src;
   }
-  if (function_exists('custom_url_rewrite')) {
-    $result = custom_url_rewrite('source', $result, $path, $path_language);
+  if (function_exists('custom_url_rewrite_inbound')) {
+    // Modules may alter the inbound request path by reference.
+    custom_url_rewrite_inbound($result, $path, $path_language);
   }
   return $result;
 }

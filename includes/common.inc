@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.655 2007/06/15 07:15:24 dries Exp $
+// $Id: common.inc,v 1.656 2007/06/18 06:59:11 goba Exp $
 
 /**
  * @file
@@ -1227,10 +1227,17 @@ function url($path = NULL, $options = array()) {
 
   $base = $options['absolute'] ? $base_url .'/' : base_path();
 
+  // Preserve the original path before aliasing.
+  $original_path = $path;
+  
   // The special path '<front>' links to the default front page.
   if (!empty($path) && $path != '<front>') {
     if (!$options['alias']) {
       $path = drupal_get_path_alias($path);
+    }
+    if (function_exists('custom_url_rewrite_outbound')) {
+      // Modules may alter outbound links by reference.
+      custom_url_rewrite_outbound($path, $options, $original_path);
     }
     $path = drupal_urlencode($path);
     if (!$clean_url) {
