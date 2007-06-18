@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.139 2007/06/17 17:41:40 goba Exp $
+// $Id: locale.inc,v 1.140 2007/06/18 09:41:30 goba Exp $
 
 /**
  * @file
@@ -2091,14 +2091,14 @@ function _locale_rebuild_js($langcode = NULL) {
       if ($filepath) {
         // There has already been a translation file before.
         if (!empty($language->javascript)) {
-          watchdog('locale', t('Updated JavaScript translation file for the language %language.', array('%language' => t($language->name))));
+          watchdog('locale', 'Updated JavaScript translation file for the language %language.', array('%language' => t($language->name)));
         }
         else {
-          watchdog('locale', t('Created JavaScript translation file for the language %language.', array('%language' => t($language->name))));
+          watchdog('locale', 'Created JavaScript translation file for the language %language.', array('%language' => t($language->name)));
         }
       }
       else {
-        watchdog('locale', t('An error occured during creation of the JavaScript translation file for the language %language.', array('%language' => t($language->name))));
+        watchdog('locale', 'An error occured during creation of the JavaScript translation file for the language %language.', array('%language' => t($language->name)));
       }
     }
   }
@@ -2109,7 +2109,7 @@ function _locale_rebuild_js($langcode = NULL) {
     // Delete the old JavaScript file
     file_delete(file_create_path(variable_get('locale_js_directory', 'languages') .'/'. $language->language .'_'. $language->javascript .'.js'));
     db_query("UPDATE {languages} SET javascript = '' WHERE language = '%s'", $language->language);
-    watchdog('locale', t('Deleted JavaScript translation file for the locale %language.', array('%language' => t($language->name))));
+    watchdog('locale', 'Deleted JavaScript translation file for the locale %language.', array('%language' => t($language->name)));
   }
 }
 
