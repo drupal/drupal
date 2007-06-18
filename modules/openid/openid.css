@@ -1,0 +1,32 @@
+a.openid-link, a.user-link, #edit-openid-url {
+  background-image: url("login-bg.png");
+  background-position: 0% 50%;
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+
+div#edit-openid-url-wrapper {
+  display: block;
+}
+
+html.js #user-login-form div#edit-openid-url-wrapper,
+html.js #user-login div#edit-openid-url-wrapper {
+  display: none;
+}
+
+html.js #user-login-form a.openid-link,
+html.js #user-login a.openid-link {
+  display : block;
+}
+
+#user-login-form a.openid-link,
+#user-login-form a.user-link,
+#user-login a.openid-link,
+#user-login a.user-link {
+  display: none;
+}
+
+#user-login-form a.openid-link,
+#user-login-form a.user-link {
+  text-align : left;
+}

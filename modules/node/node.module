@@ -1383,7 +1383,7 @@ function node_filters() {
   }
 
   $filters['type'] = array('title' => t('type'), 'options' => node_get_types('names'));
-  
+
   // The taxonomy filter
   if ($taxonomy = module_invoke('taxonomy', 'form_all', 1)) {
     $filters['category'] = array('title' => t('category'), 'options' => $taxonomy);

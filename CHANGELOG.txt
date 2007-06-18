@@ -57,6 +57,7 @@ Drupal 6.0, xxxx-xx-xx (development version)
 - File handling improvements:
     * Entries in the files table are now keyed to a user, and not a node.
     * Added re-usable validation functions to check for uploaded file sizes, extensions, and image resolution.
+- Added support for OpenID.
 
 Drupal 5.0, 2007-01-15
 ----------------------
