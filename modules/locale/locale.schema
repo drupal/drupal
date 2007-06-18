@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.schema,v 1.3 2007/06/18 08:22:42 goba Exp $
+// $Id: locale.schema,v 1.4 2007/06/18 13:00:02 goba Exp $
 
 function locale_schema() {
   $schema['languages'] = array(
@@ -54,7 +54,7 @@ function locale_schema() {
       'translation' => array('type' => 'text', 'mysql_type' => 'blob', 'not null' => TRUE),
       // Language code referencing the languages table.
       'language'    => array('type' => 'varchar', 'length' => 12, 'not null' => TRUE, 'default' => ''),
-      // Parent lid (lid of the singular form) in case of plural strings.
+      // Parent lid (lid of the previous string in the plural chain) in case of plural strings.
       'plid'        => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
       // Plural index number in case of plural strings.
       'plural'      => array('type' => 'int', 'not null' => TRUE, 'default' => 0)
