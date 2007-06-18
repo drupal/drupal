@@ -110,9 +110,6 @@ function drupal_get_path_alias($path, $path_language = '') {
   if ($alias = drupal_lookup_path('alias', $path, $path_language)) {
     $result = $alias;
   }
-  if (function_exists('custom_url_rewrite')) {
-    $result = custom_url_rewrite('alias', $result, $path, $path_language);
-  }
   return $result;
 }
 
@@ -133,8 +130,9 @@ function drupal_get_normal_path($path, $path_language = '') {
   if ($src = drupal_lookup_path('source', $path, $path_language)) {
     $result = $src;
   }
-  if (function_exists('custom_url_rewrite')) {
-    $result = custom_url_rewrite('source', $result, $path, $path_language);
+  if (function_exists('custom_url_rewrite_inbound')) {
+    // Modules may alter the inbound request path by reference.
+    custom_url_rewrite_inbound($result, $path, $path_language);
   }
   return $result;
 }

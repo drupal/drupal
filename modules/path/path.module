@@ -233,11 +233,10 @@ function path_nodeapi(&$node, $op, $arg) {
 
       case 'load':
         $path = "node/$node->nid";
-        // We don't use drupal_get_path_alias() to avoid custom rewrite functions.
-        // We only care about exact aliases.
-        $result = db_query("SELECT dst FROM {url_alias} WHERE src = '%s'", $path);
-        if (db_num_rows($result)) {
-          $node->path = db_result($result);
+        $language = isset($node->language) ? $node->language : '';
+        $alias = drupal_get_path_alias($path, $language);
+        if ($path != $alias) {
+          $node->path = $alias;
         }
         break;
 
