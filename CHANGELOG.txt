@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.209 2007/06/17 15:43:31 goba Exp $
+// $Id: CHANGELOG.txt,v 1.210 2007/06/18 16:09:38 dries Exp $
 
 Drupal 6.0, xxxx-xx-xx (development version)
 ----------------------
@@ -57,6 +57,7 @@ Drupal 6.0, xxxx-xx-xx (development version)
 - File handling improvements:
     * Entries in the files table are now keyed to a user, and not a node.
     * Added re-usable validation functions to check for uploaded file sizes, extensions, and image resolution.
+- Added support for OpenID.
 
 Drupal 5.0, 2007-01-15
 ----------------------

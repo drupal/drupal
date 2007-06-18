@@ -1,0 +1,530 @@
+<?php
+// $Id: openid.module,v 1.1 2007/06/18 16:09:39 dries Exp $
+
+/**
+ * @file
+ * Implement OpenID Relying Party support for Drupal
+ */
+
+/**
+ * Implementation of hook_menu.
+ */
+function openid_menu() {
+  $items['openid/authenticate'] = array(
+    'title' => 'OpenID Login',
+    'page callback' => 'openid_authentication_page',
+    'access callback' => 'user_is_anonymous',
+    'type' => MENU_CALLBACK,
+  );
+  $items['user/%user/openid'] = array(
+    'title' => 'OpenID identities',
+    'page callback' => 'openid_user_identities',
+    'page arguments' => array(1),
+    'access callback' => 'user_edit_access',
+    'access arguments' => array(1),
+    'type' => MENU_LOCAL_TASK,
+  );
+  $items['user/%user/openid/delete'] = array(
+    'title' => 'Delete OpenID',
+    'page callback' => 'openid_user_delete',
+    'page arguments' => array(1),
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+/**
+ * Implementation of hook_help().
+ */
+function openid_help($section) {
+  switch ($section) {
+    case 'user/%/openid':
+      return t('You may login to this site using an OpenID. You may add your OpenId URLs below, and also see a list of any OpenIDs which have already been added.');
+  }
+}
+
+/**
+ * Implementation of hook_user().
+ */
+function openid_user($op, &$edit, &$account, $category = NULL) {
+  if ($op == 'insert' && isset($_SESSION['openid'])) {
+    // The user has registered after trying to login via OpenID.
+    if (variable_get('user_email_verification', TRUE)) {
+      drupal_set_message(t('Once you have verified your email address, you may log in via OpenID.'));
+    }
+    unset($_SESSION['openid']);
+  }
+}
+
+/**
+ * Implementation of hook_form_alter : adds OpenID login to the login forms.
+ */
+function openid_form_alter(&$form, $form_state, $form_id) {
+  if ($form_id == 'user_login_block' || $form_id == 'user_login') {
+    drupal_add_css(drupal_get_path('module', 'openid') .'/openid.css', 'module');
+    drupal_add_js(drupal_get_path('module', 'openid') .'/openid.js');
+    if (!empty($form_state['post']['openid_url'])) {
+      $form['name']['#required'] = FALSE;
+      $form['pass']['#required'] = FALSE;
+      unset($form['#submit']);
+      $form['#validate'] = array('openid_login_validate');
+    }
+
+    $form['openid_link'] = array('#value' => l(t('Log in using OpenID'), '#', array('attributes' => array('class' => 'openid-link'))));
+    $form['user_link'] = array('#value' => l(t('Cancel OpenID login'), '#', array('attributes' => array('class' => 'user-link'))));
+
+    $form['openid_url'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Log in using OpenID'),
+      '#size' => ($form_id == 'user_login') ? 58 : 13,
+      '#maxlength' => 255,
+      '#weight' => -1,
+      '#description' => l(t('What is OpenID?'), 'http://openid.net/', array('external' => TRUE))
+    );
+    $form['openid.return_to'] = array('#type' => 'hidden', '#value' => url('openid/authenticate', array('absolute' => TRUE, 'query' => drupal_get_destination())));
+  }
+  elseif ($form_id == 'user_register' && isset($_SESSION['openid'])) {
+    // We were unable to auto-register a new user. Prefill the registration
+    // form with the values we have.
+    $form['name']['#default_value'] = $_SESSION['openid']['name'];
+    $form['mail']['#default_value'] = $_SESSION['openid']['mail'];
+    // If user_email_verification is off, hide the password field and just fill
+    // with random password to avoid confusion.
+    if (!variable_get('user_email_verification', TRUE)) {
+      $form['pass']['#type'] = 'hidden';
+      $form['pass']['#value'] = user_password();
+    }
+    $form['auth_openid'] = array('#type' => 'hidden', '#value' => $_SESSION['openid']['auth_openid']);
+  }
+  return $form;
+}
+
+/**
+ * Login form _validate hook
+ */
+function openid_login_validate($form, &$form_state) {
+  $return_to = $form_state['values']['openid.return_to'];
+  if (empty($return_to)) {
+    $return_to = url('', array('absolute' => TRUE));
+  }
+
+  openid_begin($form_state['values']['openid_url'], $return_to);
+}
+
+/**
+ * Callbacks.
+ */
+function openid_authentication_page() {
+  $result = openid_complete($_REQUEST);
+  switch ($result['status']) {
+    case 'success':
+      return openid_authentication($result);
+    case 'failed':
+      drupal_set_message(t('OpenID login failed.'), 'error');
+      break;
+    case 'cancel':
+      drupal_set_message(t('OpenID login cancelled.'));
+      break;
+  }
+  drupal_goto();
+}
+
+function openid_user_identities($account) {
+  drupal_add_css(drupal_get_path('module', 'openid') .'/openid.css', 'module');
+
+  // Check to see if we got a response
+  $result = openid_complete($_REQUEST);
+  if ($result['status'] == 'success') {
+    db_query("INSERT INTO {authmap} (uid, authname, module) VALUES (%d, '%s','openid')", $account->uid, $result['openid.identity']);
+    drupal_set_message(t('Successfully added %identity', array('%identity' => $result['openid.identity'])));
+  }
+
+  $header = array(t('OpenID'), t('Operations'));
+  $rows = array();
+
+  $result = db_query("SELECT * FROM {authmap} WHERE module='openid' AND uid=%d", $account->uid);
+  while ($identity = db_fetch_object($result)) {
+    $rows[] = array($identity->authname, l(t('Delete'), 'user/'. $account->uid .'/openid/delete/'. $identity->aid));
+  }
+
+  $output = theme('table', $header, $rows);
+  $output .= drupal_get_form('openid_user_add');
+  return $output;
+}
+
+function openid_user_add() {
+  $form['openid_url'] = array(
+    '#type' => 'textfield',
+    '#title' => t('OpenID'),
+  );
+  $form['submit'] = array('#type' => 'submit', '#value' => t('Add an OpenID'));
+  return $form;
+}
+
+function openid_user_add_validate($form, &$form_state) {
+  // Check for existing entries.
+  $claimed_id = _openid_normalize($form_state['values']['openid_url']);
+  if (db_result(db_query("SELECT authname FROM {authmap} WHERE authname='%s'", $claimed_id))) {
+    form_set_error('openid_url', t('That OpenID is already in use on this site.'));
+  }
+  else {
+    $return_to = url('user/'. arg(1)  .'/openid', array('absolute' => TRUE));
+    openid_begin($form_state['values']['openid_url'], $return_to);
+  }
+}
+
+function openid_user_delete($account, $aid = 0) {
+  db_query("DELETE FROM {authmap} WHERE uid=%d AND aid=%d AND module='openid'", $account->uid, $aid);
+  if (db_affected_rows()) {
+    drupal_set_message(t('OpenID deleted.'));
+  }
+  drupal_goto('user/'. $account->uid .'/openid');
+}
+
+/**
+ * The initial step of OpenID authentication responsible for the following:
+ *  - Perform discovery on the claimed OpenID.
+ *  - If possible, create an association with the Provider's endpoint.
+ *  - Create the authentication request.
+ *  - Perform the appropriate redirect.
+ *
+ * @param $claimed_id The OpenID to authenticate
+ * @param $return_to The endpoint to return to from the OpenID Provider
+ */
+function openid_begin($claimed_id, $return_to = '') {
+  include_once drupal_get_path('module', 'openid') .'/openid.inc';
+
+  $claimed_id = _openid_normalize($claimed_id);
+
+  $services = openid_discovery($claimed_id);
+  if (count($services) == 0) {
+    form_set_error('openid_url', t('Sorry, that is not a valid OpenID. Please ensure you have spelled your ID correctly.'));
+    return;
+  }
+
+  $op_endpoint = $services[0]['uri'];
+  // Store the discovered endpoint in the session (so we don't have to rediscover).
+  $_SESSION['openid_op_endpoint'] = $op_endpoint;
+  // Store the claimed_id in the session (for handling delegation).
+  $_SESSION['openid_claimed_id'] = $claimed_id;
+
+  // If bcmath is present, then create an association
+  $assoc_handle = '';
+  if (function_exists('bcadd')) {
+    $assoc_handle = openid_association($op_endpoint);
+  }
+
+  // Now that there is an association created, move on
+  // to request authentication from the IdP
+  $identity = (!empty($services[0]['delegate'])) ? $services[0]['delegate'] : $claimed_id;
+  if (isset($services[0]['types']) && is_array($services[0]['types']) && in_array(OPENID_NS_2_0 .'/server', $services[0]['types'])) {
+    $identity = 'http://openid.net/identifier_select/2.0';
+  }
+  $authn_request = openid_authentication_request($claimed_id, $identity, $return_to, $assoc_handle, $services[0]['version']);
+
+  if ($services[0]['version'] == 2) {
+    openid_redirect($op_endpoint, $authn_request);
+  }
+  else {
+    openid_redirect_http($op_endpoint, $authn_request);
+  }
+}
+
+/**
+ * Completes OpenID authentication by validating returned data from the OpenID
+ * Provider.
+ *
+ * @param $response Array of returned from the OpenID provider (typically $_REQUEST).
+ *
+ * @return $response Response values for further processing with
+ *   $response['status'] set to one of 'success', 'failed' or 'cancel'.
+ */
+function openid_complete($response) {
+  include_once drupal_get_path('module', 'openid') .'/openid.inc';
+
+  // Default to failed response
+  $response['status'] = 'failed';
+  if (isset($_SESSION['openid_op_endpoint']) && isset($_SESSION['openid_claimed_id'])) {
+    _openid_fix_post($response);
+    $op_endpoint = $_SESSION['openid_op_endpoint'];
+    $claimed_id = $_SESSION['openid_claimed_id'];
+    unset($_SESSION['openid_op_endpoint']);
+    unset($_SESSION['openid_claimed_id']);
+    if (isset($response['openid.mode'])) {
+      if ($response['openid.mode'] == 'cancel') {
+        $response['status'] = 'cancel';
+      }
+      else {
+        if (openid_verify_assertion($op_endpoint, $response)) {
+          $response['openid.identity'] = $claimed_id;
+          $response['status'] = 'success';
+        }
+      }
+    }
+  }
+  return $response;
+}
+
+/**
+ * Perform discovery on a claimed ID to determine the OpenID provider endpoint.
+ *
+ * @param $claimed_id The OpenID URL to perform discovery on.
+ *
+ * @return Array of services discovered (including OpenID version, endpoint
+ * URI, etc).
+ */
+function openid_discovery($claimed_id) {
+  include_once drupal_get_path('module', 'openid') .'/openid.inc';
+  include_once drupal_get_path('module', 'openid') .'/xrds.inc';
+
+  $services = array();
+
+  $xrds_url = $claimed_id;
+  if (_openid_is_xri($claimed_id)) {
+    $xrds_url = 'http://xri.net/'. $claimed_id;
+  }
+  $url = @parse_url($xrds_url);
+  if ($url['scheme'] == 'http' || $url['scheme'] == 'https') {
+    // For regular URLs, try Yadis resolution first, then HTML-based discovery
+    $headers = array('Accept' => 'application/xrds+xml');
+    $result = drupal_http_request($xrds_url, $headers);
+
+    if (!isset($result->error)) {
+      if (isset($result->headers['Content-Type']) && preg_match("/application\/xrds\+xml/", $result->headers['Content-Type'])) {
+        // Parse XML document to find URL
+        $services = xrds_parse($result->data);
+      }
+      else {
+        $xrds_url = NULL;
+        if (isset($result->headers['X-XRDS-Location'])) {
+          $xrds_url = $result->headers['X-XRDS-Location'];
+        }
+        else {
+          // Look for meta http-equiv link in HTML head
+          $xrds_url = _openid_meta_httpequiv('X-XRDS-Location', $result->data);
+        }
+        if (!empty($xrds_url)) {
+          $headers = array('Accept' => 'application/xrds+xml');
+          $xrds_result = drupal_http_request($xrds_url, $headers);
+          if (!isset($xrds_result->error)) {
+            $services = xrds_parse($xrds_result->data);
+          }
+        }
+      }
+
+      // Check for HTML delegation
+      if (count($services) == 0) {
+        // Look for 2.0 links
+        $uri = _openid_link_href('openid2.provider', $result->data);
+        $delegate = _openid_link_href('openid2.local_id', $result->data);
+        $version = 2;
+
+        // 1.0 links
+        if (empty($uri)) {
+          $uri = _openid_link_href('openid.server', $result->data);
+          $delegate = _openid_link_href('openid.delegate', $result->data);
+          $version = 1;
+        }
+        if (!empty($uri)) {
+          $services[] = array('uri' => $uri, 'delegate' => $delegate, 'version' => $version);
+        }
+      }
+    }
+  }
+  return $services;
+}
+
+/**
+ * Attempt to create a shared secret with the OpenID Provider.
+ *
+ * @param $op_endpoint URL of the OpenID Provider endpoint.
+ *
+ * @return $assoc_handle The association handle.
+ */
+function openid_association($op_endpoint) {
+  include_once drupal_get_path('module', 'openid') .'/openid.inc';
+
+  // Remove Old Associations:
+  db_query("DELETE FROM {openid_association} WHERE created + expires_in < %d", time());
+
+  // Check to see if we have an association for this IdP already
+  $assoc_handle = db_result(db_query("SELECT assoc_handle FROM {openid_association} WHERE idp_endpoint_uri = '%s'", $op_endpoint));
+  if (empty($assoc_handle)) {
+    $mod = OPENID_DH_DEFAULT_MOD;
+    $gen = OPENID_DH_DEFAULT_GEN;
+    $r = _openid_dh_rand($mod);
+    $private = bcadd($r, 1);
+    $public = bcpowmod($gen, $private, $mod);
+
+    // If there is no existing association, then request one
+    $assoc_request = openid_association_request($public);
+    $assoc_message = _openid_encode_message(_openid_create_message($assoc_request));
+    $assoc_headers = array('Content-Type' => 'application/x-www-form-urlencoded; charset=utf-8');
+    $assoc_result = drupal_http_request($op_endpoint, $assoc_headers, 'POST', $assoc_message);
+    if (isset($assoc_result->error)) {
+      return FALSE;
+    }
+
+    $assoc_response = _openid_parse_message($assoc_result->data);
+    if (isset($assoc_response['mode']) && $assoc_response['mode'] == 'error') {
+        return FALSE;
+    }
+
+    if ($assoc_response['session_type'] == 'DH-SHA1') {
+      $spub = _openid_dh_base64_to_long($assoc_response['dh_server_public']);
+      $enc_mac_key = base64_decode($assoc_response['enc_mac_key']);
+      $shared = bcpowmod($spub, $private, $mod);
+      $assoc_response['mac_key'] = base64_encode(_openid_dh_xorsecret($shared, $enc_mac_key));
+    }
+    db_query("INSERT INTO {openid_association} (idp_endpoint_uri, session_type, assoc_handle, assoc_type, expires_in, mac_key, created) VALUES('%s', '%s', '%s', '%s', %d, '%s', %d)",
+             $op_endpoint, $assoc_response['session_type'], $assoc_response['assoc_handle'], $assoc_response['assoc_type'], $assoc_response['expires_in'], $assoc_response['mac_key'], time());
+
+    $assoc_handle = $assoc_response['assoc_handle'];
+  }
+
+  return $assoc_handle;
+}
+
+/**
+ * Authenticate a user or attempt registration.
+ *
+ * @param $response Response values from the OpenID Provider.
+ */
+function openid_authentication($response) {
+  include_once drupal_get_path('module', 'openid') .'/openid.inc';
+
+  $identity = $response['openid.identity'];
+
+  $account = user_external_load($identity);
+  if (isset($account->uid)) {
+    if (!variable_get('user_email_verification', TRUE) || $account->login) {
+      user_external_login($account);
+    }
+    else {
+      drupal_set_message(t('You must validate your email address for this account before logging in via OpenID'));
+    }
+  }
+  else {
+    // Register new user
+    $form_state['redirect'] = NULL;
+    $form_state['values']['name'] = (empty($response['openid.sreg.nickname'])) ? $identity : $response['openid.sreg.nickname'];
+    $form_state['values']['mail'] = (empty($response['openid.sreg.email'])) ? '' : $response['openid.sreg.email'];
+    $form_state['values']['pass']  = user_password();
+    $form_state['values']['status'] = variable_get('user_register', 1) == 1;
+    $form_state['values']['response'] = $response;
+    $form_state['values']['auth_openid'] = $identity;
+    $form = drupal_retrieve_form('user_register', $form_state);
+    drupal_prepare_form('user_register', $form, $form_state);
+    drupal_validate_form('user_register', $form, $form_state);
+    if (form_get_errors()) {
+      // We were unable to register a valid new user, redirect to standard
+      // user/register and prefill with the values we received.
+      drupal_set_message(t('OpenID registration failed for the reasons listed. You may register now, or if you already have an account you can <a href="@login">log in</a> now and add your OpenID under "My Account"', array('@login' => url('user/login'))), 'error');
+      $_SESSION['openid'] = $form_state['values'];
+      // We'll want to redirect back to the same place.
+      $destination = drupal_get_destination();
+      unset($_REQUEST['destination']);
+      drupal_goto('user/register', $destination);
+    }
+    else {
+      unset($form_state['values']['response']);
+      $account = user_save('', $form_state['values']);
+      user_external_login($account);
+    }
+    drupal_redirect_form($form, $form_state['redirect']);
+  }
+  drupal_goto();
+}
+
+function openid_association_request($public) {
+  include_once drupal_get_path('module', 'openid') .'/openid.inc';
+
+  $request = array(
+    'openid.ns' => OPENID_NS_2_0,
+    'openid.mode' => 'associate',
+    'openid.session_type' => 'DH-SHA1',
+    'openid.assoc_type' => 'HMAC-SHA1'
+  );
+
+  if ($request['openid.session_type'] == 'DH-SHA1' || $request['openid.session_type'] == 'DH-SHA256') {
+    $cpub = _openid_dh_long_to_base64($public);
+    $request['openid.dh_consumer_public'] = $cpub;
+  }
+
+  return $request;
+}
+
+function openid_authentication_request($claimed_id, $identity, $return_to = '', $assoc_handle = '', $version = 2) {
+  include_once drupal_get_path('module', 'openid') .'/openid.inc';
+
+  $realm = ($return_to) ? $return_to : url('', array('absolute' => TRUE));
+
+  $ns = ($version == 2) ? OPENID_NS_2_0 : OPENID_NS_1_0;
+  $request =  array(
+    'openid.ns' => $ns,
+    'openid.mode' => 'checkid_setup',
+    'openid.identity' => $identity,
+    'openid.claimed_id' => $claimed_id,
+    'openid.assoc_handle' => $assoc_handle,
+    'openid.return_to' => $return_to,
+  );
+
+  if ($version == 2) {
+    $request['openid.realm'] = $realm;
+  }
+  else {
+    $request['openid.trust_root'] = $realm;
+  }
+
+  // Simple Registration
+  $request['openid.sreg.required'] = 'nickname,email';
+  $request['openid.ns.sreg'] = "http://openid.net/extensions/sreg/1.1";
+
+  $request = array_merge($request, module_invoke_all('openid', 'request', $request));
+
+  return $request;
+}
+
+/**
+ * Attempt to verify the response received from the OpenID Provider.
+ *
+ * @param $op_endpoint The OpenID Provider URL.
+ * @param $response Array of repsonse values from the provider.
+ *
+ * @return boolean
+ */
+function openid_verify_assertion($op_endpoint, $response) {
+  include_once drupal_get_path('module', 'openid') .'/openid.inc';
+
+  $valid = FALSE;
+
+  $association = db_fetch_object(db_query("SELECT * FROM {openid_association} WHERE assoc_handle = '%s'", $response['openid.assoc_handle']));
+  if ($association && isset($association->session_type)) {
+    $keys_to_sign = explode(',', $response['openid.signed']);
+    $self_sig = _openid_signature($association, $response, $keys_to_sign);
+    if ($self_sig == $response['openid.sig']) {
+      $valid = TRUE;
+    }
+    else {
+      $valid = FALSE;
+    }
+  }
+  else {
+    $request = $response;
+    $request['openid.mode'] = 'check_authentication';
+    $message = _openid_create_message($request);
+    $headers = array('Content-Type' => 'application/x-www-form-urlencoded; charset=utf-8');
+    $result = drupal_http_request($op_endpoint, $headers, 'POST', _openid_encode_message($message));
+    if (!isset($result->error)) {
+      $response = _openid_parse_message($result->data);
+      if (strtolower(trim($response['is_valid'])) == 'true') {
+        $valid = TRUE;
+      }
+      else {
+        $valid = FALSE;
+      }
+    }
+  }
+
+  return $valid;
+}

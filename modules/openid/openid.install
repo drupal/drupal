@@ -1,0 +1,18 @@
+<?php
+// $Id: openid.install,v 1.1 2007/06/18 16:09:39 dries Exp $
+
+/**
+ * Implementation of hook_install().
+ */
+function openid_install() {
+  // Create table.
+  drupal_install_schema('openid');
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function openid_uninstall() {
+  // Remove table.
+  drupal_uninstall_schema('openid');
+}

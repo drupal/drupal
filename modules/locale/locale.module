@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.179 2007/06/17 17:41:40 goba Exp $
+// $Id: locale.module,v 1.180 2007/06/18 16:09:38 dries Exp $
 
 /**
  * @file
@@ -285,7 +285,7 @@ function locale_theme() {
  *
  * @param $string
  *   A string to look up translation for. If omitted, all the
- *   cached strings will be returned in all languages already 
+ *   cached strings will be returned in all languages already
  *   used on the page.
  * @param $langcode
  *   Language code to use for the lookup.
@@ -304,9 +304,9 @@ function locale($string = NULL, $langcode = NULL) {
   // Store database cached translations in a static var.
   if (!isset($locale_t[$langcode])) {
     $locale_t[$langcode] = array();
-    // Disabling the usage of string caching allows a module to watch for 
-    // the exact list of strings used on a page. From a performance 
-    // perspective that is a really bad idea, so we have no user 
+    // Disabling the usage of string caching allows a module to watch for
+    // the exact list of strings used on a page. From a performance
+    // perspective that is a really bad idea, so we have no user
     // interface for this. Be careful when turning this option off!
     if (variable_get('locale_cache_strings', 1) == 1) {
       if (!($cache = cache_get('locale:'. $langcode, 'cache'))) {

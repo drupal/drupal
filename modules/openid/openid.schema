@@ -1,0 +1,19 @@
+<?php
+// $Id: openid.schema,v 1.1 2007/06/18 16:09:39 dries Exp $
+
+function openid_schema() {
+  $schema['openid_association'] = array(
+    'fields' => array(
+      'idp_endpoint_uri' => array('type' => 'varchar', 'length' => 255),
+      'assoc_handle' => array('type' => 'varchar', 'length' => 255),
+      'assoc_type' => array('type' => 'varchar', 'length' => 32),
+      'session_type' => array('type' => 'varchar', 'length' => 32),
+      'mac_key' => array('type' => 'varchar', 'length' => 255),
+      'created' => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'expires_in' => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+    ),
+    'primary key' => array('assoc_handle'),
+  );
+
+  return $schema;
+}
