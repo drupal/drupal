@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.799 2007/06/17 11:59:05 dries Exp $
+// $Id: user.module,v 1.800 2007/06/21 04:38:41 unconed Exp $
 
 /**
  * @file
@@ -33,7 +33,16 @@ function user_theme() {
       'arguments' => array('account' => NULL),
     ),
     'user_profile' => array(
-      'arguments' => array('account' => NULL, 'fields' => NULL),
+      'arguments' => array('account' => NULL),
+      'file' => 'user_profile',
+    ),
+    'user_profile_category' => array(
+      'arguments' => array('element' => NULL),
+      'file' => 'user_profile_category',
+    ),
+    'user_profile_item' => array(
+      'arguments' => array('element' => NULL),
+      'file' => 'user_profile_item',
     ),
     'user_list' => array(
       'arguments' => array('users' => NULL, 'title' => NULL),
@@ -512,14 +521,26 @@ function user_search($op = 'search', $keys = NULL, $skip_access_check = FALSE) {
 /**
  * Implementation of hook_user().
  */
-function user_user($type, &$edit, &$user, $category = NULL) {
+function user_user($type, &$edit, &$account, $category = NULL) {
   if ($type == 'view') {
-    $items['history'] = array('title' => t('Member for'),
-      'value' => format_interval(time() - $user->created),
-      'class' => 'member',
+    $account->content['user_picture'] = array(
+      '#value' => theme('user_picture', $account),
+      '#weight' => -10,
     );
-
-    return array(t('History') => $items);
+    if (!isset($account->content['summary'])) {
+      $account->content['summary'] = array();
+    }
+    $account->content['summary'] += array(
+      '#type' => 'user_profile_category',
+      '#attributes' => array('class' => 'user-member'),
+      '#weight' => -5,
+      '#title' => t('History'),
+    );
+    $account->content['summary']['member_for'] =  array(
+      '#type' => 'user_profile_item',
+      '#title' => t('Member for'),
+      '#value' => format_interval(time() - $account->created),
+    );
   }
   if ($type == 'form' && $category == 'account') {
     $form_state = array();
@@ -699,38 +720,6 @@ function theme_user_picture($account) {
       return "<div class=\"picture\">$picture</div>";
     }
   }
-}
-
-/**
- * Theme a user page
- * @param $account the user object
- * @param $fields a multidimensional array for the fields, in the form of array (
- *   'category1' => array(item_array1, item_array2), 'category2' => array(item_array3,
- *    .. etc.). Item arrays are formatted as array(array('title' => 'item title',
- * 'value' => 'item value', 'class' => 'class-name'), ... etc.). Module names are incorporated
- * into the CSS class.
- *
- * @ingroup themeable
- */
-function theme_user_profile($account, $fields) {
-  $output = '<div class="profile">';
-  $output .= theme('user_picture', $account);
-  foreach ($fields as $category => $items) {
-    if (strlen($category) > 0) {
-      $output .= '<h2 class="title">'. $category .'</h2>';
-    }
-    $output .= '<dl>';
-    foreach ($items as $item) {
-      if (isset($item['title'])) {
-        $output .= '<dt class="'. $item['class'] .'">'. $item['title'] .'</dt>';
-      }
-      $output .= '<dd class="'. $item['class'] .'">'. $item['value'] .'</dd>';
-    }
-    $output .= '</dl>';
-  }
-  $output .= '</div>';
-
-  return $output;
 }
 
 /**
@@ -1671,24 +1660,32 @@ function user_edit_submit($form, &$form_state) {
 function user_view($account) {
   global $user;
 
+  // Retrieve all profile fields and store data in content element.
+  $account->content = user_build_content($account);
   drupal_set_title(check_plain($account->name));
-  // Retrieve and merge all profile fields:
-  $fields = array();
-  foreach (module_list() as $module) {
-    if ($data = module_invoke($module, 'user', 'view', '', $account)) {
-      foreach ($data as $category => $items) {
-        foreach ($items as $key => $item) {
-          $item['class'] = "$module-". $item['class'];
-          $fields[$category][$key] = $item;
-        }
-      }
-    }
-  }
+  /** 
+   * To theme user profiles, copy modules/user/user_profile.tpl.php
+   * to your theme directory, and edit it as instructed in that file's comments.
+   */
+  return theme('user_profile', $account);
+}
 
-  drupal_alter('profile', $fields, $account);
+/**
+ * Builds a structured array representing the profile content.
+ *
+ * @param $account
+ *   A user object.
+ *
+ * @return
+ *   A structured array containing the individual elements of the profile.
+ */
+function user_build_content($account) {
+  $edit = NULL;
+  user_module_invoke('view', $edit, $account);
+  // Allow modules to modify the fully-built profile.
+  drupal_alter('profile', $edit, $account);
 
-  drupal_set_title(check_plain($account->name));
-  return theme('user_profile', $account, $fields);
+  return $account->content;
 }
 
 /*** Administrative features ***********************************************/

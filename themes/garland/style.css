@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.19 2007/04/13 07:33:24 dries Exp $ */
+/* $Id: style.css,v 1.20 2007/06/21 04:38:41 unconed Exp $ */
 
 /**
  * Garland, for Drupal 5.0
@@ -865,6 +865,31 @@ html.js fieldset.collapsed legend a {
 }
 #user-login-form ul {
   text-align: left;
+}
+
+/**
+ * User profiles.
+ */
+.profile {
+  margin-top: 1.5em;
+}
+.profile h3 {
+  border-bottom: 0;
+  margin-bottom: 1em;
+}
+.profile dl {
+  margin: 0;
+}
+.profile dt {
+  font-weight: normal;
+  color: #898989;
+  font-size: 0.92em;
+  line-height: 1.3em;
+  margin-top: 1.4em;
+  margin-bottom: 0.45em;
+}
+.profile dd {
+  margin-bottom: 1.6em;
 }
 
 /**

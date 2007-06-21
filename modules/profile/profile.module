@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.206 2007/06/15 21:48:02 dries Exp $
+// $Id: profile.module,v 1.207 2007/06/21 04:38:41 unconed Exp $
 
 /**
  * @file
@@ -575,7 +575,7 @@ function profile_view_field($user, $field) {
          && (user_access('administer users') || $field->visibility != PROFILE_PRIVATE)
          && !empty($field->page);
 
-  if ($value = $user->{$field->name}) {
+  if (isset($user->{$field->name}) && $value = $user->{$field->name}) {
     switch ($field->type) {
       case 'textarea':
         return check_markup($value);
@@ -612,7 +612,7 @@ function profile_view_field($user, $field) {
   }
 }
 
-function profile_view_profile($user) {
+function profile_view_profile(&$user) {
 
   profile_load_profile($user);
 
@@ -628,14 +628,24 @@ function profile_view_profile($user) {
   while ($field = db_fetch_object($result)) {
     if ($value = profile_view_field($user, $field)) {
       $title = ($field->type != 'checkbox') ? check_plain($field->title) : NULL;
-      $item = array('title' => $title,
-        'value' => $value,
-        'class' => $field->name,
+
+      // Create a single fieldset for each category.
+      if (!isset($user->content[$field->category])) {
+        $user->content[$field->category] = array(
+          '#type' => 'user_profile_category',
+          '#title' => check_plain($field->category),
+        );
+      }
+
+      $user->content[$field->category][$field->name] = array(
+        '#type' => 'user_profile_item',
+        '#title' => check_plain($title),
+        '#value' => check_markup($value),
+        '#weight' => $field->weight,
+        '#attributes' => array('class' => 'profile-'. $field->name),
       );
-      $fields[$field->category][$field->name] = $item;
     }
   }
-  return $fields;
 }
 
 function _profile_form_explanation($field) {
@@ -666,7 +676,7 @@ function profile_form_profile($edit, $user, $category, $register = FALSE) {
       case 'url':
         $fields[$category][$field->name] = array('#type' => 'textfield',
           '#title' => check_plain($field->title),
-          '#default_value' => $edit[$field->name],
+          '#default_value' => isset($edit[$field->name]) ? $edit[$field->name] : '',
           '#maxlength' => 255,
           '#description' => _profile_form_explanation($field),
           '#required' => $field->required,
