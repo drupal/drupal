@@ -44,10 +44,16 @@
   float: right; /* LTR */
   margin: 0 1em 1em 0; /* LTR */
 }
+.profile h3 {
+  border-bottom: 1px solid #ccc;
+}
+.profile dl {
+  margin: 0 0 1.5em 0;
+}
 .profile dt {
-  margin: 1em 0 0.2em 0;
+  margin: 0 0 0.2em 0;
   font-weight: bold;
 }
 .profile dd {
-  margin:0;
+  margin: 0 0 1em 0;
 }
