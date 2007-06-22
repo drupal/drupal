@@ -2827,8 +2827,8 @@ function user_autocomplete($string = '') {
       $matches[$user->name] = check_plain($user->name);
    }
   }
-  print drupal_to_js($matches);
-  exit();
+
+  drupal_json($matches);
 }
 
 /**

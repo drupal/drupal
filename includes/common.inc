@@ -2123,6 +2123,24 @@ function drupal_to_js($var) {
 }
 
 /**
+ * Return data in JSON format.
+ * 
+ * This function should be used for JavaScript callback functions returning
+ * data in JSON format. It sets the header for JavaScript output.
+ *
+ * @param $var
+ *   (optional) If set, the variable will be converted to JSON and output.
+ */
+function drupal_json($var = NULL) {
+  // We are returning JavaScript, so tell the browser.
+  drupal_set_header('Content-Type: text/javascript; charset=utf-8');
+
+  if (isset($var)) {
+    echo drupal_to_js($var);
+  }
+}
+
+/**
  * Wrapper around urlencode() which avoids Apache quirks.
  *
  * Should be used when placing arbitrary data in an URL. Note that Drupal paths
