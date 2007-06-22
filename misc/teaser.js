@@ -1,4 +1,4 @@
-// $Id: teaser.js,v 1.5 2007/06/08 12:51:59 goba Exp $
+// $Id: teaser.js,v 1.6 2007/06/22 06:30:11 unconed Exp $
 
 /**
  * Auto-attach for teaser behaviour.
@@ -65,6 +65,7 @@ Drupal.teaserAttach = function() {
       body[0].value = trim(text[1]);
       $(teaser).attr('disabled', '');
       $('input', button).val(Drupal.t('Join summary')).toggle(join_teaser, split_teaser);
+      $(teaser).show();
     }
     else {
       $(teaser).hide();
