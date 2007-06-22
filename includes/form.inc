@@ -485,17 +485,7 @@ function drupal_redirect_form($form, $redirect = NULL) {
   if ($goto !== FALSE && isset($form['#redirect'])) {
     $goto = $form['#redirect'];
   }
-  if (!isset($goto) || ($goto !== FALSE)) {
-    if (isset($goto)) {
-      if (is_array($goto)) {
-        call_user_func_array('drupal_goto', $goto);
-      }
-      else {
-        drupal_goto($goto);
-      }
-    }
-    drupal_goto($_GET['q']);
-  }
+  drupal_redirect(isset($goto) ? $goto : NULL);
 }
 
 /**
