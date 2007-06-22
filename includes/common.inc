@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.658 2007/06/22 08:32:26 unconed Exp $
+// $Id: common.inc,v 1.659 2007/06/22 08:46:15 unconed Exp $
 
 /**
  * @file
@@ -2119,6 +2119,24 @@ function drupal_to_js($var) {
       return '{ '. implode(', ', $output) .' }';
     default:
       return 'null';
+  }
+}
+
+/**
+ * Return data in JSON format.
+ * 
+ * This function should be used for JavaScript callback functions returning
+ * data in JSON format. It sets the header for JavaScript output.
+ *
+ * @param $var
+ *   (optional) If set, the variable will be converted to JSON and output.
+ */
+function drupal_json($var = NULL) {
+  // We are returning JavaScript, so tell the browser.
+  drupal_set_header('Content-Type: text/javascript; charset=utf-8');
+
+  if (isset($var)) {
+    echo drupal_to_js($var);
   }
 }
 

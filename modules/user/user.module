@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.801 2007/06/22 08:32:28 unconed Exp $
+// $Id: user.module,v 1.802 2007/06/22 08:46:16 unconed Exp $
 
 /**
  * @file
@@ -2827,8 +2827,8 @@ function user_autocomplete($string = '') {
       $matches[$user->name] = check_plain($user->name);
    }
   }
-  print drupal_to_js($matches);
-  exit();
+
+  drupal_json($matches);
 }
 
 /**

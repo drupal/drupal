@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.362 2007/06/22 08:32:28 unconed Exp $
+// $Id: taxonomy.module,v 1.363 2007/06/22 08:46:15 unconed Exp $
 
 /**
  * @file
@@ -1506,12 +1506,12 @@ function taxonomy_autocomplete($vid, $string = '') {
 
   // Fetch last tag
   $last_string = trim(array_pop($array));
+  $matches = array();
   if ($last_string != '') {
     $result = db_query_range(db_rewrite_sql("SELECT t.tid, t.name FROM {term_data} t WHERE t.vid = %d AND LOWER(t.name) LIKE LOWER('%%%s%%')", 't', 'tid'), $vid, $last_string, 0, 10);
 
     $prefix = count($array) ? implode(', ', $array) .', ' : '';
 
-    $matches = array();
     while ($tag = db_fetch_object($result)) {
       $n = $tag->name;
       // Commas and quotes in terms are special cases, so encode 'em.
@@ -1520,9 +1520,9 @@ function taxonomy_autocomplete($vid, $string = '') {
       }
       $matches[$prefix . $n] = check_plain($tag->name);
     }
-    print drupal_to_js($matches);
-    exit();
   }
+
+  drupal_json($matches);
 }
 
 /**

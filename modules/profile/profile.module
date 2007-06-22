@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.208 2007/06/22 08:32:28 unconed Exp $
+// $Id: profile.module,v 1.209 2007/06/22 08:46:15 unconed Exp $
 
 /**
  * @file
@@ -742,16 +742,15 @@ function profile_form_profile($edit, $user, $category, $register = FALSE) {
  * Callback to allow autocomplete of profile text fields.
  */
 function profile_autocomplete($field, $string) {
+  $matches = array();
   if (db_result(db_query("SELECT COUNT(*) FROM {profile_fields} WHERE fid = %d AND autocomplete = 1", $field))) {
-    $matches = array();
     $result = db_query_range("SELECT value FROM {profile_values} WHERE fid = %d AND LOWER(value) LIKE LOWER('%s%%') GROUP BY value ORDER BY value ASC", $field, $string, 0, 10);
     while ($data = db_fetch_object($result)) {
       $matches[$data->value] = check_plain($data->value);
     }
-
-    print drupal_to_js($matches);
   }
-  exit();
+
+  drupal_json($matches);
 }
 
 /**

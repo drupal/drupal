@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.167 2007/06/22 05:44:21 unconed Exp $
+// $Id: upload.module,v 1.168 2007/06/22 08:46:15 unconed Exp $
 
 /**
  * @file
@@ -741,7 +741,10 @@ function upload_js() {
   // @todo: Put status messages inside wrapper, instead of above so they do not
   // persist across ajax reloads.
   $output = theme('status_messages') . drupal_render($form);
+
   // We send the updated file attachments form.
+  // Don't call drupal_json(). upload.js uses an iframe and
+  // the header output by drupal_json() causes problems in some browsers.
   print drupal_to_js(array('status' => TRUE, 'data' => $output));
   exit;
 }
