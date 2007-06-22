@@ -392,7 +392,9 @@ function node_type_delete_confirm(&$form_state, $type) {
 
   $caption .= '<p>'. t('This action cannot be undone.') .'</p>';
 
-  return confirm_form($form, $message, 'admin/content/types', $caption, t('Delete'));
+  $options = array('description' => $caption);
+
+  return confirm_form($form, $message, 'admin/content/types', $options);
 }
 
 /**

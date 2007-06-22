@@ -2979,7 +2979,7 @@ function drupal_delete_add_form_elements($elements) {
 /**
  * @} End of "ingroup deletionapi".
  */
- 
+
 /**
  * Create/build/execute deletion packages.
  *
