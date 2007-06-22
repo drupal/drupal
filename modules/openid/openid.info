@@ -1,6 +1,6 @@
 ; $Id$
 name = OpenID
-description = "Allows Drupal to act as an OpenID relying party."
+description = "Allows users to log into your site using OpenID."
 version = VERSION
 package = Core - optional
 core = 6.x
