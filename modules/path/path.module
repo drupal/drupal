@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.122 2007/06/18 06:59:11 goba Exp $
+// $Id: path.module,v 1.123 2007/06/22 05:44:21 unconed Exp $
 
 /**
  * @file
@@ -127,12 +127,12 @@ function path_admin_delete($pid = 0) {
 function path_set_alias($path = NULL, $alias = NULL, $pid = NULL, $language = '') {
   if ($path && !$alias) {
     // Delete based on path
-    db_query("DELETE FROM {url_alias} WHERE src = '%s' AND language = '%s'", $path, $language);
+    drupal_delete_add_query("DELETE FROM {url_alias} WHERE src = '%s' AND language = '%s'", $path, $language);
     drupal_clear_path_cache();
   }
   else if (!$path && $alias) {
     // Delete based on alias
-    db_query("DELETE FROM {url_alias} WHERE dst = '%s' AND language = '%s'", $alias, $language);
+    drupal_delete_add_query("DELETE FROM {url_alias} WHERE dst = '%s' AND language = '%s'", $alias, $language);
     drupal_clear_path_cache();
   }
   else if ($path && $alias) {

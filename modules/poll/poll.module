@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.231 2007/06/04 07:22:21 dries Exp $
+// $Id: poll.module,v 1.232 2007/06/22 05:44:21 unconed Exp $
 
 /**
  * @file
@@ -91,9 +91,9 @@ function poll_cron() {
  * Implementation of hook_delete().
  */
 function poll_delete($node) {
-  db_query("DELETE FROM {poll} WHERE nid = %d", $node->nid);
-  db_query("DELETE FROM {poll_choices} WHERE nid = %d", $node->nid);
-  db_query("DELETE FROM {poll_votes} WHERE nid = %d", $node->nid);
+  drupal_delete_add_query('DELETE FROM {poll} WHERE nid = %d', $node->nid);
+  drupal_delete_add_query('DELETE FROM {poll_choices} WHERE nid = %d', $node->nid);
+  drupal_delete_add_query('DELETE FROM {poll_votes} WHERE nid = %d', $node->nid);
 }
 
 /**

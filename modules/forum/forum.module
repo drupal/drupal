@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.402 2007/06/04 15:56:32 dries Exp $
+// $Id: forum.module,v 1.403 2007/06/22 05:44:20 unconed Exp $
 
 /**
  * @file
@@ -169,7 +169,7 @@ function forum_perm() {
 function forum_nodeapi(&$node, $op, $teaser, $page) {
   switch ($op) {
     case 'delete revision':
-      db_query('DELETE FROM {forum} WHERE vid = %d', $node->vid);
+      drupal_delete_add_query('DELETE FROM {forum} WHERE vid = %d', $node->vid);
       break;
   }
 }
@@ -453,7 +453,7 @@ function forum_insert($node) {
  * Implementation of hook_delete().
  */
 function forum_delete(&$node) {
-  db_query('DELETE FROM {forum} WHERE nid = %d', $node->nid);
+  drupal_delete_add_query('DELETE FROM {forum} WHERE nid = %d', $node->nid);
 }
 
 /**

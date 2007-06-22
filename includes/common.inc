@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.656 2007/06/18 06:59:11 goba Exp $
+// $Id: common.inc,v 1.657 2007/06/22 05:44:20 unconed Exp $
 
 /**
  * @file
@@ -1229,7 +1229,7 @@ function url($path = NULL, $options = array()) {
 
   // Preserve the original path before aliasing.
   $original_path = $path;
-  
+
   // The special path '<front>' links to the default front page.
   if (!empty($path) && $path != '<front>') {
     if (!$options['alias']) {
@@ -2845,6 +2845,376 @@ function drupal_common_themes() {
       'arguments' => array('element' => NULL, 'value' => NULL),
     ),
   );
+}
+
+/**
+ * @ingroup deletionapi
+ * @{
+ */
+
+/**
+ * Used to begin a new deletion package. A package is set of deletion
+ * queries associated with a particular kind of deletion -- for example,
+ * all the queries associated with a node deletion. Most often it will
+ * not be necessary to start a new package, as most non-core deletions will
+ * already be part of a package initiated by core. Once a package has
+ * been started, all metadata, callbacks, and queries are added to the package.
+ * A package is complete when either a new package is started, or when a
+ * confirm or execute command is given.
+ *
+ * @param $type
+ *   The deletion type for the package, ex. 'node', 'user', 'comment'.
+ * @param $id
+ *   A unique identifier for the package. By convention this is the primary
+ *   key of the 'root' deletion, ex. the nid for node type deletions, the uid
+ *   for user type deletions, etc.
+ */
+function drupal_delete_initiate($type, $id) {
+  _drupal_delete('new package', array('type' => $type, 'id' => $id));
+}
+
+/**
+ * Pass a deletion query into a deletion package.
+ *
+ * @param $query
+ *   The query to be passed, followed by any additional arguments for escaped values.
+ *   ex. drupal_delete_add_query('DELETE FROM {comments} WHERE nid = %d', $node->nid);
+ *   The additional arguments can be passed in any fashion that db_query() accepts.
+ */
+function drupal_delete_add_query($query) {
+  $all_args = func_get_args();
+  array_unshift($all_args, 'query', '');
+  call_user_func_array('_drupal_delete', $all_args);
+}
+
+/**
+ * Initiates the confirmation cycle.  This command fully builds all packages
+ * for deletion, and returns a confirm form array containing any injected messages
+ * which can be used to print a confirmation screen.
+ *
+ * @param $confirm
+ *   An associative array with the following key/value pairs:
+ *       'form'      => Optional. An array representing the form elements to pass to the confirm form.
+ *       'question'  => Optional. The question for the confirm form.
+ *       'path'      => Optional. The cancellation path for the confirm form.
+ *
+ *       Also, any valid options from the $options argument of confirm_form() may be passed,
+ *       and they will be passed through to the confirm form.
+ *         ex. drupal_delete_confirm(
+ *               array(
+ *                 'form' => $form,
+ *                 'question' => t('Are you sure you want to delete these items?'),
+ *                 'path' => 'admin/content/node',
+ *                 'yes' => t('Delete all'),
+ *                 'destination' => 'admin/content/node',
+ *               )
+ *             );
+ */
+function drupal_delete_confirm($confirm) {
+  return _drupal_delete('confirm', '', $confirm);
+}
+
+/**
+ * Initiates the deletion of all constructed packages.  Confirmation messages
+ * are bypassed, but abort messages are respected.
+ */
+function drupal_delete_execute() {
+  _drupal_delete('execute');
+}
+
+/**
+ * Register post-deletion callback functions for a package. The functions are called after the package
+ * has been deleted. Useful for miscellaneous cleanup, user messages, etc.
+ *
+ * @param $callbacks
+ *   An associative array of callback functions, key = name of function,
+ *   value = an array of arguments to pass to the function.
+ *     ex. drupal_delete_add_callback(
+ *           array(
+ *             'node_delete_post' => array($node->nid, $node->title, $node->type),
+ *           )
+ *         );
+ */
+function drupal_delete_add_callback($callbacks) {
+  _drupal_delete('callback', '', $callbacks);
+}
+
+/**
+ * Pass metadata related to the deletion or package to the API.  This is made
+ * available to all hooks called during the deletion cycle.
+ *
+ * @param $metadata
+ *   An associative array of metadata.
+ *     ex. drupal_delete_add_metadata(
+ *           array(
+ *             'comment_messages' => $messages,
+ *           )
+ *         );
+ */
+function drupal_delete_add_metadata($metadata) {
+  _drupal_delete('metadata', '', $metadata);
+}
+
+/**
+ * Pass in a package-specific set of form elements, to be displayed in the
+ * confirm form.  Use this in multiple deletion scenarios where the confirm
+ * information shouldn't be displayed if the package is aborted.
+ *
+ * @param $elements
+ *   An array representing the package-specific form elements to pass to the confirm form.
+ *                       ex. drupal_delete_add_form_elements(
+ *                             array(
+ *                               "node_$node->nid" => array(
+ *                                 '#value' => check_plain($node->title),
+ *                                 '#prefix' => '<li>',
+ *                                 '#suffix' => "</li>\n",
+ *                               ),
+ *                             )
+ *                           );
+ */
+function drupal_delete_add_form_elements($elements) {
+  _drupal_delete('form', '', $elements);
+}
+
+/**
+ * @} End of "ingroup deletionapi".
+ */
+ 
+/**
+ * Create/build/execute deletion packages.
+ *
+ * Note that this function should not be called directly, but through the following helper functions:
+ *
+ * drupal_delete_initiate()
+ * drupal_delete_add_query()
+ * drupal_delete_confirm()
+ * drupal_delete_execute()
+ * drupal_delete_add_callback()
+ * drupal_delete_add_metadata()
+ * drupal_delete_add_form_elements()
+ *
+ * @param $op
+ *   An operation to be performed.
+ *
+ * @param $id
+ *   A unique string identifier for the deletion being performed.
+ */
+function _drupal_delete($op, $id = '') {
+  static $delete_type = NULL,
+         $delete_id = NULL,
+         $deletion_data = array(),
+         $built = NULL,
+         $form = array();
+
+  $confirm = NULL;
+  $execute = NULL;
+  $destination = FALSE;
+
+  // Process additional arguments.
+  $all_args = func_get_args();
+  if (count($all_args) > 2) {
+    // Get any additional arguments.
+    $args = array_slice($all_args, 2);
+    // Shift off query string if present.
+    if ($op == 'query') {
+      $query = array_shift($args);
+    }
+    // Clean up args passed as an array.
+    if (is_array($args[0])) {
+      $args = $args[0];
+    }
+  }
+  else {
+    $args = array();
+  }
+
+  switch ($op) {
+    // Query to add to a package
+    case 'query':
+      // Add the information for this deletion into the package array.
+      $deletion_data[$delete_type][$delete_id]['queries'][] = array('query' => $query, 'args' => $args);
+      break;
+    // New package -- mark it as such and get the next deletion ID.
+    case 'new package':
+      $delete_type = $id['type'];
+      $delete_id = $id['id'];
+      $deletion_data[$delete_type][$delete_id] = array(
+        'metadata' => array(),
+        'callback' => array(),
+        'form' => array(),
+      );
+      break;
+    // Confirm all packages.
+    case 'confirm':
+      // Set execute switch and destination if bypass is enabled.
+      if (variable_get('bypass_delete_confirmation', 0)) {
+        $execute = TRUE;
+        $destination = isset($args['destination']) ? $args['destination'] : NULL;
+      }
+      else {
+        $confirm = TRUE;
+      }
+      break;
+    // Add package-specific form array pieces, callbacks, metadata.
+    case 'form':
+    case 'callback':
+    case 'metadata':
+      $deletion_data[$delete_type][$delete_id][$op] += $args;
+      break;
+    // Execute all packages.
+    case 'execute':
+      $execute = TRUE;
+      break;
+  }
+
+  // Allow modules to inject confirm/abort data.
+  if (isset($confirm) || isset($execute)) {
+    // $built is kept as a static and checked to avoid calling this code twice
+    // when the package is executed.
+    if (!isset($built)) {
+      $built = TRUE;
+
+      // Main confirm form.
+      if (isset($args['form'])) {
+        $form = $args['form'];
+      }
+      $count = 0;
+      foreach ($deletion_data as $type => $deletion_info) {
+        // Reset $delete_type to the type being checked.
+        $delete_type = $type;
+        foreach ($deletion_info as $package_id => $package_info) {
+          $package_confirm_data = array();
+          // Reset $delete_id to the package to be passed.
+          $delete_id = $package_id;
+          // Call hook_delete_pre() once for each package.
+          foreach (module_implements('delete_pre') as $module) {
+            $confirm_data = module_invoke($module, 'delete_pre', $type, $package_id, $package_info);
+            // Check for an aborted package.
+            if (isset($confirm_data['abort'])) {
+              // Set abort message.
+              if (isset($confirm_data['abort']['message'])) {
+                drupal_set_message($confirm_data['abort']['message'], 'error');
+              }
+              // Set abort destination.
+              if (isset($confirm_data['abort']['destination'])) {
+                $abort_destination = $confirm_data['abort']['destination'];
+              }
+              // Remove the package.
+              unset($deletion_data[$type][$package_id]);
+            }
+            else {
+              // Add elements to confirm form data for the package.
+              $package_confirm_data = array_merge_recursive($package_confirm_data, $confirm_data);
+            }
+          }
+          // Add in package-specific confirm form elements if the package still exists.
+          if (isset($deletion_data[$type][$package_id])) {
+            $form = array_merge_recursive($form, $package_confirm_data);
+            if (!empty($package_info['form'])) {
+              $form = array_merge_recursive($form, $package_info['form']);
+            }
+            // If queries exist, then add to the count of executable packages.
+            if (isset($package_info['queries'])) {
+              $count++;
+            }
+          }
+        }
+      }
+      if (isset($confirm)) {
+        // Generate the confirm form if any packages remain.
+        if ($count) {
+          $question = isset($args['question']) ? $args['question'] : t('Delete the item?');
+          $path = isset($args['path']) ? $args['path'] : 'node';
+          unset($args['question'], $args['path']);
+          $args['name'] = 'delete';
+          // Submit handler - triggers execute operation for the API.
+          $form['#submit'] = array('delete_confirm_submit');
+          return confirm_form($form, $question, $path, $args);
+        }
+        // No packages left after aborts -- go to an abort destination if it exists.
+        elseif (isset($abort_destination)) {
+          drupal_goto($abort_destination);
+        }
+        // Fallback to cancel path.
+        elseif (isset($args['path'])) {
+          drupal_goto($args['path']);
+        }
+        // Last fallback, front page.
+        else {
+          drupal_goto('<front>');
+        }
+      }
+    }
+  }
+
+  // Execute all constructed packages.
+  if (isset($execute)) {
+
+    // Explicitly reset the package information.
+    $delete_type = NULL;
+    $delete_id = NULL;
+    $package_data = $deletion_data;
+    $deletion_data = array();
+    $built = NULL;
+
+    // Execute the deletion of all packages.
+    _drupal_delete_execute($package_data, $destination);
+  }
+}
+
+/**
+ * Executes all database deletions in all packages of a single page call.
+ *
+ * @param $package_data
+ *   The complete array of deletion data for all packages.
+ * @param $destination
+ *   A destination for operations that bypass the confirm step.
+ */
+function _drupal_delete_execute($package_data, $destination = NULL) {
+  foreach ($package_data as $type => $package) {
+    foreach ($package as $package_id => $package_info) {
+      // Allow modules to perform any operations just prior to the deletion of the package.
+      drupal_alter('delete', $type, $package_id, $package_info);
+      // Perform the deletions.
+      if (isset($package_info['queries'])) {
+        foreach ($package_info['queries'] as $deletion) {
+          db_query($deletion['query'], $deletion['args']);
+        }
+      }
+      // Execute post-deletion callbacks.
+      foreach ($package_info['callback'] as $function => $args) {
+        if (function_exists($function)) {
+          call_user_func_array($function, $args);
+        }
+      }
+    }
+  }
+  // Redirect for confirmation bypass.
+  drupal_redirect($destination);
+}
+
+/**
+ * Generates a drupal_goto() based on the value of $goto.
+ *
+ * @param $goto
+ *   Can be any of the following values:
+ *   - A string representing a valid Drupal path.
+ *   - An array containing arguments to pass to drupal_goto().
+ *   - NULL to redirect to $_GET['q'].
+ *   - FALSE to bypass the redirection.
+ */
+function drupal_redirect($goto) {
+  if ($goto !== FALSE) {
+    if (isset($goto)) {
+      if (is_array($goto)) {
+        call_user_func_array('drupal_goto', $goto);
+      }
+      else {
+        drupal_goto($goto);
+      }
+    }
+    drupal_goto($_GET['q']);
+  }
 }
 
 /**

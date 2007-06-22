@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.259 2007/05/25 15:04:42 dries Exp $
+// $Id: statistics.module,v 1.260 2007/06/22 05:44:21 unconed Exp $
 
 /**
  * @file
@@ -553,7 +553,7 @@ function statistics_nodeapi(&$node, $op, $arg = 0) {
   switch ($op) {
     case 'delete':
       // clean up statistics table when node is deleted
-      db_query('DELETE FROM {node_counter} WHERE nid = %d', $node->nid);
+      drupal_delete_add_query('DELETE FROM {node_counter} WHERE nid = %d', $node->nid);
   }
 }
 
