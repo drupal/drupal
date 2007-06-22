@@ -65,6 +65,7 @@ Drupal.teaserAttach = function() {
       body[0].value = trim(text[1]);
       $(teaser).attr('disabled', '');
       $('input', button).val(Drupal.t('Join summary')).toggle(join_teaser, split_teaser);
+      $(teaser).show();
     }
     else {
       $(teaser).hide();
