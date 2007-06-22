@@ -1,6 +1,6 @@
-; $Id: openid.info,v 1.1 2007/06/18 16:09:39 dries Exp $
+; $Id: openid.info,v 1.2 2007/06/22 22:26:43 unconed Exp $
 name = OpenID
-description = "Allows Drupal to act as an OpenID relying party."
+description = "Allows users to log into your site using OpenID."
 version = VERSION
 package = Core - optional
 core = 6.x
