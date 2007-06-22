@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.179 2007/06/17 14:55:39 goba Exp $
+// $Id: menu.inc,v 1.180 2007/06/22 06:12:09 unconed Exp $
 
 /**
  * @file
@@ -922,7 +922,7 @@ function menu_local_tasks($level = 0) {
   if (empty($tabs)) {
     $router_item = menu_get_item();
     if (!$router_item || !$router_item['access']) {
-      return array();
+      return '';
     }
     // Get all tabs and the root page.
     $result = db_query("SELECT * FROM {menu_router} WHERE tab_root = '%s' ORDER BY weight, title", $router_item['tab_root']);
@@ -945,8 +945,10 @@ function menu_local_tasks($level = 0) {
     while (isset($children[$path])) {
       $tabs_current = '';
       $next_path = '';
+      $count = 0;
       foreach ($children[$path] as $item) {
         if ($item['access']) {
+          $count++;
           // The default task is always active.
           if ($item['type'] == MENU_DEFAULT_LOCAL_TASK) {
             // Find the first parent which is not a default local task.
@@ -962,7 +964,8 @@ function menu_local_tasks($level = 0) {
         }
       }
       $path = $next_path;
-      $tabs[$item['number_parts']] = $tabs_current;
+      $tabs[$item['number_parts']]['count'] = $count;
+      $tabs[$item['number_parts']]['output'] = $tabs_current;
     }
 
     // Find all tabs at the same level or above the current one
@@ -973,8 +976,10 @@ function menu_local_tasks($level = 0) {
       $tabs_current = '';
       $next_path = '';
       $next_parent = '';
+      $count = 0;
       foreach ($children[$parent] as $item) {
         if ($item['access']) {
+          $count++;
           if ($item['type'] == MENU_DEFAULT_LOCAL_TASK) {
             // Find the first parent which is not a default local task.
             for ($p = $item['tab_parent']; $tasks[$p]['type'] == MENU_DEFAULT_LOCAL_TASK; $p = $tasks[$p]['tab_parent']);
@@ -998,14 +1003,16 @@ function menu_local_tasks($level = 0) {
       }
       $path = $next_path;
       $parent = $next_parent;
-      $tabs[$item['number_parts']] = $tabs_current;
+      $tabs[$item['number_parts']]['count'] = $count;
+      $tabs[$item['number_parts']]['output'] = $tabs_current;
     }
     // Sort by depth.
     ksort($tabs);
     // Remove the depth, we are interested only in their relative placement.
     $tabs = array_values($tabs);
   }
-  return isset($tabs[$level]) ? $tabs[$level] : array();
+  // We do not display single tabs.
+  return (isset($tabs[$level]) && $tabs[$level]['count'] > 1) ? $tabs[$level]['output'] : '';
 }
 
 function menu_primary_local_tasks() {
