@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.494 2007/06/22 05:44:21 unconed Exp $
+// $Id: system.module,v 1.495 2007/06/22 08:32:28 unconed Exp $
 
 /**
  * @file
@@ -1641,14 +1641,18 @@ function system_modules_confirm_form($modules, $storage) {
   $form['text'] = array('#value' => theme('item_list', $items));
 
   if ($form) {
+    $options = array(
+      'description' => t('Would you like to continue with enabling the above?'),
+      'yes' => t('Continue'),
+    );
+
     // Set some default form values
     $form = confirm_form(
       $form,
       t('Some required modules must be enabled'),
       'admin/build/modules',
-      t('Would you like to continue with enabling the above?'),
-      t('Continue'),
-      t('Cancel'));
+      $options);
+
     return $form;
   }
 }
@@ -1929,13 +1933,17 @@ function system_modules_uninstall_confirm_form($storage) {
     $form['#confirmed'] = TRUE;
     $form['uninstall']['#tree'] = TRUE;
     $form['modules'] = array('#value' => '<p>'. t('The following modules will be completely uninstalled from your site, and <em>all data from these modules will be lost</em>!') .'</p>'. theme('item_list', $uninstall));
+
+    $options = array(
+      'description' => t('Would you like to continue with uninstalling the above?'),
+      'yes' => t('Uninstall')
+    );
+
     $form = confirm_form(
       $form,
       t('Confirm uninstall'),
       'admin/build/modules/uninstall',
-      t('Would you like to continue with uninstalling the above?'),
-      t('Uninstall'),
-      t('Cancel'));
+      $options);
     return $form;
   }
 }

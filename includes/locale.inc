@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.140 2007/06/18 09:41:30 goba Exp $
+// $Id: locale.inc,v 1.141 2007/06/22 08:32:26 unconed Exp $
 
 /**
  * @file
@@ -393,7 +393,9 @@ function locale_languages_delete_form(&$form_state, $langcode) {
   }
   else {
     $form['langcode'] = array('#type' => 'value', '#value' => $langcode);
-    return confirm_form($form, t('Are you sure you want to delete the language %name?', array('%name' => t($languages[$langcode]->name))), 'admin/settings/language', t('Deleting a language will remove all interface translations associated with it, and posts in this language will be set to be language neutral. This action cannot be undone.'), t('Delete'), t('Cancel'));
+    $options = array('description' => t('Deleting a language will remove all interface translations associated with it, and posts in this language will be set to be language neutral. This action cannot be undone.'));
+
+    return confirm_form($form, t('Are you sure you want to delete the language %name?', array('%name' => t($languages[$langcode]->name))), 'admin/settings/language', $options);
   }
 }
 
@@ -1194,7 +1196,7 @@ function _locale_import_one_string($op, $value = NULL, $mode = NULL, $lang = NUL
       else {
         // Some real string to import.
         $comments = _locale_import_shorten_comments(empty($value['#']) ? array() : $value['#']);
-        
+
         if (strpos($value['msgid'], "\0")) {
           // This string has plural versions.
           $english = explode("\0", $value['msgid'], 2);
@@ -1279,7 +1281,7 @@ function _locale_import_one_string_db(&$report, $langcode, $source, $translation
     db_query("DELETE FROM {locales_target} WHERE language = '%s' AND lid = %d AND plid = %d AND plural = %d", $translation, $langcode, $lid, $plid, $plural);
     $report[2]++;
   }
-  
+
   return $lid;
 }
 

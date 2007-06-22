@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.834 2007/06/22 05:44:21 unconed Exp $
+// $Id: node.module,v 1.835 2007/06/22 08:32:27 unconed Exp $
 
 /**
  * @file
@@ -1078,8 +1078,13 @@ function node_configure_validate($form, &$form_state) {
  * Menu callback: confirm rebuilding of permissions.
  */
 function node_configure_rebuild_confirm() {
+  $options = array(
+    'description' => t('This will wipe all current node permissions and rebuild them based on current settings. Rebuilding the permissions may take a while so please be patient. This action cannot be undone.'),
+    'yes' => t('Rebuild permissions')
+  );
+
   return confirm_form(array(), t('Are you sure you want to rebuild node permissions on the site?'),
-                  'admin/content/node-settings', t('This will wipe all current node permissions and rebuild them based on current settings. Rebuilding the permissions may take a while so please be patient. This action cannot be undone.'), t('Rebuild permissions'), t('Cancel'));
+                  'admin/content/node-settings', $options);
 }
 
 /**

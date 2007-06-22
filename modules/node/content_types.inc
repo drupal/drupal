@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.35 2007/06/04 15:56:33 dries Exp $
+// $Id: content_types.inc,v 1.36 2007/06/22 08:32:27 unconed Exp $
 
 /**
  * @file
@@ -392,7 +392,9 @@ function node_type_delete_confirm(&$form_state, $type) {
 
   $caption .= '<p>'. t('This action cannot be undone.') .'</p>';
 
-  return confirm_form($form, $message, 'admin/content/types', $caption, t('Delete'));
+  $options = array('description' => $caption);
+
+  return confirm_form($form, $message, 'admin/content/types', $options);
 }
 
 /**

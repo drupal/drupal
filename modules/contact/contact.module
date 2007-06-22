@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.89 2007/06/14 05:44:51 dries Exp $
+// $Id: contact.module,v 1.90 2007/06/22 08:32:27 unconed Exp $
 
 /**
  * @file
@@ -265,7 +265,7 @@ function contact_admin_delete(&$form_state, $cid = NULL) {
       '#value' => $info->category,
     );
 
-    return confirm_form($form, t('Are you sure you want to delete %category?', array('%category' => $info->category)), 'admin/build/contact', t('This action cannot be undone.'), t('Delete'), t('Cancel'));
+    return confirm_form($form, t('Are you sure you want to delete %category?', array('%category' => $info->category)), 'admin/build/contact');
   }
   else {
     drupal_set_message(t('Category not found.'), 'error');

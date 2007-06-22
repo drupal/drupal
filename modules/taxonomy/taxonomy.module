@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.361 2007/06/22 05:44:21 unconed Exp $
+// $Id: taxonomy.module,v 1.362 2007/06/22 08:32:28 unconed Exp $
 
 /**
  * @file
@@ -384,13 +384,14 @@ function taxonomy_vocabulary_confirm_delete(&$form_state, $vid) {
   $form['type'] = array('#type' => 'value', '#value' => 'vocabulary');
   $form['vid'] = array('#type' => 'value', '#value' => $vid);
   $form['name'] = array('#type' => 'value', '#value' => $vocabulary->name);
+
+  $options = array('description' => t('Deleting a vocabulary will delete all the terms in it. This action cannot be undone.'));
+
   return confirm_form($form,
                   t('Are you sure you want to delete the vocabulary %title?',
                   array('%title' => $vocabulary->name)),
                   'admin/content/taxonomy',
-                  t('Deleting a vocabulary will delete all the terms in it. This action cannot be undone.'),
-                  t('Delete'),
-                  t('Cancel'));
+                  $options);
 }
 
 function taxonomy_vocabulary_confirm_delete_submit($form, &$form_state) {
@@ -620,13 +621,14 @@ function taxonomy_term_confirm_delete(&$form_state, $tid) {
   $form['type'] = array('#type' => 'value', '#value' => 'term');
   $form['name'] = array('#type' => 'value', '#value' => $term->name);
   $form['tid'] = array('#type' => 'value', '#value' => $tid);
+
+  $options = array('description' => t('Deleting a term will delete all its children if there are any. This action cannot be undone.'));
+
   return confirm_form($form,
                   t('Are you sure you want to delete the term %title?',
                   array('%title' => $term->name)),
                   'admin/content/taxonomy',
-                  t('Deleting a term will delete all its children if there are any. This action cannot be undone.'),
-                  t('Delete'),
-                  t('Cancel'));
+                  $options);
 }
 
 function taxonomy_term_confirm_delete_submit($form, &$form_state) {

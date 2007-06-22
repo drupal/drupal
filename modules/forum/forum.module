@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.403 2007/06/22 05:44:20 unconed Exp $
+// $Id: forum.module,v 1.404 2007/06/22 08:32:27 unconed Exp $
 
 /**
  * @file
@@ -610,7 +610,9 @@ function forum_confirm_delete(&$form_state, $tid) {
   $form['tid'] = array('#type' => 'value', '#value' => $tid);
   $form['name'] = array('#type' => 'value', '#value' => $term->name);
 
-  return confirm_form($form, t('Are you sure you want to delete the forum %name?', array('%name' => $term->name)), 'admin/content/forum', t('Deleting a forum or container will delete all sub-forums and associated posts as well. This action cannot be undone.'), t('Delete'), t('Cancel'));
+  $options = array('description' => t('Deleting a forum or container will delete all sub-forums and associated posts as well. This action cannot be undone.'));
+
+  return confirm_form($form, t('Are you sure you want to delete the forum %name?', array('%name' => $term->name)), 'admin/content/forum', $options);
 }
 
 /**
