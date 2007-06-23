@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.835 2007/06/22 08:32:27 unconed Exp $
+// $Id: node.module,v 1.836 2007/06/23 13:04:29 goba Exp $
 
 /**
  * @file
@@ -2206,20 +2206,21 @@ function node_form(&$form_state, $node) {
   }
 
   // Add the buttons.
-  $form['preview'] = array(
+  $form['buttons'] = array();
+  $form['buttons']['preview'] = array(
     '#type' => 'submit',
     '#value' => t('Preview'),
-    '#weight' => 40,
+    '#weight' => 5,
     '#submit' => array('node_form_build_preview'),
   );
-  $form['submit'] = array(
+  $form['buttons']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Submit'),
-    '#weight' => 45,
+    '#weight' => 10,
     '#submit' => array('node_form_submit'),
   );
   if (!empty($node->nid) && node_access('delete', $node)) {
-    $form['delete'] = array('#type' => 'button', '#value' => t('Delete'), '#weight' => 50);
+    $form['buttons']['delete'] = array('#type' => 'button', '#value' => t('Delete'), '#weight' => 15);
   }
   $form['#validate'][] = 'node_form_validate';
   $form['#theme'] = 'node_form';
@@ -2254,9 +2255,7 @@ function theme_node_form($form) {
     $admin .= drupal_render($form['options']);
     $admin .= "    </div>\n";
   }
-  $buttons = drupal_render($form['preview']);
-  $buttons .= drupal_render($form['submit']);
-  $buttons .= isset($form['delete']) ? drupal_render($form['delete']) : '';
+  $buttons = drupal_render($form['buttons']);
 
   // Everything else gets rendered here, and is displayed before the admin form
   // field and the submit buttons.
