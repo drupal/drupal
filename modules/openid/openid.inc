@@ -368,7 +368,7 @@ function _openid_get_bytes($num_bytes) {
   if (!isset($f)) {
     $f = @fopen(OPENID_RAND_SOURCE, "r");
   }
-  if (!isset($f)) {
+  if (!$f) {
     // pseudorandom used
     $bytes = '';
     for ($i = 0; $i < $num_bytes; $i += 4) {
