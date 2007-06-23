@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.803 2007/06/23 08:58:31 goba Exp $
+// $Id: user.module,v 1.804 2007/06/23 13:15:49 goba Exp $
 
 /**
  * @file
@@ -1101,10 +1101,7 @@ function user_login_name_validate($form, &$form_state) {
  * @return void
  **/
 function user_login_authenticate_validate($form, &$form_state) {
-  global $user;
-  if ($account = user_authenticate($form_state['values']['name'], trim($form_state['values']['pass']))) {
-    $user = $account;
-  }
+  user_authenticate($form_state['values']['name'], trim($form_state['values']['pass']));
 }
 
 /**
