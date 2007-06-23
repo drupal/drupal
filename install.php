@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.60 2007/06/08 12:51:58 goba Exp $
+// $Id: install.php,v 1.61 2007/06/23 13:22:47 goba Exp $
 
 require_once './includes/install.inc';
 
@@ -16,16 +16,9 @@ require_once './includes/install.inc';
  */
 function install_main() {
   global $profile, $install_locale, $conf;
-  require_once './includes/cache-install.inc';
   require_once './includes/bootstrap.inc';
   drupal_bootstrap(DRUPAL_BOOTSTRAP_CONFIGURATION);
 
-  // Because no persistent storage is available yet, functions
-  // that check for cached data will fail. During the installation
-  // process, we temporarily replace the normal cache system with
-  // a stubbed-out version that short-circuits the actual caching
-  // process and avoids any errors.
-  $conf['cache_inc'] = './includes/cache-install.inc';
   require_once './modules/system/system.install';
   require_once './includes/file.inc';
 
@@ -36,9 +29,16 @@ function install_main() {
   $verify = install_verify_settings();
 
   if ($verify) {
+    // Since we have a database connection, we use the normal cache system.
+    // This is important, as the installer calls into the Drupal system for
+    // the clean URL checks, so we should maintain the cache properly.
+    require_once './includes/cache.inc';
+    $conf['cache_inc'] = './includes/cache.inc';
+
     // Establish a connection to the database.
     require_once './includes/database.inc';
     db_set_active();
+
     // Check if Drupal is installed.
     $task = install_verify_drupal();
     if ($task == 'done') {
@@ -46,6 +46,13 @@ function install_main() {
     }
   }
   else {
+    // Since no persistent storage is available yet, and functions that check
+    // for cached data will fail, we temporarily replace the normal cache
+    // system with a stubbed-out version that short-circuits the actual
+    // caching process and avoids any errors.
+    require_once './includes/cache-install.inc';
+    $conf['cache_inc'] = './includes/cache-install.inc';
+
     $task = NULL;
   }
 
