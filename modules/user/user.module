@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.804 2007/06/23 13:15:49 goba Exp $
+// $Id: user.module,v 1.805 2007/06/23 21:35:08 goba Exp $
 
 /**
  * @file
@@ -515,9 +515,18 @@ function user_search($op = 'search', $keys = NULL, $skip_access_check = FALSE) {
         $find = array();
         // Replace wildcards with MySQL/PostgreSQL wildcards.
         $keys = preg_replace('!\*+!', '%', $keys);
-        $result = pager_query("SELECT uid, name FROM {users} WHERE LOWER(name) LIKE LOWER('%%%s%%')", 15, 0, NULL, $keys);
-        while ($account = db_fetch_object($result)) {
-          $find[] = array('title' => $account->name, 'link' => url('user/'. $account->uid, array('absolute' => TRUE)));
+        if (user_access('administer users')) {
+          // Administrators can also search in the otherwise private email field.
+          $result = pager_query("SELECT name, uid, mail FROM {users} WHERE LOWER(name) LIKE LOWER('%%%s%%') OR LOWER(mail) LIKE LOWER('%%%s%%')", 15, 0, NULL, $keys, $keys);
+          while ($account = db_fetch_object($result)) {
+            $find[] = array('title' => $account->name .' ('. $account->mail .')', 'link' => url('user/'. $account->uid, array('absolute' => TRUE)));  
+          }
+        }
+        else {
+          $result = pager_query("SELECT name, uid FROM {users} WHERE LOWER(name) LIKE LOWER('%%%s%%')", 15, 0, NULL, $keys); 
+          while ($account = db_fetch_object($result)) {
+            $find[] = array('title' => $account->name, 'link' => url('user/'. $account->uid, array('absolute' => TRUE)));  
+          }
         }
         return $find;
       }
@@ -914,7 +923,7 @@ function user_menu() {
   if (module_exists('search')) {
     $items['admin/user/search'] = array(
       'title' => 'Search users',
-      'description' => 'Search users by name.',
+      'description' => 'Search users by name or e-mail address.',
       'page callback' => 'user_admin',
       'page arguments' => array('search'),
       'access arguments' => array('administer users'),
@@ -2777,7 +2786,7 @@ function user_help($section) {
       <li>Authenticated user: this role is automatically granted to all logged in users.</li>
       </ul>', array('@permissions' => url('admin/user/access')));
     case 'admin/user/search':
-      return '<p>'. t('Enter a simple pattern ("*" may be used as a wildcard match) to search for a username. For example, one may search for "br" and Drupal might return "brian", "brad", and "brenda".') .'</p>';
+      return '<p>'. t('Enter a simple pattern ("*" may be used as a wildcard match) to search for a username or e-mail address. For example, one may search for "br" and Drupal might return "brian", "brad", and "brenda@example.com".') .'</p>';
   }
 }
 
