@@ -1101,10 +1101,7 @@ function user_login_name_validate($form, &$form_state) {
  * @return void
  **/
 function user_login_authenticate_validate($form, &$form_state) {
-  global $user;
-  if ($account = user_authenticate($form_state['values']['name'], trim($form_state['values']['pass']))) {
-    $user = $account;
-  }
+  user_authenticate($form_state['values']['name'], trim($form_state['values']['pass']));
 }
 
 /**
