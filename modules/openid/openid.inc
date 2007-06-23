@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.inc,v 1.1 2007/06/18 16:09:39 dries Exp $
+// $Id: openid.inc,v 1.2 2007/06/23 08:58:31 goba Exp $
 
 /**
  * @file
@@ -368,7 +368,7 @@ function _openid_get_bytes($num_bytes) {
   if (!isset($f)) {
     $f = @fopen(OPENID_RAND_SOURCE, "r");
   }
-  if (!isset($f)) {
+  if (!$f) {
     // pseudorandom used
     $bytes = '';
     for ($i = 0; $i < $num_bytes; $i += 4) {

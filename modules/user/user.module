@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.802 2007/06/22 08:46:16 unconed Exp $
+// $Id: user.module,v 1.803 2007/06/23 08:58:31 goba Exp $
 
 /**
  * @file
@@ -80,22 +80,28 @@ function user_external_load($authname) {
 }
 
 /**
-* Perform standard Drupal login operations for a user object.  The
-* user object must already be authenticated. This function verifies
-* that the user account is not blocked/denied and then performs the login,
-* updates the login timestamp in the database, invokes hook_user('login'),
-* regenerates the session, etc.
-*
-* @param $account
-*    An authenticated user object to be set as the currently logged
-*    in user.
-* @return boolean
-*    TRUE if the login succeeds, FALSE otherwise.
-*/
-function user_external_login($account) {
+ * Perform standard Drupal login operations for a user object.  The
+ * user object must already be authenticated. This function verifies
+ * that the user account is not blocked/denied and then performs the login,
+ * updates the login timestamp in the database, invokes hook_user('login'),
+ * regenerates the session, etc.
+ *
+ * @param $account
+ *    An authenticated user object to be set as the currently logged
+ *    in user.
+ * @param $edit
+ *    The array of form values submitted by the user, if any.
+ * @return boolean
+ *    TRUE if the login succeeds, FALSE otherwise.
+ */
+function user_external_login($account, $edit = array()) {
   $form = drupal_get_form('user_login');
 
-  $state = array();
+  $state['values'] = $edit;
+  if (empty($state['values']['name'])) {
+    $state['values']['name'] = $account->name;
+  }
+
   user_login_name_validate($form, $state, (array)$account);
   if (form_get_errors()) {
     return FALSE;
@@ -1075,7 +1081,7 @@ function user_login_default_validators() {
  *
  * @return void
  **/
- function user_login_name_validate($form, &$form_state) {
+function user_login_name_validate($form, &$form_state) {
   if (isset($form_state['values']['name'])) {
     if (user_is_blocked($form_state['values']['name'])) {
       // blocked in user administration

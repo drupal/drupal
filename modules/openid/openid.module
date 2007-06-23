@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.module,v 1.1 2007/06/18 16:09:39 dries Exp $
+// $Id: openid.module,v 1.2 2007/06/23 08:58:31 goba Exp $
 
 /**
  * @file
@@ -108,7 +108,7 @@ function openid_login_validate($form, &$form_state) {
     $return_to = url('', array('absolute' => TRUE));
   }
 
-  openid_begin($form_state['values']['openid_url'], $return_to);
+  openid_begin($form_state['values']['openid_url'], $return_to, $form_state['values']);
 }
 
 /**
@@ -191,7 +191,7 @@ function openid_user_delete($account, $aid = 0) {
  * @param $claimed_id The OpenID to authenticate
  * @param $return_to The endpoint to return to from the OpenID Provider
  */
-function openid_begin($claimed_id, $return_to = '') {
+function openid_begin($claimed_id, $return_to = '', $form_values = array()) {
   include_once drupal_get_path('module', 'openid') .'/openid.inc';
 
   $claimed_id = _openid_normalize($claimed_id);
@@ -207,6 +207,9 @@ function openid_begin($claimed_id, $return_to = '') {
   $_SESSION['openid_op_endpoint'] = $op_endpoint;
   // Store the claimed_id in the session (for handling delegation).
   $_SESSION['openid_claimed_id'] = $claimed_id;
+  // Store the login form values so we can pass them to
+  // user_exteral_login later.
+  $_SESSION['openid_user_login_values'] = $form_values;
 
   // If bcmath is present, then create an association
   $assoc_handle = '';
@@ -398,7 +401,7 @@ function openid_authentication($response) {
   $account = user_external_load($identity);
   if (isset($account->uid)) {
     if (!variable_get('user_email_verification', TRUE) || $account->login) {
-      user_external_login($account);
+      user_external_login($account, $_SESSION['openid_user_login_values']);
     }
     else {
       drupal_set_message(t('You must validate your email address for this account before logging in via OpenID'));
