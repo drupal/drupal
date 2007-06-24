@@ -130,6 +130,9 @@ function user_load($array = array()) {
   if (is_numeric($array)) {
     $array = array('uid' => $array);
   }
+  elseif (!is_array($array)) {
+    return FALSE;
+  }
 
   foreach ($array as $key => $value) {
     if ($key == 'uid' || $key == 'status') {
