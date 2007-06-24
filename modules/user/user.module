@@ -1621,12 +1621,15 @@ function user_edit($form_state, $category = 'account') {
   return $form;
 }
 
-function user_confirm_delete($name, $uid) {
-  $options = array('description' => t('All submissions made by this user will be attributed to the anonymous account. This action cannot be undone.'));
+function user_confirm_delete(&$form_state, $name, $uid) {
+  $options = array(
+    'description' => t('All submissions made by this user will be attributed to the anonymous account. This action cannot be undone.'),
+    'cancel' => 'user/'. $uid,
+  );
 
   return confirm_form(array(),
     t('Are you sure you want to delete the account %name?', array('%name' => $name)),
-    'user/'. $uid,
+    'admin/user/user',
     $options);
 }
 
