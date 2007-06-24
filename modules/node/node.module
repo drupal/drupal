@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.836 2007/06/23 13:04:29 goba Exp $
+// $Id: node.module,v 1.837 2007/06/24 00:38:40 unconed Exp $
 
 /**
  * @file
@@ -568,13 +568,16 @@ function node_load($param = array(), $revision = NULL, $reset = NULL) {
     $cond = 'n.nid = %d';
     $arguments[] = $param;
   }
-  else {
+  elseif (is_array($param)) {
     // Turn the conditions into a query.
     foreach ($param as $key => $value) {
       $cond[] = 'n.'. db_escape_string($key) ." = '%s'";
       $arguments[] = $value;
     }
     $cond = implode(' AND ', $cond);
+  }
+  else {
+    return FALSE;
   }
 
   // Retrieve the node.

@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.805 2007/06/23 21:35:08 goba Exp $
+// $Id: user.module,v 1.806 2007/06/24 00:38:40 unconed Exp $
 
 /**
  * @file
@@ -129,6 +129,9 @@ function user_load($array = array()) {
 
   if (is_numeric($array)) {
     $array = array('uid' => $array);
+  }
+  elseif (!is_array($array)) {
+    return FALSE;
   }
 
   foreach ($array as $key => $value) {

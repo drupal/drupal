@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.554 2007/06/22 05:44:20 unconed Exp $
+// $Id: comment.module,v 1.555 2007/06/24 00:38:40 unconed Exp $
 
 /**
  * @file
@@ -973,7 +973,7 @@ function comment_render($node, $cid = 0) {
     $order = _comment_get_display_setting('sort');
     $comments_per_page = _comment_get_display_setting('comments_per_page');
 
-    if ($cid) {
+    if ($cid && is_numeric($cid)) {
       // Single comment view.
       $query = 'SELECT c.cid, c.pid, c.nid, c.subject, c.comment, c.format, c.timestamp, c.name, c.mail, c.homepage, u.uid, u.name AS registered_name, u.signature, u.picture, u.data, c.score, c.users, c.status FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d';
       $query_args = array($cid);
