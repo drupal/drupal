@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.117 2007/06/22 08:32:27 unconed Exp $
+// $Id: menu.module,v 1.118 2007/06/24 10:09:52 unconed Exp $
 
 /**
  * @file
@@ -488,10 +488,11 @@ function menu_reset_item(&$form_state, $mlid) {
 
     $options = array(
       'description' => t('Any customizations will be lost. This action cannot be undone.'),
-      'yes' => t('Reset')
+      'yes' => t('Reset'),
+      'cancel' => 'admin/build/menu',
     );
 
-    return confirm_form($form, t('Are you sure you want to reset the item %item to its default values?', array('%item' => $item['link_title'])), 'admin/build/menu', $options);
+    return confirm_form($form, t('Are you sure you want to reset the item %item to its default values?', array('%item' => $item['link_title'])), 'admin/build/menu/navigation', $options);
   }
   else {
     drupal_not_found();

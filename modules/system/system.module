@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.495 2007/06/22 08:32:28 unconed Exp $
+// $Id: system.module,v 1.496 2007/06/24 10:09:53 unconed Exp $
 
 /**
  * @file
@@ -2426,9 +2426,11 @@ function system_node_type($op, $info) {
  * @param $question
  *   The question to ask the user (e.g. "Are you sure you want to delete the
  *   block <em>foo</em>?").
- * @param $path
- *   The page to go to if the user denies the action.
- *   Can be either a Drupal path, or an array with the keys 'path', 'query', 'fragment'.
+ * @param $destination
+ *   The page to go to if the confirm form is submitted, or the action is cancelled.
+ *   The value can be either a Drupal path, or an array with the keys 'path', 'query', 'fragment'.
+ *
+ *   Note: If a custom submit handler is being used, return the destination from the handler.
  * @param $options
  *   An associative array of options, with the following key/value pairs:
  *    'description' => Additional text to display.
@@ -2439,37 +2441,39 @@ function system_node_type($op, $info) {
  *                     Default is "Cancel".
  *    'name'        => The internal name used to refer to the confirmation item.
  *                     Default is "confirm".
- *    'destination' => A destination page to go to after form submission -- the value can
- *                     be of any form of the $goto argument accepted by drupal_redirect().
+ *    'cancel'      => Set a custom path for cancelling the form, -- can be either a Drupal path,
+ *                     or an array with the keys 'path', 'query', 'fragment'.
  *
  * @return
  *   The form.
  */
-function confirm_form($form, $question, $path, $options = array()) {
+function confirm_form($form, $question, $destination, $options = array()) {
   $description = isset($options['description']) ? $options['description'] : t('This action cannot be undone.');
   $name = isset($options['name']) ? $options['name'] : 'confirm';
+  $cancel = isset($options['cancel']) ? $options['cancel'] : $destination;
 
   // Prepare cancel link
   $query = $fragment = NULL;
-  if (is_array($path)) {
-    $query = isset($path['query']) ? $path['query'] : NULL;
-    $fragment = isset($path['fragment']) ? $path['fragment'] : NULL;
-    $path = isset($path['path']) ? $path['path'] : NULL;
+  if (is_array($cancel)) {
+    $query = isset($cancel['query']) ? $cancel['query'] : NULL;
+    $fragment = isset($cancel['fragment']) ? $cancel['fragment'] : NULL;
+    $path = isset($cancel['path']) ? $cancel['path'] : NULL;
   }
-  $cancel = l(isset($options['no']) ? $options['no'] : t('Cancel'), $path, array('query' => $query, 'fragment' => $fragment));
+  else {
+    $path = $cancel;
+  }
+  $cancel_link = l(isset($options['no']) ? $options['no'] : t('Cancel'), $path, array('query' => $query, 'fragment' => $fragment));
 
   drupal_set_title($question);
 
   $form['#attributes'] = array('class' => 'confirmation');
   $form['description'] = array('#value' => $description);
   $form[$name] = array('#type' => 'hidden', '#value' => 1);
-  if (isset($options['destination'])) {
-    $form['destination'] = array('#type' => 'value', '#value' => $options['destination']);
-  }
+  $form['destination'] = array('#type' => 'value', '#value' => $destination);
 
   $form['actions'] = array('#prefix' => '<div class="container-inline">', '#suffix' => '</div>');
   $form['actions']['submit'] = array('#type' => 'submit', '#value' => isset($options['yes']) ? $options['yes'] : t('Delete'));
-  $form['actions']['cancel'] = array('#value' => $cancel);
+  $form['actions']['cancel'] = array('#value' => $cancel_link);
 
   $form['#theme'] = 'confirm_form';
   return $form;

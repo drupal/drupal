@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.124 2007/06/22 08:32:27 unconed Exp $
+// $Id: path.module,v 1.125 2007/06/24 10:09:52 unconed Exp $
 
 /**
  * @file
@@ -90,13 +90,14 @@ function path_admin_edit($pid = 0) {
 /**
  * Menu callback; confirms deleting an URL alias
  **/
-function path_admin_delete_confirm($pid) {
+function path_admin_delete_confirm(&$form_state, $pid) {
   $path = path_load($pid);
   if (user_access('administer url aliases')) {
     $form['pid'] = array('#type' => 'value', '#value' => $pid);
+    $options = array('cancel' => isset($_GET['destination']) ? $_GET['destination'] : 'admin/build/path');
     $output = confirm_form($form,
   t('Are you sure you want to delete path alias %title?', array('%title' => $path['dst'])),
-   isset($_GET['destination']) ? $_GET['destination'] : 'admin/build/path');
+   'admin/build/path', $options);
   }
   return $output;
 }

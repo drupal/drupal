@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.837 2007/06/24 00:38:40 unconed Exp $
+// $Id: node.module,v 1.838 2007/06/24 10:09:52 unconed Exp $
 
 /**
  * @file
@@ -1743,9 +1743,8 @@ function node_multiple_delete_confirm(&$form_state) {
     array(
       'form' => $form,
       'question' => t('Are you sure you want to delete these items?'),
-      'path' => 'admin/content/node',
-      'yes' => t('Delete all'),
       'destination' => 'admin/content/node',
+      'yes' => t('Delete all'),
     )
   );
 }
@@ -2443,7 +2442,7 @@ function node_delete_confirm(&$form_state, $node) {
   return drupal_delete_confirm(
     array(
       'question' => t('Are you sure you want to delete %title?', array('%title' => $node->title)),
-      'path' => isset($_GET['destination']) ? $_GET['destination'] : 'node/'. $node->nid,
+      'cancel' => isset($_GET['destination']) ? $_GET['destination'] : 'node/'. $node->nid,
       'destination' => isset($_GET['destination']) ? $_GET['destination'] : '<front>',
     )
   );

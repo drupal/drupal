@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.659 2007/06/22 08:46:15 unconed Exp $
+// $Id: common.inc,v 1.660 2007/06/24 10:09:50 unconed Exp $
 
 /**
  * @file
@@ -2912,9 +2912,9 @@ function drupal_delete_add_query($query) {
  *
  * @param $confirm
  *   An associative array with the following key/value pairs:
- *       'form'      => Optional. An array representing the form elements to pass to the confirm form.
- *       'question'  => Optional. The question for the confirm form.
- *       'path'      => Optional. The cancellation path for the confirm form.
+ *       'form'        => Optional. An array representing the form elements to pass to the confirm form.
+ *       'question'    => Optional. The question for the confirm form.
+ *       'destination' => Optional. The destination path for form submissions and form cancellations.
  *
  *       Also, any valid options from the $options argument of confirm_form() may be passed,
  *       and they will be passed through to the confirm form.
@@ -2922,9 +2922,8 @@ function drupal_delete_add_query($query) {
  *               array(
  *                 'form' => $form,
  *                 'question' => t('Are you sure you want to delete these items?'),
- *                 'path' => 'admin/content/node',
- *                 'yes' => t('Delete all'),
  *                 'destination' => 'admin/content/node',
+ *                 'yes' => t('Delete all'),
  *               )
  *             );
  */
@@ -3142,8 +3141,8 @@ function _drupal_delete($op, $id = '') {
         // Generate the confirm form if any packages remain.
         if ($count) {
           $question = isset($args['question']) ? $args['question'] : t('Delete the item?');
-          $path = isset($args['path']) ? $args['path'] : 'node';
-          unset($args['question'], $args['path']);
+          $path = isset($args['destination']) ? $args['destination'] : '<front>';
+          unset($args['question'], $args['destination']);
           $args['name'] = 'delete';
           // Submit handler - triggers execute operation for the API.
           $form['#submit'] = array('delete_confirm_submit');
@@ -3154,12 +3153,12 @@ function _drupal_delete($op, $id = '') {
           drupal_goto($abort_destination);
         }
         // Fallback to cancel path.
-        elseif (isset($args['path'])) {
-          drupal_goto($args['path']);
+        elseif (isset($args['cancel'])) {
+          drupal_goto($args['cancel']);
         }
-        // Last fallback, front page.
+        // Last fallback, submit destination.
         else {
-          drupal_goto('<front>');
+          drupal_goto($path);
         }
       }
     }

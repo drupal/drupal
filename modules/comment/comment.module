@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.555 2007/06/24 00:38:40 unconed Exp $
+// $Id: comment.module,v 1.556 2007/06/24 10:09:52 unconed Exp $
 
 /**
  * @file
@@ -1114,9 +1114,8 @@ function comment_delete(&$form_state, $cid = NULL) {
     return drupal_delete_confirm(
       array(
         'question' => t('Are you sure you want to delete the comment %title?', array('%title' => $comment->subject)),
-        'path' => 'node/'. $comment->nid,
-        'description' => t('Any replies to this comment will be lost. This action cannot be undone.'),
         'destination' => 'node/'. $comment->nid,
+        'description' => t('Any replies to this comment will be lost. This action cannot be undone.'),
       )
     );
   }
@@ -1344,9 +1343,8 @@ function comment_multiple_delete_confirm(&$form_state) {
       array(
         'form' => $form,
         'question' => t('Are you sure you want to delete these comments and all their children?'),
-        'path' => 'admin/content/comment',
-        'yes' => t('Delete all'),
         'destination' => 'admin/content/comment',
+        'yes' => t('Delete all'),
       )
     );
   }
