@@ -485,7 +485,7 @@ function install_select_profile_form(&$form_state, $profiles) {
  * Find all .po files for the current profile.
  */
 function install_find_locales($profilename) {
-  $locales = file_scan_directory('./profiles/'. $profilename .'/po', '\.po$', array('.', '..', 'CVS'), 0, FALSE);
+  $locales = file_scan_directory('./profiles/'. $profilename .'/translations', '\.po$', array('.', '..', 'CVS'), 0, FALSE);
   array_unshift($locales, (object) array('name' => 'en'));
   return $locales;
 }
