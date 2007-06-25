@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.61 2007/06/23 13:22:47 goba Exp $
+// $Id: install.php,v 1.62 2007/06/25 12:44:11 goba Exp $
 
 require_once './includes/install.inc';
 
@@ -485,7 +485,7 @@ function install_select_profile_form(&$form_state, $profiles) {
  * Find all .po files for the current profile.
  */
 function install_find_locales($profilename) {
-  $locales = file_scan_directory('./profiles/'. $profilename .'/po', '\.po$', array('.', '..', 'CVS'), 0, FALSE);
+  $locales = file_scan_directory('./profiles/'. $profilename .'/translations', '\.po$', array('.', '..', 'CVS'), 0, FALSE);
   array_unshift($locales, (object) array('name' => 'en'));
   return $locales;
 }
