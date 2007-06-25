@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.660 2007/06/24 10:09:50 unconed Exp $
+// $Id: common.inc,v 1.661 2007/06/25 12:42:07 goba Exp $
 
 /**
  * @file
@@ -1121,7 +1121,7 @@ function format_date($timestamp, $type = 'medium', $format = '', $timezone = NUL
       $date .= gmdate($c, $timestamp);
     }
     else if ($c == 'r') {
-      $date .= format_date($timestamp - $timezone, 'custom', 'D, d M Y H:i:s O', $timezone);
+      $date .= format_date($timestamp - $timezone, 'custom', 'D, d M Y H:i:s O', $timezone, $langcode);
     }
     else if ($c == 'O') {
       $date .= sprintf('%s%02d%02d', ($timezone < 0 ? '-' : '+'), abs($timezone / 3600), abs($timezone % 3600) / 60);
@@ -2124,7 +2124,7 @@ function drupal_to_js($var) {
 
 /**
  * Return data in JSON format.
- * 
+ *
  * This function should be used for JavaScript callback functions returning
  * data in JSON format. It sets the header for JavaScript output.
  *
