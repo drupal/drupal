@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.662 2007/06/26 20:24:19 goba Exp $
+// $Id: common.inc,v 1.663 2007/06/26 20:30:48 goba Exp $
 
 /**
  * @file
@@ -2934,9 +2934,13 @@ function drupal_delete_confirm($confirm) {
 /**
  * Initiates the deletion of all constructed packages.  Confirmation messages
  * are bypassed, but abort messages are respected.
+ *
+ * @param $destination
+ *   Optional. A destination to go to after all packages are executed.
+ *   Can be either a Drupal path, or an array with the keys 'path', 'query', 'fragment'.
  */
-function drupal_delete_execute() {
-  _drupal_delete('execute');
+function drupal_delete_execute($destination = FALSE) {
+  _drupal_delete('execute', '', array('destination' => $destination));
 }
 
 /**
@@ -3025,7 +3029,6 @@ function _drupal_delete($op, $id = '') {
 
   $confirm = NULL;
   $execute = NULL;
-  $destination = FALSE;
 
   // Process additional arguments.
   $all_args = func_get_args();
@@ -3081,6 +3084,7 @@ function _drupal_delete($op, $id = '') {
     // Execute all packages.
     case 'execute':
       $execute = TRUE;
+      $destination = $args['destination'];
       break;
   }
 

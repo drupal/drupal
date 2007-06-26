@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.838 2007/06/24 10:09:52 unconed Exp $
+// $Id: node.module,v 1.839 2007/06/26 20:30:49 goba Exp $
 
 /**
  * @file
@@ -1846,7 +1846,15 @@ function node_revision_delete($nid, $revision) {
       drupal_delete_add_callback(array('node_revision_delete_post' => array($node, $revision)));
       drupal_delete_add_query('DELETE FROM {node_revisions} WHERE vid = %d', $revision);
       node_invoke_nodeapi($node, 'delete revision');
-      drupal_delete_execute();
+
+      // Back to revisions page if multiple revisions exist.
+      if (db_result(db_query('SELECT COUNT(vid) FROM {node_revisions} WHERE nid = %d', $node->nid)) > 2) {
+        $destination = "node/$node->nid/revisions";
+      }
+      else {
+        $destination = "node/$node->nid";
+      }
+      drupal_delete_execute($destination);
     }
     else {
       drupal_set_message(t('Deletion failed. You tried to delete the current revision.'));
@@ -1864,14 +1872,6 @@ function node_revision_delete_post($node, $revision) {
 
   drupal_set_message(t('Deleted %title revision %revision.', array('%title' => $node->title, '%revision' => $revision)));
   watchdog('content', '@type: deleted %title revision %revision.', array('@type' => t($node->type), '%title' => $node->title, '%revision' => $revision));
-
-
-  if (db_result(db_query('SELECT COUNT(vid) FROM {node_revisions} WHERE nid = %d', $node->nid)) > 1) {
-    drupal_goto("node/$node->nid/revisions");
-  }
-  else {
-    drupal_goto("node/$node->nid");
-  }
 }
 
 /**
