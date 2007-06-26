@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.839 2007/06/26 20:30:49 goba Exp $
+// $Id: node.module,v 1.840 2007/06/26 22:27:25 goba Exp $
 
 /**
  * @file
@@ -849,6 +849,8 @@ function node_perm() {
     if ($type->module == 'node') {
       $name = check_plain($type->type);
       $perms[] = 'create '. $name .' content';
+      $perms[] = 'delete own '. $name .' content';
+      $perms[] = 'delete '. $name .' content';
       $perms[] = 'edit own '. $name .' content';
       $perms[] = 'edit '. $name .' content';
     }
@@ -3084,8 +3086,14 @@ function node_content_access($op, $node) {
     return user_access('create '. $type .' content');
   }
 
-  if ($op == 'update' || $op == 'delete') {
+  if ($op == 'update') {
     if (user_access('edit '. $type .' content') || (user_access('edit own '. $type .' content') && ($user->uid == $node->uid))) {
+      return TRUE;
+    }
+  }
+  
+  if ($op == 'delete') {
+    if (user_access('delete '. $type .' content') || (user_access('delete own '. $type .' content') && ($user->uid == $node->uid))) {
       return TRUE;
     }
   }
