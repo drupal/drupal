@@ -1,5 +1,5 @@
 <?php
-// $Id: database.pgsql.inc,v 1.49 2007/06/05 12:13:20 dries Exp $
+// $Id: database.pgsql.inc,v 1.50 2007/06/26 20:24:19 goba Exp $
 
 /**
  * @file
@@ -513,17 +513,19 @@ function db_type_map() {
 }
 
 /**
- *  Generate SQL to create a new table from a Drupal schema definition.
+ * Generate SQL to create a new table from a Drupal schema definition.
  *
+ * @param $name
+ *   The name of the table to create.
  * @param $table
- *   A valid Drupal table definition array.
+ *   A Schema API table definition array.
  * @return
  *   An array of SQL statements to create the table.
  */
-function db_create_table_sql($table) {
+function db_create_table_sql($name, $table) {
   $sql_fields = array();
-  foreach ($table['fields'] as $name => $field) {
-    $sql_fields[] = _db_create_field_sql($name, _db_process_field($field));
+  foreach ($table['fields'] as $field_name => $field) {
+    $sql_fields[] = _db_create_field_sql($field_name, _db_process_field($field));
   }
 
   $sql_keys = array();
@@ -531,12 +533,12 @@ function db_create_table_sql($table) {
     $sql_keys[] = 'PRIMARY KEY ('. implode(', ', $table['primary key']) .')';
   }
   if (isset($table['unique keys']) && is_array($table['unique keys'])) {
-    foreach ($table['unique keys'] as $keyname => $key) {
-      $sql_keys[] = 'CONSTRAINT {'. $table['name'] .'}_'. $keyname .'_key UNIQUE ('. implode(', ', $key) .')';
+    foreach ($table['unique keys'] as $key_name => $key) {
+      $sql_keys[] = 'CONSTRAINT {'. $name .'}_'. $key_name .'_key UNIQUE ('. implode(', ', $key) .')';
     }
   }
 
-  $sql = "CREATE TABLE {". $table['name'] ."} (\n\t";
+  $sql = "CREATE TABLE {". $name ."} (\n\t";
   $sql .= implode(",\n\t", $sql_fields);
   if (count($sql_keys) > 0) {
     $sql .= ",\n\t";
@@ -546,8 +548,8 @@ function db_create_table_sql($table) {
   $statements[] = $sql;
 
   if (isset($table['indexes']) && is_array($table['indexes'])) {
-    foreach ($table['indexes'] as $keyname => $key) {
-      $statements[] = _db_create_index_sql($table['name'], $keyname, $key);
+    foreach ($table['indexes'] as $key_name => $key) {
+      $statements[] = _db_create_index_sql($name, $key_name, $key);
     }
   }
 

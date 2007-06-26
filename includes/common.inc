@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.661 2007/06/25 12:42:07 goba Exp $
+// $Id: common.inc,v 1.662 2007/06/26 20:24:19 goba Exp $
 
 /**
  * @file
@@ -3300,8 +3300,8 @@ function drupal_install_schema($module) {
   _drupal_initialize_schema($module, $schema);
 
   $ret = array();
-  foreach ($schema as $table) {
-    db_create_table($ret, $table);
+  foreach ($schema as $name => $table) {
+    db_create_table($ret, $name, $table);
   }
 }
 

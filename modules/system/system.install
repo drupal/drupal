@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.123 2007/06/23 11:15:15 goba Exp $
+// $Id: system.install,v 1.124 2007/06/26 20:24:19 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -3288,12 +3288,71 @@ function system_update_6019() {
 function system_update_6020() {
   $ret = array();
 
-  $schema['menu_router'] = drupal_get_schema_unprocessed('system', 'menu_router');
-  $schema['menu_links'] = drupal_get_schema_unprocessed('system', 'menu_links');
-  _drupal_initialize_schema('system', $schema);
-  $ret = array();
-  foreach ($schema as $table) {
-    db_create_table($ret, $table);
+  $schema['menu_router'] = array(
+    'fields' => array(
+      'path'             => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'load_functions'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'to_arg_functions' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'access_callback'  => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'access_arguments' => array('type' => 'text', 'not null' => FALSE),
+      'page_callback'    => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'page_arguments'   => array('type' => 'text', 'not null' => FALSE),
+      'fit'              => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'number_parts'     => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'small'),
+      'tab_parent'       => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'tab_root'         => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'title'            => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'title_callback'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'title_arguments'  => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'type'             => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'block_callback'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'description'      => array('type' => 'text', 'not null' => TRUE),
+      'position'         => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'weight'           => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'file'             => array('type' => 'text', 'size' => 'medium')
+    ),
+    'indexes' => array(
+      'fit'        => array('fit'),
+      'tab_parent' => array('tab_parent')
+    ),
+    'primary key' => array('path'),
+  );
+
+  $schema['menu_links'] = array(
+    'fields' => array(
+      'menu_name'    => array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''),
+      'mlid'         => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
+      'plid'         => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+      'link_path'    => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'router_path'  => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'hidden'       => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'small'),
+      'external'     => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'small'),
+      'has_children' => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'small'),
+      'expanded'     => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'small'),
+      'weight'       => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'depth'        => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'small'),
+      'p1'           => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+      'p2'           => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+      'p3'           => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+      'p4'           => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+      'p5'           => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+      'p6'           => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+      'module'       => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => 'system'),
+      'link_title'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'options'      => array('type' => 'text', 'not null' => FALSE)
+    ),
+    'indexes' => array(
+      'expanded_children' => array('expanded', 'has_children'),
+      'menu_name_path' => array('menu_name', 'link_path'),
+      'plid'=> array('plid'),
+      'parents' => array('p1', 'p2', 'p3', 'p4', 'p5'),
+      'router_path' => array('router_path'),
+    ),
+    'primary key' => array('mlid'),
+  );
+
+  foreach ($schema as $name => $table) {
+    db_create_table($ret, $name, $table);
   }
   return $ret;
 }

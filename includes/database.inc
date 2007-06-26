@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.70 2007/05/30 09:11:21 dries Exp $
+// $Id: database.inc,v 1.71 2007/06/26 20:24:19 goba Exp $
 
 /**
  * @file
@@ -401,11 +401,13 @@ function db_escape_table($string) {
  *
  * @param $ret
  *   Array to which query results will be added.
+ * @param $name
+ *   The name of the table to create.
  * @param $table
- *   A valid and processed table schema definition array.
+ *   A Schema API table definition array.
  */
-function db_create_table(&$ret, $table) {
-  $statements = db_create_table_sql($table);
+function db_create_table(&$ret, $name, $table) {
+  $statements = db_create_table_sql($name, $table);
   foreach ($statements as $statement) {
     $ret[] = update_sql($statement);
   }

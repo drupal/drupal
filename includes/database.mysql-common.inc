@@ -1,6 +1,6 @@
 <?php
 
-// $Id: database.mysql-common.inc,v 1.5 2007/06/05 12:13:20 dries Exp $
+// $Id: database.mysql-common.inc,v 1.6 2007/06/26 20:24:19 goba Exp $
 
 /**
  * @file
@@ -49,24 +49,26 @@ function db_query($query) {
 }
 
 /**
- *  Generate SQL to create a new table from a Drupal schema definition.
+ * Generate SQL to create a new table from a Drupal schema definition.
  *
+ * @param $name
+ *   The name of the table to create.
  * @param $table
- *   A valid Drupal table definition array.
+ *   A Schema API table definition array.
  * @return
  *   An array of SQL statements to create the table.
  */
-function db_create_table_sql($table) {
+function db_create_table_sql($name, $table) {
 
   if (empty($table['mysql_suffix'])) {
     $table['mysql_suffix'] = "/*!40100 DEFAULT CHARACTER SET UTF8 */";
   }
 
-  $sql = "CREATE TABLE {". $table['name'] ."} (\n";
+  $sql = "CREATE TABLE {". $name ."} (\n";
 
   // Add the SQL statement for each field.
-  foreach ($table['fields'] as $name => $field) {
-    $sql .= _db_create_field_sql($name, _db_process_field($field)) .", \n";
+  foreach ($table['fields'] as $field_name => $field) {
+    $sql .= _db_create_field_sql($field_name, _db_process_field($field)) .", \n";
   }
 
   // Process keys & indexes.
