@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.663 2007/06/26 20:30:48 goba Exp $
+// $Id: common.inc,v 1.664 2007/06/26 22:21:08 goba Exp $
 
 /**
  * @file
@@ -2253,6 +2253,7 @@ function _drupal_bootstrap_full() {
   require_once './includes/unicode.inc';
   require_once './includes/image.inc';
   require_once './includes/form.inc';
+  require_once './includes/mail.inc';
   // Set the Drupal custom error handler.
   set_error_handler('drupal_error_handler');
   // Emit the correct charset HTTP header.
@@ -2305,99 +2306,6 @@ function page_set_cache() {
         cache_set($base_root . request_uri(), $data, 'cache_page', CACHE_TEMPORARY, drupal_get_headers());
       }
     }
-  }
-}
-
-/**
- * Send an e-mail message, using Drupal variables and default settings.
- * More information in the <a href="http://php.net/manual/en/function.mail.php">
- * PHP function reference for mail()</a>
- * @param $mailkey
- *   A key to identify the mail sent, for altering.
- * @param $to
- *   The mail address or addresses where the message will be send to. The
- *   formatting of this string must comply with RFC 2822. Some examples are:
- *    user@example.com
- *    user@example.com, anotheruser@example.com
- *    User <user@example.com>
- *    User <user@example.com>, Another User <anotheruser@example.com>
- * @param $subject
- *   Subject of the e-mail to be sent. This must not contain any newline
- *   characters, or the mail may not be sent properly.
- * @param $body
- *   Message to be sent. Drupal will format the correct line endings for you.
- * @param $from
- *   Sets From, Reply-To, Return-Path and Error-To to this value, if given.
- * @param $headers
- *   Associative array containing the headers to add. This is typically
- *   used to add extra headers (From, Cc, and Bcc).
- *   <em>When sending mail, the mail must contain a From header.</em>
- * @return Returns TRUE if the mail was successfully accepted for delivery,
- *   FALSE otherwise.
- */
-function drupal_mail($mailkey, $to, $subject, $body, $from = NULL, $headers = array()) {
-  $defaults = array(
-    'MIME-Version' => '1.0',
-    'Content-Type' => 'text/plain; charset=UTF-8; format=flowed',
-    'Content-Transfer-Encoding' => '8Bit',
-    'X-Mailer' => 'Drupal'
-  );
-  // To prevent e-mail from looking like spam, the addresses in the Sender and
-  // Return-Path headers should have a domain authorized to use the originating
-  // SMTP server.  Errors-To is redundant, but shouldn't hurt.
-  $default_from = variable_get('site_mail', ini_get('sendmail_from'));
-  if ($default_from) {
-    $defaults['From'] = $defaults['Reply-To'] = $defaults['Sender'] = $defaults['Return-Path'] = $defaults['Errors-To'] = $default_from;
-  }
-  if ($from) {
-    $defaults['From'] = $defaults['Reply-To'] = $from;
-  }
-  $headers = array_merge($defaults, $headers);
-
-  // Bundle up the variables into a structured array for altering.
-  $message = array('#mail_id' => $mailkey, '#to' => $to, '#subject' => $subject, '#body' => $body, '#from' => $from, '#headers' => $headers);
-  drupal_alter('mail', $message);
-  $mailkey = $message['#mail_id'];
-  $to = $message['#to'];
-  $subject = $message['#subject'];
-  $body = $message['#body'];
-  $from = $message['#from'];
-  $headers = $message['#headers'];
-
-  // Allow for custom mail backend
-  if (variable_get('smtp_library', '') && file_exists(variable_get('smtp_library', ''))) {
-    include_once './' . variable_get('smtp_library', '');
-    return drupal_mail_wrapper($mailkey, $to, $subject, $body, $from, $headers);
-  }
-  else {
-    // Note: if you are having problems with sending mail, or mails look wrong
-    // when they are received you may have to modify the str_replace to suit
-    // your systems.
-    //  - \r\n will work under dos and windows.
-    //  - \n will work for linux, unix and BSDs.
-    //  - \r will work for macs.
-    //
-    // According to RFC 2646, it's quite rude to not wrap your e-mails:
-    //
-    // "The Text/Plain media type is the lowest common denominator of
-    // Internet e-mail, with lines of no more than 997 characters (by
-    // convention usually no more than 80), and where the CRLF sequence
-    // represents a line break [MIME-IMT]."
-    //
-    // CRLF === \r\n
-    //
-    // http://www.rfc-editor.org/rfc/rfc2646.txt
-
-    $mimeheaders = array();
-    foreach ($headers as $name => $value) {
-      $mimeheaders[] = $name .': '. mime_header_encode($value);
-    }
-    return mail(
-      $to,
-      mime_header_encode($subject),
-      str_replace("\r", '', $body),
-      join("\n", $mimeheaders)
-    );
   }
 }
 

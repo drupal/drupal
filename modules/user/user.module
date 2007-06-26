@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.807 2007/06/24 10:09:53 unconed Exp $
+// $Id: user.module,v 1.808 2007/06/26 22:21:08 goba Exp $
 
 /**
  * @file
@@ -3157,7 +3157,7 @@ function _user_mail_notify($op, $account, $password = NULL) {
     $from = variable_get('site_mail', ini_get('sendmail_from'));
     $variables = user_mail_tokens($account, $password);
     $subject = _user_mail_text($op .'_subject', $variables);
-    $body = _user_mail_text($op .'_body', $variables);
+    $body = drupal_wrap_mail(_user_mail_text($op .'_body', $variables));
     $result = drupal_mail($mail_id, $account->mail, $subject, $body, $from);
     if ($op == 'register_pending_approval') {
       // If a user registered requiring admin approval, notify the admin, too.
