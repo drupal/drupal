@@ -3300,8 +3300,8 @@ function drupal_install_schema($module) {
   _drupal_initialize_schema($module, $schema);
 
   $ret = array();
-  foreach ($schema as $table) {
-    db_create_table($ret, $table);
+  foreach ($schema as $name => $table) {
+    db_create_table($ret, $name, $table);
   }
 }
 

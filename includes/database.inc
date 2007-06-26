@@ -401,11 +401,13 @@ function db_escape_table($string) {
  *
  * @param $ret
  *   Array to which query results will be added.
+ * @param $name
+ *   The name of the table to create.
  * @param $table
- *   A valid and processed table schema definition array.
+ *   A Schema API table definition array.
  */
-function db_create_table(&$ret, $table) {
-  $statements = db_create_table_sql($table);
+function db_create_table(&$ret, $name, $table) {
+  $statements = db_create_table_sql($name, $table);
   foreach ($statements as $statement) {
     $ret[] = update_sql($statement);
   }
