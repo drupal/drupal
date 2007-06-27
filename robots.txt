@@ -1,4 +1,4 @@
-# $Id: robots.txt,v 1.8 2007/03/25 20:05:19 dries Exp $
+# $Id: robots.txt,v 1.9 2007/06/27 22:37:44 goba Exp $
 #
 # robots.txt
 #
@@ -43,7 +43,6 @@ Disallow: /LICENSE.txt
 Disallow: /UPGRADE.txt
 # Paths (clean URLs)
 Disallow: /admin/
-Disallow: /aggregator/
 Disallow: /comment/reply/
 Disallow: /contact/
 Disallow: /logout/
@@ -54,7 +53,6 @@ Disallow: /user/password/
 Disallow: /user/login/
 # Paths (no clean URLs)
 Disallow: /?q=admin/
-Disallow: /?q=aggregator/
 Disallow: /?q=comment/reply/
 Disallow: /?q=contact/
 Disallow: /?q=logout/
