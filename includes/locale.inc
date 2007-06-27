@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.142 2007/06/23 20:45:36 goba Exp $
+// $Id: locale.inc,v 1.143 2007/06/27 08:40:58 goba Exp $
 
 /**
  * @file
@@ -1602,7 +1602,6 @@ function _locale_update_js_files() {
   // when new files are added for example in the footer.
   $javascript = drupal_add_js(NULL, NULL, NULL);
   $files = FALSE;
-  $parsed = array();
 
   foreach ($javascript as $scope) {
     foreach ($scope as $type => $data) {
