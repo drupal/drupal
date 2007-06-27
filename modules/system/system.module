@@ -1091,6 +1091,11 @@ function system_theme_data() {
   // Read info files for each theme
   foreach ($themes as $key => $theme) {
     $themes[$key]->info = drupal_parse_info_file($theme->filename) + $defaults;
+
+    // Invoke hook_system_info_alter() to give installed modules a chance to
+    // modify the data in the .info files if necessary.
+    drupal_alter('system_info', $themes[$key]->info, $themes[$key]);
+
     if (!empty($themes[$key]->info['base theme'])) {
       $sub_themes[] = $key;
     }

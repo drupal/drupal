@@ -123,6 +123,10 @@ function module_rebuild_cache() {
     // Merge in defaults and save.
     $files[$filename]->info = $file->info + $defaults;
 
+    // Invoke hook_system_info_alter() to give installed modules a chance to
+    // modify the data in the .info files if necessary.
+    drupal_alter('system_info', $files[$filename]->info, $files[$filename]);
+
     // Log the critical hooks implemented by this module.
     $bootstrap = 0;
     foreach (bootstrap_hooks() as $hook) {
