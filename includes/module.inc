@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.103 2007/06/27 17:54:49 goba Exp $
+// $Id: module.inc,v 1.104 2007/06/27 21:59:33 goba Exp $
 
 /**
  * @file
@@ -122,6 +122,10 @@ function module_rebuild_cache() {
     }
     // Merge in defaults and save.
     $files[$filename]->info = $file->info + $defaults;
+
+    // Invoke hook_system_info_alter() to give installed modules a chance to
+    // modify the data in the .info files if necessary.
+    drupal_alter('system_info', $files[$filename]->info, $files[$filename]);
 
     // Log the critical hooks implemented by this module.
     $bootstrap = 0;
