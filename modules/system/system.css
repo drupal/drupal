@@ -1,4 +1,4 @@
-/* $Id: system.css,v 1.31 2007/06/08 06:04:15 dries Exp $ */
+/* $Id: system.css,v 1.32 2007/06/27 17:54:49 goba Exp $ */
 
 /*
 ** HTML elements
@@ -467,6 +467,13 @@ html.js .js-hide {
 ** Styles for the system modules page (admin/build/modules)
 */
 #system-modules div.incompatible {
+  font-weight: bold;
+}
+
+/*
+** Styles for the system themes page (admin/build/themes)
+*/
+#system-themes-form div.incompatible {
   font-weight: bold;
 }
 

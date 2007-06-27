@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.225 2007/06/08 05:50:53 dries Exp $
+// $Id: update.php,v 1.226 2007/06/27 17:54:49 goba Exp $
 
 /**
  * @file
@@ -722,7 +722,8 @@ function update_fix_compatibility() {
     }
     if (!isset($file)
         || !isset($file->info['core'])
-        || $file->info['core'] != DRUPAL_CORE_COMPATIBILITY) {
+        || $file->info['core'] != DRUPAL_CORE_COMPATIBILITY
+        || version_compare(phpversion(), $file->info['php']) < 0) {
       $incompatible[] = $name;
     }
   }

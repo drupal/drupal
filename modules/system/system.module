@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.496 2007/06/24 10:09:53 unconed Exp $
+// $Id: system.module,v 1.497 2007/06/27 17:54:49 goba Exp $
 
 /**
  * @file
@@ -1061,6 +1061,7 @@ function system_theme_default() {
     'stylesheet' => 'style.css',
     'script' => 'script.js',
     'screenshot' => 'screenshot.png',
+    'php' => DRUPAL_MINIMUM_PHP,
   );
 }
 
@@ -1324,6 +1325,8 @@ function system_themes_form() {
   $themes = system_theme_data();
   ksort($themes);
   $status = array();
+  $incompatible_core = array();
+  $incompatible_php = array();
 
   foreach ($themes as $theme) {
     $screenshot = NULL;
@@ -1338,25 +1341,48 @@ function system_themes_form() {
     $screenshot = $screenshot ? theme('image', $screenshot, t('Screenshot for %theme theme', array('%theme' => $theme->info['name'])), '', array('class' => 'screenshot'), FALSE) : t('no screenshot');
 
     $form[$theme->name]['screenshot'] = array('#value' => $screenshot);
-    $form[$theme->name]['info'] = array('#type' => 'value', '#value' => $theme->info);
+    $form[$theme->name]['info'] = array(
+      '#type' => 'value',
+      '#value' => $theme->info,
+    );
     $options[$theme->name] = '';
     if (!empty($theme->status)) {
       $status[] = $theme->name;
-    }
-    if (!empty($theme->status)) {
       $form[$theme->name]['operations'] = array('#value' => l(t('configure'), 'admin/build/themes/settings/'. $theme->name) );
     }
     else {
       // Dummy element for drupal_render. Cleaner than adding a check in the theme function.
       $form[$theme->name]['operations'] = array();
+      // Ensure this theme is compatible with this version of core.
+      if (!isset($theme->info['core']) || $theme->info['core'] != DRUPAL_CORE_COMPATIBILITY) {
+        $incompatible_core[] = $theme->name;
+      }
+      if (version_compare(phpversion(), $theme->info['php']) < 0) {
+        $incompatible_php[$theme->name] = $theme->info['php'];
+      }
     }
   }
 
-  $form['status'] = array('#type' => 'checkboxes', '#options' => $options, '#default_value' => $status);
-  $form['theme_default'] = array('#type' => 'radios', '#options' => $options, '#default_value' => variable_get('theme_default', 'garland'));
-  $form['buttons']['submit'] = array('#type' => 'submit', '#value' => t('Save configuration') );
-  $form['buttons']['reset'] = array('#type' => 'submit', '#value' => t('Reset to defaults') );
-
+  $form['status'] = array(
+    '#type' => 'checkboxes',
+    '#options' => $options,
+    '#default_value' => $status,
+    '#incompatible_themes_core' => drupal_map_assoc($incompatible_core),
+    '#incompatible_themes_php' => $incompatible_php,
+  );
+  $form['theme_default'] = array(
+    '#type' => 'radios',
+    '#options' => $options,
+    '#default_value' => variable_get('theme_default', 'garland'),
+  );
+  $form['buttons']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save configuration'),
+  );
+  $form['buttons']['reset'] = array(
+    '#type' => 'submit',
+    '#value' => t('Reset to defaults'),
+  );
   return $form;
 }
 
@@ -1370,15 +1396,35 @@ function theme_system_themes_form($form) {
     // Fetch info
     $info = $form[$key]['info']['#value'];
 
+    $description = $info['description'];
+    // Make sure it is compatible and render the checkbox if so.
+    if (isset($form['status']['#incompatible_themes_core'][$key])) {
+      unset($form['status'][$key]);
+      $status = theme('image', 'misc/watchdog-error.png', t('incompatible'), t('Incompatible with this version of Drupal core'));
+      $description .= '<div class="incompatible">'. t('This version is incompatible with the !core_version version of Drupal core.', array('!core_version' => VERSION)) .'</div>';
+    }
+    elseif (isset($form['status']['#incompatible_themes_php'][$key])) {
+      unset($form['status'][$key]);
+      $status = theme('image', 'misc/watchdog-error.png', t('incompatible'), t('Incompatible with this version of PHP'));
+      $php_required = $form['status']['#incompatible_themes_php'][$key];
+      if (substr_count($php_required, '.') < 2) {
+        $php_required .= '.*';
+      }
+      $description .= '<div class="incompatible">'. t('This theme requires PHP version @php_required and is incompatible with PHP version !php_version.', array('@php_required' => $php_required, '!php_version' => phpversion())) .'</div>';
+    }
+    else {
+      $status = drupal_render($form['status'][$key]);
+    }
+
     // Style theme info
-    $theme = '<div class="theme-info"><h2>'. $info['name'] .'</h2><div class="description">'. $info['description'] .'</div></div>';
+    $theme = '<div class="theme-info"><h2>'. $info['name'] .'</h2><div class="description">'. $description .'</div></div>';
 
     // Build rows
     $row = array();
     $row[] = drupal_render($form[$key]['screenshot']);
     $row[] = $theme;
     $row[] = $info['version'];
-    $row[] = array('data' => drupal_render($form['status'][$key]), 'align' => 'center');
+    $row[] = array('data' => $status, 'align' => 'center');
     if ($form['theme_default']) {
       $row[] = array('data' => drupal_render($form['theme_default'][$key]), 'align' => 'center');
       $row[] = array('data' => drupal_render($form[$key]['operations']), 'align' => 'center');
@@ -1476,7 +1522,8 @@ function system_modules($form_state = array()) {
   // Array for disabling checkboxes in callback system_module_disable.
   $disabled = array();
   $throttle = array();
-  $incompatible = array();
+  $incompatible_core = array();
+  $incompatible_php = array();
   // Traverse the files retrieved and build the form.
   foreach ($files as $filename => $file) {
     $form['name'][$filename] = array('#value' => $file->info['name']);
@@ -1485,7 +1532,14 @@ function system_modules($form_state = array()) {
     $options[$filename] = '';
     // Ensure this module is compatible with this version of core.
     if (!isset($file->info['core']) || $file->info['core'] != DRUPAL_CORE_COMPATIBILITY) {
-      $incompatible[] = $file->name;
+      $incompatible_core[] = $file->name;
+      $disabled[] = $file->name;
+      // Nothing else in this loop matters, so move to the next module.
+      continue;
+    }
+    // Ensure this module is compatible with the currently installed version of PHP.
+    if (version_compare(phpversion(), $file->info['php']) < 0) {
+      $incompatible_php[$file->name] = $file->info['php'];
       $disabled[] = $file->name;
       // Nothing else in this loop matters, so move to the next module.
       continue;
@@ -1567,7 +1621,8 @@ function system_modules($form_state = array()) {
       'system_modules_disable',
     ),
     '#disabled_modules' => $disabled,
-    '#incompatible_modules' => drupal_map_assoc($incompatible),
+    '#incompatible_modules_core' => drupal_map_assoc($incompatible_core),
+    '#incompatible_modules_php' => $incompatible_php,
   );
 
   // Handle throttle checkboxes, including overriding the
@@ -1816,10 +1871,19 @@ function theme_system_modules($form) {
     foreach ($modules as $key => $module) {
       $row = array();
       $description = drupal_render($form['description'][$key]);
-      if (isset($form['status']['#incompatible_modules'][$key])) {
+      if (isset($form['status']['#incompatible_modules_core'][$key])) {
         unset($form['status'][$key]);
         $status = theme('image', 'misc/watchdog-error.png', t('incompatible'), t('Incompatible with this version of Drupal core'));
         $description .= '<div class="incompatible">'. t('This version is incompatible with the !core_version version of Drupal core.', array('!core_version' => VERSION)) .'</div>';
+      }
+      elseif (isset($form['status']['#incompatible_modules_php'][$key])) {
+        unset($form['status'][$key]);
+        $status = theme('image', 'misc/watchdog-error.png', t('incompatible'), t('Incompatible with this version of PHP'));
+        $php_required = $form['status']['#incompatible_modules_php'][$key];
+        if (substr_count($php_required, '.') < 2) {
+          $php_required .= '.*';
+        }
+        $description .= '<div class="incompatible">'. t('This module requires PHP version @php_required and is incompatible with PHP version !php_version.', array('@php_required' => $php_required, '!php_version' => phpversion())) .'</div>';
       }
       else {
         $status = drupal_render($form['status'][$key]);

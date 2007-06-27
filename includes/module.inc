@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.102 2007/05/25 12:46:43 dries Exp $
+// $Id: module.inc,v 1.103 2007/06/27 17:54:49 goba Exp $
 
 /**
  * @file
@@ -107,7 +107,8 @@ function module_rebuild_cache() {
     'dependencies' => array(),
     'dependents' => array(),
     'description' => '',
-    'version' => NULL
+    'version' => NULL,
+    'php' => DRUPAL_MINIMUM_PHP,
   );
 
   foreach ($files as $filename => $file) {
