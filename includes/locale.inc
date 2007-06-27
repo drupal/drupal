@@ -1602,7 +1602,6 @@ function _locale_update_js_files() {
   // when new files are added for example in the footer.
   $javascript = drupal_add_js(NULL, NULL, NULL);
   $files = FALSE;
-  $parsed = array();
 
   foreach ($javascript as $scope) {
     foreach ($scope as $type => $data) {
