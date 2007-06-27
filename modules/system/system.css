@@ -471,6 +471,13 @@ html.js .js-hide {
 }
 
 /*
+** Styles for the system themes page (admin/build/themes)
+*/
+#system-themes-form div.incompatible {
+  font-weight: bold;
+}
+
+/*
 ** Password strength indicator
 */
 span.password-strength {

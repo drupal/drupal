@@ -722,7 +722,8 @@ function update_fix_compatibility() {
     }
     if (!isset($file)
         || !isset($file->info['core'])
-        || $file->info['core'] != DRUPAL_CORE_COMPATIBILITY) {
+        || $file->info['core'] != DRUPAL_CORE_COMPATIBILITY
+        || version_compare(phpversion(), $file->info['php']) < 0) {
       $incompatible[] = $name;
     }
   }
