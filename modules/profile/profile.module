@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.209 2007/06/22 08:46:15 unconed Exp $
+// $Id: profile.module,v 1.210 2007/06/28 00:29:05 goba Exp $
 
 /**
  * @file
@@ -462,8 +462,8 @@ function profile_browse() {
       drupal_not_found();
       return;
     }
-    // Do not allow browsing of private fields by non-admins.
-    if (!user_access('administer users') && $field->visibility == PROFILE_PRIVATE) {
+    // Do not allow browsing of private and hidden fields by non-admins.
+    if (!user_access('administer users') && ($field->visibility == PROFILE_PRIVATE || $field->visibility == PROFILE_HIDDEN)) {
        drupal_access_denied();
        return;
     }
