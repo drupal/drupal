@@ -699,6 +699,7 @@ function form_builder($form_id, $form, &$form_state) {
   if (isset($form['#input']) && $form['#input']) {
     _form_builder_handle_input_element($form_id, $form, $form_state);
   }
+  $form['#defaults_loaded'] = TRUE;
 
   // We start off assuming all form elements are in the correct order.
   $form['#sorted'] = TRUE;

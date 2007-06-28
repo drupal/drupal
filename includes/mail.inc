@@ -277,7 +277,7 @@ function drupal_html_to_text($string, $allowed_tags = NULL) {
     }
     // Process blocks of text.
     else {
-      // Convert inline HTML text to plain text. 
+      // Convert inline HTML text to plain text.
       $value = trim(preg_replace('/\s+/', ' ', decode_entities($value)));
       if (strlen($value)) {
         $chunk = $value;
@@ -295,7 +295,7 @@ function drupal_html_to_text($string, $allowed_tags = NULL) {
       // Remove non-quotation markers from indentation.
       $indent = array_map('_drupal_html_to_text_clean', $indent);
     }
-    
+
     $tag = !$tag;
   }
 

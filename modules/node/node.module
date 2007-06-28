@@ -3091,7 +3091,7 @@ function node_content_access($op, $node) {
       return TRUE;
     }
   }
-  
+
   if ($op == 'delete') {
     if (user_access('delete '. $type .' content') || (user_access('delete own '. $type .' content') && ($user->uid == $node->uid))) {
       return TRUE;
