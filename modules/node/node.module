@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.841 2007/06/28 00:48:26 goba Exp $
+// $Id: node.module,v 1.842 2007/06/28 07:48:40 dries Exp $
 
 /**
  * @file
@@ -3091,7 +3091,7 @@ function node_content_access($op, $node) {
       return TRUE;
     }
   }
-  
+
   if ($op == 'delete') {
     if (user_access('delete '. $type .' content') || (user_access('delete own '. $type .' content') && ($user->uid == $node->uid))) {
       return TRUE;

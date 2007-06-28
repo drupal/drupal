@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.207 2007/06/22 05:44:20 unconed Exp $
+// $Id: form.inc,v 1.208 2007/06/28 07:48:40 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -699,6 +699,7 @@ function form_builder($form_id, $form, &$form_state) {
   if (isset($form['#input']) && $form['#input']) {
     _form_builder_handle_input_element($form_id, $form, $form_state);
   }
+  $form['#defaults_loaded'] = TRUE;
 
   // We start off assuming all form elements are in the correct order.
   $form['#sorted'] = TRUE;

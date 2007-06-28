@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.808 2007/06/26 22:21:08 goba Exp $
+// $Id: user.module,v 1.809 2007/06/28 07:48:41 dries Exp $
 
 /**
  * @file
@@ -522,13 +522,13 @@ function user_search($op = 'search', $keys = NULL, $skip_access_check = FALSE) {
           // Administrators can also search in the otherwise private email field.
           $result = pager_query("SELECT name, uid, mail FROM {users} WHERE LOWER(name) LIKE LOWER('%%%s%%') OR LOWER(mail) LIKE LOWER('%%%s%%')", 15, 0, NULL, $keys, $keys);
           while ($account = db_fetch_object($result)) {
-            $find[] = array('title' => $account->name .' ('. $account->mail .')', 'link' => url('user/'. $account->uid, array('absolute' => TRUE)));  
+            $find[] = array('title' => $account->name .' ('. $account->mail .')', 'link' => url('user/'. $account->uid, array('absolute' => TRUE)));
           }
         }
         else {
-          $result = pager_query("SELECT name, uid FROM {users} WHERE LOWER(name) LIKE LOWER('%%%s%%')", 15, 0, NULL, $keys); 
+          $result = pager_query("SELECT name, uid FROM {users} WHERE LOWER(name) LIKE LOWER('%%%s%%')", 15, 0, NULL, $keys);
           while ($account = db_fetch_object($result)) {
-            $find[] = array('title' => $account->name, 'link' => url('user/'. $account->uid, array('absolute' => TRUE)));  
+            $find[] = array('title' => $account->name, 'link' => url('user/'. $account->uid, array('absolute' => TRUE)));
           }
         }
         return $find;

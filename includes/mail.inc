@@ -1,5 +1,5 @@
 <?php
-// $Id: mail.inc,v 1.1 2007/06/26 22:21:08 goba Exp $
+// $Id: mail.inc,v 1.2 2007/06/28 07:48:40 dries Exp $
 
 /**
  * Send an e-mail message, using Drupal variables and default settings.
@@ -277,7 +277,7 @@ function drupal_html_to_text($string, $allowed_tags = NULL) {
     }
     // Process blocks of text.
     else {
-      // Convert inline HTML text to plain text. 
+      // Convert inline HTML text to plain text.
       $value = trim(preg_replace('/\s+/', ' ', decode_entities($value)));
       if (strlen($value)) {
         $chunk = $value;
@@ -295,7 +295,7 @@ function drupal_html_to_text($string, $allowed_tags = NULL) {
       // Remove non-quotation markers from indentation.
       $indent = array_map('_drupal_html_to_text_clean', $indent);
     }
-    
+
     $tag = !$tag;
   }
 

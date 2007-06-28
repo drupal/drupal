@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.143 2007/06/27 08:40:58 goba Exp $
+// $Id: locale.inc,v 1.144 2007/06/28 07:48:40 dries Exp $
 
 /**
  * @file
@@ -1726,7 +1726,7 @@ function _locale_export_get_strings($language = NULL, $group = 'default') {
 
 /**
  * Generates the PO(T) file contents for given strings.
- * 
+ *
  * @param $language
  *   Language object to generate the output for, or NULL if generating
  *   translation template.
@@ -1739,7 +1739,7 @@ function _locale_export_get_strings($language = NULL, $group = 'default') {
  */
 function _locale_export_po_generate($language = NULL, $strings = array(), $header = NULL) {
   global $user;
-  
+
   if (!isset($header)) {
     if (isset($language)) {
       $header = '# '. $language->name .' translation of '. variable_get('site_name', 'Drupal') ."\n";
@@ -1776,9 +1776,9 @@ function _locale_export_po_generate($language = NULL, $strings = array(), $heade
       $header .= "\"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\\n\"\n";
     }
   }
-  
+
   $output = $header ."\n";
-  
+
   foreach ($strings as $lid => $string) {
     // Only process non-children, children are output below their parent.
     if (!isset($string['child'])) {

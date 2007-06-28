@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.665 2007/06/28 00:55:10 goba Exp $
+// $Id: common.inc,v 1.666 2007/06/28 07:48:40 dries Exp $
 
 /**
  * @file
@@ -403,6 +403,7 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
 
   // Parse the URL, and make sure we can handle the schema.
   $uri = parse_url($url);
+
   switch ($uri['scheme']) {
     case 'http':
       $port = isset($uri['port']) ? $uri['port'] : 80;
@@ -2483,6 +2484,25 @@ function drupal_render(&$elements) {
     return NULL;
   }
 
+  // If the default values for this element haven't been loaded yet, populate
+  // them.
+  if (!isset($elements['#defaults_loaded']) || !$elements['#defaults_loaded']) {
+    if ((!empty($elements['#type'])) && ($info = _element_info($elements['#type']))) {
+      $elements += $info;
+    }
+  }
+
+  // Make any final changes to the element before it is rendered. This means
+  // that the $element or the chilren can be altered or corrected before the
+  // element is rendered into the final text.
+  if (isset($elements['#pre_render'])) {
+    foreach ($elements['#pre_render'] as $function) {
+      if (function_exists($function)) {
+        $elements = $function($elements);
+      }
+    }
+  }
+
   $content = '';
   // Either the elements did not go through form_builder or one of the children
   // has a #weight.
@@ -2534,6 +2554,16 @@ function drupal_render(&$elements) {
   }
 
   if (isset($content) && $content !== '') {
+    // Filter the outputed content and make any last changes before the
+    // content is sent to the browser. The changes are made on $content
+    // which allows the output'ed text to be filtered.
+    if (isset($elements['#post_render'])) {
+      foreach ($elements['#post_render'] as $function) {
+        if (function_exists($function)) {
+          $content = $function($content, $elements);
+        }
+      }
+    }
     $prefix = isset($elements['#prefix']) ? $elements['#prefix'] : '';
     $suffix = isset($elements['#suffix']) ? $elements['#suffix'] : '';
     return $prefix . $content . $suffix;
@@ -2835,7 +2865,7 @@ function drupal_delete_add_query($query) {
  *       'question'    => Optional. The question for the confirm form.
  *       'destination' => Optional. The destination path for form submissions and form cancellations.
  *
- *   Also, any valid options from the $options argument of confirm_form() may 
+ *   Also, any valid options from the $options argument of confirm_form() may
  *   be passed, and they will be passed through to the confirm form.
  */
 function drupal_delete_confirm($confirm) {
@@ -3450,4 +3480,3 @@ function watchdog_severity_levels() {
     WATCHDOG_DEBUG    => t('debug'),
   );
 }
-
