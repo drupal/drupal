@@ -1153,24 +1153,25 @@ function theme_table($header, $rows, $attributes = array(), $caption = NULL) {
       else {
         $cells = $row;
       }
+      if (count($cells)) {
+        // Add odd/even class
+        $class = $flip[$class];
+        if (isset($attributes['class'])) {
+          $attributes['class'] .= ' '. $class;
+        }
+        else {
+          $attributes['class'] = $class;
+        }
 
-      // Add odd/even class
-      $class = $flip[$class];
-      if (isset($attributes['class'])) {
-        $attributes['class'] .= ' '. $class;
+        // Build row
+        $output .= ' <tr'. drupal_attributes($attributes) .'>';
+        $i = 0;
+        foreach ($cells as $cell) {
+          $cell = tablesort_cell($cell, $header, $ts, $i++);
+          $output .= _theme_table_cell($cell);
+        }
+        $output .= " </tr>\n";
       }
-      else {
-        $attributes['class'] = $class;
-      }
-
-      // Build row
-      $output .= ' <tr'. drupal_attributes($attributes) .'>';
-      $i = 0;
-      foreach ($cells as $cell) {
-        $cell = tablesort_cell($cell, $header, $ts, $i++);
-        $output .= _theme_table_cell($cell);
-      }
-      $output .= " </tr>\n";
     }
   }
 
