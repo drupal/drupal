@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.424 2007/06/22 05:44:20 unconed Exp $
+// $Id: book.module,v 1.425 2007/06/28 08:56:28 dries Exp $
 
 /**
  * @file
@@ -681,6 +681,7 @@ function book_export($type, $nid) {
 */
 function book_export_html($nid, $depth) {
   if (user_access('see printer-friendly version')) {
+    $content = '';
     $node = node_load($nid);
     for ($i = 1; $i < $depth; $i++) {
       $content .= "<div class=\"section-$i\">\n";
@@ -709,7 +710,7 @@ function theme_book_export_html($title, $content) {
   $html .= '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />';
   $html .= '<base href="'. $base_url .'/" />'."\n";
   $html .= "<style type=\"text/css\">\n@import url(misc/print.css);\n";
-  if ($language->direction == LANGUAGE_RTL) {
+  if (defined('LANGUAGE_RTL') && $language->direction == LANGUAGE_RTL) {
     $html .= "@import url(misc/print-rtl.css);\n";
   }
   $html .= "</style>\n";
@@ -738,6 +739,7 @@ function theme_book_export_html($title, $content) {
  *  - the output generated in visiting each node
  */
 function book_recurse($nid = 0, $depth = 1, $visit_pre, $visit_post) {
+  $output = '';
   $result = db_query(db_rewrite_sql('SELECT n.nid, n.title, b.weight FROM {node} n INNER JOIN {book} b ON n.vid = b.vid WHERE n.status = 1 AND n.nid = %d ORDER BY b.weight, n.title'), $nid);
   while ($page = db_fetch_object($result)) {
     // Load the node:
@@ -802,7 +804,7 @@ function book_node_visitor_html_pre($node, $depth, $nid) {
   // Allow modules to make their own additions to the node.
   node_invoke_nodeapi($node, 'print');
 
-  $output .= "<div id=\"node-". $node->nid ."\" class=\"section-$depth\">\n";
+  $output = "<div id=\"node-". $node->nid ."\" class=\"section-$depth\">\n";
   $output .= "<h1 class=\"book-heading\">". check_plain($node->title) ."</h1>\n";
   $output .= drupal_render($node->content);
 
