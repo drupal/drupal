@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.266 2007/06/22 08:32:26 unconed Exp $
+// $Id: block.module,v 1.267 2007/06/28 00:39:47 goba Exp $
 
 /**
  * @file
@@ -217,7 +217,7 @@ function _block_rehash() {
 /**
  * Generate main block administration form.
  */
-function block_admin_display($theme = NULL) {
+function block_admin_display(&$form_state, $theme = NULL) {
   global $theme_key, $custom_theme;
 
   // Add CSS
@@ -379,7 +379,7 @@ function block_box_get($bid) {
 /**
  * Menu callback; displays the block configuration form.
  */
-function block_admin_configure($module = NULL, $delta = 0) {
+function block_admin_configure(&$form_state, $module = NULL, $delta = 0) {
 
   $form['module'] = array('#type' => 'value', '#value' => $module);
   $form['delta'] = array('#type' => 'value', '#value' => $delta);
@@ -524,8 +524,8 @@ function block_admin_configure_submit($form, &$form_state) {
 /**
  * Menu callback: display the custom block addition form.
  */
-function block_add_block_form() {
-  return block_admin_configure('block', NULL);
+function block_add_block_form(&$form_state) {
+  return block_admin_configure($form_state, 'block', NULL);
 }
 
 function block_add_block_form_validate($form, &$form_state) {
@@ -561,7 +561,7 @@ function block_add_block_form_submit($form, &$form_state) {
 /**
  * Menu callback; confirm deletion of custom blocks.
  */
-function block_box_delete($bid = 0) {
+function block_box_delete(&$form_state, $bid = 0) {
   $box = block_box_get($bid);
   $form['info'] = array('#type' => 'hidden', '#value' => $box['info'] ? $box['info'] : $box['title']);
   $form['bid'] = array('#type' => 'hidden', '#value' => $bid);
