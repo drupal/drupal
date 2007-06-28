@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.840 2007/06/26 22:27:25 goba Exp $
+// $Id: node.module,v 1.841 2007/06/28 00:48:26 goba Exp $
 
 /**
  * @file
@@ -1146,7 +1146,7 @@ function node_menu() {
     'position' => 'left',
     'weight' => -10,
     'page callback' => 'system_admin_menu_block_page',
-    'access arguments' => array('administer site configuration'),
+    'access arguments' => array('administer nodes'),
     'file' => 'system.admin.inc',
     'file path' => drupal_get_path('module', 'system'),
   );

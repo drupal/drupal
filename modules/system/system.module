@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.498 2007/06/27 21:59:33 goba Exp $
+// $Id: system.module,v 1.499 2007/06/28 00:48:26 goba Exp $
 
 /**
  * @file
@@ -284,6 +284,7 @@ function system_menu() {
     'description' => 'Configure the number of items per feed and whether feeds should be titles/teasers/full-text.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_rss_feeds_settings'),
+    'access arguments' => array('administer site configuration'),
   );
   $items['admin/settings/date-time'] = array(
     'title' => 'Date and time',
