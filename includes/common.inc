@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.664 2007/06/26 22:21:08 goba Exp $
+// $Id: common.inc,v 1.665 2007/06/28 00:55:10 goba Exp $
 
 /**
  * @file
@@ -2818,22 +2818,25 @@ function drupal_delete_add_query($query) {
  * for deletion, and returns a confirm form array containing any injected messages
  * which can be used to print a confirmation screen.
  *
+ * @code
+ *   drupal_delete_confirm(
+ *     array(
+ *       'form' => $form,
+ *       'question' => t('Are you sure you want to delete these items?'),
+ *       'destination' => 'admin/content/node',
+ *       'yes' => t('Delete all'),
+ *     )
+ *   );
+ * @endcode
+ *
  * @param $confirm
  *   An associative array with the following key/value pairs:
  *       'form'        => Optional. An array representing the form elements to pass to the confirm form.
  *       'question'    => Optional. The question for the confirm form.
  *       'destination' => Optional. The destination path for form submissions and form cancellations.
  *
- *       Also, any valid options from the $options argument of confirm_form() may be passed,
- *       and they will be passed through to the confirm form.
- *         ex. drupal_delete_confirm(
- *               array(
- *                 'form' => $form,
- *                 'question' => t('Are you sure you want to delete these items?'),
- *                 'destination' => 'admin/content/node',
- *                 'yes' => t('Delete all'),
- *               )
- *             );
+ *   Also, any valid options from the $options argument of confirm_form() may 
+ *   be passed, and they will be passed through to the confirm form.
  */
 function drupal_delete_confirm($confirm) {
   return _drupal_delete('confirm', '', $confirm);
@@ -2855,14 +2858,17 @@ function drupal_delete_execute($destination = FALSE) {
  * Register post-deletion callback functions for a package. The functions are called after the package
  * has been deleted. Useful for miscellaneous cleanup, user messages, etc.
  *
+ * @code
+ *   drupal_delete_add_callback(
+ *     array(
+ *       'node_delete_post' => array($node->nid, $node->title, $node->type),
+ *     )
+ *   );
+ * @endcode
+ *
  * @param $callbacks
  *   An associative array of callback functions, key = name of function,
  *   value = an array of arguments to pass to the function.
- *     ex. drupal_delete_add_callback(
- *           array(
- *             'node_delete_post' => array($node->nid, $node->title, $node->type),
- *           )
- *         );
  */
 function drupal_delete_add_callback($callbacks) {
   _drupal_delete('callback', '', $callbacks);
@@ -2872,13 +2878,16 @@ function drupal_delete_add_callback($callbacks) {
  * Pass metadata related to the deletion or package to the API.  This is made
  * available to all hooks called during the deletion cycle.
  *
+ * @code
+ *   drupal_delete_add_metadata(
+ *     array(
+ *       'comment_messages' => $messages,
+ *     )
+ *   );
+ * @endcode
+ *
  * @param $metadata
  *   An associative array of metadata.
- *     ex. drupal_delete_add_metadata(
- *           array(
- *             'comment_messages' => $messages,
- *           )
- *         );
  */
 function drupal_delete_add_metadata($metadata) {
   _drupal_delete('metadata', '', $metadata);
@@ -2889,17 +2898,20 @@ function drupal_delete_add_metadata($metadata) {
  * confirm form.  Use this in multiple deletion scenarios where the confirm
  * information shouldn't be displayed if the package is aborted.
  *
+ * @code
+ *   drupal_delete_add_form_elements(
+ *     array(
+ *       "node_$node->nid" => array(
+ *         '#value' => check_plain($node->title),
+ *         '#prefix' => '<li>',
+ *         '#suffix' => "</li>\n",
+ *       ),
+ *     )
+ *   );
+ * @endcode
+ *
  * @param $elements
  *   An array representing the package-specific form elements to pass to the confirm form.
- *                       ex. drupal_delete_add_form_elements(
- *                             array(
- *                               "node_$node->nid" => array(
- *                                 '#value' => check_plain($node->title),
- *                                 '#prefix' => '<li>',
- *                                 '#suffix' => "</li>\n",
- *                               ),
- *                             )
- *                           );
  */
 function drupal_delete_add_form_elements($elements) {
   _drupal_delete('form', '', $elements);
