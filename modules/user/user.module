@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.811 2007/06/29 18:06:51 dries Exp $
+// $Id: user.module,v 1.812 2007/06/29 18:19:25 dries Exp $
 
 /**
  * @file
@@ -1421,7 +1421,7 @@ function user_register_submit($form, &$form_state) {
   }
   else {
     if ($admin && !$notify) {
-      drupal_set_message(t('Created a new user account. No e-mail has been sent.'));
+      drupal_set_message(t('Created a new user account for <a href="@url">%name</a>. No e-mail has been sent.', array('@url' => url("user/$account->uid"), '%name' => $account->name)));
     }
     else if (!variable_get('user_email_verification', TRUE) && $account->status && !$admin) {
       // No e-mail verification is required, create new user account, and login user immediately.
@@ -1435,7 +1435,7 @@ function user_register_submit($form, &$form_state) {
       $op = $notify ? 'register_admin_created' : 'register_no_approval_required';
       _user_mail_notify($op, $account, $pass);
       if ($notify) {
-        drupal_set_message(t('Password and further instructions have been e-mailed to the new user %user.', array('%user' => $name)));
+        drupal_set_message(t('Password and further instructions have been e-mailed to the new user <a href="@url">%name</a>.', array('@url' => url("user/$account->uid"), '%name' => $account->name)));
       }
       else {
         drupal_set_message(t('Your password and further instructions have been sent to your e-mail address.'));
