@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.810 2007/06/29 11:18:40 dries Exp $
+// $Id: user.module,v 1.811 2007/06/29 18:06:51 dries Exp $
 
 /**
  * @file
@@ -3199,4 +3199,93 @@ function _user_password_dynamic_validation() {
       'setting');
     $complete = TRUE;
   }
+}
+
+
+
+/**
+ * Implementation of hook_hook_info().
+ */
+function user_hook_info() {
+  return array(
+    'user' => array(
+      'user' => array(
+        'insert' => array(
+          'runs when' => t('When a user account has been created'),
+        ),
+        'update' => array(
+          'runs when' => t('When a user account has been updated'),
+        ),
+        'delete' => array(
+          'runs when' => t('When a user account has been deleted')
+        ),
+        'login' => array(
+          'runs when' => t('When a user has logged in')
+        ),
+        'logout' => array(
+          'runs when' => t('When a user has logged out')
+        ),
+        'view' => array(
+          'runs when' => t("When a user's account information is displayed")
+        ),
+      ),
+    ),
+  );
+}
+
+/**
+ * Implementation of hook_action_info().
+ */
+function user_action_info() {
+  return array(
+    'user_block_user_action' => array(
+      'description' => t('Block current user'),
+      'type' => 'user',
+      'configurable' => FALSE,
+      'hooks' => array(
+        'nodeapi' => array('presave', 'delete','insert', 'update','view'),
+        'comment' => array('view', 'insert', 'update', 'delete'),
+        'user' => array('logout'),
+        ),
+      ),
+    'user_block_ip_action' => array(
+      'description' => t('Ban IP address of current user'),
+      'type' => 'user',
+      'configurable' => FALSE,
+      'hooks' => array(
+        'nodeapi' => array('presave', 'delete','insert', 'update','view'),
+        'comment' => array('view', 'insert', 'update', 'delete'),
+        'user' => array('logout'),
+      )
+    )
+  );
+}
+
+/**
+ * Implementation of a Drupal action.
+ * Blocks the current user.
+ */
+function user_block_user_action(&$object, $context = array()) {
+  if (isset($object->uid)) {
+    $uid = $object->uid;
+  }
+  elseif (isset($context['uid'])) {
+    $uid = $context['uid'];
+  }
+  else {
+    global $user;
+    $uid = $user->uid;
+  }
+  db_query("UPDATE {users} SET status = 0 WHERE uid = %d", $uid);
+  sess_destroy_uid($uid);
+  watchdog('action', 'Blocked user %name.', array('%name' => check_plain($user->name)));
+}
+
+/**
+ * Implementation of a Drupal action.
+ * Adds an access rule that blocks the user's IP address.
+ */
+function user_block_ip_action() {
+  db_query("INSERT INTO {access} (mask, type, status) VALUES ('%s', '%s', %d)", $_SERVER['REMOTE_ADDR'], 'host', 0);
+  watchdog('action', 'Banned IP address %ip', array('%ip' => $_SERVER['REMOTE_ADDR']));
 }

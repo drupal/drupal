@@ -1,0 +1,1024 @@
+<?php
+// $Id: actions.module,v 1.1 2007/06/29 18:06:50 dries Exp $
+
+/**
+* @file
+* Enables functions to be stored and executed at a later time when
+* triggered by other modules or by one of Drupal's core API hooks.
+*/
+
+/**
+* Implementation of hook_help().
+*/
+function actions_help($section) {
+  $output = '';
+  $explanation = t('Actions are functions that Drupal can execute when certain events happen, such as when a post is added or a user logs in.');
+  switch ($section) {
+    case 'admin/build/actions/manage':
+      $output = '<p>'. $explanation .' '. t('This page lists all actions that are available. Simple actions that do not require any configuration are listed automatically. Actions that need to be configured are listed in the dropdown below. To add an advanced action, select the action and click the <em>Configure</em> button. After completing the configuration form, the action will be available for use by Drupal.') .'</p>';
+      break;
+    case 'admin/build/actions/config':
+      $output = '<p>'. t('This is where you configure a certain action that will be performed at some time in the future. For example, you might configure an action to send email to your friend Joe. You would modify the description field, below, to read %send to remind you of that. The description you provide will be used to identify this action; for example, when assigning an action to a Drupal event such as a new comment being posted.', array('%send' => t('Send email to Joe'))) .'</p>';
+      break;
+    case 'admin/build/actions/assign/comment':
+      $output = '<p>'. $explanation .' '. t('Below you can assign actions to run when certain comment-related operations happen. For example, you could promote a post to the front page when a comment is added.') .'</p>';
+      break;
+    case 'admin/build/actions/assign/node':
+      $output = '<p>'. $explanation .' '. t('Below you can assign actions to run when certain post-related operations happen. For example, you could remove a post from the front page when the post is updated. Note that if you are running actions that modify the characteristics of a post (such as making a post sticky or removing a post from the front page), you will need to add the %node_save action to save the changes.', array('%node_save' => t('Save post'))) .'</p>';
+      break;
+    case 'admin/build/actions/assign/user':
+      $output = '<p>'. $explanation .' '. t("Below you can assign actions to run when certain user-related operations happen. For example, you could block a user when the user's account is edited by assigning the %block_user action to the user %update operation.", array('%block_user' => t('Block user'), '%update' => t('update'))) .'</p>';
+      break;
+    case 'admin/build/actions/assign/cron':
+      $output = '<p>'. t('Actions are functions that Drupal can execute when certain events happen, such as when a post is added or a user logs in. Below you can assign actions to run when cron runs.') .'</p>';
+      break;
+  }
+
+  return $output;
+}
+
+/**
+* Implementation of hook_menu().
+*/
+function actions_menu() {
+  $items['admin/build/actions'] = array(
+    'title' => 'Actions',
+    'description' => 'Manage the actions defined for your site.',
+    'access arguments' => array('administer actions'),
+    'page callback' => 'actions_assign'
+  );
+  $items['admin/build/actions/manage'] = array(
+    'title' => 'Manage actions',
+    'description' => 'Manage the actions defined for your site.',
+    'page callback' => 'actions_manage',
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 2,
+  );
+  $items['admin/build/actions/assign'] = array(
+    'title' => 'Assign actions',
+    'description' => 'Tell Drupal when to execute actions.',
+    'page callback' => 'actions_assign',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
+  $items['admin/build/actions/assign/node'] = array(
+    'title' => 'Content',
+    'page callback' => 'actions_assign',
+    'page arguments' => array('node'),
+    'type' => MENU_LOCAL_TASK,
+  );
+  $items['admin/build/actions/assign/user'] = array(
+    'title' => 'User',
+    'page callback' => 'actions_assign',
+    'page arguments' => array('user'),
+    'type' => MENU_LOCAL_TASK,
+  );
+  $items['admin/build/actions/assign/comment'] = array(
+    'title' => 'Comment',
+    'page callback' => 'actions_assign',
+    'page arguments' => array('comment'),
+    'access callback' => 'actions_access_check',
+    'access arguments' => array('comment'),
+    'type' => MENU_LOCAL_TASK,
+  );
+  $items['admin/build/actions/assign/taxonomy'] = array(
+    'title' => 'Taxonomy',
+    'page callback' => 'actions_assign',
+    'page arguments' => array('taxonomy'),
+    'access callback' => 'actions_access_check',
+    'access arguments' => array('taxonomy'),
+    'type' => MENU_LOCAL_TASK,
+  );
+  $items['admin/build/actions/assign/cron'] = array(
+    'title' => 'Cron',
+    'page callback' => 'actions_assign',
+    'page arguments' => array('cron'),
+    'type' => MENU_LOCAL_TASK,
+  );
+
+  // We want contributed modules to be able to describe
+  // their hooks and have actions assignable to them.
+  $hooks = module_invoke_all('hook_info');
+  foreach ($hooks as $module => $hook) {
+    if (in_array($module, array('node', 'comment', 'user', 'system', 'taxonomy'))) {
+      continue;
+    }
+    $info = db_result(db_query("SELECT info FROM {system} WHERE name = '%s'", $module));
+    $info = unserialize($info);
+    $nice_name = $info['name'];
+    $items["admin/build/actions/assign/$module"] = array(
+      'title' => $nice_name,
+      'page callback' => 'actions_assign',
+      'page arguments' => array($module),
+      'type' => MENU_LOCAL_TASK,
+    );
+  }
+  $items['admin/build/actions/assign/remove'] = array(
+    'title' => 'Unassign',
+    'description' => 'Remove an action assignment.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('actions_unassign'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['admin/build/actions/config'] = array(
+    'title' => 'Configure an action',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('actions_configure'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['admin/build/actions/delete'] = array(
+    'title' => 'Delete action',
+    'description' => 'Delete an action.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('actions_delete_form'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['admin/build/actions/orphan'] = array(
+    'title' => 'Remove orphans',
+    'page callback' => 'actions_remove_orphans',
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+/**
+* Implementation of hook_perm().
+*/
+function actions_perm() {
+  return array('administer actions');
+}
+
+/**
+ * Access callback for menu system.
+ */
+function actions_access_check($module) {
+  return (module_exists($module) && user_access('administer actions'));
+}
+
+/**
+ * Menu callback.
+ * Display an overview of available and configured actions.
+  */
+function actions_manage() {
+  $output = '';
+  $actions = actions_list();
+  actions_synchronize($actions);
+  $actions_map = actions_actions_map($actions);
+  $options = array(t('Choose an advanced action'));
+  $unconfigurable = array();
+
+  foreach ($actions_map as $key => $array) {
+    if ($array['configurable']) {
+      $options[$key] = $array['description'] .'...';
+    }
+    else {
+      $unconfigurable[] = $array;
+    }
+  }
+
+  $row = array();
+  $instances_present = db_fetch_object(db_query("SELECT aid FROM {actions} WHERE parameters != ''"));
+  $header = array(
+    array('data' => t('Action Type'), 'field' => 'type'),
+    array('data' => t('Description'), 'field' => 'description'),
+    array('data' => $instances_present ? t('Operations') : '', 'colspan' => '2')
+  );
+  $sql = 'SELECT * FROM {actions}';
+  $result = pager_query($sql . tablesort_sql($header), 50);
+  while ($action = db_fetch_object($result)) {
+    $row[] = array(
+      array('data' => $action->type),
+      array('data' => $action->description),
+      array('data' => $action->parameters ? l(t('configure'), "admin/build/actions/config/$action->aid") : ''),
+      array('data' => $action->parameters ? l(t('delete'), "admin/build/actions/delete/$action->aid") : '')
+    );
+  }
+
+  if ($row) {
+    $pager = theme('pager', NULL, 50, 0);
+    if (!empty($pager)) {
+      $row[] = array(array('data' => $pager, 'colspan' => '3'));
+    }
+    $output .= '<h3>'. t('Actions available to Drupal:') .'</h3>';
+    $output .= theme('table', $header, $row);
+  }
+
+  if ($actions_map) {
+    $output .= '<p>'. drupal_get_form('actions_manage_form', $options) .'</p>';
+  }
+
+  return $output;
+}
+
+/**
+ * Define the form for the actions overview page.
+ *
+ * @param $options
+ *   An array of configurable actions.
+ * @return
+ *   Form definition.
+ */
+function actions_manage_form($form_state, $options = array()) {
+  $form['parent'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Make a new advanced action available'),
+    '#prefix' => '<div class="container-inline">',
+    '#suffix' => '</div>',
+  );
+  $form['parent']['action'] = array(
+    '#type' => 'select',
+    '#default_value' => '',
+    '#options' => $options,
+    '#description' => '',
+  );
+  $form['parent']['buttons']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Configure'),
+  );
+  return $form;
+}
+
+function actions_manage_form_submit($form, &$form_state) {
+  if ($form_state['values']['action']) {
+    $form_state['redirect'] = 'admin/build/actions/config/'. $form_state['values']['action'];
+  }
+}
+
+/**
+ * Menu callback. Create the form for configuration of a single action.
+ * We provide the "Description" field. The rest of the form
+ * is provided by the action. We then provide the Save button.
+ * Because we are combining unknown form elements with the action
+ * configuration form, we use actions_ prefix on our elements.
+ *
+ * @param $action
+ *   md5 hash of action ID or an integer. If it's an md5 hash, we
+ *   are creating a new instance. If it's an integer, we're editing
+ *   an existing instance.
+ */
+function actions_configure($form_state, $action = NULL) {
+  if ($action === NULL) {
+    drupal_goto('admin/build/actions');
+  }
+
+  $actions_map = actions_actions_map(actions_list());
+  $edit = array();
+
+  // Numeric action denotes saved instance of a configurable action;
+  // else we are creating a new action instance.
+  if (is_numeric($action)) {
+    $aid = $action;
+    // Load stored parameter values from database.
+    $data = db_fetch_object(db_query("SELECT * FROM {actions} WHERE aid = %d", intval($aid)));
+    $edit['actions_description'] = $data->description;
+    $edit['actions_type'] = $data->type;
+    $function = $data->callback;
+    $action = md5($data->callback);
+    $params = unserialize($data->parameters);
+    if ($params) {
+      foreach ($params as $name => $val) {
+        $edit[$name] = $val;
+      }
+    }
+  }
+  else {
+    $function = $actions_map[$action]['callback'];
+    $edit['actions_description'] = $actions_map[$action]['description'];
+    $edit['actions_type'] = $actions_map[$action]['type'];
+  }
+
+
+  $form['actions_description'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Description'),
+    '#default_value' => $edit['actions_description'],
+    '#size' => '70',
+    '#maxlength' => '255',
+    '#description' => t('A unique description for this configuration of this action. This will be used to describe this action when assigning actions.'),
+    '#weight' => -10
+  );
+  $action_form = $function .'_form';
+  $form = array_merge($form, $action_form($edit));
+  $form['actions_type'] = array(
+    '#type' => 'value',
+    '#value' => $edit['actions_type'],
+  );
+  $form['actions_action'] = array(
+    '#type' => 'hidden',
+    '#value' => $action,
+  );
+  // $aid is set when configuring an existing action instance.
+  if (isset($aid)) {
+    $form['actions_aid'] = array(
+      '#type' => 'hidden',
+      '#value' => $aid,
+    );
+  }
+  $form['actions_configured'] = array(
+    '#type' => 'hidden',
+    '#value' => '1',
+  );
+  $form['buttons']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save'),
+    '#weight' => 13
+  );
+
+  return $form;
+}
+
+function actions_configure_validate($form, $form_state) {
+  $function = actions_function_lookup($form_state['values']['actions_action']) . '_validate';
+  // Hand off validation to the action.
+  if (function_exists($function)) {
+    $function($form, $form_state);
+  }
+}
+
+function actions_configure_submit($form, &$form_state) {
+  $function = actions_function_lookup($form_state['values']['actions_action']);
+  $submit_function = $function .'_submit';
+
+  // Action will return keyed array of values to store.
+  $params = $submit_function($form, $form_state);
+  $aid = isset($form_state['values']['actions_aid']) ? $form_state['values']['actions_aid'] : NULL;
+
+  actions_save($function, $form_state['values']['actions_type'], $params, $form_state['values']['actions_description'], $aid);
+  drupal_set_message(t('The action has been successfully saved.'));
+
+  $form_state['redirect'] = 'admin/build/actions/manage';
+}
+
+/**
+ * Create the form for confirmation of deleting an action.
+ *
+ * @param $aid
+ *   The action ID.
+ */
+function actions_delete_form($form_state, $aid) {
+  if (!$aid) {
+    drupal_goto('admin/build/actions');
+  }
+  $action = actions_load($aid);
+
+  drupal_delete_initiate('action', $aid);
+  drupal_delete_add_callback(array('actions_delete_form_post' => array($action)));
+  actions_delete($aid);
+
+  return drupal_delete_confirm(
+    array(
+      'question' => t('Are you sure you want to delete the action %action?', array('%action' => $action->description)),
+      'destination' => 'admin/build/actions/manage',
+      'description' => t('This cannot be undone.'),
+    )
+  );
+}
+
+/**
+ * Post-deletion operations for action deletion.
+ */
+function actions_delete_form_post($action) {
+  $t_args = array('%aid' => $action->aid, '%action' => $action->description);
+  watchdog('user', 'Deleted action %aid (%action)', $t_args);
+  drupal_set_message(t('Action %action was deleted.', $t_args));
+}
+
+/**
+ * Save an action and its associated user-supplied parameter values to
+ * the database.
+ *
+ * @param $function
+ *   The name of the function to be called when this action is performed.
+ * @param $params
+ *   An associative array with parameter names as keys and parameter values
+ *   as values.
+ * @param $desc
+ *   A user-supplied description of this particular action, e.g., 'Send
+ *   e-mail to Jim'.
+ * @param $aid
+ *   The ID of this action. If omitted, a new action is created.
+ *
+ * @return
+ *   The ID of the action.
+ */
+function actions_save($function, $type, $params, $desc, $aid = NULL) {
+  $serialized = serialize($params);
+  if ($aid) {
+    db_query("UPDATE {actions} SET callback = '%s', type = '%s', parameters = '%s', description = '%s' WHERE aid = %d", $function, $type, $serialized, $desc, $aid);
+    watchdog('user', 'Action %action saved.', array('%action' => $desc));
+  }
+  else {
+    $aid = variable_get('actions_next_id', 0);
+    $aid = $aid + 1;
+    variable_set('actions_next_id', $aid);
+    db_query("INSERT INTO {actions} (aid, callback, type, parameters, description) VALUES (%d, '%s', '%s', '%s', '%s')", $aid, $function, $type, $serialized, $desc);
+    watchdog('user', 'Action %action created.', array('%action' => $desc));
+  }
+
+  return $aid;
+}
+
+/**
+ * Retrieve a single action from the database.
+ *
+ * @param $aid
+ *   integer The ID of the action to retrieve.
+ *
+ * @return
+ *   The appropriate action row from the database as an object.
+ */
+function actions_load($aid) {
+  return db_fetch_object(db_query("SELECT * FROM {actions} WHERE aid = %d", $aid));
+}
+
+/**
+ * Delete a single action from the database.
+ *
+ * @param $aid
+ *   integer The ID of the action to delete.
+ */
+function actions_delete($aid) {
+  drupal_delete_add_query("DELETE FROM {actions} WHERE aid = %d", $aid);
+  drupal_delete_add_query("DELETE FROM {actions_assignments} WHERE aid = %d", $aid);
+}
+
+/**
+ * Synchronize actions that are provided by modules with actions
+ * that are stored in the actions table. This is necessary so that
+ * actions that do not require configuration can receive action IDs.
+ * This is not necessarily the best approach, but it is the most
+ * straightforward.
+ */
+function actions_synchronize($actions_in_code = array(), $delete_orphans = FALSE) {
+  if (!$actions_in_code) {
+    $actions_in_code = actions_list();
+  }
+  $actions_in_db = array();
+  $result = db_query("SELECT * FROM {actions} WHERE parameters = ''");
+  while ($action = db_fetch_object($result)) {
+    $actions_in_db[$action->callback] = array('aid' => $action->aid, 'description' => $action->description);
+  }
+
+  // Go through all the actions provided by modules.
+  foreach ($actions_in_code as $callback => $array) {
+    // Ignore configurable actions since their instances get put in
+    // when the user adds the action.
+    if (!$array['configurable']) {
+      // If we already have an action ID for this action, no need to assign aid.
+      if (array_key_exists($callback, $actions_in_db)) {
+        unset($actions_in_db[$callback]);
+      }
+      else {
+        // This is a new singleton that we don't have an aid for; assign one.
+        db_query("INSERT INTO {actions} (aid, type, callback, parameters, description) VALUES ('%s', '%s', '%s', '%s', '%s')", $callback, $array['type'], $callback, '', $array['description']);
+        drupal_set_message(t("Action '%action' added.", array('%action' => filter_xss_admin($array['description']))));
+      }
+    }
+  }
+
+  // Any actions that we have left in $actions_in_db are orphaned.
+  if ($actions_in_db) {
+    $orphaned = array();
+    $placeholder = array();
+
+    foreach ($actions_in_db as $callback => $array) {
+      $orphaned[] = $callback;
+      $placeholder[] = "'%s'";
+    }
+
+    $orphans = implode(', ', $orphaned);
+
+    if ($delete_orphans) {
+      $placeholders = implode(', ', $placeholder);
+      drupal_delete_initiate('action_delete_orphans', $orphans);
+      drupal_delete_add_callback(array('action_delete_orphans_post' => array($orphaned)));
+      drupal_delete_add_query("DELETE FROM {actions} WHERE callback IN ($placeholders)", $orphaned);
+      drupal_delete_execute();
+    }
+    else {
+      $link = l(t('Remove orphaned actions'), 'admin/build/actions/orphan');
+      $count = count($actions_in_db);
+      drupal_set_message(format_plural($count, 'One orphaned action (%orphans) exists in the actions table. !link', '@count orphaned actions (%orphans) exist in the actions table. !link', array('@count' => $count, '%orphans' => $orphans, '!link' => $link), 'warning'));
+    }
+  }
+}
+
+/**
+ * Post-deletion operations for deleting action orphans.
+ */
+function action_delete_orphans_post($orphaned) {
+  foreach ($orphaned as $callback) {
+    drupal_set_message(t("Deleted orphaned action (%action).", array('%action' => $callback)));
+  }
+}
+
+/**
+ * Menu callback. Remove any actions that are in the database but not supported
+ * by any currently enabled module.
+ */
+function actions_remove_orphans() {
+  actions_synchronize(actions_list(), TRUE);
+  drupal_goto('admin/build/actions/manage');
+}
+
+/**
+ * Get the actions that have already been defined for this
+ * type-hook-op combination.
+ *
+ * @param $type
+ *   One of 'node', 'user', 'comment'.
+ * @param $hook
+ *   The name of the hook for which actions have been assigned,
+ *   e.g. 'nodeapi'.
+ * @param $op
+ *   The hook operation for which the actions have been assigned,
+ *   e.g., 'view'.
+ * @return
+ *   An array of action descriptions keyed by action IDs.
+ */
+function _actions_get_hook_actions($hook, $op, $type = NULL) {
+  $actions = array();
+  if ($type) {
+    $result = db_query("SELECT h.aid, a.description FROM {actions_assignments} h LEFT JOIN {actions} a on a.aid = h.aid WHERE a.type = '%s' AND h.hook = '%s' AND h.op = '%s' ORDER BY h.weight", $type, $hook, $op);
+  }
+  else {
+    $result = db_query("SELECT h.aid, a.description FROM {actions_assignments} h LEFT JOIN {actions} a on a.aid = h.aid WHERE h.hook = '%s' AND h.op = '%s' ORDER BY h.weight", $hook, $op);
+  }
+  while ($action = db_fetch_object($result)) {
+    $actions[$action->aid] = $action->description;
+  }
+  return $actions;
+}
+
+/**
+ * Get the aids of actions to be executed for a hook-op combination.
+ *
+ * @param $hook
+ *   The name of the hook being fired.
+ * @param $op
+ *   The name of the operation being executed. Defaults to an empty string
+ *   because some hooks (e.g., hook_cron()) do not have operations.
+ * @return
+ *   An array of action IDs.
+ */
+function _actions_get_hook_aids($hook, $op = '') {
+  $aids = array();
+  $result = db_query("SELECT aa.aid, a.type FROM {actions_assignments} aa LEFT JOIN {actions} a ON aa.aid = a.aid WHERE aa.hook = '%s' AND aa.op = '%s' ORDER BY weight", $hook, $op);
+  while ($action = db_fetch_object($result)) {
+    $aids[$action->aid]['type'] = $action->type;
+  }
+  return $aids;
+}
+
+/**
+ * Create the form definition for assigning an action to a hook-op combination.
+ *
+ * @param $form_state
+ *   Information about the current form.
+ * @param $hook
+ *   The name of the hook, e.g., 'nodeapi'.
+ * @param $op
+ *   The name of the hook operation, e.g., 'insert'.
+ * @param $description
+ *   A plain English description of what this hook operation does.
+ * @return
+ */
+function actions_assign_form($form_state, $hook, $op, $description) {
+  $form['hook'] = array(
+    '#type' => 'hidden',
+    '#value' => $hook,
+  );
+  $form['operation'] = array(
+    '#type' => 'hidden',
+    '#value' => $op,
+  );
+  // All of these forms use the same #submit function.
+  $form['#submit'][] = 'actions_assign_form_submit';
+
+  $options = array();
+  $functions = array();
+  // Restrict the options list to actions that declare support for this hook-op combination.
+  foreach (actions_list() as $func => $metadata) {
+    if (isset($metadata['hooks']['any']) || (isset($metadata['hooks'][$hook]) && is_array($metadata['hooks'][$hook]) && (in_array($op, $metadata['hooks'][$hook])))) {
+      $functions[] = $func;
+    }
+  }
+  foreach (actions_actions_map(actions_get_all_actions()) as $aid => $action) {
+    if (in_array($action['callback'], $functions)) {
+      $options[$action['type']][$aid] = $action['description'];
+    }
+  }
+
+  $form[$op] = array(
+    '#type' => 'fieldset',
+    '#title' => $description,
+    '#theme' => 'actions_display'
+    );
+  // Retrieve actions that are already assigned to this hook-op combination.
+  $actions = _actions_get_hook_actions($hook, $op);
+  $form[$op]['assigned']['#type'] = 'value';
+  $form[$op]['assigned']['#value'] = array();
+  foreach ($actions as $aid => $description) {
+    $form[$op]['assigned']['#value'][$aid] = array(
+      'description' => $description,
+      'link' => l(t('remove'), "admin/build/actions/assign/remove/$hook/$op/" . md5($aid))
+    );
+  }
+
+  $form[$op]['parent'] = array(
+    '#prefix' => "<div class='container-inline'>",
+    '#suffix' => '</div>',
+  );
+  // List possible actions that may be assigned.
+  if (count($options) != 0) {
+    array_unshift($options, t('Choose an action'));
+    $form[$op]['parent']['aid'] = array(
+      '#type' => 'select',
+      '#options' => $options,
+    );
+    $form[$op]['parent']['submit'] = array(
+      '#type' => 'submit',
+      '#value' => t('Assign')
+    );
+  }
+  else {
+    $form[$op]['none'] = array(
+      '#value' => t('No available actions support this context.')
+    );
+  }
+  return $form;
+}
+
+function actions_assign_form_submit($form, $form_state) {
+  $form_values = $form_state['values'];
+  if (isset($form_values['aid']) && $form_values['aid'] != '0') {
+    $aid = actions_function_lookup($form_values['aid']);
+    $weight = db_result(db_query("SELECT MAX(weight) FROM {actions_assignments} WHERE hook = '%s' AND op = '%s'", $form_values['hook'], $form_values['operation']));
+    db_query("INSERT INTO {actions_assignments} values ('%s', '%s', '%s', %d)", $form_values['hook'], $form_values['operation'], $aid, $weight + 1);
+  }
+}
+
+/**
+ * Implementation of hook_theme().
+ */
+function actions_theme() {
+  return array(
+    'actions_display' => array(
+      'arguments' => array('element')
+    ),
+  );
+}
+
+/**
+ * Display actions assigned to this hook-op combination in a table.
+ *
+ * @param array $element
+ *   The fieldset including all assigned actions.
+ * @return
+ *   The rendered form with the table prepended.
+ */
+function theme_actions_display($element) {
+  $header = array();
+  $rows = array();
+  if (count($element['assigned']['#value'])) {
+    $header = array(array('data' => t('Name')), array('data' => t('Operation')));
+    $rows = array();
+    foreach ($element['assigned']['#value'] as $aid => $info) {
+      $rows[] = array(
+        $info['description'],
+        $info['link']
+      );
+    }
+  }
+
+  $output = theme('table', $header, $rows) . drupal_render($element);
+  return $output;
+}
+
+/**
+ * Implementation of hook_forms(). We reuse code by using the
+ * same assignment form definition for each node-op combination.
+ */
+function actions_forms() {
+  $hooks = module_invoke_all('hook_info');
+  foreach ($hooks as $module => $info) {
+    foreach ($hooks[$module] as $hook => $ops) {
+      foreach ($ops as $op => $description) {
+        $forms['actions_'. $hook .'_'. $op .'_assign_form'] = array('callback' => 'actions_assign_form');
+      }
+    }
+  }
+
+  return $forms;
+}
+
+/**
+ * Build the form that allows users to assign actions to hooks.
+ *
+ * @param $type
+ *   Name of hook.
+ * @return
+ *   HTML form.
+ */
+function actions_assign($type = NULL) {
+  // If no type is specificied we default to node actions, since they
+  // are the most common.
+  if (!isset($type)) {
+    drupal_goto('admin/build/actions/assign/node');
+  }
+  if ($type == 'node') {
+    $type = 'nodeapi';
+  }
+
+  $output = '';
+  $hooks = module_invoke_all('hook_info');
+  foreach ($hooks as $module => $hook) {
+    if (isset($hook[$type])) {
+      foreach ($hook[$type] as $op => $description) {
+        $form_id = 'actions_'. $type .'_'. $op .'_assign_form';
+        $output .= drupal_get_form($form_id, $type, $op, $description['runs when']);
+      }
+    }
+  }
+  return $output;
+}
+
+/**
+ * Confirm removal of an assigned action.
+ *
+ * @param $hook
+ * @param $op
+ * @param $aid
+ *   The action ID.
+ */
+function actions_unassign($form_state, $hook = NULL, $op = NULL, $aid = NULL) {
+  if (!($hook && $op && $aid)) {
+    drupal_goto('admin/build/actions/assign');
+  }
+
+  $action = actions_function_lookup($aid);
+  $actions = actions_get_all_actions();
+
+  drupal_delete_initiate('action_assignment', $hook .'_'. $op .'_'. $action);
+  drupal_delete_add_callback(array('actions_assign_remove_post' => array($action, $actions)));
+  drupal_delete_add_query("DELETE FROM {actions_assignments} WHERE hook = '%s' AND op = '%s' AND aid = '%s'", $hook, $op, $action);
+
+  $destination = 'admin/build/actions/assign/'. ($hook == 'nodeapi' ? 'node' : $hook);
+
+  return drupal_delete_confirm(
+    array(
+      'question' => t('Are you sure you want to remove the action %title?', array('%title' => $actions[$action]['description'])),
+      'destination' => $destination,
+      'description' => t('You can assign it again later if you wish.'),
+      'yes' => t('Remove'),
+    )
+  );
+}
+
+function actions_unassign_post($action, $actions) {
+    watchdog('actions', 'Action %action has been unassigned.',  array('%action' => check_plain($actions[$action]['description'])));
+    drupal_set_message(t('Action %action has been unassigned.', array('%action' => $actions[$action]['description'])));
+}
+
+/**
+ * When an action is called in a context that does not match its type,
+ * the object that the action expects must be retrieved. For example, when
+ * an action that works on users is called during the node hook, the
+ * user object is not available since the node hook doesn't pass it.
+ * So here we load the object the action expects.
+ *
+ * @param $type
+ *   The type of action that is about to be called.
+ * @param $node
+ *   The node that was passed via the nodeapi hook.
+ * @return
+ *   The object expected by the action that is about to be called.
+ */
+function _actions_normalize_node_context($type, $node) {
+  switch ($type) {
+    // If an action that works on comments is being called in a node context,
+    // the action is expecting a comment object. But we do not know which comment
+    // to give it. The first? The most recent? All of them? So comment actions
+    // in a node context are not supported.
+
+    // An action that works on users is being called in a node context.
+    // Load the user object of the node's author.
+    case 'user':
+      return user_load(array('uid' => $node->uid));
+  }
+}
+
+/**
+ * Implementation of hook_nodeapi().
+ */
+function actions_nodeapi($node, $op, $a3, $a4) {
+  // Keep objects for reuse so that changes actions make to objects can persist.
+  static $objects;
+  // Prevent recursion by tracking which operations have already been called.
+  static $recursion;
+  // Support a subset of operations.
+  if (!in_array($op, array('view', 'update', 'presave', 'insert', 'delete')) || isset($recursion[$op])) {
+    return;
+  }
+  $recursion[$op] = TRUE;
+
+  $aids = _actions_get_hook_aids('nodeapi', $op);
+  if (!$aids) {
+    return;
+  }
+  $context = array(
+    'hook' => 'nodeapi',
+    'op' => $op,
+  );
+
+  // We need to get the expected object if the action's type is not 'node'.
+  // We keep the object in $objects so we can reuse it if we have multiple actions
+  // that make changes to an object.
+  foreach ($aids as $aid => $action_info) {
+    if ($action_info['type'] != 'node') {
+      if (!isset($objects[$action_info['type']])) {
+        $objects[$action_info['type']] = _actions_normalize_node_context($action_info['type'], $node);
+      }
+      // Since we know about the node, we pass that info along to the action.
+      $context['node'] = $node;
+      $result = actions_do($aid, $objects[$action_info['type']], $context, $a4, $a4);
+    }
+    else {
+      actions_do($aid, $node, $context, $a3, $a4);
+    }
+  }
+}
+
+/**
+ * When an action is called in a context that does not match its type,
+ * the object that the action expects must be retrieved. For example, when
+ * an action that works on nodes is called during the comment hook, the
+ * node object is not available since the comment hook doesn't pass it.
+ * So here we load the object the action expects.
+ *
+ * @param $type
+ *   The type of action that is about to be called.
+ * @param $comment
+ *   The comment that was passed via the comment hook.
+ * @return
+ *   The object expected by the action that is about to be called.
+ */
+function _actions_normalize_comment_context($type, $comment) {
+  switch ($type) {
+    // An action that works with nodes is being called in a comment context.
+    case 'node':
+      return node_load(is_array($comment) ? $comment['nid'] : $comment->nid);
+
+    // An action that works on users is being called in a comment context.
+    case 'user':
+      return user_load(array('uid' => is_array($comment) ? $comment['uid'] : $comment->uid));
+  }
+}
+
+/**
+ * Implementation of hook_comment().
+ */
+function actions_comment($a1, $op) {
+  // Keep objects for reuse so that changes actions make to objects can persist.
+  static $objects;
+  // We support a subset of operations.
+  if (!in_array($op, array('insert', 'update', 'delete', 'view'))) {
+    return;
+  }
+  $aids = _actions_get_hook_aids('comment', $op);
+  $context = array(
+    'hook' => 'comment',
+    'op' => $op,
+  );
+  // We need to get the expected object if the action's type is not 'comment'.
+  // We keep the object in $objects so we can reuse it if we have multiple actions
+  // that make changes to an object.
+  foreach ($aids as $aid => $action_info) {
+    if ($action_info['type'] != 'comment') {
+      if (!isset($objects[$action_info['type']])) {
+        $objects[$action_info['type']] = _actions_normalize_comment_context($action_info['type'], $a1);
+      }
+      // Since we know about the comment, we pass it along to the action
+      // in case it wants to peek at it.
+      $context['comment'] = (object) $a1;
+      actions_do($aid, $objects[$action_info['type']], $context);
+    }
+    else {
+      actions_do($aid, (object) $a1, $context);
+    }
+  }
+}
+
+/**
+ * Implementation of hook_cron().
+ */
+function actions_cron() {
+  $aids = _actions_get_hook_aids('cron');
+  $context = array(
+    'hook' => 'cron',
+    'op' => '',
+  );
+  // Cron does not act on any specific object.
+  $object = NULL;
+  actions_do(array_keys($aids), $object, $context);
+}
+
+/**
+ * When an action is called in a context that does not match its type,
+ * the object that the action expects must be retrieved. For example, when
+ * an action that works on nodes is called during the user hook, the
+ * node object is not available since the user hook doesn't pass it.
+ * So here we load the object the action expects.
+ *
+ * @param $type
+ *   The type of action that is about to be called.
+ * @param $account
+ *   The account object that was passed via the user hook.
+ * @return
+ *   The object expected by the action that is about to be called.
+ */
+function _actions_normalize_user_context($type, $account) {
+  switch ($type) {
+    // If an action that works on comments is being called in a user context,
+    // the action is expecting a comment object. But we have no way of
+    // determining the appropriate comment object to pass. So comment
+    // actions in a user context are not supported.
+
+    // An action that works with nodes is being called in a user context.
+    // If a single node is being viewed, return the node.
+    case 'node':
+      // If we are viewing an individual node, return the node.
+      if ((arg(0) == 'node') && is_numeric(arg(1)) && (arg(2) == NULL)) {
+        return node_load(array('nid' => arg(1)));
+      }
+  }
+}
+
+/**
+ * Implementation of hook_user().
+ */
+function actions_user($op, &$edit, &$account, $category = NULL) {
+  // Keep objects for reuse so that changes actions make to objects can persist.
+  static $objects;
+  // We support a subset of operations.
+  if (!in_array($op, array('login', 'logout', 'insert', 'update', 'delete', 'view'))) {
+    return;
+  }
+  $aids = _actions_get_hook_aids('user', $op);
+  $context = array(
+    'hook' => 'user',
+    'op' => $op,
+    'form_values' => &$edit,
+  );
+  foreach ($aids as $aid => $action_info) {
+    if ($action_info['type'] != 'user') {
+      if (!isset($objects[$action_info['type']])) {
+        $objects[$action_info['type']] = _actions_normalize_user_context($action_info['type'], $account);
+      }
+      $context['account'] = $account;
+      actions_do($aid, $objects[$action_info['type']], $context);
+    }
+    else {
+      actions_do($aid, $account, $context, $category);
+    }
+  }
+}
+
+/**
+ * Implementation of hook_taxonomy().
+ */
+function actions_taxonomy($op, $type, $array) {
+  if ($type != 'term') {
+    return;
+  }
+  $aids = _actions_get_hook_aids('taxonomy', $op);
+  $context = array(
+    'hook' => 'taxonomy',
+    'op' => $op
+  );
+  foreach ($aids as $aid => $action_info) {
+    actions_do($aid, (object) $array, $context);
+  }
+}
+
+/**
+ * Often we generate a select field of all actions. This function
+ * generates the options for that select.
+ *
+ * @param $type
+ *   One of 'node', 'user', 'comment'.
+ * @return
+ *   Array keyed by action ID.
+ */
+function actions_options($type = 'all') {
+  $options = array(t('Choose an action'));
+  foreach (actions_actions_map(actions_get_all_actions()) as $aid => $action) {
+    $options[$action['type']][$aid] = $action['description'];
+  }
+
+  if ($type == 'all') {
+    return $options;
+  }
+  else {
+    return $options[$type];
+  }
+}

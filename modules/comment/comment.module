@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.556 2007/06/24 10:09:52 unconed Exp $
+// $Id: comment.module,v 1.557 2007/06/29 18:06:51 dries Exp $
 
 /**
  * @file
@@ -2085,4 +2085,108 @@ function int2vancode($i = 0) {
  */
 function vancode2int($c = '00') {
   return base_convert(substr($c, 1), 36, 10);
+}
+
+/**
+ * Implementation of hook_hook_info().
+ */
+function comment_hook_info() {
+  return array(
+    'comment' => array(
+      'comment' => array(
+        'insert' => array(
+          'runs when' => t('When a comment has been created'),
+        ),
+        'update' => array(
+          'runs when' => t('When a comment has been updated'),
+        ),
+        'delete' => array(
+          'runs when' => t('When a comment has been deleted')
+        ),
+        'view' => array(
+          'runs when' => t('When a comment is being viewed')
+        ),
+      ),
+    ),
+  );
+}
+
+/**
+ * Implementation of hook_action_info().
+ */
+function comment_action_info() {
+  return array(
+    'comment_unpublish_action' => array(
+      'description' => t('Unpublish comment'),
+      'type' => 'comment',
+      'configurable' => FALSE,
+      'hooks' => array(
+        'comment' => array('insert', 'update', 'view'),
+      )
+    ),
+    'comment_unpublish_by_keyword_action' => array(
+      'description' => t('Unpublish comment containing keyword(s)'),
+      'type' => 'comment',
+      'configurable' => TRUE,
+      'hooks' => array(
+        'comment' => array('insert', 'update'),
+      )
+    )
+  );
+}
+
+/**
+ * Drupal action to unpublish a comment.
+ *
+ * @param $context
+ *   Keyed array. Must contain the id of the comment if $comment is not passed.
+ * @param $comment
+ *   An optional comment object.
+ */
+function comment_unpublish_action($comment, $context = array()) {
+  if (isset($comment->cid)) {
+    $cid = $comment->cid;
+    $subject = $comment->subject;
+  }
+  else {
+    $cid = $context['cid'];
+    $subject = db_result(db_query("SELECT subject FROM {comments} WHERE cid = %d", $cid));
+  }
+  db_query('UPDATE {comments} SET status = %d WHERE cid = %d', COMMENT_NOT_PUBLISHED, $cid);
+  watchdog('action', 'Unpublished comment %subject.', array('%subject' => $subject));
+}
+
+function comment_unpublish_by_keyword_action_form($context) {
+  $form['keywords'] = array(
+    '#title' => t('Keywords'),
+    '#type' => 'textarea',
+    '#description' => t('The comment will be unpublished if it contains any of the character sequences above. Use a comma-separated list of character sequences. Example: funny, bungee jumping, "Company, Inc.".'),
+    '#default_value' => isset($context['keywords']) ? drupal_implode_tags($context['keywords']) : '',
+  );
+  return $form;
+}
+
+function comment_unpublish_by_keyword_action_submit($form, $form_state) {
+  return array('keywords' => drupal_explode_tags($form_state['values']['keywords']));
+}
+
+/**
+ * Implementation of a configurable Drupal action.
+ * Unpublish a comment if it contains a certain string.
+ *
+ * @param $context
+ *   An array providing more information about the context of the call to this action.
+ *   Unused here since this action currently only supports the insert and update ops of
+ *   the comment hook, both of which provide a complete $comment object.
+ * @param $comment
+ *   A comment object.
+ */
+function comment_unpublish_by_keyword_action($comment, $context) {
+  foreach ($context['keywords'] as $keyword) {
+    if (strstr($comment->comment, $keyword) || strstr($comment->subject, $keyword)) {
+      db_query('UPDATE {comments} SET status = %d WHERE cid = %d', COMMENT_NOT_PUBLISHED, $comment->cid);
+      watchdog('action', 'Unpublished comment %subject.', array('%subject' => $comment->subject));
+      break;
+    }
+  }
 }

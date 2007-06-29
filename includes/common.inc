@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.666 2007/06/28 07:48:40 dries Exp $
+// $Id: common.inc,v 1.667 2007/06/29 18:06:50 dries Exp $
 
 /**
  * @file
@@ -2255,6 +2255,7 @@ function _drupal_bootstrap_full() {
   require_once './includes/image.inc';
   require_once './includes/form.inc';
   require_once './includes/mail.inc';
+  require_once './includes/actions.inc';
   // Set the Drupal custom error handler.
   set_error_handler('drupal_error_handler');
   // Emit the correct charset HTTP header.
@@ -3479,4 +3480,45 @@ function watchdog_severity_levels() {
     WATCHDOG_INFO     => t('info'),
     WATCHDOG_DEBUG    => t('debug'),
   );
+}
+
+
+/**
+ * Explode a string of given tags into an array.
+ */
+function drupal_explode_tags($tags) {
+  // This regexp allows the following types of user input:
+  // this, "somecompany, llc", "and ""this"" w,o.rks", foo bar
+  $regexp = '%(?:^|,\ *)("(?>[^"]*)(?>""[^"]* )*"|(?: [^",]*))%x';
+  preg_match_all($regexp, $tags, $matches);
+  $typed_tags = array_unique($matches[1]);
+
+  $tags = array();
+  foreach ($typed_tags as $tag) {
+    // If a user has escaped a term (to demonstrate that it is a group,
+    // or includes a comma or quote character), we remove the escape
+    // formatting so to save the term into the database as the user intends.
+    $tag = trim(str_replace('""', '"', preg_replace('/^"(.*)"$/', '\1', $tag)));
+    if ($tag != "") {
+      $tags[] = $tag;
+    }
+  }
+
+  return $tags;
+}
+
+/**
+ * Implode an array of tags into a string.
+ */
+function drupal_implode_tags($tags) {
+  $encoded_tags = array();
+  foreach ($tags as $tag) {
+    // Commas and quotes in tag names are special cases, so encode them.
+    if (strpos($tag, ',') !== FALSE || strpos($tag, '"') !== FALSE) {
+      $tag = '"'. str_replace('"', '""', $tag) .'"';
+    }
+
+    $encoded_tags[] = $tag;
+  }
+  return implode(', ', $encoded_tags);
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.363 2007/06/22 08:46:15 unconed Exp $
+// $Id: taxonomy.module,v 1.364 2007/06/29 18:06:51 dries Exp $
 
 /**
  * @file
@@ -826,7 +826,7 @@ function taxonomy_node_save($node, $terms) {
     unset($terms['tags']);
 
     foreach ($typed_input as $vid => $vid_value) {
-      $typed_terms = taxonomy_explode_tags($vid_value);
+      $typed_terms = drupal_explode_tags($vid_value);
 
       $inserted = array();
       foreach ($typed_terms as $typed_term) {
@@ -1502,7 +1502,7 @@ function _taxonomy_get_tid_from_term($term) {
  */
 function taxonomy_autocomplete($vid, $string = '') {
   // The user enters a comma-separated list of tags. We only autocomplete the last tag.
-  $array = taxonomy_explode_tags($string);
+  $array = drupal_explode_tags($string);
 
   // Fetch last tag
   $last_string = trim(array_pop($array));
@@ -1526,30 +1526,6 @@ function taxonomy_autocomplete($vid, $string = '') {
 }
 
 /**
- * Explode a string of given tags into an array.
- */
-function taxonomy_explode_tags($tags) {
-  // This regexp allows the following types of user input:
-  // this, "somecompany, llc", "and ""this"" w,o.rks", foo bar
-  $regexp = '%(?:^|,\ *)("(?>[^"]*)(?>""[^"]* )*"|(?: [^",]*))%x';
-  preg_match_all($regexp, $tags, $matches);
-  $typed_tags = array_unique($matches[1]);
-
-  $tags = array();
-  foreach ($typed_tags as $tag) {
-    // If a user has escaped a term (to demonstrate that it is a group,
-    // or includes a comma or quote character), we remove the escape
-    // formatting so to save the term into the database as the user intends.
-    $tag = trim(str_replace('""', '"', preg_replace('/^"(.*)"$/', '\1', $tag)));
-    if ($tag != "") {
-      $tags[] = $tag;
-    }
-  }
-
-  return $tags;
-}
-
-/**
  * Implode a list of tags of a certain vocabulary into a string.
  */
 function taxonomy_implode_tags($tags, $vid = NULL) {
@@ -1567,4 +1543,25 @@ function taxonomy_implode_tags($tags, $vid = NULL) {
     }
   }
   return implode(', ', $typed_tags);
+}
+
+/**
+ * Implementation of hook_hook_info().
+ */
+function taxonomy_hook_info() {
+  return array(
+    'taxonomy' => array(
+      'taxonomy' => array(
+        'insert' => array(
+          'runs when' => t('When a new category has been created'),
+        ),
+        'update' => array(
+          'runs when' => t('When a category has been updated'),
+        ),
+        'delete' => array(
+          'runs when' => t('When a category has been deleted')
+        ),
+      ),
+    ),
+  );
 }

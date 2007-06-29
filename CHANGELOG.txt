@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.211 2007/06/22 05:47:29 unconed Exp $
+// $Id: CHANGELOG.txt,v 1.212 2007/06/29 18:06:50 dries Exp $
 
 Drupal 6.0, xxxx-xx-xx (development version)
 ----------------------
@@ -58,6 +58,7 @@ Drupal 6.0, xxxx-xx-xx (development version)
     * Entries in the files table are now keyed to a user, and not a node.
     * Added re-usable validation functions to check for uploaded file sizes, extensions, and image resolution.
 - Added support for OpenID.
+- Added support for configurable actions.
 - Made user profiles easier to theme by using array rendering and supplying template files.
 - Added Deletion API to allow modules to alter and respond to any delete operation.
 

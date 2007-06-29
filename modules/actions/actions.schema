@@ -1,0 +1,26 @@
+<?php
+// $Id: actions.schema,v 1.1 2007/06/29 18:06:50 dries Exp $
+
+function actions_schema() {
+  $schema['actions'] = array(
+    'fields' => array(
+      'aid' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => '0'),
+      'type' => array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''),
+      'callback' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'parameters' => array('type' => 'text', 'not null' => TRUE, 'size' => 'big', 'default' => ''),
+      'description' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => '0'),
+    ),
+    'primary key' => array('aid'),
+  );
+  $schema['actions_assignments'] = array(
+    'fields' => array(
+      'hook' => array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''),
+      'op' => array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''),
+      'aid' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'weight' => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+    ),
+    'index keys' => array(
+      'hook_op' => array('hook', 'op'))
+  );
+  return $schema;
+}

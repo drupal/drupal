@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.842 2007/06/28 07:48:40 dries Exp $
+// $Id: node.module,v 1.843 2007/06/29 18:06:51 dries Exp $
 
 /**
  * @file
@@ -616,6 +616,8 @@ function node_load($param = array(), $revision = NULL, $reset = NULL) {
  * Save a node object into the database.
  */
 function node_save(&$node) {
+  // Let modules modify the node before it is saved to the database.
+  node_invoke_nodeapi($node, 'presave');
   global $user;
 
   $node->is_new = FALSE;
@@ -654,7 +656,7 @@ function node_save(&$node) {
                      'title' => "'%s'", 'body' => "'%s'",
                      'teaser' => "'%s'", 'timestamp' => '%d',
                      'uid' => '%d', 'format' => '%d');
-  if (!empty($node->log) || $node->is_new || $node->revision) {
+  if (!empty($node->log) || $node->is_new || (isset($node->revision) && $node->revision)) {
     // Only store the log message if there's something to store; this prevents
     // existing log messages from being unintentionally overwritten by a blank
     // message. A new revision will have an empty log message (or $node->log).
@@ -3172,4 +3174,279 @@ function node_forms() {
     $forms[$type .'_node_form']['callback'] = 'node_form';
   }
   return $forms;
+}
+
+/**
+ * Implementation of hook_hook_info().
+ */
+function node_hook_info() {
+  return array(
+    'node' => array(
+      'nodeapi' => array(
+        'presave' => array(
+          'runs when' => t('When content is about to be saved'),
+        ),
+        'insert' => array(
+          'runs when' => t('When content has been created'),
+        ),
+        'update' => array(
+          'runs when' => t('When content has been updated'),
+        ),
+        'delete' => array(
+          'runs when' => t('When content has been deleted')
+        ),
+        'view' => array(
+          'runs when' => t('When content is viewed by an authenticated user')
+        ),
+      ),
+    ),
+  );
+}
+
+/**
+ * Implementation of hook_action_info().
+ */
+function node_action_info() {
+  return array(
+    'node_publish_action' => array(
+      'type' => 'node',
+      'description' => t('Publish post'),
+      'configurable' => FALSE,
+      'hooks' => array(
+        'nodeapi' => array('presave','insert','update', 'view'),
+        'comment' => array('delete','insert','update', 'view'),
+      ),
+    ),
+    'node_unpublish_action' => array(
+      'type' => 'node',
+      'description' => t('Unpublish post'),
+      'configurable' => FALSE,
+      'hooks' => array(
+        'nodeapi' => array('presave','insert','update', 'view'),
+        'comment' => array('delete','insert','update', 'view'),
+      ),
+    ),
+    'node_make_sticky_action' => array(
+      'type' => 'node',
+      'description' => t('Make post sticky'),
+      'configurable' => FALSE,
+      'hooks' => array(
+        'nodeapi' => array('presave','insert','update', 'view'),
+        'comment' => array('delete','insert','update', 'view'),
+      ),
+    ),
+    'node_make_unsticky_action' => array(
+      'type' => 'node',
+      'description' => t('Make post unsticky'),
+      'configurable' => FALSE,
+      'hooks' => array(
+        'nodeapi' => array('presave','insert','update', 'view'),
+        'comment' => array('delete','insert','update', 'view'),
+      ),
+    ),
+    'node_promote_action' => array(
+      'type' => 'node',
+      'description' => t('Promote post to front page'),
+      'configurable' => FALSE,
+      'hooks' => array(
+        'nodeapi' => array('presave','insert','update', 'view'),
+        'comment' => array('delete','insert','update', 'view'),
+        'user' => array('login'),
+      ),
+    ),
+    'node_unpromote_action' => array(
+      'type' => 'node',
+      'description' => t('Remove post from front page'),
+      'configurable' => FALSE,
+      'hooks' => array(
+        'nodeapi' => array('presave','insert','update', 'view'),
+        'comment' => array('delete','insert','update', 'view'),
+      ),
+    ),
+    'node_assign_owner_action' => array(
+      'type' => 'node',
+      'description' => t('Change the author of a post'),
+      'configurable' => TRUE,
+      'hooks' => array(
+        'any' => TRUE,
+        'nodeapi' => array('presave','insert','update', 'view'),
+        'comment' => array('delete','insert','update', 'view'),
+      ),
+    ),
+    'node_save_action' => array(
+      'type' => 'node',
+      'description' => t('Save post'),
+      'configurable' => FALSE,
+      'hooks' => array(
+        'nodeapi' => array('delete','insert','update', 'view'),
+        'comment' => array('delete','insert','update', 'view'),
+        'user' => array('login'),
+      ),
+    ),
+    'node_unpublish_by_keyword_action' => array(
+      'type' => 'node',
+      'description' => t('Unpublish post containing keyword(s)'),
+      'configurable' => TRUE,
+      'hooks' => array(
+        'nodeapi' => array('presave','insert','update', 'view'),
+        'comment' => array('delete','insert','update', 'view'),
+      ),
+    ),
+  );
+}
+
+/**
+ * Implementation of a Drupal action.
+ * Sets the status of a node to 1, meaning published.
+ */
+function node_publish_action(&$node, $context = array()) {
+  $node->status = 1;
+  watchdog('action', 'Set @type %title to published.', array('@type' => node_get_types('name', $node), '%title' => $node->title));
+}
+
+/**
+ * Implementation of a Drupal action.
+ * Sets the status of a node to 0, meaning unpublished.
+ */
+function node_unpublish_action(&$node, $context = array()) {
+  $node->status = 0;
+  watchdog('action', 'Set @type %title to unpublished.', array('@type' => node_get_types('name', $node), '%title' => $node->title));
+}
+
+/**
+ * Implementation of a Drupal action.
+ * Sets the sticky-at-top-of-list property of a node to 1.
+ */
+function node_make_sticky_action(&$node, $context = array()) {
+  $node->sticky = 1;
+  watchdog('action', 'Set @type %title to sticky.', array('@type' => node_get_types('name', $node), '%title' => $node->title));
+}
+
+/**
+ * Implementation of a Drupal action.
+ * Sets the sticky-at-top-of-list property of a node to 1.
+ */
+function node_make_unsticky_action(&$node, $context = array()) {
+  $node->sticky = 0;
+  watchdog('action', 'Set @type %title to unsticky.', array('@type' => node_get_types('name', $node), '%title' => $node->title));
+}
+
+/**
+ * Implementation of a Drupal action.
+ * Sets the promote property of a node to 1.
+ */
+function node_promote_action(&$node, $context = array()) {
+  $node->promote = 1;
+  watchdog('action', 'Promoted @type %title to front page.', array('@type' => node_get_types('type', $node), '%title' => $node->title));
+}
+
+/**
+ * Implementation of a Drupal action.
+ * Sets the promote property of a node to 0.
+ */
+function node_unpromote_action(&$node, $context = array()) {
+  $node->promote = 1;
+  watchdog('action', 'Removed @type %title from front page.', array('@type' => node_get_types('type', $node), '%title' => $node->title));
+}
+
+/**
+ * Implementation of a Drupal action.
+ * Saves a node.
+ */
+function node_save_action($node) {
+  node_save($node);
+  watchdog('action', 'Saved @type %title', array('@type' => node_get_types('type', $node), '%title' => $node->title));
+}
+
+/**
+ * Implementation of a configurable Drupal action.
+ * Assigns ownership of a node to a user.
+ */
+function node_assign_owner_action(&$node, $context) {
+  $node->uid = $context['owner_uid'];
+  $owner_name = db_result(db_query("SELECT name FROM {users} WHERE uid = %d", $context['owner_uid']));
+  watchdog('action', 'Changed owner of @type %title to uid %name.', array('@type' => node_get_types('type', $node), '%title' => $node->title, '%name' => $owner_name));
+}
+
+function node_assign_owner_action_form($context) {
+  $description = t('The username of the user to which you would like to assign ownership.');
+  $count = db_result(db_query("SELECT COUNT(*) FROM {users}"));
+  $owner_name = '';
+  if (isset($context['owner_uid'])) {
+    $owner_name = db_result(db_query("SELECT name FROM {users} WHERE uid = %d", $context['owner_uid']));
+  }
+
+  // Use dropdown for fewer than 200 users; textbox for more than that.
+  if (intval($count) < 200) {
+    $options = array();
+    $result = db_query("SELECT uid, name FROM {users} WHERE uid > 0 ORDER BY name");
+    while ($data = db_fetch_object($result)) {
+      $options[$data->name] = $data->name;
+    }
+    $form['owner_name'] = array(
+      '#type' => 'select',
+      '#title' => t('Username'),
+      '#default_value' => $owner_name,
+      '#options' => $options,
+      '#description' => $description,
+    );
+  }
+  else {
+    $form['owner_name'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Username'),
+      '#default_value' => $owner_name,
+      '#autocomplete_path' => 'user/autocomplete',
+      '#size' => '6',
+      '#maxlength' => '7',
+      '#description' => $description,
+    );
+  }
+  return $form;
+}
+
+function node_assign_owner_action_validate($form, $form_state) {
+  $count = db_result(db_query("SELECT COUNT(*) FROM {users} WHERE name = '%s'", $form_state['values']['owner_name']));
+  if (intval($count) != 1) {
+    form_set_error('owner_name', t('Please enter a valid username.'));
+  }
+}
+
+function node_assign_owner_action_submit($form, $form_state) {
+  // Username can change, so we need to store the ID, not the username.
+  $uid = db_result(db_query("SELECT uid from {users} WHERE name = '%s'", $form_state['values']['owner_name']));
+  return array('owner_uid' => $uid);
+}
+
+function node_unpublish_by_keyword_action_form($context) {
+  $form['keywords'] = array(
+    '#title' => t('Keywords'),
+    '#type' => 'textarea',
+    '#description' => t('The node will be unpublished if it contains any of the character sequences above. Use a comma-separated list of character sequences. Example: funny, bungee jumping, "Company, Inc.".'),
+    '#default_value' => isset($context['keywords']) ? drupal_implode_tags($context['keywords']) : '',
+  );
+  return $form;
+}
+
+function node_unpublish_by_keyword_action_submit($form, $form_state) {
+  return array('keywords' => drupal_explode_tags($form_state['values']['keywords']));
+}
+
+/**
+ * Implementation of a configurable Drupal action.
+ * Unpublish a node if it contains a certain string.
+ *
+ * @param $context
+ *   An array providing more information about the context of the call to this action.
+ * @param $comment
+ *   A node object.
+ */
+function node_unpublish_by_keyword_action($node, $context) {
+  foreach ($context['keywords'] as $keyword) {
+    if (strstr(node_view(drupal_clone($node)), $keyword) || strstr($node->title, $keyword)) {
+      $node->status = 0;
+      watchdog('action', 'Set @type %title to unpublished.', array('@type' => node_get_types('name', $node), '%title' => $node->title));
+      break;
+    }
+  }
 }
