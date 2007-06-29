@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.809 2007/06/28 07:48:41 dries Exp $
+// $Id: user.module,v 1.810 2007/06/29 11:18:40 dries Exp $
 
 /**
  * @file
@@ -2780,7 +2780,7 @@ function user_help($section) {
       return '<p>'. t('Drupal allows users to register, login, log out, maintain user profiles, etc. Users of the site may not use their own names to post content until they have signed up for a user account.') .'</p>';
     case 'admin/user/user/create':
     case 'admin/user/user/account/create':
-      return '<p>'. t('This web page allows the administrators to register a new users by hand. Note that you cannot have a user where either the e-mail address or the username match another user in the system.') .'</p>';
+      return '<p>'. t('This web page allows the administrators to register new users by hand. Note that you cannot have a user where either the e-mail address or the username match another user in the system.') .'</p>';
     case 'admin/user/rules':
       return '<p>'. t('Set up username and e-mail address access rules for new <em>and</em> existing accounts (currently logged in accounts will not be logged out). If a username or e-mail address for an account matches any deny rule, but not an allow rule, then the account will not be allowed to be created or to log in. A host rule is effective for every page view, not just registrations.') .'</p>';
     case 'admin/user/access':
