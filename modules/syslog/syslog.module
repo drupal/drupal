@@ -16,8 +16,8 @@ else {
 /**
  * Implementation of hook_help().
  */
-function syslog_help($section) {
-  switch ($section) {
+function syslog_help($path, $arg) {
+  switch ($path) {
     case 'admin/help#syslog':
       return '<p>'. t('Provides the facility to log Drupal messages to the operating systems\' syslog facility.') .'</p>';
   }

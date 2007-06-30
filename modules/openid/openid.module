@@ -36,8 +36,8 @@ function openid_menu() {
 /**
  * Implementation of hook_help().
  */
-function openid_help($section) {
-  switch ($section) {
+function openid_help($path, $arg) {
+  switch ($path) {
     case 'user/%/openid':
       return t('You may login to this site using an OpenID. You may add your OpenId URLs below, and also see a list of any OpenIDs which have already been added.');
   }

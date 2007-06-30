@@ -10,8 +10,8 @@
 /**
  * Implementation of hook_help().
  */
-function php_help($section) {
-  switch ($section) {
+function php_help($path, $arg) {
+  switch ($path) {
     case 'admin/help#php':
       return t('Adds a filter option to include PHP in content.');
   }
