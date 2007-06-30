@@ -1,5 +1,5 @@
 <?php
-// $Id: translation.module,v 1.1 2007/06/15 18:40:14 goba Exp $
+// $Id: translation.module,v 1.2 2007/06/30 19:46:58 goba Exp $
 
 /**
  * @file
@@ -28,8 +28,8 @@ define ('TRANSLATION_ENABLED', 2);
 /**
  * Implementation of hook_help().
  */
-function translation_help($section) {
-  switch ($section) {
+function translation_help($path, $arg) {
+  switch ($path) {
     case 'admin/help#translation':
       $output = '<p>'. t('The <em>translation</em> module allows content translation for multilingual sites.') .'</p>';
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@translation">Translation page</a>.', array('@translation' => 'http://drupal.org/handbook/modules/translation/')) .'</p>';

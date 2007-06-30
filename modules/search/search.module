@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.226 2007/06/22 08:32:28 unconed Exp $
+// $Id: search.module,v 1.227 2007/06/30 19:46:57 goba Exp $
 
 /**
  * @file
@@ -93,8 +93,8 @@ define('PREG_CLASS_CJK', '\x{3041}-\x{30ff}\x{31f0}-\x{31ff}\x{3400}-\x{4db5}'.
 /**
  * Implementation of hook_help().
  */
-function search_help($section) {
-  switch ($section) {
+function search_help($path, $arg) {
+  switch ($path) {
     case 'admin/help#search':
       $output = '<p>'. t('The search module adds the ability to search for content by keywords. Search is often the only practical way to find content on a large site. Search is useful for finding users and posts by searching on keywords.') .'</p>';
       $output .= '<p>'. t('The search engine works by maintaining an index of the words in your site\'s content. It indexes the posts and users. You can adjust the settings to tweak the indexing behaviour. Note that the search requires cron to be set up correctly. The index percentage sets the maximum amount of items that will be indexed in one cron run. Set this number lower if your cron is timing out or if PHP is running out of memory.') .'</p>';

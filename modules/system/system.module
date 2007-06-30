@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.501 2007/06/29 18:17:21 dries Exp $
+// $Id: system.module,v 1.502 2007/06/30 19:46:58 goba Exp $
 
 /**
  * @file
@@ -20,10 +20,10 @@ define('DRUPAL_MAXIMUM_TEMP_FILE_AGE', 1440);
 /**
  * Implementation of hook_help().
  */
-function system_help($section) {
+function system_help($path, $arg) {
   global $base_url;
 
-  switch ($section) {
+  switch ($path) {
     case 'admin/help#system':
       $output = '<p>'. t('The system module provides system-wide defaults such as running jobs at a particular time, and storing web pages to improve efficiency. The ability to run scheduled jobs makes administering the website more usable, as administrators do not have to manually start jobs. The storing of web pages, or caching, allows the site to efficiently re-use web pages and improve website performance. The settings module provides control over preferences, behaviours including visual and operational settings.') .'</p>';
       $output .= '<p>'. t('Some modules require regularly scheduled actions, such as cleaning up logfiles. Cron, which stands for chronograph, is a periodic command scheduler executing commands at intervals specified in seconds. It can be used to control the execution of daily, weekly and monthly jobs (or anything with a period measured in seconds). The aggregator module periodically updates feeds using cron. Ping periodically notifies services of new content on your site. Search periodically indexes the content on your site. Automating tasks is one of the best ways to keep a system running smoothly, and if most of your administration does not require your direct involvement, cron is an ideal solution. Cron can, if necessary, also be run manually.') .'</p>';
@@ -36,12 +36,12 @@ function system_help($section) {
       return '<p>'. t('This page shows you all available administration tasks for each module.') .'</p>';
     case 'admin/build/themes':
       return '<p>'. t('Select which themes are available to your users and specify the default theme. To configure site-wide display settings, click the "configure" task above. Alternately, to override these settings in a specific theme, click the "configure" link for the corresponding theme. Note that different themes may have different regions available for rendering content like blocks. If you want consistency in what your users see, you may wish to enable only one theme.') .'</p>';
-    case 'admin/build/themes/settings':
-      return '<p>'. t('These options control the default display settings for your entire site, across all themes. Unless they have been overridden by a specific theme, these settings will be used.') .'</p>';
-    case 'admin/build/themes/settings/'. arg(4):
-      $reference = explode('.', arg(4), 2);
+    case 'admin/build/themes/settings/'. $arg[4]:
+      $reference = explode('.', $arg[4], 2);
       $theme = array_pop($reference);
       return '<p>'. t('These options control the display settings for the <code>%template</code> theme. When your site is displayed using this theme, these settings will be used. By clicking "Reset to defaults," you can choose to use the <a href="@global">global settings</a> for this theme.', array('%template' => $theme, '@global' => url('admin/build/themes/settings'))) .'</p>';
+    case 'admin/build/themes/settings':
+      return '<p>'. t('These options control the default display settings for your entire site, across all themes. Unless they have been overridden by a specific theme, these settings will be used.') .'</p>';
     case 'admin/build/modules':
       return t('<p>Modules are plugins for Drupal that extend its core functionality. Here you can select which modules are enabled. Click on the name of the module in the navigation menu for their individual configuration pages. Once a module is enabled, new <a href="@permissions">permissions</a> might be made available. Modules can automatically be temporarily disabled to reduce server load when your site becomes extremely busy by enabling the throttle.module and checking throttle. The auto-throttle functionality must be enabled on the <a href="@throttle">throttle configuration page</a> after having enabled the throttle module.</p>
 <p>It is important that <a href="@update-php">update.php</a> is run every time a module is updated to a newer version.</p><p>You can find all administration tasks belonging to a particular module on the <a href="@by-module">administration by module page</a>.</p>', array('@permissions' => url('admin/user/access'), '@throttle' => url('admin/settings/throttle'), '@update-php' => $base_url .'/update.php', '@by-module' => url('admin/by-module')));
@@ -188,7 +188,7 @@ function system_menu() {
     'title' => 'Themes',
     'description' => 'Change which theme your site uses or allows users to set.',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('system_themes_form'),
+    'page arguments' => array('system_themes_form', NULL),
   );
   $items['admin/build/themes/select'] = array(
     'title' => 'List',
@@ -198,7 +198,6 @@ function system_menu() {
   );
   $items['admin/build/themes/settings'] = array(
     'title' => 'Configure',
-    'page arguments' => array('system_theme_settings'),
     'type' => MENU_LOCAL_TASK,
   );
   // Theme configuration subtabs
@@ -2687,6 +2686,8 @@ function system_admin_by_module() {
   return 'This page awaits rewrite'; // TODO: this needs to be rewritten for the new menu system.
   $modules = module_rebuild_cache();
   $menu_items = array();
+  $help_arg = drupal_help_arg();
+
   foreach ($modules as $file) {
     $module = $file->name;
     if ($module == 'help') {
@@ -2699,7 +2700,7 @@ function system_admin_by_module() {
     if (count($admin_tasks)) {
 
       // Check for help links.
-      if (module_invoke($module, 'help', "admin/help#$module")) {
+      if (module_invoke($module, 'help', "admin/help#$module", $help_arg)) {
         $admin_tasks[100] = l(t('Get help'), "admin/help/$module");
       }
 

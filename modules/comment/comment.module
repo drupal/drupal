@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.557 2007/06/29 18:06:51 dries Exp $
+// $Id: comment.module,v 1.558 2007/06/30 19:46:55 goba Exp $
 
 /**
  * @file
@@ -123,17 +123,16 @@ define('COMMENT_PREVIEW_REQUIRED', 1);
 /**
  * Implementation of hook_help().
  */
-function comment_help($section) {
-  switch ($section) {
+function comment_help($path, $arg) {
+  switch ($path) {
     case 'admin/help#comment':
       $output = '<p>'. t('The comment module creates a discussion board for each post. Users can post comments to discuss a forum topic, weblog post, story, collaborative book page, etc. The ability to comment is an important part of involving members in a community dialogue.') .'</p>';
       $output .= '<p>'. t('An administrator can give comment permissions to user groups, and users can (optionally) edit their last comment, assuming no others have been posted since. Attached to each comment board is a control panel for customizing the way that comments are displayed. Users can control the chronological ordering of posts (newest or oldest first) and the number of posts to display on each page. Comments behave like other user submissions. Filters, smileys and HTML that work in nodes will also work with comments. The comment module provides specific features to inform site members when new comments have been posted.') .'</p>';
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@comment">Comment page</a>.', array('@comment' => 'http://drupal.org/handbook/modules/comment/')) .'</p>';
       return $output;
     case 'admin/content/comment':
-    case 'admin/content/comment/new':
       return '<p>'. t("Below is a list of the latest comments posted to your site. Click on a subject to see the comment, the author's name to edit the author's user information , 'edit' to modify the text, and 'delete' to remove their submission.") .'</p>';
-    case 'admin/content/comment/approval':
+    case 'admin/content/comment/list/approval':
       return '<p>'. t("Below is a list of the comments posted to your site that need approval. To approve a comment, click on 'edit' and then change its 'moderation status' to Approved. Click on a subject to see the comment, the author's name to edit the author's user information, 'edit' to modify the text, and 'delete' to remove their submission.") .'</p>';
     case 'admin/content/comment/settings':
       return '<p>'. t("Comments can be attached to any node, and their settings are below. The display comes in two types: a 'flat list' where everything is flush to the left side, and comments come in chronological order, and a 'threaded list' where replies to other comments are placed immediately below and slightly indented, forming an outline. They also come in two styles: 'expanded', where you see both the title and the contents, and 'collapsed' where you only see the title. Preview comment forces a user to look at their comment by clicking on a 'Preview' button before they can actually add the comment.") .'</p>';

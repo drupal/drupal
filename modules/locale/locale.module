@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.180 2007/06/18 16:09:38 dries Exp $
+// $Id: locale.module,v 1.181 2007/06/30 19:46:56 goba Exp $
 
 /**
  * @file
@@ -29,8 +29,8 @@ define('LANGUAGE_RTL', 1);
 /**
  * Implementation of hook_help().
  */
-function locale_help($section) {
-  switch ($section) {
+function locale_help($path, $arg) {
+  switch ($path) {
     case 'admin/help#locale':
       $output = '<p>'. t('The locale module allows you to present your Drupal site in a language other than the default English. You can use it to set up a multi-lingual website or replace given <em>built-in</em> text with text which has been customized for your site. Whenever the locale module encounters text which needs to be displayed, it tries to translate it into the currently selected language. If a translation is not available, then the string is remembered, so you can look up untranslated strings easily.') .'</p>';
       $output .= '<p>'. t('The locale module provides two options for providing translations. The first is the integrated web interface, via which you can search for untranslated strings, and specify their translations. An easier and less time-consuming method is to import existing translations for your language. These translations are available as <em>GNU gettext Portable Object files</em> (<em>.po</em> files for short). Translations for many languages are available for download from the translation page.') .'</p>';
@@ -39,7 +39,6 @@ function locale_help($section) {
       return $output;
 
     case 'admin/settings/language':
-    case 'admin/settings/language/overview':
       return t("<p>Drupal provides support for the translation of its interface text into different languages. This page provides an overview of the installed languages. You can add a language on the <a href=\"@add-language\">add language page</a>, or directly by <a href=\"@import\">importing a translation</a>. If multiple languages are enabled, registered users will be able to set their preferred language. The site default will be used for anonymous visitors and for users without their own settings.</p><p>Drupal interface translations may be added or extended by several courses: by <a href=\"@import\">importing</a> an existing translation, by <a href=\"@search\">translating everything</a> from scratch, or by a combination of these approaches.</p>", array("@search" => url("admin/build/translate/search"), "@import" => url("admin/build/translate/import"), "@add-language" => url("admin/settings/language/add")));
     case 'admin/settings/language/add':
       return '<p>'. t("You need to add all languages in which you would like to display the site interface. If you can't find the desired language in the quick-add dropdown, then you will need to provide the proper language code yourself. The language code may be used to negotiate with browsers and to present flags, etc., so it is important to pick a code that is standardised for the desired language. You can also add a language by <a href=\"@import\">importing a translation</a>.", array("@import" => url("admin/build/translate/import"))) .'</p>';
@@ -47,7 +46,6 @@ function locale_help($section) {
       return '<p>'. t('The language used to display a web page is determined with a negotiation algorithm. You can choose how this algorithm should work. By default, there is no negotiation and the default language is used. You can use path prefixes (like "de" and "it" for German and Italian content) with different fallback options, so you can have web addresses like /de/contact and /it/contact. Alternatively you can use custom domains like de.example.com and it.example.com. Customize path prefixes and set domain names on the <a href="@languages">language editing pages</a>.', array('@languages' => url('admin/settings/language'))) .'</p>';
 
     case 'admin/build/translate':
-    case 'admin/build/translate/overview':
       return '<p>'. t("This page provides an overview of interface translation on the site. Drupal groups all translatable strings in so called 'text groups'. Text groups are useful, because you can focus your translation efforts on the groups of text you care most about.  For example, a translation team could choose not to fully translate the text group that includes all the long help texts on the administration pages. Similarly, text groups are useful to ensure that certain aspects of the site are always fully translated.") . '</p>';
     case 'admin/build/translate/import':
       return '<p>'. t("This page allows you to import a translation provided in the gettext Portable Object (.po) format. The easiest way to get your site translated is to obtain an existing Drupal translation and to import it. You can find existing translations on the <a href=\"@url\">Drupal translation page</a>. Note that importing a translation file might take a while.", array('@url' => 'http://drupal.org/project/translations')) .'</p>';

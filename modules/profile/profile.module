@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.210 2007/06/28 00:29:05 goba Exp $
+// $Id: profile.module,v 1.211 2007/06/30 19:46:57 goba Exp $
 
 /**
  * @file
@@ -29,8 +29,8 @@ define('PROFILE_HIDDEN', 4);
 /**
  * Implementation of hook_help().
  */
-function profile_help($section) {
-  switch ($section) {
+function profile_help($path, $arg) {
+  switch ($path) {
     case 'admin/help#profile':
       $output = '<p>'. t('The profile module allows you to define custom fields (such as country, real name, age, ...) in the user profile. This permits users of a site to share more information about themselves, and can help community-based sites to organize users around profile fields.') .'</p>';
       $output .= t('<p>The following types of fields can be added to the user profile:</p>

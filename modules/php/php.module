@@ -1,5 +1,5 @@
 <?php
-// $Id: php.module,v 1.1 2007/04/24 10:54:34 dries Exp $
+// $Id: php.module,v 1.2 2007/06/30 19:46:57 goba Exp $
 
 /**
  * @file
@@ -10,8 +10,8 @@
 /**
  * Implementation of hook_help().
  */
-function php_help($section) {
-  switch ($section) {
+function php_help($path, $arg) {
+  switch ($path) {
     case 'admin/help#php':
       return t('Adds a filter option to include PHP in content.');
   }

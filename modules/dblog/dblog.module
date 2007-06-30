@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.module,v 1.10 2007/06/04 07:22:17 dries Exp $
+// $Id: dblog.module,v 1.11 2007/06/30 19:46:55 goba Exp $
 
 /**
  * @file
@@ -15,8 +15,8 @@
 /**
  * Implementation of hook_help().
  */
-function dblog_help($section) {
-  switch ($section) {
+function dblog_help($path, $arg) {
+  switch ($path) {
     case 'admin/help#dblog':
       $output = '<p>'. t('The dblog module monitors your system, capturing system events in a log to be reviewed by an authorized individual at a later time. This is useful for site administrators who want a quick overview of activities on their site. The logs also record the sequence of events, so it can be useful for debugging site errors.') .'</p>';
       $output .= '<p>'. t('The dblog log is simply a list of recorded events containing usage data, performance data, errors, warnings and operational information. Administrators should check the dblog report on a regular basis to ensure their site is working properly.') .'</p>';

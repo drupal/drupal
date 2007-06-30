@@ -1,5 +1,5 @@
 <?php
-// $Id: syslog.module,v 1.7 2007/04/30 17:03:28 dries Exp $
+// $Id: syslog.module,v 1.8 2007/06/30 19:46:58 goba Exp $
 
 /**
  * @file
@@ -16,8 +16,8 @@ else {
 /**
  * Implementation of hook_help().
  */
-function syslog_help($section) {
-  switch ($section) {
+function syslog_help($path, $arg) {
+  switch ($path) {
     case 'admin/help#syslog':
       return '<p>'. t('Provides the facility to log Drupal messages to the operating systems\' syslog facility.') .'</p>';
   }

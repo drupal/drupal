@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.425 2007/06/28 08:56:28 dries Exp $
+// $Id: book.module,v 1.426 2007/06/30 19:46:55 goba Exp $
 
 /**
  * @file
@@ -990,8 +990,8 @@ function book_admin_overview() {
 /**
  * Implementation of hook_help().
  */
-function book_help($section) {
-  switch ($section) {
+function book_help($path, $arg) {
+  switch ($path) {
     case 'admin/help#book':
       $output = '<p>'. t('The <em>book</em> module is suited for creating structured, multi-page hypertexts such as site resource guides, manuals, and Frequently Asked Questions (FAQs). It permits a document to have chapters, sections, subsections, etc. Authors with suitable permissions can add pages to a collaborative book,  placing them into the existing document by adding them to a table of contents menu.') .'</p>';
       $output .= '<p>'. t('Book pages have navigation elements at the bottom of the page for moving through the text.  These link to the previous and next pages in the book, as well as a link labeled <em>up</em>, leading to the level above in the structure.  More comprehensive navigation may be provided by enabling the <em>book navigation block</em> on the <a href="@admin-block">block administration page</a>.', array('@admin-block' => url('admin/build/block'))) .'</p>';
@@ -1004,9 +1004,7 @@ function book_help($section) {
       return '<p>'. t('The book module offers a means to organize content, authored by many users, in an online manual, outline or FAQ.') .'</p>';
     case 'admin/content/book/orphan':
       return '<p>'. t('Pages in a book are like a tree. As pages are edited, reorganized and removed, child pages might be left with no link to the rest of the book. Such pages are referred to as "orphan pages". On this page, administrators can review their books for orphans and reattach those pages as desired.') .'</p>';
-  }
-
-  if (arg(0) == 'node' && is_numeric(arg(1)) && arg(2) == 'outline') {
-    return '<p>'. t('The outline feature allows you to include posts in the <a href="@book">book hierarchy</a>.', array('@book' => url('book'))) .'</p>';
+    case 'node/%/outline':
+      return '<p>'. t('The outline feature allows you to include posts in the <a href="@book">book hierarchy</a>.', array('@book' => url('book'))) .'</p>';
   }
 }

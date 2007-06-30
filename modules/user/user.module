@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.812 2007/06/29 18:19:25 dries Exp $
+// $Id: user.module,v 1.813 2007/06/30 19:46:58 goba Exp $
 
 /**
  * @file
@@ -2767,10 +2767,10 @@ function user_admin($callback_arg = '') {
 /**
  * Implementation of hook_help().
  */
-function user_help($section) {
+function user_help($path, $arg) {
   global $user;
 
-  switch ($section) {
+  switch ($path) {
     case 'admin/help#user':
       $output = '<p>'. t('The user module allows users to register, login, and log out. Users benefit from being able to sign on because it associates content they create with their account and allows various permissions to be set for their roles. The user module supports user roles which can setup fine grained permissions allowing each role to do only what the administrator wants them to. Each user is assigned to one or more roles. By default there are two roles <em>anonymous</em> - a user who has not logged in, and <em>authenticated</em> a user who has signed up and who has been authorized.') .'</p>';
       $output .= '<p>'. t('Users can use their own name or handle and can fine tune some personal configuration settings through their individual my account page. Registered users need to authenticate by supplying either a local username and password, or a remote username and password such as DelphiForums ID, or one from a Drupal powered website. A visitor accessing your website is assigned an unique ID, the so-called session ID, which is stored in a cookie. For security\'s sake, the cookie does not contain personal information but acts as a key to retrieve the information stored on your server.') .'</p>';

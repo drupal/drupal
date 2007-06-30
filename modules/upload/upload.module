@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.168 2007/06/22 08:46:15 unconed Exp $
+// $Id: upload.module,v 1.169 2007/06/30 19:46:58 goba Exp $
 
 /**
  * @file
@@ -10,8 +10,8 @@
 /**
  * Implementation of hook_help().
  */
-function upload_help($section) {
-  switch ($section) {
+function upload_help($path, $arg) {
+  switch ($path) {
     case 'admin/help#upload':
       $output = '<p>'. t('The upload module allows users to upload files to the site. The ability to upload files to a site is important for members of a community who want to share work. It is also useful to administrators who want to keep uploaded files connected to a node or page.') .'</p>';
       $output .= '<p>'. t('Users with the upload files permission can upload attachments. You can choose which post types can take attachments on the content types settings page. Each user role can be customized for the file size of uploads, and the dimension of image files.') .'</p>';

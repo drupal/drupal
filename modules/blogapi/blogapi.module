@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.106 2007/04/30 17:03:23 dries Exp $
+// $Id: blogapi.module,v 1.107 2007/06/30 19:46:55 goba Exp $
 
 /**
  * @file
@@ -9,8 +9,8 @@
 /**
  * Implementation of hook_help().
  */
-function blogapi_help($section) {
-  switch ($section) {
+function blogapi_help($path, $arg) {
+  switch ($path) {
     case 'admin/help#blogapi':
       $output = '<p>'. t('The blog API module enables a post to be posted to a site via external GUI applications. Many users prefer to use external tools to improve their ability to read and post responses in a customized way. The blog api provides users the freedom to use the blogging tools they want but still have the blogging server of choice.') .'</p>';
       $output .= '<p>'. t('When this module is enabled and configured you can use programs like <a href="@external-http-ecto-kung-foo-tv">Ecto</a> to create and publish posts from your desktop. Blog API module supports several XML-RPC based blogging APIs such as the <a href="@-">Blogger API</a>, <a href="@external-http-www-xmlrpc-com-metaWeblogApi">MetaWeblog API</a>, and most of the <a href="@external-http-www-movabletype-org-docs-mtmanual_programmatic-html">Movable Type API</a>. Any desktop blogging tools or other services (e.g. <a href="@external-http-www-flickr-com">Flickr\'s</a> "post to blog") that support these APIs should work with this site.', array('@external-http-ecto-kung-foo-tv' => 'http://ecto.kung-foo.tv/', '@-' => url('http://www.blogger.com/developers/api/1_docs/'), '@external-http-www-xmlrpc-com-metaWeblogApi' => 'http://www.xmlrpc.com/metaWeblogApi', '@external-http-www-movabletype-org-docs-mtmanual_programmatic-html' => 'http://www.movabletype.org/docs/mtmanual_programmatic.html', '@external-http-www-flickr-com' => 'http://www.flickr.com')) .'</p>';

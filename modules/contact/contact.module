@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.91 2007/06/26 22:21:08 goba Exp $
+// $Id: contact.module,v 1.92 2007/06/30 19:46:55 goba Exp $
 
 /**
  * @file
@@ -9,8 +9,8 @@
 /**
  * Implementation of hook_help().
  */
-function contact_help($section) {
-  switch ($section) {
+function contact_help($path, $arg) {
+  switch ($path) {
     case 'admin/help#contact':
       $output = '<p>'. t('The contact module enables the use of both personal and site-wide contact forms, thereby facilitating easy communication within the community. While personal contact forms allow users to contact each other by e-mail, site-wide forms allow community members to contact the site administration from a central location. Users can specify a subject and message in the contact form, and also request that a copy of the e-mail be sent to their own address.') .'</p>';
       $output .= '<p>'. t("Users can activate/deactivate their personal contact forms in their account settings. Upon activation, a contact tab will appear in their user profiles. Privileged users such as site administrators are able to contact users even if they have chosen not to enable this feature.") .'</p>';

@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal.module,v 1.146 2007/06/15 06:53:26 dries Exp $
+// $Id: drupal.module,v 1.147 2007/06/30 19:46:55 goba Exp $
 
 /**
  * @file
@@ -9,8 +9,8 @@
 /**
  * Implementation of hook_help().
  */
-function drupal_help($section) {
-  switch ($section) {
+function drupal_help($path, $arg) {
+  switch ($path) {
     case 'admin/help#drupal':
       $output = '<p>'. t('The Drupal module uses the XML-RPC network communication protocol to connect your site with a central server that maintains a directory of client sites.') .'</p>';
       $output .= t('<p>Enabling the Drupal module will allow you to:</p>

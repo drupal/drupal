@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.260 2007/06/22 05:44:21 unconed Exp $
+// $Id: statistics.module,v 1.261 2007/06/30 19:46:58 goba Exp $
 
 /**
  * @file
@@ -9,8 +9,8 @@
 /**
  * Implementation of hook_help().
  */
-function statistics_help($section) {
-  switch ($section) {
+function statistics_help($path, $arg) {
+  switch ($path) {
     case 'admin/help#statistics':
       $output = '<p>'. t('The statistics module keeps track of numerous statistics of site usage. It counts how many times, and from where each of your posts is viewed. The statistics module can be used to learn many useful things about how users are interacting with each other and with your site.') .'</p>';
       $output .= t('<p>Statistics module features</p>

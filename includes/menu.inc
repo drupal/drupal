@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.180 2007/06/22 06:12:09 unconed Exp $
+// $Id: menu.inc,v 1.181 2007/06/30 19:46:54 goba Exp $
 
 /**
  * @file
@@ -838,30 +838,32 @@ function theme_menu_local_task($link, $active = FALSE) {
 }
 
 /**
+ * Generates elements for the $arg array in the help hook.
+ */
+function drupal_help_arg($arg = array()) {
+  // Note - the number of empty elements should be > MENU_MAX_PARTS.
+  return $arg + array('', '', '', '', '', '', '', '', '', '', '', '');
+}
+
+/**
  * Returns the help associated with the active menu item.
  */
 function menu_get_active_help() {
-
   $output = '';
-  $item = menu_get_item();
+  $router_path = menu_tab_root_path();
 
-  if (!$item || !$item['access']) {
-    // Don't return help text for areas the user cannot access.
-    return;
-  }
-  $path = ($item['type'] == MENU_DEFAULT_LOCAL_TASK) ? $item['tab_parent'] : $item['path'];
+  $arg = drupal_help_arg(arg(NULL));
+  $empty_arg = drupal_help_arg();
 
   foreach (module_list() as $name) {
     if (module_hook($name, 'help')) {
-      if ($temp = module_invoke($name, 'help', $path)) {
-        $output .= $temp ."\n";
+      // Lookup help for this path.
+      if ($help = module_invoke($name, 'help', $router_path, $arg)) {
+        $output .= $help ."\n";
       }
-      if (module_hook('help', 'page')) {
-        if (arg(0) == "admin") {
-          if (module_invoke($name, 'help', 'admin/help#'. arg(2)) && !empty($output)) {
-            $output .= theme("more_help_link", url('admin/help/'. arg(2)));
-          }
-        }
+      // Add "more help" link on admin pages if the module provides a standalone help page.
+      if (module_hook('help', 'page') && $arg[0] == "admin" && module_invoke($name, 'help', 'admin/help#'. $arg[2], $empty_arg) && $help) {
+        $output .= theme("more_help_link", url('admin/help/'. $arg[2]));
       }
     }
   }
@@ -913,11 +915,16 @@ function menu_secondary_links() {
  *
  * @param $level
  *   The level of tasks you ask for. Primary tasks are 0, secondary are 1.
+ * @param $return_root
+ *   Whether to return the root path for the current page.
  * @return
- *   Themed output corresponding to the tabs of the requested level.
+ *   Themed output corresponding to the tabs of the requested level, or if
+ *   router path if $root == TRUE.  This router path will correspond to the
+ *   a parent tab, if the current page is a default local task.
  */
-function menu_local_tasks($level = 0) {
+function menu_local_tasks($level = 0, $return_root = FALSE) {
   static $tabs = array();
+  static $root_path;
 
   if (empty($tabs)) {
     $router_item = menu_get_item();
@@ -929,6 +936,7 @@ function menu_local_tasks($level = 0) {
     $map = arg();
     $children = array();
     $tasks = array();
+    $root_path = $router_item['path'];
 
     while ($item = db_fetch_array($result)) {
       _menu_translate($item, $map, TRUE);
@@ -984,6 +992,9 @@ function menu_local_tasks($level = 0) {
             // Find the first parent which is not a default local task.
             for ($p = $item['tab_parent']; $tasks[$p]['type'] == MENU_DEFAULT_LOCAL_TASK; $p = $tasks[$p]['tab_parent']);
             $link = l($item['title'], $tasks[$p]['href']);
+            if ($item['path'] == $router_item['path']) {
+              $root_path = $tasks[$p]['path'];
+            }
           }
           else {
             $link = l($item['title'], $item['href']);
@@ -1011,8 +1022,14 @@ function menu_local_tasks($level = 0) {
     // Remove the depth, we are interested only in their relative placement.
     $tabs = array_values($tabs);
   }
-  // We do not display single tabs.
-  return (isset($tabs[$level]) && $tabs[$level]['count'] > 1) ? $tabs[$level]['output'] : '';
+
+  if ($return_root) {
+    return $root_path;
+  }
+  else {
+    // We do not display single tabs.
+    return (isset($tabs[$level]) && $tabs[$level]['count'] > 1) ? $tabs[$level]['output'] : '';
+  }
 }
 
 function menu_primary_local_tasks() {
@@ -1024,8 +1041,14 @@ function menu_secondary_local_tasks() {
 }
 
 /**
- * Returns the rendered local tasks. The default implementation renders
- * them as tabs.
+ * Returns the router path, or the path of the parent tab of a default local task.
+ */
+function menu_tab_root_path() {
+  return menu_local_tasks(0, TRUE);
+}
+
+/**
+ * Returns the rendered local tasks. The default implementation renders them as tabs.
  *
  * @ingroup themeable
  */

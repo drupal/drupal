@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.843 2007/06/29 18:06:51 dries Exp $
+// $Id: node.module,v 1.844 2007/06/30 19:46:56 goba Exp $
 
 /**
  * @file
@@ -12,8 +12,8 @@ define('NODE_NEW_LIMIT', time() - 30 * 24 * 60 * 60);
 /**
  * Implementation of hook_help().
  */
-function node_help($section) {
-  switch ($section) {
+function node_help($path, $arg) {
+  switch ($path) {
     case 'admin/help#node':
       $output = '<p>'. t('All content in a website is stored and treated as <b>nodes</b>. Therefore nodes are any postings such as blogs, stories, polls and forums. The node module manages these content types and is one of the strengths of Drupal over other content management systems.') .'</p>';
       $output .= '<p>'. t('Treating all content as nodes allows the flexibility of creating new types of content. It also allows you to painlessly apply new features or changes to all content. Comments are not stored as nodes but are always associated with a node.') .'</p>';
@@ -27,20 +27,24 @@ function node_help($section) {
 ');
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@node">Node page</a>.', array('@node' => 'http://drupal.org/handbook/modules/node/')) .'</p>';
       return $output;
+    case 'admin/content/node':
+      return ' '; // Return a non-null value so that the 'more help' link is shown.
     case 'admin/content/search':
       return '<p>'. t('Enter a simple pattern to search for a post. Words are matched exactly. Phrases can be surrounded by quotes to do an exact search.') .'</p>';
     case 'admin/content/types':
       return '<p>'. t('Below is a list of all the content types on your site. All posts that exist on your site are instances of one of these content types.') .'</p>';
     case 'admin/content/types/add':
       return '<p>'. t('To create a new content type, enter the human-readable name, the machine-readable name, and all other relevant fields that are on this page. Once created, users of your site will be able to create posts that are instances of this content type.') .'</p>';
+    case 'node/%/revisions':
+      return '<p>'. t('The revisions let you track differences between multiple versions of a post.') .'</p>';
+    case 'node/%/edit':
+      $node = node_load($arg[1]);
+      $type = node_get_types('type', $node->type);
+      return '<p>'. (isset($type->help) ? filter_xss_admin($type->help) : '') .'</p>';
   }
 
-  if (arg(0) == 'node' && is_numeric(arg(1)) && arg(2) == 'revisions') {
-    return '<p>'. t('The revisions let you track differences between multiple versions of a post.') .'</p>';
-  }
-
-  if (arg(0) == 'node' && arg(1) == 'add' && $type = arg(2)) {
-    $type = node_get_types('type', str_replace('-', '_', arg(2)));
+  if ($arg[0] == 'node' && $arg[1] == 'add' && $arg[2]) {
+    $type = node_get_types('type', str_replace('-', '_', $arg[2]));
     return '<p>'. (isset($type->help) ? filter_xss_admin($type->help) : '') .'</p>';
   }
 }

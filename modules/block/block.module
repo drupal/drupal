@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.267 2007/06/28 00:39:47 goba Exp $
+// $Id: block.module,v 1.268 2007/06/30 19:46:55 goba Exp $
 
 /**
  * @file
@@ -15,8 +15,8 @@ define('BLOCK_REGION_NONE', -1);
 /**
  * Implementation of hook_help().
  */
-function block_help($section) {
-  switch ($section) {
+function block_help($path, $arg) {
+  switch ($path) {
     case 'admin/help#block':
       $output = '<p>'. t('Blocks are boxes of content that may be rendered into certain regions of your web pages, for example, into sidebars. Blocks are usually generated automatically by modules (e.g., Recent Forum Topics), but administrators can also define custom blocks.') .'</p>';
       $output .= '<p>'. t('The region each block appears in depends on both which theme you are using (some themes allow greater control over block placement than others), and on the settings in the block administration section.') .'</p>';
