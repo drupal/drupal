@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.62 2007/06/25 12:44:11 goba Exp $
+// $Id: install.php,v 1.63 2007/06/30 08:17:05 goba Exp $
 
 require_once './includes/install.inc';
 
@@ -107,12 +107,13 @@ function install_main() {
     drupal_install_profile($profile, $modules);
 
     // Warn about settings.php permissions risk
-    $settings_file = './'. conf_path() .'/settings.php';
-    if (!drupal_verify_install_file($settings_file, FILE_EXIST|FILE_READABLE|FILE_NOT_WRITABLE)) {
-      drupal_set_message(st('All necessary changes to %file have been made, so you should now remove write permissions to this file. Failure to remove write permissions to this file is a security risk.', array('%file' => $settings_file)), 'error');
+    $settings_dir = './'. conf_path();
+    $settings_file = $settings_dir .'/settings.php';
+    if (!drupal_verify_install_file($settings_file, FILE_EXIST|FILE_READABLE|FILE_NOT_WRITABLE) || !drupal_verify_install_file($settings_dir, FILE_NOT_WRITABLE, 'dir')) {
+      drupal_set_message(st('All necessary changes to %dir and %file have been made, so you should now remove write permissions to them. Failure to remove write permissions to them is a security risk.', array('%dir' => $settings_dir, '%file' => $settings_file)), 'error');
     }
     else {
-      drupal_set_message(st('All necessary changes to %file have been made. It has been set to read-only for security.', array('%file' => $settings_file)));
+      drupal_set_message(st('All necessary changes to %dir and %file have been made. They have been set to read-only for security.', array('%dir' => $settings_dir, '%file' => $settings_file)));
     }
   }
 

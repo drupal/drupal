@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.124 2007/06/26 20:24:19 goba Exp $
+// $Id: system.install,v 1.125 2007/06/30 08:17:05 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -66,12 +66,20 @@ function system_requirements($phase) {
 
   // Test settings.php file writability
   if ($phase == 'runtime') {
-    if (!drupal_verify_install_file(conf_path() .'/settings.php', FILE_EXIST|FILE_READABLE|FILE_NOT_WRITABLE)) {
+    $conf_dir = drupal_verify_install_file(conf_path(), FILE_NOT_WRITABLE, 'dir');
+    $conf_file = drupal_verify_install_file(conf_path() .'/settings.php', FILE_EXIST|FILE_READABLE|FILE_NOT_WRITABLE);
+    if (!$conf_dir || !$conf_file) {
       $requirements['settings.php'] = array(
         'value' => $t('Not protected'),
         'severity' => REQUIREMENT_ERROR,
-        'description' => $t('The file %file is not protected from modifications and poses a security risk. You must change the file\'s permissions to be non-writable.', array('%file' => conf_path() .'/settings.php')),
+        'description' => '',
       );
+      if (!$conf_dir) {
+        $requirements['settings.php']['description'] .= $t('The directory %file is not protected from modifications and poses a security risk. You must change the directory\'s permissions to be non-writable. ', array('%file' => conf_path()));
+      }
+      if (!$conf_file) {
+        $requirements['settings.php']['description'] .= $t('The file %file is not protected from modifications and poses a security risk. You must change the file\'s permissions to be non-writable.', array('%file' => conf_path() .'/settings.php'));
+      }
     }
     else {
       $requirements['settings.php'] = array(
