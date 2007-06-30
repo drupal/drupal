@@ -1,5 +1,5 @@
 <?php
-// $Id: translation.module,v 1.2 2007/06/30 19:46:58 goba Exp $
+// $Id: translation.module,v 1.3 2007/06/30 21:00:51 goba Exp $
 
 /**
  * @file
@@ -335,4 +335,45 @@ function translation_node_get_translations($tnid) {
  */
 function translation_supported_type($type) {
   return variable_get('language_' . $type, 0) == TRANSLATION_ENABLED;
+}
+
+/**
+ * Return paths of all translations of a node, based on
+ * its Drupal path. 
+ *
+ * @param $path
+ *   A Drupal path, for example node/432.
+ * @return
+ *   An array of paths of translations of the node accessible 
+ *   to the current user keyed with language codes.
+ */
+function translation_path_get_translations($path) {
+  $paths = array();
+  // Check for a node related path, and for its translations.
+  if ((preg_match("!^node/([0-9]+)(/.+|)$!", $path, $matches)) && ($node = node_load((int)$matches[1])) && !empty($node->tnid)) {
+    foreach (translation_node_get_translations($node->tnid) as $language => $translation_node) {
+      $paths[$language] = 'node/'. $translation_node->nid . $matches[2];
+    }
+  }
+  return $paths;
+}
+
+/**
+ * Implementation of hook_alter_translation_link().
+ *
+ * Replaces links with pointers to translated versions of the content.
+ */
+function translation_translation_link_alter(&$links, $path) {
+  if ($paths = translation_path_get_translations($path)) {
+    foreach ($links as $langcode => $link) {
+      if (isset($paths[$langcode])) {
+        // Translation in a different node.
+        $links[$langcode]['href'] = $paths[$langcode];
+      }
+      else {
+        // No translation in this language, or no permission to view.
+        unset($links[$langcode]);
+      }
+    }
+  }
 }
