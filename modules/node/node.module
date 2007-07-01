@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.845 2007/07/01 17:41:15 dries Exp $
+// $Id: node.module,v 1.846 2007/07/01 21:16:09 goba Exp $
 
 /**
  * @file
@@ -8,6 +8,12 @@
  */
 
 define('NODE_NEW_LIMIT', time() - 30 * 24 * 60 * 60);
+
+define('NODE_BUILD_NORMAL', 0);
+define('NODE_BUILD_PREVIEW', 1);
+define('NODE_BUILD_SEARCH_INDEX', 2);
+define('NODE_BUILD_SEARCH_RESULT', 3);
+define('NODE_BUILD_RSS', 4);
 
 /**
  * Implementation of hook_help().
@@ -811,6 +817,12 @@ function node_prepare($node, $teaser = FALSE) {
  *   of the node's body.
  */
 function node_build_content($node, $teaser = FALSE, $page = FALSE) {
+
+  // The build mode identifies the target for which the node is built.
+  if (!isset($node->build_mode)) {
+    $node->build_mode = NODE_BUILD_NORMAL;
+  }
+
   // Remove the delimiter (if any) that separates the teaser from the body.
   $node->body = isset($node->body) ? str_replace('<!--break-->', '', $node->body) : '';
 
@@ -989,6 +1001,7 @@ function node_search($op = 'search', $keys = NULL) {
       foreach ($find as $item) {
         // Build the node body.
         $node = node_load($item->sid);
+        $node->build_mode = NODE_BUILD_SEARCH_RESULT;
         $node = node_build_content($node, FALSE, FALSE);
         $node->body = drupal_render($node->content);
 
@@ -1935,6 +1948,7 @@ function node_feed($nodes = 0, $channel = array()) {
   while ($node = db_fetch_object($nodes)) {
     // Load the specified node:
     $item = node_load($node->nid);
+    $node->build_mode = NODE_BUILD_RSS;
     $link = url("node/$node->nid", array('absolute' => TRUE));
 
     if ($item_length != 'title') {
@@ -2353,7 +2367,7 @@ function node_preview($node) {
     // Previewing alters $node so it needs to be cloned.
     if (!form_get_errors()) {
       $cloned_node = drupal_clone($node);
-      $cloned_node->in_preview = TRUE;
+      $cloned_node->build_mode = NODE_BUILD_PREVIEW;
       $output = theme('node_preview', $cloned_node);
     }
     drupal_set_title(t('Preview'));
@@ -2616,6 +2630,7 @@ function node_update_index() {
     $node = node_load($node->nid);
 
     // Build the node body.
+    $node->build_mode = NODE_BUILD_SEARCH_INDEX;
     $node = node_build_content($node, FALSE, FALSE);
     $node->body = drupal_render($node->content);
 
