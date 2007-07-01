@@ -1030,9 +1030,17 @@ function language_list($field = 'language', $reset = FALSE) {
 
   // Init language list
   if (!isset($languages)) {
-    $result = db_query('SELECT * FROM {languages} ORDER BY weight ASC, name ASC');
-    while ($row = db_fetch_object($result)) {
-      $languages['language'][$row->language] = $row;
+    if (variable_get('language_count', 1) > 1) {
+      $result = db_query('SELECT * FROM {languages} ORDER BY weight ASC, name ASC');
+      while ($row = db_fetch_object($result)) {
+        $languages['language'][$row->language] = $row;
+      }
+    }
+    else {
+      // One language only, the locale tables might not even
+      // be in place, so use the default language only.
+      $default = language_default();
+      $languages['language'][$default->language] = $default;
     }
   }
 
