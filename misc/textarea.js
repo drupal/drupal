@@ -1,8 +1,8 @@
 // $Id$
 
-Drupal.textareaAttach = function() {
-  $('textarea.resizable:not(.processed)').each(function() {
-    var textarea = $(this).addClass('processed'), staticOffset = null;
+Drupal.behaviors.textarea = function(context) {
+  $('textarea.resizable:not(.textarea-processed)', context).each(function() {
+    var textarea = $(this).addClass('textarea-processed'), staticOffset = null;
 
     // When wrapping the text area, work around an IE margin bug.  See:
     // http://jaspan.com/ie-inherited-margin-bug-form-elements-and-haslayout
@@ -37,7 +37,3 @@ Drupal.textareaAttach = function() {
     }
   });
 };
-
-if (Drupal.jsEnabled) {
-  $(document).ready(Drupal.textareaAttach);
-}

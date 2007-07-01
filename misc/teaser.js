@@ -5,9 +5,9 @@
  *
  * Note: depends on resizable textareas.
  */
-Drupal.teaserAttach = function() {
-  $('textarea.teaser:not(.joined)').each(function() {
-    var teaser = $(this).addClass('joined');
+Drupal.behaviors.teaser = function(context) {
+  $('textarea.teaser:not(.teaser-processed)', context).each(function() {
+    var teaser = $(this).addClass('teaser-processed');
 
     // Move teaser textarea before body, and remove its form-item wrapper.
     var body = $('#'+ Drupal.settings.teaser[this.id]);
@@ -75,7 +75,3 @@ Drupal.teaserAttach = function() {
 
   });
 };
-
-if (Drupal.jsEnabled) {
-  $(document).ready(Drupal.teaserAttach);
-}

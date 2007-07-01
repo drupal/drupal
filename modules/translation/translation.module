@@ -339,12 +339,12 @@ function translation_supported_type($type) {
 
 /**
  * Return paths of all translations of a node, based on
- * its Drupal path. 
+ * its Drupal path.
  *
  * @param $path
  *   A Drupal path, for example node/432.
  * @return
- *   An array of paths of translations of the node accessible 
+ *   An array of paths of translations of the node accessible
  *   to the current user keyed with language codes.
  */
 function translation_path_get_translations($path) {
