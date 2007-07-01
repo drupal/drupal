@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.846 2007/07/01 21:16:09 goba Exp $
+// $Id: node.module,v 1.847 2007/07/01 21:52:43 goba Exp $
 
 /**
  * @file
@@ -204,10 +204,23 @@ function node_teaser_js(&$form, &$form_state) {
 
 /**
  * Automatically generate a teaser for a node body in a given format.
+ *
+ * @param $body
+ *   The content for which a teaser will be generated.
+ * @param $format
+ *   The format of the content. If the content contains PHP code, we do not
+ *   split it up to prevent parse errors.
+ * @param $size
+ *   The desired character length of the teaser. If omitted, the default 
+ *   value will be used.
+ * @return
+ *   The generated teaser.
  */
-function node_teaser($body, $format = NULL) {
+function node_teaser($body, $format = NULL, $size = NULL) {
 
-  $size = variable_get('teaser_length', 600);
+  if (!isset($size)) {
+    $size = variable_get('teaser_length', 600);
+  }
 
   // Find where the delimiter is in the body
   $delimiter = strpos($body, '<!--break-->');
