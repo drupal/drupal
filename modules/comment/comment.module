@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.559 2007/07/01 17:41:14 dries Exp $
+// $Id: comment.module,v 1.560 2007/07/01 23:15:41 goba Exp $
 
 /**
  * @file
@@ -183,6 +183,9 @@ function comment_theme() {
     ),
     'comment_wrapper' => array(
       'arguments' => array('content' => NULL),
+    ),
+    'comment_submitted' => array(
+      'arguments' => array('comment' => NULL),
     ),
   );
 }
@@ -1853,9 +1856,7 @@ function template_preprocess_comment(&$variables) {
   $variables['new']       = $comment->new ? t('new') : '';
   $variables['picture']   = theme_get_setting('toggle_comment_user_picture') ? theme('user_picture', $comment) : '';
   $variables['signature'] = $comment->signature;
-  $variables['submitted'] = t('Submitted by !a on @b.',
-                      array('!a' => theme('username', $comment),
-                            '@b' => format_date($comment->timestamp)));
+  $variables['submitted'] = theme('comment_submitted', $comment);
   $variables['title']     = l($comment->subject, $_GET['q'], array('fragment' => "comment-$comment->cid"));
   $variables['template_files'][] = 'comment-'. $node->type;
 }
@@ -1915,6 +1916,17 @@ function theme_comment_post_forbidden($nid) {
  */
 function theme_comment_wrapper($content) {
   return '<div id="comments">'. $content .'</div>';
+}
+
+/**
+ * Make the submitted variable themable
+ */
+function theme_comment_submitted($comment) {
+  return t('Submitted by !username on @datetime.',
+    array(
+      '!username' => theme('username', $comment),
+      '@datetime' => format_date($comment->timestamp)
+    ));
 }
 
 function _comment_delete_thread($comment) {

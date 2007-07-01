@@ -1,5 +1,5 @@
 <?php
-// $Id: template.php,v 1.10 2007/04/27 07:42:54 dries Exp $
+// $Id: template.php,v 1.11 2007/07/01 23:15:41 goba Exp $
 
 /**
  * Sets the body-tag class attribute.
@@ -82,4 +82,20 @@ function phptemplate_menu_local_tasks() {
   }
 
   return $output;
+}
+
+function phptemplate_comment_submitted($comment) {
+  return t('!datetime — !username',
+    array(
+      '!username' => theme('username', $comment),
+      '!datetime' => format_date($comment->timestamp)
+    ));
+}
+
+function phptemplate_node_submitted($node) {
+  return t('!datetime — !username',
+    array(
+      '!username' => theme('username', $node),
+      '!datetime' => format_date($node->created),
+    ));
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.847 2007/07/01 21:52:43 goba Exp $
+// $Id: node.module,v 1.848 2007/07/01 23:15:41 goba Exp $
 
 /**
  * @file
@@ -83,6 +83,9 @@ function node_theme() {
     ),
     'node_log_message' => array(
       'arguments' => array('log' => NULL),
+    ),
+    'node_submitted' => array(
+      'arguments' => array('node' => NULL),
     ),
   );
 }
@@ -3202,6 +3205,17 @@ function node_forms() {
     $forms[$type .'_node_form']['callback'] = 'node_form';
   }
   return $forms;
+}
+
+/**
+ * Format the "Submitted by username on date/time" for each node
+ */
+function theme_node_submitted($node) {
+  return t('Submitted by !username on @datetime',
+    array(
+      '!username' => theme('username', $node),
+      '@datetime' => format_date($node->created),
+    ));
 }
 
 /**

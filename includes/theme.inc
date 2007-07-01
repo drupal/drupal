@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.359 2007/06/28 09:11:06 dries Exp $
+// $Id: theme.inc,v 1.360 2007/07/01 23:15:40 goba Exp $
 
 /**
  * @file
@@ -1609,7 +1609,7 @@ function template_preprocess_node(&$variables) {
 
   // Display info only on certain node types.
   if (theme_get_setting('toggle_node_info_' . $node->type)) {
-    $variables['submitted'] = t('Submitted by !a on @b.', array('!a' => theme('username', $node), '@b' => format_date($node->created)));
+    $variables['submitted'] = theme('node_submitted', $node);
     $variables['picture'] = theme_get_setting('toggle_node_user_picture') ? theme('user_picture', $node) : '';
   }
   else {
@@ -1637,3 +1637,4 @@ function template_preprocess_block(&$variables) {
   $variables['template_files'][] = 'block-' . $variables['block']->module;
   $variables['template_files'][] = 'block-' . $variables['block']->module .'-'. $variables['block']->delta;
 }
+
