@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.183 2007/07/01 15:37:09 dries Exp $
+// $Id: locale.module,v 1.184 2007/07/01 19:49:19 goba Exp $
 
 /**
  * @file
@@ -190,25 +190,33 @@ function locale_locale($op = 'groups') {
  * Implementation of hook_user().
  */
 function locale_user($type, $edit, &$user, $category = NULL) {
-  if ($type == 'form' && $category == 'account' && variable_get('language_count', 1) > 1 && variable_get('language_negotiation', LANGUAGE_NEGOTIATION_NONE) == LANGUAGE_NEGOTIATION_PATH) {
+  global $language;
+
+  // If we have more then one language and either creating a user on the
+  // admin interface or edit the user, show the language selector.
+  if (variable_get('language_count', 1) > 1 && ($type == 'register' && user_access('administer users') || $type == 'form' && $category == 'account' )) {
     $languages = language_list('enabled');
     $languages = $languages['1'];
-    if ($user->language == '') {
-      $user->language = language_default('language');
-    }
+
+    // If the user is being created, we set the user language to the page language.
+    $user_language = $user ? user_language($user) : $language;
+
     $names = array();
     foreach ($languages as $langcode => $language) {
       $names[$langcode] = t($language->name) .' ('. $language->native .')';
     }
-    $form['locale'] = array('#type' => 'fieldset',
-      '#title' => t('Interface language settings'),
+    $form['locale'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Language settings'),
       '#weight' => 1,
     );
-    $form['locale']['language'] = array('#type' => 'radios',
+    
+    $form['locale']['language'] = array(
+      '#type' => 'radios',
       '#title' => t('Language'),
-      '#default_value' => $user->language,
+      '#default_value' => $user_language->language,
       '#options' => $names,
-      '#description' => t('Selecting a different locale will change the interface language of the site.'),
+      '#description' => t('Sets the default site interface and e-mail language for this account.'),
     );
     return $form;
   }

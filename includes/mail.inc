@@ -1,82 +1,184 @@
 <?php
-// $Id: mail.inc,v 1.2 2007/06/28 07:48:40 dries Exp $
+// $Id: mail.inc,v 1.3 2007/07/01 19:49:19 goba Exp $
 
 /**
- * Send an e-mail message, using Drupal variables and default settings.
- * More information in the <a href="http://php.net/manual/en/function.mail.php">
- * PHP function reference for mail()</a>
+ * Compose and optionally send an e-mail message.
  *
- * @param $mailkey
- *   A key to identify the mail sent, for altering.
+ * Sending an e-mail works with defining an e-mail template (subject, text
+ * and possibly e-mail headers) and the replacement values to use in the
+ * appropriate places in the template. Processed e-mail templates are
+ * requested from hook_mail() from the module sending the e-mail. Any module
+ * can modify the composed e-mail message array using hook_mail_alter().
+ * Finally drupal_mail_send() sends the e-mail, which can be reused
+ * if the exact same composed e-mail is to be sent to multiple recipients.
+ *
+ * Finding out what language to send the e-mail with needs some consideration.
+ * If you send e-mail to a user, her preferred language should be fine, so
+ * use user_preferred_language(). If you send email based on form values
+ * filled on the page, there are two additional choices if you are not
+ * sending the e-mail to a user on the site. You can either use the language
+ * used to generate the page ($language global variable) or the site default
+ * language. See language_default(). The former is good if sending e-mail to
+ * the person filling the form, the later is good if you send e-mail to an
+ * address previously set up (like contact addresses in a contact form).
+ *
+ * Taking care of always using the proper language is even more important
+ * when sending e-mails in a row to multiple users. Hook_mail() abstracts
+ * whether the mail text comes from an administrator setting or is
+ * static in the source code. It should also deal with common mail tokens,
+ * only receiving $params which are unique to the actual e-mail at hand.
+ *
+ * An example:
+ *
+ * @code
+ *   function example_notify($accounts) {
+ *     foreach ($accounts as $account) {
+ *       $params['account'] = $account;
+ *       // example_mail() will be called based on the first drupal_mail() parameter.
+ *       drupal_mail('example', 'notify', $account->mail, user_preferred_language($account), $params);
+ *     }
+ *   }
+ *   
+ *   function example_mail($key, &$message, $params) {
+ *     $language = $message['language'];
+ *     $variables = user_mail_tokens($params['account'], $language);
+ *     switch($key) {
+ *       case 'notice':
+ *         $message['subject'] = t('Notification from !site', $variables, $language->language);
+ *         $message['body'] = t("Dear !username\n\nThere is new content available on the site.", $variables, $language->language);
+ *         break;
+ *     }
+ *   }
+ * @endcode
+ *
+ * @param $module
+ *   A module name to invoke hook_mail() on. The {$module}_mail() hook will be
+ *   called to complete the $message structure which will already contain common
+ *   defaults.
+ * @param $key
+ *   A key to identify the e-mail sent. The final e-mail id for e-mail altering
+ *   will be {$module}_{$key}.
  * @param $to
- *   The mail address or addresses where the message will be send to. The
+ *   The e-mail address or addresses where the message will be sent to. The
  *   formatting of this string must comply with RFC 2822. Some examples are:
  *    user@example.com
  *    user@example.com, anotheruser@example.com
  *    User <user@example.com>
  *    User <user@example.com>, Another User <anotheruser@example.com>
- * @param $subject
- *   Subject of the e-mail to be sent. This must not contain any newline
- *   characters, or the mail may not be sent properly.
- * @param $body
- *   Message to be sent. Accepts both CRLF and LF line-endings.
- *   E-mail bodies must be wrapped. You can use drupal_wrap_mail() for
- *   smart plain text wrapping.
+ * @param $language
+ *   Language object to use to compose the e-mail.
+ * @param $params
+ *   Optional parameters to build the e-mail.
  * @param $from
  *   Sets From, Reply-To, Return-Path and Error-To to this value, if given.
- * @param $headers
- *   Associative array containing the headers to add. This is typically
- *   used to add extra headers (From, Cc, and Bcc).
- *   <em>When sending mail, the mail must contain a From header.</em>
- * @return Returns TRUE if the mail was successfully accepted for delivery,
- *   FALSE otherwise.
+ * @param $send
+ *   Send the message directly, without calling drupal_mail_send() manually.
+ * @return
+ *   The $message array structure containing all details of the
+ *   message. If already sent ($send = TRUE), then the 'result' element
+ *   will contain the success indicator of the e-mail.
  */
-function drupal_mail($mailkey, $to, $subject, $body, $from = NULL, $headers = array()) {
-  $defaults = array(
-    'MIME-Version' => '1.0',
-    'Content-Type' => 'text/plain; charset=UTF-8; format=flowed; delsp=yes',
-    'Content-Transfer-Encoding' => '8Bit',
-    'X-Mailer' => 'Drupal'
-  );
-  // To prevent e-mail from looking like spam, the addresses in the Sender and
-  // Return-Path headers should have a domain authorized to use the originating
-  // SMTP server.  Errors-To is redundant, but shouldn't hurt.
+function drupal_mail($module, $key, $to, $language, $params = array(), $from = NULL, $send = TRUE) {
   $default_from = variable_get('site_mail', ini_get('sendmail_from'));
+  
+  // Bundle up the variables into a structured array for altering.
+  $message = array(
+    'id'       => $module .'_'. $key,
+    'to'       => $to, 
+    'from'     => isset($from) ? $from : $default_from,
+    'language' => $language,
+    'params'   => $params,
+    'subject'  => '',
+    'body'     => array()
+  );
+
+  // Build the default headers
+  $headers = array(
+    'MIME-Version'              => '1.0',
+    'Content-Type'              => 'text/plain; charset=UTF-8; format=flowed; delsp=yes',
+    'Content-Transfer-Encoding' => '8Bit',
+    'X-Mailer'                  => 'Drupal'
+  );
   if ($default_from) {
-    $defaults['From'] = $defaults['Reply-To'] = $defaults['Sender'] = $defaults['Return-Path'] = $defaults['Errors-To'] = $default_from;
+    // To prevent e-mail from looking like spam, the addresses in the Sender and
+    // Return-Path headers should have a domain authorized to use the originating
+    // SMTP server. Errors-To is redundant, but shouldn't hurt.
+    $headers['From'] = $headers['Reply-To'] = $headers['Sender'] = $headers['Return-Path'] = $headers['Errors-To'] = $default_from;
   }
   if ($from) {
-    $defaults['From'] = $defaults['Reply-To'] = $from;
+    $headers['From'] = $headers['Reply-To'] = $from;
   }
-  $headers = array_merge($defaults, $headers);
-
-  // Bundle up the variables into a structured array for altering.
-  $message = array('#mail_id' => $mailkey, '#to' => $to, '#subject' => $subject, '#body' => $body, '#from' => $from, '#headers' => $headers);
+  $message['headers'] = $headers;
+    
+  // Build the e-mail (get subject and body, allow additional headers) by
+  // invoking hook_mail() on this module. We cannot use module_invoke() as
+  // we need to have $message by reference in hook_mail().
+  if (function_exists($function = $module .'_mail')) {
+    $function($key, $message, $params);
+  }
+  
+  // Invoke hook_mail_alter() to allow all modules to alter the resulting e-mail.
   drupal_alter('mail', $message);
-  $mailkey = $message['#mail_id'];
-  $to = $message['#to'];
-  $subject = $message['#subject'];
-  $body = $message['#body'];
-  $from = $message['#from'];
-  $headers = $message['#headers'];
 
-  // Allow for custom mail backend
+  // Concatenate and wrap the e-mail body.
+  $message['body'] = is_array($message['body']) ? drupal_wrap_mail(implode("\n\n", $message['body'])) : drupal_wrap_mail($message['body']);
+
+  // Optionally send e-mail.
+  if ($send) {
+    $message['result'] = drupal_mail_send($message);
+  }
+
+  return $message;
+}
+
+/**
+ * Send an e-mail message, using Drupal variables and default settings.
+ * More information in the <a href="http://php.net/manual/en/function.mail.php">
+ * PHP function reference for mail()</a>. See drupal_mail() for information on
+ * how $message is composed.
+ *
+ * @param $message
+ *  Message array with at least the following elements:
+ *   - id
+ *      A unique identifier of the e-mail type. Examples: 'contact_user_copy',
+ *      'user_password_reset'.
+ *   - to
+ *      The mail address or addresses where the message will be sent to. The
+ *      formatting of this string must comply with RFC 2822. Some examples are:
+ *       user@example.com
+ *       user@example.com, anotheruser@example.com
+ *       User <user@example.com>
+ *       User <user@example.com>, Another User <anotheruser@example.com>
+ *   - subject
+ *      Subject of the e-mail to be sent. This must not contain any newline
+ *      characters, or the mail may not be sent properly.
+ *   - body
+ *      Message to be sent. Accepts both CRLF and LF line-endings.
+ *      E-mail bodies must be wrapped. You can use drupal_wrap_mail() for
+ *      smart plain text wrapping.
+ *   - headers
+ *      Associative array containing all mail headers.
+ * @return
+ *   Returns TRUE if the mail was successfully accepted for delivery,
+ *   FALSE otherwise.
+ */
+function drupal_mail_send($message) {
+  // Allow for a custom mail backend.
   if (variable_get('smtp_library', '') && file_exists(variable_get('smtp_library', ''))) {
     include_once './' . variable_get('smtp_library', '');
-    return drupal_mail_wrapper($mailkey, $to, $subject, $body, $from, $headers);
+    return drupal_mail_wrapper($message);
   }
   else {
-    // Note: e-mail uses CRLF for line-endings, but PHP's API requires LF.
-    // They will appear correctly in the actual e-mail that is sent.
-
     $mimeheaders = array();
-    foreach ($headers as $name => $value) {
+    foreach ($message['headers'] as $name => $value) {
       $mimeheaders[] = $name .': '. mime_header_encode($value);
     }
     return mail(
-      $to,
-      mime_header_encode($subject),
-      str_replace("\r", '', $body),
+      $message['to'],
+      mime_header_encode($message['subject']),
+      // Note: e-mail uses CRLF for line-endings, but PHP's API requires LF.
+      // They will appear correctly in the actual e-mail that is sent.
+      str_replace("\r", '', $message['body']),
       join("\n", $mimeheaders)
     );
   }
@@ -127,7 +229,7 @@ function drupal_wrap_mail($text, $indent = '') {
 
 /**
  * Transform an HTML string into plain text, preserving the structure of the
- * markup. Useful for preparing the body of a node to be sent by email.
+ * markup. Useful for preparing the body of a node to be sent by e-mail.
  *
  * The output will be suitable for use as 'format=flowed; delsp=yes' text
  * (RFC 3676) and can be passed directly to drupal_mail() for sending.

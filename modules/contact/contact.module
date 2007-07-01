@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.93 2007/07/01 17:41:14 dries Exp $
+// $Id: contact.module,v 1.94 2007/07/01 19:49:19 goba Exp $
 
 /**
  * @file
@@ -360,48 +360,37 @@ function contact_mail_user(&$form_state, $recipient) {
  * Process the personal contact page form submission.
  */
 function contact_mail_user_submit($form, &$form_state) {
-  global $user;
+  global $user, $language;
 
   $account = user_load(array('uid' => arg(1), 'status' => 1));
-  // Compose the body:
-  $message[] = "$account->name,";
-  $message[] = t("!name (!name-url) has sent you a message via your contact form (!form-url) at !site.", array('!name' => $user->name, '!name-url' => url("user/$user->uid", array('absolute' => TRUE)), '!form-url' => url($_GET['q'], array('absolute' => TRUE)), '!site' => variable_get('site_name', 'Drupal')));
-  $message[] = t("If you don't want to receive such e-mails, you can change your settings at !url.", array('!url' => url("user/$account->uid", array('absolute' => TRUE))));
-  $message[] = t('Message:');
-  $message[] = $form_state['values']['message'];
 
-  // Prepare all fields:
+  // Send from the current user to the requested user.
   $to = $account->mail;
   $from = $user->mail;
 
-  // Format the subject:
-  $subject = '['. variable_get('site_name', 'Drupal') .'] '. $form_state['values']['subject'];
+  // Save both users and all form values for email composition.
+  $values = $form_state['values'];
+  $values['account'] = $account;
+  $values['user'] = $user;
 
-  // Prepare the body:
-  $body = drupal_wrap_mail(implode("\n\n", $message));
+  // Send the e-mail in the requested user language.
+  drupal_mail('contact', 'user_mail', $to, user_preferred_language($account), $values, $from);
 
-  // Send the e-mail:
-  drupal_mail('contact-user-mail', $to, $subject, $body, $from);
-
-  // Send a copy if requested:
+  // Send a copy if requested, using current page language.
   if ($form_state['values']['copy']) {
-    drupal_mail('contact-user-copy', $from, $subject, $body, $from);
+    drupal_mail('contact', 'user_copy', $from, $language, $values, $from);
   }
 
-  // Log the operation:
   flood_register_event('contact');
   watchdog('mail', '%name-from sent %name-to an e-mail.', array('%name-from' => $user->name, '%name-to' => $account->name));
-
-  // Set a status message:
   drupal_set_message(t('The message has been sent.'));
-
-  // Jump to the user's profile page:
+  
+  // Back to the requested users profile page.
   $form_state['redirect'] = "user/$account->uid";
-  return;
 }
 
 /**
- * Site-wide contact page
+ * Site-wide contact page.
  */
 function contact_site_page() {
   global $user;
@@ -504,45 +493,68 @@ function contact_mail_page_validate($form, &$form_state) {
  * Process the site-wide contact page form submission.
  */
 function contact_mail_page_submit($form, &$form_state) {
+  global $language;
+  
+  $values = $form_state['values'];
 
   // E-mail address of the sender: as the form field is a text field,
   // all instances of \r and \n have been automatically stripped from it.
-  $from = $form_state['values']['mail'];
+  $from = $values['mail'];
 
-  // Compose the body:
-  $message[] = t("!name sent a message using the contact form at !form.", array('!name' => $form_state['values']['name'], '!form' => url($_GET['q'], array('absolute' => TRUE))));
-  $message[] = $form_state['values']['message'];
+  // Load category properties and save form values for email composition.
+  $contact = db_fetch_object(db_query("SELECT * FROM {contact} WHERE cid = %d", $values['cid']));
+  $values['contact'] = $contact;
+  
+  // Send the e-mail to the recipients using the site default language.
+  drupal_mail('contact', 'page_mail', $contact->recipients, language_default(), $values, $from); 
 
-  // Load the category information:
-  $contact = db_fetch_object(db_query("SELECT * FROM {contact} WHERE cid = %d", $form_state['values']['cid']));
-
-  // Format the category:
-  $subject = t('[!category] !subject', array('!category' => $contact->category, '!subject' => $form_state['values']['subject']));
-
-  // Prepare the body:
-  $body = drupal_wrap_mail(implode("\n\n", $message));
-
-  // Send the e-mail to the recipients:
-  drupal_mail('contact-page-mail', $contact->recipients, $subject, $body, $from);
-
-  // If the user requests it, send a copy.
-  if ($form_state['values']['copy']) {
-    drupal_mail('contact-page-copy', $from, $subject, $body, $from);
+  // If the user requests it, send a copy using the current language.
+  if ($values['copy']) {
+    drupal_mail('contact', 'page_copy', $from, $language, $values, $from);
   }
 
-  // Send an auto-reply if necessary:
+  // Send an auto-reply if necessary using the current language.
   if ($contact->reply) {
-    drupal_mail('contact-page-autoreply', $from, $subject, drupal_wrap_mail($contact->reply), $contact->recipients);
+    drupal_mail('contact', 'page_autoreply', $from, $language, $values, $contact->recipients);
   }
 
-  // Log the operation:
   flood_register_event('contact');
-  watchdog('mail', '%name-from sent an e-mail regarding %category.', array('%name-from' => $form_state['values']['name'] ." [$from]", '%category' => $contact->category));
-
-  // Update user:
+  watchdog('mail', '%name-from sent an e-mail regarding %category.', array('%name-from' => $values['name'] ." [$from]", '%category' => $contact->category));
   drupal_set_message(t('Your message has been sent.'));
 
-  // Jump to home page rather than back to contact page to avoid contradictory messages if flood control has been activated.
+  // Jump to home page rather than back to contact page to avoid
+  // contradictory messages if flood control has been activated.
   $form_state['redirect'] = '';
-  return;
+}
+
+/**
+ * Implementation of hook_mail().
+ */
+function contact_mail($key, &$message, $params) {
+  $language = $message['language'];
+  switch ($key) {
+    case 'page_mail':
+    case 'page_copy':
+      $contact = $params['contact'];
+      $message['subject'] .= t('[!category] !subject', array('!category' => $contact->category, '!subject' => $params['subject']), $language->language);
+      $message['body'][] = t("!name sent a message using the contact form at !form.", array('!name' => $params['name'], '!form' => url($_GET['q'], array('absolute' => TRUE, 'language' => $language))), $language->language);
+      $message['body'][] = $params['message'];
+      break;
+    case 'page_autoreply':
+      $contact = $params['contact']; 
+      $message['subject'] .= t('[!category] !subject', array('!category' => $contact->category, '!subject' => $params['subject']), $language->language);
+      $message['body'][] = $contact->reply;
+      break;
+    case 'user_mail':
+    case 'user_copy':
+      $user = $params['user'];
+      $account = $params['account'];
+      $message['subject'] .= '['. variable_get('site_name', 'Drupal') .'] '. $params['subject'];
+      $message['body'][] = "$account->name,";
+      $message['body'][] = t("!name (!name-url) has sent you a message via your contact form (!form-url) at !site.", array('!name' => $user->name, '!name-url' => url("user/$user->uid", array('absolute' => TRUE, 'language' => $language)), '!form-url' => url($_GET['q'], array('absolute' => TRUE, 'language' => $language)), '!site' => variable_get('site_name', 'Drupal')), $language->language);
+      $message['body'][] = t("If you don't want to receive such e-mails, you can change your settings at !url.", array('!url' => url("user/$account->uid", array('absolute' => TRUE, 'language' => $language))), $language->language);
+      $message['body'][] = t('Message:', NULL, $language->language);
+      $message['body'][] = $params['message'];
+      break;
+  }
 }
