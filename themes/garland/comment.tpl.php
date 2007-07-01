@@ -2,7 +2,7 @@
 
   <div class="clear-block">
   <?php if ($submitted): ?>
-    <span class="submitted"><?php print t('!date — !username', array('!username' => theme('username', $comment), '!date' => format_date($comment->timestamp))); ?></span>
+    <span class="submitted"><?php print $submitted; ?></span>
   <?php endif; ?>
 
   <?php if ($comment->new) : ?>

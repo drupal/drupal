@@ -83,3 +83,19 @@ function phptemplate_menu_local_tasks() {
 
   return $output;
 }
+
+function phptemplate_comment_submitted($comment) {
+  return t('!datetime — !username',
+    array(
+      '!username' => theme('username', $comment),
+      '!datetime' => format_date($comment->timestamp)
+    ));
+}
+
+function phptemplate_node_submitted($node) {
+  return t('!datetime — !username',
+    array(
+      '!username' => theme('username', $node),
+      '!datetime' => format_date($node->created),
+    ));
+}
