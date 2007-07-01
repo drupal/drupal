@@ -553,7 +553,7 @@ function statistics_nodeapi(&$node, $op, $arg = 0) {
   switch ($op) {
     case 'delete':
       // clean up statistics table when node is deleted
-      drupal_delete_add_query('DELETE FROM {node_counter} WHERE nid = %d', $node->nid);
+      db_query('DELETE FROM {node_counter} WHERE nid = %d', $node->nid);
   }
 }
 
