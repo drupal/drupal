@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.module,v 1.11 2007/06/30 19:46:55 goba Exp $
+// $Id: dblog.module,v 1.12 2007/07/01 21:01:46 goba Exp $
 
 /**
  * @file
@@ -179,7 +179,7 @@ function dblog_overview() {
     $rows[] = array(array('data' => t('No log messages available.'), 'colspan' => 6));
   }
 
-  $output .= theme('table', $header, $rows);
+  $output .= theme('table', $header, $rows, array('id' => 'admin-dblog'));
   $output .= theme('pager', NULL, 50, 0);
 
   return $output;
