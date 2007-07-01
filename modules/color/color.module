@@ -1,5 +1,5 @@
 <?php
-// $Id: color.module,v 1.22 2007/06/04 07:22:17 dries Exp $
+// $Id: color.module,v 1.23 2007/07/01 22:13:35 goba Exp $
 
 /**
  * Implementation of hook_theme()
@@ -238,12 +238,10 @@ function color_scheme_form_submit($form, &$form_state) {
 
   // Prepare target locations for generated files
   $id = $theme .'-'. substr(md5(serialize($palette) . microtime()), 0, 8);
-  $paths['color'] = variable_get('file_directory_path', 'files') .'/color';
+  $paths['color'] = file_directory_path() .'/color';
   $paths['target'] = $paths['color'] .'/'. $id;
   foreach ($paths as $path) {
-    if (!is_dir($path)) {
-      mkdir($path);
-    }
+    file_check_directory($path, FILE_CREATE_DIRECTORY);
   }
   $paths['target'] = $paths['target'] .'/';
   $paths['id'] = $id;
@@ -259,7 +257,8 @@ function color_scheme_form_submit($form, &$form_state) {
   // Copy over neutral images
   foreach ($info['copy'] as $file) {
     $base = basename($file);
-    copy($paths['source'] . $file, $paths['target'] . $base);
+    $source = $paths['source'] . $file;
+    file_copy($source, $paths['target'] . $base);
     $paths['map'][$file] = $base;
     $paths['files'][] = $paths['target'] . $base;
   }
@@ -350,6 +349,9 @@ function _color_rewrite_stylesheet($theme, &$info, &$paths, $palette) {
   fwrite($file, $output);
   fclose($file);
   $paths['files'][] = $paths['stylesheet'];
+
+  // Set standard file permissions for webserver-generated files
+  @chmod($paths['stylesheet'], 0664);
 }
 
 /**
@@ -412,6 +414,9 @@ function _color_render_images($theme, &$info, &$paths, $palette) {
     imagepng($slice, $image);
     imagedestroy($slice);
     $paths['files'][] = $image;
+
+    // Set standard file permissions for webserver-generated files
+    @chmod(realpath($image), 0664);
 
     // Build before/after map of image paths.
     $paths['map'][$file] = $base;
