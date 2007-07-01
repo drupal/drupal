@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.144 2007/06/28 07:48:40 dries Exp $
+// $Id: locale.inc,v 1.145 2007/07/01 17:41:14 dries Exp $
 
 /**
  * @file
@@ -393,9 +393,7 @@ function locale_languages_delete_form(&$form_state, $langcode) {
   }
   else {
     $form['langcode'] = array('#type' => 'value', '#value' => $langcode);
-    $options = array('description' => t('Deleting a language will remove all interface translations associated with it, and posts in this language will be set to be language neutral. This action cannot be undone.'));
-
-    return confirm_form($form, t('Are you sure you want to delete the language %name?', array('%name' => t($languages[$langcode]->name))), 'admin/settings/language', $options);
+    return confirm_form($form, t('Are you sure you want to delete the language %name?', array('%name' => t($languages[$langcode]->name))), 'admin/settings/language', t('Deleting a language will remove all interface translations associated with it, and posts in this language will be set to be language neutral. This action cannot be undone.'), t('Delete'), t('Cancel'));
   }
 }
 

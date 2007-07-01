@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.169 2007/06/30 19:46:58 goba Exp $
+// $Id: upload.module,v 1.170 2007/07/01 17:41:16 dries Exp $
 
 /**
  * @file
@@ -575,44 +575,31 @@ function upload_delete($node) {
   }
 
   foreach ($files as $fid => $file) {
-    // Delete all file revision information associated with the node
-    drupal_delete_add_query('DELETE FROM {files} WHERE fid = %d', $fid);
+    // Delete all files associated with the node
+    db_query('DELETE FROM {files} WHERE fid = %d', $fid);
+    file_delete($file->filepath);
   }
 
-  // Delete all files associated with the node
-  drupal_delete_add_query('DELETE FROM {upload} WHERE nid = %d', $node->nid);
-
-  // Register a callback to delete the files.
-  drupal_delete_add_callback(array('upload_delete_post' => array($files)));
+  // Delete all file revision information associated with the node
+  db_query('DELETE FROM {upload} WHERE nid = %d', $node->nid);
 }
 
 function upload_delete_revision($node) {
   if (is_array($node->files)) {
-    $files = array();
     foreach ($node->files as $file) {
       // Check if the file will be used after this revision is deleted
       $count = db_result(db_query('SELECT COUNT(fid) FROM {upload} WHERE fid = %d', $file->fid));
 
       // if the file won't be used, delete it
       if ($count < 2) {
-        drupal_delete_add_query('DELETE FROM {files} WHERE fid = %d', $file->fid);
-        $files[$file->fid] = $file;
+        db_query('DELETE FROM {files} WHERE fid = %d', $file->fid);
+        file_delete($file->filepath);
       }
     }
   }
 
-  // Delete the revision.
-  drupal_delete_add_query('DELETE FROM {upload} WHERE vid = %d', $node->vid);
-
-  // Register a callback to delete the files.
-  drupal_delete_add_callback(array('upload_delete_post' => array($files)));
-}
-
-function upload_delete_post($files) {
-  foreach ($files as $file) {
-    // Delete all files associated with the node or revision.
-    file_delete($file->filepath);
-  }
+  // delete the revision
+  db_query('DELETE FROM {upload} WHERE vid = %d', $node->vid);
 }
 
 function _upload_form($node) {

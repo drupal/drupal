@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.365 2007/06/30 19:46:58 goba Exp $
+// $Id: taxonomy.module,v 1.366 2007/07/01 17:41:16 dries Exp $
 
 /**
  * @file
@@ -384,14 +384,13 @@ function taxonomy_vocabulary_confirm_delete(&$form_state, $vid) {
   $form['type'] = array('#type' => 'value', '#value' => 'vocabulary');
   $form['vid'] = array('#type' => 'value', '#value' => $vid);
   $form['name'] = array('#type' => 'value', '#value' => $vocabulary->name);
-
-  $options = array('description' => t('Deleting a vocabulary will delete all the terms in it. This action cannot be undone.'));
-
   return confirm_form($form,
                   t('Are you sure you want to delete the vocabulary %title?',
                   array('%title' => $vocabulary->name)),
                   'admin/content/taxonomy',
-                  $options);
+                  t('Deleting a vocabulary will delete all the terms in it. This action cannot be undone.'),
+                  t('Delete'),
+                  t('Cancel'));
 }
 
 function taxonomy_vocabulary_confirm_delete_submit($form, &$form_state) {
@@ -621,14 +620,13 @@ function taxonomy_term_confirm_delete(&$form_state, $tid) {
   $form['type'] = array('#type' => 'value', '#value' => 'term');
   $form['name'] = array('#type' => 'value', '#value' => $term->name);
   $form['tid'] = array('#type' => 'value', '#value' => $tid);
-
-  $options = array('description' => t('Deleting a term will delete all its children if there are any. This action cannot be undone.'));
-
   return confirm_form($form,
                   t('Are you sure you want to delete the term %title?',
                   array('%title' => $term->name)),
                   'admin/content/taxonomy',
-                  $options);
+                  t('Deleting a term will delete all its children if there are any. This action cannot be undone.'),
+                  t('Delete'),
+                  t('Cancel'));
 }
 
 function taxonomy_term_confirm_delete_submit($form, &$form_state) {
@@ -878,14 +876,14 @@ function taxonomy_node_save($node, $terms) {
  * Remove associations of a node to its terms.
  */
 function taxonomy_node_delete($node) {
-  drupal_delete_add_query('DELETE FROM {term_node} WHERE nid = %d', $node->nid);
+  db_query('DELETE FROM {term_node} WHERE nid = %d', $node->nid);
 }
 
 /**
  * Remove associations of a node to its terms.
  */
 function taxonomy_node_delete_revision($node) {
-  drupal_delete_add_query('DELETE FROM {term_node} WHERE vid = %d', $node->vid);
+  db_query('DELETE FROM {term_node} WHERE vid = %d', $node->vid);
 }
 
 /**

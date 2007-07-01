@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.426 2007/06/30 19:46:55 goba Exp $
+// $Id: book.module,v 1.427 2007/07/01 17:41:14 dries Exp $
 
 /**
  * @file
@@ -466,10 +466,10 @@ function book_nodeapi(&$node, $op, $teaser, $page) {
       }
       break;
     case 'delete revision':
-      drupal_delete_add_query('DELETE FROM {book} WHERE vid = %d', $node->vid);
+      db_query('DELETE FROM {book} WHERE vid = %d', $node->vid);
       break;
     case 'delete':
-      drupal_delete_add_query('DELETE FROM {book} WHERE nid = %d', $node->nid);
+      db_query('DELETE FROM {book} WHERE nid = %d', $node->nid);
       break;
   }
 }

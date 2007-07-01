@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.405 2007/06/30 19:46:56 goba Exp $
+// $Id: forum.module,v 1.406 2007/07/01 17:41:15 dries Exp $
 
 /**
  * @file
@@ -169,7 +169,7 @@ function forum_perm() {
 function forum_nodeapi(&$node, $op, $teaser, $page) {
   switch ($op) {
     case 'delete revision':
-      drupal_delete_add_query('DELETE FROM {forum} WHERE vid = %d', $node->vid);
+      db_query('DELETE FROM {forum} WHERE vid = %d', $node->vid);
       break;
   }
 }
@@ -453,7 +453,7 @@ function forum_insert($node) {
  * Implementation of hook_delete().
  */
 function forum_delete(&$node) {
-  drupal_delete_add_query('DELETE FROM {forum} WHERE nid = %d', $node->nid);
+  db_query('DELETE FROM {forum} WHERE nid = %d', $node->nid);
 }
 
 /**
@@ -610,9 +610,7 @@ function forum_confirm_delete(&$form_state, $tid) {
   $form['tid'] = array('#type' => 'value', '#value' => $tid);
   $form['name'] = array('#type' => 'value', '#value' => $term->name);
 
-  $options = array('description' => t('Deleting a forum or container will delete all sub-forums and associated posts as well. This action cannot be undone.'));
-
-  return confirm_form($form, t('Are you sure you want to delete the forum %name?', array('%name' => $term->name)), 'admin/content/forum', $options);
+  return confirm_form($form, t('Are you sure you want to delete the forum %name?', array('%name' => $term->name)), 'admin/content/forum', t('Deleting a forum or container will delete all sub-forums and associated posts as well. This action cannot be undone.'), t('Delete'), t('Cancel'));
 }
 
 /**

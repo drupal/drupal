@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.844 2007/06/30 19:46:56 goba Exp $
+// $Id: node.module,v 1.845 2007/07/01 17:41:15 dries Exp $
 
 /**
  * @file
@@ -1089,13 +1089,8 @@ function node_configure_validate($form, &$form_state) {
  * Menu callback: confirm rebuilding of permissions.
  */
 function node_configure_rebuild_confirm() {
-  $options = array(
-    'description' => t('This will wipe all current node permissions and rebuild them based on current settings. Rebuilding the permissions may take a while so please be patient. This action cannot be undone.'),
-    'yes' => t('Rebuild permissions')
-  );
-
   return confirm_form(array(), t('Are you sure you want to rebuild node permissions on the site?'),
-                  'admin/content/node-settings', $options);
+                  'admin/content/node-settings', t('This will wipe all current node permissions and rebuild them based on current settings. Rebuilding the permissions may take a while so please be patient. This action cannot be undone.'), t('Rebuild permissions'), t('Cancel'));
 }
 
 /**
@@ -1751,8 +1746,9 @@ function node_multiple_delete_confirm(&$form_state) {
     array(
       'form' => $form,
       'question' => t('Are you sure you want to delete these items?'),
-      'destination' => 'admin/content/node',
+      'path' => 'admin/content/node',
       'yes' => t('Delete all'),
+      'destination' => 'admin/content/node',
     )
   );
 }
@@ -2435,25 +2431,25 @@ function node_form_submit($form, &$form_state) {
  * Menu callback -- ask for confirmation of node deletion
  */
 function node_delete_confirm(&$form_state, $node) {
+ $form['nid'] = array('#type' => 'value', '#value' => $node->nid);
 
-  drupal_delete_initiate('node', $node->nid);
-  drupal_delete_add_callback(
-    array(
-      'node_delete_post' => array($node->nid, $node->title, $node->type),
-      // Clear the cache so an anonymous poster can see the node being deleted.
-      'cache_clear_all' => array(),
-    )
-  );
+ return confirm_form($form,
+   t('Are you sure you want to delete %title?', array('%title' => $node->title)),
+   isset($_GET['destination']) ? $_GET['destination'] : 'node/'. $node->nid,
+   t('This action cannot be undone.'),
+   t('Delete'), t('Cancel'));
+}
 
-  node_delete($node->nid, FALSE);
+/**
+ * Execute node deletion
+ */
+function node_delete_confirm_submit($form, &$form_state) {
+  if ($form_state['values']['confirm']) {
+    node_delete($form_state['values']['nid']);
+  }
 
-  return drupal_delete_confirm(
-    array(
-      'question' => t('Are you sure you want to delete %title?', array('%title' => $node->title)),
-      'cancel' => isset($_GET['destination']) ? $_GET['destination'] : 'node/'. $node->nid,
-      'destination' => isset($_GET['destination']) ? $_GET['destination'] : '<front>',
-    )
-  );
+  $form_state['redirect'] = '<front>';
+  return;
 }
 
 /**
@@ -2464,23 +2460,23 @@ function node_delete($nid) {
   $node = node_load($nid);
 
   if (node_access('delete', $node)) {
-    drupal_delete_add_query('DELETE FROM {node} WHERE nid = %d', $node->nid);
-    drupal_delete_add_query('DELETE FROM {node_revisions} WHERE nid = %d', $node->nid);
+    db_query('DELETE FROM {node} WHERE nid = %d', $node->nid);
+    db_query('DELETE FROM {node_revisions} WHERE nid = %d', $node->nid);
 
     // Call the node-specific callback (if any):
     node_invoke($node, 'delete');
     node_invoke_nodeapi($node, 'delete');
-  }
-}
 
-function node_delete_post($nid, $title, $type) {
+    // Clear the cache so an anonymous poster can see the node being deleted.
+    cache_clear_all();
 
-  // Remove this node from the search index if needed.
-  if (function_exists('search_wipe')) {
-    search_wipe($nid, 'node');
+    // Remove this node from the search index if needed.
+    if (function_exists('search_wipe')) {
+      search_wipe($node->nid, 'node');
+    }
+    drupal_set_message(t('%title has been deleted.', array('%title' => $node->title)));
+    watchdog('content', '@type: deleted %title.', array('@type' => $node->type, '%title' => $node->title));
   }
-  drupal_set_message(t('%title has been deleted.', array('%title' => $title)));
-  watchdog('content', '@type: deleted %title.', array('@type' => t($type), '%title' => $title));
 }
 
 /**

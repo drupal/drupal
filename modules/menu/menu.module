@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.119 2007/06/30 19:46:56 goba Exp $
+// $Id: menu.module,v 1.120 2007/07/01 17:41:15 dries Exp $
 
 /**
  * @file
@@ -464,7 +464,7 @@ function menu_item_delete_form(&$form_state, $mlid) {
   }
   $form['#item'] = $item;
 
-  return confirm_form($form, t('Are you sure you want to delete the custom menu item %item?', array('%item' => $item['link_title'])), 'admin/build/menu/'. $item['menu_name']);
+  return confirm_form($form, t('Are you sure you want to delete the custom menu item %item?', array('%item' => $item['link_title'])), 'admin/build/menu/'. $item['menu_name'], t('This action cannot be undone.'), t('Delete'));
 }
 
 /**
@@ -488,11 +488,10 @@ function menu_reset_item(&$form_state, $mlid) {
 
     $options = array(
       'description' => t('Any customizations will be lost. This action cannot be undone.'),
-      'yes' => t('Reset'),
-      'cancel' => 'admin/build/menu',
+      'yes' => t('Reset')
     );
 
-    return confirm_form($form, t('Are you sure you want to reset the item %item to its default values?', array('%item' => $item['link_title'])), 'admin/build/menu/navigation', $options);
+    return confirm_form($form, t('Are you sure you want to reset the item %item to its default values?', array('%item' => $item['link_title'])), 'admin/build/menu', $options);
   }
   else {
     drupal_not_found();

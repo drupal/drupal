@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.503 2007/07/01 15:37:09 dries Exp $
+// $Id: system.module,v 1.504 2007/07/01 17:41:16 dries Exp $
 
 /**
  * @file
@@ -1690,18 +1690,14 @@ function system_modules_confirm_form($modules, $storage) {
   $form['text'] = array('#value' => theme('item_list', $items));
 
   if ($form) {
-    $options = array(
-      'description' => t('Would you like to continue with enabling the above?'),
-      'yes' => t('Continue'),
-    );
-
     // Set some default form values
     $form = confirm_form(
       $form,
       t('Some required modules must be enabled'),
       'admin/build/modules',
-      $options);
-
+      t('Would you like to continue with enabling the above?'),
+      t('Continue'),
+      t('Cancel'));
     return $form;
   }
 }
@@ -1991,17 +1987,13 @@ function system_modules_uninstall_confirm_form($storage) {
     $form['#confirmed'] = TRUE;
     $form['uninstall']['#tree'] = TRUE;
     $form['modules'] = array('#value' => '<p>'. t('The following modules will be completely uninstalled from your site, and <em>all data from these modules will be lost</em>!') .'</p>'. theme('item_list', $uninstall));
-
-    $options = array(
-      'description' => t('Would you like to continue with uninstalling the above?'),
-      'yes' => t('Uninstall')
-    );
-
     $form = confirm_form(
       $form,
       t('Confirm uninstall'),
       'admin/build/modules/uninstall',
-      $options);
+      t('Would you like to continue with uninstalling the above?'),
+      t('Uninstall'),
+      t('Cancel'));
     return $form;
   }
 }
@@ -2484,69 +2476,47 @@ function system_node_type($op, $info) {
  * @param $question
  *   The question to ask the user (e.g. "Are you sure you want to delete the
  *   block <em>foo</em>?").
- * @param $destination
- *   The page to go to if the confirm form is submitted, or the action is cancelled.
- *   The value can be either a Drupal path, or an array with the keys 'path', 'query', 'fragment'.
- *
- *   Note: If a custom submit handler is being used, return the destination from the handler.
- * @param $options
- *   An associative array of options, with the following key/value pairs:
- *    'description' => Additional text to display.
- *                     Default is "This action cannot be undone".
- *    'yes'         => A caption for the button which confirms the action (e.g. "Confirm",
- *                     "Replace", ...). Default is "Delete".
- *    'no'          => A caption for the link which denies the action (e.g. "Cancel").
- *                     Default is "Cancel".
- *    'name'        => The internal name used to refer to the confirmation item.
- *                     Default is "confirm".
- *    'cancel'      => Set a custom path for cancelling the form, -- can be either a Drupal path,
- *                     or an array with the keys 'path', 'query', 'fragment'.
- *
+ * @param $path
+ *   The page to go to if the user denies the action.
+ *   Can be either a drupal path, or an array with the keys 'path', 'query', 'fragment'.
+ * @param $description
+ *   Additional text to display (defaults to "This action cannot be undone.").
+ * @param $yes
+ *   A caption for the button which confirms the action (e.g. "Delete",
+ *   "Replace", ...).
+ * @param $no
+ *   A caption for the link which denies the action (e.g. "Cancel").
+ * @param $name
+ *   The internal name used to refer to the confirmation item.
  * @return
  *   The form.
  */
-function confirm_form($form, $question, $destination, $options = array()) {
-  $description = isset($options['description']) ? $options['description'] : t('This action cannot be undone.');
-  $name = isset($options['name']) ? $options['name'] : 'confirm';
-  $cancel = isset($options['cancel']) ? $options['cancel'] : $destination;
+function confirm_form($form, $question, $path, $description = NULL, $yes = NULL, $no = NULL, $name = 'confirm') {
+  $description = isset($description) ? $description : t('This action cannot be undone.');
 
   // Prepare cancel link
   $query = $fragment = NULL;
-  if (is_array($cancel)) {
-    $query = isset($cancel['query']) ? $cancel['query'] : NULL;
-    $fragment = isset($cancel['fragment']) ? $cancel['fragment'] : NULL;
-    $path = isset($cancel['path']) ? $cancel['path'] : NULL;
+  if (is_array($path)) {
+    $query = isset($path['query']) ? $path['query'] : NULL;
+    $fragment = isset($path['fragment']) ? $path['fragment'] : NULL;
+    $path = isset($path['path']) ? $path['path'] : NULL;
   }
-  else {
-    $path = $cancel;
-  }
-  $cancel_link = l(isset($options['no']) ? $options['no'] : t('Cancel'), $path, array('query' => $query, 'fragment' => $fragment));
+  $cancel = l($no ? $no : t('Cancel'), $path, array('query' => $query, 'fragment' => $fragment));
 
   drupal_set_title($question);
+
+  // Confirm form fails duplication check, as the form values rarely change -- so skip it.
+  $form['#skip_duplicate_check'] = TRUE;
 
   $form['#attributes'] = array('class' => 'confirmation');
   $form['description'] = array('#value' => $description);
   $form[$name] = array('#type' => 'hidden', '#value' => 1);
-  $form['destination'] = array('#type' => 'value', '#value' => $destination);
 
   $form['actions'] = array('#prefix' => '<div class="container-inline">', '#suffix' => '</div>');
-  $form['actions']['submit'] = array('#type' => 'submit', '#value' => isset($options['yes']) ? $options['yes'] : t('Delete'));
-  $form['actions']['cancel'] = array('#value' => $cancel_link);
-
+  $form['actions']['submit'] = array('#type' => 'submit', '#value' => $yes ? $yes : t('Confirm'));
+  $form['actions']['cancel'] = array('#value' => $cancel);
   $form['#theme'] = 'confirm_form';
   return $form;
-}
-
-/**
- * Executes confirmation pages for the Deletion API.
- */
-function delete_confirm_submit($form, &$form_state) {
-  if ($form_state['values']['delete']) {
-    drupal_delete_execute();
-  }
-  if (isset($form_state['values']['destination'])) {
-    $form_state['redirect'] = $form_state['values']['destination'];
-  }
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.268 2007/06/30 19:46:55 goba Exp $
+// $Id: block.module,v 1.269 2007/07/01 17:41:14 dries Exp $
 
 /**
  * @file
@@ -566,7 +566,7 @@ function block_box_delete(&$form_state, $bid = 0) {
   $form['info'] = array('#type' => 'hidden', '#value' => $box['info'] ? $box['info'] : $box['title']);
   $form['bid'] = array('#type' => 'hidden', '#value' => $bid);
 
-  return confirm_form($form, t('Are you sure you want to delete the block %name?', array('%name' => $box['info'])), 'admin/build/block');
+  return confirm_form($form, t('Are you sure you want to delete the block %name?', array('%name' => $box['info'])), 'admin/build/block', '', t('Delete'), t('Cancel'));
 }
 
 /**

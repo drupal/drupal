@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.558 2007/06/30 19:46:55 goba Exp $
+// $Id: comment.module,v 1.559 2007/07/01 17:41:14 dries Exp $
 
 /**
  * @file
@@ -231,8 +231,7 @@ function comment_menu() {
 
   $items['comment/delete'] = array(
     'title' => 'Delete comment',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('comment_delete', 2),
+    'page callback' => 'comment_delete',
     'access arguments' => array('administer comments'),
     'type' => MENU_CALLBACK,
   );
@@ -474,8 +473,8 @@ function comment_nodeapi(&$node, $op, $arg = 0) {
       break;
 
     case 'delete':
-      drupal_delete_add_query('DELETE FROM {comments} WHERE nid = %d', $node->nid);
-      drupal_delete_add_query('DELETE FROM {node_comment_statistics} WHERE nid = %d', $node->nid);
+      db_query('DELETE FROM {comments} WHERE nid = %d', $node->nid);
+      db_query('DELETE FROM {node_comment_statistics} WHERE nid = %d', $node->nid);
       break;
 
     case 'update index':
@@ -1093,43 +1092,50 @@ function comment_render($node, $cid = 0) {
 /**
  * Menu callback; delete a comment.
  */
-function comment_delete(&$form_state, $cid = NULL) {
+function comment_delete($cid = NULL) {
   $comment = db_fetch_object(db_query('SELECT c.*, u.name AS registered_name, u.uid FROM {comments} c INNER JOIN {users} u ON u.uid = c.uid WHERE c.cid = %d', $cid));
   $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
 
+  $output = '';
+
   if (is_object($comment) && is_numeric($comment->cid)) {
-    drupal_delete_initiate('comment', $comment->cid);
-    drupal_delete_add_callback(
-      array(
-        'comment_delete_post' => array($comment),
-        // Clear the cache so an anonymous poster can see the node being deleted.
-        'cache_clear_all' => array(),
-      )
-    );
-
-    // Delete comment and its replies.
-    _comment_delete_thread($comment);
-
-    return drupal_delete_confirm(
-      array(
-        'question' => t('Are you sure you want to delete the comment %title?', array('%title' => $comment->subject)),
-        'destination' => 'node/'. $comment->nid,
-        'description' => t('Any replies to this comment will be lost. This action cannot be undone.'),
-      )
-    );
+    $output = drupal_get_form('comment_confirm_delete', $comment);
   }
   else {
-    drupal_set_message(t('The comment no longer exists.'), 'error');
-    drupal_goto('<front>');
+    drupal_set_message(t('The comment no longer exists.'));
   }
+
+  return $output;
 }
 
-function comment_delete_post($comment) {
+function comment_confirm_delete(&$form_state, $comment) {
+  $form = array();
+  $form['#comment'] = $comment;
+  return confirm_form(
+    $form,
+    t('Are you sure you want to delete the comment %title?', array('%title' => $comment->subject)),
+    'node/'. $comment->nid,
+    t('Any replies to this comment will be lost. This action cannot be undone.'),
+    t('Delete'),
+    t('Cancel'),
+    'comment_confirm_delete');
+}
 
-  drupal_set_message(t('The comment %subject and all its replies have been deleted.', array('%subject' => $comment->subject)));
-  watchdog('content', 'Comment: deleted %subject and all its replies.', array('%subject' => $comment->subject));
+function comment_confirm_delete_submit($form, &$form_state) {
+  drupal_set_message(t('The comment and all its replies have been deleted.'));
+
+  $comment = $form['#comment'];
+
+  // Delete comment and its replies.
+  _comment_delete_thread($comment);
 
   _comment_update_node_statistics($comment->nid);
+
+  // Clear the cache so an anonymous user sees that his comment was deleted.
+  cache_clear_all();
+
+  $form_state['redirect'] = "node/$comment->nid";
+  return;
 }
 
 /**
@@ -1342,8 +1348,9 @@ function comment_multiple_delete_confirm(&$form_state) {
       array(
         'form' => $form,
         'question' => t('Are you sure you want to delete these comments and all their children?'),
-        'destination' => 'admin/content/comment',
+        'path' => 'admin/content/comment',
         'yes' => t('Delete all'),
+        'destination' => 'admin/content/comment',
       )
     );
   }
@@ -1917,7 +1924,8 @@ function _comment_delete_thread($comment) {
   }
 
   // Delete the comment:
-  drupal_delete_add_query('DELETE FROM {comments} WHERE cid = %d', $comment->cid);
+  db_query('DELETE FROM {comments} WHERE cid = %d', $comment->cid);
+  watchdog('content', 'Comment: deleted %subject.', array('%subject' => $comment->subject));
 
   comment_invoke_comment($comment, 'delete');
 

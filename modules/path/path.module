@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.126 2007/06/30 19:46:57 goba Exp $
+// $Id: path.module,v 1.127 2007/07/01 17:41:15 dries Exp $
 
 /**
  * @file
@@ -89,14 +89,13 @@ function path_admin_edit($pid = 0) {
 /**
  * Menu callback; confirms deleting an URL alias
  **/
-function path_admin_delete_confirm(&$form_state, $pid) {
+function path_admin_delete_confirm($pid) {
   $path = path_load($pid);
   if (user_access('administer url aliases')) {
     $form['pid'] = array('#type' => 'value', '#value' => $pid);
-    $options = array('cancel' => isset($_GET['destination']) ? $_GET['destination'] : 'admin/build/path');
     $output = confirm_form($form,
   t('Are you sure you want to delete path alias %title?', array('%title' => $path['dst'])),
-   'admin/build/path', $options);
+   isset($_GET['destination']) ? $_GET['destination'] : 'admin/build/path');
   }
   return $output;
 }
@@ -126,12 +125,12 @@ function path_admin_delete($pid = 0) {
 function path_set_alias($path = NULL, $alias = NULL, $pid = NULL, $language = '') {
   if ($path && !$alias) {
     // Delete based on path
-    drupal_delete_add_query("DELETE FROM {url_alias} WHERE src = '%s' AND language = '%s'", $path, $language);
+    db_query("DELETE FROM {url_alias} WHERE src = '%s' AND language = '%s'", $path, $language);
     drupal_clear_path_cache();
   }
   else if (!$path && $alias) {
     // Delete based on alias
-    drupal_delete_add_query("DELETE FROM {url_alias} WHERE dst = '%s' AND language = '%s'", $alias, $language);
+    db_query("DELETE FROM {url_alias} WHERE dst = '%s' AND language = '%s'", $alias, $language);
     drupal_clear_path_cache();
   }
   else if ($path && $alias) {

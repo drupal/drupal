@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.179 2007/06/30 19:46:56 goba Exp $
+// $Id: filter.module,v 1.180 2007/07/01 17:41:14 dries Exp $
 
 /**
  * @file
@@ -336,9 +336,7 @@ function filter_admin_delete() {
       $form['format'] = array('#type' => 'hidden', '#value' => $format->format);
       $form['name'] = array('#type' => 'hidden', '#value' => $format->name);
 
-      $options = array('description' => t('If you have any content left in this input format, it will be switched to the default input format. This action cannot be undone.'));
-
-      return confirm_form($form, t('Are you sure you want to delete the input format %format?', array('%format' => $format->name)), 'admin/settings/filters', $options);
+      return confirm_form($form, t('Are you sure you want to delete the input format %format?', array('%format' => $format->name)), 'admin/settings/filters', t('If you have any content left in this input format, it will be switched to the default input format. This action cannot be undone.'), t('Delete'), t('Cancel'));
     }
     else {
       drupal_set_message(t('The default format cannot be deleted.'));

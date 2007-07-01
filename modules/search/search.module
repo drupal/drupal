@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.227 2007/06/30 19:46:57 goba Exp $
+// $Id: search.module,v 1.228 2007/07/01 17:41:16 dries Exp $
 
 /**
  * @file
@@ -262,13 +262,8 @@ function search_admin_settings() {
  * Menu callback: confirm wiping of the index.
  */
 function search_wipe_confirm() {
-  $options = array(
-    'description' => t(' The search index is not cleared but systematically updated to reflect the new settings. Searching will continue to work but new content won\'t be indexed until all existing content has been re-indexed. This action cannot be undone.'),
-    'yes' => t('Re-index site')
-  );
-
   return confirm_form(array(), t('Are you sure you want to re-index the site?'),
-                  'admin/settings/search', $options);
+                  'admin/settings/search', t(' The search index is not cleared but systematically updated to reflect the new settings. Searching will continue to work but new content won\'t be indexed until all existing content has been re-indexed. This action cannot be undone.'), t('Re-index site'), t('Cancel'));
 }
 
 /**
