@@ -1,6 +1,6 @@
-// $Id: drupal.js,v 1.34 2007/06/08 12:51:59 goba Exp $
+// $Id: drupal.js,v 1.35 2007/07/01 15:37:08 dries Exp $
 
-var Drupal = Drupal || { 'settings': {}, 'themes': {}, 'locale': {} };
+var Drupal = Drupal || { 'settings': {}, 'behaviors': {}, 'themes': {}, 'locale': {} };
 
 /**
  * Set the variable that indicates if JavaScript behaviors should be applied
@@ -18,6 +18,43 @@ Drupal.extend = function(obj) {
     else {
       this[i] = obj[i];
     }
+  }
+};
+
+/**
+ * Attach all registered behaviors to a page element.
+ *
+ * Behaviors are event-triggered actions that attach to page elements, enhancing
+ * default non-Javascript UIs. Behaviors are registered in the Drupal.behaviors
+ * object as follows:
+ * @code
+ *    Drupal.behaviors.behaviorName = function () {
+ *      ...
+ *    };
+ * @endcode
+ *
+ * Drupal.attachBehaviors is added below to the jQuery ready event and so
+ * runs on initial page load. Developers implementing AHAH/AJAX in their
+ * solutions should also call this function after new page content has been
+ * loaded, feeding in an element to be processed, in order to attach all
+ * behaviors to the new content.
+ *
+ * Behaviors should use a class in the form behaviorName-processed to ensure
+ * the behavior is attached only once to a given element. (Doing so enables
+ * the reprocessing of given elements, which may be needed on occasion despite
+ * the ability to limit behavior attachment to a particular element.)
+ *
+ * @param context
+ *   An element to attach behaviors to. If none is given, the document element
+ *   is used.
+ */
+Drupal.attachBehaviors = function(context) {
+  context = context || document;
+  if (Drupal.jsEnabled) {
+    // Execute all of them.
+    jQuery.each(Drupal.behaviors, function() {
+      this(context);
+    });
   }
 };
 
@@ -362,6 +399,8 @@ if (Drupal.jsEnabled) {
   document.documentElement.className = 'js';
   // 'js enabled' cookie
   document.cookie = 'has_js=1';
+  // Attach all behaviors.
+  $(document).ready(Drupal.attachBehaviors);
 }
 
 /**

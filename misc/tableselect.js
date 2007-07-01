@@ -1,4 +1,8 @@
-// $Id: tableselect.js,v 1.3 2007/06/08 12:51:59 goba Exp $
+// $Id: tableselect.js,v 1.4 2007/07/01 15:37:08 dries Exp $
+
+Drupal.behaviors.tableSelect = function (context) {
+  $('form table[th.select-all]:not(.tableSelect-processed)', context).each(Drupal.tableSelect);
+}
 
 Drupal.tableSelect = function() {
   // Keep track of the table, which checkbox is checked and alias the settings.
@@ -41,6 +45,7 @@ Drupal.tableSelect = function() {
     // Keep track of the last checked checkbox.
     lastChecked = e.target;
   });
+  $(this).addClass('tableSelect-processed');
 };
 
 Drupal.tableSelectRange = function(from, to, state) {
@@ -67,10 +72,3 @@ Drupal.tableSelectRange = function(from, to, state) {
 
   }
 };
-
-// Global Killswitch
-if (Drupal.jsEnabled) {
-  $(document).ready(function() {
-    $('form table[th.select-all]').each(Drupal.tableSelect);
-  });
-}

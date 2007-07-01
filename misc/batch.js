@@ -1,31 +1,38 @@
-if (Drupal.jsEnabled) {
-  $(document).ready(function() {
-    $('#progress').each(function () {
-      var holder = this;
-      var uri = Drupal.settings.batch.uri;
-      var initMessage = Drupal.settings.batch.initMessage;
-      var errorMessage = Drupal.settings.batch.errorMessage;
+// $Id: batch.js,v 1.3 2007/07/01 15:37:08 dries Exp $
 
-      // Success: redirect to the summary.
-      var updateCallback = function (progress, status, pb) {
-        if (progress == 100) {
-          pb.stopMonitoring();
-          window.location = uri+'&op=finished';
-        }
-      };
+/**
+ * Attaches the batch behaviour to progress bars.
+ */
+Drupal.behaviors.batch = function (context) {
+  // This behavior attaches by ID, so is only valid once on a page.
+  if ($('#progress.batch-processed').size()) {
+    return;
+  }
+  $('#progress', context).addClass('batch-processed').each(function () {
+    var holder = this;
+    var uri = Drupal.settings.batch.uri;
+    var initMessage = Drupal.settings.batch.initMessage;
+    var errorMessage = Drupal.settings.batch.errorMessage;
 
-      var errorCallback = function (pb) {
-        var div = document.createElement('p');
-        div.className = 'error';
-        $(div).html(errorMessage);
-        $(holder).prepend(div);
-        $('#wait').hide();
-      };
+    // Success: redirect to the summary.
+    var updateCallback = function (progress, status, pb) {
+      if (progress == 100) {
+        pb.stopMonitoring();
+        window.location = uri+'&op=finished';
+      }
+    };
 
-      var progress = new Drupal.progressBar('updateprogress', updateCallback, "POST", errorCallback);
-      progress.setProgress(-1, initMessage);
-      $(holder).append(progress.element);
-      progress.startMonitoring(uri+'&op=do', 10);
-    });
+    var errorCallback = function (pb) {
+      var div = document.createElement('p');
+      div.className = 'error';
+      $(div).html(errorMessage);
+      $(holder).prepend(div);
+      $('#wait').hide();
+    };
+
+    var progress = new Drupal.progressBar('updateprogress', updateCallback, "POST", errorCallback);
+    progress.setProgress(-1, initMessage);
+    $(holder).append(progress.element);
+    progress.startMonitoring(uri+'&op=do', 10);
   });
-}
+};

@@ -1,10 +1,10 @@
-// $Id: upload.js,v 1.13 2007/06/08 12:51:59 goba Exp $
+// $Id: upload.js,v 1.14 2007/07/01 15:37:08 dries Exp $
 
 /**
  * Attaches the upload behaviour to the upload form.
  */
-Drupal.uploadAutoAttach = function() {
-  $('input.upload').each(function () {
+Drupal.behaviors.upload = function(context) {
+  $('input.upload:not(.upload-processed)', context).addClass('upload-processed').each(function () {
     var uri = this.value;
     // Extract the base name from the id (edit-attach-url -> attach).
     var base = this.id.substring(5, this.id.length - 4);
@@ -12,6 +12,7 @@ Drupal.uploadAutoAttach = function() {
     var wrapper = base + '-wrapper';
     var hide = base + '-hide';
     var upload = new Drupal.jsUpload(uri, button, wrapper, hide);
+    $(this).addClass('upload-processed');
   });
 };
 
@@ -65,11 +66,10 @@ Drupal.jsUpload.prototype.oncomplete = function (data) {
 
   // If uploading the first attachment fade in everything
   if ($('tr', div).size() == 2) {
-    // Replace form and re-attach behaviour
+    // Replace form and re-attach behaviours
     $(div).hide();
     $(this.wrapper).append(div);
     $(div).fadeIn('slow');
-    Drupal.uploadAutoAttach();
   }
   // Else fade in only the last table row
   else {
@@ -89,8 +89,8 @@ Drupal.jsUpload.prototype.oncomplete = function (data) {
     $(this.wrapper).append(div);
     $('table tr:last-of-type td', div).fadeIn('slow');
     $(this.hide, div).fadeIn('slow');
-    Drupal.uploadAutoAttach();
   }
+  Drupal.attachBehaviors(div);
   Drupal.unfreezeHeight();
 };
 
@@ -108,9 +108,3 @@ Drupal.jsUpload.prototype.onerror = function (error) {
     left: '0px'
   });
 };
-
-
-// Global killswitch
-if (Drupal.jsEnabled) {
-  $(document).ready(Drupal.uploadAutoAttach);
-}

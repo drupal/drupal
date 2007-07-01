@@ -1,13 +1,13 @@
-// $Id: teaser.js,v 1.6 2007/06/22 06:30:11 unconed Exp $
+// $Id: teaser.js,v 1.7 2007/07/01 15:37:08 dries Exp $
 
 /**
  * Auto-attach for teaser behaviour.
  *
  * Note: depends on resizable textareas.
  */
-Drupal.teaserAttach = function() {
-  $('textarea.teaser:not(.joined)').each(function() {
-    var teaser = $(this).addClass('joined');
+Drupal.behaviors.teaser = function(context) {
+  $('textarea.teaser:not(.teaser-processed)', context).each(function() {
+    var teaser = $(this).addClass('teaser-processed');
 
     // Move teaser textarea before body, and remove its form-item wrapper.
     var body = $('#'+ Drupal.settings.teaser[this.id]);
@@ -75,7 +75,3 @@ Drupal.teaserAttach = function() {
 
   });
 };
-
-if (Drupal.jsEnabled) {
-  $(document).ready(Drupal.teaserAttach);
-}

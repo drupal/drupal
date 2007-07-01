@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.182 2007/06/30 21:00:51 goba Exp $
+// $Id: locale.module,v 1.183 2007/07/01 15:37:09 dries Exp $
 
 /**
  * @file
@@ -53,7 +53,7 @@ function locale_help($path, $arg) {
       return '<p>'. t("This page allows you to export Drupal strings. The first option is to export a translation so it can be shared. The second option generates a translation template, which contains all Drupal strings, but without their translations. You can use this template to start a new translation using various software packages designed for this task.") .'</p>';
     case 'admin/build/translate/search':
       return '<p>'. t("It is often convenient to get the strings from your setup on the <a href=\"@export\">export page</a>, and use a desktop Gettext translation editor to edit the translations. On this page you can search in the translated and untranslated strings, and the default English texts provided by Drupal.", array("@export" => url("admin/build/translate/export"))) .'</p>';
-    
+
     case 'admin/build/block/configure':
       if ($arg[4] == 'locale' && $arg[5] == 0) {
         return '<p>'. t("This block is only shown if you have <a href=\"@languages\">at least two languages enabled</a> and you have a <a href=\"@configuration\">language negotiation setting</a> different from 'none', so you have different web addresses for different language versions.", array('@languages' => url('admin/settings/language'), '@configuration' => url('admin/settings/language/configure'))) .'</p>';
@@ -524,13 +524,13 @@ function locale_block($op = 'list', $delta = 0) {
         'attributes' => array('class' => 'language-link'),
       );
     }
-    
+
     // Allow modules to provide translations for specific links.
     // A translation link may need to point to a different path or use
     // a translated link text before going through l(), which will just
     // handle the path aliases.
     drupal_alter('translation_link', $links, $_GET['q']);
-    
+
     $block['subject'] = t('Languages');
     $block['content'] = theme('links', $links, array());
     return $block;

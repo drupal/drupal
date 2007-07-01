@@ -1,14 +1,13 @@
-/* $Id: user.js,v 1.2 2007/06/08 06:04:15 dries Exp $ */
+/* $Id: user.js,v 1.3 2007/07/01 15:37:10 dries Exp $ */
 
 /**
  * Attach handlers to evaluate the strength of any password fields and to check
  * that its confirmation is correct.
  */
-Drupal.passwordAttach = function(context) {
-  var context = context || $(document);
+Drupal.behaviors.password = function(context) {
   var translate = Drupal.settings.password;
-  $("input.password-field", context).each(function() {
-    var passwordInput = $(this);
+  $("input.password-field:not(.password-processed)", context).each(function() {
+    var passwordInput = $(this).addClass('password-processed');
     var parent = $(this).parent();
     // Wait this number of milliseconds before checking password.
     var monitorDelay = 700;
@@ -173,11 +172,9 @@ Drupal.evaluatePasswordStrength = function(value) {
  * picture-related form elements depending on the current value of the
  * "Picture support" radio buttons.
  */
-if (Drupal.jsEnabled) {
-  $(document).ready(function () {
-    $('div.user-admin-picture-radios input[@type=radio]').click(function () {
-      $('div.user-admin-picture-settings')[['hide', 'show'][this.value]]();
-    });
-    Drupal.passwordAttach();
+Drupal.behaviors.userSettings = function (context) {
+  $('div.user-admin-picture-radios input[@type=radio]:not(.userSettings-processed)', context).addClass('userSettings-processed').click(function () {
+    $('div.user-admin-picture-settings', context)[['hide', 'show'][this.value]]();
   });
-}
+};
+

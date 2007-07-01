@@ -1,15 +1,16 @@
-// $Id: comment.js,v 1.2 2007/05/20 12:34:47 dries Exp $
-if (Drupal.jsEnabled) {
-  $(document).ready(function() {
-    var parts = new Array("name", "homepage", "mail");
-    var cookie = '';
-    for (i=0;i<3;i++) {
-      cookie = Drupal.comment.getCookie('comment_info_' + parts[i]);
-      if (cookie != '') {
-        $("#comment-form input[@name=" + parts[i] + "]").val(cookie);
-      }
+// $Id: comment.js,v 1.3 2007/07/01 15:37:08 dries Exp $
+
+Drupal.behaviors.comment = function (context) {
+  var parts = new Array("name", "homepage", "mail");
+  var cookie = '';
+  for (i=0;i<3;i++) {
+    cookie = Drupal.comment.getCookie('comment_info_' + parts[i]);
+    if (cookie != '') {
+      $("#comment-form input[@name=" + parts[i] + "]:not(.comment-processed)", context)
+        .val(cookie)
+        .addClass('comment-processed');
     }
-  });
+  }
 };
 
 Drupal.comment = {};
