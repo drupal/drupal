@@ -7,5 +7,7 @@ features[] = logo
 features[] = favicon
 features[] = name
 features[] = slogan
+stylesheets[all][] = style.css
+stylesheets[all][] = common.css
 version = VERSION
 core = 6.x

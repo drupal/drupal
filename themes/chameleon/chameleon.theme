@@ -29,8 +29,6 @@ function chameleon_page($content, $show_blocks = TRUE, $show_messages = TRUE) {
     drupal_set_html_head('<link rel="shortcut icon" href="'. check_url(theme_get_setting('favicon')) .'" type="image/x-icon" />');
   }
 
-  drupal_add_css(path_to_theme() .'/common.css', 'theme');
-
   $title = drupal_get_title();
 
   // Get blocks before so that they can alter the header (JavaScript, Stylesheets etc.)
