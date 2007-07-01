@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.269 2007/07/01 17:41:14 dries Exp $
+// $Id: block.module,v 1.270 2007/07/01 21:39:07 goba Exp $
 
 /**
  * @file
@@ -683,7 +683,7 @@ function block_list($region) {
   static $blocks = array();
 
   if (!count($blocks)) {
-    $result = db_query("SELECT DISTINCT b.* FROM {blocks} b LEFT JOIN {blocks_roles} r ON b.module = r.module AND b.delta = r.delta WHERE b.theme = '%s' AND b.status = 1 AND (r.rid IN (%s) OR r.rid IS NULL) ORDER BY b.region, b.weight, b.module", $theme_key, implode(',', array_keys($user->roles)));
+    $result = db_query(db_rewrite_sql("SELECT DISTINCT b.* FROM {blocks} b LEFT JOIN {blocks_roles} r ON b.module = r.module AND b.delta = r.delta WHERE b.theme = '%s' AND b.status = 1 AND (r.rid IN (%s) OR r.rid IS NULL) ORDER BY b.region, b.weight, b.module", 'b', 'bid'), $theme_key, implode(',', array_keys($user->roles)));
     while ($block = db_fetch_object($result)) {
       if (!isset($blocks[$block->region])) {
         $blocks[$block->region] = array();

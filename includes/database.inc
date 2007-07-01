@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.71 2007/06/26 20:24:19 goba Exp $
+// $Id: database.inc,v 1.72 2007/07/01 21:39:07 goba Exp $
 
 /**
  * @file
@@ -194,7 +194,9 @@ define('DB_QUERY_REGEXP', '/(%d|%s|%%|%f|%b)/');
  * @param $query
  *   Query to be rewritten.
  * @param $primary_table
- *   Name or alias of the table which has the primary key field for this query. Possible values are: comments, forum, node, menu, term_data, vocabulary.
+ *   Name or alias of the table which has the primary key field for this query.
+ *   Possible values are: blocks, comments, forum, node, menu, term_data,
+ *   vocabulary.
  * @param $primary_field
  *   Name of the primary field.
  * @param $args
