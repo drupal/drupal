@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.213 2007/07/01 15:37:08 dries Exp $
+// $Id: CHANGELOG.txt,v 1.214 2007/07/01 18:10:09 goba Exp $
 
 Drupal 6.0, xxxx-xx-xx (development version)
 ----------------------
@@ -61,7 +61,6 @@ Drupal 6.0, xxxx-xx-xx (development version)
 - Added support for configurable actions.
 - Made user profiles easier to theme by using array rendering and supplying template files.
 - Added Deletion API to allow modules to alter and respond to any delete operation.
-- Added the Update status module to automatically check for available updates and warn sites if they are missing security updates or newer versions.
 
 Drupal 5.0, 2007-01-15
 ----------------------
