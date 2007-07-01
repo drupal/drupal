@@ -1,5 +1,5 @@
 <?php
-// $Id: chameleon.theme,v 1.66 2007/06/11 15:21:14 dries Exp $
+// $Id: chameleon.theme,v 1.67 2007/07/01 23:27:31 goba Exp $
 
 /**
  * @file
@@ -28,8 +28,6 @@ function chameleon_page($content, $show_blocks = TRUE, $show_messages = TRUE) {
   if (theme_get_setting('toggle_favicon')) {
     drupal_set_html_head('<link rel="shortcut icon" href="'. check_url(theme_get_setting('favicon')) .'" type="image/x-icon" />');
   }
-
-  drupal_add_css(path_to_theme() .'/common.css', 'theme');
 
   $title = drupal_get_title();
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.360 2007/07/01 23:15:40 goba Exp $
+// $Id: theme.inc,v 1.361 2007/07/01 23:27:31 goba Exp $
 
 /**
  * @file
@@ -100,33 +100,18 @@ function _init_theme($theme, $base_theme = array()) {
 
   $theme_path = dirname($theme->filename);
 
-  // Add the default stylesheet
-  if (!empty($theme->stylesheet)) {
-    drupal_add_css($theme->stylesheet, 'theme');
-  }
-  else {
-    // If we don't have a stylesheet of our own, look for the first
-    // base to have one and use its.
-    foreach ($base_theme as $base) {
-      if (!empty($base->stylesheet)) {
-        drupal_add_css($base->stylesheet, 'theme');
-        break;
+  // Add stylesheets used by this theme.
+  if (!empty($theme->stylesheets)) {
+    foreach ($theme->stylesheets as $media => $stylesheets) {
+      foreach ($stylesheets as $stylesheet) {
+        drupal_add_css($stylesheet, 'theme', $media);
       }
     }
   }
-
-  // Add the default script
-  if (!empty($theme->script)) {
-    drupal_add_js($theme->script, 'theme');
-  }
-  else {
-    // If we don't have a script of our own, look for the first
-    // base to have one and use its.
-    foreach ($base_theme as $base) {
-      if (!empty($base->script)) {
-        drupal_add_js($base->script, 'theme');
-        break;
-      }
+  // Add scripts used by this theme.
+  if (!empty($theme->scripts)) {
+    foreach ($theme->scripts as $script) {
+      drupal_add_js($script, 'theme');
     }
   }
 
@@ -356,11 +341,17 @@ function list_themes($refresh = FALSE) {
     while ($theme = db_fetch_object($result)) {
       if (file_exists($theme->filename)) {
         $theme->info = unserialize($theme->info);
-        if (!empty($theme->info['stylesheet']) && file_exists($theme->info['stylesheet'])) {
-          $theme->stylesheet = $theme->info['stylesheet'];
+        foreach ($theme->info['stylesheets'] as $media => $stylesheets) {
+          foreach ($stylesheets as $stylesheet => $path) {
+            if (file_exists($path)) {
+              $theme->stylesheets[$media][$stylesheet] = $path;
+            }
+          }
         }
-        if (!empty($theme->info['script']) && file_exists($theme->info['script'])) {
-          $theme->script = $theme->info['script'];
+        foreach ($theme->info['scripts'] as $script => $path) {
+          if (file_exists($path)) {
+            $theme->scripts[$script] = $path;
+          }
         }
         if (isset($theme->info['engine'])) {
           $theme->engine = $theme->info['engine'];

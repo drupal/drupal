@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.504 2007/07/01 17:41:16 dries Exp $
+// $Id: system.module,v 1.505 2007/07/01 23:27:31 goba Exp $
 
 /**
  * @file
@@ -1047,8 +1047,10 @@ function system_theme_default() {
       'search',
       'slogan'
     ),
-    'stylesheet' => 'style.css',
-    'script' => 'script.js',
+    'stylesheets' => array(
+      'all' => array('style.css')
+    ),
+    'scripts' => array('script.js'),
     'screenshot' => 'screenshot.png',
     'php' => DRUPAL_MINIMUM_PHP,
   );
@@ -1104,14 +1106,21 @@ function system_theme_data() {
       }
     }
 
-    // Give the stylesheet proper path information.
-    if (!empty($themes[$key]->info['stylesheet'])) {
-      $themes[$key]->info['stylesheet'] = dirname($themes[$key]->filename) .'/'. $themes[$key]->info['stylesheet'];
+    // Give the stylesheets proper path information.
+    $pathed_stylesheets = array();
+    foreach ($themes[$key]->info['stylesheets'] as $media => $stylesheets) {
+      foreach ($stylesheets as $stylesheet) {
+        $pathed_stylesheets[$media][$stylesheet] = dirname($themes[$key]->filename) .'/'. $stylesheet;
+      }
     }
-    // Give the script proper path information.
-    if (!empty($themes[$key]->info['script'])) {
-      $themes[$key]->info['script'] = dirname($themes[$key]->filename) .'/'. $themes[$key]->info['script'];
+    $themes[$key]->info['stylesheets'] = $pathed_stylesheets;
+    
+    // Give the scripts proper path information.
+    $scripts = array();
+    foreach ($themes[$key]->info['scripts'] as $script) {
+      $scripts[$script] = dirname($themes[$key]->filename) .'/'. $script;
     }
+    $themes[$key]->info['scripts'] = $scripts;
     // Give the screenshot proper path information.
     if (!empty($themes[$key]->info['screenshot'])) {
       $themes[$key]->info['screenshot'] = dirname($themes[$key]->filename) .'/'. $themes[$key]->info['screenshot'];
@@ -1135,6 +1144,28 @@ function system_theme_data() {
       }
       else {
         $themes[$key]->prefix = $key;
+      }
+    }
+    // Add any stylesheets from the base theme, unless the names match in which case
+    // the sub-theme wins. Note that we slip the base theme's stylesheets in at the 
+    // beginning of the array so that they get added to the page in the correct order.
+    foreach ($themes[$base_key]->info['stylesheets'] as $media => $stylesheets) {
+      foreach ($stylesheets as $stylesheet => $path) {
+        if (!isset($themes[$key]->info['stylesheets'][$media][$stylesheet])) {
+          // We need to ensure the media array exists, or the array addition below doesn't work.
+          if (!isset($themes[$key]->info['stylesheets'][$media])) {
+            $themes[$key]->info['stylesheets'][$media] = array();
+          }
+          $themes[$key]->info['stylesheets'][$media] = array($stylesheet => $path) + $themes[$key]->info['stylesheets'][$media];
+        }
+      }
+    }
+    // Add any scripts from the base theme, unless the names match in which case
+    // the sub-theme wins. Note that we slip the base theme's scripts in at the 
+    // beginning of the array so that they get added to the page in the correct order.
+    foreach ($themes[$base_key]->info['scripts'] as $script => $path) {
+      if (!isset($themes[$key]->info['scripts'][$script])) {
+        $themes[$key]->info['scripts'] = array($script => $path) + $themes[$key]->info['scripts'];
       }
     }
   }
