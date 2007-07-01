@@ -194,7 +194,9 @@ define('DB_QUERY_REGEXP', '/(%d|%s|%%|%f|%b)/');
  * @param $query
  *   Query to be rewritten.
  * @param $primary_table
- *   Name or alias of the table which has the primary key field for this query. Possible values are: comments, forum, node, menu, term_data, vocabulary.
+ *   Name or alias of the table which has the primary key field for this query.
+ *   Possible values are: blocks, comments, forum, node, menu, term_data,
+ *   vocabulary.
  * @param $primary_field
  *   Name of the primary field.
  * @param $args
