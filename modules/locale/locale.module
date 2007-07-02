@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.185 2007/07/02 14:41:35 dries Exp $
+// $Id: locale.module,v 1.186 2007/07/02 15:47:32 goba Exp $
 
 /**
  * @file
@@ -199,7 +199,7 @@ function locale_user($type, $edit, &$user, $category = NULL) {
     $languages = $languages['1'];
 
     // If the user is being created, we set the user language to the page language.
-    $user_language = $user ? user_language($user) : $language;
+    $user_preferred_language = $user ? user_preferred_language($user) : $language;
 
     $names = array();
     foreach ($languages as $langcode => $language) {
@@ -214,7 +214,7 @@ function locale_user($type, $edit, &$user, $category = NULL) {
     $form['locale']['language'] = array(
       '#type' => 'radios',
       '#title' => t('Language'),
-      '#default_value' => $user_language->language,
+      '#default_value' => $user_preferred_language->language,
       '#options' => $names,
       '#description' => t('Sets the default site interface and e-mail language for this account.'),
     );
