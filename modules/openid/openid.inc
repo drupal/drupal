@@ -86,7 +86,7 @@ function _openid_is_xri($identifier) {
 }
 
 /**
- * Normalize the given identifer as per spec.
+ * Normalize the given identifier as per spec.
  */
 function _openid_normalize($identifier) {
   if (_openid_is_xri($identifier)) {

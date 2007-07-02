@@ -37,7 +37,7 @@ All arguments are long options.
 
   URI         The URI to execute, i.e. http://default/foo/bar for executing
               the path '/foo/bar' in your site 'default'.  URI has to be
-              enclosured by quotation marks if there are ampersands in it
+              enclosed by quotation marks if there are ampersands in it
               (f.e. index.php?q=node&foo=bar).  Prefix 'http://' is required,
               and the domain must exist in Drupal's sites-directory.
 

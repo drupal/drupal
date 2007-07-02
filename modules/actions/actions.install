@@ -9,7 +9,7 @@ function actions_install() {
   drupal_install_schema('actions');
   variable_set('actions_next_id', 0);
 
-  // Do initial sychronization of actions in code and the database.
+  // Do initial synchronization of actions in code and the database.
   // For that we need to run code from actions.module.
   drupal_load('module', 'actions');
   actions_synchronize(actions_list());

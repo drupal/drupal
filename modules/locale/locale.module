@@ -210,7 +210,7 @@ function locale_user($type, $edit, &$user, $category = NULL) {
       '#title' => t('Language settings'),
       '#weight' => 1,
     );
-    
+
     $form['locale']['language'] = array(
       '#type' => 'radios',
       '#title' => t('Language'),
