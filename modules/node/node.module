@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.849 2007/07/02 14:41:36 dries Exp $
+// $Id: node.module,v 1.850 2007/07/02 17:08:36 dries Exp $
 
 /**
  * @file
@@ -1944,28 +1944,31 @@ function node_block($op = 'list', $delta = 0) {
 /**
  * A generic function for generating RSS feeds from a set of nodes.
  *
- * @param $nodes
- *   An object as returned by db_query() which contains the nid field.
+ * @param $nids
+ *   An array of node IDs (nid).
  * @param $channel
  *   An associative array containing title, link, description and other keys.
  *   The link should be an absolute URL.
  */
-function node_feed($nodes = 0, $channel = array()) {
+function node_feed($nids = array(), $channel = array()) {
   global $base_url, $language;
 
-  if (!$nodes) {
-    $nodes = db_query_range(db_rewrite_sql('SELECT n.nid, n.created FROM {node} n WHERE n.promote = 1 AND n.status = 1 ORDER BY n.created DESC'), 0, variable_get('feed_default_items', 10));
+  if (!$nids) {
+    $result = db_query_range(db_rewrite_sql('SELECT n.nid, n.created FROM {node} n WHERE n.promote = 1 AND n.status = 1 ORDER BY n.created DESC'), 0, variable_get('feed_default_items', 10));
+    while ($row = db_fetch_object($result)) {
+      $nids[] = $row->nid;
+    }
   }
 
   $item_length = variable_get('feed_item_length', 'teaser');
   $namespaces = array('xmlns:dc="http://purl.org/dc/elements/1.1/"');
 
   $items = '';
-  while ($node = db_fetch_object($nodes)) {
+  foreach ($nids as $nid) {
     // Load the specified node:
-    $item = node_load($node->nid);
+    $item = node_load($nid);
     $node->build_mode = NODE_BUILD_RSS;
-    $link = url("node/$node->nid", array('absolute' => TRUE));
+    $link = url("node/$nid", array('absolute' => TRUE));
 
     if ($item_length != 'title') {
       $teaser = ($item_length == 'teaser') ? TRUE : FALSE;

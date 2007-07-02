@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.366 2007/07/01 17:41:16 dries Exp $
+// $Id: taxonomy.module,v 1.367 2007/07/02 17:08:36 dries Exp $
 
 /**
  * @file
@@ -1422,7 +1422,12 @@ function taxonomy_term_page($str_tids = '', $depth = 0, $op = 'page') {
           $channel['description'] = $term->description;
 
           $result = taxonomy_select_nodes($tids, $terms['operator'], $depth, FALSE);
-          node_feed($result, $channel);
+
+          while ($row = db_fetch_object($result)) {
+            $items[] = $row->nid;
+          }
+
+          node_feed($items, $channel);
           break;
         default:
           drupal_not_found();

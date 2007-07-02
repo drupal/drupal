@@ -1,20 +1,46 @@
 <?php
-// $Id: forum.install,v 1.7 2007/05/25 12:46:44 dries Exp $
+// $Id: forum.install,v 1.8 2007/07/02 17:08:35 dries Exp $
 
 /**
  * Implementation of hook_install().
  */
 function forum_install() {
-  // Create tables.
-  drupal_install_schema('forum');
+  // Create the forum vocabulary. Assign the vocabulary a low weight so
+  // it will appear first in forum topic create and edit forms.
+  $vocabulary = array(
+    'name' => t('Forums'),
+    'multiple' => 0,
+    'required' => 1,
+    'hierarchy' => 1,
+    'relations' => 0,
+    'module' => 'forum',
+    'weight' => -10,
+    'nodes' => array('forum' => 1),
+  );
+  taxonomy_save_vocabulary($vocabulary);
+
+  variable_set('forum_nav_vocabulary', $vocabulary['vid']);
+}
+
+/**
+ * Remove forum table; forums now use the general term_node table to support multiple
+ * node types.
+ */
+function forum_update_6001() {
+  $ret = array();
+
+  $ret[] = update_sql("DROP TABLE {forum}");
+
+  return $ret;
 }
 
 /**
  * Implementation of hook_uninstall().
  */
 function forum_uninstall() {
-  // Remove tables.
-  drupal_uninstall_schema('forum');
+  $vid = variable_get('forum_nav_vocabulary', '');
+  // Delete the vocabulary.
+  taxonomy_del_vocabulary($vid);
 
   db_query("DELETE FROM {node} WHERE type = 'forum'");
   variable_del('forum_containers');
