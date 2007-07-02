@@ -1,5 +1,5 @@
 <?php
-// $Id: mail.inc,v 1.3 2007/07/01 19:49:19 goba Exp $
+// $Id: mail.inc,v 1.4 2007/07/02 14:41:35 dries Exp $
 
 /**
  * Compose and optionally send an e-mail message.
@@ -38,7 +38,7 @@
  *       drupal_mail('example', 'notify', $account->mail, user_preferred_language($account), $params);
  *     }
  *   }
- *   
+ *
  *   function example_mail($key, &$message, $params) {
  *     $language = $message['language'];
  *     $variables = user_mail_tokens($params['account'], $language);
@@ -80,11 +80,11 @@
  */
 function drupal_mail($module, $key, $to, $language, $params = array(), $from = NULL, $send = TRUE) {
   $default_from = variable_get('site_mail', ini_get('sendmail_from'));
-  
+
   // Bundle up the variables into a structured array for altering.
   $message = array(
     'id'       => $module .'_'. $key,
-    'to'       => $to, 
+    'to'       => $to,
     'from'     => isset($from) ? $from : $default_from,
     'language' => $language,
     'params'   => $params,
@@ -109,14 +109,14 @@ function drupal_mail($module, $key, $to, $language, $params = array(), $from = N
     $headers['From'] = $headers['Reply-To'] = $from;
   }
   $message['headers'] = $headers;
-    
+
   // Build the e-mail (get subject and body, allow additional headers) by
   // invoking hook_mail() on this module. We cannot use module_invoke() as
   // we need to have $message by reference in hook_mail().
   if (function_exists($function = $module .'_mail')) {
     $function($key, $message, $params);
   }
-  
+
   // Invoke hook_mail_alter() to allow all modules to alter the resulting e-mail.
   drupal_alter('mail', $message);
 

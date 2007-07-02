@@ -1,5 +1,5 @@
 <?php
-// $Id: translation.module,v 1.4 2007/07/01 15:37:10 dries Exp $
+// $Id: translation.module,v 1.5 2007/07/02 14:41:37 dries Exp $
 
 /**
  * @file
@@ -35,7 +35,7 @@ function translation_help($path, $arg) {
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@translation">Translation page</a>.', array('@translation' => 'http://drupal.org/handbook/modules/translation/')) .'</p>';
       return $output;
     case 'node/%/translate':
-      $output = '<p>'. t('Translations of a piece of content are managed with translation sets. Each translation set has one source post and any number of translations in any of the <a href="!languages">enabled languages</a>. All translations are tracked to be up to date or oudated based on whether the source post was modified significantly.', array('!languages' => url('admin/settings/language'))) .'</p>';
+      $output = '<p>'. t('Translations of a piece of content are managed with translation sets. Each translation set has one source post and any number of translations in any of the <a href="!languages">enabled languages</a>. All translations are tracked to be up to date or outdated based on whether the source post was modified significantly.', array('!languages' => url('admin/settings/language'))) .'</p>';
       return $output;
   }
 }

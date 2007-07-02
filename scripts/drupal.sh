@@ -1,6 +1,6 @@
 #!/usr/bin/php
 <?php
-// $Id: drupal.sh,v 1.3 2007/03/05 16:13:28 dries Exp $
+// $Id: drupal.sh,v 1.4 2007/07/02 14:41:37 dries Exp $
 
 /**
  * Drupal shell execution script
@@ -37,7 +37,7 @@ All arguments are long options.
 
   URI         The URI to execute, i.e. http://default/foo/bar for executing
               the path '/foo/bar' in your site 'default'.  URI has to be
-              enclosured by quotation marks if there are ampersands in it
+              enclosed by quotation marks if there are ampersands in it
               (f.e. index.php?q=node&foo=bar).  Prefix 'http://' is required,
               and the domain must exist in Drupal's sites-directory.
 

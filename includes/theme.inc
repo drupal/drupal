@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.361 2007/07/01 23:27:31 goba Exp $
+// $Id: theme.inc,v 1.362 2007/07/02 14:41:35 dries Exp $
 
 /**
  * @file
@@ -797,7 +797,7 @@ function theme_placeholder($text) {
 /**
  * Generate a themed maintenance page.
  *
- * Note: this function is not themable.
+ * Note: this function is not themeable.
  *
  * @param $content
  *   The page content to show.
@@ -838,7 +838,7 @@ function theme_maintenance_page($content, $show_messages = TRUE) {
 /**
  * Generate a themed installation page.
  *
- * Note: this function is not themable.
+ * Note: this function is not themeable.
  *
  * @param $content
  *   The page content to show.
@@ -885,7 +885,7 @@ function theme_install_page($content) {
 /**
  * Return a themed list of maintenance tasks to perform.
  *
- * Note: this function is not themable.
+ * Note: this function is not themeable.
  */
 function theme_task_list($items, $active = NULL) {
   $done = isset($items[$active]) || $active == NULL;

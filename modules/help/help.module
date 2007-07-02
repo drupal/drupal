@@ -1,5 +1,5 @@
 <?php
-// $Id: help.module,v 1.74 2007/06/30 19:46:56 goba Exp $
+// $Id: help.module,v 1.75 2007/07/02 14:41:35 dries Exp $
 
 /**
  * @file
@@ -47,7 +47,7 @@ function help_main() {
    <dt>Node</dt><dd>The basic unit of content in Drupal, often referred to as a "post". All content that can be created using the "create content" menu is a node. Keep in mind that comments, blocks, and users are <em>not</em> nodes.</dd>
    <dt>Published</dt><dd>A post that is viewable by every visitor of the site, regardless of whether he is logged in (see also "Unpublished").</dd>
    <dt>Role</dt><dd>A classification users are placed into for the purpose of setting users\' permissions. A user receives the combined permissions of all roles to which he or she is subscribed.</dd>
-   <dt>Taxonomy</dt><dd>A categorization system that allows the building of complex hierarchial or relational structures and tagging of content (see <a href="@taxonomy">taxonomy help</a>).</dd>
+   <dt>Taxonomy</dt><dd>A categorization system that allows the building of complex hierarchical or relational structures and tagging of content (see <a href="@taxonomy">taxonomy help</a>).</dd>
    <dt>Unpublished</dt><dd>A post that is only viewable by administrators and moderators.</dd>
    <dt>User</dt><dd>A person who has an account at your Drupal site, and is currently logged in with that account.</dd>
    <dt>Visitor</dt><dd>A person who does not have an account at your Drupal site or a person who has an account at your Drupal site but is <em>not</em> currently logged in with that account. A visitor is also called an "anonymous user".</dd>

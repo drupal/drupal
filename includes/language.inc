@@ -1,5 +1,5 @@
 <?php
-// $Id: language.inc,v 1.4 2007/04/18 21:56:18 goba Exp $
+// $Id: language.inc,v 1.5 2007/07/02 14:41:35 dries Exp $
 
 /**
  * @file
@@ -58,7 +58,7 @@ function language_initialize() {
 }
 
 /**
- * Indetify language from the Accept-language HTTP header we got.
+ * Identify language from the Accept-language HTTP header we got.
  */
 function language_from_browser() {
   // Specified by the user via the browser's Accept Language setting

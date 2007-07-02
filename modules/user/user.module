@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.815 2007/07/01 19:49:19 goba Exp $
+// $Id: user.module,v 1.816 2007/07/02 14:41:37 dries Exp $
 
 /**
  * @file
@@ -371,7 +371,7 @@ function user_validate_picture(&$form, &$form_state) {
   );
   if ($file = file_save_upload('picture_upload', $validators)) {
     // The image was saved using file_save_upload() and was added to the
-    // files table as a temorary file. We'll make a copy and let the garbage
+    // files table as a temporary file. We'll make a copy and let the garbage
     // collector delete the original upload.
     $info = image_get_info($file->filepath);
     $destination = variable_get('user_picture_path', 'pictures') .'/picture-'. $form['#uid'] .'.'. $info['extension'];
@@ -3143,7 +3143,7 @@ function user_mail_tokens($account, $language) {
  * are more than one languages enabled on the site. If the user did not
  * choose a preferred language, or is the anonymous user, the $default
  * value, or if it is not set, the site default language will be returned.
- * 
+ *
  * @param $account
  *   User account to look up language for.
  * @param $default

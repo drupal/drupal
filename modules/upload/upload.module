@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.170 2007/07/01 17:41:16 dries Exp $
+// $Id: upload.module,v 1.171 2007/07/02 14:41:37 dries Exp $
 
 /**
  * @file
@@ -166,7 +166,7 @@ function upload_admin_settings() {
     '#default_value' => variable_get('upload_max_resolution', 0),
     '#size' => 15,
     '#maxlength' => 10,
-    '#description' => t('The maximum allowed image size (e.g. 640x480). Set to 0 for no restriction. If an <a href="!image-toolkit-link">image toolkit</a> is installed, files exceeding this value will be scalled down to fit.', array('!image-toolkit-link' => url('admin/settings/image-toolkit'))),
+    '#description' => t('The maximum allowed image size (e.g. 640x480). Set to 0 for no restriction. If an <a href="!image-toolkit-link">image toolkit</a> is installed, files exceeding this value will be scaled down to fit.', array('!image-toolkit-link' => url('admin/settings/image-toolkit'))),
     '#field_suffix' => '<kbd>'. t('WIDTHxHEIGHT') .'</kbd>'
   );
   $form['settings_general']['upload_list_default'] = array(
@@ -317,7 +317,7 @@ function upload_file_download($file) {
 function _upload_prepare(&$node) {
   global $user;
 
-  // Initialize _SESSION['upload_files'] if no post occured.
+  // Initialize _SESSION['upload_files'] if no post occurred.
   // This clears the variable from old forms and makes sure it
   // is an array to prevent notices and errors in other parts
   // of upload.module.

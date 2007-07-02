@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.209 2007/07/01 17:41:14 dries Exp $
+// $Id: form.inc,v 1.210 2007/07/02 14:41:35 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -268,7 +268,7 @@ function drupal_retrieve_form($form_id, &$form_state) {
  *   An associative array containing the structure of the form.
  * @param $form_state
  *   A keyed array containing the current state of the form. This
- *   includes the current persistant storage data for the form, and
+ *   includes the current persistent storage data for the form, and
  *   any data passed along by earlier steps when displaying a
  *   multi-step form. Additional information, like the sanitized $_POST
  *   data, is also accumulated here.
@@ -759,7 +759,7 @@ function form_builder($form_id, $form, &$form_state) {
   }
 
   // Now that we've processed everything, we can go back to handle the funky
-  // Internet Explorer button-click scenerio.
+  // Internet Explorer button-click scenario.
   _form_builder_ie_cleanup($form, $form_state);
 
   return $form;
@@ -902,7 +902,7 @@ function _form_builder_handle_input_element($form_id, &$form, &$form_state) {
 
 /**
  * Handle the special Internet Explorer one-button-form hit-enter-
- * instead-of-clicking scenerio.
+ * instead-of-clicking scenario.
  */
 function _form_builder_ie_cleanup($form, &$form_state) {
   if (!empty($form['#type']) && $form['#type'] == 'form') {
@@ -1761,7 +1761,7 @@ function form_clean_id($id = NULL) {
  *   // as well as 'return values' for the current operation (write)
  *   // The following keys are provided :
  *   // 'results' (read / write): The array of results gathered so far by
- *   //   the batch processing, for the curent operation to append its own.
+ *   //   the batch processing, for the current operation to append its own.
  *   // 'message' (write): A text message displayed in the progress page.
  *   // The following keys allow for multi-step operations :
  *   // 'sandbox' (read / write): An array that can be freely used to
@@ -1778,7 +1778,7 @@ function form_clean_id($id = NULL) {
  *   $context['message'] = $node->title;
  * }
  *
- * // More advanced example: mutli-step operation - load all nodes, five by five
+ * // More advanced example: multi-step operation - load all nodes, five by five
  * function my_function_2(&$context) {
  *   if (empty($context['sandbox'])) {
  *     $context['sandbox']['progress'] = 0;
@@ -1810,7 +1810,7 @@ function form_clean_id($id = NULL) {
  *     $message = t('Finished with an error.');
  *   }
  *   drupal_set_message($message);
- *   // Provinding data for the redirected page is done through $_SESSION.
+ *   // Providing data for the redirected page is done through $_SESSION.
  *   foreach ($results as $result) {
  *     $items[] = t('Loaded node %title.', array('%title' => $result));
  *   }
@@ -1848,7 +1848,7 @@ function form_clean_id($id = NULL) {
  *       and possibly save data in $_SESSION for display after final page redirection.
  *
  * Operations are added as new batch sets. Batch sets are used to ensure
- * clean code independency, ensuring that several batches submitted by
+ * clean code independence, ensuring that several batches submitted by
  * different parts of the code (core / contrib modules) can be processed
  * correctly while not interfering or having to cope with each other. Each
  * batch set gets to specify his own UI messages, operates on it's own set
@@ -1902,7 +1902,7 @@ function batch_set($batch_definition) {
 /**
  * Process the batch.
  *
- * Unless the batch has been markes with 'progressive' = FALSE, the function
+ * Unless the batch has been marked with 'progressive' = FALSE, the function
  * isses a drupal_goto and thus ends page execution.
  *
  * This function is not needed in form submit handlers; Form API takes care
@@ -1911,7 +1911,7 @@ function batch_set($batch_definition) {
  * @param $redirect
  *   (optional) Path to redirect to when the batch has finished processing.
  * @param $url
- *   (optional - should ony be used for separate scripts like update.php)
+ *   (optional - should only be used for separate scripts like update.php)
  *   URL of the batch processing page.
  */
 function batch_process($redirect = NULL, $url = NULL) {
@@ -1957,7 +1957,7 @@ function batch_process($redirect = NULL, $url = NULL) {
 }
 
 /**
- * Retrive the current batch.
+ * Retrieve the current batch.
  */
 function &batch_get() {
   static $batch = array();

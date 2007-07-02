@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.inc,v 1.2 2007/06/23 08:58:31 goba Exp $
+// $Id: openid.inc,v 1.3 2007/07/02 14:41:36 dries Exp $
 
 /**
  * @file
@@ -86,7 +86,7 @@ function _openid_is_xri($identifier) {
 }
 
 /**
- * Normalize the given identifer as per spec.
+ * Normalize the given identifier as per spec.
  */
 function _openid_normalize($identifier) {
   if (_openid_is_xri($identifier)) {

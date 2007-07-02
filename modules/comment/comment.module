@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.560 2007/07/01 23:15:41 goba Exp $
+// $Id: comment.module,v 1.561 2007/07/02 14:41:35 dries Exp $
 
 /**
  * @file
@@ -299,7 +299,7 @@ function comment_block($op = 'list', $delta = 0) {
  *
  * @param $number (optional) The maximum number of comments to find.
  * @return $comments An array of comment objects each containing a nid,
- *   subject, cid, and timstamp, or an empty array if there are no recent
+ *   subject, cid, and timestamp, or an empty array if there are no recent
  *   comments visible to the current user.
  */
 function comment_get_recent($number = 10) {
@@ -1912,7 +1912,7 @@ function theme_comment_post_forbidden($nid) {
 }
 
 /**
- * Allow themable wrapping of all comments.
+ * Allow themeable wrapping of all comments.
  */
 function theme_comment_wrapper($content) {
   return '<div id="comments">'. $content .'</div>';

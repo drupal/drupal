@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.101 2007/06/05 12:13:20 dries Exp $
+// $Id: file.inc,v 1.102 2007/07/02 14:41:35 dries Exp $
 
 /**
  * @file
@@ -21,7 +21,7 @@ define('FILE_EXISTS_REPLACE', 1);
 define('FILE_EXISTS_ERROR', 2);
 
 /**
- * A files status can be one of two values: temorary or permanent. The status
+ * A files status can be one of two values: temporary or permanent. The status
  * for each file Drupal manages is stored in the {files} tables. If the status
  * is temporary Drupal's file garbage collection will delete the file and
  * remove it from the files table after a set period of time.
@@ -262,7 +262,7 @@ function file_copy(&$source, $dest = 0, $replace = FILE_EXISTS_RENAME) {
 
     // Give everyone read access so that FTP'd users or
     // non-webserver users can see/read these files,
-    // and give group write permissions so group memebers
+    // and give group write permissions so group members
     // can alter files uploaded by the webserver.
     @chmod($dest, 0664);
   }
@@ -454,7 +454,7 @@ function file_space_used($uid = NULL) {
  * Saves a file upload to a new location. The source file is validated as a
  * proper upload and handled as such.
  *
- * The file will be added to the files table as a temporary file. Temorary files
+ * The file will be added to the files table as a temporary file. Temporary files
  * are periodically cleaned. To make the file permanent file call
  * file_set_status() to change it's status.
  *

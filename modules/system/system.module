@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.505 2007/07/01 23:27:31 goba Exp $
+// $Id: system.module,v 1.506 2007/07/02 14:41:37 dries Exp $
 
 /**
  * @file
@@ -1114,7 +1114,7 @@ function system_theme_data() {
       }
     }
     $themes[$key]->info['stylesheets'] = $pathed_stylesheets;
-    
+
     // Give the scripts proper path information.
     $scripts = array();
     foreach ($themes[$key]->info['scripts'] as $script) {
@@ -1147,7 +1147,7 @@ function system_theme_data() {
       }
     }
     // Add any stylesheets from the base theme, unless the names match in which case
-    // the sub-theme wins. Note that we slip the base theme's stylesheets in at the 
+    // the sub-theme wins. Note that we slip the base theme's stylesheets in at the
     // beginning of the array so that they get added to the page in the correct order.
     foreach ($themes[$base_key]->info['stylesheets'] as $media => $stylesheets) {
       foreach ($stylesheets as $stylesheet => $path) {
@@ -1161,7 +1161,7 @@ function system_theme_data() {
       }
     }
     // Add any scripts from the base theme, unless the names match in which case
-    // the sub-theme wins. Note that we slip the base theme's scripts in at the 
+    // the sub-theme wins. Note that we slip the base theme's scripts in at the
     // beginning of the array so that they get added to the page in the correct order.
     foreach ($themes[$base_key]->info['scripts'] as $script => $path) {
       if (!isset($themes[$key]->info['scripts'][$script])) {
@@ -2308,7 +2308,7 @@ function system_theme_settings(&$form_state, $key = '') {
     $filename = ($key) ? str_replace('/', '_', $key) .'_logo.'. $parts['extension'] : 'logo.'. $parts['extension'];
 
     // The image was saved using file_save_upload() and was added to the
-    // files table as a temorary file. We'll make a copy and let the garbage
+    // files table as a temporary file. We'll make a copy and let the garbage
     // collector delete the original upload.
     if (file_copy($file, $filename, FILE_EXISTS_REPLACE)) {
       $_POST['default_logo'] = 0;
@@ -2323,7 +2323,7 @@ function system_theme_settings(&$form_state, $key = '') {
     $filename = ($key) ? str_replace('/', '_', $key) .'_favicon.'. $parts['extension'] : 'favicon.'. $parts['extension'];
 
     // The image was saved using file_save_upload() and was added to the
-    // files table as a temorary file. We'll make a copy and let the garbage
+    // files table as a temporary file. We'll make a copy and let the garbage
     // collector delete the original upload.
     if (file_copy($file, $filename)) {
       $_POST['default_favicon'] = 0;
@@ -2784,7 +2784,7 @@ function system_cron() {
   while ($file = db_fetch_object($result)) {
     if (file_exists($file->filepath)) {
       // If files that exist cannot be deleted, continue so the database remains
-      // consistant.
+      // consistent.
       if (!file_delete($file->filepath)) {
         watchdog('file system', t('Could not delete temporary file "%path" during garbage collection', array('%path' => $file->filepath)), 'error');
         continue;

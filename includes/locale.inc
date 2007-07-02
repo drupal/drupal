@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.145 2007/07/01 17:41:14 dries Exp $
+// $Id: locale.inc,v 1.146 2007/07/02 14:41:35 dries Exp $
 
 /**
  * @file
@@ -62,7 +62,7 @@ function locale_languages_overview_form() {
 }
 
 /**
- * Theme the langauge overview form.
+ * Theme the language overview form.
  */
 function theme_locale_languages_overview_form($form) {
   $default = language_default();
@@ -892,7 +892,7 @@ function locale_translate_delete($lid) {
  * @param $enabled
  *   Optionally TRUE to enable the language when created or FALSE to disable.
  * @param $default
- *   Optionall set this language to be the default.
+ *   Optionally set this language to be the default.
  */
 function locale_add_language($langcode, $name = NULL, $native = NULL, $direction = LANGUAGE_LTR, $domain = '', $prefix = '', $enabled = TRUE, $default = FALSE) {
   // Default prefix on language code.
@@ -1266,7 +1266,7 @@ function _locale_import_one_string_db(&$report, $langcode, $source, $translation
         $report[0]++;
       }
       else if ($mode == LOCALE_IMPORT_OVERWRITE) {
-        // Translation exists, only overvwrite if instructed.
+        // Translation exists, only overwrite if instructed.
         db_query("UPDATE {locales_target} SET translation = '%s', plid = %d, plural = %d WHERE language = '%s' AND lid = %d", $translation, $plid, $plural, $langcode, $lid);
         $report[1]++;
       }
@@ -2130,7 +2130,7 @@ function _locale_rebuild_js($langcode = NULL) {
         }
       }
       else {
-        watchdog('locale', 'An error occured during creation of the JavaScript translation file for the language %language.', array('%language' => t($language->name)));
+        watchdog('locale', 'An error occurred during creation of the JavaScript translation file for the language %language.', array('%language' => t($language->name)));
       }
     }
   }

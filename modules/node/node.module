@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.848 2007/07/01 23:15:41 goba Exp $
+// $Id: node.module,v 1.849 2007/07/02 14:41:36 dries Exp $
 
 /**
  * @file
@@ -214,7 +214,7 @@ function node_teaser_js(&$form, &$form_state) {
  *   The format of the content. If the content contains PHP code, we do not
  *   split it up to prevent parse errors.
  * @param $size
- *   The desired character length of the teaser. If omitted, the default 
+ *   The desired character length of the teaser. If omitted, the default
  *   value will be used.
  * @return
  *   The generated teaser.
@@ -1899,7 +1899,7 @@ function node_revision_delete($nid, $revision) {
 }
 
 /**
- * Post revision deletion opertations.
+ * Post revision deletion operations.
  */
 function node_revision_delete_post($node, $revision) {
 

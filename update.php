@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.226 2007/06/27 17:54:49 goba Exp $
+// $Id: update.php,v 1.227 2007/07/02 14:41:34 dries Exp $
 
 /**
  * @file
@@ -278,7 +278,7 @@ function update_fix_watchdog() {
  * @param $number
  *   The update number to run.
  * @param $context
- *   The batch conetxt array
+ *   The batch context array
  */
 function update_do_one($module, $number, &$context) {
   $function = $module .'_update_'. $number;
@@ -387,7 +387,7 @@ function update_batch() {
     'operations' => $operations,
     'title' => 'Updating',
     'init_message' => 'Starting updates',
-    'error_message' => 'An unrecoverable error has occured. You can find the error message below. It is advised to copy it to the clipboard for reference.',
+    'error_message' => 'An unrecoverable error has occurred. You can find the error message below. It is advised to copy it to the clipboard for reference.',
     'finished' => 'update_finished',
   );
   batch_set($batch);

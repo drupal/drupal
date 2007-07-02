@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.184 2007/07/01 19:49:19 goba Exp $
+// $Id: locale.module,v 1.185 2007/07/02 14:41:35 dries Exp $
 
 /**
  * @file
@@ -210,7 +210,7 @@ function locale_user($type, $edit, &$user, $category = NULL) {
       '#title' => t('Language settings'),
       '#weight' => 1,
     );
-    
+
     $form['locale']['language'] = array(
       '#type' => 'radios',
       '#title' => t('Language'),

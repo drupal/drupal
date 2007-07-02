@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.94 2007/07/01 19:49:19 goba Exp $
+// $Id: contact.module,v 1.95 2007/07/02 14:41:35 dries Exp $
 
 /**
  * @file
@@ -384,7 +384,7 @@ function contact_mail_user_submit($form, &$form_state) {
   flood_register_event('contact');
   watchdog('mail', '%name-from sent %name-to an e-mail.', array('%name-from' => $user->name, '%name-to' => $account->name));
   drupal_set_message(t('The message has been sent.'));
-  
+
   // Back to the requested users profile page.
   $form_state['redirect'] = "user/$account->uid";
 }
@@ -494,7 +494,7 @@ function contact_mail_page_validate($form, &$form_state) {
  */
 function contact_mail_page_submit($form, &$form_state) {
   global $language;
-  
+
   $values = $form_state['values'];
 
   // E-mail address of the sender: as the form field is a text field,
@@ -504,9 +504,9 @@ function contact_mail_page_submit($form, &$form_state) {
   // Load category properties and save form values for email composition.
   $contact = db_fetch_object(db_query("SELECT * FROM {contact} WHERE cid = %d", $values['cid']));
   $values['contact'] = $contact;
-  
+
   // Send the e-mail to the recipients using the site default language.
-  drupal_mail('contact', 'page_mail', $contact->recipients, language_default(), $values, $from); 
+  drupal_mail('contact', 'page_mail', $contact->recipients, language_default(), $values, $from);
 
   // If the user requests it, send a copy using the current language.
   if ($values['copy']) {
@@ -541,7 +541,7 @@ function contact_mail($key, &$message, $params) {
       $message['body'][] = $params['message'];
       break;
     case 'page_autoreply':
-      $contact = $params['contact']; 
+      $contact = $params['contact'];
       $message['subject'] .= t('[!category] !subject', array('!category' => $contact->category, '!subject' => $params['subject']), $language->language);
       $message['body'][] = $contact->reply;
       break;

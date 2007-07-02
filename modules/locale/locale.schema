@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.schema,v 1.4 2007/06/18 13:00:02 goba Exp $
+// $Id: locale.schema,v 1.5 2007/07/02 14:41:36 dries Exp $
 
 function locale_schema() {
   $schema['languages'] = array(
@@ -32,7 +32,7 @@ function locale_schema() {
 
   $schema['locales_source'] = array(
     'fields' => array(
-      // Unique indentifier of this string.
+      // Unique identifier of this string.
       'lid'       => array('type' => 'serial', 'not null' => TRUE),
       // Drupal path in case of online discovered translations or file path in case of imported strings.
       'location'  => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),

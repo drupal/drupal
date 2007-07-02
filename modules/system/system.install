@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.125 2007/06/30 08:17:05 goba Exp $
+// $Id: system.install,v 1.126 2007/07/02 14:41:37 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -976,7 +976,7 @@ function system_update_145() {
       break;
   }
 
-  // Intialize block data for default theme
+  // Initialize block data for default theme
   $ret[] = update_sql("UPDATE {blocks} SET region = 'left' WHERE region = '0'");
   $ret[] = update_sql("UPDATE {blocks} SET region = 'right' WHERE region = '1'");
   db_query("UPDATE {blocks} SET theme = '%s'", $default_theme);
@@ -3121,7 +3121,7 @@ function system_update_6017() {
         $ret[] = array('success' => TRUE, 'query' => "variable_set($new_name)");
         $ret[] = array('success' => TRUE, 'query' => "variable_del($old_name)");
         if ($old_name == 'user_mail_approval_body') {
-          drupal_set_message(t('Saving an old value of the welcome message body for users that are pending administrator approval. However, you should consider modifying this text, since Drupal can now be configured to automatically notify users and send them their login infomation when their accounts are approved.  See the !admin_user_settings page for details.', array('!admin_user_settings' => l(t('User settings'), 'admin/user/settings'))));
+          drupal_set_message(t('Saving an old value of the welcome message body for users that are pending administrator approval. However, you should consider modifying this text, since Drupal can now be configured to automatically notify users and send them their login information when their accounts are approved.  See the !admin_user_settings page for details.', array('!admin_user_settings' => l(t('User settings'), 'admin/user/settings'))));
         }
       }
     }
@@ -3160,7 +3160,7 @@ function system_update_6018() {
  *
  * Note that the mysql and pgsql cases make different changes.  This
  * is because each schema needs to be tweaked in different ways to
- * comform to the new schema structure.  Also, since they operate on
+ * conform to the new schema structure.  Also, since they operate on
  * tables defined by many optional core modules which may not ever
  * have been installed, they must test each table for existence.  If
  * the modules are first installed after this update exists the tables
@@ -3392,7 +3392,7 @@ function system_update_6022() {
 
   // Rename the file_revisions table to upload then add nid column. Since we're
   // changing the table name we need to drop and re-add the vid index so both
-  // pgsql ends up with the corect index name.
+  // pgsql ends up with the correct index name.
   db_drop_index($ret, 'file_revisions', 'vid');
   db_rename_table($ret, 'file_revisions', 'upload');
   db_add_field($ret, 'upload', 'nid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0));

@@ -1,5 +1,5 @@
 <?php
-// $Id: actions.module,v 1.1 2007/06/29 18:06:50 dries Exp $
+// $Id: actions.module,v 1.2 2007/07/02 14:41:35 dries Exp $
 
 /**
 * @file
@@ -720,7 +720,7 @@ function actions_forms() {
  *   HTML form.
  */
 function actions_assign($type = NULL) {
-  // If no type is specificied we default to node actions, since they
+  // If no type is specified we default to node actions, since they
   // are the most common.
   if (!isset($type)) {
     drupal_goto('admin/build/actions/assign/node');

@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.181 2007/06/30 19:46:54 goba Exp $
+// $Id: menu.inc,v 1.182 2007/07/02 14:41:35 dries Exp $
 
 /**
  * @file
@@ -67,7 +67,7 @@
  *
  * Everything described so far is stored in the menu_router table. The
  * menu_links table holds the visible menu links. By default these are
- * derived from the same hook_menu definitons, however you are free to
+ * derived from the same hook_menu definitions, however you are free to
  * add more with menu_link_save().
  */
 
@@ -522,7 +522,7 @@ function _menu_link_translate(&$item) {
     // TODO: menu_tree_data may set this ahead of time for links to nodes
     if (!isset($item['access'])) {
       if (!_menu_load_objects($item, $map)) {
-        // An error occured loading an object
+        // An error occurred loading an object
         $item['access'] = FALSE;
         return FALSE;
       }
@@ -651,7 +651,7 @@ function menu_tree_all_data($menu_name = 'navigation', $item = NULL, $show_hidde
 
 /**
  * Get the data structure representing a named menu tree, based on the current
- * page. The tree order is maintained by storing each parent in an invidual
+ * page. The tree order is maintained by storing each parent in an individual
  * field, see http://drupal.org/node/141866 for more.
  *
  * @param $menu_name

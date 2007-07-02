@@ -183,7 +183,7 @@ function _batch_process() {
     $total = $current_set['total'];
 
     // If the batch set is completed, browse through the remaining sets
-    // until we find one that acually has operations.
+    // until we find one that actually has operations.
     while (empty($current_set['operations']) && ($current_set['success'] = TRUE) && _batch_next_set()) {
       $current_set =& _batch_current_set();
     }
@@ -292,7 +292,7 @@ function _batch_finished() {
 }
 
 /**
- * Store tha batch data for next request, or clear the table if the batch is finished.
+ * Store the batch data for next request, or clear the table if the batch is finished.
  */
 function _batch_shutdown() {
   if ($batch = batch_get()) {

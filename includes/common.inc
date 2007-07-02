@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.668 2007/07/01 17:41:14 dries Exp $
+// $Id: common.inc,v 1.669 2007/07/02 14:41:34 dries Exp $
 
 /**
  * @file
@@ -935,7 +935,7 @@ function format_xml_elements($array) {
  * @param $singular
  *   The string for the singular case. Please make sure it is clear this is
  *   singular, to ease translation (e.g. use "1 new comment" instead of "1 new").
- *   Do not use @count in the singluar string.
+ *   Do not use @count in the singular string.
  * @param $plural
  *   The string for the plural case. Please make sure it is clear this is plural,
  *   to ease translation. Use @count in place of the item count, as in "@count
@@ -2266,7 +2266,7 @@ function _drupal_bootstrap_full() {
   fix_gpc_magic();
   // Load all enabled modules
   module_load_all();
-  // Let all modules take action before menu system handles the reqest
+  // Let all modules take action before menu system handles the request
   module_invoke_all('init');
 
 }
@@ -2494,7 +2494,7 @@ function drupal_render(&$elements) {
   }
 
   // Make any final changes to the element before it is rendered. This means
-  // that the $element or the chilren can be altered or corrected before the
+  // that the $element or the children can be altered or corrected before the
   // element is rendered into the final text.
   if (isset($elements['#pre_render'])) {
     foreach ($elements['#pre_render'] as $function) {
@@ -2555,7 +2555,7 @@ function drupal_render(&$elements) {
   }
 
   if (isset($content) && $content !== '') {
-    // Filter the outputed content and make any last changes before the
+    // Filter the outputted content and make any last changes before the
     // content is sent to the browser. The changes are made on $content
     // which allows the output'ed text to be filtered.
     if (isset($elements['#post_render'])) {
@@ -3047,14 +3047,14 @@ function drupal_redirect($goto) {
  */
 
 /**
- * Get the schema defintion of a table, or the whole database schema.
+ * Get the schema definition of a table, or the whole database schema.
  * The returned schema will include any modifications made by any
  * module that implements hook_schema_alter().
  *
  * @param $name
  *   The name of the table. If not given, the schema of all tables is returned.
  * @param $rebuild
- *   If true, the schema will be rebuilt instead of retreived from the cache.
+ *   If true, the schema will be rebuilt instead of retrieved from the cache.
  */
 function drupal_get_schema($name = NULL, $rebuild = FALSE) {
   static $schema = array();

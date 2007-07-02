@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.72 2007/07/01 21:39:07 goba Exp $
+// $Id: database.inc,v 1.73 2007/07/02 14:41:35 dries Exp $
 
 /**
  * @file
@@ -307,7 +307,7 @@ function db_escape_table($string) {
  * more tables and their related keys and indexes. A schema is defined by
  * hook_schema(), which usually lives in a modulename.schema file.
  *
- * By implenting hook_schema() and specifying the tables your module
+ * By implementing hook_schema() and specifying the tables your module
  * declares, you can easily create and drop these tables on all
  * supported database engines. You don't have to deal with the
  * different SQL dialects for table creation and alteration of the
@@ -357,7 +357,7 @@ function db_escape_table($string) {
  *     All parameters apart from 'type' are optional except that type
  *     'numeric' columns must specify 'precision' and 'scale'.
  *
- *  - 'primary key': An array of one or more key column specifers (see below)
+ *  - 'primary key': An array of one or more key column specifiers (see below)
  *    that form the primary key.
  *  - 'unique key': An associative array of unique keys ('keyname' =>
  *    specification).  Each specification is an array of one or more
