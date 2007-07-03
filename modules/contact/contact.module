@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.95 2007/07/02 14:41:35 dries Exp $
+// $Id: contact.module,v 1.96 2007/07/03 19:53:01 dries Exp $
 
 /**
  * @file
@@ -472,7 +472,7 @@ function contact_mail_page() {
     );
   }
   else {
-    $form['#error'] = array('#value' => t('The contact form has not been configured.'));
+    drupal_set_message(t('The contact form has not been configured. <a href="@add">Add one or more categories</a> to the form.', array('@add' => url('admin/build/contact/add'))), 'error');
   }
   return $form;
 }

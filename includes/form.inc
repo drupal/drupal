@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.211 2007/07/03 19:13:49 dries Exp $
+// $Id: form.inc,v 1.212 2007/07/03 19:53:01 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -672,7 +672,6 @@ function form_get_error($element) {
  * Flag an element as having an error.
  */
 function form_error(&$element, $message = '') {
-  $element['#error'] = TRUE;
   form_set_error(implode('][', $element['#parents']), $message);
 }
 
