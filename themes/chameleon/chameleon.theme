@@ -1,5 +1,5 @@
 <?php
-// $Id: chameleon.theme,v 1.67 2007/07/01 23:27:31 goba Exp $
+// $Id: chameleon.theme,v 1.68 2007/07/03 18:48:41 dries Exp $
 
 /**
  * @file
@@ -10,16 +10,7 @@
  * Implementation of hook_theme. Auto-discover theme functions.
  */
 function chameleon_theme($existing, $type, $theme, $path) {
-  $templates = array();
-  // Check for function overrides.
-  foreach ($existing as $hook => $info) {
-    if (function_exists($theme .'_'. $hook)) {
-      $templates[$hook] = array(
-        'function' => $theme .'_'. $hook,
-      );
-    }
-  }
-  return $templates;
+  return drupal_find_theme_functions($existing, array($theme));
 }
 
 function chameleon_page($content, $show_blocks = TRUE, $show_messages = TRUE) {

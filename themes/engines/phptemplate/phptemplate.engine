@@ -1,5 +1,5 @@
 <?php
-// $Id: phptemplate.engine,v 1.65 2007/05/06 05:47:52 dries Exp $
+// $Id: phptemplate.engine,v 1.66 2007/07/03 18:48:41 dries Exp $
 
 /**
  * @file
@@ -20,36 +20,8 @@ function phptemplate_init($template) {
  * we need to.
  */
 function phptemplate_theme($existing, $type, $theme, $path) {
-  $templates = array();
-
-  // Check for template overrides.
-  $files = drupal_system_listing('\.tpl\.php$', $path, 'name', 0);
-
-  foreach ($files as $template => $file) {
-    // chop off the .tpl
-    $template = substr($template, 0, -4);
-    if (isset($existing[$template])) {
-      $templates[$template] = array(
-        'file' => $template,
-        'path' => dirname($file->filename),
-      );
-    }
-  }
-
-  // Check for function overrides.
-  foreach ($existing as $hook => $info) {
-    if (function_exists($theme .'_'. $hook)) {
-      $templates[$hook] = array(
-        'function' => $theme .'_'. $hook,
-      );
-    }
-    else if (function_exists('phptemplate_'. $hook)) {
-      $templates[$hook] = array(
-        'function' => 'phptemplate_'. $hook,
-      );
-    }
-  }
-
+  $templates = drupal_find_theme_functions($existing, array('phptemplate', $theme));
+  $templates += drupal_find_theme_templates($existing, '.tpl.php', $path);
   return $templates;
 }
 

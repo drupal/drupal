@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.362 2007/07/02 14:41:35 dries Exp $
+// $Id: theme.inc,v 1.363 2007/07/03 18:48:41 dries Exp $
 
 /**
  * @file
@@ -416,24 +416,31 @@ function list_theme_engines($refresh = FALSE) {
  *   This function should only be implemented by theme engines and exists
  *   so that the theme engine can set necessary variables. It is commonly
  *   used to set global variables such as $directory and $is_front_page.
+ *
  * ENGINE_engine_preprocess_HOOK(&$variables)
  *   This is the same as the previous function, but is called only per hook.
+ *
  * ENGINE_preprocess_HOOK(&$variables)
+ *
  * ENGINE_preprocess(&$variables)
  *   This is meant to be used by themes that utilize a theme engine; as it is
  *   good practice for these themes to use the theme engine's name for
  *   their functions so that they may share code. In PHPTemplate, these
  *   functions will appear in template.php
+ *
  * THEME_preprocess_HOOK(&$variables)
+ *
  * THEME_preprocess(&$variables)
  *   These functions are based upon the raw theme; they should primarily be
  *   used by themes that do not use an engine or by themes that need small
  *   changes to what has already been established in the theme engine version
  *   of the function.
+ *
  * template_preprocess(&$variables)
  *   This function will only be called for theme functions registered by
  *   the named module. In general it is preferred to use the following
  *   function if possible, but it may not always be the case.
+ *
  * template_preprocess_HOOK(&$variables)
  *   This is the same as the previous function, but is called only per hook.
  *
@@ -445,7 +452,12 @@ function list_theme_engines($refresh = FALSE) {
  *   files, one at a time, and use the first one
  *   that exists.
  * @param $hook
- *   The name of the theme function to call.
+ *   The name of the theme function to call. May be an array, in which
+ *   case the first hook that actually has an implementation registered
+ *   will be used. This can be used to choose 'fallback' theme implementations,
+ *   so that if the specific theme hook isn't implemented anywhere, a more
+ *   generic one will be used. This can allow themes to create specific theme
+ *   implementations for named objects.
  * @param ...
  *   Additional arguments to pass along to the theme function.
  * @return
@@ -459,6 +471,15 @@ function theme() {
   if (!isset($hooks)) {
     init_theme();
     $hooks = theme_get_registry();
+  }
+
+  if (is_array($hook)) {
+    foreach ($hook as $candidate) {
+      if (isset($hooks[$candidate])) {
+        break;
+      }
+    }
+    $hook = $candidate;
   }
 
   if (!isset($hooks[$hook])) {
@@ -584,6 +605,100 @@ function path_to_theme() {
   }
 
   return $theme_path;
+}
+
+/**
+ * Find overridden theme functions. Called by themes and/or theme engines to
+ * easily discover theme functions.
+ *
+ * @param $cache
+ *   The existing cache of theme hooks to test against.
+ * @param $prefixes
+ *   An array of prefixes to test, in reverse order of importance.
+ *
+ * @return $templates
+ *   The functions found, suitable for returning from hook_theme;
+ */
+function drupal_find_theme_functions($cache, $prefixes) {
+  $templates = array();
+  $functions = get_defined_functions();
+
+  foreach ($cache as $hook => $info) {
+    foreach ($prefixes as $prefix) {
+      if (!empty($info['pattern'])) {
+        $matches = preg_grep('/^'. $prefix .'_'. $info['pattern'] .'/', $functions['user']);
+        if ($matches) {
+          foreach ($matches as $match) {
+            $new_hook = str_replace($prefix . '_', '', $match);
+            $templates[$new_hook] = array(
+              'function' => $match,
+              'arguments' => $info['arguments'],
+            );
+          }
+        }
+      }
+      if (function_exists($prefix .'_'. $hook)) {
+        $templates[$hook] = array(
+          'function' => $prefix .'_'. $hook,
+        );
+      }
+    }
+  }
+
+  return $templates;
+}
+
+/**
+ * Find overridden theme templates. Called by themes and/or theme engines to
+ * easily discover templates.
+ *
+ * @param $cache
+ *   The existing cache of theme hooks to test against.
+ * @param $extension
+ *   The extension that these templates will have.
+ * @param $path
+ *   The path to search.
+ */
+function drupal_find_theme_templates($cache, $extension, $path) {
+  $templates = array();
+
+  // Escape the dots in the extension.
+  $regex = str_replace('.', '\.', $extension) . '$';
+
+  // Because drupal_system_listing works the way it does, we check for real
+  // templates separately from checking for patterns.
+  $files = drupal_system_listing($regex, $path, 'name', 0);
+  foreach ($files as $template => $file) {
+    // Chop off the extension. We do it this way because $template will
+    // have one extension chopped off, but there might be more than one,
+    // such as with .tpl.php
+    $template = substr($template, 0, strpos($template, '.'));
+    if (isset($cache[$template])) {
+      $templates[$template] = array(
+        'file' => $template,
+        'path' => dirname($file->filename),
+      );
+    }
+  }
+
+  $patterns = array_keys($files);
+
+  foreach ($cache as $hook => $info) {
+    if (!empty($info['pattern'])) {
+      $matches = preg_grep('/^'. $info['pattern'] .'/', $patterns);
+      if ($matches) {
+        foreach ($matches as $match) {
+          $file = substr($match, 0, strpos($match, '.'));
+          $templates[$file] = array(
+            'file' => $file,
+            'path' => dirname($files[$match]->filename),
+            'arguments' => $info['arguments'],
+          );
+        }
+      }
+    }
+  }
+  return $templates;
 }
 
 /**
@@ -736,6 +851,14 @@ function theme_render_template($file, $variables) {
  * Inside Drupal, the theme layer is utilized by the use of the theme()
  * function, which is passed the name of a component (the theme hook)
  * and several arguments. For example, theme('table', $header, $rows);
+ * Additionally, the theme() function can take an array of theme
+ * hooks, which can be used to provide 'fallback' implementations to
+ * allow for more specific control of output. For example, the function:
+ * theme(array('table__foo', 'table), $header, $rows) would look to see if
+ * 'table__foo' is registered anywhere; if it is not, it would 'fall back'
+ * to the generic 'table' implementation. This can be used to attach specific
+ * theme functions to named objects, allowing the themer more control over
+ * specific types of output.
  *
  * As of Drupal 6, every theme hook is required to be registered by the
  * module that owns it, so that Drupal can tell what to do with it and
