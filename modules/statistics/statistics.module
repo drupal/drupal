@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.262 2007/07/01 17:41:16 dries Exp $
+// $Id: statistics.module,v 1.263 2007/07/03 20:10:50 dries Exp $
 
 /**
  * @file
@@ -175,15 +175,34 @@ function statistics_user($op, &$edit, &$user) {
 function statistics_access_log($aid) {
   $result = db_query('SELECT a.*, u.name FROM {accesslog} a LEFT JOIN {users} u ON a.uid = u.uid WHERE aid = %d', $aid);
   if ($access = db_fetch_object($result)) {
-    $output  = '<table border="1" cellpadding="2" cellspacing="2">';
-    $output .= ' <tr><th>'. t('URL') ."</th><td>". l(url($access->path, array('absolute' => TRUE)), $access->path) ."</td></tr>";
-    $output .= ' <tr><th>'. t('Title') .'</th><td>'. $access->title .'</td></tr>'; // safe because it comes from drupal_get_title()
-    $output .= ' <tr><th>'. t('Referrer') ."</th><td>". ($access->url ? l($access->url, $access->url) : '') ."</td></tr>";
-    $output .= ' <tr><th>'. t('Date') .'</th><td>'. format_date($access->timestamp, 'large') .'</td></tr>';
-    $output .= ' <tr><th>'. t('User') .'</th><td>'. theme('username', $access) .'</td></tr>';
-    $output .= ' <tr><th>'. t('Hostname') .'</th><td>'. check_plain($access->hostname) .'</td></tr>';
-    $output .= '</table>';
-    return $output;
+    $rows[] = array(
+      array('data' => t('URL'), 'header' => TRUE),
+      l(url($access->path, array('absolute' => TRUE)), $access->path)
+    );
+    // It is safe to avoid filtering $access->title through check_plain because
+    // it comes from drupal_get_title().
+    $rows[] = array(
+      array('data' => t('Title'), 'header' => TRUE),
+      $access->title
+    );
+    $rows[] = array(
+      array('data' => t('Referrer'), 'header' => TRUE),
+      ($access->url ? l($access->url, $access->url) : '')
+    );
+    $rows[] = array(
+      array('data' => t('Date'), 'header' => TRUE),
+      format_date($access->timestamp, 'large')
+    );
+    $rows[] = array(
+      array('data' => t('User'), 'header' => TRUE),
+      theme('username', $access)
+    );
+    $rows[] = array(
+      array('data' => t('Hostname'), 'header' => TRUE),
+      check_plain($access->hostname)
+    );
+
+    return theme('table', array(), $rows);
   }
   else {
     drupal_not_found();
