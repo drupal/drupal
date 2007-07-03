@@ -1,4 +1,5 @@
 <?php
+// $Id$
 
 /**
  * Provide the administration overview page.
