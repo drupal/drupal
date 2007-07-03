@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.670 2007/07/03 16:22:58 goba Exp $
+// $Id: common.inc,v 1.671 2007/07/03 20:16:11 dries Exp $
 
 /**
  * @file
@@ -197,8 +197,6 @@ function drupal_get_feeds($delimiter = "\n") {
  *   The array to be processed e.g. $_GET
  * @param $exclude
  *   The array filled with keys to be excluded. Use parent[child] to exclude nested items.
- * @param $urlencode
- *   If TRUE, the keys and values are both urlencoded.
  * @param $parent
  *   Should not be passed, only used in recursive calls
  * @return
