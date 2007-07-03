@@ -672,7 +672,6 @@ function form_get_error($element) {
  * Flag an element as having an error.
  */
 function form_error(&$element, $message = '') {
-  $element['#error'] = TRUE;
   form_set_error(implode('][', $element['#parents']), $message);
 }
 
