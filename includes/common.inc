@@ -2080,7 +2080,7 @@ function _packer_backreferences($match, $offset, $data) {
  */
 function drupal_clear_js_cache() {
   file_scan_directory(file_create_path('js'), '.*', array('.', '..', 'CVS'), 'file_delete', TRUE);
-  variable_set('javascript_parsed', '');
+  variable_set('javascript_parsed', array());
 }
 
 /**
