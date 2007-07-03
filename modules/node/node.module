@@ -60,6 +60,10 @@ function node_help($path, $arg) {
  */
 function node_theme() {
   return array(
+    'node' => array(
+      'arguments' => array('node' => NULL, 'teaser' => FALSE, 'page' => FALSE),
+      'file' => 'node',
+    ),
     'node_list' => array(
       'arguments' => array('items' => NULL, 'title' => NULL),
     ),
