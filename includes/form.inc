@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.210 2007/07/02 14:41:35 dries Exp $
+// $Id: form.inc,v 1.211 2007/07/03 19:13:49 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -762,6 +762,9 @@ function form_builder($form_id, $form, &$form_state) {
   // Internet Explorer button-click scenario.
   _form_builder_ie_cleanup($form, $form_state);
 
+  // After handling the special IE case, we no longer need the buttons collection.
+  unset($form_state['buttons']);
+
   return $form;
 }
 
@@ -877,6 +880,7 @@ function _form_builder_handle_input_element($form_id, &$form, &$form_state) {
       // the global variables. In this special case, we want to make sure that
       // the value of this element is listed in $form_variables under 'op'.
       $form_state['values'][$form['#name']] = $form['#value'];
+      $form_state['clicked_button'] = $form;
 
       if (isset($form['#validate'])) {
         $form_state['validate_handlers'] = $form['#validate'];
@@ -913,9 +917,8 @@ function _form_builder_ie_cleanup($form, &$form_state) {
       $form_state['submit_handlers'] = empty($button['#submit']) ? NULL : $button['#submit'];
       $form_state['validate_handlers'] = empty($button['#validate']) ? NULL : $button['#validate'];
       $form_state['values'][$button['#name']] = $button['#value'];
+      $form_state['clicked_button'] = $button;
     }
-    // After handling the special IE case, we no longer need the buttons collection.
-    unset($form_state['buttons']);
   }
 }
 
