@@ -1,4 +1,5 @@
 <?php
+// $Id: batch.inc,v 1.9 2007/07/03 19:49:07 dries Exp $
 
 /**
  * @file Batch processing API for processes to run in multiple HTTP requests.

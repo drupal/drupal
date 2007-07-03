@@ -1,4 +1,5 @@
 <?php
+// $Id: system.admin.inc,v 1.3 2007/07/03 19:49:07 dries Exp $
 
 /**
  * Provide the administration overview page.

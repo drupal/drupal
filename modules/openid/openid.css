@@ -1,3 +1,5 @@
+/* $Id: openid.css,v 1.2 2007/07/03 19:49:07 dries Exp $ */
+
 a.openid-link, a.user-link, #edit-openid-url {
   background-image: url("login-bg.png");
   background-position: 0% 50%;
