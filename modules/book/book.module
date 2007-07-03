@@ -871,7 +871,7 @@ function theme_book_admin_table($form) {
       drupal_render($form[$key]['weight']),
       l(t('view'), 'node/'. $nid),
       l(t('edit'), 'node/'. $nid .'/edit'),
-      l(t('delete'), 'node/'. $nid .'/delete', NULL, 'destination=admin/content/book'. (arg(3) == 'orphan' ? '/orphan' : '') . ($pid != $nid ? '/'. $pid : ''))
+      l(t('delete'), 'node/'. $nid .'/delete', array('query' => 'destination=admin/content/book'. (arg(3) == 'orphan' ? '/orphan' : '') . ($pid != $nid ? '/'. $pid : ''))),
     );
   }
 
