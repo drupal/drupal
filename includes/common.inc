@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.669 2007/07/02 14:41:34 dries Exp $
+// $Id: common.inc,v 1.670 2007/07/03 16:22:58 goba Exp $
 
 /**
  * @file
@@ -2080,7 +2080,7 @@ function _packer_backreferences($match, $offset, $data) {
  */
 function drupal_clear_js_cache() {
   file_scan_directory(file_create_path('js'), '.*', array('.', '..', 'CVS'), 'file_delete', TRUE);
-  variable_set('javascript_parsed', '');
+  variable_set('javascript_parsed', array());
 }
 
 /**
