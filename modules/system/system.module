@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.506 2007/07/02 14:41:37 dries Exp $
+// $Id: system.module,v 1.507 2007/07/03 19:11:14 dries Exp $
 
 /**
  * @file
@@ -43,8 +43,13 @@ function system_help($path, $arg) {
     case 'admin/build/themes/settings':
       return '<p>'. t('These options control the default display settings for your entire site, across all themes. Unless they have been overridden by a specific theme, these settings will be used.') .'</p>';
     case 'admin/build/modules':
-      return t('<p>Modules are plugins for Drupal that extend its core functionality. Here you can select which modules are enabled. Click on the name of the module in the navigation menu for their individual configuration pages. Once a module is enabled, new <a href="@permissions">permissions</a> might be made available. Modules can automatically be temporarily disabled to reduce server load when your site becomes extremely busy by enabling the throttle.module and checking throttle. The auto-throttle functionality must be enabled on the <a href="@throttle">throttle configuration page</a> after having enabled the throttle module.</p>
-<p>It is important that <a href="@update-php">update.php</a> is run every time a module is updated to a newer version.</p><p>You can find all administration tasks belonging to a particular module on the <a href="@by-module">administration by module page</a>.</p>', array('@permissions' => url('admin/user/access'), '@throttle' => url('admin/settings/throttle'), '@update-php' => $base_url .'/update.php', '@by-module' => url('admin/by-module')));
+      $output = '<p>'. t('Modules are plugins for Drupal that extend its core functionality. Here you can select which modules are enabled. Once a module is enabled, new <a href="@permissions">permissions</a> might be made available. Modules can automatically be temporarily disabled to reduce server load when your site becomes extremely busy by enabling the throttle.module and checking throttle.', array('@permissions' => url('admin/user/access')));
+      if (module_exists('throttle')) {
+        $output .= ' '. t('The auto-throttle functionality must be enabled on the <a href="@throttle">throttle configuration page</a> after having enabled the throttle module.', array('@throttle' => url('admin/settings/throttle')));
+      }
+      $output .= '</p>';
+      $output .= t('<p>It is important that <a href="@update-php">update.php</a> is run every time a module is updated to a newer version.</p><p>You can find all administration tasks belonging to a particular module on the <a href="@by-module">administration by module page</a>.</p>', array('@update-php' => $base_url .'/update.php', '@by-module' => url('admin/by-module')));
+      return $output;
     case 'admin/build/modules/uninstall':
       return '<p>'. t('The uninstall process removes all data related to a module. To uninstall a module, you must first disable it. Not all modules support this feature.') .'</p>';
     case 'admin/logs/status':
