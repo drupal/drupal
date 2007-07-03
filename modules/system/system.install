@@ -3429,6 +3429,17 @@ function system_update_6024() {
 }
 
 /**
+ * Increase the maximum length of node titles from 128 to 255.
+ */
+function system_update_6025() {
+  $ret = array();
+  db_update_field($ret, 'node', 'title');
+  db_update_field($ret, 'node_revisions', 'title');
+  return $ret;
+}
+
+
+/**
  * @} End of "defgroup updates-5.x-to-6.x"
  * The next series of updates should start at 7000.
  */

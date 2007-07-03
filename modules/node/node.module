@@ -3185,6 +3185,7 @@ function node_content_form($node, $form_state) {
       '#title' => check_plain($type->title_label),
       '#required' => TRUE,
       '#default_value' => $node->title,
+      '#maxlength' => 255,
       '#weight' => -5,
     );
   }
