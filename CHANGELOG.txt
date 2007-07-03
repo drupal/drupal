@@ -62,7 +62,6 @@ Drupal 6.0, xxxx-xx-xx (development version)
 - Added support for OpenID.
 - Added support for configurable actions.
 - Made user profiles easier to theme by using array rendering and supplying template files.
-- Added Deletion API to allow modules to alter and respond to any delete operation.
 
 Drupal 5.0, 2007-01-15
 ----------------------
