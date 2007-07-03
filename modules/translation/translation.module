@@ -1,5 +1,5 @@
 <?php
-// $Id: translation.module,v 1.5 2007/07/02 14:41:37 dries Exp $
+// $Id: translation.module,v 1.6 2007/07/03 16:27:51 goba Exp $
 
 /**
  * @file
@@ -92,7 +92,7 @@ function translation_form_alter(&$form, $form_state, $form_id) {
     // Description based on text from locale.module.
     $form['workflow']['language']['#description'] = t('Enable multilingual support for this content type. If enabled, a language selection field will be added to the editing form, allowing you to select from one of the <a href="!languages">enabled languages</a>. You can also turn on translation for this content type, which lets you have content translated to any of the enabled languages. If disabled, new posts are saved with the default language. Existing content will not be affected by changing this option.', array('!languages' => url('admin/settings/language')));
   }
-  elseif ($form['#id'] == 'node-form' && translation_supported_type($form['#node']->type)) {
+  elseif (isset($form['#id']) && $form['#id'] == 'node-form' && translation_supported_type($form['#node']->type)) {
     $node = $form['#node'];
     if (!empty($node->translation_source)) {
       // We are creating a translation. Add values and lock language field.

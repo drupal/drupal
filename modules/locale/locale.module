@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.186 2007/07/02 15:47:32 goba Exp $
+// $Id: locale.module,v 1.187 2007/07/03 16:27:51 goba Exp $
 
 /**
  * @file
@@ -255,7 +255,7 @@ function locale_form_alter(&$form, $form_state, $form_id) {
 
     // Language field for nodes
     default:
-      if ($form['#id'] == 'node-form') {
+      if (isset($form['#id']) && $form['#id'] == 'node-form') {
         if (isset($form['#node']->type) && variable_get('language_' . $form['#node']->type, 0)) {
           $form['language'] = array(
             '#type' => 'select',
