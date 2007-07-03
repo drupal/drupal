@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.850 2007/07/02 17:08:36 dries Exp $
+// $Id: node.module,v 1.851 2007/07/03 19:42:14 dries Exp $
 
 /**
  * @file
@@ -3185,6 +3185,7 @@ function node_content_form($node, $form_state) {
       '#title' => check_plain($type->title_label),
       '#required' => TRUE,
       '#default_value' => $node->title,
+      '#maxlength' => 255,
       '#weight' => -5,
     );
   }

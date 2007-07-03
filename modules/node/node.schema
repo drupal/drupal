@@ -1,5 +1,5 @@
 <?php
-// $Id: node.schema,v 1.3 2007/06/15 18:40:14 goba Exp $
+// $Id: node.schema,v 1.4 2007/07/03 19:42:14 dries Exp $
 
 function node_schema() {
   $schema['node'] = array(
@@ -8,7 +8,7 @@ function node_schema() {
       'vid'       => array('type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE, 'default' => 0),
       'type'      => array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''),
       'language'  => array('type' => 'varchar', 'length' => 12, 'not null' => TRUE, 'default' => ''),
-      'title'     => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
+      'title'     => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
       'uid'       => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
       'status'    => array('type' => 'int', 'not null' => TRUE, 'default' => 1),
       'created'   => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
@@ -72,7 +72,7 @@ function node_schema() {
       'nid'       => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
       'vid'       => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
       'uid'       => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      'title'     => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
+      'title'     => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
       'body'      => array('type' => 'text', 'not null' => TRUE, 'size' => 'big'),
       'teaser'    => array('type' => 'text', 'not null' => TRUE, 'size' => 'big'),
       'log'       => array('type' => 'text', 'not null' => TRUE, 'size' => 'big'),

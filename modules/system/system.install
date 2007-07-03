@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.126 2007/07/02 14:41:37 dries Exp $
+// $Id: system.install,v 1.127 2007/07/03 19:42:14 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -3427,6 +3427,17 @@ function system_update_6024() {
   db_add_index($ret, 'node', 'translate', array('translate'));
   return $ret;
 }
+
+/**
+ * Increase the maximum length of node titles from 128 to 255.
+ */
+function system_update_6025() {
+  $ret = array();
+  db_update_field($ret, 'node', 'title');
+  db_update_field($ret, 'node_revisions', 'title');
+  return $ret;
+}
+
 
 /**
  * @} End of "defgroup updates-5.x-to-6.x"
