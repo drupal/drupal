@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.123 2007/07/04 18:56:12 goba Exp $
+// $Id: menu.module,v 1.124 2007/07/04 21:33:55 goba Exp $
 
 /**
  * @file
@@ -389,7 +389,7 @@ function menu_edit_menu(&$form_state, $type, $menu = array()) {
     $form['menu_name'] = array(
       '#type' => 'textfield',
       '#title' => t('Menu name'),
-      '#description' => t('The machine-readable name of this menu. This text will be used for constructing the URL of the <em>menu overview</em> page for this menu. This name may consist of only of lowercase letters, numbers and hypens and must be unique.'),
+      '#description' => t('The machine-readable name of this menu. This text will be used for constructing the URL of the <em>menu overview</em> page for this menu. This name may consist of only of lowercase letters, numbers, and hyphens, and must be unique.'),
       '#required' => TRUE,
     );
     $form['#insert'] = TRUE;
@@ -420,7 +420,7 @@ function menu_edit_menu(&$form_state, $type, $menu = array()) {
 function menu_edit_menu_validate($form, &$form_state) {
   $item = $form_state['values'];
   if (preg_match('/[^a-z0-9-]/', $item['menu_name'])) {
-    form_set_error('menu_name', t('Menu name may consist only of lowercase letters, numbers and hypens.'));
+    form_set_error('menu_name', t('Menu name may consist only of lowercase letters, numbers, and hyphens.'));
   }
   if ($form['#insert'] &&
       (db_result(db_query("SELECT menu_name FROM {menu_custom} WHERE menu_name = '%s'", $item['menu_name'])) ||
@@ -592,7 +592,7 @@ function menu_form_alter(&$form, $form_state, $form_id) {
     $item = $form['#node']->menu;
 
     if ($item['mlid']) {
-      // There is an existing link
+      // There is an existing link.
       $form['menu']['delete'] = array(
         '#type' => 'checkbox',
         '#title' => t('Check to remove this item from the menu.'),
@@ -640,7 +640,7 @@ function menu_form_alter(&$form, $form_state, $form_id) {
  *   titles as the values.
  */
 function menu_get_menus($all = FALSE) {
-  $sql = 'SELECT * FROM {menu_custom}'. ($all ? '' : " WHERE menu_name NOT IN ('navigation', 'primary-links', 'secondary-links')") . ' ORDER BY title';
+  $sql = 'SELECT * FROM {menu_custom}'. ($all ? '' : " WHERE menu_name NOT IN ('navigation', 'primary-links', 'secondary-links')") .' ORDER BY title';
   $result = db_query($sql);
 
   $rows = array();
