@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.671 2007/07/03 20:16:11 dries Exp $
+// $Id: common.inc,v 1.672 2007/07/04 22:47:28 goba Exp $
 
 /**
  * @file
@@ -162,7 +162,7 @@ function drupal_get_headers() {
 function drupal_add_feed($url = NULL, $title = '') {
   static $stored_feed_links = array();
 
-  if (!is_null($url)) {
+  if (!is_null($url) && !isset($stored_feed_links[$url])) {
     $stored_feed_links[$url] = theme('feed_icon', $url, $title);
 
     drupal_add_link(array('rel' => 'alternate',
