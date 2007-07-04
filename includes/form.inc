@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.212 2007/07/03 19:53:01 dries Exp $
+// $Id: form.inc,v 1.213 2007/07/04 15:42:38 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -1378,6 +1378,48 @@ function expand_radios($element) {
         );
       }
     }
+  }
+  return $element;
+}
+
+/**
+ * Add AHAH information about a form element to the page to communicate with
+ * javascript. If #ahah_path is set on an element, this additional javascript is
+ * added to the page header to attach the AHAH behaviors. See ahah.js for more
+ * information.
+ *
+ * @param $element
+ *   An associative array containing the properties of the element.
+ *   Properties used: ahah_event, ahah_path, ahah_wrapper, ahah_parameters,
+ *   ahah_effect.
+ * @return
+ *   None. Additional code is added to the header of the page using
+ *   drupal_add_js.
+ */
+function form_expand_ahah($element) {
+  static $js_added = array();
+
+  // Adding the same javascript settings twice will cause a recursion error,
+  // we avoid the problem by checking if the javascript has already been added.
+  if (!isset($js_added[$element['#id']]) && isset($element['#ahah_event']) && isset($element['#ahah_path'])) {
+    drupal_add_js('misc/ahah.js');
+    drupal_add_js('misc/progress.js');
+
+    $ahah_binding = array(
+      'id' => $element['#id'],
+      'uri' => url($element['#ahah_path']),
+      'event' => $element['#ahah_event'],
+      'effect' => empty($element['#ahah_effect']) ? 'none' : $element['#ahah_effect'],
+      'method' => empty($element['#ahah_method']) ? 'replace' : $element['#ahah_method'],
+    );
+
+    if (!empty($element['#ahah_wrapper'])) {
+      $ahah_binding['wrapper'] = $element['#ahah_wrapper'];
+    }
+
+    drupal_add_js(array('ahah' => array($element['#id'] => $ahah_binding)), 'setting');
+
+    $js_added[$element['#id']] = TRUE;
   }
   return $element;
 }
