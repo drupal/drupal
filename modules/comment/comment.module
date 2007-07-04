@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.561 2007/07/02 14:41:35 dries Exp $
+// $Id: comment.module,v 1.562 2007/07/04 22:24:40 goba Exp $
 
 /**
  * @file
@@ -983,6 +983,7 @@ function comment_render($node, $cid = 0) {
         $query_args[] = COMMENT_PUBLISHED;
       }
 
+      $query = db_rewrite_sql($query, 'c', 'cid');
       $result = db_query($query, $query_args);
 
       if ($comment = db_fetch_object($result)) {
@@ -1028,6 +1029,8 @@ function comment_render($node, $cid = 0) {
           $query .= ' ORDER BY SUBSTRING(c.thread, 1, (LENGTH(c.thread) - 1))';
         }
       }
+      $query = db_rewrite_sql($query, 'c', 'cid');
+      $query_count = db_rewrite_sql($query_count, 'c', 'cid');
 
       // Start a form, for use with comment control.
       $result = pager_query($query, $comments_per_page, 0, $query_count, $query_args);
