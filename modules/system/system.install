@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.127 2007/07/03 19:42:14 dries Exp $
+// $Id: system.install,v 1.128 2007/07/04 15:34:50 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -3433,8 +3433,8 @@ function system_update_6024() {
  */
 function system_update_6025() {
   $ret = array();
-  db_update_field($ret, 'node', 'title');
-  db_update_field($ret, 'node_revisions', 'title');
+  db_change_field($ret, 'node', 'title', 'title', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''));
+  db_change_field($ret, 'node_revisions', 'title', 'title', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''));
   return $ret;
 }
 
