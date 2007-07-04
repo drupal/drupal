@@ -5,7 +5,7 @@ function openid_schema() {
   $schema['openid_association'] = array(
     'fields' => array(
       'idp_endpoint_uri' => array('type' => 'varchar', 'length' => 255),
-      'assoc_handle' => array('type' => 'varchar', 'length' => 255),
+      'assoc_handle' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE),
       'assoc_type' => array('type' => 'varchar', 'length' => 32),
       'session_type' => array('type' => 'varchar', 'length' => 32),
       'mac_key' => array('type' => 'varchar', 'length' => 255),
