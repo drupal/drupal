@@ -162,7 +162,7 @@ function drupal_get_headers() {
 function drupal_add_feed($url = NULL, $title = '') {
   static $stored_feed_links = array();
 
-  if (!is_null($url)) {
+  if (!is_null($url) && !isset($stored_feed_links[$url])) {
     $stored_feed_links[$url] = theme('feed_icon', $url, $title);
 
     drupal_add_link(array('rel' => 'alternate',
