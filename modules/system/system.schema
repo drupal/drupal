@@ -1,5 +1,5 @@
 <?php
-// $Id: system.schema,v 1.6 2007/06/15 07:15:24 dries Exp $
+// $Id: system.schema,v 1.7 2007/07/04 15:49:44 dries Exp $
 
 function system_schema() {
   $schema['batch'] = array(
@@ -110,6 +110,7 @@ function system_schema() {
       'expanded'     => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'small'),
       'weight'       => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
       'depth'        => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'small'),
+      'customized'   => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'small'),
       'p1'           => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
       'p2'           => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
       'p3'           => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),

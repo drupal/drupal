@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.128 2007/07/04 15:34:50 dries Exp $
+// $Id: system.install,v 1.129 2007/07/04 15:49:44 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -3339,6 +3339,7 @@ function system_update_6020() {
       'expanded'     => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'small'),
       'weight'       => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
       'depth'        => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'small'),
+      'customized'   => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'small'),
       'p1'           => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
       'p2'           => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
       'p3'           => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
