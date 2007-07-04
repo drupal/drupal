@@ -3433,8 +3433,8 @@ function system_update_6024() {
  */
 function system_update_6025() {
   $ret = array();
-  db_update_field($ret, 'node', 'title');
-  db_update_field($ret, 'node_revisions', 'title');
+  db_change_field($ret, 'node', 'title', 'title', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''));
+  db_change_field($ret, 'node_revisions', 'title', 'title', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''));
   return $ret;
 }
 
