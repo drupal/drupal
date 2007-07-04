@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.213 2007/07/04 15:42:38 dries Exp $
+// $Id: form.inc,v 1.214 2007/07/04 15:45:37 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -791,66 +791,40 @@ function _form_builder_handle_input_element($form_id, &$form, &$form_state) {
     $form['#id'] = form_clean_id('edit-'. implode('-', $form['#parents']));
   }
 
+  unset($edit);
   if (!empty($form['#disabled'])) {
     $form['#attributes']['disabled'] = 'disabled';
   }
 
   if (!isset($form['#value']) && !array_key_exists('#value', $form)) {
+    $function = 'form_type_'. $form['#type'] . '_value';
     if (($form['#programmed']) || ((!isset($form['#access']) || $form['#access']) && isset($form['#post']) && (isset($form['#post']['form_id']) && $form['#post']['form_id'] == $form_id))) {
       $edit = $form['#post'];
       foreach ($form['#parents'] as $parent) {
         $edit = isset($edit[$parent]) ? $edit[$parent] : NULL;
       }
       if (!$form['#programmed'] || isset($edit)) {
-        switch ($form['#type']) {
-          case 'checkbox':
-            $form['#value'] = !empty($edit) ? $form['#return_value'] : 0;
-            break;
-
-          case 'select':
-            if (isset($form['#multiple']) && $form['#multiple']) {
-              if (isset($edit) && is_array($edit)) {
-                $form['#value'] = drupal_map_assoc($edit);
-              }
-              else {
-                $form['#value'] = array();
-              }
-            }
-            elseif (isset($edit)) {
-              $form['#value'] = $edit;
-            }
-            break;
-
-          case 'textfield':
-            if (isset($edit)) {
-              // Equate $edit to the form value to ensure it's marked for
-              // validation.
-              $edit = str_replace(array("\r", "\n"), '', $edit);
-              $form['#value'] = $edit;
-            }
-            break;
-
-          case 'token':
-            $form['#value'] = (string)$edit;
-            break;
-
-          default:
-            if (isset($edit)) {
-              $form['#value'] = $edit;
-            }
+        // Call #type_value to set the form value;
+        if (function_exists($function)) {
+          $form['#value'] = $function($form, $edit);
         }
-        // Mark all posted values for validation.
-        if ((isset($form['#value']) && $form['#value'] === $edit) || (isset($form['#required']) && $form['#required'])) {
-          $form['#needs_validation'] = TRUE;
+        if (!isset($form['#value']) && isset($edit)) {
+          $form['#value'] = $edit;
         }
+      }
+      // Mark all posted values for validation.
+      if (isset($form['#value']) || (isset($form['#required']) && $form['#required'])) {
+        $form['#needs_validation'] = TRUE;
       }
     }
+    // Load defaults.
     if (!isset($form['#value'])) {
-      $function = 'form_'. $form['#type'] .'_value';
+      // Call #type_value without a second argument to request default_value handling.
       if (function_exists($function)) {
-        $function($form);
+        $form['#value'] = $function($form);
       }
-      else {
+      // Final catch. If we haven't set a value yet, use the explicit default value.
+      if(!isset($form['#value'])) {
         $form['#value'] = isset($form['#default_value']) ? $form['#default_value'] : '';
       }
     }
@@ -901,6 +875,116 @@ function _form_builder_handle_input_element($form_id, &$form, &$form_state) {
     $form['#processed'] = TRUE;
   }
   form_set_value($form, $form['#value'], $form_state);
+}
+
+/**
+ * Helper function to determine the value for a checkbox form element.
+ *
+ * @param $form
+ *   Form element we are trying to determine a value for.
+ * @param $edit
+ *   Relevant post data for real value, or NULL for default value
+ * @return
+ *   Mixed, value to be assigned to element.
+ */
+function form_type_checkbox_value($form, $edit = NULL) {
+  if (isset($edit)) {
+    return !empty($edit) ? $form['#return_value'] : 0;
+  }
+}
+
+/**
+ * Helper function to determine the value for a checkboxes form element.
+ *
+ * @param $form
+ *   Form element we are trying to determine a value for.
+ * @param $edit
+ *   Relevant post data for real value, or NULL for default value
+ * @return
+ *   Mixed, value to be assigned to element.
+ */
+ function form_type_checkboxes_value($form, $edit = NULL) {
+  if (!isset($edit)) {
+    $value = array();
+    $form += array('#default_value' => array());
+    foreach ($form['#default_value'] as $key) {
+      $value[$key] = 1;
+    }
+    return $value;
+  }
+}
+
+/**
+ * Helper function to determine the value for a password_confirm form
+ * element.
+ *
+ * @param $form
+ *   Form element we are trying to determine a value for.
+ * @param $edit
+ *   Relevant post data for real value, or NULL for default value
+ * @return
+ *   Mixed, value to be assigned to element.
+ */
+function form_type_password_confirm_value($form, $edit = NULL) {
+  if (!isset($edit)) {
+    $form += array('#default_value' => array());
+    return $form['#default_value'] + array('pass1' => '', 'pass2' => '');
+  }
+}
+
+/**
+ * Helper function to determine the value for a select form element.
+ *
+ * @param $form
+ *   Form element we are trying to determine a value for.
+ * @param $edit
+ *   Relevant post data for real value, or NULL for default value
+ * @return
+ *   Mixed, value to be assigned to element.
+ */
+function form_type_select_value($form, $edit = NULL) {
+  if (isset($edit)) {
+    if (isset($form['#multiple']) && $form['#multiple']) {
+      return (is_array($edit)) ? drupal_map_assoc($edit) : array();
+    }
+    else {
+      return $edit;
+    }
+  }
+}
+
+/**
+ * Helper function to determine the value for a textfield form element.
+ *
+ * @param $form
+ *   Form element we are trying to determine a value for.
+ * @param $edit
+ *   Relevant post data for real value, or NULL for default value
+ * @return
+ *   Mixed, value to be assigned to element.
+ */
+function form_type_textfield_value($form, $edit = NULL) {
+  if (isset($edit)) {
+    // Equate $edit to the form value to ensure it's marked for
+    // validation.
+    return str_replace(array("\r", "\n"), '', $edit);
+  }
+}
+
+/**
+ * Helper function to determine the value for form's token value.
+ *
+ * @param $form
+ *   Form element we are trying to determine a value for.
+ * @param $edit
+ *   Relevant post data for real value, or NULL for default value
+ * @return
+ *   Mixed, value to be assigned to element.
+ */
+function form_type_token_value($form, $edit = NULL) {
+  if (isset($edit)) {
+    return (string)$edit;
+  }
 }
 
 /**
@@ -1329,23 +1413,6 @@ function date_validate($form) {
  */
 function map_month($month) {
   return format_date(gmmktime(0, 0, 0, $month, 2, 1970), 'custom', 'M', 0);
-}
-
-/**
- * Helper function to load value from default value for checkboxes.
- */
-function form_checkboxes_value(&$form) {
-  $value = array();
-  $form += array('#default_value' => array());
-  foreach ($form['#default_value'] as $key) {
-    $value[$key] = 1;
-  }
-  $form['#value'] = $value;
-}
-
-function password_confirm_value(&$form) {
-  $form += array('#default_value' => array());
-  $form['#value'] = $form['#default_value'] + array('pass1' => '', 'pass2' => '');
 }
 
 /**
