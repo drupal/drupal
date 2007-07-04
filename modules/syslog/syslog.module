@@ -1,5 +1,5 @@
 <?php
-// $Id: syslog.module,v 1.8 2007/06/30 19:46:58 goba Exp $
+// $Id: syslog.module,v 1.9 2007/07/04 21:35:24 goba Exp $
 
 /**
  * @file
@@ -89,14 +89,14 @@ function theme_syslog_format($entry) {
   global $base_url;
 
   $message  = $base_url;
-  $message .= '|' . $entry['timestamp'];
-  $message .= '|' . $entry['type'];
-  $message .= '|' . $entry['ip'];
-  $message .= '|' . $entry['request_uri'];
-  $message .= '|' . $entry['referer'];
-  $message .= '|' . $entry['user']->uid;
-  $message .= '|' . strip_tags($entry['link']);
-  $message .= '|' . strip_tags(is_null($entry['variables']) ? $entry['message'] : strtr($entry['message'], $entry['variables']));
+  $message .= '|'. $entry['timestamp'];
+  $message .= '|'. $entry['type'];
+  $message .= '|'. $entry['ip'];
+  $message .= '|'. $entry['request_uri'];
+  $message .= '|'. $entry['referer'];
+  $message .= '|'. $entry['user']->uid;
+  $message .= '|'. strip_tags($entry['link']);
+  $message .= '|'. strip_tags(is_null($entry['variables']) ? $entry['message'] : strtr($entry['message'], $entry['variables']));
 
   return $message;
 }
