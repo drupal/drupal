@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.562 2007/07/04 22:24:40 goba Exp $
+// $Id: comment.module,v 1.563 2007/07/05 08:48:57 goba Exp $
 
 /**
  * @file
@@ -136,7 +136,7 @@ function comment_help($path, $arg) {
       return '<p>'. t("Below is a list of the comments posted to your site that need approval. To approve a comment, click on 'edit' and then change its 'moderation status' to Approved. Click on a subject to see the comment, the author's name to edit the author's user information, 'edit' to modify the text, and 'delete' to remove their submission.") .'</p>';
     case 'admin/content/comment/settings':
       return '<p>'. t("Comments can be attached to any node, and their settings are below. The display comes in two types: a 'flat list' where everything is flush to the left side, and comments come in chronological order, and a 'threaded list' where replies to other comments are placed immediately below and slightly indented, forming an outline. They also come in two styles: 'expanded', where you see both the title and the contents, and 'collapsed' where you only see the title. Preview comment forces a user to look at their comment by clicking on a 'Preview' button before they can actually add the comment.") .'</p>';
-   }
+  }
 }
 
 /**

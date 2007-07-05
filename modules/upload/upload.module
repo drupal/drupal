@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.172 2007/07/04 15:42:38 dries Exp $
+// $Id: upload.module,v 1.173 2007/07/05 08:48:58 goba Exp $
 
 /**
  * @file
@@ -494,8 +494,8 @@ function theme_upload_attachments($files) {
   $header = array(t('Attachment'), t('Size'));
   $rows = array();
   foreach ($files as $file) {
-   $file = (object)$file;
-   if ($file->list && empty($file->remove)) {
+    $file = (object)$file;
+    if ($file->list && empty($file->remove)) {
       $href = file_create_url($file->filepath);
       $text = $file->description ? $file->description : $file->filename;
       $rows[] = array(l($text, $href), format_size($file->filesize));

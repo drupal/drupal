@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.129 2007/07/04 15:49:44 dries Exp $
+// $Id: system.install,v 1.130 2007/07/05 08:48:58 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -958,9 +958,9 @@ function system_update_145() {
 
   $themes = list_themes();
   if (!array_key_exists($default_theme, $themes)) {
-      variable_set('theme_default', 'garland');
-      $default_theme = 'garland';
-   }
+    variable_set('theme_default', 'garland');
+    $default_theme = 'garland';
+  }
 
   $ret = array();
 

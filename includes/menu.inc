@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.184 2007/07/04 21:33:54 goba Exp $
+// $Id: menu.inc,v 1.185 2007/07/05 08:48:57 goba Exp $
 
 /**
  * @file
@@ -1121,16 +1121,16 @@ function menu_tab_root_path() {
  * @ingroup themeable
  */
 function theme_menu_local_tasks() {
- $output = '';
+  $output = '';
 
- if ($primary = menu_primary_local_tasks()) {
-   $output .= "<ul class=\"tabs primary\">\n". $primary ."</ul>\n";
- }
- if ($secondary = menu_secondary_local_tasks()) {
-   $output .= "<ul class=\"tabs secondary\">\n". $secondary ."</ul>\n";
- }
+  if ($primary = menu_primary_local_tasks()) {
+    $output .= "<ul class=\"tabs primary\">\n". $primary ."</ul>\n";
+  }
+  if ($secondary = menu_secondary_local_tasks()) {
+    $output .= "<ul class=\"tabs secondary\">\n". $secondary ."</ul>\n";
+  }
 
- return $output;
+  return $output;
 }
 
 /**

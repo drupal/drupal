@@ -1,5 +1,5 @@
 <?php
-// $Id: translation.module,v 1.6 2007/07/03 16:27:51 goba Exp $
+// $Id: translation.module,v 1.7 2007/07/05 08:48:58 goba Exp $
 
 /**
  * @file
@@ -229,7 +229,7 @@ function translation_nodeapi(&$node, $op, $teaser, $page) {
   }
 
   switch ($op) {
-   case 'prepare':
+    case 'prepare':
       if (empty($node->nid) && isset($_GET['translation']) && isset($_GET['language']) &&
           ($source_nid = $_GET['translation']) && ($language = $_GET['language']) &&
           (user_access('translate content'))) {

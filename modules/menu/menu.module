@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.124 2007/07/04 21:33:55 goba Exp $
+// $Id: menu.module,v 1.125 2007/07/05 08:48:57 goba Exp $
 
 /**
  * @file
@@ -400,8 +400,8 @@ function menu_edit_menu(&$form_state, $type, $menu = array()) {
     '#title' => t('Title'),
     '#default_value' => $menu['title'],
     '#required' => TRUE,
-   );
-   $form['description'] = array(
+  );
+  $form['description'] = array(
     '#type' => 'textarea',
     '#title' => t('Description'),
     '#default_value' => $menu['description'],

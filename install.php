@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.63 2007/06/30 08:17:05 goba Exp $
+// $Id: install.php,v 1.64 2007/07/05 08:48:57 goba Exp $
 
 require_once './includes/install.inc';
 
@@ -699,7 +699,7 @@ function install_tasks($profile, $task) {
       }
     }
     // Found nothing to import or not foreign language, go to next task.
-   $task = 'finished';
+    $task = 'finished';
   }
 
   // We are running a batch import of interface translation files.

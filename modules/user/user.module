@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.817 2007/07/04 21:42:39 goba Exp $
+// $Id: user.module,v 1.818 2007/07/05 08:48:58 goba Exp $
 
 /**
  * @file
@@ -2865,7 +2865,7 @@ function user_autocomplete($string = '') {
     $result = db_query_range("SELECT name FROM {users} WHERE LOWER(name) LIKE LOWER('%s%%')", $string, 0, 10);
     while ($user = db_fetch_object($result)) {
       $matches[$user->name] = check_plain($user->name);
-   }
+    }
   }
 
   drupal_json($matches);

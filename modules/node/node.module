@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.852 2007/07/03 20:31:15 dries Exp $
+// $Id: node.module,v 1.853 2007/07/05 08:48:57 goba Exp $
 
 /**
  * @file
@@ -2468,13 +2468,13 @@ function node_form_submit($form, &$form_state) {
  * Menu callback -- ask for confirmation of node deletion
  */
 function node_delete_confirm(&$form_state, $node) {
- $form['nid'] = array('#type' => 'value', '#value' => $node->nid);
+  $form['nid'] = array('#type' => 'value', '#value' => $node->nid);
 
- return confirm_form($form,
-   t('Are you sure you want to delete %title?', array('%title' => $node->title)),
-   isset($_GET['destination']) ? $_GET['destination'] : 'node/'. $node->nid,
-   t('This action cannot be undone.'),
-   t('Delete'), t('Cancel'));
+  return confirm_form($form,
+    t('Are you sure you want to delete %title?', array('%title' => $node->title)),
+    isset($_GET['destination']) ? $_GET['destination'] : 'node/'. $node->nid,
+    t('This action cannot be undone.'),
+    t('Delete'), t('Cancel'));
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.508 2007/07/04 15:42:38 dries Exp $
+// $Id: system.module,v 1.509 2007/07/05 08:48:58 goba Exp $
 
 /**
  * @file
@@ -2122,15 +2122,15 @@ function system_modules_uninstall_submit($form, &$form_state) {
  * Menu callback: run cron manually.
  */
 function system_run_cron() {
-   // Run cron manually
-   if (drupal_cron_run()) {
-     drupal_set_message(t('Cron ran successfully'));
-   }
-   else {
-     drupal_set_message(t('Cron run failed'));
-   }
+  // Run cron manually
+  if (drupal_cron_run()) {
+    drupal_set_message(t('Cron ran successfully'));
+  }
+  else {
+    drupal_set_message(t('Cron run failed'));
+  }
 
-   drupal_goto('admin/logs/status');
+  drupal_goto('admin/logs/status');
 }
 
 /**
@@ -3054,7 +3054,7 @@ function system_message_action(&$object, $context = array()) {
   $variables = array(
     '%site_name' => variable_get('site_name', 'Drupal'),
     '%username' => $user->name ? $user->name : variable_get('anonymous', t('Anonymous')),
-   );
+  );
 
   // This action can be called in any context, but if placeholders
   // are used a node object must be present to be the source
