@@ -699,7 +699,7 @@ function install_tasks($profile, $task) {
       }
     }
     // Found nothing to import or not foreign language, go to next task.
-   $task = 'finished';
+    $task = 'finished';
   }
 
   // We are running a batch import of interface translation files.

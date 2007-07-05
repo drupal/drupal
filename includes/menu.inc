@@ -1121,16 +1121,16 @@ function menu_tab_root_path() {
  * @ingroup themeable
  */
 function theme_menu_local_tasks() {
- $output = '';
+  $output = '';
 
- if ($primary = menu_primary_local_tasks()) {
-   $output .= "<ul class=\"tabs primary\">\n". $primary ."</ul>\n";
- }
- if ($secondary = menu_secondary_local_tasks()) {
-   $output .= "<ul class=\"tabs secondary\">\n". $secondary ."</ul>\n";
- }
+  if ($primary = menu_primary_local_tasks()) {
+    $output .= "<ul class=\"tabs primary\">\n". $primary ."</ul>\n";
+  }
+  if ($secondary = menu_secondary_local_tasks()) {
+    $output .= "<ul class=\"tabs secondary\">\n". $secondary ."</ul>\n";
+  }
 
- return $output;
+  return $output;
 }
 
 /**

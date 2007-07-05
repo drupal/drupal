@@ -45,7 +45,7 @@ function db_version() {
  * Initialize a database connection.
  */
 function db_connect($url) {
-   // Check if MySQL support is present in PHP
+  // Check if MySQL support is present in PHP
   if (!function_exists('pg_connect')) {
     drupal_maintenance_theme();
     drupal_set_title('PHP PostgreSQL support not enabled');
@@ -630,7 +630,7 @@ function _db_create_field_sql($name, $spec) {
   }
 
   if (isset($spec['not null']) && $spec['not null']) {
-   $sql .= ' NOT NULL';
+    $sql .= ' NOT NULL';
   }
   if (isset($spec['default'])) {
     $default = is_string($spec['default']) ? "'". $spec['default'] ."'" : $spec['default'];

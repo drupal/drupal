@@ -494,8 +494,8 @@ function theme_upload_attachments($files) {
   $header = array(t('Attachment'), t('Size'));
   $rows = array();
   foreach ($files as $file) {
-   $file = (object)$file;
-   if ($file->list && empty($file->remove)) {
+    $file = (object)$file;
+    if ($file->list && empty($file->remove)) {
       $href = file_create_url($file->filepath);
       $text = $file->description ? $file->description : $file->filename;
       $rows[] = array(l($text, $href), format_size($file->filesize));

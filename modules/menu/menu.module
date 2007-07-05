@@ -400,8 +400,8 @@ function menu_edit_menu(&$form_state, $type, $menu = array()) {
     '#title' => t('Title'),
     '#default_value' => $menu['title'],
     '#required' => TRUE,
-   );
-   $form['description'] = array(
+  );
+  $form['description'] = array(
     '#type' => 'textarea',
     '#title' => t('Description'),
     '#default_value' => $menu['description'],
