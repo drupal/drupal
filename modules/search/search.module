@@ -948,7 +948,7 @@ function search_view($type = 'node') {
         $results = theme('box', t('Search results'), $results);
       }
       else {
-        $results = theme('box', t('Your search yielded no results'), search_help('search#noresults'));
+        $results = theme('box', t('Your search yielded no results'), search_help('search#noresults', drupal_help_arg()));
       }
     }
 
