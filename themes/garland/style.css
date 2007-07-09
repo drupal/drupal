@@ -291,6 +291,11 @@ table .form-button, table .form-submit {
   margin-bottom: 0;
 }
 
+/* Avoid displaying content of script tags */
+#header-region script {
+  display: none;
+}
+
 #header-region p, #header-region img {
   margin-top: 0.5em;
 }
