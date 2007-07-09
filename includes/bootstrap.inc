@@ -230,11 +230,16 @@ function drupal_unset_globals() {
 }
 
 /**
- * Loads the configuration and sets the base URL correctly.
+ * Loads the configuration and sets the base URL, cookie domain, and
+ * session name correctly.
  */
 function conf_init() {
-  global $db_url, $db_prefix, $base_url, $base_path, $base_root, $conf, $installed_profile;
+  global $base_url, $base_path, $base_root;
+
+  // Export the following settings.php variables to the global namespace
+  global $db_url, $db_prefix, $cookie_domain, $conf, $installed_profile;
   $conf = array();
+
   include_once './'. conf_path() .'/settings.php';
 
   if (isset($base_url)) {
@@ -260,6 +265,36 @@ function conf_init() {
       $base_path = '/';
     }
   }
+
+  if (!$cookie_domain) {
+    // If the $cookie_domain is empty, try to use the session.cookie_domain.
+    $cookie_domain = ini_get('session.cookie_domain');
+  }
+  if ($cookie_domain) {
+    // If the user specifies the cookie domain, also use it for session name.
+    $session_name = $cookie_domain;
+  }
+  else {
+    // Otherwise use $base_url for session name.
+    $session_name = $base_url;
+    // We try to set the cookie domain to the hostname.
+    if (!empty($_SERVER['HTTP_HOST'])) {
+      $cookie_domain = $_SERVER['HTTP_HOST'];
+    }
+  }
+  // Strip leading periods, www., and port numbers from cookie domain.
+  $cookie_domain = ltrim($cookie_domain, '.');
+  if (strpos($cookie_domain, 'www.') === 0) {
+    $cookie_domain = substr($cookie_domain, 4);
+  }
+  $cookie_domain = explode(':', $cookie_domain);
+  $cookie_domain = '.'. $cookie_domain[0];
+  // Per RFC 2109, cookie domains must contain at least one dot other than the
+  // first. For hosts such as 'localhost' or IP Addresses we don't set a cookie domain.
+  if (count(explode('.', $cookie_domain)) > 2 && !is_numeric(str_replace('.', '', $cookie_domain))) {
+    ini_set('session.cookie_domain', $cookie_domain);
+  }
+  session_name('SESS'. md5($session_name));
 }
 
 /**
