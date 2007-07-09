@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.563 2007/07/05 08:48:57 goba Exp $
+// $Id: comment.module,v 1.564 2007/07/09 17:05:49 dries Exp $
 
 /**
  * @file
@@ -190,10 +190,6 @@ function comment_theme() {
   );
 }
 
-function _comment_view_access($node, $cid) {
-  return $node && $cid;
-}
-
 /**
  * Implementation of hook_menu().
  */
@@ -251,14 +247,6 @@ function comment_menu() {
     'page arguments' => array(2),
     'access callback' => 'node_access',
     'access arguments' => array('view', 2),
-    'type' => MENU_CALLBACK,
-  );
-  $items['node/%node/%'] = array(
-    'title' => 'View',
-    'page callback' => 'node_page_view',
-    'page arguments' => array(1, 2),
-    'access callback' => '_comment_view_access',
-    'access arguments' => array(1, 2),
     'type' => MENU_CALLBACK,
   );
 
