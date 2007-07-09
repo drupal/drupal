@@ -96,7 +96,7 @@ function tracker_page($uid = 0) {
   while ($node = db_fetch_object($result)) {
     // Determine the number of comments:
     $comments = 0;
-    if (module_exists('comment') && $node->comment_count) {
+    if ($node->comment_count) {
       $comments = $node->comment_count;
 
       if ($new = comment_num_new($node->nid)) {
