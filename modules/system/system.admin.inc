@@ -22,6 +22,7 @@ function system_main_admin_page($arg = NULL) {
     INNER JOIN {menu_router} m ON ml.router_path = m.path
     WHERE ml.link_path like 'admin/%' AND ml.link_path != 'admin/help' AND ml.depth = 2 AND ml.menu_name = 'navigation' AND hidden = 0
     ORDER BY p1 ASC, p2 ASC, p3 ASC");
+  $blocks = array();
   while ($item = db_fetch_array($result)) {
     _menu_link_translate($item);
     if (!$item['access']) {
