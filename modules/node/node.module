@@ -678,7 +678,7 @@ function node_view($node, $teaser = FALSE, $page = FALSE, $links = TRUE) {
   $node = node_build_content($node, $teaser, $page);
 
   if ($links) {
-    $node->links = module_invoke_all('link', 'node', $node, !$page);
+    $node->links = module_invoke_all('link', 'node', $node, $teaser);
 
     foreach (module_implements('link_alter') AS $module) {
       $function = $module .'_link_alter';

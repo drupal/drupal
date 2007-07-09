@@ -2,6 +2,8 @@
 
 Drupal 5.2, xxxx-xx-xx
 ----------------------
+- changed hook_link() $teaser argument to match documentation.
+- fixed a variety of small bugs.
 
 
 Drupal 5.1, 2007-01-29
