@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.185 2007/07/05 08:48:57 goba Exp $
+// $Id: menu.inc,v 1.186 2007/07/09 18:08:15 dries Exp $
 
 /**
  * @file
@@ -1361,9 +1361,11 @@ function _menu_navigation_links_rebuild($menu) {
     array_multisort($sort, SORT_NUMERIC, $menu_links);
 
     foreach ($menu_links as $item) {
-      $existing_item = db_fetch_array(db_query("SELECT mlid, customized FROM {menu_links} WHERE menu_name = '%s' AND link_path = '%s' AND module = 'system'", $item['menu_name'], $item['link_path']));
+      $existing_item = db_fetch_array(db_query("SELECT mlid, menu_name, plid, customized FROM {menu_links} WHERE link_path = '%s' AND module = 'system'", $item['link_path']));
       if ($existing_item) {
         $item['mlid'] = $existing_item['mlid'];
+        $item['menu_name'] = $existing_item['menu_name'];
+        $item['plid'] = $existing_item['plid'];
       }
       if (!$existing_item || !$existing_item['customized']) {
         menu_link_save($item);

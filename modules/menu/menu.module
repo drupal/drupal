@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.125 2007/07/05 08:48:57 goba Exp $
+// $Id: menu.module,v 1.126 2007/07/09 18:08:15 dries Exp $
 
 /**
  * @file
@@ -146,7 +146,7 @@ function menu_load($menu_name) {
  * Menu callback which shows an overview page of all the custom menus and their descriptions.
  */
 function menu_overview_page() {
-  $result = db_query("SELECT * FROM {menu_custom}");
+  $result = db_query("SELECT * FROM {menu_custom} ORDER BY title");
   $content = array();
   while ($menu = db_fetch_array($result)) {
     $menu['href'] = 'admin/build/menu-customize/'. $menu['menu_name'];
@@ -157,8 +157,7 @@ function menu_overview_page() {
 }
 
 /**
- * Menu callback which displays every menu element accessible to the current
- * user and the relevant operations.
+ * Shows for one menu the menu items accessible to the current user and relevant operations.
  */
 function menu_overview($menu) {
 
@@ -256,7 +255,7 @@ function menu_edit_item(&$form_state, $type, $item, $menu) {
     // This is an add form, initialize the menu link.
     $item = array('link_title' => '', 'mlid' => 0, 'plid' => 0, 'menu_name' => $menu['menu_name'], 'weight' => 0,  'link_path' => '', 'options' => array(), 'module' => 'menu', 'expanded' => 0, 'hidden' => 0, 'has_children' => 0);
   }
-  foreach (array('link_path', 'mlid', 'module', 'hidden', 'menu_name', 'has_children', 'options') as $key) {
+  foreach (array('link_path', 'mlid', 'module', 'hidden', 'has_children', 'options') as $key) {
     $form[$key] = array('#type' => 'value', '#value' => $item[$key]);
   }
   // Any item created or edited via this interface is considered "customized".
@@ -270,6 +269,13 @@ function menu_edit_item(&$form_state, $type, $item, $menu) {
       '#default_value' => $item['link_path'],
       '#description' => t('The path this menu item links to. This can be an internal Drupal path such as %add-node or an external URL such as %drupal. Enter %front to link to the front page.', array('%front' => '<front>', '%add-node' => 'node/add', '%drupal' => 'http://drupal.org')),
       '#required' => TRUE,
+    );
+    $form['delete'] = array(
+      '#type' => 'submit',
+      '#value' => t('Delete'),
+      '#access' => $item['mlid'],
+      '#submit' => array('menu_item_delete_submit'),
+      '#weight' => 10,
     );
   }
   else {
@@ -300,11 +306,15 @@ function menu_edit_item(&$form_state, $type, $item, $menu) {
   );
 
   // Generate a list of possible parents (not including this item or descendants).
-  $options = menu_parent_options($item['menu_name'], $item);
-  $form['plid'] = array(
+  $options = menu_parent_options(menu_get_menus(), $item);
+  $default = $item['menu_name'] .':'. $item['plid'];
+  if (!isset($options[$default])) {
+    $default = 'navigation:0';
+  }
+  $form['parent'] = array(
     '#type' => 'select',
     '#title' => t('Parent item'),
-    '#default_value' => $item['plid'],
+    '#default_value' => $default,
     '#options' => $options,
   );
   $form['weight'] = array(
@@ -314,6 +324,7 @@ function menu_edit_item(&$form_state, $type, $item, $menu) {
     '#description' => t('Optional. In the menu, the heavier items will sink and the lighter items will be positioned nearer the top.'),
   );
   $form['submit'] = array('#type' => 'submit', '#value' => t('Submit'));
+
 
   return $form;
 }
@@ -329,48 +340,57 @@ function menu_edit_item_validate($form, &$form_state) {
 }
 
 /**
+ * Submit function for the delete button on the menu item editing form.
+ */
+function menu_item_delete_submit($form, &$form_state) {
+  $form_state['redirect'] = 'admin/build/menu/item/'. $form_state['values']['mlid'] .'/delete';
+}
+
+/**
  * Process menu and menu item add/edit form submissions.
  */
 function menu_edit_item_submit($form, &$form_state) {
   $form_state['values']['options']['attributes']['title'] = $form_state['values']['description'];
+  list($form_state['values']['menu_name'], $form_state['values']['plid']) = explode(':', $form_state['values']['parent']);
   menu_link_save($form_state['values']);
   $form_state['redirect'] = 'admin/build/menu-customize/'. $form_state['values']['menu_name'];
 }
 
 /**
- * Return a list of menu items that are valid possible parents for the
- * given menu item. The list excludes the given item and its children.
+ * Return a list of menu items that are valid possible parents for the given menu item.
  *
- * @param $menu_name
- *   The name of the menu.
+ * @param $menus
+ *   An array of menu names and titles, such as from menu_get_menus().
  * @param $item
  *   The menu item for which to generate a list of parents.
- *   If $item['mlid'] == 0 or NULL then the complete tree is returned.
+ *   If $item['mlid'] == 0 then the complete tree is returned.
  * @return
- *   An array of menu link titles keyed on the mlid.
+ *   An array of menu link titles keyed on the a string containing the menu name
+ *   and mlid. The list excludes the given item and its children.
  */
-function menu_parent_options($menu_name, $item) {
+function menu_parent_options($menus, $item) {
 
-  $tree = menu_tree_all_data($item['menu_name'], NULL, TRUE);
-  $options = array(0 => '<'. t('root') .'>');
-  _menu_parents_recurse($tree, '--', $options, $item['mlid']);
-
+  foreach ($menus as $menu_name => $title) {
+    $tree = menu_tree_all_data($menu_name, NULL, TRUE);
+    $options[$menu_name .':0'] = '<'. $title .'>';
+    _menu_parents_recurse($tree, $menu_name, '--', $options, $item['mlid']);
+  }
   return $options;
 }
 
 /**
  * Recursive helper function for menu_parent_options().
  */
-function _menu_parents_recurse($tree, $indent, &$options, $exclude) {
+function _menu_parents_recurse($tree, $menu_name, $indent, &$options, $exclude) {
   foreach ($tree as $data) {
     if ($data['link']['mlid'] != $exclude) {
       $title = $indent .' '. truncate_utf8($data['link']['title'], 30, TRUE, FALSE);
       if ($data['link']['hidden']) {
         $title .= ' ('. t('disabled') .')';
       }
-      $options[$data['link']['mlid']] = $title;
+      $options[$menu_name .':'. $data['link']['mlid']] = $title;
       if ($data['below'] && $data['link']['depth'] < MENU_MAX_DEPTH - 1) {
-         _menu_parents_recurse($data['below'], $indent .'--', $options, $exclude);
+         _menu_parents_recurse($data['below'], $menu_name, $indent .'--', $options, $exclude);
       }
     }
   }
@@ -508,7 +528,7 @@ function menu_reset_item_submit($form, &$form_state) {
  * Implementation of hook_block().
  */
 function menu_block($op = 'list', $delta = 0) {
-  $custom_menus = menu_get_menus();
+  $custom_menus = menu_get_menus(FALSE);
   if ($op == 'list') {
     $blocks = array();
     foreach ($custom_menus as $name => $title) {
@@ -556,10 +576,15 @@ function menu_nodeapi(&$node, $op) {
     case 'prepare':
       if (empty($node->menu)) {
         // Prepare the node for the edit form so that $node->menu always exists.
-        $menu_name = variable_get('menu_parent_items', 'navigation');
+        $menu_name = variable_get('menu_default_node_menu', 'navigation');
         $item = array();
         if (isset($node->nid)) {
-          $mlid = db_result(db_query("SELECT mlid FROM {menu_links} WHERE link_path = 'node/%d' AND menu_name = '%s' AND module = 'menu' ORDER BY mlid ASC", $node->nid, $menu_name));
+          // Give priority to the default menu
+          $mlid = db_result(db_query_range("SELECT mlid FROM {menu_links} WHERE link_path = 'node/%d' AND menu_name = '%s' AND module = 'menu' ORDER BY mlid ASC", $node->nid, $menu_name, 0, 1));
+          // Check all menus if a link does not exist in the default menu.
+          if (!$mlid) {
+            $mlid = db_result(db_query_range("SELECT mlid FROM {menu_links} WHERE link_path = 'node/%d' AND module = 'menu' ORDER BY mlid ASC", $node->nid, 0, 1));
+          }
           if ($mlid) {
             $item = menu_link_load($mlid);
           }
@@ -572,8 +597,7 @@ function menu_nodeapi(&$node, $op) {
 }
 
 /**
- * Implementation of hook_form_alter().
- * Add menu item fields to the node form.
+ * Implementation of hook_form_alter(). Adds menu item fields to the node form.
  */
 function menu_form_alter(&$form, $form_state, $form_id) {
   if (isset($form['#node']) && $form['#node']->type .'_node_form' == $form_id) {
@@ -602,7 +626,7 @@ function menu_form_alter(&$form, $form_state, $form_id) {
       $form['menu']['#collapsed'] = TRUE;
     }
 
-    foreach (array('mlid', 'module', 'hidden', 'menu_name', 'has_children', 'customized', 'options', 'expanded', 'hidden') as $key) {
+    foreach (array('mlid', 'module', 'hidden', 'has_children', 'customized', 'options', 'expanded', 'hidden') as $key) {
       $form['menu'][$key] = array('#type' => 'value', '#value' => $item[$key]);
     }
 
@@ -613,13 +637,19 @@ function menu_form_alter(&$form, $form_state, $form_id) {
       '#required' => FALSE,
     );
     // Generate a list of possible parents (not including this item or descendants).
-    $options = menu_parent_options($item['menu_name'], $item);
-    $form['menu']['plid'] = array(
+    $options = menu_parent_options(menu_get_menus(), $item);
+    $default = $item['menu_name'] .':'. $item['plid'];
+    if (!isset($options[$default])) {
+      $default = 'navigation:0';
+    }
+    $form['menu']['parent'] = array(
       '#type' => 'select',
       '#title' => t('Parent item'),
-      '#default_value' => $item['plid'],
+      '#default_value' => $default,
       '#options' => $options,
     );
+    $form['#submit'][] = 'menu_node_form_submit';
+
     $form['menu']['weight'] = array(
       '#type' => 'weight',
       '#title' => t('Weight'),
@@ -627,6 +657,13 @@ function menu_form_alter(&$form, $form_state, $form_id) {
       '#description' => t('Optional. In the menu, the heavier items will sink and the lighter items will be positioned nearer the top.'),
     );
   }
+}
+
+/**
+ * Decompose the selected menu parent option into the menu_name and plid.
+ */
+function menu_node_form_submit($form, &$form_state) {
+  list($form_state['values']['menu']['menu_name'], $form_state['values']['menu']['plid']) = explode(':', $form_state['values']['menu']['parent']);
 }
 
 /**
@@ -639,7 +676,7 @@ function menu_form_alter(&$form, $form_state, $form_id) {
  *   An array with the machine-readable names as the keys, and human-readable
  *   titles as the values.
  */
-function menu_get_menus($all = FALSE) {
+function menu_get_menus($all = TRUE) {
   $sql = 'SELECT * FROM {menu_custom}'. ($all ? '' : " WHERE menu_name NOT IN ('navigation', 'primary-links', 'secondary-links')") .' ORDER BY title';
   $result = db_query($sql);
 
@@ -656,16 +693,15 @@ function menu_get_menus($all = FALSE) {
 function menu_configure() {
   $form['intro'] = array(
     '#type' => 'item',
-    '#value' => t('The menu module allows on-the-fly creation of menu links in the content authoring forms. The following option limits the menus in which a new link may be added. E.g., this can be used to force new menu items to be created in the primary links menu or to hide admin menu items.'),
+    '#value' => t('The menu module allows on-the-fly creation of menu links in the content authoring forms. The following option sets the default menu in which a new link will be added.'),
   );
 
-  $authoring_options = menu_get_menus(TRUE);
-
-  $form['menu_parent_items'] = array('#type' => 'select',
-    '#title' => t('Restrict parent items to'),
-    '#default_value' => variable_get('menu_parent_items', 0),
+  $authoring_options = menu_get_menus();
+  $form['menu_default_node_menu'] = array('#type' => 'select',
+    '#title' => t('Default menu for content'),
+    '#default_value' => variable_get('menu_default_node_menu', 'navigation'),
     '#options' => $authoring_options,
-    '#description' => t('Choose the menu to be made available in the content authoring form. Only this menu item and its children will be shown.'),
+    '#description' => t('Choose the menu to be the default in the menu options in the content authoring form.'),
   );
 
   return system_settings_form($form);
