@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.126 2007/07/09 18:08:15 dries Exp $
+// $Id: menu.module,v 1.127 2007/07/10 11:23:32 goba Exp $
 
 /**
  * @file
@@ -442,10 +442,13 @@ function menu_edit_menu_validate($form, &$form_state) {
   if (preg_match('/[^a-z0-9-]/', $item['menu_name'])) {
     form_set_error('menu_name', t('Menu name may consist only of lowercase letters, numbers, and hyphens.'));
   }
-  if ($form['#insert'] &&
-      (db_result(db_query("SELECT menu_name FROM {menu_custom} WHERE menu_name = '%s'", $item['menu_name'])) ||
-       db_result(db_query("SELECT menu_name FROM {menu_links} WHERE menu_name = '%s'", $item['menu_name'])))) {
-    form_set_error('menu_name', t('Menu already exists'));
+  if ($form['#insert']) {
+    // We will add 'menu-' to the menu name to help avoid name-space conflicts.
+    $item['menu_name'] = 'menu-'. $item['menu_name']; 
+    if (db_result(db_query("SELECT menu_name FROM {menu_custom} WHERE menu_name = '%s'", $item['menu_name'])) ||
+       db_result(db_query_range("SELECT menu_name FROM {menu_links} WHERE menu_name = '%s'", $item['menu_name'], 0, 1))) {
+      form_set_error('menu_name', t('Menu already exists'));
+    }
   }
 }
 
@@ -454,28 +457,28 @@ function menu_edit_menu_validate($form, &$form_state) {
  */
 function menu_edit_menu_submit($form, &$form_state) {
   $menu = $form_state['values'];
-  // Append 'menu' to the menu name to help avoid name-space conflicts.
-  $menu['menu_name'] = 'menu-'. $menu['menu_name'];
-  $redirect = 'admin/build/menu-customize/'. $menu['menu_name'];
-  $link['link_title'] = $menu['title'];
-  $link['router_path'] = 'admin/build/menu-customize/%';
-  $link['module'] = 'menu';
-  $link['link_path'] = $redirect;
+  $path = 'admin/build/menu-customize/';
   if ($form['#insert']) {
+    // Add 'menu-' to the menu name to help avoid name-space conflicts.
+    $menu['menu_name'] = 'menu-'. $menu['menu_name'];
+    $link['link_title'] = $menu['title'];
+    $link['link_path'] = $path . $menu['menu_name'];
+    $link['router_path'] = $path .'%';
+    $link['module'] = 'menu';
     $link['plid'] = db_result(db_query("SELECT mlid from {menu_links} WHERE menu_name = 'navigation' AND link_path = 'admin/build/menu'"));
     menu_link_save($link);
     db_query("INSERT INTO {menu_custom} (menu_name, title, description) VALUES ('%s', '%s', '%s')", $menu['menu_name'], $menu['title'], $menu['description']);
   }
   else {
     db_query("UPDATE {menu_custom} SET title = '%s', description = '%s' WHERE menu_name = '%s'", $menu['title'], $menu['description'], $menu['menu_name']);
-    $result = db_query("SELECT mlid FROM {menu_links} WHERE link_path = '%s'", $link['link_path']);
+    $result = db_query("SELECT mlid FROM {menu_links} WHERE link_path = '%s'", $path . $menu['menu_name']);
     while ($m = db_fetch_array($result)) {
       $link = menu_link_load($m['mlid']);
       $link['link_title'] = $menu['title'];
       menu_link_save($link);
     }
   }
-  $form_state['redirect'] = $redirect;
+  $form_state['redirect'] = $path . $menu['menu_name'];
 }
 
 /**
