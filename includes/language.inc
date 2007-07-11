@@ -30,9 +30,12 @@ function language_initialize() {
     case LANGUAGE_NEGOTIATION_PATH_DEFAULT:
     case LANGUAGE_NEGOTIATION_PATH:
       $languages = language_list('prefix');
-      $args = explode('/', $_GET['q']);
+      // $_GET['q'] might not be available at this time, because
+      // path initialization runs after the language bootstrap phase.
+      $args = isset($_GET['q']) ? explode('/', $_GET['q']) : array();
       $language = array_shift($args);
       if (isset($languages[$language])) {
+        // Rebuild $GET['q'] with the language removed.
         $_GET['q'] = implode('/', $args);
         return $languages[$language];
       }
