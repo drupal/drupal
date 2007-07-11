@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.367 2007/07/02 17:08:36 dries Exp $
+// $Id: taxonomy.module,v 1.368 2007/07/11 15:27:57 dries Exp $
 
 /**
  * @file
@@ -1031,11 +1031,12 @@ function taxonomy_get_tree($vid, $parent = 0, $depth = -1, $max_depth = NULL) {
  */
 function taxonomy_get_synonyms($tid) {
   if ($tid) {
+    $synonyms = array();
     $result = db_query('SELECT name FROM {term_synonym} WHERE tid = %d', $tid);
     while ($synonym = db_fetch_array($result)) {
       $synonyms[] = $synonym['name'];
     }
-    return $synonyms ? $synonyms : array();
+    return $synonyms;
   }
   else {
     return array();
@@ -1443,7 +1444,7 @@ function taxonomy_term_page($str_tids = '', $depth = 0, $op = 'page') {
  * Page to edit a vocabulary.
  */
 function taxonomy_admin_vocabulary_edit($vocabulary) {
-  if ($_POST['op'] == t('Delete') || $_POST['confirm']) {
+  if ((isset($_POST['op']) && $_POST['op'] == t('Delete')) || isset($_POST['confirm'])) {
     return drupal_get_form('taxonomy_vocabulary_confirm_delete', $vocabulary->vid);
   }
   return drupal_get_form('taxonomy_form_vocabulary', (array)$vocabulary);
@@ -1453,7 +1454,7 @@ function taxonomy_admin_vocabulary_edit($vocabulary) {
  * Page to edit a vocabulary term.
  */
 function taxonomy_admin_term_edit($tid) {
-  if ($_POST['op'] == t('Delete') || $_POST['confirm']) {
+  if ((isset($_POST['op']) && $_POST['op']) == t('Delete') || isset($_POST['confirm'])) {
     return drupal_get_form('taxonomy_term_confirm_delete', $tid);
   }
   if ($term = (array)taxonomy_get_term($tid)) {
