@@ -1,0 +1,7 @@
+<?php
+// $Id: update.schema,v 1.1 2007/07/11 15:15:40 dries Exp $
+
+function update_schema() {
+  $schema['cache_update'] = drupal_get_schema_unprocessed('system', 'cache');
+  return $schema;
+}

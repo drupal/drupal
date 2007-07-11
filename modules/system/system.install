@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.130 2007/07/05 08:48:58 goba Exp $
+// $Id: system.install,v 1.131 2007/07/11 15:15:40 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -3439,6 +3439,41 @@ function system_update_6025() {
   return $ret;
 }
 
+/**
+ * Enable the update.module by default on sites that upgrade.
+ *
+ * This cannot just rely on update.install to install the schema. If,
+ * in the future, someone decides to change the schema for the
+ * {cache_update} table, this update would cause uncertainty in the
+ * state of the DB, since the effect of running this update would
+ * change. For example, if the schema is changed in update #6101, and
+ * a site upgrades direct from 5.x to 6.1, update #6026 would create
+ * the table with the new schema, and then update #6101 would fail,
+ * since it's trying to alter the old schema into the new
+ * schema. Therefore, we must hard-code the particular version of the
+ * schema we mean during update #6026, and then future upgrades that
+ * might attempt to modify the schema of this table will be starting
+ * from a known state. See http://drupal.org/node/150220 for more.
+ */
+function system_update_6026() {
+  $ret = array();
+  $schema['cache_update'] = array(
+    'fields' => array(
+      'cid'        => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'data'       => array('type' => 'blob', 'not null' => FALSE, 'size' => 'big'),
+      'expire'     => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'created'    => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'headers'    => array('type' => 'text', 'not null' => FALSE),
+      'serialized' => array('type' => 'int', 'size' => 'small', 'not null' => TRUE, 'default' => 0)
+    ),
+    'indexes' => array('expire' => array('expire')),
+    'primary key' => array('cid'),
+  );
+  db_create_table($ret, 'cache_update', $schema['cache_update']);
+  module_enable(array('update'));
+  menu_rebuild();
+  return $ret;
+}
 
 /**
  * @} End of "defgroup updates-5.x-to-6.x"

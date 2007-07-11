@@ -1,0 +1,30 @@
+<?php
+// $Id: update.install,v 1.1 2007/07/11 15:15:40 dries Exp $
+
+/**
+ * Implementation of hook_install().
+ */
+function update_install() {
+  // Create cache table.
+  drupal_install_schema('update');
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function update_uninstall() {
+  // Remove cache table.
+  drupal_uninstall_schema('update');
+  // Clear any variables that might be in use
+  $variables = array(
+    'update_check_frequency',
+    'update_fetch_url',
+    'update_last_check',
+    'update_notification_threshold',
+    'update_notify_emails',
+  );
+  foreach ($variables as $variable) {
+    variable_del($variable);
+  }
+  menu_rebuild();
+}

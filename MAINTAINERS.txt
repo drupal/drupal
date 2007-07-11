@@ -1,4 +1,4 @@
-// $Id: MAINTAINERS.txt,v 1.16 2007/06/01 09:42:44 dries Exp $
+// $Id: MAINTAINERS.txt,v 1.17 2007/07/11 15:15:39 dries Exp $
 
 List of maintainers
 --------------------------------------------------------------------------------
@@ -64,6 +64,11 @@ S: maintained
 
 STATISTICS MODULE
 M: Jeremy Andrews <jeremy@kerneltrap.com>
+S: maintained
+
+UPDATE MODULE
+M: Derek Wright <http://drupal.org/user/46549/contact>
+   Earl Miles <http://drupal.org/user/26979/contact>
 S: maintained
 
 XML-RPC SERVER/CLIENT

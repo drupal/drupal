@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.216 2007/07/03 18:48:41 dries Exp $
+// $Id: CHANGELOG.txt,v 1.217 2007/07/11 15:15:39 dries Exp $
 
 Drupal 6.0, xxxx-xx-xx (development version)
 ----------------------
@@ -62,6 +62,7 @@ Drupal 6.0, xxxx-xx-xx (development version)
 - Added support for OpenID.
 - Added support for configurable actions.
 - Made user profiles easier to theme by using array rendering and supplying template files.
+- Added the Update status module to automatically check for available updates and warn sites if they are missing security updates or newer versions.
 
 Drupal 5.0, 2007-01-15
 ----------------------

@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.127 2007/07/10 11:23:32 goba Exp $
+// $Id: menu.module,v 1.128 2007/07/11 15:15:39 dries Exp $
 
 /**
  * @file
@@ -444,7 +444,7 @@ function menu_edit_menu_validate($form, &$form_state) {
   }
   if ($form['#insert']) {
     // We will add 'menu-' to the menu name to help avoid name-space conflicts.
-    $item['menu_name'] = 'menu-'. $item['menu_name']; 
+    $item['menu_name'] = 'menu-'. $item['menu_name'];
     if (db_result(db_query("SELECT menu_name FROM {menu_custom} WHERE menu_name = '%s'", $item['menu_name'])) ||
        db_result(db_query_range("SELECT menu_name FROM {menu_links} WHERE menu_name = '%s'", $item['menu_name'], 0, 1))) {
       form_set_error('menu_name', t('Menu already exists'));

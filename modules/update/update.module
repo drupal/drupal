@@ -1,0 +1,387 @@
+<?php
+// $Id: update.module,v 1.1 2007/07/11 15:15:40 dries Exp $
+
+/**
+ * @file
+ * The "Update status" module checks for available updates of Drupal core and
+ * any installed contributed modules and themes. It warns site administrators
+ * if newer releases are available via the system status report
+ * (admin/logs/status), the module and theme pages, and optionally via email.
+ */
+
+/**
+ * URL to check for updates, if a given project doesn't define its own.
+ */
+define('UPDATE_DEFAULT_URL', 'http://updates.drupal.org/release-history');
+
+// These are internally used constants for this code, do not modify.
+
+/**
+ * Project is up to date.
+ */
+define('UPDATE_CURRENT', 1);
+
+/**
+ * Project is missing security update(s).
+ */
+define('UPDATE_NOT_SECURE', 2);
+
+/**
+ * Project has a new release available, but it is not a security release.
+ */
+define('UPDATE_NOT_CURRENT', 3);
+
+/**
+ * Project's status cannot be checked.
+ */
+define('UPDATE_NOT_CHECKED', 4);
+
+/**
+ * No available update data was found for project.
+ */
+define('UPDATE_UNKNOWN', 5);
+
+/**
+ * Implementation of hook_help().
+ */
+function update_help($path, $arg) {
+  switch ($path) {
+    case 'admin/logs/updates':
+      return '<p>'. t('Here you can find information about available updates for your installed modules and themes. Note that each module or theme is part of a "project", which may or may not have the same name, and might include multiple modules or themes within it.') .'</p>';
+
+    case 'admin/build/themes':
+    case 'admin/build/modules':
+      include_once './includes/install.inc';
+      $status = update_requirements('runtime');
+      foreach (array('core', 'contrib') as $report_type) {
+        $type = 'update_'. $report_type;
+        if (isset($status[$type]['severity'])) {
+          if ($status[$type]['severity'] == REQUIREMENT_ERROR) {
+            drupal_set_message($status[$type]['description'], 'error');
+          }
+          elseif ($status[$type]['severity'] == REQUIREMENT_WARNING) {
+            drupal_set_message($status[$type]['description']);
+          }
+        }
+      }
+      return '<p>'. t('See the <a href="@available_updates">available updates</a> page for information on installed modules and themes with new versions released.', array('@available_updates' => url('admin/logs/updates'))) .'</p>';
+
+    case 'admin/logs/updates/settings':
+    case 'admin/logs/status':
+      // These two pages don't need additional nagging.
+      break;
+
+    default:
+      // Otherwise, if we're on *any* admin page and there's a security
+      // update missing, print an error message about it.
+      if (arg(0) == 'admin' && strpos($path, '#') === FALSE
+          && user_access('administer site configuration')) {
+        include_once './includes/install.inc';
+        $status = update_requirements('runtime');
+        foreach (array('core', 'contrib') as $report_type) {
+          $type = 'update_'. $report_type;
+          if (isset($status[$type])
+              && isset($status[$type]['reason'])
+              && $status[$type]['reason'] === UPDATE_NOT_SECURE) {
+            drupal_set_message($status[$type]['description'], 'error');
+          }
+        }
+      }
+
+  }
+}
+
+/**
+ * Implementation of hook_menu().
+ */
+function update_menu() {
+  $items = array();
+
+  $items['admin/logs/updates'] = array(
+    'title' => 'Available updates',
+    'description' => 'Get a status report about available updates for your installed modules and themes.',
+    'page callback' => 'update_status',
+    'access arguments' => array('administer site configuration'),
+    'file' => 'update.report.inc',
+    'weight' => 10,
+  );
+  $items['admin/logs/updates/list'] = array(
+    'title' => 'List',
+    'page callback' => 'update_status',
+    'access arguments' => array('administer site configuration'),
+    'file' => 'update.report.inc',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
+  $items['admin/logs/updates/settings'] = array(
+    'title' => 'Settings',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('update_settings'),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'update.settings.inc',
+    'type' => MENU_LOCAL_TASK,
+  );
+  $items['admin/logs/updates/check'] = array(
+    'title' => 'Manual update check',
+    'page callback' => 'update_manual_status',
+    'access arguments' => array('administer site configuration'),
+    'file' => 'update.fetch.inc',
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+/**
+ * Implementation of the hook_theme() registry.
+ */
+function update_theme() {
+  return array(
+    'update_settings' => array(
+      'arguments' => array('form' => NULL),
+    ),
+    'update_report' => array(
+      'arguments' => array('data' => NULL),
+    ),
+    'update_version' => array(
+      'arguments' => array('version' => NULL, 'tag' => NULL, 'class' => NULL),
+    ),
+  );
+}
+
+/**
+ * Implementation of hook_requirements.
+ *
+ * @return
+ *   An array describing the status of the site regarding available updates.
+ *   If there is no update data, only one record will be returned, indicating
+ *   that the status of core can't be determined. If data is available, there
+ *   will be two records: one for core, and another for all of contrib
+ *   (assuming there are any contributed modules or themes enabled on the
+ *   site). In addition to the fields expected by hook_requirements ('value',
+ *   'severity', and optionally 'description'), this array will contain a
+ *   'reason' attribute, which is an integer constant to indicate why the
+ *   given status is being returned (UPDATE_NOT_SECURE, UPDATE_NOT_CURRENT, or
+ *   UPDATE_UNKNOWN). This is used for generating the appropriate e-mail
+ *   notification messages during update_cron(), and might be useful for other
+ *   modules that invoke update_requirements() to find out if the site is up
+ *   to date or not.
+ *
+ * @see _update_message_text()
+ * @see _update_cron_notify()
+ */
+function update_requirements($phase) {
+  if ($phase == 'runtime') {
+    $requirements['update_core']['title'] = t('Drupal core update status');
+    $notification_level = variable_get('update_notification_threshold', 'all');
+    if ($available = update_get_available(FALSE)) {
+      include_once './modules/update/update.compare.inc';
+      $data = update_calculate_project_data($available);
+      switch ($data['drupal']['status']) {
+        case UPDATE_NOT_CURRENT:
+          $requirements['update_core']['value'] = t('Out of date (version @version available)', array('@version' => $data['drupal']['recommended']));
+          $requirements['update_core']['severity'] = $notification_level == 'all' ? REQUIREMENT_ERROR : REQUIREMENT_WARNING;
+          $requirements['update_core']['reason'] = UPDATE_NOT_CURRENT;
+          $requirements['update_core']['description'] = _update_message_text('core', UPDATE_NOT_CURRENT, TRUE);
+          break;
+
+        case UPDATE_NOT_SECURE:
+          $requirements['update_core']['value'] = t('Not secure! (version @version available)', array('@version' => $data['drupal']['recommended']));
+          $requirements['update_core']['severity'] = REQUIREMENT_ERROR;
+          $requirements['update_core']['reason'] = UPDATE_NOT_SECURE;
+          $requirements['update_core']['description'] = _update_message_text('core', UDPDATE_NOT_SECURE, TRUE);
+          break;
+
+        default:
+          $requirements['update_core']['value'] = t('Up to date');
+          break;
+      }
+      // We don't want to check drupal a second time.
+      unset($data['drupal']);
+      $not_current = FALSE;
+      if (!empty($data)) {
+        $requirements['update_contrib']['title'] = t('Module and theme update status');
+        // Default to being current until we see otherwise.
+        $requirements['update_contrib']['value'] = t('Up to date');
+        foreach (array_keys($data) as $project) {
+          if (isset($available[$project])) {
+            if ($data[$project]['status'] == UPDATE_NOT_SECURE) {
+              $requirements['update_contrib']['value'] = t('Not secure!');
+              $requirements['update_contrib']['severity'] = REQUIREMENT_ERROR;
+              $requirements['update_contrib']['reason'] = UPDATE_NOT_SECURE;
+              $requirements['update_contrib']['description'] = _update_message_text('contrib', UPDATE_NOT_SECURE, TRUE);
+              break;
+            }
+            elseif ($data[$project]['status'] == UPDATE_NOT_CURRENT) {
+              $not_current = TRUE;
+            }
+          }
+        }
+        if (!isset($requirements['update_contrib']['severity']) && $not_current) {
+          $requirements['update_contrib']['severity'] = $notification_level == 'all' ? REQUIREMENT_ERROR : REQUIREMENT_WARNING;
+          $requirements['update_contrib']['value'] = t('Out of date');
+          $requirements['update_contrib']['reason'] = UPDATE_NOT_CURRENT;
+          $requirements['update_contrib']['description'] = _update_message_text('contrib', UPDATE_NOT_CURRENT, TRUE);
+        }
+      }
+    }
+    else {
+      $requirements['update_core']['value'] = t('No update data available');
+      $requirements['update_core']['severity'] = REQUIREMENT_WARNING;
+      $requirements['update_core']['reason'] = UPDATE_UNKNOWN;
+      $requirements['update_core']['description'] = _update_no_data();
+    }
+    return $requirements;
+  }
+}
+
+/**
+ * Implementation of hook_cron().
+ */
+function update_cron() {
+  $frequency = variable_get('update_check_frequency', 1);
+  $interval = 60 * 60 * 24 * $frequency;
+  if (time() - variable_get('update_last_check', 0) > $interval) {
+    update_refresh();
+    _update_cron_notify();
+  }
+}
+
+/**
+ * Implementation of hook_form_alter().
+ *
+ * Adds a submit handler to the system modules and themes forms, so that if a
+ * site admin saves either form, we invalidate the cache of available updates.
+ *
+ * @see update_invalidate_cache()
+ */
+function update_form_alter(&$form, $form_state, $form_id) {
+  if ($form_id == 'system_modules' || $form_id == 'system_themes' ) {
+    $form['#submit'][] = 'update_invalidate_cache';
+  }
+}
+
+/**
+ * Prints a warning message when there is no data about available updates.
+ */
+function _update_no_data() {
+  $destination = drupal_get_destination();
+  return t('No information is available about potential new releases for currently installed modules and themes. To check for updates, you may need to <a href="@run_cron">run cron</a> or you can <a href="@check_manually">check manually</a>. Please note that checking for available updates can take a long time, so please be patient.', array(
+    '@run_cron' => url('admin/logs/status/run-cron', array('query' => $destination)),
+    '@check_manually' => url('admin/logs/updates/check', array('query' => $destination)),
+  ));
+}
+
+/**
+ * Internal helper to try to get the update information from the cache
+ * if possible, and to refresh the cache when necessary.
+ *
+ * @param $refresh
+ *   Boolean to indicate if this method should refresh the cache automatically
+ *   if there's no data.
+ */
+function update_get_available($refresh = FALSE) {
+  $available = array();
+  if (($cache = cache_get('update_info', 'cache_update'))
+       && $cache->expire > time()) {
+    $available = $cache->data;
+  }
+  elseif ($refresh) {
+    $available = update_refresh();
+  }
+  return $available;
+}
+
+/**
+ * Invalidates any cached data relating to update status.
+ */
+function update_invalidate_cache() {
+  cache_clear_all('update_info', 'cache_update');
+}
+
+/**
+ * Wrapper to load the include file and then refresh the release data.
+ */
+function update_refresh() {
+  include_once './modules/update/update.fetch.inc';
+  return _update_refresh();
+}
+
+/**
+ * Implementation of hook_mail().
+ *
+ * Constructs the email notification message when the site is out of date.
+ *
+ * @param $key
+ *   Unique key to indicate what message to build, always 'status_notify'.
+ * @param $message
+ *   Reference to the message array being built.
+ * @param $params
+ *   Array of parameters to indicate what kind of text to include in the
+ *   message body. This is a keyed array of message type ('core' or 'contrib')
+ *   as the keys, and the status reason constant (UPDATE_NOT_SECURE, etc) for
+ *   the values.
+ *
+ * @see drupal_mail();
+ * @see _update_cron_notify();
+ * @see _update_message_text();
+ */
+function update_mail($key, &$message, $params) {
+  $language = $message['language'];
+  $langcode = $language->language;
+  $message['subject'] .= t('New release(s) available for !site_name', array('!site_name' => variable_get('site_name', 'Drupal')), $langcode);
+  foreach ($params as $msg_type => $msg_reason) {
+    $message['body'][] = _update_message_text($msg_type, $msg_reason, FALSE, $language);
+  }
+  $message['body'][] = t('See the available updates page for more information:', array(), $langcode) ."\n". url('admin/logs/updates', array('absolute' => TRUE, 'language' => $language));
+}
+
+/**
+ * Helper function to return the appropriate message text when the site is out
+ * of date or missing a security update.
+ *
+ * These error messages are shared by both update_requirements() for the
+ * site-wide status report at admin/logs/status and in the body of the
+ * notification emails generated by update_cron().
+ *
+ * @param $msg_type
+ *   String to indicate what kind of message to generate. Can be either
+ *   'core' or 'contrib'.
+ * @param $msg_reason
+ *   Integer constant specifying why message is generated. Can be either
+ *   UPDATE_NOT_CURRENT or UPDATE_NOT_SECURE.
+ * @param $report_link
+ *   Boolean that controls if a link to the updates report should be added.
+ * @param $language
+ *   An optional language object to use.
+ * @return
+ *   The properly translated error message for the given key.
+ */
+function _update_message_text($msg_type, $msg_reason, $report_link = FALSE, $language = NULL) {
+  $langcode = isset($language) ? $language->language : NULL;
+  $text = '';
+  switch ($msg_reason) {
+    case UPDATE_NOT_CURRENT:
+      if ($msg_type == 'core') {
+        $text = t('There are updates available for your version of Drupal. To ensure the proper functioning of your site, you should update as soon as possible.', array(), $langcode);
+      }
+      else {
+        $text = t('There are updates available for one or more of your modules or themes. To ensure the proper functioning of your site, you should update as soon as possible.', array(), $langcode);
+      }
+      break;
+
+    case UPDATE_NOT_SECURE:
+      if ($msg_type == 'core') {
+        $text = t('There is a security update available for your version of Drupal. To ensure the security of your server, you should update immediately!', array(), $langcode);
+      }
+      else {
+        $text = t('There are security updates available for one or more of your modules or themes. To ensure the security of your server, you should update immediately!', array(), $langcode);
+      }
+      break;
+  }
+
+  if ($report_link) {
+    $text .= ' '. t('See the <a href="@available_updates">available updates</a> page for more information.', array('@available_updates' => url('admin/logs/updates', array('language' => $language))), $langcode);
+  }
+
+  return $text;
+}
