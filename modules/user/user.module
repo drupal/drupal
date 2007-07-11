@@ -1411,7 +1411,7 @@ function user_register_submit($form, &$form_state) {
 
   // The first user may login immediately, and receives a customized welcome e-mail.
   if ($account->uid == 1) {
-    drupal_set_message(t('<p>Welcome to Drupal. You are now logged in as user #1, which gives you full control over your website.</p>'));
+    drupal_set_message(t('Welcome to Drupal. You are now logged in as user #1, which gives you full control over your website.'));
     if (variable_get('user_email_verification', TRUE)) {
       drupal_set_message(t('</p><p> Your password is <strong>%pass</strong>. You may change your password below.</p>', array('%pass' => $pass)));
     }
