@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.module,v 1.12 2007/07/01 21:01:46 goba Exp $
+// $Id: dblog.module,v 1.13 2007/07/12 21:01:16 dries Exp $
 
 /**
  * @file
@@ -22,7 +22,7 @@ function dblog_help($path, $arg) {
       $output .= '<p>'. t('The dblog log is simply a list of recorded events containing usage data, performance data, errors, warnings and operational information. Administrators should check the dblog report on a regular basis to ensure their site is working properly.') .'</p>';
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@dblog">Dblog page</a>.', array('@dblog' => 'http://drupal.org/handbook/modules/dblog/')) .'</p>';
       return $output;
-    case 'admin/logs':
+    case 'admin/logs/dblog':
       return '<p>'. t('The dblog module monitors your website, capturing system events in a log to be reviewed by an authorized individual at a later time. The dblog log is simply a list of recorded events containing usage data, performance data, errors, warnings and operational information. It is vital to check the dblog report on a regular basis as it is often the only way to tell what is going on.') .'</p>';
   }
 }
