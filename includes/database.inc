@@ -269,6 +269,9 @@ function db_rewrite_sql($query, $primary_table = 'n', $primary_field = 'nid',  $
     if (strpos($query, 'GROUP')) {
       $replace = 'GROUP';
     }
+    elseif (strpos($query, 'HAVING')) {
+      $replace = 'HAVING';
+    }
     elseif (strpos($query, 'ORDER')) {
       $replace = 'ORDER';
     }
