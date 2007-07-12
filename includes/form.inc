@@ -1386,8 +1386,6 @@ function expand_date($element) {
         $options = drupal_map_assoc(range(1900, 2050));
         break;
     }
-    $parents = $element['#parents'];
-    $parents[] = $type;
     $element[$type] = array(
       '#type' => 'select',
       '#value' => $element['#value'][$type],
