@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.20 2007/06/21 04:38:41 unconed Exp $ */
+/* $Id: style.css,v 1.21 2007/07/12 10:06:16 goba Exp $ */
 
 /**
  * Garland, for Drupal 5.0
@@ -322,6 +322,11 @@ table .form-button, table .form-submit {
   line-height: 1.5em;
   margin-top: 0;
   margin-bottom: 0;
+}
+
+/* Prevent the previous directive from showing the content of script elements in Mozilla browsers. */
+#header-region script {
+  display: none;
 }
 
 #header-region p, #header-region img {
