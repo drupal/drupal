@@ -1458,7 +1458,7 @@ function taxonomy_admin_term_edit($tid) {
     return drupal_get_form('taxonomy_term_confirm_delete', $tid);
   }
   if ($term = (array)taxonomy_get_term($tid)) {
-    return drupal_get_form('taxonomy_form_term', $term['vid'], $term);
+    return drupal_get_form('taxonomy_form_term', taxonomy_vocabulary_load($term['vid']), $term);
   }
   return drupal_not_found();
 }
