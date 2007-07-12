@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.368 2007/07/11 15:27:57 dries Exp $
+// $Id: taxonomy.module,v 1.369 2007/07/12 18:15:48 dries Exp $
 
 /**
  * @file
@@ -1458,7 +1458,7 @@ function taxonomy_admin_term_edit($tid) {
     return drupal_get_form('taxonomy_term_confirm_delete', $tid);
   }
   if ($term = (array)taxonomy_get_term($tid)) {
-    return drupal_get_form('taxonomy_form_term', $term['vid'], $term);
+    return drupal_get_form('taxonomy_form_term', taxonomy_vocabulary_load($term['vid']), $term);
   }
   return drupal_not_found();
 }
