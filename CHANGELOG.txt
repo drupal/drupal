@@ -89,6 +89,10 @@ Drupal 5.0, 2007-01-15
     * added nested lists generation.
     * added a self-clearing block class.
 
+Drupal 4.7.6, 2007-01-29
+------------------------
+- fixed security issue (code execution), see SA-2007-005
+
 Drupal 4.7.5, 2007-01-05
 ------------------------
 - fixed security issue (XSS), see SA-2007-001
