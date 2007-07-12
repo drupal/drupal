@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.73 2007/07/02 14:41:35 dries Exp $
+// $Id: database.inc,v 1.74 2007/07/12 09:21:30 goba Exp $
 
 /**
  * @file
@@ -268,6 +268,9 @@ function db_rewrite_sql($query, $primary_table = 'n', $primary_field = 'nid',  $
     }
     if (strpos($query, 'GROUP')) {
       $replace = 'GROUP';
+    }
+    elseif (strpos($query, 'HAVING')) {
+      $replace = 'HAVING';
     }
     elseif (strpos($query, 'ORDER')) {
       $replace = 'ORDER';
