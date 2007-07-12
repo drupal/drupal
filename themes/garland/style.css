@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.21 2007/07/12 10:06:16 goba Exp $ */
+/* $Id: style.css,v 1.22 2007/07/12 11:00:44 goba Exp $ */
 
 /**
  * Garland, for Drupal 5.0
@@ -16,17 +16,17 @@ body {
   margin: 0;
   padding: 0;
   background: #edf5fa;
-  font: 12px/170% Verdana;
+  font: 12px/170% Verdana, sans-serif;
   color: #494949;
 }
 
 input {
-  font: 12px/100% "Verdana";
+  font: 12px/100% Verdana, sans-serif;
   color: #494949;
 }
 
 textarea, select {
-  font: 12px/160% "Verdana";
+  font: 12px/160% Verdana, sans-serif;
   color: #494949;
 }
 
