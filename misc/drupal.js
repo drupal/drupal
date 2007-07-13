@@ -369,8 +369,8 @@ Drupal.unfreezeHeight = function () {
  */
 Drupal.encodeURIComponent = function (item, uri) {
   uri = uri || location.href;
-  item = encodeURIComponent(item).replace('%2F', '/');
-  return uri.indexOf('?q=') ? item : item.replace('%26', '%2526').replace('%23', '%2523');
+  item = encodeURIComponent(item).replace(/%2F/g, '/');
+  return (uri.indexOf('?q=') != -1) ? item : item.replace(/%26/g, '%2526').replace(/%23/g, '%2523').replace(/\/\//g, '/%252F');
 };
 
 /**
