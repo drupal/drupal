@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.564 2007/07/09 17:05:49 dries Exp $
+// $Id: comment.module,v 1.565 2007/07/13 20:04:47 goba Exp $
 
 /**
  * @file
@@ -1284,78 +1284,45 @@ function theme_comment_admin_overview($form) {
 function comment_multiple_delete_confirm(&$form_state) {
   $edit = $form_state['post'];
 
-  $form['comments']['#tree'] = TRUE;
-  $form['prefix'] = array('#value' => '<ul>');
+  $form['comments'] = array('#prefix' => '<ul>', '#suffix' => '</ul>', '#tree' => TRUE);
   // array_filter() returns only elements with actual values
   $comment_counter = 0;
-  foreach (array_filter($edit['comments']) as $cid) {
+  foreach (array_filter($edit['comments']) as $cid => $value) {
     $comment = _comment_load($cid);
     if (is_object($comment) && is_numeric($comment->cid)) {
       $subject = db_result(db_query('SELECT subject FROM {comments} WHERE cid = %d', $cid));
-      // This is a placeholder -- preserves proper ordering in the confirm form.
-      $form["comment_$cid"] = array();
-
-      // Start a new package for each comment.
-      drupal_delete_initiate('comment', $comment->cid);
-      drupal_delete_add_callback(array('comment_delete_post' => array($comment)));
-
-      _comment_delete_thread($comment);
-
-      // Add the confirm form piece for this comment.
-      drupal_delete_add_form_elements(
-        array(
-          "comment_$cid" => array(
-            '#value' => check_plain($subject),
-            '#prefix' => '<li>',
-            '#suffix' => "</li>\n",
-          ),
-          'comments' => array(
-            "comment_$cid" => array(
-              '#type' => 'hidden',
-              '#value' => $cid,
-            )
-          )
-        )
-      );
-
+      $form['comments'][$cid] = array('#type' => 'hidden', '#value' => $cid, '#prefix' => '<li>', '#suffix' => check_plain($subject) .'</li>');
       $comment_counter++;
     }
   }
-  $form['suffix'] = array('#value' => '</ul>');
-  $form['operation'] = array(
-    '#type' => 'hidden',
-    '#value' => 'delete'
-  );
-
-  // New package for the main admin callback.
-  drupal_delete_initiate('comment', 'admin');
-
-  // Add the main callback for the mass deletion last.
-  drupal_delete_add_callback(array('comment_multiple_delete_confirm_post' => array()));
+  $form['operation'] = array('#type' => 'hidden', '#value' => 'delete');
 
   if (!$comment_counter) {
     drupal_set_message(t('There do not appear to be any comments to delete or your selected comment was deleted by another administrator.'));
     drupal_goto('admin/content/comment');
   }
   else {
-    return drupal_delete_confirm(
-      array(
-        'form' => $form,
-        'question' => t('Are you sure you want to delete these comments and all their children?'),
-        'path' => 'admin/content/comment',
-        'yes' => t('Delete all'),
-        'destination' => 'admin/content/comment',
-      )
-    );
+    return confirm_form($form,
+                        t('Are you sure you want to delete these comments and all their children?'),
+                        'admin/content/comment', t('This action cannot be undone.'),
+                        t('Delete comments'), t('Cancel'));
   }
 }
 
 /**
- * Post deletion callback for multiple comment deletion.
+ * Perform the actual comment deletion.
  */
-function comment_multiple_delete_confirm_post() {
+function comment_multiple_delete_confirm_submit($form, &$form_state) {
+  if ($form_state['values']['confirm']) {
+    foreach ($form_state['values']['comments'] as $cid => $value) {
+      $comment = _comment_load($cid);
+      _comment_delete_thread($comment);
+      _comment_update_node_statistics($comment->nid);
+    }
     cache_clear_all();
     drupal_set_message(t('The comments have been deleted.'));
+  }
+  drupal_goto('admin/content/comment');
 }
 
 /**
