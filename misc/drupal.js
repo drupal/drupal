@@ -1,4 +1,4 @@
-// $Id: drupal.js,v 1.35 2007/07/01 15:37:08 dries Exp $
+// $Id: drupal.js,v 1.36 2007/07/13 20:07:15 goba Exp $
 
 var Drupal = Drupal || { 'settings': {}, 'behaviors': {}, 'themes': {}, 'locale': {} };
 
@@ -369,8 +369,8 @@ Drupal.unfreezeHeight = function () {
  */
 Drupal.encodeURIComponent = function (item, uri) {
   uri = uri || location.href;
-  item = encodeURIComponent(item).replace('%2F', '/');
-  return uri.indexOf('?q=') ? item : item.replace('%26', '%2526').replace('%23', '%2523');
+  item = encodeURIComponent(item).replace(/%2F/g, '/');
+  return (uri.indexOf('?q=') != -1) ? item : item.replace(/%26/g, '%2526').replace(/%23/g, '%2523').replace(/\/\//g, '/%252F');
 };
 
 /**
