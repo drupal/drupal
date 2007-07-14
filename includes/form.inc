@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.215 2007/07/12 11:03:54 goba Exp $
+// $Id: form.inc,v 1.216 2007/07/14 15:23:29 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -797,7 +797,7 @@ function _form_builder_handle_input_element($form_id, &$form, &$form_state) {
   }
 
   if (!isset($form['#value']) && !array_key_exists('#value', $form)) {
-    $function = 'form_type_'. $form['#type'] . '_value';
+    $function = !empty($form['#value_callback']) ? $form['#value_callback'] : 'form_type_'. $form['#type'] .'_value';
     if (($form['#programmed']) || ((!isset($form['#access']) || $form['#access']) && isset($form['#post']) && (isset($form['#post']['form_id']) && $form['#post']['form_id'] == $form_id))) {
       $edit = $form['#post'];
       foreach ($form['#parents'] as $parent) {
@@ -881,14 +881,16 @@ function _form_builder_handle_input_element($form_id, &$form, &$form_state) {
  * Helper function to determine the value for a checkbox form element.
  *
  * @param $form
- *   Form element we are trying to determine a value for.
+ *   The form element whose value is being populated.
  * @param $edit
- *   Relevant post data for real value, or NULL for default value
+ *   The incoming POST data to populate the form element. If this is FALSE,
+ *   the element's default value should be returned.
  * @return
- *   Mixed, value to be assigned to element.
+ *   The data that will appear in the $form_state['values'] collection
+ *   for this element. Return nothing to use the default.
  */
-function form_type_checkbox_value($form, $edit = NULL) {
-  if (isset($edit)) {
+function form_type_checkbox_value($form, $edit = FALSE) {
+  if ($edit !== FALSE) {
     return !empty($edit) ? $form['#return_value'] : 0;
   }
 }
@@ -897,14 +899,16 @@ function form_type_checkbox_value($form, $edit = NULL) {
  * Helper function to determine the value for a checkboxes form element.
  *
  * @param $form
- *   Form element we are trying to determine a value for.
+ *   The form element whose value is being populated.
  * @param $edit
- *   Relevant post data for real value, or NULL for default value
+ *   The incoming POST data to populate the form element. If this is FALSE,
+ *   the element's default value should be returned.
  * @return
- *   Mixed, value to be assigned to element.
+ *   The data that will appear in the $form_state['values'] collection
+ *   for this element. Return nothing to use the default.
  */
- function form_type_checkboxes_value($form, $edit = NULL) {
-  if (!isset($edit)) {
+ function form_type_checkboxes_value($form, $edit = FALSE) {
+  if ($edit === FALSE) {
     $value = array();
     $form += array('#default_value' => array());
     foreach ($form['#default_value'] as $key) {
@@ -919,14 +923,16 @@ function form_type_checkbox_value($form, $edit = NULL) {
  * element.
  *
  * @param $form
- *   Form element we are trying to determine a value for.
+ *   The form element whose value is being populated.
  * @param $edit
- *   Relevant post data for real value, or NULL for default value
+ *   The incoming POST data to populate the form element. If this is FALSE,
+ *   the element's default value should be returned.
  * @return
- *   Mixed, value to be assigned to element.
+ *   The data that will appear in the $form_state['values'] collection
+ *   for this element. Return nothing to use the default.
  */
-function form_type_password_confirm_value($form, $edit = NULL) {
-  if (!isset($edit)) {
+function form_type_password_confirm_value($form, $edit = FALSE) {
+  if ($edit === FALSE) {
     $form += array('#default_value' => array());
     return $form['#default_value'] + array('pass1' => '', 'pass2' => '');
   }
@@ -936,14 +942,16 @@ function form_type_password_confirm_value($form, $edit = NULL) {
  * Helper function to determine the value for a select form element.
  *
  * @param $form
- *   Form element we are trying to determine a value for.
+ *   The form element whose value is being populated.
  * @param $edit
- *   Relevant post data for real value, or NULL for default value
+ *   The incoming POST data to populate the form element. If this is FALSE,
+ *   the element's default value should be returned.
  * @return
- *   Mixed, value to be assigned to element.
+ *   The data that will appear in the $form_state['values'] collection
+ *   for this element. Return nothing to use the default.
  */
-function form_type_select_value($form, $edit = NULL) {
-  if (isset($edit)) {
+function form_type_select_value($form, $edit = FALSE) {
+  if ($edit !== FALSE) {
     if (isset($form['#multiple']) && $form['#multiple']) {
       return (is_array($edit)) ? drupal_map_assoc($edit) : array();
     }
@@ -957,14 +965,16 @@ function form_type_select_value($form, $edit = NULL) {
  * Helper function to determine the value for a textfield form element.
  *
  * @param $form
- *   Form element we are trying to determine a value for.
+ *   The form element whose value is being populated.
  * @param $edit
- *   Relevant post data for real value, or NULL for default value
+ *   The incoming POST data to populate the form element. If this is FALSE,
+ *   the element's default value should be returned.
  * @return
- *   Mixed, value to be assigned to element.
+ *   The data that will appear in the $form_state['values'] collection
+ *   for this element. Return nothing to use the default.
  */
-function form_type_textfield_value($form, $edit = NULL) {
-  if (isset($edit)) {
+function form_type_textfield_value($form, $edit = FALSE) {
+  if ($edit !== FALSE) {
     // Equate $edit to the form value to ensure it's marked for
     // validation.
     return str_replace(array("\r", "\n"), '', $edit);
@@ -975,14 +985,16 @@ function form_type_textfield_value($form, $edit = NULL) {
  * Helper function to determine the value for form's token value.
  *
  * @param $form
- *   Form element we are trying to determine a value for.
+ *   The form element whose value is being populated.
  * @param $edit
- *   Relevant post data for real value, or NULL for default value
+ *   The incoming POST data to populate the form element. If this is FALSE,
+ *   the element's default value should be returned.
  * @return
- *   Mixed, value to be assigned to element.
+ *   The data that will appear in the $form_state['values'] collection
+ *   for this element. Return nothing to use the default.
  */
-function form_type_token_value($form, $edit = NULL) {
-  if (isset($edit)) {
+function form_type_token_value($form, $edit = FALSE) {
+  if ($edit !== FALSE) {
     return (string)$edit;
   }
 }
