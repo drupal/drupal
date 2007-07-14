@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.819 2007/07/11 19:59:11 goba Exp $
+// $Id: user.module,v 1.820 2007/07/14 15:21:38 dries Exp $
 
 /**
  * @file
@@ -303,7 +303,7 @@ function user_save($account, $array = array(), $category = 'account') {
     db_query("UPDATE {users} SET data = '%s' WHERE uid = %d", serialize($data), $user->uid);
 
     // Save user roles (delete just to be safe).
-    if (isset($roles) && is_array($array['roles'])) {
+    if (isset($array['roles']) && is_array($array['roles'])) {
       db_query('DELETE FROM {users_roles} WHERE uid = %d', $array['uid']);
       foreach (array_keys($array['roles']) as $rid) {
         if (!in_array($rid, array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID))) {
