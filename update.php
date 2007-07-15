@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.227 2007/07/02 14:41:34 dries Exp $
+// $Id: update.php,v 1.228 2007/07/15 05:57:40 unconed Exp $
 
 /**
  * @file
@@ -463,13 +463,16 @@ function update_results_page() {
 function update_info_page() {
   update_task_list('info');
   drupal_set_title('Drupal database update');
-  $output = "<ol>\n";
-  $output .= "<li>Use this script to <strong>upgrade an existing Drupal installation</strong>. You don't need this script when installing Drupal from scratch.</li>";
-  $output .= "<li>Before doing anything, backup your database. This process will change your database and its values, and some things might get lost.</li>\n";
-  $output .= "<li>Update your Drupal sources, check the notes below and <a href=\"update.php?op=selection\">run the database upgrade script</a>. Don't upgrade your database twice as it may cause problems.</li>\n";
-  $output .= "<li>Go through the various administration pages to change the existing and new settings to your liking.</li>\n";
-  $output .= "</ol>";
-  $output .= '<p>For more help, see the <a href="http://drupal.org/node/258">Installation and upgrading handbook</a>. If you are unsure what these terms mean you should probably contact your hosting provider.</p>';
+  $output = '<p>Use this utility to update your database whenever a new release of Drupal or a module is installed.</p><p>For more detailed information, see the <a href="http://drupal.org/node/258">Installation and upgrading handbook</a>. If you are unsure what these terms mean you should probably contact your hosting provider.</p>';
+  $output .= "<ol>\n";
+  $output .= "<li><strong>Back up your database</strong>. This process will change your database values and in case of emergency you may need to revert to a backup.</li>\n";
+  $output .= "<li><strong>Back up your code</strong>. Hint: when backing up module code, do not leave that backup in the 'modules' or 'sites/*/modules' directories as this may confuse Drupal's auto-discovery mechanism.</li>\n";
+  $output .= '<li>Put your site into <a href="'. base_path() .'?q=admin/settings/site-maintenance">maintenance mode</a>.</li>'."\n";
+  $output .= "<li>Install your new files in the appropriate location, as described in the handbook.</li>\n";
+  $output .= "</ol>\n";
+  $output .= "<p>When you have performed the steps above, you may proceed.</p>\n";
+  $output .= '<form method="post" action="update.php?op=selection"><input type="submit" value="Continue" /></form>';
+  $output .= "\n";
   return $output;
 }
 
