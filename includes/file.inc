@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.102 2007/07/02 14:41:35 dries Exp $
+// $Id: file.inc,v 1.103 2007/07/15 19:14:19 goba Exp $
 
 /**
  * @file
@@ -849,7 +849,7 @@ function file_download() {
  * from being scanned.
  *
  * @param $dir
- *   The base directory for the scan.
+ *   The base directory for the scan, without trailing slash.
  * @param $mask
  *   The regular expression of the files to find.
  * @param $nomask
