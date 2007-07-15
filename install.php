@@ -790,6 +790,11 @@ function install_task_list($active = NULL) {
   $profile = isset($_GET['profile']) && isset($profiles[$_GET['profile']]) ? $_GET['profile'] : '.';
   $locales = install_find_locales($profile);
 
+  // Remove select profile if we have only one.
+  if (count($profiles) == 1) {
+    unset($tasks['profile-select']);
+  }
+
   // Add tasks defined by the profile.
   if ($profile) {
     $function = $profile .'_profile_task_list';
