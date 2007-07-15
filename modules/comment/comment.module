@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.565 2007/07/13 20:04:47 goba Exp $
+// $Id: comment.module,v 1.566 2007/07/15 10:05:18 dries Exp $
 
 /**
  * @file
@@ -460,7 +460,7 @@ function comment_nodeapi(&$node, $op, $arg = 0) {
       break;
 
     case 'insert':
-      db_query('INSERT INTO {node_comment_statistics} (nid, last_comment_timestamp, last_comment_name, last_comment_uid, comment_count) VALUES (%d, %d, NULL, %d, 0)', $node->nid, $node->created, $node->uid);
+      db_query('INSERT INTO {node_comment_statistics} (nid, last_comment_timestamp, last_comment_name, last_comment_uid, comment_count) VALUES (%d, %d, NULL, %d, 0)', $node->nid, $node->changed, $node->uid);
       break;
 
     case 'delete':
