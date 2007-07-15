@@ -6,7 +6,7 @@ function search_schema() {
     'fields' => array(
       'sid'  => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
       'type' => array('type' => 'varchar', 'length' => 16, 'not null' => FALSE),
-      'data' => array('type' => 'text', 'not null' => TRUE, 'size' => 'medium')
+      'data' => array('type' => 'text', 'not null' => TRUE, 'size' => 'big')
     ),
     'indexes' => array('sid_type' => array('sid', 'type')),
   );
