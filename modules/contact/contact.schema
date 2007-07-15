@@ -1,12 +1,12 @@
 <?php
-// $Id: contact.schema,v 1.2 2007/06/15 07:15:24 dries Exp $
+// $Id: contact.schema,v 1.3 2007/07/15 10:09:21 dries Exp $
 
 function contact_schema() {
   $schema['contact'] = array(
     'fields' => array(
       'cid'        => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
       'category'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'recipients' => array('type' => 'text', 'not null' => TRUE, 'size' => 'medium'),
+      'recipients' => array('type' => 'text', 'not null' => TRUE, 'size' => 'big'),
       'reply'      => array('type' => 'text', 'not null' => TRUE, 'size' => 'big'),
       'weight'     => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny'),
       'selected'   => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny')

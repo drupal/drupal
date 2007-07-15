@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.schema,v 1.2 2007/06/15 07:15:24 dries Exp $
+// $Id: aggregator.schema,v 1.3 2007/07/15 10:09:21 dries Exp $
 
 function aggregator_schema() {
   $schema['aggregator_category'] = array(
@@ -38,7 +38,7 @@ function aggregator_schema() {
       'checked'     => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
       'link'        => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
       'description' => array('type' => 'text', 'not null' => TRUE, 'size' => 'big'),
-      'image'       => array('type' => 'text', 'not null' => TRUE, 'size' => 'medium'),
+      'image'       => array('type' => 'text', 'not null' => TRUE, 'size' => 'big'),
       'etag'        => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
       'modified'    => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
       'block'       => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny')
