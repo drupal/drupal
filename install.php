@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.64 2007/07/05 08:48:57 goba Exp $
+// $Id: install.php,v 1.65 2007/07/15 10:11:44 dries Exp $
 
 require_once './includes/install.inc';
 
@@ -511,15 +511,20 @@ function install_select_locale($profilename) {
   if (count($locales) == 1) {
     if ($profilename == 'default') {
       drupal_maintenance_theme();
-      install_task_list('profile-select');
-      drupal_set_title(st('Localization of the Drupal installer'));
-      $output = '<p>'. st('With the addition of an appropriate language pack, this installer is capable of proceeding in another language of your choice. To install and use Drupal in a language other than English:') . '</p>';
-      $output .= '<ul><li>'. st('Determine if <a href="@translations" target="_blank">a translation of this Drupal version</a> is available in your language of choice. A translation is provided via a translation pack; each translation pack enables the display of a specific version of Drupal in a specific language. Not all languages are available for every version of Drupal.', array('@translations' => 'http://drupal.org/project/Translations')) .'</li>';
-      $output .= '<li>'. st('If an alternative language pack of your choice is available, download and extract its contents to your Drupal root directory.') .'</li>';
-      $output .= '<li>'. st('Reload this page using the second link below and select your desired language from the displayed list. Reloading the page allows the list to automatically adjust to the presence of new language packs.') .'</li>';
-      $output .= '</ul><p>' . st('Alternatively, to install and use Drupal in English, or to defer the selection of an alternative language until after installation, select the first link below.') .'</p>';
-      $output .= '<p>' . st('How should the installation continue?') .'</p>';
-      $output .= '<ul><li><a href="install.php?profile='. $profilename . '&amp;locale=en">'. st('Continue installation in English') .'</a></li><li><a href="install.php?profile='. $profilename . '">'. st('Reload this page to select a language') .'</a></li></ul>';
+      install_task_list('locale-select');
+      drupal_set_title(st('Choose language'));
+      if (!empty($_GET['localize'])) {
+        $output = '<p>'. st('With the addition of an appropriate language pack, this installer is capable of proceeding in another language of your choice. To install and use Drupal in a language other than English:') . '</p>';
+        $output .= '<ul><li>'. st('Determine if <a href="@translations" target="_blank">a translation of this Drupal version</a> is available in your language of choice. A translation is provided via a translation pack; each translation pack enables the display of a specific version of Drupal in a specific language. Not all languages are available for every version of Drupal.', array('@translations' => 'http://drupal.org/project/Translations')) .'</li>';
+        $output .= '<li>'. st('If an alternative language pack of your choice is available, download and extract its contents to your Drupal root directory.') .'</li>';
+        $output .= '<li>'. st('Return to choose language using the second link below and select your desired language from the displayed list. Reloading the page allows the list to automatically adjust to the presence of new language packs.') .'</li>';
+        $output .= '</ul><p>' . st('Alternatively, to install and use Drupal in English, or to defer the selection of an alternative language until after installation, select the first link below.') .'</p>';
+        $output .= '<p>' . st('How should the installation continue?') .'</p>';
+        $output .= '<ul><li><a href="install.php?profile='. $profilename . '&amp;locale=en">'. st('Continue installation in English') .'</a></li><li><a href="install.php?profile='. $profilename . '">'. st('Return to to choose a language') .'</a></li></ul>';
+      }
+      else {
+        $output .= '<ul><li><a href="install.php?profile='. $profilename . '&amp;locale=en">'. st('Install Drupal in English') .'</a></li><li><a href="install.php?profile='. $profilename . '&localize=true">'. st('Learn how to install Drupal in other languages') .'</a></li></ul>';
+      }
       print theme('install_page', $output);
       exit;
     }
@@ -537,7 +542,7 @@ function install_select_locale($profilename) {
     drupal_maintenance_theme();
     install_task_list('locale-select');
 
-    drupal_set_title(st('Choose your preferred language'));
+    drupal_set_title(st('Choose language'));
     print theme('install_page', drupal_get_form('install_select_locale_form', $locales));
     exit;
   }
@@ -785,16 +790,6 @@ function install_task_list($active = NULL) {
   $profile = isset($_GET['profile']) && isset($profiles[$_GET['profile']]) ? $_GET['profile'] : '.';
   $locales = install_find_locales($profile);
 
-  // Keep the profile selection task if we have more profiles or only the
-  // default profile is available and with only the built-in language, in
-  // which case we use this screen to present information about translations.
-  if (count($profiles) == 1) {
-    $first_profile = array_shift($profiles);
-    if ($first_profile->name != 'default' || count($locales) > 1) {
-      unset($tasks['profile-select']);
-    }
-  }
-
   // Add tasks defined by the profile.
   if ($profile) {
     $function = $profile .'_profile_task_list';
@@ -806,17 +801,17 @@ function install_task_list($active = NULL) {
     }
   }
 
+  // If necessary, add translation import to the task list.
+  if (count($locales) > 1 && !empty($_GET['locale']) && $_GET['locale'] != 'en') {
+    $tasks += array(
+      'locale-batch' => st('Import translations'),
+    );
+  }
+
   // Add finished step as the last task.
   $tasks += array(
-    'locale-batch' => st('Import translations'),
     'finished'     => st('Finished')
   );
-
-  // Remove locale related tasks if the install profile does not use them.
-  if (count($locales) == 1) {
-    unset($tasks['locale-select']);
-    unset($tasks['locale-batch']);
-  }
 
   // Let the theming function know that 'finished' and 'done'
   // include everything, so every step is completed.
