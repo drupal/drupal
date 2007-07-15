@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.65 2007/07/15 10:11:44 dries Exp $
+// $Id: install.php,v 1.66 2007/07/15 18:59:25 goba Exp $
 
 require_once './includes/install.inc';
 
@@ -789,6 +789,11 @@ function install_task_list($active = NULL) {
   $profiles = install_find_profiles();
   $profile = isset($_GET['profile']) && isset($profiles[$_GET['profile']]) ? $_GET['profile'] : '.';
   $locales = install_find_locales($profile);
+
+  // Remove select profile if we have only one.
+  if (count($profiles) == 1) {
+    unset($tasks['profile-select']);
+  }
 
   // Add tasks defined by the profile.
   if ($profile) {
