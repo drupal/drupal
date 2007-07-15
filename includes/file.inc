@@ -849,7 +849,7 @@ function file_download() {
  * from being scanned.
  *
  * @param $dir
- *   The base directory for the scan.
+ *   The base directory for the scan, without trailing slash.
  * @param $mask
  *   The regular expression of the files to find.
  * @param $nomask
