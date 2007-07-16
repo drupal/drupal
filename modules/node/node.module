@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.856 2007/07/16 07:40:27 dries Exp $
+// $Id: node.module,v 1.857 2007/07/16 12:34:32 goba Exp $
 
 /**
  * @file
@@ -2292,7 +2292,7 @@ function node_add($type) {
     // Initialize settings:
     $node = array('uid' => $user->uid, 'name' => $user->name, 'type' => $type, 'language' => '');
 
-    drupal_set_title(t('Submit @name', array('@name' => $types[$type]->name)));
+    drupal_set_title(t('Create @name', array('@name' => $types[$type]->name)));
     $output = drupal_get_form($type .'_node_form', $node);
   }
 
@@ -2565,7 +2565,7 @@ function node_page_edit($node) {
     drupal_goto('node/'. $node->nid .'/delete', $destination);
   }
 
-  drupal_set_title(check_plain($node->title));
+  drupal_set_title(t('Edit %title', array('%title' => $node->title)));
   return drupal_get_form($node->type .'_node_form', $node);
 }
 
