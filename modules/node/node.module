@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.855 2007/07/14 15:28:02 dries Exp $
+// $Id: node.module,v 1.856 2007/07/16 07:40:27 dries Exp $
 
 /**
  * @file
@@ -1917,7 +1917,7 @@ function node_feed($nids = array(), $channel = array()) {
   }
 
   $item_length = variable_get('feed_item_length', 'teaser');
-  $namespaces = array('xmlns:dc="http://purl.org/dc/elements/1.1/"');
+  $namespaces = array('xmlns:dc' => 'http://purl.org/dc/elements/1.1/');
 
   $items = '';
   foreach ($nids as $nid) {
@@ -1979,7 +1979,7 @@ function node_feed($nids = array(), $channel = array()) {
   $channel = array_merge($channel_defaults, $channel);
 
   $output = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
-  $output .= "<rss version=\"". $channel["version"] ."\" xml:base=\"". $base_url ."\" ". implode(' ', $namespaces) .">\n";
+  $output .= "<rss version=\"". $channel["version"] ."\" xml:base=\"". $base_url ."\" ". drupal_attributes($namespaces) .">\n";
   $output .= format_rss_channel($channel['title'], $channel['link'], $channel['description'], $items, $channel['language']);
   $output .= "</rss>\n";
 
