@@ -2210,7 +2210,7 @@ function node_form(&$form_state, $node) {
   );
   $form['buttons']['submit'] = array(
     '#type' => 'submit',
-    '#value' => t('Submit'),
+    '#value' => t('Save'),
     '#weight' => 10,
     '#submit' => array('node_form_submit'),
   );

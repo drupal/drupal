@@ -475,7 +475,7 @@ function forum_form_container(&$form_state, $edit = array()) {
   );
   $form['submit'] = array(
     '#type' => 'submit',
-    '#value' => t('Submit')
+    '#value' => t('Save')
   );
   if ($edit['tid']) {
     $form['delete'] = array('#type' => 'submit', '#value' => t('Delete'));
@@ -534,7 +534,7 @@ function forum_form_forum(&$form_state, $edit = array()) {
   );
 
   $form['vid'] = array('#type' => 'hidden', '#value' => variable_get('forum_nav_vocabulary', ''));
-  $form['submit' ] = array('#type' => 'submit', '#value' => t('Submit'));
+  $form['submit' ] = array('#type' => 'submit', '#value' => t('Save'));
   if ($edit['tid']) {
     $form['delete'] = array('#type' => 'submit', '#value' => t('Delete'));
     $form['tid'] = array('#type' => 'hidden', '#value' => $edit['tid']);

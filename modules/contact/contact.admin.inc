@@ -69,7 +69,7 @@ function contact_admin_edit($form_state = array(), $op, $contact = NULL) {
     '#value' => $contact['cid'],
   );
   $form['submit'] = array('#type' => 'submit',
-    '#value' => t('Submit'),
+    '#value' => t('Save'),
   );
 
   return $form;
