@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.509 2007/07/05 08:48:58 goba Exp $
+// $Id: system.module,v 1.510 2007/07/16 06:33:44 dries Exp $
 
 /**
  * @file
@@ -115,7 +115,7 @@ function system_elements() {
   $type['checkbox'] = array('#input' => TRUE, '#return_value' => 1);
   $type['select'] = array('#input' => TRUE, '#size' => 0, '#multiple' => FALSE);
   $type['weight'] = array('#input' => TRUE, '#delta' => 10, '#default_value' => 0, '#process' => array('process_weight'));
-  $type['date'] = array('#input' => TRUE, '#process' => array('expand_date' => array()), '#element_validate' => array('date_validate'));
+  $type['date'] = array('#input' => TRUE, '#process' => array('expand_date'), '#element_validate' => array('date_validate'));
   $type['file'] = array('#input' => TRUE, '#size' => 60);
 
   // Form structure
