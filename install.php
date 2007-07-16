@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.66 2007/07/15 18:59:25 goba Exp $
+// $Id: install.php,v 1.67 2007/07/16 12:43:04 goba Exp $
 
 require_once './includes/install.inc';
 
@@ -932,7 +932,7 @@ if (Drupal.jsEnabled) {
 
   $form['submit'] = array(
     '#type' => 'submit',
-    '#value' => st('Submit'),
+    '#value' => st('Save'),
     '#weight' => 15,
   );
   $hook_form_alter = $_GET['profile'] .'_form_alter';

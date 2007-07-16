@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.admin.inc,v 1.1 2007/07/16 06:37:49 dries Exp $
+// $Id: contact.admin.inc,v 1.2 2007/07/16 12:43:05 goba Exp $
 
 /**
  * @file
@@ -69,7 +69,7 @@ function contact_admin_edit($form_state = array(), $op, $contact = NULL) {
     '#value' => $contact['cid'],
   );
   $form['submit'] = array('#type' => 'submit',
-    '#value' => t('Submit'),
+    '#value' => t('Save'),
   );
 
   return $form;

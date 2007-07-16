@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.370 2007/07/14 15:30:40 dries Exp $
+// $Id: taxonomy.module,v 1.371 2007/07/16 12:43:06 goba Exp $
 
 /**
  * @file
@@ -292,7 +292,7 @@ function taxonomy_form_vocabulary(&$form_state, $edit = array()) {
     '#description' => t('In listings, the heavier vocabularies will sink and the lighter vocabularies will be positioned nearer the top.'),
   );
 
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Submit'));
+  $form['submit'] = array('#type' => 'submit', '#value' => t('Save'));
   if (isset($edit['vid'])) {
     $form['delete'] = array('#type' => 'submit', '#value' => t('Delete'));
     $form['vid'] = array('#type' => 'value', '#value' => $edit['vid']);
@@ -459,7 +459,7 @@ function taxonomy_form_term(&$form_state, $vocabulary, $edit = array()) {
     '#value' => $vocabulary->vid);
   $form['submit'] = array(
     '#type' => 'submit',
-    '#value' => t('Submit'));
+    '#value' => t('Save'));
 
   if ($edit['tid']) {
     $form['delete'] = array(

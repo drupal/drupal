@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.347 2007/07/05 09:07:03 goba Exp $
+// $Id: aggregator.module,v 1.348 2007/07/16 12:43:04 goba Exp $
 
 /**
  * @file
@@ -344,7 +344,7 @@ function aggregator_form_category($edit = array('title' => '', 'description' => 
     '#title' => t('Description'),
     '#default_value' => $edit['description'],
   );
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Submit'));
+  $form['submit'] = array('#type' => 'submit', '#value' => t('Save'));
 
   if ($edit['cid']) {
     $form['delete'] = array('#type' => 'submit', '#value' => t('Delete'));
@@ -358,7 +358,7 @@ function aggregator_form_category($edit = array('title' => '', 'description' => 
  * Validate aggregator_form_feed form submissions.
  */
 function aggregator_form_category_validate($form, &$form_state) {
-  if ($form_state['values']['op'] == t('Submit')) {
+  if ($form_state['values']['op'] == t('Save')) {
     // Check for duplicate titles
     if (isset($form_state['values']['cid'])) {
       $category = db_fetch_object(db_query("SELECT cid FROM {aggregator_category} WHERE title = '%s' AND cid != %d", $form_state['values']['title'], $form_state['values']['cid']));
@@ -478,7 +478,7 @@ function aggregator_form_feed($edit = array('refresh' => 900, 'title' => '', 'ur
       '#description' => t('New items in this feed will be automatically filed in the checked categories as they are received.'),
     );
   }
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Submit'));
+  $form['submit'] = array('#type' => 'submit', '#value' => t('Save'));
 
   if ($edit['fid']) {
     $form['delete'] = array('#type' => 'submit', '#value' => t('Delete'));
@@ -492,7 +492,7 @@ function aggregator_form_feed($edit = array('refresh' => 900, 'title' => '', 'ur
  * Validate aggregator_form_feed form submissions.
  */
 function aggregator_form_feed_validate($form, &$form_state) {
-  if ($form_state['values']['op'] == t('Submit')) {
+  if ($form_state['values']['op'] == t('Save')) {
     // Check for duplicate titles
     if (isset($form_state['values']['fid'])) {
       $result = db_query("SELECT title, url FROM {aggregator_feed} WHERE (title = '%s' OR url='%s') AND fid != %d", $form_state['values']['title'], $form_state['values']['url'], $form_state['values']['fid']);

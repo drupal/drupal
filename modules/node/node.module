@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.857 2007/07/16 12:34:32 goba Exp $
+// $Id: node.module,v 1.858 2007/07/16 12:43:05 goba Exp $
 
 /**
  * @file
@@ -2210,7 +2210,7 @@ function node_form(&$form_state, $node) {
   );
   $form['buttons']['submit'] = array(
     '#type' => 'submit',
-    '#value' => t('Submit'),
+    '#value' => t('Save'),
     '#weight' => 10,
     '#submit' => array('node_form_submit'),
   );
