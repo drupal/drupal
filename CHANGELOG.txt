@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.217 2007/07/11 15:15:39 dries Exp $
+// $Id: CHANGELOG.txt,v 1.218 2007/07/16 09:29:43 dries Exp $
 
 Drupal 6.0, xxxx-xx-xx (development version)
 ----------------------
@@ -10,8 +10,6 @@ Drupal 6.0, xxxx-xx-xx (development version)
    * Added syslog module: useful for monitoring large Drupal installations.
 - Added optional e-mail notifications when users are approved, blocked, or deleted.
 - Added versioning support to node terms.
-- Made it easier to theme the forum overview page.
-- Made Drupal work correctly when running behind a reverse proxy like Squid or Pound.
 - Drupal works with error reporting set to E_ALL.
 - Added scripts/drupal.sh to execute Drupal code from the command line. Useful to use Drupal as a framework to build command-line tools.
 - Made signature support optional and made it possible to theme signatures.
@@ -26,6 +24,7 @@ Drupal 6.0, xxxx-xx-xx (development version)
     * Automatically import translations when enabling new modules.
     * Automatically import translations when adding a new language.
     * JavaScript interface translation.
+    * Automatically import a module's translation upon enabling that module.
 - Moved "PHP input filter" to a stand-alone module so it can be deleted for security reasons.
 - Usability:
     * Improved handling of teasers in posts.
@@ -54,6 +53,7 @@ Drupal 6.0, xxxx-xx-xx (development version)
 - Performance:
     * Made it easier to conditionally load include files.
     * Added a JavaScript aggregator and compressor.
+    * Made Drupal work correctly when running behind a reverse proxy like Squid or Pound.
 - File handling improvements:
     * Entries in the files table are now keyed to a user, and not a node.
     * Added re-usable validation functions to check for uploaded file sizes, extensions, and image resolution.
