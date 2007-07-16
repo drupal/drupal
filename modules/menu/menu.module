@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.129 2007/07/16 12:43:05 goba Exp $
+// $Id: menu.module,v 1.130 2007/07/16 12:51:03 dries Exp $
 
 /**
  * @file
@@ -163,14 +163,16 @@ function menu_overview($menu) {
 
   $header = array(t('Menu item'), t('Expanded'), array('data' => t('Operations'), 'colspan' => '3'));
   $sql ="
-    SELECT m.*, ml.menu_name, ml.mlid, ml.plid, ml.link_path, ml.router_path, ml.hidden, ml.external, ml.has_children, ml.expanded, ml.weight + 50000 AS weight, ml.depth, ml.customized, ml.module, ml.link_title, ml.options
+    SELECT m.load_functions, m.to_arg_functions, m.access_callback, m.access_arguments, m.page_callback, m.page_arguments, m.title, m.title_callback, m.title_arguments, m.type, ml.*
     FROM {menu_links} ml LEFT JOIN {menu_router} m ON m.path = ml.router_path
     WHERE ml.menu_name = '%s' AND ml.hidden >= 0
     ORDER BY p1 ASC, p2 ASC, p3 ASC, p4 ASC, p5 ASC";
   $sql_count = "SELECT COUNT(*) FROM {menu_links} ml WHERE menu_name = '%s' AND hidden >= 0";
   $result = pager_query($sql, 200, 0, $sql_count, $menu['menu_name']);
   $tree = menu_tree_data($result);
-  menu_tree_check_access($tree, TRUE);
+  $node_links = array();
+  menu_tree_collect_node_links($tree, $node_links);
+  menu_tree_check_access($tree, $node_links, TRUE);
   $rows = _menu_overview_tree($tree);
   $output = theme('table', $header, $rows);
   $output .= theme('pager', NULL, 200, 0);

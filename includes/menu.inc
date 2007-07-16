@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.186 2007/07/09 18:08:15 dries Exp $
+// $Id: menu.inc,v 1.187 2007/07/16 12:51:03 dries Exp $
 
 /**
  * @file
@@ -544,10 +544,11 @@ function _menu_link_translate(&$item) {
 }
 
 /**
- * Returns a rendered menu tree. The tree is expanded based on the current
- * path and dynamic paths are also changed according to the defined to_arg
- * functions (for example the 'My account' link is changed from user/% to
- * a link with the current user's uid).
+ * Render a menu tree based on the current path.
+ *
+ * The tree is expanded based on the current path and dynamic paths are also
+ * changed according to the defined to_arg functions (for example the 'My account'
+ * link is changed from user/% to a link with the current user's uid).
  *
  * @param $menu_name
  *   The name of the menu.
@@ -590,9 +591,10 @@ function menu_tree_output($tree) {
 }
 
 /**
- * Get the data structure representing a named menu tree. Since this can be
- * the full tree including hidden items, the data returned may be used for
- * generating an an admin interface or a select.
+ * Get the data structure representing a named menu tree.
+ *
+ * Since this can be the full tree including hidden items, the data returned
+ * may be used for generating an an admin interface or a select.
  *
  * @param $menu_name
  *   The named menu links to return
@@ -617,7 +619,7 @@ function menu_tree_all_data($menu_name = 'navigation', $item = NULL, $show_hidde
     // If the static variable doesn't have the data, check {cache_menu}.
     $cache = cache_get($cid, 'cache_menu');
     if ($cache && isset($cache->data)) {
-      $tree[$cid] = $cache->data;
+      $data = $cache->data;
     }
     else {
       // Build and run the query, and build the tree.
@@ -644,24 +646,28 @@ function menu_tree_all_data($menu_name = 'navigation', $item = NULL, $show_hidde
       // (ml.hidden >= 0), but not callbacks (ml.hidden < 0), so that we can
       // later exclude all the children of a hidden item.
       // No need to order by p6 - there is a sort by weight later.
-      $tree[$cid] = menu_tree_data(db_query("
-        SELECT m.*, ml.menu_name, ml.mlid, ml.plid, ml.link_path, ml.router_path, ml.hidden, ml.external, ml.has_children, ml.expanded, ml.weight + 50000 AS weight, ml.depth, ml.p1, ml.p2, ml.p3, ml.p4, ml.p5, ml.p6, ml.module, ml.link_title, ml.options
+      $data['tree'] = menu_tree_data(db_query("
+        SELECT m.load_functions, m.to_arg_functions, m.access_callback, m.access_arguments, m.page_callback, m.page_arguments, m.title, m.title_callback, m.title_arguments, m.type, ml.*
         FROM {menu_links} ml LEFT JOIN {menu_router} m ON m.path = ml.router_path
         WHERE ml.menu_name = '%s'". $where ." AND ml.hidden >= 0
         ORDER BY p1 ASC, p2 ASC, p3 ASC, p4 ASC, p5 ASC", $args), $parents);
+      $data['node_links'] = array();
+      menu_tree_collect_node_links($data['tree'], $data['node_links']);
       // Cache the data.
-      cache_set($cid, $tree[$cid], 'cache_menu');
+      cache_set($cid, $data, 'cache_menu');
     }
     // Check access for the current user to each item in the tree.
-    menu_tree_check_access($tree[$cid], $show_hidden);
+    menu_tree_check_access($data['tree'], $data['node_links'], $show_hidden);
+    $tree[$cid] = $data['tree'];
   }
 
   return $tree[$cid];
 }
 
 /**
- * Get the data structure representing a named menu tree, based on the current
- * page. The tree order is maintained by storing each parent in an individual
+ * Get the data structure representing a named menu tree, based on the current page.
+ *
+ * The tree order is maintained by storing each parent in an individual
  * field, see http://drupal.org/node/141866 for more.
  *
  * @param $menu_name
@@ -685,7 +691,7 @@ function menu_tree_page_data($menu_name = 'navigation') {
       // If the static variable doesn't have the data, check {cache_menu}.
       $cache = cache_get($cid, 'cache_menu');
       if ($cache && isset($cache->data)) {
-        $tree[$cid] = $cache->data;
+        $data = $cache->data;
       }
       else {
         // Build and run the query, and build the tree.
@@ -730,16 +736,19 @@ function menu_tree_page_data($menu_name = 'navigation') {
         // (ml.hidden >= 0), but not callbacks (ml.hidden < 0), so that we can
         // later exclude all the children of a hidden item.
         // No need to order by p6 - there is a sort by weight later.
-        $tree[$cid] = menu_tree_data(db_query("
-          SELECT m.*, ml.menu_name, ml.mlid, ml.plid, ml.link_path, ml.router_path, ml.hidden, ml.external, ml.has_children, ml.expanded, ml.weight + 50000 AS weight, ml.depth, ml.p1, ml.p2, ml.p3, ml.p4, ml.p5, ml.p6, ml.module, ml.link_title, ml.options
+        $data['tree'] = menu_tree_data(db_query("
+          SELECT m.load_functions, m.to_arg_functions, m.access_callback, m.access_arguments, m.page_callback, m.page_arguments, m.title, m.title_callback, m.title_arguments, m.type, ml.*
           FROM {menu_links} ml LEFT JOIN {menu_router} m ON m.path = ml.router_path
           WHERE ml.menu_name = '%s' AND ml.plid IN (". $placeholders .") AND ml.hidden >= 0
           ORDER BY p1 ASC, p2 ASC, p3 ASC, p4 ASC, p5 ASC", $args), $parents);
+        $data['node_links'] = array();
+        menu_tree_collect_node_links($data['tree'], $data['node_links']);
         // Cache the data.
-        cache_set($cid, $tree[$cid], 'cache_menu');
+        cache_set($cid, $data, 'cache_menu');
       }
       // Check access for the current user to each item in the tree.
-      menu_tree_check_access($tree[$cid]);
+      menu_tree_check_access($data['tree'], $data['node_links']);
+      $tree[$cid] = $data['tree'];
     }
     return $tree[$cid];
   }
@@ -748,20 +757,47 @@ function menu_tree_page_data($menu_name = 'navigation') {
 }
 
 /**
+ * Recursive helper function - collect node links.
+ */
+function menu_tree_collect_node_links(&$tree, &$node_links) {
+
+  foreach ($tree as $key => $v) {
+    if ($tree[$key]['link']['router_path'] == 'node/%') {
+      $nid = substr($tree[$key]['link']['link_path'], 5);
+      if (is_numeric($nid)) {
+        $node_links[$nid] = &$tree[$key]['link'];
+        $tree[$key]['link']['access'] = FALSE;
+      }
+    }
+    if ($tree[$key]['below']) {
+      menu_tree_collect_node_links($node_links, $tree[$key]['below']);
+    }
+  }
+}
+
+/**
  * Check access and perform other dynamic operations for each link in the tree.
  */
-function menu_tree_check_access(&$tree, $show_hidden = FALSE) {
-  // TODO: Special case node links and access check via db_rewite_sql().
-  // TODO: Move sorting of siblings in the tree here so that we can sort based
-  // on the localized title of each link. Currently the dorting is done in
-  // function _menu_tree_data().
+function menu_tree_check_access(&$tree, $node_links = array(), $show_hidden = FALSE) {
+
+  if ($node_links) {
+    // Use db_rewrite_sql to evaluate view access without loading each full node.
+    $nids = array_keys($node_links);
+    $placeholders = '%d' . str_repeat(', %d', count($nids) - 1);
+    $result = db_query(db_rewrite_sql("SELECT n.nid FROM {node} n WHERE n.nid IN (". $placeholders .")"), $nids);
+    while ($node = db_fetch_array($result)) {
+      $node_links[$node['nid']]['access'] = TRUE;
+    }
+  }
   _menu_tree_check_access($tree, $show_hidden);
+  return;
 }
 
 /**
  * Recursive helper function for menu_tree_check_access()
  */
 function _menu_tree_check_access(&$tree, $show_hidden) {
+  $new_tree = array();
   foreach ($tree as $key => $v) {
     $item = &$tree[$key]['link'];
     if (!$item['hidden'] || $show_hidden) {
@@ -770,13 +806,19 @@ function _menu_tree_check_access(&$tree, $show_hidden) {
     else {
       $item['access'] = FALSE;
     }
-    if (!$item['access']) {
-      unset($tree[$key]);
-    }
-    elseif ($tree[$key]['below']) {
-      _menu_tree_check_access($tree[$key]['below'], $show_hidden);
+    if ($item['access']) {
+      if ($tree[$key]['below']) {
+        _menu_tree_check_access($tree[$key]['below'], $show_hidden);
+      }
+      // The weights are made a uniform 5 digits by adding 50000 as an offset.
+      // After _menu_link_translate(), $item['title'] has the localized link title.
+      // Adding the mlid to the end of the index insures that it is unique.
+      $new_tree[(50000 + $item['weight']) .' '. $item['title'] .' '. $item['mlid']] = $tree[$key];
     }
   }
+  // Sort siblings in the tree based on the weights and localized titles.
+  ksort($new_tree);
+  $tree = $new_tree;
 }
 
 /**
@@ -812,9 +854,8 @@ function _menu_tree_data($result, $parents, $depth, $previous_element = '') {
     // We need to determine if we're on the path to root so we can later build
     // the correct active trail and breadcrumb.
     $item['in_active_trail'] = in_array($item['mlid'], $parents);
-    // The weights are uniform 5 digits because of the 50000 offset in the
-    // query. We add mlid at the end of the index to insure uniqueness.
-    $index = $previous_element ? ($previous_element['weight'] .' '. drupal_strtolower($previous_element['link_title']) . $previous_element['mlid']) : '';
+
+    $index = $previous_element ? ($previous_element['mlid']) : '';
     // The current item is the first in a new submenu.
     if ($item['depth'] > $depth) {
       // _menu_tree returns an item and the menu tree structure.
@@ -825,7 +866,6 @@ function _menu_tree_data($result, $parents, $depth, $previous_element = '') {
       );
       // We need to fall back one level.
       if (!isset($item) || $item['depth'] < $depth) {
-        ksort($tree);
         return array($item, $tree);
       }
       // This will be the link to be output in the next iteration.
@@ -851,12 +891,11 @@ function _menu_tree_data($result, $parents, $depth, $previous_element = '') {
   }
   if ($previous_element) {
     // We have one more link dangling.
-    $tree[$previous_element['weight'] .' '. drupal_strtolower($previous_element['link_title']) .' '. $previous_element['mlid']] = array(
+    $tree[$previous_element['mlid']] = array(
       'link' => $previous_element,
       'below' => '',
     );
   }
-  ksort($tree);
   return array($remnant, $tree);
 }
 
