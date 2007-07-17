@@ -770,7 +770,7 @@ function menu_tree_collect_node_links(&$tree, &$node_links) {
       }
     }
     if ($tree[$key]['below']) {
-      menu_tree_collect_node_links($node_links, $tree[$key]['below']);
+      menu_tree_collect_node_links($tree[$key]['below'], $node_links);
     }
   }
 }
