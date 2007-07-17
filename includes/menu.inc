@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.187 2007/07/16 12:51:03 dries Exp $
+// $Id: menu.inc,v 1.188 2007/07/17 06:13:34 goba Exp $
 
 /**
  * @file
@@ -770,7 +770,7 @@ function menu_tree_collect_node_links(&$tree, &$node_links) {
       }
     }
     if ($tree[$key]['below']) {
-      menu_tree_collect_node_links($node_links, $tree[$key]['below']);
+      menu_tree_collect_node_links($tree[$key]['below'], $node_links);
     }
   }
 }
