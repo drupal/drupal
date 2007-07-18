@@ -1,5 +1,5 @@
 <?php
-// $Id: block.admin.inc,v 1.1 2007/07/16 06:40:25 dries Exp $
+// $Id: block.admin.inc,v 1.2 2007/07/18 14:08:08 dries Exp $
 
 /**
  * @file
@@ -300,3 +300,62 @@ function block_box_delete_submit($form, &$form_state) {
   return;
 }
 
+/**
+ * Process variables for block-admin-display.tpl.php.
+ *
+ * The $variables array contains the following arguments:
+ * - $form
+ *
+ * @see block-admin-display.tpl.php
+ * @see theme_block_admin_display()
+ */
+function template_preprocess_block_admin_display(&$variables) {
+  global $theme_key;
+
+  $variables['throttle'] = module_exists('throttle');
+  $block_regions = system_region_list($theme_key);
+
+  // Highlight regions on page to provide visual reference.
+  foreach ($block_regions as $key => $value) {
+    drupal_set_content($key, '<div class="block-region">'. $value .'</div>');
+  }
+
+  // Setup to track previous region in loop.
+  $last_region = '';
+  foreach (element_children($variables['form']) as $i) {
+    $block = &$variables['form'][$i];
+
+    // Only take form elements that are blocks.
+    if (isset($block['info'])) {
+      // Fetch region for current block.
+      $region = $block['region']['#default_value'];
+
+      // Track first block listing to insert region header inside block_admin_display.tpl.php.
+      $is_region_first = FALSE;
+      if ($last_region != $region) {
+        $is_region_first = TRUE;
+        // Set region title. Block regions already translated.
+        if ($region != BLOCK_REGION_NONE) {
+          $region_title = drupal_ucfirst($block_regions[$region]);
+        }
+        else {
+          $region_title = t('Disabled');
+        }
+      }
+
+      $variables['block_listing'][$i]->is_region_first = $is_region_first;
+      $variables['block_listing'][$i]->region_title = $region_title;
+      $variables['block_listing'][$i]->block_title =  drupal_render($block['info']);
+      $variables['block_listing'][$i]->region_select = drupal_render($block['region']) . drupal_render($block['theme']);
+      $variables['block_listing'][$i]->weight_select = drupal_render($block['weight']);
+      $variables['block_listing'][$i]->throttle_check = $variables['throttle'] ? drupal_render($block['throttle']) : '';
+      $variables['block_listing'][$i]->configure_link = drupal_render($block['configure']);
+      $variables['block_listing'][$i]->delete_link = !empty($block['delete']) ? drupal_render($block['delete']) : '';
+
+      $last_region = $region;
+    }
+  }
+
+  $variables['form_submit'] = drupal_render($variables['form']);
+}
+drupal_rebuild_theme_registry();

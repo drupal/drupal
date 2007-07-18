@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.272 2007/07/16 12:52:25 dries Exp $
+// $Id: block.module,v 1.273 2007/07/18 14:08:08 dries Exp $
 
 /**
  * @file
@@ -54,6 +54,7 @@ function block_help($path, $arg) {
 function block_theme() {
   return array(
     'block_admin_display' => array(
+      'file' => 'block-admin-display',
       'arguments' => array('form' => NULL),
     ),
   );
@@ -216,76 +217,6 @@ function _block_rehash() {
   db_unlock_tables();
 
   return $blocks;
-}
-
-/**
- * Theme main block administration form submission.
- *
- * Note: the blocks are already sorted in the right order,
- * grouped by status, region and weight.
- */
-function theme_block_admin_display($form) {
-  global $theme_key;
-
-  $throttle = module_exists('throttle');
-  $block_regions = system_region_list($theme_key);
-
-  // Highlight regions on page to provide visual reference.
-  foreach ($block_regions as $key => $value) {
-    drupal_set_content($key, '<div class="block-region">'. $value .'</div>');
-  }
-
-  // Build rows
-  $rows = array();
-  $last_region = '';
-  $last_status = 1;
-  foreach (element_children($form) as $i) {
-    $block = &$form[$i];
-    // Only take form elements that are blocks.
-    if (isset($block['info'])) {
-      // Fetch values
-      $region = $block['region']['#default_value'];
-      $status = $region != BLOCK_REGION_NONE;
-
-      // Output region header
-      if ($status && $region != $last_region) {
-        $region_title = t('@region', array('@region' => drupal_ucfirst($block_regions[$region])));
-        $rows[] = array(array('data' => $region_title, 'class' => 'region', 'colspan' => ($throttle ? 7 : 6)));
-        $last_region = $region;
-      }
-      // Output disabled header
-      elseif ($status != $last_status) {
-        $rows[] = array(array('data' => t('Disabled'), 'class' => 'region', 'colspan' => ($throttle ? 7 : 6)));
-        $last_status = $status;
-      }
-
-      // Generate block row
-      $row = array(
-        array('data' => drupal_render($block['info']), 'class' => 'block'),
-        drupal_render($block['region']) . drupal_render($block['theme']),
-        drupal_render($block['weight']),
-      );
-      if ($throttle) {
-        $row[] = drupal_render($block['throttle']);
-      }
-      $row[] = drupal_render($block['configure']);
-      $row[] = !empty($block['delete']) ? drupal_render($block['delete']) : '';
-      $rows[] = $row;
-    }
-  }
-
-  // Finish table
-  $header = array(t('Block'), t('Region'), t('Weight'));
-  if ($throttle) {
-    $header[] = t('Throttle');
-  }
-  $header[] = array('data' => t('Operations'), 'colspan' => 2);
-
-  $output = theme('table', $header, $rows, array('id' => 'blocks'));
-
-  $output .= drupal_render($form);
-
-  return $output;
 }
 
 function block_box_get($bid) {
