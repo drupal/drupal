@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.363 2007/07/03 18:48:41 dries Exp $
+// $Id: theme.inc,v 1.364 2007/07/18 07:05:49 goba Exp $
 
 /**
  * @file
@@ -1636,7 +1636,6 @@ function template_preprocess_page(&$variables) {
   $variables['head_title']        = implode(' | ', $head_title);
   $variables['base_path']         = base_path();
   $variables['breadcrumb']        = theme('breadcrumb', drupal_get_breadcrumb());
-  $variables['closure']           = theme('closure');
   $variables['feed_icons']        = drupal_get_feeds();
   $variables['footer_message']    = filter_xss_admin(variable_get('site_footer', FALSE)) . "\n" . theme('blocks', 'footer');
   $variables['head']              = drupal_get_html_head();
@@ -1655,6 +1654,8 @@ function template_preprocess_page(&$variables) {
   $variables['scripts']           = drupal_get_js();
   $variables['tabs']              = theme('menu_local_tasks');
   $variables['title']             = drupal_get_title();
+  // Closure should be filled last.
+  $variables['closure']           = theme('closure');
 
   if ((arg(0) == 'node') && is_numeric(arg(1))) {
     $variables['node'] = node_load(arg(1));
