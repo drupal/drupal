@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.67 2007/07/16 12:43:04 goba Exp $
+// $Id: install.php,v 1.68 2007/07/18 18:44:51 goba Exp $
 
 require_once './includes/install.inc';
 
@@ -520,7 +520,7 @@ function install_select_locale($profilename) {
         $output .= '<li>'. st('Return to choose language using the second link below and select your desired language from the displayed list. Reloading the page allows the list to automatically adjust to the presence of new language packs.') .'</li>';
         $output .= '</ul><p>' . st('Alternatively, to install and use Drupal in English, or to defer the selection of an alternative language until after installation, select the first link below.') .'</p>';
         $output .= '<p>' . st('How should the installation continue?') .'</p>';
-        $output .= '<ul><li><a href="install.php?profile='. $profilename . '&amp;locale=en">'. st('Continue installation in English') .'</a></li><li><a href="install.php?profile='. $profilename . '">'. st('Return to to choose a language') .'</a></li></ul>';
+        $output .= '<ul><li><a href="install.php?profile='. $profilename . '&amp;locale=en">'. st('Continue installation in English') .'</a></li><li><a href="install.php?profile='. $profilename . '">'. st('Return to choose a language') .'</a></li></ul>';
       }
       else {
         $output .= '<ul><li><a href="install.php?profile='. $profilename . '&amp;locale=en">'. st('Install Drupal in English') .'</a></li><li><a href="install.php?profile='. $profilename . '&localize=true">'. st('Learn how to install Drupal in other languages') .'</a></li></ul>';
