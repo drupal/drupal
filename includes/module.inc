@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.104 2007/06/27 21:59:33 goba Exp $
+// $Id: module.inc,v 1.105 2007/07/18 14:10:14 dries Exp $
 
 /**
  * @file
@@ -343,7 +343,7 @@ function module_implements($hook, $sort = FALSE, $refresh = FALSE) {
   static $implementations;
 
   if ($refresh) {
-    unset($implementations);
+    $implementations = array();
     return;
   }
 
