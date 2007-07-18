@@ -343,7 +343,7 @@ function module_implements($hook, $sort = FALSE, $refresh = FALSE) {
   static $implementations;
 
   if ($refresh) {
-    unset($implementations);
+    $implementations = array();
     return;
   }
 
