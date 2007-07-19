@@ -698,7 +698,7 @@ function system_performance_settings() {
   $form['bandwidth_optimizations']['preprocess_css'] = array(
     '#type' => 'radios',
     '#title' => t('Aggregate and compress CSS files'),
-    '#default_value' => variable_get('preprocess_css', FALSE) && $is_writable,
+    '#default_value' => intval(variable_get('preprocess_css', FALSE) && $is_writable),
     '#disabled' => !$is_writable,
     '#options' => array(t('Disabled'), t('Enabled')),
     '#description' => t("Some Drupal modules include their own CSS files. When these modules are enabled, each module's CSS file adds an additional HTTP request to the page, which can increase the load time of each page. These HTTP requests can also slightly increase server load. It is recommended to only turn this option on when your site is in production, as it can interfere with theme development. This option is disabled if you have not set up your files directory, or if your download method is set to private."),
