@@ -6,7 +6,6 @@
   <?php endif; ?>
 
   <?php if ($comment->new) : ?>
-    <a id="new"></a>
     <span class="new"><?php print drupal_ucfirst($new) ?></span>
   <?php endif; ?>
 

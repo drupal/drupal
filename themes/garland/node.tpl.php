@@ -1,5 +1,3 @@
-<?php phptemplate_comment_wrapper(NULL, $node->type); ?>
-
 <div id="node-<?php print $node->nid; ?>" class="node<?php if ($sticky) { print ' sticky'; } ?><?php if (!$status) { print ' node-unpublished'; } ?>">
 
 <?php print $picture ?>
