@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.68 2007/07/18 18:44:51 goba Exp $
+// $Id: install.php,v 1.69 2007/07/20 05:40:14 dries Exp $
 
 require_once './includes/install.inc';
 
@@ -523,7 +523,7 @@ function install_select_locale($profilename) {
         $output .= '<ul><li><a href="install.php?profile='. $profilename . '&amp;locale=en">'. st('Continue installation in English') .'</a></li><li><a href="install.php?profile='. $profilename . '">'. st('Return to choose a language') .'</a></li></ul>';
       }
       else {
-        $output .= '<ul><li><a href="install.php?profile='. $profilename . '&amp;locale=en">'. st('Install Drupal in English') .'</a></li><li><a href="install.php?profile='. $profilename . '&localize=true">'. st('Learn how to install Drupal in other languages') .'</a></li></ul>';
+        $output = '<ul><li><a href="install.php?profile='. $profilename . '&amp;locale=en">'. st('Install Drupal in English') .'</a></li><li><a href="install.php?profile='. $profilename . '&localize=true">'. st('Learn how to install Drupal in other languages') .'</a></li></ul>';
       }
       print theme('install_page', $output);
       exit;
