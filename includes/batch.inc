@@ -1,5 +1,5 @@
 <?php
-// $Id: batch.inc,v 1.9 2007/07/03 19:49:07 dries Exp $
+// $Id: batch.inc,v 1.10 2007/07/20 05:44:13 dries Exp $
 
 /**
  * @file Batch processing API for processes to run in multiple HTTP requests.
@@ -22,13 +22,14 @@ function _batch_page() {
   register_shutdown_function('_batch_shutdown');
 
   $op = isset($_REQUEST['op']) ? $_REQUEST['op'] : '';
+  $output = NULL;
   switch ($op) {
     case 'start':
       $output = _batch_start();
       break;
 
     case 'do':
-      $output = _batch_do();
+      _batch_do();
       break;
 
     case 'do_nojs':
@@ -97,9 +98,7 @@ function _batch_do() {
 
   list($percentage, $message) = _batch_process();
 
-  drupal_set_header('Content-Type: text/plain; charset=utf-8');
-  print drupal_to_js(array('status' => TRUE, 'percentage' => $percentage, 'message' => $message));
-  exit();
+  drupal_json(array('status' => TRUE, 'percentage' => $percentage, 'message' => $message));
 }
 
 /**
@@ -159,6 +158,10 @@ function _batch_process() {
   $batch =& batch_get();
   $current_set =& _batch_current_set();
 
+  if ($batch['progressive']) {
+    timer_start('batch_processing');
+  }
+
   while (!$current_set['success']) {
     $finished = 1;
     $task_message = '';
@@ -169,33 +172,51 @@ function _batch_process() {
     }
 
     if ($finished == 1) {
-      // Make sure this step isn't counted double.
+      // Make sure this step isn't counted double when computing $current.
       $finished = 0;
-      // Remove the operation, and clear the sandbox to reduce the stored data.
+      // Remove the operation and clear the sandbox.
       array_shift($current_set['operations']);
       $current_set['sandbox'] = array();
     }
 
-    // Make sure we display progress information about a batch set that
-    // actually has operations, and not about a 'control' set (form submit
-    // handler).
-    $remaining = count($current_set['operations']);
-    $progress_message = $current_set['progress_message'];
-    $total = $current_set['total'];
-
-    // If the batch set is completed, browse through the remaining sets
-    // until we find one that actually has operations.
+    // If the batch set is completed, browse through the remaining sets,
+    // executing 'control sets' (stored submit handlers) along the way - this
+    // might in turn insert new batch sets. Stop when we find a set that
+    // actually has operations.
+    $set_changed = FALSE;
+    $old_set = $current_set;
     while (empty($current_set['operations']) && ($current_set['success'] = TRUE) && _batch_next_set()) {
       $current_set =& _batch_current_set();
+      $set_changed = TRUE;
     }
+    // At this point, either $current_set is a 'real' batch set (has operations),
+    // or all sets have been completed.
 
-    // Progressive mode : stop after 1 second
-    if ($batch['progressive'] && timer_read('page') > 1000) {
+    // Progressive mode : stop after 1 second.
+    if ($batch['progressive'] && timer_read('batch_processing') > 1000) {
       break;
     }
   }
 
   if ($batch['progressive']) {
+    // Gather progress information.
+
+    // Reporting 100% progress will cause the whole batch to be considered
+    // processed. If processing was paused right after moving to a new set,
+    // we have to use the info from the new one.
+    if ($set_changed && isset($current_set['operations'])) {
+      // Processing will continue with a fresh batch set.
+      $remaining = count($current_set['operations']);
+      $total = $current_set['total'];
+      $progress_message = $current_set['init_message'];
+      $task_message = '';
+    }
+    else {
+      $remaining = count($old_set['operations']);
+      $total = $old_set['total'];
+      $progress_message = $old_set['progress_message'];
+    }
+
     $current    = $total - $remaining + $finished;
     $percentage = $total ? floor($current / $total * 100) : 100;
     $values = array(
@@ -258,7 +279,9 @@ function _batch_finished() {
   }
 
   // Cleanup the batch table and unset the global $batch variable.
-  db_query("DELETE FROM {batch} WHERE bid = %d", $batch['id']);
+  if ($batch['progressive']) {
+    db_query("DELETE FROM {batch} WHERE bid = %d", $batch['id']);
+  }
   $_batch = $batch;
   $batch = NULL;
 

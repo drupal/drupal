@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.510 2007/07/16 06:33:44 dries Exp $
+// $Id: system.module,v 1.511 2007/07/20 05:44:13 dries Exp $
 
 /**
  * @file
@@ -2808,7 +2808,7 @@ function system_batch_page() {
   if ($output === FALSE) {
     drupal_access_denied();
   }
-  else {
+  elseif (isset($output)) {
     // Force a page without blocks or messages to
     // display a list of collected messages later.
     print theme('page', $output, FALSE, FALSE);

@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.216 2007/07/14 15:23:29 dries Exp $
+// $Id: form.inc,v 1.217 2007/07/20 05:44:13 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -1398,6 +1398,8 @@ function expand_date($element) {
         $options = drupal_map_assoc(range(1900, 2050));
         break;
     }
+    $parents = $element['#parents'];
+    $parents[] = $type;
     $element[$type] = array(
       '#type' => 'select',
       '#value' => $element['#value'][$type],
@@ -2027,7 +2029,7 @@ function batch_set($batch_definition) {
  * isses a drupal_goto and thus ends page execution.
  *
  * This function is not needed in form submit handlers; Form API takes care
- * of batches issued during form submission.
+ * of batches that were set during form submission.
  *
  * @param $redirect
  *   (optional) Path to redirect to when the batch has finished processing.
@@ -2040,7 +2042,6 @@ function batch_process($redirect = NULL, $url = NULL) {
 
   if (isset($batch)) {
     // Add process information
-    $t = get_t();
     $url = isset($url) ? $url : 'batch';
     $process_info = array(
       'current_set' => 0,
@@ -2048,13 +2049,13 @@ function batch_process($redirect = NULL, $url = NULL) {
       'url' => isset($url) ? $url : 'batch',
       'source_page' => $_GET['q'],
       'redirect' => $redirect,
-      'error_message' => $t('Please continue to <a href="@error_url">the error page</a>', array('@error_url' => url($url, array('query' => array('id' => $batch['id'], 'op' => 'error'))))),
     );
     $batch += $process_info;
 
     if ($batch['progressive']) {
-      // Save and unset the destination if any. drupal_goto looks for redirection
-      // in $_REQUEST['destination'] and $_REQUEST['edit']['destination'].
+      // Clear the way for the drupal_goto redirection to the batch processing
+      // page, by saving and unsetting the 'destination' if any, on both places
+      // drupal_goto looks for it.
       if (isset($_REQUEST['destination'])) {
         $batch['destination'] = $_REQUEST['destination'];
         unset($_REQUEST['destination']);
@@ -2063,9 +2064,20 @@ function batch_process($redirect = NULL, $url = NULL) {
         $batch['destination'] = $_REQUEST['edit']['destination'];
         unset($_REQUEST['edit']['destination']);
       }
-      db_query('INSERT INTO {batch} (timestamp) VALUES (%d)', time());
+
+      // Initiate db storage in order to get a batch id. We have to provide
+      // at least an empty string for the (not null) 'token' column.
+      db_query("INSERT INTO {batch} (token, timestamp) VALUES ('', %d)", time());
       $batch['id'] = db_last_insert_id('batch', 'bid');
+
+      // Now that we have a batch id, we can generate the redirection link in
+      // the generic error message.
+      $t = get_t();
+      $batch['error_message'] = $t('Please continue to <a href="@error_url">the error page</a>', array('@error_url' => url($url, array('query' => array('id' => $batch['id'], 'op' => 'finished')))));
+
+      // Actually store the batch data and the token generated form the batch id.
       db_query("UPDATE {batch} SET token = '%s', batch = '%s' WHERE bid = %d", drupal_get_token($batch['id']), serialize($batch), $batch['id']);
+
       drupal_goto($batch['url'], 'op=start&id='. $batch['id']);
     }
     else {
