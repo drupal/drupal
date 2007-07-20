@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.567 2007/07/20 08:39:00 dries Exp $
+// $Id: comment.module,v 1.568 2007/07/20 08:51:13 dries Exp $
 
 /**
  * @file
@@ -160,10 +160,11 @@ function comment_theme() {
       'arguments' => array('form' => NULL),
     ),
     'comment' => array(
-      'arguments' => array('comment' => NULL, 'node' => NULL, 'links' => array()),
       'file' => 'comment.tpl.php',
+      'arguments' => array('comment' => NULL, 'node' => NULL, 'links' => array()),
     ),
     'comment_folded' => array(
+      'file' => 'comment-folded',
       'arguments' => array('comment' => NULL),
     ),
     'comment_flat_collapsed' => array(
@@ -182,7 +183,8 @@ function comment_theme() {
       'arguments' => array('nid' => NULL),
     ),
     'comment_wrapper' => array(
-      'arguments' => array('content' => NULL),
+      'file' => 'comment-wrapper',
+      'arguments' => array('content' => NULL, 'node' => NULL),
     ),
     'comment_submitted' => array(
       'arguments' => array('comment' => NULL),
@@ -1077,7 +1079,7 @@ function comment_render($node, $cid = 0) {
       $output .= comment_form_box(array('nid' => $nid), t('Post new comment'));
     }
 
-    $output = theme('comment_wrapper', $output);
+    $output = theme('comment_wrapper', $output, $node);
   }
 
   return $output;
@@ -1776,7 +1778,7 @@ function comment_controls($mode = COMMENT_MODE_THREADED_EXPANDED, $order = COMME
 }
 
 function theme_comment_controls($form) {
-  $output .= '<div class="container-inline">';
+  $output = '<div class="container-inline">';
   $output .=  drupal_render($form);
   $output .= '</div>';
   $output .= '<div class="description">'. t('Select your preferred way to display the comments and click "Save settings" to activate your changes.') .'</div>';
@@ -1801,13 +1803,20 @@ function comment_controls_submit($form, &$form_state) {
 }
 
 /**
- * Prepare values for comment.tpl.php
+ * Process variables for comment.tpl.php.
+ *
+ * The $variables array contains the following arguments:
+ * - $comment
+ * - $node
+ * - $links
+ *
+ * @see comment.tpl.php
+ * @see theme_comment()
  */
 function template_preprocess_comment(&$variables) {
   $comment = $variables['comment'];
   $node = $variables['node'];
   $variables['author']    = theme('username', $comment);
-  $variables['comment']   = $comment;
   $variables['content']   = $comment->comment;
   $variables['date']      = format_date($comment->timestamp);
   $variables['links']     = isset($variables['links']) ? theme('links', $variables['links']) : '';
@@ -1819,12 +1828,21 @@ function template_preprocess_comment(&$variables) {
   $variables['template_files'][] = 'comment-'. $node->type;
 }
 
-function theme_comment_folded($comment) {
-  $output  = "<div class=\"comment-folded\">\n";
-  $output .= ' <span class="subject">'. l($comment->subject, comment_node_url() .'/'. $comment->cid, array('fragment' => "comment-$comment->cid")) .' '. theme('mark', $comment->new) .'</span> ';
-  $output .= '<span class="credit">'. t('by') .' '. theme('username', $comment) ."</span>\n";
-  $output .= "</div>\n";
-  return $output;
+/**
+ * Process variables for comment-folded.tpl.php.
+ *
+ * The $variables array contains the following arguments:
+ * - $comment
+ *
+ * @see comment-folded.tpl.php
+ * @see theme_comment_folded()
+ */
+function template_preprocess_comment_folded(&$variables) {
+  $comment = $variables['comment'];
+  $variables['author'] = theme('username', $comment);
+  $variables['date']   = format_date($comment->timestamp);
+  $variables['new']    = $comment->new ? t('new') : '';
+  $variables['title']  = l($comment->subject, comment_node_url() .'/'. $comment->cid, array('fragment' => "comment-$comment->cid"));
 }
 
 function theme_comment_flat_collapsed($comment, $node) {
@@ -1836,14 +1854,11 @@ function theme_comment_flat_expanded($comment, $node) {
 }
 
 function theme_comment_thread_collapsed($comment, $node) {
-  $output .= theme('comment_view', $comment, $node, '', 0);
-  return $output;
+  return theme('comment_view', $comment, $node, '', 0);
 }
 
 function theme_comment_thread_expanded($comment, $node) {
-  $output = '';
-  $output .= theme('comment_view', $comment, $node, module_invoke_all('link', 'comment', $comment, 0));
-  return $output;
+  return theme('comment_view', $comment, $node, module_invoke_all('link', 'comment', $comment, 0));
 }
 
 function theme_comment_post_forbidden($nid) {
@@ -1870,10 +1885,21 @@ function theme_comment_post_forbidden($nid) {
 }
 
 /**
- * Allow themeable wrapping of all comments.
+ * Process variables for comment-wrapper.tpl.php.
+ *
+ * The $variables array contains the following arguments:
+ * - $content
+ * - $node
+ *
+ * @see comment-wrapper.tpl.php
+ * @see theme_comment_wrapper()
  */
-function theme_comment_wrapper($content) {
-  return '<div id="comments">'. $content .'</div>';
+function template_preprocess_comment_wrapper(&$variables) {
+  // Provide contextual information.
+  $variables['display_mode']  = _comment_get_display_setting('mode');
+  $variables['display_order'] = _comment_get_display_setting('sort');
+  $variables['comment_controls_state'] = variable_get('comment_controls', COMMENT_CONTROLS_HIDDEN);
+  $variables['template_files'][] = 'comment-wrapper-'. $variables['node']->type;
 }
 
 /**

@@ -1,10 +1,34 @@
+<?php
+// $Id
+/**
+ * @file comment.tpl.php
+ * Default theme implementation for comments.
+ *
+ * Available variables:
+ * - $author: Comment author. Can be link or plain text.
+ * - $content: Body of the post.
+ * - $date: Date and time of posting.
+ * - $links: Various operational links.
+ * - $new: New comment marker.
+ * - $picture: Authors picture.
+ * - $signature: Authors signature.
+ * - $submitted: By line with date and time.
+ * - $title: Linked title.
+ *
+ * These two variables are provided for context.
+ * - $comment: Full comment object.
+ * - $node: Node object the comments are attached to.
+ *
+ * @see template_preprocess_comment()
+ * @see theme_comment()
+ */
+?>
 <div class="comment<?php print ($comment->new) ? ' comment-new' : ''; print ($comment->status == COMMENT_NOT_PUBLISHED) ? ' comment-unpublished' : ''; ?> clear-block">
   <?php print $picture ?>
 
-<?php if ($comment->new) : ?>
-  <a id="new"></a>
-  <span class="new"><?php print $new ?></span>
-<?php endif; ?>
+  <?php if ($comment->new): ?>
+    <span class="new"><?php print $new ?></span>
+  <?php endif; ?>
 
   <h3><?php print $title ?></h3>
 

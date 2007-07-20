@@ -1,5 +1,5 @@
 <?php
-// $Id: template.php,v 1.11 2007/07/01 23:15:41 goba Exp $
+// $Id: template.php,v 1.12 2007/07/20 08:51:13 dries Exp $
 
 /**
  * Sets the body-tag class attribute.
@@ -40,11 +40,8 @@ function phptemplate_breadcrumb($breadcrumb) {
 /**
  * Allow themable wrapping of all comments.
  */
-function phptemplate_comment_wrapper($content, $type = null) {
-  static $node_type;
-  if (isset($type)) $node_type = $type;
-
-  if (!$content || $node_type == 'forum') {
+function phptemplate_comment_wrapper($content, $node) {
+  if (!$content || $node->type == 'forum') {
     return '<div id="comments">'. $content .'</div>';
   }
   else {
