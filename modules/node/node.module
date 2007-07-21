@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.859 2007/07/20 08:45:07 dries Exp $
+// $Id: node.module,v 1.860 2007/07/21 09:55:18 dries Exp $
 
 /**
  * @file
@@ -356,6 +356,9 @@ function node_types_rebuild() {
     if (!empty($info->is_new)) {
       node_type_save($info);
     }
+    if (!empty($info->disabled)) {
+      node_type_delete($info->type);
+    }
   }
 
   _node_types_build();
@@ -428,8 +431,10 @@ function node_type_update_nodes($old_type, $type) {
 }
 
 /**
- * Builds the list of available node types, by querying hook_node_info() in all
- * modules, and by looking for node types in the database.
+ * Builds and returns the list of available node types.
+ *
+ * The list of types is built by querying hook_node_info() in all modules, and
+ * by comparing this information with the node types in the {node_type} table.
  *
  */
 function _node_types_build() {
@@ -445,6 +450,12 @@ function _node_types_build() {
 
   $type_result = db_query(db_rewrite_sql('SELECT nt.type, nt.* FROM {node_type} nt ORDER BY nt.type ASC', 'nt', 'type'));
   while ($type_object = db_fetch_object($type_result)) {
+    // Check for node types from disabled modules and mark their types for removal.
+    // Types defined by the node module in the database (rather than by a separate
+    // module using hook_node_info) have a module value of 'node'.
+    if ($type_object->module != 'node' && empty($info_array[$type_object->type])) {
+       $type_object->disabled = TRUE;
+    }
     if (!isset($_node_types[$type_object->type]) || $type_object->modified) {
       $_node_types[$type_object->type] = $type_object;
       $_node_names[$type_object->type] = $type_object->name;
@@ -1257,31 +1268,28 @@ function node_menu() {
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
-  foreach (node_get_types() as $type) {
-    if (function_exists($type->module .'_form')) {
-      $name = check_plain($type->name);
-      $type_url_str = str_replace('_', '-', $type->type);
-      $items['node/add/'. $type_url_str] = array(
-        'title' => drupal_ucfirst($name),
-        'page callback' => 'node_add',
-        'page arguments' => array(2),
-        'access callback' => 'node_access',
-        'access arguments' => array('create', $type->type),
-        'description' => $type->description,
-      );
-      $items['admin/content/types/'. $type_url_str] = array(
-        'title' => $type->name,
-        'page callback' => 'drupal_get_form',
-        'page arguments' => array('node_type_form', $type),
-        'type' => MENU_CALLBACK,
-      );
-      $items['admin/content/types/'. $type_url_str .'/delete'] = array(
-        'title' => 'Delete',
-        'page arguments' => array('node_type_delete_confirm', $type),
-        'type' => MENU_CALLBACK,
-      );
-
-    }
+  foreach (node_get_types('types', NULL, TRUE) as $type) {
+    $name = check_plain($type->name);
+    $type_url_str = str_replace('_', '-', $type->type);
+    $items['node/add/'. $type_url_str] = array(
+      'title' => drupal_ucfirst($name),
+      'page callback' => 'node_add',
+      'page arguments' => array(2),
+      'access callback' => 'node_access',
+      'access arguments' => array('create', $type->type),
+      'description' => $type->description,
+    );
+    $items['admin/content/types/'. $type_url_str] = array(
+      'title' => $type->name,
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('node_type_form', $type),
+      'type' => MENU_CALLBACK,
+    );
+    $items['admin/content/types/'. $type_url_str .'/delete'] = array(
+      'title' => 'Delete',
+      'page arguments' => array('node_type_delete_confirm', $type),
+      'type' => MENU_CALLBACK,
+    );
   }
   $items['node/%node'] = array(
     'title' => 'View',
