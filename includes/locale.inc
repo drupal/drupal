@@ -353,7 +353,9 @@ function locale_languages_edit_form_submit($form, &$form_state) {
   if ($default->language == $form_state['values']['langcode']) {
     $properties = array('name', 'native', 'direction', 'enabled', 'plurals', 'formula', 'domain', 'prefix', 'weight');
     foreach ($properties as $keyname) {
-      $default->$keyname = $form_state['values'][$keyname];
+      if (isset($form_state['values'][$keyname])) {
+        $default->$keyname = $form_state['values'][$keyname];
+      }
     }
     variable_set('language_default', $default);
   }
