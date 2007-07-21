@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.147 2007/07/15 19:14:19 goba Exp $
+// $Id: locale.inc,v 1.148 2007/07/21 09:26:07 dries Exp $
 
 /**
  * @file
@@ -353,7 +353,9 @@ function locale_languages_edit_form_submit($form, &$form_state) {
   if ($default->language == $form_state['values']['langcode']) {
     $properties = array('name', 'native', 'direction', 'enabled', 'plurals', 'formula', 'domain', 'prefix', 'weight');
     foreach ($properties as $keyname) {
-      $default->$keyname = $form_state['values'][$keyname];
+      if (isset($form_state['values'][$keyname])) {
+        $default->$keyname = $form_state['values'][$keyname];
+      }
     }
     variable_set('language_default', $default);
   }
