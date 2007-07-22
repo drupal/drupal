@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysql.inc,v 1.74 2007/06/05 12:13:20 dries Exp $
+// $Id: database.mysql.inc,v 1.75 2007/07/22 07:23:27 dries Exp $
 
 /**
  * @file
@@ -165,8 +165,8 @@ function _db_query($query, $debug = 0) {
  * @param $result
  *   A database query result resource, as returned from db_query().
  * @return
- *   An object representing the next row of the result. The attributes of this
- *   object are the table fields selected by the query.
+ *   An object representing the next row of the result, or FALSE. The attributes
+ *   of this object are the table fields selected by the query.
  */
 function db_fetch_object($result) {
   if ($result) {
@@ -180,9 +180,9 @@ function db_fetch_object($result) {
  * @param $result
  *   A database query result resource, as returned from db_query().
  * @return
- *   An associative array representing the next row of the result. The keys of
- *   this object are the names of the table fields selected by the query, and
- *   the values are the field values for this result row.
+ *   An associative array representing the next row of the result, or FALSE. 
+ *   The keys of this object are the names of the table fields selected by the 
+ *   query, and the values are the field values for this result row.
  */
 function db_fetch_array($result) {
   if ($result) {
