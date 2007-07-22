@@ -19,6 +19,10 @@
 #forum tr.new-topics td.forum {
   background-image: url(../../misc/forum-new.png);
 }
+#forum div.indent {
+  margin-left: 20px;
+}
+
 .forum-topic-navigation {
   padding: 1em 0 0 3em; /* LTR */
   border-top: 1px solid #888;
