@@ -358,4 +358,3 @@ function template_preprocess_block_admin_display(&$variables) {
 
   $variables['form_submit'] = drupal_render($variables['form']);
 }
-drupal_rebuild_theme_registry();
