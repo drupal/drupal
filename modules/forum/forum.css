@@ -1,4 +1,4 @@
-/* $Id: forum.css,v 1.4 2007/05/27 17:57:48 goba Exp $ */
+/* $Id: forum.css,v 1.5 2007/07/22 07:01:07 dries Exp $ */
 
 #forum .description {
   font-size: 0.9em;
@@ -19,6 +19,10 @@
 #forum tr.new-topics td.forum {
   background-image: url(../../misc/forum-new.png);
 }
+#forum div.indent {
+  margin-left: 20px;
+}
+
 .forum-topic-navigation {
   padding: 1em 0 0 3em; /* LTR */
   border-top: 1px solid #888;

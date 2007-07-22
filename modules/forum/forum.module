@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.408 2007/07/16 12:43:05 goba Exp $
+// $Id: forum.module,v 1.409 2007/07/22 07:01:07 dries Exp $
 
 /**
  * @file
@@ -34,19 +34,28 @@ function forum_help($path, $arg) {
 function forum_theme() {
   return array(
     'forum_display' => array(
+      'file' => 'forum-display',
       'arguments' => array('forums' => NULL, 'topics' => NULL, 'parents' => NULL, 'tid' => NULL, 'sortby' => NULL, 'forum_per_page' => NULL),
     ),
     'forum_list' => array(
+      'file' => 'forum-list',
       'arguments' => array('forums' => NULL, 'parents' => NULL, 'tid' => NULL),
     ),
     'forum_topic_list' => array(
+      'file' => 'forum-topic-list',
       'arguments' => array('tid' => NULL, 'topics' => NULL, 'sortby' => NULL, 'forum_per_page' => NULL),
     ),
     'forum_icon' => array(
+      'file' => 'forum-icon',
       'arguments' => array('new_posts' => NULL, 'num_posts' => 0, 'comment_mode' => 0, 'sticky' => 0),
     ),
     'forum_topic_navigation' => array(
+      'file' => 'forum-topic-navigation',
       'arguments' => array('node' => NULL),
+    ),
+    'forum_format_topic' => array(
+      'file' => 'forum-format-topic',
+      'arguments' => array('topic' => NULL),
     ),
   );
 }
@@ -689,20 +698,6 @@ function forum_link_alter(&$links, $node) {
 }
 
 /**
- * Formats a topic for display
- *
- * @TODO Give a better description. Not sure where this function is used yet.
- */
-function _forum_format($topic) {
-  if ($topic && !empty($topic->timestamp)) {
-    return t('@time ago<br />by !author', array('@time' => format_interval(time() - $topic->timestamp), '!author' => theme('username', $topic)));
-  }
-  else {
-    return t('n/a');
-  }
-}
-
-/**
  * Returns a list of all forums for a given taxonomy id
  *
  * Forum objects contain the following fields
@@ -868,11 +863,19 @@ function forum_page($tid = 0) {
 }
 
 /**
- * Format the forum body.
+ * Process variables for forum-display.tpl.php
  *
- * @ingroup themeable
+ * The $variables array contains the following arguments:
+ * - $forums
+ * - $topics
+ * - $parents
+ * - $tid
+ * - $sortby
+ * - $forum_per_page
+ *
+ * @see forum-display.tpl.php
  */
-function theme_forum_display($forums, $topics, $parents, $tid, $sortby, $forum_per_page) {
+function template_preprocess_forum_display(&$variables) {
   global $user;
   // forum list, topics list, topic browser and 'add new topic' link
 
@@ -882,14 +885,14 @@ function theme_forum_display($forums, $topics, $parents, $tid, $sortby, $forum_p
 
   // Breadcrumb navigation:
   $breadcrumb = array();
-  if ($tid) {
+  if ($variables['tid']) {
     $breadcrumb[] = array('path' => 'forum', 'title' => $title);
   }
 
-  if ($parents) {
-    $parents = array_reverse($parents);
-    foreach ($parents as $p) {
-      if ($p->tid == $tid) {
+  if ($variables['parents']) {
+    $variables['parents'] = array_reverse($variables['parents']);
+    foreach ($variables['parents'] as $p) {
+      if ($p->tid == $variables['tid']) {
         $title = $p->name;
       }
       else {
@@ -903,15 +906,10 @@ function theme_forum_display($forums, $topics, $parents, $tid, $sortby, $forum_p
   $breadcrumb[] = array('path' => $_GET['q']);
   menu_set_location($breadcrumb);
 
-  if (count($forums) || count($parents)) {
-    $output  = '<div id="forum">';
-    $output .= '<ul>';
+  $variables['forums_defined'] = count($variables['forums']) || count($variables['parents']);
+  if ($variables['forums_defined']) {
     // Format the "post new content" links listing.
     $forum_types = array();
-
-    // Load the vocabulary.
-    $forum_vid = variable_get('forum_nav_vocabulary', '');
-    $vocabulary = taxonomy_vocabulary_load($forum_vid);
 
     // Loop through all node types for forum vocabulary.
     foreach ($vocabulary->nodes as $type) {
@@ -919,219 +917,225 @@ function theme_forum_display($forums, $topics, $parents, $tid, $sortby, $forum_p
       if (node_access('create', $type)) {
         // Fetch the "General" name of the content type;
         // Push the link with title and url to the array.
-        $forum_types[$type] = array('title' => t('Post new @node_type', array('@node_type' => node_get_types('name', $type))), 'href' => "node/add/$type/$tid");
+        $forum_types[$type] = array('title' => t('Post new @node_type', array('@node_type' => node_get_types('name', $type))), 'href' => "node/add/$type/$variables[tid]");
       }
     }
 
-    if (!empty($forum_types)) {
-      // Theme links for the prepared content types data.
-      $output .= theme('links', $forum_types);
-    }
-    else {
-      $output .= '<li>'. t('<a href="@login">Login</a> to post a new forum topic.', array('@login' => url('user/login', array('query' => drupal_get_destination())))) .'</li>';
+    if (empty($forum_types)) {
       // The user is logged-in; but denied access to create any new forum content type.
       if ($user->uid) {
-        $output .= t('You are not allowed to post new content in forum.');
+        $forum_types['disallowed'] = array('title' => t('You are not allowed to post new content in forum.'));
       }
       // The user is not logged-in; and denied access to create any new forum content type.
       else {
-        $output .= t('<a href="@login">Login</a> to post new content in forum.', array('@login' => url('user/login', array('query' => drupal_get_destination()))));
+        $forum_types['login'] = array('title' => t('<a href="@login">Login</a> to post new content in forum.', array('@login' => url('user/login', array('query' => drupal_get_destination())))), 'html' => TRUE);
       }
     }
-    $output .= '</ul>';
+    $variables['links'] = $forum_types;
 
-    $output .= theme('forum_list', $forums, $parents, $tid);
-
-    if ($tid && !in_array($tid, variable_get('forum_containers', array()))) {
-      $output .= theme('forum_topic_list', $tid, $topics, $sortby, $forum_per_page);
-      drupal_add_feed(url('taxonomy/term/'. $tid .'/0/feed'), 'RSS - '. $title);
+    if (!empty($variables['forums'])) {
+      $variables['forums'] = theme('forum_list', $variables['forums'], $variables['parents'], $variables['tid']);
     }
-    $output .= '</div>';
+    else {
+      $variables['forums'] = '';
+    }
+
+    if ($variables['tid'] && !in_array($variables['tid'], variable_get('forum_containers', array()))) {
+      $variables['topics'] = theme('forum_topic_list', $variables['tid'], $variables['topics'], $variables['sortby'], $variables['forum_per_page']);
+      drupal_add_feed(url('taxonomy/term/'. $variables['tid'] .'/0/feed'), 'RSS - '. $title);
+    }
+    else {
+      $variables['topics'] = '';
+    }
+
+    // Provide separate template suggestions based on what's being output. Topic id is also accounted for.
+    // Check both variables to be safe.
+    if ($variables['forums'] && !$variables['topics']) {
+      $variables['template_files'][] = 'forum-display-container';
+      $variables['template_files'][] = 'forum-display-container-'. $variables['tid'];
+    }
+    else {
+      $variables['template_files'][] = 'forum-display-topics';
+      $variables['template_files'][] = 'forum-display-topics-'. $variables['tid'];
+    }
+
   }
   else {
     drupal_set_title(t('No forums defined'));
-    $output = '';
   }
-
-  return $output;
 }
 
 /**
- * Format the forum listing.
+ * Process variables to format a forum listing.
  *
- * @ingroup themeable
+ * $variables contains the following information:
+ * - $forums
+ * - $parents
+ * - $tid
+ *
+ * @see forum-list.tpl.php
+ * @see theme_forum_list()
  */
-function theme_forum_list($forums, $parents, $tid) {
+function template_preprocess_forum_list(&$variables) {
   global $user;
-
-  if ($forums) {
-
-    $header = array(t('Forum'), t('Topics'), t('Posts'), t('Last post'));
-
-    foreach ($forums as $forum) {
-      if (!empty($forum->container)) {
-        $description  = '<div style="margin-left: '. ($forum->depth * 30) ."px;\">\n";
-        $description .= ' <div class="name">'. l($forum->name, "forum/$forum->tid") ."</div>\n";
-
-        if (!empty($forum->description)) {
-          $description .= ' <div class="description">'. filter_xss_admin($forum->description) ."</div>\n";
-        }
-        $description .= "</div>\n";
-
-        $rows[] = array(array('data' => $description, 'class' => 'container', 'colspan' => '4'));
+  // Sanitize each forum so that the template can safely print the data.
+  foreach ($variables['forums'] as $id => $forum) {
+    $variables['forums'][$id]->description = !empty($forum->description) ? filter_xss_admin($forum->description) : '';
+    $variables['forums'][$id]->link = url("forum/$forum->tid");
+    $variables['forums'][$id]->name = check_plain($forum->name);
+    $variables['forums'][$id]->is_container = !empty($forum->container);
+    if ($user->uid) {
+      $variables['forums'][$id]->new_topics = _forum_topics_unread($forum->tid, $user->uid);
+      if ($variables['forums'][$id]->new_topics) {
+        $variables['forums'][$id]->new_text = format_plural($variables['forums'][$id]->new_topics, '1 new', '@count new');
+        $variables['forums'][$id]->new_url = url("forum/$forum->tid", array('fragment' => 'new'));
       }
-      else {
-        $new_topics = _forum_topics_unread($forum->tid, $user->uid);
-        $forum->old_topics = $forum->num_topics - $new_topics;
-        if (!$user->uid) {
-          $new_topics = 0;
-        }
-
-        $description  = '<div style="margin-left: '. ($forum->depth * 30) ."px;\">\n";
-        $description .= ' <div class="name">'. l($forum->name, "forum/$forum->tid") ."</div>\n";
-
-        if (!empty($forum->description)) {
-          $description .= ' <div class="description">'. filter_xss_admin($forum->description) ."</div>\n";
-        }
-        $description .= "</div>\n";
-
-        $row = array(
-          'data' => array(
-            array('data' => $description, 'class' => 'forum'),
-            array('data' => $forum->num_topics . ($new_topics ? '<br />'. l(format_plural($new_topics, '1 new', '@count new'), "forum/$forum->tid", array('fragment' => 'new')) : ''), 'class' => 'topics'),
-            array('data' => $forum->num_posts, 'class' => 'posts'),
-            array('data' => _forum_format($forum->last_post), 'class' => 'last-reply'),
-          ),
-        );
-        if ($new_topics > 0) {
-          $row['class'] = 'new-topics';
-        }
-        $rows[] = $row;
-      }
+      $variables['forums'][$id]->old_topics = $forum->num_topics - $variables['forums'][$id]->new_topics;
     }
-
-    return theme('table', $header, $rows);
-
+    else {
+      $variables['forums'][$id]->new_topics = 0;
+      $variables['forums'][$id]->old_topics = $forum->num_topics;
+    }
+    $variables['forums'][$id]->last_reply = theme('forum_format_topic', $forum->last_post);
   }
-
 }
 
 /**
- * Format the topic listing.
+ * Preprocess variables to format the topic listing.
  *
- * @ingroup themeable
+ * $variables contains the following data:
+ * - $tid
+ * - $topics
+ * - $sortby
+ * - $forum_per_page
+ *
+ * @see forum-topic-list.tpl.php
+ * @see theme_forum_topic_list()
  */
-function theme_forum_topic_list($tid, $topics, $sortby, $forum_per_page) {
+function template_preprocess_forum_topic_list(&$variables) {
   global $forum_topic_list_header;
-  $rows = array();
-  if ($topics) {
 
-    foreach ($topics as $topic) {
-      // folder is new if topic is new or there are new comments since last visit
-      if ($topic->tid != $tid) {
-        $rows[] = array(
-          array('data' => theme('forum_icon', $topic->new, $topic->num_comments, $topic->comment_mode, $topic->sticky), 'class' => 'icon'),
-          array('data' => check_plain($topic->title), 'class' => 'title'),
-          array('data' => l(t('This topic has been moved'), "forum/$topic->tid"), 'colspan' => '3')
-        );
+  // Create the tablesorting header.
+  $ts = tablesort_init($forum_topic_list_header);
+  $header = '';
+  foreach ($forum_topic_list_header as $cell) {
+    $cell = tablesort_header($cell, $forum_topic_list_header, $ts);
+    $header .= _theme_table_cell($cell, TRUE);
+  }
+  $variables['header'] = $header;
+
+  $rows = array();
+  if (!empty($variables['topics'])) {
+    foreach ($variables['topics'] as $id => $topic) {
+      $variables['topics'][$id]->icon = theme('forum_icon', $topic->new, $topic->num_comments, $topic->comment_mode, $topic->sticky);
+
+      if ($topic->tid != $variables['tid']) {
+        $variables['topics'][$id]->moved = TRUE;
+        $variables['topics'][$id]->title = check_plain($topic->title);
+        $variables['topics'][$id]->description = l(t('This topic has been moved'), "forum/$topic->tid");
       }
       else {
-        $rows[] = array(
-          array('data' => theme('forum_icon', $topic->new, $topic->num_comments, $topic->comment_mode, $topic->sticky), 'class' => 'icon'),
-          array('data' => l($topic->title, "node/$topic->nid"), 'class' => 'topic'),
-          array('data' => $topic->num_comments . ($topic->new_replies ? '<br />'. l(format_plural($topic->new_replies, '1 new', '@count new'), "node/$topic->nid", array('fragment' => 'new')) : ''), 'class' => 'replies'),
-          array('data' => _forum_format($topic), 'class' => 'created'),
-          array('data' => _forum_format(isset($topic->last_reply) ? $topic->last_reply : NULL), 'class' => 'last-reply')
-        );
+        $variables['topics'][$id]->moved = FALSE;
+        $variables['topics'][$id]->title = l($topic->title, "node/$topic->nid");
+        if ($topic->new_replies) {
+          $variables['topics'][$id]->new_text = format_plural($topic->new_replies, '1 new', '@count new');
+          $variables['topics'][$id]->new_url = url("node/$topic->nid", array('fragment' => 'new'));
+        }
+        $variables['topics'][$id]->created = theme('forum_format_topic', $topic);
+        $variables['topics'][$id]->last_reply = theme('forum_format_topic', isset($topic->last_reply) ? $topic->last_reply : NULL);
       }
     }
-  }
-
-  $output = theme('table', $forum_topic_list_header, $rows);
-  $output .= theme('pager', NULL, $forum_per_page, 0);
-
-  return $output;
-}
-
-/**
- * Format the icon for each individual topic.
- *
- * @ingroup themeable
- */
-function theme_forum_icon($new_posts, $num_posts = 0, $comment_mode = 0, $sticky = 0) {
-
-  if ($num_posts > variable_get('forum_hot_topic', 15)) {
-    $icon = $new_posts ? 'hot-new' : 'hot';
   }
   else {
-    $icon = $new_posts ? 'new' : 'default';
+    // Make this safe for the template
+    $variables['topics'] = array();
   }
 
-  if ($comment_mode == COMMENT_NODE_READ_ONLY || $comment_mode == COMMENT_NODE_DISABLED) {
-    $icon = 'closed';
-  }
-
-  if ($sticky == 1) {
-    $icon = 'sticky';
-  }
-
-  $output = theme('image', "misc/forum-$icon.png");
-
-  if ($new_posts) {
-    $output = "<a name=\"new\">$output</a>";
-  }
-
-  return $output;
+  $variables['pager'] = theme('pager', NULL, $variables['forum_per_page'], 0);
 }
 
 /**
- * Format the next/previous forum topic navigation links.
+ * Process variables to format the icon for each individual topic.
  *
- * @ingroup themeable
+ * $variables contains the following data:
+ * - $new_posts
+ * - $num_posts = 0
+ * - $comment_mode = 0
+ * - $sticky = 0
+ *
+ * @see forum-icon.tpl.php
+ * @see theme_forum_icon()
  */
-function theme_forum_topic_navigation($node) {
+function template_preprocess_forum_icon(&$variables) {
+  $variables['hot_threshold'] = variable_get('forum_hot_topic', 15);
+  if ($variables['num_posts'] > $variables['hot_threshold']) {
+    $variables['icon'] = $variables['new_posts'] ? 'hot-new' : 'hot';
+  }
+  else {
+    $variables['icon'] = $variables['new_posts'] ? 'new' : 'default';
+  }
+
+  if ($variables['comment_mode'] == COMMENT_NODE_READ_ONLY || $variables['comment_mode'] == COMMENT_NODE_DISABLED) {
+    $variables['icon'] = 'closed';
+  }
+
+  if ($variables['sticky'] == 1) {
+    $variables['icon'] = 'sticky';
+  }
+}
+
+/**
+ * Preprocess variables to format the next/previous forum topic navigation links.
+ *
+ * $variables contains $node.
+ *
+ * @see forum-topic-navigation.tpl.php
+ * @see theme_forum_topic_navigation
+ */
+function template_preprocess_forum_topic_navigation(&$variables) {
   $output = '';
 
   // get previous and next topic
   $sql = "SELECT n.nid, n.title, n.sticky, l.comment_count, l.last_comment_timestamp FROM {node} n INNER JOIN {node_comment_statistics} l ON n.nid = l.nid INNER JOIN {term_node} r ON n.nid = r.nid AND r.tid = %d WHERE n.status = 1 ORDER BY n.sticky DESC, ". _forum_get_topic_order_sql(variable_get('forum_order', 1));
-  $result = db_query(db_rewrite_sql($sql), isset($node->tid) ? $node->tid : 0);
+  $result = db_query(db_rewrite_sql($sql), isset($variables['node']->tid) ? $variables['node']->tid : 0);
 
-  $stop = 0;
+  $stop = $variables['prev'] = $variables['next'] = 0;
+
   while ($topic = db_fetch_object($result)) {
     if ($stop == 1) {
-      $next = new stdClass();
-      $next->nid = $topic->nid;
-      $next->title = $topic->title;
+      $variables['next'] = $topic->nid;
+      $variables['next_title'] = check_plain($topic->title);
+      $variables['next_url'] = url("node/$topic->nid");
       break;
     }
-    if ($topic->nid == $node->nid) {
+    if ($topic->nid == $variables['node']->nid) {
       $stop = 1;
     }
     else {
-      $prev = new stdClass();
-      $prev->nid = $topic->nid;
-      $prev->title = $topic->title;
+      $variables['prev'] = $topic->nid;
+      $variables['prev_title'] = check_plain($topic->title);
+      $variables['prev_url'] = url("node/$topic->nid");
     }
   }
+}
 
-  if (!empty($prev) || !empty($next)) {
-    $output .= '<div class="forum-topic-navigation clear-block">';
-
-    if (!empty($prev)) {
-      $output .= l(t('‹ ') . $prev->title, 'node/'. $prev->nid, array('class' => 'topic-previous', 'title' => t('Go to previous forum topic')));
-    }
-    if (!empty($prev) && !empty($next)) {
-      // Word break (a is an inline element)
-      $output .= ' ';
-    }
-    if (!empty($next)) {
-      $output .= l($next->title . t(' ›'), 'node/'. $next->nid, array('class' => 'topic-next', 'title' => t('Go to next forum topic')));
-    }
-
-    $output .= '</div>';
+/**
+ * Process variables to format a topic for display in the forum list and topic list.
+ *
+ * $variables will contain: $topic
+ *
+ * @see forum-format-topic.tpl.php
+ * @see theme_forum_format_topic
+ */
+function template_preprocess_forum_format_topic(&$variables) {
+  if (empty($variables['topic']) || empty($variables['topic']->timestamp)) {
+    $variables['topic'] = new stdClass();
+    $variables['topic']->timestamp = 0;
   }
-
-  return $output;
+  else {
+    $variables['time'] = format_interval(time() - $variables['topic']->timestamp);
+    $variables['author'] = theme('username', $variables['topic']);
+  }
 }
 
 function _forum_user_last_visit($nid) {
