@@ -1,5 +1,5 @@
 <?php
-// $Id: block.admin.inc,v 1.2 2007/07/18 14:08:08 dries Exp $
+// $Id: block.admin.inc,v 1.3 2007/07/22 06:48:25 dries Exp $
 
 /**
  * @file
@@ -358,4 +358,3 @@ function template_preprocess_block_admin_display(&$variables) {
 
   $variables['form_submit'] = drupal_render($variables['form']);
 }
-drupal_rebuild_theme_registry();
