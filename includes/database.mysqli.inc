@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysqli.inc,v 1.39 2007/07/22 07:23:27 dries Exp $
+// $Id: database.mysqli.inc,v 1.40 2007/07/23 08:05:14 dries Exp $
 
 /**
  * @file
@@ -178,8 +178,8 @@ function db_fetch_object($result) {
  * @param $result
  *   A database query result resource, as returned from db_query().
  * @return
- *   An associative array representing the next row of the result, or FALSE. 
- *   The keys of this object are the names of the table fields selected by the 
+ *   An associative array representing the next row of the result, or FALSE.
+ *   The keys of this object are the names of the table fields selected by the
  *   query, and the values are the field values for this result row.
  */
 function db_fetch_array($result) {
