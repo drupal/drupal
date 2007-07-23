@@ -1,5 +1,5 @@
 <?php
-// $Id: session.inc,v 1.40 2007/05/25 15:04:41 dries Exp $
+// $Id: session.inc,v 1.41 2007/07/23 07:29:29 dries Exp $
 
 /**
  * @file
@@ -75,8 +75,9 @@ function sess_write($key, $value) {
   else {
     db_query("UPDATE {sessions} SET uid = %d, cache = %d, hostname = '%s', session = '%s', timestamp = %d WHERE sid = '%s'", $user->uid, isset($user->cache) ? $user->cache : '', ip_address(), $value, time(), $key);
 
-    // TODO: this can be an expensive query. Perhaps only execute it every x minutes. Requires investigation into cache expiration.
-    if ($user->uid) {
+    // Last access time is updated no more frequently than once every 180 seconds.
+    // This reduces contention in the users table.
+    if ($user->uid && time() - $user->access > variable_get('session_write_interval', 180)) {
       db_query("UPDATE {users} SET access = %d WHERE uid = %d", time(), $user->uid);
     }
   }
