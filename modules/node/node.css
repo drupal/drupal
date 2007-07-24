@@ -1,9 +1,9 @@
 /* $Id$ */
 
-.node-unpublished, .comment-unpublished {
+.node-unpublished {
   background-color: #fff4f4;
 }
-.preview .node, .preview .comment {
+.preview .node {
   background-color: #ffffea;
 }
 #node-admin-filter ul {

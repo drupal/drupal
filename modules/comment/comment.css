@@ -3,3 +3,9 @@
 .indented {
   margin-left: 25px;
 }
+.comment-unpublished {
+  background-color: #fff4f4;
+}
+.preview .comment {
+  background-color: #ffffea;
+}
