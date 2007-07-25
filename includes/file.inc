@@ -725,7 +725,7 @@ function file_validate_image_resolution(&$file, $maximum_dimensions = 0, $minimu
     if ($minimum_dimensions) {
       // Check that it is larger than the given dimensions.
       list($width, $height) = explode('x', $minimum_dimensions);
-      if ($info['width'] < $width || $info['height'] < $maxheight) {
+      if ($info['width'] < $width || $info['height'] < $height) {
         $errors[] = t('The image is too small; the minimum dimensions are %dimensions pixels.', array('%dimensions' => $minimum_dimensions));
       }
     }
