@@ -914,7 +914,7 @@ function install_configure_form() {
 if (Drupal.jsEnabled) {
   $(document).ready(function() {
     Drupal.cleanURLsInstallCheck();
-    Drupal.installDefaultTimezone();
+    Drupal.setDefaultTimezone();
   });
 }', 'inline');
 

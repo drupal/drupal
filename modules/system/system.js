@@ -60,11 +60,6 @@ Drupal.cleanURLsInstallCheck = function() {
   $("#clean-url").addClass('clean-url-processed');
 };
 
-Drupal.installDefaultTimezone = function() {
-  var offset = new Date().getTimezoneOffset() * -60;
-  $("#edit-date-default-timezone").val(offset);
-};
-
 /**
  * Show/hide custom format sections on the date-time settings page.
  */
