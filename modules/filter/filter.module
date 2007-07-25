@@ -495,7 +495,12 @@ function filter_admin_format_form_submit($form, &$form_state) {
       }
     }
   }
-  $roles = ','. implode(',', ($form_state['values']['default_format'] ? array_keys(user_roles()) : $roles)) .',';
+  if (!empty($form_state['values']['default_format'])) {
+    $roles = ','. implode(',', array_keys(user_roles())) .',';
+  }
+  else {
+    $roles = ','. implode(',', $roles) .',';
+  }
 
   db_query("UPDATE {filter_formats} SET cache = %d, name='%s', roles = '%s' WHERE format = %d", $cache, $name, $roles, $format);
 
