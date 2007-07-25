@@ -982,6 +982,13 @@ function menu_get_names($reset = FALSE) {
 }
 
 /**
+ * Return an array containing the names of system-defined (default) menus.
+ */
+function menu_list_system_menus() {
+  return array('navigation', 'primary-links', 'secondary-links');
+}
+
+/**
  * Return an array of links to be rendered as the Primary links.
  */
 function menu_primary_links() {
