@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.188 2007/07/17 06:13:34 goba Exp $
+// $Id: menu.inc,v 1.189 2007/07/25 14:44:03 goba Exp $
 
 /**
  * @file
@@ -979,6 +979,13 @@ function menu_get_names($reset = FALSE) {
     }
   }
   return $names;
+}
+
+/**
+ * Return an array containing the names of system-defined (default) menus.
+ */
+function menu_list_system_menus() {
+  return array('navigation', 'primary-links', 'secondary-links');
 }
 
 /**

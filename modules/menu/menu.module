@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.130 2007/07/16 12:51:03 dries Exp $
+// $Id: menu.module,v 1.131 2007/07/25 14:44:03 goba Exp $
 
 /**
  * @file
@@ -86,6 +86,11 @@ function menu_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('menu_edit_menu', 'edit', 3),
     'type' => MENU_LOCAL_TASK);
+  $items['admin/build/menu-customize/%menu/delete'] = array(
+    'title' => 'Delete menu',
+    'page callback' => 'menu_delete_menu_page',
+    'page arguments' => array(3),
+    'type' => MENU_CALLBACK);
   $items['admin/build/menu/item/%menu_link/disable'] = array(
     'title' => 'Disable menu item',
     'page callback' => 'menu_flip_item',
@@ -104,12 +109,12 @@ function menu_menu() {
   $items['admin/build/menu/item/%menu_link/reset'] = array(
     'title' => 'Reset menu item',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('menu_reset_item', 4),
+    'page arguments' => array('menu_reset_item_confirm', 4),
     'type' => MENU_CALLBACK);
   $items['admin/build/menu/item/%menu_link/delete'] = array(
     'title' => 'Delete menu item',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('menu_item_delete_form', 4),
+    'page callback' => 'menu_item_delete_page',
+    'page arguments' => array(4),
     'type' => MENU_CALLBACK);
 
   return $items;
@@ -133,6 +138,7 @@ function menu_enable() {
     $link['link_path'] = 'admin/build/menu-customize/'. $menu['menu_name'];
     menu_link_save($link);
   }
+  menu_cache_clear_all();
 }
 
 /**
@@ -405,6 +411,13 @@ function menu_edit_menu(&$form_state, $type, $menu = array()) {
   if ($type == 'edit') {
     $form['menu_name'] = array('#type' => 'value', '#value' => $menu['menu_name']);
     $form['#insert'] = FALSE;
+    $form['delete'] = array(
+      '#type' => 'submit',
+      '#value' => t('Delete'),
+      '#access' => !in_array($menu['menu_name'], menu_list_system_menus()),
+      '#submit' => array('menu_custom_delete_submit'),
+      '#weight' => 10,
+    );
   }
   else {
     $menu = array('menu_name' => '', 'title' => '', 'description' => '');
@@ -434,6 +447,72 @@ function menu_edit_menu(&$form_state, $type, $menu = array()) {
   );
 
   return $form;
+}
+
+/**
+ * Submit function for the 'Delete' button on the menu editing form.
+ */
+function menu_custom_delete_submit($form, &$form_state) {
+  $form_state['redirect'] = 'admin/build/menu-customize/'. $form_state['values']['menu_name'] .'/delete';
+}
+
+/**
+ * Menu callback; check access and get a confirm form for deletion of a custom menu.
+ */
+function menu_delete_menu_page($menu) {
+  // System-defined menus may not be deleted.
+  if (in_array($menu['menu_name'], menu_list_system_menus())) {
+    drupal_access_denied();
+    return;
+  }
+  return drupal_get_form('menu_delete_menu_confirm', $menu);
+}
+
+/**
+ * Build a confirm form for deletion of a custom menu.
+ */
+function menu_delete_menu_confirm(&$form_state, $menu) {
+  $form['#menu'] = $menu;
+  $caption = '';
+  $num_links = db_result(db_query("SELECT COUNT(*) FROM {menu_links} WHERE menu_name = '%s'", $menu['menu_name']));
+  if ($num_links) {
+    $caption .= '<p>'. format_plural($num_links, '<strong>Warning:</strong> There is currently 1 menu item in %title. It will be deleted (system-defined items will be reset).', '<strong>Warning:</strong> There are currently @count menu items in %title. They will be deleted (system-defined items will be reset).', array('%title' => $menu['title'])) .'</p>';
+  }
+  $caption .= '<p>'. t('This action cannot be undone.') .'</p>';  
+  return confirm_form($form, t('Are you sure you want to delete the custom menu %title?', array('%title' => $menu['title'])), 'admin/build/menu-customize/'. $menu['menu_name'], $caption, t('Delete'));
+}
+
+/**
+ * Delete a custom menu and all items in it.
+ */
+function menu_delete_menu_confirm_submit($form, &$form_state) {
+  $menu = $form['#menu'];
+  $form_state['redirect'] = 'admin/build/menu';
+  // System-defined menus may not be deleted - only menus defined by this module.
+  if (in_array($menu['menu_name'], menu_list_system_menus())  || !db_result(db_query("SELECT COUNT(*) FROM {menu_custom} WHERE menu_name = '%s'", $menu['menu_name']))) {
+    return;
+  }
+  // Reset all the menu links defined by the system via hook_menu.
+  $result = db_query("SELECT * FROM {menu_links} ml INNER JOIN {menu_router} m ON ml.router_path = m.path WHERE ml.menu_name = '%s' AND ml.module = 'system' ORDER BY m.number_parts ASC", $menu['menu_name']);
+  while ($item = db_fetch_array($result)) {
+    menu_reset_item($item);
+  }
+  // Delete all links to the overview page for this menu.
+  $result = db_query("SELECT mlid FROM {menu_links} ml WHERE ml.link_path = '%s'", 'admin/build/menu-customize/'. $menu['menu_name']);
+  while ($m = db_fetch_array($result)) {
+     menu_link_delete($m['mlid']);
+  }
+  // Delete all the links in the menu and the menu from the list of custom menus.
+  db_query("DELETE FROM {menu_links} WHERE menu_name = '%s'", $menu['menu_name']);
+  db_query("DELETE FROM {menu_custom} WHERE menu_name = '%s'", $menu['menu_name']);
+  // Delete all the blocks for this menu.
+  db_query("DELETE FROM {blocks} WHERE module = 'menu' AND delta = '%s'", $menu['menu_name']);
+  db_query("DELETE FROM {blocks_roles} WHERE module = 'menu' AND delta = '%s'", $menu['menu_name']);
+  menu_cache_clear_all();
+  cache_clear_all();
+  $t_args = array('%title' => $menu['title']);
+  drupal_set_message(t('The custom menu %title has been deleted.', $t_args));
+  watchdog('menu', 'Deleted custom menu %title and all its menu items.', $t_args, WATCHDOG_NOTICE);
 }
 
 /**
@@ -484,12 +563,21 @@ function menu_edit_menu_submit($form, &$form_state) {
 }
 
 /**
- * Menu callback; Build a confirm form for deletion of a single menu link.
+ * Menu callback; Check access and present a confirm form for deleting a menu link.
  */
-function menu_item_delete_form(&$form_state, $item) {
+function menu_item_delete_page($item) {
+  // Links defined via hook_menu may not be deleted.
   if ($item['module'] == 'system') {
     drupal_access_denied();
+    return;
   }
+  return drupal_get_form('menu_item_delete_form', $item);
+}
+
+/**
+ * Build a confirm form for deletion of a single menu link.
+ */
+function menu_item_delete_form(&$form_state, $item) {
   $form['#item'] = $item;
   return confirm_form($form, t('Are you sure you want to delete the custom menu item %item?', array('%item' => $item['link_title'])), 'admin/build/menu-customize/'. $item['menu_name']);
 }
@@ -509,7 +597,7 @@ function menu_item_delete_form_submit($form, &$form_state) {
 /**
  * Menu callback; reset a single modified item.
  */
-function menu_reset_item(&$form_state, $item) {
+function menu_reset_item_confirm(&$form_state, $item) {
   $form['item'] = array('#type' => 'value', '#value' => $item);
   return confirm_form($form, t('Are you sure you want to reset the item %item to its default values?', array('%item' => $item['link_title'])), 'admin/build/menu-customize/'. $item['menu_name'], t('Any customizations will be lost. This action cannot be undone.'), t('Reset'));
 }
@@ -517,16 +605,24 @@ function menu_reset_item(&$form_state, $item) {
 /**
  * Process menu reset item form submissions.
  */
-function menu_reset_item_submit($form, &$form_state) {
+function menu_reset_item_confirm_submit($form, &$form_state) {
   $item = $form_state['values']['item'];
+  $new_item = menu_reset_item($item);
+  drupal_set_message(t('The menu item was reset to its default settings.'));
+  $form_state['redirect'] = 'admin/build/menu-customize/'. $new_item['menu_name'];
+}
+
+/**
+ * Reset a system-defined menu item.
+ */
+function menu_reset_item($item) {
   $router = menu_router_build();
   $new_item = _menu_link_build($router[$item['router_path']]);
   foreach (array('mlid', 'has_children') as $key) {
     $new_item[$key] = $item[$key];
   }
   menu_link_save($new_item);
-  drupal_set_message(t('The menu item was reset to its default settings.'));
-  $form_state['redirect'] = 'admin/build/menu-customize/'. $new_item['menu_name'];
+  return $new_item;
 }
 
 /**
@@ -682,9 +778,13 @@ function menu_node_form_submit($form, &$form_state) {
  *   titles as the values.
  */
 function menu_get_menus($all = TRUE) {
-  $sql = 'SELECT * FROM {menu_custom}'. ($all ? '' : " WHERE menu_name NOT IN ('navigation', 'primary-links', 'secondary-links')") .' ORDER BY title';
-  $result = db_query($sql);
-
+  $system_menus = menu_list_system_menus();
+  $sql = 'SELECT * FROM {menu_custom}';
+  if (!$all) {
+    $sql .= ' WHERE menu_name NOT IN ('. implode(',', array_fill(0, count($system_menus), "'%s'")) .')';
+  }
+  $sql .= ' ORDER BY title';
+  $result = db_query($sql, $system_menus);
   $rows = array();
   while ($r = db_fetch_array($result)) {
     $rows[$r['menu_name']] = $r['title'];
