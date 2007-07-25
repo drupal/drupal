@@ -1,4 +1,4 @@
-// $Id: system.js,v 1.9 2007/07/01 15:37:09 dries Exp $
+// $Id: system.js,v 1.10 2007/07/25 17:35:47 goba Exp $
 
 /**
  * Internal function to check using Ajax if clean URLs can be enabled on the
@@ -58,11 +58,6 @@ Drupal.cleanURLsInstallCheck = function() {
     }
   }});
   $("#clean-url").addClass('clean-url-processed');
-};
-
-Drupal.installDefaultTimezone = function() {
-  var offset = new Date().getTimezoneOffset() * -60;
-  $("#edit-date-default-timezone").val(offset);
 };
 
 /**

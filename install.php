@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.69 2007/07/20 05:40:14 dries Exp $
+// $Id: install.php,v 1.70 2007/07/25 17:35:47 goba Exp $
 
 require_once './includes/install.inc';
 
@@ -914,7 +914,7 @@ function install_configure_form() {
 if (Drupal.jsEnabled) {
   $(document).ready(function() {
     Drupal.cleanURLsInstallCheck();
-    Drupal.installDefaultTimezone();
+    Drupal.setDefaultTimezone();
   });
 }', 'inline');
 
