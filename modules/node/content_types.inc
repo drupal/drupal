@@ -18,7 +18,6 @@ function node_overview_types() {
   foreach ($names as $key => $name) {
     $type = $types[$key];
     if (function_exists($type->module .'_form')) {
-      $name = check_plain($name);
       $type_url_str = str_replace('_', '-', $type->type);
       // Populate the operations field.
       $operations = array();

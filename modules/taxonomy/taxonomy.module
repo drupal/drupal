@@ -152,7 +152,7 @@ function taxonomy_overview_vocabularies() {
     $types = array();
     foreach ($vocabulary->nodes as $type) {
       $node_type = node_get_types('name', $type);
-      $types[] = $node_type ? $node_type : $type;
+      $types[] = $node_type ? check_plain($node_type) : check_plain($type);
     }
     $rows[] = array('name' => check_plain($vocabulary->name),
       'type' => implode(', ', $types),
@@ -251,7 +251,7 @@ function taxonomy_form_vocabulary($edit = array()) {
   $form['nodes'] = array('#type' => 'checkboxes',
     '#title' => t('Types'),
     '#default_value' => $edit['nodes'],
-    '#options' => node_get_types('names'),
+    '#options' => array_map('check_plain', node_get_types('names')),
     '#description' => t('A list of node types you want to associate with this vocabulary.'),
     '#required' => TRUE,
   );

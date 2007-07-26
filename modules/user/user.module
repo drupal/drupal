@@ -656,7 +656,7 @@ function theme_user_profile($account, $fields) {
   $output .= theme('user_picture', $account);
   foreach ($fields as $category => $items) {
     if (strlen($category) > 0) {
-      $output .= '<h2 class="title">'. $category .'</h2>';
+      $output .= '<h2 class="title">'. check_plain($category) .'</h2>';
     }
     $output .= '<dl>';
     foreach ($items as $item) {

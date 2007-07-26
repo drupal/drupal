@@ -1,9 +1,11 @@
 // $Id$
 
-Drupal 5.2, xxxx-xx-xx
+Drupal 5.2, 2007-07-26
 ----------------------
 - changed hook_link() $teaser argument to match documentation.
 - fixed a variety of small bugs.
+- fixed a security issue (cross-site request forgery), see SA-2007-017
+- fixed a security issue (cross-site scripting), see SA-2007-018
 
 Drupal 5.1, 2007-01-29
 ----------------------
@@ -86,6 +88,10 @@ Drupal 5.0, 2007-01-15
     * split up and removed drupal.css.
     * added nested lists generation.
     * added a self-clearing block class.
+
+Drupal 4.7.7, 2007-07-26
+------------------------
+- fixed security issue (XSS), see SA-2007-018
 
 Drupal 4.7.6, 2007-01-29
 ------------------------

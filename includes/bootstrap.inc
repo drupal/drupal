@@ -200,7 +200,7 @@ function conf_path() {
   }
 
   $confdir = 'sites';
-  $uri = explode('/', $_SERVER['PHP_SELF'] ? $_SERVER['PHP_SELF'] : $_SERVER['SCRIPT_FILENAME']);
+  $uri = explode('/', $_SERVER['SCRIPT_NAME'] ? $_SERVER['SCRIPT_NAME'] : $_SERVER['SCRIPT_FILENAME']);
   $server = explode('.', implode('.', array_reverse(explode(':', rtrim($_SERVER['HTTP_HOST'], '.')))));
   for ($i = count($uri) - 1; $i > 0; $i--) {
     for ($j = count($server); $j > 0; $j--) {
@@ -255,8 +255,14 @@ function conf_init() {
   else {
     // Create base URL
     $base_root = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http';
-    $base_url = $base_root .= '://'. $_SERVER['HTTP_HOST'];
-    if ($dir = trim(dirname($_SERVER['PHP_SELF']), '\,/')) {
+
+    // As $_SERVER['HTTP_HOST'] is user input, ensure it only contains
+    // characters allowed in hostnames.
+    $base_url = $base_root .= '://'. preg_replace('/[^a-z0-9-:._]/i', '', $_SERVER['HTTP_HOST']);
+
+    // $_SERVER['SCRIPT_NAME'] can, in contrast to $_SERVER['PHP_SELF'], not
+    // be modified by a visitor.
+    if ($dir = trim(dirname($_SERVER['SCRIPT_NAME']), '\,/')) {
       $base_path = "/$dir";
       $base_url .= $base_path;
       $base_path .= '/';
@@ -279,8 +285,9 @@ function conf_init() {
     // to use the same session identifiers across http and https.
     list( , $session_name) = explode('://', $base_url, 2);
     // We try to set the cookie domain to the hostname.
+    // We escape the hostname because it can be modified by a visitor.
     if (!empty($_SERVER['HTTP_HOST'])) {
-      $cookie_domain = $_SERVER['HTTP_HOST'];
+      $cookie_domain = check_plain($_SERVER['HTTP_HOST']);
     }
   }
   // Strip leading periods, www., and port numbers from cookie domain.
@@ -635,10 +642,10 @@ function request_uri() {
   }
   else {
     if (isset($_SERVER['argv'])) {
-      $uri = $_SERVER['PHP_SELF'] .'?'. $_SERVER['argv'][0];
+      $uri = $_SERVER['SCRIPT_NAME'] .'?'. $_SERVER['argv'][0];
     }
     else {
-      $uri = $_SERVER['PHP_SELF'] .'?'. $_SERVER['QUERY_STRING'];
+      $uri = $_SERVER['SCRIPT_NAME'] .'?'. $_SERVER['QUERY_STRING'];
     }
   }
 

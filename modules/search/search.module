@@ -1233,7 +1233,7 @@ function theme_search_item($item, $type) {
   $output = ' <dt class="title"><a href="'. check_url($item['link']) .'">'. check_plain($item['title']) .'</a></dt>';
   $info = array();
   if ($item['type']) {
-    $info[] = $item['type'];
+    $info[] = check_plain($item['type']);
   }
   if ($item['user']) {
     $info[] = $item['user'];

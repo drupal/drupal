@@ -68,7 +68,8 @@ function menu_menu($may_cache) {
       'type' => MENU_CALLBACK);
     $items[] = array('path' => 'admin/build/menu/item/disable',
       'title' => t('Disable menu item'),
-      'callback' => 'menu_disable_item',
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('menu_confirm_disable_item'),
       'access' => user_access('administer menu'),
       'type' => MENU_CALLBACK);
     $items[] = array('path' => 'admin/build/menu/item/delete',
@@ -481,14 +482,24 @@ function menu_reset_item_submit($form_id, $form_values) {
 
 /**
  * Menu callback; hide a menu item.
+ *
+ * Presents a confirmation form to protect against cross site request forgeries.
  */
-function menu_disable_item($mid) {
+function menu_confirm_disable_item($mid, $token = NULL) {
+  global $user;
   $item = menu_get_item($mid);
-  $type = $item['type'];
+  $form = array();
+  $form['mid'] = array('#type' => 'value', '#value' => $mid);
+  $form['item'] = array('#type' => 'value', '#value' => $item);
+  return confirm_form($form, t('Are you sure you want to disable the menu item %menu-item?', array('%menu-item' =>  $item['title'])), 'admin/build/menu', ' ', t('Disable'), t('Cancel'));
+}
+
+function menu_confirm_disable_item_submit($form_id, $form_values) {
+  $type = $form_values['item']['type'];
   $type &= ~MENU_VISIBLE_IN_TREE;
   $type &= ~MENU_VISIBLE_IN_BREADCRUMB;
   $type |= MENU_MODIFIED_BY_ADMIN;
-  db_query('UPDATE {menu} SET type = %d WHERE mid = %d', $type, $mid);
+  db_query('UPDATE {menu} SET type = %d WHERE mid = %d', $type, $form_values['mid']);
   drupal_set_message(t('The menu item has been disabled.'));
   drupal_goto('admin/build/menu');
 }

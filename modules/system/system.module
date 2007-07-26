@@ -6,7 +6,7 @@
  * Configuration system that lets administrators modify the workings of the site.
  */
 
-define('VERSION', '5.2 dev');
+define('VERSION', '5.2');
 
 /**
  * Implementation of hook_help().
@@ -2011,7 +2011,7 @@ function system_theme_settings($key = '') {
         '#suffix' => '</div>',
       );
       foreach ($node_types as $type => $name) {
-        $form['node_info']["toggle_node_info_$type"] = array('#type' => 'checkbox', '#title' => $name, '#default_value' => $settings["toggle_node_info_$type"]);
+        $form['node_info']["toggle_node_info_$type"] = array('#type' => 'checkbox', '#title' => check_plain($name), '#default_value' => $settings["toggle_node_info_$type"]);
       }
     }
   }

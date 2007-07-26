@@ -111,7 +111,7 @@ function profile_block($op = 'list', $delta = 0, $edit = array()) {
     $fields = array();
     $result = db_query('SELECT name, title, weight, visibility FROM {profile_fields} WHERE visibility IN (%d, %d) ORDER BY weight', PROFILE_PUBLIC, PROFILE_PUBLIC_LISTINGS);
     while ($record = db_fetch_object($result)) {
-      $fields[$record->name] = $record->title;
+      $fields[$record->name] = check_plain($record->title);
     }
     $fields['user_profile'] = t('Link to full user profile');
     $form['profile_block_author_fields'] = array('#type' => 'checkboxes',
@@ -399,7 +399,7 @@ function profile_admin_overview() {
   $result = db_query('SELECT title, name, type, category, fid FROM {profile_fields} ORDER BY category, weight');
   $rows = array();
   while ($field = db_fetch_object($result)) {
-    $rows[] = array(check_plain($field->title), $field->name, _profile_field_types($field->type), $field->category, l(t('edit'), "admin/user/profile/edit/$field->fid"), l(t('delete'), "admin/user/profile/delete/$field->fid"));
+    $rows[] = array(check_plain($field->title), check_plain($field->name), _profile_field_types($field->type), check_plain($field->category), l(t('edit'), "admin/user/profile/edit/$field->fid"), l(t('delete'), "admin/user/profile/delete/$field->fid"));
   }
   if (count($rows) == 0) {
     $rows[] = array(array('data' => t('No fields defined.'), 'colspan' => '6'));
@@ -628,7 +628,7 @@ function profile_form_profile($edit, $user, $category, $register = FALSE) {
   while ($field = db_fetch_object($result)) {
     $category = $field->category;
     if (!isset($fields[$category])) {
-      $fields[$category] = array('#type' => 'fieldset', '#title' => $category, '#weight' => $w++);
+      $fields[$category] = array('#type' => 'fieldset', '#title' => check_plain($category), '#weight' => $w++);
     }
     switch ($field->type) {
       case 'textfield':
@@ -759,7 +759,7 @@ function theme_profile_block($account, $fields = array()) {
         $output .= "<p>$field->value</p>\n";
       }
       else {
-        $output .= "<p><strong>$field->title</strong><br />$field->value</p>\n";
+        $output .= '<p><strong>'. check_plain($field->title) ."</strong><br />$field->value</p>\n";
       }
     }
   }

@@ -35,7 +35,7 @@ function node_help($section) {
       return '<p>'. t('To create a new content type, enter the human-readable name, the machine-readable name, and all other relevant fields that are on this page. Once created, users of your site will be able to create posts that are instances of this content type.') .'</p>';
   }
 
-  if (arg(0) == 'node' && is_numeric(arg(1)) && arg(2) == 'revisions') {
+  if (arg(0) == 'node' && is_numeric(arg(1)) && arg(2) == 'revisions' && arg(3) == NULL) {
     return '<p>'. t('The revisions let you track differences between multiple versions of a post.') .'</p>';
   }
 
@@ -1159,11 +1159,10 @@ function node_menu($may_cache) {
 
     foreach (node_get_types() as $type) {
       if (function_exists($type->module .'_form')) {
-        $name = check_plain($type->name);
         $type_url_str = str_replace('_', '-', $type->type);
         $items[] = array(
           'path' => 'node/add/'. $type_url_str,
-          'title' => drupal_ucfirst($name),
+          'title' => drupal_ucfirst($type->name),
           'access' => node_access('create', $type->type),
         );
       }
@@ -1212,11 +1211,26 @@ function node_menu($may_cache) {
           'weight' => 1,
           'type' => MENU_CALLBACK);
         $revisions_access = ((user_access('view revisions') || user_access('administer nodes')) && node_access('view', $node) && db_result(db_query('SELECT COUNT(vid) FROM {node_revisions} WHERE nid = %d', arg(1))) > 1);
-        $items[] = array('path' => 'node/'. arg(1) .'/revisions', 'title' => t('Revisions'),
+        $items[] = array(
+          'path' => 'node/'. arg(1) .'/revisions',
+          'title' => t('Revisions'),
           'callback' => 'node_revisions',
           'access' => $revisions_access,
           'weight' => 2,
-          'type' => MENU_LOCAL_TASK);
+          'type' => MENU_LOCAL_TASK,
+        );
+        if (!is_null(arg(3))) {
+          $items[] = array(
+            'path' => 'node/'. arg(1) .'/revisions/'. arg(3) .'/delete',
+            'callback' => 'node_revision_delete',
+            'callback arguments' => array(arg(1), arg(3)), 
+          );
+          $items[] = array(
+            'path' => 'node/'. arg(1) .'/revisions/'. arg(3) .'/revert',
+            'callback' => 'node_revision_revert',
+            'callback arguments' => array(arg(1), arg(3)), 
+          );
+        }
       }
     }
 
@@ -1230,7 +1244,6 @@ function node_menu($may_cache) {
         $type = node_get_types('type', $type_name);
 
         if (!empty($type)) {
-          $type->name = check_plain($type->name);
           $type_url_str = str_replace('_', '-', $type->type);
 
           $items[] = array(
@@ -1569,7 +1582,7 @@ function node_admin_nodes() {
   while ($node = db_fetch_object($result)) {
     $nodes[$node->nid] = '';
     $form['title'][$node->nid] = array('#value' => l($node->title, 'node/'. $node->nid) .' '. theme('mark', node_mark($node->nid, $node->changed)));
-    $form['name'][$node->nid] =  array('#value' => node_get_types('name', $node));
+    $form['name'][$node->nid] =  array('#value' => check_plain(node_get_types('name', $node)));
     $form['username'][$node->nid] = array('#value' => theme('username', $node));
     $form['status'][$node->nid] =  array('#value' =>  ($node->status ? t('published') : t('not published')));
     $form['operations'][$node->nid] = array('#value' => l(t('edit'), 'node/'. $node->nid .'/edit', array(), $destination));
@@ -1696,16 +1709,7 @@ function node_revision_revert($nid, $revision) {
   $node = node_load($nid, $revision);
   if ((user_access('revert revisions') || user_access('administer nodes')) && node_access('update', $node)) {
     if ($node->vid) {
-      $node->revision = 1;
-      $node->log = t('Copy of the revision from %date.', array('%date' => format_date($node->revision_timestamp)));
-      if (module_exists('taxonomy')) {
-        $node->taxonomy = array_keys($node->taxonomy);
-      }
-
-      node_save($node);
-
-      drupal_set_message(t('%title has been reverted back to the revision from %revision-date', array('%revision-date' => format_date($node->revision_timestamp), '%title' => $node->title)));
-      watchdog('content', t('@type: reverted %title revision %revision.', array('@type' => t($node->type), '%title' => $node->title, '%revision' => $revision)));
+      return drupal_get_form('node_revision_revert_confirm', $node);
     }
     else {
       drupal_set_message(t('You tried to revert to an invalid revision.'), 'error');
@@ -1713,6 +1717,31 @@ function node_revision_revert($nid, $revision) {
     drupal_goto('node/'. $nid .'/revisions');
   }
   drupal_access_denied();
+}
+
+/**
+ * Ask for confirmation of the reversion to prevent against CSRF attacks.
+ */
+function node_revision_revert_confirm($node) {
+  $form['node'] = array('#type' => 'value', '#value' => $node);
+  return confirm_form($form, t('Are you sure you want to revert to the revision from %revision-date?', array('%revision-date' =>  format_date($node->revision_timestamp))), 'node/'. $node->nid .'/revisions', '', t('Revert'), t('Cancel'));
+}
+
+function node_revision_revert_confirm_submit($form_id, $form_values) {
+  $node = $form_values['node'];
+
+  $node->revision = 1;
+  $node->log = t('Copy of the revision from %date.', array('%date' => format_date($node->revision_timestamp)));
+  if (module_exists('taxonomy')) {
+    $node->taxonomy = array_keys($node->taxonomy);
+  }
+
+  node_save($node);
+
+  drupal_set_message(t('%title has been reverted back to the revision from %revision-date', array('%revision-date' => format_date($node->revision_timestamp), '%title' => $node->title)));
+  watchdog('content', t('@type: reverted %title revision %revision.', array('@type' => t($node->type), '%title' => $node->title, '%revision' => $revision)));
+
+  return 'node/'. $node->nid .'/revisions';
 }
 
 /**
@@ -1725,27 +1754,50 @@ function node_revision_delete($nid, $revision) {
     if (node_access('delete', $node)) {
       // Don't delete the current revision
       if ($revision != $node->vid) {
-        $node = node_load($nid, $revision);
-
-        db_query("DELETE FROM {node_revisions} WHERE nid = %d AND vid = %d", $nid, $revision);
-        node_invoke_nodeapi($node, 'delete revision');
-        drupal_set_message(t('Deleted %title revision %revision.', array('%title' => $node->title, '%revision' => $revision)));
-        watchdog('content', t('@type: deleted %title revision %revision.', array('@type' => t($node->type), '%title' => $node->title, '%revision' => $revision)));
+        if ($node = node_load($nid, $revision)) {
+          return drupal_get_form('node_revision_delete_confirm', $node);
+        }
+        else {
+          drupal_set_message(t('Deletion failed. You tried to delete a non-existing revision.'));
+        }
       }
-
       else {
         drupal_set_message(t('Deletion failed. You tried to delete the current revision.'));
       }
+
       if (db_result(db_query('SELECT COUNT(vid) FROM {node_revisions} WHERE nid = %d', $nid)) > 1) {
-        drupal_goto("node/$nid/revisions");
+        drupal_goto('node/'. $nid .'/revisions');
       }
       else {
-        drupal_goto("node/$nid");
+        drupal_goto('node/'. $nid);
       }
     }
   }
 
   drupal_access_denied();
+}
+
+/**
+ * Ask confirmation for revision deletion to prevent against CSRF attacks.
+ */
+function node_revision_delete_confirm($node) {
+  $form['node'] = array('#type' => 'value', '#value' => $node);
+  return confirm_form($form, t('Are you sure you want to delete the revision from %revision-date?', array('%revision-date' =>  format_date($node->revision_timestamp))), 'node/'. $node->nid .'/revisions', t('This action cannot be undone.'), t('Delete'), t('Cancel'));
+}
+
+function node_revision_delete_confirm_submit($form_id, $form_values) {
+  $node = $form_values['node'];
+  db_query("DELETE FROM {node_revisions} WHERE nid = %d AND vid = %d", $node->nid, $node->vid);
+  node_invoke_nodeapi($node, 'delete revision');
+  drupal_set_message(t('Deleted %title revision %revision.', array('%title' => $node->title, '%revision' => $node->vid)));
+  watchdog('content', t('@type: deleted %title revision %revision.', array('@type' => t($node->type), '%title' => $node->title, '%revision' => $node->vid)));
+
+  if (db_result(db_query('SELECT COUNT(vid) FROM {node_revisions} WHERE nid = %d', $node->nid)) > 1) {
+    return 'node/'. $node->nid .'/revisions';
+  }
+  else {
+    return 'node/'. $node->nid;
+  }
 }
 
 /**
@@ -2352,12 +2404,6 @@ function node_revisions() {
           }
         }
         break;
-      case 'revert':
-        node_revision_revert(arg(1), arg(3));
-        break;
-      case 'delete':
-        node_revision_delete(arg(1), arg(3));
-        break;
     }
   }
   drupal_not_found();
@@ -2536,7 +2582,7 @@ function node_form_alter($form_id, &$form) {
     }
 
     // Node types:
-    $types = node_get_types('names');
+    $types = array_map('check_plain', node_get_types('names'));
     $form['advanced']['type'] = array(
       '#type' => 'checkboxes',
       '#title' => t('Only of the type(s)'),
