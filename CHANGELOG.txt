@@ -1,5 +1,8 @@
 // $Id$
 
+Drupal 5.3, xxxx-xx-xx
+----------------------
+
 Drupal 5.2, 2007-07-26
 ----------------------
 - changed hook_link() $teaser argument to match documentation.
