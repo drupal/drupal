@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.213 2007/07/05 08:38:58 goba Exp $
+// $Id: profile.module,v 1.214 2007/07/26 08:49:11 goba Exp $
 
 /**
  * @file
@@ -452,7 +452,7 @@ function profile_admin_overview() {
  */
 function profile_browse() {
   $name = arg(1);
-  list(, , $value) = explode('/', $_GET['q'], 3);
+  list(, , $value) = array_pad(explode('/', $_GET['q'], 3), 3, '');
 
   $field = db_fetch_object(db_query("SELECT DISTINCT(fid), type, title, page, visibility FROM {profile_fields} WHERE name = '%s'", $name));
 
