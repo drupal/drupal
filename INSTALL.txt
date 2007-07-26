@@ -1,4 +1,4 @@
-// $Id: INSTALL.txt,v 1.40 2007/06/12 20:25:32 dries Exp $
+// $Id: INSTALL.txt,v 1.41 2007/07/26 06:14:14 dries Exp $
 
 CONTENTS OF THIS FILE
 ---------------------
@@ -134,10 +134,10 @@ few active modules and minimal user access rights.
 
 Use your administration panel to enable and configure services. For example:
 
-General Settings       administer > site configuration > site information
-Enable Modules         administer > site configuration > modules
-Set User Permissions   administer > users management > access control
-Configure Themes       administer > site building > themes
+General Settings       Administer > Site configuration > Site information
+Enable Modules         Administer > Site building > Modules
+Set User Permissions   Administer > User management > Access control
+Configure Themes       Administer > Site building > Themes
 
 For more information on configuration options, read the instructions which
 accompany the different configuration settings and consult the various help
