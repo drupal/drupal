@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.pages.inc,v 1.1 2007/07/24 18:08:54 dries Exp $
+// $Id: forum.pages.inc,v 1.2 2007/07/26 06:48:03 dries Exp $
 
 /**
  * @file
@@ -20,5 +20,5 @@ function forum_page($tid = 0) {
     $topics = forum_get_topics($tid, $sortby, $forum_per_page);
   }
 
-  return theme('forum_display', $forums, $topics, $parents, $tid, $sortby, $forum_per_page);
+  return theme('forums', $forums, $topics, $parents, $tid, $sortby, $forum_per_page);
 }

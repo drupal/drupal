@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.410 2007/07/24 18:08:54 dries Exp $
+// $Id: forum.module,v 1.411 2007/07/26 06:48:03 dries Exp $
 
 /**
  * @file
@@ -33,8 +33,8 @@ function forum_help($path, $arg) {
  */
 function forum_theme() {
   return array(
-    'forum_display' => array(
-      'file' => 'forum-display',
+    'forums' => array(
+      'file' => 'forums',
       'arguments' => array('forums' => NULL, 'topics' => NULL, 'parents' => NULL, 'tid' => NULL, 'sortby' => NULL, 'forum_per_page' => NULL),
     ),
     'forum_list' => array(
@@ -53,8 +53,8 @@ function forum_theme() {
       'file' => 'forum-topic-navigation',
       'arguments' => array('node' => NULL),
     ),
-    'forum_format_topic' => array(
-      'file' => 'forum-format-topic',
+    'forum_submitted' => array(
+      'file' => 'forum-submitted',
       'arguments' => array('topic' => NULL),
     ),
   );
@@ -587,7 +587,7 @@ function _forum_new($tid) {
 }
 
 /**
- * Process variables for forum-display.tpl.php
+ * Process variables for forums.tpl.php
  *
  * The $variables array contains the following arguments:
  * - $forums
@@ -597,9 +597,9 @@ function _forum_new($tid) {
  * - $sortby
  * - $forum_per_page
  *
- * @see forum-display.tpl.php
+ * @see forums.tpl.php
  */
-function template_preprocess_forum_display(&$variables) {
+function template_preprocess_forums(&$variables) {
   global $user;
   // forum list, topics list, topic browser and 'add new topic' link
 
@@ -675,12 +675,12 @@ function template_preprocess_forum_display(&$variables) {
     // Provide separate template suggestions based on what's being output. Topic id is also accounted for.
     // Check both variables to be safe.
     if ($variables['forums'] && !$variables['topics']) {
-      $variables['template_files'][] = 'forum-display-container';
-      $variables['template_files'][] = 'forum-display-container-'. $variables['tid'];
+      $variables['template_files'][] = 'forums-containers';
+      $variables['template_files'][] = 'forums-containers-'. $variables['tid'];
     }
     else {
-      $variables['template_files'][] = 'forum-display-topics';
-      $variables['template_files'][] = 'forum-display-topics-'. $variables['tid'];
+      $variables['template_files'][] = 'forums-topics';
+      $variables['template_files'][] = 'forums-topics-'. $variables['tid'];
     }
 
   }
@@ -720,7 +720,7 @@ function template_preprocess_forum_list(&$variables) {
       $variables['forums'][$id]->new_topics = 0;
       $variables['forums'][$id]->old_topics = $forum->num_topics;
     }
-    $variables['forums'][$id]->last_reply = theme('forum_format_topic', $forum->last_post);
+    $variables['forums'][$id]->last_reply = theme('forum_submitted', $forum->last_post);
   }
 }
 
@@ -765,8 +765,8 @@ function template_preprocess_forum_topic_list(&$variables) {
           $variables['topics'][$id]->new_text = format_plural($topic->new_replies, '1 new', '@count new');
           $variables['topics'][$id]->new_url = url("node/$topic->nid", array('fragment' => 'new'));
         }
-        $variables['topics'][$id]->created = theme('forum_format_topic', $topic);
-        $variables['topics'][$id]->last_reply = theme('forum_format_topic', isset($topic->last_reply) ? $topic->last_reply : NULL);
+        $variables['topics'][$id]->created = theme('forum_submitted', $topic);
+        $variables['topics'][$id]->last_reply = theme('forum_submitted', $topic->last_reply);
       }
     }
   }
@@ -844,22 +844,16 @@ function template_preprocess_forum_topic_navigation(&$variables) {
 }
 
 /**
- * Process variables to format a topic for display in the forum list and topic list.
+ * Process variables to format submission info for display in the forum list and topic list.
  *
  * $variables will contain: $topic
  *
- * @see forum-format-topic.tpl.php
- * @see theme_forum_format_topic
+ * @see forum-submitted.tpl.php
+ * @see theme_forum_submitted
  */
-function template_preprocess_forum_format_topic(&$variables) {
-  if (empty($variables['topic']) || empty($variables['topic']->timestamp)) {
-    $variables['topic'] = new stdClass();
-    $variables['topic']->timestamp = 0;
-  }
-  else {
-    $variables['time'] = format_interval(time() - $variables['topic']->timestamp);
-    $variables['author'] = theme('username', $variables['topic']);
-  }
+function template_preprocess_forum_submitted(&$variables) {
+  $variables['author'] = isset($variables['topic']->uid) ? theme('username', $variables['topic']) : '';
+  $variables['time'] = isset($variables['topic']->timestamp) ? format_interval(time() - $variables['topic']->timestamp) : '';
 }
 
 function _forum_user_last_visit($nid) {
