@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.176 2007/07/26 09:32:15 dries Exp $
+// $Id: bootstrap.inc,v 1.177 2007/07/26 21:42:51 unconed Exp $
 
 /**
  * @file
@@ -891,7 +891,7 @@ function _drupal_bootstrap($phase) {
       // Deny access to hosts which were banned - t() is not yet available.
       if (drupal_is_denied('host', ip_address())) {
         header('HTTP/1.1 403 Forbidden');
-        print 'Sorry, '. ip_address() .' has been banned.';
+        print 'Sorry, '. check_plain(ip_address()) .' has been banned.';
         exit();
       }
       break;

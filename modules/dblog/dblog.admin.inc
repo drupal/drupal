@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.admin.inc,v 1.1 2007/07/22 06:51:47 dries Exp $
+// $Id: dblog.admin.inc,v 1.2 2007/07/26 21:42:52 unconed Exp $
 
 /**
  * @file
@@ -154,7 +154,7 @@ function dblog_event($id) {
       ),
       array(
         array('data' => t('Hostname'), 'header' => TRUE),
-        $dblog->hostname,
+        check_plain($dblog->hostname),
       ),
       array(
         array('data' => t('Operations'), 'header' => TRUE),
