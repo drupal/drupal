@@ -138,7 +138,9 @@ if (isset($_SERVER['HTTP_HOST'])) {
   // Per RFC 2109, cookie domains must contain at least one dot other than the
   // first. For hosts such as 'localhost', we don't set a cookie domain.
   if (count(explode('.', $domain)) > 2) {
-    ini_set('session.cookie_domain', $domain);
+    // We need to use escaping because $_SERVER['HTTP_HOST'] can be modified
+    // by a visitor.
+    ini_set('session.cookie_domain', check_plain($domain));
   }
 }
 

@@ -1,4 +1,9 @@
 // $Id$
+
+Drupal 4.7.7, 2007-07-26
+------------------------
+- fixed security issue (XSS), see SA-2007-018
+
 Drupal 4.7.6, 2007-01-29
 ------------------------
 - fixed security issue (code execution), see SA-2007-005

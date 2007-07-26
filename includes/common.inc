@@ -502,7 +502,7 @@ function error_handler($errno, $message, $filename, $line) {
     $entry = $types[$errno] .': '. $message .' in '. $filename .' on line '. $line .'.';
 
     // Force display of error messages in update.php
-    if (variable_get('error_level', 1) == 1 || strstr($_SERVER['PHP_SELF'], 'update.php')) {
+    if (variable_get('error_level', 1) == 1 || strstr($_SERVER['SCRIPT_NAME'], 'update.php')) {
       drupal_set_message($entry, 'error');
     }
 

@@ -116,7 +116,7 @@ function conf_path() {
   }
 
   $confdir = 'sites';
-  $uri = explode('/', $_SERVER['PHP_SELF'] ? $_SERVER['PHP_SELF'] : $_SERVER['SCRIPT_FILENAME']);
+  $uri = explode('/', $_SERVER['SCRIPT_NAME'] ? $_SERVER['SCRIPT_NAME'] : $_SERVER['SCRIPT_FILENAME']);
   $server = explode('.', implode('.', array_reverse(explode(':', rtrim($_SERVER['HTTP_HOST'], '.')))));
   for ($i = count($uri) - 1; $i > 0; $i--) {
     for ($j = count($server); $j > 0; $j--) {
@@ -166,8 +166,14 @@ function conf_init() {
   else {
     // Create base URL
     $base_root = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http';
-    $base_url = $base_root .= '://'. $_SERVER['HTTP_HOST'];
-    if ($dir = trim(dirname($_SERVER['PHP_SELF']), '\,/')) {
+
+    // As $_SERVER['HTTP_HOST'] is user input, ensure it only contains
+    // characters allowed in hostnames.
+    $base_url = $base_root .= '://'. preg_replace('/[^a-z0-9-:._]/i', '', $_SERVER['HTTP_HOST']);
+
+    // $_SERVER['SCRIPT_NAME'] can, in contrast to $_SERVER['PHP_SELF'], not
+    // be modified by a visitor.
+    if ($dir = trim(dirname($_SERVER['SCRIPT_NAME']), '\,/')) {
       $base_path = "/$dir";
       $base_url .= $base_path;
       $base_path .= '/';
@@ -495,7 +501,7 @@ function drupal_load($type, $name) {
 
 /**
  * Set HTTP headers in preparation for a page response.
- * 
+ *
  * The general approach here is that anonymous users can keep a local cache of
  * the page, but must revalidate it on every request. Then, they are given a
  * '304 Not Modified' response as long as they stay logged out and the page
@@ -536,7 +542,7 @@ function drupal_page_header() {
     // The following headers force validation of cache
     header("Expires: Sun, 19 Nov 1978 05:00:00 GMT");
     header("Cache-Control: must-revalidate");
-      
+
     // Determine if the browser accepts gzipped data.
     if (@strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') === false && function_exists('gzencode')) {
       // Strip the gzip header and run uncompress.
@@ -620,10 +626,10 @@ function request_uri() {
   }
   else {
     if (isset($_SERVER['argv'])) {
-      $uri = $_SERVER['PHP_SELF'] .'?'. $_SERVER['argv'][0];
+      $uri = $_SERVER['SCRIPT_NAME'] .'?'. $_SERVER['argv'][0];
     }
     else {
-      $uri = $_SERVER['PHP_SELF'] .'?'. $_SERVER['QUERY_STRING'];
+      $uri = $_SERVER['SCRIPT_NAME'] .'?'. $_SERVER['QUERY_STRING'];
     }
   }
 
