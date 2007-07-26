@@ -1101,7 +1101,6 @@ function ip_address() {
       $remote_ip = $ip_array[0];
     }
   }
-  // Store the satnized version in the static variable
-  $remote_ip = check_plain($remote_ip);
+  
   return $remote_ip;
 }
