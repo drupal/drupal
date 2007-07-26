@@ -154,7 +154,7 @@ function dblog_event($id) {
       ),
       array(
         array('data' => t('Hostname'), 'header' => TRUE),
-        $dblog->hostname,
+        check_plain($dblog->hostname),
       ),
       array(
         array('data' => t('Operations'), 'header' => TRUE),
