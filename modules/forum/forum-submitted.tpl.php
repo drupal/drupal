@@ -1,10 +1,10 @@
-<?php
+<?php 
 // $Id$
 /**
- * @file forum-format-topic.tpl.php
+ * @file forum-submitted.tpl.php
  * Default theme implementation to format a simple string indicated when and
- * by whom a topic was posted.
- *
+ * by whom a topic was submitted.
+ * 
  * Available variables:
  *
  * - $author: The author of the post.
@@ -12,14 +12,14 @@
  * - $topic: An object with the raw data of the post. Unsafe, be sure
  *   to clean this data before printing.
  *
- * @see template_preprocess_forum_format_topic()
- * @see theme_forum_format_topic()
+ * @see template_preprocess_forum_submitted()
+ * @see theme_forum_submitted()
  */
 ?>
-<?php if ($topic->timestamp): ?>
+<?php if ($time): ?>
   <?php print t(
   '@time ago<br />by !author', array(
-    '@time' => $time,
+    '@time' => $time, 
     '!author' => $author,
     )); ?>
 <?php else: ?>

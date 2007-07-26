@@ -1,6 +1,6 @@
-<?php // $Id$
+<?php // $Id$ 
 /**
- * @file forum-display.tpl.php
+ * @file forums.tpl.php
  * Default theme implementation to display a forum, which may contain forum
  * containers as well as forum topics.
  *
@@ -12,14 +12,12 @@
  * - $forums: The forums to display (as processed by forum-list.tpl.php)
  * - $topics: The topics to display (as processed by forum-topic-list.tpl.php)
  *
- * @see template_preprocess_forum_display()
- * @see theme_forum_display()
+ * @see template_preprocess_forums()
+ * @see theme_forums()
  *
  */
 ?>
-
 <?php if ($forums_defined): ?>
-
 <div id="forum">
   <?php print theme('links', $links); ?>
   <?php print $forums; ?>
