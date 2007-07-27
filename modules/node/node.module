@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.862 2007/07/26 07:49:40 goba Exp $
+// $Id: node.module,v 1.863 2007/07/27 13:07:06 dries Exp $
 
 /**
  * @file
@@ -1979,7 +1979,7 @@ function node_feed($nids = array(), $channel = array()) {
 
   $channel_defaults = array(
     'version'     => '2.0',
-    'title'       => variable_get('site_name', 'Drupal') .' - '. variable_get('site_slogan', ''),
+    'title'       => variable_get('site_name', 'Drupal'),
     'link'        => $base_url,
     'description' => variable_get('site_mission', ''),
     'language'    => $language->language
