@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.129 2007/07/22 20:21:02 dries Exp $
+// $Id: path.module,v 1.130 2007/07/28 07:16:44 dries Exp $
 
 /**
  * @file
@@ -162,7 +162,7 @@ function path_nodeapi(&$node, $op, $arg) {
       case 'insert':
         // Don't try to insert if path is NULL. We may have already set
         // the alias ahead of time.
-        if ($node->path) {
+        if (isset($node->path)) {
           path_set_alias("node/$node->nid", $node->path);
         }
         break;
