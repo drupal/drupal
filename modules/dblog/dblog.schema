@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.schema,v 1.2 2007/05/30 08:34:12 dries Exp $
+// $Id: dblog.schema,v 1.3 2007/07/28 07:11:14 dries Exp $
 
 function dblog_schema() {
   $schema['watchdog'] = array(
@@ -7,8 +7,8 @@ function dblog_schema() {
       'wid'       => array('type' => 'serial', 'not null' => TRUE),
       'uid'       => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
       'type'      => array('type' => 'varchar', 'length' => 16, 'not null' => TRUE, 'default' => ''),
-      'message'   => array('type' => 'text', 'not null' => TRUE, 'size' => 'medium'),
-      'variables' => array('type' => 'text', 'not null' => TRUE, 'size' => 'medium'),
+      'message'   => array('type' => 'text', 'not null' => TRUE, 'size' => 'big'),
+      'variables' => array('type' => 'text', 'not null' => TRUE, 'size' => 'big'),
       'severity'  => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0, 'size' => 'tiny'),
       'link'      => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
       'location'  => array('type' => 'text', 'not null' => TRUE),
