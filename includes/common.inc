@@ -2774,6 +2774,9 @@ function drupal_common_themes() {
     'button' => array(
       'arguments' => array('element' => NULL),
     ),
+    'image_button' => array(
+      'arguments' => array('element' => NULL),
+    ),
     'hidden' => array(
       'arguments' => array('element' => NULL),
     ),

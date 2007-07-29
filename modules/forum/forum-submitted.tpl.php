@@ -1,10 +1,10 @@
-<?php 
+<?php
 // $Id$
 /**
  * @file forum-submitted.tpl.php
  * Default theme implementation to format a simple string indicated when and
  * by whom a topic was submitted.
- * 
+ *
  * Available variables:
  *
  * - $author: The author of the post.
@@ -19,7 +19,7 @@
 <?php if ($time): ?>
   <?php print t(
   '@time ago<br />by !author', array(
-    '@time' => $time, 
+    '@time' => $time,
     '!author' => $author,
     )); ?>
 <?php else: ?>

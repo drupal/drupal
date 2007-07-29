@@ -1101,6 +1101,6 @@ function ip_address() {
       $remote_ip = $ip_array[0];
     }
   }
-  
+
   return $remote_ip;
 }
