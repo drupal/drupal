@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.217 2007/07/20 05:44:13 dries Exp $
+// $Id: form.inc,v 1.218 2007/07/29 17:28:23 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -44,7 +44,6 @@
  */
 function drupal_get_form($form_id) {
   $form_state = array('storage' => NULL, 'submitted' => FALSE);
-  $expire = max(ini_get('session.cookie_lifetime'), 86400);
 
   $args = func_get_args();
 
@@ -62,12 +61,7 @@ function drupal_get_form($form_id) {
     // form_state data from a previous step, we'll retrieve it so it can
     // be passed on to the form processing code.
     if (isset($_POST['form_id']) && $_POST['form_id'] == $form_id && !empty($_POST['form_build_id'])) {
-      if ($cached = cache_get('form_'. $_POST['form_build_id'], 'cache_form')) {
-        $form = $cached->data;
-        if ($cached = cache_get('storage_'. $_POST['form_build_id'], 'cache_form')) {
-          $form_state['storage'] = $cached->data;
-        }
-      }
+      $form = form_get_cache($_POST['form_build_id'], $form_state);
     }
 
     // If the previous bit of code didn't result in a populated $form
@@ -84,7 +78,9 @@ function drupal_get_form($form_id) {
       $form['#build_id'] = $form_build_id;
       drupal_prepare_form($form_id, $form, $form_state);
       if (!empty($form['#cache'])) {
-        cache_set('form_'. $form_build_id, $form, 'cache_form', $expire);
+        // By not sending the form state, we avoid storing the storage which
+        // won't have been touched yet.
+        form_set_cache($form_build_id, $form, NULL);
       }
       unset($form_state['post']);
     }
@@ -126,10 +122,7 @@ function drupal_get_form($form_id) {
     // Now, we cache the form structure so it can be retrieved later for
     // validation. If $form_state['storage'] is populated, we'll also cache
     // it so that it can be used to resume complex multi-step processes.
-    cache_set('form_'. $form_build_id, $form, 'cache_form', $expire);
-    if (!empty($form_state['storage'])) {
-      cache_set('storage_'. $form_build_id, $form_state['storage'], 'cache_form', $expire);
-    }
+    form_set_cache($form_build_id, $form, $form_state);
 
     // Clear out all post data, as we don't want the previous step's
     // data to pollute this one and trigger validate/submit handling,
@@ -142,6 +135,31 @@ function drupal_get_form($form_id) {
   // If we haven't redirected to a new location by now, we want to
   // render whatever form array is currently in hand.
   return drupal_render_form($form_id, $form);
+}
+
+/**
+ * Fetch a form from cache.
+ */
+function form_get_cache($form_build_id, &$form_state) {
+  if ($cached = cache_get('form_'. $form_build_id, 'cache_form')) {
+    $form = $cached->data;
+    if ($cached = cache_get('storage_'. $form_build_id, 'cache_form')) {
+      $form_state['storage'] = $cached->data;
+    }
+    return $form;
+  }
+}
+
+/**
+ * Store a form in the cache
+ */
+function form_set_cache($form_build_id, $form, $form_state) {
+  $expire = max(ini_get('session.cookie_lifetime'), 86400);
+
+  cache_set('form_'. $form_build_id, $form, 'cache_form', $expire);
+  if (!empty($form_state['storage'])) {
+    cache_set('storage_'. $form_build_id, $form_state['storage'], 'cache_form', $expire);
+  }
 }
 
 /**
@@ -840,13 +858,7 @@ function _form_builder_handle_input_element($form_id, &$form, &$form_state) {
     $button_type = $form['#executes_submit_callback'] ? 'submit' : 'button';
     $form_state['buttons'][$button_type][] = $form;
 
-    // See if a submit button was clicked. In Internet Explorer, if ONLY
-    // one submit button is present, AND the enter key is used to submit
-    // the form, no form value is sent for it and we'll never detect a
-    // match. In most cases, though, the following code will properly handle
-    // finding the clicked button and storing any custom validate and
-    // submit handlers it has defined.
-    if (isset($form['#post'][$form['#name']]) && $form['#post'][$form['#name']] == $form['#value']) {
+    if (_form_button_was_clicked($form)) {
       $form_state['submitted'] = $form_state['submitted'] || $form['#executes_submit_callback'];
 
       // In most cases, we want to use form_set_value() to manipulate
@@ -875,6 +887,64 @@ function _form_builder_handle_input_element($form_id, &$form, &$form_state) {
     $form['#processed'] = TRUE;
   }
   form_set_value($form, $form['#value'], $form_state);
+}
+
+/**
+ * Helper function to handle the sometimes-convoluted logic of button
+ * click detection.
+ *
+ * In Internet Explorer, if ONLY one submit button is present, AND the
+ * enter key is used to submit the form, no form value is sent for it
+ * and we'll never detect a match. That special case is handled by
+ * _form_builder_ie_cleanup().
+ */
+function _form_button_was_clicked($form) {
+  // First detect normal 'vanilla' button clicks. Traditionally, all
+  // standard buttons on a form share the same name (usually 'op'),
+  // and the specific return value is used to determine which was
+  // clicked. This ONLY works as long as $form['#name'] puts the
+  // value at the top level of the tree of $_POST data.
+  if (isset($form['#post'][$form['#name']]) && $form['#post'][$form['#name']] == $form['#value']) {
+    return TRUE;
+  }
+  // When image buttons are clicked, browsers do NOT pass the form element
+  // value in $_POST. Instead they pass an integer representing the
+  // coordinates of the click on the button image. This means that image
+  // buttons MUST have unique $form['#name'] values, but the details of
+  // their $_POST data should be ignored.
+  elseif (!empty($form['#has_garbage_value']) && isset($form['#value']) && $form['#value'] !== '') {
+    return TRUE;
+  }
+  return FALSE;
+}
+
+/**
+ * In IE, if only one submit button is present, AND the enter key is
+ * used to submit the form, no form value is sent for it and our normal
+ * button detection code will never detect a match. We call this
+ * function after all other button-detection is complete to check
+ * for the proper conditions, and treat the single button on the form
+ * as 'clicked' if they are met.
+ */
+function _form_builder_ie_cleanup($form, &$form_state) {
+  // Quick check to make sure we're always looking at the full form
+  // and not a sub-element.
+  if (!empty($form['#type']) && $form['#type'] == 'form') {
+    // If we haven't recognized a submission yet, and there's a single
+    // submit button, we know that we've hit the right conditions. Grab
+    // the first one and treat it as the clicked button.
+    if (empty($form_state['submitted']) && !empty($form_state['buttons']['submit']) && empty($form_state['buttons']['button'])) {
+      $button = $form_state['buttons']['submit'][0];
+
+      // Set up all the $form_state information that would have been
+      // populated had the button been recognized earlier.
+      $form_state['submitted'] = TRUE;
+      $form_state['submit_handlers'] = empty($button['#submit']) ? NULL : $button['#submit'];
+      $form_state['validate_handlers'] = empty($button['#validate']) ? NULL : $button['#validate'];
+      $form_state['values'][$button['#name']] = $button['#value'];
+      $form_state['clicked_button'] = $button;
+    }
+  }
 }
 
 /**
@@ -996,24 +1066,6 @@ function form_type_textfield_value($form, $edit = FALSE) {
 function form_type_token_value($form, $edit = FALSE) {
   if ($edit !== FALSE) {
     return (string)$edit;
-  }
-}
-
-/**
- * Handle the special Internet Explorer one-button-form hit-enter-
- * instead-of-clicking scenario.
- */
-function _form_builder_ie_cleanup($form, &$form_state) {
-  if (!empty($form['#type']) && $form['#type'] == 'form') {
-    // If the 'submitted' flag isn't tripped, but there is only one submit button...
-    if (empty($form_state['submitted']) && !empty($form_state['buttons']['submit']) && empty($form_state['buttons']['button'])) {
-      $button = $form_state['buttons']['submit'][0];
-      $form_state['submitted'] = TRUE;
-      $form_state['submit_handlers'] = empty($button['#submit']) ? NULL : $button['#submit'];
-      $form_state['validate_handlers'] = empty($button['#validate']) ? NULL : $button['#validate'];
-      $form_state['values'][$button['#name']] = $button['#value'];
-      $form_state['clicked_button'] = $button;
-    }
   }
 }
 
@@ -1596,6 +1648,27 @@ function theme_button($element) {
   }
 
   return '<input type="submit" '. (empty($element['#name']) ? '' : 'name="'. $element['#name'] .'" ') .'id="'. $element['#id'] .'" value="'. check_plain($element['#value']) .'" '. drupal_attributes($element['#attributes']) ." />\n";
+}
+
+/**
+ * Theme an image button.
+ */
+function theme_image_button($element) {
+  // Make sure not to overwrite classes.
+  if (isset($element['#attributes']['class'])) {
+    $element['#attributes']['class'] = 'form-'. $element['#button_type'] .' '. $element['#attributes']['class'];
+  }
+  else {
+    $element['#attributes']['class'] = 'form-'. $element['#button_type'];
+  }
+
+  return '<input type="image" name="'. $element['#name'] .'" ' .
+    (!empty($element['#value']) ? ('value="'. check_plain($element['#value']) .'" ') : '') .
+    'id="' . $element['#id'] . '" ' .
+    drupal_attributes($element['#attributes']) .
+    ' src="' . base_path() . $element['#image'] . '" ' .
+    (!empty($element['#title']) ? 'alt="' . check_plain($element['#title']) . '" title="' . check_plain($element['#title']) . '" ' : '' ).
+    "/>\n";
 }
 
 /**

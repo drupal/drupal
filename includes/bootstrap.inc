@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.177 2007/07/26 21:42:51 unconed Exp $
+// $Id: bootstrap.inc,v 1.178 2007/07/29 17:28:23 dries Exp $
 
 /**
  * @file
@@ -1101,6 +1101,6 @@ function ip_address() {
       $remote_ip = $ip_array[0];
     }
   }
-  
+
   return $remote_ip;
 }

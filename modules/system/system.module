@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.511 2007/07/20 05:44:13 dries Exp $
+// $Id: system.module,v 1.512 2007/07/29 17:28:23 dries Exp $
 
 /**
  * @file
@@ -105,6 +105,7 @@ function system_elements() {
   // Inputs
   $type['submit'] = array('#input' => TRUE, '#name' => 'op', '#button_type' => 'submit', '#executes_submit_callback' => TRUE, '#ahah_event' => 'submit', '#process' => array('form_expand_ahah'));
   $type['button'] = array('#input' => TRUE, '#name' => 'op', '#button_type' => 'submit', '#executes_submit_callback' => FALSE, '#ahah_event' => 'submit', '#process' => array('form_expand_ahah'));
+  $type['image_button'] = array('#input' => TRUE, '#button_type' => 'submit','#executes_submit_callback' => TRUE, '#ahah_event' => 'submit', '#process' => array('form_expand_ahah'), '#has_garbage_value' => TRUE, '#image' => NULL);
   $type['textfield'] = array('#input' => TRUE, '#size' => 60, '#maxlength' => 128, '#autocomplete_path' => FALSE);
   $type['password'] = array('#input' => TRUE, '#size' => 60, '#maxlength' => 128);
   $type['password_confirm'] = array('#input' => TRUE, '#process' => array('expand_password_confirm'));

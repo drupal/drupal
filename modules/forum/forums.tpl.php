@@ -1,4 +1,4 @@
-<?php // $Id: forums.tpl.php,v 1.1 2007/07/26 06:48:03 dries Exp $ 
+<?php // $Id: forums.tpl.php,v 1.2 2007/07/29 17:28:23 dries Exp $
 /**
  * @file forums.tpl.php
  * Default theme implementation to display a forum, which may contain forum
