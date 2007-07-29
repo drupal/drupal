@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.178 2007/07/29 17:28:23 dries Exp $
+// $Id: bootstrap.inc,v 1.179 2007/07/29 21:04:03 dries Exp $
 
 /**
  * @file
@@ -1077,7 +1077,6 @@ function language_default($property = NULL) {
   return $property ? $language->$property : $language;
 }
 
-
 /**
  * If Drupal is behind a reverse proxy, we use the X-Forwarded-For header
  * instead of $_SERVER['REMOTE_ADDR'], which would be the IP address
@@ -1087,20 +1086,15 @@ function language_default($property = NULL) {
  *   IP address of client machine, adjusted for reverse proxy.
  */
 function ip_address() {
-  static $remote_ip;
+  static $ip_address = NULL;
 
-  if ($remote_ip) {
-    // We have been here before, so just return the one we processed before
-    return $remote_ip;
-  }
-  else {
-    $remote_ip = $_SERVER['REMOTE_ADDR'];
-    if (variable_get('reverse_proxy', FALSE) && array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER)) {
-      $ip_array = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+  if (!isset($ip_address)) {
+    $ip_address = $_SERVER['REMOTE_ADDR'];
+    if (variable_get('reverse_proxy', 0) && array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER)) {
       // If there are several arguments, the leftmost one is the farthest client
-      $remote_ip = $ip_array[0];
+      list($ip_address, ) = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
     }
   }
 
-  return $remote_ip;
+  return $ip_address;
 }
