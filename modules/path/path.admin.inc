@@ -1,5 +1,5 @@
 <?php
-// $Id: path.admin.inc,v 1.1 2007/07/22 20:21:02 dries Exp $
+// $Id: path.admin.inc,v 1.2 2007/07/29 16:58:19 goba Exp $
 
 /**
  * @file
@@ -64,11 +64,11 @@ function path_admin_overview($keys = NULL) {
 /**
  * Menu callback; handles pages for creating and editing URL aliases.
  */
-function path_admin_edit($pid = 0) {
+function path_admin_edit($form_state, $pid = 0) {
   if ($pid) {
     $alias = path_load($pid);
     drupal_set_title(check_plain($alias['dst']));
-    $output = path_admin_form($alias);
+    $output = path_admin_form($form_state, $alias);
   }
   else {
     $output = path_admin_form();
@@ -154,7 +154,7 @@ function path_admin_form_submit($form, &$form_state) {
 /**
  * Menu callback; confirms deleting an URL alias
  **/
-function path_admin_delete_confirm($pid) {
+function path_admin_delete_confirm($form_state, $pid) {
   $path = path_load($pid);
   if (user_access('administer url aliases')) {
     $form['pid'] = array('#type' => 'value', '#value' => $pid);
