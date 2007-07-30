@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.863 2007/07/27 13:07:06 dries Exp $
+// $Id: node.module,v 1.864 2007/07/30 18:20:21 dries Exp $
 
 /**
  * @file
@@ -14,6 +14,7 @@ define('NODE_BUILD_PREVIEW', 1);
 define('NODE_BUILD_SEARCH_INDEX', 2);
 define('NODE_BUILD_SEARCH_RESULT', 3);
 define('NODE_BUILD_RSS', 4);
+define('NODE_BUILD_PRINT', 5);
 
 /**
  * Implementation of hook_help().
@@ -2231,8 +2232,8 @@ function node_form(&$form_state, $node) {
 }
 
 function node_form_build_preview($form, &$form_state) {
-  // We do not want to execute button level handlers, we want the form level
-  // handlers to go in and change the submitted values.
+  // Unset any button-level handlers, execute all the form-level submit functions
+  // to process the form values into an updated node, and rebuild the form.
   unset($form_state['submit_handlers']);
   form_execute_handlers('submit', $form, $form_state);
 
@@ -2390,8 +2391,8 @@ function theme_node_log_message($log) {
 function node_form_submit($form, &$form_state) {
   global $user;
 
-  // We do not want to execute button level handlers, we want the form level
-  // handlers to go in and change the submitted values.
+  // Unset any button-level handlers, and execute all the form-level submit
+  // functions to process the form values into an updated node.
   unset($form_state['submit_handlers']);
   form_execute_handlers('submit', $form, $form_state);
 

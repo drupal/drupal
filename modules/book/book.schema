@@ -1,19 +1,18 @@
 <?php
-// $Id: book.schema,v 1.1 2007/05/25 12:46:43 dries Exp $
+// $Id: book.schema,v 1.2 2007/07/30 18:20:21 dries Exp $
 
 function book_schema() {
   $schema['book'] = array(
     'fields' => array(
-      'vid'    => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
-      'nid'    => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
-      'parent' => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      'weight' => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny')
+      'mlid'    => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+      'nid'     => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+      'bid' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
     ),
     'indexes' => array(
-      'nid'    => array('nid'),
-      'parent' => array('parent')
+      'nid'     => array('nid'),
+      'bid' => array('bid')
     ),
-    'primary key' => array('vid'),
+    'primary key' => array('mlid'),
   );
 
   return $schema;

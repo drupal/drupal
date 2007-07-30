@@ -1,6 +1,6 @@
-; $Id: book.info,v 1.4 2007/06/08 05:50:53 dries Exp $
+; $Id: book.info,v 1.5 2007/07/30 18:20:21 dries Exp $
 name = Book
-description = Allows users to collaboratively author a book.
+description = Allows users to structure site pages in a hierarchy or outline.
 package = Core - optional
 version = VERSION
 core = 6.x
