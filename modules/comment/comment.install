@@ -24,3 +24,9 @@ function comment_update_1() {
   }
   return array();
 }
+
+function comment_update_6001() {
+  $ret[] = update_sql("ALTER TABLE {comments} DROP score");
+  $ret[] = update_sql("ALTER TABLE {comments} DROP users");
+  return $ret;
+}
