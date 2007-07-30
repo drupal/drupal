@@ -166,7 +166,7 @@ function drupal_detect_database_types() {
  */
 function drupal_rewrite_settings($settings = array(), $prefix = '') {
   $default_settings = './sites/default/default.settings.php';
-  $settings_file = './'. conf_path() .'/'. $prefix .'settings.php';
+  $settings_file = './'. conf_path(FALSE, TRUE) .'/'. $prefix .'settings.php';
 
   // Build list of setting names and insert the values into the global namespace.
   $keys = array();
