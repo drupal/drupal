@@ -1,9 +1,9 @@
 <?php
-// $Id: path.admin.inc,v 1.2 2007/07/29 16:58:19 goba Exp $
+// $Id: path.admin.inc,v 1.3 2007/07/30 18:23:25 dries Exp $
 
 /**
  * @file
- * Administrative page callbacks for the contact module.
+ * Administrative page callbacks for the path module.
  */
 
 /**
