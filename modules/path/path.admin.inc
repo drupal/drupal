@@ -3,7 +3,7 @@
 
 /**
  * @file
- * Administrative page callbacks for the contact module.
+ * Administrative page callbacks for the path module.
  */
 
 /**
