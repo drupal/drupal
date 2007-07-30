@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.41 2007/06/13 19:39:04 goba Exp $
+// $Id: install.inc,v 1.42 2007/07/30 19:22:47 dries Exp $
 
 define('SCHEMA_UNINSTALLED', -1);
 define('SCHEMA_INSTALLED', 0);
@@ -166,7 +166,7 @@ function drupal_detect_database_types() {
  */
 function drupal_rewrite_settings($settings = array(), $prefix = '') {
   $default_settings = './sites/default/default.settings.php';
-  $settings_file = './'. conf_path() .'/'. $prefix .'settings.php';
+  $settings_file = './'. conf_path(FALSE, TRUE) .'/'. $prefix .'settings.php';
 
   // Build list of setting names and insert the values into the global namespace.
   $keys = array();

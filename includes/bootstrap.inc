@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.179 2007/07/29 21:04:03 dries Exp $
+// $Id: bootstrap.inc,v 1.180 2007/07/30 19:22:47 dries Exp $
 
 /**
  * @file
@@ -217,11 +217,22 @@ function timer_stop($name) {
  * 12. $confdir/org
  *
  * 13. $confdir/default
+ *
+ * @param $require_settings
+ *   Only configuration directories with an existing settings.php file
+ *   will be recognized. Defaults to TRUE. During initial installation,
+ *   this is set to FALSE so that Drupal can detect a matching directory,
+ *   then create a new settings.php file in it.
+ * @param reset
+ *   Force a full search for matching directories even if one had been
+ *   found previously.
+ * @return
+ *   The path of the matching directory.
  */
-function conf_path() {
+function conf_path($require_settings = TRUE, $reset = FALSE) {
   static $conf = '';
 
-  if ($conf) {
+  if ($conf && !$reset) {
     return $conf;
   }
 
@@ -231,7 +242,7 @@ function conf_path() {
   for ($i = count($uri) - 1; $i > 0; $i--) {
     for ($j = count($server); $j > 0; $j--) {
       $dir = implode('.', array_slice($server, -$j)) . implode('.', array_slice($uri, 0, $i));
-      if (file_exists("$confdir/$dir/settings.php")) {
+      if (file_exists("$confdir/$dir/settings.php") || (!$require_settings && file_exists("$confdir/$dir"))) {
         $conf = "$confdir/$dir";
         return $conf;
       }
