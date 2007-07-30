@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.schema,v 1.3 2007/07/15 10:09:21 dries Exp $
+// $Id: comment.schema,v 1.4 2007/07/30 21:27:34 dries Exp $
 
 function comment_schema() {
   $schema['comments'] = array(
@@ -12,11 +12,9 @@ function comment_schema() {
       'comment'   => array('type' => 'text', 'not null' => TRUE, 'size' => 'big'),
       'hostname'  => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
       'timestamp' => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      'score'     => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'medium'),
       'status'    => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0, 'size' => 'tiny'),
       'format'    => array('type' => 'int', 'size' => 'small', 'not null' => TRUE, 'default' => 0),
       'thread'    => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE),
-      'users'     => array('type' => 'text', 'not null' => FALSE, 'size' => 'big'),
       'name'      => array('type' => 'varchar', 'length' => 60, 'not null' => FALSE),
       'mail'      => array('type' => 'varchar', 'length' => 64, 'not null' => FALSE),
       'homepage'  => array('type' => 'varchar', 'length' => 255, 'not null' => FALSE)
@@ -42,4 +40,3 @@ function comment_schema() {
 
   return $schema;
 }
-

@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.569 2007/07/25 14:57:58 goba Exp $
+// $Id: comment.module,v 1.570 2007/07/30 21:27:34 dries Exp $
 
 /**
  * @file
@@ -744,14 +744,6 @@ function comment_save($edit) {
       else {
         // Add the comment to database.
         $status = user_access('post comments without approval') ? COMMENT_PUBLISHED : COMMENT_NOT_PUBLISHED;
-        $roles = variable_get('comment_roles', array());
-        $score = 0;
-
-        foreach (array_intersect(array_keys($roles), array_keys($user->roles)) as $rid) {
-          $score = max($roles[$rid], $score);
-        }
-
-        $users = serialize(array(0 => $score));
 
         // Here we are building the thread field. See the documentation for
         // comment_render().
@@ -804,7 +796,7 @@ function comment_save($edit) {
         }
 
         $edit += array('mail' => '', 'homepage' => '');
-        db_query("INSERT INTO {comments} (nid, pid, uid, subject, comment, format, hostname, timestamp, status, score, users, thread, name, mail, homepage) VALUES (%d, %d, %d, '%s', '%s', %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s')", $edit['nid'], $edit['pid'], $edit['uid'], $edit['subject'], $edit['comment'], $edit['format'], ip_address(), $edit['timestamp'], $status, $score, $users, $thread, $edit['name'], $edit['mail'], $edit['homepage']);
+        db_query("INSERT INTO {comments} (nid, pid, uid, subject, comment, format, hostname, timestamp, status, thread, name, mail, homepage) VALUES (%d, %d, %d, '%s', '%s', %d, '%s', %d, %d, '%s', '%s', '%s', '%s')", $edit['nid'], $edit['pid'], $edit['uid'], $edit['subject'], $edit['comment'], $edit['format'], ip_address(), $edit['timestamp'], $status, $thread, $edit['name'], $edit['mail'], $edit['homepage']);
         $edit['cid'] = db_last_insert_id('comments', 'cid');
 
         _comment_update_node_statistics($edit['nid']);
@@ -966,7 +958,7 @@ function comment_render($node, $cid = 0) {
 
     if ($cid && is_numeric($cid)) {
       // Single comment view.
-      $query = 'SELECT c.cid, c.pid, c.nid, c.subject, c.comment, c.format, c.timestamp, c.name, c.mail, c.homepage, u.uid, u.name AS registered_name, u.signature, u.picture, u.data, c.score, c.users, c.status FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d';
+      $query = 'SELECT c.cid, c.pid, c.nid, c.subject, c.comment, c.format, c.timestamp, c.name, c.mail, c.homepage, u.uid, u.name AS registered_name, u.signature, u.picture, u.data, c.status FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d';
       $query_args = array($cid);
       if (!user_access('administer comments')) {
         $query .= ' AND c.status = %d';
@@ -987,7 +979,7 @@ function comment_render($node, $cid = 0) {
     else {
       // Multiple comment view
       $query_count = 'SELECT COUNT(*) FROM {comments} WHERE nid = %d';
-      $query = 'SELECT c.cid as cid, c.pid, c.nid, c.subject, c.comment, c.format, c.timestamp, c.name, c.mail, c.homepage, u.uid, u.name AS registered_name, u.signature, u.picture, u.data, c.score, c.users, c.thread, c.status FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.nid = %d';
+      $query = 'SELECT c.cid as cid, c.pid, c.nid, c.subject, c.comment, c.format, c.timestamp, c.name, c.mail, c.homepage, u.uid, u.name AS registered_name, u.signature, u.picture, u.data, c.thread, c.status FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.nid = %d';
 
       $query_args = array($nid);
       if (!user_access('administer comments')) {
