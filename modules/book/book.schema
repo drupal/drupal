@@ -4,16 +4,15 @@
 function book_schema() {
   $schema['book'] = array(
     'fields' => array(
-      'vid'    => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
-      'nid'    => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
-      'parent' => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      'weight' => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny')
+      'mlid'    => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+      'nid'     => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+      'bid' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
     ),
     'indexes' => array(
-      'nid'    => array('nid'),
-      'parent' => array('parent')
+      'nid'     => array('nid'),
+      'bid' => array('bid')
     ),
-    'primary key' => array('vid'),
+    'primary key' => array('mlid'),
   );
 
   return $schema;

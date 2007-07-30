@@ -1,6 +1,6 @@
 ; $Id$
 name = Book
-description = Allows users to collaboratively author a book.
+description = Allows users to structure site pages in a hierarchy or outline.
 package = Core - optional
 version = VERSION
 core = 6.x
