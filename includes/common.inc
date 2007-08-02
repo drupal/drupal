@@ -2650,10 +2650,6 @@ function drupal_common_themes() {
     'help' => array(
       'arguments' => array(),
     ),
-    'node' => array(
-      'arguments' => array('node' => NULL, 'teaser' => FALSE, 'page' => FALSE),
-      'file' => 'node',
-    ),
     'submenu' => array(
       'arguments' => array('links' => NULL),
     ),

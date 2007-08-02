@@ -11,7 +11,7 @@
  * - $links: Links in the poll.
  * - $nid: The nid of the poll
  * - $cancel_form: A form to cancel the user's vote, if allowed.
- * - $raw_links: The raw array of links. Should be run through theme('links') 
+ * - $raw_links: The raw array of links. Should be run through theme('links')
  *   if used.
  * - $vote: The choice number of the current user's vote.
  *

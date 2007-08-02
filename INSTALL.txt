@@ -102,6 +102,12 @@ INSTALLATION
    administrator account with total control. Login as the administrator and
    complete the initial configuration steps on the "Welcome" page.
 
+   If the default Drupal theme is not diplaying properly and links on the page
+   result in "Page Not Found" errors, try manually setting the $base_url variable
+   in the settings.php file if not already set. It's currently known that servers
+   running FastCGI can run into problems if the $base_url variable is left
+   commented out (see http://bugs.php.net/bug.php?id=19656).
+
    Consider creating a "files" subdirectory in your Drupal installation
    directory. This subdirectory stores files such as custom logos, user avatars,
    and other media associated with your new site. The sub-directory requires
