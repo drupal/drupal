@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.214 2007/07/26 08:49:11 goba Exp $
+// $Id: profile.module,v 1.215 2007/08/02 10:36:42 dries Exp $
 
 /**
  * @file
@@ -58,10 +58,17 @@ function profile_theme() {
   return array(
     'profile_block' => array(
       'arguments' => array('account' => NULL, 'fields' => array()),
+      'file' => 'profile-block',
     ),
     'profile_listing' => array(
       'arguments' => array('account' => NULL, 'fields' => array()),
-    ),  );
+      'file' => 'profile-listing',
+    ),
+    'profile_wrapper' => array(
+      'arguments' => array('content' => NULL),
+      'file' => 'profile-wrapper',
+    )
+  );
 }
 
 /**
@@ -451,8 +458,8 @@ function profile_admin_overview() {
  * Menu callback; display a list of user information.
  */
 function profile_browse() {
-  $name = arg(1);
-  list(, , $value) = array_pad(explode('/', $_GET['q'], 3), 3, '');
+  // Ensure that the path is converted to 3 levels always.
+  list(, $name, $value) = array_pad(explode('/', $_GET['q'], 3), 3, '');
 
   $field = db_fetch_object(db_query("SELECT DISTINCT(fid), type, title, page, visibility FROM {profile_fields} WHERE name = '%s'", $name));
 
@@ -498,12 +505,13 @@ function profile_browse() {
     // Extract the affected users:
     $result = pager_query("SELECT u.uid, u.access FROM {users} u INNER JOIN {profile_values} v ON u.uid = v.uid WHERE v.fid = %d AND $query AND u.access != 0 AND u.status != 0 ORDER BY u.access DESC", 20, 0, NULL, $arguments);
 
-    $output = '<div id="profile">';
+    $content = '';
     while ($account = db_fetch_object($result)) {
       $account = user_load(array('uid' => $account->uid));
       $profile = _profile_update_user_fields($fields, $account);
-      $output .= theme('profile_listing', $account, $profile);
+      $content .= theme('profile_listing', $account, $profile);
     }
+    $output = theme('profile_wrapper', $content);
     $output .= theme('pager', NULL, 20);
 
     if ($field->type == 'selection' || $field->type == 'list' || $field->type == 'textfield') {
@@ -512,7 +520,6 @@ function profile_browse() {
     else {
       $title = check_plain($field->page);
     }
-    $output .= '</div>';
 
     drupal_set_title($title);
     return $output;
@@ -531,13 +538,13 @@ function profile_browse() {
     // Extract the affected users:
     $result = pager_query('SELECT uid, access FROM {users} WHERE uid > 0 AND status != 0 AND access != 0 ORDER BY access DESC', 20, 0, NULL);
 
-    $output = '<div id="profile">';
+    $content = '';
     while ($account = db_fetch_object($result)) {
       $account = user_load(array('uid' => $account->uid));
       $profile = _profile_update_user_fields($fields, $account);
-      $output .= theme('profile_listing', $account, $profile);
+      $content .= theme('profile_listing', $account, $profile);
     }
-    $output .= '</div>';
+    $output = theme('profile_wrapper', $content);
     $output .= theme('pager', NULL, 20);
 
     drupal_set_title(t('User list'));
@@ -790,39 +797,70 @@ function profile_categories() {
   return $data;
 }
 
-function theme_profile_block($account, $fields = array()) {
+/**
+ * Process variables for profile-block.tpl.php.
+ *
+ * The $variables array contains the following arguments:
+ * - $account
+ * - $fields
+ *
+ * @see profile-block.tpl.php
+ */
+function template_preprocess_profile_block(&$variables) {
 
-  $output .= theme('user_picture', $account);
-
-  foreach ($fields as $field) {
+  $variables['picture'] = theme('user_picture', $variables['account']);
+  $variables['profile'] = array();
+  // Supply filtered version of $fields that have values.
+  foreach ($variables['fields'] as $field) {
     if ($field->value) {
-      if ($field->type == 'checkbox') {
-        $output .= "<p>$field->value</p>\n";
-      }
-      else {
-        $output .= "<p><strong>$field->title</strong><br />$field->value</p>\n";
-      }
+      $variables['profile'][$field->name]->title = $field->title;
+      $variables['profile'][$field->name]->value = $field->value;
+      $variables['profile'][$field->name]->type = $field->type;
     }
   }
 
-  return $output;
 }
 
-function theme_profile_listing($account, $fields = array()) {
+/**
+ * Process variables for profile-listing.tpl.php.
+ *
+ * The $variables array contains the following arguments:
+ * - $account
+ * - $fields
+ *
+ * @see profile-listing.tpl.php
+ */
+function template_preprocess_profile_listing(&$variables) {
 
-  $output  = "<div class=\"profile\">\n";
-  $output .= theme('user_picture', $account);
-  $output .= ' <div class="name">'. theme('username', $account) ."</div>\n";
-
-  foreach ($fields as $field) {
+  $variables['picture'] = theme('user_picture', $variables['account']);
+  $variables['name'] = theme('username', $variables['account']);
+  $variables['profile'] = array();
+  // Supply filtered version of $fields that have values.
+  foreach ($variables['fields'] as $field) {
     if ($field->value) {
-      $output .= " <div class=\"field\">$field->value</div>\n";
+      $variables['profile'][$field->name]->title = $field->title;
+      $variables['profile'][$field->name]->value = $field->value;
+      $variables['profile'][$field->name]->type = $field->type;
     }
   }
 
-  $output .= "</div>\n";
+}
 
-  return $output;
+/**
+ * Process variables for profile-wrapper.tpl.php.
+ *
+ * The $variables array contains the following arguments:
+ * - $content
+ *
+ * @see profile-wrapper.tpl.php
+ */
+function template_preprocess_profile_wrapper(&$variables) {
+  $variables['current_field'] = '';
+  if ($field = arg(1)) {
+    $variables['current_field'] = $field;
+    // Supply an alternate template suggestion based on the browsable field.
+    $variables['template_files'][] = 'profile-wrapper-'. $field;
+  }
 }
 
 function _profile_field_types($type = NULL) {
