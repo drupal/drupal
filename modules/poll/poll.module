@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.234 2007/07/01 17:41:16 dries Exp $
+// $Id: poll.module,v 1.235 2007/08/02 10:46:53 dries Exp $
 
 /**
  * @file
@@ -21,20 +21,37 @@ function poll_help($path, $arg) {
 }
 
 /**
+ * Implementation of hook_init().
+ */
+function poll_init() {
+  drupal_add_css(drupal_get_path('module', 'poll') .'/poll.css');
+}
+
+/**
  * Implementation of hook_theme()
  */
 function poll_theme() {
   return array(
-    'poll_view_voting' => array(
+    'poll_vote' => array(
+      'file' => 'poll-vote',
       'arguments' => array('form' => NULL),
     ),
     'poll_results' => array(
-      'arguments' => array('title' => NULL, 'results' => NULL, 'votes' => NULL, 'links' => NULL, 'block' => NULL, 'nid' => NULL, 'vote' => NULL),
+      'file' => 'poll-results',
+      'arguments' => array('raw_title' => NULL, 'results' => NULL, 'votes' => NULL, 'raw_links' => NULL, 'block' => NULL, 'nid' => NULL, 'vote' => NULL),
     ),
     'poll_bar' => array(
-      'arguments' => array('title' => NULL, 'percentage' => NULL, 'votes' => NULL, 'block' => NULL),
+      'file' => 'poll-bar',
+      'arguments' => array('title' => NULL, 'votes' => NULL, 'total_votes' => NULL, 'vote' => NULL, 'block' => NULL),
     ),
   );
+}
+
+/**
+ * Implementation of hook_perm().
+ */
+function poll_perm() {
+  return array('create polls', 'vote on polls', 'cancel own vote', 'inspect all votes');
 }
 
 /**
@@ -44,6 +61,46 @@ function poll_access($op, $node) {
   if ($op == 'create') {
     return user_access('create polls');
   }
+}
+
+/**
+ * Implementation of hook_menu().
+ */
+function poll_menu() {
+  $items['poll'] = array(
+    'title' => 'Polls',
+    'page callback' => 'poll_page',
+    'access arguments' => array('access content'),
+    'type' => MENU_SUGGESTED_ITEM,
+  );
+
+  $items['node/%node/votes'] = array(
+    'title' => 'Votes',
+    'page callback' => 'poll_votes',
+    'page arguments' => array(1),
+    'access callback' => '_poll_menu_access',
+    'access arguments' => array(1, 'inspect all votes', FALSE),
+    'weight' => 3,
+    'type' => MENU_LOCAL_TASK,
+  );
+
+  $items['node/%node/results'] = array(
+    'title' => 'Results',
+    'page callback' => 'poll_results',
+    'page arguments' => array(1),
+    'access callback' => '_poll_menu_access',
+    'access arguments' => array(1, 'access content', TRUE),
+    'weight' => 3,
+    'type' => MENU_LOCAL_TASK,
+  );
+  return $items;
+}
+
+/**
+ * Callback function to see if a node is acceptable for poll menu items.
+ */
+function _poll_menu_access($node, $perm, $inspect_allowvotes) {
+  return user_access($perm) && ($node->type == 'poll') && ($node->allowvotes || !$inspect_allowvotes);
 }
 
 /**
@@ -88,49 +145,18 @@ function poll_cron() {
 }
 
 /**
- * Implementation of hook_delete().
+ * Implementation of hook_node_info().
  */
-function poll_delete($node) {
-  db_query("DELETE FROM {poll} WHERE nid = %d", $node->nid);
-  db_query("DELETE FROM {poll_choices} WHERE nid = %d", $node->nid);
-  db_query("DELETE FROM {poll_votes} WHERE nid = %d", $node->nid);
-}
-
-/**
- * Implementation of hook_submit().
- */
-function poll_node_form_submit(&$form, &$form_state) {
-  // Renumber fields
-  $form_state['values']['choice'] = array_values($form_state['values']['choice']);
-  $form_state['values']['teaser'] = poll_teaser((object)$form_state['values']);
-  $form_state['choices'] = $form_state['values']['choices'];
-  if ($form_state['values']['morechoices']) {
-    $form_state['choices'] *= 2;
-  }
-}
-
-/**
- * Implementation of hook_validate().
- */
-function poll_validate($node) {
-  if (isset($node->title)) {
-    // Check for at least two options and validate amount of votes:
-    $realchoices = 0;
-    // Renumber fields
-    $node->choice = array_values($node->choice);
-    foreach ($node->choice as $i => $choice) {
-      if ($choice['chtext'] != '') {
-        $realchoices++;
-      }
-      if ($choice['chvotes'] < 0) {
-        form_set_error("choice][$i][chvotes", t('Negative values are not allowed.'));
-      }
-    }
-
-    if ($realchoices < 2) {
-      form_set_error("choice][$realchoices][chtext", t('You must fill in at least two choices.'));
-    }
-  }
+function poll_node_info() {
+  return array(
+    'poll' => array(
+      'name' => t('Poll'),
+      'module' => 'poll',
+      'description' => t("A poll is a multiple-choice question which visitors can vote on."),
+      'title_label' => t('Question'),
+      'has_body' => FALSE,
+    )
+  );
 }
 
 /**
@@ -223,67 +249,41 @@ function poll_form(&$node, $form_state) {
   return $form;
 }
 
-function poll_insert($node) {
-  if (!user_access('administer nodes')) {
-    // Make sure all votes are 0 initially
-    foreach ($node->choice as $i => $choice) {
-      $node->choice[$i]['chvotes'] = 0;
-    }
-    $node->active = 1;
+/**
+ * Implementation of hook_submit().
+ */
+function poll_node_form_submit(&$form, &$form_state) {
+  // Renumber fields
+  $form_state['values']['choice'] = array_values($form_state['values']['choice']);
+  $form_state['values']['teaser'] = poll_teaser((object)$form_state['values']);
+  $form_state['choices'] = $form_state['values']['choices'];
+  if ($form_state['values']['morechoices']) {
+    $form_state['choices'] *= 2;
   }
-
-  db_query("INSERT INTO {poll} (nid, runtime, active) VALUES (%d, %d, %d)", $node->nid, $node->runtime, $node->active);
-
-  foreach ($node->choice as $choice) {
-    if ($choice['chtext'] != '') {
-      db_query("INSERT INTO {poll_choices} (nid, chtext, chvotes, chorder) VALUES (%d, '%s', %d, %d)", $node->nid, $choice['chtext'], $choice['chvotes'], $i++);
-    }
-  }
-}
-
-function _poll_menu_access($node, $perm, $inspect_allowvotes) {
-  return user_access($perm) && ($node->type == 'poll') && ($node->allowvotes || !$inspect_allowvotes);
 }
 
 /**
- * Implementation of hook_menu().
+ * Implementation of hook_validate().
  */
-function poll_menu() {
-  $items['poll'] = array(
-    'title' => 'Polls',
-    'page callback' => 'poll_page',
-    'access arguments' => array('access content'),
-    'type' => MENU_SUGGESTED_ITEM,
-  );
+function poll_validate($node) {
+  if (isset($node->title)) {
+    // Check for at least two options and validate amount of votes:
+    $realchoices = 0;
+    // Renumber fields
+    $node->choice = array_values($node->choice);
+    foreach ($node->choice as $i => $choice) {
+      if ($choice['chtext'] != '') {
+        $realchoices++;
+      }
+      if ($choice['chvotes'] < 0) {
+        form_set_error("choice][$i][chvotes", t('Negative values are not allowed.'));
+      }
+    }
 
-  $items['poll/cancel/%node'] = array(
-    'title' => 'Cancel',
-    'page callback' => 'poll_cancel',
-    'page arguments' => array(2),
-    'access arguments' => array('cancel own vote'),
-    'type' => MENU_CALLBACK,
-  );
-  $items['node/%node/votes'] = array(
-    'title' => 'Votes',
-    'page callback' => 'poll_votes',
-    'access callback' => '_poll_menu_access',
-    'access arguments' => array(1, 'inspect all votes', FALSE),
-    'weight' => 3,
-    'type' => MENU_LOCAL_TASK,
-  );
-  $items['node/%node/results'] = array(
-    'title' => 'Results',
-    'page callback' => 'poll_results',
-    'access callback' => '_poll_menu_access',
-    'access arguments' => array(1, 'access content', TRUE),
-    'weight' => 3,
-    'type' => MENU_LOCAL_TASK,
-  );
-  return $items;
-}
-
-function poll_init() {
-  drupal_add_css(drupal_get_path('module', 'poll') .'/poll.css');
+    if ($realchoices < 2) {
+      form_set_error("choice][$realchoices][chtext", t('You must fill in at least two choices.'));
+    }
+  }
 }
 
 /**
@@ -321,274 +321,54 @@ function poll_load($node) {
 }
 
 /**
- * Implementation of hook_node_info().
+ * Implementation of hook_insert().
  */
-function poll_node_info() {
-  return array(
-    'poll' => array(
-      'name' => t('Poll'),
-      'module' => 'poll',
-      'description' => t("A poll is a multiple-choice question which visitors can vote on."),
-      'title_label' => t('Question'),
-      'has_body' => FALSE,
-    )
-  );
-}
-
-function poll_page() {
-  // List all polls
-  $sql = "SELECT n.nid, n.title, p.active, n.created, SUM(c.chvotes) AS votes FROM {node} n INNER JOIN {poll} p ON n.nid = p.nid INNER JOIN {poll_choices} c ON n.nid = c.nid WHERE n.status = 1 GROUP BY n.nid, n.title, p.active, n.created ORDER BY n.created DESC";
-  $sql = db_rewrite_sql($sql);
-  $result = pager_query($sql, 15);
-  $output = '<ul>';
-  while ($node = db_fetch_object($result)) {
-    $output .= '<li>'. l($node->title, "node/$node->nid") .' - '. format_plural($node->votes, '1 vote', '@count votes') .' - '. ($node->active ? t('open') : t('closed')) .'</li>';
-  }
-  $output .= '</ul>';
-  $output .= theme("pager", NULL, 15);
-  return $output;
-}
-
-/**
- * Implementation of hook_perm().
- */
-function poll_perm() {
-  return array('create polls', 'vote on polls', 'cancel own vote', 'inspect all votes');
-}
-
-/**
- * Creates a simple teaser that lists all the choices.
- */
-function poll_teaser($node) {
-  $teaser = NULL;
-  if (is_array($node->choice)) {
-    foreach ($node->choice as $k => $choice) {
-      $teaser .= '* '. $choice['chtext'] .'\n';
-    }
-  }
-  return $teaser;
-}
-
-/**
- * Generates the voting form for a poll.
- */
-function poll_view_voting($node, $block) {
-  if ($node->choice) {
-    $list = array();
+function poll_insert($node) {
+  if (!user_access('administer nodes')) {
+    // Make sure all votes are 0 initially
     foreach ($node->choice as $i => $choice) {
-      $list[$i] = check_plain($choice['chtext']);
+      $node->choice[$i]['chvotes'] = 0;
     }
-    $form['choice'] = array(
-      '#type' => 'radios',
-      '#title' => $block ? check_plain($node->title) : '',
-      '#default_value' => -1,
-      '#options' => $list,
-    );
+    $node->active = 1;
   }
-  $form['nid'] = array('#type' => 'hidden', '#value' => $node->nid);
-  $form['vote'] = array('#type' => 'submit', '#value' => t('Vote'));
-  $form['#action'] = url('node/'. $node->nid);
-  return $form;
-}
 
-/**
- * Themes the voting form for a poll.
- */
-function theme_poll_view_voting($form) {
-  $output .= '<div class="poll">';
-  $output .= '  <div class="vote-form">';
-  $output .= '    <div class="choices">';
-  $output .= drupal_render($form['choice']);
-  $output .= '    </div>';
-  $output .= drupal_render($form['nid']);
-  $output .= drupal_render($form['vote']);
-  $output .= '  </div>';
-  $output .= drupal_render($form);
-  $output .= '</div>';
-  return $output;
-}
+  db_query("INSERT INTO {poll} (nid, runtime, active) VALUES (%d, %d, %d)", $node->nid, $node->runtime, $node->active);
 
-/**
- * Generates a graphical representation of the results of a poll.
- */
-function poll_view_results(&$node, $teaser, $page, $block) {
-  // Count the votes and find the maximum
-  $total_votes = 0;
-  $max_votes = 0;
+  $i = 0;
   foreach ($node->choice as $choice) {
-    $total_votes += $choice['chvotes'];
-    $max_votes = max($max_votes, $choice['chvotes']);
-  }
-
-  $poll_results = '';
-  foreach ($node->choice as $i => $choice) {
     if ($choice['chtext'] != '') {
-      $poll_results .= theme('poll_bar', check_plain($choice['chtext']), round($choice['chvotes'] * 100 / max($total_votes, 1)), format_plural($choice['chvotes'], '1 vote', '@count votes'), $block);
+      db_query("INSERT INTO {poll_choices} (nid, chtext, chvotes, chorder) VALUES (%d, '%s', %d, %d)", $node->nid, $choice['chtext'], $choice['chvotes'], $i++);
     }
-  }
-
-  return theme('poll_results', check_plain($node->title), $poll_results, $total_votes, isset($node->links) ? $node->links : array(), $block, $node->nid, isset($node->vote) ? $node->vote : NULL);
-}
-
-function theme_poll_results($title, $results, $votes, $links, $block, $nid, $vote) {
-  $output = '';
-  if ($block) {
-    $output .= '<div class="poll">';
-    $output .= '<div class="title">'. $title .'</div>';
-    $output .= $results;
-    $output .= '<div class="total">'. t('Total votes: %votes', array('%votes' => $votes)) .'</div>';
-    $output .= '</div>';
-    $output .= '<div class="links">'. theme('links', $links) .'</div>';
-  }
-  else {
-    $output .= '<div class="poll">';
-    $output .= $results;
-    $output .= '<div class="total">'. t('Total votes: %votes', array('%votes' => $votes)) .'</div>';
-    if (isset($vote) && $vote > -1 && user_access('cancel own vote')) {
-      $output .= drupal_get_form('poll_cancel_form', $nid);
-    }
-    $output .= '</div>';
-  }
-
-  return $output;
-}
-
-function poll_cancel_form(&$form_state, $nid) {
-  $form['#action'] = url("poll/cancel/$nid");
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Cancel your vote'));
-  return $form;
-}
-
-function theme_poll_bar($title, $percentage, $votes, $block) {
-  if ($block) {
-    $output  = '<div class="text">'. $title .'</div>';
-    $output .= '<div class="bar"><div style="width: '. $percentage .'%;" class="foreground"></div></div>';
-    $output .= '<div class="percent">'. $percentage .'%</div>';
-  }
-  else {
-    $output  = '<div class="text">'. $title .'</div>';
-    $output .= '<div class="bar"><div style="width: '. $percentage .'%;" class="foreground"></div></div>';
-    $output .= '<div class="percent">'. $percentage .'% ('. $votes .')</div>';
-  }
-
-  return $output;
-}
-
-/**
- * Callback for the 'results' tab for polls you can vote on
- */
-function poll_results() {
-  if ($node = node_load(arg(1))) {
-    drupal_set_title(check_plain($node->title));
-    return node_show($node, 0);
-  }
-  else {
-    drupal_not_found();
   }
 }
 
 /**
- * Callback for the 'votes' tab for polls you can see other votes on
+ * Implementation of hook_update().
  */
-function poll_votes() {
-  if ($node = node_load(arg(1))) {
-    drupal_set_title(check_plain($node->title));
-    $output = t('This table lists all the recorded votes for this poll.  If anonymous users are allowed to vote, they will be identified by the IP address of the computer they used when they voted.');
+function poll_update($node) {
+  db_query('UPDATE {poll} SET runtime = %d, active = %d WHERE nid = %d', $node->runtime, $node->active, $node->nid);
 
-    $header[] = array('data' => t('Visitor'), 'field' => 'u.name');
-    $header[] = array('data' => t('Vote'), 'field' => 'pv.chorder');
+  db_query('DELETE FROM {poll_choices} WHERE nid = %d', $node->nid);
+  db_query('DELETE FROM {poll_votes} WHERE nid = %d', $node->nid);
 
-    $result = pager_query("SELECT pv.chorder, pv.uid, pv.hostname, u.name FROM {poll_votes} pv LEFT JOIN {users} u ON pv.uid = u.uid WHERE pv.nid = %d" . tablesort_sql($header), 20, 0, NULL, $node->nid);
-    $rows = array();
-    while ($vote = db_fetch_object($result)) {
-      $rows[] = array(
-        $vote->name ? theme('username', $vote) : check_plain($vote->hostname),
-        check_plain($node->choice[$vote->chorder]['chtext']));
+  $i = 0;
+  foreach ($node->choice as $choice) {
+    $chvotes = (int)$choice['chvotes'];
+    $chtext = $choice['chtext'];
+
+    if ($chtext != '') {
+      db_query("INSERT INTO {poll_choices} (nid, chtext, chvotes, chorder) VALUES (%d, '%s', %d, %d)", $node->nid, $chtext, $chvotes, $i++);
     }
-    $output .= theme('table', $header, $rows);
-    $output .= theme('pager', NULL, 20, 0);
-    print theme('page', $output);
-  }
-  else {
-    drupal_not_found();
   }
 }
 
 /**
- * Callback for processing a vote
+ * Implementation of hook_delete().
  */
-function poll_vote(&$node) {
-  global $user;
-  $nid = arg(1);
-
-  if ($node = node_load($nid)) {
-    $edit = $_POST;
-    $choice = $edit['choice'];
-    $vote = $_POST['vote'];
-
-    if (isset($choice) && isset($node->choice[$choice])) {
-      if ($node->allowvotes) {
-        // Record the vote by this user or host.
-        if ($user->uid) {
-          db_query('INSERT INTO {poll_votes} (nid, chorder, uid) VALUES (%d, %d, %d)', $node->nid, $choice, $user->uid);
-        }
-        else {
-          db_query("INSERT INTO {poll_votes} (nid, chorder, hostname) VALUES (%d, %d, '%s')", $node->nid, $choice, ip_address());
-        }
-
-        // Add one to the votes.
-        db_query("UPDATE {poll_choices} SET chvotes = chvotes + 1 WHERE nid = %d AND chorder = %d", $node->nid, $choice);
-
-        $node->allowvotes = FALSE;
-        $node->choice[$choice]['chvotes']++;
-        cache_clear_all();
-        drupal_set_message(t('Your vote was recorded.'));
-      }
-      else {
-        drupal_set_message(t("You are not allowed to vote on this poll."), 'error');
-      }
-    }
-    else {
-      drupal_set_message(t("You did not specify a valid poll choice."), 'error');
-    }
-    drupal_goto('node/'. $nid);
-  }
-  else {
-    drupal_not_found();
-  }
-}
-
-
-/**
- * Callback for canceling a vote
- */
-function poll_cancel(&$node) {
-  global $user;
-
-  $nid = arg(2);
-  if ($node = node_load($nid)) {
-    if ($node->type == 'poll' && $node->allowvotes == FALSE) {
-      if ($user->uid) {
-        db_query('DELETE FROM {poll_votes} WHERE nid = %d and uid = %d', $node->nid, $user->uid);
-      }
-      else {
-        db_query("DELETE FROM {poll_votes} WHERE nid = %d and hostname = '%s'", $node->nid, ip_address());
-      }
-
-      // Subtract from the votes.
-      db_query("UPDATE {poll_choices} SET chvotes = chvotes - 1 WHERE nid = %d AND chorder = %d", $node->nid, $node->vote);
-      $node->allowvotes = TRUE;
-      $node->choice[$node->vote]['chvotes']--;
-      drupal_set_message(t('Your vote was canceled.'));
-    }
-    else {
-      drupal_set_message(t("You are not allowed to cancel an invalid poll choice."), 'error');
-    }
-    drupal_goto('node/'. $nid);
-  }
-  else {
-    drupal_not_found();
-  }
+function poll_delete($node) {
+  db_query("DELETE FROM {poll} WHERE nid = %d", $node->nid);
+  db_query("DELETE FROM {poll_choices} WHERE nid = %d", $node->nid);
+  db_query("DELETE FROM {poll_votes} WHERE nid = %d", $node->nid);
 }
 
 /**
@@ -616,10 +396,7 @@ function poll_view($node, $teaser = FALSE, $page = FALSE, $block = FALSE) {
     $node->links = $links;
   }
 
-  if (!empty($node->allowvotes) && ($block || arg(2) != 'results')) {
-    if ($_POST['op'] == t('Vote')) {
-      poll_vote($node);
-    }
+  if (!empty($node->allowvotes) && ($block || empty($node->show_results))) {
     $node->content['body'] = array(
       '#value' => drupal_get_form('poll_view_voting', $node, $block),
     );
@@ -633,23 +410,247 @@ function poll_view($node, $teaser = FALSE, $page = FALSE, $block = FALSE) {
 }
 
 /**
- * Implementation of hook_update().
+ * Menu callback to provide a simple list of all polls available.
  */
-function poll_update($node) {
-  db_query('UPDATE {poll} SET runtime = %d, active = %d WHERE nid = %d', $node->runtime, $node->active, $node->nid);
+function poll_page() {
+  // List all polls
+  $sql = "SELECT n.nid, n.title, p.active, n.created, SUM(c.chvotes) AS votes FROM {node} n INNER JOIN {poll} p ON n.nid = p.nid INNER JOIN {poll_choices} c ON n.nid = c.nid WHERE n.status = 1 GROUP BY n.nid, n.title, p.active, n.created ORDER BY n.created DESC";
+  $sql = db_rewrite_sql($sql);
+  $result = pager_query($sql, 15);
+  $output = '<ul>';
+  while ($node = db_fetch_object($result)) {
+    $output .= '<li>'. l($node->title, "node/$node->nid") .' - '. format_plural($node->votes, '1 vote', '@count votes') .' - '. ($node->active ? t('open') : t('closed')) .'</li>';
+  }
+  $output .= '</ul>';
+  $output .= theme("pager", NULL, 15);
+  return $output;
+}
 
-  db_query('DELETE FROM {poll_choices} WHERE nid = %d', $node->nid);
-  db_query('DELETE FROM {poll_votes} WHERE nid = %d', $node->nid);
-
-  $i = 0;
-  foreach ($node->choice as $choice) {
-    $chvotes = (int)$choice['chvotes'];
-    $chtext = $choice['chtext'];
-
-    if ($chtext != '') {
-      db_query("INSERT INTO {poll_choices} (nid, chtext, chvotes, chorder) VALUES (%d, '%s', %d, %d)", $node->nid, $chtext, $chvotes, $i++);
+/**
+ * Creates a simple teaser that lists all the choices. 
+ *
+ * This is primarily used for RSS.
+ */
+function poll_teaser($node) {
+  $teaser = NULL;
+  if (is_array($node->choice)) {
+    foreach ($node->choice as $k => $choice) {
+      $teaser .= '* '. $choice['chtext'] .'\n';
     }
   }
+  return $teaser;
+}
+
+/**
+ * Generates the voting form for a poll.
+ *
+ * @ingroup forms
+ * @see poll_vote()
+ * @see phptemplate_preprocess_poll_vote()
+ */
+function poll_view_voting(&$form_state, $node, $block) {
+  if ($node->choice) {
+    $list = array();
+    foreach ($node->choice as $i => $choice) {
+      $list[$i] = check_plain($choice['chtext']);
+    }
+    $form['choice'] = array(
+      '#type' => 'radios',
+      '#default_value' => -1,
+      '#options' => $list,
+    );
+  }
+  
+  $form['vote'] = array(
+    '#type' => 'submit', 
+    '#value' => t('Vote'),
+    '#submit' => array('poll_vote'),
+  );
+
+  // Store the node so we can get to it in submit functions.
+  $form['#node'] = $node;
+  $form['#block'] = $block;
+
+  // Set form caching because we could have multiple of these forms on
+  // the same page, and we want to ensure the right one gets picked.
+  $form['#cache'] = TRUE;
+
+  // Provide a more cleanly named voting form theme.
+  $form['#theme'] = 'poll_vote';
+  return $form;
+}
+
+/**
+ * Submit handler for processing a vote
+ */
+function poll_vote($form, &$form_state) {
+  $node = $form['#node'];
+  $choice = $form_state['values']['choice'];
+
+  global $user;
+  if ($user->uid) {
+    db_query('INSERT INTO {poll_votes} (nid, chorder, uid) VALUES (%d, %d, %d)', $node->nid, $choice, $user->uid);
+  }
+  else {
+    db_query("INSERT INTO {poll_votes} (nid, chorder, hostname) VALUES (%d, %d, '%s')", $node->nid, $choice, ip_address());
+  }
+
+  // Add one to the votes.
+  db_query("UPDATE {poll_choices} SET chvotes = chvotes + 1 WHERE nid = %d AND chorder = %d", $node->nid, $choice);
+
+  cache_clear_all();
+  drupal_set_message(t('Your vote was recorded.'));
+
+  // Return the user to whatever page they voted from.
+}
+
+/**
+ * Themes the voting form for a poll.
+ *
+ * Inputs: $form
+ */
+function template_preprocess_poll_vote(&$variables) {
+  $form = $variables['form'];
+  $variables['choice'] = drupal_render($form['choice']);
+  $variables['title'] = check_plain($form['#node']->title);
+  $variables['vote'] = drupal_render($form['vote']);
+  $variables['rest'] = drupal_render($form);
+  $variables['block'] = $form['#block'];
+}
+
+/**
+ * Generates a graphical representation of the results of a poll.
+ */
+function poll_view_results(&$node, $teaser, $page, $block) {
+  // Count the votes and find the maximum
+  $total_votes = 0;
+  $max_votes = 0;
+  foreach ($node->choice as $choice) {
+    $total_votes += $choice['chvotes'];
+    $max_votes = max($max_votes, $choice['chvotes']);
+  }
+
+  $poll_results = '';
+  foreach ($node->choice as $i => $choice) {
+    if ($choice['chtext'] != '') {
+      $poll_results .= theme('poll_bar', $choice['chtext'], $choice['chvotes'], $total_votes, isset($node->vote) && $node->vote == $i, $block);
+    }
+  }
+
+  return theme('poll_results', $node->title, $poll_results, $total_votes, isset($node->links) ? $node->links : array(), $block, $node->nid, isset($node->vote) ? $node->vote : NULL);
+}
+
+/**
+ * Preprocess the poll_results theme hook.
+ *
+ * Inputs: $raw_title, $results, $votes, $raw_links, $block, $nid, $vote. The
+ * $raw_* inputs to this are naturally unsafe; often safe versions are
+ * made to simply overwrite the raw version, but in this case it seems likely
+ * that the title and the links may be overridden by the theme layer, so they
+ * are left in with a different name for that purpose.
+ *
+ * @see poll-results.tpl.php
+ * @see poll-results-block.tpl.php
+ * @see theme_poll_results()
+ */
+function template_preprocess_poll_results(&$variables) {
+  $variables['links'] = theme('links', $variables['raw_links']);
+  if (isset($variables['vote']) && $variables['vote'] > -1 && user_access('cancel own vote')) {
+    $variables['cancel_form'] = drupal_get_form('poll_cancel_form', $variables['nid']);
+  }
+  $variables['title'] = check_plain($variables['raw_title']);
+
+  // If this is a block, allow a different tpl.php to be used.
+  if ($variables['block']) {
+    $variables['template_files'][] = 'poll-results-block';
+  }
+}
+
+/**
+ * Preprocess the poll_bar theme hook.
+ *
+ * Inputs: $title, $votes, $total_votes, $voted, $block
+ *
+ * @see poll-bar.tpl.php
+ * @see poll-bar-block.tpl.php
+ * @see theme_poll_bar()
+ */
+function template_preprocess_poll_bar(&$variables) {
+  if ($variables['block']) {
+    $variables['template_files'][] = 'poll-bar-block';
+  }
+  $variables['title'] = check_plain($variables['title']);
+  $variables['percentage'] = round($variables['votes'] * 100 / max($variables['total_votes'], 1));
+}
+
+/**
+ * Builds the cancel form for a poll.
+ *
+ * @ingroup forms
+ * @see poll_cancel()
+ */
+function poll_cancel_form(&$form_state, $nid) {
+  // Store the nid so we can get to it in submit functions.
+  $form['#nid'] = $nid;
+
+  $form['submit'] = array(
+    '#type' => 'submit', 
+    '#value' => t('Cancel your vote'),
+    '#submit' => array('poll_cancel')
+  );
+
+  $form['#cache'] = TRUE;
+
+  return $form;
+}
+
+/**
+ * Submit callback for poll_cancel_form
+ */
+function poll_cancel($form, &$form_state) {
+  $node = node_load($form['#nid']);
+  global $user;
+
+  if ($user->uid) {
+    db_query('DELETE FROM {poll_votes} WHERE nid = %d and uid = %d', $node->nid, $user->uid);
+  }
+  else {
+    db_query("DELETE FROM {poll_votes} WHERE nid = %d and hostname = '%s'", $node->nid, ip_address());
+  }
+
+  // Subtract from the votes.
+  db_query("UPDATE {poll_choices} SET chvotes = chvotes - 1 WHERE nid = %d AND chorder = %d", $node->nid, $node->vote);
+}
+
+/**
+ * Callback for the 'results' tab for polls you can vote on
+ */
+function poll_results($node) {
+  drupal_set_title(check_plain($node->title));
+  $node->show_results = TRUE;
+  return node_show($node, 0);
+}
+
+/**
+ * Callback for the 'votes' tab for polls you can see other votes on
+ */
+function poll_votes($node) {
+  drupal_set_title(check_plain($node->title));
+  $output = t('This table lists all the recorded votes for this poll.  If anonymous users are allowed to vote, they will be identified by the IP address of the computer they used when they voted.');
+
+  $header[] = array('data' => t('Visitor'), 'field' => 'u.name');
+  $header[] = array('data' => t('Vote'), 'field' => 'pv.chorder');
+
+  $result = pager_query("SELECT pv.chorder, pv.uid, pv.hostname, u.name FROM {poll_votes} pv LEFT JOIN {users} u ON pv.uid = u.uid WHERE pv.nid = %d" . tablesort_sql($header), 20, 0, NULL, $node->nid);
+  $rows = array();
+  while ($vote = db_fetch_object($result)) {
+    $rows[] = array(
+      $vote->name ? theme('username', $vote) : check_plain($vote->hostname),
+      check_plain($node->choice[$vote->chorder]['chtext']));
+  }
+  $output .= theme('table', $header, $rows);
+  $output .= theme('pager', NULL, 20, 0);
+  return $output;
 }
 
 /**
