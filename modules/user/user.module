@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.825 2007/08/02 10:22:45 dries Exp $
+// $Id: user.module,v 1.826 2007/08/02 10:41:26 dries Exp $
 
 /**
  * @file
@@ -31,18 +31,19 @@ function user_theme() {
   return array(
     'user_picture' => array(
       'arguments' => array('account' => NULL),
+      'file' => 'user-picture',
     ),
     'user_profile' => array(
       'arguments' => array('account' => NULL),
-      'file' => 'user_profile',
+      'file' => 'user-profile',
     ),
     'user_profile_category' => array(
       'arguments' => array('element' => NULL),
-      'file' => 'user_profile_category',
+      'file' => 'user-profile-category',
     ),
     'user_profile_item' => array(
       'arguments' => array('element' => NULL),
-      'file' => 'user_profile_item',
+      'file' => 'user-profile-item',
     ),
     'user_list' => array(
       'arguments' => array('users' => NULL, 'title' => NULL),
@@ -729,8 +730,18 @@ function user_block($op = 'list', $delta = 0, $edit = array()) {
   }
 }
 
-function theme_user_picture($account) {
+/**
+ * Process variables for user-picture.tpl.php.
+ *
+ * The $variables array contains the following arguments:
+ * - $account
+ *
+ * @see user-picture.tpl.php
+ */
+function template_preprocess_user_picture(&$variables) {
+  $variables['picture'] = '';
   if (variable_get('user_pictures', 0)) {
+    $account = $variables['account'];
     if (!empty($account->picture) && file_exists($account->picture)) {
       $picture = file_create_url($account->picture);
     }
@@ -740,19 +751,22 @@ function theme_user_picture($account) {
 
     if (isset($picture)) {
       $alt = t("@user's picture", array('@user' => $account->name ? $account->name : variable_get('anonymous', t('Anonymous'))));
-      $picture = theme('image', $picture, $alt, $alt, '', FALSE);
+      $variables['picture'] = theme('image', $picture, $alt, $alt, '', FALSE);
       if (!empty($account->uid) && user_access('access user profiles')) {
-        $picture = l($picture, "user/$account->uid", array('attributes' => array('title' => t('View user profile.')), 'html' => TRUE));
+        $attributes = array('attributes' => array('title' => t('View user profile.')), 'html' => TRUE);
+        $variables['picture'] = l($variables['picture'], "user/$account->uid", $attributes);
       }
-
-      return "<div class=\"picture\">$picture</div>";
     }
   }
 }
 
 /**
  * Make a list of users.
- * @param $items an array with user objects. Should contain at least the name and uid
+ *
+ * @param $users
+ *   An array with user objects. Should contain at least the name and uid.
+ * @param $title
+ *  (optional) Title to pass on to theme_item_list().
  *
  * @ingroup themeable
  */
@@ -763,6 +777,58 @@ function theme_user_list($users, $title = NULL) {
     }
   }
   return theme('item_list', $items, $title);
+}
+
+/**
+ * Process variables for user-profile.tpl.php.
+ *
+ * The $variables array contains the following arguments:
+ * - $account
+ *
+ * @see user-picture.tpl.php
+ */
+function template_preprocess_user_profile(&$variables) {
+  $variables['profile'] = array();
+  // Provide keyed variables so themers can print each section independantly.
+  foreach (element_children($variables['account']->content) as $key) {
+    $variables['profile'][$key] = drupal_render($variables['account']->content[$key]);
+  }
+  // Collect all profiles to make it easier to print all items at once.
+  $variables['user_profile'] = implode($variables['profile']);
+}
+
+/**
+ * Process variables for user-profile-item.tpl.php.
+ *
+ * The $variables array contains the following arguments:
+ * - $element
+ *
+ * @see user-profile-item.tpl.php
+ */
+function template_preprocess_user_profile_item(&$variables) {
+  $variables['title'] = $variables['element']['#title'];
+  $variables['value'] = $variables['element']['#value'];
+  $variables['attributes'] = '';
+  if (isset($variables['element']['#attributes'])) {
+    $variables['attributes'] = drupal_attributes($variables['element']['#attributes']);
+  }
+}
+
+/**
+ * Process variables for user-profile-category.tpl.php.
+ *
+ * The $variables array contains the following arguments:
+ * - $element
+ *
+ * @see user-profile-category.tpl.php
+ */
+function template_preprocess_user_profile_category(&$variables) {
+  $variables['title'] = $variables['element']['#title'];
+  $variables['profile_items'] = $variables['element']['#children'];
+  $variables['attributes'] = '';
+  if (isset($variables['element']['#attributes'])) {
+    $variables['attributes'] = drupal_attributes($variables['element']['#attributes']);
+  }
 }
 
 function user_is_anonymous() {
@@ -1718,11 +1784,9 @@ function user_edit_submit($form, &$form_state) {
 }
 
 function user_view($account) {
-  global $user;
-
-  // Retrieve all profile fields and store data in content element.
-  $account->content = user_build_content($account);
   drupal_set_title(check_plain($account->name));
+  // Retrieve all profile fields and attach to $account->content.
+  user_build_content($account);
   /**
    * To theme user profiles, copy modules/user/user_profile.tpl.php
    * to your theme directory, and edit it as instructed in that file's comments.
