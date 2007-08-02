@@ -537,6 +537,16 @@ function user_search($op = 'search', $keys = NULL, $skip_access_check = FALSE) {
 }
 
 /**
+ * Implementation of hook_elements().
+ */
+function user_elements() {
+  return array(
+    'user_profile_category' => array(),
+    'user_profile_item' => array(),
+  );
+}
+
+/**
  * Implementation of hook_user().
  */
 function user_user($type, &$edit, &$account, $category = NULL) {
