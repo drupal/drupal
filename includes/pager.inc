@@ -142,10 +142,10 @@ function theme_pager($tags = array(), $limit = 10, $element = 0, $parameters = a
   }
   // End of generation loop preparation.
 
-  $li_first = theme('pager_first', ($tags[0] ? $tags[0] : t('« first')), $limit, $element, $parameters);
-  $li_previous = theme('pager_previous', ($tags[1] ? $tags[1] : t('‹ previous')), $limit, $element, 1, $parameters);
-  $li_next = theme('pager_next', ($tags[3] ? $tags[3] : t('next ›')), $limit, $element, 1, $parameters);
-  $li_last = theme('pager_last', ($tags[4] ? $tags[4] : t('last »')), $limit, $element, $parameters);
+  $li_first = theme('pager_first', (isset($tags[0]) ? $tags[0] : t('« first')), $limit, $element, $parameters);
+  $li_previous = theme('pager_previous', (isset($tags[1]) ? $tags[1] : t('‹ previous')), $limit, $element, 1, $parameters);
+  $li_next = theme('pager_next', (isset($tags[3]) ? $tags[3] : t('next ›')), $limit, $element, 1, $parameters);
+  $li_last = theme('pager_last', (isset($tags[4]) ? $tags[4] : t('last »')), $limit, $element, $parameters);
 
   if ($pager_total[$element] > 1) {
     if ($li_first) {
