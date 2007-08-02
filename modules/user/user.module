@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.824 2007/07/27 13:08:17 dries Exp $
+// $Id: user.module,v 1.825 2007/08/02 10:22:45 dries Exp $
 
 /**
  * @file
@@ -534,6 +534,16 @@ function user_search($op = 'search', $keys = NULL, $skip_access_check = FALSE) {
         return $find;
       }
   }
+}
+
+/**
+ * Implementation of hook_elements().
+ */
+function user_elements() {
+  return array(
+    'user_profile_category' => array(),
+    'user_profile_item' => array(),
+  );
 }
 
 /**
