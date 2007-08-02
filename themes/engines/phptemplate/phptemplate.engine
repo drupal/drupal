@@ -1,5 +1,5 @@
 <?php
-// $Id: phptemplate.engine,v 1.66 2007/07/03 18:48:41 dries Exp $
+// $Id: phptemplate.engine,v 1.67 2007/08/02 20:08:53 dries Exp $
 
 /**
  * @file
@@ -36,6 +36,7 @@ function phptemplate_theme($existing, $type, $theme, $path) {
  *   The name of the theme function being executed.
  */
 function phptemplate_engine_preprocess(&$variables, $hook) {
+  global $user;
   static $count = array();
 
   // Create variables so anything which is themed can be zebra striped automatically.
@@ -46,4 +47,7 @@ function phptemplate_engine_preprocess(&$variables, $hook) {
   // Tell all templates where they are located.
   $variables['directory'] = path_to_theme();
   $variables['is_front'] = drupal_is_front_page();
+  // Tell all templates by which kind of user they're viewed.
+  $variables['logged_in'] = ($user->uid > 0);
+  $variables['is_admin'] = user_access('access administration pages');
 }

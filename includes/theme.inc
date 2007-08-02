@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.364 2007/07/18 07:05:49 goba Exp $
+// $Id: theme.inc,v 1.365 2007/08/02 20:08:52 dries Exp $
 
 /**
  * @file
@@ -1611,6 +1611,7 @@ function template_preprocess_page(&$variables) {
   $variables['layout'] = $layout;
 
   global $theme;
+  global $user;
   // Populate the rest of the regions.
   $regions = system_region_list($theme);
   // Load all region content assigned via blocks.
@@ -1660,6 +1661,38 @@ function template_preprocess_page(&$variables) {
   if ((arg(0) == 'node') && is_numeric(arg(1))) {
     $variables['node'] = node_load(arg(1));
   }
+
+  // Compile a list of classes that are going to be applied to the body element.
+  // This allows advanced theming based on context (home page, node of certain type, etc.).
+  $body_classes = array();
+  // Add a class that tells us whether we're on the front page or not.
+  $body_classes[] = (drupal_is_front_page()) ? 'front' : 'not-front';
+  // Add a class that tells us whether the page is viewed by an authenticated user or not.
+  $body_classes[] = ($user->uid > 0) ? 'logged-in' : 'not-logged-in';
+  // Add arg(0) to make it possible to theme the page depending on the current page
+  // type (e.g. node, admin, user, etc.). To avoid illegal characters in the class,
+  // we're removing everything disallowed. We are not using 'a-z' as that might leave
+  // in certain international characters (e.g. German umlauts).
+  $body_classes[] = preg_replace('![^abcdefghijklmnopqrstuvwxyz0-9-_]+!s', '', 'page-' . form_clean_id(drupal_strtolower(arg(0))));
+  // If on an individual node page, add the node type.
+  if (isset($variables['node']) && $variables['node']->type) {
+    $body_classes[] = 'node-type-'. form_clean_id($variables['node']->type);
+  }
+  // Add information about the number of sidebars.
+  if ($variables['sidebar_left'] && $variables['sidebar_right']) {
+    $body_classes[] = 'two-sidebars';
+  }
+  elseif ($variables['sidebar_left']) {
+    $body_classes[] = 'one-sidebar sidebar-left';
+  }
+  elseif ($variables['sidebar_right']) {
+    $body_classes[] = 'one-sidebar sidebar-right';
+  }
+  else {
+    $body_classes[] = 'no-sidebars';
+  }
+  // Implode with spaces.
+  $variables['body_classes'] = implode(' ', $body_classes);
 
   // Build a list of suggested template files in order of specificity. One
   // suggestion is made for every element of the current path, though

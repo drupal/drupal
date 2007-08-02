@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.864 2007/07/30 18:20:21 dries Exp $
+// $Id: node.module,v 1.865 2007/08/02 20:08:52 dries Exp $
 
 /**
  * @file
@@ -691,9 +691,9 @@ function node_save(&$node) {
 
   // Split off revisions data to another structure
   $revisions_table_values = array('nid' => &$node->nid,
-                     'title' => $node->title, 'body' => $node->body,
+                     'title' => $node->title, 'body' => isset($node->body) ? $node->body : '',
                      'teaser' => $node->teaser, 'timestamp' => $node->changed,
-                     'uid' => $user->uid, 'format' => $node->format);
+                     'uid' => $user->uid, 'format' => isset($node->format) ? $node->format : FILTER_FORMAT_DEFAULT);
   $revisions_table_types = array('nid' => '%d',
                      'title' => "'%s'", 'body' => "'%s'",
                      'teaser' => "'%s'", 'timestamp' => '%d',
@@ -1166,7 +1166,7 @@ function node_link($type, $node = NULL, $teaser = FALSE) {
   $links = array();
 
   if ($type == 'node') {
-    if ($teaser == 1 && $node->teaser && $node->readmore) {
+    if ($teaser == 1 && $node->teaser && !empty($node->readmore)) {
       $links['node_read_more'] = array(
         'title' => t('Read more'),
         'href' => "node/$node->nid",
@@ -1966,7 +1966,7 @@ function node_feed($nids = array(), $channel = array()) {
         break;
       case 'teaser':
         $item_text = $item->teaser;
-        if ($item->readmore) {
+        if (!empty($item->readmore)) {
           $item_text .= '<p>'. l(t('read more'), 'node/'. $item->nid, array('absolute' => TRUE)) .'</p>';
         }
         break;

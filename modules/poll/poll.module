@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.235 2007/08/02 10:46:53 dries Exp $
+// $Id: poll.module,v 1.236 2007/08/02 20:08:53 dries Exp $
 
 /**
  * @file
@@ -427,7 +427,7 @@ function poll_page() {
 }
 
 /**
- * Creates a simple teaser that lists all the choices. 
+ * Creates a simple teaser that lists all the choices.
  *
  * This is primarily used for RSS.
  */
@@ -460,9 +460,9 @@ function poll_view_voting(&$form_state, $node, $block) {
       '#options' => $list,
     );
   }
-  
+
   $form['vote'] = array(
-    '#type' => 'submit', 
+    '#type' => 'submit',
     '#value' => t('Vote'),
     '#submit' => array('poll_vote'),
   );
@@ -594,7 +594,7 @@ function poll_cancel_form(&$form_state, $nid) {
   $form['#nid'] = $nid;
 
   $form['submit'] = array(
-    '#type' => 'submit', 
+    '#type' => 'submit',
     '#value' => t('Cancel your vote'),
     '#submit' => array('poll_cancel')
   );

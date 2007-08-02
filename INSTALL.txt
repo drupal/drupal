@@ -1,4 +1,4 @@
-// $Id: INSTALL.txt,v 1.41 2007/07/26 06:14:14 dries Exp $
+// $Id: INSTALL.txt,v 1.42 2007/08/02 20:08:52 dries Exp $
 
 CONTENTS OF THIS FILE
 ---------------------
@@ -101,6 +101,12 @@ INSTALLATION
    In "step one" click "create the first account" which will become the main
    administrator account with total control. Login as the administrator and
    complete the initial configuration steps on the "Welcome" page.
+
+   If the default Drupal theme is not diplaying properly and links on the page
+   result in "Page Not Found" errors, try manually setting the $base_url variable
+   in the settings.php file if not already set. It's currently known that servers
+   running FastCGI can run into problems if the $base_url variable is left
+   commented out (see http://bugs.php.net/bug.php?id=19656).
 
    Consider creating a "files" subdirectory in your Drupal installation
    directory. This subdirectory stores files such as custom logos, user avatars,

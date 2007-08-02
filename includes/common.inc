@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.675 2007/07/29 17:28:23 dries Exp $
+// $Id: common.inc,v 1.676 2007/08/02 20:08:52 dries Exp $
 
 /**
  * @file
@@ -2649,10 +2649,6 @@ function drupal_common_themes() {
     ),
     'help' => array(
       'arguments' => array(),
-    ),
-    'node' => array(
-      'arguments' => array('node' => NULL, 'teaser' => FALSE, 'page' => FALSE),
-      'file' => 'node',
     ),
     'submenu' => array(
       'arguments' => array('links' => NULL),
