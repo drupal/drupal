@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.512 2007/07/29 17:28:23 dries Exp $
+// $Id: system.module,v 1.513 2007/08/02 20:19:02 dries Exp $
 
 /**
  * @file
@@ -789,10 +789,12 @@ function system_image_toolkit_settings() {
       '#options' => $toolkits_available
     );
   }
-  else {
-    $form['image_toolkit'] = array('#value' => '<p>'. t("No image toolkits found. Drupal will use PHP's built-in GD library for image handling.") .'</p>');
+  elseif (count($toolkits_available) == 1) {
+    variable_set('image_toolkit', key($toolkits_available));
   }
+
   $form['image_toolkit_settings'] = image_toolkit_invoke('settings');
+
   return system_settings_form($form);
 }
 
