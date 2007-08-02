@@ -153,7 +153,7 @@ function taxonomy_admin_vocabulary_edit($vocabulary) {
  * Page to edit a vocabulary term.
  */
 function taxonomy_admin_term_edit($tid) {
-  if ((isset($_POST['op']) && $_POST['op']) == t('Delete') || isset($_POST['confirm'])) {
+  if ((isset($_POST['op']) && $_POST['op'] == t('Delete')) || isset($_POST['confirm'])) {
     return drupal_get_form('taxonomy_term_confirm_delete', $tid);
   }
   if ($term = (array)taxonomy_get_term($tid)) {
