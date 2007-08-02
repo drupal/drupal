@@ -27,6 +27,10 @@
   margin: 0 auto;
   display: table;
 }
+.poll .vote-form .choices .title {
+  font-weight: bold;
+}
+
 .node-form .poll-form fieldset {
   display: block;
 }
