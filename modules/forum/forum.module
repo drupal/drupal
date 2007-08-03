@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.411 2007/07/26 06:48:03 dries Exp $
+// $Id: forum.module,v 1.412 2007/08/03 06:07:52 dries Exp $
 
 /**
  * @file
@@ -601,7 +601,6 @@ function _forum_new($tid) {
  */
 function template_preprocess_forums(&$variables) {
   global $user;
-  // forum list, topics list, topic browser and 'add new topic' link
 
   $vid = variable_get('forum_nav_vocabulary', '');
   $vocabulary = taxonomy_vocabulary_load($vid);
@@ -630,8 +629,7 @@ function template_preprocess_forums(&$variables) {
   $breadcrumb[] = array('path' => $_GET['q']);
   menu_set_location($breadcrumb);
 
-  $variables['forums_defined'] = count($variables['forums']) || count($variables['parents']);
-  if ($variables['forums_defined']) {
+  if ($variables['forums_defined'] = count($variables['forums']) || count($variables['parents'])) {
     // Format the "post new content" links listing.
     $forum_types = array();
 
@@ -673,19 +671,27 @@ function template_preprocess_forums(&$variables) {
     }
 
     // Provide separate template suggestions based on what's being output. Topic id is also accounted for.
-    // Check both variables to be safe.
+    // Check both variables to be safe then the inverse. Forums with topic ID's take precedence.
     if ($variables['forums'] && !$variables['topics']) {
       $variables['template_files'][] = 'forums-containers';
+      $variables['template_files'][] = 'forums-'. $variables['tid'];
       $variables['template_files'][] = 'forums-containers-'. $variables['tid'];
     }
-    else {
+    elseif (!$variables['forums'] && $variables['topics']) {
       $variables['template_files'][] = 'forums-topics';
+      $variables['template_files'][] = 'forums-'. $variables['tid'];
       $variables['template_files'][] = 'forums-topics-'. $variables['tid'];
+    }
+    else {
+      $variables['template_files'][] = 'forums-'. $variables['tid'];
     }
 
   }
   else {
     drupal_set_title(t('No forums defined'));
+    $variables['links'] = array();
+    $variables['forums'] = '';
+    $variables['topics'] = '';
   }
 }
 
@@ -702,23 +708,27 @@ function template_preprocess_forums(&$variables) {
  */
 function template_preprocess_forum_list(&$variables) {
   global $user;
+  $row = 0;
   // Sanitize each forum so that the template can safely print the data.
   foreach ($variables['forums'] as $id => $forum) {
     $variables['forums'][$id]->description = !empty($forum->description) ? filter_xss_admin($forum->description) : '';
     $variables['forums'][$id]->link = url("forum/$forum->tid");
     $variables['forums'][$id]->name = check_plain($forum->name);
     $variables['forums'][$id]->is_container = !empty($forum->container);
+    $variables['forums'][$id]->zebra = $row % 2 == 0 ? 'odd' : 'even';
+    $row++;
+
+    $variables['forums'][$id]->new_text = '';
+    $variables['forums'][$id]->new_url = '';
+    $variables['forums'][$id]->new_topics = 0;
+    $variables['forums'][$id]->old_topics = $forum->num_topics;
     if ($user->uid) {
       $variables['forums'][$id]->new_topics = _forum_topics_unread($forum->tid, $user->uid);
       if ($variables['forums'][$id]->new_topics) {
-        $variables['forums'][$id]->new_text = format_plural($variables['forums'][$id]->new_topics, '1 new', '@count new');
+        $variables['forums'][$id]->new_text = t('!count new', array('!count' => $variables['forums'][$id]->new_topics));
         $variables['forums'][$id]->new_url = url("forum/$forum->tid", array('fragment' => 'new'));
       }
       $variables['forums'][$id]->old_topics = $forum->num_topics - $variables['forums'][$id]->new_topics;
-    }
-    else {
-      $variables['forums'][$id]->new_topics = 0;
-      $variables['forums'][$id]->old_topics = $forum->num_topics;
     }
     $variables['forums'][$id]->last_reply = theme('forum_submitted', $forum->last_post);
   }
@@ -748,25 +758,30 @@ function template_preprocess_forum_topic_list(&$variables) {
   }
   $variables['header'] = $header;
 
-  $rows = array();
   if (!empty($variables['topics'])) {
+    $row = 0;
     foreach ($variables['topics'] as $id => $topic) {
       $variables['topics'][$id]->icon = theme('forum_icon', $topic->new, $topic->num_comments, $topic->comment_mode, $topic->sticky);
+      $variables['topics'][$id]->zebra = $row % 2 == 0 ? 'odd' : 'even';
+      $row++;
 
+      $variables['topics'][$id]->title = l($topic->title, "node/$topic->nid");
+      $variables['topics'][$id]->created = theme('forum_submitted', $topic);
+      $variables['topics'][$id]->last_reply = theme('forum_submitted', isset($topic->last_reply) ? $topic->last_reply : NULL);
+
+      $variables['topics'][$id]->new_text = '';
+      $variables['topics'][$id]->new_url = '';
+      if ($topic->new_replies) {
+        $variables['topics'][$id]->new_text = t('!count new', array('!count' => $variables['forums'][$id]->new_topics));
+        $variables['topics'][$id]->new_url = url("node/$topic->nid", array('fragment' => 'new'));
+      }
+
+      $variables['topics'][$id]->moved = FALSE;
+      $variables['topics'][$id]->message = '';
       if ($topic->tid != $variables['tid']) {
         $variables['topics'][$id]->moved = TRUE;
         $variables['topics'][$id]->title = check_plain($topic->title);
-        $variables['topics'][$id]->description = l(t('This topic has been moved'), "forum/$topic->tid");
-      }
-      else {
-        $variables['topics'][$id]->moved = FALSE;
-        $variables['topics'][$id]->title = l($topic->title, "node/$topic->nid");
-        if ($topic->new_replies) {
-          $variables['topics'][$id]->new_text = format_plural($topic->new_replies, '1 new', '@count new');
-          $variables['topics'][$id]->new_url = url("node/$topic->nid", array('fragment' => 'new'));
-        }
-        $variables['topics'][$id]->created = theme('forum_submitted', $topic);
-        $variables['topics'][$id]->last_reply = theme('forum_submitted', $topic->last_reply);
+        $variables['topics'][$id]->message = l(t('This topic has been moved'), "forum/$topic->tid");
       }
     }
   }
