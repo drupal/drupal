@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.429 2007/07/30 18:20:21 dries Exp $
+// $Id: book.module,v 1.430 2007/08/04 21:24:32 goba Exp $
 
 /**
  * @file
@@ -1225,7 +1225,7 @@ function _book_admin_table_tree($tree, &$form) {
       ),
     );
     if ($data['below']) {
-      _book_admin_table_tree($data['below'], &$form);
+      _book_admin_table_tree($data['below'], $form);
     }
   }
 
