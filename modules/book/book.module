@@ -1225,7 +1225,7 @@ function _book_admin_table_tree($tree, &$form) {
       ),
     );
     if ($data['below']) {
-      _book_admin_table_tree($data['below'], &$form);
+      _book_admin_table_tree($data['below'], $form);
     }
   }
 
