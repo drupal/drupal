@@ -2184,7 +2184,7 @@ function _locale_prepare_predefined_list() {
       continue;
     }
     // Include native name in output, if possible
-    if (count($value) == 2) {
+    if (count($value) > 1) {
       $tname = t($value[0]);
       $predefined[$key] = ($tname == $value[1]) ? $tname : "$tname ($value[1])";
     }
