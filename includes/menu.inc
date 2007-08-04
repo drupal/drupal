@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.189 2007/07/25 14:44:03 goba Exp $
+// $Id: menu.inc,v 1.190 2007/08/04 13:58:06 goba Exp $
 
 /**
  * @file
@@ -1620,9 +1620,10 @@ function menu_link_save(&$item) {
 }
 
 /**
- * Find the depth of an item's children relative to its depth.  For example, if
- * the item has a depth of 2, and the maximum of any child in the menu link tree
- * is 5, the relative depth is 3.
+ * Find the depth of an item's children relative to its depth.
+ *
+ * For example, if the item has a depth of 2, and the maximum of any child in
+ * the menu link tree is 5, the relative depth is 3.
  *
  * @param $item
  *   An array representing a menu link item.
@@ -1647,48 +1648,54 @@ function menu_link_children_relative_depth($item) {
 }
 
 /**
- * Update the menu name, parents (p1 - p6), and depth for the children of
- * a menu link that's being moved in the tree and check the has_children status
- * of the previous parent.
+ * Update the children of a menu link that's being moved.
+ *
+ * The menu name, parents (p1 - p6), and depth are updated for all children of
+ * the link, and the has_children status of the previous parent is updated.
  */
 function _menu_link_move_children($item, $existing_item) {
 
   $args[] = $item['menu_name'];
-  $set = '';
-  $shift = $item['depth'] - $existing_item['depth'];
-  if ($shift < 0) {
-    $args[] = -$shift;
-    $set = ', depth = depth - %d';
-  }
-  elseif ($shift > 0) {
-    $args[] = $shift;
-    $set = ', depth = depth + %d';
-  }
+  $set[] = "menu_name = '%s'";
+
   $i = 1;
   while ($i <= $item['depth']) {
     $p = 'p'. $i++;
-    $set .= ", $p = %d";
+    $set[] = "$p = %d";
     $args[] = $item[$p];
   }
   $j = $existing_item['depth'] + 1;
   while ($i <= MENU_MAX_DEPTH && $j <= MENU_MAX_DEPTH) {
-    $set .= ', p'. $i++ .' = p'. $j++;
+    $set[] = 'p'. $i++ .' = p'. $j++;
   }
   while ($i <= MENU_MAX_DEPTH) {
-    $set .= ', p'. $i++ .' = 0';
+    $set[] = 'p'. $i++ .' = 0';
   }
 
-  $args[] = $existing_item['menu_name'];
-  $i = 1;
-  $match = '';
+  $shift = $item['depth'] - $existing_item['depth'];
+  if ($shift < 0) {
+    $args[] = -$shift;
+    $set[] = 'depth = depth - %d';
+  }
+  elseif ($shift > 0) {
+    // The order of $set must be reversed so the new values don't overwrite the
+    // old ones before they can be used because "Single-table UPDATE 
+    // assignments are generally evaluated from left to right"
+    // see: http://dev.mysql.com/doc/refman/5.0/en/update.html
+    $set = array_reverse($set);
+    $args = array_reverse($args);
+
+    $args[] = $shift;
+    $set[] = 'depth = depth + %d';
+  }
+
   $p = 'p1';
-  while ($i <= MENU_MAX_DEPTH && $existing_item[$p]) {
-    $match .= " AND $p = %d";
+  for ($i = 1; $i <= MENU_MAX_DEPTH && $existing_item[$p]; $p = 'p'. ++$i) {
+    $where[] = "$p = %d";
     $args[] = $existing_item[$p];
-    $p = 'p'. ++$i;
   }
 
-  db_query("UPDATE {menu_links} SET menu_name = '%s'". $set ." WHERE menu_name = '%s'". $match, $args);
+  db_query("UPDATE {menu_links} SET ". implode(', ', $set) ." WHERE ". implode(' AND ', $where), $args);
 
   if ($existing_item['plid']) {
     $parent_has_children = (bool)db_result(db_query("SELECT COUNT(*) FROM {menu_links} WHERE plid = %d AND hidden = 0 AND mlid != %d", $existing_item['plid'], $existing_item['mlid']));
