@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.148 2007/07/21 09:26:07 dries Exp $
+// $Id: locale.inc,v 1.149 2007/08/04 13:08:17 goba Exp $
 
 /**
  * @file
@@ -2184,7 +2184,7 @@ function _locale_prepare_predefined_list() {
       continue;
     }
     // Include native name in output, if possible
-    if (count($value) == 2) {
+    if (count($value) > 1) {
       $tname = t($value[0]);
       $predefined[$key] = ($tname == $value[1]) ? $tname : "$tname ($value[1])";
     }
