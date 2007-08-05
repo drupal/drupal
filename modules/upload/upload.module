@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.174 2007/07/30 22:53:10 dries Exp $
+// $Id: upload.module,v 1.175 2007/08/05 16:13:31 dries Exp $
 
 /**
  * @file
@@ -149,7 +149,7 @@ function upload_file_download($file) {
     return -1;
   }
   $file = file_create_path($file);
-  $result = db_query("SELECT f.* FROM {files} f INNER JOIN {upload} u ON f.fid = u.uid WHERE filepath = '%s'", $file);
+  $result = db_query("SELECT f.* FROM {files} f INNER JOIN {upload} u ON f.fid = u.fid WHERE filepath = '%s'", $file);
   if ($file = db_fetch_object($result)) {
     return array(
       'Content-Type: '. $file->filemime,
