@@ -381,12 +381,13 @@ function db_escape_table($string) {
  * one named 'node_title_type' on the field 'title' and the first four
  * bytes of the field 'type':
  *
+ * @code
  * $schema['node'] = array(
  *   'fields' => array(
  *     'nid'      => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
  *     'vid'      => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
  *     'type'     => array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''),
-      'title'    => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
+ *     'title'    => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
  *   ),
  *   'primary key' => array('nid'),
  *   'unique keys' => array(
@@ -397,6 +398,7 @@ function db_escape_table($string) {
  *     'node_title_type'     => array('title', array('type', 4)),
  *   ),
  * );
+ * @endcode
  *
  * @see drupal_install_schema()
  */
