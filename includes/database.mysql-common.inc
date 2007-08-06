@@ -464,5 +464,3 @@ function db_last_insert_id($table, $field) {
 /**
  * @} End of "ingroup schemaapi".
  */
-
-?>

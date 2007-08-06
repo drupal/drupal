@@ -137,5 +137,3 @@ function drupal_test_mysql($url, &$success) {
   mysql_close($connection);
   return TRUE;
 }
-
-?>

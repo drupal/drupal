@@ -130,5 +130,3 @@ function drupal_test_pgsql($url, &$success) {
   pg_close($connection);
   return TRUE;
 }
-
-?>

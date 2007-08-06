@@ -132,5 +132,3 @@ function drupal_test_mysqli($url, &$success) {
   mysqli_close($connection);
   return TRUE;
 }
-
-?>
