@@ -1,5 +1,5 @@
 <?php
-// $Id: color.module,v 1.23 2007/07/01 22:13:35 goba Exp $
+// $Id: color.module,v 1.24 2007/08/06 12:54:39 goba Exp $
 
 /**
  * Implementation of hook_theme()
@@ -221,7 +221,7 @@ function color_scheme_form_submit($form, &$form_state) {
   foreach (variable_get('color_'. $theme .'_files', array()) as $file) {
     @unlink($file);
   }
-  if ($file = dirname($file)) {
+  if (isset($file) && $file = dirname($file)) {
     @rmdir($file);
   }
 
@@ -279,7 +279,7 @@ function color_scheme_form_submit($form, &$form_state) {
 function _color_rewrite_stylesheet($theme, &$info, &$paths, $palette) {
   // Load stylesheet
   $themes = list_themes();
-  $style = file_get_contents($themes[$theme]->stylesheet);
+  $style = file_get_contents($themes[$theme]->stylesheets['all']['style.css']);
 
   // Prepare color conversion table
   $conversion = $palette;
@@ -447,6 +447,8 @@ function _color_shift($given, $ref1, $ref2, $target) {
   $target = _color_unpack($target, true);
   $ref1 = _color_unpack($ref1, true);
   $ref2 = _color_unpack($ref2, true);
+  $numerator = 0;
+  $denominator = 0;
   for ($i = 0; $i < 3; ++$i) {
     $numerator += ($ref2[$i] - $ref1[$i]) * ($ref2[$i] - $ref1[$i]);
     $denominator += ($target[$i] - $ref1[$i]) * ($target[$i] - $ref1[$i]);
@@ -523,6 +525,7 @@ function _color_unpack($hex, $normalize = false) {
  * Convert an RGB triplet to a hex color.
  */
 function _color_pack($rgb, $normalize = false) {
+  $out = 0;
   foreach ($rgb as $k => $v) {
     $out |= (($v * ($normalize ? 255 : 1)) << (16 - $k * 8));
   }
