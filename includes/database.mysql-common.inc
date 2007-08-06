@@ -1,6 +1,6 @@
 <?php
 
-// $Id: database.mysql-common.inc,v 1.6 2007/06/26 20:24:19 goba Exp $
+// $Id: database.mysql-common.inc,v 1.7 2007/08/06 10:28:42 goba Exp $
 
 /**
  * @file
@@ -464,5 +464,3 @@ function db_last_insert_id($table, $field) {
 /**
  * @} End of "ingroup schemaapi".
  */
-
-?>

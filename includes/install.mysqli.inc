@@ -1,5 +1,5 @@
 <?php
-// $Id: install.mysqli.inc,v 1.6 2006/12/27 13:02:34 drumm Exp $
+// $Id: install.mysqli.inc,v 1.7 2007/08/06 10:28:42 goba Exp $
 
 // MySQLi specific install functions
 
@@ -132,5 +132,3 @@ function drupal_test_mysqli($url, &$success) {
   mysqli_close($connection);
   return TRUE;
 }
-
-?>

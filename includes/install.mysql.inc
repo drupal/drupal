@@ -1,5 +1,5 @@
 <?php
-// $Id: install.mysql.inc,v 1.4 2006/12/27 13:02:34 drumm Exp $
+// $Id: install.mysql.inc,v 1.5 2007/08/06 10:28:42 goba Exp $
 
 // MySQL specific install functions
 
@@ -137,5 +137,3 @@ function drupal_test_mysql($url, &$success) {
   mysql_close($connection);
   return TRUE;
 }
-
-?>

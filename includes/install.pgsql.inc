@@ -1,5 +1,5 @@
 <?php
-// $Id: install.pgsql.inc,v 1.3 2007/04/13 08:56:57 dries Exp $
+// $Id: install.pgsql.inc,v 1.4 2007/08/06 10:28:42 goba Exp $
 
 // PostgreSQL specific install functions
 
@@ -130,5 +130,3 @@ function drupal_test_pgsql($url, &$success) {
   pg_close($connection);
   return TRUE;
 }
-
-?>
