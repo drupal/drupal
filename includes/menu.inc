@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.190 2007/08/04 13:58:06 goba Exp $
+// $Id: menu.inc,v 1.191 2007/08/07 08:41:24 dries Exp $
 
 /**
  * @file
@@ -1679,7 +1679,7 @@ function _menu_link_move_children($item, $existing_item) {
   }
   elseif ($shift > 0) {
     // The order of $set must be reversed so the new values don't overwrite the
-    // old ones before they can be used because "Single-table UPDATE 
+    // old ones before they can be used because "Single-table UPDATE
     // assignments are generally evaluated from left to right"
     // see: http://dev.mysql.com/doc/refman/5.0/en/update.html
     $set = array_reverse($set);
