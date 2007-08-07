@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.131 2007/07/11 15:15:40 dries Exp $
+// $Id: system.install,v 1.132 2007/08/07 08:32:43 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -253,8 +253,8 @@ function system_install() {
 
   db_query("INSERT INTO {variable} (name,value) VALUES('theme_default', 's:7:\"garland\";')");
   db_query("UPDATE {system} SET status = 1 WHERE type = 'theme' AND name = 'garland'");
-  db_query("INSERT INTO {blocks} (module,delta,theme,status,pages) VALUES('user', 0, 'garland', 1, '')");
-  db_query("INSERT INTO {blocks} (module,delta,theme,status,pages) VALUES('user', 1, 'garland', 1, '')");
+  db_query("INSERT INTO {blocks} (module,delta,theme,status,pages) VALUES('user', '0', 'garland', 1, '')");
+  db_query("INSERT INTO {blocks} (module,delta,theme,status,pages) VALUES('user', '1', 'garland', 1, '')");
 
   db_query("INSERT INTO {node_access} VALUES (0, 0, 'all', 1, 0, 0)");
 
