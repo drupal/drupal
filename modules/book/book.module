@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.430 2007/08/04 21:24:32 goba Exp $
+// $Id: book.module,v 1.431 2007/08/07 11:43:05 goba Exp $
 
 /**
  * @file
@@ -166,27 +166,41 @@ function book_block($op = 'list', $delta = 0, $edit = array()) {
       $block[0]['info'] = t('Book navigation');
       return $block;
     case 'view':
+      if (arg(0) == 'node' && is_numeric(arg(1))) {
+        $node = node_load(arg(1));
+      }
+      $current_bid = empty($node->book['bid']) ? 0 : $node->book['bid'];
       $mode = variable_get('book_block_mode', 'all pages');
       if ($mode == 'all pages') {
         $block['subject'] = t('Book navigation');
         $book_menus = array();
+        $pseudo_tree = array(0 => array('below' => FALSE));
         foreach (book_get_books() as $book) {
-          $book_menus[] = menu_tree_output(menu_tree_page_data($book['menu_name']));
+          if ($book['bid'] == $current_bid) {
+            // If the current page is a node associated with a book, the menu
+            // needs to be retrieved.
+            $book_menus[] = menu_tree_output(menu_tree_all_data($node->book['menu_name'], $node->book));
+          }
+          else {
+            // Since we know we will only display a link to the top node, there
+            // is no reason to run an additional menu tree query for each book.
+            $book['in_active_trail'] = FALSE;
+            $pseudo_tree[0]['link'] = $book;
+            $book_menus[] = menu_tree_output($pseudo_tree);
+          }
         }
         $block['content'] = theme('book_all_books_block', $book_menus);
       }
-      elseif (arg(0) == 'node' && is_numeric(arg(1))) {
+      elseif ($current_bid) {
         // Only display this block when the user is browsing a book.
-        $node = node_load(arg(1));
-        if (isset($node->book['bid'])) {
-          $title = db_result(db_query(db_rewrite_sql('SELECT n.title FROM {node} n WHERE n.nid = %d'), $node->book['bid']));
-          // Only show the block if the user has view access for the top-level node.
-          if ($title) {
-            $tree = menu_tree_all_data($node->book['menu_name'], $node->book);
-            $data = array_shift($tree); // Should only be one element.
-            $block['subject'] = theme('book_title_link', $data['link']);
-            $block['content'] = ($data['below']) ? menu_tree_output($data['below']) : '';
-          }
+        $title = db_result(db_query(db_rewrite_sql('SELECT n.title FROM {node} n WHERE n.nid = %d'), $node->book['bid']));
+        // Only show the block if the user has view access for the top-level node.
+        if ($title) {
+          $tree = menu_tree_all_data($node->book['menu_name'], $node->book);
+          // There should only be one element at the top level.
+          $data = array_shift($tree);
+          $block['subject'] = theme('book_title_link', $data['link']);
+          $block['content'] = ($data['below']) ? menu_tree_output($data['below']) : '';
         }
       }
       return $block;
