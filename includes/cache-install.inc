@@ -1,5 +1,6 @@
 <?php
 // $Id$
+
 /**
  * A stub cache implementation to be used during the installation
  * process when database access is not yet available. Because Drupal's

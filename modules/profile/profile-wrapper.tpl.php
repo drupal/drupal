@@ -1,5 +1,6 @@
 <?php
-// $Id
+// $Id$
+
 /**
  * @file profile-wrapper.tpl.php
  * Default theme implementation for wrapping member listings and their

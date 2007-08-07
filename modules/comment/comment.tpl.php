@@ -1,5 +1,6 @@
 <?php
-// $Id
+// $Id$
+
 /**
  * @file comment.tpl.php
  * Default theme implementation for comments.

@@ -1,3 +1,6 @@
+<?php
+// $Id$
+?>
 <div class="box">
 
 <?php if ($title): ?>

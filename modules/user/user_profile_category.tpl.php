@@ -1,3 +1,6 @@
+<?php
+// $Id$
+?>
 <?php if ($element['#title']): ?>
   <h3><?php print $element['#title'] ?></h3>
 <?php endif; ?>

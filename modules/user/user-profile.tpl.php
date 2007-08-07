@@ -1,5 +1,6 @@
 <?php
-// $Id
+// $Id$
+
 /**
  * @file user-profile.tpl.php
  * Default theme implementation to present all user profile data.

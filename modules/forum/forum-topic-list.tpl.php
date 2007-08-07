@@ -1,5 +1,6 @@
 <?php
 // $Id$
+
 /**
  * @file forum-topic-list.tpl.php
  * Theme implementation to display a list of forum topics.

@@ -1,5 +1,6 @@
 <?php
-// $Id
+// $Id$
+
 /**
  * @file profile-listing.tpl.php
  * Default theme implementation for displaying a user and their profile data

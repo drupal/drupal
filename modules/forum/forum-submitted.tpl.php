@@ -1,5 +1,6 @@
 <?php
 // $Id$
+
 /**
  * @file forum-submitted.tpl.php
  * Default theme implementation to format a simple string indicated when and

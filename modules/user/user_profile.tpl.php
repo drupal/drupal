@@ -1,4 +1,5 @@
 <?php
+// $Id$
 
 /*
  * In order to customize user profiles, replace the HTML below with your own

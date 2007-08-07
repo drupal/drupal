@@ -1,5 +1,6 @@
 <?php
-// $Id
+// $Id$
+
 /**
  * @file profile-block.tpl.php
  * Default theme implementation for displaying a users profile within a

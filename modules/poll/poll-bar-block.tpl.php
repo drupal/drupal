@@ -1,5 +1,6 @@
 <?php
 // $Id$
+
 /**
  * @file poll-bar-block.tpl.php
  * Display the bar for a single choice in a poll

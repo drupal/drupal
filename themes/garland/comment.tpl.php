@@ -1,3 +1,6 @@
+<?php
+// $Id$
+?>
 <div class="comment<?php print ($comment->new) ? ' comment-new' : ''; print (isset($comment->status) && $comment->status  == COMMENT_NOT_PUBLISHED) ? ' comment-unpublished' : ''; print ' '. $zebra; ?>">
 
   <div class="clear-block">

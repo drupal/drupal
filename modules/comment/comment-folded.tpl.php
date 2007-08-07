@@ -1,5 +1,6 @@
 <?php
-// $Id
+// $Id$
+
 /**
  * @file comment-folded.tpl.php
  * Default theme implementation for folded comments.

@@ -1,3 +1,6 @@
+<?php
+// $Id$
+?>
 <div class="comment<?php if ($comment->status == COMMENT_NOT_PUBLISHED) print ' comment-unpublished'; ?>">
   <?php if ($picture) : ?>
     <?php print $picture ?>

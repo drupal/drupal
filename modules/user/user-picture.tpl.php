@@ -1,5 +1,6 @@
 <?php
-// $Id
+// $Id$
+
 /**
  * @file user-picture.tpl.php
  * Default theme implementation to present an picture configured for the

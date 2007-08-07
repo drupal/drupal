@@ -1,5 +1,6 @@
 <?php
 // $Id$
+
 /**
  * @file forum-topic-navigation.tpl.php
  * Default theme implementation to display the topic navigation string at the

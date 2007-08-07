@@ -1,5 +1,6 @@
 <?php
 // $Id$
+
 /**
  * @file poll-vote.tpl.php
  * Voting form for a poll.

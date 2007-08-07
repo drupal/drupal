@@ -1,5 +1,6 @@
 <?php 
-// $Id$ 
+// $Id$
+
 /**
  * @file forum-icon.tpl.php
  * Display an appropriate icon for a forum post.

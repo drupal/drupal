@@ -1,5 +1,6 @@
 <?php
-// $Id
+// $Id$
+
 /**
  * @file block-admin-display.tpl.php
  * Default theme implementation to configure blocks.

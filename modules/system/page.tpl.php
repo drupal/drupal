@@ -1,5 +1,6 @@
 <?php
 // $Id$
+
 /**
  * @file page.tpl.php
  *

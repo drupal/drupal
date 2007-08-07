@@ -1,4 +1,6 @@
-<?php // $Id$
+<?php
+// $Id$
+
 /**
  * @file forums.tpl.php
  * Default theme implementation to display a forum which may contain forum
