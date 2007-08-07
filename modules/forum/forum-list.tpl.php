@@ -1,5 +1,6 @@
 <?php
-// $Id
+// $Id: forum-list.tpl.php,v 1.3 2007/08/07 08:39:35 goba Exp $
+
 /**
  * @file forum-list.tpl.php
  * Default theme implementation to display a list of forums and containers.

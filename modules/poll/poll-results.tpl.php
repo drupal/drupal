@@ -1,5 +1,6 @@
 <?php
-// $Id: poll-results.tpl.php,v 1.1 2007/08/02 10:46:53 dries Exp $
+// $Id: poll-results.tpl.php,v 1.2 2007/08/07 08:39:35 goba Exp $
+
 /**
  * @file poll-results-block.tpl.php
  * Display the poll results in a block.

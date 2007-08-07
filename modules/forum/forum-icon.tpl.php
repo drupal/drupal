@@ -1,5 +1,6 @@
 <?php 
-// $Id: forum-icon.tpl.php,v 1.1 2007/07/22 07:01:07 dries Exp $ 
+// $Id: forum-icon.tpl.php,v 1.2 2007/08/07 08:39:35 goba Exp $
+
 /**
  * @file forum-icon.tpl.php
  * Display an appropriate icon for a forum post.

@@ -1,5 +1,6 @@
 <?php
-// $Id: cache-install.inc,v 1.1 2007/05/14 13:43:32 dries Exp $
+// $Id: cache-install.inc,v 1.2 2007/08/07 08:39:35 goba Exp $
+
 /**
  * A stub cache implementation to be used during the installation
  * process when database access is not yet available. Because Drupal's

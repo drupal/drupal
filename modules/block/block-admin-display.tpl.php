@@ -1,5 +1,6 @@
 <?php
-// $Id
+// $Id: block-admin-display.tpl.php,v 1.2 2007/08/07 08:39:35 goba Exp $
+
 /**
  * @file block-admin-display.tpl.php
  * Default theme implementation to configure blocks.

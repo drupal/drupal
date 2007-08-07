@@ -1,4 +1,5 @@
 <?php
+// $Id: user_profile.tpl.php,v 1.2 2007/08/07 08:39:36 goba Exp $
 
 /*
  * In order to customize user profiles, replace the HTML below with your own

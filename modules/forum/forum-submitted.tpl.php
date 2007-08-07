@@ -1,5 +1,6 @@
 <?php
-// $Id: forum-submitted.tpl.php,v 1.2 2007/07/29 17:28:23 dries Exp $
+// $Id: forum-submitted.tpl.php,v 1.3 2007/08/07 08:39:35 goba Exp $
+
 /**
  * @file forum-submitted.tpl.php
  * Default theme implementation to format a simple string indicated when and

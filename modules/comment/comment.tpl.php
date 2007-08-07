@@ -1,5 +1,6 @@
 <?php
-// $Id
+// $Id: comment.tpl.php,v 1.3 2007/08/07 08:39:35 goba Exp $
+
 /**
  * @file comment.tpl.php
  * Default theme implementation for comments.

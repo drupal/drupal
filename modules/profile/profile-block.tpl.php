@@ -1,5 +1,6 @@
 <?php
-// $Id
+// $Id: profile-block.tpl.php,v 1.2 2007/08/07 08:39:35 goba Exp $
+
 /**
  * @file profile-block.tpl.php
  * Default theme implementation for displaying a users profile within a

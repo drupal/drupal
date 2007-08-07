@@ -1,5 +1,6 @@
 <?php
-// $Id
+// $Id: user-profile.tpl.php,v 1.2 2007/08/07 08:39:36 goba Exp $
+
 /**
  * @file user-profile.tpl.php
  * Default theme implementation to present all user profile data.

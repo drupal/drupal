@@ -1,4 +1,5 @@
 <?php
+// $Id: upload.admin.inc,v 1.2 2007/08/07 08:39:36 goba Exp $
 
 /**
  * Form API callback to validate the upload settings form.

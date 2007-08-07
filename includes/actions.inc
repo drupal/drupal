@@ -1,6 +1,5 @@
 <?php
-
-// $Id: actions.inc,v 1.1 2007/06/29 18:06:50 dries Exp $
+// $Id: actions.inc,v 1.2 2007/08/07 08:39:35 goba Exp $
 
 /**
 * @file

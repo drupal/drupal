@@ -1,6 +1,5 @@
 <?php
-
-// $Id: database.mysql-common.inc,v 1.7 2007/08/06 10:28:42 goba Exp $
+// $Id: database.mysql-common.inc,v 1.8 2007/08/07 08:39:35 goba Exp $
 
 /**
  * @file

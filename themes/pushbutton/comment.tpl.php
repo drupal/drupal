@@ -1,3 +1,6 @@
+<?php
+// $Id: comment.tpl.php,v 1.5 2007/08/07 08:39:36 goba Exp $
+?>
 <div class="comment<?php if ($comment->status == COMMENT_NOT_PUBLISHED) print ' comment-unpublished'; ?>">
   <?php if ($picture) : ?>
     <?php print $picture ?>
