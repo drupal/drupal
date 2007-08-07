@@ -844,7 +844,7 @@ function taxonomy_vocabulary_load($vid) {
   static $vocabularies = array();
 
   if (!array_key_exists($vid, $vocabularies)) {
-    $result = db_query('SELECT v.*, n.type FROM {vocabulary} v LEFT JOIN {vocabulary_node_types} n ON v.vid = n.vid WHERE v.vid = %d ORDER BY v.weight, v.name', $vid);
+    $result = db_query('SELECT v.*, n.type FROM {vocabulary} v LEFT JOIN {vocabulary_node_types} n ON v.vid = n.vid WHERE v.vid = %d', $vid);
     $node_types = array();
     while ($voc = db_fetch_object($result)) {
       if (!empty($voc->type)) {
