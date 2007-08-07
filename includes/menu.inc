@@ -1679,7 +1679,7 @@ function _menu_link_move_children($item, $existing_item) {
   }
   elseif ($shift > 0) {
     // The order of $set must be reversed so the new values don't overwrite the
-    // old ones before they can be used because "Single-table UPDATE 
+    // old ones before they can be used because "Single-table UPDATE
     // assignments are generally evaluated from left to right"
     // see: http://dev.mysql.com/doc/refman/5.0/en/update.html
     $set = array_reverse($set);

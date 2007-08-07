@@ -822,7 +822,7 @@ function drupal_is_denied($type, $mask) {
   // (allowed).
   // The use of ORDER BY / LIMIT is more efficient than "MAX(status) = 0"
   // in PostgreSQL <= 8.0.
-  return (bool) db_result(db_query_range("SELECT CASE WHEN status=1 THEN 0 ELSE 1 END FROM {access} WHERE type = '%s' AND LOWER('%s') LIKE LOWER(mask) ORDER BY status DESC", $type, $mask, 0, 1));
+  return (bool) db_result(db_query_range("SELECT CASE WHEN status=1 THEN 0 ELSE 1 END FROM {access} WHERE type = '%s' AND LOWER(mask) LIKE LOWER('%s') ORDER BY status DESC", $type, $mask, 0, 1));
 }
 
 /**
