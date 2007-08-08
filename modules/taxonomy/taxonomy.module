@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.374 2007/08/07 11:33:36 dries Exp $
+// $Id: taxonomy.module,v 1.375 2007/08/08 07:18:19 dries Exp $
 
 /**
  * @file
@@ -125,7 +125,7 @@ function taxonomy_menu() {
     'page callback' => 'taxonomy_term_page',
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
-    'file' => 'taxonomy.page.inc',
+    'file' => 'taxonomy.pages.inc',
   );
 
   $items['taxonomy/autocomplete'] = array(
@@ -133,7 +133,7 @@ function taxonomy_menu() {
     'page callback' => 'taxonomy_autocomplete',
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
-    'file' => 'taxonomy.page.inc',
+    'file' => 'taxonomy.pages.inc',
   );
   $items['admin/content/taxonomy/%taxonomy_vocabulary'] = array(
     'title' => 'List terms',
