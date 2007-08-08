@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.106 2007/08/08 07:22:03 dries Exp $
+// $Id: module.inc,v 1.107 2007/08/08 20:04:38 goba Exp $
 
 /**
  * @file
@@ -138,13 +138,13 @@ function module_rebuild_cache() {
 
     // Update the contents of the system table:
     if (isset($file->status) || (isset($file->old_filename) && $file->old_filename != $file->filename)) {
-      db_query("UPDATE {system} SET info = '%s', name = '%s', filename = '%s', bootstrap = %d WHERE filename = '%s'", serialize($file->info), $file->name, $file->filename, $bootstrap, $file->old_filename);
+      db_query("UPDATE {system} SET info = '%s', name = '%s', filename = '%s', bootstrap = %d WHERE filename = '%s'", serialize($files[$filename]->info), $file->name, $file->filename, $bootstrap, $file->old_filename);
     }
     else {
       // This is a new module.
       $files[$filename]->status = 0;
       $files[$filename]->throttle = 0;
-      db_query("INSERT INTO {system} (name, info, type, filename, status, throttle, bootstrap) VALUES ('%s', '%s', '%s', '%s', %d, %d, %d)", $file->name, serialize($file->info), 'module', $file->filename, 0, 0, $bootstrap);
+      db_query("INSERT INTO {system} (name, info, type, filename, status, throttle, bootstrap) VALUES ('%s', '%s', '%s', '%s', %d, %d, %d)", $file->name, serialize($files[$filename]->info), 'module', $file->filename, 0, 0, $bootstrap);
     }
   }
   $files = _module_build_dependents($files);
