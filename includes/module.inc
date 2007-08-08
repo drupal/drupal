@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.105 2007/07/18 14:10:14 dries Exp $
+// $Id: module.inc,v 1.106 2007/08/08 07:22:03 dries Exp $
 
 /**
  * @file
@@ -243,7 +243,7 @@ function module_enable($module_list) {
   $invoke_modules = array();
   foreach ($module_list as $module) {
     $existing = db_fetch_object(db_query("SELECT status FROM {system} WHERE type = 'module' AND name = '%s'", $module));
-    if ($existing->status === '0') {
+    if ($existing->status == 0) {
       module_load_install($module);
       db_query("UPDATE {system} SET status = 1, throttle = 0 WHERE type = 'module' AND name = '%s'", $module);
       drupal_load('module', $module);
