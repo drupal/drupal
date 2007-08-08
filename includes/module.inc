@@ -243,7 +243,7 @@ function module_enable($module_list) {
   $invoke_modules = array();
   foreach ($module_list as $module) {
     $existing = db_fetch_object(db_query("SELECT status FROM {system} WHERE type = 'module' AND name = '%s'", $module));
-    if ($existing->status === '0') {
+    if ($existing->status == 0) {
       module_load_install($module);
       db_query("UPDATE {system} SET status = 1, throttle = 0 WHERE type = 'module' AND name = '%s'", $module);
       drupal_load('module', $module);
