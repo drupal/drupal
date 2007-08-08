@@ -89,11 +89,6 @@ function forum_menu($may_cache) {
         'type' => MENU_CALLBACK);
     }
   }
-  else {
-    // Add the CSS for this module
-    // We put this in !$may_cache so it's only added once per request
-    drupal_add_css(drupal_get_path('module', 'forum') .'/forum.css');
-  }
 
   return $items;
 }
@@ -292,6 +287,7 @@ function forum_block($op = 'list', $delta = 0, $edit = array()) {
  * Implementation of hook_view().
  */
 function forum_view(&$node, $teaser = FALSE, $page = FALSE) {
+  drupal_add_css(drupal_get_path('module', 'forum') .'/forum.css');
   if ($page) {
     $vocabulary = taxonomy_get_vocabulary(variable_get('forum_nav_vocabulary', ''));
     // Breadcrumb navigation
@@ -847,6 +843,7 @@ function _forum_new($tid) {
  * Menu callback; prints a forum listing.
  */
 function forum_page($tid = 0) {
+  drupal_add_css(drupal_get_path('module', 'forum') .'/forum.css');
   $forum_per_page = variable_get('forum_per_page', 25);
   $sortby = variable_get('forum_order', 1);
 
