@@ -1,5 +1,5 @@
 <?php
-// $Id: image.inc,v 1.22 2007/08/02 20:19:02 dries Exp $
+// $Id: image.inc,v 1.23 2007/08/08 07:46:09 dries Exp $
 
 /**
  * @file
@@ -24,6 +24,35 @@
  * Image toolkits are installed by copying the image.$name.inc file into
  * Drupal's includes directory. The toolkit must then be enabled using the
  * form at ?q=admin/settings/image-toolkit.
+ */
+
+/**
+ * @file
+ * API for manipulating images.
+ */
+
+/**
+ * @defgroup image Image toolkits
+ * @{
+ * Drupal's image toolkits provide an abstraction layer for common image file
+ * manipulations like scaling, cropping, and rotating. The abstraction frees
+ * module authors from the need to support multiple image libraries, and it
+ * allows site administrators to choose the library that's best for them.
+ *
+ * PHP includes the GD library by default so a GD toolkit is installed with
+ * Drupal. Other toolkits like ImageMagic are available from contrib modules.
+ * GD works well for small images, but using it with larger files may cause PHP
+ * to run out of memory. In contrast the ImageMagick library does not suffer
+ * from this problem, but it requires the ISP to have installed additional
+ * software.
+ *
+ * Image toolkits are installed by copying the image.ToolkitName.inc file into
+ * Drupal's includes directory. The toolkit must then be enabled using the
+ * admin/settings/image-toolkit form.
+ *
+ * Only one toolkit maybe selected at a time. If a module author wishes to call
+ * a specific toolkit they can check that it is installed by calling
+ * image_get_available_toolkits(), and then calling its functions directly.
  */
 
 /**
@@ -79,7 +108,7 @@ function image_get_toolkit() {
  * @param $params
  *   An optional array of parameters to pass to the toolkit method.
  * @return
- *   Mixed values (typically boolean indicating successful operation).
+ *   Mixed values (typically Boolean indicating successful operation).
  */
 function image_toolkit_invoke($method, $params = array()) {
   if ($toolkit = image_get_toolkit()) {
