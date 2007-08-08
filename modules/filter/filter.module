@@ -159,9 +159,9 @@ function filter_filter_tips($delta, $format, $long = FALSE) {
         if ($allowed_html = variable_get("allowed_html_$format", '<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd>')) {
           switch ($long) {
             case 0:
-              return t('Allowed HTML tags') .': '. check_plain($allowed_html);
+              return t('Allowed HTML tags: @tags', array('@tags' => $allowed_html));
             case 1:
-              $output = '<p>'. t('Allowed HTML tags') .': '. check_plain($allowed_html) .'</p>';
+              $output = '<p>'. t('Allowed HTML tags: @tags', array('@tags' => $allowed_html)) .'</p>';
               if (!variable_get("filter_html_help_$format", 1)) {
                 return $output;
               }
