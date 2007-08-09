@@ -295,7 +295,7 @@ function locale_languages_predefined_form_validate($form, &$form_state) {
   }
   else {
     // Reuse the editing form validation routine if we add a custom language.
-    locale_languages_edit_form_validate($form_state['values'], $form, $form_state);
+    locale_languages_edit_form_validate($form, $form_state);
   }
 }
 
