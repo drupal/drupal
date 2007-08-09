@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.431 2007/08/07 11:43:05 goba Exp $
+// $Id: book.module,v 1.432 2007/08/09 11:00:58 goba Exp $
 
 /**
  * @file
@@ -343,28 +343,16 @@ function book_form_alter(&$form, $form_state, $form_id) {
       $form['book']['pick-book'] = array(
         '#type' => 'submit',
         '#value' => t('Change book (update list of parents)'),
-        '#submit' => array('book_pick_book_submit'),
+         // Submit the node form so the parent select options get updated.
+         // This is typically only used when JS is disabled.  Since the parent options
+         // won't be changed via AJAX, a button is provided in the node form to submit
+         // the form and generate options in the parent select corresponding to the
+         // selected book.  This is similar to what happens during a node preview.
+        '#submit' => array('node_form_submit_build_node'),
         '#weight' => 20,
       );
     }
   }
-}
-
-/**
- * Submit the node form so the parent select options get updated.
- *
- * This is typically only used when JS is disabled.  Since the parent options
- * won't be changed via AJAX, a button is provided in the node form to submit
- * the form and generate options in the parent select corresponding to the
- * selected book.  This is similar to what happens during a node preview.
- */
-function book_pick_book_submit($form, &$form_state) {
-  // Unset any button-level handlers, execute all the form-level submit functions
-  // to process the form values into an updated node, and rebuild the form.
-  unset($form_state['submit_handlers']);
-  form_execute_handlers('submit', $form, $form_state);
-  $form_state['rebuild'] = TRUE;
-  $form_state['node'] = $form_state['values'];
 }
 
 /**

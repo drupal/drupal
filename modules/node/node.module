@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.865 2007/08/02 20:08:52 dries Exp $
+// $Id: node.module,v 1.866 2007/08/09 11:00:59 goba Exp $
 
 /**
  * @file
@@ -2231,15 +2231,23 @@ function node_form(&$form_state, $node) {
   return $form;
 }
 
-function node_form_build_preview($form, &$form_state) {
-  // Unset any button-level handlers, execute all the form-level submit functions
-  // to process the form values into an updated node, and rebuild the form.
+/**
+ * Build a node by processing submitted form values and prepare for a form rebuild.
+ */
+function node_form_submit_build_node($form, &$form_state) {
+  // Unset any button-level handlers, execute all the form-level submit
+  // functions to process the form values into an updated node.
   unset($form_state['submit_handlers']);
   form_execute_handlers('submit', $form, $form_state);
-
-  $form_state['node_preview'] = node_preview((object)$form_state['values']);
+  $node = node_submit($form_state['values']);
+  $form_state['node'] = (array)$node;
   $form_state['rebuild'] = TRUE;
-  $form_state['node'] = $form_state['values'];
+  return $node;
+}
+
+function node_form_build_preview($form, &$form_state) {
+  $node = node_form_submit_build_node($form, $form_state);
+  $form_state['node_preview'] = node_preview($node);
 }
 
 function theme_node_form($form) {
@@ -2391,32 +2399,30 @@ function theme_node_log_message($log) {
 function node_form_submit($form, &$form_state) {
   global $user;
 
-  // Unset any button-level handlers, and execute all the form-level submit
-  // functions to process the form values into an updated node.
-  unset($form_state['submit_handlers']);
-  form_execute_handlers('submit', $form, $form_state);
+  $node = node_form_submit_build_node($form, $form_state);
+  $insert = empty($node->nid);
+  node_save($node);
+  $node_link = l(t('view'), 'node/'. $node->nid);
+  $watchdog_args = array('@type' => $node->type, '%title' => $node->title);
+  $t_args = array('%post' => node_get_types('name', $node));
 
-  // Fix up the node when required:
-  $node = node_submit($form_state['values']);
-
-  // Prepare the node's body:
-  if ($node->nid) {
-    node_save($node);
-    watchdog('content', '@type: updated %title.', array('@type' => $node->type, '%title' => $node->title), WATCHDOG_NOTICE, l(t('view'), 'node/'. $node->nid));
-    drupal_set_message(t('The %post has been updated.', array('%post' => node_get_types('name', $node))));
+  if ($insert) {
+    watchdog('content', '@type: added %title.', $watchdog_args, WATCHDOG_NOTICE, $node_link);
+    drupal_set_message(t('Your %post has been created.', $t_args));
   }
   else {
-    node_save($node);
-    watchdog('content', '@type: added %title.', array('@type' => $node->type, '%title' => $node->title), WATCHDOG_NOTICE, l(t('view'), "node/$node->nid"));
-    drupal_set_message(t('Your %post has been created.', array('%post' => node_get_types('name', $node))));
+    watchdog('content', '@type: updated %title.', $watchdog_args, WATCHDOG_NOTICE, $node_link);
+    drupal_set_message(t('The %post has been updated.', $t_args));
   }
   if ($node->nid) {
-    if (node_access('view', $node)) {
-      $form_state['redirect'] = 'node/'. $node->nid;
-    }
+    unset($form_state['rebuild']);
+    $form_state['redirect'] = 'node/'. $node->nid;
   }
-  // it is very unlikely we get here
-  return FALSE;
+  else {
+    // In the unlikely case something went wrong on save, the node will be
+    // rebuilt and node form redisplayed the same way as in preview.
+    drupal_set_message(t('The node could not be saved.'), 'error');
+  }
 }
 
 /**
