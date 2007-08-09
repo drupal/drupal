@@ -6,7 +6,7 @@ function profile_schema() {
     'fields' => array(
       'fid'          => array('type' => 'serial', 'not null' => TRUE),
       'title'        => array('type' => 'varchar', 'length' => 255, 'not null' => FALSE),
-      'name'         => array('type' => 'varchar', 'length' => 128, 'not null' => FALSE),
+      'name'         => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
       'explanation'  => array('type' => 'text', 'not null' => FALSE),
       'category'     => array('type' => 'varchar', 'length' => 255, 'not null' => FALSE),
       'page'         => array('type' => 'varchar', 'length' => 255, 'not null' => FALSE),
