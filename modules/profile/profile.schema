@@ -1,12 +1,12 @@
 <?php
-// $Id: profile.schema,v 1.1 2007/05/25 12:46:45 dries Exp $
+// $Id: profile.schema,v 1.2 2007/08/09 11:05:40 goba Exp $
 
 function profile_schema() {
   $schema['profile_fields'] = array(
     'fields' => array(
       'fid'          => array('type' => 'serial', 'not null' => TRUE),
       'title'        => array('type' => 'varchar', 'length' => 255, 'not null' => FALSE),
-      'name'         => array('type' => 'varchar', 'length' => 128, 'not null' => FALSE),
+      'name'         => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
       'explanation'  => array('type' => 'text', 'not null' => FALSE),
       'category'     => array('type' => 'varchar', 'length' => 255, 'not null' => FALSE),
       'page'         => array('type' => 'varchar', 'length' => 255, 'not null' => FALSE),
