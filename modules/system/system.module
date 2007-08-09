@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.513 2007/08/02 20:19:02 dries Exp $
+// $Id: system.module,v 1.514 2007/08/09 20:05:49 dries Exp $
 
 /**
  * @file
@@ -2681,7 +2681,7 @@ function theme_admin_block_content($content) {
  * Menu callback; prints a listing of admin tasks for each installed module.
  */
 function system_admin_by_module() {
-  return 'This page awaits rewrite'; // TODO: this needs to be rewritten for the new menu system.
+
   $modules = module_rebuild_cache();
   $menu_items = array();
   $help_arg = drupal_help_arg();
@@ -2712,23 +2712,35 @@ function system_admin_by_module() {
 }
 
 function system_get_module_admin_tasks($module) {
-  return array(); // TODO: this needs to be rewritten for the new menu system.
+  static $items;
+
   $admin_access = user_access('administer access control');
-  $menu = menu_get_menu();
   $admin_tasks = array();
 
+  if (!isset($items)) {
+    $result = db_query("
+       SELECT m.load_functions, m.to_arg_functions, m.access_callback, m.access_arguments, m.page_callback, m.page_arguments, m.title, m.title_callback, m.title_arguments, m.type, ml.*
+       FROM {menu_links} ml INNER JOIN {menu_router} m ON ml.router_path = m.path WHERE ml.link_path LIKE 'admin/%' AND hidden >= 0 AND module = 'system' AND m.number_parts > 2");
+    $items = array();
+    while ($item = db_fetch_array($result)) {
+      _menu_link_translate($item);
+      if ($item['access']) {
+        $items[$item['router_path']] = $item;
+      }
+    }
+  }
+  $admin_tasks = array();
+  $admin_task_count = 0;
   // Check for permissions.
   if (module_hook($module, 'perm') && $admin_access) {
     $admin_tasks[-1] = l(t('Configure permissions'), 'admin/user/access', array('fragment' => 'module-'. $module));
   }
 
   // Check for menu items that are admin links.
-  if ($items = module_invoke($module, 'menu', TRUE)) {
-    foreach ($items as $item) {
-      $parts = explode('/', $item['path']);
-      $n = count($parts);
-      if ((!isset($item['type']) || ($item['type'] & MENU_VISIBLE_IN_TREE)) && ($parts[0] == 'admin') && ($n >= 3) && _menu_item_is_accessible($menu['path index'][$item['path']])) {
-        $admin_tasks[$item['title']] = l($item['title'], $item['path']);
+  if ($menu = module_invoke($module, 'menu')) {
+    foreach (array_keys($menu) as $path) {
+      if (isset($items[$path])) {
+        $admin_tasks[$items[$path]['title'] . $admin_task_count ++] = l($items[$path]['title'], $path);
       }
     }
   }
@@ -2742,7 +2754,9 @@ function system_get_module_admin_tasks($module) {
 function theme_system_admin_by_module($menu_items) {
   $stripe = 0;
   $output = '';
-  $container = array();
+  $container = array('left' => '', 'right' => '');
+  $flip = array('left' => 'right', 'right' => 'left');
+  $position = 'left';
 
   // Iterate over all modules
   foreach ($menu_items as $module => $block) {
@@ -2756,9 +2770,10 @@ function theme_system_admin_by_module($menu_items) {
       $block['description'] = t($description);
 
       if ($block_output = theme('admin_block', $block)) {
-        if (!$block['position']) {
+        if (!isset($block['position'])) {
           // Perform automatic striping.
-          $block['position'] = ++$stripe % 2 ? 'left' : 'right';
+          $block['position'] = $position;
+          $position = $flip[$position];
         }
         $container[$block['position']] .= $block_output;
       }
