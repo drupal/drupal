@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.218 2007/07/29 17:28:23 dries Exp $
+// $Id: form.inc,v 1.219 2007/08/09 10:43:03 goba Exp $
 
 /**
  * @defgroup form Form generation
@@ -1698,7 +1698,8 @@ function theme_token($element) {
  *   A themed HTML string representing the textfield.
  */
 function theme_textfield($element) {
-  $size = $element['#size'] ? ' size="'. $element['#size'] .'"' : '';
+  $size = empty($element['#size']) ? '' : ' size="'. $element['#size'] .'"';
+  $maxlength = empty($element['#maxlength']) ? '' : ' maxlength="'. $element['#maxlength'] .'"';
   $class = array('form-text');
   $extra = '';
   $output = '';
@@ -1714,7 +1715,7 @@ function theme_textfield($element) {
     $output .= '<span class="field-prefix">'. $element['#field_prefix'] .'</span> ';
   }
 
-  $output .= '<input type="text" maxlength="'. $element['#maxlength'] .'" name="'. $element['#name'] .'" id="'. $element['#id'] .'" '. $size .' value="'. check_plain($element['#value']) .'"'. drupal_attributes($element['#attributes']) .' />';
+  $output .= '<input type="text"'. $maxlength .' name="'. $element['#name'] .'" id="'. $element['#id'] .'"'. $size .' value="'. check_plain($element['#value']) .'"'. drupal_attributes($element['#attributes']) .' />';
 
   if (isset($element['#field_suffix'])) {
     $output .= ' <span class="field-suffix">'. $element['#field_suffix'] .'</span>';
