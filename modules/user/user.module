@@ -246,7 +246,7 @@ function user_save($account, $array = array(), $category = 'account') {
 
     // If the password changed, delete all open sessions and recreate
     // the current one.
-    if (isset($array['pass'])) {
+    if (!empty($array['pass'])) {
       sess_destroy_uid($account->uid);
       sess_regenerate();
     }
