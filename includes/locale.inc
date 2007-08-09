@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.149 2007/08/04 13:08:17 goba Exp $
+// $Id: locale.inc,v 1.150 2007/08/09 10:12:14 goba Exp $
 
 /**
  * @file
@@ -295,7 +295,7 @@ function locale_languages_predefined_form_validate($form, &$form_state) {
   }
   else {
     // Reuse the editing form validation routine if we add a custom language.
-    locale_languages_edit_form_validate($form_state['values'], $form, $form_state);
+    locale_languages_edit_form_validate($form, $form_state);
   }
 }
 
