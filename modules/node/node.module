@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.867 2007/08/10 06:29:01 dries Exp $
+// $Id: node.module,v 1.868 2007/08/10 11:14:22 goba Exp $
 
 /**
  * @file
@@ -719,7 +719,7 @@ function node_save(&$node) {
   //Generate the node table query and the
   //the node_revisions table query
   if ($node->is_new) {
-    $node_query = 'INSERT INTO {node} (vid, '. implode(', ', array_keys($node_table_types)) .') VALUES (NULL, '. implode(', ', $node_table_types) .')';
+    $node_query = 'INSERT INTO {node} ('. implode(', ', array_keys($node_table_types)) .') VALUES ('. implode(', ', $node_table_types) .')';
     db_query($node_query, $node_table_values);
     $node->nid = db_last_insert_id('node', 'nid');
     $revisions_query = 'INSERT INTO {node_revisions} ('. implode(', ', array_keys($revisions_table_types)) .') VALUES ('. implode(', ', $revisions_table_types) .')';
