@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.219 2007/08/09 10:43:03 goba Exp $
+// $Id: form.inc,v 1.220 2007/08/10 10:51:16 goba Exp $
 
 /**
  * @defgroup form Form generation
@@ -948,6 +948,51 @@ function _form_builder_ie_cleanup($form, &$form_state) {
 }
 
 /**
+ * Helper function to determine the value for an image button form element.
+ *
+ * @param $form
+ *   The form element whose value is being populated.
+ * @param $edit
+ *   The incoming POST data to populate the form element. If this is FALSE,
+ *   the element's default value should be returned.
+ * @return
+ *   The data that will appear in the $form_state['values'] collection
+ *   for this element. Return nothing to use the default.
+ */
+function form_type_image_button_value($form, $edit = FALSE) {
+  if ($edit !== FALSE) {
+    if (!empty($edit)) {
+      // If we're dealing with Mozilla or Opera, we're lucky. It will
+      // return a proper value, and we can get on with things.
+      return $form['#return_value'];
+    }
+    else {
+      // Unfortunately, in IE we never get back a proper value for THIS
+      // form element. Instead, we get back two split values: one for the
+      // X and one for the Y coordinates on which the user clicked the
+      // button. We'll find this element in the #post data, and search
+      // in the same spot for its name, with '_x'.
+      $post = $form['#post'];
+      foreach (split('\[', $form['#name']) as $element_name) {
+        // chop off the ] that may exist.
+        if (substr($element_name, -1) == ']') {
+          $element_name = substr($element_name, 0, -1);
+        }
+
+        if (!isset($post[$element_name])) {
+          if (isset($post[$element_name .'_x'])) {
+            return $form['#return_value'];
+          }
+          return NULL;
+        }
+        $post = $array[$element_name];
+      }
+      return $form['#return_value'];
+    }
+  }
+}
+
+/**
  * Helper function to determine the value for a checkbox form element.
  *
  * @param $form
@@ -1666,7 +1711,7 @@ function theme_image_button($element) {
     (!empty($element['#value']) ? ('value="'. check_plain($element['#value']) .'" ') : '') .
     'id="' . $element['#id'] . '" ' .
     drupal_attributes($element['#attributes']) .
-    ' src="' . base_path() . $element['#image'] . '" ' .
+    ' src="' . base_path() . $element['#src'] . '" ' .
     (!empty($element['#title']) ? 'alt="' . check_plain($element['#title']) . '" title="' . check_plain($element['#title']) . '" ' : '' ).
     "/>\n";
 }
