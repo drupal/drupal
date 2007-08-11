@@ -1,5 +1,5 @@
 <?php
-// $Id: database.pgsql.inc,v 1.53 2007/07/23 08:05:14 dries Exp $
+// $Id: database.pgsql.inc,v 1.54 2007/08/11 14:14:46 dries Exp $
 
 /**
  * @file
@@ -229,16 +229,13 @@ function db_num_rows($result) {
  *
  * @param $result
  *   A database query result resource, as returned from db_query().
- * @param $row
- *   The index of the row whose result is needed.
  * @return
  *   The resulting field or FALSE.
  */
-function db_result($result, $row = 0) {
-  if ($result && pg_num_rows($result) > $row) {
-    $res = pg_fetch_row($result, $row);
-
-    return $res[0];
+function db_result($result) {
+  if ($result && pg_num_rows($result) > 0) {
+    $array = pg_fetch_row($result);
+    return $array[0];
   }
   return FALSE;
 }

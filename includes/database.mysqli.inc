@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysqli.inc,v 1.40 2007/07/23 08:05:14 dries Exp $
+// $Id: database.mysqli.inc,v 1.41 2007/08/11 14:14:46 dries Exp $
 
 /**
  * @file
@@ -211,14 +211,14 @@ function db_num_rows($result) {
 *
 * @param $result
 *   A database query result resource, as returned from db_query().
-* @param $row
-*   The index of the row whose result is needed.
 * @return
 *   The resulting field or FALSE.
 */
-function db_result($result, $row = 0) {
-  if ($result && mysqli_num_rows($result) > $row) {
-    $array = mysqli_fetch_array($result, MYSQLI_NUM);
+function db_result($result) {
+  if ($result && mysqli_num_rows($result) > 0) {
+    // The mysqli_fetch_row function has an optional second parameter $row
+    // but that can't be used for compatibility with Oracle, DB2, etc.
+    $array = mysqli_fetch_row($result);
     return $array[0];
   }
   return FALSE;

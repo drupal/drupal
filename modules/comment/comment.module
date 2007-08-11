@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.570 2007/07/30 21:27:34 dries Exp $
+// $Id: comment.module,v 1.571 2007/08/11 14:14:46 dries Exp $
 
 /**
  * @file
@@ -1398,7 +1398,7 @@ function comment_validate($edit) {
   if (!$user->uid || isset($edit['is_anonymous'])) {
     if (variable_get('comment_anonymous', COMMENT_ANONYMOUS_MAYNOT_CONTACT) > COMMENT_ANONYMOUS_MAYNOT_CONTACT) {
       if ($edit['name']) {
-        $taken = db_result(db_query("SELECT COUNT(uid) FROM {users} WHERE LOWER(name) = '%s'", $edit['name']), 0);
+        $taken = db_result(db_query("SELECT COUNT(uid) FROM {users} WHERE LOWER(name) = '%s'", $edit['name']));
 
         if ($taken != 0) {
           form_set_error('name', t('The name you used belongs to a registered user.'));
