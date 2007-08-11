@@ -1,5 +1,5 @@
 <?php
-// $Id: update.fetch.inc,v 1.1 2007/07/11 15:15:40 dries Exp $
+// $Id: update.fetch.inc,v 1.2 2007/08/11 07:05:11 dries Exp $
 
 /**
  * @file
@@ -14,7 +14,7 @@ function update_manual_status() {
     drupal_set_message(t('Fetched information about all available new releases and updates.'));
   }
   else {
-    drupal_set_message(t('Unable to fetch any information on available new releases and updates.'), 'error');
+    drupal_set_message(t('Unable to fetch any information about available new releases and updates.'), 'error');
   }
   drupal_goto('admin/logs/updates');
 }
@@ -47,10 +47,10 @@ function _update_refresh() {
     $frequency = variable_get('update_check_frequency', 1);
     cache_set('update_info', $available, 'cache_update', time() + (60 * 60 * 24 * $frequency));
     variable_set('update_last_check', time());
-    watchdog('update', 'Fetched information on all available new releases and updates.', array(), WATCHDOG_NOTICE, l('view', 'admin/logs/updates'));
+    watchdog('update', 'Fetched information about all available new releases and updates.', array(), WATCHDOG_NOTICE, l('view', 'admin/logs/updates'));
   }
   else {
-    watchdog('update', 'Unable to fetch any information on available new releases and updates.', array(), WATCHDOG_ERROR, l('view', 'admin/logs/updates'));
+    watchdog('update', 'Unable to fetch any information about available new releases and updates.', array(), WATCHDOG_ERROR, l('view', 'admin/logs/updates'));
   }
   return $available;
 }
