@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.432 2007/08/09 11:00:58 goba Exp $
+// $Id: book.module,v 1.433 2007/08/11 14:06:15 dries Exp $
 
 /**
  * @file
@@ -620,7 +620,7 @@ function book_outline_form_submit($form, &$form_state) {
     }
   }
   else {
-    drupal_set_message(t('There was an error adding the post to the book.'));
+    drupal_set_message(t('There was an error adding the post to the book.'), 'error');
   }
 }
 
@@ -1451,8 +1451,9 @@ function book_menu_subtree_data($item) {
       $data = $cache->data;
     }
     else {
+      $match = array("menu_name  = '%s'");
+      $args = array($item['menu_name']);
       $i = 1;
-      $match = array();
       while ($i <= MENU_MAX_DEPTH && $item["p$i"]) {
         $match[] = "p$i = %d";
         $args[] = $item["p$i"];
@@ -1460,10 +1461,10 @@ function book_menu_subtree_data($item) {
       }
       $sql = "
         SELECT b.*, m.load_functions, m.to_arg_functions, m.access_callback, m.access_arguments, m.page_callback, m.page_arguments, m.title, m.title_callback, m.title_arguments, m.type, ml.*
-        FROM {menu_links} ml LEFT JOIN {menu_router} m ON m.path = ml.router_path
+        FROM {menu_links} ml INNER JOIN {menu_router} m ON m.path = ml.router_path
         INNER JOIN {book} b ON ml.mlid = b.mlid
-        WHERE ml.hidden >= 0 AND ". implode(' AND ', $match) ."
-        ORDER BY p1 ASC, p2 ASC, p3 ASC, p4 ASC, p5 ASC";
+        WHERE ". implode(' AND ', $match) ."
+        ORDER BY p1 ASC, p2 ASC, p3 ASC, p4 ASC, p5 ASC, p6 ASC, p7 ASC, p8 ASC, p9 ASC";
 
       $data['tree'] = menu_tree_data(db_query($sql, $args), array(), $item['depth']);
       $data['node_links'] = array();

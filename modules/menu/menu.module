@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.132 2007/07/29 17:28:23 dries Exp $
+// $Id: menu.module,v 1.133 2007/08/11 14:06:15 dries Exp $
 
 /**
  * @file
@@ -70,6 +70,8 @@ function menu_menu() {
     'title' => 'Customize menu',
     'page callback' => 'menu_overview',
     'page arguments' => array(3),
+    'title callback' => 'menu_overview_title',
+    'title arguments' => array(3),
     'access arguments' => array('administer menu'),
     'type' => MENU_CALLBACK);
   $items['admin/build/menu-customize/%menu/list'] = array(
@@ -142,6 +144,13 @@ function menu_enable() {
 }
 
 /**
+ * Title callback for the menu overview page and links.
+ */
+function menu_overview_title($menu) {
+  return t('!menu_title (overview)', array('!menu_title' => $menu['title']));
+}
+
+/**
  * Load the data for a single custom menu.
  */
 function menu_load($menu_name) {
@@ -171,14 +180,14 @@ function menu_overview($menu) {
   $sql ="
     SELECT m.load_functions, m.to_arg_functions, m.access_callback, m.access_arguments, m.page_callback, m.page_arguments, m.title, m.title_callback, m.title_arguments, m.type, ml.*
     FROM {menu_links} ml LEFT JOIN {menu_router} m ON m.path = ml.router_path
-    WHERE ml.menu_name = '%s' AND ml.hidden >= 0
-    ORDER BY p1 ASC, p2 ASC, p3 ASC, p4 ASC, p5 ASC";
-  $sql_count = "SELECT COUNT(*) FROM {menu_links} ml WHERE menu_name = '%s' AND hidden >= 0";
+    WHERE ml.menu_name = '%s'
+    ORDER BY p1 ASC, p2 ASC, p3 ASC, p4 ASC, p5 ASC, p6 ASC, p7 ASC, p8 ASC, p9 ASC";
+  $sql_count = "SELECT COUNT(*) FROM {menu_links} ml WHERE menu_name = '%s'";
   $result = pager_query($sql, 200, 0, $sql_count, $menu['menu_name']);
   $tree = menu_tree_data($result);
   $node_links = array();
   menu_tree_collect_node_links($tree, $node_links);
-  menu_tree_check_access($tree, $node_links, TRUE);
+  menu_tree_check_access($tree, $node_links);
   $rows = _menu_overview_tree($tree);
   $output = theme('table', $header, $rows);
   $output .= theme('pager', NULL, 200, 0);
@@ -192,9 +201,11 @@ function _menu_overview_tree($tree) {
   static $rows = array();
   foreach ($tree as $data) {
     $title = '';
-    if ($item = $data['link']) {
+    $item = $data['link'];
+    // Don't show callbacks; these have $item['hidden'] < 0.
+    if ($item && $item['hidden'] >= 0) {
       $title = str_repeat('&nbsp;&nbsp;', $item['depth'] - 1) . ($item['depth'] > 1 ? '-&nbsp;' : '');
-      $title .= l($item['link_title'], $item['href'], $item['options']);
+      $title .= l($item['title'], $item['href'], $item['options']);
       // Populate the operations field.
       $operations = array();
       // Set the edit column.
@@ -360,7 +371,9 @@ function menu_item_delete_submit($form, &$form_state) {
 function menu_edit_item_submit($form, &$form_state) {
   $form_state['values']['options']['attributes']['title'] = $form_state['values']['description'];
   list($form_state['values']['menu_name'], $form_state['values']['plid']) = explode(':', $form_state['values']['parent']);
-  menu_link_save($form_state['values']);
+  if (!menu_link_save($form_state['values'])) {
+    drupal_set_message(t('There was an error saving the menu link.'), 'error');
+  }
   $form_state['redirect'] = 'admin/build/menu-customize/'. $form_state['values']['menu_name'];
 }
 
@@ -379,7 +392,7 @@ function menu_edit_item_submit($form, &$form_state) {
 function menu_parent_options($menus, $item) {
 
   foreach ($menus as $menu_name => $title) {
-    $tree = menu_tree_all_data($menu_name, NULL, TRUE);
+    $tree = menu_tree_all_data($menu_name, NULL);
     $options[$menu_name .':0'] = '<'. $title .'>';
     _menu_parents_recurse($tree, $menu_name, '--', $options, $item['mlid']);
   }
@@ -391,14 +404,14 @@ function menu_parent_options($menus, $item) {
  */
 function _menu_parents_recurse($tree, $menu_name, $indent, &$options, $exclude) {
   foreach ($tree as $data) {
-    if ($data['link']['mlid'] != $exclude) {
+    if ($data['link']['mlid'] != $exclude && $data['link']['hidden'] >= 0) {
       $title = $indent .' '. truncate_utf8($data['link']['title'], 30, TRUE, FALSE);
       if ($data['link']['hidden']) {
         $title .= ' ('. t('disabled') .')';
       }
       $options[$menu_name .':'. $data['link']['mlid']] = $title;
       if ($data['below'] && $data['link']['depth'] < MENU_MAX_DEPTH - 1) {
-         _menu_parents_recurse($data['below'], $menu_name, $indent .'--', $options, $exclude);
+        _menu_parents_recurse($data['below'], $menu_name, $indent .'--', $options, $exclude);
       }
     }
   }
@@ -500,7 +513,7 @@ function menu_delete_menu_confirm_submit($form, &$form_state) {
   // Delete all links to the overview page for this menu.
   $result = db_query("SELECT mlid FROM {menu_links} ml WHERE ml.link_path = '%s'", 'admin/build/menu-customize/'. $menu['menu_name']);
   while ($m = db_fetch_array($result)) {
-     menu_link_delete($m['mlid']);
+    menu_link_delete($m['mlid']);
   }
   // Delete all the links in the menu and the menu from the list of custom menus.
   db_query("DELETE FROM {menu_links} WHERE menu_name = '%s'", $menu['menu_name']);
@@ -527,7 +540,7 @@ function menu_edit_menu_validate($form, &$form_state) {
     // We will add 'menu-' to the menu name to help avoid name-space conflicts.
     $item['menu_name'] = 'menu-'. $item['menu_name'];
     if (db_result(db_query("SELECT menu_name FROM {menu_custom} WHERE menu_name = '%s'", $item['menu_name'])) ||
-       db_result(db_query_range("SELECT menu_name FROM {menu_links} WHERE menu_name = '%s'", $item['menu_name'], 0, 1))) {
+      db_result(db_query_range("SELECT menu_name FROM {menu_links} WHERE menu_name = '%s'", $item['menu_name'], 0, 1))) {
       form_set_error('menu_name', t('Menu already exists'));
     }
   }
@@ -663,7 +676,9 @@ function menu_nodeapi(&$node, $op) {
           if (!$item['customized']) {
             $item['options']['attributes']['title'] = trim($node->title);
           }
-          menu_link_save($item);
+          if (!menu_link_save($item)) {
+            drupal_set_message(t('There was an error saving the menu link.'), 'error');
+          }
         }
       }
       break;

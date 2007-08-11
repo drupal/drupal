@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.132 2007/08/07 08:32:43 goba Exp $
+// $Id: system.install,v 1.133 2007/08/11 14:06:15 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -3333,6 +3333,9 @@ function system_update_6020() {
       'plid'         => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
       'link_path'    => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
       'router_path'  => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'link_title'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'options'      => array('type' => 'text', 'not null' => FALSE),
+      'module'       => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => 'system'),
       'hidden'       => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'small'),
       'external'     => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'small'),
       'has_children' => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'small'),
@@ -3346,16 +3349,15 @@ function system_update_6020() {
       'p4'           => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
       'p5'           => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
       'p6'           => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
-      'module'       => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => 'system'),
-      'link_title'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'options'      => array('type' => 'text', 'not null' => FALSE)
+      'p7'           => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+      'p8'           => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+      'p9'           => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
     ),
     'indexes' => array(
-      'expanded_children' => array('expanded', 'has_children'),
-      'menu_name_path' => array('menu_name', 'link_path'),
-      'plid'=> array('plid'),
-      'parents' => array('p1', 'p2', 'p3', 'p4', 'p5'),
-      'router_path' => array('router_path'),
+      'path_menu'              => array(array('link_path', 128), 'menu_name'),
+      'menu_plid_expand_child' => array('menu_name', 'plid', 'expanded', 'has_children'),
+      'menu_parents'           => array('menu_name', 'p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'p7', 'p8', 'p9'),
+      'router_path'            => array(array('router_path', 128)),
     ),
     'primary key' => array('mlid'),
   );
