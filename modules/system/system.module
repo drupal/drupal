@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.515 2007/08/10 10:51:17 goba Exp $
+// $Id: system.module,v 1.516 2007/08/11 19:17:17 goba Exp $
 
 /**
  * @file
@@ -204,6 +204,7 @@ function system_menu() {
   );
   $items['admin/build/themes/settings'] = array(
     'title' => 'Configure',
+    'page arguments' => array('system_theme_settings'),
     'type' => MENU_LOCAL_TASK,
   );
   // Theme configuration subtabs
