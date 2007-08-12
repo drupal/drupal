@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.829 2007/08/12 16:12:00 dries Exp $
+// $Id: user.module,v 1.830 2007/08/12 19:25:57 goba Exp $
 
 /**
  * @file
@@ -1803,7 +1803,7 @@ function user_view($account) {
  * @return
  *   A structured array containing the individual elements of the profile.
  */
-function user_build_content($account) {
+function user_build_content(&$account) {
   $edit = NULL;
   user_module_invoke('view', $edit, $account);
   // Allow modules to modify the fully-built profile.
