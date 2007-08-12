@@ -45,8 +45,7 @@ function path_menu() {
   );
   $items['admin/build/path/edit'] = array(
     'title' => 'Edit alias',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('path_admin_edit'),
+    'page callback' => 'path_admin_edit',
     'type' => MENU_CALLBACK,
     'file' => 'path.admin.inc',
   );
@@ -64,8 +63,7 @@ function path_menu() {
   );
   $items['admin/build/path/add'] = array(
     'title' => 'Add alias',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('path_admin_edit'),
+    'page callback' => 'path_admin_edit',
     'access arguments' => array('administer url aliases'),
     'type' => MENU_LOCAL_TASK,
     'file' => 'path.admin.inc',
