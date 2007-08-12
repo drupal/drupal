@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.263 2007/07/03 20:10:50 dries Exp $
+// $Id: statistics.module,v 1.264 2007/08/12 15:55:36 dries Exp $
 
 /**
  * @file
@@ -525,18 +525,18 @@ function statistics_block($op = 'list', $delta = 0, $edit = array()) {
         $content = array();
 
         $daytop = variable_get('statistics_block_top_day_num', 0);
-        if ($daytop && ($result = statistics_title_list('daycount', $daytop)) && db_num_rows($result)) {
-          $content[] = node_title_list($result, t("Today's:"));
+        if ($daytop && ($result = statistics_title_list('daycount', $daytop)) && ($node_title_list = node_title_list($result, t("Today's:")))) {
+          $content[] = $node_title_list;
         }
 
         $alltimetop = variable_get('statistics_block_top_all_num', 0);
-        if ($alltimetop && ($result = statistics_title_list('totalcount', $alltimetop)) && db_num_rows($result)) {
-          $content[] = node_title_list($result, t('All time:'));
+        if ($alltimetop && ($result = statistics_title_list('totalcount', $alltimetop)) && ($node_title_list = node_title_list($result, t('All time:')))) {
+          $content[] = $node_title_list;
         }
 
         $lasttop = variable_get('statistics_block_top_last_num', 0);
-        if ($lasttop && ($result = statistics_title_list('timestamp', $lasttop)) && db_num_rows($result)) {
-          $content[] = node_title_list($result, t('Last viewed:'));
+        if ($lasttop && ($result = statistics_title_list('timestamp', $lasttop)) && ($node_title_list = node_title_list($result, t('Last viewed:')))) {
+          $content[] = $node_title_list;
         }
 
         if (count($content)) {

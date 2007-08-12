@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.133 2007/08/11 14:06:15 dries Exp $
+// $Id: system.install,v 1.134 2007/08/12 15:55:36 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -1428,8 +1428,9 @@ function system_update_159() {
   $ret = array();
 
   $result = db_query_range("SELECT * FROM {old_revisions} WHERE done = 0 AND type IN ('page', 'story', 'poll', 'book', 'forum', 'blog') ORDER BY nid DESC", 0, 20);
+  $result_rows = db_result(db_query_range("SELECT COUNT(*) FROM {old_revisions} WHERE done = 0 AND type IN ('page', 'story', 'poll', 'book', 'forum', 'blog') ORDER BY nid DESC", 0, 20));
 
-  if (db_num_rows($result)) {
+  if ($result_rows) {
     $vid = db_next_id('{node_revisions}_vid');
     while ($node = db_fetch_object($result)) {
       $revisions = unserialize($node->revisions);
@@ -1519,7 +1520,7 @@ function system_update_159() {
     }
   }
 
-  if (db_num_rows($result) < 20) {
+  if ($result_rows < 20) {
     $ret[] = update_sql('ALTER TABLE {old_revisions} DROP done');
   }
   else {
@@ -2179,7 +2180,7 @@ function system_update_179() {
     }
 
     // Done?
-    if (db_num_rows($result) == 0) {
+    if (!$field) {
       unset($_SESSION['system_update_179_uid']);
       unset($_SESSION['system_update_179_fid']);
       unset($_SESSION['system_update_179_max']);

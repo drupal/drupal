@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.571 2007/08/11 14:14:46 dries Exp $
+// $Id: comment.module,v 1.572 2007/08/12 15:55:35 dries Exp $
 
 /**
  * @file
@@ -1016,12 +1016,10 @@ function comment_render($node, $cid = 0) {
 
       // Start a form, for use with comment control.
       $result = pager_query($query, $comments_per_page, 0, $query_count, $query_args);
-      if (db_num_rows($result) && (variable_get('comment_controls', COMMENT_CONTROLS_HIDDEN) == COMMENT_CONTROLS_ABOVE || variable_get('comment_controls', COMMENT_CONTROLS_HIDDEN) == COMMENT_CONTROLS_ABOVE_BELOW)) {
-        $output .= drupal_get_form('comment_controls', $mode, $order, $comments_per_page);
-      }
 
       $divs = 0;
       $last_depth = 0;
+      $comments = '';
       drupal_add_css(drupal_get_path('module', 'comment') .'/comment.css');
       while ($comment = db_fetch_object($result)) {
         $comment = drupal_unpack($comment);
@@ -1031,37 +1029,43 @@ function comment_render($node, $cid = 0) {
         if ($mode == COMMENT_MODE_THREADED_COLLAPSED || $mode == COMMENT_MODE_THREADED_EXPANDED) {
           if ($comment->depth > $last_depth) {
             $divs++;
-            $output .= '<div class="indented">';
+            $comments .= '<div class="indented">';
             $last_depth++;
           }
           else {
             while ($comment->depth < $last_depth) {
               $divs--;
-              $output .= '</div>';
+              $comments .= '</div>';
               $last_depth--;
             }
           }
         }
 
         if ($mode == COMMENT_MODE_FLAT_COLLAPSED) {
-          $output .= theme('comment_flat_collapsed', $comment, $node);
+          $comments .= theme('comment_flat_collapsed', $comment, $node);
         }
         else if ($mode == COMMENT_MODE_FLAT_EXPANDED) {
-          $output .= theme('comment_flat_expanded', $comment, $node);
+          $comments .= theme('comment_flat_expanded', $comment, $node);
         }
         else if ($mode == COMMENT_MODE_THREADED_COLLAPSED) {
-          $output .= theme('comment_thread_collapsed', $comment, $node);
+          $comments .= theme('comment_thread_collapsed', $comment, $node);
         }
         else if ($mode == COMMENT_MODE_THREADED_EXPANDED) {
-          $output .= theme('comment_thread_expanded', $comment, $node);
+          $comments .= theme('comment_thread_expanded', $comment, $node);
         }
       }
+
+      if ($comment && (variable_get('comment_controls', COMMENT_CONTROLS_HIDDEN) == COMMENT_CONTROLS_ABOVE || variable_get('comment_controls', COMMENT_CONTROLS_HIDDEN) == COMMENT_CONTROLS_ABOVE_BELOW)) {
+        $output .= drupal_get_form('comment_controls', $mode, $order, $comments_per_page);
+      }
+      $output .= $comments;
+
       for ($i = 0; $i < $divs; $i++) {
         $output .= '</div>';
       }
       $output .= theme('pager', NULL, $comments_per_page, 0);
 
-      if (db_num_rows($result) && (variable_get('comment_controls', COMMENT_CONTROLS_HIDDEN) == COMMENT_CONTROLS_BELOW || variable_get('comment_controls', COMMENT_CONTROLS_HIDDEN) == COMMENT_CONTROLS_ABOVE_BELOW)) {
+      if ($comment && (variable_get('comment_controls', COMMENT_CONTROLS_HIDDEN) == COMMENT_CONTROLS_BELOW || variable_get('comment_controls', COMMENT_CONTROLS_HIDDEN) == COMMENT_CONTROLS_ABOVE_BELOW)) {
         $output .= drupal_get_form('comment_controls', $mode, $order, $comments_per_page);
       }
     }

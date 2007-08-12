@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.516 2007/08/11 19:17:17 goba Exp $
+// $Id: system.module,v 1.517 2007/08/12 15:55:36 dries Exp $
 
 /**
  * @file
@@ -463,8 +463,8 @@ function system_admin_theme_settings() {
 function system_admin_theme_submit($form, &$form_state) {
   // If we're changing themes, make sure the theme has its blocks initialized.
   if ($form_state['values']['admin_theme'] != variable_get('admin_theme', '0')) {
-    $result = db_query("SELECT status FROM {blocks} WHERE theme = '%s'", $form_state['values']['admin_theme']);
-    if (!db_num_rows($result)) {
+    $result = db_result(db_query("SELECT COUNT(*) FROM {blocks} WHERE theme = '%s'", $form_state['values']['admin_theme']));
+    if (!$result) {
       system_initialize_theme_blocks($form_state['values']['admin_theme']);
     }
   }
@@ -1266,7 +1266,7 @@ function system_default_region($theme) {
  */
 function system_initialize_theme_blocks($theme) {
   // Initialize theme's blocks if none already registered.
-  if (!(db_num_rows(db_query("SELECT module FROM {blocks} WHERE theme = '%s'", $theme)))) {
+  if (!(db_result(db_query("SELECT COUNT(*) FROM {blocks} WHERE theme = '%s'", $theme)))) {
     $default_theme = variable_get('theme_default', 'garland');
     $regions = system_region_list($theme);
     $result = db_query("SELECT * FROM {blocks} WHERE theme = '%s'", $default_theme);

@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.412 2007/08/03 06:07:52 dries Exp $
+// $Id: forum.module,v 1.413 2007/08/12 15:55:36 dries Exp $
 
 /**
  * @file
@@ -375,18 +375,14 @@ function forum_block($op = 'list', $delta = 0, $edit = array()) {
             $title = t('Active forum topics');
             $sql = db_rewrite_sql("SELECT n.nid, n.title, l.comment_count, l.last_comment_timestamp FROM {node} n INNER JOIN {term_node} tn ON tn.nid = n.nid INNER JOIN {term_data} td ON td.tid = tn.tid INNER JOIN {node_comment_statistics} l ON n.nid = l.nid WHERE n.status = 1 AND td.vid = %d ORDER BY l.last_comment_timestamp DESC");
             $result = db_query_range($sql, variable_get('forum_nav_vocabulary', ''), 0, variable_get('forum_block_num_0', '5'));
-            if (db_num_rows($result)) {
-              $content = node_title_list($result);
-            }
+            $content = node_title_list($result);
             break;
 
           case 1:
             $title = t('New forum topics');
             $sql = db_rewrite_sql("SELECT n.nid, n.title, l.comment_count FROM {node} n INNER JOIN {term_node} tn ON tn.nid = n.nid INNER JOIN {term_data} td ON td.tid = tn.tid INNER JOIN {node_comment_statistics} l ON n.nid = l.nid WHERE n.status = 1 AND td.vid = %d ORDER BY n.nid DESC");
             $result = db_query_range($sql, variable_get('forum_nav_vocabulary', ''), 0, variable_get('forum_block_num_1', '5'));
-            if (db_num_rows($result)) {
-              $content = node_title_list($result);
-            }
+            $content = node_title_list($result);
             break;
         }
 

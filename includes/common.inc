@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.676 2007/08/02 20:08:52 dries Exp $
+// $Id: common.inc,v 1.677 2007/08/12 15:55:35 dries Exp $
 
 /**
  * @file
@@ -807,7 +807,7 @@ function flood_register_event($name) {
  *   True if the user did not exceed the hourly threshold. False otherwise.
  */
 function flood_is_allowed($name, $threshold) {
-  $number = db_num_rows(db_query("SELECT event FROM {flood} WHERE event = '%s' AND hostname = '%s' AND timestamp > %d", $name, ip_address(), time() - 3600));
+  $number = db_result(db_query("SELECT COUNT(*) FROM {flood} WHERE event = '%s' AND hostname = '%s' AND timestamp > %d", $name, ip_address(), time() - 3600));
   return ($number < $threshold ? TRUE : FALSE);
 }
 

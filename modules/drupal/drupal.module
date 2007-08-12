@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal.module,v 1.147 2007/06/30 19:46:55 goba Exp $
+// $Id: drupal.module,v 1.148 2007/08/12 15:55:36 dries Exp $
 
 /**
  * @file
@@ -251,8 +251,7 @@ function drupal_client_ping($client, $system) {
 
   if ($client['link'] && $client['name'] && $client['mail'] && $client['slogan'] && $client['mission']) {
     $result = db_query("SELECT cid FROM {client} WHERE link = '%s'", $client['link']);
-    if (db_num_rows($result)) {
-      $record = db_fetch_object($result);
+    if ($record = db_fetch_object($result)) {
       $client['cid'] = $record->cid;
       // We have an existing record.
       db_query("UPDATE {client} SET link = '%s', name = '%s', mail = '%s', slogan = '%s', mission = '%s', users = %d, nodes = %d, version = '%s', changed = '%s' WHERE cid = %d", $client['uid'], $client['link'], $client['name'], $client['mail'], $client['slogan'], $client['mission'], $client['users'], $client['nodes'], $client['version'], time(), $client['cid']);

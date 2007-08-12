@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.868 2007/08/10 11:14:22 goba Exp $
+// $Id: node.module,v 1.869 2007/08/12 15:55:36 dries Exp $
 
 /**
  * @file
@@ -106,19 +106,24 @@ function node_cron() {
  * Gather a listing of links to nodes.
  *
  * @param $result
- *   A DB result object from a query to fetch node objects. If your query joins the <code>node_comment_statistics</code> table so that the <code>comment_count</code> field is available, a title attribute will be added to show the number of comments.
+ *   A DB result object from a query to fetch node objects. If your query
+ *   joins the <code>node_comment_statistics</code> table so that the
+ *   <code>comment_count</code> field is available, a title attribute will
+ *   be added to show the number of comments.
  * @param $title
  *   A heading for the resulting list.
  *
  * @return
- *   An HTML list suitable as content for a block.
+ *   An HTML list suitable as content for a block, or FALSE if no result can
+ *   fetch from DB result object.
  */
 function node_title_list($result, $title = NULL) {
+  $items = array();
   while ($node = db_fetch_object($result)) {
     $items[] = l($node->title, 'node/'. $node->nid, !empty($node->comment_count) ? array('title' => format_plural($node->comment_count, '1 comment', '@count comments')) : array());
   }
 
-  return theme('node_list', $items, $title);
+  return $node ? theme('node_list', $items, $title) : FALSE;
 }
 
 /**
@@ -377,7 +382,7 @@ function node_types_rebuild() {
 function node_type_save($info) {
   $is_existing = FALSE;
   $existing_type = !empty($info->old_type) ? $info->old_type : $info->type;
-  $is_existing = db_num_rows(db_query("SELECT * FROM {node_type} WHERE type = '%s'", $existing_type));
+  $is_existing = db_result(db_query("SELECT COUNT(*) FROM {node_type} WHERE type = '%s'", $existing_type));
   if (!isset($info->help)) {
     $info->help = '';
   }
@@ -2551,14 +2556,14 @@ function node_revisions() {
 function node_page_default() {
   $result = pager_query(db_rewrite_sql('SELECT n.nid, n.sticky, n.created FROM {node} n WHERE n.promote = 1 AND n.status = 1 ORDER BY n.sticky DESC, n.created DESC'), variable_get('default_nodes_main', 10));
 
-  if (db_num_rows($result)) {
+  $output = '';
+  while ($node = db_fetch_object($result)) {
+    $output .= node_view(node_load($node->nid), 1);
+  }
+
+  if ($node) {
     $feed_url = url('rss.xml', array('absolute' => TRUE));
     drupal_add_feed($feed_url, variable_get('site_name', 'Drupal') .' '. t('RSS'));
-
-    $output = '';
-    while ($node = db_fetch_object($result)) {
-      $output .= node_view(node_load($node->nid), 1);
-    }
     $output .= theme('pager', NULL, variable_get('default_nodes_main', 10));
   }
   else {

@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysql.inc,v 1.77 2007/08/11 14:14:46 dries Exp $
+// $Id: database.mysql.inc,v 1.78 2007/08/12 15:55:35 dries Exp $
 
 /**
  * @file
@@ -191,20 +191,6 @@ function db_fetch_array($result) {
 }
 
 /**
- * Determine how many result rows were found by the preceding query.
- *
- * @param $result
- *   A database query result resource, as returned from db_query().
- * @return
- *   The number of result rows.
- */
-function db_num_rows($result) {
-  if ($result) {
-    return mysql_num_rows($result);
-  }
-}
-
-/**
  * Return an individual result field from the previous query.
  *
  * Only use this function if exactly one field is being selected; otherwise,
@@ -295,9 +281,8 @@ function db_query_range($query) {
  * so that they can be properly escaped to avoid SQL injection attacks.
  *
  * Note that if you need to know how many results were returned, you should do
- * a SELECT COUNT(*) on the temporary table afterwards. db_num_rows() and
- * db_affected_rows() do not give consistent result across different database
- * types in this case.
+ * a SELECT COUNT(*) on the temporary table afterwards. db_affected_rows() does
+ * not give consistent result across different database types in this case.
  *
  * @param $query
  *   A string containing a normal SELECT SQL query.
@@ -383,14 +368,14 @@ function db_unlock_tables() {
  * Check if a table exists.
  */
 function db_table_exists($table) {
-  return db_num_rows(db_query("SHOW TABLES LIKE '{". db_escape_table($table) ."}'"));
+  return db_fetch_object(db_query("SHOW TABLES LIKE '{". db_escape_table($table) ."}'")) ? TRUE : FALSE;
 }
 
 /**
  * Check if a column exists in the given table.
  */
 function db_column_exists($table, $column) {
-  return db_num_rows(db_query("SHOW COLUMNS FROM {%s} LIKE '%s'", $table, $column));
+  return db_fetch_object(db_query("SHOW COLUMNS FROM {%s} LIKE '%s'", $table, $column)) ? TRUE : FALSE;
 }
 
 /**

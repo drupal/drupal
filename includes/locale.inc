@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.150 2007/08/09 10:12:14 goba Exp $
+// $Id: locale.inc,v 1.151 2007/08/12 15:55:35 dries Exp $
 
 /**
  * @file
@@ -282,7 +282,7 @@ function _locale_languages_common_controls(&$form, $language = NULL) {
 function locale_languages_predefined_form_validate($form, &$form_state) {
   $langcode = $form_state['values']['langcode'];
 
-  if ($duplicate = db_num_rows(db_query("SELECT language FROM {languages} WHERE language = '%s'", $langcode)) != 0) {
+  if ($duplicate = db_result(db_query("SELECT COUNT(*) FROM {languages} WHERE language = '%s'", $langcode)) != 0) {
     form_set_error('langcode', t('The language %language (%code) already exists.', array('%language' => $form_state['values']['name'], '%code' => $langcode)));
   }
 

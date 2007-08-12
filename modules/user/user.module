@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.827 2007/08/09 10:49:26 goba Exp $
+// $Id: user.module,v 1.828 2007/08/12 15:55:36 dries Exp $
 
 /**
  * @file
@@ -151,8 +151,7 @@ function user_load($array = array()) {
   }
   $result = db_query('SELECT * FROM {users} u WHERE '. implode(' AND ', $query), $params);
 
-  if (db_num_rows($result)) {
-    $user = db_fetch_object($result);
+  if ($user = db_fetch_object($result)) {
     $user = drupal_unpack($user);
 
     $user->roles = array();
@@ -474,8 +473,8 @@ function user_fields() {
 
   if (!$fields) {
     $result = db_query('SELECT * FROM {users} WHERE uid = 1');
-    if (db_num_rows($result)) {
-      $fields = array_keys(db_fetch_array($result));
+    if ($field = db_fetch_array($result)) {
+      $fields = array_keys($field);
     }
     else {
       // Make sure we return the default fields at least
@@ -700,7 +699,16 @@ function user_block($op = 'list', $delta = 0, $edit = array()) {
           // rather than u.access because it is much faster.
           $anonymous_count = sess_count($interval);
           $authenticated_users = db_query('SELECT DISTINCT u.uid, u.name, s.timestamp FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.timestamp >= %d AND s.uid > 0 ORDER BY s.timestamp DESC', $interval);
-          $authenticated_count = db_num_rows($authenticated_users);
+          $authenticated_count = 0;
+          $max_users = variable_get('user_block_max_list_count', 10);
+          $items = array();
+          while ($account = db_fetch_object($authenticated_users)) {
+            if ($max_users > 0) {
+              $items[] = $account;
+              $max_users--;
+            }
+            $authenticated_count++;
+          }
 
           // Format the output with proper grammar.
           if ($anonymous_count == 1 && $authenticated_count == 1) {
@@ -713,12 +721,6 @@ function user_block($op = 'list', $delta = 0, $edit = array()) {
           // Display a list of currently online users.
           $max_users = variable_get('user_block_max_list_count', 10);
           if ($authenticated_count && $max_users) {
-            $items = array();
-
-            while ($max_users-- && $account = db_fetch_object($authenticated_users)) {
-              $items[] = $account;
-            }
-
             $output .= theme('user_list', $items, t('Online users'));
           }
 
@@ -1093,15 +1095,11 @@ function user_current_to_arg($arg) {
  */
 function user_get_authmaps($authname = NULL) {
   $result = db_query("SELECT authname, module FROM {authmap} WHERE authname = '%s'", $authname);
-  if (db_num_rows($result) > 0) {
-    while ($authmap = db_fetch_object($result)) {
-      $authmaps[$authmap->module] = $authmap->authname;
-    }
-    return $authmaps;
+  $authmaps = array();
+  while ($authmap = db_fetch_object($result)) {
+    $authmaps[$authmap->module] = $authmap->authname;
   }
-  else {
-    return 0;
-  }
+  return count($authmaps) ? $authmaps : 0;
 }
 
 function user_set_authmaps($account, $authmaps) {
@@ -1653,7 +1651,7 @@ function _user_edit_validate($uid, &$edit) {
     if ($error = user_validate_name($edit['name'])) {
       form_set_error('name', $error);
     }
-    else if (db_num_rows(db_query("SELECT uid FROM {users} WHERE uid != %d AND LOWER(name) = LOWER('%s')", $uid, $edit['name'])) > 0) {
+    else if (db_result(db_query("SELECT COUNT(*) FROM {users} WHERE uid != %d AND LOWER(name) = LOWER('%s')", $uid, $edit['name'])) > 0) {
       form_set_error('name', t('The name %name is already taken.', array('%name' => $edit['name'])));
     }
     else if (drupal_is_denied('user', $edit['name'])) {
@@ -1665,7 +1663,7 @@ function _user_edit_validate($uid, &$edit) {
   if ($error = user_validate_mail($edit['mail'])) {
     form_set_error('mail', $error);
   }
-  else if (db_num_rows(db_query("SELECT uid FROM {users} WHERE uid != %d AND LOWER(mail) = LOWER('%s')", $uid, $edit['mail'])) > 0) {
+  else if (db_result(db_query("SELECT COUNT(*) FROM {users} WHERE uid != %d AND LOWER(mail) = LOWER('%s')", $uid, $edit['mail'])) > 0) {
     form_set_error('mail', t('The e-mail address %email is already registered. <a href="@password">Have you forgotten your password?</a>', array('%email' => $edit['mail'], '@password' => url('user/password'))));
   }
   else if (drupal_is_denied('mail', $edit['mail'])) {

@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.192 2007/08/11 14:06:14 dries Exp $
+// $Id: menu.inc,v 1.193 2007/08/12 15:55:35 dries Exp $
 
 /**
  * @file
@@ -724,7 +724,7 @@ function menu_tree_page_data($menu_name = 'navigation') {
                 $args[] = $item['mlid'];
               }
               $placeholders = implode(', ', array_fill(0, count($args), '%d'));
-            } while (db_num_rows($result));
+            } while ($item);
           }
           array_unshift($args, $menu_name);
         }
