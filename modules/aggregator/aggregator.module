@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.349 2007/08/12 15:55:35 dries Exp $
+// $Id: aggregator.module,v 1.350 2007/08/12 16:12:00 dries Exp $
 
 /**
  * @file
@@ -964,10 +964,12 @@ function aggregator_parse_feed(&$data, $feed) {
   $result = db_query('SELECT iid FROM {aggregator_item} WHERE fid = %d AND timestamp < %d', $feed['fid'], $age);
 
   $items = array();
+  $num_rows = FALSE;
   while ($item = db_fetch_object($result)) {
     $items[] = $item->iid;
+    $num_rows = TRUE;
   }
-  if ($item) {
+  if ($num_rows) {
     db_query('DELETE FROM {aggregator_category_item} WHERE iid IN ('. implode(', ', $items) .')');
     db_query('DELETE FROM {aggregator_item} WHERE fid = %d AND timestamp < %d', $feed['fid'], $age);
   }

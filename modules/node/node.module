@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.869 2007/08/12 15:55:36 dries Exp $
+// $Id: node.module,v 1.870 2007/08/12 16:12:00 dries Exp $
 
 /**
  * @file
@@ -119,11 +119,13 @@ function node_cron() {
  */
 function node_title_list($result, $title = NULL) {
   $items = array();
+  $num_rows = FALSE;
   while ($node = db_fetch_object($result)) {
     $items[] = l($node->title, 'node/'. $node->nid, !empty($node->comment_count) ? array('title' => format_plural($node->comment_count, '1 comment', '@count comments')) : array());
+    $num_rows = TRUE;
   }
 
-  return $node ? theme('node_list', $items, $title) : FALSE;
+  return $num_rows ? theme('node_list', $items, $title) : FALSE;
 }
 
 /**
@@ -2557,11 +2559,13 @@ function node_page_default() {
   $result = pager_query(db_rewrite_sql('SELECT n.nid, n.sticky, n.created FROM {node} n WHERE n.promote = 1 AND n.status = 1 ORDER BY n.sticky DESC, n.created DESC'), variable_get('default_nodes_main', 10));
 
   $output = '';
+  $num_rows = FALSE;
   while ($node = db_fetch_object($result)) {
     $output .= node_view(node_load($node->nid), 1);
+    $num_rows = TRUE;
   }
 
-  if ($node) {
+  if ($num_rows) {
     $feed_url = url('rss.xml', array('absolute' => TRUE));
     drupal_add_feed($feed_url, variable_get('site_name', 'Drupal') .' '. t('RSS'));
     $output .= theme('pager', NULL, variable_get('default_nodes_main', 10));

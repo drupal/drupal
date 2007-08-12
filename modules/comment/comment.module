@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.572 2007/08/12 15:55:35 dries Exp $
+// $Id: comment.module,v 1.573 2007/08/12 16:12:00 dries Exp $
 
 /**
  * @file
@@ -1019,6 +1019,7 @@ function comment_render($node, $cid = 0) {
 
       $divs = 0;
       $last_depth = 0;
+      $num_rows = FALSE;
       $comments = '';
       drupal_add_css(drupal_get_path('module', 'comment') .'/comment.css');
       while ($comment = db_fetch_object($result)) {
@@ -1053,9 +1054,11 @@ function comment_render($node, $cid = 0) {
         else if ($mode == COMMENT_MODE_THREADED_EXPANDED) {
           $comments .= theme('comment_thread_expanded', $comment, $node);
         }
+
+        $num_rows = TRUE;
       }
 
-      if ($comment && (variable_get('comment_controls', COMMENT_CONTROLS_HIDDEN) == COMMENT_CONTROLS_ABOVE || variable_get('comment_controls', COMMENT_CONTROLS_HIDDEN) == COMMENT_CONTROLS_ABOVE_BELOW)) {
+      if ($num_rows && (variable_get('comment_controls', COMMENT_CONTROLS_HIDDEN) == COMMENT_CONTROLS_ABOVE || variable_get('comment_controls', COMMENT_CONTROLS_HIDDEN) == COMMENT_CONTROLS_ABOVE_BELOW)) {
         $output .= drupal_get_form('comment_controls', $mode, $order, $comments_per_page);
       }
       $output .= $comments;
@@ -1065,7 +1068,7 @@ function comment_render($node, $cid = 0) {
       }
       $output .= theme('pager', NULL, $comments_per_page, 0);
 
-      if ($comment && (variable_get('comment_controls', COMMENT_CONTROLS_HIDDEN) == COMMENT_CONTROLS_BELOW || variable_get('comment_controls', COMMENT_CONTROLS_HIDDEN) == COMMENT_CONTROLS_ABOVE_BELOW)) {
+      if ($num_rows && (variable_get('comment_controls', COMMENT_CONTROLS_HIDDEN) == COMMENT_CONTROLS_BELOW || variable_get('comment_controls', COMMENT_CONTROLS_HIDDEN) == COMMENT_CONTROLS_ABOVE_BELOW)) {
         $output .= drupal_get_form('comment_controls', $mode, $order, $comments_per_page);
       }
     }
