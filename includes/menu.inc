@@ -724,7 +724,7 @@ function menu_tree_page_data($menu_name = 'navigation') {
                 $args[] = $item['mlid'];
               }
               $placeholders = implode(', ', array_fill(0, count($args), '%d'));
-            } while (db_num_rows($result));
+            } while ($item);
           }
           array_unshift($args, $menu_name);
         }

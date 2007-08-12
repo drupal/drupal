@@ -983,10 +983,10 @@ function taxonomy_select_nodes($tids = array(), $operator = 'or', $depth = 0, $p
 */
 function taxonomy_render_nodes($result) {
   $output = '';
-  if (db_num_rows($result) > 0) {
-    while ($node = db_fetch_object($result)) {
-      $output .= node_view(node_load($node->nid), 1);
-    }
+  while ($node = db_fetch_object($result)) {
+    $output .= node_view(node_load($node->nid), 1);
+  }
+  if ($node) {
     $output .= theme('pager', NULL, variable_get('default_nodes_main', 10), 0);
   }
   else {

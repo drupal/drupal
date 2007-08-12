@@ -61,9 +61,9 @@ function sess_write($key, $value) {
     return TRUE;
   }
 
-  $result = db_query("SELECT sid FROM {sessions} WHERE sid = '%s'", $key);
+  $result = db_result(db_query("SELECT COUNT(*) FROM {sessions} WHERE sid = '%s'", $key));
 
-  if (!db_num_rows($result)) {
+  if (!$result) {
     // Only save session data when when the browser sends a cookie. This keeps
     // crawlers out of session table. This reduces memory and server load,
     // and gives more useful statistics. We can't eliminate anonymous session
