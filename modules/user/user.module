@@ -1803,7 +1803,7 @@ function user_view($account) {
  * @return
  *   A structured array containing the individual elements of the profile.
  */
-function user_build_content($account) {
+function user_build_content(&$account) {
   $edit = NULL;
   user_module_invoke('view', $edit, $account);
   // Allow modules to modify the fully-built profile.
