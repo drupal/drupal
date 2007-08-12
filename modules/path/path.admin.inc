@@ -1,5 +1,5 @@
 <?php
-// $Id: path.admin.inc,v 1.3 2007/07/30 18:23:25 dries Exp $
+// $Id: path.admin.inc,v 1.4 2007/08/12 16:34:56 goba Exp $
 
 /**
  * @file
@@ -64,14 +64,14 @@ function path_admin_overview($keys = NULL) {
 /**
  * Menu callback; handles pages for creating and editing URL aliases.
  */
-function path_admin_edit($form_state, $pid = 0) {
+function path_admin_edit($pid = 0) {
   if ($pid) {
     $alias = path_load($pid);
     drupal_set_title(check_plain($alias['dst']));
-    $output = path_admin_form($form_state, $alias);
+    $output = drupal_get_form('path_admin_form', $alias);
   }
   else {
-    $output = path_admin_form();
+    $output = drupal_get_form('path_admin_form');
   }
 
   return $output;
@@ -85,8 +85,7 @@ function path_admin_edit($form_state, $pid = 0) {
  * @see path_admin_form_submit().
  */
 function path_admin_form(&$form_state, $edit = array('src' => '', 'dst' => '', 'language' => '', 'pid' => NULL)) {
-  $form['#submit'][] = 'path_admin_form_submit';
-  $form['#validate'][] = 'path_admin_form_validate';
+
   $form['#alias'] = $edit;
 
   $form['src'] = array(
