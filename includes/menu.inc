@@ -720,11 +720,13 @@ function menu_tree_page_data($menu_name = 'navigation') {
             // their children to the list as well.
             do {
               $result = db_query("SELECT mlid FROM {menu_links} WHERE menu_name = '%s' AND expanded = 1 AND has_children = 1 AND plid IN (". $placeholders .') AND mlid NOT IN ('. $placeholders .')', array_merge(array($menu_name), $args, $args));
+              $num_rows = FALSE;
               while ($item = db_fetch_array($result)) {
                 $args[] = $item['mlid'];
+                $num_rows = TRUE;
               }
               $placeholders = implode(', ', array_fill(0, count($args), '%d'));
-            } while ($item);
+            } while ($num_rows);
           }
           array_unshift($args, $menu_name);
         }
