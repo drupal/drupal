@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.176 2007/08/09 11:01:00 goba Exp $
+// $Id: upload.module,v 1.177 2007/08/16 12:30:24 goba Exp $
 
 /**
  * @file
@@ -459,6 +459,7 @@ function _upload_form($node) {
     $form['files']['#theme'] = 'upload_form_current';
     $form['files']['#tree'] = TRUE;
     foreach ($node->files as $key => $file) {
+      $file = (object)$file;
       $description = file_create_url($file->filepath);
       $description = "<small>". check_plain($description) ."</small>";
       $form['files'][$key]['description'] = array('#type' => 'textfield', '#default_value' => !empty($file->description) ? $file->description : $file->filename, '#maxlength' => 256, '#description' => $description );
