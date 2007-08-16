@@ -3180,9 +3180,9 @@ function user_forms() {
 }
 
 /**
- * Implementation of hook_comments().
+ * Implementation of hook_comment().
  */
-function user_comment($comment, $op) {
+function user_comment(&$comment, $op) {
   // Validate signature.
   if ($op == 'view') {
     if (variable_get('user_signatures', 0) && !empty($comment->signature)) {
