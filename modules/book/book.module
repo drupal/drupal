@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.433 2007/08/11 14:06:15 dries Exp $
+// $Id: book.module,v 1.434 2007/08/16 12:47:34 goba Exp $
 
 /**
  * @file
@@ -384,12 +384,16 @@ function _book_parent_select($book_link) {
     $form['#prefix'] .= '<em>'. t('No book selected.') .'</em>';
   }
   else {
+    // If the item has children, there is an added limit to the depth of valid parents.
+    $limit = MENU_MAX_DEPTH - 1 - ($book_link['has_children'] ? menu_link_children_relative_depth($book_link) : 0);
+
     $form = array(
       '#type' => 'select',
       '#title' => t('Parent item'),
       '#default_value' => $book_link['plid'],
-      '#description' => t('The parent page in the book.'),
-      '#options' => book_toc($book_link['bid'], array($book_link['mlid'])),
+      '#description' => t('The parent page in the book. The maximum depth for a book and all child pages is !maxdepth.  Some pages in the selected book may not be available as parents if selecting them would exceed this limit.', array('!maxdepth' => MENU_MAX_DEPTH)),
+      '#options' => book_toc($book_link['bid'], array($book_link['mlid']), $limit),
+      '#attributes' => array('class' => 'book-title-select'),
     );
   }
   return $form;
@@ -415,6 +419,7 @@ function _book_add_form_elements(&$form, $node) {
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
     '#tree' => TRUE,
+    '#attributes' => array('class' => 'book-outline-form'),
   );
   foreach (array('menu_name', 'mlid', 'nid', 'router_path', 'has_children', 'options', 'module', 'original_bid') as $key) {
     $form['book'][$key] = array(
@@ -434,11 +439,18 @@ function _book_add_form_elements(&$form, $node) {
     '#description' => t('Pages at a given level are ordered first by weight and then by title.'),
   );
   $options = array();
-
-  foreach (book_get_books() as $book) {
-    $options[$book['nid']] = $book['title'];
-  }
   $nid = isset($node->nid) ? $node->nid : 'new';
+    
+  if (isset($node->nid) && ($nid == $node->book['original_bid']) && $node->book['has_children'] && (MENU_MAX_DEPTH - 1 - menu_link_children_relative_depth($node->book) == 0)) {
+    // This is the top level node in a maximum depth book and thus cannot be moved.
+    $options[$node->nid] = $node->title;
+  }
+  else {
+    foreach (book_get_books() as $book) {
+      $options[$book['nid']] = $book['title'];
+    }
+  }
+
   if (user_access('create new books') && ($nid == 'new' || ($nid != $node->book['original_bid']))) {
     // The node can become a new book, if it is not one already.
     $options = array($nid => '<'. t('create a new book') .'>') + $options;
@@ -457,6 +469,7 @@ function _book_add_form_elements(&$form, $node) {
     '#access' => (bool)$options,
     '#description' => t('Your page will be a part of the selected book.'),
     '#weight' => -5,
+    '#attributes' => array('class' => 'book-title-select'),
   );
 }
 
@@ -491,13 +504,13 @@ function book_outline_form(&$form_state, $node) {
 
   $form['book']['#collapsible'] = FALSE;
 
-  $form['book']['update'] = array(
+  $form['update'] = array(
     '#type' => 'submit',
     '#value' => $node->book['original_bid'] ? t('Update book outline') : t('Add to book outline'),
     '#weight' => 15,
   );
 
-  $form['book']['remove'] = array(
+  $form['remove'] = array(
     '#type' => 'submit',
     '#value' => t('Remove from book outline'),
     '#access' => $node->nid != $node->book['bid'] && $node->book['bid'],
@@ -951,12 +964,16 @@ function theme_book_navigation($book_link) {
 /**
  * A recursive helper function for book_toc().
  */
-function _book_toc_recurse($tree, $indent, &$toc, $exclude) {
+function _book_toc_recurse($tree, $indent, &$toc, $exclude, $depth_limit) {
   foreach ($tree as $data) {
+    if ($data['link']['depth'] > $depth_limit) {
+      // Don't iterate through any links on this level.
+      break;
+    }
     if (!in_array($data['link']['mlid'], $exclude)) {
       $toc[$data['link']['mlid']] = $indent .' '. truncate_utf8($data['link']['title'], 30, TRUE, TRUE);
-      if ($data['below'] && $data['link']['depth'] < MENU_MAX_DEPTH - 1) {
-        _book_toc_recurse($data['below'], $indent .'--', $toc, $exclude);
+      if ($data['below']) {
+        _book_toc_recurse($data['below'], $indent .'--', $toc, $exclude, $depth_limit);
       }
     }
   }
@@ -970,14 +987,16 @@ function _book_toc_recurse($tree, $indent, &$toc, $exclude) {
  * @param $exclude
  *   Optional array of mlid values.  Any link whose mlid is in this array
  *   will be excluded (along with its children).
+ * @param $depth_limit
+ *   Any link deeper than this value will be excluded (along with its children).
  * @return
  *   An array of mlid, title pairs for use as options for selecting a book page.
  */
-function book_toc($bid, $exclude = array()) {
+function book_toc($bid, $exclude = array(), $depth_limit) {
 
   $tree = menu_tree_all_data(book_menu_name($bid));
   $toc = array();
-  _book_toc_recurse($tree, '', $toc, $exclude);
+  _book_toc_recurse($tree, '', $toc, $exclude, $depth_limit);
 
   return $toc;
 }
