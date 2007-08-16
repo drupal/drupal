@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.365 2007/08/02 20:08:52 dries Exp $
+// $Id: theme.inc,v 1.366 2007/08/16 13:59:41 goba Exp $
 
 /**
  * @file
@@ -673,8 +673,11 @@ function drupal_find_theme_templates($cache, $extension, $path) {
     // have one extension chopped off, but there might be more than one,
     // such as with .tpl.php
     $template = substr($template, 0, strpos($template, '.'));
-    if (isset($cache[$template])) {
-      $templates[$template] = array(
+    // Transform - in filenames to _ to match function naming scheme
+    // for the purposes of searching.
+    $hook = strtr($template, '-', '_');
+    if (isset($cache[$hook])) {
+      $templates[$hook] = array(
         'file' => $template,
         'path' => dirname($file->filename),
       );
@@ -685,11 +688,16 @@ function drupal_find_theme_templates($cache, $extension, $path) {
 
   foreach ($cache as $hook => $info) {
     if (!empty($info['pattern'])) {
-      $matches = preg_grep('/^'. $info['pattern'] .'/', $patterns);
+      // Transform _ in pattern to - to match file naming scheme
+      // for the purposes of searching.
+      $pattern = strtr($info['pattern'], '_', '-');
+
+      $matches = preg_grep('/^'. $pattern .'/', $patterns);
       if ($matches) {
         foreach ($matches as $match) {
           $file = substr($match, 0, strpos($match, '.'));
-          $templates[$file] = array(
+          // Put the underscores back in for the hook name and register this pattern.
+          $templates[strtr($file, '-', '_')] = array(
             'file' => $file,
             'path' => dirname($files[$match]->filename),
             'arguments' => $info['arguments'],
