@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.830 2007/08/12 19:25:57 goba Exp $
+// $Id: user.module,v 1.831 2007/08/16 09:32:06 goba Exp $
 
 /**
  * @file
@@ -3180,9 +3180,9 @@ function user_forms() {
 }
 
 /**
- * Implementation of hook_comments().
+ * Implementation of hook_comment().
  */
-function user_comment($comment, $op) {
+function user_comment(&$comment, $op) {
   // Validate signature.
   if ($op == 'view') {
     if (variable_get('user_signatures', 0) && !empty($comment->signature)) {
