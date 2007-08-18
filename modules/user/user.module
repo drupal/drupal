@@ -1098,12 +1098,12 @@ function user_current_to_arg($arg) {
 function user_get_authmaps($authname = NULL) {
   $result = db_query("SELECT authname, module FROM {authmap} WHERE authname = '%s'", $authname);
   $authmaps = array();
-  $num_rows = 0;
+  $has_rows = FALSE;
   while ($authmap = db_fetch_object($result)) {
     $authmaps[$authmap->module] = $authmap->authname;
-    $num_rows++;
+    $has_rows = TRUE;
   }
-  return $num_rows > 0 ? $authmaps : 0;
+  return $has_rows ? $authmaps : 0;
 }
 
 function user_set_authmaps($account, $authmaps) {
