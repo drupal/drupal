@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.434 2007/08/16 12:47:34 goba Exp $
+// $Id: book.module,v 1.435 2007/08/18 11:36:40 goba Exp $
 
 /**
  * @file
@@ -539,8 +539,16 @@ function book_remove_button_submit($form,  &$form_state) {
  */
 function book_remove_form(&$form_state, $node) {
   $form['#node'] = $node;
+  $title = array('%title' => $node->title);
 
-  return confirm_form($form, t('Are you sure you want to remove %title from the book hierarchy?', array('%title' => $node->title)), 'node/'. $node->nid, array('yes' => t('Remove')));
+  if ($node->book['has_children']) {
+    $description = t('%title has associated child pages, which will be relocated automatically to maintain their connection to the book. To recreate the hierarchy (as it was before removing this page), %title may be added again using the Outline tab, and each of its former child pages will need to be relocated manually.', $title);
+  }
+  else {
+    $description = t('%title may be added to hierarchy again using the Outline tab.', $title);
+  }
+
+  return confirm_form($form, t('Are you sure you want to remove %title from the book hierarchy?', $title), 'node/'. $node->nid,  $description, t('Remove'));
 }
 
 /**
