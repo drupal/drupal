@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.135 2007/08/12 16:12:00 dries Exp $
+// $Id: system.install,v 1.136 2007/08/18 20:03:19 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -2169,7 +2169,8 @@ function system_update_179() {
     $limit = 20;
     $args = array_merge(array($_SESSION['system_update_179_uid'], $_SESSION['system_update_179_fid'], $_SESSION['system_update_179_uid']), $_SESSION['system_update_179_fields']);
     $result = db_query_range("SELECT fid, uid, value FROM {profile_values} WHERE ((uid = %d AND fid > %d) OR uid > %d) AND fid IN ". $_SESSION['system_update_179_field_string'] .' ORDER BY uid ASC, fid ASC', $args, 0, $limit);
-    $num_rows = 0;
+
+    $has_rows = FALSE;
     while ($field = db_fetch_object($result)) {
       $_SESSION['system_update_179_uid'] = $field->uid;
       $_SESSION['system_update_179_fid'] = $field->fid;
@@ -2177,11 +2178,11 @@ function system_update_179() {
       if ($field->value !== FALSE) {
         db_query("UPDATE {profile_values} SET value = '%s' WHERE uid = %d AND fid = %d", $field->value, $field->uid, $field->fid);
       }
-      $num_rows++;
+      $has_rows = TRUE;
     }
 
     // Done?
-    if ($num_rows == 0) {
+    if (!$has_rows) {
       unset($_SESSION['system_update_179_uid']);
       unset($_SESSION['system_update_179_fid']);
       unset($_SESSION['system_update_179_max']);
