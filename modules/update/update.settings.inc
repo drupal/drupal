@@ -1,5 +1,5 @@
 <?php
-// $Id: update.settings.inc,v 1.1 2007/07/11 15:15:40 dries Exp $
+// $Id: update.settings.inc,v 1.2 2007/08/18 11:30:59 goba Exp $
 
 /**
  * @file
@@ -18,7 +18,7 @@ function update_settings() {
     '#title' => t('E-mail addresses to notify when updates are available'),
     '#rows' => 4,
     '#default_value' => implode("\n", $notify_emails),
-    '#description' => t('Whenever your site checks for available updates and finds new releases, it can notify a list of users via e-email. Put each address on a separate line. If blank, no e-mails will be sent.'),
+    '#description' => t('Whenever your site checks for available updates and finds new releases, it can notify a list of users via e-mail. Put each address on a separate line. If blank, no e-mails will be sent.'),
   );
 
   $form['update_check_frequency'] = array(
