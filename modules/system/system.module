@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.518 2007/08/18 11:51:48 goba Exp $
+// $Id: system.module,v 1.519 2007/08/18 20:08:33 goba Exp $
 
 /**
  * @file
@@ -669,9 +669,9 @@ function system_error_reporting_settings() {
 
 function system_performance_settings() {
 
-  $description = '<p>'. t("The normal cache mode is suitable for most sites and does not cause any side effects. The aggressive cache mode causes Drupal to skip the loading (init) and unloading (exit) of enabled modules when serving a cached page. This results in an additional performance boost but can cause unwanted side effects.") .'</p>';
+  $description = '<p>'. t("The normal cache mode is suitable for most sites and does not cause any side effects. The aggressive cache mode causes Drupal to skip the loading (boot) and unloading (exit) of enabled modules when serving a cached page. This results in an additional performance boost but can cause unwanted side effects.") .'</p>';
 
-  $problem_modules = array_unique(array_merge(module_implements('init'), module_implements('exit')));
+  $problem_modules = array_unique(array_merge(module_implements('boot'), module_implements('exit')));
   sort($problem_modules);
 
   if (count($problem_modules) > 0) {
