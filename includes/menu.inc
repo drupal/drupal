@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.194 2007/08/12 16:12:00 dries Exp $
+// $Id: menu.inc,v 1.195 2007/08/19 09:46:15 dries Exp $
 
 /**
  * @file
@@ -1423,8 +1423,13 @@ function _menu_navigation_links_rebuild($menu) {
     }
   }
   $placeholders = implode(', ', array_fill(0, count($menu), "'%s'"));
-  // Remove items if their router path does not exist any more.
-  db_query('DELETE FROM {menu_links} WHERE router_path NOT IN ('. $placeholders .')', array_keys($menu));
+  // Find any items where their router path does not exist any more.
+  $result = db_query('SELECT mlid FROM {menu_links} WHERE router_path NOT IN ('. $placeholders .') AND external = 0 ORDER BY depth DESC', array_keys($menu));
+  // Remove all such items. Starting from those with the greatest depth will
+  // minimize the amount of re-parenting done by menu_link_delete().
+  while ($item = db_fetch_array($result)) {
+    menu_link_delete($item['mlid']);
+  }
 }
 
 /**
