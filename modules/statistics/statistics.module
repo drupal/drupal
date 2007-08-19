@@ -502,6 +502,8 @@ function statistics_block($op = 'list', $delta = 0, $edit = array()) {
     case 'list':
       if (variable_get('statistics_count_content_views', 0)) {
         $blocks[0]['info'] = t('Popular content');
+        // Too dynamic to cache.
+        $blocks[0]['cache'] = BLOCK_NO_CACHE;
         return $blocks;
       }
       break;

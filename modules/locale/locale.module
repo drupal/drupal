@@ -516,6 +516,8 @@ function _locale_batch_import($filepath, &$context) {
 function locale_block($op = 'list', $delta = 0) {
   if ($op == 'list') {
     $block[0]['info'] = t('Language switcher');
+    // Not worth caching.
+    $block[0]['cache'] = BLOCK_NO_CACHE;
     return $block;
   }
 

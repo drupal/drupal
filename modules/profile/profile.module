@@ -125,7 +125,7 @@ function profile_block($op = 'list', $delta = 0, $edit = array()) {
 
   if ($op == 'list') {
      $blocks[0]['info'] = t('Author information');
-
+     $blocks[0]['cache'] = BLOCK_CACHE_PER_PAGE | BLOCK_CACHE_PER_ROLE;
      return $blocks;
   }
   else if ($op == 'configure' && $delta == 0) {

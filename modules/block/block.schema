@@ -15,7 +15,8 @@ function block_schema() {
       'throttle'   => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny'),
       'visibility' => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny'),
       'pages'      => array('type' => 'text', 'not null' => TRUE),
-      'title'      => array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => '')
+      'title'      => array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''),
+      'cache'      => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny'),
     ),
     'primary key' => array('bid'),
   );
@@ -43,6 +44,8 @@ function block_schema() {
     'unique keys' => array('info' => array('info')),
     'primary key' => array('bid'),
   );
+
+  $schema['cache_block'] = drupal_get_schema_unprocessed('system', 'cache');
 
   return $schema;
 }

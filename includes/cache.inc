@@ -114,7 +114,7 @@ function cache_set($cid, $data, $table = 'cache', $expire = CACHE_PERMANENT, $he
 /**
  *
  * Expire data from the cache. If called without arguments, expirable
- * entries will be cleared from the cache_page table.
+ * entries will be cleared from the cache_page and cache_block tables.
  *
  * @param $cid
  *   If set, the cache ID to delete. Otherwise, all cache entries that can
@@ -134,6 +134,7 @@ function cache_clear_all($cid = NULL, $table = NULL, $wildcard = FALSE) {
 
   if (!isset($cid) && !isset($table)) {
     cache_clear_all(NULL, 'cache_page');
+    cache_clear_all(NULL, 'cache_block');
     return;
   }
 

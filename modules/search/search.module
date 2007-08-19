@@ -144,6 +144,8 @@ function search_perm() {
 function search_block($op = 'list', $delta = 0) {
   if ($op == 'list') {
     $blocks[0]['info'] = t('Search form');
+    // Not worth caching.
+    $blocks[0]['cache'] = BLOCK_NO_CACHE;
     return $blocks;
   }
   else if ($op == 'view' && user_access('search content')) {
