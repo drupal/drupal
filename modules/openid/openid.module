@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.module,v 1.3 2007/06/30 19:46:57 goba Exp $
+// $Id: openid.module,v 1.4 2007/08/19 09:48:33 dries Exp $
 
 /**
  * @file
@@ -15,6 +15,7 @@ function openid_menu() {
     'page callback' => 'openid_authentication_page',
     'access callback' => 'user_is_anonymous',
     'type' => MENU_CALLBACK,
+    'file' => 'openid.pages.inc',
   );
   $items['user/%user/openid'] = array(
     'title' => 'OpenID identities',
@@ -23,12 +24,14 @@ function openid_menu() {
     'access callback' => 'user_edit_access',
     'access arguments' => array(1),
     'type' => MENU_LOCAL_TASK,
+    'file' => 'openid.pages.inc',
   );
   $items['user/%user/openid/delete'] = array(
     'title' => 'Delete OpenID',
     'page callback' => 'openid_user_delete',
     'page arguments' => array(1),
     'type' => MENU_CALLBACK,
+    'file' => 'openid.pages.inc',
   );
   return $items;
 }
@@ -109,76 +112,6 @@ function openid_login_validate($form, &$form_state) {
   }
 
   openid_begin($form_state['values']['openid_url'], $return_to, $form_state['values']);
-}
-
-/**
- * Callbacks.
- */
-function openid_authentication_page() {
-  $result = openid_complete($_REQUEST);
-  switch ($result['status']) {
-    case 'success':
-      return openid_authentication($result);
-    case 'failed':
-      drupal_set_message(t('OpenID login failed.'), 'error');
-      break;
-    case 'cancel':
-      drupal_set_message(t('OpenID login cancelled.'));
-      break;
-  }
-  drupal_goto();
-}
-
-function openid_user_identities($account) {
-  drupal_add_css(drupal_get_path('module', 'openid') .'/openid.css', 'module');
-
-  // Check to see if we got a response
-  $result = openid_complete($_REQUEST);
-  if ($result['status'] == 'success') {
-    db_query("INSERT INTO {authmap} (uid, authname, module) VALUES (%d, '%s','openid')", $account->uid, $result['openid.identity']);
-    drupal_set_message(t('Successfully added %identity', array('%identity' => $result['openid.identity'])));
-  }
-
-  $header = array(t('OpenID'), t('Operations'));
-  $rows = array();
-
-  $result = db_query("SELECT * FROM {authmap} WHERE module='openid' AND uid=%d", $account->uid);
-  while ($identity = db_fetch_object($result)) {
-    $rows[] = array($identity->authname, l(t('Delete'), 'user/'. $account->uid .'/openid/delete/'. $identity->aid));
-  }
-
-  $output = theme('table', $header, $rows);
-  $output .= drupal_get_form('openid_user_add');
-  return $output;
-}
-
-function openid_user_add() {
-  $form['openid_url'] = array(
-    '#type' => 'textfield',
-    '#title' => t('OpenID'),
-  );
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Add an OpenID'));
-  return $form;
-}
-
-function openid_user_add_validate($form, &$form_state) {
-  // Check for existing entries.
-  $claimed_id = _openid_normalize($form_state['values']['openid_url']);
-  if (db_result(db_query("SELECT authname FROM {authmap} WHERE authname='%s'", $claimed_id))) {
-    form_set_error('openid_url', t('That OpenID is already in use on this site.'));
-  }
-  else {
-    $return_to = url('user/'. arg(1)  .'/openid', array('absolute' => TRUE));
-    openid_begin($form_state['values']['openid_url'], $return_to);
-  }
-}
-
-function openid_user_delete($account, $aid = 0) {
-  db_query("DELETE FROM {authmap} WHERE uid=%d AND aid=%d AND module='openid'", $account->uid, $aid);
-  if (db_affected_rows()) {
-    drupal_set_message(t('OpenID deleted.'));
-  }
-  drupal_goto('user/'. $account->uid .'/openid');
 }
 
 /**
