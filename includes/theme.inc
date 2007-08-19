@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.366 2007/08/16 13:59:41 goba Exp $
+// $Id: theme.inc,v 1.367 2007/08/19 11:02:35 goba Exp $
 
 /**
  * @file
@@ -1523,7 +1523,7 @@ function theme_username($object) {
     // aggregator modules). This clause enables modules to display
     // the true author of the content.
     if ($object->homepage) {
-      $output = l($object->name, $object->homepage);
+      $output = l($object->name, $object->homepage, array('rel' => 'nofollow'));
     }
     else {
       $output = check_plain($object->name);
