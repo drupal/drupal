@@ -1523,7 +1523,7 @@ function theme_username($object) {
     // aggregator modules). This clause enables modules to display
     // the true author of the content.
     if ($object->homepage) {
-      $output = l($object->name, $object->homepage);
+      $output = l($object->name, $object->homepage, array('rel' => 'nofollow'));
     }
     else {
       $output = check_plain($object->name);
