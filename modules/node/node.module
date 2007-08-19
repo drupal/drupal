@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.870 2007/08/12 16:12:00 dries Exp $
+// $Id: node.module,v 1.871 2007/08/19 08:08:44 dries Exp $
 
 /**
  * @file
@@ -770,7 +770,7 @@ function node_save(&$node) {
   // Update the node access table for this node.
   node_access_acquire_grants($node);
 
-  // Clear the cache so an anonymous poster can see the node being added or updated.
+  // Clear the page and block caches.
   cache_clear_all();
 }
 
@@ -1915,6 +1915,8 @@ function node_admin_search() {
 function node_block($op = 'list', $delta = 0) {
   if ($op == 'list') {
     $blocks[0]['info'] = t('Syndicate');
+    // Not worth caching.
+    $blocks[0]['cache'] = BLOCK_NO_CACHE;
     return $blocks;
   }
   else if ($op == 'view') {
@@ -2502,7 +2504,7 @@ function node_delete($nid) {
     node_invoke($node, 'delete');
     node_invoke_nodeapi($node, 'delete');
 
-    // Clear the cache so an anonymous poster can see the node being deleted.
+    // Clear the page and block caches.
     cache_clear_all();
 
     // Remove this node from the search index if needed.

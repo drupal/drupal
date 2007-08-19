@@ -1,5 +1,5 @@
 <?php
-// $Id: cache.inc,v 1.12 2007/05/25 21:01:30 dries Exp $
+// $Id: cache.inc,v 1.13 2007/08/19 08:08:43 dries Exp $
 
 /**
  * Return data from the persistent cache. Data may be stored as either plain text or as serialized data.
@@ -114,7 +114,7 @@ function cache_set($cid, $data, $table = 'cache', $expire = CACHE_PERMANENT, $he
 /**
  *
  * Expire data from the cache. If called without arguments, expirable
- * entries will be cleared from the cache_page table.
+ * entries will be cleared from the cache_page and cache_block tables.
  *
  * @param $cid
  *   If set, the cache ID to delete. Otherwise, all cache entries that can
@@ -134,6 +134,7 @@ function cache_clear_all($cid = NULL, $table = NULL, $wildcard = FALSE) {
 
   if (!isset($cid) && !isset($table)) {
     cache_clear_all(NULL, 'cache_page');
+    cache_clear_all(NULL, 'cache_block');
     return;
   }
 

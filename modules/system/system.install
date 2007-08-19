@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.136 2007/08/18 20:03:19 goba Exp $
+// $Id: system.install,v 1.137 2007/08/19 08:08:44 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -3477,6 +3477,52 @@ function system_update_6026() {
   db_create_table($ret, 'cache_update', $schema['cache_update']);
   module_enable(array('update'));
   menu_rebuild();
+  return $ret;
+}
+
+/**
+ * Add block cache.
+ */
+function system_update_6027() {
+  $ret = array();
+
+  // Create the blocks.cache column.
+  db_add_field($ret, 'blocks', 'cache', array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny'));
+
+  // Create the cache_block table.
+  $schema['cache_block'] = array(
+    'fields' => array(
+      'cid'        => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'data'       => array('type' => 'blob', 'not null' => FALSE, 'size' => 'big'),
+      'expire'     => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'created'    => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'headers'    => array('type' => 'text', 'not null' => FALSE),
+      'serialized' => array('type' => 'int', 'size' => 'small', 'not null' => TRUE, 'default' => 0)
+    ),
+    'indexes' => array('expire' => array('expire')),
+    'primary key' => array('cid'),
+  );
+  db_create_table($ret, 'cache_block', $schema['cache_block']);
+
+  // Fill in the values for the new 'cache' column,
+  // by refreshing the {blocks} table.
+  global $theme, $custom_theme;
+  $old_theme = $theme;
+  $themes = list_themes();
+
+  $result = db_query("SELECT DISTINCT theme FROM {blocks}");
+  while ($row = db_fetch_array($result)) {
+    if (array_key_exists($row['theme'], $themes)) {
+      // Set up global values so that _blocks_rehash()
+      // operates on the expected theme.
+      $theme = NULL;
+      $custom_theme = $row['theme'];
+      _block_rehash();
+    }
+  }
+
+  $theme = $old_theme;
+
   return $ret;
 }
 

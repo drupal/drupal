@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.519 2007/08/18 20:08:33 goba Exp $
+// $Id: system.module,v 1.520 2007/08/19 08:08:44 dries Exp $
 
 /**
  * @file
@@ -683,7 +683,7 @@ function system_performance_settings() {
   $form['page_cache'] = array(
     '#type' => 'fieldset',
     '#title' => t('Page cache'),
-    '#description' => t('Enabling the cache will offer a significant performance boost. Drupal can store and send compressed cached pages requested by <em>anonymous</em> users. By caching a web page, Drupal does not have to construct the page each time someone wants to view it.'),
+    '#description' => t('Enabling the page cache will offer a significant performance boost. Drupal can store and send compressed cached pages requested by <em>anonymous</em> users. By caching a web page, Drupal does not have to construct the page each time someone wants to view it.'),
   );
 
   $form['page_cache']['cache'] = array(
@@ -701,7 +701,22 @@ function system_performance_settings() {
     '#title' => t('Minimum cache lifetime'),
     '#default_value' => variable_get('cache_lifetime', 0),
     '#options' => $period,
-    '#description' => t('On high-traffic sites it can become necessary to enforce a minimum cache lifetime. The minimum cache lifetime is the minimum amount of time that will go by before the cache is emptied and recreated. A larger minimum cache lifetime offers better performance, but users will not see new content for a longer period of time.')
+    '#description' => t('On high-traffic sites it can become necessary to enforce a minimum cache lifetime. The minimum cache lifetime is the minimum amount of time that will go by before the cache is emptied and recreated. A larger minimum cache lifetime offers better performance, but users will not see new content for a longer period of time. This setting also affects block caching.')
+  );
+
+  $form['block_cache'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Block cache'),
+    '#description' => t('Enabling the block cache can offer a performance increase for all users by preventing blocks from being reconstructed on every page load. If page cache is also enabled, this performance increase will mainly affect authenticated users.'),
+  );
+
+  $form['block_cache']['block_cache'] = array(
+    '#type' => 'radios',
+    '#title' => t('Block cache'),
+    '#default_value' => variable_get('block_cache', CACHE_DISABLED),
+    '#options' => array(CACHE_DISABLED => t('Disabled'), CACHE_NORMAL => t('Enabled (recommended)')),
+    '#disabled' => count(module_implements('node_grants')),
+    '#description' => t('Note that block caching is inactive when modules defining content access restrictions are enabled.'),
   );
 
   $form['bandwidth_optimizations'] = array(
@@ -1275,8 +1290,8 @@ function system_initialize_theme_blocks($theme) {
       if (!array_key_exists($block['region'], $regions)) {
         $block['region'] = system_default_region($theme);
       }
-      db_query("INSERT INTO {blocks} (module, delta, theme, status, weight, region, visibility, pages, custom, throttle) VALUES ('%s', '%s', '%s', %d, %d, '%s', %d, '%s', %d, %d)",
-          $block['module'], $block['delta'], $theme, $block['status'], $block['weight'], $block['region'], $block['visibility'], $block['pages'], $block['custom'], $block['throttle']);
+      db_query("INSERT INTO {blocks} (module, delta, theme, status, weight, region, visibility, pages, custom, throttle, cache) VALUES ('%s', '%s', '%s', %d, %d, '%s', %d, '%s', %d, %d, %d)",
+          $block['module'], $block['delta'], $theme, $block['status'], $block['weight'], $block['region'], $block['visibility'], $block['pages'], $block['custom'], $block['throttle'], $block['cache']);
     }
   }
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.833 2007/08/18 20:03:19 goba Exp $
+// $Id: user.module,v 1.834 2007/08/19 08:08:45 dries Exp $
 
 /**
  * @file
@@ -627,10 +627,19 @@ function user_block($op = 'list', $delta = 0, $edit = array()) {
 
   if ($op == 'list') {
      $blocks[0]['info'] = t('User login');
-     $blocks[1]['info'] = t('Navigation');
-     $blocks[2]['info'] = t('Who\'s new');
-     $blocks[3]['info'] = t('Who\'s online');
+     // Not worth caching.
+     $blocks[0]['cache'] = BLOCK_NO_CACHE;
 
+     $blocks[1]['info'] = t('Navigation');
+      // Menu blocks can't be cached because each menu item can have
+      // a custom access callback. menu.inc manages its own caching.
+     $blocks[1]['cache'] = BLOCK_NO_CACHE;
+
+     $blocks[2]['info'] = t('Who\'s new');
+
+     // Too dynamic to cache.
+     $blocks[3]['info'] = t('Who\'s online');
+     $blocks[3]['cache'] = BLOCK_NO_CACHE;
      return $blocks;
   }
   else if ($op == 'configure' && $delta == 2) {

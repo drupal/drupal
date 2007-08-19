@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.274 2007/07/24 18:17:30 dries Exp $
+// $Id: block.module,v 1.275 2007/08/19 08:08:44 dries Exp $
 
 /**
  * @file
@@ -11,6 +11,55 @@
  * be shown.
  */
 define('BLOCK_REGION_NONE', -1);
+
+/**
+ * Constants defining cache granularity for blocks.
+ *
+ * Modules specify the caching patterns for their blocks using binary
+ * combinations of these constants in their hook_block(op 'list'):
+ *   $block[delta]['cache'] = BLOCK_CACHE_PER_ROLE | BLOCK_CACHE_PER_PAGE;
+ * BLOCK_CACHE_PER_ROLE is used as a default when no caching pattern is
+ * specified.
+ *
+ * The block cache is cleared in cache_clear_all(), and uses the same clearing
+ * policy than page cache (node, comment, user, taxonomy added or updated...).
+ * Blocks requiring more fine-grained clearing might consider disabling the
+ * built-in block cache (BLOCK_NO_CACHE) and roll their own.
+ *
+ * Note that user 1 is excluded from block caching.
+ */
+
+/**
+ * The block should not get cached. This setting should be used:
+ * - for simple blocks (notably those that do not perform any db query),
+ * where querying the db cache would be more expensive than directly generating
+ * the content.
+ * - for blocks that change too frequently.
+ */
+define('BLOCK_NO_CACHE', -1);
+
+/**
+* The block can change depending on the roles the user viewing the page belongs to.
+* This is the default setting, used when the block does not specify anything.
+*/
+define('BLOCK_CACHE_PER_ROLE', 0x0001);
+
+/**
+* The block can change depending on the user viewing the page.
+* This setting can be resource-consuming for sites with large number of users,
+* and thus should only be used when BLOCK_CACHE_PER_ROLE is not sufficient.
+*/
+define('BLOCK_CACHE_PER_USER', 0x0002);
+
+/**
+* The block can change depending on the page being viewed.
+*/
+define('BLOCK_CACHE_PER_PAGE', 0x0004);
+
+/**
+ * The block is the same for every user on every page where it is visible.
+ */
+define('BLOCK_CACHE_GLOBAL', 0x0008);
 
 /**
  * Implementation of hook_help().
@@ -187,6 +236,8 @@ function block_block($op = 'list', $delta = 0, $edit = array()) {
       $result = db_query('SELECT bid, info FROM {boxes} ORDER BY info');
       while ($block = db_fetch_object($result)) {
         $blocks[$block->bid]['info'] = $block->info;
+        // Not worth caching.
+        $blocks[$block->bid]['cache'] = BLOCK_NO_CACHE;
       }
       return $blocks;
 
@@ -235,6 +286,8 @@ function _block_rehash() {
       foreach ($module_blocks as $delta => $block) {
         $block['module'] = $module;
         $block['delta']  = $delta;
+        // If no cache pattern is specified, we use PER_ROLE as a default.
+        $block['cache'] = isset($block['cache']) ? $block['cache'] : BLOCK_CACHE_PER_ROLE;
         // If previously written to database, load values.
         if (!empty($old_blocks[$module][$delta])) {
           $block['status'] = $old_blocks[$module][$delta]->status;
@@ -271,7 +324,7 @@ function _block_rehash() {
       'visibility' => NULL,
       'throttle' => NULL,
     );
-    db_query("INSERT INTO {blocks} (module, delta, theme, status, weight, region, visibility, pages, custom, throttle, title) VALUES ('%s', '%s', '%s', %d, %d, '%s', %d, '%s', %d, %d, '%s')", $block['module'], $block['delta'], $theme_key, $block['status'], $block['weight'], $block['region'], $block['visibility'], $block['pages'], $block['custom'], $block['throttle'], $block['title']);
+    db_query("INSERT INTO {blocks} (module, delta, theme, status, weight, region, visibility, pages, custom, throttle, title, cache) VALUES ('%s', '%s', '%s', %d, %d, '%s', %d, '%s', %d, %d, '%s', %d)", $block['module'], $block['delta'], $theme_key, $block['status'], $block['weight'], $block['region'], $block['visibility'], $block['pages'], $block['custom'], $block['throttle'], $block['title'], $block['cache']);
   }
   db_unlock_tables();
 
@@ -429,7 +482,19 @@ function block_list($region) {
         // Check the current throttle status and see if block should be displayed
         // based on server load.
         if (!($block->throttle && (module_invoke('throttle', 'status') > 0))) {
-          $array = module_invoke($block->module, 'block', 'view', $block->delta);
+          // Try fetching the block from cache. Block caching is not compatible with
+          // node_access modules. We also preserve the submission of forms in blocks,
+          // by fetching from cache only if the request method is 'GET'.
+          if (!count(module_implements('node_grants')) && $_SERVER['REQUEST_METHOD'] == 'GET' && ($cid = _block_get_cache_id($block)) && ($cache = cache_get($cid, 'cache_block'))) {
+            $array = $cache->data;
+          }
+          else {
+            $array = module_invoke($block->module, 'block', 'view', $block->delta);
+            if (isset($cid)) {
+              cache_set($cid, $array, 'cache_block', CACHE_TEMPORARY);
+            }
+          }
+
           if (isset($array) && is_array($array)) {
             foreach ($array as $k => $v) {
               $block->$k = $v;
@@ -452,4 +517,56 @@ function block_list($region) {
     $blocks[$region] = array();
   }
   return $blocks[$region];
+}
+
+/**
+ * Assemble the cache_id to use for a given block.
+ *
+ * The cache_id string reflects the viewing context for the current block
+ * instance, obtained by concatenating the relevant context information
+ * (user, page, ...) according to the block's cache settings (BLOCK_CACHE_*
+ * constants). Two block instances can use the same cached content when
+ * they share the same cache_id.
+ *
+ * Theme and language contexts are automatically differenciated.
+ *
+ * @param $block
+ * @return
+ *   The string used as cache_id for the block.
+ */
+function _block_get_cache_id($block) {
+  global $theme, $base_root, $user;
+
+  // User 1 being out of the regular 'roles define permissions' schema,
+  // it brings too many chances of having unwanted output get in the cache
+  // and later be served to other users. We therefore exclude user 1 from
+  // block caching.
+  if (variable_get('block_cache', 0) && $block->cache != BLOCK_NO_CACHE && $user->uid != 1) {
+    $cid_parts = array();
+
+    // Start with common sub-patterns: block identification, theme, language.
+    $cid_parts[] = $block->module;
+    $cid_parts[] = $block->delta;
+    $cid_parts[] = $theme;
+    if (module_exists('locale')) {
+      global $language;
+      $cid_parts[] = $language->language;
+    }
+
+    // 'PER_ROLE' and 'PER_USER' are mutually exclusive. 'PER_USER' can be a
+    // resource drag for sites with many users, so when a module is being
+    // equivocal, we favor the less expensive 'PER_ROLE' pattern.
+    if ($block->cache & BLOCK_CACHE_PER_ROLE) {
+      $cid_parts[] = 'r.'. implode(',', array_keys($user->roles));
+    }
+    elseif ($block->cache & BLOCK_CACHE_PER_USER) {
+      $cid_parts[] = "u.$user->uid";
+    }
+
+    if ($block->cache & BLOCK_CACHE_PER_PAGE) {
+      $cid_parts[] = $base_root . request_uri();
+    }
+
+    return implode(':', $cid_parts);
+  }
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.134 2007/08/16 12:47:34 goba Exp $
+// $Id: menu.module,v 1.135 2007/08/19 08:08:44 dries Exp $
 
 /**
  * @file
@@ -404,7 +404,7 @@ function menu_parent_options($menus, $item) {
 
   // If the item has children, there is an added limit to the depth of valid parents.
   $limit = MENU_MAX_DEPTH - 1 - (($item['mlid'] && $item['has_children']) ? menu_link_children_relative_depth($item) : 0);
-  
+
   foreach ($menus as $menu_name => $title) {
     $tree = menu_tree_all_data($menu_name, NULL);
     $options[$menu_name .':0'] = '<'. $title .'>';
@@ -666,6 +666,9 @@ function menu_block($op = 'list', $delta = 0) {
     foreach ($custom_menus as $name => $title) {
       // Default "Navigation" block is handled by user.module.
       $blocks[$name]['info'] = check_plain($title);
+      // Menu blocks can't be cached because each menu item can have
+      // a custom access callback. menu.inc manages its own caching.
+      $blocks[$name]['cache'] = BLOCK_NO_CACHE;
     }
     return $blocks;
   }

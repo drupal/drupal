@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.218 2007/07/16 09:29:43 dries Exp $
+// $Id: CHANGELOG.txt,v 1.219 2007/08/19 08:08:43 dries Exp $
 
 Drupal 6.0, xxxx-xx-xx (development version)
 ----------------------
@@ -54,6 +54,7 @@ Drupal 6.0, xxxx-xx-xx (development version)
     * Made it easier to conditionally load include files.
     * Added a JavaScript aggregator and compressor.
     * Made Drupal work correctly when running behind a reverse proxy like Squid or Pound.
+    * Added block-level caching, improving performance for logged-in users.
 - File handling improvements:
     * Entries in the files table are now keyed to a user, and not a node.
     * Added re-usable validation functions to check for uploaded file sizes, extensions, and image resolution.

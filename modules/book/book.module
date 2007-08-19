@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.435 2007/08/18 11:36:40 goba Exp $
+// $Id: book.module,v 1.436 2007/08/19 08:08:44 dries Exp $
 
 /**
  * @file
@@ -164,6 +164,7 @@ function book_block($op = 'list', $delta = 0, $edit = array()) {
   switch ($op) {
     case 'list':
       $block[0]['info'] = t('Book navigation');
+      $block[0]['cache'] = BLOCK_CACHE_PER_PAGE | BLOCK_CACHE_PER_ROLE;
       return $block;
     case 'view':
       if (arg(0) == 'node' && is_numeric(arg(1))) {
@@ -440,7 +441,7 @@ function _book_add_form_elements(&$form, $node) {
   );
   $options = array();
   $nid = isset($node->nid) ? $node->nid : 'new';
-    
+
   if (isset($node->nid) && ($nid == $node->book['original_bid']) && $node->book['has_children'] && (MENU_MAX_DEPTH - 1 - menu_link_children_relative_depth($node->book) == 0)) {
     // This is the top level node in a maximum depth book and thus cannot be moved.
     $options[$node->nid] = $node->title;

@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.215 2007/08/02 10:36:42 dries Exp $
+// $Id: profile.module,v 1.216 2007/08/19 08:08:44 dries Exp $
 
 /**
  * @file
@@ -125,7 +125,7 @@ function profile_block($op = 'list', $delta = 0, $edit = array()) {
 
   if ($op == 'list') {
      $blocks[0]['info'] = t('Author information');
-
+     $blocks[0]['cache'] = BLOCK_CACHE_PER_PAGE | BLOCK_CACHE_PER_ROLE;
      return $blocks;
   }
   else if ($op == 'configure' && $delta == 0) {

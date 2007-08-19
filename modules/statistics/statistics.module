@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.264 2007/08/12 15:55:36 dries Exp $
+// $Id: statistics.module,v 1.265 2007/08/19 08:08:44 dries Exp $
 
 /**
  * @file
@@ -502,6 +502,8 @@ function statistics_block($op = 'list', $delta = 0, $edit = array()) {
     case 'list':
       if (variable_get('statistics_count_content_views', 0)) {
         $blocks[0]['info'] = t('Popular content');
+        // Too dynamic to cache.
+        $blocks[0]['cache'] = BLOCK_NO_CACHE;
         return $blocks;
       }
       break;
