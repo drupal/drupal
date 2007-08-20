@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.151 2007/08/12 15:55:35 dries Exp $
+// $Id: locale.inc,v 1.152 2007/08/20 07:54:46 goba Exp $
 
 /**
  * @file
@@ -97,10 +97,13 @@ function theme_locale_languages_overview_form($form) {
  */
 function locale_languages_overview_form_submit($form, &$form_state) {
   $languages = language_list();
+  $default = language_default();
   $enabled_count = 0;
   foreach ($languages as $langcode => $language) {
-    if ($form_state['values']['site_default'] == $langcode) {
-      // Automatically enable the default language.
+    if ($form_state['values']['site_default'] == $langcode || $default->language == $langcode) {
+      // Automatically enable the default language and the language
+      // which was default previously (because we will not get the
+      // value from that disabled checkox).
       $form_state['values']['enabled'][$langcode] = 1;
     }
     if ($form_state['values']['enabled'][$langcode]) {
@@ -917,8 +920,10 @@ function locale_add_language($langcode, $name = NULL, $native = NULL, $direction
     variable_set('language_default', (object) array('language' => $langcode, 'name' => $name, 'native' => $native, 'direction' => $direction, 'enabled' => (int) $enabled, 'plurals' => 0, 'formula' => '', 'domain' => '', 'prefix' => $prefix, 'weight' => 0));
   }
 
-  // Increment count of enabled languages.
-  variable_set('language_count', variable_get('language_count', 1) + 1);
+  if ($enabled) {
+    // Increment enabled language count if we are adding an enabled language.
+    variable_set('language_count', variable_get('language_count', 1) + 1);
+  }
 
   watchdog('locale', 'The %language language (%code) has been created.', array('%language' => $name, '%code' => $langcode));
 }
