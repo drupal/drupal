@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.197 2007/08/20 18:15:05 goba Exp $
+// $Id: menu.inc,v 1.198 2007/08/20 18:26:41 goba Exp $
 
 /**
  * @file
@@ -990,24 +990,56 @@ function menu_list_system_menus() {
  * Return an array of links to be rendered as the Primary links.
  */
 function menu_primary_links() {
-  $tree = menu_tree_page_data('primary-links');
-  $links = array();
-  foreach ($tree as $item) {
-    if (!$item['link']['hidden']) {
-      $l = $item['link']['options'];
-      $l['href'] = $item['link']['href'];
-      $l['title'] = $item['link']['title'];
-      $links[] = $l;
-    }
-  }
-  return $links;
+  return menu_navigation_links('primary-links');
 }
-
+ 
 /**
  * Return an array of links to be rendered as the Secondary links.
  */
 function menu_secondary_links() {
-  $tree = menu_tree_page_data('secondary-links');
+
+  // If the secondary menu source is set as the primary menu, we display the 
+  // second level of the primary menu.
+  if (variable_get('menu_secondary_links_source', 'secondary-links') == 'primary-links') {
+    return menu_navigation_links('primary-links', 1);
+  }
+  else {
+    return menu_navigation_links('secondary-links', 0);
+  }
+}
+
+/**
+ * Return an array of links for a navigation menu.
+ *
+ * @param $menu_name
+ *   The name of the menu.
+ * @param $level
+ *   Optional, the depth of the menu to be returned.
+ * @return
+ *   An array of links of the specified menu and level.
+ */
+function menu_navigation_links($menu_name, $level = 0) {
+  // Don't even bother querying the menu table if no menu is specified.
+  if (empty($menu_name)){
+    return array();
+  }
+
+  // Get the menu hierarchy for the current page.
+  $tree = menu_tree_page_data($menu_name);
+
+  // Go down the active trail until the right level is reached.
+  while ($level-- > 0 && $tree) {
+    // Loop through the current level's items until we find one that is in trail.
+    while ($item = array_shift($tree)) {
+      if ($item['link']['in_active_trail']) {
+        // If the item is in the active trail, we continue in the subtree.
+        $tree = empty($item['below']) ? array() : $item['below'];
+        break;
+      }
+    }
+  }
+
+  // Create a single level of links.
   $links = array();
   foreach ($tree as $item) {
     if (!$item['link']['hidden']) {

@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.367 2007/08/19 11:02:35 goba Exp $
+// $Id: theme.inc,v 1.368 2007/08/20 18:26:41 goba Exp $
 
 /**
  * @file
@@ -733,6 +733,8 @@ function theme_get_settings($key = NULL) {
     'logo_path'                     =>  '',
     'default_favicon'               =>  1,
     'favicon_path'                  =>  '',
+    'primary_links'                 =>  1,
+    'secondary_links'               =>  1,
     'toggle_logo'                   =>  1,
     'toggle_favicon'                =>  1,
     'toggle_name'                   =>  1,
@@ -741,6 +743,8 @@ function theme_get_settings($key = NULL) {
     'toggle_mission'                =>  1,
     'toggle_node_user_picture'      =>  0,
     'toggle_comment_user_picture'   =>  0,
+    'toggle_primary_links'          =>  1,
+    'toggle_secondary_links'        =>  1,
   );
 
   if (module_exists('node')) {
@@ -1653,9 +1657,9 @@ function template_preprocess_page(&$variables) {
   $variables['logo']              = theme_get_setting('logo');
   $variables['messages']          = $variables['show_messages'] ? theme('status_messages') : '';
   $variables['mission']           = isset($mission) ? $mission : '';
-  $variables['primary_links']     = menu_primary_links();
+  $variables['primary_links']     = theme_get_setting('toggle_primary_links') ? menu_primary_links() : array();
+  $variables['secondary_links']   = theme_get_setting('toggle_secondary_links') ? menu_secondary_links() : array();
   $variables['search_box']        = (theme_get_setting('toggle_search') ? drupal_get_form('search_theme_form') : '');
-  $variables['secondary_links']   = menu_secondary_links();
   $variables['site_name']         = (theme_get_setting('toggle_name') ? variable_get('site_name', 'Drupal') : '');
   $variables['site_slogan']       = (theme_get_setting('toggle_slogan') ? variable_get('site_slogan', '') : '');
   $variables['css']               = drupal_add_css();

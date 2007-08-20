@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.137 2007/08/20 18:18:15 goba Exp $
+// $Id: menu.module,v 1.138 2007/08/20 18:26:41 goba Exp $
 
 /**
  * @file
@@ -856,12 +856,22 @@ function menu_configure() {
     '#value' => t('The menu module allows on-the-fly creation of menu links in the content authoring forms. The following option sets the default menu in which a new link will be added.'),
   );
 
-  $authoring_options = menu_get_menus();
+  $menu_options = menu_get_menus();
   $form['menu_default_node_menu'] = array('#type' => 'select',
     '#title' => t('Default menu for content'),
     '#default_value' => variable_get('menu_default_node_menu', 'navigation'),
-    '#options' => $authoring_options,
+    '#options' => $menu_options,
     '#description' => t('Choose the menu to be the default in the menu options in the content authoring form.'),
+  );
+
+  $secondary_options = array('secondary-links' => $menu_options['secondary-links'],  'primary-links' => $menu_options['primary-links']);
+  $form["menu_secondary_links_source"] = array(
+    '#type' => 'radios',
+    '#title' => t('Source for the secondary links'),
+    '#default_value' => variable_get('menu_secondary_links_source', 'secondary-links'),
+    '#options' => $secondary_options,
+    '#tree' => FALSE,
+    '#description' => t('Select what should be displayed as the secondary links . If %primary is choosen the children of the active primary menu link (if any) will be shown instead of the links in the %secondary menu.', array('%secondary' => $menu_options['secondary-links'],  '%primary' => $menu_options['primary-links'])),
   );
 
   return system_settings_form($form);

@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.520 2007/08/19 08:08:44 dries Exp $
+// $Id: system.module,v 1.521 2007/08/20 18:26:41 goba Exp $
 
 /**
  * @file
@@ -1069,7 +1069,9 @@ function system_theme_default() {
       'name',
       'node_user_picture',
       'search',
-      'slogan'
+      'slogan',
+      'primary_links',
+      'secondary_links',
     ),
     'stylesheets' => array(
       'all' => array('style.css')
@@ -2365,7 +2367,9 @@ function system_theme_settings(&$form_state, $key = '') {
     'node_user_picture'    => t('User pictures in posts'),
     'comment_user_picture' => t('User pictures in comments'),
     'search'               => t('Search box'),
-    'favicon'              => t('Shortcut icon')
+    'favicon'              => t('Shortcut icon'),
+    'primary_links'        => t('Primary links'),
+    'secondary_links'      => t('Secondary links'),
   );
 
   // Some features are not always available
