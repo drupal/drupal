@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.196 2007/08/20 06:44:02 dries Exp $
+// $Id: menu.inc,v 1.197 2007/08/20 18:15:05 goba Exp $
 
 /**
  * @file
@@ -1424,11 +1424,11 @@ function _menu_navigation_links_rebuild($menu) {
   }
   $placeholders = implode(', ', array_fill(0, count($menu), "'%s'"));
   // Find any items where their router path does not exist any more.
-  $result = db_query('SELECT mlid FROM {menu_links} WHERE router_path NOT IN ('. $placeholders .') AND external = 0 ORDER BY depth DESC', array_keys($menu));
+  $result = db_query('SELECT * FROM {menu_links} WHERE router_path NOT IN ('. $placeholders .') AND external = 0 ORDER BY depth DESC', array_keys($menu));
   // Remove all such items. Starting from those with the greatest depth will
   // minimize the amount of re-parenting done by menu_link_delete().
   while ($item = db_fetch_array($result)) {
-    menu_link_delete($item['mlid']);
+    _menu_delete_item($item, TRUE);
   }
 }
 
@@ -1455,9 +1455,9 @@ function menu_link_delete($mlid, $path = NULL) {
 /**
  * Helper function for menu_link_delete; deletes a single menu link.
  */
-function _menu_delete_item($item) {
-  // System-created items get automatically deleted, but only on menu rebuild.
-  if ($item && $item['module'] != 'system') {
+function _menu_delete_item($item, $rebuild = FALSE) {
+  // System-created items are only deleted on menu rebuild.
+  if ($item && ($item['module'] != 'system' || $rebuild)) {
 
     // Children get re-attached to the item's parent.
     if ($item['has_children']) {
@@ -1473,7 +1473,10 @@ function _menu_delete_item($item) {
     // Update the has_children status of the parent.
     _menu_update_parental_status($item);
 
-    menu_cache_clear($item['menu_name']);
+    // If we are rebuilding the menu, the menu cache has already been cleared.
+    if (!$rebuild) {
+      menu_cache_clear($item['menu_name']);
+    }
   }
 }
 
