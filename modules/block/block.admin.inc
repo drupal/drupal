@@ -1,5 +1,5 @@
 <?php
-// $Id: block.admin.inc,v 1.6 2007/08/19 08:08:44 dries Exp $
+// $Id: block.admin.inc,v 1.7 2007/08/20 06:41:38 dries Exp $
 
 /**
  * @file
@@ -262,7 +262,7 @@ function block_add_block_form_submit($form, &$form_state) {
 
   foreach (list_themes() as $key => $theme) {
     if ($theme->status) {
-      db_query("INSERT INTO {blocks} (visibility, pages, custom, title, module, theme, status, weight, delta, cache) VALUES(%d, '%s', %d, '%s', '%s', '%s', %d, %d, %d)", $form_state['values']['visibility'], trim($form_state['values']['pages']), $form_state['values']['custom'], $form_state['values']['title'], $form_state['values']['module'], $theme->name, 0, 0, $delta, BLOCK_NO_CACHE);
+      db_query("INSERT INTO {blocks} (visibility, pages, custom, title, module, theme, status, weight, delta, cache) VALUES(%d, '%s', %d, '%s', '%s', '%s', %d, %d, %d, %d)", $form_state['values']['visibility'], trim($form_state['values']['pages']), $form_state['values']['custom'], $form_state['values']['title'], $form_state['values']['module'], $theme->name, 0, 0, $delta, BLOCK_NO_CACHE);
     }
   }
 
