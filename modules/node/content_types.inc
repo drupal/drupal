@@ -17,7 +17,7 @@ function node_overview_types() {
 
   foreach ($names as $key => $name) {
     $type = $types[$key];
-    if (function_exists($type->module .'_form')) {
+    if (node_hook($type, 'form')) {
       $name = check_plain($name);
       $type_url_str = str_replace('_', '-', $type->type);
       $row = array(
