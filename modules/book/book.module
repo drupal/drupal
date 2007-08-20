@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.436 2007/08/19 08:08:44 dries Exp $
+// $Id: book.module,v 1.437 2007/08/20 17:54:35 goba Exp $
 
 /**
  * @file
@@ -385,15 +385,12 @@ function _book_parent_select($book_link) {
     $form['#prefix'] .= '<em>'. t('No book selected.') .'</em>';
   }
   else {
-    // If the item has children, there is an added limit to the depth of valid parents.
-    $limit = MENU_MAX_DEPTH - 1 - ($book_link['has_children'] ? menu_link_children_relative_depth($book_link) : 0);
-
     $form = array(
       '#type' => 'select',
       '#title' => t('Parent item'),
       '#default_value' => $book_link['plid'],
       '#description' => t('The parent page in the book. The maximum depth for a book and all child pages is !maxdepth.  Some pages in the selected book may not be available as parents if selecting them would exceed this limit.', array('!maxdepth' => MENU_MAX_DEPTH)),
-      '#options' => book_toc($book_link['bid'], array($book_link['mlid']), $limit),
+      '#options' => book_toc($book_link['bid'], array($book_link['mlid']), $book_link['parent_depth_limit']),
       '#attributes' => array('class' => 'book-title-select'),
     );
   }
@@ -422,7 +419,7 @@ function _book_add_form_elements(&$form, $node) {
     '#tree' => TRUE,
     '#attributes' => array('class' => 'book-outline-form'),
   );
-  foreach (array('menu_name', 'mlid', 'nid', 'router_path', 'has_children', 'options', 'module', 'original_bid') as $key) {
+  foreach (array('menu_name', 'mlid', 'nid', 'router_path', 'has_children', 'options', 'module', 'original_bid', 'parent_depth_limit') as $key) {
     $form['book'][$key] = array(
       '#type' => 'value',
       '#value' => $node->book[$key],
@@ -442,7 +439,7 @@ function _book_add_form_elements(&$form, $node) {
   $options = array();
   $nid = isset($node->nid) ? $node->nid : 'new';
 
-  if (isset($node->nid) && ($nid == $node->book['original_bid']) && $node->book['has_children'] && (MENU_MAX_DEPTH - 1 - menu_link_children_relative_depth($node->book) == 0)) {
+  if (isset($node->nid) && ($nid == $node->book['original_bid']) && ($node->book['parent_depth_limit'] == 0)) {
     // This is the top level node in a maximum depth book and thus cannot be moved.
     $options[$node->nid] = $node->title;
   }
@@ -498,6 +495,10 @@ function book_outline_form(&$form_state, $node) {
   }
   else {
     $node->book['original_bid'] = $node->book['bid'];
+  }
+  // Find the depth limit for the parent select.
+  if (!isset($node->book['parent_depth_limit'])) {
+    $node->book['parent_depth_limit'] = _book_parent_depth_limit($node->book);
   }
   $form['#node'] = $node;
   $form['#id'] = 'book-outline';
@@ -901,8 +902,19 @@ function book_nodeapi(&$node, $op, $teaser, $page) {
           $node->book['original_bid'] = $node->book['bid'];
         }
       }
+      // Find the depth limit for the parent select.
+      if (isset($node->book['bid']) && !isset($node->book['parent_depth_limit'])) {
+        $node->book['parent_depth_limit'] = _book_parent_depth_limit($node->book);
+      }
       break;
   }
+}
+
+/**
+ * Find the depth limit for items in the parent select.
+ */
+function _book_parent_depth_limit($book_link) {
+  return MENU_MAX_DEPTH - 1 - (($book_link['mlid'] && $book_link['has_children']) ? menu_link_children_relative_depth($book_link) : 0);
 }
 
 /**
