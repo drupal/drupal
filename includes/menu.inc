@@ -955,7 +955,7 @@ function menu_get_active_help() {
       }
       // Add "more help" link on admin pages if the module provides a
       // standalone help page.
-      if (module_hook('help', 'page') && $arg[0] == "admin" && module_invoke($name, 'help', 'admin/help#'. $arg[2], $empty_arg) && $help) {
+      if ($arg[0] == "admin" && module_exists('help') && module_invoke($name, 'help', 'admin/help#'. $arg[2], $empty_arg) && $help) {
         $output .= theme("more_help_link", url('admin/help/'. $arg[2]));
       }
     }
