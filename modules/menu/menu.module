@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.138 2007/08/20 18:26:41 goba Exp $
+// $Id: menu.module,v 1.139 2007/08/22 14:48:39 dries Exp $
 
 /**
  * @file
@@ -131,7 +131,7 @@ function menu_enable() {
   menu_rebuild();
   $result = db_query("SELECT * FROM {menu_custom}");
   $link['module'] = 'menu';
-  $link['plid'] = db_result(db_query("SELECT mlid FROM {menu_links} WHERE menu_name = '%s' AND link_path = '%s'", 'navigation', 'admin/build/menu'));
+  $link['plid'] = db_result(db_query("SELECT mlid FROM {menu_links} WHERE link_path = '%s' AND module = '%s'", 'admin/build/menu', 'system'));
   $link['router_path'] = 'admin/build/menu-customize/%';
 
   while ($menu = db_fetch_array($result)) {
@@ -582,7 +582,7 @@ function menu_edit_menu_submit($form, &$form_state) {
     $link['link_path'] = $path . $menu['menu_name'];
     $link['router_path'] = $path .'%';
     $link['module'] = 'menu';
-    $link['plid'] = db_result(db_query("SELECT mlid FROM {menu_links} WHERE menu_name = '%s' AND link_path = '%s'", 'navigation', 'admin/build/menu'));
+    $link['plid'] = db_result(db_query("SELECT mlid FROM {menu_links} WHERE link_path = '%s' AND module = '%s'", 'admin/build/menu', 'system'));
     menu_link_save($link);
     db_query("INSERT INTO {menu_custom} (menu_name, title, description) VALUES ('%s', '%s', '%s')", $menu['menu_name'], $menu['title'], $menu['description']);
   }
