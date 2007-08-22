@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.107 2007/08/08 20:04:38 goba Exp $
+// $Id: module.inc,v 1.108 2007/08/22 08:36:34 goba Exp $
 
 /**
  * @file
@@ -242,10 +242,10 @@ function module_load_all_includes($type, $name = NULL) {
 function module_enable($module_list) {
   $invoke_modules = array();
   foreach ($module_list as $module) {
-    $existing = db_fetch_object(db_query("SELECT status FROM {system} WHERE type = 'module' AND name = '%s'", $module));
+    $existing = db_fetch_object(db_query("SELECT status FROM {system} WHERE type = '%s' AND name = '%s'", 'module', $module));
     if ($existing->status == 0) {
       module_load_install($module);
-      db_query("UPDATE {system} SET status = 1, throttle = 0 WHERE type = 'module' AND name = '%s'", $module);
+      db_query("UPDATE {system} SET status = %d, throttle = %d WHERE type = '%s' AND name = '%s'", 1, 0, 'module', $module);
       drupal_load('module', $module);
       $invoke_modules[] = $module;
     }
@@ -275,7 +275,7 @@ function module_disable($module_list) {
     if (module_exists($module)) {
       module_load_install($module);
       module_invoke($module, 'disable');
-      db_query("UPDATE {system} SET status = 0, throttle = 0 WHERE type = 'module' AND name = '%s'", $module);
+      db_query("UPDATE {system} SET status = %d, throttle = %d WHERE type = '%s' AND name = '%s'", 0, 0, 'module', $module);
       $invoke_modules[] = $module;
     }
   }

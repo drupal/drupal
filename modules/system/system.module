@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.521 2007/08/20 18:26:41 goba Exp $
+// $Id: system.module,v 1.522 2007/08/22 08:36:34 goba Exp $
 
 /**
  * @file
@@ -1093,7 +1093,7 @@ function system_theme_data() {
   $engines = drupal_system_listing('\.engine$', 'themes/engines');
 
   // Remove all theme engines from the system table
-  db_query("DELETE FROM {system} WHERE type = 'theme_engine'");
+  db_query("DELETE FROM {system} WHERE type = '%s'", 'theme_engine');
 
   foreach ($engines as $engine) {
     // Insert theme engine into system table

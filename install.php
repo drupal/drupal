@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.70 2007/07/25 17:35:47 goba Exp $
+// $Id: install.php,v 1.71 2007/08/22 08:36:34 goba Exp $
 
 require_once './includes/install.inc';
 
@@ -126,7 +126,7 @@ function install_main() {
  */
 function install_verify_drupal() {
   // Read the variable manually using the @ so we don't trigger an error if it fails.
-  $result = @db_query("SELECT value FROM {variable} WHERE name = 'install_task'");
+  $result = @db_query("SELECT value FROM {variable} WHERE name = '%s'", 'install_task');
   if ($result) {
     return unserialize(db_result($result));
   }

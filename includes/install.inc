@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.42 2007/07/30 19:22:47 dries Exp $
+// $Id: install.inc,v 1.43 2007/08/22 08:36:34 goba Exp $
 
 define('SCHEMA_UNINSTALLED', -1);
 define('SCHEMA_INSTALLED', 0);
@@ -70,7 +70,7 @@ function drupal_get_installed_schema_version($module, $reset = FALSE) {
 
   if (!$versions) {
     $versions = array();
-    $result = db_query("SELECT name, schema_version FROM {system} WHERE type = 'module'");
+    $result = db_query("SELECT name, schema_version FROM {system} WHERE type = '%s'", 'module');
     while ($row = db_fetch_object($result)) {
       $versions[$row->name] = $row->schema_version;
     }
@@ -312,7 +312,7 @@ function drupal_install_profile($profile, $module_list) {
   module_invoke('system', 'install');
   $system_versions = drupal_get_schema_versions('system');
   $system_version = $system_versions ? max($system_versions) : SCHEMA_INSTALLED;
-  db_query("INSERT INTO {system} (filename, name, type, owner, status, throttle, bootstrap, schema_version) VALUES('%s', '%s', 'module', '', 1, 0, 0, %d)", $system_path .'/system.module', 'system', $system_version);
+  db_query("INSERT INTO {system} (filename, name, type, owner, status, throttle, bootstrap, schema_version) VALUES('%s', '%s', '%s', '%s', %d, %d, %d, %d)", $system_path .'/system.module', 'system', 'module', '', 1, 0, 0, $system_version);
   // Now that we've installed things properly, bootstrap the full Drupal environment
   drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 
