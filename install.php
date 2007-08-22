@@ -126,7 +126,7 @@ function install_main() {
  */
 function install_verify_drupal() {
   // Read the variable manually using the @ so we don't trigger an error if it fails.
-  $result = @db_query("SELECT value FROM {variable} WHERE name = 'install_task'");
+  $result = @db_query("SELECT value FROM {variable} WHERE name = '%s'", 'install_task');
   if ($result) {
     return unserialize(db_result($result));
   }

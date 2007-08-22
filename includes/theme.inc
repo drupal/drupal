@@ -337,7 +337,7 @@ function list_themes($refresh = FALSE) {
 
   if (empty($list)) {
     $list = array();
-    $result = db_query("SELECT * FROM {system} WHERE type = 'theme'");
+    $result = db_query("SELECT * FROM {system} WHERE type = '%s'", 'theme');
     while ($theme = db_fetch_object($result)) {
       if (file_exists($theme->filename)) {
         $theme->info = unserialize($theme->info);
@@ -384,7 +384,7 @@ function list_theme_engines($refresh = FALSE) {
 
   if (!$list) {
     $list = array();
-    $result = db_query("SELECT * FROM {system} WHERE type = 'theme_engine' AND status = '1' ORDER BY name");
+    $result = db_query("SELECT * FROM {system} WHERE type = '%s' AND status = %d ORDER BY name", 'theme_engine', '1');
     while ($engine = db_fetch_object($result)) {
       if (file_exists($engine->filename)) {
         $engine->info = unserialize($engine->info);
