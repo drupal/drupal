@@ -8,9 +8,9 @@
     <?php print $head ?>
     <?php print $styles ?>
     <?php print $scripts ?>
-    <style type="text/css" media="all">@import "<?php print $path_to_theme ?>/style.css";</style>
+    <link type="text/css" rel="stylesheet" media="all" href="<?php print $path_to_theme ?>/style.css" />
     <!--[if lt IE 7]>
-    <style type="text/css" media="all">@import "<?php print $path_to_theme ?>/fix-ie.css";</style>
+    <link type="text/css" rel="stylesheet" media="all" href="<?php print $path_to_theme ?>/fix-ie.css" />
     <![endif]-->
   </head>
   <body class="<?php

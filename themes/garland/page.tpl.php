@@ -9,7 +9,7 @@
     <?php print $styles ?>
     <?php print $scripts ?>
     <!--[if lt IE 7]>
-    <style type="text/css" media="all">@import "<?php print base_path() . path_to_theme() ?>/fix-ie.css";</style>
+    <link type="text/css" rel="stylesheet" media="all" href="<?php print base_path() . path_to_theme() ?>/fix-ie.css" />
     <![endif]-->
   </head>
   <body<?php print phptemplate_body_class($sidebar_left, $sidebar_right); ?>>
