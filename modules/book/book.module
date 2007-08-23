@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.437 2007/08/20 17:54:35 goba Exp $
+// $Id: book.module,v 1.438 2007/08/23 16:41:19 dries Exp $
 
 /**
  * @file
@@ -1122,11 +1122,10 @@ function theme_book_export_html($title, $content) {
   $html .= "<head>\n<title>". $title ."</title>\n";
   $html .= '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />';
   $html .= '<base href="'. $base_url .'/" />'."\n";
-  $html .= "<style type=\"text/css\">\n@import url(misc/print.css);\n";
+  $html .= '<link type="text/css" rel="stylesheet" href="misc/print.css" />';
   if (defined('LANGUAGE_RTL') && $language->direction == LANGUAGE_RTL) {
-    $html .= "@import url(misc/print-rtl.css);\n";
+    $html .= '<link type="text/css" rel="stylesheet" href="misc/print-rtl.css" />';
   }
-  $html .= "</style>\n";
   $html .= "</head>\n<body>\n". $content ."\n</body>\n</html>\n";
   return $html;
 }

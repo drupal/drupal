@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.199 2007/08/22 08:36:34 goba Exp $
+// $Id: menu.inc,v 1.200 2007/08/23 16:41:19 dries Exp $
 
 /**
  * @file
@@ -992,13 +992,13 @@ function menu_list_system_menus() {
 function menu_primary_links() {
   return menu_navigation_links('primary-links');
 }
- 
+
 /**
  * Return an array of links to be rendered as the Secondary links.
  */
 function menu_secondary_links() {
 
-  // If the secondary menu source is set as the primary menu, we display the 
+  // If the secondary menu source is set as the primary menu, we display the
   // second level of the primary menu.
   if (variable_get('menu_secondary_links_source', 'secondary-links') == 'primary-links') {
     return menu_navigation_links('primary-links', 1);

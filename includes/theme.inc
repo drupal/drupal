@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.369 2007/08/22 08:36:34 goba Exp $
+// $Id: theme.inc,v 1.370 2007/08/23 16:41:19 dries Exp $
 
 /**
  * @file
@@ -943,9 +943,9 @@ function theme_placeholder($text) {
 function theme_maintenance_page($content, $show_messages = TRUE) {
   // Set required headers.
   drupal_set_header('Content-Type: text/html; charset=utf-8');
-  drupal_set_html_head('<style type="text/css" media="all">@import "'. base_path() .'misc/maintenance.css";</style>');
-  drupal_set_html_head('<style type="text/css" media="all">@import "'. base_path() . drupal_get_path('module', 'system') .'/defaults.css";</style>');
-  drupal_set_html_head('<style type="text/css" media="all">@import "'. base_path() . drupal_get_path('module', 'system') .'/system.css";</style>');
+  drupal_set_html_head('<link type="text/css" rel="stylesheet" media="all" href="'. base_path() .'misc/maintenance.css" />');
+  drupal_set_html_head('<link type="text/css" rel="stylesheet" media="all" href="'. base_path() . drupal_get_path('module', 'system') .'/defaults.css" />');
+  drupal_set_html_head('<link type="text/css" rel="stylesheet" media="all" href="'. base_path() . drupal_get_path('module', 'system') .'/system.css" />');
   drupal_set_html_head('<link rel="shortcut icon" href="'. base_path() .'misc/favicon.ico" type="image/x-icon" />');
 
   // Prepare variables.

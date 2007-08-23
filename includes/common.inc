@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.677 2007/08/12 15:55:35 dries Exp $
+// $Id: common.inc,v 1.678 2007/08/23 16:41:19 dries Exp $
 
 /**
  * @file
@@ -1554,15 +1554,15 @@ function drupal_get_css($css = NULL) {
           // If a CSS file is not to be preprocessed and it's a module CSS file, it needs to *always* appear at the *top*,
           // regardless of whether preprocessing is on or off.
           if (!$preprocess && $type == 'module') {
-            $no_module_preprocess .= '<style type="text/css" media="'. $media .'">@import "'. base_path() . $file .'";</style>' ."\n";
+            $no_module_preprocess .= '<link type="text/css" rel="stylesheet" media="'. $media .'" href="'. base_path() . $file .'" />'."\n";
           }
           // If a CSS file is not to be preprocessed and it's a theme CSS file, it needs to *always* appear at the *bottom*,
           // regardless of whether preprocessing is on or off.
           else if (!$preprocess && $type == 'theme') {
-            $no_theme_preprocess .= '<style type="text/css" media="'. $media .'">@import "'. base_path() . $file .'";</style>' ."\n";
+            $no_theme_preprocess .= '<link type="text/css" rel="stylesheet" media="'. $media .'" href="'. base_path() . $file .'" />'."\n";
           }
           else {
-            $output .= '<style type="text/css" media="'. $media .'">@import "'. base_path() . $file .'";</style>' ."\n";
+            $output .= '<link type="text/css" rel="stylesheet" media="'. $media .'" href="'. base_path() . $file . '" />'."\n";
           }
         }
       }
@@ -1571,7 +1571,7 @@ function drupal_get_css($css = NULL) {
     if ($is_writable && $preprocess_css) {
       $filename = md5(serialize($types)) .'.css';
       $preprocess_file = drupal_build_css_cache($types, $filename);
-      $output .= '<style type="text/css" media="'. $media .'">@import "'. base_path() . $preprocess_file .'";</style>'. "\n";
+      $output .= '<link type="text/css" rel="stylesheet" media="'. $media .'" href="'. base_path() . $preprocess_file .'" />'."\n";
     }
   }
 

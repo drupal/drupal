@@ -1,5 +1,5 @@
 <?php
-// $Id: maintenance.tpl.php,v 1.3 2007/08/07 08:39:35 goba Exp $
+// $Id: maintenance.tpl.php,v 1.4 2007/08/23 16:41:19 dries Exp $
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -8,9 +8,9 @@
     <?php print $head ?>
     <?php print $styles ?>
     <?php print $scripts ?>
-    <style type="text/css" media="all">@import "<?php print $path_to_theme ?>/style.css";</style>
+    <link type="text/css" rel="stylesheet" media="all" href="<?php print $path_to_theme ?>/style.css" />
     <!--[if lt IE 7]>
-    <style type="text/css" media="all">@import "<?php print $path_to_theme ?>/fix-ie.css";</style>
+    <link type="text/css" rel="stylesheet" media="all" href="<?php print $path_to_theme ?>/fix-ie.css" />
     <![endif]-->
   </head>
   <body class="<?php
