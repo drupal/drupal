@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.220 2007/08/10 10:51:16 goba Exp $
+// $Id: form.inc,v 1.221 2007/08/23 18:02:52 goba Exp $
 
 /**
  * @defgroup form Form generation
@@ -295,7 +295,9 @@ function drupal_process_form($form_id, &$form, &$form_state) {
   $form_state['values'] = array();
 
   $form = form_builder($form_id, $form, $form_state);
-  if ((!empty($form['#programmed'])) || (!empty($form['#post']) && (($form['#post']['form_id'] == $form_id)))) {
+  // Only process the form if it is programmed or the form_id coming
+  // from the POST data is set and matches the current form_id.
+  if ((!empty($form['#programmed'])) || (!empty($form['#post']) && (isset($form['#post']['form_id']) && ($form['#post']['form_id'] == $form_id)))) {
     drupal_validate_form($form_id, $form, $form_state);
 
     if ((!empty($form_state['submitted'])) && !form_get_errors() && empty($form_state['rebuild'])) {
