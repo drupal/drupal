@@ -188,14 +188,14 @@ function search_menu() {
   );
 
   foreach (module_implements('search') as $name) {
-    $items['search/'. $name .'/%'] = array(
+    $items['search/'. $name .'/%menu_tail'] = array(
       'title callback' => 'module_invoke',
       'title arguments' => array($name, 'search', 'name', TRUE),
       'page callback' => 'search_view',
       'page arguments' => array($name),
       'access callback' => '_search_menu',
       'access arguments' => array($name),
-      'type' => $name == 'node' ? MENU_DEFAULT_LOCAL_TASK : MENU_LOCAL_TASK,
+      'type' => MENU_LOCAL_TASK,
       'parent' => 'search',
     );
   }
