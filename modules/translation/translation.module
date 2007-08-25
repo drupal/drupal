@@ -296,6 +296,8 @@ function translation_remove_from_set($node) {
         db_query('UPDATE {node} SET tnid = %d WHERE tnid = %d', $new_tnid, $node->tnid);
       }
     }
+    // TODO: it'd be better to only delete the caches of the affected nodes.
+    cache_clear_all('*', 'cache_node', TRUE);
   }
 }
 

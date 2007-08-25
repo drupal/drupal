@@ -1868,6 +1868,7 @@ function system_modules_submit($form, &$form_state) {
     node_types_rebuild();
     menu_rebuild();
     cache_clear_all('schema', 'cache');
+    cache_clear_all('*', 'cache_node', TRUE);
     drupal_set_message(t('The configuration options have been saved.'));
   }
 
