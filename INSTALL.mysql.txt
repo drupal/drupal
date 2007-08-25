@@ -1,4 +1,4 @@
-// $Id: INSTALL.mysql.txt,v 1.7 2006/09/08 16:29:35 dries Exp $
+// $Id: INSTALL.mysql.txt,v 1.8 2007/08/25 11:12:17 goba Exp $
 
 CREATE THE MySQL DATABASE
 --------------------------
@@ -38,7 +38,4 @@ not be able to run Drupal.
 If successful, MySQL will reply with:
 
   Query OK, 0 rows affected
-
-To activate the new permissions, enter the following command:
-
-  FLUSH PRIVILEGES;
+  
