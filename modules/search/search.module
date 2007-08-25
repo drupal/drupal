@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.230 2007/08/19 08:08:44 dries Exp $
+// $Id: search.module,v 1.231 2007/08/25 10:29:18 goba Exp $
 
 /**
  * @file
@@ -188,14 +188,14 @@ function search_menu() {
   );
 
   foreach (module_implements('search') as $name) {
-    $items['search/'. $name .'/%'] = array(
+    $items['search/'. $name .'/%menu_tail'] = array(
       'title callback' => 'module_invoke',
       'title arguments' => array($name, 'search', 'name', TRUE),
       'page callback' => 'search_view',
       'page arguments' => array($name),
       'access callback' => '_search_menu',
       'access arguments' => array($name),
-      'type' => $name == 'node' ? MENU_DEFAULT_LOCAL_TASK : MENU_LOCAL_TASK,
+      'type' => MENU_LOCAL_TASK,
       'parent' => 'search',
     );
   }

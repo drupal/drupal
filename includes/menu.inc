@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.200 2007/08/23 16:41:19 dries Exp $
+// $Id: menu.inc,v 1.201 2007/08/25 10:29:18 goba Exp $
 
 /**
  * @file
@@ -336,7 +336,6 @@ function _menu_load_objects($item, &$map) {
     $path_map = $map;
     foreach ($load_functions as $index => $function) {
       if ($function) {
-
         $return = $function(isset($path_map[$index]) ? $path_map[$index] : '');
         // If callback returned an error or there is no callback, trigger 404.
         if ($return === FALSE) {
@@ -478,14 +477,14 @@ function _menu_translate(&$router_item, $map, $to_arg = FALSE) {
  * @param map
  *   An array of path arguments (ex: array('node', '5'))
  * @param $to_arg_functions
- *   An array of helper function (ex: array(1 => 'node_load'))
+ *   An array of helper function (ex: array(2 => 'menu_tail_to_arg'))
  */
 function _menu_link_map_translate(&$map, $to_arg_functions) {
   if ($to_arg_functions) {
     $to_arg_functions = unserialize($to_arg_functions);
     foreach ($to_arg_functions as $index => $function) {
       // Translate place-holders into real values.
-      $arg = $function(!empty($map[$index]) ? $map[$index] : '');
+      $arg = $function(!empty($map[$index]) ? $map[$index] : '', $map, $index);
       if (!empty($map[$index]) || isset($arg)) {
         $map[$index] = $arg;
       }
@@ -494,6 +493,10 @@ function _menu_link_map_translate(&$map, $to_arg_functions) {
       }
     }
   }
+}
+
+function menu_tail_to_arg($arg, $map, $index) {
+  return implode('/', array_slice($map, $index));
 }
 
 /**
