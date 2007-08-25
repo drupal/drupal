@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.522 2007/08/22 08:36:34 goba Exp $
+// $Id: system.module,v 1.523 2007/08/25 09:25:49 goba Exp $
 
 /**
  * @file
@@ -1868,6 +1868,7 @@ function system_modules_submit($form, &$form_state) {
     node_types_rebuild();
     menu_rebuild();
     cache_clear_all('schema', 'cache');
+    cache_clear_all('*', 'cache_node', TRUE);
     drupal_set_message(t('The configuration options have been saved.'));
   }
 

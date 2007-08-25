@@ -1,5 +1,5 @@
 <?php
-// $Id: translation.module,v 1.8 2007/08/12 15:55:36 dries Exp $
+// $Id: translation.module,v 1.9 2007/08/25 09:25:49 goba Exp $
 
 /**
  * @file
@@ -296,6 +296,8 @@ function translation_remove_from_set($node) {
         db_query('UPDATE {node} SET tnid = %d WHERE tnid = %d', $new_tnid, $node->tnid);
       }
     }
+    // TODO: it'd be better to only delete the caches of the affected nodes.
+    cache_clear_all('*', 'cache_node', TRUE);
   }
 }
 

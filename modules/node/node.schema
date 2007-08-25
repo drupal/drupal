@@ -1,5 +1,5 @@
 <?php
-// $Id: node.schema,v 1.5 2007/08/10 11:14:22 goba Exp $
+// $Id: node.schema,v 1.6 2007/08/25 09:25:48 goba Exp $
 
 function node_schema() {
   $schema['node'] = array(
@@ -105,6 +105,7 @@ function node_schema() {
     'primary key' => array('type'),
   );
 
+  $schema['cache_node'] = drupal_get_schema_unprocessed('system', 'cache');
+
   return $schema;
 }
-

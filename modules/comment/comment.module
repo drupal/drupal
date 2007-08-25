@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.573 2007/08/12 16:12:00 dries Exp $
+// $Id: comment.module,v 1.574 2007/08/25 09:25:48 goba Exp $
 
 /**
  * @file
@@ -733,8 +733,6 @@ function comment_save($edit) {
         // Update the comment in the database.
         db_query("UPDATE {comments} SET status = %d, timestamp = %d, subject = '%s', comment = '%s', format = %d, uid = %d, name = '%s', mail = '%s', homepage = '%s' WHERE cid = %d", $edit['status'], $edit['timestamp'], $edit['subject'], $edit['comment'], $edit['format'], $edit['uid'], $edit['name'], $edit['mail'], $edit['homepage'], $edit['cid']);
 
-        _comment_update_node_statistics($edit['nid']);
-
         // Allow modules to respond to the updating of a comment.
         comment_invoke_comment($edit, 'update');
 
@@ -799,14 +797,13 @@ function comment_save($edit) {
         db_query("INSERT INTO {comments} (nid, pid, uid, subject, comment, format, hostname, timestamp, status, thread, name, mail, homepage) VALUES (%d, %d, %d, '%s', '%s', %d, '%s', %d, %d, '%s', '%s', '%s', '%s')", $edit['nid'], $edit['pid'], $edit['uid'], $edit['subject'], $edit['comment'], $edit['format'], ip_address(), $edit['timestamp'], $status, $thread, $edit['name'], $edit['mail'], $edit['homepage']);
         $edit['cid'] = db_last_insert_id('comments', 'cid');
 
-        _comment_update_node_statistics($edit['nid']);
-
         // Tell the other modules a new comment has been submitted.
         comment_invoke_comment($edit, 'insert');
 
         // Add an entry to the watchdog log.
         watchdog('content', 'Comment: added %subject.', array('%subject' => $edit['subject']), WATCHDOG_NOTICE, l(t('view'), 'node/'. $edit['nid'], array('fragment' => 'comment-'. $edit['cid'])));
       }
+      _comment_update_node_statistics($edit['nid']);
 
       // Clear the cache so an anonymous user can see his comment being added.
       cache_clear_all();
@@ -2035,6 +2032,7 @@ function _comment_update_node_statistics($nid) {
     $node = db_fetch_object(db_query("SELECT uid, created FROM {node} WHERE nid = %d", $nid));
     db_query("UPDATE {node_comment_statistics} SET comment_count = 0, last_comment_timestamp = %d, last_comment_name = '', last_comment_uid = %d WHERE nid = %d", $node->created, $node->uid, $nid);
   }
+  cache_clear_all($nid, 'cache_node');
 }
 
 /**
