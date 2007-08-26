@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.874 2007/08/26 07:46:11 dries Exp $
+// $Id: node.module,v 1.875 2007/08/26 14:15:51 goba Exp $
 
 /**
  * @file
@@ -600,6 +600,17 @@ function node_invoke_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
 
 /**
  * Load a node object from the database.
+ *
+ * This function provides two levels of caching. The internal cache stores
+ * all nodes loaded in this request. Use the $reset argument to invalidate
+ * it. The cache API based cache stores all nodes throughout requests,
+ * until invalidated with cache_clear_all().
+ *
+ * If the load operation was cached previously, we load the data from
+ * that cache, and no nodeapi load operations are called. That means,
+ * that we expect all load operations to return the same data and do
+ * not use any conditions on the user, language or anything else,
+ * which would limit what is stored in the node_load cache.
  *
  * @param $param
  *   Either the nid of the node or an array of conditions to match against in the database query
