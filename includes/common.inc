@@ -2624,7 +2624,7 @@ function drupal_common_themes() {
     ),
     'page' => array(
       'arguments' => array('content' => NULL, 'show_blocks' => TRUE, 'show_messages' => TRUE),
-      'file' => 'page',
+      'template' => 'page',
     ),
     'maintenance_page' => array(
       'arguments' => array('content' => NULL, 'show_messages' => TRUE),
@@ -2664,11 +2664,11 @@ function drupal_common_themes() {
     ),
     'box' => array(
       'arguments' => array('title' => NULL, 'content' => NULL, 'region' => 'main'),
-      'file' => 'box',
+      'template' => 'box',
     ),
     'block' => array(
       'arguments' => array('block' => NULL),
-      'file' => 'block',
+      'template' => 'block',
     ),
     'mark' => array(
       'arguments' => array('type' => MARK_NEW),

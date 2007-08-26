@@ -38,4 +38,4 @@ not be able to run Drupal.
 If successful, MySQL will reply with:
 
   Query OK, 0 rows affected
-  
+

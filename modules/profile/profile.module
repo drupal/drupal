@@ -58,15 +58,15 @@ function profile_theme() {
   return array(
     'profile_block' => array(
       'arguments' => array('account' => NULL, 'fields' => array()),
-      'file' => 'profile-block',
+      'template' => 'profile-block',
     ),
     'profile_listing' => array(
       'arguments' => array('account' => NULL, 'fields' => array()),
-      'file' => 'profile-listing',
+      'template' => 'profile-listing',
     ),
     'profile_wrapper' => array(
       'arguments' => array('content' => NULL),
-      'file' => 'profile-wrapper',
+      'template' => 'profile-wrapper',
     )
   );
 }
