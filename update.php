@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.228 2007/07/15 05:57:40 unconed Exp $
+// $Id: update.php,v 1.229 2007/08/26 08:27:08 goba Exp $
 
 /**
  * @file
@@ -63,9 +63,13 @@ function db_add_column(&$ret, $table, $column, $type, $attributes = array()) {
   }
 
   $ret[] = update_sql("ALTER TABLE {". $table ."} ADD $column $type");
-  if ($default) { $ret[] = update_sql("ALTER TABLE {". $table ."} ALTER $column SET $default"); }
-  if ($not_null) {
-    if ($default) { $ret[] = update_sql("UPDATE {". $table ."} SET $column = $default_val"); }
+  if (!empty($default)) {
+    $ret[] = update_sql("ALTER TABLE {". $table ."} ALTER $column SET $default"); 
+  }
+  if (!empty($not_null)) {
+    if (!empty($default)) { 
+      $ret[] = update_sql("UPDATE {". $table ."} SET $column = $default_val"); 
+    }
     $ret[] = update_sql("ALTER TABLE {". $table ."} ALTER $column SET NOT NULL");
   }
 }
@@ -737,6 +741,45 @@ function update_fix_compatibility() {
 }
 
 /**
+ * Perform Drupal 5.x to 6.x updates that are required for update.php
+ * to function properly.
+ *
+ * This function runs when update.php is run the first time for 6.x,
+ * even before updates are selected or performed.  It is important
+ * that if updates are not ultimately performed that no changes are
+ * made which make it impossible to continue using the prior version.
+ * Just adding columns is safe.  However, renaming the
+ * system.description column to owner is not.  Therefore, we add the
+ * system.owner column and leave it to system_update_6008() to copy
+ * the data from description and remove description. The same for
+ * renaming locales_target.locale to locales_target.language, which
+ * will be finished by locale_update_6002().
+ */
+function update_fix_d6_requirements() {
+  $ret = array();
+
+  if (drupal_get_installed_schema_version('system') < 6000 && !variable_get('update_d6_requirements', FALSE)) {
+    $spec = array('type' => 'int', 'size' => 'small', 'default' => 0, 'not null' => TRUE);
+    db_add_field($ret, 'cache', 'serialized', $spec);
+    db_add_field($ret, 'cache_filter', 'serialized', $spec);
+    db_add_field($ret, 'cache_page', 'serialized', $spec);
+    db_add_field($ret, 'cache_menu', 'serialized', $spec);
+
+    db_add_field($ret, 'system', 'info', array('type' => 'text'));
+    db_add_field($ret, 'system', 'owner', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''));
+    if (db_table_exists('locales_target')) {
+      db_add_field($ret, 'locales_target', 'language', array('type' => 'varchar', 'length' => 12, 'not null' => TRUE, 'default' => ''));
+    }
+    if (db_table_exists('locales_source')) {
+      db_add_field($ret, 'locales_source', 'textgroup', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => 'default'));
+    }
+    variable_set('update_d6_requirements', TRUE);
+  }
+
+  return $ret;
+}
+
+/**
  * Add the update task list to the current page.
  */
 function update_task_list($active = NULL) {
@@ -782,6 +825,7 @@ if (($access_check == FALSE) || ($user->uid == 1)) {
   update_fix_watchdog_115();
   update_fix_watchdog();
   update_fix_sessions();
+  update_fix_d6_requirements();
   update_fix_compatibility();
 
   $op = isset($_REQUEST['op']) ? $_REQUEST['op'] : '';

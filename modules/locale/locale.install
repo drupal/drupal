@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.install,v 1.14 2007/06/17 17:41:40 goba Exp $
+// $Id: locale.install,v 1.15 2007/08/26 08:27:09 goba Exp $
 
 /**
  * Implementation of hook_install().
@@ -75,19 +75,15 @@ function locale_update_6001() {
 }
 
 /**
- * Add multiple text group support to allow for user defined string translation.
+ * Change locale column to language. The language column is added by
+ * update_fix_d6_requirements() in update.php to avoid a large number
+ * of error messages from update.php.  All we need to do here is copy
+ * locale to language and then drop locale.
  */
 function locale_update_6002() {
   $ret = array();
-  switch ($GLOBALS['db_type']) {
-    case 'mysql':
-    case 'mysqli':
-      $ret[] = update_sql("ALTER TABLE {locales_source} ADD textgroup varchar(255) NOT NULL default ''");
-      break;
-    case 'pgsql':
-      db_add_column($ret, 'locales_source', 'textgroup', 'varchar(255)', array('default' => "''", 'not null' => TRUE));
-      break;
-  }
+  $ret[] = update_sql('UPDATE {locales_target} SET language = locale');
+  db_drop_field($ret, 'locales_target', 'locale');
   return $ret;
 }
 

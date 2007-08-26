@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.75 2007/08/06 10:25:56 goba Exp $
+// $Id: database.inc,v 1.76 2007/08/26 08:27:09 goba Exp $
 
 /**
  * @file
@@ -442,6 +442,48 @@ function db_field_names($fields) {
     }
   }
   return $ret;
+}
+
+/**
+ * Given a Schema API field type, return the correct %-placeholder to
+ * embed in a query to be passed to db_query along with a value from a
+ * column of the specified type.
+ *
+ * @param $type
+ *   The Schema API type of a field.
+ * @return
+ *   The placeholder string to embed in a query for that type.
+ */
+function _db_type_placeholder($type) {
+  switch ($type) {
+    case 'varchar':
+    case 'text':
+    case 'datetime':
+      return '\'%s\'';
+
+    case 'numeric':
+      // For 'numeric' values, we use '%s', not '\'%s\'' as with
+      // string types, because numeric values should not be enclosed
+      // in quotes in queries (though they can be, at least on mysql
+      // and pgsql).  Numerics should only have [0-9.+-] and
+      // presumably no db's "escape string" function will mess with
+      // those characters.
+      return '%s';
+    
+    case 'serial':
+    case 'int':
+      return '%d';
+
+    case 'float':
+      return '%f';
+    
+    case 'blob':
+      return '%b';
+  }
+
+  // There is no safe value to return here, so return something that
+  // will cause the query to fail.
+  return 'unsupported type '. $type . 'for _db_type_placeholder';
 }
 
 /**

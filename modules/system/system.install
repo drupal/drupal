@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.139 2007/08/25 09:25:49 goba Exp $
+// $Id: system.install,v 1.140 2007/08/26 08:27:09 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -2744,23 +2744,13 @@ function system_update_6000() {
  */
 function system_update_6001() {
   $ret = array();
-  // Add revision id to term-node relation.
-  switch ($GLOBALS['db_type']) {
-    case 'mysql':
-    case 'mysqli':
-      $ret[] = update_sql("ALTER TABLE {term_node} ADD vid int NOT NULL default '0'");
-      $ret[] = update_sql('ALTER TABLE {term_node} DROP PRIMARY KEY');
-      $ret[] = update_sql('ALTER TABLE {term_node} ADD PRIMARY KEY (tid,nid,vid)');
-      $ret[] = update_sql('ALTER TABLE {term_node} ADD KEY vid (vid)');
-      break;
 
-    case 'pgsql':
-      db_add_column($ret, 'term_node', 'vid', 'int', array('not null' => TRUE, 'default' => 0));
-      $ret[] = update_sql("ALTER TABLE {term_node} DROP CONSTRAINT {term_node}_pkey");
-      $ret[] = update_sql("ALTER TABLE {term_node} ADD PRIMARY KEY (tid,nid,vid)");
-      $ret[] = update_sql("CREATE INDEX {term_node}_vid_idx ON {term_node} (vid)");
-      break;
-  }
+  // Add vid to term-node relation.  The schema says it is unsigned.
+  db_add_field($ret, 'term_node', 'vid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0));
+  db_drop_primary_key($ret, 'term_node');
+  db_add_primary_key($ret, 'term_node', array('vid', 'tid', 'nid'));
+  db_add_index($ret, 'term_node', 'vid', array('vid'));
+
   // Update all entries with the current revision number.
   $nodes = db_query('SELECT nid, vid FROM {node}');
   while ($node = db_fetch_object($nodes)) {
@@ -2774,15 +2764,9 @@ function system_update_6001() {
  */
 function system_update_6002() {
   $ret = array();
-  switch ($GLOBALS['db_type']) {
-    case 'pgsql':
-      db_change_column($ret, 'variable', 'name', 'name', 'varchar(128)', array('not null' => TRUE, 'default' => "''"));
-      break;
-    case 'mysql':
-    case 'mysqli':
-      $ret[] = update_sql("ALTER TABLE {variable} CHANGE name name varchar(128) NOT NULL default ''");
-      break;
-  }
+  db_drop_primary_key($ret, 'variable');
+  db_change_field($ret, 'variable', 'name', 'name', array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''));
+  db_add_primary_key($ret, 'variable', array('name'));
   return $ret;
 }
 
@@ -2805,26 +2789,18 @@ function system_update_6003() {
 }
 
 /**
- * Add index on users created column.
+ * This update used to add an index on users created column (#127941).
+ * However, system_update_1022() does the same thing.  This update
+ * tried to detect if 1022 had already run but failed to do so,
+ * resulting in an "index already exists" error.
+ *
+ * Adding the index here is never necessary.  Sites installed before
+ * 1022 will run 1022, getting the update.  Sites installed on/after 1022
+ * got the index when the table was first created.  Therefore, this
+ * function is now a no-op.
  */
 function system_update_6004() {
-  // Already run as system_update_1022?
-  if (variable_get('system_update_1022', FALSE)) {
-    variable_del('system_update_1022');
-    return array();
-  }
-  $ret = array();
-  switch ($GLOBALS['db_type']) {
-    case 'mysql':
-    case 'mysqli':
-      $ret[] = update_sql('ALTER TABLE {users} ADD KEY created (created)');
-      break;
-
-    case 'pgsql':
-      $ret[] = update_sql("CREATE INDEX {users}_created_idx ON {users} (created)");
-      break;
-  }
-  return $ret;
+  return array();
 }
 
 /**
@@ -2835,7 +2811,34 @@ function system_update_6005() {
   switch ($GLOBALS['db_type']) {
     case 'pgsql':
       db_add_column($ret, 'url_alias', 'language', 'varchar(12)', array('default' => "''", 'not null' => TRUE));
-      $ret[] = update_sql('DROP INDEX {url_alias}_dst_idx');
+
+      // As of system.install:1.85 (before the new language
+      // subsystem), new installs got a unique key named
+      // url_alias_dst_key on url_alias.dst.  Unfortunately,
+      // system_update_162 created a unique key inconsistently named
+      // url_alias_dst_idx on url_alias.dst (keys should have the _key
+      // suffix, indexes the _idx suffix).  Therefore, sites installed
+      // before system_update_162 have a unique key with a different
+      // name than sites installed after system_update_162().  Now, we
+      // want to drop the unique key on dst which may have either one
+      // of two names and create a new unique key on (dst, language).
+      // There is no way to know which key name exists so we have to
+      // drop both, causing an SQL error.  Thus, we just hide the
+      // error and only report the update_sql results that work.
+      $err = error_reporting(0);
+      $ret1 = update_sql('DROP INDEX {url_alias}_dst_idx');
+      if ($ret1['success']) {
+	$ret[] = $ret1;
+      }
+      $ret1 = array();
+      db_drop_unique_key($ret, 'url_alias', 'dst');
+      foreach ($ret1 as $r) {
+	if ($r['success']) {
+	  $ret[] = $r;
+	}
+      }
+      error_reporting($err);
+
       $ret[] = update_sql('CREATE UNIQUE INDEX {url_alias}_dst_language_idx ON {url_alias}(dst, language)');
       break;
     case 'mysql':
@@ -2881,23 +2884,15 @@ function system_update_6007() {
 }
 
 /**
- * Add info files to themes.
+ * Add info files to themes.  The info and owner columns are added by
+ * update_fix_d6_requirements() in update.php to avoid a large number
+ * of error messages from update.php.  All we need to do here is copy
+ * description to owner and then drop description.
  */
 function system_update_6008() {
   $ret = array();
-
-  // Alter system table.
-  switch ($GLOBALS['db_type']) {
-    case 'pgsql':
-      db_add_column($ret, 'system', 'info', 'text');
-      db_change_column($ret, 'system', 'description', 'owner', 'varchar(255)', array('not null' => TRUE, 'default' => "''"));
-      break;
-    case 'mysql':
-    case 'mysqli':
-      $ret[] = update_sql("ALTER TABLE {system} ADD info longtext");
-      $ret[] = update_sql("ALTER TABLE {system} CHANGE description owner varchar(255) NOT NULL default ''");
-      break;
-  }
+  $ret[] = update_sql('UPDATE {system} SET owner = description');
+  db_drop_field($ret, 'system', 'description');
 
   // Rebuild system table contents.
   module_rebuild_cache();
@@ -2942,21 +2937,15 @@ function system_update_6009() {
 
 /**
  * Add variable replacement for watchdog messages.
+ *
+ * The variables field is NOT NULL and does not have a default value.
+ * Existing log messages should not be translated in the new system,
+ * so we insert 'N;' (serialize(NULL)) as the temporary default but
+ * then remove the default value to match the schema.
  */
 function system_update_6010() {
   $ret = array();
-  switch ($GLOBALS['db_type']) {
-    case 'pgsql':
-      db_add_column($ret, 'watchdog', 'variables', 'text', array('not null' => TRUE));
-      break;
-    case 'mysql':
-    case 'mysqli':
-      $ret[] = update_sql("ALTER TABLE {watchdog} ADD variables longtext NOT NULL");
-      break;
-  }
-  // Ensure we have 'N;' (serialize(NULL)) as the default, so existing
-  // log messages will not get translated in the new system.
-  $ret[] = update_sql("UPDATE {watchdog} SET variables = 'N;'");
+  db_add_field($ret, 'watchdog', 'variables', array('type' => 'text', 'size' => 'medium', 'not null' => TRUE, 'initial' => 'N;'));
   return $ret;
 }
 
@@ -2978,28 +2967,11 @@ function system_update_6011() {
 }
 
 /**
- * Add serialized field to cache tables
+ * Add serialized field to cache tables.  This is now handled directly
+ * by update.php, so this function is a no-op.
  */
 function system_update_6012() {
-  $ret = array();
-
-  switch ($GLOBALS['db_type']) {
-    case 'pgsql':
-      db_add_column($ret, 'cache', 'serialized', 'smallint', array('default' => "'0'", 'not null' => TRUE));
-      db_add_column($ret, 'cache_filter', 'serialized', 'smallint', array('default' => "'0'", 'not null' => TRUE));
-      db_add_column($ret, 'cache_page', 'serialized', 'smallint', array('default' => "'0'", 'not null' => TRUE));
-      db_add_column($ret, 'cache_menu', 'serialized', 'smallint', array('default' => "'0'", 'not null' => TRUE));
-      break;
-    case 'mysql':
-    case 'mysqli':
-      $ret[] = update_sql("ALTER TABLE {cache} ADD serialized int(1) NOT NULL default '0'");
-      $ret[] = update_sql("ALTER TABLE {cache_filter} ADD serialized int(1) NOT NULL default '0'");
-      $ret[] = update_sql("ALTER TABLE {cache_page} ADD serialized int(1) NOT NULL default '0'");
-      $ret[] = update_sql("ALTER TABLE {cache_menu} ADD serialized int(1) NOT NULL default '0'");
-      break;
-  }
-
-  return $ret;
+  return array();
 }
 
 /**
@@ -3193,16 +3165,10 @@ function system_update_6019() {
       // Update from pgsql 'float' (which means 'double precision') to
       // schema 'float' (which in pgsql means 'real').
       if (db_table_exists('search_index')) {
-        db_update_field($ret, 'search_index', 'score');
+        db_change_field($ret, 'search_index', 'score', 'score', array('type' => 'float'));
       }
       if (db_table_exists('search_total')) {
-        db_update_field($ret, 'search_total', 'count');
-      }
-
-      // Fix index menu.pid: pgsql code incorrectly had it on parent, not pid.
-      if (db_table_exists('menu')) {
-        db_drop_index($ret, 'menu', 'pid');
-        db_add_index($ret, 'menu', 'pid', array('pid'));
+        db_change_field($ret, 'search_total', 'count', 'count', array('type' => 'float'));
       }
 
       // Replace unique index dst_language with a unique constraint.  The
@@ -3228,17 +3194,6 @@ function system_update_6019() {
         db_field_set_no_default($ret, 'batch', 'timestamp');
       }
 
-      // Fix index locales_source.source.
-      if (db_table_exists('locales_source')) {
-        db_drop_index($ret, 'locales_source', 'source');
-        db_add_index($ret, 'locales_source', 'source',
-          array(array('source', 30)));
-      }
-
-      // Rename unique key node.nid to node.nid_vid.
-      db_drop_unique_key($ret, 'node', 'nid');
-      db_add_unique_key($ret, 'node', 'nid_vid', array('nid', 'vid'));
-
       break;
 
     case 'mysql':
@@ -3251,44 +3206,38 @@ function system_update_6019() {
 
       // Change to size => small.
       if (db_table_exists('boxes')) {
-        db_update_field($ret, 'boxes', 'format');
+        db_change_field($ret, 'boxes', 'format', 'format', array('type' => 'int', 'size' => 'small', 'not null' => TRUE, 'default' => 0));
       }
 
       // Change to size => small.
       // Rename index 'lid' to 'nid'.
       if (db_table_exists('comments')) {
-        db_update_field($ret, 'comments', 'format');
+        db_change_field($ret, 'comments', 'format', 'format', array('type' => 'int', 'size' => 'small', 'not null' => TRUE, 'default' => 0));
         db_drop_index($ret, 'comments', 'lid');
         db_add_index($ret, 'comments', 'nid', array('nid'));
       }
 
-      // Rename index 'lang' to 'language'.
-      if (db_table_exists('locales_target')) {
-        db_drop_index($ret, 'locales_target', 'lang');
-        db_add_index($ret, 'locales_target', 'language', array('language'));
-      }
-
       // Change to size => small.
-      db_update_field($ret, 'cache', 'serialized');
-      db_update_field($ret, 'cache_filter', 'serialized');
-      db_update_field($ret, 'cache_page', 'serialized');
-      db_update_field($ret, 'cache_form', 'serialized');
+      db_change_field($ret, 'cache', 'serialized', 'serialized', array('type' => 'int', 'size' => 'small', 'not null' => TRUE, 'default' => 0));
+      db_change_field($ret, 'cache_filter', 'serialized', 'serialized', array('type' => 'int', 'size' => 'small', 'not null' => TRUE, 'default' => 0));
+      db_change_field($ret, 'cache_page', 'serialized', 'serialized', array('type' => 'int', 'size' => 'small', 'not null' => TRUE, 'default' => 0));
+      db_change_field($ret, 'cache_form', 'serialized', 'serialized', array('type' => 'int', 'size' => 'small', 'not null' => TRUE, 'default' => 0));
 
       // Remove default => 0, set auto increment.
-      db_update_field($ret, 'files', 'fid');
+      db_change_field($ret, 'files', 'fid', 'fid', array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE));
 
       // Remove default => 0, set auto increment.
       $ret[] = update_sql("SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO'");
-      db_update_field($ret, 'users', 'uid');
+      db_change_field($ret, 'users', 'uid', 'uid', array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE));
 
       // Set auto increment.
-      db_update_field($ret, 'node_revisions', 'vid');
+      db_change_field($ret, 'node_revisions', 'vid', 'vid', array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE));
 
       // Set auto increment.
-      db_update_field($ret, 'boxes', 'bid');
+      db_change_field($ret, 'boxes', 'bid', 'bid', array('type' => 'serial', 'not null' => TRUE));
 
       // Set auto increment, unsigned.
-      db_update_field($ret, 'batch', 'bid');
+      db_change_field($ret, 'batch', 'bid', 'bid', array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE));
 
       break;
   }
@@ -3406,9 +3355,20 @@ function system_update_6022() {
   db_add_index($ret, 'upload', 'vid', array('vid'));
 
   // The nid column was renamed to uid. Use the old nid to find the node's uid.
-  $ret[] = update_sql('UPDATE {files} f JOIN {node} n ON f.uid = n.nid SET f.uid = n.uid');
-  // Use the existing vid to find the nid.
-  $ret[] = update_sql('UPDATE {upload} u JOIN {node_revisions} r ON u.vid = r.vid SET u.nid = r.nid');
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql('UPDATE {files} f JOIN {node} n ON f.uid = n.nid SET f.uid = n.uid');
+      // Use the existing vid to find the nid.
+      $ret[] = update_sql('UPDATE {upload} u JOIN {node_revisions} r ON u.vid = r.vid SET u.nid = r.nid');
+      break;
+
+    case 'pgsql':
+      $ret[] = update_sql('UPDATE {files} AS f SET uid = n.uid FROM {node} n WHERE f.uid=n.nid');
+      // Use the existing vid to find the nid.
+      $ret[] = update_sql('UPDATE {upload} AS u SET nid = r.nid FROM {node_revisions} r WHERE u.vid = r.vid');
+      break;
+  }
 
   return $ret;
 }
@@ -3416,9 +3376,16 @@ function system_update_6022() {
 function system_update_6023() {
   $ret = array();
   // vid is NULL
+  db_drop_unique_key($ret, 'node', 'nid_vid');
+  db_drop_unique_key($ret, 'node', 'vid');
   db_change_field($ret, 'node', 'vid', 'vid', array('type' => 'int', 'unsigned' => TRUE, 'default' => 0));
+  db_add_unique_key($ret, 'node', 'nid_vid', array('nid', 'vid'));
+  db_add_unique_key($ret, 'node', 'vid', array('vid'));
+
   // nid is DEFAULT 0
+  db_drop_index($ret, 'node_revisions', 'nid');
   db_change_field($ret, 'node_revisions', 'nid', 'nid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0));
+  db_add_index($ret, 'node_revisions', 'nid', array('nid'));
   return $ret;
 }
 
@@ -3439,7 +3406,9 @@ function system_update_6024() {
  */
 function system_update_6025() {
   $ret = array();
+  db_drop_index($ret, 'node', 'node_title_type');
   db_change_field($ret, 'node', 'title', 'title', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''));
+  db_add_index($ret, 'node', 'node_title_type', array('title', array('type', 4)));
   db_change_field($ret, 'node_revisions', 'title', 'title', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''));
   return $ret;
 }
@@ -3475,10 +3444,12 @@ function system_update_6026() {
     'primary key' => array('cid'),
   );
   db_create_table($ret, 'cache_update', $schema['cache_update']);
+  drupal_set_installed_schema_version('update', 0);
   module_enable(array('update'));
   menu_rebuild();
   return $ret;
 }
+
 
 /**
  * Add block cache.
@@ -3548,6 +3519,28 @@ function system_update_6028() {
   db_create_table($ret, 'cache_node', $schema['cache_node']);
 
   return $ret;
+}
+
+/*
+ * Enable the dblog module on sites that upgrade, since otherwise
+ * watchdog logging will stop unexpectedly.
+ */
+function system_update_6029() {
+  // The watchdog table is now owned by dblog, which is not yet
+  // "installed" according to the system table, but the table already
+  // exists.  We set the module as "installed" here to avoid an error
+  // later.
+  //
+  // Although not the case for the initial D6 release, it is likely
+  // that dblog.install will have its own update functions eventually.
+  // However, dblog did not exist in D5 and this update is part of the
+  // initial D6 release, so we know that dblog is not installed yet.
+  // It is therefore correct to install it as version 0.  If
+  // dblog updates exist, the next run of update.php will get them.
+  drupal_set_installed_schema_version('dblog', 0);
+  module_enable(array('dblog'));
+  menu_rebuild();
+  return array();
 }
 
 /**

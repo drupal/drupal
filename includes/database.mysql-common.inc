@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysql-common.inc,v 1.8 2007/08/07 08:39:35 goba Exp $
+// $Id: database.mysql-common.inc,v 1.9 2007/08/26 08:27:09 goba Exp $
 
 /**
  * @file
@@ -257,12 +257,31 @@ function db_drop_table(&$ret, $table) {
  * @param $field
  *   Name of the field to be added.
  * @param $spec
- *   The field specification array, as taken from a schema definition
+ *   The field specification array, as taken from a schema definition.
+ *   The specification may also contain the key 'initial', the newly
+ *   created field will be set to the value of the key in all rows.
+ *   This is most useful for creating NOT NULL columns with no default
+ *   value in existing tables.
  */
 function db_add_field(&$ret, $table, $field, $spec) {
+  $fixnull = FALSE;
+  if (!empty($spec['not null']) && !isset($spec['default'])) {
+    $fixnull = TRUE;
+    $spec['not null'] = FALSE;
+  }
   $query = 'ALTER TABLE {'. $table .'} ADD ';
   $query .= _db_create_field_sql($field, _db_process_field($spec));
   $ret[] = update_sql($query);
+  if (isset($spec['initial'])) {
+    // All this because update_sql does not support %-placeholders.
+    $sql = 'UPDATE {'. $table .'} SET '. $field .' = '. _db_type_placeholder($spec['type']);
+    $result = db_query($sql, $spec['initial']);
+    $ret[] = array('success' => $result !== FALSE, 'query' => check_plain($sql .' ('. $spec['initial'] .')'));
+  }
+  if ($fixnull) {
+    $spec['not null'] = TRUE;
+    db_change_field($ret, $table, $field, $field, $spec);
+  }
 }
 
 /**
@@ -387,15 +406,7 @@ function db_drop_unique_key(&$ret, $table, $name) {
  *   An array of field names.
  */
 function db_add_index(&$ret, $table, $name, $fields) {
-  $query = 'ALTER TABLE {'. $table .'} ADD INDEX '. $name .' (';
-
-  foreach ($fields as $current) {
-    $query .= $current .', ';
-  }
-
-  // Remove the last comma, add a closing bracket.
-  $query = substr($query, 0, -2) .')';
-
+  $query = 'ALTER TABLE {'. $table .'} ADD INDEX '. $name .' ('. _db_create_key_sql($fields) . ')';
   $ret[] = update_sql($query);
 }
 
@@ -415,6 +426,15 @@ function db_drop_index(&$ret, $table, $name) {
 
 /**
  * Change a field definition.
+ *
+ * IMPORTANT NOTE: On some database systems (notably PostgreSQL),
+ * changing a field definition involves adding a new field and
+ * dropping an old one. This means that any indices, primary keys and
+ * sequences (from serial-type fields) that use the field to be
+ * changed get dropped.  For database portability, you MUST drop them
+ * explicitly before calling db_change_field() and then re-create them
+ * afterwards.  Use db_{add,drop}_{primary_key,unique_key,index} for
+ * this purpose.
  *
  * @param $ret
  *   Array to which query results will be added.
