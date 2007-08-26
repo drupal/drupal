@@ -1,5 +1,5 @@
 <?php
-// $Id: book.install,v 1.8 2007/07/30 18:20:21 dries Exp $
+// $Id: book.install,v 1.9 2007/08/26 07:20:07 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -150,20 +150,10 @@ function book_update_6000() {
     $update_count = 400; // Update this many at a time
 
     $result = db_query_range("SELECT * FROM {book_temp}", $_SESSION['book_update_6000_orphans']['from'], $update_count);
-
-    if (db_num_rows($result)) {
-      $_SESSION['book_update_6000_orphans']['from'] += $update_count;
-    }
-    else {
-      // Done with this part
-      if (!empty($_SESSION['book_update_6000_orphans']['book'])) {
-        // The orphans' parent is added last, so it will be processed first.
-        $_SESSION['book_update_6000'][] = $_SESSION['book_update_6000_orphans']['book'];
-      }
-      $_SESSION['book_update_6000_orphans'] = FALSE;
-    }
+    $has_rows = FALSE;
     // Go through the next $update_count book pages and locate the orphans.
     while ($book = db_fetch_array($result)) {
+      $has_rows = TRUE;
       // Orphans are defined as nodes whose parent does not exist in the table.
       if ($book['parent'] && !db_result(db_query("SELECT COUNT(*) FROM {book_temp} WHERE nid = %d", $book['parent']))) {
         if (empty($_SESSION['book_update_6000_orphans']['book'])) {
@@ -178,6 +168,17 @@ function book_update_6000() {
           $_SESSION['book_update_6000'][] = $book;
         }
       }
+    }
+    if ($has_rows) {
+      $_SESSION['book_update_6000_orphans']['from'] += $update_count;
+    }
+    else {
+      // Done with this part
+      if (!empty($_SESSION['book_update_6000_orphans']['book'])) {
+        // The orphans' parent is added last, so it will be processed first.
+        $_SESSION['book_update_6000'][] = $_SESSION['book_update_6000_orphans']['book'];
+      }
+      $_SESSION['book_update_6000_orphans'] = FALSE;
     }
     $ret['#finished'] = FALSE;
     return $ret;
