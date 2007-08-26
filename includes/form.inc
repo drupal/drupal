@@ -69,11 +69,13 @@ function drupal_get_form($form_id) {
     // to build it from scratch.
     if (!isset($form)) {
       $form_state['post'] = $_POST;
-      array_shift($args);
-      array_unshift($args, $form_state);
-      array_unshift($args, $form_id);
+      // Use a copy of the function's arguments for manipulation
+      $args_temp = $args;
+      array_shift($args_temp);
+      array_unshift($args_temp, $form_state);
+      array_unshift($args_temp, $form_id);
 
-      $form = call_user_func_array('drupal_retrieve_form', $args);
+      $form = call_user_func_array('drupal_retrieve_form', $args_temp);
       $form_build_id = 'form-'. md5(mt_rand());
       $form['#build_id'] = $form_build_id;
       drupal_prepare_form($form_id, $form, $form_state);
