@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.835 2007/08/26 07:46:11 dries Exp $
+// $Id: user.module,v 1.836 2007/08/26 08:00:49 dries Exp $
 
 /**
  * @file
@@ -1331,15 +1331,10 @@ function user_pass_submit($form, &$form_state) {
 
   $account = $form_state['values']['account'];
   // Mail one time login URL and instructions using current language.
-  $mail_success = _user_mail_notify('password_reset', $account, $language);
-  if ($mail_success) {
-    watchdog('user', 'Password reset instructions mailed to %name at %email.', array('%name' => $account->name, '%email' => $account->mail));
-    drupal_set_message(t('Further instructions have been sent to your e-mail address.'));
-  }
-  else {
-    watchdog('user', 'Error mailing password reset instructions to %name at %email.', array('%name' => $account->name, '%email' => $account->mail), WATCHDOG_ERROR);
-    drupal_set_message(t('Unable to send mail. Please contact the site admin.'));
-  }
+  _user_mail_notify('password_reset', $account, $language);
+  watchdog('user', 'Password reset instructions mailed to %name at %email.', array('%name' => $account->name, '%email' => $account->mail));
+  drupal_set_message(t('Further instructions have been sent to your e-mail address.'));
+
   $form_state['redirect'] = 'user';
   return;
 }

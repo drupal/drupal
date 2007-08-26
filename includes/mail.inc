@@ -1,5 +1,5 @@
 <?php
-// $Id: mail.inc,v 1.4 2007/07/02 14:41:35 dries Exp $
+// $Id: mail.inc,v 1.5 2007/08/26 08:00:49 dries Exp $
 
 /**
  * Compose and optionally send an e-mail message.
@@ -76,7 +76,9 @@
  * @return
  *   The $message array structure containing all details of the
  *   message. If already sent ($send = TRUE), then the 'result' element
- *   will contain the success indicator of the e-mail.
+ *   will contain the success indicator of the e-mail, failure being already
+ *   written to the watchdog. (Success means nothing more than the message being
+ *   accepted at php-level, which still doesn't guarantee it to be delivered.)
  */
 function drupal_mail($module, $key, $to, $language, $params = array(), $from = NULL, $send = TRUE) {
   $default_from = variable_get('site_mail', ini_get('sendmail_from'));
@@ -126,6 +128,12 @@ function drupal_mail($module, $key, $to, $language, $params = array(), $from = N
   // Optionally send e-mail.
   if ($send) {
     $message['result'] = drupal_mail_send($message);
+
+    // Log errors
+    if (!$message['result']) {
+      watchdog('mail', 'Error sending e-mail (from %from to %to).', array('%from' => $message['from'], '%to' => $message['to']), WATCHDOG_ERROR);
+      drupal_set_message(t('Unable to send e-mail. Please contact the site admin, if the problem persists.'), 'error');
+    }
   }
 
   return $message;
