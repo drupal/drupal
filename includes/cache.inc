@@ -5,13 +5,13 @@
  * Return data from the persistent cache. Data may be stored as either plain text or as serialized data.
  * cache_get will automatically return unserialized objects and arrays.
  *
- * @param $key
+ * @param $cid
  *   The cache ID of the data to retrieve.
  * @param $table
  *   The table $table to store the data in. Valid core values are 'cache_filter',
  *   'cache_menu', 'cache_page', or 'cache' for the default cache.
  */
-function cache_get($key, $table = 'cache') {
+function cache_get($cid, $table = 'cache') {
   global $user;
 
   // Garbage collection necessary when enforcing a minimum cache lifetime
@@ -22,7 +22,7 @@ function cache_get($key, $table = 'cache') {
     variable_set('cache_flush', 0);
   }
 
-  $cache = db_fetch_object(db_query("SELECT data, created, headers, expire, serialized FROM {". $table ."} WHERE cid = '%s'", $key));
+  $cache = db_fetch_object(db_query("SELECT data, created, headers, expire, serialized FROM {". $table ."} WHERE cid = '%s'", $cid));
   if (isset($cache->data)) {
     // If the data is permanent or we're not enforcing a minimum cache lifetime
     // always return the cached data.
