@@ -1,5 +1,5 @@
 <?php
-// $Id: translation.module,v 1.9 2007/08/25 09:25:49 goba Exp $
+// $Id: translation.module,v 1.10 2007/08/26 13:49:27 goba Exp $
 
 /**
  * @file
@@ -256,6 +256,7 @@ function translation_nodeapi(&$node, $op, $teaser, $page) {
           db_query("UPDATE {node} SET tnid = %d, translate = %d WHERE nid = %d", $tnid, 0, $node->translation_source->nid);
         }
         db_query("UPDATE {node} SET tnid = %d, translate = %d WHERE nid = %d", $tnid, 0, $node->nid);
+        translation_clear_node_cache($tnid);
       }
       break;
 
@@ -267,6 +268,7 @@ function translation_nodeapi(&$node, $op, $teaser, $page) {
           // This is the source node, asking to mark all translations outdated.
           db_query("UPDATE {node} SET translate = 1 WHERE tnid = %d AND nid != %d", $node->tnid, $node->nid);
         }
+        translation_clear_node_cache($node->tnid);
       }
       break;
 
@@ -295,9 +297,22 @@ function translation_remove_from_set($node) {
         $new_tnid = db_result(db_query('SELECT nid FROM {node} WHERE tnid = %d ORDER BY translate ASC, nid ASC', $node->tnid));
         db_query('UPDATE {node} SET tnid = %d WHERE tnid = %d', $new_tnid, $node->tnid);
       }
+      translation_clear_node_cache($node->tnid);
     }
-    // TODO: it'd be better to only delete the caches of the affected nodes.
-    cache_clear_all('*', 'cache_node', TRUE);
+  }
+}
+
+/**
+ * Clear node_load cache for all nodes in the translation set, so we have
+ * the proper translation set information in every node.
+ * 
+ * @param $tnid
+ *   The translation source nid of the translation set, the identifier
+ *   of the node used to derive all translations in the set.
+ */
+function translation_clear_node_cache($tnid) {
+  foreach (translation_node_get_translations($tnid) as $node) {
+    cache_clear_all($node->nid, 'cache_node');
   }
 }
 
@@ -308,11 +323,11 @@ function translation_remove_from_set($node) {
  *   The translation source nid of the translation set, the identifier
  *   of the node used to derive all translations in the set.
  * @return
- *  Array of partial node objects (nid, title, language) representing
- *  all nodes in the translation set, in effect all translations
- *  of node $tnid, including node $tnid itself. Because these are
- *  not partial nodes, you need to node_load() the full node, if you
- *  need more properties. The array is indexed by language code.
+ *   Array of partial node objects (nid, title, language) representing
+ *   all nodes in the translation set, in effect all translations
+ *   of node $tnid, including node $tnid itself. Because these are
+ *   not partial nodes, you need to node_load() the full node, if you
+ *   need more properties. The array is indexed by language code.
  */
 function translation_node_get_translations($tnid) {
   static $translations = array();
