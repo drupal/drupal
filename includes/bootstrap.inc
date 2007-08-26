@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.181 2007/08/07 08:41:24 dries Exp $
+// $Id: bootstrap.inc,v 1.182 2007/08/26 16:00:29 goba Exp $
 
 /**
  * @file
@@ -922,6 +922,7 @@ function _drupal_bootstrap($phase) {
       // Start a page timer:
       timer_start('page');
 
+      bootstrap_invoke_all('boot');
       drupal_page_header();
       break;
 
@@ -962,7 +963,6 @@ function _drupal_cache_init($phase) {
       }
       elseif (variable_get('cache', CACHE_DISABLED) == CACHE_NORMAL) {
         require_once './includes/module.inc';
-        bootstrap_invoke_all('boot');
         drupal_page_cache_header($cache);
         bootstrap_invoke_all('exit');
         exit();
