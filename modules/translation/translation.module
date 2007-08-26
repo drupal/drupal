@@ -326,7 +326,7 @@ function translation_clear_node_cache($tnid) {
  *   Array of partial node objects (nid, title, language) representing
  *   all nodes in the translation set, in effect all translations
  *   of node $tnid, including node $tnid itself. Because these are
- *   not partial nodes, you need to node_load() the full node, if you
+ *   partial nodes, you need to node_load() the full node, if you
  *   need more properties. The array is indexed by language code.
  */
 function translation_node_get_translations($tnid) {
