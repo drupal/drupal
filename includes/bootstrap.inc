@@ -922,6 +922,7 @@ function _drupal_bootstrap($phase) {
       // Start a page timer:
       timer_start('page');
 
+      bootstrap_invoke_all('boot');
       drupal_page_header();
       break;
 
@@ -962,7 +963,6 @@ function _drupal_cache_init($phase) {
       }
       elseif (variable_get('cache', CACHE_DISABLED) == CACHE_NORMAL) {
         require_once './includes/module.inc';
-        bootstrap_invoke_all('boot');
         drupal_page_cache_header($cache);
         bootstrap_invoke_all('exit');
         exit();
