@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.238 2007/08/25 09:25:49 goba Exp $
+// $Id: poll.module,v 1.239 2007/08/26 07:46:11 dries Exp $
 
 /**
  * @file
@@ -33,15 +33,15 @@ function poll_init() {
 function poll_theme() {
   return array(
     'poll_vote' => array(
-      'file' => 'poll-vote',
+      'template' => 'poll-vote',
       'arguments' => array('form' => NULL),
     ),
     'poll_results' => array(
-      'file' => 'poll-results',
+      'template' => 'poll-results',
       'arguments' => array('raw_title' => NULL, 'results' => NULL, 'votes' => NULL, 'raw_links' => NULL, 'block' => NULL, 'nid' => NULL, 'vote' => NULL),
     ),
     'poll_bar' => array(
-      'file' => 'poll-bar',
+      'template' => 'poll-bar',
       'arguments' => array('title' => NULL, 'votes' => NULL, 'total_votes' => NULL, 'vote' => NULL, 'block' => NULL),
     ),
   );

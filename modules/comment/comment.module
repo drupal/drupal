@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.574 2007/08/25 09:25:48 goba Exp $
+// $Id: comment.module,v 1.575 2007/08/26 07:46:10 dries Exp $
 
 /**
  * @file
@@ -160,11 +160,11 @@ function comment_theme() {
       'arguments' => array('form' => NULL),
     ),
     'comment' => array(
-      'file' => 'comment.tpl.php',
+      'template' => 'comment',
       'arguments' => array('comment' => NULL, 'node' => NULL, 'links' => array()),
     ),
     'comment_folded' => array(
-      'file' => 'comment-folded',
+      'template' => 'comment-folded',
       'arguments' => array('comment' => NULL),
     ),
     'comment_flat_collapsed' => array(
@@ -183,7 +183,7 @@ function comment_theme() {
       'arguments' => array('nid' => NULL),
     ),
     'comment_wrapper' => array(
-      'file' => 'comment-wrapper',
+      'template' => 'comment-wrapper',
       'arguments' => array('content' => NULL, 'node' => NULL),
     ),
     'comment_submitted' => array(

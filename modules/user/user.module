@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.834 2007/08/19 08:08:45 dries Exp $
+// $Id: user.module,v 1.835 2007/08/26 07:46:11 dries Exp $
 
 /**
  * @file
@@ -31,19 +31,19 @@ function user_theme() {
   return array(
     'user_picture' => array(
       'arguments' => array('account' => NULL),
-      'file' => 'user-picture',
+      'template' => 'user-picture',
     ),
     'user_profile' => array(
       'arguments' => array('account' => NULL),
-      'file' => 'user-profile',
+      'template' => 'user-profile',
     ),
     'user_profile_category' => array(
       'arguments' => array('element' => NULL),
-      'file' => 'user-profile-category',
+      'template' => 'user-profile-category',
     ),
     'user_profile_item' => array(
       'arguments' => array('element' => NULL),
-      'file' => 'user-profile-item',
+      'template' => 'user-profile-item',
     ),
     'user_list' => array(
       'arguments' => array('users' => NULL, 'title' => NULL),

@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.873 2007/08/25 09:25:48 goba Exp $
+// $Id: node.module,v 1.874 2007/08/26 07:46:11 dries Exp $
 
 /**
  * @file
@@ -63,7 +63,7 @@ function node_theme() {
   return array(
     'node' => array(
       'arguments' => array('node' => NULL, 'teaser' => FALSE, 'page' => FALSE),
-      'file' => 'node',
+      'template' => 'node',
     ),
     'node_list' => array(
       'arguments' => array('items' => NULL, 'title' => NULL),
@@ -74,32 +74,26 @@ function node_theme() {
     'node_filter_form' => array(
       'arguments' => array('form' => NULL),
       'file' => 'node.admin.inc',
-      'function' => 'theme_node_filter_form',
     ),
     'node_filters' => array(
       'arguments' => array('form' => NULL),
       'file' => 'node.admin.inc',
-      'function' => 'theme_node_filters',
     ),
     'node_admin_nodes' => array(
       'arguments' => array('form' => NULL),
       'file' => 'node.admin.inc',
-      'function' => 'theme_node_admin_nodes',
     ),
     'node_add_list' => array(
       'arguments' => array('content' => NULL),
       'file' => 'node.pages.inc',
-      'function' => 'theme_node_add_list',
     ),
     'node_form' => array(
       'arguments' => array('form' => NULL),
       'file' => 'node.pages.inc',
-      'function' => 'theme_node_form',
     ),
     'node_preview' => array(
       'arguments' => array('node' => NULL),
       'file' => 'node.pages.inc',
-      'function' => 'theme_node_preview',
     ),
     'node_log_message' => array(
       'arguments' => array('log' => NULL),

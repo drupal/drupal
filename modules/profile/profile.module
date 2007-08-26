@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.216 2007/08/19 08:08:44 dries Exp $
+// $Id: profile.module,v 1.217 2007/08/26 07:46:11 dries Exp $
 
 /**
  * @file
@@ -58,15 +58,15 @@ function profile_theme() {
   return array(
     'profile_block' => array(
       'arguments' => array('account' => NULL, 'fields' => array()),
-      'file' => 'profile-block',
+      'template' => 'profile-block',
     ),
     'profile_listing' => array(
       'arguments' => array('account' => NULL, 'fields' => array()),
-      'file' => 'profile-listing',
+      'template' => 'profile-listing',
     ),
     'profile_wrapper' => array(
       'arguments' => array('content' => NULL),
-      'file' => 'profile-wrapper',
+      'template' => 'profile-wrapper',
     )
   );
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.413 2007/08/12 15:55:36 dries Exp $
+// $Id: forum.module,v 1.414 2007/08/26 07:46:11 dries Exp $
 
 /**
  * @file
@@ -34,27 +34,27 @@ function forum_help($path, $arg) {
 function forum_theme() {
   return array(
     'forums' => array(
-      'file' => 'forums',
+      'template' => 'forums',
       'arguments' => array('forums' => NULL, 'topics' => NULL, 'parents' => NULL, 'tid' => NULL, 'sortby' => NULL, 'forum_per_page' => NULL),
     ),
     'forum_list' => array(
-      'file' => 'forum-list',
+      'template' => 'forum-list',
       'arguments' => array('forums' => NULL, 'parents' => NULL, 'tid' => NULL),
     ),
     'forum_topic_list' => array(
-      'file' => 'forum-topic-list',
+      'template' => 'forum-topic-list',
       'arguments' => array('tid' => NULL, 'topics' => NULL, 'sortby' => NULL, 'forum_per_page' => NULL),
     ),
     'forum_icon' => array(
-      'file' => 'forum-icon',
+      'template' => 'forum-icon',
       'arguments' => array('new_posts' => NULL, 'num_posts' => 0, 'comment_mode' => 0, 'sticky' => 0),
     ),
     'forum_topic_navigation' => array(
-      'file' => 'forum-topic-navigation',
+      'template' => 'forum-topic-navigation',
       'arguments' => array('node' => NULL),
     ),
     'forum_submitted' => array(
-      'file' => 'forum-submitted',
+      'template' => 'forum-submitted',
       'arguments' => array('topic' => NULL),
     ),
   );

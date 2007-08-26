@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.370 2007/08/23 16:41:19 dries Exp $
+// $Id: theme.inc,v 1.371 2007/08/26 07:46:10 dries Exp $
 
 /**
  * @file
@@ -231,14 +231,24 @@ function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
       $result[$hook]['theme path'] = $path;
       // if function and file are left out, default to standard naming
       // conventions.
-      if (!isset($info['file']) && !isset($info['function'])) {
+      if (!isset($info['template']) && !isset($info['function'])) {
         $result[$hook]['function'] = ($type == 'module' ? 'theme_' : $name .'_') . $hook;
       }
       // If a path is set in the info, use what was set. Otherwise use the
       // default path. This is mostly so system.module can declare theme
       // functions on behalf of core .include files.
+      // All files are included to be safe. Conditionally included
+      // files can prevent them from getting registered.
       if (isset($info['file']) && !isset($info['path'])) {
         $result[$hook]['file'] = $path .'/'. $info['file'];
+        include_once($result[$hook]['file']);
+      }
+      elseif (isset($info['file']) && isset($info['path'])) {
+        include_once($info['path'] .'/'. $info['file']);
+      }
+
+      if (isset($info['template']) && !isset($info['path'])) {
+        $result[$hook]['template'] = $path .'/'. $info['template'];
       }
       // If 'arguments' have been defined previously, carry them forward.
       // This should happen if a theme overrides a Drupal defined theme
@@ -492,16 +502,16 @@ function theme() {
   // point path_to_theme() to the currently used theme path:
   $theme_path = $hooks[$hook]['theme path'];
 
+  // Include a file if the theme function or preprocess function is held elsewhere.
+  if (!empty($info['file'])) {
+    $include_file = $info['file'];
+    if (isset($info['path'])) {
+      $include_file = $info['path'] .'/'. $include_file;
+    }
+    include_once($include_file);
+  }
   if (isset($info['function'])) {
     // The theme call is a function.
-    // Include a file if this theme function is held elsewhere.
-    if (!empty($info['file'])) {
-      $function_file = $info['file'];
-      if (isset($info['path'])) {
-        $function_file = $info['path'] .'/'. $function_file;
-      }
-      include_once($function_file);
-    }
     $output = call_user_func_array($info['function'], $args);
   }
   else {
@@ -566,7 +576,7 @@ function theme() {
     }
 
     if (empty($template_file)) {
-      $template_file = $hooks[$hook]['file'] . $extension;
+      $template_file = $hooks[$hook]['template'] . $extension;
       if (isset($hooks[$hook]['path'])) {
         $template_file = $hooks[$hook]['path'] .'/'. $template_file;
       }
@@ -678,7 +688,7 @@ function drupal_find_theme_templates($cache, $extension, $path) {
     $hook = strtr($template, '-', '_');
     if (isset($cache[$hook])) {
       $templates[$hook] = array(
-        'file' => $template,
+        'template' => $template,
         'path' => dirname($file->filename),
       );
     }
@@ -698,7 +708,7 @@ function drupal_find_theme_templates($cache, $extension, $path) {
           $file = substr($match, 0, strpos($match, '.'));
           // Put the underscores back in for the hook name and register this pattern.
           $templates[strtr($file, '-', '_')] = array(
-            'file' => $file,
+            'template' => $file,
             'path' => dirname($files[$match]->filename),
             'arguments' => $info['arguments'],
           );
