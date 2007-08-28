@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.182 2007/08/26 16:00:29 goba Exp $
+// $Id: bootstrap.inc,v 1.183 2007/08/28 11:42:56 goba Exp $
 
 /**
  * @file
@@ -274,7 +274,7 @@ function conf_init() {
   global $base_url, $base_path, $base_root;
 
   // Export the following settings.php variables to the global namespace
-  global $db_url, $db_prefix, $cookie_domain, $conf, $installed_profile;
+  global $db_url, $db_prefix, $cookie_domain, $conf, $installed_profile, $update_free_access;
   $conf = array();
 
   if (file_exists('./'. conf_path() .'/settings.php')) {

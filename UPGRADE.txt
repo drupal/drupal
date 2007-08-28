@@ -1,4 +1,4 @@
-// $Id: UPGRADE.txt,v 1.8 2007/01/09 09:16:10 dries Exp $
+// $Id: UPGRADE.txt,v 1.9 2007/08/28 11:42:56 goba Exp $
 
 UPGRADING
 ---------
@@ -25,8 +25,8 @@ UPGRADING
 2.  Log on as the user with user ID 1.  User ID 1 is the first
     account created and the main administrator account.  User
     ID 1 needs to be logged in so that you can access update.php
-    (step 9) which can only be run by user ID 1.  Do not close
-    your browser until step 10 is complete.
+    (step 10) which can only be run by user ID 1.  Do not close
+    your browser until step 11 is complete.
 
 3.  Place the site in "Off-line" mode, to mask any errors from
     site visitors.
@@ -64,13 +64,14 @@ UPGRADING
 
     Note: if you are unable to access update.php do the following:
 
-      - Open update.php with a text editor.
+      - Open your settings.php with a text editor.
 
-      - There is a line near top of update.php that says
-        $access_check = TRUE;. Change it to $access_check = FALSE;.
+      - There is a line that says $update_free_access = FALSE;.
+        Change it to $update_free_access = TRUE;.
 
-      - As soon as the script is done, you must change the update.php
-        script back to its original form to $access_check = TRUE;.
+      - As soon as the update.php script is done, you must change
+        the settings.php file back to its original form with
+        $update_free_access = FALSE;.
 
 11. Finally, return site to "Online" mode so your visitors may resume
     browsing.

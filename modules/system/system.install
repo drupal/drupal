@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.140 2007/08/26 08:27:09 goba Exp $
+// $Id: system.install,v 1.141 2007/08/28 11:42:56 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -105,7 +105,7 @@ function system_requirements($phase) {
     }
     $requirements['cron'] += array('description' => '');
 
-    $requirements['cron']['description'] .= ' '. t('You can <a href="@cron">run cron manually</a>.', array('@cron' => url('admin/logs/status/run-cron')));
+    $requirements['cron']['description'] .= ' '. $t('You can <a href="@cron">run cron manually</a>.', array('@cron' => url('admin/logs/status/run-cron')));
 
     $requirements['cron']['title'] = $t('Cron maintenance tasks');
   }
@@ -164,6 +164,23 @@ function system_requirements($phase) {
         }
       }
     }
+  }
+
+  // Verify the update.php access setting
+  if ($phase == 'runtime') {
+    if (!empty($GLOBALS['update_free_access'])) {
+      $requirements['update access'] = array(
+        'value' => $t('Not protected'),
+        'severity' => REQUIREMENT_ERROR,
+        'description' => $t('The update.php script is accessible to everyone without authentication check, which is a security risk. You must change the $update_free_access value in your settings.php back to FALSE.'),
+      );
+    }
+    else {
+      $requirements['update access'] = array(
+        'value' => $t('Protected'),
+      );
+    }
+    $requirements['update access']['title'] = $t('Access to update.php');
   }
 
   // Test Unicode library
