@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.371 2007/08/26 07:46:10 dries Exp $
+// $Id: theme.inc,v 1.372 2007/08/28 11:35:33 goba Exp $
 
 /**
  * @file
@@ -270,9 +270,7 @@ function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
           }
         }
 
-        // It would be too much of a performance hit to let every module have
-        // a generic preprocess function; themes and theme engines can do that.
-        if ($type != 'module' && function_exists($prefix .'_preprocess')) {
+        if (function_exists($prefix .'_preprocess')) {
           $info['preprocess functions'][] = $prefix .'_preprocess';
         }
         if (function_exists($prefix .'_preprocess_'. $hook)) {
@@ -1591,9 +1589,45 @@ function _theme_table_cell($cell, $header = FALSE) {
 }
 
 /**
- * Prepare the variables passed to the page.tpl.php template. Uses the arg()
- * function to generate a series of page template files suggestions based on
- * the current path.
+ * Adds a default set of helper variables for preprocess functions and
+ * templates. This comes in before any other preprocess function which makes
+ * it possible to be used in default theme implementations (non-overriden
+ * theme functions).
+ */
+function template_preprocess(&$variables, $hook) {
+  global $user;
+  static $count = array();
+
+  // Track run count for each hook to provide zebra striping.
+  // See "template_preprocess_block()" which provides the same feature for sidebar blocks. 
+  $count[$hook] = isset($count[$hook]) && is_int($count[$hook]) ? $count[$hook] : 1;
+  $variables['zebra'] = ($count[$hook] % 2) ? 'odd' : 'even';
+  $variables['id'] = $count[$hook]++;
+
+  // Tell all templates where they are located.
+  $variables['directory'] = path_to_theme();
+  // Flag front page status.
+  $variables['is_front'] = drupal_is_front_page();
+  // Tell all templates by which kind of user they're viewed.
+  $variables['logged_in'] = ($user->uid > 0);
+  $variables['is_admin'] = user_access('access administration pages');
+}
+
+/**
+ * Process variables for page.tpl.php
+ *
+ * Most themes utilize their own copy of page.tpl.php. The default is located
+ * inside "modules/system/page.tpl.php". Look in there for the full list of
+ * variables.
+ *
+ * Uses the arg() function to generate a series of page template suggestions
+ * based on the current path.
+ *
+ * The $variables array contains the following arguments:
+ * - $content
+ * - $show_blocks
+ *
+ * @see page.tpl.php
  */
 function template_preprocess_page(&$variables) {
   /* Set title and breadcrumb to declared values */
@@ -1744,9 +1778,19 @@ function template_preprocess_page(&$variables) {
   }
 }
 
-/*
- * Prepare the values passed to the theme_node function to be passed
- * into standard template files.
+/**
+ * Process variables for node.tpl.php
+ *
+ * Most themes utilize their own copy of node.tpl.php. The default is located
+ * inside "modules/node/node.tpl.php". Look in there for the full list of
+ * variables.
+ *
+ * The $variables array contains the following arguments:
+ * - $node
+ * - $teaser
+ * - $page
+ *
+ * @see node.tpl.php
  */
 function template_preprocess_node(&$variables) {
   $node = $variables['node'];
@@ -1786,15 +1830,26 @@ function template_preprocess_node(&$variables) {
     $variables['submitted'] = '';
     $variables['picture'] = '';
   }
-
+  // Clean up name so there are no underscores.
   $variables['template_files'][] = 'node-'. $node->type;
 }
 
 /**
+ * Process variables for block.tpl.php
+ *
  * Prepare the values passed to the theme_block function to be passed
  * into a pluggable template engine. Uses block properties to generate a
  * series of template file suggestions. If none are found, the default
  * block.tpl.php is used.
+ *
+ * Most themes utilize their own copy of page.tpl.php. The default is located
+ * inside "modules/system/block.tpl.php". Look in there for the full list of
+ * variables.
+ *
+ * The $variables array contains the following arguments:
+ * - $block
+ *
+ * @see block.tpl.php
  */
 function template_preprocess_block(&$variables) {
   global $sidebar_indicator;

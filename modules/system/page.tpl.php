@@ -1,5 +1,5 @@
 <?php
-// $Id: page.tpl.php,v 1.4 2007/08/07 08:39:36 goba Exp $
+// $Id: page.tpl.php,v 1.5 2007/08/28 11:35:34 goba Exp $
 
 /**
  * @file page.tpl.php
@@ -14,7 +14,7 @@
  * - $css: An array of CSS files for the current page.
  * - $directory: The directory the theme is located in, e.g. themes/garland or
  *   themes/garland/minelli.
- * - $is_front: TRUE if the current page is the front page.
+ * - $is_front: TRUE if the current page is the front page. Used to toggle the mission statement.
  * - $logged_in: TRUE if the user is registered and signed in.
  * - $is_admin: TRUE if the user has permission to access administration pages.
  *
@@ -30,8 +30,6 @@
  * - $body_classes: A set of CSS classes for the BODY tag. This contains flags
  *   indicating the current layout (multiple columns, single column), the current
  *   path, whether the user is logged in, and so on.
- * - $is_front: True if the front page is currently being displayed. Used to
- *   toggle the mission.
  *
  * Site identity:
  * - $logo: The path to the logo image, as defined in theme configuration.
@@ -69,8 +67,8 @@
  * - $closure: Final closing markup from any modules that have altered the page.
  *   This variable should always be output last, after all other dynamic content.
  *
+ * @see template_preprocess()
  * @see template_preprocess_page()
- * @see phptemplate_engine_preprocess()
  */
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
