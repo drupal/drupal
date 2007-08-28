@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.139 2007/08/22 14:48:39 dries Exp $
+// $Id: menu.module,v 1.140 2007/08/28 13:16:36 goba Exp $
 
 /**
  * @file
@@ -665,10 +665,12 @@ function menu_reset_item($item) {
  * Implementation of hook_block().
  */
 function menu_block($op = 'list', $delta = 0) {
-  $custom_menus = menu_get_menus(FALSE);
+  $menus = menu_get_menus();
+  // The Navigation menu is handled by the user module.
+  unset($menus['navigation']);
   if ($op == 'list') {
     $blocks = array();
-    foreach ($custom_menus as $name => $title) {
+    foreach ($menus as $name => $title) {
       // Default "Navigation" block is handled by user.module.
       $blocks[$name]['info'] = check_plain($title);
       // Menu blocks can't be cached because each menu item can have
@@ -678,7 +680,7 @@ function menu_block($op = 'list', $delta = 0) {
     return $blocks;
   }
   else if ($op == 'view') {
-    $data['subject'] = check_plain($custom_menus[$delta]);
+    $data['subject'] = check_plain($menus[$delta]);
     $data['content'] = menu_tree($delta);
     return $data;
   }
