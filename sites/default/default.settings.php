@@ -94,6 +94,17 @@ $db_url = 'mysql://username:password@localhost/databasename';
 $db_prefix = '';
 
 /**
+ * Access control for update.php script
+ *
+ * If you are updating your Drupal installation using the update.php script
+ * being not logged in as administrator, you will need to modify the access
+ * check statement below. Change the FALSE to a TRUE to disable the access
+ * check. After finishing the upgrade, be sure to open this file again
+ * and change the TRUE back to a FALSE!
+ */
+$update_free_access = FALSE;
+
+/**
  * Base URL (optional).
  *
  * If you are experiencing issues with different site domains,
