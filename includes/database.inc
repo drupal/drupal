@@ -1,10 +1,17 @@
 <?php
-// $Id: database.inc,v 1.76 2007/08/26 08:27:09 goba Exp $
+// $Id: database.inc,v 1.77 2007/08/29 18:38:55 goba Exp $
 
 /**
  * @file
  * Wrapper for database interface code.
  */
+
+/**
+ * A hash value to check when outputting database errors, md5('DB_ERROR').
+ *
+ * @see drupal_error_handler
+ */
+define('DB_ERROR', 'a515ac9c2796ca0e23adbe92c68fc9fc');
 
 /**
  * @defgroup database Database abstraction layer

@@ -1,5 +1,5 @@
 <?php
-// $Id: database.pgsql.inc,v 1.56 2007/08/26 08:27:09 goba Exp $
+// $Id: database.pgsql.inc,v 1.57 2007/08/29 18:38:55 goba Exp $
 
 /**
  * @file
@@ -171,6 +171,8 @@ function _db_query($query, $debug = 0) {
     return $last_result;
   }
   else {
+    // Indicate to drupal_error_handler that this is a database error.
+    ${DB_ERROR} = TRUE;
     trigger_error(check_plain(pg_last_error($active_db) ."\nquery: ". $query), E_USER_WARNING);
     return FALSE;
   }

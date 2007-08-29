@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysql.inc,v 1.78 2007/08/12 15:55:35 dries Exp $
+// $Id: database.mysql.inc,v 1.79 2007/08/29 18:38:55 goba Exp $
 
 /**
  * @file
@@ -154,6 +154,8 @@ function _db_query($query, $debug = 0) {
     return $result;
   }
   else {
+    // Indicate to drupal_error_handler that this is a database error.
+    ${DB_ERROR} = TRUE;
     trigger_error(check_plain(mysql_error($active_db) ."\nquery: ". $query), E_USER_WARNING);
     return FALSE;
   }

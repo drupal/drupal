@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.680 2007/08/29 17:28:02 goba Exp $
+// $Id: common.inc,v 1.681 2007/08/29 18:38:55 goba Exp $
 
 /**
  * @file
@@ -531,7 +531,7 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
  *  0 = Log errors to database.
  *  1 = Log errors to database and to screen.
  */
-function drupal_error_handler($errno, $message, $filename, $line) {
+function drupal_error_handler($errno, $message, $filename, $line, $context) {
   // If the @ error suppression operator was used, error_reporting is temporarily set to 0
   if (error_reporting() == 0) {
     return;
@@ -539,6 +539,26 @@ function drupal_error_handler($errno, $message, $filename, $line) {
 
   if ($errno & (E_ALL)) {
     $types = array(1 => 'error', 2 => 'warning', 4 => 'parse error', 8 => 'notice', 16 => 'core error', 32 => 'core warning', 64 => 'compile error', 128 => 'compile warning', 256 => 'user error', 512 => 'user warning', 1024 => 'user notice', 2048 => 'strict warning');
+
+    // For database errors, we want the line number/file name of the place that
+    // the query was originally called, not _db_query().
+    if (isset($context[DB_ERROR])) {
+      $backtrace = array_reverse(debug_backtrace());
+
+      // List of functions where SQL queries can originate.
+      $query_functions = array('db_query', 'pager_query', 'db_query_range', 'db_query_temporary', 'update_sql');
+
+      // Determine where query function was called, and adjust line/file
+      // accordingly.
+      foreach ($backtrace as $index => $function) {
+        if (in_array($function['function'], $query_functions)) {
+          $line = $backtrace[$index]['line'];
+          $filename = $backtrace[$index]['file'];
+          break;
+        }
+      }
+    }
+
     $entry = $types[$errno] .': '. $message .' in '. $filename .' on line '. $line .'.';
 
     // Force display of error messages in update.php
