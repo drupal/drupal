@@ -4,7 +4,8 @@
 function menu_schema() {
   $schema['menu_custom'] = array(
     'fields' => array(
-      'menu_name'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      // This is used as a block delta so length is 32.
+      'menu_name'   => array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''),
       'title'       => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
       'description' => array('type' => 'text', 'not null' => FALSE),
     ),
