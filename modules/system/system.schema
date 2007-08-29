@@ -2,6 +2,24 @@
 // $Id$
 
 function system_schema() {
+  $schema['actions'] = array(
+    'fields' => array(
+      'aid' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => '0'),
+      'type' => array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''),
+      'callback' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'parameters' => array('type' => 'text', 'not null' => TRUE, 'size' => 'big'),
+      'description' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => '0'),
+    ),
+    'primary key' => array('aid'),
+  );
+
+  $schema['actions_aid'] = array(
+    'fields' => array(
+      'aid' => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
+    ),
+    'primary key' => array('aid'),
+  );
+
   $schema['batch'] = array(
     'fields' => array(
       'bid'       => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),

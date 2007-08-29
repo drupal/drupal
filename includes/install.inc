@@ -321,7 +321,6 @@ function drupal_install_profile($profile, $module_list) {
   drupal_install_modules($module_list);
 }
 
-
 /**
  * Calls the install function and updates the system table for a given list of
  * modules.

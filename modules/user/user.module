@@ -3433,7 +3433,7 @@ function user_action_info() {
         'comment' => array('view', 'insert', 'update', 'delete'),
         'user' => array('logout'),
       )
-    )
+    ),
   );
 }
 

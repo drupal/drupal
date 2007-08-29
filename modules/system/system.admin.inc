@@ -817,6 +817,9 @@ function system_modules_submit($form, &$form_state) {
   // path after that.
   module_invoke('locale', 'system_update', $new_modules);
 
+  // Synchronize to catch any actions that were added or removed.
+  actions_synchronize();
+
   return;
 }
 
