@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.141 2007/08/29 20:46:18 goba Exp $
+// $Id: menu.module,v 1.142 2007/08/29 23:18:58 goba Exp $
 
 /**
  * @file
@@ -10,7 +10,7 @@
  * Maximum length of menu name as entered by the user. Database length is 32
  * and we add a menu- prefix.
  */
-define (MENU_MAX_MENU_NAME_LENGTH_UI, 27);
+define('MENU_MAX_MENU_NAME_LENGTH_UI', 27);
 
 /**
  * Implementation of hook_help().
