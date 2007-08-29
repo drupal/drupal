@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.142 2007/08/29 14:57:49 goba Exp $
+// $Id: system.install,v 1.143 2007/08/29 18:00:05 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -3587,6 +3587,13 @@ function system_update_6030() {
   db_create_table($ret, 'actions_aid', $schema['actions_aid']);
 
   return $ret;
+}
+
+/**
+  * Ensure that installer cannot be run again after updating from Drupal 5.x to 6.x
+  */
+function system_update_6031() {
+  variable_set('install_task', 'done');
 }
 
 /**
