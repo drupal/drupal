@@ -1,5 +1,5 @@
 <?php
-// $Id: system.schema,v 1.10 2007/08/29 14:57:50 goba Exp $
+// $Id: system.schema,v 1.11 2007/08/29 20:46:18 goba Exp $
 
 function system_schema() {
   $schema['actions'] = array(
@@ -117,7 +117,7 @@ function system_schema() {
 
   $schema['menu_links'] = array(
     'fields' => array(
-      'menu_name'    => array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''),
+      'menu_name'    => array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''),
       'mlid'         => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
       'plid'         => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
       'link_path'    => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
@@ -141,6 +141,7 @@ function system_schema() {
       'p7'           => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
       'p8'           => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
       'p9'           => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+      'updated'      => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'small'),
     ),
     'indexes' => array(
       'path_menu'              => array(array('link_path', 128), 'menu_name'),

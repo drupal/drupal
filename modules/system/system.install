@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.143 2007/08/29 18:00:05 goba Exp $
+// $Id: system.install,v 1.144 2007/08/29 20:46:18 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -3262,6 +3262,9 @@ function system_update_6019() {
   return $ret;
 }
 
+/**
+ * Create the tables for the new menu system.
+ */
 function system_update_6020() {
   $ret = array();
 
@@ -3297,7 +3300,7 @@ function system_update_6020() {
 
   $schema['menu_links'] = array(
     'fields' => array(
-      'menu_name'    => array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''),
+      'menu_name'    => array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''),
       'mlid'         => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
       'plid'         => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
       'link_path'    => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
@@ -3321,6 +3324,7 @@ function system_update_6020() {
       'p7'           => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
       'p8'           => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
       'p9'           => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+      'updated'      => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'small'),
     ),
     'indexes' => array(
       'path_menu'              => array(array('link_path', 128), 'menu_name'),
@@ -3337,11 +3341,187 @@ function system_update_6020() {
   return $ret;
 }
 
+/**
+ * Migrate the menu items from the old menu system to the new menu_links table.
+ */
 function system_update_6021() {
-  $ret = array();
-  // TODO - menu module updates. These need to happen before we do the menu_rebuild
+  $ret = array('#finished' => 0);
+  // Multi-part update
+  if (!isset($_SESSION['system_update_6021'])) {
+    db_add_field($ret, 'menu', 'converted', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0, 'size' => 'tiny'));
+    $_SESSION['system_update_6021_max'] = db_result(db_query('SELECT COUNT(*) FROM {menu}'));
+    $_SESSION['menu_menu_map'] = array(1 => 'navigation');
+    // 0 => FALSE is for new menus, 1 => FALSE is for the navigation.
+    $_SESSION['menu_item_map'] = array(0 => FALSE, 1 => FALSE);
+    if ($secondary = variable_get('menu_secondary_menu', 0)) {
+      $_SESSION['menu_menu_map'][$secondary] = 'secondary-links';
+      $_SESSION['menu_item_map'][$secondary] = FALSE;
+    }
+    if ($primary = variable_get('menu_primary_menu', 0)) {
+      $_SESSION['menu_menu_map'][$primary] = 'primary-links';
+      $_SESSION['menu_item_map'][$primary] = FALSE;
+      if ($primary == $secondary) {
+        variable_set('menu_secondary_links_source', 'primary-links');
+      }
+    }
+    $table = array(
+      'fields' => array(
+        'menu_name'   => array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''),
+        'title'       => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+        'description' => array('type' => 'text', 'not null' => FALSE),
+      ),
+      'primary key' => array('menu_name'),
+    );
+    db_create_table($ret, 'menu_custom', $table);
+    $menus = array(
+      'navigation' => array(
+        'menu_name' => 'navigation',
+        'title' => 'Navigation',
+        'description' => 'The navigation menu is provided by Drupal and is the main interactive menu for any site. It is usually the only menu that contains personalized links for authenticated users, and is often not even visible to anonymous users.',
+      ),
+      'primary-links' => array(
+        'menu_name' => 'primary-links',
+        'title' => 'Primary links',
+        'description' => 'Primary links are often used at the theme layer to show the major sections of a site. A typical representation for primary links would be tabs along the top.',
+      ),
+      'secondary-links' => array(
+        'menu_name' => 'secondary-links',
+        'title' => 'Secondary links',
+        'description' => 'Secondary links are often used for pages like legal notices, contact details, and other secondary navigation items that play a lesser role than primary links',
+      ),
+    );
+    // Save user-defined titles.
+    foreach (array($primary, $secondary) as $mid) {
+      if ($item = db_fetch_array(db_query('SELECT * FROM {menu} WHERE mid = %d', $mid))) {
+        $menus[$_SESSION['menu_menu_map'][$mid]]['title']  = $item['title'];
+      }
+    }
+    foreach ($menus as $menu) {
+      db_query("INSERT INTO {menu_custom} (menu_name, title, description) VALUES ('%s', '%s', '%s')", $menu);
+    }
+    menu_rebuild();
+    $_SESSION['system_update_6021'] = 0;
+    // force page reload.
+    return $ret;
+  }
 
-  menu_rebuild();
+  $limit = 50;
+  while ($limit-- && ($item = db_fetch_array(db_query_range('SELECT * FROM {menu} WHERE converted = 0', 0, 1)))) {
+    // If it's not a menu...
+    if ($item['pid']) {
+      // Let's climb up until we find an item with a converted parent.
+      $item_original = $item;
+      while ($item && !isset($_SESSION['menu_item_map'][$item['pid']])) {
+        $item = db_fetch_array(db_query('SELECT * FROM {menu} WHERE mid = %d', $item['pid']));
+      }
+      // This can only occur if the menu entry is a leftover in the menu table.
+      // These do not appear in Drupal 5 anyways, so we skip them.
+      if (!$item) {
+        db_query('UPDATE {menu} SET converted = %d WHERE mid  = %d', 1, $item_original['mid']);
+        $_SESSION['system_update_6021']++;
+        continue;
+      }
+    }
+    // We need to recheck because item might have changed.
+    if ($item['pid']) {
+      // Fill the new fields.
+      $item['link_title'] = $item['title'];
+      $item['link_path'] = drupal_get_normal_path($item['path']);
+      // We know the parent is already set. If it's not FALSE then it's an item.
+      if ($_SESSION['menu_item_map'][$item['pid']]) {
+        // The new menu system parent link id.
+        $item['plid'] = $_SESSION['menu_item_map'][$item['pid']]['mlid'];
+        // The new menu system menu name.
+        $item['menu_name'] = $_SESSION['menu_item_map'][$item['pid']]['menu_name'];
+      }
+      else {
+        // This a top level element.
+        $item['plid'] = 0;
+        // The menu name is stored among the menus.
+        $item['menu_name'] = $_SESSION['menu_menu_map'][$item['pid']];
+      }
+      // Is the element visible in the menu block?
+      $item['hidden'] = !($item['type'] & MENU_VISIBLE_IN_TREE);
+      // Is it a custom(ized) element?
+      if ($item['type'] & (MENU_CREATED_BY_ADMIN | MENU_MODIFIED_BY_ADMIN)) {
+        $item['customized'] = TRUE;
+      }
+      // Items created via the menu module need to be assigned to it.
+      if ($item['type'] & MENU_CREATED_BY_ADMIN) {
+        $item['module'] = 'menu';
+      }
+      else {
+        $item['module'] = 'system';
+      }
+      $item['updated'] = TRUE;
+      // Save the link.
+      if ($existing_item = db_fetch_array(db_query("SELECT mlid, menu_name FROM {menu_links} WHERE link_path = '%s' AND plid = '%s' AND link_title = '%s' AND menu_name = '%s'", $item['link_path'], $item['plid'], $item['link_title'], $item['menu_name']))) {
+        $_SESSION['menu_item_map'][$item['mid']] = $existing_item;
+      }
+      else {
+        $item['router_path'] = '';
+        menu_link_save($item);
+        $_SESSION['menu_item_map'][$item['mid']] = array('mlid' => $item['mlid'], 'menu_name' => $item['menu_name']);
+      }
+
+    }
+    elseif (!isset($_SESSION['menu_menu_map'][$item['mid']])) {
+      $item['menu_name'] = 'menu-'. preg_replace('/[^a-zA-Z0-9]/', '-', strtolower($item['title']));
+      $item['menu_name'] = substr($item['menu_name'], 0, 20);
+      $original_menu_name = $item['menu_name'];
+      $i = 0;
+      while (db_result(db_query("SELECT menu_name FROM {menu_custom} WHERE menu_name = '%s'", $item['menu_name']))) {
+        $item['menu_name'] = $original_menu_name . ($i++);
+      }
+      if ($item['path']) {
+        // Another bunch of bogus entries. Apparently, these are leftovers
+        // from Drupal 4.7 .
+        $_SESSION['menu_bogus_menus'][] = $item['menu_name'];
+      }
+      else {
+        // Add this menu to the list of custom menus.
+        db_query("INSERT INTO {menu_custom} (menu_name, title, description) VALUES ('%s', '%s', '')", $item['menu_name'], $item['title']);
+      }
+      $_SESSION['menu_menu_map'][$item['mid']] = $item['menu_name'];
+      $_SESSION['menu_item_map'][$item['mid']] = FALSE;
+    }
+    db_query('UPDATE {menu} SET converted = %d WHERE mid  = %d', 1, $item['mid']);
+    $_SESSION['system_update_6021']++;
+  }
+
+  if ($_SESSION['system_update_6021'] >= $_SESSION['system_update_6021_max']) {
+    $result = db_query('SELECT * FROM {menu_links} WHERE updated = 1 AND has_children = 0 AND customized = 0 ORDER BY depth DESC');
+    // Remove all items that are not customized.
+    while ($item = db_fetch_array($result)) {
+      _menu_delete_item($item, TRUE);
+    }
+    if (!empty($_SESSION['menu_bogus_menus'])) {
+      // Remove entries in bogus menus. This is secure because we deleted
+      // every non-alpanumeric character from the menu name.
+      $ret[] = update_sql("DELETE FROM {menu_links} WHERE menu_name IN ('". implode("', '", $_SESSION['menu_bogus_menus']) ."')");
+    }
+    // Update menu OTF preferences.
+    $mid = variable_get('menu_parent_items', 0);
+    $menu_name = $mid ? $_SESSION['menu_menu_map'][$mid] : 'navigation';
+    variable_set('menu_default_node_menu', $menu_name);
+    // Skip the navigation menu - it is handled by the user module.
+    unset($_SESSION['menu_menu_map'][1]);
+    // Update the deltas for all menu module blocks.
+    foreach ($_SESSION['menu_menu_map'] as $mid => $menu_name) {
+      // This is again secure because we deleted every non-alpanumeric
+      // character from the menu name.
+      $ret[] = update_sql("UPDATE {blocks} SET delta = '". $menu_name ."' WHERE module  = 'menu' AND delta = '". $mid ."'");
+      $ret[] = update_sql("UPDATE {blocks_roles} SET delta = '". $menu_name ."' WHERE module  = 'menu' AND delta = '". $mid ."'");
+    }
+    $ret[] = array('success' => TRUE, 'query' => t('Relocated @num existing items to the new menu system.', array('@num' => $_SESSION['system_update_6021'])));
+    unset($_SESSION['system_update_6021'], $_SESSION['system_update_6021_max'], $_SESSION['menu_menu_map'], $_SESSION['menu_item_map'], $_SESSION['menu_bogus_menus']);
+    // Create the menu overview links - also calls menu_rebuild().
+    module_invoke('menu', 'enable');
+    $ret['#finished'] = 1;
+  }
+  else {
+    $ret['#finished'] = $_SESSION['system_update_6021'] / $_SESSION['system_update_6021_max'];
+  }
   return $ret;
 }
 
@@ -3538,7 +3718,7 @@ function system_update_6028() {
   return $ret;
 }
 
-/*
+/**
  * Enable the dblog module on sites that upgrade, since otherwise
  * watchdog logging will stop unexpectedly.
  */

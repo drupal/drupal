@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.44 2007/08/29 14:57:49 goba Exp $
+// $Id: install.inc,v 1.45 2007/08/29 20:46:18 goba Exp $
 
 define('SCHEMA_UNINSTALLED', -1);
 define('SCHEMA_INSTALLED', 0);
@@ -353,6 +353,32 @@ function drupal_install_modules($module_list = array()) {
 function drupal_uninstall_module($module) {
   module_load_install($module);
   module_invoke($module, 'uninstall');
+  
+  // Remove menu links for paths declared by this module.
+  drupal_load('module', $module);
+  $paths = module_invoke($module, 'menu');
+  if (!empty($paths)) {
+    $paths = array_keys($paths);
+    // Clean out the names of load functions.
+    foreach($paths as $index => $path) {
+      $parts = explode('/', $path, MENU_MAX_PARTS);
+      foreach ($parts as $k => $part) {
+        if (preg_match('/^%[a-z_]*$/', $part)) {
+          $parts[$k] = '%';
+        }
+      }
+      $paths[$index] = implode('/', $parts);
+    }
+    $placeholders = implode(', ', array_fill(0, count($paths), "'%s'"));
+    
+    $result = db_query('SELECT * FROM {menu_links} WHERE router_path IN ('. $placeholders .') AND external = 0 ORDER BY depth DESC', $paths);
+    // Remove all such items. Starting from those with the greatest depth will
+    // minimize the amount of re-parenting done by menu_link_delete().
+    while ($item = db_fetch_array($result)) {
+      _menu_delete_item($item, TRUE);
+    }
+  }
+
   drupal_set_installed_schema_version($module, SCHEMA_UNINSTALLED);
 }
 

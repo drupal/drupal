@@ -1,10 +1,16 @@
 <?php
-// $Id: menu.module,v 1.140 2007/08/28 13:16:36 goba Exp $
+// $Id: menu.module,v 1.141 2007/08/29 20:46:18 goba Exp $
 
 /**
  * @file
  * Allows administrators to customize the site navigation menu.
  */
+
+/**
+ * Maximum length of menu name as entered by the user. Database length is 32
+ * and we add a menu- prefix.
+ */
+define (MENU_MAX_MENU_NAME_LENGTH_UI, 27);
 
 /**
  * Implementation of hook_help().
@@ -130,15 +136,17 @@ function menu_menu() {
 function menu_enable() {
   menu_rebuild();
   $result = db_query("SELECT * FROM {menu_custom}");
-  $link['module'] = 'menu';
-  $link['plid'] = db_result(db_query("SELECT mlid FROM {menu_links} WHERE link_path = '%s' AND module = '%s'", 'admin/build/menu', 'system'));
+  $link = db_fetch_array(db_query("SELECT mlid AS plid, menu_name from {menu_links} WHERE link_path = 'admin/build/menu' AND module = 'system'"));
   $link['router_path'] = 'admin/build/menu-customize/%';
-
+  $link['module'] = 'menu';
+  $result = db_query("SELECT * FROM {menu_custom}");
   while ($menu = db_fetch_array($result)) {
     $link['mlid'] = 0;
     $link['link_title'] = $menu['title'];
     $link['link_path'] = 'admin/build/menu-customize/'. $menu['menu_name'];
-    menu_link_save($link);
+    if (!db_result(db_query("SELECT mlid FROM {menu_links} WHERE link_path = '%s' AND plid = %d", $link['link_path'], $link['plid']))) {
+      menu_link_save($link);
+    }
   }
   menu_cache_clear_all();
 }
@@ -460,6 +468,7 @@ function menu_edit_menu(&$form_state, $type, $menu = array()) {
     $form['menu_name'] = array(
       '#type' => 'textfield',
       '#title' => t('Menu name'),
+      '#maxsize' => MENU_MAX_MENU_NAME_LENGTH_UI,
       '#description' => t('The machine-readable name of this menu. This text will be used for constructing the URL of the <em>menu overview</em> page for this menu. This name may consist of only of lowercase letters, numbers, and hyphens, and must be unique.'),
       '#required' => TRUE,
     );
@@ -558,6 +567,9 @@ function menu_edit_menu_validate($form, &$form_state) {
   $item = $form_state['values'];
   if (preg_match('/[^a-z0-9-]/', $item['menu_name'])) {
     form_set_error('menu_name', t('Menu name may consist only of lowercase letters, numbers, and hyphens.'));
+  }
+  if (strlen($item['menu_name']) > MENU_MAX_MENU_NAME_LENGTH_UI) {
+    form_set_error('menu_name', t('Menu name can not be longer than '. MENU_MAX_MENU_NAME_LENGTH_UI .' characters.'));
   }
   if ($form['#insert']) {
     // We will add 'menu-' to the menu name to help avoid name-space conflicts.

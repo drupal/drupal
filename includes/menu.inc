@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.201 2007/08/25 10:29:18 goba Exp $
+// $Id: menu.inc,v 1.202 2007/08/29 20:46:18 goba Exp $
 
 /**
  * @file
@@ -363,10 +363,10 @@ function _menu_load_objects($item, &$map) {
 function _menu_check_access(&$item, $map) {
   // Determine access callback, which will decide whether or not the current
   // user has access to this path.
-  $callback = trim($item['access_callback']);
+  $callback = empty($item['access_callback']) ? 0 : trim($item['access_callback']);
   // Check for a TRUE or FALSE value.
   if (is_numeric($callback)) {
-    $item['access'] = $callback;
+    $item['access'] = (bool)$callback;
   }
   else {
     $arguments = menu_unserialize($item['access_arguments'], $map);
@@ -1457,13 +1457,12 @@ function _menu_navigation_links_rebuild($menu) {
       }
     }
   }
-  $placeholders = implode(', ', array_fill(0, count($menu), "'%s'"));
-  // Find any items where their router path does not exist any more.
-  $result = db_query('SELECT * FROM {menu_links} WHERE router_path NOT IN ('. $placeholders .') AND external = 0 ORDER BY depth DESC', array_keys($menu));
-  // Remove all such items. Starting from those with the greatest depth will
-  // minimize the amount of re-parenting done by menu_link_delete().
+  $result = db_query("SELECT ml.link_path, ml.mlid, ml.router_path FROM {menu_links} ml WHERE ml.updated = 1");
   while ($item = db_fetch_array($result)) {
-    _menu_delete_item($item, TRUE);
+    $router_path = _menu_find_router_path($menu, $item['link_path']);
+    if (!empty($router_path) && $router_path != $item['router_path']) {
+      db_query("UPDATE {menu_links} SET router_path = '%s' WHERE mlid = %d", $router_path, $item['mlid']);
+    }
   }
 }
 
@@ -1548,6 +1547,7 @@ function menu_link_save(&$item) {
     'options' => array(),
     'module' => 'menu',
     'customized' => 0,
+    'updated' => 0,
   );
   $menu_name = $item['menu_name'];
   $existing_item = FALSE;
@@ -1580,15 +1580,17 @@ function menu_link_save(&$item) {
        menu_name, plid, link_path,
       hidden, external, has_children,
       expanded, weight,
-      module, link_title, options, customized) VALUES (
+      module, link_title, options,
+      customized, updated) VALUES (
       '%s', %d, '%s',
       %d, %d, %d,
       %d, %d,
-      '%s', '%s', '%s', %d)",
+      '%s', '%s', '%s', %d, %d)",
       $item['menu_name'], $item['plid'], $item['link_path'],
       $item['hidden'], $item['_external'], $item['has_children'],
       $item['expanded'], $item['weight'],
-      $item['module'],  $item['link_title'], serialize($item['options']), $item['customized']);
+      $item['module'],  $item['link_title'], serialize($item['options']),
+      $item['customized'], $item['updated']);
     $item['mlid'] = db_last_insert_id('menu_links', 'mlid');
   }
 
@@ -1617,24 +1619,16 @@ function menu_link_save(&$item) {
   if ($existing_item && ($item['plid'] != $existing_item['plid'] || $menu_name != $existing_item['menu_name'])) {
     _menu_link_move_children($item, $existing_item);
   }
-  // Find the callback.
-  if (empty($item['router_path']) || !$existing_item || ($existing_item['link_path'] != $item['link_path'])) {
+  // Find the callback. During the menu update we store empty paths to be
+  // fixed later, so we skip this.
+  if (!isset($_SESSION['system_update_6021']) && (empty($item['router_path'])  || !$existing_item || ($existing_item['link_path'] != $item['link_path']))) {
     if ($item['_external']) {
       $item['router_path'] = '';
     }
     else {
       // Find the router path which will serve this path.
       $item['parts'] = explode('/', $item['link_path'], MENU_MAX_PARTS);
-      $item['router_path'] = $item['link_path'];
-      if (!isset($menu[$item['router_path']])) {
-        list($ancestors) = menu_get_ancestors($item['parts']);
-        while ($ancestors && (empty($menu[$item['router_path']]))) {
-          $item['router_path'] = array_shift($ancestors);
-        }
-      }
-      if (empty($item['router_path'])) {
-        return FALSE;
-      }
+      $item['router_path'] = _menu_find_router_path($menu, $item['link_path']);
     }
   }
   db_query("UPDATE {menu_links} SET menu_name = '%s', plid = %d, link_path = '%s',
@@ -1662,6 +1656,31 @@ function menu_link_save(&$item) {
   variable_set('menu_expanded', $names);
   return $item['mlid'];
 }
+
+/**
+ * Find the router path which will serve this path.
+ *
+ * @param $menu
+ *  The full built menu.
+ * @param $link_path
+ *  The path for we are looking up its router path.
+ * @return
+ *  A path from $menu keys or empty if $link_path points to a nonexisting
+ *  place.
+ */
+ function _menu_find_router_path($menu, $link_path) {
+  $parts = explode('/', $link_path, MENU_MAX_PARTS);
+  $router_path = $link_path;
+  if (!isset($menu[$router_path])) {
+    list($ancestors) = menu_get_ancestors($parts);
+    $ancestors[] = '';
+    while ($ancestors && (empty($menu[$router_path]))) {
+      $router_path = array_shift($ancestors);
+    }
+  }
+  return $router_path;
+}
+
 
 /**
  * Find the depth of an item's children relative to its depth.
