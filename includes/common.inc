@@ -955,10 +955,10 @@ function format_xml_elements($array) {
  *   A translated string.
  */
 function format_plural($count, $singular, $plural, $args = array(), $langcode = NULL) {
-  if ($count == 1) {
-    return t($singular, $args);
-  }
   $args['@count'] = $count;
+  if ($count == 1) {
+    return t($singular, $args, $langcode);
+  }
 
   // get the plural index through the gettext formula
   $index = (function_exists('locale_get_plural')) ? locale_get_plural($count, $langcode) : -1;
