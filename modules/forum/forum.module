@@ -61,6 +61,20 @@ function forum_theme() {
 }
 
 /**
+ * Fetch a forum term.
+ *
+ * @param $tid
+ *   The ID of the term which should be loaded.
+ *
+ * @return
+ *   An associative array containing the term data or FALSE if the term cannot be loaded, or is not part of the forum vocabulary.
+ */
+function forum_term_load($tid) {
+  $result = db_query(db_rewrite_sql('SELECT t.tid, t.vid, t.name, t.description, t.weight FROM {term_data} t WHERE t.tid = %d AND t.vid = %d', 't', 'tid'), $tid, variable_get('forum_nav_vocabulary', ''));
+  return db_fetch_array($result);
+}
+
+/**
  * Implementation of hook_menu().
  */
 function forum_menu() {
