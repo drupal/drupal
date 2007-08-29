@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.372 2007/08/28 11:35:33 goba Exp $
+// $Id: theme.inc,v 1.373 2007/08/29 16:16:50 goba Exp $
 
 /**
  * @file
@@ -1096,27 +1096,19 @@ function theme_links($links, $attributes = array('class' => 'links')) {
     $i = 1;
 
     foreach ($links as $key => $link) {
-      $class = '';
+      $class = $key;
 
-      // Automatically add a class to each link and also to each LI
-      if (isset($link['attributes']) && isset($link['attributes']['class'])) {
-        $link['attributes']['class'] .= ' '. $key;
-        $class = $key;
-      }
-      else {
-        $link['attributes']['class'] = $key;
-        $class = $key;
-      }
-
-      // Add first and last classes to the list of links to help out themers.
-      $extra_class = '';
+      // Add first, last and active classes to the list of links to help out themers.
       if ($i == 1) {
-        $extra_class .= 'first ';
+        $class .= ' first';
       }
       if ($i == $num_links) {
-        $extra_class .= 'last ';
+        $class .= ' last';
       }
-      $output .= '<li class="'. $extra_class . $class .'">';
+      if ($link['href'] == $_GET['q']) {
+        $class .= ' active';
+      }
+      $output .= '<li class="'. $class .'">';
 
       if (isset($link['href'])) {
         // Pass in $link as $options, they share the same keys.
@@ -1127,7 +1119,11 @@ function theme_links($links, $attributes = array('class' => 'links')) {
         if (empty($link['html'])) {
           $link['title'] = check_plain($link['title']);
         }
-        $output .= '<span'. drupal_attributes($link['attributes']) .'>'. $link['title'] .'</span>';
+        $span_attributes = '';
+        if (isset($link['attributes'])) {
+          $span_attributes = drupal_attributes($link['attributes']);
+        }
+        $output .= '<span'. $span_attributes .'>'. $link['title'] .'</span>';
       }
 
       $i++;
