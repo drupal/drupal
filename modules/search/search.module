@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.231 2007/08/25 10:29:18 goba Exp $
+// $Id: search.module,v 1.232 2007/08/29 18:20:01 goba Exp $
 
 /**
  * @file
@@ -1072,6 +1072,7 @@ function search_form_submit($form, &$form_state) {
 function search_box(&$form_state, $form_id) {
   // Use search_keys instead of keys to avoid ID conflicts with the search block.
   $form[$form_id .'_keys'] = array(
+    '#title' => t('Search this site'),
     '#type' => 'textfield',
     '#size' => 15,
     '#default_value' => '',
