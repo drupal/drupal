@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.373 2007/08/29 16:16:50 goba Exp $
+// $Id: theme.inc,v 1.374 2007/08/29 16:56:13 goba Exp $
 
 /**
  * @file
@@ -256,6 +256,14 @@ function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
       if (!isset($info['arguments']) && isset($cache[$hook])) {
         $result[$hook]['arguments'] = $cache[$hook]['arguments'];
       }
+      // Likewise with theme paths. These are used for template naming suggestions.
+      // Theme implementations can occur in multiple paths. Suggestions should follow.
+      if (!isset($info['theme paths']) && isset($cache[$hook])) {
+        $result[$hook]['theme paths'] = $cache[$hook]['theme paths'];
+      }
+      // Check for sub-directories.
+      $result[$hook]['theme paths'][] = isset($info['path']) ? $info['path'] : $path;
+
       // Check for default _preprocess_ functions. Ensure arrayness.
       if (!isset($info['preprocess functions']) || !is_array($info['preprocess functions'])) {
         $info['preprocess functions'] = array();
@@ -570,7 +578,7 @@ function theme() {
     }
 
     if ($suggestions) {
-      $template_file = drupal_discover_template($suggestions, $extension);
+      $template_file = drupal_discover_template($info['theme paths'], $suggestions, $extension);
     }
 
     if (empty($template_file)) {
@@ -587,17 +595,23 @@ function theme() {
 }
 
 /**
- * Choose which template file to actually render; these are all
- * suggested templates from the theme.
+ * Choose which template file to actually render. These are all suggested
+ * templates from themes and modules. Theming implementations can occur on
+ * multiple levels. All paths are checked to account for this.
  */
-function drupal_discover_template($suggestions, $extension = '.tpl.php') {
+function drupal_discover_template($paths, $suggestions, $extension = '.tpl.php') {
   global $theme_engine;
 
-  // Loop through any suggestions in FIFO order.
+  // Loop through all paths and suggestions in FIFO order.
   $suggestions = array_reverse($suggestions);
+  $paths = array_reverse($paths);
   foreach ($suggestions as $suggestion) {
-    if (!empty($suggestion) && file_exists($file = path_to_theme() .'/'. $suggestion . $extension)) {
-      return $file;
+    if (!empty($suggestion)) {
+      foreach ($paths as $path) {
+        if (file_exists($file = $path .'/'. $suggestion . $extension)) {
+          return $file;
+        }
+      }
     }
   }
 }
