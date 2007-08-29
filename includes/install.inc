@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.43 2007/08/22 08:36:34 goba Exp $
+// $Id: install.inc,v 1.44 2007/08/29 14:57:49 goba Exp $
 
 define('SCHEMA_UNINSTALLED', -1);
 define('SCHEMA_INSTALLED', 0);
@@ -320,7 +320,6 @@ function drupal_install_profile($profile, $module_list) {
   module_rebuild_cache();
   drupal_install_modules($module_list);
 }
-
 
 /**
  * Calls the install function and updates the system table for a given list of

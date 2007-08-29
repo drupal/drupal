@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.836 2007/08/26 08:00:49 dries Exp $
+// $Id: user.module,v 1.837 2007/08/29 14:57:50 goba Exp $
 
 /**
  * @file
@@ -3433,7 +3433,7 @@ function user_action_info() {
         'comment' => array('view', 'insert', 'update', 'delete'),
         'user' => array('logout'),
       )
-    )
+    ),
   );
 }
 

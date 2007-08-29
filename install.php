@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.71 2007/08/22 08:36:34 goba Exp $
+// $Id: install.php,v 1.72 2007/08/29 14:57:48 goba Exp $
 
 require_once './includes/install.inc';
 
@@ -731,6 +731,10 @@ function install_tasks($profile, $task) {
     // Rebuild menu to get content type links registered by the profile,
     // and possibly any other menu items created through the tasks.
     menu_rebuild();
+
+    // Register actions declared by any modules.
+    actions_synchronize();
+
     variable_set('install_profile', $profile);
   }
 

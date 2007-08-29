@@ -1,5 +1,5 @@
 <?php
-// $Id: actions.inc,v 1.2 2007/08/07 08:39:35 goba Exp $
+// $Id: actions.inc,v 1.3 2007/08/29 14:57:49 goba Exp $
 
 /**
 * @file
@@ -7,6 +7,8 @@
 */
 
 /**
+ * Perform a given list of actions by executing their callback functions.
+ *
  * Given the IDs of actions to perform, find out what the callbacks
  * for the actions are by querying the database. Then call each callback
  * using the function call $function('do', $object, $context, $a1, $2)
@@ -116,8 +118,8 @@ function actions_do($action_ids, $object = NULL, $context = NULL, $a1 = NULL, $a
  *       'description' => t('Save node'),
  *       'configurable' => FALSE,
  *       'hooks' => array(
- *         'nodeapi' => array('delete','insert','update', 'view'),
- *         'comment' => array('delete','insert','update', 'view'),
+ *         'nodeapi' => array('delete', 'insert', 'update', 'view'),
+ *         'comment' => array('delete', 'insert', 'update', 'view'),
  *       )
  *     )
  *   );
@@ -130,26 +132,40 @@ function actions_do($action_ids, $object = NULL, $context = NULL, $a1 = NULL, $a
  * validation and submission functions. The hooks the action supports
  * are declared in the 'hooks' array.
  *
+ * @param $reset
+ *   Reset the action info static cache.
+ *
  * @return
  *   An associative array keyed on function name. The value of each key is
  *   an array containing information about the action, such as type of
  *   action and description of the action, e.g.,
  *
- *   $actions['actions_node_publish'] = ('description' => 'Publish a node' ... )
+ *   @code
+ *   $actions['node_publish_action'] = array(
+ *     'type' => 'node',
+ *     'description' => t('Publish post'),
+ *     'configurable' => FALSE,
+ *     'hooks' => array(
+ *       'nodeapi' => array('presave', 'insert', 'update', 'view'),
+ *       'comment' => array('delete', 'insert', 'update', 'view'),
+ *     ),
+ *   );
+ *   @endcode
  */
-function actions_list() {
+function actions_list($reset = FALSE) {
   static $actions;
-  if (isset($actions)) {
-    return $actions;
+  if (!isset($actions) || $reset) {
+    $actions = module_invoke_all('action_info');
+    drupal_alter('action_info', $actions);
   }
 
-  $actions = module_invoke_all('action_info');
-  drupal_alter('action_info', $actions);
-  return $actions;
+  // See module_implements for explanations of this cast.
+  return (array)$actions;
 }
 
 /**
  * Retrieve all action instances from the database.
+ *
  * Compare with actions_list() which gathers actions by
  * invoking hook_action_info(). The two are synchronized
  * by visiting /admin/build/actions (when actions.module is
@@ -176,6 +192,7 @@ function actions_get_all_actions() {
 
 /**
  * Create an associative array keyed by md5 hashes of function names.
+ *
  * Hashes are used to prevent actual function names from going out into
  * HTML forms and coming back.
  *
@@ -204,6 +221,7 @@ function actions_actions_map($actions) {
 
 /**
  * Given an md5 hash of a function name, return the function name.
+ *
  * Faster than actions_actions_map() when you only need the function name.
  *
  * @param $hash
@@ -223,4 +241,126 @@ function actions_function_lookup($hash) {
   // Must be an instance; must check database.
   $aid = db_result(db_query("SELECT aid FROM {actions} WHERE MD5(aid) = '%s' AND parameters != ''", $hash));
   return $aid;
+}
+
+/**
+ * Synchronize actions that are provided by modules.
+ *
+ * They are synchronized with actions that are stored in the actions table.
+ * This is necessary so that actions that do not require configuration can
+ * receive action IDs. This is not necessarily the best approach,
+ * but it is the most straightforward.
+ */
+function actions_synchronize($actions_in_code = array(), $delete_orphans = FALSE) {
+  if (!$actions_in_code) {
+    $actions_in_code = actions_list();
+  }
+  $actions_in_db = array();
+  $result = db_query("SELECT * FROM {actions} WHERE parameters = ''");
+  while ($action = db_fetch_object($result)) {
+    $actions_in_db[$action->callback] = array('aid' => $action->aid, 'description' => $action->description);
+  }
+
+  // Go through all the actions provided by modules.
+  foreach ($actions_in_code as $callback => $array) {
+    // Ignore configurable actions since their instances get put in
+    // when the user adds the action.
+    if (!$array['configurable']) {
+      // If we already have an action ID for this action, no need to assign aid.
+      if (array_key_exists($callback, $actions_in_db)) {
+        unset($actions_in_db[$callback]);
+      }
+      else {
+        // This is a new singleton that we don't have an aid for; assign one.
+        db_query("INSERT INTO {actions} (aid, type, callback, parameters, description) VALUES ('%s', '%s', '%s', '%s', '%s')", $callback, $array['type'], $callback, '', $array['description']);
+        watchdog('actions', t("Action '%action' added.", array('%action' => filter_xss_admin($array['description']))));
+      }
+    }
+  }
+
+  // Any actions that we have left in $actions_in_db are orphaned.
+  if ($actions_in_db) {
+    $orphaned = array();
+    $placeholder = array();
+
+    foreach ($actions_in_db as $callback => $array) {
+      $orphaned[] = $callback;
+      $placeholder[] = "'%s'";
+    }
+
+    $orphans = implode(', ', $orphaned);
+
+    if ($delete_orphans) {
+      $placeholders = implode(', ', $placeholder);
+      $results = db_query("SELECT a.aid, a.description FROM {actions} a WHERE callback IN ($placeholders)", $orphaned);
+      while ($action = db_fetch_object($results)) {
+        actions_delete($action->aid);
+        watchdog('actions', t("Removed orphaned action '%action' from database.", array('%action' => filter_xss_admin($action->description))));
+      }
+    }
+    else {
+      $link = l(t('Remove orphaned actions'), 'admin/build/actions/orphan');
+      $count = count($actions_in_db);
+      watchdog('actions', format_plural($count, 'One orphaned action (%orphans) exists in the actions table. !link', '@count orphaned actions (%orphans) exist in the actions table. !link', array('@count' => $count, '%orphans' => $orphans, '!link' => $link), 'warning'));
+    }
+  }
+}
+
+/**
+ * Save an action and its associated user-supplied parameter values to the database.
+ *
+ * @param $function
+ *   The name of the function to be called when this action is performed.
+ * @param $params
+ *   An associative array with parameter names as keys and parameter values
+ *   as values.
+ * @param $desc
+ *   A user-supplied description of this particular action, e.g., 'Send
+ *   e-mail to Jim'.
+ * @param $aid
+ *   The ID of this action. If omitted, a new action is created.
+ *
+ * @return
+ *   The ID of the action.
+ */
+function actions_save($function, $type, $params, $desc, $aid = NULL) {
+  $serialized = serialize($params);
+  if ($aid) {
+    db_query("UPDATE {actions} SET callback = '%s', type = '%s', parameters = '%s', description = '%s' WHERE aid = %d", $function, $type, $serialized, $desc, $aid);
+    watchdog('actions', 'Action %action saved.', array('%action' => $desc));
+  }
+  else {
+    // aid is the callback for singleton actions so we need to keep a
+    // separate table for numeric aids.
+    db_query('INSERT INTO {actions_aid} () VALUES ()');
+    $aid = db_last_insert_id('actions_aid', 'aid');
+    db_query("INSERT INTO {actions} (aid, callback, type, parameters, description) VALUES (%d, '%s', '%s', '%s', '%s')", $aid, $function, $type, $serialized, $desc);
+    watchdog('actions', 'Action %action created.', array('%action' => $desc));
+  }
+
+  return $aid;
+}
+
+/**
+ * Retrieve a single action from the database.
+ *
+ * @param $aid
+ *   integer The ID of the action to retrieve.
+ *
+ * @return
+ *   The appropriate action row from the database as an object.
+ */
+function actions_load($aid) {
+  return db_fetch_object(db_query("SELECT * FROM {actions} WHERE aid = %d", $aid));
+}
+
+/**
+ * Delete a single action from the database.
+ *
+ * @param $aid
+ *   integer The ID of the action to delete.
+ */
+function actions_delete($aid) {
+  db_query("DELETE FROM {actions} WHERE aid = %d", $aid);
+  module_invoke_all('actions_delete', $aid);
 }

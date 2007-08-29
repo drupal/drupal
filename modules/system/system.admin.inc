@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.5 2007/08/26 16:41:02 dries Exp $
+// $Id: system.admin.inc,v 1.6 2007/08/29 14:57:49 goba Exp $
 
 /**
  * @file
@@ -816,6 +816,9 @@ function system_modules_submit($form, &$form_state) {
   // imported. This might start a batch, and only return to the redirect
   // path after that.
   module_invoke('locale', 'system_update', $new_modules);
+
+  // Synchronize to catch any actions that were added or removed.
+  actions_synchronize();
 
   return;
 }

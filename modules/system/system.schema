@@ -1,7 +1,25 @@
 <?php
-// $Id: system.schema,v 1.9 2007/08/11 14:06:15 dries Exp $
+// $Id: system.schema,v 1.10 2007/08/29 14:57:50 goba Exp $
 
 function system_schema() {
+  $schema['actions'] = array(
+    'fields' => array(
+      'aid' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => '0'),
+      'type' => array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''),
+      'callback' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'parameters' => array('type' => 'text', 'not null' => TRUE, 'size' => 'big'),
+      'description' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => '0'),
+    ),
+    'primary key' => array('aid'),
+  );
+
+  $schema['actions_aid'] = array(
+    'fields' => array(
+      'aid' => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
+    ),
+    'primary key' => array('aid'),
+  );
+
   $schema['batch'] = array(
     'fields' => array(
       'bid'       => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),

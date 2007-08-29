@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.141 2007/08/28 11:42:56 goba Exp $
+// $Id: system.install,v 1.142 2007/08/29 14:57:49 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -3558,6 +3558,35 @@ function system_update_6029() {
   module_enable(array('dblog'));
   menu_rebuild();
   return array();
+}
+
+/**
+ * Add the tables required by actions.inc.
+ */
+function system_update_6030() {
+  $ret = array();
+  $schema['actions'] = array(
+    'fields' => array(
+      'aid' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => '0'),
+      'type' => array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''),
+      'callback' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'parameters' => array('type' => 'text', 'not null' => TRUE, 'size' => 'big'),
+      'description' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => '0'),
+    ),
+    'primary key' => array('aid'),
+  );
+
+  $schema['actions_aid'] = array(
+    'fields' => array(
+      'aid' => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
+    ),
+    'primary key' => array('aid'),
+  );
+
+  db_create_table($ret, 'actions', $schema['actions']);
+  db_create_table($ret, 'actions_aid', $schema['actions_aid']);
+
+  return $ret;
 }
 
 /**
