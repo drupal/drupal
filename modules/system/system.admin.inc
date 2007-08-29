@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.6 2007/08/29 14:57:49 goba Exp $
+// $Id: system.admin.inc,v 1.7 2007/08/29 18:09:36 goba Exp $
 
 /**
  * @file
@@ -451,19 +451,37 @@ function system_theme_settings(&$form_state, $key = '') {
   }
 
   if ($key) {
-    // Template-specific settings
-    $function = $themes[$key]->prefix .'_settings';
+    // Include the theme's theme-settings.php file
+    $filename = './'. str_replace("/$key.info", '', $themes[$key]->filename) .'/theme-settings.php';
+    if (!file_exists($filename) and !empty($themes[$key]->info['base theme'])) {
+      // If the theme doesn't have a theme-settings.php file, use the base theme's.
+      $base = $themes[$key]->info['base theme'];
+      $filename = './'. str_replace("/$base.info", '', $themes[$base]->filename) .'/theme-settings.php';
+    }
+    if (file_exists($filename)) {
+      require_once $filename;
+    }
+
+    // Call engine-specific settings.
+    $function = $themes[$key]->prefix .'_engine_settings';
     if (function_exists($function)) {
-      if ($themes[$key]->template) {
-        // file is a template or a style of a template
-        $form['specific'] = array('#type' => 'fieldset', '#title' => t('Engine-specific settings'), '#description' => t('These settings only exist for all the templates and styles based on the %engine theme engine.', array('%engine' => $themes[$key]->prefix)));
+      $group = $function($settings);
+      if (!empty($group)) {
+        $form['engine_specific'] = array('#type' => 'fieldset', '#title' => t('Theme-engine-specific settings'), '#description' => t('These settings only exist for all the templates and styles based on the %engine theme engine.', array('%engine' => $themes[$key]->prefix)));
+        $form['engine_specific'] = array_merge($form['engine_specific'], $group);
       }
-      else {
-        // file is a theme or a style of a theme
-        $form['specific'] = array('#type' => 'fieldset', '#title' => t('Theme-specific settings'), '#description' => t('These settings only exist for the %theme theme and all the styles based on it.', array('%theme' => $themes[$key]->prefix)));
+    }
+    // Call theme-specific settings.
+    $function = $key .'_settings';
+    if (!function_exists($function)) {
+      $function = $themes[$key]->prefix .'_settings';
+    }
+    if (function_exists($function)) {
+      $group = $function($settings);
+      if (!empty($group)) {
+        $form['theme_specific'] = array('#type' => 'fieldset', '#title' => t('Theme-specific settings'), '#description' => t('These settings only exist for the %theme theme and all the styles based on it.', array('%theme' => $themes[$key]->info['name'])));
+        $form['theme_specific'] = array_merge($form['theme_specific'], $group);
       }
-      $group = $function();
-      $form['specific'] = array_merge($form['specific'], (is_array($group) ? $group : array()));
     }
   }
   $form['#attributes'] = array('enctype' => 'multipart/form-data');
