@@ -151,6 +151,8 @@ function _db_query($query, $debug = 0) {
     return $result;
   }
   else {
+    // Indicate to drupal_error_handler that this is a database error.
+    ${DB_ERROR} = TRUE;
     trigger_error(check_plain(mysqli_error($active_db) ."\nquery: ". $query), E_USER_WARNING);
     return FALSE;
   }
