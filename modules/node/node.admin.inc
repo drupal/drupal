@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.1 2007/08/20 07:03:07 dries Exp $
+// $Id: node.admin.inc,v 1.2 2007/08/29 19:56:09 goba Exp $
 
 /**
  * @file
@@ -63,7 +63,7 @@ function node_configure_rebuild_confirm() {
 /**
  * Handler for wipe confirmation
  */
-function node_configure_rebuild_confirm_submit(&$form, $form, &$form_state) {
+function node_configure_rebuild_confirm_submit($form, &$form_state) {
   node_access_rebuild();
   drupal_set_message(t('The node access table has been rebuilt.'));
   $form_state['redirect'] = 'admin/content/node-settings';
