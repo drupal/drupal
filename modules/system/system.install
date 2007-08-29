@@ -3590,6 +3590,13 @@ function system_update_6030() {
 }
 
 /**
+  * Ensure that installer cannot be run again after updating from Drupal 5.x to 6.x
+  */
+function system_update_6031() {
+  variable_set('install_task', 'done');
+}
+
+/**
  * @} End of "defgroup updates-5.x-to-6.x"
  * The next series of updates should start at 7000.
  */
