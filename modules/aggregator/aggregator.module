@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.351 2007/08/30 17:23:09 goba Exp $
+// $Id: aggregator.module,v 1.352 2007/08/30 18:22:20 goba Exp $
 
 /**
  * @file
@@ -333,7 +333,7 @@ function aggregator_block($op = 'list', $delta = 0, $edit = array()) {
 /**
  * Generate a form to add/edit/delete aggregator categories.
  */
-function aggregator_form_category($edit = array('title' => '', 'description' => '', 'cid' => NULL)) {
+function aggregator_form_category(&$form_state, $edit = array('title' => '', 'description' => '', 'cid' => NULL)) {
   $form['title'] = array('#type' => 'textfield',
     '#title' => t('Title'),
     '#default_value' => $edit['title'],
@@ -434,7 +434,7 @@ function aggregator_save_category($edit) {
 /**
  * Generate a form to add/edit feed sources.
  */
-function aggregator_form_feed($edit = array('refresh' => 900, 'title' => '', 'url' => '', 'fid' => NULL)) {
+function aggregator_form_feed(&$form_state, $edit = array('refresh' => 900, 'title' => '', 'url' => '', 'fid' => NULL)) {
   $period = drupal_map_assoc(array(900, 1800, 3600, 7200, 10800, 21600, 32400, 43200, 64800, 86400, 172800, 259200, 604800, 1209600, 2419200), 'format_interval');
 
   if ($edit['refresh'] == '') {
