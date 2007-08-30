@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.144 2007/08/29 20:46:18 goba Exp $
+// $Id: system.install,v 1.145 2007/08/30 15:13:46 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -3774,6 +3774,7 @@ function system_update_6030() {
   */
 function system_update_6031() {
   variable_set('install_task', 'done');
+  return array();
 }
 
 /**
