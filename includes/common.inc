@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.681 2007/08/29 18:38:55 goba Exp $
+// $Id: common.inc,v 1.682 2007/08/30 15:53:39 goba Exp $
 
 /**
  * @file
@@ -562,7 +562,7 @@ function drupal_error_handler($errno, $message, $filename, $line, $context) {
     $entry = $types[$errno] .': '. $message .' in '. $filename .' on line '. $line .'.';
 
     // Force display of error messages in update.php
-    if (variable_get('error_level', 1) == 1 || strstr($_SERVER['PHP_SELF'], 'update.php')) {
+    if (variable_get('error_level', 1) == 1 || strstr($_SERVER['SCRIPT_NAME'], 'update.php')) {
       drupal_set_message($entry, 'error');
     }
 
