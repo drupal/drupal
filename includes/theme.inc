@@ -1119,7 +1119,7 @@ function theme_links($links, $attributes = array('class' => 'links')) {
       if ($i == $num_links) {
         $class .= ' last';
       }
-      if ($link['href'] == $_GET['q']) {
+      if (isset($link['href']) && $link['href'] == $_GET['q']) {
         $class .= ' active';
       }
       $output .= '<li class="'. $class .'">';
