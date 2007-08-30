@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.147 2007/08/30 19:54:06 dries Exp $
+// $Id: system.install,v 1.148 2007/08/30 20:34:02 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -259,8 +259,6 @@ function system_install() {
 
   // Load system theme data appropriately.
   system_theme_data();
-
-  db_query("INSERT INTO {users} (uid, name, mail) VALUES(%d, '%s', '%s')", 0, '', '');
 
   db_query("INSERT INTO {role} (name) VALUES ('%s')", 'anonymous user');
   db_query("INSERT INTO {role} (name) VALUES ('%s')", 'authenticated user');
