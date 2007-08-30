@@ -6,7 +6,10 @@
  * Default theme implementation to display a list of forums and containers.
  *
  * Available variables:
- * - $forums: An array of forums and containers to display.
+ * - $forums: An array of forums and containers to display. It is keyed to the
+ *   numeric id's of all child forums and containers.
+ * - $forum_id: Forum id for the current forum. Parent to all items within
+ *   the $forums array.
  *
  * Each $forum in $forums contains:
  * - $forum->is_container: Is TRUE if the forum can contain other forums. Is
@@ -28,7 +31,7 @@
  * @see theme_forum_list()
  */
 ?>
-<table>
+<table id="forum-<?php print $forum_id; ?>">
   <thead>
     <tr>
       <th><?php print t('Forum'); ?></th>
@@ -38,8 +41,8 @@
     </tr>
   </thead>
   <tbody>
-  <?php foreach ($forums as $forum): ?>
-    <tr class="<?php print $forum->zebra; ?>">
+  <?php foreach ($forums as $child_id => $forum): ?>
+    <tr id="forum-list-<?php print $child_id; ?>" class="<?php print $forum->zebra; ?>">
       <td <?php print $forum->is_container ? 'colspan="4" class="container"' : 'class="forum"'; ?>>
         <?php /* Enclose the contents of this cell with X divs, where X is the
                * depth this forum resides at. This will allow us to use CSS

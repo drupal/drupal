@@ -10,6 +10,7 @@
  *   information. If you need to change this, @see template_preprocess_forum_topic_list().
  * - $pager: The pager to display beneath the table.
  * - $topics: An array of topics to be displayed.
+ * - $topic_id: Numeric id for the current forum topic.
  *
  * Each $topic in $topics contains:
  * - $topic->icon: The icon to display.
@@ -32,7 +33,7 @@
  * @see theme_forum_topic_list()
  */
 ?>
-<table>
+<table id="forum-topic-<?php print $topic_id; ?>">
   <thead>
     <tr><?php print $header; ?></tr>
   </thead>
