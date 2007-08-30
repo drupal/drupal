@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.239 2007/08/26 07:46:11 dries Exp $
+// $Id: poll.module,v 1.240 2007/08/30 17:01:42 goba Exp $
 
 /**
  * @file
@@ -299,6 +299,24 @@ function poll_load($node) {
   while ($choice = db_fetch_array($result)) {
     $poll->choice[$choice['chorder']] = $choice;
   }
+
+  // Determine whether or not this user is allowed to vote
+  $poll->allowvotes = FALSE;
+  if (user_access('vote on polls') && $poll->active) {
+    if ($user->uid) {
+      $result = db_fetch_object(db_query('SELECT chorder FROM {poll_votes} WHERE nid = %d AND uid = %d', $node->nid, $user->uid));
+    }
+    else {
+      $result = db_fetch_object(db_query("SELECT chorder FROM {poll_votes} WHERE nid = %d AND hostname = '%s'", $node->nid, ip_address()));
+    }
+    if (isset($result->chorder)) {
+      $poll->vote = $result->chorder;
+    }
+    else {
+      $poll->vote = -1;
+      $poll->allowvotes = TRUE;
+    }
+  }
   return $poll;
 }
 
@@ -363,25 +381,6 @@ function poll_delete($node) {
 function poll_view($node, $teaser = FALSE, $page = FALSE, $block = FALSE) {
   global $user;
   $output = '';
-
-  // Determine whether or not this user is allowed to vote
-  $poll->allowvotes = FALSE;
-  if (user_access('vote on polls') && $poll->active) {
-    if ($user->uid) {
-      $result = db_fetch_object(db_query('SELECT chorder FROM {poll_votes} WHERE nid = %d AND uid = %d', $node->nid, $user->uid));
-    }
-    else {
-      $result = db_fetch_object(db_query("SELECT chorder FROM {poll_votes} WHERE nid = %d AND hostname = '%s'", $node->nid, ip_address()));
-    }
-    if (isset($result->chorder)) {
-      $poll->vote = $result->chorder;
-    }
-    else {
-      $poll->vote = -1;
-      $poll->allowvotes = TRUE;
-    }
-  }
-
 
   // Special display for side-block
   if ($block) {
