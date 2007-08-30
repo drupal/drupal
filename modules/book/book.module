@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.439 2007/08/25 09:25:48 goba Exp $
+// $Id: book.module,v 1.440 2007/08/30 15:31:46 goba Exp $
 
 /**
  * @file
@@ -564,8 +564,6 @@ function book_remove_form_submit($form, &$form_state) {
     // Only allowed when this is not a book (top-level page).
     menu_link_delete($node->book['mlid']);
     db_query('DELETE FROM {book} WHERE nid = %d', $node->nid);
-    // Clear the node load cache.
-    cache_clear_all('*', 'cache_node', TRUE);
     drupal_set_message(t('The post has been removed from the book.'));
   }
   $form_state['redirect'] = 'node/'. $node->nid;
@@ -611,8 +609,6 @@ function _book_update_outline(&$node) {
         // Update the bid for this page and all children.
         book_update_bid($node->book);
       }
-      // Clear the node load cache.
-      cache_clear_all('*', 'cache_node', TRUE);
     }
     return TRUE;
   }

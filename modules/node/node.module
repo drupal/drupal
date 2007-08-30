@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.875 2007/08/26 14:15:51 goba Exp $
+// $Id: node.module,v 1.876 2007/08/30 15:31:46 goba Exp $
 
 /**
  * @file
@@ -444,7 +444,6 @@ function node_type_delete($type) {
  */
 function node_type_update_nodes($old_type, $type) {
   db_query("UPDATE {node} SET type = '%s' WHERE type = '%s'", $type, $old_type);
-  cache_clear_all('*', 'cache_node', TRUE);
   return db_affected_rows();
 }
 
@@ -601,17 +600,6 @@ function node_invoke_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
 /**
  * Load a node object from the database.
  *
- * This function provides two levels of caching. The internal cache stores
- * all nodes loaded in this request. Use the $reset argument to invalidate
- * it. The cache API based cache stores all nodes throughout requests,
- * until invalidated with cache_clear_all().
- *
- * If the load operation was cached previously, we load the data from
- * that cache, and no nodeapi load operations are called. That means,
- * that we expect all load operations to return the same data and do
- * not use any conditions on the user, language or anything else,
- * which would limit what is stored in the node_load cache.
- *
  * @param $param
  *   Either the nid of the node or an array of conditions to match against in the database query
  * @param $revision
@@ -633,13 +621,7 @@ function node_load($param = array(), $revision = NULL, $reset = NULL) {
   $arguments = array();
   if (is_numeric($param)) {
     if ($cachable) {
-      if (!isset($nodes[$param])) {
-        if ($cache = cache_get($param, 'cache_node')) {
-          $nodes[$param] = $cache->data;
-        }
-      }
-      // Either the node was statically cached or we loaded from the
-      // cache_node table.
+      // Is the node statically cached?
       if (isset($nodes[$param])) {
         return is_object($nodes[$param]) ? drupal_clone($nodes[$param]) : $nodes[$param];
       }
@@ -685,11 +667,6 @@ function node_load($param = array(), $revision = NULL, $reset = NULL) {
     }
     if ($cachable) {
       $nodes[$node->nid] = is_object($node) ? drupal_clone($node) : $node;
-      // We can only cache when a nid is given, otherwise the conditions are
-      // too dynamic to be cacheable.
-      if (is_numeric($param)) {
-        cache_set($param, $nodes[$node->nid], 'cache_node');
-      }
     }
   }
 
@@ -886,8 +863,6 @@ function node_save(&$node) {
 
   // Clear the page and block caches.
   cache_clear_all();
-  // Clear the node load cache for this node.
-  cache_clear_all($node->nid, 'cache_node');
 }
 
 /**
@@ -1218,7 +1193,6 @@ function node_user($op, &$edit, &$user) {
   if ($op == 'delete') {
     db_query('UPDATE {node} SET uid = 0 WHERE uid = %d', $user->uid);
     db_query('UPDATE {node_revisions} SET uid = 0 WHERE uid = %d', $user->uid);
-    cache_clear_all('*', 'cache_node', TRUE);
   }
 }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.7 2007/08/29 18:09:36 goba Exp $
+// $Id: system.admin.inc,v 1.8 2007/08/30 15:31:46 goba Exp $
 
 /**
  * @file
@@ -123,7 +123,7 @@ function system_settings_overview() {
 
 /**
  * Form builder; This function allows selection of the theme to show in administration sections.
- * 
+ *
  * @ingroup forms
  * @see system_settings_form().
  */
@@ -156,7 +156,7 @@ function system_admin_theme_settings() {
 
 /**
  * Menu callback; displays a listing of all themes.
- * 
+ *
  * @ingroup forms
  * @see system_themes_form_submt().
  */
@@ -280,7 +280,7 @@ function system_themes_form_submit($form, &$form_state) {
 
 /**
  * Form builder; display theme configuration for entire site and individual themes.
- * 
+ *
  * @ingroup forms
  * @see system_theme_settings_submit().
  */
@@ -693,7 +693,7 @@ function system_modules_disable($form, $edit) {
  *   elements: the list of dependencies and the list of status
  *   form field values from the previous screen.
  * @ingroup forms
- * @see 
+ * @see
  */
 function system_modules_confirm_form($modules, $storage) {
   $form = array();
@@ -821,7 +821,6 @@ function system_modules_submit($form, &$form_state) {
     node_types_rebuild();
     menu_rebuild();
     cache_clear_all('schema', 'cache');
-    cache_clear_all('*', 'cache_node', TRUE);
     drupal_set_message(t('The configuration options have been saved.'));
   }
 
@@ -1010,7 +1009,7 @@ function system_modules_uninstall_submit($form, &$form_state) {
 
 /**
  * Form builder; The general site information form.
- * 
+ *
  * @ingroup forms
  * @see system_settings_form().
  */
@@ -1068,7 +1067,7 @@ function system_site_information_settings() {
 
 /**
  * Form builder; Configure error reporting settings.
- * 
+ *
  * @ingroup forms
  * @see system_settings_form().
  */
@@ -1115,7 +1114,7 @@ function system_logging_overview() {
 
 /**
  * Form builder; Configure site performance settings.
- * 
+ *
  * @ingroup forms
  * @see system_settings_form().
  */
@@ -1218,7 +1217,7 @@ function system_performance_settings() {
 
 /**
  * Form builder; Configure the site file handling.
- * 
+ *
  * @ingroup forms
  * @see system_settings_form().
  */
@@ -1255,7 +1254,7 @@ function system_file_system_settings() {
 
 /**
  * Form builder; Configure site image toolkit usage.
- * 
+ *
  * @ingroup forms
  * @see system_settings_form().
  */
@@ -1280,7 +1279,7 @@ function system_image_toolkit_settings() {
 
 /**
  * Form builder; Configure how the site handles RSS feeds.
- * 
+ *
  * @ingroup forms
  * @see system_settings_form().
  */
@@ -1306,7 +1305,7 @@ function system_rss_feeds_settings() {
 
 /**
  * Form builder; Configure the site date and time settings.
- * 
+ *
  * @ingroup forms
  * @see system_settings_form().
  * @see system_date_time_settings().
@@ -1476,7 +1475,7 @@ function system_date_time_lookup() {
 
 /**
  * Form builder; Configure the site's maintenance status.
- * 
+ *
  * @ingroup forms
  * @see system_settings_form().
  */
@@ -1502,7 +1501,7 @@ function system_site_maintenance_settings() {
 
 /**
  * Form builder; Configure Clean URL settings.
- * 
+ *
  * @ingroup forms
  * @see system_settings_form().
  */
@@ -1802,7 +1801,7 @@ function theme_system_admin_by_module($menu_items) {
 
 /**
  * Theme status report
- * 
+ *
  * @ingroup themeable
  */
 function theme_status_report(&$requirements) {
@@ -1837,7 +1836,7 @@ function theme_status_report(&$requirements) {
 
 /**
  * Theme call back for the modules form.
- * 
+ *
  * @ingroup themeable
  */
 function theme_system_modules($form) {

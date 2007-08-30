@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.145 2007/08/30 15:13:46 goba Exp $
+// $Id: system.install,v 1.146 2007/08/30 15:31:46 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -3698,24 +3698,8 @@ function system_update_6027() {
  * Add the node load cache table.
  */
 function system_update_6028() {
-  $ret = array();
-
-  // Create the cache_node table.
-  $schema['cache_node'] = array(
-    'fields' => array(
-      'cid'        => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'data'       => array('type' => 'blob', 'not null' => FALSE, 'size' => 'big'),
-      'expire'     => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      'created'    => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      'headers'    => array('type' => 'text', 'not null' => FALSE),
-      'serialized' => array('type' => 'int', 'size' => 'small', 'not null' => TRUE, 'default' => 0)
-    ),
-    'indexes' => array('expire' => array('expire')),
-    'primary key' => array('cid'),
-  );
-  db_create_table($ret, 'cache_node', $schema['cache_node']);
-
-  return $ret;
+  // Removed node_load cache to discuss it more for Drupal 7.
+  return array();
 }
 
 /**
