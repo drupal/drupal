@@ -1,6 +1,11 @@
 // $Id$
 
 Drupal.behaviors.tableHeader = function (context) {
+  // This breaks in anything less than IE 7. Prevent it from running.
+  if (jQuery.browser.msie && parseInt(jQuery.browser.version) < 7) {
+    return;
+  }
+
   // Keep track of all header cells.
   var cells = [];
 
