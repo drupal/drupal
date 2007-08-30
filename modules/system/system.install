@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.146 2007/08/30 15:31:46 goba Exp $
+// $Id: system.install,v 1.147 2007/08/30 19:54:06 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -2845,14 +2845,14 @@ function system_update_6005() {
       $err = error_reporting(0);
       $ret1 = update_sql('DROP INDEX {url_alias}_dst_idx');
       if ($ret1['success']) {
-	$ret[] = $ret1;
+  $ret[] = $ret1;
       }
       $ret1 = array();
       db_drop_unique_key($ret, 'url_alias', 'dst');
       foreach ($ret1 as $r) {
-	if ($r['success']) {
-	  $ret[] = $r;
-	}
+  if ($r['success']) {
+    $ret[] = $r;
+  }
       }
       error_reporting($err);
 
