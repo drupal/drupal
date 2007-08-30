@@ -60,11 +60,11 @@ function db_add_column(&$ret, $table, $column, $type, $attributes = array()) {
 
   $ret[] = update_sql("ALTER TABLE {". $table ."} ADD $column $type");
   if (!empty($default)) {
-    $ret[] = update_sql("ALTER TABLE {". $table ."} ALTER $column SET $default"); 
+    $ret[] = update_sql("ALTER TABLE {". $table ."} ALTER $column SET $default");
   }
   if (!empty($not_null)) {
-    if (!empty($default)) { 
-      $ret[] = update_sql("UPDATE {". $table ."} SET $column = $default_val"); 
+    if (!empty($default)) {
+      $ret[] = update_sql("UPDATE {". $table ."} SET $column = $default_val");
     }
     $ret[] = update_sql("ALTER TABLE {". $table ."} ALTER $column SET NOT NULL");
   }

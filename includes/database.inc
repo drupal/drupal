@@ -476,14 +476,14 @@ function _db_type_placeholder($type) {
       // presumably no db's "escape string" function will mess with
       // those characters.
       return '%s';
-    
+
     case 'serial':
     case 'int':
       return '%d';
 
     case 'float':
       return '%f';
-    
+
     case 'blob':
       return '%b';
   }
