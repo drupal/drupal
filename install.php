@@ -970,6 +970,7 @@ function install_configure_form_submit($form, &$form_state) {
   $form_state['old_values'] = $form_state['values'];
   $form_state['values'] = $form_state['values']['account'];
   user_register_submit($form, $form_state);
+  db_query("INSERT INTO {users} (uid, name, mail) VALUES(%d, '%s', '%s')", 0, '', '');
   $form_state['values'] = $form_state['old_values'];
   unset($form_state['old_values']);
   variable_set('user_email_verification', TRUE);
