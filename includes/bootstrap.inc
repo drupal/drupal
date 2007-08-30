@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.185 2007/08/30 15:53:39 goba Exp $
+// $Id: bootstrap.inc,v 1.186 2007/08/30 16:09:50 goba Exp $
 
 /**
  * @file
@@ -330,7 +330,7 @@ function conf_init() {
     $cookie_domain = substr($cookie_domain, 4);
   }
   $cookie_domain = explode(':', $cookie_domain);
-  $cookie_domain = '.'. array_shift($cookie_domain);
+  $cookie_domain = '.'. $cookie_domain[0];
   // Per RFC 2109, cookie domains must contain at least one dot other than the
   // first. For hosts such as 'localhost' or IP Addresses we don't set a cookie domain.
   if (count(explode('.', $cookie_domain)) > 2 && !is_numeric(str_replace('.', '', $cookie_domain))) {
@@ -868,15 +868,18 @@ function drupal_anonymous_user($session = '') {
  *     DRUPAL_BOOTSTRAP_FULL: Drupal is fully loaded, validate and fix input data.
  */
 function drupal_bootstrap($phase) {
-  static $phases = array(DRUPAL_BOOTSTRAP_CONFIGURATION, DRUPAL_BOOTSTRAP_EARLY_PAGE_CACHE, DRUPAL_BOOTSTRAP_DATABASE, DRUPAL_BOOTSTRAP_ACCESS, DRUPAL_BOOTSTRAP_SESSION, DRUPAL_BOOTSTRAP_LATE_PAGE_CACHE, DRUPAL_BOOTSTRAP_LANGUAGE, DRUPAL_BOOTSTRAP_PATH, DRUPAL_BOOTSTRAP_FULL);
+  static $phases = array(DRUPAL_BOOTSTRAP_CONFIGURATION, DRUPAL_BOOTSTRAP_EARLY_PAGE_CACHE, DRUPAL_BOOTSTRAP_DATABASE, DRUPAL_BOOTSTRAP_ACCESS, DRUPAL_BOOTSTRAP_SESSION, DRUPAL_BOOTSTRAP_LATE_PAGE_CACHE, DRUPAL_BOOTSTRAP_LANGUAGE, DRUPAL_BOOTSTRAP_PATH, DRUPAL_BOOTSTRAP_FULL), $phase_index = 0;
 
   // Stop early if $phase was already executed.
-  if (!in_array($phase, $phases)) {
+  if ($phase < $phase_index) {
     return;
   }
 
-  while (!is_null($current_phase = array_shift($phases))) {
+  while (!empty($phases)) {
+    $current_phase = $phases[$phase_index];
+    unset($phases[$phase_index]);
     _drupal_bootstrap($current_phase);
+    $phase_index++;
     if ($phase == $current_phase) {
       return;
     }
