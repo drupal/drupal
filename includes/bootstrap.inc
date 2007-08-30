@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.183 2007/08/28 11:42:56 goba Exp $
+// $Id: bootstrap.inc,v 1.184 2007/08/30 15:47:27 goba Exp $
 
 /**
  * @file
@@ -985,6 +985,7 @@ function drupal_maintenance_theme() {
   require_once './includes/theme.inc';
   require_once './includes/common.inc';
   require_once './includes/unicode.inc';
+  require_once './includes/file.inc';
   require_once './modules/filter/filter.module';
   unicode_check();
   drupal_add_css(drupal_get_path('module', 'system') .'/defaults.css', 'module');
