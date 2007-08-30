@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.415 2007/08/29 18:25:51 goba Exp $
+// $Id: forum.module,v 1.416 2007/08/30 18:58:12 goba Exp $
 
 /**
  * @file
@@ -742,6 +742,9 @@ function template_preprocess_forum_list(&$variables) {
     }
     $variables['forums'][$id]->last_reply = theme('forum_submitted', $forum->last_post);
   }
+  // Give meaning to $tid for themers. $tid actually stands for term id.
+  $variables['forum_id'] = $variables['tid'];
+  unset($variables['tid']);
 }
 
 /**
@@ -799,6 +802,9 @@ function template_preprocess_forum_topic_list(&$variables) {
     // Make this safe for the template
     $variables['topics'] = array();
   }
+  // Give meaning to $tid for themers. $tid actually stands for term id.
+  $variables['topic_id'] = $variables['tid'];
+  unset($variables['tid']);
 
   $variables['pager'] = theme('pager', NULL, $variables['forum_per_page'], 0);
 }

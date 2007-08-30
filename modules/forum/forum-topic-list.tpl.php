@@ -1,5 +1,5 @@
 <?php
-// $Id: forum-topic-list.tpl.php,v 1.3 2007/08/07 08:39:35 goba Exp $
+// $Id: forum-topic-list.tpl.php,v 1.4 2007/08/30 18:58:12 goba Exp $
 
 /**
  * @file forum-topic-list.tpl.php
@@ -10,6 +10,7 @@
  *   information. If you need to change this, @see template_preprocess_forum_topic_list().
  * - $pager: The pager to display beneath the table.
  * - $topics: An array of topics to be displayed.
+ * - $topic_id: Numeric id for the current forum topic.
  *
  * Each $topic in $topics contains:
  * - $topic->icon: The icon to display.
@@ -32,7 +33,7 @@
  * @see theme_forum_topic_list()
  */
 ?>
-<table>
+<table id="forum-topic-<?php print $topic_id; ?>">
   <thead>
     <tr><?php print $header; ?></tr>
   </thead>
