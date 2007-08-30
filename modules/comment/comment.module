@@ -2035,7 +2035,6 @@ function _comment_update_node_statistics($nid) {
     $node = db_fetch_object(db_query("SELECT uid, created FROM {node} WHERE nid = %d", $nid));
     db_query("UPDATE {node_comment_statistics} SET comment_count = 0, last_comment_timestamp = %d, last_comment_name = '', last_comment_uid = %d WHERE nid = %d", $node->created, $node->uid, $nid);
   }
-  cache_clear_all($nid, 'cache_node');
 }
 
 /**
