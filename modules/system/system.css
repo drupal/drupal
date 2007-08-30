@@ -1,4 +1,4 @@
-/* $Id: system.css,v 1.32 2007/06/27 17:54:49 goba Exp $ */
+/* $Id: system.css,v 1.33 2007/08/30 17:37:08 goba Exp $ */
 
 /*
 ** HTML elements
@@ -351,6 +351,10 @@ html.js fieldset.collapsed legend a {
 * html.js fieldset.collapsed legend *,
 * html.js fieldset.collapsed table * {
   display: inline;
+}
+/* For Safari 2 to prevent collapsible fieldsets containing tables from dissapearing due to tableheader.js. */
+html.js fieldset.collapsible {
+  position: relative;
 }
 html.js fieldset.collapsible legend a {
   display: block;

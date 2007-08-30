@@ -1,4 +1,4 @@
-// $Id: tableheader.js,v 1.4 2007/07/01 15:37:08 dries Exp $
+// $Id: tableheader.js,v 1.5 2007/08/30 17:37:08 goba Exp $
 
 Drupal.behaviors.tableHeader = function (context) {
   // Keep track of all header cells.
@@ -42,8 +42,7 @@ Drupal.behaviors.tableHeader = function (context) {
         ref = table;
         div.wide = true;
       }
-      $(div).css('width', parseInt($(ref).width())
-                        - parseInt($(div).css('paddingLeft')) +'px');
+      $(div).css('width', $(ref).width() - parseInt($(div).css('paddingLeft')) +'px');
 
       // Get position and store.
       div.cell = this;
@@ -96,8 +95,7 @@ Drupal.behaviors.tableHeader = function (context) {
           // Resize the first cell to fit the table.
           ref = this.table;
         }
-        $(this).css('width', parseInt($(ref).width())
-                           - parseInt($(this).css('paddingLeft')) +'px');
+        $(this).css('width', $(ref).width() - parseInt($(this).css('paddingLeft')) +'px');
       });
 
       // Reset timer
