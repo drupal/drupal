@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.72 2007/08/29 14:57:48 goba Exp $
+// $Id: install.php,v 1.73 2007/08/30 19:31:28 dries Exp $
 
 require_once './includes/install.inc';
 
@@ -970,6 +970,7 @@ function install_configure_form_submit($form, &$form_state) {
   $form_state['old_values'] = $form_state['values'];
   $form_state['values'] = $form_state['values']['account'];
   user_register_submit($form, $form_state);
+  db_query("INSERT INTO {users} (uid, name, mail) VALUES(%d, '%s', '%s')", 0, '', '');
   $form_state['values'] = $form_state['old_values'];
   unset($form_state['old_values']);
   variable_set('user_email_verification', TRUE);
