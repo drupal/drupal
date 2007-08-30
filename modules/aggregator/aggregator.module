@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.352 2007/08/30 18:22:20 goba Exp $
+// $Id: aggregator.module,v 1.353 2007/08/30 20:20:38 dries Exp $
 
 /**
  * @file
@@ -558,14 +558,14 @@ function aggregator_form_feed_submit($form, &$form_state) {
  * Add/edit/delete an aggregator feed.
  */
 function aggregator_save_feed($edit) {
-  if ($edit['fid']) {
+  if (!empty($edit['fid'])) {
     // An existing feed is being modified, delete the category listings.
     db_query('DELETE FROM {aggregator_category_feed} WHERE fid = %d', $edit['fid']);
   }
-  if ($edit['fid'] && $edit['title']) {
+  if (!empty($edit['fid']) && !empty($edit['title'])) {
     db_query("UPDATE {aggregator_feed} SET title = '%s', url = '%s', refresh = %d WHERE fid = %d", $edit['title'], $edit['url'], $edit['refresh'], $edit['fid']);
   }
-  else if ($edit['fid']) {
+  else if (!empty($edit['fid'])) {
     $result = db_query('SELECT iid FROM {aggregator_item} WHERE fid = %d', $edit['fid']);
     while ($item = db_fetch_object($result)) {
       $items[] = "iid = $item->iid";
@@ -628,7 +628,7 @@ function aggregator_element_start($parser, $name, $attributes) {
         $element = $name;
       }
     case 'LINK':
-      if ($attributes['REL'] == 'alternate') {
+      if (!empty($attributes['REL']) && $attributes['REL'] == 'alternate') {
         if ($element == 'ITEM') {
           $items[$item]['LINK'] = $attributes['HREF'];
         }
@@ -679,6 +679,9 @@ function aggregator_element_data($parser, $data) {
   global $channel, $element, $items, $item, $image, $tag;
   switch ($element) {
     case 'ITEM':
+      if(empty($items[$item][$tag])) {
+        $items[$item][$tag] = '';
+      }
       $items[$item][$tag] .= $data;
       break;
     case 'IMAGE':
@@ -766,7 +769,7 @@ function aggregator_refresh($feed) {
           $image[$key] = trim($value);
         }
 
-        if ($image['LINK'] && $image['URL'] && $image['TITLE']) {
+        if (!empty($image['LINK']) && !empty($image['URL']) && !empty($image['TITLE'])) {
           // Note, we should really use theme_image() here but that only works with local images it won't work with images fetched with a URL unless PHP version > 5
           $image = '<a href="'. check_url($image['LINK']) .'" class="feed-image"><img src="'. check_url($image['URL']) .'" alt="'. check_plain($image['TITLE']) .'" /></a>';
         }
@@ -902,13 +905,13 @@ function aggregator_parse_feed(&$data, $feed) {
     /**
      * Atom feeds have a CONTENT and/or SUMMARY tag instead of a DESCRIPTION tag
      */
-    if ($item['CONTENT:ENCODED']) {
+    if (!empty($item['CONTENT:ENCODED'])) {
       $item['DESCRIPTION'] = $item['CONTENT:ENCODED'];
     }
-    else if ($item['SUMMARY']) {
+    else if (!empty($item['SUMMARY'])) {
       $item['DESCRIPTION'] = $item['SUMMARY'];
     }
-    else if ($item['CONTENT']) {
+    else if (!empty($item['CONTENT'])) {
       $item['DESCRIPTION'] = $item['CONTENT'];
     }
 
@@ -952,8 +955,7 @@ function aggregator_parse_feed(&$data, $feed) {
     else {
       $entry = db_fetch_object(db_query("SELECT iid FROM {aggregator_item} WHERE fid = %d AND title = '%s'", $feed['fid'], $title));
     }
-
-    aggregator_save_item(array('iid' => $entry->iid, 'fid' => $feed['fid'], 'timestamp' => $timestamp, 'title' => $title, 'link' => $link, 'author' => $item['AUTHOR'], 'description' => $item['DESCRIPTION'], 'guid' => $guid));
+    aggregator_save_item(array('iid' => (isset($entry->iid)?$entry->iid:''), 'fid' => $feed['fid'], 'timestamp' => $timestamp, 'title' => $title, 'link' => $link, 'author' => (empty($item['AUTHOR'])?'':$item['AUTHOR']), 'description' => $item['DESCRIPTION'], 'guid' => $guid));
   }
 
   /*
@@ -1393,7 +1395,7 @@ function theme_aggregator_summary_item($item) {
 function theme_aggregator_page_item($item) {
 
   $source = '';
-  if ($item->ftitle && $item->fid) {
+  if (isset($item->ftitle) && isset($item->fid)) {
     $source = l($item->ftitle, "aggregator/sources/$item->fid", array('attributes' => array('class' => 'feed-item-source'))) . ' -';
   }
 
@@ -1404,7 +1406,7 @@ function theme_aggregator_page_item($item) {
     $source_date = format_date($item->timestamp, 'custom', variable_get('date_format_medium', 'D, m/d/Y - H:i'));
   }
 
-  $output .= "<div class=\"feed-item\">\n";
+  $output = "<div class=\"feed-item\">\n";
   $output .= '<h3 class="feed-item-title"><a href="'. check_url($item->link) .'">'. check_plain($item->title) ."</a></h3>\n";
   $output .= "<div class=\"feed-item-meta\">$source <span class=\"feed-item-date\">$source_date</span></div>\n";
 
