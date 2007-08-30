@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.375 2007/08/30 15:50:58 goba Exp $
+// $Id: theme.inc,v 1.376 2007/08/30 19:54:21 dries Exp $
 
 /**
  * @file
@@ -1609,7 +1609,7 @@ function template_preprocess(&$variables, $hook) {
   static $count = array();
 
   // Track run count for each hook to provide zebra striping.
-  // See "template_preprocess_block()" which provides the same feature for sidebar blocks. 
+  // See "template_preprocess_block()" which provides the same feature for sidebar blocks.
   $count[$hook] = isset($count[$hook]) && is_int($count[$hook]) ? $count[$hook] : 1;
   $variables['zebra'] = ($count[$hook] % 2) ? 'odd' : 'even';
   $variables['id'] = $count[$hook]++;

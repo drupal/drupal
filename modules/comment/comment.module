@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.577 2007/08/30 15:31:46 goba Exp $
+// $Id: comment.module,v 1.578 2007/08/30 19:54:22 dries Exp $
 
 /**
  * @file
@@ -814,7 +814,7 @@ function comment_save($edit) {
         drupal_set_message(t('Your comment has been queued for moderation by site administrators and will be published after approval.'));
       }
       else {
-	comment_invoke_comment($edit, 'publish');
+  comment_invoke_comment($edit, 'publish');
       }
       return $edit['cid'];
     }

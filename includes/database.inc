@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.77 2007/08/29 18:38:55 goba Exp $
+// $Id: database.inc,v 1.78 2007/08/30 19:54:21 dries Exp $
 
 /**
  * @file
@@ -476,14 +476,14 @@ function _db_type_placeholder($type) {
       // presumably no db's "escape string" function will mess with
       // those characters.
       return '%s';
-    
+
     case 'serial':
     case 'int':
       return '%d';
 
     case 'float':
       return '%f';
-    
+
     case 'blob':
       return '%b';
   }

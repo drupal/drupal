@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.230 2007/08/28 11:42:56 goba Exp $
+// $Id: update.php,v 1.231 2007/08/30 19:54:21 dries Exp $
 
 /**
  * @file
@@ -60,11 +60,11 @@ function db_add_column(&$ret, $table, $column, $type, $attributes = array()) {
 
   $ret[] = update_sql("ALTER TABLE {". $table ."} ADD $column $type");
   if (!empty($default)) {
-    $ret[] = update_sql("ALTER TABLE {". $table ."} ALTER $column SET $default"); 
+    $ret[] = update_sql("ALTER TABLE {". $table ."} ALTER $column SET $default");
   }
   if (!empty($not_null)) {
-    if (!empty($default)) { 
-      $ret[] = update_sql("UPDATE {". $table ."} SET $column = $default_val"); 
+    if (!empty($default)) {
+      $ret[] = update_sql("UPDATE {". $table ."} SET $column = $default_val");
     }
     $ret[] = update_sql("ALTER TABLE {". $table ."} ALTER $column SET NOT NULL");
   }
