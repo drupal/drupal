@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.374 2007/08/29 16:56:13 goba Exp $
+// $Id: theme.inc,v 1.375 2007/08/30 15:50:58 goba Exp $
 
 /**
  * @file
@@ -1119,7 +1119,7 @@ function theme_links($links, $attributes = array('class' => 'links')) {
       if ($i == $num_links) {
         $class .= ' last';
       }
-      if ($link['href'] == $_GET['q']) {
+      if (isset($link['href']) && $link['href'] == $_GET['q']) {
         $class .= ' active';
       }
       $output .= '<li class="'. $class .'">';
