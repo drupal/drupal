@@ -985,6 +985,7 @@ function drupal_maintenance_theme() {
   require_once './includes/theme.inc';
   require_once './includes/common.inc';
   require_once './includes/unicode.inc';
+  require_once './includes/file.inc';
   require_once './modules/filter/filter.module';
   unicode_check();
   drupal_add_css(drupal_get_path('module', 'system') .'/defaults.css', 'module');
