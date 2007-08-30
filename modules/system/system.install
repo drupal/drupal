@@ -3774,6 +3774,7 @@ function system_update_6030() {
   */
 function system_update_6031() {
   variable_set('install_task', 'done');
+  return array();
 }
 
 /**
