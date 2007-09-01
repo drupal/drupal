@@ -1,4 +1,4 @@
-// $Id: book.js,v 1.1 2007/07/30 18:20:21 dries Exp $
+// $Id: book.js,v 1.2 2007/09/01 07:08:10 goba Exp $
 
 Drupal.behaviors.bookSelect = function(context) {
    // This behavior attaches by ID, so is only valid once on a page.
@@ -14,7 +14,7 @@ Drupal.behaviors.bookSelect = function(context) {
     .keyup(Drupal.bookFillSelect)
     .change(Drupal.bookFillSelect)
     .addClass('book-select-processed');
-}
+};
 
 // This function passes the form information and the book ID to a Drupal callback
 // and retrieves a parent select with changed options to replace the one in the form.

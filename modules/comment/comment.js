@@ -1,4 +1,4 @@
-// $Id: comment.js,v 1.3 2007/07/01 15:37:08 dries Exp $
+// $Id: comment.js,v 1.4 2007/09/01 07:08:11 goba Exp $
 
 Drupal.behaviors.comment = function (context) {
   var parts = new Array("name", "homepage", "mail");
@@ -32,4 +32,4 @@ Drupal.comment.getCookie = function(name) {
   }
 
   return returnValue;
-}
+};
