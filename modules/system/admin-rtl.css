@@ -24,14 +24,13 @@ table.screenshot {
   margin-left: 1em;
 }
 
-div.date-container {
+.date-container {
   clear: right;
 }
-
-div.date-container div {
+.date-container .select-container, .date-container .custom-container {
   float: right;
 }
-div.custom-container {
+.date-container .custom-container {
   margin-left: inherit;
   margin-right: 15px;
 }

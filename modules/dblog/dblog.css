@@ -4,6 +4,15 @@
   float: left; /* LTR */
   padding-right: .8em; /* LTR */
   margin: 0.1em;
+  /**
+   * In Opera 9, DOM elements with the property of "overflow: auto"
+   * will partially hide its contents with unnecessary scrollbars when
+   * its immediate child is floated without an explicit width set.
+   */
+  width: 15em;
+}
+#dblog-filter-form .form-item select.form-select {
+  width: 100%;
 }
 tr.dblog-user {
   background: #ffd;

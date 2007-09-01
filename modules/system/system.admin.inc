@@ -1378,7 +1378,7 @@ function system_date_time_settings() {
 
   $date_format_short = variable_get('date_format_short', $date_short[1]);
   $form['date_formats']['date_format_short'] = array(
-    '#prefix' => '<div class="date-container"><div>',
+    '#prefix' => '<div class="date-container"><div class="select-container">',
     '#suffix' => '</div>',
     '#type' => 'select',
     '#title' => t('Short date format'),
@@ -1401,7 +1401,7 @@ function system_date_time_settings() {
 
   $date_format_medium = variable_get('date_format_medium', $date_medium[1]);
   $form['date_formats']['date_format_medium'] = array(
-    '#prefix' => '<div class="date-container"><div>',
+    '#prefix' => '<div class="date-container"><div class="select-container">',
     '#suffix' => '</div>',
     '#type' => 'select',
     '#title' => t('Medium date format'),
@@ -1424,7 +1424,7 @@ function system_date_time_settings() {
 
   $date_format_long = variable_get('date_format_long', $date_long[0]);
   $form['date_formats']['date_format_long'] = array(
-    '#prefix' => '<div class="date-container"><div>',
+    '#prefix' => '<div class="date-container"><div class="select-container">',
     '#suffix' => '</div>',
     '#type' => 'select',
     '#title' => t('Long date format'),
