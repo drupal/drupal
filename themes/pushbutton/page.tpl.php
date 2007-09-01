@@ -52,9 +52,9 @@
 
 <table id="content" border="0" cellpadding="15" cellspacing="0" width="100%">
   <tr>
-    <?php if ($sidebar_left != ""): ?>
+    <?php if ($left != ""): ?>
     <td id="sidebar-left">
-      <?php print $sidebar_left ?>
+      <?php print $left ?>
     </td>
     <?php endif; ?>
 
@@ -89,9 +89,9 @@
 
       </div><!-- main -->
     </td>
-    <?php if ($sidebar_right != ""): ?>
+    <?php if ($right != ""): ?>
     <td id="sidebar-right">
-      <?php print $sidebar_right ?>
+      <?php print $right ?>
     </td>
     <?php endif; ?>
   </tr>
@@ -110,9 +110,9 @@
   </tr>
 </table>
 
-<?php if ($footer_message) : ?>
+<?php if ($footer_message || $footer) : ?>
 <div id="footer-message">
-    <p><?php print $footer_message;?></p>
+    <p><?php print $footer_message . $footer;?></p>
 </div>
 <?php endif; ?>
 <?php print $closure;?>

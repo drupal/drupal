@@ -14,10 +14,9 @@
  * - $block->region: The block region embedding the current block.
  *
  * Helper variables:
- * - $block_zebra: Outputs 'odd' and 'even' dependent on the default sidebar
- *   block regions.
+ * - $block_zebra: Outputs 'odd' and 'even' dependent on each block region.
  * - $zebra: Same output as $block_zebra but independent of any block region.
- * - $block_id: counter within the default sidebar block regions.
+ * - $block_id: Counter dependent on each block region.
  * - $id: Same output as $block_id but independent of any block region.
  * - $is_front: Flags true when presented in the front page.
  * - $logged_in: Flags true when the current user is a logged-in member.

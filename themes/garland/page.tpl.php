@@ -12,7 +12,7 @@
     <link type="text/css" rel="stylesheet" media="all" href="<?php print base_path() . path_to_theme() ?>/fix-ie.css" />
     <![endif]-->
   </head>
-  <body<?php print phptemplate_body_class($sidebar_left, $sidebar_right); ?>>
+  <body<?php print phptemplate_body_class($left, $right); ?>>
 
 <!-- Layout -->
   <div id="header-region" class="clear-block"><?php print $header; ?></div>
@@ -54,10 +54,10 @@
 
       </div> <!-- /header -->
 
-      <?php if ($sidebar_left): ?>
+      <?php if ($left): ?>
         <div id="sidebar-left" class="sidebar">
           <?php if ($search_box): ?><div class="block block-theme"><?php print $search_box ?></div><?php endif; ?>
-          <?php print $sidebar_left ?>
+          <?php print $left ?>
         </div>
       <?php endif; ?>
 
@@ -76,13 +76,13 @@
           <?php print $content ?>
           <span class="clear"></span>
           <?php print $feed_icons ?>
-          <div id="footer"><?php print $footer_message ?></div>
+          <div id="footer"><?php print $footer_message . $footer ?></div>
       </div></div></div></div> <!-- /.left-corner, /.right-corner, /#squeeze, /#center -->
 
-      <?php if ($sidebar_right): ?>
+      <?php if ($right): ?>
         <div id="sidebar-right" class="sidebar">
-          <?php if (!$sidebar_left && $search_box): ?><div class="block block-theme"><?php print $search_box ?></div><?php endif; ?>
-          <?php print $sidebar_right ?>
+          <?php if (!$left && $search_box): ?><div class="block block-theme"><?php print $search_box ?></div><?php endif; ?>
+          <?php print $right ?>
         </div>
       <?php endif; ?>
 

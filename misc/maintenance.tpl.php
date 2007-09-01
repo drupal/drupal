@@ -15,7 +15,7 @@
   </head>
   <body class="<?php
   $classes = array('', 'sidebar-left', 'sidebar-right', 'sidebar-both');
-  print $classes[((bool)$sidebar_left) + 2 * ((bool)$sidebar_right)];
+  print $classes[((bool)$left) + 2 * ((bool)$right)];
   ?>">
 
 <!-- Layout -->
@@ -30,9 +30,9 @@
         </div>
       </div> <!-- /header -->
 
-      <?php if ($sidebar_left): ?>
+      <?php if ($left): ?>
         <div id="sidebar-left" class="sidebar">
-          <?php print $sidebar_left ?>
+          <?php print $left ?>
         </div>
       <?php endif; ?>
 
@@ -47,9 +47,9 @@
 
       </div></div></div></div> <!-- /.left-corner, /.right-corner, /#squeeze, /#center -->
 
-      <?php if ($sidebar_right): ?>
+      <?php if ($right): ?>
         <div id="sidebar-right" class="sidebar">
-          <?php print $sidebar_right ?>
+          <?php print $right ?>
         </div>
       <?php endif; ?>
 
