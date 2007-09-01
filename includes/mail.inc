@@ -276,7 +276,7 @@ function drupal_html_to_text($string, $allowed_tags = NULL) {
   // Replace inline <a> tags with the text of link and a footnote.
   // 'See <a href="http://drupal.org">the Drupal site</a>' becomes
   // 'See the Drupal site [1]' with the URL included as a footnote.
-  $pattern = '@(<a[^>]+?href="([^"]*)">(.+?)</a>)@i';
+  $pattern = '@(<a[^>]+?href="([^"]*)"[^>]*?>(.+?)</a>)@i';
   $string = preg_replace_callback($pattern, '_drupal_html_to_mail_urls', $string);
   $urls = _drupal_html_to_mail_urls();
   $footnotes = '';
