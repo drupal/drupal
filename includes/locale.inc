@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.152 2007/08/20 07:54:46 goba Exp $
+// $Id: locale.inc,v 1.153 2007/09/01 12:50:47 goba Exp $
 
 /**
  * @file
@@ -498,7 +498,7 @@ function locale_translate_overview_screen() {
   }
 
   // Languages with at least one record in the locale table.
-  $translations = db_query("SELECT COUNT(*) AS translation, t.language, s.textgroup FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid WHERE translation != '' GROUP BY textgroup, language");
+  $translations = db_query("SELECT COUNT(*) AS translation, t.language, s.textgroup FROM {locales_source} s INNER JOIN {locales_target} t ON s.lid = t.lid GROUP BY textgroup, language");
   while ($data = db_fetch_object($translations)) {
     $ratio = (!empty($groupsums[$data->textgroup]) && $data->translation > 0) ? round(($data->translation/$groupsums[$data->textgroup])*100., 2) : 0;
     $rows[$data->language][$data->textgroup] = $data->translation .'/'. $groupsums[$data->textgroup] ." ($ratio%)";
@@ -551,7 +551,7 @@ function locale_translate_seek_form() {
   $form['search']['translation'] = array('#type' => 'radios',
     '#title' => t('Search in'),
     '#default_value' => (!empty($query['translation']) ? $query['translation'] : 'all'),
-    '#options' => array('all' => t('All strings in that language'), 'translated' => t('Only translated strings'), 'untranslated' => t('Only untranslated strings')),
+    '#options' => array('all' => t('Both translated and untranslated strings'), 'translated' => t('Only translated strings'), 'untranslated' => t('Only untranslated strings')),
   );
   $groups = module_invoke_all('locale', 'groups');
   $form['search']['group'] = array('#type' => 'radios',
@@ -1704,7 +1704,7 @@ function _locale_parse_js_file($filepath) {
  */
 function _locale_export_get_strings($language = NULL, $group = 'default') {
   if (isset($language)) {
-    $result = db_query("SELECT s.lid, s.source, s.location, t.translation, t.plid, t.plural FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid WHERE t.language = '%s' AND s.textgroup = '%s' ORDER BY t.plid, t.plural", $language->language, $group);
+    $result = db_query("SELECT s.lid, s.source, s.location, t.translation, t.plid, t.plural FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid AND t.language = '%s' WHERE s.textgroup = '%s' ORDER BY t.plid, t.plural", $language->language, $group);
   }
   else {
     $result = db_query("SELECT s.lid, s.source, s.location, t.plid, t.plural FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid WHERE s.textgroup = '%s' ORDER BY t.plid, t.plural", $group);
@@ -1938,15 +1938,16 @@ function _locale_translate_seek() {
     $join = "SELECT s.source, s.location, s.lid, s.textgroup, t.translation, t.language FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid ";
 
     $arguments = array();
+    $limit_language = FALSE;
     // Compute LIKE section
     switch ($query['translation']) {
       case 'translated':
-        $where = "WHERE (t.translation LIKE '%%%s%%' AND t.translation != '')";
+        $where = "WHERE (t.translation LIKE '%%%s%%')";
         $orderby = "ORDER BY t.translation";
         $arguments[] = $query['string'];
         break;
       case 'untranslated':
-        $where = "WHERE (s.source LIKE '%%%s%%' AND t.translation = '')";
+        $where = "WHERE (s.source LIKE '%%%s%%' AND t.translation IS NULL)";
         $orderby = "ORDER BY s.source";
         $arguments[] = $query['string'];
         break;
@@ -1979,14 +1980,16 @@ function _locale_translate_seek() {
         break;
       // Some different language
       default:
-        $sql = "$join $where $grouplimit AND t.language = '%s' $orderby";
-        $arguments[] = $query['language'];
+        $sql = "$join AND t.language = '%s' $where $grouplimit $orderby";
+        array_unshift($arguments, $query['language']);
+        // Don't show translation flags for other languages, we can't see them with this search.
+        $limit_language = $query['language'];
     }
 
     $result = pager_query($sql, 50, 0, NULL, $arguments);
 
     $groups = module_invoke_all('locale', 'groups');
-    $header = array(t('Text group'), t('String'), t('Languages'), array('data' => t('Operations'), 'colspan' => '2'));
+    $header = array(t('Text group'), t('String'), ($limit_language) ? t('Language') : t('Languages'), array('data' => t('Operations'), 'colspan' => '2'));
     $arr = array();
     while ($locale = db_fetch_object($result)) {
       $arr[$locale->lid]['group'] = $groups[$locale->textgroup];
@@ -1996,7 +1999,13 @@ function _locale_translate_seek() {
     }
     $rows = array();
     foreach ($arr as $lid => $value) {
-      $rows[] = array($value['group'], array('data' => check_plain(truncate_utf8($value['source'], 150, FALSE, TRUE)) .'<br /><small>'. $value['location'] .'</small>'), array('data' => _locale_translate_language_list($value['languages']), 'align' => 'center'), array('data' => l(t('edit'), "admin/build/translate/edit/$lid"), 'class' => 'nowrap'), array('data' => l(t('delete'), "admin/build/translate/delete/$lid"), 'class' => 'nowrap'));
+      $rows[] = array(
+        $value['group'],
+        array('data' => check_plain(truncate_utf8($value['source'], 150, FALSE, TRUE)) .'<br /><small>'. $value['location'] .'</small>'),
+        array('data' => _locale_translate_language_list($value['languages'], $limit_language), 'align' => 'center'),
+        array('data' => l(t('edit'), "admin/build/translate/edit/$lid"), 'class' => 'nowrap'),
+        array('data' => l(t('delete'), "admin/build/translate/delete/$lid"), 'class' => 'nowrap'),
+      );
     }
 
     if (count($rows)) {
@@ -2048,7 +2057,7 @@ function _locale_rebuild_js($langcode = NULL) {
 
   // Construct the array for JavaScript translations.
   // We sort on plural so that we have all plural forms before singular forms.
-  $result = db_query("SELECT s.lid, s.source, t.plid, t.plural, t.translation FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid WHERE t.language = '%s' AND s.location LIKE '%%.js%%' AND s.textgroup = 'default' ORDER BY t.plural DESC", $language->language);
+  $result = db_query("SELECT s.lid, s.source, t.plid, t.plural, t.translation FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid AND t.language = '%s' WHERE s.location LIKE '%%.js%%' AND s.textgroup = 'default' ORDER BY t.plural DESC", $language->language);
 
   $translations = $plurals = array();
   while ($data = db_fetch_object($result)) {
@@ -2155,7 +2164,7 @@ function _locale_rebuild_js($langcode = NULL) {
 /**
  * List languages in search result table
  */
-function _locale_translate_language_list($translation) {
+function _locale_translate_language_list($translation, $limit_language) {
   // Add CSS
   drupal_add_css(drupal_get_path('module', 'locale') .'/locale.css', 'module', 'all', FALSE);
 
@@ -2163,7 +2172,9 @@ function _locale_translate_language_list($translation) {
   unset($languages['en']);
   $output = '';
   foreach ($languages as $langcode => $language) {
-    $output .= (!empty($translation[$langcode])) ? $langcode .' ' : "<em class=\"locale-untranslated\">$langcode</em> ";
+    if (!$limit_language || $limit_language == $langcode) {
+      $output .= (!empty($translation[$langcode])) ? $langcode .' ' : "<em class=\"locale-untranslated\">$langcode</em> ";
+    }
   }
 
   return $output;

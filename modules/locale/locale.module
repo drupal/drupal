@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.188 2007/08/19 08:08:44 dries Exp $
+// $Id: locale.module,v 1.189 2007/09/01 12:50:47 goba Exp $
 
 /**
  * @file
@@ -331,22 +331,15 @@ function locale($string = NULL, $langcode = NULL) {
     }
   }
 
-  // We have the translation cached (if it is TRUE, then there is no
-  // translation, so there is no point in checking the database)
-  if (isset($locale_t[$langcode][$string])) {
-    $string = ($locale_t[$langcode][$string] === TRUE ? $string : $locale_t[$langcode][$string]);
-  }
+  // If we have the translation cached, skip checking the database
+  if (!isset($locale_t[$langcode][$string])) {
 
-  // We do not have this translation cached, so get it from the DB.
-  else {
-    $translation = db_fetch_object(db_query("SELECT s.lid, t.translation FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid WHERE s.source = '%s' AND t.language = '%s' AND s.textgroup = 'default'", $string, $langcode));
+    // We do not have this translation cached, so get it from the DB.
+    $translation = db_fetch_object(db_query("SELECT s.lid, t.translation FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid AND t.language = '%s' WHERE s.source = '%s' AND s.textgroup = 'default'", $langcode, $string));
     if ($translation) {
       // We have the source string at least.
-      if ($translation->lid) {
-        // Cache translation string or TRUE if no translation exists.
-        $translation = (empty($translation->translation) ? TRUE : $translation->translation);
-        $locale_t[$langcode][$string] = $translation;
-      }
+      // Cache translation string or TRUE if no translation exists.
+      $locale_t[$langcode][$string] = (empty($translation->translation) ? TRUE : $translation->translation);
     }
     else {
       // We don't have the source string, cache this as untranslated.
@@ -357,7 +350,7 @@ function locale($string = NULL, $langcode = NULL) {
     }
   }
 
-  return $string;
+  return ($locale_t[$langcode][$string] === TRUE ? $string : $locale_t[$langcode][$string]);
 }
 
 /**
@@ -368,9 +361,10 @@ function locale($string = NULL, $langcode = NULL) {
 function locale_refresh_cache() {
   $languages = language_list('enabled');
   $languages = $languages['1'];
+  unset($languages['en']);
 
   foreach ($languages as $language) {
-    $result = db_query("SELECT s.source, t.translation, t.language FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid WHERE t.language = '%s' AND s.textgroup = 'default' AND LENGTH(s.source) < 75", $language->language);
+    $result = db_query("SELECT s.source, t.translation, t.language FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid AND t.language = '%s' WHERE s.textgroup = 'default' AND LENGTH(s.source) < 75", $language->language);
     $t = array();
     while ($data = db_fetch_object($result)) {
       $t[$data->source] = (empty($data->translation) ? TRUE : $data->translation);

@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.schema,v 1.5 2007/07/02 14:41:36 dries Exp $
+// $Id: locale.schema,v 1.6 2007/09/01 12:50:47 goba Exp $
 
 function locale_schema() {
   $schema['languages'] = array(
@@ -37,7 +37,7 @@ function locale_schema() {
       // Drupal path in case of online discovered translations or file path in case of imported strings.
       'location'  => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
       // A module defined group of translations, see hook_locale().
-      'textgroup' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'textgroup' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => 'default'),
       // The original string in English.
       'source'    => array('type' => 'text', 'mysql_type' => 'blob', 'not null' => TRUE),
     ),
