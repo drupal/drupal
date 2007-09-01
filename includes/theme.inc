@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.377 2007/09/01 05:35:15 dries Exp $
+// $Id: theme.inc,v 1.378 2007/09/01 05:42:48 dries Exp $
 
 /**
  * @file
@@ -983,8 +983,8 @@ function theme_maintenance_page($content, $show_messages = TRUE) {
     'head' => drupal_get_html_head(),
     'styles' => '',
     'scripts' => drupal_get_js(),
-    'sidebar_left' => drupal_get_content('left'),
-    'sidebar_right' => drupal_get_content('right'),
+    'left' => drupal_get_content('left'),
+    'right' => drupal_get_content('right'),
     'base_path' => base_path(),
     'path_to_theme' => base_path() .'themes/garland/minnelli',
     'logo' => base_path() .'themes/garland/minnelli/logo.png',
@@ -1017,8 +1017,8 @@ function theme_install_page($content) {
     'head' => drupal_get_html_head(),
     'styles' => drupal_get_css(),
     'scripts' => drupal_get_js(),
-    'sidebar_left' => drupal_get_content('left'),
-    'sidebar_right' => drupal_get_content('right'),
+    'left' => drupal_get_content('left'),
+    'right' => drupal_get_content('right'),
     'base_path' => base_path(),
     'path_to_theme' => base_path() .'themes/garland/minnelli',
     'logo' => base_path() .'themes/garland/minnelli/logo.png',
@@ -1616,7 +1616,7 @@ function template_preprocess(&$variables, $hook) {
   static $count = array();
 
   // Track run count for each hook to provide zebra striping.
-  // See "template_preprocess_block()" which provides the same feature for sidebar blocks.
+  // See "template_preprocess_block()" which provides the same feature specific to blocks.
   $count[$hook] = isset($count[$hook]) && is_int($count[$hook]) ? $count[$hook] : 1;
   $variables['zebra'] = ($count[$hook] % 2) ? 'odd' : 'even';
   $variables['id'] = $count[$hook]++;
@@ -1657,44 +1657,29 @@ function template_preprocess_page(&$variables) {
     drupal_set_html_head('<link rel="shortcut icon" href="'. check_url(theme_get_setting('favicon')) .'" type="image/x-icon" />');
   }
 
-  /**
-  * Populate sidebars.
-  */
-  $variables['sidebar_left'] = NULL;
-  $variables['sidebar_right'] = NULL;
-  $layout = 'none';
-  if ($variables['show_blocks']) {
-    global $sidebar_indicator;
-    /**
-     * Sidebar_indicator tells the block counting code to count sidebars separately.
-     */
-    $sidebar_indicator = 'left';
-    $variables['sidebar_left'] = theme('blocks', 'left');
-    if ($variables['sidebar_left'] != '') {
-      $layout = 'left';
-    }
-
-    $sidebar_indicator = 'right';
-    $variables['sidebar_right'] = theme('blocks', 'right');
-    if ($variables['sidebar_right'] != '') {
-      $variables['layout'] = ($layout == 'left') ? 'both' : 'right';
-    }
-    $sidebar_indicator = NULL;
-  }
-  $variables['layout'] = $layout;
-
   global $theme;
-  global $user;
-  // Populate the rest of the regions.
+  // Populate all block regions.
   $regions = system_region_list($theme);
   // Load all region content assigned via blocks.
   foreach (array_keys($regions) as $region) {
-    // Skip blocks in this region that have already been loaded.
-    // This pre-loading is necessary because phptemplate uses variable names different from
-    // the region names, e.g., 'sidebar_left' instead of 'left'.
-    if (!in_array($region, array('left', 'right', 'footer'))) {
-      isset($variables[$region]) ? $variables[$region] .= theme('blocks', $region) : $variables[$region] = theme('blocks', $region);
+    // Prevent left and right regions from rendering blocks when 'show_blocks' == FALSE.
+    if (!(!$variables['show_blocks'] && ($region == 'left' || $region == 'right'))) {
+      $blocks = theme('blocks', $region);
     }
+    else {
+      $blocks = '';
+    }
+    // Assign region to a region variable.
+    isset($variables[$region]) ? $variables[$region] .= $blocks : $variables[$region] = $blocks;
+  }
+
+  // Setup layout variable.
+  $variables['layout'] = 'none';
+  if (!empty($variables['left'])) {
+    $variables['layout'] = 'left';
+  }
+  if (!empty($variables['right'])) {
+    $variables['layout'] = ($variables['layout'] == 'left') ? 'both' : 'right';
   }
 
   // Construct page title
@@ -1711,7 +1696,7 @@ function template_preprocess_page(&$variables) {
   $variables['base_path']         = base_path();
   $variables['breadcrumb']        = theme('breadcrumb', drupal_get_breadcrumb());
   $variables['feed_icons']        = drupal_get_feeds();
-  $variables['footer_message']    = filter_xss_admin(variable_get('site_footer', FALSE)) . "\n" . theme('blocks', 'footer');
+  $variables['footer_message']    = filter_xss_admin(variable_get('site_footer', FALSE));
   $variables['head']              = drupal_get_html_head();
   $variables['help']              = theme('help');
   $variables['language']          = $GLOBALS['language'];
@@ -1739,9 +1724,9 @@ function template_preprocess_page(&$variables) {
   // This allows advanced theming based on context (home page, node of certain type, etc.).
   $body_classes = array();
   // Add a class that tells us whether we're on the front page or not.
-  $body_classes[] = (drupal_is_front_page()) ? 'front' : 'not-front';
+  $body_classes[] = $variables['is_front'] ? 'front' : 'not-front';
   // Add a class that tells us whether the page is viewed by an authenticated user or not.
-  $body_classes[] = ($user->uid > 0) ? 'logged-in' : 'not-logged-in';
+  $body_classes[] = $variables['logged_in'] ? 'logged-in' : 'not-logged-in';
   // Add arg(0) to make it possible to theme the page depending on the current page
   // type (e.g. node, admin, user, etc.). To avoid illegal characters in the class,
   // we're removing everything disallowed. We are not using 'a-z' as that might leave
@@ -1752,13 +1737,13 @@ function template_preprocess_page(&$variables) {
     $body_classes[] = 'node-type-'. form_clean_id($variables['node']->type);
   }
   // Add information about the number of sidebars.
-  if ($variables['sidebar_left'] && $variables['sidebar_right']) {
+  if ($variables['left'] && $variables['right']) {
     $body_classes[] = 'two-sidebars';
   }
-  elseif ($variables['sidebar_left']) {
+  elseif ($variables['left']) {
     $body_classes[] = 'one-sidebar sidebar-left';
   }
-  elseif ($variables['sidebar_right']) {
+  elseif ($variables['right']) {
     $body_classes[] = 'one-sidebar sidebar-right';
   }
   else {
@@ -1869,12 +1854,15 @@ function template_preprocess_node(&$variables) {
  * @see block.tpl.php
  */
 function template_preprocess_block(&$variables) {
-  global $sidebar_indicator;
-  $count['block_counter'][$sidebar_indicator] = isset($count['block_counter'][$sidebar_indicator]) && is_int($count['block_counter'][$sidebar_indicator]) ? $count['block_counter'][$sidebar_indicator] : 1;
+  static $block_counter = array();
+  // All blocks get an independent counter for each region.
+  if (!isset($block_counter[$variables['block']->region])) {
+    $block_counter[$variables['block']->region] = 1;
+  }
+  // Same with zebra striping.
+  $variables['block_zebra'] = ($block_counter[$variables['block']->region] % 2) ? 'odd' : 'even';
+  $variables['block_id'] = $block_counter[$variables['block']->region]++;
 
-  $variables['block_zebra'] = ($count['block_counter'][$sidebar_indicator] % 2) ? 'odd' : 'even';
-
-  $variables['block_id'] = $count['block_counter'][$sidebar_indicator]++;
   $variables['template_files'][] = 'block-' . $variables['block']->region;
   $variables['template_files'][] = 'block-' . $variables['block']->module;
   $variables['template_files'][] = 'block-' . $variables['block']->module .'-'. $variables['block']->delta;

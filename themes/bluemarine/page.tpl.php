@@ -1,5 +1,5 @@
 <?php
-// $Id: page.tpl.php,v 1.23 2007/08/07 08:39:36 goba Exp $
+// $Id: page.tpl.php,v 1.24 2007/09/01 05:42:48 dries Exp $
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="<?php print $language->language ?>" xml:lang="<?php print $language->language ?>">
 
@@ -33,8 +33,8 @@
 
 <table border="0" cellpadding="0" cellspacing="0" id="content">
   <tr>
-    <?php if ($sidebar_left) { ?><td id="sidebar-left">
-      <?php print $sidebar_left ?>
+    <?php if ($left) { ?><td id="sidebar-left">
+      <?php print $left ?>
     </td><?php } ?>
     <td valign="top">
       <?php if ($mission) { ?><div id="mission"><?php print $mission ?></div><?php } ?>
@@ -48,14 +48,15 @@
         <?php print $feed_icons; ?>
       </div>
     </td>
-    <?php if ($sidebar_right) { ?><td id="sidebar-right">
-      <?php print $sidebar_right ?>
+    <?php if ($right) { ?><td id="sidebar-right">
+      <?php print $right ?>
     </td><?php } ?>
   </tr>
 </table>
 
 <div id="footer">
   <?php print $footer_message ?>
+  <?php print $footer ?>
 </div>
 <?php print $closure ?>
 </body>

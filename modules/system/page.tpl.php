@@ -1,5 +1,5 @@
 <?php
-// $Id: page.tpl.php,v 1.5 2007/08/28 11:35:34 goba Exp $
+// $Id: page.tpl.php,v 1.6 2007/09/01 05:42:48 dries Exp $
 
 /**
  * @file page.tpl.php
@@ -48,7 +48,7 @@
  *   the site, if they have been configured.
  *
  * Page content (in order of occurrance in the default page.tpl.php):
- * - $sidebar_left: The HTML for the left sidebar.
+ * - $left: The HTML for the left sidebar.
  *
  * - $breadcrumb: The breadcrumb trail for the current page.
  * - $title: The page title, for use in the actual HTML content.
@@ -59,11 +59,12 @@
  *
  * - $content: The main content of the current Drupal page.
  *
- * - $sidebar_right: The HTML for the right sidebar.
+ * - $right: The HTML for the right sidebar.
  *
  * Footer/closing data:
  * - $feed_icons: A string of all feed icons for the current page.
  * - $footer_message: The footer message as defined in the admin settings.
+ * - $footer : The footer region.
  * - $closure: Final closing markup from any modules that have altered the page.
  *   This variable should always be output last, after all other dynamic content.
  *
@@ -134,9 +135,9 @@
 
     <div id="container" class="clear-block">
 
-      <?php if (!empty($sidebar_left)): ?>
+      <?php if (!empty($left)): ?>
         <div id="sidebar-left" class="column sidebar">
-          <?php print $sidebar_left; ?>
+          <?php print $left; ?>
         </div> <!-- /sidebar-left -->
       <?php endif; ?>
 
@@ -157,9 +158,9 @@
 
       </div></div> <!-- /main-squeeze /main -->
 
-      <?php if (!empty($sidebar_right)): ?>
+      <?php if (!empty($right)): ?>
         <div id="sidebar-right" class="column sidebar">
-          <?php print $sidebar_right; ?>
+          <?php print $right; ?>
         </div> <!-- /sidebar-right -->
       <?php endif; ?>
 
@@ -168,6 +169,7 @@
     <div id="footer-wrapper">
       <div id="footer">
         <?php print $footer_message; ?>
+        <?php if (!empty($footer)): print $footer; endif; ?>
       </div> <!-- /footer -->
     </div> <!-- /footer-wrapper -->
 

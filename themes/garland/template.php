@@ -1,20 +1,20 @@
 <?php
-// $Id: template.php,v 1.12 2007/07/20 08:51:13 dries Exp $
+// $Id: template.php,v 1.13 2007/09/01 05:42:48 dries Exp $
 
 /**
  * Sets the body-tag class attribute.
  *
  * Adds 'sidebar-left', 'sidebar-right' or 'sidebars' classes as needed.
  */
-function phptemplate_body_class($sidebar_left, $sidebar_right) {
-  if ($sidebar_left != '' && $sidebar_right != '') {
+function phptemplate_body_class($left, $right) {
+  if ($left != '' && $right != '') {
     $class = 'sidebars';
   }
   else {
-    if ($sidebar_left != '') {
+    if ($left != '') {
       $class = 'sidebar-left';
     }
-    if ($sidebar_right != '') {
+    if ($right != '') {
       $class = 'sidebar-right';
     }
   }

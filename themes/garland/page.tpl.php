@@ -1,5 +1,5 @@
 <?php
-// $Id: page.tpl.php,v 1.10 2007/08/23 16:41:19 dries Exp $
+// $Id: page.tpl.php,v 1.11 2007/09/01 05:42:48 dries Exp $
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php print $language->language ?>" lang="<?php print $language->language ?>">
@@ -12,7 +12,7 @@
     <link type="text/css" rel="stylesheet" media="all" href="<?php print base_path() . path_to_theme() ?>/fix-ie.css" />
     <![endif]-->
   </head>
-  <body<?php print phptemplate_body_class($sidebar_left, $sidebar_right); ?>>
+  <body<?php print phptemplate_body_class($left, $right); ?>>
 
 <!-- Layout -->
   <div id="header-region" class="clear-block"><?php print $header; ?></div>
@@ -54,10 +54,10 @@
 
       </div> <!-- /header -->
 
-      <?php if ($sidebar_left): ?>
+      <?php if ($left): ?>
         <div id="sidebar-left" class="sidebar">
           <?php if ($search_box): ?><div class="block block-theme"><?php print $search_box ?></div><?php endif; ?>
-          <?php print $sidebar_left ?>
+          <?php print $left ?>
         </div>
       <?php endif; ?>
 
@@ -76,13 +76,13 @@
           <?php print $content ?>
           <span class="clear"></span>
           <?php print $feed_icons ?>
-          <div id="footer"><?php print $footer_message ?></div>
+          <div id="footer"><?php print $footer_message . $footer ?></div>
       </div></div></div></div> <!-- /.left-corner, /.right-corner, /#squeeze, /#center -->
 
-      <?php if ($sidebar_right): ?>
+      <?php if ($right): ?>
         <div id="sidebar-right" class="sidebar">
-          <?php if (!$sidebar_left && $search_box): ?><div class="block block-theme"><?php print $search_box ?></div><?php endif; ?>
-          <?php print $sidebar_right ?>
+          <?php if (!$left && $search_box): ?><div class="block block-theme"><?php print $search_box ?></div><?php endif; ?>
+          <?php print $right ?>
         </div>
       <?php endif; ?>
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: maintenance.tpl.php,v 1.4 2007/08/23 16:41:19 dries Exp $
+// $Id: maintenance.tpl.php,v 1.5 2007/09/01 05:42:48 dries Exp $
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -15,7 +15,7 @@
   </head>
   <body class="<?php
   $classes = array('', 'sidebar-left', 'sidebar-right', 'sidebar-both');
-  print $classes[((bool)$sidebar_left) + 2 * ((bool)$sidebar_right)];
+  print $classes[((bool)$left) + 2 * ((bool)$right)];
   ?>">
 
 <!-- Layout -->
@@ -30,9 +30,9 @@
         </div>
       </div> <!-- /header -->
 
-      <?php if ($sidebar_left): ?>
+      <?php if ($left): ?>
         <div id="sidebar-left" class="sidebar">
-          <?php print $sidebar_left ?>
+          <?php print $left ?>
         </div>
       <?php endif; ?>
 
@@ -47,9 +47,9 @@
 
       </div></div></div></div> <!-- /.left-corner, /.right-corner, /#squeeze, /#center -->
 
-      <?php if ($sidebar_right): ?>
+      <?php if ($right): ?>
         <div id="sidebar-right" class="sidebar">
-          <?php print $sidebar_right ?>
+          <?php print $right ?>
         </div>
       <?php endif; ?>
 
