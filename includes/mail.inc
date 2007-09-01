@@ -1,5 +1,5 @@
 <?php
-// $Id: mail.inc,v 1.5 2007/08/26 08:00:49 dries Exp $
+// $Id: mail.inc,v 1.6 2007/09/01 14:35:19 goba Exp $
 
 /**
  * Compose and optionally send an e-mail message.
@@ -276,7 +276,7 @@ function drupal_html_to_text($string, $allowed_tags = NULL) {
   // Replace inline <a> tags with the text of link and a footnote.
   // 'See <a href="http://drupal.org">the Drupal site</a>' becomes
   // 'See the Drupal site [1]' with the URL included as a footnote.
-  $pattern = '@(<a[^>]+?href="([^"]*)">(.+?)</a>)@i';
+  $pattern = '@(<a[^>]+?href="([^"]*)"[^>]*?>(.+?)</a>)@i';
   $string = preg_replace_callback($pattern, '_drupal_html_to_mail_urls', $string);
   $urls = _drupal_html_to_mail_urls();
   $footnotes = '';
