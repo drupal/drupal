@@ -279,7 +279,7 @@ function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
         }
 
         // Let the theme engine register theme specific variable functions.
-        $prefixes[] = $prefix;
+        $prefixes = array($prefix);
         if ($type == 'theme_engine') {
           $prefixes[] = $theme;
         }
