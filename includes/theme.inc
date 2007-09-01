@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.378 2007/09/01 05:42:48 dries Exp $
+// $Id: theme.inc,v 1.379 2007/09/01 11:32:07 goba Exp $
 
 /**
  * @file
@@ -279,7 +279,7 @@ function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
         }
 
         // Let the theme engine register theme specific variable functions.
-        $prefixes[] = $prefix;
+        $prefixes = array($prefix);
         if ($type == 'theme_engine') {
           $prefixes[] = $theme;
         }
