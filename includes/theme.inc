@@ -278,11 +278,18 @@ function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
           }
         }
 
-        if (function_exists($prefix .'_preprocess')) {
-          $info['preprocess functions'][] = $prefix .'_preprocess';
+        // Let the theme engine register theme specific variable functions.
+        $prefixes[] = $prefix;
+        if ($type == 'theme_engine') {
+          $prefixes[] = $theme;
         }
-        if (function_exists($prefix .'_preprocess_'. $hook)) {
-          $info['preprocess functions'][] = $prefix .'_preprocess_'. $hook;
+        foreach ($prefixes as $prefix) {
+          if (function_exists($prefix .'_preprocess')) {
+            $info['preprocess functions'][] = $prefix .'_preprocess';
+          }
+          if (function_exists($prefix .'_preprocess_'. $hook)) {
+            $info['preprocess functions'][] = $prefix .'_preprocess_'. $hook;
+          }
         }
       }
       if (isset($cache[$hook]['preprocess functions']) && is_array($cache[$hook]['preprocess functions']) && empty($cache[$hook]['override preprocess functions'])) {
