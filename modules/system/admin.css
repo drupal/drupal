@@ -1,4 +1,4 @@
-/* $Id: admin.css,v 1.16 2007/05/27 17:57:48 goba Exp $ */
+/* $Id: admin.css,v 1.17 2007/09/01 05:27:04 dries Exp $ */
 
 /*
 ** Formatting for administration page
@@ -115,30 +115,20 @@ table.screenshot {
 /**
  * Date and time settings page
  */
-div.date-container {
+.date-container {
   overflow: auto;
   clear: left; /* LTR */
 }
-
-div.date-container > div, div.date-container > div > div {
-  margin-top: 0px;
-  margin-bottom: 0px;
+.date-container .form-item {
+  margin-top: 0;
 }
-
-div.date-container div {
+.date-container .select-container, .date-container .custom-container {
   float: left; /* LTR */
 }
-
-html.js div.custom-container {
-  display: none;
-}
-
-html.js div.custom-container .form-item label {
-  visibility: hidden;
-}
-
-div.custom-container {
+.date-container .custom-container {
   margin-left: 15px; /* LTR */
   width: 50%;
 }
-
+html.js .custom-container label {
+  visibility: hidden;
+}

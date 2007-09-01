@@ -1,4 +1,4 @@
-/* $Id: admin-rtl.css,v 1.2 2007/05/30 18:28:13 goba Exp $ */
+/* $Id: admin-rtl.css,v 1.3 2007/09/01 05:27:04 dries Exp $ */
 
 div.admin-panel .body {
   padding: 0 8px 2px 4px;
@@ -24,14 +24,13 @@ table.screenshot {
   margin-left: 1em;
 }
 
-div.date-container {
+.date-container {
   clear: right;
 }
-
-div.date-container div {
+.date-container .select-container, .date-container .custom-container {
   float: right;
 }
-div.custom-container {
+.date-container .custom-container {
   margin-left: inherit;
   margin-right: 15px;
 }
