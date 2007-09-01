@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.525 2007/08/29 14:57:49 goba Exp $
+// $Id: system.module,v 1.526 2007/09/01 14:41:21 goba Exp $
 
 /**
  * @file
@@ -477,21 +477,28 @@ function system_user($type, $edit, &$user, $category = NULL) {
 function system_admin_menu_block($item) {
   $content = array();
   if (!isset($item['mlid'])) {
-    $item['mlid'] = db_result(db_query("SELECT mlid FROM {menu_links} ml WHERE ml.router_path = '%s' AND menu_name = 'navigation'", $item['path']));
+    $item += db_fetch_array(db_query("SELECT mlid, menu_name FROM {menu_links} ml WHERE ml.router_path = '%s' AND module = 'system'", $item['path']));
   }
   $result = db_query("
-    SELECT *
+    SELECT m.*, ml.*
     FROM {menu_links} ml
     INNER JOIN {menu_router} m ON ml.router_path = m.path
-    WHERE ml.plid = %d AND ml.menu_name = 'navigation' AND hidden = 0
-    ORDER BY m.weight, m.title", $item['mlid']);
+    WHERE ml.plid = %d AND ml.menu_name = '%s' AND hidden = 0", $item['mlid'], $item['menu_name']);
   while ($item = db_fetch_array($result)) {
     _menu_link_translate($item);
     if (!$item['access']) {
       continue;
     }
-    $content[] = (array)$item;
+    // The link 'description' either derived from the hook_menu 'description' or
+    // entered by the user via menu module is saved as the title attribute.
+    if (!empty($item['options']['attributes']['title'])) {
+      $item['description'] = $item['options']['attributes']['title'];
+    }
+    // Prepare for sorting as in function _menu_tree_check_access().
+    // The weight is offset so it is always positive, with a uniform 5-digits.
+    $content[(50000 + $item['weight']) .' '. $item['title'] .' '. $item['mlid']] = $item;
   }
+  ksort($content);
   return $content;
 }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.9 2007/09/01 05:27:04 dries Exp $
+// $Id: system.admin.inc,v 1.10 2007/09/01 14:41:21 goba Exp $
 
 /**
  * @file
@@ -21,28 +21,42 @@ function system_main_admin_page($arg = NULL) {
   if (system_status(TRUE)) {
     drupal_set_message(t('One or more problems were detected with your Drupal installation. Check the <a href="@status">status report</a> for more information.', array('@status' => url('admin/logs/status'))), 'error');
   }
-  $result = db_query("
-    SELECT *
-    FROM {menu_links} ml
-    INNER JOIN {menu_router} m ON ml.router_path = m.path
-    WHERE ml.link_path like 'admin/%' AND ml.link_path != 'admin/help' AND ml.depth = 2 AND ml.menu_name = 'navigation' AND hidden = 0
-    ORDER BY p1 ASC, p2 ASC, p3 ASC");
   $blocks = array();
-  while ($item = db_fetch_array($result)) {
-    _menu_link_translate($item);
-    if (!$item['access']) {
-      continue;
+  if ($admin = db_fetch_array(db_query("SELECT menu_name, mlid FROM {menu_links} WHERE link_path = 'admin' AND module = 'system'"))) {
+    $result = db_query("
+      SELECT m.*, ml.*
+      FROM {menu_links} ml
+      INNER JOIN {menu_router} m ON ml.router_path = m.path
+      WHERE ml.link_path != 'admin/help' AND menu_name = '%s' AND ml.plid = %d AND hidden = 0", $admin);
+    while ($item = db_fetch_array($result)) {
+      _menu_link_translate($item);
+      if (!$item['access']) {
+        continue;
+      }
+      // The link 'description' either derived from the hook_menu 'description'
+      // or entered by the user via menu module is saved as the title attribute.
+      if (!empty($item['options']['attributes']['title'])) {
+        $item['description'] = $item['options']['attributes']['title'];
+      }
+      $block = $item;
+      $block['content'] = '';
+      if ($item['block_callback'] && function_exists($item['block_callback'])) {
+        $function = $item['block_callback'];
+        $block['content'] .= $function();
+      }
+      $block['content'] .= theme('admin_block_content', system_admin_menu_block($item));
+      // Prepare for sorting as in function _menu_tree_check_access().
+      // The weight is offset so it is always positive, with a uniform 5-digits.
+      $blocks[(50000 + $item['weight']) .' '. $item['title'] .' '. $item['mlid']] = $block;
     }
-    $block = $item;
-    $block['content'] = '';
-    if ($item['block_callback'] && function_exists($item['block_callback'])) {
-      $function = $item['block_callback'];
-      $block['content'] .= $function();
-    }
-    $block['content'] .= theme('admin_block_content', system_admin_menu_block($item));
-    $blocks[] = $block;
   }
-  return theme('admin_page', $blocks);
+  if ($blocks) {
+    ksort($blocks);
+    return theme('admin_page', $blocks);
+  }
+  else {
+    return t('You do not have any administrative items.');
+  }
 }
 
 
