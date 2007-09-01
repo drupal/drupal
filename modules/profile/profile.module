@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.217 2007/08/26 07:46:11 dries Exp $
+// $Id: profile.module,v 1.218 2007/09/01 06:15:33 goba Exp $
 
 /**
  * @file
@@ -375,6 +375,12 @@ function profile_field_form_validate($form, &$form_state) {
  * Process profile_field_form submissions.
  */
 function profile_field_form_submit($form, &$form_state) {
+  if (!isset($form_state['values']['options'])) {
+    $form_state['values']['options'] = '';
+  }
+  if (!isset($form_state['values']['page'])) {
+    $form_state['values']['page'] = '';
+  }
   if (!isset($form_state['values']['fid'])) {
     db_query("INSERT INTO {profile_fields} (title, name, explanation, category, type, weight, required, register, visibility, autocomplete, options, page) VALUES ('%s', '%s', '%s', '%s', '%s', %d, %d, %d, %d, %d, '%s', '%s')", $form_state['values']['title'], $form_state['values']['name'], $form_state['values']['explanation'], $form_state['values']['category'], $form_state['values']['type'], $form_state['values']['weight'], $form_state['values']['required'], $form_state['values']['register'], $form_state['values']['visibility'], $form_state['values']['autocomplete'], $form_state['values']['options'], $form_state['values']['page']);
 
@@ -695,7 +701,7 @@ function profile_form_profile($edit, $user, $category, $register = FALSE) {
       case 'textarea':
         $fields[$category][$field->name] = array('#type' => 'textarea',
           '#title' => check_plain($field->title),
-          '#default_value' => $edit[$field->name],
+          '#default_value' => isset($edit[$field->name]) ? $edit[$field->name] : '',
           '#description' => _profile_form_explanation($field),
           '#required' => $field->required,
         );
@@ -703,7 +709,7 @@ function profile_form_profile($edit, $user, $category, $register = FALSE) {
       case 'list':
         $fields[$category][$field->name] = array('#type' => 'textarea',
           '#title' => check_plain($field->title),
-          '#default_value' => $edit[$field->name],
+          '#default_value' => isset($edit[$field->name]) ? $edit[$field->name] : '',
           '#description' => _profile_form_explanation($field),
           '#required' => $field->required,
         );
@@ -711,7 +717,7 @@ function profile_form_profile($edit, $user, $category, $register = FALSE) {
       case 'checkbox':
         $fields[$category][$field->name] = array('#type' => 'checkbox',
           '#title' => check_plain($field->title),
-          '#default_value' => $edit[$field->name],
+          '#default_value' => isset($edit[$field->name]) ? $edit[$field->name] : '',
           '#description' => _profile_form_explanation($field),
           '#required' => $field->required,
         );
@@ -726,7 +732,7 @@ function profile_form_profile($edit, $user, $category, $register = FALSE) {
         }
         $fields[$category][$field->name] = array('#type' => 'select',
           '#title' => check_plain($field->title),
-          '#default_value' => $edit[$field->name],
+          '#default_value' => isset($edit[$field->name]) ? $edit[$field->name] : '',
           '#options' => $options,
           '#description' => _profile_form_explanation($field),
           '#required' => $field->required,
@@ -735,7 +741,7 @@ function profile_form_profile($edit, $user, $category, $register = FALSE) {
       case 'date':
         $fields[$category][$field->name] = array('#type' => 'date',
           '#title' => check_plain($field->title),
-          '#default_value' => $edit[$field->name],
+          '#default_value' => isset($edit[$field->name]) ? $edit[$field->name] : '',
           '#description' => _profile_form_explanation($field),
           '#required' => $field->required,
         );
