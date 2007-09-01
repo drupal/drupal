@@ -32,4 +32,4 @@ Drupal.comment.getCookie = function(name) {
   }
 
   return returnValue;
-}
+};

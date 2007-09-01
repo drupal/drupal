@@ -14,7 +14,7 @@ Drupal.behaviors.bookSelect = function(context) {
     .keyup(Drupal.bookFillSelect)
     .change(Drupal.bookFillSelect)
     .addClass('book-select-processed');
-}
+};
 
 // This function passes the form information and the book ID to a Drupal callback
 // and retrieves a parent select with changed options to replace the one in the form.

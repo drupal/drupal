@@ -2,7 +2,7 @@
 
 Drupal.behaviors.tableSelect = function (context) {
   $('form table[th.select-all]:not(.tableSelect-processed)', context).each(Drupal.tableSelect);
-}
+};
 
 Drupal.tableSelect = function() {
   // Keep track of the table, which checkbox is checked and alias the settings.
