@@ -106,6 +106,15 @@ function locale_update_6004() {
 }
 
 /**
+ * Prune strings with no translations (will be automatically re-registered if still in use)
+ */
+function locale_update_6005() {
+  $ret = array();
+  $ret[] = update_sql("DELETE s FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid WHERE t.lid IS NULL");
+  return $ret;
+}
+
+/**
  * @} End of "defgroup updates-5.x-to-6.x"
  */
 

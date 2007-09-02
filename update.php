@@ -768,6 +768,7 @@ function update_fix_d6_requirements() {
     }
     if (db_table_exists('locales_source')) {
       db_add_field($ret, 'locales_source', 'textgroup', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => 'default'));
+      db_add_field($ret, 'locales_source', 'version', array('type' => 'varchar', 'length' => 20, 'not null' => TRUE, 'default' => 'none'));
     }
     variable_set('update_d6_requirements', TRUE);
   }
