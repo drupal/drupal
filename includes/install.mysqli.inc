@@ -1,5 +1,5 @@
 <?php
-// $Id: install.mysqli.inc,v 1.7 2007/08/06 10:28:42 goba Exp $
+// $Id: install.mysqli.inc,v 1.8 2007/09/02 12:50:55 goba Exp $
 
 // MySQLi specific install functions
 
@@ -36,13 +36,13 @@ function drupal_test_mysqli($url, &$success) {
   $connection = mysqli_init();
   @mysqli_real_connect($connection, $url['host'], $url['user'], $url['pass'], substr($url['path'], 1), $url['port'], NULL, MYSQLI_CLIENT_FOUND_ROWS);
   if (mysqli_connect_errno() >= 2000 || mysqli_connect_errno() == 1045) {
-    drupal_set_message(st('Failure to connect to your MySQL database server. MySQL reports the following message: %error.<ul><li>Are you sure you have the correct username and password?</li><li>Are you sure that you have typed the correct database hostname?</li><li>Are you sure that the database server is running?</li></ul>For more help, see the <a href="http://drupal.org/node/258">Installation and upgrading handbook</a>. If you are unsure what these terms mean you should probably contact your hosting provider.', array('%error' => mysqli_error($connection))), 'error');
+    drupal_set_message(st('Failure to connect to your MySQL database server. MySQL reports the following message: %error.<ul><li>Are you sure you have the correct username and password?</li><li>Are you sure that you have typed the correct database hostname?</li><li>Are you sure that the database server is running?</li></ul>For more help, see the <a href="http://drupal.org/node/258">Installation and upgrading handbook</a>. If you are unsure what these terms mean you should probably contact your hosting provider.', array('%error' => mysqli_connect_error())), 'error');
     return FALSE;
   }
 
   // Test selecting the database.
   if (mysqli_connect_errno() > 0) {
-    drupal_set_message(st('We were able to connect to the MySQL database server (which means your username and password are valid) but not able to select your database. MySQL reports the following message: %error.<ul><li>Are you sure you have the correct database name?</li><li>Are you sure the database exists?</li><li>Are you sure the username has permission to access the database?</li></ul>For more help, see the <a href="http://drupal.org/node/258">Installation and upgrading handbook</a>. If you are unsure what these terms mean you should probably contact your hosting provider.', array('%error' => mysqli_error($connection))), 'error');
+    drupal_set_message(st('We were able to connect to the MySQL database server (which means your username and password are valid) but not able to select your database. MySQL reports the following message: %error.<ul><li>Are you sure you have the correct database name?</li><li>Are you sure the database exists?</li><li>Are you sure the username has permission to access the database?</li></ul>For more help, see the <a href="http://drupal.org/node/258">Installation and upgrading handbook</a>. If you are unsure what these terms mean you should probably contact your hosting provider.', array('%error' => mysqli_connect_error())), 'error');
     return FALSE;
   }
 
