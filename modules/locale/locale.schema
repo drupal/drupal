@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.schema,v 1.6 2007/09/01 12:50:47 goba Exp $
+// $Id: locale.schema,v 1.7 2007/09/02 15:19:16 goba Exp $
 
 function locale_schema() {
   $schema['languages'] = array(
@@ -40,6 +40,8 @@ function locale_schema() {
       'textgroup' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => 'default'),
       // The original string in English.
       'source'    => array('type' => 'text', 'mysql_type' => 'blob', 'not null' => TRUE),
+      // Drupal core version, which last used the string.
+      'version'   => array('type' => 'varchar', 'length' => 20, 'not null' => TRUE, 'default' => 'none'),
     ),
     'primary key' => array('lid'),
     'indexes' => array

@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.189 2007/09/01 12:50:47 goba Exp $
+// $Id: locale.module,v 1.190 2007/09/02 15:19:16 goba Exp $
 
 /**
  * @file
@@ -335,15 +335,23 @@ function locale($string = NULL, $langcode = NULL) {
   if (!isset($locale_t[$langcode][$string])) {
 
     // We do not have this translation cached, so get it from the DB.
-    $translation = db_fetch_object(db_query("SELECT s.lid, t.translation FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid AND t.language = '%s' WHERE s.source = '%s' AND s.textgroup = 'default'", $langcode, $string));
+    $translation = db_fetch_object(db_query("SELECT s.lid, t.translation, s.version FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid AND t.language = '%s' WHERE s.source = '%s' AND s.textgroup = 'default'", $langcode, $string));
     if ($translation) {
       // We have the source string at least.
       // Cache translation string or TRUE if no translation exists.
       $locale_t[$langcode][$string] = (empty($translation->translation) ? TRUE : $translation->translation);
+
+      if ($translation->version != VERSION) {
+        // This is the first use of this string under current Drupal version. Save version
+        // and clear cache, to include the string into caching next time. Saved version is
+        // also a string-history information for later pruning of the tables.
+        db_query("UPDATE {locales_source} SET version = '%s' WHERE lid = %d LIMIT 1", VERSION, $translation->lid);
+        cache_clear_all('locale:'. $langcode, 'cache');
+      }
     }
     else {
       // We don't have the source string, cache this as untranslated.
-      db_query("INSERT INTO {locales_source} (location, source, textgroup) VALUES ('%s', '%s', 'default')", request_uri(), $string);
+      db_query("INSERT INTO {locales_source} (location, source, textgroup, version) VALUES ('%s', '%s', 'default', '%s')", request_uri(), $string, VERSION);
       $locale_t[$langcode][$string] = TRUE;
       // Clear locale cache so this string can be added in a later request.
       cache_clear_all('locale:'. $langcode, 'cache');
@@ -356,7 +364,7 @@ function locale($string = NULL, $langcode = NULL) {
 /**
  * Refreshes database stored cache of translations.
  *
- * We only store short strings to improve performance and consume less memory.
+ * We only store short strings used in current version, to improve performance and consume less memory.
  */
 function locale_refresh_cache() {
   $languages = language_list('enabled');
@@ -364,7 +372,7 @@ function locale_refresh_cache() {
   unset($languages['en']);
 
   foreach ($languages as $language) {
-    $result = db_query("SELECT s.source, t.translation, t.language FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid AND t.language = '%s' WHERE s.textgroup = 'default' AND LENGTH(s.source) < 75", $language->language);
+    $result = db_query("SELECT s.source, t.translation, t.language FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid AND t.language = '%s' WHERE s.textgroup = 'default' AND s.version = '%s' AND LENGTH(s.source) < 75", $language->language, VERSION);
     $t = array();
     while ($data = db_fetch_object($result)) {
       $t[$data->source] = (empty($data->translation) ? TRUE : $data->translation);
