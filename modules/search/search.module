@@ -183,8 +183,10 @@ function search_menu() {
   $items['admin/logs/search'] = array(
     'title' => 'Top search phrases',
     'description' => 'View most popular search phrases.',
-    'page callback' => 'watchdog_top',
+    'page callback' => 'dblog_top',
     'page arguments' => array('search'),
+    'file' => 'dblog.admin.inc',
+    'file path' => drupal_get_path('module', 'dblog'),
   );
 
   foreach (module_implements('search') as $name) {
