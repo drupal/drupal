@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.73 2007/08/30 19:31:28 dries Exp $
+// $Id: install.php,v 1.74 2007/09/02 12:41:01 goba Exp $
 
 require_once './includes/install.inc';
 
@@ -592,7 +592,7 @@ function install_already_done_error() {
 
   drupal_maintenance_theme();
   drupal_set_title(st('Drupal already installed'));
-  print theme('install_page', st('<ul><li>To start over, you must empty your existing database.</li><li>To install to a different database, edit the appropriate <em>settings.php</em> file in the <em>sites</em> folder.</li><li>To upgrade an existing installation, proceed to the <a href="@base-url/update.php">update script</a>.</li></ul>', array('@base-url' => $base_url)));
+  print theme('install_page', st('<ul><li>To start over, you must empty your existing database.</li><li>To install to a different database, edit the appropriate <em>settings.php</em> file in the <em>sites</em> folder.</li><li>To upgrade an existing installation, proceed to the <a href="@base-url/update.php">update script</a>.</li><li>View your <a href="@base-url">existing site</a>.</li></ul>', array('@base-url' => $base_url)));
   exit;
 }
 
