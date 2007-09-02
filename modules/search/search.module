@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.233 2007/08/30 20:11:20 dries Exp $
+// $Id: search.module,v 1.234 2007/09/02 12:53:50 goba Exp $
 
 /**
  * @file
@@ -183,8 +183,10 @@ function search_menu() {
   $items['admin/logs/search'] = array(
     'title' => 'Top search phrases',
     'description' => 'View most popular search phrases.',
-    'page callback' => 'watchdog_top',
+    'page callback' => 'dblog_top',
     'page arguments' => array('search'),
+    'file' => 'dblog.admin.inc',
+    'file path' => drupal_get_path('module', 'dblog'),
   );
 
   foreach (module_implements('search') as $name) {
