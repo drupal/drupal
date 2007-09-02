@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.578 2007/08/30 19:54:22 dries Exp $
+// $Id: comment.module,v 1.579 2007/09/02 14:56:18 goba Exp $
 
 /**
  * @file
@@ -317,6 +317,49 @@ function comment_get_recent($number = 10) {
 }
 
 /**
+ * Calculate page number for first new comment.
+ */
+function comment_new_page_count($num_comments, $new_replies, $nid) {
+  $comments_per_page = _comment_get_display_setting('comments_per_page');
+  $mode = _comment_get_display_setting('mode');
+  $order = _comment_get_display_setting('sort');
+  $pagenum = NULL;
+  $flat = in_array($mode, array(COMMENT_MODE_FLAT_COLLAPSED, COMMENT_MODE_FLAT_EXPANDED)); 
+  if ($num_comments <= $comments_per_page || ($flat && $order == COMMENT_ORDER_NEWEST_FIRST)) {
+    // Only one page of comments or flat forum and newest first.
+    // First new comment will always be on first page.
+    $pageno = 0;
+  } 
+  else {
+    if ($flat) { 
+      // Flat comments and oldest first.
+      $count = $num_comments - $new_replies;
+    } 
+    else {
+      // Threaded comments. See the documentation for comment_render().
+      if ($order == COMMENT_ORDER_NEWEST_FIRST) { 
+        // Newest first: find the last thread with new comment
+        $result = db_query('(SELECT thread FROM {comments} WHERE nid = %d  AND status = 0 ORDER BY timestamp DESC LIMIT %d) ORDER BY thread DESC LIMIT 1', $nid, $new_replies);
+        $thread = db_result($result);
+        $result_count = db_query("SELECT COUNT(*) FROM {comments} WHERE nid = %d AND status = 0 AND thread > '" . $thread . "'", $nid);
+      } 
+      else { 
+        // Oldest first: find the first thread with new comment
+        $result = db_query('(SELECT thread FROM {comments} WHERE nid = %d  AND status = 0 ORDER BY timestamp DESC LIMIT %d) ORDER BY SUBSTRING(thread, 1, (LENGTH(thread) - 1)) LIMIT 1', $nid, $new_replies);  
+        $thread = substr(db_result($result), 0, -1);
+        $result_count = db_query("SELECT COUNT(*) FROM {comments} WHERE nid = %d AND status = 0 AND SUBSTRING(thread, 1, (LENGTH(thread) - 1)) < '" . $thread . "'", $nid);
+      }
+      $count = db_result($result_count);
+    }
+    $pageno =  $count / $comments_per_page;
+  }
+  if ($pageno >= 1) {
+    $pagenum = "page=" . intval($pageno);
+  }
+  return $pagenum;
+}
+
+/**
  * Returns a formatted list of recent comments to be displayed in the comment
  * block.
  *
@@ -360,6 +403,7 @@ function comment_link($type, $node = NULL, $teaser = FALSE) {
             $links['comment_new_comments'] = array(
               'title' => format_plural($new, '1 new comment', '@count new comments'),
               'href' => "node/$node->nid",
+              'query' => comment_new_page_count($all, $new, $node->nid),
               'attributes' => array('title' => t('Jump to the first new comment of this posting.')),
               'fragment' => 'new'
             );
