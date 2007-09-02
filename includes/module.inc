@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.109 2007/08/30 16:09:50 goba Exp $
+// $Id: module.inc,v 1.110 2007/09/02 14:42:30 goba Exp $
 
 /**
  * @file
@@ -260,6 +260,10 @@ function module_enable($module_list) {
 
   foreach ($invoke_modules as $module) {
     module_invoke($module, 'enable');
+    // Check if node_access table needs rebuilding.
+    if (!node_access_needs_rebuild() && module_hook($module, 'node_grants')) {
+      node_access_needs_rebuild(TRUE);
+    }
   }
 }
 
@@ -273,6 +277,11 @@ function module_disable($module_list) {
   $invoke_modules = array();
   foreach ($module_list as $module) {
     if (module_exists($module)) {
+      // Check if node_access table needs rebuilding.
+      if (!node_access_needs_rebuild() && module_hook($module, 'node_grants')) {
+        node_access_needs_rebuild(TRUE);
+      }
+
       module_load_install($module);
       module_invoke($module, 'disable');
       db_query("UPDATE {system} SET status = %d, throttle = %d WHERE type = '%s' AND name = '%s'", 0, 0, 'module', $module);
@@ -285,6 +294,12 @@ function module_disable($module_list) {
     module_list(TRUE, FALSE);
     // Force to regenerate the stored list of hook implementations.
     module_implements('', FALSE, TRUE);
+  }
+
+  // If there remains no more node_access module, rebuilding will be 
+  // straightforward, we can do it right now.
+  if (node_access_needs_rebuild() && count(module_implements('node_grants')) == 0) {
+    node_access_rebuild();
   }
 }
 

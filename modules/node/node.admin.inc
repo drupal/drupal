@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.2 2007/08/29 19:56:09 goba Exp $
+// $Id: node.admin.inc,v 1.3 2007/09/02 14:42:30 goba Exp $
 
 /**
  * @file
@@ -10,7 +10,8 @@
  * Menu callback; presents general node configuration options.
  */
 function node_configure() {
-  // Only show rebuild button if there is 0 or more than 2 rows in node_access table, or if there are modules that implement node_grant.
+  // Only show rebuild button if there is 0 or more than 2 rows in node_access table,
+  // or if there are modules that implement node_grant.
   if (db_result(db_query('SELECT COUNT(*) FROM {node_access}')) != 1 || count(module_implements('node_grants')) > 0) {
     $status = '<p>'. t('If the site is experiencing problems with permissions to content, you may have to rebuild the permissions cache. Possible causes for permission problems are disabling modules or configuration changes to permissions. Rebuilding will remove all privileges to posts, and replace them with permissions based on the current modules and settings.') .'</p>';
     $status .= '<p>'. t('Rebuilding may take some time if there is a lot of content or complex permission settings. After rebuilding has completed posts will automatically use the new permissions.') .'</p>';
@@ -64,8 +65,7 @@ function node_configure_rebuild_confirm() {
  * Handler for wipe confirmation
  */
 function node_configure_rebuild_confirm_submit($form, &$form_state) {
-  node_access_rebuild();
-  drupal_set_message(t('The node access table has been rebuilt.'));
+  node_access_rebuild(TRUE);
   $form_state['redirect'] = 'admin/content/node-settings';
   return;
 }
