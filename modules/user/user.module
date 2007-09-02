@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.837 2007/08/29 14:57:50 goba Exp $
+// $Id: user.module,v 1.838 2007/09/02 12:24:49 goba Exp $
 
 /**
  * @file
@@ -2000,7 +2000,7 @@ function user_admin_access_add($mask = NULL, $type = NULL) {
       form_set_error('mask', t('You must enter a mask.'));
     }
     else {
-      db_query("INSERT INTO {access} (aid, mask, type, status) VALUES ('%s', '%s', '%s', %d)", $aid, $edit['mask'], $edit['type'], $edit['status']);
+      db_query("INSERT INTO {access} (mask, type, status) VALUES ('%s', '%s', %d)", $edit['mask'], $edit['type'], $edit['status']);
       $aid = db_last_insert_id('access', 'aid');
       drupal_set_message(t('The access rule has been added.'));
       drupal_goto('admin/user/rules');
@@ -2016,7 +2016,7 @@ function user_admin_access_add($mask = NULL, $type = NULL) {
 /**
  * Menu callback: delete an access rule
  */
-function user_admin_access_delete_confirm($aid = 0) {
+function user_admin_access_delete_confirm($form_state, $aid = 0) {
   $access_types = array('user' => t('username'), 'mail' => t('e-mail'), 'host' => t('host'));
   $edit = db_fetch_object(db_query('SELECT aid, type, status, mask FROM {access} WHERE aid = %d', $aid));
 
@@ -2134,7 +2134,7 @@ function user_roles($membersonly = 0, $permission = 0) {
 /**
  * Menu callback: administer permissions.
  */
-function user_admin_perm($rid = NULL) {
+function user_admin_perm($form_state, $rid = NULL) {
   if (is_numeric($rid)) {
     $result = db_query('SELECT r.rid, p.perm FROM {role} r LEFT JOIN {permission} p ON r.rid = p.rid WHERE r.rid = %d', $rid);
   }
