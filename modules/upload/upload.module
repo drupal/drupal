@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.177 2007/08/16 12:30:24 goba Exp $
+// $Id: upload.module,v 1.178 2007/09/02 14:26:26 goba Exp $
 
 /**
  * @file
@@ -165,16 +165,8 @@ function upload_file_download($file) {
  * @param $node
  *   A node object to associate with uploaded files.
  */
-function _upload_prepare(&$node) {
+function upload_node_form_submit($form, &$form_state) {
   global $user;
-
-  // Initialize _SESSION['upload_files'] if no post occurred.
-  // This clears the variable from old forms and makes sure it
-  // is an array to prevent notices and errors in other parts
-  // of upload.module.
-  if (!$_POST) {
-    $_SESSION['upload_files'] = array();
-  }
 
   // $_SESSION['upload_current_file'] tracks the fid of the file submitted this page request.
   // form_builder sets the value of file->list to 0 for checkboxes added to a form after
@@ -199,9 +191,9 @@ function _upload_prepare(&$node) {
   }
 
   // attach session files to node.
-  if (count($_SESSION['upload_files'])) {
+  if (!empty($_SESSION['upload_files'])) {
     foreach($_SESSION['upload_files'] as $fid => $file) {
-      $node->files[$fid] = $file;
+      $form_state['values']['files'][$fid] = $file;
     }
   }
 }
@@ -257,6 +249,7 @@ function upload_form_alter(&$form, $form_state, $form_id) {
         $form['#attributes']['enctype'] = 'multipart/form-data';
       }
     }
+    $form['#submit'][] = 'upload_node_form_submit';
   }
 }
 
@@ -274,10 +267,6 @@ function upload_nodeapi(&$node, $op, $teaser) {
       }
       break;
 
-    case 'prepare':
-      _upload_prepare($node);
-      break;
-
     case 'view':
       if (isset($node->files) && user_access('view uploaded files')) {
         // Add the attachments list to node body with a heavy
@@ -290,6 +279,16 @@ function upload_nodeapi(&$node, $op, $teaser) {
             );
           }
         }
+      }
+      break;
+
+    case 'prepare':
+      // Initialize $_SESSION['upload_files'] if no post occurred.
+      // This clears the variable from old forms and makes sure it
+      // is an array to prevent notices and errors in other parts
+      // of upload.module.
+      if (!$_POST) {
+        $_SESSION['upload_files'] = array();
       }
       break;
 
@@ -390,7 +389,7 @@ function upload_save(&$node) {
 
     // Remove file. Process removals first since no further processing
     // will be required.
-    if ($file->remove) {
+    if (!empty($file->remove)) {
       db_query('DELETE FROM {upload} WHERE fid = %d AND vid = %d', $fid, $node->vid);
       // Remove it from the session in the case of new uploads,
       // that you want to disassociate before node submission.
@@ -400,7 +399,7 @@ function upload_save(&$node) {
     }
 
     // Create a new revision, or associate a new file needed.
-    if (!empty($node->old_vid) || array_key_exists($fid, $_SESSION['upload_files'])) {
+    if (!empty($node->old_vid) || isset($_SESSION['upload_files'][$fid])) {
       db_query("INSERT INTO {upload} (fid, nid, vid, list, description) VALUES (%d, %d, %d, %d, '%s')", $file->fid, $node->nid, $node->vid, $file->list, $file->description);
       file_set_status($file, FILE_STATUS_PERMANENT);
     }
@@ -550,13 +549,13 @@ function upload_load($node) {
 function upload_js() {
   // We only do the upload.module part of the node validation process.
   $node = (object)$_POST;
+  $form_state = array();
+  // Handle new uploads, and merge tmp files into node-files.
+  upload_node_form_submit(array(), $form_state);
+  $node->files = array_merge(isset($form_state['values']['files']) ? $form_state['values']['files'] : array(), upload_load($node));
+
   $files = isset($_POST['files']) ? $_POST['files'] : array();
 
-  // Load existing node files.
-  $node->files = upload_load($node);
-
-  // Handle new uploads, and merge tmp files into node-files.
-  _upload_prepare($node);
 
   $form = _upload_form($node);
   $form += array(
