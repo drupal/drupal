@@ -1,4 +1,4 @@
-// $Id: drupal.js,v 1.36 2007/07/13 20:07:15 goba Exp $
+// $Id: drupal.js,v 1.37 2007/09/03 16:55:56 dries Exp $
 
 var Drupal = Drupal || { 'settings': {}, 'behaviors': {}, 'themes': {}, 'locale': {} };
 
@@ -149,7 +149,7 @@ Drupal.t = function(str, args) {
  *   A translated string.
  */
 Drupal.formatPlural = function(count, singular, plural, args) {
-  var args = ars || {};
+  var args = args || {};
   args['@count'] = count;
   // Determine the index of the plural form.
   var index = Drupal.locale.pluralFormula ? Drupal.locale.pluralFormula(args['@count']) : ((args['@count'] == 1) ? 0 : 1);
