@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysqli.inc,v 1.43 2007/08/29 18:38:55 goba Exp $
+// $Id: database.mysqli.inc,v 1.44 2007/09/03 17:02:16 dries Exp $
 
 /**
  * @file
@@ -89,7 +89,7 @@ function db_connect($url) {
     drupal_set_title('Unable to connect to database server');
     print theme('maintenance_page', '<p>If you still have to install Drupal, proceed to the <a href="'. base_path() .'install.php">installation page</a>.</p>
 <p>If you have already finished installed Drupal, this either means that the username and password information in your <code>settings.php</code> file is incorrect or that we can\'t connect to the MySQL database server. This could mean your hosting provider\'s database server is down.</p>
-<p>The MySQL error was: '. theme('placeholder', mysqli_error($connection)) .'.</p>
+<p>The MySQL error was: '. theme('placeholder', mysqli_connect_error()) .'.</p>
 <p>Currently, the username is '. theme('placeholder', $url['user']) .' and the database server is '. theme('placeholder', $url['host']) .'.</p>
 <ul>
   <li>Are you sure you have the correct username and password?</li>
@@ -104,7 +104,7 @@ function db_connect($url) {
     drupal_maintenance_theme();
     drupal_set_title('Unable to select database');
     print theme('maintenance_page', '<p>We were able to connect to the MySQL database server (which means your username and password are okay) but not able to select the database.</p>
-<p>The MySQL error was: '. theme('placeholder', mysqli_error($connection)) .'.</p>
+<p>The MySQL error was: '. theme('placeholder', mysqli_connect_error()) .'.</p>
 <p>Currently, the database is '. theme('placeholder', substr($url['path'], 1)) .'. The username is '. theme('placeholder', $url['user']) .' and the database server is '. theme('placeholder', $url['host']) .'.</p>
 <ul>
   <li>Are you sure you have the correct database name?</li>
