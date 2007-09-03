@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.148 2007/08/30 20:34:02 dries Exp $
+// $Id: system.install,v 1.149 2007/09/03 14:13:58 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -195,60 +195,42 @@ function system_requirements($phase) {
  * Implementation of hook_install().
  */
 function system_install() {
- switch ($GLOBALS['db_type']) {
-  case 'mysql':
-  case 'mysqli':
-    // As of Drupal 6, users.uid is an auto-incrementing column, but
-    // previously it was not.  Below, we insert a row with uid 0 to
-    // represent user anonymous.  By default, mysql treats that as
-    // requesting the next sequence value which, of course, is uid
-    // 1!  This statement turns off that behavior for the duration
-    // of the current request, which is all we need.
-    //
-    // Note that this statement must be run any time the uid column
-    // is inserted or altered.  That includes loading mysqldump
-    // backups, but mysqldump puts this statement in all backups for
-    // this exact reason.  It also includes any Schema API
-    // table-altering operations on the users table.
-    db_query("SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO'");
-    break;
-  case 'pgsql':
-      /* create unsigned types */
-      db_query("CREATE DOMAIN int_unsigned integer CHECK (VALUE >= 0)");
-      db_query("CREATE DOMAIN smallint_unsigned smallint CHECK (VALUE >= 0)");
-      db_query("CREATE DOMAIN bigint_unsigned bigint CHECK (VALUE >= 0)");
+  if ($GLOBALS['db_type'] == 'pgsql') {
+    /* create unsigned types */
+    db_query("CREATE DOMAIN int_unsigned integer CHECK (VALUE >= 0)");
+    db_query("CREATE DOMAIN smallint_unsigned smallint CHECK (VALUE >= 0)");
+    db_query("CREATE DOMAIN bigint_unsigned bigint CHECK (VALUE >= 0)");
 
-      /* create functions */
-      db_query('CREATE OR REPLACE FUNCTION "greatest"(numeric, numeric) RETURNS numeric AS
-        \'SELECT CASE WHEN (($1 > $2) OR ($2 IS NULL)) THEN $1 ELSE $2 END;\'
+    /* create functions */
+    db_query('CREATE OR REPLACE FUNCTION "greatest"(numeric, numeric) RETURNS numeric AS
+      \'SELECT CASE WHEN (($1 > $2) OR ($2 IS NULL)) THEN $1 ELSE $2 END;\'
+      LANGUAGE \'sql\''
+    );
+    db_query('CREATE OR REPLACE FUNCTION "greatest"(numeric, numeric, numeric) RETURNS numeric AS
+      \'SELECT greatest($1, greatest($2, $3));\'
+      LANGUAGE \'sql\''
+    );
+    if (!db_result(db_query("SELECT COUNT(*) FROM pg_proc WHERE proname = 'rand'"))) {
+      db_query('CREATE OR REPLACE FUNCTION "rand"() RETURNS float AS
+        \'SELECT random();\'
         LANGUAGE \'sql\''
       );
-      db_query('CREATE OR REPLACE FUNCTION "greatest"(numeric, numeric, numeric) RETURNS numeric AS
-        \'SELECT greatest($1, greatest($2, $3));\'
-        LANGUAGE \'sql\''
-      );
-      if (!db_result(db_query("SELECT COUNT(*) FROM pg_proc WHERE proname = 'rand'"))) {
-        db_query('CREATE OR REPLACE FUNCTION "rand"() RETURNS float AS
-          \'SELECT random();\'
-          LANGUAGE \'sql\''
-        );
-      }
+    }
 
-      if (!db_result(db_query("SELECT COUNT(*) FROM pg_proc WHERE proname = 'concat'"))) {
-        db_query('CREATE OR REPLACE FUNCTION "concat"(text, text) RETURNS text AS
-          \'SELECT $1 || $2;\'
-          LANGUAGE \'sql\''
-        );
-      }
-      db_query('CREATE OR REPLACE FUNCTION "if"(boolean, text, text) RETURNS text AS
-        \'SELECT CASE WHEN $1 THEN $2 ELSE $3 END;\'
+    if (!db_result(db_query("SELECT COUNT(*) FROM pg_proc WHERE proname = 'concat'"))) {
+      db_query('CREATE OR REPLACE FUNCTION "concat"(text, text) RETURNS text AS
+        \'SELECT $1 || $2;\'
         LANGUAGE \'sql\''
       );
-      db_query('CREATE OR REPLACE FUNCTION "if"(boolean, integer, integer) RETURNS integer AS
-        \'SELECT CASE WHEN $1 THEN $2 ELSE $3 END;\'
-        LANGUAGE \'sql\''
-      );
-    break;
+    }
+    db_query('CREATE OR REPLACE FUNCTION "if"(boolean, text, text) RETURNS text AS
+      \'SELECT CASE WHEN $1 THEN $2 ELSE $3 END;\'
+      LANGUAGE \'sql\''
+    );
+    db_query('CREATE OR REPLACE FUNCTION "if"(boolean, integer, integer) RETURNS integer AS
+      \'SELECT CASE WHEN $1 THEN $2 ELSE $3 END;\'
+      LANGUAGE \'sql\''
+    );
   }
 
   // Create tables.
@@ -259,6 +241,20 @@ function system_install() {
 
   // Load system theme data appropriately.
   system_theme_data();
+
+  // Inserting uid 0 here confuses MySQL -- the next user might be created as
+  // uid 2 which is not what we want. So we insert the first user here, the
+  // anonymous user. uid is 1 here for now, but very soon it will be changed
+  // to 0.
+  db_query("INSERT INTO {users} (name, mail) VALUES('%s', '%s')", '', '');
+  // We need some placeholders here as name and mail are uniques and data is
+  // presumed to be a serialized array. Install will change uid 1 immediately
+  // anyways. So we insert the superuser here, the uid is 2 here for now, but
+  // very soon it will be changed to 1.
+  db_query("INSERT INTO {users} (name, mail, created, data) VALUES('%s', '%s', %d, '%s')", 'placeholder-for-uid-1', 'placeholder-for-uid-1', time(), serialize(array()));
+  // This sets the above two users to 1 -1 = 0 (anonymous) and
+  // 2- 1 = 1 (superuser). We skip uid 2 but that's not a big problem.
+  db_query('UPDATE {users} SET uid = uid - 1');
 
   db_query("INSERT INTO {role} (name) VALUES ('%s')", 'anonymous user');
   db_query("INSERT INTO {role} (name) VALUES ('%s')", 'authenticated user');
