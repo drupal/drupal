@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.187 2007/09/01 12:50:47 goba Exp $
+// $Id: bootstrap.inc,v 1.188 2007/09/03 09:59:43 goba Exp $
 
 /**
  * @file
@@ -1111,8 +1111,9 @@ function ip_address() {
   if (!isset($ip_address)) {
     $ip_address = $_SERVER['REMOTE_ADDR'];
     if (variable_get('reverse_proxy', 0) && array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER)) {
-      // If there are several arguments, the leftmost one is the farthest client
-      list($ip_address, ) = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+      // If there are several arguments, we need to check the most
+      // recently added one, ie the last one.
+      $ip_address = array_pop(explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']));
     }
   }
 
