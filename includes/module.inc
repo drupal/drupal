@@ -296,7 +296,7 @@ function module_disable($module_list) {
     module_implements('', FALSE, TRUE);
   }
 
-  // If there remains no more node_access module, rebuilding will be 
+  // If there remains no more node_access module, rebuilding will be
   // straightforward, we can do it right now.
   if (node_access_needs_rebuild() && count(module_implements('node_grants')) == 0) {
     node_access_rebuild();

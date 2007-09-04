@@ -360,7 +360,7 @@ function drupal_uninstall_module($module) {
   if (!empty($paths)) {
     $paths = array_keys($paths);
     // Clean out the names of load functions.
-    foreach($paths as $index => $path) {
+    foreach ($paths as $index => $path) {
       $parts = explode('/', $path, MENU_MAX_PARTS);
       foreach ($parts as $k => $part) {
         if (preg_match('/^%[a-z_]*$/', $part)) {

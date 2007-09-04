@@ -1023,7 +1023,7 @@ function menu_secondary_links() {
  */
 function menu_navigation_links($menu_name, $level = 0) {
   // Don't even bother querying the menu table if no menu is specified.
-  if (empty($menu_name)){
+  if (empty($menu_name)) {
     return array();
   }
 

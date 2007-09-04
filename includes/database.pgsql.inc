@@ -245,7 +245,7 @@ function db_error() {
  *   The name of the autoincrement field.
  */
 function db_last_insert_id($table, $field) {
-  return db_result(db_query("SELECT currval('%s_seq')", db_prefix_tables('{'. $table .'}') . '_'. $field));
+  return db_result(db_query("SELECT currval('%s_seq')", db_prefix_tables('{'. $table .'}') .'_'. $field));
 }
 
 /**

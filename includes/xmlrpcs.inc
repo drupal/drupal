@@ -109,7 +109,7 @@ function xmlrpc_server_output($xml) {
   header('Connection: close');
   header('Content-Length: '. strlen($xml));
   header('Content-Type: text/xml');
-  header('Date: '.date('r'));
+  header('Date: '. date('r'));
   echo $xml;
   exit;
 }

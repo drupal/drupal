@@ -430,7 +430,7 @@ function _xmlrpc() {
     $method = 'system.multicall';
     $multicall_args = array();
     foreach ($args[0] as $call) {
-      $multicall_args[] = array('methodName' => array_shift($call),'params' => $call);
+      $multicall_args[] = array('methodName' => array_shift($call), 'params' => $call);
     }
     $args = array($multicall_args);
   }

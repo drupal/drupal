@@ -490,7 +490,7 @@ function _db_type_placeholder($type) {
 
   // There is no safe value to return here, so return something that
   // will cause the query to fail.
-  return 'unsupported type '. $type . 'for _db_type_placeholder';
+  return 'unsupported type '. $type .'for _db_type_placeholder';
 }
 
 /**

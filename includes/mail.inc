@@ -173,7 +173,7 @@ function drupal_mail($module, $key, $to, $language, $params = array(), $from = N
 function drupal_mail_send($message) {
   // Allow for a custom mail backend.
   if (variable_get('smtp_library', '') && file_exists(variable_get('smtp_library', ''))) {
-    include_once './' . variable_get('smtp_library', '');
+    include_once './'. variable_get('smtp_library', '');
     return drupal_mail_wrapper($message);
   }
   else {
@@ -436,7 +436,7 @@ function _drupal_html_to_mail_urls($match = NULL) {
     $regexp = '@^'. preg_quote($base_path, '@') .'@';
   }
   if ($match) {
-    list(,, $url, $label) = $match;
+    list(, , $url, $label) = $match;
     // Ensure all URLs are absolute.
     $urls[] = strpos($url, '://') ? $url : preg_replace($regexp, $base_url .'/', $url);
     return $label .' ['. count($urls) .']';

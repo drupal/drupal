@@ -226,7 +226,7 @@ function _batch_process() {
       '@percentage' => $percentage,
       );
     $message = strtr($progress_message, $values) .'<br/>';
-    $message.= $task_message ? $task_message : '&nbsp';
+    $message .= $task_message ? $task_message : '&nbsp';
 
     return array($percentage, $message);
   }
@@ -272,7 +272,7 @@ function _batch_finished() {
   $batch =& batch_get();
 
   // Execute the 'finished' callbacks.
-  foreach($batch['sets'] as $key => $batch_set) {
+  foreach ($batch['sets'] as $key => $batch_set) {
     if (isset($batch_set['finished']) && function_exists($batch_set['finished'])) {
       $batch_set['finished']($batch_set['success'], $batch_set['results'], $batch_set['operations']);
     }

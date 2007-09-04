@@ -406,7 +406,7 @@ function db_drop_unique_key(&$ret, $table, $name) {
  *   An array of field names.
  */
 function db_add_index(&$ret, $table, $name, $fields) {
-  $query = 'ALTER TABLE {'. $table .'} ADD INDEX '. $name .' ('. _db_create_key_sql($fields) . ')';
+  $query = 'ALTER TABLE {'. $table .'} ADD INDEX '. $name .' ('. _db_create_key_sql($fields) .')';
   $ret[] = update_sql($query);
 }
 
