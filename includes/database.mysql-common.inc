@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysql-common.inc,v 1.9 2007/08/26 08:27:09 goba Exp $
+// $Id: database.mysql-common.inc,v 1.10 2007/09/04 21:10:45 dries Exp $
 
 /**
  * @file
@@ -406,7 +406,7 @@ function db_drop_unique_key(&$ret, $table, $name) {
  *   An array of field names.
  */
 function db_add_index(&$ret, $table, $name, $fields) {
-  $query = 'ALTER TABLE {'. $table .'} ADD INDEX '. $name .' ('. _db_create_key_sql($fields) . ')';
+  $query = 'ALTER TABLE {'. $table .'} ADD INDEX '. $name .' ('. _db_create_key_sql($fields) .')';
   $ret[] = update_sql($query);
 }
 

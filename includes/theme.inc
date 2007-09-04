@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.379 2007/09/01 11:32:07 goba Exp $
+// $Id: theme.inc,v 1.380 2007/09/04 21:10:45 dries Exp $
 
 /**
  * @file
@@ -658,7 +658,7 @@ function drupal_find_theme_functions($cache, $prefixes) {
         $matches = preg_grep('/^'. $prefix .'_'. $info['pattern'] .'/', $functions['user']);
         if ($matches) {
           foreach ($matches as $match) {
-            $new_hook = str_replace($prefix . '_', '', $match);
+            $new_hook = str_replace($prefix .'_', '', $match);
             $templates[$new_hook] = array(
               'function' => $match,
               'arguments' => $info['arguments'],
@@ -692,7 +692,7 @@ function drupal_find_theme_templates($cache, $extension, $path) {
   $templates = array();
 
   // Escape the dots in the extension.
-  $regex = str_replace('.', '\.', $extension) . '$';
+  $regex = str_replace('.', '\.', $extension) .'$';
 
   // Because drupal_system_listing works the way it does, we check for real
   // templates separately from checking for patterns.
@@ -1731,7 +1731,7 @@ function template_preprocess_page(&$variables) {
   // type (e.g. node, admin, user, etc.). To avoid illegal characters in the class,
   // we're removing everything disallowed. We are not using 'a-z' as that might leave
   // in certain international characters (e.g. German umlauts).
-  $body_classes[] = preg_replace('![^abcdefghijklmnopqrstuvwxyz0-9-_]+!s', '', 'page-' . form_clean_id(drupal_strtolower(arg(0))));
+  $body_classes[] = preg_replace('![^abcdefghijklmnopqrstuvwxyz0-9-_]+!s', '', 'page-'. form_clean_id(drupal_strtolower(arg(0))));
   // If on an individual node page, add the node type.
   if (isset($variables['node']) && $variables['node']->type) {
     $body_classes[] = 'node-type-'. form_clean_id($variables['node']->type);
@@ -1766,9 +1766,9 @@ function template_preprocess_page(&$variables) {
   $suggestion = 'page';
   $suggestions = array();
   while ($arg = arg($i++)) {
-    $suggestions[] = $suggestion . '-' . $arg;
+    $suggestions[] = $suggestion .'-'. $arg;
     if (!is_numeric($arg)) {
-      $suggestion .= '-' . $arg;
+      $suggestion .= '-'. $arg;
     }
   }
   if (drupal_is_front_page()) {
@@ -1824,7 +1824,7 @@ function template_preprocess_node(&$variables) {
   $variables = array_merge((array)$node, $variables);
 
   // Display info only on certain node types.
-  if (theme_get_setting('toggle_node_info_' . $node->type)) {
+  if (theme_get_setting('toggle_node_info_'. $node->type)) {
     $variables['submitted'] = theme('node_submitted', $node);
     $variables['picture'] = theme_get_setting('toggle_node_user_picture') ? theme('user_picture', $node) : '';
   }
@@ -1863,8 +1863,8 @@ function template_preprocess_block(&$variables) {
   $variables['block_zebra'] = ($block_counter[$variables['block']->region] % 2) ? 'odd' : 'even';
   $variables['block_id'] = $block_counter[$variables['block']->region]++;
 
-  $variables['template_files'][] = 'block-' . $variables['block']->region;
-  $variables['template_files'][] = 'block-' . $variables['block']->module;
-  $variables['template_files'][] = 'block-' . $variables['block']->module .'-'. $variables['block']->delta;
+  $variables['template_files'][] = 'block-'. $variables['block']->region;
+  $variables['template_files'][] = 'block-'. $variables['block']->module;
+  $variables['template_files'][] = 'block-'. $variables['block']->module .'-'. $variables['block']->delta;
 }
 

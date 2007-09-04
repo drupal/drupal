@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.46 2007/08/30 19:54:21 dries Exp $
+// $Id: install.inc,v 1.47 2007/09/04 21:10:45 dries Exp $
 
 define('SCHEMA_UNINSTALLED', -1);
 define('SCHEMA_INSTALLED', 0);
@@ -360,7 +360,7 @@ function drupal_uninstall_module($module) {
   if (!empty($paths)) {
     $paths = array_keys($paths);
     // Clean out the names of load functions.
-    foreach($paths as $index => $path) {
+    foreach ($paths as $index => $path) {
       $parts = explode('/', $path, MENU_MAX_PARTS);
       foreach ($parts as $k => $part) {
         if (preg_match('/^%[a-z_]*$/', $part)) {

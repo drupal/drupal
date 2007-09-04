@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.153 2007/09/01 12:50:47 goba Exp $
+// $Id: locale.inc,v 1.154 2007/09/04 21:10:45 dries Exp $
 
 /**
  * @file
@@ -81,7 +81,7 @@ function theme_locale_languages_overview_form($form) {
         drupal_render($form['direction'][$key]),
         drupal_render($form['site_default'][$key]),
         drupal_render($form['weight'][$key]),
-        l(t('edit'), 'admin/settings/language/edit/'. $key). (($key != 'en' && $key != $default->language) ? ' '. l(t('delete') ,'admin/settings/language/delete/'. $key) : '')
+        l(t('edit'), 'admin/settings/language/edit/'. $key) . (($key != 'en' && $key != $default->language) ? ' '. l(t('delete'), 'admin/settings/language/delete/'. $key) : '')
       );
     }
   }
@@ -493,7 +493,7 @@ function locale_translate_overview_screen() {
   foreach ($languages as $langcode => $language) {
     $rows[$langcode] = array('name' => ($langcode == 'en' ? t('English (built-in)') : t($language->name)));
     foreach ($groups as $group => $name) {
-      $rows[$langcode][$group] = ($langcode == 'en' ? t('n/a') : '0/'. (isset($groupsums[$group]) ? $groupsums[$group] : 0) . ' (0%)');
+      $rows[$langcode][$group] = ($langcode == 'en' ? t('n/a') : '0/'. (isset($groupsums[$group]) ? $groupsums[$group] : 0) .' (0%)');
     }
   }
 
@@ -2449,7 +2449,7 @@ function _locale_batch_build($files, $finished = NULL) {
   $t = get_t();
   if (count($files)) {
     $operations = array();
-    foreach($files as $file) {
+    foreach ($files as $file) {
       // We call _locale_batch_import for every batch operation.
       $operations[] = array('_locale_batch_import', array($file->filename));    }
       $batch = array(

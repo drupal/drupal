@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.110 2007/09/02 14:42:30 goba Exp $
+// $Id: module.inc,v 1.111 2007/09/04 21:10:45 dries Exp $
 
 /**
  * @file
@@ -296,7 +296,7 @@ function module_disable($module_list) {
     module_implements('', FALSE, TRUE);
   }
 
-  // If there remains no more node_access module, rebuilding will be 
+  // If there remains no more node_access module, rebuilding will be
   // straightforward, we can do it right now.
   if (node_access_needs_rebuild() && count(module_implements('node_grants')) == 0) {
     node_access_rebuild();

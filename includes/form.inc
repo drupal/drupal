@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.222 2007/08/26 07:31:48 dries Exp $
+// $Id: form.inc,v 1.223 2007/09/04 21:10:45 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -846,7 +846,7 @@ function _form_builder_handle_input_element($form_id, &$form, &$form_state) {
         $form['#value'] = $function($form);
       }
       // Final catch. If we haven't set a value yet, use the explicit default value.
-      if(!isset($form['#value'])) {
+      if (!isset($form['#value'])) {
         $form['#value'] = isset($form['#default_value']) ? $form['#default_value'] : '';
       }
     }
@@ -1711,12 +1711,12 @@ function theme_image_button($element) {
     $element['#attributes']['class'] = 'form-'. $element['#button_type'];
   }
 
-  return '<input type="image" name="'. $element['#name'] .'" ' .
+  return '<input type="image" name="'. $element['#name'] .'" '.
     (!empty($element['#value']) ? ('value="'. check_plain($element['#value']) .'" ') : '') .
-    'id="' . $element['#id'] . '" ' .
+    'id="'. $element['#id'] .'" '.
     drupal_attributes($element['#attributes']) .
-    ' src="' . base_path() . $element['#src'] . '" ' .
-    (!empty($element['#title']) ? 'alt="' . check_plain($element['#title']) . '" title="' . check_plain($element['#title']) . '" ' : '' ).
+    ' src="'. base_path() . $element['#src'] .'" '.
+    (!empty($element['#title']) ? 'alt="'. check_plain($element['#title']) .'" title="'. check_plain($element['#title']) .'" ' : '' ) .
     "/>\n";
 }
 

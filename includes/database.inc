@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.78 2007/08/30 19:54:21 dries Exp $
+// $Id: database.inc,v 1.79 2007/09/04 21:10:45 dries Exp $
 
 /**
  * @file
@@ -490,7 +490,7 @@ function _db_type_placeholder($type) {
 
   // There is no safe value to return here, so return something that
   // will cause the query to fail.
-  return 'unsupported type '. $type . 'for _db_type_placeholder';
+  return 'unsupported type '. $type .'for _db_type_placeholder';
 }
 
 /**

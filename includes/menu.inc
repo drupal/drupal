@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.202 2007/08/29 20:46:18 goba Exp $
+// $Id: menu.inc,v 1.203 2007/09/04 21:10:45 dries Exp $
 
 /**
  * @file
@@ -1023,7 +1023,7 @@ function menu_secondary_links() {
  */
 function menu_navigation_links($menu_name, $level = 0) {
   // Don't even bother querying the menu table if no menu is specified.
-  if (empty($menu_name)){
+  if (empty($menu_name)) {
     return array();
   }
 

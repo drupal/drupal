@@ -1,5 +1,5 @@
 <?php
-// $Id: database.pgsql.inc,v 1.57 2007/08/29 18:38:55 goba Exp $
+// $Id: database.pgsql.inc,v 1.58 2007/09/04 21:10:45 dries Exp $
 
 /**
  * @file
@@ -245,7 +245,7 @@ function db_error() {
  *   The name of the autoincrement field.
  */
 function db_last_insert_id($table, $field) {
-  return db_result(db_query("SELECT currval('%s_seq')", db_prefix_tables('{'. $table .'}') . '_'. $field));
+  return db_result(db_query("SELECT currval('%s_seq')", db_prefix_tables('{'. $table .'}') .'_'. $field));
 }
 
 /**

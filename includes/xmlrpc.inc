@@ -1,5 +1,5 @@
 <?php
-// $Id: xmlrpc.inc,v 1.40 2007/04/18 20:35:45 dries Exp $
+// $Id: xmlrpc.inc,v 1.41 2007/09/04 21:10:45 dries Exp $
 
 /*
   Drupal XML-RPC library. Based on the IXR - The Incutio XML-RPC Library - (c) Incutio Ltd 2002-2005
@@ -430,7 +430,7 @@ function _xmlrpc() {
     $method = 'system.multicall';
     $multicall_args = array();
     foreach ($args[0] as $call) {
-      $multicall_args[] = array('methodName' => array_shift($call),'params' => $call);
+      $multicall_args[] = array('methodName' => array_shift($call), 'params' => $call);
     }
     $args = array($multicall_args);
   }
