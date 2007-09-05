@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.pages.inc,v 1.1 2007/09/05 08:31:48 dries Exp $
+// $Id: aggregator.pages.inc,v 1.2 2007/09/05 18:24:25 dries Exp $
 
 /**
  * @file
@@ -166,7 +166,7 @@ function theme_aggregator_page_item($item) {
 
   $source = '';
   if (isset($item->ftitle) && isset($item->fid)) {
-    $source = l($item->ftitle, "aggregator/sources/$item->fid", array('attributes' => array('class' => 'feed-item-source'))) . ' -';
+    $source = l($item->ftitle, "aggregator/sources/$item->fid", array('attributes' => array('class' => 'feed-item-source'))) .' -';
   }
 
   if (date('Ymd', $item->timestamp) == date('Ymd')) {
@@ -297,7 +297,7 @@ function aggregator_page_rss() {
 
   $output .= "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
   $output .= "<rss version=\"2.0\">\n";
-  $output .= format_rss_channel(variable_get('site_name', 'Drupal') . ' ' . t('aggregator'), url('aggregator' . $url, array('absolute' => TRUE)), variable_get('site_name', 'Drupal') . ' - ' . t('aggregated feeds') . $title, $items);
+  $output .= format_rss_channel(variable_get('site_name', 'Drupal') .' '. t('aggregator'), url('aggregator'. $url, array('absolute' => TRUE)), variable_get('site_name', 'Drupal') .' - '. t('aggregated feeds') . $title, $items);
   $output .= "</rss>\n";
 
   drupal_set_header('Content-Type: application/rss+xml; charset=utf-8');
@@ -374,7 +374,7 @@ function theme_aggregator_feed($feed) {
     $updated = l($updated, 'admin/content/aggregator');
   }
 
-  $output .= '<div class="feed-updated"><em>'. t('Updated:') . "</em> $updated</div>";
+  $output .= '<div class="feed-updated"><em>'. t('Updated:') ."</em> $updated</div>";
   $output .= "</div>\n";
 
   return $output;
