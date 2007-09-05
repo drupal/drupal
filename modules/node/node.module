@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.878 2007/09/05 08:35:14 dries Exp $
+// $Id: node.module,v 1.879 2007/09/05 08:42:01 dries Exp $
 
 /**
  * @file
@@ -821,7 +821,7 @@ function node_save(&$node) {
                     'promote' => $node->promote, 'sticky' => $node->sticky);
   $node_table_types = array(
                     'title' => "'%s'", 'type' => "'%s'", 'uid' => '%d',
-                    'status' => '%d', 'language' => "'%s'",'created' => '%d',
+                    'status' => '%d', 'language' => "'%s'", 'created' => '%d',
                     'changed' => '%d', 'comment' => '%d',
                     'promote' => '%d', 'sticky' => '%d');
   $update_node = TRUE;
@@ -2337,8 +2337,8 @@ function node_action_info() {
       'description' => t('Publish post'),
       'configurable' => FALSE,
       'hooks' => array(
-        'nodeapi' => array('presave','insert','update', 'view'),
-        'comment' => array('delete','insert','update', 'view'),
+        'nodeapi' => array('presave', 'insert', 'update', 'view'),
+        'comment' => array('delete', 'insert', 'update', 'view'),
       ),
     ),
     'node_unpublish_action' => array(
@@ -2346,8 +2346,8 @@ function node_action_info() {
       'description' => t('Unpublish post'),
       'configurable' => FALSE,
       'hooks' => array(
-        'nodeapi' => array('presave','insert','update', 'view'),
-        'comment' => array('delete','insert','update', 'view'),
+        'nodeapi' => array('presave', 'insert', 'update', 'view'),
+        'comment' => array('delete', 'insert', 'update', 'view'),
       ),
     ),
     'node_make_sticky_action' => array(
@@ -2355,8 +2355,8 @@ function node_action_info() {
       'description' => t('Make post sticky'),
       'configurable' => FALSE,
       'hooks' => array(
-        'nodeapi' => array('presave','insert','update', 'view'),
-        'comment' => array('delete','insert','update', 'view'),
+        'nodeapi' => array('presave', 'insert', 'update', 'view'),
+        'comment' => array('delete', 'insert', 'update', 'view'),
       ),
     ),
     'node_make_unsticky_action' => array(
@@ -2364,8 +2364,8 @@ function node_action_info() {
       'description' => t('Make post unsticky'),
       'configurable' => FALSE,
       'hooks' => array(
-        'nodeapi' => array('presave','insert','update', 'view'),
-        'comment' => array('delete','insert','update', 'view'),
+        'nodeapi' => array('presave', 'insert', 'update', 'view'),
+        'comment' => array('delete', 'insert', 'update', 'view'),
       ),
     ),
     'node_promote_action' => array(
@@ -2373,8 +2373,8 @@ function node_action_info() {
       'description' => t('Promote post to front page'),
       'configurable' => FALSE,
       'hooks' => array(
-        'nodeapi' => array('presave','insert','update', 'view'),
-        'comment' => array('delete','insert','update', 'view'),
+        'nodeapi' => array('presave', 'insert', 'update', 'view'),
+        'comment' => array('delete', 'insert', 'update', 'view'),
         'user' => array('login'),
       ),
     ),
@@ -2383,8 +2383,8 @@ function node_action_info() {
       'description' => t('Remove post from front page'),
       'configurable' => FALSE,
       'hooks' => array(
-        'nodeapi' => array('presave','insert','update', 'view'),
-        'comment' => array('delete','insert','update', 'view'),
+        'nodeapi' => array('presave', 'insert', 'update', 'view'),
+        'comment' => array('delete', 'insert', 'update', 'view'),
       ),
     ),
     'node_assign_owner_action' => array(
@@ -2393,8 +2393,8 @@ function node_action_info() {
       'configurable' => TRUE,
       'hooks' => array(
         'any' => TRUE,
-        'nodeapi' => array('presave','insert','update', 'view'),
-        'comment' => array('delete','insert','update', 'view'),
+        'nodeapi' => array('presave', 'insert', 'update', 'view'),
+        'comment' => array('delete', 'insert', 'update', 'view'),
       ),
     ),
     'node_save_action' => array(
@@ -2402,8 +2402,8 @@ function node_action_info() {
       'description' => t('Save post'),
       'configurable' => FALSE,
       'hooks' => array(
-        'nodeapi' => array('delete','insert','update', 'view'),
-        'comment' => array('delete','insert','update', 'view'),
+        'nodeapi' => array('delete', 'insert', 'update', 'view'),
+        'comment' => array('delete', 'insert', 'update', 'view'),
         'user' => array('login'),
       ),
     ),
@@ -2412,8 +2412,8 @@ function node_action_info() {
       'description' => t('Unpublish post containing keyword(s)'),
       'configurable' => TRUE,
       'hooks' => array(
-        'nodeapi' => array('presave','insert','update', 'view'),
-        'comment' => array('delete','insert','update', 'view'),
+        'nodeapi' => array('presave', 'insert', 'update', 'view'),
+        'comment' => array('delete', 'insert', 'update', 'view'),
       ),
     ),
   );

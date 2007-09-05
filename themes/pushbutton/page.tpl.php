@@ -1,5 +1,5 @@
 <?php
-// $Id: page.tpl.php,v 1.20 2007/09/01 05:42:49 dries Exp $
+// $Id: page.tpl.php,v 1.21 2007/09/05 08:42:02 dries Exp $
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="<?php print $language->language ?>" xml:lang="<?php print $language->language ?>">
 <head>
@@ -104,7 +104,7 @@
       <?php print theme('links', $primary_links, array('class' => 'links primary-links')) ?>
     <?php endif; ?>
     <?php if (isset($secondary_links)) : ?>
-      <?php print theme('links', $secondary_links, array('class' => 'links secondary-links',)) ?>
+      <?php print theme('links', $secondary_links, array('class' => 'links secondary-links')) ?>
     <?php endif; ?>
     </td>
   </tr>

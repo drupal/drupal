@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.178 2007/09/02 14:26:26 goba Exp $
+// $Id: upload.module,v 1.179 2007/09/05 08:42:02 dries Exp $
 
 /**
  * @file
@@ -184,7 +184,7 @@ function upload_node_form_submit($form, &$form_state) {
 
   // Save new file uploads.
   if (($user->uid != 1 || user_access('upload files')) && ($file = file_save_upload('upload', $validators))) {
-    $file->list = variable_get('upload_list_default',1);
+    $file->list = variable_get('upload_list_default', 1);
     $file->description = $file->filename;
     $_SESSION['upload_current_file'] = $file->fid;
     $_SESSION['upload_files'][$file->fid] = $file;
@@ -192,7 +192,7 @@ function upload_node_form_submit($form, &$form_state) {
 
   // attach session files to node.
   if (!empty($_SESSION['upload_files'])) {
-    foreach($_SESSION['upload_files'] as $fid => $file) {
+    foreach ($_SESSION['upload_files'] as $fid => $file) {
       $form_state['values']['files'][$fid] = $file;
     }
   }

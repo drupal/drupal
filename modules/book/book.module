@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.440 2007/08/30 15:31:46 goba Exp $
+// $Id: book.module,v 1.441 2007/09/05 08:42:01 dries Exp $
 
 /**
  * @file
@@ -264,7 +264,7 @@ function book_get_books() {
       $nids[] = $book['bid'];
     }
     if ($nids) {
-      $result2 = db_query(db_rewrite_sql("SELECT n.type, n.title, b.*, ml.* FROM {book} b INNER JOIN {node} n on b.nid = n.nid INNER JOIN {menu_links} ml ON b.mlid = ml.mlid WHERE n.nid IN (". implode(',', $nids). ") AND n.status = 1 ORDER BY ml.weight, ml.link_title"));
+      $result2 = db_query(db_rewrite_sql("SELECT n.type, n.title, b.*, ml.* FROM {book} b INNER JOIN {node} n on b.nid = n.nid INNER JOIN {menu_links} ml ON b.mlid = ml.mlid WHERE n.nid IN (". implode(',', $nids) .") AND n.status = 1 ORDER BY ml.weight, ml.link_title"));
       while ($link = db_fetch_array($result2)) {
         $link['href'] = $link['link_path'];
         $link['options'] = unserialize($link['options']);
@@ -404,7 +404,7 @@ function _book_add_form_elements(&$form, $node) {
   $settings['book']['formCallback'] = url('book-form-update' , array());
   $settings['book']['formId'] = $form['#id'];
   drupal_add_js($settings, 'setting');
-  drupal_add_js(drupal_get_path('module', 'book'). '/book.js');
+  drupal_add_js(drupal_get_path('module', 'book') .'/book.js');
   drupal_add_js('misc/progress.js');
 
   // Need this for AJAX.
@@ -1415,7 +1415,7 @@ function book_admin_settings_validate($form, &$form_state) {
  */
 function book_node_type($op, $type) {
 
-  switch ($op){
+  switch ($op) {
     case 'update':
       if (!empty($type->old_type) && $type->old_type != $type->type) {
         // Update the list of node types that are allowed to be added to books.

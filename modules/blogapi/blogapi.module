@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.107 2007/06/30 19:46:55 goba Exp $
+// $Id: blogapi.module,v 1.108 2007/09/05 08:42:01 dries Exp $
 
 /**
  * @file
@@ -631,7 +631,7 @@ function _blogapi_mt_extra(&$node, $struct) {
   // merge the 3 body sections (description, mt_excerpt, mt_text_more) into
   // one body
   if ($struct['mt_excerpt']) {
-    $node->body = $struct['mt_excerpt'] .'<!--break-->'.$node->body;
+    $node->body = $struct['mt_excerpt'] .'<!--break-->'. $node->body;
   }
   if ($struct['mt_text_more']) {
     $node->body = $node->body .'<!--extended-->'. $struct['mt_text_more'];
@@ -658,8 +658,8 @@ function _blogapi_get_post($node, $bodies = TRUE) {
     'dateCreated' => xmlrpc_date($node->created),
     'title' => $node->title,
     'postid' => $node->nid,
-    'link' => url('node/'.$node->nid, array('absolute' => TRUE)),
-    'permaLink' => url('node/'.$node->nid, array('absolute' => TRUE)),
+    'link' => url('node/'. $node->nid, array('absolute' => TRUE)),
+    'permaLink' => url('node/'. $node->nid, array('absolute' => TRUE)),
   );
   if ($bodies) {
     if ($node->comment == 1) {

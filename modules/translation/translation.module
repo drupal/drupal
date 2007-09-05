@@ -1,5 +1,5 @@
 <?php
-// $Id: translation.module,v 1.12 2007/08/30 15:31:46 goba Exp $
+// $Id: translation.module,v 1.13 2007/09/05 08:42:02 dries Exp $
 
 /**
  * @file
@@ -199,7 +199,7 @@ function translation_node_overview($node) {
       $status = $translation_node->status ? t('Published') : t('Not published');
       $status .= $translation_node->translate ? ' - <span class="marker">'. t('outdated') .'</span>' : '';
       if ($translation_node->nid == $tnid) {
-        $language_name = '<strong>'. $language_name . '</strong> (source)';
+        $language_name = '<strong>'. $language_name .'</strong> (source)';
       }
     }
     else {
@@ -334,7 +334,7 @@ function translation_node_get_translations($tnid) {
  *   Boolean value.
  */
 function translation_supported_type($type) {
-  return variable_get('language_' . $type, 0) == TRANSLATION_ENABLED;
+  return variable_get('language_'. $type, 0) == TRANSLATION_ENABLED;
 }
 
 /**

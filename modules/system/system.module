@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.526 2007/09/01 14:41:21 goba Exp $
+// $Id: system.module,v 1.527 2007/09/05 08:42:02 dries Exp $
 
 /**
  * @file
@@ -122,7 +122,7 @@ function system_elements() {
   // Inputs
   $type['submit'] = array('#input' => TRUE, '#name' => 'op', '#button_type' => 'submit', '#executes_submit_callback' => TRUE, '#ahah_event' => 'submit', '#process' => array('form_expand_ahah'));
   $type['button'] = array('#input' => TRUE, '#name' => 'op', '#button_type' => 'submit', '#executes_submit_callback' => FALSE, '#ahah_event' => 'submit', '#process' => array('form_expand_ahah'));
-  $type['image_button'] = array('#input' => TRUE, '#button_type' => 'submit','#executes_submit_callback' => TRUE, '#ahah_event' => 'submit', '#process' => array('form_expand_ahah'), '#return_value' => TRUE, '#has_garbage_value' => TRUE, '#src' => NULL);
+  $type['image_button'] = array('#input' => TRUE, '#button_type' => 'submit', '#executes_submit_callback' => TRUE, '#ahah_event' => 'submit', '#process' => array('form_expand_ahah'), '#return_value' => TRUE, '#has_garbage_value' => TRUE, '#src' => NULL);
   $type['textfield'] = array('#input' => TRUE, '#size' => 60, '#maxlength' => 128, '#autocomplete_path' => FALSE);
   $type['password'] = array('#input' => TRUE, '#size' => 60, '#maxlength' => 128);
   $type['password_confirm'] = array('#input' => TRUE, '#process' => array('expand_password_confirm'));

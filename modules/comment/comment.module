@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.580 2007/09/04 21:10:45 dries Exp $
+// $Id: comment.module,v 1.581 2007/09/05 08:42:01 dries Exp $
 
 /**
  * @file
@@ -341,13 +341,13 @@ function comment_new_page_count($num_comments, $new_replies, $nid) {
         // Newest first: find the last thread with new comment
         $result = db_query('(SELECT thread FROM {comments} WHERE nid = %d  AND status = 0 ORDER BY timestamp DESC LIMIT %d) ORDER BY thread DESC LIMIT 1', $nid, $new_replies);
         $thread = db_result($result);
-        $result_count = db_query("SELECT COUNT(*) FROM {comments} WHERE nid = %d AND status = 0 AND thread > '" . $thread . "'", $nid);
+        $result_count = db_query("SELECT COUNT(*) FROM {comments} WHERE nid = %d AND status = 0 AND thread > '". $thread ."'", $nid);
       }
       else {
         // Oldest first: find the first thread with new comment
         $result = db_query('(SELECT thread FROM {comments} WHERE nid = %d  AND status = 0 ORDER BY timestamp DESC LIMIT %d) ORDER BY SUBSTRING(thread, 1, (LENGTH(thread) - 1)) LIMIT 1', $nid, $new_replies);
         $thread = substr(db_result($result), 0, -1);
-        $result_count = db_query("SELECT COUNT(*) FROM {comments} WHERE nid = %d AND status = 0 AND SUBSTRING(thread, 1, (LENGTH(thread) - 1)) < '" . $thread . "'", $nid);
+        $result_count = db_query("SELECT COUNT(*) FROM {comments} WHERE nid = %d AND status = 0 AND SUBSTRING(thread, 1, (LENGTH(thread) - 1)) < '". $thread ."'", $nid);
       }
       $count = db_result($result_count);
     }
@@ -1490,7 +1490,7 @@ function comment_form(&$form_state, $edit, $title = NULL) {
   $op = isset($_POST['op']) ? $_POST['op'] : '';
 
   if (!$user->uid && variable_get('comment_anonymous', COMMENT_ANONYMOUS_MAYNOT_CONTACT) != COMMENT_ANONYMOUS_MAYNOT_CONTACT) {
-    drupal_add_js(drupal_get_path('module', 'comment') . '/comment.js');
+    drupal_add_js(drupal_get_path('module', 'comment') .'/comment.js');
   }
 
   if ($user->uid) {
