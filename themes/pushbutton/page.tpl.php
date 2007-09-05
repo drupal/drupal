@@ -104,7 +104,7 @@
       <?php print theme('links', $primary_links, array('class' => 'links primary-links')) ?>
     <?php endif; ?>
     <?php if (isset($secondary_links)) : ?>
-      <?php print theme('links', $secondary_links, array('class' => 'links secondary-links',)) ?>
+      <?php print theme('links', $secondary_links, array('class' => 'links secondary-links')) ?>
     <?php endif; ?>
     </td>
   </tr>

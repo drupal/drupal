@@ -204,7 +204,7 @@ function dblog_build_filter_query() {
 function dblog_filters() {
   $filters = array();
 
-  foreach(_dblog_get_message_types() as $type) {
+  foreach (_dblog_get_message_types() as $type) {
     $types[$type] = $type;
   }
 
