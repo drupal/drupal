@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.417 2007/09/02 14:56:18 goba Exp $
+// $Id: forum.module,v 1.418 2007/09/05 08:27:57 dries Exp $
 
 /**
  * @file
@@ -234,7 +234,7 @@ function forum_nodeapi(&$node, $op, $teaser, $page) {
       break;
 
     // Assign forum taxonomy when adding a topic from within a forum.
-    case 'submit':
+    case 'presave':
       // Make sure all fields are set properly:
       $node->icon = !empty($node->icon) ? $node->icon : '';
 
@@ -246,12 +246,12 @@ function forum_nodeapi(&$node, $op, $teaser, $page) {
             $forum_terms[] = $term->tid;
           }
         }
-        foreach ($node->taxonomy as $term_id => $term) {
+        foreach ($node->taxonomy as $term_id) {
           if (in_array($term_id, $forum_terms)) {
             $node->tid = $term_id;
           }
         }
-        $old_tid = db_result(db_query_range("SELECT t.tid FROM {term_data} t INNER JOIN {node} n WHERE t.vid = n.vid AND n.nid = %d ORDER BY t.vid DESC", $node->nid, 0, 1));
+        $old_tid = db_result(db_query_range("SELECT t.tid FROM {term_node} t INNER JOIN {node} n WHERE t.vid = n.vid AND n.nid = %d ORDER BY t.vid DESC", $node->nid, 0, 1));
         if ($old_tid) {
           if (($node->tid != $old_tid) && $node->shadow) {
             // A shadow copy needs to be created. Retain new term and add old term.
@@ -260,6 +260,20 @@ function forum_nodeapi(&$node, $op, $teaser, $page) {
         }
       }
       break;
+    case 'update':
+      if (!$node->revision) {
+        db_query('UPDATE {forum} SET tid = %d WHERE vid = %d', $node->tid, $node->vid);
+        break;
+      }
+      // Deliberate no break -- for new revisions we need an insert.
+    case 'insert':
+      db_query('INSERT INTO {forum} (tid, vid, nid) VALUES (%d, %d, %d)', $node->tid, $node->vid, $node->nid);
+      break;
+    case 'delete':
+      db_query('DELETE FROM {forum} WHERE nid = %d', $node->nid);
+      break;
+    case 'load':
+      return db_fetch_object(db_query('SELECT tid AS forum_tid FROM {forum} WHERE vid = %d', $node->vid));
   }
 
   return;
@@ -347,6 +361,7 @@ function forum_form_alter(&$form, $form_state, $form_id) {
       unset($form['relations']);
       unset($form['tags']);
       unset($form['multiple']);
+      unset($form['delete']);
       $form['required'] = array('#type' => 'value', '#value' => 1);
     }
   }
@@ -496,7 +511,7 @@ function forum_get_forums($tid = 0) {
     // This query does not use full ANSI syntax since MySQL 3.x does not support
     // table1 INNER JOIN table2 INNER JOIN table3 ON table2_criteria ON table3_criteria
     // used to join node_comment_statistics to users.
-    $sql = "SELECT ncs.last_comment_timestamp, IF (ncs.last_comment_uid != 0, u2.name, ncs.last_comment_name) AS last_comment_name, ncs.last_comment_uid FROM {node} n INNER JOIN {users} u1 ON n.uid = u1.uid INNER JOIN {term_node} tn ON n.nid = tn.nid INNER JOIN {node_comment_statistics} ncs ON n.nid = ncs.nid INNER JOIN {users} u2 ON ncs.last_comment_uid=u2.uid WHERE n.status = 1 AND tn.tid = %d ORDER BY ncs.last_comment_timestamp DESC";
+    $sql = "SELECT ncs.last_comment_timestamp, IF (ncs.last_comment_uid != 0, u2.name, ncs.last_comment_name) AS last_comment_name, ncs.last_comment_uid FROM {node} n INNER JOIN {users} u1 ON n.uid = u1.uid INNER JOIN {term_node} tn ON n.vid = tn.vid INNER JOIN {node_comment_statistics} ncs ON n.nid = ncs.nid INNER JOIN {users} u2 ON ncs.last_comment_uid=u2.uid WHERE n.status = 1 AND tn.tid = %d ORDER BY ncs.last_comment_timestamp DESC";
     $sql = db_rewrite_sql($sql);
     $topic = db_fetch_object(db_query_range($sql, $forum->tid, 0, 1));
 
@@ -519,7 +534,7 @@ function forum_get_forums($tid = 0) {
  * than NODE_NEW_LIMIT.
  */
 function _forum_topics_unread($term, $uid) {
-  $sql = "SELECT COUNT(n.nid) FROM {node} n INNER JOIN {term_node} tn ON n.nid = tn.nid AND tn.tid = %d LEFT JOIN {history} h ON n.nid = h.nid AND h.uid = %d WHERE n.status = 1 AND n.created > %d AND h.nid IS NULL";
+  $sql = "SELECT COUNT(n.nid) FROM {node} n INNER JOIN {term_node} tn ON n.vid = tn.vid AND tn.tid = %d LEFT JOIN {history} h ON n.nid = h.nid AND h.uid = %d WHERE n.status = 1 AND n.created > %d AND h.nid IS NULL";
   $sql = db_rewrite_sql($sql);
   return db_result(db_query($sql, $term, $uid, NODE_NEW_LIMIT));
 }
@@ -544,7 +559,7 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
 
   $term = taxonomy_get_term($tid);
 
-  $sql = db_rewrite_sql("SELECT n.nid, r.tid, n.title, n.sticky, u.name, u.uid, n.created AS timestamp, n.comment AS comment_mode, l.last_comment_timestamp, IF(l.last_comment_uid != 0, cu.name, l.last_comment_name) AS last_comment_name, l.last_comment_uid, l.comment_count AS num_comments FROM {node_comment_statistics} l, {users} cu, {term_node} r, {users} u, {node} n WHERE n.status = 1 AND l.last_comment_uid = cu.uid AND n.nid = l.nid AND n.nid = r.nid AND r.tid = %d AND n.uid = u.uid AND n.vid = r.vid");
+  $sql = db_rewrite_sql("SELECT n.nid, r.tid, n.title, n.sticky, u.name, u.uid, n.created AS timestamp, n.comment AS comment_mode, l.last_comment_timestamp, IF(l.last_comment_uid != 0, cu.name, l.last_comment_name) AS last_comment_name, l.last_comment_uid, l.comment_count AS num_comments, f.tid AS forum_tid FROM {node_comment_statistics} l INNER JOIN {node} n ON n.nid = l.nid INNER JOIN {users} cu ON l.last_comment_uid = cu.uid INNER JOIN {term_node} r ON n.vid = r.vid INNER JOIN {users} u ON n.uid = u.uid INNER JOIN {forum} f ON n.vid = f.vid WHERE n.status = 1 AND r.tid = %d");
   $sql .= tablesort_sql($forum_topic_list_header, 'n.sticky DESC,');
   $sql .= ', n.created DESC';  // Always add a secondary sort order so that the news forum topics are on top.
 
@@ -778,7 +793,19 @@ function template_preprocess_forum_topic_list(&$variables) {
       $variables['topics'][$id]->zebra = $row % 2 == 0 ? 'odd' : 'even';
       $row++;
 
-      $variables['topics'][$id]->title = l($topic->title, "node/$topic->nid");
+      // We keep the actual tid in forum table, if it's different from the
+      // current tid then it means the topic appears in two forums, one of
+      // them is a shadow copy.
+      if ($topic->forum_tid != $variables['tid']) {
+        $variables['topics'][$id]->moved = TRUE;
+        $variables['topics'][$id]->title = check_plain($topic->title);
+        $variables['topics'][$id]->message = l(t('This topic has been moved'), "forum/$topic->forum_tid");
+      }
+      else {
+        $variables['topics'][$id]->moved = FALSE;
+        $variables['topics'][$id]->title = l($topic->title, "node/$topic->nid");
+        $variables['topics'][$id]->message = '';
+      }
       $variables['topics'][$id]->created = theme('forum_submitted', $topic);
       $variables['topics'][$id]->last_reply = theme('forum_submitted', isset($topic->last_reply) ? $topic->last_reply : NULL);
 
@@ -789,13 +816,6 @@ function template_preprocess_forum_topic_list(&$variables) {
         $variables['topics'][$id]->new_url = url("node/$topic->nid", array('query' => comment_new_page_count($topic->num_comments, $topic->new_replies, $topic->nid), 'fragment' => 'new'));
       }
 
-      $variables['topics'][$id]->moved = FALSE;
-      $variables['topics'][$id]->message = '';
-      if ($topic->tid != $variables['tid']) {
-        $variables['topics'][$id]->moved = TRUE;
-        $variables['topics'][$id]->title = check_plain($topic->title);
-        $variables['topics'][$id]->message = l(t('This topic has been moved'), "forum/$topic->tid");
-      }
     }
   }
   else {

@@ -1,37 +1,35 @@
 <?php
-// $Id: forum.install,v 1.8 2007/07/02 17:08:35 dries Exp $
+// $Id: forum.install,v 1.9 2007/09/05 08:27:57 dries Exp $
 
 /**
  * Implementation of hook_install().
  */
 function forum_install() {
-  // Create the forum vocabulary. Assign the vocabulary a low weight so
-  // it will appear first in forum topic create and edit forms.
-  $vocabulary = array(
-    'name' => t('Forums'),
-    'multiple' => 0,
-    'required' => 1,
-    'hierarchy' => 1,
-    'relations' => 0,
-    'module' => 'forum',
-    'weight' => -10,
-    'nodes' => array('forum' => 1),
-  );
-  taxonomy_save_vocabulary($vocabulary);
-
-  variable_set('forum_nav_vocabulary', $vocabulary['vid']);
+  // Create tables.
+  drupal_install_schema('forum');
 }
 
-/**
- * Remove forum table; forums now use the general term_node table to support multiple
- * node types.
- */
-function forum_update_6001() {
-  $ret = array();
+function forum_enable() {
+  // Create the forum vocabulary if it does not exist. Assign the vocabulary
+  // a low weight so it will appear first in forum topic create and edit
+  // forms.
+  $vid = variable_get('forum_nav_vocabulary', 0);
+  $vocabularies = taxonomy_get_vocabularies();
+  if (!isset($vocabularies[$vid])) {
+    $vocabulary = array(
+      'name' => t('Forums'),
+      'multiple' => 0,
+      'required' => 1,
+      'hierarchy' => 1,
+      'relations' => 0,
+      'module' => 'forum',
+      'weight' => -10,
+      'nodes' => array('forum' => 1),
+    );
+    taxonomy_save_vocabulary($vocabulary);
 
-  $ret[] = update_sql("DROP TABLE {forum}");
-
-  return $ret;
+    variable_set('forum_nav_vocabulary', $vocabulary['vid']);
+  }
 }
 
 /**
@@ -43,6 +41,7 @@ function forum_uninstall() {
   taxonomy_del_vocabulary($vid);
 
   db_query("DELETE FROM {node} WHERE type = 'forum'");
+  db_query('DROP TABLE {forum}');
   variable_del('forum_containers');
   variable_del('forum_nav_vocabulary');
   variable_del('forum_hot_topic');
