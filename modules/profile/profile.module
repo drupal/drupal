@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.218 2007/09/01 06:15:33 goba Exp $
+// $Id: profile.module,v 1.219 2007/09/05 18:11:27 dries Exp $
 
 /**
  * @file
@@ -166,7 +166,7 @@ function profile_block($op = 'list', $delta = 0, $edit = array()) {
           }
         }
 
-        if ($fields) {
+        if (!empty($fields)) {
           $profile = _profile_update_user_fields($fields, $account);
           $output .= theme('profile_block', $account, $profile, TRUE);
         }
