@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.179 2007/09/05 08:42:02 dries Exp $
+// $Id: upload.module,v 1.180 2007/09/05 18:09:49 dries Exp $
 
 /**
  * @file
@@ -416,7 +416,7 @@ function upload_save(&$node) {
 
 function upload_delete($node) {
   $files = array();
-  $result = db_query('SELECT DISTINCT f.* FROM upload u INNER JOIN files f ON u.fid = f.fid WHERE u.nid = %d', $node->nid);
+  $result = db_query('SELECT DISTINCT f.* FROM {upload} u INNER JOIN {files} f ON u.fid = f.fid WHERE u.nid = %d', $node->nid);
   while ($file = db_fetch_object($result)) {
     $files[$file->fid] = $file;
   }
