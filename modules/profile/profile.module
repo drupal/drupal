@@ -166,7 +166,7 @@ function profile_block($op = 'list', $delta = 0, $edit = array()) {
           }
         }
 
-        if ($fields) {
+        if (!empty($fields)) {
           $profile = _profile_update_user_fields($fields, $account);
           $output .= theme('profile_block', $account, $profile, TRUE);
         }
