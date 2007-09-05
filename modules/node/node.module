@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.877 2007/09/02 14:42:30 goba Exp $
+// $Id: node.module,v 1.878 2007/09/05 08:35:14 dries Exp $
 
 /**
  * @file
@@ -1115,7 +1115,7 @@ function node_search($op = 'search', $keys = NULL) {
           $arguments1[] = $c;
         }
         $conditions1 .= ' AND ('. implode(' OR ', $categories) .')';
-        $join1 .= ' INNER JOIN {term_node} tn ON n.nid = tn.nid';
+        $join1 .= ' INNER JOIN {term_node} tn ON n.vid = tn.vid';
         $keys = search_query_insert($keys, 'category');
       }
 
