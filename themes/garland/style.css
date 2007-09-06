@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.22 2007/07/12 11:00:44 goba Exp $ */
+/* $Id: style.css,v 1.23 2007/09/06 12:55:55 goba Exp $ */
 
 /**
  * Garland, for Drupal 5.0
@@ -825,10 +825,25 @@ fieldset {
   background: #fff url(images/gradient-inner.png) repeat-x 0 0;
 }
 
+/* Targets IE 7. Fixes background image in field sets. */
+*:first-child+html fieldset {
+  padding: 0 1em 1em;
+  background-position: 0 .75em;
+  background-color: transparent;
+}
+
+*:first-child+html fieldset > .description, *:first-child+html fieldset .fieldset-wrapper .description  {
+  padding-top: 1em;
+}
+ 
 fieldset legend {
   /* Fix disappearing legend in FFox */
   display: block;
 }
+
+*:first-child+html fieldset legend, *:first-child+html fieldset.collapsed legend {
+  display: inline;
+} 
 
 html.js fieldset.collapsed {
   background: transparent;
