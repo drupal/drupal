@@ -340,6 +340,9 @@ function drupal_not_found() {
 
   $path = drupal_get_normal_path(variable_get('site_404', ''));
   if ($path && $path != $_GET['q']) {
+    // Set the active item in case there are tabs to display, or other
+    // dependencies on the path.
+    menu_set_active_item($path);
     $return = menu_execute_active_handler($path);
   }
 
@@ -365,6 +368,9 @@ function drupal_access_denied() {
 
   $path = drupal_get_normal_path(variable_get('site_403', ''));
   if ($path && $path != $_GET['q']) {
+    // Set the active item in case there are tabs to display, or other
+    // dependencies on the path.
+    menu_set_active_item($path);
     $return = menu_execute_active_handler($path);
   }
 

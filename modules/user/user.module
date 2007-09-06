@@ -1138,7 +1138,7 @@ function user_set_authmaps($account, $authmaps) {
 function user_page() {
   global $user;
   if ($user->uid) {
-    $_GET['q'] = 'user/'. $user->uid;
+    menu_set_active_item('user/'. $user->uid);
     return menu_execute_active_handler();
   }
   else {
