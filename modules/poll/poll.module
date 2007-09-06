@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.241 2007/09/05 08:33:16 dries Exp $
+// $Id: poll.module,v 1.242 2007/09/06 12:18:01 goba Exp $
 
 /**
  * @file
@@ -502,6 +502,10 @@ function template_preprocess_poll_vote(&$variables) {
   $variables['vote'] = drupal_render($form['vote']);
   $variables['rest'] = drupal_render($form);
   $variables['block'] = $form['#block'];
+  // If this is a block, allow a different tpl.php to be used.
+  if ($variables['block']) {
+    $variables['template_files'][] = 'poll-vote-block';
+  }
 }
 
 /**
