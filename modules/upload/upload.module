@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.180 2007/09/05 18:09:49 dries Exp $
+// $Id: upload.module,v 1.181 2007/09/06 15:31:48 goba Exp $
 
 /**
  * @file
@@ -391,6 +391,14 @@ function upload_save(&$node) {
     // will be required.
     if (!empty($file->remove)) {
       db_query('DELETE FROM {upload} WHERE fid = %d AND vid = %d', $fid, $node->vid);
+
+      // If the file isn't used by any other revisions delete it.
+      $count = db_result(db_query('SELECT COUNT(fid) FROM {upload} WHERE fid = %d', $fid));
+      if ($count < 1) {
+        file_delete($file->filepath);
+        db_query('DELETE FROM {files} WHERE fid = %d', $fid);
+      }
+
       // Remove it from the session in the case of new uploads,
       // that you want to disassociate before node submission.
       unset($_SESSION['upload_files'][$fid]);
