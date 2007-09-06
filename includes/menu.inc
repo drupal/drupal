@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.204 2007/09/06 12:07:31 goba Exp $
+// $Id: menu.inc,v 1.205 2007/09/06 12:47:20 goba Exp $
 
 /**
  * @file
@@ -1240,7 +1240,18 @@ function menu_get_active_menu_name() {
   return menu_set_active_menu_name();
 }
 
-function menu_set_active_item() {
+/**
+ * Set the active path, which determines which page is loaded.
+ *
+ * @param $path
+ *   A Drupal path - not a path alias.
+ *
+ * Note that this may not have the desired effect unless invoked very early
+ * in the page load, such as during hook_boot, or unless you call
+ * menu_execute_active_handler() to generate your page output.
+ */
+function menu_set_active_item($path) {
+  $_GET['q'] = $path;
 }
 
 /**
