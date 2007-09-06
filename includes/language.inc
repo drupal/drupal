@@ -130,7 +130,7 @@ function language_url_rewrite(&$path, &$options) {
             $path = drupal_get_path_alias($path, $path_language->language);
             $options['alias'] = TRUE;
           }
-          $path = empty($path) ? $path_language->prefix : $path_language->prefix .'/'. $path;
+          $path = (empty($path) || ($path == '<front>')) ? $path_language->prefix : $path_language->prefix .'/'. $path;
         }
         break;
 
