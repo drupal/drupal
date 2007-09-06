@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.203 2007/09/04 21:10:45 dries Exp $
+// $Id: menu.inc,v 1.204 2007/09/06 12:07:31 goba Exp $
 
 /**
  * @file
@@ -1668,7 +1668,7 @@ function menu_link_save(&$item) {
  *  A path from $menu keys or empty if $link_path points to a nonexisting
  *  place.
  */
- function _menu_find_router_path($menu, $link_path) {
+function _menu_find_router_path($menu, $link_path) {
   $parts = explode('/', $link_path, MENU_MAX_PARTS);
   $router_path = $link_path;
   if (!isset($menu[$router_path])) {
