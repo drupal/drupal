@@ -1,0 +1,321 @@
+/* $Id: style-rtl.css,v 1.1 2007/09/06 21:17:07 goba Exp $ */
+
+html {
+  direction: rtl;
+}
+
+/**
+ * Markup free clearing
+ * Details: http://www.positioniseverything.net/easyclearing.html
+ */
+.clear-block:after {
+  content: ".";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+}
+
+.clear-block {
+  display: inline-block;
+}
+
+/* Hides from IE-mac \*/
+* html .clear-block {
+  height: 1%;
+}
+
+.clear-block {
+  display: block;
+}
+/* End hide from IE-mac */
+
+/**
+ * Generic elements
+ */
+body {
+  direction: rtl;
+}
+
+ol li, ul li {
+  margin: 0.4em .5em 0.4em 0;
+}
+
+ul.menu, .item-list ul {
+  margin: 0.35em -0.5em 0 0;
+}
+
+ul.menu ul, .item-list ul ul {
+  margin-left: inherit;
+  margin-right: 0em;
+}
+
+ol li, ul li, ul.menu li, .item-list ul li, li.leaf {
+  margin: 0.15em .5em 0.15em 0;
+}
+
+ul li, ul.menu li, .item-list ul li, li.leaf {
+  padding: 0 1.5em .2em 0; 
+  background: transparent url("images/menu-leaf.gif") no-repeat 100% .35em;
+}
+
+ol li {
+  margin-left: inherit;
+  margin-right: 2em;
+}
+
+ul li.expanded {
+  background: transparent url("images/menu-expanded.gif") no-repeat 100% .35em;
+}
+
+ul li.collapsed {
+  background: transparent url("images/menu-collapsed-rtl.gif") no-repeat 100% .35em;
+}
+
+ul.inline li {
+  padding: 0 0 0 1em;
+}
+
+ol.task-list {
+  margin-left: inherit;
+  margin-right: 0;
+}
+
+ol.task-list li {
+  padding: 0.5em 2em 0.5em 1em;
+}
+
+ol.task-list li.active {
+  background: transparent url(images/task-list.png) no-repeat 97px 50%;
+}
+
+ol.task-list li.done {
+  background: transparent url(../../misc/watchdog-ok.png) no-repeat 100% 50%;
+}
+
+ol.task-list li.active {
+  margin-right: inherit;
+  margin-left: 1em;
+}
+
+dl {
+  margin: 0.5em 1.5em 1em 0;
+}
+
+dl dt {
+}
+
+dl dd {
+  margin: 0 1.5em .5em 0;
+}
+
+.form-button, .form-submit {
+  margin: 2em 0 1em 0.5em;
+}
+
+#header-region h2 {
+  margin: 0 0 0 1em;
+}
+
+#wrapper {
+  background: #edf5fa url("images/body.png") repeat-x 50% 0;
+}
+
+#wrapper #container #header h1 img {
+  padding-right: inherit;
+  float: right; 
+  padding-right: inherit;
+  padding-left : 20px;
+}
+
+#sidebar-left .block-region {
+  margin: 0 0 0 15px;
+}
+
+#sidebar-right .block-region {
+  margin: 0 15px 0px 0;
+}
+
+/* Now we add the backgrounds for the main content shading */
+#wrapper #container #center #squeeze {
+  background: #fff url("images/bg-content.png") repeat-x 50% 0;  
+}
+
+#wrapper #container .breadcrumb {
+  position: absolute;
+  top: 15px;
+  left: inherit; 
+  right: 35px;
+  z-index: 3;
+}
+
+/**
+ * Primary navigation
+ */
+ul.primary-links {
+  float: left; 
+width:70%;
+}
+
+ul.primary-links li {
+  float: right;  
+}
+
+/**
+ * Secondary navigation
+ */
+ul.secondary-links {
+  padding: 20px 0 0;
+  float: left;
+  clear: left;
+}
+
+ul.secondary-links li {
+  float: right;
+}
+
+ul.primary {
+  float: right;
+}
+ul.secondary {
+  clear: both;
+  text-align: right;
+}
+h2.with-tabs {
+  float: right;
+  margin: 0 0 0 2em;
+}
+
+ul.primary li a, ul.primary li.active a, ul.primary li a:hover, ul.primary li a:visited,
+ul.secondary li a, ul.secondary li.active a, ul.secondary li a:hover, ul.secondary li a:visited {
+  margin: 0 1px 0 0;
+  
+}
+ul.primary li a:after {
+  /* Fix Firefox 2 RTL bug. */
+  content: " ";
+}
+
+ul.links li, ul.inline li {
+  padding-left: 1em;
+  padding-right: 0;
+}
+
+.node .links, .comment .links {
+  text-align: right;
+}
+
+.node .links ul.links li, .comment .links ul.links li {}
+.terms ul.links li {
+  padding-right: 1em;
+  padding-left: 0;
+}
+
+.picture, .comment .submitted {
+  padding-left: inherit;
+  float: left;
+  clear: left;
+  padding-right: 1em;
+}
+
+.new {
+  float: left;
+}
+
+.terms {
+  float: left;
+}
+
+.indented {
+  margin-left: 0; /* an should be inherit, but force left margin to be 0  */
+  margin-right: 25px;
+}
+
+html.js fieldset.collapsible legend a {
+  padding-left: inherit; 
+  padding-right: 2em;
+  background: url("images/menu-expanded.gif") no-repeat 100% 50%;
+}
+
+html.js fieldset.collapsed legend a {
+  background: url("images/menu-collapsed-rtl.gif") no-repeat 100% 50%;
+}
+
+/**
+ * Syndication Block
+ */
+#block-node-0 h2 {
+  float: right;
+  padding-right: inherit;
+  padding-left: 20px;
+}
+
+#block-node-0 img {
+  float: left;
+}
+
+#block-node-0 .content {
+  clear: left;
+}
+
+/**
+ * Login Block
+ */
+#user-login-form ul {
+  text-align: right;
+}
+
+div.admin .left {
+  float: right;
+}
+
+div.admin .right {
+  float: left;
+}
+
+/* Fix Opera, IE6 and IE7 header width */
+#wrapper #container #header {
+  position: relative;
+  width: 100%;
+}
+
+#wrapper #container #header #logo-floater {
+  width: 100%;	
+  left: 0;	
+  top:0;
+}
+
+/**
+ * Fixes for IE7 - Does not break other browsers 
+ */
+
+/* Position:relative on these breaks IE7. */  
+ul.primary li a, ul.primary li.active a, ul.primary li a:hover, ul.primary li a:visited,
+ul.secondary li a, ul.secondary li.active a, ul.secondary li a:hover, ul.secondary li a:visited {
+  position: static;
+}
+  
+/* Fix right and left cloumns position breaking on window resize */
+#container {
+  position: relative;
+}
+
+#center {
+  position: relative;
+}
+
+#sidebar-right{
+  position: absolute;
+  right: 0;
+}
+
+/**
+ * Apply hasLayout to elements in IE7, using standard property "min-height" 
+ * (see http://www.satzansatz.de/cssd/onhavinglayout.html)
+ */
+
+/* Fix background bleed in center column. */
+#squeeze,
+#squeeze .right-corner {
+  min-height: 1%;
+}

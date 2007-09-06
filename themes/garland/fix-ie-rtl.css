@@ -1,10 +1,4 @@
-/* $Id: fix-ie.css,v 1.5 2007/09/06 21:17:07 goba Exp $ */
-
-/**
- * Themetastic, for Drupal 5.0
- * Stefan Nagtegaal, iStyledThis [dot] nl
- * Steven Wittens, acko [dot] net
- */
+/* $Id: fix-ie-rtl.css,v 1.1 2007/09/06 21:17:07 goba Exp $ */
 
 body {
   /* Center layout */
@@ -13,9 +7,18 @@ body {
   font-size: 80%;
 }
 
+#squeeze {
+  zoom: 1;
+  direction: ltr;
+}
+
+#squeeze .left-corner{
+  direction: rtl
+}
+
 #header-region, #wrapper #container {
   /* Reset text alignment */
-  text-align: left; /* LTR */
+  text-align: right;
 }
 
 #wrapper #container #center {
@@ -33,17 +36,12 @@ fieldset {
   background: none;
 }
 
-ul.primary {
-  /* Fix missing top margin */
-  position: relative; /* LTR */
-/*  top: 0.5em; */
-}
-
 /* Prevent fieldsets from shifting when changing collapsed state. */
 html.js fieldset.collapsible {
   position: relative;
   top: -1em;
 }
+
 html.js fieldset.collapsed {
   top: 0;
   margin-bottom: 1em;

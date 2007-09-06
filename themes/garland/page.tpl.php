@@ -1,5 +1,5 @@
 <?php
-// $Id: page.tpl.php,v 1.11 2007/09/01 05:42:48 dries Exp $
+// $Id: page.tpl.php,v 1.12 2007/09/06 21:17:07 goba Exp $
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php print $language->language ?>" lang="<?php print $language->language ?>">
@@ -9,7 +9,7 @@
     <?php print $styles ?>
     <?php print $scripts ?>
     <!--[if lt IE 7]>
-    <link type="text/css" rel="stylesheet" media="all" href="<?php print base_path() . path_to_theme() ?>/fix-ie.css" />
+      <?php print phptemplate_get_ie_styles(); ?>
     <![endif]-->
   </head>
   <body<?php print phptemplate_body_class($left, $right); ?>>

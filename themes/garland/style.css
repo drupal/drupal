@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.23 2007/09/06 12:55:55 goba Exp $ */
+/* $Id: style.css,v 1.24 2007/09/06 21:17:07 goba Exp $ */
 
 /**
  * Garland, for Drupal 5.0
@@ -104,40 +104,40 @@ ol {
 }
 
 ol li, ul li {
-  margin: 0.4em 0 0.4em .5em;
+  margin: 0.4em 0 0.4em .5em; /* LTR */
 }
 
 ul.menu, .item-list ul {
-  margin: 0.35em 0 0 -0.5em;
+  margin: 0.35em 0 0 -0.5em; /* LTR */
   padding: 0;
 }
 
 ul.menu ul, .item-list ul ul {
-  margin-left: 0em;
+  margin-left: 0em; /* LTR */
 }
 
 ol li, ul li, ul.menu li, .item-list ul li, li.leaf {
-  margin: 0.15em 0 0.15em .5em;
+  margin: 0.15em 0 0.15em .5em; /* LTR */
 }
 
 ul li, ul.menu li, .item-list ul li, li.leaf {
   padding: 0 0 .2em 1.5em;
   list-style-type: none;
   list-style-image: none;
-  background: transparent url(images/menu-leaf.gif) no-repeat 1px .35em;
+  background: transparent url(images/menu-leaf.gif) no-repeat 1px .35em; /* LTR */
 }
 
 ol li {
   padding: 0 0 .3em;
-  margin-left: 2em;
+  margin-left: 2em; /* LTR */
 }
 
 ul li.expanded {
-  background: transparent url(images/menu-expanded.gif) no-repeat 1px .35em;
+  background: transparent url(images/menu-expanded.gif) no-repeat 1px .35em; /* LTR */
 }
 
 ul li.collapsed {
-  background: transparent url(images/menu-collapsed.gif) no-repeat 0px .35em;
+  background: transparent url(images/menu-collapsed.gif) no-repeat 0px .35em; /* LTR */
 }
 
 ul li.leaf a, ul li.expanded a, ul li.collapsed a {
@@ -147,26 +147,26 @@ ul li.leaf a, ul li.expanded a, ul li.collapsed a {
 ul.inline li {
   background: none;
   margin: 0;
-  padding: 0 1em 0 0;
+  padding: 0 1em 0 0; /* LTR */
 }
 
 ol.task-list {
-  margin-left: 0;
+  margin-left: 0; /* LTR */
   list-style-type: none;
   list-style-image: none;
 }
 ol.task-list li {
-  padding: 0.5em 1em 0.5em 2em;
+  padding: 0.5em 1em 0.5em 2em; /* LTR */
 }
 ol.task-list li.active {
-  background: transparent url(images/task-list.png) no-repeat 3px 50%;
+  background: transparent url(images/task-list.png) no-repeat 3px 50%; /* LTR */
 }
 ol.task-list li.done {
   color: #393;
-  background: transparent url(../../misc/watchdog-ok.png) no-repeat 0px 50%;
+  background: transparent url(../../misc/watchdog-ok.png) no-repeat 0px 50%; /* LTR */
 }
 ol.task-list li.active {
-  margin-right: 1em;
+  margin-right: 1em; /* LTR */
 }
 
 fieldset ul.clear-block li {
@@ -176,14 +176,14 @@ fieldset ul.clear-block li {
 }
 
 dl {
-  margin: 0.5em 0 1em 1.5em;
+  margin: 0.5em 0 1em 1.5em; /* LTR */
 }
 
 dl dt {
 }
 
 dl dd {
-  margin: 0 0 .5em 1.5em;
+  margin: 0 0 .5em 1.5em; /* LTR */
 }
 
 img, a img {
@@ -279,7 +279,7 @@ span.submitted, .description {
 }
 
 .form-button, .form-submit {
-  margin: 2em 0.5em 1em 0;
+  margin: 2em 0.5em 1em 0; /* LTR */
 }
 
 #watchdog-form-overview .form-submit,
@@ -334,7 +334,7 @@ table .form-button, table .form-submit {
 }
 
 #header-region h2 {
-  margin: 0 1em 0 0;
+  margin: 0 1em 0 0; /* LTR */
 }
 
 #header-region h3, #header-region label, #header-region li {
@@ -374,8 +374,8 @@ table .form-button, table .form-submit {
 
 #wrapper #container #header h1 img {
   padding-top: 16px;
-  padding-right: 20px;
-  float: left;
+  padding-right: 20px; /* LTR */
+  float: left; /* LTR */
 }
 
 /* With 3 columns, require a minimum width of 1000px to ensure there is enough horizontal space. */
@@ -441,11 +441,11 @@ body.sidebars #squeeze {
 }
 
 #sidebar-left .block-region {
-  margin: 0 15px 0 0px;
+  margin: 0 15px 0 0px; /* LTR */
 }
 
 #sidebar-right .block-region {
-  margin: 0 0px 0 15px;
+  margin: 0 0px 0 15px; /* LTR */
 }
 
 .block-region {
@@ -488,7 +488,7 @@ body.sidebars #squeeze {
 #wrapper #container .breadcrumb {
   position: absolute;
   top: 15px;
-  left: 35px;
+  left: 35px; /* LTR */
   z-index: 3;
 }
 
@@ -539,7 +539,7 @@ body.sidebars #footer {
 ul.primary-links {
   margin: 0;
   padding: 0;
-  float: right;
+  float: right; /* LTR */
   position: relative;
   z-index: 4;
 }
@@ -547,7 +547,7 @@ ul.primary-links {
 ul.primary-links li {
   margin: 0;
   padding: 0;
-  float: left;
+  float: left; /* LTR */
   background-image: none;
 }
 
@@ -569,9 +569,9 @@ ul.primary-links li a:hover, ul.primary-links li a.active {
  */
 ul.secondary-links {
   margin: 0;
-  padding: 18px 0 0;
-  float: right;
-  clear: right;
+  padding: 18px 0 0; /* LTR */
+  float: right; /* LTR */
+  clear: right; /* LTR */
   position: relative;
   z-index: 4;
 }
@@ -579,7 +579,7 @@ ul.secondary-links {
 ul.secondary-links li {
   margin: 0;
   padding: 0;
-  float: left;
+  float: left; /* LTR */
   background-image: none;
 }
 
@@ -614,18 +614,18 @@ ul.primary, ul.primary li, ul.secondary, ul.secondary li {
 }
 ul.primary {
   padding: 0.5em 0 10px;
-  float: left;
+  float: left; /* LTR */
 }
 ul.secondary {
   clear: both;
-  text-align: left;
+  text-align: left; /* LTR */
   border-bottom: 1px solid #e9eff3;
   margin: -0.2em -26px 1em;
   padding: 0 26px 0.6em;
 }
 h2.with-tabs {
-  float: left;
-  margin: 0 2em 0 0;
+  float: left; /* LTR */
+  margin: 0 2em 0 0; /* LTR */
   padding: 0;
 }
 
@@ -634,7 +634,7 @@ ul.secondary li a, ul.secondary li.active a, ul.secondary li a:hover, ul.seconda
   border: 0;
   background: transparent;
   padding: 4px 1em;
-  margin: 0 0 0 1px;
+  margin: 0 0 0 1px; /* LTR */
   height: auto;
   text-decoration: none;
   position: relative;
@@ -662,13 +662,13 @@ ul.secondary li.active a {
 ul.links li, ul.inline li {
   margin-left: 0;
   margin-right: 0;
-  padding-left: 0;
-  padding-right: 1em;
+  padding-left: 0; /* LTR */
+  padding-right: 1em; /* LTR */
   background-image: none;
 }
 
 .node .links, .comment .links {
-  text-align: left;
+  text-align: left; /* LTR */
 }
 
 .node .links ul.links li, .comment .links ul.links li {}
@@ -680,20 +680,20 @@ ul.links li, ul.inline li {
 }
 
 .picture, .comment .submitted {
-  float: right;
-  clear: right;
-  padding-left: 1em;
+  float: right; /* LTR */
+  clear: right; /* LTR */
+  padding-left: 1em; /* LTR */
 }
 
 .new {
   color: #ffae00;
   font-size: 0.92em;
   font-weight: bold;
-  float: right;
+  float: right; /* LTR */
 }
 
 .terms {
-  float: right;
+  float: right; /* LTR */
 }
 
 .preview .node, .preview .comment, .sticky {
@@ -731,7 +731,7 @@ ul.links li, ul.inline li {
 }
 
 .indented {
-  margin-left: 25px;
+  margin-left: 25px; /* LTR */
 }
 
 .comment h3 a.active {
@@ -852,29 +852,29 @@ html.js fieldset.collapsed {
 }
 
 html.js fieldset.collapsible legend a {
-  padding-left: 2em;
-  background: url(images/menu-expanded.gif) no-repeat 0% 50%;
+  padding-left: 2em; /* LTR */
+  background: url(images/menu-expanded.gif) no-repeat 0% 50%; /* LTR */
 }
 
 html.js fieldset.collapsed legend a {
-  background: url(images/menu-collapsed.gif) no-repeat 0% 50%;
+  background: url(images/menu-collapsed.gif) no-repeat 0% 50%; /* LTR */
 }
 
 /**
  * Syndication icons and block
  */
 #block-node-0 h2 {
-  float: left;
-  padding-right: 20px;
+  float: left; /* LTR */
+  padding-right: 20px; /* LTR */
 }
 
 #block-node-0 img, .feed-icon {
-  float: right;
+  float: right; /* LTR */
   padding-top: 4px;
 }
 
 #block-node-0 .content {
-  clear: right;
+  clear: right; /* LTR */
 }
 
 /**
@@ -884,7 +884,7 @@ html.js fieldset.collapsed legend a {
   text-align: center;
 }
 #user-login-form ul {
-  text-align: left;
+  text-align: left; /* LTR */
 }
 
 /**
@@ -929,11 +929,11 @@ div.item-list,
 }
 
 div.admin .left {
-  float: left;
+  float: left; /* LTR */
   width: 48%;
 }
 div.admin .right {
-  float: right;
+  float: right; /* LTR */
   width: 48%;
 }
 
