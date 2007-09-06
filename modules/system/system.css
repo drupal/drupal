@@ -381,6 +381,7 @@ html.js fieldset.collapsible .fieldset-wrapper {
 html.js .resizable-textarea textarea {
   margin-bottom: 0;
   width: 100%;
+  display: block;
 }
 
 /*

@@ -10,7 +10,7 @@ Drupal.behaviors.textarea = function(context) {
       .parent().append($('<div class="grippie"></div>').mousedown(startDrag));
 
     // Inherit visibility
-    if ($(this).is(':hidden')) {
+    if ($(this).is('[@disabled]')) {
       $(this).parent().hide();
       $(this).show();
     }
