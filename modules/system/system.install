@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.149 2007/09/03 14:13:58 goba Exp $
+// $Id: system.install,v 1.150 2007/09/06 13:13:08 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -3560,6 +3560,9 @@ function system_update_6022() {
       $ret[] = update_sql('UPDATE {upload} AS u SET nid = r.nid FROM {node_revisions} r WHERE u.vid = r.vid');
       break;
   }
+
+  // Mark all existing files as FILE_STATUS_PERMANENT.
+  $ret[] = update_sql('UPDATE {files} SET status = 1');
 
   return $ret;
 }
