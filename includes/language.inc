@@ -1,5 +1,5 @@
 <?php
-// $Id: language.inc,v 1.6 2007/07/11 20:07:00 goba Exp $
+// $Id: language.inc,v 1.7 2007/09/06 14:03:52 goba Exp $
 
 /**
  * @file
@@ -130,7 +130,7 @@ function language_url_rewrite(&$path, &$options) {
             $path = drupal_get_path_alias($path, $path_language->language);
             $options['alias'] = TRUE;
           }
-          $path = empty($path) ? $path_language->prefix : $path_language->prefix .'/'. $path;
+          $path = (empty($path) || ($path == '<front>')) ? $path_language->prefix : $path_language->prefix .'/'. $path;
         }
         break;
 
