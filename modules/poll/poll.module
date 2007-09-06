@@ -502,6 +502,10 @@ function template_preprocess_poll_vote(&$variables) {
   $variables['vote'] = drupal_render($form['vote']);
   $variables['rest'] = drupal_render($form);
   $variables['block'] = $form['#block'];
+  // If this is a block, allow a different tpl.php to be used.
+  if ($variables['block']) {
+    $variables['template_files'][] = 'poll-vote-block';
+  }
 }
 
 /**
