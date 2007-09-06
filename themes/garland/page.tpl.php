@@ -9,7 +9,7 @@
     <?php print $styles ?>
     <?php print $scripts ?>
     <!--[if lt IE 7]>
-    <link type="text/css" rel="stylesheet" media="all" href="<?php print base_path() . path_to_theme() ?>/fix-ie.css" />
+      <?php print phptemplate_get_ie_styles(); ?>
     <![endif]-->
   </head>
   <body<?php print phptemplate_body_class($left, $right); ?>>
