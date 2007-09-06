@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.380 2007/09/04 21:10:45 dries Exp $
+// $Id: theme.inc,v 1.381 2007/09/06 12:21:39 goba Exp $
 
 /**
  * @file
@@ -1551,7 +1551,7 @@ function theme_username($object) {
     // not registered members of the site (e.g. mailing list or news
     // aggregator modules). This clause enables modules to display
     // the true author of the content.
-    if ($object->homepage) {
+    if (!empty($object->homepage)) {
       $output = l($object->name, $object->homepage, array('rel' => 'nofollow'));
     }
     else {

@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.581 2007/09/05 08:42:01 dries Exp $
+// $Id: comment.module,v 1.582 2007/09/06 12:21:39 goba Exp $
 
 /**
  * @file
@@ -773,6 +773,7 @@ function comment_save($edit) {
   global $user;
   if (user_access('post comments') && (user_access('administer comments') || node_comment_mode($edit['nid']) == COMMENT_NODE_READ_WRITE)) {
     if (!form_get_errors()) {
+      $edit += array('mail' => '', 'homepage' => '', 'name' => '');
       if ($edit['cid']) {
         // Update the comment in the database.
         db_query("UPDATE {comments} SET status = %d, timestamp = %d, subject = '%s', comment = '%s', format = %d, uid = %d, name = '%s', mail = '%s', homepage = '%s' WHERE cid = %d", $edit['status'], $edit['timestamp'], $edit['subject'], $edit['comment'], $edit['format'], $edit['uid'], $edit['name'], $edit['mail'], $edit['homepage'], $edit['cid']);
@@ -836,8 +837,7 @@ function comment_save($edit) {
         if ($edit['uid'] === $user->uid) { // '===' because we want to modify anonymous users too
           $edit['name'] = $user->name;
         }
-
-        $edit += array('mail' => '', 'homepage' => '');
+        
         db_query("INSERT INTO {comments} (nid, pid, uid, subject, comment, format, hostname, timestamp, status, thread, name, mail, homepage) VALUES (%d, %d, %d, '%s', '%s', %d, '%s', %d, %d, '%s', '%s', '%s', '%s')", $edit['nid'], $edit['pid'], $edit['uid'], $edit['subject'], $edit['comment'], $edit['format'], ip_address(), $edit['timestamp'], $status, $thread, $edit['name'], $edit['mail'], $edit['homepage']);
         $edit['cid'] = db_last_insert_id('comments', 'cid');
 
@@ -1232,7 +1232,7 @@ function comment_admin_overview($type = 'new', $arg) {
   $form['options']['submit'] = array('#type' => 'submit', '#value' => t('Update'));
 
   // load the comments that we want to display
-  $status = ($type == 'approval') ? COMMENT_NOT_PUBLISHED : COMMENT_PUBLISHED;
+  $status = ($arg == 'approval') ? COMMENT_NOT_PUBLISHED : COMMENT_PUBLISHED;
   $form['header'] = array('#type' => 'value', '#value' => array(
     theme('table_select_header_cell'),
     array('data' => t('Subject'), 'field' => 'subject'),
@@ -1492,7 +1492,7 @@ function comment_form(&$form_state, $edit, $title = NULL) {
   if (!$user->uid && variable_get('comment_anonymous', COMMENT_ANONYMOUS_MAYNOT_CONTACT) != COMMENT_ANONYMOUS_MAYNOT_CONTACT) {
     drupal_add_js(drupal_get_path('module', 'comment') .'/comment.js');
   }
-
+  $edit += array('name' => '', 'mail' => '', 'homepage' => '');
   if ($user->uid) {
     if (!empty($edit['cid']) && user_access('administer comments')) {
       if (!empty($edit['author'])) {
@@ -1623,12 +1623,12 @@ function comment_form(&$form_state, $edit, $title = NULL) {
   $form['comment_filter']['format'] = filter_form($edit['format']);
 
   $form['cid'] = array('#type' => 'value', '#value' => !empty($edit['cid']) ? $edit['cid'] : NULL);
-  $form['pid'] = array('#type' => 'value', '#value' => $edit['pid']);
+  $form['pid'] = array('#type' => 'value', '#value' => !empty($edit['pid']) ? $edit['pid'] : NULL);
   $form['nid'] = array('#type' => 'value', '#value' => $edit['nid']);
   $form['uid'] = array('#type' => 'value', '#value' => !empty($edit['uid']) ? $edit['uid'] : NULL);
 
   $form['preview'] = array('#type' => 'button', '#value' => t('Preview comment'), '#weight' => 19);
-  $form['#token'] = 'comment'. $edit['nid'] . $edit['pid'];
+  $form['#token'] = 'comment'. $edit['nid'] . (isset($edit['pid']) ? $edit['pid'] : '');
 
   // Only show post button if preview is optional or if we are in preview mode.
   // We show the post button in preview mode even if there are form errors so that
@@ -1674,13 +1674,13 @@ function comment_form_add_preview($form, &$form_state) {
     $comment = (object)$edit;
 
     // Attach the user and time information.
-    if ($edit['author']) {
+    if (!empty($edit['author'])) {
       $account = user_load(array('name' => $edit['author']));
     }
     elseif ($user->uid && !isset($edit['is_anonymous'])) {
       $account = $user;
     }
-    if ($account) {
+    if (!empty($account)) {
       $comment->uid = $account->uid;
       $comment->name = check_plain($account->name);
     }
@@ -1719,14 +1719,17 @@ function comment_form_validate($form, &$form_state) {
   global $user;
   if ($user->uid === 0) {
     foreach (array('name', 'homepage', 'mail') as $field) {
-      //set cookie for 365 days
-      setcookie('comment_info_'. $field, $form_state['values'][$field], time() + 31536000);
+      // Set cookie for 365 days.
+      if (isset($form_state['values'][$field])) {
+        setcookie('comment_info_'. $field, $form_state['values'][$field], time() + 31536000);
+      }
     }
   }
   comment_validate($form_state['values']);
 }
 
 function _comment_form_submit(&$comment_values) {
+  $comment_values += array('subject' => '');
   if (!isset($comment_values['date'])) {
     $comment_values['date'] = 'now';
   }
