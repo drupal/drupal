@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.183 2007/09/05 08:42:01 dries Exp $
+// $Id: filter.module,v 1.184 2007/09/06 12:40:47 goba Exp $
 
 /**
  * @file
@@ -1209,7 +1209,8 @@ function _filter_url_trim($text, $length = NULL) {
     $_length = $length;
   }
 
-  if (strlen($text) > $_length) {
+  // Use +3 for '...' string length.
+  if (strlen($text) > $_length + 3) {
     $text = substr($text, 0, $_length) .'...';
   }
 
