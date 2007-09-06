@@ -1209,7 +1209,8 @@ function _filter_url_trim($text, $length = NULL) {
     $_length = $length;
   }
 
-  if (strlen($text) > $_length) {
+  // Use +3 for '...' string length.
+  if (strlen($text) > $_length + 3) {
     $text = substr($text, 0, $_length) .'...';
   }
 
