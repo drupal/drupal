@@ -1,4 +1,4 @@
-// $Id: textarea.js,v 1.16 2007/07/01 15:37:08 dries Exp $
+// $Id: textarea.js,v 1.17 2007/09/06 13:06:13 goba Exp $
 
 Drupal.behaviors.textarea = function(context) {
   $('textarea.resizable:not(.textarea-processed)', context).each(function() {
@@ -10,7 +10,7 @@ Drupal.behaviors.textarea = function(context) {
       .parent().append($('<div class="grippie"></div>').mousedown(startDrag));
 
     // Inherit visibility
-    if ($(this).is(':hidden')) {
+    if ($(this).is('[@disabled]')) {
       $(this).parent().hide();
       $(this).show();
     }
