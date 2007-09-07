@@ -453,22 +453,6 @@ function db_change_field(&$ret, $table, $field, $field_new, $spec) {
 }
 
 /**
- * Update a field definition to match its schema. If the field is
- * involved in any keys or indexes, recreate them.
- *
- * @param $ret
- *   Array to which query results will be added.
- * @param $table
- *   Name of the table.
- * @param $field
- *   Name of the field to update.
- */
-function db_update_field(&$ret, $table, $field) {
-  $spec = drupal_get_schema($table);
-  db_change_field($ret, $table, $field, $field, $spec['fields'][$field]);
-}
-
-/**
  * Returns the last insert id.
  *
  * @param $table
