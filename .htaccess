@@ -56,8 +56,10 @@ DirectoryIndex index.php
 <IfModule mod_expires.c>
   # Enable expirations.
   ExpiresActive On
+
   # Cache all files for 2 weeks after access (A).
   ExpiresDefault A1209600
+
   # Do not cache dynamically generated pages.
   ExpiresByType text/html A1
 </IfModule>
@@ -78,13 +80,19 @@ DirectoryIndex index.php
   #
   # To redirect all users to access the site WITHOUT the 'www.' prefix,
   # (http://www.example.com/... will be redirected to http://example.com/...)
-  # adapt and uncomment the following:
+  # uncomment and adapt the following:
   # RewriteCond %{HTTP_HOST} ^www\.example\.com$ [NC]
   # RewriteRule ^(.*)$ http://example.com/$1 [L,R=301]
 
-  # Modify the RewriteBase if you are using Drupal in a subdirectory and
-  # the rewrite rules are not working properly.
-  #RewriteBase /drupal
+  # Modify the RewriteBase if you are using Drupal in a subdirectory or in a
+  # VirtualDocumentRoot and the rewrite rules are not working properly.
+  # For example if your site is at http://example.com/drupal uncomment and
+  # modify the following line:
+  # RewriteBase /drupal
+  #
+  # If your site is running in a VirtualDocumentRoot at http://example.com/, 
+  # uncomment the following line:
+  # RewriteBase /
 
   # Rewrite URLs of the form 'index.php?q=x'.
   RewriteCond %{REQUEST_FILENAME} !-f
@@ -92,4 +100,4 @@ DirectoryIndex index.php
   RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
 </IfModule>
 
-# $Id: .htaccess,v 1.87 2007/08/16 12:54:36 goba Exp $
+# $Id: .htaccess,v 1.88 2007/09/07 12:26:59 goba Exp $
