@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.10 2007/09/01 14:41:21 goba Exp $
+// $Id: system.admin.inc,v 1.11 2007/09/07 12:45:28 goba Exp $
 
 /**
  * @file
@@ -1155,7 +1155,7 @@ function system_performance_settings() {
     '#type' => 'radios',
     '#title' => t('Caching mode'),
     '#default_value' => variable_get('cache', CACHE_DISABLED),
-    '#options' => array(CACHE_DISABLED => t('Disabled'), CACHE_NORMAL => t('Normal (recommended, no side effects)'), CACHE_AGGRESSIVE => t('Aggressive (experts only, possible side effects)')),
+    '#options' => array(CACHE_DISABLED => t('Disabled'), CACHE_NORMAL => t('Normal (recommended for production sites, no side effects)'), CACHE_AGGRESSIVE => t('Aggressive (experts only, possible side effects)')),
     '#description' => $description
   );
 
