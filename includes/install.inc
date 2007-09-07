@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.47 2007/09/04 21:10:45 dries Exp $
+// $Id: install.inc,v 1.48 2007/09/07 10:48:24 goba Exp $
 
 define('SCHEMA_UNINSTALLED', -1);
 define('SCHEMA_INSTALLED', 0);
@@ -590,6 +590,7 @@ function drupal_install_fix_file($file, $mask, $message = TRUE) {
 function install_goto($path) {
   global $base_url;
   header('Location: '. $base_url .'/'. $path);
+  header('Cache-Control: no-cache'); // Not a permanent redirect.
   exit();
 }
 
