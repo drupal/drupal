@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.189 2007/09/03 16:55:00 dries Exp $
+// $Id: bootstrap.inc,v 1.190 2007/09/07 10:33:06 goba Exp $
 
 /**
  * @file
@@ -1057,7 +1057,7 @@ function language_list($field = 'language', $reset = FALSE) {
 
   // Init language list
   if (!isset($languages)) {
-    if (module_exists('locale')) {
+    if (variable_get('language_count', 1) > 1 || module_exists('locale')) {
       $result = db_query('SELECT * FROM {languages} ORDER BY weight ASC, name ASC');
       while ($row = db_fetch_object($result)) {
         $languages['language'][$row->language] = $row;
