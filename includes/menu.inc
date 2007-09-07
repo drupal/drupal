@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.205 2007/09/06 12:47:20 goba Exp $
+// $Id: menu.inc,v 1.206 2007/09/07 20:31:02 goba Exp $
 
 /**
  * @file
@@ -462,6 +462,7 @@ function _menu_translate(&$router_item, $map, $to_arg = FALSE) {
     }
   }
   $router_item['href'] = implode('/', $link_map);
+  $router_item['options'] = array();
   _menu_check_access($router_item, $map);
 
   _menu_item_localize($router_item, $map);
@@ -1267,28 +1268,51 @@ function menu_set_active_trail($new_trail = NULL) {
     $trail = array();
     $trail[] = array('title' => t('Home'), 'href' => '<front>', 'options' => array(), 'type' => 0);
     $item = menu_get_item();
-    // We are on a tab.
+
+    // Check whether the current item is a local task (displayed as a tab).
     if ($item['tab_parent']) {
-      $href = $item['tab_root'];
+      // The title of a local task is used for the tab, never the page title.
+      // Thus, replace it with the item corresponding to the root path to get
+      // the relevant href and title.  For example, the menu item corresponding 
+      // to 'admin' is used when on the 'By module' tab at 'admin/by-module'.
+      $parts = explode('/', $item['tab_root']);
+      $args = arg();
+      // Replace wildcards in the root path using the current path.
+      foreach ($parts as $index => $part) {
+        if ($part == '%') {
+          $parts[$index] = $args[$index];
+        }
+      }
+      // Retrieve the menu item using the root path after wildcard replacement.
+      $root_item = menu_get_item(implode('/', $parts));
+      if ($root_item && $root_item['access']) {
+        $item = $root_item;
+      }
     }
-    else {
-      $href = $item['href'];
-    }
+
     $tree = menu_tree_page_data(menu_get_active_menu_name());
     $curr = array_shift($tree);
 
     while ($curr) {
-      if ($curr['link']['href'] == $href) {
+      // Terminate the loop when we find the current path in the active trail.
+      if ($curr['link']['href'] == $item['href']) {
         $trail[] = $curr['link'];
         $curr = FALSE;
       }
       else {
+        // Move to the child link if it's in the active trail.
         if ($curr['below'] && $curr['link']['in_active_trail']) {
           $trail[] = $curr['link'];
           $tree = $curr['below'];
         }
         $curr = array_shift($tree);
       }
+    }
+    // Make sure the current page is in the trail (needed for the page title),
+    // but exclude tabs and the front page.
+    $last = count($trail) - 1;
+    if ($trail[$last]['href'] != $item['href'] && !(bool)($item['type'] & MENU_IS_LOCAL_TASK) && !drupal_is_front_page()) {
+      $trail[] = $item;
     }
   }
   return $trail;
