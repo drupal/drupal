@@ -1057,7 +1057,7 @@ function language_list($field = 'language', $reset = FALSE) {
 
   // Init language list
   if (!isset($languages)) {
-    if (module_exists('locale')) {
+    if (variable_get('language_count', 1) > 1 || module_exists('locale')) {
       $result = db_query('SELECT * FROM {languages} ORDER BY weight ASC, name ASC');
       while ($row = db_fetch_object($result)) {
         $languages['language'][$row->language] = $row;
