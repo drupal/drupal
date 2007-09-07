@@ -1,5 +1,5 @@
 <?php
-// $Id: database.pgsql.inc,v 1.58 2007/09/04 21:10:45 dries Exp $
+// $Id: database.pgsql.inc,v 1.59 2007/09/07 10:42:56 goba Exp $
 
 /**
  * @file
@@ -861,42 +861,6 @@ function db_change_field(&$ret, $table, $field, $field_new, $spec) {
     $ret[] = update_sql("ALTER TABLE {". $table ."} ALTER $field_new SET NOT NULL");
   }
   db_drop_field($ret, $table, $field .'_old');
-}
-
-/**
- * Update a field definition to match its schema. If the field is
- * involved in any keys or indexes, recreate them if necessary.
- *
- * @param $ret
- *   Array to which query results will be added.
- * @param $table
- *   Name of the table.
- * @param $field
- *   Name of the field to update.
- */
-function db_update_field(&$ret, $table, $field) {
-  $spec = drupal_get_schema($table);
-
-  db_change_field($ret, $table, $field, $field, $spec['fields'][$field]);
-  if (isset($spec['primary key'])) {
-    if (array_search($field, db_field_names($spec['primary key'])) !== FALSE) {
-      db_add_primary_key($ret, $table, $spec['primary key']);
-    }
-  }
-  if (isset($spec['unique keys'])) {
-    foreach ($spec['unique keys'] as $name => $fields) {
-      if (array_search($field, db_field_names($fields)) !== FALSE) {
-        db_add_unique_key($ret, $table, $fields);
-      }
-    }
-  }
-  if (isset($spec['indexes'])) {
-    foreach ($spec['indexes'] as $name => $fields) {
-      if (array_search($field, db_field_names($fields)) !== FALSE) {
-        db_add_index($ret, $table, $fields);
-      }
-    }
-  }
 }
 
 /**
