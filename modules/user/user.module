@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.842 2007/09/08 08:57:26 dries Exp $
+// $Id: user.module,v 1.843 2007/09/08 13:57:22 goba Exp $
 
 /**
  * @file
@@ -3478,6 +3478,7 @@ function user_block_user_action(&$object, $context = array()) {
  * Adds an access rule that blocks the user's IP address.
  */
 function user_block_ip_action() {
+  $ip = ip_address();
   db_query("INSERT INTO {access} (mask, type, status) VALUES ('%s', '%s', %d)", $ip, 'host', 0);
-  watchdog('action', 'Banned IP address %ip', array('%ip' => ip_address()));
+  watchdog('action', 'Banned IP address %ip', array('%ip' => $ip));
 }
