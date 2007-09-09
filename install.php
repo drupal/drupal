@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.76 2007/09/04 21:10:45 dries Exp $
+// $Id: install.php,v 1.77 2007/09/09 19:46:54 goba Exp $
 
 require_once './includes/install.inc';
 
@@ -15,9 +15,11 @@ require_once './includes/install.inc';
  *   The installation phase we should proceed to.
  */
 function install_main() {
-  global $profile, $install_locale, $conf;
   require_once './includes/bootstrap.inc';
   drupal_bootstrap(DRUPAL_BOOTSTRAP_CONFIGURATION);
+
+  // This must go after drupal_bootstrap(), which unsets globals!
+  global $profile, $install_locale, $conf;
 
   require_once './modules/system/system.install';
   require_once './includes/file.inc';
