@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.1 2007/08/20 07:03:08 dries Exp $
+// $Id: node.pages.inc,v 1.2 2007/09/09 19:52:29 goba Exp $
 
 /**
  * @file
@@ -107,7 +107,9 @@ function node_form(&$form_state, $node) {
       $node->$key = NULL;
     }
   }
-  node_object_prepare($node);
+  if (!isset($form_state['node_preview'])) {
+    node_object_prepare($node);
+  }
 
   // Set the id of the top-level form tag
   $form['#id'] = 'node-form';
