@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.879 2007/09/05 08:42:01 dries Exp $
+// $Id: node.module,v 1.880 2007/09/09 20:16:09 goba Exp $
 
 /**
  * @file
@@ -334,7 +334,7 @@ function node_teaser($body, $format = NULL, $size = NULL) {
  *
  * @return
  *   Either an array of all available node types, or a single node type, in a
- *   variable format.
+ *   variable format. Returns FALSE if the node type is not found.
  */
 function node_get_types($op = 'types', $node = NULL, $reset = FALSE) {
   static $_node_types, $_node_names;
@@ -361,13 +361,13 @@ function node_get_types($op = 'types', $node = NULL, $reset = FALSE) {
     case 'types':
       return $_node_types;
     case 'type':
-      return $_node_types[$type];
+      return isset($_node_types[$type]) ? $_node_types[$type] : FALSE;
     case 'module':
-      return $_node_types[$type]->module;
+      return isset($_node_types[$type]->module) ? $_node_types[$type]->module : FALSE;
     case 'names':
       return $_node_names;
     case 'name':
-      return $_node_names[$type];
+      return isset($_node_names[$type]) ? $_node_names[$type] : FALSE;
   }
 }
 
