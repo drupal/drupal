@@ -107,7 +107,9 @@ function node_form(&$form_state, $node) {
       $node->$key = NULL;
     }
   }
-  node_object_prepare($node);
+  if (!isset($form_state['node_preview'])) {
+    node_object_prepare($node);
+  }
 
   // Set the id of the top-level form tag
   $form['#id'] = 'node-form';
