@@ -332,7 +332,7 @@ function actions_save($function, $type, $params, $desc, $aid = NULL) {
   else {
     // aid is the callback for singleton actions so we need to keep a
     // separate table for numeric aids.
-    db_query('INSERT INTO {actions_aid} () VALUES ()');
+    db_query('INSERT INTO {actions_aid} VALUES (default)');
     $aid = db_last_insert_id('actions_aid', 'aid');
     db_query("INSERT INTO {actions} (aid, callback, type, parameters, description) VALUES (%d, '%s', '%s', '%s', '%s')", $aid, $function, $type, $serialized, $desc);
     watchdog('actions', 'Action %action created.', array('%action' => $desc));
