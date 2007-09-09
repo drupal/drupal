@@ -15,9 +15,11 @@ require_once './includes/install.inc';
  *   The installation phase we should proceed to.
  */
 function install_main() {
-  global $profile, $install_locale, $conf;
   require_once './includes/bootstrap.inc';
   drupal_bootstrap(DRUPAL_BOOTSTRAP_CONFIGURATION);
+
+  // This must go after drupal_bootstrap(), which unsets globals!
+  global $profile, $install_locale, $conf;
 
   require_once './modules/system/system.install';
   require_once './includes/file.inc';
