@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.381 2007/09/06 12:21:39 goba Exp $
+// $Id: theme.inc,v 1.382 2007/09/10 13:28:22 goba Exp $
 
 /**
  * @file
@@ -220,6 +220,11 @@ function drupal_rebuild_theme_registry() {
  * expanded upon; new entries will replace old entries in the
  * array_merge, but we are careful to ensure some data is carried
  * forward, such as the arguments a theme hook needs.
+ *
+ * An override flag can be set for preprocess functions. When detected the
+ * cached preprocessors for the hook will not be merged with the newly set.
+ * This can be useful to themes and theme engines by giving them more control
+ * over how and when the preprocess functions are run.
  */
 function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
   $function = $name .'_theme';
@@ -292,7 +297,13 @@ function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
           }
         }
       }
-      if (isset($cache[$hook]['preprocess functions']) && is_array($cache[$hook]['preprocess functions']) && empty($cache[$hook]['override preprocess functions'])) {
+      // Check for the override flag and prevent the cached preprocess functions from being used.
+      // This allows themes or theme engines to remove preprocessors set earlier in the registry build.
+      if (!empty($info['override preprocess functions'])) {
+        // Flag not needed inside the registry.
+        unset($result[$hook]['override preprocess functions']);
+      }
+      elseif (isset($cache[$hook]['preprocess functions']) && is_array($cache[$hook]['preprocess functions'])) {
         $info['preprocess functions'] = array_merge($cache[$hook]['preprocess functions'], $info['preprocess functions']);
       }
       $result[$hook]['preprocess functions'] = $info['preprocess functions'];
