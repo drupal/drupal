@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.206 2007/09/07 20:31:02 goba Exp $
+// $Id: menu.inc,v 1.207 2007/09/10 12:21:30 goba Exp $
 
 /**
  * @file
@@ -1291,7 +1291,7 @@ function menu_set_active_trail($new_trail = NULL) {
     }
 
     $tree = menu_tree_page_data(menu_get_active_menu_name());
-    $curr = array_shift($tree);
+    list($key, $curr) = each($tree);
 
     while ($curr) {
       // Terminate the loop when we find the current path in the active trail.
@@ -1305,7 +1305,7 @@ function menu_set_active_trail($new_trail = NULL) {
           $trail[] = $curr['link'];
           $tree = $curr['below'];
         }
-        $curr = array_shift($tree);
+        list($key, $curr) = each($tree);
       }
     }
     // Make sure the current page is in the trail (needed for the page title),
@@ -1709,8 +1709,10 @@ function _menu_find_router_path($menu, $link_path) {
   if (!isset($menu[$router_path])) {
     list($ancestors) = menu_get_ancestors($parts);
     $ancestors[] = '';
-    while ($ancestors && (empty($menu[$router_path]))) {
-      $router_path = array_shift($ancestors);
+    foreach ($ancestors as $key => $router_path) {
+      if (isset($menu[$router_path])) {
+        break;
+      }
     }
   }
   return $router_path;
