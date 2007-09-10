@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.527 2007/09/05 08:42:02 dries Exp $
+// $Id: system.module,v 1.528 2007/09/10 09:28:28 goba Exp $
 
 /**
  * @file
@@ -1444,7 +1444,6 @@ function system_send_email_action_submit($form, $form_state) {
  */
 function system_send_email_action($object, $context) {
   global $user;
-  $variables['%site_name'] = variable_get('site_name', 'Drupal');
 
   switch ($context['hook']) {
     case 'nodeapi':
@@ -1471,25 +1470,11 @@ function system_send_email_action($object, $context) {
         return;
       }
       break;
-    case 'taxonomy':
-      $account = $user;
-      $vocabulary = taxonomy_vocabulary_load($object->vid);
-      $variables = array_merge($variables, array(
-        '%term_name' => $object->name,
-        '%term_description' => $object->description,
-        '%term_id' => $object->tid,
-        '%vocabulary_name' => $vocabulary->name,
-        '%vocabulary_description' => $vocabulary->description,
-        '%vocabulary_id' => $vocabulary->vid,
-        )
-      );
-      break;
     default:
       // We are being called directly.
       $node = $object;
   }
 
-  $from = variable_get('site_mail', ini_get('sendmail_from'));
   $recipient = $context['recipient'];
 
   if (isset($node)) {
@@ -1501,32 +1486,63 @@ function system_send_email_action($object, $context) {
     }
   }
 
-  $variables['%username'] = $account->name;
+  if (!isset($account)) {
+    $account = $user;
 
-  // Node-based variable translation is only available if we have a node.
-  if (isset($node) && is_object($node)) {
-    $variables = array_merge($variables, array(
-        '%uid' => $node->uid,
-        '%node_url' => url('node/'. $node->nid, array('absolute' => TRUE)),
-        '%node_type' => node_get_types('name', $node),
-        '%title' => $node->title,
-        '%teaser' => $node->teaser,
-        '%body' => $node->body
-      )
-    );
+  }
+  $language = user_preferred_language($account);
+  $params = array('account' => $account, 'object' => $object, 'context' => $context);
+  if (isset($node)) {
+    $params['node'] = $node;
   }
 
-  $subject = strtr($context['subject'], $variables);
-  $subject = str_replace(array("\r", "\n"), '', $subject);
-  $message = strtr($context['message'], $variables);
-  $body = drupal_html_to_text($message);
-
-  if (drupal_mail('action_send_email', $recipient, $subject, $body, $from )) {
+  if (drupal_mail('system', 'action_send_email', $recipient, $language, $params)) {
     watchdog('action', 'Sent email to %recipient', array('%recipient' => $recipient));
   }
   else {
     watchdog('error', 'Unable to send email to %recipient', array('%recipient' => $recipient));
   }
+}
+
+/**
+ * Implementation of hook_mail().
+ */
+function system_mail($key, &$message, $params) {
+  $account = $params['account'];
+  $context = $params['context'];
+  $variables = array(
+    '%site_name' => variable_get('site_name', 'Drupal'),
+    '%username' => $account->name,
+  );
+  if ($context['hook'] == 'taxonomy') {
+    $object = $params['object'];
+    $vocabulary = taxonomy_vocabulary_load($object->vid);
+    $variables += array(
+      '%term_name' => $object->name,
+      '%term_description' => $object->description,
+      '%term_id' => $object->tid,
+      '%vocabulary_name' => $vocabulary->name,
+      '%vocabulary_description' => $vocabulary->description,
+      '%vocabulary_id' => $vocabulary->vid,
+    );
+  }
+
+  // Node-based variable translation is only available if we have a node.
+  if (isset($params['node'])) {
+    $node = $params['node'];
+    $variables += array(
+      '%uid' => $node->uid,
+      '%node_url' => url('node/'. $node->nid, array('absolute' => TRUE)),
+      '%node_type' => node_get_types('name', $node),
+      '%title' => $node->title,
+      '%teaser' => $node->teaser,
+      '%body' => $node->body,
+    );
+  }
+  $subject = strtr($context['subject'], $variables);
+  $body = strtr($context['message'], $variables);
+  $message['subject'] .= str_replace(array("\r", "\n"), '', $subject);
+  $message['body'][] = drupal_html_to_text($body);
 }
 
 function system_message_action_form($context) {
