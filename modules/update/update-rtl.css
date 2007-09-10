@@ -1,4 +1,4 @@
-/* $Id: update-rtl.css,v 1.1 2007/07/11 15:15:40 dries Exp $ */
+/* $Id: update-rtl.css,v 1.2 2007/09/10 18:11:22 goba Exp $ */
 
 .update .project {
   padding-right: .25em;
@@ -24,4 +24,8 @@
 .update table.version .version-links {
   text-align: left;
   padding-left: 1em;
+}
+
+.update .check-manually {
+  padding-right: 1em;
 }
