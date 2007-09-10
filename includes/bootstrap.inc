@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.191 2007/09/09 19:46:54 goba Exp $
+// $Id: bootstrap.inc,v 1.192 2007/09/10 12:19:11 goba Exp $
 
 /**
  * @file
@@ -820,15 +820,12 @@ function drupal_is_denied($type, $mask) {
   // and non-cached pages, we tried to optimize it as much as possible.
   // We deny access if the only matching records in the {access} table have
   // status 0. If any have status 1, or if there are no matching records,
-  // we allow access. So, select matching records in decreasing order of
-  // 'status', returning NOT(status) for the first. If any have status 1,
-  // they come first, and we return NOT(status) = 0 (allowed). Otherwise,
-  // if we have some with status 0, we return 1 (denied). If no matching
-  // records, we get no return from db_result, so we return (bool)NULL = 0
-  // (allowed).
-  // The use of ORDER BY / LIMIT is more efficient than "MAX(status) = 0"
-  // in PostgreSQL <= 8.0.
-  return (bool) db_result(db_query_range("SELECT CASE WHEN status=1 THEN 0 ELSE 1 END FROM {access} WHERE type = '%s' AND LOWER('%s') LIKE LOWER(mask) ORDER BY status DESC", $type, $mask, 0, 1));
+  // we allow access.
+  // We only select for records with status 0. If we have some of
+  // these, we return 1 (denied). If no matching records or only ones
+  // with status = 1, we get no return from db_result, so we return
+  // (bool)NULL = 0 (allowed).
+  return (bool) db_result(db_query_range("SELECT 1 FROM {access} WHERE type = '%s' AND LOWER('%s') LIKE LOWER(mask) AND status = 0", $type, $mask, 0, 1));
 }
 
 /**
