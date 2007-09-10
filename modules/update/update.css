@@ -96,3 +96,7 @@ table.update,
   font-weight: bold;
   color: #970F00;
 }
+
+.update .check-manually {
+  padding-left: 1em; /* LTR */
+}

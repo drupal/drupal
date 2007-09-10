@@ -25,8 +25,8 @@ function update_status() {
  */
 function theme_update_report($data) {
   $last = variable_get('update_last_check', 0);
-  $output = '<div class="checked">'. t('Last checked: ') . ($last ? format_interval(time() - $last) .' '. t('ago') : t('Never'));
-  $output .= ' <span class="check-manually">'. l(t('Check manually'), 'admin/logs/updates/check') .'</span>';
+  $output = '<div class="update checked">'. t('Last checked: ') . ($last ? format_interval(time() - $last) .' '. t('ago') : t('Never'));
+  $output .= ' <span class="check-manually">('. l(t('Check manually'), 'admin/logs/updates/check') .')</span>';
   $output .= "</div>\n";
 
   if (!is_array($data)) {
