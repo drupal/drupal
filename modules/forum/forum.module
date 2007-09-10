@@ -251,7 +251,7 @@ function forum_nodeapi(&$node, $op, $teaser, $page) {
             $node->tid = $term_id;
           }
         }
-        $old_tid = db_result(db_query_range("SELECT t.tid FROM {term_node} t INNER JOIN {node} n WHERE t.vid = n.vid AND n.nid = %d ORDER BY t.vid DESC", $node->nid, 0, 1));
+        $old_tid = db_result(db_query_range("SELECT t.tid FROM {term_node} t INNER JOIN {node} n ON t.vid = n.vid WHERE n.nid = %d ORDER BY t.vid DESC", $node->nid, 0, 1));
         if ($old_tid) {
           if (($node->tid != $old_tid) && $node->shadow) {
             // A shadow copy needs to be created. Retain new term and add old term.
