@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.582 2007/09/06 12:21:39 goba Exp $
+// $Id: comment.module,v 1.583 2007/09/11 14:50:04 goba Exp $
 
 /**
  * @file
@@ -2144,16 +2144,16 @@ function comment_hook_info() {
     'comment' => array(
       'comment' => array(
         'insert' => array(
-          'runs when' => t('When a comment has been created'),
+          'runs when' => t('After saving a new comment'),
         ),
         'update' => array(
-          'runs when' => t('When a comment has been updated'),
+          'runs when' => t('After saving an updated comment'),
         ),
         'delete' => array(
-          'runs when' => t('When a comment has been deleted')
+          'runs when' => t('After deleting a comment')
         ),
         'view' => array(
-          'runs when' => t('When a comment is being viewed')
+          'runs when' => t('When a comment is being viewed by an authenticated user')
         ),
       ),
     ),
@@ -2170,7 +2170,7 @@ function comment_action_info() {
       'type' => 'comment',
       'configurable' => FALSE,
       'hooks' => array(
-        'comment' => array('insert', 'update', 'view'),
+        'comment' => array('insert', 'update'),
       )
     ),
     'comment_unpublish_by_keyword_action' => array(
@@ -2209,7 +2209,7 @@ function comment_unpublish_by_keyword_action_form($context) {
   $form['keywords'] = array(
     '#title' => t('Keywords'),
     '#type' => 'textarea',
-    '#description' => t('The comment will be unpublished if it contains any of the character sequences above. Use a comma-separated list of character sequences. Example: funny, bungee jumping, "Company, Inc.".'),
+    '#description' => t('The comment will be unpublished if it contains any of the character sequences above. Use a comma-separated list of character sequences. Example: funny, bungee jumping, "Company, Inc.". Character sequences are case-sensitive.'),
     '#default_value' => isset($context['keywords']) ? drupal_implode_tags($context['keywords']) : '',
   );
   return $form;

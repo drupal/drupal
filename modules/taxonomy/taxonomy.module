@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.380 2007/09/09 20:16:09 goba Exp $
+// $Id: taxonomy.module,v 1.381 2007/09/11 14:50:04 goba Exp $
 
 /**
  * @file
@@ -1149,13 +1149,13 @@ function taxonomy_hook_info() {
     'taxonomy' => array(
       'taxonomy' => array(
         'insert' => array(
-          'runs when' => t('When a new category has been created'),
+          'runs when' => t('After saving a new category to the database'),
         ),
         'update' => array(
-          'runs when' => t('When a category has been updated'),
+          'runs when' => t('After saving an updated category to the database'),
         ),
         'delete' => array(
-          'runs when' => t('When a category has been deleted')
+          'runs when' => t('After deleting a category')
         ),
       ),
     ),

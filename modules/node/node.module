@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.880 2007/09/09 20:16:09 goba Exp $
+// $Id: node.module,v 1.881 2007/09/11 14:50:04 goba Exp $
 
 /**
  * @file
@@ -2308,16 +2308,16 @@ function node_hook_info() {
     'node' => array(
       'nodeapi' => array(
         'presave' => array(
-          'runs when' => t('When content is about to be saved'),
+          'runs when' => t('When either saving a new post or updating an existing post'),
         ),
         'insert' => array(
-          'runs when' => t('When content has been created'),
+          'runs when' => t('After saving a new post'),
         ),
         'update' => array(
-          'runs when' => t('When content has been updated'),
+          'runs when' => t('After saving an updated post'),
         ),
         'delete' => array(
-          'runs when' => t('When content has been deleted')
+          'runs when' => t('After deleting a post')
         ),
         'view' => array(
           'runs when' => t('When content is viewed by an authenticated user')
@@ -2336,65 +2336,71 @@ function node_action_info() {
       'type' => 'node',
       'description' => t('Publish post'),
       'configurable' => FALSE,
+      'behavior' => array('changes_node_property'),
       'hooks' => array(
-        'nodeapi' => array('presave', 'insert', 'update', 'view'),
-        'comment' => array('delete', 'insert', 'update', 'view'),
+        'nodeapi' => array('presave'),
+        'comment' => array('insert', 'update'),
       ),
     ),
     'node_unpublish_action' => array(
       'type' => 'node',
       'description' => t('Unpublish post'),
       'configurable' => FALSE,
+      'behavior' => array('changes_node_property'),
       'hooks' => array(
-        'nodeapi' => array('presave', 'insert', 'update', 'view'),
-        'comment' => array('delete', 'insert', 'update', 'view'),
+        'nodeapi' => array('presave'),
+        'comment' => array('delete', 'insert', 'update'),
       ),
     ),
     'node_make_sticky_action' => array(
       'type' => 'node',
       'description' => t('Make post sticky'),
       'configurable' => FALSE,
+      'behavior' => array('changes_node_property'),
       'hooks' => array(
-        'nodeapi' => array('presave', 'insert', 'update', 'view'),
-        'comment' => array('delete', 'insert', 'update', 'view'),
+        'nodeapi' => array('presave'),
+        'comment' => array('insert', 'update'),
       ),
     ),
     'node_make_unsticky_action' => array(
       'type' => 'node',
       'description' => t('Make post unsticky'),
       'configurable' => FALSE,
+      'behavior' => array('changes_node_property'),
       'hooks' => array(
-        'nodeapi' => array('presave', 'insert', 'update', 'view'),
-        'comment' => array('delete', 'insert', 'update', 'view'),
+        'nodeapi' => array('presave'),
+        'comment' => array('delete', 'insert', 'update'),
       ),
     ),
     'node_promote_action' => array(
       'type' => 'node',
       'description' => t('Promote post to front page'),
       'configurable' => FALSE,
+      'behavior' => array('changes_node_property'),
       'hooks' => array(
-        'nodeapi' => array('presave', 'insert', 'update', 'view'),
-        'comment' => array('delete', 'insert', 'update', 'view'),
-        'user' => array('login'),
+        'nodeapi' => array('presave'),
+        'comment' => array('insert', 'update'),
       ),
     ),
     'node_unpromote_action' => array(
       'type' => 'node',
       'description' => t('Remove post from front page'),
       'configurable' => FALSE,
+      'behavior' => array('changes_node_property'),
       'hooks' => array(
-        'nodeapi' => array('presave', 'insert', 'update', 'view'),
-        'comment' => array('delete', 'insert', 'update', 'view'),
+        'nodeapi' => array('presave'),
+        'comment' => array('delete', 'insert', 'update'),
       ),
     ),
     'node_assign_owner_action' => array(
       'type' => 'node',
       'description' => t('Change the author of a post'),
       'configurable' => TRUE,
+      'behavior' => array('changes_node_property'),
       'hooks' => array(
         'any' => TRUE,
-        'nodeapi' => array('presave', 'insert', 'update', 'view'),
-        'comment' => array('delete', 'insert', 'update', 'view'),
+        'nodeapi' => array('presave'),
+        'comment' => array('delete', 'insert', 'update'),
       ),
     ),
     'node_save_action' => array(
@@ -2402,9 +2408,7 @@ function node_action_info() {
       'description' => t('Save post'),
       'configurable' => FALSE,
       'hooks' => array(
-        'nodeapi' => array('delete', 'insert', 'update', 'view'),
-        'comment' => array('delete', 'insert', 'update', 'view'),
-        'user' => array('login'),
+        'comment' => array('delete', 'insert', 'update'),
       ),
     ),
     'node_unpublish_by_keyword_action' => array(
@@ -2412,8 +2416,7 @@ function node_action_info() {
       'description' => t('Unpublish post containing keyword(s)'),
       'configurable' => TRUE,
       'hooks' => array(
-        'nodeapi' => array('presave', 'insert', 'update', 'view'),
-        'comment' => array('delete', 'insert', 'update', 'view'),
+        'nodeapi' => array('presave', 'insert', 'update'),
       ),
     ),
   );
@@ -2546,7 +2549,7 @@ function node_unpublish_by_keyword_action_form($context) {
   $form['keywords'] = array(
     '#title' => t('Keywords'),
     '#type' => 'textarea',
-    '#description' => t('The node will be unpublished if it contains any of the character sequences above. Use a comma-separated list of character sequences. Example: funny, bungee jumping, "Company, Inc.".'),
+    '#description' => t('The node will be unpublished if it contains any of the character sequences above. Use a comma-separated list of character sequences. Example: funny, bungee jumping, "Company, Inc.". Character sequences are case-sensitive.'),
     '#default_value' => isset($context['keywords']) ? drupal_implode_tags($context['keywords']) : '',
   );
   return $form;

@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.528 2007/09/10 09:28:28 goba Exp $
+// $Id: system.module,v 1.529 2007/09/11 14:50:04 goba Exp $
 
 /**
  * @file
@@ -52,14 +52,16 @@ function system_help($path, $arg) {
       return $output;
     case 'admin/build/modules/uninstall':
       return '<p>'. t('The uninstall process removes all data related to a module. To uninstall a module, you must first disable it. Not all modules support this feature.') .'</p>';
-    case 'admin/build/actions':
-    case 'admin/build/actions/manage':
-      $explanation = t('Actions are functions that Drupal can execute when certain events happen, such as when a post is added or a user logs in.');
-      $output = '<p>'. $explanation .' '. t('A module, such as the actions module, may assign these actions to the specific events that will trigger them.') .'</p>';
-      $output .= '<p>'. t('This page lists all actions that are available. Simple actions that do not require any configuration are listed automatically. Advanced actions that need to be configured are listed in the dropdown below. To add an advanced action, select the action and click the <em>Configure</em> button. After completing the configuration form, the action will be available for use by Drupal.') .'</p>';
+    case 'admin/settings/actions':
+    case 'admin/settings/actions/manage':
+      $output = '<p>'. t('Actions are individual tasks that the system can do, such as unpublishing a piece of content or banning a user. Modules, such as the trigger module, can fire these actions when certain system events happen; for example, when a new post is added or when a user logs in. Modules may also provide additional actions.') .'</p>';
+      $output .= '<p>'. t('There are two types of actions: simple and advanced. Simple actions do not require any additional configuration, and are listed here automatically. Advanced actions can do more than simple actions; for example, send an e-mail to a specified address, or check for certain words within a piece of content. These actions need to be created and configured first before they may be used. To create an advanced action, select the action from the drop-down below and click the <em>Create</em> button.') .'</p>';
+      if (module_exists('trigger')) {
+        $output .= '<p>'. t('You may proceed to the <a href="@url">Triggers</a> page to assign these actions to system events.', array('@url' => url('admin/build/trigger'))) .'</p>';
+      }
       return $output;
-    case 'admin/build/actions/config':
-      return '<p>'. t('This is where you configure a certain action that will be performed at some time in the future. For example, you might configure an action to send email to your friend Joe. You would modify the description field, below, to read %send to remind you of that. The description you provide will be used to identify this action; for example, when assigning an action to a Drupal event such as a new comment being posted.', array('%send' => t('Send email to Joe'))) .'</p>';
+    case 'admin/settings/actions/configure':
+      return t('An advanced action offers additional configuration options which may be filled out below. Changing the <em>Description</em> field is recommended, in order to better identify the precise action taking place. This description will be displayed in modules such as the trigger module when assigning actions to system events, so it is best if it is as descriptive as possible (for example, "Send e-mail to Moderation Team" rather than simply "Send e-mail").');
     case 'admin/logs/status':
       return '<p>'. t("Here you can find a short overview of your Drupal site's parameters as well as any problems detected with your installation. It is useful to copy/paste this information when you need support.") .'</p>';
   }
@@ -273,33 +275,33 @@ function system_menu() {
   );
 
   // Actions:
-  $items['admin/build/actions'] = array(
+  $items['admin/settings/actions'] = array(
     'title' => 'Actions',
     'description' => 'Manage the actions defined for your site.',
     'access arguments' => array('administer actions'),
     'page callback' => 'system_actions_manage'
   );
-  $items['admin/build/actions/manage'] = array(
+  $items['admin/settings/actions/manage'] = array(
     'title' => 'Manage actions',
     'description' => 'Manage the actions defined for your site.',
     'page callback' => 'system_actions_manage',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -2,
   );
-  $items['admin/build/actions/config'] = array(
-    'title' => 'Configure an action',
+  $items['admin/settings/actions/configure'] = array(
+    'title' => 'Configure an advanced action',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_actions_configure'),
     'type' => MENU_CALLBACK,
   );
-  $items['admin/build/actions/delete/%actions'] = array(
+  $items['admin/settings/actions/delete/%actions'] = array(
     'title' => 'Delete action',
     'description' => 'Delete an action.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_actions_delete_form', 4),
     'type' => MENU_CALLBACK,
   );
-  $items['admin/build/actions/orphan'] = array(
+  $items['admin/settings/actions/orphan'] = array(
     'title' => 'Remove orphans',
     'page callback' => 'system_actions_remove_orphans',
     'type' => MENU_CALLBACK,
@@ -1148,7 +1150,7 @@ function system_actions_manage() {
   $row = array();
   $instances_present = db_fetch_object(db_query("SELECT aid FROM {actions} WHERE parameters != ''"));
   $header = array(
-    array('data' => t('Action Type'), 'field' => 'type'),
+    array('data' => t('Action type'), 'field' => 'type'),
     array('data' => t('Description'), 'field' => 'description'),
     array('data' => $instances_present ? t('Operations') : '', 'colspan' => '2')
   );
@@ -1158,8 +1160,8 @@ function system_actions_manage() {
     $row[] = array(
       array('data' => $action->type),
       array('data' => $action->description),
-      array('data' => $action->parameters ? l(t('configure'), "admin/build/actions/config/$action->aid") : ''),
-      array('data' => $action->parameters ? l(t('delete'), "admin/build/actions/delete/$action->aid") : '')
+      array('data' => $action->parameters ? l(t('configure'), "admin/settings/actions/configure/$action->aid") : ''),
+      array('data' => $action->parameters ? l(t('delete'), "admin/settings/actions/delete/$action->aid") : '')
     );
   }
 
@@ -1202,14 +1204,14 @@ function system_actions_manage_form($form_state, $options = array()) {
   );
   $form['parent']['buttons']['submit'] = array(
     '#type' => 'submit',
-    '#value' => t('Configure'),
+    '#value' => t('Create'),
   );
   return $form;
 }
 
 function system_actions_manage_form_submit($form, &$form_state) {
   if ($form_state['values']['action']) {
-    $form_state['redirect'] = 'admin/build/actions/config/'. $form_state['values']['action'];
+    $form_state['redirect'] = 'admin/settings/actions/configure/'. $form_state['values']['action'];
   }
 }
 
@@ -1230,7 +1232,7 @@ function system_actions_manage_form_submit($form, &$form_state) {
  */
 function system_actions_configure($form_state, $action = NULL) {
   if ($action === NULL) {
-    drupal_goto('admin/build/actions');
+    drupal_goto('admin/settings/actions');
   }
 
   $actions_map = actions_actions_map(actions_list());
@@ -1259,14 +1261,12 @@ function system_actions_configure($form_state, $action = NULL) {
     $edit['actions_type'] = $actions_map[$action]['type'];
   }
 
-
   $form['actions_description'] = array(
     '#type' => 'textfield',
     '#title' => t('Description'),
     '#default_value' => $edit['actions_description'],
-    '#size' => '70',
     '#maxlength' => '255',
-    '#description' => t('A unique description for this configuration of this action. This will be used to describe this action when assigning actions.'),
+    '#description' => t('A unique description for this advanced action. This description will be displayed in the interface of modules that integrate with actions, such as Trigger module.'),
     '#weight' => -10
   );
   $action_form = $function .'_form';
@@ -1318,7 +1318,7 @@ function system_actions_configure_submit($form, &$form_state) {
   actions_save($function, $form_state['values']['actions_type'], $params, $form_state['values']['actions_description'], $aid);
   drupal_set_message(t('The action has been successfully saved.'));
 
-  $form_state['redirect'] = 'admin/build/actions/manage';
+  $form_state['redirect'] = 'admin/settings/actions/manage';
 }
 
 /**
@@ -1335,7 +1335,7 @@ function system_actions_delete_form($form_state, $action) {
   );
   return confirm_form($form,
     t('Are you sure you want to delete the action %action?', array('%action' => $action->description)),
-    'admin/build/actions/manage',
+    'admin/settings/actions/manage',
     t('This cannot be undone.'),
     t('Delete'), t('Cancel')
   );
@@ -1351,7 +1351,7 @@ function system_actions_delete_form_submit($form, &$form_state) {
   $description = check_plain($action->description);
   watchdog('user', 'Deleted action %aid (%action)', array('%aid' => $aid, '%action' => $description));
   drupal_set_message(t('Action %action was deleted', array('%action' => $description)));
-  $form_state['redirect'] = 'admin/build/actions/manage';
+  $form_state['redirect'] = 'admin/settings/actions/manage';
 }
 /**
  * Post-deletion operations for deleting action orphans.
@@ -1368,7 +1368,7 @@ function system_action_delete_orphans_post($orphaned) {
  */
 function system_actions_remove_orphans() {
   actions_synchronize(actions_list(), TRUE);
-  drupal_goto('admin/build/actions/manage');
+  drupal_goto('admin/settings/actions/manage');
 }
 
 /**
@@ -1395,15 +1395,13 @@ function system_send_email_action_form($context) {
     '#type' => 'textfield',
     '#title' => t('Recipient'),
     '#default_value' => $context['recipient'],
-    '#size' => '20',
     '#maxlength' => '254',
-    '#description' => t('The email address to which the message should be sent OR enter %author if you would like to send an e-mail to the original author of the post.', array('%author' => '%author')),
+    '#description' => t('The email address to which the message should be sent OR enter %author if you would like to send an e-mail to the author of the original post.', array('%author' => '%author')),
   );
   $form['subject'] = array(
     '#type' => 'textfield',
     '#title' => t('Subject'),
     '#default_value' => $context['subject'],
-    '#size' => '20',
     '#maxlength' => '254',
     '#description' => t('The subject of the message.'),
   );

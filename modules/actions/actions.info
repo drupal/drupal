@@ -1,6 +1,0 @@
-; $Id: actions.info,v 1.1 2007/06/29 18:06:50 dries Exp $
-name = Actions
-description = Enables triggerable Drupal actions.
-package = Core - optional
-version = VERSION
-core = 6.x

@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.845 2007/09/10 13:14:38 goba Exp $
+// $Id: user.module,v 1.846 2007/09/11 14:50:05 goba Exp $
 
 /**
  * @file
@@ -1991,22 +1991,22 @@ function user_hook_info() {
     'user' => array(
       'user' => array(
         'insert' => array(
-          'runs when' => t('When a user account has been created'),
+          'runs when' => t('After a user account has been created'),
         ),
         'update' => array(
-          'runs when' => t('When a user account has been updated'),
+          'runs when' => t("After a user's profile has been updated"),
         ),
         'delete' => array(
-          'runs when' => t('When a user account has been deleted')
+          'runs when' => t('After a user has been deleted')
         ),
         'login' => array(
-          'runs when' => t('When a user has logged in')
+          'runs when' => t('After a user has logged in')
         ),
         'logout' => array(
-          'runs when' => t('When a user has logged out')
+          'runs when' => t('After a user has logged out')
         ),
         'view' => array(
-          'runs when' => t("When a user's account information is displayed")
+          'runs when' => t("When a user's profile is being viewed")
         ),
       ),
     ),
@@ -2022,21 +2022,13 @@ function user_action_info() {
       'description' => t('Block current user'),
       'type' => 'user',
       'configurable' => FALSE,
-      'hooks' => array(
-        'nodeapi' => array('presave', 'delete', 'insert', 'update', 'view'),
-        'comment' => array('view', 'insert', 'update', 'delete'),
-        'user' => array('logout'),
-        ),
-      ),
+      'hooks' => array(),
+    ),
     'user_block_ip_action' => array(
       'description' => t('Ban IP address of current user'),
       'type' => 'user',
       'configurable' => FALSE,
-      'hooks' => array(
-        'nodeapi' => array('presave', 'delete', 'insert', 'update', 'view'),
-        'comment' => array('view', 'insert', 'update', 'delete'),
-        'user' => array('logout'),
-      )
+      'hooks' => array(),
     ),
   );
 }
@@ -2073,8 +2065,8 @@ function user_block_ip_action() {
 
 /**
  * Submit handler for the user registration form.
- * 
- * This function is shared by the installation form and the normal registration form, 
+ *
+ * This function is shared by the installation form and the normal registration form,
  * which is why it can't be in the user.pages.inc file.
  */
 function user_register_submit($form, &$form_state) {
