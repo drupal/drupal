@@ -163,14 +163,6 @@ function system_schema() {
     'primary key' => array('mlid'),
   );
 
-  $schema['sequences'] = array(
-    'fields' => array(
-      'name' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'id'   => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0)
-    ),
-    'primary key' => array('name'),
-  );
-
   $schema['sessions'] = array(
     'fields' => array(
       'uid'       => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
