@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.223 2007/09/04 21:10:45 dries Exp $
+// $Id: form.inc,v 1.224 2007/09/11 17:23:58 goba Exp $
 
 /**
  * @defgroup form Form generation
@@ -1548,6 +1548,9 @@ function expand_radios($element) {
   if (count($element['#options']) > 0) {
     foreach ($element['#options'] as $key => $choice) {
       if (!isset($element[$key])) {
+        // Generate the parents as the autogenerator does, so we will have a
+        // unique id for each radio button.
+        $parents_for_id = array_merge($element['#parents'], array($key));
         $element[$key] = array(
           '#type' => 'radio',
           '#title' => $choice,
@@ -1555,6 +1558,7 @@ function expand_radios($element) {
           '#default_value' => isset($element['#default_value']) ? $element['#default_value'] : NULL,
           '#attributes' => $element['#attributes'],
           '#parents' => $element['#parents'],
+          '#id' => form_clean_id('edit-'. implode('-', $parents_for_id)),
         );
       }
     }

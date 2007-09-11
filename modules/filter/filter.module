@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.184 2007/09/06 12:40:47 goba Exp $
+// $Id: filter.module,v 1.185 2007/09/11 17:23:58 goba Exp $
 
 /**
  * @file
@@ -794,6 +794,9 @@ function filter_form($value = FILTER_FORMAT_DEFAULT, $weight = NULL, $parents = 
     );
     // Multiple formats available: display radio buttons with tips.
     foreach ($formats as $format) {
+      // Generate the parents as the autogenerator does, so we will have a
+      // unique id for each radio button.
+      $parents_for_id = array_merge($parents, array($format->format));
       $form[$format->format] = array(
         '#type' => 'radio',
         '#title' => $format->name,
@@ -801,6 +804,7 @@ function filter_form($value = FILTER_FORMAT_DEFAULT, $weight = NULL, $parents = 
         '#return_value' => $format->format,
         '#parents' => $parents,
         '#description' => theme('filter_tips', _filter_tips($format->format, FALSE)),
+        '#id' => form_clean_id('edit-'. implode('-', $parents_for_id)),
       );
     }
   }
