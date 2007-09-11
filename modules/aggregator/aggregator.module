@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.355 2007/09/05 08:31:48 dries Exp $
+// $Id: aggregator.module,v 1.356 2007/09/11 17:28:44 goba Exp $
 
 /**
  * @file
@@ -368,7 +368,7 @@ function aggregator_save_feed($edit) {
     db_query('DELETE FROM {aggregator_item} WHERE fid = %d', $edit['fid']);
   }
   else if (!empty($edit['title'])) {
-    db_query("INSERT INTO {aggregator_feed} (title, url, refresh, block, description) VALUES ('%s', '%s', %d, 5, '')", $edit['title'], $edit['url'], $edit['refresh']);
+    db_query("INSERT INTO {aggregator_feed} (title, url, refresh, block, description, image) VALUES ('%s', '%s', %d, 5, '', '')", $edit['title'], $edit['url'], $edit['refresh']);
     // A single unique id for bundles and feeds, to use in blocks.
     $edit['fid'] = db_last_insert_id('aggregator_feed', 'fid');
   }
