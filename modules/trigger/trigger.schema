@@ -1,8 +1,8 @@
 <?php
 // $Id$
 
-function actions_schema() {
-  $schema['actions_assignments'] = array(
+function trigger_schema() {
+  $schema['trigger_assignments'] = array(
     'fields' => array(
       'hook' => array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''),
       'op' => array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''),

@@ -1,6 +1,0 @@
-; $Id$
-name = Actions
-description = Enables triggerable Drupal actions.
-package = Core - optional
-version = VERSION
-core = 6.x
