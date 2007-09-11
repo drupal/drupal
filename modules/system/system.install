@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.150 2007/09/06 13:13:08 goba Exp $
+// $Id: system.install,v 1.151 2007/09/11 19:14:34 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -2956,7 +2956,7 @@ function system_update_6009() {
  */
 function system_update_6010() {
   $ret = array();
-  db_add_field($ret, 'watchdog', 'variables', array('type' => 'text', 'size' => 'medium', 'not null' => TRUE, 'initial' => 'N;'));
+  db_add_field($ret, 'watchdog', 'variables', array('type' => 'text', 'size' => 'big', 'not null' => TRUE, 'initial' => 'N;'));
   return $ret;
 }
 
@@ -3508,6 +3508,7 @@ function system_update_6021() {
       $ret[] = update_sql("UPDATE {blocks_roles} SET delta = '". $menu_name ."' WHERE module  = 'menu' AND delta = '". $mid ."'");
     }
     $ret[] = array('success' => TRUE, 'query' => t('Relocated @num existing items to the new menu system.', array('@num' => $_SESSION['system_update_6021'])));
+    $ret[] = update_sql("DROP TABLE {menu}");
     unset($_SESSION['system_update_6021'], $_SESSION['system_update_6021_max'], $_SESSION['menu_menu_map'], $_SESSION['menu_item_map'], $_SESSION['menu_bogus_menus']);
     // Create the menu overview links - also calls menu_rebuild().
     module_invoke('menu', 'enable');
@@ -3569,12 +3570,6 @@ function system_update_6022() {
 
 function system_update_6023() {
   $ret = array();
-  // vid is NULL
-  db_drop_unique_key($ret, 'node', 'nid_vid');
-  db_drop_unique_key($ret, 'node', 'vid');
-  db_change_field($ret, 'node', 'vid', 'vid', array('type' => 'int', 'unsigned' => TRUE, 'default' => 0));
-  db_add_unique_key($ret, 'node', 'nid_vid', array('nid', 'vid'));
-  db_add_unique_key($ret, 'node', 'vid', array('vid'));
 
   // nid is DEFAULT 0
   db_drop_index($ret, 'node_revisions', 'nid');
@@ -3756,6 +3751,18 @@ function system_update_6030() {
 function system_update_6031() {
   variable_set('install_task', 'done');
   return array();
+}
+
+/**
+ * profile_fields.name used to be nullable but is part of a unique key
+ * and so shouldn't be.
+ */
+function system_update_6032() {
+  $ret = array();
+  db_drop_unique_key($ret, 'profile_fields', 'name');
+  db_change_field($ret, 'profile_fields', 'name', 'name', array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''));
+  db_add_unique_key($ret, 'profile_fields', 'name', array('name'));
+  return $ret;
 }
 
 /**

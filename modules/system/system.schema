@@ -1,5 +1,5 @@
 <?php
-// $Id: system.schema,v 1.12 2007/09/01 07:11:00 goba Exp $
+// $Id: system.schema,v 1.13 2007/09/11 19:14:34 goba Exp $
 
 function system_schema() {
   // NOTE: {variable} needs to be created before all other tables, as
@@ -161,14 +161,6 @@ function system_schema() {
       'router_path'            => array(array('router_path', 128)),
     ),
     'primary key' => array('mlid'),
-  );
-
-  $schema['sequences'] = array(
-    'fields' => array(
-      'name' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'id'   => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0)
-    ),
-    'primary key' => array('name'),
   );
 
   $schema['sessions'] = array(
