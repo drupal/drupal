@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.441 2007/09/05 08:42:01 dries Exp $
+// $Id: book.module,v 1.442 2007/09/11 17:35:58 goba Exp $
 
 /**
  * @file
@@ -16,6 +16,7 @@ function book_theme() {
     ),
     'book_export_html' => array(
       'arguments' => array('title' => NULL, 'content' => NULL),
+      'file' => 'book.pages.inc',
     ),
     'book_admin_table' => array(
       'arguments' => array('form' => NULL),
@@ -73,6 +74,7 @@ function book_menu() {
     'description' => "Manage your site's book outlines.",
     'page callback' => 'book_admin_overview',
     'access arguments' => array('administer book outlines'),
+    'file' => 'book.admin.inc',
   );
   $items['admin/content/book/list'] = array(
     'title' => 'List',
@@ -85,6 +87,7 @@ function book_menu() {
     'access arguments' => array('administer site configuration'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 8,
+    'file' => 'book.admin.inc',
   );
   $items['admin/content/book/%node'] = array(
     'title' => 'Re-order book pages and change titles',
@@ -93,18 +96,21 @@ function book_menu() {
     'access callback' => '_book_outline_access',
     'access arguments' => array(3),
     'type' => MENU_CALLBACK,
+    'file' => 'book.admin.inc',
   );
   $items['book'] = array(
     'title' => 'Books',
     'page callback' => 'book_render',
     'access arguments' => array('access content'),
     'type' => MENU_SUGGESTED_ITEM,
+    'file' => 'book.pages.inc',
   );
   $items['book/export/%/%'] = array(
     'page callback' => 'book_export',
     'page arguments' => array(2, 3),
     'access arguments' => array('access printer-friendly version'),
     'type' => MENU_CALLBACK,
+    'file' => 'book.pages.inc',
   );
   $items['node/%node/outline'] = array(
     'title' => 'Outline',
@@ -114,6 +120,7 @@ function book_menu() {
     'access arguments' => array(1),
     'type' => MENU_LOCAL_TASK,
     'weight' => 2,
+    'file' => 'book.pages.inc',
   );
   $items['node/%node/outline/remove'] = array(
     'title' => 'Remove from outline',
@@ -122,12 +129,14 @@ function book_menu() {
     'access callback' => '_book_outline_remove_access',
     'access arguments' => array(1),
     'type' => MENU_CALLBACK,
+    'file' => 'book.pages.inc',
   );
   $items['book-form-update/%/%'] = array(
     'page callback' => 'book_form_update',
     'page arguments' => array(1, 2),
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
+    'file' => 'book.pages.inc',
   );
   return $items;
 }
@@ -273,50 +282,6 @@ function book_get_books() {
     }
   }
   return $all_books;
-}
-
-/**
- * AJAX callback to replace the book parent select options.
- *
- * This function is called when the selected book is changed.  It updates the
- * cached form (either the node form or the book outline form) and returns
- * rendered output to be used to replace the select containing the possible
- * parent pages in the newly selected book.
- *
- * @param $build_id
- *   The form's build_id.
- * @param $bid
- *   A bid from from among those in the form's book select.
- * @return
- *   Prints the replacement HTML in JSON format.
- */
-function book_form_update($build_id, $bid) {
-
-  $cid = 'form_'. $build_id;
-  $cache = cache_get($cid, 'cache_form');
-  if ($cache) {
-    $form = $cache->data;
-
-    // Validate the bid.
-    if (isset($form['book']['bid']['#options'][$bid])) {
-      $book_link = $form['#node']->book;
-      $book_link['bid'] = $bid;
-      // Get the new options and update the cache.
-      $form['book']['plid'] = _book_parent_select($book_link);
-      // We set an updated expiration time for the cached form using the same
-      // formula as used originally in function drupal_get_form()
-      $expire = max(ini_get('session.cookie_lifetime'), 86400);
-      cache_set($cid, $form, 'cache_form', $expire);
-
-      // Build and render the new select element, then return it in JSON format.
-      $form_state = array();
-      $form['#post'] = array();
-      $form = form_builder($form['form_id']['#value'] , $form, $form_state);
-      $output = drupal_render($form['book']['plid']);
-      drupal_json(array('book' => $output));
-    }
-  }
-  exit();
 }
 
 /**
@@ -472,104 +437,6 @@ function _book_add_form_elements(&$form, $node) {
 }
 
 /**
- * Menu callback; show the outline form for a single node.
- */
-function book_outline($node) {
-  drupal_set_title(check_plain($node->title));
-  return drupal_get_form('book_outline_form', $node);
-}
-
-/**
- * Build the form to handle all book outline operations via the outline tab.
- *
- * @see book_outline_form_submit()
- * @see book_remove_button_submit()
- *
- * @ingroup forms
- */
-function book_outline_form(&$form_state, $node) {
-
-  if (!isset($node->book)) {
-    // The node is not part of any book yet - set default options.
-    $node->book = _book_link_defaults($node->nid);
-  }
-  else {
-    $node->book['original_bid'] = $node->book['bid'];
-  }
-  // Find the depth limit for the parent select.
-  if (!isset($node->book['parent_depth_limit'])) {
-    $node->book['parent_depth_limit'] = _book_parent_depth_limit($node->book);
-  }
-  $form['#node'] = $node;
-  $form['#id'] = 'book-outline';
-  _book_add_form_elements($form, $node);
-
-  $form['book']['#collapsible'] = FALSE;
-
-  $form['update'] = array(
-    '#type' => 'submit',
-    '#value' => $node->book['original_bid'] ? t('Update book outline') : t('Add to book outline'),
-    '#weight' => 15,
-  );
-
-  $form['remove'] = array(
-    '#type' => 'submit',
-    '#value' => t('Remove from book outline'),
-    '#access' => $node->nid != $node->book['bid'] && $node->book['bid'],
-    '#weight' => 20,
-    '#submit' => array('book_remove_button_submit'),
-  );
-
-  return $form;
-}
-
-/**
- * Button submit function to redirect to removal confirm form.
- *
- * @see book_outline_form()
- */
-function book_remove_button_submit($form,  &$form_state) {
-  $form_state['redirect'] = 'node/'. $form['#node']->nid .'/outline/remove';
-}
-
-/**
- * Menu callback; builds a form to confirm removal of a node from the book.
- *
- * @see book_remove_form_submit()
- *
- * @ingroup forms
- */
-function book_remove_form(&$form_state, $node) {
-  $form['#node'] = $node;
-  $title = array('%title' => $node->title);
-
-  if ($node->book['has_children']) {
-    $description = t('%title has associated child pages, which will be relocated automatically to maintain their connection to the book. To recreate the hierarchy (as it was before removing this page), %title may be added again using the Outline tab, and each of its former child pages will need to be relocated manually.', $title);
-  }
-  else {
-    $description = t('%title may be added to hierarchy again using the Outline tab.', $title);
-  }
-
-  return confirm_form($form, t('Are you sure you want to remove %title from the book hierarchy?', $title), 'node/'. $node->nid,  $description, t('Remove'));
-}
-
-/**
- * Confirm form submit function to remove a node from the book.
- *
- * @see book_remove_form()
- */
-function book_remove_form_submit($form, &$form_state) {
-  $node = $form['#node'];
-  if ($node->nid != $node->book['bid']) {
-    // Only allowed when this is not a book (top-level page).
-    menu_link_delete($node->book['mlid']);
-    db_query('DELETE FROM {book} WHERE nid = %d', $node->nid);
-    drupal_set_message(t('The post has been removed from the book.'));
-  }
-  $form_state['redirect'] = 'node/'. $node->nid;
-}
-
-/**
  * Common helper function to handles additions and updates to the book outline.
  *
  * Performs all additions and updates to the book outline through node addition,
@@ -614,37 +481,6 @@ function _book_update_outline(&$node) {
   }
   // Failed to save the menu link
   return FALSE;
-}
-
-/**
- * Handles book outline form submissions from the outline tab.
- *
- * @see book_outline_form()
- */
-function book_outline_form_submit($form, &$form_state) {
-  $node = $form['#node'];
-  $form_state['redirect'] = "node/". $node->nid;
-  $book_link = $form_state['values']['book'];
-  if (!$book_link['bid']) {
-    drupal_set_message(t('No changes were made'));
-    return;
-  }
-
-  $book_link['menu_name'] = book_menu_name($book_link['bid']);
-  $node->book = $book_link;
-  if (_book_update_outline($node)) {
-    if ($node->book['parent_mismatch']) {
-      // This will usually only happen when JS is disabled.
-      drupal_set_message(t('The post has been added to the selected book. You may now position it relative to other pages.'));
-      $form_state['redirect'] = "node/". $node->nid ."/outline";
-    }
-    else {
-      drupal_set_message(t('The book outline has been updated.'));
-    }
-  }
-  else {
-    drupal_set_message(t('There was an error adding the post to the book.'), 'error');
-  }
 }
 
 /**
@@ -1023,114 +859,6 @@ function book_toc($bid, $exclude = array(), $depth_limit) {
 }
 
 /**
- * Menu callback; prints a listing of all books.
- */
-function book_render() {
-  $book_list = array();
-  foreach (book_get_books() as $book) {
-    $book_list[] = l($book['title'], $book['href'], $book['options']);
-  }
-
-  return theme('item_list', $book_list);
-}
-
-/**
- * Menu callback; Generates various representation of a book page and its children.
- *
- * The function delegates the generation of output to helper functions.
- * The function name is derived by prepending 'book_export_' to the
- * given output type. So, e.g., a type of 'html' results in a call to
- * the function book_export_html().
- *
- * @param $type
- *   A string encoding the type of output requested. The following
- *   types are currently supported in book module:
- *
- *   - html: HTML (printer friendly output)
- *
- *   Other types may be supported in contributed modules.
- * @param $nid
- *   An integer representing the node id (nid) of the node to export
- * @return
- *   A string representing the node and its children in the book hierarchy
- *   in a format determined by the $type parameter.
- */
-function book_export($type, $nid) {
-
-  $type = drupal_strtolower($type);
-
-  $export_function = 'book_export_'. $type;
-
-  if (function_exists($export_function)) {
-    print call_user_func($export_function, $nid);
-  }
-  else {
-    drupal_set_message(t('Unknown export format.'));
-    drupal_not_found();
-  }
-}
-
-/**
- * This function is called by book_export() to generate HTML for export.
- *
- * The given node is /embedded to its absolute depth in a top level
- * section/. For example, a child node with depth 2 in the hierarchy
- * is contained in (otherwise empty) &lt;div&gt; elements
- * corresponding to depth 0 and depth 1. This is intended to support
- * WYSIWYG output - e.g., level 3 sections always look like level 3
- * sections, no matter their depth relative to the node selected to be
- * exported as printer-friendly HTML.
- *
- * @param $nid
- *   An integer representing the node id (nid) of the node to export.
- * @return
- *   A string containing HTML representing the node and its children in
- *   the book hierarchy.
- */
-function book_export_html($nid) {
-  if (user_access('access printer-friendly version')) {
-    $content = '';
-    $node = node_load($nid);
-    if (isset($node->book)) {
-      $depth = $node->book['depth'];
-      for ($i = 1; $i < $depth; $i++) {
-        $content .= "<div class=\"section-$i\">\n";
-      }
-      $tree = book_menu_subtree_data($node->book);
-      $content .= book_export_traverse($tree, 'book_node_visitor_html_pre', 'book_node_visitor_html_post');
-
-      for ($i = 1; $i < $depth; $i++) {
-        $content .= "</div>\n";
-      }
-    }
-    return theme('book_export_html', check_plain($node->title), $content);
-  }
-  else {
-    drupal_access_denied();
-  }
-}
-
-/**
- * How the book's HTML export should be themed
- *
- * @ingroup themeable
- */
-function theme_book_export_html($title, $content) {
-  global $base_url, $language;
-  $html = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
-  $html .= '<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">';
-  $html .= "<head>\n<title>". $title ."</title>\n";
-  $html .= '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />';
-  $html .= '<base href="'. $base_url .'/" />'."\n";
-  $html .= '<link type="text/css" rel="stylesheet" href="misc/print.css" />';
-  if (defined('LANGUAGE_RTL') && $language->direction == LANGUAGE_RTL) {
-    $html .= '<link type="text/css" rel="stylesheet" href="misc/print-rtl.css" />';
-  }
-  $html .= "</head>\n<body>\n". $content ."\n</body>\n</html>\n";
-  return $html;
-}
-
-/**
  * Traverse the book tree to build printable or exportable output.
  *
  * During the traversal, the $visit_pre() callback is applied to each
@@ -1228,183 +956,10 @@ function book_node_visitor_html_post($node, $depth) {
 }
 
 /**
- * Build the table portion of the form for the book administration page.
- *
- * @see book_admin_edit()
- */
-function _book_admin_table($node) {
-  $form = array(
-    '#theme' => 'book_admin_table',
-    '#tree' => TRUE,
-  );
-
-  $tree = book_menu_subtree_data($node->book);
-  _book_admin_table_tree($tree, $form);
-  return $form;
-}
-
-/**
- * Recursive helper to build the main table in the book administration page form.
- *
- * @see book_admin_edit()
- */
-function _book_admin_table_tree($tree, &$form) {
-  foreach ($tree as $data) {
-    $form[] = array(
-      'nid' => array('#type' => 'value', '#value' => $data['link']['nid']),
-      'depth' => array('#type' => 'value', '#value' => $data['link']['depth']),
-      'href' => array('#type' => 'value', '#value' => $data['link']['href']),
-      'title' => array(
-        '#type' => 'textfield',
-        '#default_value' => $data['link']['link_title'],
-        '#maxlength' => 255,
-      ),
-      'weight' => array(
-        '#type' => 'weight',
-        '#default_value' => $data['link']['weight'],
-        '#delta' => 15,
-      ),
-    );
-    if ($data['below']) {
-      _book_admin_table_tree($data['below'], $form);
-    }
-  }
-
-  return $form;
-}
-
-/**
- * Theme function for the book administration page form.
- *
- * @ingroup themeable
- */
-function theme_book_admin_table($form) {
-
-  $header = array(t('Title'), t('Weight'), array('data' => t('Operations'), 'colspan' => '3'));
-
-  $rows = array();
-  $destination = drupal_get_destination();
-  $access = user_access('administer nodes');
-  foreach (element_children($form) as $key) {
-    $nid = $form[$key]['nid']['#value'];
-    $href = $form[$key]['href']['#value'];
-    $rows[] = array(
-      '<div style="padding-left: '. (25 * $form[$key]['depth']['#value']) .'px;">'. drupal_render($form[$key]['title']) .'</div>',
-      drupal_render($form[$key]['weight']),
-      l(t('view'), $href),
-      $access ? l(t('edit'), 'node/'. $nid .'/edit', array('query' => $destination)) : '&nbsp',
-      $access ? l(t('delete'), 'node/'. $nid .'/delete', array('query' => $destination) )  : '&nbsp',
-    );
-  }
-
-  return theme('table', $header, $rows);
-}
-
-/**
- * Build the form to administrate the hierarchy of a single book.
- *
- * @see book_admin_edit_submit()
- *
- * @ingroup forms.
- */
-function book_admin_edit($form_state, $node) {
-
-    drupal_set_title(check_plain($node->title));
-    $form = array();
-
-    $form['#node'] = $node;
-    $form['table'] = _book_admin_table($node);
-    $form['save'] = array(
-      '#type' => 'submit',
-      '#value' => t('Save book pages'),
-    );
-  return $form;
-}
-
-/**
- * Handle submission of the book administrative page form.
- *
- * @see book_admin_edit()
- */
-function book_admin_edit_submit($form, &$form_state) {
-  foreach ($form_state['values']['table'] as $row) {
-    $node = node_load($row['nid'], FALSE);
-
-    if ($row['title'] != $node->title || $row['weight'] != $node->book['weight']) {
-      $node->title = $row['title'];
-      $node->book['link_title'] = $row['title'];
-      $node->book['weight'] = $row['weight'];
-      $node->revision = 1;
-
-      node_save($node);
-      watchdog('content', 'book: updated %title.', array('%title' => $node->title), WATCHDOG_NOTICE, l(t('view'), 'node/'. $node->nid));
-    }
-  }
-  // Insure we have the current title - it may have been changed in the form.
-  $title = db_result(db_query("SELECT title FROM {node} WHERE nid = %d", $form['#node']->nid));
-  drupal_set_message(t('Updated book %title.', array('%title' => $title)));
-}
-
-/**
- * Returns an administrative overview of all books.
- */
-function book_admin_overview() {
-  $rows = array();
-  foreach (book_get_books() as $book) {
-    $rows[] = array(l($book['title'], $book['href'], $book['options']), l(t('edit order and titles'), "admin/content/book/". $book['nid']));
-  }
-  $headers = array(t('Book'), t('Operations'));
-
-  return theme('table', $headers, $rows);
-}
-
-/**
  * Determine if a given node type is in the list of types allowed for books.
  */
 function book_type_is_allowed($type) {
   return in_array($type, variable_get('book_allowed_types', array('book')));
-}
-
-/**
- * Builds and returns the book settings form.
- *
- * @see book_admin_settings_validate()
- *
- * @ingroup forms
- */
-function book_admin_settings() {
-
-  $types = node_get_types('names');
-  $form['book_allowed_types'] = array(
-    '#type' => 'checkboxes',
-    '#title' => t('Allowed book outline types'),
-    '#default_value' => variable_get('book_allowed_types', array('book')),
-    '#options' => $types,
-    '#description' => t('Select content types which users with the %add-perm permission will be allowed to add to the book hierarchy. Users with the %outline-perm permission can add all content types.', array('%add-perm' => t('add content to books'),  '%outline-perm' => t('administer book outlines'))),
-    '#required' => TRUE,
-  );
-  $form['book_child_type'] = array(
-    '#type' => 'radios',
-    '#title' => t('Default child page type'),
-    '#default_value' => variable_get('book_child_type', 'book'),
-    '#options' => $types,
-    '#description' => t('The content type for the %add-child link must be one of those selected as an allowed book outline type.', array('%add-child' => t('Add child page'))),
-    '#required' => TRUE,
-  );
-  $form['#validate'][] = 'book_admin_settings_validate';
-  return system_settings_form($form);
-}
-
-/**
- * Validate the book settings form.
- *
- * @see book_admin_settings()
- */
-function book_admin_settings_validate($form, &$form_state) {
-  $child_type = $form_state['values']['book_child_type'];
-  if (empty($form_state['values']['book_allowed_types'][$child_type])) {
-    form_set_error('book_child_type', t('The content type for the %add-child link must be one of those selected as an allowed book outline type.', array('%add-child' => t('Add child page'))));
-  }
 }
 
 /**
