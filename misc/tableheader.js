@@ -1,4 +1,4 @@
-// $Id: tableheader.js,v 1.6 2007/08/30 18:56:18 goba Exp $
+// $Id: tableheader.js,v 1.7 2007/09/12 11:45:03 goba Exp $
 
 Drupal.behaviors.tableHeader = function (context) {
   // This breaks in anything less than IE 7. Prevent it from running.
@@ -86,13 +86,13 @@ Drupal.behaviors.tableHeader = function (context) {
 
       // Precalculate table heights
       $('table.sticky-table').each(function () {
-        this.height = $(this).height();
+        this.savedHeight = $(this).height();
       });
 
       $(cells).each(function () {
         // Get position.
         this.stickyPosition = Drupal.absolutePosition(this.cell).y;
-        this.stickyMax = this.table.height;
+        this.stickyMax = this.table.savedHeight;
 
         // Reflow the cell.
         var ref = this.cell;
