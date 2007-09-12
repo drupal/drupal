@@ -1139,8 +1139,14 @@ function format_date($timestamp, $type = 'medium', $format = '', $timezone = NUL
   $date = '';
   for ($i = 0; $i < $max; $i++) {
     $c = $format[$i];
-    if (strpos('AaDFlM', $c) !== FALSE) {
+    if (strpos('AaDlM', $c) !== FALSE) {
       $date .= t(gmdate($c, $timestamp), array(), $langcode);
+    }
+    else if ($c == 'F') {
+      // Special treatment for long month names: May is both an abbreviation
+      // and a full month name in English, but other languages have
+      // different abbreviations.
+      $date .= trim(t('!long-month-name '. gmdate($c, $timestamp), array('!long-month-name' => ''), $langcode));
     }
     else if (strpos('BdgGhHiIjLmnsStTUwWYyz', $c) !== FALSE) {
       $date .= gmdate($c, $timestamp);
