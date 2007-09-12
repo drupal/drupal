@@ -86,13 +86,13 @@ Drupal.behaviors.tableHeader = function (context) {
 
       // Precalculate table heights
       $('table.sticky-table').each(function () {
-        this.height = $(this).height();
+        this.savedHeight = $(this).height();
       });
 
       $(cells).each(function () {
         // Get position.
         this.stickyPosition = Drupal.absolutePosition(this.cell).y;
-        this.stickyMax = this.table.height;
+        this.stickyMax = this.table.savedHeight;
 
         // Reflow the cell.
         var ref = this.cell;
