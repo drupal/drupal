@@ -1,5 +1,5 @@
 <?php
-// $Id: user.admin.inc,v 1.2 2007/09/12 11:39:38 goba Exp $
+// $Id: user.admin.inc,v 1.3 2007/09/12 18:29:32 goba Exp $
 
 /**
  * @file
@@ -82,6 +82,8 @@ function user_filter_form() {
                                              '#value' => t('Reset')
                                            );
   }
+
+  drupal_add_js('misc/form.js', 'core');
 
   return $form;
 }

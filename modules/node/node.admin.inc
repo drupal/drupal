@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.3 2007/09/02 14:42:30 goba Exp $
+// $Id: node.admin.inc,v 1.4 2007/09/12 18:29:32 goba Exp $
 
 /**
  * @file
@@ -268,7 +268,7 @@ function node_filter_form() {
     $form['filters']['buttons']['reset'] = array('#type' => 'submit', '#value' => t('Reset'));
   }
 
-  drupal_add_js(drupal_get_path('module', 'node') .'/node.js');
+  drupal_add_js('misc/form.js', 'core');
 
   return $form;
 }

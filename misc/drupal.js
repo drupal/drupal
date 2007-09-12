@@ -1,4 +1,4 @@
-// $Id: drupal.js,v 1.37 2007/09/03 16:55:56 dries Exp $
+// $Id: drupal.js,v 1.38 2007/09/12 18:29:32 goba Exp $
 
 var Drupal = Drupal || { 'settings': {}, 'behaviors': {}, 'themes': {}, 'locale': {} };
 
@@ -6,20 +6,6 @@ var Drupal = Drupal || { 'settings': {}, 'behaviors': {}, 'themes': {}, 'locale'
  * Set the variable that indicates if JavaScript behaviors should be applied
  */
 Drupal.jsEnabled = document.getElementsByTagName && document.createElement && document.createTextNode && document.documentElement && document.getElementById;
-
-/**
- * Extends the current object with the parameter. Works recursively.
- */
-Drupal.extend = function(obj) {
-  for (var i in obj) {
-    if (this[i]) {
-      Drupal.extend.apply(this[i], [obj[i]]);
-    }
-    else {
-      this[i] = obj[i];
-    }
-  }
-};
 
 /**
  * Attach all registered behaviors to a page element.
@@ -204,6 +190,7 @@ Drupal.redirectFormButton = function (uri, button, handler) {
   button.onmouseover = button.onfocus = function() {
     button.onclick = function() {
       // Create target iframe
+      Drupal.deleteIframe();
       Drupal.createIframe();
 
       // Prepare variables for use in anonymous function.
@@ -214,6 +201,7 @@ Drupal.redirectFormButton = function (uri, button, handler) {
       // Redirect form submission to iframe
       this.form.action = uri;
       this.form.target = 'redirect-target';
+      this.form.submit();
 
       handler.onsubmit();
 
@@ -238,10 +226,10 @@ Drupal.redirectFormButton = function (uri, button, handler) {
           response = null;
         }
 
-        response = Drupal.parseJson(response);
+        response = eval('('+ response +');');
         // Check response code
-        if (response.status == 0) {
-          handler.onerror(response.data);
+        if (!response || response.status == 0) {
+          handler.onerror(response.data || Drupal.t('Error parsing response'));
           return;
         }
         handler.oncomplete(response.data);
@@ -255,53 +243,6 @@ Drupal.redirectFormButton = function (uri, button, handler) {
   button.onmouseout = button.onblur = function() {
     button.onclick = null;
   };
-};
-
-/**
- * Retrieves the absolute position of an element on the screen
- */
-Drupal.absolutePosition = function (el) {
-  var sLeft = 0, sTop = 0;
-  var isDiv = /^div$/i.test(el.tagName);
-  if (isDiv && el.scrollLeft) {
-    sLeft = el.scrollLeft;
-  }
-  if (isDiv && el.scrollTop) {
-    sTop = el.scrollTop;
-  }
-  var r = { x: el.offsetLeft - sLeft, y: el.offsetTop - sTop };
-  if (el.offsetParent) {
-    var tmp = Drupal.absolutePosition(el.offsetParent);
-    r.x += tmp.x;
-    r.y += tmp.y;
-  }
-  return r;
-};
-
-/**
- * Return the dimensions of an element on the screen
- */
-Drupal.dimensions = function (el) {
-  return { width: el.offsetWidth, height: el.offsetHeight };
-};
-
-/**
- *  Returns the position of the mouse cursor based on the event object passed
- */
-Drupal.mousePosition = function(e) {
-  return { x: e.clientX + document.documentElement.scrollLeft, y: e.clientY + document.documentElement.scrollTop };
-};
-
-/**
- * Parse a JSON response.
- *
- * The result is either the JSON object, or an object with 'status' 0 and 'data' an error message.
- */
-Drupal.parseJson = function (data) {
-  if ((data.substring(0, 1) != '{') && (data.substring(0, 1) != '[')) {
-    return { status: 0, data: data.length ? data : Drupal.t('Unspecified error') };
-  }
-  return eval('(' + data + ');');
 };
 
 /**

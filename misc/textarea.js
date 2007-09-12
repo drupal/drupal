@@ -1,4 +1,4 @@
-// $Id: textarea.js,v 1.17 2007/09/06 13:06:13 goba Exp $
+// $Id: textarea.js,v 1.18 2007/09/12 18:29:32 goba Exp $
 
 Drupal.behaviors.textarea = function(context) {
   $('textarea.resizable:not(.textarea-processed)', context).each(function() {
@@ -19,14 +19,14 @@ Drupal.behaviors.textarea = function(context) {
     grippie.style.marginRight = (grippie.offsetWidth - $(this)[0].offsetWidth) +'px';
 
     function startDrag(e) {
-      staticOffset = textarea.height() - Drupal.mousePosition(e).y;
+      staticOffset = textarea.height() - e.pageY;
       textarea.css('opacity', 0.25);
       $(document).mousemove(performDrag).mouseup(endDrag);
       return false;
     }
 
     function performDrag(e) {
-      textarea.height(Math.max(32, staticOffset + Drupal.mousePosition(e).y) + 'px');
+      textarea.height(Math.max(32, staticOffset + e.pageY) + 'px');
       return false;
     }
 

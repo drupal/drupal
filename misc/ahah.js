@@ -1,4 +1,4 @@
-// $Id: ahah.js,v 1.1 2007/07/04 15:42:38 dries Exp $
+// $Id: ahah.js,v 1.2 2007/09/12 18:29:31 goba Exp $
 
 /**
  * Provides AJAX-like page updating via AHAH (Asynchronous HTML and HTTP).
@@ -69,7 +69,9 @@ Drupal.ahah.prototype.onsubmit = function () {
     margin: '0 0 0 20px'
   });
   button.css('float', 'left').attr('disabled', true).after(progress_element);
-  eval('progress_element.' + this.showEffect + '()');
+  if (progress_element[this.showEffect]) {
+    progress_element[this.showEffect]();
+  }
 };
 
 /**
@@ -93,10 +95,12 @@ Drupal.ahah.prototype.oncomplete = function (data) {
   if (this.method == 'replace') {
     wrapper.empty().append(new_content);
   }
-  else {
-    eval('wrapper.' + this.method + '(new_content)');
+  else if (wrapper[this.method]) {
+    wrapper[this.method](new_content);
   }
-  eval('new_content.' + this.showEffect + '()');
+  if (new_content[this.showEffect]) {
+    new_content[this.showEffect]();
+  }
   button.css('float', 'none').attr('disabled', false);
 
   Drupal.attachBehaviors(new_content);

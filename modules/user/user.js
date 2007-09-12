@@ -1,4 +1,4 @@
-// $Id: user.js,v 1.5 2007/08/07 08:39:36 goba Exp $
+// $Id: user.js,v 1.6 2007/09/12 18:29:32 goba Exp $
 
 /**
  * Attach handlers to evaluate the strength of any password fields and to check
@@ -181,7 +181,7 @@ Drupal.setDefaultTimezone = function() {
  * "Picture support" radio buttons.
  */
 Drupal.behaviors.userSettings = function (context) {
-  $('div.user-admin-picture-radios input[@type=radio]:not(.userSettings-processed)', context).addClass('userSettings-processed').click(function () {
+  $('div.user-admin-picture-radios input[type=radio]:not(.userSettings-processed)', context).addClass('userSettings-processed').click(function () {
     $('div.user-admin-picture-settings', context)[['hide', 'show'][this.value]]();
   });
 };

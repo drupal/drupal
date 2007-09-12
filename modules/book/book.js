@@ -1,4 +1,4 @@
-// $Id: book.js,v 1.2 2007/09/01 07:08:10 goba Exp $
+// $Id: book.js,v 1.3 2007/09/12 18:29:32 goba Exp $
 
 Drupal.behaviors.bookSelect = function(context) {
    // This behavior attaches by ID, so is only valid once on a page.
@@ -24,9 +24,12 @@ Drupal.bookFillSelect = function() {
   pb.setProgress(-1, Drupal.t('Updating parents...'));
   $('#edit-book-plid-wrapper').html(pb.element);
 
-  $.get(Drupal.settings.book.formCallback +'/'+ $('#'+ Drupal.settings.book.formId +' input[@name=form_build_id]').val() +'/'+ $('#edit-book-bid').val(), {}, function(data) {
-    parsedData = Drupal.parseJson(data);
-    // Insert the new select, and remove the progress bar.
-    $('#edit-book-plid-wrapper').after(parsedData['book']).remove();
+  $.ajax({
+    url: Drupal.settings.book.formCallback +'/'+ $('#'+ Drupal.settings.book.formId +' input[name=form_build_id]').val() +'/'+ $('#edit-book-bid').val(),
+    dataType: 'json',
+    success: function(data) {
+      // Insert the new select, and remove the progress bar.
+      $('#edit-book-plid-wrapper').after(data['book']).remove();
+    }
   });
 };

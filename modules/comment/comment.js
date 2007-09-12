@@ -1,4 +1,4 @@
-// $Id: comment.js,v 1.4 2007/09/01 07:08:11 goba Exp $
+// $Id: comment.js,v 1.5 2007/09/12 18:29:32 goba Exp $
 
 Drupal.behaviors.comment = function (context) {
   var parts = new Array("name", "homepage", "mail");
@@ -6,7 +6,7 @@ Drupal.behaviors.comment = function (context) {
   for (i=0;i<3;i++) {
     cookie = Drupal.comment.getCookie('comment_info_' + parts[i]);
     if (cookie != '') {
-      $("#comment-form input[@name=" + parts[i] + "]:not(.comment-processed)", context)
+      $("#comment-form input[name=" + parts[i] + "]:not(.comment-processed)", context)
         .val(cookie)
         .addClass('comment-processed');
     }

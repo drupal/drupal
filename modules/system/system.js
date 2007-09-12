@@ -1,4 +1,4 @@
-// $Id: system.js,v 1.10 2007/07/25 17:35:47 goba Exp $
+// $Id: system.js,v 1.11 2007/09/12 18:29:32 goba Exp $
 
 /**
  * Internal function to check using Ajax if clean URLs can be enabled on the
@@ -41,7 +41,7 @@ Drupal.behaviors.cleanURLsSettingsCheck = function(context) {
  */
 Drupal.cleanURLsInstallCheck = function() {
   var pathname = location.pathname +"";
-  var url = pathname.replace(/\/[^/]*$/, "/") +"node";
+  var url = pathname.replace(/\/[^\/]*$/, "/") +"node";
   $("#clean-url .description").append('<span><div id="testing">'+ Drupal.settings.cleanURL.testing +"</div></span>");
   $("#clean-url.install").css("display", "block");
   $.ajax({url: location.protocol +"//"+ location.host + url, type: "GET", data: " ", complete: function(response) {

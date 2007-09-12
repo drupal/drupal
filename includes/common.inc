@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.684 2007/09/12 13:30:42 goba Exp $
+// $Id: common.inc,v 1.685 2007/09/12 18:29:31 goba Exp $
 
 /**
  * @file
@@ -1813,7 +1813,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
 
     switch ($type) {
       case 'setting':
-        $output .= '<script type="text/javascript">Drupal.extend({ settings: '. drupal_to_js(call_user_func_array('array_merge_recursive', $data)) ." });</script>\n";
+        $output .= '<script type="text/javascript">jQuery.extend(Drupal.settings, '. drupal_to_js(call_user_func_array('array_merge_recursive', $data)) .");</script>\n";
         break;
       case 'inline':
         foreach ($data as $info) {

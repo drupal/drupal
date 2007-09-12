@@ -1,4 +1,4 @@
-// $Id: color.js,v 1.5 2007/07/01 15:37:08 dries Exp $
+// $Id: color.js,v 1.6 2007/09/12 18:29:32 goba Exp $
 
 Drupal.behaviors.color = function (context) {
   // This behavior attaches by ID, so is only valid once on a page.
@@ -188,7 +188,7 @@ Drupal.behaviors.color = function (context) {
 
     // Add new bindings
     focused = this;
-    farb.linkTo(function (color) { callback(input, color, true, false) });
+    farb.linkTo(function (color) { callback(input, color, true, false); });
     farb.setColor(this.value);
     $(focused).keyup(farb.updateValue).keyup(preview).keyup(resetScheme)
       .parent().addClass('item-selected');
