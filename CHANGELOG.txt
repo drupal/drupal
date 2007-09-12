@@ -1,7 +1,8 @@
-// $Id: CHANGELOG.txt,v 1.220 2007/08/21 08:15:07 dries Exp $
+// $Id: CHANGELOG.txt,v 1.221 2007/09/12 11:23:51 goba Exp $
 
 Drupal 6.0, xxxx-xx-xx (development version)
 ----------------------
+- New, faster and better menu system.
 - New watchdog as a hook functionality.
    * New hook_watchdog that can be implemented by any module to route log messages to various destinations.
    * Expands the severity levels from 3 (Error, Warning, Notice) to the 8 levels defined in RFC 3164.
