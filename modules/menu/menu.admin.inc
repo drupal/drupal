@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.admin.inc,v 1.1 2007/08/30 16:27:12 goba Exp $
+// $Id: menu.admin.inc,v 1.2 2007/09/12 11:48:15 goba Exp $
 
 /**
  * @file
@@ -355,17 +355,17 @@ function menu_delete_menu_confirm_submit($form, &$form_state) {
 function menu_edit_menu_validate($form, &$form_state) {
   $item = $form_state['values'];
   if (preg_match('/[^a-z0-9-]/', $item['menu_name'])) {
-    form_set_error('menu_name', t('Menu name may consist only of lowercase letters, numbers, and hyphens.'));
+    form_set_error('menu_name', t('The menu name may only consist of lowercase letters, numbers, and hyphens.'));
   }
   if (strlen($item['menu_name']) > MENU_MAX_MENU_NAME_LENGTH_UI) {
-    form_set_error('menu_name', t('Menu name can not be longer than '. MENU_MAX_MENU_NAME_LENGTH_UI .' characters.'));
+    form_set_error('menu_name', format_plural(MENU_MAX_MENU_NAME_LENGTH_UI, "The menu name can't be longer than 1 character.", "The menu name can't be longer than @count characters."));
   }
   if ($form['#insert']) {
     // We will add 'menu-' to the menu name to help avoid name-space conflicts.
     $item['menu_name'] = 'menu-'. $item['menu_name'];
     if (db_result(db_query("SELECT menu_name FROM {menu_custom} WHERE menu_name = '%s'", $item['menu_name'])) ||
       db_result(db_query_range("SELECT menu_name FROM {menu_links} WHERE menu_name = '%s'", $item['menu_name'], 0, 1))) {
-      form_set_error('menu_name', t('Menu already exists'));
+      form_set_error('menu_name', t('The menu already exists.'));
     }
   }
 }
