@@ -181,7 +181,7 @@ Drupal.setDefaultTimezone = function() {
  * "Picture support" radio buttons.
  */
 Drupal.behaviors.userSettings = function (context) {
-  $('div.user-admin-picture-radios input[@type=radio]:not(.userSettings-processed)', context).addClass('userSettings-processed').click(function () {
+  $('div.user-admin-picture-radios input[type=radio]:not(.userSettings-processed)', context).addClass('userSettings-processed').click(function () {
     $('div.user-admin-picture-settings', context)[['hide', 'show'][this.value]]();
   });
 };

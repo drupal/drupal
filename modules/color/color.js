@@ -188,7 +188,7 @@ Drupal.behaviors.color = function (context) {
 
     // Add new bindings
     focused = this;
-    farb.linkTo(function (color) { callback(input, color, true, false) });
+    farb.linkTo(function (color) { callback(input, color, true, false); });
     farb.setColor(this.value);
     $(focused).keyup(farb.updateValue).keyup(preview).keyup(resetScheme)
       .parent().addClass('item-selected');

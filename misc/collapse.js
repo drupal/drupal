@@ -35,13 +35,13 @@ Drupal.toggleFieldset = function(fieldset) {
 Drupal.collapseScrollIntoView = function (node) {
   var h = self.innerHeight || document.documentElement.clientHeight || $('body')[0].clientHeight || 0;
   var offset = self.pageYOffset || document.documentElement.scrollTop || $('body')[0].scrollTop || 0;
-  var pos = Drupal.absolutePosition(node);
+  var posY = $(node).offset().top;
   var fudge = 55;
-  if (pos.y + node.offsetHeight + fudge > h + offset) {
+  if (posY + node.offsetHeight + fudge > h + offset) {
     if (node.offsetHeight > h) {
-      window.scrollTo(0, pos.y);
+      window.scrollTo(0, posY);
     } else {
-      window.scrollTo(0, pos.y + node.offsetHeight - h + fudge);
+      window.scrollTo(0, posY + node.offsetHeight - h + fudge);
     }
   }
 };

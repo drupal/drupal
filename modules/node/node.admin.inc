@@ -268,7 +268,7 @@ function node_filter_form() {
     $form['filters']['buttons']['reset'] = array('#type' => 'submit', '#value' => t('Reset'));
   }
 
-  drupal_add_js(drupal_get_path('module', 'node') .'/node.js');
+  drupal_add_js('misc/form.js', 'core');
 
   return $form;
 }

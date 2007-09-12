@@ -72,9 +72,8 @@ Drupal.progressBar.prototype.sendPing = function () {
       type: this.method,
       url: this.uri,
       data: '',
-      success: function (data) {
-        // Parse response
-        var progress = Drupal.parseJson(data);
+      dataType: 'json',
+      success: function (progress) {
         // Display errors
         if (progress.status == 0) {
           pb.displayError(progress.data);

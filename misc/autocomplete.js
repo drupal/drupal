@@ -38,7 +38,7 @@ Drupal.jsAC = function (input, db) {
 
   $(this.input)
     .keydown(function (event) { return ac.onkeydown(this, event); })
-    .keyup(function (event) { ac.onkeyup(this, event) })
+    .keyup(function (event) { ac.onkeyup(this, event); })
     .blur(function () { ac.hidePopup(); ac.db.cancel(); });
 
 };
@@ -270,9 +270,8 @@ Drupal.ACDB.prototype.search = function (searchString) {
     $.ajax({
       type: "GET",
       url: db.uri +'/'+ Drupal.encodeURIComponent(searchString),
-      success: function (data) {
-        // Parse back result
-        var matches = Drupal.parseJson(data);
+      dataType: 'json',
+      success: function (matches) {
         if (typeof matches['status'] == 'undefined' || matches['status'] != 0) {
           db.cache[searchString] = matches;
           // Verify if these are still the matches the user wants to see

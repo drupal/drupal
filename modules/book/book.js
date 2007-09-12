@@ -24,9 +24,12 @@ Drupal.bookFillSelect = function() {
   pb.setProgress(-1, Drupal.t('Updating parents...'));
   $('#edit-book-plid-wrapper').html(pb.element);
 
-  $.get(Drupal.settings.book.formCallback +'/'+ $('#'+ Drupal.settings.book.formId +' input[@name=form_build_id]').val() +'/'+ $('#edit-book-bid').val(), {}, function(data) {
-    parsedData = Drupal.parseJson(data);
-    // Insert the new select, and remove the progress bar.
-    $('#edit-book-plid-wrapper').after(parsedData['book']).remove();
+  $.ajax({
+    url: Drupal.settings.book.formCallback +'/'+ $('#'+ Drupal.settings.book.formId +' input[name=form_build_id]').val() +'/'+ $('#edit-book-bid').val(),
+    dataType: 'json',
+    success: function(data) {
+      // Insert the new select, and remove the progress bar.
+      $('#edit-book-plid-wrapper').after(data['book']).remove();
+    }
   });
 };

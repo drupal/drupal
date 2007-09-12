@@ -1,7 +1,7 @@
 // $Id$
 
 Drupal.behaviors.tableSelect = function (context) {
-  $('form table[th.select-all]:not(.tableSelect-processed)', context).each(Drupal.tableSelect);
+  $('form table:has(th.select-all):not(.tableSelect-processed)', context).each(Drupal.tableSelect);
 };
 
 Drupal.tableSelect = function() {

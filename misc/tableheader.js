@@ -47,13 +47,13 @@ Drupal.behaviors.tableHeader = function (context) {
         ref = table;
         div.wide = true;
       }
-      $(div).css('width', $(ref).width() - parseInt($(div).css('paddingLeft')) +'px');
+      $(div).width(Math.max(0, $(ref).width() - parseInt($(div).css('paddingLeft'))));
 
       // Get position and store.
       div.cell = this;
       div.table = table;
       div.stickyMax = height;
-      div.stickyPosition = Drupal.absolutePosition(this).y;
+      div.stickyPosition = $(this).offset().top;
     });
     $(this).addClass('tableHeader-processed');
   });
@@ -91,7 +91,7 @@ Drupal.behaviors.tableHeader = function (context) {
 
       $(cells).each(function () {
         // Get position.
-        this.stickyPosition = Drupal.absolutePosition(this.cell).y;
+        this.stickyPosition = $(this.cell).offset().top;
         this.stickyMax = this.table.savedHeight;
 
         // Reflow the cell.
@@ -100,7 +100,7 @@ Drupal.behaviors.tableHeader = function (context) {
           // Resize the first cell to fit the table.
           ref = this.table;
         }
-        $(this).css('width', $(ref).width() - parseInt($(this).css('paddingLeft')) +'px');
+        $(this).width(Math.max(0, $(ref).width() - parseInt($(this).css('paddingLeft'))));
       });
 
       // Reset timer

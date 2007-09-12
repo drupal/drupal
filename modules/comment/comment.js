@@ -6,7 +6,7 @@ Drupal.behaviors.comment = function (context) {
   for (i=0;i<3;i++) {
     cookie = Drupal.comment.getCookie('comment_info_' + parts[i]);
     if (cookie != '') {
-      $("#comment-form input[@name=" + parts[i] + "]:not(.comment-processed)", context)
+      $("#comment-form input[name=" + parts[i] + "]:not(.comment-processed)", context)
         .val(cookie)
         .addClass('comment-processed');
     }
