@@ -1,5 +1,5 @@
 <?php
-// $Id: user.admin.inc,v 1.1 2007/09/10 13:14:38 goba Exp $
+// $Id: user.admin.inc,v 1.2 2007/09/12 11:39:38 goba Exp $
 
 /**
  * @file
@@ -50,10 +50,15 @@ function user_filter_form() {
                      );
   foreach ($session as $filter) {
     list($type, $value) = $filter;
-    $string = ($i++ ? '<em>and</em> where <strong>%a</strong> is <strong>%b</strong>' : '<strong>%a</strong> is <strong>%b</strong>');
     // Merge an array of arrays into one if necessary.
     $options = $type == 'permission' ? call_user_func_array('array_merge', $filters[$type]['options']) : $filters[$type]['options'];
-    $form['filters']['current'][] = array('#value' => t($string, array('%a' => $filters[$type]['title'] , '%b' => $options[$value])));
+    $params = array('%property' => $filters[$type]['title'] , '%value' => $options[$value]);
+    if ($i++ > 0) {
+      $form['filters']['current'][] = array('#value' => t('<em>and</em> where <strong>%property</strong> is <strong>%value</strong>', $params));
+    }
+    else {
+      $form['filters']['current'][] = array('#value' => t('<strong>%property</strong> is <strong>%value</strong>', $params));
+    }
   }
 
   foreach ($filters as $key => $filter) {
