@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.2 2007/08/02 10:25:21 dries Exp $
+// $Id: taxonomy.admin.inc,v 1.3 2007/09/13 07:54:27 goba Exp $
 
 /**
  * @file
@@ -171,7 +171,7 @@ function taxonomy_overview_terms($vocabulary) {
 
   $header = array(t('Name'), t('Operations'));
 
-  drupal_set_title(check_plain($vocabulary->name));
+  drupal_set_title(t('Terms in %vocabulary', array('%vocabulary' => $vocabulary->name)));
   $start_from      = isset($_GET['page']) ? $_GET['page'] : 0;
   $total_entries   = 0;  // total count for pager
   $page_increment  = 25; // number of tids per page
@@ -199,6 +199,15 @@ function taxonomy_overview_terms($vocabulary) {
   }
 
   return theme('table', $header, $rows, array('id' => 'taxonomy'));
+}
+
+
+/**
+ * Menu callback; return the edit form for a new term after setting the title.
+ */
+function taxonomy_add_term_page($vocabulary) {
+  drupal_set_title(t('Add term to %vocabulary', array('%vocabulary' => $vocabulary->name)));
+  return drupal_get_form('taxonomy_form_term' , $vocabulary);
 }
 
 /**
