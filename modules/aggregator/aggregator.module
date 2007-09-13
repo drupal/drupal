@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.356 2007/09/11 17:28:44 goba Exp $
+// $Id: aggregator.module,v 1.357 2007/09/13 08:02:38 goba Exp $
 
 /**
  * @file
@@ -30,23 +30,44 @@ function aggregator_help($path, $arg) {
  */
 function aggregator_theme() {
   return array(
-    'aggregator_page_list' => array(
+    'aggregator_wrapper' => array(
+      'arguments' => array('content' => NULL),
+      'file' => 'aggregator.pages.inc',
+      'template' => 'aggregator-wrapper',
+    ),
+    'aggregator_categorize_items' => array(
       'arguments' => array('form' => NULL),
       'file' => 'aggregator.pages.inc',
     ),
-    'aggregator_feed' => array(
+    'aggregator_feed_source' => array(
       'arguments' => array('feed' => NULL),
       'file' => 'aggregator.pages.inc',
+      'template' => 'aggregator-feed-source',
     ),
     'aggregator_block_item' => array(
       'arguments' => array('item' => NULL, 'feed' => 0),
     ),
+    'aggregator_summary_items' => array(
+      'arguments' => array('summary_items' => NULL, 'source' => NULL),
+      'file' => 'aggregator.pages.inc',
+      'template' => 'aggregator-summary-items',
+    ),
     'aggregator_summary_item' => array(
       'arguments' => array('item' => NULL),
       'file' => 'aggregator.pages.inc',
+      'template' => 'aggregator-summary-item',
     ),
-    'aggregator_page_item' => array(
+    'aggregator_item' => array(
       'arguments' => array('item' => NULL),
+      'file' => 'aggregator.pages.inc',
+      'template' => 'aggregator-item',
+    ),
+    'aggregator_page_opml' => array(
+      'arguments' => array('feeds' => NULL),
+      'file' => 'aggregator.pages.inc',
+    ),
+    'aggregator_page_rss' => array(
+      'arguments' => array('feeds' => NULL, 'category' => NULL),
       'file' => 'aggregator.pages.inc',
     ),
   );
