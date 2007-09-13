@@ -1751,12 +1751,11 @@ function user_filters() {
   }
 
   $options = array();
-  $t_module = t('module');
   foreach (module_list() as $module) {
     if ($permissions = module_invoke($module, 'perm')) {
       asort($permissions);
       foreach ($permissions as $permission) {
-        $options["$module $t_module"][$permission] = t($permission);
+        $options[t('@module module', array('@module' => $module))][$permission] = t($permission);
       }
     }
   }
