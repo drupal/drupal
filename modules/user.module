@@ -397,32 +397,10 @@ function user_is_blocked($name) {
  *    <em>When sending mail, the mail must contain a From header.</em>
  * @return Returns TRUE if the mail was successfully accepted for delivery, FALSE otherwise.
  */
-function user_mail($mail, $subject, $message, $header = NULL) {
-  $defaults = array(
-   'MIME-Version' => '1.0',
-   'Content-Type' => 'text/plain; charset=UTF-8; format=flowed',
-   'Content-Transfer-Encoding' => '8Bit',
-   'X-Mailer' => 'Drupal'
-   );
-  // To prevent e-mail from looking like spam, the addresses in the Sender and
-  // Return-Path headers should have a domain authorized to use the originating
-  // SMTP server.  Errors-To is redundant, but shouldn't hurt.
-  $default_from = variable_get('site_mail', ini_get('sendmail_from'));
-  if ($default_from) {
-    $defaults['From'] = $defaults['Reply-To'] = $defaults['Sender'] = $defaults['Return-Path'] = $defaults['Errors-To'] = $default_from;
-  }
-  $mimeheaders = array();
-  foreach ($defaults as $name => $value) {
-    $mimeheaders[] = $name .': '. mime_header_encode($value);
-  }
-  $headers = join("\n", $mimeheaders);
-  if (!is_null($header)) {
-    $headers .="\n".$header;
-  }
-
+function user_mail($mail, $subject, $message, $header) {
   if (variable_get('smtp_library', '') && file_exists(variable_get('smtp_library', ''))) {
    include_once './' . variable_get('smtp_library', '');
-    return user_mail_wrapper($mail, $subject, $message, $headers);
+    return user_mail_wrapper($mail, $subject, $message, $header);
   }
   else {
     /*
@@ -449,7 +427,7 @@ function user_mail($mail, $subject, $message, $header = NULL) {
       $mail,
       mime_header_encode($subject),
       str_replace("\r", '', $message),
-      $headers
+      "MIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8; format=flowed\nContent-transfer-encoding: 8Bit\n" . $header
     );
   }
 }
@@ -1095,12 +1073,14 @@ function user_pass_submit($form_id, $form_values) {
   global $base_url;
 
   $account = $form_values['account'];
+  $from = variable_get('site_mail', ini_get('sendmail_from'));
 
   // Mail one time login URL and instructions.
   $variables = array('%username' => $account->name, '%site' => variable_get('site_name', 'drupal'), '%login_url' => user_pass_reset_url($account), '%uri' => $base_url, '%uri_brief' => substr($base_url, strlen('http://')), '%mailto' => $account->mail, '%date' => format_date(time()), '%login_uri' => url('user', NULL, NULL, TRUE), '%edit_uri' => url('user/'. $account->uid .'/edit', NULL, NULL, TRUE));
   $subject = _user_mail_text('pass_subject', $variables);
   $body = _user_mail_text('pass_body', $variables);
-  $mail_success = user_mail($account->mail, $subject, $body);
+  $headers = "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from";
+  $mail_success = user_mail($account->mail, $subject, $body, $headers);
 
   if ($mail_success) {
     watchdog('user', t('Password reset instructions mailed to %name at %email.', array('%name' => theme('placeholder', $account->name), '%email' => theme('placeholder', $account->mail))));
@@ -1259,6 +1239,7 @@ function user_register_submit($form_id, $form_values) {
   $name = $form_values['name'];
   $pass = $admin ? $form_values['pass'] : user_password();
   $notify = $form_values['notify'];
+  $from = variable_get('site_mail', ini_get('sendmail_from'));
 
   if (!$admin && array_intersect(array_keys($form_values), array('uid', 'roles', 'init', 'session', 'status'))) {
     watchdog('security', t('Detected malicious attempt to alter protected user fields.'), WATCHDOG_WARNING);
@@ -1274,7 +1255,7 @@ function user_register_submit($form_id, $form_values) {
 
   // The first user may login immediately, and receives a customized welcome e-mail.
   if ($account->uid == 1) {
-    user_mail($mail, t('Drupal user account details for %s', array('%s' => $name)), strtr(t("%username,\n\nYou may now login to %uri using the following username and password:\n\n  username: %username\n  password: %password\n\n%edit_uri\n\n--drupal"), $variables));
+    user_mail($mail, t('Drupal user account details for %s', array('%s' => $name)), strtr(t("%username,\n\nYou may now login to %uri using the following username and password:\n\n  username: %username\n  password: %password\n\n%edit_uri\n\n--drupal"), $variables), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
     drupal_set_message(t('<p>Welcome to Drupal. You are user #1, which gives you full and immediate access.  All future registrants will receive their passwords via e-mail, so please make sure your website e-mail address is set properly under the general settings on the <a href="%settings">settings page</a>.</p><p> Your password is <strong>%pass</strong>. You may change your password below.</p>', array('%pass' => $pass, '%settings' => url('admin/settings'))));
     user_authenticate($account->name, trim($pass));
 
@@ -1295,7 +1276,7 @@ function user_register_submit($form_id, $form_values) {
       $subject = $notify ? _user_mail_text('admin_subject', $variables) : _user_mail_text('welcome_subject', $variables);
       $body = $notify ? _user_mail_text('admin_body', $variables) : _user_mail_text('welcome_body', $variables);
 
-      user_mail($mail, $subject, $body);
+      user_mail($mail, $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
 
       if ($notify) {
         drupal_set_message(t('Password and further instructions have been e-mailed to the new user %user.', array('%user' => theme('placeholder', $name))));
@@ -1311,8 +1292,8 @@ function user_register_submit($form_id, $form_values) {
       $subject = _user_mail_text('approval_subject', $variables);
       $body = _user_mail_text('approval_body', $variables);
 
-      user_mail($mail, $subject, $body);
-      user_mail(variable_get('site_mail', ini_get('sendmail_from')), $subject, t("%u has applied for an account.\n\n%uri", array('%u' => $account->name, '%uri' => url("user/$account->uid/edit", NULL, NULL, TRUE))));
+      user_mail($mail, $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
+      user_mail(variable_get('site_mail', ini_get('sendmail_from')), $subject, t("%u has applied for an account.\n\n%uri", array('%u' => $account->name, '%uri' => url("user/$account->uid/edit", NULL, NULL, TRUE))), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
       drupal_set_message(t('Thank you for applying for an account. Your account is currently pending approval by the site administrator.<br />In the meantime, your password and further instructions have been sent to your e-mail address.'));
 
     }
