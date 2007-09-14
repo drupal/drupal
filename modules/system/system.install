@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.151 2007/09/11 19:14:34 goba Exp $
+// $Id: system.install,v 1.152 2007/09/14 09:43:13 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -3759,9 +3759,11 @@ function system_update_6031() {
  */
 function system_update_6032() {
   $ret = array();
-  db_drop_unique_key($ret, 'profile_fields', 'name');
-  db_change_field($ret, 'profile_fields', 'name', 'name', array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''));
-  db_add_unique_key($ret, 'profile_fields', 'name', array('name'));
+  if (db_table_exists('profile_fields')) {
+    db_drop_unique_key($ret, 'profile_fields', 'name');
+    db_change_field($ret, 'profile_fields', 'name', 'name', array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''));
+    db_add_unique_key($ret, 'profile_fields', 'name', array('name'));
+  }
   return $ret;
 }
 
