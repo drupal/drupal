@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.152 2007/09/14 09:43:13 goba Exp $
+// $Id: system.install,v 1.153 2007/09/14 17:46:32 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -3052,8 +3052,6 @@ function system_update_6016() {
 
   switch ($GLOBALS['db_type']) {
     case 'pgsql':
-      $ret[] = update_sql("ALTER TABLE {node} DROP CONSTRAINT {node}_pkey");
-      $ret[] = update_sql("ALTER TABLE {node} ADD PRIMARY KEY (nid)");
       $ret[] = update_sql("ALTER TABLE {node} ADD CONSTRAINT {node}_nid_vid_key UNIQUE (nid, vid)");
       db_add_column($ret, 'blocks', 'bid', 'serial');
       $ret[] = update_sql("ALTER TABLE {blocks} ADD PRIMARY KEY (bid)");
@@ -3070,8 +3068,6 @@ function system_update_6016() {
       break;
     case 'mysql':
     case 'mysqli':
-      $ret[] = update_sql('ALTER TABLE {node} DROP PRIMARY KEY');
-      $ret[] = update_sql('ALTER TABLE {node} ADD PRIMARY KEY (nid)');
       $ret[] = update_sql('ALTER TABLE {node} ADD UNIQUE KEY nid_vid (nid, vid)');
       $ret[] = update_sql("ALTER TABLE {blocks} ADD bid int NOT NULL AUTO_INCREMENT PRIMARY KEY");
       $ret[] = update_sql("ALTER TABLE {filters} ADD fid int NOT NULL AUTO_INCREMENT PRIMARY KEY");
@@ -3198,12 +3194,14 @@ function system_update_6019() {
         db_drop_primary_key($ret, 'term_node');
         db_add_primary_key($ret, 'term_node', array('vid', 'tid', 'nid'));
       }
+      
+      // Make boxes.bid unsigned.
+      db_drop_primary_key($ret, 'boxes');
+      db_change_field($ret, 'boxes', 'bid', 'bid', array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE), array('primary key' => array('bid')));
 
-      // Remove defaults on batch columns.
-      if (db_table_exists('batch')) {
-        db_field_set_no_default($ret, 'batch', 'token');
-        db_field_set_no_default($ret, 'batch', 'timestamp');
-      }
+      // Fix primary key
+      db_drop_primary_key($ret, 'node');
+      db_add_primary_key($ret, 'node', array('nid'));
 
       break;
 
@@ -3235,20 +3233,20 @@ function system_update_6019() {
       db_change_field($ret, 'cache_form', 'serialized', 'serialized', array('type' => 'int', 'size' => 'small', 'not null' => TRUE, 'default' => 0));
 
       // Remove default => 0, set auto increment.
-      db_change_field($ret, 'files', 'fid', 'fid', array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE));
+      $new_uid = 1 + db_result(db_query('SELECT MAX(uid) FROM {users}'));
+      $ret[] = update_sql('UPDATE users SET uid = '. $new_uid . ' WHERE uid = 0');
+      db_drop_primary_key($ret, 'users');
+      db_change_field($ret, 'users', 'uid', 'uid', array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE), array('primary key' => array('uid')));
+      $ret[] = update_sql('UPDATE users SET uid = 0 WHERE uid = '. $new_uid);
 
-      // Remove default => 0, set auto increment.
-      $ret[] = update_sql("SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO'");
-      db_change_field($ret, 'users', 'uid', 'uid', array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE));
-
-      // Set auto increment.
-      db_change_field($ret, 'node_revisions', 'vid', 'vid', array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE));
-
-      // Set auto increment.
-      db_change_field($ret, 'boxes', 'bid', 'bid', array('type' => 'serial', 'not null' => TRUE));
-
-      // Set auto increment, unsigned.
-      db_change_field($ret, 'batch', 'bid', 'bid', array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE));
+      // Special field names.
+      $map = array('node_revisions' => 'vid');
+      // Make sure these tables have proper auto_increment fields.
+      foreach (array('boxes', 'files', 'node', 'node_revisions') as $table) {
+        $field = isset($map[$table]) ? $map[$table] : $table[0] .'id';
+        db_drop_primary_key($ret, $table);
+        db_change_field($ret, $table, $field, $field, array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE), array('primary key' => array($field)));
+      }
 
       break;
   }

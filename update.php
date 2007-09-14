@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.232 2007/09/02 15:19:16 goba Exp $
+// $Id: update.php,v 1.233 2007/09/14 17:46:31 goba Exp $
 
 /**
  * @file
@@ -677,30 +677,19 @@ function update_create_batch_table() {
     return;
   }
 
+  $schema['batch'] = array(
+    'fields' => array(
+      'bid'       => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
+      'token'     => array('type' => 'varchar', 'length' => 64, 'not null' => TRUE),
+      'timestamp' => array('type' => 'int', 'not null' => TRUE),
+      'batch'     => array('type' => 'text', 'not null' => FALSE, 'size' => 'big')
+    ),
+    'primary key' => array('bid'),
+    'indexes' => array('token' => array('token')),
+  );
+
   $ret = array();
-  switch ($GLOBALS['db_type']) {
-    case 'mysql':
-    case 'mysqli':
-      $ret[] = update_sql("CREATE TABLE {batch} (
-        bid int(11) NOT NULL,
-        token varchar(64) NOT NULL,
-        timestamp int(11) NOT NULL,
-        batch longtext,
-        PRIMARY KEY  (bid),
-        KEY token (token)
-      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
-      break;
-    case 'pgsql':
-      $ret[] = update_sql("CREATE TABLE {batch} (
-        bid serial CHECK (bid >= 0),
-        token varchar(64) NOT NULL default '',
-        timestamp int NOT NULL default '0',
-        batch text,
-        PRIMARY KEY (bid)
-      )");
-      $ret[] = update_sql("CREATE INDEX {batch}_token_idx ON {batch} (token)");
-     break;
-  }
+  db_create_table($ret, 'batch', $schema['batch']);
   return $ret;
 }
 

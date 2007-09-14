@@ -1,5 +1,5 @@
 <?php
-// $Id: database.pgsql.inc,v 1.59 2007/09/07 10:42:56 goba Exp $
+// $Id: database.pgsql.inc,v 1.60 2007/09/14 17:46:32 goba Exp $
 
 /**
  * @file
@@ -559,6 +559,22 @@ function _db_create_key_sql($fields) {
   return implode(', ', $ret);
 }
 
+function _db_create_keys(&$ret, $table, $new_keys) {
+  if (isset($new_keys['primary key'])) {
+    db_add_primary_key($ret, $table, $new_keys['primary key']);
+  }
+  if (isset($new_keys['unique keys'])) {
+    foreach ($new_keys['unique keys'] as $name => $fields) {
+      db_add_unique_key($ret, $table, $name, $fields);
+    }
+  }
+  if (isset($new_keys['indexes'])) {
+    foreach ($new_keys['indexes'] as $name => $fields) {
+      db_add_index($ret, $table, $name, $fields);
+    }
+  }
+}
+
 /**
  * Set database-engine specific properties for a field.
  *
@@ -665,8 +681,15 @@ function db_drop_table(&$ret, $table) {
  *   created field will be set to the value of the key in all rows.
  *   This is most useful for creating NOT NULL columns with no default
  *   value in existing tables.
+ * @param $keys_new
+ *   Optional keys and indexes specification to be created on the
+ *   table along with adding the field. The format is the same as a
+ *   table specification but without the 'fields' element.  If you are
+ *   adding a type 'serial' field, you MUST specify at least one key
+ *   or index including it in this array. @see db_change_field for more
+ *   explanation why.
  */
-function db_add_field(&$ret, $table, $field, $spec) {
+function db_add_field(&$ret, $table, $field, $spec, $new_keys = array()) {
   $fixnull = FALSE;
   if (!empty($spec['not null']) && !isset($spec['default'])) {
     $fixnull = TRUE;
@@ -683,6 +706,9 @@ function db_add_field(&$ret, $table, $field, $spec) {
   }
   if ($fixnull) {
     $ret[] = update_sql("ALTER TABLE {". $table ."} ALTER $field SET NOT NULL");
+  }
+  if (isset($new_keys)) {
+    _db_create_keys($ret, $table, $new_keys);
   }
 }
 
@@ -831,14 +857,49 @@ function db_drop_index(&$ret, $table, $name) {
 /**
  * Change a field definition.
  *
- * IMPORTANT NOTE: On some database systems (notably PostgreSQL),
- * changing a field definition involves adding a new field and
- * dropping an old one. This means that any indices, primary keys and
- * sequences (from serial-type fields) that use the field to be
- * changed get dropped.  For database portability, you MUST drop them
- * explicitly before calling db_change_field() and then re-create them
- * afterwards.  Use db_{add,drop}_{primary_key,unique_key,index} for
- * this purpose.
+ * IMPORTANT NOTE: To maintain database portability, you have to explicitly
+ * recreate all indices and primary keys that are using the changed field.
+ *
+ * That means that you have to drop all affected keys and indexes with
+ * db_drop_{primary_key,unique_key,index}() before calling db_change_field().
+ * To recreate the keys and indices, pass the key definitions as the
+ * optional $new_keys argument directly to db_change_field().
+ *
+ * For example, suppose you have:
+ * @code
+ * $schema['foo'] = array(
+ *   'fields' => array(
+ *     'bar' => array('type' => 'int', 'not null' => TRUE)
+ *   ),
+ *   'primary key' => array('bar')
+ * );
+ * @endcode
+ * and you want to change foo.bar to be type serial, leaving it as the
+ * primary key.  The correct sequence is:
+ * @code
+ * db_drop_primary_key($ret, 'foo');
+ * db_change_field($ret, 'foo', 'bar', 'bar',
+ *   array('type' => 'serial', 'not null' => TRUE),
+ *   array('primary key' => array('bar')));
+ * @endcode
+ *
+ * The reasons for this are due to the different database engines:
+ *
+ * On PostgreSQL, changing a field definition involves adding a new field
+ * and dropping an old one which* causes any indices, primary keys and
+ * sequences (from serial-type fields) that use the changed field to be dropped.
+ *
+ * On MySQL, all type 'serial' fields must be part of at least one key
+ * or index as soon as they are created.  You cannot use
+ * db_add_{primary_key,unique_key,index}() for this purpose because
+ * the ALTER TABLE command will fail to add the column without a key
+ * or index specification.  The solution is to use the optional
+ * $new_keys argument to create the key or index at the same time as
+ * field.
+ *
+ * You could use db_add_{primary_key,unique_key,index}() in all cases
+ * unless you are converting a field to be type serial. You can use
+ * the $new_keys argument in all cases.
  *
  * @param $ret
  *   Array to which query results will be added.
@@ -850,17 +911,29 @@ function db_drop_index(&$ret, $table, $name) {
  *   New name for the field (set to the same as $field if you don't want to change the name).
  * @param $spec
  *   The field specification for the new field.
+ * @param $new_keys
+ *   Optional keys and indexes specification to be created on the
+ *   table along with changing the field. The format is the same as a
+ *   table specification but without the 'fields' element.
  */
-function db_change_field(&$ret, $table, $field, $field_new, $spec) {
+function db_change_field(&$ret, $table, $field, $field_new, $spec, $new_keys = array()) {
   $ret[] = update_sql("ALTER TABLE {". $table ."} RENAME $field TO ". $field ."_old");
   $not_null = isset($spec['not null']) ? $spec['not null'] : FALSE;
   unset($spec['not null']);
+
   db_add_field($ret, $table, "$field_new", $spec);
+
   $ret[] = update_sql("UPDATE {". $table ."} SET $field_new = ". $field ."_old");
+
   if ($not_null) {
     $ret[] = update_sql("ALTER TABLE {". $table ."} ALTER $field_new SET NOT NULL");
   }
+
   db_drop_field($ret, $table, $field .'_old');
+
+  if (isset($new_keys)) {
+    _db_create_keys($ret, $table, $new_keys);
+  }
 }
 
 /**

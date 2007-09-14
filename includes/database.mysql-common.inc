@@ -1,14 +1,9 @@
 <?php
-// $Id: database.mysql-common.inc,v 1.11 2007/09/07 10:42:56 goba Exp $
+// $Id: database.mysql-common.inc,v 1.12 2007/09/14 17:46:32 goba Exp $
 
 /**
  * @file
  * Functions shared between mysql and mysqli database engines.
- */
-
-/**
- * @ingroup schemaapi
- * @{
  */
 
 /**
@@ -48,6 +43,11 @@ function db_query($query) {
 }
 
 /**
+ * @ingroup schemaapi
+ * @{
+ */
+
+/**
  * Generate SQL to create a new table from a Drupal schema definition.
  *
  * @param $name
@@ -71,16 +71,9 @@ function db_create_table_sql($name, $table) {
   }
 
   // Process keys & indexes.
-  if (!empty($table['primary key'])) {
-    $sql .= " PRIMARY KEY (". _db_create_key_sql($table['primary key']) ."), \n";
-  }
-  if (!empty($table['unique keys'])) {
-    foreach ($table['unique keys'] as $key => $fields)
-      $sql .= " UNIQUE KEY $key (". _db_create_key_sql($fields) ."), \n";
-  }
-  if (!empty($table['indexes'])) {
-    foreach ($table['indexes'] as $index => $fields)
-      $sql .= " INDEX $index (". _db_create_key_sql($fields) ."), \n";
+  $keys = _db_create_keys_sql($table);
+  if (count($keys)) {
+    $sql .= implode(", \n", $keys) .", \n";
   }
 
   // Remove the last comma and space.
@@ -89,6 +82,26 @@ function db_create_table_sql($name, $table) {
   $sql .= $table['mysql_suffix'];
 
   return array($sql);
+}
+
+function _db_create_keys_sql($spec) {
+  $keys = array();
+
+  if (!empty($spec['primary key'])) {
+    $keys[] = 'PRIMARY KEY ('. _db_create_key_sql($spec['primary key']) .')';
+  }
+  if (!empty($spec['unique keys'])) {
+    foreach ($spec['unique keys'] as $key => $fields) {
+      $keys[] = 'UNIQUE KEY '. $key .' ('. _db_create_key_sql($fields) .')';
+    }
+  }
+  if (!empty($spec['indexes'])) {
+    foreach ($spec['indexes'] as $index => $fields) {
+      $keys[] = 'INDEX '. $index .' ('. _db_create_key_sql($fields) .')';
+    }
+  }
+
+  return $keys;
 }
 
 function _db_create_key_sql($fields) {
@@ -262,8 +275,15 @@ function db_drop_table(&$ret, $table) {
  *   created field will be set to the value of the key in all rows.
  *   This is most useful for creating NOT NULL columns with no default
  *   value in existing tables.
+ * @param $keys_new
+ *   Optional keys and indexes specification to be created on the
+ *   table along with adding the field. The format is the same as a
+ *   table specification but without the 'fields' element.  If you are
+ *   adding a type 'serial' field, you MUST specify at least one key
+ *   or index including it in this array. @see db_change_field for more
+ *   explanation why.
  */
-function db_add_field(&$ret, $table, $field, $spec) {
+function db_add_field(&$ret, $table, $field, $spec, $keys_new = array()) {
   $fixnull = FALSE;
   if (!empty($spec['not null']) && !isset($spec['default'])) {
     $fixnull = TRUE;
@@ -271,6 +291,9 @@ function db_add_field(&$ret, $table, $field, $spec) {
   }
   $query = 'ALTER TABLE {'. $table .'} ADD ';
   $query .= _db_create_field_sql($field, _db_process_field($spec));
+  if (count($keys_new)) {
+    $query .= ', ADD '. implode(', ADD ', _db_create_keys_sql($keys_new));
+  }
   $ret[] = update_sql($query);
   if (isset($spec['initial'])) {
     // All this because update_sql does not support %-placeholders.
@@ -427,14 +450,49 @@ function db_drop_index(&$ret, $table, $name) {
 /**
  * Change a field definition.
  *
- * IMPORTANT NOTE: On some database systems (notably PostgreSQL),
- * changing a field definition involves adding a new field and
- * dropping an old one. This means that any indices, primary keys and
- * sequences (from serial-type fields) that use the field to be
- * changed get dropped.  For database portability, you MUST drop them
- * explicitly before calling db_change_field() and then re-create them
- * afterwards.  Use db_{add,drop}_{primary_key,unique_key,index} for
- * this purpose.
+ * IMPORTANT NOTE: To maintain database portability, you have to explicitly
+ * recreate all indices and primary keys that are using the changed field.
+ *
+ * That means that you have to drop all affected keys and indexes with
+ * db_drop_{primary_key,unique_key,index}() before calling db_change_field().
+ * To recreate the keys and indices, pass the key definitions as the
+ * optional $keys_new argument directly to db_change_field().
+ *
+ * For example, suppose you have:
+ * @code
+ * $schema['foo'] = array(
+ *   'fields' => array(
+ *     'bar' => array('type' => 'int', 'not null' => TRUE)
+ *   ),
+ *   'primary key' => array('bar')
+ * );
+ * @endcode
+ * and you want to change foo.bar to be type serial, leaving it as the
+ * primary key.  The correct sequence is:
+ * @code
+ * db_drop_primary_key($ret, 'foo');
+ * db_change_field($ret, 'foo', 'bar', 'bar',
+ *   array('type' => 'serial', 'not null' => TRUE),
+ *   array('primary key' => array('bar')));
+ * @endcode
+ *
+ * The reasons for this are due to the different database engines:
+ *
+ * On PostgreSQL, changing a field definition involves adding a new field
+ * and dropping an old one which* causes any indices, primary keys and
+ * sequences (from serial-type fields) that use the changed field to be dropped.
+ *
+ * On MySQL, all type 'serial' fields must be part of at least one key
+ * or index as soon as they are created.  You cannot use
+ * db_add_{primary_key,unique_key,index}() for this purpose because
+ * the ALTER TABLE command will fail to add the column without a key
+ * or index specification.  The solution is to use the optional
+ * $keys_new argument to create the key or index at the same time as
+ * field.
+ *
+ * You could use db_add_{primary_key,unique_key,index}() in all cases
+ * unless you are converting a field to be type serial. You can use
+ * the $keys_new argument in all cases.
  *
  * @param $ret
  *   Array to which query results will be added.
@@ -446,10 +504,19 @@ function db_drop_index(&$ret, $table, $name) {
  *   New name for the field (set to the same as $field if you don't want to change the name).
  * @param $spec
  *   The field specification for the new field.
+ * @param $keys_new
+ *   Optional keys and indexes specification to be created on the
+ *   table along with changing the field. The format is the same as a
+ *   table specification but without the 'fields' element.
  */
-function db_change_field(&$ret, $table, $field, $field_new, $spec) {
-  $ret[] = update_sql("ALTER TABLE {". $table ."} CHANGE $field ".
-    _db_create_field_sql($field_new, _db_process_field($spec)));
+
+function db_change_field(&$ret, $table, $field, $field_new, $spec, $keys_new = array()) {
+  $sql = 'ALTER TABLE {'. $table .'} CHANGE '. $field .' '.
+    _db_create_field_sql($field_new, _db_process_field($spec));
+  if (count($keys_new)) {
+    $sql .= ', ADD '.implode(', ADD ', _db_create_keys_sql($keys_new));
+  }
+  $ret[] = update_sql($sql);
 }
 
 /**
@@ -463,7 +530,3 @@ function db_change_field(&$ret, $table, $field, $field_new, $spec) {
 function db_last_insert_id($table, $field) {
   return db_result(db_query('SELECT LAST_INSERT_ID()'));
 }
-
-/**
- * @} End of "ingroup schemaapi".
- */
