@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.11 2007/09/07 12:45:28 goba Exp $
+// $Id: system.admin.inc,v 1.12 2007/09/14 12:16:55 dries Exp $
 
 /**
  * @file
@@ -526,6 +526,22 @@ function system_theme_settings_submit($form, &$form_state) {
 }
 
 /**
+ * Recursively check compatability
+ */
+function _system_is_incompatible(&$incompatible, $files, $file) {
+  if (isset($incompatible[$file->name])) {
+    return TRUE;
+  }
+  // Recursively traverse the dependencies, looking for incompatible modules
+  foreach ($file->info['dependencies'] as $dependency) {
+    if (isset($files[$dependency]) && _system_is_incompatible($incompatible, $files, $files[$dependency])) {
+      $incompatible[$file->name] = TRUE;
+      return TRUE;
+    }
+  }
+}
+
+/**
  * Menu callback; provides module enable/disable interface.
  *
  * Modules can be enabled or disabled and set for throttling if the throttle module is enabled.
@@ -557,27 +573,31 @@ function system_modules($form_state = array()) {
   // Create storage for disabled modules as browser will disable checkboxes.
   $form['disabled_modules'] = array('#type' => 'value', '#value' => array());
 
+  // Traverse the files, checking for compatibility
+  $incompatible_core = array();
+  $incompatible_php = array();
+  foreach ($files as $filename => $file) {
+    // Ensure this module is compatible with this version of core.
+    if (!isset($file->info['core']) || $file->info['core'] != DRUPAL_CORE_COMPATIBILITY) {
+      $incompatible_core[$file->name] = $file->name;
+    }
+    // Ensure this module is compatible with the currently installed version of PHP.
+    if (version_compare(phpversion(), $file->info['php']) < 0) {
+      $incompatible_php[$file->name] = $file->info['php'];
+    }
+  }
+
   // Array for disabling checkboxes in callback system_module_disable.
   $disabled = array();
   $throttle = array();
-  $incompatible_core = array();
-  $incompatible_php = array();
   // Traverse the files retrieved and build the form.
   foreach ($files as $filename => $file) {
     $form['name'][$filename] = array('#value' => $file->info['name']);
     $form['version'][$filename] = array('#value' => $file->info['version']);
     $form['description'][$filename] = array('#value' => t($file->info['description']));
     $options[$filename] = '';
-    // Ensure this module is compatible with this version of core.
-    if (!isset($file->info['core']) || $file->info['core'] != DRUPAL_CORE_COMPATIBILITY) {
-      $incompatible_core[] = $file->name;
-      $disabled[] = $file->name;
-      // Nothing else in this loop matters, so move to the next module.
-      continue;
-    }
-    // Ensure this module is compatible with the currently installed version of PHP.
-    if (version_compare(phpversion(), $file->info['php']) < 0) {
-      $incompatible_php[$file->name] = $file->info['php'];
+    // Ensure this module is compatible with this version of core and php.
+    if (_system_is_incompatible($incompatible_core, $files, $file) || _system_is_incompatible($incompatible_php, $files, $file)) {
       $disabled[] = $file->name;
       // Nothing else in this loop matters, so move to the next module.
       continue;
@@ -659,7 +679,7 @@ function system_modules($form_state = array()) {
       'system_modules_disable',
     ),
     '#disabled_modules' => $disabled,
-    '#incompatible_modules_core' => drupal_map_assoc($incompatible_core),
+    '#incompatible_modules_core' => $incompatible_core,
     '#incompatible_modules_php' => $incompatible_php,
   );
 
