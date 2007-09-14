@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.685 2007/09/12 18:29:31 goba Exp $
+// $Id: common.inc,v 1.686 2007/09/14 20:08:59 goba Exp $
 
 /**
  * @file
@@ -543,7 +543,7 @@ function drupal_error_handler($errno, $message, $filename, $line, $context) {
     return;
   }
 
-  if ($errno & (E_ALL)) {
+  if ($errno & (E_ALL ^ E_NOTICE)) {
     $types = array(1 => 'error', 2 => 'warning', 4 => 'parse error', 8 => 'notice', 16 => 'core error', 32 => 'core warning', 64 => 'compile error', 128 => 'compile warning', 256 => 'user error', 512 => 'user warning', 1024 => 'user notice', 2048 => 'strict warning');
 
     // For database errors, we want the line number/file name of the place that
