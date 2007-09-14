@@ -315,8 +315,10 @@ function drupal_process_form($form_id, &$form, &$form_state) {
       }
 
       // If batches were set in the submit handlers, we process them now,
-      // possibly ending execution.
-      if ($batch =& batch_get()) {
+      // possibly ending execution. We make sure we do not react to the batch
+      // that is already being processed (if a batch operation performs a
+      // drupal_execute).
+      if ($batch =& batch_get() && !isset($batch['current_set'])) {
         // The batch uses its own copies of $form and $form_state for
         // late execution of submit handers and post-batch redirection.
         $batch['form'] = $form;
