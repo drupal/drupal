@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.79 2007/09/04 21:10:45 dries Exp $
+// $Id: database.inc,v 1.80 2007/09/14 10:43:26 goba Exp $
 
 /**
  * @file
@@ -326,13 +326,22 @@ function db_escape_table($string) {
  * hook_schema() should return an array with a key for each table that
  * the module defines.
  *
- * The following keys in the table definition are processed during
- * table creation:
+ * The following keys are defined:
  *
+ *   - 'description': A string describing this table and its purpose.
+ *     References to other tables should be enclosed in
+ *     curly-brackets.  For example, the node_revisions table
+ *     description field might contain "Stores per-revision title and
+ *     body data for each {node}."
  *   - 'fields': An associative array ('fieldname' => specification)
  *     that describes the table's database columns.  The specification
  *     is also an array.  The following specification parameters are defined:
  *
+ *     - 'description': A string describing this field and its purpose.
+ *       References to other tables should be enclosed in
+ *       curly-brackets.  For example, the node table vid field
+ *       description might contain "Always holds the largest (most
+ *       recent) {node_revisions}.vid value for this nid."
  *     - 'type': The generic datatype: 'varchar', 'int', 'serial'
  *       'float', 'numeric', 'text', 'blob' or 'datetime'.  Most types
  *       just map to the according database engine specific
