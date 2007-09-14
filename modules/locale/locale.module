@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.191 2007/09/05 08:42:01 dries Exp $
+// $Id: locale.module,v 1.192 2007/09/14 18:05:33 goba Exp $
 
 /**
  * @file
@@ -46,7 +46,7 @@ function locale_help($path, $arg) {
       return '<p>'. t('The language used to display a web page is determined with a negotiation algorithm. You can choose how this algorithm should work. By default, there is no negotiation and the default language is used. You can use path prefixes (like "de" and "it" for German and Italian content) with different fallback options, so you can have web addresses like /de/contact and /it/contact. Alternatively you can use custom domains like de.example.com and it.example.com. Customize path prefixes and set domain names on the <a href="@languages">language editing pages</a>.', array('@languages' => url('admin/settings/language'))) .'</p>';
 
     case 'admin/build/translate':
-      return '<p>'. t("This page provides an overview of interface translation on the site. Drupal groups all translatable strings in so called 'text groups'. Text groups are useful, because you can focus your translation efforts on the groups of text you care most about.  For example, a translation team could choose not to fully translate the text group that includes all the long help texts on the administration pages. Similarly, text groups are useful to ensure that certain aspects of the site are always fully translated.") .'</p>';
+      return '<p>'. t("This page provides an overview of interface translation on the site. Drupal groups all translatable strings in so called 'text groups'. Modules may provide more text groups additionaly to the 'built-in interface' default, to separate strings used for other purposes, allowing you to focus your translation efforts on the groups of text you care most about. For example, a translation team could choose not to fully translate a text group that includes less important data, being still able to ensure that built-in interface is always fully translated.") .'</p>';
     case 'admin/build/translate/import':
       return '<p>'. t("This page allows you to import a translation provided in the gettext Portable Object (.po) format. The easiest way to get your site translated is to obtain an existing Drupal translation and to import it. You can find existing translations on the <a href=\"@url\">Drupal translation page</a>. Note that importing a translation file might take a while.", array('@url' => 'http://drupal.org/project/translations')) .'</p>';
     case 'admin/build/translate/export':
