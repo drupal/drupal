@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.185 2007/09/11 17:23:58 goba Exp $
+// $Id: filter.module,v 1.186 2007/09/14 11:48:41 dries Exp $
 
 /**
  * @file
@@ -968,7 +968,7 @@ function filter_filter($op, $delta = 0, $format = -1, $text = '') {
     case 'description':
       switch ($delta) {
         case 0:
-          return t('Allows you to restrict if users can post HTML and which tags to filter out.');
+          return t('Allows you to restrict whether users can post HTML and which tags to filter out. It will also remove harmful content such as JavaScript events, JavaScript URLs and CSS styles from those tags that are not removed.');
         case 1:
           return t('Converts line breaks into HTML (i.e. &lt;br&gt; and &lt;p&gt; tags).');
         case 2:
