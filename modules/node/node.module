@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.881 2007/09/11 14:50:04 goba Exp $
+// $Id: node.module,v 1.882 2007/09/14 09:37:29 goba Exp $
 
 /**
  * @file
@@ -1246,7 +1246,9 @@ function node_link($type, $node = NULL, $teaser = FALSE) {
       $links['node_read_more'] = array(
         'title' => t('Read more'),
         'href' => "node/$node->nid",
-        'attributes' => array('title' => t('Read the rest of this posting.'))
+        // The title attribute gets escaped when the links are processed, so
+        // there is no need to escape here.
+        'attributes' => array('title' => t('Read the rest of !title.', array('!title' => $node->title)))
       );
     }
   }
