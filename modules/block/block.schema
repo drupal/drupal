@@ -36,7 +36,7 @@ function block_schema() {
 
   $schema['boxes'] = array(
     'fields' => array(
-      'bid'    => array('type' => 'serial', 'not null' => TRUE),
+      'bid'    => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
       'body'   => array('type' => 'text', 'not null' => FALSE, 'size' => 'big'),
       'info'   => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
       'format' => array('type' => 'int', 'size' => 'small', 'not null' => TRUE, 'default' => 0)
