@@ -1,20 +1,27 @@
-// $Id: CHANGELOG.txt,v 1.221 2007/09/12 11:23:51 goba Exp $
+// $Id: CHANGELOG.txt,v 1.222 2007/09/14 09:16:02 goba Exp $
 
 Drupal 6.0, xxxx-xx-xx (development version)
 ----------------------
 - New, faster and better menu system.
 - New watchdog as a hook functionality.
-   * New hook_watchdog that can be implemented by any module to route log messages to various destinations.
-   * Expands the severity levels from 3 (Error, Warning, Notice) to the 8 levels defined in RFC 3164.
-   * The watchdog module is now called dblog, and is optional, but enabled by default in the default install profile.
+   * New hook_watchdog that can be implemented by any module to route log
+     messages to various destinations.
+   * Expands the severity levels from 3 (Error, Warning, Notice) to the 8
+     levels defined in RFC 3164.
+   * The watchdog module is now called dblog, and is optional, but enabled by
+     default in the default install profile.
    * Extended the database log module so log messages can be filtered.
    * Added syslog module: useful for monitoring large Drupal installations.
-- Added optional e-mail notifications when users are approved, blocked, or deleted.
-- Added versioning support to node terms.
+- Added optional e-mail notifications when users are approved, blocked, or 
+  deleted.
+- Added versioning support to categories by associating them with node
+  revisions.
 - Drupal works with error reporting set to E_ALL.
-- Added scripts/drupal.sh to execute Drupal code from the command line. Useful to use Drupal as a framework to build command-line tools.
+- Added scripts/drupal.sh to execute Drupal code from the command line. Useful
+  to use Drupal as a framework to build command-line tools.
 - Made signature support optional and made it possible to theme signatures.
-- Made it possible to filter the URL aliases on the URL alias administration screen.
+- Made it possible to filter the URL aliases on the URL alias administration
+  screen.
 - Language system improvements:
     * Support for right to left languages.
     * Language detection based on parts of the URL.
@@ -26,23 +33,31 @@ Drupal 6.0, xxxx-xx-xx (development version)
     * Automatically import translations when adding a new language.
     * JavaScript interface translation.
     * Automatically import a module's translation upon enabling that module.
-- Moved "PHP input filter" to a stand-alone module so it can be deleted for security reasons.
+- Moved "PHP input filter" to a stand-alone module so it can be deleted for
+  security reasons.
 - Usability:
     * Improved handling of teasers in posts.
     * Added sticky table headers.
     * Check for clean URL support automatically with JavaScript.
-    * Removed default/settings.php. Instead the installer will create it from default.settings.php.
+    * Removed default/settings.php. Instead the installer will create it from
+      default.settings.php.
     * Made it possible to configure your own date formats.
     * Remember anonymous comment posters.
-    * Only allow modules and themes to be enabled that have explicitly been ported to the right core API version.
+    * Only allow modules and themes to be enabled that have explicitly been
+      ported to the right core API version.
+    * Can now specify the minimum PHP version required for a module within the
+      .info file.
     * Dynamically check password strength and confirmation.
 - Theme system:
-    * Added .info files to themes and made it easier to specify regions and features.
-    * Added theme registry: modules can directly provide .tpl.php files for their themes without having to create theme_ functions.
+    * Added .info files to themes and made it easier to specify regions and
+      features.
+    * Added theme registry: modules can directly provide .tpl.php files for
+      their themes without having to create theme_ functions.
     * Used the Garland theme for the installation and maintenance pages.
     * Added theme preprocess functions for themes that are templates.
     * Added support for themeable functions in JavaScript.
-- Refactored update.php to a generic batch API to be able to run time consuming operations in multiple subsequent HTTP requests.
+- Refactored update.php to a generic batch API to be able to run time consuming
+  operations in multiple subsequent HTTP requests.
 - Installer:
     * Themed the installer with the Garland theme.
     * Added form to provide initial site information during installation.
@@ -52,19 +67,27 @@ Drupal 6.0, xxxx-xx-xx (development version)
     * Fixes faulty and chopped off HTML in postings.
     * Tags are now automatically closed at the end of the teaser.
 - Performance:
-    * Made it easier to conditionally load include files and split up many core modules.
+    * Made it easier to conditionally load include files and split up many core
+      modules.
     * Added a JavaScript aggregator and compressor.
-    * Added block-level caching, improving performance for both authenticated and anonymous users.
-    * Made Drupal work correctly when running behind a reverse proxy like Squid or Pound.
+    * Added block-level caching, improving performance for both authenticated
+      and anonymous users.
+    * Made Drupal work correctly when running behind a reverse proxy like
+      Squid or Pound.
 - File handling improvements:
     * Entries in the files table are now keyed to a user, and not a node.
-    * Added re-usable validation functions to check for uploaded file sizes, extensions, and image resolution.
+    * Added re-usable validation functions to check for uploaded file sizes,
+      extensions, and image resolution.
+    * Added ability to create and remove temporary files during a cron job.
 - Forum improvements:
     * Any node type may be posted in a forum.
 - Added support for OpenID.
-- Added support for configurable actions.
-- Made user profiles easier to theme by using array rendering and supplying template files.
-- Added the Update status module to automatically check for available updates and warn sites if they are missing security updates or newer versions.
+- Added support for triggering configurable actions.
+- Added the Update status module to automatically check for available updates
+  and warn sites if they are missing security updates or newer versions.
+- Upgraded the core JavaScript library to jQuery version 1.2.
+- Added a new Schema API, which provides built-in support for core and
+  contributed modules to work with databases other than MySQL.
 
 Drupal 5.0, 2007-01-15
 ----------------------
