@@ -1,6 +1,6 @@
 // $Id$
 
-Drupal 6.0 beta 1, 2007-09-14
+Drupal 6.0, xxxx-xx-xx (development version)
 ----------------------
 - New, faster and better menu system.
 - New watchdog as a hook functionality.
