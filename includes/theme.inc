@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.383 2007/09/17 08:06:52 goba Exp $
+// $Id: theme.inc,v 1.384 2007/09/17 11:11:57 goba Exp $
 
 /**
  * @file
@@ -1748,17 +1748,14 @@ function template_preprocess_page(&$variables) {
     $body_classes[] = 'node-type-'. form_clean_id($variables['node']->type);
   }
   // Add information about the number of sidebars.
-  if ($variables['left'] && $variables['right']) {
+  if ($variables['layout'] == 'both') {
     $body_classes[] = 'two-sidebars';
   }
-  elseif ($variables['left']) {
-    $body_classes[] = 'one-sidebar sidebar-left';
-  }
-  elseif ($variables['right']) {
-    $body_classes[] = 'one-sidebar sidebar-right';
+  elseif ($variables['layout'] == 'none') {
+    $body_classes[] = 'no-sidebars';
   }
   else {
-    $body_classes[] = 'no-sidebars';
+    $body_classes[] = 'one-sidebar sidebar-'. $variables['layout'];
   }
   // Implode with spaces.
   $variables['body_classes'] = implode(' ', $body_classes);
