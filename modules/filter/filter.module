@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.187 2007/09/14 12:17:58 dries Exp $
+// $Id: filter.module,v 1.188 2007/09/17 09:16:48 goba Exp $
 
 /**
  * @file
@@ -87,10 +87,10 @@ function filter_menu() {
   );
   $items['admin/settings/filters/add'] = array(
     'title' => 'Add input format',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('filter_admin_format_form'),
+    'page callback' => 'filter_admin_format_page',
     'type' => MENU_LOCAL_TASK,
     'weight' => 1,
+    'file' => 'filter.admin.inc',
   );
   $items['admin/settings/filters/delete'] = array(
     'title' => 'Delete input format',
@@ -108,28 +108,30 @@ function filter_menu() {
   );
   $items['admin/settings/filters/%filter_format'] = array(
     'type' => MENU_CALLBACK,
-    'page arguments' => array('filter_admin_format_form', 3),
+    'page callback' => 'filter_admin_format_page',
+    'page arguments' => array(3),
     'access arguments' => array('administer filters'),
     'file' => 'filter.admin.inc',
   );
 
-  $items['admin/settings/filters/%filter_format/list'] = array(
-    'title' => 'View',
-    'page arguments' => array('filter_admin_format_form', 3),
+  $items['admin/settings/filters/%filter_format/edit'] = array(
+    'title' => 'Edit',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => 0,
     'file' => 'filter.admin.inc',
   );
   $items['admin/settings/filters/%filter_format/configure'] = array(
     'title' => 'Configure',
-    'page arguments' => array('filter_admin_configure', 3),
+    'page callback' => 'filter_admin_configure_page',
+    'page arguments' => array(3),
     'type' => MENU_LOCAL_TASK,
     'weight' => 1,
     'file' => 'filter.admin.inc',
   );
   $items['admin/settings/filters/%filter_format/order'] = array(
     'title' => 'Rearrange',
-    'page arguments' => array('filter_admin_order', 3),
+    'page callback' => 'filter_admin_order_page',
+    'page arguments' => array(3),
     'type' => MENU_LOCAL_TASK,
     'weight' => 2,
     'file' => 'filter.admin.inc',

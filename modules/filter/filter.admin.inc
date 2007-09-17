@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.admin.inc,v 1.1 2007/09/14 12:17:58 dries Exp $
+// $Id: filter.admin.inc,v 1.2 2007/09/17 09:16:48 goba Exp $
 
 /**
  * @file
@@ -74,13 +74,27 @@ function theme_filter_admin_overview($form) {
 }
 
 /**
+ * Display a filter format form.
+ */
+function filter_admin_format_page($format = NULL) {
+  if (!isset($format->name)) {
+    drupal_set_title(t("Add input format"));
+    $format = (object)array('name' => '', 'roles' => '', 'format' => '');
+  }
+  else {
+    drupal_set_title(t("%format input format", array('%format' => $format->name)));
+  }
+  return drupal_get_form('filter_admin_format_form', $format);
+}
+
+/**
  * Generate a filter format form.
  *
  * @ingroup forms
  * @see filter_admin_format_form_validate().
  * @see filter_admin_format_form_submit().
  */
-function filter_admin_format_form(&$form_state, $format = NULL) {
+function filter_admin_format_form(&$form_state, $format) {
   $default = ($format->format == variable_get('filter_default_format', 1));
   if ($default) {
     $help = t('All roles for the default format must be enabled and cannot be changed.');
@@ -127,7 +141,7 @@ function filter_admin_format_form(&$form_state, $format = NULL) {
       '#description' => module_invoke($filter->module, 'filter', 'description', $filter->delta),
     );
   }
-  if (isset($format)) {
+  if (!empty($format->format)) {
     $form['format'] = array('#type' => 'hidden', '#value' => $format->format);
 
     // Composition tips (guidelines)
@@ -140,7 +154,6 @@ function filter_admin_format_form(&$form_state, $format = NULL) {
     $group = '<p>'. t('These are the guidelines that users will see for posting in this input format. They are automatically generated from the filter settings.') .'</p>';
     $group .= $tiplist;
     $form['tips'] = array('#value' => '<h2>'. t('Formatting guidelines') .'</h2>'. $group);
-    drupal_set_title(t("!format input format", array('!format' => $format->name)));
   }
   $form['submit'] = array('#type' => 'submit', '#value' => t('Save configuration'));
 
@@ -271,8 +284,17 @@ function filter_admin_delete_submit($form, &$form_state) {
   return;
 }
 
+
 /**
- * Menu callback; display settings defined by filters.
+ * Menu callback; display settings defined by a format's filters.
+ */
+function filter_admin_configure_page($format) {
+  drupal_set_title(t("Configure %format", array('%format' => $format->name)));
+  return drupal_get_form('filter_admin_configure', $format);
+}
+
+/**
+ * Build a form to change the settings for a format's filters.
  *
  * @ingroup forms
  */
@@ -298,6 +320,14 @@ function filter_admin_configure(&$form_state, $format) {
 
 /**
  * Menu callback; display form for ordering filters for a format.
+ */
+function filter_admin_order_page($format) {
+  drupal_set_title(t("Rearrange %format", array('%format' => $format->name)));
+  return drupal_get_form('filter_admin_order', $format);
+}
+
+/**
+ * Build the form for ordering filters for a format.
  *
  * @ingroup forms
  * @see theme_filter_admin_order().
