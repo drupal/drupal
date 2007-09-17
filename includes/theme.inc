@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.382 2007/09/10 13:28:22 goba Exp $
+// $Id: theme.inc,v 1.383 2007/09/17 08:06:52 goba Exp $
 
 /**
  * @file
@@ -41,7 +41,7 @@ function init_theme() {
 
   // Only select the user selected theme if it is available in the
   // list of enabled themes.
-  $theme = !empty($user->theme) && $themes[$user->theme]->status ? $user->theme : variable_get('theme_default', 'garland');
+  $theme = !empty($user->theme) && !empty($themes[$user->theme]->status) ? $user->theme : variable_get('theme_default', 'garland');
 
   // Allow modules to override the present theme... only select custom theme
   // if it is available in the list of installed themes.
