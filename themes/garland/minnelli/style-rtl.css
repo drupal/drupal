@@ -1,17 +1,3 @@
-/* $Id: style-rtl.css,v 1.1 2007/09/17 11:39:38 goba Exp $ */
+/* $Id: style-rtl.css,v 1.2 2007/09/17 12:50:32 goba Exp $ */
 
-@import "../style.css";
 @import "../style-rtl.css";
-
-body #wrapper #container {
-  width: 560px;
-}
-
-body.sidebars #wrapper #container {
-  width: 980px;
-}
-
-body.sidebar-left #wrapper #container,
-body.sidebar-right #wrapper #container {
-  width: 770px;
-}
