@@ -1,17 +1,3 @@
 /* $Id$ */
 
-@import "../style.css";
 @import "../style-rtl.css";
-
-body #wrapper #container {
-  width: 560px;
-}
-
-body.sidebars #wrapper #container {
-  width: 980px;
-}
-
-body.sidebar-left #wrapper #container,
-body.sidebar-right #wrapper #container {
-  width: 770px;
-}
