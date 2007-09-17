@@ -527,7 +527,7 @@ function system_admin_theme_submit($form, &$form_state) {
  * @return
  *    a form array
  */
-function system_theme_select_form(&$form_state, $description = '', $default_value = '', $weight = 0) {
+function system_theme_select_form($description = '', $default_value = '', $weight = 0) {
   if (user_access('select different theme')) {
     $enabled = array();
     $themes = list_themes();
