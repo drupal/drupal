@@ -850,10 +850,10 @@ function user_menu() {
   // Registration and login pages.
   $items['user'] = array(
     'title' => 'Log in',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('user_login'),
-    'access callback' => 'user_is_anonymous',
+    'page callback' => 'user_page',
+    'access callback' => TRUE,
     'type' => MENU_CALLBACK,
+    'file' => 'user.pages.inc',
   );
 
   $items['user/login'] = array(
