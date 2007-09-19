@@ -754,10 +754,9 @@ function node_submit($node) {
     else {
       $node->uid = 0;
     }
-
-    $node->created = $node->date ? strtotime($node->date) : NULL;
   }
 
+  $node->created = !empty($node->date) ? strtotime($node->date) : time();
   $node->validated = TRUE;
 
   return $node;
