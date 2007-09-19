@@ -1,5 +1,5 @@
 <?php
-// $Id: chameleon.theme,v 1.68 2007/07/03 18:48:41 dries Exp $
+// $Id: chameleon.theme,v 1.69 2007/09/19 19:20:48 goba Exp $
 
 /**
  * @file
@@ -124,7 +124,7 @@ function chameleon_node($node, $teaser = 0, $page = 0) {
   if ($teaser && $node->teaser) {
     $output .= $node->teaser;
   }
-  else {
+  elseif (isset($node->body)) {
     $output .= $node->body;
   }
 
@@ -140,7 +140,7 @@ function chameleon_node($node, $teaser = 0, $page = 0) {
   }
 
   $links = array_merge($submitted, $terms);
-  if ($node->links) {
+  if (isset($node->links)) {
     $links = array_merge($links, $node->links);
   }
   if (count($links)) {
