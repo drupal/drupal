@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.3 2007/09/13 07:54:27 goba Exp $
+// $Id: taxonomy.admin.inc,v 1.4 2007/09/19 19:02:57 goba Exp $
 
 /**
  * @file
@@ -177,28 +177,42 @@ function taxonomy_overview_terms($vocabulary) {
   $page_increment  = 25; // number of tids per page
   $displayed_count = 0;  // number of tids shown
 
-  $tree = taxonomy_get_tree($vocabulary->vid);
-  foreach ($tree as $term) {
-    $total_entries++; // we're counting all-totals, not displayed
-    if (($start_from && ($start_from * $page_increment) >= $total_entries) || ($displayed_count == $page_increment)) {
-      continue;
+  if ($vocabulary->tags) {
+    // We are not calling taxonomy_get_tree because that might fail with a big
+    // number of tags in the freetagging vocabulary.
+    $results = pager_query(db_rewrite_sql('SELECT t.*, h.parent FROM {term_data} t INNER JOIN  {term_hierarchy} h ON t.tid = h.tid WHERE t.vid = %d ORDER BY weight, name', 't', 'tid'), $page_increment, 0, NULL, $vid);
+    while ($term = db_fetch_object($results)) {
+      $rows[] = array(
+        l($term->name, "taxonomy/term/$term->tid"),
+        l(t('edit'), "admin/content/taxonomy/edit/term/$term->tid", array('query' => $destination)),
+      );
     }
-    $rows[] = array(str_repeat('--', $term->depth) .' '. l($term->name, "taxonomy/term/$term->tid"), l(t('edit'), "admin/content/taxonomy/edit/term/$term->tid", array('query' => $destination)));
-    $displayed_count++; // we're counting tids displayed
+  }
+  else {
+    $tree = taxonomy_get_tree($vocabulary->vid);
+    foreach ($tree as $term) {
+      $total_entries++; // we're counting all-totals, not displayed
+      if (($start_from && ($start_from * $page_increment) >= $total_entries) || ($displayed_count == $page_increment)) {
+        continue;
+      }
+      $rows[] = array(str_repeat('--', $term->depth) .' '. l($term->name, "taxonomy/term/$term->tid"), l(t('edit'), "admin/content/taxonomy/edit/term/$term->tid", array('query' => $destination)));
+      $displayed_count++; // we're counting tids displayed
+    }
+
+    if (empty($rows)) {
+      $rows[] = array(array('data' => t('No terms available.'), 'colspan' => '2'));
+    }
+
+    $GLOBALS['pager_page_array'][] = $start_from;  // FIXME
+    $GLOBALS['pager_total'][] = intval($total_entries / $page_increment) + 1; // FIXME
   }
 
-  if (empty($rows)) {
-    $rows[] = array(array('data' => t('No terms available.'), 'colspan' => '2'));
+  $output .= theme('table', $header, $rows, array('id' => 'taxonomy'));
+  if ($vocabulary->tags || $total_entries >= $page_increment) {
+    $output .= theme('pager', NULL, $page_increment);
   }
 
-  $GLOBALS['pager_page_array'][] = $start_from;  // FIXME
-  $GLOBALS['pager_total'][] = intval($total_entries / $page_increment) + 1; // FIXME
-
-  if ($total_entries >= $page_increment) {
-    $rows[] = array(array('data' => theme('pager', NULL, $page_increment), 'colspan' => '2'));
-  }
-
-  return theme('table', $header, $rows, array('id' => 'taxonomy'));
+  return $output;
 }
 
 
