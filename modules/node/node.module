@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.882 2007/09/14 09:37:29 goba Exp $
+// $Id: node.module,v 1.883 2007/09/19 18:11:08 goba Exp $
 
 /**
  * @file
@@ -754,10 +754,9 @@ function node_submit($node) {
     else {
       $node->uid = 0;
     }
-
-    $node->created = $node->date ? strtotime($node->date) : NULL;
   }
 
+  $node->created = !empty($node->date) ? strtotime($node->date) : time();
   $node->validated = TRUE;
 
   return $node;
