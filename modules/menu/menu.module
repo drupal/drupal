@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.143 2007/08/30 16:26:48 goba Exp $
+// $Id: menu.module,v 1.144 2007/09/20 08:41:33 goba Exp $
 
 /**
  * @file
@@ -370,7 +370,7 @@ function menu_form_alter(&$form, $form_state, $form_id) {
       // There is an existing link.
       $form['menu']['delete'] = array(
         '#type' => 'checkbox',
-        '#title' => t('Check to remove this item from the menu.'),
+        '#title' => t('Delete this menu item.'),
       );
     }
     if (!$item['link_title']) {
