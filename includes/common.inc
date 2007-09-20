@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.687 2007/09/15 07:33:46 goba Exp $
+// $Id: common.inc,v 1.688 2007/09/20 08:30:34 goba Exp $
 
 /**
  * @file
@@ -1984,7 +1984,7 @@ function _packer_apply($script, $regexps, $escape = FALSE) {
   if ($escape) {
     // Remove escaped characters
     $script = preg_replace_callback(
-      '/\\\\(.)' .'/',
+      '/\\\\(.)/',
       '_packer_escape_char',
       $script
     );
@@ -2002,7 +2002,7 @@ function _packer_apply($script, $regexps, $escape = FALSE) {
     // Restore escaped characters
     _packer_unescape_char(NULL, $escaped);
     $script = preg_replace_callback(
-      '/\\\\' .'/',
+      '/\\\\/',
       '_packer_unescape_char',
       $script
     );
