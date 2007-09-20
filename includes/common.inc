@@ -1984,7 +1984,7 @@ function _packer_apply($script, $regexps, $escape = FALSE) {
   if ($escape) {
     // Remove escaped characters
     $script = preg_replace_callback(
-      '/\\\\(.)' .'/',
+      '/\\\\(.)/',
       '_packer_escape_char',
       $script
     );
@@ -2002,7 +2002,7 @@ function _packer_apply($script, $regexps, $escape = FALSE) {
     // Restore escaped characters
     _packer_unescape_char(NULL, $escaped);
     $script = preg_replace_callback(
-      '/\\\\' .'/',
+      '/\\\\/',
       '_packer_unescape_char',
       $script
     );
