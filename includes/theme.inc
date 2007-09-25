@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.384 2007/09/17 11:11:57 goba Exp $
+// $Id: theme.inc,v 1.385 2007/09/25 12:43:18 goba Exp $
 
 /**
  * @file
@@ -1658,11 +1658,6 @@ function template_preprocess(&$variables, $hook) {
  * @see page.tpl.php
  */
 function template_preprocess_page(&$variables) {
-  /* Set title and breadcrumb to declared values */
-  if (drupal_is_front_page()) {
-    $variables['mission'] = filter_xss_admin(theme_get_setting('mission'));
-  }
-
   /* Add favicon */
   if (theme_get_setting('toggle_favicon')) {
     drupal_set_html_head('<link rel="shortcut icon" href="'. check_url(theme_get_setting('favicon')) .'" type="image/x-icon" />');
@@ -1691,6 +1686,11 @@ function template_preprocess_page(&$variables) {
   }
   if (!empty($variables['right'])) {
     $variables['layout'] = ($variables['layout'] == 'left') ? 'both' : 'right';
+  }
+
+  // Set mission when viewing the frontpage.
+  if (drupal_is_front_page()) {
+    $mission = filter_xss_admin(theme_get_setting('mission'));
   }
 
   // Construct page title
