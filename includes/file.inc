@@ -302,7 +302,7 @@ function file_destination($destination, $replace) {
         break;
 
       case FILE_EXISTS_ERROR:
-        drupal_set_message(t('The selected file %file could not be copied, because a file by that name already exists in the destination.', array('%file' => $source)), 'error');
+        drupal_set_message(t('The selected file %file could not be copied, because a file by that name already exists in the destination.', array('%file' => $destination)), 'error');
         return FALSE;
     }
   }
