@@ -1,4 +1,4 @@
-// $Id: drupal.js,v 1.38 2007/09/12 18:29:32 goba Exp $
+// $Id: drupal.js,v 1.39 2007/09/25 14:55:36 goba Exp $
 
 var Drupal = Drupal || { 'settings': {}, 'behaviors': {}, 'themes': {}, 'locale': {} };
 
@@ -339,7 +339,7 @@ if (Drupal.jsEnabled) {
   // Global Killswitch on the <html> element
   document.documentElement.className = 'js';
   // 'js enabled' cookie
-  document.cookie = 'has_js=1';
+  document.cookie = 'has_js=1; path=/';
   // Attach all behaviors.
   $(document).ready(Drupal.attachBehaviors);
 }
