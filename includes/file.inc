@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.104 2007/07/25 17:41:27 goba Exp $
+// $Id: file.inc,v 1.105 2007/09/25 12:39:31 goba Exp $
 
 /**
  * @file
@@ -302,7 +302,7 @@ function file_destination($destination, $replace) {
         break;
 
       case FILE_EXISTS_ERROR:
-        drupal_set_message(t('The selected file %file could not be copied, because a file by that name already exists in the destination.', array('%file' => $source)), 'error');
+        drupal_set_message(t('The selected file %file could not be copied, because a file by that name already exists in the destination.', array('%file' => $destination)), 'error');
         return FALSE;
     }
   }
