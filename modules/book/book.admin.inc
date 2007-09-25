@@ -27,7 +27,6 @@ function book_admin_overview() {
  * @ingroup forms
  */
 function book_admin_settings() {
-
   $types = node_get_types('names');
   $form['book_allowed_types'] = array(
     '#type' => 'checkboxes',
@@ -45,6 +44,7 @@ function book_admin_settings() {
     '#description' => t('The content type for the %add-child link must be one of those selected as an allowed book outline type.', array('%add-child' => t('Add child page'))),
     '#required' => TRUE,
   );
+  $form['array_filter'] = array('#type' => 'value', '#value' => TRUE);
   $form['#validate'][] = 'book_admin_settings_validate';
   return system_settings_form($form);
 }
