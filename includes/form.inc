@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.226 2007/09/25 11:29:10 goba Exp $
+// $Id: form.inc,v 1.227 2007/09/25 15:14:37 goba Exp $
 
 /**
  * @defgroup form Form generation
@@ -191,6 +191,7 @@ function form_set_cache($form_build_id, $form, $form_state) {
  * $form_state['values']['name'] = 'robo-user';
  * $form_state['values']['mail'] = 'robouser@example.com';
  * $form_state['values']['pass'] = 'password';
+ * $form_state['values']['op'] = t('Create new account');
  * drupal_execute('user_register', $form_state);
  *
  * // Create a new node
@@ -199,6 +200,7 @@ function form_set_cache($form_build_id, $form, $form_state) {
  * $form_state['values']['title'] = 'My node';
  * $form_state['values']['body'] = 'This is the body text!';
  * $form_state['values']['name'] = 'robo-user';
+ * $form_state['values']['op'] = t('Save');
  * drupal_execute('story_node_form', $form_state, $node);
  */
 function drupal_execute($form_id, &$form_state) {
