@@ -1028,7 +1028,7 @@ function form_type_checkbox_value($form, $edit = FALSE) {
  *   The data that will appear in the $form_state['values'] collection
  *   for this element. Return nothing to use the default.
  */
- function form_type_checkboxes_value($form, $edit = FALSE) {
+function form_type_checkboxes_value($form, $edit = FALSE) {
   if ($edit === FALSE) {
     $value = array();
     $form += array('#default_value' => array());
@@ -1036,6 +1036,9 @@ function form_type_checkbox_value($form, $edit = FALSE) {
       $value[$key] = 1;
     }
     return $value;
+  }
+  elseif (!isset($edit)) {
+    return array();
   }
 }
 
