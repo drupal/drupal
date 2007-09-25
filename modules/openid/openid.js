@@ -1,4 +1,4 @@
-// $Id: openid.js,v 1.2 2007/07/01 15:37:09 dries Exp $
+// $Id: openid.js,v 1.3 2007/09/25 11:42:44 goba Exp $
 
 Drupal.behaviors.openid = function (context) {
   // This behavior attaches by ID, so is only valid once on a page.
@@ -8,6 +8,7 @@ Drupal.behaviors.openid = function (context) {
     $("#edit-pass-wrapper").hide();
     $("#edit-openid-url-wrapper").show();
     $("a.openid-link").hide();
+    $("a.user-link").show();
   }
   $("a.openid-link:not(.openid-processed)", context)
     .addClass('openid-processed')
