@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.module,v 1.5 2007/09/12 11:32:06 goba Exp $
+// $Id: openid.module,v 1.6 2007/09/25 14:52:55 goba Exp $
 
 /**
  * @file
@@ -345,7 +345,7 @@ function openid_authentication($response) {
       drupal_set_message(t('You must validate your email address for this account before logging in via OpenID'));
     }
   }
-  else {
+  elseif (variable_get('user_register', 1)) {
     // Register new user
     $form_state['redirect'] = NULL;
     $form_state['values']['name'] = (empty($response['openid.sreg.nickname'])) ? $identity : $response['openid.sreg.nickname'];
@@ -373,6 +373,9 @@ function openid_authentication($response) {
       user_external_login($account);
     }
     drupal_redirect_form($form, $form_state['redirect']);
+  }
+  else {
+    drupal_set_message(t('Only site administrators can create new user accounts.'), 'error');
   }
   drupal_goto();
 }
