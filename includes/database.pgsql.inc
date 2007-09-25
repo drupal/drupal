@@ -1,5 +1,5 @@
 <?php
-// $Id: database.pgsql.inc,v 1.60 2007/09/14 17:46:32 goba Exp $
+// $Id: database.pgsql.inc,v 1.61 2007/09/25 11:44:35 goba Exp $
 
 /**
  * @file
@@ -45,7 +45,7 @@ function db_version() {
  * Initialize a database connection.
  */
 function db_connect($url) {
-  // Check if MySQL support is present in PHP
+  // Check if PostgreSQL support is present in PHP
   if (!function_exists('pg_connect')) {
     drupal_maintenance_theme();
     drupal_set_title('PHP PostgreSQL support not enabled');
