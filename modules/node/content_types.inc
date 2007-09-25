@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.40 2007/09/02 12:36:14 goba Exp $
+// $Id: content_types.inc,v 1.41 2007/09/25 12:07:14 goba Exp $
 
 /**
  * @file
@@ -129,7 +129,7 @@ function node_type_form(&$form_state, $type = NULL) {
   $form['submission']['body_label'] = array(
     '#title' => t('Body field label'),
     '#type' => 'textfield',
-    '#default_value' => $type->body_label,
+    '#default_value' => isset($type->body_label) ? $type->body_label : '',
     '#description' => t('To omit the body field for this content type, remove any text and leave this field blank.'),
   );
   $form['submission']['min_word_count'] = array(
