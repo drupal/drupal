@@ -339,7 +339,7 @@ if (Drupal.jsEnabled) {
   // Global Killswitch on the <html> element
   document.documentElement.className = 'js';
   // 'js enabled' cookie
-  document.cookie = 'has_js=1';
+  document.cookie = 'has_js=1; path=/';
   // Attach all behaviors.
   $(document).ready(Drupal.attachBehaviors);
 }
