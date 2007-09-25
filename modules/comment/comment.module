@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.583 2007/09/11 14:50:04 goba Exp $
+// $Id: comment.module,v 1.584 2007/09/25 14:58:43 goba Exp $
 
 /**
  * @file
@@ -837,7 +837,7 @@ function comment_save($edit) {
         if ($edit['uid'] === $user->uid) { // '===' because we want to modify anonymous users too
           $edit['name'] = $user->name;
         }
-        
+
         db_query("INSERT INTO {comments} (nid, pid, uid, subject, comment, format, hostname, timestamp, status, thread, name, mail, homepage) VALUES (%d, %d, %d, '%s', '%s', %d, '%s', %d, %d, '%s', '%s', '%s', '%s')", $edit['nid'], $edit['pid'], $edit['uid'], $edit['subject'], $edit['comment'], $edit['format'], ip_address(), $edit['timestamp'], $status, $thread, $edit['name'], $edit['mail'], $edit['homepage']);
         $edit['cid'] = db_last_insert_id('comments', 'cid');
 
@@ -1721,7 +1721,7 @@ function comment_form_validate($form, &$form_state) {
     foreach (array('name', 'homepage', 'mail') as $field) {
       // Set cookie for 365 days.
       if (isset($form_state['values'][$field])) {
-        setcookie('comment_info_'. $field, $form_state['values'][$field], time() + 31536000);
+        setcookie('comment_info_'. $field, $form_state['values'][$field], time() + 31536000, '/');
       }
     }
   }
