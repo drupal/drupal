@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.532 2007/09/17 08:06:52 goba Exp $
+// $Id: system.module,v 1.533 2007/09/25 11:49:37 goba Exp $
 
 /**
  * @file
@@ -184,6 +184,16 @@ function system_menu() {
     'type' => MENU_LOCAL_TASK,
     'weight' => 2,
   );
+  $items['admin/content'] = array(
+    'title' => 'Content management',
+    'description' => "Manage your site's content.",
+    'position' => 'left',
+    'weight' => -10,
+    'page callback' => 'system_admin_menu_block_page',
+    'access arguments' => array('access administration pages'),
+    'file' => 'system.admin.inc',
+  );
+
   // menu items that are basically just menu blocks
   $items['admin/settings'] = array(
     'title' => 'Site configuration',

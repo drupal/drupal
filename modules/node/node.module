@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.883 2007/09/19 18:11:08 goba Exp $
+// $Id: node.module,v 1.884 2007/09/25 11:49:36 goba Exp $
 
 /**
  * @file
@@ -1273,17 +1273,6 @@ function _node_add_access() {
  * Implementation of hook_menu().
  */
 function node_menu() {
-  $items['admin/content'] = array(
-    'title' => 'Content management',
-    'description' => "Manage your site's content.",
-    'position' => 'left',
-    'weight' => -10,
-    'page callback' => 'system_admin_menu_block_page',
-    'access arguments' => array('administer nodes'),
-    'file' => 'system.admin.inc',
-    'file path' => drupal_get_path('module', 'system'),
-  );
-
   $items['admin/content/node'] = array(
     'title' => 'Content',
     'description' => "View, edit, and delete your site's content.",
