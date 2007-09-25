@@ -184,6 +184,16 @@ function system_menu() {
     'type' => MENU_LOCAL_TASK,
     'weight' => 2,
   );
+  $items['admin/content'] = array(
+    'title' => 'Content management',
+    'description' => "Manage your site's content.",
+    'position' => 'left',
+    'weight' => -10,
+    'page callback' => 'system_admin_menu_block_page',
+    'access arguments' => array('access administration pages'),
+    'file' => 'system.admin.inc',
+  );
+
   // menu items that are basically just menu blocks
   $items['admin/settings'] = array(
     'title' => 'Site configuration',
