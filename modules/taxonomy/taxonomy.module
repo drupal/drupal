@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.382 2007/09/13 07:54:27 goba Exp $
+// $Id: taxonomy.module,v 1.383 2007/09/25 14:44:50 goba Exp $
 
 /**
  * @file
@@ -788,7 +788,7 @@ function taxonomy_term_count_nodes($tid, $type = 0) {
   foreach (_taxonomy_term_children($tid) as $c) {
     $children_count += taxonomy_term_count_nodes($c, $type);
   }
-  return $count[$type][$tid] + $children_count;
+  return $children_count + (isset($count[$type][$tid]) ? $count[$type][$tid] : 0);
 }
 
 /**
