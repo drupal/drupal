@@ -8,6 +8,7 @@ Drupal.behaviors.openid = function (context) {
     $("#edit-pass-wrapper").hide();
     $("#edit-openid-url-wrapper").show();
     $("a.openid-link").hide();
+    $("a.user-link").show();
   }
   $("a.openid-link:not(.openid-processed)", context)
     .addClass('openid-processed')
