@@ -9,8 +9,7 @@ function trigger_schema() {
       'aid' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
       'weight' => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
     ),
-    'index keys' => array(
-      'hook_op' => array('hook', 'op'))
+    'primary key' => array('hook', 'op', 'aid'),
   );
   return $schema;
 }
