@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.module,v 1.1 2007/09/11 14:50:05 goba Exp $
+// $Id: trigger.module,v 1.2 2007/09/26 18:19:22 dries Exp $
 
 /**
  * @file
@@ -187,6 +187,10 @@ function _trigger_get_hook_aids($hook, $op = '') {
  * @param $description
  *   A plain English description of what this hook operation does.
  * @return
+ *
+ * @ingoup forms
+ * @see trigger_assign_form_validate()
+ * @see trigger_assign_form_submit()
  */
 function trigger_assign_form($form_state, $hook, $op, $description) {
   $form['hook'] = array(
@@ -197,7 +201,8 @@ function trigger_assign_form($form_state, $hook, $op, $description) {
     '#type' => 'hidden',
     '#value' => $op,
   );
-  // All of these forms use the same #submit function.
+  // All of these forms use the same validate and submit functions.
+  $form['#validate'][] = 'trigger_assign_form_validate';
   $form['#submit'][] = 'trigger_assign_form_submit';
 
   $options = array();
@@ -253,7 +258,24 @@ function trigger_assign_form($form_state, $hook, $op, $description) {
   }
   return $form;
 }
+/**
+ * Validation function for trigger_assign_form().
+ *
+ * Makes sure that the user is not re-assigning an action to an event.
+ */
+function trigger_assign_form_validate($form, $form_state) {
+  $form_values = $form_state['values'];
+  if (!empty($form_values['aid'])) {
+    $aid = actions_function_lookup($form_values['aid']);
+    if (db_result(db_query("SELECT aid FROM {trigger_assignments} WHERE hook = '%s' AND op = '%s' AND aid = '%s'", $form_values['hook'], $form_values['operation'], $aid))) {
+      form_set_error($form_values['operation'], t('The action you choose is already assigned to that trigger.'));
+    }
+  }
+}
 
+/**
+ * Submit function for trigger_assign_form().
+ */
 function trigger_assign_form_submit($form, $form_state) {
   $form_values = $form_state['values'];
 
