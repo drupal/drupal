@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.886 2007/09/25 15:05:01 goba Exp $
+// $Id: node.module,v 1.887 2007/09/26 18:22:34 dries Exp $
 
 /**
  * @file
@@ -908,7 +908,7 @@ function node_delete($nid) {
  * @param $node
  *   A node array or node object.
  * @param $teaser
- *   Whether to display the teaser only, as on the main page.
+ *   Whether to display the teaser only or the full form.
  * @param $page
  *   Whether the node is being displayed by itself as a page.
  * @param $links
@@ -923,7 +923,7 @@ function node_view($node, $teaser = FALSE, $page = FALSE, $links = TRUE) {
   $node = node_build_content($node, $teaser, $page);
 
   if ($links) {
-    $node->links = module_invoke_all('link', 'node', $node, !$page);
+    $node->links = module_invoke_all('link', 'node', $node, $teaser);
     drupal_alter('link', $node->links, $node);
   }
 
@@ -1638,7 +1638,7 @@ function node_update_index() {
     $node->build_mode = NODE_BUILD_SEARCH_INDEX;
     $node = node_build_content($node, FALSE, FALSE);
     $node->body = drupal_render($node->content);
-    
+
     // Allow modules to modify the fully-built node.
     node_invoke_nodeapi($node, 'alter');
 
