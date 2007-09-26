@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.207 2007/09/10 12:21:30 goba Exp $
+// $Id: menu.inc,v 1.208 2007/09/26 18:14:05 dries Exp $
 
 /**
  * @file
@@ -1050,7 +1050,9 @@ function menu_navigation_links($menu_name, $level = 0) {
       $l = $item['link']['options'];
       $l['href'] = $item['link']['href'];
       $l['title'] = $item['link']['title'];
-      $links[] = $l;
+      $l['attributes']['id'] = $item['link']['mlid'];
+      // Keyed with unique menu id to generate classes from theme_links().
+      $links['menu-'. $item['link']['mlid']] = $l;
     }
   }
   return $links;
@@ -1273,7 +1275,7 @@ function menu_set_active_trail($new_trail = NULL) {
     if ($item['tab_parent']) {
       // The title of a local task is used for the tab, never the page title.
       // Thus, replace it with the item corresponding to the root path to get
-      // the relevant href and title.  For example, the menu item corresponding 
+      // the relevant href and title.  For example, the menu item corresponding
       // to 'admin' is used when on the 'By module' tab at 'admin/by-module'.
       $parts = explode('/', $item['tab_root']);
       $args = arg();
