@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.schema,v 1.4 2007/07/30 21:27:34 dries Exp $
+// $Id: comment.schema,v 1.5 2007/09/26 18:31:34 dries Exp $
 
 function comment_schema() {
   $schema['comments'] = array(
@@ -28,7 +28,7 @@ function comment_schema() {
 
   $schema['node_comment_statistics'] = array(
     'fields' => array(
-      'nid'                    => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
+      'nid'                    => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
       'last_comment_timestamp' => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
       'last_comment_name'      => array('type' => 'varchar', 'length' => 60, 'not null' => FALSE),
       'last_comment_uid'       => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
