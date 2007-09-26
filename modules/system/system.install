@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.155 2007/09/26 18:31:34 dries Exp $
+// $Id: system.install,v 1.156 2007/09/26 20:01:17 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -3771,7 +3771,7 @@ function system_update_6032() {
 function system_update_6033() {
   $ret = array();
   if (db_table_exists('node_comment_statistics')) {
-    db_change_field($ret, 'node_comment_statistics', 'nid', 'nid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0)
+    db_change_field($ret, 'node_comment_statistics', 'nid', 'nid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0));
   }
   return $ret;
 }
