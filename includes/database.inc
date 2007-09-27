@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.80 2007/09/14 10:43:26 goba Exp $
+// $Id: database.inc,v 1.81 2007/09/27 16:52:00 goba Exp $
 
 /**
  * @file
@@ -185,6 +185,22 @@ function _db_query_callback($match, $init = FALSE) {
     case '%b': // binary data
       return db_encode_blob(array_shift($args));
   }
+}
+
+/**
+ * Generate placeholders for an array of query arguments of a single type.
+ *
+ * Given a Schema API field type, return correct %-placeholders to
+ * embed in a query
+ *
+ * @param $arguments
+ *  An array with at least one element.
+ * @param $type
+ *   The Schema API type of a field (e.g. 'int', 'text', or 'varchar').
+ */
+function db_placeholders($arguments, $type = 'int') {
+  $placeholder = _db_type_placeholder($type);
+  return implode(',', array_fill(0, count($arguments), $placeholder));
 }
 
 /**
@@ -437,10 +453,10 @@ function db_create_table(&$ret, $name, $table) {
 }
 
 /**
- * Return an array of field names from an array of key/index column
- * specifiers.  This is usually an identity function but if a
- * key/index uses a column prefix specification, this function
- * extracts just the name.
+ * Return an array of field names from an array of key/index column specifiers.
+ *
+ * This is usually an identity function but if a key/index uses a column prefix
+ * specification, this function extracts just the name.
  *
  * @param $fields
  *   An array of key/index column specifiers.
@@ -461,9 +477,10 @@ function db_field_names($fields) {
 }
 
 /**
- * Given a Schema API field type, return the correct %-placeholder to
- * embed in a query to be passed to db_query along with a value from a
- * column of the specified type.
+ * Given a Schema API field type, return the correct %-placeholder.
+ *
+ * Embed the placeholder in a query to be passed to db_query and and pass as an
+ * argument to db_query a value of the specified type.
  *
  * @param $type
  *   The Schema API type of a field.

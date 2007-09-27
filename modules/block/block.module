@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.277 2007/09/01 05:31:09 dries Exp $
+// $Id: block.module,v 1.278 2007/09/27 16:52:00 goba Exp $
 
 /**
  * @file
@@ -332,7 +332,8 @@ function block_user($type, $edit, &$user, $category = NULL) {
   switch ($type) {
     case 'form':
       if ($category == 'account') {
-        $result = db_query("SELECT DISTINCT b.* FROM {blocks} b LEFT JOIN {blocks_roles} r ON b.module = r.module AND b.delta = r.delta WHERE b.status = 1 AND b.custom != 0 AND (r.rid IN (%s) OR r.rid IS NULL) ORDER BY b.weight, b.module", implode(',', array_keys($user->roles)));
+        $rids = array_keys($user->roles);
+        $result = db_query("SELECT DISTINCT b.* FROM {blocks} b LEFT JOIN {blocks_roles} r ON b.module = r.module AND b.delta = r.delta WHERE b.status = 1 AND b.custom != 0 AND (r.rid IN (". db_placeholders($rids) .") OR r.rid IS NULL) ORDER BY b.weight, b.module", $rids);
         $form['block'] = array('#type' => 'fieldset', '#title' => t('Block configuration'), '#weight' => 3, '#collapsible' => TRUE, '#tree' => TRUE);
         while ($block = db_fetch_object($result)) {
           $data = module_invoke($block->module, 'block', 'list');
@@ -379,7 +380,8 @@ function block_list($region) {
   static $blocks = array();
 
   if (!count($blocks)) {
-    $result = db_query(db_rewrite_sql("SELECT DISTINCT b.* FROM {blocks} b LEFT JOIN {blocks_roles} r ON b.module = r.module AND b.delta = r.delta WHERE b.theme = '%s' AND b.status = 1 AND (r.rid IN (%s) OR r.rid IS NULL) ORDER BY b.region, b.weight, b.module", 'b', 'bid'), $theme_key, implode(',', array_keys($user->roles)));
+    $rids = array_keys($user->roles);
+    $result = db_query(db_rewrite_sql("SELECT DISTINCT b.* FROM {blocks} b LEFT JOIN {blocks_roles} r ON b.module = r.module AND b.delta = r.delta WHERE b.theme = '%s' AND b.status = 1 AND (r.rid IN (". db_placeholders($rids) .") OR r.rid IS NULL) ORDER BY b.region, b.weight, b.module", 'b', 'bid'), array_merge(array($theme_key), $rids));
     while ($block = db_fetch_object($result)) {
       if (!isset($blocks[$block->region])) {
         $blocks[$block->region] = array();
