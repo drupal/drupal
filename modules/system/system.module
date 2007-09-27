@@ -517,7 +517,7 @@ function system_admin_menu_block($item) {
 
 function system_admin_theme_submit($form, &$form_state) {
   // If we're changing themes, make sure the theme has its blocks initialized.
-  if ($form_state['values']['admin_theme'] != variable_get('admin_theme', '0')) {
+  if ($form_state['values']['admin_theme'] && $form_state['values']['admin_theme'] != variable_get('admin_theme', '0')) {
     $result = db_result(db_query("SELECT COUNT(*) FROM {blocks} WHERE theme = '%s'", $form_state['values']['admin_theme']));
     if (!$result) {
       system_initialize_theme_blocks($form_state['values']['admin_theme']);
