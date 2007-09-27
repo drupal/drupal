@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.admin.inc,v 1.2 2007/09/12 11:48:15 goba Exp $
+// $Id: menu.admin.inc,v 1.3 2007/09/27 16:59:54 goba Exp $
 
 /**
  * @file
@@ -138,11 +138,18 @@ function menu_edit_item(&$form_state, $type, $item, $menu) {
   $form['menu']['customized'] = array('#type' => 'value', '#value' => 1);
   $form['menu']['original_item'] = array('#type' => 'value', '#value' => $item);
 
+  $path = $item['link_path'];
+  if (isset($item['options']['query'])) {
+    $path .= '?'. $item['options']['query'];
+  }
+  if (isset($item['options']['fragment'])) {
+    $path .= '#'. $item['options']['fragment'];
+  }
   if ($item['module'] == 'menu') {
     $form['menu']['link_path'] = array(
       '#type' => 'textfield',
       '#title' => t('Path'),
-      '#default_value' => $item['link_path'],
+      '#default_value' => $path,
       '#description' => t('The path this menu item links to. This can be an internal Drupal path such as %add-node or an external URL such as %drupal. Enter %front to link to the front page.', array('%front' => '<front>', '%add-node' => 'node/add', '%drupal' => 'http://drupal.org')),
       '#required' => TRUE,
     );
@@ -211,7 +218,19 @@ function menu_edit_item(&$form_state, $type, $item, $menu) {
  * Validate form values for a menu link being added or edited.
  */
 function menu_edit_item_validate($form, &$form_state) {
-  $item = $form_state['values']['menu'];
+  $item = &$form_state['values']['menu'];
+  if (!menu_path_is_external($item['link_path'])) {
+    $parsed_link = parse_url($item['link_path']);
+    if (isset($parsed_link['query'])) {
+      $item['options']['query'] = $parsed_link['query'];
+    }
+    if (isset($parsed_link['fragment'])) {
+      $item['options']['fragment'] = $parsed_link['fragment'];
+    }
+    if ($item['link_path'] != $parsed_link['path']) {
+      $item['link_path'] = $parsed_link['path'];
+    }
+  }
   if (!trim($item['link_path']) || !menu_valid_path($item)) {
     form_set_error('link_path', t("The path '@link_path' is either invalid or you do not have access to it.", array('@link_path' => $item['link_path'])));
   }
