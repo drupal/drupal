@@ -130,7 +130,7 @@ function node_form(&$form_state, $node) {
 
   // Add a log field if the "Create new revision" option is checked, or if the
   // current user has the ability to check that option.
-  if ($node->revision || user_access('administer nodes')) {
+  if (!empty($node->revision) || user_access('administer nodes')) {
     $form['revision_information'] = array(
       '#type' => 'fieldset',
       '#title' => t('Revision information'),

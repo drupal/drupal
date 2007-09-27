@@ -810,7 +810,7 @@ function node_save(&$node) {
     // Only store the log message if there's something to store; this prevents
     // existing log messages from being unintentionally overwritten by a blank
     // message. A new revision will have an empty log message (or $node->log).
-    $revisions_table_values['log'] = $node->log;
+    $revisions_table_values['log'] = !empty($node->log) ? $node->log : '';
     $revisions_table_types['log'] = "'%s'";
   }
   $node_table_values = array(
