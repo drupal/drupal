@@ -1633,6 +1633,8 @@ function drupal_build_css_cache($types, $filename) {
       foreach ($type as $file => $cache) {
         if ($cache) {
           $contents = file_get_contents($file);
+          // Remove multiple charset declarations for standards compliance (and fixing Safari problems)
+          $contents = preg_replace('/^@charset\s+[\'"](\S*)\b[\'"];/i', '', $contents);
           // Return the path to where this CSS file originated from, stripping
           // off the name of the file at the end of the path.
           $path = base_path() . substr($file, 0, strrpos($file, '/')) .'/';
