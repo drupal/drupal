@@ -16,7 +16,7 @@ function taxonomy_term_page($str_tids = '', $depth = 0, $op = 'page') {
   }
 
   if ($terms['tids']) {
-    $result = db_query(db_rewrite_sql('SELECT t.tid, t.name FROM {term_data} t WHERE t.tid IN (%s)', 't', 'tid'), implode(',', $terms['tids']));
+    $result = db_query(db_rewrite_sql('SELECT t.tid, t.name FROM {term_data} t WHERE t.tid IN ('. db_placeholders($terms['tids']) .')', 't', 'tid'), $terms['tids']);
     $tids = array(); // we rebuild the $tids-array so it only contains terms the user has access to.
     $names = array();
     while ($term = db_fetch_object($result)) {

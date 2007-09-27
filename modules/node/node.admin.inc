@@ -116,42 +116,42 @@ function node_node_operations() {
  * Callback function for admin mass publishing nodes.
  */
 function node_operations_publish($nodes) {
-  db_query('UPDATE {node} SET status = 1 WHERE nid IN(%s)', implode(',', $nodes));
+  db_query('UPDATE {node} SET status = 1 WHERE nid IN('. db_placeholders($nodes) .')', $nodes);
 }
 
 /**
  * Callback function for admin mass unpublishing nodes.
  */
 function node_operations_unpublish($nodes) {
-  db_query('UPDATE {node} SET status = 0 WHERE nid IN(%s)', implode(',', $nodes));
+  db_query('UPDATE {node} SET status = 0 WHERE nid IN('. db_placeholders($nodes) .')', $nodes);
 }
 
 /**
  * Callback function for admin mass promoting nodes.
  */
 function node_operations_promote($nodes) {
-  db_query('UPDATE {node} SET status = 1, promote = 1 WHERE nid IN(%s)', implode(',', $nodes));
+  db_query('UPDATE {node} SET status = 1, promote = 1 WHERE nid IN('. db_placeholders($nodes) .')', $nodes);
 }
 
 /**
  * Callback function for admin mass demoting nodes.
  */
 function node_operations_demote($nodes) {
-  db_query('UPDATE {node} SET promote = 0 WHERE nid IN(%s)', implode(',', $nodes));
+  db_query('UPDATE {node} SET promote = 0 WHERE nid IN('. db_placeholders($nodes) .')', $nodes);
 }
 
 /**
  * Callback function for admin mass editing nodes to be sticky.
  */
 function node_operations_sticky($nodes) {
-  db_query('UPDATE {node} SET status = 1, sticky = 1 WHERE nid IN(%s)', implode(',', $nodes));
+  db_query('UPDATE {node} SET status = 1, sticky = 1 WHERE nid IN('. db_placeholders($nodes) .')',  $nodes);
 }
 
 /**
  * Callback function for admin mass editing nodes to remove stickiness.
  */
 function node_operations_unsticky($nodes) {
-  db_query('UPDATE {node} SET sticky = 0 WHERE nid IN(%s)', implode(',', $nodes));
+  db_query('UPDATE {node} SET sticky = 0 WHERE nid IN('. db_placeholders($nodes) .')', $nodes);
 }
 
 /**
