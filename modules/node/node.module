@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.887 2007/09/26 18:22:34 dries Exp $
+// $Id: node.module,v 1.888 2007/09/27 12:56:04 goba Exp $
 
 /**
  * @file
@@ -810,7 +810,7 @@ function node_save(&$node) {
     // Only store the log message if there's something to store; this prevents
     // existing log messages from being unintentionally overwritten by a blank
     // message. A new revision will have an empty log message (or $node->log).
-    $revisions_table_values['log'] = $node->log;
+    $revisions_table_values['log'] = !empty($node->log) ? $node->log : '';
     $revisions_table_types['log'] = "'%s'";
   }
   $node_table_values = array(
