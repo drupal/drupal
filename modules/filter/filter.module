@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.188 2007/09/17 09:16:48 goba Exp $
+// $Id: filter.module,v 1.189 2007/09/28 08:09:25 dries Exp $
 
 /**
  * @file
@@ -869,7 +869,7 @@ function _filter_autop($text) {
   // We don't apply any processing to the contents of these tags to avoid messing
   // up code. We look for matched pairs and allow basic nesting. For example:
   // "processed <pre> ignored <script> ignored </script> ignored </pre> processed"
-  $chunks = preg_split('@(</?(?:pre|script|style)[^>]*>)@i', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
+  $chunks = preg_split('@(</?(?:pre|script|style|object)[^>]*>)@i', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
   // Note: PHP ensures the array consists of alternating delimiters and literals
   // and begins and ends with a literal (inserting NULL as required).
   $ignore = FALSE;
