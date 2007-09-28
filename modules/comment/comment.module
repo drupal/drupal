@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.584 2007/09/25 14:58:43 goba Exp $
+// $Id: comment.module,v 1.585 2007/09/28 17:15:04 goba Exp $
 
 /**
  * @file
@@ -773,7 +773,12 @@ function comment_save($edit) {
   global $user;
   if (user_access('post comments') && (user_access('administer comments') || node_comment_mode($edit['nid']) == COMMENT_NODE_READ_WRITE)) {
     if (!form_get_errors()) {
-      $edit += array('mail' => '', 'homepage' => '', 'name' => '');
+      $edit += array(
+        'mail' => '',
+        'homepage' => '',
+        'name' => '',
+        'status' => user_access('post comments without approval') ? COMMENT_PUBLISHED : COMMENT_NOT_PUBLISHED,
+      );
       if ($edit['cid']) {
         // Update the comment in the database.
         db_query("UPDATE {comments} SET status = %d, timestamp = %d, subject = '%s', comment = '%s', format = %d, uid = %d, name = '%s', mail = '%s', homepage = '%s' WHERE cid = %d", $edit['status'], $edit['timestamp'], $edit['subject'], $edit['comment'], $edit['format'], $edit['uid'], $edit['name'], $edit['mail'], $edit['homepage'], $edit['cid']);
@@ -786,8 +791,6 @@ function comment_save($edit) {
       }
       else {
         // Add the comment to database.
-        $status = user_access('post comments without approval') ? COMMENT_PUBLISHED : COMMENT_NOT_PUBLISHED;
-
         // Here we are building the thread field. See the documentation for
         // comment_render().
         if ($edit['pid'] == 0) {
@@ -838,7 +841,7 @@ function comment_save($edit) {
           $edit['name'] = $user->name;
         }
 
-        db_query("INSERT INTO {comments} (nid, pid, uid, subject, comment, format, hostname, timestamp, status, thread, name, mail, homepage) VALUES (%d, %d, %d, '%s', '%s', %d, '%s', %d, %d, '%s', '%s', '%s', '%s')", $edit['nid'], $edit['pid'], $edit['uid'], $edit['subject'], $edit['comment'], $edit['format'], ip_address(), $edit['timestamp'], $status, $thread, $edit['name'], $edit['mail'], $edit['homepage']);
+        db_query("INSERT INTO {comments} (nid, pid, uid, subject, comment, format, hostname, timestamp, status, thread, name, mail, homepage) VALUES (%d, %d, %d, '%s', '%s', %d, '%s', %d, %d, '%s', '%s', '%s', '%s')", $edit['nid'], $edit['pid'], $edit['uid'], $edit['subject'], $edit['comment'], $edit['format'], ip_address(), $edit['timestamp'], $edit['status'], $thread, $edit['name'], $edit['mail'], $edit['homepage']);
         $edit['cid'] = db_last_insert_id('comments', 'cid');
 
         // Tell the other modules a new comment has been submitted.
@@ -854,11 +857,11 @@ function comment_save($edit) {
 
       // Explain the approval queue if necessary, and then
       // redirect the user to the node he's commenting on.
-      if ($status == COMMENT_NOT_PUBLISHED) {
+      if ($edit['status'] == COMMENT_NOT_PUBLISHED) {
         drupal_set_message(t('Your comment has been queued for moderation by site administrators and will be published after approval.'));
       }
       else {
-  comment_invoke_comment($edit, 'publish');
+        comment_invoke_comment($edit, 'publish');
       }
       return $edit['cid'];
     }
