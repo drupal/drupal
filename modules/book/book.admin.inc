@@ -1,5 +1,5 @@
 <?php
-// $Id: book.admin.inc,v 1.2 2007/09/25 12:50:34 goba Exp $
+// $Id: book.admin.inc,v 1.3 2007/09/28 15:44:13 goba Exp $
 
 /**
  * @file
@@ -92,10 +92,21 @@ function book_admin_edit_submit($form, &$form_state) {
     $node = node_load($row['nid'], FALSE);
 
     if ($row['title'] != $node->title || $row['weight'] != $node->book['weight']) {
+
+      // Record changes in node's log message.
+      $log_messages = array();
+      if ($row['title'] != $node->title) {
+        $log_messages[] = t('Title changed from %original to %current.', array('%original' => $node->title, '%current' => $row['title']));
+      }
+      if ($row['weight'] != $node->book['weight']) {
+        $log_messages[] = t('Weight changed from %original to %current.', array('%original' => $node->book['weight'], '%current' => $row['weight']));
+      }
+
       $node->title = $row['title'];
       $node->book['link_title'] = $row['title'];
       $node->book['weight'] = $row['weight'];
       $node->revision = 1;
+      $node->log = implode(' ', $log_messages);
 
       node_save($node);
       watchdog('content', 'book: updated %title.', array('%title' => $node->title), WATCHDOG_NOTICE, l(t('view'), 'node/'. $node->nid));
