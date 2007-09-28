@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.77 2007/09/09 19:46:54 goba Exp $
+// $Id: install.php,v 1.78 2007/09/28 13:06:46 goba Exp $
 
 require_once './includes/install.inc';
 
@@ -616,7 +616,6 @@ function install_missing_modules_error($profile) {
  */
 function install_tasks($profile, $task) {
   global $base_url, $install_locale;
-  $output = '';
 
   // Bootstrap newly installed Drupal, while preserving existing messages.
   $messages = isset($_SESSION['messages']) ? $_SESSION['messages'] : '';
@@ -716,7 +715,7 @@ function install_tasks($profile, $task) {
   if ($task == 'locale-batch') {
     include_once 'includes/batch.inc';
     include_once 'includes/locale.inc';
-    $output .= _batch_page();
+    $output = _batch_page();
   }
 
   // Display a 'finished' page to user.
@@ -744,8 +743,11 @@ function install_tasks($profile, $task) {
   install_task_list($task);
   variable_set('install_task', $task);
 
-  // Output page.
-  print theme('maintenance_page', $output);
+  // Output page, if some output was required. Otherwise it is possible
+  // that we are printing a JSON page and theme output should not be there.
+  if (isset($output)) {
+    print theme('maintenance_page', $output);
+  }
 }
 
 /**
