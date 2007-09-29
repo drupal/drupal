@@ -1,5 +1,5 @@
 <?php
-// $Id: search.install,v 1.7 2007/05/25 12:46:45 dries Exp $
+// $Id: search.install,v 1.8 2007/09/29 08:08:59 goba Exp $
 
 /**
  * Implementation of hook_install().
@@ -18,4 +18,5 @@ function search_uninstall() {
 
   variable_del('minimum_word_size');
   variable_del('overlap_cjk');
+  variable_del('search_cron_limit');
 }
