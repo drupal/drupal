@@ -2524,6 +2524,9 @@ function node_update_index() {
     $node = node_build_content($node, FALSE, FALSE);
     $node->body = drupal_render($node->content);
 
+    // Allow modules to modify the fully-built node.
+    node_invoke_nodeapi($node, 'alter');
+
     $text = '<h1>'. check_plain($node->title) .'</h1>'. $node->body;
 
     // Fetch extra data normally not visible
