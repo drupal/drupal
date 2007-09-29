@@ -1066,8 +1066,8 @@ function menu_navigation_links($menu_name, $level = 0) {
  * @param $return_root
  *   Whether to return the root path for the current page.
  * @return
- *   Themed output corresponding to the tabs of the requested level, or if
- *   router path if $root == TRUE.  This router path will correspond to the
+ *   Themed output corresponding to the tabs of the requested level, or
+ *   router path if $return_root == TRUE. This router path corresponds to
  *   a parent tab, if the current page is a default local task.
  */
 function menu_local_tasks($level = 0, $return_root = FALSE) {
