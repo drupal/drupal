@@ -71,4 +71,5 @@ function search_uninstall() {
   db_query('DROP TABLE {search_total}');
   variable_del('minimum_word_size');
   variable_del('overlap_cjk');
+  variable_del('search_cron_limit');
 }
