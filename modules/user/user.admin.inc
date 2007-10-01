@@ -578,6 +578,7 @@ function user_admin_perm_submit($form, &$form_state) {
  * @ingroup themeable
  */
 function theme_user_admin_perm($form) {
+  $roles = user_roles();
   foreach (element_children($form['permission']) as $key) {
     // Don't take form control structures
     if (is_array($form['permission'][$key])) {
@@ -590,7 +591,7 @@ function theme_user_admin_perm($form) {
         $row[] = array('data' => drupal_render($form['permission'][$key]), 'class' => 'permission');
         foreach (element_children($form['checkboxes']) as $rid) {
           if (is_array($form['checkboxes'][$rid])) {
-            $row[] = array('data' => drupal_render($form['checkboxes'][$rid][$key]), 'align' => 'center', 'title' => t($key));
+            $row[] = array('data' => drupal_render($form['checkboxes'][$rid][$key]), 'align' => 'center', 'title' => $roles[$rid] .' : '. t($key));
           }
         }
       }
