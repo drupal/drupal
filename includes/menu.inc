@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.209 2007/09/29 08:12:06 goba Exp $
+// $Id: menu.inc,v 1.210 2007/10/01 09:49:14 goba Exp $
 
 /**
  * @file
@@ -1100,6 +1100,9 @@ function menu_local_tasks($level = 0, $return_root = FALSE) {
 
     // Find all tabs below the current path.
     $path = $router_item['path'];
+    // Tab parenting may skip levels, so the number of parts in the path may not
+    // equal the depth. Thus we use the $depth counter (offset by 1000 for ksort).
+    $depth = 1001;
     while (isset($children[$path])) {
       $tabs_current = '';
       $next_path = '';
@@ -1122,14 +1125,16 @@ function menu_local_tasks($level = 0, $return_root = FALSE) {
         }
       }
       $path = $next_path;
-      $tabs[$item['number_parts']]['count'] = $count;
-      $tabs[$item['number_parts']]['output'] = $tabs_current;
+      $tabs[$depth]['count'] = $count;
+      $tabs[$depth]['output'] = $tabs_current;
+      $depth++;
     }
 
     // Find all tabs at the same level or above the current one.
     $parent = $router_item['tab_parent'];
     $path = $router_item['path'];
     $current = $router_item;
+    $depth = 1000;
     while (isset($children[$parent])) {
       $tabs_current = '';
       $next_path = '';
@@ -1164,8 +1169,9 @@ function menu_local_tasks($level = 0, $return_root = FALSE) {
       }
       $path = $next_path;
       $parent = $next_parent;
-      $tabs[$item['number_parts']]['count'] = $count;
-      $tabs[$item['number_parts']]['output'] = $tabs_current;
+      $tabs[$depth]['count'] = $count;
+      $tabs[$depth]['output'] = $tabs_current;
+      $depth--;
     }
     // Sort by depth.
     ksort($tabs);
