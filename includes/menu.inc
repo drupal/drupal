@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.210 2007/10/01 09:49:14 goba Exp $
+// $Id: menu.inc,v 1.211 2007/10/01 09:53:03 goba Exp $
 
 /**
  * @file
@@ -772,7 +772,7 @@ function menu_tree_collect_node_links(&$tree, &$node_links) {
     if ($tree[$key]['link']['router_path'] == 'node/%') {
       $nid = substr($tree[$key]['link']['link_path'], 5);
       if (is_numeric($nid)) {
-        $node_links[$nid] = &$tree[$key]['link'];
+        $node_links[$nid][$tree[$key]['link']['mlid']] = &$tree[$key]['link'];
         $tree[$key]['link']['access'] = FALSE;
       }
     }
@@ -793,7 +793,10 @@ function menu_tree_check_access(&$tree, $node_links = array()) {
     $placeholders = '%d'. str_repeat(', %d', count($nids) - 1);
     $result = db_query(db_rewrite_sql("SELECT n.nid FROM {node} n WHERE n.nid IN (". $placeholders .")"), $nids);
     while ($node = db_fetch_array($result)) {
-      $node_links[$node['nid']]['access'] = TRUE;
+      $nid = $node['nid'];
+      foreach ($node_links[$nid] as $mlid => $link) {
+        $node_links[$nid][$mlid]['access'] = TRUE;
+      }
     }
   }
   _menu_tree_check_access($tree);
