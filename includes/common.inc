@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.689 2007/09/27 17:11:07 goba Exp $
+// $Id: common.inc,v 1.690 2007/10/01 09:39:27 goba Exp $
 
 /**
  * @file
@@ -306,11 +306,13 @@ function drupal_goto($path = '', $query = NULL, $fragment = NULL, $http_response
   // Before the redirect, allow modules to react to the end of the page request.
   module_invoke_all('exit', $url);
 
-  header('Location: '. $url, TRUE, $http_response_code);
-
-  // The "Location" header sends a REDIRECT status code to the http
-  // daemon. In some cases this can go wrong, so we make sure none
-  // of the code below the drupal_goto() call gets executed when we redirect.
+  // Here we register header() to be called after exit(). Because
+  // session_write_close() was registered before header() all session
+  // data will be written to the database before the header is sent to the
+  // browser.
+  register_shutdown_function('header', "Location: $url", TRUE, $http_response_code);
+  
+  // Make sure none of the code below the drupal_goto() call gets executed. 
   exit();
 }
 
