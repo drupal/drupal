@@ -1,4 +1,4 @@
-/* $Id: defaults.css,v 1.4 2007/10/02 07:02:48 dries Exp $ */
+/* $Id: defaults.css,v 1.5 2007/10/02 12:10:40 dries Exp $ */
 
 /*
 ** HTML elements
@@ -43,9 +43,11 @@ th {
   display: inline-block;
 }
 
+/* Hides from IE-mac \*/
 * html .clear-block {
   height: 1%;
 }
 .clear-block {
   display: block;
 }
+/* End hide from IE-mac */
