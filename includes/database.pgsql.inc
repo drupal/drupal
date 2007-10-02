@@ -700,7 +700,7 @@ function db_add_field(&$ret, $table, $field, $spec, $new_keys = array()) {
   $ret[] = update_sql($query);
   if (isset($spec['initial'])) {
     // All this because update_sql does not support %-placeholders.
-    $sql = 'UPDATE {'. $table .'} SET '. $field .' = '. _db_type_placeholder($spec['type']);
+    $sql = 'UPDATE {'. $table .'} SET '. $field .' = '. db_type_placeholder($spec['type']);
     $result = db_query($sql, $spec['initial']);
     $ret[] = array('success' => $result !== FALSE, 'query' => check_plain($sql .' ('. $spec['initial'] .')'));
   }
