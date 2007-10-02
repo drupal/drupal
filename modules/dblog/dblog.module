@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.module,v 1.14 2007/07/22 06:51:47 dries Exp $
+// $Id: dblog.module,v 1.15 2007/10/02 07:05:43 dries Exp $
 
 /**
  * @file
@@ -97,15 +97,8 @@ function dblog_init() {
  */
 function dblog_cron() {
   // Cleanup the watchdog table
-  $min = db_result(db_query('SELECT MIN(wid) FROM {watchdog}'));
-  if ($min) {
-    $max = db_result(db_query('SELECT MAX(wid) FROM {watchdog}'));
-    if ($max) {
-      if (($max - $min) > variable_get('dblog_row_limit', 1000)) {
-        db_query('DELETE FROM {watchdog} WHERE wid < %d', $max - $min);
-      }
-    }
-  }
+  $max = db_result(db_query('SELECT MAX(wid) FROM {watchdog}'));
+  db_query('DELETE FROM {watchdog} WHERE wid < %d', $max - variable_get('dblog_row_limit', 1000));
 }
 
 /**
