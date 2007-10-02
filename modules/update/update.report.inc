@@ -156,7 +156,7 @@ function theme_update_report($data) {
 
     $row .= "<div class=\"info\">\n";
     if (!empty($project['extra'])) {
-      $row .= '<div class="extra">' ."\n";
+      $row .= '<div class="extra">'."\n";
       foreach ($project['extra'] as $key => $value) {
         $row .= '<div class="'. $value['class'] .'">';
         $row .= check_plain($value['label']) .': ';
