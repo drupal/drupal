@@ -1,5 +1,5 @@
 <?php
-// $Id: color.inc,v 1.2 2006/12/06 16:32:54 dries Exp $
+// $Id: color.inc,v 1.3 2007/10/02 16:31:50 goba Exp $
 
 $info = array(
 
@@ -25,6 +25,7 @@ $info = array(
   // Images to copy over
   'copy' => array(
     'images/menu-collapsed.gif',
+    'images/menu-collapsed-rtl.gif',
     'images/menu-expanded.gif',
     'images/menu-leaf.gif',
   ),
