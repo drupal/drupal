@@ -102,11 +102,11 @@ function phptemplate_node_submitted($node) {
  */
 function phptemplate_get_ie_styles() {
   global $language;
-  
+
   $iecss = '<link type="text/css" rel="stylesheet" media="all" href="'. base_path() . path_to_theme() .'/fix-ie.css" />';
   if (defined('LANGUAGE_RTL') && $language->direction == LANGUAGE_RTL) {
     $iecss .= '<style type="text/css" media="all">@import "'. base_path() . path_to_theme() .'/fix-ie-rtl.css";</style>';
   }
-  
+
   return $iecss;
 }

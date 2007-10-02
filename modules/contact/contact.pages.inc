@@ -25,9 +25,9 @@ function contact_site_page() {
 
 function contact_mail_page() {
   global $user;
-  
+
   $form = $categories = array();
-  
+
   $result = db_query('SELECT cid, category, selected FROM {contact} ORDER BY weight, category');
   while ($category = db_fetch_object($result)) {
     $categories[$category->cid] = $category->category;
