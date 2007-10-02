@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.233 2007/09/14 17:46:31 goba Exp $
+// $Id: update.php,v 1.234 2007/10/02 08:41:13 goba Exp $
 
 /**
  * @file
@@ -415,12 +415,23 @@ function update_results_page() {
 
   update_task_list();
   // Report end result
+  if (module_exists('dblog')) {
+    $log_message = ' All errors have been <a href="'. base_path() .'?q=admin/logs/dblog">logged</a>.';
+  }
+  else {
+    $log_message = ' All errors have been logged.';
+  }
+
   if ($_SESSION['update_success']) {
-    $output = '<p>Updates were attempted. If you see no failures below, you may proceed happily to the <a href="index.php?q=admin">administration pages</a>. Otherwise, you may need to update your database manually. All errors have been <a href="index.php?q=admin/logs/watchdog">logged</a>.</p>';
+    $output = '<p>Updates were attempted. If you see no failures below, you may proceed happily to the <a href="'. base_path() .'?q=admin">administration pages</a>. Otherwise, you may need to update your database manually.'. $log_message .'</p>';
   }
   else {
     list($module, $version) = array_pop(reset($_SESSION['updates_remaining']));
-    $output = '<p class="error">The update process was aborted prematurely while running <strong>update #'. $version .' in '. $module .'.module</strong>. All other errors have been <a href="index.php?q=admin/logs/watchdog">logged</a>. You may need to check the <code>watchdog</code> database table manually.</p>';
+    $output = '<p class="error">The update process was aborted prematurely while running <strong>update #'. $version .' in '. $module .'.module</strong>.'. $log_message;
+    if (module_exists('dblog')) {
+      $output .= ' You may need to check the <code>watchdog</code> database table manually.';
+    }
+    $output .= '</p>';
   }
 
   if (!empty($GLOBALS['update_free_access'])) {
