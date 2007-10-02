@@ -1,4 +1,4 @@
-// $Id: INSTALL.txt,v 1.43 2007/09/12 11:21:47 goba Exp $
+// $Id: INSTALL.txt,v 1.44 2007/10/02 16:03:17 dries Exp $
 
 CONTENTS OF THIS FILE
 ---------------------
@@ -54,7 +54,7 @@ INSTALLATION
    your web server's document root or your public HTML directory:
 
      mv drupal-x.x/* drupal-x.x/.htaccess /var/www/html
-     
+
    If you would like to have the default English interface translated to a
    different language, we have good news. You can install and use Drupal in
    other languages from the start. Check whether a released package of the
@@ -69,7 +69,7 @@ INSTALLATION
    the details you provide through the install process, in the same
    directory. For Drupal to be able to create the file, you need to
    give the web server write privileges to the sites/default directory:
-   
+
      chmod o+w default
 
 3. CREATE THE DRUPAL DATABASE
@@ -90,7 +90,7 @@ INSTALLATION
 
    To run the install script point your browser to the base url of your website
    (i.e. http://www.example.com).
-   
+
    You will be guided through several screens to set up the database,
    create tables, add the first user account and provide basic web
    site settings.

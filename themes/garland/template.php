@@ -1,5 +1,5 @@
 <?php
-// $Id: template.php,v 1.14 2007/09/06 21:17:07 goba Exp $
+// $Id: template.php,v 1.15 2007/10/02 16:03:17 dries Exp $
 
 /**
  * Sets the body-tag class attribute.
@@ -102,11 +102,11 @@ function phptemplate_node_submitted($node) {
  */
 function phptemplate_get_ie_styles() {
   global $language;
-  
+
   $iecss = '<link type="text/css" rel="stylesheet" media="all" href="'. base_path() . path_to_theme() .'/fix-ie.css" />';
   if (defined('LANGUAGE_RTL') && $language->direction == LANGUAGE_RTL) {
     $iecss .= '<style type="text/css" media="all">@import "'. base_path() . path_to_theme() .'/fix-ie-rtl.css";</style>';
   }
-  
+
   return $iecss;
 }

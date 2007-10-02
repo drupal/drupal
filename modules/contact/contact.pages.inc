@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.pages.inc,v 1.3 2007/09/06 12:42:50 goba Exp $
+// $Id: contact.pages.inc,v 1.4 2007/10/02 16:03:17 dries Exp $
 
 /**
  * @file
@@ -25,9 +25,9 @@ function contact_site_page() {
 
 function contact_mail_page() {
   global $user;
-  
+
   $form = $categories = array();
-  
+
   $result = db_query('SELECT cid, category, selected FROM {contact} ORDER BY weight, category');
   while ($category = db_fetch_object($result)) {
     $categories[$category->cid] = $category->category;

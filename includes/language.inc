@@ -1,5 +1,5 @@
 <?php
-// $Id: language.inc,v 1.7 2007/09/06 14:03:52 goba Exp $
+// $Id: language.inc,v 1.8 2007/10/02 16:03:17 dries Exp $
 
 /**
  * @file
@@ -100,7 +100,7 @@ function language_url_rewrite(&$path, &$options) {
   global $language;
 
   // Only modify relative (insite) URLs.
-  if (!$options['absolute']) {
+  if (!$options['external']) {
 
     // Language can be passed as an option, or we go for current language.
     $path_language = isset($options['language']) ? $options['language'] : $language;

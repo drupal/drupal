@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.690 2007/10/01 09:39:27 goba Exp $
+// $Id: common.inc,v 1.691 2007/10/02 16:03:17 dries Exp $
 
 /**
  * @file
@@ -311,8 +311,8 @@ function drupal_goto($path = '', $query = NULL, $fragment = NULL, $http_response
   // data will be written to the database before the header is sent to the
   // browser.
   register_shutdown_function('header', "Location: $url", TRUE, $http_response_code);
-  
-  // Make sure none of the code below the drupal_goto() call gets executed. 
+
+  // Make sure none of the code below the drupal_goto() call gets executed.
   exit();
 }
 
@@ -1197,6 +1197,8 @@ function format_date($timestamp, $type = 'medium', $format = '', $timezone = NUL
  *       as in an RSS feed.
  *     'alias' (default FALSE)
  *       Whether the given path is an alias already.
+ *     'external'
+ *       Whether the given path is an external URL.
  * @return
  *   a string containing a URL to the given path.
  *
@@ -1206,11 +1208,17 @@ function format_date($timestamp, $type = 'medium', $format = '', $timezone = NUL
 function url($path = NULL, $options = array()) {
   // Merge in defaults
   $options += array(
-      'fragment' => '',
-      'query' => '',
-      'absolute' => FALSE,
-      'alias' => FALSE,
-    );
+    'fragment' => '',
+    'query' => '',
+    'absolute' => FALSE,
+    'alias' => FALSE,
+  );
+  if (!isset($options['external'])) {
+    // Return an external link if $path contains an allowed absolute URL.
+    // Only call the slow filter_xss_bad_protocol if $path contains a ':' before any / ? or #.
+    $colonpos = strpos($path, ':');
+    $options['external'] = ($colonpos !== FALSE && !preg_match('![/?#]!', substr($path, 0, $colonpos)) && filter_xss_bad_protocol($path, FALSE) == check_plain($path));
+  }
 
   // May need language dependant rewriting if language.inc is present
   if (function_exists('language_url_rewrite')) {
@@ -1223,10 +1231,7 @@ function url($path = NULL, $options = array()) {
     $options['query'] = drupal_query_string_encode($options['query']);
   }
 
-  // Return an external link if $path contains an allowed absolute URL.
-  // Only call the slow filter_xss_bad_protocol if $path contains a ':' before any / ? or #.
-  $colonpos = strpos($path, ':');
-  if ($colonpos !== FALSE && !preg_match('![/?#]!', substr($path, 0, $colonpos)) && filter_xss_bad_protocol($path, FALSE) == check_plain($path)) {
+  if ($options['external']) {
     // Split off the fragment
     if (strpos($path, '#') !== FALSE) {
       list($path, $old_fragment) = explode('#', $path, 2);

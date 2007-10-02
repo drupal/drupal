@@ -90,7 +90,7 @@ DirectoryIndex index.php
   # modify the following line:
   # RewriteBase /drupal
   #
-  # If your site is running in a VirtualDocumentRoot at http://example.com/, 
+  # If your site is running in a VirtualDocumentRoot at http://example.com/,
   # uncomment the following line:
   # RewriteBase /
 
@@ -100,4 +100,4 @@ DirectoryIndex index.php
   RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
 </IfModule>
 
-# $Id: .htaccess,v 1.88 2007/09/07 12:26:59 goba Exp $
+# $Id: .htaccess,v 1.89 2007/10/02 16:03:17 dries Exp $

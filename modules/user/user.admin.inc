@@ -1,5 +1,5 @@
 <?php
-// $Id: user.admin.inc,v 1.4 2007/10/01 09:04:54 goba Exp $
+// $Id: user.admin.inc,v 1.5 2007/10/02 16:03:17 dries Exp $
 
 /**
  * @file
@@ -34,7 +34,7 @@ function user_admin($callback_arg = '') {
 
 /**
  * Form builder; Return form for user administration filters.
- * 
+ *
  * @ingroup forms
  * @see user_filter_form_submit().
  */
@@ -486,7 +486,7 @@ function user_admin_settings() {
 
 /**
  * Menu callback: administer permissions.
- * 
+ *
  * @ingroup forms
  * @see user_admin_perm_submit().
  * @see theme_user_admin_perm().
@@ -611,7 +611,7 @@ function theme_user_admin_perm($form) {
 
 /**
  * Menu callback: administer roles.
- * 
+ *
  * @ingroup forms
  * @see user_admin_role_validate().
  * @see user_admin_role_submit().
@@ -859,7 +859,7 @@ function user_admin_access_check_submit($form, &$form_state) {
 
 /**
  * Menu callback: delete an access rule
- * 
+ *
  * @ingroup forms
  * @see user_admin_access_delete_confirm_submit().
  */
@@ -904,7 +904,7 @@ function user_admin_access() {
 
 /**
  * Theme user administration overview.
- * 
+ *
  * @ingroup themeable
  */
 function theme_user_admin_account($form) {
@@ -973,7 +973,7 @@ function theme_user_admin_new_role($form) {
 
 /**
  * Theme user administration filter form.
- * 
+ *
  * @ingroup themeable
  */
 function theme_user_filter_form($form) {
@@ -986,7 +986,7 @@ function theme_user_filter_form($form) {
 
 /**
  * Theme user administration filter selector.
- * 
+ *
  * @ingroup themeable
  */
 function theme_user_filters($form) {

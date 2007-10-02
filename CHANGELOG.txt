@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.224 2007/09/15 07:33:46 goba Exp $
+// $Id: CHANGELOG.txt,v 1.225 2007/10/02 16:03:17 dries Exp $
 
 Drupal 6.0, xxxx-xx-xx (development version)
 ----------------------
@@ -12,7 +12,7 @@ Drupal 6.0, xxxx-xx-xx (development version)
      default in the default install profile.
    * Extended the database log module so log messages can be filtered.
    * Added syslog module: useful for monitoring large Drupal installations.
-- Added optional e-mail notifications when users are approved, blocked, or 
+- Added optional e-mail notifications when users are approved, blocked, or
   deleted.
 - Added versioning support to categories by associating them with node
   revisions.

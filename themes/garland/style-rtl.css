@@ -1,4 +1,4 @@
-/* $Id: style-rtl.css,v 1.1 2007/09/06 21:17:07 goba Exp $ */
+/* $Id: style-rtl.css,v 1.2 2007/10/02 16:03:17 dries Exp $ */
 
 html {
   direction: rtl;
@@ -55,7 +55,7 @@ ol li, ul li, ul.menu li, .item-list ul li, li.leaf {
 }
 
 ul li, ul.menu li, .item-list ul li, li.leaf {
-  padding: 0 1.5em .2em 0; 
+  padding: 0 1.5em .2em 0;
   background: transparent url("images/menu-leaf.gif") no-repeat 100% .35em;
 }
 
@@ -123,7 +123,7 @@ dl dd {
 
 #wrapper #container #header h1 img {
   padding-right: inherit;
-  float: right; 
+  float: right;
   padding-right: inherit;
   padding-left : 20px;
 }
@@ -138,13 +138,13 @@ dl dd {
 
 /* Now we add the backgrounds for the main content shading */
 #wrapper #container #center #squeeze {
-  background: #fff url("images/bg-content.png") repeat-x 50% 0;  
+  background: #fff url("images/bg-content.png") repeat-x 50% 0;
 }
 
 #wrapper #container .breadcrumb {
   position: absolute;
   top: 15px;
-  left: inherit; 
+  left: inherit;
   right: 35px;
   z-index: 3;
 }
@@ -153,12 +153,12 @@ dl dd {
  * Primary navigation
  */
 ul.primary-links {
-  float: left; 
+  float: left;
 width:70%;
 }
 
 ul.primary-links li {
-  float: right;  
+  float: right;
 }
 
 /**
@@ -189,7 +189,7 @@ h2.with-tabs {
 ul.primary li a, ul.primary li.active a, ul.primary li a:hover, ul.primary li a:visited,
 ul.secondary li a, ul.secondary li.active a, ul.secondary li a:hover, ul.secondary li a:visited {
   margin: 0 1px 0 0;
-  
+
 }
 ul.primary li a:after {
   /* Fix Firefox 2 RTL bug. */
@@ -232,7 +232,7 @@ ul.links li, ul.inline li {
 }
 
 html.js fieldset.collapsible legend a {
-  padding-left: inherit; 
+  padding-left: inherit;
   padding-right: 2em;
   background: url("images/menu-expanded.gif") no-repeat 100% 50%;
 }
@@ -280,21 +280,21 @@ div.admin .right {
 }
 
 #wrapper #container #header #logo-floater {
-  width: 100%;	
-  left: 0;	
+  width: 100%;
+  left: 0;
   top:0;
 }
 
 /**
- * Fixes for IE7 - Does not break other browsers 
+ * Fixes for IE7 - Does not break other browsers
  */
 
-/* Position:relative on these breaks IE7. */  
+/* Position:relative on these breaks IE7. */
 ul.primary li a, ul.primary li.active a, ul.primary li a:hover, ul.primary li a:visited,
 ul.secondary li a, ul.secondary li.active a, ul.secondary li a:hover, ul.secondary li a:visited {
   position: static;
 }
-  
+
 /* Fix right and left cloumns position breaking on window resize */
 #container {
   position: relative;
@@ -310,7 +310,7 @@ ul.secondary li a, ul.secondary li.active a, ul.secondary li a:hover, ul.seconda
 }
 
 /**
- * Apply hasLayout to elements in IE7, using standard property "min-height" 
+ * Apply hasLayout to elements in IE7, using standard property "min-height"
  * (see http://www.satzansatz.de/cssd/onhavinglayout.html)
  */
 

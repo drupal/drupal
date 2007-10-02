@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.24 2007/09/06 21:17:07 goba Exp $ */
+/* $Id: style.css,v 1.25 2007/10/02 16:03:17 dries Exp $ */
 
 /**
  * Garland, for Drupal 5.0
@@ -835,7 +835,7 @@ fieldset {
 *:first-child+html fieldset > .description, *:first-child+html fieldset .fieldset-wrapper .description  {
   padding-top: 1em;
 }
- 
+
 fieldset legend {
   /* Fix disappearing legend in FFox */
   display: block;
@@ -843,7 +843,7 @@ fieldset legend {
 
 *:first-child+html fieldset legend, *:first-child+html fieldset.collapsed legend {
   display: inline;
-} 
+}
 
 html.js fieldset.collapsed {
   background: transparent;
