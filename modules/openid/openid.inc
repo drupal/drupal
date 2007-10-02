@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.inc,v 1.3 2007/07/02 14:41:36 dries Exp $
+// $Id: openid.inc,v 1.4 2007/10/02 16:19:22 dries Exp $
 
 /**
  * @file
@@ -33,7 +33,7 @@ function openid_redirect_http($url, $message) {
   }
 
   $sep = (strpos($url, '?') === FALSE) ? '?' : '&';
-  header('Location: ' . $url . $sep . implode('&', $query), TRUE, 302);
+  header('Location: '. $url . $sep . implode('&', $query), TRUE, 302);
   exit;
 }
 
@@ -109,7 +109,7 @@ function _openid_normalize_url($url) {
   $normalized_url = $url;
 
   if (stristr($url, '://') === FALSE) {
-    $normalized_url = 'http://' . $url;
+    $normalized_url = 'http://'. $url;
   }
 
   if (substr_count($normalized_url, '/') < 3) {
@@ -148,7 +148,7 @@ function _openid_encode_message($message) {
       if ($encoded_message != '') {
         $encoded_message .= '&';
       }
-      $encoded_message .= rawurlencode(trim($parts[0])) . '=' . rawurlencode(trim($parts[1]));
+      $encoded_message .= rawurlencode(trim($parts[0])) .'='. rawurlencode(trim($parts[1]));
     }
   }
 
@@ -203,7 +203,7 @@ function _openid_link_href($rel, $html) {
  * Pull the http-equiv attribute out of an html meta element
  */
 function _openid_meta_httpequiv($equiv, $html) {
-  preg_match('|<meta\s+http-equiv=["\']' . $equiv . '["\'](.*)/?>|iU', $html, $matches);
+  preg_match('|<meta\s+http-equiv=["\']'. $equiv .'["\'](.*)/?>|iU', $html, $matches);
   if (isset($matches[1])) {
     preg_match('|content=["\']([^"]+)["\']|iU', $matches[1], $content);
     return $content[1];
@@ -224,8 +224,8 @@ function _openid_signature($association, $message_array, $keys_to_sign) {
   $sign_data = array();
 
   foreach ($keys_to_sign as $key) {
-    if (isset($message_array['openid.' . $key])) {
-      $sign_data[$key] = $message_array['openid.' . $key];
+    if (isset($message_array['openid.'. $key])) {
+      $sign_data[$key] = $message_array['openid.'. $key];
     }
   }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.156 2007/09/26 20:01:17 goba Exp $
+// $Id: system.install,v 1.157 2007/10/02 16:19:23 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -1299,7 +1299,7 @@ function system_update_151() {
     else {
       variable_set($menus[$loop]['menu_var'], $menus[$loop]['pid']);
     }
-    variable_del('phptemplate_' .$menus[$loop]['links_var']);
+    variable_del('phptemplate_'. $menus[$loop]['links_var']);
     variable_del('phptemplate_'. $menus[$loop]['links_var'] .'_more');
     variable_del($menus[$loop]['toggle_var']);
     variable_del($menus[$loop]['more_var']);
@@ -1334,7 +1334,7 @@ function system_update_152() {
   return $ret;
 }
 
-function system_update_153(){
+function system_update_153() {
   $ret = array();
   switch ($GLOBALS['db_type']) {
     case 'pgsql':
@@ -1801,7 +1801,7 @@ function system_update_170() {
 
 function system_update_171() {
   $ret = array();
-  $ret[] = update_sql('DELETE FROM {users_roles} WHERE rid IN ('. DRUPAL_ANONYMOUS_RID. ', '. DRUPAL_AUTHENTICATED_RID. ')');
+  $ret[] = update_sql('DELETE FROM {users_roles} WHERE rid IN ('. DRUPAL_ANONYMOUS_RID .', '. DRUPAL_AUTHENTICATED_RID .')');
   return $ret;
 }
 
@@ -1995,7 +1995,7 @@ function _update_178_url_fix($text) {
     if (preg_match_all($pattern, $text, $matches)) {
       foreach ($matches[1] as $url) {
         if ($url != '' && !strstr($url, 'mailto:') && !strstr($url, '://') && !strstr($url, '../') && !strstr($url, './') && $url[0] != '/' && $url[0] != '#') {
-          $text = preg_replace('|'. $type .'\s*=\s*"'. preg_quote($url) .'\s*"|', $type. '="'.base_path(). $url  .'"', $text);
+          $text = preg_replace('|'. $type .'\s*=\s*"'. preg_quote($url) .'\s*"|', $type .'="'. base_path() . $url .'"', $text);
         }
       }
     }

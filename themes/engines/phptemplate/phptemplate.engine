@@ -1,5 +1,5 @@
 <?php
-// $Id: phptemplate.engine,v 1.68 2007/08/28 11:35:34 goba Exp $
+// $Id: phptemplate.engine,v 1.69 2007/10/02 16:19:23 dries Exp $
 
 /**
  * @file
@@ -7,7 +7,7 @@
  */
 
 function phptemplate_init($template) {
-  $file = dirname($template->filename) . '/template.php';
+  $file = dirname($template->filename) .'/template.php';
   if (file_exists($file)) {
     include_once "./$file";
   }

@@ -1,5 +1,5 @@
 <?php
-// $Id: update.report.inc,v 1.2 2007/09/10 18:11:22 goba Exp $
+// $Id: update.report.inc,v 1.3 2007/10/02 16:19:23 dries Exp $
 
 /**
  * @file
@@ -156,7 +156,7 @@ function theme_update_report($data) {
 
     $row .= "<div class=\"info\">\n";
     if (!empty($project['extra'])) {
-      $row .= '<div class="extra">' ."\n";
+      $row .= '<div class="extra">'."\n";
       foreach ($project['extra'] as $key => $value) {
         $row .= '<div class="'. $value['class'] .'">';
         $row .= check_plain($value['label']) .': ';

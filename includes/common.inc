@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.692 2007/10/02 16:15:56 dries Exp $
+// $Id: common.inc,v 1.693 2007/10/02 16:19:22 dries Exp $
 
 /**
  * @file
@@ -1601,7 +1601,7 @@ function drupal_get_css($css = NULL) {
             $no_theme_preprocess .= '<link type="text/css" rel="stylesheet" media="'. $media .'" href="'. base_path() . $file .'" />'."\n";
           }
           else {
-            $output .= '<link type="text/css" rel="stylesheet" media="'. $media .'" href="'. base_path() . $file . '" />'."\n";
+            $output .= '<link type="text/css" rel="stylesheet" media="'. $media .'" href="'. base_path() . $file .'" />'."\n";
           }
         }
       }
@@ -1648,7 +1648,7 @@ function drupal_build_css_cache($types, $filename) {
           // Wraps all @import arguments in url().
           $contents = preg_replace('/@import\s+(?!url)[\'"]?(\S*)\b[\'"]?/i', '@import url("\1")', $contents);
           // Fix all paths within this CSS file, ignoring absolute paths.
-          $data .= preg_replace('/url\(([\'"]?)(?![a-z]+:)/i', 'url(\1'. $path . '\2', $contents);
+          $data .= preg_replace('/url\(([\'"]?)(?![a-z]+:)/i', 'url(\1'. $path .'\2', $contents);
         }
       }
     }
@@ -1879,7 +1879,7 @@ function drupal_build_js_cache($files, $filename) {
     foreach ($files as $path => $info) {
       if ($info['preprocess']) {
         // Append a ';' after each JS file to prevent them from running together.
-        $contents .= _drupal_compress_js(file_get_contents($path). ';');
+        $contents .= _drupal_compress_js(file_get_contents($path) .';');
       }
     }
 
@@ -1982,9 +1982,9 @@ function _packer_apply($script, $regexps, $escape = FALSE) {
   $regexp = '/';
   foreach ($_regexps as $_regexp) {
     list($expression) = $_regexp;
-    $regexp .= '(' . substr($expression, 1, -1) . ')|';
+    $regexp .= '('. substr($expression, 1, -1) .')|';
   }
-  $regexp = substr($regexp, 0, -1) . '/';
+  $regexp = substr($regexp, 0, -1) .'/';
 
   // In order to simplify the regexps that look e.g. for quoted strings, we
   // remove all escaped characters (such as \' or \") from the data. Then, we
