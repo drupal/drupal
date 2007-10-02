@@ -89,7 +89,7 @@ Drupal.behaviors.tableHeader = function (context) {
         this.savedHeight = $(this).height();
       });
 
-      $(cells).each(function () {
+      $('table.sticky-table div.sticky-header').each(function () {
         // Get position.
         this.stickyPosition = $(this.cell).offset().top;
         this.stickyMax = this.table.savedHeight;
