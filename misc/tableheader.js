@@ -1,4 +1,4 @@
-// $Id: tableheader.js,v 1.8 2007/09/12 18:29:32 goba Exp $
+// $Id: tableheader.js,v 1.9 2007/10/02 07:09:51 dries Exp $
 
 Drupal.behaviors.tableHeader = function (context) {
   // This breaks in anything less than IE 7. Prevent it from running.
@@ -89,7 +89,7 @@ Drupal.behaviors.tableHeader = function (context) {
         this.savedHeight = $(this).height();
       });
 
-      $(cells).each(function () {
+      $('table.sticky-table div.sticky-header').each(function () {
         // Get position.
         this.stickyPosition = $(this.cell).offset().top;
         this.stickyMax = this.table.savedHeight;
