@@ -25,6 +25,7 @@ $info = array(
   // Images to copy over
   'copy' => array(
     '../images/menu-collapsed.gif',
+    '../images/menu-collapsed-rtl.gif',
     '../images/menu-expanded.gif',
     '../images/menu-leaf.gif',
   ),
