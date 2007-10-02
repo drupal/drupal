@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.105 2007/09/25 12:39:31 goba Exp $
+// $Id: file.inc,v 1.106 2007/10/02 16:15:56 dries Exp $
 
 /**
  * @file
@@ -574,8 +574,10 @@ function file_save_upload($source, $validators = array(), $dest = FALSE, $replac
     }
 
     // If we made it this far it's safe to record this file in the database.
-    db_query("INSERT INTO {files} (uid, filename, filepath, filemime, filesize, status, timestamp) VALUES (%d, '%s', '%s', '%s', %d, %d, %d)", $user->uid, $file->filename, $file->filepath, $file->filemime, $file->filesize, FILE_STATUS_TEMPORARY, time());
-    $file->fid = db_last_insert_id('files', 'fid');
+    $file->uid = $user->uid;
+    $file->status = FILE_STATUS_TEMPORARY;
+    $file->timestamp = time();
+    drupal_write_record('files', $file);
 
     // Add file to the cache.
     $upload_cache[$source] = $file;

@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.888 2007/09/27 12:56:04 goba Exp $
+// $Id: node.module,v 1.889 2007/10/02 16:15:56 dries Exp $
 
 /**
  * @file
@@ -652,14 +652,22 @@ function node_load($param = array(), $revision = NULL, $reset = NULL) {
     return FALSE;
   }
 
+  // Retrieve a field list based on the site's schema.
+  $fields = drupal_schema_fields_sql('node', 'n');
+  $fields = array_merge($fields, drupal_schema_fields_sql('node_revisions', 'r'));
+  $fields = array_merge($fields, array('u.name', 'u.data'));
+  $fields = implode(', ', $fields);
+  // rename timestamp field for clarity.
+  $fields = str_replace('r.timestamp', 'r.timestamp AS revision_timestamp', $fields);
+
   // Retrieve the node.
   // No db_rewrite_sql is applied so as to get complete indexing for search.
   if ($revision) {
     array_unshift($arguments, $revision);
-    $node = db_fetch_object(db_query('SELECT n.nid, r.vid, n.type, n.status, n.language, n.created, n.changed, n.comment, n.promote, n.sticky, n.tnid, n.translate, r.timestamp AS revision_timestamp, r.title, r.body, r.teaser, r.log, r.format, u.uid, u.name, u.picture, u.data FROM {node} n INNER JOIN {users} u ON u.uid = n.uid INNER JOIN {node_revisions} r ON r.nid = n.nid AND r.vid = %d WHERE '. $cond, $arguments));
+    $node = db_fetch_object(db_query('SELECT '. $fields. ' FROM {node} n INNER JOIN {users} u ON u.uid = n.uid INNER JOIN {node_revisions} r ON r.nid = n.nid AND r.vid = %d WHERE '. $cond, $arguments));
   }
   else {
-    $node = db_fetch_object(db_query('SELECT n.nid, n.vid, n.type, n.status, n.language, n.created, n.changed, n.comment, n.promote, n.sticky, n.tnid, n.translate, r.timestamp AS revision_timestamp, r.title, r.body, r.teaser, r.log, r.format, u.uid, u.name, u.picture, u.data FROM {node} n INNER JOIN {users} u ON u.uid = n.uid INNER JOIN {node_revisions} r ON r.vid = n.vid WHERE '. $cond, $arguments));
+    $node = db_fetch_object(db_query('SELECT '. $fields. ' FROM {node} n INNER JOIN {users} u ON u.uid = n.uid INNER JOIN {node_revisions} r ON r.vid = n.vid WHERE '. $cond, $arguments));
   }
 
   if ($node && $node->nid) {
@@ -755,7 +763,6 @@ function node_submit($node) {
       $node->uid = 0;
     }
   }
-
   $node->created = !empty($node->date) ? strtotime($node->date) : time();
   $node->validated = TRUE;
 
@@ -777,16 +784,13 @@ function node_save(&$node) {
     // Insert a new node.
     $node->is_new = TRUE;
   }
+  elseif (!empty($node->revision)) {
+    $node->old_vid = $node->vid;
+  }
   else {
-    // We need to ensure that all node fields are filled.
-    $node_current = node_load($node->nid);
-    foreach ($node as $field => $data) {
-      $node_current->$field = $data;
-    }
-    $node = $node_current;
-
-    if (!empty($node->revision)) {
-      $node->old_vid = $node->vid;
+    // When updating a node, avoid clobberring an existing log entry with an empty one.
+    if (empty($node->log)) {
+      unset($node->log);
     }
   }
 
@@ -797,65 +801,24 @@ function node_save(&$node) {
   // The changed timestamp is always updated for bookkeeping purposes (revisions, searching, ...)
   $node->changed = time();
 
-  // Split off revisions data to another structure
-  $revisions_table_values = array('nid' => &$node->nid,
-                     'title' => $node->title, 'body' => isset($node->body) ? $node->body : '',
-                     'teaser' => $node->teaser, 'timestamp' => $node->changed,
-                     'uid' => $user->uid, 'format' => isset($node->format) ? $node->format : FILTER_FORMAT_DEFAULT);
-  $revisions_table_types = array('nid' => '%d',
-                     'title' => "'%s'", 'body' => "'%s'",
-                     'teaser' => "'%s'", 'timestamp' => '%d',
-                     'uid' => '%d', 'format' => '%d');
-  if (!empty($node->log) || $node->is_new || (isset($node->revision) && $node->revision)) {
-    // Only store the log message if there's something to store; this prevents
-    // existing log messages from being unintentionally overwritten by a blank
-    // message. A new revision will have an empty log message (or $node->log).
-    $revisions_table_values['log'] = !empty($node->log) ? $node->log : '';
-    $revisions_table_types['log'] = "'%s'";
-  }
-  $node_table_values = array(
-                    'title' => $node->title, 'type' => $node->type, 'uid' => $node->uid,
-                    'status' => $node->status, 'language' => $node->language, 'created' => $node->created,
-                    'changed' => $node->changed, 'comment' => $node->comment,
-                    'promote' => $node->promote, 'sticky' => $node->sticky);
-  $node_table_types = array(
-                    'title' => "'%s'", 'type' => "'%s'", 'uid' => '%d',
-                    'status' => '%d', 'language' => "'%s'", 'created' => '%d',
-                    'changed' => '%d', 'comment' => '%d',
-                    'promote' => '%d', 'sticky' => '%d');
+  $node->timestamp = time();
+  $node->format = isset($node->format) ? $node->format : FILTER_FORMAT_DEFAULT;
   $update_node = TRUE;
+
   //Generate the node table query and the
   //the node_revisions table query
   if ($node->is_new) {
-    $node_query = 'INSERT INTO {node} ('. implode(', ', array_keys($node_table_types)) .') VALUES ('. implode(', ', $node_table_types) .')';
-    db_query($node_query, $node_table_values);
-    $node->nid = db_last_insert_id('node', 'nid');
-    $revisions_query = 'INSERT INTO {node_revisions} ('. implode(', ', array_keys($revisions_table_types)) .') VALUES ('. implode(', ', $revisions_table_types) .')';
-    db_query($revisions_query, $revisions_table_values);
-    $node->vid = db_last_insert_id('node_revisions', 'vid');
+    drupal_write_record('node', $node);
+    drupal_write_record('node_revisions', $node);
     $op = 'insert';
   }
   else {
-    $arr = array();
-    foreach ($node_table_types as $key => $value) {
-      $arr[] = $key .' = '. $value;
-    }
-    $node_table_values[] = $node->nid;
-    $node_query = 'UPDATE {node} SET '. implode(', ', $arr) .' WHERE nid = %d';
-    db_query($node_query, $node_table_values);
+    drupal_write_record('node', $node, 'nid');
     if (!empty($node->revision)) {
-      $revisions_query = 'INSERT INTO {node_revisions} ('. implode(', ', array_keys($revisions_table_types)) .') VALUES ('. implode(', ', $revisions_table_types) .')';
-      db_query($revisions_query, $revisions_table_values);
-      $node->vid = db_last_insert_id('node_revisions', 'vid');
+      drupal_write_record('node_revisions', $node);
     }
     else {
-      $arr = array();
-      foreach ($revisions_table_types as $key => $value) {
-        $arr[] = $key .' = '. $value;
-      }
-      $revisions_table_values[] = $node->vid;
-      $revisions_query = 'UPDATE {node_revisions} SET '. implode(', ', $arr) .' WHERE vid = %d';
-      db_query($revisions_query, $revisions_table_values);
+      drupal_write_record('node_revisions', $node, 'vid');
       $update_node = FALSE;
     }
     $op = 'update';

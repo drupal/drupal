@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.81 2007/09/27 16:52:00 goba Exp $
+// $Id: database.inc,v 1.82 2007/10/02 16:15:56 dries Exp $
 
 /**
  * @file
@@ -199,7 +199,7 @@ function _db_query_callback($match, $init = FALSE) {
  *   The Schema API type of a field (e.g. 'int', 'text', or 'varchar').
  */
 function db_placeholders($arguments, $type = 'int') {
-  $placeholder = _db_type_placeholder($type);
+  $placeholder = db_type_placeholder($type);
   return implode(',', array_fill(0, count($arguments), $placeholder));
 }
 
@@ -487,7 +487,7 @@ function db_field_names($fields) {
  * @return
  *   The placeholder string to embed in a query for that type.
  */
-function _db_type_placeholder($type) {
+function db_type_placeholder($type) {
   switch ($type) {
     case 'varchar':
     case 'text':
@@ -516,7 +516,7 @@ function _db_type_placeholder($type) {
 
   // There is no safe value to return here, so return something that
   // will cause the query to fail.
-  return 'unsupported type '. $type .'for _db_type_placeholder';
+  return 'unsupported type '. $type .'for db_type_placeholder';
 }
 
 /**

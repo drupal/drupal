@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.691 2007/10/02 16:03:17 dries Exp $
+// $Id: common.inc,v 1.692 2007/10/02 16:15:56 dries Exp $
 
 /**
  * @file
@@ -2992,6 +2992,147 @@ function _drupal_initialize_schema($module, &$schema) {
       $schema[$name]['name'] = $name;
     }
   }
+}
+
+/**
+ * Retrieve a list of fields from a table schema. The list is suitable for use in a SQL query.
+ *
+ * @param $table
+ *   The name of the table from which to retrieve fields.
+ * @param
+ *   An optional prefix to to all fields.
+ *
+ * @return An array of fields.
+ **/
+function drupal_schema_fields_sql($table, $prefix = NULL) {
+  $schema = drupal_get_schema($table);
+  $fields = array_keys($schema['fields']);
+  if ($prefix) {
+    $columns = array();
+    foreach ($fields as $field) {
+      $columns[] = "$prefix.$field";
+    }
+    return $columns;
+  }
+  else {
+    return $fields;
+  }
+}
+
+/**
+ * Save a record to the database based upon the schema. Default values are
+ * filled in for missing items, and 'serial' (auto increment) types are
+ * filled in with IDs.
+ *
+ * @param $table
+ *   The name of the table; this must exist in schema API.
+ * @param $object
+ *   The object to write. This is a reference, as defaults according to
+ *   the schema may be filled in on the object, as well as ID on the serial
+ *   type(s). Both array an object types may be passed.
+ * @param update
+ *   If this is an update, specify the primary keys' field names. It is the
+ *   caller's responsibility to know if a record for this object already
+ *   exists in the database. If there is only 1 key, you may pass a simple string.
+ * @return (boolean) Failure to write a record will return FALSE. Otherwise,
+ *   TRUE is returned. The $object parameter contains values for any serial
+ *   fields defined by the $table. For example, $object->nid will be populated
+ *   after inserting a new node.
+ */
+function drupal_write_record($table, &$object, $update = array()) {
+  // Standardize $update to an array.
+  if (is_string($update)) {
+    $update = array($update);
+  }
+
+  // Convert to an object if needed.
+  if (is_array($object)) {
+    $object = (object) $object;
+    $array = TRUE;
+  }
+  else {
+    $array = FALSE;
+  }
+
+  $schema = drupal_get_schema($table);
+  if (empty($schema)) {
+    return FALSE;
+  }
+
+  $fields = $defs = $values = $serials = array();
+
+  // Go through our schema, build SQL, and when inserting, fill in defaults for
+  // fields that are not set.
+  foreach ($schema['fields'] as $field => $info) {
+    // Special case -- skip serial types if we are updating.
+    if ($info['type'] == 'serial' && count($update)) {
+      continue;
+    }
+
+    // For inserts, populate defaults from Schema if not already provided
+    if (!isset($object->$field)  && !count($update) && isset($info['default'])) {
+      $object->$field = $info['default'];
+    }
+
+    // Track serial fields so we can helpfully populate them after the query.
+    if ($info['type'] == 'serial') {
+      $serials[] = $field;
+      // Ignore values for serials when inserting data. Unsupported.
+      $object->$field = 'NULL';
+    }
+
+    // Build arrays for the fields, placeholders, and values in our query.
+    if (isset($object->$field)) {
+      $fields[] = $field;
+      $placeholders[] = db_type_placeholder($info['type']);
+
+      if (empty($info['serialize'])) {
+        $values[] = $object->$field;
+      }
+      else {
+        $values[] = serialize($object->$field);
+      }
+    }
+  }
+
+  // Build the SQL.
+  $query = '';
+  if (!count($update)) {
+    $query = "INSERT INTO {$table} (" . implode(', ', $fields) . ') VALUES (' . implode(', ', $placeholders) . ')';
+    $return = SAVED_NEW;
+  }
+  else {
+    $query = '';
+    foreach ($fields as $id => $field) {
+      if ($query) {
+        $query .= ', ';
+      }
+      $query .= $field . ' = ' . $placeholders[$id];
+    }
+
+    foreach ($update as $key){
+      $conditions[] = "$key = ". db_type_placeholder($schema['fields'][$key]['type']);
+      $values[] = $object->$key;
+    }
+
+    $query = "UPDATE {$table} SET $query WHERE ". implode(' AND ', $conditions);
+    $return = SAVED_UPDATED;
+  }
+  db_query($query, $values);
+
+  if ($serials) {
+    // Get last insert ids and fill them in.
+    foreach ($serials as $field) {
+      $object->$field = db_last_insert_id($table, $field);
+    }
+  }
+
+  // If we began with an array, convert back so we don't surprise the caller.
+  if ($array) {
+    $object = (array)$object;
+  }
+
+  return $return;
 }
 
 /**

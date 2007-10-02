@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysql-common.inc,v 1.12 2007/09/14 17:46:32 goba Exp $
+// $Id: database.mysql-common.inc,v 1.13 2007/10/02 16:15:56 dries Exp $
 
 /**
  * @file
@@ -297,7 +297,7 @@ function db_add_field(&$ret, $table, $field, $spec, $keys_new = array()) {
   $ret[] = update_sql($query);
   if (isset($spec['initial'])) {
     // All this because update_sql does not support %-placeholders.
-    $sql = 'UPDATE {'. $table .'} SET '. $field .' = '. _db_type_placeholder($spec['type']);
+    $sql = 'UPDATE {'. $table .'} SET '. $field .' = '. db_type_placeholder($spec['type']);
     $result = db_query($sql, $spec['initial']);
     $ret[] = array('success' => $result !== FALSE, 'query' => check_plain($sql .' ('. $spec['initial'] .')'));
   }

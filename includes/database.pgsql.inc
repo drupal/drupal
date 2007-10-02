@@ -1,5 +1,5 @@
 <?php
-// $Id: database.pgsql.inc,v 1.61 2007/09/25 11:44:35 goba Exp $
+// $Id: database.pgsql.inc,v 1.62 2007/10/02 16:15:56 dries Exp $
 
 /**
  * @file
@@ -700,7 +700,7 @@ function db_add_field(&$ret, $table, $field, $spec, $new_keys = array()) {
   $ret[] = update_sql($query);
   if (isset($spec['initial'])) {
     // All this because update_sql does not support %-placeholders.
-    $sql = 'UPDATE {'. $table .'} SET '. $field .' = '. _db_type_placeholder($spec['type']);
+    $sql = 'UPDATE {'. $table .'} SET '. $field .' = '. db_type_placeholder($spec['type']);
     $result = db_query($sql, $spec['initial']);
     $ret[] = array('success' => $result !== FALSE, 'query' => check_plain($sql .' ('. $spec['initial'] .')'));
   }
