@@ -66,6 +66,11 @@ STATISTICS MODULE
 M: Jeremy Andrews <jeremy@kerneltrap.com>
 S: maintained
 
+THEME SYSTEM
+M: Earl Miles <merlin@logrus.com>
+   Joon Park <joon@dvessel.com>
+S: maintained
+
 UPDATE MODULE
 M: Derek Wright <http://drupal.org/user/46549/contact>
    Earl Miles <http://drupal.org/user/26979/contact>
