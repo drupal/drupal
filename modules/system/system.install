@@ -146,7 +146,7 @@ function system_requirements($phase) {
   // See if updates are available in update.php.
   if ($phase == 'runtime') {
     $requirements['update'] = array(
-      'title' => $t('Database schema'),
+      'title' => $t('Database updates'),
       'severity' => REQUIREMENT_OK,
       'value' => $t('Up to date'),
     );
