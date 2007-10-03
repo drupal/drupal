@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.157 2007/10/02 16:19:23 dries Exp $
+// $Id: system.install,v 1.158 2007/10/03 13:19:19 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -146,7 +146,7 @@ function system_requirements($phase) {
   // See if updates are available in update.php.
   if ($phase == 'runtime') {
     $requirements['update'] = array(
-      'title' => $t('Database schema'),
+      'title' => $t('Database updates'),
       'severity' => REQUIREMENT_OK,
       'value' => $t('Up to date'),
     );
