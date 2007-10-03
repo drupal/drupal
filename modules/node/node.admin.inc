@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.5 2007/09/27 16:52:00 goba Exp $
+// $Id: node.admin.inc,v 1.6 2007/10/03 17:35:22 dries Exp $
 
 /**
  * @file
@@ -82,27 +82,33 @@ function node_node_operations() {
   $operations = array(
     'publish' => array(
       'label' => t('Publish'),
-      'callback' => 'node_operations_publish',
+      'callback' => 'node_mass_update',
+      'callback arguments' => array('updates' => array('status' => 1)),
     ),
     'unpublish' => array(
       'label' => t('Unpublish'),
-      'callback' => 'node_operations_unpublish',
+      'callback' => 'node_mass_update',
+      'callback arguments' => array('updates' => array('status' => 0)),
     ),
     'promote' => array(
       'label' => t('Promote to front page'),
-      'callback' => 'node_operations_promote',
+      'callback' => 'node_mass_update',
+      'callback arguments' => array('updates' => array('status' => 1, 'promote' => 1)),
     ),
     'demote' => array(
       'label' => t('Demote from front page'),
-      'callback' => 'node_operations_demote',
+      'callback' => 'node_mass_update',
+      'callback arguments' => array('updates' => array('promote' => 0)),
     ),
     'sticky' => array(
       'label' => t('Make sticky'),
-      'callback' => 'node_operations_sticky',
+      'callback' => 'node_mass_update',
+      'callback arguments' => array('updates' => array('status' => 1, 'sticky' => 1)),
     ),
     'unsticky' => array(
       'label' => t('Remove stickiness'),
-      'callback' => 'node_operations_unsticky',
+      'callback' => 'node_mass_update',
+      'callback arguments' => array('updates' => array('sticky' => 0)),
     ),
     'delete' => array(
       'label' => t('Delete'),
@@ -110,48 +116,6 @@ function node_node_operations() {
     ),
   );
   return $operations;
-}
-
-/**
- * Callback function for admin mass publishing nodes.
- */
-function node_operations_publish($nodes) {
-  db_query('UPDATE {node} SET status = 1 WHERE nid IN('. db_placeholders($nodes) .')', $nodes);
-}
-
-/**
- * Callback function for admin mass unpublishing nodes.
- */
-function node_operations_unpublish($nodes) {
-  db_query('UPDATE {node} SET status = 0 WHERE nid IN('. db_placeholders($nodes) .')', $nodes);
-}
-
-/**
- * Callback function for admin mass promoting nodes.
- */
-function node_operations_promote($nodes) {
-  db_query('UPDATE {node} SET status = 1, promote = 1 WHERE nid IN('. db_placeholders($nodes) .')', $nodes);
-}
-
-/**
- * Callback function for admin mass demoting nodes.
- */
-function node_operations_demote($nodes) {
-  db_query('UPDATE {node} SET promote = 0 WHERE nid IN('. db_placeholders($nodes) .')', $nodes);
-}
-
-/**
- * Callback function for admin mass editing nodes to be sticky.
- */
-function node_operations_sticky($nodes) {
-  db_query('UPDATE {node} SET status = 1, sticky = 1 WHERE nid IN('. db_placeholders($nodes) .')',  $nodes);
-}
-
-/**
- * Callback function for admin mass editing nodes to remove stickiness.
- */
-function node_operations_unsticky($nodes) {
-  db_query('UPDATE {node} SET sticky = 0 WHERE nid IN('. db_placeholders($nodes) .')', $nodes);
 }
 
 /**
@@ -364,7 +328,6 @@ function node_admin_nodes_submit($form, &$form_state) {
     call_user_func_array($function, $args);
 
     cache_clear_all();
-    drupal_set_message(t('The update has been performed.'));
   }
   else {
     // We need to rebuild the form to go to a second step.  For example, to
