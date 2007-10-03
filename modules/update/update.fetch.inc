@@ -1,5 +1,5 @@
 <?php
-// $Id: update.fetch.inc,v 1.2 2007/08/11 07:05:11 dries Exp $
+// $Id: update.fetch.inc,v 1.3 2007/10/03 13:35:15 goba Exp $
 
 /**
  * @file
@@ -28,9 +28,7 @@ function _update_refresh() {
 
   $available = array();
   $data = array();
-  $site_key = '';
-  $drupal_private_key = variable_get('drupal_private_key', '');
-  $site_key = md5($base_url . $drupal_private_key);
+  $site_key = md5($base_url . drupal_get_private_key());
   $projects = update_get_projects();
 
   foreach ($projects as $key => $project) {
