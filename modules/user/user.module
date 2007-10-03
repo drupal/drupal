@@ -858,6 +858,7 @@ function user_menu() {
 
   $items['user/login'] = array(
     'title' => 'Log in',
+    'access callback' => 'user_is_anonymous',
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
 
