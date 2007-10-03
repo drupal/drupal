@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.850 2007/09/27 16:52:00 goba Exp $
+// $Id: user.module,v 1.851 2007/10/03 13:01:04 goba Exp $
 
 /**
  * @file
@@ -858,6 +858,7 @@ function user_menu() {
 
   $items['user/login'] = array(
     'title' => 'Log in',
+    'access callback' => 'user_is_anonymous',
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
 
