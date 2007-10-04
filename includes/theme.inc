@@ -382,6 +382,8 @@ function _theme_build_registry($theme, $base_theme, $theme_engine) {
   // Finally, hooks provided by the theme itself.
   _theme_process_registry($cache, $theme->name, 'theme', $theme->name, dirname($theme->filename));
 
+  // Let modules alter the registry
+  drupal_alter('theme_registry', $cache);
   return $cache;
 }
 
