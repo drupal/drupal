@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.693 2007/10/02 16:19:22 dries Exp $
+// $Id: common.inc,v 1.694 2007/10/04 19:20:39 goba Exp $
 
 /**
  * @file
@@ -3098,7 +3098,7 @@ function drupal_write_record($table, &$object, $update = array()) {
   // Build the SQL.
   $query = '';
   if (!count($update)) {
-    $query = "INSERT INTO {$table} (" . implode(', ', $fields) . ') VALUES (' . implode(', ', $placeholders) . ')';
+    $query = "INSERT INTO {". $table ."} (" . implode(', ', $fields) . ') VALUES (' . implode(', ', $placeholders) . ')';
     $return = SAVED_NEW;
   }
   else {
@@ -3115,7 +3115,7 @@ function drupal_write_record($table, &$object, $update = array()) {
       $values[] = $object->$key;
     }
 
-    $query = "UPDATE {$table} SET $query WHERE ". implode(' AND ', $conditions);
+    $query = "UPDATE {". $table ."} SET $query WHERE ". implode(' AND ', $conditions);
     $return = SAVED_UPDATED;
   }
   db_query($query, $values);
