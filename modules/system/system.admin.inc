@@ -281,6 +281,7 @@ function system_themes_form_submit($form, &$form_state) {
 
   list_themes(TRUE);
   menu_rebuild();
+  drupal_rebuild_theme_registry();
   drupal_set_message(t('The configuration options have been saved.'));
   $form_state['redirect'] = 'admin/build/themes';
 
