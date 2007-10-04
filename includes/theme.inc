@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.387 2007/10/04 18:51:04 goba Exp $
+// $Id: theme.inc,v 1.388 2007/10/04 19:24:50 goba Exp $
 
 /**
  * @file
@@ -382,6 +382,8 @@ function _theme_build_registry($theme, $base_theme, $theme_engine) {
   // Finally, hooks provided by the theme itself.
   _theme_process_registry($cache, $theme->name, 'theme', $theme->name, dirname($theme->filename));
 
+  // Let modules alter the registry
+  drupal_alter('theme_registry', $cache);
   return $cache;
 }
 
