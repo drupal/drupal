@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.534 2007/09/27 13:12:26 goba Exp $
+// $Id: system.module,v 1.535 2007/10/04 18:51:04 goba Exp $
 
 /**
  * @file
@@ -742,28 +742,6 @@ function system_theme_data() {
         $themes[$key]->prefix = $key;
       }
     }
-    // Add any stylesheets from the base theme, unless the names match in which case
-    // the sub-theme wins. Note that we slip the base theme's stylesheets in at the
-    // beginning of the array so that they get added to the page in the correct order.
-    foreach ($themes[$base_key]->info['stylesheets'] as $media => $stylesheets) {
-      foreach ($stylesheets as $stylesheet => $path) {
-        if (!isset($themes[$key]->info['stylesheets'][$media][$stylesheet])) {
-          // We need to ensure the media array exists, or the array addition below doesn't work.
-          if (!isset($themes[$key]->info['stylesheets'][$media])) {
-            $themes[$key]->info['stylesheets'][$media] = array();
-          }
-          $themes[$key]->info['stylesheets'][$media] = array($stylesheet => $path) + $themes[$key]->info['stylesheets'][$media];
-        }
-      }
-    }
-    // Add any scripts from the base theme, unless the names match in which case
-    // the sub-theme wins. Note that we slip the base theme's scripts in at the
-    // beginning of the array so that they get added to the page in the correct order.
-    foreach ($themes[$base_key]->info['scripts'] as $script => $path) {
-      if (!isset($themes[$key]->info['scripts'][$script])) {
-        $themes[$key]->info['scripts'] = array($script => $path) + $themes[$key]->info['scripts'];
-      }
-    }
   }
 
   // Extract current files from database.
@@ -798,7 +776,7 @@ function system_find_base_theme($themes, $key, $used_keys = array()) {
   // Is the base theme itself a child of another theme?
   if (isset($themes[$base_key]->info['base theme'])) {
     // Prevent loops.
-    if ($used_keys[$base_key]) {
+    if (!empty($used_keys[$base_key])) {
       return NULL;
     }
     $used_keys[$base_key] = TRUE;

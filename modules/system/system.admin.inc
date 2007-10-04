@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.12 2007/09/14 12:16:55 dries Exp $
+// $Id: system.admin.inc,v 1.13 2007/10/04 18:51:04 goba Exp $
 
 /**
  * @file
@@ -281,6 +281,7 @@ function system_themes_form_submit($form, &$form_state) {
 
   list_themes(TRUE);
   menu_rebuild();
+  drupal_rebuild_theme_registry();
   drupal_set_message(t('The configuration options have been saved.'));
   $form_state['redirect'] = 'admin/build/themes';
 

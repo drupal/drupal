@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.386 2007/10/04 17:53:56 goba Exp $
+// $Id: theme.inc,v 1.387 2007/10/04 18:51:04 goba Exp $
 
 /**
  * @file
@@ -54,18 +54,8 @@ function init_theme() {
   $base_theme = array();
   $ancestor = $theme;
   while ($ancestor && isset($themes[$ancestor]->base_theme)) {
-    if (isset($themes[$themes[$ancestor]->base_theme])) {
-      $base_theme[] = $new_base_theme = $themes[$themes[$ancestor]->base_theme];
-      // stop if this is final ancestor.
-      if (!isset($new_base_theme->base_theme)) {
-        break;
-      }
-      $ancestor = $new_base_theme->base_theme;
-    }
-    // stop if ancestor didn't exist.
-    else {
-      break;
-    }
+    $base_theme[] = $new_base_theme = $themes[$themes[$ancestor]->base_theme];
+    $ancestor = $themes[$ancestor]->base_theme;
   }
   _init_theme($themes[$theme], array_reverse($base_theme));
 }
@@ -100,19 +90,60 @@ function _init_theme($theme, $base_theme = array()) {
 
   $theme_path = dirname($theme->filename);
 
-  // Add stylesheets used by this theme.
-  if (!empty($theme->stylesheets)) {
-    foreach ($theme->stylesheets as $media => $stylesheets) {
-      foreach ($stylesheets as $stylesheet) {
-        drupal_add_css($stylesheet, 'theme', $media);
+  // Prepare stylesheets from this theme as well as all ancestor themes.
+  // We work it this way so that we can have child themes override parent
+  // theme stylesheets easily.
+  $final_stylesheets = array();
+
+  // Grab stylesheets from base theme
+  foreach ($base_theme as $base) {
+    if (!empty($base->stylesheets)) {
+      foreach ($base->stylesheets as $media => $stylesheets) {
+        foreach ($stylesheets as $name => $stylesheet) {
+          $final_stylesheets[$media][$name] = $stylesheet;
+        }
       }
     }
   }
+
+  // Add stylesheets used by this theme.
+  if (!empty($theme->stylesheets)) {
+    foreach ($theme->stylesheets as $media => $stylesheets) {
+      foreach ($stylesheets as $name => $stylesheet) {
+        $final_stylesheets[$media][$name] = $stylesheet;
+      }
+    }
+  }
+
+  // And now add the stylesheets properly
+  foreach ($final_stylesheets as $media => $stylesheets) {
+    foreach ($stylesheets as $stylesheet) {
+      drupal_add_css($stylesheet, 'theme', $media);
+    }
+  }
+
+  // Do basically the same as the above for scripts
+  $final_scripts = array();
+
+  // Grab scripts from base theme
+  foreach ($base_theme as $base) {
+    if (!empty($base->scripts)) {
+      foreach ($base->scripts as $name => $script) {
+        $final_scripts[$name] = $script;
+      }
+    }
+  }
+
   // Add scripts used by this theme.
   if (!empty($theme->scripts)) {
-    foreach ($theme->scripts as $script) {
-      drupal_add_js($script, 'theme');
+    foreach ($theme->scripts as $name => $script) {
+      $final_scripts[$name] = $script;
     }
+  }
+
+  // Add scripts used by this theme.
+  foreach ($final_scripts as $script) {
+    drupal_add_js($script, 'theme');
   }
 
   $theme_engine = NULL;
