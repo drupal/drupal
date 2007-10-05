@@ -141,12 +141,14 @@ function block_menu() {
   );
   $items['admin/build/block/configure'] = array(
     'title' => 'Configure block',
+    'page callback' => 'drupal_get_form',
     'page arguments' => array('block_admin_configure'),
     'type' => MENU_CALLBACK,
     'file' => 'block.admin.inc',
   );
   $items['admin/build/block/delete'] = array(
     'title' => 'Delete block',
+    'page callback' => 'drupal_get_form',
     'page arguments' => array('block_box_delete'),
     'type' => MENU_CALLBACK,
     'file' => 'block.admin.inc',
