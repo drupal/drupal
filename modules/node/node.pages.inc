@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.4 2007/09/27 12:56:04 goba Exp $
+// $Id: node.pages.inc,v 1.5 2007/10/05 13:14:04 goba Exp $
 
 /**
  * @file
@@ -103,6 +103,9 @@ function node_form(&$form_state, $node) {
   }
   if (!isset($form_state['node_preview'])) {
     node_object_prepare($node);
+  }
+  else {
+    $node->build_mode = NODE_BUILD_PREVIEW;
   }
 
   // Set the id of the top-level form tag
