@@ -74,7 +74,7 @@
           <?php if ($help): print $help; endif; ?>
           <?php if ($show_messages && $messages): print $messages; endif; ?>
           <?php print $content ?>
-          <span class="clear"></span>
+          <div class="clear"></div>
           <?php print $feed_icons ?>
           <div id="footer"><?php print $footer_message . $footer ?></div>
       </div></div></div></div> <!-- /.left-corner, /.right-corner, /#squeeze, /#center -->

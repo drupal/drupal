@@ -971,7 +971,7 @@ tr.selected td a:link, tr.selected td a:visited, tr.selected td a:active {
 /**
  * CSS support
  */
-span.clear {
+div.clear {
   display: block;
   clear: both;
   height: 1px;
