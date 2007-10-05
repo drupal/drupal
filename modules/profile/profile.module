@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.219 2007/09/05 18:11:27 dries Exp $
+// $Id: profile.module,v 1.220 2007/10/05 13:26:53 goba Exp $
 
 /**
  * @file
@@ -368,6 +368,14 @@ function profile_field_form_validate($form, &$form_state) {
   }
   if (db_result(db_query("SELECT fid FROM {profile_fields} WHERE name = '%s'". $query_suffix, $args2))) {
     form_set_error('name', t('The specified name is already in use.'));
+  }
+  if ($form_state['values']['visibility'] == PROFILE_HIDDEN) {
+    if ($form_state['values']['required']) {
+      form_set_error('required', t('A hidden field cannot be required.'));
+    }
+    if ($form_state['values']['register']) {
+      form_set_error('register', t('A hidden field cannot be set to visible on the user registration form.'));
+    }
   }
 }
 
