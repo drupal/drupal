@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.192 2007/09/10 12:19:11 goba Exp $
+// $Id: bootstrap.inc,v 1.193 2007/10/05 14:48:49 dries Exp $
 
 /**
  * @file
@@ -867,19 +867,10 @@ function drupal_anonymous_user($session = '') {
 function drupal_bootstrap($phase) {
   static $phases = array(DRUPAL_BOOTSTRAP_CONFIGURATION, DRUPAL_BOOTSTRAP_EARLY_PAGE_CACHE, DRUPAL_BOOTSTRAP_DATABASE, DRUPAL_BOOTSTRAP_ACCESS, DRUPAL_BOOTSTRAP_SESSION, DRUPAL_BOOTSTRAP_LATE_PAGE_CACHE, DRUPAL_BOOTSTRAP_LANGUAGE, DRUPAL_BOOTSTRAP_PATH, DRUPAL_BOOTSTRAP_FULL), $phase_index = 0;
 
-  // Stop early if $phase was already executed.
-  if ($phase < $phase_index) {
-    return;
-  }
-
-  while (!empty($phases)) {
+  while ($phase >= $phase_index && isset($phases[$phase_index])) {
     $current_phase = $phases[$phase_index];
-    unset($phases[$phase_index]);
+    unset($phases[$phase_index++]);
     _drupal_bootstrap($current_phase);
-    $phase_index++;
-    if ($phase == $current_phase) {
-      return;
-    }
   }
 }
 
