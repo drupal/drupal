@@ -331,7 +331,7 @@ function db_escape_table($string) {
  *
  * A Drupal schema definition is an array structure representing one or
  * more tables and their related keys and indexes. A schema is defined by
- * hook_schema(), which usually lives in a modulename.schema file.
+ * hook_schema(), which usually lives in a modulename.install file.
  *
  * By implementing hook_schema() and specifying the tables your module
  * declares, you can easily create and drop these tables on all

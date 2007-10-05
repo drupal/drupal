@@ -28,3 +28,12 @@ function update_uninstall() {
   }
   menu_rebuild();
 }
+
+/**
+ * Implementation of hook_schema().
+ */
+function update_schema() {
+  $schema['cache_update'] = drupal_get_schema_unprocessed('system', 'cache');
+  return $schema;
+}
+
