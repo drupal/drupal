@@ -317,7 +317,6 @@ function node_type_form_submit($form, &$form_state) {
   }
 
   node_types_rebuild();
-  cache_clear_all();
   menu_rebuild();
   $t_args = array('%name' => $type->name);
 
