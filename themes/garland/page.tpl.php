@@ -1,5 +1,5 @@
 <?php
-// $Id: page.tpl.php,v 1.12 2007/09/06 21:17:07 goba Exp $
+// $Id: page.tpl.php,v 1.13 2007/10/05 13:09:17 goba Exp $
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php print $language->language ?>" lang="<?php print $language->language ?>">
@@ -74,7 +74,7 @@
           <?php if ($help): print $help; endif; ?>
           <?php if ($show_messages && $messages): print $messages; endif; ?>
           <?php print $content ?>
-          <span class="clear"></span>
+          <div class="clear"></div>
           <?php print $feed_icons ?>
           <div id="footer"><?php print $footer_message . $footer ?></div>
       </div></div></div></div> <!-- /.left-corner, /.right-corner, /#squeeze, /#center -->

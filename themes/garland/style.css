@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.25 2007/10/02 16:03:17 dries Exp $ */
+/* $Id: style.css,v 1.26 2007/10/05 13:09:17 goba Exp $ */
 
 /**
  * Garland, for Drupal 5.0
@@ -971,7 +971,7 @@ tr.selected td a:link, tr.selected td a:visited, tr.selected td a:active {
 /**
  * CSS support
  */
-span.clear {
+div.clear {
   display: block;
   clear: both;
   height: 1px;
