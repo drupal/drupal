@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.182 2007/09/12 18:29:32 goba Exp $
+// $Id: upload.module,v 1.183 2007/10/05 09:35:09 goba Exp $
 
 /**
  * @file
@@ -499,8 +499,10 @@ function _upload_form($node) {
       '#type' => 'submit',
       '#value' => t('Attach'),
       '#name' => 'attach',
-      '#ahah_path' => 'upload/js',
-      '#ahah_wrapper' => 'attach-wrapper',
+      '#ahah' => array(
+        'path' => 'upload/js',
+        'wrapper' => 'attach-wrapper',
+      ),
       '#submit' => array('node_form_submit_build_node'),
     );
   }

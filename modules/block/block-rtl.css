@@ -1,6 +1,15 @@
-/* $Id: block-rtl.css,v 1.1 2007/05/27 17:57:47 goba Exp $ */
+/* $Id: block-rtl.css,v 1.2 2007/10/05 09:35:09 goba Exp $ */
 
 #blocks td.block {
   padding-left: inherit;
   padding-right: 1.5em;
+}
+#blocks select {
+  margin-left: 18px;
+}
+#blocks select.progress-disabled {
+  margin-left: 0px;
+}
+#blocks .progress .bar {
+  float: right;
 }

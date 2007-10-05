@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.278 2007/09/27 16:52:00 goba Exp $
+// $Id: block.module,v 1.279 2007/10/05 09:35:09 goba Exp $
 
 /**
  * @file
@@ -102,8 +102,8 @@ function block_help($path, $arg) {
  */
 function block_theme() {
   return array(
-    'block_admin_display' => array(
-      'template' => 'block-admin-display',
+    'block_admin_display_form' => array(
+      'template' => 'block-admin-display-form',
       'file' => 'block.admin.inc',
       'arguments' => array('form' => NULL),
     ),
@@ -124,8 +124,7 @@ function block_menu() {
   $items['admin/build/block'] = array(
     'title' => 'Blocks',
     'description' => 'Configure what block content appears in your site\'s sidebars and other regions.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('block_admin_display'),
+    'page callback' => 'block_admin_display',
     'access arguments' => array('administer blocks'),
     'file' => 'block.admin.inc',
   );
@@ -133,6 +132,12 @@ function block_menu() {
     'title' => 'List',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10,
+  );
+  $items['admin/build/block/list/js'] = array(
+    'title' => 'Javascript List Form',
+    'page callback' => 'block_admin_display_js',
+    'type' => MENU_CALLBACK,
+    'file' => 'block.admin.inc',
   );
   $items['admin/build/block/configure'] = array(
     'title' => 'Configure block',
@@ -148,6 +153,7 @@ function block_menu() {
   );
   $items['admin/build/block/add'] = array(
     'title' => 'Add block',
+    'page callback' => 'drupal_get_form',
     'page arguments' => array('block_add_block_form'),
     'type' => MENU_LOCAL_TASK,
     'file' => 'block.admin.inc',
@@ -156,7 +162,7 @@ function block_menu() {
   foreach (list_themes() as $key => $theme) {
     $items['admin/build/block/list/'. $key] = array(
       'title' => check_plain($theme->info['name']),
-      'page arguments' => array('block_admin_display', $key),
+      'page arguments' => array($key),
       'type' => $key == $default ? MENU_DEFAULT_LOCAL_TASK : MENU_LOCAL_TASK,
       'weight' => $key == $default ? -10 : 0,
       'file' => 'block.admin.inc',

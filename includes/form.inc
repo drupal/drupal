@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.227 2007/09/25 15:14:37 goba Exp $
+// $Id: form.inc,v 1.228 2007/10/05 09:35:08 goba Exp $
 
 /**
  * @defgroup form Form generation
@@ -1575,7 +1575,7 @@ function expand_radios($element) {
 
 /**
  * Add AHAH information about a form element to the page to communicate with
- * javascript. If #ahah_path is set on an element, this additional javascript is
+ * javascript. If #ahah[path] is set on an element, this additional javascript is
  * added to the page header to attach the AHAH behaviors. See ahah.js for more
  * information.
  *
@@ -1590,23 +1590,42 @@ function expand_radios($element) {
 function form_expand_ahah($element) {
   static $js_added = array();
 
+  // Add a reasonable default event handler if none specified.
+  if (isset($element['#ahah']['path']) && !isset($element['#ahah']['event'])) {
+    switch ($element['#type']) {
+      case 'submit':
+      case 'button':
+      case 'image_button':
+        $element['#ahah']['event'] = 'click';
+        break;
+      case 'password':
+      case 'textfield':
+      case 'textarea':
+        $element['#ahah']['event'] = 'blur';
+        break;
+      case 'radio':
+      case 'checkbox':
+      case 'select':
+        $element['#ahah']['event'] = 'change';
+        break;
+    }
+  }
+
   // Adding the same javascript settings twice will cause a recursion error,
   // we avoid the problem by checking if the javascript has already been added.
-  if (!isset($js_added[$element['#id']]) && isset($element['#ahah_event']) && isset($element['#ahah_path'])) {
+  if (isset($element['#ahah']['path']) && isset($element['#ahah']['event']) && !isset($js_added[$element['#id']])) {
+    drupal_add_js('misc/jquery.form.js');
     drupal_add_js('misc/ahah.js');
     drupal_add_js('misc/progress.js');
 
     $ahah_binding = array(
-      'id' => $element['#id'],
-      'uri' => url($element['#ahah_path']),
-      'event' => $element['#ahah_event'],
-      'effect' => empty($element['#ahah_effect']) ? 'none' : $element['#ahah_effect'],
-      'method' => empty($element['#ahah_method']) ? 'replace' : $element['#ahah_method'],
+      'url'   => url($element['#ahah']['path']),
+      'event' => $element['#ahah']['event'],
+      'wrapper' => empty($element['#ahah']['wrapper']) ? NULL : $element['#ahah']['wrapper'],
+      'selector' => empty($element['#ahah']['selector']) ? '#'. $element['#id'] : $element['#ahah']['selector'],
+      'effect'   => empty($element['#ahah']['effect']) ? 'none' : $element['#ahah']['effect'],
+      'method'   => empty($element['#ahah']['method']) ? 'replace' : $element['#ahah']['method'],
     );
-
-    if (!empty($element['#ahah_wrapper'])) {
-      $ahah_binding['wrapper'] = $element['#ahah_wrapper'];
-    }
 
     drupal_add_js(array('ahah' => array($element['#id'] => $ahah_binding)), 'setting');
 

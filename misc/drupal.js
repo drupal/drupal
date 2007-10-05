@@ -1,4 +1,4 @@
-// $Id: drupal.js,v 1.39 2007/09/25 14:55:36 goba Exp $
+// $Id: drupal.js,v 1.40 2007/10/05 09:35:08 goba Exp $
 
 var Drupal = Drupal || { 'settings': {}, 'behaviors': {}, 'themes': {}, 'locale': {} };
 
@@ -181,103 +181,15 @@ Drupal.theme = function(func) {
 };
 
 /**
- * Redirects a button's form submission to a hidden iframe and displays the result
- * in a given wrapper. The iframe should contain a call to
- * window.parent.iframeHandler() after submission.
+ * Parse a JSON response.
+ *
+ * The result is either the JSON object, or an object with 'status' 0 and 'data' an error message.
  */
-Drupal.redirectFormButton = function (uri, button, handler) {
-  // Trap the button
-  button.onmouseover = button.onfocus = function() {
-    button.onclick = function() {
-      // Create target iframe
-      Drupal.deleteIframe();
-      Drupal.createIframe();
-
-      // Prepare variables for use in anonymous function.
-      var button = this;
-      var action = button.form.action;
-      var target = button.form.target;
-
-      // Redirect form submission to iframe
-      this.form.action = uri;
-      this.form.target = 'redirect-target';
-      this.form.submit();
-
-      handler.onsubmit();
-
-      // Set iframe handler for later
-      window.iframeHandler = function () {
-        var iframe = $('#redirect-target').get(0);
-        // Restore form submission
-        button.form.action = action;
-        button.form.target = target;
-
-        // Get response from iframe body
-        try {
-          response = (iframe.contentWindow || iframe.contentDocument || iframe).document.body.innerHTML;
-          // Firefox 1.0.x hack: Remove (corrupted) control characters
-          response = response.replace(/[\f\n\r\t]/g, ' ');
-          if (window.opera) {
-            // Opera-hack: it returns innerHTML sanitized.
-            response = response.replace(/&quot;/g, '"');
-          }
-        }
-        catch (e) {
-          response = null;
-        }
-
-        response = eval('('+ response +');');
-        // Check response code
-        if (!response || response.status == 0) {
-          handler.onerror(response.data || Drupal.t('Error parsing response'));
-          return;
-        }
-        handler.oncomplete(response.data);
-
-        return true;
-      };
-
-      return true;
-    };
-  };
-  button.onmouseout = button.onblur = function() {
-    button.onclick = null;
-  };
-};
-
-/**
- * Create an invisible iframe for form submissions.
- */
-Drupal.createIframe = function () {
-  if ($('#redirect-holder').size()) {
-    return;
+Drupal.parseJson = function (data) {
+  if ((data.substring(0, 1) != '{') && (data.substring(0, 1) != '[')) {
+    return { status: 0, data: data.length ? data : Drupal.t('Unspecified error') };
   }
-  // Note: some browsers require the literal name/id attributes on the tag,
-  // some want them set through JS. We do both.
-  window.iframeHandler = function () {};
-  var div = document.createElement('div');
-  div.id = 'redirect-holder';
-  $(div).html('<iframe name="redirect-target" id="redirect-target" class="redirect" onload="window.iframeHandler();"></iframe>');
-  var iframe = div.firstChild;
-  $(iframe)
-    .attr({
-      name: 'redirect-target',
-      id: 'redirect-target'
-    })
-    .css({
-      position: 'absolute',
-      height: '1px',
-      width: '1px',
-      visibility: 'hidden'
-    });
-  $('body').append(div);
-};
-
-/**
- * Delete the invisible iframe
- */
-Drupal.deleteIframe = function () {
-  $('#redirect-holder').remove();
+  return eval('(' + data + ');');
 };
 
 /**

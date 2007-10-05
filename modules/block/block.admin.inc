@@ -1,5 +1,5 @@
 <?php
-// $Id: block.admin.inc,v 1.8 2007/09/01 05:31:09 dries Exp $
+// $Id: block.admin.inc,v 1.9 2007/10/05 09:35:09 goba Exp $
 
 /**
  * @file
@@ -7,62 +7,104 @@
  */
 
 /**
+ * Menu callback for admin/build/block.
+ */
+function block_admin_display($theme = NULL) {
+  global $custom_theme;
+
+  // If non-default theme configuration has been selected, set the custom theme.
+  $custom_theme = isset($theme) ? $theme : variable_get('theme_default', 'garland');
+
+  // Fetch and sort blocks
+  $blocks = _block_rehash();
+  usort($blocks, '_block_compare');
+
+  return drupal_get_form('block_admin_display_form', $blocks, $theme);
+}
+
+/**
  * Generate main block administration form.
  */
-function block_admin_display(&$form_state, $theme = NULL) {
+function block_admin_display_form(&$form_state, $blocks, $theme = NULL) {
   global $theme_key, $custom_theme;
 
   // Add CSS
   drupal_add_css(drupal_get_path('module', 'block') .'/block.css', 'module', 'all', FALSE);
 
   // If non-default theme configuration has been selected, set the custom theme.
-  if ($theme) {
-    $custom_theme = $theme;
-  }
-  else {
-    $custom_theme = variable_get('theme_default', 'garland');
-  }
+  $custom_theme = isset($theme) ? $theme : variable_get('theme_default', 'garland');
   init_theme();
-
-  // Fetch and sort blocks
-  $blocks = _block_rehash();
-  usort($blocks, '_block_compare');
 
   $throttle = module_exists('throttle');
   $block_regions = array(BLOCK_REGION_NONE => '<'. t('none') .'>') + system_region_list($theme_key);
 
   // Build form tree
-  $form['#action'] = arg(3) ? url('admin/build/block/list/'. $theme_key) : url('admin/build/block');
-  $form['#tree'] = TRUE;
+  $form = array(
+    '#action' => arg(3) ? url('admin/build/block/list/'. $theme_key) : url('admin/build/block'),
+    '#tree' => TRUE,
+    '#cache' => TRUE,
+    '#prefix' => '<div id="block-admin-display-form-wrapper">',
+    '#suffix' => '</div>',
+  );
   foreach ($blocks as $i => $block) {
-    $form[$i]['module'] = array('#type' => 'value', '#value' => $block['module']);
-    $form[$i]['delta'] = array('#type' => 'value', '#value' => $block['delta']);
-    $form[$i]['info'] = array('#value' => check_plain($block['info']));
-    $form[$i]['theme'] = array('#type' => 'hidden', '#value' => $theme_key);
-    $form[$i]['weight'] = array('#type' => 'weight', '#default_value' => $block['weight']);
-    $form[$i]['region'] = array('#type' => 'select',
+    $key = $block['module'] .'_'. $block['delta'];
+    $form[$key]['module'] = array(
+      '#type' => 'value',
+      '#value' => $block['module'],
+    );
+    $form[$key]['delta'] = array(
+      '#type' => 'value',
+      '#value' => $block['delta'],
+    );
+    $form[$key]['info'] = array(
+      '#value' => check_plain($block['info'])
+    );
+    $form[$key]['theme'] = array(
+      '#type' => 'hidden',
+      '#value' => $theme_key
+    );
+    $form[$key]['weight'] = array(
+      '#type' => 'weight',
+      '#default_value' => $block['weight'],
+    );
+    $form[$key]['region'] = array(
+      '#type' => 'select',
       '#default_value' => $block['status'] ? (isset($block['region']) ? $block['region'] : system_default_region($theme_key)) : BLOCK_REGION_NONE,
       '#options' => $block_regions,
     );
 
     if ($throttle) {
-      $form[$i]['throttle'] = array('#type' => 'checkbox', '#default_value' => isset($block['throttle']) ? $block['throttle'] : FALSE);
+      $form[$key]['throttle'] = array('#type' => 'checkbox', '#default_value' => isset($block['throttle']) ? $block['throttle'] : FALSE);
     }
-    $form[$i]['configure'] = array('#value' => l(t('configure'), 'admin/build/block/configure/'. $block['module'] .'/'. $block['delta']));
+    $form[$key]['configure'] = array('#value' => l(t('configure'), 'admin/build/block/configure/'. $block['module'] .'/'. $block['delta']));
     if ($block['module'] == 'block') {
-      $form[$i]['delete'] = array('#value' => l(t('delete'), 'admin/build/block/delete/'. $block['delta']));
+      $form[$key]['delete'] = array('#value' => l(t('delete'), 'admin/build/block/delete/'. $block['delta']));
     }
   }
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Save blocks'));
+
+  // Attach the AHAH events to the submit button. Set the AHAH selector to every
+  // select element in the form. The AHAH event could be attached to every select
+  // element individually, but using the selector is more efficient, especially
+  // on a page where hundreds of AHAH enabled elements may be present.
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save blocks'),
+    '#ahah' => array(
+      'path' => 'admin/build/block/list/js/'. $theme_key,
+      'selector' => '#block-admin-display-form-wrapper select',
+      'wrapper' => 'block-admin-display-form-wrapper',
+      'event' => 'change',
+      'effect' => 'fade',
+    ),
+  );
 
   return $form;
 }
 
-
 /**
  * Process main block administration form submission.
  */
-function block_admin_display_submit($form, &$form_state) {
+function block_admin_display_form_submit($form, &$form_state) {
   foreach ($form_state['values'] as $block) {
     $block['status'] = $block['region'] != BLOCK_REGION_NONE;
     $block['region'] = $block['status'] ? $block['region'] : '';
@@ -70,6 +112,91 @@ function block_admin_display_submit($form, &$form_state) {
   }
   drupal_set_message(t('The block settings have been updated.'));
   cache_clear_all();
+}
+
+/**
+ * Javascript callback for AHAH replacement. Re-generate the form with the
+ * updated values and return necessary html.
+ */
+function block_admin_display_js($theme = NULL) {
+  // Load the cached form.
+  $form_cache = cache_get('form_'. $_POST['form_build_id'], 'cache_form');
+
+  // Set the new weights and regions for each block.
+  $blocks = array();
+  foreach (element_children($form_cache->data) as $key) {
+    $field = $form_cache->data[$key];
+    if (isset($field['info'])) {
+      $block = array(
+        'module'   => $field['module']['#value'],
+        'delta'    => $field['delta']['#value'],
+        'info'     => html_entity_decode($field['info']['#value'], ENT_QUOTES),
+        'region'   => $_POST[$key]['region'],
+        'weight'   => $_POST[$key]['weight'],
+        'status'   => $_POST[$key]['region'] == BLOCK_REGION_NONE ? 0 : 1,
+      );
+
+      $throttle = module_exists('throttle');
+      if ($throttle) {
+        $block['throttle'] = $_POST[$key]['throttle'];
+      }
+
+      if ($block['weight'] != $form_cache->data[$key]['weight']['#default_value'] || $block['region'] != $form_cache->data[$key]['region']['#default_value']) {
+        $changed_block = $block['module'] .'_'. $block['delta'];
+      }
+
+      $blocks[] = $block;
+    }
+  }
+
+  // Resort the blocks with the new weights.
+  usort($blocks, '_block_compare');
+
+  // Create a form in the new order.
+  $form_state = array('submitted' => FALSE);
+  $form = block_admin_display_form($form_state, $blocks, $theme);
+
+  // Maintain classes set on individual blocks.
+  foreach (element_children($form_cache->data) as $key) {
+    if (isset($form_cache->data[$key]['#attributes'])) {
+      $form[$key]['#attributes'] = $form_cache->data[$key]['#attributes'];
+    }
+  }
+
+  // Preserve the order of the new form while merging the previous data.
+  $form_order = array_flip(array_keys($form)); // Save the form order.
+  $form = array_merge($form_cache->data, $form);  // Merge the data.
+  $form = array_merge($form_order, $form); // Put back into the correct order.
+
+  // Add a permanent class to the changed block.
+  $form[$changed_block]['#attributes']['class'] = 'block-modified';
+
+  cache_set('form_'. $_POST['form_build_id'], $form, 'cache_form', $form_cache->expire);
+
+  // Add a temporary class to mark the new AHAH content.
+  $form[$changed_block]['#attributes']['class'] = empty($form[$changed_block]['#attributes']['class']) ? 'ahah-new-content' : $form[$changed_block]['#attributes']['class'] .' ahah-new-content';
+  $form['js_modified'] = array(
+    '#type' => 'value',
+    '#value' => TRUE,
+  );
+
+  $form['#post'] = $_POST;
+  $form['#theme'] = 'block_admin_display_form';
+
+  // Add messages to our output.
+  drupal_set_message(t('Your settings will not be saved until you click the <em>Save blocks</em> button.'), 'warning');
+
+  // Render the form.
+  drupal_alter('form', $form, array(), 'block_admin_display_form');
+  $form = form_builder('block_admin_display_form', $form, $form_state);
+
+  // Remove the wrapper from the form to prevent duplicate div IDs.
+  unset($form['#prefix'], $form['#suffix']);
+
+  $output = drupal_render($form);
+
+  // Return the output in JSON format.
+  drupal_json(array('status' => TRUE, 'data' => $output));
 }
 
 /**
@@ -84,15 +211,18 @@ function _block_compare($a, $b) {
   if ($status) {
     return $status;
   }
-  // Enabled blocks
-  if ($a['status']) {
-    $place = strcmp($a['region'], $b['region']);
-    return $place ? $place : ($a['weight'] - $b['weight']);
+  // Sort by region.
+  $place = strcmp($a['region'], $b['region']);
+  if ($place) {
+    return $place;
   }
-  // Disabled blocks
-  else {
-    return strcmp($a['info'], $b['info']);
+  // Sort by weight.
+  $weight = $a['weight'] - $b['weight'];
+  if ($weight) {
+    return $weight;
   }
+  // Sort by title.
+  return strcmp($a['info'], $b['info']);
 }
 
 /**
@@ -309,7 +439,7 @@ function block_box_delete_submit($form, &$form_state) {
  * @see block-admin-display.tpl.php
  * @see theme_block_admin_display()
  */
-function template_preprocess_block_admin_display(&$variables) {
+function template_preprocess_block_admin_display_form(&$variables) {
   global $theme_key;
 
   $variables['throttle'] = module_exists('throttle');
@@ -344,6 +474,8 @@ function template_preprocess_block_admin_display(&$variables) {
       }
 
       $variables['block_listing'][$i]->is_region_first = $is_region_first;
+      $variables['block_listing'][$i]->row_class = isset($block['#attributes']['class']) ? $block['#attributes']['class'] : '';
+      $variables['block_listing'][$i]->block_modified = isset($block['#attributes']['class']) && strpos($block['#attributes']['class'], 'block-modified') !== FALSE ? TRUE : FALSE;
       $variables['block_listing'][$i]->region_title = $region_title;
       $variables['block_listing'][$i]->block_title =  drupal_render($block['info']);
       $variables['block_listing'][$i]->region_select = drupal_render($block['region']) . drupal_render($block['theme']);
@@ -356,5 +488,6 @@ function template_preprocess_block_admin_display(&$variables) {
     }
   }
 
+  $variables['messages'] = isset($variables['form']['js_modified']) ? theme('status_messages') : '';
   $variables['form_submit'] = drupal_render($variables['form']);
 }
