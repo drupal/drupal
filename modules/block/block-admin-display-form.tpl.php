@@ -1,8 +1,8 @@
 <?php
-// $Id: block-admin-display.tpl.php,v 1.2 2007/08/07 08:39:35 goba Exp $
+// $Id: block-admin-display-form.tpl.php,v 1.1 2007/10/05 09:36:52 goba Exp $
 
 /**
- * @file block-admin-display.tpl.php
+ * @file block-admin-display-form.tpl.php
  * Default theme implementation to configure blocks.
  *
  * Available variables:
@@ -21,11 +21,12 @@
  * - $data->configure_link: Block configuration link.
  * - $data->delete_link: For deleting user added blocks.
  *
- * @see template_preprocess_block_admin_display()
+ * @see template_preprocess_block_admin_display_form()
  * @see theme_block_admin_display()
  */
 ?>
 <?php drupal_add_js('misc/tableheader.js'); ?>
+<?php print $messages; ?>
 
 <table id="blocks">
   <thead>
@@ -48,8 +49,8 @@
       </tr>
       <?php $row++; ?>
       <?php endif; ?>
-      <tr class="<?php print $row % 2 == 0 ? 'odd' : 'even'; ?>">
-        <td class="block"><?php print $data->block_title; ?></td>
+      <tr class="<?php print $row % 2 == 0 ? 'odd' : 'even'; ?><?php print $data->row_class ? ' '. $data->row_class : ''; ?>">
+        <td class="block"><?php print $data->block_title; ?><?php print $data->block_modified ? '<span class="warning">*</span>' : ''; ?></td>
         <td><?php print $data->region_select; ?></td>
         <td><?php print $data->weight_select; ?></td>
         <?php if ($throttle): ?>
