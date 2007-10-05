@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.211 2007/10/01 09:53:03 goba Exp $
+// $Id: menu.inc,v 1.212 2007/10/05 13:17:09 goba Exp $
 
 /**
  * @file
@@ -1415,6 +1415,8 @@ function menu_rebuild() {
   menu_cache_clear_all();
   $menu = menu_router_build(TRUE);
   _menu_navigation_links_rebuild($menu);
+  // Clear the page and block caches.
+  cache_clear_all();
 }
 
 /**
@@ -1556,6 +1558,8 @@ function _menu_delete_item($item, $rebuild = FALSE) {
     // If we are rebuilding the menu, the menu cache has already been cleared.
     if (!$rebuild) {
       menu_cache_clear($item['menu_name']);
+      // Clear the page and block caches.
+      cache_clear_all();
     }
   }
 }
@@ -1700,6 +1704,8 @@ function menu_link_save(&$item) {
     $names[] = $n['menu_name'];
   }
   variable_set('menu_expanded', $names);
+  // Clear the page and block caches.
+  cache_clear_all();
   return $item['mlid'];
 }
 

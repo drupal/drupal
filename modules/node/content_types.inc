@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.41 2007/09/25 12:07:14 goba Exp $
+// $Id: content_types.inc,v 1.42 2007/10/05 13:17:09 goba Exp $
 
 /**
  * @file
@@ -317,7 +317,6 @@ function node_type_form_submit($form, &$form_state) {
   }
 
   node_types_rebuild();
-  cache_clear_all();
   menu_rebuild();
   $t_args = array('%name' => $type->name);
 
