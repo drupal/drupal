@@ -1,4 +1,4 @@
-/* $Id: system-rtl.css,v 1.4 2007/10/05 09:35:09 goba Exp $ */
+/* $Id: system-rtl.css,v 1.5 2007/10/05 14:50:25 goba Exp $ */
 
 .item-list .icon {
   float: left;
@@ -21,22 +21,7 @@ dl.multiselect dt, dl.multiselect dd {
   float: right;
   margin: 0 0 0 1em;
 }
-ul.menu {
-  text-align:right;
-}
-ul.menu li {
-  margin: 0 0.5em 0 0;
-}
-li.expanded {
-  padding: 0.2em 0 0 0.5em;
-}
-li.collapsed {
-  list-style-image: url(../../misc/menu-collapsed-rtl.png);
-  padding: 0.2em 0 0 0.5em;
-}
-li.leaf {
-  padding: 0.2em 0 0 0.5em;
-}
+
 .block ul {
   padding: 0 1em 0.25em 0;
 }

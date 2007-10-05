@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.695 2007/10/05 14:43:23 dries Exp $
+// $Id: common.inc,v 1.696 2007/10/05 14:50:25 goba Exp $
 
 /**
  * @file
@@ -1495,9 +1495,19 @@ function drupal_add_link($attributes) {
 /**
  * Adds a CSS file to the stylesheet queue.
  *
+ * Themes may replace module-defined CSS files by adding a stylesheet with the
+ * same filename. For example, themes/garland/system-menus.css would replace
+ * modules/system/system-menus.css. This allows themes to override complete
+ * CSS files, rather than specific selectors, when necessary.
+ *
  * @param $path
  *   (optional) The path to the CSS file relative to the base_path(), e.g.,
  *   /modules/devel/devel.css.
+ *
+ *   Modules should always prefix the names of their CSS files with the module
+ *   name, for example: system-menus.css rather than simply menus.css. Themes
+ *   can override module-supplied CSS files based on their filenames, and this
+ *   prefixing helps prevent confusing name collisions for theme developers.
  *
  *   If the direction of the current language is right-to-left (Hebrew,
  *   Arabic, etc.), the function will also look for an RTL CSS file and append
@@ -1506,6 +1516,10 @@ function drupal_add_link($attributes) {
  *   file added to the list, if exists in the same directory. This CSS file
  *   should contain overrides for properties which should be reversed or
  *   otherwise different in a right-to-left display.
+ *
+ *   If the original CSS file is being overridden by a theme, the theme is
+ *   responsible for supplying an accompanying RTL CSS file to replace the
+ *   module's.
  * @param $type
  *   (optional) The type of stylesheet that is being added. Types are: module
  *   or theme.
@@ -1547,6 +1561,30 @@ function drupal_add_css($path = NULL, $type = 'module', $media = 'all', $preproc
     // This check is necessary to ensure proper cascading of styles and is faster than an asort().
     if (!isset($css[$media])) {
       $css[$media] = array('module' => array(), 'theme' => array());
+    }
+
+    // If a theme is adding the current stylesheet, check for any existing CSS files
+    // with the same name. If they exist, remove them and allow the theme's own CSS
+    // file to replace it.
+    if ($type == 'theme') {
+      foreach ($css[$media]['module'] as $old_path => $old_preprocess) {
+        // Match by style sheet name.
+        if (basename($path) == basename($old_path)) {
+          unset($css[$media]['module'][$old_path]);
+
+          // If the current language is RTL and the CSS file had an RTL variant,
+          // pull out the original. The theme must provide it's own RTL style.
+          if (defined('LANGUAGE_RTL') && $language->direction == LANGUAGE_RTL) {
+            $rtl_old_path = str_replace('.css', '-rtl.css', $old_path);
+            if (isset($css[$media]['module'][$rtl_old_path])) {
+              unset($css[$media]['module'][$rtl_old_path]);
+            }
+          }
+          // Set the preprocess state of the current module, then exit the search loop.
+          $preprocess = $old_preprocess;
+          break;
+        }
+      }
     }
     $css[$media][$type][$path] = $preprocess;
 
