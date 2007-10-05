@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.install,v 1.8 2007/05/25 12:46:45 dries Exp $
+// $Id: poll.install,v 1.9 2007/10/05 14:43:25 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -16,3 +16,46 @@ function poll_uninstall() {
   // Remove tables.
   drupal_uninstall_schema('poll');
 }
+
+/**
+ * Implementation of hook_schema().
+ */
+function poll_schema() {
+  $schema['poll'] = array(
+    'fields' => array(
+      'nid'     => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+      'runtime' => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'active'  => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0)
+    ),
+    'primary key' => array('nid'),
+  );
+
+  $schema['poll_choices'] = array(
+    'fields' => array(
+      'chid'    => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
+      'nid'     => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+      'chtext'  => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
+      'chvotes' => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'chorder' => array('type' => 'int', 'not null' => TRUE, 'default' => 0)
+    ),
+    'indexes' => array('nid' => array('nid')),
+    'primary key' => array('chid'),
+  );
+
+  $schema['poll_votes'] = array(
+    'fields' => array(
+      'nid'      => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
+      'uid'      => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+      'chorder'  => array('type' => 'int', 'not null' => TRUE, 'default' => -1),
+      'hostname' => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => '')
+    ),
+    'indexes' => array(
+      'hostname' => array('hostname'),
+      'nid'      => array('nid'),
+      'uid'      => array('uid')
+    ),
+  );
+
+  return $schema;
+}
+

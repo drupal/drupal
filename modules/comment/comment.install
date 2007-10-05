@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.install,v 1.4 2007/07/30 21:27:34 dries Exp $
+// $Id: comment.install,v 1.5 2007/10/05 14:43:24 dries Exp $
 
 /**
  * Implementation of hook_enable().
@@ -30,3 +30,47 @@ function comment_update_6001() {
   $ret[] = update_sql("ALTER TABLE {comments} DROP users");
   return $ret;
 }
+
+/**
+ * Implementation of hook_schema().
+ */
+function comment_schema() {
+  $schema['comments'] = array(
+    'fields' => array(
+      'cid'       => array('type' => 'serial', 'not null' => TRUE),
+      'pid'       => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'nid'       => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'uid'       => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'subject'   => array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''),
+      'comment'   => array('type' => 'text', 'not null' => TRUE, 'size' => 'big'),
+      'hostname'  => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
+      'timestamp' => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'status'    => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0, 'size' => 'tiny'),
+      'format'    => array('type' => 'int', 'size' => 'small', 'not null' => TRUE, 'default' => 0),
+      'thread'    => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE),
+      'name'      => array('type' => 'varchar', 'length' => 60, 'not null' => FALSE),
+      'mail'      => array('type' => 'varchar', 'length' => 64, 'not null' => FALSE),
+      'homepage'  => array('type' => 'varchar', 'length' => 255, 'not null' => FALSE)
+    ),
+    'indexes' => array(
+      'nid'    => array('nid'),
+      'status' => array('status')
+    ),
+    'primary key' => array('cid'),
+  );
+
+  $schema['node_comment_statistics'] = array(
+    'fields' => array(
+      'nid'                    => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+      'last_comment_timestamp' => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'last_comment_name'      => array('type' => 'varchar', 'length' => 60, 'not null' => FALSE),
+      'last_comment_uid'       => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'comment_count'          => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0)
+    ),
+    'indexes' => array('node_comment_timestamp' => array('last_comment_timestamp')),
+    'primary key' => array('nid'),
+  );
+
+  return $schema;
+}
+

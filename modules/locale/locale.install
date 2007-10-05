@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.install,v 1.16 2007/09/02 15:19:16 goba Exp $
+// $Id: locale.install,v 1.17 2007/10/05 14:43:25 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -133,3 +133,78 @@ function locale_uninstall() {
   // Remove tables.
   drupal_uninstall_schema('locale');
 }
+
+/**
+ * Implementation of hook_schema().
+ */
+function locale_schema() {
+  $schema['languages'] = array(
+    'fields' => array(
+      // Language code, eg 'de' or 'en-US'.
+      'language'   => array('type' => 'varchar', 'length' => 12, 'not null' => TRUE, 'default' => ''),
+      // Language name in English.
+      'name'       => array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''),
+      // Native language name.
+      'native'     => array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''),
+      // LANGUAGE_RTL or LANGUAGE_LTR
+      'direction'  => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      // Enabled flag.
+      'enabled'    => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      // Number of plural indexes in this language.
+      'plurals'    => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      // Plural formula in PHP code to evaluate to get plural indexes.
+      'formula'    => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
+      // Domain to use for this language.
+      'domain'     => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
+      // Path prefix to use for this language.
+      'prefix'     => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
+      // Weight, used in lists of languages.
+      'weight'     => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      // Location of JavaScript translation file.
+      'javascript' => array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''),
+    ),
+    'primary key' => array('language'),
+  );
+
+  $schema['locales_source'] = array(
+    'fields' => array(
+      // Unique identifier of this string.
+      'lid'       => array('type' => 'serial', 'not null' => TRUE),
+      // Drupal path in case of online discovered translations or file path in case of imported strings.
+      'location'  => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      // A module defined group of translations, see hook_locale().
+      'textgroup' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => 'default'),
+      // The original string in English.
+      'source'    => array('type' => 'text', 'mysql_type' => 'blob', 'not null' => TRUE),
+      // Drupal core version, which last used the string.
+      'version'   => array('type' => 'varchar', 'length' => 20, 'not null' => TRUE, 'default' => 'none'),
+    ),
+    'primary key' => array('lid'),
+    'indexes' => array
+        ('source' => array(array('source', 30))),
+  );
+
+  $schema['locales_target'] = array(
+    'fields' => array(
+      // References locales_source.
+      'lid'         => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      // Translation string value in this language.
+      'translation' => array('type' => 'text', 'mysql_type' => 'blob', 'not null' => TRUE),
+      // Language code referencing the languages table.
+      'language'    => array('type' => 'varchar', 'length' => 12, 'not null' => TRUE, 'default' => ''),
+      // Parent lid (lid of the previous string in the plural chain) in case of plural strings.
+      'plid'        => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      // Plural index number in case of plural strings.
+      'plural'      => array('type' => 'int', 'not null' => TRUE, 'default' => 0)
+    ),
+    'indexes' => array(
+      'language'   => array('language'),
+      'lid'    => array('lid'),
+      'plid'   => array('plid'),
+      'plural' => array('plural')
+    ),
+  );
+
+  return $schema;
+}
+

@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.install,v 1.9 2007/05/25 12:46:45 dries Exp $
+// $Id: profile.install,v 1.10 2007/10/05 14:43:25 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -18,3 +18,44 @@ function profile_uninstall() {
 
   variable_del('profile_block_author_fields');
 }
+
+/**
+ * Implementation of hook_schema().
+ */
+function profile_schema() {
+  $schema['profile_fields'] = array(
+    'fields' => array(
+      'fid'          => array('type' => 'serial', 'not null' => TRUE),
+      'title'        => array('type' => 'varchar', 'length' => 255, 'not null' => FALSE),
+      'name'         => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
+      'explanation'  => array('type' => 'text', 'not null' => FALSE),
+      'category'     => array('type' => 'varchar', 'length' => 255, 'not null' => FALSE),
+      'page'         => array('type' => 'varchar', 'length' => 255, 'not null' => FALSE),
+      'type'         => array('type' => 'varchar', 'length' => 128, 'not null' => FALSE),
+      'weight'       => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny'),
+      'required'     => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny'),
+      'register'     => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny'),
+      'visibility'   => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny'),
+      'autocomplete' => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny'),
+      'options'      => array('type' => 'text', 'not null' => FALSE)
+    ),
+    'indexes' => array('category' => array('category')),
+    'unique keys' => array('name' => array('name')),
+    'primary key' => array('fid'),
+  );
+
+  $schema['profile_values'] = array(
+    'fields' => array(
+      'fid'   => array('type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE, 'default' => 0),
+      'uid'   => array('type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE, 'default' => 0),
+      'value' => array('type' => 'text', 'not null' => FALSE)
+    ),
+    'indexes' => array(
+      'fid' => array('fid'),
+      'uid' => array('uid')
+    ),
+  );
+
+  return $schema;
+}
+

@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.install,v 1.1 2007/09/11 14:50:05 goba Exp $
+// $Id: trigger.install,v 1.2 2007/10/05 14:43:26 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -19,3 +19,20 @@ function trigger_uninstall() {
   // Remove tables.
   drupal_uninstall_schema('trigger');
 }
+
+/**
+ * Implementation of hook_schema().
+ */
+function trigger_schema() {
+  $schema['trigger_assignments'] = array(
+    'fields' => array(
+      'hook' => array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''),
+      'op' => array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''),
+      'aid' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'weight' => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+    ),
+    'primary key' => array('hook', 'op', 'aid'),
+  );
+  return $schema;
+}
+

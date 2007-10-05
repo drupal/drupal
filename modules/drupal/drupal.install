@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal.install,v 1.6 2007/05/25 12:46:44 dries Exp $
+// $Id: drupal.install,v 1.7 2007/10/05 14:43:24 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -26,3 +26,37 @@ function drupal_uninstall() {
   variable_del('drupal_default_da_server');
   variable_del('drupal_default_da_server_only');
 }
+
+/**
+ * Implementation of hook_schema().
+ */
+function drupal_schema() {
+  $schema['client'] = array(
+    'fields' => array(
+      'cid'     => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
+      'link'    => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'name'    => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
+      'mail'    => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
+      'slogan'  => array('type' => 'text', 'not null' => TRUE, 'size' => 'big'),
+      'mission' => array('type' => 'text', 'not null' => TRUE, 'size' => 'big'),
+      'users'   => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'nodes'   => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'version' => array('type' => 'varchar', 'length' => 35, 'not null' => TRUE, 'default' => ''),
+      'created' => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'changed' => array('type' => 'int', 'not null' => TRUE, 'default' => 0)
+    ),
+    'primary key' => array('cid'),
+  );
+
+  $schema['client_system'] = array(
+    'fields' => array(
+      'cid'  => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'name' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'type' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => '')
+    ),
+    'primary key' => array('cid', 'name'),
+  );
+
+  return $schema;
+}
+

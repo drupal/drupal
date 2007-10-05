@@ -1,5 +1,5 @@
 <?php
-// $Id: search.install,v 1.8 2007/09/29 08:08:59 goba Exp $
+// $Id: search.install,v 1.9 2007/10/05 14:43:25 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -20,3 +20,44 @@ function search_uninstall() {
   variable_del('overlap_cjk');
   variable_del('search_cron_limit');
 }
+
+/**
+ * Implementation of hook_schema().
+ */
+function search_schema() {
+  $schema['search_dataset'] = array(
+    'fields' => array(
+      'sid'  => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+      'type' => array('type' => 'varchar', 'length' => 16, 'not null' => FALSE),
+      'data' => array('type' => 'text', 'not null' => TRUE, 'size' => 'big')
+    ),
+    'indexes' => array('sid_type' => array('sid', 'type')),
+  );
+
+  $schema['search_index'] = array(
+    'fields' => array(
+      'word'     => array('type' => 'varchar', 'length' => 50, 'not null' => TRUE, 'default' => ''),
+      'sid'      => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+      'type'     => array('type' => 'varchar', 'length' => 16, 'not null' => FALSE),
+      'fromsid'  => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+      'fromtype' => array('type' => 'varchar', 'length' => 16, 'not null' => FALSE),
+      'score'    => array('type' => 'float', 'not null' => FALSE)
+    ),
+    'indexes' => array(
+      'from_sid_type' => array('fromsid', 'fromtype'),
+      'sid_type'      => array('sid', 'type'),
+      'word'          => array('word')
+    ),
+  );
+
+  $schema['search_total'] = array(
+    'fields' => array(
+      'word'  => array('type' => 'varchar', 'length' => 50, 'not null' => TRUE, 'default' => ''),
+      'count' => array('type' => 'float', 'not null' => FALSE)
+    ),
+    'primary key' => array('word'),
+  );
+
+  return $schema;
+}
+

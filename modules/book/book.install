@@ -1,5 +1,5 @@
 <?php
-// $Id: book.install,v 1.9 2007/08/26 07:20:07 dries Exp $
+// $Id: book.install,v 1.10 2007/10/05 14:43:24 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -243,4 +243,25 @@ function book_update_6000() {
 
   return $ret;
 }
+
+/**
+ * Implementation of hook_schema().
+ */
+function book_schema() {
+  $schema['book'] = array(
+    'fields' => array(
+      'mlid'    => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+      'nid'     => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+      'bid' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+    ),
+    'indexes' => array(
+      'nid'     => array('nid'),
+      'bid' => array('bid')
+    ),
+    'primary key' => array('mlid'),
+  );
+
+  return $schema;
+}
+
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.install,v 1.1 2007/06/18 16:09:39 dries Exp $
+// $Id: openid.install,v 1.2 2007/10/05 14:43:25 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -16,3 +16,24 @@ function openid_uninstall() {
   // Remove table.
   drupal_uninstall_schema('openid');
 }
+
+/**
+ * Implementation of hook_schema().
+ */
+function openid_schema() {
+  $schema['openid_association'] = array(
+    'fields' => array(
+      'idp_endpoint_uri' => array('type' => 'varchar', 'length' => 255),
+      'assoc_handle' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE),
+      'assoc_type' => array('type' => 'varchar', 'length' => 32),
+      'session_type' => array('type' => 'varchar', 'length' => 32),
+      'mac_key' => array('type' => 'varchar', 'length' => 255),
+      'created' => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'expires_in' => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+    ),
+    'primary key' => array('assoc_handle'),
+  );
+
+  return $schema;
+}
+

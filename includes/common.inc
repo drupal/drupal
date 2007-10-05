@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.694 2007/10/04 19:20:39 goba Exp $
+// $Id: common.inc,v 1.695 2007/10/05 14:43:23 dries Exp $
 
 /**
  * @file
@@ -2869,8 +2869,8 @@ function drupal_get_schema($name = NULL, $rebuild = FALSE) {
     }
     // Otherwise, rebuild the schema cache.
     else {
-      // Load the .schema files.
-      module_load_all_includes('schema');
+      // Load the .install files to get hook_schema.
+      module_load_all_includes('install');
 
       // Invoke hook_schema for all modules.
       foreach (module_implements('schema') as $module) {
@@ -2960,8 +2960,8 @@ function drupal_uninstall_schema($module) {
  *   is returned.
  */
 function drupal_get_schema_unprocessed($module, $table = NULL) {
-  // Load the .schema file.
-  module_load_include('schema', $module);
+  // Load the .install file to get hook_schema.
+  module_load_include('install', $module);
   $schema = module_invoke($module, 'schema');
 
   if (!is_null($table) && isset($schema[$table])) {

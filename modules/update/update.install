@@ -1,5 +1,5 @@
 <?php
-// $Id: update.install,v 1.1 2007/07/11 15:15:40 dries Exp $
+// $Id: update.install,v 1.2 2007/10/05 14:43:26 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -28,3 +28,12 @@ function update_uninstall() {
   }
   menu_rebuild();
 }
+
+/**
+ * Implementation of hook_schema().
+ */
+function update_schema() {
+  $schema['cache_update'] = drupal_get_schema_unprocessed('system', 'cache');
+  return $schema;
+}
+

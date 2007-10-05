@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.install,v 1.1 2007/05/30 08:08:59 dries Exp $
+// $Id: upload.install,v 1.2 2007/10/05 14:43:26 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -16,3 +16,23 @@ function upload_uninstall() {
   // Remove tables.
   drupal_uninstall_schema('upload');
 }
+
+/**
+ * Implementation of hook_schema().
+ */
+function upload_schema() {
+  $schema['upload'] = array(
+    'fields' => array(
+      'fid'         => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+      'nid'         => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+      'vid'         => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+      'description' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'list'        => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0, 'size' => 'tiny')
+    ),
+    'primary key' => array('fid', 'vid'),
+    'indexes' => array('vid' => array('vid'), 'nid' => array('nid')),
+  );
+
+  return $schema;
+}
+

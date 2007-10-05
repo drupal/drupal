@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.82 2007/10/02 16:15:56 dries Exp $
+// $Id: database.inc,v 1.83 2007/10/05 14:43:23 dries Exp $
 
 /**
  * @file
@@ -331,7 +331,7 @@ function db_escape_table($string) {
  *
  * A Drupal schema definition is an array structure representing one or
  * more tables and their related keys and indexes. A schema is defined by
- * hook_schema(), which usually lives in a modulename.schema file.
+ * hook_schema(), which usually lives in a modulename.install file.
  *
  * By implementing hook_schema() and specifying the tables your module
  * declares, you can easily create and drop these tables on all

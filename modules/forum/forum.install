@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.install,v 1.9 2007/09/05 08:27:57 dries Exp $
+// $Id: forum.install,v 1.10 2007/10/05 14:43:24 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -50,3 +50,24 @@ function forum_uninstall() {
   variable_del('forum_block_num_0');
   variable_del('forum_block_num_1');
 }
+
+/**
+ * Implementation of hook_schema().
+ */
+function forum_schema() {
+  $schema['forum'] = array(
+    'fields' => array(
+      'nid' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+      'vid' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+      'tid' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0)
+    ),
+    'indexes' => array(
+      'nid' => array('nid'),
+      'tid' => array('tid')
+    ),
+    'primary key' => array('vid'),
+  );
+
+  return $schema;
+}
+
