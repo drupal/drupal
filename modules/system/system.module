@@ -451,6 +451,7 @@ function system_init() {
   // Add the CSS for this module.
   drupal_add_css(drupal_get_path('module', 'system') .'/defaults.css', 'module');
   drupal_add_css(drupal_get_path('module', 'system') .'/system.css', 'module');
+  drupal_add_css(drupal_get_path('module', 'system') .'/system-menus.css', 'module');
 }
 
 /**

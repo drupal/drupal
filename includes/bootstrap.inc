@@ -987,6 +987,7 @@ function drupal_maintenance_theme() {
   unicode_check();
   drupal_add_css(drupal_get_path('module', 'system') .'/defaults.css', 'module');
   drupal_add_css(drupal_get_path('module', 'system') .'/system.css', 'module');
+  drupal_add_css(drupal_get_path('module', 'system') .'/system-menus.css', 'module');
   $theme = '';
 
   // Special case registry of theme functions used by the installer

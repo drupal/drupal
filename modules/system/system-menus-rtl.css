@@ -1,0 +1,18 @@
+/* $Id$ */
+
+ul.menu {
+  text-align:right;
+}
+ul.menu li {
+  margin: 0 0.5em 0 0;
+}
+li.expanded {
+  padding: 0.2em 0 0 0.5em;
+}
+li.collapsed {
+  list-style-image: url(../../misc/menu-collapsed-rtl.png);
+  padding: 0.2em 0 0 0.5em;
+}
+li.leaf {
+  padding: 0.2em 0 0 0.5em;
+}
