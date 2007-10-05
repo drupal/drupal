@@ -499,8 +499,10 @@ function _upload_form($node) {
       '#type' => 'submit',
       '#value' => t('Attach'),
       '#name' => 'attach',
-      '#ahah_path' => 'upload/js',
-      '#ahah_wrapper' => 'attach-wrapper',
+      '#ahah' => array(
+        'path' => 'upload/js',
+        'wrapper' => 'attach-wrapper',
+      ),
       '#submit' => array('node_form_submit_build_node'),
     );
   }

@@ -418,8 +418,9 @@ html.js .no-js {
 .progress .bar {
   background: #fff url(../../misc/progress.gif);
   border: 1px solid #00375a;
+  width: 5em;
   height: 1.5em;
-  margin-top: 0.2em;
+  margin: 0.2em 0 0 0.2em;
 }
 .progress .filled {
   background: #0072b9;
@@ -429,6 +430,12 @@ html.js .no-js {
 }
 .progress .percentage {
   float: right; /* LTR */
+}
+.progress-disabled {
+  float: left; /* LTR */
+}
+.ahah-progress {
+  float: left; /* LTR */
 }
 
 /*

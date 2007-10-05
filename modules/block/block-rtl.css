@@ -4,3 +4,12 @@
   padding-left: inherit;
   padding-right: 1.5em;
 }
+#blocks select {
+  margin-left: 18px;
+}
+#blocks select.progress-disabled {
+  margin-left: 0px;
+}
+#blocks .progress .bar {
+  float: right;
+}
