@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.279 2007/10/05 09:35:09 goba Exp $
+// $Id: block.module,v 1.280 2007/10/05 12:57:20 goba Exp $
 
 /**
  * @file
@@ -141,12 +141,14 @@ function block_menu() {
   );
   $items['admin/build/block/configure'] = array(
     'title' => 'Configure block',
+    'page callback' => 'drupal_get_form',
     'page arguments' => array('block_admin_configure'),
     'type' => MENU_CALLBACK,
     'file' => 'block.admin.inc',
   );
   $items['admin/build/block/delete'] = array(
     'title' => 'Delete block',
+    'page callback' => 'drupal_get_form',
     'page arguments' => array('block_box_delete'),
     'type' => MENU_CALLBACK,
     'file' => 'block.admin.inc',
