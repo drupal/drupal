@@ -1,0 +1,34 @@
+<?php
+// $Id: filter.install,v 1.1 2007/10/05 16:07:22 dries Exp $
+
+/**
+ * Implementation of hook_schema().
+ */
+function filter_schema() {
+  $schema['filters'] = array(
+    'fields' => array(
+      'fid'    => array('type' => 'serial', 'not null' => TRUE),
+      'format' => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'module' => array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''),
+      'delta'  => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny'),
+      'weight' => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny')
+    ),
+    'primary key' => array('fid'),
+    'indexes' => array('weight' => array('weight')),
+  );
+  $schema['filter_formats'] = array(
+    'fields' => array(
+      'format' => array('type' => 'serial', 'not null' => TRUE),
+      'name'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'roles'  => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'cache'  => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny')
+    ),
+    'unique keys' => array('name' => array('name')),
+    'primary key' => array('format'),
+  );
+
+  $schema['cache_filter'] = drupal_get_schema_unprocessed('system', 'cache');
+
+  return $schema;
+}
+
