@@ -1,5 +1,5 @@
 <?php
-// $Id: syslog.module,v 1.9 2007/07/04 21:35:24 goba Exp $
+// $Id: syslog.module,v 1.10 2007/10/05 13:11:19 goba Exp $
 
 /**
  * @file
@@ -40,8 +40,8 @@ function syslog_admin_settings() {
     '#default_value' => variable_get('syslog_facility', DEFAULT_SYSLOG_FACILITY),
     '#options'       => syslog_facility_list(),
     '#description'   => t('Select the syslog facility to send Drupal\'s messages to. Syslog is a system administration logging tool, where messages are routed by facility and severity. It is more suitable for medium to large sites, and would not be suitable for shared hosting environments. In the file /etc/syslog.conf you define where messages go for any combination of facility and severity. For UNIX/Linux systems, Drupal can use the facilities user, local0 to local7, for Windows, you can only use the user facility. For more information on syslog facilities, severity levels, and how to setup a syslog.conf files, see !syslog_conf and !php', array(
-      '!php'         => l("PHP's syslog", 'http://www.php.net/manual/en/function.openlog.php'),
-      '!syslog_conf' => l('UNIX/Linux syslog.conf', 'http://www.rt.com/man/syslog.5.html'),
+      '!php'         => l("PHP's syslog", 'http://www.php.net/manual/en/function.openlog.php', array('external' => TRUE)),
+      '!syslog_conf' => l('UNIX/Linux syslog.conf', 'http://www.rt.com/man/syslog.5.html', array('external' => TRUE)),
       )),
   );
   return system_settings_form($form);
