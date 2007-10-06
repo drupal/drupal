@@ -1,5 +1,5 @@
 <?php
-// $Id: page.tpl.php,v 1.6 2007/09/01 05:42:48 dries Exp $
+// $Id: page.tpl.php,v 1.7 2007/10/06 15:26:57 dries Exp $
 
 /**
  * @file page.tpl.php
@@ -114,13 +114,13 @@
       <div id="navigation" class="menu <?php if (!empty($primary_links)) { print "withprimary"; } if (!empty($secondary_links)) { print " withsecondary"; } ?> ">
         <?php if (!empty($primary_links)): ?>
           <div id="primary" class="clear-block">
-            <?php print theme('menu_links', $primary_links); ?>
+            <?php print theme('links', $primary_links, array('class' => 'links primary-links')); ?>
           </div>
         <?php endif; ?>
 
         <?php if (!empty($secondary_links)): ?>
           <div id="secondary" class="clear-block">
-            <?php print theme('menu_links', $secondary_links); ?>
+            <?php print theme('links', $secondary_links, array('class' => 'links secondary-links')); ?>
           </div>
         <?php endif; ?>
       </div> <!-- /navigation -->
