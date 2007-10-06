@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.696 2007/10/05 14:50:25 goba Exp $
+// $Id: common.inc,v 1.697 2007/10/06 15:30:41 dries Exp $
 
 /**
  * @file
@@ -269,7 +269,9 @@ function drupal_get_destination() {
  *
  * It is advised to use drupal_goto() instead of PHP's header(), because
  * drupal_goto() will append the user's session ID to the URI when PHP is
- * compiled with "--enable-trans-sid".
+ * compiled with "--enable-trans-sid". In addtion, Drupal will ensure that
+ * messages set by drupal_set_message() and other session data are written to
+ * the database before the user is redirected.
  *
  * This function ends the request; use it rather than a print theme('page')
  * statement in your menu callback.
@@ -306,13 +308,15 @@ function drupal_goto($path = '', $query = NULL, $fragment = NULL, $http_response
   // Before the redirect, allow modules to react to the end of the page request.
   module_invoke_all('exit', $url);
 
-  // Here we register header() to be called after exit(). Because
-  // session_write_close() was registered before header() all session
-  // data will be written to the database before the header is sent to the
-  // browser.
-  register_shutdown_function('header', "Location: $url", TRUE, $http_response_code);
+  // Even though session_write_close() is registered as a shutdown function, we
+  // need all session data written to the database before the redirect.
+  session_write_close();
 
-  // Make sure none of the code below the drupal_goto() call gets executed.
+  header('Location: '. $url, TRUE, $http_response_code);
+
+  // The "Location" header sends a redirect status code to the HTTP daemon. In
+  // some cases this can go wrong, so we make sure none of the code below the
+  // drupal_goto() call gets executed when we redirect.
   exit();
 }
 
