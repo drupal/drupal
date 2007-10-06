@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.280 2007/10/05 12:57:20 goba Exp $
+// $Id: block.module,v 1.281 2007/10/06 16:08:50 dries Exp $
 
 /**
  * @file
@@ -378,9 +378,8 @@ function block_user($type, $edit, &$user, $category = NULL) {
  *   displayed.
  *
  * @todo
- *   Add a proper primary key (bid) to the blocks table so we don't have
- *   to mess around with this <i>module</i>_<i>delta</i> construct.
- *   Currently, the blocks table has no primary key defined!
+ *   Now that the blocks table has a primary key, we should use that as the
+ *   array key instead of <i>module</i>_<i>delta</i>.
  */
 function block_list($region) {
   global $user, $theme_key;
