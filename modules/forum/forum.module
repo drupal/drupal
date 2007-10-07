@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.419 2007/09/10 08:06:59 goba Exp $
+// $Id: forum.module,v 1.420 2007/10/07 19:25:57 dries Exp $
 
 /**
  * @file
@@ -813,7 +813,7 @@ function template_preprocess_forum_topic_list(&$variables) {
       $variables['topics'][$id]->new_url = '';
       if ($topic->new_replies) {
         $variables['topics'][$id]->new_text = t('!count new', array('!count' => $variables['forums'][$id]->new_topics));
-        $variables['topics'][$id]->new_url = url("node/$topic->nid", array('query' => comment_new_page_count($topic->num_comments, $topic->new_replies, $topic->nid), 'fragment' => 'new'));
+        $variables['topics'][$id]->new_url = url("node/$topic->nid", array('query' => comment_new_page_count($topic->num_comments, $topic->new_replies, $topic), 'fragment' => 'new'));
       }
 
     }
