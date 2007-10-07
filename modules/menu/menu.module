@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.144 2007/09/20 08:41:33 goba Exp $
+// $Id: menu.module,v 1.145 2007/10/07 09:50:01 dries Exp $
 
 /**
  * @file
@@ -181,7 +181,7 @@ function menu_enable() {
  * Title callback for the menu overview page and links.
  */
 function menu_overview_title($menu) {
-  return t('!menu_title (overview)', array('!menu_title' => $menu['title']));
+  return $menu['title'];
 }
 
 /**
