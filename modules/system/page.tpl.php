@@ -111,6 +111,16 @@
         <div id="search-box"><?php print $search_box; ?></div>
       <?php endif; ?>
 
+      <?php if (!empty($header)): ?>
+        <div id="header-region">
+          <?php print $header; ?>
+        </div>
+      <?php endif; ?>
+
+    </div> <!-- /header -->
+
+    <div id="container" class="clear-block">
+
       <div id="navigation" class="menu <?php if (!empty($primary_links)) { print "withprimary"; } if (!empty($secondary_links)) { print " withsecondary"; } ?> ">
         <?php if (!empty($primary_links)): ?>
           <div id="primary" class="clear-block">
@@ -124,16 +134,6 @@
           </div>
         <?php endif; ?>
       </div> <!-- /navigation -->
-
-      <?php if (!empty($header)): ?>
-        <div id="header-region">
-          <?php print $header; ?>
-        </div>
-      <?php endif; ?>
-
-    </div> <!-- /header -->
-
-    <div id="container" class="clear-block">
 
       <?php if (!empty($left)): ?>
         <div id="sidebar-left" class="column sidebar">
