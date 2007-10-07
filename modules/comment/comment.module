@@ -1055,8 +1055,9 @@ function comment_render($node, $cid = 0) {
       }
     }
 
-    // If enabled, show new comment form.
-    if (user_access('post comments') && node_comment_mode($nid) == COMMENT_NODE_READ_WRITE && (variable_get('comment_form_location', COMMENT_FORM_SEPARATE_PAGE) == COMMENT_FORM_BELOW)) {
+    // If enabled, show new comment form if it's not already being displayed.
+    $reply = arg(0) == 'comment' && arg(1) == 'reply';
+    if (user_access('post comments') && node_comment_mode($nid) == COMMENT_NODE_READ_WRITE && (variable_get('comment_form_location', COMMENT_FORM_SEPARATE_PAGE) == COMMENT_FORM_BELOW) && !$reply) {
       $output .= comment_form_box(array('nid' => $nid), t('Post new comment'));
     }
 
