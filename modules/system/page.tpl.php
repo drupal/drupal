@@ -1,5 +1,5 @@
 <?php
-// $Id: page.tpl.php,v 1.7 2007/10/06 15:26:57 dries Exp $
+// $Id: page.tpl.php,v 1.8 2007/10/07 09:23:28 dries Exp $
 
 /**
  * @file page.tpl.php
@@ -111,6 +111,16 @@
         <div id="search-box"><?php print $search_box; ?></div>
       <?php endif; ?>
 
+      <?php if (!empty($header)): ?>
+        <div id="header-region">
+          <?php print $header; ?>
+        </div>
+      <?php endif; ?>
+
+    </div> <!-- /header -->
+
+    <div id="container" class="clear-block">
+
       <div id="navigation" class="menu <?php if (!empty($primary_links)) { print "withprimary"; } if (!empty($secondary_links)) { print " withsecondary"; } ?> ">
         <?php if (!empty($primary_links)): ?>
           <div id="primary" class="clear-block">
@@ -124,16 +134,6 @@
           </div>
         <?php endif; ?>
       </div> <!-- /navigation -->
-
-      <?php if (!empty($header)): ?>
-        <div id="header-region">
-          <?php print $header; ?>
-        </div>
-      <?php endif; ?>
-
-    </div> <!-- /header -->
-
-    <div id="container" class="clear-block">
 
       <?php if (!empty($left)): ?>
         <div id="sidebar-left" class="column sidebar">
