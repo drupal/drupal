@@ -181,7 +181,7 @@ function menu_enable() {
  * Title callback for the menu overview page and links.
  */
 function menu_overview_title($menu) {
-  return t('!menu_title (overview)', array('!menu_title' => $menu['title']));
+  return $menu['title'];
 }
 
 /**
