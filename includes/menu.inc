@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.212 2007/10/05 13:17:09 goba Exp $
+// $Id: menu.inc,v 1.213 2007/10/08 14:15:09 goba Exp $
 
 /**
  * @file
@@ -585,15 +585,29 @@ function menu_tree($menu_name = 'navigation') {
 function menu_tree_output($tree) {
   $output = '';
 
+  // Pull out just the menu items we are going to render so that we 
+  // get an accurate count for the first/last classes.
   foreach ($tree as $data) {
     if (!$data['link']['hidden']) {
-      $link = theme('menu_item_link', $data['link']);
-      if ($data['below']) {
-        $output .= theme('menu_item', $link, $data['link']['has_children'], menu_tree_output($data['below']), $data['link']['in_active_trail']);
-      }
-      else {
-        $output .= theme('menu_item', $link, $data['link']['has_children'], '', $data['link']['in_active_trail']);
-      }
+      $items[] = $data;
+    }
+  }
+  
+  $num_items = count($items);
+  foreach ($items as $i => $data) {
+    $extra_class = NULL;
+    if ($i == 0) {
+      $extra_class = 'first';
+    }
+    if ($i == $num_items - 1) {
+      $extra_class = 'last';
+    }
+    $link = theme('menu_item_link', $data['link']);
+    if ($data['below']) {
+      $output .= theme('menu_item', $link, $data['link']['has_children'], menu_tree_output($data['below']), $data['link']['in_active_trail'], $extra_class);
+    }
+    else {
+      $output .= theme('menu_item', $link, $data['link']['has_children'], '', $data['link']['in_active_trail'], $extra_class);
     }
   }
   return $output ? theme('menu_tree', $output) : '';
@@ -921,8 +935,11 @@ function theme_menu_tree($tree) {
 /**
  * Generate the HTML output for a menu item and submenu.
  */
-function theme_menu_item($link, $has_children, $menu = '', $in_active_trail = FALSE) {
+function theme_menu_item($link, $has_children, $menu = '', $in_active_trail = FALSE, $extra_class = NULL) {
   $class = ($menu ? 'expanded' : ($has_children ? 'collapsed' : 'leaf'));
+  if (!empty($extra_class)) {
+    $class .= ' '. $extra_class;
+  }
   if ($in_active_trail) {
     $class .= ' active-trail';
   }
