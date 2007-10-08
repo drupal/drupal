@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.214 2007/10/08 15:01:05 goba Exp $
+// $Id: menu.inc,v 1.215 2007/10/08 18:49:03 goba Exp $
 
 /**
  * @file
@@ -923,6 +923,10 @@ function _menu_tree_data($result, $parents, $depth, $previous_element = '') {
  * Generate the HTML output for a single menu link.
  */
 function theme_menu_item_link($link) {
+  if (empty($link['options'])) {
+    $link['options'] = array();
+  }
+
   return l($link['title'], $link['href'], $link['options']);
 }
 
@@ -1135,12 +1139,12 @@ function menu_local_tasks($level = 0, $return_root = FALSE) {
           if ($item['type'] == MENU_DEFAULT_LOCAL_TASK) {
             // Find the first parent which is not a default local task.
             for ($p = $item['tab_parent']; $tasks[$p]['type'] == MENU_DEFAULT_LOCAL_TASK; $p = $tasks[$p]['tab_parent']);
-            $link = l($item['title'], $tasks[$p]['href']);
+            $link = theme('menu_item_link', array('title' => $item['title'], 'href' => $tasks[$p]['href']));
             $tabs_current .= theme('menu_local_task', $link, TRUE);
             $next_path = $item['path'];
           }
           else {
-            $link = l($item['title'], $item['href']);
+            $link = theme('menu_item_link', $item);
             $tabs_current .= theme('menu_local_task', $link);
           }
         }
@@ -1167,13 +1171,13 @@ function menu_local_tasks($level = 0, $return_root = FALSE) {
           if ($item['type'] == MENU_DEFAULT_LOCAL_TASK) {
             // Find the first parent which is not a default local task.
             for ($p = $item['tab_parent']; $tasks[$p]['type'] == MENU_DEFAULT_LOCAL_TASK; $p = $tasks[$p]['tab_parent']);
-            $link = l($item['title'], $tasks[$p]['href']);
+            $link = theme('menu_item_link', array('title' => $item['title'], 'href' => $tasks[$p]['href']));
             if ($item['path'] == $router_item['path']) {
               $root_path = $tasks[$p]['path'];
             }
           }
           else {
-            $link = l($item['title'], $item['href']);
+            $link = theme('menu_item_link', $item);
           }
           // We check for the active tab.
           if ($item['path'] == $path) {
