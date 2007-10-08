@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.420 2007/10/07 19:25:57 dries Exp $
+// $Id: forum.module,v 1.421 2007/10/08 08:40:26 goba Exp $
 
 /**
  * @file
@@ -195,7 +195,6 @@ function forum_nodeapi(&$node, $op, $teaser, $page) {
         $breadcrumb[] = array('path' => 'node/'. $node->nid);
         menu_set_location($breadcrumb);
 
-        $node = node_prepare($node, $teaser);
         if (!$teaser) {
           $node->content['forum_navigation'] = array(
             '#value' => theme('forum_topic_navigation', $node),
