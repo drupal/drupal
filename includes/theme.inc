@@ -1493,7 +1493,8 @@ function theme_item_list($items = array(), $title = NULL, $type = 'ul', $attribu
 
   if (!empty($items)) {
     $output .= "<$type". drupal_attributes($attributes) .'>';
-    foreach ($items as $item) {
+    $num_items = count($items);
+    foreach ($items as $i => $item) {
       $attributes = array();
       $children = array();
       if (is_array($item)) {
@@ -1514,6 +1515,12 @@ function theme_item_list($items = array(), $title = NULL, $type = 'ul', $attribu
       }
       if (count($children) > 0) {
         $data .= theme_item_list($children, NULL, $type, $attributes); // Render nested list
+      }
+      if ($i == 0) {
+        $attributes['class'] = empty($attributes['class']) ? 'first' : ($attributes['class'] .' first');
+      }
+      if ($i == $num_items - 1) {
+        $attributes['class'] = empty($attributes['class']) ? 'last' : ($attributes['class'] .' last');
       }
       $output .= '<li'. drupal_attributes($attributes) .'>'. $data .'</li>';
     }
