@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.213 2007/10/08 14:15:09 goba Exp $
+// $Id: menu.inc,v 1.214 2007/10/08 15:01:05 goba Exp $
 
 /**
  * @file
@@ -584,6 +584,7 @@ function menu_tree($menu_name = 'navigation') {
  */
 function menu_tree_output($tree) {
   $output = '';
+  $items = array();
 
   // Pull out just the menu items we are going to render so that we 
   // get an accurate count for the first/last classes.
