@@ -1701,7 +1701,8 @@ function comment_form_add_preview($form, &$form_state) {
     $output .= theme('comment_view', $comment, $node);
   }
   else {
-    $form['#suffix'] = node_view($node);
+    $suffix = empty($form['#suffix']) ? '' : $form['#suffix'];
+    $form['#suffix'] = $suffix . node_view($node);
     $edit['pid'] = 0;
   }
 
