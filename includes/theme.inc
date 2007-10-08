@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.388 2007/10/04 19:24:50 goba Exp $
+// $Id: theme.inc,v 1.389 2007/10/08 07:47:08 goba Exp $
 
 /**
  * @file
@@ -303,22 +303,26 @@ function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
       // Check for default _preprocess_ functions. Ensure arrayness.
       if (!isset($info['preprocess functions']) || !is_array($info['preprocess functions'])) {
         $info['preprocess functions'] = array();
-        $prefix = ($type == 'module' ? 'template' : $name);
-        // theme engines get an extra set that come before the normally named preprocess.
-        if ($type == 'theme_engine') {
-          if (function_exists($prefix .'_engine_preprocess')) {
-            $info['preprocess functions'][] = $prefix .'_engine_preprocess';
-          }
-          if (function_exists($prefix .'_engine_preprocess_'. $hook)) {
-            $info['preprocess functions'][] = $prefix .'_engine_preprocess_'. $hook;
-          }
+        $prefixes = array();
+        if ($type == 'module') {
+          // Default preprocessor prefix.
+          $prefixes[] = 'template';
+          // Add all modules so they can intervene with their own preprocessors. This allows them
+          // to provide preprocess functions even if they are not the owner of the current hook.
+          $prefixes += module_list();
         }
-
-        // Let the theme engine register theme specific variable functions.
-        $prefixes = array($prefix);
-        if ($type == 'theme_engine') {
+        elseif ($type == 'theme_engine') {
+          // Theme engines get an extra set that come before the normally named preprocessors.
+          $prefixes[] = $name .'_engine';
+          // The theme engine also registers on behalf of the theme. The theme or engine name can be used.
+          $prefixes[] = $name;
           $prefixes[] = $theme;
         }
+        else {
+          // This applies when the theme manually registers their own preprocessors.
+          $prefixes[] = $name;
+        }
+
         foreach ($prefixes as $prefix) {
           if (function_exists($prefix .'_preprocess')) {
             $info['preprocess functions'][] = $prefix .'_preprocess';
@@ -475,41 +479,61 @@ function list_theme_engines($refresh = FALSE) {
  * passed along.
  *
  * If the implementation is a template, the arguments are converted to a
- * $variables array. This array is then modified by the theme engine (if
- * applicable) and the theme. The following functions may be used to modify
- * the $variables array:
+ * $variables array. This array is then modified by the module implementing
+ * the hook, theme engine (if applicable) and the theme. The following
+ * functions may be used to modify the $variables array. They are processed in
+ * this order when available:
  *
- * ENGINE_engine_preprocess(&$variables)
+ * - template_preprocess(&$variables)
+ *   This sets a default set of variables for all template implementations.
+ *
+ * - template_preprocess_HOOK(&$variables)
+ *   This is the first preprocessor called specific to the hook; it should be
+ *   implemented by the module that registers it.
+ *
+ * - MODULE_preprocess(&$variables)
+ *   This will be called for all templates; it should only be used if there
+ *   is a real need. It's purpose is similar to template_preprocess().
+ *
+ * - MODULE_preprocess_HOOK(&$variables)
+ *   This is for modules that want to alter or provide extra variables for
+ *   theming hooks not registered to itself. For example, if a module named
+ *   "foo" wanted to alter the $submitted variable for the hook "node" a
+ *   preprocess function of foo_preprocess_node() can be created to intercept
+ *   and alter the variable.
+ *
+ * - ENGINE_engine_preprocess(&$variables)
  *   This function should only be implemented by theme engines and exists
- *   so that the theme engine can set necessary variables. It is commonly
- *   used to set global variables such as $directory and $is_front_page.
+ *   so that it can set necessary variables for all hooks.
  *
- * ENGINE_engine_preprocess_HOOK(&$variables)
- *   This is the same as the previous function, but is called only per hook.
+ * - ENGINE_engine_preprocess_HOOK(&$variables)
+ *   This is the same as the previous function, but it is called for a single
+ *   theming hook.
  *
- * ENGINE_preprocess_HOOK(&$variables)
+ * - ENGINE_preprocess(&$variables)
+ *   This is meant to be used by themes that utilize a theme engine. It is
+ *   provided so that the preprocessor is not locked into a specific theme.
+ *   This makes it easy to share and transport code but theme authors must be
+ *   careful to prevent fatal re-declaration errors when using sub-themes that
+ *   have their own preprocessor named exactly the same as it's base theme. In
+ *   the default theme engine (PHPTemplate), sub-themes will load their own
+ *   template.php file in addition to the one used for it's parent theme. This
+ *   increases the risk for these errors. A good practice is to use the engine
+ *   name for the base theme and the theme name for the sub-themes to minimize
+ *   this possibility.
  *
- * ENGINE_preprocess(&$variables)
- *   This is meant to be used by themes that utilize a theme engine; as it is
- *   good practice for these themes to use the theme engine's name for
- *   their functions so that they may share code. In PHPTemplate, these
- *   functions will appear in template.php
+ * - ENGINE_preprocess_HOOK(&$variables)
+ *   The same applies from the previous function, but it is called for a
+ *   specific hook.
  *
- * THEME_preprocess_HOOK(&$variables)
- *
- * THEME_preprocess(&$variables)
+ * - THEME_preprocess(&$variables)
  *   These functions are based upon the raw theme; they should primarily be
- *   used by themes that do not use an engine or by themes that need small
- *   changes to what has already been established in the theme engine version
- *   of the function.
+ *   used by themes that do not use an engine or by sub-themes. It serves the
+ *   same purpose as ENGINE_preprocess().
  *
- * template_preprocess(&$variables)
- *   This function will only be called for theme functions registered by
- *   the named module. In general it is preferred to use the following
- *   function if possible, but it may not always be the case.
- *
- * template_preprocess_HOOK(&$variables)
- *   This is the same as the previous function, but is called only per hook.
+ * - THEME_preprocess_HOOK(&$variables)
+ *   The same applies from the previous function, but it is called for a
+ *   specific hook.
  *
  * There are two special variables that these hooks can set:
  *   'template_file' and 'template_files'. These will be merged together
