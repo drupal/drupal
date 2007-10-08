@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.890 2007/10/03 17:35:22 dries Exp $
+// $Id: node.module,v 1.891 2007/10/08 13:04:32 goba Exp $
 
 /**
  * @file
@@ -436,9 +436,8 @@ function node_type_save($info) {
  *   The machine-readable name of the node type to be deleted.
  */
 function node_type_delete($type) {
-  db_query("DELETE FROM {node_type} WHERE type = '%s'", $type);
-
   $info = node_get_types('type', $type);
+  db_query("DELETE FROM {node_type} WHERE type = '%s'", $type);
   module_invoke_all('node_type', 'delete', $info);
 }
 
