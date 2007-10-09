@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.234 2007/10/02 08:41:13 goba Exp $
+// $Id: update.php,v 1.235 2007/10/09 16:08:37 goba Exp $
 
 /**
  * @file
@@ -771,6 +771,21 @@ function update_fix_d6_requirements() {
       db_add_field($ret, 'locales_source', 'version', array('type' => 'varchar', 'length' => 20, 'not null' => TRUE, 'default' => 'none'));
     }
     variable_set('update_d6_requirements', TRUE);
+
+    // Create the cache_block table. See system_update_6027() for more details.
+    $schema['cache_block'] = array(
+      'fields' => array(
+        'cid'        => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+        'data'       => array('type' => 'blob', 'not null' => FALSE, 'size' => 'big'),
+        'expire'     => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+        'created'    => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+        'headers'    => array('type' => 'text', 'not null' => FALSE),
+        'serialized' => array('type' => 'int', 'size' => 'small', 'not null' => TRUE, 'default' => 0)
+      ),
+      'indexes' => array('expire' => array('expire')),
+      'primary key' => array('cid'),
+    );
+    db_create_table($ret, 'cache_block', $schema['cache_block']);
   }
 
   return $ret;
