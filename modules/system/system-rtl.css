@@ -74,6 +74,9 @@ div.teaser-button-wrapper {
 .ahah-progress {
   float: right;
 }
+.ahah-progress .throbber {
+  float: right;
+}
 input.password-field {
   margin-left: 10px;
   margin-right: inherit;

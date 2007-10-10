@@ -13,26 +13,11 @@
   padding: 3px;
 }
 #blocks select {
-  margin-right: 18px; /* LTR */
+  margin-right: 24px; /* LTR */
 }
 #blocks select.progress-disabled {
   margin-right: 0px; /* LTR */
 }
 #blocks tr.ahah-new-content {
   background-color: #ffd;
-}
-#blocks .progress {
-  width: 15px;
-  height: 15px;
-  margin: -2px 0;
-}
-#blocks .progress .bar {
-  width: 15px;
-  height: 15px;
-  background: transparent url(../../misc/throbber.gif) no-repeat 0px -18px;
-  border: none;
-  float: left; /* LTR */
-}
-#blocks .progress .message {
-  display: none;
 }

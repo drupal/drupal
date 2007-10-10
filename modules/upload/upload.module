@@ -502,6 +502,7 @@ function _upload_form($node) {
       '#ahah' => array(
         'path' => 'upload/js',
         'wrapper' => 'attach-wrapper',
+        'progress' => array('type' => 'bar', 'message' => t('Please wait...')),
       ),
       '#submit' => array('node_form_submit_build_node'),
     );
