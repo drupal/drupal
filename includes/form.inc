@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.229 2007/10/06 15:23:18 dries Exp $
+// $Id: form.inc,v 1.230 2007/10/10 10:24:24 goba Exp $
 
 /**
  * @defgroup form Form generation
@@ -1616,7 +1616,6 @@ function form_expand_ahah($element) {
   if (isset($element['#ahah']['path']) && isset($element['#ahah']['event']) && !isset($js_added[$element['#id']])) {
     drupal_add_js('misc/jquery.form.js');
     drupal_add_js('misc/ahah.js');
-    drupal_add_js('misc/progress.js');
 
     $ahah_binding = array(
       'url'   => url($element['#ahah']['path']),
@@ -1625,7 +1624,22 @@ function form_expand_ahah($element) {
       'selector' => empty($element['#ahah']['selector']) ? '#'. $element['#id'] : $element['#ahah']['selector'],
       'effect'   => empty($element['#ahah']['effect']) ? 'none' : $element['#ahah']['effect'],
       'method'   => empty($element['#ahah']['method']) ? 'replace' : $element['#ahah']['method'],
+      'progress' => empty($element['#ahah']['progress']) ? array('type' => 'throbber') : $element['#ahah']['progress'],
     );
+
+    // Convert a simple #ahah[progress] type string into an array.
+    if (is_string($ahah_binding['progress'])) {
+      $ahah_binding['progress'] = array('type' => $ahah_binding['progress']);
+    }
+    // Change progress path to a full url.
+    if (isset($ahah_binding['progress']['path'])) {
+      $ahah_binding['progress']['url'] = url($ahah_binding['progress']['path']);
+    }
+
+    // Add progress.js if we're doing a bar display.
+    if ($ahah_binding['progress']['type'] == 'bar') {
+      drupal_add_js('misc/progress.js');
+    }
 
     drupal_add_js(array('ahah' => array($element['#id'] => $ahah_binding)), 'setting');
 

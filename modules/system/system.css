@@ -1,4 +1,4 @@
-/* $Id: system.css,v 1.36 2007/10/05 14:50:25 goba Exp $ */
+/* $Id: system.css,v 1.37 2007/10/10 10:24:25 goba Exp $ */
 
 /*
 ** HTML elements
@@ -366,9 +366,8 @@ html.js .no-js {
 .progress .bar {
   background: #fff url(../../misc/progress.gif);
   border: 1px solid #00375a;
-  width: 5em;
   height: 1.5em;
-  margin: 0.2em 0 0 0.2em;
+  margin: 0 0.2em;
 }
 .progress .filled {
   background: #0072b9;
@@ -384,6 +383,19 @@ html.js .no-js {
 }
 .ahah-progress {
   float: left; /* LTR */
+}
+.ahah-progress .throbber {
+  width: 15px;
+  height: 15px;
+  margin: 2px;
+  background: transparent url(../../misc/throbber.gif) no-repeat 0px -18px;
+  float: left; /* LTR */
+}
+tr .ahah-progress .throbber {
+  margin: 0 2px;
+}
+.ahah-progress-bar {
+  width: 16em;
 }
 
 /*

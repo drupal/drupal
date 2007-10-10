@@ -1,4 +1,4 @@
-// $Id: ahah.js,v 1.3 2007/10/05 09:35:08 goba Exp $
+// $Id: ahah.js,v 1.4 2007/10/10 10:24:25 goba Exp $
 
 /**
  * Provides AJAX-like page updating via AHAH (Asynchronous HTML and HTTP).
@@ -42,6 +42,7 @@ Drupal.ahah = function(base, element_settings) {
   this.wrapper = '#'+ element_settings.wrapper;
   this.effect = element_settings.effect;
   this.method = element_settings.method;
+  this.progress = element_settings.progress;
   if (this.effect == 'none') {
     this.showEffect = 'show';
     this.hideEffect = 'hide';
@@ -100,12 +101,29 @@ Drupal.ahah = function(base, element_settings) {
  * Handler for the form redirection submission.
  */
 Drupal.ahah.prototype.beforeSubmit = function (form_values, element, options) {
-  // Insert progressbar and stretch to take the same space.
-  this.progress = new Drupal.progressBar('ahah_progress');
-  this.progress.setProgress(-1, Drupal.t('Please wait...'));
+  // Disable the element that received the change.
+  $(this.element).addClass('progress-disabled').attr('disabled', true);
 
-  var progress_element = $(this.progress.element).addClass('ahah-progress');
-  $(this.element).addClass('progress-disabled').attr('disabled', true).after(progress_element);
+  // Insert progressbar or throbber.
+  if (this.progress.type == 'bar') {
+    var progressBar = new Drupal.progressBar('ahah-progress-' + this.element.id, eval(this.progress.update_callback), this.progress.method, eval(this.progress.error_callback));
+    if (this.progress.message) {
+      progressBar.setProgress(-1, this.progress.message);
+    }
+    if (this.progress.url) {
+      progressBar.startMonitoring(this.progress.url, this.progress.interval || 1500);
+    }
+    this.progress.element = $(progressBar.element).addClass('ahah-progress ahah-progress-bar');
+    this.progress.object = progressBar;
+    $(this.element).after(this.progress.element);
+  }
+  else if (this.progress.type == 'throbber') {
+    this.progress.element = $('<div class="ahah-progress ahah-progress-throbber"><div class="throbber">&nbsp;</div></div>');
+    if (this.progress.message) {
+      $('.throbber', this.progress.element).after('<div class="message">' + this.progress.message + '</div>')
+    }
+    $(this.element).after(this.progress.element);
+  }
 };
 
 /**
@@ -114,7 +132,6 @@ Drupal.ahah.prototype.beforeSubmit = function (form_values, element, options) {
 Drupal.ahah.prototype.success = function (response, status) {
   var wrapper = $(this.wrapper);
   var form = $(this.element).parents('form');
-  var progress_element = $(this.progress.element);
   // Manually insert HTML into the jQuery object, using $() directly crashes
   // Safari with long string lengths. http://dev.jquery.com/ticket/1152
   var new_content = $('<div></div>').html(response.data);
@@ -125,13 +142,13 @@ Drupal.ahah.prototype.success = function (response, status) {
   this.form_encattr ? form.attr('target', this.form_encattr) : form.removeAttr('encattr');
 
   // Remove the progress element.
-  progress_element.remove();
-  $(this.element).removeClass('progess-disabled').attr('disabled', false);
-
-  // Hide the new content before adding to page.
-  if (this.showEffect != 'show') {
-    new_content.hide();
+  if (this.progress.element) {
+    $(this.progress.element).remove();
   }
+  if (this.progress.object) {
+    this.progress.object.stopMonitoring();
+  }
+  $(this.element).removeClass('progress-disabled').attr('disabled', false);
 
   // Add the new content to the page.
   Drupal.freezeHeight();
@@ -142,10 +159,18 @@ Drupal.ahah.prototype.success = function (response, status) {
     wrapper[this.method](new_content);
   }
 
+  // Immediately hide the new content if we're using any effects.
+  if (this.showEffect != 'show') {
+    new_content.hide();
+  }
+
   // Determine what effect use and what content will receive the effect, then
   // show the new content. For browser compatibility, Safari is excluded from
   // using effects on table rows.
-  if ($('.ahah-new-content', new_content).size() > 0 && !($.browser.safari && $("tr.ahah-new-content", new_content).size() > 0)) {
+  if (($.browser.safari && $("tr.ahah-new-content", new_content).size() > 0)) {
+    new_content.show();
+  }
+  else if ($('.ahah-new-content', new_content).size() > 0) {
     $('.ahah-new-content', new_content).hide();
     new_content.show();
     $(".ahah-new-content", new_content)[this.showEffect](this.showSpeed);
@@ -170,9 +195,13 @@ Drupal.ahah.prototype.error = function (error) {
   alert(Drupal.t('An error occurred:\n\n@error', { '@error': error }));
   // Resore the previous action and target to the form.
   element.parent('form').attr( { action: this.form_action, target: this.form_target} );
-  // Remove progressbar.
-  $(this.progress.element).remove();
-  this.progress = null;
+  // Remove the progress element.
+  if (this.progress.element) {
+    $(this.progress.element).remove();
+  }
+  if (this.progress.object) {
+    this.progress.object.stopMonitoring();
+  }
   // Undo hide.
   $(this.wrapper).show();
   // Re-enable the element.

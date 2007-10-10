@@ -1,4 +1,4 @@
-/* $Id: system-rtl.css,v 1.5 2007/10/05 14:50:25 goba Exp $ */
+/* $Id: system-rtl.css,v 1.6 2007/10/10 10:24:25 goba Exp $ */
 
 .item-list .icon {
   float: left;
@@ -72,6 +72,9 @@ div.teaser-button-wrapper {
   float: right;
 }
 .ahah-progress {
+  float: right;
+}
+.ahah-progress .throbber {
   float: right;
 }
 input.password-field {

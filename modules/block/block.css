@@ -1,4 +1,4 @@
-/* $Id: block.css,v 1.4 2007/10/05 09:35:09 goba Exp $ */
+/* $Id: block.css,v 1.5 2007/10/10 10:24:25 goba Exp $ */
 
 #blocks td.region {
   font-weight: bold;
@@ -13,26 +13,11 @@
   padding: 3px;
 }
 #blocks select {
-  margin-right: 18px; /* LTR */
+  margin-right: 24px; /* LTR */
 }
 #blocks select.progress-disabled {
   margin-right: 0px; /* LTR */
 }
 #blocks tr.ahah-new-content {
   background-color: #ffd;
-}
-#blocks .progress {
-  width: 15px;
-  height: 15px;
-  margin: -2px 0;
-}
-#blocks .progress .bar {
-  width: 15px;
-  height: 15px;
-  background: transparent url(../../misc/throbber.gif) no-repeat 0px -18px;
-  border: none;
-  float: left; /* LTR */
-}
-#blocks .progress .message {
-  display: none;
 }
