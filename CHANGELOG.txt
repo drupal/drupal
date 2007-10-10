@@ -88,6 +88,8 @@ Drupal 6.0, xxxx-xx-xx (development version)
 - Upgraded the core JavaScript library to jQuery version 1.2.
 - Added a new Schema API, which provides built-in support for core and
   contributed modules to work with databases other than MySQL.
+- Removed drupal.module. The functionality lives on as the Site network
+  contributed module (http://drupal.org/project/site_network).
 
 Drupal 5.0, 2007-01-15
 ----------------------
