@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.225 2007/10/02 16:03:17 dries Exp $
+// $Id: CHANGELOG.txt,v 1.226 2007/10/10 10:40:13 goba Exp $
 
 Drupal 6.0, xxxx-xx-xx (development version)
 ----------------------
@@ -88,6 +88,8 @@ Drupal 6.0, xxxx-xx-xx (development version)
 - Upgraded the core JavaScript library to jQuery version 1.2.
 - Added a new Schema API, which provides built-in support for core and
   contributed modules to work with databases other than MySQL.
+- Removed drupal.module. The functionality lives on as the Site network
+  contributed module (http://drupal.org/project/site_network).
 
 Drupal 5.0, 2007-01-15
 ----------------------
