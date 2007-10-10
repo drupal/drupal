@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.install,v 1.2 2007/10/05 14:43:25 dries Exp $
+// $Id: openid.install,v 1.3 2007/10/10 11:39:33 goba Exp $
 
 /**
  * Implementation of hook_install().
@@ -22,18 +22,49 @@ function openid_uninstall() {
  */
 function openid_schema() {
   $schema['openid_association'] = array(
+    'description' => t('Stores temporary shared key association information for OpenID authentication.'),
     'fields' => array(
-      'idp_endpoint_uri' => array('type' => 'varchar', 'length' => 255),
-      'assoc_handle' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE),
-      'assoc_type' => array('type' => 'varchar', 'length' => 32),
-      'session_type' => array('type' => 'varchar', 'length' => 32),
-      'mac_key' => array('type' => 'varchar', 'length' => 255),
-      'created' => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      'expires_in' => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'idp_endpoint_uri' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'description' => t('URI of the OpenID Provider endpoint.'),
+      ),
+      'assoc_handle' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'description' => t('Primary Key: Used to refer to this association in subsequent messages.'),
+      ),
+      'assoc_type' => array(
+        'type' => 'varchar',
+        'length' => 32,
+        'description' => t('The signature algorithm used: one of HMAC-SHA1 or HMAC-SHA256.'),
+      ),
+      'session_type' => array(
+        'type' => 'varchar',
+        'length' => 32,
+        'description' => t('Valid association session types: "no-encryption", "DH-SHA1", and "DH-SHA256".'),
+      ),
+      'mac_key' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'description' => t('The MAC key (shared secret) for this association.'),
+      ),
+      'created' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => t('UNIX timestamp for when the association was created.'),
+      ),
+      'expires_in' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => t('The lifetime, in seconds, of this association.'),
+      ),
     ),
     'primary key' => array('assoc_handle'),
   );
 
   return $schema;
 }
-

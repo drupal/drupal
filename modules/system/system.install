@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.160 2007/10/09 16:08:37 goba Exp $
+// $Id: system.install,v 1.161 2007/10/10 11:39:34 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -306,207 +306,669 @@ function system_schema() {
   // some database drivers, e.g. Oracle and DB2, will require variable_get()
   // and variable_set() for overcoming some database specific limitations.
   $schema['variable'] = array(
+    'description' => t('Named variable/value pairs created by Drupal core or any other module or theme.  All variables are cached in memory at the start of every Drupal request so developers should not be careless about what is stored here.'),
     'fields' => array(
-      'name'     => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
-      'value'    => array('type' => 'text', 'not null' => TRUE, 'size' => 'big'),
-    ),
+      'name' => array(
+        'description' => t('The name of the variable.'),
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => ''),
+      'value' => array(
+        'description' => t('The value of the variable.'),
+        'type' => 'text',
+        'not null' => TRUE,
+        'size' => 'big'),
+      ),
     'primary key' => array('name'),
-  );
+    );
 
   $schema['actions'] = array(
+    'description' => t('Stores action information.'),
     'fields' => array(
-      'aid' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => '0'),
-      'type' => array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''),
-      'callback' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'parameters' => array('type' => 'text', 'not null' => TRUE, 'size' => 'big'),
-      'description' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => '0'),
-    ),
+      'aid' => array(
+        'description' => t('Primary Key: Unique actions ID.'),
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '0'),
+      'type' => array(
+        'description' => t('The object that that action acts on (node, user, comment, system or custom types.)'),
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => ''),
+      'callback' => array(
+        'description' => t('The callback function that executes when the action runs.'),
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => ''),
+      'parameters' => array(
+        'description' => t('Parameters to be passed to the callback function.'),
+        'type' => 'text',
+        'not null' => TRUE,
+        'size' => 'big'),
+      'description' => array(
+        'description' => t('Description of the action.'),
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '0'),
+      ),
     'primary key' => array('aid'),
-  );
+    );
 
   $schema['actions_aid'] = array(
+    'description' => t('Stores action IDs for non-default actions.'),
     'fields' => array(
-      'aid' => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
-    ),
+      'aid' => array(
+        'description' => t('Primary Key: Unique actions ID.'),
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE),
+      ),
     'primary key' => array('aid'),
-  );
+    );
 
   $schema['batch'] = array(
+    'description' => t('Stores details about batches (processes that run in multiple HTTP requests).'),
     'fields' => array(
-      'bid'       => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
-      'token'     => array('type' => 'varchar', 'length' => 64, 'not null' => TRUE),
-      'timestamp' => array('type' => 'int', 'not null' => TRUE),
-      'batch'     => array('type' => 'text', 'not null' => FALSE, 'size' => 'big')
-    ),
+      'bid' => array(
+        'description' => t('Primary Key: Unique batch ID.'),
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE),
+      'token' => array(
+        'description' => t("A string token generated against the current user's session id and the batch id, used to ensure that only the user who submitted the batch can effectively access it."),
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE),
+      'timestamp' => array(
+        'description' => t('A Unix timestamp indicating when this batch was submitted for processing. Stale batches are purged at cron time.'),
+        'type' => 'int',
+        'not null' => TRUE),
+      'batch' => array(
+        'description' => t('A serialized array containing the processing data for the batch.'),
+        'type' => 'text',
+        'not null' => FALSE,
+        'size' => 'big')
+      ),
     'primary key' => array('bid'),
     'indexes' => array('token' => array('token')),
-  );
+    );
 
   $schema['cache'] = array(
+    'description' => t('Generic cache table for caching things not separated out into their own tables. Contributed modules may also use this to store cached items.'),
     'fields' => array(
-      'cid'        => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'data'       => array('type' => 'blob', 'not null' => FALSE, 'size' => 'big'),
-      'expire'     => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      'created'    => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      'headers'    => array('type' => 'text', 'not null' => FALSE),
-      'serialized' => array('type' => 'int', 'size' => 'small', 'not null' => TRUE, 'default' => 0)
-    ),
+      'cid' => array(
+        'description' => t('Primary Key: Unique cache ID.'),
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => ''),
+      'data' => array(
+        'description' => t('A collection of data to cache.'),
+        'type' => 'blob',
+        'not null' => FALSE,
+        'size' => 'big'),
+      'expire' => array(
+        'description' => t('A Unix timestamp indicating when the cache entry should expire, or 0 for never.'),
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0),
+      'created' => array(
+        'description' => t('A Unix timestamp indicating when the cache entry was created.'),
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0),
+      'headers' => array(
+        'description' => t('Any custom HTTP headers to be added to cached data.'),
+        'type' => 'text',
+        'not null' => FALSE),
+      'serialized' => array(
+        'description' => t('A flag to indicate whether content is serialized (1) or not (0).'),
+        'type' => 'int',
+        'size' => 'small',
+        'not null' => TRUE,
+        'default' => 0)
+      ),
     'indexes' => array('expire' => array('expire')),
     'primary key' => array('cid'),
-  );
+    );
 
   $schema['cache_form'] = $schema['cache'];
+  $schema['cache_form']['description'] = t('Cache table for the form system to store recently built forms and their storage data, to be used in subsequent page requests.');
   $schema['cache_page'] = $schema['cache'];
+  $schema['cache_page']['description'] = t('Cache table used to store compressed pages for anonymous users, if page caching is enabled.');
   $schema['cache_menu'] = $schema['cache'];
+  $schema['cache_menu']['description'] = t('Cache table for the menu system to store router information as well as generated link trees for various menu/page/user combinations.');
 
   $schema['files'] = array(
+    'description' => t('Stores information for uploaded files.'),
     'fields' => array(
-      'fid'       => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
-      'uid'       => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
-      'filename'  => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'filepath'  => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'filemime'  => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'filesize'  => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
-      'status'    => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      'timestamp' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
-    ),
+      'fid' => array(
+        'description' => t('Primary Key: Unique files ID.'),
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE),
+      'uid' => array(
+        'description' => t('The {users}.uid of the user who is associated with the file.'),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0),
+      'filename' => array(
+        'description' => t('Name of the file.'),
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => ''),
+      'filepath' => array(
+        'description' => t('Path of the file relative to Drupal root.'),
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => ''),
+      'filemime' => array(
+        'description' => t('The file MIME type.'),
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => ''),
+      'filesize' => array(
+        'description' => t('The size of the file in bytes.'),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0),
+      'status' => array(
+        'description' => t('A flag indicating whether file is temporary (1) or permanent (0).'),
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0),
+      'timestamp' => array(
+        'description' => t('UNIX timestamp for when the file was added.'),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0),
+      ),
     'indexes' => array(
-      'uid'       => array('uid'),
-      'status'    => array('status'),
+      'uid' => array('uid'),
+      'status' => array('status'),
       'timestamp' => array('timestamp'),
-    ),
+      ),
     'primary key' => array('fid'),
-  );
+    );
 
   $schema['flood'] = array(
+    'description' => t('Flood controls the threshold of events, such as the number of contact attempts.'),
     'fields' => array(
-      'fid'       => array('type' => 'serial', 'not null' => TRUE),
-      'event'     => array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''),
-      'hostname'  => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
-      'timestamp' => array('type' => 'int', 'not null' => TRUE, 'default' => 0)
-    ),
+      'fid' => array(
+        'description' => t('Unique flood event ID.'),
+        'type' => 'serial',
+        'not null' => TRUE),
+      'event' => array(
+        'description' => t('Name of event (e.g. contact).'),
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => ''),
+      'hostname' => array(
+        'description' => t('Hostname of the visitor.'),
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => ''),
+      'timestamp' => array(
+        'description' => t('Timestamp of the event.'),
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0)
+      ),
     'primary key' => array('fid'),
-  );
+    );
 
   $schema['history'] = array(
+    'description' => t('A record of which {users} have read which {node}s.'),
     'fields' => array(
-      'uid'       => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      'nid'       => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      'timestamp' => array('type' => 'int', 'not null' => TRUE, 'default' => 0)
-    ),
+      'uid' => array(
+        'description' => t('The {users}.uid that read the {node} nid.'),
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0),
+      'nid' => array(
+        'description' => t('The {node}.nid that was read.'),
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0),
+      'timestamp' => array(
+        'description' => t('The Unix timestamp at which the read occurred.'),
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0)
+      ),
     'primary key' => array('uid', 'nid'),
-  );
+    );
   $schema['menu_router'] = array(
+    'description' => t('Maps paths to various callbacks (access, page and title)'),
     'fields' => array(
-      'path'             => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'load_functions'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'to_arg_functions' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'access_callback'  => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'access_arguments' => array('type' => 'text', 'not null' => FALSE),
-      'page_callback'    => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'page_arguments'   => array('type' => 'text', 'not null' => FALSE),
-      'fit'              => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      'number_parts'     => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'small'),
-      'tab_parent'       => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'tab_root'         => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'title'            => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'title_callback'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'title_arguments'  => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'type'             => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      'block_callback'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'description'      => array('type' => 'text', 'not null' => TRUE),
-      'position'         => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'weight'           => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      'file'             => array('type' => 'text', 'size' => 'medium')
-    ),
+      'path' => array(
+        'description' => t('Primary Key: the Drupal path this entry describes'),
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => ''),
+      'load_functions' => array(
+        'description' => t('A serialized array of function names (like node_load) to be called to load an object corresponding to a part of the current path.'),
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => ''),
+      'to_arg_functions' => array(
+        'description' => t('A serialized array of function names (like user_current_to_arg) to be called to replace a part of the router path with another string.'),
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => ''),
+      'access_callback' => array(
+        'description' => t('The callback which determines the access to this router path. Defaults to user_access.'),
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => ''),
+      'access_arguments' => array(
+        'description' => t('A serialized array of arguments for the access callback.'),
+        'type' => 'text',
+        'not null' => FALSE),
+      'page_callback' => array(
+        'description' => t('The name of the function that renders the page.'),
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => ''),
+      'page_arguments' => array(
+        'description' => t('A serialized array of arguments for the page callback.'),
+        'type' => 'text',
+        'not null' => FALSE),
+      'fit' => array(
+        'description' => t('A numeric representation of how specific the path is.'),
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0),
+      'number_parts' => array(
+        'description' => t('Number of parts in this router path.'),
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'small'),
+      'tab_parent' => array(
+        'description' => t('Only for local tasks (tabs) - the router path of the parent page (which may also be a local task).'),
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => ''),
+      'tab_root' => array(
+        'description' => t('Router path of the closest non-tab parent page.  For pages that are not local tasks, this will be the same as the path.'),
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => ''),
+      'title' => array(
+        'description' => t('The title for the current page, or the title for the tab if this is a local task.'),
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => ''),
+      'title_callback' => array(
+        'description' => t('A function which will alter the title. Defaults to t()'),
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => ''),
+      'title_arguments' => array(
+        'description' => t('A serialized array of arguments for the title callback.  If empty, the title will be used as the sole argument for the title callback.'),
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => ''),
+      'type' => array(
+        'description' => t('Numeric representation of the type of the menu item, like MENU_LOCAL_TASK.'),
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0),
+      'block_callback' => array(
+        'description' => t('Name of a function used to render the block on the system administration page for this item.'),
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => ''),
+      'description' => array(
+        'description' => t('A description of this item.'),
+        'type' => 'text',
+        'not null' => TRUE),
+      'position' => array(
+        'description' => t('The position of the block (left or right) on the system administration page for this item.'),
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => ''),
+      'weight' => array(
+        'description' => t('Weight of the element. Lighter weights are higher up, heavier weights go down.'),
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0),
+      'file' => array(
+        'description' => t('The file to include for this element, usually the page callback function lives in this file.'),
+        'type' => 'text',
+        'size' => 'medium')
+      ),
     'indexes' => array(
-      'fit'        => array('fit'),
+      'fit' => array('fit'),
       'tab_parent' => array('tab_parent')
-    ),
+      ),
     'primary key' => array('path'),
-  );
+    );
 
   $schema['menu_links'] = array(
+    'description' => t('Contains the individual links within a menu.'),
     'fields' => array(
-      'menu_name'    => array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''),
-      'mlid'         => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
-      'plid'         => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
-      'link_path'    => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'router_path'  => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'link_title'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'options'      => array('type' => 'text', 'not null' => FALSE),
-      'module'       => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => 'system'),
-      'hidden'       => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'small'),
-      'external'     => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'small'),
-      'has_children' => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'small'),
-      'expanded'     => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'small'),
-      'weight'       => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      'depth'        => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'small'),
-      'customized'   => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'small'),
-      'p1'           => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
-      'p2'           => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
-      'p3'           => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
-      'p4'           => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
-      'p5'           => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
-      'p6'           => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
-      'p7'           => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
-      'p8'           => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
-      'p9'           => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
-      'updated'      => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'small'),
-    ),
+     'menu_name' => array(
+        'description' => t("The menu name. All links with the same menu name (such as 'navigation') are part of the same menu."),
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => ''),
+      'mlid' => array(
+        'description' => t('The menu link ID (mlid) is the integer primary key.'),
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE),
+      'plid' => array(
+        'description' => t('The parent link ID (plid) is the mlid of the link above in the hierarchy, or zero if the link is at the top level in its menu.'),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0),
+      'link_path' => array(
+        'description' => t('The Drupal path or external path this link point to.'),
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => ''),
+      'router_path' => array(
+        'description' => t('For links corresponding to a Drupal path (external = 0), this connects the link to a {menu_router}.path for joins.'),
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => ''),
+      'link_title' => array(
+      'description' => t('The text displayed for the link, which may be modified by a title callback stored in {menu_router}.'),
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => ''),
+      'options' => array(
+        'description' => t('A serialized array of options to be passed to the url() or l() function, such as a query string or HTML attributes.'),
+        'type' => 'text',
+        'not null' => FALSE),
+      'module' => array(
+        'description' => t('The name of the module that generated this link.'),
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => 'system'),
+      'hidden' => array(
+        'description' => t('A flag for whether the link should be rendered in menus. (1 = a disabled menu item that may be shown on admin screens, -1 = a menu callback, 0 = a normal, visible link)'),
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'small'),
+      'external' => array(
+        'description' => t('A flag to indicate if the link points to a full URL starting with a protocol, like http:// (1 = external, 0 = internal).'),
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'small'),
+      'has_children' => array(
+        'description' => t('Flag indicating whether any links have this link as a parent (1 = children exist, 0 = no children).'),
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'small'),
+      'expanded' => array(
+        'description' => t('Flag for whether this link should be rendered as expanded in menus - expanded links always have their child links displayed, instead of only when the link is in the active trail (1 = expanded, 0 = not expanded)'),
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'small'),
+      'weight' => array(
+        'description' => t('Link weight among links in the same menu at the same depth.'),
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0),
+      'depth' => array(
+        'description' => t('The depth relative to the top level. A link with plid == 0 will have depth == 1.'),
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'small'),
+      'customized' => array(
+        'description' => t('A flag to indicate that the user has manually created or edited the link (1 = customized, 0 = not customized).'),
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'small'),
+      'p1' => array(
+        'description' => t('The first mlid in the materialized path. If N = depth, then pN must equal the mlid.  If depth > 1 then p(N-1) must equal the plid. All pX where X > depth must equal zero. The columns p1 .. p9 are also called the parents.'),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0),
+      'p2' => array(
+        'description' => t('The second mlid in the materialized path. See p1.'),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0),
+      'p3' => array(
+        'description' => t('The third mlid in the materialized path. See p1.'),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0),
+      'p4' => array(
+        'description' => t('The fourth mlid in the materialized path. See p1.'),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0),
+      'p5' => array(
+        'description' => t('The fifth mlid in the materialized path. See p1.'),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0),
+      'p6' => array(
+        'description' => t('The sixth mlid in the materialized path. See p1.'),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0),
+      'p7' => array(
+        'description' => t('The seventh mlid in the materialized path. See p1.'),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0),
+      'p8' => array(
+        'description' => t('The eighth mlid in the materialized path. See p1.'),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0),
+      'p9' => array(
+        'description' => t('The ninth mlid in the materialized path. See p1.'),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0),
+      'updated' => array(
+        'description' => t('Flag that indicates that this link was generated during the update from Drupal 5.'),
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'small'),
+      ),
     'indexes' => array(
-      'path_menu'              => array(array('link_path', 128), 'menu_name'),
-      'menu_plid_expand_child' => array('menu_name', 'plid', 'expanded', 'has_children'),
-      'menu_parents'           => array('menu_name', 'p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'p7', 'p8', 'p9'),
-      'router_path'            => array(array('router_path', 128)),
-    ),
+      'path_menu' => array(array('link_path', 128), 'menu_name'),
+      'menu_plid_expand_child' => array(
+        'menu_name', 'plid', 'expanded', 'has_children'),
+      'menu_parents' => array(
+        'menu_name', 'p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'p7', 'p8', 'p9'),
+      'router_path' => array(array('router_path', 128)),
+      ),
     'primary key' => array('mlid'),
-  );
+    );
 
   $schema['sessions'] = array(
+    'description' => t("Drupal's session handlers read and write into the sessions table. Each record represents a user session, either anonymous or authenticated."),
     'fields' => array(
-      'uid'       => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
-      'sid'       => array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''),
-      'hostname'  => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
-      'timestamp' => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      'cache'     => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      'session'   => array('type' => 'text', 'not null' => FALSE, 'size' => 'big')
-    ),
+      'uid' => array(
+        'description' => t('The {users}.uid corresponding to a session, or 0 for anonymous user.'),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE),
+      'sid' => array(
+        'description' => t("Primary key: A session ID. The value is generated by PHP's Session API."),
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => ''),
+      'hostname' => array(
+        'description' => t('The IP address that last used this session ID (sid).'),
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => ''),
+      'timestamp' => array(
+        'description' => t('The Unix timestamp when this session last requested a page. Old records are purged by PHP automatically.'),
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0),
+      'cache' => array(
+        'description' => t("The time of this user's last post. This is used when the site has specified a minimum_cache_lifetime. See cache_get()."),
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0),
+      'session' => array(
+        'description' => t('The serialized contents of $_SESSION, an array of name/value pairs that persists across page requests by this session ID.  Drupal loads $_SESSION from here at the start of each request and saves it at the end.'),
+        'type' => 'text',
+        'not null' => FALSE,
+        'size' => 'big')
+      ),
     'primary key' => array('sid'),
     'indexes' => array(
       'timestamp' => array('timestamp'),
-      'uid'       => array('uid')
-    ),
-  );
+      'uid' => array('uid')
+      ),
+    );
 
   $schema['system'] = array(
+    'description' => t("A list of all modules, themes, and theme engines that are or have been installed in Drupal's file system."),
     'fields' => array(
-      'filename'       => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'name'           => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'type'           => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'owner'          => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'status'         => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      'throttle'       => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny'),
-      'bootstrap'      => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      'schema_version' => array('type' => 'int', 'not null' => TRUE, 'default' => -1, 'size' => 'small'),
-      'weight'         => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      'info'           => array('type' => 'text', 'not null' => FALSE)
-    ),
+      'filename' => array(
+        'description' => t('The path of the primary file for this item, relative to the Drupal root; e.g. modules/node/node.module.'),
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => ''),
+      'name' => array(
+        'description' => t('The name of the item; e.g. node.'),
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => ''),
+      'type' => array(
+        'description' => t('The type of the item, either module, theme, or theme_engine.'),
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => ''),
+      'owner' => array(
+        'description' => t("A theme's 'parent'. Can be either a theme or an engine."),
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => ''),
+      'status' => array(
+        'description' => t('Boolean indicating whether or not this item is enabled.'),
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0),
+      'throttle' => array(
+        'description' => t('Boolean indicating whether this item is disabled when the throttle.module disables throttlable items.'),
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny'),
+      'bootstrap' => array(
+        'description' => t("Boolean indicating whether this module is loaded during Drupal's early bootstrapping phase (e.g. even before the page cache is consulted)."),
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0),
+      'schema_version' => array(
+        'description' => t("The module's database schema version number.  -1 if the module is not installed (its tables do not exist); 0 or the largest N of the module's hook_update_N() function that has either been run or existed when the module was first installed."),
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => -1,
+        'size' => 'small'),
+      'weight' => array(
+        'description' => t("The order in which this module's hooks should be invoked relative to other modules.  Equal-weighted modules are ordered by name."),
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0),
+      'info' => array(
+        'description' => t("A serialized array containing information from the module's .info file; keys can include name, description, package, version, core, dependencies, depedents, and php."),
+        'type' => 'text',
+        'not null' => FALSE)
+      ),
     'primary key' => array('filename'),
     'indexes' => array('weight' => array('weight')),
-  );
+    );
 
   $schema['url_alias'] = array(
+    'description' => t('A list of URL aliases for Drupal paths; a user may visit either the source or destination path.'),
     'fields' => array(
-      'pid'      => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
-      'src'      => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
-      'dst'      => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
-      'language' => array('type' => 'varchar', 'length' => 12, 'not null' => TRUE, 'default' => '')
-    ),
+      'pid' => array(
+        'description' => t('A unique path alias identifier.'),
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE),
+      'src' => array(
+        'description' => t('The Drupal path this alias is for; e.g. node/12.'),
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => ''),
+      'dst' => array(
+        'description' => t('The alias for this path; e.g. title-of-the-story.'),
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => ''),
+      'language' => array(
+        'description' => t('The language this alias is for; if blank, the alias will be used for unknown languages.  Each Drupal path can have an alias for each supported language.'),
+        'type' => 'varchar',
+        'length' => 12,
+        'not null' => TRUE,
+        'default' => '')
+      ),
     'unique keys' => array('dst_language' => array('dst', 'language')),
     'primary key' => array('pid'),
     'indexes' => array('src' => array('src')),
-  );
+    );
 
   return $schema;
 }

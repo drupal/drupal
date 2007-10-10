@@ -1,33 +1,85 @@
 <?php
-// $Id: filter.install,v 1.1 2007/10/05 16:07:22 dries Exp $
+// $Id: filter.install,v 1.2 2007/10/10 11:39:32 goba Exp $
 
 /**
  * Implementation of hook_schema().
  */
 function filter_schema() {
   $schema['filters'] = array(
+    'description' => t('Table that maps filters (HTML corrector) to input formats (Filtered HTML).'),
     'fields' => array(
-      'fid'    => array('type' => 'serial', 'not null' => TRUE),
-      'format' => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      'module' => array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''),
-      'delta'  => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny'),
-      'weight' => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny')
+      'fid' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => t('Primary Key: Auto-incrementing filter ID.'),
+      ),
+      'format' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => t('Foreign Key: The {filter_formats}.fid to which this filter is assigned.'),
+      ),
+      'module' => array(
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => t('The origin module of the filter.'),
+      ),
+      'delta' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+        'description' => t('ID to identify which filter within module is being referenced.'),
+      ),
+      'weight' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+        'description' => t('Weight of filter within format.'),
+      )
     ),
     'primary key' => array('fid'),
     'indexes' => array('weight' => array('weight')),
   );
   $schema['filter_formats'] = array(
+    'description' => t('Stores input formats: custom groupings of filters, such as Filtered HTML.'),
     'fields' => array(
-      'format' => array('type' => 'serial', 'not null' => TRUE),
-      'name'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'roles'  => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'cache'  => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny')
+      'format' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => t('Primary Key: Unique ID for format.'),
+      ),
+      'name' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => t('Name of the input format (Filtered HTML).'),
+      ),
+      'roles' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => t('A comma-separated string of roles; references {role}.rid.'),
+      ),
+      'cache' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+        'description' => t('Flag to indicate whether format is cachable. (1 = cachable, 0 = not cachable)'),
+      ),
     ),
     'unique keys' => array('name' => array('name')),
     'primary key' => array('format'),
   );
 
   $schema['cache_filter'] = drupal_get_schema_unprocessed('system', 'cache');
+  $schema['cache_filter']['description'] = t('Cache table for the Filter module to store already filtered pieces of text, identified by input format and md5 hash of the text.');
 
   return $schema;
 }

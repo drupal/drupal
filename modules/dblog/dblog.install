@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.install,v 1.4 2007/10/05 14:43:24 dries Exp $
+// $Id: dblog.install,v 1.5 2007/10/10 11:39:32 goba Exp $
 
 /**
  * Implementation of hook_install().
@@ -22,18 +22,78 @@ function dblog_uninstall() {
  */
 function dblog_schema() {
   $schema['watchdog'] = array(
+    'description' => t('Table that contains logs of all system events.'),
     'fields' => array(
-      'wid'       => array('type' => 'serial', 'not null' => TRUE),
-      'uid'       => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      'type'      => array('type' => 'varchar', 'length' => 16, 'not null' => TRUE, 'default' => ''),
-      'message'   => array('type' => 'text', 'not null' => TRUE, 'size' => 'big'),
-      'variables' => array('type' => 'text', 'not null' => TRUE, 'size' => 'big'),
-      'severity'  => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0, 'size' => 'tiny'),
-      'link'      => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'location'  => array('type' => 'text', 'not null' => TRUE),
-      'referer'   => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
-      'hostname'  => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
-      'timestamp' => array('type' => 'int', 'not null' => TRUE, 'default' => 0)
+      'wid' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => t('Primary Key: Unique watchdog event ID.'),
+      ),
+      'uid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => t('The {user}.uid of the user who triggered the event.'),
+      ),
+      'type' => array(
+        'type' => 'varchar',
+        'length' => 16,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => t('Type of log message, for example "user" or "page not found."'),
+      ),
+      'message' => array(
+        'type' => 'text',
+        'not null' => TRUE,
+        'size' => 'big',
+        'description' => t('Text of log message to be passed into the t() function.'),
+      ),
+      'variables' => array(
+        'type' => 'text',
+        'not null' => TRUE,
+        'size' => 'big',
+        'description' => t('Serialized array of variables that match the message string and that is passed into the t() function.'),
+      ),
+      'severity' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+        'description' => t('The severity level of the event; ranges from 0 (Emergency) to 7 (Debug)'),
+      ),
+      'link' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => t('Link to view the result of the event.'),
+      ),
+      'location'  => array(
+        'type' => 'text',
+        'not null' => TRUE,
+        'description' => t('URL of the origin of the event.'),
+      ),
+      'referer' => array(
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => t('URL of referring page.'),
+      ),
+      'hostname' => array(
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => t('Hostname of the user who triggered the event.'),
+      ),
+      'timestamp' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => t('Unix timestamp of when event occurred.'),
+      ),
     ),
     'primary key' => array('wid'),
     'indexes' => array('type' => array('type')),

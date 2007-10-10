@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.install,v 1.10 2007/10/05 14:43:25 dries Exp $
+// $Id: profile.install,v 1.11 2007/10/10 11:39:33 goba Exp $
 
 /**
  * Implementation of hook_install().
@@ -24,20 +24,89 @@ function profile_uninstall() {
  */
 function profile_schema() {
   $schema['profile_fields'] = array(
+    'description' => t('Stores profile field information.'),
     'fields' => array(
-      'fid'          => array('type' => 'serial', 'not null' => TRUE),
-      'title'        => array('type' => 'varchar', 'length' => 255, 'not null' => FALSE),
-      'name'         => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
-      'explanation'  => array('type' => 'text', 'not null' => FALSE),
-      'category'     => array('type' => 'varchar', 'length' => 255, 'not null' => FALSE),
-      'page'         => array('type' => 'varchar', 'length' => 255, 'not null' => FALSE),
-      'type'         => array('type' => 'varchar', 'length' => 128, 'not null' => FALSE),
-      'weight'       => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny'),
-      'required'     => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny'),
-      'register'     => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny'),
-      'visibility'   => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny'),
-      'autocomplete' => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny'),
-      'options'      => array('type' => 'text', 'not null' => FALSE)
+      'fid' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => t('Primary Key: Unique profile field ID.'),
+      ),
+      'title' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'description' => t('Title of the field shown to the end user.'),
+      ),
+      'name' => array(
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => t('Internal name of the field used in the form HTML and URLs.'),
+      ),
+      'explanation' => array(
+        'type' => 'text',
+        'not null' => FALSE,
+        'description' => t('Explanation of the field to end users.'),
+      ),
+      'category' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'description' => t('Profile category that the field will be grouped under.'),
+      ),
+      'page' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'description' => t("Title of page used for browsing by the field's value"),
+      ),
+      'type' => array(
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => FALSE,
+        'description' => t('Type of form field.'),
+      ),
+      'weight' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+        'description' => t('Weight of field in relation to other profile fields.'),
+      ),
+      'required' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+        'description' => t('Whether the user is required to enter a value. (0 = no, 1 = yes)'),
+      ),
+      'register' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+        'description' => t('Whether the field is visible in the user registration form. (1 = yes, 0 = no)'),
+      ),
+      'visibility' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+        'description' => t('The level of visibility for the field. (0 = hidden, 1 = private, 2 = public on profile but not member list pages, 3 = public on profile and list pages)'),
+      ),
+      'autocomplete' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+        'description' => t('Whether form auto-completion is enabled. (0 = disabled, 1 = enabled)'),
+      ),
+      'options' => array(
+        'type' => 'text',
+        'not null' => FALSE,
+        'description' => t('List of options to be used in a list selection field.'),
+      ),
     ),
     'indexes' => array('category' => array('category')),
     'unique keys' => array('name' => array('name')),
@@ -45,10 +114,27 @@ function profile_schema() {
   );
 
   $schema['profile_values'] = array(
+    'description' => t('Stores values for profile fields.'),
     'fields' => array(
-      'fid'   => array('type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE, 'default' => 0),
-      'uid'   => array('type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE, 'default' => 0),
-      'value' => array('type' => 'text', 'not null' => FALSE)
+      'fid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'default' => 0,
+        'description' => t('The {profile_fields}.fid of the field.'),
+      ),
+      'uid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'default' => 0,
+        'description' => t('The {users}.uid of the profile user.'),
+      ),
+      'value' => array(
+        'type' => 'text',
+        'not null' => FALSE,
+        'description' => t('The value for the field.'),
+      ),
     ),
     'indexes' => array(
       'fid' => array('fid'),

@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.install,v 1.2 2007/10/05 14:43:26 dries Exp $
+// $Id: upload.install,v 1.3 2007/10/10 11:39:34 goba Exp $
 
 /**
  * Implementation of hook_install().
@@ -22,12 +22,44 @@ function upload_uninstall() {
  */
 function upload_schema() {
   $schema['upload'] = array(
+    'description' => t('Stores uploaded file information and table associations.'),
     'fields' => array(
-      'fid'         => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
-      'nid'         => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
-      'vid'         => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
-      'description' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'list'        => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0, 'size' => 'tiny')
+      'fid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => t('Primary Key: The {file}.fid.'),
+      ),
+      'nid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => t('The {node}.nid associated with the uploaded file.'),
+      ),
+      'vid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => t('Primary Key: The {node}.vid associated with the uploaded file.'),
+      ),
+      'description' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => t('Description of the uploaded file.'),
+      ),
+      'list' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+        'description' => t('Whether the file should be visibly listed on the node: yes(1) or no(0).'),
+      ),
     ),
     'primary key' => array('fid', 'vid'),
     'indexes' => array('vid' => array('vid'), 'nid' => array('nid')),
@@ -35,4 +67,5 @@ function upload_schema() {
 
   return $schema;
 }
+
 

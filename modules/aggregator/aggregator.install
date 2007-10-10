@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.install,v 1.10 2007/10/05 14:43:24 dries Exp $
+// $Id: aggregator.install,v 1.11 2007/10/10 11:39:32 goba Exp $
 
 /**
  * Implementation of hook_install().
@@ -27,45 +27,149 @@ function aggregator_uninstall() {
  */
 function aggregator_schema() {
   $schema['aggregator_category'] = array(
+    'description' => t('Stores categories for aggregator feeds and feed items.'),
     'fields' => array(
-      'cid'         => array('type' => 'serial', 'not null' => TRUE),
-      'title'       => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'description' => array('type' => 'text', 'not null' => TRUE, 'size' => 'big'),
-      'block'       => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny')
+      'cid'  => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => t('Primary Key: Unique aggregator category ID.'),
+      ),
+      'title' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => t('Title of the category.'),
+      ),
+      'description' => array(
+        'type' => 'text',
+        'not null' => TRUE,
+        'size' => 'big',
+        'description' => t('Description of the category'),
+      ),
+      'block' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+        'description' => t('The number of recent items to show within the category block.'),
+      )
     ),
     'primary key' => array('cid'),
     'unique keys' => array('title' => array('title')),
   );
 
   $schema['aggregator_category_feed'] = array(
+    'description' => t('Bridge table; maps feeds to categories.'),
     'fields' => array(
-      'fid' => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      'cid' => array('type' => 'int', 'not null' => TRUE, 'default' => 0)
+      'fid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => t("The feed's {aggregator_feed}.fid."),
+      ),
+      'cid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => t('The {aggregator_category}.cid to which the feed is being assigned.'),
+     )
     ),
     'primary key' => array('fid', 'cid'),
   );
 
   $schema['aggregator_category_item'] = array(
+    'description' => t('Bridge table; maps feed items to categories.'),
     'fields' => array(
-      'iid' => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      'cid' => array('type' => 'int', 'not null' => TRUE, 'default' => 0)
+      'iid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => t("The feed item's {aggregator_feed_item}.iid."),
+      ),
+      'cid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => t('The {aggregator_category}.cid to which the feed item is being assigned.'),
+      )
     ),
     'primary key' => array('iid', 'cid'),
   );
 
   $schema['aggregator_feed'] = array(
+    'description' => t('Stores feeds to be parsed by the aggregator.'),
     'fields' => array(
-      'fid'         => array('type' => 'serial', 'not null' => TRUE),
-      'title'       => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'url'         => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'refresh'     => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      'checked'     => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      'link'        => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'description' => array('type' => 'text', 'not null' => TRUE, 'size' => 'big'),
-      'image'       => array('type' => 'text', 'not null' => TRUE, 'size' => 'big'),
-      'etag'        => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'modified'    => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      'block'       => array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny')
+      'fid' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => t('Primary Key: Unique feed ID.'),
+      ),
+      'title' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => t('Title of the feed.'),
+      ),
+      'url' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => t('URL to the feed.'),
+      ),
+      'refresh' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => t('How often to check for new feed items, in seconds.'),
+      ),
+      'checked' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => t('Last time feed was checked for new items, as Unix timestamp.'),
+      ),
+      'link' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => t('The parent website of the feed; comes from the <link> element in the feed.'),
+      ),
+      'description' => array(
+        'type' => 'text',
+        'not null' => TRUE,
+        'size' => 'big',
+        'description' => t("The parent website's description; comes from the <description> element in the feed."),
+      ),
+      'image' => array(
+        'type' => 'text',
+        'not null' => TRUE,
+        'size' => 'big',
+        'description' => t('An image representing the feed.'),
+      ),
+      'etag' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => t('Entity tag HTTP response header, used for validating cache.'),
+      ),
+      'modified' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => t('When the feed was last modified, as a Unix timestamp.'),
+      ),
+      'block' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+        'description' => t("Number of items to display in the feed's block."),
+      )
     ),
     'unique keys' => array(
       'url'  => array('url'),
@@ -75,15 +179,57 @@ function aggregator_schema() {
   );
 
   $schema['aggregator_item'] = array(
+    'description' => t('Stores the individual items imported from feeds.'),
     'fields' => array(
-      'iid'         => array('type' => 'serial', 'not null' => TRUE),
-      'fid'         => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      'title'       => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'link'        => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'author'      => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'description' => array('type' => 'text', 'not null' => TRUE, 'size' => 'big'),
-      'timestamp'   => array('type' => 'int', 'not null' => FALSE),
-      'guid'        => array('type' => 'varchar', 'length' => 255, 'not null' => FALSE)
+      'iid'  => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => t('Primary Key: Unique ID for feed item.'),
+      ),
+      'fid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => t('The {aggregator_feed}.fid to which this item belongs.'),
+      ),
+      'title' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => t('Title of the feed item.'),
+      ),
+      'link' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => t('Link to the feed item.'),
+      ),
+      'author' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => t('Author of the feed item.'),
+      ),
+      'description' => array(
+        'type' => 'text',
+        'not null' => TRUE,
+        'size' => 'big',
+        'description' => t('Body of the feed item.'),
+      ),
+      'timestamp' => array(
+        'type' => 'int',
+        'not null' => FALSE,
+        'description' => t('Post date of feed item, as a Unix timestamp.'),
+      ),
+      'guid' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'description' => t('Unique identifier for the feed item.'),
+      )
     ),
     'indexes' => array('fid' => array('fid')),
     'primary key' => array('iid'),
@@ -91,4 +237,3 @@ function aggregator_schema() {
 
   return $schema;
 }
-

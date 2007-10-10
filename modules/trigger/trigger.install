@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.install,v 1.2 2007/10/05 14:43:26 dries Exp $
+// $Id: trigger.install,v 1.3 2007/10/10 11:39:34 goba Exp $
 
 /**
  * Implementation of hook_install().
@@ -25,14 +25,39 @@ function trigger_uninstall() {
  */
 function trigger_schema() {
   $schema['trigger_assignments'] = array(
+    'description' => t('Maps trigger to hook and operation assignments from trigger.module.'),
     'fields' => array(
-      'hook' => array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''),
-      'op' => array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''),
-      'aid' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'weight' => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+       'hook' => array(
+         'type' => 'varchar',
+         'length' => 32,
+         'not null' => TRUE,
+         'default' => '',
+         'description' => t('Primary Key: The name of the internal Drupal hook upon which an action is firing; for example, nodeapi.'),
+       ),
+       'op' => array(
+         'type' => 'varchar',
+         'length' => 32,
+         'not null' => TRUE,
+         'default' => '',
+         'description' => t('Primary Key: The specific operation of the hook upon which an action is firing: for example, presave.'),
+       ),
+       'aid' => array(
+         'type' => 'varchar',
+         'length' => 255,
+         'not null' => TRUE,
+         'default' => '',
+         'description' => t("Primary Key: Action's {action}.aid."),
+       ),
+      'weight' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => t('The weight of the trigger assignment in relation to other triggers.'),
+      ),
     ),
     'primary key' => array('hook', 'op', 'aid'),
   );
   return $schema;
 }
+
 

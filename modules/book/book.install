@@ -1,5 +1,5 @@
 <?php
-// $Id: book.install,v 1.10 2007/10/05 14:43:24 dries Exp $
+// $Id: book.install,v 1.11 2007/10/10 11:39:32 goba Exp $
 
 /**
  * Implementation of hook_install().
@@ -249,10 +249,29 @@ function book_update_6000() {
  */
 function book_schema() {
   $schema['book'] = array(
+  'description' => t('Stores book outline information. Uniquely connects each node in the outline to a link in {menu_links}'),
     'fields' => array(
-      'mlid'    => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
-      'nid'     => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
-      'bid' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+      'mlid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => t("The book page's {menu_links}.mlid."),
+      ),
+      'nid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => t("The book page's {node}.nid."),
+      ),
+      'bid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => t("The book ID is the {book}.nid of the top-level page."),
+      ),
     ),
     'indexes' => array(
       'nid'     => array('nid'),

@@ -1,5 +1,5 @@
 <?php
-// $Id: search.install,v 1.9 2007/10/05 14:43:25 dries Exp $
+// $Id: search.install,v 1.10 2007/10/10 11:39:34 goba Exp $
 
 /**
  * Implementation of hook_install().
@@ -26,34 +26,95 @@ function search_uninstall() {
  */
 function search_schema() {
   $schema['search_dataset'] = array(
+    'description' => t('Stores items that will be searched.'),
     'fields' => array(
-      'sid'  => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
-      'type' => array('type' => 'varchar', 'length' => 16, 'not null' => FALSE),
-      'data' => array('type' => 'text', 'not null' => TRUE, 'size' => 'big')
+      'sid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => t('Search item ID, e.g. node ID for nodes.'),
+      ),
+      'type' => array(
+        'type' => 'varchar',
+        'length' => 16,
+        'not null' => FALSE,
+        'description' => t('Type of item, e.g. node.'),
+      ),
+      'data' => array(
+        'type' => 'text',
+        'not null' => TRUE,
+        'size' => 'big',
+        'description' => t('List of space-separated words from the item.'),
+      ),
     ),
     'indexes' => array('sid_type' => array('sid', 'type')),
   );
 
   $schema['search_index'] = array(
+    'description' => t('Stores the search index, associating words, items and scores.'),
     'fields' => array(
-      'word'     => array('type' => 'varchar', 'length' => 50, 'not null' => TRUE, 'default' => ''),
-      'sid'      => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
-      'type'     => array('type' => 'varchar', 'length' => 16, 'not null' => FALSE),
-      'fromsid'  => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
-      'fromtype' => array('type' => 'varchar', 'length' => 16, 'not null' => FALSE),
-      'score'    => array('type' => 'float', 'not null' => FALSE)
+      'word' => array(
+        'type' => 'varchar',
+        'length' => 50,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => t('The {search_total}.word that is associated with the search item.'),
+      ),
+      'sid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => t('The {search_dataset}.sid of the searchable item to which the word belongs.'),
+      ),
+      'type' => array(
+        'type' => 'varchar',
+        'length' => 16,
+        'not null' => FALSE,
+        'description' => t('The {search_dataset}.type of the searchable item to which the word belongs.'),
+      ),
+      'fromsid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => t('The {search_dataset}.sid of the referring link to this item.'),
+      ),
+      'fromtype' => array(
+        'type' => 'varchar',
+        'length' => 16,
+        'not null' => FALSE,
+        'description' => t('The {search_dataset}.type of the referring link to this item.'),
+      ),
+      'score' => array(
+        'type' => 'float',
+        'not null' => FALSE,
+        'description' => t('The numeric score of the word, higher being more important.'),
+      ),
     ),
     'indexes' => array(
       'from_sid_type' => array('fromsid', 'fromtype'),
-      'sid_type'      => array('sid', 'type'),
-      'word'          => array('word')
+      'sid_type' => array('sid', 'type'),
+      'word' => array('word')
     ),
   );
 
   $schema['search_total'] = array(
+    'description' => t('Stores search totals for words.'),
     'fields' => array(
-      'word'  => array('type' => 'varchar', 'length' => 50, 'not null' => TRUE, 'default' => ''),
-      'count' => array('type' => 'float', 'not null' => FALSE)
+      'word' => array(
+        'description' => t('Primary Key: Unique word in the search index.'),
+        'type' => 'varchar',
+        'length' => 50,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'count' => array(
+        'description' => t("The count of the word in the index using Zipf's law to equalize the probability distribution."),
+        'type' => 'float',
+        'not null' => FALSE,
+      ),
     ),
     'primary key' => array('word'),
   );

@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.install,v 1.7 2007/10/05 14:43:25 dries Exp $
+// $Id: menu.install,v 1.8 2007/10/10 11:39:33 goba Exp $
 
 /**
  * Implementation of hook_install().
@@ -26,16 +26,31 @@ function menu_uninstall() {
  */
 function menu_schema() {
   $schema['menu_custom'] = array(
+    'description' => t('Holds definitions for top-level custom menus (for example, Primary Links).'),
     'fields' => array(
-      // This is used as a block delta so length is 32.
-      'menu_name'   => array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''),
-      'title'       => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'description' => array('type' => 'text', 'not null' => FALSE),
+      'menu_name' => array(
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => t('Primary Key: Unique key for menu. This is used as a block delta so length is 32.'),
+      ),
+      'title' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => t('Menu title; displayed at top of block.'),
+      ),
+      'description' => array(
+        'type' => 'text',
+        'not null' => FALSE,
+        'description' => t('Menu description.'),
+      ),
     ),
     'primary key' => array('menu_name'),
   );
 
   return $schema;
 }
-
 

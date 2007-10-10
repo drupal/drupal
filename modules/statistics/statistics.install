@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.install,v 1.9 2007/10/05 14:43:26 dries Exp $
+// $Id: statistics.install,v 1.10 2007/10/10 11:39:34 goba Exp $
 
 /**
  * Implementation of hook_install().
@@ -49,16 +49,65 @@ function statistics_uninstall() {
  */
 function statistics_schema() {
   $schema['accesslog'] = array(
+    'description' => t('Stores site access information for statistics.'),
     'fields' => array(
-      'aid'       => array('type' => 'serial', 'not null' => TRUE),
-      'sid'       => array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''),
-      'title'     => array('type' => 'varchar', 'length' => 255, 'not null' => FALSE),
-      'path'      => array('type' => 'varchar', 'length' => 255, 'not null' => FALSE),
-      'url'       => array('type' => 'varchar', 'length' => 255, 'not null' => FALSE),
-      'hostname'  => array('type' => 'varchar', 'length' => 128, 'not null' => FALSE),
-      'uid'       => array('type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE, 'default' => 0),
-      'timer'     => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
-      'timestamp' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0)
+      'aid' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => t('Primary Key: Unique accesslog ID.'),
+      ),
+      'sid' => array(
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => t('Browser session ID of user that visited page.'),
+      ),
+      'title' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'description' => t('Title of page visited.'),
+      ),
+      'path' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'description' => t('Internal path to page visited (relative to Drupal root.)'),
+      ),
+      'url' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'description' => t('Referrer URI.'),
+      ),
+      'hostname' => array(
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => FALSE,
+        'description' => t('Hostname of user that visited the page.'),
+      ),
+      'uid' => array(
+        'type' => 'int', 
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'default' => 0,
+        'description' => t('User {user}.uid that visited the page.'),
+      ),
+      'timer' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => t('Time in milliseconds that the page took to load.'),
+      ),
+      'timestamp' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => t('Timestamp of when the page was visited.'),
+      ),
     ),
     'indexes' => array('accesslog_timestamp' => array('timestamp')),
     'primary key' => array('aid'),
