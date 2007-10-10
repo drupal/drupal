@@ -1,5 +1,17 @@
 <?php
-// $Id: color.module,v 1.24 2007/08/06 12:54:39 goba Exp $
+// $Id: color.module,v 1.25 2007/10/10 10:45:23 goba Exp $
+
+/**
+ * Implementation of hook_help
+ */
+function color_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#color':
+      $output = '<p>'. t('Color module allows a site administrator to quickly and easily change the color scheme of the entire site. In order for color module to work however, a theme must be specifically designed to use the color changing features. The default theme, Garland, (as well as its fixed width counterpart, Minnelli) was designed to take advantage of these features. With color module, you can easily change the color of links, backgrounds, text, and more depending on which color module enabled theme you are using. Color module requires your <a href="@url">file download method</a> to be set to public.', array('@url' => url('admin/settings/file-system'))). '</p>';
+      $output .= '<p>'. t("It is important to remember that color module saves a modified copy of the theme's style.css file in the files directory, and includes it after the theme's original style.css. This means that if you make any manual changes to your theme's style.css file, you must save your color settings again, even if they haven't changed. This causes the color module generated version of style.css in the files directory to be recreated using the new version of the original file."). '</p>';
+      return $output;
+  }
+}
 
 /**
  * Implementation of hook_theme()
