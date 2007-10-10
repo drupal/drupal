@@ -56,10 +56,29 @@ function forum_uninstall() {
  */
 function forum_schema() {
   $schema['forum'] = array(
+    'description' => t('Stores the relationship of nodes to forum terms.'),
     'fields' => array(
-      'nid' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
-      'vid' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
-      'tid' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0)
+      'nid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => t('The {node}.nid of the node.'),
+      ),
+      'vid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => t('Primary Key: The {node}.vid of the node.'),
+      ),
+      'tid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => t('The {term_data}.tid of the forum term assigned to the node.'),
+      ),
     ),
     'indexes' => array(
       'nid' => array('nid'),
@@ -70,4 +89,3 @@ function forum_schema() {
 
   return $schema;
 }
-
