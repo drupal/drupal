@@ -62,19 +62,17 @@
       <?php endif; ?>
 
       <div id="center"><div id="squeeze"><div class="right-corner"><div class="left-corner">
-          <?php if ($breadcrumb): print $breadcrumb; endif; ?>
+          <?php print $breadcrumb; ?>
           <?php if ($mission): print '<div id="mission">'. $mission .'</div>'; endif; ?>
-
           <?php if ($tabs): print '<div id="tabs-wrapper" class="clear-block">'; endif; ?>
           <?php if ($title): print '<h2'. ($tabs ? ' class="with-tabs"' : '') .'>'. $title .'</h2>'; endif; ?>
-          <?php if ($tabs): print $tabs .'</div>'; endif; ?>
-
-          <?php if (isset($tabs2)): print $tabs2; endif; ?>
-
-          <?php if ($help): print $help; endif; ?>
+          <?php if ($tabs): print '<ul class="tabs primary">'. $tabs .'</ul></div>'; endif; ?>
+          <?php if ($tabs2): print '<ul class="tabs secondary">'. $tabs2 .'</ul>'; endif; ?>
+          <?php print $help; ?>
           <?php if ($show_messages && $messages): print $messages; endif; ?>
-          <?php print $content ?>
-          <div class="clear"></div>
+          <div class="clear-block">
+            <?php print $content ?>
+          </div>
           <?php print $feed_icons ?>
           <div id="footer"><?php print $footer_message . $footer ?></div>
       </div></div></div></div> <!-- /.left-corner, /.right-corner, /#squeeze, /#center -->

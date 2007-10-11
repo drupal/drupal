@@ -971,14 +971,6 @@ tr.selected td a:link, tr.selected td a:visited, tr.selected td a:active {
 /**
  * CSS support
  */
-div.clear {
-  display: block;
-  clear: both;
-  height: 1px;
-  line-height: 0px;
-  font-size: 0px;
-  margin-bottom: -1px;
-}
 
 /*******************************************************************
  * Color Module: Don't touch                                       *

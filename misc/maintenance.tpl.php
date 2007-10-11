@@ -40,8 +40,9 @@
           <?php if ($title): print '<h2>'. $title .'</h2>'; endif; ?>
 
           <?php if ($messages): print $messages; endif; ?>
-          <?php print $content ?>
-          <span class="clear"></span>
+          <div class="clear-block">
+            <?php print $content ?>
+          </div>
 
           <!--partial-->
 

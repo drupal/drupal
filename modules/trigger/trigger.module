@@ -333,7 +333,12 @@ function theme_trigger_display($element) {
     }
   }
 
-  $output = theme('table', $header, $rows) . drupal_render($element);
+  if (count($rows)) {
+    $output = theme('table', $header, $rows) . drupal_render($element);
+  }
+  else {
+    $output = drupal_render($element);
+  }
   return $output;
 }
 

@@ -13,11 +13,11 @@
     <span class="submitted"><?php print $submitted; ?></span>
   <?php endif; ?>
 
-  <div class="content">
+  <div class="content clear-block">
     <?php print $content ?>
   </div>
 
-  <div class="clear-block clear">
+  <div class="clear-block">
     <div class="meta">
     <?php if ($taxonomy): ?>
       <div class="terms"><?php print $terms ?></div>
