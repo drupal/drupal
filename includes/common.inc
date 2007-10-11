@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.698 2007/10/08 14:08:19 goba Exp $
+// $Id: common.inc,v 1.699 2007/10/11 09:47:23 goba Exp $
 
 /**
  * @file
@@ -457,6 +457,11 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
     'User-Agent' => 'User-Agent: Drupal (+http://drupal.org/)',
     'Content-Length' => 'Content-Length: '. strlen($data)
   );
+
+  // If the server url has a user then attempt to use basic authentication
+  if (isset($uri['user'])) {
+    $defaults['Authorization'] = 'Authorization: Basic '. base64_encode($uri['user'] . (!empty($uri['pass']) ? ":". $uri['pass'] : ''));
+  }
 
   foreach ($headers as $header => $value) {
     $defaults[$header] = $header .': '. $value;
