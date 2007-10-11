@@ -567,9 +567,7 @@ function _form_validate($elements, &$form_state, $form_id = NULL) {
         form_error($elements, t('!name cannot be longer than %max characters but is currently %length characters long.', array('!name' => empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title'], '%max' => $elements['#maxlength'], '%length' => drupal_strlen($elements['#value']))));
       }
 
-       // Add legal choice check if element has #options. Can be skipped, but
-       // then you must validate your own element.
-      if (isset($elements['#options']) && isset($elements['#value']) && !isset($elements['#DANGEROUS_SKIP_CHECK'])) {
+      if (isset($elements['#options']) && isset($elements['#value'])) {
         if ($elements['#type'] == 'select') {
           $options = form_options_flatten($elements['#options']);
         }
