@@ -57,9 +57,9 @@ function poll_perm() {
 /**
  * Implementation of hook_access().
  */
-function poll_access($op, $node) {
+function poll_access($op, $node, $account) {
   if ($op == 'create') {
-    return user_access('create polls');
+    return user_access('create polls', $account);
   }
 }
 

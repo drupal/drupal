@@ -29,15 +29,13 @@ function blog_perm() {
 /**
  * Implementation of hook_access().
  */
-function blog_access($op, $node) {
-  global $user;
-
+function blog_access($op, $node, $account) {
   if ($op == 'create') {
-    return user_access('edit own blog') && $user->uid;
+    return user_access('edit own blog', $account) && $account->uid;
   }
 
   if ($op == 'update' || $op == 'delete') {
-    if (user_access('edit own blog') && ($user->uid == $node->uid)) {
+    if (user_access('edit own blog', $account) && ($node->uid == $account->uid)) {
       return TRUE;
     }
   }
