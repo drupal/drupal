@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysql.inc,v 1.79 2007/08/29 18:38:55 goba Exp $
+// $Id: database.mysql.inc,v 1.80 2007/10/11 16:22:43 goba Exp $
 
 /**
  * @file
@@ -128,17 +128,19 @@ function db_connect($url) {
  * Helper function for db_query().
  */
 function _db_query($query, $debug = 0) {
-  global $active_db, $queries;
+  global $active_db, $queries, $user;
 
   if (variable_get('dev_query', 0)) {
     list($usec, $sec) = explode(' ', microtime());
     $timer = (float)$usec + (float)$sec;
+    $bt = debug_backtrace();
+    $name = ($user->uid) ? $user->name : variable_get('anonymous', t('Anonymous'));;
+    $query = '/* '. $name .' : '. $bt[2]['function'] .' */ '. $query;
   }
 
   $result = mysql_query($query, $active_db);
 
   if (variable_get('dev_query', 0)) {
-    $bt = debug_backtrace();
     $query = $bt[2]['function'] ."\n". $query;
     list($usec, $sec) = explode(' ', microtime());
     $stop = (float)$usec + (float)$sec;

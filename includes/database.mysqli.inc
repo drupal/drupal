@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysqli.inc,v 1.44 2007/09/03 17:02:16 dries Exp $
+// $Id: database.mysqli.inc,v 1.45 2007/10/11 16:22:45 goba Exp $
 
 /**
  * @file
@@ -125,17 +125,19 @@ function db_connect($url) {
  * Helper function for db_query().
  */
 function _db_query($query, $debug = 0) {
-  global $active_db, $queries;
+  global $active_db, $queries, $user;
 
   if (variable_get('dev_query', 0)) {
     list($usec, $sec) = explode(' ', microtime());
     $timer = (float)$usec + (float)$sec;
+    $bt = debug_backtrace();
+    $name = ($user->uid) ? $user->name : variable_get('anonymous', t('Anonymous'));
+    $query = '/* '. $name .' : '. $bt[2]['function'] .' */ '. $query;
   }
 
   $result = mysqli_query($active_db, $query);
 
   if (variable_get('dev_query', 0)) {
-    $bt = debug_backtrace();
     $query = $bt[2]['function'] ."\n". $query;
     list($usec, $sec) = explode(' ', microtime());
     $stop = (float)$usec + (float)$sec;
