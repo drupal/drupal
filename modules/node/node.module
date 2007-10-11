@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.891 2007/10/08 13:04:32 goba Exp $
+// $Id: node.module,v 1.892 2007/10/11 09:51:28 goba Exp $
 
 /**
  * @file
@@ -58,12 +58,12 @@ function node_help($path, $arg) {
     case 'node/%/edit':
       $node = node_load($arg[1]);
       $type = node_get_types('type', $node->type);
-      return '<p>'. (isset($type->help) ? filter_xss_admin($type->help) : '') .'</p>';
+      return (!empty($type->help) ? '<p>'. filter_xss_admin($type->help) .'</p>' : '');
   }
 
   if ($arg[0] == 'node' && $arg[1] == 'add' && $arg[2]) {
     $type = node_get_types('type', str_replace('-', '_', $arg[2]));
-    return '<p>'. (isset($type->help) ? filter_xss_admin($type->help) : '') .'</p>';
+    return (!empty($type->help) ? '<p>'. filter_xss_admin($type->help) .'</p>' : '');
   }
 }
 

@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.26 2007/10/05 13:09:17 goba Exp $ */
+/* $Id: style.css,v 1.27 2007/10/11 09:51:29 goba Exp $ */
 
 /**
  * Garland, for Drupal 5.0
@@ -971,14 +971,6 @@ tr.selected td a:link, tr.selected td a:visited, tr.selected td a:active {
 /**
  * CSS support
  */
-div.clear {
-  display: block;
-  clear: both;
-  height: 1px;
-  line-height: 0px;
-  font-size: 0px;
-  margin-bottom: -1px;
-}
 
 /*******************************************************************
  * Color Module: Don't touch                                       *

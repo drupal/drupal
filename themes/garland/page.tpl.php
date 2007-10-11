@@ -1,5 +1,5 @@
 <?php
-// $Id: page.tpl.php,v 1.13 2007/10/05 13:09:17 goba Exp $
+// $Id: page.tpl.php,v 1.14 2007/10/11 09:51:29 goba Exp $
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php print $language->language ?>" lang="<?php print $language->language ?>">
@@ -62,19 +62,17 @@
       <?php endif; ?>
 
       <div id="center"><div id="squeeze"><div class="right-corner"><div class="left-corner">
-          <?php if ($breadcrumb): print $breadcrumb; endif; ?>
+          <?php print $breadcrumb; ?>
           <?php if ($mission): print '<div id="mission">'. $mission .'</div>'; endif; ?>
-
           <?php if ($tabs): print '<div id="tabs-wrapper" class="clear-block">'; endif; ?>
           <?php if ($title): print '<h2'. ($tabs ? ' class="with-tabs"' : '') .'>'. $title .'</h2>'; endif; ?>
-          <?php if ($tabs): print $tabs .'</div>'; endif; ?>
-
-          <?php if (isset($tabs2)): print $tabs2; endif; ?>
-
-          <?php if ($help): print $help; endif; ?>
+          <?php if ($tabs): print '<ul class="tabs primary">'. $tabs .'</ul></div>'; endif; ?>
+          <?php if ($tabs2): print '<ul class="tabs secondary">'. $tabs2 .'</ul>'; endif; ?>
+          <?php print $help; ?>
           <?php if ($show_messages && $messages): print $messages; endif; ?>
-          <?php print $content ?>
-          <div class="clear"></div>
+          <div class="clear-block">
+            <?php print $content ?>
+          </div>
           <?php print $feed_icons ?>
           <div id="footer"><?php print $footer_message . $footer ?></div>
       </div></div></div></div> <!-- /.left-corner, /.right-corner, /#squeeze, /#center -->

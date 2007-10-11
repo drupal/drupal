@@ -1,5 +1,5 @@
 <?php
-// $Id: color.module,v 1.25 2007/10/10 10:45:23 goba Exp $
+// $Id: color.module,v 1.26 2007/10/11 09:51:28 goba Exp $
 
 /**
  * Implementation of hook_help
@@ -184,7 +184,7 @@ function theme_color_scheme_form($form) {
   // Preview
   $output .= drupal_render($form);
   $output .= '<h2>'. t('Preview') .'</h2>';
-  $output .= '<div id="preview"><div id="text"><h2>Lorem ipsum dolor</h2><p>Sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud <a href="#">exercitation ullamco</a> laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p></div><div id="img" style="background-image: url('. base_path() . $path . $info['preview_image'] .')" alt=""></div></div>';
+  $output .= '<div id="preview"><div id="text"><h2>Lorem ipsum dolor</h2><p>Sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud <a href="#">exercitation ullamco</a> laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p></div><div id="img" style="background-image: url('. base_path() . $path . $info['preview_image'] .')"></div></div>';
 
   // Close wrapper
   $output .= '</div>';

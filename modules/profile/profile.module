@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.220 2007/10/05 13:26:53 goba Exp $
+// $Id: profile.module,v 1.221 2007/10/11 09:51:28 goba Exp $
 
 /**
  * @file
@@ -288,7 +288,7 @@ Unless you know what you are doing, it is highly recommended that you prefix the
   if ($type == 'selection') {
     $form['fields']['options'] = array('#type' => 'textarea',
       '#title' => t('Selection options'),
-      '#default_value' => $edit['options'],
+      '#default_value' => isset($edit['options']) ? $edit['options'] : '',
       '#description' => t('A list of all options. Put each option on a separate line. Example options are "red", "blue", "green", etc.'),
     );
   }

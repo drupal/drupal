@@ -1,5 +1,5 @@
 <?php
-// $Id: template.php,v 1.15 2007/10/02 16:03:17 dries Exp $
+// $Id: template.php,v 1.16 2007/10/11 09:51:29 goba Exp $
 
 /**
  * Sets the body-tag class attribute.
@@ -53,11 +53,7 @@ function phptemplate_comment_wrapper($content, $node) {
  * Override or insert PHPTemplate variables into the templates.
  */
 function phptemplate_preprocess_page(&$vars) {
-  if ($secondary = menu_secondary_local_tasks()) {
-    $output = '<span class="clear"></span>';
-    $output .= "<ul class=\"tabs secondary\">\n". $secondary ."</ul>\n";
-    $vars['tabs2'] = $output;
-  }
+  $vars['tabs2'] = menu_secondary_local_tasks();
 
   // Hook into color.module
   if (module_exists('color')) {
@@ -67,18 +63,12 @@ function phptemplate_preprocess_page(&$vars) {
 
 /**
  * Returns the rendered local tasks. The default implementation renders
- * them as tabs.
+ * them as tabs. Overridden to split the secondary tasks.
  *
  * @ingroup themeable
  */
 function phptemplate_menu_local_tasks() {
-  $output = '';
-
-  if ($primary = menu_primary_local_tasks()) {
-    $output .= "<ul class=\"tabs primary\">\n". $primary ."</ul>\n";
-  }
-
-  return $output;
+  return menu_primary_local_tasks();
 }
 
 function phptemplate_comment_submitted($comment) {

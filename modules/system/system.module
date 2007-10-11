@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.537 2007/10/05 14:50:25 goba Exp $
+// $Id: system.module,v 1.538 2007/10/11 09:51:29 goba Exp $
 
 /**
  * @file
@@ -1164,7 +1164,7 @@ function system_actions_manage() {
   }
 
   if ($actions_map) {
-    $output .= '<p>'. drupal_get_form('system_actions_manage_form', $options) .'</p>';
+    $output .= drupal_get_form('system_actions_manage_form', $options);
   }
 
   return $output;

@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.281 2007/10/06 16:08:50 dries Exp $
+// $Id: block.module,v 1.282 2007/10/11 09:51:28 goba Exp $
 
 /**
  * @file
@@ -82,7 +82,7 @@ function block_help($path, $arg) {
 </ul>
 ");
       $output .= '<h3>'. t('Module blocks') .'</h3>';
-      $output .= '<p>'. t('Some modules generate blocks that become available when the modules are enabled. These blocks can be administered via the <a href="@admin-block">blocks administration page</a>.</p>', array('@admin-block' => url('admin/build/block'))) .'</p>';
+      $output .= '<p>'. t('Some modules generate blocks that become available when the modules are enabled. These blocks can be administered via the <a href="@admin-block">blocks administration page</a>.', array('@admin-block' => url('admin/build/block'))) .'</p>';
       $output .= '<h3>'. t('Administrator defined blocks') .'</h3>';
       $output .= '<p>'. t('Administrators can also define custom blocks. These blocks consist of a title, a description, and a body which can be as long as you wish. Block content can be in any of the input formats supported for other content.') .'</p>';
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@block">Block page</a>.', array('@block' => 'http://drupal.org/handbook/modules/block/')) .'</p>';

@@ -1,34 +1,8 @@
-/* $Id: style-rtl.css,v 1.2 2007/10/02 16:03:17 dries Exp $ */
+/* $Id: style-rtl.css,v 1.3 2007/10/11 09:51:29 goba Exp $ */
 
 html {
   direction: rtl;
 }
-
-/**
- * Markup free clearing
- * Details: http://www.positioniseverything.net/easyclearing.html
- */
-.clear-block:after {
-  content: ".";
-  display: block;
-  height: 0;
-  clear: both;
-  visibility: hidden;
-}
-
-.clear-block {
-  display: inline-block;
-}
-
-/* Hides from IE-mac \*/
-* html .clear-block {
-  height: 1%;
-}
-
-.clear-block {
-  display: block;
-}
-/* End hide from IE-mac */
 
 /**
  * Generic elements

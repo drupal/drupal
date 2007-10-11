@@ -1,5 +1,5 @@
 <?php
-// $Id: maintenance.tpl.php,v 1.5 2007/09/01 05:42:48 dries Exp $
+// $Id: maintenance.tpl.php,v 1.6 2007/10/11 09:51:28 goba Exp $
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -40,8 +40,9 @@
           <?php if ($title): print '<h2>'. $title .'</h2>'; endif; ?>
 
           <?php if ($messages): print $messages; endif; ?>
-          <?php print $content ?>
-          <span class="clear"></span>
+          <div class="clear-block">
+            <?php print $content ?>
+          </div>
 
           <!--partial-->
 
