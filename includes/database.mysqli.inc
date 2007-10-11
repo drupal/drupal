@@ -125,17 +125,19 @@ function db_connect($url) {
  * Helper function for db_query().
  */
 function _db_query($query, $debug = 0) {
-  global $active_db, $queries;
+  global $active_db, $queries, $user;
 
   if (variable_get('dev_query', 0)) {
     list($usec, $sec) = explode(' ', microtime());
     $timer = (float)$usec + (float)$sec;
+    $bt = debug_backtrace();
+    $name = ($user->uid) ? $user->name : variable_get('anonymous', t('Anonymous'));
+    $query = '/* '. $name .' : '. $bt[2]['function'] .' */ '. $query;
   }
 
   $result = mysqli_query($active_db, $query);
 
   if (variable_get('dev_query', 0)) {
-    $bt = debug_backtrace();
     $query = $bt[2]['function'] ."\n". $query;
     list($usec, $sec) = explode(' ', microtime());
     $stop = (float)$usec + (float)$sec;
