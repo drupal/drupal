@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.892 2007/10/11 09:51:28 goba Exp $
+// $Id: node.module,v 1.893 2007/10/11 16:37:43 goba Exp $
 
 /**
  * @file
@@ -1770,10 +1770,13 @@ function node_search_validate($form, &$form_state) {
  * @param $node
  *   The node object (or node array) on which the operation is to be performed,
  *   or node type (e.g. 'forum') for "create" operation.
+ * @param $account
+ *   Optional, a user object representing the user for whom the operation is to
+ *   be performed. Determines access for a user other than the current user.
  * @return
  *   TRUE if the operation may be performed.
  */
-function node_access($op, $node) {
+function node_access($op, $node, $account = NULL) {
   global $user;
 
   if (!$node) {
@@ -1783,16 +1786,20 @@ function node_access($op, $node) {
   if ($op != 'create') {
     $node = (object)$node;
   }
+  // If no user object is supplied, the access check is for the current user.
+  if (empty($account)) {
+    $account = $user;
+  }
   // If the node is in a restricted format, disallow editing.
   if ($op == 'update' && !filter_access($node->format)) {
     return FALSE;
   }
 
-  if (user_access('administer nodes')) {
+  if (user_access('administer nodes', $account)) {
     return TRUE;
   }
 
-  if (!user_access('access content')) {
+  if (!user_access('access content', $account)) {
     return FALSE;
   }
 
@@ -1802,7 +1809,7 @@ function node_access($op, $node) {
   if ($module == 'node') {
     $module = 'node_content'; // Avoid function name collisions.
   }
-  $access = module_invoke($module, 'access', $op, $node);
+  $access = module_invoke($module, 'access', $op, $node, $account);
   if (!is_null($access)) {
     return $access;
   }
@@ -1811,7 +1818,7 @@ function node_access($op, $node) {
   // node_access table.
   if ($op != 'create' && $node->nid && $node->status) {
     $grants = array();
-    foreach (node_access_grants($op) as $realm => $gids) {
+    foreach (node_access_grants($op, $account) as $realm => $gids) {
       foreach ($gids as $gid) {
         $grants[] = "(gid = $gid AND realm = '$realm')";
       }
@@ -1828,7 +1835,7 @@ function node_access($op, $node) {
   }
 
   // Let authors view their own nodes.
-  if ($op == 'view' && $user->uid == $node->uid && $user->uid != 0) {
+  if ($op == 'view' && $account->uid == $node->uid && $account->uid != 0) {
     return TRUE;
   }
 
@@ -1863,16 +1870,19 @@ function _node_access_join_sql($node_alias = 'n', $node_access_alias = 'na') {
  * @param $node_access_alias
  *   If the node_access table has been given an SQL alias other than the default
  *   "na", that must be passed here.
+ * @param $account
+ *   The user object for the user performing the operation. If omitted, the 
+ *   current user is used.
  * @return
  *   An SQL where clause.
  */
-function _node_access_where_sql($op = 'view', $node_access_alias = 'na', $uid = NULL) {
+function _node_access_where_sql($op = 'view', $node_access_alias = 'na', $account = NULL) {
   if (user_access('administer nodes')) {
     return;
   }
 
   $grants = array();
-  foreach (node_access_grants($op, $uid) as $realm => $gids) {
+  foreach (node_access_grants($op, $account) as $realm => $gids) {
     foreach ($gids as $gid) {
       $grants[] = "($node_access_alias.gid = $gid AND $node_access_alias.realm = '$realm')";
     }
@@ -1896,23 +1906,20 @@ function _node_access_where_sql($op = 'view', $node_access_alias = 'na', $uid = 
  *
  * @param $op
  *   The operation that the user is trying to perform.
- * @param $uid
- *   The user ID performing the operation. If omitted, the current user is used.
+ * @param $account
+ *   The user object for the user performing the operation. If omitted, the 
+ *   current user is used.
  * @return
  *   An associative array in which the keys are realms, and the values are
  *   arrays of grants for those realms.
  */
-function node_access_grants($op, $uid = NULL) {
-  global $user;
+function node_access_grants($op, $account = NULL) {
 
-  if (isset($uid)) {
-    $user_object = user_load(array('uid' => $uid));
-  }
-  else {
-    $user_object = $user;
+  if (!isset($account)) {
+    $account = $GLOBALS['user'];
   }
 
-  return array_merge(array('all' => array(0)), module_invoke_all('node_grants', $user_object, $op));
+  return array_merge(array('all' => array(0)), module_invoke_all('node_grants', $account, $op));
 }
 
 /**
@@ -2183,17 +2190,19 @@ function _node_access_rebuild_batch_finished($success, $results, $operations) {
 
 /**
  * Implementation of hook_access().
+ *
+ * Named so as not to conflict with node_access()
  */
-function node_content_access($op, $node) {
+function node_content_access($op, $node, $account) {
   global $user;
   $type = is_string($node) ? $node : (is_array($node) ? $node['type'] : $node->type);
 
   if ($op == 'create') {
-    return user_access('create '. $type .' content');
+    return user_access('create '. $type .' content', $account);
   }
 
   if ($op == 'update') {
-    if (user_access('edit '. $type .' content') || (user_access('edit own '. $type .' content') && ($user->uid == $node->uid))) {
+    if (user_access('edit '. $type .' content', $account) || (user_access('edit own '. $type .' content', $account) && ($user->uid == $node->uid))) {
       return TRUE;
     }
   }

@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.242 2007/09/06 12:18:01 goba Exp $
+// $Id: poll.module,v 1.243 2007/10/11 16:37:43 goba Exp $
 
 /**
  * @file
@@ -57,9 +57,9 @@ function poll_perm() {
 /**
  * Implementation of hook_access().
  */
-function poll_access($op, $node) {
+function poll_access($op, $node, $account) {
   if ($op == 'create') {
-    return user_access('create polls');
+    return user_access('create polls', $account);
   }
 }
 

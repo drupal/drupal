@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.285 2007/08/12 15:55:35 dries Exp $
+// $Id: blog.module,v 1.286 2007/10/11 16:37:43 goba Exp $
 
 /**
  * @file
@@ -29,15 +29,13 @@ function blog_perm() {
 /**
  * Implementation of hook_access().
  */
-function blog_access($op, $node) {
-  global $user;
-
+function blog_access($op, $node, $account) {
   if ($op == 'create') {
-    return user_access('edit own blog') && $user->uid;
+    return user_access('edit own blog', $account) && $account->uid;
   }
 
   if ($op == 'update' || $op == 'delete') {
-    if (user_access('edit own blog') && ($user->uid == $node->uid)) {
+    if (user_access('edit own blog', $account) && ($node->uid == $account->uid)) {
       return TRUE;
     }
   }

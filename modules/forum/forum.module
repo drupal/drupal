@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.421 2007/10/08 08:40:26 goba Exp $
+// $Id: forum.module,v 1.422 2007/10/11 16:37:43 goba Exp $
 
 /**
  * @file
@@ -295,15 +295,13 @@ function forum_node_info() {
 /**
  * Implementation of hook_access().
  */
-function forum_access($op, $node) {
-  global $user;
-
+function forum_access($op, $node, $account) {
   if ($op == 'create') {
-    return user_access('create forum topics');
+    return user_access('create forum topics', $account);
   }
 
   if ($op == 'update' || $op == 'delete') {
-    if (user_access('edit own forum topics') && ($user->uid == $node->uid)) {
+    if (user_access('edit own forum topics', $account) && ($account->uid == $node->uid)) {
       return TRUE;
     }
   }
