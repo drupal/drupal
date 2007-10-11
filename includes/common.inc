@@ -458,6 +458,11 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
     'Content-Length' => 'Content-Length: '. strlen($data)
   );
 
+  // If the server url has a user then attempt to use basic authentication
+  if (isset($uri['user'])) {
+    $defaults['Authorization'] = 'Authorization: Basic '. base64_encode($uri['user'] . (!empty($uri['pass']) ? ":". $uri['pass'] : ''));
+  }
+
   foreach ($headers as $header => $value) {
     $defaults[$header] = $header .': '. $value;
   }
