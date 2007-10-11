@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.230 2007/10/10 10:24:24 goba Exp $
+// $Id: form.inc,v 1.231 2007/10/11 09:22:39 goba Exp $
 
 /**
  * @defgroup form Form generation
@@ -567,9 +567,7 @@ function _form_validate($elements, &$form_state, $form_id = NULL) {
         form_error($elements, t('!name cannot be longer than %max characters but is currently %length characters long.', array('!name' => empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title'], '%max' => $elements['#maxlength'], '%length' => drupal_strlen($elements['#value']))));
       }
 
-       // Add legal choice check if element has #options. Can be skipped, but
-       // then you must validate your own element.
-      if (isset($elements['#options']) && isset($elements['#value']) && !isset($elements['#DANGEROUS_SKIP_CHECK'])) {
+      if (isset($elements['#options']) && isset($elements['#value'])) {
         if ($elements['#type'] == 'select') {
           $options = form_options_flatten($elements['#options']);
         }
