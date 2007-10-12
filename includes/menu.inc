@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.215 2007/10/08 18:49:03 goba Exp $
+// $Id: menu.inc,v 1.216 2007/10/12 14:10:17 dries Exp $
 
 /**
  * @file
@@ -586,14 +586,14 @@ function menu_tree_output($tree) {
   $output = '';
   $items = array();
 
-  // Pull out just the menu items we are going to render so that we 
+  // Pull out just the menu items we are going to render so that we
   // get an accurate count for the first/last classes.
   foreach ($tree as $data) {
     if (!$data['link']['hidden']) {
       $items[] = $data;
     }
   }
-  
+
   $num_items = count($items);
   foreach ($items as $i => $data) {
     $extra_class = NULL;

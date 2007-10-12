@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.install,v 1.18 2007/10/10 11:39:33 goba Exp $
+// $Id: locale.install,v 1.19 2007/10/12 14:10:17 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -178,7 +178,7 @@ function locale_schema() {
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('Number of plural indexes in this language.'), 
+        'description' => t('Number of plural indexes in this language.'),
       ),
       'formula' => array(
         'type' => 'varchar',

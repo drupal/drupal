@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.install,v 1.10 2007/10/10 11:39:33 goba Exp $
+// $Id: poll.install,v 1.11 2007/10/12 14:10:18 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -89,7 +89,7 @@ function poll_schema() {
       ),
     'primary key' => array('chid'),
     );
-  
+
   $schema['poll_votes'] = array(
     'description' => t('Stores per-{users} votes for each {poll}.'),
     'fields' => array(

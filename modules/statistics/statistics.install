@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.install,v 1.10 2007/10/10 11:39:34 goba Exp $
+// $Id: statistics.install,v 1.11 2007/10/12 14:10:18 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -88,7 +88,7 @@ function statistics_schema() {
         'description' => t('Hostname of user that visited the page.'),
       ),
       'uid' => array(
-        'type' => 'int', 
+        'type' => 'int',
         'unsigned' => TRUE,
         'not null' => FALSE,
         'default' => 0,

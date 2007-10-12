@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.699 2007/10/11 09:47:23 goba Exp $
+// $Id: common.inc,v 1.700 2007/10/12 14:10:17 dries Exp $
 
 /**
  * @file
@@ -98,7 +98,7 @@ function drupal_get_breadcrumb() {
 
 /**
  * Add output to the head tag of the HTML page.
- * 
+ *
  * This function can be called as long the headers aren't sent.
  */
 function drupal_set_html_head($data = NULL) {
@@ -229,7 +229,7 @@ function drupal_query_string_encode($query, $exclude = array(), $parent = '') {
 
 /**
  * Prepare a destination query string for use in combination with drupal_goto().
- * 
+ *
  * Used to direct the user back to the referring page after completing a form.
  * By default the current URL is returned. If a destination exists in the
  * previous request, that destination is returned. As such, a destination can
@@ -357,7 +357,7 @@ function drupal_not_found() {
     drupal_set_title(t('Page not found'));
     $return = '';
   }
-  
+
   // To conserve CPU and bandwidth, omit the blocks.
   print theme('page', $return, FALSE);
 }
@@ -546,7 +546,7 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
 
 /**
  * Log errors as defined by administrator.
- * 
+ *
  * Error levels:
  * - 0 = Log errors to database.
  * - 1 = Log errors to database and to screen.
@@ -762,13 +762,13 @@ function t($string, $args = array(), $langcode = NULL) {
           // Escaped only.
           $args[$key] = check_plain($value);
           break;
-          
+
         case '%':
         default:
           // Escaped and placeholder.
           $args[$key] = theme('placeholder', $value);
           break;
-          
+
         case '!':
           // Pass-through.
       }

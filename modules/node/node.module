@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.893 2007/10/11 16:37:43 goba Exp $
+// $Id: node.module,v 1.894 2007/10/12 14:10:18 dries Exp $
 
 /**
  * @file
@@ -1871,7 +1871,7 @@ function _node_access_join_sql($node_alias = 'n', $node_access_alias = 'na') {
  *   If the node_access table has been given an SQL alias other than the default
  *   "na", that must be passed here.
  * @param $account
- *   The user object for the user performing the operation. If omitted, the 
+ *   The user object for the user performing the operation. If omitted, the
  *   current user is used.
  * @return
  *   An SQL where clause.
@@ -1907,7 +1907,7 @@ function _node_access_where_sql($op = 'view', $node_access_alias = 'na', $accoun
  * @param $op
  *   The operation that the user is trying to perform.
  * @param $account
- *   The user object for the user performing the operation. If omitted, the 
+ *   The user object for the user performing the operation. If omitted, the
  *   current user is used.
  * @return
  *   An associative array in which the keys are realms, and the values are

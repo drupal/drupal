@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.install,v 1.2 2007/10/10 11:39:34 goba Exp $
+// $Id: taxonomy.install,v 1.3 2007/10/12 14:10:18 dries Exp $
 
 /**
  * Implementation of hook_schema().
@@ -99,7 +99,7 @@ function taxonomy_schema() {
     'indexes' => array(
       'nid' => array('nid'),
       'vid' => array('vid'),
-      'tid' => array('tid'),      
+      'tid' => array('tid'),
     ),
     'primary key' => array('vid', 'tid', 'nid'),
   );

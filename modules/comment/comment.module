@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.589 2007/10/12 10:41:47 goba Exp $
+// $Id: comment.module,v 1.590 2007/10/12 14:10:17 dries Exp $
 
 /**
  * @file
@@ -472,6 +472,7 @@ function comment_form_alter(&$form, $form_state, $form_id) {
       '#type' => 'fieldset',
       '#title' => t('Comment settings'),
       '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
     );
     $form['comment']['comment'] = array(
       '#type' => 'radios',

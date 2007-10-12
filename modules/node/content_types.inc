@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.42 2007/10/05 13:17:09 goba Exp $
+// $Id: content_types.inc,v 1.43 2007/10/12 14:10:18 dries Exp $
 
 /**
  * @file
@@ -109,9 +109,9 @@ function node_type_form(&$form_state, $type = NULL) {
 
   $form['submission'] = array(
     '#type' => 'fieldset',
-    '#title' => t('Submission form'),
+    '#title' => t('Submission form settings'),
     '#collapsible' => TRUE,
-    '#collapsed' => FALSE,
+    '#collapsed' => TRUE,
   );
   $form['submission']['title_label'] = array(
     '#title' => t('Title field label'),
@@ -147,8 +147,9 @@ function node_type_form(&$form_state, $type = NULL) {
   );
   $form['workflow'] = array(
     '#type' => 'fieldset',
-    '#title' => t('Workflow'),
+    '#title' => t('Workflow settings'),
     '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
   );
   $form['workflow']['node_options'] = array('#type' => 'checkboxes',
     '#title' => t('Default options'),
