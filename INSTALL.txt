@@ -150,7 +150,7 @@ Use your administration panel to enable and configure services. For example:
 General Settings       Administer > Site configuration > Site information
 Enable Modules         Administer > Site building > Modules
 Configure Themes       Administer > Site building > Themes
-Set User Permissions   Administer > User management > Access control
+Set User Permissions   Administer > User management > Permissions
 
 For more information on configuration options, read the instructions which
 accompany the different configuration settings and consult the various help
