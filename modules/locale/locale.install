@@ -178,7 +178,7 @@ function locale_schema() {
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('Number of plural indexes in this language.'), 
+        'description' => t('Number of plural indexes in this language.'),
       ),
       'formula' => array(
         'type' => 'varchar',

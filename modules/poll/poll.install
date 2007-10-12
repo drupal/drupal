@@ -89,7 +89,7 @@ function poll_schema() {
       ),
     'primary key' => array('chid'),
     );
-  
+
   $schema['poll_votes'] = array(
     'description' => t('Stores per-{users} votes for each {poll}.'),
     'fields' => array(

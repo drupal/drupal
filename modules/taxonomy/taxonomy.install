@@ -99,7 +99,7 @@ function taxonomy_schema() {
     'indexes' => array(
       'nid' => array('nid'),
       'vid' => array('vid'),
-      'tid' => array('tid'),      
+      'tid' => array('tid'),
     ),
     'primary key' => array('vid', 'tid', 'nid'),
   );

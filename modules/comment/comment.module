@@ -472,6 +472,7 @@ function comment_form_alter(&$form, $form_state, $form_id) {
       '#type' => 'fieldset',
       '#title' => t('Comment settings'),
       '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
     );
     $form['comment']['comment'] = array(
       '#type' => 'radios',

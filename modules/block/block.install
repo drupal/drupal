@@ -133,7 +133,7 @@ function block_schema() {
     'fields' => array(
       'bid' => array(
         'type' => 'serial',
-	'unsigned' => TRUE,
+  'unsigned' => TRUE,
         'not null' => TRUE,
         'description' => t("The block's {block}.bid."),
       ),

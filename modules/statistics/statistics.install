@@ -88,7 +88,7 @@ function statistics_schema() {
         'description' => t('Hostname of user that visited the page.'),
       ),
       'uid' => array(
-        'type' => 'int', 
+        'type' => 'int',
         'unsigned' => TRUE,
         'not null' => FALSE,
         'default' => 0,
