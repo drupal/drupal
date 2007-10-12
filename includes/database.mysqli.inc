@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysqli.inc,v 1.45 2007/10/11 16:22:45 goba Exp $
+// $Id: database.mysqli.inc,v 1.46 2007/10/12 14:51:23 goba Exp $
 
 /**
  * @file
@@ -130,8 +130,14 @@ function _db_query($query, $debug = 0) {
   if (variable_get('dev_query', 0)) {
     list($usec, $sec) = explode(' ', microtime());
     $timer = (float)$usec + (float)$sec;
+    // If devel.module query logging is enabled, prepend a comment with the username and calling function
+    // to the SQL string. This is useful when running mysql's SHOW PROCESSLIST to learn what exact
+    // code is issueing the slow query.
     $bt = debug_backtrace();
-    $name = ($user->uid) ? $user->name : variable_get('anonymous', t('Anonymous'));
+    // t() may not be available yet so we don't wrap 'Anonymous'
+    $name = $user->uid ? $user->name : variable_get('anonymous', 'Anonymous');
+    // str_replace() to prevent SQL injection via username or anonymous name.
+    $name = str_replace(array('*', '/'), '', $name);
     $query = '/* '. $name .' : '. $bt[2]['function'] .' */ '. $query;
   }
 
