@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.852 2007/10/07 19:27:40 dries Exp $
+// $Id: user.module,v 1.853 2007/10/12 10:41:48 goba Exp $
 
 /**
  * @file
@@ -497,7 +497,7 @@ function user_fields() {
  * Implementation of hook_perm().
  */
 function user_perm() {
-  return array('administer access control', 'administer users', 'access user profiles', 'change own username');
+  return array('administer permissions', 'administer users', 'access user profiles', 'change own username');
 }
 
 /**
@@ -923,12 +923,12 @@ function user_menu() {
   );
 
   // Admin access pages
-  $items['admin/user/access'] = array(
-    'title' => 'Access control',
+  $items['admin/user/permissions'] = array(
+    'title' => 'Permissions',
     'description' => 'Determine access to features by selecting permissions for roles.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('user_admin_perm'),
-    'access arguments' => array('administer access control'),
+    'access arguments' => array('administer permissions'),
     'file' => 'user.admin.inc',
   );
   $items['admin/user/roles'] = array(
@@ -936,7 +936,7 @@ function user_menu() {
     'description' => 'List, edit, or add user roles.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('user_admin_new_role'),
-    'access arguments' => array('administer access control'),
+    'access arguments' => array('administer permissions'),
     'file' => 'user.admin.inc',
   );
   $items['admin/user/roles/edit'] = array(
@@ -949,7 +949,7 @@ function user_menu() {
     'title' => 'Access rules',
     'description' => 'List and create rules to disallow usernames, e-mail addresses, and IP addresses.',
     'page callback' => 'user_admin_access',
-    'access arguments' => array('administer access control'),
+    'access arguments' => array('administer permissions'),
     'file' => 'user.admin.inc',
   );
   $items['admin/user/rules/list'] = array(
@@ -1311,7 +1311,7 @@ function user_edit_form(&$form_state, $uid, $edit, $register = FALSE) {
   if ($admin) {
     $form['account']['status'] = array('#type' => 'radios', '#title' => t('Status'), '#default_value' => isset($edit['status']) ? $edit['status'] : 1, '#options' => array(t('Blocked'), t('Active')));
   }
-  if (user_access('administer access control')) {
+  if (user_access('administer permissions')) {
     $roles = user_roles(1);
     unset($roles[DRUPAL_AUTHENTICATED_RID]);
     if ($roles) {
@@ -1540,7 +1540,7 @@ function user_user_operations($form_state = array()) {
     ),
   );
 
-  if (user_access('administer access control')) {
+  if (user_access('administer permissions')) {
     $roles = user_roles(1);
     unset($roles[DRUPAL_AUTHENTICATED_RID]);  // Can't edit authenticated role.
 
@@ -1574,7 +1574,7 @@ function user_user_operations($form_state = array()) {
     $operation = $operation_rid[0];
     if ($operation == 'add_role' || $operation == 'remove_role') {
       $rid = $operation_rid[1];
-      if (user_access('administer access control')) {
+      if (user_access('administer permissions')) {
         $operations[$form_state['values']['operation']] = array(
           'callback' => 'user_multiple_role_edit',
           'callback arguments' => array($operation, $rid),
@@ -1695,14 +1695,14 @@ function user_help($path, $arg) {
       return '<p>'. t('This web page allows the administrators to register new users by hand. Note that you cannot have a user where either the e-mail address or the username match another user in the system.') .'</p>';
     case 'admin/user/rules':
       return '<p>'. t('Set up username and e-mail address access rules for new <em>and</em> existing accounts (currently logged in accounts will not be logged out). If a username or e-mail address for an account matches any deny rule, but not an allow rule, then the account will not be allowed to be created or to log in. A host rule is effective for every page view, not just registrations.') .'</p>';
-    case 'admin/user/access':
+    case 'admin/user/permissions':
       return '<p>'. t('Permissions let you control what users can do on your site. Each user role (defined on the <a href="@role">user roles page</a>) has its own set of permissions. For example, you could give users classified as "Administrators" permission to "administer nodes" but deny this power to ordinary, "authenticated" users. You can use permissions to reveal new features to privileged users (those with subscriptions, for example). Permissions also allow trusted users to share the administrative burden of running a busy site.', array('@role' => url('admin/user/roles'))) .'</p>';
     case 'admin/user/roles':
       return t('<p>Roles allow you to fine tune the security and administration of Drupal. A role defines a group of users that have certain privileges as defined in <a href="@permissions">user permissions</a>. Examples of roles include: anonymous user, authenticated user, moderator, administrator and so on. In this area you will define the <em>role names</em> of the various roles. To delete a role choose "edit".</p><p>By default, Drupal comes with two user roles:</p>
       <ul>
       <li>Anonymous user: this role is used for users that don\'t have a user account or that are not authenticated.</li>
       <li>Authenticated user: this role is automatically granted to all logged in users.</li>
-      </ul>', array('@permissions' => url('admin/user/access')));
+      </ul>', array('@permissions' => url('admin/user/permissions')));
     case 'admin/user/search':
       return '<p>'. t('Enter a simple pattern ("*" may be used as a wildcard match) to search for a username or e-mail address. For example, one may search for "br" and Drupal might return "brian", "brad", and "brenda@example.com".') .'</p>';
   }

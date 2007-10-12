@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.161 2007/10/10 11:39:34 goba Exp $
+// $Id: system.install,v 1.162 2007/10/12 10:41:47 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -4440,6 +4440,20 @@ function system_update_6033() {
   return $ret;
 }
 
+/**
+ * Rename permission "administer access control" to "administer permissions".
+ */
+function system_update_6034() {
+  $ret = array();
+  $result = db_query("SELECT rid, perm FROM {permission} ORDER BY rid");
+  while ($role = db_fetch_object($result)) {
+    $renamed_permission = preg_replace('/administer access control/', 'administer permissions', $role->perm);
+    if ($renamed_permission != $role->perm) {
+      $ret[] = update_sql("UPDATE {permission} SET perm = '$renamed_permission' WHERE rid = $role->rid");
+    }
+  }
+  return $ret;
+}
 
 /**
  * @} End of "defgroup updates-5.x-to-6.x"

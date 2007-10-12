@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.539 2007/10/12 10:34:27 goba Exp $
+// $Id: system.module,v 1.540 2007/10/12 10:41:47 goba Exp $
 
 /**
  * @file
@@ -43,7 +43,7 @@ function system_help($path, $arg) {
     case 'admin/build/themes/settings':
       return '<p>'. t('These options control the default display settings for your entire site, across all themes. Unless they have been overridden by a specific theme, these settings will be used.') .'</p>';
     case 'admin/build/modules':
-      $output = '<p>'. t('Modules are plugins for Drupal that extend its core functionality. Here you can select which modules are enabled. Once a module is enabled, new <a href="@permissions">permissions</a> might be made available. Modules can automatically be temporarily disabled to reduce server load when your site becomes extremely busy by enabling the throttle.module and checking throttle.', array('@permissions' => url('admin/user/access')));
+      $output = '<p>'. t('Modules are plugins for Drupal that extend its core functionality. Here you can select which modules are enabled. Once a module is enabled, new <a href="@permissions">permissions</a> might be made available. Modules can automatically be temporarily disabled to reduce server load when your site becomes extremely busy by enabling the throttle.module and checking throttle.', array('@permissions' => url('admin/user/permissions')));
       if (module_exists('throttle')) {
         $output .= ' '. t('The auto-throttle functionality must be enabled on the <a href="@throttle">throttle configuration page</a> after having enabled the throttle module.', array('@throttle' => url('admin/settings/throttle')));
       }
@@ -1001,7 +1001,7 @@ function system_admin_compact_mode() {
 function system_get_module_admin_tasks($module) {
   static $items;
 
-  $admin_access = user_access('administer access control');
+  $admin_access = user_access('administer permissions');
   $admin_tasks = array();
 
   if (!isset($items)) {
@@ -1020,7 +1020,7 @@ function system_get_module_admin_tasks($module) {
   $admin_task_count = 0;
   // Check for permissions.
   if (module_hook($module, 'perm') && $admin_access) {
-    $admin_tasks[-1] = l(t('Configure permissions'), 'admin/user/access', array('fragment' => 'module-'. $module));
+    $admin_tasks[-1] = l(t('Configure permissions'), 'admin/user/permissions', array('fragment' => 'module-'. $module));
   }
 
   // Check for menu items that are admin links.
