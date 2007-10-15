@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.107 2007/10/08 13:13:13 goba Exp $
+// $Id: file.inc,v 1.108 2007/10/15 14:52:18 goba Exp $
 
 /**
  * @file
@@ -569,7 +569,7 @@ function file_save_upload($source, $validators = array(), $dest = FALSE, $replac
     $file->filepath = $file->destination;
     if (!move_uploaded_file($_FILES['files']['tmp_name'][$source], $file->filepath)) {
       form_set_error($source, t('File upload error. Could not move uploaded file.'));
-      watchdog('file', t('Upload error. Could not move uploaded file %file to destination %destination.', array('%file' => $file->filename, '%destination', $file->filepath)));
+      watchdog('file', 'Upload error. Could not move uploaded file %file to destination %destination.', array('%file' => $file->filename, '%destination', $file->filepath));
       return 0;
     }
 
