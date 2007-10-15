@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.233 2007/10/15 15:18:39 goba Exp $
+// $Id: form.inc,v 1.234 2007/10/15 21:19:00 goba Exp $
 
 /**
  * @defgroup form Form generation
@@ -1857,9 +1857,8 @@ function theme_textarea($element) {
     $class[] = 'resizable';
   }
 
-  $cols = $element['#cols'] ? ' cols="'. $element['#cols'] .'"' : '';
   _form_set_class($element, $class);
-  return theme('form_element', $element, '<textarea'. $cols .' rows="'. $element['#rows'] .'" name="'. $element['#name'] .'" id="'. $element['#id'] .'" '. drupal_attributes($element['#attributes']) .'>'. check_plain($element['#value']) .'</textarea>');
+  return theme('form_element', $element, '<textarea cols="'. $element['#cols'] .'" rows="'. $element['#rows'] .'" name="'. $element['#name'] .'" id="'. $element['#id'] .'" '. drupal_attributes($element['#attributes']) .'>'. check_plain($element['#value']) .'</textarea>');
 }
 
 /**
