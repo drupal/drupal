@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.194 2007/10/15 15:18:39 goba Exp $
+// $Id: locale.module,v 1.195 2007/10/15 19:51:06 goba Exp $
 
 /**
  * @file
@@ -321,12 +321,18 @@ function locale($string = NULL, $langcode = NULL) {
     // perspective that is a really bad idea, so we have no user
     // interface for this. Be careful when turning this option off!
     if (variable_get('locale_cache_strings', 1) == 1) {
-      if (!($cache = cache_get('locale:'. $langcode, 'cache'))) {
-        locale_refresh_cache();
-        $cache = cache_get('locale:'. $langcode, 'cache');
-      }
-      if ($cache) {
+      if ($cache = cache_get('locale:'. $langcode, 'cache')) {
         $locale_t[$langcode] = $cache->data;
+      }
+      else {
+        // Refresh database stored cache of translations for given language.
+        // We only store short strings used in current version, to improve
+        // performance and consume less memory.
+        $result = db_query("SELECT s.source, t.translation, t.language FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid AND t.language = '%s' WHERE s.textgroup = 'default' AND s.version = '%s' AND LENGTH(s.source) < 75", $langcode, VERSION);
+        while ($data = db_fetch_object($result)) {
+          $locale_t[$langcode][$data->source] = (empty($data->translation) ? TRUE : $data->translation);
+        }
+        cache_set('locale:'. $langcode, $locale_t[$langcode]);
       }
     }
   }
@@ -346,7 +352,7 @@ function locale($string = NULL, $langcode = NULL) {
         // and clear cache, to include the string into caching next time. Saved version is
         // also a string-history information for later pruning of the tables.
         db_query("UPDATE {locales_source} SET version = '%s' WHERE lid = %d LIMIT 1", VERSION, $translation->lid);
-        cache_clear_all('locale:'. $langcode, 'cache');
+        cache_clear_all('locale:', 'cache', TRUE);
       }
     }
     else {
@@ -354,31 +360,11 @@ function locale($string = NULL, $langcode = NULL) {
       db_query("INSERT INTO {locales_source} (location, source, textgroup, version) VALUES ('%s', '%s', 'default', '%s')", request_uri(), $string, VERSION);
       $locale_t[$langcode][$string] = TRUE;
       // Clear locale cache so this string can be added in a later request.
-      cache_clear_all('locale:'. $langcode, 'cache');
+      cache_clear_all('locale:', 'cache', TRUE);
     }
   }
 
   return ($locale_t[$langcode][$string] === TRUE ? $string : $locale_t[$langcode][$string]);
-}
-
-/**
- * Refreshes database stored cache of translations.
- *
- * We only store short strings used in current version, to improve performance and consume less memory.
- */
-function locale_refresh_cache() {
-  $languages = language_list('enabled');
-  $languages = $languages['1'];
-  unset($languages['en']);
-
-  foreach ($languages as $language) {
-    $result = db_query("SELECT s.source, t.translation, t.language FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid AND t.language = '%s' WHERE s.textgroup = 'default' AND s.version = '%s' AND LENGTH(s.source) < 75", $language->language, VERSION);
-    $t = array();
-    while ($data = db_fetch_object($result)) {
-      $t[$data->source] = (empty($data->translation) ? TRUE : $data->translation);
-    }
-    cache_set('locale:'. $language->language, $t);
-  }
 }
 
 /**

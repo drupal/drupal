@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.155 2007/10/15 15:18:39 goba Exp $
+// $Id: locale.inc,v 1.156 2007/10/15 19:51:06 goba Exp $
 
 /**
  * @file
@@ -839,8 +839,8 @@ function locale_translate_edit_form_submit($form, &$form_state) {
 
   drupal_set_message(t('The string has been saved.'));
 
-  // Refresh the locale cache.
-  locale_refresh_cache();
+  // Clear locale cache.
+  cache_clear_all('locale:', 'cache', TRUE);
 
   $form_state['redirect'] = 'admin/build/translate/search';
   return;
@@ -864,7 +864,7 @@ function locale_translate_delete($lid) {
   if ($langcode) {
     _locale_rebuild_js($langcode);
   }
-  locale_refresh_cache();
+  cache_clear_all('locale:', 'cache', TRUE);
   drupal_set_message(t('The string has been removed.'));
   drupal_goto('admin/build/translate/search');
 }
@@ -974,9 +974,9 @@ function _locale_import_po($file, $langcode, $mode, $group = NULL) {
     drupal_set_message(t('The translation file %filename appears to have a missing or malformed header.', array('%filename' => $file->filename)), 'error');
   }
 
-  // Rebuild locale cache.
+  // Clear cache and refresh JavaScript translations.
   _locale_rebuild_js($langcode);
-  cache_clear_all("locale:$langcode", 'cache');
+  cache_clear_all('locale:', 'cache', TRUE);
 
   // Rebuild the menu, strings may have changed.
   menu_rebuild();
