@@ -1285,7 +1285,7 @@ function comment_admin_overview_submit($form, &$form_state) {
     }
     cache_clear_all();
     drupal_set_message(t('The update has been performed.'));
-    drupal_goto('admin/content/comment');
+    $form_state['redirect'] = 'admin/content/comment';
   }
 }
 
