@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.442 2007/09/11 17:35:58 goba Exp $
+// $Id: book.module,v 1.443 2007/10/15 19:33:27 goba Exp $
 
 /**
  * @file
@@ -131,12 +131,18 @@ function book_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'book.pages.inc',
   );
-  $items['book-form-update/%/%'] = array(
+  $items['book/js/form'] = array(
     'page callback' => 'book_form_update',
-    'page arguments' => array(1, 2),
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
     'file' => 'book.pages.inc',
+  );
+  $items['book/js/admin/%node'] = array(
+    'page callback' => 'book_admin_js_update',
+    'access callback' => '_book_outline_access',
+    'access arguments' => array(3),
+    'type' => MENU_CALLBACK,
+    'file' => 'book.admin.inc',
   );
   return $items;
 }
@@ -366,14 +372,9 @@ function _book_parent_select($book_link) {
  * Build the common elements of the book form for the node and outline forms.
  */
 function _book_add_form_elements(&$form, $node) {
-  $settings['book']['formCallback'] = url('book-form-update' , array());
-  $settings['book']['formId'] = $form['#id'];
-  drupal_add_js($settings, 'setting');
-  drupal_add_js(drupal_get_path('module', 'book') .'/book.js');
-  drupal_add_js('misc/progress.js');
-
   // Need this for AJAX.
   $form['#cache'] = TRUE;
+  drupal_add_js("if (Drupal.jsEnabled) { $(document).ready(function() { $('#edit-book-pick-book').css('display', 'none'); }); }", 'inline');
 
   $form['book'] = array(
     '#type' => 'fieldset',
@@ -433,6 +434,11 @@ function _book_add_form_elements(&$form, $node) {
     '#description' => t('Your page will be a part of the selected book.'),
     '#weight' => -5,
     '#attributes' => array('class' => 'book-title-select'),
+    '#ahah' => array(
+      'path' => 'book/js/form',
+      'wrapper' => 'edit-book-plid-wrapper',
+      'effect' => 'slide',
+    ),
   );
 }
 

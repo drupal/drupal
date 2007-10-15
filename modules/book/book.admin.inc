@@ -1,5 +1,5 @@
 <?php
-// $Id: book.admin.inc,v 1.3 2007/09/28 15:44:13 goba Exp $
+// $Id: book.admin.inc,v 1.4 2007/10/15 19:33:27 goba Exp $
 
 /**
  * @file
@@ -69,16 +69,26 @@ function book_admin_settings_validate($form, &$form_state) {
  * @ingroup forms.
  */
 function book_admin_edit($form_state, $node) {
-
-    drupal_set_title(check_plain($node->title));
-    $form = array();
-
-    $form['#node'] = $node;
-    $form['table'] = _book_admin_table($node);
-    $form['save'] = array(
-      '#type' => 'submit',
-      '#value' => t('Save book pages'),
-    );
+  drupal_set_title(check_plain($node->title));
+  $form = array(
+    '#cache' => TRUE,
+    '#prefix' => '<div id="book-admin-edit-wrapper">',
+    '#suffix' => '</div>',
+  );
+  
+  $form['#node'] = $node;
+  $form['table'] = _book_admin_table($node);
+  $form['save'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save book pages'),
+    '#ahah' => array(
+      'path' => 'book/js/admin/'. $node->nid,
+      'selector' => '#book-admin-edit select',
+      'wrapper' => 'book-admin-edit-wrapper',
+      'event' => 'change',
+      'effect' => 'fade',
+    ),
+  );
   return $form;
 }
 
@@ -139,8 +149,8 @@ function _book_admin_table($node) {
  * @see book_admin_edit()
  */
 function _book_admin_table_tree($tree, &$form) {
-  foreach ($tree as $data) {
-    $form[] = array(
+  foreach ($tree as $key => $data) {
+    $form[$key] = array(
       'nid' => array('#type' => 'value', '#value' => $data['link']['nid']),
       'depth' => array('#type' => 'value', '#value' => $data['link']['depth']),
       'href' => array('#type' => 'value', '#value' => $data['link']['href']),
@@ -169,7 +179,6 @@ function _book_admin_table_tree($tree, &$form) {
  * @ingroup themeable
  */
 function theme_book_admin_table($form) {
-
   $header = array(t('Title'), t('Weight'), array('data' => t('Operations'), 'colspan' => '3'));
 
   $rows = array();
@@ -178,14 +187,110 @@ function theme_book_admin_table($form) {
   foreach (element_children($form) as $key) {
     $nid = $form[$key]['nid']['#value'];
     $href = $form[$key]['href']['#value'];
-    $rows[] = array(
-      '<div style="padding-left: '. (25 * $form[$key]['depth']['#value']) .'px;">'. drupal_render($form[$key]['title']) .'</div>',
+    $asterisk = (isset($form[$key]['#attributes']['class']) && strpos($form[$key]['#attributes']['class'], 'book-changed') !== FALSE) ? '<span class="warning">*</span>' : '';
+    $data = array(
+      '<div style="padding-left: '. (25 * $form[$key]['depth']['#value']) .'px;">'. drupal_render($form[$key]['title']) . $asterisk .'</div>',
       drupal_render($form[$key]['weight']),
       l(t('view'), $href),
       $access ? l(t('edit'), 'node/'. $nid .'/edit', array('query' => $destination)) : '&nbsp',
       $access ? l(t('delete'), 'node/'. $nid .'/delete', array('query' => $destination) )  : '&nbsp',
     );
+    $row = array('data' => $data);
+    if (isset($form[$key]['#attributes'])) {
+      $row = array_merge($row, $form[$key]['#attributes']);
+    }
+    $rows[] = $row;
   }
 
-  return theme('table', $header, $rows);
+  return theme('status_messages') . theme('table', $header, $rows);
+}
+
+/**
+ * Menu callback for updating the book outline form.
+ */
+function book_admin_js_update() {
+  $cid = 'form_'. $_POST['form_build_id'];
+  $cache = cache_get($cid, 'cache_form');
+  if ($cache) {
+    $form = $cache->data;
+
+    $tree = book_menu_subtree_data($form['#node']->book);
+    _book_admin_js_update_tree($tree);
+    _book_admin_sort_tree($tree);
+
+    // Create the form in the new order.
+    $table_form = array();
+    _book_admin_table_tree($tree, $table_form);
+
+    // Find the changed element on this request and save the current classes.
+    foreach (element_children($form['table']) as $key) {
+      if (isset($form['table'][$key]['#attributes'])) {
+        $table_form[$key]['#attributes'] = $form['table'][$key]['#attributes'];
+      }
+      if ($form['table'][$key]['weight']['#default_value'] != $_POST['table'][$key]['weight']) {
+        $changed_key = $key;
+      }
+    }
+
+    // Preserve the order of the new form while merging the previous data.
+    $form_order = array_flip(array_keys($table_form)); // Save the form order.
+    $form['table'] = array_merge($form['table'], $table_form); // Merge the data.
+    $form['table'] = array_merge($form_order, $form['table']); // Put back into the correct order.
+    $form['table'][$changed_key]['#attributes']['class'] = 'book-changed';
+
+    cache_set($cid, $form, 'cache_form', $cache->expire);
+
+    // Add the special AHAH class for new content.
+    $form['table'][$changed_key]['#attributes']['class'] = isset($form['table'][$changed_key]['#attributes']['class']) ? $form['table'][$changed_key]['#attributes']['class'] .' ahah-new-content' : 'ahah-new-content';
+
+    // Set a message for the user to save the form.
+    drupal_set_message(t('Your changes will not be saved until you click the <em>Save book pages</em> button.'), 'warning');
+
+    // Prevent duplicate wrappers.
+    unset($form['#prefix'], $form['#suffix']);
+
+    // Render the form.
+    $form['#post'] = $_POST;
+    $form_state = array('submitted' => FALSE);
+    $form = form_builder('book_admin_edit', $form, $form_state);
+    $output = drupal_render($form);
+
+    drupal_json(array('status' => TRUE, 'data' => $output));
+  }
+}
+
+/**
+ * Recursive helper to set new form weights to the tree.
+ */
+function _book_admin_js_update_tree(&$tree) {
+  foreach($tree as $key => $subtree) {
+    $tree[$key]['link']['weight'] = $_POST['table'][$key]['weight'];
+    $tree[$key]['link']['title'] = $_POST['table'][$key]['title'];
+    if (!empty($subtree['below'])) {
+      _book_admin_js_update_tree($tree[$key]['below']);
+    }
+  }
+}
+
+/**
+ * Recursive helper to sort each layer of a book tree by weight.
+ */
+function _book_admin_sort_tree(&$tree) {
+  uasort($tree, '_book_admin_compare');
+  foreach($tree as $key => $subtree) {
+    if (!empty($tree[$key]['below'])) {
+      _book_admin_sort_tree($tree[$key]['below']);
+    }
+  }
+}
+
+/**
+ * Used by uasort() in _book_admin_sort_tree() to compare items in a book tree.
+ */
+function _book_admin_compare($a, $b) {
+  $weight = $a['link']['weight'] - $b['link']['weight'];
+  if ($weight) {
+    return $weight;
+  }
+  return strncmp($a['link']['title'], $b['link']['title']);
 }

@@ -1,4 +1,4 @@
-/* $Id: book.css,v 1.4 2007/05/27 17:57:48 goba Exp $ */
+/* $Id: book.css,v 1.5 2007/10/15 19:33:27 goba Exp $ */
 
 .book-navigation .menu {
   border-top: 1px solid #888;
@@ -27,4 +27,23 @@
   width: 42%;
   display: block;
   float: right;
+}
+.book-outline-form .form-item {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+#edit-book-bid-wrapper .description {
+  clear: both;
+}
+#book-admin-edit select {
+  margin-right: 24px;
+}
+#book-admin-edit select.progress-disabled {
+  margin-right: 0;
+}
+#book-admin-edit tr.ahah-new-content {
+  background-color: #ffd;
+}
+#book-admin-edit .form-item {
+  float: left;
 }

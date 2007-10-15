@@ -1,5 +1,5 @@
 <?php
-// $Id: book.pages.inc,v 1.1 2007/09/11 17:35:58 goba Exp $
+// $Id: book.pages.inc,v 1.2 2007/10/15 19:33:27 goba Exp $
 
 /**
  * @file
@@ -258,9 +258,9 @@ function book_remove_form_submit($form, &$form_state) {
  * @return
  *   Prints the replacement HTML in JSON format.
  */
-function book_form_update($build_id, $bid) {
-
-  $cid = 'form_'. $build_id;
+function book_form_update() {
+  $cid = 'form_'. $_POST['form_build_id'];
+  $bid = $_POST['book']['bid'];
   $cache = cache_get($cid, 'cache_form');
   if ($cache) {
     $form = $cache->data;
@@ -271,18 +271,21 @@ function book_form_update($build_id, $bid) {
       $book_link['bid'] = $bid;
       // Get the new options and update the cache.
       $form['book']['plid'] = _book_parent_select($book_link);
-      // We set an updated expiration time for the cached form using the same
-      // formula as used originally in function drupal_get_form()
-      $expire = max(ini_get('session.cookie_lifetime'), 86400);
-      cache_set($cid, $form, 'cache_form', $expire);
+      cache_set($cid, $form, 'cache_form', $cache->expire);
 
       // Build and render the new select element, then return it in JSON format.
       $form_state = array();
       $form['#post'] = array();
       $form = form_builder($form['form_id']['#value'] , $form, $form_state);
       $output = drupal_render($form['book']['plid']);
-      drupal_json(array('book' => $output));
+      drupal_json(array('status' => TRUE, 'data' => $output));
     }
+    else {
+      drupal_json(array('status' => FALSE, 'data' => ''));    
+    }
+  }
+  else {
+    drupal_json(array('status' => FALSE, 'data' => ''));    
   }
   exit();
 }
