@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.590 2007/10/12 14:10:17 dries Exp $
+// $Id: comment.module,v 1.591 2007/10/15 15:57:15 goba Exp $
 
 /**
  * @file
@@ -1285,7 +1285,7 @@ function comment_admin_overview_submit($form, &$form_state) {
     }
     cache_clear_all();
     drupal_set_message(t('The update has been performed.'));
-    drupal_goto('admin/content/comment');
+    $form_state['redirect'] = 'admin/content/comment';
   }
 }
 
