@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.232 2007/10/15 14:52:18 goba Exp $
+// $Id: form.inc,v 1.233 2007/10/15 15:18:39 goba Exp $
 
 /**
  * @defgroup form Form generation
@@ -2129,11 +2129,17 @@ function form_clean_id($id = NULL) {
  *     'progress_message': message displayed while processing the batch.
  *       Available placeholders are @current, @remaining, @total and @percent.
  *       Defaults to t('Remaining @remaining of @total.').
- *     'error_message': message displayed if an error occurred while processing the batch.
+ *     'error_message': message displayed if an error occurred while processing
+ *       the batch.
  *       Defaults to t('An error has occurred.').
- *     'finished': the name of a function to be executed after the batch has completed.
- *       This should be used to perform any result massaging that may be needed,
- *       and possibly save data in $_SESSION for display after final page redirection.
+ *     'finished': the name of a function to be executed after the batch has
+ *       completed. This should be used to perform any result massaging that
+ *       may be needed, and possibly save data in $_SESSION for display after
+ *       final page redirection.
+ *     'file': the path to the file containing the definitions of the
+ *       'operations' and 'finished' functions, for instance if they don't
+ *       reside in the original '.module' file. The path should be relative to
+ *       the base_path(), and thus should be built using drupal_get_path().
  *
  * Operations are added as new batch sets. Batch sets are used to ensure
  * clean code independence, ensuring that several batches submitted by
@@ -2191,7 +2197,7 @@ function batch_set($batch_definition) {
  * Process the batch.
  *
  * Unless the batch has been marked with 'progressive' = FALSE, the function
- * isses a drupal_goto and thus ends page execution.
+ * issues a drupal_goto and thus ends page execution.
  *
  * This function is not needed in form submit handlers; Form API takes care
  * of batches that were set during form submission.

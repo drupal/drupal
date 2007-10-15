@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.154 2007/09/04 21:10:45 dries Exp $
+// $Id: locale.inc,v 1.155 2007/10/15 15:18:39 goba Exp $
 
 /**
  * @file
@@ -2420,7 +2420,6 @@ function _locale_get_predefined_list() {
  *   A batch structure or FALSE if no files found.
  */
 function locale_batch_by_language($langcode, $finished = '_locale_batch_installer_finished') {
-
   // Collect all files to import for all enabled modules and themes.
   $files = array();
   $result = db_query("SELECT name, filename FROM {system} WHERE status = 1");
@@ -2433,45 +2432,6 @@ function locale_batch_by_language($langcode, $finished = '_locale_batch_installe
   }
 
   return _locale_batch_build($files, $finished);
-}
-
-/**
- * Build a locale batch from an array of files.
- *
- * @param $files
- *   Array of files to import
- * @param $finished
- *   Optional finished callback for the batch.
- * @return
- *   A batch structure
- */
-function _locale_batch_build($files, $finished = NULL) {
-  $t = get_t();
-  if (count($files)) {
-    $operations = array();
-    foreach ($files as $file) {
-      // We call _locale_batch_import for every batch operation.
-      $operations[] = array('_locale_batch_import', array($file->filename));    }
-      $batch = array(
-        'operations'    => $operations,
-        'title'         => $t('Importing interface translations'),
-        'init_message'  => $t('Starting import'),
-        'error_message' => $t('Error importing interface translations'),
-      );
-      if (isset($finished)) {
-        $batch['finished'] = $finished;
-      }
-    return $batch;
-  }
-  return FALSE;
-}
-
-/**
- * Batch callback invoked when installer import processing finishes.
- * Advance installer task to the finished screen.
- */
-function _locale_batch_installer_finished($success, $results) {
-  variable_set('install_task', 'finished');
 }
 
 /**
@@ -2506,6 +2466,85 @@ function locale_batch_by_component($components, $finished = '_locale_batch_syste
   }
   return FALSE;
 }
+
+/**
+ * Build a locale batch from an array of files.
+ *
+ * @param $files
+ *   Array of files to import
+ * @param $finished
+ *   Optional finished callback for the batch.
+ * @return
+ *   A batch structure
+ */
+function _locale_batch_build($files, $finished = NULL) {
+  $t = get_t();
+  if (count($files)) {
+    $operations = array();
+    foreach ($files as $file) {
+      // We call _locale_batch_import for every batch operation.
+      $operations[] = array('_locale_batch_import', array($file->filename));    }
+      $batch = array(
+        'operations'    => $operations,
+        'title'         => $t('Importing interface translations'),
+        'init_message'  => $t('Starting import'),
+        'error_message' => $t('Error importing interface translations'),
+        'file'          => './includes/locale.inc',
+      );
+      if (isset($finished)) {
+        $batch['finished'] = $finished;
+      }
+    return $batch;
+  }
+  return FALSE;
+}
+
+/**
+ * Perform interface translation import as a batch step.
+ *
+ * @param $filepath
+ *   Path to a file to import.
+ * @param $results
+ *   Contains a list of files imported.
+ */
+function _locale_batch_import($filepath, &$context) {
+  // The filename is either {langcode}.po or {prefix}.{langcode}.po, so
+  // we can extract the language code to use for the import from the end.
+  if (preg_match('!(/|\.)([^\./]+)\.po$!', $filepath, $langcode)) {
+    $file = (object) array('filename' => basename($filepath), 'filepath' => $filepath);
+    _locale_import_read_po('db-store', $file, LOCALE_IMPORT_KEEP, $langcode[2]);
+    $context['results'][] = $filepath;
+  }
+}
+
+/**
+ * Finished callback of system page locale import batch.
+ * Inform the user of translation files imported.
+ */
+function _locale_batch_system_finished($success, $results) {
+  if ($success) {
+    drupal_set_message(format_plural(count($results), 'One translation file imported for the newly installed modules.', '@count translation files imported for the newly installed modules.'));
+  }
+}
+
+/**
+ * Finished callback of language addition locale import batch.
+ * Inform the user of translation files imported.
+ */
+function _locale_batch_language_finished($success, $results) {
+  if ($success) {
+    drupal_set_message(format_plural(count($results), 'One translation file imported for the enabled modules.', '@count translation files imported for the enabled modules.'));
+  }
+}
+
+/**
+ * Finished callback of installer locale import batch.
+ * Advance installer task to the finished screen.
+ */
+function _locale_batch_installer_finished($success, $results) {
+  variable_set('install_task', 'finished');
+}
+
 /**
  * @} End of "locale-autoimport"
  */
