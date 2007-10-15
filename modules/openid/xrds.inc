@@ -65,6 +65,9 @@ function _xrds_cdata(&$parser, $data) {
     case 'XRDS/XRD/SERVICE/DELEGATE':
       $xrds_current_service['delegate'] = $data;
       break;
+    case 'XRDS/XRD/SERVICE/LOCALID':
+      $xrds_current_service['localid'] = $data;
+      break;
   }
 }
 
