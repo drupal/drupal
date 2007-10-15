@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.module,v 1.6 2007/09/25 14:52:55 goba Exp $
+// $Id: openid.module,v 1.7 2007/10/15 09:40:42 goba Exp $
 
 /**
  * @file
@@ -157,7 +157,18 @@ function openid_begin($claimed_id, $return_to = '', $form_values = array()) {
 
   // Now that there is an association created, move on
   // to request authentication from the IdP
-  $identity = (!empty($services[0]['delegate'])) ? $services[0]['delegate'] : $claimed_id;
+  // First check for LocalID. If not found, check for Delegate. Fall
+  // back to $claimed_id if neither is found.
+  if (!empty($services[0]['localid'])) {
+    $identity = $services[0]['localid'];
+  }
+  else if (!empty($services[0]['delegate'])) {
+    $identity = $services[0]['delegate'];
+  }
+  else {
+    $identity = $claimed_id;
+  }
+  
   if (isset($services[0]['types']) && is_array($services[0]['types']) && in_array(OPENID_NS_2_0 .'/server', $services[0]['types'])) {
     $identity = 'http://openid.net/identifier_select/2.0';
   }

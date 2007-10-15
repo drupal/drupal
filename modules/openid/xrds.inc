@@ -1,5 +1,5 @@
 <?php
-// $Id: xrds.inc,v 1.1 2007/06/18 16:09:39 dries Exp $
+// $Id: xrds.inc,v 1.2 2007/10/15 09:40:42 goba Exp $
 
 // Global variables to track parsing state
 $xrds_open_elements = array();
@@ -64,6 +64,9 @@ function _xrds_cdata(&$parser, $data) {
       break;
     case 'XRDS/XRD/SERVICE/DELEGATE':
       $xrds_current_service['delegate'] = $data;
+      break;
+    case 'XRDS/XRD/SERVICE/LOCALID':
+      $xrds_current_service['localid'] = $data;
       break;
   }
 }
