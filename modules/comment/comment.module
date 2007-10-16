@@ -1232,7 +1232,7 @@ function comment_admin_overview_submit($form_id, $form_values) {
     }
     cache_clear_all();
     drupal_set_message(t('The update has been performed.'));
-    drupal_goto('admin/content/comment');
+    return 'admin/content/comment';
   }
 }
 
