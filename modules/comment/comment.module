@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.591 2007/10/15 15:57:15 goba Exp $
+// $Id: comment.module,v 1.592 2007/10/16 14:22:00 goba Exp $
 
 /**
  * @file
@@ -315,7 +315,7 @@ function comment_get_recent($number = 10) {
   if (!empty($nids)) {
     // From among the comments on the nodes selected in the first query,
     // find the $number most recent comments.
-    $result = db_query_range('SELECT c.nid, c.subject, c.cid, c.timestamp FROM {comments} c INNER JOIN {node} n ON n.nid = c.nid WHERE c.nid IN ('. implode(',', $nids) .') AND n.status = 1 AND c.status = %d ORDER BY c.timestamp DESC', COMMENT_PUBLISHED, 0, $number);
+    $result = db_query_range('SELECT c.nid, c.subject, c.cid, c.timestamp FROM {comments} c INNER JOIN {node} n ON n.nid = c.nid WHERE c.nid IN ('. implode(',', $nids) .') AND n.status = 1 AND c.status = %d ORDER BY c.cid DESC', COMMENT_PUBLISHED, 0, $number);
     while ($comment = db_fetch_object($result)) {
       $comments[] = $comment;
     }
@@ -1026,7 +1026,7 @@ function comment_render($node, $cid = 0) {
 
       if ($order == COMMENT_ORDER_NEWEST_FIRST) {
         if ($mode == COMMENT_MODE_FLAT_COLLAPSED || $mode == COMMENT_MODE_FLAT_EXPANDED) {
-          $query .= ' ORDER BY c.timestamp DESC';
+          $query .= ' ORDER BY c.cid DESC';
         }
         else {
           $query .= ' ORDER BY c.thread DESC';
@@ -1034,7 +1034,7 @@ function comment_render($node, $cid = 0) {
       }
       else if ($order == COMMENT_ORDER_OLDEST_FIRST) {
         if ($mode == COMMENT_MODE_FLAT_COLLAPSED || $mode == COMMENT_MODE_FLAT_EXPANDED) {
-          $query .= ' ORDER BY c.timestamp';
+          $query .= ' ORDER BY c.cid';
         }
         else {
 
