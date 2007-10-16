@@ -897,8 +897,6 @@ function install_configure_form() {
     '#weight' => 0,
   );
 
-  $zones = _system_zonelist();
-
   $form['server_settings'] = array(
     '#type' => 'fieldset',
     '#title' => st('Server settings'),
@@ -908,7 +906,7 @@ function install_configure_form() {
     '#type' => 'select',
     '#title' => st('Default time zone'),
     '#default_value' => variable_get('date_default_timezone', 0),
-    '#options' => $zones,
+    '#options' => _system_zonelist(),
     '#description' => st('By default, dates in this site will be displayed in the chosen time zone.'),
     '#weight' => 5,
   );
@@ -930,7 +928,7 @@ if (Drupal.jsEnabled) {
     '#type' => 'radios',
     '#title' => st('Clean URLs'),
     '#default_value' => variable_get('clean_url', 0),
-    '#options' => array(st('Disabled'), st('Enabled')),
+    '#options' => array(0 => st('Disabled'), 1 => st('Enabled')),
     '#description' => st('This option makes Drupal emit "clean" URLs (i.e. without <code>?q=</code> in the URL).'),
     '#disabled' => TRUE,
     '#prefix' => '<div id="clean-url" class="install">',
