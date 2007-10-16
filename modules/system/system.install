@@ -882,7 +882,7 @@ function system_install() {
         UNIQUE (name)
       )");
 
-      db_query("SELECT setval('{role}_rid_seq',". max(DRUPAL_ANONYMOUS_RID,DRUPAL_AUTHENTICATED_RID) ."));");
+      db_query("SELECT setval('{role}_rid_seq',". max(DRUPAL_ANONYMOUS_RID,DRUPAL_AUTHENTICATED_RID) .")");
 
       db_query("CREATE TABLE {blocks_roles} (
         module varchar(64) NOT NULL,
