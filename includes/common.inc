@@ -269,7 +269,9 @@ function drupal_get_destination() {
  *
  * It is advised to use drupal_goto() instead of PHP's header(), because
  * drupal_goto() will append the user's session ID to the URI when PHP is
- * compiled with "--enable-trans-sid".
+ * compiled with "--enable-trans-sid". In addition, Drupal will ensure that
+ * messages set by drupal_set_message() and other session data are written to
+ * the database before the user is redirected.
  *
  * This function ends the request; use it rather than a print theme('page')
  * statement in your menu callback.
@@ -305,6 +307,10 @@ function drupal_goto($path = '', $query = NULL, $fragment = NULL, $http_response
 
   // Before the redirect, allow modules to react to the end of the page request.
   module_invoke_all('exit', $url);
+
+  // Even though session_write_close() is registered as a shutdown function, we
+  // need all session data written to the database before redirecting.
+  session_write_close();
 
   header('Location: '. $url, TRUE, $http_response_code);
 
