@@ -1,5 +1,5 @@
 <?php
-// $Id: path.inc,v 1.16 2007/06/18 06:59:11 goba Exp $
+// $Id: path.inc,v 1.17 2007/10/16 14:10:33 goba Exp $
 
 /**
  * @file
@@ -219,4 +219,24 @@ function drupal_is_front_page() {
   // As drupal_init_path updates $_GET['q'] with the 'site_frontpage' path,
   // we can check it against the 'site_frontpage' variable.
   return $_GET['q'] == drupal_get_normal_path(variable_get('site_frontpage', 'node'));
+}
+
+/**
+ * Check if a path matches any pattern in a set of patterns.
+ *
+ * @param $path
+ *   The path to match.
+ * @param $patterns
+ *   String containing a set of patterns separated by \n, \r or \r\n.
+ *
+ * @return
+ *   Boolean value: TRUE if the path matches a pattern, FALSE otherwise.
+ */
+function drupal_match_path($path, $patterns) {
+  static $regexps;
+  
+  if (!isset($regexps[$patterns])) {
+    $regexps[$patterns] = '/^('. preg_replace(array('/(\r\n?|\n)/', '/\\\\\*/', '/(^|\|)\\\\<front\\\\>($|\|)/'), array('|', '.*', '\1'. preg_quote(variable_get('site_frontpage', 'node'), '/') .'\2'), preg_quote($patterns, '/')) .')$/';
+  }
+  return preg_match($regexps[$patterns], $path);
 }
