@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.234 2007/10/15 21:19:00 goba Exp $
+// $Id: form.inc,v 1.235 2007/10/16 14:06:23 goba Exp $
 
 /**
  * @defgroup form Form generation
@@ -716,6 +716,8 @@ function form_error(&$element, $message = '') {
  *   $_POST data.
  */
 function form_builder($form_id, $form, &$form_state) {
+  static $complete_form;
+
   // Initialize as unprocessed.
   $form['#processed'] = FALSE;
 
@@ -725,12 +727,15 @@ function form_builder($form_id, $form, &$form_state) {
     $form += $info;
   }
 
-  if (isset($form['#type']) && $form['#type'] == 'form' && !empty($form['#programmed'])) {
-    $form_state['submitted'] = TRUE;
+  if (isset($form['#type']) && $form['#type'] == 'form') {
+    $complete_form = $form;
+    if (!empty($form['#programmed'])) {
+      $form_state['submitted'] = TRUE;
+    }
   }
 
   if (isset($form['#input']) && $form['#input']) {
-    _form_builder_handle_input_element($form_id, $form, $form_state);
+    _form_builder_handle_input_element($form_id, $form, $form_state, $complete_form);
   }
   $form['#defaults_loaded'] = TRUE;
 
@@ -796,7 +801,7 @@ function form_builder($form_id, $form, &$form_state) {
  * can be processed and rendered. Also, execute any #process handlers
  * attached to a specific element.
  */
-function _form_builder_handle_input_element($form_id, &$form, &$form_state) {
+function _form_builder_handle_input_element($form_id, &$form, &$form_state, $complete_form) {
   if (!isset($form['#name'])) {
     $name = array_shift($form['#parents']);
     $form['#name'] = $name;
@@ -886,7 +891,7 @@ function _form_builder_handle_input_element($form_id, &$form, &$form_state) {
   if (isset($form['#process']) && !$form['#processed']) {
     foreach ($form['#process'] as $process) {
       if (function_exists($process)) {
-        $args = array_merge(array($form), array(isset($edit) ? $edit : NULL), array($form_state));
+        $args = array_merge(array($form), array(isset($edit) ? $edit : NULL), array($form_state), array($complete_form));
         $form = call_user_func_array($process, $args);
       }
     }
