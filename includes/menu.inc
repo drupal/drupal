@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.216 2007/10/12 14:10:17 dries Exp $
+// $Id: menu.inc,v 1.217 2007/10/16 13:48:11 goba Exp $
 
 /**
  * @file
@@ -1757,6 +1757,38 @@ function _menu_find_router_path($menu, $link_path) {
   return $router_path;
 }
 
+/**
+ * Insert, update or delete an uncustomized menu link related to a module.
+ *
+ * @param $module
+ *   The name of the module.
+ * @param $op
+ *   Operation to perform: insert, update or delete.
+ * @param $link_path
+ *   The path this link points to.
+ * @param $link_title
+ *   Title of the link to insert or new title to update the link to.
+ *   Unused for delete.
+ */
+function menu_link_maintain($module, $op, $link_path, $link_title) {
+  switch ($op) {
+    case 'insert':
+      $menu_link = array(
+        'link_title' => $link_title,
+        'link_path' => $link_path,
+        'module' => $module,
+      );
+      menu_link_save($menu_link);
+      break;
+    case 'update':
+      db_query("UPDATE {menu_links} SET link_title = '%s' WHERE link_path = '%s' AND customized = 0 AND module  = '%s'", $link_title, $link_path, $module);
+      menu_cache_clear();
+      break;
+    case 'delete':
+      menu_link_delete(NULL, $link_path);
+      break;
+  }
+}
 
 /**
  * Find the depth of an item's children relative to its depth.

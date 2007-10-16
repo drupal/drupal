@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.pages.inc,v 1.4 2007/10/02 16:03:17 dries Exp $
+// $Id: aggregator.pages.inc,v 1.5 2007/10/16 13:48:11 goba Exp $
 
 /**
  * @file
@@ -39,6 +39,7 @@ function aggregator_page_source($arg1, $arg2 = NULL) {
  * Menu callback; displays all the items aggregated in a particular category.
  */
 function aggregator_page_category($arg1, $arg2 = NULL) {
+  drupal_set_breadcrumb(array_merge(drupal_get_breadcrumb(), array(l(t('Categories'), 'aggregator/categories'))));
   // If there are two arguments then we are called as a form, $arg1 is
   // $form_state and $arg2 is $category. Otherwise, $arg1 is $category.
   $category = is_array($arg2) ? $arg2 : $arg1;
