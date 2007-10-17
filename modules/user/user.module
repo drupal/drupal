@@ -1415,16 +1415,11 @@ function user_edit($category = 'account') {
     drupal_set_message(t('The account does not exist or has already been deleted.'));
     drupal_goto('admin/user/user');
   }
+
   $edit = $_POST['op'] ? $_POST : (array)$account;
 
   if (arg(2) == 'delete') {
-    if (!empty($edit['confirm'])) {
-      user_delete($edit, $account->uid);
-      drupal_goto('admin/user/user');
-    }
-    else {
-      return drupal_get_form('user_confirm_delete', $account->name, $account->uid);
-    }
+    return drupal_get_form('user_confirm_delete', $account->name, $account->uid);
   }
   else if ($_POST['op'] == t('Delete')) {
     if ($_REQUEST['destination']) {
@@ -1449,11 +1444,18 @@ function user_edit($category = 'account') {
 }
 
 function user_confirm_delete($name, $uid) {
-  return confirm_form(array(),
+  $form['uid'] = array('#type' => 'value', '#value' => $uid);
+  return confirm_form($form,
     t('Are you sure you want to delete the account %name?', array('%name' => $name)),
     'user/'. $uid,
     t('All submissions made by this user will be attributed to the anonymous account. This action cannot be undone.'),
     t('Delete'), t('Cancel'));
+}
+
+function user_confirm_delete_submit($form_id, $form_values) {
+  $account = user_load(array('uid' => $form_values['uid']));
+  user_delete((array) $account, $form_values['uid']);
+  return 'admin/user/user';
 }
 
 /**

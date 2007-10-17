@@ -1,7 +1,13 @@
 // $Id$
 
-Drupal 5.3, xxxx-xx-xx
+Drupal 5.3, 2007-10-17
 ----------------------
+- fixed a variety of small bugs.
+- fixed a security issue (HTTP response splitting), see SA-2007-024
+- fixed a security issue (Arbitrary code execution via installer), see SA-2007-025
+- fixed a security issue (Cross site scripting via uploads), see SA-2007-026
+- fixed a security issue (User deletion cross site request forgery), see SA-2007-029
+- fixed a security issue (API handling of unpublished comment), see SA-2007-030
 
 Drupal 5.2, 2007-07-26
 ----------------------
@@ -91,6 +97,12 @@ Drupal 5.0, 2007-01-15
     * split up and removed drupal.css.
     * added nested lists generation.
     * added a self-clearing block class.
+
+Drupal 4.7.8, 2007-10-17
+------------------------
+- fixed a security issue (HTTP response splitting), see SA-2007-024
+- fixed a security issue (Cross site scripting via uploads), see SA-2007-026
+- fixed a security issue (API handling of unpublished comment), see SA-2007-030
 
 Drupal 4.7.7, 2007-07-26
 ------------------------
