@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.194 2007/10/05 14:50:25 goba Exp $
+// $Id: bootstrap.inc,v 1.195 2007/10/17 12:11:30 dries Exp $
 
 /**
  * @file
@@ -745,6 +745,7 @@ function watchdog($type, $message, $variables = array(), $severity = WATCHDOG_NO
  * @param $type
  *   The type of the message. One of the following values are possible:
  *   - 'status'
+ *   - 'warning'
  *   - 'error'
  */
 function drupal_set_message($message = NULL, $type = 'status') {
