@@ -157,7 +157,7 @@ function upload_settings() {
   foreach ($roles as $rid => $role) {
     $form["settings_role_$rid"] = array('#type' => 'fieldset', '#title' => t('Settings for %role', array('%role' => theme('placeholder', $role))), '#collapsible' => TRUE, '#collapsed' => TRUE);
     $form["settings_role_$rid"]["upload_extensions_$rid"] = array(
-      '#type' => 'textfield', '#title' => t('Permitted file extensions'), '#default_value' => variable_get("upload_extensions_$rid", 'jpg jpeg gif png txt html doc xls pdf ppt pps odt ods odp'),
+      '#type' => 'textfield', '#title' => t('Permitted file extensions'), '#default_value' => variable_get("upload_extensions_$rid", 'jpg jpeg gif png txt doc xls xls pdf ppt pps odt ods odp'),
       '#maxlength' => 255, '#description' => t('Extensions that users in this role can upload. Separate extensions with a space and do not include the leading dot.')
     );
     $form["settings_role_$rid"]["upload_uploadsize_$rid"] = array(
@@ -326,7 +326,7 @@ function _upload_validate(&$node) {
           $total_usersize = upload_space_used($user->uid) + $filesize;
           $error = array();
           foreach ($user->roles as $rid => $name) {
-            $extensions = variable_get("upload_extensions_$rid", 'jpg jpeg gif png txt html doc xls pdf ppt pps odt ods odp');
+            $extensions = variable_get("upload_extensions_$rid", 'jpg jpeg gif png txt doc xls xls pdf ppt pps odt ods odp');
             $uploadsize = variable_get("upload_uploadsize_$rid", 1) * 1024 * 1024;
             $usersize = variable_get("upload_usersize_$rid", 10) * 1024 * 1024;
 
@@ -538,7 +538,7 @@ function upload_munge_filename($filename, $extensions = NULL, $alerts = 1) {
     if (!isset($extensions)) {
       $extensions = '';
       foreach ($user->roles as $rid => $name) {
-        $extensions .= ' '. variable_get("upload_extensions_$rid", variable_get('upload_extensions_default', 'jpg jpeg gif png txt html doc xls pdf ppt pps odt ods odp'));
+        $extensions .= ' '. variable_get("upload_extensions_$rid", variable_get('upload_extensions_default', 'jpg jpeg gif png txt doc xls xls pdf ppt pps odt ods odp'));
       }
 
     }

@@ -6,7 +6,7 @@
  * Configuration system that lets administrators modify the workings of the site.
  */
 
-define('VERSION', '4.7.8 dev');
+define('VERSION', '4.7.8');
 
 /**
  * Implementation of hook_help().
@@ -1235,8 +1235,9 @@ function system_theme_settings($key = '') {
  * offered to go back to the item that is being changed in case the user changes
  * his/her mind.
  *
- * You should use $GLOBALS['values']['edit'][$name] (where $name is usually 'confirm') to
- * check if the confirmation was successful.
+ * If the submit handler for this form is invoked, the user successfully
+ * confirmed the action. You should never directly inspect $_POST to see if an
+ * action was confirmed.
  *
  * @param $form_id
  *   The unique form identifier. Used by the form API to construct the theme.

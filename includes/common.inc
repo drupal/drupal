@@ -235,10 +235,6 @@ function drupal_get_destination() {
  * 'user login'-block in a sidebar.  The function drupal_get_destination()
  * can be used to help set the destination URL.
  *
- * It is advised to use drupal_goto() instead of PHP's header(), because
- * drupal_goto() will append the user's session ID to the URI when PHP is
- * compiled with "--enable-trans-sid".
- *
  * This function ends the request; use it rather than a print theme('page')
  * statement in your menu callback.
  *
@@ -260,6 +256,8 @@ function drupal_goto($path = '', $query = NULL, $fragment = NULL) {
   }
 
   $url = url($path, $query, $fragment, TRUE);
+  // Remove newlines from the URL to avoid header injection attacks.
+  $url = str_replace(array("\n", "\r"), '', $url);
 
   // Before the redirect, allow modules to react to the end of the page request.
   module_invoke_all('exit', $url);
