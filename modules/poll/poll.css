@@ -30,7 +30,6 @@
 .poll .vote-form .choices .title {
   font-weight: bold;
 }
-
-.node-form .poll-form fieldset {
-  display: block;
+.node-form #edit-poll-more {
+  margin: 0;
 }

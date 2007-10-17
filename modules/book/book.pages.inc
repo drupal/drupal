@@ -281,11 +281,11 @@ function book_form_update() {
       drupal_json(array('status' => TRUE, 'data' => $output));
     }
     else {
-      drupal_json(array('status' => FALSE, 'data' => ''));    
+      drupal_json(array('status' => FALSE, 'data' => ''));
     }
   }
   else {
-    drupal_json(array('status' => FALSE, 'data' => ''));    
+    drupal_json(array('status' => FALSE, 'data' => ''));
   }
   exit();
 }

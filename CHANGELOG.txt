@@ -48,6 +48,7 @@ Drupal 6.0, xxxx-xx-xx (development version)
     * Can now specify the minimum PHP version required for a module within the
       .info file.
     * Dynamically check password strength and confirmation.
+    * Refactored poll administration.
 - Theme system:
     * Added .info files to themes and made it easier to specify regions and
       features.

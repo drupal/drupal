@@ -75,7 +75,7 @@ function book_admin_edit($form_state, $node) {
     '#prefix' => '<div id="book-admin-edit-wrapper">',
     '#suffix' => '</div>',
   );
-  
+
   $form['#node'] = $node;
   $form['table'] = _book_admin_table($node);
   $form['save'] = array(
