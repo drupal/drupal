@@ -682,8 +682,11 @@ function request_uri() {
     if (isset($_SERVER['argv'])) {
       $uri = $_SERVER['SCRIPT_NAME'] .'?'. $_SERVER['argv'][0];
     }
-    else {
+    elseif (isset($_SERVER['QUERY_STRING'])) {
       $uri = $_SERVER['SCRIPT_NAME'] .'?'. $_SERVER['QUERY_STRING'];
+    }
+    else {
+      $uri = $_SERVER['SCRIPT_NAME'];
     }
   }
 
