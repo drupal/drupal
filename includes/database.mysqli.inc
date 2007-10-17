@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysqli.inc,v 1.46 2007/10/12 14:51:23 goba Exp $
+// $Id: database.mysqli.inc,v 1.47 2007/10/17 12:47:28 goba Exp $
 
 /**
  * @file
@@ -88,7 +88,7 @@ function db_connect($url) {
     drupal_set_header('HTTP/1.1 503 Service Unavailable');
     drupal_set_title('Unable to connect to database server');
     print theme('maintenance_page', '<p>If you still have to install Drupal, proceed to the <a href="'. base_path() .'install.php">installation page</a>.</p>
-<p>If you have already finished installed Drupal, this either means that the username and password information in your <code>settings.php</code> file is incorrect or that we can\'t connect to the MySQL database server. This could mean your hosting provider\'s database server is down.</p>
+<p>If you have already finished installing Drupal, this either means that the username and password information in your <code>settings.php</code> file is incorrect or that we can\'t connect to the MySQL database server. This could mean your hosting provider\'s database server is down.</p>
 <p>The MySQL error was: '. theme('placeholder', mysqli_connect_error()) .'.</p>
 <p>Currently, the username is '. theme('placeholder', $url['user']) .' and the database server is '. theme('placeholder', $url['host']) .'.</p>
 <ul>
