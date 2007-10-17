@@ -55,7 +55,7 @@ function upload_admin_settings_validate($form, &$form_state) {
  * Menu callback for the upload settings form.
  */
 function upload_admin_settings() {
-  $upload_extensions_default = variable_get('upload_extensions_default', 'jpg jpeg gif png txt html doc xls pdf ppt pps odt ods odp');
+  $upload_extensions_default = variable_get('upload_extensions_default', 'jpg jpeg gif png txt doc xls pdf ppt pps odt ods odp');
   $upload_uploadsize_default = variable_get('upload_uploadsize_default', 1);
   $upload_usersize_default = variable_get('upload_usersize_default', 1);
 

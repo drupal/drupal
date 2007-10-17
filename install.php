@@ -208,6 +208,14 @@ function install_change_settings($profile = 'default', $install_locale = '') {
     exit;
   }
 
+  if ($db_url == 'mysql://username:password@localhost/databasename') {
+    $db_user = $db_pass = $db_path = '';
+  }
+  elseif (!empty($db_url)) {
+    // Do not install over a configured settings.php.
+    install_already_done_error();
+  }
+
   $output = drupal_get_form('install_settings_form', $profile, $install_locale, $settings_file, $db_url, $db_type, $db_prefix, $db_user, $db_pass, $db_host, $db_port, $db_path);
   drupal_set_title(st('Database configuration'));
   print theme('install_page', $output);
