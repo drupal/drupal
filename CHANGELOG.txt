@@ -1,6 +1,6 @@
-// $Id: CHANGELOG.txt,v 1.227 2007/10/17 12:34:15 dries Exp $
+// $Id: CHANGELOG.txt,v 1.228 2007/10/17 21:47:13 goba Exp $
 
-Drupal 6.0, xxxx-xx-xx (development version)
+Drupal 6.0-beta2, 2007-10-17
 ----------------------
 - New, faster and better menu system.
 - New watchdog as a hook functionality.
@@ -92,6 +92,27 @@ Drupal 6.0, xxxx-xx-xx (development version)
 - Removed drupal.module. The functionality lives on as the Site network
   contributed module (http://drupal.org/project/site_network).
 
+Drupal 5.3, 2007-10-17
+----------------------
+- fixed a variety of small bugs.
+- fixed a security issue (HTTP response splitting), see SA-2007-024
+- fixed a security issue (Arbitrary code execution via installer), see SA-2007-025
+- fixed a security issue (Cross site scripting via uploads), see SA-2007-026
+- fixed a security issue (User deletion cross site request forgery), see SA-2007-029
+- fixed a security issue (API handling of unpublished comment), see SA-2007-030
+
+Drupal 5.2, 2007-07-26
+----------------------
+- changed hook_link() $teaser argument to match documentation.
+- fixed a variety of small bugs.
+- fixed a security issue (cross-site request forgery), see SA-2007-017
+- fixed a security issue (cross-site scripting), see SA-2007-018
+
+Drupal 5.1, 2007-01-29
+----------------------
+- fixed security issue (code execution), see SA-2007-005
+- fixed a variety of small bugs.
+
 Drupal 5.0, 2007-01-15
 ----------------------
 - Completely retooled the administration page
@@ -168,6 +189,20 @@ Drupal 5.0, 2007-01-15
     * Split up and removed drupal.css.
     * Added nested lists generation.
     * Added a self-clearing block class.
+
+Drupal 4.7.8, 2007-10-17
+----------------------
+- fixed a security issue (HTTP response splitting), see SA-2007-024
+- fixed a security issue (Cross site scripting via uploads), see SA-2007-026
+- fixed a security issue (API handling of unpublished comment), see SA-2007-030
+
+Drupal 4.7.7, 2007-07-26
+------------------------
+- fixed security issue (XSS), see SA-2007-018
+
+Drupal 4.7.6, 2007-01-29
+------------------------
+- fixed security issue (code execution), see SA-2007-005
 
 Drupal 4.7.5, 2007-01-05
 ------------------------

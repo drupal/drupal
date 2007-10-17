@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.185 2007/10/12 10:41:47 goba Exp $
+// $Id: upload.module,v 1.186 2007/10/17 21:47:14 goba Exp $
 
 /**
  * @file
@@ -120,9 +120,9 @@ function upload_menu_alter(&$items) {
 function _upload_file_limits($user) {
   $file_limit = variable_get('upload_uploadsize_default', 1);
   $user_limit = variable_get('upload_usersize_default', 1);
-  $all_extensions = explode(' ', variable_get('upload_extensions_default', 'jpg jpeg gif png txt html doc xls pdf ppt pps odt ods odp'));
+  $all_extensions = explode(' ', variable_get('upload_extensions_default', 'jpg jpeg gif png txt doc xls pdf ppt pps odt ods odp'));
   foreach ($user->roles as $rid => $name) {
-    $extensions = variable_get("upload_extensions_$rid", variable_get('upload_extensions_default', 'jpg jpeg gif png txt html doc xls pdf ppt pps odt ods odp'));
+    $extensions = variable_get("upload_extensions_$rid", variable_get('upload_extensions_default', 'jpg jpeg gif png txt doc xls pdf ppt pps odt ods odp'));
     $all_extensions = array_merge($all_extensions, explode(' ', $extensions));
 
     // A zero value indicates no limit, take the least restrictive limit.

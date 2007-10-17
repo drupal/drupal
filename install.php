@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.79 2007/10/16 11:41:19 goba Exp $
+// $Id: install.php,v 1.80 2007/10/17 21:47:13 goba Exp $
 
 require_once './includes/install.inc';
 
@@ -206,6 +206,14 @@ function install_change_settings($profile = 'default', $install_locale = '') {
     drupal_set_title(st('Drupal database setup'));
     print theme('install_page', '');
     exit;
+  }
+
+  if ($db_url == 'mysql://username:password@localhost/databasename') {
+    $db_user = $db_pass = $db_path = '';
+  }
+  elseif (!empty($db_url)) {
+    // Do not install over a configured settings.php.
+    install_already_done_error();
   }
 
   $output = drupal_get_form('install_settings_form', $profile, $install_locale, $settings_file, $db_url, $db_type, $db_prefix, $db_user, $db_pass, $db_host, $db_port, $db_path);

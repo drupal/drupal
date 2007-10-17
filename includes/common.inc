@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.700 2007/10/12 14:10:17 dries Exp $
+// $Id: common.inc,v 1.701 2007/10/17 21:47:13 goba Exp $
 
 /**
  * @file
@@ -268,11 +268,8 @@ function drupal_get_destination() {
  * 'user login'-block in a sidebar. The function drupal_get_destination()
  * can be used to help set the destination URL.
  *
- * It is advised to use drupal_goto() instead of PHP's header(), because
- * drupal_goto() will append the user's session ID to the URI when PHP is
- * compiled with "--enable-trans-sid". In addition, Drupal will ensure that
- * messages set by drupal_set_message() and other session data are written to
- * the database before the user is redirected.
+ * Drupal will ensure that messages set by drupal_set_message() and other
+ * session data are written to the database before the user is redirected.
  *
  * This function ends the request; use it rather than a print theme('page')
  * statement in your menu callback.
@@ -305,6 +302,8 @@ function drupal_goto($path = '', $query = NULL, $fragment = NULL, $http_response
   }
 
   $url = url($path, array('query' => $query, 'fragment' => $fragment, 'absolute' => TRUE));
+  // Remove newlines from the URL to avoid header injection attacks.
+  $url = str_replace(array("\n", "\r"), '', $url);
 
   // Allow modules to react to the end of the page request before redirecting.
   module_invoke_all('exit', $url);
@@ -558,7 +557,7 @@ function drupal_error_handler($errno, $message, $filename, $line, $context) {
     return;
   }
 
-  if ($errno & (E_ALL)) {
+  if ($errno & (E_ALL ^ E_NOTICE)) {
     $types = array(1 => 'error', 2 => 'warning', 4 => 'parse error', 8 => 'notice', 16 => 'core error', 32 => 'core warning', 64 => 'compile error', 128 => 'compile warning', 256 => 'user error', 512 => 'user warning', 1024 => 'user notice', 2048 => 'strict warning');
 
     // For database errors, we want the line number/file name of the place that
