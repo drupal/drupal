@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.module,v 1.7 2007/10/15 09:40:42 goba Exp $
+// $Id: openid.module,v 1.8 2007/10/17 12:34:16 dries Exp $
 
 /**
  * @file
@@ -168,7 +168,7 @@ function openid_begin($claimed_id, $return_to = '', $form_values = array()) {
   else {
     $identity = $claimed_id;
   }
-  
+
   if (isset($services[0]['types']) && is_array($services[0]['types']) && in_array(OPENID_NS_2_0 .'/server', $services[0]['types'])) {
     $identity = 'http://openid.net/identifier_select/2.0';
   }

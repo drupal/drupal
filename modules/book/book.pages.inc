@@ -1,5 +1,5 @@
 <?php
-// $Id: book.pages.inc,v 1.2 2007/10/15 19:33:27 goba Exp $
+// $Id: book.pages.inc,v 1.3 2007/10/17 12:34:16 dries Exp $
 
 /**
  * @file
@@ -281,11 +281,11 @@ function book_form_update() {
       drupal_json(array('status' => TRUE, 'data' => $output));
     }
     else {
-      drupal_json(array('status' => FALSE, 'data' => ''));    
+      drupal_json(array('status' => FALSE, 'data' => ''));
     }
   }
   else {
-    drupal_json(array('status' => FALSE, 'data' => ''));    
+    drupal_json(array('status' => FALSE, 'data' => ''));
   }
   exit();
 }

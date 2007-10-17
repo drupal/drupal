@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.226 2007/10/10 10:40:13 goba Exp $
+// $Id: CHANGELOG.txt,v 1.227 2007/10/17 12:34:15 dries Exp $
 
 Drupal 6.0, xxxx-xx-xx (development version)
 ----------------------
@@ -48,6 +48,7 @@ Drupal 6.0, xxxx-xx-xx (development version)
     * Can now specify the minimum PHP version required for a module within the
       .info file.
     * Dynamically check password strength and confirmation.
+    * Refactored poll administration.
 - Theme system:
     * Added .info files to themes and made it easier to specify regions and
       features.

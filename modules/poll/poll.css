@@ -1,4 +1,4 @@
-/* $Id: poll.css,v 1.4 2007/08/02 10:46:53 dries Exp $ */
+/* $Id: poll.css,v 1.5 2007/10/17 12:34:16 dries Exp $ */
 
 .poll .bar {
   height: 1em;
@@ -30,7 +30,6 @@
 .poll .vote-form .choices .title {
   font-weight: bold;
 }
-
-.node-form .poll-form fieldset {
-  display: block;
+.node-form #edit-poll-more {
+  margin: 0;
 }

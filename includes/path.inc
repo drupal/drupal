@@ -1,5 +1,5 @@
 <?php
-// $Id: path.inc,v 1.17 2007/10/16 14:10:33 goba Exp $
+// $Id: path.inc,v 1.18 2007/10/17 12:34:16 dries Exp $
 
 /**
  * @file
@@ -234,7 +234,7 @@ function drupal_is_front_page() {
  */
 function drupal_match_path($path, $patterns) {
   static $regexps;
-  
+
   if (!isset($regexps[$patterns])) {
     $regexps[$patterns] = '/^('. preg_replace(array('/(\r\n?|\n)/', '/\\\\\*/', '/(^|\|)\\\\<front\\\\>($|\|)/'), array('|', '.*', '\1'. preg_quote(variable_get('site_frontpage', 'node'), '/') .'\2'), preg_quote($patterns, '/')) .')$/';
   }

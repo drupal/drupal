@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.243 2007/10/11 16:37:43 goba Exp $
+// $Id: poll.module,v 1.244 2007/10/17 12:34:16 dries Exp $
 
 /**
  * @file
@@ -34,6 +34,9 @@ function poll_theme() {
   return array(
     'poll_vote' => array(
       'template' => 'poll-vote',
+      'arguments' => array('form' => NULL),
+    ),
+    'poll_choices' => array(
       'arguments' => array('form' => NULL),
     ),
     'poll_results' => array(
@@ -96,6 +99,14 @@ function poll_menu() {
     'type' => MENU_LOCAL_TASK,
     'file' => 'poll.pages.inc',
   );
+
+  $items['poll/js'] = array(
+    'title' => 'Javascript Choice Form',
+    'page callback' => 'poll_choice_js',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
   return $items;
 }
 
@@ -168,70 +179,80 @@ function poll_node_info() {
 function poll_form(&$node, $form_state) {
   $admin = user_access('administer nodes');
   $type = node_get_types('type', $node);
+
+  $form = array(
+    '#cache' => TRUE,
+  );
+
   $form['title'] = array(
     '#type' => 'textfield',
     '#title' => check_plain($type->title_label),
     '#required' => TRUE,
     '#default_value' => $node->title,
-    '#weight' => -1
+    '#weight' => -5,
   );
 
-  if (isset($form_state['choices'])) {
-    $choices = $form_state['choices'];
+  if (isset($form_state['choice_count'])) {
+    $choice_count = $form_state['choice_count'];
   }
   else {
-    $choices = max(2, empty($node->choice) ? 5 : count($node->choice));
+    $choice_count = max(2, empty($node->choice) ? 2 : count($node->choice));
   }
 
-  $form['choices'] = array(
-    '#type' => 'hidden',
-    '#value' => $choices,
-  );
-
-  // Poll choices
-  $form['choice'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Choices'),
-    '#prefix' => '<div class="poll-form">',
+  // Add a wrapper for the choices and more button.
+  $form['choice_wrapper'] = array(
+    '#tree' => FALSE,
+    '#weight' => -5,
+    '#prefix' => '<div class="clear-block" id="poll-choice-wrapper">',
     '#suffix' => '</div>',
-    '#tree' => TRUE
   );
 
-  // We'll manually set the #parents property of this checkbox so that
-  // it appears in the fieldset visually, but its value won't pollute
-  // the $form_state['values']['choice'] array.
-  $form['choice']['morechoices'] = array(
-    '#type' => 'checkbox',
-    '#parents' => array('morechoices'),
-    '#title' => t('Need more choices'),
-    '#default_value' => 0,
-    '#description' => t("If the amount of boxes above isn't enough, check this box and click the Preview button below to add some more."),
-    '#weight' => 1,
+  // Container for just the poll choices.
+  $form['choice_wrapper']['choice'] = array(
+    '#prefix' => '<div id="poll-choices">',
+    '#suffix' => '</div>',
+    '#theme' => 'poll_choices',
   );
 
-  for ($a = 0; $a < $choices; $a++) {
-    $form['choice'][$a]['chtext'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Choice @n', array('@n' => ($a + 1))),
-      '#default_value' => isset($node->choice[$a]) ? $node->choice[$a]['chtext'] : '',
-    );
+  // Add the current choices to the form.
+  for ($delta = 0; $delta < $choice_count; $delta++) {
+    $text = isset($node->choice[$delta]['chtext']) ? $node->choice[$delta]['chtext'] : '';
+    $votes = isset($node->choice[$delta]['chvotes']) ? $node->choice[$delta]['chvotes'] : 0;
 
-    if ($admin) {
-      $form['choice'][$a]['chvotes'] = array(
-        '#type' => 'textfield',
-        '#title' => t('Votes for choice @n', array('@n' => ($a + 1))),
-        '#default_value' => isset($node->choice[$a]) ? (int)$node->choice[$a]['chvotes'] : 0,
-        '#size' => 5, '#maxlength' => 7
-      );
-    }
+    $form['choice_wrapper']['choice'][$delta] = _poll_choice_form($delta, $text, $votes);
   }
+
+  // We name our button 'poll_more' to avoid conflicts with other modules using
+  // AHAH-enabled buttons with the id 'more'.
+  $form['choice_wrapper']['poll_more'] = array(
+    '#type' => 'submit',
+    '#value' => t('More choices'),
+    '#description' => t("If the amount of boxes above isn't enough, click here to add more choices."),
+    '#weight' => 1,
+    '#submit' => array('poll_more_choices_submit'), // If no javascript action.
+    '#ahah' => array(
+      'path' => 'poll/js',
+      'wrapper' => 'poll-choices',
+      'method' => 'replace',
+      'effect' => 'fade',
+    ),
+  );
+
+  // If we're using the javascript version (99% use-case), change the button
+  // title to 'Add another choice' to reflect the javascript behavior.
+  drupal_add_js("if (Drupal.jsEnabled) { $(document).ready(function() { $('#edit-poll-more').val('". t('Add another choice') ."'); }); }", 'inline');
 
   // Poll attributes
   $_duration = array(0 => t('Unlimited')) + drupal_map_assoc(array(86400, 172800, 345600, 604800, 1209600, 2419200, 4838400, 9676800, 31536000), "format_interval");
   $_active = array(0 => t('Closed'), 1 => t('Active'));
 
   if ($admin) {
-    $form['settings'] = array('#type' => 'fieldset', '#title' => t('Settings'));
+    $form['settings'] = array(
+      '#type' => 'fieldset',
+      '#collapsible' => TRUE,
+      '#title' => t('Poll settings'),
+      '#weight' => -4,
+    );
 
     $form['settings']['active'] = array(
       '#type' => 'radios',
@@ -253,16 +274,93 @@ function poll_form(&$node, $form_state) {
 }
 
 /**
+ * Submit handler to add more choices to a poll form. This handler is used when
+ * javascript is not available. It makes changes to the form state and the
+ * entire form is rebuilt during the page reload.
+ */
+function poll_more_choices_submit($form, &$form_state) {
+  // Set the form to rebuild and run submit handlers.
+  node_form_submit_build_node($form, $form_state);
+
+  // Make the changes we want to the form state.
+  if ($form_state['values']['poll_more']) {
+    $form_state['choice_count'] = count($form_state['values']['choice']) + 5;
+  }
+}
+
+function _poll_choice_form($delta, $value = '', $votes = 0) {
+  $admin = user_access('administer nodes');
+
+  $form = array(
+    '#tree' => TRUE,
+  );
+
+  // We'll manually set the #parents property of these fields so that
+  // their values appear in the $form_state['values']['choice'] array.
+  $form['chtext'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Choice @n', array('@n' => ($delta + 1))),
+    '#default_value' => $value,
+    '#parents' => array('choice', $delta,'chtext'),
+  );
+
+  if ($admin) {
+    $form['chvotes'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Votes for choice @n', array('@n' => ($delta + 1))),
+      '#default_value' => $votes,
+      '#size' => 5,
+      '#maxlength' => 7,
+      '#parents' => array('choice', $delta, 'chvotes'),
+    );
+  }
+
+  return $form;
+}
+
+/**
+ * Menu callback for AHAH additions.
+ */
+function poll_choice_js() {
+  $delta = count($_POST['choice']);
+
+  // Build our new form element.
+  $form_element = _poll_choice_form($delta);
+  drupal_alter('form', $form_element, array(), 'poll_choice_js');
+
+  // Add the new element to the stored form state. Without adding the element
+  // to the form, Drupal is not aware of this new elements existence and will
+  // not process it. We retreive the cached form, add the element, and resave.
+  $cache = cache_get('form_'. $_POST['form_build_id'], 'cache_form');
+  $cache->data['choice_wrapper']['choice'][$delta] = $form_element;
+  cache_set('form_'. $_POST['form_build_id'], $cache->data, 'cache_form', $cache->expire);
+
+  // Build the new form.
+  $form_state = array('submitted' => FALSE);
+  $form = $cache->data;
+  $form += array(
+    '#post' => $_POST,
+    '#programmed' => FALSE,
+  );
+  $form = form_builder('poll_node_form', $form, $form_state);
+
+  // Render the new output.
+  $choice_form = $form['choice_wrapper']['choice'];
+  unset($choice_form['#prefix'], $choice_form['#suffix']); // Prevent duplicate wrappers.
+  $choice_form[$delta]['#attributes']['class'] = empty($choice_form[$delta]['#attributes']['class']) ? 'ahah-new-content' : $choice_form[$delta]['#attributes']['class'] .' ahah-new-content';
+  $choice_form[$delta]['chvotes']['#value'] = 0;
+  $output = theme('status_messages') . drupal_render($choice_form);
+
+  drupal_json(array('status' => TRUE, 'data' => $output));
+}
+
+/**
  * Implementation of hook_submit().
  */
 function poll_node_form_submit(&$form, &$form_state) {
   // Renumber fields
   $form_state['values']['choice'] = array_values($form_state['values']['choice']);
   $form_state['values']['teaser'] = poll_teaser((object)$form_state['values']);
-  $form_state['choices'] = $form_state['values']['choices'];
-  if ($form_state['values']['morechoices']) {
-    $form_state['choices'] *= 2;
-  }
 }
 
 /**
@@ -528,6 +626,41 @@ function poll_view_results(&$node, $teaser, $page, $block) {
   }
 
   return theme('poll_results', $node->title, $poll_results, $total_votes, isset($node->links) ? $node->links : array(), $block, $node->nid, isset($node->vote) ? $node->vote : NULL);
+}
+
+
+/**
+ * Theme the admin poll form for choices.
+ */
+function theme_poll_choices($form) {
+  $rows = array();
+  $headers = array(
+    t('Choice'),
+    t('Vote count'),
+  );
+
+  foreach (element_children($form) as $key) {
+    // No need to print the field title every time.
+    unset($form[$key]['chtext']['#title'], $form[$key]['chvotes']['#title']);
+
+    // Build the table row.
+    $row = array(
+      'data' => array(
+        array('data' => drupal_render($form[$key]['chtext']), 'class' => 'poll-chtext'),
+        array('data' => drupal_render($form[$key]['chvotes']), 'class' => 'poll-chvotes'),
+      ),
+    );
+
+    // Add additional attributes to the row, such as a class for this row.
+    if (isset($form[$key]['#attributes'])) {
+      $row = array_merge($row, $form[$key]['#attributes']);
+    }
+    $rows[] = $row;
+  }
+
+  $output = theme('table', $headers, $rows);
+  $output .= drupal_render($form);
+  return $output;
 }
 
 /**

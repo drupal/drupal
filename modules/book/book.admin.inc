@@ -1,5 +1,5 @@
 <?php
-// $Id: book.admin.inc,v 1.4 2007/10/15 19:33:27 goba Exp $
+// $Id: book.admin.inc,v 1.5 2007/10/17 12:34:16 dries Exp $
 
 /**
  * @file
@@ -75,7 +75,7 @@ function book_admin_edit($form_state, $node) {
     '#prefix' => '<div id="book-admin-edit-wrapper">',
     '#suffix' => '</div>',
   );
-  
+
   $form['#node'] = $node;
   $form['table'] = _book_admin_table($node);
   $form['save'] = array(
