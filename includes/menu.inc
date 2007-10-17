@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.218 2007/10/17 14:46:34 goba Exp $
+// $Id: menu.inc,v 1.219 2007/10/17 19:42:02 goba Exp $
 
 /**
  * @file
@@ -1796,6 +1796,8 @@ function _menu_find_router_path($menu, $link_path) {
  * @param $link_title
  *   Title of the link to insert or new title to update the link to.
  *   Unused for delete.
+ * @return
+ *   The insert op returns the mlid of the new item. Others op return NULL.
  */
 function menu_link_maintain($module, $op, $link_path, $link_title) {
   switch ($op) {
@@ -1805,7 +1807,7 @@ function menu_link_maintain($module, $op, $link_path, $link_title) {
         'link_path' => $link_path,
         'module' => $module,
       );
-      menu_link_save($menu_link);
+      return menu_link_save($menu_link);
       break;
     case 'update':
       db_query("UPDATE {menu_links} SET link_title = '%s' WHERE link_path = '%s' AND customized = 0 AND module  = '%s'", $link_title, $link_path, $module);
