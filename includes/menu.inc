@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.217 2007/10/16 13:48:11 goba Exp $
+// $Id: menu.inc,v 1.218 2007/10/17 14:46:34 goba Exp $
 
 /**
  * @file
@@ -336,7 +336,34 @@ function _menu_load_objects($item, &$map) {
     $path_map = $map;
     foreach ($load_functions as $index => $function) {
       if ($function) {
-        $return = $function(isset($path_map[$index]) ? $path_map[$index] : '');
+        $value = isset($path_map[$index]) ? $path_map[$index] : '';
+        if (is_array($function)) {
+          // Set up arguments for the load function. These were pulled from
+          // 'load arguments' in the hook_menu() entry, but they need
+          // some processing. In this case the $function is the key to the
+          // load_function array, and the value is the list of arguments.
+          list($function, $args) = each($function);
+
+          // Some arguments are placeholders for dynamic items to process.
+          foreach ($args as $i => $arg) {
+            if ($arg == '%index') {
+              // Pass on argument index to the load function, so multiple
+              // occurances of the same placeholder can be identified.
+              $args[$i] = $index;
+            }
+            if ($arg == '%map') {
+              // Pass on menu map by reference. The accepting function must
+              // also declare this as a reference if it wants to modify
+              // the map.
+              $args[$i] = &$map;
+            }
+          }
+          array_unshift($args, $value);
+          $return = call_user_func_array($function, $args);
+        }
+        else {
+          $return = $function($value);
+        }
         // If callback returned an error or there is no callback, trigger 404.
         if ($return === FALSE) {
           $item['access'] = FALSE;
@@ -1937,7 +1964,11 @@ function _menu_router_build($callbacks) {
             $match = TRUE;
           }
           if (function_exists($matches[1] .'_load')) {
-            $load_functions[$k] = $matches[1] .'_load';
+            $function = $matches[1] .'_load';
+            // Create an array of arguments that will be passed to the _load
+            // function when this menu path is checked, if 'load arguments'
+            // exists.
+            $load_functions[$k] = isset($item['load arguments']) ? array($function => $item['load arguments']) : $function;
             $match = TRUE;
           }
         }
