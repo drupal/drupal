@@ -1,12 +1,12 @@
 <?php
-// $Id: system.module,v 1.542 2007/10/17 21:47:13 goba Exp $
+// $Id: system.module,v 1.543 2007/10/17 21:59:31 goba Exp $
 
 /**
  * @file
  * Configuration system that lets administrators modify the workings of the site.
  */
 
-define('VERSION', '6.0-beta2');
+define('VERSION', '6.0-dev');
 define('DRUPAL_CORE_COMPATIBILITY', '6.x');
 
 define('DRUPAL_MINIMUM_PHP',    '4.3.3');
