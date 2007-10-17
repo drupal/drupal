@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.540 2007/10/12 10:41:47 goba Exp $
+// $Id: system.module,v 1.541 2007/10/17 15:24:56 goba Exp $
 
 /**
  * @file
@@ -52,6 +52,10 @@ function system_help($path, $arg) {
       return $output;
     case 'admin/build/modules/uninstall':
       return '<p>'. t('The uninstall process removes all data related to a module. To uninstall a module, you must first disable it. Not all modules support this feature.') .'</p>';
+    case 'admin/build/block/configure':
+      if ($arg[4] == 'system' && $arg[5] == 0) {
+        return '<p>'. t('The <em>Powered by Drupal</em> block is an optional link to the home page of the Drupal project. While there is absolutely no requirement that sites feature this link, it may be used to show support for Drupal.') .'</p>';
+      }
     case 'admin/settings/actions':
     case 'admin/settings/actions/manage':
       $output = '<p>'. t('Actions are individual tasks that the system can do, such as unpublishing a piece of content or banning a user. Modules, such as the trigger module, can fire these actions when certain system events happen; for example, when a new post is added or when a user logs in. Modules may also provide additional actions.') .'</p>';
@@ -104,6 +108,9 @@ function system_theme() {
     'system_admin_by_module' => array(
       'arguments' => array('menu_items' => NULL),
       'file' => 'system.admin.inc',
+    ),
+    'system_powered_by' => array(
+      'arguments' => array('image_path' => NULL),
     ),
   ));
 }
@@ -481,6 +488,46 @@ function system_user($type, $edit, &$user, $category = NULL) {
     }
 
     return $form;
+  }
+}
+
+/**
+ * Generate a block with a promotional link to Drupal.org.
+ */
+function system_block($op = 'list', $delta = 0, $edit = NULL) {
+  switch($op) {
+    case 'list':
+      $blocks[0] = array(
+        'info' => t('Powered by Drupal'),
+        'weight' => '10',
+        'status' => 1,
+        'region' => 'footer',
+      );
+      return $blocks;
+    case 'configure':
+      // Compile a list of fields to show
+      $form['wrapper']['color'] = array(
+        '#type' => 'select',
+        '#title' => t('Badge color'),
+        '#default_value' => variable_get('drupal_badge_color', 'powered-blue'),
+        '#options' => array('powered-black' => t('Black'), 'powered-blue' => t('Blue'), 'powered-gray' => t('Gray')),
+      );
+      $form['wrapper']['size'] = array(
+        '#type' => 'select',
+        '#title' => t('Badge size'),
+        '#default_value' => variable_get('drupal_badge_size', '80x15'),
+        '#options' => array('80x15' => t('Small'), '88x31' => t('Medium'), '135x42' => t('Large')),
+      );
+      return $form;
+    case 'save':
+      variable_set('drupal_badge_color', $edit['color']);
+      variable_set('drupal_badge_size', $edit['size']);
+      break;
+    case 'view':
+      $image_path = 'misc/'. variable_get('drupal_badge_color', 'powered-blue') .'-'. variable_get('drupal_badge_size', '80x15') .'.png';
+      $block['subject'] = NULL; // Don't display a title
+      $block['content'] = theme('system_powered_by', $image_path);
+      return $block;
   }
 }
 
@@ -1638,4 +1685,9 @@ function _system_zonelist() {
     $zones[$zone] = format_date($timestamp, 'custom', variable_get('date_format_long', 'l, F j, Y - H:i') .' O', $zone);
   }
   return $zones;
+}
+
+function theme_system_powered_by($image_path) {
+  $image = theme('image', $image_path, t('Powered by Drupal, an open source content management system'), t('Powered by Drupal, an open source content management system'));
+  return l($image, 'http://drupal.org', array('html' => TRUE, 'absolute' => TRUE, 'external' => TRUE));
 }
