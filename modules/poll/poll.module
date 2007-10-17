@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.244 2007/10/17 12:34:16 dries Exp $
+// $Id: poll.module,v 1.245 2007/10/17 19:36:12 goba Exp $
 
 /**
  * @file
@@ -202,7 +202,7 @@ function poll_form(&$node, $form_state) {
   // Add a wrapper for the choices and more button.
   $form['choice_wrapper'] = array(
     '#tree' => FALSE,
-    '#weight' => -5,
+    '#weight' => -4,
     '#prefix' => '<div class="clear-block" id="poll-choice-wrapper">',
     '#suffix' => '</div>',
   );
@@ -251,7 +251,7 @@ function poll_form(&$node, $form_state) {
       '#type' => 'fieldset',
       '#collapsible' => TRUE,
       '#title' => t('Poll settings'),
-      '#weight' => -4,
+      '#weight' => -3,
     );
 
     $form['settings']['active'] = array(
