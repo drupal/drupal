@@ -745,6 +745,7 @@ function watchdog($type, $message, $variables = array(), $severity = WATCHDOG_NO
  * @param $type
  *   The type of the message. One of the following values are possible:
  *   - 'status'
+ *   - 'warning'
  *   - 'error'
  */
 function drupal_set_message($message = NULL, $type = 'status') {
