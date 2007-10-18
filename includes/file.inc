@@ -750,7 +750,8 @@ function file_validate_image_resolution(&$file, $maximum_dimensions = 0, $minimu
  */
 function file_save_data($data, $dest, $replace = FILE_EXISTS_RENAME) {
   $temp = file_directory_temp();
-  $file = tempnam($temp, 'file');
+  // On Windows, tempnam() requires an absolute path, so we use realpath().
+  $file = tempnam(realpath($temp), 'file');
   if (!$fp = fopen($file, 'wb')) {
     drupal_set_message(t('The file could not be created.'), 'error');
     return 0;
