@@ -378,9 +378,9 @@ function system_theme_settings(&$form_state, $key = '') {
   );
   foreach ($toggles as $name => $title) {
     if ((!$key) || in_array($name, $features)) {
-      // disable search box if search.module is disabled
       $form['theme_settings']['toggle_'. $name] = array('#type' => 'checkbox', '#title' => $title, '#default_value' => $settings['toggle_'. $name]);
-      if (isset($disabled[$name])) {
+      // Disable checkboxes for features not supported in the current configuration.
+      if (isset($disabled['toggle_'. $name])) {
         $form['theme_settings']['toggle_'. $name]['#disabled'] = TRUE;
       }
     }
