@@ -3140,7 +3140,7 @@ function drupal_write_record($table, &$object, $update = array()) {
     if ($info['type'] == 'serial') {
       $serials[] = $field;
       // Ignore values for serials when inserting data. Unsupported.
-      $object->$field = 'NULL';
+      unset($object->$field);
     }
 
     // Build arrays for the fields, placeholders, and values in our query.
