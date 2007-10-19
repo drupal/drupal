@@ -362,7 +362,7 @@ function comment_new_page_count($num_comments, $new_replies, $node) {
     $pageno =  $count / $comments_per_page;
   }
   if ($pageno >= 1) {
-    $pagenum = "page=" . intval($pageno);
+    $pagenum = "page=". intval($pageno);
   }
   return $pagenum;
 }

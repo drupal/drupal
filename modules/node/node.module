@@ -663,10 +663,10 @@ function node_load($param = array(), $revision = NULL, $reset = NULL) {
   // No db_rewrite_sql is applied so as to get complete indexing for search.
   if ($revision) {
     array_unshift($arguments, $revision);
-    $node = db_fetch_object(db_query('SELECT '. $fields. ' FROM {node} n INNER JOIN {users} u ON u.uid = n.uid INNER JOIN {node_revisions} r ON r.nid = n.nid AND r.vid = %d WHERE '. $cond, $arguments));
+    $node = db_fetch_object(db_query('SELECT '. $fields .' FROM {node} n INNER JOIN {users} u ON u.uid = n.uid INNER JOIN {node_revisions} r ON r.nid = n.nid AND r.vid = %d WHERE '. $cond, $arguments));
   }
   else {
-    $node = db_fetch_object(db_query('SELECT '. $fields. ' FROM {node} n INNER JOIN {users} u ON u.uid = n.uid INNER JOIN {node_revisions} r ON r.vid = n.vid WHERE '. $cond, $arguments));
+    $node = db_fetch_object(db_query('SELECT '. $fields .' FROM {node} n INNER JOIN {users} u ON u.uid = n.uid INNER JOIN {node_revisions} r ON r.vid = n.vid WHERE '. $cond, $arguments));
   }
 
   if ($node && $node->nid) {
