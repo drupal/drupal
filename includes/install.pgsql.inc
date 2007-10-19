@@ -1,5 +1,5 @@
 <?php
-// $Id: install.pgsql.inc,v 1.4 2007/08/06 10:28:42 goba Exp $
+// $Id: install.pgsql.inc,v 1.5 2007/10/19 15:02:15 goba Exp $
 
 // PostgreSQL specific install functions
 
@@ -26,16 +26,24 @@ function drupal_test_pgsql($url, &$success) {
   }
 
   $url = parse_url($url);
+  $conn_string = '';
 
-  // Decode url-encoded information in the db connection string.
-  $url['user'] = urldecode($url['user']);
-  $url['pass'] = urldecode($url['pass']);
-  $url['host'] = urldecode($url['host']);
-  $url['path'] = urldecode($url['path']);
-
-  // Build pgsql connection string and allow for non-standard PostgreSQL port.
-  $conn_string = ' user='. $url['user'] .' dbname='. substr($url['path'], 1) .' password='. $url['pass'] .' host='. $url['host'];
-  $conn_string .= isset($url['port']) ? ' port='. $url['port'] : '';
+  // Decode url-encoded information in the db connection string
+  if (isset($url['user'])) {
+    $conn_string .= ' user='. urldecode($url['user']);
+  }
+  if (isset($url['pass'])) {
+    $conn_string .= ' password='. urldecode($url['pass']);
+  }
+  if (isset($url['host'])) {
+    $conn_string .= ' host='. urldecode($url['host']);
+  }
+  if (isset($url['path'])) {
+    $conn_string .= ' dbname='. substr(urldecode($url['path']), 1);
+  }
+  if (isset($url['port'])) {
+    $conn_string .= ' port='. urldecode($url['port']);
+  }
 
   // Test connecting to the database.
   $connection = @pg_connect($conn_string);
