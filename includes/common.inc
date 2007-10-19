@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.702 2007/10/17 21:59:31 goba Exp $
+// $Id: common.inc,v 1.703 2007/10/19 10:19:02 goba Exp $
 
 /**
  * @file
@@ -1905,7 +1905,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
   if ($is_writable && $preprocess_js && count($files) > 0) {
     $filename = md5(serialize($files)) .'.js';
     $preprocess_file = drupal_build_js_cache($files, $filename);
-    $preprocessed .= '<script type="text/javascript" src="'. base_path() . $preprocess_file .'"></script>'. "\n";
+    $preprocessed .= '<script type="text/javascript" src="'. base_path() . $preprocess_file .'"></script>'."\n";
   }
 
   // Keep the order of JS files consistent as some are preprocessed and others are not.
@@ -2134,7 +2134,7 @@ function _packer_replacement($arguments, $regexps = NULL, $escape = NULL) {
       }
       else {
         $delete = !$escape || strpos($arguments[$i], '\\') === FALSE
-                  ? '' : "\x01" . $arguments[$i] . "\x01";
+                  ? '' : "\x01". $arguments[$i] ."\x01";
         return $delete . $replacement;
       }
     // skip over references to sub-expressions
@@ -3160,7 +3160,7 @@ function drupal_write_record($table, &$object, $update = array()) {
   // Build the SQL.
   $query = '';
   if (!count($update)) {
-    $query = "INSERT INTO {". $table ."} (" . implode(', ', $fields) . ') VALUES (' . implode(', ', $placeholders) . ')';
+    $query = "INSERT INTO {". $table ."} (". implode(', ', $fields) .') VALUES ('. implode(', ', $placeholders) .')';
     $return = SAVED_NEW;
   }
   else {
@@ -3169,7 +3169,7 @@ function drupal_write_record($table, &$object, $update = array()) {
       if ($query) {
         $query .= ', ';
       }
-      $query .= $field . ' = ' . $placeholders[$id];
+      $query .= $field .' = '. $placeholders[$id];
     }
 
     foreach ($update as $key){

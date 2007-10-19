@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.163 2007/10/19 10:16:06 goba Exp $
+// $Id: system.install,v 1.164 2007/10/19 10:19:03 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -1309,7 +1309,7 @@ function system_update_123() {
   $ret[] = update_sql("UPDATE {vocabulary} SET module = 'taxonomy'");
   $vid = variable_get('forum_nav_vocabulary', '');
   if (!empty($vid)) {
-    $ret[] = update_sql("UPDATE {vocabulary} SET module = 'forum' WHERE vid = " . $vid);
+    $ret[] = update_sql("UPDATE {vocabulary} SET module = 'forum' WHERE vid = ". $vid);
   }
 
   return $ret;
@@ -1916,7 +1916,7 @@ function system_update_151() {
   for ($loop = 0; $loop <= 1 ; $loop ++) {
     // create new Primary and Secondary links menus
     $menus[$loop]['pid'] = db_next_id('{menu}_mid');
-    $ret[] = update_sql("INSERT INTO {menu} (mid, pid, path, title, description, weight, type) " .
+    $ret[] = update_sql("INSERT INTO {menu} (mid, pid, path, title, description, weight, type) ".
                          "VALUES ({$menus[$loop]['pid']}, 0, '', '{$menus[$loop]['menu_name']}', '', 0, 115)");
 
     // Gather links from various settings into a single array.
@@ -1955,10 +1955,10 @@ function system_update_151() {
         }
 
         $mid = db_next_id('{menu}_mid');
-        $ret[] = update_sql("INSERT INTO {menu} (mid, pid, path, title, description, weight, type) " .
-                             "VALUES ($mid, {$menus[$loop]['pid']}, '" . db_escape_string($href) .
-                             "', '" . db_escape_string($links['text'][$i]) .
-                             "', '" . db_escape_string($links['description'][$i]) . "', 0, 118)");
+        $ret[] = update_sql("INSERT INTO {menu} (mid, pid, path, title, description, weight, type) ".
+                             "VALUES ($mid, {$menus[$loop]['pid']}, '". db_escape_string($href) .
+                             "', '". db_escape_string($links['text'][$i]) .
+                             "', '". db_escape_string($links['description'][$i]) ."', 0, 118)");
       }
     }
     // delete Secondary links if not populated.
@@ -3910,7 +3910,7 @@ function system_update_6019() {
 
       // Remove default => 0, set auto increment.
       $new_uid = 1 + db_result(db_query('SELECT MAX(uid) FROM {users}'));
-      $ret[] = update_sql('UPDATE {users} SET uid = '. $new_uid . ' WHERE uid = 0');
+      $ret[] = update_sql('UPDATE {users} SET uid = '. $new_uid .' WHERE uid = 0');
       db_drop_primary_key($ret, 'users');
       db_change_field($ret, 'users', 'uid', 'uid', array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE), array('primary key' => array('uid')));
       $ret[] = update_sql('UPDATE {users} SET uid = 0 WHERE uid = '. $new_uid);

@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.80 2007/10/17 21:47:13 goba Exp $
+// $Id: install.php,v 1.81 2007/10/19 10:19:02 goba Exp $
 
 require_once './includes/install.inc';
 
@@ -348,7 +348,7 @@ function install_settings_form(&$form_state, $profile, $install_locale, $setting
     $form['errors'] = array();
     $form['settings_file'] = array('#type' => 'value', '#value' => $settings_file);
     $form['_db_url'] = array('#type' => 'value');
-    $form['#action'] = "install.php?profile=$profile" . ($install_locale ? "&locale=$install_locale" : '');
+    $form['#action'] = "install.php?profile=$profile". ($install_locale ? "&locale=$install_locale" : '');
     $form['#redirect'] = FALSE;
   }
   return $form;
@@ -424,7 +424,7 @@ function install_settings_form_submit($form, &$form_state) {
   drupal_rewrite_settings($settings);
 
   // Continue to install profile step
-  install_goto("install.php?profile=$profile" . ($install_locale ? "&locale=$install_locale" : ''));
+  install_goto("install.php?profile=$profile". ($install_locale ? "&locale=$install_locale" : ''));
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.inc,v 1.4 2007/10/02 16:19:22 dries Exp $
+// $Id: openid.inc,v 1.5 2007/10/19 10:19:03 goba Exp $
 
 /**
  * @file
@@ -41,7 +41,7 @@ function openid_redirect_http($url, $message) {
  * Creates a js auto-submit redirect for (for the 2.x protocol)
  */
 function openid_redirect($url, $message) {
-  $output = '<html><head><title>'.t('OpenID redirect'). "</title></head>\n<body>";
+  $output = '<html><head><title>'. t('OpenID redirect') ."</title></head>\n<body>";
   $output .= drupal_get_form('openid_redirect_form', $url, $message);
   $output .= '<script type="text/javascript">document.getElementById("openid-redirect-form").submit();</script>';
   $output .= "</body></html>\n";
@@ -354,7 +354,7 @@ function _openid_dh_rand($stop) {
   }
 
   do {
-    $bytes = "\x00" . _openid_get_bytes($nbytes);
+    $bytes = "\x00". _openid_get_bytes($nbytes);
     $n = _openid_dh_binary_to_long($bytes);
     // Keep looping if this value is in the low duplicated range.
   } while (bccomp($n, $duplicate) < 0);

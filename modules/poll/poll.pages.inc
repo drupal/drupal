@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.pages.inc,v 1.1 2007/09/05 08:33:16 dries Exp $
+// $Id: poll.pages.inc,v 1.2 2007/10/19 10:19:03 goba Exp $
 
 /**
  * @file
@@ -35,7 +35,7 @@ function poll_votes($node) {
   $header[] = array('data' => t('Visitor'), 'field' => 'u.name');
   $header[] = array('data' => t('Vote'), 'field' => 'pv.chorder');
 
-  $result = pager_query("SELECT pv.chorder, pv.uid, pv.hostname, u.name FROM {poll_votes} pv LEFT JOIN {users} u ON pv.uid = u.uid WHERE pv.nid = %d" . tablesort_sql($header), 20, 0, NULL, $node->nid);
+  $result = pager_query("SELECT pv.chorder, pv.uid, pv.hostname, u.name FROM {poll_votes} pv LEFT JOIN {users} u ON pv.uid = u.uid WHERE pv.nid = %d". tablesort_sql($header), 20, 0, NULL, $node->nid);
   $rows = array();
   while ($vote = db_fetch_object($result)) {
     $rows[] = array(
