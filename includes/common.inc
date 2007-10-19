@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.703 2007/10/19 10:19:02 goba Exp $
+// $Id: common.inc,v 1.704 2007/10/19 10:30:54 goba Exp $
 
 /**
  * @file
@@ -3140,7 +3140,7 @@ function drupal_write_record($table, &$object, $update = array()) {
     if ($info['type'] == 'serial') {
       $serials[] = $field;
       // Ignore values for serials when inserting data. Unsupported.
-      $object->$field = 'NULL';
+      unset($object->$field);
     }
 
     // Build arrays for the fields, placeholders, and values in our query.
