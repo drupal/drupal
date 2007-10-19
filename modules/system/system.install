@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.162 2007/10/12 10:41:47 goba Exp $
+// $Id: system.install,v 1.163 2007/10/19 10:16:06 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -692,7 +692,7 @@ function system_schema() {
         'not null' => TRUE,
         'default' => 0),
       'link_path' => array(
-        'description' => t('The Drupal path or external path this link point to.'),
+        'description' => t('The Drupal path or external path this link points to.'),
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
