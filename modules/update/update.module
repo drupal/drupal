@@ -1,12 +1,12 @@
 <?php
-// $Id: update.module,v 1.1 2007/07/11 15:15:40 dries Exp $
+// $Id: update.module,v 1.2 2007/10/20 21:57:50 goba Exp $
 
 /**
  * @file
  * The "Update status" module checks for available updates of Drupal core and
  * any installed contributed modules and themes. It warns site administrators
  * if newer releases are available via the system status report
- * (admin/logs/status), the module and theme pages, and optionally via email.
+ * (admin/reports/status), the module and theme pages, and optionally via email.
  */
 
 /**
@@ -46,7 +46,7 @@ define('UPDATE_UNKNOWN', 5);
  */
 function update_help($path, $arg) {
   switch ($path) {
-    case 'admin/logs/updates':
+    case 'admin/reports/updates':
       return '<p>'. t('Here you can find information about available updates for your installed modules and themes. Note that each module or theme is part of a "project", which may or may not have the same name, and might include multiple modules or themes within it.') .'</p>';
 
     case 'admin/build/themes':
@@ -64,10 +64,10 @@ function update_help($path, $arg) {
           }
         }
       }
-      return '<p>'. t('See the <a href="@available_updates">available updates</a> page for information on installed modules and themes with new versions released.', array('@available_updates' => url('admin/logs/updates'))) .'</p>';
+      return '<p>'. t('See the <a href="@available_updates">available updates</a> page for information on installed modules and themes with new versions released.', array('@available_updates' => url('admin/reports/updates'))) .'</p>';
 
-    case 'admin/logs/updates/settings':
-    case 'admin/logs/status':
+    case 'admin/reports/updates/settings':
+    case 'admin/reports/status':
       // These two pages don't need additional nagging.
       break;
 
@@ -97,7 +97,7 @@ function update_help($path, $arg) {
 function update_menu() {
   $items = array();
 
-  $items['admin/logs/updates'] = array(
+  $items['admin/reports/updates'] = array(
     'title' => 'Available updates',
     'description' => 'Get a status report about available updates for your installed modules and themes.',
     'page callback' => 'update_status',
@@ -105,14 +105,14 @@ function update_menu() {
     'file' => 'update.report.inc',
     'weight' => 10,
   );
-  $items['admin/logs/updates/list'] = array(
+  $items['admin/reports/updates/list'] = array(
     'title' => 'List',
     'page callback' => 'update_status',
     'access arguments' => array('administer site configuration'),
     'file' => 'update.report.inc',
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
-  $items['admin/logs/updates/settings'] = array(
+  $items['admin/reports/updates/settings'] = array(
     'title' => 'Settings',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('update_settings'),
@@ -120,7 +120,7 @@ function update_menu() {
     'file' => 'update.settings.inc',
     'type' => MENU_LOCAL_TASK,
   );
-  $items['admin/logs/updates/check'] = array(
+  $items['admin/reports/updates/check'] = array(
     'title' => 'Manual update check',
     'page callback' => 'update_manual_status',
     'access arguments' => array('administer site configuration'),
@@ -266,8 +266,8 @@ function update_form_alter(&$form, $form_state, $form_id) {
 function _update_no_data() {
   $destination = drupal_get_destination();
   return t('No information is available about potential new releases for currently installed modules and themes. To check for updates, you may need to <a href="@run_cron">run cron</a> or you can <a href="@check_manually">check manually</a>. Please note that checking for available updates can take a long time, so please be patient.', array(
-    '@run_cron' => url('admin/logs/status/run-cron', array('query' => $destination)),
-    '@check_manually' => url('admin/logs/updates/check', array('query' => $destination)),
+    '@run_cron' => url('admin/reports/status/run-cron', array('query' => $destination)),
+    '@check_manually' => url('admin/reports/updates/check', array('query' => $destination)),
   ));
 }
 
@@ -332,7 +332,7 @@ function update_mail($key, &$message, $params) {
   foreach ($params as $msg_type => $msg_reason) {
     $message['body'][] = _update_message_text($msg_type, $msg_reason, FALSE, $language);
   }
-  $message['body'][] = t('See the available updates page for more information:', array(), $langcode) ."\n". url('admin/logs/updates', array('absolute' => TRUE, 'language' => $language));
+  $message['body'][] = t('See the available updates page for more information:', array(), $langcode) ."\n". url('admin/reports/updates', array('absolute' => TRUE, 'language' => $language));
 }
 
 /**
@@ -340,7 +340,7 @@ function update_mail($key, &$message, $params) {
  * of date or missing a security update.
  *
  * These error messages are shared by both update_requirements() for the
- * site-wide status report at admin/logs/status and in the body of the
+ * site-wide status report at admin/reports/status and in the body of the
  * notification emails generated by update_cron().
  *
  * @param $msg_type
@@ -380,7 +380,7 @@ function _update_message_text($msg_type, $msg_reason, $report_link = FALSE, $lan
   }
 
   if ($report_link) {
-    $text .= ' '. t('See the <a href="@available_updates">available updates</a> page for more information.', array('@available_updates' => url('admin/logs/updates', array('language' => $language))), $langcode);
+    $text .= ' '. t('See the <a href="@available_updates">available updates</a> page for more information.', array('@available_updates' => url('admin/reports/updates', array('language' => $language))), $langcode);
   }
 
   return $text;

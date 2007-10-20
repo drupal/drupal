@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.266 2007/08/23 16:34:44 dries Exp $
+// $Id: statistics.module,v 1.267 2007/10/20 21:57:50 goba Exp $
 
 /**
  * @file
@@ -33,13 +33,13 @@ function statistics_help($path, $arg) {
 ');
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@statistics">Statistics page</a>.', array('@statistics' => 'http://drupal.org/handbook/modules/statistics/')) .'</p>';
       return $output;
-    case 'admin/logs/settings':
-      return '<p>'. t('Settings for the statistical information that Drupal will keep about the site. See <a href="@statistics">site statistics</a> for the actual information.', array('@statistics' => url('admin/logs/hits'))) .'</p>';
-    case 'admin/logs/hits':
+    case 'admin/reports/settings':
+      return '<p>'. t('Settings for the statistical information that Drupal will keep about the site. See <a href="@statistics">site statistics</a> for the actual information.', array('@statistics' => url('admin/reports/hits'))) .'</p>';
+    case 'admin/reports/hits':
       return '<p>'. t('This page shows you the most recent hits.') .'</p>';
-    case 'admin/logs/referrers':
+    case 'admin/reports/referrers':
       return '<p>'. t('This page shows you all external referrers. These are links pointing to your website from outside your website.') .'</p>';
-    case 'admin/logs/visitors':
+    case 'admin/reports/visitors':
       return '<p>'. t("When you ban a visitor, you prevent the visitor's IP address from accessing your site. Unlike blocking a user, banning a visitor works even for anonymous users. The most common use for this is to block bots/web crawlers that are consuming too many resources.") .'</p>';
   }
 }
@@ -100,14 +100,14 @@ function statistics_link($type, $node = NULL, $teaser = FALSE) {
  * Implementation of hook_menu().
  */
 function statistics_menu() {
-  $items['admin/logs/hits'] = array(
+  $items['admin/reports/hits'] = array(
     'title' => 'Recent hits',
     'description' => 'View pages that have recently been visited.',
     'page callback' => 'statistics_recent_hits',
     'access arguments' => array('access statistics'),
     'file' => 'statistics.admin.inc',
   );
-  $items['admin/logs/pages'] = array(
+  $items['admin/reports/pages'] = array(
     'title' => 'Top pages',
     'description' => 'View pages that have been hit frequently.',
     'page callback' => 'statistics_top_pages',
@@ -115,7 +115,7 @@ function statistics_menu() {
     'weight' => 1,
     'file' => 'statistics.admin.inc',
   );
-  $items['admin/logs/visitors'] = array(
+  $items['admin/reports/visitors'] = array(
     'title' => 'Top visitors',
     'description' => 'View visitors that hit many pages.',
     'page callback' => 'statistics_top_visitors',
@@ -123,14 +123,14 @@ function statistics_menu() {
     'weight' => 2,
     'file' => 'statistics.admin.inc',
   );
-  $items['admin/logs/referrers'] = array(
+  $items['admin/reports/referrers'] = array(
     'title' => 'Top referrers',
     'description' => 'View top referrers.',
     'page callback' => 'statistics_top_referrers',
     'access arguments' => array('access statistics'),
     'file' => 'statistics.admin.inc',
   );
-  $items['admin/logs/access/%'] = array(
+  $items['admin/reports/access/%'] = array(
     'title' => 'Details',
     'description' => 'View access log.',
     'page callback' => 'statistics_access_log',
@@ -139,7 +139,7 @@ function statistics_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'statistics.admin.inc',
   );
-  $items['admin/logs/settings'] = array(
+  $items['admin/reports/settings'] = array(
     'title' => 'Access log settings',
     'description' => 'Control details about what and how your site logs.',
     'page callback' => 'drupal_get_form',

@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.236 2007/10/01 08:50:36 goba Exp $
+// $Id: search.module,v 1.237 2007/10/20 21:57:50 goba Exp $
 
 /**
  * @file
@@ -185,7 +185,7 @@ function search_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'search.admin.inc',
   );
-  $items['admin/logs/search'] = array(
+  $items['admin/reports/search'] = array(
     'title' => 'Top search phrases',
     'description' => 'View most popular search phrases.',
     'page callback' => 'dblog_top',

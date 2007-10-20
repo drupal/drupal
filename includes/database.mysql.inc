@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysql.inc,v 1.82 2007/10/17 12:47:28 goba Exp $
+// $Id: database.mysql.inc,v 1.83 2007/10/20 21:57:49 goba Exp $
 
 /**
  * @file
@@ -24,7 +24,7 @@ function db_status_report($phase) {
 
   $form['mysql'] = array(
     'title' => $t('MySQL database'),
-    'value' => ($phase == 'runtime') ? l($version, 'admin/logs/status/sql') : $version,
+    'value' => ($phase == 'runtime') ? l($version, 'admin/reports/status/sql') : $version,
   );
 
   if (version_compare($version, DRUPAL_MINIMUM_MYSQL) < 0) {

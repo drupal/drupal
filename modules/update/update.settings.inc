@@ -1,5 +1,5 @@
 <?php
-// $Id: update.settings.inc,v 1.2 2007/08/18 11:30:59 goba Exp $
+// $Id: update.settings.inc,v 1.3 2007/10/20 21:57:50 goba Exp $
 
 /**
  * @file
@@ -40,7 +40,7 @@ function update_settings() {
       'all' => t('All newer versions'),
       'security' => t('Only security updates'),
     ),
-    '#description' => t('If there are updates available of Drupal core or any of your installed modules and themes, your site will print an error message on the <a href="@status_report">status report</a>, the <a href="@modules_page">modules page</a>, and the <a href="@themes_page">themes page</a>. You can choose to only see these error messages if a security update is available, or to be notified about any newer versions.', array('@status_report' => url('admin/logs/status'), '@modules_page' => url('admin/build/modules'), '@themes_page' => url('admin/build/themes')))
+    '#description' => t('If there are updates available of Drupal core or any of your installed modules and themes, your site will print an error message on the <a href="@status_report">status report</a>, the <a href="@modules_page">modules page</a>, and the <a href="@themes_page">themes page</a>. You can choose to only see these error messages if a security update is available, or to be notified about any newer versions.', array('@status_report' => url('admin/reports/status'), '@modules_page' => url('admin/build/modules'), '@themes_page' => url('admin/build/themes')))
   );
 
   $form = system_settings_form($form);

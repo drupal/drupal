@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.543 2007/10/17 21:59:31 goba Exp $
+// $Id: system.module,v 1.544 2007/10/20 21:57:50 goba Exp $
 
 /**
  * @file
@@ -66,7 +66,7 @@ function system_help($path, $arg) {
       return $output;
     case 'admin/settings/actions/configure':
       return t('An advanced action offers additional configuration options which may be filled out below. Changing the <em>Description</em> field is recommended, in order to better identify the precise action taking place. This description will be displayed in modules such as the trigger module when assigning actions to system events, so it is best if it is as descriptive as possible (for example, "Send e-mail to Moderation Team" rather than simply "Send e-mail").');
-    case 'admin/logs/status':
+    case 'admin/reports/status':
       return '<p>'. t("Here you can find a short overview of your Drupal site's parameters as well as any problems detected with your installation. It is useful to copy/paste this information when you need support.") .'</p>';
   }
 }
@@ -402,16 +402,16 @@ function system_menu() {
     'file' => 'system.admin.inc',
   );
 
-  // Logs:
-  $items['admin/logs'] = array(
-    'title' => 'Logs',
-    'description' => 'View system logs and other status information.',
+  // Reports:
+  $items['admin/reports'] = array(
+    'title' => 'Reports',
+    'description' => 'View reports from system logs and other status information.',
     'page callback' => 'system_admin_menu_block_page',
     'weight' => 5,
     'position' => 'left',
     'file' => 'system.admin.inc',
   );
-  $items['admin/logs/status'] = array(
+  $items['admin/reports/status'] = array(
     'title' => 'Status report',
     'description' => "Get a status report about your site's operation and any detected problems.",
     'page callback' => 'system_status',
@@ -419,19 +419,19 @@ function system_menu() {
     'access arguments' => array('administer site configuration'),
     'file' => 'system.admin.inc',
   );
-  $items['admin/logs/status/run-cron'] = array(
+  $items['admin/reports/status/run-cron'] = array(
     'title' => 'Run cron',
     'page callback' => 'system_run_cron',
     'type' => MENU_CALLBACK,
     'file' => 'system.admin.inc',
   );
-  $items['admin/logs/status/php'] = array(
+  $items['admin/reports/status/php'] = array(
     'title' => 'PHP',
     'page callback' => 'system_php',
     'type' => MENU_CALLBACK,
     'file' => 'system.admin.inc',
   );
-  $items['admin/logs/status/sql'] = array(
+  $items['admin/reports/status/sql'] = array(
     'title' => 'SQL',
     'page callback' => 'system_sql',
     'type' => MENU_CALLBACK,

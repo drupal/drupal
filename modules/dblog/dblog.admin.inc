@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.admin.inc,v 1.3 2007/09/05 08:42:01 dries Exp $
+// $Id: dblog.admin.inc,v 1.4 2007/10/20 21:57:49 goba Exp $
 
 /**
  * @file
@@ -68,7 +68,7 @@ function dblog_overview() {
         $icons[$dblog->severity],
         t($dblog->type),
         format_date($dblog->timestamp, 'small'),
-        l(truncate_utf8(_dblog_format_message($dblog), 56, TRUE, TRUE), 'admin/logs/event/'. $dblog->wid, array('html' => TRUE)),
+        l(truncate_utf8(_dblog_format_message($dblog), 56, TRUE, TRUE), 'admin/reports/event/'. $dblog->wid, array('html' => TRUE)),
         theme('username', $dblog),
         $dblog->link,
       ),
@@ -316,5 +316,5 @@ function dblog_filter_form_submit($form, &$form_state) {
       $_SESSION['dblog_overview_filter'] = array();
       break;
   }
-  return 'admin/logs/dblog';
+  return 'admin/reports/dblog';
 }

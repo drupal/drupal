@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.module,v 1.15 2007/10/02 07:05:43 dries Exp $
+// $Id: dblog.module,v 1.16 2007/10/20 21:57:49 goba Exp $
 
 /**
  * @file
@@ -22,7 +22,7 @@ function dblog_help($path, $arg) {
       $output .= '<p>'. t('The dblog log is simply a list of recorded events containing usage data, performance data, errors, warnings and operational information. Administrators should check the dblog report on a regular basis to ensure their site is working properly.') .'</p>';
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@dblog">Dblog page</a>.', array('@dblog' => 'http://drupal.org/handbook/modules/dblog/')) .'</p>';
       return $output;
-    case 'admin/logs/dblog':
+    case 'admin/reports/dblog':
       return '<p>'. t('The dblog module monitors your website, capturing system events in a log to be reviewed by an authorized individual at a later time. The dblog log is simply a list of recorded events containing usage data, performance data, errors, warnings and operational information. It is vital to check the dblog report on a regular basis as it is often the only way to tell what is going on.') .'</p>';
   }
 }
@@ -50,28 +50,28 @@ function dblog_menu() {
     'file' => 'dblog.admin.inc',
   );
 
-  $items['admin/logs/dblog'] = array(
+  $items['admin/reports/dblog'] = array(
     'title' => 'Recent log entries',
     'description' => 'View events that have recently been logged.',
     'page callback' => 'dblog_overview',
     'weight' => -1,
     'file' => 'dblog.admin.inc',
   );
-  $items['admin/logs/page-not-found'] = array(
+  $items['admin/reports/page-not-found'] = array(
     'title' => "Top 'page not found' errors",
     'description' => "View 'page not found' errors (404s).",
     'page callback' => 'dblog_top',
     'page arguments' => array('page not found'),
     'file' => 'dblog.admin.inc',
   );
-  $items['admin/logs/access-denied'] = array(
+  $items['admin/reports/access-denied'] = array(
       'title' => "Top 'access denied' errors",
     'description' => "View 'access denied' errors (403s).",
     'page callback' => 'dblog_top',
     'page arguments' => array('access denied'),
     'file' => 'dblog.admin.inc',
   );
-  $items['admin/logs/event/%'] = array(
+  $items['admin/reports/event/%'] = array(
     'title' => 'Details',
     'page callback' => 'dblog_event',
     'page arguments' => array(3),

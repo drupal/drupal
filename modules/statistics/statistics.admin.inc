@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.admin.inc,v 1.1 2007/08/23 16:34:44 dries Exp $
+// $Id: statistics.admin.inc,v 1.2 2007/10/20 21:57:50 goba Exp $
 
 /**
  * @file
@@ -26,7 +26,7 @@ function statistics_recent_hits() {
       array('data' => format_date($log->timestamp, 'small'), 'class' => 'nowrap'),
       _statistics_format_item($log->title, $log->path),
       theme('username', $log),
-      l(t('details'), "admin/logs/access/$log->aid"));
+      l(t('details'), "admin/reports/access/$log->aid"));
   }
 
   if (empty($rows)) {

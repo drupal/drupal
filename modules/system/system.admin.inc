@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.14 2007/10/18 13:41:00 goba Exp $
+// $Id: system.admin.inc,v 1.15 2007/10/20 21:57:50 goba Exp $
 
 /**
  * @file
@@ -19,7 +19,7 @@ function system_main_admin_page($arg = NULL) {
 
   // Check for status report errors.
   if (system_status(TRUE)) {
-    drupal_set_message(t('One or more problems were detected with your Drupal installation. Check the <a href="@status">status report</a> for more information.', array('@status' => url('admin/logs/status'))), 'error');
+    drupal_set_message(t('One or more problems were detected with your Drupal installation. Check the <a href="@status">status report</a> for more information.', array('@status' => url('admin/reports/status'))), 'error');
   }
   $blocks = array();
   if ($admin = db_fetch_array(db_query("SELECT menu_name, mlid FROM {menu_links} WHERE link_path = 'admin' AND module = 'system'"))) {
@@ -1601,7 +1601,7 @@ function system_run_cron() {
     drupal_set_message(t('Cron run failed'));
   }
 
-  drupal_goto('admin/logs/status');
+  drupal_goto('admin/reports/status');
 }
 
 /**

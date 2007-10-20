@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.235 2007/10/09 16:08:37 goba Exp $
+// $Id: update.php,v 1.236 2007/10/20 21:57:49 goba Exp $
 
 /**
  * @file
@@ -416,7 +416,7 @@ function update_results_page() {
   update_task_list();
   // Report end result
   if (module_exists('dblog')) {
-    $log_message = ' All errors have been <a href="'. base_path() .'?q=admin/logs/dblog">logged</a>.';
+    $log_message = ' All errors have been <a href="'. base_path() .'?q=admin/reports/dblog">logged</a>.';
   }
   else {
     $log_message = ' All errors have been logged.';
