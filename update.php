@@ -416,7 +416,7 @@ function update_results_page() {
   update_task_list();
   // Report end result
   if (module_exists('dblog')) {
-    $log_message = ' All errors have been <a href="'. base_path() .'?q=admin/logs/dblog">logged</a>.';
+    $log_message = ' All errors have been <a href="'. base_path() .'?q=admin/reports/dblog">logged</a>.';
   }
   else {
     $log_message = ' All errors have been logged.';
