@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.236 2007/10/19 16:59:28 dries Exp $
+// $Id: form.inc,v 1.237 2007/10/20 10:49:55 goba Exp $
 
 /**
  * @defgroup form Form generation
@@ -2002,8 +2002,7 @@ function _form_set_class(&$element, $class = array()) {
 }
 
 /**
- * Prepare an HTML ID attribute string by removing invalid characters and
- * guaranteeing uniqueness.
+ * Remove invalid characters from an HTML ID attribute string.
  *
  * @param $id
  *   The ID to clean.
@@ -2011,19 +2010,7 @@ function _form_set_class(&$element, $class = array()) {
  *   The cleaned ID.
  */
 function form_clean_id($id = NULL) {
-  static $seen_ids = array();
-
   $id = str_replace(array('][', '_', ' '), '-', $id);
-
-  // Ensure id's are unique. The first occurrence is held but left alone.
-  // Subsequent occurrences get a number appended to them.
-  if (isset($seen_ids[$id])) {
-    $id = $id .'-'. $seen_ids[$id]++;
-  }
-  else {
-    $seen_ids[$id] = 1;
-  }
-
   return $id;
 }
 
