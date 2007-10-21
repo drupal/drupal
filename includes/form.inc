@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.237 2007/10/20 10:49:55 goba Exp $
+// $Id: form.inc,v 1.238 2007/10/21 18:59:01 goba Exp $
 
 /**
  * @defgroup form Form generation
@@ -1847,7 +1847,7 @@ function theme_form($element) {
 function theme_textarea($element) {
   $class = array('form-textarea');
 
-  // Add teaser behaviour (must come before resizable)
+  // Add teaser behavior (must come before resizable)
   if (!empty($element['#teaser'])) {
     drupal_add_js('misc/teaser.js');
     // Note: arrays are merged in drupal_get_js().
@@ -1856,7 +1856,7 @@ function theme_textarea($element) {
     $class[] = 'teaser';
   }
 
-  // Add resizable behaviour
+  // Add resizable behavior
   if ($element['#resizable'] !== FALSE) {
     drupal_add_js('misc/textarea.js');
     $class[] = 'resizable';

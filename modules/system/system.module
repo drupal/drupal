@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.544 2007/10/20 21:57:50 goba Exp $
+// $Id: system.module,v 1.545 2007/10/21 18:59:02 goba Exp $
 
 /**
  * @file
@@ -25,7 +25,7 @@ function system_help($path, $arg) {
 
   switch ($path) {
     case 'admin/help#system':
-      $output = '<p>'. t('The system module provides system-wide defaults such as running jobs at a particular time, and storing web pages to improve efficiency. The ability to run scheduled jobs makes administering the website more usable, as administrators do not have to manually start jobs. The storing of web pages, or caching, allows the site to efficiently re-use web pages and improve website performance. The system module provides control over preferences, behaviours including visual and operational settings.') .'</p>';
+      $output = '<p>'. t('The system module provides system-wide defaults such as running jobs at a particular time, and storing web pages to improve efficiency. The ability to run scheduled jobs makes administering the website more usable, as administrators do not have to manually start jobs. The storing of web pages, or caching, allows the site to efficiently re-use web pages and improve website performance. The system module provides control over preferences, behaviors including visual and operational settings.') .'</p>';
       $output .= '<p>'. t('Some modules require regularly scheduled actions, such as cleaning up logfiles. Cron, which stands for chronograph, is a periodic command scheduler executing commands at intervals specified in seconds. It can be used to control the execution of daily, weekly and monthly jobs (or anything with a period measured in seconds). The aggregator module periodically updates feeds using cron. Ping periodically notifies services of new content on your site. Search periodically indexes the content on your site. Automating tasks is one of the best ways to keep a system running smoothly, and if most of your administration does not require your direct involvement, cron is an ideal solution. Cron can, if necessary, also be run manually.') .'</p>';
       $output .= '<p>'. t("There is a caching mechanism which stores dynamically generated web pages in a database. By caching a web page, the system module does not have to create the page each time someone wants to view it, instead it takes only one SQL query to display it, reducing response time and the server's load. Only pages requested by <em>anonymous</em> users are cached. In order to reduce server load and save bandwidth, the system module stores and sends cached pages compressed.") .'</p>';
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@system">System page</a>.', array('@system' => 'http://drupal.org/handbook/modules/system/')) .'</p>';

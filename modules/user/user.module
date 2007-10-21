@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.853 2007/10/12 10:41:48 goba Exp $
+// $Id: user.module,v 1.854 2007/10/21 18:59:02 goba Exp $
 
 /**
  * @file
@@ -2127,7 +2127,7 @@ function user_register_submit($form, &$form_state) {
       // No e-mail verification is required, create new user account, and login user immediately.
       _user_mail_notify('register_no_approval_required', $account);
       if (user_authenticate($account->name, trim($pass))) {
-        drupal_set_message(t('Registration succesful. You are now logged in.'));
+        drupal_set_message(t('Registration successful. You are now logged in.'));
       }
       $form_state['redirect'] = '';
       return;

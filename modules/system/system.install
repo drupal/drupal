@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.165 2007/10/20 21:57:50 goba Exp $
+// $Id: system.install,v 1.166 2007/10/21 18:59:02 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -930,7 +930,7 @@ function system_schema() {
         'not null' => TRUE,
         'default' => 0),
       'info' => array(
-        'description' => t("A serialized array containing information from the module's .info file; keys can include name, description, package, version, core, dependencies, depedents, and php."),
+        'description' => t("A serialized array containing information from the module's .info file; keys can include name, description, package, version, core, dependencies, dependents, and php."),
         'type' => 'text',
         'not null' => FALSE)
       ),

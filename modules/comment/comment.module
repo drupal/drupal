@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.593 2007/10/19 10:19:02 goba Exp $
+// $Id: comment.module,v 1.594 2007/10/21 18:59:01 goba Exp $
 
 /**
  * @file
@@ -127,7 +127,7 @@ function comment_help($path, $arg) {
   switch ($path) {
     case 'admin/help#comment':
       $output = '<p>'. t('The comment module creates a discussion board for each post. Users can post comments to discuss a forum topic, weblog post, story, collaborative book page, etc. The ability to comment is an important part of involving members in a community dialogue.') .'</p>';
-      $output .= '<p>'. t('An administrator can give comment permissions to user groups, and users can (optionally) edit their last comment, assuming no others have been posted since. Attached to each comment board is a control panel for customizing the way that comments are displayed. Users can control the chronological ordering of posts (newest or oldest first) and the number of posts to display on each page. Comments behave like other user submissions. Filters, smileys and HTML that work in nodes will also work with comments. The comment module provides specific features to inform site members when new comments have been posted.') .'</p>';
+      $output .= '<p>'. t('An administrator can give comment permissions to user groups, and users can (optionally) edit their last comment, assuming no others have been posted since. Attached to each comment board is a control panel for customizing the way that comments are displayed. Users can control the chronological ordering of posts (newest or oldest first) and the number of posts to display on each page. Comments behave like other user submissions. Filters, emoticons and HTML that work in nodes will also work with comments. The comment module provides specific features to inform site members when new comments have been posted.') .'</p>';
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@comment">Comment page</a>.', array('@comment' => 'http://drupal.org/handbook/modules/comment/')) .'</p>';
       return $output;
     case 'admin/content/comment':
@@ -1958,7 +1958,7 @@ function theme_comment_submitted($comment) {
 
 function _comment_delete_thread($comment) {
   if (!is_object($comment) || !is_numeric($comment->cid)) {
-    watchdog('content', 'Can not delete non-existent comment.', WATCHDOG_WARNING);
+    watchdog('content', 'Cannot delete non-existent comment.', WATCHDOG_WARNING);
     return;
   }
 

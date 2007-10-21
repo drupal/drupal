@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.219 2007/10/17 19:42:02 goba Exp $
+// $Id: menu.inc,v 1.220 2007/10/21 18:59:01 goba Exp $
 
 /**
  * @file
@@ -560,7 +560,7 @@ function _menu_link_translate(&$item) {
     // menu_tree_check_access() may set this ahead of time for links to nodes.
     if (!isset($item['access'])) {
       if (!_menu_load_objects($item, $map)) {
-        // An error occured loading an object.
+        // An error occurred loading an object.
         $item['access'] = FALSE;
         return FALSE;
       }

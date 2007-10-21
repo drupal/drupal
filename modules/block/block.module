@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.283 2007/10/16 14:10:33 goba Exp $
+// $Id: block.module,v 1.284 2007/10/21 18:59:01 goba Exp $
 
 /**
  * @file
@@ -91,7 +91,7 @@ function block_help($path, $arg) {
       return t('<p>Blocks are boxes of content that may be rendered into certain regions of your web pages, for example, into sidebars. They are usually generated automatically by modules, but administrators can create blocks manually.</p>
 <p>Only enabled blocks are shown. You can position blocks by specifying which area of the page they should appear in (e.g., a sidebar).  Highlighted labels on this page show the regions into which blocks can be rendered. You can specify where within a region a block will appear by adjusting its weight.</p>
 <p>If you want certain blocks to disable themselves temporarily during high server loads, check the "Throttle" box. You can configure the auto-throttle on the <a href="@throttle">throttle configuration page</a> after having enabled the throttle module.</p>
-<p>You can configure the behaviour of each block (for example, specifying on which pages and for what users it will appear) by clicking the "configure" link for each block.</p>', array('@throttle' => url('admin/settings/throttle')));
+<p>You can configure the behavior of each block (for example, specifying on which pages and for what users it will appear) by clicking the "configure" link for each block.</p>', array('@throttle' => url('admin/settings/throttle')));
     case 'admin/build/block/add':
       return '<p>'. t('Here you can create a new block. Once you have created this block you must make it active and give it a place on the page using <a href="@overview">blocks</a>. The description is used in the "block" column on the <a href="@overview">blocks</a> page.', array('@overview' => url('admin/build/block'))) .'</p>';
   }

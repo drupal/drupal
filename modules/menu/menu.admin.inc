@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.admin.inc,v 1.3 2007/09/27 16:59:54 goba Exp $
+// $Id: menu.admin.inc,v 1.4 2007/10/21 18:59:02 goba Exp $
 
 /**
  * @file
@@ -492,7 +492,7 @@ function menu_configure() {
     '#default_value' => variable_get('menu_secondary_links_source', 'secondary-links'),
     '#options' => $secondary_options,
     '#tree' => FALSE,
-    '#description' => t('Select what should be displayed as the secondary links . If %primary is choosen the children of the active primary menu link (if any) will be shown instead of the links in the %secondary menu.', array('%secondary' => $menu_options['secondary-links'],  '%primary' => $menu_options['primary-links'])),
+    '#description' => t('Select what should be displayed as the secondary links. If %primary is chosen, the children of the active primary menu link (if any) will be shown instead of the links in the %secondary menu.', array('%secondary' => $menu_options['secondary-links'],  '%primary' => $menu_options['primary-links'])),
   );
 
   return system_settings_form($form);

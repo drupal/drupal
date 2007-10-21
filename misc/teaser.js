@@ -1,7 +1,7 @@
-// $Id: teaser.js,v 1.7 2007/07/01 15:37:08 dries Exp $
+// $Id: teaser.js,v 1.8 2007/10/21 18:59:01 goba Exp $
 
 /**
- * Auto-attach for teaser behaviour.
+ * Auto-attach for teaser behavior.
  *
  * Note: depends on resizable textareas.
  */

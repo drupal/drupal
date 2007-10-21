@@ -1,4 +1,4 @@
-// $Id: ahah.js,v 1.4 2007/10/10 10:24:25 goba Exp $
+// $Id: ahah.js,v 1.5 2007/10/21 18:59:01 goba Exp $
 
 /**
  * Provides AJAX-like page updating via AHAH (Asynchronous HTML and HTTP).
@@ -13,7 +13,7 @@
  */
 
 /**
- * Attaches the ahah behaviour to each ahah form element.
+ * Attaches the ahah behavior to each ahah form element.
  */
 Drupal.behaviors.ahah = function(context) {
   for (var base in Drupal.settings.ahah) {

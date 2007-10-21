@@ -1,5 +1,5 @@
 <?php
-// $Id: unicode.inc,v 1.26 2007/05/12 06:08:56 dries Exp $
+// $Id: unicode.inc,v 1.27 2007/10/21 18:59:01 goba Exp $
 
 /**
  * Indicates an error during check for PHP unicode support.
@@ -104,7 +104,7 @@ function unicode_requirements() {
 
   return $requirements;
 }
- 
+
 /**
  * Prepare a new XML parser.
  *
@@ -427,7 +427,7 @@ function drupal_ucfirst($text) {
 
 /**
  * Cut off a piece of a string based on character indices and counts. Follows
- * the same behaviour as PHP's own substr() function.
+ * the same behavior as PHP's own substr() function.
  *
  * Note that for cutting off a string at a known character/substring
  * location, the usage of PHP's normal strpos/substr is safe and

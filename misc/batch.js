@@ -1,7 +1,7 @@
-// $Id: batch.js,v 1.3 2007/07/01 15:37:08 dries Exp $
+// $Id: batch.js,v 1.4 2007/10/21 18:59:01 goba Exp $
 
 /**
- * Attaches the batch behaviour to progress bars.
+ * Attaches the batch behavior to progress bars.
  */
 Drupal.behaviors.batch = function (context) {
   // This behavior attaches by ID, so is only valid once on a page.

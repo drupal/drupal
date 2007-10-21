@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.237 2007/10/20 21:57:50 goba Exp $
+// $Id: search.module,v 1.238 2007/10/21 18:59:02 goba Exp $
 
 /**
  * @file
@@ -97,11 +97,11 @@ function search_help($path, $arg) {
   switch ($path) {
     case 'admin/help#search':
       $output = '<p>'. t('The search module adds the ability to search for content by keywords. Search is often the only practical way to find content on a large site. Search is useful for finding users and posts by searching on keywords.') .'</p>';
-      $output .= '<p>'. t('The search engine works by maintaining an index of the words in your site\'s content. It indexes the posts and users. You can adjust the settings to tweak the indexing behaviour. Note that the search requires cron to be set up correctly. The index percentage sets the maximum amount of items that will be indexed in one cron run. Set this number lower if your cron is timing out or if PHP is running out of memory.') .'</p>';
+      $output .= '<p>'. t('The search engine works by maintaining an index of the words in your site\'s content. It indexes the posts and users. You can adjust the settings to tweak the indexing behavior. Note that the search requires cron to be set up correctly. The index percentage sets the maximum amount of items that will be indexed in one cron run. Set this number lower if your cron is timing out or if PHP is running out of memory.') .'</p>';
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@search">Search page</a>.', array('@search' => 'http://drupal.org/handbook/modules/search/')) .'</p>';
       return $output;
     case 'admin/settings/search':
-      return '<p>'. t('The search engine works by maintaining an index of the words in your site\'s content. You can adjust the settings below to tweak the indexing behaviour. Note that the search requires cron to be set up correctly.') .'</p>';
+      return '<p>'. t('The search engine works by maintaining an index of the words in your site\'s content. You can adjust the settings below to tweak the indexing behavior. Note that the search requires cron to be set up correctly.') .'</p>';
     case 'search#noresults':
       return t('<ul>
 <li>Check if your spelling is correct.</li>
@@ -319,7 +319,7 @@ function search_simplify($text) {
   $text = preg_replace('/(['. PREG_CLASS_NUMBERS .']+)['. PREG_CLASS_PUNCTUATION .']+(?=['. PREG_CLASS_NUMBERS .'])/u', '\1', $text);
 
   // The dot, underscore and dash are simply removed. This allows meaningful
-  // search behaviour with acronyms and URLs.
+  // search behavior with acronyms and URLs.
   $text = preg_replace('/[._-]+/', '', $text);
 
   // With the exception of the rules above, we consider all punctuation,
