@@ -215,7 +215,7 @@ function taxonomy_schema() {
         'not null' => TRUE,
         'default' => 0,
         'size' => 'tiny',
-        'description' => t('Whether or not multiple terms from this vocablulary may be assigned to a node. (0 = disabled, 1 = enabled)'),
+        'description' => t('Whether or not multiple terms from this vocabulary may be assigned to a node. (0 = disabled, 1 = enabled)'),
       ),
       'required' => array(
         'type' => 'int',

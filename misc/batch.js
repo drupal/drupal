@@ -1,7 +1,7 @@
 // $Id$
 
 /**
- * Attaches the batch behaviour to progress bars.
+ * Attaches the batch behavior to progress bars.
  */
 Drupal.behaviors.batch = function (context) {
   // This behavior attaches by ID, so is only valid once on a page.

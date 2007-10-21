@@ -146,7 +146,7 @@ function locale_schema() {
         'length' => 12,
         'not null' => TRUE,
         'default' => '',
-        'description' => t("Language code, eg 'de' or 'en-US'."),
+        'description' => t("Language code, e.g. 'de' or 'en-US'."),
       ),
       'name' => array(
         'type' => 'varchar',

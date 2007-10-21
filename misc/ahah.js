@@ -13,7 +13,7 @@
  */
 
 /**
- * Attaches the ahah behaviour to each ahah form element.
+ * Attaches the ahah behavior to each ahah form element.
  */
 Drupal.behaviors.ahah = function(context) {
   for (var base in Drupal.settings.ahah) {

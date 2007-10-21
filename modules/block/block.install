@@ -79,7 +79,7 @@ function block_schema() {
       'pages' => array(
         'type' => 'text',
         'not null' => TRUE,
-        'description' => t('Contents of the "Pages" block; contain either a list of paths on which to include/exlclude the block or PHP code, depending on "visibility" setting.'),
+        'description' => t('Contents of the "Pages" block; contains either a list of paths on which to include/exclude the block or PHP code, depending on "visibility" setting.'),
       ),
       'title' => array(
         'type' => 'varchar',

@@ -104,7 +104,7 @@ function unicode_requirements() {
 
   return $requirements;
 }
- 
+
 /**
  * Prepare a new XML parser.
  *
@@ -427,7 +427,7 @@ function drupal_ucfirst($text) {
 
 /**
  * Cut off a piece of a string based on character indices and counts. Follows
- * the same behaviour as PHP's own substr() function.
+ * the same behavior as PHP's own substr() function.
  *
  * Note that for cutting off a string at a known character/substring
  * location, the usage of PHP's normal strpos/substr is safe and

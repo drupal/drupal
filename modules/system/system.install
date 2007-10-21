@@ -930,7 +930,7 @@ function system_schema() {
         'not null' => TRUE,
         'default' => 0),
       'info' => array(
-        'description' => t("A serialized array containing information from the module's .info file; keys can include name, description, package, version, core, dependencies, depedents, and php."),
+        'description' => t("A serialized array containing information from the module's .info file; keys can include name, description, package, version, core, dependencies, dependents, and php."),
         'type' => 'text',
         'not null' => FALSE)
       ),

@@ -2127,7 +2127,7 @@ function user_register_submit($form, &$form_state) {
       // No e-mail verification is required, create new user account, and login user immediately.
       _user_mail_notify('register_no_approval_required', $account);
       if (user_authenticate($account->name, trim($pass))) {
-        drupal_set_message(t('Registration succesful. You are now logged in.'));
+        drupal_set_message(t('Registration successful. You are now logged in.'));
       }
       $form_state['redirect'] = '';
       return;

@@ -55,7 +55,7 @@ function poll_schema() {
         'type' => 'serial',
         'unsigned' => TRUE,
         'not null' => TRUE,
-        'description' => t('Unique identifer for a poll choice.'),
+        'description' => t('Unique identifier for a poll choice.'),
         ),
       'nid'     => array(
         'type' => 'int',

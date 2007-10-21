@@ -1,7 +1,7 @@
 // $Id$
 
 /**
- * Auto-attach for teaser behaviour.
+ * Auto-attach for teaser behavior.
  *
  * Note: depends on resizable textareas.
  */

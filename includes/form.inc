@@ -1847,7 +1847,7 @@ function theme_form($element) {
 function theme_textarea($element) {
   $class = array('form-textarea');
 
-  // Add teaser behaviour (must come before resizable)
+  // Add teaser behavior (must come before resizable)
   if (!empty($element['#teaser'])) {
     drupal_add_js('misc/teaser.js');
     // Note: arrays are merged in drupal_get_js().
@@ -1856,7 +1856,7 @@ function theme_textarea($element) {
     $class[] = 'teaser';
   }
 
-  // Add resizable behaviour
+  // Add resizable behavior
   if ($element['#resizable'] !== FALSE) {
     drupal_add_js('misc/textarea.js');
     $class[] = 'resizable';
