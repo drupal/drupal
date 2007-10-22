@@ -1561,6 +1561,18 @@ function theme_feed_icon($url, $title) {
 }
 
 /**
+ * Returns code that emits the 'more' link used on blocks.
+ *
+ * @param $url
+ *   The url of the main page
+ * @param $title
+ *   A descriptive verb for the link, like 'Read more'
+ */
+function theme_more_link($url, $title) {
+  return '<div class="more-link">'. t('<a href="@link" title="@title">more</a>', array('@link' => check_url($url), '@title' => $title)) .'</div>';
+}
+
+/**
  * Execute hook_footer() which is run at the end of the page right before the
  * close of the body tag.
  *

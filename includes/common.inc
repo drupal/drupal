@@ -2787,6 +2787,9 @@ function drupal_common_themes() {
     'feed_icon' => array(
       'arguments' => array('url' => NULL, 'title' => NULL),
     ),
+    'more_link' => array(
+      'arguments' => array('url' => NULL, 'title' => NULL)
+    ),
     'closure' => array(
       'arguments' => array('main' => 0),
     ),
