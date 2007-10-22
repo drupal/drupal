@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.246 2007/10/21 18:59:02 goba Exp $
+// $Id: poll.module,v 1.247 2007/10/22 09:25:33 goba Exp $
 
 /**
  * @file
@@ -237,10 +237,6 @@ function poll_form(&$node, $form_state) {
       'effect' => 'fade',
     ),
   );
-
-  // If we're using the javascript version (99% use-case), change the button
-  // title to 'Add another choice' to reflect the javascript behavior.
-  drupal_add_js("if (Drupal.jsEnabled) { $(document).ready(function() { $('#edit-poll-more').val('". t('Add another choice') ."'); }); }", 'inline');
 
   // Poll attributes
   $_duration = array(0 => t('Unlimited')) + drupal_map_assoc(array(86400, 172800, 345600, 604800, 1209600, 2419200, 4838400, 9676800, 31536000), "format_interval");
@@ -633,6 +629,9 @@ function poll_view_results(&$node, $teaser, $page, $block) {
  * Theme the admin poll form for choices.
  */
 function theme_poll_choices($form) {
+  // Change the button title to reflect the behavior when using JavaScript.
+  drupal_add_js('if (Drupal.jsEnabled) { $(document).ready(function() { $("#edit-poll-more").val("'. t('Add another choice') .'"); }); }', 'inline');
+
   $rows = array();
   $headers = array(
     t('Choice'),
