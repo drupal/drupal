@@ -61,6 +61,31 @@ Drupal.cleanURLsInstallCheck = function() {
 };
 
 /**
+ * When a field is filled out, apply its value to other fields that will likely
+ * use the same value. In the installer this is used to populate the
+ * administrator e-mail address with the same value as the site e-mail address.
+ */
+Drupal.behaviors.copyFieldValue = function (context) {
+  for (var sourceId in Drupal.settings.copyFieldValue) {
+    // Get the list of target fields.
+    targetIds = Drupal.settings.copyFieldValue[sourceId];
+    if (!$('#'+ sourceId + '.copy-field-values-processed').size(), context) {
+      // Add the behavior to update target fields on blur of the primary field.
+      sourceField = $('#' + sourceId);
+      sourceField.bind('blur', function() {
+        for (var delta in targetIds) {
+          var targetField = $('#'+ targetIds[delta]);
+          if (targetField.val() == '') {
+            targetField.val(this.value);
+          }
+        }
+      });
+      sourceField.addClass('copy-field-values-processed');
+    }
+  }
+}
+
+/**
  * Show/hide custom format sections on the date-time settings page.
  */
 Drupal.behaviors.dateTime = function(context) {
