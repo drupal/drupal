@@ -1,5 +1,5 @@
 <?php
-// $Id: install.pgsql.inc,v 1.5 2007/10/19 15:02:15 goba Exp $
+// $Id: install.pgsql.inc,v 1.6 2007/10/22 15:22:39 dries Exp $
 
 // PostgreSQL specific install functions
 
@@ -48,7 +48,7 @@ function drupal_test_pgsql($url, &$success) {
   // Test connecting to the database.
   $connection = @pg_connect($conn_string);
   if (!$connection) {
-    drupal_set_message(st('Failure to connect to your PostgreSQL database server. PostgreSQL reports the following message: %error.<ul><li>Are you sure you have the correct username and password?</li><li>Are you sure that you have typed the correct database hostname?</li><li>Are you sure that the database server is running?</li><li>Are you sure you typed the correct database name?</li></ul>For more help, see the <a href="http://drupal.org/node/258">Installation and upgrading handbook</a>. If you are unsure what these terms mean you should probably contact your hosting provider.', array('%error' => 'Connection failed. See log file for failure reason')), 'error');
+    drupal_set_message(st('Failed to connect to your PostgreSQL database server. PostgreSQL reports the following message: %error.<ul><li>Are you sure you have the correct username and password?</li><li>Are you sure that you have typed the correct database hostname?</li><li>Are you sure that the database server is running?</li><li>Are you sure you typed the correct database name?</li></ul>For more help, see the <a href="http://drupal.org/node/258">Installation and upgrading handbook</a>. If you are unsure what these terms mean you should probably contact your hosting provider.', array('%error' => 'Connection failed. See log file for failure reason')), 'error');
     return FALSE;
   }
 
@@ -58,7 +58,7 @@ function drupal_test_pgsql($url, &$success) {
   $query = 'CREATE TABLE drupal_install_test (id integer NOT NULL)';
   $result = pg_query($connection, $query);
   if ($error = pg_result_error($result)) {
-    drupal_set_message(st('We were unable to create a test table on your PostgreSQL database server with the command %query. PostgreSQL reports the following message: %error.<ul><li>Are you sure the configured username has the necessary PostgreSQL permissions to create tables in the database?</li></ul>For more help, see the <a href="http://drupal.org/node/258">Installation and upgrading handbook</a>. If you are unsure what these terms mean you should probably contact your hosting provider.', array('%query' => $query, '%error' => $error)), 'error');
+    drupal_set_message(st('Failed to create a test table on your PostgreSQL database server with the command %query. PostgreSQL reports the following message: %error.<ul><li>Are you sure the configured username has the necessary PostgreSQL permissions to create tables in the database?</li></ul>For more help, see the <a href="http://drupal.org/node/258">Installation and upgrading handbook</a>. If you are unsure what these terms mean you should probably contact your hosting provider.', array('%query' => $query, '%error' => $error)), 'error');
     return FALSE;
   }
   $err = FALSE;
@@ -69,7 +69,7 @@ function drupal_test_pgsql($url, &$success) {
   $query = 'INSERT INTO drupal_install_test (id) VALUES (1)';
   $result = pg_query($connection, $query);
   if ($error = pg_result_error($result)) {
-    drupal_set_message(st('We were unable to insert a value into a test table on your PostgreSQL database server. We tried inserting a value with the command %query and PostgreSQL reported the following error: %error.', array('%query' => $query, '%error' => $error)), 'error');
+    drupal_set_message(st('Failed to insert a value into a test table on your PostgreSQL database server. We tried inserting a value with the command %query and PostgreSQL reported the following error: %error.', array('%query' => $query, '%error' => $error)), 'error');
     $err = TRUE;
   }
   else {
@@ -80,7 +80,7 @@ function drupal_test_pgsql($url, &$success) {
   $query = 'UPDATE drupal_install_test SET id = 2';
   $result = pg_query($connection, $query);
   if ($error = pg_result_error($result)) {
-    drupal_set_message(st('We were unable to update a value in a test table on your PostgreSQL database server. We tried updating a value with the command %query and PostgreSQL reported the following error: %error.', array('%query' => $query, '%error' => $error)), 'error');
+    drupal_set_message(st('Failed to update a value in a test table on your PostgreSQL database server. We tried updating a value with the command %query and PostgreSQL reported the following error: %error.', array('%query' => $query, '%error' => $error)), 'error');
     $err = TRUE;
   }
   else {
@@ -91,7 +91,7 @@ function drupal_test_pgsql($url, &$success) {
   $query = 'BEGIN; LOCK drupal_install_test IN SHARE ROW EXCLUSIVE MODE';
   $result = pg_query($connection, $query);
   if ($error = pg_result_error($result)) {
-    drupal_set_message(st('We were unable to lock a test table on your PostgreSQL database server. We tried locking a table with the command %query and PostgreSQL reported the following error: %error.', array('%query' => $query, '%error' => $error)), 'error');
+    drupal_set_message(st('Failed to lock a test table on your PostgreSQL database server. We tried locking a table with the command %query and PostgreSQL reported the following error: %error.', array('%query' => $query, '%error' => $error)), 'error');
     $err = TRUE;
   }
   else {
@@ -102,7 +102,7 @@ function drupal_test_pgsql($url, &$success) {
   $query = 'COMMIT';
   $result = pg_query($connection, $query);
   if ($error = pg_result_error()) {
-    drupal_set_message(st('We were unable to unlock a test table on your PostgreSQL database server. We tried unlocking a table with the command %query and PostgreSQL reported the following error: %error.', array('%query' => $query, '%error' => $error)), 'error');
+    drupal_set_message(st('Failed to unlock a test table on your PostgreSQL database server. We tried unlocking a table with the command %query and PostgreSQL reported the following error: %error.', array('%query' => $query, '%error' => $error)), 'error');
     $err = TRUE;
   }
   else {
@@ -113,7 +113,7 @@ function drupal_test_pgsql($url, &$success) {
   $query = 'DELETE FROM drupal_install_test';
   $result = pg_query($connection, $query);
   if ($error = pg_result_error()) {
-    drupal_set_message(st('We were unable to delete a value from a test table on your PostgreSQL database server. We tried deleting a value with the command %query and PostgreSQL reported the following error: %error.', array('%query' => $query, '%error' => $error)), 'error');
+    drupal_set_message(st('Failed to delete a value from a test table on your PostgreSQL database server. We tried deleting a value with the command %query and PostgreSQL reported the following error: %error.', array('%query' => $query, '%error' => $error)), 'error');
     $err = TRUE;
   }
   else {
@@ -124,7 +124,7 @@ function drupal_test_pgsql($url, &$success) {
   $query = 'DROP TABLE drupal_install_test';
   $result = pg_query($connection, $query);
   if ($error = pg_result_error()) {
-    drupal_set_message(st('We were unable to drop a test table from your PostgreSQL database server. We tried dropping a table with the command %query and PostgreSQL reported the following error %error.', array('%query' => $query, '%error' => $error)), 'error');
+    drupal_set_message(st('Failed to drop a test table from your PostgreSQL database server. We tried dropping a table with the command %query and PostgreSQL reported the following error %error.', array('%query' => $query, '%error' => $error)), 'error');
     $err = TRUE;
   }
   else {
