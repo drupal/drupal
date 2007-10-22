@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.5 2007/10/05 13:14:04 goba Exp $
+// $Id: node.pages.inc,v 1.6 2007/10/22 10:37:14 goba Exp $
 
 /**
  * @file
@@ -213,7 +213,7 @@ function node_form(&$form_state, $node) {
     );
   }
   $form['#validate'][] = 'node_form_validate';
-  $form['#theme'] = 'node_form';
+  $form['#theme'] = array($node->type .'_node_form', 'node_form');
   return $form;
 }
 
