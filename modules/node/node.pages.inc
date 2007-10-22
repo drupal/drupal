@@ -213,7 +213,7 @@ function node_form(&$form_state, $node) {
     );
   }
   $form['#validate'][] = 'node_form_validate';
-  $form['#theme'] = 'node_form';
+  $form['#theme'] = array($node->type .'_node_form', 'node_form');
   return $form;
 }
 
