@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.82 2007/10/22 15:19:37 dries Exp $
+// $Id: install.php,v 1.83 2007/10/22 15:48:26 dries Exp $
 
 require_once './includes/install.inc';
 
@@ -922,7 +922,7 @@ function install_configure_form() {
   drupal_add_js(drupal_get_path('module', 'system') .'/system.js', 'module');
   // We add these strings as settings because JavaScript translation does not
   // work on install time.
-  drupal_add_js(array('cleanURL' => array('success' => st('Your server has been successfully tested to support this feature.'), 'failure' => st('Your system configuration does not currently support this feature. The <a href="http://drupal.org/node/15365">handbook page on Clean URLs</a> has additional troubleshooting information.'), 'testing' => st('Testing clean URLs...'))), 'setting');
+  drupal_add_js(array('copyFieldValue' => array('edit-site-mail' => array('edit-account-mail')), 'cleanURL' => array('success' => st('Your server has been successfully tested to support this feature.'), 'failure' => st('Your system configuration does not currently support this feature. The <a href="http://drupal.org/node/15365">handbook page on Clean URLs</a> has additional troubleshooting information.'), 'testing' => st('Testing clean URLs...'))), 'setting');
   drupal_add_js('
 // Global Killswitch
 if (Drupal.jsEnabled) {
