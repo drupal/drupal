@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.390 2007/10/08 14:15:09 goba Exp $
+// $Id: theme.inc,v 1.391 2007/10/22 09:36:05 goba Exp $
 
 /**
  * @file
@@ -1558,6 +1558,18 @@ function theme_feed_icon($url, $title) {
   if ($image = theme('image', 'misc/feed.png', t('Syndicate content'), $title)) {
     return '<a href="'. check_url($url) .'" class="feed-icon">'. $image .'</a>';
   }
+}
+
+/**
+ * Returns code that emits the 'more' link used on blocks.
+ *
+ * @param $url
+ *   The url of the main page
+ * @param $title
+ *   A descriptive verb for the link, like 'Read more'
+ */
+function theme_more_link($url, $title) {
+  return '<div class="more-link">'. t('<a href="@link" title="@title">more</a>', array('@link' => check_url($url), '@title' => $title)) .'</div>';
 }
 
 /**

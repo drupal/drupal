@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.286 2007/10/11 16:37:43 goba Exp $
+// $Id: blog.module,v 1.287 2007/10/22 09:36:05 goba Exp $
 
 /**
  * @file
@@ -192,7 +192,7 @@ function blog_block($op = 'list', $delta = 0) {
       $result = db_query_range(db_rewrite_sql("SELECT n.nid, n.title, n.created FROM {node} n WHERE n.type = 'blog' AND n.status = 1 ORDER BY n.created DESC"), 0, 10);
       if ($node_title_list = node_title_list($result)) {
         $block['content'] = $node_title_list;
-        $block['content'] .= '<div class="more-link">'. l(t('more'), 'blog', array('title' => t('Read the latest blog entries.'))) .'</div>';
+        $block['content'] .= theme('more_link', url('blog'), t('Read the latest blog entries.'));
         $block['subject'] = t('Recent blog posts');
         return $block;
       }
