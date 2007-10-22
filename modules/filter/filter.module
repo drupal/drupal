@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.189 2007/09/28 08:09:25 dries Exp $
+// $Id: filter.module,v 1.190 2007/10/22 10:32:03 goba Exp $
 
 /**
  * @file
@@ -29,7 +29,7 @@ function filter_help($path, $arg) {
 <p><em>Input formats</em> define a way of processing user-supplied text in Drupal. Every input format has its own settings of which <em>filters</em> to apply. Possible filters include stripping out malicious HTML and making URLs clickable.</p>
 <p>Users can choose between the available input formats when submitting content.</p>
 <p>Below you can configure which input formats are available to which roles, as well as choose a default input format (used for imported content, for example).</p>
-<p>Note that (1) the default format is always available to all roles, and (2) all filter formats can always be used by roles with the "administer filters" permission even if they are not explicitly listed in the Roles column of this table.</p>');
+<p>Note that (1) the default format is always available to all roles, and (2) all input formats can always be used by roles with the "administer filters" permission even if they are not explicitly listed in the Roles column of the table below.</p>');
 
     case 'admin/settings/filters/%':
       return t('
