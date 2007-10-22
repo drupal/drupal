@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.81 2007/10/19 10:19:02 goba Exp $
+// $Id: install.php,v 1.82 2007/10/22 15:19:37 dries Exp $
 
 require_once './includes/install.inc';
 
@@ -397,7 +397,7 @@ function _install_settings_form_validate($db_prefix, $db_type, $db_user, $db_pas
     $function = 'drupal_test_'. $db_type;
     if (!$function($db_url, $success)) {
       if (isset($success['CONNECT'])) {
-        form_set_error('db_type', st('In order for Drupal to work and to proceed with the installation process you must resolve all permission issues reported above. We were able to verify that we have permission for the following commands: %commands. For more help with configuring your database server, see the <a href="http://drupal.org/node/258">Installation and upgrading handbook</a>. If you are unsure what any of this means you should probably contact your hosting provider.', array('%commands' => implode($success, ', '))));
+        form_set_error('db_type', st('In order for Drupal to work, and to continue with the installation process, you must resolve all permission issues reported above. We were able to verify that we have permission for the following commands: %commands. For more help with configuring your database server, see the <a href="http://drupal.org/node/258">Installation and upgrading handbook</a>. If you are unsure what any of this means you should probably contact your hosting provider.', array('%commands' => implode($success, ', '))));
       }
       else {
         form_set_error('db_type', '');
