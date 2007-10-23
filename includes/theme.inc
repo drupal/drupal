@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.391 2007/10/22 09:36:05 goba Exp $
+// $Id: theme.inc,v 1.392 2007/10/23 09:42:09 goba Exp $
 
 /**
  * @file
@@ -766,10 +766,12 @@ function drupal_find_theme_templates($cache, $extension, $path) {
   // templates separately from checking for patterns.
   $files = drupal_system_listing($regex, $path, 'name', 0);
   foreach ($files as $template => $file) {
-    // Chop off the extension. We do it this way because $template will
-    // have one extension chopped off, but there might be more than one,
-    // such as with .tpl.php
-    $template = substr($template, 0, strpos($template, '.'));
+    // Chop off the remaining extensions if there are any. $template already
+    // has the rightmost extension removed, but there might still be more,
+    // such as with .tpl.php, which still has .tpl in $template at this point.
+    if (($pos = strpos($template, '.')) !== FALSE) {
+      $template = substr($template, 0, $pos);
+    }
     // Transform - in filenames to _ to match function naming scheme
     // for the purposes of searching.
     $hook = strtr($template, '-', '_');
