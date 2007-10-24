@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.895 2007/10/19 10:19:02 goba Exp $
+// $Id: node.module,v 1.896 2007/10/24 14:38:38 goba Exp $
 
 /**
  * @file
@@ -47,8 +47,6 @@ function node_help($path, $arg) {
       return $output;
     case 'admin/content/node':
       return ' '; // Return a non-null value so that the 'more help' link is shown.
-    case 'admin/content/search':
-      return '<p>'. t('Enter a simple pattern to search for a post. Words are matched exactly. Phrases can be surrounded by quotes to do an exact search.') .'</p>';
     case 'admin/content/types':
       return '<p>'. t('Below is a list of all the content types on your site. All posts that exist on your site are instances of one of these content types.') .'</p>';
     case 'admin/content/types/add':
@@ -1249,16 +1247,6 @@ function node_menu() {
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10,
   );
-
-  if (module_exists('search')) {
-    $items['admin/content/search'] = array(
-      'title' => 'Search content',
-      'description' => 'Search content by keyword.',
-      'page callback' => 'node_admin_search',
-      'access arguments' => array('administer nodes'),
-      'file' => 'node.admin.inc',
-    );
-  }
 
   $items['admin/content/node-settings'] = array(
     'title' => 'Post settings',

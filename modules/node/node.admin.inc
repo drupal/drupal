@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.7 2007/10/24 09:15:04 goba Exp $
+// $Id: node.admin.inc,v 1.8 2007/10/24 14:38:38 goba Exp $
 
 /**
  * @file
@@ -68,11 +68,6 @@ function node_configure_rebuild_confirm_submit($form, &$form_state) {
   node_access_rebuild(TRUE);
   $form_state['redirect'] = 'admin/content/node-settings';
   return;
-}
-
-function node_admin_search() {
-  $keys = isset($_POST['keys']) ? $_POST['keys'] : NULL;
-  return drupal_get_form('search_form', url('admin/content/search'), $keys, 'node') . search_data($keys, 'node');
 }
 
 /**
