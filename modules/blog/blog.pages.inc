@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.pages.inc,v 1.1 2007/07/22 06:48:25 dries Exp $
+// $Id: blog.pages.inc,v 1.2 2007/10/24 11:17:01 goba Exp $
 
 /**
  * @file
@@ -12,37 +12,27 @@
 function blog_page_user($account) {
   global $user;
 
-  $account = user_load(array((is_numeric($uid) ? 'uid' : 'name') => $uid, 'status' => 1));
+  drupal_set_title($title = t("@name's blog", array('@name' => $account->name)));
 
-  if (!empty($account->uid)) {
-    drupal_set_title($title = t("@name's blog", array('@name' => $account->name)));
+  $items = array();
 
-    if (($account->uid == $user->uid) && user_access('edit own blog')) {
-      $output = '<li>'. l(t('Post new blog entry.'), "node/add/blog") .'</li>';
-    }
-    else if ($account->uid == $user->uid) {
-      $output = '<li>'. t('You are not allowed to post a new blog entry.') .'</li>';
-    }
-
-    if ($output) {
-      $output = '<ul>'. $output .'</ul>';
-    }
-    else {
-      $output = '';
-    }
-
-    $result = pager_query(db_rewrite_sql("SELECT n.nid, n.sticky, n.created FROM {node} n WHERE n.type = 'blog' AND n.uid = %d AND n.status = 1 ORDER BY n.sticky DESC, n.created DESC"), variable_get('default_nodes_main', 10), 0, NULL, $account->uid);
-    while ($node = db_fetch_object($result)) {
-      $output .= node_view(node_load($node->nid), 1);
-    }
-    $output .= theme('pager', NULL, variable_get('default_nodes_main', 10));
-    drupal_add_feed(url('blog/'. $account->uid .'/feed'), t('RSS - !title', array('!title' => $title)));
-
-    return $output;
+  if (($account->uid == $user->uid) && user_access('edit own blog')) {
+    $items[] = l(t('Post new blog entry.'), "node/add/blog");
   }
-  else {
-    drupal_not_found();
+  else if ($account->uid == $user->uid) {
+    $items[] = t('You are not allowed to post a new blog entry.') .'</li>';
   }
+
+  $output = theme('item_list', $items);
+
+  $result = pager_query(db_rewrite_sql("SELECT n.nid, n.sticky, n.created FROM {node} n WHERE n.type = 'blog' AND n.uid = %d AND n.status = 1 ORDER BY n.sticky DESC, n.created DESC"), variable_get('default_nodes_main', 10), 0, NULL, $account->uid);
+  while ($node = db_fetch_object($result)) {
+    $output .= node_view(node_load($node->nid), 1);
+  }
+  $output .= theme('pager', NULL, variable_get('default_nodes_main', 10));
+  drupal_add_feed(url('blog/'. $account->uid .'/feed'), t('RSS - !title', array('!title' => $title)));
+
+  return $output;
 }
 
 /**
@@ -67,19 +57,10 @@ function blog_page_last() {
 /**
  * Menu callback; displays an RSS feed containing recent blog entries of a given user.
  */
-function blog_feed_user($uid = 0) {
-  global $user;
-
-  if ($uid) {
-    $account = user_load(array('uid' => $uid, 'status' => 1));
-  }
-  else {
-    $account = $user;
-  }
-
-  $result = db_query_range(db_rewrite_sql("SELECT n.nid, n.created FROM {node} n  WHERE n.type = 'blog' AND n.uid = %d AND n.status = 1 ORDER BY n.created DESC"), $uid, 0, variable_get('feed_default_items', 10));
+function blog_feed_user($account) {
+  $result = db_query_range(db_rewrite_sql("SELECT n.nid, n.created FROM {node} n  WHERE n.type = 'blog' AND n.uid = %d AND n.status = 1 ORDER BY n.created DESC"), $account->uid, 0, variable_get('feed_default_items', 10));
   $channel['title'] = $account->name ."'s blog";
-  $channel['link'] = url("blog/$uid", array('absolute' => TRUE));
+  $channel['link'] = url('blog/'. $account->uid, array('absolute' => TRUE));
 
   while ($row = db_fetch_object($result)) {
     $items[] = $row->nid;

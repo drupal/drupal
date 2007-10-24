@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.854 2007/10/21 18:59:02 goba Exp $
+// $Id: user.module,v 1.855 2007/10/24 11:17:01 goba Exp $
 
 /**
  * @file
@@ -1068,7 +1068,7 @@ function user_init() {
 }
 
 function user_current_load($arg) {
-  return $arg ? user_load($arg) : user_load($GLOBALS['user']->uid);
+  return $arg ? user_load($arg) : FALSE;
 }
 
 function user_current_to_arg($arg) {

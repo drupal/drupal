@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.287 2007/10/22 09:36:05 goba Exp $
+// $Id: blog.module,v 1.288 2007/10/24 11:17:01 goba Exp $
 
 /**
  * @file
@@ -145,22 +145,16 @@ function blog_menu() {
     'type' => MENU_SUGGESTED_ITEM,
     'file' => 'blog.pages.inc',
   );
-  $items['blog/%user/view'] = array(
-    'title' => 'Blogs',
-    'page callback' => 'blog_page_user',
-    'access arguments' => array('access content'),
-    'type' => MENU_CALLBACK,
-    'file' => 'blog.pages.inc',
-  );
   $items['blog/%user_current'] = array(
     'title' => 'My blog',
+    'page callback' => 'blog_page_user',
     'page arguments' => array(1),
-    'access arguments' => array('edit own blog'),
     'file' => 'blog.pages.inc',
   );
   $items['blog/%user/feed'] = array(
     'title' => 'Blogs',
     'page callback' => 'blog_feed_user',
+    'page arguments' => array(1),
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
     'file' => 'blog.pages.inc',
