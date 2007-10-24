@@ -70,11 +70,6 @@ function node_configure_rebuild_confirm_submit($form, &$form_state) {
   return;
 }
 
-function node_admin_search() {
-  $keys = isset($_POST['keys']) ? $_POST['keys'] : NULL;
-  return drupal_get_form('search_form', url('admin/content/search'), $keys, 'node') . search_data($keys, 'node');
-}
-
 /**
  * Implementation of hook_node_operations().
  */
