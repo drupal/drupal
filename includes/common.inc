@@ -1405,7 +1405,7 @@ function l($text, $path, $options = array()) {
  * react to the closing of the page by calling hook_exit().
  */
 function drupal_page_footer() {
-  if (variable_get('cache', 0)) {
+  if (variable_get('cache', CACHE_DISABLED) != CACHE_DISABLED) {
     page_set_cache();
   }
 
