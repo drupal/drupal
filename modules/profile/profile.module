@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.221 2007/10/11 09:51:28 goba Exp $
+// $Id: profile.module,v 1.222 2007/10/24 13:27:12 goba Exp $
 
 /**
  * @file
@@ -251,7 +251,7 @@ function profile_field_form(&$form_state, $arg = NULL) {
     'category' => '',
     'title' => '',
     'explanation' => '',
-    'weight' => '',
+    'weight' => 0,
     'page' => '',
     'autocomplete' => '',
     'required' => '',
