@@ -1068,7 +1068,7 @@ function user_init() {
 }
 
 function user_current_load($arg) {
-  return $arg ? user_load($arg) : user_load($GLOBALS['user']->uid);
+  return $arg ? user_load($arg) : FALSE;
 }
 
 function user_current_to_arg($arg) {
