@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.705 2007/10/22 09:36:05 goba Exp $
+// $Id: common.inc,v 1.706 2007/10/24 11:30:39 goba Exp $
 
 /**
  * @file
@@ -1405,7 +1405,7 @@ function l($text, $path, $options = array()) {
  * react to the closing of the page by calling hook_exit().
  */
 function drupal_page_footer() {
-  if (variable_get('cache', 0)) {
+  if (variable_get('cache', CACHE_DISABLED) != CACHE_DISABLED) {
     page_set_cache();
   }
 

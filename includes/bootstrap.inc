@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.196 2007/10/17 13:03:03 dries Exp $
+// $Id: bootstrap.inc,v 1.197 2007/10/24 11:30:39 goba Exp $
 
 /**
  * @file
@@ -885,12 +885,23 @@ function _drupal_bootstrap($phase) {
 
     case DRUPAL_BOOTSTRAP_CONFIGURATION:
       drupal_unset_globals();
+      // Start a page timer:
+      timer_start('page');
       // Initialize the configuration
       conf_init();
       break;
 
     case DRUPAL_BOOTSTRAP_EARLY_PAGE_CACHE:
-      _drupal_cache_init($phase);
+      // Allow specifying special cache handlers in settings.php, like
+      // using memcached or files for storing cache information.
+      require_once variable_get('cache_inc', './includes/cache.inc');
+      // If the page_cache_fastpath is set to TRUE in settings.php and
+      // page_cache_fastpath (implemented in the special implementation of
+      // cache.inc) printed the page and indicated this with a returned TRUE
+      // then we are done.
+      if (variable_get('page_cache_fastpath', FALSE) && page_cache_fastpath()) {
+        exit;
+      }
       break;
 
     case DRUPAL_BOOTSTRAP_DATABASE:
@@ -917,13 +928,26 @@ function _drupal_bootstrap($phase) {
     case DRUPAL_BOOTSTRAP_LATE_PAGE_CACHE:
       // Initialize configuration variables, using values from settings.php if available.
       $conf = variable_init(isset($conf) ? $conf : array());
-
-      _drupal_cache_init($phase);
-
-      // Start a page timer:
-      timer_start('page');
-
-      bootstrap_invoke_all('boot');
+      // Load module handling.
+      require_once './includes/module.inc';
+      $cache_mode = variable_get('cache', CACHE_DISABLED);
+      // Get the page from the cache.
+      $cache = $cache_mode == CACHE_DISABLED ? '' : page_get_cache();
+      // If the skipping of the bootstrap hooks is not enforced, call hook_boot.
+      if ($cache_mode != CACHE_AGGRESSIVE) {
+        bootstrap_invoke_all('boot');
+      }
+      // If there is a cached page, display it.
+      if ($cache) {
+        drupal_page_cache_header($cache);
+        // If the skipping of the bootstrap hooks is not enforced, call hook_exit.
+        if ($cache_mode != CACHE_AGGRESSIVE) {
+          bootstrap_invoke_all('exit');
+        }
+        // We are done.
+        exit;
+      }
+      // Prepare for non-cached page workflow.
       drupal_page_header();
       break;
 
@@ -941,35 +965,6 @@ function _drupal_bootstrap($phase) {
       require_once './includes/common.inc';
       _drupal_bootstrap_full();
       break;
-  }
-}
-
-/**
- * Initialize the caching strategy, which loads at different stages within
- * Drupal's bootstrap process.
- */
-function _drupal_cache_init($phase) {
-  require_once variable_get('cache_inc', './includes/cache.inc');
-
-  if ($phase == DRUPAL_BOOTSTRAP_EARLY_PAGE_CACHE && variable_get('page_cache_fastpath', 0)) {
-    if (page_cache_fastpath()) {
-      exit();
-    }
-  }
-  elseif ($phase == DRUPAL_BOOTSTRAP_LATE_PAGE_CACHE) {
-    if ($cache = page_get_cache()) {
-      if (variable_get('cache', CACHE_DISABLED) == CACHE_AGGRESSIVE) {
-        drupal_page_cache_header($cache);
-        exit();
-      }
-      elseif (variable_get('cache', CACHE_DISABLED) == CACHE_NORMAL) {
-        require_once './includes/module.inc';
-        drupal_page_cache_header($cache);
-        bootstrap_invoke_all('exit');
-        exit();
-      }
-    }
-    require_once './includes/module.inc';
   }
 }
 
