@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.module,v 1.3 2007/10/11 09:51:29 goba Exp $
+// $Id: trigger.module,v 1.4 2007/10/24 11:56:33 goba Exp $
 
 /**
  * @file
@@ -11,32 +11,24 @@
  * Implementation of hook_help().
  */
 function trigger_help($path, $arg) {
-  $output = '';
   $explanation = '<p>'. t('Triggers are system events, such as when new content is added or when a user logs in. Trigger module combines these triggers with actions (functional tasks), such as unpublishing content or e-mailing an administrator. The <a href="@url">Actions settings page</a> contains a list of existing actions and provides the ability to create and configure additional actions.', array('@url' => url('admin/settings/actions'))) .'</p>';
   switch ($path) {
     case 'admin/build/trigger/comment':
-      $output .= $explanation .'<p>'. t('Below you can assign actions to run when certain comment-related triggers happen. For example, you could promote a post to the front page when a comment is added.') .'</p>';
-      break;
+      return $explanation .'<p>'. t('Below you can assign actions to run when certain comment-related triggers happen. For example, you could promote a post to the front page when a comment is added.') .'</p>';
     case 'admin/build/trigger/node':
-      $output .= $explanation .'<p>'. t('Below you can assign actions to run when certain content-related triggers happen. For example, you could remove a post from the front page when the post is updated.') .'</p>';
-      break;
+      return $explanation .'<p>'. t('Below you can assign actions to run when certain content-related triggers happen. For example, you could remove a post from the front page when the post is updated.') .'</p>';
     case 'admin/build/trigger/cron':
-      $output .= $explanation .'<p>'. t('Below you can assign actions to run when cron runs. More information on cron is available in the <a href="@system">System module help page</a>.', array('@system' => url('admin/help/system'))) .'</p>';
-      break;
+      return $explanation .'<p>'. t('Below you can assign actions to run when cron runs. More information on cron is available in the <a href="@system">System module help page</a>.', array('@system' => url('admin/help/system'))) .'</p>';
     case 'admin/build/trigger/taxonomy':
-      $output .= $explanation .'<p>'.  t('Below you can assign actions to run when certain category-related triggers happen. For example, you could send an e-mail to an administrator when a category is deleted.') .'</p>';
-      break;
+      return $explanation .'<p>'. t('Below you can assign actions to run when certain category-related triggers happen. For example, you could send an e-mail to an administrator when a category is deleted.') .'</p>';
     case 'admin/build/trigger/user':
-      $output .= $explanation .'<p>'. t("Below you can assign actions to run when certain user-related triggers happen. For example, you could send an e-mail to an administrator when a user account is deleted.") .'</p>';
-      break;
+      return $explanation .'<p>'. t("Below you can assign actions to run when certain user-related triggers happen. For example, you could send an e-mail to an administrator when a user account is deleted.") .'</p>';
     case 'admin/help#trigger':
-      $output .= '<p>'. t('The Trigger module provides the ability to trigger <a href="@actions">actions</a> upon system events, such as when new content is added or when a user logs in.', array('@actions' => url('admin/settings/actions'))) .'</p>';
+      $output = '<p>'. t('The Trigger module provides the ability to trigger <a href="@actions">actions</a> upon system events, such as when new content is added or when a user logs in.', array('@actions' => url('admin/settings/actions'))) .'</p>';
       $output .= '<p>'. t('The combination of actions and triggers can perform many useful tasks, such as e-mailing an administrator if a user account is deleted, or automatically unpublishing comments that contain certain words. By default, there are five "contexts" of events (Categories, Comments, Content, Cron, and Users), but more may be added by additional modules.') .'</p>';
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@trigger">Trigger</a> page.', array('@trigger' => 'http://drupal.org/handbook/modules/trigger/')) .'</p>';
-      break;
+      return $output;
   }
-
-  return $output;
 }
 
 /**
