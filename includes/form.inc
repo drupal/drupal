@@ -304,6 +304,13 @@ function drupal_process_form($form_id, &$form, &$form_state) {
   if ((!empty($form['#programmed'])) || (!empty($form['#post']) && (isset($form['#post']['form_id']) && ($form['#post']['form_id'] == $form_id)))) {
     drupal_validate_form($form_id, $form, $form_state);
 
+    // form_clean_id() maintains a cache of element IDs it has seen,
+    // so it can prevent duplicates. We want to be sure we reset that
+    // cache when a form is processed, so scenerios that result in
+    // the form being built behind the scenes and again for the
+    // browser don't increment all the element IDs needlessly.
+    form_clean_id(NULL, TRUE);
+
     if ((!empty($form_state['submitted'])) && !form_get_errors() && empty($form_state['rebuild'])) {
       $form_state['redirect'] = NULL;
       form_execute_handlers('submit', $form, $form_state);
@@ -2002,15 +2009,43 @@ function _form_set_class(&$element, $class = array()) {
 }
 
 /**
- * Remove invalid characters from an HTML ID attribute string.
+ * Prepare an HTML ID attribute string for a form item. 
+ *
+ * Remove invalid characters and guarantee uniqueness.
  *
  * @param $id
  *   The ID to clean.
+ * @param $flush
+ *   If set to TRUE, the function will flush and reset the static array
+ *   which is built to test the uniqueness of element IDs. This is only
+ *   used if a form has completed the validation process. This parameter
+ *   should never be set to TRUE if this function is being called to
+ *   assign an ID to the #ID element.
  * @return
  *   The cleaned ID.
  */
-function form_clean_id($id = NULL) {
+function form_clean_id($id = NULL, $flush = FALSE) {
+  static $seen_ids = array();
+
+  if ($flush) {
+    $seen_ids = array();
+    return;
+  }
   $id = str_replace(array('][', '_', ' '), '-', $id);
+
+  // Ensure IDs are unique. The first occurrence is held but left alone.
+  // Subsequent occurrences get a number appended to them. This incrementing
+  // will almost certainly break code that relies on explicit HTML IDs in
+  // forms that appear more than once on the page, but the alternative is
+  // outputting duplicate IDs, which would break JS code and XHTML
+  // validity anyways. For now, it's an acceptable stopgap solution.
+  if (isset($seen_ids[$id])) {
+    $id = $id .'-'. $seen_ids[$id]++;
+  }
+  else {
+    $seen_ids[$id] = 1;
+  }
+
   return $id;
 }
 
