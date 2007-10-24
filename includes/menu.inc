@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.220 2007/10/21 18:59:01 goba Exp $
+// $Id: menu.inc,v 1.221 2007/10/24 11:59:34 goba Exp $
 
 /**
  * @file
@@ -267,16 +267,45 @@ function menu_unserialize($data, $map) {
   }
 }
 
+
+
 /**
- * Get the menu callback for the a path.
+ * Replaces the statically cached item for a given path.
  *
  * @param $path
- *   A path, or NULL for the current path
+ *   The path.
+ * @param $router_item
+ *   The router item. Usually you take a router entry from menu_get_item and
+ *   set it back either modified or to a different path. This lets you modify the
+ *   navigation block, the page title, the breadcrumb and the page help in one
+ *   call.
  */
-function menu_get_item($path = NULL) {
+function menu_set_item($path, $router_item) {
+  menu_get_item($path, $router_item);
+}
+
+/**
+ * Get a router item.
+ *
+ * @param $path
+ *   The path, for example node/5. The function will find the corresponding
+ *   node/% item and return that.
+ * @param $router_item
+ *   Internal use only.
+ * @return
+ *   The router item, an associate array corresponding to one row in the
+ *   menu_router table. The value of key map holds the loaded objects. The
+ *   value of key access is TRUE if the current user can access this page.
+ *   The values for key title, page_arguments, access_arguments will be
+ *   filled in based on the database values and the objects loaded.
+ */
+function menu_get_item($path = NULL, $router_item = NULL) {
   static $router_items;
   if (!isset($path)) {
     $path = $_GET['q'];
+  }
+  if (isset($router_item)) {
+    $router_items[$path] = $router_item;
   }
   if (!isset($router_items[$path])) {
     $original_map = arg(NULL, $path);
@@ -1383,9 +1412,6 @@ function menu_set_active_trail($new_trail = NULL) {
  */
 function menu_get_active_trail() {
   return menu_set_active_trail();
-}
-
-function menu_set_location() {
 }
 
 /**
