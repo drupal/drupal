@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.6 2007/10/03 17:35:22 dries Exp $
+// $Id: node.admin.inc,v 1.7 2007/10/24 09:15:04 goba Exp $
 
 /**
  * @file
@@ -406,8 +406,11 @@ function node_admin_nodes() {
  * Theme node administration overview.
  */
 function theme_node_admin_nodes($form) {
-  // Overview table:
-  $header = array(theme('table_select_header_cell'), t('Title'), t('Type'), t('Author'), t('Status'));
+  // If there are rows in this form, then $form['title'] contains a list of
+  // the title form elements.
+  $has_posts = isset($form['title']) && is_array($form['title']);
+  $select_header = $has_posts ? theme('table_select_header_cell') : '';
+  $header = array($select_header, t('Title'), t('Type'), t('Author'), t('Status'));
   if (isset($form['language'])) {
     $header[] = t('Language');
   }
@@ -415,7 +418,7 @@ function theme_node_admin_nodes($form) {
   $output = '';
 
   $output .= drupal_render($form['options']);
-  if (isset($form['title']) && is_array($form['title'])) {
+  if ($has_posts) {
     foreach (element_children($form['title']) as $key) {
       $row = array();
       $row[] = drupal_render($form['nodes'][$key]);
