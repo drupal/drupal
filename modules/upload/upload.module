@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.186 2007/10/17 21:47:14 goba Exp $
+// $Id: upload.module,v 1.187 2007/10/25 09:05:45 goba Exp $
 
 /**
  * @file
@@ -183,7 +183,7 @@ function upload_node_form_submit($form, &$form_state) {
   );
 
   // Save new file uploads.
-  if (($user->uid != 1 || user_access('upload files')) && ($file = file_save_upload('upload', $validators))) {
+  if (($user->uid != 1 || user_access('upload files')) && ($file = file_save_upload('upload', $validators, file_directory_path()))) {
     $file->list = variable_get('upload_list_default', 1);
     $file->description = $file->filename;
     $_SESSION['upload_current_file'] = $file->fid;

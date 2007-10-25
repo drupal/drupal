@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.109 2007/10/18 15:33:00 goba Exp $
+// $Id: file.inc,v 1.110 2007/10/25 09:05:44 goba Exp $
 
 /**
  * @file
@@ -460,9 +460,6 @@ function file_space_used($uid = NULL) {
  *
  * @param $source
  *   A string specifying the name of the upload field to save.
- * @param $dest
- *   A string containing the directory $source should be copied to. If this is
- *   not provided, the temporary directory will be used.
  * @param $validators
  *   An optional, associative array of callback functions used to validate the
  *   file. The keys are function names and the values arrays of callback
@@ -470,6 +467,9 @@ function file_space_used($uid = NULL) {
  *   functions should return an array of error messages, an empty array
  *   indicates that the file passed validation. The functions will be called in
  *   the order specified.
+ * @param $dest
+ *   A string containing the directory $source should be copied to. If this is
+ *   not provided or is not writable, the temporary directory will be used.
  * @param $replace
  *   A boolean indicating whether an existing file of the same name in the
  *   destination directory should overwritten. A false value will generate a
@@ -536,12 +536,14 @@ function file_save_upload($source, $validators = array(), $dest = FALSE, $replac
       $file->filename .= '.txt';
     }
 
-    // Create temporary name/path for newly uploaded files.
-    if (!$dest) {
-      $dest = file_destination(file_create_path($file->filename), FILE_EXISTS_RENAME);
+    // If the destination is not provided, or is not writable, then use the
+    // temporary directory.
+    if (empty($dest) || file_check_path($dest) === FALSE) {
+      $dest = file_directory_temp();
     }
+
     $file->source = $source;
-    $file->destination = $dest;
+    $file->destination = file_destination(file_create_path($dest .'/'. $file->filename), FILE_EXISTS_RENAME);
     $file->filesize = $_FILES['files']['size'][$source];
 
     // Call the validation functions.
