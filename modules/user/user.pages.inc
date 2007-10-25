@@ -170,6 +170,8 @@ function user_view($account) {
  */
 function template_preprocess_user_profile(&$variables) {
   $variables['profile'] = array();
+  // Sort sections by weight
+  uasort($variables['account']->content, 'element_sort');
   // Provide keyed variables so themers can print each section independantly.
   foreach (element_children($variables['account']->content) as $key) {
     $variables['profile'][$key] = drupal_render($variables['account']->content[$key]);

@@ -569,7 +569,7 @@ function user_user($type, &$edit, &$account, $category = NULL) {
     $account->content['summary'] += array(
       '#type' => 'user_profile_category',
       '#attributes' => array('class' => 'user-member'),
-      '#weight' => -5,
+      '#weight' => 5,
       '#title' => t('History'),
     );
     $account->content['summary']['member_for'] =  array(
