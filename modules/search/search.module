@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.238 2007/10/21 18:59:02 goba Exp $
+// $Id: search.module,v 1.239 2007/10/25 20:29:51 dries Exp $
 
 /**
  * @file
@@ -303,7 +303,7 @@ function search_simplify($text) {
   $text = drupal_strtolower($text);
 
   // Call an external processor for word handling.
-  search_preprocess($text);
+  search_invoke_preprocess($text);
 
   // Simple CJK handling
   if (variable_get('overlap_cjk', TRUE)) {
@@ -390,7 +390,7 @@ function _search_index_truncate(&$text) {
 /**
  * Invokes hook_search_preprocess() in modules.
  */
-function search_preprocess(&$text) {
+function search_invoke_preprocess(&$text) {
   foreach (module_implements('search_preprocess') as $module) {
     $text = module_invoke($module, 'search_preprocess', $text);
   }
