@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.359 2007/10/22 09:36:05 goba Exp $
+// $Id: aggregator.module,v 1.360 2007/10/25 15:32:55 dries Exp $
 
 /**
  * @file
@@ -321,7 +321,7 @@ function aggregator_block($op = 'list', $delta = 0, $edit = array()) {
           if ($feed = db_fetch_object(db_query('SELECT fid, title, block FROM {aggregator_feed} WHERE fid = %d', $id))) {
             $block['subject'] = check_plain($feed->title);
             $result = db_query_range('SELECT * FROM {aggregator_item} WHERE fid = %d ORDER BY timestamp DESC, iid DESC', $feed->fid, 0, $feed->block);
-            $read_more = theme('more_link', url('aggregator/sources/'. $feed->fid), t("View this feed's recent news.")); 
+            $read_more = theme('more_link', url('aggregator/sources/'. $feed->fid), t("View this feed's recent news."));
           }
           break;
 

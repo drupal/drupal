@@ -1,5 +1,5 @@
 <?php
-// $Id: default.profile,v 1.16 2007/07/11 15:15:40 dries Exp $
+// $Id: default.profile,v 1.17 2007/10/25 15:32:56 dries Exp $
 
 /**
  * Return an array of the modules to be enabled when this profile is installed.
@@ -80,7 +80,7 @@ function default_profile_tasks(&$task) {
       'type' => 'page',
       'name' => st('Page'),
       'module' => 'node',
-      'description' => st('If you want to add a static page, like a contact page or an about page, use a page.'),
+      'description' => st("A <em>page</em>, similar in form to a <em>story</em>, is a simple method for creating and displaying information that rarely changes, such as an "About us" section of a website. By default, a <em>page</em> entry does not allow visitor comments and is not featured on the site's initial home page."),
       'custom' => TRUE,
       'modified' => TRUE,
       'locked' => FALSE,
@@ -91,7 +91,7 @@ function default_profile_tasks(&$task) {
       'type' => 'story',
       'name' => st('Story'),
       'module' => 'node',
-      'description' => st('Stories are articles in their simplest form: they have a title, a teaser and a body, but can be extended by other modules. The teaser is part of the body too. Stories may be used as a personal blog or for news articles.'),
+      'description' => st("A <em>story</em>, similar in form to a <em>page</em>, is ideal for creating and displaying content that informs or engages website visitors. Press releases, site announcements, and informal blog-like entries may all be created with a <em>story</em> entry. By default, a <em>story</em> entry is automatically featured on the site's initial home page, and provides the ability to post comments."),
       'custom' => TRUE,
       'modified' => TRUE,
       'locked' => FALSE,

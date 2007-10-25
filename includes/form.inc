@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.239 2007/10/24 13:35:26 goba Exp $
+// $Id: form.inc,v 1.240 2007/10/25 15:32:55 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -2009,7 +2009,7 @@ function _form_set_class(&$element, $class = array()) {
 }
 
 /**
- * Prepare an HTML ID attribute string for a form item. 
+ * Prepare an HTML ID attribute string for a form item.
  *
  * Remove invalid characters and guarantee uniqueness.
  *

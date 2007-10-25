@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.289 2007/10/25 08:24:42 goba Exp $
+// $Id: blog.module,v 1.290 2007/10/25 15:32:55 dries Exp $
 
 /**
  * @file
@@ -14,7 +14,7 @@ function blog_node_info() {
     'blog' => array(
       'name' => t('Blog entry'),
       'module' => 'blog',
-      'description' => t('A blog is a regularly updated journal or diary made up of individual posts shown in reversed chronological order. Each member of the site may create and maintain a blog.'),
+      'description' => t('A <em>blog entry</em> is a single post to an online journal, or <em>blog</em>.'),
     )
   );
 }

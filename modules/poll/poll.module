@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.247 2007/10/22 09:25:33 goba Exp $
+// $Id: poll.module,v 1.248 2007/10/25 15:32:56 dries Exp $
 
 /**
  * @file
@@ -166,7 +166,7 @@ function poll_node_info() {
     'poll' => array(
       'name' => t('Poll'),
       'module' => 'poll',
-      'description' => t("A poll is a multiple-choice question which visitors can vote on."),
+      'description' => t('A <em>poll</em> is a question with a set of possible responses. A <em>poll</em>, once created, automatically provides a simple running count of the number of votes received for each response.'),
       'title_label' => t('Question'),
       'has_body' => FALSE,
     )

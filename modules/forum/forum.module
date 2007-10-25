@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.424 2007/10/25 08:24:43 goba Exp $
+// $Id: forum.module,v 1.425 2007/10/25 15:32:55 dries Exp $
 
 /**
  * @file
@@ -285,7 +285,7 @@ function forum_node_info() {
     'forum' => array(
       'name' => t('Forum topic'),
       'module' => 'forum',
-      'description' => t('Create a new topic for discussion in the forums.'),
+      'description' => t('A <em>forum topic</em> is the initial post to a new discussion thread within a forum.'),
       'title_label' => t('Subject'),
     )
   );
