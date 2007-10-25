@@ -62,6 +62,7 @@ function blog_feed_user($account) {
   $channel['title'] = $account->name ."'s blog";
   $channel['link'] = url('blog/'. $account->uid, array('absolute' => TRUE));
 
+  $items = array();
   while ($row = db_fetch_object($result)) {
     $items[] = $row->nid;
   }
