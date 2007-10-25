@@ -28,7 +28,7 @@ function _book_install_type_create() {
     'type' => 'book',
     'name' => t('Book page'),
     'module' => 'node',
-    'description' => t("A static page. These posts (as well as other types) may be added to a book outline to create a hierarchical structure for your site."),
+    'description' => t('A <em>book page</em> is a page of content, organized into a collection of related entries collectively known as a <em>book</em>. A <em>book page</em> automatically displays links to adjacent pages, providing a simple navigation system for organizing and reviewing structured content.'),
     'custom' => TRUE,
     'modified' => TRUE,
     'locked' => FALSE,

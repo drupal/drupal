@@ -2009,7 +2009,7 @@ function _form_set_class(&$element, $class = array()) {
 }
 
 /**
- * Prepare an HTML ID attribute string for a form item. 
+ * Prepare an HTML ID attribute string for a form item.
  *
  * Remove invalid characters and guarantee uniqueness.
  *
