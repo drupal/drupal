@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.pages.inc,v 1.2 2007/10/24 11:17:01 goba Exp $
+// $Id: blog.pages.inc,v 1.3 2007/10/25 17:44:38 dries Exp $
 
 /**
  * @file
@@ -62,6 +62,7 @@ function blog_feed_user($account) {
   $channel['title'] = $account->name ."'s blog";
   $channel['link'] = url('blog/'. $account->uid, array('absolute' => TRUE));
 
+  $items = array();
   while ($row = db_fetch_object($result)) {
     $items[] = $row->nid;
   }
