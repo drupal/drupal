@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.855 2007/10/24 11:17:01 goba Exp $
+// $Id: user.module,v 1.856 2007/10/25 10:30:40 goba Exp $
 
 /**
  * @file
@@ -569,7 +569,7 @@ function user_user($type, &$edit, &$account, $category = NULL) {
     $account->content['summary'] += array(
       '#type' => 'user_profile_category',
       '#attributes' => array('class' => 'user-member'),
-      '#weight' => -5,
+      '#weight' => 5,
       '#title' => t('History'),
     );
     $account->content['summary']['member_for'] =  array(

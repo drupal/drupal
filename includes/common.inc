@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.706 2007/10/24 11:30:39 goba Exp $
+// $Id: common.inc,v 1.707 2007/10/25 10:30:40 goba Exp $
 
 /**
  * @file
@@ -2612,7 +2612,7 @@ function drupal_render(&$elements) {
   // Either the elements did not go through form_builder or one of the children
   // has a #weight.
   if (!isset($elements['#sorted'])) {
-    uasort($elements, "_element_sort");
+    uasort($elements, "element_sort");
   }
   $elements += array('#title' => NULL, '#description' => NULL);
   if (!isset($elements['#children'])) {
@@ -2676,9 +2676,9 @@ function drupal_render(&$elements) {
 }
 
 /**
- * Function used by uasort in drupal_render() to sort structured arrays by weight.
+ * Function used by uasort to sort structured arrays by weight.
  */
-function _element_sort($a, $b) {
+function element_sort($a, $b) {
   $a_weight = (is_array($a) && isset($a['#weight'])) ? $a['#weight'] : 0;
   $b_weight = (is_array($b) && isset($b['#weight'])) ? $b['#weight'] : 0;
   if ($a_weight == $b_weight) {
