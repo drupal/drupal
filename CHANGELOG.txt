@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.229 2007/10/17 21:59:31 goba Exp $
+// $Id: CHANGELOG.txt,v 1.230 2007/10/25 15:28:28 dries Exp $
 
 Drupal 6.0, xxxx-xx-xx (development version)
 ----------------------
@@ -29,11 +29,10 @@ Drupal 6.0, xxxx-xx-xx (development version)
     * Made it possible to specify a node's language.
     * Support for translating posts on the site to different languages.
     * Language dependent path aliases.
-    * Automatically import translations when enabling new modules.
     * Automatically import translations when adding a new language.
     * JavaScript interface translation.
     * Automatically import a module's translation upon enabling that module.
-- Moved "PHP input filter" to a stand-alone module so it can be deleted for
+- Moved "PHP input filter" to a standalone module so it can be deleted for
   security reasons.
 - Usability:
     * Improved handling of teasers in posts.
@@ -44,7 +43,7 @@ Drupal 6.0, xxxx-xx-xx (development version)
     * Made it possible to configure your own date formats.
     * Remember anonymous comment posters.
     * Only allow modules and themes to be enabled that have explicitly been
-      ported to the right core API version.
+      ported to the correct core API version.
     * Can now specify the minimum PHP version required for a module within the
       .info file.
     * Dynamically check password strength and confirmation.
@@ -57,7 +56,7 @@ Drupal 6.0, xxxx-xx-xx (development version)
     * Used the Garland theme for the installation and maintenance pages.
     * Added theme preprocess functions for themes that are templates.
     * Added support for themeable functions in JavaScript.
-- Refactored update.php to a generic batch API to be able to run time consuming
+- Refactored update.php to a generic batch API to be able to run time-consuming
   operations in multiple subsequent HTTP requests.
 - Installer:
     * Themed the installer with the Garland theme.
@@ -68,7 +67,7 @@ Drupal 6.0, xxxx-xx-xx (development version)
     * Fixes faulty and chopped off HTML in postings.
     * Tags are now automatically closed at the end of the teaser.
 - Performance:
-    * Made it easier to conditionally load include files and split up many core
+    * Made it easier to conditionally load .include files and split up many core
       modules.
     * Added a JavaScript aggregator and compressor.
     * Added block-level caching, improving performance for both authenticated
@@ -76,12 +75,12 @@ Drupal 6.0, xxxx-xx-xx (development version)
     * Made Drupal work correctly when running behind a reverse proxy like
       Squid or Pound.
 - File handling improvements:
-    * Entries in the files table are now keyed to a user, and not a node.
-    * Added re-usable validation functions to check for uploaded file sizes,
+    * Entries in the files table are now keyed to a user instead of a node.
+    * Added reusable validation functions to check for uploaded file sizes,
       extensions, and image resolution.
     * Added ability to create and remove temporary files during a cron job.
 - Forum improvements:
-    * Any node type may be posted in a forum.
+    * Any node type may now be posted in a forum.
 - Added support for OpenID.
 - Added support for triggering configurable actions.
 - Added the Update status module to automatically check for available updates
