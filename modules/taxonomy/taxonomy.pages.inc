@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.pages.inc,v 1.2 2007/09/27 16:52:00 goba Exp $
+// $Id: taxonomy.pages.inc,v 1.3 2007/10/25 08:24:43 goba Exp $
 
 /**
  * @file
@@ -32,13 +32,14 @@ function taxonomy_term_page($str_tids = '', $depth = 0, $op = 'page') {
         case 'page':
           // Build breadcrumb based on first hierarchy of first term:
           $current->tid = $tids[0];
-          $breadcrumbs = array(array('path' => $_GET['q'], 'title' => $names[0]));
+          $breadcrumb = array();
           while ($parents = taxonomy_get_parents($current->tid)) {
             $current = array_shift($parents);
-            $breadcrumbs[] = array('path' => 'taxonomy/term/'. $current->tid, 'title' => $current->name);
+            $breadcrumb[] = l($current->name, 'taxonomy/term/'. $current->tid);
           }
-          $breadcrumbs = array_reverse($breadcrumbs);
-          menu_set_location($breadcrumbs);
+          $breadcrumb[] = l(t('Home'), NULL);
+          $breadcrumb = array_reverse($breadcrumb);
+          drupal_set_breadcrumb($breadcrumb);
 
           $output = taxonomy_render_nodes(taxonomy_select_nodes($tids, $terms['operator'], $depth, TRUE));
           drupal_add_feed(url('taxonomy/term/'. $str_tids .'/'. $depth .'/feed'), 'RSS - '. $title);

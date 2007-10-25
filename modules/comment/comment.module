@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.594 2007/10/21 18:59:01 goba Exp $
+// $Id: comment.module,v 1.595 2007/10/25 08:24:42 goba Exp $
 
 /**
  * @file
@@ -681,8 +681,7 @@ function comment_edit($cid) {
  */
 function comment_reply($node, $pid = NULL) {
   // Set the breadcrumb trail.
-  menu_set_location(array(array('path' => "node/$node->nid", 'title' => $node->title), array('path' => "comment/reply/$node->nid")));
-
+  drupal_set_breadcrumb(array(l(t('Home'), NULL), l($node->title, 'node/'. $node->nid)));
   $op = isset($_POST['op']) ? $_POST['op'] : '';
 
   $output = '';

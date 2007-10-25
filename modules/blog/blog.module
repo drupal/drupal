@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.288 2007/10/24 11:17:01 goba Exp $
+// $Id: blog.module,v 1.289 2007/10/25 08:24:42 goba Exp $
 
 /**
  * @file
@@ -107,10 +107,7 @@ function blog_form(&$node) {
 function blog_view($node, $teaser = FALSE, $page = FALSE) {
   if ($page) {
     // Breadcrumb navigation
-    $breadcrumb[] = array('path' => 'blog', 'title' => t('Blogs'));
-    $breadcrumb[] = array('path' => 'blog/'. $node->uid, 'title' => t("@name's blog", array('@name' => $node->name)));
-    $breadcrumb[] = array('path' => 'node/'. $node->nid);
-    menu_set_location($breadcrumb);
+    drupal_set_breadcrumb(array(l(t('Home'), NULL), l(t('Blogs'), 'blog'), l(t("@name's blog", array('@name' => $node->name)), 'blog/'. $node->uid)));
   }
   return node_prepare($node, $teaser);
 }

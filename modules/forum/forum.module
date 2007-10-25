@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.423 2007/10/22 09:36:05 goba Exp $
+// $Id: forum.module,v 1.424 2007/10/25 08:24:43 goba Exp $
 
 /**
  * @file
@@ -184,16 +184,15 @@ function forum_nodeapi(&$node, $op, $teaser, $page) {
           }
         }
         // Breadcrumb navigation
-        $breadcrumb = array();
-        $breadcrumb[] = array('path' => 'forum', 'title' => $vocabulary->name);
+        $breadcrumb[] = l(t('Home'), NULL);
+        $breadcrumb[] = l($vocabulary->name, 'forum');
         if ($parents = taxonomy_get_parents_all($node->tid)) {
           $parents = array_reverse($parents);
           foreach ($parents as $p) {
-            $breadcrumb[] = array('path' => 'forum/'. $p->tid, 'title' => $p->name);
+            $breadcrumb[] = l($p->name, 'forum/'.$p->tid);
           }
         }
-        $breadcrumb[] = array('path' => 'node/'. $node->nid);
-        menu_set_location($breadcrumb);
+        drupal_set_breadcrumb($breadcrumb);
 
         if (!$teaser) {
           $node->content['forum_navigation'] = array(
@@ -628,11 +627,10 @@ function template_preprocess_forums(&$variables) {
   $title = !empty($vocabulary->name) ? $vocabulary->name : '';
 
   // Breadcrumb navigation:
-  $breadcrumb = array();
+  $breadcrumb[] = l(t('Home'), NULL);
   if ($variables['tid']) {
-    $breadcrumb[] = array('path' => 'forum', 'title' => $title);
+    $breadcrumb[] = l($vocabulary->name, 'forum');
   }
-
   if ($variables['parents']) {
     $variables['parents'] = array_reverse($variables['parents']);
     foreach ($variables['parents'] as $p) {
@@ -640,15 +638,12 @@ function template_preprocess_forums(&$variables) {
         $title = $p->name;
       }
       else {
-        $breadcrumb[] = array('path' => 'forum/'. $p->tid, 'title' => $p->name);
+        $breadcrumb[] = l($p->name, 'forum/'. $p->tid);
       }
     }
   }
-
+  drupal_set_breadcrumb($breadcrumb);
   drupal_set_title(check_plain($title));
-
-  $breadcrumb[] = array('path' => $_GET['q']);
-  menu_set_location($breadcrumb);
 
   if ($variables['forums_defined'] = count($variables['forums']) || count($variables['parents'])) {
     // Format the "post new content" links listing.
