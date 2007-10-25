@@ -1,5 +1,5 @@
 <?php
-// $Id: chameleon.theme,v 1.70 2007/10/19 10:19:03 goba Exp $
+// $Id: chameleon.theme,v 1.71 2007/10/25 10:37:25 goba Exp $
 
 /**
  * @file
@@ -152,15 +152,15 @@ function chameleon_node($node, $teaser = 0, $page = 0) {
   return $output;
 }
 
-function chameleon_comment($comment, $links = "") {
+function chameleon_comment($comment, $node, $links = array()) {
   $submitted['comment_submitted'] = array(
     'title' => t('By !author at @date', array('!author' => theme('username', $comment), '@date' => format_date($comment->timestamp, 'small'))),
     'html' => TRUE);
 
   $output  = "<div class=\"comment". ($comment->status == COMMENT_NOT_PUBLISHED ? ' comment-unpublished' : '') ."\">\n";
-  $output .= " <h3 class=\"title\">". l($comment->subject, $_GET['q'], NULL, NULL, "comment-$comment->cid") ."</h3>\n";
+  $output .= " <h3 class=\"title\">". l($comment->subject, $_GET['q'], array('fragment' => "comment-$comment->cid")) ."</h3>\n";
   $output .= " <div class=\"content\">". $comment->comment;
-  if ($signature) {
+  if (!empty($signature)) {
     $output .= "  <div class=\"clear-block\">";
     $output .= "<div>—</div>\n";
     $output .= $signature ."\n";
