@@ -1269,7 +1269,7 @@ function system_update_120() {
     list(, $page, $op, $uid) = explode('/', $alias->src);
     if ($page == 'feed') {
       $new = "blog/$uid/feed";
-      update_sql("UPDATE {url_alias} SET src = '%s' WHERE pid = '%s'", $new, $alias->pid);
+      db_query("UPDATE {url_alias} SET src = '%s' WHERE pid = %d", $new, $alias->pid);
     }
   }
 
