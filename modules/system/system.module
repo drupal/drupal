@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.545 2007/10/21 18:59:02 goba Exp $
+// $Id: system.module,v 1.546 2007/10/25 15:38:25 dries Exp $
 
 /**
  * @file
@@ -943,6 +943,7 @@ function system_settings_form_submit($form, &$form_state) {
     drupal_set_message(t('The configuration options have been saved.'));
   }
 
+  cache_clear_all();
   drupal_rebuild_theme_registry();
 }
 

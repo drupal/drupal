@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.15 2007/10/20 21:57:50 goba Exp $
+// $Id: system.admin.inc,v 1.16 2007/10/25 15:38:24 dries Exp $
 
 /**
  * @file
@@ -1188,6 +1188,13 @@ function system_performance_settings() {
     '#default_value' => variable_get('cache_lifetime', 0),
     '#options' => $period,
     '#description' => t('On high-traffic sites it can become necessary to enforce a minimum cache lifetime. The minimum cache lifetime is the minimum amount of time that will go by before the cache is emptied and recreated. A larger minimum cache lifetime offers better performance, but users will not see new content for a longer period of time. This setting also affects block caching.')
+  );
+  $form['page_cache']['page_compression'] = array(
+    '#type' => 'radios',
+    '#title' => t('Page compression'),
+    '#default_value' => variable_get('page_compression', TRUE),
+    '#options' => array(t('Disabled'), t('Enabled')),
+    '#description' => t("By default Drupal compresses the pages it caches in order to save bandwidth, and improve download times for users with slow connections. However, if the webserver also performs compression, it is not just unnecessary, it can also cause problems. So in this case this option should be set to Disabled."),
   );
 
   $form['block_cache'] = array(

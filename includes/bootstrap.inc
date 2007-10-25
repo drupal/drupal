@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.197 2007/10/24 11:30:39 goba Exp $
+// $Id: bootstrap.inc,v 1.198 2007/10/25 15:38:24 dries Exp $
 
 /**
  * @file
@@ -607,13 +607,15 @@ function drupal_page_cache_header($cache) {
   header("Expires: Sun, 19 Nov 1978 05:00:00 GMT");
   header("Cache-Control: must-revalidate");
 
-  // Determine if the browser accepts gzipped data.
-  if (@strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') === FALSE && function_exists('gzencode')) {
-    // Strip the gzip header and run uncompress.
-    $cache->data = gzinflate(substr(substr($cache->data, 10), 0, -8));
-  }
-  elseif (function_exists('gzencode')) {
-    header('Content-Encoding: gzip');
+  if (variable_get('page_compression', TRUE)) {
+    // Determine if the browser accepts gzipped data.
+    if (@strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') === FALSE && function_exists('gzencode')) {
+      // Strip the gzip header and run uncompress.
+      $cache->data = gzinflate(substr(substr($cache->data, 10), 0, -8));
+    }
+    elseif (function_exists('gzencode')) {
+      header('Content-Encoding: gzip');
+    }
   }
 
   // Send the original request's headers. We send them one after

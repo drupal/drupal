@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.707 2007/10/25 10:30:40 goba Exp $
+// $Id: common.inc,v 1.708 2007/10/25 15:38:24 dries Exp $
 
 /**
  * @file
@@ -673,14 +673,15 @@ function fix_gpc_magic() {
  *   @endcode
  *
  * - @variable, which indicates that the text should be run through check_plain,
- *   to strip out HTML characters. Use this for any output that's displayed within
+ *   to escape HTML characters. Use this for any output that's displayed within
  *   a Drupal page.
  *   @code
  *     drupal_set_title($title = t("@name's blog", array('@name' => $account->name)));
  *   @endcode
  *
- * - %variable, which indicates that the string should be highlighted with
- *   theme_placeholder() which shows up by default as <em>emphasized</em>.
+ * - %variable, which indicates that the string should be HTML escaped and
+ *   highlighted with theme_placeholder() which shows up by default as
+ *   <em>emphasized</em>.
  *   @code
  *     $message = t('%name-from sent %name-to an e-mail.', array('%name-from' => $user->name, '%name-to' => $account->name));
  *   @endcode
@@ -2391,7 +2392,7 @@ function page_set_cache() {
     // This will fail in some cases, see page_get_cache() for the explanation.
     if ($data = ob_get_contents()) {
       $cache = TRUE;
-      if (function_exists('gzencode')) {
+      if (variable_get('page_compression', TRUE) && function_exists('gzencode')) {
         // We do not store the data in case the zlib mode is deflate.
         // This should be rarely happening.
         if (zlib_get_coding_type() == 'deflate') {
