@@ -943,6 +943,7 @@ function system_settings_form_submit($form, &$form_state) {
     drupal_set_message(t('The configuration options have been saved.'));
   }
 
+  cache_clear_all();
   drupal_rebuild_theme_registry();
 }
 
