@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.595 2007/10/25 08:24:42 goba Exp $
+// $Id: comment.module,v 1.596 2007/10/25 10:28:05 goba Exp $
 
 /**
  * @file
@@ -1230,10 +1230,11 @@ function comment_admin_overview($type = 'new', $arg) {
     theme('table_select_header_cell'),
     array('data' => t('Subject'), 'field' => 'subject'),
     array('data' => t('Author'), 'field' => 'name'),
+    array('data' => t('Posted in'), 'field' => 'node_title'),
     array('data' => t('Time'), 'field' => 'timestamp', 'sort' => 'desc'),
     array('data' => t('Operations'))
   ));
-  $result = pager_query('SELECT c.subject, c.nid, c.cid, c.comment, c.timestamp, c.status, c.name, c.homepage, u.name AS registered_name, u.uid FROM {comments} c INNER JOIN {users} u ON u.uid = c.uid WHERE c.status = %d'. tablesort_sql($form['header']['#value']), 50, 0, NULL, $status);
+  $result = pager_query('SELECT c.subject, c.nid, c.cid, c.comment, c.timestamp, c.status, c.name, c.homepage, u.name AS registered_name, u.uid, n.title as node_title FROM {comments} c INNER JOIN {users} u ON u.uid = c.uid INNER JOIN {node} n ON n.nid = c.nid WHERE c.status = %d'. tablesort_sql($form['header']['#value']), 50, 0, NULL, $status);
 
   // build a table listing the appropriate comments
   $destination = drupal_get_destination();
@@ -1242,6 +1243,7 @@ function comment_admin_overview($type = 'new', $arg) {
     $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
     $form['subject'][$comment->cid] = array('#value' => l($comment->subject, 'node/'. $comment->nid, array('title' => truncate_utf8($comment->comment, 128), 'fragment' => 'comment-'. $comment->cid)));
     $form['username'][$comment->cid] = array('#value' => theme('username', $comment));
+    $form['node_title'][$comment->cid] = array('#value' => l($comment->node_title, 'node/'. $comment->nid));
     $form['timestamp'][$comment->cid] = array('#value' => format_date($comment->timestamp, 'small'));
     $form['operations'][$comment->cid] = array('#value' => l(t('edit'), 'comment/edit/'. $comment->cid, array('query' => $destination)));
   }
@@ -1296,6 +1298,7 @@ function theme_comment_admin_overview($form) {
       $row[] = drupal_render($form['comments'][$key]);
       $row[] = drupal_render($form['subject'][$key]);
       $row[] = drupal_render($form['username'][$key]);
+      $row[] = drupal_render($form['node_title'][$key]);
       $row[] = drupal_render($form['timestamp'][$key]);
       $row[] = drupal_render($form['operations'][$key]);
       $rows[] = $row;
