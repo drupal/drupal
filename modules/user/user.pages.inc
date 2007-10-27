@@ -1,5 +1,5 @@
 <?php
-// $Id: user.pages.inc,v 1.2 2007/10/25 10:30:40 goba Exp $
+// $Id: user.pages.inc,v 1.3 2007/10/27 14:01:12 goba Exp $
 
 /**
  * @file
@@ -320,6 +320,8 @@ function user_confirm_delete(&$form_state, $account) {
  */
 function user_confirm_delete_submit($form, &$form_state) {
   user_delete($form_state['values'], $form_state['values']['_account']->uid);
+  drupal_set_message(t('%name has been deleted.', array('%name' => $form_state['values']['_account']->name)));
+
   if (!isset($_REQUEST['destination'])) {
     $form_state['redirect'] = 'admin/user/user';
   }

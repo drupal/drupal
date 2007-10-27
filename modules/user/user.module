@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.856 2007/10/25 10:30:40 goba Exp $
+// $Id: user.module,v 1.857 2007/10/27 14:01:12 goba Exp $
 
 /**
  * @file
@@ -1410,7 +1410,6 @@ function user_delete($edit, $uid) {
   db_query('DELETE FROM {authmap} WHERE uid = %d', $uid);
   $variables = array('%name' => $account->name, '%email' => '<'. $account->mail .'>');
   watchdog('user', 'Deleted user: %name %email.', $variables, WATCHDOG_NOTICE);
-  drupal_set_message(t('%name has been deleted.', $variables));
   module_invoke_all('user', 'delete', $edit, $account);
 }
 
