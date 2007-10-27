@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.546 2007/10/25 15:38:25 dries Exp $
+// $Id: system.module,v 1.547 2007/10/27 11:32:05 goba Exp $
 
 /**
  * @file
@@ -400,6 +400,13 @@ function system_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_clean_url_settings'),
     'file' => 'system.admin.inc',
+  );
+  $items['admin/settings/clean-urls/check'] = array(
+    'title' => 'Clean URL check',
+    'page callback' => 'drupal_json',
+    'page arguments' => array(array('status' => TRUE)),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
   );
 
   // Reports:

@@ -1,4 +1,4 @@
-// $Id: system.js,v 1.12 2007/10/22 15:48:26 dries Exp $
+// $Id: system.js,v 1.13 2007/10/27 11:32:05 goba Exp $
 
 /**
  * Internal function to check using Ajax if clean URLs can be enabled on the
@@ -14,21 +14,23 @@ Drupal.behaviors.cleanURLsSettingsCheck = function(context) {
   if ($("#clean-url.clean-url-processed, #clean-url.install").size()) {
     return;
   }
-  var url = location.pathname +"admin/settings/clean-urls";
+  var url = location.pathname +"admin/settings/clean-urls/check";
   $("#clean-url .description span").html('<div id="testing">'+ Drupal.t('Testing clean URLs...') +"</div>");
   $("#clean-url p").hide();
-  $.ajax({url: location.protocol +"//"+ location.host + url, type: "GET", data: " ", complete: function(response) {
-    $("#testing").toggle();
-    if (response.status == 200) {
+  $.ajax({
+    url: location.protocol +"//"+ location.host + url,
+    dataType: 'json',
+    success: function () {
       // Check was successful.
-      $("#clean-url input.form-radio").attr("disabled", "");
+      $("#clean-url input.form-radio").attr("disabled", false);
       $("#clean-url .description span").append('<div class="ok">'+ Drupal.t('Your server has been successfully tested to support this feature.') +"</div>");
-    }
-    else {
+      $("#testing").toggle();
+    },
+    error: function() {
       // Check failed.
       $("#clean-url .description span").append('<div class="warning">'+ Drupal.t('Your system configuration does not currently support this feature. The <a href="http://drupal.org/node/15365">handbook page on Clean URLs</a> has additional troubleshooting information.') +"</div>");
     }
-  }});
+  });
   $("#clean-url").addClass('clean-url-processed');
 };
 
@@ -40,23 +42,23 @@ Drupal.behaviors.cleanURLsSettingsCheck = function(context) {
  * are currently enabled.
  */
 Drupal.cleanURLsInstallCheck = function() {
-  var pathname = location.pathname +"";
-  var url = pathname.replace(/\/[^\/]*$/, "/") +"node";
+  var url = location.protocol +"//"+ location.host + location.pathname.replace(/\/[^\/]*$/, "/") +"admin/settings/clean-urls/check";
   $("#clean-url .description").append('<span><div id="testing">'+ Drupal.settings.cleanURL.testing +"</div></span>");
   $("#clean-url.install").css("display", "block");
-  $.ajax({url: location.protocol +"//"+ location.host + url, type: "GET", data: " ", complete: function(response) {
-    $("#testing").toggle();
-    if (response.status == 200) {
+  $.ajax({
+    url: url,
+    dataType: 'json',
+    success: function () {
       // Check was successful.
-      $("#clean-url input.form-radio").attr("disabled", "");
+      $("#clean-url input.form-radio").attr("disabled", false);
       $("#clean-url .description span").append('<div class="ok">'+ Drupal.settings.cleanURL.success +"</div>");
       $("#clean-url input.form-radio").attr("checked", 1);
-    }
-    else {
+    },
+    error: function() {
       // Check failed.
       $("#clean-url .description span").append('<div class="warning">'+ Drupal.settings.cleanURL.failure +"</div>");
     }
-  }});
+  });
   $("#clean-url").addClass('clean-url-processed');
 };
 
