@@ -1,5 +1,5 @@
 <?php
-// $Id: user.admin.inc,v 1.7 2007/10/27 13:33:21 goba Exp $
+// $Id: user.admin.inc,v 1.8 2007/10/27 15:28:43 goba Exp $
 
 /**
  * @file
@@ -231,7 +231,7 @@ function user_admin_settings() {
   // User registration settings.
   $form['registration'] = array('#type' => 'fieldset', '#title' => t('User registration settings'));
   $form['registration']['user_register'] = array('#type' => 'radios', '#title' => t('Public registrations'), '#default_value' => variable_get('user_register', 1), '#options' => array(t('Only site administrators can create new user accounts.'), t('Visitors can create accounts and no administrator approval is required.'), t('Visitors can create accounts but administrator approval is required.')));
-  $form['registration']['user_email_verification'] = array('#type' => 'checkbox', '#title' => t('Require e-mail verification when a visitor creates an account'), '#default_value' => variable_get('user_email_verification', TRUE), '#description' => t('If this box is checked, new users will be required to validate their e-mail address prior to logging into to the site, and will be assigned a system-generated password. With it unchecked, users will be logged in immediately upon registering, and may select their own passwords during registration.'));
+  $form['registration']['user_email_verification'] = array('#type' => 'checkbox', '#title' => t('Require e-mail verification when a visitor creates an account'), '#default_value' => variable_get('user_email_verification', TRUE), '#description' => t('If this box is checked, new users will be required to validate their e-mail address prior to logging into the site, and will be assigned a system-generated password. With it unchecked, users will be logged in immediately upon registering, and may select their own passwords during registration.'));
   $form['registration']['user_registration_help'] = array('#type' => 'textarea', '#title' => t('User registration guidelines'), '#default_value' => variable_get('user_registration_help', ''), '#description' => t('This text is displayed at the top of the user registration form and is useful for helping or instructing your users.'));
 
   // User e-mail settings.
