@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.196 2007/10/21 18:59:02 goba Exp $
+// $Id: locale.module,v 1.197 2007/10/27 14:03:36 goba Exp $
 
 /**
  * @file
@@ -351,7 +351,7 @@ function locale($string = NULL, $langcode = NULL) {
         // This is the first use of this string under current Drupal version. Save version
         // and clear cache, to include the string into caching next time. Saved version is
         // also a string-history information for later pruning of the tables.
-        db_query("UPDATE {locales_source} SET version = '%s' WHERE lid = %d LIMIT 1", VERSION, $translation->lid);
+        db_query("UPDATE {locales_source} SET version = '%s' WHERE lid = %d", VERSION, $translation->lid);
         cache_clear_all('locale:', 'cache', TRUE);
       }
     }
