@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.16 2007/10/25 15:38:24 dries Exp $
+// $Id: system.admin.inc,v 1.17 2007/10/27 13:23:33 goba Exp $
 
 /**
  * @file
@@ -1129,7 +1129,7 @@ function system_error_reporting_settings() {
   $form['error_level'] = array(
     '#type' => 'select', '#title' => t('Error reporting'), '#default_value' => variable_get('error_level', 1),
     '#options' => array(t('Write errors to the log'), t('Write errors to the log and to the screen')),
-    '#description' =>  t('Where Drupal, PHP and SQL errors are logged. On a production server it is recommended that errors are only written to the error log. On a test server it can be helpful to write logs to the screen.')
+    '#description' =>  t('Specify where Drupal, PHP and SQL errors are logged. While it is recommended that a site running in a production environment write errors to the log only, in a development or testing environment it may be helpful to write errors both to the log and to the screen.')
   );
 
   return system_settings_form($form);
