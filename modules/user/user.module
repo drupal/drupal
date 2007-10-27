@@ -1410,7 +1410,6 @@ function user_delete($edit, $uid) {
   db_query('DELETE FROM {authmap} WHERE uid = %d', $uid);
   $variables = array('%name' => $account->name, '%email' => '<'. $account->mail .'>');
   watchdog('user', 'Deleted user: %name %email.', $variables, WATCHDOG_NOTICE);
-  drupal_set_message(t('%name has been deleted.', $variables));
   module_invoke_all('user', 'delete', $edit, $account);
 }
 
