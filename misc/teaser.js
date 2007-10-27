@@ -1,4 +1,4 @@
-// $Id: teaser.js,v 1.8 2007/10/21 18:59:01 goba Exp $
+// $Id: teaser.js,v 1.9 2007/10/27 11:45:18 goba Exp $
 
 /**
  * Auto-attach for teaser behavior.
@@ -6,6 +6,11 @@
  * Note: depends on resizable textareas.
  */
 Drupal.behaviors.teaser = function(context) {
+  // This breaks in Konqueror. Prevent it from running.
+  if (/KDE/.test(navigator.vendor)) {
+    return;
+  }
+  
   $('textarea.teaser:not(.teaser-processed)', context).each(function() {
     var teaser = $(this).addClass('teaser-processed');
 
