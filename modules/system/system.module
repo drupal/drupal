@@ -401,6 +401,13 @@ function system_menu() {
     'page arguments' => array('system_clean_url_settings'),
     'file' => 'system.admin.inc',
   );
+  $items['admin/settings/clean-urls/check'] = array(
+    'title' => 'Clean URL check',
+    'page callback' => 'drupal_json',
+    'page arguments' => array(array('status' => TRUE)),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
 
   // Reports:
   $items['admin/reports'] = array(
