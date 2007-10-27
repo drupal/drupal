@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.17 2007/10/27 13:23:33 goba Exp $
+// $Id: system.admin.inc,v 1.18 2007/10/27 13:57:33 goba Exp $
 
 /**
  * @file
@@ -1169,7 +1169,7 @@ function system_performance_settings() {
   $form['page_cache'] = array(
     '#type' => 'fieldset',
     '#title' => t('Page cache'),
-    '#description' => t('Enabling the page cache will offer a significant performance boost. Drupal can store and send compressed cached pages requested by <em>anonymous</em> users. By caching a web page, Drupal does not have to construct the page each time someone wants to view it.'),
+    '#description' => t('Enabling the page cache will offer a significant performance boost. Drupal can store and send compressed cached pages requested by <em>anonymous</em> users. By caching a web page, Drupal does not have to construct the page each time it is viewed.'),
   );
 
   $form['page_cache']['cache'] = array(
@@ -1187,20 +1187,20 @@ function system_performance_settings() {
     '#title' => t('Minimum cache lifetime'),
     '#default_value' => variable_get('cache_lifetime', 0),
     '#options' => $period,
-    '#description' => t('On high-traffic sites it can become necessary to enforce a minimum cache lifetime. The minimum cache lifetime is the minimum amount of time that will go by before the cache is emptied and recreated. A larger minimum cache lifetime offers better performance, but users will not see new content for a longer period of time. This setting also affects block caching.')
+    '#description' => t('On high-traffic sites, it may be necessary to enforce a minimum cache lifetime. The minimum cache lifetime is the minimum amount of time that will elapse before the cache is emptied and recreated, and is applied to both page and block caches. A larger minimum cache lifetime offers better performance, but users will not see new content for a longer period of time.')
   );
   $form['page_cache']['page_compression'] = array(
     '#type' => 'radios',
     '#title' => t('Page compression'),
     '#default_value' => variable_get('page_compression', TRUE),
     '#options' => array(t('Disabled'), t('Enabled')),
-    '#description' => t("By default Drupal compresses the pages it caches in order to save bandwidth, and improve download times for users with slow connections. However, if the webserver also performs compression, it is not just unnecessary, it can also cause problems. So in this case this option should be set to Disabled."),
+    '#description' => t("By default, Drupal compresses the pages it caches in order to save bandwidth and improve download times. This option should be disabled when using a webserver that performs compression."),
   );
 
   $form['block_cache'] = array(
     '#type' => 'fieldset',
     '#title' => t('Block cache'),
-    '#description' => t('Enabling the block cache can offer a performance increase for all users by preventing blocks from being reconstructed on every page load. If page cache is also enabled, this performance increase will mainly affect authenticated users.'),
+    '#description' => t('Enabling the block cache can offer a performance increase for all users by preventing blocks from being reconstructed on each page load. If the page cache is also enabled, performance increases from enabling the block cache will mainly benefit authenticated users.'),
   );
 
   $form['block_cache']['block_cache'] = array(
@@ -1215,7 +1215,7 @@ function system_performance_settings() {
   $form['bandwidth_optimizations'] = array(
     '#type' => 'fieldset',
     '#title' => t('Bandwidth optimizations'),
-    '#description' => t('<p>Drupal can automatically aggregate and compress external resources like CSS and JavaScript into a single cached file. This can help reduce both the size and number of requests made to your website. This in turn reduces the server load, the bandwidth used, and the average page loading time for your visitors.</p><p>These options are disabled if you have not set up your files directory, or if your download method is set to private.</p>')
+    '#description' => t('<p>Drupal can automatically aggregate and compress external resources like CSS and JavaScript into a single cached file. This can help reduce both the size and number of requests made to your website, and ultimately, may reduce server load, bandwidth requirements, and page loading times.</p><p>These options are disabled if you have not set up your files directory, or if your download method is set to private.</p>')
   );
 
   $directory = file_directory_path();
