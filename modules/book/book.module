@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.443 2007/10/15 19:33:27 goba Exp $
+// $Id: book.module,v 1.444 2007/10/27 13:45:24 goba Exp $
 
 /**
  * @file
@@ -1010,7 +1010,7 @@ function book_help($path, $arg) {
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@book">Book page</a>.', array('@book' => 'http://drupal.org/handbook/modules/book/')) .'</p>';
       return $output;
     case 'admin/content/book':
-      return '<p>'. t('The book module offers a means to organize content, authored by many users, in an online manual, outline or FAQ.') .'</p>';
+      return '<p>'. t('The book module offers a means to organize a collection of related posts, collectively known as a book. When viewed, these posts automatically display links to adjacent book pages, providing a simple navigation system for creating and reviewing structured content.') .'</p>';
     case 'node/%/outline':
       return '<p>'. t('The outline feature allows you to include posts in the <a href="@book">book hierarchy</a>, as well as move them within the hierarchy or to <a href="@book-admin">reorder an entire book</a>.', array('@book' => url('book'), '@book-admin' => url('admin/content/book'))) .'</p>';
   }
