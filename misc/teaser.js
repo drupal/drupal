@@ -6,6 +6,11 @@
  * Note: depends on resizable textareas.
  */
 Drupal.behaviors.teaser = function(context) {
+  // This breaks in Konqueror. Prevent it from running.
+  if (/KDE/.test(navigator.vendor)) {
+    return;
+  }
+  
   $('textarea.teaser:not(.teaser-processed)', context).each(function() {
     var teaser = $(this).addClass('teaser-processed');
 
