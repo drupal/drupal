@@ -1,5 +1,5 @@
 <?php
-// $Id: user.admin.inc,v 1.6 2007/10/12 10:41:48 goba Exp $
+// $Id: user.admin.inc,v 1.7 2007/10/27 13:33:21 goba Exp $
 
 /**
  * @file
@@ -232,13 +232,13 @@ function user_admin_settings() {
   $form['registration'] = array('#type' => 'fieldset', '#title' => t('User registration settings'));
   $form['registration']['user_register'] = array('#type' => 'radios', '#title' => t('Public registrations'), '#default_value' => variable_get('user_register', 1), '#options' => array(t('Only site administrators can create new user accounts.'), t('Visitors can create accounts and no administrator approval is required.'), t('Visitors can create accounts but administrator approval is required.')));
   $form['registration']['user_email_verification'] = array('#type' => 'checkbox', '#title' => t('Require e-mail verification when a visitor creates an account'), '#default_value' => variable_get('user_email_verification', TRUE), '#description' => t('If this box is checked, new users will be required to validate their e-mail address prior to logging into to the site, and will be assigned a system-generated password. With it unchecked, users will be logged in immediately upon registering, and may select their own passwords during registration.'));
-  $form['registration']['user_registration_help'] = array('#type' => 'textarea', '#title' => t('User registration guidelines'), '#default_value' => variable_get('user_registration_help', ''), '#description' => t("This text is displayed at the top of the user registration form. It's useful for helping or instructing your users."));
+  $form['registration']['user_registration_help'] = array('#type' => 'textarea', '#title' => t('User registration guidelines'), '#default_value' => variable_get('user_registration_help', ''), '#description' => t('This text is displayed at the top of the user registration form and is useful for helping or instructing your users.'));
 
   // User e-mail settings.
   $form['email'] = array(
     '#type' => 'fieldset',
     '#title' => t('User e-mail settings'),
-    '#description' => t('Drupal sends emails whenever new users register on your site. Here you can customize the contents of these messages. You can also set notifications for user account changes, which is useful when your site requires administrator approval for new accounts.'),
+    '#description' => t('Drupal sends emails whenever new users register on your site, and optionally, may also notify users after other account actions. Using a simple set of content templates, notification e-mails can be customized to fit the specific needs of your site.'),
   );
   // These email tokens are shared for all settings, so just define
   // the list once to help ensure they stay in sync.
@@ -249,7 +249,7 @@ function user_admin_settings() {
     '#title' => t('Welcome, new user created by administrator'),
     '#collapsible' => TRUE,
     '#collapsed' => (variable_get('user_register', 1) != 0),
-    '#description' => t('Customize the welcome e-mail message that is sent to new member accounts created by an administrator.') .' '. $email_token_help,
+    '#description' => t('Customize welcome e-mail messages sent to new member accounts created by an administrator.') .' '. $email_token_help,
   );
   $form['email']['admin_created']['user_mail_register_admin_created_subject'] = array(
     '#type' => 'textfield',
@@ -269,7 +269,7 @@ function user_admin_settings() {
     '#title' => t('Welcome, no approval required'),
     '#collapsible' => TRUE,
     '#collapsed' => (variable_get('user_register', 1) != 1),
-    '#description' => t('Customize the welcome e-mail message that is sent to new members upon registering when no administrator approval is required.') .' '. $email_token_help
+    '#description' => t('Customize welcome e-mail messages sent to new members upon registering, when no administrator approval is required.') .' '. $email_token_help
   );
   $form['email']['no_approval_required']['user_mail_register_no_approval_required_subject'] = array(
     '#type' => 'textfield',
@@ -289,7 +289,7 @@ function user_admin_settings() {
     '#title' => t('Welcome, awaiting administrator approval'),
     '#collapsible' => TRUE,
     '#collapsed' => (variable_get('user_register', 1) != 2),
-    '#description' => t('Customize the welcome message which is sent to new members that are awaiting approval.') .' '. $email_token_help,
+    '#description' => t('Customize welcome e-mail messages sent to new members upon registering, when administrative approval is required.') .' '. $email_token_help,
   );
   $form['email']['pending_approval']['user_mail_register_pending_approval_subject'] = array(
     '#type' => 'textfield',
@@ -309,7 +309,7 @@ function user_admin_settings() {
     '#title' => t('Password recovery email'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
-    '#description' => t('Customize the e-mail message sent to users that request a new password.') .' '. $email_token_help,
+    '#description' => t('Customize e-mail messages sent to users who request a new password.') .' '. $email_token_help,
   );
   $form['email']['password_reset']['user_mail_password_reset_subject'] = array(
     '#type' => 'textfield',
@@ -329,7 +329,7 @@ function user_admin_settings() {
     '#title' => t('Account activation email'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
-    '#description' => t('Configure if an e-mail message should be sent to users when their accounts are activated, and if so, what the subject and body should be. This is particularly useful if your site requires administrator approval for new account requests.') .' '. $email_token_help,
+    '#description' => t('Enable and customize e-mail messages sent to users upon account activation (when an administrator activates an account of a user who has already registered, on a site where administrative approval is required).') .' '. $email_token_help,
   );
   $form['email']['activated']['user_mail_status_activated_notify'] = array(
     '#type' => 'checkbox',
@@ -354,7 +354,7 @@ function user_admin_settings() {
     '#title' => t('Account blocked email'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
-    '#description' => t('Configure if an e-mail message should be sent to users when their accounts are blocked, and if so, what the subject and body should be.') .' '. $email_token_help,
+    '#description' => t('Enable and customize e-mail messages sent to users when their accounts are blocked.') .' '. $email_token_help,
   );
   $form['email']['blocked']['user_mail_status_blocked_notify'] = array(
     '#type' => 'checkbox',
@@ -379,7 +379,7 @@ function user_admin_settings() {
     '#title' => t('Account deleted email'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
-    '#description' => t('Configure if an e-mail message should be sent to users when their accounts are deleted, and if so, what the subject and body should be.') .' '. $email_token_help,
+    '#description' => t('Enable and customize e-mail messages sent to users when their accounts are deleted.') .' '. $email_token_help,
   );
   $form['email']['deleted']['user_mail_status_deleted_notify'] = array(
     '#type' => 'checkbox',
