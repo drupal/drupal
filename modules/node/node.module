@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.896 2007/10/24 14:38:38 goba Exp $
+// $Id: node.module,v 1.897 2007/10/28 11:43:04 dries Exp $
 
 /**
  * @file
@@ -1521,9 +1521,6 @@ function node_page_default() {
     $output .= theme('pager', NULL, variable_get('default_nodes_main', 10));
   }
   else {
-    // Check for existence of admin account.
-    $admin = db_result(db_query('SELECT uid FROM {users} WHERE uid = 1'));
-
     $default_message = t('<h1 class="title">Welcome to your new Drupal website!</h1><p>Please follow these steps to set up and start using your website:</p>');
     $default_message .= '<ol>';
 
