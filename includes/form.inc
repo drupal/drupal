@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.240 2007/10/25 15:32:55 dries Exp $
+// $Id: form.inc,v 1.241 2007/10/31 15:10:33 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -38,7 +38,10 @@
  *   different $form_id values to the proper form constructor function. Examples
  *   may be found in node_forms(), search_forms(), and user_forms().
  * @param ...
- *   Any additional arguments needed by the form constructor function.
+ *   Any additional arguments are passed on to the functions called by
+ *   drupal_get_form(), including the unique form constructor function.
+ *   For example, the node_edit form requires that a node object be passed
+ *   in here when it is called.
  * @return
  *   The rendered form.
  */
@@ -182,8 +185,10 @@ function form_set_cache($form_build_id, $form, $form_state) {
  *   used to simulate the incoming $_POST information from a user's
  *   form submission.
  * @param ...
- *   Any additional arguments needed by the form constructor function.
- *
+ *   Any additional arguments are passed on to the functions called by
+ *   drupal_execute(), including the unique form constructor function.
+ *   For example, the node_edit form requires that a node object be passed
+ *   in here when it is called.
  * For example:
  *
  * // register a new user
@@ -223,7 +228,12 @@ function drupal_execute($form_id, &$form_state) {
  * @param $form_state
  *   A keyed array containing the current state of the form.
  * @param ...
- *   Any additional arguments needed by the form constructor function.
+ *   Any additional arguments needed by the unique form constructor
+ *   function. Generally, these are any arguments passed into the
+ *   drupal_get_form() or drupal_execute() functions after the first
+ *   argument. If a module implements hook_forms(), it can examine
+ *   these additional arguments and conditionally return different
+ *   builder functions as well.
  */
 function drupal_retrieve_form($form_id, &$form_state) {
   static $forms;
