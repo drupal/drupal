@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.239 2007/10/25 20:29:51 dries Exp $
+// $Id: search.module,v 1.240 2007/10/31 18:06:38 dries Exp $
 
 /**
  * @file
@@ -118,17 +118,21 @@ function search_theme() {
   return array(
     'search_theme_form' => array(
       'arguments' => array('form' => NULL),
+      'template' => 'search-theme-form',
     ),
     'search_block_form' => array(
       'arguments' => array('form' => NULL),
+      'template' => 'search-block-form',
     ),
-    'search_item' => array(
-      'arguments' => array('item' => NULL, 'type' => NULL),
+    'search_result' => array(
+      'arguments' => array('result' => NULL, 'type' => NULL),
       'file' => 'search.pages.inc',
+      'template' => 'search-result',
     ),
-    'search_page' => array(
+    'search_results' => array(
       'arguments' => array('results' => NULL, 'type' => NULL),
       'file' => 'search.pages.inc',
+      'template' => 'search-results',
     ),
   );
 }
@@ -940,8 +944,7 @@ function search_form(&$form_state, $action = '', $keys = '', $type = NULL, $prom
  * @see theme_search_box_form().
  */
 function search_box(&$form_state, $form_id) {
-  // Use search_keys instead of keys to avoid ID conflicts with the search block.
-  $form[$form_id .'_keys'] = array(
+  $form[$form_id] = array(
     '#title' => t('Search this site'),
     '#type' => 'textfield',
     '#size' => 15,
@@ -960,25 +963,61 @@ function search_box(&$form_state, $form_id) {
  */
 function search_box_form_submit($form, &$form_state) {
   $form_id = $form['form_id']['#value'];
-  $form_state['redirect'] = 'search/node/'. trim($form_state['values'][$form_id .'_keys']);
+  $form_state['redirect'] = 'search/node/'. trim($form_state['values'][$form_id]);
 }
 
 /**
- * Theme the theme search form.
+ * Process variables for search-theme-form.tpl.php.
  *
- * @ingroup themeable
+ * The $variables array contains the following arguments:
+ * - $form
+ *
+ * @see search-theme-form.tpl.php
  */
-function theme_search_theme_form($form) {
-  return '<div id="search" class="container-inline">'. drupal_render($form) .'</div>';
+function template_preprocess_search_theme_form(&$variables) {
+  $variables['search'] = array();
+  $hidden = array();
+  // Provide variables named after form keys so themers can print each element independently.
+  foreach (element_children($variables['form']) as $key) {
+    $type = $variables['form'][$key]['#type'];
+    if ($type == 'hidden' || $type == 'token') {
+      $hidden[] = drupal_render($variables['form'][$key]);
+    }
+   else {
+      $variables['search'][$key] = drupal_render($variables['form'][$key]);
+    }
+  }
+  // Hidden form elements have no value to themers. No need for separation.
+  $variables['search']['hidden'] = implode($hidden);
+  // Collect all form elements to make it easier to print the whole form.
+  $variables['search_form'] = implode($variables['search']);
 }
 
 /**
- * Theme the block search form.
+ * Process variables for search-block-form.tpl.php.
  *
- * @ingroup themeable
+ * The $variables array contains the following arguments:
+ * - $form
+ *
+ * @see search-block-form.tpl.php
  */
-function theme_search_block_form($form) {
-  return '<div class="container-inline">'. drupal_render($form) .'</div>';
+function template_preprocess_search_block_form(&$variables) {
+  $variables['search'] = array();
+  $hidden = array();
+  // Provide variables named after form keys so themers can print each element independently.
+  foreach (element_children($variables['form']) as $key) {
+    $type = $variables['form'][$key]['#type'];
+    if ($type == 'hidden' || $type == 'token') {
+      $hidden[] = drupal_render($variables['form'][$key]);
+    }
+    else {
+      $variables['search'][$key] = drupal_render($variables['form'][$key]);
+    }
+  }
+  // Hidden form elements have no value to themers. No need for separation.
+  $variables['search']['hidden'] = implode($hidden);
+  // Collect all form elements to make it easier to print the whole form.
+  $variables['search_form'] = implode($variables['search']);
 }
 
 /**
@@ -994,7 +1033,7 @@ function search_data($keys = NULL, $type = 'node') {
           return module_invoke($type, 'search_page', $results);
         }
         else {
-          return theme('search_page', $results, $type);
+          return theme('search_results', $results, $type);
         }
       }
     }
