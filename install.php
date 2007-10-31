@@ -850,7 +850,7 @@ function install_configure_form() {
   _user_password_dynamic_validation();
 
   $form['intro'] = array(
-    '#value' => st('To configure your web site, please provide the following information.'),
+    '#value' => st('To configure your website, please provide the following information.'),
     '#weight' => -10,
   );
   $form['site_information'] = array(
