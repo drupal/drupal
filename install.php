@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.84 2007/10/31 16:11:53 dries Exp $
+// $Id: install.php,v 1.85 2007/10/31 16:14:15 dries Exp $
 
 require_once './includes/install.inc';
 
@@ -850,7 +850,7 @@ function install_configure_form() {
   _user_password_dynamic_validation();
 
   $form['intro'] = array(
-    '#value' => st('To configure your web site, please provide the following information.'),
+    '#value' => st('To configure your website, please provide the following information.'),
     '#weight' => -10,
   );
   $form['site_information'] = array(
