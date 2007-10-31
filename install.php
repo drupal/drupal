@@ -331,13 +331,14 @@ function install_settings_form(&$form_state, $profile, $install_locale, $setting
     );
 
     // Table prefix
+    $prefix = ($profile == 'default') ? 'drupal_' : $profile .'_';
     $form['advanced_options']['db_prefix'] = array(
       '#type' => 'textfield',
       '#title' => st('Table prefix'),
       '#default_value' => $db_prefix,
       '#size' => 45,
       '#maxlength' => 45,
-      '#description' => st('If more than one @drupal website will be sharing this database, enter a table prefix for your @drupal site here.', array('@drupal' => drupal_install_profile_name())),
+      '#description' => st('If more than one application will be sharing this database, enter a table prefix such as %prefix for your @drupal site here.', array('@drupal' => drupal_install_profile_name(), '%prefix' => $prefix)),
     );
 
     $form['save'] = array(
