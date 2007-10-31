@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.18 2007/10/27 13:57:33 goba Exp $
+// $Id: system.admin.inc,v 1.19 2007/10/31 18:01:01 dries Exp $
 
 /**
  * @file
@@ -1270,7 +1270,7 @@ function system_file_system_settings() {
     '#title' => t('File system path'),
     '#default_value' => file_directory_path(),
     '#maxlength' => 255,
-    '#description' => t('A file system path where the files will be stored. This directory has to exist and be writable by Drupal. If the download method is set to public this directory has to be relative to the Drupal installation directory, and be accessible over the web. When download method is set to private this directory should not be accessible over the web. Changing this location after the site has been in use will cause problems so only change this setting on an existing site if you know what you are doing.'),
+    '#description' => t('A file system path where the files will be stored. This directory must exist and be writable by Drupal. If the download method is set to public, this directory must be relative to the Drupal installation directory and be accessible over the web. If the download method is set to private, this directory should not be accessible over the web. Changing this location will modify all download paths and may cause unexpected problems on an existing site.'),
     '#after_build' => array('system_check_directory'),
   );
 
@@ -1279,7 +1279,7 @@ function system_file_system_settings() {
     '#title' => t('Temporary directory'),
     '#default_value' => file_directory_temp(),
     '#maxlength' => 255,
-    '#description' => t('Location where uploaded files will be kept during previews. Relative paths will be resolved relative to the Drupal installation directory.'),
+    '#description' => t('A file system path where uploaded files will be stored during previews.'),
     '#after_build' => array('system_check_directory'),
   );
 
@@ -1288,7 +1288,7 @@ function system_file_system_settings() {
     '#title' => t('Download method'),
     '#default_value' => variable_get('file_downloads', FILE_DOWNLOADS_PUBLIC),
     '#options' => array(FILE_DOWNLOADS_PUBLIC => t('Public - files are available using HTTP directly.'), FILE_DOWNLOADS_PRIVATE => t('Private - files are transferred by Drupal.')),
-    '#description' => t('If you want any sort of access control on the downloading of files, this needs to be set to <em>private</em>. You can change this at any time, however all download URLs will change and there may be unexpected problems so it is not recommended.')
+    '#description' => t('Choose the <em>Public download</em> method unless you wish to enforce fine-grained access controls over file downloads. Changing the download method will modify all download paths and may cause unexpected problems on an existing site.')
   );
 
   return system_settings_form($form);
