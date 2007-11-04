@@ -229,7 +229,7 @@ function locale_form_alter(&$form, $form_state, $form_id) {
   switch ($form_id) {
 
     // Language field for paths
-    case 'path_admin_edit':
+    case 'path_admin_form':
       $form['language'] = array(
         '#type' => 'select',
         '#title' => t('Language'),
