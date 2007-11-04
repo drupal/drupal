@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.597 2007/10/31 17:50:47 dries Exp $
+// $Id: comment.module,v 1.598 2007/11/04 15:15:47 goba Exp $
 
 /**
  * @file
@@ -1327,10 +1327,6 @@ function comment_form(&$form_state, $edit, $title = NULL) {
 
   if ($op == t('Preview comment')) {
     $form['#after_build'] = array('comment_form_add_preview');
-  }
-
-  if (!empty($_REQUEST['destination'])) {
-    $form['#attributes']['destination'] = $_REQUEST['destination'];
   }
 
   if (empty($edit['cid']) && empty($edit['pid'])) {
