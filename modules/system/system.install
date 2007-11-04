@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.168 2007/11/04 15:00:21 goba Exp $
+// $Id: system.install,v 1.169 2007/11/04 16:39:59 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -935,7 +935,11 @@ function system_schema() {
         'not null' => FALSE)
       ),
     'primary key' => array('filename'),
-    'indexes' => array('weight' => array('weight')),
+    'indexes' => 
+      array(
+        'modules' => array(array('type', 12), 'status', 'weight', 'filename'),
+        'bootstrap' => array(array('type', 12), 'status', 'bootstrap', 'weight', 'filename'),
+      ),
     );
 
   $schema['url_alias'] = array(
@@ -4440,6 +4444,17 @@ function system_update_6034() {
       $ret[] = update_sql("UPDATE {permission} SET perm = '$renamed_permission' WHERE rid = $role->rid");
     }
   }
+  return $ret;
+}
+
+/**
+ * Change index on system table for better performance.
+ */
+function system_update_6035() {
+  $ret = array();
+  db_drop_index($ret, 'system', 'weight');
+  db_add_index($ret, 'system', 'modules', array(array('type', 12), 'status', 'weight', 'filename'));
+  db_add_index($ret, 'system', 'bootstrap', array(array('type', 12), 'status', 'bootstrap', 'weight', 'filename'));
   return $ret;
 }
 
