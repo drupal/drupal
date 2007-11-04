@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.385 2007/10/27 13:39:07 goba Exp $
+// $Id: taxonomy.module,v 1.386 2007/11/04 14:46:11 goba Exp $
 
 /**
  * @file
@@ -1072,7 +1072,7 @@ function taxonomy_node_update_index(&$node) {
  *   or 'or') and a tid key containing an array of the term ids.
  */
 function taxonomy_terms_parse_string($str_tids) {
-  $terms = array();
+  $terms = array('operator' => '', 'tids' => array());
   if (preg_match('/^([0-9]+[+ ])+[0-9]+$/', $str_tids)) {
     $terms['operator'] = 'or';
     // The '+' character in a query string may be parsed as ' '.
