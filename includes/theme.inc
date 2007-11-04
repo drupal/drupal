@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.392 2007/10/23 09:42:09 goba Exp $
+// $Id: theme.inc,v 1.393 2007/11/04 20:32:34 goba Exp $
 
 /**
  * @file
@@ -965,7 +965,7 @@ function theme_render_template($file, $variables) {
  * Additionally, the theme() function can take an array of theme
  * hooks, which can be used to provide 'fallback' implementations to
  * allow for more specific control of output. For example, the function:
- * theme(array('table__foo', 'table), $header, $rows) would look to see if
+ * theme(array('table__foo', 'table'), $header, $rows) would look to see if
  * 'table__foo' is registered anywhere; if it is not, it would 'fall back'
  * to the generic 'table' implementation. This can be used to attach specific
  * theme functions to named objects, allowing the themer more control over
