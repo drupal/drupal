@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.197 2007/10/27 14:03:36 goba Exp $
+// $Id: locale.module,v 1.198 2007/11/04 11:10:09 goba Exp $
 
 /**
  * @file
@@ -229,7 +229,7 @@ function locale_form_alter(&$form, $form_state, $form_id) {
   switch ($form_id) {
 
     // Language field for paths
-    case 'path_admin_edit':
+    case 'path_admin_form':
       $form['language'] = array(
         '#type' => 'select',
         '#title' => t('Language'),
