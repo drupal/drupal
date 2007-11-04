@@ -409,6 +409,11 @@ function system_theme_settings(&$form_state, $key = '') {
       }
     }
   }
+  elseif (!element_children($form['theme_settings'])) {
+    // If there is no element in the theme settings fieldset then do not show
+    // it -- but keep it in the form if another module wants to alter.
+    $form['theme_settings']['#access'] = FALSE;
+  }
 
   // Logo settings
   if ((!$key) || in_array('logo', $features)) {
