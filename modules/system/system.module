@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.547 2007/10/27 11:32:05 goba Exp $
+// $Id: system.module,v 1.548 2007/11/04 16:24:14 goba Exp $
 
 /**
  * @file
@@ -147,10 +147,10 @@ function system_elements() {
 
   // Form structure
   $type['item'] = array('#value' => '');
-  $type['hidden'] = array('#input' => TRUE, '#process' => array('expand_ahah'));
+  $type['hidden'] = array('#input' => TRUE, '#process' => array('form_expand_ahah'));
   $type['value'] = array('#input' => TRUE);
   $type['markup'] = array('#prefix' => '', '#suffix' => '');
-  $type['fieldset'] = array('#collapsible' => FALSE, '#collapsed' => FALSE, '#value' => NULL, '#process' => array('expand_ahah'));
+  $type['fieldset'] = array('#collapsible' => FALSE, '#collapsed' => FALSE, '#value' => NULL, '#process' => array('form_expand_ahah'));
   $type['token'] = array('#input' => TRUE);
   return $type;
 }
