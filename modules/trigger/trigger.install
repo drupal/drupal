@@ -46,7 +46,7 @@ function trigger_schema() {
          'length' => 255,
          'not null' => TRUE,
          'default' => '',
-         'description' => t("Primary Key: Action's {action}.aid."),
+         'description' => t("Primary Key: Action's {actions}.aid."),
        ),
       'weight' => array(
         'type' => 'int',

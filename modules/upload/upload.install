@@ -29,7 +29,7 @@ function upload_schema() {
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('Primary Key: The {file}.fid.'),
+        'description' => t('Primary Key: The {files}.fid.'),
       ),
       'nid' => array(
         'type' => 'int',

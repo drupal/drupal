@@ -17,7 +17,7 @@ function filter_schema() {
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('Foreign Key: The {filter_formats}.fid to which this filter is assigned.'),
+        'description' => t('Foreign Key: The {filter_formats}.format to which this filter is assigned.'),
       ),
       'module' => array(
         'type' => 'varchar',

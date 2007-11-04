@@ -85,7 +85,7 @@ function aggregator_schema() {
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        'description' => t("The feed item's {aggregator_feed_item}.iid."),
+        'description' => t("The feed item's {aggregator_item}.iid."),
       ),
       'cid' => array(
         'type' => 'int',

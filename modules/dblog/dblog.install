@@ -33,7 +33,7 @@ function dblog_schema() {
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('The {user}.uid of the user who triggered the event.'),
+        'description' => t('The {users}.uid of the user who triggered the event.'),
       ),
       'type' => array(
         'type' => 'varchar',

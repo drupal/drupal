@@ -92,7 +92,7 @@ function statistics_schema() {
         'unsigned' => TRUE,
         'not null' => FALSE,
         'default' => 0,
-        'description' => t('User {user}.uid that visited the page.'),
+        'description' => t('User {users}.uid that visited the page.'),
       ),
       'timer' => array(
         'type' => 'int',
