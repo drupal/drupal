@@ -1,5 +1,5 @@
 <?php
-// $Id: block.install,v 1.4 2007/10/21 18:59:01 goba Exp $
+// $Id: block.install,v 1.5 2007/11/04 14:33:06 goba Exp $
 
 /**
  * Implementation of hook_schema().
@@ -118,7 +118,7 @@ function block_schema() {
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
-        'description' => t("The user's role ID from {user_roles}.rid."),
+        'description' => t("The user's role ID from {users_roles}.rid."),
       ),
     ),
     'primary key' => array(
@@ -135,7 +135,7 @@ function block_schema() {
         'type' => 'serial',
   'unsigned' => TRUE,
         'not null' => TRUE,
-        'description' => t("The block's {block}.bid."),
+        'description' => t("The block's {blocks}.bid."),
       ),
       'body' => array(
         'type' => 'text',

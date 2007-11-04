@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.install,v 1.3 2007/10/10 11:39:34 goba Exp $
+// $Id: trigger.install,v 1.4 2007/11/04 14:33:07 goba Exp $
 
 /**
  * Implementation of hook_install().
@@ -46,7 +46,7 @@ function trigger_schema() {
          'length' => 255,
          'not null' => TRUE,
          'default' => '',
-         'description' => t("Primary Key: Action's {action}.aid."),
+         'description' => t("Primary Key: Action's {actions}.aid."),
        ),
       'weight' => array(
         'type' => 'int',

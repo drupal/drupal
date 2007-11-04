@@ -1,5 +1,5 @@
 <?php
-// $Id: node.install,v 1.2 2007/10/10 11:39:33 goba Exp $
+// $Id: node.install,v 1.3 2007/11/04 14:33:07 goba Exp $
 
 /**
  * Implementation of hook_schema().
@@ -20,7 +20,7 @@ function node_schema() {
         'not null' => TRUE,
         'default' => 0),
       'type' => array(
-        'description' => t('The {node_type} of this node.'),
+        'description' => t('The {node_type}.type of this node.'),
         'type' => 'varchar',
         'length' => 32,
         'not null' => TRUE,
@@ -287,7 +287,7 @@ function node_schema() {
         'not null' => TRUE,
         'default' => ''),
       'has_body' => array(
-        'description' => t('Boolean indicating whether this type uses the {node}.body field.'),
+        'description' => t('Boolean indicating whether this type uses the {node_revisions}.body field.'),
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,

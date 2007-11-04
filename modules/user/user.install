@@ -1,5 +1,5 @@
 <?php
-// $Id: user.install,v 1.2 2007/10/10 11:39:35 goba Exp $
+// $Id: user.install,v 1.3 2007/11/04 14:33:07 goba Exp $
 
 /**
  * Implementation of hook_schema().
@@ -51,7 +51,7 @@ function user_schema() {
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        'description' => t("User's {user}.uid."),
+        'description' => t("User's {users}.uid."),
       ),
       'authname' => array(
         'type' => 'varchar',
@@ -266,7 +266,7 @@ function user_schema() {
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('Primary Key: {user}.uid for user.'),
+        'description' => t('Primary Key: {users}.uid for user.'),
       ),
       'rid' => array(
         'type' => 'int',

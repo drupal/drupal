@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.install,v 1.5 2007/10/10 11:39:32 goba Exp $
+// $Id: dblog.install,v 1.6 2007/11/04 14:33:06 goba Exp $
 
 /**
  * Implementation of hook_install().
@@ -33,7 +33,7 @@ function dblog_schema() {
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('The {user}.uid of the user who triggered the event.'),
+        'description' => t('The {users}.uid of the user who triggered the event.'),
       ),
       'type' => array(
         'type' => 'varchar',
