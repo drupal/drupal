@@ -112,6 +112,7 @@ tr.merge-up, tr.merge-up td, tr.merge-up th {
   font-weight: bold;
 }
 .form-item label.option {
+  white-space: nowrap;
   display: inline;
   font-weight: normal;
 }
