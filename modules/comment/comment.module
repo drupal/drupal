@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.598 2007/11/04 15:15:47 goba Exp $
+// $Id: comment.module,v 1.599 2007/11/04 16:11:33 goba Exp $
 
 /**
  * @file
@@ -1444,7 +1444,9 @@ function _comment_form_submit(&$comment_values) {
 function comment_form_submit($form, &$form_state) {
   _comment_form_submit($form_state['values']);
   if ($cid = comment_save($form_state['values'])) {
-    $form_state['redirect'] = array('node/'. $form_state['values']['nid'], NULL, "comment-$cid");
+    $node = node_load($form_state['values']['nid']);
+    $page = comment_new_page_count($node->comment_count, 1, $node);
+    $form_state['redirect'] = array('node/'. $node->nid, $page, "comment-$cid");
     return;
   }
 }
