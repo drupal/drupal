@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.167 2007/10/25 20:41:16 dries Exp $
+// $Id: system.install,v 1.168 2007/11/04 15:00:21 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -4221,20 +4221,8 @@ function system_update_6022() {
   db_add_index($ret, 'upload', 'vid', array('vid'));
 
   // The nid column was renamed to uid. Use the old nid to find the node's uid.
-  switch ($GLOBALS['db_type']) {
-    case 'mysql':
-    case 'mysqli':
-      $ret[] = update_sql('UPDATE {files} f JOIN {node} n ON f.uid = n.nid SET f.uid = n.uid');
-      // Use the existing vid to find the nid.
-      $ret[] = update_sql('UPDATE {upload} u JOIN {node_revisions} r ON u.vid = r.vid SET u.nid = r.nid');
-      break;
-
-    case 'pgsql':
-      $ret[] = update_sql('UPDATE {files} AS f SET uid = n.uid FROM {node} n WHERE f.uid=n.nid');
-      // Use the existing vid to find the nid.
-      $ret[] = update_sql('UPDATE {upload} AS u SET nid = r.nid FROM {node_revisions} r WHERE u.vid = r.vid');
-      break;
-  }
+  update_sql('UPDATE {files} SET uid = (SELECT n.uid FROM {node} n WHERE {files}.uid = n.nid)');
+  update_sql('UPDATE {upload} SET nid = (SELECT r.nid FROM {node_revisions} r WHERE {upload}.vid = r.vid)');
 
   // Mark all existing files as FILE_STATUS_PERMANENT.
   $ret[] = update_sql('UPDATE {files} SET status = 1');
