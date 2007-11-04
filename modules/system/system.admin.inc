@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.19 2007/10/31 18:01:01 dries Exp $
+// $Id: system.admin.inc,v 1.20 2007/11/04 15:54:53 goba Exp $
 
 /**
  * @file
@@ -408,6 +408,11 @@ function system_theme_settings(&$form_state, $key = '') {
         $form['node_info']["toggle_node_info_$type"] = array('#type' => 'checkbox', '#title' => $name, '#default_value' => $settings["toggle_node_info_$type"]);
       }
     }
+  }
+  elseif (!element_children($form['theme_settings'])) {
+    // If there is no element in the theme settings fieldset then do not show
+    // it -- but keep it in the form if another module wants to alter.
+    $form['theme_settings']['#access'] = FALSE;
   }
 
   // Logo settings
