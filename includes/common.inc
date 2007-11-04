@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.709 2007/11/04 14:18:56 goba Exp $
+// $Id: common.inc,v 1.710 2007/11/04 21:24:09 goba Exp $
 
 /**
  * @file
@@ -1197,7 +1197,8 @@ function format_date($timestamp, $type = 'medium', $format = '', $timezone = NUL
  *
  * @param $path
  *   The Drupal path being linked to, such as "admin/content/node", or an
- *   existing URL like "http://drupal.org/".
+ *   existing URL like "http://drupal.org/".  The special path
+ *   '<front>' may also be given and will generate the site's base URL.
  * @param $options
  *   An associative array of additional options, with the following keys:
  *     'query'
@@ -1355,6 +1356,8 @@ function drupal_attributes($attributes = array()) {
  *     - If you provide only the path (e.g. "admin/content/node"), it is
  *       considered an internal link. In this case, it must be a system URL
  *       as the url() function will generate the alias.
+ *     - If you provide '<front>', it generates a link to the site's
+ *       base URL (again via the url() function).
  *     - If you provide a path, and 'alias' is set to TRUE (see below), it is
  *       used as is.
  * @param $options
@@ -1388,7 +1391,7 @@ function l($text, $path, $options = array()) {
     );
 
   // Append active class.
-  if ($path == $_GET['q']) {
+  if ($path == $_GET['q'] || ($path == '<front>' && drupal_is_front_page())) {
     if (isset($options['attributes']['class'])) {
       $options['attributes']['class'] .= ' active';
     }
