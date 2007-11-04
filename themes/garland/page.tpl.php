@@ -32,7 +32,9 @@
             $site_fields[] = check_plain($site_slogan);
           }
           $site_title = implode(' ', $site_fields);
-          $site_fields[0] = '<span>'. $site_fields[0] .'</span>';
+          if ($site_fields) {
+            $site_fields[0] = '<span>'. $site_fields[0] .'</span>';
+          }
           $site_html = implode(' ', $site_fields);
 
           if ($logo || $site_title) {
