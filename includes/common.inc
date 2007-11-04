@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.708 2007/10/25 15:38:24 dries Exp $
+// $Id: common.inc,v 1.709 2007/11/04 14:18:56 goba Exp $
 
 /**
  * @file
@@ -1396,6 +1396,13 @@ function l($text, $path, $options = array()) {
       $options['attributes']['class'] = 'active';
     }
   }
+
+  // Remove all HTML and PHP tags from a tooltip. For best performance, we act only
+  // if a quick strpos() pre-check gave a suspicion (because strip_tags() is expensive).
+  if (isset($options['attributes']['title']) && strpos($options['attributes']['title'], '<') !== FALSE) {
+    $options['attributes']['title'] = strip_tags($options['attributes']['title']);
+  }
+
   return '<a href="'. check_url(url($path, $options)) .'"'. drupal_attributes($options['attributes']) .'>'. ($options['html'] ? $text : check_plain($text)) .'</a>';
 }
 
