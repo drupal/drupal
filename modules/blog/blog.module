@@ -146,6 +146,8 @@ function blog_menu() {
     'title' => 'My blog',
     'page callback' => 'blog_page_user',
     'page arguments' => array(1),
+    'access callback' => 'user_access',
+    'access arguments' => array('edit own blog', 1),
     'file' => 'blog.pages.inc',
   );
   $items['blog/%user/feed'] = array(
