@@ -1,5 +1,5 @@
 <?php
-// $Id: path.inc,v 1.18 2007/10/17 12:34:16 dries Exp $
+// $Id: path.inc,v 1.19 2007/11/04 16:42:45 goba Exp $
 
 /**
  * @file
@@ -153,7 +153,7 @@ function drupal_get_normal_path($path, $path_language = '') {
  *   (forward-slash), and where the first component has an index of 0 (zero).
  *
  * @return
- *   The component specified by $index, or FALSE if the specified component was
+ *   The component specified by $index, or NULL if the specified component was
  *   not found.
  */
 function arg($index = NULL, $path = NULL) {
