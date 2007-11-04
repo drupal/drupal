@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.857 2007/10/27 14:01:12 goba Exp $
+// $Id: user.module,v 1.858 2007/11/04 15:42:52 goba Exp $
 
 /**
  * @file
@@ -429,17 +429,25 @@ function user_password($length = 10) {
  *   The permission, such as "administer nodes", being checked for.
  * @param $account
  *   (optional) The account to check, if not given use currently logged in user.
+ * @param $reset
+ *   (optional) Resets the user's permissions cache, which will result in a
+ *   recalculation of the user's permissions. This is necessary to support
+ *   dynamically added user roles.
  *
  * @return
- *   boolean TRUE if the current user has the requested permission.
+ *   Boolean TRUE if the current user has the requested permission.
  *
  * All permission checks in Drupal should go through this function. This
  * way, we guarantee consistent behavior, and ensure that the superuser
  * can perform all actions.
  */
-function user_access($string, $account = NULL) {
+function user_access($string, $account = NULL, $reset = FALSE) {
   global $user;
   static $perm = array();
+
+  if ($reset) {
+    unset($perm);
+  }
 
   if (is_null($account)) {
     $account = $user;
