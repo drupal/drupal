@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.386 2007/11/04 14:46:11 goba Exp $
+// $Id: taxonomy.module,v 1.387 2007/11/04 15:10:09 goba Exp $
 
 /**
  * @file
@@ -20,6 +20,9 @@ function taxonomy_theme() {
   return array(
     'taxonomy_term_select' => array(
       'arguments' => array('element' => NULL),
+    ),
+    'taxonomy_term_page' => array(
+      'arguments' => array('tids' => array(), 'result' => NULL),
     ),
   );
 }

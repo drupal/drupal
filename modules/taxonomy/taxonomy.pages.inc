@@ -1,9 +1,9 @@
 <?php
-// $Id: taxonomy.pages.inc,v 1.3 2007/10/25 08:24:43 goba Exp $
+// $Id: taxonomy.pages.inc,v 1.4 2007/11/04 15:10:09 goba Exp $
 
 /**
  * @file
- * Administrative page callbacks for the taxonomy module.
+ * Page callbacks for the taxonomy module.
  */
 
 /**
@@ -41,16 +41,20 @@ function taxonomy_term_page($str_tids = '', $depth = 0, $op = 'page') {
           $breadcrumb = array_reverse($breadcrumb);
           drupal_set_breadcrumb($breadcrumb);
 
-          $output = taxonomy_render_nodes(taxonomy_select_nodes($tids, $terms['operator'], $depth, TRUE));
+          $output = theme('taxonomy_term_page', $tids, taxonomy_select_nodes($tids, $terms['operator'], $depth, TRUE));
           drupal_add_feed(url('taxonomy/term/'. $str_tids .'/'. $depth .'/feed'), 'RSS - '. $title);
           return $output;
           break;
 
         case 'feed':
-          $term = taxonomy_get_term($tids[0]);
           $channel['link'] = url('taxonomy/term/'. $str_tids .'/'. $depth, array('absolute' => TRUE));
           $channel['title'] = variable_get('site_name', 'Drupal') .' - '. $title;
-          $channel['description'] = $term->description;
+          // Only display the description if we have a single term, to avoid clutter and confusion.
+          if (count($tids) == 1) {
+            $term = taxonomy_get_term($tids[0]);
+            // HTML will be removed from feed description, so no need to filter here.
+            $channel['description'] = $term->description;
+          }
 
           $result = taxonomy_select_nodes($tids, $terms['operator'], $depth, FALSE);
 
@@ -60,6 +64,7 @@ function taxonomy_term_page($str_tids = '', $depth = 0, $op = 'page') {
 
           node_feed($items, $channel);
           break;
+
         default:
           drupal_not_found();
       }
@@ -68,6 +73,30 @@ function taxonomy_term_page($str_tids = '', $depth = 0, $op = 'page') {
       drupal_not_found();
     }
   }
+}
+
+/**
+ * Render a taxonomy term page HTML output.
+ * 
+ * @param $tids
+ *   An array of term ids.
+ * @param $result
+ *   A pager_query() result, such as that performed by taxonomy_select_nodes().
+ */
+function theme_taxonomy_term_page($tids, $result) {
+  $output = '';
+  
+  // Only display the description if we have a single term, to avoid clutter and confusion.
+  if (count($tids) == 1) {
+    $term = taxonomy_get_term($tids[0]);
+    $output .= '<div class="taxonomy-term-description">';
+    $output .= filter_xss_admin($term->description);
+    $output .= '</div>';
+  }
+  
+  $output .= taxonomy_render_nodes($result);
+  
+  return $output;
 }
 
 /**
