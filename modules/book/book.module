@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.444 2007/10/27 13:45:24 goba Exp $
+// $Id: book.module,v 1.445 2007/11/04 14:28:35 goba Exp $
 
 /**
  * @file
@@ -13,10 +13,11 @@ function book_theme() {
   return array(
     'book_navigation' => array(
       'arguments' => array('book_link' => NULL),
+      'template' => 'book-navigation',
     ),
     'book_export_html' => array(
-      'arguments' => array('title' => NULL, 'content' => NULL),
-      'file' => 'book.pages.inc',
+      'arguments' => array('title' => NULL, 'contents' => NULL, 'depth' => NULL),
+      'template' => 'book-export-html',
     ),
     'book_admin_table' => array(
       'arguments' => array('form' => NULL),
@@ -26,6 +27,11 @@ function book_theme() {
     ),
     'book_all_books_block' => array(
       'arguments' => array('book_menus' => array()),
+      'template' => 'book-all-books-block',
+    ),
+    'book_node_export_html' => array(
+      'arguments' => array('node' => NULL, 'children' => NULL),
+      'template' => 'book-node-export-html',
     ),
   );
 }
@@ -191,18 +197,18 @@ function book_block($op = 'list', $delta = 0, $edit = array()) {
         $block['subject'] = t('Book navigation');
         $book_menus = array();
         $pseudo_tree = array(0 => array('below' => FALSE));
-        foreach (book_get_books() as $book) {
+        foreach (book_get_books() as $book_id => $book) {
           if ($book['bid'] == $current_bid) {
             // If the current page is a node associated with a book, the menu
             // needs to be retrieved.
-            $book_menus[] = menu_tree_output(menu_tree_all_data($node->book['menu_name'], $node->book));
+            $book_menus[$book_id] = menu_tree_output(menu_tree_all_data($node->book['menu_name'], $node->book));
           }
           else {
             // Since we know we will only display a link to the top node, there
             // is no reason to run an additional menu tree query for each book.
             $book['in_active_trail'] = FALSE;
             $pseudo_tree[0]['link'] = $book;
-            $book_menus[] = menu_tree_output($pseudo_tree);
+            $book_menus[$book_id] = menu_tree_output($pseudo_tree);
           }
         }
         $block['content'] = theme('book_all_books_block', $book_menus);
@@ -240,19 +246,6 @@ function book_block($op = 'list', $delta = 0, $edit = array()) {
 }
 
 /**
- * Generate the HTML output for the block showing all book menus.
- *
- * @ingroup themeable
- */
-function theme_book_all_books_block($book_menus) {
-  $output = '';
-  foreach ($book_menus as $menu) {
-    $output .= '<div class="book-block-menu">'. $menu ."</div>\n";
-  }
-  return $output;
-}
-
-/**
  * Generate the HTML output for a link to a book title when used as a block title.
  *
  * @ingroup themeable
@@ -283,7 +276,7 @@ function book_get_books() {
       while ($link = db_fetch_array($result2)) {
         $link['href'] = $link['link_path'];
         $link['options'] = unserialize($link['options']);
-        $all_books[] = $link;
+        $all_books[$link['bid']] = $link;
       }
     }
   }
@@ -782,46 +775,59 @@ function _book_link_defaults($nid) {
 }
 
 /**
- * Prepares the links to the children of the page and the previous/up/next navigation.
+ * Process variables for book-navigation.tpl.php.
  *
- * These navigation elements are added to the content of a node in the book
- * outline when it is viewed as a page and in similar contexts.
+ * The $variables array contains the following arguments:
+ * - $book_link
  *
- * @ingroup themeable
+ * @see book-navigation.tpl.php
  */
-function theme_book_navigation($book_link) {
-  $output = '';
-  $links = '';
+function template_preprocess_book_navigation(&$variables) {
+  $book_link = $variables['book_link'];
 
+  // Provide extra variables for themers. Not needed by default.
+  $variables['book_id'] = $book_link['bid'];
+  $variables['book_title'] = check_plain($book_link['link_title']);
+  $variables['book_url'] = 'node/'. $book_link['bid'];
+  $variables['current_depth'] = $book_link['depth'];
+
+  $variables['tree'] = '';
   if ($book_link['mlid']) {
-    $tree = book_children($book_link);
+    $variables['tree'] = book_children($book_link);
 
     if ($prev = book_prev($book_link)) {
-      drupal_add_link(array('rel' => 'prev', 'href' => url($prev['href'])));
-      $links .= l(t('‹ ') . $prev['title'], $prev['href'], array('attributes' => array('class' => 'page-previous', 'title' => t('Go to previous page'))));
+      $prev_href = url($prev['href']);
+      drupal_add_link(array('rel' => 'prev', 'href' => $prev_href));
+      $variables['prev_url'] = $prev_href;
+      $variables['prev_title'] = check_plain($prev['title']);
     }
     if ($book_link['plid'] && $parent = book_link_load($book_link['plid'])) {
-      drupal_add_link(array('rel' => 'up', 'href' => url($parent['href'])));
-      $links .= l(t('up'), $parent['href'], array('attributes' => array('class' => 'page-up', 'title' => t('Go to parent page'))));
+      $parent_href = url($parent['href']);
+      drupal_add_link(array('rel' => 'up', 'href' => $parent_href));
+      $variables['parent_url'] = $parent_href;
+      $variables['parent_title'] = check_plain($parent['title']);
     }
     if ($next = book_next($book_link)) {
-      drupal_add_link(array('rel' => 'next', 'href' => url($next['href'])));
-      $links .= l($next['title'] . t(' ›'), $next['href'], array('attributes' => array('class' => 'page-next', 'title' => t('Go to next page'))));
-    }
-
-    if (isset($tree) || isset($links)) {
-      $output = '<div class="book-navigation">';
-      if (isset($tree)) {
-        $output .= $tree;
-      }
-      if (isset($links)) {
-        $output .= '<div class="page-links clear-block">'. $links .'</div>';
-      }
-      $output .= '</div>';
+      $next_href = url($next['href']);
+      drupal_add_link(array('rel' => 'next', 'href' => $next_href));
+      $variables['next_url'] = $next_href;
+      $variables['next_title'] = check_plain($next['title']);
     }
   }
 
-  return $output;
+  $variables['has_links'] = FALSE;
+  // Link variables to filter for values and set state of the flag variable.
+  $links = array('prev_url', 'prev_title', 'parent_url', 'parent_title', 'next_url', 'next_title');
+  foreach ($links as $link) {
+    if (isset($variables[$link])) {
+      // Flag when there is a value.
+      $variables['has_links'] = TRUE;
+    }
+    else {
+      // Set empty to prevent notices.
+      $variables[$link] = '';
+    }
+  }
 }
 
 /**
@@ -865,50 +871,56 @@ function book_toc($bid, $exclude = array(), $depth_limit) {
 }
 
 /**
+ * Process variables for book-export-html.tpl.php.
+ *
+ * The $variables array contains the following arguments:
+ * - $title
+ * - $contents
+ * - $depth
+ *
+ * @see book-export-html.tpl.php
+ */
+function template_preprocess_book_export_html(&$variables) {
+  global $base_url, $language;
+
+  $variables['title'] = check_plain($variables['title']);
+  $variables['base_url'] = $base_url;
+  $variables['language'] = $language;
+  $variables['language_rtl'] = (defined('LANGUAGE_RTL') && $language->direction == LANGUAGE_RTL) ? TRUE : FALSE;
+  $variables['head'] = drupal_get_html_head();
+}
+
+/**
  * Traverse the book tree to build printable or exportable output.
  *
- * During the traversal, the $visit_pre() callback is applied to each
+ * During the traversal, the $visit_func() callback is applied to each
  * node, and is called recursively for each child of the node (in weight,
- * title order). Finally, the output of the $visit_post() callback is
- * appended before returning the generated output.
+ * title order).
  *
  * @param $tree
  *   A subtree of the book menu hierarchy, rooted at the current page.
- * @param $visit_pre
+ * @param $visit_func
  *   A function callback to be called upon visiting a node in the tree.
- * @param $visit_post
- *   A function callback to be called after visiting a node in the tree,
- *   but before recursively visiting children.
  * @return
  *   The output generated in visiting each node.
  */
-function book_export_traverse($tree, $visit_pre, $visit_post) {
+function book_export_traverse($tree, $visit_func) {
   $output = '';
 
   foreach ($tree as $data) {
     // Note- access checking is already performed when building the tree.
-    $node = node_load($data['link']['nid'], FALSE);
-
-    if ($node) {
-      $depth = $node->book['depth'];
-      if (function_exists($visit_pre)) {
-        $output .= call_user_func($visit_pre, $node, $depth);
-      }
-      else {
-        // Use the default function.
-        $output .= book_node_visitor_html_pre($node, $depth);
-      }
-
+    if ($node = node_load($data['link']['nid'], FALSE)) {
+      $children = '';
       if ($data['below']) {
-        $output .= book_export_traverse($data['below'], $visit_pre, $visit_post);
+        $children = book_export_traverse($data['below'], $visit_func);
       }
 
-      if (function_exists($visit_post)) {
-        $output .= call_user_func($visit_post, $node, $depth);
+      if (function_exists($visit_func)) {
+        $output .= call_user_func($visit_func, $node, $children);
       }
       else {
         // Use the default function.
-        $output .= book_node_visitor_html_post($node, $depth);
+        $output .= book_node_export($node, $children);
       }
     }
   }
@@ -918,47 +930,37 @@ function book_export_traverse($tree, $visit_pre, $visit_post) {
 /**
  * Generates printer-friendly HTML for a node.
  *
- * This function is a 'pre-node' visitor function.
- *
  * @see book_export_traverse().
  *
  * @param $node
  *   The node to generate output for.
- * @param $depth
- *   The depth of the given node in the hierarchy. This
- *   is used only for generating output.
+ * @param $children
+ *   All the rendered child nodes within the current node.
  * @return
  *   The HTML generated for the given node.
  */
-function book_node_visitor_html_pre($node, $depth) {
+function book_node_export($node, $children = '') {
 
   $node->build_mode = NODE_BUILD_PRINT;
   $node = node_build_content($node, FALSE, FALSE);
+  $node->body = drupal_render($node->content);
 
-  $output = "<div id=\"node-". $node->nid ."\" class=\"section-$depth\">\n";
-  $output .= "<h1 class=\"book-heading\">". check_plain($node->title) ."</h1>\n";
-  $output .= drupal_render($node->content);
-
-  return $output;
+  return theme('book_node_export_html', $node, $children);
 }
 
 /**
- * Finishes up generation of printer-friendly HTML after visiting a node.
+ * Process variables for book-node-export-html.tpl.php.
  *
- * This function is a 'post-node' visitor function.
+ * The $variables array contains the following arguments:
+ * - $node
+ * - $children
  *
- * @see book_export_traverse().
- *
- * @param $node
- *   The node to generate output for.
- * @param $depth
- *   The depth of the given node in the hierarchy. This
- *   is used only for generating output.
- * @return
- *   The HTML appended after the given node.
+ * @see book-node-export-html.tpl.php
  */
-function book_node_visitor_html_post($node, $depth) {
-  return "</div>\n";
+function template_preprocess_book_node_export_html(&$variables) {
+  $variables['depth'] = $variables['node']->book['depth'];
+  $variables['title'] = check_plain($variables['node']->title);
+  $variables['content'] = $variables['node']->body;
 }
 
 /**

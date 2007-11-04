@@ -1,5 +1,5 @@
 <?php
-// $Id: book.pages.inc,v 1.3 2007/10/17 12:34:16 dries Exp $
+// $Id: book.pages.inc,v 1.4 2007/11/04 14:28:35 goba Exp $
 
 /**
  * @file
@@ -73,45 +73,17 @@ function book_export($type, $nid) {
  */
 function book_export_html($nid) {
   if (user_access('access printer-friendly version')) {
-    $content = '';
+    $export_data = array();
     $node = node_load($nid);
     if (isset($node->book)) {
-      $depth = $node->book['depth'];
-      for ($i = 1; $i < $depth; $i++) {
-        $content .= "<div class=\"section-$i\">\n";
-      }
       $tree = book_menu_subtree_data($node->book);
-      $content .= book_export_traverse($tree, 'book_node_visitor_html_pre', 'book_node_visitor_html_post');
-
-      for ($i = 1; $i < $depth; $i++) {
-        $content .= "</div>\n";
-      }
+      $contents = book_export_traverse($tree, 'book_node_export');
     }
-    return theme('book_export_html', check_plain($node->title), $content);
+    return theme('book_export_html', $node->title, $contents, $node->book['depth']);
   }
   else {
     drupal_access_denied();
   }
-}
-
-/**
- * How the book's HTML export should be themed
- *
- * @ingroup themeable
- */
-function theme_book_export_html($title, $content) {
-  global $base_url, $language;
-  $html = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
-  $html .= '<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">';
-  $html .= "<head>\n<title>". $title ."</title>\n";
-  $html .= '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />';
-  $html .= '<base href="'. $base_url .'/" />'."\n";
-  $html .= '<link type="text/css" rel="stylesheet" href="misc/print.css" />';
-  if (defined('LANGUAGE_RTL') && $language->direction == LANGUAGE_RTL) {
-    $html .= '<link type="text/css" rel="stylesheet" href="misc/print-rtl.css" />';
-  }
-  $html .= "</head>\n<body>\n". $content ."\n</body>\n</html>\n";
-  return $html;
 }
 
 /**
