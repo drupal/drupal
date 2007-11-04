@@ -21,6 +21,9 @@ function taxonomy_theme() {
     'taxonomy_term_select' => array(
       'arguments' => array('element' => NULL),
     ),
+    'taxonomy_term_page' => array(
+      'arguments' => array('tids' => array(), 'result' => NULL),
+    ),
   );
 }
 
