@@ -1,5 +1,5 @@
 <?php
-// $Id: page.tpl.php,v 1.14 2007/10/11 09:51:29 goba Exp $
+// $Id: page.tpl.php,v 1.15 2007/11/04 15:01:39 goba Exp $
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php print $language->language ?>" lang="<?php print $language->language ?>">
@@ -32,7 +32,9 @@
             $site_fields[] = check_plain($site_slogan);
           }
           $site_title = implode(' ', $site_fields);
-          $site_fields[0] = '<span>'. $site_fields[0] .'</span>';
+          if ($site_fields) {
+            $site_fields[0] = '<span>'. $site_fields[0] .'</span>';
+          }
           $site_html = implode(' ', $site_fields);
 
           if ($logo || $site_title) {
