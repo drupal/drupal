@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.290 2007/10/25 15:32:55 dries Exp $
+// $Id: blog.module,v 1.291 2007/11/04 15:45:15 goba Exp $
 
 /**
  * @file
@@ -146,6 +146,8 @@ function blog_menu() {
     'title' => 'My blog',
     'page callback' => 'blog_page_user',
     'page arguments' => array(1),
+    'access callback' => 'user_access',
+    'access arguments' => array('edit own blog', 1),
     'file' => 'blog.pages.inc',
   );
   $items['blog/%user/feed'] = array(
