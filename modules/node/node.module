@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.897 2007/10/28 11:43:04 dries Exp $
+// $Id: node.module,v 1.898 2007/11/05 15:14:54 goba Exp $
 
 /**
  * @file
@@ -742,7 +742,7 @@ function node_submit($node) {
     if (isset($node->body)) {
       $node->teaser = node_teaser($node->body, isset($node->format) ? $node->format : NULL);
       // Chop off the teaser from the body if needed.
-      if (!$node->teaser_include && $node->teaser == substr($node->body, 0, strlen($node->teaser))) {
+      if (empty($node->teaser_include) && $node->teaser == substr($node->body, 0, strlen($node->teaser))) {
         $node->body = substr($node->body, strlen($node->teaser));
       }
     }
