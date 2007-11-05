@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.248 2007/10/25 15:32:56 dries Exp $
+// $Id: poll.module,v 1.249 2007/11/05 16:28:25 goba Exp $
 
 /**
  * @file
@@ -54,15 +54,20 @@ function poll_theme() {
  * Implementation of hook_perm().
  */
 function poll_perm() {
-  return array('create polls', 'vote on polls', 'cancel own vote', 'inspect all votes');
+  return array('create polls', 'edit polls', 'edit own poll', 'vote on polls', 'cancel own vote', 'inspect all votes');
 }
 
 /**
  * Implementation of hook_access().
  */
 function poll_access($op, $node, $account) {
-  if ($op == 'create') {
-    return user_access('create polls', $account);
+  global $user;
+
+  switch ($op) {
+    case 'create':
+      return user_access('create polls', $account);
+    case 'update':
+      return user_access('edit polls') || (user_access('edit own poll') && ($node->uid == $user->uid));
   }
 }
 
@@ -177,7 +182,9 @@ function poll_node_info() {
  * Implementation of hook_form().
  */
 function poll_form(&$node, $form_state) {
-  $admin = user_access('administer nodes');
+  global $user;
+
+  $admin = user_access('administer nodes') || user_access('edit polls') || (user_access('edit own polls') && $user->uid == $node->nid);
   $type = node_get_types('type', $node);
 
   $form = array(
