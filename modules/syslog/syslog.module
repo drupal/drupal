@@ -1,5 +1,5 @@
 <?php
-// $Id: syslog.module,v 1.10 2007/10/05 13:11:19 goba Exp $
+// $Id: syslog.module,v 1.11 2007/11/05 14:22:22 goba Exp $
 
 /**
  * @file
@@ -19,14 +19,17 @@ else {
 function syslog_help($path, $arg) {
   switch ($path) {
     case 'admin/help#syslog':
-      return '<p>'. t('Provides the facility to log Drupal messages to the operating systems\' syslog facility.') .'</p>';
+      $output = '<p>'. t('Enables Drupal to send messages to the operating system\'s logging facility.') .'</p>';
+      $output .= '<p>'. t('Syslog is an operating system administrative logging tool, and provides valuable information for use in system management and security auditing. Most suited to medium and large sites, syslog provides filtering tools that allow messages to be routed by type and severity. On UNIX/Linux systems, the file /etc/syslog.conf defines this routing configuration; on Microsoft Windows, all messages are sent to the Event Log. For more information on syslog facilities, severity levels, and how to set up a syslog.conf file, see <a href="@syslog_conf">UNIX/Linux syslog.conf</a> and PHP\'s <a href="@php_openlog">openlog</a> and <a href="@php_syslog">syslog</a> functions.', array('@syslog_conf' => url('http://www.rt.com/man/syslog.5.html'), '@php_openlog' => url('http://www.php.net/manual/en/function.openlog.php'), '@php_syslog' => url('http://www.php.net/manual/en/function.syslog.php'))) .'</p>';
+      $output .= '<p>'. t('For more information please read the handbook <a href="@syslog">Syslog page</a>.', array('@syslog' => 'http://drupal.org/handbook/modules/syslog')) .'</p>';
+      return $output;
   }
 }
 
 function syslog_menu() {
   $items['admin/settings/logging/syslog'] = array(
     'title'          => 'Syslog',
-    'description'    => 'Settings for syslog logging. Syslog is a system administration logging tool, where messages are routed by facility and severity. It is more suitable for medium to large sites, and would not be suitable for shared hosting environments.',
+    'description'    => 'Settings for syslog logging. Syslog is an operating system administrative logging tool used in systems management and security auditing. Most suited to medium and large sites, syslog provides filtering tools that allow messages to be routed by type and severity.',
     'page callback'  => 'drupal_get_form',
     'page arguments' => array('syslog_admin_settings'),
   );
@@ -36,13 +39,13 @@ function syslog_menu() {
 function syslog_admin_settings() {
   $form['syslog_facility'] = array(
     '#type'          => 'select',
-    '#title'         => t('Syslog facility to send events to'),
+    '#title'         => t('Send events to this syslog facility'),
     '#default_value' => variable_get('syslog_facility', DEFAULT_SYSLOG_FACILITY),
     '#options'       => syslog_facility_list(),
-    '#description'   => t('Select the syslog facility to send Drupal\'s messages to. Syslog is a system administration logging tool, where messages are routed by facility and severity. It is more suitable for medium to large sites, and would not be suitable for shared hosting environments. In the file /etc/syslog.conf you define where messages go for any combination of facility and severity. For UNIX/Linux systems, Drupal can use the facilities user, local0 to local7, for Windows, you can only use the user facility. For more information on syslog facilities, severity levels, and how to setup a syslog.conf files, see !syslog_conf and !php', array(
+    '#description'   => t('Select the syslog facility code under which Drupal\'s messages should be sent. On UNIX/Linux systems, Drupal can flag its messages with the code LOG_LOCAL0 through LOG_LOCAL7; for Microsoft Windows, all messages are flagged with the code LOG_USER. Depending on the system configuration, syslog and other logging tools use this code to identify or filter Drupal messages from within the entire system log. For more information on syslog, see <a href="@syslog_help">Syslog help</a>.', array(
+      '@syslog_help' => url('admin/help/syslog'),
       '!php'         => l("PHP's syslog", 'http://www.php.net/manual/en/function.openlog.php', array('external' => TRUE)),
-      '!syslog_conf' => l('UNIX/Linux syslog.conf', 'http://www.rt.com/man/syslog.5.html', array('external' => TRUE)),
-      )),
+      '!syslog_conf' => l('UNIX/Linux syslog.conf', 'http://www.rt.com/man/syslog.5.html', array('external' => TRUE)))),
   );
   return system_settings_form($form);
 }
