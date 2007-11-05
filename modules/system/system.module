@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.548 2007/11/04 16:24:14 goba Exp $
+// $Id: system.module,v 1.549 2007/11/05 16:00:55 goba Exp $
 
 /**
  * @file
@@ -56,6 +56,7 @@ function system_help($path, $arg) {
       if ($arg[4] == 'system' && $arg[5] == 0) {
         return '<p>'. t('The <em>Powered by Drupal</em> block is an optional link to the home page of the Drupal project. While there is absolutely no requirement that sites feature this link, it may be used to show support for Drupal.') .'</p>';
       }
+      break;
     case 'admin/settings/actions':
     case 'admin/settings/actions/manage':
       $output = '<p>'. t('Actions are individual tasks that the system can do, such as unpublishing a piece of content or banning a user. Modules, such as the trigger module, can fire these actions when certain system events happen; for example, when a new post is added or when a user logs in. Modules may also provide additional actions.') .'</p>';
