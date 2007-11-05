@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.599 2007/11/04 16:11:33 goba Exp $
+// $Id: comment.module,v 1.600 2007/11/05 14:25:58 goba Exp $
 
 /**
  * @file
@@ -1368,7 +1368,7 @@ function comment_form_add_preview($form, &$form_state) {
       $comment->uid = $account->uid;
       $comment->name = check_plain($account->name);
     }
-    else {
+    elseif (empty($comment->name)) {
       $comment->name = variable_get('anonymous', t('Anonymous'));
     }
     $comment->timestamp = !empty($edit['timestamp']) ? $edit['timestamp'] : time();
