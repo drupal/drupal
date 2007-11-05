@@ -1368,7 +1368,7 @@ function comment_form_add_preview($form, &$form_state) {
       $comment->uid = $account->uid;
       $comment->name = check_plain($account->name);
     }
-    else {
+    elseif (empty($comment->name)) {
       $comment->name = variable_get('anonymous', t('Anonymous'));
     }
     $comment->timestamp = !empty($edit['timestamp']) ? $edit['timestamp'] : time();
