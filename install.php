@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.85 2007/10/31 16:14:15 dries Exp $
+// $Id: install.php,v 1.86 2007/11/06 09:00:30 goba Exp $
 
 require_once './includes/install.inc';
 
@@ -654,11 +654,8 @@ function install_tasks($profile, $task) {
     $form['#build_id'] = $form_build_id;
     drupal_prepare_form('install_configure_form', $form, $form_state);
 
-    // In order to find out if the form was successfully submitted or not,
-    // we do a little song and dance to set the form to 'programmed' and check
-    // to make sure this is really the form being submitted. It'd better be.
+    // Is the form submitted?
     if (!empty($_POST) && $_POST['form_id'] == 'install_configure_form') {
-      $form['#programmed'] = TRUE;
       $form['#post'] = $_POST;
     }
     else {
@@ -945,11 +942,22 @@ if (Drupal.jsEnabled) {
     '#weight' => 10,
   );
 
+  $form['server_settings']['update_status_module'] = array(
+    '#type' => 'checkboxes',
+    '#title' => st('Update notifications'),
+    '#options' => array(1 => st('Check for updates automatically')),
+    '#default_value' => array(1),
+    '#description' => st('Drupal can check periodically for important bug fixes and security releases. To do this, your site will send anonymous information on its installed components to drupal.org. It is <strong>highly recommended</strong> that you enable this option for your site\'s security. For more information please read the <a href="@update">update notification information</a>.', array('@update' => 'http://drupal.org/handbook/modules/update')),
+    '#weight' => 15,
+  );
+
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => st('Save'),
     '#weight' => 15,
   );
+  $form['#redirect'] = FALSE;
+
   $hook_form_alter = $_GET['profile'] .'_form_alter';
   if (function_exists($hook_form_alter)) {
     $hook_form_alter($form, 'install_configure');
@@ -975,6 +983,11 @@ function install_configure_form_submit($form, &$form_state) {
   variable_set('site_name', $form_state['values']['site_name']);
   variable_set('site_mail', $form_state['values']['site_mail']);
   variable_set('date_default_timezone', $form_state['values']['date_default_timezone']);
+
+  // Enable update.module if this option was selected.
+  if ($form_state['values']['update_status_module'][1]) {
+    drupal_install_modules(array('update'));
+  }
 
   // Turn this off temporarily so that we can pass a password through.
   variable_set('user_email_verification', FALSE);

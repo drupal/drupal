@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.169 2007/11/04 16:39:59 goba Exp $
+// $Id: system.install,v 1.170 2007/11/06 09:00:30 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -186,6 +186,23 @@ function system_requirements($phase) {
   // Test Unicode library
   include_once './includes/unicode.inc';
   $requirements = array_merge($requirements, unicode_requirements());
+
+  // Check for update status module.
+  if ($phase == 'runtime') {
+    if (!module_exists('update')) {
+      $requirements['update status'] = array(
+        'value' => $t('Not enabled'),
+        'severity' => REQUIREMENT_ERROR,
+        'description' => $t('Update notifications are not enabled. It is <strong>highly recommended</strong> that you enable the update status module from the <a href="@module">module administration page</a> in order to stay up-to-date on new releases. For more information please read the <a href="@update">Update status handbook page</a>.', array('@update' => 'http://drupal.org/handbook/modules/update', '@module' => url('admin/build/modules'))),
+      );
+    }
+    else {
+      $requirements['update status'] = array(
+        'value' => $t('Enabled'),
+      );
+    }
+    $requirements['update status']['title'] = $t('Update notifications');
+  }
 
   return $requirements;
 }
@@ -4269,42 +4286,16 @@ function system_update_6025() {
 }
 
 /**
- * Enable the update.module by default on sites that upgrade.
- *
- * This cannot just rely on update.install to install the schema. If,
- * in the future, someone decides to change the schema for the
- * {cache_update} table, this update would cause uncertainty in the
- * state of the DB, since the effect of running this update would
- * change. For example, if the schema is changed in update #6101, and
- * a site upgrades direct from 5.x to 6.1, update #6026 would create
- * the table with the new schema, and then update #6101 would fail,
- * since it's trying to alter the old schema into the new
- * schema. Therefore, we must hard-code the particular version of the
- * schema we mean during update #6026, and then future upgrades that
- * might attempt to modify the schema of this table will be starting
- * from a known state. See http://drupal.org/node/150220 for more.
+ * Display warning about new Update status module.
  */
 function system_update_6026() {
   $ret = array();
-  $schema['cache_update'] = array(
-    'fields' => array(
-      'cid'        => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'data'       => array('type' => 'blob', 'not null' => FALSE, 'size' => 'big'),
-      'expire'     => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      'created'    => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      'headers'    => array('type' => 'text', 'not null' => FALSE),
-      'serialized' => array('type' => 'int', 'size' => 'small', 'not null' => TRUE, 'default' => 0)
-    ),
-    'indexes' => array('expire' => array('expire')),
-    'primary key' => array('cid'),
-  );
-  db_create_table($ret, 'cache_update', $schema['cache_update']);
-  drupal_set_installed_schema_version('update', 0);
-  module_enable(array('update'));
-  menu_rebuild();
+
+  // Notify user that new update module exists.
+  drupal_set_message(t('Drupal can check periodically for important bug fixes and security releases using the new update status module. This module can be turned on from the <a href="@modules">modules administration page</a>. For more information please read the <a href="@update">Update status handbook page</a>.', array('@modules' => url('admin/build/modules'), '@update' => 'http://drupal.org/handbook/modules/update')));
+
   return $ret;
 }
-
 
 /**
  * Add block cache.

@@ -1,5 +1,5 @@
 <?php
-// $Id: update.module,v 1.2 2007/10/20 21:57:50 goba Exp $
+// $Id: update.module,v 1.3 2007/11/06 09:00:31 goba Exp $
 
 /**
  * @file
@@ -70,6 +70,13 @@ function update_help($path, $arg) {
     case 'admin/reports/status':
       // These two pages don't need additional nagging.
       break;
+
+    case 'admin/help#update':
+      $output = '<p>'. t("The Update status module periodically checks for new versions of your site's software (including contributed modules and themes), and alerts you to available updates.") .'</p>';
+      $output .= '<p>'. t('The <a href="@update-report">report of available updates</a> will alert you when new releases are available for download. You may configure options for update checking frequency and notifications at the <a href="@update-settings">Update status module settings page</a>.', array('@update-report' => url('admin/logs/updates'), '@update-settings' => url('admin/logs/updates/settings'))) .'</p>';
+      $output .= '<p>'. t('Please note that in order to provide this information, anonymous usage statistics are sent to drupal.org. If desired, you may disable the Update status module from the <a href="@modules">module administration page</a>.', array('@modules' => url('admin/build/modules'))) .'</p>';
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@update">Update status page</a>.', array('@update' => 'http://drupal.org/handbook/modules/update')) .'</p>';
+      return $output;
 
     default:
       // Otherwise, if we're on *any* admin page and there's a security
