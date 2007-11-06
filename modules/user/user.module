@@ -1076,15 +1076,17 @@ function user_init() {
 }
 
 function user_current_load($arg) {
-  return $arg ? user_load($arg) : FALSE;
+  return user_load($arg ? $arg : $GLOBALS['user']->uid);
 }
 
+/**
+ * Returns the user id of the currently logged in user.
+ */
 function user_current_to_arg($arg) {
-
-  if (is_numeric($arg)) {
-    return $arg;
-  }
-  return $GLOBALS['user']->uid;
+  // Give back the current user uid when called from eg. tracker, aka.
+  // with an empty arg. Also use the current user uid when called from
+  // the menu with a % for the current account link.
+  return empty($arg) || $arg == '%' ? $GLOBALS['user']->uid : $arg;
 }
 
 /**
