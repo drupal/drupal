@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.861 2007/11/06 08:53:52 goba Exp $
+// $Id: user.module,v 1.862 2007/11/06 12:20:14 goba Exp $
 
 /**
  * @file
@@ -203,6 +203,11 @@ function user_save($account, $array = array(), $category = 'account') {
     user_module_invoke('update', $array, $account, $category);
     $query = '';
     $data = unserialize(db_result(db_query('SELECT data FROM {users} WHERE uid = %d', $account->uid)));
+    // Consider users edited by an administrator as logged in, if they haven't
+    // already, so anonymous users can view the profile (if allowed).
+    if (empty($array['access']) && empty($account->access) && user_access('administer users')) {
+      $array['access'] = time();
+    }
     foreach ($array as $key => $value) {
       if ($key == 'pass' && !empty($value)) {
         $query .= "$key = '%s', ";
@@ -268,6 +273,11 @@ function user_save($account, $array = array(), $category = 'account') {
   else {
     if (!isset($array['created'])) {    // Allow 'created' to be set by the caller
       $array['created'] = time();
+    }
+    // Consider users created by an administrator as already logged in, so
+    // anonymous users can view the profile (if allowed).
+    if (empty($array['access']) && user_access('administer users')) {
+      $array['access'] = time();
     }
 
     // Note, we wait with saving the data column to prevent module-handled
