@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.pages.inc,v 1.3 2007/10/07 19:25:57 dries Exp $
+// $Id: tracker.pages.inc,v 1.4 2007/11/06 08:51:23 goba Exp $
 
 /**
  * @file
@@ -10,35 +10,23 @@
 /**
  * Menu callback. Prints a listing of active nodes on the site.
  */
-function tracker_track_user() {
-  if ($account = user_load(array('uid' => arg(1)))) {
-    if ($account->status || user_access('administer users')) {
-      drupal_set_title(check_plain($account->name));
-      return tracker_page($account->uid);
-    }
-    else {
-      drupal_access_denied();
-    }
-  }
-  else {
-    drupal_not_found();
-  }
-}
-
-/**
- * Menu callback. Prints a listing of active nodes on the site.
- */
-function tracker_page($uid = 0) {
+function tracker_page($account = NULL, $set_title = FALSE) {
   // Add CSS
   drupal_add_css(drupal_get_path('module', 'tracker') .'/tracker.css', 'module', 'all', FALSE);
 
+  if ($account) {
+    if ($set_title) {
+      // When viewed from user/%user/track, display the name of the user
+      // as page title -- the tab title remains Track so this needs to be done
+      // here and not in the menu definiton.
+      drupal_set_title(check_plain($account->name));
+    }
   // TODO: These queries are very expensive, see http://drupal.org/node/105639
-  if ($uid) {
     $sql = 'SELECT DISTINCT(n.nid), n.title, n.type, n.changed, n.uid, u.name, GREATEST(n.changed, l.last_comment_timestamp) AS last_updated, l.comment_count FROM {node} n INNER JOIN {node_comment_statistics} l ON n.nid = l.nid INNER JOIN {users} u ON n.uid = u.uid LEFT JOIN {comments} c ON n.nid = c.nid AND (c.status = %d OR c.status IS NULL) WHERE n.status = 1 AND (n.uid = %d OR c.uid = %d) ORDER BY last_updated DESC';
     $sql = db_rewrite_sql($sql);
     $sql_count = 'SELECT COUNT(DISTINCT(n.nid)) FROM {node} n LEFT JOIN {comments} c ON n.nid = c.nid AND (c.status = %d OR c.status IS NULL) WHERE n.status = 1 AND (n.uid = %d OR c.uid = %d)';
     $sql_count = db_rewrite_sql($sql_count);
-    $result = pager_query($sql, 25, 0, $sql_count, COMMENT_PUBLISHED, $uid, $uid);
+    $result = pager_query($sql, 25, 0, $sql_count, COMMENT_PUBLISHED, $account->uid, $account->uid);
   }
   else {
     $sql = 'SELECT DISTINCT(n.nid), n.title, n.type, n.changed, n.uid, u.name, GREATEST(n.changed, l.last_comment_timestamp) AS last_updated, l.comment_count FROM {node} n INNER JOIN {users} u ON n.uid = u.uid INNER JOIN {node_comment_statistics} l ON n.nid = l.nid WHERE n.status = 1 ORDER BY last_updated DESC';

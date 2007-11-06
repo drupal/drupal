@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.module,v 1.151 2007/08/23 16:01:01 dries Exp $
+// $Id: tracker.module,v 1.152 2007/11/06 08:51:23 goba Exp $
 
 /**
  * @file
@@ -30,24 +30,22 @@ function tracker_menu() {
     'weight' => 1,
     'file' => 'tracker.pages.inc',
   );
-
   $items['tracker/all'] = array(
     'title' => 'All recent posts',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'access callback' => 'user_is_logged_in',
   );
-
   $items['tracker/%user_current'] = array(
     'title' => 'My recent posts',
-    'type' => MENU_LOCAL_TASK,
     'access callback' => 'user_is_logged_in',
+    'page arguments' => array(1),
+    'type' => MENU_LOCAL_TASK,
   );
 
   $items['user/%user/track'] = array(
     'title' => 'Track',
-    'page callback' => 'tracker_track_user',
-    'access callback' => 'user_access',
-    'access arguments' => array('access content'),
+    'page callback' => 'tracker_page',
+    'page arguments' => array(1, TRUE),
     'type' => MENU_LOCAL_TASK,
     'file' => 'tracker.pages.inc',
   );
