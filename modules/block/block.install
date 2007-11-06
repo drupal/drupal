@@ -1,5 +1,5 @@
 <?php
-// $Id: block.install,v 1.5 2007/11/04 14:33:06 goba Exp $
+// $Id: block.install,v 1.6 2007/11/06 11:40:15 goba Exp $
 
 /**
  * Implementation of hook_schema().
@@ -91,7 +91,7 @@ function block_schema() {
       'cache' => array(
         'type' => 'int',
         'not null' => TRUE,
-        'default' => 0,
+        'default' => 1,
         'size' => 'tiny',
         'description' => t('Binary flag to indicate block cache mode. (-1: Do not cache, 1: Cache per role, 2: Cache per user, 4: Cache per page, 8: Block cache global) See BLOCK_CACHE_* constants in block.module for more detailed information.'),
       ),

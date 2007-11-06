@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.284 2007/10/21 18:59:01 goba Exp $
+// $Id: block.module,v 1.285 2007/11/06 11:40:15 goba Exp $
 
 /**
  * @file
@@ -224,8 +224,9 @@ function _block_rehash() {
   init_theme();
 
   $result = db_query("SELECT * FROM {blocks} WHERE theme = '%s'", $theme_key);
-  while ($old_block = db_fetch_object($result)) {
-    $old_blocks[$old_block->module][$old_block->delta] = $old_block;
+  $old_blocks = array();
+  while ($old_block = db_fetch_array($result)) {
+    $old_blocks[$old_block['module']][$old_block['delta']] = $old_block;
   }
 
   $blocks = array();
@@ -234,50 +235,37 @@ function _block_rehash() {
     $module_blocks = module_invoke($module, 'block', 'list');
     if ($module_blocks) {
       foreach ($module_blocks as $delta => $block) {
-        $block['module'] = $module;
-        $block['delta']  = $delta;
-        // If no cache pattern is specified, we use PER_ROLE as a default.
-        $block['cache'] = isset($block['cache']) ? $block['cache'] : BLOCK_CACHE_PER_ROLE;
-        // If previously written to database, load values.
-        if (!empty($old_blocks[$module][$delta])) {
-          $block['status'] = $old_blocks[$module][$delta]->status;
-          $block['weight'] = $old_blocks[$module][$delta]->weight;
-          $block['region'] = $old_blocks[$module][$delta]->region;
-          $block['visibility'] = $old_blocks[$module][$delta]->visibility;
-          $block['pages'] = $old_blocks[$module][$delta]->pages;
-          $block['custom'] = $old_blocks[$module][$delta]->custom;
-          $block['throttle'] = $old_blocks[$module][$delta]->throttle;
-          $block['title'] = $old_blocks[$module][$delta]->title;
+        if (empty($old_blocks[$module][$delta])) {
+          // If it's a new block, add identifiers.
+          $block['module'] = $module;
+          $block['delta']  = $delta;
+          $block['theme']  = $theme_key;
+          // Add defaults and save it into the database.
+          drupal_write_record('blocks', $block);
+          $blocks[] = $block;
         }
-        // Otherwise, use any set values, or else substitute defaults.
         else {
-          $properties = array('status' => 0, 'weight' => 0, 'region' => 'left', 'pages' => '', 'custom' => 0, 'title' => '');
-          foreach ($properties as $property => $default) {
-            if (!isset($block[$property])) {
-              $block[$property] = $default;
-            }
-          }
+          // If it's an existing block, database settings should overwrite
+          // the code. But aside from 'info' everything that's definable in
+          // code is stored in the database and we do not store 'info', so we
+          // do not need to update the database here.
+          // Add 'info' to this block.
+          $old_blocks[$module][$delta]['info'] = $block['info'];
+          // Add this block to the list of blocks we return
+          $blocks[] = $old_blocks[$module][$delta];
+          // Remove this block from the list of blocks to be deleted.
+          unset($old_blocks[$module][$delta]);
         }
-
-        $blocks[] = $block;
       }
     }
   }
 
-  db_lock_table('blocks');
-  // Remove all blocks from table.
-  db_query("DELETE FROM {blocks} WHERE theme = '%s'", $theme_key);
-
-  // Reinsert new set of blocks into table.
-  foreach ($blocks as $block) {
-    $block += array(
-      'visibility' => NULL,
-      'throttle' => NULL,
-    );
-    db_query("INSERT INTO {blocks} (module, delta, theme, status, weight, region, visibility, pages, custom, throttle, title, cache) VALUES ('%s', '%s', '%s', %d, %d, '%s', %d, '%s', %d, %d, '%s', %d)", $block['module'], $block['delta'], $theme_key, $block['status'], $block['weight'], $block['region'], $block['visibility'], $block['pages'], $block['custom'], $block['throttle'], $block['title'], $block['cache']);
+  // Remove blocks that are no longer defined by the code from the database.
+  foreach ($old_blocks as $module => $old_module_blocks) {
+    foreach ($old_module_blocks as $delta => $block) {
+      db_query("DELETE FROM {blocks} WHERE module = '%s' AND delta = '%s' AND theme = '%s'", $module, $delta, $theme_key);
+    }
   }
-  db_unlock_tables();
-
   return $blocks;
 }
 

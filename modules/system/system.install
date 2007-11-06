@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.170 2007/11/06 09:00:30 goba Exp $
+// $Id: system.install,v 1.171 2007/11/06 11:40:15 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -4304,7 +4304,7 @@ function system_update_6027() {
   $ret = array();
 
   // Create the blocks.cache column.
-  db_add_field($ret, 'blocks', 'cache', array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny'));
+  db_add_field($ret, 'blocks', 'cache', array('type' => 'int', 'not null' => TRUE, 'default' => 1, 'size' => 'tiny'));
 
   // The cache_block table is created in update_fix_d6_requirements() since
   // calls to cache_clear_all() would otherwise cause warnings.
