@@ -1349,7 +1349,7 @@ function user_edit_form(&$form_state, $uid, $edit, $register = FALSE) {
   if (variable_get('user_pictures', 0) && !$register) {
     $form['picture'] = array('#type' => 'fieldset', '#title' => t('Picture'), '#weight' => 1);
     $picture = theme('user_picture', (object)$edit);
-    if ($picture) {
+    if ($edit['picture']) {
       $form['picture']['current_picture'] = array('#value' => $picture);
       $form['picture']['picture_delete'] = array('#type' => 'checkbox', '#title' => t('Delete picture'), '#description' => t('Check this box to delete your current picture.'));
     }
