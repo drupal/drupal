@@ -1,0 +1,20 @@
+/* $Id: minnelli.css,v 1.1 2007/11/07 18:04:15 goba Exp $ */
+
+/**
+ * Minnelli, for Drupal 5.0
+ * Stefan Nagtegaal, iStyledThis [dot] nl
+ * Steven Wittens, acko [dot] net
+ */
+
+body #wrapper #container {
+  width: 560px;
+}
+
+body.sidebars #wrapper #container {
+  width: 980px;
+}
+
+body.sidebar-left #wrapper #container,
+body.sidebar-right #wrapper #container {
+  width: 770px;
+}
