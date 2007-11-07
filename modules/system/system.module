@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.549 2007/11/05 16:00:55 goba Exp $
+// $Id: system.module,v 1.550 2007/11/07 20:21:33 goba Exp $
 
 /**
  * @file
@@ -383,7 +383,7 @@ function system_menu() {
     'file' => 'system.admin.inc',
   );
   $items['admin/settings/date-time/lookup'] = array(
-    'title' => t('Date and time lookup'),
+    'title' => 'Date and time lookup',
     'type' => MENU_CALLBACK,
     'page callback' => 'system_date_time_lookup',
     'file' => 'system.admin.inc',
