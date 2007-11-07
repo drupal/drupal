@@ -1566,10 +1566,6 @@ function comment_form($edit, $title = NULL) {
     $form['#after_build'] = array('comment_form_add_preview');
   }
 
-  if ($_REQUEST['destination']) {
-    $form['#attributes']['destination'] = $_REQUEST['destination'];
-  }
-
   if (empty($edit['cid']) && empty($edit['pid'])) {
     $form['#action'] = url('comment/reply/'. $edit['nid']);
   }
