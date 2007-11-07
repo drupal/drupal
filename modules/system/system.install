@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.172 2007/11/07 09:48:06 goba Exp $
+// $Id: system.install,v 1.173 2007/11/07 09:55:20 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -4418,7 +4418,23 @@ function system_update_6032() {
 function system_update_6033() {
   $ret = array();
   if (db_table_exists('node_comment_statistics')) {
+    // On pgsql but not mysql, db_change_field() drops all keys
+    // involving the changed field, which in this case is the primary
+    // key.  The normal approach is explicitly drop the pkey, change the
+    // field, and re-create the pkey.
+    //
+    // Unfortunately, in this case that won't work on mysql; we CANNOT
+    // drop the pkey because on mysql auto-increment fields must be
+    // included in at least one key or index.
+    //
+    // Since we cannot drop the pkey before db_change_field(), after
+    // db_change_field() we may or may not still have a pkey.  The
+    // simple way out is to re-create the pkey only when using pgsql.
+    // Realistic requirements trump idealistic purity.
     db_change_field($ret, 'node_comment_statistics', 'nid', 'nid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0));
+    if ($GLOBALS['db_type'] == 'pgsql') {
+      db_add_primary_key($ret, 'node_comment_statistics', array('nid'));
+    }
   }
   return $ret;
 }
