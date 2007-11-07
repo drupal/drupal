@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.285 2007/11/06 11:40:15 goba Exp $
+// $Id: block.module,v 1.286 2007/11/07 21:13:31 goba Exp $
 
 /**
  * @file
@@ -240,6 +240,12 @@ function _block_rehash() {
           $block['module'] = $module;
           $block['delta']  = $delta;
           $block['theme']  = $theme_key;
+          if (!isset($block['pages'])) {
+            // {block}.pages is type 'text', so it cannot have a
+            // default value, and not null, so we need to provide
+            // value if the module did not.
+            $block['pages']  = '';
+          }
           // Add defaults and save it into the database.
           drupal_write_record('blocks', $block);
           $blocks[] = $block;
