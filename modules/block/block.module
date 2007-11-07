@@ -240,6 +240,12 @@ function _block_rehash() {
           $block['module'] = $module;
           $block['delta']  = $delta;
           $block['theme']  = $theme_key;
+          if (!isset($block['pages'])) {
+            // {block}.pages is type 'text', so it cannot have a
+            // default value, and not null, so we need to provide
+            // value if the module did not.
+            $block['pages']  = '';
+          }
           // Add defaults and save it into the database.
           drupal_write_record('blocks', $block);
           $blocks[] = $block;
