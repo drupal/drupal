@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.171 2007/11/06 11:40:15 goba Exp $
+// $Id: system.install,v 1.172 2007/11/07 09:48:06 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -2937,7 +2937,7 @@ function system_update_181() {
   switch ($GLOBALS['db_type']) {
     case 'mysql':
     case 'mysqli':
-      $ret[] = update_sql("ALTER TABLE {profile_fields} ADD autocomplete TINYint NOT NULL AFTER visibility ;");
+      $ret[] = update_sql("ALTER TABLE {profile_fields} ADD autocomplete TINYint NOT NULL AFTER visibility");
       break;
     case 'pgsql':
       db_add_column($ret, 'profile_fields', 'autocomplete', 'smallint', array('not null' => TRUE, 'default' => 0));
