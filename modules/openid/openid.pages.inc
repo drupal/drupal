@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.pages.inc,v 1.1 2007/08/19 09:48:33 dries Exp $
+// $Id: openid.pages.inc,v 1.2 2007/11/08 13:58:32 goba Exp $
 
 /**
  * @file
@@ -28,6 +28,7 @@ function openid_authentication_page() {
  * Menu callback; Manage OpenID identities for the specified user.
  */
 function openid_user_identities($account) {
+  drupal_set_title(check_plain($account->name));
   drupal_add_css(drupal_get_path('module', 'openid') .'/openid.css', 'module');
 
   // Check to see if we got a response
