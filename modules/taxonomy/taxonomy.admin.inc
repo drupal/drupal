@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.5 2007/10/02 16:15:56 dries Exp $
+// $Id: taxonomy.admin.inc,v 1.6 2007/11/08 16:23:17 goba Exp $
 
 /**
  * @file
@@ -262,10 +262,10 @@ function taxonomy_form_term(&$form_state, $vocabulary, $edit = array()) {
     $exclude[] = $edit['tid'];
 
     if ($vocabulary->hierarchy == 1) {
-      $form['parent'] = _taxonomy_term_select(t('Parent'), 'parent', $parent, $vocabulary->vid, l(t('Parent term'), 'admin/help/taxonomy', array('fragment' => 'parent')) .'.', 0, '<'. t('root') .'>', $exclude);
+      $form['parent'] = _taxonomy_term_select(t('Parent'), 'parent', $parent, $vocabulary->vid, t('Parent term') .'.', 0, '<'. t('root') .'>', $exclude);
     }
     elseif ($vocabulary->hierarchy == 2) {
-      $form['parent'] = _taxonomy_term_select(t('Parents'), 'parent', $parent, $vocabulary->vid, l(t('Parent terms'), 'admin/help/taxonomy', array('fragment' => 'parent')) .'.', 1, '<'. t('root') .'>', $exclude);
+      $form['parent'] = _taxonomy_term_select(t('Parents'), 'parent', $parent, $vocabulary->vid, t('Parent terms') .'.', 1, '<'. t('root') .'>', $exclude);
     }
   }
 
@@ -277,7 +277,7 @@ function taxonomy_form_term(&$form_state, $vocabulary, $edit = array()) {
     '#type' => 'textarea',
     '#title' => t('Synonyms'),
     '#default_value' => implode("\n", taxonomy_get_synonyms($edit['tid'])),
-    '#description' => t('<a href="@help-url">Synonyms</a> of this term, one synonym per line.', array('@help-url' => url('admin/help/taxonomy', array('absolute' => TRUE)))));
+    '#description' => t('Synonyms of this term, one synonym per line.'));
   $form['weight'] = array(
     '#type' => 'weight',
     '#title' => t('Weight'),
