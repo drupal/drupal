@@ -1,5 +1,5 @@
 <?php
-// $Id: translation.module,v 1.15 2007/11/09 12:37:30 goba Exp $
+// $Id: translation.module,v 1.16 2007/11/09 17:47:29 goba Exp $
 
 /**
  * @file
@@ -111,6 +111,7 @@ function translation_form_alter(&$form, $form_state, $form_id) {
         }
       }
       // Add translation values and workflow options.
+      $form['tnid'] = array('#type' => 'value', '#value' => $node->tnid);
       $form['translation'] = array(
         '#type' => 'fieldset',
         '#title' => t('Translation settings'),
@@ -120,7 +121,6 @@ function translation_form_alter(&$form, $form_state, $form_id) {
         '#tree' => TRUE,
         '#weight' => 30,
       );
-      $form['translation']['tnid'] = array('#type' => 'value', '#value' => $node->tnid);
       if ($node->tnid == $node->nid) {
         // This is the source node of the translation
         $form['translation']['retranslate'] = array(
