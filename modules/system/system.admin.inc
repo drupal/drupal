@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.21 2007/11/09 07:43:09 dries Exp $
+// $Id: system.admin.inc,v 1.22 2007/11/09 17:44:01 goba Exp $
 
 /**
  * @file
@@ -568,6 +568,9 @@ function _system_is_incompatible(&$incompatible, $files, $file) {
 function system_modules($form_state = array()) {
   // Get current list of modules.
   $files = module_rebuild_cache();
+
+  uasort($files, 'system_sort_modules_by_info_name');
+
   if (!empty($form_state['storage'])) {
     return system_modules_confirm_form($files, $form_state['storage']);
   }
@@ -711,6 +714,10 @@ function system_modules($form_state = array()) {
   $form['#action'] = url('admin/build/modules/list/confirm');
 
   return $form;
+}
+
+function system_sort_modules_by_info_name($a, $b) {
+  return strcasecmp($a->info['name'], $b->info['name']);
 }
 
 /**
