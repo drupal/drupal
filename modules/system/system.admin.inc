@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.22 2007/11/09 17:44:01 goba Exp $
+// $Id: system.admin.inc,v 1.23 2007/11/09 19:16:22 goba Exp $
 
 /**
  * @file
@@ -1842,7 +1842,7 @@ function theme_system_admin_by_module($menu_items) {
     }
   }
 
-  $output = '<div class="admin">';
+  $output = '<div class="admin clear-block">';
   foreach ($container as $id => $data) {
     $output .= '<div class="'. $id .' clear-block">';
     $output .= $data;
