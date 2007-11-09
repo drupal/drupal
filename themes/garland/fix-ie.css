@@ -1,4 +1,4 @@
-/* $Id: fix-ie.css,v 1.6 2007/09/06 21:23:32 goba Exp $ */
+/* $Id: fix-ie.css,v 1.7 2007/11/09 22:14:41 goba Exp $ */
 
 /**
  * Garland, for Drupal 5.0
@@ -49,7 +49,7 @@ html.js fieldset.collapsed {
   margin-bottom: 1em;
 }
 
-td.menu-disabled {
+tr.menu-disabled {
   /* Use filter to emulate CSS3 opacity */
   filter: alpha(opacity=50);
 }

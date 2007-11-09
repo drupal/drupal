@@ -1,4 +1,4 @@
-/* $Id: fix-ie-rtl.css,v 1.1 2007/09/06 21:17:07 goba Exp $ */
+/* $Id: fix-ie-rtl.css,v 1.2 2007/11/09 22:14:41 goba Exp $ */
 
 body {
   /* Center layout */
@@ -47,7 +47,7 @@ html.js fieldset.collapsed {
   margin-bottom: 1em;
 }
 
-td.menu-disabled {
+tr.menu-disabled {
   /* Use filter to emulate CSS3 opacity */
   filter: alpha(opacity=50);
 }

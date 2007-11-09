@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.223 2007/10/25 08:24:42 goba Exp $
+// $Id: menu.inc,v 1.224 2007/11/09 22:14:40 goba Exp $
 
 /**
  * @file
@@ -838,7 +838,6 @@ function menu_tree_page_data($menu_name = 'navigation') {
  * Recursive helper function - collect node links.
  */
 function menu_tree_collect_node_links(&$tree, &$node_links) {
-
   foreach ($tree as $key => $v) {
     if ($tree[$key]['link']['router_path'] == 'node/%') {
       $nid = substr($tree[$key]['link']['link_path'], 5);
@@ -911,7 +910,6 @@ function _menu_tree_check_access(&$tree) {
  *   See menu_tree_page_data for a description of the data structure.
  */
 function menu_tree_data($result = NULL, $parents = array(), $depth = 1) {
-
   list(, $tree) = _menu_tree_data($result, $parents, $depth);
   return $tree;
 }
@@ -930,16 +928,19 @@ function _menu_tree_data($result, $parents, $depth, $previous_element = '') {
     // We need to determine if we're on the path to root so we can later build
     // the correct active trail and breadcrumb.
     $item['in_active_trail'] = in_array($item['mlid'], $parents);
-
-    $index = $previous_element ? ($previous_element['mlid']) : '';
     // The current item is the first in a new submenu.
     if ($item['depth'] > $depth) {
       // _menu_tree returns an item and the menu tree structure.
       list($item, $below) = _menu_tree_data($result, $parents, $item['depth'], $item);
-      $tree[$index] = array(
-        'link' => $previous_element,
-        'below' => $below,
-      );
+      if ($previous_element) {
+        $tree[$previous_element['mlid']] = array(
+          'link' => $previous_element,
+          'below' => $below,
+        );
+      }
+      else {
+        $tree = $below;
+      }
       // We need to fall back one level.
       if (!isset($item) || $item['depth'] < $depth) {
         return array($item, $tree);
@@ -951,7 +952,7 @@ function _menu_tree_data($result, $parents, $depth, $previous_element = '') {
     elseif ($item['depth'] == $depth) {
       if ($previous_element) {
         // Only the first time.
-        $tree[$index] = array(
+        $tree[$previous_element['mlid']] = array(
           'link' => $previous_element,
           'below' => FALSE,
         );

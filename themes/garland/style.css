@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.27 2007/10/11 09:51:29 goba Exp $ */
+/* $Id: style.css,v 1.28 2007/11/09 22:14:41 goba Exp $ */
 
 /**
  * Garland, for Drupal 5.0
@@ -779,14 +779,14 @@ ul.links li, ul.inline li {
 /**
  * Menu.module
  */
+tr.menu-disabled {
+  opacity: 0.5;
+}
 tr.odd td.menu-disabled {
   background-color: #edf5fa;
 }
 tr.even td.menu-disabled {
   background-color: #fff;
-}
-td.menu-disabled {
-  opacity: 0.5;
 }
 
 /**

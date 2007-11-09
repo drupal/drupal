@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.admin.inc,v 1.4 2007/10/21 18:59:02 goba Exp $
+// $Id: menu.admin.inc,v 1.5 2007/11/09 22:14:40 goba Exp $
 
 /**
  * @file
@@ -21,11 +21,12 @@ function menu_overview_page() {
 }
 
 /**
- * Shows for one menu the menu items accessible to the current user and relevant operations.
+ * Form for editing an entire menu tree at once.
+ *
+ * Shows for one menu the menu items accessible to the current user and
+ * relevant operations.
  */
-function menu_overview($menu) {
-
-  $header = array(t('Menu item'), t('Expanded'), array('data' => t('Operations'), 'colspan' => '3'));
+function menu_overview_form(&$form_state, $menu) {
   $sql ="
     SELECT m.load_functions, m.to_arg_functions, m.access_callback, m.access_arguments, m.page_callback, m.page_arguments, m.title, m.title_callback, m.title_arguments, m.type, ml.*
     FROM {menu_links} ml LEFT JOIN {menu_router} m ON m.path = ml.router_path
@@ -37,81 +38,120 @@ function menu_overview($menu) {
   $node_links = array();
   menu_tree_collect_node_links($tree, $node_links);
   menu_tree_check_access($tree, $node_links);
-  $rows = _menu_overview_tree($tree);
-  $output = theme('table', $header, $rows);
-  $output .= theme('pager', NULL, 200, 0);
-  return $output;
+
+  $form = _menu_overview_tree_form($tree);
+  if (element_children($form)) {
+    $form['submit'] = array(
+      '#type' => 'submit',
+      '#value' => t('Save configuration'),
+    );
+  }
+  else {
+    $form['empty_menu'] = array('#value' => t('There are no menu items yet.'));
+  }
+  return $form;
 }
 
 /**
- * Recursive helper function for menu_overview().
+ * Recursive helper function for menu_overview_form().
  */
-function _menu_overview_tree($tree) {
-  static $rows = array();
+function _menu_overview_tree_form($tree) {
+  static $form = array('#tree' => TRUE);
   foreach ($tree as $data) {
     $title = '';
     $item = $data['link'];
     // Don't show callbacks; these have $item['hidden'] < 0.
     if ($item && $item['hidden'] >= 0) {
-      $title = str_repeat('&nbsp;&nbsp;', $item['depth'] - 1) . ($item['depth'] > 1 ? '-&nbsp;' : '');
-      $title .= l($item['title'], $item['href'], $item['options']);
-      // Populate the operations field.
+      $mlid = $item['mlid'];
+      $form[$mlid]['#item'] = $item;
+      $form[$mlid]['#attributes'] = $item['hidden'] ? array('class' => 'menu-disabled') : array('class' => 'menu-enabled');
+      $form[$mlid]['title']['#value'] = l($item['title'], $item['href'], $item['options']) . ($item['hidden'] ? ' ('. t('disabled') .')' : '');
+      $form[$mlid]['hidden'] = array(
+        '#type' => 'checkbox',
+        '#default_value' => !$item['hidden'],
+      );
+      $form[$mlid]['expanded'] = array(
+        '#type' => 'checkbox',
+        '#default_value' => $item['has_children'] && $item['expanded'],
+      );
+      // Build a list of operations.
       $operations = array();
-      // Set the edit column.
-      $operations[] = array('data' => l(t('edit'), 'admin/build/menu/item/'. $item['mlid'] .'/edit'));
-      if ($item['hidden']) {
-        $title .= ' ('. t('disabled') .')';
-        $class = 'menu-disabled';
-        $operations[] = array('data' => l(t('enable'), 'admin/build/menu/item/'. $item['mlid'] .'/enable'));
-      }
-      else {
-        $class = 'menu-enabled';
-        $operations[] = array('data' => l(t('disable'), 'admin/build/menu/item/'. $item['mlid'] .'/disable'));
-      }
+      $operations['edit'] = l(t('edit'), 'admin/build/menu/item/'. $item['mlid'] .'/edit');
       // Only items created by the menu module can be deleted.
       if ($item['module'] == 'menu') {
-        $operations[] = array('data' => l(t('delete'), 'admin/build/menu/item/'. $item['mlid'] .'/delete'));
+        $operations['delete'] = l(t('delete'), 'admin/build/menu/item/'. $item['mlid'] .'/delete');
       }
       // Set the reset column.
       elseif ($item['module'] == 'system' && $item['customized']) {
-        $operations[] = array('data' => l(t('reset'), 'admin/build/menu/item/'. $item['mlid'] .'/reset'));
+        $operations['reset'] = l(t('reset'), 'admin/build/menu/item/'. $item['mlid'] .'/reset');
       }
-      else {
-        $operations[] = array('data' => '');
+
+      $form[$mlid]['operations'] = array();
+      foreach ($operations as $op => $value) {
+        $form[$mlid]['operations'][$op] = array('#value' => $value);
       }
-      $row = array(
-        array('data' => $title, 'class' => $class),
-        array('data' => ($item['has_children'] ? (($item['expanded']) ? t('Yes') : t('No')) : ''), 'class' => $class),
-      );
-      foreach ($operations as $operation) {
-        $operation['class'] = $class;
-        $row[] = $operation;
-      }
-      $rows[] = $row;
     }
+
     if ($data['below']) {
-      _menu_overview_tree($data['below']);
+      _menu_overview_tree_form($data['below']);
     }
   }
-  return $rows;
+  return $form;
+}
+
+function menu_overview_form_submit($form) {
+  foreach (element_children($form) as $mlid) {
+    if (isset($form[$mlid]['hidden'])) {
+      $element = $form[$mlid];
+      if ($element['hidden']['#value'] != $element['hidden']['#default_value']) {
+        $element['#item']['hidden'] = !$element['hidden']['#value'];
+        menu_link_save($element['#item']);
+      }
+      if ($element['expanded']['#value'] != $element['expanded']['#default_value']) {
+        $element['#item']['expanded'] = $element['expanded']['#value'];
+        menu_link_save($element['#item']);
+      }
+    }
+  }
 }
 
 /**
- * Menu callback; enable/disable a menu link.
- *
- * @param $hide
- *   TRUE to not show in the menu tree. FALSE to make the item and its children
- *   reappear in menu tree.
- * @param $item
- *    The menu item.
+ * Theme the menu overview form into a table.
  */
-function menu_flip_item($hide, $item) {
+function theme_menu_overview_form($form) {
+  $header = array(t('Enabled'), t('Expanded'), t('Menu item'), array('data' => t('Operations'), 'colspan' => '3'));
+  $rows = array();
+  foreach (element_children($form) as $mlid) {
+    if (isset($form[$mlid]['hidden'])) {
+      $element = &$form[$mlid];
+      // Build a list of operations.
+      $operations = array();
+      foreach (element_children($element['operations']) as $op) {
+        $operations[] = drupal_render($element['operations'][$op]);
+      }
+      while (count($operations) < 2) {
+        $operations[] = '';
+      }
 
-  $item['hidden'] = (bool)$hide;
-  $item['customized'] = 1;
-  menu_link_save($item);
-  drupal_set_message($hide ? t('The menu item has been disabled.') : t('The menu item has been enabled.'));
-  drupal_goto('admin/build/menu-customize/'. $item['menu_name']);
+      $row = array();
+      $row[] = array('data' => drupal_render($element['hidden']), 'align' => 'center');
+      $row[] = array('data' => drupal_render($element['expanded']), 'align' => 'center');
+      $depth = $element['#item']['depth'];
+      $indentation = str_repeat('&nbsp;&nbsp;', $depth - 1) . ($depth > 1 ? '-&nbsp;' : '');
+      $row[] = $indentation . drupal_render($element['title']);
+      $row = array_merge($row, $operations);
+
+      $row = array_merge(array('data' => $row), $element['#attributes']);
+      $rows[] = $row;
+    }
+  }
+  $output = '';
+  if ($rows) {
+    $output .= theme('table', $header, $rows, array('id' => 'menu-overview'));
+    $output .= theme('pager', NULL, 200, 0);
+  }
+  $output .= drupal_render($form);
+  return $output;
 }
 
 /**

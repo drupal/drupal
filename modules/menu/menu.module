@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.146 2007/10/21 18:59:02 goba Exp $
+// $Id: menu.module,v 1.147 2007/11/09 22:14:40 goba Exp $
 
 /**
  * @file
@@ -80,8 +80,8 @@ function menu_menu() {
   );
   $items['admin/build/menu-customize/%menu'] = array(
     'title' => 'Customize menu',
-    'page callback' => 'menu_overview',
-    'page arguments' => array(3),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('menu_overview_form', 3),
     'title callback' => 'menu_overview_title',
     'title arguments' => array(3),
     'access arguments' => array('administer menu'),
@@ -115,20 +115,6 @@ function menu_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'menu.admin.inc',
   );
-  $items['admin/build/menu/item/%menu_link/disable'] = array(
-    'title' => 'Disable menu item',
-    'page callback' => 'menu_flip_item',
-    'page arguments' => array(TRUE, 4),
-    'type' => MENU_CALLBACK,
-    'file' => 'menu.admin.inc',
-  );
-  $items['admin/build/menu/item/%menu_link/enable'] = array(
-    'title' => 'Enable menu item',
-    'page callback' => 'menu_flip_item',
-    'page arguments' => array(FALSE, 4),
-    'type' => MENU_CALLBACK,
-    'file' => 'menu.admin.inc',
-  );
   $items['admin/build/menu/item/%menu_link/edit'] = array(
     'title' => 'Edit menu item',
     'page callback' => 'drupal_get_form',
@@ -152,6 +138,18 @@ function menu_menu() {
   );
 
   return $items;
+}
+
+/**
+ * Implemenation of hook_theme().
+ */
+function menu_theme() {
+  return array(
+    'menu_overview_form' => array(
+      'file' => 'menu.admin.inc',
+      'arguments' => array('form' => NULL),
+    ),
+  );
 }
 
 /**
