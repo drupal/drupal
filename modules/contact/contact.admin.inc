@@ -110,13 +110,13 @@ function contact_admin_edit_submit($form, &$form_state) {
   }
   $form_state['values']['recipients'] = implode(',', $recipients);
   if (empty($form_state['values']['cid']) || $form_state['values']['contact_op'] == 'add') {
-    db_query("INSERT INTO {contact} (category, recipients, reply, weight, selected) VALUES ('%s', '%s', '%s', %d, %d)", $form_state['values']['category'], $form_state['values']['recipients'], $form_state['values']['reply'], $form_state['values']['weight'], $form_state['values']['selected']);
+    drupal_write_record('contact', $form_state['values']);
     drupal_set_message(t('Category %category has been added.', array('%category' => $form_state['values']['category'])));
     watchdog('mail', 'Contact form: category %category added.', array('%category' => $form_state['values']['category']), WATCHDOG_NOTICE, l(t('view'), 'admin/build/contact'));
 
   }
   else {
-    db_query("UPDATE {contact} SET category = '%s', recipients = '%s', reply = '%s', weight = %d, selected = %d WHERE cid = %d", $form_state['values']['category'], $form_state['values']['recipients'], $form_state['values']['reply'], $form_state['values']['weight'], $form_state['values']['selected'], $form_state['values']['cid']);
+    drupal_write_record('contact', $form_state['values'], 'cid');
     drupal_set_message(t('Category %category has been updated.', array('%category' => $form_state['values']['category'])));
     watchdog('mail', 'Contact form: category %category updated.', array('%category' => $form_state['values']['category']), WATCHDOG_NOTICE, l(t('view'), 'admin/build/contact'));
   }
