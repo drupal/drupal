@@ -1842,7 +1842,7 @@ function theme_system_admin_by_module($menu_items) {
     }
   }
 
-  $output = '<div class="admin">';
+  $output = '<div class="admin clear-block">';
   foreach ($container as $id => $data) {
     $output .= '<div class="'. $id .' clear-block">';
     $output .= $data;
