@@ -2061,7 +2061,7 @@ function theme_system_themes_form($form) {
     $row = array();
     $row[] = drupal_render($form[$key]['screenshot']);
     $row[] = $theme;
-    $row[] = $info['version'];
+    $row[] = isset($info['version']) ? $info['version'] : '';
     $row[] = array('data' => $status, 'align' => 'center');
     if ($form['theme_default']) {
       $row[] = array('data' => drupal_render($form['theme_default'][$key]), 'align' => 'center');
