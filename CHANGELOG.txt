@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.230 2007/10/25 15:28:28 dries Exp $
+// $Id: CHANGELOG.txt,v 1.231 2007/11/09 16:01:54 goba Exp $
 
 Drupal 6.0, xxxx-xx-xx (development version)
 ----------------------
@@ -14,8 +14,6 @@ Drupal 6.0, xxxx-xx-xx (development version)
    * Added syslog module: useful for monitoring large Drupal installations.
 - Added optional e-mail notifications when users are approved, blocked, or
   deleted.
-- Added versioning support to categories by associating them with node
-  revisions.
 - Drupal works with error reporting set to E_ALL.
 - Added scripts/drupal.sh to execute Drupal code from the command line. Useful
   to use Drupal as a framework to build command-line tools.
@@ -81,6 +79,11 @@ Drupal 6.0, xxxx-xx-xx (development version)
     * Added ability to create and remove temporary files during a cron job.
 - Forum improvements:
     * Any node type may now be posted in a forum.
+- Taxonomy improvements:
+    * Descriptions for terms are now shown on taxonomy/term pages as well 
+      as RSS feeds.
+    * Added versioning support to categories by associating them with node
+      revisions.
 - Added support for OpenID.
 - Added support for triggering configurable actions.
 - Added the Update status module to automatically check for available updates
