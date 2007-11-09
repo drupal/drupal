@@ -47,7 +47,7 @@ html.js fieldset.collapsed {
   margin-bottom: 1em;
 }
 
-td.menu-disabled {
+tr.menu-disabled {
   /* Use filter to emulate CSS3 opacity */
   filter: alpha(opacity=50);
 }
