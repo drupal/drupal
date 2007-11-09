@@ -35,7 +35,7 @@ function contact_help($path, $arg) {
  * Implementation of hook_perm
  */
 function contact_perm() {
-  return array('access site-wide contact form');
+  return array('access site-wide contact form', 'administer site-wide contact form');
 }
 /**
  * Implementation of hook_menu().
@@ -45,7 +45,7 @@ function contact_menu() {
     'title' => 'Contact form',
     'description' => 'Create a system contact form and set up categories for the form to use.',
     'page callback' => 'contact_admin_categories',
-    'access arguments' => array('administer site configuration'),
+    'access arguments' => array('administer site-wide contact form'),
     'file' => 'contact.admin.inc',
   );
   $items['admin/build/contact/list'] = array(
