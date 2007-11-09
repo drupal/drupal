@@ -1,5 +1,5 @@
 <?php
-// $Id: translation.module,v 1.14 2007/10/16 09:15:19 goba Exp $
+// $Id: translation.module,v 1.15 2007/11/09 12:37:30 goba Exp $
 
 /**
  * @file
@@ -267,7 +267,7 @@ function translation_node_get_translations($tnid) {
   if (is_numeric($tnid) && $tnid) {
     if (!isset($translations[$tnid])) {
       $translations[$tnid] = array();
-      $result = db_query(db_rewrite_sql('SELECT nid, title, language FROM {node} WHERE tnid = %d'), $tnid);
+      $result = db_query(db_rewrite_sql('SELECT n.nid, n.title, n.language FROM {node} n WHERE n.tnid = %d'), $tnid);
       while ($node = db_fetch_object($result)) {
         $translations[$tnid][$node->language] = $node;
       }
