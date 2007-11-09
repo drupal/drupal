@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.600 2007/11/05 14:25:58 goba Exp $
+// $Id: comment.module,v 1.601 2007/11/09 07:46:10 dries Exp $
 
 /**
  * @file
@@ -957,7 +957,6 @@ function comment_render($node, $cid = 0) {
       $result = pager_query($query, $comments_per_page, 0, $query_count, $query_args);
 
       $divs = 0;
-      $last_depth = 0;
       $num_rows = FALSE;
       $comments = '';
       drupal_add_css(drupal_get_path('module', 'comment') .'/comment.css');
@@ -967,16 +966,14 @@ function comment_render($node, $cid = 0) {
         $comment->depth = count(explode('.', $comment->thread)) - 1;
 
         if ($mode == COMMENT_MODE_THREADED_COLLAPSED || $mode == COMMENT_MODE_THREADED_EXPANDED) {
-          if ($comment->depth > $last_depth) {
+          if ($comment->depth > $divs) {
             $divs++;
             $comments .= '<div class="indented">';
-            $last_depth++;
           }
           else {
-            while ($comment->depth < $last_depth) {
+            while ($comment->depth < $divs) {
               $divs--;
               $comments .= '</div>';
-              $last_depth--;
             }
           }
         }
@@ -996,16 +993,16 @@ function comment_render($node, $cid = 0) {
 
         $num_rows = TRUE;
       }
+      while ($divs-- > 0) {
+        $comments .= '</div>';
+      }
 
       $comment_controls = variable_get('comment_controls_'. $node->type, COMMENT_CONTROLS_HIDDEN);
       if ($num_rows && ($comment_controls == COMMENT_CONTROLS_ABOVE || $comment_controls == COMMENT_CONTROLS_ABOVE_BELOW)) {
         $output .= drupal_get_form('comment_controls', $mode, $order, $comments_per_page);
       }
-      $output .= $comments;
 
-      for ($i = 0; $i < $divs; $i++) {
-        $output .= '</div>';
-      }
+      $output .= $comments;
       $output .= theme('pager', NULL, $comments_per_page, 0);
 
       if ($num_rows && ($comment_controls == COMMENT_CONTROLS_BELOW || $comment_controls == COMMENT_CONTROLS_ABOVE_BELOW)) {
