@@ -13,16 +13,18 @@
  * The drupal_get_form() function handles retrieving, processing, and
  * displaying a rendered HTML form for modules automatically. For example:
  *
+ * @code
  * // Display the user registration form.
  * $output = drupal_get_form('user_register');
+ * @endcode
  *
  * Forms can also be built and submitted programmatically without any user input
  * using the drupal_execute() function.
  *
  * For information on the format of the structured arrays used to define forms,
  * and more detailed explanations of the Form API workflow, see the
- * @link http://api.drupal.org/api/HEAD/file/developer/topics/forms_api_reference.html reference @endlink
- * and the @link http://api.drupal.org/api/HEAD/file/developer/topics/forms_api.html quickstart guide. @endlink
+ * @link http://api.drupal.org/api/file/developer/topics/forms_api_reference.html reference @endlink
+ * and the @link http://api.drupal.org/api/file/developer/topics/forms_api.html quickstart guide. @endlink
  */
 
 /**
