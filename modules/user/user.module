@@ -111,6 +111,11 @@ function user_save($account, $array = array(), $category = 'account') {
     user_module_invoke('update', $array, $account, $category);
 
     $data = unserialize(db_result(db_query('SELECT data FROM {users} WHERE uid = %d', $account->uid)));
+    // Consider users edited by an administrator as logged in, if they haven't
+    // already, so anonymous users can view the profile (if allowed).
+    if (empty($array['access']) && empty($account->access) && user_access('administer users')) {
+      $array['access'] = time();
+    }
     foreach ($array as $key => $value) {
       if ($key == 'pass' && !empty($value)) {
         $query .= "$key = '%s', ";
@@ -170,6 +175,11 @@ function user_save($account, $array = array(), $category = 'account') {
 
     if (!isset($array['created'])) {    // Allow 'created' to be set by hook_auth
       $array['created'] = time();
+    }
+    // Consider users created by an administrator as already logged in, so
+    // anonymous users can view the profile (if allowed).
+    if (empty($array['access']) && user_access('administer users')) {
+      $array['access'] = time();
     }
 
     // Note, we wait with saving the data column to prevent module-handled
