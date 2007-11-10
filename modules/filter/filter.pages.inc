@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.pages.inc,v 1.1 2007/09/14 12:17:58 dries Exp $
+// $Id: filter.pages.inc,v 1.2 2007/11/10 17:41:18 dries Exp $
 
 /**
  * @file
@@ -45,13 +45,12 @@ function theme_filter_tips($tips, $long = FALSE, $extra = '') {
         $output .= '<strong>'. $name .'</strong>:<br />';
       }
 
-      $tips = '';
-      foreach ($tiplist as $tip) {
-        $tips .= '<li'. ($long ? ' id="filter-'. str_replace("/", "-", $tip['id']) .'">' : '>') . $tip['tip'] .'</li>';
-      }
-
-      if ($tips) {
-        $output .= "<ul class=\"tips\">$tips</ul>";
+      if (count($tiplist) > 0) {
+        $output .= '<ul class="tips">';
+        foreach ($tiplist as $tip) {
+          $output .= '<li'. ($long ? ' id="filter-'. str_replace("/", "-", $tip['id']) .'">' : '>') . $tip['tip'] .'</li>';
+        }
+        $output .= '</ul>';
       }
 
       if ($multiple) {
