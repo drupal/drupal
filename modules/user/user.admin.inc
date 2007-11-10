@@ -1,5 +1,5 @@
 <?php
-// $Id: user.admin.inc,v 1.8 2007/10/27 15:28:43 goba Exp $
+// $Id: user.admin.inc,v 1.9 2007/11/10 10:15:21 goba Exp $
 
 /**
  * @file
@@ -141,7 +141,8 @@ function user_admin_account() {
 
   $sql = 'SELECT DISTINCT u.uid, u.name, u.status, u.created, u.access FROM {users} u LEFT JOIN {users_roles} ur ON u.uid = ur.uid '. $filter['join'] .' WHERE u.uid != 0 '. $filter['where'];
   $sql .= tablesort_sql($header);
-  $result = pager_query($sql, 50, 0, NULL, $filter['args']);
+  $query_count = 'SELECT COUNT(DISTINCT u.uid) FROM users u LEFT JOIN users_roles ur ON u.uid = ur.uid '. $filter['join'] .' WHERE u.uid != 0 '. $filter['where'];
+  $result = pager_query($sql, 50, 0, $query_count, $filter['args']);
 
   $form['options'] = array(
     '#type' => 'fieldset',
