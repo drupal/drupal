@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.131 2007/08/12 16:34:56 goba Exp $
+// $Id: path.module,v 1.132 2007/11/10 12:08:22 goba Exp $
 
 /**
  * @file
@@ -139,18 +139,17 @@ function path_set_alias($path = NULL, $alias = NULL, $pid = NULL, $language = ''
  */
 function path_nodeapi(&$node, $op, $arg) {
   if (user_access('create url aliases') || user_access('administer url aliases')) {
+    $language = isset($node->language) ? $node->language : '';
     switch ($op) {
       case 'validate':
         $node->path = trim($node->path);
-        $language = isset($node->language) ? $node->language : '';
         if (db_result(db_query("SELECT COUNT(dst) FROM {url_alias} WHERE dst = '%s' AND src != '%s' AND language = '%s'", $node->path, "node/$node->nid", $language))) {
           form_set_error('path', t('The path is already in use.'));
         }
         break;
 
       case 'load':
-        $path = "node/$node->nid";
-        $language = isset($node->language) ? $node->language : '';
+        $path = 'node/'. $node->nid;
         $alias = drupal_get_path_alias($path, $language);
         if ($path != $alias) {
           $node->path = $alias;
@@ -161,16 +160,16 @@ function path_nodeapi(&$node, $op, $arg) {
         // Don't try to insert if path is NULL. We may have already set
         // the alias ahead of time.
         if (isset($node->path)) {
-          path_set_alias("node/$node->nid", $node->path);
+          path_set_alias('node/'. $node->nid, $node->path);
         }
         break;
 
       case 'update':
-        path_set_alias("node/$node->nid", isset($node->path) ? $node->path : NULL, isset($node->pid) ? $node->pid : NULL);
+        path_set_alias('node/'. $node->nid, isset($node->path) ? $node->path : NULL, isset($node->pid) ? $node->pid : NULL, $language);
         break;
 
       case 'delete':
-        $path = "node/$node->nid";
+        $path = 'node/'. $node->nid;
         if (drupal_get_path_alias($path) != $path) {
           path_set_alias($path);
         }

@@ -1,5 +1,5 @@
 <?php
-// $Id: path.admin.inc,v 1.4 2007/08/12 16:34:56 goba Exp $
+// $Id: path.admin.inc,v 1.5 2007/11/10 12:08:22 goba Exp $
 
 /**
  * @file
@@ -95,7 +95,8 @@ function path_admin_form(&$form_state, $edit = array('src' => '', 'dst' => '', '
     '#maxlength' => 64,
     '#size' => 45,
     '#description' => t('Specify the existing path you wish to alias. For example: node/28, forum/1, taxonomy/term/1+2.'),
-    '#field_prefix' => url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q=')
+    '#field_prefix' => url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q='),
+    '#required' => TRUE,
   );
   $form['dst'] = array(
     '#type' => 'textfield',
@@ -104,7 +105,8 @@ function path_admin_form(&$form_state, $edit = array('src' => '', 'dst' => '', '
     '#maxlength' => 64,
     '#size' => 45,
     '#description' => t('Specify an alternative path by which this data can be accessed. For example, type "about" when writing an about page. Use a relative path and don\'t add a trailing slash or the URL alias won\'t work.'),
-    '#field_prefix' => url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q=')
+    '#field_prefix' => url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q='),
+    '#required' => TRUE,
   );
   // This will be a hidden value unless locale module is enabled
   $form['language'] = array(
@@ -135,6 +137,10 @@ function path_admin_form_validate($form, &$form_state) {
 
   if (db_result(db_query("SELECT COUNT(dst) FROM {url_alias} WHERE pid != %d AND dst = '%s' AND language = '%s'", $pid, $dst, $language))) {
     form_set_error('dst', t('The alias %alias is already in use in this language.', array('%alias' => $dst)));
+  }
+  $item = menu_get_item($src);
+  if (!$item || !$item['access']) {
+    form_set_error('src', t("The path '@link_path' is either invalid or you do not have access to it.", array('@link_path' => $src)));
   }
 }
 
@@ -195,17 +201,35 @@ function path_admin_filter_form(&$form_state, $keys = '') {
     '#maxlength' => 64,
     '#size' => 25,
   );
-  $form['basic']['inline']['submit'] = array('#type' => 'submit', '#value' => t('Filter'));
-
+  $form['basic']['inline']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Filter'),
+    '#submit' => array('path_admin_filter_form_submit_filter'),
+    );
+  if ($keys) {
+    $form['basic']['inline']['reset'] = array(
+      '#type' => 'submit',
+      '#value' => t('Reset'),
+      '#submit' => array('path_admin_filter_form_submit_reset'),
+    );
+  }
   return $form;
 }
 
 /**
- * Process filter form submission.
+ * Process filter form submission when the Filter button is pressed.
  */
-function path_admin_filter_form_submit($form, &$form_state) {
-  return 'admin/build/path/list/'. trim($form_state['values']['filter']);
+function path_admin_filter_form_submit_filter($form, &$form_state) {
+  $form_state['redirect'] = 'admin/build/path/list/'. trim($form_state['values']['filter']);
 }
+
+/**
+ * Process filter form submission when the Reset button is pressed.
+ */
+function path_admin_filter_form_submit_reset($form, &$form_state) {
+  $form_state['redirect'] = 'admin/build/path/list';
+}
+
 
 /**
  * Helper function for grabbing filter keys.
