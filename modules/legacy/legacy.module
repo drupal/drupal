@@ -57,19 +57,19 @@ function legacy_menu($may_cache) {
     // Map "node/view/52" to "node/52".
     $items[] = array('path' => 'node/view', 'title' => t('View'),
       'callback' => 'drupal_goto',
-      'callback arguments' => array('node/'. arg(2), NULL, NULL),
+      'callback arguments' => array('node/'. arg(2), NULL, NULL, 301),
       'access' => TRUE, 'type' => MENU_CALLBACK);
 
     // Map "book/view/52" to "node/52".
     $items[] = array('path' => 'book/view', 'title' => t('View'),
       'callback' => 'drupal_goto',
-      'callback arguments' => array('node/'. arg(2), NULL, NULL),
+      'callback arguments' => array('node/'. arg(2), NULL, NULL, 301),
       'access' => TRUE, 'type' => MENU_CALLBACK);
 
     // Map "user/view/52" to "user/52".
     $items[] = array('path' => 'user/view', 'title' => t('View'),
       'callback' => 'drupal_goto',
-      'callback arguments' => array('user/'. arg(2), NULL, NULL),
+      'callback arguments' => array('user/'. arg(2), NULL, NULL, 301),
       'access' => TRUE, 'type' => MENU_CALLBACK);
   }
 
