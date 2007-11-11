@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.550 2007/11/07 20:21:33 goba Exp $
+// $Id: system.module,v 1.551 2007/11/11 08:48:22 dries Exp $
 
 /**
  * @file
@@ -508,8 +508,6 @@ function system_block($op = 'list', $delta = 0, $edit = NULL) {
       $blocks[0] = array(
         'info' => t('Powered by Drupal'),
         'weight' => '10',
-        'status' => 1,
-        'region' => 'footer',
       );
       return $blocks;
     case 'configure':

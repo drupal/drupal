@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.174 2007/11/11 06:56:44 dries Exp $
+// $Id: system.install,v 1.175 2007/11/11 08:48:22 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -281,8 +281,9 @@ function system_install() {
 
   db_query("INSERT INTO {variable} (name, value) VALUES ('%s', '%s')", 'theme_default', 's:7:"garland";');
   db_query("UPDATE {system} SET status = %d WHERE type = '%s' AND name = '%s'", 1, 'theme', 'garland');
-  db_query("INSERT INTO {blocks} (module, delta, theme, status, pages) VALUES ('%s', '%s', '%s', %d, '%s')", 'user', '0', 'garland', 1, '');
-  db_query("INSERT INTO {blocks} (module, delta, theme, status, pages) VALUES ('%s', '%s', '%s', %d, '%s')", 'user', '1', 'garland', 1, '');
+  db_query("INSERT INTO {blocks} (module, delta, theme, status, weight, region, pages) VALUES ('%s', '%s', '%s', %d, %d, '%s', '%s')", 'user', '0', 'garland', 1, 0, 'left', '');
+  db_query("INSERT INTO {blocks} (module, delta, theme, status, weight, region, pages) VALUES ('%s', '%s', '%s', %d, %d, '%s', '%s')", 'user', '1', 'garland', 1, 0, 'left', '');
+  db_query("INSERT INTO {blocks} (module, delta, theme, status, weight, region, pages) VALUES ('%s', '%s', '%s', %d, %d, '%s', '%s')", 'system', '0', 'garland', 1, 10, 'footer', '');
 
   db_query("INSERT INTO {node_access} (nid, gid, realm, grant_view, grant_update, grant_delete) VALUES (%d, %d, '%s', %d, %d, %d)", 0, 0, 'all', 1, 0, 0);
 
