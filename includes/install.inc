@@ -595,8 +595,9 @@ function install_goto($path) {
 }
 
 /**
- * Hardcoded function for doing the equivalent of theme('placeholder')
- * when the theme system is not available.
+ * Hardcoded function for doing the equivalent of t() during
+ * the install process, when database, theme, and localization
+ * system is possibly not yet available.
  */
 function st($string, $args = array()) {
   static $locale_strings = NULL;

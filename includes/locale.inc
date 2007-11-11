@@ -917,7 +917,7 @@ function locale_add_language($langcode, $name = NULL, $native = NULL, $direction
 
   // Only set it as default if enabled.
   if ($enabled && $default) {
-    variable_set('language_default', (object) array('language' => $langcode, 'name' => $name, 'native' => $native, 'direction' => $direction, 'enabled' => (int) $enabled, 'plurals' => 0, 'formula' => '', 'domain' => '', 'prefix' => $prefix, 'weight' => 0));
+    variable_set('language_default', (object) array('language' => $langcode, 'name' => $name, 'native' => $native, 'direction' => $direction, 'enabled' => (int) $enabled, 'plurals' => 0, 'formula' => '', 'domain' => '', 'prefix' => $prefix, 'weight' => 0, 'javascript' => ''));
   }
 
   if ($enabled) {
