@@ -1,5 +1,5 @@
 <?php
-// $Id: translation.module,v 1.16 2007/11/09 17:47:29 goba Exp $
+// $Id: translation.module,v 1.17 2007/11/11 11:24:27 goba Exp $
 
 /**
  * @file
@@ -31,8 +31,18 @@ define ('TRANSLATION_ENABLED', 2);
 function translation_help($path, $arg) {
   switch ($path) {
     case 'admin/help#translation':
-      $output = '<p>'. t('The <em>translation</em> module allows content translation for multilingual sites.') .'</p>';
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@translation">Translation page</a>.', array('@translation' => 'http://drupal.org/handbook/modules/translation/')) .'</p>';
+      $output = '<p>'. t('The content translation module allows content to be translated into different languages. Working with the locale module (which manages enabled languages and provides translation for the site interface), the content translation module is key to creating and maintaining translated site content.') .'</p>';
+      $output .= '<p>'. t('Configuring content translation and translation-enabled content types:') .'</p>';
+      $output .= '<ul><li>'. t('Assign the <em>translate content</em> permission to the appropriate user roles at the <a href="@permissions">Permissions configuration page</a>.', array('@permissions' => url('admin/user/permissions'))) .'</li>';
+      $output .= '<li>'. t('Add and enable desired languages at the <a href="@languages">Languages configuration page</a>.', array('@languages' => url('admin/settings/language'))) .'</li>';
+      $output .= '<li>'. t('Determine which <a href="@content-types">content types</a> should support translation features. To enable translation support for a content type, edit the type and at the <em>Multilingual support</em> drop down, select <em>Enabled, with translation</em>. (<em>Multilingual support</em> is located within <em>Workflow settings</em>.) Be sure to save each content type after enabling multilingual support.', array('@content-types' => url('admin/content/types'))) .'</li></ul>';
+      $output .= '<p>'. t('Working with translation-enabled content types:') .'</p>';
+      $output .= '<ul><li>'. t('Use the <em>Language</em> drop down to select the appropriate language when creating or editing posts.') .'</li>';
+      $output .= '<li>'. t('Provide new or edit current translations for existing posts via the <em>Translation</em> tab. Only visible while viewing a post as a user with the <em>translate content</em> permission, this tab allows translations to be added or edited using a specialized editing form that also displays the content being translated.') .'</li>';
+      $output .= '<li>'. t('Update translations as needed, so that they accurately reflect changes in the content of the original post. The translation status flag provides a simple method for tracking outdated translations. After editing a post, for example, select the <em>Flag translations as outdated</em> check box to mark all of its translations as outdated and in need of revision. Individual translations may be marked for revision by selecting the <em>This translation needs to be updated</em> check box on the translation editing form.') .'</li>';
+      $output .= '<li>'. t('The <a href="@content-node">Content management administration page</a> displays the language of each post, and also allows filtering by language or translation status.', array('@content-node' => url('admin/content/node'))) .'</li></ul>';
+      $output .= '<p>'. t('Use the <href="@blocks">language switcher block</a> provided by locale module to allow users to select a language. If available, both the site interface and site content are presented in the language selected.', array('@blocks' => url('admin/build/block'))) .'</p>';
+      $output .= '<p>'. t('For more information please read the handbook <a href="@translation">Translation page</a>.', array('@translation' => 'http://drupal.org/handbook/modules/translation/')) .'</p>';
       return $output;
     case 'node/%/translate':
       $output = '<p>'. t('Translations of a piece of content are managed with translation sets. Each translation set has one source post and any number of translations in any of the <a href="!languages">enabled languages</a>. All translations are tracked to be up to date or outdated based on whether the source post was modified significantly.', array('!languages' => url('admin/settings/language'))) .'</p>';
@@ -326,3 +336,4 @@ function translation_translation_link_alter(&$links, $path) {
     }
   }
 }
+
