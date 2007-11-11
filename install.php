@@ -616,7 +616,7 @@ function install_missing_modules_error($profile) {
   drupal_maintenance_theme();
   install_task_list('requirements');
   drupal_set_title(st('Modules missing'));
-  print theme('install_page', '<p>'. st('One or more required modules are missing. Please check the error messages and <a href="!url">try again</a>.', array('!url' => "install.php?profile=$profile")) .'</p>');
+  print theme('install_page', '<p>'. st('One or more required modules are missing.') .'</p>');
   exit;
 }
 
