@@ -77,7 +77,7 @@ function taxonomy_term_page($str_tids = '', $depth = 0, $op = 'page') {
 
 /**
  * Render a taxonomy term page HTML output.
- * 
+ *
  * @param $tids
  *   An array of term ids.
  * @param $result
@@ -85,7 +85,7 @@ function taxonomy_term_page($str_tids = '', $depth = 0, $op = 'page') {
  */
 function theme_taxonomy_term_page($tids, $result) {
   $output = '';
-  
+
   // Only display the description if we have a single term, to avoid clutter and confusion.
   if (count($tids) == 1) {
     $term = taxonomy_get_term($tids[0]);
@@ -93,9 +93,9 @@ function theme_taxonomy_term_page($tids, $result) {
     $output .= filter_xss_admin($term->description);
     $output .= '</div>';
   }
-  
+
   $output .= taxonomy_render_nodes($result);
-  
+
   return $output;
 }
 

@@ -952,7 +952,7 @@ function system_schema() {
         'not null' => FALSE)
       ),
     'primary key' => array('filename'),
-    'indexes' => 
+    'indexes' =>
       array(
         'modules' => array(array('type', 12), 'status', 'weight', 'filename'),
         'bootstrap' => array(array('type', 12), 'status', 'bootstrap', 'weight', 'filename'),
