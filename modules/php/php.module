@@ -1,5 +1,5 @@
 <?php
-// $Id: php.module,v 1.3 2007/10/24 14:51:06 goba Exp $
+// $Id: php.module,v 1.4 2007/11/11 08:54:02 dries Exp $
 
 /**
  * @file
@@ -30,27 +30,35 @@ function php_filter_tips($delta, $format, $long = false) {
       case 0:
         return t('You may post PHP code. You should include &lt;?php ?&gt; tags.');
       case 1:
-        return t('
-<h4>Using custom PHP code</h4>
-<p>If you know how to script in PHP, Drupal gives you the power to embed any script you like. It will be executed when the page is viewed and dynamically embedded into the page. This gives you amazing flexibility and power, but of course with that comes danger and insecurity if you don\'t write good code. If you are not familiar with PHP, SQL or with the site engine, avoid experimenting with PHP because you can corrupt your database or render your site insecure or even unusable! If you don\'t plan to do fancy stuff with your content then you\'re probably better off with straight HTML.</p>
-<p>Remember that the code within each PHP item must be valid PHP code - including things like correctly terminating statements with a semicolon. It is highly recommended that you develop your code separately using a simple test script on top of a test database before migrating to your production environment.</p>
-<p>Notes:</p><ul><li>You can use global variables, such as configuration parameters, within the scope of your PHP code but remember that global variables which have been given values in your code will retain these values in the engine afterwards.</li><li>register_globals is now set to <strong>off</strong> by default. If you need form information you need to get it from the "superglobals" $_POST, $_GET, etc.</li><li>You can either use the <code>print</code> or <code>return</code> statement to output the actual content for your item.</li></ul>
-<p>A basic example:</p>
-<blockquote><p>You want to have a box with the title "Welcome" that you use to greet your visitors. The content for this box could be created by going:</p>
+        $output = '<h4>'. t('Using custom PHP code') .'</h4>';
+        $output .= '<p>'. t('Custom PHP code may be embedded in some types of site content, including posts and blocks. While embedding PHP code inside a post or block is a powerful and flexible feature when used by a trusted user with PHP experience, it is a significant and dangerous security risk when used improperly. Even a small mistake when posting PHP code may accidentally compromise your site.') .'</p>';
+        $output .= '<p>'. t('If you are unfamiliar with PHP, SQL, or Drupal, avoid using custom PHP code within posts. Experimenting with PHP may corrupt your database, render your site inoperable, or significantly compromise security.') .'</p>';
+        $output .= '<p>'. t('Notes:') .'</p>';
+        $output .= '<ul><li>'. t('Remember to double-check each line for syntax and logic errors <strong>before</strong> saving.') .'</li>';
+        $output .= '<li>'. t('Statements must be correctly terminated with semicolons.') .'</li>';
+        $output .= '<li>'. t('Global variables used within your PHP code retain their values after your script executes.') .'</li>';
+        $output .= '<li>'. t('<code>register_globals</code> is <strong>turned off</strong>. If you need to use forms, understand and use the functions in <a href="@formapi">the Drupal Form API</a>.', array('@formapi' => url('http://api.drupal.org/api/group/form/6'))) .'</li>';
+        $output .= '<li>'. t('Use a <code>print</code> or <code>return</code> statement in your code to output content.') .'</li>';
+        $output .= '<li>'. t('Develop and test your PHP code using a separate test script and sample database before deploying on a production site.') .'</li>';
+        $output .= '<li>'. t('Consider including your custom PHP code within a site-specific module or <code>template.php</code> file rather than embedding it directly into a post or block.') .'</li>';
+        $output .= '<li>'. t('Be aware that the ability to embed PHP code within content is provided by the PHP Filter module. If this module is disabled or deleted, then blocks and posts with embedded PHP may display, rather than execute, the PHP code.') .'</li></ul>';
+        $output .= '<p>'. t('A basic example: <em>Creating a "Welcome" block that greets visitors with a simple message.</em>') .'</p>';
+        $output .= '<blockquote>'. t('<p>Add a custom block to your site, named "Welcome". With its input format set to "PHP code" (or another format supporting PHP input), add the following in the Block body:</p>
 <pre>
-print t("Welcome visitor, ... welcome message goes here ...");
+print t(\'Welcome visitor! Thank you for visiting.\');
 </pre>
-<p>If we are however dealing with a registered user, we can customize the message by using:</p>
+<p>To display the name of a registered user, use this instead:</p>
 <pre>
 global $user;
 if ($user->uid) {
-  print t("Welcome $user->name, ... welcome message goes here ...");
+  print t(\'Welcome @name! Thank you for visiting.\', array(\'@name\' => $user->name));
 }
 else {
-  print t("Welcome visitor, ... welcome message goes here ...");
+  print t(\'Welcome visitor! Thank you for visiting.\');
 }
-</pre></blockquote>
-<p>For more in-depth examples, we recommend that you check the existing Drupal code and use it as a starting point, especially for sidebar boxes.</p>');
+</pre>') .'</blockquote>';
+        $output .= '<p>'. t('<a href="@drupal">Drupal.org</a> offers <a href="@php-snippets">some example PHP snippets</a>, or you can create your own with some PHP experience and knowledge of the Drupal system.', array('@drupal' => url('http://drupal.org'), '@php-snippets' => url('http://drupal.org/handbook/customization/php-snippets'))) .'</p>';
+        return $output;
     }
   }
 }
@@ -75,3 +83,6 @@ function php_filter($op, $delta = 0, $format = -1, $text = '') {
       return $text;
   }
 }
+
+
+
