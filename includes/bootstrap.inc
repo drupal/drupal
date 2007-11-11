@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.198 2007/10/25 15:38:24 dries Exp $
+// $Id: bootstrap.inc,v 1.199 2007/11/11 16:14:45 goba Exp $
 
 /**
  * @file
@@ -1083,7 +1083,7 @@ function language_list($field = 'language', $reset = FALSE) {
  *   Optional property of the language object to return
  */
 function language_default($property = NULL) {
-  $language = variable_get('language_default', (object) array('language' => 'en', 'name' => 'English', 'native' => 'English', 'direction' => 0, 'enabled' => 1, 'plurals' => 0, 'formula' => '', 'domain' => '', 'prefix' => '', 'weight' => 0));
+  $language = variable_get('language_default', (object) array('language' => 'en', 'name' => 'English', 'native' => 'English', 'direction' => 0, 'enabled' => 1, 'plurals' => 0, 'formula' => '', 'domain' => '', 'prefix' => '', 'weight' => 0, 'javascript' => ''));
   return $property ? $language->$property : $language;
 }
 

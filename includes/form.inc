@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.242 2007/11/09 07:40:55 dries Exp $
+// $Id: form.inc,v 1.243 2007/11/11 16:14:45 goba Exp $
 
 /**
  * @defgroup form Form generation
@@ -565,6 +565,9 @@ function drupal_redirect_form($form, $redirect = NULL) {
  *   theming, and hook_form_alter functions.
  */
 function _form_validate($elements, &$form_state, $form_id = NULL) {
+  // Also used in the installer, pre-database setup.
+  $t = get_t();
+  
   // Recurse through all children.
   foreach (element_children($elements) as $key) {
     if (isset($elements[$key]) && $elements[$key]) {
@@ -578,12 +581,12 @@ function _form_validate($elements, &$form_state, $form_id = NULL) {
       // and a textfield could return '0' and empty('0') returns TRUE so we
       // need a special check for the '0' string.
       if ($elements['#required'] && empty($elements['#value']) && $elements['#value'] !== '0') {
-        form_error($elements, t('!name field is required.', array('!name' => $elements['#title'])));
+        form_error($elements, $t('!name field is required.', array('!name' => $elements['#title'])));
       }
 
       // Verify that the value is not longer than #maxlength.
       if (isset($elements['#maxlength']) && drupal_strlen($elements['#value']) > $elements['#maxlength']) {
-        form_error($elements, t('!name cannot be longer than %max characters but is currently %length characters long.', array('!name' => empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title'], '%max' => $elements['#maxlength'], '%length' => drupal_strlen($elements['#value']))));
+        form_error($elements, $t('!name cannot be longer than %max characters but is currently %length characters long.', array('!name' => empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title'], '%max' => $elements['#maxlength'], '%length' => drupal_strlen($elements['#value']))));
       }
 
       if (isset($elements['#options']) && isset($elements['#value'])) {
@@ -597,13 +600,13 @@ function _form_validate($elements, &$form_state, $form_id = NULL) {
           $value = $elements['#type'] == 'checkboxes' ? array_keys(array_filter($elements['#value'])) : $elements['#value'];
           foreach ($value as $v) {
             if (!isset($options[$v])) {
-              form_error($elements, t('An illegal choice has been detected. Please contact the site administrator.'));
+              form_error($elements, $t('An illegal choice has been detected. Please contact the site administrator.'));
               watchdog('form', 'Illegal choice %choice in !name element.', array('%choice' => $v, '!name' => empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title']), WATCHDOG_ERROR);
             }
           }
         }
         elseif (!isset($options[$elements['#value']])) {
-          form_error($elements, t('An illegal choice has been detected. Please contact the site administrator.'));
+          form_error($elements, $t('An illegal choice has been detected. Please contact the site administrator.'));
           watchdog('form', 'Illegal choice %choice in %name element.', array('%choice' => $elements['#value'], '%name' => empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title']), WATCHDOG_ERROR);
         }
       }
@@ -1969,20 +1972,23 @@ function theme_file($element) {
  *   A string representing the form element.
  */
 function theme_form_element($element, $value) {
+  // This is also used in the installer, pre-database setup.
+  $t = get_t();
+  
   $output  = '<div class="form-item"';
   if (!empty($element['#id'])) {
     $output .= ' id="'. $element['#id'] .'-wrapper"';
   }
   $output .= ">\n";
-  $required = !empty($element['#required']) ? '<span class="form-required" title="'. t('This field is required.') .'">*</span>' : '';
+  $required = !empty($element['#required']) ? '<span class="form-required" title="'. $t('This field is required.') .'">*</span>' : '';
 
   if (!empty($element['#title'])) {
     $title = $element['#title'];
     if (!empty($element['#id'])) {
-      $output .= ' <label for="'. $element['#id'] .'">'. t('!title: !required', array('!title' => $title, '!required' => $required)) ."</label>\n";
+      $output .= ' <label for="'. $element['#id'] .'">'. $t('!title: !required', array('!title' => $title, '!required' => $required)) ."</label>\n";
     }
     else {
-      $output .= ' <label>'. t('!title: !required', array('!title' => $title, '!required' => $required)) ."</label>\n";
+      $output .= ' <label>'. $t('!title: !required', array('!title' => $title, '!required' => $required)) ."</label>\n";
     }
   }
 

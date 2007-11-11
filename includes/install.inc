@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.48 2007/09/07 10:48:24 goba Exp $
+// $Id: install.inc,v 1.49 2007/11/11 16:14:45 goba Exp $
 
 define('SCHEMA_UNINSTALLED', -1);
 define('SCHEMA_INSTALLED', 0);
@@ -595,8 +595,9 @@ function install_goto($path) {
 }
 
 /**
- * Hardcoded function for doing the equivalent of theme('placeholder')
- * when the theme system is not available.
+ * Hardcoded function for doing the equivalent of t() during
+ * the install process, when database, theme, and localization
+ * system is possibly not yet available.
  */
 function st($string, $args = array()) {
   static $locale_strings = NULL;
