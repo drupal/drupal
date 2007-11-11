@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.43 2007/10/12 14:10:18 dries Exp $
+// $Id: content_types.inc,v 1.44 2007/11/11 06:56:44 dries Exp $
 
 /**
  * @file
@@ -73,7 +73,7 @@ function node_type_form(&$form_state, $type = NULL) {
     '#title' => t('Name'),
     '#type' => 'textfield',
     '#default_value' => $type->name,
-    '#description' => t('The human-readable name of this content type. This text will be displayed as part of the list on the <em>create content</em> page. It is recommended that this name begins with a capital letter and consists only of letters, numbers, and <strong>spaces</strong>. This name must be unique to this content type.'),
+    '#description' => t('The human-readable name of this content type. This text will be displayed as part of the list on the <em>create content</em> page. This name must begin with a capital letter and contain only letters, numbers, and <strong>spaces</strong>. This name must be unique.'),
     '#required' => TRUE,
   );
 
@@ -84,7 +84,7 @@ function node_type_form(&$form_state, $type = NULL) {
       '#default_value' => $type->type,
       '#maxlength' => 32,
       '#required' => TRUE,
-      '#description' => t('The machine-readable name of this content type. This text will be used for constructing the URL of the <em>create content</em> page for this content type. This name may consist of only of lowercase letters, numbers, and underscores. Hyphens are not allowed. Underscores will be converted into hyphens when constructing the URL of the <em>create content</em> page. This name must be unique to this content type.'),
+      '#description' => t('The machine-readable name of this content type. This text will be used for constructing the URL of the <em>create content</em> page for this content type. This name must contain only lowercase letters, numbers, and underscores. Underscores will be converted into hyphens when constructing the URL of the <em>create content</em> page. This name must be unique.'),
     );
   }
   else {
@@ -232,7 +232,7 @@ function node_type_form_validate($form, &$form_state) {
       form_set_error('type', t('The machine-readable name %type is already taken.', array('%type' => $type->type)));
     }
     if (!preg_match('!^[a-z0-9_]+$!', $type->type)) {
-      form_set_error('type', t('The machine-readable name can only consist of lowercase letters, underscores, and numbers.'));
+      form_set_error('type', t('The machine-readable name must contain only lowercase letters, numbers, and underscores.'));
     }
     // The type cannot be just the character '0', since elsewhere we check it using empty().
     if ($type->type === '0') {

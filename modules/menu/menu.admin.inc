@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.admin.inc,v 1.5 2007/11/09 22:14:40 goba Exp $
+// $Id: menu.admin.inc,v 1.6 2007/11/11 06:56:44 dries Exp $
 
 /**
  * @file
@@ -317,7 +317,7 @@ function menu_edit_menu(&$form_state, $type, $menu = array()) {
       '#type' => 'textfield',
       '#title' => t('Menu name'),
       '#maxsize' => MENU_MAX_MENU_NAME_LENGTH_UI,
-      '#description' => t('The machine-readable name of this menu. This text will be used for constructing the URL of the <em>menu overview</em> page for this menu. This name may consist of only of lowercase letters, numbers, and hyphens, and must be unique.'),
+      '#description' => t('The machine-readable name of this menu. This text will be used for constructing the URL of the <em>menu overview</em> page for this menu. This name must contain only lowercase letters, numbers, and hyphens, and must be unique.'),
       '#required' => TRUE,
     );
     $form['#insert'] = TRUE;

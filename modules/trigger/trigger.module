@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.module,v 1.5 2007/10/31 16:30:14 dries Exp $
+// $Id: trigger.module,v 1.6 2007/11/11 06:56:44 dries Exp $
 
 /**
  * @file
@@ -51,7 +51,7 @@ function trigger_menu() {
     'page arguments' => array('node'),
     'access arguments' => array('node'),
     'type' => MENU_LOCAL_TASK,
-  	'file' => 'trigger.admin.inc',
+    'file' => 'trigger.admin.inc',
   );
   $items['admin/build/trigger/user'] = array(
     'title' => 'Users',
@@ -59,7 +59,7 @@ function trigger_menu() {
     'page arguments' => array('user'),
     'access arguments' => array('user'),
     'type' => MENU_LOCAL_TASK,
-  	'file' => 'trigger.admin.inc',
+    'file' => 'trigger.admin.inc',
   );
   $items['admin/build/trigger/comment'] = array(
     'title' => 'Comments',
@@ -68,7 +68,7 @@ function trigger_menu() {
     'access callback' => 'trigger_access_check',
     'access arguments' => array('comment'),
     'type' => MENU_LOCAL_TASK,
-  	'file' => 'trigger.admin.inc',
+    'file' => 'trigger.admin.inc',
   );
   $items['admin/build/trigger/taxonomy'] = array(
     'title' => 'Categories',

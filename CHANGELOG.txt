@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.231 2007/11/09 16:01:54 goba Exp $
+// $Id: CHANGELOG.txt,v 1.232 2007/11/11 06:56:44 dries Exp $
 
 Drupal 6.0, xxxx-xx-xx (development version)
 ----------------------
@@ -80,7 +80,7 @@ Drupal 6.0, xxxx-xx-xx (development version)
 - Forum improvements:
     * Any node type may now be posted in a forum.
 - Taxonomy improvements:
-    * Descriptions for terms are now shown on taxonomy/term pages as well 
+    * Descriptions for terms are now shown on taxonomy/term pages as well
       as RSS feeds.
     * Added versioning support to categories by associating them with node
       revisions.
