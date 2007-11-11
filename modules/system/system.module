@@ -508,8 +508,6 @@ function system_block($op = 'list', $delta = 0, $edit = NULL) {
       $blocks[0] = array(
         'info' => t('Powered by Drupal'),
         'weight' => '10',
-        'status' => 1,
-        'region' => 'footer',
       );
       return $blocks;
     case 'configure':
