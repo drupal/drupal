@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.8 2007/10/24 14:38:38 goba Exp $
+// $Id: node.admin.inc,v 1.9 2007/11/12 17:26:16 goba Exp $
 
 /**
  * @file
@@ -166,8 +166,10 @@ function node_build_filter_query() {
         break;
       case 'type':
         $where[] = "n.type = '%s'";
+        break;
       case 'language':
         $where[] = "n.language = '%s'";
+        break;
     }
     $args[] = $value;
   }
