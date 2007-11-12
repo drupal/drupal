@@ -166,8 +166,10 @@ function node_build_filter_query() {
         break;
       case 'type':
         $where[] = "n.type = '%s'";
+        break;
       case 'language':
         $where[] = "n.language = '%s'";
+        break;
     }
     $args[] = $value;
   }
