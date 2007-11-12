@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.898 2007/11/05 15:14:54 goba Exp $
+// $Id: node.module,v 1.899 2007/11/12 19:06:32 goba Exp $
 
 /**
  * @file
@@ -2108,7 +2108,7 @@ function node_access_rebuild($batch_mode = FALSE) {
   }
 
   if (!isset($batch)) {
-    drupal_set_message(t('The node access table has been rebuilt.'));
+    drupal_set_message(t('Content permissions have been rebuilt.'));
     node_access_needs_rebuild(FALSE);
     cache_clear_all();
   }
@@ -2498,7 +2498,7 @@ function node_unpublish_by_keyword_action_form($context) {
   $form['keywords'] = array(
     '#title' => t('Keywords'),
     '#type' => 'textarea',
-    '#description' => t('The node will be unpublished if it contains any of the character sequences above. Use a comma-separated list of character sequences. Example: funny, bungee jumping, "Company, Inc.". Character sequences are case-sensitive.'),
+    '#description' => t('The post will be unpublished if it contains any of the character sequences above. Use a comma-separated list of character sequences. Example: funny, bungee jumping, "Company, Inc.". Character sequences are case-sensitive.'),
     '#default_value' => isset($context['keywords']) ? drupal_implode_tags($context['keywords']) : '',
   );
   return $form;

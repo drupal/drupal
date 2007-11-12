@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.243 2007/11/11 16:14:45 goba Exp $
+// $Id: form.inc,v 1.244 2007/11/12 19:06:32 goba Exp $
 
 /**
  * @defgroup form Form generation
@@ -2149,7 +2149,7 @@ function form_clean_id($id = NULL, $flush = FALSE) {
  * @code
  * function batch_test_finished($success, $results, $operations) {
  *   if ($success) {
- *     $message = format_plural(count($results), 'One node processed.', '@count nodes processed.');
+ *     $message = format_plural(count($results), 'One post processed.', '@count posts processed.');
  *   }
  *   else {
  *     $message = t('Finished with an error.');

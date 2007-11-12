@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.6 2007/11/08 16:23:17 goba Exp $
+// $Id: taxonomy.admin.inc,v 1.7 2007/11/12 19:06:33 goba Exp $
 
 /**
  * @file
@@ -95,12 +95,12 @@ function taxonomy_form_vocabulary(&$form_state, $edit = array()) {
   $form['multiple'] = array('#type' => 'checkbox',
     '#title' => t('Multiple select'),
     '#default_value' => $edit['multiple'],
-    '#description' => t('Allows nodes to have more than one term from this vocabulary (always true for free tagging).'),
+    '#description' => t('Allows posts to have more than one term from this vocabulary (always true for free tagging).'),
   );
   $form['required'] = array('#type' => 'checkbox',
     '#title' => t('Required'),
     '#default_value' => $edit['required'],
-    '#description' => t('If enabled, every node <strong>must</strong> have at least one term in this vocabulary.'),
+    '#description' => t('If enabled, every post <strong>must</strong> have at least one term in this vocabulary.'),
   );
   $form['weight'] = array('#type' => 'weight',
     '#title' => t('Weight'),

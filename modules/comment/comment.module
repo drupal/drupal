@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.601 2007/11/09 07:46:10 dries Exp $
+// $Id: comment.module,v 1.602 2007/11/12 19:06:32 goba Exp $
 
 /**
  * @file
@@ -761,8 +761,8 @@ function comment_save($edit) {
     }
   }
   else {
-    watchdog('content', 'Comment: unauthorized comment submitted or comment submitted to a closed node %subject.', array('%subject' => $edit['subject']), WATCHDOG_WARNING);
-    drupal_set_message(t('Comment: unauthorized comment submitted or comment submitted to a closed node %subject.', array('%subject' => $edit['subject'])), 'error');
+    watchdog('content', 'Comment: unauthorized comment submitted or comment submitted to a closed post %subject.', array('%subject' => $edit['subject']), WATCHDOG_WARNING);
+    drupal_set_message(t('Comment: unauthorized comment submitted or comment submitted to a closed post %subject.', array('%subject' => $edit['subject'])), 'error');
     return FALSE;
   }
 }

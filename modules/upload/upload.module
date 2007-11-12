@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.187 2007/10/25 09:05:45 goba Exp $
+// $Id: upload.module,v 1.188 2007/11/12 19:06:33 goba Exp $
 
 /**
  * @file
@@ -13,7 +13,7 @@
 function upload_help($path, $arg) {
   switch ($path) {
     case 'admin/help#upload':
-      $output = '<p>'. t('The upload module allows users to upload files to the site. The ability to upload files to a site is important for members of a community who want to share work. It is also useful to administrators who want to keep uploaded files connected to a node or page.') .'</p>';
+      $output = '<p>'. t('The upload module allows users to upload files to the site. The ability to upload files to a site is important for members of a community who want to share work. It is also useful to administrators who want to keep uploaded files connected to posts.') .'</p>';
       $output .= '<p>'. t('Users with the upload files permission can upload attachments. You can choose which post types can take attachments on the content types settings page. Each user role can be customized for the file size of uploads, and the dimension of image files.') .'</p>';
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@upload">Upload page</a>.', array('@upload' => 'http://drupal.org/handbook/modules/upload/')) .'</p>';
       return $output;
