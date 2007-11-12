@@ -761,8 +761,8 @@ function comment_save($edit) {
     }
   }
   else {
-    watchdog('content', 'Comment: unauthorized comment submitted or comment submitted to a closed node %subject.', array('%subject' => $edit['subject']), WATCHDOG_WARNING);
-    drupal_set_message(t('Comment: unauthorized comment submitted or comment submitted to a closed node %subject.', array('%subject' => $edit['subject'])), 'error');
+    watchdog('content', 'Comment: unauthorized comment submitted or comment submitted to a closed post %subject.', array('%subject' => $edit['subject']), WATCHDOG_WARNING);
+    drupal_set_message(t('Comment: unauthorized comment submitted or comment submitted to a closed post %subject.', array('%subject' => $edit['subject'])), 'error');
     return FALSE;
   }
 }

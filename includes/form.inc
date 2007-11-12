@@ -2149,7 +2149,7 @@ function form_clean_id($id = NULL, $flush = FALSE) {
  * @code
  * function batch_test_finished($success, $results, $operations) {
  *   if ($success) {
- *     $message = format_plural(count($results), 'One node processed.', '@count nodes processed.');
+ *     $message = format_plural(count($results), 'One post processed.', '@count posts processed.');
  *   }
  *   else {
  *     $message = t('Finished with an error.');

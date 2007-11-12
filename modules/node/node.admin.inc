@@ -57,8 +57,8 @@ function node_configure_validate($form, &$form_state) {
  * Menu callback: confirm rebuilding of permissions.
  */
 function node_configure_rebuild_confirm() {
-  return confirm_form(array(), t('Are you sure you want to rebuild node permissions on the site?'),
-                  'admin/content/node-settings', t('This will wipe all current node permissions and rebuild them based on current settings. Rebuilding the permissions may take a while so please be patient. This action cannot be undone.'), t('Rebuild permissions'), t('Cancel'));
+  return confirm_form(array(), t('Are you sure you want to rebuild the permissions on site content?'),
+                  'admin/content/node-settings', t('This action rebuilds all permissions on site content, and may be a lengthy process. This action cannot be undone.'), t('Rebuild permissions'), t('Cancel'));
 }
 
 /**

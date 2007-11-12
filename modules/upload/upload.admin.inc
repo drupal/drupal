@@ -78,7 +78,7 @@ function upload_admin_settings() {
     '#title' => t('List files by default'),
     '#default_value' => variable_get('upload_list_default', 1),
     '#options' => array(0 => t('No'), 1 => t('Yes')),
-    '#description' => t('Set whether files attached to nodes are listed or not in the node view by default.'),
+    '#description' => t('Display attached files when viewing a post.'),
   );
 
   $form['settings_general']['upload_extensions_default'] = array(
