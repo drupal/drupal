@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.710 2007/11/04 21:24:09 goba Exp $
+// $Id: common.inc,v 1.711 2007/11/12 22:12:12 goba Exp $
 
 /**
  * @file
@@ -352,9 +352,9 @@ function drupal_not_found() {
     $return = menu_execute_active_handler($path);
   }
 
-  if (empty($return)) {
+  if (empty($return) || $return == MENU_NOT_FOUND || $return == MENU_ACCESS_DENIED) {
     drupal_set_title(t('Page not found'));
-    $return = '';
+    $return = t('The requested page could not be found.');
   }
 
   // To conserve CPU and bandwidth, omit the blocks.
@@ -381,7 +381,7 @@ function drupal_access_denied() {
     $return = menu_execute_active_handler($path);
   }
 
-  if (empty($return)) {
+  if (empty($return) || $return == MENU_NOT_FOUND || $return == MENU_ACCESS_DENIED) {
     drupal_set_title(t('Access denied'));
     $return = t('You are not authorized to access this page.');
   }
