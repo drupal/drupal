@@ -1,5 +1,5 @@
 <?php
-// $Id: color.module,v 1.27 2007/10/11 10:51:06 goba Exp $
+// $Id: color.module,v 1.28 2007/11/12 16:06:25 goba Exp $
 
 /**
  * Implementation of hook_help
@@ -396,7 +396,7 @@ function _color_render_images($theme, &$info, &$paths, $palette) {
   // Render gradient.
   for ($y = 0; $y < $info['gradient'][3]; ++$y) {
     $color = _color_blend($target, $palette['top'], $palette['bottom'], $y / ($info['gradient'][3] - 1));
-    imagefilledrectangle($target, $info['gradient'][0], $info['gradient'][1] + $y, $info['gradient'][2], $info['gradient'][1] + $y + 1, $color);
+    imagefilledrectangle($target, $info['gradient'][0], $info['gradient'][1] + $y, $info['gradient'][0] + $info['gradient'][2], $info['gradient'][1] + $y + 1, $color);
   }
 
   // Blend over template.
