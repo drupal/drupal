@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.108 2007/09/05 08:42:01 dries Exp $
+// $Id: blogapi.module,v 1.109 2007/11/13 12:29:56 goba Exp $
 
 /**
  * @file
@@ -12,10 +12,10 @@
 function blogapi_help($path, $arg) {
   switch ($path) {
     case 'admin/help#blogapi':
-      $output = '<p>'. t('The blog API module enables a post to be posted to a site via external GUI applications. Many users prefer to use external tools to improve their ability to read and post responses in a customized way. The blog api provides users the freedom to use the blogging tools they want but still have the blogging server of choice.') .'</p>';
-      $output .= '<p>'. t('When this module is enabled and configured you can use programs like <a href="@external-http-ecto-kung-foo-tv">Ecto</a> to create and publish posts from your desktop. Blog API module supports several XML-RPC based blogging APIs such as the <a href="@-">Blogger API</a>, <a href="@external-http-www-xmlrpc-com-metaWeblogApi">MetaWeblog API</a>, and most of the <a href="@external-http-www-movabletype-org-docs-mtmanual_programmatic-html">Movable Type API</a>. Any desktop blogging tools or other services (e.g. <a href="@external-http-www-flickr-com">Flickr\'s</a> "post to blog") that support these APIs should work with this site.', array('@external-http-ecto-kung-foo-tv' => 'http://ecto.kung-foo.tv/', '@-' => url('http://www.blogger.com/developers/api/1_docs/'), '@external-http-www-xmlrpc-com-metaWeblogApi' => 'http://www.xmlrpc.com/metaWeblogApi', '@external-http-www-movabletype-org-docs-mtmanual_programmatic-html' => 'http://www.movabletype.org/docs/mtmanual_programmatic.html', '@external-http-www-flickr-com' => 'http://www.flickr.com')) .'</p>';
-      $output .= '<p>'. t('This module also allows site administrators to configure which content types can be posted via the external applications. So, for instance, users can post forum topics as well as blog posts. Where supported, the external applications will display each content type as a separate "blog".') .'</p>';
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@blogapi">BlogApi page</a>.', array('@blogapi' => 'http://drupal.org/handbook/modules/blogapi/')) .'</p>';
+      $output = '<p>'. t("The Blog API module allows your site's users to access and post to their blogs from external blogging clients. External blogging clients are available for a wide range of desktop operating systems, and generally provide a feature-rich graphical environment for creating and editing posts.") .'</p>';
+      $output .= '<p>'. t('<a href="@ecto-link">Ecto</a>, a blogging client available for both Mac OS X and Microsoft Windows, can be used with Blog API. Blog API also supports <a href="@blogger-api">Blogger API</a>, <a href="@metaweblog-api">MetaWeblog API</a>, and most of the <a href="@movabletype-api">Movable Type API</a>. Blogging clients and other services (e.g. <a href="@flickr">Flickr\'s</a> "post to blog") that support these APIs may also be compatible.', array('@ecto-link' => url('http://infinite-sushi.com/software/ecto/'), '@blogger-api' => url('http://www.blogger.com/developers/api/1_docs/'), '@metaweblog-api' => url('http://www.xmlrpc.com/metaWeblogApi'), '@movabletype-api' => url('http://www.movabletype.org/docs/mtmanual_programmatic.html'), '@flickr' => url('http://www.flickr.com'))) .'</p>';
+      $output .= '<p>'. t('Select the content types available to external clients on the <a href="@blogapi-settings">Blog API settings page</a>. If supported and available, each content type will be displayed as a separate "blog" by the external client.', array('@blogapi-settings' => url('admin/settings/blogapi'))) .'</p>';
+      $output .= '<p>'. t('For more information, see the configuration and customization handbook <a href="@blogapi">Blog API page</a>.', array('@blogapi' => url('http://drupal.org/handbook/modules/blogapi/'))) .'</p>';
       return $output;
   }
 }
@@ -29,7 +29,7 @@ function blogapi_xmlrpc() {
       'blogger.getUsersBlogs',
       'blogapi_blogger_get_users_blogs',
       array('array', 'string', 'string', 'string'),
-      t('Returns a list of weblogs to which an author has posting privileges.')),
+      t('Returns a list of blogs to which an author has posting privileges.')),
     array(
       'blogger.getUserInfo',
       'blogapi_blogger_get_user_info',
@@ -99,7 +99,7 @@ function blogapi_xmlrpc() {
       'mt.getCategoryList',
       'blogapi_mt_get_category_list',
       array('array', 'string', 'string', 'string'),
-      t('Returns a list of all categories defined in the weblog.')),
+      t('Returns a list of all categories defined in the blog.')),
     array(
       'mt.getPostCategories',
       'blogapi_mt_get_post_categories',
@@ -124,7 +124,7 @@ function blogapi_xmlrpc() {
       'mt.publishPost',
       'blogap_mti_publish_post',
       array('boolean', 'string', 'string', 'string'),
-      t('Publish (rebuild) all of the static files related to an entry from your weblog. Equivalent to saving an entry in the system (but without the ping).')));
+      t('Publish (rebuild) all of the static files related to an entry from your blog. Equivalent to saving an entry in the system (but without the ping).')));
 }
 
 /**
@@ -201,7 +201,7 @@ function blogapi_blogger_new_post($appkey, $blogid, $username, $password, $conte
   }
 
   if (!node_access('create', $edit['type'])) {
-    return blogapi_error(t('You do not have permission to create the type of post you wanted to create.'));
+    return blogapi_error(t('You do not have permission to create this type of post.'));
   }
 
   if (user_access('administer nodes') && !isset($edit['date'])) {
@@ -274,7 +274,7 @@ function blogapi_blogger_edit_post($appkey, $postid, $username, $password, $cont
   $node = node_submit($node);
   node_save($node);
   if ($node->nid) {
-    watchdog('content', '@type: updated %title using blog API.', array('@type' => $node->type, '%title' => $node->title), WATCHDOG_NOTICE, l(t('view'), "node/$node->nid"));
+    watchdog('content', '@type: updated %title using Blog API.', array('@type' => $node->type, '%title' => $node->title), WATCHDOG_NOTICE, l(t('view'), "node/$node->nid"));
     return TRUE;
   }
 
@@ -514,7 +514,7 @@ function blogapi_validate_user($username, $password) {
       return $user;
     }
     else {
-      return t("You either tried to edit somebody else's blog or you don't have permission to edit your own blog.");
+      return t('You do not have permission to edit this blog.');
     }
   }
   else {
@@ -541,11 +541,11 @@ function blogapi_admin_settings() {
   $defaults = isset($node_types['blog']) ? array('blog' => 1) : array();
   $form['blogapi_node_types'] = array(
     '#type' => 'checkboxes',
-    '#title' => t('Blog types'),
+    '#title' => t('Enable for external blogging clients'),
     '#required' => TRUE,
     '#default_value' => variable_get('blogapi_node_types', $defaults),
     '#options' => $node_types,
-    '#description' => t('Select the content types for which you wish to enable posting via blogapi. Each type will appear as a different "blog" in the client application (if supported).')
+    '#description' => t('Select the content types available to external blogging clients via Blog API. If supported, each enabled content type will be displayed as a separate "blog" by the external client.')
   );
 
   return system_settings_form($form);
@@ -559,8 +559,8 @@ function blogapi_menu() {
     'type' => MENU_CALLBACK,
   );
   $items['admin/settings/blogapi'] = array(
-    'title' => 'Blog APIs',
-    'description' => 'Configure which content types and engines external blog clients can use.',
+    'title' => 'Blog API',
+    'description' => 'Configure the content types available to external blogging clients.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('blogapi_admin_settings'),
     'access arguments' => array('administer site configuration'),
@@ -698,4 +698,5 @@ function _blogapi_get_node_types() {
 
   return $types;
 }
+
 
