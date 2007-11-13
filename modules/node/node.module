@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.900 2007/11/13 14:04:08 dries Exp $
+// $Id: node.module,v 1.901 2007/11/13 14:56:14 dries Exp $
 
 /**
  * @file
@@ -806,16 +806,16 @@ function node_save(&$node) {
   //the node_revisions table query
   if ($node->is_new) {
     drupal_write_record('node', $node);
-    drupal_write_record('node_revisions', $node);
+    _node_save_revision($node, $user->uid);
     $op = 'insert';
   }
   else {
     drupal_write_record('node', $node, 'nid');
     if (!empty($node->revision)) {
-      drupal_write_record('node_revisions', $node);
+      _node_save_revision($node, $user->uid);
     }
     else {
-      drupal_write_record('node_revisions', $node, 'vid');
+      _node_save_revision($node, $user->uid, 'vid');
       $update_node = FALSE;
     }
     $op = 'update';
@@ -833,6 +833,22 @@ function node_save(&$node) {
 
   // Clear the page and block caches.
   cache_clear_all();
+}
+
+
+/**
+ * Helper function to save a revision with current user responsible for revision.
+ */
+function _node_save_revision($node, $uid, $update = NULL) {
+  $temp_uid = $node->uid;
+  $node->uid = $uid;
+  if (isset($update)) {
+    drupal_write_record('node_revisions', $node, $update);
+  }
+  else {
+    drupal_write_record('node_revisions', $node);
+  }
+  $node->uid = $temp_uid;
 }
 
 /**
