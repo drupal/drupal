@@ -10,7 +10,7 @@ Drupal.behaviors.teaser = function(context) {
   if (/KDE/.test(navigator.vendor)) {
     return;
   }
-  
+
   $('textarea.teaser:not(.teaser-processed)', context).each(function() {
     var teaser = $(this).addClass('teaser-processed');
 

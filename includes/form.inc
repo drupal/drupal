@@ -567,7 +567,7 @@ function drupal_redirect_form($form, $redirect = NULL) {
 function _form_validate($elements, &$form_state, $form_id = NULL) {
   // Also used in the installer, pre-database setup.
   $t = get_t();
-  
+
   // Recurse through all children.
   foreach (element_children($elements) as $key) {
     if (isset($elements[$key]) && $elements[$key]) {
@@ -1974,7 +1974,7 @@ function theme_file($element) {
 function theme_form_element($element, $value) {
   // This is also used in the installer, pre-database setup.
   $t = get_t();
-  
+
   $output  = '<div class="form-item"';
   if (!empty($element['#id'])) {
     $output .= ' id="'. $element['#id'] .'-wrapper"';
