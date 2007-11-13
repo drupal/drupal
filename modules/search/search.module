@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.240 2007/10/31 18:06:38 dries Exp $
+// $Id: search.module,v 1.241 2007/11/13 14:04:08 dries Exp $
 
 /**
  * @file
@@ -233,9 +233,11 @@ function search_wipe($sid = NULL, $type = NULL, $reindex = FALSE) {
   }
   else {
     db_query("DELETE FROM {search_dataset} WHERE sid = %d AND type = '%s'", $sid, $type);
-    db_query("DELETE FROM {search_index} WHERE fromsid = %d AND fromtype = '%s'", $sid, $type);
-    // When re-indexing, keep link references
-    db_query("DELETE FROM {search_index} WHERE sid = %d AND type = '%s'". ($reindex ? " AND fromsid = 0" : ''), $sid, $type);
+    db_query("DELETE FROM {search_index} WHERE sid = %d AND type = '%s'", $sid, $type);
+    // Don't remove links if re-indexing.
+    if (!$reindex) {
+      db_query("DELETE FROM {search_node_links} WHERE sid = %d AND type = '%s'", $sid, $type);
+    }
   }
 }
 
@@ -531,21 +533,24 @@ function search_index($sid, $type, $text) {
               $word = (int)ltrim($word, '-0');
             }
 
+            // Links score mainly for the target.
             if ($link) {
               if (!isset($results[$linknid])) {
                 $results[$linknid] = array();
               }
-              $results[$linknid][$word] += $score * $focus;
+              $results[$linknid][] = $word;
+              // Reduce score of the link caption in the source.
+              $focus *= 0.2;
             }
-            else {
-              if (!isset($results[0][$word])) {
-                $results[0][$word] = 0;
-              }
-              $results[0][$word] += $score * $focus;
-              // Focus is a decaying value in terms of the amount of unique words up to this point.
-              // From 100 words and more, it decays, to e.g. 0.5 at 500 words and 0.3 at 1000 words.
-              $focus = min(1, .01 + 3.5 / (2 + count($results[0]) * .015));
+            // Fall-through
+            if (!isset($results[0][$word])) {
+              $results[0][$word] = 0;
             }
+            $results[0][$word] += $score * $focus;
+
+            // Focus is a decaying value in terms of the amount of unique words up to this point.
+            // From 100 words and more, it decays, to e.g. 0.5 at 500 words and 0.3 at 1000 words.
+            $focus = min(1, .01 + 3.5 / (2 + count($results[0]) * .015));
           }
           $tagwords++;
           // Too many words inside a single tag probably mean a tag was accidentally left open.
@@ -562,7 +567,7 @@ function search_index($sid, $type, $text) {
   search_wipe($sid, $type, TRUE);
 
   // Insert cleaned up data into dataset
-  db_query("INSERT INTO {search_dataset} (sid, type, data) VALUES (%d, '%s', '%s')", $sid, $type, $accum);
+  db_query("INSERT INTO {search_dataset} (sid, type, data, reindex) VALUES (%d, '%s', '%s', %d)", $sid, $type, $accum, 0);
 
   // Insert results into search index
   foreach ($results[0] as $word => $score) {
@@ -571,12 +576,82 @@ function search_index($sid, $type, $text) {
   }
   unset($results[0]);
 
-  // Now insert links to nodes
+  // Get all previous links from this item.
+  $result = db_query("SELECT nid, caption FROM {search_node_links} WHERE sid = %d AND type = '%s'", $sid, $type);
+  $links = array();
+  while ($link = db_fetch_object($result)) {
+    $links[$link->nid] = $link->caption;
+  }
+
+  // Now store links to nodes.
   foreach ($results as $nid => $words) {
-    foreach ($words as $word => $score) {
-      db_query("INSERT INTO {search_index} (word, sid, type, fromsid, fromtype, score) VALUES ('%s', %d, '%s', %d, '%s', %f)", $word, $nid, 'node', $sid, $type, $score);
-      search_dirty($word);
+    $caption = implode(' ', $words);
+    if (isset($links[$nid])) {
+      if ($links[$nid] != $caption) {
+        // Update the existing link and mark the node for reindexing.
+        db_query("UPDATE {search_node_links} SET caption = '%s' WHERE sid = %d AND type = '%s' AND nid = %d", $caption, $sid, $type, $nid);
+        search_touch_node($nid);
+      }
+      // Unset the link to mark it as processed.
+      unset($links[$nid]);
     }
+    else {
+      // Insert the existing link and mark the node for reindexing.
+      db_query("INSERT INTO {search_node_links} (caption, sid, type, nid) VALUES ('%s', %d, '%s', %d)", $caption, $sid, $type, $nid);
+      search_touch_node($nid);
+    }
+  }
+  // Any left-over links in $links no longer exist. Delete them and mark the nodes for reindexing.
+  foreach ($links as $nid) {
+    db_query("DELETE FROM {search_node_links} WHERE sid = %d AND type = '%s' AND nid = %d", $sid, $type, $nid);
+    search_touch_node($nid);
+  }
+}
+
+/**
+ * Change a node's changed timestamp to 'now' to force reindexing.
+ *
+ * @param $nid
+ *   The nid of the node that needs reindexing.
+ */
+function search_touch_node($nid) {
+  db_query("UPDATE {search_dataset} SET reindex = %d WHERE sid = %d AND type = 'node'", time(), $nid);
+}
+
+/**
+ * Implementation of hook_nodeapi().
+ */
+function search_nodeapi(&$node, $op, $teaser = NULL, $page = NULL) {
+  switch ($op) {
+    // Transplant links to a node into the target node.
+    case 'update index':
+      $result = db_query("SELECT caption FROM {search_node_links} WHERE nid = %d", $node->nid);
+      $output = array();
+      while ($link = db_fetch_object($result)) {
+        $output[] = $link->caption;
+      }
+      return '<a>('. implode(', ', $output) .')</a>';
+    // Reindex the node when it is updated.  The node is automatically indexed
+    // when it is added, simply by being added to the node table.
+    case 'update':
+      search_touch_node($node->nid);
+      break;
+  }
+}
+
+/**
+ * Implementation of hook_comment().
+ */
+function search_comment($a1, $op) {
+  switch ($op) {
+    // Reindex the node when comments are added or changed
+    case 'insert':
+    case 'update':
+    case 'delete':
+    case 'publish':
+    case 'unpublish':
+      search_touch_node(is_array($a1) ? $a1['nid'] : $a1->nid);
+      break;
   }
 }
 
@@ -606,7 +681,22 @@ function search_query_insert($keys, $option, $value = '') {
 /**
  * Parse a search query into SQL conditions.
  *
- * We build a query that matches the dataset bodies.
+ * We build two queries that matches the dataset bodies. @See do_search for
+ * more about these.
+ *
+ * @param $text
+ *   The search keys.
+ * @return
+ *   A list of six elements.
+ *    * A series of statements AND'd together which will be used to provide all
+ *      possible matches.
+ *    * Arguments for this query part.
+ *    * A series of exact word matches OR'd together.
+ *    * Arguments for this query part.
+ *    * A bool indicating whether this is a simple query or not. Negative
+ *      terms, presence of both AND / OR make this FALSE.
+ *    * A bool indicating the presence of a lowercase or. Maybe the user
+ *      wanted to use OR.
  */
 function search_parse_query($text) {
   $keys = array('positive' => array(), 'negative' => array());
@@ -620,12 +710,15 @@ function search_parse_query($text) {
 
   // Classify tokens
   $or = FALSE;
+  $or_warning = FALSE;
+  $simple = TRUE;
   foreach ($matches as $match) {
     $phrase = FALSE;
     // Strip off phrase quotes
     if ($match[2]{0} == '"') {
       $match[2] = substr($match[2], 1, -1);
       $phrase = TRUE;
+      $simple = FALSE;
     }
     // Simplify keyword according to indexing rules and external preprocessors
     $words = search_simplify($match[2]);
@@ -649,6 +742,9 @@ function search_parse_query($text) {
     }
     // Plain keyword
     else {
+      if ($match[2] == 'or') {
+        $or_warning = TRUE;
+      }
       if ($or) {
         // Add to last element (which is an array)
         $keys['positive'][count($keys['positive']) - 1] = array_merge($keys['positive'][count($keys['positive']) - 1], $words);
@@ -666,10 +762,13 @@ function search_parse_query($text) {
   $arguments = array();
   $arguments2 = array();
   $matches = 0;
+  $simple_and = FALSE;
+  $simple_or = FALSE;
   // Positive matches
   foreach ($keys['positive'] as $key) {
     // Group of ORed terms
     if (is_array($key) && count($key)) {
+      $simple_or = TRUE;
       $queryor = array();
       $any = FALSE;
       foreach ($key as $or) {
@@ -688,6 +787,7 @@ function search_parse_query($text) {
     }
     // Single ANDed term
     else {
+      $simple_and = TRUE;
       list($q, $count) = _search_parse_query($key, $arguments2);
       if ($q) {
         $query[] = $q;
@@ -697,12 +797,16 @@ function search_parse_query($text) {
       }
     }
   }
+  if ($simple_and && $simple_or) {
+    $simple = FALSE;
+  }
   // Negative matches
   foreach ($keys['negative'] as $key) {
     list($q) = _search_parse_query($key, $arguments2, TRUE);
     if ($q) {
       $query[] = $q;
       $arguments[] = $key;
+      $simple = FALSE;
     }
   }
   $query = implode(' AND ', $query);
@@ -710,7 +814,7 @@ function search_parse_query($text) {
   // Build word-index conditions for the first pass
   $query2 = substr(str_repeat("i.word = '%s' OR ", count($arguments2)), 0, -4);
 
-  return array($query, $arguments, $query2, $arguments2, $matches);
+  return array($query, $arguments, $query2, $arguments2, $matches, $simple, $or_warning);
 }
 
 /**
@@ -742,28 +846,15 @@ function _search_parse_query(&$word, &$scores, $not = FALSE) {
  * This function is normally only called by each module that support the
  * indexed search (and thus, implements hook_update_index()).
  *
- * Two queries are performed which can be extended by the caller.
+ * Results are retrieved in two logical passes. However, the two passes are
+ * joined together into a single query.  And in the case of most simple
+ * queries the second pass is not even used.
  *
- * The first query selects a set of possible matches based on the search index
- * and any extra given restrictions. This is the classic "OR" search.
+ * The first pass selects a set of all possible matches, which has the benefit
+ * of also providing the exact result set for simple "AND" or "OR" searches.
  *
- * SELECT i.type, i.sid, SUM(i.score*t.count) AS relevance
- * FROM {search_index} i
- * INNER JOIN {search_total} t ON i.word = t.word
- * $join1
- * WHERE $where1 AND (...)
- * GROUP BY i.type, i.sid
- *
- * The second query further refines this set by verifying advanced text
- * conditions (such as AND, negative or phrase matches), and orders the results
- * on a the column or expression 'score':
- *
- * SELECT i.type, i.sid, $select2
- * FROM temp_search_sids i
- * INNER JOIN {search_dataset} d ON i.sid = d.sid AND i.type = d.type
- * $join2
- * WHERE (...)
- * ORDER BY score DESC
+ * The second portion of the query further refines this set by verifying
+ * advanced text conditions (such negative or phrase matches)
  *
  * @param $keywords
  *   A search string as entered by the user.
@@ -782,7 +873,7 @@ function _search_parse_query(&$word, &$scores, $not = FALSE) {
  * @param $arguments1
  *   (optional) Extra SQL arguments belonging to the first query.
  *
- * @param $select2
+ * @param $columns2
  *   (optional) Inserted into the SELECT pat of the second query. Must contain
  *   a column selected as 'score'.
  *   defaults to 'i.relevance AS score'
@@ -803,40 +894,45 @@ function _search_parse_query(&$word, &$scores, $not = FALSE) {
  *
  * @ingroup search
  */
-function do_search($keywords, $type, $join1 = '', $where1 = '1', $arguments1 = array(), $select2 = 'i.relevance AS score', $join2 = '', $arguments2 = array(), $sort_parameters = 'ORDER BY score DESC') {
+function do_search($keywords, $type, $join1 = '', $where1 = '1', $arguments1 = array(), $columns2 = 'i.relevance AS score', $join2 = '', $arguments2 = array(), $sort_parameters = 'ORDER BY score DESC') {
   $query = search_parse_query($keywords);
 
   if ($query[2] == '') {
     form_set_error('keys', t('You must include at least one positive keyword with @count characters or more.', array('@count' => variable_get('minimum_word_size', 3))));
   }
+  if ($query[6]) {
+    form_set_error('keys', t('Try uppercase "OR" to search for either of two terms.'));
+  }
   if ($query === NULL || $query[0] == '' || $query[2] == '') {
     return array();
   }
 
-  // First pass: select all possible matching sids, doing a simple index-based OR matching on the keywords.
-  // 'matches' is used to reject those items that cannot possibly match the query.
-  $conditions = $where1 .' AND ('. $query[2] .") AND i.type = '%s'";
-  $arguments = array_merge($arguments1, $query[3], array($type, $query[4]));
-  $result = db_query_temporary("SELECT i.type, i.sid, SUM(i.score * t.count) AS relevance, COUNT(*) AS matches FROM {search_index} i INNER JOIN {search_total} t ON i.word = t.word $join1 WHERE $conditions GROUP BY i.type, i.sid HAVING COUNT(*) >= %d", $arguments, 'temp_search_sids');
+  // Build query for keyword normalization.
+  $conditions = "$where1 AND ($query[2]) AND i.type = '%s'";
+  $arguments1 = array_merge($arguments1, $query[3], array($type));
+  $join = "INNER JOIN {search_total} t ON i.word = t.word $join1";
+  if (!$query[5]) {
+    $conditions .= " AND ($query[0])";
+    $arguments1 = array_merge($arguments1, $query[1]);
+    $join .= " INNER JOIN {search_dataset} d ON i.sid = d.sid AND i.type = d.type";
+  }
 
-  // Calculate maximum relevance, to normalize it
-  $normalize = db_result(db_query('SELECT MAX(relevance) FROM temp_search_sids'));
+  // Calculate maximum keyword relevance, to normalize it.
+  $select = "SELECT MAX(i.score * t.count) FROM {search_index} i $join WHERE $conditions GROUP BY i.type, i.sid HAVING COUNT(*) >= %d";
+  $arguments = array_merge($arguments1, array($query[4]));
+  $normalize = db_result(db_query($select, $arguments));
   if (!$normalize) {
     return array();
   }
-  $select2 = str_replace('i.relevance', '('. (1.0 / $normalize) .' * i.relevance)', $select2);
+  $columns2 = str_replace('i.relevance', '('. (1.0 / $normalize) .' * SUM(i.score * t.count))', $columns2);
 
-  // Second pass: only keep items that match the complicated keywords conditions (phrase search, negative keywords, ...)
-  $conditions = '('. $query[0] .')';
-  $arguments = array_merge($arguments2, $query[1]);
-  $result = db_query_temporary("SELECT i.type, i.sid, $select2 FROM temp_search_sids i INNER JOIN {search_dataset} d ON i.sid = d.sid AND i.type = d.type $join2 WHERE $conditions $sort_parameters", $arguments, 'temp_search_results');
-  if (($count = db_result(db_query('SELECT COUNT(*) FROM temp_search_results'))) == 0) {
-    return array();
-  }
-  $count_query = "SELECT $count";
+  // Build query to retrieve results.
+  $select = "SELECT i.type, i.sid, $columns2 FROM {search_index} i $join $join2 WHERE $conditions GROUP BY i.type, i.sid HAVING COUNT(*) >= %d";
+  $count_select =  "SELECT COUNT(*) FROM ($select) n1";
+  $arguments = array_merge($arguments2, $arguments1, array($query[4]));
 
   // Do actual search query
-  $result = pager_query("SELECT * FROM temp_search_results", 10, 0, $count_query);
+  $result = pager_query("$select $sort_parameters", 10, 0, $count_select, $arguments);
   $results = array();
   while ($item = db_fetch_object($result)) {
     $results[] = $item;

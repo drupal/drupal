@@ -1,4 +1,4 @@
-// $Id: teaser.js,v 1.9 2007/10/27 11:45:18 goba Exp $
+// $Id: teaser.js,v 1.10 2007/11/13 14:04:08 dries Exp $
 
 /**
  * Auto-attach for teaser behavior.
@@ -10,7 +10,7 @@ Drupal.behaviors.teaser = function(context) {
   if (/KDE/.test(navigator.vendor)) {
     return;
   }
-  
+
   $('textarea.teaser:not(.teaser-processed)', context).each(function() {
     var teaser = $(this).addClass('teaser-processed');
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.899 2007/11/12 19:06:32 goba Exp $
+// $Id: node.module,v 1.900 2007/11/13 14:04:08 dries Exp $
 
 /**
  * @file
@@ -1017,15 +1017,12 @@ function node_search($op = 'search', $keys = NULL) {
       return t('Content');
 
     case 'reset':
-      variable_del('node_cron_last');
-      variable_del('node_cron_last_nid');
+      db_query("UPDATE {search_dataset} SET reindex = %d AND type = 'node'", time());
       return;
 
     case 'status':
-      $last = variable_get('node_cron_last', 0);
-      $last_nid = variable_get('node_cron_last_nid', 0);
       $total = db_result(db_query('SELECT COUNT(*) FROM {node} WHERE status = 1'));
-      $remaining = db_result(db_query('SELECT COUNT(*) FROM {node} n LEFT JOIN {node_comment_statistics} c ON n.nid = c.nid WHERE n.status = 1 AND ((GREATEST(n.created, n.changed, c.last_comment_timestamp) = %d AND n.nid > %d ) OR (n.created > %d OR n.changed > %d OR c.last_comment_timestamp > %d))', $last, $last_nid, $last, $last, $last));
+      $remaining = db_result(db_query("SELECT COUNT(*) FROM {node} n LEFT JOIN {search_dataset} d ON d.type = 'node' AND d.sid = n.nid WHERE d.sid IS NULL OR d.reindex <> 0"));
       return array('remaining' => $remaining, 'total' => $total);
 
     case 'admin':
@@ -1097,7 +1094,7 @@ function node_search($op = 'search', $keys = NULL) {
         $ranking[] = '%d * POW(2, (GREATEST(n.created, n.changed, c.last_comment_timestamp) - %d) * 6.43e-8)';
         $arguments2[] = $weight;
         $arguments2[] = (int)variable_get('node_cron_last', 0);
-        $join2 .= ' INNER JOIN {node} n ON n.nid = i.sid LEFT JOIN {node_comment_statistics} c ON c.nid = i.sid';
+        $join2 .= ' LEFT JOIN {node_comment_statistics} c ON c.nid = i.sid';
         $stats_join = TRUE;
         $total += $weight;
       }
@@ -1547,59 +1544,49 @@ function node_page_view($node, $cid = NULL) {
 }
 
 /**
- * shutdown function to make sure we always mark the last node processed.
- */
-function node_update_shutdown() {
-  global $last_change, $last_nid;
-
-  if ($last_change && $last_nid) {
-    variable_set('node_cron_last', $last_change);
-    variable_set('node_cron_last_nid', $last_nid);
-  }
-}
-
-/**
  * Implementation of hook_update_index().
  */
 function node_update_index() {
-  global $last_change, $last_nid;
-
-  register_shutdown_function('node_update_shutdown');
-
-  $last = variable_get('node_cron_last', 0);
-  $last_nid = variable_get('node_cron_last_nid', 0);
   $limit = (int)variable_get('search_cron_limit', 100);
 
   // Store the maximum possible comments per thread (used for ranking by reply count)
   variable_set('node_cron_comments_scale', 1.0 / max(1, db_result(db_query('SELECT MAX(comment_count) FROM {node_comment_statistics}'))));
   variable_set('node_cron_views_scale', 1.0 / max(1, db_result(db_query('SELECT MAX(totalcount) FROM {node_counter}'))));
 
-  $result = db_query_range('SELECT GREATEST(IF(c.last_comment_timestamp IS NULL, 0, c.last_comment_timestamp), n.changed) as last_change, n.nid FROM {node} n LEFT JOIN {node_comment_statistics} c ON n.nid = c.nid WHERE n.status = 1 AND ((GREATEST(n.changed, c.last_comment_timestamp) = %d AND n.nid > %d) OR (n.changed > %d OR c.last_comment_timestamp > %d)) ORDER BY GREATEST(n.changed, c.last_comment_timestamp) ASC, n.nid ASC', $last, $last_nid, $last, $last, 0, $limit);
+  $result = db_query_range("SELECT n.nid FROM {node} n LEFT JOIN {search_dataset} d ON d.type = 'node' AND d.sid = n.nid WHERE d.sid IS NULL OR d.reindex <> 0 ORDER BY d.reindex ASC, n.nid ASC", 0, $limit);
 
   while ($node = db_fetch_object($result)) {
-    $last_change = $node->last_change;
-    $last_nid = $node->nid;
-    $node = node_load($node->nid);
-
-    // Build the node body.
-    $node->build_mode = NODE_BUILD_SEARCH_INDEX;
-    $node = node_build_content($node, FALSE, FALSE);
-    $node->body = drupal_render($node->content);
-
-    // Allow modules to modify the fully-built node.
-    node_invoke_nodeapi($node, 'alter');
-
-    $text = '<h1>'. check_plain($node->title) .'</h1>'. $node->body;
-
-    // Fetch extra data normally not visible
-    $extra = node_invoke_nodeapi($node, 'update index');
-    foreach ($extra as $t) {
-      $text .= $t;
-    }
-
-    // Update index
-    search_index($node->nid, 'node', $text);
+    _node_index_node($node);
   }
+}
+
+/**
+ * Index a single node.
+ *
+ * @param $node
+ *   The node to index.
+ */
+function _node_index_node($node) {
+  $node = node_load($node->nid);
+
+  // save the changed time of the most recent indexed node, for the search results half-life calculation
+  variable_set('node_cron_last', $node->changed);
+
+  // Build the node body.
+  $node->build_mode = NODE_BUILD_SEARCH_INDEX;
+  $node = node_build_content($node, FALSE, FALSE);
+  $node->body = drupal_render($node->content);
+
+  $text = '<h1>'. check_plain($node->title) .'</h1>'. $node->body;
+
+  // Fetch extra data normally not visible
+  $extra = node_invoke_nodeapi($node, 'update index');
+  foreach ($extra as $t) {
+    $text .= $t;
+  }
+
+  // Update index
+  search_index($node->nid, 'node', $text);
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: search.install,v 1.10 2007/10/10 11:39:34 goba Exp $
+// $Id: search.install,v 1.11 2007/11/13 14:04:08 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -47,6 +47,13 @@ function search_schema() {
         'size' => 'big',
         'description' => t('List of space-separated words from the item.'),
       ),
+      'reindex' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => t('Set to force node reindexing.'),
+      ),
     ),
     'indexes' => array('sid_type' => array('sid', 'type')),
   );
@@ -74,19 +81,6 @@ function search_schema() {
         'not null' => FALSE,
         'description' => t('The {search_dataset}.type of the searchable item to which the word belongs.'),
       ),
-      'fromsid' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => t('The {search_dataset}.sid of the referring link to this item.'),
-      ),
-      'fromtype' => array(
-        'type' => 'varchar',
-        'length' => 16,
-        'not null' => FALSE,
-        'description' => t('The {search_dataset}.type of the referring link to this item.'),
-      ),
       'score' => array(
         'type' => 'float',
         'not null' => FALSE,
@@ -94,10 +88,10 @@ function search_schema() {
       ),
     ),
     'indexes' => array(
-      'from_sid_type' => array('fromsid', 'fromtype'),
       'sid_type' => array('sid', 'type'),
       'word' => array('word')
     ),
+    'unique keys' => array('word_sid_type' => array('word', 'sid', 'type')),
   );
 
   $schema['search_total'] = array(
@@ -117,6 +111,40 @@ function search_schema() {
       ),
     ),
     'primary key' => array('word'),
+  );
+
+  $schema['search_node_links'] = array(
+    'fields' => array(
+      'sid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => t('The {search_dataset}.sid of the searchable item to which the word belongs.'),
+      ),
+      'type' => array(
+        'type' => 'varchar',
+        'length' => 16,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => t('The {search_dataset}.sid of the searchable item to which the word belongs.'),
+      ),
+      'nid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => t('The {node}.nid that this item links to.'),
+      ),
+      'caption' => array(
+        'type' => 'text',
+        'size' => 'big',
+        'not null' => FALSE,
+        'description' => t('The text used to link to the {node}.nid.'),
+      ),
+    ),
+    'primary key' => array('sid', 'type', 'nid'),
+    'indexes' => array('nid' => array('nid')),
   );
 
   return $schema;
