@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.389 2007/11/11 06:56:44 dries Exp $
+// $Id: taxonomy.module,v 1.390 2007/11/14 13:32:58 goba Exp $
 
 /**
  * @file
@@ -42,17 +42,32 @@ function taxonomy_theme() {
 function taxonomy_link($type, $node = NULL) {
   if ($type == 'taxonomy terms' && $node != NULL) {
     $links = array();
+    // If previewing, the terms must be converted to objects first.
+    if ($node->build_mode == NODE_BUILD_PREVIEW) {
+      $node->taxonomy = taxonomy_preview_terms($node);
+    }
     if (!empty($node->taxonomy)) {
       foreach ($node->taxonomy as $term) {
-        // On preview, we get tids.
-        if (is_numeric($term)) {
-          $term = taxonomy_get_term($term);
+        // During preview the free tagging terms are in an array unlike the other terms which are objects.
+        // So we have to check if a $term is an object or not.        
+        if (is_object($term)) {
+          $links['taxonomy_term_'. $term->tid] = array(
+            'title' => $term->name,
+            'href' => taxonomy_term_path($term),
+            'attributes' => array('rel' => 'tag', 'title' => strip_tags($term->description))
+          );
         }
-        $links['taxonomy_term_'. $term->tid] = array(
-          'title' => $term->name,
-          'href' => taxonomy_term_path($term),
-          'attributes' => array('rel' => 'tag', 'title' => strip_tags($term->description))
-        );
+        // Previewing free tagging terms; we don't link them because the term-page might not exist yet.
+        else {
+          foreach ($term as $free_typed) {
+            $typed_terms = drupal_explode_tags($free_typed);
+            foreach($typed_terms as $typed_term) {
+              $links['taxonomy_preview_term_'. $typed_term] = array(
+                'title' => $typed_term,
+              );           
+            }
+          }
+        }
       }
     }
 
@@ -419,6 +434,10 @@ function taxonomy_form_alter(&$form, $form_state, $form_id) {
       $terms = empty($node->nid) ? array() : taxonomy_node_get_terms($node);
     }
     else {
+      // After preview the terms must be converted to objects.
+      if (isset($form_state['node_preview'])) {
+        $node->taxonomy = taxonomy_preview_terms($node);
+      }
       $terms = $node->taxonomy;
     }
 
@@ -426,8 +445,13 @@ function taxonomy_form_alter(&$form, $form_state, $form_id) {
 
     while ($vocabulary = db_fetch_object($c)) {
       if ($vocabulary->tags) {
-        $typed_string = taxonomy_implode_tags($terms, $vocabulary->vid) . (array_key_exists('tags', $terms) ? $terms['tags'][$vocabulary->vid] : NULL);
-
+        if (isset($form_state['node_preview'])) {
+          // Typed string can be changed by the user before preview, so we just insert the tags directly as provided in the form.
+          $typed_string = $node->taxonomy['tags'][$vocabulary->vid];
+        }
+        else {
+          $typed_string = taxonomy_implode_tags($terms, $vocabulary->vid) . (array_key_exists('tags', $terms) ? $terms['tags'][$vocabulary->vid] : NULL);
+        }
         if ($vocabulary->help) {
           $help = $vocabulary->help;
         }
@@ -447,8 +471,9 @@ function taxonomy_form_alter(&$form, $form_state, $form_id) {
       else {
         // Extract terms belonging to the vocabulary in question.
         $default_terms = array();
-        foreach ($terms as $term) {
-          if ($term->vid == $vocabulary->vid) {
+        foreach ($terms as $term) {     
+          // Free tagging has no default terms and also no vid after preview.
+          if (isset($term->vid) && $term->vid == $vocabulary->vid) {
             $default_terms[$term->tid] = $term;
           }
         }
@@ -468,8 +493,42 @@ function taxonomy_form_alter(&$form, $form_state, $form_id) {
       }
       $form['taxonomy']['#weight'] = -3;
       $form['taxonomy']['#tree'] = TRUE;
+    }  
+  }
+}
+
+/**
+ * Helper function to covert terms after a preview.
+ *
+ * After preview the tags are an array instead of proper objects. This function
+ * converts them back to objects with the exception of 'free tagging' terms,
+ * because new tags can be added by the user before preview and those do not 
+ * yet exist in the database. We therefore save those tags as a string so 
+ * we can fill the form again after the preview.
+ */
+function taxonomy_preview_terms($node) {
+  $taxonomy = array();
+  foreach ($node->taxonomy as $key => $term) {
+    unset($node->taxonomy[$key]);
+    // A 'Multiple select' and a 'Free tagging' field returns an array.
+    if (is_array($term)) {
+      foreach ($term as $tid) {
+        if ($key == 'tags') {
+          // Free tagging; the values will be saved for later as strings 
+	  // instead of objects to fill the form again.
+          $taxonomy['tags'] = $term;
+        }
+        else {
+          $taxonomy[$tid] = taxonomy_get_term($tid);
+        }
+      }
+    }
+    // A 'Single select' field returns the term id.
+    elseif ($term) {
+      $taxonomy[$term] = taxonomy_get_term($term);
     }
   }
+  return $taxonomy;
 }
 
 /**
