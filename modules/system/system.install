@@ -4525,6 +4525,15 @@ function system_update_6036() {
 }
 
 /**
+ * Create consistent empty region for disabled blocks.
+ */
+function system_update_6037() {
+  $ret = array();
+  $ret[] = update_sql("UPDATE {blocks} SET region = '' WHERE status = 0");
+  return $ret;
+}
+
+/**
  * @} End of "defgroup updates-5.x-to-6.x"
  * The next series of updates should start at 7000.
  */

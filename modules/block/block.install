@@ -52,7 +52,7 @@ function block_schema() {
         'type' => 'varchar',
         'length' => 64,
         'not null' => TRUE,
-        'default' => 'left',
+        'default' => '',
         'description' => t('Theme region within which the block is set.'),
       ),
       'custom' => array(
