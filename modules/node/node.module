@@ -652,7 +652,7 @@ function node_load($param = array(), $revision = NULL, $reset = NULL) {
   // Retrieve a field list based on the site's schema.
   $fields = drupal_schema_fields_sql('node', 'n');
   $fields = array_merge($fields, drupal_schema_fields_sql('node_revisions', 'r'));
-  $fields = array_merge($fields, array('u.name', 'u.data'));
+  $fields = array_merge($fields, array('u.name', 'u.picture', 'u.data'));
   $fields = implode(', ', $fields);
   // rename timestamp field for clarity.
   $fields = str_replace('r.timestamp', 'r.timestamp AS revision_timestamp', $fields);
