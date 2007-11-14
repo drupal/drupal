@@ -2346,8 +2346,7 @@ function system_update_164() {
       foreach (explode(' ', $poll->polled) as $polled) {
         if ($polled[0] == '_') {
           // $polled is a user id
-          db_query('INSERT INTO {poll_votes} (nid, uid) VALUES (%d, %d)', $poll->nid, substr($polled, 
-1, -1));
+          db_query('INSERT INTO {poll_votes} (nid, uid) VALUES (%d, %d)', $poll->nid, substr($polled, 1, -1));
         }
         else {
           // $polled is a host
