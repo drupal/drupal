@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.901 2007/11/13 14:56:14 dries Exp $
+// $Id: node.module,v 1.902 2007/11/14 12:43:13 goba Exp $
 
 /**
  * @file
@@ -652,7 +652,7 @@ function node_load($param = array(), $revision = NULL, $reset = NULL) {
   // Retrieve a field list based on the site's schema.
   $fields = drupal_schema_fields_sql('node', 'n');
   $fields = array_merge($fields, drupal_schema_fields_sql('node_revisions', 'r'));
-  $fields = array_merge($fields, array('u.name', 'u.data'));
+  $fields = array_merge($fields, array('u.name', 'u.picture', 'u.data'));
   $fields = implode(', ', $fields);
   // rename timestamp field for clarity.
   $fields = str_replace('r.timestamp', 'r.timestamp AS revision_timestamp', $fields);
