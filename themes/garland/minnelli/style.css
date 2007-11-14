@@ -6,6 +6,8 @@
  * Steven Wittens, acko [dot] net
  */
 
+@import "../style.css";
+
 body #wrapper #container {
   width: 560px;
 }
