@@ -138,7 +138,7 @@ function block_admin_display_js($theme = NULL) {
 
       $throttle = module_exists('throttle');
       if ($throttle) {
-        $block['throttle'] = $_POST[$key]['throttle'];
+        $block['throttle'] = !empty($_POST[$key]['throttle']);
       }
 
       if ($block['weight'] != $form_cache->data[$key]['weight']['#default_value'] || $block['region'] != $form_cache->data[$key]['region']['#default_value']) {
