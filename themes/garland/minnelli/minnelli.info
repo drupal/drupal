@@ -1,7 +1,6 @@
-; $Id: minnelli.info,v 1.5 2007/11/07 18:03:56 goba Exp $
+; $Id: minnelli.info,v 1.6 2007/11/14 15:05:19 goba Exp $
 name = Minnelli
 description = Tableless, recolorable, multi-column, fixed width theme.
 version = VERSION
 core = 6.x
 base theme = garland
-stylesheets[all][] = minnelli.css

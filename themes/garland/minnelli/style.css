@@ -1,10 +1,12 @@
-/* $Id: minnelli.css,v 1.1 2007/11/07 18:04:15 goba Exp $ */
+/* $Id: style.css,v 1.6 2007/11/14 15:05:37 goba Exp $ */
 
 /**
  * Minnelli, for Drupal 5.0
  * Stefan Nagtegaal, iStyledThis [dot] nl
  * Steven Wittens, acko [dot] net
  */
+
+@import "../style.css";
 
 body #wrapper #container {
   width: 560px;
