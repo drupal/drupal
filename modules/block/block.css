@@ -3,21 +3,16 @@
 #blocks td.region {
   font-weight: bold;
 }
-#blocks td.block {
-  padding-left: 1.5em; /* LTR */
+#blocks tr.region-message {
+  font-weight: normal;
+  color: #999;
+}
+#blocks tr.region-populated {
+  display: none;
 }
 .block-region {
   background-color: #ff6;
   margin-top: 4px;
   margin-bottom: 4px;
   padding: 3px;
-}
-#blocks select {
-  margin-right: 24px; /* LTR */
-}
-#blocks select.progress-disabled {
-  margin-right: 0px; /* LTR */
-}
-#blocks tr.ahah-new-content {
-  background-color: #ffd;
 }

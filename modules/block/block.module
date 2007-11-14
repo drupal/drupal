@@ -248,6 +248,9 @@ function _block_rehash() {
           }
           // Add defaults and save it into the database.
           drupal_write_record('blocks', $block);
+          // Set region to none if not enabled.
+          $block['region'] = $block['status'] ? $block['region'] : BLOCK_REGION_NONE;
+          // Add to the list of blocks we return.
           $blocks[] = $block;
         }
         else {
@@ -257,7 +260,9 @@ function _block_rehash() {
           // do not need to update the database here.
           // Add 'info' to this block.
           $old_blocks[$module][$delta]['info'] = $block['info'];
-          // Add this block to the list of blocks we return
+          // Set region to none if not enabled.
+          $old_blocks[$module][$delta]['region'] = $old_blocks[$module][$delta]['status'] ? $old_blocks[$module][$delta]['region'] : BLOCK_REGION_NONE;
+          // Add this block to the list of blocks we return.
           $blocks[] = $old_blocks[$module][$delta];
           // Remove this block from the list of blocks to be deleted.
           unset($old_blocks[$module][$delta]);

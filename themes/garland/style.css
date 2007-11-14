@@ -226,6 +226,14 @@ tr.even {
   background-color: #fff;
 }
 
+tr.drag {
+  background-color: #fffff0;
+}
+
+tr.drag-previous {
+  background-color: #ffd;
+}
+
 tr.odd td.active {
   background-color: #ddecf5;
 }

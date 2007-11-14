@@ -46,6 +46,7 @@ Drupal 6.0, xxxx-xx-xx (development version)
       .info file.
     * Dynamically check password strength and confirmation.
     * Refactored poll administration.
+    * Drag and drop of table rows in the block administration page.
 - Theme system:
     * Added .info files to themes and made it easier to specify regions and
       features.
