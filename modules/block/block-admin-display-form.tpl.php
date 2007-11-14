@@ -1,18 +1,19 @@
 <?php
-// $Id: block-admin-display-form.tpl.php,v 1.1 2007/10/05 09:36:52 goba Exp $
+// $Id: block-admin-display-form.tpl.php,v 1.2 2007/11/14 09:49:30 dries Exp $
 
 /**
  * @file block-admin-display-form.tpl.php
  * Default theme implementation to configure blocks.
  *
  * Available variables:
- * - $block_listing: An array of block controls within regions.
+ * - $block_regions: An array of regions. Keyed by name with the title as value.
+ * - $block_listing: An array of blocks keyed by region and then delta.
  * - $form_submit: Form submit button.
  * - $throttle: TRUE or FALSE depending on throttle module being enabled.
  *
- * Each $data in $block_listing contains:
- * - $data->is_region_first: TRUE or FALSE depending on the listed blocks
- *   positioning. Used here to insert a region header.
+ * Each $block_listing[$region] contains an array of blocks for that region.
+ *
+ * Each $data in $block_listing[$region] contains:
  * - $data->region_title: Region title for the listed block.
  * - $data->block_title: Block title.
  * - $data->region_select: Drop-down menu for assigning a region.
@@ -25,9 +26,15 @@
  * @see theme_block_admin_display()
  */
 ?>
-<?php drupal_add_js('misc/tableheader.js'); ?>
-<?php print $messages; ?>
-
+<?php
+  // Add table javascript.
+  drupal_add_js('misc/tableheader.js');
+  drupal_add_js(drupal_get_path('module', 'block') .'/block.js');
+  foreach ($block_regions as $region => $title) {
+    drupal_add_tabledrag('blocks', 'match', 'sibling', 'block-region-select', 'block-region-'. $region, NULL, FALSE);
+    drupal_add_tabledrag('blocks', 'order', 'sibling', 'block-weight', 'block-weight-'. $region);
+  }
+?>
 <table id="blocks">
   <thead>
     <tr>
@@ -42,15 +49,16 @@
   </thead>
   <tbody>
     <?php $row = 0; ?>
-    <?php foreach ($block_listing as $data): ?>
-      <?php if ($data->is_region_first): ?>
-      <tr class="<?php print $row % 2 == 0 ? 'odd' : 'even'; ?>">
-        <td colspan="<?php print $throttle ? '7' : '6'; ?>" class="region"><?php print $data->region_title; ?></td>
+    <?php foreach ($block_regions as $region => $title): ?>
+      <tr class="region region-<?php print $region?>">
+        <td colspan="<?php print $throttle ? '6' : '5'; ?>" class="region"><?php print $title; ?></td>
       </tr>
-      <?php $row++; ?>
-      <?php endif; ?>
-      <tr class="<?php print $row % 2 == 0 ? 'odd' : 'even'; ?><?php print $data->row_class ? ' '. $data->row_class : ''; ?>">
-        <td class="block"><?php print $data->block_title; ?><?php print $data->block_modified ? '<span class="warning">*</span>' : ''; ?></td>
+      <tr class="region-message region-<?php print $region?>-message <?php print empty($block_listing[$region]) ? 'region-empty' : 'region-populated'; ?>">
+        <td colspan="<?php print $throttle ? '6' : '5'; ?>"><em><?php print t('No blocks in this region'); ?></em></td>
+      </tr>
+      <?php foreach ($block_listing[$region] as $delta => $data): ?>
+      <tr class="draggable <?php print $row % 2 == 0 ? 'odd' : 'even'; ?><?php print $data->row_class ? ' '. $data->row_class : ''; ?>">
+        <td class="block"><?php print $data->block_title; ?></td>
         <td><?php print $data->region_select; ?></td>
         <td><?php print $data->weight_select; ?></td>
         <?php if ($throttle): ?>
@@ -60,6 +68,7 @@
         <td><?php print $data->delete_link; ?></td>
       </tr>
       <?php $row++; ?>
+      <?php endforeach; ?>
     <?php endforeach; ?>
   </tbody>
 </table>

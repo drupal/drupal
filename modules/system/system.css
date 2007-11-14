@@ -1,8 +1,11 @@
-/* $Id: system.css,v 1.38 2007/11/04 21:09:22 goba Exp $ */
+/* $Id: system.css,v 1.39 2007/11/14 09:49:30 dries Exp $ */
 
 /*
 ** HTML elements
 */
+body.drag {
+  cursor: move;
+}
 th.active img {
   display: inline;
 }
@@ -10,6 +13,12 @@ tr.even, tr.odd {
   background-color: #eee;
   border-bottom: 1px solid #ccc;
   padding: 0.1em 0.6em;
+}
+tr.drag {
+  background-color: #fffff0;
+}
+tr.drag-previous {
+  background-color: #ffd;
 }
 td.active {
   background-color: #ddd;
@@ -31,6 +40,21 @@ thead th {
 */
 .breadcrumb {
   padding-bottom: .5em
+}
+div.indentation {
+  width: 20px;
+  margin: -0.4em 0.2em -0.4em -0.4em;
+  padding: 0.4em 0 0.4em 0.6em;
+  float: left;
+}
+div.tree-child {
+  background: url(../../misc/tree.png) no-repeat 11px center;
+}
+div.tree-child-last {
+  background: url(../../misc/tree-bottom.png) no-repeat 11px center;
+}
+div.tree-child-horizontal {
+  background: url(../../misc/tree.png) no-repeat -11px center;
 }
 .error {
   color: #e55;
@@ -331,6 +355,30 @@ html.js .resizable-textarea textarea {
   margin-bottom: 0;
   width: 100%;
   display: block;
+}
+
+/*
+** Table drag and drop.
+*/
+a.tabledrag-handle {
+  cursor: move;
+  float: left;
+  height: 1.7em;
+  margin: -0.42em 0 -0.42em -0.5em;
+  padding: 0.42em 1.5em 0.42em 0.5em;
+  text-decoration: none;
+}
+a.tabledrag-handle:hover {
+  text-decoration: none;
+}
+a.tabledrag-handle .handle {
+  margin-top: 4px;
+  height: 13px;
+  width: 13px;
+  background: url(../../misc/draggable.png) no-repeat 0 0;
+}
+a.tabledrag-handle-hover .handle {
+  background-position: 0 -20px;
 }
 
 /*

@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.28 2007/11/09 22:14:41 goba Exp $ */
+/* $Id: style.css,v 1.29 2007/11/14 09:49:30 dries Exp $ */
 
 /**
  * Garland, for Drupal 5.0
@@ -224,6 +224,14 @@ tr.odd, tr.info {
 
 tr.even {
   background-color: #fff;
+}
+
+tr.drag {
+  background-color: #fffff0;
+}
+
+tr.drag-previous {
+  background-color: #ffd;
 }
 
 tr.odd td.active {

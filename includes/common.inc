@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.712 2007/11/13 12:35:19 dries Exp $
+// $Id: common.inc,v 1.713 2007/11/14 09:49:30 dries Exp $
 
 /**
  * @file
@@ -1924,6 +1924,113 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
   $output = $preprocessed . implode('', $no_preprocess) . $output;
 
   return $output;
+}
+
+/**
+ * Assist in adding the tableDrag JavaScript behavior to a themed table.
+ *
+ * Draggable tables should be used wherever an outline or list of sortable items
+ * needs to be arranged by an end-user. Draggable tables are very flexible and
+ * can manipulate the value of form elements placed within individual columns.
+ *
+ * To setup a table to use drag and drop in place of weight select-lists or
+ * in place of a form that contains parent relationships, the form must be
+ * themed into a table. The table must have an id attribute set. If using
+ * theme_table(), the id may be set as such:
+ * @code
+ * $output = theme('table', $header, $rows, array('id' => 'my-module-table'));
+ * return $output;
+ * @endcode
+ *
+ * In the theme function for the form, a special class must be added to each
+ * form element within the same column, "grouping" them together.
+ *
+ * In a situation where a single weight column is being sorted in the table, the
+ * classes could be added like this (in the theme function):
+ * @code
+ * $form['my_elements'][$delta]['weight']['attributes']['class'] = "my-elements-weight";
+ * @endcode
+ *
+ * Calling drupal_add_tabledrag() would then be written as such:
+ * @code
+ * drupal_add_tabledrag('my-module-table', 'sort', 'sibling', 'my-elements-weight');
+ * @endcode
+ *
+ * In a more complex case where there are several groups in one column (such as
+ * the block regions on the admin/build/block page), a separate subgroup class
+ * must also be added to differentiate the groups.
+ * @code
+ * $form['my_elements'][$region][$delta]['weight']['attributes']['class'] = "my-elements-weight my-elements-weight-". $region;
+ * @endcode
+ *
+ * $group is still 'my-element-weight', and the additional $subgroup variable
+ * will be passed in as 'my-elements-weight-'. $region. This also means that
+ * you'll need to call drupal_add_tabledrag() once for every region added.
+ *
+ * @code
+ * foreach ($regions as $region) {
+ *   drupal_add_tabledrag('my-module-table', 'sort', 'sibling', 'my-elements-weight', 'my-elements-weight-'. $region);
+ * }
+ * @endcode
+ *
+ * In a situation where tree relationships are present, adding multiple
+ * subgroups is not necessary, because the table will contain indentations that
+ * provide enough information about the sibling and parent relationships.
+ * See theme_menu_overview_form() for an example creating a table containing
+ * parent relationships.
+ *
+ * Please note that this function should be called from the theme layer, such as
+ * in a .tpl.php file, theme_ function, or in a template_preprocess function,
+ * not in a form declartion. Though the same JavaScript could be added to the
+ * page using drupal_add_js() directly, this function helps keep template files
+ * clean and readable. It also prevents tabledrag.js from being added twice
+ * accidentally.
+ *
+ * @param $table_id
+ *   String containing the target table's id attribute. If the table does not
+ *   have an id, one will need to be set, such as <table id="my-module-table">.
+ * @param $action
+ *   String describing the action to be done on the form item. Either 'match' or
+ *   'sort'. Match is typically used for parent relationships, sort is typically
+ *   used to set weights on other form elements with the same group.
+ * @param $relationship
+ *   String describing where the $action variable should be performed. Either
+ *   'parent' or 'sibling'. Parent will only look for fields up the tree.
+ *   Sibling will look for fields in the same group in rows above and below it.
+ * @param $group
+ *   A class name applied on all related form elements for this action.
+ * @param $subgroup
+ *   (optional) If the group has several subgroups within it, this string should
+ *   contain the class name identifying fields in the same subgroup.
+ * @param $source
+ *   (optional) If the $action is 'match', this string should contain the class
+ *   name identifying what field will be used as the source value when matching
+ *   the value in $subgroup.
+ * @param $hidden
+ *   (optional) The column containing the field elements may be entirely hidden
+ *   from view dynamically when the JavaScript is loaded. Set to FALSE if the
+ *   column should not be hidden.
+ * @see block-admin-display-form.tpl.php
+ * @see theme_menu_overview_form()
+ */
+function drupal_add_tabledrag($table_id, $action, $relationship, $group, $subgroup = NULL, $source = NULL, $hidden = TRUE) {
+  static $js_added = FALSE;
+  if (!$js_added) {
+    drupal_add_js('misc/tabledrag.js', 'core');
+    $js_added = TRUE;
+  }
+
+  // If a subgroup or source isn't set, assume it is the same as the group.
+  $target = isset($subgroup) ? $subgroup : $group;
+  $source = isset($source) ? $source : $target;
+  $settings['tableDrag'][$table_id][$group][] = array(
+    'target' => $target,
+    'source' => $source,
+    'relationship' => $relationship,
+    'action' => $action,
+    'hidden' => $hidden,
+  );
+  drupal_add_js($settings, 'setting');
 }
 
 /**

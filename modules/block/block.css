@@ -1,23 +1,18 @@
-/* $Id: block.css,v 1.5 2007/10/10 10:24:25 goba Exp $ */
+/* $Id: block.css,v 1.6 2007/11/14 09:49:30 dries Exp $ */
 
 #blocks td.region {
   font-weight: bold;
 }
-#blocks td.block {
-  padding-left: 1.5em; /* LTR */
+#blocks tr.region-message {
+  font-weight: normal;
+  color: #999;
+}
+#blocks tr.region-populated {
+  display: none;
 }
 .block-region {
   background-color: #ff6;
   margin-top: 4px;
   margin-bottom: 4px;
   padding: 3px;
-}
-#blocks select {
-  margin-right: 24px; /* LTR */
-}
-#blocks select.progress-disabled {
-  margin-right: 0px; /* LTR */
-}
-#blocks tr.ahah-new-content {
-  background-color: #ffd;
 }

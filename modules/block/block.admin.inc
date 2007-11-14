@@ -1,5 +1,5 @@
 <?php
-// $Id: block.admin.inc,v 1.10 2007/11/14 05:59:38 dries Exp $
+// $Id: block.admin.inc,v 1.11 2007/11/14 09:49:30 dries Exp $
 
 /**
  * @file
@@ -36,16 +36,14 @@ function block_admin_display_form(&$form_state, $blocks, $theme = NULL) {
   init_theme();
 
   $throttle = module_exists('throttle');
-  $block_regions = array(BLOCK_REGION_NONE => '<'. t('none') .'>') + system_region_list($theme_key);
+  $block_regions = system_region_list($theme_key) + array(BLOCK_REGION_NONE => '<'. t('none') .'>');
 
   // Build form tree
   $form = array(
     '#action' => arg(3) ? url('admin/build/block/list/'. $theme_key) : url('admin/build/block'),
     '#tree' => TRUE,
-    '#cache' => TRUE,
-    '#prefix' => '<div id="block-admin-display-form-wrapper">',
-    '#suffix' => '</div>',
   );
+
   foreach ($blocks as $i => $block) {
     $key = $block['module'] .'_'. $block['delta'];
     $form[$key]['module'] = array(
@@ -69,7 +67,7 @@ function block_admin_display_form(&$form_state, $blocks, $theme = NULL) {
     );
     $form[$key]['region'] = array(
       '#type' => 'select',
-      '#default_value' => $block['status'] ? (isset($block['region']) ? $block['region'] : system_default_region($theme_key)) : BLOCK_REGION_NONE,
+      '#default_value' => $block['region'],
       '#options' => $block_regions,
     );
 
@@ -82,20 +80,9 @@ function block_admin_display_form(&$form_state, $blocks, $theme = NULL) {
     }
   }
 
-  // Attach the AHAH events to the submit button. Set the AHAH selector to every
-  // select element in the form. The AHAH event could be attached to every select
-  // element individually, but using the selector is more efficient, especially
-  // on a page where hundreds of AHAH enabled elements may be present.
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save blocks'),
-    '#ahah' => array(
-      'path' => 'admin/build/block/list/js/'. $theme_key,
-      'selector' => '#block-admin-display-form-wrapper select',
-      'wrapper' => 'block-admin-display-form-wrapper',
-      'event' => 'change',
-      'effect' => 'fade',
-    ),
   );
 
   return $form;
@@ -115,104 +102,28 @@ function block_admin_display_form_submit($form, &$form_state) {
 }
 
 /**
- * Javascript callback for AHAH replacement. Re-generate the form with the
- * updated values and return necessary html.
- */
-function block_admin_display_js($theme = NULL) {
-  // Load the cached form.
-  $form_cache = cache_get('form_'. $_POST['form_build_id'], 'cache_form');
-
-  // Set the new weights and regions for each block.
-  $blocks = array();
-  foreach (element_children($form_cache->data) as $key) {
-    $field = $form_cache->data[$key];
-    if (isset($field['info'])) {
-      $block = array(
-        'module'   => $field['module']['#value'],
-        'delta'    => $field['delta']['#value'],
-        'info'     => html_entity_decode($field['info']['#value'], ENT_QUOTES),
-        'region'   => $_POST[$key]['region'],
-        'weight'   => $_POST[$key]['weight'],
-        'status'   => $_POST[$key]['region'] == BLOCK_REGION_NONE ? 0 : 1,
-      );
-
-      $throttle = module_exists('throttle');
-      if ($throttle) {
-        $block['throttle'] = !empty($_POST[$key]['throttle']);
-      }
-
-      if ($block['weight'] != $form_cache->data[$key]['weight']['#default_value'] || $block['region'] != $form_cache->data[$key]['region']['#default_value']) {
-        $changed_block = $block['module'] .'_'. $block['delta'];
-      }
-
-      $blocks[] = $block;
-    }
-  }
-
-  // Resort the blocks with the new weights.
-  usort($blocks, '_block_compare');
-
-  // Create a form in the new order.
-  $form_state = array('submitted' => FALSE);
-  $form = block_admin_display_form($form_state, $blocks, $theme);
-
-  // Maintain classes set on individual blocks.
-  foreach (element_children($form_cache->data) as $key) {
-    if (isset($form_cache->data[$key]['#attributes'])) {
-      $form[$key]['#attributes'] = $form_cache->data[$key]['#attributes'];
-    }
-  }
-
-  // Preserve the order of the new form while merging the previous data.
-  $form_order = array_flip(array_keys($form)); // Save the form order.
-  $form = array_merge($form_cache->data, $form);  // Merge the data.
-  $form = array_merge($form_order, $form); // Put back into the correct order.
-
-  // Add a permanent class to the changed block.
-  $form[$changed_block]['#attributes']['class'] = 'block-modified';
-
-  cache_set('form_'. $_POST['form_build_id'], $form, 'cache_form', $form_cache->expire);
-
-  // Add a temporary class to mark the new AHAH content.
-  $form[$changed_block]['#attributes']['class'] = empty($form[$changed_block]['#attributes']['class']) ? 'ahah-new-content' : $form[$changed_block]['#attributes']['class'] .' ahah-new-content';
-  $form['js_modified'] = array(
-    '#type' => 'value',
-    '#value' => TRUE,
-  );
-
-  $form['#post'] = $_POST;
-  $form['#theme'] = 'block_admin_display_form';
-
-  // Add messages to our output.
-  drupal_set_message(t('Your settings will not be saved until you click the <em>Save blocks</em> button.'), 'warning');
-
-  // Render the form.
-  drupal_alter('form', $form, array(), 'block_admin_display_form');
-  $form = form_builder('block_admin_display_form', $form, $form_state);
-
-  // Remove the wrapper from the form to prevent duplicate div IDs.
-  unset($form['#prefix'], $form['#suffix']);
-
-  $output = drupal_render($form);
-
-  // Return the output in JSON format.
-  drupal_json(array('status' => TRUE, 'data' => $output));
-}
-
-/**
  * Helper function for sorting blocks on admin/build/block.
  *
  * Active blocks are sorted by region, then by weight.
  * Disabled blocks are sorted by name.
  */
 function _block_compare($a, $b) {
-  $status = $b['status'] - $a['status'];
+  global $theme_key;
+  static $regions;
+
+  // We need the region list to correctly order by region.
+  if (!isset($regions)) {
+    $regions = array_flip(array_keys(system_region_list($theme_key)));
+    $regions[BLOCK_REGION_NONE] = count($regions);
+  }
+
   // Separate enabled from disabled.
+  $status = $b['status'] - $a['status'];
   if ($status) {
     return $status;
   }
-  // Sort by region.
-  $place = strcmp($a['region'], $b['region']);
+  // Sort by region (in the order defined by theme .info file).
+  $place = $regions[$a['region']] - $regions[$b['region']];
   if ($place) {
     return $place;
   }
@@ -442,13 +353,19 @@ function block_box_delete_submit($form, &$form_state) {
 function template_preprocess_block_admin_display_form(&$variables) {
   global $theme_key;
 
-  $variables['throttle'] = module_exists('throttle');
   $block_regions = system_region_list($theme_key);
+  $variables['throttle'] = module_exists('throttle');
+  $variables['block_regions'] = $block_regions + array(BLOCK_REGION_NONE => t('Disabled'));
 
-  // Highlight regions on page to provide visual reference.
   foreach ($block_regions as $key => $value) {
+    // Highlight regions on page to provide visual reference.
     drupal_set_content($key, '<div class="block-region">'. $value .'</div>');
+    // Initialize an empty array for the region.
+    $variables['block_listing'][$key] = array();
   }
+
+  // Initialize disabled blocks array.
+  $variables['block_listing'][BLOCK_REGION_NONE] = array();
 
   // Setup to track previous region in loop.
   $last_region = '';
@@ -460,34 +377,23 @@ function template_preprocess_block_admin_display_form(&$variables) {
       // Fetch region for current block.
       $region = $block['region']['#default_value'];
 
-      // Track first block listing to insert region header inside block_admin_display.tpl.php.
-      $is_region_first = FALSE;
-      if ($last_region != $region) {
-        $is_region_first = TRUE;
-        // Set region title. Block regions already translated.
-        if ($region != BLOCK_REGION_NONE) {
-          $region_title = drupal_ucfirst($block_regions[$region]);
-        }
-        else {
-          $region_title = t('Disabled');
-        }
-      }
+      // Set special classes needed for table drag and drop.
+      $variables['form'][$i]['region']['#attributes']['class'] = 'block-region-select block-region-'. $region;
+      $variables['form'][$i]['weight']['#attributes']['class'] = 'block-weight block-weight-'. $region;
 
-      $variables['block_listing'][$i]->is_region_first = $is_region_first;
-      $variables['block_listing'][$i]->row_class = isset($block['#attributes']['class']) ? $block['#attributes']['class'] : '';
-      $variables['block_listing'][$i]->block_modified = isset($block['#attributes']['class']) && strpos($block['#attributes']['class'], 'block-modified') !== FALSE ? TRUE : FALSE;
-      $variables['block_listing'][$i]->region_title = $region_title;
-      $variables['block_listing'][$i]->block_title =  drupal_render($block['info']);
-      $variables['block_listing'][$i]->region_select = drupal_render($block['region']) . drupal_render($block['theme']);
-      $variables['block_listing'][$i]->weight_select = drupal_render($block['weight']);
-      $variables['block_listing'][$i]->throttle_check = $variables['throttle'] ? drupal_render($block['throttle']) : '';
-      $variables['block_listing'][$i]->configure_link = drupal_render($block['configure']);
-      $variables['block_listing'][$i]->delete_link = !empty($block['delete']) ? drupal_render($block['delete']) : '';
+      $variables['block_listing'][$region][$i]->row_class = isset($block['#attributes']['class']) ? $block['#attributes']['class'] : '';
+      $variables['block_listing'][$region][$i]->block_modified = isset($block['#attributes']['class']) && strpos($block['#attributes']['class'], 'block-modified') !== FALSE ? TRUE : FALSE;
+      $variables['block_listing'][$region][$i]->block_title =  drupal_render($block['info']);
+      $variables['block_listing'][$region][$i]->region_select = drupal_render($block['region']) . drupal_render($block['theme']);
+      $variables['block_listing'][$region][$i]->weight_select = drupal_render($block['weight']);
+      $variables['block_listing'][$region][$i]->throttle_check = $variables['throttle'] ? drupal_render($block['throttle']) : '';
+      $variables['block_listing'][$region][$i]->configure_link = drupal_render($block['configure']);
+      $variables['block_listing'][$region][$i]->delete_link = !empty($block['delete']) ? drupal_render($block['delete']) : '';
+      $variables['block_listing'][$region][$i]->printed = FALSE;
 
       $last_region = $region;
     }
   }
 
-  $variables['messages'] = isset($variables['form']['js_modified']) ? theme('status_messages') : '';
   $variables['form_submit'] = drupal_render($variables['form']);
 }
