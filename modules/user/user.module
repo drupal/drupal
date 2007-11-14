@@ -841,7 +841,7 @@ function user_view_access($account) {
 }
 
 function user_edit_access($account) {
-  return ($GLOBALS['user']->uid == $account->uid) || user_access('administer users');
+  return (($GLOBALS['user']->uid == $account->uid) || user_access('administer users')) && $account->uid > 0;
 }
 
 function user_load_self($arg) {
