@@ -1,5 +1,5 @@
 <?php
-// $Id: block.admin.inc,v 1.9 2007/10/05 09:35:09 goba Exp $
+// $Id: block.admin.inc,v 1.10 2007/11/14 05:59:38 dries Exp $
 
 /**
  * @file
@@ -138,7 +138,7 @@ function block_admin_display_js($theme = NULL) {
 
       $throttle = module_exists('throttle');
       if ($throttle) {
-        $block['throttle'] = $_POST[$key]['throttle'];
+        $block['throttle'] = !empty($_POST[$key]['throttle']);
       }
 
       if ($block['weight'] != $form_cache->data[$key]['weight']['#default_value'] || $block['region'] != $form_cache->data[$key]['region']['#default_value']) {
