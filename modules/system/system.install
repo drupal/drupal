@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.178 2007/11/14 14:02:01 goba Exp $
+// $Id: system.install,v 1.179 2007/11/14 15:22:04 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -2342,14 +2342,17 @@ function system_update_164() {
 
   $result = db_query('SELECT nid, polled FROM {poll}');
   while ($poll = db_fetch_object($result)) {
-    foreach (explode(' ', $poll->polled) as $polled) {
-      if ($polled[0] == '_') {
-        // $polled is a user id
-        db_query('INSERT INTO {poll_votes} (nid, uid) VALUES (%d, %d)', $poll->nid, substr($polled, 1, -1));
-      }
-      else {
-        // $polled is a host
-        db_query("INSERT INTO {poll_votes} (nid, hostname) VALUES (%d, '%s')", $poll->nid, $polled);
+    if (!empty($poll->polled)) {
+      foreach (explode(' ', $poll->polled) as $polled) {
+        if ($polled[0] == '_') {
+          // $polled is a user id
+          db_query('INSERT INTO {poll_votes} (nid, uid) VALUES (%d, %d)', $poll->nid, substr($polled, 
+1, -1));
+        }
+        else {
+          // $polled is a host
+          db_query("INSERT INTO {poll_votes} (nid, hostname) VALUES (%d, '%s')", $poll->nid, $polled);
+        }
       }
     }
   }
