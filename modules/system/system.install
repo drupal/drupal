@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.177 2007/11/14 09:31:05 dries Exp $
+// $Id: system.install,v 1.178 2007/11/14 14:02:01 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -3153,7 +3153,10 @@ function system_update_1005() {
   }
 
   cache_clear_all();
+
+  include_once './'. drupal_get_path('module', 'system') .'/system.admin.inc';
   system_modules();
+
   menu_rebuild();
   node_types_rebuild();
 
