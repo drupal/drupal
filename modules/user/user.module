@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.862 2007/11/06 12:20:14 goba Exp $
+// $Id: user.module,v 1.863 2007/11/14 16:01:30 goba Exp $
 
 /**
  * @file
@@ -841,7 +841,7 @@ function user_view_access($account) {
 }
 
 function user_edit_access($account) {
-  return ($GLOBALS['user']->uid == $account->uid) || user_access('administer users');
+  return (($GLOBALS['user']->uid == $account->uid) || user_access('administer users')) && $account->uid > 0;
 }
 
 function user_load_self($arg) {
