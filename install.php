@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.88 2007/11/11 22:43:44 goba Exp $
+// $Id: install.php,v 1.89 2007/11/14 20:18:08 goba Exp $
 
 require_once './includes/install.inc';
 
@@ -664,6 +664,21 @@ function install_tasks($profile, $task) {
 
     drupal_process_form('install_configure_form', $form, $form_state);
     if (empty($form_state['redirect'])) {
+      // Add JavaScript validation for form.
+      _user_password_dynamic_validation();
+      drupal_add_js(drupal_get_path('module', 'system') .'/system.js', 'module');
+      // We add these strings as settings because JavaScript translation does not
+      // work on install time.
+      drupal_add_js(array('copyFieldValue' => array('edit-site-mail' => array('edit-account-mail')), 'cleanURL' => array('success' => st('Your server has been successfully tested to support this feature.'), 'failure' => st('Your system configuration does not currently support this feature. The <a href="http://drupal.org/node/15365">handbook page on Clean URLs</a> has additional troubleshooting information.'), 'testing' => st('Testing clean URLs...'))), 'setting');
+      drupal_add_js('
+// Global Killswitch
+if (Drupal.jsEnabled) {
+  $(document).ready(function() {
+    Drupal.cleanURLsInstallCheck();
+    Drupal.setDefaultTimezone();
+  });
+}', 'inline');
+
       // Build menu to allow clean URL check.
       menu_rebuild();
       $output = drupal_render_form('install_configure_form', $form);
@@ -844,8 +859,6 @@ function install_configure_form() {
   // This is necessary to add the task to the $_GET args so the install
   // system will know that it is done and we've taken over.
 
-  _user_password_dynamic_validation();
-
   $form['intro'] = array(
     '#value' => st('To configure your website, please provide the following information.'),
     '#weight' => -10,
@@ -916,19 +929,6 @@ function install_configure_form() {
     '#description' => st('By default, dates in this site will be displayed in the chosen time zone.'),
     '#weight' => 5,
   );
-
-  drupal_add_js(drupal_get_path('module', 'system') .'/system.js', 'module');
-  // We add these strings as settings because JavaScript translation does not
-  // work on install time.
-  drupal_add_js(array('copyFieldValue' => array('edit-site-mail' => array('edit-account-mail')), 'cleanURL' => array('success' => st('Your server has been successfully tested to support this feature.'), 'failure' => st('Your system configuration does not currently support this feature. The <a href="http://drupal.org/node/15365">handbook page on Clean URLs</a> has additional troubleshooting information.'), 'testing' => st('Testing clean URLs...'))), 'setting');
-  drupal_add_js('
-// Global Killswitch
-if (Drupal.jsEnabled) {
-  $(document).ready(function() {
-    Drupal.cleanURLsInstallCheck();
-    Drupal.setDefaultTimezone();
-  });
-}', 'inline');
 
   $form['server_settings']['clean_url'] = array(
     '#type' => 'radios',
