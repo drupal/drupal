@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.176 2007/11/13 14:04:08 dries Exp $
+// $Id: system.install,v 1.177 2007/11/14 09:31:05 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -4521,6 +4521,15 @@ function system_update_6036() {
       search_install();
     }
   }
+  return $ret;
+}
+
+/**
+ * Create consistent empty region for disabled blocks.
+ */
+function system_update_6037() {
+  $ret = array();
+  $ret[] = update_sql("UPDATE {blocks} SET region = '' WHERE status = 0");
   return $ret;
 }
 

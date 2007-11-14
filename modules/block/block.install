@@ -1,5 +1,5 @@
 <?php
-// $Id: block.install,v 1.6 2007/11/06 11:40:15 goba Exp $
+// $Id: block.install,v 1.7 2007/11/14 09:31:04 dries Exp $
 
 /**
  * Implementation of hook_schema().
@@ -52,7 +52,7 @@ function block_schema() {
         'type' => 'varchar',
         'length' => 64,
         'not null' => TRUE,
-        'default' => 'left',
+        'default' => '',
         'description' => t('Theme region within which the block is set.'),
       ),
       'custom' => array(
