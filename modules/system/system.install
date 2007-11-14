@@ -3153,7 +3153,10 @@ function system_update_1005() {
   }
 
   cache_clear_all();
+
+  include_once './'. drupal_get_path('module', 'system') .'/system.admin.inc';
   system_modules();
+
   menu_rebuild();
   node_types_rebuild();
 
