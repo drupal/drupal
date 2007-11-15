@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.44 2007/11/11 06:56:44 dries Exp $
+// $Id: content_types.inc,v 1.45 2007/11/15 23:55:52 goba Exp $
 
 /**
  * @file
@@ -23,7 +23,7 @@ function node_overview_types() {
       $row = array(
         l($name, 'admin/content/types/'. $type_url_str),
         check_plain($type->type),
-        check_plain($type->description),
+        filter_xss($type->description),
       );
       // Set the edit column.
       $row[] = array('data' => l(t('edit'), 'admin/content/types/'. $type_url_str));
