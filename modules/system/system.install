@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.180 2007/11/14 15:24:16 goba Exp $
+// $Id: system.install,v 1.181 2007/11/15 14:55:11 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -4534,6 +4534,7 @@ function system_update_6036() {
  */
 function system_update_6037() {
   $ret = array();
+  db_change_field($ret, 'blocks', 'region', 'region', array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''));
   $ret[] = update_sql("UPDATE {blocks} SET region = '' WHERE status = 0");
   return $ret;
 }
