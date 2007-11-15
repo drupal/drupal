@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.install,v 1.20 2007/10/21 18:59:02 goba Exp $
+// $Id: locale.install,v 1.21 2007/11/15 13:27:45 goba Exp $
 
 /**
  * Implementation of hook_install().
@@ -110,7 +110,24 @@ function locale_update_6004() {
  */
 function locale_update_6005() {
   $ret = array();
-  $ret[] = update_sql("DELETE s FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid WHERE t.lid IS NULL");
+  $ret[] = update_sql("DELETE FROM {locales_source} WHERE lid NOT IN (SELECT lid FROM {locales_target})");
+  return $ret;
+}
+
+/**
+ * Fix remaining inconsistent indexes.
+ */
+function locale_update_6006() {
+  $ret = array();
+  db_add_index($ret, 'locales_target', 'language', array('language'));
+
+  switch ($GLOBALS['db_type']) {
+    case 'pgsql':
+      db_drop_index($ret, 'locales_source', 'source');
+      db_add_index($ret, 'locales_source', 'source', array(array('source', 30)));
+      break;
+  }
+
   return $ret;
 }
 
