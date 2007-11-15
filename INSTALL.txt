@@ -1,4 +1,4 @@
-// $Id: INSTALL.txt,v 1.45 2007/10/12 10:41:47 goba Exp $
+// $Id: INSTALL.txt,v 1.46 2007/11/15 23:12:38 goba Exp $
 
 CONTENTS OF THIS FILE
 ---------------------
@@ -62,15 +62,22 @@ INSTALLATION
    http://drupal.org/project/Translations and download the package. Extract
    the contents to the same directory where you extracted Drupal into.
 
-2. GIVE PERMISSION TO DRUPAL TO BE ABLE TO CREATE THE CONFIGURATION FILE
+2. GRANT WRITE PERMISSIONS ON CONFIGURATION FILE AND FILES STORAGE DIRECTORY
 
    Drupal comes with a default.settings.php file in the sites/default
    directory. The installer will create a copy of this file filled with
    the details you provide through the install process, in the same
-   directory. For Drupal to be able to create the file, you need to
-   give the web server write privileges to the sites/default directory:
+   directory. Give the web server write privileges to the sites/default
+   directory with the command (from the installation directory):
 
-     chmod o+w default
+     chmod o+w sites/default
+
+   Drupal requires the files directory be present and writable during
+   the installation (the location of the files directory can be changed
+   after Drupal is installed). Give the web server write privileges to the
+   files directory with the command (from the installation directory):
+
+     chmod o+w files
 
 3. CREATE THE DRUPAL DATABASE
 
@@ -115,13 +122,13 @@ INSTALLATION
    running FastCGI can run into problems if the $base_url variable is left
    commented out (see http://bugs.php.net/bug.php?id=19656).
 
-   Consider creating a "files" subdirectory in your Drupal installation
-   directory. This subdirectory stores files such as custom logos, user avatars,
-   and other media associated with your new site. The sub-directory requires
-   "read and write" permission by the Drupal server process. You can change
-   the name of this subdirectory at "administer > site configuration > file
-   system".
-
+   Determine whether the default "files" directory is the right location for your
+   file system path. Drupal uses the location specified in the file system path
+   to store files attached to site content, theme-specific logos, user avatars, and
+   some temporary files. On some installations, it may be necessary to modify
+   the file system path, especially in large or multi-site configurations. See the
+   files/README.txt file for more information about setting the file system path.
+   
 6. CRON TASKS
 
    Many Drupal modules (such as the search functionality) have periodic tasks
@@ -225,6 +232,9 @@ accessible to other sites, the setup would look like this:
 
 NOTE: for more information about multiple virtual hosts or the configuration
 settings, consult the Drupal handbook at drupal.org.
+
+For more information on configuring Drupal's file system path in a multi-site
+configuration, see files/README.txt.
 
 MORE INFORMATION
 ----------------

@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.181 2007/11/15 14:55:11 goba Exp $
+// $Id: system.install,v 1.182 2007/11/15 23:12:38 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -111,37 +111,39 @@ function system_requirements($phase) {
   }
 
   // Test files directory
-  if ($phase == 'runtime') {
-    $directory = file_directory_path();
-    $is_writable = is_writable($directory);
-    $is_directory = is_dir($directory);
-    if (!$is_writable || !$is_directory) {
-      if (!$is_directory) {
-        $error = $t('The directory %directory does not exist.', array('%directory' => $directory));
-      }
-      else {
-        $error = $t('The directory %directory is not writable.', array('%directory' => $directory));
-      }
-      $requirements['file system'] = array(
-        'value' => $t('Not writable'),
-        'severity' => REQUIREMENT_ERROR,
-        'description' => $error .' '. $t('You may need to set the correct directory at the <a href="@admin-file-system">file system settings page</a> or change the current directory\'s permissions so that it is writable.', array('@admin-file-system' => url('admin/settings/file-system'))),
-      );
+  $directory = file_directory_path();
+  $is_writable = is_writable($directory);
+  $is_directory = is_dir($directory);
+  if (!$is_writable || !$is_directory) {
+    if (!$is_directory) {
+      $error = $t('The directory %directory does not exist.', array('%directory' => $directory));
     }
     else {
-      if (variable_get('file_downloads', FILE_DOWNLOADS_PUBLIC) == FILE_DOWNLOADS_PUBLIC) {
-        $requirements['file system'] = array(
-          'value' => $t('Writable (<em>public</em> download method)'),
-        );
-      }
-      else {
-        $requirements['file system'] = array(
-          'value' => $t('Writable (<em>private</em> download method)'),
-        );
-      }
+      $error = $t('The directory %directory is not writable.', array('%directory' => $directory));
     }
-    $requirements['file system']['title'] = $t('File system');
+    $requirements['file system'] = array(
+      'value' => $t('Not writable'),
+      'severity' => REQUIREMENT_ERROR,
+    );
+    if ($phase == 'runtime') {
+      $requirements['file system']['description'] = $error .' '. $t('You may need to set the correct directory at the <a href="@admin-file-system">file system settings page</a> or change the current directory\'s permissions so that it is writable.', array('@admin-file-system' => url('admin/settings/file-system')));
+    }
+    else if ($phase == 'install') {
+      // For the installer UI, we need different wording. 'value' will
+      // be treated as version, so provide none there.
+      $requirements['file system']['description'] = $error .' '. $t('To proceed with the installation, please change the %directory directory permissions to allow the installer to write to it. If you are unsure how to do so, please consult the <a href="@handbook_url">on-line handbook</a>.', array('%directory' => $directory, '@handbook_url' => 'http://drupal.org/getting-started'));
+      $requirements['file system']['value'] = '';
+    }
   }
+  else {
+    if (variable_get('file_downloads', FILE_DOWNLOADS_PUBLIC) == FILE_DOWNLOADS_PUBLIC) {
+      $requirements['file system']['value'] = $t('Writable (<em>public</em> download method)');
+    }
+    else {
+      $requirements['file system']['value'] = $t('Writable (<em>private</em> download method)');
+    }
+  }
+  $requirements['file system']['title'] = $t('File system');
 
   // See if updates are available in update.php.
   if ($phase == 'runtime') {

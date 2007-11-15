@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.89 2007/11/14 20:18:08 goba Exp $
+// $Id: install.php,v 1.90 2007/11/15 23:12:38 goba Exp $
 
 require_once './includes/install.inc';
 
@@ -91,12 +91,19 @@ function install_main() {
   // Tasks come after the database is set up
   if (!$task) {
     // Check the installation requirements for Drupal and this profile.
-    install_check_requirements($profile);
+    install_check_requirements($profile, $verify);
 
     // Verify existence of all required modules.
     $modules = drupal_verify_profile($profile, $install_locale);
-    if (!$modules) {
-      install_missing_modules_error($profile);
+
+    // If any error messages are set now, it means a requirement problem.
+    $messages = drupal_set_message();
+    if (!empty($messages['error'])) {
+      drupal_maintenance_theme();
+      install_task_list('requirements');
+      drupal_set_title(st('Requirements problem'));
+      print theme('install_page', '');
+      exit;
     }
 
     // Change the settings.php information if verification failed earlier.
@@ -112,7 +119,7 @@ function install_main() {
     $settings_dir = './'. conf_path();
     $settings_file = $settings_dir .'/settings.php';
     if (!drupal_verify_install_file($settings_file, FILE_EXIST|FILE_READABLE|FILE_NOT_WRITABLE) || !drupal_verify_install_file($settings_dir, FILE_NOT_WRITABLE, 'dir')) {
-      drupal_set_message(st('All necessary changes to %dir and %file have been made, so you should now remove write permissions to them. Failure to remove write permissions to them is a security risk.', array('%dir' => $settings_dir, '%file' => $settings_file)), 'error');
+      drupal_set_message(st('All necessary changes to %dir and %file have been made, so you should remove write permissions to them now in order to avoid security risks. If you are unsure how to do so, please consult the <a href="@handbook_url">on-line handbook</a>.', array('%dir' => $settings_dir, '%file' => $settings_file, '@handbook_url' => 'http://drupal.org/getting-started')), 'error');
     }
     else {
       drupal_set_message(st('All necessary changes to %dir and %file have been made. They have been set to read-only for security.', array('%dir' => $settings_dir, '%file' => $settings_file)));
@@ -181,32 +188,6 @@ function install_change_settings($profile = 'default', $install_locale = '') {
   include_once './includes/form.inc';
   drupal_maintenance_theme();
   install_task_list('database');
-
-  // The existing database settings are not working, so we need write access
-  // to settings.php to change them.
-  $writable = FALSE;
-  $file = $conf_path;
-  // Verify the directory exists.
-  if (drupal_verify_install_file($conf_path, FILE_EXIST, 'dir')) {
-    // Check to see if a settings.php already exists
-    if (drupal_verify_install_file($settings_file, FILE_EXIST)) {
-      // If it does, make sure it is writable
-      $writable = drupal_verify_install_file($settings_file, FILE_READABLE|FILE_WRITABLE);
-      $file = $settings_file;
-    }
-    else {
-      // If not, makes sure the directory is.
-      $writable = drupal_verify_install_file($conf_path, FILE_READABLE|FILE_WRITABLE, 'dir');
-    }
-  }
-
-  if (!$writable) {
-    drupal_set_message(st('The @drupal installer requires write permissions to %file during the installation process.', array('@drupal' => drupal_install_profile_name(), '%file' => $file)), 'error');
-
-    drupal_set_title(st('Drupal database setup'));
-    print theme('install_page', '');
-    exit;
-  }
 
   if ($db_url == 'mysql://username:password@localhost/databasename') {
     $db_user = $db_pass = $db_path = '';
@@ -608,19 +589,6 @@ function install_already_done_error() {
 }
 
 /**
- * Show an error page when Drupal is missing required modules.
- */
-function install_missing_modules_error($profile) {
-  global $base_url;
-
-  drupal_maintenance_theme();
-  install_task_list('requirements');
-  drupal_set_title(st('Modules missing'));
-  print theme('install_page', '<p>'. st('One or more required modules are missing.') .'</p>');
-  exit;
-}
-
-/**
  * Tasks performed after the database is initialized. Called from install.php.
  */
 function install_tasks($profile, $task) {
@@ -779,26 +747,49 @@ function install_reserved_tasks() {
 }
 
 /**
- * Page to check installation requirements and report any errors.
+ * Check installation requirements and report any errors.
  */
-function install_check_requirements($profile) {
+function install_check_requirements($profile, $verify) {
   $requirements = drupal_check_profile($profile);
   $severity = drupal_requirements_severity($requirements);
 
   // If there are issues, report them.
   if ($severity == REQUIREMENT_ERROR) {
-    drupal_maintenance_theme();
-    install_task_list('requirements');
 
     foreach ($requirements as $requirement) {
       if (isset($requirement['severity']) && $requirement['severity'] == REQUIREMENT_ERROR) {
-        drupal_set_message($requirement['description'] .' ('. st('Currently using !item !version', array('!item' => $requirement['title'], '!version' => $requirement['value'])) .')', 'error');
+        $message = $requirement['description'];
+        if ($requirement['value']) {
+          $message .= ' ('. st('Currently using !item !version', array('!item' => $requirement['title'], '!version' => $requirement['value'])) .')';
+        }
+        drupal_set_message($message, 'error');
+      }
+    }
+  }
+
+  // If Drupal is not set up already, we also need to create a settings file.
+  if (!$verify) {
+    $writable = FALSE;
+    $conf_path = './'. conf_path();
+    $settings_file = $conf_path .'/settings.php';
+    $file = $conf_path;
+    // Verify that the directory exists.
+    if (drupal_verify_install_file($conf_path, FILE_EXIST, 'dir')) {
+      // Check to see if a settings.php already exists.
+      if (drupal_verify_install_file($settings_file, FILE_EXIST)) {
+        // If it does, make sure it is writable.
+        $writable = drupal_verify_install_file($settings_file, FILE_READABLE|FILE_WRITABLE);
+        $file = $settings_file;
+      }
+      else {
+        // If not, make sure the directory is.
+        $writable = drupal_verify_install_file($conf_path, FILE_READABLE|FILE_WRITABLE, 'dir');
       }
     }
 
-    drupal_set_title(st('Incompatible environment'));
-    print theme('install_page', '');
-    exit;
+    if (!$writable) {
+      drupal_set_message(st('The @drupal installer requires write permissions to %file during the installation process. If you are unsure how to grant file permissions, please consult the <a href="@handbook_url">on-line handbook</a>.', array('@drupal' => drupal_install_profile_name(), '%file' => $file, '@handbook_url' => 'http://drupal.org/getting-started')), 'error');
+    }
   }
 }
 
