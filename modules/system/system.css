@@ -1,4 +1,4 @@
-/* $Id: system.css,v 1.39 2007/11/14 09:49:30 dries Exp $ */
+/* $Id: system.css,v 1.40 2007/11/16 13:16:50 goba Exp $ */
 
 /*
 ** HTML elements
@@ -22,6 +22,9 @@ tr.drag-previous {
 }
 td.active {
   background-color: #ddd;
+}
+td.checkbox, th.checkbox {
+  text-align: center;
 }
 tbody {
   border-top: 1px solid #ccc;

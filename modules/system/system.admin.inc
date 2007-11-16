@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.23 2007/11/09 19:16:22 goba Exp $
+// $Id: system.admin.inc,v 1.24 2007/11/16 13:16:50 goba Exp $
 
 /**
  * @file
@@ -1899,9 +1899,10 @@ function theme_system_modules($form) {
   }
 
   // Individual table headers.
-  $header = array(t('Enabled'));
+  $header = array();
+  $header[] = array('data' => t('Enabled'), 'class' => 'checkbox');
   if (module_exists('throttle')) {
-    $header[] = t('Throttle');
+    $header[] = array('data' => t('Throttle'), 'class' => 'checkbox');
   }
   $header[] = t('Name');
   $header[] = t('Version');
@@ -1941,9 +1942,9 @@ function theme_system_modules($form) {
       else {
         $status = drupal_render($form['status'][$key]);
       }
-      $row[] = array('data' => $status, 'align' => 'center');
+      $row[] = array('data' => $status, 'class' => 'checkbox');
       if (module_exists('throttle')) {
-        $row[] = array('data' => drupal_render($form['throttle'][$key]), 'align' => 'center');
+        $row[] = array('data' => drupal_render($form['throttle'][$key]), 'class' => 'checkbox');
       }
       $row[] = '<strong>'. drupal_render($form['name'][$key]) .'</strong>';
       $row[] = drupal_render($form['version'][$key]);
