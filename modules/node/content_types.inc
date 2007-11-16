@@ -23,7 +23,7 @@ function node_overview_types() {
       $row = array(
         l($name, 'admin/content/types/'. $type_url_str),
         check_plain($type->type),
-        filter_xss($type->description),
+        filter_xss_admin($type->description),
       );
       // Set the edit column.
       $row[] = array('data' => l(t('edit'), 'admin/content/types/'. $type_url_str));
