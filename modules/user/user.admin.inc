@@ -592,7 +592,7 @@ function theme_user_admin_perm($form) {
         $row[] = array('data' => drupal_render($form['permission'][$key]), 'class' => 'permission');
         foreach (element_children($form['checkboxes']) as $rid) {
           if (is_array($form['checkboxes'][$rid])) {
-            $row[] = array('data' => drupal_render($form['checkboxes'][$rid][$key]), 'align' => 'center', 'title' => $roles[$rid] .' : '. t($key));
+            $row[] = array('data' => drupal_render($form['checkboxes'][$rid][$key]), 'class' => 'checkbox', 'title' => $roles[$rid] .' : '. t($key));
           }
         }
       }
@@ -602,7 +602,7 @@ function theme_user_admin_perm($form) {
   $header[] = (t('Permission'));
   foreach (element_children($form['role_names']) as $rid) {
     if (is_array($form['role_names'][$rid])) {
-      $header[] = drupal_render($form['role_names'][$rid]);
+      $header[] = array('data' => drupal_render($form['role_names'][$rid]), 'class' => 'checkbox');
     }
   }
   $output = theme('table', $header, $rows, array('id' => 'permissions'));

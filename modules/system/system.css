@@ -23,6 +23,9 @@ tr.drag-previous {
 td.active {
   background-color: #ddd;
 }
+td.checkbox, th.checkbox {
+  text-align: center;
+}
 tbody {
   border-top: 1px solid #ccc;
 }
