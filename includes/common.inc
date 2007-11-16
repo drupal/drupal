@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.713 2007/11/14 09:49:30 dries Exp $
+// $Id: common.inc,v 1.714 2007/11/16 09:27:22 goba Exp $
 
 /**
  * @file
@@ -3087,6 +3087,10 @@ function drupal_get_schema($name = NULL, $rebuild = FALSE) {
  *
  * @param $module
  *   The module for which the tables will be created.
+ * @return
+ *   An array of arrays with the following key/value pairs:
+ *      success: a boolean indicating whether the query succeeded
+ *      query: the SQL query(s) executed, passed through check_plain()
  */
 function drupal_install_schema($module) {
   $schema = drupal_get_schema_unprocessed($module);
@@ -3096,6 +3100,7 @@ function drupal_install_schema($module) {
   foreach ($schema as $name => $table) {
     db_create_table($ret, $name, $table);
   }
+  return $ret;
 }
 
 /**
@@ -3107,6 +3112,10 @@ function drupal_install_schema($module) {
  *
  * @param $module
  *   The module for which the tables will be removed.
+ * @return
+ *   An array of arrays with the following key/value pairs:
+ *      success: a boolean indicating whether the query succeeded
+ *      query: the SQL query(s) executed, passed through check_plain()
  */
 function drupal_uninstall_schema($module) {
   $schema = drupal_get_schema_unprocessed($module);
@@ -3116,6 +3125,7 @@ function drupal_uninstall_schema($module) {
   foreach ($schema as $table) {
     db_drop_table($ret, $table['name']);
   }
+  return $ret;
 }
 
 /**
