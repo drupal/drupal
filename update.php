@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.236 2007/10/20 21:57:49 goba Exp $
+// $Id: update.php,v 1.237 2007/11/16 15:35:24 dries Exp $
 
 /**
  * @file
@@ -813,6 +813,11 @@ ini_set('display_errors', FALSE);
 include_once './includes/bootstrap.inc';
 update_fix_system_table();
 
+// Bootstrap Drupal in a safe way, without calling hook_init() and hook_exit(),
+// to avoid possible warnings. We need to set the global variable after
+// DRUPAL_BOOTSTRAP_CONFIGURATION, which unsets globals, but before the rest.
+drupal_bootstrap(DRUPAL_BOOTSTRAP_CONFIGURATION);
+$update_mode = TRUE;
 drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 drupal_maintenance_theme();
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.714 2007/11/16 09:27:22 goba Exp $
+// $Id: common.inc,v 1.715 2007/11/16 15:35:24 dries Exp $
 
 /**
  * @file
@@ -294,6 +294,8 @@ function drupal_get_destination() {
  * @see drupal_get_destination()
  */
 function drupal_goto($path = '', $query = NULL, $fragment = NULL, $http_response_code = 302) {
+  global $update_mode;
+
   if (isset($_REQUEST['destination'])) {
     extract(parse_url(urldecode($_REQUEST['destination'])));
   }
@@ -306,7 +308,10 @@ function drupal_goto($path = '', $query = NULL, $fragment = NULL, $http_response
   $url = str_replace(array("\n", "\r"), '', $url);
 
   // Allow modules to react to the end of the page request before redirecting.
-  module_invoke_all('exit', $url);
+  // We do not want this while running update.php.
+  if (empty($update_mode)) {
+    module_invoke_all('exit', $url);
+  }
 
   // Even though session_write_close() is registered as a shutdown function, we
   // need all session data written to the database before redirecting.
@@ -1853,7 +1858,7 @@ function drupal_add_js($data = NULL, $type = 'module', $scope = 'header', $defer
  * References to JavaScript files are placed in a certain order: first, all
  * 'core' files, then all 'module' and finally all 'theme' JavaScript files
  * are added to the page. Then, all settings are output, followed by 'inline'
- * JavaScript code.
+ * JavaScript code. If running update.php, all preprocessing is disabled.
  *
  * @parameter $scope
  *   (optional) The scope for which the JavaScript rules should be returned.
@@ -1865,7 +1870,8 @@ function drupal_add_js($data = NULL, $type = 'module', $scope = 'header', $defer
  *   All JavaScript code segments and includes for the scope as HTML tags.
  */
 function drupal_get_js($scope = 'header', $javascript = NULL) {
-  if (function_exists('locale_inc_callback')) {
+  global $update_mode;
+  if (empty($update_mode) && function_exists('locale_inc_callback')) {
     locale_inc_callback('_locale_update_js_files');
   }
 
@@ -1881,7 +1887,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
   $preprocessed = '';
   $no_preprocess = array('core' => '', 'module' => '', 'theme' => '');
   $files = array();
-  $preprocess_js = variable_get('preprocess_js', FALSE);
+  $preprocess_js = (variable_get('preprocess_js', FALSE) && empty($update_mode));
   $directory = file_directory_path();
   $is_writable = is_dir($directory) && is_writable($directory) && (variable_get('file_downloads', FILE_DOWNLOADS_PUBLIC) == FILE_DOWNLOADS_PUBLIC);
 
@@ -2459,6 +2465,7 @@ function xmlrpc($url) {
 
 function _drupal_bootstrap_full() {
   static $called;
+  global $update_mode;
 
   if ($called) {
     return;
@@ -2485,8 +2492,10 @@ function _drupal_bootstrap_full() {
   // Load all enabled modules
   module_load_all();
   // Let all modules take action before menu system handles the request
-  module_invoke_all('init');
-
+  // We do not want this while running update.php.
+  if (empty($update_mode)) {
+    module_invoke_all('init');
+  }
 }
 
 /**
