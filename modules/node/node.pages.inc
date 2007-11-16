@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.8 2007/11/15 23:55:52 goba Exp $
+// $Id: node.pages.inc,v 1.9 2007/11/16 09:52:37 goba Exp $
 
 /**
  * @file
@@ -11,7 +11,6 @@
  * Menu callback; presents the node editing form, or redirects to delete confirmation.
  */
 function node_page_edit($node) {
-
   drupal_set_title(t('Edit %title', array('%title' => $node->title)));
   return drupal_get_form($node->type .'_node_form', $node);
 }
@@ -29,7 +28,7 @@ function theme_node_add_list($content) {
     $output = '<dl class="node-type-list">';
     foreach ($content as $item) {
       $output .= '<dt>'. l($item['title'], $item['href'], $item['options']) .'</dt>';
-      $output .= '<dd>'. filter_xss($item['description']) .'</dd>';
+      $output .= '<dd>'. filter_xss_admin($item['description']) .'</dd>';
     }
     $output .= '</dl>';
   }
