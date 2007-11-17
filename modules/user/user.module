@@ -817,7 +817,8 @@ function theme_user_list($users, $title = NULL) {
 }
 
 function user_is_anonymous() {
-  return !$GLOBALS['user']->uid;
+  // Menu administrators can see items for anonymous when administering.
+  return !$GLOBALS['user']->uid || !empty($GLOBALS['menu_admin']);
 }
 
 function user_is_logged_in() {

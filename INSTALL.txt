@@ -128,7 +128,7 @@ INSTALLATION
    some temporary files. On some installations, it may be necessary to modify
    the file system path, especially in large or multi-site configurations. See the
    files/README.txt file for more information about setting the file system path.
-   
+
 6. CRON TASKS
 
    Many Drupal modules (such as the search functionality) have periodic tasks
