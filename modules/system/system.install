@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.182 2007/11/15 23:12:38 goba Exp $
+// $Id: system.install,v 1.183 2007/11/17 14:01:24 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -4515,7 +4515,7 @@ function system_update_6036() {
       // Since it's possible that some existing sites have duplicates,
       // create the index using the IGNORE keyword, which ignores duplicate errors.
       // However, pgsql doesn't support it
-      $ret[] = update_sql("ALTER IGNORE TABLE {search_index} ADD UNIQUE KEY sid_word_type (sid, word, type)");
+      $ret[] = update_sql("ALTER IGNORE TABLE {search_index} ADD UNIQUE KEY word_sid_type (word, sid, type)");
       $ret[] = update_sql("ALTER IGNORE TABLE {search_dataset} ADD UNIQUE KEY sid_type (sid, type)");
     }
     else {
