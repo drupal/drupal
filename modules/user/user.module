@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.863 2007/11/14 16:01:30 goba Exp $
+// $Id: user.module,v 1.864 2007/11/17 14:25:23 dries Exp $
 
 /**
  * @file
@@ -817,7 +817,8 @@ function theme_user_list($users, $title = NULL) {
 }
 
 function user_is_anonymous() {
-  return !$GLOBALS['user']->uid;
+  // Menu administrators can see items for anonymous when administering.
+  return !$GLOBALS['user']->uid || !empty($GLOBALS['menu_admin']);
 }
 
 function user_is_logged_in() {

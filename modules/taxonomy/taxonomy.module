@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.391 2007/11/14 13:39:58 goba Exp $
+// $Id: taxonomy.module,v 1.392 2007/11/17 14:25:23 dries Exp $
 
 /**
  * @file
@@ -49,7 +49,7 @@ function taxonomy_link($type, $node = NULL) {
     if (!empty($node->taxonomy)) {
       foreach ($node->taxonomy as $term) {
         // During preview the free tagging terms are in an array unlike the
-        // other terms which are objects. So we have to check if a $term 
+        // other terms which are objects. So we have to check if a $term
         // is an object or not.
         if (is_object($term)) {
           $links['taxonomy_term_'. $term->tid] = array(
@@ -66,7 +66,7 @@ function taxonomy_link($type, $node = NULL) {
             foreach($typed_terms as $typed_term) {
               $links['taxonomy_preview_term_'. $typed_term] = array(
                 'title' => $typed_term,
-              );           
+              );
             }
           }
         }
@@ -449,7 +449,7 @@ function taxonomy_form_alter(&$form, $form_state, $form_id) {
     while ($vocabulary = db_fetch_object($c)) {
       if ($vocabulary->tags) {
         if (isset($form_state['node_preview'])) {
-          // Typed string can be changed by the user before preview, 
+          // Typed string can be changed by the user before preview,
           // so we just insert the tags directly as provided in the form.
           $typed_string = $node->taxonomy['tags'][$vocabulary->vid];
         }
@@ -475,7 +475,7 @@ function taxonomy_form_alter(&$form, $form_state, $form_id) {
       else {
         // Extract terms belonging to the vocabulary in question.
         $default_terms = array();
-        foreach ($terms as $term) {     
+        foreach ($terms as $term) {
           // Free tagging has no default terms and also no vid after preview.
           if (isset($term->vid) && $term->vid == $vocabulary->vid) {
             $default_terms[$term->tid] = $term;
@@ -487,7 +487,7 @@ function taxonomy_form_alter(&$form, $form_state, $form_id) {
       }
     }
     if (!empty($form['taxonomy']) && is_array($form['taxonomy'])) {
-      if (count($form['taxonomy']) > 1) { 
+      if (count($form['taxonomy']) > 1) {
         // Add fieldset only if form has more than 1 element.
         $form['taxonomy'] += array(
           '#type' => 'fieldset',
@@ -498,7 +498,7 @@ function taxonomy_form_alter(&$form, $form_state, $form_id) {
       }
       $form['taxonomy']['#weight'] = -3;
       $form['taxonomy']['#tree'] = TRUE;
-    }  
+    }
   }
 }
 
@@ -507,8 +507,8 @@ function taxonomy_form_alter(&$form, $form_state, $form_id) {
  *
  * After preview the tags are an array instead of proper objects. This function
  * converts them back to objects with the exception of 'free tagging' terms,
- * because new tags can be added by the user before preview and those do not 
- * yet exist in the database. We therefore save those tags as a string so 
+ * because new tags can be added by the user before preview and those do not
+ * yet exist in the database. We therefore save those tags as a string so
  * we can fill the form again after the preview.
  */
 function taxonomy_preview_terms($node) {
@@ -519,8 +519,8 @@ function taxonomy_preview_terms($node) {
     if (is_array($term)) {
       foreach ($term as $tid) {
         if ($key == 'tags') {
-          // Free tagging; the values will be saved for later as strings 
-	  // instead of objects to fill the form again.
+          // Free tagging; the values will be saved for later as strings
+    // instead of objects to fill the form again.
           $taxonomy['tags'] = $term;
         }
         else {

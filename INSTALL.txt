@@ -1,4 +1,4 @@
-// $Id: INSTALL.txt,v 1.46 2007/11/15 23:12:38 goba Exp $
+// $Id: INSTALL.txt,v 1.47 2007/11/17 14:25:23 dries Exp $
 
 CONTENTS OF THIS FILE
 ---------------------
@@ -128,7 +128,7 @@ INSTALLATION
    some temporary files. On some installations, it may be necessary to modify
    the file system path, especially in large or multi-site configurations. See the
    files/README.txt file for more information about setting the file system path.
-   
+
 6. CRON TASKS
 
    Many Drupal modules (such as the search functionality) have periodic tasks
