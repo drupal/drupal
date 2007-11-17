@@ -1,5 +1,5 @@
 <?php
-// $Id: help.admin.inc,v 1.3 2007/10/15 14:15:31 goba Exp $
+// $Id: help.admin.inc,v 1.4 2007/11/17 10:08:16 goba Exp $
 
 /**
  * @file
@@ -12,24 +12,7 @@
 function help_main() {
   // Add CSS
   drupal_add_css(drupal_get_path('module', 'help') .'/help.css', 'module', 'all', FALSE);
-
-  $output = t('
-  <h2>Help topics</h2>
-  <p>Help is available on the following items:</p>
-  !help_pages
-  <h2>Glossary of Drupal terminology</h2>
-  <dl>
-   <dt>Block</dt><dd>A small box containing information or content placed in a region of a web page (e.g. in a sidebar, below or above the content, or in any other region the current theme allows).</dd>
-   <dt>Comment</dt><dd>Text attached to a post intended to clarify, explain, criticize, or express an opinion on the original post.</dd>
-   <dt>Node</dt><dd>The basic unit of content in Drupal, often referred to as a "post". All content that can be created using the "create content" menu is a node. Keep in mind that comments, blocks, and users are <em>not</em> nodes.</dd>
-   <dt>Published</dt><dd>A post that is viewable by every visitor of the site, regardless of whether he is logged in (see also "Unpublished").</dd>
-   <dt>Role</dt><dd>A classification users are placed into for the purpose of setting users\' permissions. A user receives the combined permissions of all roles to which he or she is subscribed.</dd>
-   <dt>Taxonomy</dt><dd>A categorization system that allows the building of complex hierarchical or relational structures and tagging of content (see <a href="@taxonomy">taxonomy help</a>).</dd>
-   <dt>Unpublished</dt><dd>A post that is only viewable by administrators and moderators.</dd>
-   <dt>User</dt><dd>A person who has an account at your Drupal site, and is currently logged in with that account.</dd>
-   <dt>Visitor</dt><dd>A person who does not have an account at your Drupal site or a person who has an account at your Drupal site but is <em>not</em> currently logged in with that account. A visitor is also called an "anonymous user".</dd>
-  </dl>', array('!help_pages' => help_links_as_list(), '@taxonomy' => url('admin/help/taxonomy')));
-
+  $output = '<h2>'. t('Help topics') .'</h2><p>'. t('Help is available on the following items:') .'</p>'. help_links_as_list();
   return $output;
 }
 
