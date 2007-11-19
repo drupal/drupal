@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.233 2007/11/14 09:50:00 dries Exp $
+// $Id: CHANGELOG.txt,v 1.234 2007/11/19 19:04:47 goba Exp $
 
 Drupal 6.0, xxxx-xx-xx (development version)
 ----------------------
@@ -94,6 +94,8 @@ Drupal 6.0, xxxx-xx-xx (development version)
   contributed modules to work with databases other than MySQL.
 - Removed drupal.module. The functionality lives on as the Site network
   contributed module (http://drupal.org/project/site_network).
+- Removed old system updates. Updates from Drupal versions prior to 4.7.x will
+  require upgrading to 4.7.x or 5.x before upgrading to 6.x.
 
 Drupal 5.3, 2007-10-17
 ----------------------
