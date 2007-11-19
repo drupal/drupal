@@ -1,4 +1,4 @@
-// $Id: ahah.js,v 1.5 2007/10/21 18:59:01 goba Exp $
+// $Id: ahah.js,v 1.6 2007/11/19 10:05:48 goba Exp $
 
 /**
  * Provides AJAX-like page updating via AHAH (Asynchronous HTML and HTTP).
@@ -43,6 +43,8 @@ Drupal.ahah = function(base, element_settings) {
   this.effect = element_settings.effect;
   this.method = element_settings.method;
   this.progress = element_settings.progress;
+  this.button = element_settings.button || { };
+
   if (this.effect == 'none') {
     this.showEffect = 'show';
     this.hideEffect = 'hide';
@@ -70,6 +72,7 @@ Drupal.ahah = function(base, element_settings) {
   var ahah = this;
   var options = {
     url: ahah.url,
+    data: ahah.button,
     beforeSubmit: function(form_values, element_settings, options) {
       return ahah.beforeSubmit(form_values, element_settings, options);
     },
