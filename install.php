@@ -1073,6 +1073,9 @@ function install_configure_form_submit($form, &$form_state) {
   // The user is now logged in, but has no session ID yet, which
   // would be required later in the request, so remember it.
   $user->sid = session_id();
+
+  // Record when this install ran.
+  variable_set('install_time', time());
 }
 
 // Start the installer.
