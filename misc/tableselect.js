@@ -5,6 +5,11 @@ Drupal.behaviors.tableSelect = function (context) {
 };
 
 Drupal.tableSelect = function() {
+  // Do not add a "Select all" checkbox if there are no rows with checkboxes in the table
+  if ($('td input:checkbox', this).size() == 0) {
+    return;
+  }
+
   // Keep track of the table, which checkbox is checked and alias the settings.
   var table = this, checkboxes, lastChecked;
   var strings = { 'selectAll': Drupal.t('Select all rows in this table'), 'selectNone': Drupal.t('Deselect all rows in this table') };
@@ -58,7 +63,9 @@ Drupal.tableSelectRange = function(from, to, state) {
   // Traverse through the sibling nodes.
   for (var i = from[mode]; i; i = i[mode]) {
     // Make sure that we're only dealing with elements.
-    if (i.nodeType != 1) continue;
+    if (i.nodeType != 1) {
+      continue;
+    }
 
     // Either add or remove the selected class based on the state of the target checkbox.
     $(i)[ state ? 'addClass' : 'removeClass' ]('selected');
@@ -68,10 +75,13 @@ Drupal.tableSelectRange = function(from, to, state) {
 
     if (to.nodeType) {
       // If we are at the end of the range, stop.
-      if (i == to) break;
+      if (i == to) {
+        break;
+      }
     }
     // A faster alternative to doing $(i).filter(to).length.
-    else if (jQuery.filter(to, [i]).r.length) break;
-
+    else if (jQuery.filter(to, [i]).r.length) {
+      break;
+    }
   }
 };
