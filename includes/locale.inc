@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.157 2007/11/11 16:14:45 goba Exp $
+// $Id: locale.inc,v 1.158 2007/11/19 13:56:14 goba Exp $
 
 /**
  * @file
@@ -2416,22 +2416,31 @@ function _locale_get_predefined_list() {
  *   Language code to import translations for.
  * @param $finished
  *   Optional finished callback for the batch.
+ * @param $skip
+ *   Array of component names to skip. Used in the installer for the
+ *   second pass import, when most components are already imported.
  * @return
  *   A batch structure or FALSE if no files found.
  */
-function locale_batch_by_language($langcode, $finished = '_locale_batch_installer_finished') {
+function locale_batch_by_language($langcode, $finished = NULL, $skip = array()) {
   // Collect all files to import for all enabled modules and themes.
   $files = array();
-  $result = db_query("SELECT name, filename FROM {system} WHERE status = 1");
+  $components = array();
+  $query = "SELECT name, filename FROM {system} WHERE status = 1";
+  if (count($skip)) {
+    $query .= " AND name NOT IN (". db_placeholders($skip, 'varchar') .")"; 
+  }
+  $result = db_query($query, $skip);
   while ($component = db_fetch_object($result)) {
     // Collect all files for all components, names as $langcode.po or
     // with names ending with $langcode.po. This allows for filenames
     // like node-module.de.po to let translators use small files and
     // be able to import in smaller chunks.
     $files = array_merge($files, file_scan_directory(dirname($component->filename) .'/translations', '(^|\.)'. $langcode .'\.po$', array('.', '..', 'CVS'), 0, FALSE));
+    $components[] = $component->name;
   }
 
-  return _locale_batch_build($files, $finished);
+  return _locale_batch_build($files, $finished, $components);
 }
 
 /**
@@ -2474,10 +2483,12 @@ function locale_batch_by_component($components, $finished = '_locale_batch_syste
  *   Array of files to import
  * @param $finished
  *   Optional finished callback for the batch.
+ * @param $components
+ *   Optional list of component names the batch covers. Used in the installer.
  * @return
  *   A batch structure
  */
-function _locale_batch_build($files, $finished = NULL) {
+function _locale_batch_build($files, $finished = NULL, $components = array()) {
   $t = get_t();
   if (count($files)) {
     $operations = array();
@@ -2490,6 +2501,9 @@ function _locale_batch_build($files, $finished = NULL) {
         'init_message'  => $t('Starting import'),
         'error_message' => $t('Error importing interface translations'),
         'file'          => './includes/locale.inc',
+        // This is not a batch API construct, but data passed along to the
+        // installer, so we know what did we import already.
+        '#components'   => $components,
       );
       if (isset($finished)) {
         $batch['finished'] = $finished;
@@ -2535,14 +2549,6 @@ function _locale_batch_language_finished($success, $results) {
   if ($success) {
     drupal_set_message(format_plural(count($results), 'One translation file imported for the enabled modules.', '@count translation files imported for the enabled modules.'));
   }
-}
-
-/**
- * Finished callback of installer locale import batch.
- * Advance installer task to the finished screen.
- */
-function _locale_batch_installer_finished($success, $results) {
-  variable_set('install_task', 'finished');
 }
 
 /**

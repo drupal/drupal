@@ -1,11 +1,11 @@
 <?php
-// $Id: default.profile,v 1.19 2007/11/06 09:00:31 goba Exp $
+// $Id: default.profile,v 1.20 2007/11/19 13:56:14 goba Exp $
 
 /**
  * Return an array of the modules to be enabled when this profile is installed.
  *
  * @return
- *  An array of modules to be enabled.
+ *   An array of modules to enable.
  */
 function default_profile_modules() {
   return array('color', 'comment', 'help', 'menu', 'taxonomy', 'dblog');
@@ -15,7 +15,9 @@ function default_profile_modules() {
  * Return a description of the profile for the initial installation screen.
  *
  * @return
- *   An array with keys 'name' and 'description' describing this profile.
+ *   An array with keys 'name' and 'description' describing this profile,
+ *   and optional 'language' to override the language selection for
+ *   language-specific profiles.
  */
 function default_profile_details() {
   return array(
@@ -39,38 +41,54 @@ function default_profile_task_list() {
 /**
  * Perform any final installation tasks for this profile.
  *
- * The installer goes through the configure -> locale-import ->
- * locale-batch -> finished -> done tasks in this order, if you
- * don't implement this function in your profile.
+ * The installer goes through the profile-select -> locale-select
+ * -> requirements -> database -> locale-initial-batch -> configure
+ * -> locale-remaining-batch -> finished -> done tasks in this order,
+ * if you don't implement this function in your profile.
  *
  * If this function is implemented, you can have any number of
- * custom tasks to perform, implementing a state machine here to
- * walk the user through those tasks, by setting $task to something
- * other then the reserved tasks listed in install_reserved_tasks()
- * and the 'profile' task this function gets called with for first
- * time. If you implement your custom tasks, this function will get called
- * in every HTTP request (for form processing, printing your
- * information screens and so on) until you advance to the
- * 'locale-import' task, with which you hand control back to the
- * installer.
+ * custom tasks to perform after 'configure', implementing a state
+ * machine here to walk the user through those tasks. First time,
+ * this function gets called with $task set to 'profile', and you
+ * can advance to further tasks by setting $task to your tasks'
+ * identifiers, used as array keys in the hook_profile_task_list()
+ * above. You must avoid the reserved tasks listed in
+ * install_reserved_tasks(). If you implement your custom tasks,
+ * this function will get called in every HTTP request (for form
+ * processing, printing your information screens and so on) until
+ * you advance to the 'profile-finished' task, with which you
+ * hand control back to the installer. Each custom page you
+ * return needs to provide a way to continue, such as a form
+ * submission or a link. You should also set custom page titles.
  *
  * You should define the list of custom tasks you implement by
- * returning an array of them in hook_profile_task_list().
+ * returning an array of them in hook_profile_task_list(), as these
+ * show up in the list of tasks on the installer user interface.
  *
- * Should a profile want to display a form here, it can; it should set
- * the task using variable_set('install_task', 'new_task') and use
- * the form technique used in install_tasks() rather than using
- * drupal_get_form().
+ * Remember that the user will be able to reload the pages multiple
+ * times, so you might want to use variable_set() and variable_get()
+ * to remember your data and control further processing, if $task
+ * is insufficient. Should a profile want to display a form here,
+ * it can; the form should set '#redirect' to FALSE, and rely on
+ * an action in the submit handler, such as variable_set(), to
+ * detect submission and proceed to further tasks. See the configuration
+ * form handling code in install_tasks() for an example.
+ *
+ * Important: Any temporary variables should be removed using
+ * variable_del() before advancing to the 'profile-finished' phase.
  *
  * @param $task
  *   The current $task of the install system. When hook_profile_tasks()
  *   is first called, this is 'profile'.
+ * @param $url
+ *   Complete URL to be used for a link or form action on a custom page,
+ *   if providing any, to allow the user to proceed with the installation.
  *
  * @return
  *   An optional HTML string to display to the user. Only used if you
  *   modify the $task, otherwise discarded.
  */
-function default_profile_tasks(&$task) {
+function default_profile_tasks(&$task, $url) {
 
   // Insert default user-defined node types into the database. For a complete
   // list of available node type attributes, refer to the node type API
@@ -116,4 +134,17 @@ function default_profile_tasks(&$task) {
 
   // Update the menu router information.
   menu_rebuild();
+}
+
+/**
+ * Implementation of hook_form_alter().
+ *
+ * Allows the profile to alter the site-configuration form. This is
+ * called through custom invocation, so $form_state is not populated.
+ */
+function default_form_alter(&$form, $form_state, $form_id) {
+  if ($form_id == 'install_configure') {
+    // Set default for site name field.
+    $form['site_information']['site_name']['#default_value'] = 'Drupal';
+  }
 }

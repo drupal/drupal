@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.90 2007/11/15 23:12:38 goba Exp $
+// $Id: install.php,v 1.91 2007/11/19 13:56:14 goba Exp $
 
 require_once './includes/install.inc';
 
@@ -26,6 +26,9 @@ function install_main() {
 
   // Ensure correct page headers are sent (e.g. caching)
   drupal_page_header();
+
+  // Set up $language, so t() caller functions will still work.
+  drupal_init_language();
 
   // Check existing settings.php.
   $verify = install_verify_settings();
@@ -448,6 +451,9 @@ function install_select_profile() {
   }
 }
 
+/**
+ * Form API array definition for the profile selection form.
+ */
 function install_select_profile_form(&$form_state, $profiles) {
   foreach ($profiles as $profile) {
     include_once($profile->filename);
@@ -525,6 +531,19 @@ function install_select_locale($profilename) {
     return FALSE;
   }
   else {
+    // Allow profile to pre-select the language, skipping the selection.
+    $function = $profilename .'_profile_details';
+    if (function_exists($function)) {
+      $details = $function();
+      if (isset($details['language'])) {
+        foreach ($locales as $locale) {
+          if ($details['language'] == $locale->name) {
+            return $locale->name;
+          }
+        }
+      }
+    }
+
     foreach ($locales as $locale) {
       if ($_POST['locale'] == $locale->name) {
         return $locale->name;
@@ -540,6 +559,9 @@ function install_select_locale($profilename) {
   }
 }
 
+/**
+ * Form API array definition for language selection.
+ */
 function install_select_locale_form(&$form_state, $locales) {
   include_once './includes/locale.inc';
   $languages = _locale_get_predefined_list();
@@ -589,7 +611,7 @@ function install_already_done_error() {
 }
 
 /**
- * Tasks performed after the database is initialized. Called from install.php.
+ * Tasks performed after the database is initialized.
  */
 function install_tasks($profile, $task) {
   global $base_url, $install_locale;
@@ -599,40 +621,66 @@ function install_tasks($profile, $task) {
   drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
   $_SESSION['messages'] = $messages;
 
-  // Build a page for a final task.
+  // URL used to direct page requests.
+  $url = $base_url .'/install.php?locale='. $install_locale .'&profile='. $profile;
+
+  // Build a page for final tasks.
   drupal_maintenance_theme();
   if (empty($task)) {
-    variable_set('install_task', 'configure');
-    $task = 'configure';
+    variable_set('install_task', 'locale-initial-import');
+    $task = 'locale-initial-import';
   }
 
   // We are using a list of if constructs here to allow for
   // passing from one task to the other in the same request.
 
+  // Import interface translations for the enabled modules.
+  if ($task == 'locale-initial-import') {
+    if (!empty($install_locale) && ($install_locale != 'en')) {
+      include_once 'includes/locale.inc';
+      // Enable installation language as default site language.
+      locale_add_language($install_locale, NULL, NULL, NULL, NULL, NULL, 1, TRUE);
+      // Collect files to import for this language.
+      $batch = locale_batch_by_language($install_locale, '_install_locale_initial_batch_finished');
+      if (!empty($batch)) {
+        // Remember components we cover in this batch set.
+        variable_set('install_locale_batch_components', $batch['#components']);        
+        // Start a batch, switch to 'locale-batch' task. We need to
+        // set the variable here, because batch_process() redirects.
+        variable_set('install_task', 'locale-initial-batch');
+        batch_set($batch);
+        batch_process($url, $url);
+      }
+    }
+    // Found nothing to import or not foreign language, go to next task.
+    $task = 'configure';
+  }
+
+  // We are running a batch import of interface translation files.
+  // This might run in multiple HTTP requests, constantly redirecting
+  // to the same address, until the batch finished callback is invoked
+  // and the task advances to 'configure'.
+  if ($task == 'locale-initial-batch') {
+    include_once 'includes/batch.inc';
+    include_once 'includes/locale.inc';
+    $output = _batch_page();
+  }
+
   if ($task == 'configure') {
-    drupal_set_title(st('Configure site'));
-
-    // We break the form up so we can tell when it's been successfully
-    // submitted.
-
-    $form_state = array('storage' => NULL, 'submitted' => FALSE);
-
-    $form = drupal_retrieve_form('install_configure_form', $form_state);
-    $form_build_id = md5(mt_rand());
-    $form['#build_id'] = $form_build_id;
-    drupal_prepare_form('install_configure_form', $form, $form_state);
-
-    // Is the form submitted?
-    if (!empty($_POST) && $_POST['form_id'] == 'install_configure_form') {
-      $form['#post'] = $_POST;
+    if (variable_get('site_name', FALSE) || variable_get('site_mail', FALSE)) {
+      // Site already configured: This should never happen, means re-running
+      // the installer, possibly by an attacker after the 'install_task' variable
+      // got accidentally blown somewhere. Stop it now.
+      install_already_done_error();
     }
-    else {
-      $form['#post'] = array();
-    }
+    $form = drupal_get_form('install_configure_form', $url);
 
-    drupal_process_form('install_configure_form', $form, $form_state);
-    if (empty($form_state['redirect'])) {
-      // Add JavaScript validation for form.
+    if (!variable_get('site_name', FALSE) && !variable_get('site_mail', FALSE)) {
+      // Not submitted yet: Prepare to display the form.
+      $output = $form;
+      drupal_set_title(st('Configure site'));
+
+      // Add JavaScript validation.
       _user_password_dynamic_validation();
       drupal_add_js(drupal_get_path('module', 'system') .'/system.js', 'module');
       // We add these strings as settings because JavaScript translation does not
@@ -646,17 +694,16 @@ if (Drupal.jsEnabled) {
     Drupal.setDefaultTimezone();
   });
 }', 'inline');
-
       // Build menu to allow clean URL check.
       menu_rebuild();
-      $output = drupal_render_form('install_configure_form', $form);
     }
+
     else {
       $task = 'profile';
     }
   }
 
-  // If found an unknown task or the 'profile-custom' task, which is
+  // If found an unknown task or the 'profile' task, which is
   // reserved for profiles, hand over the control to the profile,
   // so it can run any number of custom tasks it defines.
   if (!in_array($task, install_reserved_tasks())) {
@@ -664,44 +711,38 @@ if (Drupal.jsEnabled) {
     if (function_exists($function)) {
       // The profile needs to run more code, maybe even more tasks.
       // $task is sent through as a reference and may be changed!
-      $output = $function($task);
+      $output = $function($task, $url);
     }
 
     // If the profile doesn't move on to a new task we assume
-    // that it is done: we let the installer regain control and
-    // proceed with the locale import.
+    // that it is done.
     if ($task == 'profile') {
-      $task = 'locale-import';
+      $task = 'profile-finished';
     }
   }
 
-  // Import interface translations for the enabled modules, after
-  // any changes made by the profile through the profile forms.
-  if ($task == 'locale-import') {
+  // Profile custom tasks are done, so let the installer regain
+  // control and proceed with importing the remaining translations.
+  if ($task == 'profile-finished') {
     if (!empty($install_locale) && ($install_locale != 'en')) {
       include_once 'includes/locale.inc';
-      // Enable installation language as default site language.
-      locale_add_language($install_locale, NULL, NULL, NULL, NULL, NULL, 1, TRUE);
-      // Collect files to import for this language.
-      $batch = locale_batch_by_language($install_locale);
+      // Collect files to import for this language. Skip components
+      // already covered in the initial batch set.
+      $batch = locale_batch_by_language($install_locale, '_install_locale_remaining_batch_finished', variable_get('install_locale_batch_components', array()));
+      // Remove temporary variable.
+      variable_del('install_locale_batch_components');
       if (!empty($batch)) {
-        // Start a batch, switch to 'locale-batch' task. We need to
+        // Start a batch, switch to 'locale-remaining-batch' task. We need to
         // set the variable here, because batch_process() redirects.
-        variable_set('install_task', 'locale-batch');
+        variable_set('install_task', 'locale-remaining-batch');
         batch_set($batch);
-        $path = $base_url .'/install.php?locale='. $install_locale .'&profile='. $profile;
-        batch_process($path, $path);
+        batch_process($url, $url);
       }
     }
     // Found nothing to import or not foreign language, go to next task.
     $task = 'finished';
   }
-
-  // We are running a batch import of interface translation files.
-  // This might run in multiple HTTP requests, constantly redirecting
-  // to the same address, until the batch finished callback is invoked
-  // and the task advances to 'finished'.
-  if ($task == 'locale-batch') {
+  if ($task == 'locale-remaining-batch') {
     include_once 'includes/batch.inc';
     include_once 'includes/locale.inc';
     $output = _batch_page();
@@ -740,10 +781,28 @@ if (Drupal.jsEnabled) {
 }
 
 /**
+ * Finished callback for the first locale import batch.
+ * 
+ * Advance installer task to the configure screen.
+ */
+function _install_locale_initial_batch_finished($success, $results) {
+  variable_set('install_task', 'configure');
+}
+
+/**
+ * Finished callback for the second locale import batch.
+ * 
+ * Advance installer task to the finished screen.
+ */
+function _install_locale_remaining_batch_finished($success, $results) {
+  variable_set('install_task', 'finished');
+}
+
+/**
  * The list of reserved tasks to run in the installer.
  */
 function install_reserved_tasks() {
-  return array('configure', 'locale-import', 'locale-batch', 'finished', 'done');
+  return array('configure', 'locale-initial-import', 'locale-initial-batch', 'profile-finished', 'locale-remaining-batch', 'finished', 'done');
 }
 
 /**
@@ -799,11 +858,12 @@ function install_check_requirements($profile, $verify) {
 function install_task_list($active = NULL) {
   // Default list of tasks.
   $tasks = array(
-    'profile-select' => st('Choose profile'),
-    'locale-select'  => st('Choose language'),
-    'requirements'   => st('Verify requirements'),
-    'database'       => st('Setup database'),
-    'configure'      => st('Configure site'),
+    'profile-select'       => st('Choose profile'),
+    'locale-select'        => st('Choose language'),
+    'requirements'         => st('Verify requirements'),
+    'database'             => st('Setup database'),
+    'locale-initial-batch' => st('Setup translations'),
+    'configure'            => st('Configure site'),
   );
 
   $profiles = install_find_profiles();
@@ -826,11 +886,13 @@ function install_task_list($active = NULL) {
     }
   }
 
-  // If necessary, add translation import to the task list.
-  if (count($locales) > 1 && !empty($_GET['locale']) && $_GET['locale'] != 'en') {
-    $tasks += array(
-      'locale-batch' => st('Import translations'),
-    );
+  if (count($locales) < 2 || empty($_GET['locale']) || $_GET['locale'] == 'en') {
+    // If not required, remove translation import from the task list.
+    unset($tasks['locale-initial-batch']);
+  }
+  else {
+    // If required, add remaining translations import task.
+    $tasks += array('locale-remaining-batch' => st('Finish translations'));
   }
 
   // Add finished step as the last task.
@@ -846,9 +908,10 @@ function install_task_list($active = NULL) {
   drupal_set_content('left', theme_task_list($tasks, $active));
 }
 
-function install_configure_form() {
-  // This is necessary to add the task to the $_GET args so the install
-  // system will know that it is done and we've taken over.
+/**
+ * Form API array definition for site configuration.
+ */
+function install_configure_form(&$form_state, $url) {
 
   $form['intro'] = array(
     '#value' => st('To configure your website, please provide the following information.'),
@@ -862,14 +925,13 @@ function install_configure_form() {
   $form['site_information']['site_name'] = array(
     '#type' => 'textfield',
     '#title' => st('Site name'),
-    '#default_value' => variable_get('site_name', 'Drupal'),
     '#required' => TRUE,
     '#weight' => -20,
   );
   $form['site_information']['site_mail'] = array(
     '#type' => 'textfield',
     '#title' => st('Site e-mail address'),
-    '#default_value' => variable_get('site_mail', ini_get('sendmail_from')),
+    '#default_value' => ini_get('sendmail_from'),
     '#description' => st('A valid e-mail address to be used as the "From" address by the auto-mailer during registration, new password requests, notifications, etc.  To lessen the likelihood of e-mail being marked as spam, this e-mail address should use the same domain as the website.'),
     '#required' => TRUE,
     '#weight' => -15,
@@ -915,7 +977,7 @@ function install_configure_form() {
   $form['server_settings']['date_default_timezone'] = array(
     '#type' => 'select',
     '#title' => st('Default time zone'),
-    '#default_value' => variable_get('date_default_timezone', 0),
+    '#default_value' => 0,
     '#options' => _system_zonelist(),
     '#description' => st('By default, dates in this site will be displayed in the chosen time zone.'),
     '#weight' => 5,
@@ -924,7 +986,7 @@ function install_configure_form() {
   $form['server_settings']['clean_url'] = array(
     '#type' => 'radios',
     '#title' => st('Clean URLs'),
-    '#default_value' => variable_get('clean_url', 0),
+    '#default_value' => 0,
     '#options' => array(0 => st('Disabled'), 1 => st('Enabled')),
     '#description' => st('This option makes Drupal emit "clean" URLs (i.e. without <code>?q=</code> in the URL).'),
     '#disabled' => TRUE,
@@ -947,15 +1009,22 @@ function install_configure_form() {
     '#value' => st('Save'),
     '#weight' => 15,
   );
+  $form['#action'] = $url;
   $form['#redirect'] = FALSE;
 
+  // Allow the profile to alter this form. $form_state isn't available
+  // here, but to conform to the hook_form_alter() signature, we pass
+  // an empty array.
   $hook_form_alter = $_GET['profile'] .'_form_alter';
   if (function_exists($hook_form_alter)) {
-    $hook_form_alter($form, 'install_configure');
+    $hook_form_alter($form, array(), 'install_configure');
   }
   return $form;
 }
 
+/**
+ * Form API validate for the site configuration form.
+ */
 function install_configure_form_validate($form, &$form_state) {
   if ($error = user_validate_name($form_state['values']['account']['name'])) {
     form_error($form['admin_account']['account']['name'], $error);
@@ -968,6 +1037,9 @@ function install_configure_form_validate($form, &$form_state) {
   }
 }
 
+/**
+ * Form API submit for the site configuration form.
+ */
 function install_configure_form_submit($form, &$form_state) {
   global $user;
 
@@ -1001,8 +1073,7 @@ function install_configure_form_submit($form, &$form_state) {
   // The user is now logged in, but has no session ID yet, which
   // would be required later in the request, so remember it.
   $user->sid = session_id();
-
-  $form_state['redirect'] = 'finished';
 }
 
+// Start the installer.
 install_main();
