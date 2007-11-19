@@ -1072,6 +1072,8 @@ function user_menu() {
           'title arguments' => array($category['title']),
           'page callback' => 'user_edit',
           'page arguments' => array(1, 3),
+          'access callback' => isset($category['access callback']) ? $category['access callback'] : TRUE,
+          'access arguments' => isset($category['access arguments']) ? $category['access arguments'] : array(),
           'type' => MENU_LOCAL_TASK,
           'weight' => $category['weight'],
           'file' => 'user.pages.inc',
