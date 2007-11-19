@@ -1,5 +1,5 @@
 <?php
-// $Id: install.mysqli.inc,v 1.9 2007/10/22 15:22:39 dries Exp $
+// $Id: install.mysqli.inc,v 1.10 2007/11/19 19:53:51 goba Exp $
 
 // MySQLi specific install functions
 
@@ -79,28 +79,6 @@ function drupal_test_mysqli($url, &$success) {
   }
   else {
     $success[] = 'UPDATE';
-  }
-
-  // Test LOCK.
-  $query = 'LOCK TABLES drupal_install_test WRITE';
-  $result = mysqli_query($connection, $query);
-  if ($error = mysqli_error($connection)) {
-    drupal_set_message(st('Failed to lock a test table on your MySQL database server. We tried locking a table with the command %query and MySQL reported the following error: %error.', array('%query' => $query, '%error' => $error)), 'error');
-    $err = TRUE;
-  }
-  else {
-    $success[] = 'LOCK';
-  }
-
-  // Test UNLOCK.
-  $query = 'UNLOCK TABLES';
-  $result = mysqli_query($connection, $query);
-  if ($error = mysqli_error($connection)) {
-    drupal_set_message(st('Failed to unlock a test table on your MySQL database server. We tried unlocking a table with the command %query and MySQL reported the following error: %error.', array('%query' => $query, '%error' => $error)), 'error');
-    $err = TRUE;
-  }
-  else {
-    $success[] = 'UNLOCK';
   }
 
   // Test DELETE.
