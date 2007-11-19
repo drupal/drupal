@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.246 2007/11/19 10:05:48 goba Exp $
+// $Id: form.inc,v 1.247 2007/11/19 19:23:28 goba Exp $
 
 /**
  * @defgroup form Form generation
@@ -51,6 +51,7 @@ function drupal_get_form($form_id) {
   $form_state = array('storage' => NULL, 'submitted' => FALSE);
 
   $args = func_get_args();
+  $cacheable = FALSE;
 
   if (isset($_SESSION['batch_form_state'])) {
     // We've been redirected here after a batch processing : the form has
@@ -84,11 +85,10 @@ function drupal_get_form($form_id) {
       $form_build_id = 'form-'. md5(mt_rand());
       $form['#build_id'] = $form_build_id;
       drupal_prepare_form($form_id, $form, $form_state);
-      if (!empty($form['#cache'])) {
-        // By not sending the form state, we avoid storing the storage which
-        // won't have been touched yet.
-        form_set_cache($form_build_id, $form, NULL);
-      }
+      // Store a copy of the unprocessed form for caching and indicate that it
+      // is cacheable if #cache will be set.
+      $original_form = $form;
+      $cacheable = TRUE;
       unset($form_state['post']);
     }
     $form['#post'] = $_POST;
@@ -99,6 +99,12 @@ function drupal_get_form($form_id) {
     // altering the $form_state variable, which is passed into them by
     // reference.
     drupal_process_form($form_id, $form, $form_state);
+    if ($cacheable && !empty($form['#cache'])) {
+      // Caching is done past drupal_process_form so #process callbacks can
+      // set #cache. By not sending the form state, we avoid storing
+      // $form_state['storage'].
+      form_set_cache($form_build_id, $original_form, NULL);
+    }
   }
 
   // Most simple, single-step forms will be finished by this point --
@@ -116,32 +122,81 @@ function drupal_get_form($form_id) {
   // other variables passed into drupal_get_form().
 
   if (!empty($form_state['rebuild']) || !empty($form_state['storage'])) {
-    array_shift($args);
-    array_unshift($args, $form_state);
-    array_unshift($args, $form_id);
-    $form = call_user_func_array('drupal_retrieve_form', $args);
-
-    // We need a new build_id for the new version of the form.
-    $form_build_id = 'form-'. md5(mt_rand());
-    $form['#build_id'] = $form_build_id;
-    drupal_prepare_form($form_id, $form, $form_state);
-
-    // Now, we cache the form structure so it can be retrieved later for
-    // validation. If $form_state['storage'] is populated, we'll also cache
-    // it so that it can be used to resume complex multi-step processes.
-    form_set_cache($form_build_id, $form, $form_state);
-
-    // Clear out all post data, as we don't want the previous step's
-    // data to pollute this one and trigger validate/submit handling,
-    // then process the form for rendering.
-    $_POST = array();
-    $form['#post'] = array();
-    drupal_process_form($form_id, $form, $form_state);
+    $form = drupal_rebuild_form($form_id, $form_state, $args);
   }
 
   // If we haven't redirected to a new location by now, we want to
   // render whatever form array is currently in hand.
   return drupal_render_form($form_id, $form);
+}
+
+/**
+ * Retrieves a form, caches it and processes it with an empty $_POST.
+ *
+ * This function clears $_POST and passes the empty $_POST to the form_builder.
+ * To preserve some parts from $_POST, pass them in $form_state.
+ *
+ * If your AHAH callback simulates the pressing of a button, then your AHAH
+ * callback will need to do the same as what drupal_get_form would do when the
+ * button is pressed: get the form from the cache, run drupal_process_form over
+ * it and then if it needs rebuild, run drupal_rebuild_form over it. Then send
+ * back a part of the returned form.
+ * $form_state['clicked_button']['#array_parents'] will help you to find which
+ * part.
+ *
+ * @param $form_id
+ *   The unique string identifying the desired form. If a function
+ *   with that name exists, it is called to build the form array.
+ *   Modules that need to generate the same form (or very similar forms)
+ *   using different $form_ids can implement hook_forms(), which maps
+ *   different $form_id values to the proper form constructor function. Examples
+ *   may be found in node_forms(), search_forms(), and user_forms().
+ * @param $form_state
+ *   A keyed array containing the current state of the form. Most
+ *   important is the $form_state['storage'] collection.
+ * @param $args
+ *   Any additional arguments are passed on to the functions called by
+ *   drupal_get_form(), plus the original form_state in the beginning. If you
+ *   are getting a form from the cache, use $form['#parameters'] to shift off
+ *   the $form_id from its beginning then the resulting array can be used as
+ *   $arg here.
+ * @param $form_build_id
+ *   If the AHAH callback calling this function only alters part of the form,
+ *   then pass in the existing form_build_id so we can re-cache with the same
+ *   csid.
+ * @return
+ *   The newly built form.
+ */
+function drupal_rebuild_form($form_id, &$form_state, $args, $form_build_id = NULL) {
+  // Remove the first argument. This is $form_id.when called from
+  // drupal_get_form and the original $form_state when called from some AHAH
+  // callback. Neither is needed.
+  array_shift($args);
+  // Put in the current state.
+  array_unshift($args, $form_state);
+  // And the form_id.
+  array_unshift($args, $form_id);
+  $form = call_user_func_array('drupal_retrieve_form', $args);
+
+  if (!isset($form_build_id)) {
+    // We need a new build_id for the new version of the form.
+    $form_build_id = 'form-'. md5(mt_rand());
+  }
+  $form['#build_id'] = $form_build_id;
+  drupal_prepare_form($form_id, $form, $form_state);
+
+  // Now, we cache the form structure so it can be retrieved later for
+  // validation. If $form_state['storage'] is populated, we'll also cache
+  // it so that it can be used to resume complex multi-step processes.
+  form_set_cache($form_build_id, $form, $form_state);
+
+  // Clear out all post data, as we don't want the previous step's
+  // data to pollute this one and trigger validate/submit handling,
+  // then process the form for rendering.
+  $_POST = array();
+  $form['#post'] = array();
+  drupal_process_form($form_id, $form, $form_state);
+  return $form;
 }
 
 /**
@@ -738,7 +793,7 @@ function form_error(&$element, $message = '') {
  *   $_POST data.
  */
 function form_builder($form_id, $form, &$form_state) {
-  static $complete_form;
+  static $complete_form, $cache;
 
   // Initialize as unprocessed.
   $form['#processed'] = FALSE;
@@ -784,6 +839,9 @@ function form_builder($form_id, $form, &$form_state) {
       // Check to see if a tree of child elements is present. If so,
       // continue down the tree if required.
       $form[$key]['#parents'] = $form[$key]['#tree'] && $form['#tree'] ? array_merge($form['#parents'], array($key)) : array($key);
+      $array_parents = isset($form['#array_parents']) ? $form['#array_parents'] : array();
+      $array_parents[] = $key;
+      $form[$key]['#array_parents'] = $array_parents;
     }
 
     // Assign a decimal placeholder weight to preserve original array order.
@@ -815,6 +873,15 @@ function form_builder($form_id, $form, &$form_state) {
   // After handling the special IE case, we no longer need the buttons collection.
   unset($form_state['buttons']);
 
+  // If some callback set #cache, we need to flip a static flag so later it
+  // can be found.
+  if (isset($form['#cache'])) {
+    $cache = $form['#cache'];
+  }
+  // We are on the top form, we can copy back #cache if it's set.
+  if (isset($form['#type']) && $form['#type'] == 'form' && isset($cache)) {
+    $form['#cache'] = TRUE;
+  }
   return $form;
 }
 
@@ -913,8 +980,7 @@ function _form_builder_handle_input_element($form_id, &$form, &$form_state, $com
   if (isset($form['#process']) && !$form['#processed']) {
     foreach ($form['#process'] as $process) {
       if (function_exists($process)) {
-        $args = array_merge(array($form), array(isset($edit) ? $edit : NULL), array($form_state), array($complete_form));
-        $form = call_user_func_array($process, $args);
+        $form = $process($form, isset($edit) ? $edit : NULL, $form_state, $complete_form);
       }
     }
     $form['#processed'] = TRUE;
@@ -1669,6 +1735,7 @@ function form_expand_ahah($element) {
     drupal_add_js(array('ahah' => array($element['#id'] => $ahah_binding)), 'setting');
 
     $js_added[$element['#id']] = TRUE;
+    $element['#cache'] = TRUE;
   }
   return $element;
 }
