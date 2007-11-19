@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.864 2007/11/17 14:25:23 dries Exp $
+// $Id: user.module,v 1.865 2007/11/19 11:24:11 goba Exp $
 
 /**
  * @file
@@ -1072,6 +1072,8 @@ function user_menu() {
           'title arguments' => array($category['title']),
           'page callback' => 'user_edit',
           'page arguments' => array(1, 3),
+          'access callback' => isset($category['access callback']) ? $category['access callback'] : TRUE,
+          'access arguments' => isset($category['access arguments']) ? $category['access arguments'] : array(),
           'type' => MENU_LOCAL_TASK,
           'weight' => $category['weight'],
           'file' => 'user.pages.inc',

@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.223 2007/11/13 12:28:36 dries Exp $
+// $Id: profile.module,v 1.224 2007/11/19 11:24:11 goba Exp $
 
 /**
  * @file
@@ -443,9 +443,27 @@ function profile_categories() {
   $result = db_query("SELECT DISTINCT(category) FROM {profile_fields}");
   $data = array();
   while ($category = db_fetch_object($result)) {
-    $data[] = array('name' => $category->category, 'title' => $category->category, 'weight' => 3);
+    $data[] = array(
+      'name' => $category->category,
+      'title' => $category->category,
+      'weight' => 3,
+      'access callback' => 'profile_category_access',
+      'access arguments' => array($category->category)
+    );
   }
   return $data;
+}
+
+/*
+ * Menu item access callback - check if a user has access to a profile category.
+ */
+function profile_category_access($category) {
+  if (user_access('administer users')) {
+    return TRUE;
+  }
+  else {
+    return db_result(db_query("SELECT COUNT(*) FROM {profile_fields} WHERE category = '%s' AND visibility <> %d", $category, PROFILE_HIDDEN));
+  }
 }
 
 /**
