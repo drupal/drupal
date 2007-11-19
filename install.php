@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.91 2007/11/19 13:56:14 goba Exp $
+// $Id: install.php,v 1.92 2007/11/19 15:01:18 goba Exp $
 
 require_once './includes/install.inc';
 
@@ -1073,6 +1073,9 @@ function install_configure_form_submit($form, &$form_state) {
   // The user is now logged in, but has no session ID yet, which
   // would be required later in the request, so remember it.
   $user->sid = session_id();
+
+  // Record when this install ran.
+  variable_set('install_time', time());
 }
 
 // Start the installer.

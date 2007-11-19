@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.183 2007/11/17 14:01:24 dries Exp $
+// $Id: system.install,v 1.184 2007/11/19 15:01:18 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -89,25 +89,59 @@ function system_requirements($phase) {
     $requirements['settings.php']['title'] = $t('Configuration file');
   }
 
-  // Report cron status
+  // Report cron status.
   if ($phase == 'runtime') {
-    $cron_last = variable_get('cron_last', NULL);
+    // Cron warning threshold defaults to two days.
+    $threshold_warning = variable_get('cron_threshold_warning', 172800);
+    // Cron error threshold defaults to two weeks.
+    $threshold_error = variable_get('cron_threshold_error', 1209600);
+    // Cron configuration help text.
+    $help = $t('Please check the help pages for <a href="@url">configuring cron jobs</a>.', array('@url' => 'http://drupal.org/cron'));
 
-    if (is_numeric($cron_last)) {
-      $requirements['cron']['value'] = $t('Last run !time ago', array('!time' => format_interval(time() - $cron_last)));
+    // Determine when cron last ran. If never, use the install time to
+    // determine the warning or error status.
+    $cron_last = variable_get('cron_last', NULL);
+    $never_run = FALSE;
+    if (!is_numeric($cron_last)) {
+      $never_run = TRUE;
+      $cron_last = variable_get('install_time', 0);
+    }
+
+    // Determine severity based on time since cron last ran.
+    $severity = REQUIREMENT_OK;
+    if (time() - $cron_last > $threshold_error) {
+      $severity = REQUIREMENT_ERROR;
+    }
+    else if (time() - $cron_last > $threshold_warning) {
+      $severity = REQUIREMENT_WARNING;
+    }
+
+    // If cron hasn't been run, and the user is viewing the main
+    // administration page, instead of an error, we display a helpful reminder
+    // to configure cron jobs.
+    if ($never_run && $severity != REQUIREMENT_ERROR && $_GET['q'] == 'admin') {
+      drupal_set_message($t('Cron has not run.') .' '. $help);
+    }
+
+    // Set summary and description based on values determined above.
+    if ($never_run) {
+      $summary = $t('Never run');
+      $description = $t('Cron has not run.') .' '. $help;
     }
     else {
-      $requirements['cron'] = array(
-        'description' => $t('Cron has not run. It appears cron jobs have not been setup on your system. Please check the help pages for <a href="@url">configuring cron jobs</a>.', array('@url' => 'http://drupal.org/cron')),
-        'severity' => REQUIREMENT_ERROR,
-        'value' => $t('Never run'),
-      );
+      $summary = $t('Last run !time ago', array('!time' => format_interval(time() - $cron_last)));
+      $description = '';
+      if ($severity != REQUIREMENT_OK) {
+        $description = $t('Cron has not run recently.') .' '. $help;
+      }
     }
-    $requirements['cron'] += array('description' => '');
 
-    $requirements['cron']['description'] .= ' '. $t('You can <a href="@cron">run cron manually</a>.', array('@cron' => url('admin/reports/status/run-cron')));
-
-    $requirements['cron']['title'] = $t('Cron maintenance tasks');
+    $requirements['cron'] = array(
+      'title' => $t('Cron maintenance tasks'),
+      'severity' => $severity,
+      'value' => $summary,
+      'description' => $description .' '. $t('You can <a href="@cron">run cron manually</a>.', array('@cron' => url('admin/reports/status/run-cron'))),
+    );
   }
 
   // Test files directory
