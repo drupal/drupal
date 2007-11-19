@@ -43,6 +43,8 @@ Drupal.ahah = function(base, element_settings) {
   this.effect = element_settings.effect;
   this.method = element_settings.method;
   this.progress = element_settings.progress;
+  this.button = element_settings.button || { };
+
   if (this.effect == 'none') {
     this.showEffect = 'show';
     this.hideEffect = 'hide';
@@ -70,6 +72,7 @@ Drupal.ahah = function(base, element_settings) {
   var ahah = this;
   var options = {
     url: ahah.url,
+    data: ahah.button,
     beforeSubmit: function(form_values, element_settings, options) {
       return ahah.beforeSubmit(form_values, element_settings, options);
     },

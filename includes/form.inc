@@ -1614,7 +1614,6 @@ function expand_radios($element) {
  */
 function form_expand_ahah($element) {
   static $js_added = array();
-
   // Add a reasonable default event handler if none specified.
   if (isset($element['#ahah']['path']) && !isset($element['#ahah']['event'])) {
     switch ($element['#type']) {
@@ -1643,13 +1642,14 @@ function form_expand_ahah($element) {
     drupal_add_js('misc/ahah.js');
 
     $ahah_binding = array(
-      'url'   => url($element['#ahah']['path']),
-      'event' => $element['#ahah']['event'],
-      'wrapper' => empty($element['#ahah']['wrapper']) ? NULL : $element['#ahah']['wrapper'],
+      'url'      => url($element['#ahah']['path']),
+      'event'    => $element['#ahah']['event'],
+      'wrapper'  => empty($element['#ahah']['wrapper']) ? NULL : $element['#ahah']['wrapper'],
       'selector' => empty($element['#ahah']['selector']) ? '#'. $element['#id'] : $element['#ahah']['selector'],
       'effect'   => empty($element['#ahah']['effect']) ? 'none' : $element['#ahah']['effect'],
       'method'   => empty($element['#ahah']['method']) ? 'replace' : $element['#ahah']['method'],
       'progress' => empty($element['#ahah']['progress']) ? array('type' => 'throbber') : $element['#ahah']['progress'],
+      'button'   => $element['#type'] == 'submit' ? array($element['#name'] => $element['#value']) : FALSE,
     );
 
     // Convert a simple #ahah[progress] type string into an array.
