@@ -86,28 +86,6 @@ function drupal_test_mysql($url, &$success) {
     $success[] = 'UPDATE';
   }
 
-  // Test LOCK.
-  $query = 'LOCK TABLES drupal_install_test WRITE';
-  $result = mysql_query($query);
-  if ($error = mysql_error()) {
-    drupal_set_message(st('Failed to lock a test table on your MySQL database server. We tried locking a table with the command %query and MySQL reported the following error: %error.', array('%query' => $query, '%error' => $error)), 'error');
-    $err = TRUE;
-  }
-  else {
-    $success[] = 'LOCK';
-  }
-
-  // Test UNLOCK.
-  $query = 'UNLOCK TABLES';
-  $result = mysql_query($query);
-  if ($error = mysql_error()) {
-    drupal_set_message(st('Failed to unlock a test table on your MySQL database server. We tried unlocking a table with the command %query and MySQL reported the following error: %error.', array('%query' => $query, '%error' => $error)), 'error');
-    $err = TRUE;
-  }
-  else {
-    $success[] = 'UNLOCK';
-  }
-
   // Test DELETE.
   $query = 'DELETE FROM drupal_install_test';
   $result = mysql_query($query);
