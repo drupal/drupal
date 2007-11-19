@@ -861,8 +861,8 @@ function install_task_list($active = NULL) {
     'profile-select'       => st('Choose profile'),
     'locale-select'        => st('Choose language'),
     'requirements'         => st('Verify requirements'),
-    'database'             => st('Setup database'),
-    'locale-initial-batch' => st('Setup translations'),
+    'database'             => st('Set up database'),
+    'locale-initial-batch' => st('Set up translations'),
     'configure'            => st('Configure site'),
   );
 
