@@ -1,6 +1,6 @@
-/* $Id: openid.css,v 1.2 2007/07/03 19:49:07 dries Exp $ */
+/* $Id: openid.css,v 1.3 2007/11/20 10:00:04 goba Exp $ */
 
-a.openid-link, a.user-link, #edit-openid-url {
+a.openid-link, #edit-openid-url {
   background-image: url("login-bg.png");
   background-position: 0% 50%;
   background-repeat: no-repeat;

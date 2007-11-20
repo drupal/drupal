@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.module,v 1.10 2007/10/18 14:33:44 goba Exp $
+// $Id: openid.module,v 1.11 2007/11/20 10:00:04 goba Exp $
 
 /**
  * @file
@@ -84,8 +84,8 @@ function openid_form_alter(&$form, $form_state, $form_id) {
       $form['#validate'] = array('openid_login_validate');
     }
 
-    $form['openid_link'] = array('#value' => l(t('Log in using OpenID'), '#', array('attributes' => array('class' => 'openid-link'))));
-    $form['user_link'] = array('#value' => l(t('Cancel OpenID login'), '#', array('attributes' => array('class' => 'user-link'))));
+    $form['openid_link'] = array('#value' => l(t('Log in using OpenID'), '#', array('attributes' => array('class' => 'openid-link'))), '#weight' => 3);
+    $form['user_link'] = array('#value' => l(t('Cancel OpenID login'), '#', array('attributes' => array('class' => 'user-link'))), '#weight' => 3);
 
     $form['openid_url'] = array(
       '#type' => 'textfield',
