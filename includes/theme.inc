@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.395 2007/11/20 10:18:42 goba Exp $
+// $Id: theme.inc,v 1.396 2007/11/20 13:24:54 dries Exp $
 
 /**
  * @file
@@ -1673,7 +1673,7 @@ function theme_progress_bar($percent, $message) {
 
 /**
  * Create a standard indentation div. Used for drag and drop tables.
- * 
+ *
  * @param $size
  *   Optional. The number of indentations to create.
  * @return

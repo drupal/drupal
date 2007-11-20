@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.94 2007/11/20 09:03:10 goba Exp $
+// $Id: install.php,v 1.95 2007/11/20 13:24:53 dries Exp $
 
 require_once './includes/install.inc';
 
@@ -644,7 +644,7 @@ function install_tasks($profile, $task) {
       $batch = locale_batch_by_language($install_locale, '_install_locale_initial_batch_finished');
       if (!empty($batch)) {
         // Remember components we cover in this batch set.
-        variable_set('install_locale_batch_components', $batch['#components']);        
+        variable_set('install_locale_batch_components', $batch['#components']);
         // Start a batch, switch to 'locale-batch' task. We need to
         // set the variable here, because batch_process() redirects.
         variable_set('install_task', 'locale-initial-batch');
@@ -782,7 +782,7 @@ if (Drupal.jsEnabled) {
 
 /**
  * Finished callback for the first locale import batch.
- * 
+ *
  * Advance installer task to the configure screen.
  */
 function _install_locale_initial_batch_finished($success, $results) {
@@ -791,7 +791,7 @@ function _install_locale_initial_batch_finished($success, $results) {
 
 /**
  * Finished callback for the second locale import batch.
- * 
+ *
  * Advance installer task to the finished screen.
  */
 function _install_locale_remaining_batch_finished($success, $results) {

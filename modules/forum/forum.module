@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.425 2007/10/25 15:32:55 dries Exp $
+// $Id: forum.module,v 1.426 2007/11/20 13:24:54 dries Exp $
 
 /**
  * @file
@@ -354,11 +354,11 @@ function forum_form_alter(&$form, $form_state, $form_id) {
       );
       $form['nodes']['#required'] = TRUE;
       $form['hierarchy'] = array('#type' => 'value', '#value' => 1);
-      unset($form['relations']);
-      unset($form['tags']);
-      unset($form['multiple']);
+      unset($form['settings']['relations']);
+      unset($form['settings']['tags']);
+      unset($form['settings']['multiple']);
       unset($form['delete']);
-      $form['required'] = array('#type' => 'value', '#value' => 1);
+      $form['settings']['required'] = array('#type' => 'value', '#value' => 1);
     }
   }
 }

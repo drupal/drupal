@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.admin.inc,v 1.8 2007/11/20 10:18:43 goba Exp $
+// $Id: menu.admin.inc,v 1.9 2007/11/20 13:24:54 dries Exp $
 
 /**
  * @file
@@ -118,10 +118,10 @@ function _menu_overview_tree_form($tree) {
 
 /**
  * Submit handler for the menu overview form.
- * 
+ *
  * This function takes great care in saving parent items first, then items
  * underneath them. Saving items in the incorrect order can break the menu tree.
- * 
+ *
  * @see menu_overview_form()
  */
 function menu_overview_form_submit($form, &$form_state) {

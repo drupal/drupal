@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.7 2007/11/12 19:06:33 goba Exp $
+// $Id: taxonomy.admin.inc,v 1.8 2007/11/20 13:24:54 dries Exp $
 
 /**
  * @file
@@ -52,60 +52,73 @@ function taxonomy_form_vocabulary(&$form_state, $edit = array()) {
     'required' => 0,
     'weight' => 0,
   );
-  $form['name'] = array('#type' => 'textfield',
+  $form['identification'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Identification'),
+    '#collapsible' => TRUE,
+  );
+  $form['identification']['name'] = array('#type' => 'textfield',
     '#title' => t('Vocabulary name'),
     '#default_value' => $edit['name'],
     '#maxlength' => 255,
     '#description' => t('The name for this vocabulary. Example: "Topic".'),
     '#required' => TRUE,
   );
-  $form['description'] = array('#type' => 'textarea',
+  $form['identification']['description'] = array('#type' => 'textarea',
     '#title' => t('Description'),
     '#default_value' => $edit['description'],
     '#description' => t('Description of the vocabulary; can be used by modules.'),
   );
-  $form['help'] = array('#type' => 'textfield',
+  $form['identification']['help'] = array('#type' => 'textfield',
     '#title' => t('Help text'),
     '#maxlength' => 255,
     '#default_value' => $edit['help'],
     '#description' => t('Instructions to present to the user when choosing a term.'),
   );
-  $form['nodes'] = array('#type' => 'checkboxes',
+  $form['content_types'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Content types'),
+    '#collapsible' => TRUE,
+  );
+  $form['content_types']['nodes'] = array('#type' => 'checkboxes',
     '#title' => t('Content types'),
     '#default_value' => $edit['nodes'],
     '#options' => node_get_types('names'),
-    '#description' => t('A list of content types you would like to categorize using this vocabulary.'),
+    '#description' => t('Select content types to categorize using this vocabulary.'),
   );
-  $form['hierarchy'] = array('#type' => 'radios',
-    '#title' => t('Hierarchy'),
-    '#default_value' => $edit['hierarchy'],
-    '#options' => array(t('Disabled'), t('Single'), t('Multiple')),
-    '#description' => t('Allows <a href="@help-url">a tree-like hierarchy</a> between terms of this vocabulary.', array('@help-url' => url('admin/help/taxonomy', array('absolute' => TRUE)))),
-  );
-  $form['relations'] = array('#type' => 'checkbox',
-    '#title' => t('Related terms'),
-    '#default_value' => $edit['relations'],
-    '#description' => t('Allows <a href="@help-url">related terms</a> in this vocabulary.', array('@help-url' => url('admin/help/taxonomy', array('absolute' => TRUE)))),
-  );
-  $form['tags'] = array('#type' => 'checkbox',
+  $form['settings'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Settings'),
+    '#collapsible' => TRUE,
+   );
+  $form['settings']['tags'] = array('#type' => 'checkbox',
     '#title' => t('Free tagging'),
     '#default_value' => $edit['tags'],
     '#description' => t('Content is categorized by typing terms instead of choosing from a list.'),
   );
-  $form['multiple'] = array('#type' => 'checkbox',
+  $form['settings']['multiple'] = array('#type' => 'checkbox',
     '#title' => t('Multiple select'),
     '#default_value' => $edit['multiple'],
     '#description' => t('Allows posts to have more than one term from this vocabulary (always true for free tagging).'),
   );
-  $form['required'] = array('#type' => 'checkbox',
+  $form['settings']['required'] = array('#type' => 'checkbox',
     '#title' => t('Required'),
     '#default_value' => $edit['required'],
-    '#description' => t('If enabled, every post <strong>must</strong> have at least one term in this vocabulary.'),
+    '#description' => t('At least one term in this vocabulary must be selected when submitting a post.'),
   );
-  $form['weight'] = array('#type' => 'weight',
+  $form['settings']['weight'] = array('#type' => 'weight',
     '#title' => t('Weight'),
     '#default_value' => $edit['weight'],
-    '#description' => t('In listings, the heavier vocabularies will sink and the lighter vocabularies will be positioned nearer the top.'),
+    '#description' => t('Vocabularies are displayed in ascending order by weight.'),
+  );
+  // Set the hierarchy to "multiple parents" by default. This simplifies the
+  // vocabulary form and standardizes the term form.
+  $form['hierarchy'] = array('#type' => 'value',
+    '#value' => '2',
+  );
+  // Enable "related terms" by default.
+  $form['relations'] = array('#type' => 'value',
+    '#value' => '1',
   );
 
   $form['submit'] = array('#type' => 'submit', '#value' => t('Save'));
@@ -237,52 +250,52 @@ function taxonomy_form_term(&$form_state, $vocabulary, $edit = array()) {
     'tid' => NULL,
     'weight' => 0,
   );
-  $form['name'] = array(
+  $form['identification'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Identification'),
+    '#collapsible' => TRUE,
+  );
+  $form['identification']['name'] = array(
     '#type' => 'textfield',
     '#title' => t('Term name'),
     '#default_value' => $edit['name'],
     '#maxlength' => 255,
     '#description' => t('The name of this term.'),
     '#required' => TRUE);
-
-  $form['description'] = array(
+  $form['identification']['description'] = array(
     '#type' => 'textarea',
     '#title' => t('Description'),
     '#default_value' => $edit['description'],
     '#description' => t('A description of the term.'));
 
-  if ($vocabulary->hierarchy) {
-    $parent = array_keys(taxonomy_get_parents($edit['tid']));
-    $children = taxonomy_get_tree($vocabulary->vid, $edit['tid']);
+  $form['advanced'] = array(
+    '#type' => 'fieldset',
+    '#title' => 'Advanced options',
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+  );
 
-    // A term can't be the child of itself, nor of its children.
-    foreach ($children as $child) {
-      $exclude[] = $child->tid;
-    }
-    $exclude[] = $edit['tid'];
+  $parent = array_keys(taxonomy_get_parents($edit['tid']));
+  $children = taxonomy_get_tree($vocabulary->vid, $edit['tid']);
 
-    if ($vocabulary->hierarchy == 1) {
-      $form['parent'] = _taxonomy_term_select(t('Parent'), 'parent', $parent, $vocabulary->vid, t('Parent term') .'.', 0, '<'. t('root') .'>', $exclude);
-    }
-    elseif ($vocabulary->hierarchy == 2) {
-      $form['parent'] = _taxonomy_term_select(t('Parents'), 'parent', $parent, $vocabulary->vid, t('Parent terms') .'.', 1, '<'. t('root') .'>', $exclude);
-    }
+  // A term can't be the child of itself, nor of its children.
+  foreach ($children as $child) {
+    $exclude[] = $child->tid;
   }
+  $exclude[] = $edit['tid'];
 
-  if ($vocabulary->relations) {
-    $form['relations'] = _taxonomy_term_select(t('Related terms'), 'relations', array_keys(taxonomy_get_related($edit['tid'])), $vocabulary->vid, NULL, 1, '<'. t('none') .'>', array($edit['tid']));
-  }
+  $form['advanced']['parent'] = _taxonomy_term_select(t('Parents'), 'parent', $parent, $vocabulary->vid, t('Parent terms') .'.', 1, '<'. t('root') .'>', $exclude);
 
-  $form['synonyms'] = array(
+  $form['advanced']['synonyms'] = array(
     '#type' => 'textarea',
     '#title' => t('Synonyms'),
     '#default_value' => implode("\n", taxonomy_get_synonyms($edit['tid'])),
     '#description' => t('Synonyms of this term, one synonym per line.'));
-  $form['weight'] = array(
+  $form['advanced']['weight'] = array(
     '#type' => 'weight',
     '#title' => t('Weight'),
     '#default_value' => $edit['weight'],
-    '#description' => t('In listings, the heavier terms will sink and the lighter terms will be positioned nearer the top.'));
+    '#description' => t('Vocabularies are displayed in ascending order by weight.'));
   $form['vid'] = array(
     '#type' => 'value',
     '#value' => $vocabulary->vid);

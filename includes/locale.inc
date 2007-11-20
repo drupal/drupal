@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.158 2007/11/19 13:56:14 goba Exp $
+// $Id: locale.inc,v 1.159 2007/11/20 13:24:54 dries Exp $
 
 /**
  * @file
@@ -2428,7 +2428,7 @@ function locale_batch_by_language($langcode, $finished = NULL, $skip = array()) 
   $components = array();
   $query = "SELECT name, filename FROM {system} WHERE status = 1";
   if (count($skip)) {
-    $query .= " AND name NOT IN (". db_placeholders($skip, 'varchar') .")"; 
+    $query .= " AND name NOT IN (". db_placeholders($skip, 'varchar') .")";
   }
   $result = db_query($query, $skip);
   while ($component = db_fetch_object($result)) {
