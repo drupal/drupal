@@ -1449,7 +1449,7 @@ function user_build_content(&$account) {
   $edit = NULL;
   user_module_invoke('view', $edit, $account);
   // Allow modules to modify the fully-built profile.
-  drupal_alter('profile', $edit, $account);
+  drupal_alter('profile', $account);
 
   return $account->content;
 }
