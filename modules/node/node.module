@@ -780,6 +780,15 @@ function node_save(&$node) {
   if (empty($node->nid)) {
     // Insert a new node.
     $node->is_new = TRUE;
+
+    // When inserting a node, $node->log must be set because
+    // {node_revisions}.log does not (and cannot) have a default
+    // value.  If the user does not have permission to create
+    // revisions, however, the form will not contain an element for
+    // log so $node->log will be unset at this point.
+    if (!isset($node->log)) {
+      $node->log = '';
+    }
   }
   elseif (!empty($node->revision)) {
     $node->old_vid = $node->vid;
