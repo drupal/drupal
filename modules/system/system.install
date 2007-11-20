@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.186 2007/11/20 11:03:08 dries Exp $
+// $Id: system.install,v 1.187 2007/11/20 11:37:05 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -1032,6 +1032,97 @@ function system_schema() {
 }
 
 // Updates for core.
+
+/**
+ * @defgroup updates-4.7.x-extra Extra system updates for 4.7.x
+ * @{
+ */
+
+function system_update_180() {
+  $ret = array();
+
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql("ALTER TABLE {node} DROP PRIMARY KEY");
+      $ret[] = update_sql("ALTER TABLE {node} ADD PRIMARY KEY (nid, vid)");
+      $ret[] = update_sql("ALTER TABLE {node} ADD UNIQUE (vid)");
+      $ret[] = update_sql("ALTER TABLE {node} ADD INDEX (nid)");
+
+      $ret[] = update_sql("ALTER TABLE {node_counter} CHANGE nid nid INT(10) NOT NULL DEFAULT '0'");
+      break;
+    case 'pgsql':
+      $ret[] = update_sql("ALTER TABLE {node} DROP CONSTRAINT {node}_pkey"); // Change PK
+      $ret[] = update_sql("ALTER TABLE {node} ADD PRIMARY KEY (nid, vid)");
+      $ret[] = update_sql('DROP INDEX {node}_vid_idx'); // Change normal index to UNIQUE index
+      $ret[] = update_sql('CREATE UNIQUE INDEX {node}_vid_idx ON {node}(vid)');
+      $ret[] = update_sql('CREATE INDEX {node}_nid_idx ON {node}(nid)'); // Add index on nid
+      break;
+  }
+
+  return $ret;
+}
+
+function system_update_181() {
+  $ret = array();
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql("ALTER TABLE {profile_fields} ADD autocomplete TINYINT(1) NOT NULL AFTER visibility ;");
+      break;
+    case 'pgsql':
+      db_add_column($ret, 'profile_fields', 'autocomplete', 'smallint', array('not null' => TRUE, 'default' => 0));
+      break;
+  }
+  return $ret;
+}
+
+/**
+ * The lid field in pgSQL should not be UNIQUE, but an INDEX.
+ */
+function system_update_182() {
+  $ret = array();
+
+  if ($GLOBALS['db_type'] == 'pgsql') {
+    $ret[] = update_sql('ALTER TABLE {locales_target} DROP CONSTRAINT {locales_target}_lid_key');
+    $ret[] = update_sql('CREATE INDEX {locales_target}_lid_idx ON {locales_target} (lid)');
+  }
+
+  return $ret;
+}
+
+/**
+ * Cid matching by MySQL should be case-sensitive.
+ */
+function system_update_183() {
+  $ret = array();
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql("ALTER TABLE {cache} CHANGE cid cid varchar(255) BINARY NOT NULL default ''");
+      break;
+  }
+  return $ret;
+}
+
+function system_update_184() {
+  $ret = array();
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql("ALTER TABLE {access} CHANGE aid aid int(10) NOT NULL AUTO_INCREMENT ");
+      $ret[] = update_sql("ALTER TABLE {boxes} CHANGE bid bid int NOT NULL AUTO_INCREMENT ");
+      break;
+    case 'pgsql':
+       // No database update required for PostgreSQL because it already uses big SERIAL numbers.
+  }
+
+  return $ret;
+}
+
+/**
+ * @} End of "defgroup updates-4.7-extra"
+ */
 
 /**
  * @defgroup updates-4.7-to-5.0 System updates from 4.7 to 5.0
