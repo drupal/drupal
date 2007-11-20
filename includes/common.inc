@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.716 2007/11/20 10:18:42 goba Exp $
+// $Id: common.inc,v 1.717 2007/11/20 20:13:03 goba Exp $
 
 /**
  * @file
@@ -1957,6 +1957,16 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
  * $form['my_elements'][$delta]['weight']['#attributes']['class'] = "my-elements-weight";
  * @endcode
  *
+ * Each row of the table must also have a class of "draggable" in order to enable the
+ * drag handles:
+ * @code
+ * $row = array(...);
+ * $rows[] = array(
+ *   'data' => $row,
+ *   'class' => 'draggable',
+ * );
+ * @endcode
+ * 
  * Calling drupal_add_tabledrag() would then be written as such:
  * @code
  * drupal_add_tabledrag('my-module-table', 'order', 'sibling', 'my-elements-weight');

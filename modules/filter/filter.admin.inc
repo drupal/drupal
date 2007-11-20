@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.admin.inc,v 1.2 2007/09/17 09:16:48 goba Exp $
+// $Id: filter.admin.inc,v 1.3 2007/11/20 20:13:04 goba Exp $
 
 /**
  * @file
@@ -357,13 +357,19 @@ function theme_filter_admin_order($form) {
   foreach (element_children($form['names']) as $id) {
     // Don't take form control structures.
     if (is_array($form['names'][$id])) {
-      $rows[] = array(drupal_render($form['names'][$id]), drupal_render($form['weights'][$id]));
+      $form['weights'][$id]['#attributes']['class'] = 'filter-order-weight';
+      $rows[] = array(
+        'data' => array(drupal_render($form['names'][$id]), drupal_render($form['weights'][$id])),
+        'class' => 'draggable',
+      );
     }
   }
 
-  $output = theme('table', $header, $rows);
+  $output = theme('table', $header, $rows, array('id' => 'filter-order'));
   $output .= drupal_render($form);
 
+  drupal_add_tabledrag('filter-order', 'order', 'sibling', 'filter-order-weight', NULL, NULL, FALSE);
+  
   return $output;
 }
 
