@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.185 2007/11/19 19:04:48 goba Exp $
+// $Id: system.install,v 1.186 2007/11/20 11:03:08 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -96,7 +96,7 @@ function system_requirements($phase) {
     // Cron error threshold defaults to two weeks.
     $threshold_error = variable_get('cron_threshold_error', 1209600);
     // Cron configuration help text.
-    $help = $t('Please check the help pages for <a href="@url">configuring cron jobs</a>.', array('@url' => 'http://drupal.org/cron'));
+    $help = $t('Please check the help pages for <a href="@url">configuring cron jobs</a> or you can <a href="@cron">run cron manually</a>.', array('@url' => 'http://drupal.org/cron', '@cron' => url('admin/reports/status/run-cron')));
 
     // Determine when cron last ran. If never, use the install time to
     // determine the warning or error status.
@@ -140,7 +140,7 @@ function system_requirements($phase) {
       'title' => $t('Cron maintenance tasks'),
       'severity' => $severity,
       'value' => $summary,
-      'description' => $description .' '. $t('You can <a href="@cron">run cron manually</a>.', array('@cron' => url('admin/reports/status/run-cron'))),
+      'description' => $description,
     );
   }
 
