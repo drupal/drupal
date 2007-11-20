@@ -191,7 +191,7 @@ function _openid_nonce() {
  */
 function _openid_link_href($rel, $html) {
   $rel = preg_quote($rel);
-  preg_match('|<link\s+rel=["\'](.*)'. $rel .'(.*)["\'](.*)/?>|iU', $html, $matches);
+  preg_match('|<link\s+rel=["\'](.*)'. $rel .'(.*)["\'](.*)/?>|iUs', $html, $matches);
   if (isset($matches[3])) {
     preg_match('|href=["\']([^"]+)["\']|iU', $matches[0], $href);
     return trim($href[1]);
@@ -203,9 +203,9 @@ function _openid_link_href($rel, $html) {
  * Pull the http-equiv attribute out of an html meta element
  */
 function _openid_meta_httpequiv($equiv, $html) {
-  preg_match('|<meta\s+http-equiv=["\']'. $equiv .'["\'](.*)/?>|iU', $html, $matches);
+  preg_match('|<meta\s+http-equiv=["\']'. $equiv .'["\'](.*)/?>|iUs', $html, $matches);
   if (isset($matches[1])) {
-    preg_match('|content=["\']([^"]+)["\']|iU', $matches[1], $content);
+    preg_match('|content=["\']([^"]+)["\']|iUs', $matches[1], $content);
     return $content[1];
   }
   return FALSE;
