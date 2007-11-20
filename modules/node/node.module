@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.902 2007/11/14 12:43:13 goba Exp $
+// $Id: node.module,v 1.903 2007/11/20 09:47:07 goba Exp $
 
 /**
  * @file
@@ -837,9 +837,12 @@ function node_save(&$node) {
 
 
 /**
- * Helper function to save a revision with current user responsible for revision.
+ * Helper function to save a revision with the uid of the current user.
+ *
+ * Node is taken by reference, becuse drupal_write_record() updates the
+ * $node with the revision id, and we need to pass that back to the caller.
  */
-function _node_save_revision($node, $uid, $update = NULL) {
+function _node_save_revision(&$node, $uid, $update = NULL) {
   $temp_uid = $node->uid;
   $node->uid = $uid;
   if (isset($update)) {
