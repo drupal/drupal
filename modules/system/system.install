@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.187 2007/11/20 11:37:05 goba Exp $
+// $Id: system.install,v 1.188 2007/11/20 14:48:07 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -96,7 +96,7 @@ function system_requirements($phase) {
     // Cron error threshold defaults to two weeks.
     $threshold_error = variable_get('cron_threshold_error', 1209600);
     // Cron configuration help text.
-    $help = $t('Please check the help pages for <a href="@url">configuring cron jobs</a> or you can <a href="@cron">run cron manually</a>.', array('@url' => 'http://drupal.org/cron', '@cron' => url('admin/reports/status/run-cron')));
+    $help = $t('Please check the help pages for <a href="@url">configuring cron jobs</a>.', array('@url' => 'http://drupal.org/cron'));
 
     // Determine when cron last ran. If never, use the install time to
     // determine the warning or error status.
@@ -112,7 +112,7 @@ function system_requirements($phase) {
     if (time() - $cron_last > $threshold_error) {
       $severity = REQUIREMENT_ERROR;
     }
-    else if (time() - $cron_last > $threshold_warning) {
+    else if ($never_run || (time() - $cron_last > $threshold_warning)) {
       $severity = REQUIREMENT_WARNING;
     }
 
@@ -120,7 +120,7 @@ function system_requirements($phase) {
     // administration page, instead of an error, we display a helpful reminder
     // to configure cron jobs.
     if ($never_run && $severity != REQUIREMENT_ERROR && $_GET['q'] == 'admin') {
-      drupal_set_message($t('Cron has not run.') .' '. $help);
+      drupal_set_message($t('Cron has not run. Please visit the <a href="@status">status report</a> for more information.', array('@status' => url('admin/reports/status'))));
     }
 
     // Set summary and description based on values determined above.
@@ -140,7 +140,7 @@ function system_requirements($phase) {
       'title' => $t('Cron maintenance tasks'),
       'severity' => $severity,
       'value' => $summary,
-      'description' => $description,
+      'description' => $description .' '. $t('You can <a href="@cron">run cron manually</a>.', array('@cron' => url('admin/reports/status/run-cron'))),
     );
   }
 
