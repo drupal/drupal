@@ -1,6 +1,6 @@
 /* $Id$ */
 
-a.openid-link, a.user-link, #edit-openid-url {
+a.openid-link, #edit-openid-url {
   background-image: url("login-bg.png");
   background-position: 0% 50%;
   background-repeat: no-repeat;
