@@ -2428,7 +2428,7 @@ function locale_batch_by_language($langcode, $finished = NULL, $skip = array()) 
   $components = array();
   $query = "SELECT name, filename FROM {system} WHERE status = 1";
   if (count($skip)) {
-    $query .= " AND name NOT IN (". db_placeholders($skip, 'varchar') .")"; 
+    $query .= " AND name NOT IN (". db_placeholders($skip, 'varchar') .")";
   }
   $result = db_query($query, $skip);
   while ($component = db_fetch_object($result)) {
