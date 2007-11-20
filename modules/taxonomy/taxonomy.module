@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.393 2007/11/19 18:26:11 goba Exp $
+// $Id: taxonomy.module,v 1.394 2007/11/20 15:31:34 dries Exp $
 
 /**
  * @file
@@ -503,7 +503,7 @@ function taxonomy_form_alter(&$form, $form_state, $form_id) {
 }
 
 /**
- * Helper function to covert terms after a preview.
+ * Helper function to convert terms after a preview.
  *
  * After preview the tags are an array instead of proper objects. This function
  * converts them back to objects with the exception of 'free tagging' terms,
@@ -1166,15 +1166,19 @@ function taxonomy_rss_item($node) {
 function taxonomy_help($path, $arg) {
   switch ($path) {
     case 'admin/help#taxonomy':
-      $output = '<p>'. t('The taxonomy module is one of the most popular features because users often want to create categories to organize content by type. A simple example would be organizing a list of music reviews by musical genre.') .'</p>';
-      $output .= '<p>'. t('Taxonomy is the study of classification. The taxonomy module allows you to define vocabularies (sets of categories) which are used to classify content. The module supports hierarchical classification and association between terms, allowing for truly flexible information retrieval and classification. The taxonomy module allows multiple lists of categories for classification (controlled vocabularies) and offers the possibility of creating thesauri (controlled vocabularies that indicate the relationship of terms) and taxonomies (controlled vocabularies where relationships are indicated hierarchically). To view and manage the terms of each vocabulary, click on the associated <em>list terms</em> link. To delete a vocabulary and all its terms, choose <em>edit vocabulary.</em>') .'</p>';
-      $output .= '<p>'. t('A controlled vocabulary is a set of terms to use for describing content (known as descriptors in indexing lingo). Drupal allows you to describe each piece of content (blog, story, etc.) using one or many of these terms. For simple implementations, you might create a set of categories without subcategories, similar to Slashdot\'s sections. For more complex implementations, you might create a hierarchical list of categories.') .'</p>';
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@taxonomy">Taxonomy page</a>.', array('@taxonomy' => 'http://drupal.org/handbook/modules/taxonomy/')) .'</p>';
+      $output = '<p>'. t('The taxonomy module allows you to categorize content using various systems of classification. Free-tagging vocabularies are created by users on the fly when they submit posts (as commonly found in blogs and social bookmarking applications). Controlled vocabularies allow for administrator defined short lists of terms to complex hierarchies allowing for multiple relationships between different terms. These methods can be applied to different content types and combined together to create a powerful and flexible method of classifying and presenting your content.') .'</p>';
+      $output .= '<p>'. t('For example, when creating a recipe site, you might want to classify posts by both the type of meal and preparation time. A vocabulary for each allows you to categorise using each criteria independently instead of creating a tag for every possible combination.') .'</p>';
+      $output .= '<p>'. t('Type of Meal: <em>Appetizer, Main Course, Salad, Dessert</em>') .'</p>';
+      $output .= '<p>'. t('Preparation Time: <em>0-30mins, 30-60mins, 1-2 hrs, 2hrs+</em>') .'</p>';
+      $output .= '<p>'. t("Each taxonomy term (often called a 'category' or 'tag' in other systems) automatically provides lists of posts and a corresponding RSS feed. These taxonomy/term urls can be manipulated to generate AND and OR lists of posts classified with terms. In our recipe site example, it then becomes easy to create pages displaying 'Main courses', '30 minute recipes', or '30 minute main courses and appetizers' by using terms on their own or in combination with others. There are a significant number of contributed modules which you to alter and extend the behaviour of the core module for both display and organisation of terms.") .'</p>';
+      $output .= '<p>'. t("Terms can also be organized in parent/child relationships from the admin interface. An example would be a vocabulary grouping countries under their parent geo-political regions. The taxonomy module also enables advanced implementations of hierarchy, for example placing Turkey in both the 'Middle East' and 'Europe'.") .'</p>';
+      $output .= '<p>'. t('Two features are offered by the taxonomy module which are not used within core: synonymns and related terms. These allow for further advanced classification of terms and may be utilized by contributed modules.') .'</p>';
+      $output .= '<p>'. t('See the <a href="@taxonomy">Handbook page</a> for more information.', array('@taxonomy' => 'http://drupal.org/handbook/modules/taxonomy/')) .'</p>';
       return $output;
     case 'admin/content/taxonomy':
-      return '<p>'. t('The taxonomy module allows content to be classified into categories and subcategories, or vocabularies and terms. Terms may be organized in controlled vocabularies (vocabularies with multiple lists of categories), in thesauri (controlled vocabularies that indicate the relationship of terms), in taxonomies (controlled vocabularies where relationships are indicated hierarchically), or in free vocabularies (vocabularies where tags are defined during content creation). To view and manage the terms of each vocabulary, click on the associated <em>list terms</em> link. To delete a vocabulary and all its terms, choose "edit vocabulary".') .'</p>';
+      return '<p>'. t("The taxonomy module allows you to categorize your content using both tags and administrator defined terms. It is a flexible tool for classifying content with many advanced features. To begin, create a 'Vocabulary' to hold one set of terms or tags. You can create one free-tagging vocabulary for everything, or seperate controlled vocabularies to define the various properties of your content, for example 'Countries' or 'Colours'.") .'</p>';
     case 'admin/content/taxonomy/add/vocabulary':
-      return '<p>'. t("When you create a controlled vocabulary you are creating a set of terms to use for describing content (known as descriptors in indexing lingo). Drupal allows you to describe each piece of content (blog, story, etc.) using one or many of these terms. For simple implementations, you might create a set of categories without subcategories. For more complex implementations, you might create a hierarchical list of categories.") .'</p>';
+      return '<p>'. t('Define how your vocabulary will be presented to administrators and users, and which content types to categorise with it. Tags allows users to create terms when submitting posts by typing a comma separated list. Otherwise terms are chosen from a select list and can only be created by users with the "administer taxonomy" permission.') .'</p>';
   }
 }
 

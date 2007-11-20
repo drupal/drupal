@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.8 2007/11/20 13:24:54 dries Exp $
+// $Id: taxonomy.admin.inc,v 1.9 2007/11/20 15:31:34 dries Exp $
 
 /**
  * @file
@@ -26,7 +26,7 @@ function taxonomy_overview_vocabularies() {
     );
   }
   if (empty($rows)) {
-    $rows[] = array(array('data' => t('No categories available.'), 'colspan' => '5'));
+    $rows[] = array(array('data' => t('No terms available.'), 'colspan' => '5'));
   }
   $header = array(t('Name'), t('Type'), array('data' => t('Operations'), 'colspan' => '3'));
 
@@ -61,7 +61,7 @@ function taxonomy_form_vocabulary(&$form_state, $edit = array()) {
     '#title' => t('Vocabulary name'),
     '#default_value' => $edit['name'],
     '#maxlength' => 255,
-    '#description' => t('The name for this vocabulary. Example: "Topic".'),
+    '#description' => t('The name for this vocabulary. i.e. <em>"Tags"</em>.'),
     '#required' => TRUE,
   );
   $form['identification']['description'] = array('#type' => 'textarea',
@@ -73,7 +73,7 @@ function taxonomy_form_vocabulary(&$form_state, $edit = array()) {
     '#title' => t('Help text'),
     '#maxlength' => 255,
     '#default_value' => $edit['help'],
-    '#description' => t('Instructions to present to the user when choosing a term.'),
+    '#description' => t('Instructions to present to the user when selecting terms. i.e. <em>"Enter a comma separated list of words".</em>'),
   );
   $form['content_types'] = array(
     '#type' => 'fieldset',
@@ -92,14 +92,14 @@ function taxonomy_form_vocabulary(&$form_state, $edit = array()) {
     '#collapsible' => TRUE,
    );
   $form['settings']['tags'] = array('#type' => 'checkbox',
-    '#title' => t('Free tagging'),
+    '#title' => t('Tags'),
     '#default_value' => $edit['tags'],
-    '#description' => t('Content is categorized by typing terms instead of choosing from a list.'),
+    '#description' => t('Terms are created by users when submitting posts by typing a comma separated list.'),
   );
   $form['settings']['multiple'] = array('#type' => 'checkbox',
     '#title' => t('Multiple select'),
     '#default_value' => $edit['multiple'],
-    '#description' => t('Allows posts to have more than one term from this vocabulary (always true for free tagging).'),
+    '#description' => t('Allows posts to have more than one term from this vocabulary (always true for tags).'),
   );
   $form['settings']['required'] = array('#type' => 'checkbox',
     '#title' => t('Required'),
@@ -266,7 +266,7 @@ function taxonomy_form_term(&$form_state, $vocabulary, $edit = array()) {
     '#type' => 'textarea',
     '#title' => t('Description'),
     '#default_value' => $edit['description'],
-    '#description' => t('A description of the term.'));
+    '#description' => t('A description of the term. To be displayed on taxonomy/term pages and RSS feeds.'));
 
   $form['advanced'] = array(
     '#type' => 'fieldset',
