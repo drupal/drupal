@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.93 2007/11/19 16:38:42 goba Exp $
+// $Id: install.php,v 1.94 2007/11/20 09:03:10 goba Exp $
 
 require_once './includes/install.inc';
 
@@ -1000,7 +1000,7 @@ function install_configure_form(&$form_state, $url) {
     '#title' => st('Update notifications'),
     '#options' => array(1 => st('Check for updates automatically')),
     '#default_value' => array(1),
-    '#description' => st('Drupal can check periodically for important bug fixes and security releases. To do this, your site will send anonymous information on its installed components to drupal.org. It is <strong>highly recommended</strong> that you enable this option for your site\'s security. For more information please read the <a href="@update">update notification information</a>.', array('@update' => 'http://drupal.org/handbook/modules/update')),
+    '#description' => st('With this option enabled, Drupal will notify you when new releases are available. This will significantly enhance your site\'s security and is <strong>highly recommended</strong>. This requires your site to periodically send anonymous information on its installed components to <a href="@drupal">drupal.org</a>.  For more information please see the <a href="@update">update notification information</a>.', array('@drupal' => 'http://drupal.org', '@update' => 'http://drupal.org/handbook/modules/update')),
     '#weight' => 15,
   );
 
