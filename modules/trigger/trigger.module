@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.module,v 1.6 2007/11/11 06:56:44 dries Exp $
+// $Id: trigger.module,v 1.7 2007/11/20 09:24:59 goba Exp $
 
 /**
  * @file
@@ -20,12 +20,12 @@ function trigger_help($path, $arg) {
     case 'admin/build/trigger/cron':
       return $explanation .'<p>'. t('Below you can assign actions to run when cron runs. More information on cron is available in the <a href="@system">System module help page</a>.', array('@system' => url('admin/help/system'))) .'</p>';
     case 'admin/build/trigger/taxonomy':
-      return $explanation .'<p>'. t('Below you can assign actions to run when certain category-related triggers happen. For example, you could send an e-mail to an administrator when a category is deleted.') .'</p>';
+      return $explanation .'<p>'. t('Below you can assign actions to run when certain taxonomy-related triggers happen. For example, you could send an e-mail to an administrator when a term is deleted.') .'</p>';
     case 'admin/build/trigger/user':
       return $explanation .'<p>'. t("Below you can assign actions to run when certain user-related triggers happen. For example, you could send an e-mail to an administrator when a user account is deleted.") .'</p>';
     case 'admin/help#trigger':
       $output = '<p>'. t('The Trigger module provides the ability to trigger <a href="@actions">actions</a> upon system events, such as when new content is added or when a user logs in.', array('@actions' => url('admin/settings/actions'))) .'</p>';
-      $output .= '<p>'. t('The combination of actions and triggers can perform many useful tasks, such as e-mailing an administrator if a user account is deleted, or automatically unpublishing comments that contain certain words. By default, there are five "contexts" of events (Categories, Comments, Content, Cron, and Users), but more may be added by additional modules.') .'</p>';
+      $output .= '<p>'. t('The combination of actions and triggers can perform many useful tasks, such as e-mailing an administrator if a user account is deleted, or automatically unpublishing comments that contain certain words. By default, there are five "contexts" of events (Comments, Content, Cron, Taxonomy, and Users), but more may be added by additional modules.') .'</p>';
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@trigger">Trigger</a> page.', array('@trigger' => 'http://drupal.org/handbook/modules/trigger/')) .'</p>';
       return $output;
   }
@@ -71,7 +71,7 @@ function trigger_menu() {
     'file' => 'trigger.admin.inc',
   );
   $items['admin/build/trigger/taxonomy'] = array(
-    'title' => 'Categories',
+    'title' => 'Taxonomy',
     'page callback' => 'trigger_assign',
     'page arguments' => array('taxonomy'),
     'access callback' => 'trigger_access_check',
