@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.394 2007/11/11 22:43:44 goba Exp $
+// $Id: theme.inc,v 1.395 2007/11/20 10:18:42 goba Exp $
 
 /**
  * @file
@@ -1668,6 +1668,22 @@ function theme_progress_bar($percent, $message) {
   $output .= '<div class="message">'. $message .'</div>';
   $output .= '</div>';
 
+  return $output;
+}
+
+/**
+ * Create a standard indentation div. Used for drag and drop tables.
+ * 
+ * @param $size
+ *   Optional. The number of indentations to create.
+ * @return
+ *   A string containing indentations.
+ */
+function theme_indentation($size = 1) {
+  $output = '';
+  for ($n = 0; $n < $size; $n++) {
+    $output .= '<div class="indentation">&nbsp;</div>';
+  }
   return $output;
 }
 

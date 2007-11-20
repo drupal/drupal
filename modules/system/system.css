@@ -1,4 +1,4 @@
-/* $Id: system.css,v 1.40 2007/11/16 13:16:50 goba Exp $ */
+/* $Id: system.css,v 1.41 2007/11/20 10:18:43 goba Exp $ */
 
 /*
 ** HTML elements
@@ -46,8 +46,9 @@ thead th {
 }
 div.indentation {
   width: 20px;
+  height: 1.7em;
   margin: -0.4em 0.2em -0.4em -0.4em;
-  padding: 0.4em 0 0.4em 0.6em;
+  padding: 0.42em 0 0.42em 0.6em;
   float: left;
 }
 div.tree-child {
@@ -367,7 +368,7 @@ a.tabledrag-handle {
   cursor: move;
   float: left;
   height: 1.7em;
-  margin: -0.42em 0 -0.42em -0.5em;
+  margin: -0.4em 0 -0.4em -0.5em;
   padding: 0.42em 1.5em 0.42em 0.5em;
   text-decoration: none;
 }

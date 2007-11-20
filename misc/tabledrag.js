@@ -53,15 +53,26 @@ Drupal.tableDrag = function(table, tableSettings) {
   this.scrollY = 0;
   this.windowHeight = 0;
 
-  // Check if this table contains indentations.
-  var indents = $('div.indentation', table);
-  this.indentEnabled = indents.size() > 0 ? true : false;
+  // Check this table's settings to see if there are parent relationships in
+  // this table. For efficiency, large sections of code can be skipped if we
+  // don't need to track horizontal movement and indentations.
+  this.indentEnabled = false;
+  for (group in tableSettings) {
+    for (n in tableSettings[group]) {
+      if (tableSettings[group][n]['relationship'] == 'parent') {
+        this.indentEnabled = true;
+      }
+    }
+  }
   if (this.indentEnabled) {
-    var indentSize = indents.css('width');
     this.oldX = 0;
     this.indentCount = 1; // Total width of indents, set in makeDraggable.
-    this.indentIncrement = indentSize.replace(/[0-9\.]*/, '');
-    this.indentAmount = parseInt(indentSize);
+    // Find the width of indentations to measure mouse movements against.
+    // Because the table doesn't need to start with any indentations, we
+    // manually create an empty div, check it's width, then remove.
+    var indent = $(Drupal.theme('tableDragIndentation')).appendTo('body');
+    this.indentAmount = parseInt(indent.css('width'));
+    indent.remove();
   }
 
   // Make each applicable row draggable.
@@ -253,7 +264,7 @@ Drupal.tableDrag.prototype.makeDraggable = function(item) {
           self.safeBlur = false; // Do not allow the onBlur cleanup.
           self.rowObject.direction = 'up';
           keyChange = true;
-          if (self.rowObject.isValidSwap(previousRow, 'up', 0)) {
+          if (self.rowObject.isValidSwap(previousRow, 0)) {
             self.rowObject.swap('before', previousRow);
             window.scrollBy(0, -parseInt(item.offsetHeight));
           }
@@ -280,7 +291,7 @@ Drupal.tableDrag.prototype.makeDraggable = function(item) {
           self.safeBlur = false; // Do not allow the onBlur cleanup.
           self.rowObject.direction = 'down';
           keyChange = true;
-          if (self.rowObject.isValidSwap(nextRow, 'down', 0)) {
+          if (self.rowObject.isValidSwap(nextRow, 0)) {
             self.rowObject.swap('after', nextRow);
           }
           else {
@@ -549,8 +560,12 @@ Drupal.tableDrag.prototype.updateFields = function(changedRow) {
     // the source rows for each seperately.
     var rowSettings = this.rowSettings(group, changedRow);
 
+    // Set the row as it's own target.
+    if (rowSettings.relationship == 'self') {
+      var sourceRow = changedRow;
+    }
     // Siblings are easy, check previous and next rows.
-    if (rowSettings.relationship == 'sibling') {
+    else if (rowSettings.relationship == 'sibling') {
       var previousRow = $(changedRow).prev('tr').get(0);
       var nextRow = $(changedRow).next('tr').get(0);
       var sourceRow = changedRow;
@@ -586,11 +601,16 @@ Drupal.tableDrag.prototype.updateFields = function(changedRow) {
       if (previousRow.length) {
         sourceRow = previousRow[0];
       }
-      // Otherwise we went all the way to the top of the table.
-      // Assume that the first item has no indentions.
+      // Otherwise we went all the way to the left of the table without finding
+      // a parent, meaning this item has been placed at the root level.
       else {
-        // Basically copy first item's value.
-        sourceRow = $('tr.draggable:first')[0];
+        // Use the first row in the table as source, because it's garanteed to
+        // be at the root level. Find the first item, then compare this row
+        // against it as a sibling.
+        sourceRow = $('tr.draggable:first').get(0);
+        if (sourceRow == this.rowObject.element) {
+          sourceRow = $(this.rowObject.group[this.rowObject.group.length - 1]).next('tr.draggable').get(0);
+        }
         var useSibling = true;
       }
     }
@@ -615,6 +635,10 @@ Drupal.tableDrag.prototype.updateFields = function(changedRow) {
       var sourceClass = '.' + rowSettings.source;
       var sourceElement = $(sourceClass, sourceRow).get(0);
       switch (rowSettings.action) {
+        case 'depth':
+          // Get the depth of the target row.
+          targetElement.value = $('.indentation', $(sourceElement).parents('tr:first')).size();
+          break;
         case 'match':
           // Update the value.
           targetElement.value = sourceElement.value;
@@ -634,7 +658,7 @@ Drupal.tableDrag.prototype.updateFields = function(changedRow) {
           }
           else {
             // Assume a numeric input field.
-            var weight = 0;
+            var weight = parseInt($(targetClass, siblings[0]).val()) || 0;
             $(targetClass, siblings).each(function() {
               this.value = weight;
               weight++;
@@ -832,7 +856,7 @@ Drupal.tableDrag.prototype.row.prototype.isValidSwap = function(row, indentDiff)
   if (this.table.tBodies[0].rows[0] == row) {
     // Do not let the first row contain indentations
     // or let an un-draggable first row have anything put before it.
-    if (this.indents > 0 || $(row).is(':not(.draggable)')) {
+    if ((this.indents + indentDiff) > 0 || $(row).is(':not(.draggable)')) {
       return false;
     }
   }

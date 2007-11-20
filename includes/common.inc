@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.715 2007/11/16 15:35:24 dries Exp $
+// $Id: common.inc,v 1.716 2007/11/20 10:18:42 goba Exp $
 
 /**
  * @file
@@ -1954,19 +1954,19 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
  * In a situation where a single weight column is being sorted in the table, the
  * classes could be added like this (in the theme function):
  * @code
- * $form['my_elements'][$delta]['weight']['attributes']['class'] = "my-elements-weight";
+ * $form['my_elements'][$delta]['weight']['#attributes']['class'] = "my-elements-weight";
  * @endcode
  *
  * Calling drupal_add_tabledrag() would then be written as such:
  * @code
- * drupal_add_tabledrag('my-module-table', 'sort', 'sibling', 'my-elements-weight');
+ * drupal_add_tabledrag('my-module-table', 'order', 'sibling', 'my-elements-weight');
  * @endcode
  *
  * In a more complex case where there are several groups in one column (such as
  * the block regions on the admin/build/block page), a separate subgroup class
  * must also be added to differentiate the groups.
  * @code
- * $form['my_elements'][$region][$delta]['weight']['attributes']['class'] = "my-elements-weight my-elements-weight-". $region;
+ * $form['my_elements'][$region][$delta]['weight']['#attributes']['class'] = "my-elements-weight my-elements-weight-". $region;
  * @endcode
  *
  * $group is still 'my-element-weight', and the additional $subgroup variable
@@ -1975,7 +1975,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
  *
  * @code
  * foreach ($regions as $region) {
- *   drupal_add_tabledrag('my-module-table', 'sort', 'sibling', 'my-elements-weight', 'my-elements-weight-'. $region);
+ *   drupal_add_tabledrag('my-module-table', 'order', 'sibling', 'my-elements-weight', 'my-elements-weight-'. $region);
  * }
  * @endcode
  *
@@ -1996,13 +1996,15 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
  *   String containing the target table's id attribute. If the table does not
  *   have an id, one will need to be set, such as <table id="my-module-table">.
  * @param $action
- *   String describing the action to be done on the form item. Either 'match' or
- *   'sort'. Match is typically used for parent relationships, sort is typically
- *   used to set weights on other form elements with the same group.
+ *   String describing the action to be done on the form item. Either 'match'
+ *   'depth', or 'order'. Match is typically used for parent relationships.
+ *   Order is typically used to set weights on other form elements with the same
+ *   group. Depth updates the target element with the current indentation.
  * @param $relationship
  *   String describing where the $action variable should be performed. Either
- *   'parent' or 'sibling'. Parent will only look for fields up the tree.
- *   Sibling will look for fields in the same group in rows above and below it.
+ *   'parent', 'sibling', or 'self'. Parent will only look for fields up the
+ *   tree. Sibling will look for fields in the same group in rows above and
+ *   below it. Self affects the dragged row itself.
  * @param $group
  *   A class name applied on all related form elements for this action.
  * @param $subgroup
@@ -2928,6 +2930,9 @@ function drupal_common_themes() {
     ),
     'progress_bar' => array(
       'arguments' => array('percent' => NULL, 'message' => NULL),
+    ),
+    'indentation' => array(
+      'arguments' => array('size' => 1),
     ),
     // from pager.inc
     'pager' => array(

@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.admin.inc,v 1.7 2007/11/17 14:25:23 dries Exp $
+// $Id: menu.admin.inc,v 1.8 2007/11/20 10:18:43 goba Exp $
 
 /**
  * @file
@@ -28,7 +28,7 @@ function menu_overview_page() {
  */
 function menu_overview_form(&$form_state, $menu) {
   global $menu_admin;
-  $sql ="
+  $sql = "
     SELECT m.load_functions, m.to_arg_functions, m.access_callback, m.access_arguments, m.page_callback, m.page_arguments, m.title, m.title_callback, m.title_arguments, m.type, ml.*
     FROM {menu_links} ml LEFT JOIN {menu_router} m ON m.path = ml.router_path
     WHERE ml.menu_name = '%s'
@@ -66,7 +66,7 @@ function _menu_overview_tree_form($tree) {
     $item = $data['link'];
     // Don't show callbacks; these have $item['hidden'] < 0.
     if ($item && $item['hidden'] >= 0) {
-      $mlid = $item['mlid'];
+      $mlid = 'mlid:'. $item['mlid'];
       $form[$mlid]['#item'] = $item;
       $form[$mlid]['#attributes'] = $item['hidden'] ? array('class' => 'menu-disabled') : array('class' => 'menu-enabled');
       $form[$mlid]['title']['#value'] = l($item['title'], $item['href'], $item['options']) . ($item['hidden'] ? ' ('. t('disabled') .')' : '');
@@ -77,6 +77,19 @@ function _menu_overview_tree_form($tree) {
       $form[$mlid]['expanded'] = array(
         '#type' => 'checkbox',
         '#default_value' => $item['has_children'] && $item['expanded'],
+      );
+      $form[$mlid]['weight'] = array(
+        '#type' => 'weight',
+        '#default_value' => isset($form_state[$mlid]['weight']) ? $form_state[$mlid]['weight'] : $item['weight'],
+      );
+      $form[$mlid]['mlid'] = array(
+        '#type' => 'hidden',
+        '#value' => $item['mlid'],
+      );
+      $form[$mlid]['plid'] = array(
+        '#type' => 'textfield',
+        '#default_value' => isset($form_state[$mlid]['plid']) ? $form_state[$mlid]['plid'] : $item['plid'],
+        '#size' => 6,
       );
       // Build a list of operations.
       $operations = array();
@@ -103,19 +116,47 @@ function _menu_overview_tree_form($tree) {
   return $form;
 }
 
-function menu_overview_form_submit($form) {
+/**
+ * Submit handler for the menu overview form.
+ * 
+ * This function takes great care in saving parent items first, then items
+ * underneath them. Saving items in the incorrect order can break the menu tree.
+ * 
+ * @see menu_overview_form()
+ */
+function menu_overview_form_submit($form, &$form_state) {
+  // When dealing with saving menu items, the order in which these items are
+  // saved is critical. If a changed child item is saved before its parent,
+  // the child item could be saved with an invalid path past its immediate
+  // parent. To prevent this, save items in the form in the same order they
+  // are sent by $_POST, ensuring parents are saved first, then their children.
+  // See http://drupal.org/node/181126#comment-632270
+  $order = array_flip(array_keys($form['#post'])); // Get the $_POST order.
+  $form = array_merge($order, $form); // Update our original form with the new order.
+
+  $updated_items = array();
+  $fields = array('expanded', 'weight', 'plid');
   foreach (element_children($form) as $mlid) {
-    if (isset($form[$mlid]['hidden'])) {
+    if (isset($form[$mlid]['#item'])) {
       $element = $form[$mlid];
+      // Update any fields that have changed in this menu item.
+      foreach ($fields as $field) {
+        if ($element[$field]['#value'] != $element[$field]['#default_value']) {
+          $element['#item'][$field] = $element[$field]['#value'];
+          $updated_items[$mlid] = $element['#item'];
+        }
+      }
+      // Hidden is a special case, the value needs to be reversed.
       if ($element['hidden']['#value'] != $element['hidden']['#default_value']) {
         $element['#item']['hidden'] = !$element['hidden']['#value'];
-        menu_link_save($element['#item']);
-      }
-      if ($element['expanded']['#value'] != $element['expanded']['#default_value']) {
-        $element['#item']['expanded'] = $element['expanded']['#value'];
-        menu_link_save($element['#item']);
+        $updated_items[$mlid] = $element['#item'];
       }
     }
+  }
+
+  // Save all our changed items to the database.
+  foreach ($updated_items as $item) {
+    menu_link_save($item);
   }
 }
 
@@ -123,7 +164,17 @@ function menu_overview_form_submit($form) {
  * Theme the menu overview form into a table.
  */
 function theme_menu_overview_form($form) {
-  $header = array(t('Enabled'), t('Expanded'), t('Menu item'), array('data' => t('Operations'), 'colspan' => '3'));
+  drupal_add_tabledrag('menu-overview', 'match', 'parent', 'menu-plid', 'menu-plid', 'menu-mlid');
+  drupal_add_tabledrag('menu-overview', 'order', 'sibling', 'menu-weight');
+
+  $header = array(
+    t('Menu item'),
+    array('data' => t('Expanded'), 'class' => 'checkbox'),
+    array('data' => t('Enabled'), 'class' => 'checkbox'),
+    t('Weight'),
+    array('data' => t('Operations'), 'colspan' => '3'),
+  );
+
   $rows = array();
   foreach (element_children($form) as $mlid) {
     if (isset($form[$mlid]['hidden'])) {
@@ -137,15 +188,23 @@ function theme_menu_overview_form($form) {
         $operations[] = '';
       }
 
+      // Add special classes to be used for tabledrag.js.
+      $element['plid']['#attributes']['class'] = 'menu-plid';
+      $element['mlid']['#attributes']['class'] = 'menu-mlid';
+      $element['weight']['#attributes']['class'] = 'menu-weight';
+
+      // Change the parent field to a hidden. This allows any value but hides the field.
+      $element['plid']['#type'] = 'hidden';
+
       $row = array();
-      $row[] = array('data' => drupal_render($element['hidden']), 'align' => 'center');
-      $row[] = array('data' => drupal_render($element['expanded']), 'align' => 'center');
-      $depth = $element['#item']['depth'];
-      $indentation = str_repeat('&nbsp;&nbsp;', $depth - 1) . ($depth > 1 ? '-&nbsp;' : '');
-      $row[] = $indentation . drupal_render($element['title']);
+      $row[] = theme('indentation', $element['#item']['depth'] - 1) . drupal_render($element['title']);
+      $row[] = array('data' => drupal_render($element['expanded']), 'class' => 'checkbox');
+      $row[] = array('data' => drupal_render($element['hidden']), 'class' => 'checkbox');
+      $row[] = drupal_render($element['weight']) . drupal_render($element['plid']) . drupal_render($element['mlid']);
       $row = array_merge($row, $operations);
 
       $row = array_merge(array('data' => $row), $element['#attributes']);
+      $row['class'] = !empty($row['class']) ? $row['class'] .' draggable' : 'draggable';
       $rows[] = $row;
     }
   }
