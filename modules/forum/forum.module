@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.426 2007/11/20 13:24:54 dries Exp $
+// $Id: forum.module,v 1.427 2007/11/21 09:31:57 goba Exp $
 
 /**
  * @file
@@ -271,7 +271,7 @@ function forum_nodeapi(&$node, $op, $teaser, $page) {
       db_query('DELETE FROM {forum} WHERE nid = %d', $node->nid);
       break;
     case 'load':
-      return db_fetch_object(db_query('SELECT tid AS forum_tid FROM {forum} WHERE vid = %d', $node->vid));
+      return db_fetch_array(db_query('SELECT tid AS forum_tid FROM {forum} WHERE vid = %d', $node->vid));
   }
 
   return;
