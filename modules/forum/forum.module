@@ -361,6 +361,10 @@ function forum_form_alter(&$form, $form_state, $form_id) {
       $form['settings']['required'] = array('#type' => 'value', '#value' => 1);
     }
   }
+  // Hide multiple parents select from forum terms.
+  if ($form_id == 'taxonomy_form_term') {
+    unset($form['advanced']['parent']);
+  }
 }
 
 /**
