@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.admin.inc,v 1.10 2007/11/21 19:08:18 goba Exp $
+// $Id: menu.admin.inc,v 1.11 2007/11/21 19:12:00 goba Exp $
 
 /**
  * @file
@@ -156,6 +156,7 @@ function menu_overview_form_submit($form, &$form_state) {
 
   // Save all our changed items to the database.
   foreach ($updated_items as $item) {
+    $item['customized'] = 1;
     menu_link_save($item);
   }
 }
