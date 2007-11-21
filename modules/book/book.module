@@ -328,6 +328,9 @@ function book_form_alter(&$form, $form_state, $form_id) {
  * form element.
  */
 function _book_parent_select($book_link) {
+  if (variable_get('menu_override_parent_selector', FALSE)) {
+    return array();
+  }
   // Offer a message or a drop-down to choose a different parent page.
   $form = array(
     '#type' => 'hidden',

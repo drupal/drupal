@@ -229,6 +229,7 @@ function menu_edit_item(&$form_state, $type, $item, $menu) {
     '#tree' => TRUE,
     '#weight' => -2,
     '#attributes' => array('class' => 'menu-item-form'),
+    '#item' => $item,
   );
   if ($type == 'add' || empty($item)) {
     // This is an add form, initialize the menu link.
