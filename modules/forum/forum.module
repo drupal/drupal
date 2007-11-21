@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.427 2007/11/21 09:31:57 goba Exp $
+// $Id: forum.module,v 1.428 2007/11/21 14:02:23 goba Exp $
 
 /**
  * @file
@@ -360,6 +360,10 @@ function forum_form_alter(&$form, $form_state, $form_id) {
       unset($form['delete']);
       $form['settings']['required'] = array('#type' => 'value', '#value' => 1);
     }
+  }
+  // Hide multiple parents select from forum terms.
+  if ($form_id == 'taxonomy_form_term') {
+    unset($form['advanced']['parent']);
   }
 }
 
