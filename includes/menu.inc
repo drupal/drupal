@@ -1132,7 +1132,6 @@ function menu_navigation_links($menu_name, $level = 0) {
       $l = $item['link']['options'];
       $l['href'] = $item['link']['href'];
       $l['title'] = $item['link']['title'];
-      $l['attributes']['id'] = $item['link']['mlid'];
       // Keyed with unique menu id to generate classes from theme_links().
       $links['menu-'. $item['link']['mlid']] = $l;
     }
