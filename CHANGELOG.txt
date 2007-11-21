@@ -1,6 +1,6 @@
-// $Id: CHANGELOG.txt,v 1.235 2007/11/21 22:33:30 goba Exp $
+// $Id: CHANGELOG.txt,v 1.236 2007/11/21 22:53:39 goba Exp $
 
-Drupal 6.0-beta3, 2007-11-21
+Drupal 6.0, xxxx-xx-xx (development version)
 ----------------------
 - New, faster and better menu system.
 - New watchdog as a hook functionality.
