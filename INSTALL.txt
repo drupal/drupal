@@ -1,4 +1,4 @@
-// $Id: INSTALL.txt,v 1.47 2007/11/17 14:25:23 dries Exp $
+// $Id: INSTALL.txt,v 1.48 2007/11/21 09:49:36 goba Exp $
 
 CONTENTS OF THIS FILE
 ---------------------
@@ -62,7 +62,7 @@ INSTALLATION
    http://drupal.org/project/Translations and download the package. Extract
    the contents to the same directory where you extracted Drupal into.
 
-2. GRANT WRITE PERMISSIONS ON CONFIGURATION FILE AND FILES STORAGE DIRECTORY
+2. GRANT WRITE PERMISSIONS ON CONFIGURATION FILE
 
    Drupal comes with a default.settings.php file in the sites/default
    directory. The installer will create a copy of this file filled with
@@ -72,14 +72,18 @@ INSTALLATION
 
      chmod o+w sites/default
 
+3. CREATE AND GRANT WRITE PERMISSIONS TO FILES DIRECTORY
+
    Drupal requires the files directory be present and writable during
    the installation (the location of the files directory can be changed
-   after Drupal is installed). Give the web server write privileges to the
-   files directory with the command (from the installation directory):
+   after Drupal is installed). Use the following commands (from the
+   installation directory) to create this directory and grant the
+   web server write privileges to it:
 
+     mkdir files
      chmod o+w files
 
-3. CREATE THE DRUPAL DATABASE
+4. CREATE THE DRUPAL DATABASE
 
    Drupal requires access to a database in order to be installed. Your database
    user will need sufficient privileges to run Drupal. Additional information
@@ -93,9 +97,9 @@ INSTALLATION
    Take note of the username, password, database name and hostname as you
    create the database. You will enter these items in the install script.
 
-4. RUN THE INSTALL SCRIPT
+5. RUN THE INSTALL SCRIPT
 
-   To run the install script point your browser to the base url of your website
+   To run the install script point your browser to the base URL of your website
    (i.e. http://www.example.com).
 
    You will be guided through several screens to set up the database,
@@ -110,7 +114,7 @@ INSTALLATION
    file is at sites/default/settings.php, it may be in another location
    if you use the multi-site setup, as explained below.
 
-5. CONFIGURE DRUPAL
+6. CONFIGURE DRUPAL
 
    When the install script succeeds, you will be directed to the "Welcome"
    page, and you will be logged in as the administrator already. Proceed with
@@ -122,14 +126,58 @@ INSTALLATION
    running FastCGI can run into problems if the $base_url variable is left
    commented out (see http://bugs.php.net/bug.php?id=19656).
 
-   Determine whether the default "files" directory is the right location for your
-   file system path. Drupal uses the location specified in the file system path
-   to store files attached to site content, theme-specific logos, user avatars, and
-   some temporary files. On some installations, it may be necessary to modify
-   the file system path, especially in large or multi-site configurations. See the
-   files/README.txt file for more information about setting the file system path.
+7. REVIEW FILE SYSTEM STORAGE SETTINGS
 
-6. CRON TASKS
+   The files directory created in step 3 is the default file system path used 
+   to store all uploaded files, as well as some temporary files created by Drupal. 
+   After installation, the settings for the file system path may be modified
+   to store uploaded files in a different location.
+
+   It is not necessary to modify this path, but you may wish to change it if:
+
+     * your site runs multiple Drupal installations from a single codebase
+       (modify the file system path of each installation to a different
+       directory so that uploads do not overlap between installations);
+
+     * your site runs a number of web server front-ends behind a load
+       balancer or reverse proxy (modify the file system path on each
+       server to point to a shared file repository); or,
+
+     * your site policies specify that all site-related files are stored
+       under the sites directory in order to simplify backup and restore
+       operations (modify the file system path to point to a newly-created
+       directory underneath sites).
+
+   To modify the file system path:
+
+     * Ensure that the new location for the path exists or create it if
+       necessary. To create a new directory named uploads, for example,
+       use the following command from a shell or system prompt (while in
+       the installation directory):
+
+           mkdir uploads
+
+     * Ensure that the new location for the path is writable by the web
+       server process. To grant write permissions for a directory named
+       uploads, you may need to use the following command from a shell 
+       or system prompt (while in the installation directory):
+
+           chmod o+w uploads
+
+     * Access the file system path settings in Drupal by selecting these
+       menu items from the Navigation menu:
+
+           administer > site configuration > file system
+
+       Enter the path to the new location (e.g.: uploads) at the File
+       System Path prompt. 
+
+   Changing the file system path after files have been uploaded may cause
+   unexpected problems on an existing site. If you modify the file system path
+   on an existing site, remember to copy all files from the original location
+   to the new location.
+
+8. CRON TASKS
 
    Many Drupal modules (such as the search functionality) have periodic tasks
    that must be triggered by a cron job. To activate these tasks, call the cron
@@ -243,3 +291,4 @@ For platform specific configuration issues and other installation and
 administration assistance, please consult the Drupal handbook at
 http://drupal.org/handbook. You can view the wide range of other support options
 available at http://drupal.org/support.
+

@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.189 2007/11/21 09:46:44 goba Exp $
+// $Id: system.install,v 1.190 2007/11/21 09:49:36 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -165,7 +165,7 @@ function system_requirements($phase) {
     else if ($phase == 'install') {
       // For the installer UI, we need different wording. 'value' will
       // be treated as version, so provide none there.
-      $requirements['file system']['description'] = $error .' '. $t('To proceed with the installation, please change the %directory directory permissions to allow the installer to write to it. If you are unsure how to do so, please consult the <a href="@handbook_url">on-line handbook</a>.', array('%directory' => $directory, '@handbook_url' => 'http://drupal.org/getting-started'));
+      $requirements['file system']['description'] = $error .' '. $t('To proceed with the installation, please ensure that the files directory exists and is writable by the installer. If you are unsure how to create this directory and modify its permissions, please consult the <a href="@handbook_url">on-line handbook</a> or INSTALL.txt.', array('%directory' => $directory, '@handbook_url' => 'http://drupal.org/getting-started'));
       $requirements['file system']['value'] = '';
     }
   }
