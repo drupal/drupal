@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.148 2007/11/17 14:25:23 dries Exp $
+// $Id: menu.module,v 1.149 2007/11/21 19:08:18 goba Exp $
 
 /**
  * @file
@@ -202,7 +202,13 @@ function menu_load($menu_name) {
  *   and mlid. The list excludes the given item and its children.
  */
 function menu_parent_options($menus, $item) {
-
+  // The menu_links table can be practically any size and we need a way to
+  // allow contrib modules to provide more scalable pattern choosers.
+  // hook_form_alter is too late in itself because all the possible parents are
+  // retrieved here, unless menu_override_parent_selector is set to TRUE.
+  if (variable_get('menu_override_parent_selector', FALSE)) {
+    return array();
+  }
   // If the item has children, there is an added limit to the depth of valid parents.
   if (isset($item['parent_depth_limit'])) {
     $limit = $item['parent_depth_limit'];
@@ -378,6 +384,7 @@ function menu_form_alter(&$form, $form_state, $form_id) {
     foreach (array('mlid', 'module', 'hidden', 'has_children', 'customized', 'options', 'expanded', 'hidden', 'parent_depth_limit') as $key) {
       $form['menu'][$key] = array('#type' => 'value', '#value' => $item[$key]);
     }
+    $form['menu']['#item'] = $item;
 
     $form['menu']['link_title'] = array('#type' => 'textfield',
       '#title' => t('Menu link title'),

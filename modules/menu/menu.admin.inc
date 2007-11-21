@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.admin.inc,v 1.9 2007/11/20 13:24:54 dries Exp $
+// $Id: menu.admin.inc,v 1.10 2007/11/21 19:08:18 goba Exp $
 
 /**
  * @file
@@ -229,6 +229,7 @@ function menu_edit_item(&$form_state, $type, $item, $menu) {
     '#tree' => TRUE,
     '#weight' => -2,
     '#attributes' => array('class' => 'menu-item-form'),
+    '#item' => $item,
   );
   if ($type == 'add' || empty($item)) {
     // This is an add form, initialize the menu link.
