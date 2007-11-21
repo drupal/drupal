@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.224 2007/11/09 22:14:40 goba Exp $
+// $Id: menu.inc,v 1.225 2007/11/21 09:37:07 goba Exp $
 
 /**
  * @file
@@ -1132,7 +1132,6 @@ function menu_navigation_links($menu_name, $level = 0) {
       $l = $item['link']['options'];
       $l['href'] = $item['link']['href'];
       $l['title'] = $item['link']['title'];
-      $l['attributes']['id'] = $item['link']['mlid'];
       // Keyed with unique menu id to generate classes from theme_links().
       $links['menu-'. $item['link']['mlid']] = $l;
     }
