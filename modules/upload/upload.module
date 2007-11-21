@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.188 2007/11/12 19:06:33 goba Exp $
+// $Id: upload.module,v 1.189 2007/11/21 19:13:22 goba Exp $
 
 /**
  * @file
@@ -561,12 +561,15 @@ function upload_js() {
   // We only do the upload.module part of the node validation process.
   $node = (object)$_POST;
   $form_state = array();
+
   // Handle new uploads, and merge tmp files into node-files.
   upload_node_form_submit(array(), $form_state);
-  $node->files = array_merge(isset($form_state['values']['files']) ? $form_state['values']['files'] : array(), upload_load($node));
-
-  $files = isset($_POST['files']) ? $_POST['files'] : array();
-
+  $node->files = upload_load($node);
+  if (!empty($form_state['values']['files'])) {
+    foreach($form_state['values']['files'] as $fid => $file) {
+      $node->files[$fid] = $file;
+    }
+  }
 
   $form = _upload_form($node);
   $form += array(
@@ -580,9 +583,12 @@ function upload_js() {
   $form = form_builder('upload_js', $form, $form_state);
 
   // Maintain the list and delete checkboxes values.
+  $files = isset($_POST['files']) ? $_POST['files'] : array();
   foreach ($files as $fid => $file) {
-    $form['files'][$fid]['list']['#value'] = isset($file['list']) ? 1 : 0;
-    $form['files'][$fid]['remove']['#value'] = isset($file['remove']) ? 1 : 0;
+    if (is_numeric($fid)) {
+      $form['files'][$fid]['list']['#value'] = isset($file['list']) ? 1 : 0;
+      $form['files'][$fid]['remove']['#value'] = isset($file['remove']) ? 1 : 0;
+    }
   }
 
   $output = theme('status_messages') . drupal_render($form);
