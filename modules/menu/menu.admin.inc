@@ -156,6 +156,7 @@ function menu_overview_form_submit($form, &$form_state) {
 
   // Save all our changed items to the database.
   foreach ($updated_items as $item) {
+    $item['customized'] = 1;
     menu_link_save($item);
   }
 }
