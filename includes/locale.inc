@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.160 2007/11/21 18:24:37 goba Exp $
+// $Id: locale.inc,v 1.161 2007/11/21 22:04:37 goba Exp $
 
 /**
  * @file
@@ -1027,7 +1027,7 @@ function _locale_import_read_po($op, $file, $mode = NULL, $lang = NULL, $group =
         $current["#"][] = substr($line, 1);
       }
       elseif (($context == "MSGSTR") || ($context == "MSGSTR_ARR")) { // End current entry, start a new one
-        _locale_import_one_string($op, $current, $mode, $lang, $file);
+        _locale_import_one_string($op, $current, $mode, $lang, $file, $group);
         $current = array();
         $current["#"][] = substr($line, 1);
         $context = "COMMENT";
@@ -1053,7 +1053,7 @@ function _locale_import_read_po($op, $file, $mode = NULL, $lang = NULL, $group =
     }
     elseif (!strncmp("msgid", $line, 5)) {
       if ($context == "MSGSTR") {   // End current entry, start a new one
-        _locale_import_one_string($op, $current, $mode, $lang, $file);
+        _locale_import_one_string($op, $current, $mode, $lang, $file, $group);
         $current = array();
       }
       elseif ($context == "MSGID") { // Already in this context? Parse error
@@ -1127,7 +1127,7 @@ function _locale_import_read_po($op, $file, $mode = NULL, $lang = NULL, $group =
 
   // End of PO file, flush last entry
   if (($context == "MSGSTR") || ($context == "MSGSTR_ARR")) {
-    _locale_import_one_string($op, $current, $mode, $lang, $file);
+    _locale_import_one_string($op, $current, $mode, $lang, $file, $group);
   }
   elseif ($context != "COMMENT") {
     _locale_import_message('The translation file %filename ended unexpectedly at line %line.', $file, $lineno);
