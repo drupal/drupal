@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.188 2007/11/20 14:48:07 dries Exp $
+// $Id: system.install,v 1.189 2007/11/21 09:46:44 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -345,7 +345,7 @@ function system_install() {
   // Line break filter.
   db_query("INSERT INTO {filters} (format, module, delta, weight) VALUES (%d, '%s', %d, %d)", 2, 'filter', 1, 1);
   // HTML corrector filter.
-  db_query("INSERT INTO {filters} (format, module, delta, weight) VALUES (%d, '%s', %d, %d)", 1, 'filter', 3, 10);
+  db_query("INSERT INTO {filters} (format, module, delta, weight) VALUES (%d, '%s', %d, %d)", 2, 'filter', 3, 10);
 
   db_query("INSERT INTO {variable} (name, value) VALUES ('%s','%s')", 'filter_html_1', 'i:1;');
 
