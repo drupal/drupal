@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.161 2007/11/21 22:04:37 goba Exp $
+// $Id: locale.inc,v 1.162 2007/11/22 23:58:34 goba Exp $
 
 /**
  * @file
@@ -1000,7 +1000,7 @@ function _locale_import_po($file, $langcode, $mode, $group = NULL) {
  * @param $group
  *   Text group to import PO file into (eg. 'default' for interface translations)
  */
-function _locale_import_read_po($op, $file, $mode = NULL, $lang = NULL, $group = NULL) {
+function _locale_import_read_po($op, $file, $mode = NULL, $lang = NULL, $group = 'default') {
 
   $fd = fopen($file->filepath, "rb"); // File will get closed by PHP on return
   if (!$fd) {
