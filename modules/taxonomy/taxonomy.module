@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.395 2007/11/20 15:53:59 dries Exp $
+// $Id: taxonomy.module,v 1.396 2007/11/22 13:18:01 goba Exp $
 
 /**
  * @file
@@ -513,24 +513,26 @@ function taxonomy_form_alter(&$form, $form_state, $form_id) {
  */
 function taxonomy_preview_terms($node) {
   $taxonomy = array();
-  foreach ($node->taxonomy as $key => $term) {
-    unset($node->taxonomy[$key]);
-    // A 'Multiple select' and a 'Free tagging' field returns an array.
-    if (is_array($term)) {
-      foreach ($term as $tid) {
-        if ($key == 'tags') {
-          // Free tagging; the values will be saved for later as strings
-    // instead of objects to fill the form again.
-          $taxonomy['tags'] = $term;
-        }
-        else {
-          $taxonomy[$tid] = taxonomy_get_term($tid);
+  if (isset($node->taxonomy)) {
+    foreach ($node->taxonomy as $key => $term) {
+      unset($node->taxonomy[$key]);
+      // A 'Multiple select' and a 'Free tagging' field returns an array.
+      if (is_array($term)) {
+        foreach ($term as $tid) {
+          if ($key == 'tags') {
+            // Free tagging; the values will be saved for later as strings
+            // instead of objects to fill the form again.
+            $taxonomy['tags'] = $term;
+          }
+          else {
+            $taxonomy[$tid] = taxonomy_get_term($tid);
+          }
         }
       }
-    }
-    // A 'Single select' field returns the term id.
-    elseif ($term) {
-      $taxonomy[$term] = taxonomy_get_term($term);
+      // A 'Single select' field returns the term id.
+      elseif ($term) {
+        $taxonomy[$term] = taxonomy_get_term($term);
+      }
     }
   }
   return $taxonomy;
