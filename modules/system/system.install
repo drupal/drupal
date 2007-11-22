@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.190 2007/11/21 09:49:36 goba Exp $
+// $Id: system.install,v 1.191 2007/11/22 21:02:15 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -305,9 +305,11 @@ function system_install() {
   // anyways. So we insert the superuser here, the uid is 2 here for now, but
   // very soon it will be changed to 1.
   db_query("INSERT INTO {users} (name, mail, created, data) VALUES('%s', '%s', %d, '%s')", 'placeholder-for-uid-1', 'placeholder-for-uid-1', time(), serialize(array()));
-  // This sets the above two users to 1 -1 = 0 (anonymous) and
-  // 2- 1 = 1 (superuser). We skip uid 2 but that's not a big problem.
-  db_query('UPDATE {users} SET uid = uid - 1');
+  // This sets the above two users uid 0 (anonymous). We avoid an explicit 0
+  // otherwise MySQL might insert the next auto_increment value.
+  db_query("UPDATE {users} SET uid = uid - uid WHERE name = '%s'", '');
+  // This sets uid 1 (superuser). We skip uid 2 but that's not a big problem.
+  db_query("UPDATE {users} SET uid = 1 WHERE name = '%s'", 'placeholder-for-uid-1');
 
   db_query("INSERT INTO {role} (name) VALUES ('%s')", 'anonymous user');
   db_query("INSERT INTO {role} (name) VALUES ('%s')", 'authenticated user');
