@@ -203,7 +203,8 @@ function locale_user($type, $edit, &$user, $category = NULL) {
 
     $names = array();
     foreach ($languages as $langcode => $language) {
-      $names[$langcode] = t($language->name) .' ('. $language->native .')';
+      $name = t($language->name);
+      $names[$langcode] = $name . ($language->native != $name ? ' ('. $language->native .')' : '');
     }
     $form['locale'] = array(
       '#type' => 'fieldset',
