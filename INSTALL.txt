@@ -1,4 +1,4 @@
-// $Id: INSTALL.txt,v 1.48 2007/11/21 09:49:36 goba Exp $
+// $Id: INSTALL.txt,v 1.49 2007/11/23 13:34:55 dries Exp $
 
 CONTENTS OF THIS FILE
 ---------------------
@@ -128,8 +128,8 @@ INSTALLATION
 
 7. REVIEW FILE SYSTEM STORAGE SETTINGS
 
-   The files directory created in step 3 is the default file system path used 
-   to store all uploaded files, as well as some temporary files created by Drupal. 
+   The files directory created in step 3 is the default file system path used
+   to store all uploaded files, as well as some temporary files created by Drupal.
    After installation, the settings for the file system path may be modified
    to store uploaded files in a different location.
 
@@ -159,7 +159,7 @@ INSTALLATION
 
      * Ensure that the new location for the path is writable by the web
        server process. To grant write permissions for a directory named
-       uploads, you may need to use the following command from a shell 
+       uploads, you may need to use the following command from a shell
        or system prompt (while in the installation directory):
 
            chmod o+w uploads
@@ -170,7 +170,7 @@ INSTALLATION
            administer > site configuration > file system
 
        Enter the path to the new location (e.g.: uploads) at the File
-       System Path prompt. 
+       System Path prompt.
 
    Changing the file system path after files have been uploaded may cause
    unexpected problems on an existing site. If you modify the file system path

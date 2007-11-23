@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.admin.inc,v 1.3 2007/11/20 20:13:04 goba Exp $
+// $Id: filter.admin.inc,v 1.4 2007/11/23 13:34:55 dries Exp $
 
 /**
  * @file
@@ -369,7 +369,7 @@ function theme_filter_admin_order($form) {
   $output .= drupal_render($form);
 
   drupal_add_tabledrag('filter-order', 'order', 'sibling', 'filter-order-weight', NULL, NULL, FALSE);
-  
+
   return $output;
 }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.10 2007/11/23 12:32:21 goba Exp $
+// $Id: taxonomy.admin.inc,v 1.11 2007/11/23 13:34:55 dries Exp $
 
 /**
  * @file
@@ -278,7 +278,7 @@ function taxonomy_form_term(&$form_state, $vocabulary, $edit = array()) {
   // taxonomy_get_tree and taxonomy_get_parents may contain large numbers of
   // items so we check for taxonomy_override_selector before loading the
   // full vocabulary. Contrib modules can then intercept before
-  // hook_form_alter to provide scalable alternatives. 
+  // hook_form_alter to provide scalable alternatives.
   if (!variable_get('taxonomy_override_selector', FALSE)) {
     $parent = array_keys(taxonomy_get_parents($edit['tid']));
     $children = taxonomy_get_tree($vocabulary->vid, $edit['tid']);

@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.719 2007/11/21 22:53:40 goba Exp $
+// $Id: common.inc,v 1.720 2007/11/23 13:34:55 dries Exp $
 
 /**
  * @file
@@ -1966,7 +1966,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
  *   'class' => 'draggable',
  * );
  * @endcode
- * 
+ *
  * Calling drupal_add_tabledrag() would then be written as such:
  * @code
  * drupal_add_tabledrag('my-module-table', 'order', 'sibling', 'my-elements-weight');
