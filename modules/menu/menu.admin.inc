@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.admin.inc,v 1.11 2007/11/21 19:12:00 goba Exp $
+// $Id: menu.admin.inc,v 1.12 2007/11/23 13:31:36 dries Exp $
 
 /**
  * @file
@@ -65,7 +65,7 @@ function _menu_overview_tree_form($tree) {
     $title = '';
     $item = $data['link'];
     // Don't show callbacks; these have $item['hidden'] < 0.
-    if ($item && $item['hidden'] >= 0) {
+    if ($item && $item['hidden'] >= 0 && ($item['type'] & MENU_MODIFIABLE_BY_ADMIN)) {
       $mlid = 'mlid:'. $item['mlid'];
       $form[$mlid]['#item'] = $item;
       $form[$mlid]['#attributes'] = $item['hidden'] ? array('class' => 'menu-disabled') : array('class' => 'menu-enabled');
@@ -222,101 +222,106 @@ function theme_menu_overview_form($form) {
  * Menu callback; Build the menu link editing form.
  */
 function menu_edit_item(&$form_state, $type, $item, $menu) {
+  if ($item['type'] & MENU_MODIFIABLE_BY_ADMIN) {
+    $form['menu'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Menu settings'),
+        '#collapsible' => FALSE,
+        '#tree' => TRUE,
+        '#weight' => -2,
+        '#attributes' => array('class' => 'menu-item-form'),
+        '#item' => $item,
+        );
+    if ($type == 'add' || empty($item)) {
+      // This is an add form, initialize the menu link.
+      $item = array('link_title' => '', 'mlid' => 0, 'plid' => 0, 'menu_name' => $menu['menu_name'], 'weight' => 0,  'link_path' => '', 'options' => array(), 'module' => 'menu', 'expanded' => 0, 'hidden' => 0, 'has_children' => 0);
+    }
+    foreach (array('link_path', 'mlid', 'module', 'hidden', 'has_children', 'options') as $key) {
+      $form['menu'][$key] = array('#type' => 'value', '#value' => $item[$key]);
+    }
+    // Any item created or edited via this interface is considered "customized".
+    $form['menu']['customized'] = array('#type' => 'value', '#value' => 1);
+    $form['menu']['original_item'] = array('#type' => 'value', '#value' => $item);
 
-  $form['menu'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Menu settings'),
-    '#collapsible' => FALSE,
-    '#tree' => TRUE,
-    '#weight' => -2,
-    '#attributes' => array('class' => 'menu-item-form'),
-    '#item' => $item,
-  );
-  if ($type == 'add' || empty($item)) {
-    // This is an add form, initialize the menu link.
-    $item = array('link_title' => '', 'mlid' => 0, 'plid' => 0, 'menu_name' => $menu['menu_name'], 'weight' => 0,  'link_path' => '', 'options' => array(), 'module' => 'menu', 'expanded' => 0, 'hidden' => 0, 'has_children' => 0);
-  }
-  foreach (array('link_path', 'mlid', 'module', 'hidden', 'has_children', 'options') as $key) {
-    $form['menu'][$key] = array('#type' => 'value', '#value' => $item[$key]);
-  }
-  // Any item created or edited via this interface is considered "customized".
-  $form['menu']['customized'] = array('#type' => 'value', '#value' => 1);
-  $form['menu']['original_item'] = array('#type' => 'value', '#value' => $item);
+    $path = $item['link_path'];
+    if (isset($item['options']['query'])) {
+      $path .= '?'. $item['options']['query'];
+    }
+    if (isset($item['options']['fragment'])) {
+      $path .= '#'. $item['options']['fragment'];
+    }
+    if ($item['module'] == 'menu') {
+      $form['menu']['link_path'] = array(
+          '#type' => 'textfield',
+          '#title' => t('Path'),
+          '#default_value' => $path,
+          '#description' => t('The path this menu item links to. This can be an internal Drupal path such as %add-node or an external URL such as %drupal. Enter %front to link to the front page.', array('%front' => '<front>', '%add-node' => 'node/add', '%drupal' => 'http://drupal.org')),
+          '#required' => TRUE,
+          );
+      $form['delete'] = array(
+          '#type' => 'submit',
+          '#value' => t('Delete'),
+          '#access' => $item['mlid'],
+          '#submit' => array('menu_item_delete_submit'),
+          '#weight' => 10,
+          );
+    }
+    else {
+      $form['menu']['_path'] = array(
+          '#type' => 'item',
+          '#title' => t('Path'),
+          '#description' => l($item['link_title'], $item['href'], $item['options']),
+          );
+    }
+    $form['menu']['link_title'] = array('#type' => 'textfield',
+        '#title' => t('Menu link title'),
+        '#default_value' => $item['link_title'],
+        '#description' => t('The link text corresponding to this item that should appear in the menu.'),
+        '#required' => TRUE,
+        );
+    $form['menu']['description'] = array(
+        '#type' => 'textarea',
+        '#title' => t('Description'),
+        '#default_value' => isset($item['options']['attributes']['title']) ? $item['options']['attributes']['title'] : '',
+        '#rows' => 1,
+        '#description' => t('The description displayed when hovering over a menu item.'),
+        );
+    $form['menu']['expanded'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Expanded'),
+        '#default_value' => $item['expanded'],
+        '#description' => t('If selected and this menu item has children, the menu will always appear expanded.'),
+        );
 
-  $path = $item['link_path'];
-  if (isset($item['options']['query'])) {
-    $path .= '?'. $item['options']['query'];
-  }
-  if (isset($item['options']['fragment'])) {
-    $path .= '#'. $item['options']['fragment'];
-  }
-  if ($item['module'] == 'menu') {
-    $form['menu']['link_path'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Path'),
-      '#default_value' => $path,
-      '#description' => t('The path this menu item links to. This can be an internal Drupal path such as %add-node or an external URL such as %drupal. Enter %front to link to the front page.', array('%front' => '<front>', '%add-node' => 'node/add', '%drupal' => 'http://drupal.org')),
-      '#required' => TRUE,
-    );
-    $form['delete'] = array(
-      '#type' => 'submit',
-      '#value' => t('Delete'),
-      '#access' => $item['mlid'],
-      '#submit' => array('menu_item_delete_submit'),
-      '#weight' => 10,
-    );
+    // Generate a list of possible parents (not including this item or descendants).
+    $options = menu_parent_options(menu_get_menus(), $item);
+    $default = $item['menu_name'] .':'. $item['plid'];
+    if (!isset($options[$default])) {
+      $default = 'navigation:0';
+    }
+    $form['menu']['parent'] = array(
+        '#type' => 'select',
+        '#title' => t('Parent item'),
+        '#default_value' => $default,
+        '#options' => $options,
+        '#description' => t('The maximum depth for an item and all its children is fixed at !maxdepth.  Some menu items may not be available as parents if selecting them would exceed this limit.', array('!maxdepth' => MENU_MAX_DEPTH)),
+        '#attributes' => array('class' => 'menu-title-select'),
+        );
+    $form['menu']['weight'] = array(
+        '#type' => 'weight',
+        '#title' => t('Weight'),
+        '#default_value' => $item['weight'],
+        '#description' => t('Optional. In the menu, the heavier items will sink and the lighter items will be positioned nearer the top.'),
+        );
+    $form['submit'] = array('#type' => 'submit', '#value' => t('Save'));
+
+
+    return $form;
   }
   else {
-    $form['menu']['_path'] = array(
-      '#type' => 'item',
-      '#title' => t('Path'),
-      '#description' => l($item['link_title'], $item['href'], $item['options']),
-    );
+    drupal_access_denied();
+    return;
   }
-  $form['menu']['link_title'] = array('#type' => 'textfield',
-    '#title' => t('Menu link title'),
-    '#default_value' => $item['link_title'],
-    '#description' => t('The link text corresponding to this item that should appear in the menu.'),
-    '#required' => TRUE,
-  );
-  $form['menu']['description'] = array(
-    '#type' => 'textarea',
-    '#title' => t('Description'),
-    '#default_value' => isset($item['options']['attributes']['title']) ? $item['options']['attributes']['title'] : '',
-    '#rows' => 1,
-    '#description' => t('The description displayed when hovering over a menu item.'),
-  );
-  $form['menu']['expanded'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Expanded'),
-    '#default_value' => $item['expanded'],
-    '#description' => t('If selected and this menu item has children, the menu will always appear expanded.'),
-  );
-
-  // Generate a list of possible parents (not including this item or descendants).
-  $options = menu_parent_options(menu_get_menus(), $item);
-  $default = $item['menu_name'] .':'. $item['plid'];
-  if (!isset($options[$default])) {
-    $default = 'navigation:0';
-  }
-  $form['menu']['parent'] = array(
-    '#type' => 'select',
-    '#title' => t('Parent item'),
-    '#default_value' => $default,
-    '#options' => $options,
-    '#description' => t('The maximum depth for an item and all its children is fixed at !maxdepth.  Some menu items may not be available as parents if selecting them would exceed this limit.', array('!maxdepth' => MENU_MAX_DEPTH)),
-    '#attributes' => array('class' => 'menu-title-select'),
-  );
-  $form['menu']['weight'] = array(
-    '#type' => 'weight',
-    '#title' => t('Weight'),
-    '#default_value' => $item['weight'],
-    '#description' => t('Optional. In the menu, the heavier items will sink and the lighter items will be positioned nearer the top.'),
-  );
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Save'));
-
-
-  return $form;
 }
 
 /**
