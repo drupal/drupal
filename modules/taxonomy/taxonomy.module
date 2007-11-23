@@ -428,9 +428,12 @@ function taxonomy_get_vocabularies($type = NULL) {
 /**
  * Implementation of hook_form_alter().
  * Generate a form for selecting terms to associate with a node.
+ * We check for taxonomy_override_selector before loading the full 
+ * vocabulary, so contrib modules can intercept before hook_form_alter
+ *  and provide scalable alternatives.
  */
 function taxonomy_form_alter(&$form, $form_state, $form_id) {
-  if (isset($form['type']) && isset($form['#node']) && $form['type']['#value'] .'_node_form' == $form_id) {
+  if (isset($form['type']) && isset($form['#node']) && (!variable_get('taxonomy_override_selector', FALSE)) && $form['type']['#value'] .'_node_form' == $form_id) {
     $node = $form['#node'];
 
     if (!isset($node->taxonomy)) {
