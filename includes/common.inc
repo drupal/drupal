@@ -1966,7 +1966,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
  *   'class' => 'draggable',
  * );
  * @endcode
- * 
+ *
  * Calling drupal_add_tabledrag() would then be written as such:
  * @code
  * drupal_add_tabledrag('my-module-table', 'order', 'sibling', 'my-elements-weight');

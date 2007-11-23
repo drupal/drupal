@@ -369,7 +369,7 @@ function theme_filter_admin_order($form) {
   $output .= drupal_render($form);
 
   drupal_add_tabledrag('filter-order', 'order', 'sibling', 'filter-order-weight', NULL, NULL, FALSE);
-  
+
   return $output;
 }
 
