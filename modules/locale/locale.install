@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.install,v 1.21 2007/11/15 13:27:45 goba Exp $
+// $Id: locale.install,v 1.22 2007/11/23 12:15:12 goba Exp $
 
 /**
  * Implementation of hook_install().
@@ -60,7 +60,7 @@ function locale_update_6001() {
   }
 
   // Save the languages
-  $ret[] = update_sql("INSERT INTO {languages} (language, name, native, direction, enabled, plurals, formula, domain, prefix, weight) SELECT locale, name, '', 0, enabled, plurals, formula, '', locale, 0 FROM {locales_meta}");
+  $ret[] = update_sql("INSERT INTO {languages} (language, name, native, direction, enabled, plurals, formula, domain, prefix, weight) SELECT locale, name, name, 0, enabled, plurals, formula, '', locale, 0 FROM {locales_meta}");
 
   // Save the language count in the variable table
   $count = db_result(db_query('SELECT COUNT(*) FROM {languages} WHERE enabled = 1'));

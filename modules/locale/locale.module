@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.198 2007/11/04 11:10:09 goba Exp $
+// $Id: locale.module,v 1.199 2007/11/23 12:15:12 goba Exp $
 
 /**
  * @file
@@ -203,7 +203,8 @@ function locale_user($type, $edit, &$user, $category = NULL) {
 
     $names = array();
     foreach ($languages as $langcode => $language) {
-      $names[$langcode] = t($language->name) .' ('. $language->native .')';
+      $name = t($language->name);
+      $names[$langcode] = $name . ($language->native != $name ? ' ('. $language->native .')' : '');
     }
     $form['locale'] = array(
       '#type' => 'fieldset',
