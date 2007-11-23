@@ -4,6 +4,11 @@ Drupal.behaviors.textarea = function(context) {
   $('textarea.resizable:not(.textarea-processed)', context).each(function() {
     var textarea = $(this).addClass('textarea-processed'), staticOffset = null;
 
+    // Make sure that teaser.js has done its magic before converting this textarea.
+    if (Drupal.behaviors.teaser && textarea.is(('.teaser:not(.teaser-processed)'))) {
+      Drupal.behaviors.teaser(this.parentNode);
+    }
+
     // When wrapping the text area, work around an IE margin bug.  See:
     // http://jaspan.com/ie-inherited-margin-bug-form-elements-and-haslayout
     $(this).wrap('<div class="resizable-textarea"><span></span></div>')
