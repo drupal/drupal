@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.24 2007/11/16 13:16:50 goba Exp $
+// $Id: system.admin.inc,v 1.25 2007/11/23 15:36:44 goba Exp $
 
 /**
  * @file
@@ -566,6 +566,10 @@ function _system_is_incompatible(&$incompatible, $files, $file) {
  *   The form array.
  */
 function system_modules($form_state = array()) {
+  drupal_rebuild_theme_registry();
+  node_types_rebuild();
+  menu_rebuild();
+  cache_clear_all('schema', 'cache');
   // Get current list of modules.
   $files = module_rebuild_cache();
 
@@ -864,10 +868,6 @@ function system_modules_submit($form, &$form_state) {
 
   $current_module_list = module_list(TRUE, FALSE);
   if ($old_module_list != $current_module_list) {
-    drupal_rebuild_theme_registry();
-    node_types_rebuild();
-    menu_rebuild();
-    cache_clear_all('schema', 'cache');
     drupal_set_message(t('The configuration options have been saved.'));
   }
 
