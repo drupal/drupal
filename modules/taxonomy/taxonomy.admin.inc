@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.9 2007/11/20 15:31:34 dries Exp $
+// $Id: taxonomy.admin.inc,v 1.10 2007/11/23 12:32:21 goba Exp $
 
 /**
  * @file
@@ -275,17 +275,23 @@ function taxonomy_form_term(&$form_state, $vocabulary, $edit = array()) {
     '#collapsed' => TRUE,
   );
 
-  $parent = array_keys(taxonomy_get_parents($edit['tid']));
-  $children = taxonomy_get_tree($vocabulary->vid, $edit['tid']);
+  // taxonomy_get_tree and taxonomy_get_parents may contain large numbers of
+  // items so we check for taxonomy_override_selector before loading the
+  // full vocabulary. Contrib modules can then intercept before
+  // hook_form_alter to provide scalable alternatives. 
+  if (!variable_get('taxonomy_override_selector', FALSE)) {
+    $parent = array_keys(taxonomy_get_parents($edit['tid']));
+    $children = taxonomy_get_tree($vocabulary->vid, $edit['tid']);
 
-  // A term can't be the child of itself, nor of its children.
-  foreach ($children as $child) {
-    $exclude[] = $child->tid;
+    // A term can't be the child of itself, nor of its children.
+    foreach ($children as $child) {
+      $exclude[] = $child->tid;
+    }
+    $exclude[] = $edit['tid'];
+
+    $form['advanced']['parent'] = _taxonomy_term_select(t('Parents'), 'parent', $parent, $vocabulary->vid, t('Parent terms') .'.', 1, '<'. t('root') .'>', $exclude);
+    $form['advanced']['relations'] = _taxonomy_term_select(t('Related terms'), 'relations', array_keys(taxonomy_get_related($edit['tid'])), $vocabulary->vid, NULL, 1, '<'. t('none') .'>', array($edit['tid']));
   }
-  $exclude[] = $edit['tid'];
-
-  $form['advanced']['parent'] = _taxonomy_term_select(t('Parents'), 'parent', $parent, $vocabulary->vid, t('Parent terms') .'.', 1, '<'. t('root') .'>', $exclude);
-
   $form['advanced']['synonyms'] = array(
     '#type' => 'textarea',
     '#title' => t('Synonyms'),
