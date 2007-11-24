@@ -1335,7 +1335,7 @@ function node_menu() {
     'title' => 'Content',
     'page callback' => 'node_page_default',
     'access arguments' => array('access content'),
-    'type' => MENU_MODIFIABLE_BY_ADMIN,
+    'type' => MENU_CALLBACK,
   );
   $items['node/add'] = array(
     'title' => 'Create content',
