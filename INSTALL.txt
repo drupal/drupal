@@ -1,4 +1,4 @@
-// $Id: INSTALL.txt,v 1.49 2007/11/23 13:34:55 dries Exp $
+// $Id: INSTALL.txt,v 1.50 2007/11/24 20:35:36 goba Exp $
 
 CONTENTS OF THIS FILE
 ---------------------
@@ -59,7 +59,7 @@ INSTALLATION
    different language, we have good news. You can install and use Drupal in
    other languages from the start. Check whether a released package of the
    language desired is available for this Drupal version at
-   http://drupal.org/project/Translations and download the package. Extract
+   http://drupal.org/project/translations and download the package. Extract
    the contents to the same directory where you extracted Drupal into.
 
 2. GRANT WRITE PERMISSIONS ON CONFIGURATION FILE
