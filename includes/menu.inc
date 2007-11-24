@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.225 2007/11/21 09:37:07 goba Exp $
+// $Id: menu.inc,v 1.226 2007/11/24 20:59:32 goba Exp $
 
 /**
  * @file
@@ -81,7 +81,6 @@ define('MENU_IS_ROOT', 0x0001);
 define('MENU_VISIBLE_IN_TREE', 0x0002);
 define('MENU_VISIBLE_IN_BREADCRUMB', 0x0004);
 define('MENU_LINKS_TO_PARENT', 0x0008);
-define('MENU_MODIFIABLE_BY_ADMIN', 0x0010);
 define('MENU_MODIFIED_BY_ADMIN', 0x0020);
 define('MENU_CREATED_BY_ADMIN', 0x0040);
 define('MENU_IS_LOCAL_TASK', 0x0080);
@@ -102,7 +101,7 @@ define('MENU_IS_LOCAL_TASK', 0x0080);
  * the administrator. Use this for most menu items. It is the default value if
  * no menu item type is specified.
  */
-define('MENU_NORMAL_ITEM', MENU_VISIBLE_IN_TREE | MENU_VISIBLE_IN_BREADCRUMB | MENU_MODIFIABLE_BY_ADMIN);
+define('MENU_NORMAL_ITEM', MENU_VISIBLE_IN_TREE | MENU_VISIBLE_IN_BREADCRUMB);
 
 /**
  * Callbacks simply register a path so that the correct function is fired
@@ -113,8 +112,10 @@ define('MENU_CALLBACK', MENU_VISIBLE_IN_BREADCRUMB);
 /**
  * Modules may "suggest" menu items that the administrator may enable. They act
  * just as callbacks do until enabled, at which time they act like normal items.
+ * Note for the value: 0x0010 was a flag which is no longer used, but this way
+ * the values of MENU_CALLBACK and MENU_SUGGESTED_ITEM are separate.
  */
-define('MENU_SUGGESTED_ITEM', MENU_MODIFIABLE_BY_ADMIN | MENU_VISIBLE_IN_BREADCRUMB);
+define('MENU_SUGGESTED_ITEM', MENU_VISIBLE_IN_BREADCRUMB | 0x0010);
 
 /**
  * Local tasks are rendered as tabs by default. Use this for menu items that

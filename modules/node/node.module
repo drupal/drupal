@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.906 2007/11/24 20:35:37 goba Exp $
+// $Id: node.module,v 1.907 2007/11/24 20:59:32 goba Exp $
 
 /**
  * @file
@@ -1335,7 +1335,7 @@ function node_menu() {
     'title' => 'Content',
     'page callback' => 'node_page_default',
     'access arguments' => array('access content'),
-    'type' => MENU_MODIFIABLE_BY_ADMIN,
+    'type' => MENU_CALLBACK,
   );
   $items['node/add'] = array(
     'title' => 'Create content',
