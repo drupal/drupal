@@ -47,8 +47,9 @@ define('UPDATE_UNKNOWN', 5);
 function update_help($path, $arg) {
   switch ($path) {
     case 'admin/reports/updates':
-      return '<p>'. t('Here you can find information about available updates for your installed modules and themes. Note that each module or theme is part of a "project", which may or may not have the same name, and might include multiple modules or themes within it.') .'</p>';
-
+      $output = '<p>'. t('Here you can find information about available updates for your installed modules and themes. Note that each module or theme is part of a "project", which may or may not have the same name, and might include multiple modules or themes within it.') .'</p>';
+      $output .= '<p>'. t('To extend the functionality or to change the look of your site, a number of contributed <a href="@modules">modules</a> and <a href="@themes">themes</a> are available.', array('@modules' => 'http://drupal.org/project/modules', '@themes' => 'http://drupal.org/project/themes')) .'</p>';
+      return $output;
     case 'admin/build/themes':
     case 'admin/build/modules':
       include_once './includes/install.inc';
