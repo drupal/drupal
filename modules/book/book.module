@@ -143,13 +143,6 @@ function book_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'book.pages.inc',
   );
-  $items['book/js/admin/%node'] = array(
-    'page callback' => 'book_admin_js_update',
-    'access callback' => '_book_outline_access',
-    'access arguments' => array(3),
-    'type' => MENU_CALLBACK,
-    'file' => 'book.admin.inc',
-  );
   return $items;
 }
 

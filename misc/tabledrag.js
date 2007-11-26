@@ -46,6 +46,7 @@ Drupal.tableDrag = function(table, tableSettings) {
   this.oldRowElement = null; // Remember the previous element.
   this.oldY = 0; // Used to determine up or down direction from last mouse move.
   this.changed = false; // Whether anything in the entire table has changed.
+  this.maxDepth = 0 // Maximum amount of allowed parenting.
 
   // Configure the scroll settings.
   this.scrollSettings = { amount: 4, interval: 50, trigger: 70 };
@@ -61,6 +62,9 @@ Drupal.tableDrag = function(table, tableSettings) {
     for (n in tableSettings[group]) {
       if (tableSettings[group][n]['relationship'] == 'parent') {
         this.indentEnabled = true;
+      }
+      if (tableSettings[group][n]['limit'] > 0) {
+        this.maxDepth = tableSettings[group][n]['limit'];
       }
     }
   }
@@ -190,7 +194,7 @@ Drupal.tableDrag.prototype.makeDraggable = function(item) {
     }
 
     // Create a new rowObject for manipulation of this row.
-    self.rowObject = new self.row(item, 'mouse', self.indentEnabled, true);
+    self.rowObject = new self.row(item, 'mouse', self.indentEnabled, self.maxDepth, true);
 
     // Save the position of the table.
     self.table.topY = self.getPosition(self.table).y;
@@ -244,7 +248,7 @@ Drupal.tableDrag.prototype.makeDraggable = function(item) {
   handle.keydown(function(event) {
     // If a rowObject doesn't yet exist and this isn't the tab key.
     if (event.keyCode != 9 && !self.rowObject) {
-      self.rowObject = new self.row(item, 'keyboard', self.indentEnabled, true);
+      self.rowObject = new self.row(item, 'keyboard', self.indentEnabled, self.maxDepth, true);
     }
 
     var keyChange = false;
@@ -753,10 +757,12 @@ Drupal.tableDrag.prototype.onDrop = function() {
  *   The method in which this row is being moved. Either 'keyboard' or 'mouse'.
  * @param indentEnabled
  *   Whether the containing table uses indentations. Used for optimizations.
+ * @param maxDepth
+ *   The maximum amount of indentations this row may contain.
  * @param addClasses
  *   Whether we want to add classes to this row to indicate child relationships.
  */
-Drupal.tableDrag.prototype.row = function(tableRow, method, indentEnabled, addClasses) {
+Drupal.tableDrag.prototype.row = function(tableRow, method, indentEnabled, maxDepth, addClasses) {
   this.element = tableRow;
   this.method = method;
   this.group = new Array(tableRow);
@@ -764,6 +770,7 @@ Drupal.tableDrag.prototype.row = function(tableRow, method, indentEnabled, addCl
   this.changed = false;
   this.table = $(tableRow).parents('table:first').get(0);
   this.indentEnabled = indentEnabled;
+  this.maxDepth = maxDepth;
   this.direction = ''; // Direction the row is being moved.
 
   if (this.indentEnabled) {
@@ -901,8 +908,8 @@ Drupal.tableDrag.prototype.row.prototype.indent = function(indentDiff) {
     indentDiff = Math.max(nextIndent - this.indents, indentDiff);
   }
 
-  // Never allow indentation greater than 8 parents (menu system limit).
-  if (indentDiff + this.groupDepth > 8) {
+  // Never allow indentation greater the set limit.
+  if (this.maxDepth && indentDiff + this.groupDepth > this.maxDepth) {
     indentDiff = 0;
   }
 
