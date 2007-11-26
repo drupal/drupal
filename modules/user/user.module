@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.866 2007/11/20 13:44:38 dries Exp $
+// $Id: user.module,v 1.867 2007/11/26 08:15:32 goba Exp $
 
 /**
  * @file
@@ -1047,19 +1047,21 @@ function user_menu() {
     'file' => 'user.pages.inc',
   );
 
-  $items['user/%user/edit'] = array(
+  $items['user/%user_category/edit'] = array(
     'title' => 'Edit',
     'page callback' => 'user_edit',
     'page arguments' => array(1),
     'access callback' => 'user_edit_access',
     'access arguments' => array(1),
     'type' => MENU_LOCAL_TASK,
+    'load arguments' => array('%map', '%index'),
     'file' => 'user.pages.inc',
   );
 
-  $items['user/%user/edit/account'] = array(
+  $items['user/%user_category/edit/account'] = array(
     'title' => 'Account',
     'type' => MENU_DEFAULT_LOCAL_TASK,
+    'load arguments' => array('%map', '%index'),
   );
 
   $empty_account = new stdClass();
@@ -1067,7 +1069,7 @@ function user_menu() {
     foreach ($categories as $key => $category) {
       // 'account' is already handled by the MENU_DEFAULT_LOCAL_TASK.
       if ($category['name'] != 'account') {
-        $items['user/%user/edit/'. $category['name']] = array(
+        $items['user/%user_category/edit/'. $category['name']] = array(
           'title callback' => 'check_plain',
           'title arguments' => array($category['title']),
           'page callback' => 'user_edit',
@@ -1076,6 +1078,8 @@ function user_menu() {
           'access arguments' => isset($category['access arguments']) ? $category['access arguments'] : array(),
           'type' => MENU_LOCAL_TASK,
           'weight' => $category['weight'],
+          'load arguments' => array('%map', '%index'),
+          'tab_parent' => 'user/%/edit',
           'file' => 'user.pages.inc',
         );
       }
@@ -1090,6 +1094,45 @@ function user_init() {
 
 function user_current_load($arg) {
   return user_load($arg ? $arg : $GLOBALS['user']->uid);
+}
+
+/**
+ * Return a user object after checking if any profile category in the path exists.
+ */
+function user_category_load($uid, &$map, $index) {
+  static $user_categories, $accounts;
+
+  // Cache $account - this load function will get called for each profile tab.
+  if (!isset($accounts[$uid])) {
+    $accounts[$uid] = user_load($uid);
+  }
+  $valid = TRUE;
+  if ($account = $accounts[$uid]) {
+    // Since the path is like user/%/edit/category_name, the category name will
+    // be at a position 2 beyond the index corresponding to the % wildcard.
+    $category_index = $index + 2;
+    // Valid categories may contain slashes, and hence need to be imploded.
+    $category_path = implode('/', array_slice($map, $category_index));
+    if ($category_path) {
+      // Check that the requested category exists.
+      $valid = FALSE;
+      if (!isset($user_categories)) {
+        $empty_account = new stdClass();
+        $user_categories = _user_categories($empty_account);
+      }
+      foreach ($user_categories as $category) {
+        if ($category['name'] == $category_path) {
+          $valid = TRUE;
+          // Truncate the map array in case the category name had slashes.
+          $map = array_slice($map, 0, $category_index);
+          // Assign the imploded category name to the last map element.
+          $map[$category_index] = $category_path;
+          break;
+        }
+      }
+    }
+  }
+  return $valid ? $account : FALSE;
 }
 
 /**
