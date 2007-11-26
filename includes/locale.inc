@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.164 2007/11/26 16:36:42 dries Exp $
+// $Id: locale.inc,v 1.165 2007/11/26 22:34:08 goba Exp $
 
 /**
  * @file
@@ -408,8 +408,13 @@ function locale_languages_delete_form(&$form_state, $langcode) {
 function locale_languages_delete_form_submit($form, &$form_state) {
   $languages = language_list();
   if (isset($languages[$form_state['values']['langcode']])) {
-    db_query("DELETE FROM {languages} WHERE language = '%s'", $form_state['values']['langcode']);
+    // Remove translations first.
     db_query("DELETE FROM {locales_target} WHERE language = '%s'", $form_state['values']['langcode']);
+    cache_clear_all('locale:'. $form_state['values']['langcode'], 'cache');
+    // With no translations, this removes existing JavaScript translations file.
+    _locale_rebuild_js($form_state['values']['langcode']);
+    // Remove the language.
+    db_query("DELETE FROM {languages} WHERE language = '%s'", $form_state['values']['langcode']);
     db_query("UPDATE {node} SET language = '' WHERE language = '%s'", $form_state['values']['langcode']);
     $variables = array('%locale' => $languages[$form_state['values']['langcode']]->name);
     drupal_set_message(t('The language %locale has been removed.', $variables));
@@ -833,8 +838,8 @@ function locale_translate_edit_form_submit($form, &$form_state) {
       db_query("DELETE FROM {locales_target} WHERE lid = %d AND language = '%s'", $lid, $key);
     }
 
-    // Refresh the JS file for this language.
-    _locale_rebuild_js($key);
+    // Force JavaScript translation file recreation for this language.
+    _locale_invalidate_js($key);
   }
 
   drupal_set_message(t('The string has been saved.'));
@@ -858,12 +863,10 @@ function locale_translate_edit_form_submit($form, &$form_state) {
  * Delete a language string.
  */
 function locale_translate_delete($lid) {
-  $langcode = db_result(db_query('SELECT language FROM {locales_target} WHERE lid = %d', $lid));
   db_query('DELETE FROM {locales_source} WHERE lid = %d', $lid);
   db_query('DELETE FROM {locales_target} WHERE lid = %d', $lid);
-  if ($langcode) {
-    _locale_rebuild_js($langcode);
-  }
+  // Force JavaScript translation file recreation for all languages.
+  _locale_invalidate_js();
   cache_clear_all('locale:', 'cache', TRUE);
   drupal_set_message(t('The string has been removed.'));
   drupal_goto('admin/build/translate/search');
@@ -925,6 +928,9 @@ function locale_add_language($langcode, $name = NULL, $native = NULL, $direction
     variable_set('language_count', variable_get('language_count', 1) + 1);
   }
 
+  // Force JavaScript translation file creation for the newly added language.
+  _locale_invalidate_js($langcode);
+
   watchdog('locale', 'The %language language (%code) has been created.', array('%language' => $name, '%code' => $langcode));
 }
 /**
@@ -974,8 +980,8 @@ function _locale_import_po($file, $langcode, $mode, $group = NULL) {
     drupal_set_message(t('The translation file %filename appears to have a missing or malformed header.', array('%filename' => $file->filename)), 'error');
   }
 
-  // Clear cache and refresh JavaScript translations.
-  _locale_rebuild_js($langcode);
+  // Clear cache and force refresh of JavaScript translations.
+  _locale_invalidate_js($langcode);
   cache_clear_all('locale:', 'cache', TRUE);
 
   // Rebuild the menu, strings may have changed.
@@ -1598,46 +1604,6 @@ function _locale_import_parse_quoted($string) {
  */
 
 /**
- * This function checks all JavaScript files currently added via drupal_add_js()
- * and invokes parsing if they have not yet been parsed for Drupal.t() calls.
- */
-function _locale_update_js_files() {
-  global $language;
-
-  $parsed = variable_get('javascript_parsed', array());
-
-  // The first three parameters are NULL in order to get an array with all
-  // scopes. This is necessary to prevent recreation of JS translation files
-  // when new files are added for example in the footer.
-  $javascript = drupal_add_js(NULL, NULL, NULL);
-  $files = FALSE;
-
-  foreach ($javascript as $scope) {
-    foreach ($scope as $type => $data) {
-      if ($type != 'setting' && $type != 'inline') {
-        foreach ($data as $filepath => $info) {
-          $files = TRUE;
-          if (!in_array($filepath, $parsed)) {
-            _locale_parse_js_file($filepath);
-            watchdog('locale', 'Parsed JavaScript file %file.', array('%file' => $filepath));
-            $parsed[] = $filepath;
-          }
-        }
-      }
-    }
-  }
-
-  // Update the parsed files storage array.
-  variable_set('javascript_parsed', $parsed);
-  _locale_rebuild_js();
-
-  // Add the translation JavaScript file to the page.
-  if ($files && !empty($language->javascript)) {
-    drupal_add_js(file_create_path(variable_get('locale_js_directory', 'languages') .'/'. $language->language .'_'. $language->javascript .'.js'), 'core');
-  }
-}
-
-/**
  * Parses a JavaScript file, extracts strings wrapped in Drupal.t() and
  * Drupal.formatPlural() and inserts them into the database.
  */
@@ -2044,6 +2010,39 @@ function _locale_translate_seek_query() {
 }
 
 /**
+ * Force the JavaScript translation file(s) to be refreshed.
+ *
+ * This function sets a refresh flag for a specified language, or all
+ * languages except English, if none specified. JavaScript translation
+ * files are rebuilt (with locale_update_js_files()) the next time a
+ * request is served in that language.
+ *
+ * @param $langcode
+ *   The language code for which the file needs to be refreshed.
+ * @return
+ *   New content of the 'javascript_parsed' variable.
+ */
+function _locale_invalidate_js($langcode = NULL) {
+  $parsed = variable_get('javascript_parsed', array());
+
+  if (empty($langcode)) {
+    // Invalidate all languages.
+    $languages = language_list();
+    unset($languages['en']);
+    foreach ($languages as $lcode => $data) {
+      $parsed['refresh:'. $lcode] = 'waiting';
+    }
+  }
+  else {
+    // Invalidate single language.
+    $parsed['refresh:'. $langcode] = 'waiting';
+  }
+
+  variable_set('javascript_parsed', $parsed);
+  return $parsed;
+}
+
+/**
  * (Re-)Creates the JavaScript translation file for a language.
  *
  * @param $language
@@ -2091,9 +2090,10 @@ function _locale_rebuild_js($langcode = NULL) {
     }
   }
 
-  // Only operate when there are translations.
+  // Construct the JavaScript file, if there are translations.
+  $data = $status = '';
   if (!empty($translations)) {
-    // Construct the JavaScript file.
+
     $data = "Drupal.locale = { ";
 
     if (!empty($language->formula)) {
@@ -2101,67 +2101,69 @@ function _locale_rebuild_js($langcode = NULL) {
     }
 
     $data .= "'strings': ". drupal_to_js($translations) ." };";
-
-    // Construct the directory where JS translation files are stored.
-    // There is (on purpose) no front end to edit that variable.
-    $dir = file_create_path(variable_get('locale_js_directory', 'languages'));
-
-    // Only create a new file if the content has changed.
     $data_hash = md5($data);
-    if ($language->javascript != $data_hash) {
-      if (!empty($language->javascript)) {
-        // We are recreating the new file, so delete the old one.
-        file_delete(file_create_path($dir .'/'. $language->language .'_'. $language->javascript .'.js'));
-        $language->javascript = '';
-      }
-      else {
-        // The directory might not exist when there has not been a translation
-        // file before, so create it.
-        file_check_directory($dir, TRUE);
-      }
+  }
 
-      // The file name of the new JavaScript translation file.
-      $dest = $dir .'/'. $language->language .'_'. $data_hash .'.js';
-      $filepath = file_save_data($data, $dest);
+  // Construct the filepath where JS translation files are stored.
+  // There is (on purpose) no front end to edit that variable.
+  $dir = file_create_path(variable_get('locale_js_directory', 'languages'));
 
-      // Update the global $language object.
-      $language->javascript = $filepath ? $data_hash : '';
+  // Delete old file, if we have no translations anymore, or a different file to be saved.
+  if (!empty($language->javascript) && (!$data || $language->javascript != $data_hash)) {
+    file_delete(file_create_path($dir .'/'. $language->language .'_'. $language->javascript .'.js'));
+    $language->javascript = '';
+    $status = 'deleted';
+  }
 
-      // Save the new JavaScript hash.
-      db_query("UPDATE {languages} SET javascript = '%s' WHERE language = '%s'", $language->javascript, $language->language);
+  // Only create a new file if the content has changed.
+  if ($data && $language->javascript != $data_hash) {
+    // Ensure that the directory exists and is writable, if possible.
+    file_check_directory($dir, TRUE);
 
-      // Update the default language variable if the default language has been altered.
-      // This is necessary to keep the variable consistent with the database
-      // version of the language and to prevent checking against an outdated hash.
-      $default_langcode = language_default('language');
-      if ($default_langcode == $language->language) {
-        $default = db_fetch_object(db_query("SELECT * FROM {languages} WHERE language = '%s'", $default_langcode));
-        variable_set('language_default', $default);
-      }
-
-      // Only report updated or creation when there is actually a file created.
-      if ($filepath) {
-        // There has already been a translation file before.
-        if (!empty($language->javascript)) {
-          watchdog('locale', 'Updated JavaScript translation file for the language %language.', array('%language' => t($language->name)));
-        }
-        else {
-          watchdog('locale', 'Created JavaScript translation file for the language %language.', array('%language' => t($language->name)));
-        }
-      }
-      else {
-        watchdog('locale', 'An error occurred during creation of the JavaScript translation file for the language %language.', array('%language' => t($language->name)));
-      }
+    // Save the file.
+    $dest = $dir .'/'. $language->language .'_'. $data_hash .'.js';
+    if (file_save_data($data, $dest)) {
+      $language->javascript = $data_hash;
+      $status = ($status == 'deleted') ? 'updated' : 'created';
+    }
+    else {
+      $language->javascript = '';
+      $status = 'error';
     }
   }
 
-  // There are no strings for JavaScript translation. However, if there is a file,
-  // delete it and reset the database.
-  elseif (!empty($language->javascript)) {
-    // Delete the old JavaScript file
-    file_delete(file_create_path(variable_get('locale_js_directory', 'languages') .'/'. $language->language .'_'. $language->javascript .'.js'));
-    db_query("UPDATE {languages} SET javascript = '' WHERE language = '%s'", $language->language);
-    watchdog('locale', 'Deleted JavaScript translation file for the locale %language.', array('%language' => t($language->name)));
+  // Save the new JavaScript hash (or an empty value if the file
+  // just got deleted). Act only if some operation was executed.
+  if ($status) {
+    db_query("UPDATE {languages} SET javascript = '%s' WHERE language = '%s'", $language->javascript, $language->language);
+
+    // Update the default language variable if the default language has been altered.
+    // This is necessary to keep the variable consistent with the database
+    // version of the language and to prevent checking against an outdated hash.
+    $default_langcode = language_default('language');
+    if ($default_langcode == $language->language) {
+      $default = db_fetch_object(db_query("SELECT * FROM {languages} WHERE language = '%s'", $default_langcode));
+      variable_set('language_default', $default);
+    }
+  }
+
+  // Log the operation and return success flag.
+  switch ($status) {
+    case 'updated':
+      watchdog('locale', 'Updated JavaScript translation file for the language %language.', array('%language' => t($language->name)));
+      return TRUE;
+    case 'created':
+      watchdog('locale', 'Created JavaScript translation file for the language %language.', array('%language' => t($language->name)));
+      return TRUE;
+    case 'deleted':
+      watchdog('locale', 'Removed JavaScript translation file for the language %language, because no translations currently exist for that language.', array('%language' => t($language->name)));
+      return TRUE;
+    case 'error':
+      watchdog('locale', 'An error occurred during creation of the JavaScript translation file for the language %language.', array('%language' => t($language->name)), WATCHDOG_ERROR);
+      return FALSE;
+    default:
+      // No operation needed.
+      return TRUE;
   }
 }
 

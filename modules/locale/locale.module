@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.201 2007/11/24 21:19:10 goba Exp $
+// $Id: locale.module,v 1.202 2007/11/26 22:34:09 goba Exp $
 
 /**
  * @file
@@ -455,6 +455,74 @@ function locale_system_update($components) {
   include_once 'includes/locale.inc';
   if ($batch = locale_batch_by_component($components)) {
     batch_set($batch);
+  }
+}
+
+/**
+ * Update JavaScript translation file, if required, and add it to the page.
+ *
+ * This function checks all JavaScript files currently added via drupal_add_js()
+ * and invokes parsing if they have not yet been parsed for Drupal.t()
+ * and Drupal.formatPlural() calls. Also refreshes the JavaScript translation
+ * file if necessary, and adds it to the page.
+ */
+function locale_update_js_files() {
+  global $language;
+
+  $dir = file_create_path(variable_get('locale_js_directory', 'languages'));
+  $parsed = variable_get('javascript_parsed', array());
+
+  // The first three parameters are NULL in order to get an array with all
+  // scopes. This is necessary to prevent recreation of JS translation files
+  // when new files are added for example in the footer.
+  $javascript = drupal_add_js(NULL, NULL, NULL);
+  $files = $new_files = FALSE;
+
+  foreach ($javascript as $scope) {
+    foreach ($scope as $type => $data) {
+      if ($type != 'setting' && $type != 'inline') {
+        foreach ($data as $filepath => $info) {
+          $files = TRUE;
+          if (!in_array($filepath, $parsed)) {
+            // Don't parse our own translations files.
+            if (substr($filepath, 0, strlen($dir)) != $dir) {
+              locale_inc_callback('_locale_parse_js_file', $filepath);
+              watchdog('locale', 'Parsed JavaScript file %file.', array('%file' => $filepath));
+              $parsed[] = $filepath;
+              $new_files = TRUE;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // If there are any new source files we parsed, invalidate existing
+  // JavaScript translation files for all languages, adding the refresh
+  // flags into the existing array.
+  if ($new_files) {
+    $parsed += locale_inc_callback('_locale_invalidate_js');
+  }
+
+  // If necessary, rebuild the translation file for the current language.
+  if (!empty($parsed['refresh:'. $language->language])) {
+    // Don't clear the refresh flag on failure, so that another try will
+    // be performed later.
+    if (locale_inc_callback('_locale_rebuild_js')) {
+      unset($parsed['refresh:'. $language->language]);
+    }
+    // Store any changes after refresh was attempted.
+    variable_set('javascript_parsed', $parsed);
+  }
+  // If no refresh was attempted, but we have new source files, we need
+  // to store them too. This occurs if current page is in English.
+  else if ($new_files) {
+    variable_set('javascript_parsed', $parsed);
+  }
+
+  // Add the translation JavaScript file to the page.
+  if ($files && !empty($language->javascript)) {
+    drupal_add_js($dir .'/'. $language->language .'_'. $language->javascript .'.js', 'core');
   }
 }
 
