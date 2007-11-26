@@ -488,7 +488,7 @@ function locale_translate_overview_screen() {
     $groupsums[$group->textgroup] = $group->strings;
   }
 
-  // Setup overview table with default values, ensuring common order for values.
+  // Set up overview table with default values, ensuring common order for values.
   $rows = array();
   foreach ($languages as $langcode => $language) {
     $rows[$langcode] = array('name' => ($langcode == 'en' ? t('English (built-in)') : t($language->name)));

@@ -304,7 +304,7 @@ function menu_edit_item(&$form_state, $type, $item, $menu) {
     '#title' => t('Parent item'),
     '#default_value' => $default,
     '#options' => $options,
-    '#description' => t('The maximum depth for an item and all its children is fixed at !maxdepth.  Some menu items may not be available as parents if selecting them would exceed this limit.', array('!maxdepth' => MENU_MAX_DEPTH)),
+    '#description' => t('The maximum depth for an item and all its children is fixed at !maxdepth. Some menu items may not be available as parents if selecting them would exceed this limit.', array('!maxdepth' => MENU_MAX_DEPTH)),
     '#attributes' => array('class' => 'menu-title-select'),
   );
   $form['menu']['weight'] = array(

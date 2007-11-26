@@ -367,7 +367,7 @@ function template_preprocess_block_admin_display_form(&$variables) {
   // Initialize disabled blocks array.
   $variables['block_listing'][BLOCK_REGION_NONE] = array();
 
-  // Setup to track previous region in loop.
+  // Set up to track previous region in loop.
   $last_region = '';
   foreach (element_children($variables['form']) as $i) {
     $block = &$variables['form'][$i];

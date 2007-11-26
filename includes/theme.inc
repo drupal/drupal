@@ -515,9 +515,9 @@ function list_theme_engines($refresh = FALSE) {
  *   provided so that the preprocessor is not locked into a specific theme.
  *   This makes it easy to share and transport code but theme authors must be
  *   careful to prevent fatal re-declaration errors when using sub-themes that
- *   have their own preprocessor named exactly the same as it's base theme. In
+ *   have their own preprocessor named exactly the same as its base theme. In
  *   the default theme engine (PHPTemplate), sub-themes will load their own
- *   template.php file in addition to the one used for it's parent theme. This
+ *   template.php file in addition to the one used for its parent theme. This
  *   increases the risk for these errors. A good practice is to use the engine
  *   name for the base theme and the theme name for the sub-themes to minimize
  *   this possibility.
@@ -1778,7 +1778,7 @@ function template_preprocess_page(&$variables) {
     isset($variables[$region]) ? $variables[$region] .= $blocks : $variables[$region] = $blocks;
   }
 
-  // Setup layout variable.
+  // Set up layout variable.
   $variables['layout'] = 'none';
   if (!empty($variables['left'])) {
     $variables['layout'] = 'left';

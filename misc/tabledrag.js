@@ -188,7 +188,7 @@ Drupal.tableDrag.prototype.makeDraggable = function(item) {
       self.dragObject.indentMousePos = self.dragObject.initMouseCoords;
     }
 
-    // If there's a lingering row object from the keyboard, remove it's focus.
+    // If there's a lingering row object from the keyboard, remove its focus.
     if (self.rowObject) {
       $('a.tabledrag-handle', self.rowObject.element).blur();
     }

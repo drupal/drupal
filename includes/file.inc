@@ -456,7 +456,7 @@ function file_space_used($uid = NULL) {
  *
  * The file will be added to the files table as a temporary file. Temporary files
  * are periodically cleaned. To make the file permanent file call
- * file_set_status() to change it's status.
+ * file_set_status() to change its status.
  *
  * @param $source
  *   A string specifying the name of the upload field to save.
