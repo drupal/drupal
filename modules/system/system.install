@@ -2717,6 +2717,25 @@ function system_update_6038() {
 }
 
 /**
+ * Rename permissions "edit foo content" to "edit any foo content".
+ * Also update poll module permission "create polls" to "create
+ * poll content".
+ */
+function system_update_6039() {
+  $ret = array();
+  $result = db_query("SELECT rid, perm FROM {permission} ORDER BY rid");
+  while ($role = db_fetch_object($result)) {
+    $renamed_permission = preg_replace('/(?<=^|,\ )edit\ ([a-zA-Z0-9_\-]+)\ content(?=,|$)/', 'edit any $1 content', $role->perm);
+    $renamed_permission = preg_replace('/(?<=^|,\ )create\ polls(?=,|$)/', 'create poll content', $renamed_permission);
+    if ($renamed_permission != $role->perm) {
+      $ret[] = update_sql("UPDATE {permission} SET perm = '$renamed_permission' WHERE rid = $role->rid");
+    }
+  }
+  return $ret;
+}
+
+
+/**
  * @} End of "defgroup updates-5.x-to-6.x"
  * The next series of updates should start at 7000.
  */
