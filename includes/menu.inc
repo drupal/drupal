@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.227 2007/11/26 08:49:03 goba Exp $
+// $Id: menu.inc,v 1.228 2007/11/26 16:19:37 dries Exp $
 
 /**
  * @file
@@ -1788,7 +1788,7 @@ function menu_link_save(&$item) {
 function _menu_clear_page_cache() {
   static $cache_cleared = 0;
 
-  // Clear the page and block caches, but at most twice, including at 
+  // Clear the page and block caches, but at most twice, including at
   //  the end of the page load when there are multple links saved or deleted.
   if (empty($cache_cleared)) {
     cache_clear_all();
@@ -1805,7 +1805,7 @@ function _menu_clear_page_cache() {
 }
 
 /**
-* Helper function to update a list of menus with expanded items 
+* Helper function to update a list of menus with expanded items
 */
 function _menu_set_expanded_menus() {
   $names = array();

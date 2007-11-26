@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.720 2007/11/23 13:34:55 dries Exp $
+// $Id: common.inc,v 1.721 2007/11/26 16:19:37 dries Exp $
 
 /**
  * @file
@@ -2028,10 +2028,12 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
  *   (optional) The column containing the field elements may be entirely hidden
  *   from view dynamically when the JavaScript is loaded. Set to FALSE if the
  *   column should not be hidden.
+ * @param $limit
+ *   (optional) Limit the maximum amount of parenting in this table.
  * @see block-admin-display-form.tpl.php
  * @see theme_menu_overview_form()
  */
-function drupal_add_tabledrag($table_id, $action, $relationship, $group, $subgroup = NULL, $source = NULL, $hidden = TRUE) {
+function drupal_add_tabledrag($table_id, $action, $relationship, $group, $subgroup = NULL, $source = NULL, $hidden = TRUE, $limit = 0) {
   static $js_added = FALSE;
   if (!$js_added) {
     drupal_add_js('misc/tabledrag.js', 'core');
@@ -2047,6 +2049,7 @@ function drupal_add_tabledrag($table_id, $action, $relationship, $group, $subgro
     'relationship' => $relationship,
     'action' => $action,
     'hidden' => $hidden,
+    'limit' => $limit,
   );
   drupal_add_js($settings, 'setting');
 }

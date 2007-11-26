@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.446 2007/11/21 19:08:18 goba Exp $
+// $Id: book.module,v 1.447 2007/11/26 16:19:37 dries Exp $
 
 /**
  * @file
@@ -142,13 +142,6 @@ function book_menu() {
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
     'file' => 'book.pages.inc',
-  );
-  $items['book/js/admin/%node'] = array(
-    'page callback' => 'book_admin_js_update',
-    'access callback' => '_book_outline_access',
-    'access arguments' => array(3),
-    'type' => MENU_CALLBACK,
-    'file' => 'book.admin.inc',
   );
   return $items;
 }

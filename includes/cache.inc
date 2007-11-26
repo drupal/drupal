@@ -1,5 +1,5 @@
 <?php
-// $Id: cache.inc,v 1.15 2007/11/26 08:18:50 goba Exp $
+// $Id: cache.inc,v 1.16 2007/11/26 16:19:37 dries Exp $
 
 /**
  * Return data from the persistent cache. Data may be stored as either plain text or as serialized data.
@@ -133,8 +133,8 @@ function cache_clear_all($cid = NULL, $table = NULL, $wildcard = FALSE) {
   global $user;
 
   if (!isset($cid) && !isset($table)) {
-    // Clear the block cache first, so stale data will 
-    // not end up in the page cache. 
+    // Clear the block cache first, so stale data will
+    // not end up in the page cache.
     cache_clear_all(NULL, 'cache_block');
     cache_clear_all(NULL, 'cache_page');
     return;

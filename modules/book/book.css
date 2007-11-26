@@ -1,4 +1,4 @@
-/* $Id: book.css,v 1.5 2007/10/15 19:33:27 goba Exp $ */
+/* $Id: book.css,v 1.6 2007/11/26 16:19:37 dries Exp $ */
 
 .book-navigation .menu {
   border-top: 1px solid #888;
@@ -27,6 +27,9 @@
   width: 42%;
   display: block;
   float: right;
+}
+#book-outline {
+  min-width: 56em;
 }
 .book-outline-form .form-item {
   margin-top: 0;

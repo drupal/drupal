@@ -1,5 +1,5 @@
 <?php
-// $Id: book.admin.inc,v 1.5 2007/10/17 12:34:16 dries Exp $
+// $Id: book.admin.inc,v 1.6 2007/11/26 16:19:37 dries Exp $
 
 /**
  * @file
@@ -70,24 +70,12 @@ function book_admin_settings_validate($form, &$form_state) {
  */
 function book_admin_edit($form_state, $node) {
   drupal_set_title(check_plain($node->title));
-  $form = array(
-    '#cache' => TRUE,
-    '#prefix' => '<div id="book-admin-edit-wrapper">',
-    '#suffix' => '</div>',
-  );
-
+  $form = array();
   $form['#node'] = $node;
   $form['table'] = _book_admin_table($node);
   $form['save'] = array(
     '#type' => 'submit',
     '#value' => t('Save book pages'),
-    '#ahah' => array(
-      'path' => 'book/js/admin/'. $node->nid,
-      'selector' => '#book-admin-edit select',
-      'wrapper' => 'book-admin-edit-wrapper',
-      'event' => 'change',
-      'effect' => 'fade',
-    ),
   );
   return $form;
 }
@@ -95,36 +83,44 @@ function book_admin_edit($form_state, $node) {
 /**
  * Handle submission of the book administrative page form.
  *
+ * This function takes care to save parent menu items before their children.
+ * Saving menu items in the incorrect order can break the menu tree.
+ *
  * @see book_admin_edit()
+ * @see menu_overview_form_submit()
  */
 function book_admin_edit_submit($form, &$form_state) {
-  foreach ($form_state['values']['table'] as $row) {
-    $node = node_load($row['nid'], FALSE);
+  // Save elements in the same order as defined in post rather than the form.
+  // This ensures parents are updated before their children, preventing orphans.
+  $order = array_flip(array_keys($form['#post']['table']));
+  $form['table'] = array_merge($order, $form['table']);
 
-    if ($row['title'] != $node->title || $row['weight'] != $node->book['weight']) {
+  foreach (element_children($form['table']) as $key) {
+    if ($form['table'][$key]['#item']) {
+      $row = $form['table'][$key];
+      $values = $form_state['values']['table'][$key];
 
-      // Record changes in node's log message.
-      $log_messages = array();
-      if ($row['title'] != $node->title) {
-        $log_messages[] = t('Title changed from %original to %current.', array('%original' => $node->title, '%current' => $row['title']));
+      // Update menu item if moved.
+      if ($row['plid']['#default_value'] != $values['plid'] || $row['weight']['#default_value'] != $values['weight']) {
+        $row['#item']['plid'] = $values['plid'];
+        $row['#item']['weight'] = $values['weight'];
+        menu_link_save($row['#item']);
       }
-      if ($row['weight'] != $node->book['weight']) {
-        $log_messages[] = t('Weight changed from %original to %current.', array('%original' => $node->book['weight'], '%current' => $row['weight']));
+
+      // Update the title if changed.
+      if ($row['title']['#default_value'] != $values['title']) {
+        $node = node_load($values['nid'], FALSE);
+        $node->title = $values['title'];
+        $node->book['link_title'] = $values['title'];
+        $node->revision = 1;
+        $node->log = t('Title changed from %original to %current.', array('%original' => $node->title, '%current' => $values['title']));
+        node_save($node);
+        watchdog('content', 'book: updated %title.', array('%title' => $node->title), WATCHDOG_NOTICE, l(t('view'), 'node/'. $node->nid));
       }
-
-      $node->title = $row['title'];
-      $node->book['link_title'] = $row['title'];
-      $node->book['weight'] = $row['weight'];
-      $node->revision = 1;
-      $node->log = implode(' ', $log_messages);
-
-      node_save($node);
-      watchdog('content', 'book: updated %title.', array('%title' => $node->title), WATCHDOG_NOTICE, l(t('view'), 'node/'. $node->nid));
     }
   }
-  // Insure we have the current title - it may have been changed in the form.
-  $title = db_result(db_query("SELECT title FROM {node} WHERE nid = %d", $form['#node']->nid));
-  drupal_set_message(t('Updated book %title.', array('%title' => $title)));
+
+  drupal_set_message(t('Updated book %title.', array('%title' => $form['#node']->title)));
 }
 
 /**
@@ -139,7 +135,10 @@ function _book_admin_table($node) {
   );
 
   $tree = book_menu_subtree_data($node->book);
-  _book_admin_table_tree($tree, $form);
+  $tree = array_shift($tree); // Do not include the book item itself.
+  if ($tree['below']) {
+    _book_admin_table_tree($tree['below'], $form);
+  }
   return $form;
 }
 
@@ -151,6 +150,7 @@ function _book_admin_table($node) {
 function _book_admin_table_tree($tree, &$form) {
   foreach ($tree as $key => $data) {
     $form[$key] = array(
+      '#item' => $data['link'],
       'nid' => array('#type' => 'value', '#value' => $data['link']['nid']),
       'depth' => array('#type' => 'value', '#value' => $data['link']['depth']),
       'href' => array('#type' => 'value', '#value' => $data['link']['href']),
@@ -158,11 +158,21 @@ function _book_admin_table_tree($tree, &$form) {
         '#type' => 'textfield',
         '#default_value' => $data['link']['link_title'],
         '#maxlength' => 255,
+        '#size' => 40,
       ),
       'weight' => array(
         '#type' => 'weight',
         '#default_value' => $data['link']['weight'],
         '#delta' => 15,
+      ),
+      'plid' => array(
+        '#type' => 'textfield',
+        '#default_value' => $data['link']['plid'],
+        '#size' => 6,
+      ),
+      'mlid' => array(
+        '#type' => 'hidden',
+        '#default_value' => $data['link']['mlid'],
       ),
     );
     if ($data['below']) {
@@ -177,9 +187,13 @@ function _book_admin_table_tree($tree, &$form) {
  * Theme function for the book administration page form.
  *
  * @ingroup themeable
+ * @see book_admin_table().
  */
 function theme_book_admin_table($form) {
-  $header = array(t('Title'), t('Weight'), array('data' => t('Operations'), 'colspan' => '3'));
+  drupal_add_tabledrag('book-outline', 'match', 'parent', 'book-plid', 'book-plid', 'book-mlid', TRUE, MENU_MAX_DEPTH - 2);
+  drupal_add_tabledrag('book-outline', 'order', 'sibling', 'book-weight');
+
+  $header = array(t('Title'), t('Weight'), t('Parent'), array('data' => t('Operations'), 'colspan' => '3'));
 
   $rows = array();
   $destination = drupal_get_destination();
@@ -187,10 +201,16 @@ function theme_book_admin_table($form) {
   foreach (element_children($form) as $key) {
     $nid = $form[$key]['nid']['#value'];
     $href = $form[$key]['href']['#value'];
-    $asterisk = (isset($form[$key]['#attributes']['class']) && strpos($form[$key]['#attributes']['class'], 'book-changed') !== FALSE) ? '<span class="warning">*</span>' : '';
+
+    // Add special classes to be used with tabledrag.js.
+    $form[$key]['plid']['#attributes']['class'] = 'book-plid';
+    $form[$key]['mlid']['#attributes']['class'] = 'book-mlid';
+    $form[$key]['weight']['#attributes']['class'] = 'book-weight';
+
     $data = array(
-      '<div style="padding-left: '. (25 * $form[$key]['depth']['#value']) .'px;">'. drupal_render($form[$key]['title']) . $asterisk .'</div>',
+      theme('indentation', $form[$key]['depth']['#value'] - 2) . drupal_render($form[$key]['title']),
       drupal_render($form[$key]['weight']),
+      drupal_render($form[$key]['plid']) . drupal_render($form[$key]['mlid']),
       l(t('view'), $href),
       $access ? l(t('edit'), 'node/'. $nid .'/edit', array('query' => $destination)) : '&nbsp',
       $access ? l(t('delete'), 'node/'. $nid .'/delete', array('query' => $destination) )  : '&nbsp',
@@ -199,77 +219,11 @@ function theme_book_admin_table($form) {
     if (isset($form[$key]['#attributes'])) {
       $row = array_merge($row, $form[$key]['#attributes']);
     }
+    $row['class'] = empty($row['class']) ? 'draggable' : $row['class'] .' draggable';
     $rows[] = $row;
   }
 
-  return theme('status_messages') . theme('table', $header, $rows);
-}
-
-/**
- * Menu callback for updating the book outline form.
- */
-function book_admin_js_update() {
-  $cid = 'form_'. $_POST['form_build_id'];
-  $cache = cache_get($cid, 'cache_form');
-  if ($cache) {
-    $form = $cache->data;
-
-    $tree = book_menu_subtree_data($form['#node']->book);
-    _book_admin_js_update_tree($tree);
-    _book_admin_sort_tree($tree);
-
-    // Create the form in the new order.
-    $table_form = array();
-    _book_admin_table_tree($tree, $table_form);
-
-    // Find the changed element on this request and save the current classes.
-    foreach (element_children($form['table']) as $key) {
-      if (isset($form['table'][$key]['#attributes'])) {
-        $table_form[$key]['#attributes'] = $form['table'][$key]['#attributes'];
-      }
-      if ($form['table'][$key]['weight']['#default_value'] != $_POST['table'][$key]['weight']) {
-        $changed_key = $key;
-      }
-    }
-
-    // Preserve the order of the new form while merging the previous data.
-    $form_order = array_flip(array_keys($table_form)); // Save the form order.
-    $form['table'] = array_merge($form['table'], $table_form); // Merge the data.
-    $form['table'] = array_merge($form_order, $form['table']); // Put back into the correct order.
-    $form['table'][$changed_key]['#attributes']['class'] = 'book-changed';
-
-    cache_set($cid, $form, 'cache_form', $cache->expire);
-
-    // Add the special AHAH class for new content.
-    $form['table'][$changed_key]['#attributes']['class'] = isset($form['table'][$changed_key]['#attributes']['class']) ? $form['table'][$changed_key]['#attributes']['class'] .' ahah-new-content' : 'ahah-new-content';
-
-    // Set a message for the user to save the form.
-    drupal_set_message(t('Your changes will not be saved until you click the <em>Save book pages</em> button.'), 'warning');
-
-    // Prevent duplicate wrappers.
-    unset($form['#prefix'], $form['#suffix']);
-
-    // Render the form.
-    $form['#post'] = $_POST;
-    $form_state = array('submitted' => FALSE);
-    $form = form_builder('book_admin_edit', $form, $form_state);
-    $output = drupal_render($form);
-
-    drupal_json(array('status' => TRUE, 'data' => $output));
-  }
-}
-
-/**
- * Recursive helper to set new form weights to the tree.
- */
-function _book_admin_js_update_tree(&$tree) {
-  foreach($tree as $key => $subtree) {
-    $tree[$key]['link']['weight'] = $_POST['table'][$key]['weight'];
-    $tree[$key]['link']['title'] = $_POST['table'][$key]['title'];
-    if (!empty($subtree['below'])) {
-      _book_admin_js_update_tree($tree[$key]['below']);
-    }
-  }
+  return theme('table', $header, $rows, array('id' => 'book-outline'));
 }
 
 /**
