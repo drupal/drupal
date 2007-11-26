@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.12 2007/11/26 19:46:52 goba Exp $
+// $Id: taxonomy.admin.inc,v 1.13 2007/11/26 20:58:28 goba Exp $
 
 /**
  * @file
@@ -31,7 +31,14 @@ function taxonomy_overview_vocabularies() {
     $form[$vocabulary->vid]['add'] = array('#value' => l(t('add terms'), "admin/content/taxonomy/$vocabulary->vid/add/term"));
   }
 
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Submit'));
+  // Only make this form include a submit button and weight if more than one
+  // vocabulary exists.
+  if (count($vocabularies) > 1) {
+    $form['submit'] = array('#type' => 'submit', '#value' => t('Submit'));
+  }
+  elseif (isset($vocabulary)) {
+    unset($form[$vocabulary->vid]['weight']);
+  }
   return $form;
 }
 
@@ -56,18 +63,18 @@ function taxonomy_overview_vocabularies_submit($form, &$form_state) {
  * @see taxonomy_overview_vocabularies().
  */
 function theme_taxonomy_overview_vocabularies($form) {
-  drupal_add_tabledrag('taxonomy', 'order', 'sibling', 'vocabulary-weight');
-
   $rows = array();
   foreach (element_children($form) as $key) {
     if (isset($form[$key]['name'])) {
       $vocabulary = &$form[$key];
-      $vocabulary['weight']['#attributes']['class'] = 'vocabulary-weight';
 
       $row = array();
       $row[] = drupal_render($vocabulary['name']);
       $row[] = drupal_render($vocabulary['types']);
-      $row[] = drupal_render($vocabulary['weight']);
+      if (isset($vocabulary['weight'])) {
+        $vocabulary['weight']['#attributes']['class'] = 'vocabulary-weight';
+        $row[] = drupal_render($vocabulary['weight']);
+      }
       $row[] = drupal_render($vocabulary['edit']);
       $row[] = drupal_render($vocabulary['list']);
       $row[] = drupal_render($vocabulary['add']);
@@ -75,10 +82,15 @@ function theme_taxonomy_overview_vocabularies($form) {
     }
   }
   if (empty($rows)) {
-    $rows[] = array(array('data' => t('No terms available.'), 'colspan' => '6'));
+    $rows[] = array(array('data' => t('No vocabularies available.'), 'colspan' => '5'));
   }
-  $header = array(t('Name'), t('Type'), t('Weight'), array('data' => t('Operations'), 'colspan' => '3'));
 
+  $header = array(t('Name'), t('Type'));
+  if (isset($form['submit'])) {
+    $header[] = t('Weight');
+    drupal_add_tabledrag('taxonomy', 'order', 'sibling', 'vocabulary-weight');
+  }
+  $header[] = array('data' => t('Operations'), 'colspan' => '3');
   return theme('table', $header, $rows, array('id' => 'taxonomy')) . drupal_render($form);  
 }
 
