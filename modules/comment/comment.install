@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.install,v 1.10 2007/11/26 19:46:51 goba Exp $
+// $Id: comment.install,v 1.11 2007/11/26 19:55:15 goba Exp $
 
 /**
  * Implementation of hook_enable().
@@ -20,6 +20,38 @@ function comment_update_1() {
   // Unstuck node indexing timestamp if needed.
   if (($last = variable_get('node_cron_last', FALSE)) !== FALSE) {
     variable_set('node_cron_last', min(time(), $last));
+  }
+  return array();
+}
+
+function comment_update_6001() {
+  $ret[] = update_sql("ALTER TABLE {comments} DROP score");
+  $ret[] = update_sql("ALTER TABLE {comments} DROP users");
+  return $ret;
+}
+
+/**
+ * Changed comment settings from global to per-node -- copy global
+ * settings to all node types.
+ */
+function comment_update_6002() {
+  $settings = array(
+    'comment_default_mode' => COMMENT_MODE_THREADED_EXPANDED,
+    'comment_default_order' => COMMENT_ORDER_NEWEST_FIRST,
+    'comment_default_per_page' => 50,
+    'comment_controls' => COMMENT_CONTROLS_HIDDEN,
+    'comment_anonymous' => COMMENT_ANONYMOUS_MAYNOT_CONTACT,
+    'comment_subject_field' => 1,
+    'comment_preview' => COMMENT_PREVIEW_REQUIRED,
+    'comment_form_location' => COMMENT_FORM_SEPARATE_PAGE,
+  );
+  $types = node_get_types();
+  foreach ($settings as $setting => $default) {
+    $value = variable_get($setting, $default);
+    foreach ($types as $type => $object) {
+      variable_set($setting .'_'. $type, $value);
+    }
+    variable_del($setting);
   }
   return array();
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.install,v 1.23 2007/11/26 19:46:51 goba Exp $
+// $Id: locale.install,v 1.24 2007/11/26 19:55:15 goba Exp $
 
 /**
  * Implementation of hook_install().
@@ -14,6 +14,126 @@ function locale_install() {
 
   db_query("INSERT INTO {languages} (language, name, native, direction, enabled, weight, javascript) VALUES ('en', 'English', 'English', '0', '1', '0', '')");
 }
+
+/**
+ * @defgroup updates-5.x-to-6.x Locale updates from 5.x to 6.x
+ * @{
+ */
+
+/**
+ * {locales_meta} table became {languages}.
+ */
+function locale_update_6001() {
+  $ret = array();
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql("CREATE TABLE {languages} (
+        language varchar(12) NOT NULL default '',
+        name varchar(64) NOT NULL default '',
+        native varchar(64) NOT NULL default '',
+        direction int NOT NULL default '0',
+        enabled int NOT NULL default '0',
+        plurals int NOT NULL default '0',
+        formula varchar(128) NOT NULL default '',
+        domain varchar(128) NOT NULL default '',
+        prefix varchar(128) NOT NULL default '',
+        weight int NOT NULL default '0',
+        PRIMARY KEY (language)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+      break;
+    case 'pgsql':
+      $ret[] = update_sql("CREATE TABLE {languages} (
+        language varchar(12) NOT NULL default '',
+        name varchar(64) NOT NULL default '',
+        native varchar(64) NOT NULL default '',
+        direction int NOT NULL default '0',
+        enabled int NOT NULL default '0',
+        plurals int NOT NULL default '0',
+        formula varchar(128) NOT NULL default '',
+        domain varchar(128) NOT NULL default '',
+        prefix varchar(128) NOT NULL default '',
+        weight int NOT NULL default '0',
+        PRIMARY KEY (language)
+      )");
+      break;
+  }
+
+  // Save the languages
+  $ret[] = update_sql("INSERT INTO {languages} (language, name, native, direction, enabled, plurals, formula, domain, prefix, weight) SELECT locale, name, name, 0, enabled, plurals, formula, '', locale, 0 FROM {locales_meta}");
+
+  // Save the language count in the variable table
+  $count = db_result(db_query('SELECT COUNT(*) FROM {languages} WHERE enabled = 1'));
+  variable_set('language_count', $count);
+
+  // Save the default language in the variable table
+  $default = db_fetch_object(db_query('SELECT * FROM {locales_meta} WHERE isdefault = 1'));
+  variable_set('language_default', (object) array('language' => $default->locale, 'name' => $default->name, 'native' => '', 'direction' => 0, 'enabled' => 1, 'plurals' => $default->plurals, 'formula' => $default->formula, 'domain' => '', 'prefix' => $default->locale, 'weight' => 0));
+
+  $ret[] = update_sql("DROP TABLE {locales_meta}");
+  return $ret;
+}
+
+/**
+ * Change locale column to language. The language column is added by
+ * update_fix_d6_requirements() in update.php to avoid a large number
+ * of error messages from update.php.  All we need to do here is copy
+ * locale to language and then drop locale.
+ */
+function locale_update_6002() {
+  $ret = array();
+  $ret[] = update_sql('UPDATE {locales_target} SET language = locale');
+  db_drop_field($ret, 'locales_target', 'locale');
+  return $ret;
+}
+
+/**
+ * Adds a column to store the filename of the JavaScript translation file.
+ */
+function locale_update_6003() {
+  $ret = array();
+  db_add_field($ret, 'languages', 'javascript', array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''));
+  return $ret;
+}
+
+/**
+ * Remove empty translations, we don't need these anymore.
+ */
+function locale_update_6004() {
+  $ret = array();
+  $ret[] = update_sql("DELETE FROM {locales_target} WHERE translation = ''");
+  return $ret;
+}
+
+/**
+ * Prune strings with no translations (will be automatically re-registered if still in use)
+ */
+function locale_update_6005() {
+  $ret = array();
+  $ret[] = update_sql("DELETE FROM {locales_source} WHERE lid NOT IN (SELECT lid FROM {locales_target})");
+  return $ret;
+}
+
+/**
+ * Fix remaining inconsistent indexes.
+ */
+function locale_update_6006() {
+  $ret = array();
+  db_add_index($ret, 'locales_target', 'language', array('language'));
+
+  switch ($GLOBALS['db_type']) {
+    case 'pgsql':
+      db_drop_index($ret, 'locales_source', 'source');
+      db_add_index($ret, 'locales_source', 'source', array(array('source', 30)));
+      break;
+  }
+
+  return $ret;
+}
+
+/**
+ * @} End of "defgroup updates-5.x-to-6.x"
+ */
 
 /**
  * Implementation of hook_uninstall().
