@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.29 2007/11/14 09:49:30 dries Exp $ */
+/* $Id: style.css,v 1.30 2007/11/26 19:46:52 goba Exp $ */
 
 /**
  * Garland, for Drupal 5.0
@@ -976,6 +976,18 @@ tr.selected td a:link, tr.selected td a:visited, tr.selected td a:active {
   color: #d3e7f4;
 }
 
+tr.taxonomy-term-preview {
+  opacity: 0.5;
+}
+
+tr.taxonomy-term-divider-top {
+  border-bottom: none;
+}
+
+tr.taxonomy-term-divider-bottom {
+  border-top: 1px dotted #CCC;
+}
+
 /**
  * CSS support
  */
@@ -1002,8 +1014,9 @@ div.status {
   border-color: #c7f2c8;
 }
 
-div.error {
+div.error, tr.error {
   color: #c52020;
+  background-color: #FFCCCC;
 }
 
 .form-item input.error, .form-item textarea.error {

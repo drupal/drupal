@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.428 2007/11/21 14:02:23 goba Exp $
+// $Id: forum.module,v 1.429 2007/11/26 19:46:51 goba Exp $
 
 /**
  * @file
@@ -92,7 +92,8 @@ function forum_menu() {
   $items['admin/content/forum'] = array(
     'title' => 'Forums',
     'description' => 'Control forums and their hierarchy and change forum settings.',
-    'page callback' => 'forum_overview',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('forum_overview'),
     'access arguments' => array('administer forums'),
     'file' => 'forum.admin.inc',
   );

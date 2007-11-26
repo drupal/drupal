@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.admin.inc,v 1.1 2007/07/24 18:08:54 dries Exp $
+// $Id: forum.admin.inc,v 1.2 2007/11/26 19:46:51 goba Exp $
 
 /**
  * @file
@@ -214,26 +214,33 @@ function forum_admin_settings() {
 /**
  * Returns an overview list of existing forums and containers
  */
-function forum_overview() {
-  $header = array(t('Name'), t('Operations'));
+function forum_overview(&$form_state) {
+  include_once(drupal_get_path('module', 'taxonomy') .'/taxonomy.admin.inc');
 
   $vid = variable_get('forum_nav_vocabulary', '');
-  $tree = taxonomy_get_tree($vid);
-  if ($tree) {
-    foreach ($tree as $term) {
-      if (in_array($term->tid, variable_get('forum_containers', array()))) {
-        $rows[] = array(str_repeat(' -- ', $term->depth) .' '. l($term->name, 'forum/'. $term->tid), l(t('edit container'), 'admin/content/forum/edit/container/'. $term->tid));
+  $vocabulary = taxonomy_vocabulary_load($vid);
+  $form = taxonomy_overview_terms($form_state, $vocabulary);
+  drupal_set_title('Forums');
+
+  foreach (element_children($form) as $key) {
+    if (isset($form[$key]['#term'])) {
+      $term = $form[$key]['#term'];
+      $form[$key]['view']['#value'] = l($term['name'], 'forum/'. $term['tid']);
+      if (in_array($form[$key]['#term']['tid'], variable_get('forum_containers', array()))) {
+        $form[$key]['edit']['#value'] = l(t('edit container'), 'admin/content/forum/edit/container/'. $term['tid']);
       }
       else {
-        $rows[] = array(str_repeat(' -- ', $term->depth) .' '. l($term->name, 'forum/'. $term->tid), l(t('edit forum'), 'admin/content/forum/edit/forum/'. $term->tid));
-       }
-
+        $form[$key]['edit']['#value'] = l(t('edit forum'), 'admin/content/forum/edit/forum/'. $term['tid']);
+      }
     }
   }
-  else {
-    $rows[] = array(array('data' => '<em>'. t('There are no existing containers or forums. You may add some on the <a href="@container">add container</a> or <a href="@forum">add forum</a> pages.', array('@container' => url('admin/content/forum/add/container'), '@forum' => url('admin/content/forum/add/forum'))) .'</em>', 'colspan' => 2));
-  }
-  return theme('table', $header, $rows);
+
+  // The form needs to have submit and validate handlers set explicitly.
+  $form['#theme'] = 'taxonomy_overview_terms';
+  $form['#submit'] = array('taxonomy_overview_terms_submit'); // Use the existing taxonomy overview submit handler.
+  $form['#validate'] = array('taxonomy_overview_terms_validate');
+  $form['#empty_text'] = '<em>'. t('There are no existing containers or forums. You may add some on the <a href="@container">add container</a> or <a href="@forum">add forum</a> pages.', array('@container' => url('admin/content/forum/add/container'), '@forum' => url('admin/content/forum/add/forum'))) .'</em>';
+  return $form;
 }
 
 /**

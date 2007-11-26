@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.723 2007/11/26 16:36:42 dries Exp $
+// $Id: common.inc,v 1.724 2007/11/26 19:46:51 goba Exp $
 
 /**
  * @file
@@ -2012,9 +2012,10 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
  *   group. Depth updates the target element with the current indentation.
  * @param $relationship
  *   String describing where the $action variable should be performed. Either
- *   'parent', 'sibling', or 'self'. Parent will only look for fields up the
- *   tree. Sibling will look for fields in the same group in rows above and
- *   below it. Self affects the dragged row itself.
+ *   'parent', 'sibling', 'group', or 'self'. Parent will only look for fields
+ *   up the tree. Sibling will look for fields in the same group in rows above
+ *   and below it. Self affects the dragged row itself. Group affects the
+ *   dragged row, plus any children below it (the entire dragged group).
  * @param $group
  *   A class name applied on all related form elements for this action.
  * @param $subgroup

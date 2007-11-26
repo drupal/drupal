@@ -1,4 +1,4 @@
-/* $Id: fix-ie.css,v 1.7 2007/11/09 22:14:41 goba Exp $ */
+/* $Id: fix-ie.css,v 1.8 2007/11/26 19:46:52 goba Exp $ */
 
 /**
  * Garland, for Drupal 5.0
@@ -57,6 +57,10 @@ tr.menu-disabled {
 #header-region {
   /* Because of the lack of min-height, we use height as an alternative */
   height: 1em;
+}
+
+tr.taxonomy-term-preview {
+  filter: alpha(opacity=50);
 }
 
 #attach-hide label, #uploadprogress div.message {
