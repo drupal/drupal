@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.226 2007/11/24 20:59:32 goba Exp $
+// $Id: menu.inc,v 1.227 2007/11/26 08:49:03 goba Exp $
 
 /**
  * @file
@@ -1472,7 +1472,16 @@ function menu_link_load($mlid) {
  * Clears the cached cached data for a single named menu.
  */
 function menu_cache_clear($menu_name = 'navigation') {
-  cache_clear_all('links:'. $menu_name .':', 'cache_menu', TRUE);
+  static $cache_cleared = array();
+
+  if (empty($cache_cleared[$menu_name])) {
+    cache_clear_all('links:'. $menu_name .':', 'cache_menu', TRUE);
+    $cache_cleared[$menu_name] = 1;
+  }
+  elseif ($cache_cleared[$menu_name] == 1) {
+    register_shutdown_function('cache_clear_all', 'links:'. $menu_name .':', 'cache_menu', TRUE);
+    $cache_cleared[$menu_name] = 2;
+  }
 }
 
 /**
@@ -1492,7 +1501,7 @@ function menu_rebuild() {
   $menu = menu_router_build(TRUE);
   _menu_navigation_links_rebuild($menu);
   // Clear the page and block caches.
-  cache_clear_all();
+  _menu_clear_page_cache();
 }
 
 /**
@@ -1613,9 +1622,9 @@ function menu_link_delete($mlid, $path = NULL) {
 /**
  * Helper function for menu_link_delete; deletes a single menu link.
  */
-function _menu_delete_item($item, $rebuild = FALSE) {
-  // System-created items are only deleted on menu rebuild.
-  if ($item && ($item['module'] != 'system' || $rebuild)) {
+function _menu_delete_item($item) {
+  // System-created items are never deleted.
+  if ($item && ($item['module'] != 'system')) {
 
     // Children get re-attached to the item's parent.
     if ($item['has_children']) {
@@ -1630,13 +1639,8 @@ function _menu_delete_item($item, $rebuild = FALSE) {
 
     // Update the has_children status of the parent.
     _menu_update_parental_status($item);
-
-    // If we are rebuilding the menu, the menu cache has already been cleared.
-    if (!$rebuild) {
-      menu_cache_clear($item['menu_name']);
-      // Clear the page and block caches.
-      cache_clear_all();
-    }
+    menu_cache_clear($item['menu_name']);
+    _menu_clear_page_cache();
   }
 }
 
@@ -1773,16 +1777,43 @@ function menu_link_save(&$item) {
   if ($existing_item && $menu_name != $existing_item['menu_name']) {
     menu_cache_clear($existing_item['menu_name']);
   }
-  // Keep track of which menus have expanded items.
+
+  _menu_clear_page_cache();
+  return $item['mlid'];
+}
+
+/**
+* Helper function to clear the page and block caches at most twice per page load.
+*/
+function _menu_clear_page_cache() {
+  static $cache_cleared = 0;
+
+  // Clear the page and block caches, but at most twice, including at 
+  //  the end of the page load when there are multple links saved or deleted.
+  if (empty($cache_cleared)) {
+    cache_clear_all();
+    // Keep track of which menus have expanded items.
+    _menu_set_expanded_menus();
+    $cache_cleared = 1;
+  }
+  elseif ($cache_cleared == 1) {
+    register_shutdown_function('cache_clear_all');
+    // Keep track of which menus have expanded items.
+    register_shutdown_function('_menu_set_expanded_menus');
+    $cache_cleared = 2;
+  }
+}
+
+/**
+* Helper function to update a list of menus with expanded items 
+*/
+function _menu_set_expanded_menus() {
   $names = array();
   $result = db_query("SELECT menu_name FROM {menu_links} WHERE expanded != 0 GROUP BY menu_name");
   while ($n = db_fetch_array($result)) {
     $names[] = $n['menu_name'];
   }
   variable_set('menu_expanded', $names);
-  // Clear the page and block caches.
-  cache_clear_all();
-  return $item['mlid'];
 }
 
 /**
