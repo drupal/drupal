@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.165 2007/11/26 22:34:08 goba Exp $
+// $Id: locale.inc,v 1.166 2007/11/26 23:33:03 goba Exp $
 
 /**
  * @file
@@ -71,7 +71,7 @@ function theme_locale_languages_overview_form($form) {
     if (is_array($element) && element_child($key)) {
       // Disable checkbox for the default language, because it cannot be disabled.
       if ($key == $default->language) {
-        $form['enabled'][$key]['#attributes']['disabled'] = TRUE;
+        $form['enabled'][$key]['#attributes']['disabled'] = 'disabled';
       }
       $rows[] = array(
         array('data' => drupal_render($form['enabled'][$key]), 'align' => 'center'),
