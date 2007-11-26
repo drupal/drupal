@@ -92,7 +92,8 @@ function forum_menu() {
   $items['admin/content/forum'] = array(
     'title' => 'Forums',
     'description' => 'Control forums and their hierarchy and change forum settings.',
-    'page callback' => 'forum_overview',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('forum_overview'),
     'access arguments' => array('administer forums'),
     'file' => 'forum.admin.inc',
   );

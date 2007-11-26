@@ -59,6 +59,10 @@ tr.menu-disabled {
   height: 1em;
 }
 
+tr.taxonomy-term-preview {
+  filter: alpha(opacity=50);
+}
+
 #attach-hide label, #uploadprogress div.message {
   /* Fading elements in IE causes the text to bleed unless they have a background. */
   background-color: #ffffff;
