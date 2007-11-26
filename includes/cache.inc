@@ -133,8 +133,10 @@ function cache_clear_all($cid = NULL, $table = NULL, $wildcard = FALSE) {
   global $user;
 
   if (!isset($cid) && !isset($table)) {
-    cache_clear_all(NULL, 'cache_page');
+    // Clear the block cache first, so stale data will 
+    // not end up in the page cache. 
     cache_clear_all(NULL, 'cache_block');
+    cache_clear_all(NULL, 'cache_page');
     return;
   }
 
