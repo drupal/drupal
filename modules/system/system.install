@@ -2703,6 +2703,20 @@ function system_update_6037() {
 }
 
 /**
+ * Ensure that "Account" is not used as a Profile category.
+ */
+function system_update_6038() {
+  $ret = array();
+  if (db_table_exists('profile_fields')) {
+    $ret[] = update_sql('UPDATE {profile_fields} SET category = "Account settings" WHERE LOWER(category) = "account"');
+    if ($affectedrows = db_affected_rows()) {
+      drupal_set_message(t('There were @affectedrows profile fields that used a reserved category name. They have been assigned to the category "Account settings".', array('@affectedrows' => $affectedrows)));
+    }
+  }
+  return $ret;
+}
+
+/**
  * @} End of "defgroup updates-5.x-to-6.x"
  * The next series of updates should start at 7000.
  */

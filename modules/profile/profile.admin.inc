@@ -177,7 +177,7 @@ function profile_field_form_validate($form, &$form_state) {
   if (!$form_state['values']['category']) {
     form_set_error('category', t('You must enter a category.'));
   }
-  if ($form_state['values']['category'] == 'account') {
+  if (strtolower($form_state['values']['category']) == 'account') {
     form_set_error('category', t('The specified category name is reserved for use by Drupal.'));
   }
   $args1 = array($form_state['values']['title'], $form_state['values']['category']);
