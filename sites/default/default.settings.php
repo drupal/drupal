@@ -1,5 +1,5 @@
 <?php
-// $Id: default.settings.php,v 1.3 2007/08/28 11:42:56 goba Exp $
+// $Id: default.settings.php,v 1.4 2007/11/26 08:06:52 goba Exp $
 
 /**
  * @file
@@ -172,6 +172,34 @@ ini_set('url_rewriter.tags',        '');
 #   'site_name' => 'My Drupal site',
 #   'theme_default' => 'minnelli',
 #   'anonymous' => 'Visitor',
+/**
+ * reverse_proxy accepts a boolean value.
+ *
+ * Enable this setting to determine the correct IP address of the remote
+ * client by examining information stored in the X-Forwarded-For headers.
+ * X-Forwarded-For headers are a standard mechanism for identifying client
+ * systems connecting through a reverse proxy server, such as Squid or
+ * Pound. Reverse proxy servers are often used to enhance the performance
+ * of heavily visited sites and may also provide other site caching,
+ * security or encryption benefits. If this Drupal installation operates
+ * behind a reverse proxy, this setting should be enabled so that correct
+ * IP address information is captured in Drupal's session management,
+ * logging, statistics and access management systems; if you are unsure
+ * about this setting, do not have a reverse proxy, or Drupal operates in
+ * a shared hosting environment, this setting should be set to disabled.
+ */
+#   'reverse_proxy' => TRUE,
+/**
+ * reverse_proxy accepts an array of IP addresses.
+ *
+ * Each element of this array is the IP address of any of your reverse
+ * proxies. Filling this array Drupal will trust the information stored
+ * in the X-Forwarded-For headers only if Remote IP address is one of
+ * these, that is the request reaches the web server from one of your
+ * reverse proxies. Otherwise, the client could directly connect to
+ * your web server spoofing the X-Forwarded-For headers.
+ */
+#   'reverse_proxy_addresses' => array('a.b.c.d', ...),
 # );
 
 /**

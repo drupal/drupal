@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.25 2007/11/23 15:36:44 goba Exp $
+// $Id: system.admin.inc,v 1.26 2007/11/26 08:06:52 goba Exp $
 
 /**
  * @file
@@ -1247,20 +1247,6 @@ function system_performance_settings() {
     '#disabled' => !$is_writable,
     '#options' => array(t('Disabled'), t('Enabled')),
     '#description' => t("This option can interfere with module development. It is recommended to only turn this on when your site is complete."),
-  );
-
-  $form['reverse_proxy'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Reverse proxy'),
-    '#description' => t('Proper extraction of client IP addresses when Drupal is behind a reverse proxy.'),
-  );
-
-  $form['reverse_proxy']['reverse_proxy'] = array(
-    '#type' => 'radios',
-    '#title' => t('Reverse proxy'),
-    '#default_value' => variable_get('reverse_proxy', FALSE),
-    '#options' => array(t('Disabled'), t('Enabled')),
-    '#description' => t('Enable this setting to determine the correct IP address of the remote client by examining information stored in the X-Forwarded-For headers. X-Forwarded-For headers are a standard mechanism for identifying client systems connecting through a reverse proxy server, such as Squid or Pound. Reverse proxy servers are often used to enhance the performance of heavily visited sites and may also provide other site caching, security or encryption benefits. If this Drupal installation operates behind a reverse proxy, this setting should be enabled so that correct IP address information is captured in Drupal\'s session management, logging, statistics and access management systems; if you are unsure about this setting, do not have a reverse proxy, or Drupal operates in a shared hosting environment, this setting should be set to disabled.'),
   );
 
   $form['#submit'][] = 'drupal_clear_css_cache';

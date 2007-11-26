@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.199 2007/11/11 16:14:45 goba Exp $
+// $Id: bootstrap.inc,v 1.200 2007/11/26 08:06:52 goba Exp $
 
 /**
  * @file
@@ -1101,9 +1101,14 @@ function ip_address() {
   if (!isset($ip_address)) {
     $ip_address = $_SERVER['REMOTE_ADDR'];
     if (variable_get('reverse_proxy', 0) && array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER)) {
-      // If there are several arguments, we need to check the most
-      // recently added one, ie the last one.
-      $ip_address = array_pop(explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']));
+      // If an array of known reverse proxy IPs is provided, then trust
+      // the XFF header if request really comes from one of them.
+      $reverse_proxy_addresses = variable_get('reverse_proxy_addresses', array());
+      if (!empty($reverse_proxy_addresses) && in_array($ip_address, $reverse_proxy_addresses, TRUE)) {
+        // If there are several arguments, we need to check the most
+        // recently added one, i.e. the last one.
+        $ip_address = array_pop(explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']));
+      }
     }
   }
 
