@@ -1871,8 +1871,8 @@ function drupal_add_js($data = NULL, $type = 'module', $scope = 'header', $defer
  */
 function drupal_get_js($scope = 'header', $javascript = NULL) {
   global $update_mode;
-  if (empty($update_mode) && function_exists('locale_inc_callback')) {
-    locale_inc_callback('_locale_update_js_files');
+  if (empty($update_mode) && function_exists('locale_update_js_files')) {
+    locale_update_js_files();
   }
 
   if (!isset($javascript)) {
