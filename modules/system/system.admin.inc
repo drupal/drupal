@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.26 2007/11/26 08:06:52 goba Exp $
+// $Id: system.admin.inc,v 1.27 2007/11/26 16:25:14 dries Exp $
 
 /**
  * @file
@@ -1249,10 +1249,30 @@ function system_performance_settings() {
     '#description' => t("This option can interfere with module development. It is recommended to only turn this on when your site is complete."),
   );
 
+  $form['clear_cache'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Clear cached data'),
+    '#description' => t('Caching data improves performance, but may cause problems while troubleshooting new modules, themes, or translations, if outdated information has been cached. To refresh all cached data on your site, click the button below. <em>Warning: high-traffic sites will experience performance slowdowns while cached data is rebuilt.</em>'),
+  );
+
+  $form['clear_cache']['cache'] = array(
+    '#type' => 'submit',
+    '#value' => t('Clear cached data'),
+    '#submit' => array('system_clear_cache_submit'),
+  );
+
   $form['#submit'][] = 'drupal_clear_css_cache';
   $form['#submit'][] = 'drupal_clear_js_cache';
 
   return system_settings_form($form);
+}
+
+/**
+ * Clear system caches.
+ */
+function system_clear_cache_submit(&$form_state, $form) {
+  drupal_flush_all_caches();
+  drupal_set_message('Caches cleared.');
 }
 
 /**

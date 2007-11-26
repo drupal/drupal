@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.721 2007/11/26 16:19:37 dries Exp $
+// $Id: common.inc,v 1.722 2007/11/26 16:25:13 dries Exp $
 
 /**
  * @file
@@ -3539,3 +3539,23 @@ function drupal_implode_tags($tags) {
   return implode(', ', $encoded_tags);
 }
 
+/**
+ * Flush all cached data on the site.
+ *
+ * Empties cache tables, rebuilds the menu cache and theme registries, and
+ * exposes a hook for other modules to clear their own cache data as well.
+ */
+function drupal_flush_all_caches() {
+  drupal_clear_css_cache();
+  drupal_clear_js_cache();
+  drupal_rebuild_theme_registry();
+  menu_rebuild();
+  node_types_rebuild();
+  // Don't clear cache_form - in-progress form submissions may break.
+  // Ordered so clearing the page cache will always be the last action.
+  $core = array('cache', 'cache_block', 'cache_filter', 'cache_page');
+  $cache_tables = array_merge(module_invoke_all('flush_caches'), $core);
+  foreach ($cache_tables as $table) {
+    cache_clear_all('*', $table, TRUE);
+  }
+}
