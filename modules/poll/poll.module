@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.249 2007/11/05 16:28:25 goba Exp $
+// $Id: poll.module,v 1.250 2007/11/26 11:44:03 goba Exp $
 
 /**
  * @file
@@ -54,7 +54,7 @@ function poll_theme() {
  * Implementation of hook_perm().
  */
 function poll_perm() {
-  return array('create polls', 'edit polls', 'edit own poll', 'vote on polls', 'cancel own vote', 'inspect all votes');
+  return array('create poll content', 'edit any poll content', 'edit own poll content', 'vote on polls', 'cancel own vote', 'inspect all votes');
 }
 
 /**
@@ -65,9 +65,9 @@ function poll_access($op, $node, $account) {
 
   switch ($op) {
     case 'create':
-      return user_access('create polls', $account);
+      return user_access('create poll content', $account);
     case 'update':
-      return user_access('edit polls') || (user_access('edit own poll') && ($node->uid == $user->uid));
+      return user_access('edit any poll content') || (user_access('edit own poll content') && ($node->uid == $user->uid));
   }
 }
 
@@ -184,7 +184,7 @@ function poll_node_info() {
 function poll_form(&$node, $form_state) {
   global $user;
 
-  $admin = user_access('administer nodes') || user_access('edit polls') || (user_access('edit own polls') && $user->uid == $node->nid);
+  $admin = user_access('administer nodes') || user_access('edit any poll content') || (user_access('edit own poll content') && $user->uid == $node->nid);
   $type = node_get_types('type', $node);
 
   $form = array(

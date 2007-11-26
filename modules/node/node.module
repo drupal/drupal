@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.908 2007/11/24 21:02:24 goba Exp $
+// $Id: node.module,v 1.909 2007/11/26 11:44:03 goba Exp $
 
 /**
  * @file
@@ -1048,9 +1048,9 @@ function node_perm() {
       $name = check_plain($type->type);
       $perms[] = 'create '. $name .' content';
       $perms[] = 'delete own '. $name .' content';
-      $perms[] = 'delete '. $name .' content';
+      $perms[] = 'delete any '. $name .' content';
       $perms[] = 'edit own '. $name .' content';
-      $perms[] = 'edit '. $name .' content';
+      $perms[] = 'edit any '. $name .' content';
     }
   }
 
@@ -2223,13 +2223,13 @@ function node_content_access($op, $node, $account) {
   }
 
   if ($op == 'update') {
-    if (user_access('edit '. $type .' content', $account) || (user_access('edit own '. $type .' content', $account) && ($user->uid == $node->uid))) {
+    if (user_access('edit any '. $type .' content', $account) || (user_access('edit own '. $type .' content', $account) && ($user->uid == $node->uid))) {
       return TRUE;
     }
   }
 
   if ($op == 'delete') {
-    if (user_access('delete '. $type .' content') || (user_access('delete own '. $type .' content') && ($user->uid == $node->uid))) {
+    if (user_access('delete any '. $type .' content') || (user_access('delete own '. $type .' content') && ($user->uid == $node->uid))) {
       return TRUE;
     }
   }
