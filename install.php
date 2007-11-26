@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.96 2007/11/24 20:35:36 goba Exp $
+// $Id: install.php,v 1.97 2007/11/26 16:36:42 dries Exp $
 
 require_once './includes/install.inc';
 
@@ -932,7 +932,7 @@ function install_configure_form(&$form_state, $url) {
     '#type' => 'textfield',
     '#title' => st('Site e-mail address'),
     '#default_value' => ini_get('sendmail_from'),
-    '#description' => st('A valid e-mail address to be used as the "From" address by the auto-mailer during registration, new password requests, notifications, etc.  To lessen the likelihood of e-mail being marked as spam, this e-mail address should use the same domain as the website.'),
+    '#description' => st('A valid e-mail address to be used as the "From" address by the auto-mailer during registration, new password requests, notifications, etc. To lessen the likelihood of e-mail being marked as spam, this e-mail address should use the same domain as the website.'),
     '#required' => TRUE,
     '#weight' => -15,
   );
@@ -1000,7 +1000,7 @@ function install_configure_form(&$form_state, $url) {
     '#title' => st('Update notifications'),
     '#options' => array(1 => st('Check for updates automatically')),
     '#default_value' => array(1),
-    '#description' => st('With this option enabled, Drupal will notify you when new releases are available. This will significantly enhance your site\'s security and is <strong>highly recommended</strong>. This requires your site to periodically send anonymous information on its installed components to <a href="@drupal">drupal.org</a>.  For more information please see the <a href="@update">update notification information</a>.', array('@drupal' => 'http://drupal.org', '@update' => 'http://drupal.org/handbook/modules/update')),
+    '#description' => st('With this option enabled, Drupal will notify you when new releases are available. This will significantly enhance your site\'s security and is <strong>highly recommended</strong>. This requires your site to periodically send anonymous information on its installed components to <a href="@drupal">drupal.org</a>. For more information please see the <a href="@update">update notification information</a>.', array('@drupal' => 'http://drupal.org', '@update' => 'http://drupal.org/handbook/modules/update')),
     '#weight' => 15,
   );
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.163 2007/11/23 13:34:55 dries Exp $
+// $Id: locale.inc,v 1.164 2007/11/26 16:36:42 dries Exp $
 
 /**
  * @file
@@ -488,7 +488,7 @@ function locale_translate_overview_screen() {
     $groupsums[$group->textgroup] = $group->strings;
   }
 
-  // Setup overview table with default values, ensuring common order for values.
+  // Set up overview table with default values, ensuring common order for values.
   $rows = array();
   foreach ($languages as $langcode => $language) {
     $rows[$langcode] = array('name' => ($langcode == 'en' ? t('English (built-in)') : t($language->name)));

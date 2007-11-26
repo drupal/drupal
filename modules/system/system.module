@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.554 2007/11/24 20:35:37 goba Exp $
+// $Id: system.module,v 1.555 2007/11/26 16:36:43 dries Exp $
 
 /**
  * @file
@@ -35,7 +35,7 @@ function system_help($path, $arg) {
     case 'admin/by-module':
       return '<p>'. t('This page shows you all available administration tasks for each module.') .'</p>';
     case 'admin/build/themes':
-      $output = '<p>'. t('Select which themes are available to your users and specify the default theme. To configure site-wide display settings, click the "configure" task above. Alternatively, to override these settings in a specific theme, click the "configure" link for the corresponding theme. Note that different themes may have different regions available for rendering content like blocks. If you want consistency in what your users see, you may wish to enable only one theme.') .'</p>';
+      $output = '<p>'. t('Select which themes are available to your users and specify the default theme. To configure site-wide display settings, click the "configure" task above. Alternatively, to override these settings in a specific theme, click the "configure" link for that theme. Note that different themes may have different regions available for displaying content; for consistency in presentation, you may wish to enable only one theme.') .'</p>';
       $output .= '<p>'. t('To change the appearance of your site, a number of <a href="@themes">contributed themes</a> are available.', array('@themes' => 'http://drupal.org/project/themes')) .'</p>';
       return $output;
     case 'admin/build/themes/settings/'. $arg[4]:
@@ -45,7 +45,7 @@ function system_help($path, $arg) {
     case 'admin/build/themes/settings':
       return '<p>'. t('These options control the default display settings for your entire site, across all themes. Unless they have been overridden by a specific theme, these settings will be used.') .'</p>';
     case 'admin/build/modules':
-      $output = '<p>'. t('Modules are plugins for Drupal that extend its core functionality. Here you can select which modules are enabled. Once a module is enabled, new <a href="@permissions">permissions</a> might be made available. Modules can automatically be temporarily disabled to reduce server load when your site becomes extremely busy by enabling the throttle.module and checking throttle.', array('@permissions' => url('admin/user/permissions')));
+      $output = '<p>'. t('Modules are plugins that extend Drupal\'s core functionality. Enable modules by selecting the <em>Enabled</em> checkboxes below and clicking the <em>Save configuration</em> button. Once a module is enabled, new <a href="@permissions">permissions</a> may be available. To reduce server load, modules with their <em>Throttle</em> checkbox selected are temporarily disabled when your site becomes extremely busy. (Note that the <em>Throttle</em> checkbox is only available if the Throttle module is enabled.)', array('@permissions' => url('admin/user/permissions')));
       if (module_exists('throttle')) {
         $output .= ' '. t('The auto-throttle functionality must be enabled on the <a href="@throttle">throttle configuration page</a> after having enabled the throttle module.', array('@throttle' => url('admin/settings/throttle')));
       }
@@ -72,7 +72,7 @@ function system_help($path, $arg) {
     case 'admin/settings/actions/configure':
       return t('An advanced action offers additional configuration options which may be filled out below. Changing the <em>Description</em> field is recommended, in order to better identify the precise action taking place. This description will be displayed in modules such as the trigger module when assigning actions to system events, so it is best if it is as descriptive as possible (for example, "Send e-mail to Moderation Team" rather than simply "Send e-mail").');
     case 'admin/reports/status':
-      return '<p>'. t("Here you can find a short overview of your Drupal site's parameters as well as any problems detected with your installation. It is useful to copy/paste this information when you need support.") .'</p>';
+      return '<p>'. t("Here you can find a short overview of your site's parameters as well as any problems detected with your installation. It may be useful to copy and paste this information into support requests filed on drupal.org's support forums and project issue queues.") .'</p>';
   }
 }
 
@@ -1597,7 +1597,7 @@ function system_message_action_form($context) {
     '#default_value' => isset($context['message']) ? $context['message'] : '',
     '#required' => TRUE,
     '#rows' => '8',
-    '#description' => t('The message to be displayed to the current user.  You may include the following variables: %site_name, %username, %node_url, %node_type, %title, %teaser, %body. Not all variables will be available in all contexts.'),
+    '#description' => t('The message to be displayed to the current user. You may include the following variables: %site_name, %username, %node_url, %node_type, %title, %teaser, %body. Not all variables will be available in all contexts.'),
   );
   return $form;
 }

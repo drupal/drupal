@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.248 2007/11/23 12:02:38 goba Exp $
+// $Id: form.inc,v 1.249 2007/11/26 16:36:42 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -2269,8 +2269,8 @@ function form_clean_id($id = NULL, $flush = FALSE) {
  * clean code independence, ensuring that several batches submitted by
  * different parts of the code (core / contrib modules) can be processed
  * correctly while not interfering or having to cope with each other. Each
- * batch set gets to specify his own UI messages, operates on it's own set
- * of operations and results, and triggers it's own 'finished' callback.
+ * batch set gets to specify his own UI messages, operates on its own set
+ * of operations and results, and triggers its own 'finished' callback.
  * Batch sets are processed sequentially, with the progress bar starting
  * fresh for every new set.
  */

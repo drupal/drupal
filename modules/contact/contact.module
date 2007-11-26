@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.98 2007/11/09 09:21:00 dries Exp $
+// $Id: contact.module,v 1.99 2007/11/26 16:36:43 dries Exp $
 
 /**
  * @file
@@ -19,7 +19,7 @@ function contact_help($path, $arg) {
       $output .= '<p>'. t('For more information, please read the configuration and customization handbook page for the <a href="@contact">contact module</a>.', array('@contact' => url('http://drupal.org/handbook/modules/contact/', array('absolute' => TRUE)))) .'</p>';
       return $output;
     case 'admin/build/contact':
-      $output = '<p>'. t('This page lets you setup <a href="@form">your site-wide contact form</a>. To do so, add one or more categories. You can associate different recipients with each category to route e-mails to different people. For example, you can route website feedback to the webmaster and direct product information requests to the sales department. On the <a href="@settings">settings page</a>, you can customize the information shown above the contact form. This can be useful to provide additional contact information such as your postal address and telephone number.', array('@settings' => url('admin/build/contact/settings'), '@form' => url('contact'))) .'</p>';
+      $output = '<p>'. t('This page lets you set up <a href="@form">your site-wide contact form</a>. To do so, add one or more categories. You can associate different recipients with each category to route e-mails to different people. For example, you can route website feedback to the webmaster and direct product information requests to the sales department. On the <a href="@settings">settings page</a>, you can customize the information shown above the contact form. This can be useful to provide additional contact information such as your postal address and telephone number.', array('@settings' => url('admin/build/contact/settings'), '@form' => url('contact'))) .'</p>';
       if (!module_exists('menu')) {
         $menu_note = t('The menu item can be customized and configured only once the menu module has been <a href="@modules-page">enabled</a>.', array('@modules-page' => url('admin/settings/modules')));
       }

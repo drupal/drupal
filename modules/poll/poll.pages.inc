@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.pages.inc,v 1.2 2007/10/19 10:19:03 goba Exp $
+// $Id: poll.pages.inc,v 1.3 2007/11/26 16:36:43 dries Exp $
 
 /**
  * @file
@@ -30,7 +30,7 @@ function poll_page() {
  */
 function poll_votes($node) {
   drupal_set_title(check_plain($node->title));
-  $output = t('This table lists all the recorded votes for this poll.  If anonymous users are allowed to vote, they will be identified by the IP address of the computer they used when they voted.');
+  $output = t('This table lists all the recorded votes for this poll. If anonymous users are allowed to vote, they will be identified by the IP address of the computer they used when they voted.');
 
   $header[] = array('data' => t('Visitor'), 'field' => 'u.name');
   $header[] = array('data' => t('Vote'), 'field' => 'pv.chorder');

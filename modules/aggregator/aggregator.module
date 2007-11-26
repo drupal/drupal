@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.360 2007/10/25 15:32:55 dries Exp $
+// $Id: aggregator.module,v 1.361 2007/11/26 16:36:42 dries Exp $
 
 /**
  * @file
@@ -767,7 +767,7 @@ function aggregator_parse_feed(&$data, $feed) {
     /*
     ** Save this item. Try to avoid duplicate entries as much as
     ** possible. If we find a duplicate entry, we resolve it and
-    ** pass along it's ID such that we can update it if needed.
+    ** pass along its ID is such that we can update it if needed.
     */
 
     if (!empty($guid)) {

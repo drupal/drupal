@@ -1,5 +1,5 @@
 <?php
-// $Id: block.admin.inc,v 1.11 2007/11/14 09:49:30 dries Exp $
+// $Id: block.admin.inc,v 1.12 2007/11/26 16:36:42 dries Exp $
 
 /**
  * @file
@@ -367,7 +367,7 @@ function template_preprocess_block_admin_display_form(&$variables) {
   // Initialize disabled blocks array.
   $variables['block_listing'][BLOCK_REGION_NONE] = array();
 
-  // Setup to track previous region in loop.
+  // Set up to track previous region in loop.
   $last_region = '';
   foreach (element_children($variables['form']) as $i) {
     $block = &$variables['form'][$i];

@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.27 2007/11/26 16:25:14 dries Exp $
+// $Id: system.admin.inc,v 1.28 2007/11/26 16:36:43 dries Exp $
 
 /**
  * @file
@@ -448,7 +448,7 @@ function system_theme_settings(&$form_state, $key = '') {
     $form['favicon'] = array(
       '#type' => 'fieldset',
       '#title' => t('Shortcut icon settings'),
-      '#description' => t("Your shortcut icon or 'favicon' is displayed in the address bar and bookmarks of most browsers.")
+      '#description' => t("Your shortcut icon, or 'favicon', is displayed in the address bar and bookmarks of most browsers.")
     );
     $form['favicon']['default_favicon'] = array(
       '#type' => 'checkbox',
@@ -1072,7 +1072,7 @@ function system_site_information_settings() {
     '#type' => 'textfield',
     '#title' => t('E-mail address'),
     '#default_value' => variable_get('site_mail', ini_get('sendmail_from')),
-    '#description' => t('A valid e-mail address to be used as the "From" address by the auto-mailer during registration, new password requests, notifications, etc.  To lessen the likelihood of e-mail being marked as spam, this e-mail address should use the same domain as the website.'),
+    '#description' => t('A valid e-mail address to be used as the "From" address by the auto-mailer during registration, new password requests, notifications, etc. To lessen the likelihood of e-mail being marked as spam, this e-mail address should use the same domain as the website.'),
     '#required' => TRUE,
   );
   $form['site_slogan'] = array(
@@ -1238,7 +1238,7 @@ function system_performance_settings() {
     '#default_value' => variable_get('preprocess_css', 0) && $is_writable,
     '#disabled' => !$is_writable,
     '#options' => array(t('Disabled'), t('Enabled')),
-    '#description' => t("This option can interfere with theme development. It is recommended to only turn this on when your site is complete."),
+    '#description' => t('This option can interfere with theme development and should only be enabled in a production environment.'),
   );
   $form['bandwidth_optimizations']['preprocess_js'] = array(
     '#type' => 'radios',
@@ -1246,7 +1246,7 @@ function system_performance_settings() {
     '#default_value' => variable_get('preprocess_js', 0) && $is_writable,
     '#disabled' => !$is_writable,
     '#options' => array(t('Disabled'), t('Enabled')),
-    '#description' => t("This option can interfere with module development. It is recommended to only turn this on when your site is complete."),
+    '#description' => t('This option can interfere with module development and should only be enabled in a production environment.'),
   );
 
   $form['clear_cache'] = array(
@@ -1678,12 +1678,12 @@ function system_sql() {
   ));
 
   $output .= '<h2>'. t('Query cache information') .'</h2>';
-  $output .= '<p>'. t('The MySQL query cache can improve performance of your site by storing the result of queries.  Then, if an identical query is received later, the MySQL server retrieves the result from the query cache rather than parsing and executing the statement again.') .'</p>';
+  $output .= '<p>'. t('The MySQL query cache can improve performance of your site by storing the result of queries. Then, if an identical query is received later, the MySQL server retrieves the result from the query cache rather than parsing and executing the statement again.') .'</p>';
   $output .= _system_sql($data, array(
    'Qcache_queries_in_cache' => t('The number of queries in the query cache.'),
-   'Qcache_hits' => t('The number of times that MySQL found previous results in the cache.'),
-   'Qcache_inserts' => t('The number of times that MySQL added a query to the cache (misses).'),
-   'Qcache_lowmem_prunes' => t('The number of times that MySQL had to remove queries from the cache because it ran out of memory.  Ideally should be zero.')
+   'Qcache_hits' => t('The number of times MySQL found previous results in the cache.'),
+   'Qcache_inserts' => t('The number of times MySQL added a query to the cache (misses).'),
+   'Qcache_lowmem_prunes' => t('The number of times MySQL had to remove queries from the cache because it ran out of memory. Ideally should be zero.')
   ));
 
   return $output;
@@ -1800,10 +1800,10 @@ function theme_admin_page($blocks) {
   $output = '<div class="admin clear-block">';
   $output .= '<div class="compact-link">';
   if (system_admin_compact_mode()) {
-    $output .= l(t('Show descriptions'), 'admin/compact/off', array('title' => t('Produce a less compact layout that includes descriptions.')));
+    $output .= l(t('Show descriptions'), 'admin/compact/off', array('title' => t('Expand layout to include descriptions.')));
   }
   else {
-    $output .= l(t('Hide descriptions'), 'admin/compact/on', array('title' => t("Produce a more compact layout that doesn't include descriptions.")));
+    $output .= l(t('Hide descriptions'), 'admin/compact/on', array('title' => t('Compress layout by hiding descriptions.')));
   }
   $output .= '</div>';
 

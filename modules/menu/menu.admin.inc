@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.admin.inc,v 1.14 2007/11/26 16:19:37 dries Exp $
+// $Id: menu.admin.inc,v 1.15 2007/11/26 16:36:43 dries Exp $
 
 /**
  * @file
@@ -304,7 +304,7 @@ function menu_edit_item(&$form_state, $type, $item, $menu) {
     '#title' => t('Parent item'),
     '#default_value' => $default,
     '#options' => $options,
-    '#description' => t('The maximum depth for an item and all its children is fixed at !maxdepth.  Some menu items may not be available as parents if selecting them would exceed this limit.', array('!maxdepth' => MENU_MAX_DEPTH)),
+    '#description' => t('The maximum depth for an item and all its children is fixed at !maxdepth. Some menu items may not be available as parents if selecting them would exceed this limit.', array('!maxdepth' => MENU_MAX_DEPTH)),
     '#attributes' => array('class' => 'menu-title-select'),
   );
   $form['menu']['weight'] = array(

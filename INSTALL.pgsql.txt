@@ -1,4 +1,4 @@
-// $Id: INSTALL.pgsql.txt,v 1.6 2006/09/08 16:29:35 dries Exp $
+// $Id: INSTALL.pgsql.txt,v 1.7 2007/11/26 16:36:42 dries Exp $
 
 CREATE THE PostgreSQL DATABASE
 ------------------------------
@@ -7,7 +7,7 @@ Note that the database must be created with UTF-8 (Unicode) encoding.
 
 1. CREATE DATABASE USER
 
-   This step is only necessary if you don't already have a user setup (e.g.
+   This step is only necessary if you don't already have a user set up (e.g.
    by your host) or you want to create new user for use with Drupal only. The
    following command creates a new user named "username" and asks for a
    password for that user:
@@ -18,7 +18,7 @@ Note that the database must be created with UTF-8 (Unicode) encoding.
 
 2. CREATE THE DRUPAL DATABASE
 
-   This step is only necessary if you don't already have a database setup (e.g.
+   This step is only necessary if you don't already have a database set up (e.g.
    by your host) or you want to create new database for use with Drupal only.
    The following command creates a new database named "databasename", which is
    owned by previously created "username":

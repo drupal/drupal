@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.193 2007/11/26 11:44:04 goba Exp $
+// $Id: system.install,v 1.194 2007/11/26 16:36:43 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -362,7 +362,7 @@ function system_schema() {
   // some database drivers, e.g. Oracle and DB2, will require variable_get()
   // and variable_set() for overcoming some database specific limitations.
   $schema['variable'] = array(
-    'description' => t('Named variable/value pairs created by Drupal core or any other module or theme.  All variables are cached in memory at the start of every Drupal request so developers should not be careless about what is stored here.'),
+    'description' => t('Named variable/value pairs created by Drupal core or any other module or theme. All variables are cached in memory at the start of every Drupal request so developers should not be careless about what is stored here.'),
     'fields' => array(
       'name' => array(
         'description' => t('The name of the variable.'),
@@ -666,7 +666,7 @@ function system_schema() {
         'not null' => TRUE,
         'default' => ''),
       'tab_root' => array(
-        'description' => t('Router path of the closest non-tab parent page.  For pages that are not local tasks, this will be the same as the path.'),
+        'description' => t('Router path of the closest non-tab parent page. For pages that are not local tasks, this will be the same as the path.'),
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
@@ -684,7 +684,7 @@ function system_schema() {
         'not null' => TRUE,
         'default' => ''),
       'title_arguments' => array(
-        'description' => t('A serialized array of arguments for the title callback.  If empty, the title will be used as the sole argument for the title callback.'),
+        'description' => t('A serialized array of arguments for the title callback. If empty, the title will be used as the sole argument for the title callback.'),
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
@@ -817,7 +817,7 @@ function system_schema() {
         'default' => 0,
         'size' => 'small'),
       'p1' => array(
-        'description' => t('The first mlid in the materialized path. If N = depth, then pN must equal the mlid.  If depth > 1 then p(N-1) must equal the plid. All pX where X > depth must equal zero. The columns p1 .. p9 are also called the parents.'),
+        'description' => t('The first mlid in the materialized path. If N = depth, then pN must equal the mlid. If depth > 1 then p(N-1) must equal the plid. All pX where X > depth must equal zero. The columns p1 .. p9 are also called the parents.'),
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
@@ -919,7 +919,7 @@ function system_schema() {
         'not null' => TRUE,
         'default' => 0),
       'session' => array(
-        'description' => t('The serialized contents of $_SESSION, an array of name/value pairs that persists across page requests by this session ID.  Drupal loads $_SESSION from here at the start of each request and saves it at the end.'),
+        'description' => t('The serialized contents of $_SESSION, an array of name/value pairs that persists across page requests by this session ID. Drupal loads $_SESSION from here at the start of each request and saves it at the end.'),
         'type' => 'text',
         'not null' => FALSE,
         'size' => 'big')
@@ -975,13 +975,13 @@ function system_schema() {
         'not null' => TRUE,
         'default' => 0),
       'schema_version' => array(
-        'description' => t("The module's database schema version number.  -1 if the module is not installed (its tables do not exist); 0 or the largest N of the module's hook_update_N() function that has either been run or existed when the module was first installed."),
+        'description' => t("The module's database schema version number. -1 if the module is not installed (its tables do not exist); 0 or the largest N of the module's hook_update_N() function that has either been run or existed when the module was first installed."),
         'type' => 'int',
         'not null' => TRUE,
         'default' => -1,
         'size' => 'small'),
       'weight' => array(
-        'description' => t("The order in which this module's hooks should be invoked relative to other modules.  Equal-weighted modules are ordered by name."),
+        'description' => t("The order in which this module's hooks should be invoked relative to other modules. Equal-weighted modules are ordered by name."),
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0),
@@ -1019,7 +1019,7 @@ function system_schema() {
         'not null' => TRUE,
         'default' => ''),
       'language' => array(
-        'description' => t('The language this alias is for; if blank, the alias will be used for unknown languages.  Each Drupal path can have an alias for each supported language.'),
+        'description' => t('The language this alias is for; if blank, the alias will be used for unknown languages. Each Drupal path can have an alias for each supported language.'),
         'type' => 'varchar',
         'length' => 12,
         'not null' => TRUE,
@@ -1969,7 +1969,7 @@ function system_update_6017() {
         $ret[] = array('success' => TRUE, 'query' => "variable_set($new_name)");
         $ret[] = array('success' => TRUE, 'query' => "variable_del($old_name)");
         if ($old_name == 'user_mail_approval_body') {
-          drupal_set_message(t('Saving an old value of the welcome message body for users that are pending administrator approval. However, you should consider modifying this text, since Drupal can now be configured to automatically notify users and send them their login information when their accounts are approved.  See the !admin_user_settings page for details.', array('!admin_user_settings' => l(t('User settings'), 'admin/user/settings'))));
+          drupal_set_message(t('Saving an old value of the welcome message body for users that are pending administrator approval. However, you should consider modifying this text, since Drupal can now be configured to automatically notify users and send them their login information when their accounts are approved. See the !admin_user_settings page for details.', array('!admin_user_settings' => l(t('User settings'), 'admin/user/settings'))));
         }
       }
     }

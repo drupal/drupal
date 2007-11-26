@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.722 2007/11/26 16:25:13 dries Exp $
+// $Id: common.inc,v 1.723 2007/11/26 16:36:42 dries Exp $
 
 /**
  * @file
@@ -1604,7 +1604,7 @@ function drupal_add_css($path = NULL, $type = 'module', $media = 'all', $preproc
           unset($css[$media]['module'][$old_path]);
 
           // If the current language is RTL and the CSS file had an RTL variant,
-          // pull out the original. The theme must provide it's own RTL style.
+          // pull out the original. The theme must provide its own RTL style.
           if (defined('LANGUAGE_RTL') && $language->direction == LANGUAGE_RTL) {
             $rtl_old_path = str_replace('.css', '-rtl.css', $old_path);
             if (isset($css[$media]['module'][$rtl_old_path])) {
@@ -1939,7 +1939,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
  * needs to be arranged by an end-user. Draggable tables are very flexible and
  * can manipulate the value of form elements placed within individual columns.
  *
- * To setup a table to use drag and drop in place of weight select-lists or
+ * To set up a table to use drag and drop in place of weight select-lists or
  * in place of a form that contains parent relationships, the form must be
  * themed into a table. The table must have an id attribute set. If using
  * theme_table(), the id may be set as such:

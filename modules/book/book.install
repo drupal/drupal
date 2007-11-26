@@ -1,5 +1,5 @@
 <?php
-// $Id: book.install,v 1.13 2007/11/26 11:44:03 goba Exp $
+// $Id: book.install,v 1.14 2007/11/26 16:36:43 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -78,7 +78,7 @@ function book_update_6000() {
     _book_install_type_create();
 
     // Fix role permissions to account for the changed names
-    // Setup the array holding strings to match and the corresponding
+    // Set up the array holding strings to match and the corresponding
     // strings to replace them with.
     $replace = array(
       'outline posts in books' => 'administer book outlines',

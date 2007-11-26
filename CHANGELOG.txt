@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.236 2007/11/21 22:53:39 goba Exp $
+// $Id: CHANGELOG.txt,v 1.237 2007/11/26 16:36:42 dries Exp $
 
 Drupal 6.0, xxxx-xx-xx (development version)
 ----------------------
@@ -695,7 +695,7 @@ Drupal 3.0.0, 2001-09-15
     * Drupal tries to locate a configuration file that matches your domain name or uses conf.php if the former failed. Note also that the configuration files got renamed from .conf to .php for security's sake on mal-configured Drupal sites.
 - Added caching support which makes Drupal extremely scalable.
 - Added access.module:
-    * Allows you to setup 'roles' (groups) and to bind a set of permissions to each group.
+    * Allows you to set up 'roles' (groups) and to bind a set of permissions to each group.
 - Added blog.module.
 - Added poll.module.
 - Added system.module:
@@ -750,13 +750,13 @@ Drupal 2.0.0, 2001-03-15
     * Story sections can be maintained from the administration pages.
     * Story sections make the open submission more adaptive in that you can set individual post, dump and expiration thresholds for each section according to the story type and urgency level: stories in certain sections do not "expire" and might stay interesting and active as time passes by, whereas news-related stories are only considered "hot" over a short period of time.
 - Multiple vhosts + multiple directories:
-    * You can setup multiple Drupal sites on top of the same physical source tree either by using vhosts or sub-directories.
+    * You can set up multiple Drupal sites on top of the same physical source tree either by using vhosts or sub-directories.
 - Added "user ratings" similar to SlashCode's Karma or Scoop's Mojo:
     * All rating logic is packed into a module to ease experimenting with different rating heuristics/algorithms.
 - Added "search infrastructure":
     * Improved search page and integrated search functionality in the administration pages.
 - Added translation / localization / internationalization support:
-    * Because many people would love to see their website showing a lot less of English, and far more of their own language, Drupal provides a framework to setup a multi-lingual website or to overwrite the default English text in English.
+    * Because many people would love to see their website showing a lot less of English, and far more of their own language, Drupal provides a framework to set up a multi-lingual website or to overwrite the default English text in English.
 - Added fine-grained user permission (or group) system:
     * Users can be granted access to specific administration sections. Example: a FAQ maintainer can be given access to maintain the FAQ and translators can be given access to the translation pages.
 - Added FAQ module
