@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.191 2007/11/22 21:02:15 goba Exp $
+// $Id: system.install,v 1.192 2007/11/26 08:30:19 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -2699,6 +2699,20 @@ function system_update_6037() {
   $ret = array();
   db_change_field($ret, 'blocks', 'region', 'region', array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''));
   $ret[] = update_sql("UPDATE {blocks} SET region = '' WHERE status = 0");
+  return $ret;
+}
+
+/**
+ * Ensure that "Account" is not used as a Profile category.
+ */
+function system_update_6038() {
+  $ret = array();
+  if (db_table_exists('profile_fields')) {
+    $ret[] = update_sql('UPDATE {profile_fields} SET category = "Account settings" WHERE LOWER(category) = "account"');
+    if ($affectedrows = db_affected_rows()) {
+      drupal_set_message(t('There were @affectedrows profile fields that used a reserved category name. They have been assigned to the category "Account settings".', array('@affectedrows' => $affectedrows)));
+    }
+  }
   return $ret;
 }
 

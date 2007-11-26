@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.admin.inc,v 1.1 2007/11/13 12:28:36 dries Exp $
+// $Id: profile.admin.inc,v 1.2 2007/11/26 08:30:19 goba Exp $
 
 /**
  * @file
@@ -177,7 +177,7 @@ function profile_field_form_validate($form, &$form_state) {
   if (!$form_state['values']['category']) {
     form_set_error('category', t('You must enter a category.'));
   }
-  if ($form_state['values']['category'] == 'account') {
+  if (strtolower($form_state['values']['category']) == 'account') {
     form_set_error('category', t('The specified category name is reserved for use by Drupal.'));
   }
   $args1 = array($form_state['values']['title'], $form_state['values']['category']);
