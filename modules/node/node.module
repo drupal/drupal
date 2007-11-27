@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.909 2007/11/26 11:44:03 goba Exp $
+// $Id: node.module,v 1.910 2007/11/27 11:36:35 goba Exp $
 
 /**
  * @file
@@ -236,7 +236,7 @@ function node_teaser_js(&$form, &$form_state) {
 }
 
 /**
- * Automatically generate a teaser for a node body in a given format.
+ * Automatically generate a teaser for a node body.
  *
  * @param $body
  *   The content for which a teaser will be generated.
