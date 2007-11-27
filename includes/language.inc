@@ -111,7 +111,7 @@ function language_url_rewrite(&$path, &$options) {
 
       case LANGUAGE_NEGOTIATION_DOMAIN:
         if ($path_language->domain) {
-          $options['absolute'] = TRUE;
+          $options['external'] = TRUE;
           $path = $path_language->domain .'/'. $path;
         }
         break;
