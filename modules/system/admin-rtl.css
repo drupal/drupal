@@ -6,9 +6,9 @@ div.admin-panel .body {
 
 div.admin .expert-link {
   text-align: left;
-  margin-right: inherit;
+  margin-right: 0;
   margin-left: 1em;
-  padding-right: inherit;
+  padding-right: 0;
   padding-left: 4px;
 }
 
@@ -31,7 +31,7 @@ table.screenshot {
   float: right;
 }
 .date-container .custom-container {
-  margin-left: inherit;
+  margin-left: 0;
   margin-right: 15px;
 }
 

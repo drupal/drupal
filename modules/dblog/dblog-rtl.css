@@ -2,6 +2,6 @@
 
 #dblog-filter-form .form-item {
   float: right;
-  padding-right: inherit;
+  padding-right: 0;
   padding-left: .8em;
 }

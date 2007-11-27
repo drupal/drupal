@@ -2,7 +2,7 @@
 
 .search-advanced .criterion {
   float: right;
-  margin-right: inherit;
+  margin-right: 0;
   margin-left: 2em;
 }
 .search-advanced .action {

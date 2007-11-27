@@ -17,7 +17,7 @@ body {
 }
 ul.links li {
   border-right: 1px solid #9cf;
-  border-left: inherit;
+  border-left: none;
 }
 .block, .box {
   padding: 0 1.5em 0 0;

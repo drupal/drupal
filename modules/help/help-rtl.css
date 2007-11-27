@@ -2,10 +2,10 @@
 
 .help-items {
   float: right;
-  padding-right: inherit;
+  padding-right: 0;
   padding-left: 3%;
 }
 .help-items-last {
-  padding-right: inherit;
+  padding-right: 0;
   padding-left: 0;
 }

@@ -1,7 +1,7 @@
 /* $Id$ */
 
 #forum tr td.forum {
-  padding-left: inherit;
+  padding-left: 0.5em;
   padding-right: 25px;
   background-position: 98% 2px;
 }

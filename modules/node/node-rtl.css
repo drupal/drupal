@@ -2,7 +2,7 @@
 
 #node-admin-buttons {
   float: right;
-  margin-left: inherit;
+  margin-left: 0;
   margin-right: 0.5em;
   clear: left;
 }

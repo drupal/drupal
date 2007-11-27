@@ -1,17 +1,17 @@
 /* $Id$ */
 
 #permissions td.permission {
-  padding-left: inherit;
+  padding-left: 0;
   padding-right: 1.5em;
 }
 #access-rules .access-type, #access-rules .rule-type {
-  margin-right: inherit;
+  margin-right: 0;
   margin-left: 1em;
   float: right;
 }
 #user-admin-buttons {
   float: right;
-  margin-left: inherit;
+  margin-left: 0;
   margin-right: 0.5em;
   clear: left;
 }
