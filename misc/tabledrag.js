@@ -87,8 +87,8 @@ Drupal.tableDrag = function(table, tableSettings) {
 
   // Add mouse bindings to the document. The self variable is passed along
   // as event handlers do not have direct access to the tableDrag object.
-  $(document).bind('mousemove', { tableDrag: self }, self.dragRow);
-  $(document).bind('mouseup', { tableDrag: self }, self.dropRow);
+  $(document).bind('mousemove', function(event) { self.dragRow(event, self); });
+  $(document).bind('mouseup', function(event) { self.dropRow(event, self); });
 };
 
 /**
@@ -240,7 +240,7 @@ Drupal.tableDrag.prototype.makeDraggable = function(item) {
     $(this).removeClass('tabledrag-handle-hover');
     if (self.rowObject && self.safeBlur) {
       event.data = { tableDrag: self };
-      self.dropRow(event);
+      self.dropRow(event, self);
     }
   });
 
@@ -341,9 +341,7 @@ Drupal.tableDrag.prototype.makeDraggable = function(item) {
 /**
  * Mousemove event handler, bound to document.
  */
-Drupal.tableDrag.prototype.dragRow = function(event) {
-  var self = event.data.tableDrag;
-
+Drupal.tableDrag.prototype.dragRow = function(event, self) {
   if (self.dragObject) {
     self.currentMouseCoords = self.mouseCoords(event);
 
@@ -405,9 +403,7 @@ Drupal.tableDrag.prototype.dragRow = function(event) {
  * Mouseup event handler, bound to document.
  * Blur event handler, bound to drag handle for keyboard support.
  */
-Drupal.tableDrag.prototype.dropRow = function(event) {
-  var self = event.data.tableDrag;
-
+Drupal.tableDrag.prototype.dropRow = function(event, self) {
   // Drop row functionality shared between mouseup and blur events.
   if (self.rowObject != null) {
     var droppedRow = self.rowObject.element;
