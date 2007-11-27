@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.28 2007/11/26 16:36:43 dries Exp $
+// $Id: system.admin.inc,v 1.29 2007/11/27 17:58:26 goba Exp $
 
 /**
  * @file
@@ -1952,7 +1952,15 @@ function theme_system_modules($form) {
       if (module_exists('throttle')) {
         $row[] = array('data' => drupal_render($form['throttle'][$key]), 'class' => 'checkbox');
       }
-      $row[] = '<strong>'. drupal_render($form['name'][$key]) .'</strong>';
+
+      // Add labels only when there is also a checkbox.
+      if (isset($form['status'][$key])) {
+        $row[] = '<strong><label for="'. $form['status'][$key]['#id'] .'">'. drupal_render($form['name'][$key]) .'</label></strong>';
+      }
+      else {
+        $row[] = '<strong>'. drupal_render($form['name'][$key]) .'</strong>';
+      }
+
       $row[] = drupal_render($form['version'][$key]);
       $row[] = array('data' => $description, 'class' => 'description');
       $rows[] = $row;
