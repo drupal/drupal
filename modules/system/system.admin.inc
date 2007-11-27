@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.29 2007/11/27 17:58:26 goba Exp $
+// $Id: system.admin.inc,v 1.30 2007/11/27 21:06:28 goba Exp $
 
 /**
  * @file
@@ -91,7 +91,7 @@ function system_admin_by_module() {
 
   $modules = module_rebuild_cache();
   $menu_items = array();
-  $help_arg = drupal_help_arg();
+  $help_arg = module_exists('help') ? drupal_help_arg() : FALSE;
 
   foreach ($modules as $file) {
     $module = $file->name;
@@ -105,7 +105,7 @@ function system_admin_by_module() {
     if (count($admin_tasks)) {
 
       // Check for help links.
-      if (module_invoke($module, 'help', "admin/help#$module", $help_arg)) {
+      if ($help_arg && module_invoke($module, 'help', "admin/help#$module", $help_arg)) {
         $admin_tasks[100] = l(t('Get help'), "admin/help/$module");
       }
 
