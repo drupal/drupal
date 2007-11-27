@@ -1,0 +1,184 @@
+/* $Id $ */
+
+body {
+  direction: rtl;
+}
+
+blockquote {
+  border-right: 4px solid #69c;
+  border-left: none;
+  margin: 25px 50px 25px 100px;
+  text-align: right;
+}
+
+#primary-menu tr {
+  background: transparent url(header-a.jpg) right bottom repeat;
+}
+
+td#home {
+  background: transparent url(logo-background-rtl.jpg) right top repeat;
+}
+
+td#home a:link img, td#home a:visited img {
+  background: transparent url(logo-active-rtl.jpg) repeat; 
+}
+
+td#home a:hover img {
+  background: transparent url(logo-hover-rtl.jpg) repeat; 
+}
+
+#primary-menu .primary-links   {
+  background: transparent url(header-b-rtl.jpg) right top no-repeat;
+}
+
+ul.links li {
+  border-right: 1px solid #ff8c00;
+  border-left: none;
+}
+
+#navlist li {
+  border-right: 1px solid #369;
+  border-left: none;
+}
+
+#subnavlist li, ul.primary-links li, ul.secondary-links li {
+  border-right: 1px solid #fff;
+  border-left: none;
+}
+
+.tabs ul.primary {
+  padding: 0 10px 3px 0; 
+  height: 1.2em; /* FF hack, see float below */
+  line-height: 1em; /* FF hack, see float below */
+}
+/* @begin FF hacks, copied from Wikipedia's RTL tabs implementation */
+.tabs ul { clear:right;}
+.tabs li {padding: 0 0 0 10px; float: right;}
+/* @end FF hacks */
+
+.tabs ul.primary li a {
+  background: #fff url(tabs-off-rtl.png) right top no-repeat; 
+  border-style: none none none solid; 
+  margin-left: 10px;
+  margin-right: 0;
+}
+.tabs ul.primary li.active a {
+  background: #369 url(tabs-on-rtl.png) right top no-repeat; 
+  border-right: none;
+  border-left: 2px solid #369;
+}
+
+.tabs ul.primary li a:hover {
+  background-color:#FFFAF0;
+  color:#FF4500;
+}
+
+.tabs ul.secondary {
+  padding: 10px 0 60px 0;
+  line-height: 220%;
+}
+
+.tabs ul.secondary li {
+  padding: 0 10px 0 0;
+  border-left: none;
+}
+
+.tabs ul.secondary li a {
+  background: #fff url(tabs-option-off-rtl.png) right center no-repeat;
+  padding: 10px 25px 10px 0;
+}
+
+.tabs ul.secondary li a.active {
+  background: #fff url(tabs-option-on.png) right center no-repeat; 
+}
+
+.tabs ul.secondary li a:hover {
+  background: #fff url(tabs-option-hover-rtl.png) right center no-repeat;
+}
+
+#menu {
+  text-align: left; 
+}
+
+.node .content {
+  text-align: right; 
+}
+
+.comment .content {
+  text-align: right;
+}
+
+.block .title h3 {
+  padding: 10px 30px 10px 5px;
+  background: transparent url(icon-block-rtl.png) right center no-repeat;  
+}
+
+.node .picture {
+  float: left;
+}
+
+.comment .title {
+  padding: 10px 19px 12px 0;
+  background: transparent url(icon-comment-rtl.png) right center no-repeat;
+}
+
+.comment .new {
+  margin-right: 2px;
+  margin-left: 0;
+}
+
+.comment .picture {
+  float: left; 
+}
+
+.nav .links .next a:link {
+  padding: 17px 0 17px 17px;
+  background: transparent url(arrow-next-rtl.png) left center no-repeat;
+}
+.nav .links .next a:visited {
+  padding: 17px 0 17px 17px;
+  background: transparent url(arrow-next-visited-rtl.png) left center no-repeat;
+}
+.nav .links .next a:hover {
+  padding: 17px 0 17px 17px;
+  background: transparent url(arrow-next-hover-rtl.png) left center no-repeat;
+}
+.nav .links .prev a:link {
+  padding: 17px 17px 17px 0;
+  background: transparent url(arrow-prev-rtl.png) right center no-repeat;
+}
+.nav .links .prev a:visited {
+  padding: 17px 17px 17px 0;
+  background: transparent url(arrow-prev-visited-rtl.png) right center no-repeat;
+}
+.nav .links .prev a:hover {
+  padding: 17px 17px 17px 0;
+  background: transparent url(arrow-prev-hover-rtl.png) right center no-repeat;
+}
+
+#tracker th {
+  border-right: 1px solid #fafafa;
+  border-left: 1px solid #ddd ;
+}
+
+#tracker th img {
+  float: left;
+}
+
+#tracker td {
+  padding: 1em 0 1em 1em;
+}
+
+#forum td.container {
+  background: #369 url(forum-container-rtl.jpg) left top no-repeat;
+}
+
+#forum td.container a {
+  padding: 20px 35px 20px 0;
+  background: transparent url(forum-link-rtl.png) right center no-repeat;
+}
+
+/* IE hack */
+div, div.name a, .tabs ul li, .tabs ul li a{zoom:1}
+.tabs ul.primary li a, .tabs ul.primary li.active a, .tabs ul.secondary li, .tabs ul.secondary li, div.tabs a.active {zoom:1}
+.tabs ul.primary li.active a{zoom:1}

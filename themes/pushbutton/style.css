@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.22 2006/11/23 11:05:46 dries Exp $ */
+/* $Id: style.css,v 1.23 2007/11/27 15:07:57 goba Exp $ */
 
 /*
 ** HTML elements
@@ -46,11 +46,11 @@ p {
   padding: 0;
 }
 blockquote {
-  border-left: 4px solid #69c;
+  border-left: 4px solid #69c;  /* LTR */
   padding: 0 15px;
-  margin: 25px 100px 25px 50px;
+  margin: 25px 100px 25px 50px; /* LTR */
   color: #696969;
-  text-align: left;
+  text-align: left; /* LTR */
   font-size: 1.2em;
   line-height: 1.3em;
   font-family: "Trebuchet MS", Geneva, Arial, Helvetica, SunSans-Regular, Verdana, sans-serif;
@@ -81,18 +81,18 @@ pre {
   border-bottom: 3px solid #69c;
 }
 #primary-menu tr {
-  background: transparent url(header-a.jpg) left bottom repeat;
+  background: transparent url(header-a.jpg) left bottom repeat; /* LTR */
 }
 td#home {
-  background: transparent url(logo-background.jpg) left top repeat;
+  background: transparent url(logo-background.jpg) left top repeat; /* LTR */
 }
 td#home a:link img, td#home a:visited img {
-  background: transparent url(logo-active.jpg) repeat;
+  background: transparent url(logo-active.jpg) repeat; /* LTR */
   width: 144px;
   height: 63px;
 }
 td#home a:hover img {
-  background: transparent url(logo-hover.jpg) repeat;
+  background: transparent url(logo-hover.jpg) repeat; /* LTR */
   width: 144px;
   height: 63px;
 }
@@ -103,7 +103,7 @@ td#home a:hover img {
   color: #000;
 }
 #primary-menu .primary-links   {
-  background: transparent url(header-b.jpg) left top no-repeat;
+  background: transparent url(header-b.jpg) left top no-repeat; /* LTR */
   font-size: 0.79em;
 }
 #primary-menu .primary-links h1, #primary-menu .primary-links h2, #primary-menu .primary-links h3 {
@@ -126,13 +126,13 @@ td#home a:hover img {
   font-size: 0.85em;
 }
 ul.links li {
-  border-left: 1px solid #ff8c00;
+  border-left: 1px solid #ff8c00; /* LTR */
 }
 #navlist li {
-  border-left: 1px solid #369;
+  border-left: 1px solid #369; /* LTR */
 }
 #subnavlist li, ul.primary-links li, ul.secondary-links li {
-  border-left: 1px solid #fff;
+  border-left: 1px solid #fff; /* LTR */
 }
 #navlist li.first, #subnavlist li.first, ul.links li.first {
   border: none;
@@ -142,7 +142,7 @@ ul.links li {
 }
 .tabs ul.primary {
   border-collapse: collapse;
-  padding: 0 0 3px 10px;
+  padding: 0 0 3px 10px; /* LTR */
   white-space: nowrap;
   list-style: none;
   margin: 0;
@@ -155,18 +155,18 @@ ul.links li {
 }
 .tabs ul.primary li a {
   padding: 3px 10px;
-  background: #fff url(tabs-off.png) left top no-repeat;
+  background: #fff url(tabs-off.png) left top no-repeat; /* LTR */
   border-color: #69C;
   border-width: 2px;
-  border-style: none solid none none;
+  border-style: none solid none none; /* LTR */
   height: auto;
-  margin-right: 10px;
+  margin-right: 10px; /* LTR */
   text-decoration: none;
   text-transform: lowercase;
 }
 .tabs ul.primary li.active a {
-  background: #369 url(tabs-on.png) left top no-repeat;
-  border-right: 2px solid #369;
+  background: #369 url(tabs-on.png) left top no-repeat; /* LTR */
+  border-right: 2px solid #369; /* LTR */
   color: #fff;
 }
 .tabs ul.primary li a:hover {
@@ -187,23 +187,23 @@ ul.links li {
 .tabs ul.secondary li {
   display: inline;
   height: auto;
-  padding: 0 0 0 10px;
+  padding: 0 0 0 10px; /* LTR */
   text-decoration: none;
-  border-right: none;
+  border-right: none; /* LTR */
 }
 .tabs ul.secondary li a {
-  background: #fff url(tabs-option-off.png) left center no-repeat;
-  padding: 10px 0 10px 25px;
+  background: #fff url(tabs-option-off.png) left center no-repeat; /* LTR */
+  padding: 10px 0 10px 25px; /* LTR */
   margin: 0;
 }
 .tabs ul.secondary li a.active {
-  background: #fff url(tabs-option-on.png) left center no-repeat;
+  background: #fff url(tabs-option-on.png) left center no-repeat; /* LTR */
   color: #369;
   border-bottom: none;
 }
 .tabs ul.secondary li a:hover {
-  background: #fff url(tabs-option-hover.png) left center no-repeat;
-  color: #FF4500
+  background: #fff url(tabs-option-hover.png) left center no-repeat; /* LTR */
+  color: #FF4500;
 }
 #content {
   background-color: #fff;
@@ -213,7 +213,7 @@ ul.links li {
 }
 #menu {
   padding: 0.5em 0.5em 0 0.5em;
-  text-align: right;
+  text-align: right; /* LTR */
   vertical-align: middle;
 }
 #search .form-text, #search .form-submit {
@@ -305,12 +305,12 @@ ul.links li {
   font-size: 1em;
 }
 .node .content {
-  text-align: left;
+  text-align: left; /* LTR */
   font-size: 0.85em;
   line-height: 1.3;
 }
 .comment .content {
-  text-align: left;
+  text-align: left; /* LTR */
   font-size: 0.85em;
   line-height: 1.3;
 }
@@ -395,9 +395,9 @@ div.links {
   color: #369;
   font-size: 18px;
   font-weight: bold;
-  padding: 10px 5px 10px 30px;
+  padding: 10px 5px 10px 30px; /* LTR */
   margin-bottom: .25em;
-  background: transparent url(icon-block.png) left center no-repeat;
+  background: transparent url(icon-block.png) left center no-repeat; /* LTR */
 }
 .block .content {
   padding: 5px;
@@ -421,7 +421,7 @@ div.links {
 }
 .node .picture {
   border: 1px solid #fff;
-  float: right;
+  float: right; /* LTR */
   margin: 0.5em;
 }
 .comment {
@@ -431,18 +431,18 @@ div.links {
 }
 .comment .title {
   font-size: 1em;
-  padding: 10px 0 12px 19px;
-  background: transparent url(icon-comment.png) left center no-repeat;
+  padding: 10px 0 12px 19px; /* LTR */
+  background: transparent url(icon-comment.png) left center no-repeat; /* LTR */
 }
 .comment .new {
   font-weight: bold;
   font-size: 1em;
-  margin-left: 2px;
+  margin-left: 2px; /* LTR */
   color: red;
 }
 .comment .picture {
   border: 1px solid #fff;
-  float: right;
+  float: right; /* LTR */
   margin: 10px;
 }
 div.links {
@@ -460,28 +460,28 @@ div.links .prev, div.links .next, div.links .up {
   display: none
 }
 .nav .links .next a:link {
-  padding: 17px 17px 17px 0;
-  background: transparent url(arrow-next.png) right center no-repeat;
+  padding: 17px 17px 17px 0; /* LTR */
+  background: transparent url(arrow-next.png) right center no-repeat; /* LTR */
 }
 .nav .links .next a:visited {
-  padding: 17px 17px 17px 0;
-  background: transparent url(arrow-next-visited.png) right center no-repeat;
+  padding: 17px 17px 17px 0; /* LTR */
+  background: transparent url(arrow-next-visited.png) right center no-repeat; /* LTR */
 }
 .nav .links .next a:hover {
-  padding: 17px 17px 17px 0;
-  background: transparent url(arrow-next-hover.png) right center no-repeat;
+  padding: 17px 17px 17px 0; /* LTR */
+  background: transparent url(arrow-next-hover.png) right center no-repeat; /* LTR */
 }
 .nav .links .prev a:link {
-  padding: 17px 0 17px 17px;
-  background: transparent url(arrow-prev.png) left center no-repeat;
+  padding: 17px 0 17px 17px; /* LTR */
+  background: transparent url(arrow-prev.png) left center no-repeat; /* LTR */
 }
 .nav .links .prev a:visited {
-  padding: 17px 0 17px 17px;
-  background: transparent url(arrow-prev-visited.png) left center no-repeat;
+  padding: 17px 0 17px 17px; /* LTR */
+  background: transparent url(arrow-prev-visited.png) left center no-repeat; /* LTR */
 }
 .nav .links .prev a:hover {
-  padding: 17px 0 17px 17px;
-  background: transparent url(arrow-prev-hover.png) left center no-repeat;
+  padding: 17px 0 17px 17px; /* LTR */
+  background: transparent url(arrow-prev-hover.png) left center no-repeat; /* LTR */
 }
 .nav .links .up a:link {
   padding: 11px 0 17px 0;
@@ -539,18 +539,18 @@ div.admin-panel .body {
   text-align: center;
   background-color: #f5f5f5;
   border-bottom: 1px solid #ddd;
-  border-right: 1px solid #ddd;
-  border-left: 1px solid #fafafa;
+  border-right: 1px solid #ddd; /* LTR */
+  border-left: 1px solid #fafafa; /* LTR */
 }
 #tracker th img {
-  float: right;
+  float: right; /* LTR */
 }
 #tracker tr.even, #tracker tr.odd {
   background-color: #fff;
 }
 #tracker td {
   vertical-align: top;
-  padding: 1em 1em 1em 0;
+  padding: 1em 1em 1em 0; /* LTR */
   border-bottom: 1px solid #bbb;
 }
 #forum {
@@ -586,13 +586,13 @@ div.admin-panel .body {
 }
 #forum td.container {
   color: #000;
-  background: #369 url(forum-container.jpg) right top no-repeat;
+  background: #369 url(forum-container.jpg) right top no-repeat; /* LTR */
   border: 2px solid #69c;
 }
 #forum td.container a {
   color: #e4e9eb;
-  padding: 20px 0 20px 35px;
-  background: transparent url(forum-link.png) left center no-repeat;
+  padding: 20px 0 20px 35px; /* LTR */
+  background: transparent url(forum-link.png) left center no-repeat; /* LTR */
 }
 #forum td.container a:visited {
   color: #e4e9eb;
