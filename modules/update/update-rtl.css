@@ -19,6 +19,7 @@
 
 .update table.version .version-details {
   padding-left: .5em;
+  direction: ltr;
 }
 
 .update table.version .version-links {
