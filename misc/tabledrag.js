@@ -239,7 +239,6 @@ Drupal.tableDrag.prototype.makeDraggable = function(item) {
   handle.blur(function(event) {
     $(this).removeClass('tabledrag-handle-hover');
     if (self.rowObject && self.safeBlur) {
-      event.data = { tableDrag: self };
       self.dropRow(event, self);
     }
   });
