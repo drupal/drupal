@@ -1,13 +1,13 @@
-/* $Id: color-rtl.css,v 1.1 2007/05/27 17:57:48 goba Exp $ */
+/* $Id: color-rtl.css,v 1.2 2007/11/27 12:09:25 goba Exp $ */
 
 #placeholder {
-  right: inherit;
   left: 0;
+  right: auto;
 }
 
 /* Palette */
 .color-form .form-item {
-  padding-left: inherit;
+  padding-left: 0;
   padding-right: 1em;
 }
 .color-form label {
@@ -18,7 +18,7 @@
   float: right;
 }
 .color-form .form-text {
-  margin-right: inherit;
+  margin-right: 0;
   margin-left: 5px;
 }
 
@@ -26,7 +26,7 @@
   float: right;
 }
 #palette .down, #palette .up, #palette .both {
-  background-position: 0 0;
+  background: url(images/hook-rtl.png) no-repeat 0 0;
 }
 #palette .up {
   background-position: 0 -27px;
@@ -37,7 +37,6 @@
 
 #palette .lock {
   float: right;
-  left: inherit;
   right: -10px;
 }
 html.js #preview {

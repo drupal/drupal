@@ -1,8 +1,14 @@
-/* $Id: system-rtl.css,v 1.6 2007/10/10 10:24:25 goba Exp $ */
+/* $Id: system-rtl.css,v 1.7 2007/11/27 12:09:26 goba Exp $ */
+
+thead th {
+  text-align: right; 
+  padding-left: 1em; 
+  padding-right: 0.5em;
+}
 
 .item-list .icon {
   float: left;
-  padding-left: inherit;
+  padding-left: 0;
   padding-right: 0.25em;
   clear: left;
 }
@@ -30,13 +36,13 @@ ul.primary {
   padding: 0 1em 0 0;
 }
 ul.primary li a {
-  margin-right: inherit;
+  margin-right: 5px;
   margin-left: 0.5em;
 }
 ul.secondary li {
   display: inline;
   padding: 0 1em;
-  border-right: inherit;
+  border-right: none;
   border-left: 1px solid #ccc;
 }
 html.js input.form-autocomplete {
@@ -47,7 +53,7 @@ html.js input.throbbing {
 }
 
 html.js fieldset.collapsible legend a {
-  padding-left: inherit;
+  padding-left: 0;
   padding-right: 15px;
   background-position: 98% 75%;
 }
@@ -58,7 +64,7 @@ html.js fieldset.collapsed legend a {
 
 div.teaser-button-wrapper {
   float: left;
-  padding-right: inherit;
+  padding-right: 0;
   padding-left: 5%;
 }
 .teaser-checkbox div.form-item {
@@ -79,9 +85,9 @@ div.teaser-button-wrapper {
 }
 input.password-field {
   margin-left: 10px;
-  margin-right: inherit;
+  margin-right: 0;
 }
 input.password-confirm {
   margin-left: 10px;
-  margin-right: inherit;
+  margin-right: 0;
 }

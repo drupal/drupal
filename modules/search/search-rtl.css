@@ -1,8 +1,8 @@
-/* $Id: search-rtl.css,v 1.2 2007/05/30 18:28:13 goba Exp $ */
+/* $Id: search-rtl.css,v 1.3 2007/11/27 12:09:26 goba Exp $ */
 
 .search-advanced .criterion {
   float: right;
-  margin-right: inherit;
+  margin-right: 0;
   margin-left: 2em;
 }
 .search-advanced .action {

@@ -1,4 +1,4 @@
-/* $Id: style-rtl.css,v 1.3 2007/10/11 09:51:29 goba Exp $ */
+/* $Id: style-rtl.css,v 1.4 2007/11/27 12:09:27 goba Exp $ */
 
 html {
   direction: rtl;
@@ -20,7 +20,7 @@ ul.menu, .item-list ul {
 }
 
 ul.menu ul, .item-list ul ul {
-  margin-left: inherit;
+  margin-left: 0;
   margin-right: 0em;
 }
 
@@ -34,7 +34,7 @@ ul li, ul.menu li, .item-list ul li, li.leaf {
 }
 
 ol li {
-  margin-left: inherit;
+  margin-left: 0;
   margin-right: 2em;
 }
 
@@ -51,7 +51,7 @@ ul.inline li {
 }
 
 ol.task-list {
-  margin-left: inherit;
+  margin-left: 0;
   margin-right: 0;
 }
 
@@ -68,7 +68,7 @@ ol.task-list li.done {
 }
 
 ol.task-list li.active {
-  margin-right: inherit;
+  margin-right: 0;
   margin-left: 1em;
 }
 
@@ -96,10 +96,9 @@ dl dd {
 }
 
 #wrapper #container #header h1 img {
-  padding-right: inherit;
+  padding-right: 0;
+  padding-left: 20px;
   float: right;
-  padding-right: inherit;
-  padding-left : 20px;
 }
 
 #sidebar-left .block-region {
@@ -118,7 +117,7 @@ dl dd {
 #wrapper #container .breadcrumb {
   position: absolute;
   top: 15px;
-  left: inherit;
+  left: 0;
   right: 35px;
   z-index: 3;
 }
@@ -139,7 +138,6 @@ ul.primary-links li {
  * Secondary navigation
  */
 ul.secondary-links {
-  padding: 20px 0 0;
   float: left;
   clear: left;
 }
@@ -186,7 +184,7 @@ ul.links li, ul.inline li {
 }
 
 .picture, .comment .submitted {
-  padding-left: inherit;
+  padding-left: 0;
   float: left;
   clear: left;
   padding-right: 1em;
@@ -201,12 +199,12 @@ ul.links li, ul.inline li {
 }
 
 .indented {
-  margin-left: 0; /* an should be inherit, but force left margin to be 0  */
+  margin-left: 0;
   margin-right: 25px;
 }
 
 html.js fieldset.collapsible legend a {
-  padding-left: inherit;
+  padding-left: 0;
   padding-right: 2em;
   background: url("images/menu-expanded.gif") no-repeat 100% 50%;
 }
@@ -220,7 +218,7 @@ html.js fieldset.collapsed legend a {
  */
 #block-node-0 h2 {
   float: right;
-  padding-right: inherit;
+  padding-right: 0;
   padding-left: 20px;
 }
 

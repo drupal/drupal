@@ -1,7 +1,7 @@
-/* $Id: forum-rtl.css,v 1.2 2007/05/30 18:28:13 goba Exp $ */
+/* $Id: forum-rtl.css,v 1.3 2007/11/27 12:09:26 goba Exp $ */
 
 #forum tr td.forum {
-  padding-left: inherit;
+  padding-left: 0.5em;
   padding-right: 25px;
   background-position: 98% 2px;
 }

@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.30 2007/11/26 19:46:52 goba Exp $ */
+/* $Id: style.css,v 1.31 2007/11/27 12:09:27 goba Exp $ */
 
 /**
  * Garland, for Drupal 5.0
@@ -577,7 +577,7 @@ ul.primary-links li a:hover, ul.primary-links li a.active {
  */
 ul.secondary-links {
   margin: 0;
-  padding: 18px 0 0; /* LTR */
+  padding: 18px 0 0;
   float: right; /* LTR */
   clear: right; /* LTR */
   position: relative;

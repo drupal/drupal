@@ -1,4 +1,4 @@
-/* $Id: admin-rtl.css,v 1.3 2007/09/01 05:27:04 dries Exp $ */
+/* $Id: admin-rtl.css,v 1.4 2007/11/27 12:09:26 goba Exp $ */
 
 div.admin-panel .body {
   padding: 0 8px 2px 4px;
@@ -6,9 +6,9 @@ div.admin-panel .body {
 
 div.admin .expert-link {
   text-align: left;
-  margin-right: inherit;
+  margin-right: 0;
   margin-left: 1em;
-  padding-right: inherit;
+  padding-right: 0;
   padding-left: 4px;
 }
 
@@ -31,7 +31,7 @@ table.screenshot {
   float: right;
 }
 .date-container .custom-container {
-  margin-left: inherit;
+  margin-left: 0;
   margin-right: 15px;
 }
 
