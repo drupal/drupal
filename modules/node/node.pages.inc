@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.9 2007/11/16 09:52:37 goba Exp $
+// $Id: node.pages.inc,v 1.10 2007/11/27 13:31:04 goba Exp $
 
 /**
  * @file
@@ -115,11 +115,17 @@ function node_form(&$form_state, $node) {
    * These elements are just values so they are not even sent to the client.
    */
   foreach (array('nid', 'vid', 'uid', 'created', 'type', 'language') as $key) {
-    $form[$key] = array('#type' => 'value', '#value' => isset($node->$key) ? $node->$key : NULL);
+    $form[$key] = array(
+      '#type' => 'value', 
+      '#value' => isset($node->$key) ? $node->$key : NULL,
+    );
   }
 
   // Changed must be sent to the client, for later overwrite error checking.
-  $form['changed'] = array('#type' => 'hidden', '#default_value' => isset($node->changed) ? $node->changed : NULL);
+  $form['changed'] = array(
+    '#type' => 'hidden', 
+    '#default_value' => isset($node->changed) ? $node->changed : NULL,
+  );
   // Get the node-specific bits.
   if ($extra = node_invoke($node, 'form', $form_state)) {
     $form = array_merge_recursive($form, $extra);
@@ -164,8 +170,21 @@ function node_form(&$form_state, $node) {
     '#collapsed' => TRUE,
     '#weight' => 20,
   );
-  $form['author']['name'] = array('#type' => 'textfield', '#title' => t('Authored by'), '#maxlength' => 60, '#autocomplete_path' => 'user/autocomplete', '#default_value' => $node->name ? $node->name : '', '#weight' => -1, '#description' => t('Leave blank for %anonymous.', array('%anonymous' => variable_get('anonymous', t('Anonymous')))));
-  $form['author']['date'] = array('#type' => 'textfield', '#title' => t('Authored on'), '#maxlength' => 25, '#description' => t('Format: %time. Leave blank to use the time of form submission.', array('%time' => !empty($node->date) ? $node->date : format_date($node->created, 'custom', 'Y-m-d H:i:s O'))));
+  $form['author']['name'] = array(
+    '#type' => 'textfield', 
+    '#title' => t('Authored by'), 
+    '#maxlength' => 60, 
+    '#autocomplete_path' => 'user/autocomplete', 
+    '#default_value' => $node->name ? $node->name : '', 
+    '#weight' => -1, 
+    '#description' => t('Leave blank for %anonymous.', array('%anonymous' => variable_get('anonymous', t('Anonymous')))),
+  );
+  $form['author']['date'] = array(
+    '#type' => 'textfield', 
+    '#title' => t('Authored on'), 
+    '#maxlength' => 25, 
+    '#description' => t('Format: %time. Leave blank to use the time of form submission.', array('%time' => !empty($node->date) ? $node->date : format_date($node->created, 'custom', 'Y-m-d H:i:s O'))),
+  );
 
   if (isset($node->date)) {
     $form['author']['date']['#default_value'] = $node->date;
@@ -180,13 +199,28 @@ function node_form(&$form_state, $node) {
     '#collapsed' => TRUE,
     '#weight' => 25,
   );
-  $form['options']['status']   = array('#type' => 'checkbox', '#title' => t('Published'), '#default_value' => $node->status);
-  $form['options']['promote']  = array('#type' => 'checkbox', '#title' => t('Promoted to front page'), '#default_value' => $node->promote);
-  $form['options']['sticky']   = array('#type' => 'checkbox', '#title' => t('Sticky at top of lists'), '#default_value' => $node->sticky);
+  $form['options']['status'] = array(
+    '#type' => 'checkbox', 
+    '#title' => t('Published'), 
+    '#default_value' => $node->status,
+  );
+  $form['options']['promote'] = array(
+    '#type' => 'checkbox', 
+    '#title' => t('Promoted to front page'), 
+    '#default_value' => $node->promote,
+  );
+  $form['options']['sticky'] = array(
+    '#type' => 'checkbox', 
+    '#title' => t('Sticky at top of lists'), 
+    '#default_value' => $node->sticky,
+  );
 
   // These values are used when the user has no administrator access.
   foreach (array('uid', 'created') as $key) {
-    $form[$key] = array('#type' => 'value', '#value' => $node->$key);
+    $form[$key] = array(
+      '#type' => 'value', 
+      '#value' => $node->$key,
+    );
   }
 
   // Add the buttons.
@@ -232,7 +266,8 @@ function node_body_field(&$node, $label, $word_count) {
     '#rows' => 10,
     '#teaser' => 'edit-body',
     '#teaser_checkbox' => 'edit-teaser-include',
-    '#disabled' => TRUE);
+    '#disabled' => TRUE,
+  );
 
   $form['teaser_include'] = array(
     '#type' => 'checkbox',
@@ -247,7 +282,8 @@ function node_body_field(&$node, $label, $word_count) {
     '#title' => check_plain($label),
     '#default_value' => $include ? $node->body : ($node->teaser . $node->body),
     '#rows' => 20,
-    '#required' => ($word_count > 0));
+    '#required' => ($word_count > 0),
+  );
 
   $form['format'] = filter_form($node->format);
 
@@ -428,13 +464,18 @@ function node_form_submit_build_node($form, &$form_state) {
  * Menu callback -- ask for confirmation of node deletion
  */
 function node_delete_confirm(&$form_state, $node) {
-  $form['nid'] = array('#type' => 'value', '#value' => $node->nid);
+  $form['nid'] = array(
+    '#type' => 'value', 
+    '#value' => $node->nid,
+  );
 
   return confirm_form($form,
     t('Are you sure you want to delete %title?', array('%title' => $node->title)),
     isset($_GET['destination']) ? $_GET['destination'] : 'node/'. $node->nid,
     t('This action cannot be undone.'),
-    t('Delete'), t('Cancel'));
+    t('Delete'), 
+    t('Cancel')
+  );
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.910 2007/11/27 11:36:35 goba Exp $
+// $Id: node.module,v 1.911 2007/11/27 13:31:04 goba Exp $
 
 /**
  * @file
@@ -1077,9 +1077,14 @@ function node_search($op = 'search', $keys = NULL) {
     case 'admin':
       $form = array();
       // Output form for defining rank factor weights.
-      $form['content_ranking'] = array('#type' => 'fieldset', '#title' => t('Content ranking'));
+      $form['content_ranking'] = array(
+        '#type' => 'fieldset', 
+        '#title' => t('Content ranking'),
+      );
       $form['content_ranking']['#theme'] = 'node_search_admin';
-      $form['content_ranking']['info'] = array('#value' => '<em>'. t('The following numbers control which properties the content search should favor when ordering the results. Higher numbers mean more influence, zero means the property is ignored. Changing these numbers does not require the search index to be rebuilt. Changes take effect immediately.') .'</em>');
+      $form['content_ranking']['info'] = array(
+        '#value' => '<em>'. t('The following numbers control which properties the content search should favor when ordering the results. Higher numbers mean more influence, zero means the property is ignored. Changing these numbers does not require the search index to be rebuilt. Changes take effect immediately.') .'</em>'
+      );
 
       $ranking = array('node_rank_relevance' => t('Keyword relevance'),
                        'node_rank_recent' => t('Recently posted'));
@@ -1093,7 +1098,12 @@ function node_search($op = 'search', $keys = NULL) {
       // Note: reversed to reflect that higher number = higher ranking.
       $options = drupal_map_assoc(range(0, 10));
       foreach ($ranking as $var => $title) {
-        $form['content_ranking']['factors'][$var] = array('#title' => $title, '#type' => 'select', '#options' => $options, '#default_value' => variable_get($var, 5));
+        $form['content_ranking']['factors'][$var] = array(
+          '#title' => $title, 
+          '#type' => 'select', 
+          '#options' => $options, 
+          '#default_value' => variable_get($var, 5),
+        );
       }
       return $form;
 
@@ -2592,7 +2602,7 @@ function node_mass_update($nodes, $updates) {
     batch_set($batch);
   }
   else {
-    foreach($nodes as $nid) {
+    foreach ($nodes as $nid) {
       _node_mass_update_helper($nid, $updates);
     }
     drupal_set_message(t('The update has been performed.'));
