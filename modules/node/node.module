@@ -236,7 +236,7 @@ function node_teaser_js(&$form, &$form_state) {
 }
 
 /**
- * Automatically generate a teaser for a node body in a given format.
+ * Automatically generate a teaser for a node body.
  *
  * @param $body
  *   The content for which a teaser will be generated.
