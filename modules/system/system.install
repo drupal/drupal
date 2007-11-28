@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.196 2007/11/26 19:55:15 goba Exp $
+// $Id: system.install,v 1.197 2007/11/28 09:45:47 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -1784,30 +1784,18 @@ function system_update_6008() {
 function system_update_6009() {
   $ret = array();
 
-  // Delete existing PHP filter and input format.
-  $ret[] = update_sql("DELETE FROM {filter_formats} WHERE format = 2");
-  $ret[] = update_sql("DELETE FROM {filters} WHERE format = 2");
-
-  // Enable the PHP filter module.
-  $ret[] = update_sql("UPDATE {system} SET status = 1 WHERE name = 'php' AND type = 'module'");
-
-  // Add the PHP Code input format.
-  $ret[] = update_sql("INSERT INTO {filter_formats} (name, roles, cache) VALUES ('PHP code', '', 0)");
-  $format = db_result(db_query("SELECT MAX(format) FROM {filter_formats}"));
-
-  // Enable the PHP evaluator filter.
-  db_query("INSERT INTO {filters} (format, module, delta, weight) VALUES (%d, 'php', 0, 0)", $format);
-
-  // If any other input formats use the PHP evaluator, update them accordingly.
-  $ret[] = update_sql("UPDATE {filters} SET delta = 0, module = 'php' WHERE module = 'filter' AND delta = 1");
+  // If any input format used the Drupal 5 PHP filter.
+  if (db_result(db_query("SELECT COUNT(format) FROM {filters} WHERE module = 'filter' AND delta = 1"))) {
+    // Enable the PHP filter module.
+    $ret[] = update_sql("UPDATE {system} SET status = 1 WHERE name = 'php' AND type = 'module'");
+    // Update the input filters.
+    $ret[] = update_sql("UPDATE {filters} SET delta = 0, module = 'php' WHERE module = 'filter' AND delta = 1");
+  }
 
   // With the removal of the PHP evaluator filter, the deltas of the line break
   // and URL filter have changed.
   $ret[] = update_sql("UPDATE {filters} SET delta = 1 WHERE module = 'filter' AND delta = 2");
   $ret[] = update_sql("UPDATE {filters} SET delta = 2 WHERE module = 'filter' AND delta = 3");
-
-  // Update any nodes associated with the PHP input format.
-  db_query("UPDATE {node_revisions} SET format = %d WHERE format = 2", $format);
 
   return $ret;
 }
