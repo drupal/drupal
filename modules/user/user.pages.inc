@@ -206,7 +206,7 @@ function template_preprocess_user_profile_item(&$variables) {
  * @see user-profile-category.tpl.php
  */
 function template_preprocess_user_profile_category(&$variables) {
-  $variables['title'] = $variables['element']['#title'];
+  $variables['title'] = check_plain($variables['element']['#title']);
   $variables['profile_items'] = $variables['element']['#children'];
   $variables['attributes'] = '';
   if (isset($variables['element']['#attributes'])) {

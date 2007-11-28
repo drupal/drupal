@@ -14,7 +14,7 @@ function profile_admin_overview() {
   $result = db_query('SELECT title, name, type, category, fid FROM {profile_fields} ORDER BY category, weight');
   $rows = array();
   while ($field = db_fetch_object($result)) {
-    $rows[] = array(check_plain($field->title), $field->name, _profile_field_types($field->type), $field->category, l(t('edit'), "admin/user/profile/edit/$field->fid"), l(t('delete'), "admin/user/profile/delete/$field->fid"));
+    $rows[] = array(check_plain($field->title), check_plain($field->name), _profile_field_types($field->type), check_plain($field->category), l(t('edit'), "admin/user/profile/edit/$field->fid"), l(t('delete'), "admin/user/profile/delete/$field->fid"));
   }
   if (count($rows) == 0) {
     $rows[] = array(array('data' => t('No fields defined.'), 'colspan' => '6'));
