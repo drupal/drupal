@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.911 2007/11/27 13:31:04 goba Exp $
+// $Id: node.module,v 1.912 2007/11/28 10:29:20 dries Exp $
 
 /**
  * @file
@@ -1078,7 +1078,7 @@ function node_search($op = 'search', $keys = NULL) {
       $form = array();
       // Output form for defining rank factor weights.
       $form['content_ranking'] = array(
-        '#type' => 'fieldset', 
+        '#type' => 'fieldset',
         '#title' => t('Content ranking'),
       );
       $form['content_ranking']['#theme'] = 'node_search_admin';
@@ -1099,9 +1099,9 @@ function node_search($op = 'search', $keys = NULL) {
       $options = drupal_map_assoc(range(0, 10));
       foreach ($ranking as $var => $title) {
         $form['content_ranking']['factors'][$var] = array(
-          '#title' => $title, 
-          '#type' => 'select', 
-          '#options' => $options, 
+          '#title' => $title,
+          '#type' => 'select',
+          '#options' => $options,
           '#default_value' => variable_get($var, 5),
         );
       }
@@ -1199,7 +1199,7 @@ function node_search($op = 'search', $keys = NULL) {
 
         $extra = node_invoke_nodeapi($node, 'search result');
         $results[] = array('link' => url('node/'. $item->sid, array('absolute' => TRUE)),
-                           'type' => node_get_types('name', $node),
+                           'type' => check_plain(node_get_types('name', $node)),
                            'title' => $node->title,
                            'user' => theme('username', $node),
                            'date' => $node->changed,
@@ -1699,7 +1699,7 @@ function node_form_alter(&$form, $form_state, $form_id) {
     }
 
     // Node types:
-    $types = node_get_types('names');
+    $types = array_map('check_plain', node_get_types('names'));
     $form['advanced']['type'] = array(
       '#type' => 'checkboxes',
       '#title' => t('Only of the type(s)'),

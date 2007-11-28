@@ -1,5 +1,5 @@
 <?php
-// $Id: user.pages.inc,v 1.3 2007/10/27 14:01:12 goba Exp $
+// $Id: user.pages.inc,v 1.4 2007/11/28 10:29:20 dries Exp $
 
 /**
  * @file
@@ -206,7 +206,7 @@ function template_preprocess_user_profile_item(&$variables) {
  * @see user-profile-category.tpl.php
  */
 function template_preprocess_user_profile_category(&$variables) {
-  $variables['title'] = $variables['element']['#title'];
+  $variables['title'] = check_plain($variables['element']['#title']);
   $variables['profile_items'] = $variables['element']['#children'];
   $variables['attributes'] = '';
   if (isset($variables['element']['#attributes'])) {

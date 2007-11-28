@@ -1,8 +1,8 @@
-/* $Id: system-rtl.css,v 1.7 2007/11/27 12:09:26 goba Exp $ */
+/* $Id: system-rtl.css,v 1.8 2007/11/28 10:29:20 dries Exp $ */
 
 thead th {
-  text-align: right; 
-  padding-left: 1em; 
+  text-align: right;
+  padding-left: 1em;
   padding-right: 0.5em;
 }
 

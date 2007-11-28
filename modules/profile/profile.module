@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.225 2007/11/20 11:39:48 goba Exp $
+// $Id: profile.module,v 1.226 2007/11/28 10:29:20 dries Exp $
 
 /**
  * @file
@@ -140,7 +140,7 @@ function profile_block($op = 'list', $delta = 0, $edit = array()) {
     $fields = array();
     $result = db_query('SELECT name, title, weight, visibility FROM {profile_fields} WHERE visibility IN (%d, %d) ORDER BY weight', PROFILE_PUBLIC, PROFILE_PUBLIC_LISTINGS);
     while ($record = db_fetch_object($result)) {
-      $fields[$record->name] = $record->title;
+      $fields[$record->name] = check_plain($record->title);
     }
     $fields['user_profile'] = t('Link to full user profile');
     $form['profile_block_author_fields'] = array('#type' => 'checkboxes',
@@ -342,7 +342,7 @@ function profile_form_profile($edit, $user, $category, $register = FALSE) {
   while ($field = db_fetch_object($result)) {
     $category = $field->category;
     if (!isset($fields[$category])) {
-      $fields[$category] = array('#type' => 'fieldset', '#title' => $category, '#weight' => $weight++);
+      $fields[$category] = array('#type' => 'fieldset', '#title' => check_plain($category), '#weight' => $w++);
     }
     switch ($field->type) {
       case 'textfield':
@@ -482,7 +482,7 @@ function template_preprocess_profile_block(&$variables) {
   // Supply filtered version of $fields that have values.
   foreach ($variables['fields'] as $field) {
     if ($field->value) {
-      $variables['profile'][$field->name]->title = $field->title;
+      $variables['profile'][$field->name]->title = check_plain($field->title);
       $variables['profile'][$field->name]->value = $field->value;
       $variables['profile'][$field->name]->type = $field->type;
     }

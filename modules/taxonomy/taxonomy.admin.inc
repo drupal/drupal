@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.13 2007/11/26 20:58:28 goba Exp $
+// $Id: taxonomy.admin.inc,v 1.14 2007/11/28 10:29:20 dries Exp $
 
 /**
  * @file
@@ -8,7 +8,7 @@
 
 /**
  * Form builder to list and manage vocabularies.
- * 
+ *
  * @ingroup forms
  * @see taxonomy_overview_vocabularies_submit().
  * @see theme_taxonomy_overview_vocabularies().
@@ -20,7 +20,7 @@ function taxonomy_overview_vocabularies() {
     $types = array();
     foreach ($vocabulary->nodes as $type) {
       $node_type = node_get_types('name', $type);
-      $types[] = $node_type ? $node_type : $type;
+      $types[] = $node_type ? check_plain($node_type) : check_plain($type);
     }
     $form[$vocabulary->vid]['#vocabulary'] = (array)$vocabulary;
     $form[$vocabulary->vid]['name'] = array('#value' => check_plain($vocabulary->name));
@@ -44,7 +44,7 @@ function taxonomy_overview_vocabularies() {
 
 /**
  * Submit handler for vocabularies overview. Updates changed vocabulary weights.
- * 
+ *
  * @see taxonomy_overview_vocabularies().
  */
 function taxonomy_overview_vocabularies_submit($form, &$form_state) {
@@ -58,7 +58,7 @@ function taxonomy_overview_vocabularies_submit($form, &$form_state) {
 
 /**
  * Theme the vocabulary overview as a sortable list of vocabularies.
- * 
+ *
  * @ingroup themeable
  * @see taxonomy_overview_vocabularies().
  */
@@ -91,7 +91,7 @@ function theme_taxonomy_overview_vocabularies($form) {
     drupal_add_tabledrag('taxonomy', 'order', 'sibling', 'vocabulary-weight');
   }
   $header[] = array('data' => t('Operations'), 'colspan' => '3');
-  return theme('table', $header, $rows, array('id' => 'taxonomy')) . drupal_render($form);  
+  return theme('table', $header, $rows, array('id' => 'taxonomy')) . drupal_render($form);
 }
 
 /**
@@ -144,7 +144,7 @@ function taxonomy_form_vocabulary(&$form_state, $edit = array()) {
   $form['content_types']['nodes'] = array('#type' => 'checkboxes',
     '#title' => t('Content types'),
     '#default_value' => $edit['nodes'],
-    '#options' => node_get_types('names'),
+    '#options' => array_map('check_plain', node_get_types('names')),
     '#description' => t('Select content types to categorize using this vocabulary.'),
   );
   $form['settings'] = array(
@@ -235,10 +235,10 @@ function taxonomy_admin_term_edit($tid) {
 
 /**
  * Form builder for the taxonomy terms overview.
- * 
+ *
  * Display a tree of all the terms in a vocabulary, with options to edit
  * each one. The form is made drag and drop by the theme function.
- * 
+ *
  * @ingroup forms
  * @see taxonomy_overview_terms_submit().
  * @see theme_taxonomy_overview_terms().
@@ -428,17 +428,17 @@ function taxonomy_overview_terms(&$form_state, $vocabulary) {
 
 /**
  * Submit handler for terms overview form.
- * 
+ *
  * Rather than using a textfield or weight field, this form depends entirely
  * upon the order of form elements on the page to determine new weights.
- * 
+ *
  * Because there might be hundreds or thousands of taxonomy terms that need to
  * be ordered, terms are weighted from 0 to the number of terms in the
  * vocabulary, rather than the standard -10 to 10 scale. Numbers are sorted
  * lowest to highest, but are not necessarily sequential. Numbers may be skipped
  * when a term has children so that reordering is minimal when a child is
  * added or removed from a term.
- * 
+ *
  * @see taxonomy_overview_terms().
  */
 function taxonomy_overview_terms_submit($form, &$form_state) {
@@ -533,7 +533,7 @@ function taxonomy_overview_terms_submit($form, &$form_state) {
 
 /**
  * Theme the terms overview as a sortable list of terms.
- * 
+ *
  * @ingroup themeable
  * @see taxonomy_overview_terms().
  */
@@ -732,7 +732,7 @@ function taxonomy_form_term(&$form_state, $vocabulary, $edit = array()) {
 
 /**
  * Validation handler for the term edit form. Ensure numeric weight values.
- * 
+ *
  * @see taxonomy_form_term().
  */
 function taxonomy_form_term_validate($form, &$form_state) {
@@ -743,7 +743,7 @@ function taxonomy_form_term_validate($form, &$form_state) {
 
 /**
  * Submit handler to insert or update a term.
- * 
+ *
  * @see taxonomy_form_term().
  */
 function taxonomy_form_term_submit($form, &$form_state) {
@@ -783,7 +783,7 @@ function taxonomy_form_term_submit($form, &$form_state) {
       $current_parent_count = 0;
       $form_state['values']['parent'] = array();
     }
-  
+
     // If the number of parents has been reduced to one or none, do a check on the
     // parents of every term in the vocabulary value.
     if ($current_parent_count < $previous_parent_count && $current_parent_count < 2) {
@@ -804,7 +804,7 @@ function taxonomy_form_term_submit($form, &$form_state) {
 
 /**
  * Form builder for the confirmation of multiple term parents.
- * 
+ *
  * @ingroup forms
  * @see taxonomy_form_term().
  */
@@ -846,7 +846,7 @@ function taxonomy_term_confirm_delete(&$form_state, $tid) {
 
 /**
  * Submit handler to delete a term after confirmation.
- * 
+ *
  * @see taxonomy_term_confirm_delete().
  */
 function taxonomy_term_confirm_delete_submit($form, &$form_state) {
@@ -881,7 +881,7 @@ function taxonomy_vocabulary_confirm_delete(&$form_state, $vid) {
 
 /**
  * Submit handler to delete a vocabulary after confirmation.
- * 
+ *
  * @see taxonomy_vocabulary_confirm_delete().
  */
 function taxonomy_vocabulary_confirm_delete_submit($form, &$form_state) {
@@ -894,7 +894,7 @@ function taxonomy_vocabulary_confirm_delete_submit($form, &$form_state) {
 
 /**
  * Form builder to confirm reseting a vocabulary to alphabetical order.
- * 
+ *
  * @ingroup forms
  * @see taxonomy_vocabulary_confirm_reset_alphabetical_submit().
  */
@@ -916,7 +916,7 @@ function taxonomy_vocabulary_confirm_reset_alphabetical(&$form_state, $vid) {
 
 /**
  * Submit handler to reset a vocabulary to alphabetical order after confirmation.
- * 
+ *
  * @see taxonomy_vocabulary_confirm_reset_alphabetical().
  */
 function taxonomy_vocabulary_confirm_reset_alphabetical_submit($form, &$form_state) {

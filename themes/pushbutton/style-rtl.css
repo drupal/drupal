@@ -20,11 +20,11 @@ td#home {
 }
 
 td#home a:link img, td#home a:visited img {
-  background: transparent url(logo-active-rtl.jpg) repeat; 
+  background: transparent url(logo-active-rtl.jpg) repeat;
 }
 
 td#home a:hover img {
-  background: transparent url(logo-hover-rtl.jpg) repeat; 
+  background: transparent url(logo-hover-rtl.jpg) repeat;
 }
 
 #primary-menu .primary-links   {
@@ -47,7 +47,7 @@ ul.links li {
 }
 
 .tabs ul.primary {
-  padding: 0 10px 3px 0; 
+  padding: 0 10px 3px 0;
   height: 1.2em; /* FF hack, see float below */
   line-height: 1em; /* FF hack, see float below */
 }
@@ -57,13 +57,13 @@ ul.links li {
 /* @end FF hacks */
 
 .tabs ul.primary li a {
-  background: #fff url(tabs-off-rtl.png) right top no-repeat; 
-  border-style: none none none solid; 
+  background: #fff url(tabs-off-rtl.png) right top no-repeat;
+  border-style: none none none solid;
   margin-left: 10px;
   margin-right: 0;
 }
 .tabs ul.primary li.active a {
-  background: #369 url(tabs-on-rtl.png) right top no-repeat; 
+  background: #369 url(tabs-on-rtl.png) right top no-repeat;
   border-right: none;
   border-left: 2px solid #369;
 }
@@ -89,7 +89,7 @@ ul.links li {
 }
 
 .tabs ul.secondary li a.active {
-  background: #fff url(tabs-option-on.png) right center no-repeat; 
+  background: #fff url(tabs-option-on.png) right center no-repeat;
 }
 
 .tabs ul.secondary li a:hover {
@@ -97,11 +97,11 @@ ul.links li {
 }
 
 #menu {
-  text-align: left; 
+  text-align: left;
 }
 
 .node .content {
-  text-align: right; 
+  text-align: right;
 }
 
 .comment .content {
@@ -110,7 +110,7 @@ ul.links li {
 
 .block .title h3 {
   padding: 10px 30px 10px 5px;
-  background: transparent url(icon-block-rtl.png) right center no-repeat;  
+  background: transparent url(icon-block-rtl.png) right center no-repeat;
 }
 
 .node .picture {
@@ -128,7 +128,7 @@ ul.links li {
 }
 
 .comment .picture {
-  float: left; 
+  float: left;
 }
 
 .nav .links .next a:link {

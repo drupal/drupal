@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.install,v 1.3 2007/11/04 14:33:06 goba Exp $
+// $Id: filter.install,v 1.4 2007/11/28 10:29:19 dries Exp $
 
 /**
  * Implementation of hook_schema().
@@ -17,7 +17,7 @@ function filter_schema() {
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('Foreign Key: The {filter_formats}.format to which this filter is assigned.'),
+        'description' => t('Foreign key: The {filter_formats}.format to which this filter is assigned.'),
       ),
       'module' => array(
         'type' => 'varchar',

@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.10 2007/11/12 19:06:32 goba Exp $
+// $Id: node.admin.inc,v 1.11 2007/11/28 10:29:20 dries Exp $
 
 /**
  * @file
@@ -385,7 +385,7 @@ function node_admin_nodes() {
   while ($node = db_fetch_object($result)) {
     $nodes[$node->nid] = '';
     $form['title'][$node->nid] = array('#value' => l($node->title, 'node/'. $node->nid) .' '. theme('mark', node_mark($node->nid, $node->changed)));
-    $form['name'][$node->nid] =  array('#value' => node_get_types('name', $node));
+    $form['name'][$node->nid] =  array('#value' => check_plain(node_get_types('name', $node)));
     $form['username'][$node->nid] = array('#value' => theme('username', $node));
     $form['status'][$node->nid] =  array('#value' =>  ($node->status ? t('published') : t('not published')));
     if ($multilanguage) {

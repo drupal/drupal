@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.399 2007/11/26 19:46:52 goba Exp $
+// $Id: taxonomy.module,v 1.400 2007/11/28 10:29:20 dries Exp $
 
 /**
  * @file
@@ -250,14 +250,14 @@ function taxonomy_del_vocabulary($vid) {
 
 /**
  * Dynamicly check and update the hierarachy flag of a vocabulary.
- * 
+ *
  * Checks the current parents of all terms in a vocabulary and updates the
  * vocabularies hierarchy setting to the lowest possible level. A hierarchy with
  * no parents in any of its terms will be given a hierarchy of 0. If terms
  * contain at most a single parent, the vocabulary will be given a hierarchy of
  * 1. If any term contain multiple parents, the vocabulary will be given a
  * hieararchy of 2.
- * 
+ *
  * @param $vocabulary
  *   An array of the vocabulary structure.
  * @param $changed_term

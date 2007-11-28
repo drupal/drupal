@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.109 2007/11/13 12:29:56 goba Exp $
+// $Id: blogapi.module,v 1.110 2007/11/28 10:29:19 dries Exp $
 
 /**
  * @file
@@ -537,7 +537,7 @@ function blogapi_blogger_title(&$contents) {
 }
 
 function blogapi_admin_settings() {
-  $node_types = node_get_types('names');
+  $node_types = array_map('check_plain', node_get_types('names'));
   $defaults = isset($node_types['blog']) ? array('blog' => 1) : array();
   $form['blogapi_node_types'] = array(
     '#type' => 'checkboxes',
