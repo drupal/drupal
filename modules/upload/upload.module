@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.189 2007/11/21 19:13:22 goba Exp $
+// $Id: upload.module,v 1.190 2007/11/29 11:49:34 goba Exp $
 
 /**
  * @file
@@ -186,6 +186,7 @@ function upload_node_form_submit($form, &$form_state) {
   if (($user->uid != 1 || user_access('upload files')) && ($file = file_save_upload('upload', $validators, file_directory_path()))) {
     $file->list = variable_get('upload_list_default', 1);
     $file->description = $file->filename;
+    $file->weight = 0;
     $_SESSION['upload_current_file'] = $file->fid;
     $_SESSION['upload_files'][$file->fid] = $file;
   }
@@ -408,12 +409,12 @@ function upload_save(&$node) {
 
     // Create a new revision, or associate a new file needed.
     if (!empty($node->old_vid) || isset($_SESSION['upload_files'][$fid])) {
-      db_query("INSERT INTO {upload} (fid, nid, vid, list, description) VALUES (%d, %d, %d, %d, '%s')", $file->fid, $node->nid, $node->vid, $file->list, $file->description);
+      db_query("INSERT INTO {upload} (fid, nid, vid, list, description, 'weight') VALUES (%d, %d, %d, %d, '%s', %d)", $file->fid, $node->nid, $node->vid, $file->list, $file->description, $file->weight);
       file_set_status($file, FILE_STATUS_PERMANENT);
     }
     // Update existing revision.
     else {
-      db_query("UPDATE {upload} SET list = %d, description = '%s' WHERE fid = %d AND vid = %d", $file->list, $file->description, $file->fid, $node->vid);
+      db_query("UPDATE {upload} SET list = %d, description = '%s', weight = %d WHERE fid = %d AND vid = %d", $file->list, $file->description, $file->weight, $file->fid, $node->vid);
       file_set_status($file, FILE_STATUS_PERMANENT);
     }
   }
@@ -479,6 +480,7 @@ function _upload_form($node) {
       if (isset($_SESSION['upload_current_file']) && $_SESSION['upload_current_file'] == $file->fid) {
         $form['files'][$key]['list']['#value'] = variable_get('upload_list_default', 1);
       }
+      $form['files'][$key]['weight'] = array('#type' => 'weight', '#delta' => count($node->files), '#default_value' => $file->weight);
       $form['files'][$key]['filename'] = array('#type' => 'value',  '#value' => $file->filename);
       $form['files'][$key]['filepath'] = array('#type' => 'value',  '#value' => $file->filepath);
       $form['files'][$key]['filemime'] = array('#type' => 'value',  '#value' => $file->filemime);
@@ -517,17 +519,22 @@ function _upload_form($node) {
  * Theme the attachments list.
  */
 function theme_upload_form_current(&$form) {
-  $header = array(t('Delete'), t('List'), t('Description'), t('Size'));
+  $header = array('', t('Delete'), t('List'), t('Description'), t('Weight'), t('Size'));
+  drupal_add_tabledrag('upload-attachments', 'order', 'sibling', 'upload-weight');
 
   foreach (element_children($form) as $key) {
-    $row = array();
+    // Add class to group weight fields for drag and drop.
+    $form[$key]['weight']['#attributes']['class'] = 'upload-weight';
+
+    $row = array('');
     $row[] = drupal_render($form[$key]['remove']);
     $row[] = drupal_render($form[$key]['list']);
     $row[] = drupal_render($form[$key]['description']);
+    $row[] = drupal_render($form[$key]['weight']);
     $row[] = drupal_render($form[$key]['size']);
-    $rows[] = $row;
+    $rows[] = array('data' => $row, 'class' => 'draggable');
   }
-  $output = theme('table', $header, $rows);
+  $output = theme('table', $header, $rows, array('id' => 'upload-attachments'));
   $output .= drupal_render($form);
   return $output;
 }
@@ -545,7 +552,7 @@ function upload_load($node) {
   $files = array();
 
   if ($node->vid) {
-    $result = db_query('SELECT * FROM {files} f INNER JOIN {upload} r ON f.fid = r.fid WHERE r.vid = %d ORDER BY f.fid', $node->vid);
+    $result = db_query('SELECT * FROM {files} f INNER JOIN {upload} r ON f.fid = r.fid WHERE r.vid = %d ORDER BY r.weight, f.fid', $node->vid);
     while ($file = db_fetch_object($result)) {
       $files[$file->fid] = $file;
     }

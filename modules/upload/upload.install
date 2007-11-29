@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.install,v 1.4 2007/11/04 14:33:07 goba Exp $
+// $Id: upload.install,v 1.5 2007/11/29 11:49:34 goba Exp $
 
 /**
  * Implementation of hook_install().
@@ -59,6 +59,13 @@ function upload_schema() {
         'default' => 0,
         'size' => 'tiny',
         'description' => t('Whether the file should be visibly listed on the node: yes(1) or no(0).'),
+      ),
+      'weight' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+        'description' => t('Weight of this upload in relation to other uploads in this node.'),
       ),
     ),
     'primary key' => array('fid', 'vid'),

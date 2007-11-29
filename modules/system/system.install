@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.197 2007/11/28 09:45:47 dries Exp $
+// $Id: system.install,v 1.198 2007/11/29 11:49:34 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -2722,6 +2722,14 @@ function system_update_6039() {
   return $ret;
 }
 
+/**
+ * Add a weight column to the upload table.
+ */
+function system_update_6040() {
+  $ret = array();
+  db_add_field($ret, 'upload', 'weight', array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny'));
+  return $ret;
+}
 
 /**
  * @} End of "defgroup updates-5.x-to-6.x"
