@@ -409,7 +409,7 @@ function upload_save(&$node) {
 
     // Create a new revision, or associate a new file needed.
     if (!empty($node->old_vid) || isset($_SESSION['upload_files'][$fid])) {
-      db_query("INSERT INTO {upload} (fid, nid, vid, list, description, 'weight') VALUES (%d, %d, %d, %d, '%s', %d)", $file->fid, $node->nid, $node->vid, $file->list, $file->description, $file->weight);
+      db_query("INSERT INTO {upload} (fid, nid, vid, list, description, weight) VALUES (%d, %d, %d, %d, '%s', %d)", $file->fid, $node->nid, $node->vid, $file->list, $file->description, $file->weight);
       file_set_status($file, FILE_STATUS_PERMANENT);
     }
     // Update existing revision.
