@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.11 2007/11/28 10:29:20 dries Exp $
+// $Id: node.pages.inc,v 1.12 2007/11/29 11:54:37 goba Exp $
 
 /**
  * @file
@@ -225,17 +225,17 @@ function node_form(&$form_state, $node) {
 
   // Add the buttons.
   $form['buttons'] = array();
-  $form['buttons']['preview'] = array(
-    '#type' => 'submit',
-    '#value' => t('Preview'),
-    '#weight' => 5,
-    '#submit' => array('node_form_build_preview'),
-  );
   $form['buttons']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save'),
-    '#weight' => 10,
+    '#weight' => 5,
     '#submit' => array('node_form_submit'),
+  );
+  $form['buttons']['preview'] = array(
+    '#type' => 'submit',
+    '#value' => t('Preview'),
+    '#weight' => 10,
+    '#submit' => array('node_form_build_preview'),
   );
   if (!empty($node->nid) && node_access('delete', $node)) {
     $form['buttons']['delete'] = array(

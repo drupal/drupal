@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.602 2007/11/12 19:06:32 goba Exp $
+// $Id: comment.module,v 1.603 2007/11/29 11:54:37 goba Exp $
 
 /**
  * @file
@@ -1312,17 +1312,17 @@ function comment_form(&$form_state, $edit, $title = NULL) {
   $form['nid'] = array('#type' => 'value', '#value' => $edit['nid']);
   $form['uid'] = array('#type' => 'value', '#value' => !empty($edit['uid']) ? $edit['uid'] : NULL);
 
-  $form['preview'] = array('#type' => 'button', '#value' => t('Preview comment'), '#weight' => 19);
+  // Only show save button if preview is optional or if we are in preview mode.
+  // We show the save button in preview mode even if there are form errors so that
+  // optional form elements (e.g., captcha) can be updated in preview mode.
+  if (!form_get_errors() && ((variable_get('comment_preview_'. $node->type, COMMENT_PREVIEW_REQUIRED) == COMMENT_PREVIEW_OPTIONAL) || ($op == t('Preview')) || ($op == t('Save')))) {
+    $form['submit'] = array('#type' => 'submit', '#value' => t('Save'), '#weight' => 19);
+  }
+  
+  $form['preview'] = array('#type' => 'button', '#value' => t('Preview'), '#weight' => 20);
   $form['#token'] = 'comment'. $edit['nid'] . (isset($edit['pid']) ? $edit['pid'] : '');
 
-  // Only show post button if preview is optional or if we are in preview mode.
-  // We show the post button in preview mode even if there are form errors so that
-  // optional form elements (e.g., captcha) can be updated in preview mode.
-  if (!form_get_errors() && ((variable_get('comment_preview_'. $node->type, COMMENT_PREVIEW_REQUIRED) == COMMENT_PREVIEW_OPTIONAL) || ($op == t('Preview comment')) || ($op == t('Post comment')))) {
-    $form['submit'] = array('#type' => 'submit', '#value' => t('Post comment'), '#weight' => 20);
-  }
-
-  if ($op == t('Preview comment')) {
+  if ($op == t('Preview')) {
     $form['#after_build'] = array('comment_form_add_preview');
   }
 
