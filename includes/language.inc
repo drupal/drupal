@@ -111,8 +111,11 @@ function language_url_rewrite(&$path, &$options) {
 
       case LANGUAGE_NEGOTIATION_DOMAIN:
         if ($path_language->domain) {
-          $options['external'] = TRUE;
-          $path = $path_language->domain .'/'. $path;
+          // Ask for an absolute URL with our modified base_url.
+          $options['absolute'] = TRUE;
+          $options['base_url'] = $path_language->domain;
+          // Ensure that path alias generation will use this language.
+          $options['langcode'] = $path_language->language;
         }
         break;
 
@@ -125,11 +128,8 @@ function language_url_rewrite(&$path, &$options) {
 
       case LANGUAGE_NEGOTIATION_PATH:
         if (isset($path_language->prefix) && $path_language->prefix) {
-          // Get alias if not already aliased.
-          if (!$options['alias']) {
-            $path = drupal_get_path_alias($path, $path_language->language);
-            $options['alias'] = TRUE;
-          }
+          // Ensure that path alias generation will use this language.
+          $options['langcode'] = $path_language->language;
           $path = (empty($path) || ($path == '<front>')) ? $path_language->prefix : $path_language->prefix .'/'. $path;
         }
         break;
