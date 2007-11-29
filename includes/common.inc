@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.725 2007/11/26 22:34:08 goba Exp $
+// $Id: common.inc,v 1.726 2007/11/29 14:42:31 goba Exp $
 
 /**
  * @file
@@ -1285,7 +1285,11 @@ function url($path = NULL, $options = array()) {
     $clean_url = (bool)variable_get('clean_url', '0');
   }
 
-  $base = $options['absolute'] ? $base_url .'/' : base_path();
+  if (!isset($options['base_url'])) {
+    // The base_url might be rewritten from the language rewrite in domain mode.
+    $options['base_url'] = $base_url;
+  }
+  $base = $options['absolute'] ? $options['base_url'] .'/' : base_path();
 
   // Preserve the original path before aliasing.
   $original_path = $path;
@@ -1293,7 +1297,7 @@ function url($path = NULL, $options = array()) {
   // The special path '<front>' links to the default front page.
   if (!empty($path) && $path != '<front>') {
     if (!$options['alias']) {
-      $path = drupal_get_path_alias($path);
+      $path = drupal_get_path_alias($path, isset($options['langcode']) ? $options['langcode'] : '');
     }
     if (function_exists('custom_url_rewrite_outbound')) {
       // Modules may alter outbound links by reference.
