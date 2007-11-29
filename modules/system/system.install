@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.198 2007/11/29 11:49:34 goba Exp $
+// $Id: system.install,v 1.199 2007/11/29 12:02:06 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -2245,10 +2245,7 @@ function system_update_6021() {
     foreach ($menus as $menu) {
       db_query("INSERT INTO {menu_custom} (menu_name, title, description) VALUES ('%s', '%s', '%s')", $menu);
     }
-    menu_rebuild();
     $_SESSION['system_update_6021'] = 0;
-    // force page reload.
-    return $ret;
   }
 
   $limit = 50;
@@ -2301,15 +2298,9 @@ function system_update_6021() {
       }
       $item['updated'] = TRUE;
       // Save the link.
-      if ($existing_item = db_fetch_array(db_query("SELECT mlid, menu_name FROM {menu_links} WHERE link_path = '%s' AND plid = '%s' AND link_title = '%s' AND menu_name = '%s'", $item['link_path'], $item['plid'], $item['link_title'], $item['menu_name']))) {
-        $_SESSION['menu_item_map'][$item['mid']] = $existing_item;
-      }
-      else {
-        $item['router_path'] = '';
-        menu_link_save($item);
-        $_SESSION['menu_item_map'][$item['mid']] = array('mlid' => $item['mlid'], 'menu_name' => $item['menu_name']);
-      }
-
+      $item['router_path'] = '';
+      menu_link_save($item);
+      $_SESSION['menu_item_map'][$item['mid']] = array('mlid' => $item['mlid'], 'menu_name' => $item['menu_name']);
     }
     elseif (!isset($_SESSION['menu_menu_map'][$item['mid']])) {
       $item['menu_name'] = 'menu-'. preg_replace('/[^a-zA-Z0-9]/', '-', strtolower($item['title']));
@@ -2362,8 +2353,14 @@ function system_update_6021() {
     $ret[] = array('success' => TRUE, 'query' => t('Relocated @num existing items to the new menu system.', array('@num' => $_SESSION['system_update_6021'])));
     $ret[] = update_sql("DROP TABLE {menu}");
     unset($_SESSION['system_update_6021'], $_SESSION['system_update_6021_max'], $_SESSION['menu_menu_map'], $_SESSION['menu_item_map'], $_SESSION['menu_bogus_menus']);
-    // Create the menu overview links - also calls menu_rebuild().
-    module_invoke('menu', 'enable');
+    // Create the menu overview links - also calls menu_rebuild(). If menu is
+    // disabled, then just call menu_rebuild.
+    if (function_exists('menu_enable')) {
+      menu_enable();
+    }
+    else {
+      menu_rebuild();
+    }
     $ret['#finished'] = 1;
   }
   else {
