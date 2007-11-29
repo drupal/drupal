@@ -60,6 +60,13 @@ function upload_schema() {
         'size' => 'tiny',
         'description' => t('Whether the file should be visibly listed on the node: yes(1) or no(0).'),
       ),
+      'weight' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+        'description' => t('Weight of this upload in relation to other uploads in this node.'),
+      ),
     ),
     'primary key' => array('fid', 'vid'),
     'indexes' => array('vid' => array('vid'), 'nid' => array('nid')),
