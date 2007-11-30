@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.132 2007/11/10 12:08:22 goba Exp $
+// $Id: path.module,v 1.133 2007/11/30 16:04:05 goba Exp $
 
 /**
  * @file
@@ -84,52 +84,44 @@ function path_admin_delete($pid = 0) {
  * Set an aliased path for a given Drupal path, preventing duplicates.
  */
 function path_set_alias($path = NULL, $alias = NULL, $pid = NULL, $language = '') {
-  if ($path && !$alias) {
-    // Delete based on path
-    db_query("DELETE FROM {url_alias} WHERE src = '%s' AND language = '%s'", $path, $language);
-    drupal_clear_path_cache();
-  }
-  else if (!$path && $alias) {
-    // Delete based on alias
-    db_query("DELETE FROM {url_alias} WHERE dst = '%s' AND language = '%s'", $alias, $language);
-    drupal_clear_path_cache();
+  $path = urldecode($path);
+  $alias = urldecode($alias);
+  // First we check if we deal with an existing alias and delete or modify it based on pid.
+  if ($pid) {
+    // An existing alias.
+    if (!$path || !$alias) {
+      // Delete the alias based on pid.
+      db_query('DELETE FROM {url_alias} WHERE pid = %d', $pid);
+    }
+    else {
+      // Update the existing alias.
+      db_query("UPDATE {url_alias} SET src = '%s', dst = '%s', language = '%s' WHERE pid = %d", $path, $alias, $language, $pid);
+    }
   }
   else if ($path && $alias) {
-    $path = urldecode($path);
-    $path_count = db_result(db_query("SELECT COUNT(src) FROM {url_alias} WHERE src = '%s' AND language = '%s'", $path, $language));
-    $alias = urldecode($alias);
-    // Alias count can only be 0 or 1.
-    $alias_count = db_result(db_query("SELECT COUNT(dst) FROM {url_alias} WHERE dst = '%s' AND language = '%s'", $alias, $language));
-
-    if ($alias_count == 0) {
-      if ($pid) {
-        // Existing path changed data
-        db_query("UPDATE {url_alias} SET src = '%s', dst = '%s', language = '%s' WHERE pid = %d", $path, $alias, $language, $pid);
-      }
-      else {
-        // No such alias yet in this language
-        db_query("INSERT INTO {url_alias} (src, dst, language) VALUES ('%s', '%s', '%s')", $path, $alias, $language);
-      }
+    // Check for existing aliases.
+    if ($alias == drupal_get_path_alias($path, $language)) {
+      // There is already such an alias, neutral or in this language.
+      // Update the alias based on alias; setting the language if not yet done.
+      db_query("UPDATE {url_alias} SET src = '%s', dst = '%s', language = '%s' WHERE dst = '%s'", $path, $alias, $language, $alias);
     }
-    // The alias exists.
     else {
-      // This path has no alias yet, so we redirect the alias here.
-      if ($path_count == 0) {
-        db_query("UPDATE {url_alias} SET src = '%s' WHERE dst = '%s' AND language = '%s'", $path, $alias, $language);
-      }
-      else {
-        // This will delete the path that alias was originally pointing to.
-        path_set_alias(NULL, $alias, NULL, $language);
-        // This will remove the current aliases of the path.
-        path_set_alias($path, NULL, NULL, $language);
-        path_set_alias($path, $alias, NULL, $language);
-      }
-    }
-    if ($alias_count == 0 || $path_count == 0) {
-      drupal_clear_path_cache();
+      // A new alias. Add it to the database.
+      db_query("INSERT INTO {url_alias} (src, dst, language) VALUES ('%s', '%s', '%s')", $path, $alias, $language);
     }
   }
+  else {
+    // Delete the alias.
+    if ($alias) {
+      db_query("DELETE FROM {url_alias} WHERE dst = '%s'", $alias);
+    }
+    else {
+      db_query("DELETE FROM {url_alias} WHERE src = '%s'", $path);
+    }  
+  }
+  drupal_clear_path_cache();
 }
+
 
 /**
  * Implementation of hook_nodeapi().
@@ -160,7 +152,7 @@ function path_nodeapi(&$node, $op, $arg) {
         // Don't try to insert if path is NULL. We may have already set
         // the alias ahead of time.
         if (isset($node->path)) {
-          path_set_alias('node/'. $node->nid, $node->path);
+          path_set_alias('node/'. $node->nid, $node->path, NULL, $language);
         }
         break;
 
