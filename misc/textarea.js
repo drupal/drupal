@@ -1,4 +1,4 @@
-// $Id: textarea.js,v 1.19 2007/11/23 11:45:37 goba Exp $
+// $Id: textarea.js,v 1.20 2007/11/30 23:26:58 goba Exp $
 
 Drupal.behaviors.textarea = function(context) {
   $('textarea.resizable:not(.textarea-processed)', context).each(function() {
@@ -36,8 +36,7 @@ Drupal.behaviors.textarea = function(context) {
     }
 
     function endDrag(e) {
-      $(document).unbind("mousemove");
-      $(document).unbind("mouseup");
+      $(document).unbind("mousemove", performDrag).unbind("mouseup", endDrag);
       textarea.css('opacity', 1);
     }
   });
