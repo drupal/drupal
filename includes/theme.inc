@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.398 2007/11/30 12:19:10 goba Exp $
+// $Id: theme.inc,v 1.399 2007/11/30 16:10:28 goba Exp $
 
 /**
  * @file
@@ -416,7 +416,7 @@ function list_themes($refresh = FALSE) {
     $list = array();
     $themes = array();
     // Extract from the database only when it is available.
-    if (db_is_active()) {
+    if (db_is_active() && db_table_exists('system')) {
       $result = db_query("SELECT * FROM {system} WHERE type = '%s'", 'theme');
       while ($theme = db_fetch_object($result)) {
         if (file_exists($theme->filename)) {
