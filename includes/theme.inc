@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.399 2007/11/30 16:10:28 goba Exp $
+// $Id: theme.inc,v 1.400 2007/11/30 23:09:14 goba Exp $
 
 /**
  * @file
@@ -416,7 +416,8 @@ function list_themes($refresh = FALSE) {
     $list = array();
     $themes = array();
     // Extract from the database only when it is available.
-    if (db_is_active() && db_table_exists('system')) {
+    // Also check that the site is not in the middle of an install or update.
+    if (db_is_active() && !defined('MAINTENANCE_MODE')) {
       $result = db_query("SELECT * FROM {system} WHERE type = '%s'", 'theme');
       while ($theme = db_fetch_object($result)) {
         if (file_exists($theme->filename)) {
@@ -426,7 +427,7 @@ function list_themes($refresh = FALSE) {
       }
     }
     else {
-      // When the database is unavailable, scan the installation.
+      // Scan the installation when the database should not be read.
       $themes = _system_theme_data();
     }
 
@@ -448,6 +449,11 @@ function list_themes($refresh = FALSE) {
       }
       if (isset($theme->info['base theme'])) {
         $theme->base_theme = $theme->info['base theme'];
+      }
+      // Status is normally retrieved from the database. Add zero values when
+      // read from the installation directory to prevent notices.
+      if (!isset($theme->status)) {
+        $theme->status = 0;
       }
       $list[$theme->name] = $theme;
     }

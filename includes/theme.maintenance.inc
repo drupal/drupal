@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.maintenance.inc,v 1.1 2007/11/30 12:19:10 goba Exp $
+// $Id: theme.maintenance.inc,v 1.2 2007/11/30 23:09:14 goba Exp $
 
 /**
  * @file
@@ -31,22 +31,22 @@ function _drupal_maintenance_theme() {
   require_once './includes/database.inc';
   unicode_check();
 
-  // Load module basics (needed for hook invokes).
-  $module_list['system']['filename'] = 'modules/system/system.module';
-  $module_list['filter']['filename'] = 'modules/filter/filter.module';
-  module_list(TRUE, FALSE, FALSE, $module_list);
-  drupal_load('module', 'system');
-  drupal_load('module', 'filter');
-
-  $themes = list_themes();
-
   // Install and update pages are treated differently to prevent theming overrides.
   if (defined('MAINTENANCE_MODE') && (MAINTENANCE_MODE == 'install' || MAINTENANCE_MODE == 'update')) {
     $theme = 'minnelli';
   }
   else {
+    // Load module basics (needed for hook invokes).
+    $module_list['system']['filename'] = 'modules/system/system.module';
+    $module_list['filter']['filename'] = 'modules/filter/filter.module';
+    module_list(TRUE, FALSE, FALSE, $module_list);
+    drupal_load('module', 'system');
+    drupal_load('module', 'filter');
+
     $theme = variable_get('maintenance_theme', 'minnelli');
   }
+
+  $themes = list_themes();
 
   // Store the identifier for retrieving theme settings with.
   $theme_key = $theme;

@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.98 2007/11/30 12:19:10 goba Exp $
+// $Id: install.php,v 1.99 2007/11/30 23:09:14 goba Exp $
 
 require_once './includes/install.inc';
 
@@ -32,6 +32,17 @@ function install_main() {
   // Set up $language, so t() caller functions will still work.
   drupal_init_language();
 
+  // Load module basics (needed for hook invokes).
+  include_once './includes/module.inc';
+  $module_list['system']['filename'] = 'modules/system/system.module';
+  $module_list['filter']['filename'] = 'modules/filter/filter.module';
+  module_list(TRUE, FALSE, FALSE, $module_list);
+  drupal_load('module', 'system');
+  drupal_load('module', 'filter');
+
+  // Set up theme system for the maintenance page.
+  drupal_maintenance_theme();
+
   // Check existing settings.php.
   $verify = install_verify_settings();
 
@@ -62,14 +73,6 @@ function install_main() {
 
     $task = NULL;
   }
-
-  // Load module basics (needed for hook invokes).
-  include_once './includes/module.inc';
-  $module_list['system']['filename'] = 'modules/system/system.module';
-  $module_list['filter']['filename'] = 'modules/filter/filter.module';
-  module_list(TRUE, FALSE, FALSE, $module_list);
-  drupal_load('module', 'system');
-  drupal_load('module', 'filter');
 
   // Decide which profile to use.
   if (!empty($_GET['profile'])) {
@@ -104,7 +107,6 @@ function install_main() {
     // If any error messages are set now, it means a requirement problem.
     $messages = drupal_set_message();
     if (!empty($messages['error'])) {
-      drupal_maintenance_theme();
       install_task_list('requirements');
       drupal_set_title(st('Requirements problem'));
       print theme('install_page', '');
@@ -191,7 +193,6 @@ function install_change_settings($profile = 'default', $install_locale = '') {
 
   // We always need this because we want to run form_get_errors.
   include_once './includes/form.inc';
-  drupal_maintenance_theme();
   install_task_list('database');
 
   if ($db_url == 'mysql://username:password@localhost/databasename') {
@@ -444,7 +445,6 @@ function install_select_profile() {
       }
     }
 
-    drupal_maintenance_theme();
     install_task_list('profile-select');
 
     drupal_set_title(st('Select an installation profile'));
@@ -510,7 +510,6 @@ function install_select_locale($profilename) {
   // the user know what he is doing.
   if (count($locales) == 1) {
     if ($profilename == 'default') {
-      drupal_maintenance_theme();
       install_task_list('locale-select');
       drupal_set_title(st('Choose language'));
       if (!empty($_GET['localize'])) {
@@ -552,7 +551,6 @@ function install_select_locale($profilename) {
       }
     }
 
-    drupal_maintenance_theme();
     install_task_list('locale-select');
 
     drupal_set_title(st('Choose language'));
@@ -592,7 +590,6 @@ function install_select_locale_form(&$form_state, $locales) {
  * Show an error page when there are no profiles available.
  */
 function install_no_profile_error() {
-  drupal_maintenance_theme();
   install_task_list('profile-select');
   drupal_set_title(st('No profiles available'));
   print theme('install_page', '<p>'. st('We were unable to find any installer profiles. Installer profiles tell us what modules to enable and what schema to install in the database. A profile is necessary to continue with the installation process.') .'</p>');
@@ -606,7 +603,6 @@ function install_no_profile_error() {
 function install_already_done_error() {
   global $base_url;
 
-  drupal_maintenance_theme();
   drupal_set_title(st('Drupal already installed'));
   print theme('install_page', st('<ul><li>To start over, you must empty your existing database.</li><li>To install to a different database, edit the appropriate <em>settings.php</em> file in the <em>sites</em> folder.</li><li>To upgrade an existing installation, proceed to the <a href="@base-url/update.php">update script</a>.</li><li>View your <a href="@base-url">existing site</a>.</li></ul>', array('@base-url' => $base_url)));
   exit;
@@ -627,7 +623,6 @@ function install_tasks($profile, $task) {
   $url = $base_url .'/install.php?locale='. $install_locale .'&profile='. $profile;
 
   // Build a page for final tasks.
-  drupal_maintenance_theme();
   if (empty($task)) {
     variable_set('install_task', 'locale-initial-import');
     $task = 'locale-initial-import';
