@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.admin.inc,v 1.3 2007/11/28 10:29:20 dries Exp $
+// $Id: profile.admin.inc,v 1.4 2007/11/30 09:02:50 goba Exp $
 
 /**
  * @file
@@ -7,29 +7,153 @@
  */
 
 /**
- * Menu callback; display a listing of all editable profile fields.
+ * Form builder to display a listing of all editable profile fields.
+ * 
+ * @ingroup forms
+ * @see profile_admin_overview_submit().
  */
-function profile_admin_overview() {
-
-  $result = db_query('SELECT title, name, type, category, fid FROM {profile_fields} ORDER BY category, weight');
-  $rows = array();
+function profile_admin_overview(&$form_state = NULL) {
+  $result = db_query('SELECT title, name, type, category, fid, weight FROM {profile_fields} ORDER BY category, weight');
+  
+  $form = array();
+  $categories = array();
   while ($field = db_fetch_object($result)) {
-    $rows[] = array(check_plain($field->title), check_plain($field->name), _profile_field_types($field->type), check_plain($field->category), l(t('edit'), "admin/user/profile/edit/$field->fid"), l(t('delete'), "admin/user/profile/delete/$field->fid"));
-  }
-  if (count($rows) == 0) {
-    $rows[] = array(array('data' => t('No fields defined.'), 'colspan' => '6'));
-  }
+    // Collect all category information
+    $categories[] = $field->category;
 
-  $header = array(t('Title'), t('Name'), t('Type'), t('Category'), array('data' => t('Operations'), 'colspan' => '2'));
-
-  $output  = theme('table', $header, $rows);
-  $output .= '<h2>'. t('Add new field') .'</h2>';
-  $output .= '<ul>';
+    // Save all field information
+    $form[$field->fid]['name'] = array('#value' => check_plain($field->name));
+    $form[$field->fid]['title'] = array('#value' => check_plain($field->title));
+    $form[$field->fid]['type'] = array('#value' => $field->type);
+    $form[$field->fid]['category'] = array('#type' => 'select', '#default_value' => $field->category, '#options' => array());
+    $form[$field->fid]['weight'] = array('#type' => 'weight', '#default_value' => $field->weight);
+    $form[$field->fid]['edit'] = array('#value' => l(t('edit'), "admin/user/profile/edit/$field->fid"));
+    $form[$field->fid]['delete'] = array('#value' => l(t('delete'), "admin/user/profile/delete/$field->fid"));
+  }
+  
+  // Add the cateogory combo boxes
+  $categories = array_unique($categories);
+  foreach($form as $fid => $field) {
+    foreach($categories as $cat => $category) {
+      $form[$fid]['category']['#options'][$category] = $category;
+    }
+  }
+  
+  // Display the submit button only when there's more than one field
+  if (count($form) > 1) {
+    $form['submit'] = array('#type' => 'submit', '#value' => t('Save configuration'));
+  }
+  else {
+    // Disable combo boxes when there isn't a submit button
+    foreach ($form as $fid => $field) {
+      unset($form[$fid]['weight']);
+      $form[$fid]['category']['#type'] = 'value';
+    }
+  }
+  $form['#tree'] = TRUE;
+  
+  $addnewfields = '<h2>'. t('Add new field') .'</h2>';
+  $addnewfields .= '<ul>';
   foreach (_profile_field_types() as $key => $value) {
-    $output .= '<li>'. l($value, "admin/user/profile/add/$key") .'</li>';
+    $addnewfields .= '<li>'. l($value, "admin/user/profile/add/$key") .'</li>';
   }
-  $output .= '</ul>';
+  $addnewfields .= '</ul>';
+  $form['addnewfields'] = array('#value' => $addnewfields);
 
+  return $form;
+}
+
+/**
+ * Submit hanlder to update changed profile field weights and categories.
+ * 
+ * @see profile_admin_overview().
+ */
+function profile_admin_overview_submit($form, &$form_state) {
+  foreach (element_children($form_state['values']) as $fid) {
+    if (is_numeric($fid)) {
+      $weight = $form_state['values'][$fid]['weight'];
+      $category = $form_state['values'][$fid]['category'];
+      if ($weight != $form[$fid]['weight']['#default_value'] || $category != $form[$fid]['category']['#default_value']) {
+        db_query("UPDATE {profile_fields} SET weight = %d, category = '%s' WHERE fid = %d", $weight, $category, $fid);
+      }
+    }
+  }
+
+  drupal_set_message(t('Profile fields have been updated.'));
+  cache_clear_all();
+  menu_rebuild();
+}
+
+/**
+ * Theme the profile field overview into a drag and drop enabled table.
+ *
+ * @ingroup themeable
+ * @see profile_admin_overview().
+ */
+function theme_profile_admin_overview($form) {
+  drupal_add_css(drupal_get_path('module', 'profile') .'/profile.css');
+  // Add javascript if there's more than one field.
+  if (isset($form['submit'])) {
+    drupal_add_js(drupal_get_path('module', 'profile') .'/profile.js');
+  }
+
+  $rows = array();
+  $categories = array();
+  $category_number = 0;
+  foreach (element_children($form) as $key) {
+    // Don't take form control structures.
+    if (array_key_exists('category', $form[$key])) {
+      $field = &$form[$key];
+      $category = $field['category']['#default_value'];
+
+      if (!isset($categories[$category])) {
+        // Category classes are given numeric IDs because there's no guarantee
+        // class names won't contain invalid characters.
+        $categories[$category] = $category_number;
+        $category_field['#attributes']['class'] = 'profile-category profile-category-'. $category_number;
+        $rows[] = array(array('data' => $category, 'colspan' => 7, 'class' => 'category'));
+        $rows[] = array('data' => array(array('data' => '<em>'. t('No fields in this category. If this category remains empty when saved, it will be removed.') .'</em>', 'colspan' => 7)), 'class' => 'category-'. $category_number .'-message category-message category-populated');
+        
+        // Make it dragable only if there is more than one field
+        if (isset($form['submit'])) {
+          drupal_add_tabledrag('profile-fields', 'order', 'sibling', 'profile-weight', 'profile-weight-'. $category_number);
+          drupal_add_tabledrag('profile-fields', 'match', 'sibling', 'profile-category', 'profile-category-'. $category_number);
+        }
+        $category_number++;
+      }
+
+      // Add special drag and drop classes that group fields together.
+      $field['weight']['#attributes']['class'] = 'profile-weight profile-weight-'. $categories[$category];
+      $field['category']['#attributes']['class'] = 'profile-category profile-category-'. $categories[$category];
+      
+      // Add the row
+      $row = array();
+      $row[] = drupal_render($field['title']);
+      $row[] = drupal_render($field['name']);
+      $row[] = drupal_render($field['type']);
+      if (isset($form['submit'])) {
+        $row[] = drupal_render($field['category']);
+        $row[] = drupal_render($field['weight']);
+      }
+      $row[] = drupal_render($field['edit']);
+      $row[] = drupal_render($field['delete']);
+      $rows[] = array('data' => $row, 'class' => 'draggable');
+    }
+  }
+  if (empty($rows)) {
+    $rows[] = array(array('data' => t('No fields available.'), 'colspan' => 7));
+  }
+  
+  $header = array(t('Title'), t('Name'), t('Type'));
+  if (isset($form['submit'])) {
+    $header[] = t('Category');
+    $header[] = t('Weight');
+  }
+  $header[] = array('data' => t('Operations'), 'colspan' => 2);
+
+  $output = theme('table', $header, $rows, array('id' => 'profile-fields'));
+  $output .= drupal_render($form);
+  
   return $output;
 }
 
@@ -118,12 +242,6 @@ Unless you know what you are doing, it is highly recommended that you prefix the
       '#description' => t('A list of all options. Put each option on a separate line. Example options are "red", "blue", "green", etc.'),
     );
   }
-  $form['fields']['weight'] = array('#type' => 'weight',
-    '#title' => t('Weight'),
-    '#default_value' => $edit['weight'],
-    '#delta' => 5,
-    '#description' => t('The weights define the order in which the form fields are shown. Lighter fields "float up" towards the top of the category.'),
-  );
   $form['fields']['visibility'] = array('#type' => 'radios',
     '#title' => t('Visibility'),
     '#default_value' => isset($edit['visibility']) ? $edit['visibility'] : PROFILE_PUBLIC,
@@ -143,6 +261,11 @@ Unless you know what you are doing, it is highly recommended that you prefix the
       '#description' => t('To enable browsing this field by value, enter a title for the resulting page. An example page title is "People who are employed". This is only applicable for a public field.'),
     );
   }
+  $form['fields']['weight'] = array('#type' => 'weight',
+    '#title' => t('Weight'),
+    '#default_value' => $edit['weight'],
+    '#description' => t('The weights define the order in which the form fields are shown. Lighter fields "float up" towards the top of the category.'),
+  );
   $form['fields']['autocomplete'] = array('#type' => 'checkbox',
     '#title' => t('Form will auto-complete while user is typing.'),
     '#default_value' => $edit['autocomplete'],

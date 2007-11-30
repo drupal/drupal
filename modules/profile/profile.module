@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.226 2007/11/28 10:29:20 dries Exp $
+// $Id: profile.module,v 1.227 2007/11/30 09:02:51 goba Exp $
 
 /**
  * @file
@@ -67,6 +67,10 @@ function profile_theme() {
     'profile_wrapper' => array(
       'arguments' => array('content' => NULL),
       'template' => 'profile-wrapper',
+    ),
+    'profile_admin_overview' => array(
+      'arguments' => array('form' => NULL),
+      'file' => 'profile.admin.inc',
     )
   );
 }
@@ -85,7 +89,8 @@ function profile_menu() {
   $items['admin/user/profile'] = array(
     'title' => 'Profiles',
     'description' => 'Create customizable fields for your users.',
-    'page callback' => 'profile_admin_overview',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('profile_admin_overview'),
     'file' => 'profile.admin.inc',
   );
   $items['admin/user/profile/add'] = array(

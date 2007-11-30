@@ -1,0 +1,11 @@
+/* $Id: profile.css,v 1.3 2007/11/30 09:02:51 goba Exp $ */
+
+#profile-fields td.category {
+  font-weight: bold;
+}
+#profile-fields tr.category-message {
+  color: #999;
+}
+#profile-fields tr.category-populated {
+  display: none;
+}
