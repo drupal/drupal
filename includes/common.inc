@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.727 2007/11/30 12:19:10 goba Exp $
+// $Id: common.inc,v 1.728 2007/11/30 15:31:13 goba Exp $
 
 /**
  * @file
@@ -1816,25 +1816,27 @@ function drupal_clear_css_cache() {
 function drupal_add_js($data = NULL, $type = 'module', $scope = 'header', $defer = FALSE, $cache = TRUE, $preprocess = TRUE) {
   static $javascript = array();
 
-  // Add jquery.js and drupal.js the first time a Javascript file is added.
-  if (isset($data) && empty($javascript)) {
-    $javascript['header'] = array(
-      'core' => array(
-        'misc/jquery.js' => array('cache' => TRUE, 'defer' => FALSE, 'preprocess' => TRUE),
-        'misc/drupal.js' => array('cache' => TRUE, 'defer' => FALSE, 'preprocess' => TRUE),
-      ),
-      'module' => array(), 'theme' => array(), 'setting' => array(), 'inline' => array(),
-    );
-  }
-  if (isset($scope) && !isset($javascript[$scope])) {
-    $javascript[$scope] = array('core' => array(), 'module' => array(), 'theme' => array(), 'setting' => array(), 'inline' => array());
-  }
-
-  if (isset($type) && isset($scope) && !isset($javascript[$scope][$type])) {
-    $javascript[$scope][$type] = array();
-  }
-
   if (isset($data)) {
+    
+    // Add jquery.js and drupal.js the first time a Javascript file is added.
+    if (empty($javascript)) {
+      $javascript['header'] = array(
+        'core' => array(
+          'misc/jquery.js' => array('cache' => TRUE, 'defer' => FALSE, 'preprocess' => TRUE),
+          'misc/drupal.js' => array('cache' => TRUE, 'defer' => FALSE, 'preprocess' => TRUE),
+        ),
+        'module' => array(), 'theme' => array(), 'setting' => array(), 'inline' => array(),
+      );
+    }
+    
+    if (isset($scope) && !isset($javascript[$scope])) {
+      $javascript[$scope] = array('core' => array(), 'module' => array(), 'theme' => array(), 'setting' => array(), 'inline' => array());
+    }
+
+    if (isset($type) && isset($scope) && !isset($javascript[$scope][$type])) {
+      $javascript[$scope][$type] = array();
+    }
+    
     switch ($type) {
       case 'setting':
         $javascript[$scope][$type][] = $data;
@@ -1849,7 +1851,13 @@ function drupal_add_js($data = NULL, $type = 'module', $scope = 'header', $defer
   }
 
   if (isset($scope)) {
-    return $javascript[$scope];
+    
+    if (isset($javascript[$scope])) {
+      return $javascript[$scope];
+    }
+    else {
+      return array();
+    }
   }
   else {
     return $javascript;
@@ -1883,7 +1891,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
     $javascript = drupal_add_js(NULL, NULL, $scope);
   }
 
-  if (count($javascript) < 1) {
+  if (empty($javascript)) {
     return '';
   }
 
