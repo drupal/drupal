@@ -70,10 +70,9 @@ function actions_do($action_ids, $object = NULL, $context = NULL, $a1 = NULL, $a
       $where_clause = '('. strstr($where_clause, " ") .')';
       $result_db = db_query('SELECT * FROM {actions} WHERE '. $where_clause, $where_values);
       while ($action = db_fetch_object($result_db)) {
-        $action_id = $action->action_id;
-        $actions[$action_id] = $action->params ? unserialize($data->parameters) : array();
-        $actions[$action_id]['callback'] = $action->callback;
-        $actions[$action_id]['type'] = $action->type;
+        $actions[$action->aid] = $action->parameters ? unserialize($action->parameters) : array();
+        $actions[$action->aid]['callback'] = $action->callback;
+        $actions[$action->aid]['type'] = $action->type;
       }
     }
 
