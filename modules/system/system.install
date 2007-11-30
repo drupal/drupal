@@ -2724,7 +2724,9 @@ function system_update_6039() {
  */
 function system_update_6040() {
   $ret = array();
-  db_add_field($ret, 'upload', 'weight', array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny'));
+  if (db_table_exists('upload')) {
+    db_add_field($ret, 'upload', 'weight', array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny'));
+  }
   return $ret;
 }
 
