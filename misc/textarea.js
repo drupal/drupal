@@ -36,8 +36,7 @@ Drupal.behaviors.textarea = function(context) {
     }
 
     function endDrag(e) {
-      $(document).unbind("mousemove");
-      $(document).unbind("mouseup");
+      $(document).unbind("mousemove", performDrag).unbind("mouseup", endDrag);
       textarea.css('opacity', 1);
     }
   });
