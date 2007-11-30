@@ -242,7 +242,7 @@ tr.even td.active {
   background-color: #e6f1f7;
 }
 
-td.region, td.module, td.container {
+td.region, td.module, td.container, td.category {
   border-top: 1.5em solid #fff;
   border-bottom: 1px solid #b4d7f0;
   background-color: #d4e7f3;
@@ -250,7 +250,7 @@ td.region, td.module, td.container {
   font-weight: bold;
 }
 
-tr:first-child td.region, tr:first-child td.module, tr:first-child td.container {
+tr:first-child td.region, tr:first-child td.module, tr:first-child td.container, tr:first-child td.category {
   border-top-width: 0;
 }
 
