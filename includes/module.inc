@@ -423,7 +423,7 @@ function module_invoke_all() {
     $function = $module .'_'. $hook;
     $result = call_user_func_array($function, $args);
     if (isset($result) && is_array($result)) {
-      $return = array_merge($return, $result);
+      $return = array_merge_recursive($return, $result);
     }
     else if (isset($result)) {
       $return[] = $result;
