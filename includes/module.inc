@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.111 2007/09/04 21:10:45 dries Exp $
+// $Id: module.inc,v 1.112 2007/11/30 09:16:02 goba Exp $
 
 /**
  * @file
@@ -423,7 +423,7 @@ function module_invoke_all() {
     $function = $module .'_'. $hook;
     $result = call_user_func_array($function, $args);
     if (isset($result) && is_array($result)) {
-      $return = array_merge($return, $result);
+      $return = array_merge_recursive($return, $result);
     }
     else if (isset($result)) {
       $return[] = $result;
