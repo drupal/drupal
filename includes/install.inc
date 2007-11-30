@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.49 2007/11/11 16:14:45 goba Exp $
+// $Id: install.inc,v 1.50 2007/11/30 12:19:10 goba Exp $
 
 define('SCHEMA_UNINSTALLED', -1);
 define('SCHEMA_INSTALLED', 0);
@@ -615,7 +615,6 @@ function st($string, $args = array()) {
   }
 
   require_once './includes/theme.inc';
-  $GLOBALS['theme'] = 'theme';
   // Transform arguments before inserting them
   foreach ($args as $key => $value) {
     switch ($key[0]) {

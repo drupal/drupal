@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.200 2007/11/26 08:06:52 goba Exp $
+// $Id: bootstrap.inc,v 1.201 2007/11/30 12:19:10 goba Exp $
 
 /**
  * @file
@@ -369,7 +369,6 @@ function conf_init() {
  */
 function drupal_get_filename($type, $name, $filename = NULL) {
   static $files = array();
-  global $active_db;
 
   if (!isset($files[$type])) {
     $files[$type] = array();
@@ -385,7 +384,7 @@ function drupal_get_filename($type, $name, $filename = NULL) {
   // the database.  This is required because this function is called both
   // before we have a database connection (i.e. during installation) and
   // when a database connection fails.
-  elseif ($active_db && (($file = db_result(db_query("SELECT filename FROM {system} WHERE name = '%s' AND type = '%s'", $name, $type))) && file_exists($file))) {
+  elseif (db_is_active() && (($file = db_result(db_query("SELECT filename FROM {system} WHERE name = '%s' AND type = '%s'", $name, $type))) && file_exists($file))) {
     $files[$type][$name] = $file;
   }
   else {
@@ -971,35 +970,16 @@ function _drupal_bootstrap($phase) {
 }
 
 /**
- * Enables use of the theme system without requiring database access. Since
- * there is not database access no theme will be enabled and the default
- * themeable functions will be called. Some themeable functions can not be used
- * without the full Drupal API loaded. For example, theme_page() is
- * unavailable and theme_maintenance_page() must be used in its place.
+ * Enables use of the theme system without requiring database access.
+ *
+ * Loads and initializes the theme system for site installs, updates and when
+ * the site is in off-line mode. This also applies when the database fails.
+ *
+ * @see _drupal_maintenance_theme()
  */
 function drupal_maintenance_theme() {
-  global $theme;
-  require_once './includes/path.inc';
-  require_once './includes/theme.inc';
-  require_once './includes/common.inc';
-  require_once './includes/unicode.inc';
-  require_once './includes/file.inc';
-  require_once './modules/filter/filter.module';
-  unicode_check();
-  drupal_add_css(drupal_get_path('module', 'system') .'/defaults.css', 'module');
-  drupal_add_css(drupal_get_path('module', 'system') .'/system.css', 'module');
-  drupal_add_css(drupal_get_path('module', 'system') .'/system-menus.css', 'module');
-  $theme = '';
-
-  // Special case registry of theme functions used by the installer
-  $themes = drupal_common_themes();
-  foreach ($themes as $hook => $info) {
-    if (!isset($info['file']) && !isset($info['function'])) {
-      $themes[$hook]['function'] = 'theme_'. $hook;
-      $themes[$hook]['theme path'] = 'misc';
-    }
-  }
-  _theme_set_registry($themes);
+  require_once './includes/theme.maintenance.inc';
+  _drupal_maintenance_theme();
 }
 
 /**

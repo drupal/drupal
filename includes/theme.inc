@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.397 2007/11/26 16:36:42 dries Exp $
+// $Id: theme.inc,v 1.398 2007/11/30 12:19:10 goba Exp $
 
 /**
  * @file
@@ -29,7 +29,7 @@ define('MARK_UPDATED', 2);
  * Initialize the theme system by loading the theme.
  */
 function init_theme() {
-  global $theme, $user, $custom_theme, $theme_engine, $theme_key;
+  global $theme, $user, $custom_theme, $theme_key;
 
   // If $theme is already set, assume the others are set, too, and do nothing
   if (isset($theme)) {
@@ -82,8 +82,10 @@ function init_theme() {
  *    the same information as the $theme object. It should be in
  *    'oldest first' order, meaning the top level of the chain will
  *    be first.
+ * @param $registry_callback
+ *   The callback to invoke to set the theme registry.
  */
-function _init_theme($theme, $base_theme = array()) {
+function _init_theme($theme, $base_theme = array(), $registry_callback = '_theme_load_registry') {
   global $theme_info, $base_theme_info, $theme_engine, $theme_path;
   $theme_info = $theme;
   $base_theme_info = $base_theme;
@@ -174,7 +176,8 @@ function _init_theme($theme, $base_theme = array()) {
       include_once './'. $theme->owner;
     }
   }
-  _theme_load_registry($theme, $base_theme, $theme_engine);
+
+  $registry_callback($theme, $base_theme, $theme_engine);
 }
 
 /**
@@ -394,6 +397,9 @@ function _theme_build_registry($theme, $base_theme, $theme_engine) {
 /**
  * Provides a list of currently available themes.
  *
+ * If the database is active then it will be retrieved from the database.
+ * Otherwise it will retrieve a new list.
+ *
  * @param $refresh
  *   Whether to reload the list of themes from the database.
  * @return
@@ -408,59 +414,42 @@ function list_themes($refresh = FALSE) {
 
   if (empty($list)) {
     $list = array();
-    $result = db_query("SELECT * FROM {system} WHERE type = '%s'", 'theme');
-    while ($theme = db_fetch_object($result)) {
-      if (file_exists($theme->filename)) {
-        $theme->info = unserialize($theme->info);
-        foreach ($theme->info['stylesheets'] as $media => $stylesheets) {
-          foreach ($stylesheets as $stylesheet => $path) {
-            if (file_exists($path)) {
-              $theme->stylesheets[$media][$stylesheet] = $path;
-            }
-          }
+    $themes = array();
+    // Extract from the database only when it is available.
+    if (db_is_active()) {
+      $result = db_query("SELECT * FROM {system} WHERE type = '%s'", 'theme');
+      while ($theme = db_fetch_object($result)) {
+        if (file_exists($theme->filename)) {
+          $theme->info = unserialize($theme->info);
+          $themes[] = $theme;
         }
-        foreach ($theme->info['scripts'] as $script => $path) {
-          if (file_exists($path)) {
-            $theme->scripts[$script] = $path;
-          }
-        }
-        if (isset($theme->info['engine'])) {
-          $theme->engine = $theme->info['engine'];
-        }
-        if (isset($theme->info['base theme'])) {
-          $theme->base_theme = $theme->info['base theme'];
-        }
-        $list[$theme->name] = $theme;
       }
     }
-  }
+    else {
+      // When the database is unavailable, scan the installation.
+      $themes = _system_theme_data();
+    }
 
-  return $list;
-}
-
-/**
- * Provides a list of currently available theme engines
- *
- * @param $refresh
- *   Whether to reload the list of themes from the database.
- * @return
- *   An array of the currently available theme engines.
- */
-function list_theme_engines($refresh = FALSE) {
-  static $list;
-
-  if ($refresh) {
-    unset($list);
-  }
-
-  if (!$list) {
-    $list = array();
-    $result = db_query("SELECT * FROM {system} WHERE type = '%s' AND status = %d ORDER BY name", 'theme_engine', '1');
-    while ($engine = db_fetch_object($result)) {
-      if (file_exists($engine->filename)) {
-        $engine->info = unserialize($engine->info);
-        $list[$engine->name] = $engine;
+    foreach ($themes as $theme) {
+      foreach ($theme->info['stylesheets'] as $media => $stylesheets) {
+        foreach ($stylesheets as $stylesheet => $path) {
+          if (file_exists($path)) {
+            $theme->stylesheets[$media][$stylesheet] = $path;
+          }
+        }
       }
+      foreach ($theme->info['scripts'] as $script => $path) {
+        if (file_exists($path)) {
+          $theme->scripts[$script] = $path;
+        }
+      }
+      if (isset($theme->info['engine'])) {
+        $theme->engine = $theme->info['engine'];
+      }
+      if (isset($theme->info['base theme'])) {
+        $theme->base_theme = $theme->info['base theme'];
+      }
+      $list[$theme->name] = $theme;
     }
   }
 
@@ -1026,117 +1015,6 @@ function theme_render_template($file, $variables) {
  */
 function theme_placeholder($text) {
   return '<em>'. check_plain($text) .'</em>';
-}
-
-/**
- * Generate a themed maintenance page.
- *
- * Note: this function is not themeable.
- *
- * @param $content
- *   The page content to show.
- * @param $show_messages
- *   Whether to output status and error messages.
- *   FALSE can be useful to postpone the messages to a subsequent page.
- */
-function theme_maintenance_page($content, $show_messages = TRUE) {
-  // Set required headers.
-  drupal_set_header('Content-Type: text/html; charset=utf-8');
-  drupal_set_html_head('<link type="text/css" rel="stylesheet" media="all" href="'. base_path() .'misc/maintenance.css" />');
-  drupal_set_html_head('<link type="text/css" rel="stylesheet" media="all" href="'. base_path() . drupal_get_path('module', 'system') .'/defaults.css" />');
-  drupal_set_html_head('<link type="text/css" rel="stylesheet" media="all" href="'. base_path() . drupal_get_path('module', 'system') .'/system.css" />');
-  drupal_set_html_head('<link rel="shortcut icon" href="'. base_path() .'misc/favicon.ico" type="image/x-icon" />');
-
-  // Prepare variables.
-  $variables = array(
-    'head_title' => strip_tags(drupal_get_title()),
-    'head' => drupal_get_html_head(),
-    'styles' => '',
-    'scripts' => drupal_get_js(),
-    'left' => drupal_get_content('left'),
-    'right' => drupal_get_content('right'),
-    'base_path' => base_path(),
-    'path_to_theme' => base_path() .'themes/garland/minnelli',
-    'logo' => base_path() .'themes/garland/minnelli/logo.png',
-    'site_title' => t('Drupal'),
-    'title' => drupal_get_title(),
-    'messages' => $show_messages ? theme('status_messages') : '',
-    'content' => $content,
-  );
-
-  $output = theme_render_template('misc/maintenance.tpl.php', $variables);
-
-  return $output;
-}
-
-/**
- * Generate a themed installation page.
- *
- * Note: this function is not themeable.
- *
- * @param $content
- *   The page content to show.
- */
-function theme_install_page($content) {
-  drupal_set_header('Content-Type: text/html; charset=utf-8');
-  drupal_add_css('misc/maintenance.css', 'module', 'all', FALSE);
-  drupal_set_html_head('<link rel="shortcut icon" href="'. base_path() .'misc/favicon.ico" type="image/x-icon" />');
-
-  $variables = array(
-    'head_title' => strip_tags(drupal_get_title()),
-    'head' => drupal_get_html_head(),
-    'styles' => drupal_get_css(),
-    'scripts' => drupal_get_js(),
-    'left' => drupal_get_content('left'),
-    'right' => drupal_get_content('right'),
-    'base_path' => base_path(),
-    'path_to_theme' => base_path() .'themes/garland/minnelli',
-    'logo' => base_path() .'themes/garland/minnelli/logo.png',
-    'site_title' => st('Drupal Installation'),
-    'title' => drupal_get_title(),
-    'messages' => '',
-    'content' => $content,
-  );
-
-  // Special handling of error messages
-  $messages = drupal_set_message();
-  if (isset($messages['error'])) {
-    $title = count($messages['error']) > 1 ? st('The following errors must be resolved before you can continue the installation process') : st('The following error must be resolved before you can continue the installation process');
-    $variables['messages'] .= '<h3>'. $title .':</h3>';
-    $variables['messages'] .= theme('status_messages', 'error');
-    $variables['content'] .= '<p>'. st('Please check the error messages and <a href="!url">try again</a>.', array('!url' => request_uri())) .'</p>';
-  }
-
-  // Special handling of status messages
-  if (isset($messages['status'])) {
-    $warnings = count($messages['status']) > 1 ? st('The following installation warnings should be carefully reviewed, but in most cases may be safely ignored') : st('The following installation warning should be carefully reviewed, but in most cases may be safely ignored');
-    $variables['messages'] .= '<h4>'. $title .':</h4>';
-    $variables['messages'] .= theme('status_messages', 'status');
-  }
-
-  return theme_render_template('misc/maintenance.tpl.php', $variables);
-}
-
-/**
- * Return a themed list of maintenance tasks to perform.
- *
- * Note: this function is not themeable.
- */
-function theme_task_list($items, $active = NULL) {
-  $done = isset($items[$active]) || $active == NULL;
-  $output = '<ol class="task-list">';
-  foreach ($items as $k => $item) {
-    if ($active == $k) {
-      $class = 'active';
-      $done = false;
-    }
-    else {
-      $class = $done ? 'done' : '';
-    }
-    $output .= '<li class="'. $class .'">'. $item .'</li>';
-  }
-  $output .= '</ol>';
-  return $output;
 }
 
 /**
@@ -1733,11 +1611,21 @@ function template_preprocess(&$variables, $hook) {
 
   // Tell all templates where they are located.
   $variables['directory'] = path_to_theme();
-  // Flag front page status.
-  $variables['is_front'] = drupal_is_front_page();
-  // Tell all templates by which kind of user they're viewed.
-  $variables['logged_in'] = ($user->uid > 0);
-  $variables['is_admin'] = user_access('access administration pages');
+  
+  // Set default variables that depend on the database.
+  $variables['is_admin']            = FALSE;
+  $variables['is_front']            = FALSE;
+  $variables['logged_in']           = FALSE;
+  if ($variables['db_is_active'] = db_is_active()) {
+    // Check for administrators.
+    if (user_access('access administration pages')) {
+      $variables['is_admin'] = TRUE;
+    }
+    // Flag front page status.
+    $variables['is_front'] = drupal_is_front_page();
+    // Tell all templates by which kind of user they're viewed.
+    $variables['logged_in'] = ($user->uid > 0);
+  }
 }
 
 /**
@@ -1750,6 +1638,9 @@ function template_preprocess(&$variables, $hook) {
  * Uses the arg() function to generate a series of page template suggestions
  * based on the current path.
  *
+ * Any changes to variables in this preprocessor should also be changed inside
+ * template_preprocess_maintenance_page() to keep all them consistent.
+ *
  * The $variables array contains the following arguments:
  * - $content
  * - $show_blocks
@@ -1757,7 +1648,7 @@ function template_preprocess(&$variables, $hook) {
  * @see page.tpl.php
  */
 function template_preprocess_page(&$variables) {
-  /* Add favicon */
+  // Add favicon
   if (theme_get_setting('toggle_favicon')) {
     drupal_set_html_head('<link rel="shortcut icon" href="'. check_url(theme_get_setting('favicon')) .'" type="image/x-icon" />');
   }

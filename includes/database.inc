@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.84 2007/10/12 14:19:44 dries Exp $
+// $Id: database.inc,v 1.85 2007/11/30 12:19:10 goba Exp $
 
 /**
  * @file
@@ -161,6 +161,14 @@ function db_set_active($name = 'default') {
   $active_db = $db_conns[$name];
 
   return array_search($previous_db, $db_conns);
+}
+
+/**
+ * Returns a boolean depending on the availability of the database.
+ */
+function db_is_active() {
+  global $active_db;
+  return !empty($active_db);
 }
 
 /**

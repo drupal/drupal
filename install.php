@@ -1,7 +1,9 @@
 <?php
-// $Id: install.php,v 1.97 2007/11/26 16:36:42 dries Exp $
+// $Id: install.php,v 1.98 2007/11/30 12:19:10 goba Exp $
 
 require_once './includes/install.inc';
+
+define('MAINTENANCE_MODE', 'install');
 
 /**
  * The Drupal installation happens in a series of steps. We begin by verifying

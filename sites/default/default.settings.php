@@ -1,5 +1,5 @@
 <?php
-// $Id: default.settings.php,v 1.4 2007/11/26 08:06:52 goba Exp $
+// $Id: default.settings.php,v 1.5 2007/11/30 12:19:10 goba Exp $
 
 /**
  * @file
@@ -172,6 +172,15 @@ ini_set('url_rewriter.tags',        '');
 #   'site_name' => 'My Drupal site',
 #   'theme_default' => 'minnelli',
 #   'anonymous' => 'Visitor',
+/**
+ * A custom theme can be set for the off-line page. This applies when the site
+ * is explicitly set to off-line mode through the administration page or when
+ * the database is inactive due to an error. It can be set through the
+ * 'maintenance_theme' key. The template file should also be copied into the
+ * theme. It is located inside 'modules/system/maintenance-page.tpl.php'.
+ * Note: This setting does not apply to installation and update pages.
+ */
+#   'maintenance_theme' => 'minnelli',
 /**
  * reverse_proxy accepts a boolean value.
  *

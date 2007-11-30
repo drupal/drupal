@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.237 2007/11/16 15:35:24 dries Exp $
+// $Id: update.php,v 1.238 2007/11/30 12:19:10 goba Exp $
 
 /**
  * @file
@@ -12,6 +12,8 @@
  * check statement inside your settings.php file. After finishing the upgrade,
  * be sure to open settings.php again, and change it back to its original state!
  */
+
+define('MAINTENANCE_MODE', 'update');
 
 /**
  * Add a column to a database using syntax appropriate for PostgreSQL.
@@ -803,7 +805,7 @@ function update_task_list($active = NULL) {
     'finished' => 'Review log',
   );
 
-  drupal_set_content('left', theme_task_list($tasks, $active));
+  drupal_set_content('left', theme('task_list', $tasks, $active));
 }
 
 // Some unavoidable errors happen because the database is not yet up-to-date.
@@ -875,5 +877,5 @@ else {
   $output = update_access_denied_page();
 }
 if (isset($output) && $output) {
-  print theme('maintenance_page', $output);
+  print theme('update_page', $output);
 }
