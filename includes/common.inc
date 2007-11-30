@@ -2865,7 +2865,7 @@ function element_children($element) {
 /**
  * Provide theme registration for themes across .inc files.
  */
-function drupal_common_themes() {
+function drupal_common_theme() {
   return array(
     // theme.inc
     'placeholder' => array(
@@ -2876,6 +2876,10 @@ function drupal_common_themes() {
       'template' => 'page',
     ),
     'maintenance_page' => array(
+      'arguments' => array('content' => NULL, 'show_blocks' => TRUE, 'show_messages' => TRUE),
+      'template' => 'maintenance-page',
+    ),
+    'update_page' => array(
       'arguments' => array('content' => NULL, 'show_messages' => TRUE),
     ),
     'install_page' => array(

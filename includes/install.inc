@@ -615,7 +615,6 @@ function st($string, $args = array()) {
   }
 
   require_once './includes/theme.inc';
-  $GLOBALS['theme'] = 'theme';
   // Transform arguments before inserting them
   foreach ($args as $key => $value) {
     switch ($key[0]) {

@@ -164,6 +164,14 @@ function db_set_active($name = 'default') {
 }
 
 /**
+ * Returns a boolean depending on the availability of the database.
+ */
+function db_is_active() {
+  global $active_db;
+  return !empty($active_db);
+}
+
+/**
  * Helper function for db_query().
  */
 function _db_query_callback($match, $init = FALSE) {
