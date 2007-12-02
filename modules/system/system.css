@@ -1,4 +1,4 @@
-/* $Id: system.css,v 1.41 2007/11/20 10:18:43 goba Exp $ */
+/* $Id: system.css,v 1.42 2007/12/02 16:17:48 goba Exp $ */
 
 /*
 ** HTML elements
@@ -140,7 +140,6 @@ tr.merge-up, tr.merge-up td, tr.merge-up th {
   font-weight: bold;
 }
 .form-item label.option {
-  white-space: nowrap;
   display: inline;
   font-weight: normal;
 }
