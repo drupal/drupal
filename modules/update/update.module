@@ -1,5 +1,5 @@
 <?php
-// $Id: update.module,v 1.4 2007/11/24 20:35:37 goba Exp $
+// $Id: update.module,v 1.5 2007/12/02 16:43:59 goba Exp $
 
 /**
  * @file
@@ -196,7 +196,7 @@ function update_requirements($phase) {
           $requirements['update_core']['value'] = t('Not secure! (version @version available)', array('@version' => $data['drupal']['recommended']));
           $requirements['update_core']['severity'] = REQUIREMENT_ERROR;
           $requirements['update_core']['reason'] = UPDATE_NOT_SECURE;
-          $requirements['update_core']['description'] = _update_message_text('core', UDPDATE_NOT_SECURE, TRUE);
+          $requirements['update_core']['description'] = _update_message_text('core', UPDATE_NOT_SECURE, TRUE);
           break;
 
         default:
