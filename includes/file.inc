@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.112 2007/11/26 16:36:42 dries Exp $
+// $Id: file.inc,v 1.113 2007/12/03 09:02:37 goba Exp $
 
 /**
  * @file
@@ -614,7 +614,7 @@ function file_validate_name_length($file) {
  * @param $extensions
  *   A string with a space separated
  * @return
- *   An array. If the file name is too long, it will contain an error message.
+ *   An array. If the file extension is not allowed, it will contain an error message.
  */
 function file_validate_extensions($file, $extensions) {
   global $user;
@@ -644,7 +644,7 @@ function file_validate_extensions($file, $extensions) {
  *   An integer specifying the maximum number of bytes the user is allowed. Zero
  *   indicates that no limit should be enforced.
  * @return
- *   An array. If the file name is too long, it will contain an error message.
+ *   An array. If the file size exceeds limits, it will contain an error message.
  */
 function file_validate_size($file, $file_limit = 0, $user_limit = 0) {
   global $user;
