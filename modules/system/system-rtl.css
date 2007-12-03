@@ -91,3 +91,9 @@ input.password-confirm {
   margin-left: 10px;
   margin-right: 0;
 }
+
+a.tabledrag-handle {
+  float: right;
+  margin: -0.4em -0.5em -0.4em 0;
+  padding: 0.42em 0.5em 0.42em 1.5em;
+}

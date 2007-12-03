@@ -365,10 +365,10 @@ html.js .resizable-textarea textarea {
 */
 a.tabledrag-handle {
   cursor: move;
-  float: left;
+  float: left; /* LTR */
   height: 1.7em;
-  margin: -0.4em 0 -0.4em -0.5em;
-  padding: 0.42em 1.5em 0.42em 0.5em;
+  margin: -0.4em 0 -0.4em -0.5em; /* LTR */
+  padding: 0.42em 1.5em 0.42em 0.5em; /* LTR */
   text-decoration: none;
 }
 a.tabledrag-handle:hover {
