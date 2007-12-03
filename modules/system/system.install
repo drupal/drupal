@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.200 2007/11/30 18:11:29 goba Exp $
+// $Id: system.install,v 1.201 2007/12/03 08:20:56 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -2693,7 +2693,7 @@ function system_update_6037() {
 function system_update_6038() {
   $ret = array();
   if (db_table_exists('profile_fields')) {
-    $ret[] = update_sql('UPDATE {profile_fields} SET category = "Account settings" WHERE LOWER(category) = "account"');
+    $ret[] = update_sql("UPDATE {profile_fields} SET category = 'Account settings' WHERE LOWER(category) = 'account'");
     if ($affectedrows = db_affected_rows()) {
       drupal_set_message(t('There were @affectedrows profile fields that used a reserved category name. They have been assigned to the category "Account settings".', array('@affectedrows' => $affectedrows)));
     }
