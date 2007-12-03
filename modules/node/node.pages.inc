@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.12 2007/11/29 11:54:37 goba Exp $
+// $Id: node.pages.inc,v 1.13 2007/12/03 07:45:15 goba Exp $
 
 /**
  * @file
@@ -517,12 +517,6 @@ function node_revisions() {
           }
         }
         break;
-      case 'revert':
-        node_revision_revert(arg(1), arg(3));
-        break;
-      case 'delete':
-        node_revision_delete(arg(1), arg(3));
-        break;
     }
   }
   drupal_not_found();
@@ -577,61 +571,79 @@ function node_revision_overview($node) {
  * Revert to the revision with the specified revision number. A node and nodeapi "update" event is triggered
  * (via the node_save() call) when a revision is reverted.
  */
-function node_revision_revert($nid, $revision) {
+function node_revision_revert($node, $revision) {
   global $user;
 
-  $node = node_load($nid, $revision);
   if ((user_access('revert revisions') || user_access('administer nodes')) && node_access('update', $node)) {
-    if ($node->vid) {
-      $node->revision = 1;
-      $node->log = t('Copy of the revision from %date.', array('%date' => format_date($node->revision_timestamp)));
-      if (module_exists('taxonomy')) {
-        $node->taxonomy = array_keys($node->taxonomy);
-      }
-
-      node_save($node);
-
-      drupal_set_message(t('%title has been reverted back to the revision from %revision-date', array('%revision-date' => format_date($node->revision_timestamp), '%title' => $node->title)));
-      watchdog('content', '@type: reverted %title revision %revision.', array('@type' => $node->type, '%title' => $node->title, '%revision' => $revision));
+    $node_revision = node_load($node->nid, $revision);
+    if ($node_revision->vid) {
+      return drupal_get_form('node_revision_revert_confirm', $node_revision);
     }
     else {
       drupal_set_message(t('You tried to revert to an invalid revision.'), 'error');
+      drupal_goto('node/'. $node->nid .'/revisions');
     }
-    drupal_goto('node/'. $nid .'/revisions');
   }
   drupal_access_denied();
+}
+/**
+ * Ask for confirmation of the reversion to prevent against CSRF attacks.
+ */
+function node_revision_revert_confirm($form_state, $node_revision) {
+  $form['#node_revision'] = $node_revision;
+  return confirm_form($form, t('Are you sure you want to revert to the revision from %revision-date?', array('%revision-date' =>  format_date($node_revision->revision_timestamp))), 'node/'. $node_revision->nid .'/revisions', '', t('Revert'), t('Cancel'));
+}
+
+function node_revision_revert_confirm_submit($form, &$form_state) {
+  $node_revision = $form['#node_revision'];
+  $node_revision->revision = 1;
+  $node_revision->log = t('Copy of the revision from %date.', array('%date' => format_date($node_revision->revision_timestamp)));
+  if (module_exists('taxonomy')) {
+    $node_revision->taxonomy = array_keys($node_revision->taxonomy);
+  }
+
+  node_save($node_revision);
+
+  drupal_set_message(t('%title has been reverted back to the revision from %revision-date', array('%revision-date' => format_date($node_revision->revision_timestamp), '%title' => $node_revision->title)));
+  watchdog('content', '@type: reverted %title revision %revision.', array('@type' => $node_revision->type, '%title' => $node_revision->title, '%revision' => $node_revision->vid));
+  $form_state['redirect'] = 'node/'. $node_revision->nid .'/revisions';
 }
 
 /**
  * Delete the revision with specified revision number. A "delete revision" nodeapi event is invoked when a
  * revision is deleted.
  */
-function node_revision_delete($nid, $revision) {
+function node_revision_delete($node, $revision) {
   if (user_access('administer nodes')) {
-    $node = node_load($nid);
     if (node_access('delete', $node)) {
-      // Don't delete the current revision
+      // Don't allow deleting the current revision.
       if ($revision != $node->vid) {
-        $node = node_load($nid, $revision);
-
-        db_query("DELETE FROM {node_revisions} WHERE nid = %d AND vid = %d", $nid, $revision);
-        node_invoke_nodeapi($node, 'delete revision');
-        drupal_set_message(t('Deleted %title revision %revision.', array('%title' => $node->title, '%revision' => $revision)));
-        watchdog('content', '@type: deleted %title revision %revision.', array('@type' => $node->type, '%title' => $node->title, '%revision' => $revision));
+        // Load the specific revision instead of the current one.
+        $node_revision = node_load($node->nid, $revision);
+        return drupal_get_form('node_revision_delete_confirm', $node_revision);
       }
-
       else {
         drupal_set_message(t('Deletion failed. You tried to delete the current revision.'));
-      }
-      if (db_result(db_query('SELECT COUNT(vid) FROM {node_revisions} WHERE nid = %d', $nid)) > 1) {
-        drupal_goto("node/$nid/revisions");
-      }
-      else {
-        drupal_goto("node/$nid");
+        drupal_goto('node/'. $node->nid .'/revisions');
       }
     }
   }
-
   drupal_access_denied();
 }
 
+function node_revision_delete_confirm($form_state, $node_revision) {
+  $form['#node_revision'] = $node_revision;
+  return confirm_form($form, t('Are you sure you want to delete the revision from %revision-date?', array('%revision-date' =>  format_date($node_revision->revision_timestamp))), 'node/'. $node_revision->nid .'/revisions', t('This action cannot be undone.'), t('Delete'), t('Cancel'));
+}
+
+function node_revision_delete_confirm_submit($form, &$form_state) {
+  $node_revision = $form['#node_revision'];
+  db_query("DELETE FROM {node_revisions} WHERE nid = %d AND vid = %d", $node_revision->nid, $node_revision->vid);
+  node_invoke_nodeapi($node_revision, 'delete revision');
+  drupal_set_message(t('Deleted %title revision %revision.', array('%title' => $node_revision->title, '%revision' => $node_revision->vid)));
+  watchdog('content', '@type: deleted %title revision %revision.', array('@type' => $node_revision->type, '%title' => $node_revision->title, '%revision' => $node_revision->vid));
+  $form_state['redirect'] = 'node/'. $node_revision->nid;
+  if (db_result(db_query('SELECT COUNT(vid) FROM {node_revisions} WHERE nid = %d', $node_revision->nid)) > 1) {
+    $form_state['redirect'] .= '/revisions';
+  }
+}

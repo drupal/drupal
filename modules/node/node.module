@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.913 2007/11/29 11:29:24 goba Exp $
+// $Id: node.module,v 1.914 2007/12/03 07:45:15 goba Exp $
 
 /**
  * @file
@@ -1436,6 +1436,24 @@ function node_menu() {
     'weight' => 2,
     'file' => 'node.pages.inc',
     'type' => MENU_LOCAL_TASK,
+  );
+  $items['node/%node/revisions/%/revert'] = array(
+    'title' => 'Revert to earlier revision',
+    'page callback' => 'node_revision_revert',
+    'page arguments' => array(1, 3),
+    'access callback' => '_node_revision_access',
+    'access arguments' => array(1, 3),
+    'file' => 'node.pages.inc',
+    'type' => MENU_CALLBACK,
+  );
+  $items['node/%node/revisions/%/delete'] = array(
+    'title' => 'Delete earlier revision',
+    'page callback' => 'node_revision_delete',
+    'page arguments' => array(1, 3),
+    'access callback' => '_node_revision_access',
+    'access arguments' => array(1, 3),
+    'file' => 'node.pages.inc',
+    'type' => MENU_CALLBACK,
   );
   return $items;
 }
