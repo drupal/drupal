@@ -1,4 +1,4 @@
-/* $Id: system.css,v 1.42 2007/12/02 16:17:48 goba Exp $ */
+/* $Id: system.css,v 1.43 2007/12/03 08:40:38 goba Exp $ */
 
 /*
 ** HTML elements
@@ -365,10 +365,10 @@ html.js .resizable-textarea textarea {
 */
 a.tabledrag-handle {
   cursor: move;
-  float: left;
+  float: left; /* LTR */
   height: 1.7em;
-  margin: -0.4em 0 -0.4em -0.5em;
-  padding: 0.42em 1.5em 0.42em 0.5em;
+  margin: -0.4em 0 -0.4em -0.5em; /* LTR */
+  padding: 0.42em 1.5em 0.42em 0.5em; /* LTR */
   text-decoration: none;
 }
 a.tabledrag-handle:hover {
