@@ -4,3 +4,4 @@ description = Tableless, recolorable, multi-column, fixed width theme.
 version = VERSION
 core = 6.x
 base theme = garland
+stylesheets[all][] = minnelli.css
