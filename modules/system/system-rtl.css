@@ -97,3 +97,8 @@ a.tabledrag-handle {
   margin: -0.4em -0.5em -0.4em 0;
   padding: 0.42em 0.5em 0.42em 1.5em;
 }
+div.indentation {
+  margin: -0.4em -0.4em -0.4em 0.2em;
+  padding: 0.42em 0.6em 0.42em 0;
+  float: right;
+}

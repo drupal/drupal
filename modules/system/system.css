@@ -47,9 +47,9 @@ thead th {
 div.indentation {
   width: 20px;
   height: 1.7em;
-  margin: -0.4em 0.2em -0.4em -0.4em;
-  padding: 0.42em 0 0.42em 0.6em;
-  float: left;
+  margin: -0.4em 0.2em -0.4em -0.4em; /* LTR */
+  padding: 0.42em 0 0.42em 0.6em; /* LTR */
+  float: left; /* LTR */
 }
 div.tree-child {
   background: url(../../misc/tree.png) no-repeat 11px center;
