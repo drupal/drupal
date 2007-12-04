@@ -1,5 +1,5 @@
 <?php
-// $Id: user.pages.inc,v 1.4 2007/11/28 10:29:20 dries Exp $
+// $Id: user.pages.inc,v 1.5 2007/12/04 18:34:44 goba Exp $
 
 /**
  * @file
@@ -7,7 +7,7 @@
  */
 
 /**
- * Menu callback; Retrieve a pipe delimited string of autocomplete suggestions for existing users
+ * Menu callback; Retrieve a JSON object containing autocomplete suggestions for existing users.
  */
 function user_autocomplete($string = '') {
   $matches = array();
