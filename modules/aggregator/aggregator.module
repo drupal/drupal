@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.361 2007/11/26 16:36:42 dries Exp $
+// $Id: aggregator.module,v 1.362 2007/12/04 16:34:27 goba Exp $
 
 /**
  * @file
@@ -12,16 +12,18 @@
 function aggregator_help($path, $arg) {
   switch ($path) {
     case 'admin/help#aggregator':
-      $output = '<p>'. t('The news aggregator is a powerful on-site RSS syndicator/news reader that can gather fresh content from news sites and weblogs around the web.') .'</p>';
-      $output .= '<p>'. t('Users can view the latest news chronologically in the <a href="@aggregator">main news aggregator display</a> or by <a href="@aggregator-sources">source</a>. Administrators can add, edit and delete feeds and choose how often to check for newly updated news for each individual feed. Administrators can also tag individual feeds with categories, offering selective grouping of some feeds into separate displays. Listings of the latest news for individual sources or categorized sources can be enabled as blocks for display in the sidebar through the <a href="@admin-block">block administration page</a>. The news aggregator requires cron to check for the latest news from the sites to which you have subscribed. Drupal also provides a <a href="@aggregator-opml">machine-readable OPML file</a> of all of your subscribed feeds.', array('@aggregator' => url('aggregator'), '@aggregator-sources' => url('aggregator/sources'), '@admin-block' => url('admin/build/block'), '@aggregator-opml' => url('aggregator/opml'))) .'</p>';
+      $output = '<p>'. t('The aggregator is a powerful on-site syndicator and news reader that gathers fresh content from RSS-, RDF-, and Atom-based feeds made available across the web. Thousands of sites (particularly news sites and blogs) publish their latest headlines and posts in feeds, using a number of standardized XML-based formats. Formats supported by the aggregator include <a href="@rss">RSS</a>, <a href="@rdf">RDF</a>, and <a href="@atom">Atom</a>.', array('@rss' => 'http://blogs.law.harvard.edu/tech/rss', '@rdf' => 'http://www.w3.org/RDF/', '@atom' => 'http://www.atomenabled.org')) .'</p>';
+      $output .= '<p>'. t('Feeds contain feed items, or individual posts published by the site providing the feed. Feeds may be grouped in categories, generally by topic. Users view feed items in the <a href="@aggregator">main aggregator display</a> or by <a href="@aggregator-sources">their source</a>. Administrators can <a href="@feededit">add, edit and delete feeds</a> and choose how often to check each feed for newly updated items. The most recent items in either a feed or category can be displayed as a block through the <a href="@admin-block">block administration page</a>. An <a href="@aggregator-opml">machine-readable OPML file</a> of all feeds is available. A correctly configured <a href="@cron">Cron maintenance task</a> is required to update feeds automatically.', array('@aggregator' => url('aggregator'), '@aggregator-sources' => url('aggregator/sources'), '@feededit' => url('admin/content/aggregator'), '@admin-block' => url('admin/build/block'), '@aggregator-opml' => url('aggregator/opml'), '@cron' => url('admin/reports/status'))) .'</p>';
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@aggregator">Aggregator page</a>.', array('@aggregator' => 'http://drupal.org/handbook/modules/aggregator/')) .'</p>';
       return $output;
     case 'admin/content/aggregator':
-      return '<p>'. t('Thousands of sites (particularly news sites and weblogs) publish their latest headlines and/or stories in a machine-readable format so that other sites can easily link to them. This content is usually in the form of an <a href="http://blogs.law.harvard.edu/tech/rss">RSS</a> feed (which is an XML-based syndication standard). To display the feed or category in a block you must decide how many items to show by editing the feed or block and turning on the <a href="@block">feed\'s block</a>.', array('@block' => url('admin/build/block'))) .'</p>';
+      $output = '<p>'. t('Thousands of sites (particularly news sites and blogs) publish their latest headlines and posts in feeds, using a number of standardized XML-based formats. Formats supported by the aggregator include <a href="@rss">RSS</a>, <a href="@rdf">RDF</a>, and <a href="@atom">Atom</a>.', array('@rss' => 'http://blogs/law.harvard.edu/tech/rss', '@rdf' => 'http://www.w3.org/RDF/', '@atom' => 'http://www.atomenabled.org')) .'</p>';
+      $output .= '<p>'. t('Current feeds are listed below, and <a href="@addfeed">new feeds may be added</a>. For each feed or feed category, the <em>latest items</em> block may be enabled at the <a href="@block">blocks configuration page</a>.', array('@addfeed' => url('admin/content/aggregator/add/feed'), '@block' => url('admin/build/block'))) .'</p>';
+      return $output;
     case 'admin/content/aggregator/add/feed':
-      return '<p>'. t('Add a site that has an RSS/RDF/Atom feed. The URL is the full path to the feed file. For the feed to update automatically you must run "cron.php" on a regular basis. If you already have a feed with the URL you are planning to use, the system will not accept another feed with the same URL.') .'</p>';
+      return '<p>'. t('Add a feed in RSS, RDF or Atom format. A feed may only have one entry.') .'</p>';
     case 'admin/content/aggregator/add/category':
-      return '<p>'. t('Categories provide a way to group items from different news feeds together. Each news category has its own feed page and block. For example, you could tag various sport-related feeds as belonging to a category called <em>Sports</em>. News items can be added to a category automatically by setting a feed to automatically place its item into that category, or by using the categorize items link in any listing of news items.') .'</p>';
+      return '<p>'. t('Categories allow feed items from different feeds to be grouped together. For example, several sport-related feeds may belong to a category named <em>Sports</em>. Feed items may be grouped automatically (by selecting a category when creating or editing a feed) or manually (via the <em>Categorize</em> page available from feed item listings). Each category provides its own feed page and block.') .'</p>';
   }
 }
 
@@ -78,7 +80,7 @@ function aggregator_theme() {
  */
 function aggregator_menu() {
   $items['admin/content/aggregator'] = array(
-    'title' => 'News aggregator',
+    'title' => 'Feed aggregator',
     'description' => "Configure which content your site aggregates from other sites, how often it polls them, and how they're categorized.",
     'page callback' => 'aggregator_admin_overview',
     'access arguments' => array('administer news feeds'),
@@ -133,7 +135,7 @@ function aggregator_menu() {
     'file' => 'aggregator.admin.inc',
   );
   $items['aggregator'] = array(
-    'title' => 'News aggregator',
+    'title' => 'Feed aggregator',
     'page callback' => 'aggregator_page_last',
     'access arguments' => array('access news feeds'),
     'weight' => 5,

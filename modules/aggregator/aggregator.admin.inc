@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.admin.inc,v 1.1 2007/09/05 08:31:48 dries Exp $
+// $Id: aggregator.admin.inc,v 1.2 2007/12/04 16:34:27 goba Exp $
 
 /**
  * @file
@@ -57,7 +57,7 @@ function aggregator_form_feed(&$form_state, $edit = array('refresh' => 900, 'tit
     '#title' => t('Title'),
     '#default_value' => $edit['title'],
     '#maxlength' => 255,
-    '#description' => t('The name of the feed; typically the name of the website you syndicate content from.'),
+    '#description' => t('The name of the feed (or the name of the website providing the feed).'),
     '#required' => TRUE,
   );
   $form['url'] = array('#type' => 'textfield',
@@ -71,7 +71,7 @@ function aggregator_form_feed(&$form_state, $edit = array('refresh' => 900, 'tit
     '#title' => t('Update interval'),
     '#default_value' => $edit['refresh'],
     '#options' => $period,
-    '#description' => t('The refresh interval indicating how often you want to update this feed. Requires crontab.'),
+    '#description' => t('The length of time between feed updates. (Requires a correctly configured <a href="@cron">Cron maintenance task</a>.)', array('@cron' => url('admin/reports/status'))),
   );
 
   // Handling of categories:
@@ -87,7 +87,7 @@ function aggregator_form_feed(&$form_state, $edit = array('refresh' => 900, 'tit
       '#title' => t('Categorize news items'),
       '#default_value' => $values,
       '#options' => $options,
-      '#description' => t('New items in this feed will be automatically filed in the checked categories as they are received.'),
+      '#description' => t('New feed items are automatically filed in the checked categories.'),
     );
   }
   $form['submit'] = array('#type' => 'submit', '#value' => t('Save'));
@@ -199,25 +199,25 @@ function aggregator_admin_settings() {
   $form['aggregator_allowed_html_tags'] = array(
     '#type' => 'textfield', '#title' => t('Allowed HTML tags'), '#size' => 80, '#maxlength' => 255,
     '#default_value' => variable_get('aggregator_allowed_html_tags', '<a> <b> <br> <dd> <dl> <dt> <em> <i> <li> <ol> <p> <strong> <u> <ul>'),
-    '#description' => t('The list of tags which are allowed in feeds, i.e., which will not be removed by Drupal.')
+    '#description' => t('A space-separated list of HTML tags allowed in the content of feed items. (Tags in this list are not removed by Drupal.)')
   );
 
   $form['aggregator_summary_items'] = array(
     '#type' => 'select', '#title' => t('Items shown in sources and categories pages') ,
     '#default_value' => variable_get('aggregator_summary_items', 3), '#options' => $items,
-    '#description' =>  t('The number of items which will be shown with each feed or category in the feed and category summary pages.')
+    '#description' =>  t('Number of feed items displayed in feed and category summary pages.')
   );
 
   $form['aggregator_clear'] = array(
-    '#type' => 'select', '#title' => t('Discard news items older than'),
+    '#type' => 'select', '#title' => t('Discard items older than'),
     '#default_value' => variable_get('aggregator_clear', 9676800), '#options' => $period,
-    '#description' => t('Older news items will be automatically discarded. Requires crontab.')
+    '#description' => t('The length of time to retain feed items before discarding. (Requires a correctly configured <a href="@cron">Cron maintenance task</a>.)', array('@cron' => url('admin/reports/status')))
   );
 
   $form['aggregator_category_selector'] = array(
     '#type' => 'radios', '#title' => t('Category selection type'), '#default_value' => variable_get('aggregator_category_selector', 'checkboxes'),
     '#options' => array('checkboxes' => t('checkboxes'), 'select' => t('multiple selector')),
-    '#description' => t('The type of category selection widget which is shown on categorization pages. Checkboxes are easier to use; a multiple selector is good for working with large numbers of categories.')
+    '#description' => t('The type of category selection widget displayed on categorization pages. (For a small number of categories, checkboxes are easier to use, while a multiple selector work well with large numbers of categories.)')
   );
 
   return system_settings_form($form);
