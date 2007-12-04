@@ -7,7 +7,7 @@
  */
 
 /**
- * Menu callback; Retrieve a pipe delimited string of autocomplete suggestions for existing users
+ * Menu callback; Retrieve a JSON object containing autocomplete suggestions for existing users.
  */
 function user_autocomplete($string = '') {
   $matches = array();
