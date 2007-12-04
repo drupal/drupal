@@ -1,4 +1,4 @@
-/* $Id: system-rtl.css,v 1.9 2007/12/03 08:40:38 goba Exp $ */
+/* $Id: system-rtl.css,v 1.10 2007/12/04 10:52:16 goba Exp $ */
 
 thead th {
   text-align: right;
@@ -96,4 +96,9 @@ a.tabledrag-handle {
   float: right;
   margin: -0.4em -0.5em -0.4em 0;
   padding: 0.42em 0.5em 0.42em 1.5em;
+}
+div.indentation {
+  margin: -0.4em -0.4em -0.4em 0.2em;
+  padding: 0.42em 0.6em 0.42em 0;
+  float: right;
 }
