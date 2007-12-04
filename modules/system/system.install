@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.201 2007/12/03 08:20:56 goba Exp $
+// $Id: system.install,v 1.202 2007/12/04 16:39:22 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -2463,24 +2463,16 @@ function system_update_6027() {
   // The cache_block table is created in update_fix_d6_requirements() since
   // calls to cache_clear_all() would otherwise cause warnings.
 
-  // Fill in the values for the new 'cache' column,
-  // by refreshing the {blocks} table.
-  global $theme, $custom_theme;
-  $old_theme = $theme;
-  $themes = list_themes();
-
-  $result = db_query("SELECT DISTINCT theme FROM {blocks}");
-  while ($row = db_fetch_array($result)) {
-    if (array_key_exists($row['theme'], $themes)) {
-      // Set up global values so that _blocks_rehash()
-      // operates on the expected theme.
-      $theme = NULL;
-      $custom_theme = $row['theme'];
-      _block_rehash();
+  // Fill in the values for the new 'cache' column in the {blocks} table.
+  foreach (module_list() as $module) {
+    if ($module_blocks = module_invoke($module, 'block', 'list')) {
+      foreach ($module_blocks as $delta => $block) {
+        if (isset($block['cache'])) {
+          db_query("UPDATE {blocks} SET cache = %d WHERE module = '%s' AND delta = %d", $block['cache'], $module, $delta);
+        }
+      }
     }
   }
-
-  $theme = $old_theme;
 
   return $ret;
 }
