@@ -1,5 +1,8 @@
 // $Id$
 
+DRUPAL 5.5, xxxx-xx-xx
+----------------------
+
 Drupal 5.4, 2007-12-05
 ----------------------
 - fixed a variety of small bugs.
