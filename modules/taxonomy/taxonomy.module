@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.400 2007/11/28 10:29:20 dries Exp $
+// $Id: taxonomy.module,v 1.401 2007/12/05 21:18:29 goba Exp $
 
 /**
  * @file
@@ -1074,16 +1074,19 @@ function taxonomy_select_nodes($tids = array(), $operator = 'or', $depth = 0, $p
     }
 
     if ($operator == 'or') {
-      $str_tids = implode(',', call_user_func_array('array_merge', $descendant_tids));
-      $sql = 'SELECT DISTINCT(n.nid), n.sticky, n.title, n.created FROM {node} n INNER JOIN {term_node} tn ON n.vid = tn.vid WHERE tn.tid IN ('. $str_tids .') AND n.status = 1 ORDER BY '. $order;
-      $sql_count = 'SELECT COUNT(DISTINCT(n.nid)) FROM {node} n INNER JOIN {term_node} tn ON n.vid = tn.vid WHERE tn.tid IN ('. $str_tids .') AND n.status = 1';
+      $args = call_user_func_array('array_merge', $descendant_tids);
+      $placeholders = db_placeholders($args, 'int');
+      $sql = 'SELECT DISTINCT(n.nid), n.sticky, n.title, n.created FROM {node} n INNER JOIN {term_node} tn ON n.vid = tn.vid WHERE tn.tid IN ('. $placeholders .') AND n.status = 1 ORDER BY '. $order;
+      $sql_count = 'SELECT COUNT(DISTINCT(n.nid)) FROM {node} n INNER JOIN {term_node} tn ON n.vid = tn.vid WHERE tn.tid IN ('. $placeholders .') AND n.status = 1';
     }
     else {
       $joins = '';
       $wheres = '';
+      $args = array();
       foreach ($descendant_tids as $index => $tids) {
         $joins .= ' INNER JOIN {term_node} tn'. $index .' ON n.vid = tn'. $index .'.vid';
-        $wheres .= ' AND tn'. $index .'.tid IN ('. implode(',', $tids) .')';
+        $wheres .= ' AND tn'. $index .'.tid IN ('. db_placeholders($tids, 'int') .')';
+        $args = array_merge($args, $tids);
       }
       $sql = 'SELECT DISTINCT(n.nid), n.sticky, n.title, n.created FROM {node} n '. $joins .' WHERE n.status = 1 '. $wheres .' ORDER BY '. $order;
       $sql_count = 'SELECT COUNT(DISTINCT(n.nid)) FROM {node} n '. $joins .' WHERE n.status = 1 '. $wheres;
@@ -1091,10 +1094,10 @@ function taxonomy_select_nodes($tids = array(), $operator = 'or', $depth = 0, $p
     $sql = db_rewrite_sql($sql);
     $sql_count = db_rewrite_sql($sql_count);
     if ($pager) {
-      $result = pager_query($sql, variable_get('default_nodes_main', 10), 0, $sql_count);
+      $result = pager_query($sql, variable_get('default_nodes_main', 10), 0, $sql_count, $args);
     }
     else {
-      $result = db_query_range($sql, 0, variable_get('feed_default_items', 10));
+      $result = db_query_range($sql, 0, variable_get('feed_default_items', 10), $args);
     }
   }
 

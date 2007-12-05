@@ -1,6 +1,6 @@
-// $Id: CHANGELOG.txt,v 1.237 2007/11/26 16:36:42 dries Exp $
+// $Id: CHANGELOG.txt,v 1.238 2007/12/05 21:18:27 goba Exp $
 
-Drupal 6.0, xxxx-xx-xx (development version)
+Drupal 6.0-beta4, 2007-12-05
 ----------------------
 - New, faster and better menu system.
 - New watchdog as a hook functionality.
@@ -96,6 +96,11 @@ Drupal 6.0, xxxx-xx-xx (development version)
   contributed module (http://drupal.org/project/site_network).
 - Removed old system updates. Updates from Drupal versions prior to 4.7.x will
   require upgrading to 4.7.x or 5.x before upgrading to 6.x.
+
+Drupal 5.4, 2007-12-05
+----------------------
+- fixed a variety of small bugs.
+- fixed a security issue (SQL injection), see SA-2007-031
 
 Drupal 5.3, 2007-10-17
 ----------------------
@@ -194,6 +199,10 @@ Drupal 5.0, 2007-01-15
     * Split up and removed drupal.css.
     * Added nested lists generation.
     * Added a self-clearing block class.
+
+Drupal 4.7.9, 2007-12-05
+------------------------
+- fixed a security issue (SQL injection), see SA-2007-031
 
 Drupal 4.7.8, 2007-10-17
 ----------------------
