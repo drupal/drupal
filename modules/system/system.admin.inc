@@ -172,7 +172,7 @@ function system_admin_theme_settings() {
  * Menu callback; displays a listing of all themes.
  *
  * @ingroup forms
- * @see system_themes_form_submt().
+ * @see system_themes_form_submit().
  */
 function system_themes_form() {
 
@@ -405,7 +405,7 @@ function system_theme_settings(&$form_state, $key = '') {
         '#suffix' => '</div>',
       );
       foreach ($node_types as $type => $name) {
-        $form['node_info']["toggle_node_info_$type"] = array('#type' => 'checkbox', '#title' => $name, '#default_value' => $settings["toggle_node_info_$type"]);
+        $form['node_info']["toggle_node_info_$type"] = array('#type' => 'checkbox', '#title' => check_plain($name), '#default_value' => $settings["toggle_node_info_$type"]);
       }
     }
   }

@@ -84,7 +84,7 @@ function template_preprocess_search_result(&$variables) {
 
   $info = array();
   if (!empty($result['type'])) {
-    $info['type'] = $result['type'];
+    $info['type'] = check_plain($result['type']);
   }
   if (!empty($result['user'])) {
     $info['user'] = $result['user'];
