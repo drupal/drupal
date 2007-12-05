@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.267 2007/10/20 21:57:50 goba Exp $
+// $Id: statistics.module,v 1.268 2007/12/05 16:51:30 goba Exp $
 
 /**
  * @file
@@ -12,35 +12,28 @@
 function statistics_help($path, $arg) {
   switch ($path) {
     case 'admin/help#statistics':
-      $output = '<p>'. t('The statistics module keeps track of numerous statistics of site usage. It counts how many times, and from where each of your posts is viewed. The statistics module can be used to learn many useful things about how users are interacting with each other and with your site.') .'</p>';
-      $output .= t('<p>Statistics module features</p>
-<ul>
-<li>Logs show statistics for how many times your site and specific content on your site has been accessed.</li>
-<li>Referrers tells you from where visitors came from (referrer URL).</li>
-<li>Top pages shows you what\'s hot, what is the most popular content on your site.</li>
-<li>Top users shows you the most active users for your site.</li>
-<li>Recent hits displays information about the latest activity on your site.</li>
-<li>Node count displays the number of times a node has been accessed in the node\'s link section next to <em># comments</em>.</li>
-<li>Popular content block creates a block that can display the day\'s top viewed content, the all time top viewed content, and the last content viewed.</li>
-</ul>
-');
-      $output .= t('<p>Configuring the statistics module</p>
-<ul>
-<li>Enable access log allows you to turn the access log on and off. This log is used to store data about every page accessed, such as the remote host\'s IP address, where they came from (referrer), what node they\'ve viewed, and their user name. Enabling the log adds one database call per page displayed by Drupal.</li>
-<li>Discard access logs older than allows you to configure how long an access log entry is saved, after which time it is deleted from the database table. To use this you need to run <em>cron.php</em></li>
-<li>Enable node view counter allows you to turn on and off the node-counting functionality of this module. If it is turned on, an extra database query is added for each node displayed, which increments a counter.</li>
-</ul>
-');
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@statistics">Statistics page</a>.', array('@statistics' => 'http://drupal.org/handbook/modules/statistics/')) .'</p>';
+      $output = '<p>'. t('The statistics module keeps track of numerous site usage statistics, including the number of times, and from where, each of your posts is viewed. These statistics are useful in determining how users are interacting with each other and with your site, and are required for the display of some Drupal blocks.') .'</p>';
+      $output .= '<p>'. t('The statistics module provides:') .'</p>';
+      $output .= '<ul><li>'. t('a counter for each post on your site that increments each time the post is viewed. (Enable <em>Count content views</em> on the <a href="@accesslog">access log settings page</a>, and determine if the post access counters should be visible to any user roles on the <a href="@permissions">permissions page</a>.)', array('@accesslog' => url('admin/reports/settings'), '@permissions' => url('admin/user/permissions'))) .'</li>';
+      $output .= '<li>'. t('a <a href="@recent-hits">recent hits</a> log that displays information about the latest activity on your site, including the URL and title of the page accessed, the user name (if available) and IP address of the accessing party.', array('@recent-hits' => url('admin/reports/hits'))) .'</li>';
+      $output .= '<li>'. t('a <a href="@top-referrers">top referrers</a> log that displays the referring parties for your site visits (where your visitors came from).', array('@top-referrers' => url('admin/reports/referrers'))) .'</li>';
+      $output .= '<li>'. t('a <a href="@top-pages">top pages</a> log that displays site content in descending order by number of views.', array('@top-pages' => url('admin/reports/pages'))) .'</li>';
+      $output .= '<li>'. t('a <a href="@top-visitors">top visitors</a> log that displays the most active users on your site.', array('@top-visitors' => url('admin/reports/visitors'))) .'</li>';
+      $output .= '<li>'. t('a <em>Popular content</em> block that displays the day\'s most viewed content, the all-time most viewed content, and the last content viewed. (Enable the <em>Popular content</em> block on the <a href="@blocks">blocks configuration page</a>.)', array('@blocks' => url('admin/build/block'))) .'</li></ul>';
+      $output .= '<p>'. t('Configuring the statistics module') .'</p>';
+      $output .= '<ul><li>'. t('When the <em>Enable access log</em> setting on the <a href="@accesslog">access log settings page</a> is enabled, data about every page accessed (including the remote host\'s IP address, referrer, node accessed, and user name) is stored in the access log. The access log must be enabled for the <a href="@recent-hits">recent hits</a>, <a href="@top-referrers">top referrers</a>, <a href="@top-pages">top pages</a>, and <a href="@top-visitors">top visitors</a> log pages to function. Enabling the access log adds one additional database call per page displayed by Drupal.', array('@accesslog' => url('admin/reports/settings'), '@recent-hits' => url('admin/reports/hits'), '@top-referrers' => url('admin/reports/referrers'), '@top-pages' => url('admin/reports/pages'), '@top-visitors' => url('admin/reports/visitors'))) .'</li>';
+      $output .= '<li>'. t('The <em>Discard access logs older than</em> setting on the <a href="@accesslog">access log settings page</a> specifies the length of time entries are retained in the access log before they are deleted. Automatic access log entry deletion requires a correctly configured <a href="@cron">cron maintenance task</a>.', array('@accesslog' => url('admin/reports/settings'), '@cron' => url('admin/reports/status'))) .'</li>';
+      $output .= '<li>'. t('The <em>Count content views</em> setting on the <a href="@accesslog">access log settings page</a> enables a counter for each post on your site that increments each time the post is viewed. This option must be enabled to provide post-specific access counts. Enabling this option adds one additional database call per each post displayed by Drupal.', array('@accesslog' => url('admin/reports/settings'))) .'</li></ul>';
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@statistics">statistics page</a>.', array('@statistics' => 'http://drupal.org/handbook/modules/statistics/')) .'</p>';
       return $output;
     case 'admin/reports/settings':
       return '<p>'. t('Settings for the statistical information that Drupal will keep about the site. See <a href="@statistics">site statistics</a> for the actual information.', array('@statistics' => url('admin/reports/hits'))) .'</p>';
     case 'admin/reports/hits':
-      return '<p>'. t('This page shows you the most recent hits.') .'</p>';
+      return '<p>'. t("This page displays the site's most recent hits.") .'</p>';
     case 'admin/reports/referrers':
-      return '<p>'. t('This page shows you all external referrers. These are links pointing to your website from outside your website.') .'</p>';
+      return '<p>'. t('This page displays all external referrers, or external references to your website.') .'</p>';
     case 'admin/reports/visitors':
-      return '<p>'. t("When you ban a visitor, you prevent the visitor's IP address from accessing your site. Unlike blocking a user, banning a visitor works even for anonymous users. The most common use for this is to block bots/web crawlers that are consuming too many resources.") .'</p>';
+      return '<p>'. t("When you ban a visitor, you prevent the visitor's IP address from accessing your site. Unlike blocking a user, banning a visitor works even for anonymous users. This is most commonly used to block resource-intensive bots or web crawlers.") .'</p>';
   }
 }
 
