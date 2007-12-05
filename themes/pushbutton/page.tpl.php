@@ -18,13 +18,13 @@
   <tr>
     <td id="home" width="10%">
       <?php if ($logo) : ?>
-        <a href="<?php print $base_path ?>" title="<?php print t('Home') ?>"><img src="<?php print($logo) ?>" alt="<?php print t('Home') ?>" border="0" /></a>
+        <a href="<?php print $front_page ?>" title="<?php print t('Home') ?>"><img src="<?php print($logo) ?>" alt="<?php print t('Home') ?>" border="0" /></a>
       <?php endif; ?>
     </td>
 
     <td id="site-info" width="20%">
       <?php if ($site_name) : ?>
-        <div class='site-name'><a href="<?php print $base_path ?>" title="<?php print t('Home') ?>"><?php print($site_name) ?></a></div>
+        <div class='site-name'><a href="<?php print $front_page ?>" title="<?php print t('Home') ?>"><?php print($site_name) ?></a></div>
       <?php endif;?>
       <?php if ($site_slogan) : ?>
         <div class='site-slogan'><?php print($site_slogan) ?></div>

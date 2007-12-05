@@ -38,7 +38,7 @@
           $site_html = implode(' ', $site_fields);
 
           if ($logo || $site_title) {
-            print '<h1><a href="'. check_url($base_path) .'" title="'. $site_title .'">';
+            print '<h1><a href="'. check_url($front_page) .'" title="'. $site_title .'">';
             if ($logo) {
               print '<img src="'. check_url($logo) .'" alt="'. $site_title .'" id="logo" />';
             }
