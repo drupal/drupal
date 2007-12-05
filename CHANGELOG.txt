@@ -1,7 +1,9 @@
 // $Id$
 
-Drupal 5.4, xxxx-xx-xx
+Drupal 5.4, 2007-12-05
 ----------------------
+- fixed a variety of small bugs.
+- fixed a security issue (SQL injection), see SA-2007-031
 
 Drupal 5.3, 2007-10-17
 ----------------------
@@ -100,6 +102,10 @@ Drupal 5.0, 2007-01-15
     * split up and removed drupal.css.
     * added nested lists generation.
     * added a self-clearing block class.
+
+Drupal 4.7.9, 2007-12-05
+------------------------
+- fixed a security issue (SQL injection), see SA-2007-031
 
 Drupal 4.7.8, 2007-10-17
 ------------------------
