@@ -1,5 +1,5 @@
 <?php
-// $Id: search.pages.inc,v 1.2 2007/10/31 18:06:38 dries Exp $
+// $Id: search.pages.inc,v 1.3 2007/12/05 19:12:58 goba Exp $
 
 /**
  * @file
@@ -84,7 +84,7 @@ function template_preprocess_search_result(&$variables) {
 
   $info = array();
   if (!empty($result['type'])) {
-    $info['type'] = $result['type'];
+    $info['type'] = check_plain($result['type']);
   }
   if (!empty($result['user'])) {
     $info['user'] = $result['user'];

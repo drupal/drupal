@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.914 2007/12/03 07:45:15 goba Exp $
+// $Id: node.module,v 1.915 2007/12/05 19:12:58 goba Exp $
 
 /**
  * @file
@@ -1373,10 +1373,9 @@ function node_menu() {
     'type' => MENU_CALLBACK,
   );
   foreach (node_get_types('types', NULL, TRUE) as $type) {
-    $name = check_plain($type->name);
     $type_url_str = str_replace('_', '-', $type->type);
     $items['node/add/'. $type_url_str] = array(
-      'title' => drupal_ucfirst($name),
+      'title' => drupal_ucfirst($type->name),
       'page callback' => 'node_add',
       'page arguments' => array(2),
       'access callback' => 'node_access',

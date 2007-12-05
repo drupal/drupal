@@ -1,5 +1,5 @@
 <?php
-// $Id: session.inc,v 1.42 2007/08/12 15:55:35 dries Exp $
+// $Id: session.inc,v 1.43 2007/12/05 19:12:58 goba Exp $
 
 /**
  * @file
@@ -56,8 +56,9 @@ function sess_read($key) {
 function sess_write($key, $value) {
   global $user;
 
-  // If the client doesn't have a session, and one isn't being created ($value), do nothing.
-  if (empty($_COOKIE[session_name()]) && empty($value)) {
+  // If saving of session data is disabled or if the client doesn't have a session,
+  // and one isn't being created ($value), do nothing.
+  if (!session_save_session() || (empty($_COOKIE[session_name()]) && empty($value))) {
     return TRUE;
   }
 
@@ -152,4 +153,24 @@ function sess_gc($lifetime) {
   db_query("DELETE FROM {sessions} WHERE timestamp < %d", time() - $lifetime);
 
   return TRUE;
+}
+
+/**
+ * Determine whether to save session data of the current request.
+ *
+ * This function allows the caller to temporarily disable writing of session data,
+ * should the request end while performing potentially dangerous operations, such as
+ * manipulating the global $user object.
+ *
+ * @param $status
+ *   Disables writing of session data when FALSE, (re-)enables writing when TRUE.
+ * @return
+ *   FALSE if writing session data has been disabled. Otherwise, TRUE.
+ */
+function session_save_session($status = NULL) {
+  static $save_session = TRUE;
+  if (isset($status)) {
+    $save_session = $status;
+  }
+  return ($save_session);
 }
