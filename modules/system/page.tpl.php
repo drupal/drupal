@@ -1,5 +1,5 @@
 <?php
-// $Id: page.tpl.php,v 1.8 2007/10/07 09:23:28 dries Exp $
+// $Id: page.tpl.php,v 1.9 2007/12/05 16:34:05 goba Exp $
 
 /**
  * @file page.tpl.php
@@ -32,6 +32,8 @@
  *   path, whether the user is logged in, and so on.
  *
  * Site identity:
+ * - $front_page: The URL of the front page. Use this instead of $base_path, 
+ *   when linking to the front page. This includes the language domain or prefix.
  * - $logo: The path to the logo image, as defined in theme configuration.
  * - $site_name: The name of the site, empty when display has been disabled
  *   in theme settings.
@@ -89,7 +91,7 @@
       <div id="logo-title">
 
         <?php if (!empty($logo)): ?>
-          <a href="<?php print $base_path; ?>" title="<?php print t('Home'); ?>" rel="home" id="logo">
+          <a href="<?php print $front_page; ?>" title="<?php print t('Home'); ?>" rel="home" id="logo">
             <img src="<?php print $logo; ?>" alt="<?php print t('Home'); ?>" />
           </a>
         <?php endif; ?>
@@ -97,7 +99,7 @@
         <div id="name-and-slogan">
           <?php if (!empty($site_name)): ?>
             <h1 id="site-name">
-              <a href="<?php print $base_path ?>" title="<?php print t('Home'); ?>" rel="home"><span><?php print $site_name; ?></span></a>
+              <a href="<?php print $front_page ?>" title="<?php print t('Home'); ?>" rel="home"><span><?php print $site_name; ?></span></a>
             </h1>
           <?php endif; ?>
 

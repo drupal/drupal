@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.11 2007/11/28 10:29:20 dries Exp $
+// $Id: node.admin.inc,v 1.12 2007/12/05 16:34:05 goba Exp $
 
 /**
  * @file
@@ -380,16 +380,18 @@ function node_admin_nodes() {
     '#submit' => array('node_admin_nodes_submit'),
   );
 
+  $languages = language_list(); 
   $destination = drupal_get_destination();
   $nodes = array();
   while ($node = db_fetch_object($result)) {
     $nodes[$node->nid] = '';
-    $form['title'][$node->nid] = array('#value' => l($node->title, 'node/'. $node->nid) .' '. theme('mark', node_mark($node->nid, $node->changed)));
+    $options = empty($node->language) ? array() : array('language' => $languages[$node->language]);
+    $form['title'][$node->nid] = array('#value' => l($node->title, 'node/'. $node->nid, $options) .' '. theme('mark', node_mark($node->nid, $node->changed)));
     $form['name'][$node->nid] =  array('#value' => check_plain(node_get_types('name', $node)));
     $form['username'][$node->nid] = array('#value' => theme('username', $node));
     $form['status'][$node->nid] =  array('#value' =>  ($node->status ? t('published') : t('not published')));
     if ($multilanguage) {
-      $form['language'][$node->nid] = array('#value' => empty($node->language) ? t('Language neutral') : module_invoke('locale', 'language_name', $node->language));
+      $form['language'][$node->nid] = array('#value' => empty($node->language) ? t('Language neutral') : t($languages[$node->language]->name));
     }
     $form['operations'][$node->nid] = array('#value' => l(t('edit'), 'node/'. $node->nid .'/edit', array('query' => $destination)));
   }

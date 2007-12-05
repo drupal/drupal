@@ -1,5 +1,5 @@
 <?php
-// $Id: page.tpl.php,v 1.15 2007/11/04 15:01:39 goba Exp $
+// $Id: page.tpl.php,v 1.16 2007/12/05 16:34:06 goba Exp $
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php print $language->language ?>" lang="<?php print $language->language ?>">
@@ -38,7 +38,7 @@
           $site_html = implode(' ', $site_fields);
 
           if ($logo || $site_title) {
-            print '<h1><a href="'. check_url($base_path) .'" title="'. $site_title .'">';
+            print '<h1><a href="'. check_url($front_page) .'" title="'. $site_title .'">';
             if ($logo) {
               print '<img src="'. check_url($logo) .'" alt="'. $site_title .'" id="logo" />';
             }

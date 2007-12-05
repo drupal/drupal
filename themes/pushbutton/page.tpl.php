@@ -1,5 +1,5 @@
 <?php
-// $Id: page.tpl.php,v 1.21 2007/09/05 08:42:02 dries Exp $
+// $Id: page.tpl.php,v 1.22 2007/12/05 16:34:07 goba Exp $
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="<?php print $language->language ?>" xml:lang="<?php print $language->language ?>">
 <head>
@@ -18,13 +18,13 @@
   <tr>
     <td id="home" width="10%">
       <?php if ($logo) : ?>
-        <a href="<?php print $base_path ?>" title="<?php print t('Home') ?>"><img src="<?php print($logo) ?>" alt="<?php print t('Home') ?>" border="0" /></a>
+        <a href="<?php print $front_page ?>" title="<?php print t('Home') ?>"><img src="<?php print($logo) ?>" alt="<?php print t('Home') ?>" border="0" /></a>
       <?php endif; ?>
     </td>
 
     <td id="site-info" width="20%">
       <?php if ($site_name) : ?>
-        <div class='site-name'><a href="<?php print $base_path ?>" title="<?php print t('Home') ?>"><?php print($site_name) ?></a></div>
+        <div class='site-name'><a href="<?php print $front_page ?>" title="<?php print t('Home') ?>"><?php print($site_name) ?></a></div>
       <?php endif;?>
       <?php if ($site_slogan) : ?>
         <div class='site-slogan'><?php print($site_slogan) ?></div>

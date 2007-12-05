@@ -1,5 +1,5 @@
 <?php
-// $Id: chameleon.theme,v 1.71 2007/10/25 10:37:25 goba Exp $
+// $Id: chameleon.theme,v 1.72 2007/12/05 16:34:06 goba Exp $
 
 /**
  * @file
@@ -38,7 +38,7 @@ function chameleon_page($content, $show_blocks = TRUE, $show_messages = TRUE) {
   $output .= " <div id=\"header\">";
 
   if ($logo = theme_get_setting('logo')) {
-    $output .= "  <a href=\"". base_path() ."\" title=\"". t('Home') ."\"><img src=\"$logo\" alt=\"". t('Home') ."\" /></a>";
+    $output .= "  <a href=\"". url() ."\" title=\"". t('Home') ."\"><img src=\"$logo\" alt=\"". t('Home') ."\" /></a>";
   }
   if (theme_get_setting('toggle_name')) {
     $output .= "  <h1 class=\"site-name title\">". l(variable_get('site_name', 'drupal'), "") ."</h1>";

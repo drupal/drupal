@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.728 2007/11/30 15:31:13 goba Exp $
+// $Id: common.inc,v 1.729 2007/12/05 16:34:05 goba Exp $
 
 /**
  * @file
@@ -1220,6 +1220,15 @@ function format_date($timestamp, $type = 'medium', $format = '', $timezone = NUL
  *       Whether the given path is an alias already.
  *     'external'
  *       Whether the given path is an external URL.
+ *     'language'
+ *       An optional language object. Used to build the URL to link to and
+ *       look up the proper alias for the link.
+ *     'base_url'
+ *       Only used internally, to modify the base URL when a language dependent
+ *       URL requires so.
+ *     'prefix'
+ *       Only used internally, to modify the path when a language dependent URL
+ *       requires so.
  * @return
  *   A string containing a URL to the given path.
  *
@@ -1233,6 +1242,7 @@ function url($path = NULL, $options = array()) {
     'query' => '',
     'absolute' => FALSE,
     'alias' => FALSE,
+    'prefix' => ''
   );
   if (!isset($options['external'])) {
     // Return an external link if $path contains an allowed absolute URL.
@@ -1297,33 +1307,39 @@ function url($path = NULL, $options = array()) {
   // The special path '<front>' links to the default front page.
   if (!empty($path) && $path != '<front>') {
     if (!$options['alias']) {
-      $path = drupal_get_path_alias($path, isset($options['langcode']) ? $options['langcode'] : '');
+      $path = drupal_get_path_alias($path, isset($options['language']) ? $options['language']->language : '');
     }
     if (function_exists('custom_url_rewrite_outbound')) {
       // Modules may alter outbound links by reference.
       custom_url_rewrite_outbound($path, $options, $original_path);
     }
-    $path = drupal_urlencode($path);
-    if (!$clean_url) {
-      if ($options['query']) {
-        return $base . $script .'?q='. $path .'&'. $options['query'] . $options['fragment'];
-      }
-      else {
-        return $base . $script .'?q='. $path . $options['fragment'];
-      }
+    $path = drupal_urlencode($options['prefix'] . $path);
+  }
+  else {
+    // Will be empty if there is no language prefix.
+    $path = trim($options['prefix'], '/');
+  }
+  
+  if ($clean_url) {
+    // With Clean URLs.
+    if ($options['query']) {
+      return $base . $path .'?'. $options['query'] . $options['fragment'];
     }
     else {
-      if ($options['query']) {
-        return $base . $path .'?'. $options['query'] . $options['fragment'];
-      }
-      else {
-        return $base . $path . $options['fragment'];
-      }
+      return $base . $path . $options['fragment'];
     }
   }
   else {
-    if ($options['query']) {
-      return $base . $script .'?'. $options['query'] . $options['fragment'];
+    // Without Clean URLs.
+    $variables = array();
+    if (!empty($path)) {
+      $variables[] = 'q='. $path;
+    }
+    if (!empty($options['query'])) {
+      $variables[] = $options['query'];
+    }   
+    if ($query = join('&', $variables)) {
+      return $base . $script .'?'. $query . $options['fragment'];
     }
     else {
       return $base . $options['fragment'];

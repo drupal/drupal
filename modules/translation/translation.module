@@ -1,5 +1,5 @@
 <?php
-// $Id: translation.module,v 1.17 2007/11/11 11:24:27 goba Exp $
+// $Id: translation.module,v 1.18 2007/12/05 16:34:05 goba Exp $
 
 /**
  * @file
@@ -164,11 +164,12 @@ function translation_link($type, $node = NULL, $teaser = FALSE) {
   if ($type == 'node' && ($node->tnid) && $translations = translation_node_get_translations($node->tnid)) {
     // Do not show link to the same node.
     unset($translations[$node->language]);
-    $languages = locale_language_list('native');
+    $languages = language_list();
     foreach ($translations as $language => $translation) {
       $links["node_translation_$language"] = array(
-        'title' => $languages[$language],
+        'title' => $languages[$language]->native,
         'href' => "node/$translation->nid",
+        'language' => $languages[$language],
         'attributes' => array('title' => $translation->title, 'class' => 'translation-link')
       );
     }

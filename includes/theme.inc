@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.400 2007/11/30 23:09:14 goba Exp $
+// $Id: theme.inc,v 1.401 2007/12/05 16:34:05 goba Exp $
 
 /**
  * @file
@@ -1701,6 +1701,7 @@ function template_preprocess_page(&$variables) {
   }
   $variables['head_title']        = implode(' | ', $head_title);
   $variables['base_path']         = base_path();
+  $variables['front_page']        = url();
   $variables['breadcrumb']        = theme('breadcrumb', drupal_get_breadcrumb());
   $variables['feed_icons']        = drupal_get_feeds();
   $variables['footer_message']    = filter_xss_admin(variable_get('site_footer', FALSE));

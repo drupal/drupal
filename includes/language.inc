@@ -1,5 +1,5 @@
 <?php
-// $Id: language.inc,v 1.10 2007/11/29 14:42:31 goba Exp $
+// $Id: language.inc,v 1.11 2007/12/05 16:34:05 goba Exp $
 
 /**
  * @file
@@ -103,37 +103,36 @@ function language_url_rewrite(&$path, &$options) {
   if (!$options['external']) {
 
     // Language can be passed as an option, or we go for current language.
-    $path_language = isset($options['language']) ? $options['language'] : $language;
+    if (!isset($options['language'])) {
+      $options['language'] = $language;
+    }
+    
     switch (variable_get('language_negotiation', LANGUAGE_NEGOTIATION_NONE)) {
-
       case LANGUAGE_NEGOTIATION_NONE:
+        // No language dependent path allowed in this mode.
+        unset($options['language']);
         break;
 
       case LANGUAGE_NEGOTIATION_DOMAIN:
-        if ($path_language->domain) {
+        if ($options['language']->domain) {
           // Ask for an absolute URL with our modified base_url.
           $options['absolute'] = TRUE;
-          $options['base_url'] = $path_language->domain;
-          // Ensure that path alias generation will use this language.
-          $options['langcode'] = $path_language->language;
+          $options['base_url'] = $options['language']->domain;
         }
         break;
 
       case LANGUAGE_NEGOTIATION_PATH_DEFAULT:
         $default = language_default();
-        if ($path_language->language == $default->language) {
+        if ($options['language']->language == $default->language) {
           break;
         }
         // Intentionally no break here.
 
       case LANGUAGE_NEGOTIATION_PATH:
-        if (isset($path_language->prefix) && $path_language->prefix) {
-          // Ensure that path alias generation will use this language.
-          $options['langcode'] = $path_language->language;
-          $path = (empty($path) || ($path == '<front>')) ? $path_language->prefix : $path_language->prefix .'/'. $path;
+        if (!empty($options['language']->prefix)) {
+          $options['prefix'] = $options['language']->prefix .'/';
         }
         break;
-
     }
   }
 }
