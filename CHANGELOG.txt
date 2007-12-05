@@ -1,5 +1,9 @@
 // $Id$
 
+Drupal 4.7.9, 2007-12-05
+------------------------
+- fixed a security issue (SQL injection), see SA-2007-031
+
 Drupal 4.7.8, 2007-10-17
 ----------------------
 - fixed a security issue (HTTP response splitting), see SA-2007-024
