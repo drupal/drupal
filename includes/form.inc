@@ -1353,7 +1353,7 @@ function form_select_options($element, $choices = NULL) {
       else {
         $selected = '';
       }
-      $options .= '<option value="'. $key .'"'. $selected .'>'. check_plain($choice) .'</option>';
+      $options .= '<option value="'. check_plain($key) .'"'. $selected .'>'. check_plain($choice) .'</option>';
     }
   }
   return $options;
@@ -1449,7 +1449,7 @@ function theme_radio($element) {
   $output = '<input type="radio" ';
   $output .= 'name="'. $element['#name'] .'" ';
   $output .= 'value="'. $element['#return_value'] .'" ';
-  $output .= ($element['#value'] == $element['#return_value']) ? ' checked="checked" ' : ' ';
+  $output .= (check_plain($element['#value']) == $element['#return_value']) ? ' checked="checked" ' : ' ';
   $output .= drupal_attributes($element['#attributes']) .' />';
   if (!is_null($element['#title'])) {
     $output = '<label class="option">'. $output .' '. $element['#title'] .'</label>';
@@ -1652,7 +1652,7 @@ function expand_radios($element) {
         $element[$key] = array(
           '#type' => 'radio',
           '#title' => $choice,
-          '#return_value' => $key,
+          '#return_value' => check_plain($key),
           '#default_value' => isset($element['#default_value']) ? $element['#default_value'] : NULL,
           '#attributes' => $element['#attributes'],
           '#parents' => $element['#parents'],
@@ -2052,10 +2052,10 @@ function theme_form_element($element, $value) {
   if (!empty($element['#title'])) {
     $title = $element['#title'];
     if (!empty($element['#id'])) {
-      $output .= ' <label for="'. $element['#id'] .'">'. $t('!title: !required', array('!title' => $title, '!required' => $required)) ."</label>\n";
+      $output .= ' <label for="'. $element['#id'] .'">'. $t('!title: !required', array('!title' => filter_xss_admin($title), '!required' => $required)) ."</label>\n";
     }
     else {
-      $output .= ' <label>'. $t('!title: !required', array('!title' => $title, '!required' => $required)) ."</label>\n";
+      $output .= ' <label>'. $t('!title: !required', array('!title' => filter_xss_admin($title), '!required' => $required)) ."</label>\n";
     }
   }
 
