@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.241 2007/11/13 14:04:08 dries Exp $
+// $Id: search.module,v 1.242 2007/12/05 12:38:03 goba Exp $
 
 /**
  * @file
@@ -710,7 +710,7 @@ function search_parse_query($text) {
 
   // Classify tokens
   $or = FALSE;
-  $or_warning = FALSE;
+  $warning = '';
   $simple = TRUE;
   foreach ($matches as $match) {
     $phrase = FALSE;
@@ -740,10 +740,16 @@ function search_parse_query($text) {
       $or = TRUE;
       continue;
     }
+    // AND operator: implied, so just ignore it
+    elseif ($match[2] == 'AND' || $match[2] == 'and') {
+      $warning = $match[2];
+      continue;
+    }
+
     // Plain keyword
     else {
       if ($match[2] == 'or') {
-        $or_warning = TRUE;
+        $warning = $match[2];
       }
       if ($or) {
         // Add to last element (which is an array)
@@ -814,7 +820,7 @@ function search_parse_query($text) {
   // Build word-index conditions for the first pass
   $query2 = substr(str_repeat("i.word = '%s' OR ", count($arguments2)), 0, -4);
 
-  return array($query, $arguments, $query2, $arguments2, $matches, $simple, $or_warning);
+  return array($query, $arguments, $query2, $arguments2, $matches, $simple, $warning);
 }
 
 /**
@@ -901,7 +907,9 @@ function do_search($keywords, $type, $join1 = '', $where1 = '1', $arguments1 = a
     form_set_error('keys', t('You must include at least one positive keyword with @count characters or more.', array('@count' => variable_get('minimum_word_size', 3))));
   }
   if ($query[6]) {
-    form_set_error('keys', t('Try uppercase "OR" to search for either of two terms.'));
+    if ($query[6] == 'or') {
+      drupal_set_message(t('Search for either of the two terms with uppercase <strong>OR</strong>. For example, <strong>cats OR dogs</strong>.'));
+    }
   }
   if ($query === NULL || $query[0] == '' || $query[2] == '') {
     return array();
