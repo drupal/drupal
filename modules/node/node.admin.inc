@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.12 2007/12/05 16:34:05 goba Exp $
+// $Id: node.admin.inc,v 1.13 2007/12/06 09:58:32 goba Exp $
 
 /**
  * @file
@@ -236,6 +236,8 @@ function node_filter_form() {
 
 /**
  * Theme node administration filter form.
+ *
+ * @ingroup themeable
  */
 function theme_node_filter_form($form) {
   $output = '';
@@ -248,6 +250,8 @@ function theme_node_filter_form($form) {
 
 /**
  * Theme node administration filter selector.
+ *
+ * @ingroup themeable
  */
 function theme_node_filters($form) {
   $output = '';
@@ -403,6 +407,8 @@ function node_admin_nodes() {
 
 /**
  * Theme node administration overview.
+ *
+ * @ingroup themeable
  */
 function theme_node_admin_nodes($form) {
   // If there are rows in this form, then $form['title'] contains a list of

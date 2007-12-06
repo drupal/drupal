@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.190 2007/10/22 10:32:03 goba Exp $
+// $Id: filter.module,v 1.191 2007/12/06 09:58:31 goba Exp $
 
 /**
  * @file
@@ -576,7 +576,6 @@ function _filter_tips($format, $long = FALSE) {
  *
  * @ingroup themeable
  */
-
 function theme_filter_tips_more_info() {
   return '<p>'. l(t('More information about formatting options'), 'filter/tips') .'</p>';
 }

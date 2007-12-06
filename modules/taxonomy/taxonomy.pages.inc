@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.pages.inc,v 1.5 2007/11/11 06:56:44 dries Exp $
+// $Id: taxonomy.pages.inc,v 1.6 2007/12/06 09:58:34 goba Exp $
 
 /**
  * @file
@@ -82,6 +82,8 @@ function taxonomy_term_page($str_tids = '', $depth = 0, $op = 'page') {
  *   An array of term ids.
  * @param $result
  *   A pager_query() result, such as that performed by taxonomy_select_nodes().
+ *
+ * @ingroup themeable
  */
 function theme_taxonomy_term_page($tids, $result) {
   $output = '';

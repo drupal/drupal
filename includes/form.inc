@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.250 2007/12/05 18:13:03 goba Exp $
+// $Id: form.inc,v 1.251 2007/12/06 09:58:30 goba Exp $
 
 /**
  * @defgroup form Form generation
@@ -1315,6 +1315,8 @@ function form_options_flatten($array, $reset = TRUE) {
  * @return
  *   A themed HTML string representing the form element.
  *
+ * @ingroup themeable
+ *
  * It is possible to group options together; to do this, change the format of
  * $options to an associative array in which the keys are group labels, and the
  * values are associative arrays in the normal $options format.
@@ -1417,6 +1419,8 @@ function form_get_options($element, $key) {
  *   Properties used: attributes, title, value, description, children, collapsible, collapsed
  * @return
  *   A themed HTML string representing the form item group.
+ *
+ * @ingroup themeable
  */
 function theme_fieldset($element) {
   if ($element['#collapsible']) {
@@ -1443,6 +1447,8 @@ function theme_fieldset($element) {
  *   Properties used: required, return_value, value, attributes, title, description
  * @return
  *   A themed HTML string representing the form item group.
+ *
+ * @ingroup themeable
  */
 function theme_radio($element) {
   _form_set_class($element, array('form-radio'));
@@ -1467,6 +1473,8 @@ function theme_radio($element) {
  *   Properties used: title, value, options, description, required and attributes.
  * @return
  *   A themed HTML string representing the radio button set.
+ *
+ * @ingroup themeable
  */
 function theme_radios($element) {
   $class = 'form-radios';
@@ -1491,6 +1499,8 @@ function theme_radios($element) {
  *   Properties used: title, value, id, required, error.
  * @return
  *   A themed HTML string representing the form item.
+ *
+ * @ingroup themeable
  */
 function theme_password_confirm($element) {
   return theme('form_element', $element, $element['#children']);
@@ -1557,6 +1567,8 @@ function password_confirm_validate($form, &$form_state) {
  *   Properties used: title, value, options, description, required and attributes.
  * @return
  *   A themed HTML string representing the date selection boxes.
+ *
+ * @ingroup themeable
  */
 function theme_date($element) {
   return theme('form_element', $element, '<div class="container-inline">'. $element['#children'] .'</div>');
@@ -1748,6 +1760,8 @@ function form_expand_ahah($element) {
  *   Properties used:  title, value, description, required, error
  * @return
  *   A themed HTML string representing the form item.
+ *
+ * @ingroup themeable
  */
 function theme_item($element) {
   return theme('form_element', $element, $element['#value'] . (!empty($element['#children']) ? $element['#children'] : ''));
@@ -1761,6 +1775,8 @@ function theme_item($element) {
  *   Properties used:  title, value, return_value, description, required
  * @return
  *   A themed HTML string representing the checkbox.
+ *
+ * @ingroup themeable
  */
 function theme_checkbox($element) {
   _form_set_class($element, array('form-checkbox'));
@@ -1787,6 +1803,8 @@ function theme_checkbox($element) {
  *   An associative array containing the properties of the element.
  * @return
  *   A themed HTML string representing the checkbox set.
+ *
+ * @ingroup themeable
  */
 function theme_checkboxes($element) {
   $class = 'form-checkboxes';
@@ -1819,10 +1837,20 @@ function expand_checkboxes($element) {
   return $element;
 }
 
+/**
+ * Theme a form submit button.
+ *
+ * @ingroup themeable
+ */
 function theme_submit($element) {
   return theme('button', $element);
 }
 
+/**
+ * Theme a form button.
+ *
+ * @ingroup themeable
+ */
 function theme_button($element) {
   // Make sure not to overwrite classes.
   if (isset($element['#attributes']['class'])) {
@@ -1836,7 +1864,9 @@ function theme_button($element) {
 }
 
 /**
- * Theme an image button.
+ * Theme a form image button.
+ *
+ * @ingroup themeable
  */
 function theme_image_button($element) {
   // Make sure not to overwrite classes.
@@ -1864,11 +1894,18 @@ function theme_image_button($element) {
  *   Properties used:  value, edit
  * @return
  *   A themed HTML string representing the hidden form field.
+ *
+ * @ingroup themeable
  */
 function theme_hidden($element) {
   return '<input type="hidden" name="'. $element['#name'] .'" id="'. $element['#id'] .'" value="'. check_plain($element['#value']) ."\" ". drupal_attributes($element['#attributes']) ." />\n";
 }
 
+/**
+ * Format a form token.
+ *
+ * @ingroup themeable
+ */
 function theme_token($element) {
   return theme('hidden', $element);
 }
@@ -1881,6 +1918,8 @@ function theme_token($element) {
  *   Properties used:  title, value, description, size, maxlength, required, attributes autocomplete_path
  * @return
  *   A themed HTML string representing the textfield.
+ *
+ * @ingroup themeable
  */
 function theme_textfield($element) {
   $size = empty($element['#size']) ? '' : ' size="'. $element['#size'] .'"';
@@ -1917,6 +1956,8 @@ function theme_textfield($element) {
  *   Properties used: action, method, attributes, children
  * @return
  *   A themed HTML string representing the form.
+ *
+ * @ingroup themeable
  */
 function theme_form($element) {
   // Anonymous div to satisfy XHTML compliance.
@@ -1932,6 +1973,8 @@ function theme_form($element) {
  *   Properties used: title, value, description, rows, cols, required, attributes
  * @return
  *   A themed HTML string representing the textarea.
+ *
+ * @ingroup themeable
  */
 function theme_textarea($element) {
   $class = array('form-textarea');
@@ -1965,6 +2008,8 @@ function theme_textarea($element) {
  *   Properties used: value, children.
  * @return
  *   A themed HTML string representing the HTML markup.
+ *
+ * @ingroup themeable
  */
 
 function theme_markup($element) {
@@ -1979,6 +2024,8 @@ function theme_markup($element) {
  *   Properties used:  title, value, description, size, maxlength, required, attributes
  * @return
  *   A themed HTML string representing the form.
+ *
+ * @ingroup themeable
  */
 function theme_password($element) {
   $size = $element['#size'] ? ' size="'. $element['#size'] .'" ' : '';
@@ -2019,6 +2066,8 @@ function process_weight($element) {
  * @return
  *   A themed HTML string representing the field.
  *
+ * @ingroup themeable
+ *
  * For assistance with handling the uploaded file correctly, see the API
  * provided by file.inc.
  */
@@ -2037,6 +2086,8 @@ function theme_file($element) {
  *   The form element's data.
  * @return
  *   A string representing the form element.
+ *
+ * @ingroup themeable
  */
 function theme_form_element($element, $value) {
   // This is also used in the installer, pre-database setup.

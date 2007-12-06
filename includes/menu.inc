@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.228 2007/11/26 16:19:37 dries Exp $
+// $Id: menu.inc,v 1.229 2007/12/06 09:58:30 goba Exp $
 
 /**
  * @file
@@ -979,6 +979,8 @@ function _menu_tree_data($result, $parents, $depth, $previous_element = '') {
 
 /**
  * Generate the HTML output for a single menu link.
+ *
+ * @ingroup themeable
  */
 function theme_menu_item_link($link) {
   if (empty($link['options'])) {
@@ -990,6 +992,8 @@ function theme_menu_item_link($link) {
 
 /**
  * Generate the HTML output for a menu tree
+ *
+ * @ingroup themeable
  */
 function theme_menu_tree($tree) {
   return '<ul class="menu">'. $tree .'</ul>';
@@ -997,6 +1001,8 @@ function theme_menu_tree($tree) {
 
 /**
  * Generate the HTML output for a menu item and submenu.
+ *
+ * @ingroup themeable
  */
 function theme_menu_item($link, $has_children, $menu = '', $in_active_trail = FALSE, $extra_class = NULL) {
   $class = ($menu ? 'expanded' : ($has_children ? 'collapsed' : 'leaf'));
@@ -1011,6 +1017,8 @@ function theme_menu_item($link, $has_children, $menu = '', $in_active_trail = FA
 
 /**
  * Generate the HTML output for a single local task link.
+ *
+ * @ingroup themeable
  */
 function theme_menu_local_task($link, $active = FALSE) {
   return '<li '. ($active ? 'class="active" ' : '') .'>'. $link .'</li>';

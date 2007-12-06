@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.module,v 1.17 2007/11/27 16:24:34 goba Exp $
+// $Id: dblog.module,v 1.18 2007/12/06 09:58:31 goba Exp $
 
 /**
  * @file
@@ -145,6 +145,8 @@ function dblog_watchdog($log = array()) {
 
 /**
  * Theme dblog administration filter selector.
+ *
+ * @ingroup themeable
  */
 function theme_dblog_filters($form) {
   $output = '';

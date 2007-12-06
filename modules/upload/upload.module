@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.191 2007/11/29 23:13:13 goba Exp $
+// $Id: upload.module,v 1.192 2007/12/06 09:58:34 goba Exp $
 
 /**
  * @file
@@ -340,6 +340,8 @@ function upload_nodeapi(&$node, $op, $teaser) {
 
 /**
  * Displays file attachments in table
+ *
+ * @ingroup themeable
  */
 function theme_upload_attachments($files) {
   $header = array(t('Attachment'), t('Size'));
@@ -517,6 +519,8 @@ function _upload_form($node) {
 
 /**
  * Theme the attachments list.
+ *
+ * @ingroup themeable
  */
 function theme_upload_form_current(&$form) {
   $header = array('', t('Delete'), t('List'), t('Description'), t('Weight'), t('Size'));
@@ -542,6 +546,8 @@ function theme_upload_form_current(&$form) {
 /**
  * Theme the attachment form.
  * Note: required to output prefix/suffix.
+ *
+ * @ingroup themeable
  */
 function theme_upload_form_new($form) {
   $output = drupal_render($form);

@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.915 2007/12/05 19:12:58 goba Exp $
+// $Id: node.module,v 1.916 2007/12/06 09:58:32 goba Exp $
 
 /**
  * @file
@@ -148,6 +148,8 @@ function node_title_list($result, $title = NULL) {
 
 /**
  * Format a listing of links to nodes.
+ *
+ * @ingroup themeable
  */
 function theme_node_list($items, $title = NULL) {
   return theme('item_list', $items, $title);
@@ -1045,6 +1047,11 @@ function node_show($node, $cid) {
   return $output;
 }
 
+/**
+ * Theme a log message.
+ *
+ * @ingroup themeable
+ */
 function theme_node_log_message($log) {
   return '<div class="log"><div class="title">'. t('Log') .':</div>'. $log .'</div>';
 }
@@ -1234,6 +1241,11 @@ function node_user($op, &$edit, &$user) {
   }
 }
 
+/**
+ * Theme the content ranking part of the search settings admin page.
+ *
+ * @ingroup themeable
+ */
 function theme_node_search_admin($form) {
   $output = drupal_render($form['info']);
 
@@ -2315,6 +2327,8 @@ function node_forms() {
 
 /**
  * Format the "Submitted by username on date/time" for each node
+ *
+ * @ingroup themeable
  */
 function theme_node_submitted($node) {
   return t('Submitted by !username on @datetime',

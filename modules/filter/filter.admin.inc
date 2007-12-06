@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.admin.inc,v 1.4 2007/11/23 13:34:55 dries Exp $
+// $Id: filter.admin.inc,v 1.5 2007/12/06 09:58:31 goba Exp $
 
 /**
  * @file
@@ -350,6 +350,8 @@ function filter_admin_order(&$form_state, $format = NULL) {
 
 /**
  * Theme filter order configuration form.
+ *
+ * @ingroup themeable
  */
 function theme_filter_admin_order($form) {
   $header = array(t('Name'), t('Weight'));

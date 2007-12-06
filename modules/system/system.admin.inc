@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.31 2007/12/05 19:12:59 goba Exp $
+// $Id: system.admin.inc,v 1.32 2007/12/06 09:58:33 goba Exp $
 
 /**
  * @file
@@ -1711,7 +1711,8 @@ function system_batch_page() {
  * @param $block
  *   An array containing information about the block. It should
  *   include a 'title', a 'description' and a formatted 'content'.
- * @themeable
+ *
+ * @ingroup themeable
  */
 function theme_admin_block($block) {
   // Don't display the block if it has no content to display.
@@ -1741,7 +1742,8 @@ EOT;
  * @param $block
  *   An array containing information about the block. It should
  *   include a 'title', a 'description' and a formatted 'content'.
- * @themeable
+ *
+ * @ingroup themeable
  */
 function theme_admin_block_content($content) {
   if (!$content) {
@@ -1778,7 +1780,8 @@ function theme_admin_block_content($content) {
  *   'title', a 'description', a formatted 'content' and a
  *   'position' which will control which container it will be
  *   in. This is usually 'left' or 'right'.
- * @themeable
+ *
+ * @ingroup themeable
  */
 function theme_admin_page($blocks) {
   $stripe = 0;
@@ -1818,6 +1821,8 @@ function theme_admin_page($blocks) {
 
 /**
  * Theme output of the dashboard page.
+ *
+ * @ingroup themeable
  */
 function theme_system_admin_by_module($menu_items) {
   $stripe = 0;

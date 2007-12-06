@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.401 2007/12/05 21:18:29 goba Exp $
+// $Id: taxonomy.module,v 1.402 2007/12/06 09:58:34 goba Exp $
 
 /**
  * @file
@@ -1036,7 +1036,10 @@ function _taxonomy_term_select($title, $name, $value, $vocabulary_id, $descripti
 }
 
 /**
- * We use the default selection field for choosing terms.
+ * Format the selection field for choosing terms
+ * (by deafult the default selection field is used).
+ *
+ * @ingroup themeable
  */
 function theme_taxonomy_term_select($element) {
   return theme('select', $element);

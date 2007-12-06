@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.603 2007/11/29 11:54:37 goba Exp $
+// $Id: comment.module,v 1.604 2007/12/06 09:58:30 goba Exp $
 
 /**
  * @file
@@ -1448,6 +1448,11 @@ function comment_form_submit($form, &$form_state) {
   }
 }
 
+/**
+ * Return a themed comment.
+ *
+ * @ingroup themeable
+ */
 function theme_comment_view($comment, $node, $links = array(), $visible = 1) {
   static $first_new = TRUE;
 
@@ -1506,7 +1511,11 @@ function comment_controls($mode = COMMENT_MODE_THREADED_EXPANDED, $order = COMME
 
   return $form;
 }
-
+/**
+ * Theme comment controls box where the user can change the default display mode and display order of comments.
+ *
+ * @ingroup themeable
+ */
 function theme_comment_controls($form) {
   $output = '<div class="container-inline">';
   $output .=  drupal_render($form);
@@ -1575,22 +1584,47 @@ function template_preprocess_comment_folded(&$variables) {
   $variables['title']  = l($comment->subject, comment_node_url() .'/'. $comment->cid, array('fragment' => "comment-$comment->cid"));
 }
 
+/**
+ * Theme collapsed flat type comment.
+ *
+ * @ingroup themeable
+ */
 function theme_comment_flat_collapsed($comment, $node) {
   return theme('comment_view', $comment, $node, '', 0);
 }
 
+/**
+ * Theme expanded flat type comment.
+ *
+ * @ingroup themeable
+ */
 function theme_comment_flat_expanded($comment, $node) {
   return theme('comment_view', $comment, $node, module_invoke_all('link', 'comment', $comment, 0));
 }
 
+/**
+ * Theme collapsed thread type comment.
+ *
+ * @ingroup themeable
+ */
 function theme_comment_thread_collapsed($comment, $node) {
   return theme('comment_view', $comment, $node, '', 0);
 }
 
+/**
+ * Theme expanded thread type comment.
+ *
+ * @ingroup themeable
+ */
 function theme_comment_thread_expanded($comment, $node) {
   return theme('comment_view', $comment, $node, module_invoke_all('link', 'comment', $comment, 0));
 }
 
+/**
+ * Theme the "comment posting is forbidden" message.
+ *
+ * @ingroup themeable
+ */
 function theme_comment_post_forbidden($node) {
   global $user;
   if ($user->uid) {
@@ -1634,6 +1668,8 @@ function template_preprocess_comment_wrapper(&$variables) {
 
 /**
  * Make the submitted variable themable
+ *
+ * @ingroup themeable
  */
 function theme_comment_submitted($comment) {
   return t('Submitted by !username on @datetime.',

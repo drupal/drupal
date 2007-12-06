@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.admin.inc,v 1.15 2007/11/26 16:36:43 dries Exp $
+// $Id: menu.admin.inc,v 1.16 2007/12/06 09:58:31 goba Exp $
 
 /**
  * @file
@@ -163,6 +163,8 @@ function menu_overview_form_submit($form, &$form_state) {
 
 /**
  * Theme the menu overview form into a table.
+ *
+ * @ingroup themeable
  */
 function theme_menu_overview_form($form) {
   drupal_add_tabledrag('menu-overview', 'match', 'parent', 'menu-plid', 'menu-plid', 'menu-mlid', TRUE, MENU_MAX_DEPTH - 1);

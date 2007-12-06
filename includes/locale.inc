@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.166 2007/11/26 23:33:03 goba Exp $
+// $Id: locale.inc,v 1.167 2007/12/06 09:58:30 goba Exp $
 
 /**
  * @file
@@ -63,6 +63,8 @@ function locale_languages_overview_form() {
 
 /**
  * Theme the language overview form.
+ *
+ * @ingroup themeable
  */
 function theme_locale_languages_overview_form($form) {
   $default = language_default();

@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.401 2007/12/05 16:34:05 goba Exp $
+// $Id: theme.inc,v 1.402 2007/12/06 09:58:30 goba Exp $
 
 /**
  * @file
@@ -1545,6 +1545,16 @@ function theme_username($object) {
   return $output;
 }
 
+/**
+ * Return a themed progress bar.
+ *
+ * @param $percent
+ *   The percentage of the progress.
+ * @param $message
+ *   A string containing information to be displayed.
+ * @return
+ *   A themed HTML string representing the progress bar.
+ */
 function theme_progress_bar($percent, $message) {
   $output = '<div id="progress" class="progress">';
   $output .= '<div class="bar"><div class="filled" style="width: '. $percent .'%"></div></div>';

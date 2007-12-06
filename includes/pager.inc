@@ -1,5 +1,5 @@
 <?php
-// $Id: pager.inc,v 1.62 2007/08/02 10:58:41 dries Exp $
+// $Id: pager.inc,v 1.63 2007/12/06 09:58:30 goba Exp $
 
 /**
  * @file
@@ -369,6 +369,8 @@ function theme_pager_last($text, $limit, $element = 0, $parameters = array()) {
  *   An associative array of HTML attributes to apply to a pager anchor tag.
  * @return
  *   An HTML string that generates the link.
+ *
+ * @ingroup themeable
  */
 function theme_pager_link($text, $page_new, $element, $parameters = array(), $attributes = array()) {
   $page = isset($_GET['page']) ? $_GET['page'] : '';

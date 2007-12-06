@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.13 2007/12/03 07:45:15 goba Exp $
+// $Id: node.pages.inc,v 1.14 2007/12/06 09:58:32 goba Exp $
 
 /**
  * @file
@@ -21,6 +21,11 @@ function node_add_page() {
   return theme('node_add_list', $content);
 }
 
+/**
+ * Display the list of available node types for node creation.
+ *
+ * @ingroup themeable
+ */
 function theme_node_add_list($content) {
   $output = '';
 
@@ -309,6 +314,11 @@ function node_form_build_preview($form, &$form_state) {
   $form_state['node_preview'] = node_preview($node);
 }
 
+/**
+ * Present a node submission form.
+ *
+ * @ingroup themeable
+ */
 function theme_node_form($form) {
   $output = "\n<div class=\"node-form\">\n";
 
@@ -399,6 +409,8 @@ function node_preview($node) {
  *
  * @param $node
  *   The node object which is being previewed.
+ *
+ * @ingroup themeable
  */
 function theme_node_preview($node) {
   $output = '<div class="preview">';

@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.558 2007/12/05 21:31:59 goba Exp $
+// $Id: system.module,v 1.559 2007/12/06 09:58:33 goba Exp $
 
 /**
  * @file
@@ -1706,6 +1706,11 @@ function _system_zonelist() {
   return $zones;
 }
 
+/**
+ * Format the Powered by Drupal text.
+ *
+ * @ingroup themeable
+ */
 function theme_system_powered_by($image_path) {
   $image = theme('image', $image_path, t('Powered by Drupal, an open source content management system'), t('Powered by Drupal, an open source content management system'));
   return l($image, 'http://drupal.org', array('html' => TRUE, 'absolute' => TRUE, 'external' => TRUE));

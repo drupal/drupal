@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.251 2007/11/28 10:29:20 dries Exp $
+// $Id: poll.module,v 1.252 2007/12/06 09:58:33 goba Exp $
 
 /**
  * @file
@@ -636,6 +636,8 @@ function poll_view_results(&$node, $teaser, $page, $block) {
 
 /**
  * Theme the admin poll form for choices.
+ *
+ * @ingroup themeable
  */
 function theme_poll_choices($form) {
   // Change the button title to reflect the behavior when using JavaScript.

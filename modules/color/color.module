@@ -1,5 +1,5 @@
 <?php
-// $Id: color.module,v 1.28 2007/11/12 16:06:25 goba Exp $
+// $Id: color.module,v 1.29 2007/12/06 09:58:30 goba Exp $
 
 /**
  * Implementation of hook_help
@@ -160,6 +160,8 @@ function color_scheme_form(&$form_state, $theme) {
 
 /**
  * Theme color form.
+ *
+ * @ingroup @themeable
  */
 function theme_color_scheme_form($form) {
   // Include stylesheet
