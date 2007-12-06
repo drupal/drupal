@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.202 2007/12/04 16:39:22 goba Exp $
+// $Id: system.install,v 1.203 2007/12/06 21:35:14 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -2327,11 +2327,6 @@ function system_update_6021() {
   }
 
   if ($_SESSION['system_update_6021'] >= $_SESSION['system_update_6021_max']) {
-    $result = db_query('SELECT * FROM {menu_links} WHERE updated = 1 AND has_children = 0 AND customized = 0 ORDER BY depth DESC');
-    // Remove all items that are not customized.
-    while ($item = db_fetch_array($result)) {
-      _menu_delete_item($item, TRUE);
-    }
     if (!empty($_SESSION['menu_bogus_menus'])) {
       // Remove entries in bogus menus. This is secure because we deleted
       // every non-alpanumeric character from the menu name.

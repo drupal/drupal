@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.229 2007/12/06 09:58:30 goba Exp $
+// $Id: menu.inc,v 1.230 2007/12/06 21:35:14 goba Exp $
 
 /**
  * @file
@@ -1598,11 +1598,13 @@ function _menu_navigation_links_rebuild($menu) {
       }
     }
   }
-  $result = db_query("SELECT ml.link_path, ml.mlid, ml.router_path FROM {menu_links} ml WHERE ml.updated = 1");
+  $result = db_query("SELECT ml.link_path, ml.mlid, ml.router_path, ml.updated FROM {menu_links} ml WHERE ml.updated = 1");
   while ($item = db_fetch_array($result)) {
     $router_path = _menu_find_router_path($menu, $item['link_path']);
-    if (!empty($router_path) && $router_path != $item['router_path']) {
-      db_query("UPDATE {menu_links} SET router_path = '%s' WHERE mlid = %d", $router_path, $item['mlid']);
+    if (!empty($router_path) && ($router_path != $item['router_path'] || $item['updated'])) {
+      // If the router path and the link path matches, it's surely a working
+      // item, so we clear the updated flag.
+      db_query("UPDATE {menu_links} SET router_path = '%s', updated = %d WHERE mlid = %d", $router_path, $router_path != $item['link_path'], $item['mlid']);
     }
   }
 }
@@ -1631,9 +1633,9 @@ function menu_link_delete($mlid, $path = NULL) {
  * Helper function for menu_link_delete; deletes a single menu link.
  */
 function _menu_delete_item($item) {
-  // System-created items are never deleted.
-  if ($item && ($item['module'] != 'system')) {
-
+  // System-created items are never deleted. Updated items are an exception,
+  // as they can be broken.
+  if ($item && ($item['module'] != 'system' || $item['updated'])) {
     // Children get re-attached to the item's parent.
     if ($item['has_children']) {
       $result = db_query("SELECT mlid FROM {menu_links} WHERE plid = %d", $item['mlid']);

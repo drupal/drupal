@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.admin.inc,v 1.18 2007/12/06 21:02:57 goba Exp $
+// $Id: menu.admin.inc,v 1.19 2007/12/06 21:35:14 goba Exp $
 
 /**
  * @file
@@ -95,7 +95,7 @@ function _menu_overview_tree_form($tree) {
       $operations = array();
       $operations['edit'] = l(t('edit'), 'admin/build/menu/item/'. $item['mlid'] .'/edit');
       // Only items created by the menu module can be deleted.
-      if ($item['module'] == 'menu') {
+      if ($item['module'] == 'menu' || $item['updated'] == 1) {
         $operations['delete'] = l(t('delete'), 'admin/build/menu/item/'. $item['mlid'] .'/delete');
       }
       // Set the reset column.
@@ -534,8 +534,9 @@ function menu_edit_menu_submit($form, &$form_state) {
  * Menu callback; Check access and present a confirm form for deleting a menu link.
  */
 function menu_item_delete_page($item) {
-  // Links defined via hook_menu may not be deleted.
-  if ($item['module'] == 'system') {
+  // Links defined via hook_menu may not be deleted. Updated items are an
+  // exception, as they can be broken.
+  if ($item['module'] == 'system' && !$item['updated']) {
     drupal_access_denied();
     return;
   }
