@@ -1,5 +1,9 @@
 // $Id$
 
+Drupal 5.6, xxxx-xx-xx
+----------------------
+
+
 Drupal 5.5, 2007-12-06
 ----------------------
 - fixed missing missing brackets in a query in the user module.
