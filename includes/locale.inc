@@ -63,6 +63,8 @@ function locale_languages_overview_form() {
 
 /**
  * Theme the language overview form.
+ *
+ * @ingroup themeable
  */
 function theme_locale_languages_overview_form($form) {
   $default = language_default();

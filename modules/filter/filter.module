@@ -576,7 +576,6 @@ function _filter_tips($format, $long = FALSE) {
  *
  * @ingroup themeable
  */
-
 function theme_filter_tips_more_info() {
   return '<p>'. l(t('More information about formatting options'), 'filter/tips') .'</p>';
 }

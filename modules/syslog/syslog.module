@@ -88,6 +88,11 @@ function syslog_theme() {
   );
 }
 
+/**
+ * Format a system log entry.
+ *
+ * @ingroup themeable
+ */
 function theme_syslog_format($entry) {
   global $base_url;
 

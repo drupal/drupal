@@ -22,6 +22,8 @@ function update_status() {
 
 /**
  * Theme project status report.
+ *
+ * @ingroup themeable
  */
 function theme_update_report($data) {
   $last = variable_get('update_last_check', 0);
@@ -197,6 +199,11 @@ function theme_update_report($data) {
   return $output;
 }
 
+/**
+ * Theme the version display of a project.
+ *
+ * @ingroup themeable
+ */
 function theme_update_version($version, $tag, $class) {
   $output = '';
   $output .= '<table class="version '. $class .'">';

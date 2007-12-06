@@ -78,6 +78,8 @@ function _theme_load_offline_registry($theme, $base_theme = NULL, $theme_engine 
 
 /**
  * Return a themed list of maintenance tasks to perform.
+ * 
+ * @ingroup themeable
  */
 function theme_task_list($items, $active = NULL) {
   $done = isset($items[$active]) || $active == NULL;

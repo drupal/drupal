@@ -226,6 +226,8 @@ function trigger_assign_form_submit($form, $form_state) {
  *   The fieldset including all assigned actions.
  * @return
  *   The rendered form with the table prepended.
+ *
+ * @ingroup themeable
  */
 function theme_trigger_display($element) {
   $header = array();

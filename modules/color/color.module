@@ -160,6 +160,8 @@ function color_scheme_form(&$form_state, $theme) {
 
 /**
  * Theme color form.
+ *
+ * @ingroup @themeable
  */
 function theme_color_scheme_form($form) {
   // Include stylesheet

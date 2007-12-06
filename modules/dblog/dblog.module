@@ -145,6 +145,8 @@ function dblog_watchdog($log = array()) {
 
 /**
  * Theme dblog administration filter selector.
+ *
+ * @ingroup themeable
  */
 function theme_dblog_filters($form) {
   $output = '';

@@ -350,6 +350,8 @@ function filter_admin_order(&$form_state, $format = NULL) {
 
 /**
  * Theme filter order configuration form.
+ *
+ * @ingroup themeable
  */
 function theme_filter_admin_order($form) {
   $header = array(t('Name'), t('Weight'));

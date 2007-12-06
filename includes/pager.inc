@@ -369,6 +369,8 @@ function theme_pager_last($text, $limit, $element = 0, $parameters = array()) {
  *   An associative array of HTML attributes to apply to a pager anchor tag.
  * @return
  *   An HTML string that generates the link.
+ *
+ * @ingroup themeable
  */
 function theme_pager_link($text, $page_new, $element, $parameters = array(), $attributes = array()) {
   $page = isset($_GET['page']) ? $_GET['page'] : '';

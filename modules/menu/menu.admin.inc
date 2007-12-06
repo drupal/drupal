@@ -163,6 +163,8 @@ function menu_overview_form_submit($form, &$form_state) {
 
 /**
  * Theme the menu overview form into a table.
+ *
+ * @ingroup themeable
  */
 function theme_menu_overview_form($form) {
   drupal_add_tabledrag('menu-overview', 'match', 'parent', 'menu-plid', 'menu-plid', 'menu-mlid', TRUE, MENU_MAX_DEPTH - 1);

@@ -82,6 +82,8 @@ function taxonomy_term_page($str_tids = '', $depth = 0, $op = 'page') {
  *   An array of term ids.
  * @param $result
  *   A pager_query() result, such as that performed by taxonomy_select_nodes().
+ *
+ * @ingroup themeable
  */
 function theme_taxonomy_term_page($tids, $result) {
   $output = '';
