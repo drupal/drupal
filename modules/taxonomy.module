@@ -1128,7 +1128,7 @@ function taxonomy_select_nodes($tids = array(), $operator = 'or', $depth = 0, $p
       $result = pager_query($sql, variable_get('default_nodes_main', 10), 0, $sql_count, $args);
     }
     else {
-      $result = db_query_range($sql, 0, variable_get('feed_default_items', 10), $args);
+      $result = db_query_range($sql, $args, 0, variable_get('feed_default_items', 10));
     }
   }
 
