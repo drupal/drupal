@@ -1,5 +1,5 @@
 <?php
-// $Id: search.pages.inc,v 1.3 2007/12/05 19:12:58 goba Exp $
+// $Id: search.pages.inc,v 1.4 2007/12/06 09:51:01 goba Exp $
 
 /**
  * @file
@@ -46,7 +46,7 @@ function search_view($type = 'node') {
     return $output;
   }
 
-  return drupal_get_form('search_form', NULL, empty($keys) ? array() : $keys, $type);
+  return drupal_get_form('search_form', NULL, empty($keys) ? '' : $keys, $type);
 }
 
 /**
