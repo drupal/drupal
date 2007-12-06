@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.admin.inc,v 1.17 2007/12/06 10:37:47 goba Exp $
+// $Id: menu.admin.inc,v 1.18 2007/12/06 21:02:57 goba Exp $
 
 /**
  * @file
@@ -328,7 +328,7 @@ function menu_edit_item_validate($form, &$form_state) {
   $item = &$form_state['values']['menu'];
   $normal_path = drupal_get_normal_path($item['link_path']);
   if ($item['link_path'] != $normal_path) {
-    drupal_set_message(t('The menu system stores system paths only, but will use the URL alias for display. %link_path has been stored as %normal_path', array('%link_path' => $item['link_path'], '%normal_path' =>  $normal_path)));
+    drupal_set_message(t('The menu system stores system paths only, but will use the URL alias for display. %link_path has been stored as %normal_path', array('%link_path' => $item['link_path'], '%normal_path' => $normal_path)));
     $item['link_path'] = $normal_path;
   }
   if (!menu_path_is_external($item['link_path'])) {
