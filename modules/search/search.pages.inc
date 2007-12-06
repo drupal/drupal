@@ -46,7 +46,7 @@ function search_view($type = 'node') {
     return $output;
   }
 
-  return drupal_get_form('search_form', NULL, empty($keys) ? array() : $keys, $type);
+  return drupal_get_form('search_form', NULL, empty($keys) ? '' : $keys, $type);
 }
 
 /**
