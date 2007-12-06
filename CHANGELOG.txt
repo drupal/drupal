@@ -1,5 +1,8 @@
 // $Id$
 
+Drupal 4.7.11, xxxx-xx-xx
+-------------------------
+
 Drupal 4.7.10, 2007-12-06
 -------------------------
 - fixed taxonomy feed bug introduced by SA-2007-031
