@@ -1,4 +1,4 @@
-// $Id: tabledrag.js,v 1.8 2007/11/29 10:57:38 goba Exp $
+// $Id: tabledrag.js,v 1.9 2007/12/06 09:53:53 goba Exp $
 
 /**
  * Drag and drop table rows with field manipulation.
@@ -46,7 +46,7 @@ Drupal.tableDrag = function(table, tableSettings) {
   this.oldRowElement = null; // Remember the previous element.
   this.oldY = 0; // Used to determine up or down direction from last mouse move.
   this.changed = false; // Whether anything in the entire table has changed.
-  this.maxDepth = 0 // Maximum amount of allowed parenting.
+  this.maxDepth = 0; // Maximum amount of allowed parenting.
 
   // Configure the scroll settings.
   this.scrollSettings = { amount: 4, interval: 50, trigger: 70 };
@@ -572,7 +572,7 @@ Drupal.tableDrag.prototype.updateFields = function(changedRow) {
     // the source rows for each seperately.
     this.updateField(changedRow, group);
   }
-}
+};
 
 /**
  * After the row is dropped, update a single table field according to specific
