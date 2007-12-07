@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.32 2007/12/06 09:58:33 goba Exp $
+// $Id: system.admin.inc,v 1.33 2007/12/07 10:46:49 goba Exp $
 
 /**
  * @file
@@ -1235,7 +1235,7 @@ function system_performance_settings() {
   $form['bandwidth_optimizations']['preprocess_css'] = array(
     '#type' => 'radios',
     '#title' => t('Optimize CSS files'),
-    '#default_value' => variable_get('preprocess_css', 0) && $is_writable,
+    '#default_value' => intval(variable_get('preprocess_css', 0) && $is_writable),
     '#disabled' => !$is_writable,
     '#options' => array(t('Disabled'), t('Enabled')),
     '#description' => t('This option can interfere with theme development and should only be enabled in a production environment.'),
@@ -1243,7 +1243,7 @@ function system_performance_settings() {
   $form['bandwidth_optimizations']['preprocess_js'] = array(
     '#type' => 'radios',
     '#title' => t('Optimize JavaScript files'),
-    '#default_value' => variable_get('preprocess_js', 0) && $is_writable,
+    '#default_value' => intval(variable_get('preprocess_js', 0) && $is_writable),
     '#disabled' => !$is_writable,
     '#options' => array(t('Disabled'), t('Enabled')),
     '#description' => t('This option can interfere with module development and should only be enabled in a production environment.'),
