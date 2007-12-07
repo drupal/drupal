@@ -1519,8 +1519,7 @@ function menu_router_build($reset = FALSE) {
   static $menu;
 
   if (!isset($menu) || $reset) {
-    $cache = cache_get('router:', 'cache_menu');
-    if (!$reset && $cache && isset($cache->data)) {
+    if (!$reset && ($cache = cache_get('router:', 'cache_menu')) && isset($cache->data)) {
       $menu = $cache->data;
     }
     else {
