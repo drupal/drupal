@@ -1628,11 +1628,7 @@ function system_update_6001() {
   db_add_primary_key($ret, 'term_node', array('vid', 'tid', 'nid'));
   db_add_index($ret, 'term_node', 'vid', array('vid'));
 
-  // Update all entries with the current revision number.
-  $nodes = db_query('SELECT nid, vid FROM {node}');
-  while ($node = db_fetch_object($nodes)) {
-    db_query('UPDATE {term_node} SET vid = %d WHERE nid = %d', $node->vid, $node->nid);
-  }
+  db_query('UPDATE {term_node} t SET vid = (SELECT vid FROM {node} n WHERE t.nid = n.nid)');
   return $ret;
 }
 
