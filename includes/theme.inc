@@ -1641,6 +1641,8 @@ function template_preprocess(&$variables, $hook) {
     $variables['is_front'] = drupal_is_front_page();
     // Tell all templates by which kind of user they're viewed.
     $variables['logged_in'] = ($user->uid > 0);
+    // Provide user object to all templates
+    $variables['user'] = $user;
   }
 }
 
