@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.402 2007/12/06 09:58:30 goba Exp $
+// $Id: theme.inc,v 1.403 2007/12/07 10:14:03 goba Exp $
 
 /**
  * @file
@@ -1641,6 +1641,8 @@ function template_preprocess(&$variables, $hook) {
     $variables['is_front'] = drupal_is_front_page();
     // Tell all templates by which kind of user they're viewed.
     $variables['logged_in'] = ($user->uid > 0);
+    // Provide user object to all templates
+    $variables['user'] = $user;
   }
 }
 
