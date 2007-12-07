@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.33 2007/12/07 10:46:49 goba Exp $
+// $Id: system.admin.inc,v 1.34 2007/12/07 16:53:57 goba Exp $
 
 /**
  * @file
@@ -1255,7 +1255,7 @@ function system_performance_settings() {
     '#description' => t('Caching data improves performance, but may cause problems while troubleshooting new modules, themes, or translations, if outdated information has been cached. To refresh all cached data on your site, click the button below. <em>Warning: high-traffic sites will experience performance slowdowns while cached data is rebuilt.</em>'),
   );
 
-  $form['clear_cache']['cache'] = array(
+  $form['clear_cache']['clear'] = array(
     '#type' => 'submit',
     '#value' => t('Clear cached data'),
     '#submit' => array('system_clear_cache_submit'),
