@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.230 2007/12/06 21:35:14 goba Exp $
+// $Id: menu.inc,v 1.231 2007/12/07 18:24:55 goba Exp $
 
 /**
  * @file
@@ -1519,8 +1519,7 @@ function menu_router_build($reset = FALSE) {
   static $menu;
 
   if (!isset($menu) || $reset) {
-    $cache = cache_get('router:', 'cache_menu');
-    if (!$reset && $cache && isset($cache->data)) {
+    if (!$reset && ($cache = cache_get('router:', 'cache_menu')) && isset($cache->data)) {
       $menu = $cache->data;
     }
     else {
