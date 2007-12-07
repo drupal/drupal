@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.731 2007/12/05 21:31:59 goba Exp $
+// $Id: common.inc,v 1.732 2007/12/07 11:14:05 goba Exp $
 
 /**
  * @file
@@ -1732,16 +1732,12 @@ function drupal_build_css_cache($types, $filename) {
     foreach ($types as $type) {
       foreach ($type as $file => $cache) {
         if ($cache) {
-          $contents = file_get_contents($file);
-          // Remove multiple charset declarations for standards compliance (and fixing Safari problems)
-          $contents = preg_replace('/^@charset\s+[\'"](\S*)\b[\'"];/i', '', $contents);
-          // Return the path to where this CSS file originated from, stripping
-          // off the name of the file at the end of the path.
-          $path = base_path() . substr($file, 0, strrpos($file, '/')) .'/';
-          // Wraps all @import arguments in url().
-          $contents = preg_replace('/@import\s+(?!url)[\'"]?(\S*)\b[\'"]?/i', '@import url("\1")', $contents);
-          // Fix all paths within this CSS file, ignoring absolute paths.
-          $data .= preg_replace('/url\(([\'"]?)(?![a-z]+:)/i', 'url(\1'. $path .'\2', $contents);
+          $contents = drupal_load_stylesheet($file, TRUE);
+          // Return the path to where this CSS file originated from.
+          $base = base_path() . dirname($file) .'/';
+          _drupal_build_css_path(NULL, $base);
+          // Prefix all paths within this CSS file, ignoring external and absolute paths.
+          $data .= preg_replace_callback('/url\([\'"]?(?![a-z]+:|\/+)([^\'")]+)[\'"]?\)/i', '_drupal_build_css_path', $contents);
         }
       }
     }
@@ -1753,17 +1749,102 @@ function drupal_build_css_cache($types, $filename) {
     $data = preg_replace($regexp, '', $data);
     $data = implode('', $matches[0]) . $data;
 
-    // Perform some safe CSS optimizations.
-    $data = preg_replace('<
-      \s*([@{}:;,]|\)\s|\s\()\s* |  # Remove whitespace around separators, but keep space around parentheses.
-      /\*([^*\\\\]|\*(?!/))+\*/ |   # Remove comments that are not CSS hacks.
-      [\n\r]                        # Remove line breaks.
-      >x', '\1', $data);
-
     // Create the CSS file.
     file_save_data($data, $csspath .'/'. $filename, FILE_EXISTS_REPLACE);
   }
   return $csspath .'/'. $filename;
+}
+
+/**
+ * Helper function for drupal_build_css_cache().
+ * 
+ * This function will prefix all paths within a CSS file.
+ */
+function _drupal_build_css_path($matches, $base = NULL) {
+  static $_base;
+  // Store base path for preg_replace_callback.
+  if (isset($base)) {
+    $_base = $base;
+  }
+
+  // Prefix with base and remove '../' segments where possible.
+  $path = $_base . $matches[1];
+  $last = '';
+  while ($path != $last) {
+    $last = $path;
+    $path = preg_replace('`(^|/)(?!../)([^/]+)/../`', '$1', $path);
+  }
+  return 'url('. $path .')';
+}
+
+/**
+ * Loads the stylesheet and resolves all @import commands.
+ *
+ * Loads a stylesheet and replaces @import commands with the contents of the
+ * imported file. Use this instead of file_get_contents when processing
+ * stylesheets.
+ *
+ * The returned contents are compressed removing white space and comments only
+ * when CSS aggregation is enabled. This optimization will not apply for
+ * color.module enabled themes with CSS aggregation turned off.
+ *
+ * @param $file
+ *   Name of the stylesheet to be processed.
+ * @param $optimize
+ *   Defines if CSS contents should be compressed or not.
+ * @return
+ *   Contents of the stylesheet including the imported stylesheets.
+ */
+function drupal_load_stylesheet($file, $optimize = NULL) {
+  static $_optimize;
+  // Store optimization parameter for preg_replace_callback with nested @import loops.
+  if (isset($optimize)) {
+    $_optimize = $optimize;
+  }
+
+  $contents = '';
+  if (file_exists($file)) {
+    // Load the local CSS stylesheet.
+    $contents = file_get_contents($file);
+
+    // Change to the current stylesheet's directory.
+    $cwd = getcwd();
+    chdir(dirname($file));
+
+    // Replaces @import commands with the actual stylesheet content.
+    // This happens recursively but omits external files.
+    $contents = preg_replace_callback('/@import\s*(?:url\()?[\'"]?(?![a-z]+:)([^\'"\()]+)[\'"]?\)?;/', '_drupal_load_stylesheet', $contents);
+    // Remove multiple charset declarations for standards compliance (and fixing Safari problems).
+    $contents = preg_replace('/^@charset\s+[\'"](\S*)\b[\'"];/i', '', $contents);
+
+    if ($_optimize) {
+      // Perform some safe CSS optimizations.
+      $contents = preg_replace('<
+        \s*([@{}:;,]|\)\s|\s\()\s* |  # Remove whitespace around separators, but keep space around parentheses.
+        /\*([^*\\\\]|\*(?!/))+\*/ |   # Remove comments that are not CSS hacks.
+        [\n\r]                        # Remove line breaks.
+        >x', '\1', $contents);
+    }
+
+    // Change back directory.
+    chdir($cwd);
+  }
+
+  return $contents;
+}
+
+/**
+ * Loads stylesheets recursively and returns contents with corrected paths.
+ * 
+ * This function is used for recursive loading of stylesheets and
+ * returns the stylesheet content with all url() paths corrected.
+ */
+function _drupal_load_stylesheet($matches) {
+  $filename = $matches[1];
+  // Load the imported stylesheet and replace @import commands in there as well.
+  $file = drupal_load_stylesheet($filename);
+  // Alter all url() paths, but not external.
+  return preg_replace('/url\(([\'"]?)(?![a-z]+:)([^\'")]+)[\'"]?\)?;/i', 'url(\1'. dirname($filename) .'/', $file);
 }
 
 /**
