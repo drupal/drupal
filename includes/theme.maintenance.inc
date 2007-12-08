@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.maintenance.inc,v 1.4 2007/12/08 14:06:20 goba Exp $
+// $Id: theme.maintenance.inc,v 1.5 2007/12/08 15:15:25 goba Exp $
 
 /**
  * @file
@@ -127,7 +127,7 @@ function theme_install_page($content) {
 
   // Special handling of status messages
   if (isset($messages['status'])) {
-    $warnings = count($messages['status']) > 1 ? st('The following installation warnings should be carefully reviewed, but in most cases may be safely ignored') : st('The following installation warning should be carefully reviewed, but in most cases may be safely ignored');
+    $title = count($messages['status']) > 1 ? st('The following installation warnings should be carefully reviewed, but in most cases may be safely ignored') : st('The following installation warning should be carefully reviewed, but in most cases may be safely ignored');
     $variables['messages'] .= '<h4>'. $title .':</h4>';
     $variables['messages'] .= theme('status_messages', 'status');
   }

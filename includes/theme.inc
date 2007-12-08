@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.404 2007/12/08 14:06:20 goba Exp $
+// $Id: theme.inc,v 1.405 2007/12/08 15:15:25 goba Exp $
 
 /**
  * @file
@@ -1632,7 +1632,7 @@ function template_preprocess(&$variables, $hook) {
   $variables['is_admin']            = FALSE;
   $variables['is_front']            = FALSE;
   $variables['logged_in']           = FALSE;
-  if ($variables['db_is_active'] = db_is_active()) {
+  if ($variables['db_is_active'] = db_is_active()  && !defined('MAINTENANCE_MODE')) {
     // Check for administrators.
     if (user_access('access administration pages')) {
       $variables['is_admin'] = TRUE;

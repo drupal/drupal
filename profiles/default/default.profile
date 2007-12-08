@@ -1,5 +1,5 @@
 <?php
-// $Id: default.profile,v 1.20 2007/11/19 13:56:14 goba Exp $
+// $Id: default.profile,v 1.21 2007/12/08 15:15:25 goba Exp $
 
 /**
  * Return an array of the modules to be enabled when this profile is installed.
@@ -42,9 +42,10 @@ function default_profile_task_list() {
  * Perform any final installation tasks for this profile.
  *
  * The installer goes through the profile-select -> locale-select
- * -> requirements -> database -> locale-initial-batch -> configure
- * -> locale-remaining-batch -> finished -> done tasks in this order,
- * if you don't implement this function in your profile.
+ * -> requirements -> database -> profile-install-batch
+ * -> locale-initial-batch -> configure -> locale-remaining-batch
+ * -> finished -> done tasks, in this order, if you don't implement
+ * this function in your profile.
  *
  * If this function is implemented, you can have any number of
  * custom tasks to perform after 'configure', implementing a state

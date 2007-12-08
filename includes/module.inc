@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.112 2007/11/30 09:16:02 goba Exp $
+// $Id: module.inc,v 1.113 2007/12/08 15:15:25 goba Exp $
 
 /**
  * @file
@@ -261,7 +261,10 @@ function module_enable($module_list) {
   foreach ($invoke_modules as $module) {
     module_invoke($module, 'enable');
     // Check if node_access table needs rebuilding.
-    if (!node_access_needs_rebuild() && module_hook($module, 'node_grants')) {
+    // We check for the existence of node_access_needs_rebuild() since
+    // at install time, module_enable() could be called while node.module
+    // is not enabled yet.
+    if (function_exists('node_access_needs_rebuild') && !node_access_needs_rebuild() && module_hook($module, 'node_grants')) {
       node_access_needs_rebuild(TRUE);
     }
   }

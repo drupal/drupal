@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.99 2007/11/30 23:09:14 goba Exp $
+// $Id: install.php,v 1.100 2007/12/08 15:15:25 goba Exp $
 
 require_once './includes/install.inc';
 
@@ -119,18 +119,12 @@ function install_main() {
       install_change_settings($profile, $install_locale);
     }
 
-    // Perform actual installation defined in the profile.
-    drupal_install_profile($profile, $modules);
-
-    // Warn about settings.php permissions risk
-    $settings_dir = './'. conf_path();
-    $settings_file = $settings_dir .'/settings.php';
-    if (!drupal_verify_install_file($settings_file, FILE_EXIST|FILE_READABLE|FILE_NOT_WRITABLE) || !drupal_verify_install_file($settings_dir, FILE_NOT_WRITABLE, 'dir')) {
-      drupal_set_message(st('All necessary changes to %dir and %file have been made, so you should remove write permissions to them now in order to avoid security risks. If you are unsure how to do so, please consult the <a href="@handbook_url">on-line handbook</a>.', array('%dir' => $settings_dir, '%file' => $settings_file, '@handbook_url' => 'http://drupal.org/getting-started')), 'error');
-    }
-    else {
-      drupal_set_message(st('All necessary changes to %dir and %file have been made. They have been set to read-only for security.', array('%dir' => $settings_dir, '%file' => $settings_file)));
-    }
+    // Install system.module.
+    drupal_install_system();
+    // Save the list of other modules to install for the 'profile-install'
+    // task. variable_set() can be used now that system.module is installed
+    // and drupal is bootstrapped.
+    variable_set('install_profile_modules', array_diff($modules, array('system')));
   }
 
   // The database is set up, turn to further tasks.
@@ -624,12 +618,42 @@ function install_tasks($profile, $task) {
 
   // Build a page for final tasks.
   if (empty($task)) {
-    variable_set('install_task', 'locale-initial-import');
-    $task = 'locale-initial-import';
+    variable_set('install_task', 'profile-install');
+    $task = 'profile-install';
   }
 
   // We are using a list of if constructs here to allow for
   // passing from one task to the other in the same request.
+
+  // Install profile modules.
+  if ($task == 'profile-install') {
+    $modules = variable_get('install_profile_modules', array());
+    $files = module_rebuild_cache();
+    variable_del('install_profile_modules');
+    $operations = array();
+    foreach ($modules as $module) {
+      $operations[] = array('_install_module_batch', array($module, $files[$module]->info['name']));
+    }
+    $batch = array(
+      'operations' => $operations,
+      'finished' => '_install_profile_batch_finished',
+      'title' => t('Installing @drupal', array('@drupal' => drupal_install_profile_name())),
+      'error_message' => t('The installation has encountered an error.'),
+    );
+    // Start a batch, switch to 'profile-install-batch' task. We need to
+    // set the variable here, because batch_process() redirects.
+    variable_set('install_task', 'profile-install-batch');
+    batch_set($batch);
+    batch_process($url, $url);
+  }
+  // We are running a batch install of the profile's modules.
+  // This might run in multiple HTTP requests, constantly redirecting
+  // to the same address, until the batch finished callback is invoked
+  // and the task advances to 'locale-initial-import'.
+  if ($task == 'profile-install-batch') {
+    include_once 'includes/batch.inc';
+    $output = _batch_page();
+  }
 
   // Import interface translations for the enabled modules.
   if ($task == 'locale-initial-import') {
@@ -652,11 +676,6 @@ function install_tasks($profile, $task) {
     // Found nothing to import or not foreign language, go to next task.
     $task = 'configure';
   }
-
-  // We are running a batch import of interface translation files.
-  // This might run in multiple HTTP requests, constantly redirecting
-  // to the same address, until the batch finished callback is invoked
-  // and the task advances to 'configure'.
   if ($task == 'locale-initial-batch') {
     include_once 'includes/batch.inc';
     include_once 'includes/locale.inc';
@@ -676,6 +695,16 @@ function install_tasks($profile, $task) {
       // Not submitted yet: Prepare to display the form.
       $output = $form;
       drupal_set_title(st('Configure site'));
+
+      // Warn about settings.php permissions risk
+      $settings_dir = './'. conf_path();
+      $settings_file = $settings_dir .'/settings.php';
+      if (!drupal_verify_install_file($settings_file, FILE_EXIST|FILE_READABLE|FILE_NOT_WRITABLE) || !drupal_verify_install_file($settings_dir, FILE_NOT_WRITABLE, 'dir')) {
+        drupal_set_message(st('All necessary changes to %dir and %file have been made, so you should remove write permissions to them now in order to avoid security risks. If you are unsure how to do so, please consult the <a href="@handbook_url">on-line handbook</a>.', array('%dir' => $settings_dir, '%file' => $settings_file, '@handbook_url' => 'http://drupal.org/getting-started')), 'error');
+      }
+      else {
+        drupal_set_message(st('All necessary changes to %dir and %file have been made. They have been set to read-only for security.', array('%dir' => $settings_dir, '%file' => $settings_file)));
+      }
 
       // Add JavaScript validation.
       _user_password_dynamic_validation();
@@ -748,8 +777,8 @@ if (Drupal.jsEnabled) {
   // Display a 'finished' page to user.
   if ($task == 'finished') {
     drupal_set_title(st('@drupal installation complete', array('@drupal' => drupal_install_profile_name())));
-    $output = '<p>'. st('Congratulations, @drupal has been successfully installed.', array('@drupal' => drupal_install_profile_name())) .'</p>';
     $messages = drupal_set_message();
+    $output = '<p>'. st('Congratulations, @drupal has been successfully installed.', array('@drupal' => drupal_install_profile_name())) .'</p>';
     $output .= '<p>'. (isset($messages['error']) ? st('Please review the messages above before continuing on to <a href="@url">your new site</a>.', array('@url' => url(''))) : st('You may now visit <a href="@url">your new site</a>.', array('@url' => url('')))) .'</p>';
     $task = 'done';
   }
@@ -778,6 +807,29 @@ if (Drupal.jsEnabled) {
 }
 
 /**
+ * Batch callback for batch installation of modules.
+ */
+function _install_module_batch($module, $module_name, &$context) {
+  _drupal_install_module($module);
+  // We enable the installed module right away, so that the module will be
+  // loaded by drupal_bootstrap in subsequent batch requests, and other
+  // modules possibly depending on it can safely perform their installation
+  // steps.
+  module_enable(array($module));
+  $context['results'][] = $module;
+  $context['message'] = 'Installed '. $module_name. ' module.';
+}
+
+/**
+ * Finished callback for the modules install batch.
+ *
+ * Advance installer task to language import.
+ */
+function _install_profile_batch_finished($success, $results) {
+  variable_set('install_task', 'locale-initial-import');
+}
+
+/**
  * Finished callback for the first locale import batch.
  *
  * Advance installer task to the configure screen.
@@ -799,7 +851,7 @@ function _install_locale_remaining_batch_finished($success, $results) {
  * The list of reserved tasks to run in the installer.
  */
 function install_reserved_tasks() {
-  return array('configure', 'locale-initial-import', 'locale-initial-batch', 'profile-finished', 'locale-remaining-batch', 'finished', 'done');
+  return array('configure', 'profile-install', 'profile-install-batch', 'locale-initial-import', 'locale-initial-batch', 'profile-finished', 'locale-remaining-batch', 'finished', 'done');
 }
 
 /**
@@ -855,21 +907,24 @@ function install_check_requirements($profile, $verify) {
 function install_task_list($active = NULL) {
   // Default list of tasks.
   $tasks = array(
-    'profile-select'       => st('Choose profile'),
-    'locale-select'        => st('Choose language'),
-    'requirements'         => st('Verify requirements'),
-    'database'             => st('Set up database'),
-    'locale-initial-batch' => st('Set up translations'),
-    'configure'            => st('Configure site'),
+    'profile-select'        => st('Choose profile'),
+    'locale-select'         => st('Choose language'),
+    'requirements'          => st('Verify requirements'),
+    'database'              => st('Set up database'),
+    'profile-install-batch' => st('Install profile'),
+    'locale-initial-batch'  => st('Set up translations'),
+    'configure'             => st('Configure site'),
   );
 
   $profiles = install_find_profiles();
   $profile = isset($_GET['profile']) && isset($profiles[$_GET['profile']]) ? $_GET['profile'] : '.';
   $locales = install_find_locales($profile);
 
-  // Remove select profile if we have only one.
+  // If we have only one profile, remove 'Choose profile'
+  // and rename 'Install profile'.
   if (count($profiles) == 1) {
     unset($tasks['profile-select']);
+    $tasks['profile-install-batch'] = st('Install site');
   }
 
   // Add tasks defined by the profile.

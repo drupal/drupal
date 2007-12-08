@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.50 2007/11/30 12:19:10 goba Exp $
+// $Id: install.inc,v 1.51 2007/12/08 15:15:25 goba Exp $
 
 define('SCHEMA_UNINSTALLED', -1);
 define('SCHEMA_INSTALLED', 0);
@@ -294,19 +294,41 @@ function drupal_verify_profile($profile, $locale) {
 }
 
 /**
- * Install a profile (i.e. a set of modules) from scratch.
- * The profile must be verified first using drupal_verify_profile().
+ * Calls the install function and updates the system table for a given list of
+ * modules.
  *
- * @param profile
- *   The name of the profile to install.
  * @param module_list
- *   An array of modules to install.
+ *   The modules to install.
  */
-function drupal_install_profile($profile, $module_list) {
-  // The system module is a special case; we can't bootstrap until it's
-  // installed, so we can't use the normal installation function.
-  $module_list = array_diff($module_list, array('system'));
+function drupal_install_modules($module_list = array()) {
+  array_filter($module_list, '_drupal_install_module');
+  module_enable($module_list);
+}
 
+/**
+ * Callback to install an individual profile module.
+ *
+ * Used during installation to install modules one at a time and then
+ * enable them, or to install a number of modules at one time
+ * from admin/build/modules.
+ */
+function _drupal_install_module($module) {
+  if (drupal_get_installed_schema_version($module, TRUE) == SCHEMA_UNINSTALLED) {
+    module_load_install($module);
+    module_invoke($module, 'install');
+    $versions = drupal_get_schema_versions($module);
+    drupal_set_installed_schema_version($module, $versions ? max($versions) : SCHEMA_INSTALLED);
+    return TRUE;
+  }
+}
+
+/**
+ * Callback to install the system module.
+ *
+ * Separated from the installation of other modules so core system
+ * functions can be made available while other modules are installed.
+ */
+function drupal_install_system() {
   $system_path = dirname(drupal_get_filename('module', 'system', NULL));
   require_once './'. $system_path .'/system.install';
   module_invoke('system', 'install');
@@ -315,34 +337,9 @@ function drupal_install_profile($profile, $module_list) {
   db_query("INSERT INTO {system} (filename, name, type, owner, status, throttle, bootstrap, schema_version) VALUES('%s', '%s', '%s', '%s', %d, %d, %d, %d)", $system_path .'/system.module', 'system', 'module', '', 1, 0, 0, $system_version);
   // Now that we've installed things properly, bootstrap the full Drupal environment
   drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
-
-  // Install schemas for profile and all its modules.
   module_rebuild_cache();
-  drupal_install_modules($module_list);
 }
 
-/**
- * Calls the install function and updates the system table for a given list of
- * modules.
- *
- * @param module_list
- *   The modules to install.
- */
-function drupal_install_modules($module_list = array()) {
-  $enable_modules = array();
-
-  foreach ($module_list as $module) {
-    if (drupal_get_installed_schema_version($module, TRUE) == SCHEMA_UNINSTALLED) {
-      module_load_install($module);
-      module_invoke($module, 'install');
-      $versions = drupal_get_schema_versions($module);
-      drupal_set_installed_schema_version($module, $versions ? max($versions) : SCHEMA_INSTALLED);
-      $enable_modules[] = $module;
-    }
-  }
-
-  module_enable($enable_modules);
-}
 
 /**
  * Calls the uninstall function and updates the system table for a given module.
