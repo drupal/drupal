@@ -42,9 +42,10 @@ function default_profile_task_list() {
  * Perform any final installation tasks for this profile.
  *
  * The installer goes through the profile-select -> locale-select
- * -> requirements -> database -> locale-initial-batch -> configure
- * -> locale-remaining-batch -> finished -> done tasks in this order,
- * if you don't implement this function in your profile.
+ * -> requirements -> database -> profile-install-batch
+ * -> locale-initial-batch -> configure -> locale-remaining-batch
+ * -> finished -> done tasks, in this order, if you don't implement
+ * this function in your profile.
  *
  * If this function is implemented, you can have any number of
  * custom tasks to perform after 'configure', implementing a state
