@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.362 2007/12/04 16:34:27 goba Exp $
+// $Id: aggregator.module,v 1.363 2007/12/08 14:06:20 goba Exp $
 
 /**
  * @file
@@ -577,7 +577,7 @@ function aggregator_refresh($feed) {
     case 302:
     case 307:
       // Filter the input data:
-     if (aggregator_parse_feed($result->data, $feed)) {
+      if (aggregator_parse_feed($result->data, $feed)) {
 
         $modified = empty($result->headers['Last-Modified']) ? 0 : strtotime($result->headers['Last-Modified']);
 

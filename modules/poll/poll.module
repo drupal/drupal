@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.252 2007/12/06 09:58:33 goba Exp $
+// $Id: poll.module,v 1.253 2007/12/08 14:06:21 goba Exp $
 
 /**
  * @file
@@ -304,7 +304,7 @@ function _poll_choice_form($delta, $value = '', $votes = 0) {
     '#type' => 'textfield',
     '#title' => t('Choice @n', array('@n' => ($delta + 1))),
     '#default_value' => $value,
-    '#parents' => array('choice', $delta,'chtext'),
+    '#parents' => array('choice', $delta, 'chtext'),
   );
 
   if ($admin) {

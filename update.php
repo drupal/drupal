@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.238 2007/11/30 12:19:10 goba Exp $
+// $Id: update.php,v 1.239 2007/12/08 14:06:20 goba Exp $
 
 /**
  * @file
@@ -624,7 +624,7 @@ function update_create_cache_tables() {
         created int NOT NULL default '0',
         headers text,
         PRIMARY KEY (cid),
-        INDEX expire (expire)
+        INDEX expire (expire),
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
       $ret[] = update_sql("CREATE TABLE {cache_menu} (
         cid varchar(255) NOT NULL default '',
@@ -633,7 +633,7 @@ function update_create_cache_tables() {
         created int NOT NULL default '0',
         headers text,
         PRIMARY KEY (cid),
-        INDEX expire (expire)
+        INDEX expire (expire),
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
       $ret[] = update_sql("CREATE TABLE {cache_page} (
         cid varchar(255) BINARY NOT NULL default '',
@@ -642,7 +642,7 @@ function update_create_cache_tables() {
          created int NOT NULL default '0',
         headers text,
         PRIMARY KEY (cid),
-        INDEX expire (expire)
+        INDEX expire (expire),
       ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
       break;
     case 'pgsql':
@@ -652,28 +652,28 @@ function update_create_cache_tables() {
         expire int NOT NULL default '0',
         created int NOT NULL default '0',
         headers text,
-        PRIMARY KEY (cid)
-     )");
-     $ret[] = update_sql("CREATE TABLE {cache_menu} (
-       cid varchar(255) NOT NULL default '',
-       data bytea,
-       expire int NOT NULL default '0',
-       created int NOT NULL default '0',
-       headers text,
-       PRIMARY KEY (cid)
-     )");
-     $ret[] = update_sql("CREATE TABLE {cache_page} (
-       cid varchar(255) NOT NULL default '',
-       data bytea,
-       expire int NOT NULL default '0',
-       created int NOT NULL default '0',
-       headers text,
-       PRIMARY KEY (cid)
-     )");
-     $ret[] = update_sql("CREATE INDEX {cache_filter}_expire_idx ON {cache_filter} (expire)");
-     $ret[] = update_sql("CREATE INDEX {cache_menu}_expire_idx ON {cache_menu} (expire)");
-     $ret[] = update_sql("CREATE INDEX {cache_page}_expire_idx ON {cache_page} (expire)");
-     break;
+        PRIMARY KEY (cid),
+      )");
+      $ret[] = update_sql("CREATE TABLE {cache_menu} (
+        cid varchar(255) NOT NULL default '',
+        data bytea,
+        expire int NOT NULL default '0',
+        created int NOT NULL default '0',
+        headers text,
+        PRIMARY KEY (cid),
+      )");
+      $ret[] = update_sql("CREATE TABLE {cache_page} (
+        cid varchar(255) NOT NULL default '',
+        data bytea,
+        expire int NOT NULL default '0',
+        created int NOT NULL default '0',
+        headers text,
+        PRIMARY KEY (cid),
+      )");
+      $ret[] = update_sql("CREATE INDEX {cache_filter}_expire_idx ON {cache_filter} (expire)");
+      $ret[] = update_sql("CREATE INDEX {cache_menu}_expire_idx ON {cache_menu} (expire)");
+      $ret[] = update_sql("CREATE INDEX {cache_page}_expire_idx ON {cache_page} (expire)");
+      break;
   }
   return $ret;
 }

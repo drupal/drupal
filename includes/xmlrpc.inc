@@ -1,5 +1,5 @@
 <?php
-// $Id: xmlrpc.inc,v 1.41 2007/09/04 21:10:45 dries Exp $
+// $Id: xmlrpc.inc,v 1.42 2007/12/08 14:06:20 goba Exp $
 
 /*
   Drupal XML-RPC library. Based on the IXR - The Incutio XML-RPC Library - (c) Incutio Ltd 2002-2005
@@ -7,7 +7,7 @@
    Site:   http://scripts.incutio.com/xmlrpc/
    Manual: http://scripts.incutio.com/xmlrpc/manual.php
    This version is made available under the GNU GPL License
-*/
+ */
 
 /**
  * Recursively turn a data structure into objects with 'data' and 'type' attributes.

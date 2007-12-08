@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysql.inc,v 1.83 2007/10/20 21:57:49 goba Exp $
+// $Id: database.mysql.inc,v 1.84 2007/12/08 14:06:20 goba Exp $
 
 /**
  * @file
@@ -74,7 +74,7 @@ function db_connect($url) {
 
   // Allow for non-standard MySQL port.
   if (isset($url['port'])) {
-     $url['host'] = $url['host'] .':'. $url['port'];
+    $url['host'] = $url['host'] .':'. $url['port'];
   }
 
   // - TRUE makes mysql_connect() always open a new link, even if

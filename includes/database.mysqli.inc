@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysqli.inc,v 1.49 2007/11/26 08:21:49 goba Exp $
+// $Id: database.mysqli.inc,v 1.50 2007/12/08 14:06:20 goba Exp $
 
 /**
  * @file
@@ -203,16 +203,16 @@ function db_fetch_array($result) {
 }
 
 /**
-* Return an individual result field from the previous query.
-*
-* Only use this function if exactly one field is being selected; otherwise,
-* use db_fetch_object() or db_fetch_array().
-*
-* @param $result
-*   A database query result resource, as returned from db_query().
-* @return
-*   The resulting field or FALSE.
-*/
+ * Return an individual result field from the previous query.
+ *
+ * Only use this function if exactly one field is being selected; otherwise,
+ * use db_fetch_object() or db_fetch_array().
+ *
+ * @param $result
+ *   A database query result resource, as returned from db_query().
+ * @return
+ *   The resulting field or FALSE.
+ */
 function db_result($result) {
   if ($result && mysqli_num_rows($result) > 0) {
     // The mysqli_fetch_row function has an optional second parameter $row

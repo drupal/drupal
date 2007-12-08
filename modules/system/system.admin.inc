@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.34 2007/12/07 16:53:57 goba Exp $
+// $Id: system.admin.inc,v 1.35 2007/12/08 14:06:22 goba Exp $
 
 /**
  * @file
@@ -1655,7 +1655,7 @@ function system_sql() {
 
   $result = db_query("SHOW STATUS");
   while ($entry = db_fetch_object($result)) {
-   $data[$entry->Variable_name] = $entry->Value;
+    $data[$entry->variable_name] = $entry->value;
   }
 
   $output  = '<h2>'. t('Command counters') .'</h2>';

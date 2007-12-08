@@ -1,5 +1,5 @@
 <?php
-// $Id: batch.inc,v 1.12 2007/10/15 15:18:39 goba Exp $
+// $Id: batch.inc,v 1.13 2007/12/08 14:06:20 goba Exp $
 
 /**
  * @file Batch processing API for processes to run in multiple HTTP requests.
@@ -291,7 +291,7 @@ function _batch_finished() {
   $batch =& batch_get();
 
   // Execute the 'finished' callbacks for each batch set.
-  foreach($batch['sets'] as $key => $batch_set) {
+  foreach ($batch['sets'] as $key => $batch_set) {
     if (isset($batch_set['finished'])) {
       // Check if the set requires an additional file for functions definitions.
       if (isset($batch_set['file']) && is_file($batch_set['file'])) {

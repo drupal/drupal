@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.13 2007/12/06 09:58:32 goba Exp $
+// $Id: node.admin.inc,v 1.14 2007/12/08 14:06:21 goba Exp $
 
 /**
  * @file
@@ -384,7 +384,7 @@ function node_admin_nodes() {
     '#submit' => array('node_admin_nodes_submit'),
   );
 
-  $languages = language_list(); 
+  $languages = language_list();
   $destination = drupal_get_destination();
   $nodes = array();
   while ($node = db_fetch_object($result)) {

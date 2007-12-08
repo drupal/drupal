@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.732 2007/12/07 11:14:05 goba Exp $
+// $Id: common.inc,v 1.733 2007/12/08 14:06:20 goba Exp $
 
 /**
  * @file
@@ -1319,7 +1319,7 @@ function url($path = NULL, $options = array()) {
     // Will be empty if there is no language prefix.
     $path = trim($options['prefix'], '/');
   }
-  
+
   if ($clean_url) {
     // With Clean URLs.
     if ($options['query']) {
@@ -1337,7 +1337,7 @@ function url($path = NULL, $options = array()) {
     }
     if (!empty($options['query'])) {
       $variables[] = $options['query'];
-    }   
+    }
     if ($query = join('&', $variables)) {
       return $base . $script .'?'. $query . $options['fragment'];
     }
@@ -1757,7 +1757,7 @@ function drupal_build_css_cache($types, $filename) {
 
 /**
  * Helper function for drupal_build_css_cache().
- * 
+ *
  * This function will prefix all paths within a CSS file.
  */
 function _drupal_build_css_path($matches, $base = NULL) {
@@ -1835,7 +1835,7 @@ function drupal_load_stylesheet($file, $optimize = NULL) {
 
 /**
  * Loads stylesheets recursively and returns contents with corrected paths.
- * 
+ *
  * This function is used for recursive loading of stylesheets and
  * returns the stylesheet content with all url() paths corrected.
  */
@@ -1914,7 +1914,7 @@ function drupal_add_js($data = NULL, $type = 'module', $scope = 'header', $defer
   static $javascript = array();
 
   if (isset($data)) {
-    
+
     // Add jquery.js and drupal.js the first time a Javascript file is added.
     if (empty($javascript)) {
       $javascript['header'] = array(
@@ -1925,7 +1925,7 @@ function drupal_add_js($data = NULL, $type = 'module', $scope = 'header', $defer
         'module' => array(), 'theme' => array(), 'setting' => array(), 'inline' => array(),
       );
     }
-    
+
     if (isset($scope) && !isset($javascript[$scope])) {
       $javascript[$scope] = array('core' => array(), 'module' => array(), 'theme' => array(), 'setting' => array(), 'inline' => array());
     }
@@ -1933,7 +1933,7 @@ function drupal_add_js($data = NULL, $type = 'module', $scope = 'header', $defer
     if (isset($type) && isset($scope) && !isset($javascript[$scope][$type])) {
       $javascript[$scope][$type] = array();
     }
-    
+
     switch ($type) {
       case 'setting':
         $javascript[$scope][$type][] = $data;
@@ -1948,7 +1948,7 @@ function drupal_add_js($data = NULL, $type = 'module', $scope = 'header', $defer
   }
 
   if (isset($scope)) {
-    
+
     if (isset($javascript[$scope])) {
       return $javascript[$scope];
     }

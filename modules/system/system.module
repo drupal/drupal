@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.559 2007/12/06 09:58:33 goba Exp $
+// $Id: system.module,v 1.560 2007/12/08 14:06:22 goba Exp $
 
 /**
  * @file
@@ -136,7 +136,7 @@ function system_elements() {
   // Inputs
   $type['submit'] = array('#input' => TRUE, '#name' => 'op', '#button_type' => 'submit', '#executes_submit_callback' => TRUE, '#process' => array('form_expand_ahah'));
   $type['button'] = array('#input' => TRUE, '#name' => 'op', '#button_type' => 'submit', '#executes_submit_callback' => FALSE, '#process' => array('form_expand_ahah'));
-  $type['image_button'] = array('#input' => TRUE, '#button_type' => 'submit','#executes_submit_callback' => TRUE, '#process' => array('form_expand_ahah'), '#return_value' => TRUE, '#has_garbage_value' => TRUE, '#src' => NULL);
+  $type['image_button'] = array('#input' => TRUE, '#button_type' => 'submit', '#executes_submit_callback' => TRUE, '#process' => array('form_expand_ahah'), '#return_value' => TRUE, '#has_garbage_value' => TRUE, '#src' => NULL);
   $type['textfield'] = array('#input' => TRUE, '#size' => 60, '#maxlength' => 128, '#autocomplete_path' => FALSE, '#process' => array('form_expand_ahah'));
   $type['password'] = array('#input' => TRUE, '#size' => 60, '#maxlength' => 128, '#process' => array('form_expand_ahah'));
   $type['password_confirm'] = array('#input' => TRUE, '#process' => array('expand_password_confirm'));
@@ -507,7 +507,7 @@ function system_user($type, $edit, &$user, $category = NULL) {
  * Generate a block with a promotional link to Drupal.org.
  */
 function system_block($op = 'list', $delta = 0, $edit = NULL) {
-  switch($op) {
+  switch ($op) {
     case 'list':
       $blocks[0] = array(
         'info' => t('Powered by Drupal'),
@@ -741,7 +741,7 @@ function system_theme_data() {
  */
 function _system_theme_data() {
   static $themes_info = array();
-  
+
   if (empty($theme_info)) {
     // Find themes
     $themes = drupal_system_listing('\.info$', 'themes');
@@ -819,7 +819,7 @@ function _system_theme_data() {
         }
       }
     }
-    
+
     $themes_info = $themes;
   }
 
@@ -1477,7 +1477,7 @@ function system_send_email_action_validate($form, $form_state) {
   if (!valid_email_address($form_values['recipient']) && $form_values['recipient'] != '%author') {
     // We want the literal %author placeholder to be emphasized in the error message.
     form_set_error('recipient', t('Please enter a valid email address or %author.', array('%author' => '%author')));
-   }
+  }
 }
 
 function system_send_email_action_submit($form, $form_state) {

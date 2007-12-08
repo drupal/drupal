@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.maintenance.inc,v 1.3 2007/12/06 09:58:30 goba Exp $
+// $Id: theme.maintenance.inc,v 1.4 2007/12/08 14:06:20 goba Exp $
 
 /**
  * @file
@@ -78,7 +78,7 @@ function _theme_load_offline_registry($theme, $base_theme = NULL, $theme_engine 
 
 /**
  * Return a themed list of maintenance tasks to perform.
- * 
+ *
  * @ingroup themeable
  */
 function theme_task_list($items, $active = NULL) {

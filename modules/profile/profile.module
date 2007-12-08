@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.227 2007/11/30 09:02:51 goba Exp $
+// $Id: profile.module,v 1.228 2007/12/08 14:06:22 goba Exp $
 
 /**
  * @file
@@ -136,9 +136,9 @@ function profile_menu() {
 function profile_block($op = 'list', $delta = 0, $edit = array()) {
 
   if ($op == 'list') {
-     $blocks[0]['info'] = t('Author information');
-     $blocks[0]['cache'] = BLOCK_CACHE_PER_PAGE | BLOCK_CACHE_PER_ROLE;
-     return $blocks;
+    $blocks[0]['info'] = t('Author information');
+    $blocks[0]['cache'] = BLOCK_CACHE_PER_PAGE | BLOCK_CACHE_PER_ROLE;
+    return $blocks;
   }
   else if ($op == 'configure' && $delta == 0) {
     // Compile a list of fields to show
@@ -189,9 +189,9 @@ function profile_block($op = 'list', $delta = 0, $edit = array()) {
       }
 
       if ($output) {
-         $block['subject'] = t('About %name', array('%name' => $account->name));
-         $block['content'] = $output;
-         return $block;
+        $block['subject'] = t('About %name', array('%name' => $account->name));
+        $block['content'] = $output;
+        return $block;
       }
     }
   }
@@ -236,7 +236,7 @@ function profile_save_profile(&$edit, &$user, $category, $register = FALSE) {
   $result = _profile_get_fields($category, $register);
   while ($field = db_fetch_object($result)) {
     if (_profile_field_serialize($field->type)) {
-       $edit[$field->name] = serialize($edit[$field->name]);
+      $edit[$field->name] = serialize($edit[$field->name]);
     }
     db_query("DELETE FROM {profile_values} WHERE fid = %d AND uid = %d", $field->fid, $user->uid);
     db_query("INSERT INTO {profile_values} (fid, uid, value) VALUES (%d, %d, '%s')", $field->fid, $user->uid, $edit[$field->name]);

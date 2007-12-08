@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.192 2007/12/06 09:58:34 goba Exp $
+// $Id: upload.module,v 1.193 2007/12/08 14:06:22 goba Exp $
 
 /**
  * @file
@@ -579,7 +579,7 @@ function upload_js() {
   upload_node_form_submit(array(), $form_state);
   $node->files = upload_load($node);
   if (!empty($form_state['values']['files'])) {
-    foreach($form_state['values']['files'] as $fid => $file) {
+    foreach ($form_state['values']['files'] as $fid => $file) {
       $node->files[$fid] = $file;
     }
   }

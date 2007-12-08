@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.916 2007/12/06 09:58:32 goba Exp $
+// $Id: node.module,v 1.917 2007/12/08 14:06:21 goba Exp $
 
 /**
  * @file
@@ -253,7 +253,7 @@ function node_teaser_js(&$form, &$form_state) {
  * @param $size
  *   The desired character length of the teaser. If omitted, the default
  *   value will be used. Ignored if the special delimiter is present
- *   in $body. 
+ *   in $body.
  * @return
  *   The generated teaser.
  */
@@ -514,7 +514,7 @@ function _node_types_build() {
     // Types defined by the node module in the database (rather than by a separate
     // module using hook_node_info) have a module value of 'node'.
     if ($type_object->module != 'node' && empty($info_array[$type_object->type])) {
-       $type_object->disabled = TRUE;
+      $type_object->disabled = TRUE;
     }
     if (!isset($_node_types[$type_object->type]) || $type_object->modified) {
       $_node_types[$type_object->type] = $type_object;

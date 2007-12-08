@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.231 2007/12/07 18:24:55 goba Exp $
+// $Id: menu.inc,v 1.232 2007/12/08 14:06:20 goba Exp $
 
 /**
  * @file
@@ -1792,8 +1792,8 @@ function menu_link_save(&$item) {
 }
 
 /**
-* Helper function to clear the page and block caches at most twice per page load.
-*/
+ * Helper function to clear the page and block caches at most twice per page load.
+ */
 function _menu_clear_page_cache() {
   static $cache_cleared = 0;
 
@@ -1814,8 +1814,8 @@ function _menu_clear_page_cache() {
 }
 
 /**
-* Helper function to update a list of menus with expanded items
-*/
+ * Helper function to update a list of menus with expanded items
+ */
 function _menu_set_expanded_menus() {
   $names = array();
   $result = db_query("SELECT menu_name FROM {menu_links} WHERE expanded != 0 GROUP BY menu_name");

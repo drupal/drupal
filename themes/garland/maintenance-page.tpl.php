@@ -1,5 +1,5 @@
 <?php
-// $Id: maintenance-page.tpl.php,v 1.1 2007/11/30 12:19:10 goba Exp $
+// $Id: maintenance-page.tpl.php,v 1.2 2007/12/08 14:06:23 goba Exp $
 
 /**
  * @file maintenance-page.tpl.php
@@ -7,7 +7,7 @@
  * This is an override of the default maintenance page. Used for Garland and
  * Minnelli, this file should not be moved or modified since the installation
  * and update pages depend on this file.
- * 
+ *
  * This mirrors closely page.tpl.php for Garland in order to share the same
  * styles.
  */

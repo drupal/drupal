@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.403 2007/12/07 10:14:03 goba Exp $
+// $Id: theme.inc,v 1.404 2007/12/08 14:06:20 goba Exp $
 
 /**
  * @file
@@ -1627,7 +1627,7 @@ function template_preprocess(&$variables, $hook) {
 
   // Tell all templates where they are located.
   $variables['directory'] = path_to_theme();
-  
+
   // Set default variables that depend on the database.
   $variables['is_admin']            = FALSE;
   $variables['is_front']            = FALSE;

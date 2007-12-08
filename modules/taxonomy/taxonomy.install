@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.install,v 1.4 2007/10/21 18:59:02 goba Exp $
+// $Id: taxonomy.install,v 1.5 2007/12/08 14:06:22 goba Exp $
 
 /**
  * Implementation of hook_schema().
@@ -263,7 +263,8 @@ function taxonomy_schema() {
       ),
       'type' => array(
         'type' => 'varchar',
-        'length' => 32,'not null' => TRUE,
+        'length' => 32,
+        'not null' => TRUE,
         'default' => '',
         'description' => t('The {node}.type of the node type for which the vocabulary may be used.'),
       ),

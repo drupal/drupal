@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.251 2007/12/06 09:58:30 goba Exp $
+// $Id: form.inc,v 1.252 2007/12/08 14:06:20 goba Exp $
 
 /**
  * @defgroup form Form generation
@@ -415,7 +415,7 @@ function drupal_process_form($form_id, &$form, &$form_state) {
       // however, we'll skip this and let the calling function examine
       // the resulting $form_state bundle itself.
       if (!$form['#programmed'] && empty($form_state['rebuild']) && empty($form_state['storage'])) {
-         drupal_redirect_form($form, $form_state['redirect']);
+        drupal_redirect_form($form, $form_state['redirect']);
       }
     }
   }
@@ -1432,7 +1432,7 @@ function theme_fieldset($element) {
 
     $element['#attributes']['class'] .= ' collapsible';
     if ($element['#collapsed']) {
-     $element['#attributes']['class'] .= ' collapsed';
+      $element['#attributes']['class'] .= ' collapsed';
     }
   }
 

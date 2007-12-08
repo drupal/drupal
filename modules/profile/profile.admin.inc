@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.admin.inc,v 1.4 2007/11/30 09:02:50 goba Exp $
+// $Id: profile.admin.inc,v 1.5 2007/12/08 14:06:22 goba Exp $
 
 /**
  * @file
@@ -8,13 +8,13 @@
 
 /**
  * Form builder to display a listing of all editable profile fields.
- * 
+ *
  * @ingroup forms
  * @see profile_admin_overview_submit().
  */
 function profile_admin_overview(&$form_state = NULL) {
   $result = db_query('SELECT title, name, type, category, fid, weight FROM {profile_fields} ORDER BY category, weight');
-  
+
   $form = array();
   $categories = array();
   while ($field = db_fetch_object($result)) {
@@ -30,15 +30,15 @@ function profile_admin_overview(&$form_state = NULL) {
     $form[$field->fid]['edit'] = array('#value' => l(t('edit'), "admin/user/profile/edit/$field->fid"));
     $form[$field->fid]['delete'] = array('#value' => l(t('delete'), "admin/user/profile/delete/$field->fid"));
   }
-  
+
   // Add the cateogory combo boxes
   $categories = array_unique($categories);
-  foreach($form as $fid => $field) {
-    foreach($categories as $cat => $category) {
+  foreach ($form as $fid => $field) {
+    foreach ($categories as $cat => $category) {
       $form[$fid]['category']['#options'][$category] = $category;
     }
   }
-  
+
   // Display the submit button only when there's more than one field
   if (count($form) > 1) {
     $form['submit'] = array('#type' => 'submit', '#value' => t('Save configuration'));
@@ -51,7 +51,7 @@ function profile_admin_overview(&$form_state = NULL) {
     }
   }
   $form['#tree'] = TRUE;
-  
+
   $addnewfields = '<h2>'. t('Add new field') .'</h2>';
   $addnewfields .= '<ul>';
   foreach (_profile_field_types() as $key => $value) {
@@ -65,7 +65,7 @@ function profile_admin_overview(&$form_state = NULL) {
 
 /**
  * Submit hanlder to update changed profile field weights and categories.
- * 
+ *
  * @see profile_admin_overview().
  */
 function profile_admin_overview_submit($form, &$form_state) {
@@ -113,7 +113,7 @@ function theme_profile_admin_overview($form) {
         $category_field['#attributes']['class'] = 'profile-category profile-category-'. $category_number;
         $rows[] = array(array('data' => $category, 'colspan' => 7, 'class' => 'category'));
         $rows[] = array('data' => array(array('data' => '<em>'. t('No fields in this category. If this category remains empty when saved, it will be removed.') .'</em>', 'colspan' => 7)), 'class' => 'category-'. $category_number .'-message category-message category-populated');
-        
+
         // Make it dragable only if there is more than one field
         if (isset($form['submit'])) {
           drupal_add_tabledrag('profile-fields', 'order', 'sibling', 'profile-weight', 'profile-weight-'. $category_number);
@@ -125,7 +125,7 @@ function theme_profile_admin_overview($form) {
       // Add special drag and drop classes that group fields together.
       $field['weight']['#attributes']['class'] = 'profile-weight profile-weight-'. $categories[$category];
       $field['category']['#attributes']['class'] = 'profile-category profile-category-'. $categories[$category];
-      
+
       // Add the row
       $row = array();
       $row[] = drupal_render($field['title']);
@@ -143,7 +143,7 @@ function theme_profile_admin_overview($form) {
   if (empty($rows)) {
     $rows[] = array(array('data' => t('No fields available.'), 'colspan' => 7));
   }
-  
+
   $header = array(t('Title'), t('Name'), t('Type'));
   if (isset($form['submit'])) {
     $header[] = t('Category');
@@ -153,7 +153,7 @@ function theme_profile_admin_overview($form) {
 
   $output = theme('table', $header, $rows, array('id' => 'profile-fields'));
   $output .= drupal_render($form);
-  
+
   return $output;
 }
 

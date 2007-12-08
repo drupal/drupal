@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.191 2007/12/06 09:58:31 goba Exp $
+// $Id: filter.module,v 1.192 2007/12/08 14:06:21 goba Exp $
 
 /**
  * @file
@@ -274,7 +274,7 @@ function filter_filter_tips($delta, $format, $long = FALSE) {
       }
       break;
     case 2:
-       return t('Web page addresses and e-mail addresses turn into links automatically.');
+      return t('Web page addresses and e-mail addresses turn into links automatically.');
   }
 }
 

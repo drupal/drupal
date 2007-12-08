@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.14 2007/12/06 09:58:32 goba Exp $
+// $Id: node.pages.inc,v 1.15 2007/12/08 14:06:21 goba Exp $
 
 /**
  * @file
@@ -384,10 +384,10 @@ function node_preview($node) {
     // 'teaser' form item).
     if (!isset($node->teaser)) {
       $node->teaser = empty($node->body) ? '' : node_teaser($node->body, $node->format);
-       // Chop off the teaser from the body if needed.
-       if (!$node->teaser_include && $node->teaser == substr($node->body, 0, strlen($node->teaser))) {
-         $node->body = substr($node->body, strlen($node->teaser));
-       }
+      // Chop off the teaser from the body if needed.
+      if (!$node->teaser_include && $node->teaser == substr($node->body, 0, strlen($node->teaser))) {
+        $node->body = substr($node->body, strlen($node->teaser));
+      }
     }
 
     // Display a preview of the node:

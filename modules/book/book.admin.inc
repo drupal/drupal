@@ -1,5 +1,5 @@
 <?php
-// $Id: book.admin.inc,v 1.6 2007/11/26 16:19:37 dries Exp $
+// $Id: book.admin.inc,v 1.7 2007/12/08 14:06:20 goba Exp $
 
 /**
  * @file
@@ -231,7 +231,7 @@ function theme_book_admin_table($form) {
  */
 function _book_admin_sort_tree(&$tree) {
   uasort($tree, '_book_admin_compare');
-  foreach($tree as $key => $subtree) {
+  foreach ($tree as $key => $subtree) {
     if (!empty($tree[$key]['below'])) {
       _book_admin_sort_tree($tree[$key]['below']);
     }

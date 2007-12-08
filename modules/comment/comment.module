@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.604 2007/12/06 09:58:30 goba Exp $
+// $Id: comment.module,v 1.605 2007/12/08 14:06:21 goba Exp $
 
 /**
  * @file
@@ -1050,8 +1050,8 @@ function comment_operations($action = NULL) {
 }
 
 /**
-*** misc functions: helpers, privates, history
-**/
+ * Misc functions: helpers, privates, history
+ */
 
 /**
  * Load the entire comment by cid.
@@ -1318,7 +1318,7 @@ function comment_form(&$form_state, $edit, $title = NULL) {
   if (!form_get_errors() && ((variable_get('comment_preview_'. $node->type, COMMENT_PREVIEW_REQUIRED) == COMMENT_PREVIEW_OPTIONAL) || ($op == t('Preview')) || ($op == t('Save')))) {
     $form['submit'] = array('#type' => 'submit', '#value' => t('Save'), '#weight' => 19);
   }
-  
+
   $form['preview'] = array('#type' => 'button', '#value' => t('Preview'), '#weight' => 20);
   $form['#token'] = 'comment'. $edit['nid'] . (isset($edit['pid']) ? $edit['pid'] : '');
 

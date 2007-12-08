@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.install,v 1.11 2007/11/26 19:55:15 goba Exp $
+// $Id: comment.install,v 1.12 2007/12/08 14:06:21 goba Exp $
 
 /**
  * Implementation of hook_enable().
@@ -159,44 +159,44 @@ function comment_schema() {
     'primary key' => array('cid'),
   );
 
-    $schema['node_comment_statistics'] = array(
-     'description' => t('Maintains statistics of node and comments posts to show "new" and "updated" flags.'),
-      'fields' => array(
-       'nid' => array(
-         'type' => 'int',
-         'unsigned' => TRUE,
-         'not null' => TRUE,
-         'default' => 0,
-         'description' => t('The {node}.nid for which the statistics are compiled.'),
-       ),
-       'last_comment_timestamp' => array(
-         'type' => 'int',
-         'not null' => TRUE,
-         'default' => 0,
-         'description' => t('The Unix timestamp of the last comment that was posted within this node, from {comments}.timestamp.'),
-       ),
-       'last_comment_name' => array(
-         'type' => 'varchar',
-         'length' => 60,
-         'not null' => FALSE,
-         'description' => t('The name of the latest author to post a comment on this node, from {comments}.name.'),
-       ),
-       'last_comment_uid' => array(
-         'type' => 'int',
-         'not null' => TRUE,
-         'default' => 0,
-         'description' => t('The user ID of the latest author to post a comment on this node, from {comments}.uid.'),
-       ),
-       'comment_count' => array(
-         'type' => 'int',
-         'unsigned' => TRUE,
-         'not null' => TRUE,
-         'default' => 0,
-         'description' => t('The total number of comments on this node.'),
-       ),
+  $schema['node_comment_statistics'] = array(
+    'description' => t('Maintains statistics of node and comments posts to show "new" and "updated" flags.'),
+    'fields' => array(
+      'nid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => t('The {node}.nid for which the statistics are compiled.'),
       ),
-      'indexes' => array('node_comment_timestamp' => array('last_comment_timestamp')),
-      'primary key' => array('nid'),
+      'last_comment_timestamp' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => t('The Unix timestamp of the last comment that was posted within this node, from {comments}.timestamp.'),
+      ),
+      'last_comment_name' => array(
+        'type' => 'varchar',
+        'length' => 60,
+        'not null' => FALSE,
+        'description' => t('The name of the latest author to post a comment on this node, from {comments}.name.'),
+      ),
+      'last_comment_uid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => t('The user ID of the latest author to post a comment on this node, from {comments}.uid.'),
+      ),
+      'comment_count' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => t('The total number of comments on this node.'),
+      ),
+    ),
+    'indexes' => array('node_comment_timestamp' => array('last_comment_timestamp')),
+    'primary key' => array('nid'),
   );
 
   return $schema;

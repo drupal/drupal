@@ -1,5 +1,5 @@
 <?php
-// $Id: page.tpl.php,v 1.9 2007/12/05 16:34:05 goba Exp $
+// $Id: page.tpl.php,v 1.10 2007/12/08 14:06:22 goba Exp $
 
 /**
  * @file page.tpl.php
@@ -32,7 +32,7 @@
  *   path, whether the user is logged in, and so on.
  *
  * Site identity:
- * - $front_page: The URL of the front page. Use this instead of $base_path, 
+ * - $front_page: The URL of the front page. Use this instead of $base_path,
  *   when linking to the front page. This includes the language domain or prefix.
  * - $logo: The path to the logo image, as defined in theme configuration.
  * - $site_name: The name of the site, empty when display has been disabled

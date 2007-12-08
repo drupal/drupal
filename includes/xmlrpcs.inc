@@ -1,5 +1,5 @@
 <?php
-// $Id: xmlrpcs.inc,v 1.22 2007/09/04 21:10:45 dries Exp $
+// $Id: xmlrpcs.inc,v 1.23 2007/12/08 14:06:20 goba Exp $
 
 /**
  * The main entry point for XML-RPC requests.
@@ -55,7 +55,7 @@ function xmlrpc_server($callbacks) {
 
   $data = file_get_contents('php://input');
   if (!$data) {
-     die('XML-RPC server accepts POST requests only.');
+    die('XML-RPC server accepts POST requests only.');
   }
   $xmlrpc_server->message = xmlrpc_message($data);
   if (!xmlrpc_message_parse($xmlrpc_server->message)) {

@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.133 2007/11/30 16:04:05 goba Exp $
+// $Id: path.module,v 1.134 2007/12/08 14:06:21 goba Exp $
 
 /**
  * @file
@@ -117,7 +117,7 @@ function path_set_alias($path = NULL, $alias = NULL, $pid = NULL, $language = ''
     }
     else {
       db_query("DELETE FROM {url_alias} WHERE src = '%s'", $path);
-    }  
+    }
   }
   drupal_clear_path_cache();
 }

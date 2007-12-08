@@ -1,4 +1,4 @@
-// $Id: profile.js,v 1.1 2007/11/30 09:02:51 goba Exp $
+// $Id: profile.js,v 1.2 2007/12/08 14:06:22 goba Exp $
 
 /**
  * Add functionality to the profile drag and drop table.
@@ -46,7 +46,7 @@ Drupal.behaviors.profileDrag = function(context) {
       if (!categoryField.is('.profile-category-'+ categoryNum)) {
         categoryField.removeClass('profile-category-' + oldcategoryNum).addClass('profile-category-' + categoryNum);
         weightField.removeClass('profile-weight-' + oldcategoryNum).addClass('profile-weight-' + categoryNum);
-        
+
         categoryField.val(categoryField[0].options[categoryNum].value);
       }
     }

@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.429 2007/11/26 19:46:51 goba Exp $
+// $Id: forum.module,v 1.430 2007/12/08 14:06:21 goba Exp $
 
 /**
  * @file
@@ -190,7 +190,7 @@ function forum_nodeapi(&$node, $op, $teaser, $page) {
         if ($parents = taxonomy_get_parents_all($node->tid)) {
           $parents = array_reverse($parents);
           foreach ($parents as $p) {
-            $breadcrumb[] = l($p->name, 'forum/'.$p->tid);
+            $breadcrumb[] = l($p->name, 'forum/'. $p->tid);
           }
         }
         drupal_set_breadcrumb($breadcrumb);

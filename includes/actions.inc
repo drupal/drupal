@@ -1,10 +1,10 @@
 <?php
-// $Id: actions.inc,v 1.6 2007/11/30 09:20:27 goba Exp $
+// $Id: actions.inc,v 1.7 2007/12/08 14:06:20 goba Exp $
 
 /**
-* @file
-* This is the actions engine for executing stored actions.
-*/
+ * @file
+ * This is the actions engine for executing stored actions.
+ */
 
 /**
  * Perform a given list of actions by executing their callback functions.

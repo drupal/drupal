@@ -1,5 +1,5 @@
 <?php
-// $Id: language.inc,v 1.11 2007/12/05 16:34:05 goba Exp $
+// $Id: language.inc,v 1.12 2007/12/08 14:06:20 goba Exp $
 
 /**
  * @file
@@ -106,7 +106,7 @@ function language_url_rewrite(&$path, &$options) {
     if (!isset($options['language'])) {
       $options['language'] = $language;
     }
-    
+
     switch (variable_get('language_negotiation', LANGUAGE_NEGOTIATION_NONE)) {
       case LANGUAGE_NEGOTIATION_NONE:
         // No language dependent path allowed in this mode.

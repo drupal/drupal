@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.288 2007/11/26 16:36:42 dries Exp $
+// $Id: block.module,v 1.289 2007/12/08 14:06:20 goba Exp $
 
 /**
  * @file
@@ -39,21 +39,21 @@ define('BLOCK_REGION_NONE', -1);
 define('BLOCK_NO_CACHE', -1);
 
 /**
-* The block can change depending on the roles the user viewing the page belongs to.
-* This is the default setting, used when the block does not specify anything.
-*/
+ * The block can change depending on the roles the user viewing the page belongs to.
+ * This is the default setting, used when the block does not specify anything.
+ */
 define('BLOCK_CACHE_PER_ROLE', 0x0001);
 
 /**
-* The block can change depending on the user viewing the page.
-* This setting can be resource-consuming for sites with large number of users,
-* and thus should only be used when BLOCK_CACHE_PER_ROLE is not sufficient.
-*/
+ * The block can change depending on the user viewing the page.
+ * This setting can be resource-consuming for sites with large number of users,
+ * and thus should only be used when BLOCK_CACHE_PER_ROLE is not sufficient.
+ */
 define('BLOCK_CACHE_PER_USER', 0x0002);
 
 /**
-* The block can change depending on the page being viewed.
-*/
+ * The block can change depending on the page being viewed.
+ */
 define('BLOCK_CACHE_PER_PAGE', 0x0004);
 
 /**

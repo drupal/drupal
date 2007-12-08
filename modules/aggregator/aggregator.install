@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.install,v 1.12 2007/11/04 14:33:06 goba Exp $
+// $Id: aggregator.install,v 1.13 2007/12/08 14:06:20 goba Exp $
 
 /**
  * Implementation of hook_install().
@@ -73,7 +73,7 @@ function aggregator_schema() {
         'not null' => TRUE,
         'default' => 0,
         'description' => t('The {aggregator_category}.cid to which the feed is being assigned.'),
-     )
+      )
     ),
     'primary key' => array('fid', 'cid'),
   );

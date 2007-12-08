@@ -1,5 +1,5 @@
 <?php
-// $Id: install.mysql.inc,v 1.7 2007/11/19 19:53:51 goba Exp $
+// $Id: install.mysql.inc,v 1.8 2007/12/08 14:06:20 goba Exp $
 
 // MySQL specific install functions
 
@@ -35,7 +35,7 @@ function drupal_test_mysql($url, &$success) {
 
   // Allow for non-standard MySQL port.
   if (isset($url['port'])) {
-     $url['host'] = $url['host'] .':'. $url['port'];
+    $url['host'] = $url['host'] .':'. $url['port'];
   }
 
   // Test connecting to the database.

@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.242 2007/12/05 12:38:03 goba Exp $
+// $Id: search.module,v 1.243 2007/12/08 14:06:22 goba Exp $
 
 /**
  * @file
@@ -1087,7 +1087,7 @@ function template_preprocess_search_theme_form(&$variables) {
     if ($type == 'hidden' || $type == 'token') {
       $hidden[] = drupal_render($variables['form'][$key]);
     }
-   else {
+    else {
       $variables['search'][$key] = drupal_render($variables['form'][$key]);
     }
   }

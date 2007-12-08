@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.module,v 1.12 2007/11/26 16:36:43 dries Exp $
+// $Id: openid.module,v 1.13 2007/12/08 14:06:21 goba Exp $
 
 /**
  * @file
@@ -44,7 +44,7 @@ function openid_help($path, $arg) {
 
   case 'user/%/openid':
       $output = '<p>'. t('This site supports <a href="@openid-net">OpenID</a>, a secure way to log into many websites using a single username and password. OpenID can reduce the necessity of managing many usernames and passwords for many websites.', array('@openid-net' => url('http://openid.net'))) .'</p>';
-      $output .= '<p>' . t('To use OpenID you must first establish an identity on a public or private OpenID server. If you do not have an OpenID and would like one, look into one of the <a href="@openid-providers">free public providers</a>. You can find out more about OpenID at <a href="@openid-net">this website</a>.', array('@openid-providers' => url('http://openid.net/wiki/index.php/OpenIDServers'), '@openid-net' => url('http://openid.net'))) .'</p>';
+      $output .= '<p>'. t('To use OpenID you must first establish an identity on a public or private OpenID server. If you do not have an OpenID and would like one, look into one of the <a href="@openid-providers">free public providers</a>. You can find out more about OpenID at <a href="@openid-net">this website</a>.', array('@openid-providers' => url('http://openid.net/wiki/index.php/OpenIDServers'), '@openid-net' => url('http://openid.net'))) .'</p>';
       $output .= '<p>'. t('If you already have an OpenID, enter the URL to your OpenID server below (e.g. myusername.openidprovider.com). Next time you login, you will be able to use this URL instead of a regular username and password. You can have multiple OpenID servers if you like; just keep adding them here.') .'</p>';
       return $output;
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.14 2007/11/28 10:29:20 dries Exp $
+// $Id: taxonomy.admin.inc,v 1.15 2007/12/08 14:06:22 goba Exp $
 
 /**
  * @file
@@ -151,7 +151,7 @@ function taxonomy_form_vocabulary(&$form_state, $edit = array()) {
     '#type' => 'fieldset',
     '#title' => t('Settings'),
     '#collapsible' => TRUE,
-   );
+  );
   $form['settings']['tags'] = array('#type' => 'checkbox',
     '#title' => t('Tags'),
     '#default_value' => $edit['tags'],

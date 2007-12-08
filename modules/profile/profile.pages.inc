@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.pages.inc,v 1.1 2007/11/13 12:28:36 dries Exp $
+// $Id: profile.pages.inc,v 1.2 2007/12/08 14:06:22 goba Exp $
 
 /**
  * @file
@@ -23,8 +23,8 @@ function profile_browse() {
     }
     // Do not allow browsing of private and hidden fields by non-admins.
     if (!user_access('administer users') && ($field->visibility == PROFILE_PRIVATE || $field->visibility == PROFILE_HIDDEN)) {
-       drupal_access_denied();
-       return;
+      drupal_access_denied();
+      return;
     }
 
     // Compile a list of fields to show.
