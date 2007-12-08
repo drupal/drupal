@@ -106,7 +106,7 @@ function language_url_rewrite(&$path, &$options) {
     if (!isset($options['language'])) {
       $options['language'] = $language;
     }
-    
+
     switch (variable_get('language_negotiation', LANGUAGE_NEGOTIATION_NONE)) {
       case LANGUAGE_NEGOTIATION_NONE:
         // No language dependent path allowed in this mode.

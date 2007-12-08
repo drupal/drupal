@@ -73,7 +73,7 @@ function aggregator_schema() {
         'not null' => TRUE,
         'default' => 0,
         'description' => t('The {aggregator_category}.cid to which the feed is being assigned.'),
-     )
+      )
     ),
     'primary key' => array('fid', 'cid'),
   );

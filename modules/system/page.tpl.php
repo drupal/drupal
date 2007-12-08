@@ -32,7 +32,7 @@
  *   path, whether the user is logged in, and so on.
  *
  * Site identity:
- * - $front_page: The URL of the front page. Use this instead of $base_path, 
+ * - $front_page: The URL of the front page. Use this instead of $base_path,
  *   when linking to the front page. This includes the language domain or prefix.
  * - $logo: The path to the logo image, as defined in theme configuration.
  * - $site_name: The name of the site, empty when display has been disabled

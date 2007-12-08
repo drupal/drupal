@@ -190,7 +190,7 @@ function forum_nodeapi(&$node, $op, $teaser, $page) {
         if ($parents = taxonomy_get_parents_all($node->tid)) {
           $parents = array_reverse($parents);
           foreach ($parents as $p) {
-            $breadcrumb[] = l($p->name, 'forum/'.$p->tid);
+            $breadcrumb[] = l($p->name, 'forum/'. $p->tid);
           }
         }
         drupal_set_breadcrumb($breadcrumb);

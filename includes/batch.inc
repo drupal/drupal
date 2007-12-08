@@ -291,7 +291,7 @@ function _batch_finished() {
   $batch =& batch_get();
 
   // Execute the 'finished' callbacks for each batch set.
-  foreach($batch['sets'] as $key => $batch_set) {
+  foreach ($batch['sets'] as $key => $batch_set) {
     if (isset($batch_set['finished'])) {
       // Check if the set requires an additional file for functions definitions.
       if (isset($batch_set['file']) && is_file($batch_set['file'])) {

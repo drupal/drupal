@@ -263,7 +263,8 @@ function taxonomy_schema() {
       ),
       'type' => array(
         'type' => 'varchar',
-        'length' => 32,'not null' => TRUE,
+        'length' => 32,
+        'not null' => TRUE,
         'default' => '',
         'description' => t('The {node}.type of the node type for which the vocabulary may be used.'),
       ),

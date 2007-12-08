@@ -514,7 +514,7 @@ function db_change_field(&$ret, $table, $field, $field_new, $spec, $keys_new = a
   $sql = 'ALTER TABLE {'. $table .'} CHANGE '. $field .' '.
     _db_create_field_sql($field_new, _db_process_field($spec));
   if (count($keys_new)) {
-    $sql .= ', ADD '.implode(', ADD ', _db_create_keys_sql($keys_new));
+    $sql .= ', ADD '. implode(', ADD ', _db_create_keys_sql($keys_new));
   }
   $ret[] = update_sql($sql);
 }

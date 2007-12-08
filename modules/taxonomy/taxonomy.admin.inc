@@ -151,7 +151,7 @@ function taxonomy_form_vocabulary(&$form_state, $edit = array()) {
     '#type' => 'fieldset',
     '#title' => t('Settings'),
     '#collapsible' => TRUE,
-   );
+  );
   $form['settings']['tags'] = array('#type' => 'checkbox',
     '#title' => t('Tags'),
     '#default_value' => $edit['tags'],

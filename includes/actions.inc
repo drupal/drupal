@@ -2,9 +2,9 @@
 // $Id$
 
 /**
-* @file
-* This is the actions engine for executing stored actions.
-*/
+ * @file
+ * This is the actions engine for executing stored actions.
+ */
 
 /**
  * Perform a given list of actions by executing their callback functions.

@@ -117,7 +117,7 @@ function path_set_alias($path = NULL, $alias = NULL, $pid = NULL, $language = ''
     }
     else {
       db_query("DELETE FROM {url_alias} WHERE src = '%s'", $path);
-    }  
+    }
   }
   drupal_clear_path_cache();
 }

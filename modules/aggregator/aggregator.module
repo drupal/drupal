@@ -577,7 +577,7 @@ function aggregator_refresh($feed) {
     case 302:
     case 307:
       // Filter the input data:
-     if (aggregator_parse_feed($result->data, $feed)) {
+      if (aggregator_parse_feed($result->data, $feed)) {
 
         $modified = empty($result->headers['Last-Modified']) ? 0 : strtotime($result->headers['Last-Modified']);
 

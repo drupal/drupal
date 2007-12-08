@@ -304,7 +304,7 @@ function _poll_choice_form($delta, $value = '', $votes = 0) {
     '#type' => 'textfield',
     '#title' => t('Choice @n', array('@n' => ($delta + 1))),
     '#default_value' => $value,
-    '#parents' => array('choice', $delta,'chtext'),
+    '#parents' => array('choice', $delta, 'chtext'),
   );
 
   if ($admin) {

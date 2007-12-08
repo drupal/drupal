@@ -579,7 +579,7 @@ function upload_js() {
   upload_node_form_submit(array(), $form_state);
   $node->files = upload_load($node);
   if (!empty($form_state['values']['files'])) {
-    foreach($form_state['values']['files'] as $fid => $file) {
+    foreach ($form_state['values']['files'] as $fid => $file) {
       $node->files[$fid] = $file;
     }
   }

@@ -1655,7 +1655,7 @@ function system_sql() {
 
   $result = db_query("SHOW STATUS");
   while ($entry = db_fetch_object($result)) {
-   $data[$entry->Variable_name] = $entry->Value;
+    $data[$entry->variable_name] = $entry->value;
   }
 
   $output  = '<h2>'. t('Command counters') .'</h2>';

@@ -384,7 +384,7 @@ function node_admin_nodes() {
     '#submit' => array('node_admin_nodes_submit'),
   );
 
-  $languages = language_list(); 
+  $languages = language_list();
   $destination = drupal_get_destination();
   $nodes = array();
   while ($node = db_fetch_object($result)) {

@@ -46,7 +46,7 @@ Drupal.behaviors.profileDrag = function(context) {
       if (!categoryField.is('.profile-category-'+ categoryNum)) {
         categoryField.removeClass('profile-category-' + oldcategoryNum).addClass('profile-category-' + categoryNum);
         weightField.removeClass('profile-weight-' + oldcategoryNum).addClass('profile-weight-' + categoryNum);
-        
+
         categoryField.val(categoryField[0].options[categoryNum].value);
       }
     }

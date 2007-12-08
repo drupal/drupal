@@ -7,7 +7,7 @@
    Site:   http://scripts.incutio.com/xmlrpc/
    Manual: http://scripts.incutio.com/xmlrpc/manual.php
    This version is made available under the GNU GPL License
-*/
+ */
 
 /**
  * Recursively turn a data structure into objects with 'data' and 'type' attributes.

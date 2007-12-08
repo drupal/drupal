@@ -274,7 +274,7 @@ function filter_filter_tips($delta, $format, $long = FALSE) {
       }
       break;
     case 2:
-       return t('Web page addresses and e-mail addresses turn into links automatically.');
+      return t('Web page addresses and e-mail addresses turn into links automatically.');
   }
 }
 

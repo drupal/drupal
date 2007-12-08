@@ -521,7 +521,7 @@ function bootstrap_invoke_all($hook) {
   foreach (module_list(TRUE, TRUE) as $module) {
     drupal_load('module', $module);
     module_invoke($module, $hook);
- }
+  }
 }
 
 /**
@@ -786,7 +786,7 @@ function drupal_get_messages($type = NULL, $clear_queue = TRUE) {
   if ($messages = drupal_set_message()) {
     if ($type) {
       if ($clear_queue) {
-         unset($_SESSION['messages'][$type]);
+        unset($_SESSION['messages'][$type]);
       }
       if (isset($messages[$type])) {
         return array($type => $messages[$type]);
@@ -794,7 +794,7 @@ function drupal_get_messages($type = NULL, $clear_queue = TRUE) {
     }
     else {
       if ($clear_queue) {
-         unset($_SESSION['messages']);
+        unset($_SESSION['messages']);
       }
       return $messages;
     }
