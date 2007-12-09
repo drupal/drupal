@@ -347,7 +347,7 @@ function profile_form_profile($edit, $user, $category, $register = FALSE) {
   while ($field = db_fetch_object($result)) {
     $category = $field->category;
     if (!isset($fields[$category])) {
-      $fields[$category] = array('#type' => 'fieldset', '#title' => check_plain($category), '#weight' => $w++);
+      $fields[$category] = array('#type' => 'fieldset', '#title' => check_plain($category), '#weight' => $weight++);
     }
     switch ($field->type) {
       case 'textfield':
