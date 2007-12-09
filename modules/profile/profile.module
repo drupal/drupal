@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.228 2007/12/08 14:06:22 goba Exp $
+// $Id: profile.module,v 1.229 2007/12/09 13:03:01 goba Exp $
 
 /**
  * @file
@@ -347,7 +347,7 @@ function profile_form_profile($edit, $user, $category, $register = FALSE) {
   while ($field = db_fetch_object($result)) {
     $category = $field->category;
     if (!isset($fields[$category])) {
-      $fields[$category] = array('#type' => 'fieldset', '#title' => check_plain($category), '#weight' => $w++);
+      $fields[$category] = array('#type' => 'fieldset', '#title' => check_plain($category), '#weight' => $weight++);
     }
     switch ($field->type) {
       case 'textfield':

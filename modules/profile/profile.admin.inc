@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.admin.inc,v 1.5 2007/12/08 14:06:22 goba Exp $
+// $Id: profile.admin.inc,v 1.6 2007/12/09 13:03:01 goba Exp $
 
 /**
  * @file
@@ -12,7 +12,7 @@
  * @ingroup forms
  * @see profile_admin_overview_submit().
  */
-function profile_admin_overview(&$form_state = NULL) {
+function profile_admin_overview() {
   $result = db_query('SELECT title, name, type, category, fid, weight FROM {profile_fields} ORDER BY category, weight');
 
   $form = array();
