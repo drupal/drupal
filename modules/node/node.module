@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.917 2007/12/08 14:06:21 goba Exp $
+// $Id: node.module,v 1.918 2007/12/10 10:29:19 goba Exp $
 
 /**
  * @file
@@ -1513,15 +1513,18 @@ function node_block($op = 'list', $delta = 0) {
  * A generic function for generating RSS feeds from a set of nodes.
  *
  * @param $nids
- *   An array of node IDs (nid).
+ *   An array of node IDs (nid). Defaults to FALSE so empty feeds can be
+ *   generated with passing an empty array, if no items are to be added
+ *   to the feed.
  * @param $channel
  *   An associative array containing title, link, description and other keys.
  *   The link should be an absolute URL.
  */
-function node_feed($nids = array(), $channel = array()) {
+function node_feed($nids = FALSE, $channel = array()) {
   global $base_url, $language;
 
-  if (!$nids) {
+  if ($nids === FALSE) {
+    $nids = array();
     $result = db_query_range(db_rewrite_sql('SELECT n.nid, n.created FROM {node} n WHERE n.promote = 1 AND n.status = 1 ORDER BY n.created DESC'), 0, variable_get('feed_default_items', 10));
     while ($row = db_fetch_object($result)) {
       $nids[] = $row->nid;
