@@ -60,7 +60,8 @@ function contact_mail_page() {
       // If there is more than one category available and no default category has been selected,
       // prepend a default placeholder value.
       if (!isset($default_category)) {
-        $categories = array(t('--')) + $categories;
+        $default_category = t('- Please choose -');
+        $categories = array($default_category) + $categories;
       }
       $form['cid'] = array('#type' => 'select',
         '#title' => t('Category'),
