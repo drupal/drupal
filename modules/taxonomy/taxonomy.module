@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.404 2007/12/08 14:06:22 goba Exp $
+// $Id: taxonomy.module,v 1.405 2007/12/10 21:54:10 goba Exp $
 
 /**
  * @file
@@ -412,10 +412,12 @@ function taxonomy_del_term($tid) {
 function taxonomy_form($vid, $value = 0, $help = NULL, $name = 'taxonomy') {
   $vocabulary = taxonomy_vocabulary_load($vid);
   $help = ($help) ? $help : $vocabulary->help;
-  $blank = 0;
 
   if (!$vocabulary->multiple) {
     $blank = ($vocabulary->required) ? t('- Please choose -') : t('- None selected -');
+  }
+  else {
+    $blank = ($vocabulary->required) ? 0 : t('- None -');
   }
 
   return _taxonomy_term_select(check_plain($vocabulary->name), $name, $value, $vid, $help, intval($vocabulary->multiple), $blank);
