@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.100 2007/12/08 15:15:25 goba Exp $
+// $Id: install.php,v 1.101 2007/12/10 18:16:19 goba Exp $
 
 require_once './includes/install.inc';
 
@@ -817,7 +817,7 @@ function _install_module_batch($module, $module_name, &$context) {
   // steps.
   module_enable(array($module));
   $context['results'][] = $module;
-  $context['message'] = 'Installed '. $module_name. ' module.';
+  $context['message'] = 'Installed '. $module_name .' module.';
 }
 
 /**
