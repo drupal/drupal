@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.pages.inc,v 1.4 2007/10/02 16:03:17 dries Exp $
+// $Id: contact.pages.inc,v 1.5 2007/12/10 10:38:00 goba Exp $
 
 /**
  * @file
@@ -60,7 +60,8 @@ function contact_mail_page() {
       // If there is more than one category available and no default category has been selected,
       // prepend a default placeholder value.
       if (!isset($default_category)) {
-        $categories = array(t('--')) + $categories;
+        $default_category = t('- Please choose -');
+        $categories = array($default_category) + $categories;
       }
       $form['cid'] = array('#type' => 'select',
         '#title' => t('Category'),
