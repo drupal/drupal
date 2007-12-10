@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.918 2007/12/10 10:29:19 goba Exp $
+// $Id: node.module,v 1.919 2007/12/10 10:52:52 goba Exp $
 
 /**
  * @file
@@ -688,9 +688,15 @@ function node_load($param = array(), $revision = NULL, $reset = NULL) {
   $fields = drupal_schema_fields_sql('node', 'n');
   $fields = array_merge($fields, drupal_schema_fields_sql('node_revisions', 'r'));
   $fields = array_merge($fields, array('u.name', 'u.picture', 'u.data'));
+  // Remove fields not needed in the query: n.vid and r.nid are redundant,
+  // n.title is unnecessary because the node title comes from the
+  // node_revisions table.  We'll keep r.vid, r.title, and n.nid.
+  $fields = array_diff($fields, array('n.vid', 'n.title', 'r.nid'));
   $fields = implode(', ', $fields);
-  // rename timestamp field for clarity.
+  // Rename timestamp field for clarity.
   $fields = str_replace('r.timestamp', 'r.timestamp AS revision_timestamp', $fields);
+  // Change name of revision uid so it doesn't conflict with n.uid.
+  $fields = str_replace('r.uid', 'r.uid AS revision_uid', $fields);
 
   // Retrieve the node.
   // No db_rewrite_sql is applied so as to get complete indexing for search.
