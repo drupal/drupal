@@ -2714,6 +2714,20 @@ function system_update_6040() {
 }
 
 /**
+ * Change forum vocabulary not to be required by default and set the weight of the forum.module 1 higher than the taxonomy.module.
+ */
+function system_update_6041() {
+  $weight = intval((db_result(db_query("SELECT weight FROM {system} WHERE name = 'taxonomy'"))) + 1);
+  $ret = array();
+  $vid = intval(variable_get('forum_nav_vocabulary', ''));
+  if (db_table_exists('vocabulary') && $vid) {
+    $ret[] = update_sql("UPDATE {vocabulary} SET required = 0 WHERE vid = " . $vid);
+    $ret[] = update_sql("UPDATE {system} SET weight = ". $weight ." WHERE name = 'forum'");
+  }
+  return $ret;
+}
+
+/**
  * @} End of "defgroup updates-5.x-to-6.x"
  * The next series of updates should start at 7000.
  */
