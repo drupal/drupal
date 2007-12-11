@@ -926,8 +926,8 @@ function node_delete($nid) {
     if (function_exists('search_wipe')) {
       search_wipe($node->nid, 'node');
     }
-    drupal_set_message(t('%title has been deleted.', array('%title' => $node->title)));
     watchdog('content', '@type: deleted %title.', array('@type' => $node->type, '%title' => $node->title));
+    drupal_set_message(t('@type %title has been deleted.', array('@type' => node_get_types('name', $node), '%title' => $node->title)));
   }
 }
 
