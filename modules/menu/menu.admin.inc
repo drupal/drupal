@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.admin.inc,v 1.19 2007/12/06 21:35:14 goba Exp $
+// $Id: menu.admin.inc,v 1.20 2007/12/11 12:17:58 goba Exp $
 
 /**
  * @file
@@ -238,7 +238,7 @@ function menu_edit_item(&$form_state, $type, $item, $menu) {
     // This is an add form, initialize the menu link.
     $item = array('link_title' => '', 'mlid' => 0, 'plid' => 0, 'menu_name' => $menu['menu_name'], 'weight' => 0,  'link_path' => '', 'options' => array(), 'module' => 'menu', 'expanded' => 0, 'hidden' => 0, 'has_children' => 0);
   }
-  foreach (array('link_path', 'mlid', 'module', 'hidden', 'has_children', 'options') as $key) {
+  foreach (array('link_path', 'mlid', 'module', 'has_children', 'options') as $key) {
     $form['menu'][$key] = array('#type' => 'value', '#value' => $item[$key]);
   }
   // Any item created or edited via this interface is considered "customized".
@@ -287,6 +287,12 @@ function menu_edit_item(&$form_state, $type, $item, $menu) {
     '#default_value' => isset($item['options']['attributes']['title']) ? $item['options']['attributes']['title'] : '',
     '#rows' => 1,
     '#description' => t('The description displayed when hovering over a menu item.'),
+  );
+  $form['menu']['enabled'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Enabled'),
+    '#default_value' => !$item['hidden'],
+    '#description' => t('Menu items that are not enabled will not be listed in any menu.'),
   );
   $form['menu']['expanded'] = array(
     '#type' => 'checkbox',
@@ -360,6 +366,12 @@ function menu_item_delete_submit($form, &$form_state) {
  */
 function menu_edit_item_submit($form, &$form_state) {
   $item = $form_state['values']['menu'];
+  
+  // The value of "hidden" is the opposite of the value
+  // supplied by the "enabled" checkbox. 
+  $item['hidden'] = (int) !$item['enabled'];
+  unset($item['enabled']);
+  
   $item['options']['attributes']['title'] = $item['description'];
   list($item['menu_name'], $item['plid']) = explode(':', $item['parent']);
   if (!menu_link_save($item)) {
