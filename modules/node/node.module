@@ -830,6 +830,16 @@ function node_save(&$node) {
     if (!isset($node->log)) {
       $node->log = '';
     }
+
+    // For the same reasons, make sure we have $node->teaser and
+    // $node->body.  We should consider making these fields nullable
+    // in a future version since node types are not required to use them.
+    if (!isset($node->teaser)) {
+      $node->teaser = '';
+    }
+    if (!isset($node->body)) {
+      $node->body = '';
+    }
   }
   elseif (!empty($node->revision)) {
     $node->old_vid = $node->vid;
