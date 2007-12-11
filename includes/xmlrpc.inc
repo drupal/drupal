@@ -390,12 +390,13 @@ function xmlrpc_date($time) {
     $xmlrpc_date->iso8601 = date('Ymd\TH:i:s');
   }
   else {
+    $time = str_replace(array('-', ':'), '', $time);
     $xmlrpc_date->year = substr($time, 0, 4);
     $xmlrpc_date->month = substr($time, 4, 2);
     $xmlrpc_date->day = substr($time, 6, 2);
     $xmlrpc_date->hour = substr($time, 9, 2);
-    $xmlrpc_date->minute = substr($time, 12, 2);
-    $xmlrpc_date->second = substr($time, 15, 2);
+    $xmlrpc_date->minute = substr($time, 11, 2);
+    $xmlrpc_date->second = substr($time, 14, 2);
     $xmlrpc_date->iso8601 = $time;
   }
   return $xmlrpc_date;
