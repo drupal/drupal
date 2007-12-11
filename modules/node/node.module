@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.921 2007/12/11 12:42:37 goba Exp $
+// $Id: node.module,v 1.922 2007/12/11 14:31:12 goba Exp $
 
 /**
  * @file
@@ -829,6 +829,16 @@ function node_save(&$node) {
     // log so $node->log will be unset at this point.
     if (!isset($node->log)) {
       $node->log = '';
+    }
+
+    // For the same reasons, make sure we have $node->teaser and
+    // $node->body.  We should consider making these fields nullable
+    // in a future version since node types are not required to use them.
+    if (!isset($node->teaser)) {
+      $node->teaser = '';
+    }
+    if (!isset($node->body)) {
+      $node->body = '';
     }
   }
   elseif (!empty($node->revision)) {
