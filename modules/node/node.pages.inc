@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.15 2007/12/08 14:06:21 goba Exp $
+// $Id: node.pages.inc,v 1.16 2007/12/11 12:13:39 goba Exp $
 
 /**
  * @file
@@ -437,15 +437,15 @@ function node_form_submit($form, &$form_state) {
   node_save($node);
   $node_link = l(t('view'), 'node/'. $node->nid);
   $watchdog_args = array('@type' => $node->type, '%title' => $node->title);
-  $t_args = array('%post' => node_get_types('name', $node));
+  $t_args = array('@type' => node_get_types('name', $node), '%title' => $node->title);
 
   if ($insert) {
     watchdog('content', '@type: added %title.', $watchdog_args, WATCHDOG_NOTICE, $node_link);
-    drupal_set_message(t('Your %post has been created.', $t_args));
+    drupal_set_message(t('@type %title has been created.', $t_args));
   }
   else {
     watchdog('content', '@type: updated %title.', $watchdog_args, WATCHDOG_NOTICE, $node_link);
-    drupal_set_message(t('The %post has been updated.', $t_args));
+    drupal_set_message(t('@type %title has been updated.', $t_args));
   }
   if ($node->nid) {
     unset($form_state['rebuild']);
@@ -616,8 +616,8 @@ function node_revision_revert_confirm_submit($form, &$form_state) {
 
   node_save($node_revision);
 
-  drupal_set_message(t('%title has been reverted back to the revision from %revision-date', array('%revision-date' => format_date($node_revision->revision_timestamp), '%title' => $node_revision->title)));
   watchdog('content', '@type: reverted %title revision %revision.', array('@type' => $node_revision->type, '%title' => $node_revision->title, '%revision' => $node_revision->vid));
+  drupal_set_message(t('@type %title has been reverted back to the revision from %revision-date.', array('@type' => node_get_types('name', $node_revision), '%title' => $node_revision->title, '%revision-date' => format_date($node_revision->revision_timestamp))));
   $form_state['redirect'] = 'node/'. $node_revision->nid .'/revisions';
 }
 
@@ -652,8 +652,8 @@ function node_revision_delete_confirm_submit($form, &$form_state) {
   $node_revision = $form['#node_revision'];
   db_query("DELETE FROM {node_revisions} WHERE nid = %d AND vid = %d", $node_revision->nid, $node_revision->vid);
   node_invoke_nodeapi($node_revision, 'delete revision');
-  drupal_set_message(t('Deleted %title revision %revision.', array('%title' => $node_revision->title, '%revision' => $node_revision->vid)));
   watchdog('content', '@type: deleted %title revision %revision.', array('@type' => $node_revision->type, '%title' => $node_revision->title, '%revision' => $node_revision->vid));
+  drupal_set_message(t('Revision from %revision-date of @type %title has been deleted.', array('%revision-date' => format_date($node_revision->revision_timestamp), '@type' => node_get_types('name', $node_revision), '%title' => $node_revision->title)));  
   $form_state['redirect'] = 'node/'. $node_revision->nid;
   if (db_result(db_query('SELECT COUNT(vid) FROM {node_revisions} WHERE nid = %d', $node_revision->nid)) > 1) {
     $form_state['redirect'] .= '/revisions';

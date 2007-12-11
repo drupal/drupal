@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.919 2007/12/10 10:52:52 goba Exp $
+// $Id: node.module,v 1.920 2007/12/11 12:13:39 goba Exp $
 
 /**
  * @file
@@ -926,8 +926,8 @@ function node_delete($nid) {
     if (function_exists('search_wipe')) {
       search_wipe($node->nid, 'node');
     }
-    drupal_set_message(t('%title has been deleted.', array('%title' => $node->title)));
     watchdog('content', '@type: deleted %title.', array('@type' => $node->type, '%title' => $node->title));
+    drupal_set_message(t('@type %title has been deleted.', array('@type' => node_get_types('name', $node), '%title' => $node->title)));
   }
 }
 
