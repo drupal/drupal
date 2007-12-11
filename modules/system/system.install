@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.204 2007/12/07 11:55:13 goba Exp $
+// $Id: system.install,v 1.205 2007/12/11 10:52:01 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -2709,6 +2709,20 @@ function system_update_6040() {
   $ret = array();
   if (db_table_exists('upload')) {
     db_add_field($ret, 'upload', 'weight', array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny'));
+  }
+  return $ret;
+}
+
+/**
+ * Change forum vocabulary not to be required by default and set the weight of the forum.module 1 higher than the taxonomy.module.
+ */
+function system_update_6041() {
+  $weight = intval((db_result(db_query("SELECT weight FROM {system} WHERE name = 'taxonomy'"))) + 1);
+  $ret = array();
+  $vid = intval(variable_get('forum_nav_vocabulary', ''));
+  if (db_table_exists('vocabulary') && $vid) {
+    $ret[] = update_sql("UPDATE {vocabulary} SET required = 0 WHERE vid = " . $vid);
+    $ret[] = update_sql("UPDATE {system} SET weight = ". $weight ." WHERE name = 'forum'");
   }
   return $ret;
 }

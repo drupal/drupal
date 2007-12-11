@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.430 2007/12/08 14:06:21 goba Exp $
+// $Id: forum.module,v 1.431 2007/12/11 10:52:00 goba Exp $
 
 /**
  * @file
@@ -78,10 +78,6 @@ function forum_term_load($tid) {
  * Implementation of hook_menu().
  */
 function forum_menu() {
-  $items['node/add/forum'] = array(
-    'title' => 'Forum topic',
-    'access arguments' => array('create forum topics'),
-  );
   $items['forum'] = array(
     'title' => 'Forums',
     'page callback' => 'forum_page',
@@ -171,13 +167,10 @@ function forum_nodeapi(&$node, $op, $teaser, $page) {
 
   switch ($op) {
     case 'view':
-      if ($page && $node->taxonomy) {
+      if ($page && taxonomy_node_get_terms_by_vocabulary($node, $vid) && $tree = taxonomy_get_tree($vid)) {
         // Get the forum terms from the (cached) tree
-        $tree = taxonomy_get_tree($vid);
-        if ($tree) {
-          foreach ($tree as $term) {
-            $forum_terms[] = $term->tid;
-          }
+        foreach ($tree as $term) {
+          $forum_terms[] = $term->tid;
         }
         foreach ($node->taxonomy as $term_id => $term) {
           if (in_array($term_id, $forum_terms)) {
@@ -202,7 +195,6 @@ function forum_nodeapi(&$node, $op, $teaser, $page) {
           );
         }
       }
-      return $node;
       break;
 
     case 'prepare':
@@ -211,7 +203,6 @@ function forum_nodeapi(&$node, $op, $teaser, $page) {
         $node->taxonomy[arg(3)]->vid = $vid;
         $node->taxonomy[arg(3)]->tid = arg(3);
       }
-      return $node;
       break;
 
     // Check in particular that only a "leaf" term in the associated taxonomy
@@ -237,13 +228,10 @@ function forum_nodeapi(&$node, $op, $teaser, $page) {
       // Make sure all fields are set properly:
       $node->icon = !empty($node->icon) ? $node->icon : '';
 
-      if ($node->taxonomy) {
-        // Get the forum terms from the (cached) tree
-        $tree = taxonomy_get_tree($vid);
-        if ($tree) {
-          foreach ($tree as $term) {
-            $forum_terms[] = $term->tid;
-          }
+      if ($node->taxonomy && $tree = taxonomy_get_tree($vid)) {
+        // Get the forum terms from the (cached) tree if we have a taxonomy.
+        foreach ($tree as $term) {
+          $forum_terms[] = $term->tid;
         }
         foreach ($node->taxonomy as $term_id) {
           if (in_array($term_id, $forum_terms)) {
@@ -251,26 +239,36 @@ function forum_nodeapi(&$node, $op, $teaser, $page) {
           }
         }
         $old_tid = db_result(db_query_range("SELECT t.tid FROM {term_node} t INNER JOIN {node} n ON t.vid = n.vid WHERE n.nid = %d ORDER BY t.vid DESC", $node->nid, 0, 1));
-        if ($old_tid) {
-          if (($node->tid != $old_tid) && $node->shadow) {
-            // A shadow copy needs to be created. Retain new term and add old term.
-            $node->taxonomy[] = $old_tid;
-          }
+        if ($old_tid && isset($node->tid) && ($node->tid != $old_tid) && !empty($node->shadow)) {
+          // A shadow copy needs to be created. Retain new term and add old term.
+          $node->taxonomy[] = $old_tid;
         }
       }
       break;
+
     case 'update':
-      if (!$node->revision) {
-        db_query('UPDATE {forum} SET tid = %d WHERE vid = %d', $node->tid, $node->vid);
+      if (!$node->revision && db_result(db_query('SELECT tid FROM {forum} WHERE nid=%d', $node->nid))) {
+        if (!empty($node->tid)) {
+          db_query('UPDATE {forum} SET tid = %d WHERE vid = %d', $node->tid, $node->vid);
+        }
+        // The node is removed from the forum.
+        else {
+          db_query('DELETE FROM {forum} WHERE nid = %d', $node->nid);
+        }
         break;
       }
-      // Deliberate no break -- for new revisions we need an insert.
+      // Deliberate no break -- for new revisions and for previously unassigned terms we need an insert.
+
     case 'insert':
-      db_query('INSERT INTO {forum} (tid, vid, nid) VALUES (%d, %d, %d)', $node->tid, $node->vid, $node->nid);
+      if (!empty($node->tid)) {
+        db_query('INSERT INTO {forum} (tid, vid, nid) VALUES (%d, %d, %d)', $node->tid, $node->vid, $node->nid);
+      }
       break;
+
     case 'delete':
       db_query('DELETE FROM {forum} WHERE nid = %d', $node->nid);
       break;
+
     case 'load':
       return db_fetch_array(db_query('SELECT tid AS forum_tid FROM {forum} WHERE vid = %d', $node->vid));
   }
@@ -355,16 +353,22 @@ function forum_form_alter(&$form, $form_state, $form_id) {
       );
       $form['nodes']['#required'] = TRUE;
       $form['hierarchy'] = array('#type' => 'value', '#value' => 1);
-      unset($form['settings']['relations']);
-      unset($form['settings']['tags']);
-      unset($form['settings']['multiple']);
-      unset($form['delete']);
-      $form['settings']['required'] = array('#type' => 'value', '#value' => 1);
+      $form['settings']['required'] = array('#type' => 'value', '#value' => FALSE);
+      $form['settings']['relations'] = array('#type' => 'value', '#value' => FALSE);
+      $form['settings']['tags'] = array('#type' => 'value', '#value' => FALSE);
+      $form['settings']['multiple'] = array('#type' => 'value', '#value' => FALSE);
+      unset($form['delete']);    
     }
   }
   // Hide multiple parents select from forum terms.
   if ($form_id == 'taxonomy_form_term') {
     unset($form['advanced']['parent']);
+  }
+  if ($form_id == 'forum_node_form') {
+    // Make the vocabulary required for 'real' forum-nodes.
+    $vid = variable_get('forum_nav_vocabulary', '');
+    $form['taxonomy'][$vid]['#required'] = TRUE;
+    $form['taxonomy'][$vid]['#options'][''] = t('- Please choose -');
   }
 }
 
