@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.920 2007/12/11 12:13:39 goba Exp $
+// $Id: node.module,v 1.921 2007/12/11 12:42:37 goba Exp $
 
 /**
  * @file
@@ -1579,7 +1579,7 @@ function node_feed($nids = FALSE, $channel = array()) {
       case 'teaser':
         $item_text = $item->teaser;
         if (!empty($item->readmore)) {
-          $item_text .= '<p>'. l(t('read more'), 'node/'. $item->nid, array('absolute' => TRUE)) .'</p>';
+          $item_text .= '<p>'. l(t('read more'), 'node/'. $item->nid, array('absolute' => TRUE, 'attributes' => array('target' => '_blank'))) .'</p>';
         }
         break;
       case 'title':
