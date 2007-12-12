@@ -3193,6 +3193,7 @@ function drupal_get_schema($name = NULL, $rebuild = FALSE) {
     }
     // Otherwise, rebuild the schema cache.
     else {
+      $schema = array();
       // Load the .install files to get hook_schema.
       module_load_all_includes('install');
 
@@ -3200,7 +3201,7 @@ function drupal_get_schema($name = NULL, $rebuild = FALSE) {
       foreach (module_implements('schema') as $module) {
         $current = module_invoke($module, 'schema');
         _drupal_initialize_schema($module, $current);
-        $schema = array_merge($current, $schema);
+        $schema = array_merge($schema, $current);
       }
 
       drupal_alter('schema', $schema);
