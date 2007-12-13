@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.110 2007/11/28 10:29:19 dries Exp $
+// $Id: blogapi.module,v 1.111 2007/12/13 12:53:46 goba Exp $
 
 /**
  * @file
@@ -507,7 +507,7 @@ function blogapi_error($message) {
 function blogapi_validate_user($username, $password) {
   global $user;
 
-  $user = user_authenticate($username, $password);
+  $user = user_authenticate(array('name' => $username, 'pass' => $password));
 
   if ($user->uid) {
     if (user_access('edit own blog', $user)) {

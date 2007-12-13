@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.870 2007/12/13 09:34:40 goba Exp $
+// $Id: user.module,v 1.871 2007/12/13 12:53:47 goba Exp $
 
 /**
  * @file
@@ -1238,8 +1238,6 @@ function user_login_default_validators() {
 
 /**
  * A FAPI validate handler. Sets an error is supplied username has been blocked or denied access.
- *
- * @return void
  */
 function user_login_name_validate($form, &$form_state) {
   if (isset($form_state['values']['name'])) {
@@ -1259,7 +1257,7 @@ function user_login_name_validate($form, &$form_state) {
  * against local users table. If successful, sets the global $user object.
  */
 function user_login_authenticate_validate($form, &$form_state) {
-  user_authenticate($form_state['values']['name'], trim($form_state['values']['pass']));
+  user_authenticate($form_state['values']);
 }
 
 /**
@@ -1277,16 +1275,43 @@ function user_login_final_validate($form, &$form_state) {
 /**
  * Try to log in the user locally.
  *
+ * @param $form_values
+ *   Form values with at least 'name' and 'pass' keys, as well as anything else
+ *   which should be passed along to hook_user op 'login'.
+ *
  * @return
  *  A $user object, if successful.
  */
-function user_authenticate($name, $pass) {
+function user_authenticate($form_values = array()) {
   global $user;
 
-  if ($account = user_load(array('name' => $name, 'pass' => $pass, 'status' => 1))) {
+  // Name and pass keys are required.
+  if (!empty($form_values['name']) && !empty($form_values['pass']) &&
+      $account = user_load(array('name' => $form_values['name'], 'pass' => trim($form_values['pass']), 'status' => 1))) {
     $user = $account;
+    user_authenticate_finalize($form_values);
     return $user;
   }
+}
+
+/**
+ * Finalize the login process. Must be called when logging in a user.
+ *
+ * The function records a watchdog message about the new session, saves the
+ * login timestamp, calls hook_user op 'login' and generates a new session.
+ *
+ * $param $edit
+ *   This array is passed to hook_user op login.
+ */
+function user_authenticate_finalize(&$edit) {
+  global $user;
+  watchdog('user', 'Session opened for %name.', array('%name' => $user->name));
+  // Update the user table timestamp noting user has logged in.
+  // This is also used to invalidate one-time login links.
+  $user->login = time();
+  db_query("UPDATE {users} SET login = %d WHERE uid = %d", $user->login, $user->uid);
+  user_module_invoke('login', $edit, $user);
+  sess_regenerate();
 }
 
 /**
@@ -1296,14 +1321,6 @@ function user_authenticate($name, $pass) {
 function user_login_submit($form, &$form_state) {
   global $user;
   if ($user->uid) {
-    watchdog('user', 'Session opened for %name.', array('%name' => $user->name));
-
-    // Update the user table timestamp noting user has logged in.
-    db_query("UPDATE {users} SET login = %d WHERE uid = %d", time(), $user->uid);
-
-    user_module_invoke('login', $form_state['values'], $user);
-
-    sess_regenerate();
     $form_state['redirect'] = 'user/'. $user->uid;
     return;
   }
@@ -2178,7 +2195,7 @@ function user_register_submit($form, &$form_state) {
       drupal_set_message(t('</p><p> Your password is <strong>%pass</strong>. You may change your password below.</p>', array('%pass' => $pass)));
     }
 
-    user_authenticate($account->name, trim($pass));
+    user_authenticate(array_merge($form_state['values'], $merge_data));
 
     $form_state['redirect'] = 'user/1/edit';
     return;
@@ -2192,7 +2209,7 @@ function user_register_submit($form, &$form_state) {
     else if (!variable_get('user_email_verification', TRUE) && $account->status && !$admin) {
       // No e-mail verification is required, create new user account, and login user immediately.
       _user_mail_notify('register_no_approval_required', $account);
-      if (user_authenticate($account->name, trim($pass))) {
+      if (user_authenticate(array_merge($form_state['values'], $merge_data))) {
         drupal_set_message(t('Registration successful. You are now logged in.'));
       }
       $form_state['redirect'] = '';

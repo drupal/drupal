@@ -1,5 +1,5 @@
 <?php
-// $Id: user.pages.inc,v 1.5 2007/12/04 18:34:44 goba Exp $
+// $Id: user.pages.inc,v 1.6 2007/12/13 12:53:47 goba Exp $
 
 /**
  * @file
@@ -96,14 +96,11 @@ function user_pass_reset(&$form_state, $uid, $timestamp, $hashed_pass, $action =
         // First stage is a confirmation form, then login
         if ($action == 'login') {
           watchdog('user', 'User %name used one-time login link at time %timestamp.', array('%name' => $account->name, '%timestamp' => $timestamp));
-          // Update the user table noting user has logged in.
-          // And this also makes this hashed password a one-time-only login.
-          db_query("UPDATE {users} SET login = %d WHERE uid = %d", time(), $account->uid);
-          // Now we can set the new user.
+          // Set the new user.
           $user = $account;
-          // And proceed with normal login, going to user page.
-          $edit = array();
-          user_module_invoke('login', $edit, $user);
+          // user_authenticate_finalize() also updates the login timestamp of the
+          // user, which invalidates further use of the one-time login link.
+          user_authenticate_finalize($form_state['values']);
           drupal_set_message(t('You have just used your one-time login link. It is no longer necessary to use this link to login. Please change your password.'));
           drupal_goto('user/'. $user->uid .'/edit');
         }

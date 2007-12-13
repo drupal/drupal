@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.101 2007/12/10 18:16:19 goba Exp $
+// $Id: install.php,v 1.102 2007/12/13 12:53:46 goba Exp $
 
 require_once './includes/install.inc';
 
@@ -1114,7 +1114,7 @@ function install_configure_form_submit($form, &$form_state) {
   $merge_data = array('init' => $form_state['values']['mail'], 'roles' => array(), 'status' => 1);
   user_save($account, array_merge($form_state['values'], $merge_data));
   // Log in the first user.
-  user_authenticate($form_state['values']['name'], trim($form_state['values']['pass']));
+  user_authenticate($form_state['values']);
   $form_state['values'] = $form_state['old_values'];
   unset($form_state['old_values']);
   variable_set('user_email_verification', TRUE);
