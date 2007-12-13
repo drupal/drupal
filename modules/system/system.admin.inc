@@ -535,6 +535,12 @@ function system_theme_settings_submit($form, &$form_state) {
  * Recursively check compatability
  */
 function _system_is_incompatible(&$incompatible, $files, $file) {
+  static $seen;
+  // We need to protect ourselves in case of a circular dependency.
+  if (isset($seen[$file->name])) {
+    return isset($incompatible[$file->name]);
+  }
+  $seen[$file->name] = TRUE;
   if (isset($incompatible[$file->name])) {
     return TRUE;
   }
