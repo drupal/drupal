@@ -1,4 +1,4 @@
-// $Id: tabledrag.js,v 1.9 2007/12/06 09:53:53 goba Exp $
+// $Id: tabledrag.js,v 1.10 2007/12/13 10:14:17 goba Exp $
 
 /**
  * Drag and drop table rows with field manipulation.
@@ -47,6 +47,7 @@ Drupal.tableDrag = function(table, tableSettings) {
   this.oldY = 0; // Used to determine up or down direction from last mouse move.
   this.changed = false; // Whether anything in the entire table has changed.
   this.maxDepth = 0; // Maximum amount of allowed parenting.
+  this.rtl = $('body').css('direction') == 'rtl' ? -1 : 1; // Direction of the page language.
 
   // Configure the scroll settings.
   this.scrollSettings = { amount: 4, interval: 50, trigger: 70 };
@@ -255,7 +256,7 @@ Drupal.tableDrag.prototype.makeDraggable = function(item) {
       case 37: // Left arrow.
       case 63234: // Safari left arrow.
         keyChange = true;
-        self.rowObject.indent(-1);
+        self.rowObject.indent(-1 * self.rtl);
         break;
       case 38: // Up arrow.
       case 63232: // Safari up arrow.
@@ -282,7 +283,7 @@ Drupal.tableDrag.prototype.makeDraggable = function(item) {
       case 39: // Right arrow.
       case 63235: // Safari right arrow.
         keyChange = true;
-        self.rowObject.indent(1);
+        self.rowObject.indent(1 * self.rtl);
         break;
       case 40: // Down arrow.
       case 63233: // Safari down arrow.
@@ -379,7 +380,7 @@ Drupal.tableDrag.prototype.dragRow = function(event, self) {
       self.oldX = x;
       var xDiff = self.currentMouseCoords.x - self.dragObject.indentMousePos.x;
       // Set the number of indentations the mouse has been moved left or right.
-      var indentDiff = parseInt(xDiff / self.indentAmount);
+      var indentDiff = parseInt(xDiff / self.indentAmount * self.rtl);
       // Limit the indentation to no less than the left edge of the table and no
       // more than the total amount of indentation in the table.
       indentDiff = indentDiff > 0 ? Math.min(indentDiff, self.indentCount - self.rowObject.indents + 1) : Math.max(indentDiff, -self.rowObject.indents);
@@ -389,7 +390,7 @@ Drupal.tableDrag.prototype.dragRow = function(event, self) {
         var indentChange = self.rowObject.indent(indentDiff);
 
         // Update table and mouse indentations.
-        self.dragObject.indentMousePos.x += self.indentAmount * indentChange;
+        self.dragObject.indentMousePos.x += self.indentAmount * indentChange * self.rtl;
         self.indentCount = Math.max(self.indentCount, self.rowObject.indents);
       }
     }

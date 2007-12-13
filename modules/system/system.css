@@ -1,4 +1,4 @@
-/* $Id: system.css,v 1.44 2007/12/04 10:52:16 goba Exp $ */
+/* $Id: system.css,v 1.45 2007/12/13 10:14:18 goba Exp $ */
 
 /*
 ** HTML elements
@@ -52,10 +52,10 @@ div.indentation {
   float: left; /* LTR */
 }
 div.tree-child {
-  background: url(../../misc/tree.png) no-repeat 11px center;
+  background: url(../../misc/tree.png) no-repeat 11px center; /* LTR */
 }
 div.tree-child-last {
-  background: url(../../misc/tree-bottom.png) no-repeat 11px center;
+  background: url(../../misc/tree-bottom.png) no-repeat 11px center; /* LTR */
 }
 div.tree-child-horizontal {
   background: url(../../misc/tree.png) no-repeat -11px center;

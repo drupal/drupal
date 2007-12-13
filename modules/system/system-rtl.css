@@ -1,4 +1,4 @@
-/* $Id: system-rtl.css,v 1.10 2007/12/04 10:52:16 goba Exp $ */
+/* $Id: system-rtl.css,v 1.11 2007/12/13 10:14:18 goba Exp $ */
 
 thead th {
   text-align: right;
@@ -101,4 +101,7 @@ div.indentation {
   margin: -0.4em -0.4em -0.4em 0.2em;
   padding: 0.42em 0.6em 0.42em 0;
   float: right;
+}
+div.tree-child, div.tree-child-last {
+  background-position: -65px center;
 }
