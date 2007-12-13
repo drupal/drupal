@@ -102,3 +102,6 @@ div.indentation {
   padding: 0.42em 0.6em 0.42em 0;
   float: right;
 }
+div.tree-child, div.tree-child-last {
+  background-position: -65px center;
+}
