@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.51 2007/12/08 15:15:25 goba Exp $
+// $Id: install.inc,v 1.52 2007/12/13 10:46:43 goba Exp $
 
 define('SCHEMA_UNINSTALLED', -1);
 define('SCHEMA_INSTALLED', 0);
@@ -301,6 +301,24 @@ function drupal_verify_profile($profile, $locale) {
  *   The modules to install.
  */
 function drupal_install_modules($module_list = array()) {
+  $files = module_rebuild_cache();
+  $module_list = array_flip(array_values($module_list));
+  do {
+    $moved = FALSE;
+    foreach ($module_list as $module => $weight) {
+      $file = $files[$module];
+      if (isset($file->info['dependencies']) && is_array($file->info['dependencies'])) {
+        foreach ($file->info['dependencies'] as $dependency) {
+          if (isset($module_list[$dependency]) && $module_list[$module] < $module_list[$dependency] +1) {
+            $module_list[$module] = $module_list[$dependency] +1;
+            $moved = TRUE;
+          }
+        }
+      }
+    }
+  } while ($moved);
+  asort($module_list);
+  $module_list = array_keys($module_list);
   array_filter($module_list, '_drupal_install_module');
   module_enable($module_list);
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.35 2007/12/08 14:06:22 goba Exp $
+// $Id: system.admin.inc,v 1.36 2007/12/13 10:46:43 goba Exp $
 
 /**
  * @file
@@ -535,6 +535,12 @@ function system_theme_settings_submit($form, &$form_state) {
  * Recursively check compatability
  */
 function _system_is_incompatible(&$incompatible, $files, $file) {
+  static $seen;
+  // We need to protect ourselves in case of a circular dependency.
+  if (isset($seen[$file->name])) {
+    return isset($incompatible[$file->name]);
+  }
+  $seen[$file->name] = TRUE;
   if (isset($incompatible[$file->name])) {
     return TRUE;
   }
