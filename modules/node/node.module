@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.922 2007/12/11 14:31:12 goba Exp $
+// $Id: node.module,v 1.923 2007/12/13 13:06:45 goba Exp $
 
 /**
  * @file
@@ -2508,7 +2508,7 @@ function node_make_sticky_action(&$node, $context = array()) {
 
 /**
  * Implementation of a Drupal action.
- * Sets the sticky-at-top-of-list property of a node to 1.
+ * Sets the sticky-at-top-of-list property of a node to 0.
  */
 function node_make_unsticky_action(&$node, $context = array()) {
   $node->sticky = 0;
@@ -2529,7 +2529,7 @@ function node_promote_action(&$node, $context = array()) {
  * Sets the promote property of a node to 0.
  */
 function node_unpromote_action(&$node, $context = array()) {
-  $node->promote = 1;
+  $node->promote = 0;
   watchdog('action', 'Removed @type %title from front page.', array('@type' => node_get_types('type', $node), '%title' => $node->title));
 }
 
