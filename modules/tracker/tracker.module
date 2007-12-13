@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.module,v 1.152 2007/11/06 08:51:23 goba Exp $
+// $Id: tracker.module,v 1.153 2007/12/13 09:34:39 goba Exp $
 
 /**
  * @file
@@ -12,8 +12,8 @@
 function tracker_help($path, $arg) {
   switch ($path) {
     case 'admin/help#tracker':
-      $output = '<p>'. t('The tracker module displays the most recently added or updated content to the website allowing users to see the most recent contributions. The tracker module provides user level tracking for those who like to follow the contributions of particular authors.') .'</p>';
-      $output .= '<p>'. t('The  &quot;recent posts&quot; page is available via a link in the navigation menu block and contains a reverse chronological list of new and recently-updated content. The table displays  the content type, the title, the author\'s name, how many comments that item has received, and when it was last updated. Updates include any changes to the text, either by the original author or someone else, as well as any new comments added to an item. To use the tracker module to <em>watch</em> for a user\'s updated content, click on that user\'s profile, then the <em>track</em> tab.') .'</p>';
+      $output = '<p>'. t('The tracker module displays the most recently added or updated content on your site, and provides user-level tracking to follow the contributions of particular authors.') .'</p>';
+      $output .= '<p>'. t("The <em>Recent posts</em> page is available via a link in the navigation menu block and displays new and recently-updated content (including the content type, the title, the author's name, number of comments, and time of last update) in reverse chronological order. Posts are marked updated when changes occur in the text, or when new comments are added. To use the tracker module to follow a specific user's contributions, select the <em>Track</em> tab from the user's profile page.") .'</p>';
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@tracker">Tracker page</a>.', array('@tracker' => 'http://drupal.org/handbook/modules/tracker/')) .'</p>';
       return $output;
   }

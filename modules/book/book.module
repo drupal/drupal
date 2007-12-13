@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.448 2007/11/26 16:36:43 dries Exp $
+// $Id: book.module,v 1.449 2007/12/13 09:34:37 goba Exp $
 
 /**
  * @file
@@ -1000,11 +1000,11 @@ function book_node_type($op, $type) {
 function book_help($path, $arg) {
   switch ($path) {
     case 'admin/help#book':
-      $output = '<p>'. t('The <em>book</em> module is suited for creating structured, multi-page hypertexts such as site resource guides, manuals, and Frequently Asked Questions (FAQs). It permits a document to have chapters, sections, subsections, etc. Authors with suitable permissions can add pages to a collaborative book,  placing them into the existing document by adding them to a table of contents menu.') .'</p>';
-      $output .= '<p>'. t('Pages in the book hierarchy have navigation elements at the bottom of the page for moving through the text. These link to the previous and next pages in the book, as well as a link labeled <em>up</em>, leading to the level above in the structure. More comprehensive navigation may be provided by enabling the <em>book navigation block</em> on the <a href="@admin-block">block administration page</a>.', array('@admin-block' => url('admin/build/block'))) .'</p>';
+      $output = '<p>'. t('The book module is suited for creating structured, multi-page hypertexts such as site resource guides, manuals, and Frequently Asked Questions (FAQs). It permits a document to have chapters, sections, subsections, etc. Authors with suitable permissions can add pages to a collaborative book, placing them into the existing document by adding them to a table of contents menu.') .'</p>';
+      $output .= '<p>'. t('Pages in the book hierarchy have navigation elements at the bottom of the page for moving through the text. These links lead to the previous and next pages in the book, and to the level above the current page in the book\'s structure. More comprehensive navigation may be provided by enabling the <em>book navigation block</em> on the <a href="@admin-block">block administration page</a>.', array('@admin-block' => url('admin/build/block'))) .'</p>';
       $output .= '<p>'. t('Users can select the <em>printer-friendly version</em> link visible at the bottom of a book page to generate a printer-friendly display of the page and all of its subsections. ') .'</p>';
-      $output .= '<p>'. t("Users with the <em>administer book outlines</em> permission can add content of any type to a book, placing it into the existing book structure through the edit form or through the interface that's available by clicking on the <em>outline</em> tab while viewing that post.", array('%book' => node_get_types('name', 'book'))) .'</p>';
-      $output .= '<p>'. t('Administrators can view a list of all books on the <a href="@admin-node-book">book administration page</a>. In this list there is a link to an outline page for each book, from which is it possible to change the titles of sections, or to change their weight, thus reordering sections.', array('@admin-node-book' => url('admin/content/book'))) .'</p>';
+      $output .= '<p>'. t("Users with the <em>administer book outlines</em> permission can add a post of any content type to a book, by selecting the appropriate book while editing the post or by using the interface available on the post's <em>outline</em> tab.") .'</p>';
+      $output .= '<p>'. t('Administrators can view a list of all books on the <a href="@admin-node-book">book administration page</a>. The <em>Outline</em> page for each book allows section titles to be edited or rearranged.', array('@admin-node-book' => url('admin/content/book'))) .'</p>';
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@book">Book page</a>.', array('@book' => 'http://drupal.org/handbook/modules/book/')) .'</p>';
       return $output;
     case 'admin/content/book':

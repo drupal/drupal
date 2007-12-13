@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.253 2007/12/08 14:06:21 goba Exp $
+// $Id: poll.module,v 1.254 2007/12/13 09:34:38 goba Exp $
 
 /**
  * @file
@@ -13,8 +13,8 @@
 function poll_help($path, $arg) {
   switch ($path) {
     case 'admin/help#poll':
-      $output = '<p>'. t('The poll module can be used to create simple polls for site users. A poll is a simple multiple choice questionnaire which displays the cumulative results of the answers to the poll. Having polls on the site is a good way to get instant feedback from community members.') .'</p>';
-      $output .= '<p>'. t('Users can create a poll. The title of the poll should be the question, then enter the answers and the "base" vote counts. You can also choose the time period over which the vote will run. The <a href="@poll">poll</a> item in the navigation menu will take you to a page where you can see all the current polls, vote on them (if you haven\'t already) and view the results.', array('@poll' => url('poll'))) .'</p>';
+      $output = '<p>'. t('The poll module can be used to create simple polls for site users. A poll is a simple, multiple choice questionnaire which displays the cumulative results of the answers to the poll. Having polls on the site is a good way to receive feedback from community members.') .'</p>';
+      $output .= '<p>'. t('When creating a poll, enter the question being posed, as well as the potential choices (and beginning vote counts for each choice). The status and duration (length of time the poll remains active for new votes) can also be specified. Use the <a href="@poll">poll</a> menu item to view all current polls. To vote in or view the results of a specific poll, click on the poll itself.', array('@poll' => url('poll'))) .'</p>';
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@poll">Poll page</a>.', array('@poll' => 'http://drupal.org/handbook/modules/poll/')) .'</p>';
       return $output;
   }

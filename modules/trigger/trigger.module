@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.module,v 1.7 2007/11/20 09:24:59 goba Exp $
+// $Id: trigger.module,v 1.8 2007/12/13 09:34:39 goba Exp $
 
 /**
  * @file
@@ -26,7 +26,7 @@ function trigger_help($path, $arg) {
     case 'admin/help#trigger':
       $output = '<p>'. t('The Trigger module provides the ability to trigger <a href="@actions">actions</a> upon system events, such as when new content is added or when a user logs in.', array('@actions' => url('admin/settings/actions'))) .'</p>';
       $output .= '<p>'. t('The combination of actions and triggers can perform many useful tasks, such as e-mailing an administrator if a user account is deleted, or automatically unpublishing comments that contain certain words. By default, there are five "contexts" of events (Comments, Content, Cron, Taxonomy, and Users), but more may be added by additional modules.') .'</p>';
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@trigger">Trigger</a> page.', array('@trigger' => 'http://drupal.org/handbook/modules/trigger/')) .'</p>';
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@trigger">Trigger page</a>.', array('@trigger' => 'http://drupal.org/handbook/modules/trigger/')) .'</p>';
       return $output;
   }
 }

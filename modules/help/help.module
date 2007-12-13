@@ -1,5 +1,5 @@
 <?php
-// $Id: help.module,v 1.76 2007/08/19 09:27:24 dries Exp $
+// $Id: help.module,v 1.77 2007/12/13 09:34:38 goba Exp $
 
 /**
  * @file
@@ -37,19 +37,10 @@ function help_menu() {
 function help_help($path, $arg) {
   switch ($path) {
     case 'admin/help':
-      $output = t('<p>This guide explains what the various modules in <a href="@Drupal">Drupal</a> do and how to configure them. Additionally, you will find a glossary of basic Drupal terminology to help get you started.</p>
-<p>It is not a substitute for the <a href="@handbook">Drupal handbook</a> available online and should be used in conjunction with it. The online reference handbook might be more up-to-date and has helpful user-contributed comments. It is your definitive reference point for all Drupal documentation.</p>
-', array('@Drupal' => 'http://drupal.org', '@handbook' => 'http://drupal.org/handbook'));
+      $output = '<p>'. t('This guide provides context sensitive help on the use and configuration of <a href="@drupal">Drupal</a> and its modules, and is a supplement to the more extensive online <a href="@handbook">Drupal handbook</a>. The online handbook may contain more up-to-date information, is annotated with helpful user-contributed comments, and serves as the definitive reference point for all Drupal documentation.', array('@drupal' => 'http://drupal.org', '@handbook' => 'http://drupal.org/handbook')) .'</p>';
       return $output;
     case 'admin/help#help':
-      $output = '<p>'. t('The help module displays context sensitive help information. Users can learn how to use modules and accomplish tasks quicker with less errors by clicking on links in provided by the help module.') .'</p>';
-      $output .= t("<p>Modules can make documentation available to other modules with this module. All user help should be presented using this module. Some examples of help: </p>
-<ul>
-<li>The module's help text, displayed on the <a href=\"@help\">help page</a> and through the module's individual help link.</li>
-<li>More elaborate help text on sites a module defines.</li>
-<li>The help for a distributed authorization module (if applicable).</li>
-</ul>
-", array('@help' => url('admin/help')));
+      $output = '<p>'. t('The help module provides context sensitive help on the use and configuration of <a href="@drupal">Drupal</a> and its modules, and is a supplement to the more extensive online <a href="@handbook">Drupal handbook</a>. The online handbook may contain more up-to-date information, is annotated with helpful user-contributed comments, and serves as the definitive reference point for all Drupal documentation.', array('@drupal' => 'http://drupal.org', '@handbook' => 'http://drupal.org/handbook')) .'</p>';
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@help">Help page</a>.', array('@help' => 'http://drupal.org/handbook/modules/help/')) .'</p>';
       return $output;
   }

@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.605 2007/12/08 14:06:21 goba Exp $
+// $Id: comment.module,v 1.606 2007/12/13 09:34:37 goba Exp $
 
 /**
  * @file
@@ -126,8 +126,8 @@ define('COMMENT_PREVIEW_REQUIRED', 1);
 function comment_help($path, $arg) {
   switch ($path) {
     case 'admin/help#comment':
-      $output = '<p>'. t('The comment module creates a discussion board for each post. Users can post comments to discuss a forum topic, weblog post, story, collaborative book page, etc. The ability to comment is an important part of involving members in a community dialogue.') .'</p>';
-      $output .= '<p>'. t('An administrator can give comment permissions to user groups, and users can (optionally) edit their last comment, assuming no others have been posted since. Attached to each comment board is a control panel for customizing the way that comments are displayed. Users can control the chronological ordering of posts (newest or oldest first) and the number of posts to display on each page. Comments behave like other user submissions. Filters, emoticons and HTML that work in nodes will also work with comments. The comment module provides specific features to inform site members when new comments have been posted.') .'</p>';
+      $output = '<p>'. t('The comment module creates a discussion board for each post. Users can post comments to discuss a forum topic, blog entry, story, collaborative book page, etc. The ability to comment on posts is an important part of involving members in a community dialogue.') .'</p>';
+      $output .= '<p>'. t('An administrator can give comment permissions to user groups, and users can (optionally) edit their last comment, if it has no replies. Attached to each comment board is a control panel for customizing the way that comments are displayed. Users can control the chronological ordering of posts (newest or oldest first) and the number of posts to display on each page. Comments behave like other user submissions. Filters and HTML tags that work in nodes also work in comments. The comment module provides specific features to inform site members when new comments have been posted.') .'</p>';
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@comment">Comment page</a>.', array('@comment' => 'http://drupal.org/handbook/modules/comment/')) .'</p>';
       return $output;
     case 'admin/content/comment':

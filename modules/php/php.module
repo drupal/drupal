@@ -1,5 +1,5 @@
 <?php
-// $Id: php.module,v 1.5 2007/12/07 10:32:12 goba Exp $
+// $Id: php.module,v 1.6 2007/12/13 09:34:38 goba Exp $
 
 /**
  * @file
@@ -14,8 +14,9 @@ function php_help($path, $arg) {
   switch ($path) {
     case 'admin/help#php':
       $output = '<p>'. t('The PHP filter adds the ability to include PHP code in posts. PHP is a general-purpose scripting language widely-used for web development; the content management system used by this website has been developed using PHP.') .'</p>';
-      $output .= '<p>'. t('Through the PHP filter, users with the proper permission may include custom PHP code within a page of this site. While this is a powerful and flexible feature if used by a trusted user with PHP experience, it is a significant and dangerous security risk in the hands of a malicious user. Even a trusted user may accidentally compromise the site by entering malformed or incorrect PHP code. Only the most trusted users should be granted permission to use the PHP filter, and all PHP code added through the PHP filter should be carefully examined before use.') .'</p>';
+      $output .= '<p>'. t('Through the PHP filter, users with the proper permission may include custom PHP code within a page of the site. While this is a powerful and flexible feature if used by a trusted user with PHP experience, it is a significant and dangerous security risk in the hands of a malicious user. Even a trusted user may accidentally compromise the site by entering malformed or incorrect PHP code. Only the most trusted users should be granted permission to use the PHP filter, and all PHP code added through the PHP filter should be carefully examined before use.') .'</p>';
       $output .= '<p>'. t('<a href="@drupal">Drupal.org</a> offers <a href="@php-snippets">some example PHP snippets</a>, or you can create your own with some PHP experience and knowledge of the Drupal system.', array('@drupal' => url('http://drupal.org'), '@php-snippets' => url('http://drupal.org/handbook/customization/php-snippets'))) .'</p>';
+      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@php">PHP filter page</a>.', array('@php' => 'http://drupal.org/handbook/modules/php/')) .'</p>';      
       return $output;
   }
 }

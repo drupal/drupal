@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.243 2007/12/08 14:06:22 goba Exp $
+// $Id: search.module,v 1.244 2007/12/13 09:34:39 goba Exp $
 
 /**
  * @file
@@ -96,12 +96,12 @@ define('PREG_CLASS_CJK', '\x{3041}-\x{30ff}\x{31f0}-\x{31ff}\x{3400}-\x{4db5}'.
 function search_help($path, $arg) {
   switch ($path) {
     case 'admin/help#search':
-      $output = '<p>'. t('The search module adds the ability to search for content by keywords. Search is often the only practical way to find content on a large site. Search is useful for finding users and posts by searching on keywords.') .'</p>';
-      $output .= '<p>'. t('The search engine works by maintaining an index of the words in your site\'s content. It indexes the posts and users. You can adjust the settings to tweak the indexing behavior. Note that the search requires cron to be set up correctly. The index percentage sets the maximum amount of items that will be indexed in one cron run. Set this number lower if your cron is timing out or if PHP is running out of memory.') .'</p>';
+      $output = '<p>'. t('The search module adds the ability to search for content by keywords. Search is often the only practical way to find content on a large site, and is useful for finding both users and posts.') .'</p>';
+      $output .= '<p>'. t('To provide keyword searching, the search engine maintains an index of words found in your site\'s content. To build and maintain this index, a correctly configured <a href="@cron">cron maintenance task</a> is required. Indexing behavior can be adjusted using the <a href="@searchsettings">search settings page</a>; for example, the <em>Items to index per cron run</em> sets the maximum number of items indexed in a single cron run. If necessary, reduce this number to prevent timeouts and memory errors when indexing.', array('@cron' => url('admin/reports/status'), '@searchsettings' => url('admin/settings/search'))) .'</p>';
       $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@search">Search page</a>.', array('@search' => 'http://drupal.org/handbook/modules/search/')) .'</p>';
       return $output;
     case 'admin/settings/search':
-      return '<p>'. t('The search engine works by maintaining an index of the words in your site\'s content. You can adjust the settings below to tweak the indexing behavior. Note that the search requires cron to be set up correctly.') .'</p>';
+      return '<p>'. t('The search engine maintains an index of words found in your site\'s content. To build and maintain this index, a correctly configured <a href="@cron">cron maintenance task</a> is required. Indexing behavior can be adjusted using the settings below.', array('@cron' => url('admin/reports/status'))) .'</p>';
     case 'search#noresults':
       return t('<ul>
 <li>Check if your spelling is correct.</li>
