@@ -507,7 +507,7 @@ function blogapi_error($message) {
 function blogapi_validate_user($username, $password) {
   global $user;
 
-  $user = user_authenticate($username, $password);
+  $user = user_authenticate(array('name' => $username, 'pass' => $password));
 
   if ($user->uid) {
     if (user_access('edit own blog', $user)) {
