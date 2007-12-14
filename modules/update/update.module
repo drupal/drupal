@@ -1,5 +1,5 @@
 <?php
-// $Id: update.module,v 1.5 2007/12/02 16:43:59 goba Exp $
+// $Id: update.module,v 1.6 2007/12/14 10:54:28 goba Exp $
 
 /**
  * @file
@@ -61,7 +61,7 @@ function update_help($path, $arg) {
             drupal_set_message($status[$type]['description'], 'error');
           }
           elseif ($status[$type]['severity'] == REQUIREMENT_WARNING) {
-            drupal_set_message($status[$type]['description']);
+            drupal_set_message($status[$type]['description'], 'warning');
           }
         }
       }
