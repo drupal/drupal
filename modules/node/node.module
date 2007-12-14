@@ -1101,7 +1101,7 @@ function node_search($op = 'search', $keys = NULL) {
       return t('Content');
 
     case 'reset':
-      db_query("UPDATE {search_dataset} SET reindex = %d AND type = 'node'", time());
+      db_query("UPDATE {search_dataset} SET reindex = %d WHERE type = 'node'", time());
       return;
 
     case 'status':
