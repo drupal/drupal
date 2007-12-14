@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.406 2007/12/13 09:34:39 goba Exp $
+// $Id: taxonomy.module,v 1.407 2007/12/14 11:19:39 goba Exp $
 
 /**
  * @file
@@ -148,9 +148,10 @@ function taxonomy_menu() {
     'file' => 'taxonomy.admin.inc',
   );
 
-  $items['taxonomy/term'] = array(
+  $items['taxonomy/term/%'] = array(
     'title' => 'Taxonomy term',
     'page callback' => 'taxonomy_term_page',
+    'page arguments' => array(2),
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
     'file' => 'taxonomy.pages.inc',
