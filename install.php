@@ -324,7 +324,7 @@ function install_settings_form(&$form_state, $profile, $install_locale, $setting
 
     $form['save'] = array(
       '#type' => 'submit',
-      '#value' => st('Save configuration'),
+      '#value' => st('Save and continue'),
     );
 
     $form['errors'] = array();
@@ -471,7 +471,7 @@ function install_select_profile_form(&$form_state, $profiles) {
   }
   $form['submit'] =  array(
     '#type' => 'submit',
-    '#value' => st('Save configuration'),
+    '#value' => st('Save and continue'),
   );
   return $form;
 }
@@ -1058,7 +1058,7 @@ function install_configure_form(&$form_state, $url) {
 
   $form['submit'] = array(
     '#type' => 'submit',
-    '#value' => st('Save'),
+    '#value' => st('Save and continue'),
     '#weight' => 15,
   );
   $form['#action'] = $url;
