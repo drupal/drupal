@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.924 2007/12/14 18:08:47 goba Exp $
+// $Id: node.module,v 1.925 2007/12/14 18:40:32 goba Exp $
 
 /**
  * @file
@@ -1101,7 +1101,7 @@ function node_search($op = 'search', $keys = NULL) {
       return t('Content');
 
     case 'reset':
-      db_query("UPDATE {search_dataset} SET reindex = %d AND type = 'node'", time());
+      db_query("UPDATE {search_dataset} SET reindex = %d WHERE type = 'node'", time());
       return;
 
     case 'status':
