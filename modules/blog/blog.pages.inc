@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.pages.inc,v 1.3 2007/10/25 17:44:38 dries Exp $
+// $Id: blog.pages.inc,v 1.4 2007/12/14 10:40:51 goba Exp $
 
 /**
  * @file
@@ -77,6 +77,7 @@ function blog_feed_last() {
   $channel['title'] = variable_get('site_name', 'Drupal') .' blogs';
   $channel['link'] = url('blog', array('absolute' => TRUE));
 
+  $items = array();
   while ($row = db_fetch_object($result)) {
     $items[] = $row->nid;
   }
