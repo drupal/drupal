@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.205 2007/12/11 10:52:01 goba Exp $
+// $Id: system.install,v 1.206 2007/12/14 17:00:13 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -2725,6 +2725,20 @@ function system_update_6041() {
     $ret[] = update_sql("UPDATE {system} SET weight = ". $weight ." WHERE name = 'forum'");
   }
   return $ret;
+}
+
+/**
+ * Upgrade recolored theme stylesheets to new array structure.
+ */
+function system_update_6042() {
+  foreach (list_themes() as $theme) {
+    $stylesheet = variable_get('color_'. $theme->name .'_stylesheet', NULL);
+    if (!empty($stylesheet)) {
+      variable_set('color_'. $theme->name .'_stylesheets', array($stylesheet));
+      variable_del('color_'. $theme->name .'_stylesheet');
+    }
+  }
+  return array();
 }
 
 /**

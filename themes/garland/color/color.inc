@@ -1,9 +1,9 @@
 <?php
-// $Id: color.inc,v 1.3 2007/10/02 16:31:50 goba Exp $
+// $Id: color.inc,v 1.4 2007/12/14 17:00:14 goba Exp $
 
 $info = array(
 
-  // Pre-defined color schemes
+  // Pre-defined color schemes.
   'schemes' => array(
     '#0072b9,#027ac6,#2385c2,#5ab5ee,#494949' => t('Blue Lagoon (Default)'),
     '#464849,#2f416f,#2a2b2d,#5d6779,#494949' => t('Ash'),
@@ -22,7 +22,7 @@ $info = array(
     '#18583d,#1b5f42,#34775a,#52bf90,#2d2d2d' => t('Teal Top'),
   ),
 
-  // Images to copy over
+  // Images to copy over.
   'copy' => array(
     'images/menu-collapsed.gif',
     'images/menu-collapsed-rtl.gif',
@@ -30,10 +30,15 @@ $info = array(
     'images/menu-leaf.gif',
   ),
 
-  // Coordinates of gradient (x, y, width, height)
+  // CSS files (excluding @import) to rewrite with new color scheme.
+  'css' => array(
+    'style.css',
+  ),
+
+  // Coordinates of gradient (x, y, width, height).
   'gradient' => array(0, 37, 760, 121),
 
-  // Color areas to fill (x, y, width, height)
+  // Color areas to fill (x, y, width, height).
   'fill' => array(
     'base' => array(0, 0, 760, 568),
     'link' => array(107, 533, 41, 23),
@@ -61,10 +66,10 @@ $info = array(
   // Reference color used for blending. Matches the base.png's colors.
   'blend_target' => '#ffffff',
 
-  // Preview files
+  // Preview files.
   'preview_image' => 'color/preview.png',
   'preview_css' => 'color/preview.css',
 
-  // Base file for image generation
+  // Base file for image generation.
   'base_image' => 'color/base.png',
 );
