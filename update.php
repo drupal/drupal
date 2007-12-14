@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.239 2007/12/08 14:06:20 goba Exp $
+// $Id: update.php,v 1.240 2007/12/14 17:18:24 goba Exp $
 
 /**
  * @file
@@ -122,153 +122,6 @@ function db_change_column(&$ret, $table, $column, $column_new, $type, $attribute
   if ($default) { $ret[] = update_sql("ALTER TABLE {". $table ."} ALTER $column_new SET $default"); }
   if ($not_null) { $ret[] = update_sql("ALTER TABLE {". $table ."} ALTER $column_new SET NOT NULL"); }
   $ret[] = update_sql("ALTER TABLE {". $table ."} DROP ". $column ."_old");
-}
-
-/**
- * If the schema version for Drupal core is stored in the variables table
- * (4.6.x and earlier) move it to the schema_version column of the system
- * table.
- *
- * This function may be removed when update 156 is removed, which is the last
- * update in the 4.6 to 4.7 migration.
- */
-function update_fix_schema_version() {
-  if ($update_start = variable_get('update_start', FALSE)) {
-    // Some updates were made to the 4.6 branch and 4.7 branch. This sets
-    // temporary variables to prevent the updates from being executed twice and
-    // throwing errors.
-    switch ($update_start) {
-      case '2005-04-14':
-        variable_set('update_132_done', TRUE);
-        break;
-
-      case '2005-05-06':
-        variable_set('update_132_done', TRUE);
-        variable_set('update_135_done', TRUE);
-        break;
-
-      case '2005-05-07':
-        variable_set('update_132_done', TRUE);
-        variable_set('update_135_done', TRUE);
-        variable_set('update_137_done', TRUE);
-        break;
-
-    }
-    // The schema_version column (added below) was changed during 4.7beta.
-    // Update_170 is only for those beta users.
-    variable_set('update_170_done', TRUE);
-
-    $sql_updates = array(
-      '2004-10-31: first update since Drupal 4.5.0 release' => 110,
-      '2004-11-07' => 111, '2004-11-15' => 112, '2004-11-28' => 113,
-      '2004-12-05' => 114, '2005-01-07' => 115, '2005-01-14' => 116,
-      '2005-01-18' => 117, '2005-01-19' => 118, '2005-01-20' => 119,
-      '2005-01-25' => 120, '2005-01-26' => 121, '2005-01-27' => 122,
-      '2005-01-28' => 123, '2005-02-11' => 124, '2005-02-23' => 125,
-      '2005-03-03' => 126, '2005-03-18' => 127, '2005-03-21' => 128,
-      // The following three updates were made on the 4.6 branch
-      '2005-04-14' => 128, '2005-05-06' => 128, '2005-05-07' => 128,
-      '2005-04-08: first update since Drupal 4.6.0 release' => 129,
-      '2005-04-10' => 130, '2005-04-11' => 131, '2005-04-14' => 132,
-      '2005-04-24' => 133, '2005-04-30' => 134, '2005-05-06' => 135,
-      '2005-05-08' => 136, '2005-05-09' => 137, '2005-05-10' => 138,
-      '2005-05-11' => 139, '2005-05-12' => 140, '2005-05-22' => 141,
-      '2005-07-29' => 142, '2005-07-30' => 143, '2005-08-08' => 144,
-      '2005-08-15' => 145, '2005-08-25' => 146, '2005-09-07' => 147,
-      '2005-09-18' => 148, '2005-09-27' => 149, '2005-10-15' => 150,
-      '2005-10-23' => 151, '2005-10-28' => 152, '2005-11-03' => 153,
-      '2005-11-14' => 154, '2005-11-27' => 155, '2005-12-03' => 156,
-    );
-
-    // Add schema version column
-    switch ($GLOBALS['db_type']) {
-      case 'pgsql':
-        $ret = array();
-        db_add_column($ret, 'system', 'schema_version', 'smallint', array('not null' => TRUE, 'default' => -1));
-        break;
-
-      case 'mysql':
-      case 'mysqli':
-        db_query('ALTER TABLE {system} ADD schema_version smallint(3) not null default -1');
-        break;
-    }
-    // Set all enabled (contrib) modules to schema version 0 (installed)
-    db_query('UPDATE {system} SET schema_version = 0 WHERE status = 1');
-
-    // Set schema version for core
-    drupal_set_installed_schema_version('system', $sql_updates[$update_start]);
-    variable_del('update_start');
-  }
-}
-
-/**
- * System update 130 changes the sessions table, which breaks the update
- * script's ability to use session variables. This changes the table
- * appropriately.
- *
- * This code, including the 'update_sessions_fixed' variable, may be removed
- * when update 130 is removed. It is part of the Drupal 4.6 to 4.7 migration.
- */
-function update_fix_sessions() {
-  $ret = array();
-
-  if (drupal_get_installed_schema_version('system') < 130 && !variable_get('update_sessions_fixed', FALSE)) {
-    if ($GLOBALS['db_type'] == 'mysql') {
-      db_query("ALTER TABLE {sessions} ADD cache int(11) NOT NULL default '0' AFTER timestamp");
-    }
-    elseif ($GLOBALS['db_type'] == 'pgsql') {
-      db_add_column($ret, 'sessions', 'cache', 'int', array('default' => 0, 'not null' => TRUE));
-    }
-
-    variable_set('update_sessions_fixed', TRUE);
-  }
-}
-
-/**
- * System update 115 changes the watchdog table, which breaks the update
- * script's ability to use logging. This changes the table appropriately.
- *
- * This code, including the 'update_watchdog_115_fixed' variable, may be removed
- * when update 115 is removed. It is part of the Drupal 4.5 to 4.7 migration.
- */
-function update_fix_watchdog_115() {
-  if (drupal_get_installed_schema_version('system') < 115 && !variable_get('update_watchdog_115_fixed', FALSE)) {
-    if ($GLOBALS['db_type'] == 'mysql') {
-      $ret[] = update_sql("ALTER TABLE {watchdog} ADD severity tinyint(3) unsigned NOT NULL default '0'");
-    }
-    else if ($GLOBALS['db_type'] == 'pgsql') {
-      $ret[] = update_sql('ALTER TABLE {watchdog} ADD severity smallint');
-      $ret[] = update_sql('UPDATE {watchdog} SET severity = 0');
-      $ret[] = update_sql('ALTER TABLE {watchdog} ALTER COLUMN severity SET NOT NULL');
-      $ret[] = update_sql('ALTER TABLE {watchdog} ALTER COLUMN severity SET DEFAULT 0');
-    }
-
-    variable_set('update_watchdog_115_fixed', TRUE);
-  }
-}
-
-/**
- * System update 142 changes the watchdog table, which breaks the update
- * script's ability to use logging. This changes the table appropriately.
- *
- * This code, including the 'update_watchdog_fixed' variable, may be removed
- * when update 142 is removed. It is part of the Drupal 4.6 to 4.7 migration.
- */
-function update_fix_watchdog() {
-  if (drupal_get_installed_schema_version('system') < 142 && !variable_get('update_watchdog_fixed', FALSE)) {
-    switch ($GLOBALS['db_type']) {
-      case 'pgsql':
-        $ret = array();
-        db_add_column($ret, 'watchdog', 'referer', 'varchar(128)', array('not null' => TRUE, 'default' => "''"));
-        break;
-      case 'mysql':
-      case 'mysqli':
-        db_query("ALTER TABLE {watchdog} ADD COLUMN referer varchar(128) NOT NULL");
-        break;
-    }
-
-    variable_set('update_watchdog_fixed', TRUE);
-  }
 }
 
 /**
@@ -523,35 +376,6 @@ function update_fix_system_table() {
         break;
     }
   }
-}
-
-// This code may be removed later. It is part of the Drupal 4.6 to 4.7 migration.
-function update_fix_access_table() {
-  if (variable_get('update_access_fixed', FALSE)) {
-    return;
-  }
-
-  switch ($GLOBALS['db_type']) {
-    // Only for MySQL 4.1+
-    case 'mysqli':
-      break;
-    case 'mysql':
-      if (version_compare(mysql_get_server_info($GLOBALS['active_db']), '4.1.0', '<')) {
-        return;
-      }
-      break;
-    case 'pgsql':
-      return;
-  }
-
-  // Convert access table to UTF-8 if needed.
-  $result = db_fetch_array(db_query('SHOW CREATE TABLE {access}'));
-  if (!preg_match('/utf8/i', array_pop($result))) {
-    update_convert_table_utf8('access');
-  }
-
-  // Don't run again
-  variable_set('update_access_fixed', TRUE);
 }
 
 /**
@@ -825,7 +649,6 @@ drupal_maintenance_theme();
 
 // This must happen *after* drupal_bootstrap(), since it calls
 // variable_(get|set), which only works after a full bootstrap.
-update_fix_access_table();
 update_create_cache_tables();
 update_create_batch_table();
 
@@ -840,10 +663,6 @@ if (!empty($update_free_access) || $user->uid == 1) {
   include_once './includes/batch.inc';
   drupal_load_updates();
 
-  update_fix_schema_version();
-  update_fix_watchdog_115();
-  update_fix_watchdog();
-  update_fix_sessions();
   update_fix_d6_requirements();
   update_fix_compatibility();
 
