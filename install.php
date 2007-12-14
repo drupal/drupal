@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.102 2007/12/13 12:53:46 goba Exp $
+// $Id: install.php,v 1.103 2007/12/14 18:21:30 goba Exp $
 
 require_once './includes/install.inc';
 
@@ -324,7 +324,7 @@ function install_settings_form(&$form_state, $profile, $install_locale, $setting
 
     $form['save'] = array(
       '#type' => 'submit',
-      '#value' => st('Save configuration'),
+      '#value' => st('Save and continue'),
     );
 
     $form['errors'] = array();
@@ -471,7 +471,7 @@ function install_select_profile_form(&$form_state, $profiles) {
   }
   $form['submit'] =  array(
     '#type' => 'submit',
-    '#value' => st('Save configuration'),
+    '#value' => st('Save and continue'),
   );
   return $form;
 }
@@ -1058,7 +1058,7 @@ function install_configure_form(&$form_state, $url) {
 
   $form['submit'] = array(
     '#type' => 'submit',
-    '#value' => st('Save'),
+    '#value' => st('Save and continue'),
     '#weight' => 15,
   );
   $form['#action'] = $url;
