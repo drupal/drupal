@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.pages.inc,v 1.3 2007/11/26 16:36:43 dries Exp $
+// $Id: poll.pages.inc,v 1.4 2007/12/14 09:50:41 goba Exp $
 
 /**
  * @file
@@ -11,10 +11,9 @@
  */
 function poll_page() {
   // List all polls.
-  $sql = "SELECT n.nid, n.title, p.active, n.created, SUM(c.chvotes) AS votes FROM {node} n INNER JOIN {poll} p ON n.nid = p.nid INNER JOIN {poll_choices} c ON n.nid = c.nid WHERE n.status = 1 GROUP BY n.nid, n.title, p.active, n.created ORDER BY n.created DESC";
+  $sql = db_rewrite_sql("SELECT n.nid, n.title, p.active, n.created, SUM(c.chvotes) AS votes FROM {node} n INNER JOIN {poll} p ON n.nid = p.nid INNER JOIN {poll_choices} c ON n.nid = c.nid WHERE n.status = 1 GROUP BY n.nid, n.title, p.active, n.created ORDER BY n.created DESC");
   // Count all polls for the pager.
-  $count_sql = 'SELECT COUNT(*) FROM {node} n INNER JOIN {poll} p ON n.nid = p.nid WHERE n.status = 1';
-  $sql = db_rewrite_sql($sql);
+  $count_sql = db_rewrite_sql('SELECT COUNT(*) FROM {node} n INNER JOIN {poll} p ON n.nid = p.nid WHERE n.status = 1');
   $result = pager_query($sql, 15, 0, $count_sql);
   $output = '<ul>';
   while ($node = db_fetch_object($result)) {
