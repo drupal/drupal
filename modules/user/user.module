@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.873 2007/12/14 18:08:50 goba Exp $
+// $Id: user.module,v 1.874 2007/12/14 18:29:59 goba Exp $
 
 /**
  * @file
@@ -2231,7 +2231,7 @@ function user_register_submit($form, &$form_state) {
     else {
       // Create new user account, administrator approval required.
       _user_mail_notify('register_pending_approval', $account);
-      drupal_set_message(t('Thank you for applying for an account. Your account is currently pending approval by the site administrator.<br />In the meantime, your password and further instructions have been sent to your e-mail address.'));
+      drupal_set_message(t('Thank you for applying for an account. Your account is currently pending approval by the site administrator.<br />In the meantime, a welcome message with further instructions has been sent to your e-mail address.'));
       $form_state['redirect'] = '';
       return;
 
