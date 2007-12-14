@@ -2728,6 +2728,20 @@ function system_update_6041() {
 }
 
 /**
+ * Upgrade recolored theme stylesheets to new array structure.
+ */
+function system_update_6042() {
+  foreach (list_themes() as $theme) {
+    $stylesheet = variable_get('color_'. $theme->name .'_stylesheet', NULL);
+    if (!empty($stylesheet)) {
+      variable_set('color_'. $theme->name .'_stylesheets', array($stylesheet));
+      variable_del('color_'. $theme->name .'_stylesheet');
+    }
+  }
+  return array();
+}
+
+/**
  * @} End of "defgroup updates-5.x-to-6.x"
  * The next series of updates should start at 7000.
  */
