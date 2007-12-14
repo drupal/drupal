@@ -77,6 +77,7 @@ function blog_feed_last() {
   $channel['title'] = variable_get('site_name', 'Drupal') .' blogs';
   $channel['link'] = url('blog', array('absolute' => TRUE));
 
+  $items = array();
   while ($row = db_fetch_object($result)) {
     $items[] = $row->nid;
   }
