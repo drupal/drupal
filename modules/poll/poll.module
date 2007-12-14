@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.254 2007/12/13 09:34:38 goba Exp $
+// $Id: poll.module,v 1.255 2007/12/14 09:24:08 goba Exp $
 
 /**
  * @file
@@ -379,7 +379,7 @@ function poll_validate($node) {
       if ($choice['chtext'] != '') {
         $realchoices++;
       }
-      if ($choice['chvotes'] < 0) {
+      if (isset($choice['chvotes']) && $choice['chvotes'] < 0) {
         form_set_error("choice][$i][chvotes", t('Negative values are not allowed.'));
       }
     }
@@ -457,7 +457,7 @@ function poll_update($node) {
 
   $i = 0;
   foreach ($node->choice as $choice) {
-    $chvotes = (int)$choice['chvotes'];
+    $chvotes = isset($choice['chvotes']) ? (int)$choice['chvotes'] : 0;
     $chtext = $choice['chtext'];
 
     if ($chtext != '') {
