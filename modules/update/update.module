@@ -61,7 +61,7 @@ function update_help($path, $arg) {
             drupal_set_message($status[$type]['description'], 'error');
           }
           elseif ($status[$type]['severity'] == REQUIREMENT_WARNING) {
-            drupal_set_message($status[$type]['description']);
+            drupal_set_message($status[$type]['description'], 'warning');
           }
         }
       }
