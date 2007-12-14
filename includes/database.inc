@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.85 2007/11/30 12:19:10 goba Exp $
+// $Id: database.inc,v 1.86 2007/12/14 19:15:47 goba Exp $
 
 /**
  * @file
@@ -226,8 +226,9 @@ define('DB_QUERY_REGEXP', '/(%d|%s|%%|%f|%b)/');
  *   Query to be rewritten.
  * @param $primary_table
  *   Name or alias of the table which has the primary key field for this query.
- *   Possible values are: blocks, comments, forum, node, menu, term_data,
- *   vocabulary.
+ *   Typical table names would be: {blocks}, {comments}, {forum}, {node},
+ *   {menu}, {term_data} or {vocabulary}. However, in most cases the usual
+ *   table alias (b, c, f, n, m, t or v) is used instead of the table name.
  * @param $primary_field
  *   Name of the primary field.
  * @param $args
@@ -270,13 +271,17 @@ function _db_rewrite_sql($query = '', $primary_table = 'n', $primary_field = 'ni
  * @param $query
  *   Query to be rewritten.
  * @param $primary_table
- *   Name or alias of the table which has the primary key field for this query. Possible values are: {comments}, {forum}, {node}, {menu}, {term_data}, {vocabulary}.
+ *   Name or alias of the table which has the primary key field for this query.
+ *   Typical table names would be: {blocks}, {comments}, {forum}, {node},
+ *   {menu}, {term_data} or {vocabulary}. However, it is more common to use the
+ *   the usual table aliases: b, c, f, n, m, t or v.
  * @param $primary_field
  *   Name of the primary field.
  * @param $args
  *   An array of arguments, passed to the implementations of hook_db_rewrite_sql.
  * @return
- *   The original query with JOIN and WHERE statements inserted from hook_db_rewrite_sql implementations. nid is rewritten if needed.
+ *   The original query with JOIN and WHERE statements inserted from
+ *   hook_db_rewrite_sql implementations. nid is rewritten if needed.
  */
 function db_rewrite_sql($query, $primary_table = 'n', $primary_field = 'nid',  $args = array()) {
   list($join, $where, $distinct) = _db_rewrite_sql($query, $primary_table, $primary_field, $args);
