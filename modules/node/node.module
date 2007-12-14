@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.925 2007/12/14 18:40:32 goba Exp $
+// $Id: node.module,v 1.926 2007/12/14 19:19:46 goba Exp $
 
 /**
  * @file
@@ -1185,7 +1185,7 @@ function node_search($op = 'search', $keys = NULL) {
       }
       if ($weight = (int)variable_get('node_rank_recent', 5)) {
         // Exponential decay with half-life of 6 months, starting at last indexed node
-        $ranking[] = '%d * POW(2, (GREATEST(n.created, n.changed, c.last_comment_timestamp) - %d) * 6.43e-8)';
+        $ranking[] = '%d * POW(2, (GREATEST(MAX(n.created), MAX(n.changed), MAX(c.last_comment_timestamp)) - %d) * 6.43e-8)';
         $arguments2[] = $weight;
         $arguments2[] = (int)variable_get('node_cron_last', 0);
         $join2 .= ' LEFT JOIN {node_comment_statistics} c ON c.nid = i.sid';
@@ -1195,7 +1195,7 @@ function node_search($op = 'search', $keys = NULL) {
       if (module_exists('comment') && $weight = (int)variable_get('node_rank_comments', 5)) {
         // Inverse law that maps the highest reply count on the site to 1 and 0 to 0.
         $scale = variable_get('node_cron_comments_scale', 0.0);
-        $ranking[] = '%d * (2.0 - 2.0 / (1.0 + c.comment_count * %f))';
+        $ranking[] = '%d * (2.0 - 2.0 / (1.0 + MAX(c.comment_count) * %f))';
         $arguments2[] = $weight;
         $arguments2[] = $scale;
         if (!$stats_join) {
@@ -1207,7 +1207,7 @@ function node_search($op = 'search', $keys = NULL) {
           $weight = (int)variable_get('node_rank_views', 5)) {
         // Inverse law that maps the highest view count on the site to 1 and 0 to 0.
         $scale = variable_get('node_cron_views_scale', 0.0);
-        $ranking[] = '%d * (2.0 - 2.0 / (1.0 + nc.totalcount * %f))';
+        $ranking[] = '%d * (2.0 - 2.0 / (1.0 + MAX(nc.totalcount) * %f))';
         $arguments2[] = $weight;
         $arguments2[] = $scale;
         $join2 .= ' LEFT JOIN {node_counter} nc ON nc.nid = i.sid';
