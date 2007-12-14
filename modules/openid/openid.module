@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.module,v 1.13 2007/12/08 14:06:21 goba Exp $
+// $Id: openid.module,v 1.14 2007/12/14 18:08:47 goba Exp $
 
 /**
  * @file
@@ -53,6 +53,7 @@ function openid_help($path, $arg) {
       $output .= '<p>'. t('Users can create accounts using their OpenID, assign one or more OpenIDs to an existing account, and log in using an OpenID. This lowers the barrier to registration, which is good for the site, and offers convenience and security to the users. OpenID is not a trust system, so email verification is still necessary. The benefit stems from the fact that users can have a single password that they can use on many websites. This means they can easily update their single password from a centralized location, rather than having to change dozens of passwords individually.') .'</p>';
       $output .= '<p>'. t('The basic concept is as follows: A user has an account on an OpenID server. This account provides them with a unique URL (such as myusername.openidprovider.com). When the user comes to your site, they are presented with the option of entering this URL. Your site then communicates with the OpenID server, asking it to verify the identity of the user. If the user is logged into their OpenID server, the server communicates back to your site, verifying the user. If they are not logged in, the OpenID server will ask the user for their password. At no point does your site record, or need to record the user\'s password.') .'</p>';
       $output .= '<p>'. t('More information on OpenID is available at <a href="@openid-net">OpenID.net</a>.', array('@openid-net' => url('http://openid.net'))) .'</p>';
+      $output .= '<p>'. t('For more information, see the online handbook entry for <a href="@handbook">OpenID module</a>.', array('@handbook' => 'http://drupal.org/handbook/modules/openid')) .'</p>';
       return $output;
   }
 }

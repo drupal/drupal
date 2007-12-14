@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.923 2007/12/13 13:06:45 goba Exp $
+// $Id: node.module,v 1.924 2007/12/14 18:08:47 goba Exp $
 
 /**
  * @file
@@ -43,7 +43,7 @@ function node_help($path, $arg) {
 <li>The search tab lets you search all content on your site</li>
 </ul>
 ');
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@node">Node page</a>.', array('@node' => 'http://drupal.org/handbook/modules/node/')) .'</p>';
+      $output .= '<p>'. t('For more information, see the online handbook entry for <a href="@node">Node module</a>.', array('@node' => 'http://drupal.org/handbook/modules/node/')) .'</p>';
       return $output;
     case 'admin/content/node':
       return ' '; // Return a non-null value so that the 'more help' link is shown.

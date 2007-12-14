@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.293 2007/12/13 09:34:37 goba Exp $
+// $Id: blog.module,v 1.294 2007/12/14 18:08:44 goba Exp $
 
 /**
  * @file
@@ -65,7 +65,7 @@ function blog_help($path, $arg) {
       $output .= '<p>'. t('There is an (optional) <em>Blogs</em> menu item added to the Navigation menu, which displays all blogs available on your site, and a <em>My blog</em> item displaying the current user\'s blog entries. The <em>Blog entry</em> menu item under <em>Create content</em> allows new blog entries to be created.') .'</p>';
       $output .= '<p>'. t('Each blog entry is displayed with an automatic link to other blogs created by the same user. By default, blog entries have comments enabled and are automatically promoted to the site front page. The blog module also creates a <em>Recent blog posts</em> block that may be enabled at the <a href="@blocks">blocks configuration page</a>.', array('@blocks' => url('admin/build/block'))) .'</p>';
       $output .= '<p>'. t('When using the aggregator module an automatic <em>blog it</em> icon is displayed next to the items in a feed\'s <em>latest items</em> block. Clicking this icon populates a <em>blog entry</em> with a title (the title of the feed item) and body (a link to the source item on its original site and illustrative content suitable for use in a block quote). Blog authors can use this feature to easily comment on items of interest that appear in aggregator feeds from other sites. To use this feature, be sure to <a href="@modules">enable</a> the aggregator module, <a href="@feeds">add and configure</a> a feed from another site, and <a href="@blocks">position</a> the feed\'s <em>latest items</em> block.', array('@modules' => url('admin/build/modules'), '@feeds' => url('admin/content/aggregator'), '@blocks' => url('admin/build/block'))) .'</p>';
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@blog">Blog page</a>.', array('@blog' => 'http://drupal.org/handbook/modules/blog/')) .'</p>';
+      $output .= '<p>'. t('For more information, see the online handbook entry for <a href="@blog">Blog module</a>.', array('@blog' => 'http://drupal.org/handbook/modules/blog/')) .'</p>';
       return $output;
   }
 }

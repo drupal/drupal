@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.407 2007/12/14 11:19:39 goba Exp $
+// $Id: taxonomy.module,v 1.408 2007/12/14 18:08:48 goba Exp $
 
 /**
  * @file
@@ -1235,7 +1235,7 @@ function taxonomy_help($path, $arg) {
       $output .= '<p>'. t("Each taxonomy term (often called a 'category' or 'tag' in other systems) automatically provides lists of posts and a corresponding RSS feed. These taxonomy/term URLs can be manipulated to generate AND and OR lists of posts classified with terms. In our recipe site example, it then becomes easy to create pages displaying 'Main courses', '30 minute recipes', or '30 minute main courses and appetizers' by using terms on their own or in combination with others. There are a significant number of contributed modules which you to alter and extend the behaviour of the core module for both display and organization of terms.") .'</p>';
       $output .= '<p>'. t("Terms can also be organized in parent/child relationships from the admin interface. An example would be a vocabulary grouping countries under their parent geo-political regions. The taxonomy module also enables advanced implementations of hierarchy, for example placing Turkey in both the 'Middle East' and 'Europe'.") .'</p>';
       $output .= '<p>'. t('The taxonomy module supports the use of both synonyms and related terms, but does not directly use this functionality. However, optional contributed or custom modules may make full use of these advanced features.') .'</p>';
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@taxonomy">Taxonomy page</a>.', array('@taxonomy' => 'http://drupal.org/handbook/modules/taxonomy/')) .'</p>';
+      $output .= '<p>'. t('For more information, see the online handbook entry for <a href="@taxonomy">Taxonomy module</a>.', array('@taxonomy' => 'http://drupal.org/handbook/modules/taxonomy/')) .'</p>';
       return $output;
     case 'admin/content/taxonomy':
       return '<p>'. t("The taxonomy module allows you to categorize your content using both tags and administrator defined terms. It is a flexible tool for classifying content with many advanced features. To begin, create a 'Vocabulary' to hold one set of terms or tags. You can create one free-tagging vocabulary for everything, or seperate controlled vocabularies to define the various properties of your content, for example 'Countries' or 'Colours'.") .'</p>';

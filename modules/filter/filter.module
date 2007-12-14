@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.192 2007/12/08 14:06:21 goba Exp $
+// $Id: filter.module,v 1.193 2007/12/14 18:08:46 goba Exp $
 
 /**
  * @file
@@ -22,7 +22,7 @@ function filter_help($path, $arg) {
     case 'admin/help#filter':
       $output = '<p>'. t("The filter module allows administrators to configure  text input formats for the site. For example, an administrator may want a filter to strip out malicious HTML from user's comments. Administrators may also want to make URLs linkable even if they are only entered in an unlinked format.") .'</p>';
       $output .= '<p>'. t('Users can choose between the available input formats when creating or editing content. Administrators can configure which input formats are available to which user roles, as well as choose a default input format. Administrators can also create new input formats. Each input format can be configured to use a selection of filters.') .'</p>';
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@filter">Filter page</a>.', array('@filter' => 'http://drupal.org/handbook/modules/filter/')) .'</p>';
+      $output .= '<p>'. t('For more information, see the online handbook entry for <a href="@filter">Filter module</a>.', array('@filter' => 'http://drupal.org/handbook/modules/filter/')) .'</p>';
       return $output;
     case 'admin/settings/filters':
       return t('

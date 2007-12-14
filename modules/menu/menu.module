@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.151 2007/12/13 10:34:07 goba Exp $
+// $Id: menu.module,v 1.152 2007/12/14 18:08:47 goba Exp $
 
 /**
  * @file
@@ -26,7 +26,7 @@ Menu administration tabs:
   <li>Use the "add menu" tab to submit a title for a new custom menu. Once submitted, the menu will appear in a list toward the bottom of the administer menu page underneath the main navigation menu. Under the menu name there will be links to edit or delete the menu, and a link to add new items to the menu.</li>
   <li>Use the "add menu item" tab to create new links in either the navigation or a custom menu (such as a primary/secondary links menu). Select the parent item to place the new link within an existing menu structure. For top level menu items, choose the name of the menu in which the link is to be added.</li>
 </ul>', array('%navigation' => 'Navigation', '%primary-links' => 'Primary links', '%secondary-links' => 'Secondary links', '@admin-block' => url('admin/build/block'), '@menu-settings' => url('admin/build/menu/settings')));
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@menu">Menu page</a>.', array('@menu' => 'http://drupal.org/handbook/modules/menu/')) .'</p>';
+      $output .= '<p>'. t('For more information, see the online handbook entry for <a href="@menu">Menu module</a>.', array('@menu' => 'http://drupal.org/handbook/modules/menu/')) .'</p>';
       return $output;
     case 'admin/build/menu':
       return '<p>'. t('Menus are a collection of links (menu items) used to navigate a website. The menus currently available on your site are displayed below. Select a menu from this list to manage its menu items.') .'</p>';

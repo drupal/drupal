@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.230 2007/12/13 09:34:39 goba Exp $
+// $Id: profile.module,v 1.231 2007/12/14 18:08:48 goba Exp $
 
 /**
  * @file
@@ -41,7 +41,7 @@ function profile_help($path, $arg) {
       $output .= '<li>'. t('freeform list') .'</li>';
       $output .= '<li>'. t('URL') .'</li>';
       $output .= '<li>'. t('date') .'</li></ul>';
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@profile">Profile page</a>.', array('@profile' => 'http://drupal.org/handbook/modules/profile/')) .'</p>';
+      $output .= '<p>'. t('For more information, see the online handbook entry for <a href="@profile">Profile module</a>.', array('@profile' => 'http://drupal.org/handbook/modules/profile/')) .'</p>';
       return $output;
     case 'admin/user/profile':
       return '<p>'. t('The profile module allows custom fields (such as country, full name, or age) to be defined and displayed in the <em>My Account</em> section.') .'</p>';

@@ -1,5 +1,5 @@
 <?php
-// $Id: translation.module,v 1.18 2007/12/05 16:34:05 goba Exp $
+// $Id: translation.module,v 1.19 2007/12/14 18:08:49 goba Exp $
 
 /**
  * @file
@@ -42,7 +42,7 @@ function translation_help($path, $arg) {
       $output .= '<li>'. t('Update translations as needed, so that they accurately reflect changes in the content of the original post. The translation status flag provides a simple method for tracking outdated translations. After editing a post, for example, select the <em>Flag translations as outdated</em> check box to mark all of its translations as outdated and in need of revision. Individual translations may be marked for revision by selecting the <em>This translation needs to be updated</em> check box on the translation editing form.') .'</li>';
       $output .= '<li>'. t('The <a href="@content-node">Content management administration page</a> displays the language of each post, and also allows filtering by language or translation status.', array('@content-node' => url('admin/content/node'))) .'</li></ul>';
       $output .= '<p>'. t('Use the <href="@blocks">language switcher block</a> provided by locale module to allow users to select a language. If available, both the site interface and site content are presented in the language selected.', array('@blocks' => url('admin/build/block'))) .'</p>';
-      $output .= '<p>'. t('For more information please read the handbook <a href="@translation">Translation page</a>.', array('@translation' => 'http://drupal.org/handbook/modules/translation/')) .'</p>';
+      $output .= '<p>'. t('For more information, see the online handbook entry for <a href="@translation">Translation module</a>.', array('@translation' => 'http://drupal.org/handbook/modules/translation/')) .'</p>';
       return $output;
     case 'node/%/translate':
       $output = '<p>'. t('Translations of a piece of content are managed with translation sets. Each translation set has one source post and any number of translations in any of the <a href="!languages">enabled languages</a>. All translations are tracked to be up to date or outdated based on whether the source post was modified significantly.', array('!languages' => url('admin/settings/language'))) .'</p>';

@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.432 2007/12/13 09:34:38 goba Exp $
+// $Id: forum.module,v 1.433 2007/12/14 18:08:46 goba Exp $
 
 /**
  * @file
@@ -15,7 +15,7 @@ function forum_help($path, $arg) {
       $output = '<p>'. t('The forum module lets you create threaded discussion forums for a particular topic on your site. This is similar to a message board system such as phpBB. Forums are very useful because they allow community members to discuss topics with one another, and they are archived for future reference.') .'</p>';
       $output .= '<p>'. t('Forums can be organized in containers. Containers hold forums and, in turn, forums hold threaded discussions, or threads. Both containers and forums can be nested inside other containers and forums. By carefully planning the structure of your containers and forums, you make it easier for users to find a topic of interest to them. Forum threads can be moved between forums, with an optional link (or shadow copy) created in the original forum pointing to the new location. Forum threads can have their own URL.') .'</p>';
       $output .= '<p>'. t('The forum module <strong>requires that the taxonomy and comment modules</strong> be enabled.') .'</p>';
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@forum">Forum page</a>.', array('@forum' => 'http://drupal.org/handbook/modules/forum/')) .'</p>';
+      $output .= '<p>'. t('For more information, see the online handbook entry for <a href="@forum">Forum module</a>.', array('@forum' => 'http://drupal.org/handbook/modules/forum/')) .'</p>';
       return $output;
     case 'admin/content/forum':
       return '<p>'. t('This is a list of existing containers and forums that you can edit. Containers hold forums and, in turn, forums hold threaded discussions. Both containers and forums can be placed inside other containers and forums. By carefully planning the structure of your containers and forums, you make it easier for users to find a topic of interest to them.') .'</p>';

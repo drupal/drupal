@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.module,v 1.18 2007/12/06 09:58:31 goba Exp $
+// $Id: dblog.module,v 1.19 2007/12/14 18:08:46 goba Exp $
 
 /**
  * @file
@@ -20,7 +20,7 @@ function dblog_help($path, $arg) {
     case 'admin/help#dblog':
       $output = '<p>'. t('The dblog module monitors your system, capturing system events in a log to be reviewed by an authorized individual at a later time. This is useful for site administrators who want a quick overview of activities on their site. The logs also record the sequence of events, so it can be useful for debugging site errors.') .'</p>';
       $output .= '<p>'. t('The dblog log is simply a list of recorded events containing usage data, performance data, errors, warnings and operational information. Administrators should check the dblog report on a regular basis to ensure their site is working properly.') .'</p>';
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@dblog">Dblog page</a>.', array('@dblog' => 'http://drupal.org/handbook/modules/dblog/')) .'</p>';
+      $output .= '<p>'. t('For more information, see the online handbook entry for <a href="@dblog">Dblog module</a>.', array('@dblog' => 'http://drupal.org/handbook/modules/dblog/')) .'</p>';
       return $output;
     case 'admin/reports/dblog':
       return '<p>'. t('The dblog module monitors your website, capturing system events in a log to be reviewed by an authorized individual at a later time. The dblog log is simply a list of recorded events containing usage data, performance data, errors, warnings and operational information. It is vital to check the dblog report on a regular basis as it is often the only way to tell what is going on.') .'</p>';

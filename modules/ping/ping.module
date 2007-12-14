@@ -1,5 +1,5 @@
 <?php
-// $Id: ping.module,v 1.50 2007/12/13 09:34:38 goba Exp $
+// $Id: ping.module,v 1.51 2007/12/14 18:08:47 goba Exp $
 
 /**
  * @file
@@ -14,7 +14,7 @@ function ping_help($path, $arg) {
     case 'admin/help#ping':
       $output = '<p>'. t('The ping module is useful for notifying interested sites that your site has changed. It automatically sends notifications, or "pings", to the <a href="@external-http-pingomatic-com">pingomatic</a> service about new or updated content. In turn, <a href="@external-http-pingomatic-com">pingomatic</a> notifies other popular services, including weblogs.com, Technorati, blo.gs, BlogRolling, Feedster.com, and Moreover.', array('@external-http-pingomatic-com' => 'http://pingomatic.com/')) .'</p>';
       $output .= '<p>'. t('The ping module requires <code>cron</code> or a similar periodic job scheduler to be enabled.') .'</p>';
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@ping">Ping page</a>.', array('@ping' => 'http://drupal.org/handbook/modules/ping/')) .'</p>';
+      $output .= '<p>'. t('For more information, see the online handbook entry for <a href="@ping">Ping module</a>.', array('@ping' => 'http://drupal.org/handbook/modules/ping/')) .'</p>';
       return $output;
   }
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: help.module,v 1.77 2007/12/13 09:34:38 goba Exp $
+// $Id: help.module,v 1.78 2007/12/14 18:08:46 goba Exp $
 
 /**
  * @file
@@ -41,7 +41,7 @@ function help_help($path, $arg) {
       return $output;
     case 'admin/help#help':
       $output = '<p>'. t('The help module provides context sensitive help on the use and configuration of <a href="@drupal">Drupal</a> and its modules, and is a supplement to the more extensive online <a href="@handbook">Drupal handbook</a>. The online handbook may contain more up-to-date information, is annotated with helpful user-contributed comments, and serves as the definitive reference point for all Drupal documentation.', array('@drupal' => 'http://drupal.org', '@handbook' => 'http://drupal.org/handbook')) .'</p>';
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@help">Help page</a>.', array('@help' => 'http://drupal.org/handbook/modules/help/')) .'</p>';
+      $output .= '<p>'. t('For more information, see the online handbook entry for <a href="@help">Help module</a>.', array('@help' => 'http://drupal.org/handbook/modules/help/')) .'</p>';
       return $output;
   }
 }

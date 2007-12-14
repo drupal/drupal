@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.449 2007/12/13 09:34:37 goba Exp $
+// $Id: book.module,v 1.450 2007/12/14 18:08:45 goba Exp $
 
 /**
  * @file
@@ -1005,7 +1005,7 @@ function book_help($path, $arg) {
       $output .= '<p>'. t('Users can select the <em>printer-friendly version</em> link visible at the bottom of a book page to generate a printer-friendly display of the page and all of its subsections. ') .'</p>';
       $output .= '<p>'. t("Users with the <em>administer book outlines</em> permission can add a post of any content type to a book, by selecting the appropriate book while editing the post or by using the interface available on the post's <em>outline</em> tab.") .'</p>';
       $output .= '<p>'. t('Administrators can view a list of all books on the <a href="@admin-node-book">book administration page</a>. The <em>Outline</em> page for each book allows section titles to be edited or rearranged.', array('@admin-node-book' => url('admin/content/book'))) .'</p>';
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@book">Book page</a>.', array('@book' => 'http://drupal.org/handbook/modules/book/')) .'</p>';
+      $output .= '<p>'. t('For more information, see the online handbook entry for <a href="@book">Book module</a>.', array('@book' => 'http://drupal.org/handbook/modules/book/')) .'</p>';
       return $output;
     case 'admin/content/book':
       return '<p>'. t('The book module offers a means to organize a collection of related posts, collectively known as a book. When viewed, these posts automatically display links to adjacent book pages, providing a simple navigation system for creating and reviewing structured content.') .'</p>';

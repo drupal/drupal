@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.289 2007/12/08 14:06:20 goba Exp $
+// $Id: block.module,v 1.290 2007/12/14 18:08:44 goba Exp $
 
 /**
  * @file
@@ -85,7 +85,7 @@ function block_help($path, $arg) {
       $output .= '<p>'. t('Some modules generate blocks that become available when the modules are enabled. These blocks can be administered via the <a href="@admin-block">blocks administration page</a>.', array('@admin-block' => url('admin/build/block'))) .'</p>';
       $output .= '<h3>'. t('Administrator defined blocks') .'</h3>';
       $output .= '<p>'. t('Administrators can also define custom blocks. These blocks consist of a title, a description, and a body which can be as long as you wish. Block content can be in any of the input formats supported for other content.') .'</p>';
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@block">Block page</a>.', array('@block' => 'http://drupal.org/handbook/modules/block/')) .'</p>';
+      $output .= '<p>'. t('For more information, see the online handbook entry for <a href="@block">Block module</a>.', array('@block' => 'http://drupal.org/handbook/modules/block/')) .'</p>';
       return $output;
     case 'admin/build/block':
       return t('<p>Blocks are boxes of content that may be rendered into certain regions of your web pages, for example, into sidebars. They are usually generated automatically by modules, but administrators can create blocks manually.</p>

@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.872 2007/12/14 16:07:42 goba Exp $
+// $Id: user.module,v 1.873 2007/12/14 18:08:50 goba Exp $
 
 /**
  * @file
@@ -1769,7 +1769,7 @@ function user_help($path, $arg) {
       $output = '<p>'. t('The user module allows users to register, login, and log out. Users benefit from being able to sign on because it associates content they create with their account and allows various permissions to be set for their roles. The user module supports user roles which establish fine grained permissions allowing each role to do only what the administrator wants them to. Each user is assigned to one or more roles. By default there are two roles <em>anonymous</em> - a user who has not logged in, and <em>authenticated</em> a user who has signed up and who has been authorized.') .'</p>';
       $output .= '<p>'. t("Users can use their own name or handle and can specify personal configuration settings through their individual <em>My account</em> page. Users must authenticate by supplying a local username and password or through their OpenID, an optional and secure method for logging into many websites with a single username and password. In some configurations, users may authenticate using a username and password from another Drupal site, or through some other site-specific mechanism.") .'</p>';
       $output .= '<p>'. t('A visitor accessing your website is assigned a unique ID, or session ID, which is stored in a cookie. The cookie does not contain personal information, but acts as a key to retrieve information from your site. Users should have cookies enabled in their web browser when using your site.') .'</p>';
-      $output .= '<p>'. t('For more information please read the configuration and customization handbook <a href="@user">User page</a>.', array('@user' => 'http://drupal.org/handbook/modules/user/')) .'</p>';
+      $output .= '<p>'. t('For more information, see the online handbook entry for <a href="@user">User module</a>.', array('@user' => 'http://drupal.org/handbook/modules/user/')) .'</p>';
       return $output;
     case 'admin/user/user':
       return '<p>'. t('Drupal allows users to register, login, log out, maintain user profiles, etc. Users of the site may not use their own names to post content until they have signed up for a user account.') .'</p>';

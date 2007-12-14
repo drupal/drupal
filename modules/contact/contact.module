@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.100 2007/12/13 09:34:38 goba Exp $
+// $Id: contact.module,v 1.101 2007/12/14 18:08:46 goba Exp $
 
 /**
  * @file
@@ -16,7 +16,7 @@ function contact_help($path, $arg) {
       $output .= '<p>'. t("Users can activate/deactivate their personal contact forms in their account settings. Upon activation, a contact tab will appear in their user profiles. Privileged users such as site administrators are able to contact users even if they have chosen not to enable this feature.") .'</p>';
       $output .= '<p>'. t("Note that the contact tab will not appear when a user views his or her own profile; only when viewing another user's profile, if that user's contact form is enabled.") .'</p>';
       $output .= '<p>'. t('If the menu module is enabled, a menu item linking to the site-wide contact page is added to the navigation block. It is disabled by default, but can be enabled via the <a href="@menu-module">menu management</a> page. Links to the contact page may also be added to the primary and secondary links using the same page.', array('@menu-module' => url('admin/build/menu'))) .'</p>';
-      $output .= '<p>'. t('For more information, please read the configuration and customization handbook page for the <a href="@contact">contact module</a>.', array('@contact' => url('http://drupal.org/handbook/modules/contact/', array('absolute' => TRUE)))) .'</p>';
+      $output .= '<p>'. t('For more information, see the online handbook entry for <a href="@contact">Contact module</a>.', array('@contact' => url('http://drupal.org/handbook/modules/contact/', array('absolute' => TRUE)))) .'</p>';
       return $output;
     case 'admin/build/contact':
       $output = '<p>'. t('This page lets you set up <a href="@form">your site-wide contact form</a>. To do so, add one or more categories. You can associate different recipients with each category to route e-mails to different people. For example, you can route website feedback to the webmaster and direct product information requests to the sales department. On the <a href="@settings">settings page</a>, you can customize the information shown above the contact form. This can be useful to provide additional contact information such as your postal address and telephone number.', array('@settings' => url('admin/build/contact/settings'), '@form' => url('contact'))) .'</p>';

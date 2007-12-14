@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.111 2007/12/13 12:53:46 goba Exp $
+// $Id: blogapi.module,v 1.112 2007/12/14 18:08:44 goba Exp $
 
 /**
  * @file
@@ -15,7 +15,7 @@ function blogapi_help($path, $arg) {
       $output = '<p>'. t("The Blog API module allows your site's users to access and post to their blogs from external blogging clients. External blogging clients are available for a wide range of desktop operating systems, and generally provide a feature-rich graphical environment for creating and editing posts.") .'</p>';
       $output .= '<p>'. t('<a href="@ecto-link">Ecto</a>, a blogging client available for both Mac OS X and Microsoft Windows, can be used with Blog API. Blog API also supports <a href="@blogger-api">Blogger API</a>, <a href="@metaweblog-api">MetaWeblog API</a>, and most of the <a href="@movabletype-api">Movable Type API</a>. Blogging clients and other services (e.g. <a href="@flickr">Flickr\'s</a> "post to blog") that support these APIs may also be compatible.', array('@ecto-link' => url('http://infinite-sushi.com/software/ecto/'), '@blogger-api' => url('http://www.blogger.com/developers/api/1_docs/'), '@metaweblog-api' => url('http://www.xmlrpc.com/metaWeblogApi'), '@movabletype-api' => url('http://www.movabletype.org/docs/mtmanual_programmatic.html'), '@flickr' => url('http://www.flickr.com'))) .'</p>';
       $output .= '<p>'. t('Select the content types available to external clients on the <a href="@blogapi-settings">Blog API settings page</a>. If supported and available, each content type will be displayed as a separate "blog" by the external client.', array('@blogapi-settings' => url('admin/settings/blogapi'))) .'</p>';
-      $output .= '<p>'. t('For more information, see the configuration and customization handbook <a href="@blogapi">Blog API page</a>.', array('@blogapi' => url('http://drupal.org/handbook/modules/blogapi/'))) .'</p>';
+      $output .= '<p>'. t('For more information, see the online handbook entry for <a href="@blogapi">Blog API module</a>.', array('@blogapi' => url('http://drupal.org/handbook/modules/blogapi/'))) .'</p>';
       return $output;
   }
 }
