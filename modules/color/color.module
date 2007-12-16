@@ -1,5 +1,5 @@
 <?php
-// $Id: color.module,v 1.32 2007/12/14 18:08:45 goba Exp $
+// $Id: color.module,v 1.33 2007/12/16 13:05:21 goba Exp $
 
 /**
  * Implementation of hook_help().
@@ -30,17 +30,23 @@ function color_theme() {
  */
 function color_form_alter(&$form, $form_state, $form_id) {
   // Insert the color changer into the theme settings page.
-  // TODO: Last condition in the following if disables color changer when private files are used. This should be solved in a different way. See issue #92059.
-  if ($form_id == 'system_theme_settings' && color_get_info(arg(4)) && function_exists('gd_info') && variable_get('file_downloads', FILE_DOWNLOADS_PUBLIC) == FILE_DOWNLOADS_PUBLIC) {
-    $form['color'] = array(
-      '#type' => 'fieldset',
-      '#title' => t('Color scheme'),
-      '#weight' => -1,
-      '#attributes' => array('id' => 'color_scheme_form'),
-      '#theme' => 'color_scheme_form',
-    );
-    $form['color'] += color_scheme_form($form_state, arg(4));
-    $form['#submit'][] = 'color_scheme_form_submit';
+  if ($form_id == 'system_theme_settings' && color_get_info(arg(4)) && function_exists('gd_info')) {
+     if (variable_get('file_downloads', FILE_DOWNLOADS_PUBLIC) != FILE_DOWNLOADS_PUBLIC) {
+       // Disables the color changer when the private download method is used.
+       // TODO: This should be solved in a different way. See issue #181003.
+       drupal_set_message(t('The color picker only works if the <a href="@url">download method</a> is set to public.', array('@url' => url('admin/settings/file-system'))), 'warning');
+     }
+     else {
+       $form['color'] = array(
+         '#type' => 'fieldset',
+         '#title' => t('Color scheme'),
+         '#weight' => -1,
+         '#attributes' => array('id' => 'color_scheme_form'),
+         '#theme' => 'color_scheme_form',
+       );
+       $form['color'] += color_scheme_form($form_state, arg(4));
+       $form['#submit'][] = 'color_scheme_form_submit';
+     }
   }
 
   // Use the generated screenshot in the theme list.
