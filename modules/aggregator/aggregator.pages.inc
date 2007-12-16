@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.pages.inc,v 1.6 2007/12/16 18:06:27 goba Exp $
+// $Id: aggregator.pages.inc,v 1.7 2007/12/16 18:27:46 goba Exp $
 
 /**
  * @file
@@ -403,7 +403,7 @@ function template_preprocess_aggregator_summary_item(&$variables) {
 
   $variables['feed_url'] = check_url($item->link);
   $variables['feed_title'] = check_plain($item->title);
-  $variables['source_age'] = t('%age old', array('%age' => format_interval(time() - $item->timestamp)));
+  $variables['feed_age'] = t('%age old', array('%age' => format_interval(time() - $item->timestamp)));
 
   $variables['source_url'] = '';
   $variables['source_title'] = '';
