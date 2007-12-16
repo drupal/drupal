@@ -403,7 +403,7 @@ function template_preprocess_aggregator_summary_item(&$variables) {
 
   $variables['feed_url'] = check_url($item->link);
   $variables['feed_title'] = check_plain($item->title);
-  $variables['source_age'] = t('%age old', array('%age' => format_interval(time() - $item->timestamp)));
+  $variables['feed_age'] = t('%age old', array('%age' => format_interval(time() - $item->timestamp)));
 
   $variables['source_url'] = '';
   $variables['source_title'] = '';
