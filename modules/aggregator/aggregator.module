@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.365 2007/12/14 18:08:44 goba Exp $
+// $Id: aggregator.module,v 1.366 2007/12/16 21:01:44 goba Exp $
 
 /**
  * @file
@@ -246,19 +246,32 @@ function aggregator_menu() {
   return $items;
 }
 
+/**
+ * Menu callback.
+ *
+ * @return
+ *   An aggregator category title.
+ */
 function _aggregator_category_title($category) {
   return $category['title'];
 }
 
+/**
+ * Implementation of hook_init().
+ */
 function aggregator_init() {
   drupal_add_css(drupal_get_path('module', 'aggregator') .'/aggregator.css');
 }
 
+/**
+ * Find out whether there are any aggregator categories.
+ *
+ * @return
+ *   TRUE if there is at least one category and the user has access to them, FALSE otherwise.
+ */
 function _aggregator_has_categories() {
   return user_access('access news feeds') && db_result(db_query('SELECT COUNT(*) FROM {aggregator_category}'));
 }
-
-
 
 /**
  * Implementation of hook_perm().
@@ -353,6 +366,9 @@ function aggregator_block($op = 'list', $delta = 0, $edit = array()) {
 
 /**
  * Add/edit/delete aggregator categories.
+ *
+ * @param $edit
+ *   An associative array describing the category to be added/edited/deleted.
  */
 function aggregator_save_category($edit) {
   $link_path = 'aggregator/categories/';
@@ -381,6 +397,9 @@ function aggregator_save_category($edit) {
 
 /**
  * Add/edit/delete an aggregator feed.
+ *
+ * @param $edit
+ *   An associative array describing the feed to be added/edited/deleted.
  */
 function aggregator_save_feed($edit) {
   if (!empty($edit['fid'])) {
@@ -419,6 +438,12 @@ function aggregator_save_feed($edit) {
   }
 }
 
+/**
+ * Removes all items from a feed.
+ *
+ * @param $feed
+ *   An associative array describing the feed to be cleared.
+ */
 function aggregator_remove($feed) {
   $result = db_query('SELECT iid FROM {aggregator_item} WHERE fid = %d', $feed['fid']);
   while ($item = db_fetch_object($result)) {
@@ -547,6 +572,9 @@ function aggregator_element_data($parser, $data) {
 
 /**
  * Checks a news feed for new items.
+ *
+ * @param $feed
+ *   An associative array describing the feed to be refreshed.
  */
 function aggregator_refresh($feed) {
   global $channel, $image;
@@ -634,8 +662,10 @@ function aggregator_refresh($feed) {
  * See http://www.w3.org/TR/NOTE-datetime for more information.
  * Originally from MagpieRSS (http://magpierss.sourceforge.net/).
  *
- * @param $date_str A string with a potentially W3C DTF date.
- * @return A timestamp if parsed successfully or -1 if not.
+ * @param $date_str
+ *   A string with a potentially W3C DTF date.
+ * @return
+ *   A timestamp if parsed successfully or FALSE if not.
  */
 function aggregator_parse_w3cdtf($date_str) {
   if (preg_match('/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(:(\d{2}))?(?:([-+])(\d{2}):?(\d{2})|(Z))?/', $date_str, $match)) {
@@ -665,6 +695,16 @@ function aggregator_parse_w3cdtf($date_str) {
   }
 }
 
+/**
+ * Parse a feed and store its items.
+ *
+ * @param $data
+ *   The feed data.
+ * @param $feed
+ *   An associative array describing the feed to be parsed.
+ * @return
+ *   0 on error, 1 otherwise.
+ */
 function aggregator_parse_feed(&$data, $feed) {
   global $items, $image, $channel;
 
@@ -806,6 +846,12 @@ function aggregator_parse_feed(&$data, $feed) {
   return 1;
 }
 
+/**
+ * Add/edit/delete an aggregator item.
+ *
+ * @param $edit
+ *   An associative array describing the item to be added/edited/deleted.
+ */
 function aggregator_save_item($edit) {
   if ($edit['iid'] && $edit['title']) {
     db_query("UPDATE {aggregator_item} SET title = '%s', link = '%s', author = '%s', description = '%s', guid = '%s', timestamp = %d WHERE iid = %d", $edit['title'], $edit['link'], $edit['author'], $edit['description'], $edit['guid'], $edit['timestamp'], $edit['iid']);
@@ -825,6 +871,14 @@ function aggregator_save_item($edit) {
   }
 }
 
+/**
+ * Load an aggregator feed.
+ *
+ * @param $fid
+ *   The feed id.
+ * @return
+ *   An associative array describing the feed.
+ */
 function aggregator_feed_load($fid) {
   static $feeds;
   if (!isset($feeds[$fid])) {
@@ -833,6 +887,14 @@ function aggregator_feed_load($fid) {
   return $feeds[$fid];
 }
 
+/**
+ * Load an aggregator category.
+ *
+ * @param $cid
+ *   The category id.
+ * @return
+ *   An associative array describing the category.
+ */
 function aggregator_category_load($cid) {
   static $categories;
   if (!isset($categories[$cid])) {
@@ -844,6 +906,12 @@ function aggregator_category_load($cid) {
 /**
  * Format an individual feed item for display in the block.
  *
+ * @param $item
+ *   The item to be displayed.
+ * @param $feed
+ *   Not used.
+ * @return
+ *   The item HTML.
  * @ingroup themeable
  */
 function theme_aggregator_block_item($item, $feed = 0) {
@@ -864,6 +932,11 @@ function theme_aggregator_block_item($item, $feed = 0) {
 
 /**
  * Safely render HTML content, as allowed.
+ *
+ * @param $value
+ *   The content to be filtered.
+ * @return
+ *   The filtered content.
  */
 function aggregator_filter_xss($value) {
   return filter_xss($value, preg_split('/\s+|<|>/', variable_get('aggregator_allowed_html_tags', '<a> <b> <br> <dd> <dl> <dt> <em> <i> <li> <ol> <p> <strong> <u> <ul>'), -1, PREG_SPLIT_NO_EMPTY));
@@ -871,6 +944,11 @@ function aggregator_filter_xss($value) {
 
 /**
  * Helper function for drupal_map_assoc.
+ *
+ * @param $count
+ *   Items count.
+ * @return
+ *   Plural-formatted "@count items"
  */
 function _aggregator_items($count) {
   return format_plural($count, '1 item', '@count items');

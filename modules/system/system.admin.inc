@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.36 2007/12/13 10:46:43 goba Exp $
+// $Id: system.admin.inc,v 1.37 2007/12/16 21:01:45 goba Exp $
 
 /**
  * @file
@@ -66,6 +66,9 @@ function system_main_admin_page($arg = NULL) {
  * For example, 'admin/content/types' needs to have a destination to be valid
  * in the Drupal menu system, but too much information there might be
  * hidden, so we supply the contents of the block.
+ *
+ * @return
+ *   The output HTML.
  */
 function system_admin_menu_block_page() {
   $item = menu_get_item();
@@ -77,6 +80,9 @@ function system_admin_menu_block_page() {
 
 /**
  * Menu callback; Sets whether the admin menu is in compact mode or not.
+ *
+ * @param $mode
+ *   Valid values are 'on' and 'off'.
  */
 function system_admin_compact_page($mode = 'off') {
   global $user;
@@ -241,6 +247,9 @@ function system_themes_form() {
   return $form;
 }
 
+/**
+ * Process system_themes_form form submissions.
+ */
 function system_themes_form_submit($form, &$form_state) {
 
   // Store list of previously enabled themes and disable all themes
@@ -296,6 +305,10 @@ function system_themes_form_submit($form, &$form_state) {
 /**
  * Form builder; display theme configuration for entire site and individual themes.
  *
+ * @param $key
+ *   A theme name.
+ * @return
+ *   The form structure.
  * @ingroup forms
  * @see system_theme_settings_submit().
  */
@@ -512,6 +525,9 @@ function system_theme_settings(&$form_state, $key = '') {
   return $form;
 }
 
+/**
+ * Process system_theme_settings form submissions.
+ */
 function system_theme_settings_submit($form, &$form_state) {
   $op = isset($_POST['op']) ? $_POST['op'] : '';
   $key = $form_state['values']['var'];
@@ -532,7 +548,16 @@ function system_theme_settings_submit($form, &$form_state) {
 }
 
 /**
- * Recursively check compatability
+ * Recursively check compatibility.
+ *
+ * @param $incompatible
+ *   An associative array which at the end of the check contains all incompatible files as the keys, their values being TRUE.
+ * @param $files
+ *   The set of files that will be tested.
+ * @param $file
+ *   The file at which the check starts.
+ * @return
+ *   Returns TRUE if an incompatible file is found, NULL (no return value) otherwise.
  */
 function _system_is_incompatible(&$incompatible, $files, $file) {
   static $seen;
@@ -565,6 +590,8 @@ function _system_is_incompatible(&$incompatible, $files, $file) {
  * disabled dependencies and also to ensure that the module cannot be disabled if the module has
  * enabled dependents.
  *
+ * @param $form_state
+ *   An associative array containing the current state of the form.
  * @ingroup forms
  * @see theme_system_modules().
  * @see system_modules_submit().
@@ -726,12 +753,23 @@ function system_modules($form_state = array()) {
   return $form;
 }
 
+/**
+ * Array sorting callback; sorts modules by their name.
+ */
 function system_sort_modules_by_info_name($a, $b) {
   return strcasecmp($a->info['name'], $b->info['name']);
 }
 
 /**
  * Form process callback function to disable check boxes.
+ *
+ * @param $form
+ *   The form structure.
+ * @param $edit
+ *   Not used.
+ * @ingroup forms
+ * @return
+ *   The form structure.
  */
 function system_modules_disable($form, $edit) {
   foreach ($form['#disabled_modules'] as $key) {
@@ -750,7 +788,6 @@ function system_modules_disable($form, $edit) {
  *   elements: the list of dependencies and the list of status
  *   form field values from the previous screen.
  * @ingroup forms
- * @see
  */
 function system_modules_confirm_form($modules, $storage) {
   $form = array();
@@ -893,6 +930,17 @@ function system_modules_submit($form, &$form_state) {
   return;
 }
 
+
+/**
+ * Generate a list of dependencies for modules that are going to be switched on.
+ *
+ * @param $modules
+ *   The list of modules to check.
+ * @param $form_values
+ *   Submitted form values used to determine what modules have been enabled.
+ * @return
+ *   An array of dependencies.
+ */
 function system_module_build_dependencies($modules, $form_values) {
   static $dependencies;
 
@@ -925,8 +973,8 @@ function system_module_build_dependencies($modules, $form_values) {
  * @ingroup forms
  * @see system_modules_uninstall_validate().
  * @see system_modules_uninstall_submit().
- * @param
- *   $form_state['values'] Submitted form values.
+ * @param $form_state['values']
+ *   Submitted form values.
  * @return
  *   A form array representing the currently disabled modules.
  */
@@ -981,8 +1029,8 @@ function system_modules_uninstall($form_state = NULL) {
  * Confirm uninstall of selected modules.
  *
  * @ingroup forms
- * @param
- *   $form_state['values'] Submitted form values.
+ * @param $storage
+ *   An associative array of modules selected to be uninstalled.
  * @return
  *   A form array representing modules to confirm.
  */
@@ -1019,11 +1067,6 @@ function system_modules_uninstall_confirm_form($storage) {
 
 /**
  * Validates the submitted uninstall form.
- *
- * @param
- *   $form_id The form ID.
- * @param
- *   $form_state['values'] Submitted form values.
  */
 function system_modules_uninstall_validate($form, &$form_state) {
   // Form submitted, but no modules selected.
@@ -1035,11 +1078,6 @@ function system_modules_uninstall_validate($form, &$form_state) {
 
 /**
  * Processes the submitted uninstall form.
- *
- * @param
- *   $form_id The form ID.
- * @param
- *   $form_state['values'] Submitted form values.
  */
 function system_modules_uninstall_submit($form, &$form_state) {
   // Make sure the install API is available.
@@ -1274,7 +1312,9 @@ function system_performance_settings() {
 }
 
 /**
- * Clear system caches.
+ * Submit callback; clear system caches.
+ *
+ * @ingroup forms
  */
 function system_clear_cache_submit(&$form_state, $form) {
   drupal_flush_all_caches();
@@ -1374,7 +1414,7 @@ function system_rss_feeds_settings() {
  *
  * @ingroup forms
  * @see system_settings_form().
- * @see system_date_time_settings().
+ * @see system_date_time_settings_submit().
  */
 function system_date_time_settings() {
   drupal_add_js(drupal_get_path('module', 'system') .'/system.js', 'module');
@@ -1517,6 +1557,9 @@ function system_date_time_settings() {
   return $form;
 }
 
+/**
+ * Process system_date_time_settings form submissions.
+ */
 function system_date_time_settings_submit($form, &$form_state) {
   if ($form_state['values']['date_format_short'] == 'custom') {
     $form_state['values']['date_format_short'] = $form_state['values']['date_format_short_custom'];
@@ -1602,6 +1645,7 @@ function system_clean_url_settings() {
  * Menu callback: displays the site status report. Can also be used as a pure check.
  *
  * @param $check
+ *
  *   If true, only returns a boolean whether there are system status errors.
  */
 function system_status($check = FALSE) {
@@ -1643,6 +1687,16 @@ function system_php() {
   exit();
 }
 
+/**
+ * Theme a SQL result table.
+ *
+ * @param $data
+ *   The actual table data.
+ * @param $keys
+ *   Data keys and descriptions.
+ * @return
+ *   The output HTML.
+ */
 function _system_sql($data, $keys) {
   $rows = array();
   foreach ($keys as $key => $explanation) {
@@ -1717,7 +1771,6 @@ function system_batch_page() {
  * @param $block
  *   An array containing information about the block. It should
  *   include a 'title', a 'description' and a formatted 'content'.
- *
  * @ingroup themeable
  */
 function theme_admin_block($block) {
@@ -1748,7 +1801,6 @@ EOT;
  * @param $block
  *   An array containing information about the block. It should
  *   include a 'title', a 'description' and a formatted 'content'.
- *
  * @ingroup themeable
  */
 function theme_admin_block_content($content) {
@@ -1786,7 +1838,6 @@ function theme_admin_block_content($content) {
  *   'title', a 'description', a formatted 'content' and a
  *   'position' which will control which container it will be
  *   in. This is usually 'left' or 'right'.
- *
  * @ingroup themeable
  */
 function theme_admin_page($blocks) {
@@ -1828,6 +1879,8 @@ function theme_admin_page($blocks) {
 /**
  * Theme output of the dashboard page.
  *
+ * @param $menu_items
+ *   An array of modules to be displayed.
  * @ingroup themeable
  */
 function theme_system_admin_by_module($menu_items) {
@@ -1871,8 +1924,10 @@ function theme_system_admin_by_module($menu_items) {
 }
 
 /**
- * Theme status report
+ * Theme requirements status report.
  *
+ * @param $requirements
+ *   An array of requirements.
  * @ingroup themeable
  */
 function theme_status_report(&$requirements) {
@@ -1906,8 +1961,10 @@ function theme_status_report(&$requirements) {
 }
 
 /**
- * Theme call back for the modules form.
+ * Theme callback for the modules form.
  *
+ * @param $form
+ *   An associative array containing the structure of the form.
  * @ingroup themeable
  */
 function theme_system_modules($form) {
@@ -1993,8 +2050,8 @@ function theme_system_modules($form) {
  * Themes a table of currently disabled modules.
  *
  * @ingroup themeable
- * @param
- *   $form The form array representing the currently disabled modules.
+ * @param $form
+ *   The form array representing the currently disabled modules.
  * @return
  *   An HTML string representing the table.
  */
@@ -2033,7 +2090,8 @@ function theme_system_modules_uninstall($form) {
 
 /**
  * Theme the theme select form.
- *
+ * @param $form
+ *   An associative array containing the structure of the form.
  * @ingroup themeable
  */
 function theme_system_theme_select_form($form) {
@@ -2055,6 +2113,8 @@ function theme_system_theme_select_form($form) {
 /**
  * Theme function for the system themes form.
  *
+ * @param $form
+ *   An associative array containing the structure of the form.
  * @ingroup themeable
  */
 function theme_system_themes_form($form) {

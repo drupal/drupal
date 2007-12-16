@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.admin.inc,v 1.1 2007/10/31 17:50:47 dries Exp $
+// $Id: comment.admin.inc,v 1.2 2007/12/16 21:01:44 goba Exp $
 
 /**
  * @file
@@ -23,6 +23,12 @@ function comment_admin($type = 'new') {
 /**
  * Form builder; Builds the comment overview form for the admin.
  *
+ * @param $type
+ *   Not used.
+ * @param $arg
+ *   Current path's fourth component deciding the form type (Published comments/Approval queue)
+ * @return
+ *   The form structure.
  * @ingroup forms
  * @see comment_admin_overview_validate().
  * @see comment_admin_overview_submit().
@@ -70,6 +76,8 @@ function comment_admin_overview($type = 'new', $arg) {
 }
 
 /**
+ * Validate comment_admin_overview form submissions.
+ *
  * We can't execute any 'Update options' if no comments were selected.
  */
 function comment_admin_overview_validate($form, &$form_state) {
@@ -81,6 +89,8 @@ function comment_admin_overview_validate($form, &$form_state) {
 }
 
 /**
+ * Process comment_admin_overview form submissions.
+ *
  * Execute the chosen 'Update option' on the selected comments, such as
  * publishing, unpublishing or deleting.
  */
@@ -110,6 +120,8 @@ function comment_admin_overview_submit($form, &$form_state) {
 /**
  * Theme the comment admin form.
  *
+ * @param $form
+ *   An associative array containing the structure of the form.
  * @ingroup themeable
  */
 function theme_comment_admin_overview($form) {
@@ -144,6 +156,10 @@ function theme_comment_admin_overview($form) {
  * List the selected comments and verify that the admin really wants to delete
  * them.
  *
+ * @param $form_state
+ *   An associative array containing the current state of the form.
+ * @return
+ *   TRUE if the comments should be deleted, FALSE otherwise.
  * @ingroup forms
  * @see comment_multiple_delete_confirm_submit().
  */
@@ -176,6 +192,8 @@ function comment_multiple_delete_confirm(&$form_state) {
 }
 
 /**
+ * Process comment_multiple_delete_confirm form submissions.
+ *
  * Perform the actual comment deletion.
  */
 function comment_multiple_delete_confirm_submit($form, &$form_state) {
@@ -193,6 +211,9 @@ function comment_multiple_delete_confirm_submit($form, &$form_state) {
 
 /**
  * Menu callback; delete a comment.
+ *
+ * @param $cid
+ *   The comment do be deleted.
  */
 function comment_delete($cid = NULL) {
   $comment = db_fetch_object(db_query('SELECT c.*, u.name AS registered_name, u.uid FROM {comments} c INNER JOIN {users} u ON u.uid = c.uid WHERE c.cid = %d', $cid));
@@ -229,6 +250,9 @@ function comment_confirm_delete(&$form_state, $comment) {
     'comment_confirm_delete');
 }
 
+/**
+ * Process comment_confirm_delete form submissions.
+ */
 function comment_confirm_delete_submit($form, &$form_state) {
   drupal_set_message(t('The comment and all its replies have been deleted.'));
 
@@ -246,6 +270,12 @@ function comment_confirm_delete_submit($form, &$form_state) {
   return;
 }
 
+/**
+ * Perform the actual deletion of a comment and all its replies.
+ *
+ * @param $comment
+ *   An associative array describing the comment to be deleted.
+ */
 function _comment_delete_thread($comment) {
   if (!is_object($comment) || !is_numeric($comment->cid)) {
     watchdog('content', 'Cannot delete non-existent comment.', WATCHDOG_WARNING);

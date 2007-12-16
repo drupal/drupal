@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.admin.inc,v 1.2 2007/12/04 16:34:27 goba Exp $
+// $Id: aggregator.admin.inc,v 1.3 2007/12/16 21:01:44 goba Exp $
 
 /**
  * @file
@@ -13,6 +13,12 @@ function aggregator_admin_overview() {
   return aggregator_view();
 }
 
+/**
+ * Displays the aggregator administration page.
+ *
+ * @return
+ *   The page HTML.
+ */
 function aggregator_view() {
   $result = db_query('SELECT f.*, COUNT(i.iid) AS items FROM {aggregator_feed} f LEFT JOIN {aggregator_item} i ON f.fid = i.fid GROUP BY f.fid, f.title, f.url, f.refresh, f.checked, f.link, f.description, f.etag, f.modified, f.image, f.block ORDER BY f.title');
 
@@ -100,7 +106,6 @@ function aggregator_form_feed(&$form_state, $edit = array('refresh' => 900, 'tit
   return $form;
 }
 
-
 /**
  * Validate aggregator_form_feed form submissions.
  */
@@ -130,6 +135,7 @@ function aggregator_form_feed_validate($form, &$form_state) {
 
 /**
  * Process aggregator_form_feed form submissions.
+ *
  * @todo Add delete confirmation dialog.
  */
 function aggregator_form_feed_submit($form, &$form_state) {
@@ -172,6 +178,9 @@ function aggregator_form_feed_submit($form, &$form_state) {
 
 /**
  * Menu callback; removes all items from a feed, then redirects to the overview page.
+ *
+ * @param $feed
+ *   An associative array describing the feed to be cleared.
  */
 function aggregator_admin_remove_feed($feed) {
   aggregator_remove($feed);
@@ -180,6 +189,9 @@ function aggregator_admin_remove_feed($feed) {
 
 /**
  * Menu callback; refreshes a feed, then redirects to the overview page.
+ *
+ * @param $feed
+ *   An associative array describing the feed to be refreshed.
  */
 function aggregator_admin_refresh_feed($feed) {
   aggregator_refresh($feed);
@@ -271,6 +283,7 @@ function aggregator_form_category_validate($form, &$form_state) {
 
 /**
  * Process aggregator_form_category form submissions.
+ *
  * @todo Add delete confirmation dialog.
  */
 function aggregator_form_category_submit($form, &$form_state) {

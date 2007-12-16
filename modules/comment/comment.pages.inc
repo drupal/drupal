@@ -1,11 +1,18 @@
 <?php
-// $Id: comment.pages.inc,v 1.1 2007/10/31 17:50:47 dries Exp $
+// $Id: comment.pages.inc,v 1.2 2007/12/16 21:01:44 goba Exp $
 
 /**
  * @file
  * User page callbacks for the comment module.
  */
 
+/**
+ * Form builder; generate a comment editing form.
+ *
+ * @param $cid
+ *   ID of the comment to be edited.
+ * @ingroup forms
+ */
 function comment_edit($cid) {
   global $user;
 
@@ -33,11 +40,12 @@ function comment_edit($cid) {
  *
  * @param $node
  *   Every comment belongs to a node. This is that node.
+ *
  * @param $pid
  *   Some comments are replies to other comments. In those cases, $pid is the parent
  *   comment's cid.
  *
- * @return $output
+ * @return
  *   The rendered parent node or comment plus the new comment form.
  */
 function comment_reply($node, $pid = NULL) {

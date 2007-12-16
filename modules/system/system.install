@@ -1,8 +1,13 @@
 <?php
-// $Id: system.install,v 1.207 2007/12/16 09:32:41 goba Exp $
+// $Id: system.install,v 1.208 2007/12/16 21:01:45 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
+ *
+ * @param $phase
+ *   The current system installation phase.
+ * @return
+ *   An array of system requirements.
  */
 function system_requirements($phase) {
   $requirements = array();
@@ -242,7 +247,6 @@ function system_requirements($phase) {
 
   return $requirements;
 }
-
 
 /**
  * Implementation of hook_install().

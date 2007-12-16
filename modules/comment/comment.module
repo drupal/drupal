@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.607 2007/12/14 18:08:45 goba Exp $
+// $Id: comment.module,v 1.608 2007/12/16 21:01:44 goba Exp $
 
 /**
  * @file
@@ -138,7 +138,7 @@ function comment_help($path, $arg) {
 }
 
 /**
- * Implementation of hook_theme()
+ * Implementation of hook_theme().
  */
 function comment_theme() {
   return array(
@@ -245,7 +245,6 @@ function comment_menu() {
 
 /**
  * Implementation of hook_node_type().
- *
  */
 function comment_node_type($op, $info) {
   $settings = array(
@@ -300,8 +299,10 @@ function comment_block($op = 'list', $delta = 0) {
  *   2. Loading the information from the comments table based on the nids found
  *      in step 1.
  *
- * @param $number (optional) The maximum number of comments to find.
- * @return $comments An array of comment objects each containing a nid,
+ * @param $number
+ *   (optional) The maximum number of comments to find.
+ * @return
+ *   An array of comment objects each containing a nid,
  *   subject, cid, and timestamp, or an empty array if there are no recent
  *   comments visible to the current user.
  */
@@ -331,6 +332,15 @@ function comment_get_recent($number = 10) {
 
 /**
  * Calculate page number for first new comment.
+ *
+ * @param $num_comments
+ *   Number of comments.
+ * @param $new_replies
+ *   Number of new replies.
+ * @param $node
+ *   The first new comment node.
+ * @return
+ *   "page=X" if the page number is greater than zero; empty string otherwise.
  */
 function comment_new_page_count($num_comments, $new_replies, $node) {
   $comments_per_page = _comment_get_display_setting('comments_per_page', $node);
@@ -373,9 +383,10 @@ function comment_new_page_count($num_comments, $new_replies, $node) {
 }
 
 /**
- * Returns a formatted list of recent comments to be displayed in the comment
- * block.
+ * Returns a formatted list of recent comments to be displayed in the comment block.
  *
+ * @return
+ *   The comment list HTML.
  * @ingroup themeable
  */
 function theme_comment_block() {
@@ -471,6 +482,9 @@ function comment_link($type, $node = NULL, $teaser = FALSE) {
   return $links;
 }
 
+/**
+ * Implementation of hook_form_alter().
+ */
 function comment_form_alter(&$form, $form_state, $form_id) {
   if ($form_id == 'node_type_form' && isset($form['identity']['type'])) {
     $form['comment'] = array(
@@ -575,7 +589,6 @@ function comment_form_alter(&$form, $form_state, $form_id) {
 
 /**
  * Implementation of hook_nodeapi().
- *
  */
 function comment_nodeapi(&$node, $op, $arg = 0) {
   switch ($op) {
@@ -637,6 +650,13 @@ function comment_user($type, $edit, &$user, $category = NULL) {
  * Authenticated users can edit their comments as long they have not been
  * replied to. This prevents people from changing or revising their
  * statements based on the replies to their posts.
+ *
+ * @param $op
+ *   The operation that is to be performed on the comment. Only 'edit' is recognized now.
+ * @param $comment
+ *   The comment object.
+ * @return
+ *   TRUE if the current user has acces to the comment, FALSE otherwise.
  */
 function comment_access($op, $comment) {
   global $user;
@@ -646,6 +666,12 @@ function comment_access($op, $comment) {
   }
 }
 
+/**
+ * A simple helper function.
+ *
+ * @return
+ *   The 0th and the 1st path components joined by a slash.
+ */
 function comment_node_url() {
   return arg(0) .'/'. arg(1);
 }
@@ -767,6 +793,16 @@ function comment_save($edit) {
   }
 }
 
+/**
+ * Build command links for a comment (e.g.\ edit, reply, delete) with respect to the current user's access permissions.
+ *
+ * @param $comment
+ *   The comment to which the links will be related.
+ * @param $return
+ *   Not used.
+ * @return
+ *   An associative array containing the links.
+ */
 function comment_links($comment, $return = 1) {
   global $user;
 
@@ -1025,6 +1061,11 @@ function comment_render($node, $cid = 0) {
 /**
  * Comment operations. We offer different update operations depending on
  * which comment administration page we're on.
+ *
+ * @param $action
+ *   The comment administration page.
+ * @return
+ *   An associative array containing the offered operations.
  */
 function comment_operations($action = NULL) {
   if ($action == 'publish') {
@@ -1055,11 +1096,24 @@ function comment_operations($action = NULL) {
 
 /**
  * Load the entire comment by cid.
+ *
+ * @param $cid
+ *   The identifying comment id.
+ * @return
+ *   The comment object.
  */
 function _comment_load($cid) {
   return db_fetch_object(db_query('SELECT * FROM {comments} WHERE cid = %d', $cid));
 }
 
+/**
+ * Get comment count for a node.
+ *
+ * @param $nid
+ *   The node id.
+ * @return
+ *   The comment count.
+ */
 function comment_num_all($nid) {
   static $cache;
 
@@ -1069,6 +1123,14 @@ function comment_num_all($nid) {
   return $cache[$nid];
 }
 
+/**
+ * Get replies count for a comment.
+ *
+ * @param $pid
+ *   The comment id.
+ * @return
+ *   The replies count.
+ */
 function comment_num_replies($pid) {
   static $cache;
 
@@ -1080,10 +1142,12 @@ function comment_num_replies($pid) {
 }
 
 /**
- * get number of new comments for current user and specified node
+ * Get number of new comments for current user and specified node.
  *
- * @param $nid node-id to count comments for
- * @param $timestamp time to count from (defaults to time of last user access
+ * @param $nid
+ *   node-id to count comments for
+ * @param $timestamp
+ *   time to count from (defaults to time of last user access
  *   to node)
  */
 function comment_num_new($nid, $timestamp = 0) {
@@ -1108,6 +1172,14 @@ function comment_num_new($nid, $timestamp = 0) {
 
 }
 
+/**
+ * Validate comment data.
+ *
+ * @param $edit
+ *   An associative array containig the comment data.
+ * @return
+ *   The original $edit.
+ */
 function comment_validate($edit) {
   global $user;
 
@@ -1163,10 +1235,11 @@ function comment_validate($edit) {
 /**
  * Generate the basic commenting form, for appending to a node or display on a separate page.
  *
+ * @param $title
+ *   Not used.
  * @ingroup forms
  * @see comment_form_validate().
  * @see comment_form_submit().
- *
  */
 function comment_form(&$form_state, $edit, $title = NULL) {
   global $user;
@@ -1333,10 +1406,23 @@ function comment_form(&$form_state, $edit, $title = NULL) {
   return $form;
 }
 
+/**
+ * Theme the comment form box.
+ *
+ * @param $edit
+ *   The form structure.
+ * @param $title
+ *   The form title.
+ */
 function comment_form_box($edit, $title = NULL) {
   return theme('box', $title, drupal_get_form('comment_form', $edit, $title));
 }
 
+/**
+ * Form builder; Generate and validate a comment preview form.
+ *
+ * @ingroup forms
+ */
 function comment_form_add_preview($form, &$form_state) {
   global $user;
   $edit = $form_state['values'];
@@ -1397,6 +1483,9 @@ function comment_form_add_preview($form, &$form_state) {
   return $form;
 }
 
+/**
+ * Validate comment form submissions.
+ */
 function comment_form_validate($form, &$form_state) {
   global $user;
   if ($user->uid === 0) {
@@ -1410,6 +1499,12 @@ function comment_form_validate($form, &$form_state) {
   comment_validate($form_state['values']);
 }
 
+/**
+ * Prepare a comment for submission.
+ *
+ * @param $comment_values
+ *   An associative array containing the comment data.
+ */
 function _comment_form_submit(&$comment_values) {
   $comment_values += array('subject' => '');
   if (!isset($comment_values['date'])) {
@@ -1438,6 +1533,9 @@ function _comment_form_submit(&$comment_values) {
   }
 }
 
+/**
+ * Process comment form submissions; prepare the comment, store it, and set a redirection target.
+ */
 function comment_form_submit($form, &$form_state) {
   _comment_form_submit($form_state['values']);
   if ($cid = comment_save($form_state['values'])) {
@@ -1449,11 +1547,19 @@ function comment_form_submit($form, &$form_state) {
 }
 
 /**
- * Return a themed comment.
+ * Theme a single comment block.
  *
+ * @param $comment
+ *   The comment object.
+ * @param $node
+ *   The comment node.
+ * @param $links
+ *   An associative array containing control links.
+ * @param $visible
+ *   Switches between folded/unfolded view.
  * @ingroup themeable
  */
-function theme_comment_view($comment, $node, $links = array(), $visible = 1) {
+function theme_comment_view($comment, $node, $links = array(), $visible = TRUE) {
   static $first_new = TRUE;
 
   $output = '';
@@ -1483,6 +1589,18 @@ function theme_comment_view($comment, $node, $links = array(), $visible = 1) {
   return $output;
 }
 
+
+/**
+ * Build a comment control form.
+ *
+ * @param $mode
+ *   Comment display mode.
+ * @param $order
+ *   Comment order mode.
+ * @param $comments_per_page
+ *   Comments per page.
+ * @ingroup forms
+ */
 function comment_controls($mode = COMMENT_MODE_THREADED_EXPANDED, $order = COMMENT_ORDER_NEWEST_FIRST, $comments_per_page = 50) {
   $form['mode'] = array('#type' => 'select',
     '#default_value' => $mode,
@@ -1511,9 +1629,12 @@ function comment_controls($mode = COMMENT_MODE_THREADED_EXPANDED, $order = COMME
 
   return $form;
 }
+
 /**
  * Theme comment controls box where the user can change the default display mode and display order of comments.
  *
+ * @param $form
+ *   The form structure.
  * @ingroup themeable
  */
 function theme_comment_controls($form) {
@@ -1524,6 +1645,9 @@ function theme_comment_controls($form) {
   return theme('box', t('Comment viewing options'), $output);
 }
 
+/**
+ * Process comment_controls form submissions.
+ */
 function comment_controls_submit($form, &$form_state) {
   global $user;
 
@@ -1543,11 +1667,6 @@ function comment_controls_submit($form, &$form_state) {
 
 /**
  * Process variables for comment.tpl.php.
- *
- * The $variables array contains the following arguments:
- * - $comment
- * - $node
- * - $links
  *
  * @see comment.tpl.php
  * @see theme_comment()
@@ -1570,9 +1689,6 @@ function template_preprocess_comment(&$variables) {
 /**
  * Process variables for comment-folded.tpl.php.
  *
- * The $variables array contains the following arguments:
- * - $comment
- *
  * @see comment-folded.tpl.php
  * @see theme_comment_folded()
  */
@@ -1585,8 +1701,12 @@ function template_preprocess_comment_folded(&$variables) {
 }
 
 /**
- * Theme collapsed flat type comment.
+ * Theme comment flat collapsed view.
  *
+ * @param $comment
+ *   The comment to be themed.
+ * @param $node
+ *   The comment node.
  * @ingroup themeable
  */
 function theme_comment_flat_collapsed($comment, $node) {
@@ -1594,8 +1714,12 @@ function theme_comment_flat_collapsed($comment, $node) {
 }
 
 /**
- * Theme expanded flat type comment.
+ * Theme comment flat expanded view.
  *
+ * @param $comment
+ *   The comment to be themed.
+ * @param $node
+ *   The comment node.
  * @ingroup themeable
  */
 function theme_comment_flat_expanded($comment, $node) {
@@ -1603,8 +1727,12 @@ function theme_comment_flat_expanded($comment, $node) {
 }
 
 /**
- * Theme collapsed thread type comment.
+ * Theme comment thread collapsed view.
  *
+ * @param $comment
+ *   The comment to be themed.
+ * @param $node
+ *   The comment node.
  * @ingroup themeable
  */
 function theme_comment_thread_collapsed($comment, $node) {
@@ -1612,8 +1740,12 @@ function theme_comment_thread_collapsed($comment, $node) {
 }
 
 /**
- * Theme expanded thread type comment.
+ * Theme comment thread expanded view.
  *
+ * @param $comment
+ *   The comment to be themed.
+ * @param $node
+ *   The comment node.
  * @ingroup themeable
  */
 function theme_comment_thread_expanded($comment, $node) {
@@ -1621,8 +1753,10 @@ function theme_comment_thread_expanded($comment, $node) {
 }
 
 /**
- * Theme the "comment posting is forbidden" message.
+ * Theme a "you can't post comments" notice.
  *
+ * @param $node
+ *   The comment node.
  * @ingroup themeable
  */
 function theme_comment_post_forbidden($node) {
@@ -1651,10 +1785,6 @@ function theme_comment_post_forbidden($node) {
 /**
  * Process variables for comment-wrapper.tpl.php.
  *
- * The $variables array contains the following arguments:
- * - $content
- * - $node
- *
  * @see comment-wrapper.tpl.php
  * @see theme_comment_wrapper()
  */
@@ -1667,8 +1797,10 @@ function template_preprocess_comment_wrapper(&$variables) {
 }
 
 /**
- * Make the submitted variable themable
+ * Theme a "Submitted by ..." notice.
  *
+ * @param $comment
+ *   The comment.
  * @ingroup themeable
  */
 function theme_comment_submitted($comment) {
@@ -1718,7 +1850,10 @@ function _comment_per_page() {
 /**
  * Return a current comment display setting
  *
- * $setting can be one of these: 'mode', 'sort', 'comments_per_page'
+ * @param $setting
+ *   can be one of these: 'mode', 'sort', 'comments_per_page'
+ * @param $node
+ *   The comment node in question.
  */
 function _comment_get_display_setting($setting, $node) {
   global $user;
@@ -1808,7 +1943,6 @@ function comment_invoke_comment(&$comment, $op) {
   }
   return $return;
 }
-
 
 /**
  * Generate vancode.
@@ -1905,6 +2039,11 @@ function comment_unpublish_action($comment, $context = array()) {
   watchdog('action', 'Unpublished comment %subject.', array('%subject' => $subject));
 }
 
+/**
+ * Form builder; Prepare a form for blacklisted keywords.
+ *
+ * @ingroup forms
+ */
 function comment_unpublish_by_keyword_action_form($context) {
   $form['keywords'] = array(
     '#title' => t('Keywords'),
@@ -1915,6 +2054,9 @@ function comment_unpublish_by_keyword_action_form($context) {
   return $form;
 }
 
+/**
+ * Process comment_unpublish_by_keyword_action_form form submissions.
+ */
 function comment_unpublish_by_keyword_action_submit($form, $form_state) {
   return array('keywords' => drupal_explode_tags($form_state['values']['keywords']));
 }

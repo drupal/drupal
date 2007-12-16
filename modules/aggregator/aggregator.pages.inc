@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.pages.inc,v 1.7 2007/12/16 18:27:46 goba Exp $
+// $Id: aggregator.pages.inc,v 1.8 2007/12/16 21:01:44 goba Exp $
 
 /**
  * @file
@@ -8,6 +8,9 @@
 
 /**
  * Menu callback; displays the most recent items gathered from any feed.
+ *
+ * @return
+ *   The items HTML.
  */
 function aggregator_page_last() {
   drupal_add_feed(url('aggregator/rss'), variable_get('site_name', 'Drupal') .' '. t('aggregator'));
@@ -19,6 +22,15 @@ function aggregator_page_last() {
 
 /**
  * Menu callback; displays all the items captured from a particular feed.
+ *
+ * If there are two arguments then this function is the categorize form.
+ *
+ * @param $arg1
+ *   If there are two arguments then $arg1 is $form_state. Otherwise, $arg1 is $feed.
+ * @param $arg2
+ *   If there are two arguments then $arg2 is feed.
+ * @return
+ *   The items HTML.
  */
 function aggregator_page_source($arg1, $arg2 = NULL) {
   // If there are two arguments then this function is the categorize form, and
@@ -37,6 +49,15 @@ function aggregator_page_source($arg1, $arg2 = NULL) {
 
 /**
  * Menu callback; displays all the items aggregated in a particular category.
+ *
+ * If there are two arguments then this function is called as a form.
+ *
+ * @param $arg1
+ *   If there are two arguments then $arg1 is $form_state. Otherwise, $arg1 is $category.
+ * @param $arg2
+ *   If there are two arguments then $arg2 is $category.
+ * @return
+ *   The items HTML.
  */
 function aggregator_page_category($arg1, $arg2 = NULL) {
   drupal_set_breadcrumb(array_merge(drupal_get_breadcrumb(), array(l(t('Categories'), 'aggregator/categories'))));
@@ -54,7 +75,12 @@ function aggregator_page_category($arg1, $arg2 = NULL) {
 }
 
 /**
- * Load feed items by passing a sql query.
+ * Load feed items by passing a SQL query.
+ *
+ * @param $sql
+ *   The query to be executed.
+ * @return
+ *   An array of the feed items.
  */
 function aggregator_feed_items_load($sql) {
   $items = array();
@@ -73,8 +99,18 @@ function aggregator_feed_items_load($sql) {
 }
 
 /**
- * Prints an aggregator page listing a number of feed items. Various
- * menu callbacks use this function to print their feeds.
+ * Prints an aggregator page listing a number of feed items.
+ *
+ * Various menu callbacks use this function to print their feeds.
+ *
+ * @param $items
+ *   The items to be listed.
+ * @param $op
+ *   Which form should be added to the items. Only 'categorize' is now recognized.
+ * @param $feed_source
+ *   The feed source URL.
+ * @return
+ *   The items HTML.
  */
 function _aggregator_page_list($items, $op, $feed_source = '') {
   if (user_access('administer news feeds') && ($op == 'categorize')) {
@@ -95,6 +131,12 @@ function _aggregator_page_list($items, $op, $feed_source = '') {
 /**
  * Form builder; build the page list form.
  *
+ * @param $items
+ *   An array of the feed items.
+ * @param $feed_source
+ *   The feed source URL.
+ * @return
+ *   The form structure.
  * @ingroup forms
  * @see aggregator_categorize_items_validate().
  * @see aggregator_categorize_items_submit().
@@ -135,12 +177,18 @@ function aggregator_categorize_items($items, $feed_source = '') {
   return $form;
 }
 
+/**
+ * Validate aggregator_categorize_items form submissions.
+ */
 function aggregator_categorize_items_validate($form_id, &$form) {
   if (!user_access('administer news feeds')) {
     form_error($form, t('You are not allowed to categorize this feed item.'));
   }
 }
 
+/**
+ * Process aggregator_categorize_items form submissions.
+ */
 function aggregator_categorize_items_submit($form, &$form_state) {
   foreach ($form_state['values']['categories'] as $iid => $selection) {
     db_query('DELETE FROM {aggregator_category_item} WHERE iid = %d', $iid);
@@ -156,6 +204,10 @@ function aggregator_categorize_items_submit($form, &$form_state) {
 /**
  * Theme the page list form for assigning categories.
  *
+ * @param $form
+ *   An associative array containing the structure of the form.
+ * @return
+ *   The output HTML.
  * @ingroup themeable
  */
 function theme_aggregator_categorize_items($form) {
@@ -180,9 +232,6 @@ function theme_aggregator_categorize_items($form) {
 /**
  * Process variables for aggregator-wrapper.tpl.php.
  *
- * The $variables array contains the following arguments:
- * - $content
- *
  * @see aggregator-wrapper.tpl.php
  */
 function template_preprocess_aggregator_wrapper(&$variables) {
@@ -191,9 +240,6 @@ function template_preprocess_aggregator_wrapper(&$variables) {
 
 /**
  * Process variables for aggregator-item.tpl.php.
- *
- * The $variables array contains the following arguments:
- * - $item
  *
  * @see aggregator-item.tpl.php
  */
@@ -294,8 +340,12 @@ function aggregator_page_rss() {
 }
 
 /**
- * Theme the rss output.
+ * Theme the RSS output.
  *
+ * @param $feeds
+ *   An array of the feeds to theme.
+ * @param $category
+ *   A common category, if any, for all the feeds.
  * @ingroup themeable
  */
 function theme_aggregator_page_rss($feeds, $category = NULL) {
@@ -333,6 +383,11 @@ function theme_aggregator_page_rss($feeds, $category = NULL) {
 
 /**
  * Menu callback; generates an OPML representation of all feeds.
+ *
+ * @param $cid
+ *   If set, feeds are exported only from a category with this ID. Otherwise, all feeds are exported.
+ * @return
+ *   The output XML.
  */
 function aggregator_page_opml($cid = NULL) {
   if ($cid) {
@@ -350,8 +405,10 @@ function aggregator_page_opml($cid = NULL) {
 }
 
 /**
- * Theme the opml feed output.
+ * Theme the OPML feed output.
  *
+ * @param $feeds
+ *   An array of the feeds to theme.
  * @ingroup themeable
  */
 function theme_aggregator_page_opml($feeds) {
@@ -378,10 +435,6 @@ function theme_aggregator_page_opml($feeds) {
 /**
  * Process variables for aggregator-summary-items.tpl.php.
  *
- * The $variables array contains the following arguments:
- * - $summary_items
- * - $source
- *
  * @see aggregator-summary-item.tpl.php
  */
 function template_preprocess_aggregator_summary_items(&$variables) {
@@ -392,9 +445,6 @@ function template_preprocess_aggregator_summary_items(&$variables) {
 
 /**
  * Process variables for aggregator-summary-item.tpl.php.
- *
- * The $variables array contains the following arguments:
- * - $item
  *
  * @see aggregator-summary-item.tpl.php
  */
@@ -415,9 +465,6 @@ function template_preprocess_aggregator_summary_item(&$variables) {
 
 /**
  * Process variables for aggregator-feed-source.tpl.php.
- *
- * The $variables array contains the following arguments:
- * - $feed
  *
  * @see aggregator-feed-source.tpl.php
  */

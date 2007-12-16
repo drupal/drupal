@@ -1,20 +1,44 @@
 <?php
-// $Id: system.module,v 1.561 2007/12/14 18:08:48 goba Exp $
+// $Id: system.module,v 1.562 2007/12/16 21:01:45 goba Exp $
 
 /**
  * @file
  * Configuration system that lets administrators modify the workings of the site.
  */
 
+/**
+ * The current system version.
+ */
 define('VERSION', '6.0-dev');
+
+/**
+ * Core API compatibility.
+ */
 define('DRUPAL_CORE_COMPATIBILITY', '6.x');
 
+/**
+ * Minimum supported version of PHP.
+ */
 define('DRUPAL_MINIMUM_PHP',    '4.3.3');
-define('DRUPAL_MINIMUM_MYSQL',  '4.1.0'); // If using MySQL
-define('DRUPAL_MINIMUM_PGSQL',  '7.4');   // If using PostgreSQL
-define('DRUPAL_MINIMUM_APACHE', '1.3');   // If using Apache
 
-// Maximum age of temporary files in seconds.
+/**
+ * Minimum supported version of MySQL, if it is used.
+ */
+define('DRUPAL_MINIMUM_MYSQL',  '4.1.0');
+
+/**
+ * Minimum supported version of PostgreSQL, if it is used.
+ */
+define('DRUPAL_MINIMUM_PGSQL',  '7.4');
+
+/**
+ * Minimum supported version of Apache, if it is used.
+ */
+define('DRUPAL_MINIMUM_APACHE', '1.3');
+
+/**
+ * Maximum age of temporary files in seconds.
+ */
 define('DRUPAL_MAXIMUM_TEMP_FILE_AGE', 1440);
 
 /**
@@ -76,6 +100,9 @@ function system_help($path, $arg) {
   }
 }
 
+/**
+ * Implementation of hook_theme().
+ */
 function system_theme() {
   return array_merge(drupal_common_theme(), array(
     'system_theme_select_form' => array(
@@ -119,6 +146,7 @@ function system_theme() {
     ),
   ));
 }
+
 /**
  * Implementation of hook_perm().
  */
@@ -459,6 +487,9 @@ function system_menu() {
   return $items;
 }
 
+/**
+ * Implementation of hook_init().
+ */
 function system_init() {
   // Use the administrative theme if the user is looking at a page in the admin/* path.
   if (arg(0) == 'admin' || (variable_get('node_admin_theme', '0') && arg(0) == 'node' && (arg(1) == 'add' || arg(2) == 'edit'))) {
@@ -504,6 +535,8 @@ function system_user($type, $edit, &$user, $category = NULL) {
 }
 
 /**
+ * Implementation of hook_block().
+ *
  * Generate a block with a promotional link to Drupal.org.
  */
 function system_block($op = 'list', $delta = 0, $edit = NULL) {
@@ -543,6 +576,9 @@ function system_block($op = 'list', $delta = 0, $edit = NULL) {
 
 /**
  * Provide a single block on the administration overview page.
+ *
+ * @param $item
+ *   The menu item to be displayed.
  */
 function system_admin_menu_block($item) {
   $content = array();
@@ -572,7 +608,9 @@ function system_admin_menu_block($item) {
   return $content;
 }
 
-
+/**
+ * Process admin theme form submissions.
+ */
 function system_admin_theme_submit($form, &$form_state) {
   // If we're changing themes, make sure the theme has its blocks initialized.
   if ($form_state['values']['admin_theme'] && $form_state['values']['admin_theme'] != variable_get('admin_theme', '0')) {
@@ -662,6 +700,11 @@ function system_check_directory($form_element) {
 
 /**
  * Retrieves the current status of an array of files in the system table.
+ *
+ * @param $files
+ *   An array of files to check.
+ * @param $type
+ *   The type of the files.
  */
 function system_get_files_database(&$files, $type) {
   // Extract current files from database.
@@ -678,8 +721,13 @@ function system_get_files_database(&$files, $type) {
   }
 }
 
+/**
+ * Prepare defaults for themes.
+ *
+ * @return
+ *   An array of default themes settings.
+ */
 function system_theme_default() {
-  // Prepare defaults for themes.
   return array(
     'regions' => array(
       'left' => 'Left sidebar',
@@ -738,6 +786,9 @@ function system_theme_data() {
 
 /**
  * Helper function to scan and collect theme .info data and their engines.
+ *
+ * @return
+ *   An associative array of themes information.
  */
 function _system_theme_data() {
   static $themes_info = array();
@@ -828,9 +879,16 @@ function _system_theme_data() {
 
 /**
  * Recursive function to find the top level base theme. Themes can inherit
- * templates and function implementations from earlier themes; this function
- * finds the top level parent that has no ancestor, or returns NULL if there
- * isn't a valid parent.
+ * templates and function implementations from earlier themes.
+ *
+ * @param $themes
+ *   An array of available themes.
+ * @param $key
+ *   The name of the theme whose base we are looking for.
+ * @param $used_keys
+ *   A recursion parameter preventing endless loops.
+ * @return
+ *   Returns the top level parent that has no ancestor or returns NULL if there isn't a valid parent.
  */
 function system_find_base_theme($themes, $key, $used_keys = array()) {
   $base_key = $themes[$key]->info['base theme'];
@@ -913,7 +971,14 @@ function system_initialize_theme_blocks($theme) {
 }
 
 /**
- * Add default buttons to a form and set its prefix
+ * Add default buttons to a form and set its prefix.
+ *
+ * @ingroup forms
+ * @see system_settings_form_submit
+ * @param $form
+ *   An associative array containing the structure of the form.
+ * @return
+ *   The form structure.
  */
 function system_settings_form($form) {
   $form['buttons']['submit'] = array('#type' => 'submit', '#value' => t('Save configuration') );
@@ -928,14 +993,11 @@ function system_settings_form($form) {
   return $form;
 }
 
-
-
 /**
  * Execute the system_settings_form.
  *
  * If you want node type configure style handling of your checkboxes,
  * add an array_filter value to your form.
- *
  */
 function system_settings_form_submit($form, &$form_state) {
   $op = isset($form_state['values']['op']) ? $form_state['values']['op'] : '';
@@ -1008,6 +1070,7 @@ function system_node_type($op, $info) {
  * is usually 'confirm') to check if the confirmation was successful or
  * use the regular submit model.
  *
+ * @ingroup forms
  * @param $form
  *   Additional elements to inject into the form, for example hidden elements.
  * @param $question
@@ -1064,6 +1127,14 @@ function system_admin_compact_mode() {
   return (isset($user->admin_compact_mode)) ? $user->admin_compact_mode : variable_get('admin_compact_mode', FALSE);
 }
 
+/**
+ * Generate a list of tasks offered by a specified module.
+ *
+ * @param $module
+ *   Module name.
+ * @return
+ *   An array of task links.
+ */
 function system_get_module_admin_tasks($module) {
   static $items;
 
@@ -1239,6 +1310,10 @@ function system_actions_manage() {
 /**
  * Define the form for the actions overview page.
  *
+ * @see system_actions_manage_form_submit
+ * @ingroup forms
+ * @param $form_state
+ *   An associative array containing the current state of the form; not used.
  * @param $options
  *   An array of configurable actions.
  * @return
@@ -1264,6 +1339,9 @@ function system_actions_manage_form($form_state, $options = array()) {
   return $form;
 }
 
+/**
+ * Process system_actions_manage form submissions.
+ */
 function system_actions_manage_form_submit($form, &$form_state) {
   if ($form_state['values']['action']) {
     $form_state['redirect'] = 'admin/settings/actions/configure/'. $form_state['values']['action'];
@@ -1278,6 +1356,8 @@ function system_actions_manage_form_submit($form, &$form_state) {
  * Because we are combining unknown form elements with the action
  * configuration form, we use actions_ prefix on our elements.
  *
+ * @see system_actions_configure_validate()
+ * @see system_actions_configure_submit()
  * @param $action
  *   md5 hash of action ID or an integer. If it's an md5 hash, we
  *   are creating a new instance. If it's an integer, we're editing
@@ -1354,6 +1434,9 @@ function system_actions_configure($form_state, $action = NULL) {
   return $form;
 }
 
+/**
+ * Validate system_actions_configure form submissions.
+ */
 function system_actions_configure_validate($form, $form_state) {
   $function = actions_function_lookup($form_state['values']['actions_action']) .'_validate';
   // Hand off validation to the action.
@@ -1362,6 +1445,9 @@ function system_actions_configure_validate($form, $form_state) {
   }
 }
 
+/**
+ * Process system_actions_configure form submissions.
+ */
 function system_actions_configure_submit($form, &$form_state) {
   $function = actions_function_lookup($form_state['values']['actions_action']);
   $submit_function = $function .'_submit';
@@ -1379,8 +1465,8 @@ function system_actions_configure_submit($form, &$form_state) {
 /**
  * Create the form for confirmation of deleting an action.
  *
- * @param $aid
- *   The action ID.
+ * @ingroup forms
+ * @see system_actions_delete_form_submit
  */
 function system_actions_delete_form($form_state, $action) {
 
@@ -1397,6 +1483,8 @@ function system_actions_delete_form($form_state, $action) {
 }
 
 /**
+ * Process system_actions_delete form submissions.
+ *
  * Post-deletion operations for action deletion.
  */
 function system_actions_delete_form_submit($form, &$form_state) {
@@ -1408,8 +1496,12 @@ function system_actions_delete_form_submit($form, &$form_state) {
   drupal_set_message(t('Action %action was deleted', array('%action' => $description)));
   $form_state['redirect'] = 'admin/settings/actions/manage';
 }
+
 /**
  * Post-deletion operations for deleting action orphans.
+ *
+ * @param $orphaned
+ *   An array of orphaned actions.
  */
 function system_action_delete_orphans_post($orphaned) {
   foreach ($orphaned as $callback) {
@@ -1419,7 +1511,6 @@ function system_action_delete_orphans_post($orphaned) {
 
 /**
  * Remove actions that are in the database but not supported by any enabled module.
- *
  */
 function system_actions_remove_orphans() {
   actions_synchronize(actions_list(), TRUE);
@@ -1429,6 +1520,8 @@ function system_actions_remove_orphans() {
 /**
  * Return a form definition so the Send email action can be configured.
  *
+ * @see system_send_email_action_validate()
+ * @see system_send_email_action_submit()
  * @param $context
  *   Default values (if we are editing an existing action instance).
  * @return
@@ -1471,6 +1564,9 @@ function system_send_email_action_form($context) {
   return $form;
 }
 
+/**
+ * Validate system_send_email_action form submissions.
+ */
 function system_send_email_action_validate($form, $form_state) {
   $form_values = $form_state['values'];
   // Validate the configuration form.
@@ -1480,6 +1576,9 @@ function system_send_email_action_validate($form, $form_state) {
   }
 }
 
+/**
+ * Process system_send_email_action form submissions.
+ */
 function system_send_email_action_submit($form, $form_state) {
   $form_values = $form_state['values'];
   // Process the HTML form to store configuration. The keyed array that
@@ -1695,6 +1794,9 @@ function system_goto_action($object, $context) {
   drupal_goto($context['url']);
 }
 
+/**
+ * Generate an array of time zones and their local time&date.
+ */
 function _system_zonelist() {
   $timestamp = time();
   $zonelist = array(-11, -10, -9.5, -9, -8, -7, -6, -5, -4, -3.5, -3, -2, -1, 0, 1, 2, 3, 3.5, 4, 5, 5.5, 5.75, 6, 6.5, 7, 8, 9, 9.5, 10, 10.5, 11, 11.5, 12, 12.75, 13, 14);

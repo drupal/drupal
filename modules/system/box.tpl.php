@@ -1,5 +1,17 @@
 <?php
-// $Id: box.tpl.php,v 1.2 2007/08/07 08:39:36 goba Exp $
+// $Id: box.tpl.php,v 1.3 2007/12/16 21:01:45 goba Exp $
+
+/**
+ * @file box.tpl.php
+ *
+ * Theme implementation to display a box.
+ *
+ * Available variables:
+ * - $title: Box title.
+ * - $content: Box content.
+ *
+ * @see template_preprocess()
+ */
 ?>
 <div class="box">
 
