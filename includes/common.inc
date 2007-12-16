@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.734 2007/12/12 14:54:27 goba Exp $
+// $Id: common.inc,v 1.735 2007/12/16 14:09:24 goba Exp $
 
 /**
  * @file
@@ -1499,10 +1499,29 @@ function drupal_map_assoc($array, $function = NULL) {
  *   output of the code.
  */
 function drupal_eval($code) {
+  global $theme_path, $theme_info, $conf;
+  
+  // Store current theme path.
+  $old_theme_path = $theme_path;
+  
+  // Restore theme_path to the theme, as long as drupal_eval() executes,
+  // so code evaluted will not see the caller module as the current theme.
+  // If theme info is not initialized get the path from theme_default.
+  if (!isset($theme_info)) {
+    $theme_path = drupal_get_path('theme', $conf['theme_default']);
+  }
+  else {
+    $theme_path = dirname($theme_info->filename);
+  }
+
   ob_start();
   print eval('?>'. $code);
   $output = ob_get_contents();
   ob_end_clean();
+  
+  // Recover original theme path.
+  $theme_path = $old_theme_path;
+  
   return $output;
 }
 
