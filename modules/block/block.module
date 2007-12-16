@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.290 2007/12/14 18:08:44 goba Exp $
+// $Id: block.module,v 1.291 2007/12/16 10:30:09 goba Exp $
 
 /**
  * @file
@@ -162,13 +162,16 @@ function block_menu() {
   );
   $default = variable_get('theme_default', 'garland');
   foreach (list_themes() as $key => $theme) {
-    $items['admin/build/block/list/'. $key] = array(
-      'title' => check_plain($theme->info['name']),
-      'page arguments' => array($key),
-      'type' => $key == $default ? MENU_DEFAULT_LOCAL_TASK : MENU_LOCAL_TASK,
-      'weight' => $key == $default ? -10 : 0,
-      'file' => 'block.admin.inc',
-    );
+    // only show enabled themes
+    if ($theme->status) {
+      $items['admin/build/block/list/'. $key] = array(
+        'title' => check_plain($theme->info['name']),
+        'page arguments' => array($key),
+        'type' => $key == $default ? MENU_DEFAULT_LOCAL_TASK : MENU_LOCAL_TASK,
+        'weight' => $key == $default ? -10 : 0,
+        'file' => 'block.admin.inc',
+      );
+    }
   }
   return $items;
 }
