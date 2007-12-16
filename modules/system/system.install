@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.206 2007/12/14 17:00:13 goba Exp $
+// $Id: system.install,v 1.207 2007/12/16 09:32:41 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -2603,58 +2603,70 @@ function system_update_6035() {
 }
 
 /**
- * Change the search index and for reindexing.
+ * Change the search schema and indexing.
+ *
+ * The table data is preserved where possible in MYSQL and MYSQLi using
+ * ALTER IGNORE. Other databases don't support that, so for them the
+ * tables are dropped and re-created, and will need to be re-indexed
+ * from scratch.
  */
 function system_update_6036() {
   $ret = array();
   if (db_table_exists('search_index')) {
-    if ($GLOBALS['db_type'] == 'mysql') {
-      // Create the search_dataset.reindex column.
-      db_add_field($ret, 'search_dataset', 'reindex', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0));
+    // Create the search_dataset.reindex column.
+    db_add_field($ret, 'search_dataset', 'reindex', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0));
 
-      // Drop the search_index.from fields which are no longer used.
-      db_drop_index($ret, 'search_index', 'from_sid_type');
-      db_drop_field($ret, 'search_index', 'fromsid');
-      db_drop_field($ret, 'search_index', 'fromtype');
+    // Drop the search_index.from fields which are no longer used.
+    db_drop_index($ret, 'search_index', 'from_sid_type');
+    db_drop_field($ret, 'search_index', 'fromsid');
+    db_drop_field($ret, 'search_index', 'fromtype');
 
-      // Drop the search_dataset.sid_type index, so that it can be made unique.
-      db_drop_index($ret, 'search_dataset', 'sid_type');
+    // Drop the search_dataset.sid_type index, so that it can be made unique.
+    db_drop_index($ret, 'search_dataset', 'sid_type');
 
-      // Create the search_node_links Table.
-      $search_node_links_schema = array(
-        'fields' => array(
-          'sid'      => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
-          'type'     => array('type' => 'varchar', 'length' => 16, 'not null' => TRUE, 'default' => ''),
-          'nid'      => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
-          'caption'    => array('type' => 'text', 'size' => 'big', 'not null' => FALSE),
-        ),
-        'primary key' => array('sid', 'type', 'nid'),
-        'indexes' => array('nid' => array('nid')),
-      );
-      db_create_table($ret, 'search_node_links', $search_node_links_schema);
+    // Create the search_node_links Table.
+    $search_node_links_schema = array(
+      'fields' => array(
+        'sid'      => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+        'type'     => array('type' => 'varchar', 'length' => 16, 'not null' => TRUE, 'default' => ''),
+        'nid'      => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+        'caption'    => array('type' => 'text', 'size' => 'big', 'not null' => FALSE),
+      ),
+      'primary key' => array('sid', 'type', 'nid'),
+      'indexes' => array('nid' => array('nid')),
+    );
+    db_create_table($ret, 'search_node_links', $search_node_links_schema);
 
-      // with the change to search_dataset.reindex, the search queue is handled differently,
-      // and this is no longer needed
-      variable_del('node_cron_last');
+    // with the change to search_dataset.reindex, the search queue is handled differently,
+    // and this is no longer needed
+    variable_del('node_cron_last');
 
-      // Everything needs to be reindexed.
-      $ret[] = update_sql("UPDATE {search_dataset} SET reindex = 1");
-
-      // Add a unique index for the search_index.
+    // Add a unique index for the search_index.
+    if ($GLOBALS['db_type'] == 'mysql' || $GLOBALS['db_type'] == 'mysqli') {
       // Since it's possible that some existing sites have duplicates,
       // create the index using the IGNORE keyword, which ignores duplicate errors.
       // However, pgsql doesn't support it
       $ret[] = update_sql("ALTER IGNORE TABLE {search_index} ADD UNIQUE KEY word_sid_type (word, sid, type)");
       $ret[] = update_sql("ALTER IGNORE TABLE {search_dataset} ADD UNIQUE KEY sid_type (sid, type)");
+
+      // Everything needs to be reindexed.
+      $ret[] = update_sql("UPDATE {search_dataset} SET reindex = 1");
     }
     else {
-      // Drop the existing tables
-      db_query('DROP TABLE {search_dataset}');
-      db_query('DROP TABLE {search_index}');
-      db_query('DROP TABLE {search_total}');
+      // Delete the existing tables if there are duplicate values
+      if (db_result(db_query("SELECT sid FROM {search_dataset} GROUP BY sid, type HAVING COUNT(*) > 1")) || db_result(db_query("SELECT sid FROM {search_index} GROUP BY word, sid, type HAVING COUNT(*) > 1"))) {
+        $ret[] = update_sql('DELETE FROM {search_dataset}');
+        $ret[] = update_sql('DELETE FROM {search_index}');
+        $ret[] = update_sql('DELETE FROM {search_total}');
+      }
+      else {
+        // Everything needs to be reindexed.
+        $ret[] = update_sql("UPDATE {search_dataset} SET reindex = 1");
+      }
 
-      // Create the new tables and do a full re-index
-      search_install();
+      // create the new indexes
+      db_add_unique_key($ret, 'search_index', 'word_sid_type', array('word', 'sid', 'type'));
+      db_add_unique_key($ret, 'search_dataset', 'sid_type', array('sid', 'type'));
     }
   }
   return $ret;
