@@ -6,6 +6,13 @@
  * User page callbacks for the comment module.
  */
 
+/**
+ * Form builder; generate a comment editing form.
+ *
+ * @param $cid
+ *   ID of the comment to be edited.
+ * @ingroup forms
+ */
 function comment_edit($cid) {
   global $user;
 
@@ -33,11 +40,12 @@ function comment_edit($cid) {
  *
  * @param $node
  *   Every comment belongs to a node. This is that node.
+ *
  * @param $pid
  *   Some comments are replies to other comments. In those cases, $pid is the parent
  *   comment's cid.
  *
- * @return $output
+ * @return
  *   The rendered parent node or comment plus the new comment form.
  */
 function comment_reply($node, $pid = NULL) {

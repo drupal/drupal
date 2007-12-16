@@ -3,6 +3,11 @@
 
 /**
  * Test and report Drupal installation requirements.
+ *
+ * @param $phase
+ *   The current system installation phase.
+ * @return
+ *   An array of system requirements.
  */
 function system_requirements($phase) {
   $requirements = array();
@@ -242,7 +247,6 @@ function system_requirements($phase) {
 
   return $requirements;
 }
-
 
 /**
  * Implementation of hook_install().

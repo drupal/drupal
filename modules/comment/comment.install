@@ -10,8 +10,7 @@ function comment_enable() {
 }
 
 /**
- * Changed node_comment_statistics to use node->changed to avoid future
- * timestamps.
+ * Changed node_comment_statistics to use node->changed to avoid future timestamps.
  */
 function comment_update_1() {
   // Change any future last comment timestamps to now.
