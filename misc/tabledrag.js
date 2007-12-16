@@ -1,4 +1,4 @@
-// $Id: tabledrag.js,v 1.10 2007/12/13 10:14:17 goba Exp $
+// $Id: tabledrag.js,v 1.11 2007/12/16 10:36:52 goba Exp $
 
 /**
  * Drag and drop table rows with field manipulation.
@@ -13,7 +13,7 @@
  */
 Drupal.behaviors.tableDrag = function(context) {
   for (var base in Drupal.settings.tableDrag) {
-    if (!$('#' + base + '.tabledrag-processed').size(), context) {
+    if (!$('#' + base + '.tabledrag-processed', context).size()) {
       var tableSettings = Drupal.settings.tableDrag[base];
 
       $('#' + base).filter(':not(.tabledrag-processed)').each(function() {
@@ -47,7 +47,7 @@ Drupal.tableDrag = function(table, tableSettings) {
   this.oldY = 0; // Used to determine up or down direction from last mouse move.
   this.changed = false; // Whether anything in the entire table has changed.
   this.maxDepth = 0; // Maximum amount of allowed parenting.
-  this.rtl = $('body').css('direction') == 'rtl' ? -1 : 1; // Direction of the page language.
+  this.rtl = $(this.table).css('direction') == 'rtl' ? -1 : 1; // Direction of the table.
 
   // Configure the scroll settings.
   this.scrollSettings = { amount: 4, interval: 50, trigger: 70 };
@@ -162,7 +162,7 @@ Drupal.tableDrag.prototype.makeDraggable = function(item) {
   var self = this;
 
   // Create the handle.
-  var handle = $('<a href="#" title="Drag to re-order" class="tabledrag-handle"><div class="handle">&nbsp;</div></a>');
+  var handle = $('<a href="#" class="tabledrag-handle"><div class="handle">&nbsp;</div></a>').attr('title', Drupal.t('Drag to re-order'));
   // Insert the handle after indentations (if any).
   if ($('td:first .indentation:last', item).after(handle).size()) {
     // Update the total width of indentation in this entire table.
