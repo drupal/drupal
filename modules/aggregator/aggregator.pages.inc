@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.pages.inc,v 1.5 2007/10/16 13:48:11 goba Exp $
+// $Id: aggregator.pages.inc,v 1.6 2007/12/16 18:06:27 goba Exp $
 
 /**
  * @file
@@ -299,15 +299,7 @@ function aggregator_page_rss() {
  * @ingroup themeable
  */
 function theme_aggregator_page_rss($feeds, $category = NULL) {
-
   drupal_set_header('Content-Type: application/rss+xml; charset=utf-8');
-
-  $title = '';
-  $url = '';
-  if (isset($category)) {
-    $title = ' '. t('in category') .' '. check_plain($category->title);
-    $url = '/categories/'. $category->cid;
-  }
 
   $items = '';
   $feed_length = variable_get('feed_item_length', 'teaser');
@@ -328,11 +320,12 @@ function theme_aggregator_page_rss($feeds, $category = NULL) {
   }
 
   $site_name = variable_get('site_name', 'Drupal');
-  $url = url('aggregator'. $url, array('absolute' => TRUE));
+  $url = url((isset($category) ? 'aggregator/categories/'. $category->cid : 'aggregator'), array('absolute' => TRUE));
+  $description = isset($category) ? t('@site_name - aggregated feeds in category @title', array('@site_name' => $site_name, '@title' => $category->title)) : t('@site_name - aggregated feeds', array('@site_name' => $site_name));
 
   $output = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
   $output .= "<rss version=\"2.0\">\n";
-  $output .= format_rss_channel($site_name .' '. t('aggregator'), $url, $site_name .' - '. t('aggregated feeds') . $title, $items);
+  $output .= format_rss_channel(t('@site_name aggregator', array('@site_name' => $site_name)), $url, $description, $items);
   $output .= "</rss>\n";
 
   print $output;
