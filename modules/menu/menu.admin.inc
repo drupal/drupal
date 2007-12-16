@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.admin.inc,v 1.20 2007/12/11 12:17:58 goba Exp $
+// $Id: menu.admin.inc,v 1.21 2007/12/16 18:25:22 goba Exp $
 
 /**
  * @file
@@ -605,7 +605,7 @@ function menu_configure() {
   $menu_options = menu_get_menus();
   $form['menu_default_node_menu'] = array('#type' => 'select',
     '#title' => t('Default menu for content'),
-    '#default_value' => variable_get('menu_default_node_menu', 'navigation'),
+    '#default_value' => variable_get('menu_default_node_menu', 'primary-links'),
     '#options' => $menu_options,
     '#description' => t('Choose the menu to be the default in the menu options in the content authoring form.'),
   );
