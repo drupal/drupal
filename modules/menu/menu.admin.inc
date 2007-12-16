@@ -605,7 +605,7 @@ function menu_configure() {
   $menu_options = menu_get_menus();
   $form['menu_default_node_menu'] = array('#type' => 'select',
     '#title' => t('Default menu for content'),
-    '#default_value' => variable_get('menu_default_node_menu', 'navigation'),
+    '#default_value' => variable_get('menu_default_node_menu', 'primary-links'),
     '#options' => $menu_options,
     '#description' => t('Choose the menu to be the default in the menu options in the content authoring form.'),
   );
