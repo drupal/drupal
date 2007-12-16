@@ -1,5 +1,5 @@
 <?php
-// $Id: image.gd.inc,v 1.2 2007/08/07 08:39:35 goba Exp $
+// $Id: image.gd.inc,v 1.3 2007/12/16 22:09:36 goba Exp $
 
 /**
  * @file
@@ -80,7 +80,7 @@ function image_gd_resize($source, $destination, $width, $height) {
     return FALSE;
   }
 
-  $res = imageCreateTrueColor($width, $height);
+  $res = imagecreatetruecolor($width, $height);
   if ($info['extension'] == 'png') {
     $transparency = imagecolorallocatealpha($res, 0, 0, 0, 127);
     imagealphablending($res, FALSE);
@@ -88,11 +88,29 @@ function image_gd_resize($source, $destination, $width, $height) {
     imagealphablending($res, TRUE);
     imagesavealpha($res, TRUE);
   }
-  imageCopyResampled($res, $im, 0, 0, 0, 0, $width, $height, $info['width'], $info['height']);
+  elseif ($info['extension'] == 'gif') {
+    // If we have a specific transparent color.
+    $transparency_index = imagecolortransparent($im);
+    if ($transparency_index >= 0) {
+      // Get the original image's transparent color's RGB values.
+      $transparent_color = imagecolorsforindex($im, $transparency_index);
+      // Allocate the same color in the new image resource.
+      $transparency_index = imagecolorallocate($res, $transparent_color['red'], $transparent_color['green'], $transparent_color['blue']);
+      // Completely fill the background of the new image with allocated color.
+      imagefill($res, 0, 0, $transparency_index);
+      // Set the background color for new image to transparent.
+      imagecolortransparent($res, $transparency_index);
+      // Find number of colors in the images palette.
+      $number_colors = imagecolorstotal($im);
+      // Convert from true color to palette to fix transparency issues.
+      imagetruecolortopalette($res, TRUE, $number_colors);
+    }
+  }
+  imagecopyresampled($res, $im, 0, 0, 0, 0, $width, $height, $info['width'], $info['height']);
   $result = image_gd_close($res, $destination, $info['extension']);
 
-  imageDestroy($res);
-  imageDestroy($im);
+  imagedestroy($res);
+  imagedestroy($im);
 
   return $result;
 }
