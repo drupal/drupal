@@ -1,4 +1,4 @@
-// $Id: system.js,v 1.13 2007/10/27 11:32:05 goba Exp $
+// $Id: system.js,v 1.14 2007/12/17 23:43:43 goba Exp $
 
 /**
  * Internal function to check using Ajax if clean URLs can be enabled on the
@@ -14,7 +14,7 @@ Drupal.behaviors.cleanURLsSettingsCheck = function(context) {
   if ($("#clean-url.clean-url-processed, #clean-url.install").size()) {
     return;
   }
-  var url = location.pathname +"admin/settings/clean-urls/check";
+  var url = Drupal.settings.basePath +"admin/settings/clean-urls/check";
   $("#clean-url .description span").html('<div id="testing">'+ Drupal.t('Testing clean URLs...') +"</div>");
   $("#clean-url p").hide();
   $.ajax({
@@ -42,7 +42,7 @@ Drupal.behaviors.cleanURLsSettingsCheck = function(context) {
  * are currently enabled.
  */
 Drupal.cleanURLsInstallCheck = function() {
-  var url = location.protocol +"//"+ location.host + location.pathname.replace(/\/[^\/]*$/, "/") +"admin/settings/clean-urls/check";
+  var url = location.protocol +"//"+ location.host + Drupal.settings.basePath +"admin/settings/clean-urls/check";
   $("#clean-url .description").append('<span><div id="testing">'+ Drupal.settings.cleanURL.testing +"</div></span>");
   $("#clean-url.install").css("display", "block");
   $.ajax({
@@ -85,7 +85,7 @@ Drupal.behaviors.copyFieldValue = function (context) {
       sourceField.addClass('copy-field-values-processed');
     }
   }
-}
+};
 
 /**
  * Show/hide custom format sections on the date-time settings page.
