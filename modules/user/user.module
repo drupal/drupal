@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.874 2007/12/14 18:29:59 goba Exp $
+// $Id: user.module,v 1.875 2007/12/17 13:46:36 goba Exp $
 
 /**
  * @file
@@ -865,7 +865,7 @@ function user_menu() {
 
   // Registration and login pages.
   $items['user'] = array(
-    'title' => 'Log in',
+    'title' => 'User account',
     'page callback' => 'user_page',
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
