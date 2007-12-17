@@ -266,6 +266,9 @@ function node_body_field(&$node, $label, $word_count) {
   $form = array(
     '#after_build' => array('node_teaser_js'));
 
+  $form['#prefix'] = '<div class="body-field-wrapper">';
+  $form['#suffix'] = '</div>';
+
   $form['teaser_js'] = array(
     '#type' => 'textarea',
     '#rows' => 10,
