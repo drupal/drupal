@@ -1,7 +1,5 @@
 <?php
-// $Id: comment.install,v 1.14 2007/12/17 12:23:00 goba Exp $
-
-drupal_load('module', 'comment');
+// $Id: comment.install,v 1.15 2007/12/17 16:26:12 goba Exp $
 
 /**
  * Implementation of hook_enable().
@@ -36,6 +34,9 @@ function comment_update_6001() {
  * settings to all node types.
  */
 function comment_update_6002() {
+  // Comment module might not be enabled when this is run, but we need the
+  // constants defined by the module for this update.
+  drupal_load('module', 'comment');
   $settings = array(
     'comment_default_mode' => COMMENT_MODE_THREADED_EXPANDED,
     'comment_default_order' => COMMENT_ORDER_NEWEST_FIRST,
