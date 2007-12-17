@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.240 2007/12/14 17:18:24 goba Exp $
+// $Id: update.php,v 1.241 2007/12/17 12:23:00 goba Exp $
 
 /**
  * @file
@@ -187,19 +187,32 @@ function update_script_selection_form() {
   // Ensure system.module's updates appear first
   $form['start']['system'] = array();
 
-  foreach (module_list() as $module) {
+  $modules = drupal_get_installed_schema_version(NULL, FALSE, TRUE);
+  foreach ($modules as $module => $schema_version) {
     $updates = drupal_get_schema_versions($module);
-    if ($updates !== FALSE) {
+    // Skip incompatible module updates completely, otherwise test schema versions.
+    if (!update_check_incompatibility($module) && $updates !== FALSE && $schema_version >= 0) {
+      // module_invoke returns NULL for nonexisting hooks, so if no updates
+      // are removed, it will == 0.
+      $last_removed = module_invoke($module, 'update_last_removed');
+      if ($schema_version < $last_removed) {
+        $form['start'][$module] = array(
+          '#value'  => t('%module module can not be updated. Its schema version is %schema_version. Updates up to and including %last_removed have been removed in this release. In order to update %module module, you will first <a href="@upgrade">need to upgrade</a> to the last version in which these updates were available.', array('%module' => $module, '%schema_version' => $schema_version, '%last_removed' => $last_removed, '@upgrade' => url('http://drupal.org/upgrade'))),
+          '#prefix' => '<div class="warning">',
+          '#suffix' => '</div>',
+        );
+        $form['start']['#collapsed'] = FALSE;
+        continue;
+      }
       $updates = drupal_map_assoc($updates);
       $updates[] = 'No updates available';
-      $default = drupal_get_installed_schema_version($module);
+      $default = $schema_version;
       foreach (array_keys($updates) as $update) {
-        if ($update > $default) {
+        if ($update > $schema_version) {
           $default = $update;
           break;
         }
       }
-
       $form['start'][$module] = array(
         '#type' => 'select',
         '#title' => $module .' module',
@@ -537,22 +550,9 @@ function update_create_batch_table() {
 function update_fix_compatibility() {
   $ret = array();
   $incompatible = array();
-  $themes = system_theme_data();
-  $modules = module_rebuild_cache();
   $query = db_query("SELECT name, type, status FROM {system} WHERE status = 1 AND type IN ('module','theme')");
   while ($result = db_fetch_object($query)) {
-    $name = $result->name;
-    $file = array();
-    if ($result->type == 'module' && isset($modules[$name])) {
-      $file = $modules[$name];
-    }
-    else if ($result->type == 'theme' && isset($themes[$name])) {
-      $file = $themes[$name];
-    }
-    if (!isset($file)
-        || !isset($file->info['core'])
-        || $file->info['core'] != DRUPAL_CORE_COMPATIBILITY
-        || version_compare(phpversion(), $file->info['php']) < 0) {
+    if (update_check_incompatibility($result->name, $result->type)) {
       $incompatible[] = $name;
     }
   }
@@ -560,6 +560,33 @@ function update_fix_compatibility() {
     $ret[] = update_sql("UPDATE {system} SET status = 0 WHERE name IN ('". implode("','", $incompatible) ."')");
   }
   return $ret;
+}
+
+/**
+ * Helper function to test compatibility of a module or theme.
+ */
+function update_check_incompatibility($name, $type = 'module') {
+  static $themes, $modules;
+
+  // Store values of expensive functions for future use.
+  if (empty($themes) || empty($modules)) {
+    $themes = system_theme_data();
+    $modules = module_rebuild_cache();
+  }
+
+  if ($type == 'module' && isset($modules[$name])) {
+    $file = $modules[$name];
+  }
+  else if ($type == 'theme' && isset($themes[$name])) {
+    $file = $themes[$name];
+  }
+  if (!isset($file)
+      || !isset($file->info['core'])
+      || $file->info['core'] != DRUPAL_CORE_COMPATIBILITY
+      || version_compare(phpversion(), $file->info['php']) < 0) {
+    return TRUE;
+  }
+  return FALSE;
 }
 
 /**

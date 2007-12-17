@@ -1,5 +1,7 @@
 <?php
-// $Id: comment.install,v 1.13 2007/12/16 21:01:44 goba Exp $
+// $Id: comment.install,v 1.14 2007/12/17 12:23:00 goba Exp $
+
+drupal_load('module', 'comment');
 
 /**
  * Implementation of hook_enable().

@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.52 2007/12/13 10:46:43 goba Exp $
+// $Id: install.inc,v 1.53 2007/12/17 12:23:00 goba Exp $
 
 define('SCHEMA_UNINSTALLED', -1);
 define('SCHEMA_INSTALLED', 0);
@@ -22,8 +22,10 @@ define('FILE_NOT_EXECUTABLE', 128);
  * Initialize the update system by loading all installed module's .install files.
  */
 function drupal_load_updates() {
-  foreach (module_list() as $module) {
-    module_load_install($module);
+  foreach (drupal_get_installed_schema_version(NULL, FALSE, TRUE) as $module => $schema_version) {
+    if ($schema_version > -1) {
+      module_load_install($module);
+    }
   }
 }
 
@@ -58,10 +60,15 @@ function drupal_get_schema_versions($module) {
  *
  * @param $module
  *   A module name.
+ * @param $reset
+ *   Set to TRUE after modifying the system table.
+ * @param $array
+ *   Set to TRUE if you want to get information about all modules in the 
+ *   system.
  * @return
  *   The currently installed schema version.
  */
-function drupal_get_installed_schema_version($module, $reset = FALSE) {
+function drupal_get_installed_schema_version($module, $reset = FALSE, $array = FALSE) {
   static $versions = array();
 
   if ($reset) {
@@ -76,7 +83,7 @@ function drupal_get_installed_schema_version($module, $reset = FALSE) {
     }
   }
 
-  return $versions[$module];
+  return $array ? $versions : $versions[$module];
 }
 
 /**
