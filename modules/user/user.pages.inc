@@ -258,7 +258,7 @@ function user_profile_form($form_state, $account, $category = 'account') {
 function user_profile_form_validate($form, &$form_state) {
   user_module_invoke('validate', $form_state['values'], $form_state['values']['_account'], $form_state['values']['_category']);
   // Validate input to ensure that non-privileged users can't alter protected data.
-  if ((!user_access('administer users') && array_intersect(array_keys($form_state['values']), array('uid', 'init', 'session'))) || (!user_access('administer access control') && isset($form_state['values']['roles']))) {
+  if ((!user_access('administer users') && array_intersect(array_keys($form_state['values']), array('uid', 'init', 'session'))) || (!user_access('administer permissions') && isset($form_state['values']['roles']))) {
     watchdog('security', 'Detected malicious attempt to alter protected user fields.', array(), WATCHDOG_WARNING);
     // set this to a value type field
     form_set_error('category', t('Detected malicious attempt to alter protected user fields.'));
@@ -327,7 +327,7 @@ function user_confirm_delete_submit($form, &$form_state) {
 function user_edit_validate($form, &$form_state) {
   user_module_invoke('validate', $form_state['values'], $form_state['values']['_account'], $form_state['values']['_category']);
   // Validate input to ensure that non-privileged users can't alter protected data.
-  if ((!user_access('administer users') && array_intersect(array_keys($form_state['values']), array('uid', 'init', 'session'))) || (!user_access('administer access control') && isset($form_state['values']['roles']))) {
+  if ((!user_access('administer users') && array_intersect(array_keys($form_state['values']), array('uid', 'init', 'session'))) || (!user_access('administer permissions') && isset($form_state['values']['roles']))) {
     watchdog('security', 'Detected malicious attempt to alter protected user fields.', array(), WATCHDOG_WARNING);
     // set this to a value type field
     form_set_error('category', t('Detected malicious attempt to alter protected user fields.'));
