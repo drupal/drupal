@@ -190,11 +190,13 @@ function aggregator_categorize_items_validate($form_id, &$form) {
  * Process aggregator_categorize_items form submissions.
  */
 function aggregator_categorize_items_submit($form, &$form_state) {
-  foreach ($form_state['values']['categories'] as $iid => $selection) {
-    db_query('DELETE FROM {aggregator_category_item} WHERE iid = %d', $iid);
-    foreach ($selection as $cid) {
-      if ($cid) {
-        db_query('INSERT INTO {aggregator_category_item} (cid, iid) VALUES (%d, %d)', $cid, $iid);
+  if (!empty($form_state['values']['categories'])) {
+    foreach ($form_state['values']['categories'] as $iid => $selection) {
+      db_query('DELETE FROM {aggregator_category_item} WHERE iid = %d', $iid);
+      foreach ($selection as $cid) {
+        if ($cid) {
+          db_query('INSERT INTO {aggregator_category_item} (cid, iid) VALUES (%d, %d)', $cid, $iid);
+        }
       }
     }
   }
