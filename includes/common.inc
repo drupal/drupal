@@ -1934,14 +1934,20 @@ function drupal_add_js($data = NULL, $type = 'module', $scope = 'header', $defer
 
   if (isset($data)) {
 
-    // Add jquery.js and drupal.js the first time a Javascript file is added.
+    // Add jquery.js and drupal.js, as well as the basePath setting, the
+    // first time a Javascript file is added.
     if (empty($javascript)) {
       $javascript['header'] = array(
         'core' => array(
           'misc/jquery.js' => array('cache' => TRUE, 'defer' => FALSE, 'preprocess' => TRUE),
           'misc/drupal.js' => array('cache' => TRUE, 'defer' => FALSE, 'preprocess' => TRUE),
         ),
-        'module' => array(), 'theme' => array(), 'setting' => array(), 'inline' => array(),
+        'module' => array(),
+        'theme' => array(),
+        'setting' => array(
+          array('basePath' => base_path()),
+        ),
+        'inline' => array(),
       );
     }
 
