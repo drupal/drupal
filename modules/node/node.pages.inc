@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.16 2007/12/11 12:13:39 goba Exp $
+// $Id: node.pages.inc,v 1.17 2007/12/17 10:14:05 goba Exp $
 
 /**
  * @file
@@ -265,6 +265,9 @@ function node_body_field(&$node, $label, $word_count) {
 
   $form = array(
     '#after_build' => array('node_teaser_js'));
+
+  $form['#prefix'] = '<div class="body-field-wrapper">';
+  $form['#suffix'] = '</div>';
 
   $form['teaser_js'] = array(
     '#type' => 'textarea',
