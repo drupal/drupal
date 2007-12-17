@@ -2,13 +2,6 @@
 body {
   direction: rtl;
 }
-blockquote {
-  padding: 0 15px 0 0;
-  margin: 1.1em 35px 1.1em 40px;
-  border-left-style: none;
-  border-right-style: solid;
-  border-right-width: 4px;
-}
 #logo img {
   float: right;
 }

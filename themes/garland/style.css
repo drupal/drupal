@@ -71,16 +71,6 @@ p {
   padding: 0;
 }
 
-blockquote {
-  padding: 0 0 0 15px; /* LTR */
-  margin: 1.1em 40px 1.1em 35px; /* LTR */
-  border-left-style: solid; /* LTR */
-  border-left-width: 4px; /* LTR */
-  /* Same as link color, keeps this colorable. */
-  border-color: #027AC6;
-  font-style: italic;
-}
-
 a:link, a:visited {
   color: #027AC6;
   text-decoration: none;
