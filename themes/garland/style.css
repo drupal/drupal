@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.33 2007/12/17 14:04:47 goba Exp $ */
+/* $Id: style.css,v 1.34 2007/12/17 15:05:10 goba Exp $ */
 
 /**
  * Garland, for Drupal 5.0
@@ -69,16 +69,6 @@ ul, quote, code, fieldset {
 p {
   margin: 0.6em 0 1.2em;
   padding: 0;
-}
-
-blockquote {
-  padding: 0 0 0 15px; /* LTR */
-  margin: 1.1em 40px 1.1em 35px; /* LTR */
-  border-left-style: solid; /* LTR */
-  border-left-width: 4px; /* LTR */
-  /* Same as link color, keeps this colorable. */
-  border-color: #027AC6;
-  font-style: italic;
 }
 
 a:link, a:visited {

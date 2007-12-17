@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.22 2007/12/17 14:04:47 goba Exp $ */
+/* $Id: style.css,v 1.23 2007/12/17 15:05:09 goba Exp $ */
 
 /*
 ** HTML elements
@@ -28,14 +28,6 @@ h3, h4, h5, h6 {
 p {
   margin-top: 0.5em;
   margin-bottom: 0.9em;
-}
-blockquote {
-  padding: 0 0 0 15px; /* LTR */
-  margin: 1.1em 40px 1.1em 35px; /* LTR */
-  border-left-style: solid; /* LTR */
-  border-left-width: 4px; /* LTR */
-  border-color: #69c;
-  font-style: italic;
 }
 a {
   text-decoration: none;

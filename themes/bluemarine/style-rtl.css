@@ -1,13 +1,6 @@
-/* $Id: style-rtl.css,v 1.4 2007/12/17 14:04:47 goba Exp $ */
+/* $Id: style-rtl.css,v 1.5 2007/12/17 15:05:09 goba Exp $ */
 body {
   direction: rtl;
-}
-blockquote {
-  padding: 0 15px 0 0;
-  margin: 1.1em 35px 1.1em 40px;
-  border-left-style: none;
-  border-right-style: solid;
-  border-right-width: 4px;
 }
 #logo img {
   float: right;

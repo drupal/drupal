@@ -1,4 +1,4 @@
-/* $Id: style-rtl.css,v 1.5 2007/12/17 14:04:47 goba Exp $ */
+/* $Id: style-rtl.css,v 1.6 2007/12/17 15:05:10 goba Exp $ */
 
 html {
   direction: rtl;
@@ -9,14 +9,6 @@ html {
  */
 body {
   direction: rtl;
-}
-
-blockquote {
-  padding: 0 15px 0 0;
-  margin: 1.1em 35px 1.1em 40px;
-  border-left-style: none;
-  border-right-style: solid;
-  border-right-width: 4px;
 }
 
 ol li, ul li {
