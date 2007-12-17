@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.926 2007/12/14 19:19:46 goba Exp $
+// $Id: node.module,v 1.927 2007/12/17 12:41:20 goba Exp $
 
 /**
  * @file
@@ -2338,8 +2338,11 @@ function node_content_form($node, $form_state) {
  * Implementation of hook_forms(). All node forms share the same form handler
  */
 function node_forms() {
-  foreach (array_keys(node_get_types()) as $type) {
-    $forms[$type .'_node_form']['callback'] = 'node_form';
+  $forms = array();
+  if ($types = node_get_types()) {
+    foreach (array_keys($types) as $type) {
+      $forms[$type .'_node_form']['callback'] = 'node_form';
+    }
   }
   return $forms;
 }
