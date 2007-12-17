@@ -1,5 +1,5 @@
 <?php
-// $Id: default.profile,v 1.21 2007/12/08 15:15:25 goba Exp $
+// $Id: default.profile,v 1.22 2007/12/17 12:43:34 goba Exp $
 
 /**
  * Return an array of the modules to be enabled when this profile is installed.
@@ -146,6 +146,6 @@ function default_profile_tasks(&$task, $url) {
 function default_form_alter(&$form, $form_state, $form_id) {
   if ($form_id == 'install_configure') {
     // Set default for site name field.
-    $form['site_information']['site_name']['#default_value'] = 'Drupal';
+    $form['site_information']['site_name']['#default_value'] = $_SERVER['SERVER_NAME'];
   }
 }
