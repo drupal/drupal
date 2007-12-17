@@ -333,6 +333,7 @@ function aggregator_page_rss() {
     $result = db_query_range($sql, 0, variable_get('feed_default_items', 10));
   }
 
+  $feeds = array();
   while ($item = db_fetch_object($result)) {
     $feeds[] = $item;
   }
@@ -397,6 +398,7 @@ function aggregator_page_opml($cid = NULL) {
     $result = db_query('SELECT * FROM {aggregator_feed} ORDER BY title');
   }
 
+  $feeds = array();
   while ($item = db_fetch_object($result)) {
     $feeds[] = $item;
   }
@@ -425,7 +427,6 @@ function theme_aggregator_page_opml($feeds) {
   foreach ($feeds as $feed) {
     $output .= '<outline text="'. check_plain($feed->title) .'" xmlUrl="'. check_url($feed->url) ."\" />\n";
   }
-  $output .= implode('', $content);
   $output .= "</body>\n";
   $output .= "</opml>\n";
 
