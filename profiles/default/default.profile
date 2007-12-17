@@ -146,6 +146,6 @@ function default_profile_tasks(&$task, $url) {
 function default_form_alter(&$form, $form_state, $form_id) {
   if ($form_id == 'install_configure') {
     // Set default for site name field.
-    $form['site_information']['site_name']['#default_value'] = 'Drupal';
+    $form['site_information']['site_name']['#default_value'] = $_SERVER['SERVER_NAME'];
   }
 }
