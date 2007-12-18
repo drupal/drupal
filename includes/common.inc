@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.737 2007/12/18 10:31:42 dries Exp $
+// $Id: common.inc,v 1.738 2007/12/18 16:24:01 goba Exp $
 
 /**
  * @file
@@ -2832,8 +2832,25 @@ function drupal_system_listing($mask, $directory, $key = 'name', $min_depth = 1)
  *   hook_$type_alter functions.
  */
 function drupal_alter($type, &$data) {
+  // PHP's func_get_args() always returns copies of params, not references, so
+  // drupal_alter() can only manipulate data that comes in via the required first
+  // param. For the edge case functions that must pass in an arbitrary number of
+  // alterable parameters (hook_form_alter() being the best example), an array of
+  // those params can be placed in the __drupal_alter_by_ref key of the $data
+  // array. This is somewhat ugly, but is an unavoidable consequence of a flexible
+  // drupal_alter() function, and the limitations of func_get_args().
+  // @todo: Remove this in Drupal 7.
+  if (isset($data['__drupal_alter_by_ref'])) {
+    $by_ref_parameters = $data['__drupal_alter_by_ref'];
+    unset($data['__drupal_alter_by_ref']);
+  }
+
   // Hang onto a reference to the data array so that it isn't blown away later.
+  // Also, merge in any parameters that need to be passed by reference.
   $args = array(&$data);
+  if (isset($by_ref_parameters)) {
+    $args = array_merge($args, $by_ref_parameters);
+  }
 
   // Now, use func_get_args() to pull in any additional parameters passed into
   // the drupal_alter() call.

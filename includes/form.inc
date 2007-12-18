@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.252 2007/12/08 14:06:20 goba Exp $
+// $Id: form.inc,v 1.253 2007/12/18 16:24:01 goba Exp $
 
 /**
  * @defgroup form Form generation
@@ -78,7 +78,7 @@ function drupal_get_form($form_id) {
       // Use a copy of the function's arguments for manipulation
       $args_temp = $args;
       array_shift($args_temp);
-      array_unshift($args_temp, $form_state);
+      array_unshift($args_temp, &$form_state);
       array_unshift($args_temp, $form_id);
 
       $form = call_user_func_array('drupal_retrieve_form', $args_temp);
@@ -173,7 +173,7 @@ function drupal_rebuild_form($form_id, &$form_state, $args, $form_build_id = NUL
   // callback. Neither is needed.
   array_shift($args);
   // Put in the current state.
-  array_unshift($args, $form_state);
+  array_unshift($args, &$form_state);
   // And the form_id.
   array_unshift($args, $form_id);
   $form = call_user_func_array('drupal_retrieve_form', $args);
@@ -333,7 +333,7 @@ function drupal_retrieve_form($form_id, &$form_state) {
     }
   }
 
-  array_unshift($args, $form_state);
+  array_unshift($args, &$form_state);
 
   // If $callback was returned by a hook_forms() implementation, call it.
   // Otherwise, call the function named after the form id.
@@ -497,8 +497,20 @@ function drupal_prepare_form($form_id, &$form, &$form_state) {
     }
   }
 
-  drupal_alter('form_'. $form_id, $form, $form_state);
-  drupal_alter('form', $form, $form_state, $form_id);
+  // Normally, we would call drupal_alter($form_id, $form, $form_state).
+  // However, drupal_alter() normally supports just one byref parameter. Using
+  // the __drupal_alter_by_ref key, we can store any additional parameters
+  // that need to be altered, and they'll be split out into additional params
+  // for the hook_form_alter() implementations.
+  // @todo: Remove this in Drupal 7.
+  $data = &$form;
+  $data['__drupal_alter_by_ref'] = array(&$form_state);
+  drupal_alter('form_'. $form_id, $data);
+
+  // __drupal_alter_by_ref is unset in the drupal_alter() function, we need
+  // to repopulate it to ensure both calls get the data.
+  $data['__drupal_alter_by_ref'] = array(&$form_state);
+  drupal_alter('form', $data, $form_id);
 }
 
 
