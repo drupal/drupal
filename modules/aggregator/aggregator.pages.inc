@@ -180,7 +180,7 @@ function aggregator_categorize_items($items, $feed_source = '') {
 /**
  * Validate aggregator_categorize_items form submissions.
  */
-function aggregator_categorize_items_validate($form_id, &$form) {
+function aggregator_categorize_items_validate($form, &$form_state) {
   if (!user_access('administer news feeds')) {
     form_error($form, t('You are not allowed to categorize this feed item.'));
   }
