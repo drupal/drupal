@@ -63,7 +63,7 @@ function drupal_get_schema_versions($module) {
  * @param $reset
  *   Set to TRUE after modifying the system table.
  * @param $array
- *   Set to TRUE if you want to get information about all modules in the 
+ *   Set to TRUE if you want to get information about all modules in the
  *   system.
  * @return
  *   The currently installed schema version.

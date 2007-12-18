@@ -1043,7 +1043,7 @@ function system_schema() {
  * @defgroup updates-4.7.x-extra Extra system updates for 4.7.x
  * @{
  */
- 
+
 function system_update_last_removed() {
   return 179;
 }

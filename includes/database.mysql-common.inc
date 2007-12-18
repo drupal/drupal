@@ -199,6 +199,7 @@ function db_type_map() {
   // database types back into schema types.
   $map = array(
     'varchar:normal'  => 'VARCHAR',
+    'char:normal'     => 'CHAR',
 
     'text:tiny'       => 'SMALLTEXT',
     'text:small'      => 'SMALLTEXT',

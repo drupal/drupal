@@ -503,6 +503,7 @@ function db_field_names($fields) {
 function db_type_placeholder($type) {
   switch ($type) {
     case 'varchar':
+    case 'char':
     case 'text':
     case 'datetime':
       return '\'%s\'';

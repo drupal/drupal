@@ -7,8 +7,8 @@
 function forum_install() {
   // Create tables.
   drupal_install_schema('forum');
-  // Set the weight of the forum.module to 1 so it is loaded after the taxonomy.module.  
-  db_query("UPDATE {system} SET weight = 1 WHERE name = 'forum'");  
+  // Set the weight of the forum.module to 1 so it is loaded after the taxonomy.module.
+  db_query("UPDATE {system} SET weight = 1 WHERE name = 'forum'");
 }
 
 function forum_enable() {
