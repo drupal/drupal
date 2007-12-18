@@ -1,5 +1,5 @@
 <?php
-// $Id: book.install,v 1.16 2007/11/27 10:29:36 goba Exp $
+// $Id: book.install,v 1.17 2007/12/18 12:59:21 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -68,11 +68,13 @@ function book_update_6000() {
         'nid'     => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
         'bid' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
       ),
-      'indexes' => array(
-        'nid'     => array('nid'),
-        'bid' => array('bid')
-      ),
       'primary key' => array('mlid'),
+      'unique keys' => array(
+        'nid' => array('nid'),
+      ),
+      'indexes' => array(
+        'bid' => array('bid'),
+      ),
     );
     // Add the node type.
     _book_install_type_create();
@@ -273,11 +275,13 @@ function book_schema() {
         'description' => t("The book ID is the {book}.nid of the top-level page."),
       ),
     ),
-    'indexes' => array(
-      'nid'     => array('nid'),
-      'bid' => array('bid')
-    ),
     'primary key' => array('mlid'),
+    'unique keys' => array(
+      'nid' => array('nid'),
+    ),
+    'indexes' => array(
+      'bid' => array('bid'),
+    ),
   );
 
   return $schema;

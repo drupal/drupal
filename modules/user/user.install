@@ -1,5 +1,5 @@
 <?php
-// $Id: user.install,v 1.3 2007/11/04 14:33:07 goba Exp $
+// $Id: user.install,v 1.4 2007/12/18 12:59:22 dries Exp $
 
 /**
  * Implementation of hook_schema().
@@ -254,7 +254,10 @@ function user_schema() {
       'access' => array('access'),
       'created' => array('created')
     ),
-    'unique keys' => array('name' => array('name')),
+    'unique keys' => array(
+      'name' => array('name'),
+      'mail' => array('mail'),
+    ),
     'primary key' => array('uid'),
   );
 
@@ -277,6 +280,9 @@ function user_schema() {
       ),
     ),
     'primary key' => array('uid', 'rid'),
+    'indexes' => array(
+      'rid' => array('rid'),
+    ),
   );
 
   return $schema;

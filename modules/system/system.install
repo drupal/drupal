@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.210 2007/12/18 10:31:42 dries Exp $
+// $Id: system.install,v 1.211 2007/12/18 12:59:22 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -588,6 +588,9 @@ function system_schema() {
         'default' => 0)
       ),
     'primary key' => array('fid'),
+    'indexes' => array(
+      'allow' => array('event', 'hostname', 'timestamp'),
+    ),
     );
 
   $schema['history'] = array(
@@ -610,6 +613,9 @@ function system_schema() {
         'default' => 0)
       ),
     'primary key' => array('uid', 'nid'),
+    'indexes' => array(
+      'nid' => array('nid'),
+    ),
     );
   $schema['menu_router'] = array(
     'description' => t('Maps paths to various callbacks (access, page and title)'),
@@ -2386,13 +2392,16 @@ function system_update_6022() {
   db_add_index($ret, 'files', 'timestamp', array('timestamp'));
 
   // Rename the file_revisions table to upload then add nid column. Since we're
-  // changing the table name we need to drop and re-add the vid index so both
-  // pgsql ends up with the correct index name.
+  // changing the table name we need to drop and re-add the indexes and
+  // the primary key so both mysql and pgsql end up with the correct index
+  // names.
+  db_drop_primary_key($ret, 'file_revisions');
   db_drop_index($ret, 'file_revisions', 'vid');
   db_rename_table($ret, 'file_revisions', 'upload');
   db_add_field($ret, 'upload', 'nid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0));
   db_add_index($ret, 'upload', 'nid', array('nid'));
-  db_add_index($ret, 'upload', 'vid', array('vid'));
+  db_add_primary_key($ret, 'upload', array('vid', 'fid'));
+  db_add_index($ret, 'upload', 'fid', array('fid'));
 
   // The nid column was renamed to uid. Use the old nid to find the node's uid.
   update_sql('UPDATE {files} SET uid = (SELECT n.uid FROM {node} n WHERE {files}.uid = n.nid)');
@@ -2759,6 +2768,100 @@ function system_update_6042() {
     }
   }
   return array();
+}
+
+/**
+ * Update table indices to make them more rational and useful.
+ */
+function system_update_6043() {
+  $ret = array();
+  // Required modules first.
+  // Add new system module indexes.
+  db_add_index($ret, 'flood', 'allow', array('event', 'hostname', 'timestamp'));
+  db_add_index($ret, 'history', 'nid', array('nid'));
+  // Change length of theme field in {blocks} to be consistent with module, and
+  // to avoid a MySQL error regarding a too-long index.  Also add new indices.
+  db_change_field($ret, 'blocks', 'theme', 'theme', array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''),array(
+                  'unique keys' => array('tmd' => array('theme', 'module', 'delta'),),
+                  'indexes' => array('list' => array('theme', 'status', 'region', 'weight', 'module'),),));
+  db_add_index($ret, 'blocks_roles', 'rid', array('rid'));
+  // Improve filter module indices.
+  db_drop_index($ret, 'filters', 'weight');
+  db_add_unique_key($ret, 'filters', 'fmd', array('format', 'module', 'delta'));
+  db_add_index($ret, 'filters', 'list', array('format', 'weight', 'module', 'delta'));
+  // Drop unneeded keys form the node table.
+  db_drop_index($ret, 'node', 'status');
+  db_drop_unique_key($ret, 'node', 'nid_vid');
+  // Improve user module indices.
+  db_add_unique_key($ret, 'users', 'mail', array('mail'));
+  db_add_index($ret, 'users_roles', 'rid', array('rid'));
+
+  // Optional modules - need to check if the tables exist.
+  // Alter aggregator module's tables primary keys to make them more useful.
+  if (db_table_exists('aggregator_category_feed')) {
+    db_drop_primary_key($ret, 'aggregator_category_feed');
+    db_add_primary_key($ret, 'aggregator_category_feed', array('cid', 'fid'));
+    db_add_index($ret, 'aggregator_category_feed', 'fid', array('fid'));
+  }
+  if (db_table_exists('aggregator_category_item')) {
+    db_drop_primary_key($ret, 'aggregator_category_item');
+    db_add_primary_key($ret, 'aggregator_category_item', array('cid', 'iid'));
+    db_add_index($ret, 'aggregator_category_item', 'iid', array('iid'));
+  }
+  // Alter contact module's table to add an index.
+  if (db_table_exists('contact')) {
+    db_add_index($ret, 'contact', 'list', array('weight', 'category'));
+  }
+  // Alter locale table to add a primary key, drop an index.
+  if (db_table_exists('locales_target')) {
+    db_add_primary_key($ret, 'locales_target', array('language', 'lid', 'plural'));
+  }
+  // Alter a poll module table to add a primary key.
+  if (db_table_exists('poll_votes')) {
+    db_drop_index($ret, 'poll_votes', 'nid');
+    db_add_primary_key($ret, 'poll_votes', array('nid', 'uid', 'hostname'));
+  }
+  // Alter a profile module table to add a primary key.
+  if (db_table_exists('profile_values')) {
+    db_drop_index($ret, 'profile_values', 'uid');
+    db_drop_index($ret, 'profile_values', 'fid');
+    db_change_field($ret,'profile_values' ,'fid', 'fid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0,), array('indexes' => array('fid' => array('fid'),)));
+    db_change_field($ret,'profile_values' ,'uid', 'uid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0,));
+    db_add_primary_key($ret, 'profile_values', array('uid', 'fid'));
+  }
+  // Alter a statistics module table to add an index.
+  if (db_table_exists('accesslog')) {
+    db_add_index($ret, 'accesslog', 'uid', array('uid'));
+  }
+  // Alter taxonomy module's tables.
+  if (db_table_exists('term_data')) {
+    db_drop_index($ret, 'term_data', 'vid');
+    db_add_unique_key($ret, 'term_data', 'vid_name', array('vid', 'name'));
+    db_add_index($ret, 'term_data', 'taxonomy_tree', array('vid', 'weight', 'name'));
+  }
+  if (db_table_exists('term_node')) {
+    db_drop_primary_key($ret, 'term_node');
+    db_drop_index($ret, 'term_node', 'tid');
+    db_add_primary_key($ret, 'term_node', array('tid', 'vid'));
+  }
+  if (db_table_exists('term_relation')) {
+    db_drop_index($ret, 'term_relation', 'tid1');
+    db_add_unique_key($ret, 'term_relation', 'tid1_tid2', array('tid1', 'tid2'));
+  }
+  if (db_table_exists('term_synonym')) {
+    db_drop_index($ret, 'term_synonym', 'name');
+    db_add_unique_key($ret, 'term_synonym', 'name_tid', array('name', 'tid'));
+  }
+  if (db_table_exists('vocabulary')) {
+    db_add_index($ret, 'vocabulary', 'list', array('weight', 'name'));
+  }
+  if (db_table_exists('vocabulary_node_types')) {
+    db_drop_primary_key($ret, 'vocabulary_node_types');
+    db_add_primary_key($ret, 'vocabulary_node_types', array('type', 'vid'));
+    db_add_index($ret, 'vocabulary_node_types', 'vid', array('vid'));
+  }
+
+  return $ret;
 }
 
 /**

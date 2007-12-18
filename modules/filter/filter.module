@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.195 2007/12/17 15:05:09 goba Exp $
+// $Id: filter.module,v 1.196 2007/12/18 12:59:21 dries Exp $
 
 /**
  * @file
@@ -369,7 +369,7 @@ function filter_list_format($format) {
 
   if (!isset($filters[$format])) {
     $filters[$format] = array();
-    $result = db_query("SELECT * FROM {filters} WHERE format = %d ORDER BY weight ASC", $format);
+    $result = db_query("SELECT * FROM {filters} WHERE format = %d ORDER BY weight, module, delta", $format);
     while ($filter = db_fetch_object($result)) {
       $list = module_invoke($filter->module, 'filter', 'list');
       if (isset($list) && is_array($list) && isset($list[$filter->delta])) {

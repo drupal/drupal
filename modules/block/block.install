@@ -1,5 +1,5 @@
 <?php
-// $Id: block.install,v 1.7 2007/11/14 09:31:04 dries Exp $
+// $Id: block.install,v 1.8 2007/12/18 12:59:20 dries Exp $
 
 /**
  * Implementation of hook_schema().
@@ -29,7 +29,7 @@ function block_schema() {
       ),
       'theme' => array(
         'type' => 'varchar',
-        'length' => 255,
+        'length' => 64,
         'not null' => TRUE,
         'default' => '',
         'description' => t('The theme under which the block settings apply.'),
@@ -97,6 +97,12 @@ function block_schema() {
       ),
     ),
     'primary key' => array('bid'),
+    'unique keys' => array(
+      'tmd' => array('theme', 'module', 'delta'),
+    ),
+    'indexes' => array(
+      'list' => array('theme', 'status', 'region', 'weight', 'module'),
+    ),
   );
 
   $schema['blocks_roles'] = array(
@@ -125,6 +131,9 @@ function block_schema() {
       'module',
       'delta',
       'rid'
+    ),
+    'indexes' => array(
+      'rid' => array('rid'),
     ),
   );
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.install,v 1.4 2007/11/28 10:29:19 dries Exp $
+// $Id: filter.install,v 1.5 2007/12/18 12:59:21 dries Exp $
 
 /**
  * Implementation of hook_schema().
@@ -42,7 +42,12 @@ function filter_schema() {
       )
     ),
     'primary key' => array('fid'),
-    'indexes' => array('weight' => array('weight')),
+    'unique keys' => array(
+      'fmd' => array('format', 'module', 'delta'),
+    ),
+    'indexes' => array(
+      'list' => array('format', 'weight', 'module', 'delta'),
+    ),
   );
   $schema['filter_formats'] = array(
     'description' => t('Stores input formats: custom groupings of filters, such as Filtered HTML.'),
@@ -64,7 +69,7 @@ function filter_schema() {
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
-        'description' => t('A comma-separated string of roles; references {role}.rid.'),
+        'description' => t('A comma-separated string of roles; references {role}.rid.'), // This is bad since you can't use joins, nor index.
       ),
       'cache' => array(
         'type' => 'int',
@@ -74,8 +79,8 @@ function filter_schema() {
         'description' => t('Flag to indicate whether format is cachable. (1 = cachable, 0 = not cachable)'),
       ),
     ),
-    'unique keys' => array('name' => array('name')),
     'primary key' => array('format'),
+    'unique keys' => array('name' => array('name')),
   );
 
   $schema['cache_filter'] = drupal_get_schema_unprocessed('system', 'cache');

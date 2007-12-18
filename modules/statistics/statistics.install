@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.install,v 1.12 2007/11/04 14:33:07 goba Exp $
+// $Id: statistics.install,v 1.13 2007/12/18 12:59:22 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -109,7 +109,10 @@ function statistics_schema() {
         'description' => t('Timestamp of when the page was visited.'),
       ),
     ),
-    'indexes' => array('accesslog_timestamp' => array('timestamp')),
+    'indexes' => array(
+      'accesslog_timestamp' => array('timestamp'),
+      'uid' => array('uid'),
+    ),
     'primary key' => array('aid'),
   );
 

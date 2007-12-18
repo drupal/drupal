@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.install,v 1.24 2007/11/26 19:55:15 goba Exp $
+// $Id: locale.install,v 1.25 2007/12/18 12:59:21 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -23,41 +23,81 @@ function locale_install() {
 /**
  * {locales_meta} table became {languages}.
  */
-function locale_update_6001() {
+function locale_update_6000() {
   $ret = array();
-  switch ($GLOBALS['db_type']) {
-    case 'mysql':
-    case 'mysqli':
-      $ret[] = update_sql("CREATE TABLE {languages} (
-        language varchar(12) NOT NULL default '',
-        name varchar(64) NOT NULL default '',
-        native varchar(64) NOT NULL default '',
-        direction int NOT NULL default '0',
-        enabled int NOT NULL default '0',
-        plurals int NOT NULL default '0',
-        formula varchar(128) NOT NULL default '',
-        domain varchar(128) NOT NULL default '',
-        prefix varchar(128) NOT NULL default '',
-        weight int NOT NULL default '0',
-        PRIMARY KEY (language)
-      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
-      break;
-    case 'pgsql':
-      $ret[] = update_sql("CREATE TABLE {languages} (
-        language varchar(12) NOT NULL default '',
-        name varchar(64) NOT NULL default '',
-        native varchar(64) NOT NULL default '',
-        direction int NOT NULL default '0',
-        enabled int NOT NULL default '0',
-        plurals int NOT NULL default '0',
-        formula varchar(128) NOT NULL default '',
-        domain varchar(128) NOT NULL default '',
-        prefix varchar(128) NOT NULL default '',
-        weight int NOT NULL default '0',
-        PRIMARY KEY (language)
-      )");
-      break;
-  }
+
+  $schema['languages'] = array(
+    'fields' => array(
+      'language' => array(
+        'type' => 'varchar',
+        'length' => 12,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'name' => array(
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'native' => array(
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'direction' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'enabled' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'plurals' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'formula' => array(
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'domain' => array(
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'prefix' => array(
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'weight' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'javascript' => array( //Adds a column to store the filename of the JavaScript translation file.
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+    ),
+    'primary key' => array('language'),
+    'indexes' => array(
+      'list' => array('weight', 'name'),
+    ),
+  );
+
+  db_create_table($ret, 'languages', $schema['languages']);
 
   // Save the languages
   $ret[] = update_sql("INSERT INTO {languages} (language, name, native, direction, enabled, plurals, formula, domain, prefix, weight) SELECT locale, name, name, 0, enabled, plurals, formula, '', locale, 0 FROM {locales_meta}");
@@ -80,7 +120,7 @@ function locale_update_6001() {
  * of error messages from update.php.  All we need to do here is copy
  * locale to language and then drop locale.
  */
-function locale_update_6002() {
+function locale_update_6001() {
   $ret = array();
   $ret[] = update_sql('UPDATE {locales_target} SET language = locale');
   db_drop_field($ret, 'locales_target', 'locale');
@@ -88,18 +128,9 @@ function locale_update_6002() {
 }
 
 /**
- * Adds a column to store the filename of the JavaScript translation file.
- */
-function locale_update_6003() {
-  $ret = array();
-  db_add_field($ret, 'languages', 'javascript', array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''));
-  return $ret;
-}
-
-/**
  * Remove empty translations, we don't need these anymore.
  */
-function locale_update_6004() {
+function locale_update_6002() {
   $ret = array();
   $ret[] = update_sql("DELETE FROM {locales_target} WHERE translation = ''");
   return $ret;
@@ -108,7 +139,7 @@ function locale_update_6004() {
 /**
  * Prune strings with no translations (will be automatically re-registered if still in use)
  */
-function locale_update_6005() {
+function locale_update_6003() {
   $ret = array();
   $ret[] = update_sql("DELETE FROM {locales_source} WHERE lid NOT IN (SELECT lid FROM {locales_target})");
   return $ret;
@@ -117,7 +148,7 @@ function locale_update_6005() {
 /**
  * Fix remaining inconsistent indexes.
  */
-function locale_update_6006() {
+function locale_update_6004() {
   $ret = array();
   db_add_index($ret, 'locales_target', 'language', array('language'));
 
@@ -233,6 +264,9 @@ function locale_schema() {
       ),
     ),
     'primary key' => array('language'),
+    'indexes' => array(
+      'list' => array('weight', 'name'),
+    ),
   );
 
   $schema['locales_source'] = array(
@@ -272,8 +306,9 @@ function locale_schema() {
       ),
     ),
     'primary key' => array('lid'),
-    'indexes' => array
-        ('source' => array(array('source', 30))),
+    'indexes' => array(
+      'source' => array(array('source', 30)),
+    ),
   );
 
   $schema['locales_target'] = array(
@@ -300,7 +335,7 @@ function locale_schema() {
       ),
       'plid' => array(
         'type' => 'int',
-        'not null' => TRUE,
+        'not null' => TRUE, // This should be NULL for no referenced string, not zero.
         'default' => 0,
         'description' => t('Parent lid (lid of the previous string in the plural chain) in case of plural strings. References {locales_source}.lid.'),
       ),
@@ -311,11 +346,11 @@ function locale_schema() {
         'description' => t('Plural index number in case of plural strings.'),
       ),
     ),
+    'primary key' => array('language', 'lid', 'plural'),
     'indexes' => array(
-      'language'   => array('language'),
-      'lid'    => array('lid'),
-      'plid'   => array('plid'),
-      'plural' => array('plural')
+      'lid'      => array('lid'),
+      'plid'     => array('plid'),
+      'plural'   => array('plural'),
     ),
   );
 

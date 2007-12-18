@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.install,v 1.5 2007/12/08 14:06:22 goba Exp $
+// $Id: taxonomy.install,v 1.6 2007/12/18 12:59:22 dries Exp $
 
 /**
  * Implementation of hook_schema().
@@ -43,7 +43,10 @@ function taxonomy_schema() {
       ),
     ),
     'primary key' => array('tid'),
-    'indexes' => array('vid' => array('vid')),
+    'unique keys' => array(
+      'vid_name' => array('vid', 'name'),
+    ),
+    'indexes' => array('taxonomy_tree' => array('vid', 'weight', 'name')),
   );
 
   $schema['term_hierarchy'] = array(
@@ -66,7 +69,6 @@ function taxonomy_schema() {
     ),
     'indexes' => array(
       'parent' => array('parent'),
-      'tid' => array('tid'),
     ),
     'primary key' => array('tid', 'parent'),
   );
@@ -97,11 +99,10 @@ function taxonomy_schema() {
       ),
     ),
     'indexes' => array(
-      'nid' => array('nid'),
       'vid' => array('vid'),
-      'tid' => array('tid'),
+      'nid' => array('nid'),
     ),
-    'primary key' => array('vid', 'tid', 'nid'),
+    'primary key' => array('tid', 'vid'),
   );
 
   $schema['term_relation'] = array(
@@ -127,8 +128,10 @@ function taxonomy_schema() {
         'description' => t('The {term_data}.tid of the second term in a relationship.'),
       ),
     ),
+    'unique keys' => array(
+      'tid1_tid2' => array('tid1', 'tid2'),
+    ),
     'indexes' => array(
-      'tid1' => array('tid1'),
       'tid2' => array('tid2'),
     ),
     'primary key' => array('trid'),
@@ -157,8 +160,10 @@ function taxonomy_schema() {
         'description' => t('The name of the synonym.'),
       ),
     ),
+    'unique keys' => array(
+      'name_tid' => array('name', 'tid'),
+    ),
     'indexes' => array(
-      'name' => array(array('name', 3)),
       'tid' => array('tid'),
     ),
     'primary key' => array('tsid'),
@@ -249,6 +254,9 @@ function taxonomy_schema() {
       ),
     ),
     'primary key' => array('vid'),
+    'indexes' => array(
+      'list' => array('weight', 'name'),
+    ),
   );
 
   $schema['vocabulary_node_types'] = array(
@@ -269,7 +277,10 @@ function taxonomy_schema() {
         'description' => t('The {node}.type of the node type for which the vocabulary may be used.'),
       ),
     ),
-    'primary key' => array('vid', 'type'),
+    'primary key' => array('type', 'vid'),
+    'indexes' => array(
+      'vid' => array('vid'),
+    ),
   );
 
   return $schema;

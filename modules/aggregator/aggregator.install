@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.install,v 1.13 2007/12/08 14:06:20 goba Exp $
+// $Id: aggregator.install,v 1.14 2007/12/18 12:59:20 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -75,7 +75,8 @@ function aggregator_schema() {
         'description' => t('The {aggregator_category}.cid to which the feed is being assigned.'),
       )
     ),
-    'primary key' => array('fid', 'cid'),
+    'primary key' => array('cid', 'fid'),
+    'indexes' => array('fid' => array('fid')),
   );
 
   $schema['aggregator_category_item'] = array(
@@ -94,7 +95,8 @@ function aggregator_schema() {
         'description' => t('The {aggregator_category}.cid to which the feed item is being assigned.'),
       )
     ),
-    'primary key' => array('iid', 'cid'),
+    'primary key' => array('cid', 'iid'),
+    'indexes' => array('iid' => array('iid')),
   );
 
   $schema['aggregator_feed'] = array(
@@ -171,11 +173,11 @@ function aggregator_schema() {
         'description' => t("Number of items to display in the feed's block."),
       )
     ),
+    'primary key' => array('fid'),
     'unique keys' => array(
       'url'  => array('url'),
-      'title' => array('title')
+      'title' => array('title'),
     ),
-    'primary key' => array('fid'),
   );
 
   $schema['aggregator_item'] = array(
@@ -231,8 +233,8 @@ function aggregator_schema() {
         'description' => t('Unique identifier for the feed item.'),
       )
     ),
-    'indexes' => array('fid' => array('fid')),
     'primary key' => array('iid'),
+    'indexes' => array('fid' => array('fid')),
   );
 
   return $schema;

@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.install,v 1.5 2007/11/29 11:49:34 goba Exp $
+// $Id: upload.install,v 1.6 2007/12/18 12:59:22 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -68,8 +68,11 @@ function upload_schema() {
         'description' => t('Weight of this upload in relation to other uploads in this node.'),
       ),
     ),
-    'primary key' => array('fid', 'vid'),
-    'indexes' => array('vid' => array('vid'), 'nid' => array('nid')),
+    'primary key' => array('vid', 'fid'),
+    'indexes' => array(
+      'fid' => array('fid'),
+      'nid' => array('nid'),
+    ),
   );
 
   return $schema;

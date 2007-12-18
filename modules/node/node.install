@@ -1,5 +1,5 @@
 <?php
-// $Id: node.install,v 1.3 2007/11/04 14:33:07 goba Exp $
+// $Id: node.install,v 1.4 2007/12/18 12:59:21 dries Exp $
 
 /**
  * Implementation of hook_schema().
@@ -97,13 +97,11 @@ function node_schema() {
       'node_status_type'    => array('status', 'type', 'nid'),
       'node_title_type'     => array('title', array('type', 4)),
       'node_type'           => array(array('type', 4)),
-      'status'              => array('status'),
       'uid'                 => array('uid'),
       'tnid'                => array('tnid'),
       'translate'           => array('translate'),
       ),
     'unique keys' => array(
-      'nid_vid' => array('nid', 'vid'),
       'vid'     => array('vid')
       ),
     'primary key' => array('nid'),

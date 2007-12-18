@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.install,v 1.9 2007/10/10 11:39:32 goba Exp $
+// $Id: contact.install,v 1.10 2007/12/18 12:59:21 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -68,10 +68,14 @@ function contact_schema() {
         'description' => t('Flag to indicate whether or not category is selected by default. (1 = Yes, 0 = No)'),
       ),
     ),
-    'unique keys' => array('category' => array('category')),
     'primary key' => array('cid'),
+    'unique keys' => array(
+      'category' => array('category'),
+    ),
+    'indexes' => array(
+      'list' => array('weight', 'category'),
+    ),
   );
 
   return $schema;
 }
-

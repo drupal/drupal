@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.install,v 1.12 2007/10/21 18:59:02 goba Exp $
+// $Id: poll.install,v 1.13 2007/12/18 12:59:21 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -120,10 +120,10 @@ function poll_schema() {
         'description' => t('The IP address this vote is from unless the voter was logged in.'),
         ),
       ),
+    'primary key' => array('nid', 'uid', 'hostname'),
     'indexes' => array(
       'hostname' => array('hostname'),
-      'nid'      => array('nid'),
-      'uid'      => array('uid')
+      'uid'      => array('uid'),
       ),
     );
 
