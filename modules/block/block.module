@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.291 2007/12/16 10:30:09 goba Exp $
+// $Id: block.module,v 1.292 2007/12/18 14:11:02 goba Exp $
 
 /**
  * @file
@@ -458,6 +458,9 @@ function block_list($region) {
           if ($block->title) {
             // Check plain here to allow module generated titles to keep any markup.
             $block->subject = $block->title == '<none>' ? '' : check_plain($block->title);
+          }
+          if (!isset($block->subject)) {
+            $block->subject = '';
           }
           $blocks[$block->region]["{$block->module}_{$block->delta}"] = $block;
         }
