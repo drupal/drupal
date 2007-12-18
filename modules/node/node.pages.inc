@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.17 2007/12/17 10:14:05 goba Exp $
+// $Id: node.pages.inc,v 1.18 2007/12/18 10:31:42 dries Exp $
 
 /**
  * @file
@@ -656,7 +656,7 @@ function node_revision_delete_confirm_submit($form, &$form_state) {
   db_query("DELETE FROM {node_revisions} WHERE nid = %d AND vid = %d", $node_revision->nid, $node_revision->vid);
   node_invoke_nodeapi($node_revision, 'delete revision');
   watchdog('content', '@type: deleted %title revision %revision.', array('@type' => $node_revision->type, '%title' => $node_revision->title, '%revision' => $node_revision->vid));
-  drupal_set_message(t('Revision from %revision-date of @type %title has been deleted.', array('%revision-date' => format_date($node_revision->revision_timestamp), '@type' => node_get_types('name', $node_revision), '%title' => $node_revision->title)));  
+  drupal_set_message(t('Revision from %revision-date of @type %title has been deleted.', array('%revision-date' => format_date($node_revision->revision_timestamp), '@type' => node_get_types('name', $node_revision), '%title' => $node_revision->title)));
   $form_state['redirect'] = 'node/'. $node_revision->nid;
   if (db_result(db_query('SELECT COUNT(vid) FROM {node_revisions} WHERE nid = %d', $node_revision->nid)) > 1) {
     $form_state['redirect'] .= '/revisions';

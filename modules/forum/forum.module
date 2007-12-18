@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.433 2007/12/14 18:08:46 goba Exp $
+// $Id: forum.module,v 1.434 2007/12/18 10:31:42 dries Exp $
 
 /**
  * @file
@@ -357,7 +357,7 @@ function forum_form_alter(&$form, $form_state, $form_id) {
       $form['settings']['relations'] = array('#type' => 'value', '#value' => FALSE);
       $form['settings']['tags'] = array('#type' => 'value', '#value' => FALSE);
       $form['settings']['multiple'] = array('#type' => 'value', '#value' => FALSE);
-      unset($form['delete']);    
+      unset($form['delete']);
     }
   }
   // Hide multiple parents select from forum terms.

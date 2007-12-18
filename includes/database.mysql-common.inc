@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysql-common.inc,v 1.14 2007/12/08 14:06:20 goba Exp $
+// $Id: database.mysql-common.inc,v 1.15 2007/12/18 10:31:42 dries Exp $
 
 /**
  * @file
@@ -199,6 +199,7 @@ function db_type_map() {
   // database types back into schema types.
   $map = array(
     'varchar:normal'  => 'VARCHAR',
+    'char:normal'     => 'CHAR',
 
     'text:tiny'       => 'SMALLTEXT',
     'text:small'      => 'SMALLTEXT',

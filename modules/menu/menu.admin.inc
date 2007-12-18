@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.admin.inc,v 1.21 2007/12/16 18:25:22 goba Exp $
+// $Id: menu.admin.inc,v 1.22 2007/12/18 10:31:42 dries Exp $
 
 /**
  * @file
@@ -366,12 +366,12 @@ function menu_item_delete_submit($form, &$form_state) {
  */
 function menu_edit_item_submit($form, &$form_state) {
   $item = $form_state['values']['menu'];
-  
+
   // The value of "hidden" is the opposite of the value
-  // supplied by the "enabled" checkbox. 
+  // supplied by the "enabled" checkbox.
   $item['hidden'] = (int) !$item['enabled'];
   unset($item['enabled']);
-  
+
   $item['options']['attributes']['title'] = $item['description'];
   list($item['menu_name'], $item['plid']) = explode(':', $item['parent']);
   if (!menu_link_save($item)) {

@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.install,v 1.12 2007/12/11 10:52:00 goba Exp $
+// $Id: forum.install,v 1.13 2007/12/18 10:31:42 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -7,8 +7,8 @@
 function forum_install() {
   // Create tables.
   drupal_install_schema('forum');
-  // Set the weight of the forum.module to 1 so it is loaded after the taxonomy.module.  
-  db_query("UPDATE {system} SET weight = 1 WHERE name = 'forum'");  
+  // Set the weight of the forum.module to 1 so it is loaded after the taxonomy.module.
+  db_query("UPDATE {system} SET weight = 1 WHERE name = 'forum'");
 }
 
 function forum_enable() {

@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.54 2007/12/17 18:50:51 goba Exp $
+// $Id: install.inc,v 1.55 2007/12/18 10:31:42 dries Exp $
 
 define('SCHEMA_UNINSTALLED', -1);
 define('SCHEMA_INSTALLED', 0);
@@ -63,7 +63,7 @@ function drupal_get_schema_versions($module) {
  * @param $reset
  *   Set to TRUE after modifying the system table.
  * @param $array
- *   Set to TRUE if you want to get information about all modules in the 
+ *   Set to TRUE if you want to get information about all modules in the
  *   system.
  * @return
  *   The currently installed schema version.

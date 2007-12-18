@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.209 2007/12/17 12:23:01 goba Exp $
+// $Id: system.install,v 1.210 2007/12/18 10:31:42 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -1043,7 +1043,7 @@ function system_schema() {
  * @defgroup updates-4.7.x-extra Extra system updates for 4.7.x
  * @{
  */
- 
+
 function system_update_last_removed() {
   return 179;
 }

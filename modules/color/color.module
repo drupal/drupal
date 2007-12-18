@@ -1,5 +1,5 @@
 <?php
-// $Id: color.module,v 1.33 2007/12/16 13:05:21 goba Exp $
+// $Id: color.module,v 1.34 2007/12/18 10:31:42 dries Exp $
 
 /**
  * Implementation of hook_help().
@@ -9,7 +9,7 @@ function color_help($path, $arg) {
     case 'admin/help#color':
       $output = '<p>'. t('The color module allows a site administrator to quickly and easily change the color scheme of certain themes. Although all themes do not support color module, both Garland, the default theme, and Minnelli, its fixed width counterpart, were designed to take advantage of its features. By using color module with a compatible theme, you can easily change the color of links, backgrounds, text, and other theme elements. Color module requires that your <a href="@url">file download method</a> be set to public.', array('@url' => url('admin/settings/file-system'))) .'</p>';
       $output .= '<p>'. t("It is important to remember that color module saves a modified copy of the theme's specified stylesheets in the files directory. This means that if you make any manual changes to your theme's stylesheet, you must save your color settings again, even if they haven't changed. This causes the color module generated version of the stylesheets in the files directory to be recreated using the new version of the original file.") .'</p>';
-      $output .= '<p>'. t('For more information, see the online handbook entry for <a href="@color">Color module</a>.', array('@color' => 'http://drupal.org/handbook/modules/color/')) .'</p>';      
+      $output .= '<p>'. t('For more information, see the online handbook entry for <a href="@color">Color module</a>.', array('@color' => 'http://drupal.org/handbook/modules/color/')) .'</p>';
       return $output;
   }
 }
@@ -334,8 +334,8 @@ function color_scheme_form_submit($form, &$form_state) {
     }
 
     foreach ($files as $file) {
-      // Aggregate @imports recursively for each configured top level CSS file 
-      // without optimization. Aggregation and optimization will be 
+      // Aggregate @imports recursively for each configured top level CSS file
+      // without optimization. Aggregation and optimization will be
       // handled by drupal_build_css_cache() only.
       $style = drupal_load_stylesheet($paths['source'] . $file, FALSE);
 
@@ -352,7 +352,7 @@ function color_scheme_form_submit($form, &$form_state) {
       $base_file = basename($file);
       $css[] = $paths['target'] . $base_file;
       _color_save_stylesheet($paths['target'] . $base_file, $style, $paths);
-    }    
+    }
   }
 
   // Maintain list of files.

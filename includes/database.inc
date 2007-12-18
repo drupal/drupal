@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.86 2007/12/14 19:15:47 goba Exp $
+// $Id: database.inc,v 1.87 2007/12/18 10:31:42 dries Exp $
 
 /**
  * @file
@@ -503,6 +503,7 @@ function db_field_names($fields) {
 function db_type_placeholder($type) {
   switch ($type) {
     case 'varchar':
+    case 'char':
     case 'text':
     case 'datetime':
       return '\'%s\'';
