@@ -553,7 +553,7 @@ function update_fix_compatibility() {
   $query = db_query("SELECT name, type, status FROM {system} WHERE status = 1 AND type IN ('module','theme')");
   while ($result = db_fetch_object($query)) {
     if (update_check_incompatibility($result->name, $result->type)) {
-      $incompatible[] = $name;
+      $incompatible[] = $result->name;
     }
   }
   if (!empty($incompatible)) {
