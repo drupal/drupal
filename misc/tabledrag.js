@@ -1,4 +1,4 @@
-// $Id: tabledrag.js,v 1.11 2007/12/16 10:36:52 goba Exp $
+// $Id: tabledrag.js,v 1.12 2007/12/18 09:49:06 dries Exp $
 
 /**
  * Drag and drop table rows with field manipulation.
@@ -88,7 +88,7 @@ Drupal.tableDrag = function(table, tableSettings) {
 
   // Add mouse bindings to the document. The self variable is passed along
   // as event handlers do not have direct access to the tableDrag object.
-  $(document).bind('mousemove', function(event) { self.dragRow(event, self); });
+  $(document).bind('mousemove', function(event) { self.dragRow(event, self); return false; });
   $(document).bind('mouseup', function(event) { self.dropRow(event, self); });
 };
 
@@ -394,8 +394,6 @@ Drupal.tableDrag.prototype.dragRow = function(event, self) {
         self.indentCount = Math.max(self.indentCount, self.rowObject.indents);
       }
     }
-
-    return false;
   }
 };
 
