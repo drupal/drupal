@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.admin.inc,v 1.2 2007/12/16 21:01:44 goba Exp $
+// $Id: comment.admin.inc,v 1.3 2007/12/18 22:16:55 dries Exp $
 
 /**
  * @file
@@ -206,7 +206,7 @@ function comment_multiple_delete_confirm_submit($form, &$form_state) {
     cache_clear_all();
     drupal_set_message(t('The comments have been deleted.'));
   }
-  return 'admin/content/comment';
+  $form_state['redirect'] = 'admin/content/comment';
 }
 
 /**
@@ -267,7 +267,6 @@ function comment_confirm_delete_submit($form, &$form_state) {
   cache_clear_all();
 
   $form_state['redirect'] = "node/$comment->nid";
-  return;
 }
 
 /**
