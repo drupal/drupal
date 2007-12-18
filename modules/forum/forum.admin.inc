@@ -234,6 +234,9 @@ function forum_overview(&$form_state) {
       }
     }
   }
+  
+  // Remove the alphabetical reset.
+  unset($form['reset_alphabetical']);
 
   // The form needs to have submit and validate handlers set explicitly.
   $form['#theme'] = 'taxonomy_overview_terms';
