@@ -120,10 +120,10 @@ function poll_schema() {
         'description' => t('The IP address this vote is from unless the voter was logged in.'),
         ),
       ),
+    'primary key' => array('nid', 'uid', 'hostname'),
     'indexes' => array(
       'hostname' => array('hostname'),
-      'nid'      => array('nid'),
-      'uid'      => array('uid')
+      'uid'      => array('uid'),
       ),
     );
 

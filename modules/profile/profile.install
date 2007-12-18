@@ -119,14 +119,14 @@ function profile_schema() {
       'fid' => array(
         'type' => 'int',
         'unsigned' => TRUE,
-        'not null' => FALSE,
+        'not null' => TRUE,
         'default' => 0,
         'description' => t('The {profile_fields}.fid of the field.'),
       ),
       'uid' => array(
         'type' => 'int',
         'unsigned' => TRUE,
-        'not null' => FALSE,
+        'not null' => TRUE,
         'default' => 0,
         'description' => t('The {users}.uid of the profile user.'),
       ),
@@ -136,9 +136,9 @@ function profile_schema() {
         'description' => t('The value for the field.'),
       ),
     ),
+    'primary key' => array('uid', 'fid'),
     'indexes' => array(
       'fid' => array('fid'),
-      'uid' => array('uid')
     ),
   );
 

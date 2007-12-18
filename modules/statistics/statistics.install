@@ -109,7 +109,10 @@ function statistics_schema() {
         'description' => t('Timestamp of when the page was visited.'),
       ),
     ),
-    'indexes' => array('accesslog_timestamp' => array('timestamp')),
+    'indexes' => array(
+      'accesslog_timestamp' => array('timestamp'),
+      'uid' => array('uid'),
+    ),
     'primary key' => array('aid'),
   );
 

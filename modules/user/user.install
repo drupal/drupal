@@ -254,7 +254,10 @@ function user_schema() {
       'access' => array('access'),
       'created' => array('created')
     ),
-    'unique keys' => array('name' => array('name')),
+    'unique keys' => array(
+      'name' => array('name'),
+      'mail' => array('mail'),
+    ),
     'primary key' => array('uid'),
   );
 
@@ -277,6 +280,9 @@ function user_schema() {
       ),
     ),
     'primary key' => array('uid', 'rid'),
+    'indexes' => array(
+      'rid' => array('rid'),
+    ),
   );
 
   return $schema;

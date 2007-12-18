@@ -68,10 +68,14 @@ function contact_schema() {
         'description' => t('Flag to indicate whether or not category is selected by default. (1 = Yes, 0 = No)'),
       ),
     ),
-    'unique keys' => array('category' => array('category')),
     'primary key' => array('cid'),
+    'unique keys' => array(
+      'category' => array('category'),
+    ),
+    'indexes' => array(
+      'list' => array('weight', 'category'),
+    ),
   );
 
   return $schema;
 }
-
