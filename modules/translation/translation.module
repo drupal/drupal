@@ -1,5 +1,5 @@
 <?php
-// $Id: translation.module,v 1.19 2007/12/14 18:08:49 goba Exp $
+// $Id: translation.module,v 1.20 2007/12/18 16:27:44 goba Exp $
 
 /**
  * @file
@@ -31,7 +31,7 @@ define ('TRANSLATION_ENABLED', 2);
 function translation_help($path, $arg) {
   switch ($path) {
     case 'admin/help#translation':
-      $output = '<p>'. t('The content translation module allows content to be translated into different languages. Working with the locale module (which manages enabled languages and provides translation for the site interface), the content translation module is key to creating and maintaining translated site content.') .'</p>';
+      $output = '<p>'. t('The content translation module allows content to be translated into different languages. Working with the <a href="@locale">locale module</a> (which manages enabled languages and provides translation for the site interface), the content translation module is key to creating and maintaining translated site content.', array('@locale' => url('admin/help/locale'))) .'</p>';
       $output .= '<p>'. t('Configuring content translation and translation-enabled content types:') .'</p>';
       $output .= '<ul><li>'. t('Assign the <em>translate content</em> permission to the appropriate user roles at the <a href="@permissions">Permissions configuration page</a>.', array('@permissions' => url('admin/user/permissions'))) .'</li>';
       $output .= '<li>'. t('Add and enable desired languages at the <a href="@languages">Languages configuration page</a>.', array('@languages' => url('admin/settings/language'))) .'</li>';

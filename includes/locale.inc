@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.167 2007/12/06 09:58:30 goba Exp $
+// $Id: locale.inc,v 1.168 2007/12/18 16:27:44 goba Exp $
 
 /**
  * @file
@@ -161,7 +161,7 @@ function locale_languages_predefined_form() {
     '#title' => t('Language name'),
     '#default_value' => key($predefined),
     '#options' => $predefined,
-    '#description' => t('Select the desired language here, or add it below, if you are unable to find it in the list.'),
+    '#description' => t('Select the desired language and click the <em>Add language</em> button. (Use the <em>Custom language</em> options if your desired language does not appear in this list.)'),
   );
   $form['language list']['submit'] = array('#type' => 'submit', '#value' => t('Add language'));
   return $form;
@@ -242,7 +242,7 @@ function _locale_languages_common_controls(&$form, $language = NULL) {
       '#required' => TRUE,
       '#default_value' => @$language->language,
       '#disabled' => (isset($language->language)),
-      '#description' => t('This should be an <a href="@rfc4646">RFC 4646</a> compliant language identifier. Basic tags use a country code with an optional script or regional variant name, like "en", "en-US" and "zh-Hant".', array('@rfc4646' => 'http://www.ietf.org/rfc/rfc4646.txt')),
+      '#description' => t('<a href="@rfc4646">RFC 4646</a> compliant language identifier. Language codes typically use a country code, and optionally, a script or regional variant name. <em>Examples: "en", "en-US" and "zh-Hant".</em>', array('@rfc4646' => 'http://www.ietf.org/rfc/rfc4646.txt')),
     );
   }
   $form['name'] = array('#type' => 'textfield',
@@ -250,7 +250,7 @@ function _locale_languages_common_controls(&$form, $language = NULL) {
     '#maxlength' => 64,
     '#default_value' => @$language->name,
     '#required' => TRUE,
-    '#description' => t('Name of the language. Will be available for translation in all languages.'),
+    '#description' => t('Name of the language in English. Will be available for translation in all languages.'),
   );
   $form['native'] = array('#type' => 'textfield',
     '#title' => t('Native language name'),
@@ -263,18 +263,18 @@ function _locale_languages_common_controls(&$form, $language = NULL) {
     '#title' => t('Path prefix'),
     '#maxlength' => 64,
     '#default_value' => @$language->prefix,
-    '#description' => t('Optional path prefix, for example "deutsch" for the German version. This value is not used in the "None" and "Domain" negotiation schemes. You can leave this empty if you use "Path only" negotiation and this is the default language. Changing this will break existing URLs.')
+    '#description' => t('Language code or other custom string for pattern matching within the path. With language negotiation set to <em>Path prefix only</em> or <em>Path prefix with language fallback</em>, this site is presented in this language when the Path prefix value matches an element in the path. For the default language, this value may be left blank. <strong>Modifying this value will break existing URLs and should be used with caution in a production environment.</strong> <em>Example: Specifying "deutsch" as the path prefix for German results in URLs in the form "www.example.com/deutsch/node".</em>')
   );
   $form['domain'] = array('#type' => 'textfield',
     '#title' => t('Language domain'),
     '#maxlength' => 64,
     '#default_value' => @$language->domain,
-    '#description' => t('Optional custom domain with protocol (eg. "http://example.de" or "http://de.example.com" for the German version). This value is only used in the "Domain" negotiation mode. If left empty and in "Domain" mode, this language will not be accessible.'),
+    '#description' => t('Language-specific URL, with protocol. With language negotiation set to <em>Domain name only</em>, the site is presented in this language when the URL accessing the site references this domain. For the default language, this value may be left blank. <strong>This value must include a protocol as part of the string.</strong> <em>Example: Specifying "http://example.de" or "http://de.example.com" as language domains for German results in URLs in the forms "http://example.de/node" and "http://de.example.com/node", respectively.</em>'),
   );
   $form['direction'] = array('#type' => 'radios',
     '#title' => t('Direction'),
     '#required' => TRUE,
-    '#description' => t('Direction of the text being written in this language.'),
+    '#description' => t('Direction that text in this language is presented.'),
     '#default_value' => @$language->direction,
     '#options' => array(LANGUAGE_LTR => t('Left to right'), LANGUAGE_RTL => t('Right to left'))
   );
@@ -446,12 +446,12 @@ function locale_languages_configure_form() {
     '#title' => t('Language negotiation'),
     '#type' => 'radios',
     '#options' => array(
-      LANGUAGE_NEGOTIATION_NONE => t('None. Language will be independent of visitor preferences and language prefixes or domains.'),
-      LANGUAGE_NEGOTIATION_PATH_DEFAULT => t('Path prefix only. If a suitable path prefix is not identified, the default language is used.'),
-      LANGUAGE_NEGOTIATION_PATH => t('Path prefix with language fallback. If a suitable  path prefix is not identified, language is based on user preferences and browser language settings.'),
-      LANGUAGE_NEGOTIATION_DOMAIN => t('Domain name only. If a suitable domain name is not identified, the default language is used.')),
+      LANGUAGE_NEGOTIATION_NONE => t('None.'),
+      LANGUAGE_NEGOTIATION_PATH_DEFAULT => t('Path prefix only.'),
+      LANGUAGE_NEGOTIATION_PATH => t('Path prefix with language fallback.'),
+      LANGUAGE_NEGOTIATION_DOMAIN => t('Domain name only.')),
     '#default_value' => variable_get('language_negotiation', LANGUAGE_NEGOTIATION_NONE),
-    '#description' => t('The used language detection mode. Changing this also changes how paths are constructed, so setting a different value breaks all incoming links. Do not change on a live site without thinking twice!')
+    '#description' => t("Select the mechanism used to determine your site's presentation language. <strong>Modifying this setting may break all incoming URLs and should be used with caution in a production environment.</strong>")
   );
   $form['submit'] = array(
     '#type' => 'submit',
@@ -608,7 +608,7 @@ function locale_translate_import_form() {
   $form['import']['file'] = array('#type' => 'file',
     '#title' => t('Language file'),
     '#size' => 50,
-    '#description' => t('A gettext Portable Object (.po) file.'),
+    '#description' => t('A Gettext Portable Object (<em>.po</em>) file.'),
   );
   $form['import']['langcode'] = array('#type' => 'select',
     '#title' => t('Import into'),
@@ -703,7 +703,7 @@ function locale_translate_export_po_form(&$form_state, $names) {
   $form['export']['langcode'] = array('#type' => 'select',
     '#title' => t('Language name'),
     '#options' => $names,
-    '#description' => t('Select the language you would like to export in gettext Portable Object (.po) format.'),
+    '#description' => t('Select the language to export in Gettext Portable Object (<em>.po</em>) format.'),
   );
   $form['export']['group'] = array('#type' => 'radios',
     '#title' => t('Text group'),
@@ -722,7 +722,7 @@ function locale_translate_export_pot_form() {
   $form['export'] = array('#type' => 'fieldset',
     '#title' => t('Export template'),
     '#collapsible' => TRUE,
-    '#description' => t('Generate a gettext Portable Object Template (.pot) file with all strings from the Drupal locale database.'),
+    '#description' => t('Generate a Gettext Portable Object Template (<em>.pot</em>) file with all strings from the Drupal locale database.'),
   );
   $form['export']['group'] = array('#type' => 'radios',
     '#title' => t('Text group'),
