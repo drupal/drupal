@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.55 2007/12/18 10:31:42 dries Exp $
+// $Id: install.inc,v 1.56 2007/12/19 11:15:18 goba Exp $
 
 define('SCHEMA_UNINSTALLED', -1);
 define('SCHEMA_INSTALLED', 0);
@@ -251,7 +251,7 @@ function drupal_rewrite_settings($settings = array(), $prefix = '') {
 function drupal_get_install_files($module_list = array()) {
   $installs = array();
   foreach ($module_list as $module) {
-    $installs = array_merge($installs, file_scan_directory('./modules', "^$module.install$", array('.', '..', 'CVS'), 0, TRUE, 'name', 0));
+    $installs = array_merge($installs, drupal_system_listing($module .'.install$', 'modules'));
   }
   return $installs;
 }
@@ -719,7 +719,11 @@ function drupal_check_module($module) {
       // Print any error messages
       foreach ($requirements as $requirement) {
         if (isset($requirement['severity']) && $requirement['severity'] == REQUIREMENT_ERROR) {
-          drupal_set_message($requirement['description'] .' ('. t('Currently using !item !version', array('!item' => $requirement['title'], '!version' => $requirement['value'])) .')', 'error');
+          $message = $requirement['description'];
+          if (isset($requirement['value']) && $requirement['value']) {
+            $message .= ' ('. t('Currently using !item !version', array('!item' => $requirement['title'], '!version' => $requirement['value'])) .')';
+          }
+          drupal_set_message($message, 'error');
         }
       }
       return FALSE;
