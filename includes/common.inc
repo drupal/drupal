@@ -2845,7 +2845,7 @@ function drupal_alter($type, &$data) {
   // array. This is somewhat ugly, but is an unavoidable consequence of a flexible
   // drupal_alter() function, and the limitations of func_get_args().
   // @todo: Remove this in Drupal 7.
-  if (isset($data['__drupal_alter_by_ref'])) {
+  if (is_array($data) && isset($data['__drupal_alter_by_ref'])) {
     $by_ref_parameters = $data['__drupal_alter_by_ref'];
     unset($data['__drupal_alter_by_ref']);
   }
