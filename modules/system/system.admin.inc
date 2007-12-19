@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.37 2007/12/16 21:01:45 goba Exp $
+// $Id: system.admin.inc,v 1.38 2007/12/19 15:46:07 goba Exp $
 
 /**
  * @file
@@ -1393,17 +1393,17 @@ function system_rss_feeds_settings() {
 
   $form['feed_default_items'] = array(
     '#type' => 'select',
-    '#title' => t('Number of items per feed'),
+    '#title' => t('Number of items in each feed'),
     '#default_value' => variable_get('feed_default_items', 10),
     '#options' => drupal_map_assoc(array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30)),
-    '#description' => t('The default number of items to include in a feed.')
+    '#description' => t('Default number of items to include in each feed.')
   );
   $form['feed_item_length'] = array(
     '#type' => 'select',
-    '#title' => t('Display of XML feed items'),
+    '#title' => t('Feed content'),
     '#default_value' => variable_get('feed_item_length', 'teaser'),
     '#options' => array('title' => t('Titles only'), 'teaser' => t('Titles plus teaser'), 'fulltext' => t('Full text')),
-    '#description' => t('Global setting for the length of XML feed items that are output by default.')
+    '#description' => t('Global setting for the default display of content items in each feed.')
   );
 
   return system_settings_form($form);
