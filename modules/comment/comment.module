@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.608 2007/12/16 21:01:44 goba Exp $
+// $Id: comment.module,v 1.609 2007/12/19 19:17:20 goba Exp $
 
 /**
  * @file
@@ -126,8 +126,8 @@ define('COMMENT_PREVIEW_REQUIRED', 1);
 function comment_help($path, $arg) {
   switch ($path) {
     case 'admin/help#comment':
-      $output = '<p>'. t('The comment module creates a discussion board for each post. Users can post comments to discuss a forum topic, blog entry, story, collaborative book page, etc. The ability to comment on posts is an important part of involving members in a community dialogue.') .'</p>';
-      $output .= '<p>'. t('An administrator can give comment permissions to user groups, and users can (optionally) edit their last comment, if it has no replies. Attached to each comment board is a control panel for customizing the way that comments are displayed. Users can control the chronological ordering of posts (newest or oldest first) and the number of posts to display on each page. Comments behave like other user submissions. Filters and HTML tags that work in nodes also work in comments. The comment module provides specific features to inform site members when new comments have been posted.') .'</p>';
+      $output = '<p>'. t('The comment module allows visitors to comment on your posts, creating ad hoc discussion boards. Any <a href="@content-type">content type</a> may have its <em>Default comment setting</em> set to <em>Read/Write</em> to allow comments, or <em>Disabled</em>, to prevent comments. Comment display settings and other controls may also be customized for each content type (some display settings are customizable by individual users).', array('@content-type' => url('admin/content/types'))) .'</p>';
+      $output .= '<p>'. t('Comment permissions are assigned to user roles, and are used to determine whether anonymous users (or other roles) are allowed to comment on posts. If anonymous users are allowed to comment, their individual contact information may be retained in cookies stored on their local computer for use in later comment submissions. When a comment has no replies, it may be (optionally) edited by its author. The comment module uses the same input formats and HTML tags available when creating other forms of content.') .'</p>';
       $output .= '<p>'. t('For more information, see the online handbook entry for <a href="@comment">Comment module</a>.', array('@comment' => 'http://drupal.org/handbook/modules/comment/')) .'</p>';
       return $output;
     case 'admin/content/comment':
