@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.253 2007/12/18 16:24:01 goba Exp $
+// $Id: form.inc,v 1.254 2007/12/19 22:42:07 goba Exp $
 
 /**
  * @defgroup form Form generation
@@ -77,8 +77,7 @@ function drupal_get_form($form_id) {
       $form_state['post'] = $_POST;
       // Use a copy of the function's arguments for manipulation
       $args_temp = $args;
-      array_shift($args_temp);
-      array_unshift($args_temp, &$form_state);
+      $args_temp[0] = &$form_state;
       array_unshift($args_temp, $form_id);
 
       $form = call_user_func_array('drupal_retrieve_form', $args_temp);
@@ -170,10 +169,8 @@ function drupal_get_form($form_id) {
 function drupal_rebuild_form($form_id, &$form_state, $args, $form_build_id = NULL) {
   // Remove the first argument. This is $form_id.when called from
   // drupal_get_form and the original $form_state when called from some AHAH
-  // callback. Neither is needed.
-  array_shift($args);
-  // Put in the current state.
-  array_unshift($args, &$form_state);
+  // callback. Neither is needed. After that, put in the current state.
+  $args[0] = &$form_state;
   // And the form_id.
   array_unshift($args, $form_id);
   $form = call_user_func_array('drupal_retrieve_form', $args);
@@ -333,7 +330,8 @@ function drupal_retrieve_form($form_id, &$form_state) {
     }
   }
 
-  array_unshift($args, &$form_state);
+  array_unshift($args, NULL);
+  $args[0] = &$form_state;
 
   // If $callback was returned by a hook_forms() implementation, call it.
   // Otherwise, call the function named after the form id.
