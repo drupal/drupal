@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.38 2007/12/19 15:46:07 goba Exp $
+// $Id: system.admin.inc,v 1.39 2007/12/19 16:06:09 goba Exp $
 
 /**
  * @file
@@ -1125,7 +1125,6 @@ function system_site_information_settings() {
     '#default_value' => variable_get('site_slogan', ''),
     '#description' => t('The slogan of this website. Some themes display a slogan when available.')
   );
-
   $form['site_mission'] = array(
     '#type' => 'textarea',
     '#title' => t('Mission'),
@@ -1142,7 +1141,8 @@ function system_site_information_settings() {
     '#type' => 'textfield',
     '#title' => t('Anonymous user'),
     '#default_value' => variable_get('anonymous', t('Anonymous')),
-    '#description' => t('The name used to indicate anonymous users.')
+    '#description' => t('The name used to indicate anonymous users.'),
+    '#required' => TRUE,
   );
   $form['site_frontpage'] = array(
     '#type' => 'textfield',
@@ -1150,10 +1150,27 @@ function system_site_information_settings() {
     '#default_value' => variable_get('site_frontpage', 'node'),
     '#size' => 40,
     '#description' => t('The home page displays content from this relative URL. If unsure, specify "node".'),
-    '#field_prefix' => url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q=')
+    '#field_prefix' => url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q='),
+    '#required' => TRUE,
   );
+  $form['#validate'][] = 'system_site_information_settings_validate';
 
   return system_settings_form($form);
+}
+
+/**
+ * Validate the submitted site-information form.
+ */
+function system_site_information_settings_validate($form, &$form_state) {
+  // Validate the e-mail address.
+  if ($error = user_validate_mail($form_state['values']['site_mail'])) {
+    form_set_error('site_mail', $error);
+  }
+  // Validate front page path.
+  $item = array('link_path' => $form_state['values']['site_frontpage']);
+  if (!empty($item) && !menu_valid_path($item)) {
+    form_set_error('site_frontpage', t("The path '@path' is either invalid or you do not have access to it.", array('@path' => $item['link_path'])));
+  }
 }
 
 /**
@@ -1188,7 +1205,24 @@ function system_error_reporting_settings() {
     '#description' =>  t('Specify where Drupal, PHP and SQL errors are logged. While it is recommended that a site running in a production environment write errors to the log only, in a development or testing environment it may be helpful to write errors both to the log and to the screen.')
   );
 
+  $form['#validate'][] = 'system_error_reporting_settings_validate';
+
   return system_settings_form($form);
+}
+
+/**
+ * Validate the submitted error reporting form.
+ */
+function system_error_reporting_settings_validate($form, &$form_state) { 
+  // Validate paths to 403 and 404 error pages.
+  $item = array('link_path' => $form_state['values']['site_403']);
+  if (!empty($item['link_path']) && !menu_valid_path($item)) {
+    form_set_error('site_403', t("The path '@path' is either invalid or you do not have access to it.", array('@path' => $item['link_path'])));
+  }
+  $item = array('link_path' => $form_state['values']['site_404']);
+  if (!empty($item['link_path']) && !menu_valid_path($item)) {
+    form_set_error('site_404', t("The path '@path' is either invalid or you do not have access to it.", array('@path' => $item['link_path'])));
+  }
 }
 
 /**
@@ -1379,8 +1413,20 @@ function system_image_toolkit_settings() {
   }
 
   $form['image_toolkit_settings'] = image_toolkit_invoke('settings');
+  $form['#validate'][] = 'system_image_toolkit_settings_validate';
 
   return system_settings_form($form);
+}
+
+/**
+ * Validate the submitted image-toolkit form.
+ */
+function system_image_toolkit_settings_validate($form, &$form_state) { 
+  // Validate image quality range.
+  $value = $form_state['values']['image_jpeg_quality'];
+  if (!is_numeric($value) || $value < 0 || $value > 100) {
+    form_set_error('image_jpeg_quality', t('JPEG quality must be a number between 0 and 100.'));
+  }
 }
 
 /**

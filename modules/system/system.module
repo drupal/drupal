@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.563 2007/12/19 13:37:31 goba Exp $
+// $Id: system.module,v 1.564 2007/12/19 16:06:09 goba Exp $
 
 /**
  * @file
@@ -992,7 +992,6 @@ function system_settings_form($form) {
     drupal_set_message(t('The settings have not been saved because of the errors.'), 'error');
   }
   $form['#submit'][] = 'system_settings_form_submit';
-  $form['#validate'][] = 'system_settings_form_validate';
   $form['#theme'] = 'system_settings_form';
   return $form;
 }
