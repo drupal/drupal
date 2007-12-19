@@ -159,7 +159,7 @@ function update_do_one($module, $number, &$context) {
     drupal_set_installed_schema_version($module, $number);
   }
 
-  $context['message'] = t('Updating @module module', array('@module' => $module));
+  $context['message'] = 'Updating '. check_plain($module) .' module';
 }
 
 function update_selection_page() {

@@ -55,7 +55,7 @@ function comment_update_6002() {
     }
     variable_del($setting);
   }
-  return array();
+  return array(array('success' => TRUE, 'query' => 'Global comment settings copied to all node types.'));
 }
 
 /**
