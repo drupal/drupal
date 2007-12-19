@@ -155,7 +155,7 @@ function install_verify_settings() {
 
     $url = parse_url(is_array($db_url) ? $db_url['default'] : $db_url);
     $db_user = urldecode($url['user']);
-    $db_pass = urldecode($url['pass']);
+    $db_pass = isset($url['pass']) ? urldecode($url['pass']) : NULL;
     $db_host = urldecode($url['host']);
     $db_port = isset($url['port']) ? urldecode($url['port']) : '';
     $db_path = ltrim(urldecode($url['path']), '/');

@@ -29,7 +29,7 @@ function drupal_test_mysqli($url, &$success) {
 
   // Decode url-encoded information in the db connection string.
   $url['user'] = urldecode($url['user']);
-  $url['pass'] = urldecode($url['pass']);
+  $url['pass'] = isset($url['pass']) ? urldecode($url['pass']) : NULL;
   $url['host'] = urldecode($url['host']);
   $url['path'] = urldecode($url['path']);
 
