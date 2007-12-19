@@ -717,8 +717,7 @@ function taxonomy_form_term(&$form_state, $vocabulary, $edit = array()) {
   if ($edit['tid']) {
     $form['delete'] = array(
       '#type' => 'submit',
-      '#value' => t('Delete'),
-      '#submit' => array('taxonomy_term_confirm_delete'));
+      '#value' => t('Delete'));
     $form['tid'] = array(
       '#type' => 'value',
       '#value' => $edit['tid']);
