@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.39 2007/12/19 16:06:09 goba Exp $
+// $Id: system.admin.inc,v 1.40 2007/12/19 16:22:46 goba Exp $
 
 /**
  * @file
@@ -1116,20 +1116,20 @@ function system_site_information_settings() {
     '#type' => 'textfield',
     '#title' => t('E-mail address'),
     '#default_value' => variable_get('site_mail', ini_get('sendmail_from')),
-    '#description' => t('A valid e-mail address to be used as the "From" address by the auto-mailer during registration, new password requests, notifications, etc. To lessen the likelihood of e-mail being marked as spam, this e-mail address should use the same domain as the website.'),
+    '#description' => t("The <em>From</em> address in automated e-mails sent during registration and new password requests, and other notifications. (Use an address ending in your site's domain to help prevent this e-mail being flagged as spam.)"),
     '#required' => TRUE,
   );
   $form['site_slogan'] = array(
     '#type' => 'textfield',
     '#title' => t('Slogan'),
     '#default_value' => variable_get('site_slogan', ''),
-    '#description' => t('The slogan of this website. Some themes display a slogan when available.')
+    '#description' => t("Your site's motto, tag line, or catchphrase (often displayed alongside the title of the site).")
   );
   $form['site_mission'] = array(
     '#type' => 'textarea',
     '#title' => t('Mission'),
     '#default_value' => variable_get('site_mission', ''),
-    '#description' => t('Your site\'s mission statement or focus.')
+    '#description' => t("Your site's mission or focus statement (often prominently displayed on the front page).")
   );
   $form['site_footer'] = array(
     '#type' => 'textarea',

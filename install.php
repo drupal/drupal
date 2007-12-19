@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.106 2007/12/19 11:25:47 goba Exp $
+// $Id: install.php,v 1.107 2007/12/19 16:22:45 goba Exp $
 
 require_once './includes/install.inc';
 
@@ -984,7 +984,7 @@ function install_configure_form(&$form_state, $url) {
     '#type' => 'textfield',
     '#title' => st('Site e-mail address'),
     '#default_value' => ini_get('sendmail_from'),
-    '#description' => st('A valid e-mail address to be used as the "From" address by the auto-mailer during registration, new password requests, notifications, etc. To lessen the likelihood of e-mail being marked as spam, this e-mail address should use the same domain as the website.'),
+    '#description' => st("The <em>From</em> address in automated e-mails sent during registration and new password requests, and other notifications. (Use an address ending in your site's domain to help prevent this e-mail being flagged as spam.)"),
     '#required' => TRUE,
     '#weight' => -15,
   );
