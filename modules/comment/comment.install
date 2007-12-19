@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.install,v 1.16 2007/12/18 12:59:21 dries Exp $
+// $Id: comment.install,v 1.17 2007/12/19 10:34:51 goba Exp $
 
 /**
  * Implementation of hook_enable().
@@ -55,7 +55,7 @@ function comment_update_6002() {
     }
     variable_del($setting);
   }
-  return array();
+  return array(array('success' => TRUE, 'query' => 'Global comment settings copied to all node types.'));
 }
 
 /**

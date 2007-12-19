@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.211 2007/12/18 12:59:22 dries Exp $
+// $Id: system.install,v 1.212 2007/12/19 10:34:51 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -1857,7 +1857,7 @@ function system_update_6013() {
   module_rebuild_cache();
   system_theme_data();
 
-  return array();
+  return array(array('success' => TRUE, 'query' => 'Cache rebuilt.'));
 }
 
 /**
@@ -1867,7 +1867,7 @@ function system_update_6013() {
 function system_update_6014() {
   variable_set('install_task', 'done');
 
-  return array();
+  return array(array('success' => TRUE, 'query' => "variable_set('install_task')"));
 }
 
 /**
@@ -1985,15 +1985,16 @@ function system_update_6018() {
   if (module_exists('htmlcorrector')) {
     module_disable(array('htmlcorrector'));
     $ret[] = update_sql("UPDATE {filter_formats} SET module = 'filter', delta = 3 WHERE module = 'htmlcorrector'");
-    $ret[] = t('HTML Corrector module was disabled; this functionality has now been added to core.');
+    $ret[] = array('success' => TRUE, 'query' => 'HTML Corrector module was disabled; this functionality has now been added to core.');
     return $ret;
   }
 
   // Otherwise, find any format with 'HTML' in its name and add the filter at the end.
-  $result = db_query("SELECT format FROM {filter_formats} WHERE name LIKE '%HTML%'");
+  $result = db_query("SELECT format, name FROM {filter_formats} WHERE name LIKE '%HTML%'");
   while ($format = db_fetch_object($result)) {
     $weight = db_result(db_query("SELECT MAX(weight) FROM {filters} WHERE format = %d", $format->format));
     db_query("INSERT INTO {filters} (format, module, delta, weight) VALUES (%d, '%s', %d, %d)", $format->format, 'filter', 3, max(10, $weight + 1));
+    $ret[] = array('success' => TRUE, 'query' => "HTML corrector filter added to the '". $format->name ."' input format.");
   }
 
   return $ret;
@@ -2355,7 +2356,7 @@ function system_update_6021() {
       $ret[] = update_sql("UPDATE {blocks} SET delta = '". $menu_name ."' WHERE module  = 'menu' AND delta = '". $mid ."'");
       $ret[] = update_sql("UPDATE {blocks_roles} SET delta = '". $menu_name ."' WHERE module  = 'menu' AND delta = '". $mid ."'");
     }
-    $ret[] = array('success' => TRUE, 'query' => t('Relocated @num existing items to the new menu system.', array('@num' => $_SESSION['system_update_6021'])));
+    $ret[] = array('success' => TRUE, 'query' => 'Relocated '. $_SESSION['system_update_6021'] .'existing items to the new menu system.');
     $ret[] = update_sql("DROP TABLE {menu}");
     unset($_SESSION['system_update_6021'], $_SESSION['system_update_6021_max'], $_SESSION['menu_menu_map'], $_SESSION['menu_item_map'], $_SESSION['menu_bogus_menus']);
     // Create the menu overview links - also calls menu_rebuild(). If menu is
@@ -2512,7 +2513,7 @@ function system_update_6029() {
   drupal_set_installed_schema_version('dblog', 0);
   module_enable(array('dblog'));
   menu_rebuild();
-  return array();
+  return array(array('success' => TRUE, 'query' => "'dblog' module enabled."));
 }
 
 /**
@@ -2545,10 +2546,10 @@ function system_update_6030() {
 }
 
 /**
-  * Ensure that installer cannot be run again after updating from Drupal 5.x to 6.x
-  */
+ * Ensure that installer cannot be run again after updating from Drupal 5.x to 6.x
+ * Actually, this is already done by system_update_6014(), so this is now a no-op.
+ */
 function system_update_6031() {
-  variable_set('install_task', 'done');
   return array();
 }
 

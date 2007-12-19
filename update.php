@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.242 2007/12/18 15:48:14 goba Exp $
+// $Id: update.php,v 1.243 2007/12/19 10:34:50 goba Exp $
 
 /**
  * @file
@@ -159,7 +159,7 @@ function update_do_one($module, $number, &$context) {
     drupal_set_installed_schema_version($module, $number);
   }
 
-  $context['message'] = t('Updating @module module', array('@module' => $module));
+  $context['message'] = 'Updating '. check_plain($module) .' module';
 }
 
 function update_selection_page() {

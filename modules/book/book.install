@@ -1,5 +1,5 @@
 <?php
-// $Id: book.install,v 1.17 2007/12/18 12:59:21 dries Exp $
+// $Id: book.install,v 1.18 2007/12/19 10:34:50 goba Exp $
 
 /**
  * Implementation of hook_install().
@@ -162,7 +162,7 @@ function book_update_6000() {
           // The first orphan becomes the parent for all other orphans.
           $book['parent'] = 0;
           $_SESSION['book_update_6000_orphans']['book'] = $book;
-          $ret[] = array('success' => TRUE, 'query' => t('Relocated orphan book pages.'));
+          $ret[] = array('success' => TRUE, 'query' => 'Relocated orphan book pages.');
         }
         else {
           // Re-assign the parent value of the book, and add it to the stack.
@@ -237,7 +237,7 @@ function book_update_6000() {
 
   if (empty($_SESSION['book_update_6000'])) {
     $ret['#finished'] = TRUE;
-    $ret[] = array('success' => TRUE, 'query' => t('Relocated existing book pages.'));
+    $ret[] = array('success' => TRUE, 'query' => 'Relocated existing book pages.');
     $ret[] = update_sql("DROP TABLE {book_temp}");
     unset($_SESSION['book_update_6000']);
     unset($_SESSION['book_update_6000_orphans']);
