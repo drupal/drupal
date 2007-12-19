@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.204 2007/12/18 16:27:44 goba Exp $
+// $Id: locale.module,v 1.205 2007/12/19 21:40:05 goba Exp $
 
 /**
  * @file
@@ -33,7 +33,7 @@ function locale_help($path, $arg) {
   switch ($path) {
     case 'admin/help#locale':
       $output = '<p>'. t('The locale module allows your Drupal site to be presented in languages other than the default English, a defining feature of multi-lingual websites. The locale module works by examining text as it is about to be displayed: when a translation of the text is available in the language to be displayed, the translation is displayed rather than the original text. When a translation is unavailable, the original text is displayed, and then stored for later review by a translator.') .'</p>';
-      $output .= '<p>'. t('Beyond translation of the Drupal interface, the locale module provides a feature set tailored to the needs of a multi-lingual site. Language negotiation allows your site to automatically change language based on the domain or path used for each request. Users may (optionally) select their preferred language on their <em>My account</em> page, and your site can be configured to honor a web browser\'s preferred language settings. Your site content can be created in (and translated to) any enabled language, and each post may have a language-appropriate alias for each of its translations. The locale module works in concert with the <a href="@contenthelp">content translation module</a> to manage translated content.', array('@contenthelp' => url('admin/help/translation'))) .'</p>';
+      $output .= '<p>'. t('Beyond translation of the Drupal interface, the locale module provides a feature set tailored to the needs of a multi-lingual site. Language negotiation allows your site to automatically change language based on the domain or path used for each request. Users may (optionally) select their preferred language on their <em>My account</em> page, and your site can be configured to honor a web browser\'s preferred language settings. Your site content can be created in (and translated to) any enabled language, and each post may have a language-appropriate alias for each of its translations. The locale module works in concert with the <a href="@content-help">content translation module</a> to manage translated content.', array('@content-help' => url('admin/help/translation'))) .'</p>';
       $output .= '<p>'. t('Translations may be provided by:') .'</p>';
       $output .= '<ul><li>'. t("translating the original text via the locale module's integrated web interface, or") .'</li>';
       $output .= '<li>'. t('importing files from a set of existing translations, known as a translation package. A translation package enables the display of a specific version of Drupal in a specific language, and contain files in the Gettext Portable Object (<em>.po</em>) format. Although not all languages are available for every version of Drupal, translation packages for many languages are available for download from the <a href="@translations">Drupal translation page</a>.', array('@translations' => 'http://drupal.org/project/translations')) .'</li></ul>';

@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.609 2007/12/19 19:17:20 goba Exp $
+// $Id: comment.module,v 1.610 2007/12/19 21:40:05 goba Exp $
 
 /**
  * @file
@@ -131,7 +131,7 @@ function comment_help($path, $arg) {
       $output .= '<p>'. t('For more information, see the online handbook entry for <a href="@comment">Comment module</a>.', array('@comment' => 'http://drupal.org/handbook/modules/comment/')) .'</p>';
       return $output;
     case 'admin/content/comment':
-      return '<p>'. t("Below is a list of the latest comments posted to your site. Click on a subject to see the comment, the author's name to edit the author's user information , 'edit' to modify the text, and 'delete' to remove their submission.") .'</p>';
+      return '<p>'. t("Below is a list of the latest comments posted to your site. Click on a subject to see the comment, the author's name to edit the author's user information, 'edit' to modify the text, and 'delete' to remove their submission.") .'</p>';
     case 'admin/content/comment/approval':
       return '<p>'. t("Below is a list of the comments posted to your site that need approval. To approve a comment, click on 'edit' and then change its 'moderation status' to Approved. Click on a subject to see the comment, the author's name to edit the author's user information, 'edit' to modify the text, and 'delete' to remove their submission.") .'</p>';
   }

@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.113 2007/12/03 09:02:37 goba Exp $
+// $Id: file.inc,v 1.114 2007/12/19 21:40:04 goba Exp $
 
 /**
  * @file
@@ -555,7 +555,7 @@ function file_save_upload($source, $validators = array(), $dest = FALSE, $replac
 
     // Check for validation errors.
     if (!empty($errors)) {
-      $message = t('The selected file %name could not be uploaded. ', array('%name' => $file->filename));
+      $message = t('The selected file %name could not be uploaded.', array('%name' => $file->filename));
       if (count($errors) > 1) {
         $message .= '<ul><li>'. implode('</li><li>', $errors) .'</li></ul>';
       }
