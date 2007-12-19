@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.17 2007/12/19 10:31:27 goba Exp $
+// $Id: taxonomy.admin.inc,v 1.18 2007/12/19 15:40:43 goba Exp $
 
 /**
  * @file
@@ -415,7 +415,7 @@ function taxonomy_overview_terms(&$form_state, $vocabulary) {
     );
     $form['reset_alphabetical'] = array(
       '#type' => 'submit',
-      '#value' => t('Reset to Alphabetical')
+      '#value' => t('Reset to alphabetical')
     );
     $form['destination'] = array(
       '#type' => 'hidden',
@@ -442,12 +442,12 @@ function taxonomy_overview_terms(&$form_state, $vocabulary) {
  * @see taxonomy_overview_terms().
  */
 function taxonomy_overview_terms_submit($form, &$form_state) {
-  if ($form_state['clicked_button']['#value'] == t('Reset to Alphabetical')) {
-    // Execute the term deletion.
+  if ($form_state['clicked_button']['#value'] == t('Reset to alphabetical')) {
+    // Execute the reset action.
     if ($form_state['values']['reset_alphabetical'] === TRUE) {
       return taxonomy_vocabulary_confirm_reset_alphabetical_submit($form, $form_state);
     }
-    // Rebuild the form to confirm term deletion.
+    // Rebuild the form to confirm the reset action.
     $form_state['rebuild'] = TRUE;
     $form_state['confirm_reset_alphabetical'] = TRUE;
     return;
@@ -908,8 +908,8 @@ function taxonomy_vocabulary_confirm_reset_alphabetical(&$form_state, $vid) {
                   t('Are you sure you want to reset the vocabulary %title to alphabetical order?',
                   array('%title' => $vocabulary->name)),
                   'admin/content/taxonomy/'. $vid,
-                  t('Reseting a vocabulary will discard all custom ordering and sort items alphabetically.'),
-                  t('Reset to Alphabetical'),
+                  t('Resetting a vocabulary will discard all custom ordering and sort items alphabetically.'),
+                  t('Reset to alphabetical'),
                   t('Cancel'));
 }
 
