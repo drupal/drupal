@@ -2101,6 +2101,11 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
  * );
  * @endcode
  *
+ * When tree relationships are present, the two additional classes
+ * 'tabledrag-leaf' and 'tabledrag-root' can be used to refine the behavior:
+ * - Rows with the 'tabledrag-leaf' class cannot have child rows.
+ * - Rows with the 'tabledrag-root' class cannot be nested under a parent row.
+ *
  * Calling drupal_add_tabledrag() would then be written as such:
  * @code
  * drupal_add_tabledrag('my-module-table', 'order', 'sibling', 'my-elements-weight');
