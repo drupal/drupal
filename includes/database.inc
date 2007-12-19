@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.87 2007/12/18 10:31:42 dries Exp $
+// $Id: database.inc,v 1.88 2007/12/19 13:03:16 goba Exp $
 
 /**
  * @file
@@ -146,11 +146,7 @@ function db_set_active($name = 'default') {
       include_once $handler;
     }
     else {
-      drupal_maintenance_theme();
-      drupal_set_title('Unsupported database type');
-      print theme('maintenance_page', '<p>The database type '. theme('placeholder', $db_type) .' is unsupported. Please use either <var>mysql</var> for MySQL 3.x &amp; 4.0.x databases, <var>mysqli</var> for MySQL 4.1.x+ databases, or <var>pgsql</var> for PostgreSQL databases. The database information is in your <code>settings.php</code> file.</p>
-<p>For more help, see the <a href="http://drupal.org/node/258">Installation and upgrading handbook</a>. If you are unsure what these terms mean you should probably contact your hosting provider.</p>');
-      exit;
+      _db_error_page("The database type '". $db_type ."' is unsupported. Please use either 'mysql' or 'mysqli' for MySQL, or 'pgsql' for PostgreSQL databases.");
     }
 
     $db_conns[$name] = db_connect($connect_url);
@@ -161,6 +157,33 @@ function db_set_active($name = 'default') {
   $active_db = $db_conns[$name];
 
   return array_search($previous_db, $db_conns);
+}
+
+/**
+ * Helper function to show fatal database errors.
+ *
+ * Prints a themed maintenance page with the 'Site off-line' text,
+ * adding the provided error message in the case of 'display_errors'
+ * set to on. Ends the page request; no return.
+ *
+ * @param $error
+ *   The error message to be appended if 'display_errors' is on.
+ */
+function _db_error_page($error = '') {
+  global $db_type;
+  drupal_maintenance_theme();
+  drupal_set_header('HTTP/1.1 503 Service Unavailable');
+  drupal_set_title('Site off-line');
+
+  $message = '<p>The site is currently not available due to technical problems. Please try again later. Thank you for your understanding.</p>';
+  $message .= '<hr /><p><small>If you are the maintainer of this site, please check your database settings in the <code>settings.php</code> file and ensure that your hosting provider\'s database server is running. For more help, see the <a href="http://drupal.org/node/258">handbook</a>, or contact your hosting provider.</small></p>';
+
+  if ($error && ini_get('display_errors')) {
+    $message .= '<p><small>The '. theme('placeholder', $db_type) .' error was: '. theme('placeholder', $error) .'.</small></p>';
+  }
+
+  print theme('maintenance_page', $message);
+  exit;
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysql.inc,v 1.84 2007/12/08 14:06:20 goba Exp $
+// $Id: database.mysql.inc,v 1.85 2007/12/19 13:03:16 goba Exp $
 
 /**
  * @file
@@ -53,11 +53,7 @@ function db_connect($url) {
 
   // Check if MySQL support is present in PHP
   if (!function_exists('mysql_connect')) {
-    drupal_maintenance_theme();
-    drupal_set_title('PHP MySQL support not enabled');
-    print theme('maintenance_page', '<p>We were unable to use the MySQL database because the MySQL extension for PHP is not installed. Check your <code>PHP.ini</code> to see how you can enable it.</p>
-<p>For more help, see the <a href="http://drupal.org/node/258">Installation and upgrading handbook</a>. If you are unsure what these terms mean you should probably contact your hosting provider.</p>');
-    exit;
+    _db_error_page('Unable to use the MySQL database because the MySQL extension for PHP is not installed. Check your <code>php.ini</code> to see how you can enable it.');
   }
 
   // Decode url-encoded information in the db connection string
@@ -84,37 +80,9 @@ function db_connect($url) {
   // - 2 means CLIENT_FOUND_ROWS: return the number of found
   //   (matched) rows, not the number of affected rows.
   $connection = @mysql_connect($url['host'], $url['user'], $url['pass'], TRUE, 2);
-  if (!$connection) {
+  if (!$connection || !mysql_select_db(substr($url['path'], 1))) {
     // Show error screen otherwise
-    drupal_maintenance_theme();
-    drupal_set_header('HTTP/1.1 503 Service Unavailable');
-    drupal_set_title('Unable to connect to database server');
-    print theme('maintenance_page', '<p>If you still have to install Drupal, proceed to the <a href="'. base_path() .'install.php">installation page</a>.</p>
-<p>If you have already finished installing Drupal, this either means that the username and password information in your <code>settings.php</code> file is incorrect or that we can\'t connect to the MySQL database server. This could mean your hosting provider\'s database server is down.</p>
-<p>The MySQL error was: '. theme('placeholder', mysql_error()) .'.</p>
-<p>Currently, the username is '. theme('placeholder', $url['user']) .' and the database server is '. theme('placeholder', $url['host']) .'.</p>
-<ul>
-  <li>Are you sure you have the correct username and password?</li>
-  <li>Are you sure that you have typed the correct hostname?</li>
-  <li>Are you sure that the database server is running?</li>
-</ul>
-<p>For more help, see the <a href="http://drupal.org/node/258">Installation and upgrading handbook</a>. If you are unsure what these terms mean you should probably contact your hosting provider.</p>');
-    exit;
-  }
-
-  if (!mysql_select_db(substr($url['path'], 1))) {
-    drupal_maintenance_theme();
-    drupal_set_title('Unable to select database');
-    print theme('maintenance_page', '<p>We were able to connect to the MySQL database server (which means your username and password are okay) but not able to select the database.</p>
-<p>The MySQL error was: '. theme('placeholder', mysql_error($connection)) .'.</p>
-<p>Currently, the database is '. theme('placeholder', substr($url['path'], 1)) .'. The username is '. theme('placeholder', $url['user']) .' and the database server is '. theme('placeholder', $url['host']) .'.</p>
-<ul>
-  <li>Are you sure you have the correct database name?</li>
-  <li>Are you sure the database exists?</li>
-  <li>Are you sure the username has permission to access the database?</li>
-</ul>
-<p>For more help, see the <a href="http://drupal.org/node/258">Installation and upgrading handbook</a>. If you are unsure what these terms mean you should probably contact your hosting provider.</p>');
-    exit;
+    _db_error_page(mysql_error());
   }
 
   /* On MySQL 4.1 and later, force UTF-8 */

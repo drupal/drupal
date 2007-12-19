@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysqli.inc,v 1.50 2007/12/08 14:06:20 goba Exp $
+// $Id: database.mysqli.inc,v 1.51 2007/12/19 13:03:16 goba Exp $
 
 /**
  * @file
@@ -58,11 +58,7 @@ function db_version() {
 function db_connect($url) {
   // Check if MySQLi support is present in PHP
   if (!function_exists('mysqli_init') && !extension_loaded('mysqli')) {
-    drupal_maintenance_theme();
-    drupal_set_title('PHP MySQLi support not enabled');
-    print theme('maintenance_page', '<p>We were unable to use the MySQLi database because the MySQLi extension for PHP is not installed. Check your <code>PHP.ini</code> to see how you can enable it.</p>
-<p>For more help, see the <a href="http://drupal.org/node/258">Installation and upgrading handbook</a>. If you are unsure what these terms mean you should probably contact your hosting provider.</p>');
-    exit;
+    _db_error_page('Unable to use the MySQLi database because the MySQLi extension for PHP is not installed. Check your <code>php.ini</code> to see how you can enable it.');
   }
 
   $url = parse_url($url);
@@ -85,37 +81,8 @@ function db_connect($url) {
   $connection = mysqli_init();
   @mysqli_real_connect($connection, $url['host'], $url['user'], $url['pass'], substr($url['path'], 1), $url['port'], NULL, MYSQLI_CLIENT_FOUND_ROWS);
 
-  // Find all database connection errors and error 1045 for access denied for user account
-  if (mysqli_connect_errno() >= 2000 || mysqli_connect_errno() == 1045) {
-    drupal_maintenance_theme();
-    drupal_set_header('HTTP/1.1 503 Service Unavailable');
-    drupal_set_title('Unable to connect to database server');
-    print theme('maintenance_page', '<p>If you still have to install Drupal, proceed to the <a href="'. base_path() .'install.php">installation page</a>.</p>
-<p>If you have already finished installing Drupal, this either means that the username and password information in your <code>settings.php</code> file is incorrect or that we can\'t connect to the MySQL database server. This could mean your hosting provider\'s database server is down.</p>
-<p>The MySQL error was: '. theme('placeholder', mysqli_connect_error()) .'.</p>
-<p>Currently, the username is '. theme('placeholder', $url['user']) .' and the database server is '. theme('placeholder', $url['host']) .'.</p>
-<ul>
-  <li>Are you sure you have the correct username and password?</li>
-  <li>Are you sure that you have typed the correct hostname?</li>
-  <li>Are you sure that the database server is running?</li>
-  <li>Are you sure that the mysqli libraries are compiled in your PHP installation? Try using the mysql library instead by editing your <code>settings.php</code> configuration file in Drupal.</li>
-</ul>
-<p>For more help, see the <a href="http://drupal.org/node/258">Installation and upgrading handbook</a>. If you are unsure what these terms mean you should probably contact your hosting provider.</p>');
-    exit;
-  }
-  else if (mysqli_connect_errno() > 0) {
-    drupal_maintenance_theme();
-    drupal_set_title('Unable to select database');
-    print theme('maintenance_page', '<p>We were able to connect to the MySQL database server (which means your username and password are okay) but not able to select the database.</p>
-<p>The MySQL error was: '. theme('placeholder', mysqli_connect_error()) .'.</p>
-<p>Currently, the database is '. theme('placeholder', substr($url['path'], 1)) .'. The username is '. theme('placeholder', $url['user']) .' and the database server is '. theme('placeholder', $url['host']) .'.</p>
-<ul>
-  <li>Are you sure you have the correct database name?</li>
-  <li>Are you sure the database exists?</li>
-  <li>Are you sure the username has permission to access the database?</li>
-</ul>
-<p>For more help, see the <a href="http://drupal.org/node/258">Installation and upgrading handbook</a>. If you are unsure what these terms mean you should probably contact your hosting provider.</p>');
-    exit;
+  if (mysqli_connect_errno() > 0) {
+    _db_error_page(mysqli_connect_error());
   }
 
   /* Force UTF-8 */
