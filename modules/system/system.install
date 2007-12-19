@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.213 2007/12/19 17:45:43 goba Exp $
+// $Id: system.install,v 1.214 2007/12/19 22:18:15 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -974,7 +974,7 @@ function system_schema() {
         'not null' => TRUE,
         'default' => 0),
       'throttle' => array(
-        'description' => t('Boolean indicating whether this item is disabled when the throttle.module disables throttlable items.'),
+        'description' => t('Boolean indicating whether this item is disabled when the throttle.module disables throttleable items.'),
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
