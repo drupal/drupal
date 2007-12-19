@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.15 2007/12/08 14:06:22 goba Exp $
+// $Id: taxonomy.admin.inc,v 1.16 2007/12/19 10:13:16 goba Exp $
 
 /**
  * @file
@@ -717,8 +717,7 @@ function taxonomy_form_term(&$form_state, $vocabulary, $edit = array()) {
   if ($edit['tid']) {
     $form['delete'] = array(
       '#type' => 'submit',
-      '#value' => t('Delete'),
-      '#submit' => array('taxonomy_term_confirm_delete'));
+      '#value' => t('Delete'));
     $form['tid'] = array(
       '#type' => 'value',
       '#value' => $edit['tid']);
