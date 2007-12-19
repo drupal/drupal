@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.738 2007/12/18 16:24:01 goba Exp $
+// $Id: common.inc,v 1.739 2007/12/19 10:58:35 goba Exp $
 
 /**
  * @file
@@ -2100,6 +2100,11 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
  *   'class' => 'draggable',
  * );
  * @endcode
+ *
+ * When tree relationships are present, the two additional classes
+ * 'tabledrag-leaf' and 'tabledrag-root' can be used to refine the behavior:
+ * - Rows with the 'tabledrag-leaf' class cannot have child rows.
+ * - Rows with the 'tabledrag-root' class cannot be nested under a parent row.
  *
  * Calling drupal_add_tabledrag() would then be written as such:
  * @code
