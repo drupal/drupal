@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.18 2007/12/19 15:40:43 goba Exp $
+// $Id: taxonomy.admin.inc,v 1.19 2007/12/19 16:17:37 goba Exp $
 
 /**
  * @file
@@ -34,7 +34,7 @@ function taxonomy_overview_vocabularies() {
   // Only make this form include a submit button and weight if more than one
   // vocabulary exists.
   if (count($vocabularies) > 1) {
-    $form['submit'] = array('#type' => 'submit', '#value' => t('Submit'));
+    $form['submit'] = array('#type' => 'submit', '#value' => t('Save'));
   }
   elseif (isset($vocabulary)) {
     unset($form[$vocabulary->vid]['weight']);
