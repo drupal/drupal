@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.admin.inc,v 1.3 2007/12/16 21:01:44 goba Exp $
+// $Id: aggregator.admin.inc,v 1.4 2007/12/19 17:45:41 goba Exp $
 
 /**
  * @file
@@ -77,7 +77,7 @@ function aggregator_form_feed(&$form_state, $edit = array('refresh' => 900, 'tit
     '#title' => t('Update interval'),
     '#default_value' => $edit['refresh'],
     '#options' => $period,
-    '#description' => t('The length of time between feed updates. (Requires a correctly configured <a href="@cron">Cron maintenance task</a>.)', array('@cron' => url('admin/reports/status'))),
+    '#description' => t('The length of time between feed updates. (Requires a correctly configured <a href="@cron">cron maintenance task</a>.)', array('@cron' => url('admin/reports/status'))),
   );
 
   // Handling of categories:
@@ -223,7 +223,7 @@ function aggregator_admin_settings() {
   $form['aggregator_clear'] = array(
     '#type' => 'select', '#title' => t('Discard items older than'),
     '#default_value' => variable_get('aggregator_clear', 9676800), '#options' => $period,
-    '#description' => t('The length of time to retain feed items before discarding. (Requires a correctly configured <a href="@cron">Cron maintenance task</a>.)', array('@cron' => url('admin/reports/status')))
+    '#description' => t('The length of time to retain feed items before discarding. (Requires a correctly configured <a href="@cron">cron maintenance task</a>.)', array('@cron' => url('admin/reports/status')))
   );
 
   $form['aggregator_category_selector'] = array(

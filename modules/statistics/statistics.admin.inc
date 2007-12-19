@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.admin.inc,v 1.2 2007/10/20 21:57:50 goba Exp $
+// $Id: statistics.admin.inc,v 1.3 2007/12/19 17:45:42 goba Exp $
 
 /**
  * @file
@@ -197,7 +197,7 @@ function statistics_access_logging_settings() {
     '#title' => t('Discard access logs older than'),
     '#default_value'   => variable_get('statistics_flush_accesslog_timer', 259200),
     '#options' => $period,
-    '#description' => t('Older access log entries (including referrer statistics) will be automatically discarded. Requires crontab.'));
+    '#description' => t('Older access log entries (including referrer statistics) will be automatically discarded. (Requires a correctly configured <a href="@cron">cron maintenance task</a>.)', array('@cron' => url('admin/reports/status'))));
 
   // count content views settings
   $form['content'] = array(

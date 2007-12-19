@@ -1,4 +1,4 @@
-// $Id: INSTALL.txt,v 1.50 2007/11/24 20:35:36 goba Exp $
+// $Id: INSTALL.txt,v 1.51 2007/12/19 17:45:41 goba Exp $
 
 CONTENTS OF THIS FILE
 ---------------------
@@ -177,12 +177,16 @@ INSTALLATION
    on an existing site, remember to copy all files from the original location
    to the new location.
 
-8. CRON TASKS
+8. CRON MAINTENANCE TASKS
 
-   Many Drupal modules (such as the search functionality) have periodic tasks
-   that must be triggered by a cron job. To activate these tasks, call the cron
-   page by visiting http://www.example.com/cron.php --this will pass control to
-   the modules and the modules will decide if and what they must do.
+   Many Drupal modules have periodic tasks that must be triggered by a cron 
+   maintenance task, including search module (to build and update the index 
+   used for keyword searching), aggregator module (to retrieve feeds from other
+   sites), ping module (to notify other sites about new or updated content), and
+   system module (to perform routine maintenance and pruning on system tables).
+   To activate these tasks, call the cron page by visiting 
+   http://www.example.com/cron.php, which, in turn, executes tasks on behalf
+   of installed modules.
 
    Most systems support the crontab utility for scheduling tasks like this. The
    following example crontab line will activate the cron tasks automatically on
@@ -190,9 +194,9 @@ INSTALLATION
 
    0   *   *   *   *   wget -O - -q -t 1 http://www.example.com/cron.php
 
-   More information about the cron scripts are available in the admin help pages
-   and in the Drupal handbook at drupal.org. Example scripts can be found in the
-   scripts/ directory.
+   More information about cron maintenance tasks are available in the help pages
+   and in Drupal's online handbook at http://drupal.org/cron. Example scripts can
+   be found in the scripts/ directory.
 
 DRUPAL ADMINISTRATION
 ---------------------

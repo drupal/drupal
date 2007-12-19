@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.admin.inc,v 1.4 2007/10/20 21:57:49 goba Exp $
+// $Id: dblog.admin.inc,v 1.5 2007/12/19 17:45:42 goba Exp $
 
 /**
  * @file
@@ -18,7 +18,7 @@ function dblog_admin_settings() {
     '#title' => t('Discard log entries above the following row limit'),
     '#default_value' => variable_get('dblog_row_limit', 1000),
     '#options' => drupal_map_assoc(array(100, 1000, 10000, 100000, 1000000)),
-    '#description' => t('The maximum number of rows to keep in the database log. Older entries will be automatically discarded. Requires crontab.')
+    '#description' => t('The maximum number of rows to keep in the database log. Older entries will be automatically discarded. (Requires a correctly configured <a href="@cron">cron maintenance task</a>.)', array('@cron' => url('admin/reports/status')))
   );
 
   return system_settings_form($form);
