@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.16 2007/12/19 10:13:16 goba Exp $
+// $Id: taxonomy.admin.inc,v 1.17 2007/12/19 10:31:27 goba Exp $
 
 /**
  * @file
@@ -411,7 +411,7 @@ function taxonomy_overview_terms(&$form_state, $vocabulary) {
   if (!$vocabulary->tags && $vocabulary->hierarchy < 2 && count($tree) > 1) {
     $form['submit'] = array(
       '#type' => 'submit',
-      '#value' => t('Submit')
+      '#value' => t('Save')
     );
     $form['reset_alphabetical'] = array(
       '#type' => 'submit',

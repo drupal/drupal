@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.admin.inc,v 1.3 2007/12/18 19:25:40 goba Exp $
+// $Id: forum.admin.inc,v 1.4 2007/12/19 10:31:27 goba Exp $
 
 /**
  * @file
@@ -38,20 +38,20 @@ function forum_form_forum(&$form_state, $edit = array()) {
     '#title' => t('Forum name'),
     '#default_value' => $edit['name'],
     '#maxlength' => 255,
-    '#description' => t('The forum name is used to identify related discussions.'),
+    '#description' => t('Short but meaningful name for this collection of threaded discussions.'),
     '#required' => TRUE,
   );
   $form['description'] = array('#type' => 'textarea',
     '#title' => t('Description'),
     '#default_value' => $edit['description'],
-    '#description' => t('The forum description can give users more information about the discussion topics it contains.'),
+    '#description' => t('Description and guidelines for discussions within this forum.'),
   );
   $form['parent']['#tree'] = TRUE;
   $form['parent'][0] = _forum_parent_select($edit['tid'], t('Parent'), 'forum');
   $form['weight'] = array('#type' => 'weight',
     '#title' => t('Weight'),
     '#default_value' => $edit['weight'],
-    '#description' => t('When listing forums, those with lighter (smaller) weights get listed before containers with heavier (larger) weights. Forums with equal weights are sorted alphabetically.'),
+    '#description' => t('Forums are displayed in ascending order by weight (forums with equal weights are displayed alphabetically).'),
   );
 
   $form['vid'] = array('#type' => 'hidden', '#value' => variable_get('forum_nav_vocabulary', ''));
@@ -117,7 +117,7 @@ function forum_form_container(&$form_state, $edit = array()) {
     '#type' => 'textfield',
     '#default_value' => $edit['name'],
     '#maxlength' => 255,
-    '#description' => t('The container name is used to identify related forums.'),
+    '#description' => t('Short but meaningful name for this collection of related forums.'),
     '#required' => TRUE
   );
 
@@ -125,7 +125,7 @@ function forum_form_container(&$form_state, $edit = array()) {
     '#type' => 'textarea',
     '#title' => t('Description'),
     '#default_value' => $edit['description'],
-    '#description' => t('The container description can give users more information about the forums it contains.')
+    '#description' => t('Description and guidelines for forums within this container.')
   );
   $form['parent']['#tree'] = TRUE;
   $form['parent'][0] = _forum_parent_select($edit['tid'], t('Parent'), 'container');
@@ -133,7 +133,7 @@ function forum_form_container(&$form_state, $edit = array()) {
     '#type' => 'weight',
     '#title' => t('Weight'),
     '#default_value' => $edit['weight'],
-    '#description' => t('When listing containers, those with with light (small) weights get listed before containers with heavier (larger) weights. Containers with equal weights are sorted alphabetically.')
+    '#description' => t('Containers are displayed in ascending order by weight (containers with equal weights are displayed alphabetically).')
   );
 
   $form['vid'] = array(
@@ -165,7 +165,7 @@ function forum_confirm_delete(&$form_state, $tid) {
   $form['tid'] = array('#type' => 'value', '#value' => $tid);
   $form['name'] = array('#type' => 'value', '#value' => $term->name);
 
-  return confirm_form($form, t('Are you sure you want to delete the forum %name?', array('%name' => $term->name)), 'admin/content/forum', t('Deleting a forum or container will delete all sub-forums and associated posts as well. This action cannot be undone.'), t('Delete'), t('Cancel'));
+  return confirm_form($form, t('Are you sure you want to delete the forum %name?', array('%name' => $term->name)), 'admin/content/forum', t('Deleting a forum or container will also delete its sub-forums and posts, if any. This action cannot be undone.'), t('Delete'), t('Cancel'));
 }
 
 /**
@@ -192,21 +192,21 @@ function forum_admin_settings() {
     '#title' => t('Hot topic threshold'),
     '#default_value' => variable_get('forum_hot_topic', 15),
     '#options' => $number,
-    '#description' => t('The number of posts a topic must have to be considered hot.'),
+    '#description' => t('The number of posts a topic must have to be considered "hot".'),
   );
   $number = drupal_map_assoc(array(10, 25, 50, 75, 100));
   $form['forum_per_page'] = array('#type' => 'select',
     '#title' => t('Topics per page'),
     '#default_value' => variable_get('forum_per_page', 25),
     '#options' => $number,
-    '#description' => t('The default number of topics displayed per page; links to browse older messages are automatically being displayed.'),
+    '#description' => t('Default number of forum topics displayed per page.'),
   );
   $forder = array(1 => t('Date - newest first'), 2 => t('Date - oldest first'), 3 => t('Posts - most active first'), 4 => t('Posts - least active first'));
   $form['forum_order'] = array('#type' => 'radios',
     '#title' => t('Default order'),
     '#default_value' => variable_get('forum_order', '1'),
     '#options' => $forder,
-    '#description' => t('The default display order for topics.'),
+    '#description' => t('Default display order for topics.'),
   );
   return system_settings_form($form);
 }
@@ -242,7 +242,7 @@ function forum_overview(&$form_state) {
   $form['#theme'] = 'taxonomy_overview_terms';
   $form['#submit'] = array('taxonomy_overview_terms_submit'); // Use the existing taxonomy overview submit handler.
   $form['#validate'] = array('taxonomy_overview_terms_validate');
-  $form['#empty_text'] = '<em>'. t('There are no existing containers or forums. You may add some on the <a href="@container">add container</a> or <a href="@forum">add forum</a> pages.', array('@container' => url('admin/content/forum/add/container'), '@forum' => url('admin/content/forum/add/forum'))) .'</em>';
+  $form['#empty_text'] = '<em>'. t('There are no existing containers or forums. Containers and forums may be added using the <a href="@container">add container</a> and <a href="@forum">add forum</a> pages.', array('@container' => url('admin/content/forum/add/container'), '@forum' => url('admin/content/forum/add/forum'))) .'</em>';
   return $form;
 }
 
@@ -283,10 +283,10 @@ function _forum_parent_select($tid, $title, $child_type) {
     }
   }
   if ($child_type == 'container') {
-    $description = t('Containers are usually placed at the top (root) level of your forum but you can also place a container inside a parent container or forum.');
+    $description = t('Containers are usually placed at the top (root) level, but may also be placed inside another container or forum.');
   }
   else if ($child_type == 'forum') {
-    $description = t('You may place your forum inside a parent container or forum, or at the top (root) level of your forum.');
+    $description = t('Forums may be placed at the top (root) level, or inside another container or forum.');
   }
 
   return array('#type' => 'select', '#title' => $title, '#default_value' => $parent, '#options' => $options, '#description' => $description, '#required' => TRUE);

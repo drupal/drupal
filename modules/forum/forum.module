@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.434 2007/12/18 10:31:42 dries Exp $
+// $Id: forum.module,v 1.435 2007/12/19 10:31:27 goba Exp $
 
 /**
  * @file
@@ -12,19 +12,23 @@
 function forum_help($path, $arg) {
   switch ($path) {
     case 'admin/help#forum':
-      $output = '<p>'. t('The forum module lets you create threaded discussion forums for a particular topic on your site. This is similar to a message board system such as phpBB. Forums are very useful because they allow community members to discuss topics with one another, and they are archived for future reference.') .'</p>';
-      $output .= '<p>'. t('Forums can be organized in containers. Containers hold forums and, in turn, forums hold threaded discussions, or threads. Both containers and forums can be nested inside other containers and forums. By carefully planning the structure of your containers and forums, you make it easier for users to find a topic of interest to them. Forum threads can be moved between forums, with an optional link (or shadow copy) created in the original forum pointing to the new location. Forum threads can have their own URL.') .'</p>';
-      $output .= '<p>'. t('The forum module <strong>requires that the taxonomy and comment modules</strong> be enabled.') .'</p>';
+      $output = '<p>'. t('The forum module lets you create threaded discussion forums with functionality similar to other message board systems. Forums are useful because they allow community members to discuss topics with one another while ensuring those conversations are archived for later reference. The <a href="@create-topic">forum topic</a> menu item (under <em>Create content</em> on the Navigation menu) creates the initial post of a new threaded discussion, or thread.', array('@create-topic' => url('node/add/forum'))) .'</p>';
+      $output .= '<p>'. t('A threaded discussion occurs as people leave comments on a forum topic (or on other comments within that topic). A forum topic is contained within a forum, which may hold many similar or related forum topics. Forums are (optionally) nested within a container, which may hold many similar or related forums. Both containers and forums may be nested within other containers and forums, and provide structure for your message board. By carefully planning this structure, you make it easier for users to find and comment on a specific forum topic.') .'</p>';
+      $output .= '<p>'. t('When administering a forum, note that:') .'</p>';
+      $output .= '<ul><li>'. t('a forum topic (and all of its comments) may be moved between forums by selecting a different forum while editing a forum topic.') .'</li>';
+      $output .= '<li>'. t('when moving a forum topic between forums, the <em>Leave shadow copy</em> option creates a link in the original forum pointing to the new location.') .'</li>';
+      $output .= '<li>'. t('selecting <em>Read only</em> under <em>Comment settings</em> while editing a forum topic will lock (prevent new comments) on the thread.') .'</li>';
+      $output .= '<li>'. t('selecting <em>Disabled</em> under <em>Comment settings</em> while editing a forum topic will hide all existing comments on the thread, and prevent new ones.') .'</li></ul>';      
       $output .= '<p>'. t('For more information, see the online handbook entry for <a href="@forum">Forum module</a>.', array('@forum' => 'http://drupal.org/handbook/modules/forum/')) .'</p>';
       return $output;
     case 'admin/content/forum':
-      return '<p>'. t('This is a list of existing containers and forums that you can edit. Containers hold forums and, in turn, forums hold threaded discussions. Both containers and forums can be placed inside other containers and forums. By carefully planning the structure of your containers and forums, you make it easier for users to find a topic of interest to them.') .'</p>';
+      return '<p>'. t('This page displays a list of existing forums and containers. Containers (optionally) hold forums, and forums hold forum topics (a forum topic is the initial post to a threaded discussion). To provide structure, both containers and forums may be placed inside other containers and forums. To rearrange forums and containers, grab a drag-and-drop handle under the <em>Name</em> column and drag the forum or container to a new location in the list. (Grab a handle by clicking and holding the mouse while hovering over a handle icon.) Remember that your changes will not be saved until you click the <em>Save</em> button at the bottom of the page.') .'</p>';
     case 'admin/content/forum/add/container':
-      return '<p>'. t('Containers help you organize your forums. The job of a container is to hold, or contain, other forums that are related. For example, a container named "Food" might hold two forums named "Fruit" and "Vegetables".') .'</p>';
+      return '<p>'. t('By grouping related or similar forums, containers help organize forums. For example, a container named "Food" may hold two forums named "Fruit" and "Vegetables", respectively.') .'</p>';
     case 'admin/content/forum/add/forum':
-      return '<p>'. t('A forum holds discussion topics that are related. For example, a forum named "Fruit" might contain topics titled "Apples" and "Bananas".') .'</p>';
+      return '<p>'. t('A forum holds related or similar forum topics (a forum topic is the initial post to a threaded discussion). For example, a forum named "Fruit" may contain forum topics titled "Apples" and "Bananas", respectively.') .'</p>';
     case 'admin/content/forum/settings':
-      return '<p>'. t('These settings provide the ability to fine tune the display of your forum topics. Choose the content types to use in the forums by editing the options for the <a href="@forum_vocab">forum vocabulary</a>.', array('@forum_vocab' => url('admin/content/taxonomy/edit/vocabulary/'. variable_get('forum_nav_vocabulary', '')))) .'</p>';
+      return '<p>'. t('These settings allow you to adjust the display of your forum topics. The content types available for use within a forum may be selected by editing the <em>Content types</em> on the <a href="@forum-vocabulary">forum vocabulary page</a>.', array('@forum_vocabulary' => url('admin/content/taxonomy/edit/vocabulary/'. variable_get('forum_nav_vocabulary', '')))) .'</p>';
   }
 }
 
