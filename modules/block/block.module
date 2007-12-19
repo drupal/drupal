@@ -130,7 +130,7 @@ function block_menu() {
     'weight' => -10,
   );
   $items['admin/build/block/list/js'] = array(
-    'title' => 'Javascript List Form',
+    'title' => 'JavaScript List Form',
     'page callback' => 'block_admin_display_js',
     'type' => MENU_CALLBACK,
     'file' => 'block.admin.inc',

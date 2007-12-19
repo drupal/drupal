@@ -555,7 +555,7 @@ function file_save_upload($source, $validators = array(), $dest = FALSE, $replac
 
     // Check for validation errors.
     if (!empty($errors)) {
-      $message = t('The selected file %name could not be uploaded. ', array('%name' => $file->filename));
+      $message = t('The selected file %name could not be uploaded.', array('%name' => $file->filename));
       if (count($errors) > 1) {
         $message .= '<ul><li>'. implode('</li><li>', $errors) .'</li></ul>';
       }
