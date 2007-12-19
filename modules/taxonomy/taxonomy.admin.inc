@@ -411,7 +411,7 @@ function taxonomy_overview_terms(&$form_state, $vocabulary) {
   if (!$vocabulary->tags && $vocabulary->hierarchy < 2 && count($tree) > 1) {
     $form['submit'] = array(
       '#type' => 'submit',
-      '#value' => t('Submit')
+      '#value' => t('Save')
     );
     $form['reset_alphabetical'] = array(
       '#type' => 'submit',
