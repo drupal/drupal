@@ -23,7 +23,7 @@ function block_admin_display($theme = NULL) {
 }
 
 /**
- * Generate main block administration form.
+ * Generate main blocks administration form.
  */
 function block_admin_display_form(&$form_state, $blocks, $theme = NULL) {
   global $theme_key, $custom_theme;
@@ -89,7 +89,7 @@ function block_admin_display_form(&$form_state, $blocks, $theme = NULL) {
 }
 
 /**
- * Process main block administration form submission.
+ * Process main blocks administration form submission.
  */
 function block_admin_display_form_submit($form, &$form_state) {
   foreach ($form_state['values'] as $block) {
