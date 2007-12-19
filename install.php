@@ -867,7 +867,7 @@ function install_check_requirements($profile, $verify) {
     foreach ($requirements as $requirement) {
       if (isset($requirement['severity']) && $requirement['severity'] == REQUIREMENT_ERROR) {
         $message = $requirement['description'];
-        if ($requirement['value']) {
+        if (isset($requirement['value']) && $requirement['value']) {
           $message .= ' ('. st('Currently using !item !version', array('!item' => $requirement['title'], '!version' => $requirement['value'])) .')';
         }
         drupal_set_message($message, 'error');
