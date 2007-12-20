@@ -42,7 +42,8 @@ function statistics_recent_hits() {
  * Menu callback; presents the "top pages" page.
  */
 function statistics_top_pages() {
-  $sql = "SELECT COUNT(path) AS hits, path, title, AVG(timer) AS average_time, SUM(timer) AS total_time FROM {accesslog} GROUP BY path, title";
+  // MAX(title) avoids having empty node titles which otherwise causes duplicates in the top pages list
+  $sql = "SELECT COUNT(path) AS hits, path, MAX(title) AS title, AVG(timer) AS average_time, SUM(timer) AS total_time FROM {accesslog} GROUP BY path";
   $sql_cnt = "SELECT COUNT(DISTINCT(path)) FROM {accesslog}";
 
   $header = array(
