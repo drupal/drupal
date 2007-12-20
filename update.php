@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.243 2007/12/19 10:34:50 goba Exp $
+// $Id: update.php,v 1.244 2007/12/20 11:57:19 goba Exp $
 
 /**
  * @file
@@ -723,5 +723,7 @@ else {
   $output = update_access_denied_page();
 }
 if (isset($output) && $output) {
-  print theme('update_page', $output);
+  // We defer the display of messages until all updates are done.
+  $progress_page = ($batch = batch_get()) && isset($batch['running']);
+  print theme('update_page', $output, !$progress_page);
 }

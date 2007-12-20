@@ -1,5 +1,5 @@
 <?php
-// $Id: batch.inc,v 1.13 2007/12/08 14:06:20 goba Exp $
+// $Id: batch.inc,v 1.14 2007/12/20 11:57:20 goba Exp $
 
 /**
  * @file Batch processing API for processes to run in multiple HTTP requests.
@@ -133,7 +133,7 @@ function _batch_progress_page_nojs() {
     // followed by the error message.
     ob_start();
     $fallback = $current_set['error_message'] .'<br/>'. $batch['error_message'];
-    $fallback = theme('maintenance_page', $fallback, FALSE);
+    $fallback = theme('maintenance_page', $fallback, FALSE, FALSE);
 
     // We strip the end of the page using a marker in the template, so any
     // additional HTML output by PHP shows up inside the page rather than
