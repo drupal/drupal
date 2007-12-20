@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.107 2007/12/19 16:22:45 goba Exp $
+// $Id: install.php,v 1.108 2007/12/20 08:26:42 goba Exp $
 
 require_once './includes/install.inc';
 
@@ -896,7 +896,7 @@ function install_check_requirements($profile, $verify) {
     }
 
     if (!$writable) {
-      drupal_set_message(st('The @drupal installer requires write permissions to %file during the installation process. If you are unsure how to grant file permissions, please consult the <a href="@handbook_url">on-line handbook</a>.', array('@drupal' => drupal_install_profile_name(), '%file' => $file, '@handbook_url' => 'http://drupal.org/getting-started')), 'error');
+      drupal_set_message(st('The @drupal installer requires write permissions to %file during the installation process. If you are unsure how to grant file permissions, please consult the <a href="@handbook_url">on-line handbook</a>.', array('@drupal' => drupal_install_profile_name(), '%file' => $file, '@handbook_url' => 'http://drupal.org/server-permissions')), 'error');
     }
   }
 }
