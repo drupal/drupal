@@ -170,7 +170,7 @@ function system_requirements($phase) {
     else if ($phase == 'install') {
       // For the installer UI, we need different wording. 'value' will
       // be treated as version, so provide none there.
-      $requirements['file system']['description'] = $error .' '. $t('To proceed with the installation, please ensure that the files directory exists and is writable by the installer. If you are unsure how to create this directory and modify its permissions, please consult the <a href="@handbook_url">on-line handbook</a> or INSTALL.txt.', array('%directory' => $directory, '@handbook_url' => 'http://drupal.org/getting-started'));
+      $requirements['file system']['description'] = $error .' '. $t('To proceed with the installation, please ensure that the files directory exists and is writable by the installer. If you are unsure how to create this directory and modify its permissions, please consult the <a href="@handbook_url">on-line handbook</a> or INSTALL.txt.', array('%directory' => $directory, '@handbook_url' => 'http://drupal.org/server-permissions'));
       $requirements['file system']['value'] = '';
     }
   }
