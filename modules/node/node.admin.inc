@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.14 2007/12/08 14:06:21 goba Exp $
+// $Id: node.admin.inc,v 1.15 2007/12/20 09:08:35 goba Exp $
 
 /**
  * @file
@@ -341,6 +341,107 @@ function node_admin_nodes_validate($form, &$form_state) {
   $nodes = array_filter($form_state['values']['nodes']);
   if (count($nodes) == 0) {
     form_set_error('', t('No items selected.'));
+  }
+}
+
+
+/**
+ * Make mass update of nodes, changing all nodes in the $nodes array
+ * to update them with the field values in $updates.
+ *
+ * IMPORTANT NOTE: This function is intended to work when called
+ * from a form submit handler. Calling it outside of the form submission
+ * process may not work correctly.
+ *
+ * @param array $nodes
+ *   Array of node nids to update.
+ * @param array $updates
+ *   Array of key/value pairs with node field names and the
+ *   value to update that field to.
+ */
+function node_mass_update($nodes, $updates) {
+  // We use batch processing to prevent timeout when updating a large number
+  // of nodes.
+  if (count($nodes) > 10) {
+    $batch = array(
+      'operations' => array(
+        array('_node_mass_update_batch_process', array($nodes, $updates))
+      ),
+      'finished' => '_node_mass_update_batch_finished',
+      'title' => t('Processing'),
+      // We use a single multi-pass operation, so the default
+      // 'Remaining x of y operations' message will be confusing here.
+      'progress_message' => '',
+      'error_message' => t('The update has encountered an error.'),
+      // The operations do not live in the .module file, so we need to
+      // tell the batch engine which file to load before calling them.
+      'file' => drupal_get_path('module', 'node'). '/node.admin.inc',
+    );
+    batch_set($batch);
+  }
+  else {
+    foreach($nodes as $nid) {
+      _node_mass_update_helper($nid, $updates);
+    }
+    drupal_set_message(t('The update has been performed.'));
+  }
+}
+
+/**
+ * Node Mass Update - helper function.
+ */
+function _node_mass_update_helper($nid, $updates) {
+  $node = node_load($nid, NULL, TRUE);
+  foreach ($updates as $name => $value) {
+    $node->$name = $value;
+  }
+  node_save($node);
+  return $node;
+}
+
+/**
+ * Node Mass Update Batch operation
+ */
+function _node_mass_update_batch_process($nodes, $updates, &$context) {
+  if (!isset($context['sandbox']['progress'])) {
+    $context['sandbox']['progress'] = 0;
+    $context['sandbox']['max'] = count($nodes);
+    $context['sandbox']['nodes'] = $nodes;
+  }
+
+  // Process nodes by groups of 5.
+  $count = min(5, count($context['sandbox']['nodes']));
+  for ($i = 1; $i <= $count; $i++) {
+    // For each nid, load the node, reset the values, and save it.
+    $nid = array_shift($context['sandbox']['nodes']);
+    $node = _node_mass_update_helper($nid, $updates);
+
+    // Store result for post-processing in the finished callback.
+    $context['results'][] = l($node->title, 'node/'. $node->nid);
+
+    // Update our progress information.
+    $context['sandbox']['progress']++;
+  }
+
+  // Inform the batch engine that we are not finished,
+  // and provide an estimation of the completion level we reached.
+  if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
+    $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+  }
+}
+
+/**
+ * Node Mass Update Batch 'finished' callback.
+ */
+function _node_mass_update_batch_finished($success, $results, $operations) {
+  if ($success) {
+    drupal_set_message(t('The update has been performed.'));
+  }
+  else {
+    drupal_set_message(t('An error occurred and processing did not complete.'), 'error');
+    $message = format_plural(count($results), '1 item successfully processed:', '@count items successfully processed:');
+    $message .= theme('item_list', $results);
+    drupal_set_message($message);
   }
 }
 
