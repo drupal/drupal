@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.install,v 1.14 2007/12/20 21:43:01 goba Exp $
+// $Id: forum.install,v 1.15 2007/12/20 21:50:11 goba Exp $
 
 /**
  * Implementation of hook_install().
@@ -38,8 +38,11 @@ function forum_enable() {
  * Implementation of hook_uninstall().
  */
 function forum_uninstall() {
-  $vid = variable_get('forum_nav_vocabulary', '');
+  // Load the dependent Taxonomy module, in case it has been disabled.
+  drupal_load('module', 'taxonomy');
+
   // Delete the vocabulary.
+  $vid = variable_get('forum_nav_vocabulary', '');
   taxonomy_del_vocabulary($vid);
 
   db_query("DELETE FROM {node} WHERE type = 'forum'");
