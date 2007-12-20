@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.437 2007/12/20 09:35:09 goba Exp $
+// $Id: forum.module,v 1.438 2007/12/20 21:43:01 goba Exp $
 
 /**
  * @file
@@ -161,8 +161,15 @@ function forum_init() {
  * Implementation of hook_nodeapi().
  */
 function forum_nodeapi(&$node, $op, $teaser, $page) {
+  // We are going to return if $node->type is not one of the node
+  // types assigned to the forum vocabulary.  If forum_nav_vocabulary
+  // is undefined or the vocabulary does not exist, it clearly cannot
+  // be assigned to $node->type, so return to avoid E_ALL warnings.
   $vid = variable_get('forum_nav_vocabulary', '');
   $vocabulary = taxonomy_vocabulary_load($vid);
+  if (empty($vocabulary)) {
+    return;
+  }
 
   // Operate only on node types assigned for the forum vocabulary.
   if (!in_array($node->type, $vocabulary->nodes)) {

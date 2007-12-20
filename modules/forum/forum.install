@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.install,v 1.13 2007/12/18 10:31:42 dries Exp $
+// $Id: forum.install,v 1.14 2007/12/20 21:43:01 goba Exp $
 
 /**
  * Implementation of hook_install().
@@ -90,4 +90,34 @@ function forum_schema() {
   );
 
   return $schema;
+}
+
+/**
+ * Create the forum vocabulary if does not exist. Assign the
+ * vocabulary a low weight so it will appear first in forum topic
+ * create and edit forms.  Do not just call forum_enable() because in
+ * future versions it might do something different.
+ */
+function forum_update_6000() {
+  $ret = array();
+
+  $vid = variable_get('forum_nav_vocabulary', 0);
+  $vocabularies = taxonomy_get_vocabularies();
+  if (!isset($vocabularies[$vid])) {
+    $vocabulary = array(
+      'name' => t('Forums'),
+      'multiple' => 0,
+      'required' => 0,
+      'hierarchy' => 1,
+      'relations' => 0,
+      'module' => 'forum',
+      'weight' => -10,
+      'nodes' => array('forum' => 1),
+    );
+    taxonomy_save_vocabulary($vocabulary);
+
+    variable_set('forum_nav_vocabulary', $vocabulary['vid']);
+  }
+
+  return $ret;
 }
