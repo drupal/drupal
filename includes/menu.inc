@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.232 2007/12/08 14:06:20 goba Exp $
+// $Id: menu.inc,v 1.233 2007/12/20 09:20:41 goba Exp $
 
 /**
  * @file
@@ -360,9 +360,12 @@ function menu_execute_active_handler($path = NULL) {
  * @return
  *   Returns TRUE for success, FALSE if an object cannot be loaded
  */
-function _menu_load_objects($item, &$map) {
-  if ($item['load_functions']) {
-    $load_functions = unserialize($item['load_functions']);
+function _menu_load_objects(&$item, &$map) {
+  if ($load_functions = $item['load_functions']) {
+    // If someone calls this function twice, then unserialize will fail.
+    if ($load_functions_unserialized = unserialize($load_functions)) {
+      $load_functions = $load_functions_unserialized;
+    }
     $path_map = $map;
     foreach ($load_functions as $index => $function) {
       if ($function) {
@@ -373,6 +376,7 @@ function _menu_load_objects($item, &$map) {
           // some processing. In this case the $function is the key to the
           // load_function array, and the value is the list of arguments.
           list($function, $args) = each($function);
+          $load_functions[$index] = $function;
 
           // Some arguments are placeholders for dynamic items to process.
           foreach ($args as $i => $arg) {
@@ -386,6 +390,9 @@ function _menu_load_objects($item, &$map) {
               // also declare this as a reference if it wants to modify
               // the map.
               $args[$i] = &$map;
+            }
+            if (is_int($arg)) {
+              $args[$i] = isset($path_map[$arg]) ? $path_map[$arg] : '';
             }
           }
           array_unshift($args, $value);
@@ -403,6 +410,7 @@ function _menu_load_objects($item, &$map) {
         $map[$index] = $return;
       }
     }
+    $item['load_functions'] = $load_functions;
   }
   return TRUE;
 }
@@ -607,6 +615,31 @@ function _menu_link_translate(&$item) {
   $item['options'] = unserialize($item['options']);
 
   return $map;
+}
+
+/**
+ * Get a loaded object from a router item.
+ *
+ * menu_get_object() will provide you the current node on paths like node/5,
+ * node/5/revisions/48 etc. menu_get_object('user') will give you the user
+ * account on user/5 etc.
+ *
+ * @param $type
+ *   Type of the object. These appear in hook_menu definitons as %type. Core
+ *   provides aggregator_feed, aggregator_category, contact, filter_format,
+ *   forum_term, menu, menu_link, node, taxonomy_vocabulary, user. See the
+ *   relevant {$type}_load function for more on each. Defaults to node.
+ * @param $position
+ *   The expected position for $type object. For node/%node this is 1, for
+ *   comment/reply/%node this is 2. Defaults to 1.
+ * @param $path
+ *   See @menu_get_item for more on this. Defaults to the current path.
+ */
+function menu_get_object($type = 'node', $position = 1, $path = NULL) {
+  $router_item = menu_get_item($path);
+  if (isset($router_item['load_functions'][$position]) && !empty($router_item['map'][$position]) && $router_item['load_functions'][$position] == $type .'_load') {
+    return $router_item['map'][$position];
+  }
 }
 
 /**

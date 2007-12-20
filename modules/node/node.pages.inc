@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.18 2007/12/18 10:31:42 dries Exp $
+// $Id: node.pages.inc,v 1.19 2007/12/20 09:20:41 goba Exp $
 
 /**
  * @file
@@ -506,38 +506,6 @@ function node_delete_confirm_submit($form, &$form_state) {
 }
 
 /**
- * Menu callback for revisions related activities.
- */
-function node_revisions() {
-  if (is_numeric(arg(1)) && arg(2) == 'revisions') {
-    $op = arg(4) ? arg(4) : 'overview';
-    switch ($op) {
-      case 'overview':
-        $node = node_load(arg(1));
-        if ((user_access('view revisions') || user_access('administer nodes')) && node_access('view', $node)) {
-          return node_revision_overview($node);
-        }
-        drupal_access_denied();
-        return;
-      case 'view':
-        if (is_numeric(arg(3))) {
-          $node = node_load(arg(1), arg(3));
-          if ($node->nid) {
-            if ((user_access('view revisions') || user_access('administer nodes')) && node_access('view', $node)) {
-              drupal_set_title(t('Revision of %title from %date', array('%title' => $node->title, '%date' => format_date($node->revision_timestamp))));
-              return node_show($node, arg(2));
-            }
-            drupal_access_denied();
-            return;
-          }
-        }
-        break;
-    }
-  }
-  drupal_not_found();
-}
-
-/**
  * Generate an overview table of older revisions of a node.
  */
 function node_revision_overview($node) {
@@ -553,7 +521,7 @@ function node_revision_overview($node) {
     $revert_permission = TRUE;
   }
   $delete_permission = FALSE;
-  if (user_access('administer nodes')) {
+  if ((user_access('delete revisions') || user_access('administer nodes')) && node_access('delete', $node)) {
     $delete_permission = TRUE;
   }
   foreach ($revisions as $revision) {
@@ -583,25 +551,6 @@ function node_revision_overview($node) {
 }
 
 /**
- * Revert to the revision with the specified revision number. A node and nodeapi "update" event is triggered
- * (via the node_save() call) when a revision is reverted.
- */
-function node_revision_revert($node, $revision) {
-  global $user;
-
-  if ((user_access('revert revisions') || user_access('administer nodes')) && node_access('update', $node)) {
-    $node_revision = node_load($node->nid, $revision);
-    if ($node_revision->vid) {
-      return drupal_get_form('node_revision_revert_confirm', $node_revision);
-    }
-    else {
-      drupal_set_message(t('You tried to revert to an invalid revision.'), 'error');
-      drupal_goto('node/'. $node->nid .'/revisions');
-    }
-  }
-  drupal_access_denied();
-}
-/**
  * Ask for confirmation of the reversion to prevent against CSRF attacks.
  */
 function node_revision_revert_confirm($form_state, $node_revision) {
@@ -622,28 +571,6 @@ function node_revision_revert_confirm_submit($form, &$form_state) {
   watchdog('content', '@type: reverted %title revision %revision.', array('@type' => $node_revision->type, '%title' => $node_revision->title, '%revision' => $node_revision->vid));
   drupal_set_message(t('@type %title has been reverted back to the revision from %revision-date.', array('@type' => node_get_types('name', $node_revision), '%title' => $node_revision->title, '%revision-date' => format_date($node_revision->revision_timestamp))));
   $form_state['redirect'] = 'node/'. $node_revision->nid .'/revisions';
-}
-
-/**
- * Delete the revision with specified revision number. A "delete revision" nodeapi event is invoked when a
- * revision is deleted.
- */
-function node_revision_delete($node, $revision) {
-  if (user_access('administer nodes')) {
-    if (node_access('delete', $node)) {
-      // Don't allow deleting the current revision.
-      if ($revision != $node->vid) {
-        // Load the specific revision instead of the current one.
-        $node_revision = node_load($node->nid, $revision);
-        return drupal_get_form('node_revision_delete_confirm', $node_revision);
-      }
-      else {
-        drupal_set_message(t('Deletion failed. You tried to delete the current revision.'));
-        drupal_goto('node/'. $node->nid .'/revisions');
-      }
-    }
-  }
-  drupal_access_denied();
 }
 
 function node_revision_delete_confirm($form_state, $node_revision) {

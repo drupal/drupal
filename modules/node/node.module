@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.929 2007/12/20 09:08:35 goba Exp $
+// $Id: node.module,v 1.930 2007/12/20 09:20:41 goba Exp $
 
 /**
  * @file
@@ -1043,7 +1043,10 @@ function node_build_content($node, $teaser = FALSE, $page = FALSE) {
 /**
  * Generate a page displaying a single node, along with its comments.
  */
-function node_show($node, $cid) {
+function node_show($node, $cid, $message = FALSE) {
+  if ($message) {
+    drupal_set_title(t('Revision of %title from %date', array('%title' => $node->title, '%date' => format_date($node->revision_timestamp))));
+  }
   $output = node_view($node, FALSE, TRUE);
 
   if (function_exists('comment_render') && $node->comment) {
@@ -1069,7 +1072,7 @@ function theme_node_log_message($log) {
  * Implementation of hook_perm().
  */
 function node_perm() {
-  $perms = array('administer content types', 'administer nodes', 'access content', 'view revisions', 'revert revisions');
+  $perms = array('administer content types', 'administer nodes', 'access content', 'view revisions', 'revert revisions', 'delete revisions');
 
   foreach (node_get_types() as $type) {
     if ($type->module == 'node') {
@@ -1304,8 +1307,31 @@ function node_link($type, $node = NULL, $teaser = FALSE) {
   return $links;
 }
 
-function _node_revision_access($node) {
-  return (user_access('view revisions') || user_access('administer nodes')) && node_access('view', $node) && db_result(db_query('SELECT COUNT(vid) FROM {node_revisions} WHERE nid = %d', $node->nid)) > 1;
+function _node_revision_access($node, $op = 'view') {
+  static $access = array();
+  if (!isset($access[$node->vid])) {
+    $node_current_revision = node_load($node->nid);
+    $is_current_revision = $node_current_revision->vid == $node->vid;
+    // There should be at least two revisions. If the vid of the given node
+    // and the vid of the current revision differs, then we already have two
+    // different revisions so there is no need for a separate database check.
+    // Also, if you try to revert to or delete the current revision, that's
+    // not good.
+    if ($is_current_revision && (db_result(db_query('SELECT COUNT(vid) FROM {node_revisions} WHERE nid = %d', $node->nid)) == 1 || $op == 'update' || $op == 'delete')) {
+      $access[$node->vid] = FALSE;
+    }
+    elseif (user_access('administer nodes')) {
+      $access[$node->vid] = TRUE;
+    }
+    else {
+      $map = array('view' => 'view revisions', 'update' => 'revert revisions', 'delete' => 'delete revisions');
+      // First check the user permission, second check the access to the
+      // current revision and finally, if the node passed in is not the current
+      // revision then access to that, too.
+      $access[$node->vid] = isset($map[$op]) && user_access($map[$op]) && node_access($op, $node_current_revision) && ($is_current_revision || node_access($op, $node));
+    }
+  }
+  return $access[$node->vid];
 }
 
 function _node_add_access() {
@@ -1450,28 +1476,37 @@ function node_menu() {
     'type' => MENU_CALLBACK);
   $items['node/%node/revisions'] = array(
     'title' => 'Revisions',
-    'page callback' => 'node_revisions',
+    'page callback' => 'node_revision_overview',
+    'page arguments' => array(1),
     'access callback' => '_node_revision_access',
     'access arguments' => array(1),
     'weight' => 2,
     'file' => 'node.pages.inc',
     'type' => MENU_LOCAL_TASK,
   );
+  $items['node/%node/revisions/%/view'] = array(
+    'title' => 'Revisions',
+    'page callback' => 'node_show',
+    'page arguments' => array(1, NULL, TRUE),
+    'type' => MENU_CALLBACK,
+  );
   $items['node/%node/revisions/%/revert'] = array(
     'title' => 'Revert to earlier revision',
-    'page callback' => 'node_revision_revert',
-    'page arguments' => array(1, 3),
+    'load arguments' => array(3),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('node_revision_revert_confirm', 1),
     'access callback' => '_node_revision_access',
-    'access arguments' => array(1, 3),
+    'access arguments' => array(1, 'update'),
     'file' => 'node.pages.inc',
     'type' => MENU_CALLBACK,
   );
   $items['node/%node/revisions/%/delete'] = array(
     'title' => 'Delete earlier revision',
-    'page callback' => 'node_revision_delete',
-    'page arguments' => array(1, 3),
+    'load arguments' => array(3),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('node_revision_delete_confirm', 1),
     'access callback' => '_node_revision_access',
-    'access arguments' => array(1, 3),
+    'access arguments' => array(1, 'delete'),
     'file' => 'node.pages.inc',
     'type' => MENU_CALLBACK,
   );

@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.405 2007/12/08 15:15:25 goba Exp $
+// $Id: theme.inc,v 1.406 2007/12/20 09:20:41 goba Exp $
 
 /**
  * @file
@@ -1736,8 +1736,8 @@ function template_preprocess_page(&$variables) {
   // Closure should be filled last.
   $variables['closure']           = theme('closure');
 
-  if ((arg(0) == 'node') && is_numeric(arg(1))) {
-    $variables['node'] = node_load(arg(1));
+  if ($node = menu_get_object()) {
+    $variables['node'] = $node;
   }
 
   // Compile a list of classes that are going to be applied to the body element.
