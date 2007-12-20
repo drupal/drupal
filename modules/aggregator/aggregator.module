@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.368 2007/12/19 19:13:28 goba Exp $
+// $Id: aggregator.module,v 1.369 2007/12/20 08:57:54 goba Exp $
 
 /**
  * @file
@@ -600,7 +600,7 @@ function aggregator_refresh($feed) {
     case 301:
       $feed['url'] = $result->redirect_url;
       watchdog('aggregator', 'Updated URL for feed %title to %url.', array('%title' => $feed['title'], '%url' => $feed['url']));
-
+      // Deliberate no break.
     case 200:
     case 302:
     case 307:
@@ -648,11 +648,14 @@ function aggregator_refresh($feed) {
 
         watchdog('aggregator', 'There is new syndicated content from %site.', array('%site' => $feed['title']));
         drupal_set_message(t('There is new syndicated content from %site.', array('%site' => $feed['title'])));
+        break;
       }
-      break;
+      $result->error = t('feed not parseable');
+      // Deliberate no break.
     default:
       watchdog('aggregator', 'The feed from %site seems to be broken, due to "%error".', array('%site' => $feed['title'], '%error' => $result->code .' '. $result->error), WATCHDOG_WARNING);
       drupal_set_message(t('The feed from %site seems to be broken, because of error "%error".', array('%site' => $feed['title'], '%error' => $result->code .' '. $result->error)));
+      module_invoke('system', 'check_http_request');
   }
 }
 

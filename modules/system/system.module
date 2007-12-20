@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.565 2007/12/19 22:18:15 goba Exp $
+// $Id: system.module,v 1.566 2007/12/20 08:57:55 goba Exp $
 
 /**
  * @file
@@ -442,6 +442,15 @@ function system_menu() {
     'title' => 'Clean URL check',
     'page callback' => 'drupal_json',
     'page arguments' => array(array('status' => TRUE)),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  // Menu handler to test that drupal_http_request() works locally.
+  // @see system_check_http_request().
+  $items['admin/reports/request-test'] = array(
+    'title' => 'Request test',
+    'page callback' => 'printf',
+    'page arguments' => array('request test'),
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
@@ -1809,6 +1818,32 @@ function _system_zonelist() {
     $zones[$zone] = format_date($timestamp, 'custom', variable_get('date_format_long', 'l, F j, Y - H:i') .' O', $zone);
   }
   return $zones;
+}
+
+/**
+ * Checks whether the server is capable of issuing HTTP requests.
+ *
+ * The function sets the drupal_http_request_fail system variable to TRUE if
+ * drupal_http_request() does not work and then the system status report page
+ * will contain an error.
+ *
+ * @return
+ *  Whether the admin/reports/request-test page can be requested via HTTP
+ *  and contains the same output as if called via the menu system.
+ */
+function system_check_http_request() {
+  // Check whether we can do any request at all. First get the results for
+  // a very simple page which has access TRUE set via the menu system. Then,
+  // try to drupal_http_request() the same page and compare.
+  ob_start();
+  $path = 'admin/reports/request-test';
+  menu_execute_active_handler($path);
+  $nothing = ob_get_contents();
+  ob_end_clean();
+  $result = drupal_http_request(url($path, array('absolute' => TRUE)));
+  $works = isset($result->data) && $result->data == $nothing;
+  variable_set('drupal_http_request_fails', !$works);
+  return $works;
 }
 
 /**

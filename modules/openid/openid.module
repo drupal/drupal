@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.module,v 1.14 2007/12/14 18:08:47 goba Exp $
+// $Id: openid.module,v 1.15 2007/12/20 08:57:54 goba Exp $
 
 /**
  * @file
@@ -290,6 +290,9 @@ function openid_discovery($claimed_id) {
       }
     }
   }
+  if (!$services) {
+    module_invoke('system', 'check_http_request');
+  }
   return $services;
 }
 
@@ -321,12 +324,14 @@ function openid_association($op_endpoint) {
     $assoc_headers = array('Content-Type' => 'application/x-www-form-urlencoded; charset=utf-8');
     $assoc_result = drupal_http_request($op_endpoint, $assoc_headers, 'POST', $assoc_message);
     if (isset($assoc_result->error)) {
+      module_invoke('system', 'check_http_request');
       return FALSE;
     }
 
     $assoc_response = _openid_parse_message($assoc_result->data);
     if (isset($assoc_response['mode']) && $assoc_response['mode'] == 'error') {
-        return FALSE;
+      module_invoke('system', 'check_http_request');
+      return FALSE;
     }
 
     if ($assoc_response['session_type'] == 'DH-SHA1') {
@@ -487,6 +492,8 @@ function openid_verify_assertion($op_endpoint, $response) {
       }
     }
   }
-
+  if (!$valid) {
+    module_invoke('system', 'check_http_request');
+  }
   return $valid;
 }

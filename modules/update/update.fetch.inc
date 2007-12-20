@@ -1,5 +1,5 @@
 <?php
-// $Id: update.fetch.inc,v 1.4 2007/10/20 21:57:50 goba Exp $
+// $Id: update.fetch.inc,v 1.5 2007/12/20 08:57:55 goba Exp $
 
 /**
  * @file
@@ -42,12 +42,15 @@ function _update_refresh() {
   if ($data) {
     $parser = new update_xml_parser;
     $available = $parser->parse($data);
+  }
+  if (!empty($available) && is_array($available)) {
     $frequency = variable_get('update_check_frequency', 1);
     cache_set('update_info', $available, 'cache_update', time() + (60 * 60 * 24 * $frequency));
     variable_set('update_last_check', time());
     watchdog('update', 'Fetched information about all available new releases and updates.', array(), WATCHDOG_NOTICE, l('view', 'admin/reports/updates'));
   }
   else {
+    module_invoke('system', 'check_http_request');
     watchdog('update', 'Unable to fetch any information about available new releases and updates.', array(), WATCHDOG_ERROR, l('view', 'admin/reports/updates'));
   }
   return $available;

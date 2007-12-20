@@ -1,4 +1,4 @@
-// $Id: INSTALL.txt,v 1.51 2007/12/19 17:45:41 goba Exp $
+// $Id: INSTALL.txt,v 1.52 2007/12/20 08:57:54 goba Exp $
 
 CONTENTS OF THIS FILE
 ---------------------
@@ -36,6 +36,17 @@ you will need PHP's XML extension. This extension is enabled by default.
 
 - If you want support for clean URLs, you'll need mod_rewrite and the ability
 to use local .htaccess files.
+
+- Various Drupal features require that the web server process (for
+  example, httpd) needs to be able to initiate outbound connections.
+  This is usually possible, but some hosting providers or server
+  configurations forbid such connections. The features that depend on
+  this functionality include the integrated "Update status" module
+  which downloads information about available updates of Drupal core
+  and any installed contributed modules and themes, the ability to log
+  in via OpenID, fetching aggregator feeds, or use other
+  network-dependent services.
+
 
 INSTALLATION
 ------------

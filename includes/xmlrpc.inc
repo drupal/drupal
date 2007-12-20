@@ -1,5 +1,5 @@
 <?php
-// $Id: xmlrpc.inc,v 1.43 2007/12/11 12:32:33 goba Exp $
+// $Id: xmlrpc.inc,v 1.44 2007/12/20 08:57:54 goba Exp $
 
 /*
   Drupal XML-RPC library. Based on the IXR - The Incutio XML-RPC Library - (c) Incutio Ltd 2002-2005
@@ -350,6 +350,7 @@ function xmlrpc_error($code = NULL, $message = NULL) {
     $xmlrpc_error->is_error = TRUE;
     $xmlrpc_error->code = $code;
     $xmlrpc_error->message = $message;
+    module_invoke('system', 'check_http_request');
   }
   return $xmlrpc_error;
 }

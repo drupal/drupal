@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.741 2007/12/19 17:19:50 goba Exp $
+// $Id: common.inc,v 1.742 2007/12/20 08:57:54 goba Exp $
 
 /**
  * @file
@@ -415,7 +415,23 @@ function drupal_access_denied() {
  *   data and redirect status.
  */
 function drupal_http_request($url, $headers = array(), $method = 'GET', $data = NULL, $retry = 3) {
+  static $self_test = FALSE;
   $result = new stdClass();
+  // Try to clear the drupal_http_request_fails variable if it's set. We
+  // can't tie this call to any error because there is no surefire way to
+  // tell whether a request has failed, so we add the check to places where
+  // some parsing has failed.
+  if (!$self_test && variable_get('drupal_http_request_fails', FALSE)) {
+    $self_test = TRUE;
+    $works = module_invoke('system', 'check_http_request');
+    $self_test = FALSE;
+    if (!$works) {
+      // Do not bother with further operations if we already know that we
+      // have no chance.
+      $result->error = t("The server can't issue HTTP requests");
+      return $result;
+    }
+  }
 
   // Parse the URL and make sure we can handle the schema.
   $uri = parse_url($url);
@@ -439,8 +455,8 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
 
   // Make sure the socket opened properly.
   if (!$fp) {
-    // When a network error occurs, we make sure that it is a negative number so
-    // it can clash with the HTTP status codes.
+    // When a network error occurs, we use a negative number so it does not
+    // clash with the HTTP status codes.
     $result->code = -$errno;
     $result->error = trim($errstr);
     return $result;
