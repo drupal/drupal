@@ -1213,7 +1213,7 @@ function system_error_reporting_settings() {
 /**
  * Validate the submitted error reporting form.
  */
-function system_error_reporting_settings_validate($form, &$form_state) { 
+function system_error_reporting_settings_validate($form, &$form_state) {
   // Validate paths to 403 and 404 error pages.
   $item = array('link_path' => $form_state['values']['site_403']);
   if (!empty($item['link_path']) && !menu_valid_path($item)) {
@@ -1421,7 +1421,7 @@ function system_image_toolkit_settings() {
 /**
  * Validate the submitted image-toolkit form.
  */
-function system_image_toolkit_settings_validate($form, &$form_state) { 
+function system_image_toolkit_settings_validate($form, &$form_state) {
   // Validate image quality range.
   $value = $form_state['values']['image_jpeg_quality'];
   if (!is_numeric($value) || $value < 0 || $value > 100) {

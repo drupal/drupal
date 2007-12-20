@@ -234,7 +234,7 @@ function forum_overview(&$form_state) {
       }
     }
   }
-  
+
   // Remove the alphabetical reset.
   unset($form['reset_alphabetical']);
 

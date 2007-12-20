@@ -165,7 +165,7 @@ ini_set('url_rewriter.tags',        '');
  * useful in a configuration file for a vhost or directory, rather than
  * the default settings.php. Any configuration setting from the 'variable'
  * table can be given a new value. Note that any values you provide in
- * these variable overrides will not be modifiable from the Drupal 
+ * these variable overrides will not be modifiable from the Drupal
  * administration interface.
  *
  * Remove the leading hash signs to enable.
