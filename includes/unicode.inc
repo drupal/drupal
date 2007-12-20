@@ -1,5 +1,5 @@
 <?php
-// $Id: unicode.inc,v 1.27 2007/10/21 18:59:01 goba Exp $
+// $Id: unicode.inc,v 1.28 2007/12/20 08:46:01 goba Exp $
 
 /**
  * Indicates an error during check for PHP unicode support.
@@ -203,28 +203,62 @@ function drupal_convert_to_utf8($data, $encoding) {
  *   The string to truncate.
  * @param $len
  *   An upper limit on the returned string length.
+ * @return
+ *   The truncated string.
+ */
+function drupal_truncate_bytes($string, $len) {
+  if (strlen($string) <= $len) {
+     return $string;
+  }
+  if ((ord($string[$len]) < 0x80) || (ord($string[$len]) >= 0xC0)) {
+    return substr($string, 0, $len);
+  }
+  while (--$len >= 0 && ord($string[$len]) >= 0x80 && ord($string[$len]) < 0xC0) {};
+  return substr($string, 0, $len);
+}
+
+/**
+ * Truncate a UTF-8-encoded string safely to a number of characters.
+ *
+ * @param $string
+ *   The string to truncate.
+ * @param $len
+ *   An upper limit on the returned string length.
  * @param $wordsafe
- *   Flag to truncate at nearest space. Defaults to FALSE.
+ *   Flag to truncate at last space within the upper limit. Defaults to FALSE.
+ * @param $dots
+ *   Flag to add trailing dots. Defaults to FALSE.
  * @return
  *   The truncated string.
  */
 function truncate_utf8($string, $len, $wordsafe = FALSE, $dots = FALSE) {
-  $slen = strlen($string);
-  if ($slen <= $len) {
+
+  if (drupal_strlen($string) <= $len) {
     return $string;
   }
+
+  if ($dots) {
+    $len -= 4;
+  }
+
   if ($wordsafe) {
-    $end = $len;
-    while (($string[--$len] != ' ') && ($len > 0)) {};
-    if ($len == 0) {
-      $len = $end;
+    $string = drupal_substr($string, 0, $len + 1); // leave one more character
+    if ($last_space = strrpos($string, ' ')) { // space exists AND is not on position 0
+      $string = substr($string, 0, $last_space);
+    }
+    else {
+      $string = drupal_substr($string, 0, $len);
     }
   }
-  if ((ord($string[$len]) < 0x80) || (ord($string[$len]) >= 0xC0)) {
-    return substr($string, 0, $len) . ($dots ? ' ...' : '');
+  else {
+    $string = drupal_substr($string, 0, $len);
   }
-  while (--$len >= 0 && ord($string[$len]) >= 0x80 && ord($string[$len]) < 0xC0) {};
-  return substr($string, 0, $len) . ($dots ? ' ...' : '');
+
+  if ($dots) {
+    $string .= ' ...';
+  }
+
+  return $string;
 }
 
 /**
@@ -248,7 +282,7 @@ function mime_header_encode($string) {
     $len = strlen($string);
     $output = '';
     while ($len > 0) {
-      $chunk = truncate_utf8($string, $chunk_size);
+      $chunk = drupal_truncate_bytes($string, $chunk_size);
       $output .= ' =?UTF-8?B?'. base64_encode($chunk) ."?=\n";
       $c = strlen($chunk);
       $string = substr($string, $c);
