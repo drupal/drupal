@@ -1,5 +1,5 @@
 <?php
-// $Id: update.report.inc,v 1.5 2007/12/06 09:58:34 goba Exp $
+// $Id: update.report.inc,v 1.6 2007/12/20 08:42:05 goba Exp $
 
 /**
  * @file
@@ -188,6 +188,8 @@ function theme_update_report($data) {
     'core' => t('Drupal core'),
     'module' => t('Modules'),
     'theme' => t('Themes'),
+    'disabled-module' => t('Disabled modules'),
+    'disabled-theme' => t('Disabled themes'),
   );
   foreach ($project_types as $type_name => $type_label) {
     if (!empty($rows[$type_name])) {
