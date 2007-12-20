@@ -723,5 +723,7 @@ else {
   $output = update_access_denied_page();
 }
 if (isset($output) && $output) {
-  print theme('update_page', $output);
+  // We defer the display of messages until all updates are done.
+  $progress_page = ($batch = batch_get()) && isset($batch['running']);
+  print theme('update_page', $output, !$progress_page);
 }
