@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.202 2007/12/08 14:06:20 goba Exp $
+// $Id: bootstrap.inc,v 1.203 2007/12/20 08:20:58 goba Exp $
 
 /**
  * @file
@@ -824,13 +824,10 @@ function drupal_is_denied($type, $mask) {
   // Because this function is called for every page request, both cached
   // and non-cached pages, we tried to optimize it as much as possible.
   // We deny access if the only matching records in the {access} table have
-  // status 0. If any have status 1, or if there are no matching records,
-  // we allow access.
-  // We only select for records with status 0. If we have some of
-  // these, we return 1 (denied). If no matching records or only ones
-  // with status = 1, we get no return from db_result, so we return
-  // (bool)NULL = 0 (allowed).
-  return (bool) db_result(db_query_range("SELECT 1 FROM {access} WHERE type = '%s' AND LOWER('%s') LIKE LOWER(mask) AND status = 0", $type, $mask, 0, 1));
+  // status 0 (deny). If any have status 1 (allow), or if there are no
+  // matching records, we allow access.
+  $sql = "SELECT 1 FROM {access} WHERE type = '%s' AND LOWER('%s') LIKE LOWER(mask) AND status = %d";
+  return db_result(db_query_range($sql, $type, $mask, 0, 0, 1)) && !db_result(db_query_range($sql, $type, $mask, 1, 0, 1));
 }
 
 /**
