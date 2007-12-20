@@ -1736,8 +1736,8 @@ function template_preprocess_page(&$variables) {
   // Closure should be filled last.
   $variables['closure']           = theme('closure');
 
-  if ((arg(0) == 'node') && is_numeric(arg(1))) {
-    $variables['node'] = node_load(arg(1));
+  if ($node = menu_get_object()) {
+    $variables['node'] = $node;
   }
 
   // Compile a list of classes that are going to be applied to the body element.
