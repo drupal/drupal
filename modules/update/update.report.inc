@@ -188,6 +188,8 @@ function theme_update_report($data) {
     'core' => t('Drupal core'),
     'module' => t('Modules'),
     'theme' => t('Themes'),
+    'disabled-module' => t('Disabled modules'),
+    'disabled-theme' => t('Disabled themes'),
   );
   foreach ($project_types as $type_name => $type_label) {
     if (!empty($rows[$type_name])) {
