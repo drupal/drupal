@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.435 2007/12/19 10:31:27 goba Exp $
+// $Id: forum.module,v 1.436 2007/12/20 08:40:19 goba Exp $
 
 /**
  * @file
@@ -306,6 +306,9 @@ function forum_access($op, $node, $account) {
     if (user_access('edit own forum topics', $account) && ($account->uid == $node->uid)) {
       return TRUE;
     }
+    if (user_access('edit any forum topic')) {
+      return TRUE;
+    }
   }
 }
 
@@ -313,7 +316,7 @@ function forum_access($op, $node, $account) {
  * Implementation of hook_perm().
  */
 function forum_perm() {
-  return array('create forum topics', 'edit own forum topics', 'administer forums');
+  return array('create forum topics', 'edit own forum topics', 'edit any forum topic', 'administer forums');
 }
 
 /**
