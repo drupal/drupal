@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.admin.inc,v 1.4 2007/12/19 10:31:27 goba Exp $
+// $Id: forum.admin.inc,v 1.5 2007/12/20 09:35:09 goba Exp $
 
 /**
  * @file
@@ -234,7 +234,7 @@ function forum_overview(&$form_state) {
       }
     }
   }
-  
+
   // Remove the alphabetical reset.
   unset($form['reset_alphabetical']);
 

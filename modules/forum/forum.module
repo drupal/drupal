@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.436 2007/12/20 08:40:19 goba Exp $
+// $Id: forum.module,v 1.437 2007/12/20 09:35:09 goba Exp $
 
 /**
  * @file
@@ -18,7 +18,7 @@ function forum_help($path, $arg) {
       $output .= '<ul><li>'. t('a forum topic (and all of its comments) may be moved between forums by selecting a different forum while editing a forum topic.') .'</li>';
       $output .= '<li>'. t('when moving a forum topic between forums, the <em>Leave shadow copy</em> option creates a link in the original forum pointing to the new location.') .'</li>';
       $output .= '<li>'. t('selecting <em>Read only</em> under <em>Comment settings</em> while editing a forum topic will lock (prevent new comments) on the thread.') .'</li>';
-      $output .= '<li>'. t('selecting <em>Disabled</em> under <em>Comment settings</em> while editing a forum topic will hide all existing comments on the thread, and prevent new ones.') .'</li></ul>';      
+      $output .= '<li>'. t('selecting <em>Disabled</em> under <em>Comment settings</em> while editing a forum topic will hide all existing comments on the thread, and prevent new ones.') .'</li></ul>';
       $output .= '<p>'. t('For more information, see the online handbook entry for <a href="@forum">Forum module</a>.', array('@forum' => 'http://drupal.org/handbook/modules/forum/')) .'</p>';
       return $output;
     case 'admin/content/forum':
