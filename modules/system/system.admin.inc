@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.42 2007/12/20 09:35:10 goba Exp $
+// $Id: system.admin.inc,v 1.43 2007/12/20 21:37:42 goba Exp $
 
 /**
  * @file
@@ -207,13 +207,18 @@ function system_themes_form() {
       '#value' => $theme->info,
     );
     $options[$theme->name] = '';
-    if (!empty($theme->status)) {
-      $status[] = $theme->name;
+
+    if (!empty($theme->status) || $theme->name == variable_get('admin_theme', '0')) {
       $form[$theme->name]['operations'] = array('#value' => l(t('configure'), 'admin/build/themes/settings/'. $theme->name) );
     }
     else {
       // Dummy element for drupal_render. Cleaner than adding a check in the theme function.
       $form[$theme->name]['operations'] = array();
+    }
+    if (!empty($theme->status)) {
+      $status[] = $theme->name;
+    }
+    else {
       // Ensure this theme is compatible with this version of core.
       if (!isset($theme->info['core']) || $theme->info['core'] != DRUPAL_CORE_COMPATIBILITY) {
         $incompatible_core[] = $theme->name;

@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.567 2007/12/20 09:35:10 goba Exp $
+// $Id: system.module,v 1.568 2007/12/20 21:37:42 goba Exp $
 
 /**
  * @file
@@ -293,13 +293,13 @@ function system_menu() {
   );
 
   foreach (list_themes() as $theme) {
-    if ($theme->status) {
-      $items['admin/build/themes/settings/'. $theme->name] = array(
-        'title' => $theme->info['name'],
-        'page arguments' => array('system_theme_settings', $theme->name),
-        'type' => MENU_LOCAL_TASK,
-      );
-    }
+    $items['admin/build/themes/settings/'. $theme->name] = array(
+      'title' => $theme->info['name'],
+      'page arguments' => array('system_theme_settings', $theme->name),
+      'type' => MENU_LOCAL_TASK,
+      'access callback' => '_system_themes_access',
+      'access arguments' => array($theme),
+    );
   }
 
   // Modules:
@@ -498,6 +498,13 @@ function system_menu() {
     'file' => 'system.admin.inc',
   );
   return $items;
+}
+
+/**
+ * Menu item access callback - only admin or enabled themes can be accessed.
+ */
+function _system_themes_access($theme) {
+  return $theme->status || $theme->name == variable_get('admin_theme', '0');
 }
 
 /**
