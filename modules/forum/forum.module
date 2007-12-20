@@ -306,6 +306,9 @@ function forum_access($op, $node, $account) {
     if (user_access('edit own forum topics', $account) && ($account->uid == $node->uid)) {
       return TRUE;
     }
+    if (user_access('edit any forum topic')) {
+      return TRUE;
+    }
   }
 }
 
@@ -313,7 +316,7 @@ function forum_access($op, $node, $account) {
  * Implementation of hook_perm().
  */
 function forum_perm() {
-  return array('create forum topics', 'edit own forum topics', 'administer forums');
+  return array('create forum topics', 'edit own forum topics', 'edit any forum topic', 'administer forums');
 }
 
 /**
