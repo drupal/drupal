@@ -391,6 +391,11 @@ function user_validate_picture(&$form, &$form_state) {
     'file_validate_size' => array(variable_get('user_picture_file_size', '30') * 1024),
   );
   if ($file = file_save_upload('picture_upload', $validators)) {
+    // Remove the old picture.
+    if (isset($form_state['values']['_account']->picture) && file_exists($form_state['values']['_account']->picture)) {
+      file_delete($form_state['values']['_account']->picture);
+    }
+
     // The image was saved using file_save_upload() and was added to the
     // files table as a temporary file. We'll make a copy and let the garbage
     // collector delete the original upload.
