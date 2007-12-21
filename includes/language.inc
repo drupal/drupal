@@ -21,7 +21,7 @@ function language_initialize() {
       $languages = language_list();
       foreach ($languages as $language) {
         $parts = parse_url($language->domain);
-        if ($_SERVER['SERVER_NAME'] == $parts['host']) {
+        if (!empty($parts['host']) && ($_SERVER['SERVER_NAME'] == $parts['host'])) {
           return $language;
         }
       }
