@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.admin.inc,v 1.5 2007/12/06 09:58:31 goba Exp $
+// $Id: filter.admin.inc,v 1.6 2007/12/21 11:58:59 goba Exp $
 
 /**
  * @file
@@ -314,8 +314,16 @@ function filter_admin_configure(&$form_state, $format) {
   else {
     $form['error'] = array('#value' => t('No settings are available.'));
   }
-
+  $form['format'] = array('#type' => 'hidden', '#value' => $format->format);
+  $form['#submit'][] = 'filter_admin_configure_submit';
   return $form;
+}
+
+/**
+ * Clear the filter's cache when configuration settings are saved.
+ */
+function filter_admin_configure_submit($form, &$form_state) {
+  cache_clear_all($form_state['values']['format'] .':', 'cache_filter', TRUE);
 }
 
 /**
