@@ -1486,6 +1486,7 @@ function node_menu() {
   );
   $items['node/%node/revisions/%/view'] = array(
     'title' => 'Revisions',
+    'load arguments' => array(3),
     'page callback' => 'node_show',
     'page arguments' => array(1, NULL, TRUE),
     'type' => MENU_CALLBACK,
