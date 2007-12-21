@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.930 2007/12/20 09:20:41 goba Exp $
+// $Id: node.module,v 1.931 2007/12/21 11:55:23 goba Exp $
 
 /**
  * @file
@@ -1486,6 +1486,7 @@ function node_menu() {
   );
   $items['node/%node/revisions/%/view'] = array(
     'title' => 'Revisions',
+    'load arguments' => array(3),
     'page callback' => 'node_show',
     'page arguments' => array(1, NULL, TRUE),
     'type' => MENU_CALLBACK,
