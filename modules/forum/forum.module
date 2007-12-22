@@ -258,7 +258,7 @@ function forum_nodeapi(&$node, $op, $teaser, $page) {
       break;
 
     case 'update':
-      if (!$node->revision && db_result(db_query('SELECT tid FROM {forum} WHERE nid=%d', $node->nid))) {
+      if (empty($node->revision) && db_result(db_query('SELECT tid FROM {forum} WHERE nid=%d', $node->nid))) {
         if (!empty($node->tid)) {
           db_query('UPDATE {forum} SET tid = %d WHERE vid = %d', $node->tid, $node->vid);
         }
