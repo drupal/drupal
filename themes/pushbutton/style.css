@@ -1,15 +1,15 @@
-/* $Id: style.css,v 1.23 2007/11/27 15:07:57 goba Exp $ */
+/* $Id: style.css,v 1.24 2007/12/22 23:24:26 goba Exp $ */
 
 /*
 ** HTML elements
 */
-body  {
+body {
   color: #000;
   background-color: #fff;
   margin: 0;
   padding: 0;
 }
-body, p, td, li, ul, ol  {
+body, p, td, li, ul, ol {
   font-family: Verdana, Helvetica, Arial, sans-serif;
 }
 h1, h2, h3, h4, h5, h6 {
@@ -75,7 +75,7 @@ pre {
 /*
 ** Page layout blocks / IDs
 */
-#primary-menu  {
+#primary-menu {
   border-collapse: separate;
   background-color: #e0edfb;
   border-bottom: 3px solid #69c;
@@ -102,7 +102,7 @@ td#home a:hover img {
 .primary-links a:hover {
   color: #000;
 }
-#primary-menu .primary-links   {
+#primary-menu .primary-links {
   background: transparent url(header-b.jpg) left top no-repeat; /* LTR */
   font-size: 0.79em;
 }
@@ -115,7 +115,7 @@ td#home a:hover img {
   background-color: #369;
   border-bottom: 3px solid #69c;
 }
-.secondary-links, .secondary-links a:link, .secondary-links a:visited  {
+.secondary-links, .secondary-links a:link, .secondary-links a:visited {
   color: #e4e9eb;
 }
 .secondary-links a:hover {
@@ -330,10 +330,10 @@ table#footer-menu {
   padding: 5px;
   font-size: 0.75em;
 }
-#footer-menu .primary-links, #footer-menu a:link, #footer-menu a:visited  {
+#footer-menu .primary-links, #footer-menu a:link, #footer-menu a:visited {
   color: #e4e9eb;
 }
-#footer-menu a:hover  {
+#footer-menu a:hover {
   color: #fff;
   text-decoration: underline;
 }
@@ -451,7 +451,7 @@ div.links {
 div.links .prev, div.links .next, div.links .up {
   font-size: 1.15em;
 }
-.titles .prev, .titles .next  {
+.titles .prev, .titles .next {
   font-size: 0.85em;
   font-weight: bold;
   color: #444;
@@ -572,7 +572,7 @@ div.admin-panel .body {
   color: #fff;
   text-decoration: underline;
 }
-#forum table tr th img  {
+#forum table tr th img {
   margin: 0;
 }
 #forum tr.odd {

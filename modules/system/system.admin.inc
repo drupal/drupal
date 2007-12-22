@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.43 2007/12/20 21:37:42 goba Exp $
+// $Id: system.admin.inc,v 1.44 2007/12/22 23:24:25 goba Exp $
 
 /**
  * @file
@@ -418,7 +418,7 @@ function system_theme_settings(&$form_state, $key = '') {
       $form['node_info'] = array(
         '#type' => 'fieldset',
         '#title' => t('Display post information on'),
-        '#description' =>  t('Enable or disable the <em>submitted by Username on date</em> text when displaying posts of the following type.'),
+        '#description' => t('Enable or disable the <em>submitted by Username on date</em> text when displaying posts of the following type.'),
         '#prefix' => '<div class="theme-settings-right">',
         '#suffix' => '</div>',
       );
@@ -477,7 +477,7 @@ function system_theme_settings(&$form_state, $key = '') {
     $form['favicon']['favicon_path'] = array(
       '#type' => 'textfield',
       '#title' => t('Path to custom icon'),
-      '#default_value' =>  $settings['favicon_path'],
+      '#default_value' => $settings['favicon_path'],
       '#description' => t('The path to the image file you would like to use as your custom shortcut icon.')
     );
 
@@ -1198,7 +1198,7 @@ function system_error_reporting_settings() {
   $form['site_404'] = array(
     '#type' => 'textfield',
     '#title' => t('Default 404 (not found) page'),
-    '#default_value' =>  variable_get('site_404', ''),
+    '#default_value' => variable_get('site_404', ''),
     '#size' => 40,
     '#description' => t('This page is displayed when no other content matches the requested document. If unsure, specify nothing.'),
     '#field_prefix' => url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q=')
@@ -1207,7 +1207,7 @@ function system_error_reporting_settings() {
   $form['error_level'] = array(
     '#type' => 'select', '#title' => t('Error reporting'), '#default_value' => variable_get('error_level', 1),
     '#options' => array(t('Write errors to the log'), t('Write errors to the log and to the screen')),
-    '#description' =>  t('Specify where Drupal, PHP and SQL errors are logged. While it is recommended that a site running in a production environment write errors to the log only, in a development or testing environment it may be helpful to write errors both to the log and to the screen.')
+    '#description' => t('Specify where Drupal, PHP and SQL errors are logged. While it is recommended that a site running in a production environment write errors to the log only, in a development or testing environment it may be helpful to write errors both to the log and to the screen.')
   );
 
   $form['#validate'][] = 'system_error_reporting_settings_validate';
@@ -1483,8 +1483,8 @@ function system_date_time_settings() {
           'D, Y/m/d - H:i', 'F j, Y - H:i', 'j F, Y - H:i', 'Y, F j - H:i',
           'D, m/d/Y - g:ia', 'D, d/m/Y - g:ia', 'D, Y/m/d - g:ia',
           'F j, Y - g:ia', 'j F Y - g:ia', 'Y, F j - g:ia', 'j. F Y - G:i');
-  $date_long = array('l, F j, Y - H:i', 'l, j F, Y - H:i', 'l, Y,  F j - H:i',
-        'l, F j, Y - g:ia', 'l, j F Y - g:ia', 'l, Y,  F j - g:ia', 'l, j. F Y - G:i');
+  $date_long = array('l, F j, Y - H:i', 'l, j F, Y - H:i', 'l, Y, F j - H:i',
+        'l, F j, Y - g:ia', 'l, j F Y - g:ia', 'l, Y, F j - g:ia', 'l, j. F Y - G:i');
 
   // Date settings: construct choices for user
   foreach ($date_short as $f) {

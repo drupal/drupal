@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.admin.inc,v 1.22 2007/12/18 10:31:42 dries Exp $
+// $Id: menu.admin.inc,v 1.23 2007/12/22 23:24:24 goba Exp $
 
 /**
  * @file
@@ -236,7 +236,7 @@ function menu_edit_item(&$form_state, $type, $item, $menu) {
   );
   if ($type == 'add' || empty($item)) {
     // This is an add form, initialize the menu link.
-    $item = array('link_title' => '', 'mlid' => 0, 'plid' => 0, 'menu_name' => $menu['menu_name'], 'weight' => 0,  'link_path' => '', 'options' => array(), 'module' => 'menu', 'expanded' => 0, 'hidden' => 0, 'has_children' => 0);
+    $item = array('link_title' => '', 'mlid' => 0, 'plid' => 0, 'menu_name' => $menu['menu_name'], 'weight' => 0, 'link_path' => '', 'options' => array(), 'module' => 'menu', 'expanded' => 0, 'hidden' => 0, 'has_children' => 0);
   }
   foreach (array('link_path', 'mlid', 'module', 'has_children', 'options') as $key) {
     $form['menu'][$key] = array('#type' => 'value', '#value' => $item[$key]);

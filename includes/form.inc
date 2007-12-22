@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.254 2007/12/19 22:42:07 goba Exp $
+// $Id: form.inc,v 1.255 2007/12/22 23:24:24 goba Exp $
 
 /**
  * @defgroup form Form generation
@@ -2103,7 +2103,7 @@ function theme_form_element($element, $value) {
   // This is also used in the installer, pre-database setup.
   $t = get_t();
 
-  $output  = '<div class="form-item"';
+  $output = '<div class="form-item"';
   if (!empty($element['#id'])) {
     $output .= ' id="'. $element['#id'] .'-wrapper"';
   }

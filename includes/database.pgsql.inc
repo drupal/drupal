@@ -1,5 +1,5 @@
 <?php
-// $Id: database.pgsql.inc,v 1.65 2007/12/19 13:03:16 goba Exp $
+// $Id: database.pgsql.inc,v 1.66 2007/12/22 23:24:24 goba Exp $
 
 /**
  * @file
@@ -464,7 +464,7 @@ function db_type_map() {
     'float:big' => 'double precision',
     'float:normal' => 'real',
 
-    'numeric:normal'  => 'numeric',
+    'numeric:normal' => 'numeric',
 
     'blob:big' => 'bytea',
     'blob:normal' => 'bytea',

@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.233 2007/12/20 09:20:41 goba Exp $
+// $Id: menu.inc,v 1.234 2007/12/22 23:24:24 goba Exp $
 
 /**
  * @file
@@ -1805,7 +1805,7 @@ function menu_link_save(&$item) {
   }
   db_query("UPDATE {menu_links} SET menu_name = '%s', plid = %d, link_path = '%s',
     router_path = '%s', hidden = %d, external = %d, has_children = %d,
-    expanded = %d, weight = %d,  depth = %d,
+    expanded = %d, weight = %d, depth = %d,
     p1 = %d, p2 = %d, p3 = %d, p4 = %d, p5 = %d, p6 = %d, p7 = %d, p8 = %d, p9 = %d,
     module = '%s', link_title = '%s', options = '%s', customized = %d WHERE mlid = %d",
     $item['menu_name'], $item['plid'], $item['link_path'],
@@ -1910,7 +1910,7 @@ function menu_link_maintain($module, $op, $link_path, $link_title) {
       return menu_link_save($menu_link);
       break;
     case 'update':
-      db_query("UPDATE {menu_links} SET link_title = '%s' WHERE link_path = '%s' AND customized = 0 AND module  = '%s'", $link_title, $link_path, $module);
+      db_query("UPDATE {menu_links} SET link_title = '%s' WHERE link_path = '%s' AND customized = 0 AND module = '%s'", $link_title, $link_path, $module);
       menu_cache_clear();
       break;
     case 'delete':

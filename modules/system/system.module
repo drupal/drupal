@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.571 2007/12/20 23:17:51 goba Exp $
+// $Id: system.module,v 1.572 2007/12/22 23:24:25 goba Exp $
 
 /**
  * @file
@@ -692,7 +692,7 @@ function system_theme_select_form($description = '', $default_value = '', $weigh
         $screenshot = $screenshot ? theme('image', $screenshot, t('Screenshot for %theme theme', array('%theme' => $info->name)), '', array('class' => 'screenshot'), FALSE) : t('no screenshot');
 
         $form['themes'][$info->key]['screenshot'] = array('#value' => $screenshot);
-        $form['themes'][$info->key]['description'] = array('#type' => 'item', '#title' => $info->name,  '#value' => dirname($info->filename) . ($info->name == variable_get('theme_default', 'garland') ? '<br /> <em>'. t('(site default theme)') .'</em>' : ''));
+        $form['themes'][$info->key]['description'] = array('#type' => 'item', '#title' => $info->name, '#value' => dirname($info->filename) . ($info->name == variable_get('theme_default', 'garland') ? '<br /> <em>'. t('(site default theme)') .'</em>' : ''));
         $options[$info->key] = '';
       }
 

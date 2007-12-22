@@ -1,5 +1,5 @@
 <?php
-// $Id: session.inc,v 1.43 2007/12/05 19:12:58 goba Exp $
+// $Id: session.inc,v 1.44 2007/12/22 23:24:24 goba Exp $
 
 /**
  * @file
@@ -45,7 +45,7 @@ function sess_read($key) {
     }
   }
   // We didn't find the client's record (session has expired), or they are an anonymous user.
-  else  {
+  else {
     $session = isset($user->session) ? $user->session : '';
     $user = drupal_anonymous_user($session);
   }

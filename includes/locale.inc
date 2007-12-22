@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.168 2007/12/18 16:27:44 goba Exp $
+// $Id: locale.inc,v 1.169 2007/12/22 23:24:24 goba Exp $
 
 /**
  * @file
@@ -1071,7 +1071,7 @@ function _locale_import_read_po($op, $file, $mode = NULL, $lang = NULL, $group =
       $line = trim(substr($line, 5));
       $quoted = _locale_import_parse_quoted($line);
       if ($quoted === FALSE) {
-        _locale_import_message('The translation file %filename contains a syntax error on line %line.', $file,  $lineno);
+        _locale_import_message('The translation file %filename contains a syntax error on line %line.', $file, $lineno);
         return FALSE;
       }
       $current["msgid"] = $quoted;

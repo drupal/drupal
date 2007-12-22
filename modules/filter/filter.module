@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.198 2007/12/20 21:55:57 goba Exp $
+// $Id: filter.module,v 1.199 2007/12/22 23:24:24 goba Exp $
 
 /**
  * @file
@@ -160,7 +160,7 @@ function filter_filter_tips($delta, $format, $long = FALSE) {
   global $base_url;
   switch ($delta) {
     case 0:
-      if (variable_get("filter_html_$format", FILTER_HTML_STRIP) ==  FILTER_HTML_STRIP) {
+      if (variable_get("filter_html_$format", FILTER_HTML_STRIP) == FILTER_HTML_STRIP) {
         if ($allowed_html = variable_get("allowed_html_$format", '<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd>')) {
           switch ($long) {
             case 0:
@@ -724,7 +724,7 @@ function _filter_url($text, $format) {
   // Pass length to regexp callback
   _filter_url_trim(NULL, variable_get('filter_url_length_'. $format, 72));
 
-  $text   = ' '. $text .' ';
+  $text = ' '. $text .' ';
 
   // Match absolute URLs.
   $text = preg_replace_callback("`(<p>|<li>|<br\s*/?>|[ \n\r\t\(])((http://|https://|ftp://|mailto:|smb://|afp://|file://|gopher://|news://|ssl://|sslv2://|sslv3://|tls://|tcp://|udp://)([a-zA-Z0-9@:%_+*~#?&=.,/;-]*[a-zA-Z0-9@:%_+*~#&=/;-]))([.,?!]*?)(?=(</p>|</li>|<br\s*/?>|[ \n\r\t\)]))`i", '_filter_url_parse_full_links', $text);

@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.745 2007/12/22 21:12:04 goba Exp $
+// $Id: common.inc,v 1.746 2007/12/22 23:24:24 goba Exp $
 
 /**
  * @file
@@ -3244,7 +3244,7 @@ function drupal_write_record($table, &$object, $update = array()) {
     }
 
     // For inserts, populate defaults from Schema if not already provided
-    if (!isset($object->$field)  && !count($update) && isset($info['default'])) {
+    if (!isset($object->$field) && !count($update) && isset($info['default'])) {
       $object->$field = $info['default'];
     }
 

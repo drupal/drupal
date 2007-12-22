@@ -1,5 +1,5 @@
 <?php
-// $Id: user.admin.inc,v 1.11 2007/11/24 20:13:43 goba Exp $
+// $Id: user.admin.inc,v 1.12 2007/12/22 23:24:25 goba Exp $
 
 /**
  * @file
@@ -934,7 +934,7 @@ function theme_user_admin_account($form) {
       );
     }
   }
-  else  {
+  else {
     $rows[] = array(array('data' => t('No users available.'), 'colspan' => '7'));
   }
 

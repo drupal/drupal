@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.15 2007/12/20 09:08:35 goba Exp $
+// $Id: node.admin.inc,v 1.16 2007/12/22 23:24:25 goba Exp $
 
 /**
  * @file
@@ -23,7 +23,7 @@ function node_configure() {
 
   $form['default_nodes_main'] = array(
     '#type' => 'select', '#title' => t('Number of posts on main page'), '#default_value' => variable_get('default_nodes_main', 10),
-    '#options' =>  drupal_map_assoc(array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30)),
+    '#options' => drupal_map_assoc(array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30)),
     '#description' => t('The default maximum number of posts to display per page on overview pages such as the main page.')
   );
   $form['teaser_length'] = array(
@@ -478,7 +478,7 @@ function node_admin_nodes() {
   foreach (module_invoke_all('node_operations') as $operation => $array) {
     $options[$operation] = $array['label'];
   }
-  $form['options']['operation'] = array('#type' => 'select', '#options' => $options,  '#default_value' => 'approve');
+  $form['options']['operation'] = array('#type' => 'select', '#options' => $options, '#default_value' => 'approve');
   $form['options']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Update'),
@@ -494,7 +494,7 @@ function node_admin_nodes() {
     $form['title'][$node->nid] = array('#value' => l($node->title, 'node/'. $node->nid, $options) .' '. theme('mark', node_mark($node->nid, $node->changed)));
     $form['name'][$node->nid] =  array('#value' => check_plain(node_get_types('name', $node)));
     $form['username'][$node->nid] = array('#value' => theme('username', $node));
-    $form['status'][$node->nid] =  array('#value' =>  ($node->status ? t('published') : t('not published')));
+    $form['status'][$node->nid] =  array('#value' => ($node->status ? t('published') : t('not published')));
     if ($multilanguage) {
       $form['language'][$node->nid] = array('#value' => empty($node->language) ? t('Language neutral') : t($languages[$node->language]->name));
     }
@@ -540,7 +540,7 @@ function theme_node_admin_nodes($form) {
     }
 
   }
-  else  {
+  else {
     $rows[] = array(array('data' => t('No posts available.'), 'colspan' => '6'));
   }
 

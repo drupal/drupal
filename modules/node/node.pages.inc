@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.19 2007/12/20 09:20:41 goba Exp $
+// $Id: node.pages.inc,v 1.20 2007/12/22 23:24:25 goba Exp $
 
 /**
  * @file
@@ -17,7 +17,7 @@ function node_page_edit($node) {
 
 function node_add_page() {
   $item = menu_get_item();
-  $content  = system_admin_menu_block($item);
+  $content = system_admin_menu_block($item);
   return theme('node_add_list', $content);
 }
 
@@ -153,7 +153,7 @@ function node_form(&$form_state, $node) {
       '#weight' => 20,
     );
     $form['revision_information']['revision'] = array(
-      '#access' =>  user_access('administer nodes'),
+      '#access' => user_access('administer nodes'),
       '#type' => 'checkbox',
       '#title' => t('Create new revision'),
       '#default_value' => $node->revision,
@@ -555,7 +555,7 @@ function node_revision_overview($node) {
  */
 function node_revision_revert_confirm($form_state, $node_revision) {
   $form['#node_revision'] = $node_revision;
-  return confirm_form($form, t('Are you sure you want to revert to the revision from %revision-date?', array('%revision-date' =>  format_date($node_revision->revision_timestamp))), 'node/'. $node_revision->nid .'/revisions', '', t('Revert'), t('Cancel'));
+  return confirm_form($form, t('Are you sure you want to revert to the revision from %revision-date?', array('%revision-date' => format_date($node_revision->revision_timestamp))), 'node/'. $node_revision->nid .'/revisions', '', t('Revert'), t('Cancel'));
 }
 
 function node_revision_revert_confirm_submit($form, &$form_state) {
@@ -575,7 +575,7 @@ function node_revision_revert_confirm_submit($form, &$form_state) {
 
 function node_revision_delete_confirm($form_state, $node_revision) {
   $form['#node_revision'] = $node_revision;
-  return confirm_form($form, t('Are you sure you want to delete the revision from %revision-date?', array('%revision-date' =>  format_date($node_revision->revision_timestamp))), 'node/'. $node_revision->nid .'/revisions', t('This action cannot be undone.'), t('Delete'), t('Cancel'));
+  return confirm_form($form, t('Are you sure you want to delete the revision from %revision-date?', array('%revision-date' => format_date($node_revision->revision_timestamp))), 'node/'. $node_revision->nid .'/revisions', t('This action cannot be undone.'), t('Delete'), t('Cancel'));
 }
 
 function node_revision_delete_confirm_submit($form, &$form_state) {

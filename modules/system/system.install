@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.216 2007/12/20 08:57:55 goba Exp $
+// $Id: system.install,v 1.217 2007/12/22 23:24:25 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -1231,7 +1231,7 @@ function system_update_1004() {
   switch ($GLOBALS['db_type']) {
     case 'mysql':
     case 'mysqli':
-    $ret[] = update_sql("ALTER TABLE {access} CHANGE `aid` `aid` int  NOT NULL AUTO_INCREMENT ");
+    $ret[] = update_sql("ALTER TABLE {access} CHANGE `aid` `aid` int NOT NULL AUTO_INCREMENT ");
     $ret[] = update_sql("ALTER TABLE {boxes} CHANGE `bid` `bid` int NOT NULL AUTO_INCREMENT ");
       break;
     case 'pgsql':
@@ -2279,7 +2279,7 @@ function system_update_6021() {
       // This can only occur if the menu entry is a leftover in the menu table.
       // These do not appear in Drupal 5 anyways, so we skip them.
       if (!$item) {
-        db_query('UPDATE {menu} SET converted = %d WHERE mid  = %d', 1, $item_original['mid']);
+        db_query('UPDATE {menu} SET converted = %d WHERE mid = %d', 1, $item_original['mid']);
         $_SESSION['system_update_6021']++;
         continue;
       }
@@ -2341,7 +2341,7 @@ function system_update_6021() {
       $_SESSION['menu_menu_map'][$item['mid']] = $item['menu_name'];
       $_SESSION['menu_item_map'][$item['mid']] = FALSE;
     }
-    db_query('UPDATE {menu} SET converted = %d WHERE mid  = %d', 1, $item['mid']);
+    db_query('UPDATE {menu} SET converted = %d WHERE mid = %d', 1, $item['mid']);
     $_SESSION['system_update_6021']++;
   }
 
@@ -2361,8 +2361,8 @@ function system_update_6021() {
     foreach ($_SESSION['menu_menu_map'] as $mid => $menu_name) {
       // This is again secure because we deleted every non-alpanumeric
       // character from the menu name.
-      $ret[] = update_sql("UPDATE {blocks} SET delta = '". $menu_name ."' WHERE module  = 'menu' AND delta = '". $mid ."'");
-      $ret[] = update_sql("UPDATE {blocks_roles} SET delta = '". $menu_name ."' WHERE module  = 'menu' AND delta = '". $mid ."'");
+      $ret[] = update_sql("UPDATE {blocks} SET delta = '". $menu_name ."' WHERE module = 'menu' AND delta = '". $mid ."'");
+      $ret[] = update_sql("UPDATE {blocks_roles} SET delta = '". $menu_name ."' WHERE module = 'menu' AND delta = '". $mid ."'");
     }
     $ret[] = array('success' => TRUE, 'query' => 'Relocated '. $_SESSION['system_update_6021'] .'existing items to the new menu system.');
     $ret[] = update_sql("DROP TABLE {menu}");

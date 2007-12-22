@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.admin.inc,v 1.4 2007/12/20 22:02:08 goba Exp $
+// $Id: statistics.admin.inc,v 1.5 2007/12/22 23:24:25 goba Exp $
 
 /**
  * @file
@@ -189,7 +189,7 @@ function statistics_access_logging_settings() {
   $form['access']['statistics_enable_access_log'] = array(
     '#type' => 'radios',
     '#title' => t('Enable access log'),
-    '#default_value' =>  variable_get('statistics_enable_access_log', 0),
+    '#default_value' => variable_get('statistics_enable_access_log', 0),
     '#options' => $options,
     '#description' => t('Log each page access. Required for referrer statistics.'));
   $period = drupal_map_assoc(array(3600, 10800, 21600, 32400, 43200, 86400, 172800, 259200, 604800, 1209600, 2419200, 4838400, 9676800), 'format_interval');

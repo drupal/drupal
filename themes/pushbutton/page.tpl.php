@@ -1,5 +1,5 @@
 <?php
-// $Id: page.tpl.php,v 1.22 2007/12/05 16:34:07 goba Exp $
+// $Id: page.tpl.php,v 1.23 2007/12/22 23:24:26 goba Exp $
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="<?php print $language->language ?>" xml:lang="<?php print $language->language ?>">
 <head>
@@ -41,7 +41,7 @@
     <td class="secondary-links" width="75%"  align="center" valign="middle">
       <?php print theme('links', $secondary_links, array('class' => 'links', 'id' => 'subnavlist')) ?>
     </td>
-    <td  width="25%"  align="center" valign="middle">
+    <td width="25%" align="center" valign="middle">
       <?php print $search_box ?>
     </td>
   </tr>

@@ -1,5 +1,5 @@
 <?php
-// $Id: block.admin.inc,v 1.13 2007/12/19 19:13:28 goba Exp $
+// $Id: block.admin.inc,v 1.14 2007/12/22 23:24:24 goba Exp $
 
 /**
  * @file
@@ -155,7 +155,7 @@ function block_admin_configure(&$form_state, $module = NULL, $delta = 0) {
     '#type' => 'textfield',
     '#title' => t('Block title'),
     '#maxlength' => 64,
-    '#description' =>  $module == 'block' ? t('The title of the block as shown to the user.') : t('Override the default title for the block. Use <em>&lt;none&gt;</em> to display no title, or leave blank to use the default block title.'),
+    '#description' => $module == 'block' ? t('The title of the block as shown to the user.') : t('Override the default title for the block. Use <em>&lt;none&gt;</em> to display no title, or leave blank to use the default block title.'),
     '#default_value' => $edit['title'],
     '#weight' => -18,
   );
@@ -188,7 +188,7 @@ function block_admin_configure(&$form_state, $module = NULL, $delta = 0) {
       t('Show this block by default, but let individual users hide it.'),
       t('Hide this block by default but let individual users show it.')
     ),
-    '#description' =>  t('Allow individual users to customize the visibility of this block in their account settings.'),
+    '#description' => t('Allow individual users to customize the visibility of this block in their account settings.'),
     '#default_value' => $edit['custom'],
   );
 
@@ -213,7 +213,7 @@ function block_admin_configure(&$form_state, $module = NULL, $delta = 0) {
     '#title' => t('Show block for specific roles'),
     '#default_value' => $default_role_options,
     '#options' => $role_options,
-    '#description' =>  t('Show this block only for the selected role(s). If you select no roles, the block will be visible to all users.'),
+    '#description' => t('Show this block only for the selected role(s). If you select no roles, the block will be visible to all users.'),
   );
 
   $form['page_vis_settings'] = array(
@@ -298,7 +298,7 @@ function block_add_block_form_validate($form, &$form_state) {
  * Save the new custom block.
  */
 function block_add_block_form_submit($form, &$form_state) {
-  db_query("INSERT INTO {boxes} (body, info, format) VALUES  ('%s', '%s', %d)", $form_state['values']['body'], $form_state['values']['info'], $form_state['values']['format']);
+  db_query("INSERT INTO {boxes} (body, info, format) VALUES ('%s', '%s', %d)", $form_state['values']['body'], $form_state['values']['info'], $form_state['values']['format']);
   $delta = db_last_insert_id('boxes', 'bid');
 
   foreach (list_themes() as $key => $theme) {

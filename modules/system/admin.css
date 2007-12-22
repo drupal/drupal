@@ -1,4 +1,4 @@
-/* $Id: admin.css,v 1.17 2007/09/01 05:27:04 dries Exp $ */
+/* $Id: admin.css,v 1.18 2007/12/22 23:24:25 goba Exp $ */
 
 /*
 ** Formatting for administration page
@@ -67,7 +67,7 @@ table.system-status-report th {
 table.system-status-report th, table.system-status-report tr.merge-up td {
   padding-left: 30px; /* LTR */
 }
-table.system-status-report th  {
+table.system-status-report th {
   background-repeat: no-repeat;
   background-position: 5px 50%; /* LTR */
   padding-top: 6px;

@@ -1,5 +1,5 @@
 <?php
-// $Id: chameleon.theme,v 1.72 2007/12/05 16:34:06 goba Exp $
+// $Id: chameleon.theme,v 1.73 2007/12/22 23:24:26 goba Exp $
 
 /**
  * @file
@@ -95,7 +95,7 @@ function chameleon_page($content, $show_blocks = TRUE, $show_messages = TRUE) {
     $output .= " <div id=\"footer\">$footer</div>\n";
   }
 
-  $output  .= "   </td>\n";
+  $output .= "   </td>\n";
 
   if ($show_blocks && !empty($blocks_right)) {
     $output .= "   <td id=\"sidebar-right\">$blocks_right</td>\n";

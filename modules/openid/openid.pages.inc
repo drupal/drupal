@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.pages.inc,v 1.2 2007/11/08 13:58:32 goba Exp $
+// $Id: openid.pages.inc,v 1.3 2007/12/22 23:24:25 goba Exp $
 
 /**
  * @file
@@ -73,7 +73,7 @@ function openid_user_add_validate($form, &$form_state) {
     form_set_error('openid_url', t('That OpenID is already in use on this site.'));
   }
   else {
-    $return_to = url('user/'. arg(1)  .'/openid', array('absolute' => TRUE));
+    $return_to = url('user/'. arg(1) .'/openid', array('absolute' => TRUE));
     openid_begin($form_state['values']['openid_url'], $return_to);
   }
 }
