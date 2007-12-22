@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.438 2007/12/20 21:43:01 goba Exp $
+// $Id: forum.module,v 1.439 2007/12/22 23:11:31 goba Exp $
 
 /**
  * @file
@@ -258,7 +258,7 @@ function forum_nodeapi(&$node, $op, $teaser, $page) {
       break;
 
     case 'update':
-      if (!$node->revision && db_result(db_query('SELECT tid FROM {forum} WHERE nid=%d', $node->nid))) {
+      if (empty($node->revision) && db_result(db_query('SELECT tid FROM {forum} WHERE nid=%d', $node->nid))) {
         if (!empty($node->tid)) {
           db_query('UPDATE {forum} SET tid = %d WHERE vid = %d', $node->tid, $node->vid);
         }
