@@ -363,7 +363,7 @@ html.js .resizable-textarea textarea {
 /*
 ** Table drag and drop.
 */
-a.tabledrag-handle {
+.draggable a.tabledrag-handle {
   cursor: move;
   float: left; /* LTR */
   height: 1.7em;
