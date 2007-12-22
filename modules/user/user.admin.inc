@@ -934,7 +934,7 @@ function theme_user_admin_account($form) {
       );
     }
   }
-  else  {
+  else {
     $rows[] = array(array('data' => t('No users available.'), 'colspan' => '7'));
   }
 

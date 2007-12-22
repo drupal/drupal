@@ -1071,7 +1071,7 @@ function _locale_import_read_po($op, $file, $mode = NULL, $lang = NULL, $group =
       $line = trim(substr($line, 5));
       $quoted = _locale_import_parse_quoted($line);
       if ($quoted === FALSE) {
-        _locale_import_message('The translation file %filename contains a syntax error on line %line.', $file,  $lineno);
+        _locale_import_message('The translation file %filename contains a syntax error on line %line.', $file, $lineno);
         return FALSE;
       }
       $current["msgid"] = $quoted;

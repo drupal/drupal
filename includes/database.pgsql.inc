@@ -464,7 +464,7 @@ function db_type_map() {
     'float:big' => 'double precision',
     'float:normal' => 'real',
 
-    'numeric:normal'  => 'numeric',
+    'numeric:normal' => 'numeric',
 
     'blob:big' => 'bytea',
     'blob:normal' => 'bytea',

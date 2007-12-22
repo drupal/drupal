@@ -67,7 +67,7 @@ table.system-status-report th {
 table.system-status-report th, table.system-status-report tr.merge-up td {
   padding-left: 30px; /* LTR */
 }
-table.system-status-report th  {
+table.system-status-report th {
   background-repeat: no-repeat;
   background-position: 5px 50%; /* LTR */
   padding-top: 6px;

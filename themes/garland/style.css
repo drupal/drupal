@@ -500,7 +500,7 @@ body.sidebars #squeeze {
   z-index: 3;
 }
 
-body.sidebar-left  #footer {
+body.sidebar-left #footer {
   margin-left: -210px;
 }
 
@@ -840,7 +840,7 @@ fieldset {
   background-color: transparent;
 }
 
-*:first-child+html fieldset > .description, *:first-child+html fieldset .fieldset-wrapper .description  {
+*:first-child+html fieldset > .description, *:first-child+html fieldset .fieldset-wrapper .description {
   padding-top: 1em;
 }
 

@@ -141,7 +141,7 @@ function node_type_form(&$form_state, $type = NULL) {
   $form['submission']['help']  = array(
     '#type' => 'textarea',
     '#title' => t('Explanation or submission guidelines'),
-    '#default_value' =>  $type->help,
+    '#default_value' => $type->help,
     '#description' => t('This text will be displayed at the top of the submission form for this content type. It is useful for helping or instructing your users.')
   );
   $form['workflow'] = array(

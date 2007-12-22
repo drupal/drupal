@@ -143,7 +143,7 @@ function book_outline_form(&$form_state, $node) {
  *
  * @see book_outline_form()
  */
-function book_remove_button_submit($form,  &$form_state) {
+function book_remove_button_submit($form, &$form_state) {
   $form_state['redirect'] = 'node/'. $form['#node']->nid .'/outline/remove';
 }
 
@@ -196,7 +196,7 @@ function book_remove_form(&$form_state, $node) {
     $description = t('%title may be added to hierarchy again using the Outline tab.', $title);
   }
 
-  return confirm_form($form, t('Are you sure you want to remove %title from the book hierarchy?', $title), 'node/'. $node->nid,  $description, t('Remove'));
+  return confirm_form($form, t('Are you sure you want to remove %title from the book hierarchy?', $title), 'node/'. $node->nid, $description, t('Remove'));
 }
 
 /**

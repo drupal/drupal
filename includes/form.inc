@@ -2103,7 +2103,7 @@ function theme_form_element($element, $value) {
   // This is also used in the installer, pre-database setup.
   $t = get_t();
 
-  $output  = '<div class="form-item"';
+  $output = '<div class="form-item"';
   if (!empty($element['#id'])) {
     $output .= ' id="'. $element['#id'] .'-wrapper"';
   }

@@ -41,7 +41,7 @@
     <td class="secondary-links" width="75%"  align="center" valign="middle">
       <?php print theme('links', $secondary_links, array('class' => 'links', 'id' => 'subnavlist')) ?>
     </td>
-    <td  width="25%"  align="center" valign="middle">
+    <td width="25%" align="center" valign="middle">
       <?php print $search_box ?>
     </td>
   </tr>

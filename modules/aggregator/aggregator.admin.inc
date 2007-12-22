@@ -217,7 +217,7 @@ function aggregator_admin_settings() {
   $form['aggregator_summary_items'] = array(
     '#type' => 'select', '#title' => t('Items shown in sources and categories pages') ,
     '#default_value' => variable_get('aggregator_summary_items', 3), '#options' => $items,
-    '#description' =>  t('Number of feed items displayed in feed and category summary pages.')
+    '#description' => t('Number of feed items displayed in feed and category summary pages.')
   );
 
   $form['aggregator_clear'] = array(

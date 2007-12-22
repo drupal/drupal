@@ -1049,7 +1049,7 @@ function book_menu_subtree_data($item) {
       $data = $cache->data;
     }
     else {
-      $match = array("menu_name  = '%s'");
+      $match = array("menu_name = '%s'");
       $args = array($item['menu_name']);
       $i = 1;
       while ($i <= MENU_MAX_DEPTH && $item["p$i"]) {

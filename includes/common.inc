@@ -3244,7 +3244,7 @@ function drupal_write_record($table, &$object, $update = array()) {
     }
 
     // For inserts, populate defaults from Schema if not already provided
-    if (!isset($object->$field)  && !count($update) && isset($info['default'])) {
+    if (!isset($object->$field) && !count($update) && isset($info['default'])) {
       $object->$field = $info['default'];
     }
 

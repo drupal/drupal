@@ -825,7 +825,7 @@ function taxonomy_get_tree($vid, $parent = 0, $depth = -1, $max_depth = NULL) {
   if (!isset($children[$vid])) {
     $children[$vid] = array();
 
-    $result = db_query(db_rewrite_sql('SELECT t.tid, t.*, parent FROM {term_data} t INNER JOIN  {term_hierarchy} h ON t.tid = h.tid WHERE t.vid = %d ORDER BY weight, name', 't', 'tid'), $vid);
+    $result = db_query(db_rewrite_sql('SELECT t.tid, t.*, parent FROM {term_data} t INNER JOIN {term_hierarchy} h ON t.tid = h.tid WHERE t.vid = %d ORDER BY weight, name', 't', 'tid'), $vid);
     while ($term = db_fetch_object($result)) {
       $children[$vid][$term->parent][] = $term->tid;
       $parents[$vid][$term->tid][] = $term->parent;
