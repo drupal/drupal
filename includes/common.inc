@@ -3017,12 +3017,12 @@ function drupal_common_theme() {
  * The returned schema will include any modifications made by any
  * module that implements hook_schema_alter().
  *
- * @param $name
+ * @param $table
  *   The name of the table. If not given, the schema of all tables is returned.
  * @param $rebuild
  *   If true, the schema will be rebuilt instead of retrieved from the cache.
  */
-function drupal_get_schema($name = NULL, $rebuild = FALSE) {
+function drupal_get_schema($table = NULL, $rebuild = FALSE) {
   static $schema = array();
 
   if (empty($schema) || $rebuild) {
@@ -3048,11 +3048,11 @@ function drupal_get_schema($name = NULL, $rebuild = FALSE) {
     }
   }
 
-  if (!isset($name)) {
+  if (!isset($table)) {
     return $schema;
   }
-  elseif (isset($schema[$name])) {
-    return $schema[$name];
+  elseif (isset($schema[$table])) {
+    return $schema[$table];
   }
   else {
     return FALSE;
