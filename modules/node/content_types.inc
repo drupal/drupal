@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.47 2007/11/28 10:29:20 dries Exp $
+// $Id: content_types.inc,v 1.48 2007/12/22 23:21:54 goba Exp $
 
 /**
  * @file
@@ -299,19 +299,20 @@ function node_type_form_submit($form, &$form_state) {
 
   // Save or reset persistent variable values.
   foreach ($variables as $key => $value) {
-    $key .= '_'. $type->type;
+    $variable_new = $key .'_'. $type->type;
+    $variable_old = $key .'_'. $type->old_type;
+
     if ($op == t('Reset to defaults')) {
-      variable_del($key);
+      variable_del($variable_old);
     }
     else {
       if (is_array($value)) {
         $value = array_keys(array_filter($value));
       }
-      variable_set($key, $value);
+      variable_set($variable_new, $value);
 
-      if ($type->old_type != $type->type) {
-        $key = str_replace($type->type, $type->old_type, $key);
-        variable_del($key);
+      if ($variable_new != $variable_old) {
+        variable_del($variable_old);
       }
     }
   }
