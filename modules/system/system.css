@@ -1,4 +1,4 @@
-/* $Id: system.css,v 1.45 2007/12/13 10:14:18 goba Exp $ */
+/* $Id: system.css,v 1.46 2007/12/22 22:25:50 goba Exp $ */
 
 /*
 ** HTML elements
@@ -363,7 +363,7 @@ html.js .resizable-textarea textarea {
 /*
 ** Table drag and drop.
 */
-a.tabledrag-handle {
+.draggable a.tabledrag-handle {
   cursor: move;
   float: left; /* LTR */
   height: 1.7em;
