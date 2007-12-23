@@ -1,5 +1,5 @@
 <?php
-// $Id: database.pgsql.inc,v 1.66 2007/12/22 23:24:24 goba Exp $
+// $Id: database.pgsql.inc,v 1.67 2007/12/23 13:22:12 goba Exp $
 
 /**
  * @file
@@ -444,7 +444,7 @@ function db_type_map() {
   // database types back into schema types.
   $map = array(
     'varchar:normal' => 'varchar',
-    'char:normal' => 'char',
+    'char:normal' => 'character',
 
     'text:tiny' => 'text',
     'text:small' => 'text',

@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysql-common.inc,v 1.15 2007/12/18 10:31:42 dries Exp $
+// $Id: database.mysql-common.inc,v 1.16 2007/12/23 13:22:12 goba Exp $
 
 /**
  * @file
@@ -225,7 +225,7 @@ function db_type_map() {
     'float:big'       => 'DOUBLE',
     'float:normal'    => 'FLOAT',
 
-    'numeric:normal'  => 'NUMERIC',
+    'numeric:normal'  => 'DECIMAL',
 
     'blob:big'        => 'LONGBLOB',
     'blob:normal'     => 'BLOB',
