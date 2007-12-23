@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.244 2007/12/20 11:57:19 goba Exp $
+// $Id: update.php,v 1.245 2007/12/23 12:40:22 goba Exp $
 
 /**
  * @file
@@ -197,7 +197,7 @@ function update_script_selection_form() {
       $last_removed = module_invoke($module, 'update_last_removed');
       if ($schema_version < $last_removed) {
         $form['start'][$module] = array(
-          '#value'  => t('%module module can not be updated. Its schema version is %schema_version. Updates up to and including %last_removed have been removed in this release. In order to update %module module, you will first <a href="@upgrade">need to upgrade</a> to the last version in which these updates were available.', array('%module' => $module, '%schema_version' => $schema_version, '%last_removed' => $last_removed, '@upgrade' => url('http://drupal.org/upgrade'))),
+          '#value'  => '<em>'. $module .'</em> module can not be updated. Its schema version is '. $schema_version .'. Updates up to and including '. $last_removed .' have been removed in this release. In order to update <em>'. $module .'</em> module, you will first <a href="http://drupal.org/upgrade">need to upgrade</a> to the last version in which these updates were available.',
           '#prefix' => '<div class="warning">',
           '#suffix' => '</div>',
         );
