@@ -1,5 +1,5 @@
 <?php
-// $Id: color.module,v 1.35 2007/12/18 21:29:43 dries Exp $
+// $Id: color.module,v 1.36 2007/12/23 13:17:19 goba Exp $
 
 /**
  * Implementation of hook_help().
@@ -627,9 +627,11 @@ function _color_hsl2rgb($hsl) {
   $l = $hsl[2];
   $m2 = ($l <= 0.5) ? $l * ($s + 1) : $l + $s - $l*$s;
   $m1 = $l * 2 - $m2;
-  return array(_color_hue2rgb($m1, $m2, $h + 0.33333),
-               _color_hue2rgb($m1, $m2, $h),
-               _color_hue2rgb($m1, $m2, $h - 0.33333));
+  return array(
+    _color_hue2rgb($m1, $m2, $h + 0.33333),
+    _color_hue2rgb($m1, $m2, $h),
+    _color_hue2rgb($m1, $m2, $h - 0.33333),
+  );
 }
 
 /**

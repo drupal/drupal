@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.232 2007/12/19 18:31:29 goba Exp $
+// $Id: profile.module,v 1.233 2007/12/23 13:17:20 goba Exp $
 
 /**
  * @file
@@ -266,13 +266,15 @@ function profile_view_field($user, $field) {
         // Note: Avoid PHP's date() because it does not handle dates before
         // 1970 on Windows. This would make the date field useless for e.g.
         // birthdays.
-        $replace = array('d' => sprintf('%02d', $value['day']),
-                         'j' => $value['day'],
-                         'm' => sprintf('%02d', $value['month']),
-                         'M' => map_month($value['month']),
-                         'Y' => $value['year'],
-                         'H:i' => NULL,
-                         'g:ia' => NULL);
+        $replace = array(
+          'd' => sprintf('%02d', $value['day']),
+          'j' => $value['day'],
+          'm' => sprintf('%02d', $value['month']),
+          'M' => map_month($value['month']),
+          'Y' => $value['year'],
+          'H:i' => NULL,
+          'g:ia' => NULL,
+        );
         return strtr($format, $replace);
       case 'list':
         $values = split("[,\n\r]", $value);

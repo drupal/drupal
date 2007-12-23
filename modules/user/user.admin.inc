@@ -1,5 +1,5 @@
 <?php
-// $Id: user.admin.inc,v 1.12 2007/12/22 23:24:25 goba Exp $
+// $Id: user.admin.inc,v 1.13 2007/12/23 13:17:20 goba Exp $
 
 /**
  * @file
@@ -44,10 +44,11 @@ function user_filter_form() {
   $filters = user_filters();
 
   $i = 0;
-  $form['filters'] = array('#type' => 'fieldset',
-                       '#title' => t('Show only users where'),
-                       '#theme' => 'user_filters',
-                     );
+  $form['filters'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Show only users where'),
+    '#theme' => 'user_filters',
+  );
   foreach ($session as $filter) {
     list($type, $value) = $filter;
     // Merge an array of arrays into one if necessary.
@@ -63,24 +64,29 @@ function user_filter_form() {
 
   foreach ($filters as $key => $filter) {
     $names[$key] = $filter['title'];
-    $form['filters']['status'][$key] = array('#type' => 'select',
-                                         '#options' => $filter['options'],
-                                       );
+    $form['filters']['status'][$key] = array(
+      '#type' => 'select',
+      '#options' => $filter['options'],
+    );
   }
 
-  $form['filters']['filter'] = array('#type' => 'radios',
-                                 '#options' => $names,
-                               );
-  $form['filters']['buttons']['submit'] = array('#type' => 'submit',
-                                            '#value' => (count($session) ? t('Refine') : t('Filter'))
-                                          );
+  $form['filters']['filter'] = array(
+    '#type' => 'radios',
+    '#options' => $names,
+  );
+  $form['filters']['buttons']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => (count($session) ? t('Refine') : t('Filter')),
+  );
   if (count($session)) {
-    $form['filters']['buttons']['undo'] = array('#type' => 'submit',
-                                            '#value' => t('Undo')
-                                          );
-    $form['filters']['buttons']['reset'] = array('#type' => 'submit',
-                                             '#value' => t('Reset')
-                                           );
+    $form['filters']['buttons']['undo'] = array(
+      '#type' => 'submit',
+      '#value' => t('Undo'),
+    );
+    $form['filters']['buttons']['reset'] = array(
+      '#type' => 'submit',
+      '#value' => t('Reset'),
+    );
   }
 
   drupal_add_js('misc/form.js', 'core');

@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.369 2007/12/20 08:57:54 goba Exp $
+// $Id: aggregator.module,v 1.370 2007/12/23 13:17:19 goba Exp $
 
 /**
  * @file
@@ -606,21 +606,14 @@ function aggregator_refresh($feed) {
     case 307:
       // Filter the input data:
       if (aggregator_parse_feed($result->data, $feed)) {
-
         $modified = empty($result->headers['Last-Modified']) ? 0 : strtotime($result->headers['Last-Modified']);
 
-        /*
-        ** Prepare the channel data:
-        */
-
+        // Prepare the channel data.
         foreach ($channel as $key => $value) {
           $channel[$key] = trim($value);
         }
 
-        /*
-        ** Prepare the image data (if any):
-        */
-
+        // Prepare the image data (if any).
         foreach ($image as $key => $value) {
           $image[$key] = trim($value);
         }
@@ -634,16 +627,10 @@ function aggregator_refresh($feed) {
         }
 
         $etag = empty($result->headers['ETag']) ? '' : $result->headers['ETag'];
-        /*
-        ** Update the feed data:
-        */
-
+        // Update the feed data.
         db_query("UPDATE {aggregator_feed} SET url = '%s', checked = %d, link = '%s', description = '%s', image = '%s', etag = '%s', modified = %d WHERE fid = %d", $feed['url'], time(), $channel['LINK'], $channel['DESCRIPTION'], $image, $etag, $modified, $feed['fid']);
 
-        /*
-        ** Clear the cache:
-        */
-
+        // Clear the cache.
         cache_clear_all();
 
         watchdog('aggregator', 'There is new syndicated content from %site.', array('%site' => $feed['title']));

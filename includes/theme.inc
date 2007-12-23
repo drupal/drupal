@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.406 2007/12/20 09:20:41 goba Exp $
+// $Id: theme.inc,v 1.407 2007/12/23 13:17:19 goba Exp $
 
 /**
  * @file
@@ -754,7 +754,7 @@ function drupal_find_theme_functions($cache, $prefixes) {
 function drupal_find_theme_templates($cache, $extension, $path) {
   $templates = array();
 
-  // Escape the dots in the extension.
+  // Escape the periods in the extension.
   $regex = str_replace('.', '\.', $extension) .'$';
 
   // Because drupal_system_listing works the way it does, we check for real

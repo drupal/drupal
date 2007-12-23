@@ -1,12 +1,13 @@
 <?php
-// $Id: xmlrpc.inc,v 1.44 2007/12/20 08:57:54 goba Exp $
+// $Id: xmlrpc.inc,v 1.45 2007/12/23 13:17:19 goba Exp $
 
-/*
-  Drupal XML-RPC library. Based on the IXR - The Incutio XML-RPC Library - (c) Incutio Ltd 2002-2005
-   Version 1.7 (beta) - Simon Willison, 23rd May 2005
-   Site:   http://scripts.incutio.com/xmlrpc/
-   Manual: http://scripts.incutio.com/xmlrpc/manual.php
-   This version is made available under the GNU GPL License
+/**
+ * @file
+ * Drupal XML-RPC library. Based on the IXR - The Incutio XML-RPC Library - (c) Incutio Ltd 2002-2005
+ * Version 1.7 (beta) - Simon Willison, 23rd May 2005
+ * Site:   http://scripts.incutio.com/xmlrpc/
+ * Manual: http://scripts.incutio.com/xmlrpc/manual.php
+ * This version is made available under the GNU GPL License
  */
 
 /**
