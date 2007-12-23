@@ -225,7 +225,7 @@ function db_type_map() {
     'float:big'       => 'DOUBLE',
     'float:normal'    => 'FLOAT',
 
-    'numeric:normal'  => 'NUMERIC',
+    'numeric:normal'  => 'DECIMAL',
 
     'blob:big'        => 'LONGBLOB',
     'blob:normal'     => 'BLOB',
