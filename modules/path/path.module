@@ -195,7 +195,7 @@ function path_form_alter(&$form, $form_state, $form_id) {
     if ($path) {
       $form['path']['pid'] = array(
         '#type' => 'value',
-        '#value' => db_result(db_query("SELECT pid FROM {url_alias} WHERE dst = '%s'", $path))
+        '#value' => db_result(db_query("SELECT pid FROM {url_alias} WHERE dst = '%s' AND language = '%s'", $path, $form['#node']->language))
       );
     }
   }
