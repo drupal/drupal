@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.255 2007/12/22 23:24:24 goba Exp $
+// $Id: form.inc,v 1.256 2007/12/23 12:33:13 goba Exp $
 
 /**
  * @defgroup form Form generation
@@ -739,9 +739,18 @@ function form_execute_handlers($type, &$form, &$form_state) {
 }
 
 /**
- * File an error against a form element. If the name of the element is
- * edit[foo][bar] then you may pass either foo or foo][bar as $name
- * foo will set an error for all its children.
+ * File an error against a form element.
+ *
+ * @param $name
+ *   The name of the form element. If the #parents property of your form
+ *   element is array('foo', 'bar', 'baz') then you may set an error on 'foo'
+ *   or 'foo][bar][baz'. Setting an error on 'foo' sets an error for every
+ *   element where the #parents array starts with 'foo'.
+ * @param $message
+ *   The error message to present to the user.
+ * @return
+ *   Never use the return value of this function, use form_get_errors and
+ *   form_get_error instead.
  */
 function form_set_error($name = NULL, $message = '') {
   static $form = array();
