@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.136 2007/12/14 18:08:47 goba Exp $
+// $Id: path.module,v 1.137 2007/12/23 15:32:36 goba Exp $
 
 /**
  * @file
@@ -195,7 +195,7 @@ function path_form_alter(&$form, $form_state, $form_id) {
     if ($path) {
       $form['path']['pid'] = array(
         '#type' => 'value',
-        '#value' => db_result(db_query("SELECT pid FROM {url_alias} WHERE dst = '%s'", $path))
+        '#value' => db_result(db_query("SELECT pid FROM {url_alias} WHERE dst = '%s' AND language = '%s'", $path, $form['#node']->language))
       );
     }
   }
