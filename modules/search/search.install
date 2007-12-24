@@ -1,5 +1,5 @@
 <?php
-// $Id: search.install,v 1.12 2007/11/17 14:01:24 dries Exp $
+// $Id: search.install,v 1.13 2007/12/24 10:37:13 goba Exp $
 
 /**
  * Implementation of hook_install().
@@ -114,6 +114,7 @@ function search_schema() {
   );
 
   $schema['search_node_links'] = array(
+    'description' => t('Stores nodes that link to other nodes, used to improve search scores for nodes that are frequently linked to.'),
     'fields' => array(
       'sid' => array(
         'type' => 'int',
