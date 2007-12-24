@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.195 2007/12/14 18:08:49 goba Exp $
+// $Id: upload.module,v 1.196 2007/12/24 10:43:21 goba Exp $
 
 /**
  * @file
@@ -191,11 +191,25 @@ function upload_node_form_submit($form, &$form_state) {
     $_SESSION['upload_files'][$file->fid] = $file;
   }
 
-  // attach session files to node.
+  // Attach session files to node.
   if (!empty($_SESSION['upload_files'])) {
     foreach ($_SESSION['upload_files'] as $fid => $file) {
-      $form_state['values']['files'][$fid] = $file;
+      if (!isset($form_state['values']['files'][$fid]['filepath'])) {
+        $form_state['values']['files'][$fid] = (array)$file;
+      }
     }
+  }
+
+  // Order the form according to the set file weight values.
+  if (!empty($form_state['values']['files'])) {
+    $microweight = 0.001;
+    foreach ($form_state['values']['files'] as $fid => $file) {
+      if (is_numeric($fid)) {
+        $form_state['values']['files'][$fid]['#weight'] = $file['weight'] + $microweight;
+        $microweight += 0.001;
+      }
+    }
+    uasort($form_state['values']['files'], 'element_sort');
   }
 }
 
@@ -463,7 +477,10 @@ function upload_delete_revision($node) {
 function _upload_form($node) {
   global $user;
 
-  $form['#theme'] = 'upload_form_new';
+  $form = array(
+    '#theme' => 'upload_form_new',
+    '#cache' => TRUE,
+  );
 
   if (!empty($node->files) && is_array($node->files)) {
     $form['files']['#theme'] = 'upload_form_current';
@@ -493,6 +510,7 @@ function _upload_form($node) {
 
   if (user_access('upload files')) {
     $limits = _upload_file_limits($user);
+    $form['new']['#weight'] = 10;
     $form['new']['upload'] = array(
       '#type' => 'file',
       '#title' => t('Attach new file'),
@@ -550,6 +568,7 @@ function theme_upload_form_current(&$form) {
  * @ingroup themeable
  */
 function theme_upload_form_new($form) {
+  drupal_add_tabledrag('upload-attachments', 'order', 'sibling', 'upload-weight');
   $output = drupal_render($form);
   return $output;
 }
@@ -571,20 +590,46 @@ function upload_load($node) {
  * Menu-callback for JavaScript-based uploads.
  */
 function upload_js() {
+  // Load the form from the Form API cache.
+  $cache = cache_get('form_'. $_POST['form_build_id'], 'cache_form');
+
   // We only do the upload.module part of the node validation process.
   $node = (object)$_POST;
-  $form_state = array();
+  unset($node->files['upload']);
+  $form = $cache->data;
+  $form_state = array('values' => $_POST);
 
   // Handle new uploads, and merge tmp files into node-files.
-  upload_node_form_submit(array(), $form_state);
-  $node->files = upload_load($node);
+  upload_node_form_submit($form, $form_state);
+  $node_files = upload_load($node);
   if (!empty($form_state['values']['files'])) {
     foreach ($form_state['values']['files'] as $fid => $file) {
-      $node->files[$fid] = $file;
+      if (is_numeric($fid)) {
+        $node->files[$fid] = $file;
+        if (!isset($file['filepath'])) {
+          $node->files[$fid] = $node_files[$fid];
+        }
+      }
+    }
+  }
+  $form = _upload_form($node);
+
+  // Update the default values changed in the $_POST array.
+  $files = isset($_POST['files']) ? $_POST['files'] : array();
+  foreach ($files as $fid => $file) {
+    if (is_numeric($fid)) {
+      $form['files'][$fid]['description']['#default_value'] = $file['description'];
+      $form['files'][$fid]['list']['#default_value'] = isset($file['list']) ? 1 : 0;
+      $form['files'][$fid]['remove']['#default_value'] = isset($file['remove']) ? 1 : 0;
+      $form['files'][$fid]['weight']['#default_value'] = $file['weight'];
     }
   }
 
-  $form = _upload_form($node);
+  // Add the new element to the stored form state and resave.
+  $cache->data['attachments']['wrapper'] = array_merge($cache->data['attachments']['wrapper'], $form);
+  cache_set('form_'. $_POST['form_build_id'], $cache->data, 'cache_form', $cache->expire);
+
+  // Render the form for output.
   $form += array(
     '#post' => $_POST,
     '#programmed' => FALSE,
@@ -594,16 +639,6 @@ function upload_js() {
   drupal_alter('form', $form, array(), 'upload_js');
   $form_state = array('submitted' => FALSE);
   $form = form_builder('upload_js', $form, $form_state);
-
-  // Maintain the list and delete checkboxes values.
-  $files = isset($_POST['files']) ? $_POST['files'] : array();
-  foreach ($files as $fid => $file) {
-    if (is_numeric($fid)) {
-      $form['files'][$fid]['list']['#value'] = isset($file['list']) ? 1 : 0;
-      $form['files'][$fid]['remove']['#value'] = isset($file['remove']) ? 1 : 0;
-    }
-  }
-
   $output = theme('status_messages') . drupal_render($form);
 
   // We send the updated file attachments form.
