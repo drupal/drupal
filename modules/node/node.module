@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.932 2007/12/22 23:24:25 goba Exp $
+// $Id: node.module,v 1.933 2007/12/26 21:12:12 dries Exp $
 
 /**
  * @file
@@ -1445,7 +1445,8 @@ function node_menu() {
     );
   }
   $items['node/%node'] = array(
-    'title' => 'View',
+    'title callback' => 'node_page_title',
+    'title arguments' => array(1),
     'page callback' => 'node_page_view',
     'page arguments' => array(1),
     'access callback' => 'node_access',
@@ -1512,6 +1513,13 @@ function node_menu() {
     'type' => MENU_CALLBACK,
   );
   return $items;
+}
+
+/**
+ * Title callback.
+ */
+function node_page_title($node) {
+  return $node->title;
 }
 
 function node_init() {

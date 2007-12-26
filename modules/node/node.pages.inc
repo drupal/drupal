@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.20 2007/12/22 23:24:25 goba Exp $
+// $Id: node.pages.inc,v 1.21 2007/12/26 21:12:12 dries Exp $
 
 /**
  * @file
@@ -11,7 +11,6 @@
  * Menu callback; presents the node editing form, or redirects to delete confirmation.
  */
 function node_page_edit($node) {
-  drupal_set_title(t('Edit %title', array('%title' => $node->title)));
   return drupal_get_form($node->type .'_node_form', $node);
 }
 
@@ -401,7 +400,6 @@ function node_preview($node) {
       $output = theme('node_preview', $cloned_node);
     }
     drupal_set_title(t('Preview'));
-    drupal_set_breadcrumb(array(l(t('Home'), NULL), l(t('Create content'), 'node/add'), l(t('Submit @name', array('@name' => node_get_types('name', $node))), 'node/add/'. $node->type)));
 
     return $output;
   }
