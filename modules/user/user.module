@@ -915,7 +915,7 @@ function user_menu() {
     'description' => "Manage your site's users, groups and access to site features.",
     'position' => 'left',
     'page callback' => 'system_admin_menu_block_page',
-    'access arguments' => array('administer site configuration'),
+    'access arguments' => array('access administration pages'),
     'file' => 'system.admin.inc',
     'file path' => drupal_get_path('module', 'system'),
   );
@@ -943,6 +943,7 @@ function user_menu() {
     'description' => 'Configure default behavior of users, including registration requirements, e-mails, and user pictures.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('user_admin_settings'),
+    'access arguments' => array('administer users'),
     'file' => 'user.admin.inc',
   );
 

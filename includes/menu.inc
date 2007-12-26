@@ -2119,10 +2119,6 @@ function _menu_router_build($callbacks) {
   // Apply inheritance rules.
   foreach ($menu as $path => $v) {
     $item = &$menu[$path];
-    if (!isset($item['access callback']) && isset($item['access arguments'])) {
-      // Default callback.
-      $item['access callback'] = 'user_access';
-    }
     if (!$item['_tab']) {
       // Non-tab items.
       $item['tab_parent'] = '';
@@ -2163,6 +2159,10 @@ function _menu_router_build($callbacks) {
           }
         }
       }
+    }
+    if (!isset($item['access callback']) && isset($item['access arguments'])) {
+      // Default callback.
+      $item['access callback'] = 'user_access';
     }
     if (!isset($item['access callback']) || empty($item['page callback'])) {
       $item['access callback'] = 0;

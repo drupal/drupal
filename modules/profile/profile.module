@@ -88,6 +88,7 @@ function profile_menu() {
     'description' => 'Create customizable fields for your users.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('profile_admin_overview'),
+    'access arguments' => array('administer users'),
     'file' => 'profile.admin.inc',
   );
   $items['admin/user/profile/add'] = array(
