@@ -7,6 +7,9 @@
  *
  * The routines here dispatch control to the appropriate handler, which then
  * prints the appropriate page.
+ *
+ * All Drupal code is released under the GNU General Public License.
+ * See COPYRIGHT.txt and LICENSE.txt.
  */
 
 require_once './includes/bootstrap.inc';
