@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.572 2007/12/22 23:24:25 goba Exp $
+// $Id: system.module,v 1.573 2007/12/26 19:02:24 dries Exp $
 
 /**
  * @file
@@ -155,7 +155,7 @@ function system_theme() {
  * Implementation of hook_perm().
  */
 function system_perm() {
-  return array('administer site configuration', 'access administration pages', 'administer actions', 'select different theme', 'administer files');
+  return array('administer site configuration', 'access administration pages', 'administer actions', 'access site reports', 'select different theme', 'administer files');
 }
 
 /**
@@ -234,7 +234,6 @@ function system_menu() {
     'position' => 'left',
     'weight' => -10,
     'page callback' => 'system_admin_menu_block_page',
-    'access arguments' => array('access administration pages'),
     'file' => 'system.admin.inc',
   );
 
@@ -245,7 +244,6 @@ function system_menu() {
     'position' => 'right',
     'weight' => -5,
     'page callback' => 'system_settings_overview',
-    'access arguments' => array('administer site configuration'),
     'file' => 'system.admin.inc',
   );
   $items['admin/build'] = array(
@@ -254,7 +252,6 @@ function system_menu() {
     'position' => 'right',
     'weight' => -10,
     'page callback' => 'system_admin_menu_block_page',
-    'access arguments' => array('administer site configuration'),
     'file' => 'system.admin.inc',
   );
   $items['admin/settings/admin'] = array(
@@ -263,6 +260,7 @@ function system_menu() {
     'position' => 'left',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_admin_theme_settings'),
+    'access arguments' => array('administer site configuration'),
     'block callback' => 'system_admin_theme_settings',
     'file' => 'system.admin.inc',
   );
@@ -272,6 +270,7 @@ function system_menu() {
     'description' => 'Change which theme your site uses or allows users to set.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_themes_form', NULL),
+    'access arguments' => array('administer site configuration'),
     'file' => 'system.admin.inc',
   );
   $items['admin/build/themes/select'] = array(
@@ -308,6 +307,7 @@ function system_menu() {
     'description' => 'Enable or disable add-on modules for your site.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_modules'),
+    'access arguments' => array('administer site configuration'),
     'file' => 'system.admin.inc',
   );
   $items['admin/build/modules/list'] = array(
@@ -367,6 +367,7 @@ function system_menu() {
     'description' => 'Change basic site information, such as the site name, slogan, e-mail address, mission, front page and more.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_site_information_settings'),
+    'access arguments' => array('administer site configuration'),
     'file' => 'system.admin.inc',
   );
   $items['admin/settings/error-reporting'] = array(
@@ -374,12 +375,14 @@ function system_menu() {
     'description' => 'Control how Drupal deals with errors including 403/404 errors as well as PHP error reporting.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_error_reporting_settings'),
+    'access arguments' => array('administer site configuration'),
     'file' => 'system.admin.inc',
   );
   $items['admin/settings/logging'] = array(
     'title' => 'Logging and alerts',
     'description' => "Settings for logging and alerts modules. Various modules can route Drupal's system events to different destination, such as syslog, database, email, ...etc.",
     'page callback' => 'system_logging_overview',
+    'access arguments' => array('administer site configuration'),
     'file' => 'system.admin.inc',
   );
   $items['admin/settings/performance'] = array(
@@ -387,6 +390,7 @@ function system_menu() {
     'description' => 'Enable or disable page caching for anonymous users and set CSS and JS bandwidth optimization options.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_performance_settings'),
+    'access arguments' => array('administer site configuration'),
     'file' => 'system.admin.inc',
   );
   $items['admin/settings/file-system'] = array(
@@ -394,6 +398,7 @@ function system_menu() {
     'description' => 'Tell Drupal where to store uploaded files and how they are accessed.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_file_system_settings'),
+    'access arguments' => array('administer site configuration'),
     'file' => 'system.admin.inc',
   );
   $items['admin/settings/image-toolkit'] = array(
@@ -401,6 +406,7 @@ function system_menu() {
     'description' => 'Choose which image toolkit to use if you have installed optional toolkits.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_image_toolkit_settings'),
+    'access arguments' => array('administer site configuration'),
     'file' => 'system.admin.inc',
   );
   $items['admin/content/rss-publishing'] = array(
@@ -416,6 +422,7 @@ function system_menu() {
     'description' => "Settings for how Drupal displays date and time, as well as the system's default timezone.",
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_date_time_settings'),
+    'access arguments' => array('administer site configuration'),
     'file' => 'system.admin.inc',
   );
   $items['admin/settings/date-time/lookup'] = array(
@@ -429,6 +436,7 @@ function system_menu() {
     'description' => 'Take the site off-line for maintenance or bring it back online.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_site_maintenance_settings'),
+    'access arguments' => array('administer site configuration'),
     'file' => 'system.admin.inc',
   );
   $items['admin/settings/clean-urls'] = array(
@@ -436,6 +444,7 @@ function system_menu() {
     'description' => 'Enable or disable clean URLs for your site.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_clean_url_settings'),
+    'access arguments' => array('administer site configuration'),
     'file' => 'system.admin.inc',
   );
   $items['admin/settings/clean-urls/check'] = array(
@@ -460,6 +469,7 @@ function system_menu() {
     'title' => 'Reports',
     'description' => 'View reports from system logs and other status information.',
     'page callback' => 'system_admin_menu_block_page',
+    'access arguments' => array('access site reports'),
     'weight' => 5,
     'position' => 'left',
     'file' => 'system.admin.inc',

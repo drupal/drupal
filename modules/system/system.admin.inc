@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.44 2007/12/22 23:24:25 goba Exp $
+// $Id: system.admin.inc,v 1.45 2007/12/26 19:02:24 dries Exp $
 
 /**
  * @file
@@ -72,9 +72,12 @@ function system_main_admin_page($arg = NULL) {
  */
 function system_admin_menu_block_page() {
   $item = menu_get_item();
-  $content = system_admin_menu_block($item);
-
-  $output = theme('admin_block_content', $content);
+  if ($content = system_admin_menu_block($item)) {
+    $output = theme('admin_block_content', $content);
+  }
+  else {
+    $output = t('You do not have any administrative items.');
+  }
   return $output;
 }
 

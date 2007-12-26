@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.233 2007/12/23 13:17:20 goba Exp $
+// $Id: profile.module,v 1.234 2007/12/26 19:02:24 dries Exp $
 
 /**
  * @file
@@ -88,6 +88,7 @@ function profile_menu() {
     'description' => 'Create customizable fields for your users.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('profile_admin_overview'),
+    'access arguments' => array('administer users'),
     'file' => 'profile.admin.inc',
   );
   $items['admin/user/profile/add'] = array(
