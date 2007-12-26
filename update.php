@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.245 2007/12/23 12:40:22 goba Exp $
+// $Id: update.php,v 1.246 2007/12/26 10:23:59 goba Exp $
 
 /**
  * @file
@@ -366,155 +366,6 @@ function update_access_denied_page() {
 </ol>';
 }
 
-// This code may be removed later. It is part of the Drupal 4.5 to 4.8 migration.
-function update_fix_system_table() {
-  drupal_bootstrap(DRUPAL_BOOTSTRAP_DATABASE);
-  $core_modules = array('aggregator', 'archive', 'block', 'blog', 'blogapi', 'book', 'comment', 'contact', 'drupal', 'filter', 'forum', 'help', 'legacy', 'locale', 'menu', 'node', 'page', 'path', 'ping', 'poll', 'profile', 'search', 'statistics', 'story', 'system', 'taxonomy', 'throttle', 'tracker', 'upload', 'user', 'watchdog');
-  foreach ($core_modules as $module) {
-    $old_path = "modules/$module.module";
-    $new_path = "modules/$module/$module.module";
-    db_query("UPDATE {system} SET filename = '%s' WHERE filename = '%s'", $new_path, $old_path);
-  }
-  $row = db_fetch_object(db_query_range('SELECT * FROM {system}', 0, 1));
-  if (!isset($row->weight)) {
-    $ret = array();
-    switch ($GLOBALS['db_type']) {
-      case 'pgsql':
-        db_add_column($ret, 'system', 'weight', 'smallint', array('not null' => TRUE, 'default' => 0));
-        $ret[] = update_sql('CREATE INDEX {system}_weight_idx ON {system} (weight)');
-        break;
-      case 'mysql':
-      case 'mysqli':
-        $ret[] = update_sql("ALTER TABLE {system} ADD weight tinyint(2) default '0' NOT NULL, ADD KEY (weight)");
-        break;
-    }
-  }
-}
-
-/**
- * Convert a single MySQL table to UTF-8.
- *
- * We change all text columns to their corresponding binary type,
- * then back to text, but with a UTF-8 character set.
- * See: http://dev.mysql.com/doc/refman/4.1/en/charset-conversion.html
- */
-function update_convert_table_utf8($table) {
-  $ret = array();
-  $types = array('char' => 'binary',
-                 'varchar' => 'varbinary',
-                 'tinytext' => 'tinyblob',
-                 'text' => 'blob',
-                 'mediumtext' => 'mediumblob',
-                 'longtext' => 'longblob');
-
-  // Get next table in list
-  $convert_to_binary = array();
-  $convert_to_utf8 = array();
-
-  // Set table default charset
-  $ret[] = update_sql('ALTER TABLE {'. $table .'} DEFAULT CHARACTER SET utf8');
-
-  // Find out which columns need converting and build SQL statements
-  $result = db_query('SHOW FULL COLUMNS FROM {'. $table .'}');
-  while ($column = db_fetch_array($result)) {
-    list($type) = explode('(', $column['Type']);
-    if (isset($types[$type])) {
-      $names = 'CHANGE `'. $column['Field'] .'` `'. $column['Field'] .'` ';
-      $attributes = ' DEFAULT '. ($column['Default'] == 'NULL' ? 'NULL ' :
-                     "'". db_escape_string($column['Default']) ."' ") .
-                    ($column['Null'] == 'YES' ? 'NULL' : 'NOT NULL');
-
-      $convert_to_binary[] = $names . preg_replace('/'. $type .'/i', $types[$type], $column['Type']) . $attributes;
-      $convert_to_utf8[] = $names . $column['Type'] .' CHARACTER SET utf8'. $attributes;
-    }
-  }
-
-  if (count($convert_to_binary)) {
-    // Convert text columns to binary
-    $ret[] = update_sql('ALTER TABLE {'. $table .'} '. implode(', ', $convert_to_binary));
-    // Convert binary columns to UTF-8
-    $ret[] = update_sql('ALTER TABLE {'. $table .'} '. implode(', ', $convert_to_utf8));
-  }
-  return $ret;
-}
-
-/**
- * Create tables for the split cache.
- *
- * This is part of the Drupal 4.7.x to 5.x migration.
- */
-function update_create_cache_tables() {
-
-  // If cache_filter exists, update is not necessary
-  if (db_table_exists('cache_filter')) {
-    return;
-  }
-
-  $ret = array();
-  switch ($GLOBALS['db_type']) {
-    case 'mysql':
-    case 'mysqli':
-      $ret[] = update_sql("CREATE TABLE {cache_filter} (
-        cid varchar(255) NOT NULL default '',
-        data longblob,
-        expire int NOT NULL default '0',
-        created int NOT NULL default '0',
-        headers text,
-        PRIMARY KEY (cid),
-        INDEX expire (expire),
-      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
-      $ret[] = update_sql("CREATE TABLE {cache_menu} (
-        cid varchar(255) NOT NULL default '',
-        data longblob,
-        expire int NOT NULL default '0',
-        created int NOT NULL default '0',
-        headers text,
-        PRIMARY KEY (cid),
-        INDEX expire (expire),
-      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
-      $ret[] = update_sql("CREATE TABLE {cache_page} (
-        cid varchar(255) BINARY NOT NULL default '',
-        data longblob,
-        expire int NOT NULL default '0',
-         created int NOT NULL default '0',
-        headers text,
-        PRIMARY KEY (cid),
-        INDEX expire (expire),
-      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
-      break;
-    case 'pgsql':
-      $ret[] = update_sql("CREATE TABLE {cache_filter} (
-        cid varchar(255) NOT NULL default '',
-        data bytea,
-        expire int NOT NULL default '0',
-        created int NOT NULL default '0',
-        headers text,
-        PRIMARY KEY (cid),
-      )");
-      $ret[] = update_sql("CREATE TABLE {cache_menu} (
-        cid varchar(255) NOT NULL default '',
-        data bytea,
-        expire int NOT NULL default '0',
-        created int NOT NULL default '0',
-        headers text,
-        PRIMARY KEY (cid),
-      )");
-      $ret[] = update_sql("CREATE TABLE {cache_page} (
-        cid varchar(255) NOT NULL default '',
-        data bytea,
-        expire int NOT NULL default '0',
-        created int NOT NULL default '0',
-        headers text,
-        PRIMARY KEY (cid),
-      )");
-      $ret[] = update_sql("CREATE INDEX {cache_filter}_expire_idx ON {cache_filter} (expire)");
-      $ret[] = update_sql("CREATE INDEX {cache_menu}_expire_idx ON {cache_menu} (expire)");
-      $ret[] = update_sql("CREATE INDEX {cache_page}_expire_idx ON {cache_page} (expire)");
-      break;
-  }
-  return $ret;
-}
-
 /**
  * Create the batch table.
  *
@@ -664,7 +515,6 @@ function update_task_list($active = NULL) {
 ini_set('display_errors', FALSE);
 
 include_once './includes/bootstrap.inc';
-update_fix_system_table();
 
 // Bootstrap Drupal in a safe way, without calling hook_init() and hook_exit(),
 // to avoid possible warnings. We need to set the global variable after
@@ -676,7 +526,6 @@ drupal_maintenance_theme();
 
 // This must happen *after* drupal_bootstrap(), since it calls
 // variable_(get|set), which only works after a full bootstrap.
-update_create_cache_tables();
 update_create_batch_table();
 
 // Turn error reporting back on. From now on, only fatal errors (which are
