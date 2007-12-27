@@ -1572,7 +1572,7 @@ function _user_mail_text($messageid, $variables = array()) {
       case 'pass_subject':
         return t('Replacement login information for !username at !site', $variables);
       case 'pass_body':
-        return t("!username,\n\nA request to reset the password for your account has been made at !site.\n\nYou may now log in to !uri_brief clicking on this link or copying and pasting it in your browser:\n\n!login_url\n\nThis is a one-time login, so it can be used only once. It expires after one day and nothing will happen if it's not used.\n\nAfter logging in, you will be redirected to !edit_uri so you can change your password.", $variables);
+        return t("!username,\n\nA request to reset the password for your account has been made at !site.\n\nYou may now log in to !uri_brief by clicking on this link or copying and pasting it in your browser:\n\n!login_url\n\nThis is a one-time login, so it can be used only once. It expires after one day and nothing will happen if it's not used.\n\nAfter logging in, you will be redirected to !edit_uri so you can change your password.", $variables);
     }
   }
 }
