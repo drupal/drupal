@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.169 2007/12/22 23:24:24 goba Exp $
+// $Id: locale.inc,v 1.170 2007/12/27 14:13:13 goba Exp $
 
 /**
  * @file
@@ -45,7 +45,7 @@ function locale_languages_overview_form() {
     );
     $form['name'][$langcode] = array('#value' => check_plain($language->name));
     $form['native'][$langcode] = array('#value' => check_plain($language->native));
-    $form['direction'][$langcode] = array('#value' => ($language->direction == LANGUAGE_RTL ? 'Right to left' : 'Left to right'));
+    $form['direction'][$langcode] = array('#value' => ($language->direction == LANGUAGE_RTL ? t('Right to left') : t('Left to right')));
   }
   $form['enabled'] = array('#type' => 'checkboxes',
     '#options' => $options,
