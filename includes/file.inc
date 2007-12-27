@@ -223,8 +223,9 @@ function file_check_upload($source = 'upload') {
     $file = new stdClass();
     $file->filename = trim(basename($_FILES["files"]["name"][$source]), '.');
 
-    // Create temporary name/path for newly uploaded files.
-    $file->filepath = tempnam(file_directory_temp(), 'tmp_');
+    // Create temporary name/path for newly uploaded files. On Windows, tempnam()
+    // requires an absolute path, so we use realpath().
+    $file->filepath = tempnam(realpath(file_directory_temp()), 'tmp_');
 
     $file->filemime = $_FILES["files"]["type"][$source];
 
@@ -523,7 +524,8 @@ function file_save_upload($source, $dest = FALSE, $replace = FILE_EXISTS_RENAME)
  */
 function file_save_data($data, $dest, $replace = FILE_EXISTS_RENAME) {
   $temp = file_directory_temp();
-  $file = tempnam($temp, 'file');
+  // On Windows, tempnam() requires an absolute path, so we use realpath().
+  $file = tempnam(realpath($temp), 'file');
   if (!$fp = fopen($file, 'wb')) {
     drupal_set_message(t('The file could not be created.'), 'error');
     return 0;
