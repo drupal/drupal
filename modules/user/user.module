@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.881 2007/12/27 14:03:37 goba Exp $
+// $Id: user.module,v 1.882 2007/12/27 16:00:09 goba Exp $
 
 /**
  * @file
@@ -89,8 +89,9 @@ function user_external_load($authname) {
 }
 
 /**
- * Perform standard Drupal login operations for a user object.  The
- * user object must already be authenticated. This function verifies
+ * Perform standard Drupal login operations for a user object.
+ *
+ * The user object must already be authenticated. This function verifies
  * that the user account is not blocked/denied and then performs the login,
  * updates the login timestamp in the database, invokes hook_user('login'),
  * regenerates the session, etc.
@@ -100,6 +101,7 @@ function user_external_load($authname) {
  *    in user.
  * @param $edit
  *    The array of form values submitted by the user, if any.
+ *    This array is passed to hook_user op login.
  * @return boolean
  *    TRUE if the login succeeds, FALSE otherwise.
  */
@@ -113,11 +115,14 @@ function user_external_login($account, $edit = array()) {
 
   user_login_name_validate($form, $state, (array)$account);
   if (form_get_errors()) {
+    // Invalid login.
     return FALSE;
   }
+  
+  // Valid login.
   global $user;
   $user = $account;
-  user_login_submit($form, $state, (array)$account);
+  user_authenticate_finalize($state['values']);
   return TRUE;
 }
 
