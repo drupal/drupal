@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.879 2007/12/26 19:02:24 dries Exp $
+// $Id: user.module,v 1.880 2007/12/27 12:21:58 goba Exp $
 
 /**
  * @file
@@ -831,7 +831,7 @@ function user_is_logged_in() {
 }
 
 function user_register_access() {
-  return !$GLOBALS['user']->uid && variable_get('user_register', 1);
+  return user_is_anonymous() && variable_get('user_register', 1);
 }
 
 function user_view_access($account) {
