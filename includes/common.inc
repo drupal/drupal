@@ -1267,7 +1267,7 @@ function drupal_attributes($attributes = array()) {
  *   an HTML string containing a link to the given path.
  */
 function l($text, $path, $attributes = array(), $query = NULL, $fragment = NULL, $absolute = FALSE, $html = FALSE) {
-  if ($path == $_GET['q']) {
+  if (($path == $_GET['q']) || ($path == '<front>' && drupal_is_front_page())) {
     if (isset($attributes['class'])) {
       $attributes['class'] .= ' active';
     }
