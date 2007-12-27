@@ -637,8 +637,8 @@ function install_tasks($profile, $task) {
     $batch = array(
       'operations' => $operations,
       'finished' => '_install_profile_batch_finished',
-      'title' => t('Installing @drupal', array('@drupal' => drupal_install_profile_name())),
-      'error_message' => t('The installation has encountered an error.'),
+      'title' => st('Installing @drupal', array('@drupal' => drupal_install_profile_name())),
+      'error_message' => st('The installation has encountered an error.'),
     );
     // Start a batch, switch to 'profile-install-batch' task. We need to
     // set the variable here, because batch_process() redirects.
