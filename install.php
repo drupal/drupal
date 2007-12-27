@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.108 2007/12/20 08:26:42 goba Exp $
+// $Id: install.php,v 1.109 2007/12/27 14:23:00 goba Exp $
 
 require_once './includes/install.inc';
 
@@ -637,8 +637,8 @@ function install_tasks($profile, $task) {
     $batch = array(
       'operations' => $operations,
       'finished' => '_install_profile_batch_finished',
-      'title' => t('Installing @drupal', array('@drupal' => drupal_install_profile_name())),
-      'error_message' => t('The installation has encountered an error.'),
+      'title' => st('Installing @drupal', array('@drupal' => drupal_install_profile_name())),
+      'error_message' => st('The installation has encountered an error.'),
     );
     // Start a batch, switch to 'profile-install-batch' task. We need to
     // set the variable here, because batch_process() redirects.
