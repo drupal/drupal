@@ -831,7 +831,7 @@ function user_is_logged_in() {
 }
 
 function user_register_access() {
-  return !$GLOBALS['user']->uid && variable_get('user_register', 1);
+  return user_is_anonymous() && variable_get('user_register', 1);
 }
 
 function user_view_access($account) {
