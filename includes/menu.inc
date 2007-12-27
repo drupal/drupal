@@ -380,12 +380,12 @@ function _menu_load_objects(&$item, &$map) {
 
           // Some arguments are placeholders for dynamic items to process.
           foreach ($args as $i => $arg) {
-            if ($arg == '%index') {
+            if ($arg === '%index') {
               // Pass on argument index to the load function, so multiple
               // occurances of the same placeholder can be identified.
               $args[$i] = $index;
             }
-            if ($arg == '%map') {
+            if ($arg === '%map') {
               // Pass on menu map by reference. The accepting function must
               // also declare this as a reference if it wants to modify
               // the map.
