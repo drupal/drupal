@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.21 2007/12/26 21:12:12 dries Exp $
+// $Id: node.pages.inc,v 1.22 2007/12/27 14:03:37 goba Exp $
 
 /**
  * @file
@@ -11,6 +11,7 @@
  * Menu callback; presents the node editing form, or redirects to delete confirmation.
  */
 function node_page_edit($node) {
+  drupal_set_title($node->title);
   return drupal_get_form($node->type .'_node_form', $node);
 }
 

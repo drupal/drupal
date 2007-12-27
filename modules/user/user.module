@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.880 2007/12/27 12:21:58 goba Exp $
+// $Id: user.module,v 1.881 2007/12/27 14:03:37 goba Exp $
 
 /**
  * @file
@@ -1029,6 +1029,8 @@ function user_menu() {
 
   $items['user/%user_current'] = array(
     'title' => 'My account',
+    'title callback' => 'user_page_title',
+    'title arguments' => array(1),
     'page callback' => 'user_view',
     'page arguments' => array(1),
     'access callback' => 'user_view_access',
@@ -1149,6 +1151,16 @@ function user_current_to_arg($arg) {
   // with an empty arg. Also use the current user uid when called from
   // the menu with a % for the current account link.
   return empty($arg) || $arg == '%' ? $GLOBALS['user']->uid : $arg;
+}
+
+/**
+ * Menu item title callback - use the user name if it's not the current user.
+ */
+function user_page_title($account) {
+  if ($account->uid == $GLOBALS['user']->uid) {
+    return t('My account');
+  }
+  return $account->name;
 }
 
 /**

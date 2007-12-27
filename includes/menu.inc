@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.236 2007/12/27 12:23:59 goba Exp $
+// $Id: menu.inc,v 1.237 2007/12/27 14:03:36 goba Exp $
 
 /**
  * @file
@@ -464,7 +464,7 @@ function _menu_item_localize(&$item, $map) {
       $item['title'] = t($item['title'], menu_unserialize($item['title_arguments'], $map));
     }
   }
-  else {
+  elseif ($callback) {
     if (empty($item['title_arguments'])) {
       $item['title'] = $callback($item['title']);
     }
@@ -579,6 +579,7 @@ function menu_tail_to_arg($arg, $map, $index) {
  *   $item['title'] is generated from link_title, and may be localized.
  */
 function _menu_link_translate(&$item) {
+  $item['options'] = unserialize($item['options']);
   if ($item['external']) {
     $item['access'] = 1;
     $map = array();
@@ -604,16 +605,33 @@ function _menu_link_translate(&$item) {
       }
       _menu_check_access($item, $map);
     }
-    // If the link title matches that of a router item, localize it.
-    if (!empty($item['title']) && (($item['title'] == $item['link_title']) || ($item['title_callback'] != 't'))) {
-      _menu_item_localize($item, $map);
+    
+    // If the link title matches that of its router item, localize it.
+    if (!empty($item['title']) && ($item['title'] == $item['link_title'])){
+      if (!empty($item['title_arguments']) && $item['title_callback'] == 't') {
+        $item['title'] = t($item['title'], menu_unserialize($item['title_arguments'], $map));
+      }
+      else {
+        $item['title'] = t($item['title']);
+      }
     }
     else {
       $item['title'] = $item['link_title'];
     }
+    // Localize the description and title attribute.
+    if (!empty($item['description'])) {
+      $original_description = $item['description'];
+      $item['description'] = t($item['description']);
+      // Localize the title attribute only if it matches the description.
+      if ($item['options']['attributes']['title'] == $original_description) {
+        $item['options']['attributes']['title'] = $item['description'];
+      }
+    }
+    // Store the map if it may be needed for use later by a title callback.
+    if (!empty($item['title_callback']) && ($item['title_callback'] != 't')) {
+      $item['map'] = $map;
+    }
   }
-  $item['options'] = unserialize($item['options']);
-
   return $map;
 }
 
@@ -759,7 +777,7 @@ function menu_tree_all_data($menu_name = 'navigation', $item = NULL) {
       // LEFT JOIN since there is no match in {menu_router} for an external
       // link.
       $data['tree'] = menu_tree_data(db_query("
-        SELECT m.load_functions, m.to_arg_functions, m.access_callback, m.access_arguments, m.page_callback, m.page_arguments, m.title, m.title_callback, m.title_arguments, m.type, ml.*
+        SELECT m.load_functions, m.to_arg_functions, m.access_callback, m.access_arguments, m.page_callback, m.page_arguments, m.title, m.title_callback, m.title_arguments, m.type, m.description, ml.*
         FROM {menu_links} ml LEFT JOIN {menu_router} m ON m.path = ml.router_path
         WHERE ml.menu_name = '%s'". $where ."
         ORDER BY p1 ASC, p2 ASC, p3 ASC, p4 ASC, p5 ASC, p6 ASC, p7 ASC, p8 ASC, p9 ASC", $args), $parents);
@@ -849,7 +867,7 @@ function menu_tree_page_data($menu_name = 'navigation') {
         // LEFT JOIN since there is no match in {menu_router} for an external
         // link.
         $data['tree'] = menu_tree_data(db_query("
-          SELECT m.load_functions, m.to_arg_functions, m.access_callback, m.access_arguments, m.page_callback, m.page_arguments, m.title, m.title_callback, m.title_arguments, m.type, ml.*
+          SELECT m.load_functions, m.to_arg_functions, m.access_callback, m.access_arguments, m.page_callback, m.page_arguments, m.title, m.title_callback, m.title_arguments, m.type, m.description, ml.*
           FROM {menu_links} ml LEFT JOIN {menu_router} m ON m.path = ml.router_path
           WHERE ml.menu_name = '%s' AND ml.plid IN (". $placeholders .")
           ORDER BY p1 ASC, p2 ASC, p3 ASC, p4 ASC, p5 ASC, p6 ASC, p7 ASC, p8 ASC, p9 ASC", $args), $parents);
@@ -1444,6 +1462,12 @@ function menu_set_active_trail($new_trail = NULL) {
     $last = count($trail) - 1;
     if ($trail[$last]['href'] != $item['href'] && !(bool)($item['type'] & MENU_IS_LOCAL_TASK) && !drupal_is_front_page()) {
       $trail[] = $item;
+    }
+    // Apply title callbacks for items in the active trail (breadcrumb).
+    foreach ($trail as $key => $item) {
+      if (!empty($item['title_callback']) && $item['title_callback'] != 't') {
+        _menu_item_localize($trail[$key], $item['map']);
+      }
     }
   }
   return $trail;

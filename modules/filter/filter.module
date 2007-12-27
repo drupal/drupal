@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.199 2007/12/22 23:24:24 goba Exp $
+// $Id: filter.module,v 1.200 2007/12/27 14:03:36 goba Exp $
 
 /**
  * @file
@@ -102,6 +102,8 @@ function filter_menu() {
   );
   $items['admin/settings/filters/%filter_format'] = array(
     'type' => MENU_CALLBACK,
+    'title callback' => 'filter_admin_format_title',
+    'title arguments' => array(3),
     'page callback' => 'filter_admin_format_page',
     'page arguments' => array(3),
     'access arguments' => array('administer filters'),
@@ -135,6 +137,13 @@ function filter_menu() {
 
 function filter_format_load($arg) {
   return filter_formats($arg);
+}
+
+/**
+ * Display a filter format form title.
+ */
+function filter_admin_format_title($format) {
+  return $format->name;
 }
 
 /**
