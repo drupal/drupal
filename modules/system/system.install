@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.218 2007/12/26 10:24:00 goba Exp $
+// $Id: system.install,v 1.219 2007/12/27 17:25:28 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -151,6 +151,12 @@ function system_requirements($phase) {
 
   // Test files directory
   $directory = file_directory_path();
+
+  // For installer, create the directory if possible.
+  if ($phase == 'install' && !is_dir($directory) && @mkdir($directory)) {
+    @chmod($directory, 0775); // Necessary for non-webserver users.
+  }
+
   $is_writable = is_writable($directory);
   $is_directory = is_dir($directory);
   if (!$is_writable || !$is_directory) {
@@ -170,7 +176,7 @@ function system_requirements($phase) {
     else if ($phase == 'install') {
       // For the installer UI, we need different wording. 'value' will
       // be treated as version, so provide none there.
-      $requirements['file system']['description'] = $error .' '. $t('To proceed with the installation, please ensure that the files directory exists and is writable by the installer. If you are unsure how to create this directory and modify its permissions, please consult the <a href="@handbook_url">on-line handbook</a> or INSTALL.txt.', array('%directory' => $directory, '@handbook_url' => 'http://drupal.org/server-permissions'));
+      $requirements['file system']['description'] = $error .' '. $t('An automated attempt to create this directory failed, possibly due to a permissions problem. To proceed with the installation, either create the directory and modify its permissions manually, or ensure that the installer has the permissions to create it automatically. For more information, please see INSTALL.txt or the <a href="@handbook_url">on-line handbook</a>.', array('@handbook_url' => 'http://drupal.org/server-permissions'));
       $requirements['file system']['value'] = '';
     }
   }

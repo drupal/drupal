@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.109 2007/12/27 14:23:00 goba Exp $
+// $Id: install.php,v 1.110 2007/12/27 17:25:27 goba Exp $
 
 require_once './includes/install.inc';
 
@@ -858,24 +858,8 @@ function install_reserved_tasks() {
  * Check installation requirements and report any errors.
  */
 function install_check_requirements($profile, $verify) {
-  $requirements = drupal_check_profile($profile);
-  $severity = drupal_requirements_severity($requirements);
 
-  // If there are issues, report them.
-  if ($severity == REQUIREMENT_ERROR) {
-
-    foreach ($requirements as $requirement) {
-      if (isset($requirement['severity']) && $requirement['severity'] == REQUIREMENT_ERROR) {
-        $message = $requirement['description'];
-        if (isset($requirement['value']) && $requirement['value']) {
-          $message .= ' ('. st('Currently using !item !version', array('!item' => $requirement['title'], '!version' => $requirement['value'])) .')';
-        }
-        drupal_set_message($message, 'error');
-      }
-    }
-  }
-
-  // If Drupal is not set up already, we also need to create a settings file.
+  // If Drupal is not set up already, we need to create a settings file.
   if (!$verify) {
     $writable = FALSE;
     $conf_path = './'. conf_path();
@@ -897,6 +881,24 @@ function install_check_requirements($profile, $verify) {
 
     if (!$writable) {
       drupal_set_message(st('The @drupal installer requires write permissions to %file during the installation process. If you are unsure how to grant file permissions, please consult the <a href="@handbook_url">on-line handbook</a>.', array('@drupal' => drupal_install_profile_name(), '%file' => $file, '@handbook_url' => 'http://drupal.org/server-permissions')), 'error');
+    }
+  }
+
+  // Check the other requirements.
+  $requirements = drupal_check_profile($profile);
+  $severity = drupal_requirements_severity($requirements);
+
+  // If there are issues, report them.
+  if ($severity == REQUIREMENT_ERROR) {
+
+    foreach ($requirements as $requirement) {
+      if (isset($requirement['severity']) && $requirement['severity'] == REQUIREMENT_ERROR) {
+        $message = $requirement['description'];
+        if (isset($requirement['value']) && $requirement['value']) {
+          $message .= ' ('. st('Currently using !item !version', array('!item' => $requirement['title'], '!version' => $requirement['value'])) .')';
+        }
+        drupal_set_message($message, 'error');
+      }
     }
   }
 }

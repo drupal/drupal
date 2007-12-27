@@ -1,4 +1,4 @@
-// $Id: INSTALL.txt,v 1.53 2007/12/26 19:02:23 dries Exp $
+// $Id: INSTALL.txt,v 1.54 2007/12/27 17:25:27 goba Exp $
 
 CONTENTS OF THIS FILE
 ---------------------
@@ -83,18 +83,7 @@ INSTALLATION
 
      chmod o+w sites/default
 
-3. CREATE AND GRANT WRITE PERMISSIONS TO FILES DIRECTORY
-
-   Drupal requires the files directory be present and writable during
-   the installation (the location of the files directory can be changed
-   after Drupal is installed). Use the following commands (from the
-   installation directory) to create this directory and grant the
-   web server write privileges to it:
-
-     mkdir files
-     chmod o+w files
-
-4. CREATE THE DRUPAL DATABASE
+3. CREATE THE DRUPAL DATABASE
 
    Drupal requires access to a database in order to be installed. Your database
    user will need sufficient privileges to run Drupal. Additional information
@@ -108,7 +97,7 @@ INSTALLATION
    Take note of the username, password, database name and hostname as you
    create the database. You will enter these items in the install script.
 
-5. RUN THE INSTALL SCRIPT
+4. RUN THE INSTALL SCRIPT
 
    To run the install script point your browser to the base URL of your website
    (i.e. http://www.example.com).
@@ -116,6 +105,16 @@ INSTALLATION
    You will be guided through several screens to set up the database,
    create tables, add the first user account and provide basic web
    site settings.
+
+   The install script will attempt to create a files storage directory
+   in the default location at sites/default/files (the location of the
+   files directory may be changed after Drupal is installed). In some 
+   cases, you may need to create the directory and modify its permissions
+   manually. Use the following commands (from the installation directory)
+   to create the files directory and grant the web server write privileges to it:
+
+     mkdir sites/default/files
+     chmod o+w sites/default/files
 
    The install script will attempt to write-protect the sites/default
    directory after creating the settings.php file. If you make manual
@@ -125,7 +124,7 @@ INSTALLATION
    file is at sites/default/settings.php, it may be in another location
    if you use the multi-site setup, as explained below.
 
-6. CONFIGURE DRUPAL
+5. CONFIGURE DRUPAL
 
    When the install script succeeds, you will be directed to the "Welcome"
    page, and you will be logged in as the administrator already. Proceed with
@@ -137,9 +136,9 @@ INSTALLATION
    running FastCGI can run into problems if the $base_url variable is left
    commented out (see http://bugs.php.net/bug.php?id=19656).
 
-7. REVIEW FILE SYSTEM STORAGE SETTINGS
+6. REVIEW FILE SYSTEM STORAGE SETTINGS
 
-   The files directory created in step 3 is the default file system path used
+   The files directory created in step 4 is the default file system path used
    to store all uploaded files, as well as some temporary files created by Drupal.
    After installation, the settings for the file system path may be modified
    to store uploaded files in a different location.
@@ -148,16 +147,11 @@ INSTALLATION
 
      * your site runs multiple Drupal installations from a single codebase
        (modify the file system path of each installation to a different
-       directory so that uploads do not overlap between installations);
+       directory so that uploads do not overlap between installations); or,
 
      * your site runs a number of web server front-ends behind a load
        balancer or reverse proxy (modify the file system path on each
-       server to point to a shared file repository); or,
-
-     * your site policies specify that all site-related files are stored
-       under the sites directory in order to simplify backup and restore
-       operations (modify the file system path to point to a newly-created
-       directory underneath sites).
+       server to point to a shared file repository).
 
    To modify the file system path:
 
@@ -188,7 +182,7 @@ INSTALLATION
    on an existing site, remember to copy all files from the original location
    to the new location.
 
-8. CRON MAINTENANCE TASKS
+7. CRON MAINTENANCE TASKS
 
    Many Drupal modules have periodic tasks that must be triggered by a cron
    maintenance task, including search module (to build and update the index
@@ -297,7 +291,7 @@ NOTE: for more information about multiple virtual hosts or the configuration
 settings, consult the Drupal handbook at drupal.org.
 
 For more information on configuring Drupal's file system path in a multi-site
-configuration, see files/README.txt.
+configuration, see step 6 above.
 
 MORE INFORMATION
 ----------------
