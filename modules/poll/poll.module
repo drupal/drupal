@@ -217,6 +217,7 @@ function poll_insert($node) {
 
   db_query("INSERT INTO {poll} (nid, runtime, active) VALUES (%d, %d, %d)", $node->nid, $node->runtime, $node->active);
 
+  $i = 0;
   foreach ($node->choice as $choice) {
     if ($choice['chtext'] != '') {
       db_query("INSERT INTO {poll_choices} (nid, chtext, chvotes, chorder) VALUES (%d, '%s', %d, %d)", $node->nid, $choice['chtext'], $choice['chvotes'], $i++);
