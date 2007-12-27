@@ -11,6 +11,7 @@
  * Menu callback; presents the node editing form, or redirects to delete confirmation.
  */
 function node_page_edit($node) {
+  drupal_set_title($node->title);
   return drupal_get_form($node->type .'_node_form', $node);
 }
 

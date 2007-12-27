@@ -74,15 +74,12 @@ function theme_filter_admin_overview($form) {
 }
 
 /**
- * Display a filter format form.
+ * Menu callback; Display a filter format form.
  */
 function filter_admin_format_page($format = NULL) {
   if (!isset($format->name)) {
     drupal_set_title(t("Add input format"));
     $format = (object)array('name' => '', 'roles' => '', 'format' => '');
-  }
-  else {
-    drupal_set_title(t("%format input format", array('%format' => $format->name)));
   }
   return drupal_get_form('filter_admin_format_form', $format);
 }
