@@ -178,7 +178,7 @@ function _module_build_dependencies($files) {
       if (isset($file->info['dependencies']) && is_array($file->info['dependencies'])) {
         foreach ($file->info['dependencies'] as $dependency_name) {
           // This is a nonexistent module.
-          if ($dependency_name == '-circular-') {
+          if ($dependency_name == '-circular-' || !isset($files[$dependency_name])) {
             continue;
           }
           // $dependency_name is module B (again, see doxygen).
