@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.219 2007/12/27 17:25:28 goba Exp $
+// $Id: system.install,v 1.220 2007/12/28 22:23:57 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -124,7 +124,7 @@ function system_requirements($phase) {
     // If cron hasn't been run, and the user is viewing the main
     // administration page, instead of an error, we display a helpful reminder
     // to configure cron jobs.
-    if ($never_run && $severity != REQUIREMENT_ERROR && $_GET['q'] == 'admin') {
+    if ($never_run && $severity != REQUIREMENT_ERROR && $_GET['q'] == 'admin' && user_access('access site reports')) {
       drupal_set_message($t('Cron has not run. Please visit the <a href="@status">status report</a> for more information.', array('@status' => url('admin/reports/status'))));
     }
 
