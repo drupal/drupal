@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.237 2007/12/27 14:03:36 goba Exp $
+// $Id: menu.inc,v 1.238 2007/12/28 10:47:59 dries Exp $
 
 /**
  * @file
@@ -605,7 +605,7 @@ function _menu_link_translate(&$item) {
       }
       _menu_check_access($item, $map);
     }
-    
+
     // If the link title matches that of its router item, localize it.
     if (!empty($item['title']) && ($item['title'] == $item['link_title'])){
       if (!empty($item['title_arguments']) && $item['title_callback'] == 't') {
@@ -640,7 +640,9 @@ function _menu_link_translate(&$item) {
  *
  * menu_get_object() will provide you the current node on paths like node/5,
  * node/5/revisions/48 etc. menu_get_object('user') will give you the user
- * account on user/5 etc.
+ * account on user/5 etc. Note - this function should never be called within a
+ * _to_arg function (like user_current_to_arg()) since this may result in an
+ * infinite recursion.
  *
  * @param $type
  *   Type of the object. These appear in hook_menu definitons as %type. Core
@@ -1516,8 +1518,11 @@ function menu_get_active_title() {
 }
 
 /**
- * Get a menu link by its mlid, access checked and link translated for
- * rendering.
+ * Get a menu link by its mlid, access checked and link translated for rendering.
+ *
+ * This function should never be called from within node_load() or any other
+ * function used as a menu object load function since an infinite recursion may
+ * occur.
  *
  * @param $mlid
  *   The mlid of the menu item.
