@@ -1,5 +1,5 @@
 <?php
-// $Id: search.install,v 1.13 2007/12/24 10:37:13 goba Exp $
+// $Id: search.install,v 1.14 2007/12/28 10:53:27 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -114,21 +114,21 @@ function search_schema() {
   );
 
   $schema['search_node_links'] = array(
-    'description' => t('Stores nodes that link to other nodes, used to improve search scores for nodes that are frequently linked to.'),
+    'description' => t('Stores items (like nodes) that link to other nodes, used to improve search scores for nodes that are frequently linked to.'),
     'fields' => array(
       'sid' => array(
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('The {search_dataset}.sid of the searchable item to which the word belongs.'),
+        'description' => t('The {search_dataset}.sid of the searchable item containing the link to the node.'),
       ),
       'type' => array(
         'type' => 'varchar',
         'length' => 16,
         'not null' => TRUE,
         'default' => '',
-        'description' => t('The {search_dataset}.sid of the searchable item to which the word belongs.'),
+        'description' => t('The {search_dataset}.type of the searchable item containing the link to the node.'),
       ),
       'nid' => array(
         'type' => 'int',
