@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.295 2007/12/19 19:13:28 goba Exp $
+// $Id: blog.module,v 1.296 2007/12/28 12:02:51 dries Exp $
 
 /**
  * @file
@@ -80,11 +80,8 @@ function blog_form(&$node) {
 
 
   if (empty($node->body)) {
-    /*
-    ** If the user clicked a "blog it" link, we load the data from the
-    ** database and quote it in the blog:
-    */
-
+    // If the user clicked a "blog it" link, we load the data from the
+    // database and quote it in the blog.
     if ($nid && $blog = node_load($nid)) {
       $node->body = '<em>'. $blog->body .'</em> ['. l($blog->name, "node/$nid") .']';
     }

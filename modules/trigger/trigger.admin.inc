@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.admin.inc,v 1.2 2007/12/06 09:58:34 goba Exp $
+// $Id: trigger.admin.inc,v 1.3 2007/12/28 12:02:52 dries Exp $
 
 /**
  * @file
@@ -140,7 +140,7 @@ function trigger_assign_form($form_state, $hook, $op, $description) {
 
   $form[$op] = array(
     '#type' => 'fieldset',
-    '#title' => t('Trigger: '). $description,
+    '#title' => t('Trigger: ') . $description,
     '#theme' => 'trigger_display'
     );
   // Retrieve actions that are already assigned to this hook-op combination.

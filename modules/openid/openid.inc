@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.inc,v 1.6 2007/11/20 14:00:39 dries Exp $
+// $Id: openid.inc,v 1.7 2007/12/28 12:02:52 dries Exp $
 
 /**
  * @file
@@ -393,7 +393,7 @@ function _openid_fix_post(&$post) {
       $fixed_key = str_replace('openid.ns_', 'openid.ns.', $fixed_key);
       $fixed_key = str_replace('openid.sreg_', 'openid.sreg.', $fixed_key);
       foreach ($extensions as $ext) {
-        $fixed_key = str_replace('openid.'.$ext.'_', 'openid.'.$ext.'.', $fixed_key);
+        $fixed_key = str_replace('openid.'. $ext .'_', 'openid.'. $ext .'.', $fixed_key);
       }
       unset($post[$key]);
       $post[$fixed_key] = $value;

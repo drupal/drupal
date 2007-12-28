@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.16 2007/12/22 23:24:25 goba Exp $
+// $Id: node.admin.inc,v 1.17 2007/12/28 12:02:51 dries Exp $
 
 /**
  * @file
@@ -375,12 +375,12 @@ function node_mass_update($nodes, $updates) {
       'error_message' => t('The update has encountered an error.'),
       // The operations do not live in the .module file, so we need to
       // tell the batch engine which file to load before calling them.
-      'file' => drupal_get_path('module', 'node'). '/node.admin.inc',
+      'file' => drupal_get_path('module', 'node') .'/node.admin.inc',
     );
     batch_set($batch);
   }
   else {
-    foreach($nodes as $nid) {
+    foreach ($nodes as $nid) {
       _node_mass_update_helper($nid, $updates);
     }
     drupal_set_message(t('The update has been performed.'));

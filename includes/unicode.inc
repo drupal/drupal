@@ -1,5 +1,5 @@
 <?php
-// $Id: unicode.inc,v 1.28 2007/12/20 08:46:01 goba Exp $
+// $Id: unicode.inc,v 1.29 2007/12/28 12:02:50 dries Exp $
 
 /**
  * Indicates an error during check for PHP unicode support.
@@ -208,7 +208,7 @@ function drupal_convert_to_utf8($data, $encoding) {
  */
 function drupal_truncate_bytes($string, $len) {
   if (strlen($string) <= $len) {
-     return $string;
+    return $string;
   }
   if ((ord($string[$len]) < 0x80) || (ord($string[$len]) >= 0xC0)) {
     return substr($string, 0, $len);

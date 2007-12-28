@@ -1,4 +1,4 @@
-// $Id: INSTALL.txt,v 1.54 2007/12/27 17:25:27 goba Exp $
+// $Id: INSTALL.txt,v 1.55 2007/12/28 12:02:49 dries Exp $
 
 CONTENTS OF THIS FILE
 ---------------------
@@ -108,7 +108,7 @@ INSTALLATION
 
    The install script will attempt to create a files storage directory
    in the default location at sites/default/files (the location of the
-   files directory may be changed after Drupal is installed). In some 
+   files directory may be changed after Drupal is installed). In some
    cases, you may need to create the directory and modify its permissions
    manually. Use the following commands (from the installation directory)
    to create the files directory and grant the web server write privileges to it:

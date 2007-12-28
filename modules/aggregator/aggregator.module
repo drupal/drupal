@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.370 2007/12/23 13:17:19 goba Exp $
+// $Id: aggregator.module,v 1.371 2007/12/28 12:02:50 dries Exp $
 
 /**
  * @file
@@ -716,15 +716,11 @@ function aggregator_parse_feed(&$data, $feed) {
   }
   xml_parser_free($xml_parser);
 
-  /*
-  ** We reverse the array such that we store the first item last,
-  ** and the last item first. In the database, the newest item
-  ** should be at the top.
-  */
-
+  // We reverse the array such that we store the first item last, and the last
+  // item first. In the database, the newest item should be at the top.
   $items = array_reverse($items);
 
-  // Initialize variables
+  // Initialize variables.
   $title = $link = $author = $description = $guid = NULL;
   foreach ($items as $item) {
     unset($title, $link, $author, $description, $guid);
@@ -734,12 +730,9 @@ function aggregator_parse_feed(&$data, $feed) {
       $item[$key] = trim($value);
     }
 
-    /*
-    ** Resolve the item's title. If no title is found, we use
-    ** up to 40 characters of the description ending at a word
-    ** boundary but not splitting potential entities.
-    */
-
+    // Resolve the item's title. If no title is found, we use up to 40
+    // characters of the description ending at a word boundary but not
+    // splitting potential entities.
     if (!empty($item['TITLE'])) {
       $title = $item['TITLE'];
     }
@@ -750,10 +743,7 @@ function aggregator_parse_feed(&$data, $feed) {
       $title = '';
     }
 
-    /*
-    ** Resolve the items link.
-    */
-
+    // Resolve the items link.
     if (!empty($item['LINK'])) {
       $link = $item['LINK'];
     }
@@ -762,9 +752,7 @@ function aggregator_parse_feed(&$data, $feed) {
     }
     $guid = isset($item['GUID']) ? $item['GUID'] : '';
 
-    /**
-     * Atom feeds have a CONTENT and/or SUMMARY tag instead of a DESCRIPTION tag
-     */
+    // Atom feeds have a CONTENT and/or SUMMARY tag instead of a DESCRIPTION tag.
     if (!empty($item['CONTENT:ENCODED'])) {
       $item['DESCRIPTION'] = $item['CONTENT:ENCODED'];
     }
@@ -775,11 +763,8 @@ function aggregator_parse_feed(&$data, $feed) {
       $item['DESCRIPTION'] = $item['CONTENT'];
     }
 
-    /*
-    ** Try to resolve and parse the item's publication date. If no
-    ** date is found, we use the current date instead.
-    */
-
+    // Try to resolve and parse the item's publication date. If no date is
+    // found, we use the current date instead.
     $date = 'now';
     foreach (array('PUBDATE', 'DC:DATE', 'DCTERMS:ISSUED', 'DCTERMS:CREATED', 'DCTERMS:MODIFIED', 'ISSUED', 'CREATED', 'MODIFIED', 'PUBLISHED', 'UPDATED') as $key) {
       if (!empty($item[$key])) {
@@ -796,12 +781,9 @@ function aggregator_parse_feed(&$data, $feed) {
       }
     }
 
-    /*
-    ** Save this item. Try to avoid duplicate entries as much as
-    ** possible. If we find a duplicate entry, we resolve it and
-    ** pass along its ID is such that we can update it if needed.
-    */
-
+    // Save this item. Try to avoid duplicate entries as much as possible. If
+    // we find a duplicate entry, we resolve it and pass along its ID is such
+    // that we can update it if needed.
     if (!empty($guid)) {
       $entry = db_fetch_object(db_query("SELECT iid FROM {aggregator_item} WHERE fid = %d AND guid = '%s'", $feed['fid'], $guid));
     }
@@ -815,10 +797,7 @@ function aggregator_parse_feed(&$data, $feed) {
     aggregator_save_item(array('iid' => (isset($entry->iid) ? $entry->iid:  ''), 'fid' => $feed['fid'], 'timestamp' => $timestamp, 'title' => $title, 'link' => $link, 'author' => $item['AUTHOR'], 'description' => $item['DESCRIPTION'], 'guid' => $guid));
   }
 
-  /*
-  ** Remove all items that are older than flush item timer:
-  */
-
+  // Remove all items that are older than flush item timer.
   $age = time() - variable_get('aggregator_clear', 9676800);
   $result = db_query('SELECT iid FROM {aggregator_item} WHERE fid = %d AND timestamp < %d', $feed['fid'], $age);
 

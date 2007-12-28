@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.610 2007/12/19 21:40:05 goba Exp $
+// $Id: comment.module,v 1.611 2007/12/28 12:02:51 dries Exp $
 
 /**
  * @file
@@ -976,13 +976,9 @@ function comment_render($node, $cid = 0) {
           $query .= ' ORDER BY c.cid';
         }
         else {
-
-          /*
-          ** See comment above. Analysis learns that this doesn't cost
-          ** too much. It scales much much better than having the whole
-          ** comment structure.
-          */
-
+          // See comment above. Analysis reveals that this doesn't cost too
+          // much. It scales much much better than having the whole comment
+          // structure.
           $query .= ' ORDER BY SUBSTRING(c.thread, 1, (LENGTH(c.thread) - 1))';
         }
       }

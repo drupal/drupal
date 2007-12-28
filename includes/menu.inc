@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.238 2007/12/28 10:47:59 dries Exp $
+// $Id: menu.inc,v 1.239 2007/12/28 12:02:50 dries Exp $
 
 /**
  * @file
@@ -607,7 +607,7 @@ function _menu_link_translate(&$item) {
     }
 
     // If the link title matches that of its router item, localize it.
-    if (!empty($item['title']) && ($item['title'] == $item['link_title'])){
+    if (!empty($item['title']) && ($item['title'] == $item['link_title'])) {
       if (!empty($item['title_arguments']) && $item['title_callback'] == 't') {
         $item['title'] = t($item['title'], menu_unserialize($item['title_arguments'], $map));
       }

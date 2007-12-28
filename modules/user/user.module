@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.882 2007/12/27 16:00:09 goba Exp $
+// $Id: user.module,v 1.883 2007/12/28 12:02:52 dries Exp $
 
 /**
  * @file
@@ -118,7 +118,7 @@ function user_external_login($account, $edit = array()) {
     // Invalid login.
     return FALSE;
   }
-  
+
   // Valid login.
   global $user;
   $user = $account;
