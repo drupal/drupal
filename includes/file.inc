@@ -959,7 +959,7 @@ function file_directory_temp() {
  * @return A string containing the path to Drupal's 'files' directory.
  */
 function file_directory_path() {
-  return variable_get('file_directory_path', 'sites/default/files');
+  return variable_get('file_directory_path', conf_path() .'/files');
 }
 
 /**
