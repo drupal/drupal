@@ -108,7 +108,7 @@ INSTALLATION
 
    The install script will attempt to create a files storage directory
    in the default location at sites/default/files (the location of the
-   files directory may be changed after Drupal is installed). In some 
+   files directory may be changed after Drupal is installed). In some
    cases, you may need to create the directory and modify its permissions
    manually. Use the following commands (from the installation directory)
    to create the files directory and grant the web server write privileges to it:

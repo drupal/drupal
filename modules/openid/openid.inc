@@ -393,7 +393,7 @@ function _openid_fix_post(&$post) {
       $fixed_key = str_replace('openid.ns_', 'openid.ns.', $fixed_key);
       $fixed_key = str_replace('openid.sreg_', 'openid.sreg.', $fixed_key);
       foreach ($extensions as $ext) {
-        $fixed_key = str_replace('openid.'.$ext.'_', 'openid.'.$ext.'.', $fixed_key);
+        $fixed_key = str_replace('openid.'. $ext .'_', 'openid.'. $ext .'.', $fixed_key);
       }
       unset($post[$key]);
       $post[$fixed_key] = $value;

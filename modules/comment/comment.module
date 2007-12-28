@@ -976,13 +976,9 @@ function comment_render($node, $cid = 0) {
           $query .= ' ORDER BY c.cid';
         }
         else {
-
-          /*
-          ** See comment above. Analysis learns that this doesn't cost
-          ** too much. It scales much much better than having the whole
-          ** comment structure.
-          */
-
+          // See comment above. Analysis reveals that this doesn't cost too
+          // much. It scales much much better than having the whole comment
+          // structure.
           $query .= ' ORDER BY SUBSTRING(c.thread, 1, (LENGTH(c.thread) - 1))';
         }
       }

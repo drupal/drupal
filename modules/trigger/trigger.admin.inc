@@ -140,7 +140,7 @@ function trigger_assign_form($form_state, $hook, $op, $description) {
 
   $form[$op] = array(
     '#type' => 'fieldset',
-    '#title' => t('Trigger: '). $description,
+    '#title' => t('Trigger: ') . $description,
     '#theme' => 'trigger_display'
     );
   // Retrieve actions that are already assigned to this hook-op combination.

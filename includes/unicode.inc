@@ -208,7 +208,7 @@ function drupal_convert_to_utf8($data, $encoding) {
  */
 function drupal_truncate_bytes($string, $len) {
   if (strlen($string) <= $len) {
-     return $string;
+    return $string;
   }
   if ((ord($string[$len]) < 0x80) || (ord($string[$len]) >= 0xC0)) {
     return substr($string, 0, $len);

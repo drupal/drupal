@@ -80,11 +80,8 @@ function blog_form(&$node) {
 
 
   if (empty($node->body)) {
-    /*
-    ** If the user clicked a "blog it" link, we load the data from the
-    ** database and quote it in the blog:
-    */
-
+    // If the user clicked a "blog it" link, we load the data from the
+    // database and quote it in the blog.
     if ($nid && $blog = node_load($nid)) {
       $node->body = '<em>'. $blog->body .'</em> ['. l($blog->name, "node/$nid") .']';
     }

@@ -158,7 +158,7 @@ function path_admin_form_submit($form, &$form_state) {
 
 /**
  * Menu callback; confirms deleting an URL alias
- **/
+ */
 function path_admin_delete_confirm($form_state, $pid) {
   $path = path_load($pid);
   if (user_access('administer url aliases')) {
@@ -172,7 +172,7 @@ function path_admin_delete_confirm($form_state, $pid) {
 
 /**
  * Execute URL alias deletion
- **/
+ */
 function path_admin_delete_confirm_submit($form, &$form_state) {
   if ($form_state['values']['confirm']) {
     path_admin_delete($form_state['values']['pid']);

@@ -118,7 +118,7 @@ function user_external_login($account, $edit = array()) {
     // Invalid login.
     return FALSE;
   }
-  
+
   // Valid login.
   global $user;
   $user = $account;

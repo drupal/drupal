@@ -607,7 +607,7 @@ function _menu_link_translate(&$item) {
     }
 
     // If the link title matches that of its router item, localize it.
-    if (!empty($item['title']) && ($item['title'] == $item['link_title'])){
+    if (!empty($item['title']) && ($item['title'] == $item['link_title'])) {
       if (!empty($item['title_arguments']) && $item['title_callback'] == 't') {
         $item['title'] = t($item['title'], menu_unserialize($item['title_arguments'], $map));
       }
