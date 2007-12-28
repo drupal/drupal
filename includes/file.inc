@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.115 2007/12/27 17:25:27 goba Exp $
+// $Id: file.inc,v 1.116 2007/12/28 10:50:51 dries Exp $
 
 /**
  * @file
@@ -959,7 +959,7 @@ function file_directory_temp() {
  * @return A string containing the path to Drupal's 'files' directory.
  */
 function file_directory_path() {
-  return variable_get('file_directory_path', 'sites/default/files');
+  return variable_get('file_directory_path', conf_path() .'/files');
 }
 
 /**
