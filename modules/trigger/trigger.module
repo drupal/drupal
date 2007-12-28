@@ -418,3 +418,12 @@ function trigger_options($type = 'all') {
     return $options[$type];
   }
 }
+
+/**
+ * Implementation of hook_actions_delete().
+ *
+ * Remove all trigger entries for the given action, when deleted.
+ */
+function trigger_actions_delete($aid) {
+  db_query("DELETE FROM {trigger_assignments} WHERE aid = '%s'", $aid);
+}
