@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.243 2007/12/26 10:23:59 goba Exp $
+// $Id: CHANGELOG.txt,v 1.244 2007/12/29 06:45:31 dries Exp $
 
 Drupal 6.0, xxxx-xx-xx (development version)
 ----------------------
@@ -46,7 +46,8 @@ Drupal 6.0, xxxx-xx-xx (development version)
       .info file.
     * Dynamically check password strength and confirmation.
     * Refactored poll administration.
-    * Drag and drop of table rows in the blocks administration page.
+    * Implemented drag-and-drop positioning for blocks, menu items, taxonomy
+      terms, and profile fields.
 - Theme system:
     * Added .info files to themes and made it easier to specify regions and
       features.
