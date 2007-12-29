@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.35 2007/12/22 23:24:26 goba Exp $ */
+/* $Id: style.css,v 1.36 2007/12/29 16:02:52 dries Exp $ */
 
 /**
  * Garland, for Drupal 5.0
@@ -290,7 +290,7 @@ span.submitted, .description {
   margin: 2em 0.5em 1em 0; /* LTR */
 }
 
-#watchdog-form-overview .form-submit,
+#dblog-form-overview .form-submit,
 .confirmation .form-submit,
 .search-form .form-submit,
 .poll .form-submit,
@@ -1025,43 +1025,43 @@ div.error, tr.error {
 }
 
 /**
- * Watchdog.module
+ * dblog.module
  */
-tr.watchdog-user {
+tr.dblog-user {
   background-color: #fcf9e5;
 }
 
-tr.watchdog-user td.active {
+tr.dblog-user td.active {
   background-color: #fbf5cf;
 }
 
-tr.watchdog-content {
+tr.dblog-content {
   background-color: #fefefe;
 }
 
-tr.watchdog-content td.active {
+tr.dblog-content td.active {
   background-color: #f5f5f5;
 }
 
-tr.watchdog-warning {
+tr.dblog-warning {
   background-color: #fdf5e6;
 }
 
-tr.watchdog-warning td.active {
+tr.dblog-warning td.active {
   background-color: #fdf2de;
 }
 
-tr.watchdog-error {
+tr.dblog-error {
   background-color: #fbe4e4;
 }
 
-tr.watchdog-error td.active {
+tr.dblog-error td.active {
   background-color: #fbdbdb;
 }
-tr.watchdog-page-not-found, tr.watchdog-access-denied {
+tr.dblog-page-not-found, tr.dblog-access-denied {
   background: #d7ffd7;
 }
-tr.watchdog-page-not-found td.active, tr.watchdog-access-denied td.active {
+tr.dblog-page-not-found td.active, tr.dblog-access-denied td.active {
   background: #c7eec7;
 }
 
