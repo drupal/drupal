@@ -115,10 +115,8 @@ function node_form(&$form_state, $node) {
   // Set the id of the top-level form tag
   $form['#id'] = 'node-form';
 
-  /**
-   * Basic node information.
-   * These elements are just values so they are not even sent to the client.
-   */
+  // Basic node information.
+  // These elements are just values so they are not even sent to the client.
   foreach (array('nid', 'vid', 'uid', 'created', 'type', 'language') as $key) {
     $form[$key] = array(
       '#type' => 'value',

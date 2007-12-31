@@ -12,7 +12,7 @@
  * @see themeable
  */
 
- /**
+/**
  * @name Content markers
  * @{
  * Markers used by theme_mark() and node_mark() to designate content.

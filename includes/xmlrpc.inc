@@ -163,11 +163,9 @@ function xmlrpc_message_parse(&$xmlrpc_message) {
     return FALSE;
   }
   $xmlrpc_message->_parser = xml_parser_create();
-  // Set XML parser to take the case of tags into account
+  // Set XML parser to take the case of tags into account.
   xml_parser_set_option($xmlrpc_message->_parser, XML_OPTION_CASE_FOLDING, FALSE);
   // Set XML parser callback functions
-  /* Do not set object. $xmlrpc_message does not have member functions any more
-  xml_set_object($xmlrpc_message->_parser, $xmlrpc_message); */
   xml_set_element_handler($xmlrpc_message->_parser, 'xmlrpc_message_tag_open', 'xmlrpc_message_tag_close');
   xml_set_character_data_handler($xmlrpc_message->_parser, 'xmlrpc_message_cdata');
   xmlrpc_message_set($xmlrpc_message);

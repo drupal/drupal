@@ -201,12 +201,7 @@ function xmlrpc_server_call($xmlrpc_server, $methodname, $args) {
       }
     }
   }
-  /*
-  if (count($args) == 1) {
-    // If only one parameter just send that instead of the whole array
-    $args = $args[0];
-  }
-  */
+
   if (!function_exists($method)) {
     return xmlrpc_error(-32601, t('Server error. Requested function %method does not exist.', array("%method" => $method)));
   }

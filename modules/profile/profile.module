@@ -459,7 +459,7 @@ function profile_categories() {
   return $data;
 }
 
-/*
+/**
  * Menu item access callback - check if a user has access to a profile category.
  */
 function profile_category_access($category) {
