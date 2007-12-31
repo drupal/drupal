@@ -1,5 +1,5 @@
 <?php
-// $Id: user.pages.inc,v 1.7 2007/12/17 17:06:16 goba Exp $
+// $Id: user.pages.inc,v 1.8 2007/12/31 08:54:37 dries Exp $
 
 /**
  * @file
@@ -150,10 +150,9 @@ function user_view($account) {
   drupal_set_title(check_plain($account->name));
   // Retrieve all profile fields and attach to $account->content.
   user_build_content($account);
-  /**
-   * To theme user profiles, copy modules/user/user_profile.tpl.php
-   * to your theme directory, and edit it as instructed in that file's comments.
-   */
+
+  // To theme user profiles, copy modules/user/user_profile.tpl.php
+  // to your theme directory, and edit it as instructed in that file's comments.
   return theme('user_profile', $account);
 }
 

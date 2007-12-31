@@ -1,14 +1,13 @@
 <?php
-// $Id: database.mysqli.inc,v 1.51 2007/12/19 13:03:16 goba Exp $
+// $Id: database.mysqli.inc,v 1.52 2007/12/31 08:54:36 dries Exp $
 
 /**
  * @file
  * Database interface code for MySQL database servers using the mysqli client libraries. mysqli is included in PHP 5 by default and allows developers to use the advanced features of MySQL 4.1.x, 5.0.x and beyond.
  */
 
-/* Maintainers of this file should consult
- * http://www.php.net/manual/en/ref.mysqli.php
- */
+ // Maintainers of this file should consult:
+ // http://www.php.net/manual/en/ref.mysqli.php
 
 /**
  * @ingroup database
@@ -85,7 +84,7 @@ function db_connect($url) {
     _db_error_page(mysqli_connect_error());
   }
 
-  /* Force UTF-8 */
+  // Force UTF-8.
   mysqli_query($connection, 'SET NAMES "utf8"');
 
   return $connection;

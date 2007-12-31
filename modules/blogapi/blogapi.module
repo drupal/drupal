@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.112 2007/12/14 18:08:44 goba Exp $
+// $Id: blogapi.module,v 1.113 2007/12/31 08:54:36 dries Exp $
 
 /**
  * @file
@@ -396,12 +396,10 @@ function blogapi_metaweblog_get_recent_posts($blogid, $username, $password, $num
   return blogapi_blogger_get_recent_posts('0123456789ABCDEF', $blogid, $username, $password, $number_of_posts, TRUE);
 }
 
-// see above
 function blogapi_mt_get_recent_post_titles($blogid, $username, $password, $number_of_posts) {
   return blogapi_blogger_get_recent_posts('0123456789ABCDEF', $blogid, $username, $password, $number_of_posts, FALSE);
 }
 
-/* **** */
 function blogapi_mt_get_category_list($blogid, $username, $password) {
   return blogapi_metaweblog_get_category_list($blogid, $username, $password);
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.407 2007/12/23 13:17:19 goba Exp $
+// $Id: theme.inc,v 1.408 2007/12/31 08:54:36 dries Exp $
 
 /**
  * @file
@@ -12,7 +12,7 @@
  * @see themeable
  */
 
- /**
+/**
  * @name Content markers
  * @{
  * Markers used by theme_mark() and node_mark() to designate content.

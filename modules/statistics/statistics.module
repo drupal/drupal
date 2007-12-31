@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.270 2007/12/19 19:13:29 goba Exp $
+// $Id: statistics.module,v 1.271 2007/12/31 08:54:37 dries Exp $
 
 /**
  * @file
@@ -180,12 +180,12 @@ function statistics_cron() {
   $statistics_timestamp = variable_get('statistics_day_timestamp', '');
 
   if ((time() - $statistics_timestamp) >= 86400) {
-    /* reset day counts */
+    // Reset day counts.
     db_query('UPDATE {node_counter} SET daycount = 0');
     variable_set('statistics_day_timestamp', time());
   }
 
-  /* clean expired access logs */
+  // Clean up expired access logs.
   db_query('DELETE FROM {accesslog} WHERE timestamp < %d', time() - variable_get('statistics_flush_accesslog_timer', 259200));
 }
 
@@ -226,7 +226,7 @@ function statistics_title_list($dbfield, $dbrows) {
 function statistics_get($nid) {
 
   if ($nid > 0) {
-    /* retrieves an array with both totalcount and daycount */
+    // Retrieve an array with both totalcount and daycount.
     $statistics = db_fetch_array(db_query('SELECT totalcount, daycount, timestamp FROM {node_counter} WHERE nid = %d', $nid));
   }
 

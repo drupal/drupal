@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.256 2007/12/23 12:33:13 goba Exp $
+// $Id: form.inc,v 1.257 2007/12/31 08:54:36 dries Exp $
 
 /**
  * @defgroup form Form generation
@@ -639,7 +639,7 @@ function _form_validate($elements, &$form_state, $form_id = NULL) {
       _form_validate($elements[$key], $form_state);
     }
   }
-  /* Validate the current input */
+  // Validate the current input.
   if (!isset($elements['#validated']) || !$elements['#validated']) {
     if (isset($elements['#needs_validation'])) {
       // An empty textfield returns '' so we use empty(). An empty checkbox
@@ -817,7 +817,7 @@ function form_builder($form_id, $form, &$form_state) {
   // Initialize as unprocessed.
   $form['#processed'] = FALSE;
 
-  /* Use element defaults */
+  // Use element defaults.
   if ((!empty($form['#type'])) && ($info = _element_info($form['#type']))) {
     // Overlay $info onto $form, retaining preexisting keys in $form.
     $form += $info;
@@ -1525,7 +1525,7 @@ function theme_password_confirm($element) {
   return theme('form_element', $element, $element['#children']);
 }
 
-/*
+/**
  * Expand a password_confirm field into two text boxes.
  */
 function expand_password_confirm($element) {

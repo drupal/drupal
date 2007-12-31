@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.22 2007/12/27 14:03:37 goba Exp $
+// $Id: node.pages.inc,v 1.23 2007/12/31 08:54:37 dries Exp $
 
 /**
  * @file
@@ -115,10 +115,8 @@ function node_form(&$form_state, $node) {
   // Set the id of the top-level form tag
   $form['#id'] = 'node-form';
 
-  /**
-   * Basic node information.
-   * These elements are just values so they are not even sent to the client.
-   */
+  // Basic node information.
+  // These elements are just values so they are not even sent to the client.
   foreach (array('nid', 'vid', 'uid', 'created', 'type', 'language') as $key) {
     $form[$key] = array(
       '#type' => 'value',

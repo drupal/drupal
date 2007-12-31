@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.234 2007/12/26 19:02:24 dries Exp $
+// $Id: profile.module,v 1.235 2007/12/31 08:54:37 dries Exp $
 
 /**
  * @file
@@ -459,7 +459,7 @@ function profile_categories() {
   return $data;
 }
 
-/*
+/**
  * Menu item access callback - check if a user has access to a profile category.
  */
 function profile_category_access($category) {

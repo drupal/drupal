@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysql.inc,v 1.85 2007/12/19 13:03:16 goba Exp $
+// $Id: database.mysql.inc,v 1.86 2007/12/31 08:54:36 dries Exp $
 
 /**
  * @file
@@ -85,7 +85,7 @@ function db_connect($url) {
     _db_error_page(mysql_error());
   }
 
-  /* On MySQL 4.1 and later, force UTF-8 */
+  // On MySQL 4.1 and later, force UTF-8.
   if (version_compare(mysql_get_server_info(), '4.1.0', '>=')) {
     mysql_query('SET NAMES "utf8"', $connection);
   }

@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.220 2007/12/28 22:23:57 goba Exp $
+// $Id: system.install,v 1.221 2007/12/31 08:54:37 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -267,12 +267,12 @@ function system_requirements($phase) {
  */
 function system_install() {
   if ($GLOBALS['db_type'] == 'pgsql') {
-    /* create unsigned types */
+    // Create unsigned types.
     db_query("CREATE DOMAIN int_unsigned integer CHECK (VALUE >= 0)");
     db_query("CREATE DOMAIN smallint_unsigned smallint CHECK (VALUE >= 0)");
     db_query("CREATE DOMAIN bigint_unsigned bigint CHECK (VALUE >= 0)");
 
-    /* create functions */
+    // Create functions.
     db_query('CREATE OR REPLACE FUNCTION "greatest"(numeric, numeric) RETURNS numeric AS
       \'SELECT CASE WHEN (($1 > $2) OR ($2 IS NULL)) THEN $1 ELSE $2 END;\'
       LANGUAGE \'sql\''
