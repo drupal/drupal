@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.257 2007/12/17 21:58:38 goba Exp $
+// $Id: poll.module,v 1.258 2007/12/31 08:48:41 dries Exp $
 
 /**
  * @file
@@ -184,7 +184,8 @@ function poll_node_info() {
 function poll_form(&$node, $form_state) {
   global $user;
 
-  $admin = user_access('administer nodes') || user_access('edit any poll content') || (user_access('edit own poll content') && $user->uid == $node->nid);
+  $admin = user_access('administer nodes') || user_access('edit any poll content') || (user_access('edit own poll content') && $user->uid == $node->uid);
+
   $type = node_get_types('type', $node);
 
   $form = array(
@@ -633,14 +634,17 @@ function poll_view_results(&$node, $teaser, $page, $block) {
   $total_votes = 0;
   $max_votes = 0;
   foreach ($node->choice as $choice) {
-    $total_votes += $choice['chvotes'];
-    $max_votes = max($max_votes, $choice['chvotes']);
+    if (isset($choice['chvotes'])) {
+      $total_votes += $choice['chvotes'];
+      $max_votes = max($max_votes, $choice['chvotes']);
+    }
   }
 
   $poll_results = '';
   foreach ($node->choice as $i => $choice) {
-    if ($choice['chtext'] != '') {
-      $poll_results .= theme('poll_bar', $choice['chtext'], $choice['chvotes'], $total_votes, isset($node->vote) && $node->vote == $i, $block);
+    if (!empty($choice['chtext'])) {
+      $chvotes = isset($choice['chvotes']) ? $choice['chvotes'] : 0;
+      $poll_results .= theme('poll_bar', $choice['chtext'], $chvotes, $total_votes, isset($node->vote) && $node->vote == $i, $block);
     }
   }
 
