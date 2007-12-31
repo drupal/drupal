@@ -65,7 +65,7 @@ function dblog_menu() {
     'file' => 'dblog.admin.inc',
   );
   $items['admin/reports/access-denied'] = array(
-      'title' => "Top 'access denied' errors",
+    'title' => "Top 'access denied' errors",
     'description' => "View 'access denied' errors (403s).",
     'page callback' => 'dblog_top',
     'page arguments' => array('access denied'),
