@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.install,v 1.15 2007/12/20 21:50:11 goba Exp $
+// $Id: forum.install,v 1.16 2007/12/31 16:58:34 goba Exp $
 
 /**
  * Implementation of hook_install().
@@ -12,12 +12,17 @@ function forum_install() {
 }
 
 function forum_enable() {
-  // Create the forum vocabulary if it does not exist. Assign the vocabulary
-  // a low weight so it will appear first in forum topic create and edit
-  // forms.
-  $vid = variable_get('forum_nav_vocabulary', 0);
-  $vocabularies = taxonomy_get_vocabularies();
-  if (!isset($vocabularies[$vid])) {
+  if ($vocabulary = taxonomy_vocabulary_load(variable_get('forum_nav_vocabulary', 0))) {
+    // Existing install. Add back forum node type, if the forums
+    // vocabulary still exists. Keep all other node types intact there.
+    $vocabulary = (array) $vocabulary;
+    $vocabulary['nodes']['forum'] = 1;
+    taxonomy_save_vocabulary($vocabulary);
+  }
+  else {
+    // Create the forum vocabulary if it does not exist. Assign the vocabulary
+    // a low weight so it will appear first in forum topic create and edit
+    // forms.
     $vocabulary = array(
       'name' => t('Forums'),
       'multiple' => 0,
