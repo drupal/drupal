@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.258 2007/12/31 08:48:41 dries Exp $
+// $Id: poll.module,v 1.259 2007/12/31 12:28:32 goba Exp $
 
 /**
  * @file
@@ -643,7 +643,7 @@ function poll_view_results(&$node, $teaser, $page, $block) {
   $poll_results = '';
   foreach ($node->choice as $i => $choice) {
     if (!empty($choice['chtext'])) {
-      $chvotes = isset($choice['chvotes']) ? $choice['chvotes'] : 0;
+      $chvotes = isset($choice['chvotes']) ? $choice['chvotes'] : NULL;
       $poll_results .= theme('poll_bar', $choice['chtext'], $chvotes, $total_votes, isset($node->vote) && $node->vote == $i, $block);
     }
   }
