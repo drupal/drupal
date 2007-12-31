@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.47 2007/12/31 14:41:08 goba Exp $
+// $Id: system.admin.inc,v 1.48 2007/12/31 17:20:20 goba Exp $
 
 /**
  * @file
@@ -18,7 +18,7 @@ function system_main_admin_page($arg = NULL) {
   }
 
   // Check for status report errors.
-  if (system_status(TRUE) && user_access('access site reports')) {
+  if (system_status(TRUE) && user_access('administer site configuration')) {
     drupal_set_message(t('One or more problems were detected with your Drupal installation. Check the <a href="@status">status report</a> for more information.', array('@status' => url('admin/reports/status'))), 'error');
   }
   $blocks = array();
