@@ -1,5 +1,5 @@
 <?php
-// $Id: actions.inc,v 1.7 2007/12/08 14:06:20 goba Exp $
+// $Id: actions.inc,v 1.8 2007/12/31 14:51:04 goba Exp $
 
 /**
  * @file
@@ -11,11 +11,9 @@
  *
  * Given the IDs of actions to perform, find out what the callbacks
  * for the actions are by querying the database. Then call each callback
- * using the function call $function('do', $object, $context, $a1, $2)
+ * using the function call $function($object, $context, $a1, $2)
  * where $function is the name of a function written in compliance with
- * the action specification; that is, foo($object, $context). The $params
- * parameter is an array of stored parameters that have been previously
- * configured through the web using actions.module.
+ * the action specification; that is, foo($object, $context).
  *
  * @param $action_ids
  *   The ID of the action to perform. Can be a single action ID or an array
@@ -24,6 +22,8 @@
  * @param $object
  *   Parameter that will be passed along to the callback. Typically the
  *   object that the action will act on; a node, user or comment object.
+ *   If the action does not act on an object, pass a dummy object. This
+ *   is necessary to support PHP 4 object referencing.
  * @param $context
  *   Parameter that will be passed along to the callback. $context is a
  *   keyed array containing extra information about what is currently
@@ -39,7 +39,7 @@
  *   An associative array containing the result of the function that
  *   performs the action, keyed on action ID.
  */
-function actions_do($action_ids, $object = NULL, $context = NULL, $a1 = NULL, $a2 = NULL) {
+function actions_do($action_ids, &$object, $context = NULL, $a1 = NULL, $a2 = NULL) {
   static $stack;
   $stack++;
   if ($stack > variable_get('actions_max_stack', 35)) {

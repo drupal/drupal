@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.module,v 1.11 2007/12/28 15:21:30 goba Exp $
+// $Id: trigger.module,v 1.12 2007/12/31 14:51:04 goba Exp $
 
 /**
  * @file
@@ -206,7 +206,7 @@ function _trigger_normalize_node_context($type, $node) {
 /**
  * Implementation of hook_nodeapi().
  */
-function trigger_nodeapi($node, $op, $a3, $a4) {
+function trigger_nodeapi(&$node, $op, $a3, $a4) {
   // Keep objects for reuse so that changes actions make to objects can persist.
   static $objects;
   // Prevent recursion by tracking which operations have already been called.
@@ -299,7 +299,8 @@ function trigger_comment($a1, $op) {
       actions_do($aid, $objects[$action_info['type']], $context);
     }
     else {
-      actions_do($aid, (object) $a1, $context);
+      $comment = (object) $a1;
+      actions_do($aid, $comment, $context);
     }
   }
 }
@@ -392,7 +393,8 @@ function trigger_taxonomy($op, $type, $array) {
     'op' => $op
   );
   foreach ($aids as $aid => $action_info) {
-    actions_do($aid, (object) $array, $context);
+    $taxonomy_object = (object) $array;
+    actions_do($aid, $taxonomy_object, $context);
   }
 }
 
