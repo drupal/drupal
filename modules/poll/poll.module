@@ -61,13 +61,11 @@ function poll_perm() {
  * Implementation of hook_access().
  */
 function poll_access($op, $node, $account) {
-  global $user;
-
   switch ($op) {
     case 'create':
       return user_access('create poll content', $account);
     case 'update':
-      return user_access('edit any poll content') || (user_access('edit own poll content') && ($node->uid == $user->uid));
+      return user_access('edit any poll content', $account) || (user_access('edit own poll content', $account) && ($node->uid == $account->uid));
   }
 }
 

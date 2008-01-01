@@ -310,10 +310,7 @@ function forum_access($op, $node, $account) {
   }
 
   if ($op == 'update' || $op == 'delete') {
-    if (user_access('edit own forum topics', $account) && ($account->uid == $node->uid)) {
-      return TRUE;
-    }
-    if (user_access('edit any forum topic')) {
+    if (user_access('edit any forum topic', $account) || (user_access('edit own forum topics', $account) && ($account->uid == $node->uid))) {
       return TRUE;
     }
   }
