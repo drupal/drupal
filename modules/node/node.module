@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.934 2007/12/28 12:02:51 dries Exp $
+// $Id: node.module,v 1.935 2008/01/01 17:46:29 goba Exp $
 
 /**
  * @file
@@ -2322,7 +2322,6 @@ function _node_access_rebuild_batch_finished($success, $results, $operations) {
  * Named so as not to conflict with node_access()
  */
 function node_content_access($op, $node, $account) {
-  global $user;
   $type = is_string($node) ? $node : (is_array($node) ? $node['type'] : $node->type);
 
   if ($op == 'create') {
@@ -2330,13 +2329,13 @@ function node_content_access($op, $node, $account) {
   }
 
   if ($op == 'update') {
-    if (user_access('edit any '. $type .' content', $account) || (user_access('edit own '. $type .' content', $account) && ($user->uid == $node->uid))) {
+    if (user_access('edit any '. $type .' content', $account) || (user_access('edit own '. $type .' content', $account) && ($account->uid == $node->uid))) {
       return TRUE;
     }
   }
 
   if ($op == 'delete') {
-    if (user_access('delete any '. $type .' content') || (user_access('delete own '. $type .' content') && ($user->uid == $node->uid))) {
+    if (user_access('delete any '. $type .' content', $account) || (user_access('delete own '. $type .' content', $account) && ($account->uid == $node->uid))) {
       return TRUE;
     }
   }
