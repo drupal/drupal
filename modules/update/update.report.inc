@@ -1,5 +1,5 @@
 <?php
-// $Id: update.report.inc,v 1.6 2007/12/20 08:42:05 goba Exp $
+// $Id: update.report.inc,v 1.7 2008/01/01 18:03:12 goba Exp $
 
 /**
  * @file
@@ -27,7 +27,7 @@ function update_status() {
  */
 function theme_update_report($data) {
   $last = variable_get('update_last_check', 0);
-  $output = '<div class="update checked">'. t('Last checked: ') . ($last ? format_interval(time() - $last) .' '. t('ago') : t('Never'));
+  $output = '<div class="update checked">'. ($last ? t('Last checked: @time ago', array('@time' => format_interval(time() - $last))) : t('Last checked: never'));
   $output .= ' <span class="check-manually">('. l(t('Check manually'), 'admin/reports/updates/check') .')</span>';
   $output .= "</div>\n";
 
