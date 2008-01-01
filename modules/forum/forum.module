@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.440 2008/01/01 17:46:29 goba Exp $
+// $Id: forum.module,v 1.441 2008/01/01 18:23:14 goba Exp $
 
 /**
  * @file
@@ -28,7 +28,7 @@ function forum_help($path, $arg) {
     case 'admin/content/forum/add/forum':
       return '<p>'. t('A forum holds related or similar forum topics (a forum topic is the initial post to a threaded discussion). For example, a forum named "Fruit" may contain forum topics titled "Apples" and "Bananas", respectively.') .'</p>';
     case 'admin/content/forum/settings':
-      return '<p>'. t('These settings allow you to adjust the display of your forum topics. The content types available for use within a forum may be selected by editing the <em>Content types</em> on the <a href="@forum-vocabulary">forum vocabulary page</a>.', array('@forum_vocabulary' => url('admin/content/taxonomy/edit/vocabulary/'. variable_get('forum_nav_vocabulary', '')))) .'</p>';
+      return '<p>'. t('These settings allow you to adjust the display of your forum topics. The content types available for use within a forum may be selected by editing the <em>Content types</em> on the <a href="@forum-vocabulary">forum vocabulary page</a>.', array('@forum-vocabulary' => url('admin/content/taxonomy/edit/vocabulary/'. variable_get('forum_nav_vocabulary', '')))) .'</p>';
   }
 }
 
@@ -362,7 +362,7 @@ function forum_form_alter(&$form, $form_state, $form_id) {
         '#value' => t('This is the designated forum vocabulary. Some of the normal vocabulary options have been removed.'),
         '#weight' => -1,
       );
-      $form['nodes']['#required'] = TRUE;
+      $form['content_types']['nodes']['#required'] = TRUE;
       $form['hierarchy'] = array('#type' => 'value', '#value' => 1);
       $form['settings']['required'] = array('#type' => 'value', '#value' => FALSE);
       $form['settings']['relations'] = array('#type' => 'value', '#value' => FALSE);
