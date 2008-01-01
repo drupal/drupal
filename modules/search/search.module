@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.246 2007/12/19 17:45:42 goba Exp $
+// $Id: search.module,v 1.247 2008/01/01 17:30:55 goba Exp $
 
 /**
  * @file
@@ -602,7 +602,7 @@ function search_index($sid, $type, $text) {
     }
   }
   // Any left-over links in $links no longer exist. Delete them and mark the nodes for reindexing.
-  foreach ($links as $nid) {
+  foreach ($links as $nid => $caption) {
     db_query("DELETE FROM {search_node_links} WHERE sid = %d AND type = '%s' AND nid = %d", $sid, $type, $nid);
     search_touch_node($nid);
   }
