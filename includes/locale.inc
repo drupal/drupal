@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.171 2008/01/02 12:04:17 goba Exp $
+// $Id: locale.inc,v 1.172 2008/01/02 13:27:26 goba Exp $
 
 /**
  * @file
@@ -625,8 +625,11 @@ function locale_translate_import_form() {
   );
   $form['import']['mode'] = array('#type' => 'radios',
     '#title' => t('Mode'),
-    '#default_value' => 'overwrite',
-    '#options' => array(LOCALE_IMPORT_OVERWRITE => t('Strings in the uploaded file replace existing ones, new ones are added'), LOCALE_IMPORT_KEEP => t('Existing strings are kept, only new strings are added')),
+    '#default_value' => LOCALE_IMPORT_KEEP,
+    '#options' => array(
+      LOCALE_IMPORT_OVERWRITE => t('Strings in the uploaded file replace existing ones, new ones are added'),
+      LOCALE_IMPORT_KEEP => t('Existing strings are kept, only new strings are added')
+    ),
   );
   $form['import']['submit'] = array('#type' => 'submit', '#value' => t('Import'));
   $form['#attributes']['enctype'] = 'multipart/form-data';
