@@ -43,10 +43,10 @@ function user_pass() {
 
 function user_pass_validate($form, &$form_state) {
   $name = trim($form_state['values']['name']);
-  if (valid_email_address($name)) {
-    $account = user_load(array('mail' => $name, 'status' => 1));
-  }
-  else {
+  // Try to load by email.
+  $account = user_load(array('mail' => $name, 'status' => 1));
+  if (!$account) {
+    // No success, try to load by name.
     $account = user_load(array('name' => $name, 'status' => 1));
   }
   if (isset($account->uid)) {
