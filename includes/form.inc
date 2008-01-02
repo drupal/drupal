@@ -1746,7 +1746,7 @@ function form_expand_ahah($element) {
       'effect'   => empty($element['#ahah']['effect']) ? 'none' : $element['#ahah']['effect'],
       'method'   => empty($element['#ahah']['method']) ? 'replace' : $element['#ahah']['method'],
       'progress' => empty($element['#ahah']['progress']) ? array('type' => 'throbber') : $element['#ahah']['progress'],
-      'button'   => $element['#type'] == 'submit' ? array($element['#name'] => $element['#value']) : FALSE,
+      'button'   => isset($element['#executes_submit_callback']) ? array($element['#name'] => $element['#value']) : FALSE,
     );
 
     // Convert a simple #ahah[progress] type string into an array.
