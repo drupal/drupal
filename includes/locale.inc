@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.172 2008/01/02 13:27:26 goba Exp $
+// $Id: locale.inc,v 1.173 2008/01/02 22:49:43 goba Exp $
 
 /**
  * @file
@@ -551,7 +551,9 @@ function locale_translate_seek_form() {
     '#description' => t('Leave blank to show all strings. The search is case sensitive.'),
   );
   $form['search']['language'] = array(
-    '#type' => (count($languages) <= 5 ? 'radios' : 'select'),
+    // Change type of form widget if more the 5 options will
+    // be present (2 of the options are added below).
+    '#type' => (count($languages) <= 3 ? 'radios' : 'select'),
     '#title' => t('Language'),
     '#default_value' => (!empty($query['language']) ? $query['language'] : 'all'),
     '#options' => array_merge(array('all' => t('All languages'), 'en' => t('English (provided by Drupal)')), $languages),
