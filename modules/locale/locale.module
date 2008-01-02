@@ -226,7 +226,7 @@ function locale_user($type, $edit, &$user, $category = NULL) {
     );
 
     $form['locale']['language'] = array(
-      '#type' => 'radios',
+      '#type' => (count($names) <= 5 ? 'radios' : 'select'),
       '#title' => t('Language'),
       '#default_value' => $user_preferred_language->language,
       '#options' => $names,
