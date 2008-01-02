@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.203 2007/12/20 08:20:58 goba Exp $
+// $Id: bootstrap.inc,v 1.204 2008/01/02 14:29:32 goba Exp $
 
 /**
  * @file
@@ -751,8 +751,11 @@ function watchdog($type, $message, $variables = array(), $severity = WATCHDOG_NO
  *   - 'status'
  *   - 'warning'
  *   - 'error'
+ * @param $repeat
+ *   If this is FALSE and the message is already set, then the message won't
+ *   be repeated.
  */
-function drupal_set_message($message = NULL, $type = 'status') {
+function drupal_set_message($message = NULL, $type = 'status', $repeat = TRUE) {
   if ($message) {
     if (!isset($_SESSION['messages'])) {
       $_SESSION['messages'] = array();
@@ -762,7 +765,9 @@ function drupal_set_message($message = NULL, $type = 'status') {
       $_SESSION['messages'][$type] = array();
     }
 
-    $_SESSION['messages'][$type][] = $message;
+    if ($repeat || !in_array($message, $_SESSION['messages'][$type])) {
+      $_SESSION['messages'][$type][] = $message;
+    }
   }
 
   // messages not set when DB connection fails

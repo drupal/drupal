@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.239 2007/12/28 12:02:50 dries Exp $
+// $Id: menu.inc,v 1.240 2008/01/02 14:29:32 goba Exp $
 
 /**
  * @file
@@ -2257,26 +2257,33 @@ function menu_path_is_external($path) {
 }
 
 /**
- * Returns TRUE if the site is off-line for maintenance.
+ * Checks whether the site is off-line for maintenance.
+ *
+ * This function will log the current user out and redirect to front page
+ * if the current user has no 'administer site configuration' permission.
+ *
+ * @return
+ *   FALSE if the site is not off-line or its the login page or the user has
+ *     'administer site configuration' permission.
+ *   TRUE for anonymous users not on the login page if the site is off-line.
  */
 function _menu_site_is_offline() {
   // Check if site is set to off-line mode.
   if (variable_get('site_offline', 0)) {
     // Check if the user has administration privileges.
-    if (!user_access('administer site configuration')) {
-      // Check if this is an attempt to login.
-      if (drupal_get_normal_path($_GET['q']) != 'user') {
-        return TRUE;
-      }
-    }
-    else {
-      $offline_message = t('Operating in off-line mode.');
-      $messages = drupal_set_message();
+    if (user_access('administer site configuration')) {
       // Ensure that the off-line message is displayed only once [allowing for
       // page redirects].
-      if (!isset($messages) || !isset($messages['status']) || !in_array($offline_message, $messages['status'])) {
-        drupal_set_message($offline_message);
+      drupal_set_message(t('Operating in off-line mode.'), 'status', FALSE);
+    }
+    else {
+      // Anonymous users get a FALSE at the login prompt, TRUE otherwise.
+      if (user_is_anonymous()) {
+        return $_GET['q'] != 'user' && $_GET['q'] != 'user/login';
       }
+      // Logged in users are unprivileged here, so they are logged out.
+      require_once drupal_get_path('module', 'user') .'/user.pages.inc';
+      user_logout();
     }
   }
   return FALSE;
