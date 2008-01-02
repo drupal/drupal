@@ -551,7 +551,9 @@ function locale_translate_seek_form() {
     '#description' => t('Leave blank to show all strings. The search is case sensitive.'),
   );
   $form['search']['language'] = array(
-    '#type' => (count($languages) <= 5 ? 'radios' : 'select'),
+    // Change type of form widget if more the 5 options will
+    // be present (2 of the options are added below).
+    '#type' => (count($languages) <= 3 ? 'radios' : 'select'),
     '#title' => t('Language'),
     '#default_value' => (!empty($query['language']) ? $query['language'] : 'all'),
     '#options' => array_merge(array('all' => t('All languages'), 'en' => t('English (provided by Drupal)')), $languages),
