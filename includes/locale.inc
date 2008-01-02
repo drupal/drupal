@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.170 2007/12/27 14:13:13 goba Exp $
+// $Id: locale.inc,v 1.171 2008/01/02 12:04:17 goba Exp $
 
 /**
  * @file
@@ -550,7 +550,8 @@ function locale_translate_seek_form() {
     '#default_value' => @$query['string'],
     '#description' => t('Leave blank to show all strings. The search is case sensitive.'),
   );
-  $form['search']['language'] = array('#type' => 'radios',
+  $form['search']['language'] = array(
+    '#type' => (count($languages) <= 5 ? 'radios' : 'select'),
     '#title' => t('Language'),
     '#default_value' => (!empty($query['language']) ? $query['language'] : 'all'),
     '#options' => array_merge(array('all' => t('All languages'), 'en' => t('English (provided by Drupal)')), $languages),

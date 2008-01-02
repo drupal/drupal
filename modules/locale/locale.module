@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.206 2007/12/28 12:02:51 dries Exp $
+// $Id: locale.module,v 1.207 2008/01/02 12:04:17 goba Exp $
 
 /**
  * @file
@@ -226,7 +226,7 @@ function locale_user($type, $edit, &$user, $category = NULL) {
     );
 
     $form['locale']['language'] = array(
-      '#type' => 'radios',
+      '#type' => (count($names) <= 5 ? 'radios' : 'select'),
       '#title' => t('Language'),
       '#default_value' => $user_preferred_language->language,
       '#options' => $names,
