@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.452 2007/12/22 23:24:24 goba Exp $
+// $Id: book.module,v 1.453 2008/01/02 11:36:19 goba Exp $
 
 /**
  * @file
@@ -181,12 +181,11 @@ function book_block($op = 'list', $delta = 0, $edit = array()) {
       $block[0]['cache'] = BLOCK_CACHE_PER_PAGE | BLOCK_CACHE_PER_ROLE;
       return $block;
     case 'view':
-      if (arg(0) == 'node' && is_numeric(arg(1))) {
-        $node = node_load(arg(1));
+      $current_bid = 0;
+      if ($node = menu_get_object()) {
+        $current_bid = empty($node->book['bid']) ? 0 : $node->book['bid'];
       }
-      $current_bid = empty($node->book['bid']) ? 0 : $node->book['bid'];
-      $mode = variable_get('book_block_mode', 'all pages');
-      if ($mode == 'all pages') {
+      if (variable_get('book_block_mode', 'all pages') == 'all pages') {
         $block['subject'] = t('Book navigation');
         $book_menus = array();
         $pseudo_tree = array(0 => array('below' => FALSE));
