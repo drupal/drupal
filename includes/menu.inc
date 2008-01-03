@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.240 2008/01/02 14:29:32 goba Exp $
+// $Id: menu.inc,v 1.241 2008/01/03 09:59:00 goba Exp $
 
 /**
  * @file
@@ -2287,4 +2287,37 @@ function _menu_site_is_offline() {
     }
   }
   return FALSE;
+}
+
+/**
+ * Validates the path of a menu link being created or edited.
+ *
+ * @return
+ *   TRUE if it is a valid path AND the current user has access permission,
+ *   FALSE otherwise.
+ */
+function menu_valid_path($form_item) {
+  global $menu_admin;
+  $item = array();
+  $path = $form_item['link_path'];
+  // We indicate that a menu administrator is running the menu access check.
+  $menu_admin = TRUE;
+  if ($path == '<front>' || menu_path_is_external($path)) {
+    $item = array('access' => TRUE);
+  }
+  elseif (preg_match('/\/\%/', $path)) {
+    // Path is dynamic (ie 'user/%'), so check directly against menu_router table.
+    if ($item = db_fetch_array(db_query("SELECT * FROM {menu_router} where path = '%s' ", $path))) {
+      $item['link_path']  = $form_item['link_path'];
+      $item['link_title'] = $form_item['link_title'];
+      $item['external']   = FALSE;
+      $item['options'] = '';
+      _menu_link_translate($item);
+    }
+  }
+  else {
+    $item = menu_get_item($path);
+  }
+  $menu_admin = FALSE;
+  return $item && $item['access'];
 }
