@@ -336,6 +336,9 @@ function menu_execute_active_handler($path = NULL) {
   if (_menu_site_is_offline()) {
     return MENU_SITE_OFFLINE;
   }
+  if (variable_get('menu_rebuild_needs_to_called', FALSE)) {
+    menu_rebuild();
+  }
   if ($router_item = menu_get_item($path)) {
     if ($router_item['access']) {
       if ($router_item['file']) {
@@ -1563,15 +1566,25 @@ function menu_cache_clear_all() {
 }
 
 /**
- * Populate the database representation of the {menu_router} table (router items)
- * and the navigation menu in the {menu_links} table.
+ * (Re)populate the database tables used by various menu functions.
+ *
+ * This function will clear and populate the {menu_router} table, add entries
+ * to {menu_links} for new router items, then remove stale items from
+ * {menu_links}. If called from update.php or install.php, it will also
+ * schedule a call to itself on the first real page load from
+ * menu_execute_active_handler(), because the maintenance page environment
+ * is different and leaves stale data in the menu tables. 
  */
 function menu_rebuild() {
+  variable_del('menu_rebuild_needs_to_called');
   menu_cache_clear_all();
   $menu = menu_router_build(TRUE);
   _menu_navigation_links_rebuild($menu);
   // Clear the page and block caches.
   _menu_clear_page_cache();
+  if (defined('MAINTENANCE_MODE')) {
+    variable_set('menu_rebuild_needs_to_called', TRUE);
+  }
 }
 
 /**
