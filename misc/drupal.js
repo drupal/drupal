@@ -1,4 +1,4 @@
-// $Id: drupal.js,v 1.40 2007/10/05 09:35:08 goba Exp $
+// $Id: drupal.js,v 1.41 2008/01/04 11:53:21 goba Exp $
 
 var Drupal = Drupal || { 'settings': {}, 'behaviors': {}, 'themes': {}, 'locale': {} };
 
@@ -245,6 +245,24 @@ Drupal.getSelection = function (element) {
   }
   return { 'start': element.selectionStart, 'end': element.selectionEnd };
 };
+
+/**
+ * Build an error message from ahah response.
+ */
+Drupal.ahahError = function(xmlhttp, uri) {
+  if (xmlhttp.status == 200) {
+    if (jQuery.trim($(xmlhttp.responseText).text())) {
+      var message = Drupal.t("An error occurred. \n@uri\n@text", {'@uri': uri, '@text': xmlhttp.responseText });
+    }
+    else {
+      var message = Drupal.t("An error occurred. \n@uri\n(no information available).", {'@uri': uri, '@text': xmlhttp.responseText });
+    }
+  }
+  else {
+    var message = Drupal.t("An HTTP error @status occurred. \n@uri", {'@uri': uri, '@status': xmlhttp.status });
+  }
+  return message;
+}
 
 // Global Killswitch on the <html> element
 if (Drupal.jsEnabled) {

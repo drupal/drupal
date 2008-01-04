@@ -1,4 +1,4 @@
-// $Id: ahah.js,v 1.6 2007/11/19 10:05:48 goba Exp $
+// $Id: ahah.js,v 1.7 2008/01/04 11:53:21 goba Exp $
 
 /**
  * Provides AJAX-like page updating via AHAH (Asynchronous HTML and HTTP).
@@ -85,8 +85,8 @@ Drupal.ahah = function(base, element_settings) {
       return ahah.success(response, status);
     },
     complete: function(response, status) {
-      if (status == 'error') {
-        return ahah.error(response.responseText);
+      if (status == 'error' || status == 'parsererror') {
+        return ahah.error(response, ahah.url);
       }
     },
     dataType: 'json',
@@ -194,10 +194,10 @@ Drupal.ahah.prototype.success = function (response, status) {
 /**
  * Handler for the form redirection error.
  */
-Drupal.ahah.prototype.error = function (error) {
-  alert(Drupal.t('An error occurred:\n\n@error', { '@error': error }));
+Drupal.ahah.prototype.error = function (response, uri) {
+  alert(Drupal.ahahError(response, uri));
   // Resore the previous action and target to the form.
-  element.parent('form').attr( { action: this.form_action, target: this.form_target} );
+  $(this.element).parent('form').attr( { action: this.form_action, target: this.form_target} );
   // Remove the progress element.
   if (this.progress.element) {
     $(this.progress.element).remove();
