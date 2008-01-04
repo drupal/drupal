@@ -5,6 +5,8 @@ UPGRADING
 
 Prior to upgrading, you should ensure that:
 
+ * Your system meets or exceeds Drupal's minimum requirements as shown at
+   http://drupal.org/requirements.
  * You have a backup of all your relevant data (#1).
  * Custom and contributed modules have been checked for compatibility (#11).
  * Custom and contributed themes have been checked for compatibility (#11).
