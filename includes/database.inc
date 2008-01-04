@@ -350,7 +350,7 @@ function db_rewrite_sql($query, $primary_table = 'n', $primary_field = 'nid',  $
 }
 
 /**
- * Restrict a dynamic tablename to safe characters.
+ * Restrict a dynamic table, column or constraint name to safe characters.
  *
  * Only keeps alphanumeric and underscores.
  */
