@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.maintenance.inc,v 1.5 2007/12/08 15:15:25 goba Exp $
+// $Id: theme.maintenance.inc,v 1.6 2008/01/04 17:19:04 goba Exp $
 
 /**
  * @file
@@ -123,6 +123,13 @@ function theme_install_page($content) {
     $variables['messages'] .= '<h3>'. $title .':</h3>';
     $variables['messages'] .= theme('status_messages', 'error');
     $variables['content'] .= '<p>'. st('Please check the error messages and <a href="!url">try again</a>.', array('!url' => request_uri())) .'</p>';
+  }
+  
+  // Special handling of warning messages
+  if (isset($messages['warning'])) {
+    $title = count($messages['warning']) > 1 ? st('The following installation warnings should be carefully reviewed.') : st('The following installation warning should be carefully reviewed.');
+    $variables['messages'] .= '<h4>'. $title .':</h4>';
+    $variables['messages'] .= theme('status_messages', 'warning');
   }
 
   // Special handling of status messages

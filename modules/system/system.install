@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.222 2007/12/31 17:20:20 goba Exp $
+// $Id: system.install,v 1.223 2008/01/04 17:19:04 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -61,6 +61,24 @@ function system_requirements($phase) {
   if (version_compare(phpversion(), DRUPAL_MINIMUM_PHP) < 0) {
     $requirements['php']['description'] = $t('Your PHP installation is too old. Drupal requires at least PHP %version.', array('%version' => DRUPAL_MINIMUM_PHP));
     $requirements['php']['severity'] = REQUIREMENT_ERROR;
+  }
+  
+  // Test PHP memory_limit
+  $requirements['php_memory_limit'] = array(
+    'title' => $t('PHP memory limit'),
+    'value' => ini_get('memory_limit') ? ini_get('memory_limit') : '',
+  );
+  if ($phase == 'install') {
+    if (ini_get('memory_limit') && parse_size(ini_get('memory_limit')) < parse_size(DRUPAL_MINIMUM_PHP_MEMORY_LIMIT)) {
+      $requirements['php_memory_limit']['description'] = $t('Consider increasing your PHP memory limit to %memory_minimum_limit to help prevent errors in the installation process. If you have access to php.ini you can usually change this setting there. See the <a href="@url">Drupal requirements</a> for more information.', array('%memory_minimum_limit' => DRUPAL_MINIMUM_PHP_MEMORY_LIMIT, '@url' => 'http://drupal.org/requirements'));
+      $requirements['php_memory_limit']['severity'] = REQUIREMENT_WARNING;
+    }
+  }
+  elseif ($phase == 'runtime') {
+    if (ini_get('memory_limit') && parse_size(ini_get('memory_limit')) < parse_size(DRUPAL_MINIMUM_PHP_MEMORY_LIMIT)) {
+      $requirements['php_memory_limit']['description'] = $t('Depending on your configuration, Drupal can run with a %memory_limit PHP memory limit. However, a %memory_minimum_limit PHP memory limit or above is recommended, especially if your site uses additional custom or contributed modules. If you have access to php.ini you can usually change this setting there. See the <a href="@url">Drupal requirements</a> for more information.', array('%memory_limit' => ini_get('memory_limit'), '%memory_minimum_limit' => DRUPAL_MINIMUM_PHP_MEMORY_LIMIT, '@url' => 'http://drupal.org/requirements'));
+      $requirements['php_memory_limit']['severity'] = REQUIREMENT_WARNING;
+    }
   }
 
   // Test DB version

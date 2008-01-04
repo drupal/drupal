@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.110 2007/12/27 17:25:27 goba Exp $
+// $Id: install.php,v 1.111 2008/01/04 17:19:04 goba Exp $
 
 require_once './includes/install.inc';
 
@@ -901,6 +901,18 @@ function install_check_requirements($profile, $verify) {
       }
     }
   }
+  if ($severity == REQUIREMENT_WARNING) {
+
+    foreach ($requirements as $requirement) {
+      if (isset($requirement['severity']) && $requirement['severity'] == REQUIREMENT_WARNING) {
+        $message = $requirement['description'];
+        if (isset($requirement['value']) && $requirement['value']) {
+          $message .= ' ('. st('Currently using !item !version', array('!item' => $requirement['title'], '!version' => $requirement['value'])) .')';
+        }
+        drupal_set_message($message, 'warning');
+      }
+    }
+  } 
 }
 
 /**
