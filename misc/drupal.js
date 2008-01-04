@@ -246,6 +246,24 @@ Drupal.getSelection = function (element) {
   return { 'start': element.selectionStart, 'end': element.selectionEnd };
 };
 
+/**
+ * Build an error message from ahah response.
+ */
+Drupal.ahahError = function(xmlhttp, uri) {
+  if (xmlhttp.status == 200) {
+    if (jQuery.trim($(xmlhttp.responseText).text())) {
+      var message = Drupal.t("An error occurred. \n@uri\n@text", {'@uri': uri, '@text': xmlhttp.responseText });
+    }
+    else {
+      var message = Drupal.t("An error occurred. \n@uri\n(no information available).", {'@uri': uri, '@text': xmlhttp.responseText });
+    }
+  }
+  else {
+    var message = Drupal.t("An HTTP error @status occurred. \n@uri", {'@uri': uri, '@status': xmlhttp.status });
+  }
+  return message;
+}
+
 // Global Killswitch on the <html> element
 if (Drupal.jsEnabled) {
   // Global Killswitch on the <html> element

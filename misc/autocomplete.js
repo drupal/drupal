@@ -282,7 +282,7 @@ Drupal.ACDB.prototype.search = function (searchString) {
         }
       },
       error: function (xmlhttp) {
-        alert(Drupal.t("An HTTP error @status occurred. \n@uri", { '@status': xmlhttp.status, '@uri': db.uri }));
+        alert(Drupal.ahahError(xmlhttp, db.uri));
       }
     });
   }, this.delay);
