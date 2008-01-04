@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.208 2008/01/04 16:04:49 goba Exp $
+// $Id: locale.module,v 1.209 2008/01/04 17:10:36 goba Exp $
 
 /**
  * @file
@@ -324,7 +324,7 @@ function locale($string = NULL, $langcode = NULL, $reset = FALSE) {
 
   if ($reset) {
     // Reset in-memory cache.
-    unset($locale_t);
+    $locale_t = NULL;
   }
   
   if (!isset($string)) {
