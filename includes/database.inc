@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.89 2008/01/02 19:15:34 goba Exp $
+// $Id: database.inc,v 1.90 2008/01/04 09:31:48 goba Exp $
 
 /**
  * @file
@@ -350,7 +350,7 @@ function db_rewrite_sql($query, $primary_table = 'n', $primary_field = 'nid',  $
 }
 
 /**
- * Restrict a dynamic tablename to safe characters.
+ * Restrict a dynamic table, column or constraint name to safe characters.
  *
  * Only keeps alphanumeric and underscores.
  */

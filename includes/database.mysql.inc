@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysql.inc,v 1.86 2007/12/31 08:54:36 dries Exp $
+// $Id: database.mysql.inc,v 1.87 2008/01/04 09:31:48 goba Exp $
 
 /**
  * @file
@@ -346,14 +346,14 @@ function db_unlock_tables() {
  * Check if a table exists.
  */
 function db_table_exists($table) {
-  return db_fetch_object(db_query("SHOW TABLES LIKE '{". db_escape_table($table) ."}'")) ? TRUE : FALSE;
+  return (bool) db_fetch_object(db_query("SHOW TABLES LIKE '{". db_escape_table($table) ."}'"));
 }
 
 /**
  * Check if a column exists in the given table.
  */
 function db_column_exists($table, $column) {
-  return db_fetch_object(db_query("SHOW COLUMNS FROM {%s} LIKE '%s'", $table, $column)) ? TRUE : FALSE;
+  return (bool) db_fetch_object(db_query("SHOW COLUMNS FROM {". db_escape_table($table) ."} LIKE '". db_escape_table($column) ."'"));
 }
 
 /**

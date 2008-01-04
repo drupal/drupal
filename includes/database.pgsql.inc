@@ -1,5 +1,5 @@
 <?php
-// $Id: database.pgsql.inc,v 1.67 2007/12/23 13:22:12 goba Exp $
+// $Id: database.pgsql.inc,v 1.68 2008/01/04 09:31:48 goba Exp $
 
 /**
  * @file
@@ -228,7 +228,7 @@ function db_error() {
  *   The name of the autoincrement field.
  */
 function db_last_insert_id($table, $field) {
-  return db_result(db_query("SELECT currval('%s_seq')", db_prefix_tables('{'. $table .'}') .'_'. $field));
+  return db_result(db_query("SELECT CURRVAL('{". db_escape_table($table) ."}_". db_escape_table($field) ."_seq')"));
 }
 
 /**
@@ -384,14 +384,14 @@ function db_unlock_tables() {
  * Check if a table exists.
  */
 function db_table_exists($table) {
-  return db_result(db_query("SELECT COUNT(*) FROM pg_class WHERE relname = '{". db_escape_table($table) ."}'"));
+  return (bool) db_result(db_query("SELECT COUNT(*) FROM pg_class WHERE relname = '{". db_escape_table($table) ."}'"));
 }
 
 /**
  * Check if a column exists in the given table.
  */
 function db_column_exists($table, $column) {
-  return db_result(db_query("SELECT COUNT(pg_attribute.attname) FROM pg_class, pg_attribute WHERE pg_attribute.attrelid = pg_class.oid AND pg_class.relname = '{". db_escape_table($table) ."}' AND attname='%s'", $column));
+  return (bool) db_result(db_query("SELECT COUNT(pg_attribute.attname) FROM pg_class, pg_attribute WHERE pg_attribute.attrelid = pg_class.oid AND pg_class.relname = '{". db_escape_table($table) ."}' AND attname = '". db_escape_table($column) ."'"));
 }
 
 /**

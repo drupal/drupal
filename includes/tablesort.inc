@@ -1,5 +1,5 @@
 <?php
-// $Id: tablesort.inc,v 1.46 2007/06/14 06:12:09 dries Exp $
+// $Id: tablesort.inc,v 1.47 2008/01/04 09:31:48 goba Exp $
 
 /**
  * @file
@@ -39,9 +39,14 @@ function tablesort_init($header) {
 function tablesort_sql($header, $before = '') {
   $ts = tablesort_init($header);
   if ($ts['sql']) {
-    $sql = db_escape_string($ts['sql']);
-    $sort = drupal_strtoupper(db_escape_string($ts['sort']));
-    return " ORDER BY $before $sql $sort";
+    // Based on code from db_escape_table(), but this can also contain a dot.
+    $field = preg_replace('/[^A-Za-z0-9_.]+/', '', $ts['sql']);
+
+    // Sort order can only be ASC or DESC.
+    $sort = drupal_strtoupper($ts['sort']);
+    $sort = in_array($sort, array('ASC', 'DESC')) ? $sort : '';
+
+    return " ORDER BY $before $field $sort";
   }
 }
 
