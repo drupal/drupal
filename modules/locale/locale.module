@@ -324,7 +324,7 @@ function locale($string = NULL, $langcode = NULL, $reset = FALSE) {
 
   if ($reset) {
     // Reset in-memory cache.
-    unset($locale_t);
+    $locale_t = NULL;
   }
   
   if (!isset($string)) {
