@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.207 2008/01/02 12:04:17 goba Exp $
+// $Id: locale.module,v 1.208 2008/01/04 16:04:49 goba Exp $
 
 /**
  * @file
@@ -315,13 +315,20 @@ function locale_theme() {
  *   used on the page.
  * @param $langcode
  *   Language code to use for the lookup.
+ * @param $reset
+ *   Set to TRUE to reset the in-memory cache.
  */
-function locale($string = NULL, $langcode = NULL) {
+function locale($string = NULL, $langcode = NULL, $reset = FALSE) {
   global $language;
   static $locale_t;
 
-  // Return all cached strings if no string was specified
+  if ($reset) {
+    // Reset in-memory cache.
+    unset($locale_t);
+  }
+  
   if (!isset($string)) {
+    // Return all cached strings if no string was specified
     return $locale_t;
   }
 
