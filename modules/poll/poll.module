@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.260 2008/01/01 17:46:30 goba Exp $
+// $Id: poll.module,v 1.261 2008/01/04 08:04:45 dries Exp $
 
 /**
  * @file
@@ -330,20 +330,21 @@ function poll_choice_js() {
   $form_element = _poll_choice_form($delta);
   drupal_alter('form', $form_element, array(), 'poll_choice_js');
 
-  // Add the new element to the stored form state. Without adding the element
-  // to the form, Drupal is not aware of this new elements existence and will
-  // not process it. We retreive the cached form, add the element, and resave.
-  $cache = cache_get('form_'. $_POST['form_build_id'], 'cache_form');
-  $cache->data['choice_wrapper']['choice'][$delta] = $form_element;
-  cache_set('form_'. $_POST['form_build_id'], $cache->data, 'cache_form', $cache->expire);
-
   // Build the new form.
   $form_state = array('submitted' => FALSE);
-  $form = $cache->data;
+  $form_build_id = $_POST['form_build_id'];
+  // Add the new element to the stored form. Without adding the element to the
+  // form, Drupal is not aware of this new elements existence and will not
+  // process it. We retreive the cached form, add the element, and resave.
+  $form = form_get_cache($form_build_id, $form_state);
+  $form['choice_wrapper']['choice'][$delta] = $form_element;
+  form_set_cache($form_build_id, $form, $form_state);
   $form += array(
     '#post' => $_POST,
     '#programmed' => FALSE,
   );
+
+  // Rebuild the form.
   $form = form_builder('poll_node_form', $form, $form_state);
 
   // Render the new output.
