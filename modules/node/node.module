@@ -1423,6 +1423,7 @@ function node_menu() {
     $type_url_str = str_replace('_', '-', $type->type);
     $items['node/add/'. $type_url_str] = array(
       'title' => drupal_ucfirst($type->name),
+      'title callback' => 'check_plain',
       'page callback' => 'node_add',
       'page arguments' => array(2),
       'access callback' => 'node_access',
