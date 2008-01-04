@@ -901,6 +901,18 @@ function install_check_requirements($profile, $verify) {
       }
     }
   }
+  if ($severity == REQUIREMENT_WARNING) {
+
+    foreach ($requirements as $requirement) {
+      if (isset($requirement['severity']) && $requirement['severity'] == REQUIREMENT_WARNING) {
+        $message = $requirement['description'];
+        if (isset($requirement['value']) && $requirement['value']) {
+          $message .= ' ('. st('Currently using !item !version', array('!item' => $requirement['title'], '!version' => $requirement['value'])) .')';
+        }
+        drupal_set_message($message, 'warning');
+      }
+    }
+  } 
 }
 
 /**
