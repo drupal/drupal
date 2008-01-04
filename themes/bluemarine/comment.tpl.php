@@ -1,7 +1,7 @@
 <?php
-// $Id: comment.tpl.php,v 1.6 2007/08/07 08:39:36 goba Exp $
+// $Id: comment.tpl.php,v 1.7 2008/01/04 19:24:23 goba Exp $
 ?>
-  <div class="comment<?php if (isset($comment->status) && $comment->status == COMMENT_NOT_PUBLISHED) print ' comment-unpublished'; ?>">
+  <div class="comment<?php print ' '. $status; ?>">
     <?php if ($picture) {
     print $picture;
   } ?>

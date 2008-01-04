@@ -1,7 +1,7 @@
 <?php
-// $Id: comment.tpl.php,v 1.9 2007/08/07 08:39:36 goba Exp $
+// $Id: comment.tpl.php,v 1.10 2008/01/04 19:24:24 goba Exp $
 ?>
-<div class="comment<?php print ($comment->new) ? ' comment-new' : ''; print (isset($comment->status) && $comment->status  == COMMENT_NOT_PUBLISHED) ? ' comment-unpublished' : ''; print ' '. $zebra; ?>">
+<div class="comment<?php print ($comment->new) ? ' comment-new' : ''; print ' '. $status; print ' '. $zebra; ?>">
 
   <div class="clear-block">
   <?php if ($submitted): ?>

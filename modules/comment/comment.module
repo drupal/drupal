@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.613 2008/01/04 15:11:59 goba Exp $
+// $Id: comment.module,v 1.614 2008/01/04 19:24:23 goba Exp $
 
 /**
  * @file
@@ -1680,6 +1680,13 @@ function template_preprocess_comment(&$variables) {
   $variables['submitted'] = theme('comment_submitted', $comment);
   $variables['title']     = l($comment->subject, $_GET['q'], array('fragment' => "comment-$comment->cid"));
   $variables['template_files'][] = 'comment-'. $node->type;
+  // set status to a string representation of comment->status.
+  if (isset($comment->preview)) {
+    $variables['status']  = 'comment-preview';
+  }
+  else {
+    $variables['status']  = ($comment->status == COMMENT_NOT_PUBLISHED) ? 'comment-unpublished' : 'comment-published';
+  }
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.tpl.php,v 1.3 2007/08/07 08:39:35 goba Exp $
+// $Id: comment.tpl.php,v 1.4 2008/01/04 19:24:23 goba Exp $
 
 /**
  * @file comment.tpl.php
@@ -13,6 +13,8 @@
  * - $new: New comment marker.
  * - $picture: Authors picture.
  * - $signature: Authors signature.
+ * - $status: Comment status. Possible values are:
+ *   comment-unpublished, comment-published or comment-review.
  * - $submitted: By line with date and time.
  * - $title: Linked title.
  *
@@ -24,7 +26,7 @@
  * @see theme_comment()
  */
 ?>
-<div class="comment<?php print ($comment->new) ? ' comment-new' : ''; print ($comment->status == COMMENT_NOT_PUBLISHED) ? ' comment-unpublished' : ''; ?> clear-block">
+<div class="comment<?php print ($comment->new) ? ' comment-new' : ''; print ' '. $status ?> clear-block">
   <?php print $picture ?>
 
   <?php if ($comment->new): ?>
