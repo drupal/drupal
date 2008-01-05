@@ -105,7 +105,7 @@ function user_pass_reset(&$form_state, $uid, $timestamp, $hashed_pass, $action =
           drupal_goto('user/'. $user->uid .'/edit');
         }
         else {
-          $form['message'] = array('#value' => t('<p>This is a one-time login for %user_name and will expire on %expiration_date</p><p>Click on this button to login to the site and change your password.</p>', array('%user_name' => $account->name, '%expiration_date' => format_date($timestamp + $timeout))));
+          $form['message'] = array('#value' => t('<p>This is a one-time login for %user_name and will expire on %expiration_date.</p><p>Click on this button to login to the site and change your password.</p>', array('%user_name' => $account->name, '%expiration_date' => format_date($timestamp + $timeout))));
           $form['help'] = array('#value' => '<p>'. t('This login can be used only once.') .'</p>');
           $form['submit'] = array('#type' => 'submit', '#value' => t('Log in'));
           $form['#action'] = url("user/reset/$uid/$timestamp/$hashed_pass/login");
