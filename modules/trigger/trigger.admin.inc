@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.admin.inc,v 1.3 2007/12/28 12:02:52 dries Exp $
+// $Id: trigger.admin.inc,v 1.4 2008/01/05 22:23:45 dries Exp $
 
 /**
  * @file
@@ -126,7 +126,8 @@ function trigger_assign_form($form_state, $hook, $op, $description) {
 
   $options = array();
   $functions = array();
-  // Restrict the options list to actions that declare support for this hook-op combination.
+  // Restrict the options list to actions that declare support for this hook-op
+  // combination.
   foreach (actions_list() as $func => $metadata) {
     if (isset($metadata['hooks']['any']) || (isset($metadata['hooks'][$hook]) && is_array($metadata['hooks'][$hook]) && (in_array($op, $metadata['hooks'][$hook])))) {
       $functions[] = $func;
@@ -177,6 +178,7 @@ function trigger_assign_form($form_state, $hook, $op, $description) {
   }
   return $form;
 }
+
 /**
  * Validation function for trigger_assign_form().
  *
@@ -187,7 +189,7 @@ function trigger_assign_form_validate($form, $form_state) {
   if (!empty($form_values['aid'])) {
     $aid = actions_function_lookup($form_values['aid']);
     if (db_result(db_query("SELECT aid FROM {trigger_assignments} WHERE hook = '%s' AND op = '%s' AND aid = '%s'", $form_values['hook'], $form_values['operation'], $aid))) {
-      form_set_error($form_values['operation'], t('The action you choose is already assigned to that trigger.'));
+      form_set_error($form_values['operation'], t('The action you chose is already assigned to that trigger.'));
     }
   }
 }
