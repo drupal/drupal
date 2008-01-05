@@ -966,7 +966,7 @@ function file_directory_path() {
  * Determine the maximum file upload size by querying the PHP settings.
  *
  * @return
- *   A file size limit in MB based on the PHP upload_max_filesize and post_max_size
+ *   A file size limit in bytes based on the PHP upload_max_filesize and post_max_size
  */
 function file_upload_max_size() {
   static $max_size = -1;
