@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.install,v 1.17 2007/12/19 10:34:51 goba Exp $
+// $Id: comment.install,v 1.18 2008/01/05 22:45:40 dries Exp $
 
 /**
  * Implementation of hook_enable().
@@ -57,6 +57,15 @@ function comment_update_6002() {
   }
   return array(array('success' => TRUE, 'query' => 'Global comment settings copied to all node types.'));
 }
+
+/**
+ * Add index to parent ID field.
+ */
+function comment_update_6003() {
+  $ret[] = update_sql("ALTER TABLE {comments} ADD KEY pid (pid)");
+  return $ret;
+}
+
 
 /**
  * Implementation of hook_schema().
@@ -155,6 +164,7 @@ function comment_schema() {
       )
     ),
     'indexes' => array(
+      'pid'    => array('pid'),
       'nid'    => array('nid'),
       'status' => array('status'), // This index is probably unused
     ),
