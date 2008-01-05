@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.116 2007/12/28 10:50:51 dries Exp $
+// $Id: file.inc,v 1.117 2008/01/05 22:41:16 dries Exp $
 
 /**
  * @file
@@ -966,7 +966,7 @@ function file_directory_path() {
  * Determine the maximum file upload size by querying the PHP settings.
  *
  * @return
- *   A file size limit in MB based on the PHP upload_max_filesize and post_max_size
+ *   A file size limit in bytes based on the PHP upload_max_filesize and post_max_size
  */
 function file_upload_max_size() {
   static $max_size = -1;
