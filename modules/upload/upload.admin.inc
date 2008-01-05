@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.admin.inc,v 1.5 2008/01/05 22:41:16 dries Exp $
+// $Id: upload.admin.inc,v 1.6 2008/01/05 22:43:41 dries Exp $
 
 /**
  * Form API callback to validate the upload settings form.
@@ -15,7 +15,7 @@ function upload_admin_settings_validate($form, &$form_state) {
   $default_usersize = $form_state['values']['upload_usersize_default'];
 
   $exceed_max_msg = t('Your PHP settings limit the maximum file size per upload to %size.', array('%size' => format_size(file_upload_max_size()))) .'<br/>';
-  $more_info = t("Depending on your sever environment, these settings may be changed in the system-wide php.ini file, a php.ini file in your Drupal root directory, in your Drupal site's settings.php file, or in the .htaccess file in your Drupal root directory.");
+  $more_info = t("Depending on your server environment, these settings may be changed in the system-wide php.ini file, a php.ini file in your Drupal root directory, in your Drupal site's settings.php file, or in the .htaccess file in your Drupal root directory.");
 
   if (!is_numeric($default_uploadsize) || ($default_uploadsize <= 0)) {
     form_set_error('upload_uploadsize_default', t('The %role file size limit must be a number and greater than zero.', array('%role' => t('default'))));
