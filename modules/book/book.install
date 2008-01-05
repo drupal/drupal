@@ -1,5 +1,5 @@
 <?php
-// $Id: book.install,v 1.18 2007/12/19 10:34:50 goba Exp $
+// $Id: book.install,v 1.19 2008/01/05 22:32:25 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -85,7 +85,7 @@ function book_update_6000() {
     $replace = array(
       'outline posts in books' => 'administer book outlines',
       'create book pages' => 'create book content',
-      'edit book pages' => 'edit book content',
+      'edit book pages' => 'edit any book content',
       'edit own book pages' => 'edit own book content',
       'see printer-friendly version' => 'access printer-friendly version',
     );
