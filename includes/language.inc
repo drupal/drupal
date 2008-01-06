@@ -1,5 +1,5 @@
 <?php
-// $Id: language.inc,v 1.13 2007/12/21 11:33:12 goba Exp $
+// $Id: language.inc,v 1.14 2008/01/06 16:46:02 goba Exp $
 
 /**
  * @file
@@ -12,13 +12,17 @@
 function language_initialize() {
   global $user;
 
+  // Configured presentation language mode.
   $mode = variable_get('language_negotiation', LANGUAGE_NEGOTIATION_NONE);
+  // Get a list of enabled languages.
+  $languages = language_list('enabled');
+  $languages = $languages[1];
+  
   switch ($mode) {
     case LANGUAGE_NEGOTIATION_NONE:
       return language_default();
 
     case LANGUAGE_NEGOTIATION_DOMAIN:
-      $languages = language_list();
       foreach ($languages as $language) {
         $parts = parse_url($language->domain);
         if (!empty($parts['host']) && ($_SERVER['SERVER_NAME'] == $parts['host'])) {
@@ -29,24 +33,26 @@ function language_initialize() {
 
     case LANGUAGE_NEGOTIATION_PATH_DEFAULT:
     case LANGUAGE_NEGOTIATION_PATH:
-      $languages = language_list('prefix');
       // $_GET['q'] might not be available at this time, because
       // path initialization runs after the language bootstrap phase.
       $args = isset($_GET['q']) ? explode('/', $_GET['q']) : array();
-      $language = array_shift($args);
-      if (isset($languages[$language])) {
-        // Rebuild $GET['q'] with the language removed.
-        $_GET['q'] = implode('/', $args);
-        return $languages[$language];
+      $prefix = array_shift($args);
+      // Search prefix within enabled languages.
+      foreach ($languages as $language) {
+        if (!empty($language->prefix) && $language->prefix == $prefix) {
+          // Rebuild $GET['q'] with the language removed.
+          $_GET['q'] = implode('/', $args);
+          return $language;
+        }
       }
-      elseif ($mode == LANGUAGE_NEGOTIATION_PATH_DEFAULT) {
+      if ($mode == LANGUAGE_NEGOTIATION_PATH_DEFAULT) {
+        // If we did not found the language by prefix, choose the default.
         return language_default();
       }
       break;
   }
 
   // User language.
-  $languages = language_list();
   if ($user->uid && isset($languages[$user->language])) {
     return $languages[$user->language];
   }
