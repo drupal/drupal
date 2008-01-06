@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.242 2008/01/03 10:51:30 goba Exp $
+// $Id: menu.inc,v 1.243 2008/01/06 16:47:19 goba Exp $
 
 /**
  * @file
@@ -2237,6 +2237,7 @@ function _menu_router_build($callbacks) {
       $item['include file'] = $file_path .'/'. $item['file'];
     }
 
+    $title_arguments = $item['title arguments'] ? serialize($item['title arguments']) : '';
     db_query("INSERT INTO {menu_router}
       (path, load_functions, to_arg_functions, access_callback,
       access_arguments, page_callback, page_arguments, fit,
@@ -2251,7 +2252,7 @@ function _menu_router_build($callbacks) {
       $path, $item['load_functions'], $item['to_arg_functions'], $item['access callback'],
       serialize($item['access arguments']), $item['page callback'], serialize($item['page arguments']), $item['_fit'],
       $item['_number_parts'], $item['tab_parent'], $item['tab_root'],
-      $item['title'], $item['title callback'], serialize($item['title arguments']),
+      $item['title'], $item['title callback'], $title_arguments,
       $item['type'], $item['block callback'], $item['description'], $item['position'], $item['weight'], $item['include file']);
   }
   // Sort the masks so they are in order of descending fit, and store them.
