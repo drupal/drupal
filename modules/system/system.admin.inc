@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.48 2007/12/31 17:20:20 goba Exp $
+// $Id: system.admin.inc,v 1.49 2008/01/06 18:22:14 dries Exp $
 
 /**
  * @file
@@ -1729,10 +1729,10 @@ function system_status($check = FALSE) {
 function system_run_cron() {
   // Run cron manually
   if (drupal_cron_run()) {
-    drupal_set_message(t('Cron ran successfully'));
+    drupal_set_message(t('Cron ran successfully.'));
   }
   else {
-    drupal_set_message(t('Cron run failed'));
+    drupal_set_message(t('Cron run failed.'), 'error');
   }
 
   drupal_goto('admin/reports/status');
