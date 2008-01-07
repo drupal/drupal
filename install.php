@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.111 2008/01/04 17:19:04 goba Exp $
+// $Id: install.php,v 1.112 2008/01/07 19:43:28 goba Exp $
 
 require_once './includes/install.inc';
 
@@ -791,6 +791,10 @@ if (Drupal.jsEnabled) {
 
     // Register actions declared by any modules.
     actions_synchronize();
+
+    // Randomize query-strings on css/js files, to hide the fact that
+    // this is a new install, not upgraded yet.
+    _drupal_flush_css_js();
 
     variable_set('install_profile', $profile);
   }

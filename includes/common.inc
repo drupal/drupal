@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.747 2008/01/07 19:28:06 goba Exp $
+// $Id: common.inc,v 1.748 2008/01/07 19:43:29 goba Exp $
 
 /**
  * @file
@@ -294,7 +294,6 @@ function drupal_get_destination() {
  * @see drupal_get_destination()
  */
 function drupal_goto($path = '', $query = NULL, $fragment = NULL, $http_response_code = 302) {
-  global $update_mode;
 
   if (isset($_REQUEST['destination'])) {
     extract(parse_url(urldecode($_REQUEST['destination'])));
@@ -309,7 +308,7 @@ function drupal_goto($path = '', $query = NULL, $fragment = NULL, $http_response
 
   // Allow modules to react to the end of the page request before redirecting.
   // We do not want this while running update.php.
-  if (empty($update_mode)) {
+  if (!defined('MAINTENANCE_MODE') || MAINTENANCE_MODE != 'update') {
     module_invoke_all('exit', $url);
   }
 
@@ -1707,9 +1706,15 @@ function drupal_get_css($css = NULL) {
   $no_module_preprocess = '';
   $no_theme_preprocess = '';
 
-  $preprocess_css = variable_get('preprocess_css', FALSE);
+  $preprocess_css = (variable_get('preprocess_css', FALSE) && (!defined('MAINTENANCE_MODE') || MAINTENANCE_MODE != 'update'));
   $directory = file_directory_path();
   $is_writable = is_dir($directory) && is_writable($directory) && (variable_get('file_downloads', FILE_DOWNLOADS_PUBLIC) == FILE_DOWNLOADS_PUBLIC);
+
+  // A dummy query-string is added to filenames, to gain control over
+  // browser-caching. The string changes on every update or full cache
+  // flush, forcing browsers to load a new copy of the files, as the
+  // URL changed.
+  $query_string = '?'. substr(variable_get('css_js_query_string', '0'), 0, 1);
 
   foreach ($css as $media => $types) {
     // If CSS preprocessing is off, we still need to output the styles.
@@ -1720,22 +1725,22 @@ function drupal_get_css($css = NULL) {
           // If a CSS file is not to be preprocessed and it's a module CSS file, it needs to *always* appear at the *top*,
           // regardless of whether preprocessing is on or off.
           if (!$preprocess && $type == 'module') {
-            $no_module_preprocess .= '<link type="text/css" rel="stylesheet" media="'. $media .'" href="'. base_path() . $file .'" />'."\n";
+            $no_module_preprocess .= '<link type="text/css" rel="stylesheet" media="'. $media .'" href="'. base_path() . $file . $query_string .'" />'."\n";
           }
           // If a CSS file is not to be preprocessed and it's a theme CSS file, it needs to *always* appear at the *bottom*,
           // regardless of whether preprocessing is on or off.
           else if (!$preprocess && $type == 'theme') {
-            $no_theme_preprocess .= '<link type="text/css" rel="stylesheet" media="'. $media .'" href="'. base_path() . $file .'" />'."\n";
+            $no_theme_preprocess .= '<link type="text/css" rel="stylesheet" media="'. $media .'" href="'. base_path() . $file . $query_string .'" />'."\n";
           }
           else {
-            $output .= '<link type="text/css" rel="stylesheet" media="'. $media .'" href="'. base_path() . $file .'" />'."\n";
+            $output .= '<link type="text/css" rel="stylesheet" media="'. $media .'" href="'. base_path() . $file . $query_string .'" />'."\n";
           }
         }
       }
     }
 
     if ($is_writable && $preprocess_css) {
-      $filename = md5(serialize($types)) .'.css';
+      $filename = md5(serialize($types) . $query_string) .'.css';
       $preprocess_file = drupal_build_css_cache($types, $filename);
       $output .= '<link type="text/css" rel="stylesheet" media="'. $media .'" href="'. base_path() . $preprocess_file .'" />'."\n";
     }
@@ -2020,8 +2025,7 @@ function drupal_add_js($data = NULL, $type = 'module', $scope = 'header', $defer
  *   All JavaScript code segments and includes for the scope as HTML tags.
  */
 function drupal_get_js($scope = 'header', $javascript = NULL) {
-  global $update_mode;
-  if (empty($update_mode) && function_exists('locale_update_js_files')) {
+  if ((!defined('MAINTENANCE_MODE') || MAINTENANCE_MODE != 'update') && function_exists('locale_update_js_files')) {
     locale_update_js_files();
   }
 
@@ -2037,9 +2041,17 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
   $preprocessed = '';
   $no_preprocess = array('core' => '', 'module' => '', 'theme' => '');
   $files = array();
-  $preprocess_js = (variable_get('preprocess_js', FALSE) && empty($update_mode));
+  $preprocess_js = (variable_get('preprocess_js', FALSE) && (!defined('MAINTENANCE_MODE') || MAINTENANCE_MODE != 'update'));
   $directory = file_directory_path();
   $is_writable = is_dir($directory) && is_writable($directory) && (variable_get('file_downloads', FILE_DOWNLOADS_PUBLIC) == FILE_DOWNLOADS_PUBLIC);
+
+  // A dummy query-string is added to filenames, to gain control over
+  // browser-caching. The string changes on every update or full cache
+  // flush, forcing browsers to load a new copy of the files, as the
+  // URL changed. Files that should not be cached (see drupal_add_js())
+  // get time() as query-string instead, to enforce reload on every
+  // page request.
+  $query_string = '?'. substr(variable_get('css_js_query_string', '0'), 0, 1);
 
   foreach ($javascript as $type => $data) {
 
@@ -2059,7 +2071,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
         // Additionally, go through any remaining scripts if JS preprocessing is on and output the non-cached ones.
         foreach ($data as $path => $info) {
           if (!$info['preprocess'] || !$is_writable || !$preprocess_js) {
-            $no_preprocess[$type] .= '<script type="text/javascript"'. ($info['defer'] ? ' defer="defer"' : '') .' src="'. base_path() . $path . ($info['cache'] ? '' : '?'. time()) ."\"></script>\n";
+            $no_preprocess[$type] .= '<script type="text/javascript"'. ($info['defer'] ? ' defer="defer"' : '') .' src="'. base_path() . $path . ($info['cache'] ? $query_string : '?'. time()) ."\"></script>\n";
           }
           else {
             $files[$path] = $info;
@@ -2070,7 +2082,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
 
   // Aggregate any remaining JS files that haven't already been output.
   if ($is_writable && $preprocess_js && count($files) > 0) {
-    $filename = md5(serialize($files)) .'.js';
+    $filename = md5(serialize($files) . $query_string) .'.js';
     $preprocess_file = drupal_build_js_cache($files, $filename);
     $preprocessed .= '<script type="text/javascript" src="'. base_path() . $preprocess_file .'"></script>'."\n";
   }
@@ -2412,7 +2424,6 @@ function xmlrpc($url) {
 
 function _drupal_bootstrap_full() {
   static $called;
-  global $update_mode;
 
   if ($called) {
     return;
@@ -2440,7 +2451,7 @@ function _drupal_bootstrap_full() {
   module_load_all();
   // Let all modules take action before menu system handles the request
   // We do not want this while running update.php.
-  if (empty($update_mode)) {
+  if (!defined('MAINTENANCE_MODE') || MAINTENANCE_MODE != 'update') {
     module_invoke_all('init');
   }
 }
@@ -3506,6 +3517,9 @@ function drupal_implode_tags($tags) {
  * exposes a hook for other modules to clear their own cache data as well.
  */
 function drupal_flush_all_caches() {
+  // Change query-strings on css/js files to enforce reload for all users.
+  _drupal_flush_css_js();
+
   drupal_clear_css_cache();
   drupal_clear_js_cache();
   drupal_rebuild_theme_registry();
@@ -3518,4 +3532,23 @@ function drupal_flush_all_caches() {
   foreach ($cache_tables as $table) {
     cache_clear_all('*', $table, TRUE);
   }
+}
+
+/**
+ * Helper function to change query-strings on css/js files.
+ *
+ * Changes the character added to all css/js files as dummy query-string,
+ * so that all browsers are forced to reload fresh files. We keep
+ * 20 characters history (FIFO) to avoid repeats, but only the first
+ * (newest) character is actually used on urls, to keep them short.
+ * This is also called from update.php.
+ */
+function _drupal_flush_css_js() {
+  $string_history = variable_get('css_js_query_string', '00000000000000000000');
+  $new_character = $string_history[0];
+  $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  while (strpos($string_history, $new_character) !== FALSE) {
+    $new_character = $characters[mt_rand(0, strlen($characters) - 1)];
+  }
+  variable_set('css_js_query_string', $new_character . substr($string_history, 0, 19));
 }

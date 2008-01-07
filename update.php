@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.246 2007/12/26 10:23:59 goba Exp $
+// $Id: update.php,v 1.247 2008/01/07 19:43:28 goba Exp $
 
 /**
  * @file
@@ -13,6 +13,12 @@
  * be sure to open settings.php again, and change it back to its original state!
  */
 
+/**
+ * Global flag to identify update.php run, and so avoid various unwanted
+ * operations, such as hook_init() and hook_exit() invokes, css/js preprocessing
+ * and translation, and solve some theming issues. This flag is checked on several
+ * places in Drupal code (not just update.php).
+ */
 define('MAINTENANCE_MODE', 'update');
 
 /**
@@ -264,11 +270,7 @@ function update_batch() {
 
 function update_finished($success, $results, $operations) {
   // clear the caches in case the data has been updated.
-  cache_clear_all('*', 'cache', TRUE);
-  cache_clear_all('*', 'cache_page', TRUE);
-  cache_clear_all('*', 'cache_filter', TRUE);
-  drupal_clear_css_cache();
-  drupal_clear_js_cache();
+  drupal_flush_all_caches();
 
   $_SESSION['update_results'] = $results;
   $_SESSION['update_success'] = $success;
@@ -340,6 +342,9 @@ function update_results_page() {
 }
 
 function update_info_page() {
+  // Change query-strings on css/js files to enforce reload for all users.
+  _drupal_flush_css_js();
+
   update_task_list('info');
   drupal_set_title('Drupal database update');
   $output = '<p>Use this utility to update your database whenever a new release of Drupal or a module is installed.</p><p>For more detailed information, see the <a href="http://drupal.org/node/258">Installation and upgrading handbook</a>. If you are unsure what these terms mean you should probably contact your hosting provider.</p>';
@@ -516,11 +521,6 @@ ini_set('display_errors', FALSE);
 
 include_once './includes/bootstrap.inc';
 
-// Bootstrap Drupal in a safe way, without calling hook_init() and hook_exit(),
-// to avoid possible warnings. We need to set the global variable after
-// DRUPAL_BOOTSTRAP_CONFIGURATION, which unsets globals, but before the rest.
-drupal_bootstrap(DRUPAL_BOOTSTRAP_CONFIGURATION);
-$update_mode = TRUE;
 drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 drupal_maintenance_theme();
 
