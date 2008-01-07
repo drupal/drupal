@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.746 2007/12/22 23:24:24 goba Exp $
+// $Id: common.inc,v 1.747 2008/01/07 19:28:06 goba Exp $
 
 /**
  * @file
@@ -3204,14 +3204,16 @@ function drupal_schema_fields_sql($table, $prefix = NULL) {
  *   The object to write. This is a reference, as defaults according to
  *   the schema may be filled in on the object, as well as ID on the serial
  *   type(s). Both array an object types may be passed.
- * @param update
+ * @param $update
  *   If this is an update, specify the primary keys' field names. It is the
  *   caller's responsibility to know if a record for this object already
  *   exists in the database. If there is only 1 key, you may pass a simple string.
- * @return (boolean) Failure to write a record will return FALSE. Otherwise,
- *   TRUE is returned. The $object parameter contains values for any serial
- *   fields defined by the $table. For example, $object->nid will be populated
- *   after inserting a new node.
+ * @return
+ *   Failure to write a record will return FALSE. Otherwise SAVED_NEW or
+ *   SAVED_UPDATED is returned depending on the operation performed. The
+ *   $object parameter contains values for any serial fields defined by
+ *   the $table. For example, $object->nid will be populated after inserting
+ *   a new node.
  */
 function drupal_write_record($table, &$object, $update = array()) {
   // Standardize $update to an array.
@@ -3292,21 +3294,25 @@ function drupal_write_record($table, &$object, $update = array()) {
     $query = "UPDATE {". $table ."} SET $query WHERE ". implode(' AND ', $conditions);
     $return = SAVED_UPDATED;
   }
-  db_query($query, $values);
 
-  if ($serials) {
-    // Get last insert ids and fill them in.
-    foreach ($serials as $field) {
-      $object->$field = db_last_insert_id($table, $field);
+  // Execute the SQL.
+  if (db_query($query, $values)) {
+    if ($serials) {
+      // Get last insert ids and fill them in.
+      foreach ($serials as $field) {
+        $object->$field = db_last_insert_id($table, $field);
+      }
     }
+
+    // If we began with an array, convert back so we don't surprise the caller.
+    if ($array) {
+      $object = (array) $object;
+    }
+
+    return $return;
   }
 
-  // If we began with an array, convert back so we don't surprise the caller.
-  if ($array) {
-    $object = (array)$object;
-  }
-
-  return $return;
+  return FALSE;  
 }
 
 /**
