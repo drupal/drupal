@@ -1223,12 +1223,14 @@ function node_menu($may_cache) {
           $items[] = array(
             'path' => 'node/'. arg(1) .'/revisions/'. arg(3) .'/delete',
             'callback' => 'node_revision_delete',
-            'callback arguments' => array(arg(1), arg(3)), 
+            'callback arguments' => array(arg(1), arg(3)),
+            'type' => MENU_CALLBACK,
           );
           $items[] = array(
             'path' => 'node/'. arg(1) .'/revisions/'. arg(3) .'/revert',
             'callback' => 'node_revision_revert',
-            'callback arguments' => array(arg(1), arg(3)), 
+            'callback arguments' => array(arg(1), arg(3)),
+            'type' => MENU_CALLBACK,
           );
         }
       }
