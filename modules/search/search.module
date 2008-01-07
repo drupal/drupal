@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.248 2008/01/03 09:55:06 goba Exp $
+// $Id: search.module,v 1.249 2008/01/07 12:57:38 goba Exp $
 
 /**
  * @file
@@ -778,8 +778,8 @@ function search_parse_query($text) {
       $queryor = array();
       $any = FALSE;
       foreach ($key as $or) {
-        list($q, $count) = _search_parse_query($or, $arguments2);
-        $any |= $count;
+        list($q, $num_new_scores) = _search_parse_query($or, $arguments2);
+        $any |= $num_new_scores;
         if ($q) {
           $queryor[] = $q;
           $arguments[] = $or;
@@ -794,12 +794,15 @@ function search_parse_query($text) {
     // Single ANDed term
     else {
       $simple_and = TRUE;
-      list($q, $count) = _search_parse_query($key, $arguments2);
+      list($q, $num_new_scores, $num_valid_words) = _search_parse_query($key, $arguments2);
       if ($q) {
         $query[] = $q;
         $arguments[] = $key;
+        if (!$num_valid_words) {
+          $simple = FALSE;
+        }
         // Each AND keyword needs to match at least once
-        $matches += $count;
+        $matches += $num_new_scores;
       }
     }
   }
@@ -827,7 +830,8 @@ function search_parse_query($text) {
  * Helper function for search_parse_query();
  */
 function _search_parse_query(&$word, &$scores, $not = FALSE) {
-  $count = 0;
+  $num_new_scores = 0;
+  $num_valid_words = 0;
   // Determine the scorewords of this word/phrase
   if (!$not) {
     $split = explode(' ', $word);
@@ -837,13 +841,14 @@ function _search_parse_query(&$word, &$scores, $not = FALSE) {
         $s = $num ? ((int)ltrim($s, '-0')) : $s;
         if (!isset($scores[$s])) {
           $scores[$s] = $s;
-          $count++;
+          $num_new_scores++;
         }
+        $num_valid_words++;
       }
     }
   }
   // Return matching snippet and number of added words
-  return array("d.data ". ($not ? 'NOT ' : '') ."LIKE '%% %s %%'", $count);
+  return array("d.data ". ($not ? 'NOT ' : '') ."LIKE '%% %s %%'", $num_new_scores, $num_valid_words);
 }
 
 /**
