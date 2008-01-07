@@ -395,8 +395,9 @@ function menu_edit_item_form($type, $mid = 0) {
     '#description' => t('Optional. In the menu, the heavier items will sink and the lighter items will be positioned nearer the top.'),
   );
 
-  // Always enable menu items (but not menus) when editing them.
-  if (!($item['type'] & MENU_IS_ROOT)) {
+  // Always enable menu items (but not menus) when editing them, unless already
+  // conditionally visible.
+  if (!($item['type'] & (MENU_IS_ROOT | MENU_VISIBLE_IF_HAS_CHILDREN))) {
     $item['type'] |= MENU_VISIBLE_IN_TREE | MENU_VISIBLE_IN_BREADCRUMB;
   }
 
