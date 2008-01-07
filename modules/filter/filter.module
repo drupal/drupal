@@ -604,12 +604,21 @@ function filter_admin_configure() {
 
   if (!empty($form)) {
     $form = system_settings_form($form);
+    $form['format'] = array('#type' => 'hidden', '#value' => $format->format);
+    $form['#submit'][] = 'filter_admin_configure_submit';
   }
   else {
     $form['error'] = array('#value' => t('No settings are available.'));
   }
 
   return $form;
+}
+
+/**
+ * Clear the filter's cache when configuration settings are saved.
+ */
+function filter_admin_configure_submit($form_id, $form_values) {
+  cache_clear_all($form_values['format'] .':', 'cache_filter', TRUE);
 }
 
 /**
