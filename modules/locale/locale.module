@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.209 2008/01/04 17:10:36 goba Exp $
+// $Id: locale.module,v 1.210 2008/01/07 21:38:16 goba Exp $
 
 /**
  * @file
@@ -209,7 +209,7 @@ function locale_user($type, $edit, &$user, $category = NULL) {
   // admin interface or edit the user, show the language selector.
   if (variable_get('language_count', 1) > 1 && ($type == 'register' && user_access('administer users') || $type == 'form' && $category == 'account' )) {
     $languages = language_list('enabled');
-    $languages = $languages['1'];
+    $languages = $languages[1];
 
     // If the user is being created, we set the user language to the page language.
     $user_preferred_language = $user ? user_preferred_language($user) : $language;
@@ -225,12 +225,14 @@ function locale_user($type, $edit, &$user, $category = NULL) {
       '#weight' => 1,
     );
 
+    // Get language negotiation settings.  
+    $mode = variable_get('language_negotiation', LANGUAGE_NEGOTIATION_NONE);
     $form['locale']['language'] = array(
       '#type' => (count($names) <= 5 ? 'radios' : 'select'),
       '#title' => t('Language'),
       '#default_value' => $user_preferred_language->language,
       '#options' => $names,
-      '#description' => t('Sets the default site interface and e-mail language for this account.'),
+      '#description' => ($mode == LANGUAGE_NEGOTIATION_PATH) ? t("This account's default language for e-mails, and preferred language for site presentation.") : t("This account's default language for e-mails."),
     );
     return $form;
   }
