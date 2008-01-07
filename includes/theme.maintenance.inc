@@ -127,7 +127,7 @@ function theme_install_page($content) {
   
   // Special handling of warning messages
   if (isset($messages['warning'])) {
-    $title = count($messages['warning']) > 1 ? st('The following installation warnings should be carefully reviewed.') : st('The following installation warning should be carefully reviewed.');
+    $title = count($messages['warning']) > 1 ? st('The following installation warnings should be carefully reviewed') : st('The following installation warning should be carefully reviewed');
     $variables['messages'] .= '<h4>'. $title .':</h4>';
     $variables['messages'] .= theme('status_messages', 'warning');
   }
