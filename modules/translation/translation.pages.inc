@@ -1,5 +1,5 @@
 <?php
-// $Id: translation.pages.inc,v 1.1 2007/10/16 09:15:19 goba Exp $
+// $Id: translation.pages.inc,v 1.2 2008/01/07 13:18:40 goba Exp $
 
 /**
  * @file
@@ -47,7 +47,7 @@ function translation_node_overview($node) {
       // No such translation in the set yet: help user to create it.
       $title = t('n/a');
       if (node_access('create', $node)) {
-        $options[] = l(t('add translation'), 'node/add/'. $node->type, array('query' => "translation=$node->nid&language=$language->language"));
+        $options[] = l(t('add translation'), 'node/add/'. str_replace('_', '-', $node->type), array('query' => "translation=$node->nid&language=$language->language"));
       }
       $status = t('Not translated');
     }
