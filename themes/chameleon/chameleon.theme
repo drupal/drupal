@@ -1,5 +1,5 @@
 <?php
-// $Id: chameleon.theme,v 1.74 2008/01/04 19:24:24 goba Exp $
+// $Id: chameleon.theme,v 1.75 2008/01/07 13:49:37 goba Exp $
 
 /**
  * @file
@@ -80,11 +80,11 @@ function chameleon_page($content, $show_blocks = TRUE, $show_messages = TRUE) {
     $output .= $tabs;
   }
 
-  $output .= theme('help');
-
   if ($show_messages) {
     $output .= theme('status_messages');
   }
+
+  $output .= theme('help');
 
   $output .= "\n<!-- begin content -->\n";
   $output .= $content;

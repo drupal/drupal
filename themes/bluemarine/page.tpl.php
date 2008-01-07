@@ -1,5 +1,5 @@
 <?php
-// $Id: page.tpl.php,v 1.26 2007/12/05 16:34:05 goba Exp $
+// $Id: page.tpl.php,v 1.27 2008/01/07 13:49:37 goba Exp $
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="<?php print $language->language ?>" xml:lang="<?php print $language->language ?>">
 
@@ -42,8 +42,8 @@
         <?php print $breadcrumb ?>
         <h1 class="title"><?php print $title ?></h1>
         <div class="tabs"><?php print $tabs ?></div>
-        <?php print $help ?>
         <?php if ($show_messages) { print $messages; } ?>
+        <?php print $help ?>
         <?php print $content; ?>
         <?php print $feed_icons; ?>
       </div>
