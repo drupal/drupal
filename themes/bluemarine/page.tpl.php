@@ -42,8 +42,8 @@
         <?php print $breadcrumb ?>
         <h1 class="title"><?php print $title ?></h1>
         <div class="tabs"><?php print $tabs ?></div>
-        <?php print $help ?>
         <?php if ($show_messages) { print $messages; } ?>
+        <?php print $help ?>
         <?php print $content; ?>
         <?php print $feed_icons; ?>
       </div>

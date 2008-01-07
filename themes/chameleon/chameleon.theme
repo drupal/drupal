@@ -80,11 +80,11 @@ function chameleon_page($content, $show_blocks = TRUE, $show_messages = TRUE) {
     $output .= $tabs;
   }
 
-  $output .= theme('help');
-
   if ($show_messages) {
     $output .= theme('status_messages');
   }
+
+  $output .= theme('help');
 
   $output .= "\n<!-- begin content -->\n";
   $output .= $content;

@@ -74,12 +74,12 @@
 
         <?php endif; ?>
 
-        <?php if ($help != ""): ?>
-            <div id="help"><?php print $help ?></div>
-        <?php endif; ?>
-
         <?php if ($show_messages && $messages != ""): ?>
           <?php print $messages ?>
+        <?php endif; ?>
+
+        <?php if ($help != ""): ?>
+            <div id="help"><?php print $help ?></div>
         <?php endif; ?>
 
       <!-- start main content -->
