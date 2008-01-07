@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.49 2008/01/06 18:22:14 dries Exp $
+// $Id: system.admin.inc,v 1.50 2008/01/07 14:18:06 goba Exp $
 
 /**
  * @file
@@ -537,18 +537,17 @@ function system_theme_settings(&$form_state, $key = '') {
  * Process system_theme_settings form submissions.
  */
 function system_theme_settings_submit($form, &$form_state) {
-  $op = isset($_POST['op']) ? $_POST['op'] : '';
-  $key = $form_state['values']['var'];
+  $values = $form_state['values'];
+  $key = $values['var'];
 
-  // Exclude unnecessary elements.
-  unset($form_state['values']['var'], $form_state['values']['submit'], $form_state['values']['reset'], $form_state['values']['form_id']);
-
-  if ($op == t('Reset to defaults')) {
+  if ($values['op'] == t('Reset to defaults')) {
     variable_del($key);
     drupal_set_message(t('The configuration options have been reset to their default values.'));
   }
   else {
-    variable_set($key, $form_state['values']);
+    // Exclude unnecessary elements before saving.
+    unset($values['var'], $values['submit'], $values['reset'], $values['form_id'], $values['op'], $values['form_build_id'], $values['form_token']);
+    variable_set($key, $values);
     drupal_set_message(t('The configuration options have been saved.'));
   }
 
