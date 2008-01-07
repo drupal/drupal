@@ -792,6 +792,10 @@ if (Drupal.jsEnabled) {
     // Register actions declared by any modules.
     actions_synchronize();
 
+    // Randomize query-strings on css/js files, to hide the fact that
+    // this is a new install, not upgraded yet.
+    _drupal_flush_css_js();
+
     variable_set('install_profile', $profile);
   }
 
