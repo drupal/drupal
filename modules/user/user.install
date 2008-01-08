@@ -252,11 +252,11 @@ function user_schema() {
     ),
     'indexes' => array(
       'access' => array('access'),
-      'created' => array('created')
+      'created' => array('created'),
+      'mail' => array('mail'),
     ),
     'unique keys' => array(
       'name' => array('name'),
-      'mail' => array('mail'),
     ),
     'primary key' => array('uid'),
   );
