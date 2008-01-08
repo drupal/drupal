@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.225 2008/01/08 07:46:40 goba Exp $
+// $Id: system.install,v 1.226 2008/01/08 21:22:28 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -64,37 +64,33 @@ function system_requirements($phase) {
   }
   
   // Test PHP memory_limit
+  $memory_limit = ini_get('memory_limit');
   $requirements['php_memory_limit'] = array(
     'title' => $t('PHP memory limit'),
-    'value' => ini_get('memory_limit') ? ini_get('memory_limit') : '',
+    'value' => $memory_limit,
   );
 
-  // get_cfg_var('cfg_file_path') returns the location of PHP's configuration file (php.ini)
-  // or FALSE if no configuration file is being used or an error occurred. 
-  if (get_cfg_var('cfg_file_path')) {
-    $configuration_file_hint = t('Increase the memory limit by editing the memory_limit parameter in the file %configuration-file and then restart your web server (or contact your system administrator or hosting provider for assistance).', array('%configuration-file' => get_cfg_var('cfg_file_path')));
-  }
-  else {
-    $configuration_file_hint = t('Contact your system administrator or hosting provider for assistance with increasing your PHP memory limit.');
-  }
-
-  if ($phase == 'install') {
-    if (ini_get('memory_limit') && parse_size(ini_get('memory_limit')) < parse_size(DRUPAL_MINIMUM_PHP_MEMORY_LIMIT)) {
-      $requirements['php_memory_limit']['description'] = $t('Consider increasing your PHP memory limit to %memory_minimum_limit to help prevent errors in the installation process.', array('%memory_minimum_limit' => DRUPAL_MINIMUM_PHP_MEMORY_LIMIT));
+  if ($memory_limit && parse_size($memory_limit) < parse_size(DRUPAL_MINIMUM_PHP_MEMORY_LIMIT)) {
+    $description = '';
+    if ($phase == 'install') {
+      $description = $t('Consider increasing your PHP memory limit to %memory_minimum_limit to help prevent errors in the installation process.', array('%memory_minimum_limit' => DRUPAL_MINIMUM_PHP_MEMORY_LIMIT));
       $requirements['php_memory_limit']['severity'] = REQUIREMENT_WARNING;
     }
-  }
-  elseif ($phase == 'runtime') {
-    if (ini_get('memory_limit') && parse_size(ini_get('memory_limit')) < parse_size(DRUPAL_MINIMUM_PHP_MEMORY_LIMIT)) {
-      $requirements['php_memory_limit']['description'] = $t('Depending on your configuration, Drupal can run with a %memory_limit PHP memory limit. However, a %memory_minimum_limit PHP memory limit or above is recommended, especially if your site uses additional custom or contributed modules.', array('%memory_limit' => ini_get('memory_limit'), '%memory_minimum_limit' => DRUPAL_MINIMUM_PHP_MEMORY_LIMIT));
+    elseif ($phase == 'runtime') {
+      $description = $t('Depending on your configuration, Drupal can run with a %memory_limit PHP memory limit. However, a %memory_minimum_limit PHP memory limit or above is recommended, especially if your site uses additional custom or contributed modules.', array('%memory_limit' => $memory_limit, '%memory_minimum_limit' => DRUPAL_MINIMUM_PHP_MEMORY_LIMIT));
       $requirements['php_memory_limit']['severity'] = REQUIREMENT_WARNING;
     }
-  }
-
-  // Add a hint to the warning regarding the location (if any) of the php.ini file.
-  if (isset($requirements['php_memory_limit']['description'])) {
-    $requirements['php_memory_limit']['description'] .= ' '. $configuration_file_hint;
-    $requirements['php_memory_limit']['description'] .= ' '. t('See the <a href="@url">Drupal requirements</a> for more information.', array('@url' => 'http://drupal.org/requirements'));
+  
+    if (!empty($description)) {
+      if ($php_ini_path = get_cfg_var('cfg_file_path')) {
+        $description .= ' '. $t('Increase the memory limit by editing the memory_limit parameter in the file %configuration-file and then restart your web server (or contact your system administrator or hosting provider for assistance).', array('%configuration-file' => $php_ini_path));
+      }
+      else {
+        $description .= ' '. $t('Contact your system administrator or hosting provider for assistance with increasing your PHP memory limit.');
+      }
+      
+      $requirements['php_memory_limit']['description'] = $description .' '. $t('See the <a href="@url">Drupal requirements</a> for more information.', array('@url' => 'http://drupal.org/requirements'));
+    }
   }
   
   // Test DB version
