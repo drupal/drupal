@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.admin.inc,v 1.23 2007/12/22 23:24:24 goba Exp $
+// $Id: menu.admin.inc,v 1.24 2008/01/08 11:31:49 goba Exp $
 
 /**
  * @file
@@ -76,7 +76,7 @@ function _menu_overview_tree_form($tree) {
       );
       $form[$mlid]['expanded'] = array(
         '#type' => 'checkbox',
-        '#default_value' => $item['has_children'] && $item['expanded'],
+        '#default_value' => $item['expanded'],
       );
       $form[$mlid]['weight'] = array(
         '#type' => 'weight',
@@ -172,8 +172,8 @@ function theme_menu_overview_form($form) {
 
   $header = array(
     t('Menu item'),
-    array('data' => t('Expanded'), 'class' => 'checkbox'),
     array('data' => t('Enabled'), 'class' => 'checkbox'),
+    array('data' => t('Expanded'), 'class' => 'checkbox'),
     t('Weight'),
     array('data' => t('Operations'), 'colspan' => '3'),
   );
@@ -201,8 +201,8 @@ function theme_menu_overview_form($form) {
 
       $row = array();
       $row[] = theme('indentation', $element['#item']['depth'] - 1) . drupal_render($element['title']);
-      $row[] = array('data' => drupal_render($element['expanded']), 'class' => 'checkbox');
       $row[] = array('data' => drupal_render($element['hidden']), 'class' => 'checkbox');
+      $row[] = array('data' => drupal_render($element['expanded']), 'class' => 'checkbox');
       $row[] = drupal_render($element['weight']) . drupal_render($element['plid']) . drupal_render($element['mlid']);
       $row = array_merge($row, $operations);
 
