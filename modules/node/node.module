@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.937 2008/01/08 10:35:41 goba Exp $
+// $Id: node.module,v 1.938 2008/01/08 11:27:16 goba Exp $
 
 /**
  * @file
@@ -20,7 +20,10 @@ define('NODE_BUILD_PRINT', 5);
  * Implementation of hook_help().
  */
 function node_help($path, $arg) {
-  if ($path != 'admin/content/node-settings/rebuild' && strpos($path, '#') === FALSE
+  // Remind site administrators about the {node_access} table being flagged
+  // for rebuild. We don't need to issue the message on the confirm form, or
+  // while the rebuild is being processed.
+  if ($path != 'admin/content/node-settings/rebuild' && $path != 'batch' && strpos($path, '#') === FALSE
       && user_access('access administration pages') && node_access_needs_rebuild()) {
     if ($path == 'admin/content/node-settings') {
       $message = t('The content access permissions need to be rebuilt.');
