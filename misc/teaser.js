@@ -1,4 +1,4 @@
-// $Id: teaser.js,v 1.10 2007/11/13 14:04:08 dries Exp $
+// $Id: teaser.js,v 1.11 2008/01/08 19:54:07 goba Exp $
 
 /**
  * Auto-attach for teaser behavior.
@@ -70,12 +70,19 @@ Drupal.behaviors.teaser = function(context) {
       body[0].value = trim(text[1]);
       $(teaser).attr('disabled', '');
       $('input', button).val(Drupal.t('Join summary')).toggle(join_teaser, split_teaser);
-      $(teaser).show();
     }
     else {
-      $(teaser).hide();
       $('input', button).val(Drupal.t('Split summary at cursor')).toggle(split_teaser, join_teaser);
       $(checkbox).hide();
+    }
+
+    // Make sure that textarea.js has done its magic to ensure proper visibility state.
+    if (Drupal.behaviors.textarea && teaser.is(('.form-textarea:not(.textarea-processed)'))) {
+      Drupal.behaviors.textarea(teaser.parentNode);
+    }
+    // Set initial visibility
+    if ($(teaser).is('[@disabled]')) {
+      $(teaser).parent().hide();
     }
 
   });

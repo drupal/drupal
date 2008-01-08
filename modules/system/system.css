@@ -1,4 +1,4 @@
-/* $Id: system.css,v 1.46 2007/12/22 22:25:50 goba Exp $ */
+/* $Id: system.css,v 1.47 2008/01/08 19:54:07 goba Exp $ */
 
 /*
 ** HTML elements
@@ -391,6 +391,10 @@ a.tabledrag-handle-hover .handle {
   height: 5px;
   background-position: center 1px;
   margin-bottom: -2px;
+}
+/* Keeps inner content contained in Opera 9. */
+.teaser-checkbox {
+  padding-top: 1px;
 }
 div.teaser-button-wrapper {
   float: right; /* LTR */
