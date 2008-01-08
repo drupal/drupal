@@ -329,9 +329,9 @@ function update_refresh() {
  *   as the keys, and the status reason constant (UPDATE_NOT_SECURE, etc) for
  *   the values.
  *
- * @see drupal_mail();
- * @see _update_cron_notify();
- * @see _update_message_text();
+ * @see drupal_mail()
+ * @see _update_cron_notify()
+ * @see _update_message_text()
  */
 function update_mail($key, &$message, $params) {
   $language = $message['language'];

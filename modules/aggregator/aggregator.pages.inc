@@ -138,8 +138,8 @@ function _aggregator_page_list($items, $op, $feed_source = '') {
  * @return
  *   The form structure.
  * @ingroup forms
- * @see aggregator_categorize_items_validate().
- * @see aggregator_categorize_items_submit().
+ * @see aggregator_categorize_items_validate()
+ * @see aggregator_categorize_items_submit()
  */
 function aggregator_categorize_items($items, $feed_source = '') {
   $form['#submit'][] = 'aggregator_categorize_items_submit';

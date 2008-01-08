@@ -81,8 +81,8 @@ function path_admin_edit($pid = 0) {
  * Return a form for editing or creating an individual URL alias.
  *
  * @ingroup forms
- * @see path_admin_form_validate().
- * @see path_admin_form_submit().
+ * @see path_admin_form_validate()
+ * @see path_admin_form_submit()
  */
 function path_admin_form(&$form_state, $edit = array('src' => '', 'dst' => '', 'language' => '', 'pid' => NULL)) {
 
@@ -186,7 +186,7 @@ function path_admin_delete_confirm_submit($form, &$form_state) {
  * Return a form to filter URL aliases.
  *
  * @ingroup forms
- * @see path_admin_filter_form_submit().
+ * @see path_admin_filter_form_submit()
  */
 function path_admin_filter_form(&$form_state, $keys = '') {
   $form['#attributes'] = array('class' => 'search-form');

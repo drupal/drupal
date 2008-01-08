@@ -10,7 +10,7 @@
  * dblog module settings form.
  *
  * @ingroup forms
- * @see system_settings_form().
+ * @see system_settings_form()
  */
 function dblog_admin_settings() {
   $form['dblog_row_limit'] = array(
@@ -247,8 +247,8 @@ function _dblog_format_message($dblog) {
  * Return form for dblog administration filters.
  *
  * @ingroup forms
- * @see dblog_filter_form_submit().
- * @see dblog_filter_form_validate().
+ * @see dblog_filter_form_submit()
+ * @see dblog_filter_form_validate()
  */
 function dblog_filter_form() {
   $session = &$_SESSION['dblog_overview_filter'];

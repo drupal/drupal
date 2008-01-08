@@ -30,8 +30,8 @@ function search_wipe_confirm_submit(&$form, &$form_state) {
  * Menu callback; displays the search module settings page.
  *
  * @ingroup forms
- * @see system_settings_form().
- * @see search_admin_settings_validate().
+ * @see system_settings_form()
+ * @see search_admin_settings_validate()
  */
 function search_admin_settings() {
   // Collect some stats

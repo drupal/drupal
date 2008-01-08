@@ -1234,8 +1234,8 @@ function comment_validate($edit) {
  * @param $title
  *   Not used.
  * @ingroup forms
- * @see comment_form_validate().
- * @see comment_form_submit().
+ * @see comment_form_validate()
+ * @see comment_form_submit()
  */
 function comment_form(&$form_state, $edit, $title = NULL) {
   global $user;

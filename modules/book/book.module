@@ -925,7 +925,7 @@ function book_export_traverse($tree, $visit_func) {
 /**
  * Generates printer-friendly HTML for a node.
  *
- * @see book_export_traverse().
+ * @see book_export_traverse()
  *
  * @param $node
  *   The node to generate output for.

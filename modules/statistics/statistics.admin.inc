@@ -178,7 +178,7 @@ function statistics_access_log($aid) {
  * Form builder; Configure access logging.
  *
  * @ingroup forms
- * @see system_settings_form().
+ * @see system_settings_form()
  */
 function statistics_access_logging_settings() {
   // Access log settings:

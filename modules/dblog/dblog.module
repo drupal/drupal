@@ -9,7 +9,7 @@
  * recorded events containing usage and performance data, errors,
  * warnings, and similar operational information.
  *
- * @see watchdog().
+ * @see watchdog()
  */
 
 /**

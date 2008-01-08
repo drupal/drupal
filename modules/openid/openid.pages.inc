@@ -55,7 +55,7 @@ function openid_user_identities($account) {
  * Form builder; Add an OpenID identity.
  *
  * @ingroup forms
- * @see openid_user_add_validate().
+ * @see openid_user_add_validate()
  */
 function openid_user_add() {
   $form['openid_url'] = array(
