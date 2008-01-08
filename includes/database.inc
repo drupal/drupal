@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.91 2008/01/08 10:35:40 goba Exp $
+// $Id: database.inc,v 1.92 2008/01/08 16:03:31 goba Exp $
 
 /**
  * @file
@@ -315,34 +315,44 @@ function db_rewrite_sql($query, $primary_table = 'n', $primary_field = 'nid',  $
   }
 
   if (!empty($where) || !empty($join)) {
-    if (!empty($where)) {
-      $new = "WHERE $where ";
-    }
-    $new = " $join $new";
-    if (strpos($query, 'WHERE')) {
-      $query = str_replace('WHERE', $new .'AND (', $query);
-      $insert = ') ';
+    $pattern = '{
+      # Beginning of the string
+      ^
+      ((?P<anonymous_view>
+        # Everything within this set of parentheses is named "anonymous view"
+        (?:
+          [^()]++                   # anything not parentheses
+        |
+          \( (?P>anonymous_view) \)          # an open parenthesis, more "anonymous view" and finally a close parenthesis.
+        )*
+      )[^()]+WHERE)
+    }x';
+    preg_match($pattern, $query, $matches);
+    if ($where) {
+      $n = strlen($matches[1]);
+      $second_part = substr($query, $n);
+      $first_part = substr($matches[1], 0, $n - 5) ." $join WHERE $where AND ( ";
+      // PHP 4 does not support strrpos for strings. We emulate it.
+      $haystack_reverse = strrev($second_part);
+      // No need to use strrev on the needle, we supply GROUP, ORDER, LIMIT
+      // reversed.
+      foreach (array('PUORG', 'REDRO', 'TIMIL') as $needle_reverse) {
+        $pos = strpos($haystack_reverse, $needle_reverse);
+        if ($pos !== FALSE) {
+          // All needles are five characters long.
+          $pos += 5;
+          break;
+        }
+      }
+      if ($pos === FALSE) {
+        $query = $first_part . $second_part .')';
+      }
+      else {
+        $query = $first_part . substr($second_part, 0, -$pos) .')'. substr($second_part, -$pos);
+      }
     }
     else {
-      $insert = $new;
-    }
-    if (strpos($query, 'GROUP')) {
-      $replace = 'GROUP';
-    }
-    elseif (strpos($query, 'HAVING')) {
-      $replace = 'HAVING';
-    }
-    elseif (strpos($query, 'ORDER')) {
-      $replace = 'ORDER';
-    }
-    elseif (strpos($query, 'LIMIT')) {
-      $replace = 'LIMIT';
-    }
-    else {
-      $query .= $insert;
-    }
-    if (isset($replace)) {
-      $query = str_replace($replace, $insert . $replace, $query);
+      $query = $matches[1] ." $join ". substr($query, strlen($matches[1]));
     }
   }
 
