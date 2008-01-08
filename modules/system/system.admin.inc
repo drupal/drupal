@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.51 2008/01/08 10:35:42 goba Exp $
+// $Id: system.admin.inc,v 1.52 2008/01/08 21:25:05 goba Exp $
 
 /**
  * @file
@@ -153,7 +153,7 @@ function system_settings_overview() {
 function system_admin_theme_settings() {
   $themes = system_theme_data();
   ksort($themes);
-  $options[0] = t('System default');
+  $options[0] = '<'. t('System default') .'>';
   foreach ($themes as $theme) {
     $options[$theme->name] = $theme->info['name'];
   }
@@ -1283,7 +1283,7 @@ function system_performance_settings() {
   );
 
   $period = drupal_map_assoc(array(0, 60, 180, 300, 600, 900, 1800, 2700, 3600, 10800, 21600, 32400, 43200, 86400), 'format_interval');
-  $period[0] = t('none');
+  $period[0] = '<'. t('none') .'>';
   $form['page_cache']['cache_lifetime'] = array(
     '#type' => 'select',
     '#title' => t('Minimum cache lifetime'),
