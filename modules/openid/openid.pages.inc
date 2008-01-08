@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.pages.inc,v 1.3 2007/12/22 23:24:25 goba Exp $
+// $Id: openid.pages.inc,v 1.4 2008/01/08 10:35:42 goba Exp $
 
 /**
  * @file
@@ -55,7 +55,7 @@ function openid_user_identities($account) {
  * Form builder; Add an OpenID identity.
  *
  * @ingroup forms
- * @see openid_user_add_validate().
+ * @see openid_user_add_validate()
  */
 function openid_user_add() {
   $form['openid_url'] = array(

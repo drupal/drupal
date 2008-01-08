@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.admin.inc,v 1.3 2007/12/18 22:16:55 dries Exp $
+// $Id: comment.admin.inc,v 1.4 2008/01/08 10:35:41 goba Exp $
 
 /**
  * @file
@@ -30,9 +30,9 @@ function comment_admin($type = 'new') {
  * @return
  *   The form structure.
  * @ingroup forms
- * @see comment_admin_overview_validate().
- * @see comment_admin_overview_submit().
- * @see theme_comment_admin_overview().
+ * @see comment_admin_overview_validate()
+ * @see comment_admin_overview_submit()
+ * @see theme_comment_admin_overview()
  */
 function comment_admin_overview($type = 'new', $arg) {
   // build an 'Update options' form
@@ -161,7 +161,7 @@ function theme_comment_admin_overview($form) {
  * @return
  *   TRUE if the comments should be deleted, FALSE otherwise.
  * @ingroup forms
- * @see comment_multiple_delete_confirm_submit().
+ * @see comment_multiple_delete_confirm_submit()
  */
 function comment_multiple_delete_confirm(&$form_state) {
   $edit = $form_state['post'];
@@ -235,7 +235,7 @@ function comment_delete($cid = NULL) {
  * Form builder; Builds the confirmation form for deleting a single comment.
  *
  * @ingroup forms
- * @see comment_confirm_delete_submit().
+ * @see comment_confirm_delete_submit()
  */
 function comment_confirm_delete(&$form_state, $comment) {
   $form = array();

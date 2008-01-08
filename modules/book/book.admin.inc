@@ -1,5 +1,5 @@
 <?php
-// $Id: book.admin.inc,v 1.7 2007/12/08 14:06:20 goba Exp $
+// $Id: book.admin.inc,v 1.8 2008/01/08 10:35:41 goba Exp $
 
 /**
  * @file
@@ -187,7 +187,7 @@ function _book_admin_table_tree($tree, &$form) {
  * Theme function for the book administration page form.
  *
  * @ingroup themeable
- * @see book_admin_table().
+ * @see book_admin_table()
  */
 function theme_book_admin_table($form) {
   drupal_add_tabledrag('book-outline', 'match', 'parent', 'book-plid', 'book-plid', 'book-mlid', TRUE, MENU_MAX_DEPTH - 2);

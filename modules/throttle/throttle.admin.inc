@@ -1,5 +1,5 @@
 <?php
-// $Id: throttle.admin.inc,v 1.1 2007/08/22 13:35:02 dries Exp $
+// $Id: throttle.admin.inc,v 1.2 2008/01/08 10:35:43 goba Exp $
 
 /**
  * @file
@@ -10,8 +10,8 @@
  * Form builder; Configure the throttle system.
  *
  * @ingroup forms
- * @see system_settings_form().
- * @see throttle_admin_settings_validate().
+ * @see system_settings_form()
+ * @see throttle_admin_settings_validate()
  */
 function throttle_admin_settings() {
   $probabilities = array(0 => '100%', 1 => '50%', 2 => '33.3%', 3 => '25%', 4 => '20%', 5 => '16.6%', 7 => '12.5%', 9 => '10%', 19 => '5%', 99 => '1%', 199 => '.5%', 399 => '.25%', 989 => '.1%');

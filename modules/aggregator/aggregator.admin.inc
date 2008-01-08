@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.admin.inc,v 1.5 2007/12/22 23:24:24 goba Exp $
+// $Id: aggregator.admin.inc,v 1.6 2008/01/08 10:35:40 goba Exp $
 
 /**
  * @file
@@ -49,8 +49,8 @@ function aggregator_view() {
  * Form builder; Generate a form to add/edit feed sources.
  *
  * @ingroup forms
- * @see aggregator_form_feed_validate().
- * @see aggregator_form_feed_submit().
+ * @see aggregator_form_feed_validate()
+ * @see aggregator_form_feed_submit()
  */
 function aggregator_form_feed(&$form_state, $edit = array('refresh' => 900, 'title' => '', 'url' => '', 'fid' => NULL)) {
   $period = drupal_map_assoc(array(900, 1800, 3600, 7200, 10800, 21600, 32400, 43200, 64800, 86400, 172800, 259200, 604800, 1209600, 2419200), 'format_interval');
@@ -202,7 +202,7 @@ function aggregator_admin_refresh_feed($feed) {
  * Form builder; Configure the aggregator system.
  *
  * @ingroup forms
- * @see system_settings_form().
+ * @see system_settings_form()
  */
 function aggregator_admin_settings() {
   $items = array(0 => t('none')) + drupal_map_assoc(array(3, 5, 10, 15, 20, 25), '_aggregator_items');
@@ -239,8 +239,8 @@ function aggregator_admin_settings() {
  * Form builder; Generate a form to add/edit/delete aggregator categories.
  *
  * @ingroup forms
- * @see aggregator_form_category_validate().
- * @see aggregator_form_category_submit().
+ * @see aggregator_form_category_validate()
+ * @see aggregator_form_category_submit()
  */
 function aggregator_form_category(&$form_state, $edit = array('title' => '', 'description' => '', 'cid' => NULL)) {
   $form['title'] = array('#type' => 'textfield',

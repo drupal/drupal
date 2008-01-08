@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.admin.inc,v 1.6 2008/01/07 12:52:15 goba Exp $
+// $Id: forum.admin.inc,v 1.7 2008/01/08 10:35:41 goba Exp $
 
 /**
  * @file
@@ -25,7 +25,7 @@ function forum_form_main($type, $edit = array()) {
  *
  * @param $edit Associative array containing a forum term to be added or edited.
  * @ingroup forms
- * @see forum_form_submit().
+ * @see forum_form_submit()
  */
 function forum_form_forum(&$form_state, $edit = array()) {
   $edit += array(
@@ -102,7 +102,7 @@ function forum_form_submit($form, &$form_state) {
  *
  * @param $edit Associative array containing a container term to be added or edited.
  * @ingroup forms
- * @see forum_form_submit().
+ * @see forum_form_submit()
  */
 function forum_form_container(&$form_state, $edit = array()) {
   $edit += array(
@@ -183,7 +183,7 @@ function forum_confirm_delete_submit($form, &$form_state) {
 /**
  * Form builder for the forum settings page.
  *
- * @see system_settings_form().
+ * @see system_settings_form()
  */
 function forum_admin_settings() {
   $form = array();

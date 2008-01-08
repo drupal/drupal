@@ -1,5 +1,5 @@
 <?php
-// $Id: user.admin.inc,v 1.13 2007/12/23 13:17:20 goba Exp $
+// $Id: user.admin.inc,v 1.14 2008/01/08 10:35:43 goba Exp $
 
 /**
  * @file
@@ -36,7 +36,7 @@ function user_admin($callback_arg = '') {
  * Form builder; Return form for user administration filters.
  *
  * @ingroup forms
- * @see user_filter_form_submit().
+ * @see user_filter_form_submit()
  */
 function user_filter_form() {
   $session = &$_SESSION['user_overview_filter'];
@@ -129,8 +129,8 @@ function user_filter_form_submit($form, &$form_state) {
  * Form builder; User administration page.
  *
  * @ingroup forms
- * @see user_admin_account_validate().
- * @see user_admin_account_submit().
+ * @see user_admin_account_validate()
+ * @see user_admin_account_submit()
  */
 function user_admin_account() {
   $filter = user_build_filter_query();
@@ -232,7 +232,7 @@ function user_admin_account_validate($form, &$form_state) {
  * Form builder; Configure user settings for this site.
  *
  * @ingroup forms
- * @see system_settings_form().
+ * @see system_settings_form()
  */
 function user_admin_settings() {
   // User registration settings.
@@ -495,8 +495,8 @@ function user_admin_settings() {
  * Menu callback: administer permissions.
  *
  * @ingroup forms
- * @see user_admin_perm_submit().
- * @see theme_user_admin_perm().
+ * @see user_admin_perm_submit()
+ * @see theme_user_admin_perm()
  */
 function user_admin_perm($form_state, $rid = NULL) {
   if (is_numeric($rid)) {
@@ -620,9 +620,9 @@ function theme_user_admin_perm($form) {
  * Menu callback: administer roles.
  *
  * @ingroup forms
- * @see user_admin_role_validate().
- * @see user_admin_role_submit().
- * @see theme_user_admin_new_role().
+ * @see user_admin_role_validate()
+ * @see user_admin_role_submit()
+ * @see theme_user_admin_new_role()
  */
 function user_admin_role() {
   $id = arg(4);
@@ -868,7 +868,7 @@ function user_admin_access_check_submit($form, &$form_state) {
  * Menu callback: delete an access rule
  *
  * @ingroup forms
- * @see user_admin_access_delete_confirm_submit().
+ * @see user_admin_access_delete_confirm_submit()
  */
 function user_admin_access_delete_confirm($form_state, $aid = 0) {
   $access_types = array('user' => t('username'), 'mail' => t('e-mail'), 'host' => t('host'));

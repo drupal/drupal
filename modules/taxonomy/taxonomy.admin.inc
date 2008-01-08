@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.20 2007/12/22 23:24:25 goba Exp $
+// $Id: taxonomy.admin.inc,v 1.21 2008/01/08 10:35:42 goba Exp $
 
 /**
  * @file
@@ -10,8 +10,8 @@
  * Form builder to list and manage vocabularies.
  *
  * @ingroup forms
- * @see taxonomy_overview_vocabularies_submit().
- * @see theme_taxonomy_overview_vocabularies().
+ * @see taxonomy_overview_vocabularies_submit()
+ * @see theme_taxonomy_overview_vocabularies()
  */
 function taxonomy_overview_vocabularies() {
   $vocabularies = taxonomy_get_vocabularies();
@@ -45,7 +45,7 @@ function taxonomy_overview_vocabularies() {
 /**
  * Submit handler for vocabularies overview. Updates changed vocabulary weights.
  *
- * @see taxonomy_overview_vocabularies().
+ * @see taxonomy_overview_vocabularies()
  */
 function taxonomy_overview_vocabularies_submit($form, &$form_state) {
   foreach ($form_state['values'] as $vid => $vocabulary) {
@@ -60,7 +60,7 @@ function taxonomy_overview_vocabularies_submit($form, &$form_state) {
  * Theme the vocabulary overview as a sortable list of vocabularies.
  *
  * @ingroup themeable
- * @see taxonomy_overview_vocabularies().
+ * @see taxonomy_overview_vocabularies()
  */
 function theme_taxonomy_overview_vocabularies($form) {
   $rows = array();
@@ -98,7 +98,7 @@ function theme_taxonomy_overview_vocabularies($form) {
  * Display form for adding and editing vocabularies.
  *
  * @ingroup forms
- * @see taxonomy_form_vocabulary_submit().
+ * @see taxonomy_form_vocabulary_submit()
  */
 function taxonomy_form_vocabulary(&$form_state, $edit = array()) {
   $edit += array(
@@ -240,8 +240,8 @@ function taxonomy_admin_term_edit($tid) {
  * each one. The form is made drag and drop by the theme function.
  *
  * @ingroup forms
- * @see taxonomy_overview_terms_submit().
- * @see theme_taxonomy_overview_terms().
+ * @see taxonomy_overview_terms_submit()
+ * @see theme_taxonomy_overview_terms()
  */
 function taxonomy_overview_terms(&$form_state, $vocabulary) {
   global $pager_page_array, $pager_total, $pager_total_items;
@@ -439,7 +439,7 @@ function taxonomy_overview_terms(&$form_state, $vocabulary) {
  * when a term has children so that reordering is minimal when a child is
  * added or removed from a term.
  *
- * @see taxonomy_overview_terms().
+ * @see taxonomy_overview_terms()
  */
 function taxonomy_overview_terms_submit($form, &$form_state) {
   if ($form_state['clicked_button']['#value'] == t('Reset to alphabetical')) {
@@ -535,7 +535,7 @@ function taxonomy_overview_terms_submit($form, &$form_state) {
  * Theme the terms overview as a sortable list of terms.
  *
  * @ingroup themeable
- * @see taxonomy_overview_terms().
+ * @see taxonomy_overview_terms()
  */
 function theme_taxonomy_overview_terms($form) {
   $page_increment  = $form['#page_increment'];
@@ -629,7 +629,7 @@ function taxonomy_add_term_page($vocabulary) {
  * Form function for the term edit form.
  *
  * @ingroup forms
- * @see taxonomy_form_term_submit().
+ * @see taxonomy_form_term_submit()
  */
 function taxonomy_form_term(&$form_state, $vocabulary, $edit = array()) {
   $edit += array(
@@ -732,7 +732,7 @@ function taxonomy_form_term(&$form_state, $vocabulary, $edit = array()) {
 /**
  * Validation handler for the term edit form. Ensure numeric weight values.
  *
- * @see taxonomy_form_term().
+ * @see taxonomy_form_term()
  */
 function taxonomy_form_term_validate($form, &$form_state) {
   if (isset($form_state['values']['weight']) && !is_numeric($form_state['values']['weight'])) {
@@ -743,7 +743,7 @@ function taxonomy_form_term_validate($form, &$form_state) {
 /**
  * Submit handler to insert or update a term.
  *
- * @see taxonomy_form_term().
+ * @see taxonomy_form_term()
  */
 function taxonomy_form_term_submit($form, &$form_state) {
   if ($form_state['clicked_button']['#value'] == t('Delete')) {
@@ -805,7 +805,7 @@ function taxonomy_form_term_submit($form, &$form_state) {
  * Form builder for the confirmation of multiple term parents.
  *
  * @ingroup forms
- * @see taxonomy_form_term().
+ * @see taxonomy_form_term()
  */
 function taxonomy_term_confirm_parents(&$form_state, $vocabulary) {
   $form = array();
@@ -825,7 +825,7 @@ function taxonomy_term_confirm_parents(&$form_state, $vocabulary) {
  * Form builder for the term delete form.
  *
  * @ingroup forms
- * @see taxonomy_term_confirm_delete_submit().
+ * @see taxonomy_term_confirm_delete_submit()
  */
 function taxonomy_term_confirm_delete(&$form_state, $tid) {
   $term = taxonomy_get_term($tid);
@@ -846,7 +846,7 @@ function taxonomy_term_confirm_delete(&$form_state, $tid) {
 /**
  * Submit handler to delete a term after confirmation.
  *
- * @see taxonomy_term_confirm_delete().
+ * @see taxonomy_term_confirm_delete()
  */
 function taxonomy_term_confirm_delete_submit($form, &$form_state) {
   taxonomy_del_term($form_state['values']['tid']);
@@ -861,7 +861,7 @@ function taxonomy_term_confirm_delete_submit($form, &$form_state) {
  * Form builder for the vocabulary delete confirmation form.
  *
  * @ingroup forms
- * @see taxonomy_vocabulary_confirm_delete_submit().
+ * @see taxonomy_vocabulary_confirm_delete_submit()
  */
 function taxonomy_vocabulary_confirm_delete(&$form_state, $vid) {
   $vocabulary = taxonomy_vocabulary_load($vid);
@@ -881,7 +881,7 @@ function taxonomy_vocabulary_confirm_delete(&$form_state, $vid) {
 /**
  * Submit handler to delete a vocabulary after confirmation.
  *
- * @see taxonomy_vocabulary_confirm_delete().
+ * @see taxonomy_vocabulary_confirm_delete()
  */
 function taxonomy_vocabulary_confirm_delete_submit($form, &$form_state) {
   $status = taxonomy_del_vocabulary($form_state['values']['vid']);
@@ -895,7 +895,7 @@ function taxonomy_vocabulary_confirm_delete_submit($form, &$form_state) {
  * Form builder to confirm reseting a vocabulary to alphabetical order.
  *
  * @ingroup forms
- * @see taxonomy_vocabulary_confirm_reset_alphabetical_submit().
+ * @see taxonomy_vocabulary_confirm_reset_alphabetical_submit()
  */
 function taxonomy_vocabulary_confirm_reset_alphabetical(&$form_state, $vid) {
   $vocabulary = taxonomy_vocabulary_load($vid);
@@ -916,7 +916,7 @@ function taxonomy_vocabulary_confirm_reset_alphabetical(&$form_state, $vid) {
 /**
  * Submit handler to reset a vocabulary to alphabetical order after confirmation.
  *
- * @see taxonomy_vocabulary_confirm_reset_alphabetical().
+ * @see taxonomy_vocabulary_confirm_reset_alphabetical()
  */
 function taxonomy_vocabulary_confirm_reset_alphabetical_submit($form, &$form_state) {
   db_query('UPDATE {term_data} t SET weight = 0 WHERE vid = %d', $form_state['values']['vid']);

@@ -1,5 +1,5 @@
 <?php
-// $Id: search.admin.inc,v 1.3 2007/12/19 17:45:42 goba Exp $
+// $Id: search.admin.inc,v 1.4 2008/01/08 10:35:42 goba Exp $
 
 /**
  * @file
@@ -30,8 +30,8 @@ function search_wipe_confirm_submit(&$form, &$form_state) {
  * Menu callback; displays the search module settings page.
  *
  * @ingroup forms
- * @see system_settings_form().
- * @see search_admin_settings_validate().
+ * @see system_settings_form()
+ * @see search_admin_settings_validate()
  */
 function search_admin_settings() {
   // Collect some stats

@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.admin.inc,v 1.7 2007/12/27 14:03:36 goba Exp $
+// $Id: filter.admin.inc,v 1.8 2008/01/08 10:35:41 goba Exp $
 
 /**
  * @file
@@ -11,7 +11,7 @@
  * one is the default.
  *
  * @ingroup forms
- * @see filter_admin_overview_submit().
+ * @see filter_admin_overview_submit()
  */
 function filter_admin_overview() {
 
@@ -88,8 +88,8 @@ function filter_admin_format_page($format = NULL) {
  * Generate a filter format form.
  *
  * @ingroup forms
- * @see filter_admin_format_form_validate().
- * @see filter_admin_format_form_submit().
+ * @see filter_admin_format_form_validate()
+ * @see filter_admin_format_form_submit()
  */
 function filter_admin_format_form(&$form_state, $format) {
   $default = ($format->format == variable_get('filter_default_format', 1));
@@ -238,7 +238,7 @@ function filter_admin_format_form_submit($form, &$form_state) {
  * Menu callback; confirm deletion of a format.
  *
  * @ingroup forms
- * @see filter_admin_delete_submit().
+ * @see filter_admin_delete_submit()
  */
 function filter_admin_delete() {
   $format = arg(4);
@@ -335,8 +335,8 @@ function filter_admin_order_page($format) {
  * Build the form for ordering filters for a format.
  *
  * @ingroup forms
- * @see theme_filter_admin_order().
- * @see filter_admin_order_submit().
+ * @see theme_filter_admin_order()
+ * @see filter_admin_order_submit()
  */
 function filter_admin_order(&$form_state, $format = NULL) {
   // Get list (with forced refresh).

@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.50 2008/01/07 14:18:06 goba Exp $
+// $Id: system.admin.inc,v 1.51 2008/01/08 10:35:42 goba Exp $
 
 /**
  * @file
@@ -148,7 +148,7 @@ function system_settings_overview() {
  * Form builder; This function allows selection of the theme to show in administration sections.
  *
  * @ingroup forms
- * @see system_settings_form().
+ * @see system_settings_form()
  */
 function system_admin_theme_settings() {
   $themes = system_theme_data();
@@ -181,7 +181,7 @@ function system_admin_theme_settings() {
  * Menu callback; displays a listing of all themes.
  *
  * @ingroup forms
- * @see system_themes_form_submit().
+ * @see system_themes_form_submit()
  */
 function system_themes_form() {
 
@@ -318,7 +318,7 @@ function system_themes_form_submit($form, &$form_state) {
  * @return
  *   The form structure.
  * @ingroup forms
- * @see system_theme_settings_submit().
+ * @see system_theme_settings_submit()
  */
 function system_theme_settings(&$form_state, $key = '') {
   $directory_path = file_directory_path();
@@ -600,8 +600,8 @@ function _system_is_incompatible(&$incompatible, $files, $file) {
  * @param $form_state
  *   An associative array containing the current state of the form.
  * @ingroup forms
- * @see theme_system_modules().
- * @see system_modules_submit().
+ * @see theme_system_modules()
+ * @see system_modules_submit()
  * @return
  *   The form array.
  */
@@ -978,8 +978,8 @@ function system_module_build_dependencies($modules, $form_values) {
  * Builds a form of currently disabled modules.
  *
  * @ingroup forms
- * @see system_modules_uninstall_validate().
- * @see system_modules_uninstall_submit().
+ * @see system_modules_uninstall_validate()
+ * @see system_modules_uninstall_submit()
  * @param $form_state['values']
  *   Submitted form values.
  * @return
@@ -1109,7 +1109,7 @@ function system_modules_uninstall_submit($form, &$form_state) {
  * Form builder; The general site information form.
  *
  * @ingroup forms
- * @see system_settings_form().
+ * @see system_settings_form()
  */
 function system_site_information_settings() {
   $form['site_name'] = array(
@@ -1189,7 +1189,7 @@ function system_site_information_settings_validate($form, &$form_state) {
  * Form builder; Configure error reporting settings.
  *
  * @ingroup forms
- * @see system_settings_form().
+ * @see system_settings_form()
  */
 function system_error_reporting_settings() {
 
@@ -1253,7 +1253,7 @@ function system_logging_overview() {
  * Form builder; Configure site performance settings.
  *
  * @ingroup forms
- * @see system_settings_form().
+ * @see system_settings_form()
  */
 function system_performance_settings() {
 
@@ -1371,7 +1371,7 @@ function system_clear_cache_submit(&$form_state, $form) {
  * Form builder; Configure the site file handling.
  *
  * @ingroup forms
- * @see system_settings_form().
+ * @see system_settings_form()
  */
 function system_file_system_settings() {
 
@@ -1408,7 +1408,7 @@ function system_file_system_settings() {
  * Form builder; Configure site image toolkit usage.
  *
  * @ingroup forms
- * @see system_settings_form().
+ * @see system_settings_form()
  */
 function system_image_toolkit_settings() {
   $toolkits_available = image_get_available_toolkits();
@@ -1445,7 +1445,7 @@ function system_image_toolkit_settings_validate($form, &$form_state) {
  * Form builder; Configure how the site handles RSS feeds.
  *
  * @ingroup forms
- * @see system_settings_form().
+ * @see system_settings_form()
  */
 function system_rss_feeds_settings() {
 
@@ -1471,8 +1471,8 @@ function system_rss_feeds_settings() {
  * Form builder; Configure the site date and time settings.
  *
  * @ingroup forms
- * @see system_settings_form().
- * @see system_date_time_settings_submit().
+ * @see system_settings_form()
+ * @see system_date_time_settings_submit()
  */
 function system_date_time_settings() {
   drupal_add_js(drupal_get_path('module', 'system') .'/system.js', 'module');
@@ -1644,7 +1644,7 @@ function system_date_time_lookup() {
  * Form builder; Configure the site's maintenance status.
  *
  * @ingroup forms
- * @see system_settings_form().
+ * @see system_settings_form()
  */
 function system_site_maintenance_settings() {
 
@@ -1670,7 +1670,7 @@ function system_site_maintenance_settings() {
  * Form builder; Configure Clean URL settings.
  *
  * @ingroup forms
- * @see system_settings_form().
+ * @see system_settings_form()
  */
 function system_clean_url_settings() {
   $form['clean_url'] = array(

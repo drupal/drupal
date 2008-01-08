@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.admin.inc,v 1.5 2007/12/22 23:24:25 goba Exp $
+// $Id: statistics.admin.inc,v 1.6 2008/01/08 10:35:42 goba Exp $
 
 /**
  * @file
@@ -178,7 +178,7 @@ function statistics_access_log($aid) {
  * Form builder; Configure access logging.
  *
  * @ingroup forms
- * @see system_settings_form().
+ * @see system_settings_form()
  */
 function statistics_access_logging_settings() {
   // Access log settings:

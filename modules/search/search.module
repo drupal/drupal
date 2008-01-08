@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.249 2008/01/07 12:57:38 goba Exp $
+// $Id: search.module,v 1.250 2008/01/08 10:35:42 goba Exp $
 
 /**
  * @file
@@ -1049,8 +1049,8 @@ function search_form(&$form_state, $action = '', $keys = '', $type = NULL, $prom
  * Form builder; Output a search form for the search block and the theme's search box.
  *
  * @ingroup forms
- * @see search_box_form_submit().
- * @see theme_search_box_form().
+ * @see search_box_form_submit()
+ * @see theme_search_box_form()
  */
 function search_box(&$form_state, $form_id) {
   $form[$form_id] = array(

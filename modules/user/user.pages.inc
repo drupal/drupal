@@ -1,5 +1,5 @@
 <?php
-// $Id: user.pages.inc,v 1.10 2008/01/05 22:34:54 dries Exp $
+// $Id: user.pages.inc,v 1.11 2008/01/08 10:35:43 goba Exp $
 
 /**
  * @file
@@ -25,8 +25,8 @@ function user_autocomplete($string = '') {
  * Form builder; Request a password reset.
  *
  * @ingroup forms
- * @see user_pass_validate().
- * @see user_pass_submit().
+ * @see user_pass_validate()
+ * @see user_pass_submit()
  */
 function user_pass() {
   $form['name'] = array(
@@ -214,8 +214,8 @@ function template_preprocess_user_profile_category(&$variables) {
  * Form builder; Present the form to edit a given user or profile category.
  *
  * @ingroup forms
- * @see user_edit_validate().
- * @see user_edit_submit().
+ * @see user_edit_validate()
+ * @see user_edit_submit()
  */
 function user_edit($account, $category = 'account') {
   drupal_set_title(check_plain($account->name));
@@ -227,8 +227,8 @@ function user_edit($account, $category = 'account') {
  *
  * @ingroup forms
  * @see user_profile_form_validate()
- * @see user_profile_form_submit().
- * @see user_edit_delete_submit().
+ * @see user_profile_form_submit()
+ * @see user_edit_delete_submit()
  */
 function user_profile_form($form_state, $account, $category = 'account') {
 
@@ -298,7 +298,7 @@ function user_edit_delete_submit($form, &$form_state) {
  * Form builder; confirm form for user deletion.
  *
  * @ingroup forms
- * @see user_confirm_delete_submit().
+ * @see user_confirm_delete_submit()
  */
 function user_confirm_delete(&$form_state, $account) {
 

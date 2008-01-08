@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.admin.inc,v 1.4 2008/01/05 22:23:45 dries Exp $
+// $Id: trigger.admin.inc,v 1.5 2008/01/08 10:35:43 goba Exp $
 
 /**
  * @file
@@ -45,7 +45,7 @@ function trigger_assign($type = NULL) {
  * @param $aid
  *   The action ID.
  * @ingroup forms
- * @see trigger_unassign_submit().
+ * @see trigger_unassign_submit()
  */
 function trigger_unassign($form_state, $hook = NULL, $op = NULL, $aid = NULL) {
   if (!($hook && $op && $aid)) {

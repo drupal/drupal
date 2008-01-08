@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.204 2008/01/02 14:29:32 goba Exp $
+// $Id: bootstrap.inc,v 1.205 2008/01/08 10:35:40 goba Exp $
 
 /**
  * @file
@@ -37,8 +37,8 @@ define('CACHE_AGGRESSIVE', 2);
 /**
  *
  * Severity levels, as defined in RFC 3164 http://www.faqs.org/rfcs/rfc3164.html
- * @see watchdog
- * @see watchdog_severity_levels
+ * @see watchdog()
+ * @see watchdog_severity_levels()
  */
 define('WATCHDOG_EMERG',    0); // Emergency: system is unusable
 define('WATCHDOG_ALERT',    1); // Alert: action must be taken immediately
@@ -562,7 +562,7 @@ function drupal_load($type, $name) {
  * fetch a fresh page on every request.  This prevents authenticated
  * users seeing locally cached pages that show them as logged out.
  *
- * @see page_set_cache
+ * @see page_set_cache()
  */
 function drupal_page_header() {
   header("Expires: Sun, 19 Nov 1978 05:00:00 GMT");
@@ -712,7 +712,7 @@ function request_uri() {
  * @param $link
  *   A link to associate with the message.
  *
- * @see watchdog_severity_levels
+ * @see watchdog_severity_levels()
  */
 function watchdog($type, $message, $variables = array(), $severity = WATCHDOG_NOTICE, $link = NULL) {
   global $user, $base_root;

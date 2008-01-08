@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.936 2008/01/04 13:50:50 goba Exp $
+// $Id: node.module,v 1.937 2008/01/08 10:35:41 goba Exp $
 
 /**
  * @file
@@ -2206,7 +2206,7 @@ function node_access_needs_rebuild($rebuild = NULL) {
  * Note : As of Drupal 6, node access modules are not required to (and actually
  * should not) call node_access_rebuild() in hook_enable/disable anymore.
  *
- * @see node_access_needs_rebuild
+ * @see node_access_needs_rebuild()
  *
  * @param $batch_mode
  *   Set to TRUE to process in 'batch' mode, spawning processing over several

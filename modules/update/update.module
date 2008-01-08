@@ -1,5 +1,5 @@
 <?php
-// $Id: update.module,v 1.7 2007/12/14 18:08:49 goba Exp $
+// $Id: update.module,v 1.8 2008/01/08 10:35:43 goba Exp $
 
 /**
  * @file
@@ -329,9 +329,9 @@ function update_refresh() {
  *   as the keys, and the status reason constant (UPDATE_NOT_SECURE, etc) for
  *   the values.
  *
- * @see drupal_mail();
- * @see _update_cron_notify();
- * @see _update_message_text();
+ * @see drupal_mail()
+ * @see _update_cron_notify()
+ * @see _update_message_text()
  */
 function update_mail($key, &$message, $params) {
   $language = $message['language'];

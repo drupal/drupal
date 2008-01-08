@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.admin.inc,v 1.6 2007/12/09 13:03:01 goba Exp $
+// $Id: profile.admin.inc,v 1.7 2008/01/08 10:35:42 goba Exp $
 
 /**
  * @file
@@ -10,7 +10,7 @@
  * Form builder to display a listing of all editable profile fields.
  *
  * @ingroup forms
- * @see profile_admin_overview_submit().
+ * @see profile_admin_overview_submit()
  */
 function profile_admin_overview() {
   $result = db_query('SELECT title, name, type, category, fid, weight FROM {profile_fields} ORDER BY category, weight');
@@ -66,7 +66,7 @@ function profile_admin_overview() {
 /**
  * Submit hanlder to update changed profile field weights and categories.
  *
- * @see profile_admin_overview().
+ * @see profile_admin_overview()
  */
 function profile_admin_overview_submit($form, &$form_state) {
   foreach (element_children($form_state['values']) as $fid) {
@@ -88,7 +88,7 @@ function profile_admin_overview_submit($form, &$form_state) {
  * Theme the profile field overview into a drag and drop enabled table.
  *
  * @ingroup themeable
- * @see profile_admin_overview().
+ * @see profile_admin_overview()
  */
 function theme_profile_admin_overview($form) {
   drupal_add_css(drupal_get_path('module', 'profile') .'/profile.css');
@@ -161,8 +161,8 @@ function theme_profile_admin_overview($form) {
  * Menu callback: Generate a form to add/edit a user profile field.
  *
  * @ingroup forms
- * @see profile_field_form_validate().
- * @see profile_field_form_submit().
+ * @see profile_field_form_validate()
+ * @see profile_field_form_submit()
  */
 function profile_field_form(&$form_state, $arg = NULL) {
   if (arg(3) == 'edit') {

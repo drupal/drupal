@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.442 2008/01/07 13:18:39 goba Exp $
+// $Id: forum.module,v 1.443 2008/01/08 10:35:41 goba Exp $
 
 /**
  * @file
@@ -876,7 +876,7 @@ function template_preprocess_forum_icon(&$variables) {
  * $variables contains $node.
  *
  * @see forum-topic-navigation.tpl.php
- * @see theme_forum_topic_navigation
+ * @see theme_forum_topic_navigation()
  */
 function template_preprocess_forum_topic_navigation(&$variables) {
   $output = '';
@@ -911,7 +911,7 @@ function template_preprocess_forum_topic_navigation(&$variables) {
  * $variables will contain: $topic
  *
  * @see forum-submitted.tpl.php
- * @see theme_forum_submitted
+ * @see theme_forum_submitted()
  */
 function template_preprocess_forum_submitted(&$variables) {
   $variables['author'] = isset($variables['topic']->uid) ? theme('username', $variables['topic']) : '';

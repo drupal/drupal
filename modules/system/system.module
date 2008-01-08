@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.575 2008/01/04 17:19:04 goba Exp $
+// $Id: system.module,v 1.576 2008/01/08 10:35:42 goba Exp $
 
 /**
  * @file
@@ -460,7 +460,7 @@ function system_menu() {
     'type' => MENU_CALLBACK,
   );
   // Menu handler to test that drupal_http_request() works locally.
-  // @see system_check_http_request().
+  // @see system_check_http_request()
   $items['admin/reports/request-test'] = array(
     'title' => 'Request test',
     'page callback' => 'printf',
@@ -1009,7 +1009,7 @@ function system_initialize_theme_blocks($theme) {
  * Add default buttons to a form and set its prefix.
  *
  * @ingroup forms
- * @see system_settings_form_submit
+ * @see system_settings_form_submit()
  * @param $form
  *   An associative array containing the structure of the form.
  * @return
@@ -1344,7 +1344,7 @@ function system_actions_manage() {
 /**
  * Define the form for the actions overview page.
  *
- * @see system_actions_manage_form_submit
+ * @see system_actions_manage_form_submit()
  * @ingroup forms
  * @param $form_state
  *   An associative array containing the current state of the form; not used.
@@ -1500,7 +1500,7 @@ function system_actions_configure_submit($form, &$form_state) {
  * Create the form for confirmation of deleting an action.
  *
  * @ingroup forms
- * @see system_actions_delete_form_submit
+ * @see system_actions_delete_form_submit()
  */
 function system_actions_delete_form($form_state, $action) {
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.module,v 1.20 2007/12/31 15:51:30 goba Exp $
+// $Id: dblog.module,v 1.21 2008/01/08 10:35:41 goba Exp $
 
 /**
  * @file
@@ -9,7 +9,7 @@
  * recorded events containing usage and performance data, errors,
  * warnings, and similar operational information.
  *
- * @see watchdog().
+ * @see watchdog()
  */
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.614 2008/01/04 19:24:23 goba Exp $
+// $Id: comment.module,v 1.615 2008/01/08 10:35:41 goba Exp $
 
 /**
  * @file
@@ -1234,8 +1234,8 @@ function comment_validate($edit) {
  * @param $title
  *   Not used.
  * @ingroup forms
- * @see comment_form_validate().
- * @see comment_form_submit().
+ * @see comment_form_validate()
+ * @see comment_form_submit()
  */
 function comment_form(&$form_state, $edit, $title = NULL) {
   global $user;

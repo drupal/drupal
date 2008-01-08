@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.453 2008/01/02 11:36:19 goba Exp $
+// $Id: book.module,v 1.454 2008/01/08 10:35:41 goba Exp $
 
 /**
  * @file
@@ -925,7 +925,7 @@ function book_export_traverse($tree, $visit_func) {
 /**
  * Generates printer-friendly HTML for a node.
  *
- * @see book_export_traverse().
+ * @see book_export_traverse()
  *
  * @param $node
  *   The node to generate output for.

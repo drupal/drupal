@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.pages.inc,v 1.11 2007/12/18 21:39:47 dries Exp $
+// $Id: aggregator.pages.inc,v 1.12 2008/01/08 10:35:40 goba Exp $
 
 /**
  * @file
@@ -138,8 +138,8 @@ function _aggregator_page_list($items, $op, $feed_source = '') {
  * @return
  *   The form structure.
  * @ingroup forms
- * @see aggregator_categorize_items_validate().
- * @see aggregator_categorize_items_submit().
+ * @see aggregator_categorize_items_validate()
+ * @see aggregator_categorize_items_submit()
  */
 function aggregator_categorize_items($items, $feed_source = '') {
   $form['#submit'][] = 'aggregator_categorize_items_submit';

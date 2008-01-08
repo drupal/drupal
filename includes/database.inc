@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.90 2008/01/04 09:31:48 goba Exp $
+// $Id: database.inc,v 1.91 2008/01/08 10:35:40 goba Exp $
 
 /**
  * @file
@@ -9,7 +9,7 @@
 /**
  * A hash value to check when outputting database errors, md5('DB_ERROR').
  *
- * @see drupal_error_handler
+ * @see drupal_error_handler()
  */
 define('DB_ERROR', 'a515ac9c2796ca0e23adbe92c68fc9fc');
 
