@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.224 2008/01/07 15:31:50 goba Exp $
+// $Id: system.install,v 1.225 2008/01/08 07:46:40 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -2312,7 +2312,7 @@ function system_update_6043() {
   db_drop_index($ret, 'node', 'status');
   db_drop_unique_key($ret, 'node', 'nid_vid');
   // Improve user module indices.
-  db_add_unique_key($ret, 'users', 'mail', array('mail'));
+  db_add_index($ret, 'users', 'mail', array('mail'));
   db_add_index($ret, 'users_roles', 'rid', array('rid'));
 
   // Optional modules - need to check if the tables exist.
@@ -2355,7 +2355,7 @@ function system_update_6043() {
   // Alter taxonomy module's tables.
   if (db_table_exists('term_data')) {
     db_drop_index($ret, 'term_data', 'vid');
-    db_add_unique_key($ret, 'term_data', 'vid_name', array('vid', 'name'));
+    db_add_index($ret, 'term_data', 'vid_name', array('vid', 'name'));
     db_add_index($ret, 'term_data', 'taxonomy_tree', array('vid', 'weight', 'name'));
   }
   if (db_table_exists('term_node')) {
@@ -2369,7 +2369,7 @@ function system_update_6043() {
   }
   if (db_table_exists('term_synonym')) {
     db_drop_index($ret, 'term_synonym', 'name');
-    db_add_unique_key($ret, 'term_synonym', 'name_tid', array('name', 'tid'));
+    db_add_index($ret, 'term_synonym', 'name_tid', array('name', 'tid'));
   }
   if (db_table_exists('vocabulary')) {
     db_add_index($ret, 'vocabulary', 'list', array('weight', 'name'));
@@ -2378,6 +2378,41 @@ function system_update_6043() {
     db_drop_primary_key($ret, 'vocabulary_node_types');
     db_add_primary_key($ret, 'vocabulary_node_types', array('type', 'vid'));
     db_add_index($ret, 'vocabulary_node_types', 'vid', array('vid'));
+  }
+  // If we updated in RC1 or before ensure we don't update twice.
+  variable_set('system_update_6043_RC2', TRUE);
+
+  return $ret;
+}
+
+/**
+ * RC1 to RC2 index cleanup.
+ */
+function system_update_6044() {
+  $ret = array();
+
+  // Delete invalid entries in {term_node} after system_update_6001.
+  $ret[] = update_sql("DELETE FROM {term_node} WHERE vid = 0");
+
+  // Only execute the rest of this function if 6043 was run in RC1 or before.
+  if (variable_get('system_update_6043_RC2', FALSE)) {
+    variable_del('system_update_6043_RC2');
+    return $ret;
+  }
+
+  // User module indices.
+  db_drop_unique_key($ret, 'users', 'mail');
+  db_add_index($ret, 'users', 'mail', array('mail'));
+
+  // Optional modules - need to check if the tables exist.
+  // Alter taxonomy module's tables.
+  if (db_table_exists('term_data')) {
+    db_drop_unique_key($ret, 'term_data', 'vid_name');
+    db_add_index($ret, 'term_data', 'vid_name', array('vid', 'name'));
+  }
+  if (db_table_exists('term_synonym')) {
+    db_drop_unique_key($ret, 'term_synonym', 'name_tid', array('name', 'tid'));
+    db_add_index($ret, 'term_synonym', 'name_tid', array('name', 'tid'));
   }
 
   return $ret;

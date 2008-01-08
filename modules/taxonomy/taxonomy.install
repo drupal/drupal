@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.install,v 1.6 2007/12/18 12:59:22 dries Exp $
+// $Id: taxonomy.install,v 1.7 2008/01/08 07:46:41 goba Exp $
 
 /**
  * Implementation of hook_schema().
@@ -43,10 +43,10 @@ function taxonomy_schema() {
       ),
     ),
     'primary key' => array('tid'),
-    'unique keys' => array(
+    'indexes' => array(
+      'taxonomy_tree' => array('vid', 'weight', 'name'),
       'vid_name' => array('vid', 'name'),
     ),
-    'indexes' => array('taxonomy_tree' => array('vid', 'weight', 'name')),
   );
 
   $schema['term_hierarchy'] = array(
@@ -160,11 +160,9 @@ function taxonomy_schema() {
         'description' => t('The name of the synonym.'),
       ),
     ),
-    'unique keys' => array(
-      'name_tid' => array('name', 'tid'),
-    ),
     'indexes' => array(
       'tid' => array('tid'),
+      'name_tid' => array('name', 'tid'),
     ),
     'primary key' => array('tsid'),
   );
