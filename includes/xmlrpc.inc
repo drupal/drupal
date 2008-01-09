@@ -1,5 +1,5 @@
 <?php
-// $Id: xmlrpc.inc,v 1.46 2007/12/31 08:54:36 dries Exp $
+// $Id: xmlrpc.inc,v 1.47 2008/01/09 21:52:43 goba Exp $
 
 /**
  * @file
@@ -387,17 +387,17 @@ function xmlrpc_date($time) {
     $xmlrpc_date->hour = date('H', $time);
     $xmlrpc_date->minute = date('i', $time);
     $xmlrpc_date->second = date('s', $time);
-    $xmlrpc_date->iso8601 = date('Ymd\TH:i:s');
+    $xmlrpc_date->iso8601 = date('Ymd\TH:i:s', $time);
   }
   else {
+    $xmlrpc_date->iso8601 = $time;
     $time = str_replace(array('-', ':'), '', $time);
     $xmlrpc_date->year = substr($time, 0, 4);
     $xmlrpc_date->month = substr($time, 4, 2);
     $xmlrpc_date->day = substr($time, 6, 2);
     $xmlrpc_date->hour = substr($time, 9, 2);
     $xmlrpc_date->minute = substr($time, 11, 2);
-    $xmlrpc_date->second = substr($time, 14, 2);
-    $xmlrpc_date->iso8601 = $time;
+    $xmlrpc_date->second = substr($time, 13, 2);
   }
   return $xmlrpc_date;
 }
