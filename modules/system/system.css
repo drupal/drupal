@@ -472,7 +472,8 @@ tr.selected td {
 /*
 ** Floating header for tableheader.js
 */
-thead div.sticky-header {
+table.sticky-header {
+  margin-top: 0;
   background: #fff;
 }
 

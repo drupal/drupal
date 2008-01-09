@@ -201,10 +201,6 @@ thead th {
   font-weight: bold;
 }
 
-thead div.sticky-header {
-  border-bottom: 2px solid #d3e7f4;
-}
-
 th a:link, th a:visited {
   color: #6f9dbd;
 }
