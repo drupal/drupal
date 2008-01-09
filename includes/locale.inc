@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.173 2008/01/02 22:49:43 goba Exp $
+// $Id: locale.inc,v 1.174 2008/01/09 21:36:13 goba Exp $
 
 /**
  * @file
@@ -2325,7 +2325,7 @@ function _locale_get_predefined_list() {
     "lg" => array("Luganda"),
     "ln" => array("Lingala"),
     "lo" => array("Laothian"),
-    "lt" => array("Lithuanian", "Lietuviškai"),
+    "lt" => array("Lithuanian", "Lietuvių"),
     "lv" => array("Latvian", "Latviešu"),
     "mg" => array("Malagasy"),
     "mh" => array("Marshallese"),
