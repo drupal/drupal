@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.939 2008/01/09 12:10:04 goba Exp $
+// $Id: node.module,v 1.940 2008/01/09 21:40:10 goba Exp $
 
 /**
  * @file
@@ -244,7 +244,7 @@ function node_teaser_js(&$form, &$form_state) {
  *      unchecked checkbox would cause the body to be empty, or missing
  *      the auto-generated teaser).
  *
- * If JavasSript is active then it is used to force the checkbox to be
+ * If JavaScript is active then it is used to force the checkbox to be
  * checked when hidden, and so the second case will not arise.
  *
  * In either case a warning message is output.
