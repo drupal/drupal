@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.444 2008/01/09 09:51:34 goba Exp $
+// $Id: forum.module,v 1.445 2008/01/09 21:38:57 goba Exp $
 
 /**
  * @file
@@ -760,7 +760,7 @@ function template_preprocess_forum_list(&$variables) {
     if ($user->uid) {
       $variables['forums'][$id]->new_topics = _forum_topics_unread($forum->tid, $user->uid);
       if ($variables['forums'][$id]->new_topics) {
-        $variables['forums'][$id]->new_text = t('!count new', array('!count' => $variables['forums'][$id]->new_topics));
+        $variables['forums'][$id]->new_text = format_plural($variables['forums'][$id]->new_topics, '1 new', '@count new');
         $variables['forums'][$id]->new_url = url("forum/$forum->tid", array('fragment' => 'new'));
       }
       $variables['forums'][$id]->old_topics = $forum->num_topics - $variables['forums'][$id]->new_topics;
@@ -822,7 +822,7 @@ function template_preprocess_forum_topic_list(&$variables) {
       $variables['topics'][$id]->new_text = '';
       $variables['topics'][$id]->new_url = '';
       if ($topic->new_replies) {
-        $variables['topics'][$id]->new_text = t('!count new', array('!count' => $variables['forums'][$id]->new_topics));
+        $variables['topics'][$id]->new_text = format_plural($topic->new_replies, '1 new', '@count new');
         $variables['topics'][$id]->new_url = url("node/$topic->nid", array('query' => comment_new_page_count($topic->num_comments, $topic->new_replies, $topic), 'fragment' => 'new'));
       }
 
