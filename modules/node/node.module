@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.938 2008/01/08 11:27:16 goba Exp $
+// $Id: node.module,v 1.939 2008/01/09 12:10:04 goba Exp $
 
 /**
  * @file
@@ -215,8 +215,8 @@ function node_mark($nid, $timestamp) {
  * See if the user used JS to submit a teaser.
  */
 function node_teaser_js(&$form, &$form_state) {
-  // Glue the teaser to the body.
   if (isset($form['#post']['teaser_js'])) {
+    // Glue the teaser to the body.
     if (trim($form_state['values']['teaser_js'])) {
       // Space the teaser from the body
       $body = trim($form_state['values']['teaser_js']) ."\r\n<!--break-->\r\n". trim($form_state['values']['body']);
@@ -225,20 +225,65 @@ function node_teaser_js(&$form, &$form_state) {
       // Empty teaser, no spaces.
       $body = '<!--break-->'. $form_state['values']['body'];
     }
-    // Pass value onto preview/submit
+    // Pass updated body value on to preview/submit form processing.
     form_set_value($form['body'], $body, $form_state);
-    // Pass value back onto form
+    // Pass updated body value back onto form for those cases
+    // in which the form is redisplayed.
     $form['body']['#value'] = $body;
   }
   return $form;
 }
 
 /**
- * Automatically generate a teaser for a node body.
+ * Ensure value of "teaser_include" checkbox is consistent with other form data 
+ *
+ * This handles two situations in which an unchecked checkbox is rejected:
+ *
+ *   1. The user defines a teaser (summary) but it is empty;
+ *   2. The user does not define a teaser (summary) (in this case an
+ *      unchecked checkbox would cause the body to be empty, or missing
+ *      the auto-generated teaser).
+ *
+ * If JavasSript is active then it is used to force the checkbox to be
+ * checked when hidden, and so the second case will not arise.
+ *
+ * In either case a warning message is output.
+ */
+function node_teaser_include_verify(&$form, &$form_state) {
+  $message = '';
+  
+  // $form['#post'] is set only when the form is built for preview/submit.
+  if (isset($form['#post']['body']) && isset($form_state['values']['teaser_include']) && !$form_state['values']['teaser_include']) {
+    // "teaser_include" checkbox is present and unchecked.
+    if (strpos($form_state['values']['body'], '<!--break-->') === 0) {
+      // Teaser is empty string
+      $message = t('You specified that the summary should not be shown when this post is displayed in full view. This setting is ignored when the summary is empty.');
+    }
+    elseif (strpos($form_state['values']['body'], '<!--break-->') === FALSE) {
+      // Teaser delimiter is not present in the body.
+      $message = t('You specified that the summary should not be shown when this post is displayed in full view. This setting has been ignored since you have not defined a summary for the post. (To define a summary, insert the delimiter "&lt;!--break--&gt;" (without the quotes) in the Body of the post to indicate the end of the summary and the start of the main content.)');
+    }
+    
+    if (!empty($message)) {
+      drupal_set_message($message, 'warning');
+      // Pass new checkbox value on to preview/submit form processing.
+      form_set_value($form['teaser_include'], 1, $form_state);
+      // Pass new checkbox value back onto form for those cases
+      // in which form is redisplayed.
+      $form['teaser_include']['#value'] = 1;
+    }
+  }
+
+  return $form;
+}
+
+/**
+ * Generate a teaser for a node body.
  *
  * If the end of the teaser is not indicated using the <!--break--> delimiter
- * then we try to end it at a sensible place, such as the end of a paragraph,
- * a line break, or the end of a sentence (in that order of preference).
+ * then we generate the teaser automatically, trying to end it at a sensible
+ * place such as the end of a paragraph, a line break, or the end of a
+ * sentence (in that order of preference).
  *
  * @param $body
  *   The content for which a teaser will be generated.
@@ -773,7 +818,7 @@ function node_submit($node) {
   // Convert the node to an object, if necessary.
   $node = (object)$node;
 
-  // Auto-generate the teaser, but only if it hasn't been set (e.g. by a
+  // Generate the teaser, but only if it hasn't been set (e.g. by a
   // module-provided 'teaser' form item).
   if (!isset($node->teaser)) {
     if (isset($node->body)) {

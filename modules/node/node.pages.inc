@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.23 2007/12/31 08:54:37 dries Exp $
+// $Id: node.pages.inc,v 1.24 2008/01/09 12:10:04 goba Exp $
 
 /**
  * @file
@@ -262,7 +262,7 @@ function node_body_field(&$node, $label, $word_count) {
   $include = !isset($node->teaser) || ($node->teaser == substr($node->body, 0, strlen($node->teaser)));
 
   $form = array(
-    '#after_build' => array('node_teaser_js'));
+    '#after_build' => array('node_teaser_js', 'node_teaser_include_verify'));
 
   $form['#prefix'] = '<div class="body-field-wrapper">';
   $form['#suffix'] = '</div>';
@@ -414,7 +414,22 @@ function node_preview($node) {
  */
 function theme_node_preview($node) {
   $output = '<div class="preview">';
-  if (!empty($node->teaser) && !empty($node->body) && $node->teaser != $node->body) {
+  
+  $preview_trimmed_version = FALSE;
+  // Do we need to preview trimmed version of post as well as full version?
+  if (isset($node->teaser) && isset($node->body)) {
+    $teaser = trim($node->teaser);
+    $body = trim(str_replace('<!--break-->', '', $node->body));
+
+    // Preview trimmed version if teaser and body will appear different;
+    // also (edge case) if both teaser and body have been specified by the user
+    // and are actually the same.
+    if ($teaser != $body || ($body && strpos($node->body, '<!--break-->') === 0)) {
+      $preview_trimmed_version = TRUE;
+    }
+  }
+  
+  if ($preview_trimmed_version) {
     drupal_set_message(t('The trimmed version of your post shows what your post looks like when promoted to the main page or when exported for syndication.<span class="no-js"> You can insert the delimiter "&lt;!--break--&gt;" (without the quotes) to fine-tune where your post gets split.</span>'));
     $output .= '<h3>'. t('Preview trimmed version') .'</h3>';
     $output .= node_view(drupal_clone($node), 1, FALSE, 0);

@@ -1,4 +1,4 @@
-// $Id: teaser.js,v 1.11 2008/01/08 19:54:07 goba Exp $
+// $Id: teaser.js,v 1.12 2008/01/09 12:10:04 goba Exp $
 
 /**
  * Auto-attach for teaser behavior.
@@ -17,6 +17,7 @@ Drupal.behaviors.teaser = function(context) {
     // Move teaser textarea before body, and remove its form-item wrapper.
     var body = $('#'+ Drupal.settings.teaser[this.id]);
     var checkbox = $('#'+ Drupal.settings.teaserCheckbox[this.id]).parent();
+    var checked = $(checkbox).children('input').attr('checked') ? true : false;
     var parent = teaser[0].parentNode;
     $(body).before(teaser);
     $(parent).remove();
@@ -30,13 +31,19 @@ Drupal.behaviors.teaser = function(context) {
       if (teaser.val()) {
         body.val(trim(teaser.val()) +'\r\n\r\n'+ trim(body.val()));
       }
-      // Hide and disable teaser
+      // Empty, hide and disable teaser.
+      teaser[0].value = '';
       $(teaser).attr('disabled', 'disabled');
       $(teaser).parent().slideUp('fast');
-      // Change label
+      // Change label.
       $(this).val(Drupal.t('Split summary at cursor'));
-      // Show separate teaser checkbox
+      // Hide separate teaser checkbox.
       $(checkbox).hide();
+      // Force a hidden checkbox to be checked (to ensure that the body is
+      // correctly processed on form submit when teaser/body are in joined
+      // state), and remember the current checked status.
+      checked = $(checkbox).children('input').attr('checked') ? true : false;
+      $(checkbox).children('input').attr('checked', true);
     }
 
     // Split the teaser from the body.
@@ -54,8 +61,8 @@ Drupal.behaviors.teaser = function(context) {
       $(teaser).parent().slideDown('fast');
       // Change label
       $(this).val(Drupal.t('Join summary'));
-      // Show separate teaser checkbox
-      $(checkbox).show();
+      // Show separate teaser checkbox, restore checked value.
+      $(checkbox).show().children('input').attr('checked', checked);
     }
 
     // Add split/join button.
@@ -73,7 +80,7 @@ Drupal.behaviors.teaser = function(context) {
     }
     else {
       $('input', button).val(Drupal.t('Split summary at cursor')).toggle(split_teaser, join_teaser);
-      $(checkbox).hide();
+      $(checkbox).hide().children('input').attr('checked', true);
     }
 
     // Make sure that textarea.js has done its magic to ensure proper visibility state.
