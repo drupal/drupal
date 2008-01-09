@@ -1,5 +1,5 @@
 <?php
-// $Id: translation.module,v 1.21 2007/12/25 10:18:14 goba Exp $
+// $Id: translation.module,v 1.22 2008/01/09 11:51:54 goba Exp $
 
 /**
  * @file
@@ -99,9 +99,9 @@ function translation_perm() {
 function translation_form_alter(&$form, $form_state, $form_id) {
   if ($form_id == 'node_type_form') {
     // Add translation option to content type form.
-    $form['workflow']['language']['#options'][TRANSLATION_ENABLED] = t('Enabled, with translation');
+    $form['workflow']['language_content_type']['#options'][TRANSLATION_ENABLED] = t('Enabled, with translation');
     // Description based on text from locale.module.
-    $form['workflow']['language']['#description'] = t('Enable multilingual support for this content type. If enabled, a language selection field will be added to the editing form, allowing you to select from one of the <a href="!languages">enabled languages</a>. You can also turn on translation for this content type, which lets you have content translated to any of the enabled languages. If disabled, new posts are saved with the default language. Existing content will not be affected by changing this option.', array('!languages' => url('admin/settings/language')));
+    $form['workflow']['language_content_type']['#description'] = t('Enable multilingual support for this content type. If enabled, a language selection field will be added to the editing form, allowing you to select from one of the <a href="!languages">enabled languages</a>. You can also turn on translation for this content type, which lets you have content translated to any of the enabled languages. If disabled, new posts are saved with the default language. Existing content will not be affected by changing this option.', array('!languages' => url('admin/settings/language')));
   }
   elseif (isset($form['#id']) && $form['#id'] == 'node-form' && translation_supported_type($form['#node']->type)) {
     $node = $form['#node'];
@@ -294,7 +294,7 @@ function translation_node_get_translations($tnid) {
  *   Boolean value.
  */
 function translation_supported_type($type) {
-  return variable_get('language_'. $type, 0) == TRANSLATION_ENABLED;
+  return variable_get('language_content_type_'. $type, 0) == TRANSLATION_ENABLED;
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.210 2008/01/07 21:38:16 goba Exp $
+// $Id: locale.module,v 1.211 2008/01/09 11:51:54 goba Exp $
 
 /**
  * @file
@@ -259,10 +259,10 @@ function locale_form_alter(&$form, $form_state, $form_id) {
     // Language setting for content types
     case 'node_type_form':
       if (isset($form['identity']['type'])) {
-        $form['workflow']['language'] = array(
+        $form['workflow']['language_content_type'] = array(
           '#type' => 'radios',
           '#title' => t('Multilingual support'),
-          '#default_value' => variable_get('language_'. $form['#node_type']->type, 0),
+          '#default_value' => variable_get('language_content_type_'. $form['#node_type']->type, 0),
           '#options' => array(t('Disabled'), t('Enabled')),
           '#description' => t('Enable multilingual support for this content type. If enabled, a language selection field will be added to the editing form, allowing you to select from one of the <a href="!languages">enabled languages</a>. If disabled, new posts are saved with the default language. Existing content will not be affected by changing this option.', array('!languages' => url('admin/settings/language'))),
         );
@@ -272,7 +272,7 @@ function locale_form_alter(&$form, $form_state, $form_id) {
     // Language field for nodes
     default:
       if (isset($form['#id']) && $form['#id'] == 'node-form') {
-        if (isset($form['#node']->type) && variable_get('language_'. $form['#node']->type, 0)) {
+        if (isset($form['#node']->type) && variable_get('language_content_type_'. $form['#node']->type, 0)) {
           $form['language'] = array(
             '#type' => 'select',
             '#title' => t('Language'),
