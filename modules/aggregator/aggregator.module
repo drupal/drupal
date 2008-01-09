@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.371 2007/12/28 12:02:50 dries Exp $
+// $Id: aggregator.module,v 1.372 2008/01/09 09:51:34 goba Exp $
 
 /**
  * @file
@@ -887,7 +887,7 @@ function theme_aggregator_block_item($item, $feed = 0) {
   global $user;
 
   $output = '';
-  if ($user->uid && module_exists('blog') && user_access('edit own blog')) {
+  if ($user->uid && module_exists('blog') && user_access('create blog entries')) {
     if ($image = theme('image', 'misc/blog.png', t('blog it'), t('blog it'))) {
       $output .= '<div class="icon">'. l($image, 'node/add/blog', array('attributes' => array('title' => t('Comment on this news item in your personal blog.'), 'class' => 'blog-it'), 'query' => "iid=$item->iid", 'html' => TRUE)) .'</div>';
     }

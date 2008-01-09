@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.296 2007/12/28 12:02:51 dries Exp $
+// $Id: blog.module,v 1.297 2008/01/09 09:51:34 goba Exp $
 
 /**
  * @file
@@ -23,21 +23,21 @@ function blog_node_info() {
  * Implementation of hook_perm().
  */
 function blog_perm() {
-  return array('edit own blog');
+  return array('create blog entries', 'delete own blog entries', 'delete any blog entry', 'edit own blog entries', 'edit any blog entry');
 }
 
 /**
  * Implementation of hook_access().
  */
 function blog_access($op, $node, $account) {
-  if ($op == 'create') {
-    return user_access('edit own blog', $account) && $account->uid;
-  }
-
-  if ($op == 'update' || $op == 'delete') {
-    if (user_access('edit own blog', $account) && ($node->uid == $account->uid)) {
-      return TRUE;
-    }
+  switch ($op) {
+    case 'create':
+      // Anonymous users cannot post even if they have the permission. 
+      return user_access('create blog entries', $account) && $account->uid;
+    case 'update':
+      return user_access('edit any blog entry', $account) || (user_access('edit own blog entries', $account) && ($node->uid == $account->uid));
+    case 'delete':
+      return user_access('delete any blog entry', $account) || (user_access('delete own blog entries', $account) && ($node->uid == $account->uid));
   }
 }
 
@@ -45,7 +45,7 @@ function blog_access($op, $node, $account) {
  * Implementation of hook_user().
  */
 function blog_user($type, &$edit, &$user) {
-  if ($type == 'view' && user_access('edit own blog', $user)) {
+  if ($type == 'view' && user_access('create blog entries', $user)) {
     $user->content['summary']['blog'] =  array(
       '#type' => 'user_profile_item',
       '#title' => t('Blog'),
@@ -145,7 +145,7 @@ function blog_menu() {
     'page callback' => 'blog_page_user',
     'page arguments' => array(1),
     'access callback' => 'user_access',
-    'access arguments' => array('edit own blog', 1),
+    'access arguments' => array('create blog entries', 1),
     'file' => 'blog.pages.inc',
   );
   $items['blog/%user/feed'] = array(

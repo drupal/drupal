@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.443 2008/01/08 10:35:41 goba Exp $
+// $Id: forum.module,v 1.444 2008/01/09 09:51:34 goba Exp $
 
 /**
  * @file
@@ -305,14 +305,13 @@ function forum_node_info() {
  * Implementation of hook_access().
  */
 function forum_access($op, $node, $account) {
-  if ($op == 'create') {
-    return user_access('create forum topics', $account);
-  }
-
-  if ($op == 'update' || $op == 'delete') {
-    if (user_access('edit any forum topic', $account) || (user_access('edit own forum topics', $account) && ($account->uid == $node->uid))) {
-      return TRUE;
-    }
+  switch ($op) {
+    case 'create':
+      return user_access('create forum topics', $account);
+    case 'update':
+      return user_access('edit any forum topic', $account) || (user_access('edit own forum topics', $account) && ($account->uid == $node->uid));
+    case 'delete':
+      return user_access('delete any forum topic', $account) || (user_access('delete own forum topics', $account) && ($account->uid == $node->uid));
   }
 }
 
@@ -320,7 +319,7 @@ function forum_access($op, $node, $account) {
  * Implementation of hook_perm().
  */
 function forum_perm() {
-  return array('create forum topics', 'edit own forum topics', 'edit any forum topic', 'administer forums');
+  return array('create forum topics', 'delete own forum topics', 'delete any forum topic', 'edit own forum topics', 'edit any forum topic', 'administer forums');
 }
 
 /**

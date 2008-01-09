@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.113 2007/12/31 08:54:36 dries Exp $
+// $Id: blogapi.module,v 1.114 2008/01/09 09:51:34 goba Exp $
 
 /**
  * @file
@@ -18,6 +18,13 @@ function blogapi_help($path, $arg) {
       $output .= '<p>'. t('For more information, see the online handbook entry for <a href="@blogapi">Blog API module</a>.', array('@blogapi' => url('http://drupal.org/handbook/modules/blogapi/'))) .'</p>';
       return $output;
   }
+}
+
+/**
+ * Implementation of hook_perm().
+ */
+function blogapi_perm() {
+  return array('administer content with blog api');
 }
 
 /**
@@ -508,7 +515,7 @@ function blogapi_validate_user($username, $password) {
   $user = user_authenticate(array('name' => $username, 'pass' => $password));
 
   if ($user->uid) {
-    if (user_access('edit own blog', $user)) {
+    if (user_access('administer content with blog api', $user)) {
       return $user;
     }
     else {

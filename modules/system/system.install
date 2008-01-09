@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.226 2008/01/08 21:22:28 goba Exp $
+// $Id: system.install,v 1.227 2008/01/09 09:51:35 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -2411,6 +2411,40 @@ function system_update_6044() {
     db_add_index($ret, 'term_synonym', 'name_tid', array('name', 'tid'));
   }
 
+  return $ret;
+}
+
+/**
+ * Update blog, book and locale module permissions.
+ * 
+ * Blog module got "edit own blog" replaced with the more granular "create
+ * blog entries", "edit own blog entries" and "delete own blog entries"
+ * permissions. We grant create and edit to previously privileged users, but
+ * delete is not granted to be in line with other permission changes in Drupal 6.
+ *
+ * Book module's "edit book pages" was upgraded to the bogus "edit book content"
+ * in Drupal 6 RC1 instead of "edit any book content", which would be correct.
+ *
+ * Locale module introduced "administer languages" and "translate interface"
+ * in place of "administer locales".
+ *
+ * Modeled after system_update_6039().
+ */
+function system_update_6045() {
+  $ret = array();
+  $result = db_query("SELECT rid, perm FROM {permission} ORDER BY rid");
+  while ($role = db_fetch_object($result)) {
+    $renamed_permission = preg_replace('/(?<=^|,\ )edit\ own\ blog(?=,|$)/', 'create blog entries, edit own blog entries', $role->perm);
+    $renamed_permission = preg_replace('/(?<=^|,\ )edit\ book\ content(?=,|$)/', 'edit any book content', $renamed_permission);
+    $renamed_permission = preg_replace('/(?<=^|,\ )administer\ locales(?=,|$)/', 'administer languages, translate interface', $renamed_permission);
+    if ($renamed_permission != $role->perm) {
+      $ret[] = update_sql("UPDATE {permission} SET perm = '$renamed_permission' WHERE rid = $role->rid");
+    }
+  }
+  
+  // Notify user that delete permissions may have been changed. This was in
+  // effect since system_update_6039(), but there was no user notice.
+  drupal_set_message('Drupal now has separate edit and delete permissions. Previously, users who were able to edit content were automatically allowed to delete it. For added security, delete permissions for individual core content types have been <strong>removed</strong> from all roles on your site (only roles with the "administer nodes" permission can now delete these types of content). If you would like to reenable any individual delete permissions, you can do this at the <a href="'. url('admin/user/permissions', array('fragment' => 'module-node')) .'">permissions page</a>.');
   return $ret;
 }
 

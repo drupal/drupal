@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.261 2008/01/04 08:04:45 dries Exp $
+// $Id: poll.module,v 1.262 2008/01/09 09:51:34 goba Exp $
 
 /**
  * @file
@@ -54,7 +54,7 @@ function poll_theme() {
  * Implementation of hook_perm().
  */
 function poll_perm() {
-  return array('create poll content', 'edit any poll content', 'edit own poll content', 'vote on polls', 'cancel own vote', 'inspect all votes');
+  return array('create poll content', 'delete own poll content', 'delete any poll content', 'edit any poll content', 'edit own poll content', 'vote on polls', 'cancel own vote', 'inspect all votes');
 }
 
 /**
@@ -66,6 +66,8 @@ function poll_access($op, $node, $account) {
       return user_access('create poll content', $account);
     case 'update':
       return user_access('edit any poll content', $account) || (user_access('edit own poll content', $account) && ($node->uid == $account->uid));
+    case 'delete':
+      return user_access('delete any poll content', $account) || (user_access('delete own poll content', $account) && ($node->uid == $account->uid));
   }
 }
 
