@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.117 2008/01/05 22:41:16 dries Exp $
+// $Id: file.inc,v 1.118 2008/01/09 10:39:48 goba Exp $
 
 /**
  * @file
@@ -560,7 +560,7 @@ function file_save_upload($source, $validators = array(), $dest = FALSE, $replac
         $message .= '<ul><li>'. implode('</li><li>', $errors) .'</li></ul>';
       }
       else {
-        $message .= array_pop($errors);
+        $message .= ' '. array_pop($errors);
       }
       form_set_error($source, $message);
       return 0;
