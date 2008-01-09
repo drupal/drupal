@@ -1,4 +1,4 @@
-/* $Id: system.css,v 1.47 2008/01/08 19:54:07 goba Exp $ */
+/* $Id: system.css,v 1.48 2008/01/09 09:56:39 goba Exp $ */
 
 /*
 ** HTML elements
@@ -472,7 +472,8 @@ tr.selected td {
 /*
 ** Floating header for tableheader.js
 */
-thead div.sticky-header {
+table.sticky-header {
+  margin-top: 0;
   background: #fff;
 }
 

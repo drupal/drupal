@@ -1,4 +1,4 @@
-// $Id: tableheader.js,v 1.9 2007/10/02 07:09:51 dries Exp $
+// $Id: tableheader.js,v 1.10 2008/01/09 09:56:39 goba Exp $
 
 Drupal.behaviors.tableHeader = function (context) {
   // This breaks in anything less than IE 7. Prevent it from running.
@@ -6,70 +6,73 @@ Drupal.behaviors.tableHeader = function (context) {
     return;
   }
 
-  // Keep track of all header cells.
-  var cells = [];
+  // Keep track of all cloned table headers.
+  var headers = [];
 
-  var z = 0;
   $('table thead:not(.tableHeader-processed)', context).each(function () {
-    // Find table height.
-    var table = $(this).parent('table')[0];
-    var height = $(table).addClass('sticky-table').height();
-    var i = 0;
-
-    // Find all header cells.
-    $('th', this).each(function () {
-
-      // Ensure each cell has an element in it.
-      var html = $(this).html();
-      if (html == ' ') {
-        html = '&nbsp;';
-      }
-      if ($(this).children().size() == 0) {
-        html = '<span>'+ html +'</span>';
-      }
-
-      // Clone and wrap cell contents in sticky wrapper that overlaps the cell's padding.
-      $('<div class="sticky-header" style="position: fixed; visibility: hidden; top: 0px;">'+ html +'</div>').prependTo(this);
-      var div = $('div.sticky-header', this).css({
-        'marginLeft': '-'+ $(this).css('paddingLeft'),
-        'marginRight': '-'+ $(this).css('paddingRight'),
-        'paddingLeft': $(this).css('paddingLeft'),
-        'paddingTop': $(this).css('paddingTop'),
-        'paddingBottom': $(this).css('paddingBottom'),
-        'z-index': ++z
-      })[0];
-      cells.push(div);
-
-      // Adjust width to fit cell/table.
-      var ref = this;
-      if (!i++) {
-        // The first cell is as wide as the table to prevent gaps.
-        ref = table;
-        div.wide = true;
-      }
-      $(div).width(Math.max(0, $(ref).width() - parseInt($(div).css('paddingLeft'))));
-
-      // Get position and store.
-      div.cell = this;
-      div.table = table;
-      div.stickyMax = height;
-      div.stickyPosition = $(this).offset().top;
+    // Clone table and remove unwanted elements so it inherits original properties.
+    var headerClone = $(this.parentNode).clone(true).insertBefore(this.parentNode).addClass('sticky-header').css({
+      position: 'fixed',
+      visibility: 'hidden',
+      top: '0px'
     });
+    // Everything except thead must be removed. See theme_table().
+    $('tbody', headerClone).remove();
+    $('caption', headerClone).remove();
+
+    var headerClone = $(headerClone)[0];
+    headers.push(headerClone);
+
+    // Store parent table.
+    var table = $(this).parent('table')[0];
+    headerClone.table = table;
+    // Finish initialzing header positioning.
+    headerClone.resizeWidths = true;
+    tracker(headerClone);
+
+    $(table).addClass('sticky-table');
     $(this).addClass('tableHeader-processed');
   });
 
+  // Track positioning and visibility.
+  function tracker(e) {
+    // Save positioning data.
+    var viewHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
+    if (e.viewHeight != viewHeight || e.resizeWidths) {
+      e.viewHeight = viewHeight;
+      e.vPosition = $(e.table).offset().top;
+      e.hPosition = $(e.table).offset().left;
+      e.vLength = $(e.table).height();
+    }
+
+    // Track horizontal positioning relative to the viewport and set visibility.
+    var hScroll = document.documentElement.scrollLeft || document.body.scrollLeft;
+    var vScroll = document.documentElement.scrollTop || document.body.scrollTop;
+    var vOffset = vScroll - e.vPosition - 4;
+    var visState = (vOffset > 0 && vOffset < e.vLength - 100) ? 'visible' : 'hidden';
+    $(e).css({left: -hScroll + e.hPosition +'px', visibility: visState});
+
+    // Resize cell widths.
+    if (e.resizeWidths) {
+      var cellCount = 0;
+      $('th', e).each(function() {
+        var cellWidth = parseInt($('th', e.table).eq(cellCount).css('width'));
+        // Exception for IE7.
+        if (!cellWidth) {
+          var cellWidth = $('th', e.table).eq(cellCount).width();
+        }
+        cellCount++;
+        $(this).css('width', cellWidth +'px');
+      });
+      $(e).css('width', $(e.table).width() +'px');
+      e.resizeWidths = false;
+    }
+  };
+
   // Track scrolling.
   var scroll = function() {
-    $(cells).each(function () {
-      // Fetch scrolling position.
-      var scroll = document.documentElement.scrollTop || document.body.scrollTop;
-      var offset = scroll - this.stickyPosition - 4;
-      if (offset > 0 && offset < this.stickyMax - 100) {
-        $(this).css('visibility', 'visible');
-      }
-      else {
-        $(this).css('visibility', 'hidden');
-      }
+    $(headers).each(function () {
+      tracker(this);
     });
   };
   $(window).scroll(scroll);
@@ -83,26 +86,10 @@ Drupal.behaviors.tableHeader = function (context) {
       return;
     }
     time = setTimeout(function () {
-
-      // Precalculate table heights
-      $('table.sticky-table').each(function () {
-        this.savedHeight = $(this).height();
+      $(headers).each(function () {
+        this.resizeWidths = true;
+        tracker(this);
       });
-
-      $('table.sticky-table div.sticky-header').each(function () {
-        // Get position.
-        this.stickyPosition = $(this.cell).offset().top;
-        this.stickyMax = this.table.savedHeight;
-
-        // Reflow the cell.
-        var ref = this.cell;
-        if (this.wide) {
-          // Resize the first cell to fit the table.
-          ref = this.table;
-        }
-        $(this).width(Math.max(0, $(ref).width() - parseInt($(this).css('paddingLeft'))));
-      });
-
       // Reset timer
       time = null;
     }, 250);

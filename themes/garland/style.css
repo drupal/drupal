@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.36 2007/12/29 16:02:52 dries Exp $ */
+/* $Id: style.css,v 1.37 2008/01/09 09:56:39 goba Exp $ */
 
 /**
  * Garland, for Drupal 5.0
@@ -199,10 +199,6 @@ thead th {
   border-bottom: 2px solid #d3e7f4;
   color: #494949;
   font-weight: bold;
-}
-
-thead div.sticky-header {
-  border-bottom: 2px solid #d3e7f4;
 }
 
 th a:link, th a:visited {
