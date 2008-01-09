@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.52 2008/01/08 21:25:05 goba Exp $
+// $Id: system.admin.inc,v 1.53 2008/01/09 10:11:55 goba Exp $
 
 /**
  * @file
@@ -1767,13 +1767,15 @@ function _system_sql($data, $keys) {
 }
 
 /**
- * Menu callback: return information about PHP.
+ * Menu callback: return information about the database.
  */
 function system_sql() {
 
   $result = db_query("SHOW STATUS");
   while ($entry = db_fetch_object($result)) {
-    $data[$entry->variable_name] = $entry->value;
+    // 'SHOW STATUS' returns fields named 'Variable_name' and 'Value',
+    // case is important.
+    $data[$entry->Variable_name] = $entry->Value;
   }
 
   $output  = '<h2>'. t('Command counters') .'</h2>';
