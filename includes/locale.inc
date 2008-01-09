@@ -2325,7 +2325,7 @@ function _locale_get_predefined_list() {
     "lg" => array("Luganda"),
     "ln" => array("Lingala"),
     "lo" => array("Laothian"),
-    "lt" => array("Lithuanian", "Lietuviškai"),
+    "lt" => array("Lithuanian", "Lietuvių"),
     "lv" => array("Latvian", "Latviešu"),
     "mg" => array("Malagasy"),
     "mh" => array("Marshallese"),
