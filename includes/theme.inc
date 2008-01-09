@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.408 2007/12/31 08:54:36 dries Exp $
+// $Id: theme.inc,v 1.409 2008/01/09 22:01:29 goba Exp $
 
 /**
  * @file
@@ -757,10 +757,24 @@ function drupal_find_theme_templates($cache, $extension, $path) {
   // Escape the periods in the extension.
   $regex = str_replace('.', '\.', $extension) .'$';
 
+  // Collect sub-themes for the current theme. This allows base themes to have
+  // sub-themes in its folder hierarchy without affecting the base theme.
+  global $theme;
+  $sub_themes = array();
+  foreach (list_themes() as $theme_info) {
+    if (!empty($theme_info->base_theme) && $theme_info->base_theme == $theme) {
+      $sub_themes[] = dirname($theme_info->filename);
+    }
+  }
+
   // Because drupal_system_listing works the way it does, we check for real
   // templates separately from checking for patterns.
   $files = drupal_system_listing($regex, $path, 'name', 0);
   foreach ($files as $template => $file) {
+    // Catch sub-themes and skip.
+    if (strpos($file->filename, str_replace($sub_themes, '', $file->filename)) !== 0) {
+      continue;
+    }
     // Chop off the remaining extensions if there are any. $template already
     // has the rightmost extension removed, but there might still be more,
     // such as with .tpl.php, which still has .tpl in $template at this point.
