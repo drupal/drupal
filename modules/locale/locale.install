@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.install,v 1.26 2008/01/09 11:51:54 goba Exp $
+// $Id: locale.install,v 1.27 2008/01/10 14:35:24 goba Exp $
 
 /**
  * Implementation of hook_install().
@@ -167,7 +167,7 @@ function locale_update_6004() {
  * 
  * Use language_content_type_<content_type> instead of language_<content_type>
  * so content types such as 'default', 'count' or 'negotiation' will not
- * interfer with language variables.
+ * interfere with language variables.
  */
 function locale_update_6005() {
   foreach (node_get_types() as $type => $content_type) {
@@ -181,8 +181,9 @@ function locale_update_6005() {
       drupal_set_message('The default language setting has been reset to its default value. Check the '. l('language configuration page', 'admin/settings/language') .' to configure it correctly.');
     }
     elseif ($type == 'negotiation') {
-      // Either it is the negotiation setting or the content type setting, it
-      // is an integer. The language_negotiation setting is not reset, but
+      // language_content_type_negotiation is an integer either if it is
+      // the negotiation setting or the content type setting.
+      // The language_negotiation setting is not reset, but
       // the user is alerted that this setting possibly was overwritten
       variable_set('language_content_type_negotiation', $setting);
       drupal_set_message('The language negotiation setting was possibly overwritten by a content type of the same name. Check the '. l('language configuration page', 'admin/settings/language/configure') .' and the '. l('<em>'. $content_type->name ."</em> content type's multilingual support settings", 'admin/content/types/negotiation', array('html' => TRUE)) .' to configure them correctly.');
