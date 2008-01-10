@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.24 2008/01/09 12:10:04 goba Exp $
+// $Id: node.pages.inc,v 1.25 2008/01/10 14:31:23 goba Exp $
 
 /**
  * @file
@@ -52,7 +52,7 @@ function node_add($type) {
   // If a node type has been specified, validate its existence.
   if (isset($types[$type]) && node_access('create', $type)) {
     // Initialize settings:
-    $node = array('uid' => $user->uid, 'name' => $user->name, 'type' => $type, 'language' => '');
+    $node = array('uid' => $user->uid, 'name' => (isset($user->name) ? $user->name : ''), 'type' => $type, 'language' => '');
 
     drupal_set_title(t('Create @name', array('@name' => $types[$type]->name)));
     $output = drupal_get_form($type .'_node_form', $node);
