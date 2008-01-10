@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.885 2008/01/10 15:03:53 goba Exp $
+// $Id: user.module,v 1.886 2008/01/10 16:00:44 goba Exp $
 
 /**
  * @file
@@ -1628,8 +1628,12 @@ function _user_mail_text($key, $language = NULL, $variables = array()) {
  * @return
  *   An associative array with the role id as the key and the role name as value.
  */
-function user_roles($membersonly = 0, $permission = 0) {
-  $roles = array();
+function user_roles($membersonly = FALSE, $permission = FALSE) {
+  // System roles take the first two positions.
+  $roles = array(
+    DRUPAL_ANONYMOUS_RID => NULL,
+    DRUPAL_AUTHENTICATED_RID => NULL,
+  );
 
   if ($permission) {
     $result = db_query("SELECT r.* FROM {role} r INNER JOIN {permission} p ON r.rid = p.rid WHERE p.perm LIKE '%%%s%%' ORDER BY r.name", $permission);
@@ -1642,7 +1646,9 @@ function user_roles($membersonly = 0, $permission = 0) {
       $roles[$role->rid] = $role->name;
     }
   }
-  return $roles;
+
+  // Filter to remove unmatched system roles.
+  return array_filter($roles);
 }
 
 /**
@@ -2102,8 +2108,6 @@ function _user_password_dynamic_validation() {
   }
 }
 
-
-
 /**
  * Implementation of hook_hook_info().
  */
@@ -2381,4 +2385,3 @@ function _user_forms(&$edit, $account, $category, $hook = 'form') {
 
   return empty($groups) ? FALSE : $groups;
 }
-

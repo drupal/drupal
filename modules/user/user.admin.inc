@@ -1,11 +1,10 @@
 <?php
-// $Id: user.admin.inc,v 1.14 2008/01/08 10:35:43 goba Exp $
+// $Id: user.admin.inc,v 1.15 2008/01/10 16:00:44 goba Exp $
 
 /**
  * @file
  * Admin page callback file for the user module.
  */
-
 
 function user_admin($callback_arg = '') {
   $op = isset($_POST['op']) ? $_POST['op'] : $callback_arg;
@@ -514,16 +513,10 @@ function user_admin_perm($form_state, $rid = NULL) {
     $role_permissions[$role->rid] = $role->perm .',';
   }
 
+  // Retrieve role names for columns.
+  $role_names = user_roles();
   if (is_numeric($rid)) {
-    $result = db_query('SELECT rid, name FROM {role} r WHERE r.rid = %d ORDER BY name', $rid);
-  }
-  else {
-    $result = db_query('SELECT rid, name FROM {role} ORDER BY name');
-  }
-
-  $role_names = array();
-  while ($role = db_fetch_object($result)) {
-    $role_names[$role->rid] = $role->name;
+    $role_names = array($rid => $role_names[$rid]);
   }
 
   // Render role/permission overview:
@@ -556,7 +549,6 @@ function user_admin_perm($form_state, $rid = NULL) {
 
   return $form;
 }
-
 
 function user_admin_perm_submit($form, &$form_state) {
   // Save permissions:
