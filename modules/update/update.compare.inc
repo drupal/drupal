@@ -1,5 +1,5 @@
 <?php
-// $Id: update.compare.inc,v 1.1 2007/07/11 15:15:40 dries Exp $
+// $Id: update.compare.inc,v 1.2 2008/01/10 14:14:54 goba Exp $
 
 /**
  * @file
@@ -156,10 +156,20 @@ function update_process_project_info(&$projects) {
  * remote servers, calculate the current status.
  *
  * This function is the heart of the update status feature. It iterates over
- * every currently installed project, and for each one, decides what major
- * release series to consider (the larger of the major version currently
- * installed and the default major version specified by the maintainer of that
- * project).
+ * every currently installed project. For each one, it first checks if the
+ * project has been flagged with a special status like "unsupported" or
+ * "insecure", or if the project node itself has been unpublished. In any of
+ * those cases, the project is marked with an error and the next project is
+ * considered.
+ *
+ * If the project itself is valid, the function decides what major release
+ * series to consider. The project defines what the currently supported major
+ * versions are for each version of core, so the first step is to make sure
+ * the current version is still supported. If so, that's the target version.
+ * If the current version is unsupported, the project maintainer's recommended
+ * major version is used. There's also a check to make sure that this function
+ * never recommends an earlier release than the currently installed major
+ * version.
  *
  * Given a target major version, it scans the available releases looking for
  * the specific release to recommend (avoiding beta releases and development
@@ -213,28 +223,155 @@ function update_calculate_project_data($available) {
   update_process_project_info($projects);
   foreach ($projects as $project => $project_info) {
     if (isset($available[$project])) {
+
+      // If the project status is marked as something bad, there's nothing
+      // else to consider.
+      if (isset($available[$project]['project_status'])) {
+        switch ($available[$project]['project_status']) {
+          case 'insecure':
+            $projects[$project]['status'] = UPDATE_NOT_SECURE;
+            if (empty($projects[$project]['extra'])) {
+              $projects[$project]['extra'] = array();
+            }
+            $projects[$project]['extra'][] = array(
+              'class' => 'project-not-secure',
+              'label' => t('Project not secure'),
+              'data' => t('This project has been labeled insecure by the Drupal security team, and is no longer available for download. Immediately disabling everything included by this project is strongly recommended!'),
+            );
+            break;
+          case 'unpublished':
+          case 'revoked':
+            $projects[$project]['status'] = UPDATE_REVOKED;
+            if (empty($projects[$project]['extra'])) {
+              $projects[$project]['extra'] = array();
+            }
+            $projects[$project]['extra'][] = array(
+              'class' => 'project-revoked',
+              'label' => t('Project revoked'),
+              'data' => t('This project has been revoked, and is no longer available for download. Disabling everything included by this project is strongly recommended!'),
+            );
+            break;
+          case 'unsupported':
+            $projects[$project]['status'] = UPDATE_NOT_SUPPORTED;
+            if (empty($projects[$project]['extra'])) {
+              $projects[$project]['extra'] = array();
+            }
+            $projects[$project]['extra'][] = array(
+              'class' => 'project-not-supported',
+              'label' => t('Project not supported'),
+              'data' => t('This project is no longer supported, and is no longer available for download. Disabling everything included by this project is strongly recommended!'),
+            );
+            break;
+          default:
+            // Assume anything else (e.g. 'published') is valid and we should
+            // perform the rest of the logic in this function.
+            break;
+        }
+      }
+
+      if (!empty($projects[$project]['status'])) {
+        // We already know the status for this project, so there's nothing
+        // else to compute. Just record everything else we fetched from the
+        // XML file into our projects array and move to the next project.
+        $projects[$project] += $available[$project];
+        continue;
+      }
+
       // Figure out the target major version.
       $existing_major = $project_info['existing_major'];
-      if (isset($available[$project]['default_major'])) {
-        $default_major = $available[$project]['default_major'];
-        $target_major = max($existing_major, $default_major);
+      $supported_majors = array();
+      if (isset($available[$project]['supported_majors'])) {
+        $supported_majors = explode(',', $available[$project]['supported_majors']);
       }
-      else {
+      elseif (isset($available[$project]['default_major'])) {
+        // Older release history XML file without supported or recommended.
+        $supported_majors[] = $available[$project]['default_major'];
+      }
+
+      if (in_array($existing_major, $supported_majors)) {
+        // Still supported, stay at the current major version.
         $target_major = $existing_major;
       }
+      elseif (isset($available[$project]['recommended_major'])) {
+        // Since 'recommended_major' is defined, we know this is the new XML
+        // format. Therefore, we know the current release is unsupported since
+        // its major version was not in the 'supported_majors' list. We should
+        // find the best release from the recommended major version.
+        $target_major = $available[$project]['recommended_major'];
+        $projects[$project]['status'] = UPDATE_NOT_SUPPORTED;
+      }
+      elseif (isset($available[$project]['default_major'])) {
+        // Older release history XML file without recommended, so recommend
+        // the currently defined "default_major" version.
+        $target_major = $available[$project]['default_major'];
+      }
+      else {
+        // Malformed XML file? Stick with the current version.
+        $target_major = $existing_major;
+      }
+
+      // Make sure we never tell the admin to downgrade. If we recommended an
+      // earlier version than the one they're running, they'd face an
+      // impossible data migration problem, since Drupal never supports a DB
+      // downgrade path. In the unfortunate case that what they're running is
+      // unsupported, and there's nothing newer for them to upgrade to, we
+      // can't print out a "Recommended version", but just have to tell them
+      // what they have is unsupported and let them figure it out.
+      $target_major = max($existing_major, $target_major);
 
       $version_patch_changed = '';
       $patch = '';
 
+      // Defend ourselves from XML history files that contain no releases.
+      if (empty($available[$project]['releases'])) {
+        $projects[$project]['status'] = UPDATE_UNKNOWN;
+        $projects[$project]['reason'] = t('No available releases found');
+        continue;
+      }
       foreach ($available[$project]['releases'] as $version => $release) {
-        // Ignore unpublished releases.
-        if ($release['status'] != 'published') {
+        // First, if this is the existing release, check a few conditions.
+        if ($projects[$project]['existing_version'] == $version) {
+          if (isset($release['terms']['Release type']) &&
+              in_array('Insecure', $release['terms']['Release type'])) {
+            $projects[$project]['status'] = UPDATE_NOT_SECURE;
+          }
+          elseif ($release['status'] == 'unpublished') {
+            $projects[$project]['status'] = UPDATE_REVOKED;
+            if (empty($projects[$project]['extra'])) {
+              $projects[$project]['extra'] = array();
+            }
+            $projects[$project]['extra'][] = array(
+              'class' => 'release-revoked',
+              'label' => t('Release revoked'),
+              'data' => t('Your currently installed release has been revoked, and is no longer available for download. Disabling everything included in this release or upgrading is strongly recommended!'),
+            );
+          }
+          elseif (isset($release['terms']['Release type']) &&
+                  in_array('Unsupported', $release['terms']['Release type'])) {
+            $projects[$project]['status'] = UPDATE_NOT_SUPPORTED;
+            if (empty($projects[$project]['extra'])) {
+              $projects[$project]['extra'] = array();
+            }
+            $projects[$project]['extra'][] = array(
+              'class' => 'release-not-supported',
+              'label' => t('Release not supported'),
+              'data' => t('Your currently installed release is now unsupported, and is no longer available for download. Disabling everything included in this release or upgrading is strongly recommended!'),
+            );
+          }
+        }
+
+        // Otherwise, ignore unpublished, insecure, or unsupported releases.
+        if ($release['status'] == 'unpublished' || 
+            (isset($release['terms']['Release type']) &&
+             (in_array('Insecure', $release['terms']['Release type']) ||
+              in_array('Unsupported', $release['terms']['Release type'])))) {
           continue;
         }
 
-        // See if this is a higher major version than our target, and if so,
-        // record it as an "Also available" release.
-        if ($release['version_major'] > $target_major) {
+        // See if this is a higher major version than our target and yet still
+        // supported. If so, record it as an "Also available" release.
+        if ($release['version_major'] > $target_major &&
+            in_array($release['version_major'], $supported_majors)) {
           if (!isset($available[$project]['also'])) {
             $available[$project]['also'] = array();
           }
@@ -303,8 +440,7 @@ function update_calculate_project_data($available) {
         }
 
         // See if this release is a security update.
-        if (isset($release['terms'])
-            && isset($release['terms']['Release type'])
+        if (isset($release['terms']['Release type'])
             && in_array('Security update', $release['terms']['Release type'])) {
           $projects[$project]['security updates'][] = $release;
         }
@@ -314,6 +450,31 @@ function update_calculate_project_data($available) {
       // version the recommended version if possible.
       if (!isset($available[$project]['recommended']) && isset($available[$project]['latest_version'])) {
         $available[$project]['recommended'] = $available[$project]['latest_version'];
+      }
+
+      // Stash the info about available releases into our $projects array.
+      $projects[$project] += $available[$project];
+
+      //
+      // Check to see if we need an update or not.
+      //
+
+      if (!empty($projects[$project]['security updates'])) {
+        // If we found security updates, that always trumps any other status.
+        $projects[$project]['status'] = UPDATE_NOT_SECURE;
+      }
+
+      if (isset($projects[$project]['status'])) {
+        // If we already know the status, we're done.
+        continue;
+      }
+
+      // If we don't know what to recommend, there's nothing we can report.
+      // Bail out early.
+      if (!isset($projects[$project]['recommended'])) {
+        $projects[$project]['status'] = UPDATE_UNKNOWN;
+        $projects[$project]['reason'] = t('No available releases found');
+        continue;
       }
 
       // If we're running a dev snapshot, compare the date of the dev snapshot
@@ -329,44 +490,18 @@ function update_calculate_project_data($available) {
         }
       }
 
-      // Stash the info about available releases into our $projects array.
-      $projects[$project] += $available[$project];
-
-      //
-      // Check to see if we need an update or not.
-      //
-
-      // If we don't know what to recommend, there's nothing much we can
-      // report, so bail out early.
-      if (!isset($projects[$project]['recommended'])) {
-        $projects[$project]['status'] = UPDATE_UNKNOWN;
-        $projects[$project]['reason'] = t('No available releases found');
-        continue;
-      }
-
-      // Check based upon install type and the site-wide threshold setting.
-      $error_level = variable_get('update_notification_threshold', 'all');
-
+      // Figure out the status, based on what we've seen and the install type.
       switch ($projects[$project]['install_type']) {
         case 'official':
           if ($projects[$project]['existing_version'] == $projects[$project]['recommended'] || $projects[$project]['existing_version'] == $projects[$project]['latest_version']) {
             $projects[$project]['status'] = UPDATE_CURRENT;
           }
           else {
-            if (!empty($projects[$project]['security updates'])) {
-              $projects[$project]['status'] = UPDATE_NOT_SECURE;
-            }
-            else {
-              $projects[$project]['status'] = UPDATE_NOT_CURRENT;
-            }
+            $projects[$project]['status'] = UPDATE_NOT_CURRENT;
           }
           break;
-        case 'dev':
-          if (!empty($projects[$project]['security updates'])) {
-            $projects[$project]['status'] = UPDATE_NOT_SECURE;
-            break;
-          }
 
+        case 'dev':
           $latest = $available[$project]['releases'][$projects[$project]['latest_dev']];
           if (empty($projects[$project]['datestamp'])) {
             $projects[$project]['status'] = UPDATE_NOT_CHECKED;

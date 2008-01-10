@@ -1,5 +1,5 @@
 <?php
-// $Id: update.report.inc,v 1.7 2008/01/01 18:03:12 goba Exp $
+// $Id: update.report.inc,v 1.8 2008/01/10 14:14:54 goba Exp $
 
 /**
  * @file
@@ -48,9 +48,11 @@ function theme_update_report($data) {
         $icon = theme('image', 'misc/watchdog-ok.png');
         break;
       case UPDATE_NOT_SECURE:
+      case UPDATE_REVOKED:
+      case UPDATE_NOT_SUPPORTED:
       case UPDATE_NOT_CURRENT:
         if ($notification_level == 'all'
-            || $project['status'] == UPDATE_NOT_SECURE) {
+            || $project['status'] != UPDATE_NOT_CURRENT) {
           $class = 'error';
           $icon = theme('image', 'misc/watchdog-error.png');
           break;
@@ -64,16 +66,20 @@ function theme_update_report($data) {
 
     $row = '<div class="version-status">';
     switch ($project['status']) {
-      case UPDATE_CURRENT:
-        $row .= t('Up to date');
-        break;
       case UPDATE_NOT_SECURE:
-        $row .= '<span class="security-error">';
-        $row .= t('Security update required!');
-        $row .= '</span>';
+        $row .= '<span class="security-error">'. t('Security update required!') .'</span>';
+        break;
+      case UPDATE_REVOKED:
+        $row .= '<span class="revoked">'. t('Revoked!') .'</span>';
+        break;
+      case UPDATE_NOT_SUPPORTED:
+        $row .= '<span class="not-supported">'. t('Not supported!') .'</span>';
         break;
       case UPDATE_NOT_CURRENT:
-        $row .= t('Update available');
+        $row .= '<span class="not-current">'. t('Update available') .'</span>';
+        break;
+      case UPDATE_CURRENT:
+        $row .= '<span class="current">'. t('Up to date') .'</span>';
         break;
       default:
         $row .= check_plain($project['reason']);
@@ -120,6 +126,7 @@ function theme_update_report($data) {
           if ($project['recommended'] != $project['latest_version']
               || !empty($project['also'])
               || ($project['install_type'] == 'dev'
+                 && isset($project['dev_version'])
                  && $project['latest_version'] != $project['dev_version']
                  && $project['recommended'] != $project['dev_version'])
               || (isset($project['security updates'][0])
@@ -143,6 +150,7 @@ function theme_update_report($data) {
       }
       if ($project['install_type'] == 'dev'
           && $project['status'] != UPDATE_CURRENT
+          && isset($project['dev_version'])
           && $project['recommended'] != $project['dev_version']) {
         $row .= theme('update_version', $project['releases'][$project['dev_version']], t('Development version:'), 'version-latest');
       }

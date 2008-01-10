@@ -1,5 +1,5 @@
 <?php
-// $Id: update.module,v 1.9 2008/01/09 10:02:46 goba Exp $
+// $Id: update.module,v 1.10 2008/01/10 14:14:54 goba Exp $
 
 /**
  * @file
@@ -17,29 +17,40 @@ define('UPDATE_DEFAULT_URL', 'http://updates.drupal.org/release-history');
 // These are internally used constants for this code, do not modify.
 
 /**
- * Project is up to date.
- */
-define('UPDATE_CURRENT', 1);
-
-/**
  * Project is missing security update(s).
  */
-define('UPDATE_NOT_SECURE', 2);
+define('UPDATE_NOT_SECURE', 1);
+
+/**
+ * Current release has been unpublished and is no longer available.
+ */
+define('UPDATE_REVOKED', 2);
+
+/**
+ * Current release is no longer supported by the project maintainer.
+ */
+define('UPDATE_NOT_SUPPORTED', 3);
 
 /**
  * Project has a new release available, but it is not a security release.
  */
-define('UPDATE_NOT_CURRENT', 3);
+define('UPDATE_NOT_CURRENT', 4);
+
+/**
+ * Project is up to date.
+ */
+define('UPDATE_CURRENT', 5);
 
 /**
  * Project's status cannot be checked.
  */
-define('UPDATE_NOT_CHECKED', 4);
+define('UPDATE_NOT_CHECKED', -1);
 
 /**
  * No available update data was found for project.
  */
-define('UPDATE_UNKNOWN', 5);
+define('UPDATE_UNKNOWN', -2);
+
 
 /**
  * Implementation of hook_help().
@@ -179,60 +190,25 @@ function update_theme() {
  */
 function update_requirements($phase) {
   if ($phase == 'runtime') {
-    $requirements['update_core']['title'] = t('Drupal core update status');
-    $notification_level = variable_get('update_notification_threshold', 'all');
     if ($available = update_get_available(FALSE)) {
       include_once './modules/update/update.compare.inc';
       $data = update_calculate_project_data($available);
-      switch ($data['drupal']['status']) {
-        case UPDATE_NOT_CURRENT:
-          $requirements['update_core']['value'] = t('Out of date (version @version available)', array('@version' => $data['drupal']['recommended']));
-          $requirements['update_core']['severity'] = $notification_level == 'all' ? REQUIREMENT_ERROR : REQUIREMENT_WARNING;
-          $requirements['update_core']['reason'] = UPDATE_NOT_CURRENT;
-          $requirements['update_core']['description'] = _update_message_text('core', UPDATE_NOT_CURRENT, TRUE);
-          break;
-
-        case UPDATE_NOT_SECURE:
-          $requirements['update_core']['value'] = t('Not secure! (version @version available)', array('@version' => $data['drupal']['recommended']));
-          $requirements['update_core']['severity'] = REQUIREMENT_ERROR;
-          $requirements['update_core']['reason'] = UPDATE_NOT_SECURE;
-          $requirements['update_core']['description'] = _update_message_text('core', UPDATE_NOT_SECURE, TRUE);
-          break;
-
-        default:
-          $requirements['update_core']['value'] = t('Up to date');
-          break;
-      }
+      // First, populate the requirements for core:
+      $requirements['update_core'] = _update_requirement_check($data['drupal'], 'core');
       // We don't want to check drupal a second time.
       unset($data['drupal']);
-      $not_current = FALSE;
       if (!empty($data)) {
-        $requirements['update_contrib']['title'] = t('Module and theme update status');
-        // Default to being current until we see otherwise.
-        $requirements['update_contrib']['value'] = t('Up to date');
-        foreach (array_keys($data) as $project) {
-          if (isset($available[$project])) {
-            if ($data[$project]['status'] == UPDATE_NOT_SECURE) {
-              $requirements['update_contrib']['value'] = t('Not secure!');
-              $requirements['update_contrib']['severity'] = REQUIREMENT_ERROR;
-              $requirements['update_contrib']['reason'] = UPDATE_NOT_SECURE;
-              $requirements['update_contrib']['description'] = _update_message_text('contrib', UPDATE_NOT_SECURE, TRUE);
-              break;
-            }
-            elseif ($data[$project]['status'] == UPDATE_NOT_CURRENT) {
-              $not_current = TRUE;
-            }
-          }
-        }
-        if (!isset($requirements['update_contrib']['severity']) && $not_current) {
-          $requirements['update_contrib']['severity'] = $notification_level == 'all' ? REQUIREMENT_ERROR : REQUIREMENT_WARNING;
-          $requirements['update_contrib']['value'] = t('Out of date');
-          $requirements['update_contrib']['reason'] = UPDATE_NOT_CURRENT;
-          $requirements['update_contrib']['description'] = _update_message_text('contrib', UPDATE_NOT_CURRENT, TRUE);
-        }
+        // Now, sort our $data array based on each project's status. The
+        // status constants are numbered in the right order of precedence, so
+        // we just need to make sure the projects are sorted in ascending
+        // order of status, and we can look at the first project we find.
+        uasort($data, '_update_project_status_sort');
+        $first_project = reset($data);
+        $requirements['update_contrib'] = _update_requirement_check($first_project, 'contrib');
       }
     }
     else {
+      $requirements['update_core']['title'] = t('Drupal core update status');
       $requirements['update_core']['value'] = t('No update data available');
       $requirements['update_core']['severity'] = REQUIREMENT_WARNING;
       $requirements['update_core']['reason'] = UPDATE_UNKNOWN;
@@ -240,6 +216,67 @@ function update_requirements($phase) {
     }
     return $requirements;
   }
+}
+
+/**
+ * Private helper method to fill in the requirements array.
+ *
+ * This is shared for both core and contrib to generate the right elements in
+ * the array for hook_requirements().
+ *
+ * @param $project
+ *  Array of information about the project we're testing as returned by
+ *  update_calculate_project_data().
+ * @param $type
+ *  What kind of project is this ('core' or 'contrib').
+ *
+ * @return
+ *  An array to be included in the nested $requirements array.
+ *
+ * @see hook_requirements()
+ * @see update_requirements()
+ * @see update_calculate_project_data()
+ */
+function _update_requirement_check($project, $type) {
+  $requirement = array();
+  if ($type == 'core') {
+    $requirement['title'] = t('Drupal core update status');
+  }
+  else {
+    $requirement['title'] = t('Module and theme update status');
+  }
+  $status = $project['status'];
+  if ($status != UPDATE_CURRENT) {
+    $requirement['reason'] = $status;
+    $requirement['description'] = _update_message_text($type, $status, TRUE);
+    $requirement['severity'] = REQUIREMENT_ERROR;
+  }
+  switch ($status) {
+    case UPDATE_NOT_SECURE:
+      $requirement['value'] = t('Not secure!');
+      break;
+    case UPDATE_REVOKED:
+      $requirement['value'] = t('Revoked!');
+      break;
+    case UPDATE_NOT_SUPPORTED:
+      $requirement['value'] = t('Unsupported release');
+      break;
+    case UPDATE_NOT_CURRENT:
+      $requirement['value'] = t('Out of date');
+      $requirement['severity'] = variable_get('update_notification_threshold', 'all') == 'all' ? REQUIREMENT_ERROR : REQUIREMENT_WARNING;
+      break;
+    case UPDATE_UNKNOWN:
+    case UPDATE_NOT_CHECKED:
+      $requirement['value'] = isset($project['reason']) ? $project['reason'] : t('Can not determine status');
+      $requirement['severity'] = REQUIREMENT_WARNING;      
+      break;
+    default:
+      $requirement['value'] = t('Up to date');
+  }
+  if ($status != UPDATE_CURRENT && $type == 'core' && isset($project['recommended'])) {
+    $requirement['value'] .= ' '. t('(version @version available)', array('@version' => $project['recommended']));
+  }
+  return $requirement;
 }
 
 /**
@@ -355,8 +392,7 @@ function update_mail($key, &$message, $params) {
  *   String to indicate what kind of message to generate. Can be either
  *   'core' or 'contrib'.
  * @param $msg_reason
- *   Integer constant specifying why message is generated. Can be either
- *   UPDATE_NOT_CURRENT or UPDATE_NOT_SECURE.
+ *   Integer constant specifying why message is generated.
  * @param $report_link
  *   Boolean that controls if a link to the updates report should be added.
  * @param $language
@@ -368,6 +404,33 @@ function _update_message_text($msg_type, $msg_reason, $report_link = FALSE, $lan
   $langcode = isset($language) ? $language->language : NULL;
   $text = '';
   switch ($msg_reason) {
+    case UPDATE_NOT_SECURE:
+      if ($msg_type == 'core') {
+        $text = t('There is a security update available for your version of Drupal. To ensure the security of your server, you should update immediately!', array(), $langcode);
+      }
+      else {
+        $text = t('There are security updates available for one or more of your modules or themes. To ensure the security of your server, you should update immediately!', array(), $langcode);
+      }
+      break;
+
+    case UPDATE_REVOKED:
+      if ($msg_type == 'core') {
+        $text = t('Your version of Drupal has been revoked and is no longer available for download. Upgrading is strongly recommended!', array(), $langcode);
+      }
+      else {
+        $text = t('The installed version of at least one of your modules or themes has been revoked and is no longer available for download. Upgrading or disabling is strongly recommended!', array(), $langcode);
+      }
+      break;
+
+    case UPDATE_NOT_SUPPORTED:
+      if ($msg_type == 'core') {
+        $text = t('Your version of Drupal is no longer supported. Upgrading is strongly recommended!', array(), $langcode);
+      }
+      else {
+        $text = t('The installed version of at least one of your modules or themes is no longer supported. Upgrading or disabling is strongly recommended! Please see the project homepage for more details.', array(), $langcode);
+      }
+      break;
+
     case UPDATE_NOT_CURRENT:
       if ($msg_type == 'core') {
         $text = t('There are updates available for your version of Drupal. To ensure the proper functioning of your site, you should update as soon as possible.', array(), $langcode);
@@ -377,12 +440,13 @@ function _update_message_text($msg_type, $msg_reason, $report_link = FALSE, $lan
       }
       break;
 
-    case UPDATE_NOT_SECURE:
+    case UPDATE_UNKNOWN:
+    case UPDATE_NOT_CHECKED:
       if ($msg_type == 'core') {
-        $text = t('There is a security update available for your version of Drupal. To ensure the security of your server, you should update immediately!', array(), $langcode);
+        $text = t('There was a problem determining the status of available updates for your version of Drupal.', array(), $langcode);
       }
       else {
-        $text = t('There are security updates available for one or more of your modules or themes. To ensure the security of your server, you should update immediately!', array(), $langcode);
+        $text = t('There was a problem determining the status of available updates for one or more of your modules or themes.', array(), $langcode);
       }
       break;
   }
@@ -392,4 +456,20 @@ function _update_message_text($msg_type, $msg_reason, $report_link = FALSE, $lan
   }
 
   return $text;
+}
+
+/**
+ * Private sort function to order projects based on their status.
+ *
+ * @see update_requirements()
+ * @see uasort()
+ */
+function _update_project_status_sort($a, $b) {
+  // The status constants are numerically in the right order, so we can
+  // usually subtract the two to compare in the order we want. However,
+  // negative status values should be treated as if they are huge, since we
+  // always want them at the bottom of the list.
+  $a_status = $a['status'] > 0 ? $a['status'] : (-10 * $a['status']);
+  $b_status = $b['status'] > 0 ? $b['status'] : (-10 * $b['status']);
+  return $a_status - $b_status;
 }
