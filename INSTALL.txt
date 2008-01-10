@@ -22,7 +22,7 @@ are created automatically.
 REQUIREMENTS
 ------------
 
-Drupal requires a web server, PHP4 (4.3.3 or greater) or PHP5
+Drupal requires a web server, PHP4 (4.3.5 or greater) or PHP5
 (http://www.php.net/) and either MySQL (http://www.mysql.com/) or PostgreSQL
 (http://www.postgresql.org/). The Apache web server and MySQL database are
 recommended; other web server and database combinations such as IIS and

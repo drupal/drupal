@@ -1,8 +1,11 @@
 // $Id$
 
-Drupal 5.6, xxxx-xx-xx
+Drupal 5.6, 2008-01-10
 ----------------------
-
+- fixed a variety of small bugs.
+- fixed a security issue (Cross site request forgery), see SA-2008-005
+- fixed a security issue (Cross site scripting, UTF8), see SA-2008-006
+- fixed a security issue (Cross site scripting, register_globals), see SA-2008-007
 
 Drupal 5.5, 2007-12-06
 ----------------------
@@ -111,6 +114,12 @@ Drupal 5.0, 2007-01-15
     * split up and removed drupal.css.
     * added nested lists generation.
     * added a self-clearing block class.
+
+Drupal 4.7.11, 2008-01-10
+-------------------------
+- fixed a security issue (Cross site request forgery), see SA-2008-005
+- fixed a security issue (Cross site scripting, UTF8), see SA-2008-006
+- fixed a security issue (Cross site scripting, register_globals), see SA-2008-007
 
 Drupal 4.7.10, 2007-12-06
 -------------------------

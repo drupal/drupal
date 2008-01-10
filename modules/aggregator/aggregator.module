@@ -51,11 +51,14 @@ function aggregator_menu($may_cache) {
       'callback arguments' => array('aggregator_form_category'),
       'access' => $edit,
       'type' => MENU_LOCAL_TASK);
-    $items[] = array('path' => 'admin/content/aggregator/remove',
+    $items[] = array(
+      'path' => 'admin/content/aggregator/remove',
       'title' => t('Remove items'),
-      'callback' => 'aggregator_admin_remove_feed',
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('aggregator_admin_remove_feed'),
       'access' => $edit,
-      'type' => MENU_CALLBACK);
+      'type' => MENU_CALLBACK,
+    );
     $items[] = array('path' => 'admin/content/aggregator/update',
       'title' => t('Update items'),
       'callback' => 'aggregator_admin_refresh_feed',
@@ -1001,12 +1004,29 @@ function aggregator_view() {
   return $output;
 }
 
+function aggregator_admin_remove_feed($fid) {
+  $feed = aggregator_get_feed($fid);
+  return confirm_form(
+    array(
+      'feed' => array(
+        '#type' => 'value',
+        '#value' => $feed,
+      ),
+    ),
+    t('Are you sure you want to remove all items from the feed %feed?', array('%feed' => $feed['title'])),
+    'admin/content/aggregator',
+    t('This action cannot be undone.'),
+    t('Remove items'),
+    t('Cancel')
+  );
+}
+
 /**
- * Menu callback; removes all items from a feed, then redirects to the overview page.
+ * Remove all items from a feed and redirect to the overview page.
  */
-function aggregator_admin_remove_feed($feed) {
-  aggregator_remove(aggregator_get_feed($feed));
-  drupal_goto('admin/content/aggregator');
+function aggregator_admin_remove_feed_submit($form_id, $form_values) {
+  aggregator_remove($form_values['feed']);
+  return 'admin/content/aggregator';
 }
 
 /**
