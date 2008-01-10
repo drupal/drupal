@@ -1,5 +1,8 @@
 // $Id$
 
+Drupal 4.7.12, xxxx-xx-xx
+-------------------------
+
 Drupal 4.7.11, 2008-01-10
 -------------------------
 - fixed a security issue (Cross site request forgery), see SA-2008-005
