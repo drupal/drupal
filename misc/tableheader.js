@@ -16,6 +16,13 @@ Drupal.behaviors.tableHeader = function (context) {
       visibility: 'hidden',
       top: '0px'
     });
+
+    // Sets an id for cloned table header.
+    var headerID = headerClone.attr('id');
+    if (headerID != '') {
+      headerClone.attr('id', headerID + '-header');
+    }
+
     // Everything except thead must be removed. See theme_table().
     $('tbody', headerClone).remove();
     $('caption', headerClone).remove();
