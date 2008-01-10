@@ -995,12 +995,30 @@ function aggregator_view() {
   return $output;
 }
 
+function aggregator_admin_remove_feed($fid) {
+  $feed = aggregator_get_feed($fid);
+  return confirm_form(
+    'aggregator_admin_remove_feed',
+    array(
+      'feed' => array(
+        '#type' => 'value',
+        '#value' => $feed,
+      ),
+    ),
+    t('Are you sure you want to remove all items from the feed %feed?', array('%feed' => theme('placeholder', $feed['title']))),
+    'admin/aggregator',
+    t('This action cannot be undone.'),
+    t('Remove items'),
+    t('Cancel')
+  );
+}
+
 /**
- * Menu callback; removes all items from a feed, then redirects to the overview page.
+ * Remove all items from a feed and redirect to the overview page.
  */
-function aggregator_admin_remove_feed($feed) {
-  aggregator_remove(aggregator_get_feed($feed));
-  drupal_goto('admin/aggregator');
+function aggregator_admin_remove_feed_submit($form_id, $form_values) {
+  aggregator_remove($form_values['feed']);
+  return 'admin/aggregator';
 }
 
 /**

@@ -1,7 +1,10 @@
 // $Id$
 
-Drupal 4.7.11, xxxx-xx-xx
+Drupal 4.7.11, 2008-01-10
 -------------------------
+- fixed a security issue (Cross site request forgery), see SA-2008-005
+- fixed a security issue (Cross site scripting, UTF8), see SA-2008-006
+- fixed a security issue (Cross site scripting, register_globals), see SA-2008-007
 
 Drupal 4.7.10, 2007-12-06
 -------------------------
