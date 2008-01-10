@@ -451,6 +451,7 @@ function _menu_check_access(&$item, $map) {
 
 /**
  * Localize the router item title using t() or another callback.
+ * 
  * Translate the title and description to allow storage of English title
  * strings in the database, yet display of them in the language required
  * by the current user.
