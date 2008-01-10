@@ -623,7 +623,7 @@ function user_admin_role() {
       drupal_goto('admin/user/roles');
     }
     // Display the edit role form.
-    $role = db_fetch_object(db_query('SELECT * FROM {role} WHERE rid = %d', $id));
+    $role = db_fetch_object(db_query('SELECT * FROM {role} WHERE rid = %d', $rid));
     $form['name'] = array(
       '#type' => 'textfield',
       '#title' => t('Role name'),
