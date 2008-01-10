@@ -1,5 +1,5 @@
 <?php
-// $Id: user.admin.inc,v 1.15 2008/01/10 16:00:44 goba Exp $
+// $Id: user.admin.inc,v 1.16 2008/01/10 20:22:57 goba Exp $
 
 /**
  * @file
@@ -172,7 +172,7 @@ function user_admin_account() {
   $destination = drupal_get_destination();
 
   $status = array(t('blocked'), t('active'));
-  $roles = user_roles(1);
+  $roles = user_roles(TRUE);
   $accounts = array();
   while ($account = db_fetch_object($result)) {
     $accounts[$account->uid] = '';
@@ -617,9 +617,9 @@ function theme_user_admin_perm($form) {
  * @see theme_user_admin_new_role()
  */
 function user_admin_role() {
-  $id = arg(4);
-  if ($id) {
-    if (DRUPAL_ANONYMOUS_RID == $id || DRUPAL_AUTHENTICATED_RID == $id) {
+  $rid = arg(4);
+  if ($rid) {
+    if ($rid == DRUPAL_ANONYMOUS_RID || $rid == DRUPAL_AUTHENTICATED_RID) {
       drupal_goto('admin/user/roles');
     }
     // Display the edit role form.
@@ -635,7 +635,7 @@ function user_admin_role() {
     );
     $form['rid'] = array(
       '#type' => 'value',
-      '#value' => $id,
+      '#value' => $rid,
     );
     $form['submit'] = array(
       '#type' => 'submit',

@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.886 2008/01/10 16:00:44 goba Exp $
+// $Id: user.module,v 1.887 2008/01/10 20:22:57 goba Exp $
 
 /**
  * @file
@@ -1436,7 +1436,7 @@ function user_edit_form(&$form_state, $uid, $edit, $register = FALSE) {
     $form['account']['status'] = array('#type' => 'radios', '#title' => t('Status'), '#default_value' => isset($edit['status']) ? $edit['status'] : 1, '#options' => array(t('Blocked'), t('Active')));
   }
   if (user_access('administer permissions')) {
-    $roles = user_roles(1);
+    $roles = user_roles(TRUE);
     unset($roles[DRUPAL_AUTHENTICATED_RID]);
     if ($roles) {
       $default = empty($edit['roles']) ? array() : array_keys($edit['roles']);
@@ -1628,22 +1628,33 @@ function _user_mail_text($key, $language = NULL, $variables = array()) {
  * @return
  *   An associative array with the role id as the key and the role name as value.
  */
-function user_roles($membersonly = FALSE, $permission = FALSE) {
+function user_roles($membersonly = FALSE, $permission = NULL) {
   // System roles take the first two positions.
   $roles = array(
     DRUPAL_ANONYMOUS_RID => NULL,
     DRUPAL_AUTHENTICATED_RID => NULL,
   );
 
-  if ($permission) {
+  if (!empty($permission)) {
     $result = db_query("SELECT r.* FROM {role} r INNER JOIN {permission} p ON r.rid = p.rid WHERE p.perm LIKE '%%%s%%' ORDER BY r.name", $permission);
   }
   else {
     $result = db_query('SELECT * FROM {role} ORDER BY name');
   }
+
   while ($role = db_fetch_object($result)) {
-    if (!$membersonly || ($membersonly && $role->rid != DRUPAL_ANONYMOUS_RID)) {
-      $roles[$role->rid] = $role->name;
+    switch ($role->rid) {
+      // We only translate the built in role names
+      case DRUPAL_ANONYMOUS_RID:
+        if (!$membersonly) {
+          $roles[$role->rid] = t($role->name);
+        }
+        break;
+      case DRUPAL_AUTHENTICATED_RID:
+        $roles[$role->rid] = t($role->name);
+        break;
+      default:
+        $roles[$role->rid] = $role->name;
     }
   }
 
@@ -1670,7 +1681,7 @@ function user_user_operations($form_state = array()) {
   );
 
   if (user_access('administer permissions')) {
-    $roles = user_roles(1);
+    $roles = user_roles(TRUE);
     unset($roles[DRUPAL_AUTHENTICATED_RID]);  // Can't edit authenticated role.
 
     $add_roles = array();
@@ -1867,7 +1878,7 @@ function _user_sort($a, $b) {
 function user_filters() {
   // Regular filters
   $filters = array();
-  $roles = user_roles(1);
+  $roles = user_roles(TRUE);
   unset($roles[DRUPAL_AUTHENTICATED_RID]); // Don't list authorized role.
   if (count($roles)) {
     $filters['role'] = array(
