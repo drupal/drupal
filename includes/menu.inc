@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.244 2008/01/10 20:04:19 goba Exp $
+// $Id: menu.inc,v 1.245 2008/01/10 20:05:30 goba Exp $
 
 /**
  * @file
@@ -451,6 +451,7 @@ function _menu_check_access(&$item, $map) {
 
 /**
  * Localize the router item title using t() or another callback.
+ * 
  * Translate the title and description to allow storage of English title
  * strings in the database, yet display of them in the language required
  * by the current user.
