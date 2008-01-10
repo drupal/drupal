@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.245 2008/01/10 20:05:30 goba Exp $
+// $Id: menu.inc,v 1.246 2008/01/10 20:16:50 goba Exp $
 
 /**
  * @file
@@ -336,7 +336,7 @@ function menu_execute_active_handler($path = NULL) {
   if (_menu_site_is_offline()) {
     return MENU_SITE_OFFLINE;
   }
-  if (variable_get('menu_rebuild_needs_to_called', FALSE)) {
+  if (variable_get('menu_rebuild_needed', FALSE)) {
     menu_rebuild();
   }
   if ($router_item = menu_get_item($path)) {
@@ -1569,14 +1569,14 @@ function menu_cache_clear_all() {
  * is different and leaves stale data in the menu tables.
  */
 function menu_rebuild() {
-  variable_del('menu_rebuild_needs_to_called');
+  variable_del('menu_rebuild_needed');
   menu_cache_clear_all();
   $menu = menu_router_build(TRUE);
   _menu_navigation_links_rebuild($menu);
   // Clear the page and block caches.
   _menu_clear_page_cache();
   if (defined('MAINTENANCE_MODE')) {
-    variable_set('menu_rebuild_needs_to_called', TRUE);
+    variable_set('menu_rebuild_needed', TRUE);
   }
 }
 
