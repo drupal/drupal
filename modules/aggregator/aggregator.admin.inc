@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.admin.inc,v 1.6 2008/01/08 10:35:40 goba Exp $
+// $Id: aggregator.admin.inc,v 1.7 2008/01/10 22:47:17 goba Exp $
 
 /**
  * @file
@@ -176,15 +176,31 @@ function aggregator_form_feed_submit($form, &$form_state) {
   }
 }
 
+function aggregator_admin_remove_feed($form_state, $feed) {
+  return confirm_form(
+    array(
+      'feed' => array(
+        '#type' => 'value',
+        '#value' => $feed,
+      ),
+    ),
+    t('Are you sure you want to remove all items from the feed %feed?', array('%feed' => $feed['title'])),
+    'admin/content/aggregator',
+    t('This action cannot be undone.'),
+    t('Remove items'),
+    t('Cancel')
+  );
+}
+
 /**
- * Menu callback; removes all items from a feed, then redirects to the overview page.
+ * Remove all items from a feed and redirect to the overview page.
  *
  * @param $feed
  *   An associative array describing the feed to be cleared.
  */
-function aggregator_admin_remove_feed($feed) {
-  aggregator_remove($feed);
-  drupal_goto('admin/content/aggregator');
+function aggregator_admin_remove_feed_submit($form, &$form_state) {
+  aggregator_remove($form_state['values']['feed']);
+  $form_state['redirect'] = 'admin/content/aggregator';
 }
 
 /**

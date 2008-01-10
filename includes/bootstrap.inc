@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.205 2008/01/08 10:35:40 goba Exp $
+// $Id: bootstrap.inc,v 1.206 2008/01/10 22:47:17 goba Exp $
 
 /**
  * @file
@@ -665,9 +665,48 @@ function referer_uri() {
 
 /**
  * Encode special characters in a plain-text string for display as HTML.
+ *
+ * Uses drupal_validate_utf8 to prevent cross site scripting attacks on
+ * Internet Explorer 6.
  */
 function check_plain($text) {
-  return htmlspecialchars($text, ENT_QUOTES);
+  return drupal_validate_utf8($text) ? htmlspecialchars($text, ENT_QUOTES) : '';
+}
+
+/**
+ * Checks whether a string is valid UTF-8.
+ *
+ * All functions designed to filter input should use drupal_validate_utf8
+ * to ensure they operate on valid UTF-8 strings to prevent bypass of the
+ * filter.
+ *
+ * When text containing an invalid UTF-8 lead byte (0xC0 - 0xFF) is presented
+ * as UTF-8 to Internet Explorer 6, the program may misinterpret subsequent
+ * bytes. When these subsequent bytes are HTML control characters such as
+ * quotes or angle brackets, parts of the text that were deemed safe by filters
+ * end up in locations that are potentially unsafe; An onerror attribute that
+ * is outside of a tag, and thus deemed safe by a filter, can be interpreted
+ * by the browser as if it were inside the tag.
+ *
+ * This function exploits preg_match behaviour (since PHP 4.3.5) when used
+ * with the u modifier, as a fast way to find invalid UTF-8. When the matched
+ * string contains an invalid byte sequence, it will fail silently.
+ *
+ * preg_match may not fail on 4 and 5 octet sequences, even though they
+ * are not supported by the specification.
+ *
+ * The specific preg_match behaviour is present since PHP 4.3.5.
+ *
+ * @param $text
+ *   The text to check.
+ * @return
+ *   TRUE if the text is valid UTF-8, FALSE if not.
+ */
+function drupal_validate_utf8($text) {
+  if (strlen($text) == 0) {
+    return TRUE;
+  }
+  return (preg_match('/^./us', $text) == 1);
 }
 
 /**

@@ -1,4 +1,4 @@
-// $Id: INSTALL.txt,v 1.55 2007/12/28 12:02:49 dries Exp $
+// $Id: INSTALL.txt,v 1.56 2008/01/10 22:47:16 goba Exp $
 
 CONTENTS OF THIS FILE
 ---------------------
@@ -14,7 +14,7 @@ CONTENTS OF THIS FILE
 REQUIREMENTS
 ------------
 
-Drupal requires a web server, PHP 4 (4.3.3 or greater) or PHP 5
+Drupal requires a web server, PHP 4 (4.3.5 or greater) or PHP 5
 (http://www.php.net/) and either MySQL (http://www.mysql.com/) or PostgreSQL
 (http://www.postgresql.org/). The Apache web server and MySQL database are
 recommended; other web server and database combinations such as IIS and

@@ -1,6 +1,6 @@
-// $Id: CHANGELOG.txt,v 1.244 2007/12/29 06:45:31 dries Exp $
+// $Id: CHANGELOG.txt,v 1.245 2008/01/10 22:47:16 goba Exp $
 
-Drupal 6.0, xxxx-xx-xx (development version)
+Drupal 6.0-rc2, 2008-01-10
 ----------------------
 - New, faster and better menu system.
 - New watchdog as a hook functionality.
@@ -97,6 +97,18 @@ Drupal 6.0, xxxx-xx-xx (development version)
   contributed module (http://drupal.org/project/site_network).
 - Removed old system updates. Updates from Drupal versions prior to 5.x will
   require upgrading to 5.x before upgrading to 6.x.
+
+Drupal 5.6, 2008-01-10
+----------------------
+- fixed a variety of small bugs.
+- fixed a security issue (Cross site request forgery), see SA-2008-005
+- fixed a security issue (Cross site scripting, UTF8), see SA-2008-006
+- fixed a security issue (Cross site scripting, register_globals), see SA-2008-007
+
+Drupal 5.5, 2007-12-06
+----------------------
+- fixed missing missing brackets in a query in the user module.
+- fixed taxonomy feed bug introduced by SA-2007-031
 
 Drupal 5.4, 2007-12-05
 ----------------------
@@ -200,6 +212,16 @@ Drupal 5.0, 2007-01-15
     * Split up and removed drupal.css.
     * Added nested lists generation.
     * Added a self-clearing block class.
+
+Drupal 4.7.11, 2008-01-10
+-------------------------
+- fixed a security issue (Cross site request forgery), see SA-2008-005
+- fixed a security issue (Cross site scripting, UTF8), see SA-2008-006
+- fixed a security issue (Cross site scripting, register_globals), see SA-2008-007
+
+Drupal 4.7.10, 2007-12-06
+-------------------------
+- fixed taxonomy feed bug introduced by SA-2007-031
 
 Drupal 4.7.9, 2007-12-05
 ------------------------

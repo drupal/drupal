@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.372 2008/01/09 09:51:34 goba Exp $
+// $Id: aggregator.module,v 1.373 2008/01/10 22:47:17 goba Exp $
 
 /**
  * @file
@@ -106,8 +106,8 @@ function aggregator_menu() {
   );
   $items['admin/content/aggregator/remove/%aggregator_feed'] = array(
     'title' => 'Remove items',
-    'page callback' => 'aggregator_admin_remove_feed',
-    'page arguments' => array(4),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('aggregator_admin_remove_feed', 4),
     'access arguments' => array('administer news feeds'),
     'type' => MENU_CALLBACK,
     'file' => 'aggregator.admin.inc',
