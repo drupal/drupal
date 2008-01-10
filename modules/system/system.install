@@ -52,6 +52,10 @@ function system_requirements($phase) {
     $requirements['webserver']['description'] = $t('Unable to determine your web server type and version. Drupal might not work properly.');
     $requirements['webserver']['severity'] = REQUIREMENT_WARNING;
   }
+  if (ini_get('register_globals')) {
+    $requirements['php']['description'] = $t('<em>register_globals</em> is enabled. Drupal requires this configuration directive to be disabled. Your site may not be secure when <em>register_globals</em> is enabled. The PHP manual has instructions for <a href="http://php.net/configuration.changes">how to change configuration settings</a>.');
+    $requirements['php']['severity'] = REQUIREMENT_ERROR;
+  }
 
   // Test PHP version
   $requirements['php'] = array(
