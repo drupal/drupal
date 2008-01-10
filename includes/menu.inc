@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.243 2008/01/06 16:47:19 goba Exp $
+// $Id: menu.inc,v 1.244 2008/01/10 20:04:19 goba Exp $
 
 /**
  * @file
@@ -450,35 +450,57 @@ function _menu_check_access(&$item, $map) {
 }
 
 /**
- * Localize the item title using t() or another callback.
+ * Localize the router item title using t() or another callback.
+ * Translate the title and description to allow storage of English title
+ * strings in the database, yet display of them in the language required
+ * by the current user.
+ *
+ * @param $item
+ *   A menu router item or a menu link item.
+ * @param $map
+ *   The path as an array with objects already replaced. E.g., for path
+ *   node/123 $map would be array('node', $node) where $node is the node
+ *   object for node 123.
+ * @param $link_translate
+ *   TRUE if we are translating a menu link item; FALSE if we are
+ *   translating a menu router item.
  */
-function _menu_item_localize(&$item, $map) {
-  // Translate the title to allow storage of English title strings in the
-  // database, yet display of them in the language required by the current
-  // user.
+function _menu_item_localize(&$item, $map, $link_translate = FALSE) {
   $callback = $item['title_callback'];
-  // t() is a special case. Since it is used very close to all the time,
-  // we handle it directly instead of using indirect, slower methods.
-  if ($callback == 't') {
-    if (empty($item['title_arguments'])) {
-      $item['title'] = t($item['title']);
+
+  // If we are not doing link translation or if the title matches the
+  // link title of its router item, localize it.
+  if (!$link_translate || (!empty($item['title']) && ($item['title'] == $item['link_title']))) {
+    // t() is a special case. Since it is used very close to all the time,
+    // we handle it directly instead of using indirect, slower methods.
+    if ($callback == 't') {
+      if (empty($item['title_arguments'])) {
+        $item['title'] = t($item['title']);
+      }
+      else {
+        $item['title'] = t($item['title'], menu_unserialize($item['title_arguments'], $map));
+      }
     }
-    else {
-      $item['title'] = t($item['title'], menu_unserialize($item['title_arguments'], $map));
+    elseif ($callback) {
+      if (empty($item['title_arguments'])) {
+        $item['title'] = $callback($item['title']);
+      }
+      else {
+        $item['title'] = call_user_func_array($callback, menu_unserialize($item['title_arguments'], $map));
+      }
     }
   }
-  elseif ($callback) {
-    if (empty($item['title_arguments'])) {
-      $item['title'] = $callback($item['title']);
-    }
-    else {
-      $item['title'] = call_user_func_array($callback, menu_unserialize($item['title_arguments'], $map));
-    }
+  elseif ($link_translate) {
+    $item['title'] = $item['link_title'];
   }
 
   // Translate description, see the motivation above.
   if (!empty($item['description'])) {
+    $original_description = $item['description'];
     $item['description'] = t($item['description']);
+    if ($link_translate && $item['options']['attributes']['title'] == $original_description) {
+      $item['options']['attributes']['title'] = $item['description'];
+    }
   }
 }
 
@@ -609,31 +631,7 @@ function _menu_link_translate(&$item) {
       _menu_check_access($item, $map);
     }
 
-    // If the link title matches that of its router item, localize it.
-    if (!empty($item['title']) && ($item['title'] == $item['link_title'])) {
-      if (!empty($item['title_arguments']) && $item['title_callback'] == 't') {
-        $item['title'] = t($item['title'], menu_unserialize($item['title_arguments'], $map));
-      }
-      else {
-        $item['title'] = t($item['title']);
-      }
-    }
-    else {
-      $item['title'] = $item['link_title'];
-    }
-    // Localize the description and title attribute.
-    if (!empty($item['description'])) {
-      $original_description = $item['description'];
-      $item['description'] = t($item['description']);
-      // Localize the title attribute only if it matches the description.
-      if ($item['options']['attributes']['title'] == $original_description) {
-        $item['options']['attributes']['title'] = $item['description'];
-      }
-    }
-    // Store the map if it may be needed for use later by a title callback.
-    if (!empty($item['title_callback']) && ($item['title_callback'] != 't')) {
-      $item['map'] = $map;
-    }
+    _menu_item_localize($item, $map, TRUE);
   }
   return $map;
 }
@@ -1468,12 +1466,6 @@ function menu_set_active_trail($new_trail = NULL) {
     if ($trail[$last]['href'] != $item['href'] && !(bool)($item['type'] & MENU_IS_LOCAL_TASK) && !drupal_is_front_page()) {
       $trail[] = $item;
     }
-    // Apply title callbacks for items in the active trail (breadcrumb).
-    foreach ($trail as $key => $item) {
-      if (!empty($item['title_callback']) && $item['title_callback'] != 't') {
-        _menu_item_localize($trail[$key], $item['map']);
-      }
-    }
   }
   return $trail;
 }
@@ -1573,7 +1565,7 @@ function menu_cache_clear_all() {
  * {menu_links}. If called from update.php or install.php, it will also
  * schedule a call to itself on the first real page load from
  * menu_execute_active_handler(), because the maintenance page environment
- * is different and leaves stale data in the menu tables. 
+ * is different and leaves stale data in the menu tables.
  */
 function menu_rebuild() {
   variable_del('menu_rebuild_needs_to_called');
