@@ -100,7 +100,7 @@ function db_prefix_tables($sql) {
  */
 function db_set_active($name = 'default') {
   global $db_url, $db_type, $active_db;
-  static $db_conns;
+  static $db_conns, $active_name = FALSE;
 
   if (!isset($db_conns[$name])) {
     // Initiate a new connection, using the named DB URL specified.
@@ -128,11 +128,12 @@ function db_set_active($name = 'default') {
     $db_conns[$name] = db_connect($connect_url);
   }
 
-  $previous_db = $active_db;
+  $previous_name = $active_name;
   // Set the active connection.
+  $active_name = $name;
   $active_db = $db_conns[$name];
 
-  return array_search($previous_db, $db_conns);
+  return $previous_name;
 }
 
 /**
