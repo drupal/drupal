@@ -1,5 +1,5 @@
 <?php
-// $Id: user.admin.inc,v 1.16 2008/01/10 20:22:57 goba Exp $
+// $Id: user.admin.inc,v 1.17 2008/01/10 21:42:59 goba Exp $
 
 /**
  * @file
@@ -623,7 +623,7 @@ function user_admin_role() {
       drupal_goto('admin/user/roles');
     }
     // Display the edit role form.
-    $role = db_fetch_object(db_query('SELECT * FROM {role} WHERE rid = %d', $id));
+    $role = db_fetch_object(db_query('SELECT * FROM {role} WHERE rid = %d', $rid));
     $form['name'] = array(
       '#type' => 'textfield',
       '#title' => t('Role name'),
