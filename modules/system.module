@@ -169,7 +169,7 @@ function system_user($type, $edit, &$user, $category = NULL) {
   }
 }
 
-/*
+/**
  * Returns a fieldset containing the theme select form.
  *
  * @param $description
