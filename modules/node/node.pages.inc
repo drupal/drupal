@@ -52,7 +52,7 @@ function node_add($type) {
   // If a node type has been specified, validate its existence.
   if (isset($types[$type]) && node_access('create', $type)) {
     // Initialize settings:
-    $node = array('uid' => $user->uid, 'name' => $user->name, 'type' => $type, 'language' => '');
+    $node = array('uid' => $user->uid, 'name' => (isset($user->name) ? $user->name : ''), 'type' => $type, 'language' => '');
 
     drupal_set_title(t('Create @name', array('@name' => $types[$type]->name)));
     $output = drupal_get_form($type .'_node_form', $node);
