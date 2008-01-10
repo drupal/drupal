@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.615 2008/01/08 10:35:41 goba Exp $
+// $Id: comment.module,v 1.616 2008/01/10 15:03:53 goba Exp $
 
 /**
  * @file
@@ -1652,7 +1652,13 @@ function comment_controls_submit($form, &$form_state) {
   $comments_per_page = $form_state['values']['comments_per_page'];
 
   if ($user->uid) {
-    $user = user_save($user, array('mode' => $mode, 'sort' => $order, 'comments_per_page' => $comments_per_page));
+    $account = user_save($user, array('mode' => $mode, 'sort' => $order, 'comments_per_page' => $comments_per_page));
+    // Terminate if an error occured during user_save().
+    if (!$account) {
+      drupal_set_message(t("Error saving user account."), 'error');
+      return;
+    }
+    $user = $account;
   }
   else {
     $_SESSION['comment_mode'] = $mode;

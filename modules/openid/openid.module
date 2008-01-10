@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.module,v 1.15 2007/12/20 08:57:54 goba Exp $
+// $Id: openid.module,v 1.16 2008/01/10 15:03:53 goba Exp $
 
 /**
  * @file
@@ -393,6 +393,11 @@ function openid_authentication($response) {
     else {
       unset($form_state['values']['response']);
       $account = user_save('', $form_state['values']);
+      // Terminate if an error occured during user_save().
+      if (!$account) {
+        drupal_set_message(t("Error saving user account."), 'error');
+        drupal_goto();
+      }
       user_external_login($account);
     }
     drupal_redirect_form($form, $form_state['redirect']);
