@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.940 2008/01/09 21:40:10 goba Exp $
+// $Id: node.module,v 1.941 2008/01/10 15:57:10 goba Exp $
 
 /**
  * @file
@@ -235,7 +235,7 @@ function node_teaser_js(&$form, &$form_state) {
 }
 
 /**
- * Ensure value of "teaser_include" checkbox is consistent with other form data 
+ * Ensure value of "teaser_include" checkbox is consistent with other form data.
  *
  * This handles two situations in which an unchecked checkbox is rejected:
  *
@@ -251,19 +251,19 @@ function node_teaser_js(&$form, &$form_state) {
  */
 function node_teaser_include_verify(&$form, &$form_state) {
   $message = '';
-  
+
   // $form['#post'] is set only when the form is built for preview/submit.
   if (isset($form['#post']['body']) && isset($form_state['values']['teaser_include']) && !$form_state['values']['teaser_include']) {
     // "teaser_include" checkbox is present and unchecked.
     if (strpos($form_state['values']['body'], '<!--break-->') === 0) {
-      // Teaser is empty string
+      // Teaser is empty string.
       $message = t('You specified that the summary should not be shown when this post is displayed in full view. This setting is ignored when the summary is empty.');
     }
     elseif (strpos($form_state['values']['body'], '<!--break-->') === FALSE) {
       // Teaser delimiter is not present in the body.
       $message = t('You specified that the summary should not be shown when this post is displayed in full view. This setting has been ignored since you have not defined a summary for the post. (To define a summary, insert the delimiter "&lt;!--break--&gt;" (without the quotes) in the Body of the post to indicate the end of the summary and the start of the main content.)');
     }
-    
+
     if (!empty($message)) {
       drupal_set_message($message, 'warning');
       // Pass new checkbox value on to preview/submit form processing.

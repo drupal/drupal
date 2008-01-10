@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.25 2008/01/10 14:31:23 goba Exp $
+// $Id: node.pages.inc,v 1.26 2008/01/10 15:57:10 goba Exp $
 
 /**
  * @file
@@ -414,7 +414,7 @@ function node_preview($node) {
  */
 function theme_node_preview($node) {
   $output = '<div class="preview">';
-  
+
   $preview_trimmed_version = FALSE;
   // Do we need to preview trimmed version of post as well as full version?
   if (isset($node->teaser) && isset($node->body)) {
@@ -428,7 +428,7 @@ function theme_node_preview($node) {
       $preview_trimmed_version = TRUE;
     }
   }
-  
+
   if ($preview_trimmed_version) {
     drupal_set_message(t('The trimmed version of your post shows what your post looks like when promoted to the main page or when exported for syndication.<span class="no-js"> You can insert the delimiter "&lt;!--break--&gt;" (without the quotes) to fine-tune where your post gets split.</span>'));
     $output .= '<h3>'. t('Preview trimmed version') .'</h3>';
