@@ -1,5 +1,5 @@
 <?php
-// $Id: color.module,v 1.37 2007/12/28 12:02:51 dries Exp $
+// $Id: color.module,v 1.38 2008/01/11 12:33:09 goba Exp $
 
 /**
  * Implementation of hook_help().
@@ -377,7 +377,7 @@ function _color_rewrite_stylesheet($theme, &$info, &$paths, $palette, $style) {
 
   // Split off the "Don't touch" section of the stylesheet.
   $split = "Color Module: Don't touch";
-  if (strpos($split, $style) !== FALSE) {
+  if (strpos($style, $split) !== FALSE) {
     list($style, $fixed) = explode($split, $style);
   }
 
