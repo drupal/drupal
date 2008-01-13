@@ -1,4 +1,4 @@
-// $Id: tableheader.js,v 1.11 2008/01/10 17:59:38 goba Exp $
+// $Id: tableheader.js,v 1.12 2008/01/13 21:21:53 goba Exp $
 
 Drupal.behaviors.tableHeader = function (context) {
   // This breaks in anything less than IE 7. Prevent it from running.
@@ -10,22 +10,11 @@ Drupal.behaviors.tableHeader = function (context) {
   var headers = [];
 
   $('table thead:not(.tableHeader-processed)', context).each(function () {
-    // Clone table and remove unwanted elements so it inherits original properties.
-    var headerClone = $(this.parentNode).clone(true).insertBefore(this.parentNode).addClass('sticky-header').css({
+    // Clone thead so it inherits original jQuery properties.
+    var headerClone = $(this).clone(true).insertBefore(this.parentNode).wrap('<table class="sticky-header"></table>').parent().css({
       position: 'fixed',
-      visibility: 'hidden',
       top: '0px'
     });
-
-    // Sets an id for cloned table header.
-    var headerID = headerClone.attr('id');
-    if (headerID != '') {
-      headerClone.attr('id', headerID + '-header');
-    }
-
-    // Everything except thead must be removed. See theme_table().
-    $('tbody', headerClone).remove();
-    $('caption', headerClone).remove();
 
     var headerClone = $(headerClone)[0];
     headers.push(headerClone);
@@ -50,6 +39,7 @@ Drupal.behaviors.tableHeader = function (context) {
       e.vPosition = $(e.table).offset().top;
       e.hPosition = $(e.table).offset().left;
       e.vLength = $(e.table).height();
+      e.resizeWidths = true;
     }
 
     // Track horizontal positioning relative to the viewport and set visibility.
