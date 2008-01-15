@@ -9,7 +9,7 @@ Drupal.behaviors.tableHeader = function (context) {
   // Keep track of all cloned table headers.
   var headers = [];
 
-  $('table thead:not(.tableHeader-processed)', context).each(function () {
+  $('table.sticky-enabled thead:not(.tableHeader-processed)', context).each(function () {
     // Clone thead so it inherits original jQuery properties.
     var headerClone = $(this).clone(true).insertBefore(this.parentNode).wrap('<table class="sticky-header"></table>').parent().css({
       position: 'fixed',
