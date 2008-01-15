@@ -1,4 +1,4 @@
-// $Id: INSTALL.txt,v 1.56 2008/01/10 22:47:16 goba Exp $
+// $Id: INSTALL.txt,v 1.57 2008/01/15 10:36:17 goba Exp $
 
 CONTENTS OF THIS FILE
 ---------------------
@@ -130,7 +130,7 @@ INSTALLATION
    page, and you will be logged in as the administrator already. Proceed with
    the initial configuration steps suggested on the "Welcome" page.
 
-   If the default Drupal theme is not diplaying properly and links on the page
+   If the default Drupal theme is not displaying properly and links on the page
    result in "Page Not Found" errors, try manually setting the $base_url variable
    in the settings.php file if not already set. It's currently known that servers
    running FastCGI can run into problems if the $base_url variable is left
