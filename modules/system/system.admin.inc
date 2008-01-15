@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.54 2008/01/15 10:17:42 goba Exp $
+// $Id: system.admin.inc,v 1.55 2008/01/15 10:21:40 goba Exp $
 
 /**
  * @file
@@ -1217,24 +1217,7 @@ function system_error_reporting_settings() {
     '#description' => t('Specify where Drupal, PHP and SQL errors are logged. While it is recommended that a site running in a production environment write errors to the log only, in a development or testing environment it may be helpful to write errors both to the log and to the screen.')
   );
 
-  $form['#validate'][] = 'system_error_reporting_settings_validate';
-
   return system_settings_form($form);
-}
-
-/**
- * Validate the submitted error reporting form.
- */
-function system_error_reporting_settings_validate($form, &$form_state) {
-  // Validate paths to 403 and 404 error pages.
-  $item = array('link_path' => $form_state['values']['site_403']);
-  if (!empty($item['link_path']) && !menu_valid_path($item)) {
-    form_set_error('site_403', t("The path '@path' is either invalid or you do not have access to it.", array('@path' => $item['link_path'])));
-  }
-  $item = array('link_path' => $form_state['values']['site_404']);
-  if (!empty($item['link_path']) && !menu_valid_path($item)) {
-    form_set_error('site_404', t("The path '@path' is either invalid or you do not have access to it.", array('@path' => $item['link_path'])));
-  }
 }
 
 /**
