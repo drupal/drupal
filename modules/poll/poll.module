@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.262 2008/01/09 09:51:34 goba Exp $
+// $Id: poll.module,v 1.263 2008/01/15 07:57:46 dries Exp $
 
 /**
  * @file
@@ -583,6 +583,15 @@ function poll_view_voting(&$form_state, $node, $block) {
   // Provide a more cleanly named voting form theme.
   $form['#theme'] = 'poll_vote';
   return $form;
+}
+
+/**
+ * Validation function for processing votes
+ */
+function poll_view_voting_validate($form, &$form_state) {
+  if ($form_state['values']['choice'] == -1) {
+    form_set_error( 'choice', t('Your vote could not be recorded because you did not select any of the choices.'));
+  }
 }
 
 /**
