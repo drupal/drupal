@@ -1,4 +1,4 @@
-// $Id: tableheader.js,v 1.12 2008/01/13 21:21:53 goba Exp $
+// $Id: tableheader.js,v 1.13 2008/01/15 10:43:00 goba Exp $
 
 Drupal.behaviors.tableHeader = function (context) {
   // This breaks in anything less than IE 7. Prevent it from running.
@@ -9,7 +9,7 @@ Drupal.behaviors.tableHeader = function (context) {
   // Keep track of all cloned table headers.
   var headers = [];
 
-  $('table thead:not(.tableHeader-processed)', context).each(function () {
+  $('table.sticky-enabled thead:not(.tableHeader-processed)', context).each(function () {
     // Clone thead so it inherits original jQuery properties.
     var headerClone = $(this).clone(true).insertBefore(this.parentNode).wrap('<table class="sticky-header"></table>').parent().css({
       position: 'fixed',

@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.409 2008/01/09 22:01:29 goba Exp $
+// $Id: theme.inc,v 1.410 2008/01/15 10:43:00 goba Exp $
 
 /**
  * @file
@@ -1228,6 +1228,15 @@ function theme_submenu($links) {
  *   An HTML string representing the table.
  */
 function theme_table($header, $rows, $attributes = array(), $caption = NULL) {
+
+  // Add sticky headers, if applicable.
+  if (count($header)) {
+    drupal_add_js('misc/tableheader.js');
+    // Add 'sticky-enabled' class to the table to identify it for JS.
+    // This is needed to target tables constructed by this function.
+    $attributes['class'] = empty($attributes['class']) ? 'sticky-enabled' : ($attributes['class'] .' sticky-enabled');
+  }
+
   $output = '<table'. drupal_attributes($attributes) .">\n";
 
   if (isset($caption)) {
@@ -1236,9 +1245,6 @@ function theme_table($header, $rows, $attributes = array(), $caption = NULL) {
 
   // Format the table header:
   if (count($header)) {
-    // Include JS for sticky headers.
-    drupal_add_js('misc/tableheader.js');
-
     $ts = tablesort_init($header);
     // HTML requires that the thead tag has tr tags in it follwed by tbody
     // tags. Using ternary operator to check and see if we have any rows.
