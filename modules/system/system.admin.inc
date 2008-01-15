@@ -1425,20 +1425,8 @@ function system_image_toolkit_settings() {
   }
 
   $form['image_toolkit_settings'] = image_toolkit_invoke('settings');
-  $form['#validate'][] = 'system_image_toolkit_settings_validate';
 
   return system_settings_form($form);
-}
-
-/**
- * Validate the submitted image-toolkit form.
- */
-function system_image_toolkit_settings_validate($form, &$form_state) {
-  // Validate image quality range.
-  $value = $form_state['values']['image_jpeg_quality'];
-  if (!is_numeric($value) || $value < 0 || $value > 100) {
-    form_set_error('image_jpeg_quality', t('JPEG quality must be a number between 0 and 100.'));
-  }
 }
 
 /**
