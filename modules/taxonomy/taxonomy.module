@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.412 2007/12/31 16:58:34 goba Exp $
+// $Id: taxonomy.module,v 1.413 2008/01/15 08:00:24 dries Exp $
 
 /**
  * @file
@@ -990,7 +990,7 @@ function taxonomy_vocabulary_load($vid) {
       $vocabularies[$vid] = $voc;
     }
   }
-  
+
   // Return NULL if this vocabulary does not exist.
   return !empty($vocabularies[$vid]) ? $vocabularies[$vid] : NULL;
 }
@@ -1297,13 +1297,13 @@ function taxonomy_hook_info() {
     'taxonomy' => array(
       'taxonomy' => array(
         'insert' => array(
-          'runs when' => t('After saving a new term to the database.'),
+          'runs when' => t('After saving a new term to the database'),
         ),
         'update' => array(
-          'runs when' => t('After saving an updated term to the database.'),
+          'runs when' => t('After saving an updated term to the database'),
         ),
         'delete' => array(
-          'runs when' => t('After deleting a term.')
+          'runs when' => t('After deleting a term')
         ),
       ),
     ),
