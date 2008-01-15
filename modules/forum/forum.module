@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.445 2008/01/09 21:38:57 goba Exp $
+// $Id: forum.module,v 1.446 2008/01/15 08:16:45 dries Exp $
 
 /**
  * @file
@@ -674,7 +674,7 @@ function template_preprocess_forums(&$variables) {
       if (node_access('create', $type)) {
         // Fetch the "General" name of the content type;
         // Push the link with title and url to the array.
-        $forum_types[$type] = array('title' => t('Post new @node_type', array('@node_type' => node_get_types('name', $type))), 'href' => 'node/add/'. str_replace('_', '-', $type) .'/'. $variables[tid]);
+        $forum_types[$type] = array('title' => t('Post new @node_type', array('@node_type' => node_get_types('name', $type))), 'href' => 'node/add/'. str_replace('_', '-', $type) .'/'. $variables['tid']);
       }
     }
 
