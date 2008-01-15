@@ -576,6 +576,14 @@ function _system_is_incompatible(&$incompatible, $files, $file) {
   if (isset($incompatible[$file->name])) {
     return TRUE;
   }
+  // The 'dependencies' key in .info files was a string in Drupal 5, but changed
+  // to an array in Drupal 6. If it is not an array, the module is not
+  // compatible and we can skip the check below which requires an array. 
+  if (!is_array($file->info['dependencies'])) {
+    $file->info['dependencies'] = array();
+    $incompatible[$file->name] = TRUE;
+    return TRUE;
+  }
   // Recursively traverse the dependencies, looking for incompatible modules
   foreach ($file->info['dependencies'] as $dependency) {
     if (isset($files[$dependency]) && _system_is_incompatible($incompatible, $files, $files[$dependency])) {
