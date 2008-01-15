@@ -1,5 +1,5 @@
 <?php
-// $Id: update.module,v 1.11 2008/01/15 07:55:18 dries Exp $
+// $Id: update.module,v 1.12 2008/01/15 08:29:25 dries Exp $
 
 /**
  * @file
@@ -334,6 +334,16 @@ function update_get_available($refresh = FALSE) {
     $available = update_refresh();
   }
   return $available;
+}
+
+/**
+ * Implementation of hook_flush_caches().  The function update.php (among others)
+ * calls this hook to flush the caches.  Since we're running update.php, we are
+ * likely to install a new version of something, in which case, we want to check
+ * for available update data again.
+ */
+function update_flush_caches() {
+  return array('cache_update');
 }
 
 /**
