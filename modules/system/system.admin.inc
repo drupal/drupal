@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.55 2008/01/15 10:21:40 goba Exp $
+// $Id: system.admin.inc,v 1.56 2008/01/15 10:59:03 goba Exp $
 
 /**
  * @file
@@ -574,6 +574,14 @@ function _system_is_incompatible(&$incompatible, $files, $file) {
   }
   $seen[$file->name] = TRUE;
   if (isset($incompatible[$file->name])) {
+    return TRUE;
+  }
+  // The 'dependencies' key in .info files was a string in Drupal 5, but changed
+  // to an array in Drupal 6. If it is not an array, the module is not
+  // compatible and we can skip the check below which requires an array. 
+  if (!is_array($file->info['dependencies'])) {
+    $file->info['dependencies'] = array();
+    $incompatible[$file->name] = TRUE;
     return TRUE;
   }
   // Recursively traverse the dependencies, looking for incompatible modules
