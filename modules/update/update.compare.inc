@@ -361,7 +361,7 @@ function update_calculate_project_data($available) {
         }
 
         // Otherwise, ignore unpublished, insecure, or unsupported releases.
-        if ($release['status'] == 'unpublished' || 
+        if ($release['status'] == 'unpublished' ||
             (isset($release['terms']['Release type']) &&
              (in_array('Insecure', $release['terms']['Release type']) ||
               in_array('Unsupported', $release['terms']['Release type'])))) {
@@ -383,8 +383,8 @@ function update_calculate_project_data($available) {
           // release. We don't even care about security updates for this
           // branch, since if a project maintainer puts out a security release
           // at a higher major version and not at the lower major version,
-          // they must change the default major release at the same time, in
-          // which case we won't hit this code.
+          // they must remove the lower version from the supported major
+          // versions at the same time, in which case we won't hit this code.
           continue;
         }
 
