@@ -990,7 +990,7 @@ function taxonomy_vocabulary_load($vid) {
       $vocabularies[$vid] = $voc;
     }
   }
-  
+
   // Return NULL if this vocabulary does not exist.
   return !empty($vocabularies[$vid]) ? $vocabularies[$vid] : NULL;
 }
@@ -1297,13 +1297,13 @@ function taxonomy_hook_info() {
     'taxonomy' => array(
       'taxonomy' => array(
         'insert' => array(
-          'runs when' => t('After saving a new term to the database.'),
+          'runs when' => t('After saving a new term to the database'),
         ),
         'update' => array(
-          'runs when' => t('After saving an updated term to the database.'),
+          'runs when' => t('After saving an updated term to the database'),
         ),
         'delete' => array(
-          'runs when' => t('After deleting a term.')
+          'runs when' => t('After deleting a term')
         ),
       ),
     ),
