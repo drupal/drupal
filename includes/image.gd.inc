@@ -1,5 +1,5 @@
 <?php
-// $Id: image.gd.inc,v 1.3 2007/12/16 22:09:36 goba Exp $
+// $Id: image.gd.inc,v 1.4 2008/01/15 10:17:42 goba Exp $
 
 /**
  * @file
@@ -37,12 +37,24 @@ function image_gd_settings() {
       '#default_value' => variable_get('image_jpeg_quality', 75),
       '#field_suffix' => t('%'),
     );
-
+    $form['#element_validate'] = array('image_gd_settings_validate');
+    
     return $form;
   }
   else {
     form_set_error('image_toolkit', t('The GD image toolkit requires that the GD module for PHP be installed and configured properly. For more information see <a href="@url">PHP\'s image documentation</a>.', array('@url' => 'http://php.net/image')));
     return FALSE;
+  }
+}
+
+/**
+ * Validate the submitted GD settings.
+ */
+function image_gd_settings_validate($form, &$form_state) {
+  // Validate image quality range.
+  $value = $form_state['values']['image_jpeg_quality'];
+  if (!is_numeric($value) || $value < 0 || $value > 100) {
+    form_set_error('image_jpeg_quality', t('JPEG quality must be a number between 0 and 100.'));
   }
 }
 

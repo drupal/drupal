@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.53 2008/01/09 10:11:55 goba Exp $
+// $Id: system.admin.inc,v 1.54 2008/01/15 10:17:42 goba Exp $
 
 /**
  * @file
@@ -1425,20 +1425,8 @@ function system_image_toolkit_settings() {
   }
 
   $form['image_toolkit_settings'] = image_toolkit_invoke('settings');
-  $form['#validate'][] = 'system_image_toolkit_settings_validate';
 
   return system_settings_form($form);
-}
-
-/**
- * Validate the submitted image-toolkit form.
- */
-function system_image_toolkit_settings_validate($form, &$form_state) {
-  // Validate image quality range.
-  $value = $form_state['values']['image_jpeg_quality'];
-  if (!is_numeric($value) || $value < 0 || $value > 100) {
-    form_set_error('image_jpeg_quality', t('JPEG quality must be a number between 0 and 100.'));
-  }
 }
 
 /**
