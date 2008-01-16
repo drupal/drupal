@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.maintenance.inc,v 1.8 2008/01/16 10:37:43 goba Exp $
+// $Id: theme.maintenance.inc,v 1.9 2008/01/16 10:47:17 goba Exp $
 
 /**
  * @file
@@ -139,6 +139,12 @@ function theme_install_page($content) {
     $variables['messages'] .= theme('status_messages', 'status');
   }
 
+  // This was called as a theme hook (not template), so we need to
+  // fix path_to_theme() for the template, to point at the actual
+  // theme rather than system module as owner of the hook.
+  global $theme_path;
+  $theme_path = 'themes/garland';
+
   return theme_render_template('themes/garland/maintenance-page.tpl.php', $variables);
 }
 
@@ -170,6 +176,12 @@ function theme_update_page($content, $show_messages = TRUE) {
     $variables['messages'] .= '<h4>'. $title .':</h4>';
     $variables['messages'] .= theme('status_messages', 'warning');
   }
+
+  // This was called as a theme hook (not template), so we need to
+  // fix path_to_theme() for the template, to point at the actual
+  // theme rather than system module as owner of the hook.
+  global $theme_path;
+  $theme_path = 'themes/garland';
 
   return theme_render_template('themes/garland/maintenance-page.tpl.php', $variables);
 }
