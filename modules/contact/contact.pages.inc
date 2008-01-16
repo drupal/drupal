@@ -88,6 +88,9 @@ function contact_mail_page() {
         '#title' => t('Send yourself a copy.'),
       );
     }
+    else {
+      $form['copy'] = array('#type' => 'value', '#value' => FALSE);
+    }
     $form['submit'] = array('#type' => 'submit',
       '#value' => t('Send e-mail'),
     );
