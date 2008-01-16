@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.102 2007/12/19 17:42:13 goba Exp $
+// $Id: contact.module,v 1.103 2008/01/16 12:46:52 goba Exp $
 
 /**
  * @file
@@ -114,7 +114,7 @@ function _contact_user_tab_access($account) {
     $account->contact = FALSE;
   }
   return
-    $account &&
+    $account && $user->uid &&
     (
       ($user->uid != $account->uid && $account->contact) ||
       user_access('administer users')
