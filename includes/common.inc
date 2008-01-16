@@ -3246,7 +3246,7 @@ function drupal_write_record($table, &$object, $update = array()) {
     return FALSE;
   }
 
-  $fields = $defs = $values = $serials = array();
+  $fields = $defs = $values = $serials = $placeholders = array();
 
   // Go through our schema, build SQL, and when inserting, fill in defaults for
   // fields that are not set.
