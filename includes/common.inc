@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.751 2008/01/15 08:13:40 dries Exp $
+// $Id: common.inc,v 1.752 2008/01/16 10:37:30 goba Exp $
 
 /**
  * @file
@@ -3246,7 +3246,7 @@ function drupal_write_record($table, &$object, $update = array()) {
     return FALSE;
   }
 
-  $fields = $defs = $values = $serials = array();
+  $fields = $defs = $values = $serials = $placeholders = array();
 
   // Go through our schema, build SQL, and when inserting, fill in defaults for
   // fields that are not set.
