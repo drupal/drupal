@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.56 2008/01/15 10:59:03 goba Exp $
+// $Id: system.admin.inc,v 1.57 2008/01/16 12:55:50 goba Exp $
 
 /**
  * @file
@@ -187,7 +187,9 @@ function system_themes_form() {
 
   drupal_clear_css_cache();
   $themes = system_theme_data();
-  ksort($themes);
+
+  uasort($themes, 'system_sort_modules_by_info_name');
+
   $status = array();
   $incompatible_core = array();
   $incompatible_php = array();
@@ -769,7 +771,7 @@ function system_modules($form_state = array()) {
 }
 
 /**
- * Array sorting callback; sorts modules by their name.
+ * Array sorting callback; sorts modules or themes by their name.
  */
 function system_sort_modules_by_info_name($a, $b) {
   return strcasecmp($a->info['name'], $b->info['name']);
