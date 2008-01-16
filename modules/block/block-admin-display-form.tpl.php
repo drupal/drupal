@@ -35,7 +35,7 @@
     drupal_add_tabledrag('blocks', 'order', 'sibling', 'block-weight', 'block-weight-'. $region);
   }
 ?>
-<table id="blocks">
+<table id="blocks" class="sticky-enabled">
   <thead>
     <tr>
       <th><?php print t('Block'); ?></th>
