@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.229 2008/01/10 22:47:17 goba Exp $
+// $Id: system.install,v 1.230 2008/01/16 10:37:43 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -78,11 +78,12 @@ function system_requirements($phase) {
     $description = '';
     if ($phase == 'install') {
       $description = $t('Consider increasing your PHP memory limit to %memory_minimum_limit to help prevent errors in the installation process.', array('%memory_minimum_limit' => DRUPAL_MINIMUM_PHP_MEMORY_LIMIT));
-      $requirements['php_memory_limit']['severity'] = REQUIREMENT_WARNING;
+    }
+    elseif ($phase == 'update') {
+      $description = $t('Consider increasing your PHP memory limit to %memory_minimum_limit to help prevent errors in the update process.', array('%memory_minimum_limit' => DRUPAL_MINIMUM_PHP_MEMORY_LIMIT));
     }
     elseif ($phase == 'runtime') {
       $description = $t('Depending on your configuration, Drupal can run with a %memory_limit PHP memory limit. However, a %memory_minimum_limit PHP memory limit or above is recommended, especially if your site uses additional custom or contributed modules.', array('%memory_limit' => $memory_limit, '%memory_minimum_limit' => DRUPAL_MINIMUM_PHP_MEMORY_LIMIT));
-      $requirements['php_memory_limit']['severity'] = REQUIREMENT_WARNING;
     }
 
     if (!empty($description)) {
@@ -94,6 +95,7 @@ function system_requirements($phase) {
       }
 
       $requirements['php_memory_limit']['description'] = $description .' '. $t('See the <a href="@url">Drupal requirements</a> for more information.', array('@url' => 'http://drupal.org/requirements'));
+      $requirements['php_memory_limit']['severity'] = REQUIREMENT_WARNING;
     }
   }
 
@@ -185,6 +187,9 @@ function system_requirements($phase) {
 
   // Test files directory
   $directory = file_directory_path();
+  $requirements['file system'] = array(
+    'title' => $t('File system'),
+  );
 
   // For installer, create the directory if possible.
   if ($phase == 'install' && !is_dir($directory) && @mkdir($directory)) {
@@ -194,24 +199,27 @@ function system_requirements($phase) {
   $is_writable = is_writable($directory);
   $is_directory = is_dir($directory);
   if (!$is_writable || !$is_directory) {
+    $description = '';
+    $requirements['file system']['value'] = $t('Not writable');
     if (!$is_directory) {
       $error = $t('The directory %directory does not exist.', array('%directory' => $directory));
     }
     else {
       $error = $t('The directory %directory is not writable.', array('%directory' => $directory));
     }
-    $requirements['file system'] = array(
-      'value' => $t('Not writable'),
-      'severity' => REQUIREMENT_ERROR,
-    );
+    // The files directory requirement check is done only during install and runtime.
     if ($phase == 'runtime') {
-      $requirements['file system']['description'] = $error .' '. $t('You may need to set the correct directory at the <a href="@admin-file-system">file system settings page</a> or change the current directory\'s permissions so that it is writable.', array('@admin-file-system' => url('admin/settings/file-system')));
+      $description = $error .' '. $t('You may need to set the correct directory at the <a href="@admin-file-system">file system settings page</a> or change the current directory\'s permissions so that it is writable.', array('@admin-file-system' => url('admin/settings/file-system')));
     }
-    else if ($phase == 'install') {
+    elseif ($phase == 'install') {
       // For the installer UI, we need different wording. 'value' will
       // be treated as version, so provide none there.
-      $requirements['file system']['description'] = $error .' '. $t('An automated attempt to create this directory failed, possibly due to a permissions problem. To proceed with the installation, either create the directory and modify its permissions manually, or ensure that the installer has the permissions to create it automatically. For more information, please see INSTALL.txt or the <a href="@handbook_url">on-line handbook</a>.', array('@handbook_url' => 'http://drupal.org/server-permissions'));
+      $description = $error .' '. $t('An automated attempt to create this directory failed, possibly due to a permissions problem. To proceed with the installation, either create the directory and modify its permissions manually, or ensure that the installer has the permissions to create it automatically. For more information, please see INSTALL.txt or the <a href="@handbook_url">on-line handbook</a>.', array('@handbook_url' => 'http://drupal.org/server-permissions'));
       $requirements['file system']['value'] = '';
+    }
+    if (!empty($description)) {
+      $requirements['file system']['description'] = $description;
+      $requirements['file system']['severity'] = REQUIREMENT_ERROR;
     }
   }
   else {
@@ -222,7 +230,6 @@ function system_requirements($phase) {
       $requirements['file system']['value'] = $t('Writable (<em>private</em> download method)');
     }
   }
-  $requirements['file system']['title'] = $t('File system');
 
   // See if updates are available in update.php.
   if ($phase == 'runtime') {

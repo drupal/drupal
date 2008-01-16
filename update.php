@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.247 2008/01/07 19:43:28 goba Exp $
+// $Id: update.php,v 1.248 2008/01/16 10:37:42 goba Exp $
 
 /**
  * @file
@@ -515,11 +515,72 @@ function update_task_list($active = NULL) {
   drupal_set_content('left', theme('task_list', $tasks, $active));
 }
 
+/**
+ * Check update requirements and report any errors.
+ */
+function update_check_requirements() {
+  // Check the system module requirements only.
+  $requirements = module_invoke('system', 'requirements', 'update');
+  $severity = drupal_requirements_severity($requirements);
+
+  // If there are issues, report them.
+  if ($severity != REQUIREMENT_OK) {
+    foreach ($requirements as $requirement) {
+      if (isset($requirement['severity']) && $requirement['severity'] != REQUIREMENT_OK) {
+        $message = isset($requirement['description']) ? $requirement['description'] : '';
+        if (isset($requirement['value']) && $requirement['value']) {
+          $message .= ' (Currently using '. $requirement['title'] .' '. $requirement['value'] .')';
+        }
+        drupal_set_message($message, 'warning');
+      }
+    }
+  }
+}
+
 // Some unavoidable errors happen because the database is not yet up-to-date.
 // Our custom error handler is not yet installed, so we just suppress them.
 ini_set('display_errors', FALSE);
 
-include_once './includes/bootstrap.inc';
+require_once './includes/bootstrap.inc';
+
+// We only load DRUPAL_BOOTSTRAP_CONFIGURATION for the update requirements
+// check to avoid reaching the PHP memory limit.
+$op = isset($_REQUEST['op']) ? $_REQUEST['op'] : '';
+if (empty($op)) {
+  // Minimum load of components.
+  drupal_bootstrap(DRUPAL_BOOTSTRAP_CONFIGURATION);
+
+  require_once './includes/install.inc';
+  require_once './includes/file.inc';
+  require_once './modules/system/system.install';
+
+  // Load module basics.
+  include_once './includes/module.inc';
+  $module_list['system']['filename'] = 'modules/system/system.module';
+  $module_list['filter']['filename'] = 'modules/filter/filter.module';
+  module_list(TRUE, FALSE, FALSE, $module_list);
+  drupal_load('module', 'system');
+  drupal_load('module', 'filter');
+
+  // Set up $language, since the installer components require it.
+  drupal_init_language();
+
+  // Set up theme system for the maintenance page.
+  drupal_maintenance_theme();
+
+  // Check the update requirements for Drupal.
+  update_check_requirements();
+
+  // Display the warning messages (if any) in a dedicated maintenance page,
+  // or redirect to the update information page if no message.
+  $messages = drupal_set_message();
+  if (!empty($messages['warning'])) {
+    drupal_maintenance_theme();
+    print theme('update_page', '<form method="post" action="update.php?op=info"><input type="submit" value="Continue" /></form>', FALSE);
+    exit;
+  }
+  install_goto('update.php?op=info');
+}
 
 drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 drupal_maintenance_theme();
@@ -545,7 +606,7 @@ if (!empty($update_free_access) || $user->uid == 1) {
   $op = isset($_REQUEST['op']) ? $_REQUEST['op'] : '';
   switch ($op) {
     // update.php ops
-    case '':
+    case 'info':
       $output = update_info_page();
       break;
 
