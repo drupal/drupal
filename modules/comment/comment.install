@@ -62,7 +62,8 @@ function comment_update_6002() {
  * Add index to parent ID field.
  */
 function comment_update_6003() {
-  $ret[] = update_sql("ALTER TABLE {comments} ADD KEY pid (pid)");
+  $ret = array();
+  db_add_index($ret, 'comments', 'pid', array('pid'));
   return $ret;
 }
 
