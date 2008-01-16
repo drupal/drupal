@@ -1,5 +1,5 @@
 <?php
-// $Id: block-admin-display-form.tpl.php,v 1.2 2007/11/14 09:49:30 dries Exp $
+// $Id: block-admin-display-form.tpl.php,v 1.3 2008/01/16 22:57:26 goba Exp $
 
 /**
  * @file block-admin-display-form.tpl.php
@@ -35,7 +35,7 @@
     drupal_add_tabledrag('blocks', 'order', 'sibling', 'block-weight', 'block-weight-'. $region);
   }
 ?>
-<table id="blocks">
+<table id="blocks" class="sticky-enabled">
   <thead>
     <tr>
       <th><?php print t('Block'); ?></th>
