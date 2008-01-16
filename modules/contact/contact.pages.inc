@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.pages.inc,v 1.5 2007/12/10 10:38:00 goba Exp $
+// $Id: contact.pages.inc,v 1.6 2008/01/16 22:56:21 goba Exp $
 
 /**
  * @file
@@ -87,6 +87,9 @@ function contact_mail_page() {
       $form['copy'] = array('#type' => 'checkbox',
         '#title' => t('Send yourself a copy.'),
       );
+    }
+    else {
+      $form['copy'] = array('#type' => 'value', '#value' => FALSE);
     }
     $form['submit'] = array('#type' => 'submit',
       '#value' => t('Send e-mail'),
