@@ -10,11 +10,6 @@ function user_admin($callback_arg = '') {
   $op = isset($_POST['op']) ? $_POST['op'] : $callback_arg;
 
   switch ($op) {
-    case 'search':
-    case t('Search'):
-      $keys = isset($_POST['keys']) ? $_POST['keys'] : NULL;
-      $output = drupal_get_form('search_form', url('admin/user/search'), $keys, 'user') . search_data($keys, 'user');
-      break;
     case t('Create new account'):
     case 'create':
       $output = drupal_get_form('user_register');

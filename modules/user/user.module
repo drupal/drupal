@@ -1025,17 +1025,6 @@ function user_menu() {
     'file' => 'user.admin.inc',
   );
 
-  if (module_exists('search')) {
-    $items['admin/user/search'] = array(
-      'title' => 'Search users',
-      'description' => 'Search users by name or e-mail address.',
-      'page callback' => 'user_admin',
-      'page arguments' => array('search'),
-      'access arguments' => array('administer users'),
-      'file' => 'user.admin.inc',
-    );
-  }
-
   $items['logout'] = array(
     'title' => 'Log out',
     'access callback' => 'user_is_logged_in',
