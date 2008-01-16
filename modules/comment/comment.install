@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.install,v 1.18 2008/01/05 22:45:40 dries Exp $
+// $Id: comment.install,v 1.19 2008/01/16 21:45:30 goba Exp $
 
 /**
  * Implementation of hook_enable().
@@ -62,7 +62,8 @@ function comment_update_6002() {
  * Add index to parent ID field.
  */
 function comment_update_6003() {
-  $ret[] = update_sql("ALTER TABLE {comments} ADD KEY pid (pid)");
+  $ret = array();
+  db_add_index($ret, 'comments', 'pid', array('pid'));
   return $ret;
 }
 

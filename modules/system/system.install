@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.230 2008/01/16 10:37:43 goba Exp $
+// $Id: system.install,v 1.231 2008/01/16 21:45:30 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -1114,16 +1114,7 @@ function system_update_last_removed() {
  */
 function system_update_1022() {
   $ret = array();
-  switch ($GLOBALS['db_type']) {
-    case 'mysql':
-    case 'mysqli':
-      $ret[] = update_sql('ALTER TABLE {users} ADD KEY created (created)');
-      break;
-
-    case 'pgsql':
-      $ret[] = update_sql("CREATE INDEX {users}_created_idx ON {users} (created)");
-      break;
-  }
+  db_add_index($ret, 'users', 'created', array('created'));
   // Also appears as system_update_6004(). Ensure we don't update twice.
   variable_set('system_update_1022', TRUE);
   return $ret;
@@ -1187,16 +1178,7 @@ function system_update_6002() {
  */
 function system_update_6003() {
   $ret = array();
-  switch ($GLOBALS['db_type']) {
-    case 'mysql':
-    case 'mysqli':
-      $ret[] = update_sql('ALTER TABLE {comments} ADD KEY status (status)');
-      break;
-
-    case 'pgsql':
-      $ret[] = update_sql("CREATE INDEX {comments}_status_idx ON {comments} (status)");
-      break;
-  }
+  db_add_index($ret, 'comments', 'status', array('status'));
   return $ret;
 }
 
