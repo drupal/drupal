@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.887 2008/01/10 20:22:57 goba Exp $
+// $Id: user.module,v 1.888 2008/01/16 22:54:41 goba Exp $
 
 /**
  * @file
@@ -1024,17 +1024,6 @@ function user_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'user.admin.inc',
   );
-
-  if (module_exists('search')) {
-    $items['admin/user/search'] = array(
-      'title' => 'Search users',
-      'description' => 'Search users by name or e-mail address.',
-      'page callback' => 'user_admin',
-      'page arguments' => array('search'),
-      'access arguments' => array('administer users'),
-      'file' => 'user.admin.inc',
-    );
-  }
 
   $items['logout'] = array(
     'title' => 'Log out',
