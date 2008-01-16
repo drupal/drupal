@@ -163,6 +163,14 @@ function theme_update_page($content, $show_messages = TRUE) {
   // The maintenance preprocess function is recycled here.
   template_preprocess_maintenance_page($variables);
 
+  // Special handling of warning messages.
+  $messages = drupal_set_message();
+  if (isset($messages['warning'])) {
+    $title = count($messages['warning']) > 1 ? 'The following update warnings should be carefully reviewed before continuing' : 'The following update warning should be carefully reviewed before continuing';
+    $variables['messages'] .= '<h4>'. $title .':</h4>';
+    $variables['messages'] .= theme('status_messages', 'warning');
+  }
+
   return theme_render_template('themes/garland/maintenance-page.tpl.php', $variables);
 }
 
