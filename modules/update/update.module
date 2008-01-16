@@ -337,10 +337,11 @@ function update_get_available($refresh = FALSE) {
 }
 
 /**
- * Implementation of hook_flush_caches().  The function update.php (among others)
- * calls this hook to flush the caches.  Since we're running update.php, we are
- * likely to install a new version of something, in which case, we want to check
- * for available update data again.
+ * Implementation of hook_flush_caches().
+ *
+ * The function update.php (among others) calls this hook to flush the caches.
+ * Since we're running update.php, we are likely to install a new version of
+ * something, in which case, we want to check for available update data again.
  */
 function update_flush_caches() {
   return array('cache_update');
