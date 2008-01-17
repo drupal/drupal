@@ -47,7 +47,7 @@ Drupal 6.0, xxxx-xx-xx (development version)
     * Dynamically check password strength and confirmation.
     * Refactored poll administration.
     * Implemented drag-and-drop positioning for blocks, menu items, taxonomy
-      terms, and profile fields.
+      terms, profile fields, and input format filters.
 - Theme system:
     * Added .info files to themes and made it easier to specify regions and
       features.
