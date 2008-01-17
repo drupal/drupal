@@ -1,5 +1,5 @@
 <?php
-// $Id: update.compare.inc,v 1.3 2008/01/15 07:55:18 dries Exp $
+// $Id: update.compare.inc,v 1.4 2008/01/17 12:03:21 goba Exp $
 
 /**
  * @file
@@ -49,19 +49,33 @@ function _update_process_info_list(&$projects, &$list, $project_type) {
       $file->info['project'] = update_get_project_name($file);
     }
 
-    if (!isset($projects[$file->info['project']])) {
+    // If we don't already know it, grab the change time on the .info file
+    // itself. Note: we need to use the ctime, not the mtime (modification
+    // time) since many (all?) tar implementations will go out of their way to
+    // set the mtime on the files it creates to the timestamps recorded in the
+    // tarball. We want to see the last time the file was changed on disk,
+    // which is left alone by tar and correctly set to the time the .info file
+    // was unpacked.
+    if (!isset($file->info['_info_file_ctime'])) {
+      $info_filename = dirname($file->filename) .'/'. $file->name .'.info';
+      $file->info['_info_file_ctime'] = filectime($info_filename);
+    }
+
+    $project_name = $file->info['project'];
+    if (!isset($projects[$project_name])) {
       // Only process this if we haven't done this project, since a single
       // project can have multiple modules or themes.
-      $projects[$file->info['project']] = array(
-        'name' => $file->info['project'],
+      $projects[$project_name] = array(
+        'name' => $project_name,
         'info' => $file->info,
         'datestamp' => isset($file->info['datestamp']) ? $file->info['datestamp'] : 0,
         'includes' => array($file->name => $file->info['name']),
-        'project_type' => $file->info['project'] == 'drupal' ? 'core' : $project_type,
+        'project_type' => $project_name == 'drupal' ? 'core' : $project_type,
       );
     }
     else {
-      $projects[$file->info['project']]['includes'][$file->name] = $file->info['name'];
+      $projects[$project_name]['includes'][$file->name] = $file->info['name'];
+      $projects[$project_name]['info']['_info_file_ctime'] = max($projects[$project_name]['info']['_info_file_ctime'], $file->info['_info_file_ctime']);
     }
   }
 }

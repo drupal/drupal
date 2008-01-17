@@ -1,5 +1,5 @@
 <?php
-// $Id: update.module,v 1.13 2008/01/16 12:49:30 goba Exp $
+// $Id: update.module,v 1.14 2008/01/17 12:03:21 goba Exp $
 
 /**
  * @file
@@ -320,17 +320,44 @@ function _update_no_data() {
  * Internal helper to try to get the update information from the cache
  * if possible, and to refresh the cache when necessary.
  *
+ * In addition to checking the cache lifetime, this function also ensures that
+ * there are no .info files for enabled modules or themes that have a newer
+ * modification timestamp than the last time we checked for available update
+ * data. If any .info file was modified, it almost certainly means a new
+ * version of something was installed. Without fresh available update data,
+ * the logic in update_calculate_project_data() will be wrong and produce
+ * confusing, bogus results.
+ *
  * @param $refresh
  *   Boolean to indicate if this method should refresh the cache automatically
  *   if there's no data.
+ *
+ * @see update_refresh()
+ * @see update_get_projects()
  */
 function update_get_available($refresh = FALSE) {
+  include_once './modules/update/update.compare.inc';
   $available = array();
-  if (($cache = cache_get('update_info', 'cache_update'))
+
+  // First, make sure that none of the .info files have a change time
+  // newer than the last time we checked for available updates.
+  $needs_refresh = FALSE;
+  $last_check = variable_get('update_last_check', 0);
+  $projects = update_get_projects();
+  foreach ($projects as $key => $project) {
+    if ($project['info']['_info_file_ctime'] > $last_check) {
+      $needs_refresh = TRUE;
+      break;
+    }
+  }
+  if (!$needs_refresh && ($cache = cache_get('update_info', 'cache_update'))
        && $cache->expire > time()) {
     $available = $cache->data;
   }
-  elseif ($refresh) {
+  elseif ($needs_refresh || $refresh) {
+    // If we need to refresh due to a newer .info file, ignore the argument
+    // and force the refresh (e.g., even for update_requirements()) to prevent
+    // bogus results.
     $available = update_refresh();
   }
   return $available;
