@@ -2,6 +2,10 @@
 
 Drupal.behaviors.textarea = function(context) {
   $('textarea.resizable:not(.textarea-processed)', context).each(function() {
+    // Avoid non-processed teasers.
+    if ($(this).is(('textarea.teaser:not(.teaser-processed)'))) {
+      return false;  
+    }
     var textarea = $(this).addClass('textarea-processed'), staticOffset = null;
 
     // When wrapping the text area, work around an IE margin bug.  See:
