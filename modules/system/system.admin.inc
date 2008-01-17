@@ -152,7 +152,9 @@ function system_settings_overview() {
  */
 function system_admin_theme_settings() {
   $themes = system_theme_data();
-  ksort($themes);
+
+  uasort($themes, 'system_sort_modules_by_info_name');
+
   $options[0] = '<'. t('System default') .'>';
   foreach ($themes as $theme) {
     $options[$theme->name] = $theme->info['name'];
