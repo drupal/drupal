@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.57 2008/01/16 12:55:50 goba Exp $
+// $Id: system.admin.inc,v 1.58 2008/01/17 16:08:35 goba Exp $
 
 /**
  * @file
@@ -152,7 +152,9 @@ function system_settings_overview() {
  */
 function system_admin_theme_settings() {
   $themes = system_theme_data();
-  ksort($themes);
+
+  uasort($themes, 'system_sort_modules_by_info_name');
+
   $options[0] = '<'. t('System default') .'>';
   foreach ($themes as $theme) {
     $options[$theme->name] = $theme->info['name'];
