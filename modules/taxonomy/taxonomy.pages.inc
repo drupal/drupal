@@ -91,9 +91,14 @@ function theme_taxonomy_term_page($tids, $result) {
   // Only display the description if we have a single term, to avoid clutter and confusion.
   if (count($tids) == 1) {
     $term = taxonomy_get_term($tids[0]);
-    $output .= '<div class="taxonomy-term-description">';
-    $output .= filter_xss_admin($term->description);
-    $output .= '</div>';
+    $description = $term->description;
+
+    // Check that a description is set.
+    if (!empty($description)) {
+      $output .= '<div class="taxonomy-term-description">';
+      $output .= filter_xss_admin($description);
+      $output .= '</div>';
+    }
   }
 
   $output .= taxonomy_render_nodes($result);
