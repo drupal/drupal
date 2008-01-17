@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.248 2008/01/16 10:37:42 goba Exp $
+// $Id: update.php,v 1.249 2008/01/17 20:05:23 goba Exp $
 
 /**
  * @file
@@ -134,6 +134,13 @@ function db_change_column(&$ret, $table, $column, $column_new, $type, $attribute
  * Perform one update and store the results which will later be displayed on
  * the finished page.
  *
+ * An update function can force the current and all later updates for this
+ * module to abort by returning a $ret array with an element like:
+ * $ret['#abort'] = array('success' => FALSE, 'query' => 'What went wrong');
+ * The schema version will not be updated in this case, and all the
+ * aborted updates will continue to appear on update.php as updates that
+ * have not yet been run.
+ *
  * @param $module
  *   The module whose update will be run.
  * @param $number
@@ -142,6 +149,12 @@ function db_change_column(&$ret, $table, $column, $column_new, $type, $attribute
  *   The batch context array
  */
 function update_do_one($module, $number, &$context) {
+  // If updates for this module have been aborted
+  // in a previous step, go no further.
+  if (!empty($context['results'][$module]['#abort'])) {
+    return;
+  }
+
   $function = $module .'_update_'. $number;
   if (function_exists($function)) {
     $ret = $function($context['sandbox']);
@@ -158,9 +171,13 @@ function update_do_one($module, $number, &$context) {
   if (!isset($context['results'][$module][$number])) {
     $context['results'][$module][$number] = array();
   }
-  $context['results'][$module][$number] = array_merge($context['results'][$module][$number], $ret);;
+  $context['results'][$module][$number] = array_merge($context['results'][$module][$number], $ret);
 
-  if ($context['finished'] == 1) {
+  if (!empty($ret['#abort'])) {
+    $context['results'][$module]['#abort'] = TRUE;
+  }
+  // The schema update is not updated once a module's updates have been aborted.
+  if ($context['finished'] == 1 && !empty($context['results'][$module]['#abort'])) {
     // Update the installed version
     drupal_set_installed_schema_version($module, $number);
   }
@@ -317,18 +334,20 @@ function update_results_page() {
     foreach ($_SESSION['update_results'] as $module => $updates) {
       $output .= '<h3>'. $module .' module</h3>';
       foreach ($updates as $number => $queries) {
-        $output .= '<h4>Update #'. $number .'</h4>';
-        $output .= '<ul>';
-        foreach ($queries as $query) {
-          if ($query['success']) {
-            $output .= '<li class="success">'. $query['query'] .'</li>';
+        if ($number != '#abort') {
+          $output .= '<h4>Update #'. $number .'</h4>';
+          $output .= '<ul>';
+          foreach ($queries as $query) {
+            if ($query['success']) {
+              $output .= '<li class="success">'. $query['query'] .'</li>';
+            }
+            else {
+              $output .= '<li class="failure"><strong>Failed:</strong> '. $query['query'] .'</li>';
+            }
           }
-          else {
-            $output .= '<li class="failure"><strong>Failed:</strong> '. $query['query'] .'</li>';
+          if (!count($queries)) {
+            $output .= '<li class="none">No queries</li>';
           }
-        }
-        if (!count($queries)) {
-          $output .= '<li class="none">No queries</li>';
         }
         $output .= '</ul>';
       }
