@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.202 2008/01/10 22:47:17 goba Exp $
+// $Id: filter.module,v 1.203 2008/01/17 21:50:59 goba Exp $
 
 /**
  * @file
@@ -35,7 +35,7 @@ function filter_help($path, $arg) {
       return '<p>'. t('If you cannot find the settings for a certain filter, make sure you have enabled it on the <a href="@url">view tab</a> first.', array('@url' => url('admin/settings/filters/'. $arg[3]))) .'</p>';
     case 'admin/settings/filters/%/order':
       $output = '<p>'. t('Because of the flexible filtering system, you might encounter a situation where one filter prevents another from doing its job. For example: a word in an URL gets converted into a glossary term, before the URL can be converted to a clickable link. When this happens, rearrange the order of the filters.') .'</p>';
-      $output .= '<p>'. t('Filters are executed from top-to-bottom. You can use the weight column to rearrange them: heavier filters "sink" to the bottom.') .'</p>';
+      $output .= '<p>'. t("Filters are executed from top-to-bottom. To change the order of the filters, modify the values in the <em>Weight</em> column or grab a drag-and-drop handle under the <em>Name</em> column and drag filters to new locations in the list. (Grab a handle by clicking and holding the mouse while hovering over a handle icon.) Remember that your changes will not be saved until you click the <em>Save configuration</em> button at the bottom of the page.") .'</p>';
       return $output;
   }
 }
