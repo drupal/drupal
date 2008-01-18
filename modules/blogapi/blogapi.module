@@ -421,7 +421,8 @@ function blogapi_mt_get_post_categories($postid, $username, $password) {
     return blogapi_error($user);
   }
 
-  $terms = module_invoke('taxonomy', 'node_get_terms', $postid, 'tid');
+  $node = node_load($postid);
+  $terms = module_invoke('taxonomy', 'node_get_terms', $node, 'tid');
   $categories = array();
   foreach ($terms as $term) {
     $term_name = $term->name;
@@ -430,6 +431,7 @@ function blogapi_mt_get_post_categories($postid, $username, $password) {
     }
     $categories[] = array('categoryName' => $term_name, 'categoryId' => $term->tid, 'isPrimary' => TRUE);
   }
+
   return $categories;
 }
 
