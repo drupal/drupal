@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.pages.inc,v 1.8 2008/01/18 16:07:58 goba Exp $
+// $Id: taxonomy.pages.inc,v 1.9 2008/01/18 16:23:57 goba Exp $
 
 /**
  * @file
@@ -86,6 +86,8 @@ function taxonomy_term_page($str_tids = '', $depth = 0, $op = 'page') {
  * @ingroup themeable
  */
 function theme_taxonomy_term_page($tids, $result) {
+  drupal_add_css(drupal_get_path('module', 'taxonomy') .'/taxonomy.css');
+
   $output = '';
 
   // Only display the description if we have a single term, to avoid clutter and confusion.
