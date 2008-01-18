@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.37 2008/01/09 09:56:39 goba Exp $ */
+/* $Id: style.css,v 1.38 2008/01/18 16:14:56 goba Exp $ */
 
 /**
  * Garland, for Drupal 5.0
@@ -1006,18 +1006,18 @@ tr.taxonomy-term-divider-bottom {
 }
 
 div.status {
-  color: #3a3;
+  color: #33a333;
   border-color: #c7f2c8;
 }
 
 div.error, tr.error {
-  color: #c52020;
+  color: #a30000;
   background-color: #FFCCCC;
 }
 
 .form-item input.error, .form-item textarea.error {
   border: 1px solid #c52020;
-  color: #494949;
+  color: #363636;
 }
 
 /**
