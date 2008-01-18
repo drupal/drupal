@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.114 2008/01/09 09:51:34 goba Exp $
+// $Id: blogapi.module,v 1.115 2008/01/18 19:03:15 goba Exp $
 
 /**
  * @file
@@ -421,7 +421,8 @@ function blogapi_mt_get_post_categories($postid, $username, $password) {
     return blogapi_error($user);
   }
 
-  $terms = module_invoke('taxonomy', 'node_get_terms', $postid, 'tid');
+  $node = node_load($postid);
+  $terms = module_invoke('taxonomy', 'node_get_terms', $node, 'tid');
   $categories = array();
   foreach ($terms as $term) {
     $term_name = $term->name;
@@ -430,6 +431,7 @@ function blogapi_mt_get_post_categories($postid, $username, $password) {
     }
     $categories[] = array('categoryName' => $term_name, 'categoryId' => $term->tid, 'isPrimary' => TRUE);
   }
+
   return $categories;
 }
 
