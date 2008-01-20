@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.231 2008/01/16 21:45:30 goba Exp $
+// $Id: system.install,v 1.232 2008/01/20 12:47:32 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -1810,13 +1810,15 @@ function system_update_6021() {
       // Items created via the menu module need to be assigned to it.
       if ($item['type'] & MENU_CREATED_BY_ADMIN) {
         $item['module'] = 'menu';
+        $item['router_path'] = '';
+        $item['updated'] = TRUE;
       }
       else {
         $item['module'] = 'system';
+        $item['router_path'] = $item['path'];
+        $item['updated'] = FALSE;
       }
-      $item['updated'] = TRUE;
       // Save the link.
-      $item['router_path'] = '';
       menu_link_save($item);
       $_SESSION['menu_item_map'][$item['mid']] = array('mlid' => $item['mlid'], 'menu_name' => $item['menu_name']);
     }
