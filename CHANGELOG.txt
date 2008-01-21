@@ -69,7 +69,7 @@ Drupal 6.0, xxxx-xx-xx (development version)
 - Performance:
     * Made it easier to conditionally load .include files and split up many core
       modules.
-    * Added a JavaScript aggregator and compressor.
+    * Added a JavaScript aggregator.
     * Added block-level caching, improving performance for both authenticated
       and anonymous users.
     * Made Drupal work correctly when running behind a reverse proxy like
