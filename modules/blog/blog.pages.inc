@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.pages.inc,v 1.5 2008/01/09 09:51:34 goba Exp $
+// $Id: blog.pages.inc,v 1.6 2008/01/21 12:05:36 goba Exp $
 
 /**
  * @file
@@ -20,7 +20,7 @@ function blog_page_user($account) {
     $items[] = l(t('Post new blog entry.'), "node/add/blog");
   }
   else if ($account->uid == $user->uid) {
-    $items[] = t('You are not allowed to post a new blog entry.') .'</li>';
+    $items[] = t('You are not allowed to post a new blog entry.');
   }
 
   $output = theme('item_list', $items);

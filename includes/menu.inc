@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.246 2008/01/10 20:16:50 goba Exp $
+// $Id: menu.inc,v 1.247 2008/01/21 12:05:36 goba Exp $
 
 /**
  * @file
@@ -1067,7 +1067,7 @@ function theme_menu_item($link, $has_children, $menu = '', $in_active_trail = FA
   if ($in_active_trail) {
     $class .= ' active-trail';
   }
-  return '<li class="'. $class .'">'. $link . $menu .'</li>'."\n";
+  return '<li class="'. $class .'">'. $link . $menu ."</li>\n";
 }
 
 /**
@@ -1076,7 +1076,7 @@ function theme_menu_item($link, $has_children, $menu = '', $in_active_trail = FA
  * @ingroup themeable
  */
 function theme_menu_local_task($link, $active = FALSE) {
-  return '<li '. ($active ? 'class="active" ' : '') .'>'. $link .'</li>';
+  return '<li '. ($active ? 'class="active" ' : '') .'>'. $link ."</li>\n";
 }
 
 /**
