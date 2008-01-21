@@ -1067,7 +1067,7 @@ function theme_menu_item($link, $has_children, $menu = '', $in_active_trail = FA
   if ($in_active_trail) {
     $class .= ' active-trail';
   }
-  return '<li class="'. $class .'">'. $link . $menu .'</li>'."\n";
+  return '<li class="'. $class .'">'. $link . $menu ."</li>\n";
 }
 
 /**
@@ -1076,7 +1076,7 @@ function theme_menu_item($link, $has_children, $menu = '', $in_active_trail = FA
  * @ingroup themeable
  */
 function theme_menu_local_task($link, $active = FALSE) {
-  return '<li '. ($active ? 'class="active" ' : '') .'>'. $link .'</li>';
+  return '<li '. ($active ? 'class="active" ' : '') .'>'. $link ."</li>\n";
 }
 
 /**

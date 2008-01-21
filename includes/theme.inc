@@ -1429,7 +1429,7 @@ function theme_item_list($items = array(), $title = NULL, $type = 'ul', $attribu
       if ($i == $num_items - 1) {
         $attributes['class'] = empty($attributes['class']) ? 'last' : ($attributes['class'] .' last');
       }
-      $output .= '<li'. drupal_attributes($attributes) .'>'. $data .'</li>';
+      $output .= '<li'. drupal_attributes($attributes) .'>'. $data ."</li>\n";
     }
     $output .= "</$type>";
   }

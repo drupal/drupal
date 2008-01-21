@@ -20,7 +20,7 @@ function blog_page_user($account) {
     $items[] = l(t('Post new blog entry.'), "node/add/blog");
   }
   else if ($account->uid == $user->uid) {
-    $items[] = t('You are not allowed to post a new blog entry.') .'</li>';
+    $items[] = t('You are not allowed to post a new blog entry.');
   }
 
   $output = theme('item_list', $items);
