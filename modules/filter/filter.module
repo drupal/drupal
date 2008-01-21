@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.203 2008/01/17 21:50:59 goba Exp $
+// $Id: filter.module,v 1.204 2008/01/21 15:08:24 goba Exp $
 
 /**
  * @file
@@ -865,7 +865,7 @@ function _filter_url_trim($text, $length = NULL) {
  */
 function _filter_autop($text) {
   // All block level tags
-  $block = '(?:table|thead|tfoot|caption|colgroup|tbody|tr|td|th|div|dl|dd|dt|ul|ol|li|pre|select|form|blockquote|address|p|h[1-6])';
+  $block = '(?:table|thead|tfoot|caption|colgroup|tbody|tr|td|th|div|dl|dd|dt|ul|ol|li|pre|select|form|blockquote|address|p|h[1-6]|hr)';
 
   // Split at <pre>, <script>, <style> and </pre>, </script>, </style> tags.
   // We don't apply any processing to the contents of these tags to avoid messing
