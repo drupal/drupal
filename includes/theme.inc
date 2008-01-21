@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.411 2008/01/21 12:05:36 goba Exp $
+// $Id: theme.inc,v 1.412 2008/01/21 21:47:08 goba Exp $
 
 /**
  * @file
@@ -754,25 +754,33 @@ function drupal_find_theme_functions($cache, $prefixes) {
 function drupal_find_theme_templates($cache, $extension, $path) {
   $templates = array();
 
-  // Escape the periods in the extension.
-  $regex = str_replace('.', '\.', $extension) .'$';
-
-  // Collect sub-themes for the current theme. This allows base themes to have
-  // sub-themes in its folder hierarchy without affecting the base theme.
-  global $theme;
-  $sub_themes = array();
+  // Collect paths to all sub-themes grouped by base themes. These will be
+  // used for filtering. This allows base themes to have sub-themes in its
+  // folder hierarchy without affecting the base themes template discovery.
+  $theme_paths = array();
   foreach (list_themes() as $theme_info) {
-    if (!empty($theme_info->base_theme) && $theme_info->base_theme == $theme) {
-      $sub_themes[] = dirname($theme_info->filename);
+    if (!empty($theme_info->base_theme)) {
+      $theme_paths[$theme_info->base_theme][$theme_info->name] = dirname($theme_info->filename);
     }
   }
+  foreach ($theme_paths as $basetheme => $subthemes) {
+    foreach ($subthemes as $subtheme => $subtheme_path) {
+      if (isset($theme_paths[$subtheme])) {
+        $theme_paths[$basetheme] = array_merge($theme_paths[$basetheme], $theme_paths[$subtheme]);
+      }
+    }
+  }
+  global $theme;
+  $subtheme_paths = isset($theme_paths[$theme]) ? $theme_paths[$theme] : array();
 
+  // Escape the periods in the extension.
+  $regex = str_replace('.', '\.', $extension) .'$';
   // Because drupal_system_listing works the way it does, we check for real
   // templates separately from checking for patterns.
   $files = drupal_system_listing($regex, $path, 'name', 0);
   foreach ($files as $template => $file) {
-    // Catch sub-themes and skip.
-    if (strpos($file->filename, str_replace($sub_themes, '', $file->filename)) !== 0) {
+    // Ignore sub-theme templates for the current theme.
+    if (strpos($file->filename, str_replace($subtheme_paths, '', $file->filename)) !== 0) {
       continue;
     }
     // Chop off the remaining extensions if there are any. $template already
