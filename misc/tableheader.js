@@ -1,4 +1,4 @@
-// $Id: tableheader.js,v 1.13 2008/01/15 10:43:00 goba Exp $
+// $Id: tableheader.js,v 1.14 2008/01/21 15:13:50 goba Exp $
 
 Drupal.behaviors.tableHeader = function (context) {
   // This breaks in anything less than IE 7. Prevent it from running.
@@ -23,7 +23,6 @@ Drupal.behaviors.tableHeader = function (context) {
     var table = $(this).parent('table')[0];
     headerClone.table = table;
     // Finish initialzing header positioning.
-    headerClone.resizeWidths = true;
     tracker(headerClone);
 
     $(table).addClass('sticky-table');
@@ -34,36 +33,29 @@ Drupal.behaviors.tableHeader = function (context) {
   function tracker(e) {
     // Save positioning data.
     var viewHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
-    if (e.viewHeight != viewHeight || e.resizeWidths) {
+    if (e.viewHeight != viewHeight) {
       e.viewHeight = viewHeight;
-      e.vPosition = $(e.table).offset().top;
+      e.vPosition = $(e.table).offset().top - 4;
       e.hPosition = $(e.table).offset().left;
-      e.vLength = $(e.table).height();
-      e.resizeWidths = true;
+      e.vLength = e.table.clientHeight - 100;
+      // Resize header and its cell widths.
+      var parentCell = $('th', e.table);
+      $('th', e).each(function(index) {
+        var cellWidth = parentCell.eq(index).css('width');
+        // Exception for IE7.
+        if (cellWidth == 'auto') {
+          var cellWidth = parentCell.get(index).clientWidth +'px';
+        }
+        $(this).css('width', cellWidth);
+      });
+      $(e).css('width', $(e.table).css('width'));
     }
 
     // Track horizontal positioning relative to the viewport and set visibility.
     var hScroll = document.documentElement.scrollLeft || document.body.scrollLeft;
-    var vScroll = document.documentElement.scrollTop || document.body.scrollTop;
-    var vOffset = vScroll - e.vPosition - 4;
-    var visState = (vOffset > 0 && vOffset < e.vLength - 100) ? 'visible' : 'hidden';
+    var vOffset = (document.documentElement.scrollTop || document.body.scrollTop) - e.vPosition;
+    var visState = (vOffset > 0 && vOffset < e.vLength) ? 'visible' : 'hidden';
     $(e).css({left: -hScroll + e.hPosition +'px', visibility: visState});
-
-    // Resize cell widths.
-    if (e.resizeWidths) {
-      var cellCount = 0;
-      $('th', e).each(function() {
-        var cellWidth = parseInt($('th', e.table).eq(cellCount).css('width'));
-        // Exception for IE7.
-        if (!cellWidth) {
-          var cellWidth = $('th', e.table).eq(cellCount).width();
-        }
-        cellCount++;
-        $(this).css('width', cellWidth +'px');
-      });
-      $(e).css('width', $(e.table).width() +'px');
-      e.resizeWidths = false;
-    }
   };
 
   // Track scrolling.
@@ -84,7 +76,8 @@ Drupal.behaviors.tableHeader = function (context) {
     }
     time = setTimeout(function () {
       $(headers).each(function () {
-        this.resizeWidths = true;
+        // Force cell width calculation.
+        this.viewHeight = 0;
         tracker(this);
       });
       // Reset timer
