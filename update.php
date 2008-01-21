@@ -176,9 +176,8 @@ function update_do_one($module, $number, &$context) {
   if (!empty($ret['#abort'])) {
     $context['results'][$module]['#abort'] = TRUE;
   }
-  // The schema update is not updated once a module's updates have been aborted.
-  if ($context['finished'] == 1 && !empty($context['results'][$module]['#abort'])) {
-    // Update the installed version
+  // Record the schema update if it was completed successfully.
+  if ($context['finished'] == 1 && empty($context['results'][$module]['#abort'])) {
     drupal_set_installed_schema_version($module, $number);
   }
 
