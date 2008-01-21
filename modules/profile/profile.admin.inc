@@ -64,7 +64,7 @@ function profile_admin_overview() {
 }
 
 /**
- * Submit hanlder to update changed profile field weights and categories.
+ * Submit handler to update changed profile field weights and categories.
  *
  * @see profile_admin_overview()
  */
