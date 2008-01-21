@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.249 2008/01/17 20:05:23 goba Exp $
+// $Id: update.php,v 1.250 2008/01/21 15:06:41 goba Exp $
 
 /**
  * @file
@@ -176,9 +176,8 @@ function update_do_one($module, $number, &$context) {
   if (!empty($ret['#abort'])) {
     $context['results'][$module]['#abort'] = TRUE;
   }
-  // The schema update is not updated once a module's updates have been aborted.
-  if ($context['finished'] == 1 && !empty($context['results'][$module]['#abort'])) {
-    // Update the installed version
+  // Record the schema update if it was completed successfully.
+  if ($context['finished'] == 1 && empty($context['results'][$module]['#abort'])) {
     drupal_set_installed_schema_version($module, $number);
   }
 
