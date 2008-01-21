@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.admin.inc,v 1.24 2008/01/08 11:31:49 goba Exp $
+// $Id: menu.admin.inc,v 1.25 2008/01/21 12:12:44 goba Exp $
 
 /**
  * @file
@@ -33,17 +33,17 @@ function menu_overview_form(&$form_state, $menu) {
     FROM {menu_links} ml LEFT JOIN {menu_router} m ON m.path = ml.router_path
     WHERE ml.menu_name = '%s'
     ORDER BY p1 ASC, p2 ASC, p3 ASC, p4 ASC, p5 ASC, p6 ASC, p7 ASC, p8 ASC, p9 ASC";
-  $sql_count = "SELECT COUNT(*) FROM {menu_links} ml WHERE menu_name = '%s'";
-  $result = pager_query($sql, 200, 0, $sql_count, $menu['menu_name']);
+  $result = db_query($sql, $menu['menu_name']);
   $tree = menu_tree_data($result);
   $node_links = array();
   menu_tree_collect_node_links($tree, $node_links);
-  // We indicate that a menu admintrator is running the menu access check.
+  // We indicate that a menu administrator is running the menu access check.
   $menu_admin = TRUE;
   menu_tree_check_access($tree, $node_links);
   $menu_admin = FALSE;
 
   $form = _menu_overview_tree_form($tree);
+  $form['#menu'] =  $menu;
   if (element_children($form)) {
     $form['submit'] = array(
       '#type' => 'submit',
@@ -214,7 +214,6 @@ function theme_menu_overview_form($form) {
   $output = '';
   if ($rows) {
     $output .= theme('table', $header, $rows, array('id' => 'menu-overview'));
-    $output .= theme('pager', NULL, 200, 0);
   }
   $output .= drupal_render($form);
   return $output;
