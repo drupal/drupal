@@ -1,8 +1,27 @@
 <?php
-// $Id: form.inc,v 1.258 2008/01/02 15:18:15 goba Exp $
+// $Id: form.inc,v 1.259 2008/01/21 15:17:01 goba Exp $
 
 /**
- * @defgroup form Form generation
+ * @defgroup forms Form builder functions
+ * @{
+ * Functions that build an abstract representation of a HTML form.
+ *
+ * All modules should declare their form builder functions to be in this
+ * group and each builder function should reference its validate and submit
+ * functions using \@see. Conversely, validate and submit functions should 
+ * reference the form builder function using \@see. For examples, of this see
+ * system_modules_uninstall() or user_pass(), the latter of which has the 
+ * following in its doxygen documentation:
+ *
+ * \@ingroup forms
+ * \@see user_pass_validate().
+ * \@see user_pass_submit().
+ *
+ * @} End of "defgroup forms".
+ */
+
+/**
+ * @defgroup form_api Form generation
  * @{
  * Functions to enable the processing and display of HTML forms.
  *
@@ -2205,7 +2224,7 @@ function form_clean_id($id = NULL, $flush = FALSE) {
 }
 
 /**
- * @} End of "defgroup form".
+ * @} End of "defgroup form_api".
  */
 
 /**
