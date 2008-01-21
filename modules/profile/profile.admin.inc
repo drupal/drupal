@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.admin.inc,v 1.7 2008/01/08 10:35:42 goba Exp $
+// $Id: profile.admin.inc,v 1.8 2008/01/21 15:20:43 goba Exp $
 
 /**
  * @file
@@ -64,7 +64,7 @@ function profile_admin_overview() {
 }
 
 /**
- * Submit hanlder to update changed profile field weights and categories.
+ * Submit handler to update changed profile field weights and categories.
  *
  * @see profile_admin_overview()
  */
