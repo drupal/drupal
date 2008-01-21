@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.232 2008/01/20 12:47:32 goba Exp $
+// $Id: system.install,v 1.233 2008/01/21 12:01:24 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -2447,6 +2447,20 @@ function system_update_6045() {
   // Notify user that delete permissions may have been changed. This was in
   // effect since system_update_6039(), but there was no user notice.
   drupal_set_message('Drupal now has separate edit and delete permissions. Previously, users who were able to edit content were automatically allowed to delete it. For added security, delete permissions for individual core content types have been <strong>removed</strong> from all roles on your site (only roles with the "administer nodes" permission can now delete these types of content). If you would like to reenable any individual delete permissions, you can do this at the <a href="'. url('admin/user/permissions', array('fragment' => 'module-node')) .'">permissions page</a>.');
+  return $ret;
+}
+
+/**
+ * Ensure that the file_directory_path variable is set (using the old 5.x
+ * default, if necessary), so that the changed 6.x default won't break
+ * existing sites.
+ */
+function system_update_6046() {
+  $ret = array();
+  if (!variable_get('file_directory_path', FALSE)) {
+    variable_set('file_directory_path', 'files');
+    $ret[] = array('success' => TRUE, 'query' => "variable_set('file_directory_path')");
+  }
   return $ret;
 }
 
