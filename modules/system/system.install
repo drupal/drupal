@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.233 2008/01/21 12:01:24 goba Exp $
+// $Id: system.install,v 1.234 2008/01/21 20:04:35 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -52,10 +52,6 @@ function system_requirements($phase) {
     $requirements['webserver']['description'] = $t('Unable to determine your web server type and version. Drupal might not work properly.');
     $requirements['webserver']['severity'] = REQUIREMENT_WARNING;
   }
-  if (ini_get('register_globals')) {
-    $requirements['php']['description'] = $t('<em>register_globals</em> is enabled. Drupal requires this configuration directive to be disabled. Your site may not be secure when <em>register_globals</em> is enabled. The PHP manual has instructions for <a href="http://php.net/configuration.changes">how to change configuration settings</a>.');
-    $requirements['php']['severity'] = REQUIREMENT_ERROR;
-  }
 
   // Test PHP version
   $requirements['php'] = array(
@@ -65,6 +61,25 @@ function system_requirements($phase) {
   if (version_compare(phpversion(), DRUPAL_MINIMUM_PHP) < 0) {
     $requirements['php']['description'] = $t('Your PHP installation is too old. Drupal requires at least PHP %version.', array('%version' => DRUPAL_MINIMUM_PHP));
     $requirements['php']['severity'] = REQUIREMENT_ERROR;
+  }
+
+  // Test PHP register_globals setting.
+  $requirements['php_register_globals'] = array(
+    'title' => $t('PHP register globals'),
+  );
+  $register_globals = trim(ini_get('register_globals'));
+  // Unfortunately, ini_get() may return many different values, and we can't 
+  // be certain which values mean 'on', so we instead check for 'not off'
+  // since we never want to tell the user that their site is secure
+  // (register_globals off), when it is in fact on. We can only guarantee
+  // register_globals is off if the value returned is 'off', '', or 0.
+  if (!empty($register_globals) && strtolower($register_globals) != 'off') {
+    $requirements['php_register_globals']['description'] = $t('<em>register_globals</em> is enabled. Drupal requires this configuration directive to be disabled. Your site may not be secure when <em>register_globals</em> is enabled. The PHP manual has instructions for <a href="http://php.net/configuration.changes">how to change configuration settings</a>.');
+    $requirements['php_register_globals']['severity'] = REQUIREMENT_ERROR;
+    $requirements['php_register_globals']['value'] = $t("Enabled ('@value')", array('@value' => $register_globals));
+  }
+  else {
+    $requirements['php_register_globals']['value'] = $t('Disabled');
   }
 
   // Test PHP memory_limit
