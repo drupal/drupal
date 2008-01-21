@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.module,v 1.12 2007/12/31 14:51:04 goba Exp $
+// $Id: trigger.module,v 1.13 2008/01/21 20:08:15 goba Exp $
 
 /**
  * @file
@@ -16,7 +16,7 @@ function trigger_help($path, $arg) {
     case 'admin/build/trigger/comment':
       return $explanation .'<p>'. t('Below you can assign actions to run when certain comment-related triggers happen. For example, you could promote a post to the front page when a comment is added.') .'</p>';
     case 'admin/build/trigger/node':
-      return $explanation .'<p>'. t('Below you can assign actions to run when certain content-related triggers happen. For example, you could remove a post from the front page when the post is updated.') .'</p>';
+      return $explanation .'<p>'. t('Below you can assign actions to run when certain content-related triggers happen. For example, you could send an e-mail to an administrator when a post is created or updated.') .'</p>';
     case 'admin/build/trigger/cron':
       return $explanation .'<p>'. t('Below you can assign actions to run during each pass of a <a href="@cron">cron maintenance task</a>.', array('@cron' => url('admin/reports/status'))) .'</p>';
     case 'admin/build/trigger/taxonomy':
