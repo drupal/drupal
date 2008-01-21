@@ -2451,6 +2451,20 @@ function system_update_6045() {
 }
 
 /**
+ * Ensure that the file_directory_path variable is set (using the old 5.x
+ * default, if necessary), so that the changed 6.x default won't break
+ * existing sites.
+ */
+function system_update_6046() {
+  $ret = array();
+  if (!variable_get('file_directory_path', FALSE)) {
+    variable_set('file_directory_path', 'files');
+    $ret[] = array('success' => TRUE, 'query' => "variable_set('file_directory_path')");
+  }
+  return $ret;
+}
+
+/**
  * @} End of "defgroup updates-5.x-to-6.x"
  * The next series of updates should start at 7000.
  */
