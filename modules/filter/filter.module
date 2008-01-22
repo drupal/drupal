@@ -604,8 +604,9 @@ function filter_admin_configure() {
 
   if (!empty($form)) {
     $form = system_settings_form($form);
-    $form['format'] = array('#type' => 'hidden', '#value' => $format->format);
-    $form['#submit'][] = 'filter_admin_configure_submit';
+    $form['format'] = array('#type' => 'hidden', '#value' => $format);
+    $form['#submit']['system_settings_form_submit'] = array();
+    $form['#submit']['filter_admin_configure_submit'] = array();
   }
   else {
     $form['error'] = array('#value' => t('No settings are available.'));
