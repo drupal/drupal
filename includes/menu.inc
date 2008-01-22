@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.247 2008/01/21 12:05:36 goba Exp $
+// $Id: menu.inc,v 1.248 2008/01/22 17:19:28 goba Exp $
 
 /**
  * @file
@@ -468,7 +468,6 @@ function _menu_check_access(&$item, $map) {
  */
 function _menu_item_localize(&$item, $map, $link_translate = FALSE) {
   $callback = $item['title_callback'];
-
   // If we are not doing link translation or if the title matches the
   // link title of its router item, localize it.
   if (!$link_translate || (!empty($item['title']) && ($item['title'] == $item['link_title']))) {
@@ -488,6 +487,10 @@ function _menu_item_localize(&$item, $map, $link_translate = FALSE) {
       }
       else {
         $item['title'] = call_user_func_array($callback, menu_unserialize($item['title_arguments'], $map));
+      }
+      // Avoid calling check_plain again on l() function.
+      if ($callback == 'check_plain') {
+        $item['options']['html'] = TRUE;
       }
     }
   }
