@@ -1,5 +1,5 @@
 <?php
-// $Id: update.module,v 1.14 2008/01/17 12:03:21 goba Exp $
+// $Id: update.module,v 1.15 2008/01/22 07:56:07 goba Exp $
 
 /**
  * @file
@@ -253,29 +253,30 @@ function _update_requirement_check($project, $type) {
   }
   switch ($status) {
     case UPDATE_NOT_SECURE:
-      $requirement['value'] = t('Not secure!');
+      $requirement_label = t('Not secure!');
       break;
     case UPDATE_REVOKED:
-      $requirement['value'] = t('Revoked!');
+      $requirement_label = t('Revoked!');
       break;
     case UPDATE_NOT_SUPPORTED:
-      $requirement['value'] = t('Unsupported release');
+      $requirement_label = t('Unsupported release');
       break;
     case UPDATE_NOT_CURRENT:
-      $requirement['value'] = t('Out of date');
+      $requirement_label = t('Out of date');
       $requirement['severity'] = variable_get('update_notification_threshold', 'all') == 'all' ? REQUIREMENT_ERROR : REQUIREMENT_WARNING;
       break;
     case UPDATE_UNKNOWN:
     case UPDATE_NOT_CHECKED:
-      $requirement['value'] = isset($project['reason']) ? $project['reason'] : t('Can not determine status');
+      $requirement_label = isset($project['reason']) ? $project['reason'] : t('Can not determine status');
       $requirement['severity'] = REQUIREMENT_WARNING;
       break;
     default:
-      $requirement['value'] = t('Up to date');
+      $requirement_label = t('Up to date');
   }
   if ($status != UPDATE_CURRENT && $type == 'core' && isset($project['recommended'])) {
-    $requirement['value'] .= ' '. t('(version @version available)', array('@version' => $project['recommended']));
+    $requirement_label .= ' '. t('(version @version available)', array('@version' => $project['recommended']));
   }
+  $requirement['value'] = l($requirement_label, 'admin/reports/updates');
   return $requirement;
 }
 
