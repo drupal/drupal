@@ -49,6 +49,11 @@ function _update_process_info_list(&$projects, &$list, $project_type) {
       $file->info['project'] = update_get_project_name($file);
     }
 
+    // If we still don't know the 'project', give up.
+    if (empty($file->info['project'])) {
+      continue;
+    }
+
     // If we don't already know it, grab the change time on the .info file
     // itself. Note: we need to use the ctime, not the mtime (modification
     // time) since many (all?) tar implementations will go out of their way to
@@ -98,19 +103,6 @@ function update_get_project_name($file) {
     // Unfortunately, there's no way to tell if a theme is part of core,
     // so we must hard-code a list here.
     $project_name = 'drupal';
-  }
-  else {
-    // This isn't part of core, so guess the project from the directory.
-    $last = '';
-    foreach (array_reverse(explode('/', $file->filename)) as $dir) {
-      if ($dir == 'modules' || $dir == 'themes') {
-        break;
-      }
-      $last = $dir;
-    }
-    if ($last) {
-      $project_name = $last;
-    }
   }
   return $project_name;
 }
