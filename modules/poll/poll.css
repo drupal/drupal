@@ -1,4 +1,4 @@
-/* $Id: poll.css,v 1.5 2007/10/17 12:34:16 dries Exp $ */
+/* $Id: poll.css,v 1.6 2008/01/22 07:47:57 goba Exp $ */
 
 .poll .bar {
   height: 1em;
@@ -32,4 +32,10 @@
 }
 .node-form #edit-poll-more {
   margin: 0;
+}
+td.poll-chtext {
+  width: 80%;
+}
+td.poll-chvotes .form-text {
+  width: 85%;
 }
