@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.578 2008/01/10 23:14:58 goba Exp $
+// $Id: system.module,v 1.579 2008/01/22 18:20:25 goba Exp $
 
 /**
  * @file
@@ -1224,7 +1224,7 @@ function system_cron() {
       // If files that exist cannot be deleted, continue so the database remains
       // consistent.
       if (!file_delete($file->filepath)) {
-        watchdog('file system', t('Could not delete temporary file "%path" during garbage collection', array('%path' => $file->filepath)), 'error');
+        watchdog('file system', 'Could not delete temporary file "%path" during garbage collection', array('%path' => $file->filepath), 'error');
         continue;
       }
     }
