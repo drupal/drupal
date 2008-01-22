@@ -33,3 +33,9 @@
 .node-form #edit-poll-more {
   margin: 0;
 }
+td.poll-chtext {
+  width: 80%;
+}
+td.poll-chvotes .form-text {
+  width: 85%;
+}
