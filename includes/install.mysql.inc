@@ -1,5 +1,5 @@
 <?php
-// $Id: install.mysql.inc,v 1.8 2007/12/08 14:06:20 goba Exp $
+// $Id: install.mysql.inc,v 1.9 2008/01/23 09:59:29 goba Exp $
 
 // MySQL specific install functions
 
@@ -29,7 +29,7 @@ function drupal_test_mysql($url, &$success) {
 
   // Decode url-encoded information in the db connection string.
   $url['user'] = urldecode($url['user']);
-  $url['pass'] = urldecode($url['pass']);
+  $url['pass'] = isset($url['pass']) ? urldecode($url['pass']) : '';
   $url['host'] = urldecode($url['host']);
   $url['path'] = urldecode($url['path']);
 
