@@ -1,5 +1,5 @@
 <?php
-// $Id: color.module,v 1.38 2008/01/11 12:33:09 goba Exp $
+// $Id: color.module,v 1.39 2008/01/23 09:43:25 goba Exp $
 
 /**
  * Implementation of hook_help().
@@ -317,8 +317,10 @@ function color_scheme_form_submit($form, &$form_state) {
     $paths['files'][] = $paths['target'] . $base;
   }
 
-  // Render new images.
-  _color_render_images($theme, $info, $paths, $palette);
+  // Render new images, if image provided.
+  if ($info['base_image']) {
+    _color_render_images($theme, $info, $paths, $palette);
+  }
 
   // Rewrite theme stylesheets.
   $css = array();
