@@ -75,7 +75,7 @@ Drupal.behaviors.tableHeader = function (context) {
       return;
     }
     time = setTimeout(function () {
-      $(headers).each(function () {
+      $('table.sticky-header').each(function () {
         // Force cell width calculation.
         this.viewHeight = 0;
         tracker(this);
