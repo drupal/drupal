@@ -1,4 +1,4 @@
-// $Id: tableheader.js,v 1.14 2008/01/21 15:13:50 goba Exp $
+// $Id: tableheader.js,v 1.15 2008/01/23 09:48:10 goba Exp $
 
 Drupal.behaviors.tableHeader = function (context) {
   // This breaks in anything less than IE 7. Prevent it from running.
@@ -75,7 +75,7 @@ Drupal.behaviors.tableHeader = function (context) {
       return;
     }
     time = setTimeout(function () {
-      $(headers).each(function () {
+      $('table.sticky-header').each(function () {
         // Force cell width calculation.
         this.viewHeight = 0;
         tracker(this);
