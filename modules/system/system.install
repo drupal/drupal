@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.234 2008/01/21 20:04:35 goba Exp $
+// $Id: system.install,v 1.235 2008/01/24 10:41:17 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -1489,7 +1489,7 @@ function system_update_6017() {
         $ret[] = array('success' => TRUE, 'query' => "variable_set($new_name)");
         $ret[] = array('success' => TRUE, 'query' => "variable_del($old_name)");
         if ($old_name == 'user_mail_approval_body') {
-          drupal_set_message(t('Saving an old value of the welcome message body for users that are pending administrator approval. However, you should consider modifying this text, since Drupal can now be configured to automatically notify users and send them their login information when their accounts are approved. See the !admin_user_settings page for details.', array('!admin_user_settings' => l(t('User settings'), 'admin/user/settings'))));
+          drupal_set_message('Saving an old value of the welcome message body for users that are pending administrator approval. However, you should consider modifying this text, since Drupal can now be configured to automatically notify users and send them their login information when their accounts are approved. See the <a href="'. url('admin/user/settings') .'">User settings</a> page for details.');
         }
       }
     }
@@ -1979,7 +1979,7 @@ function system_update_6026() {
   $ret = array();
 
   // Notify user that new update module exists.
-  drupal_set_message(t('Drupal can check periodically for important bug fixes and security releases using the new update status module. This module can be turned on from the <a href="@modules">modules administration page</a>. For more information please read the <a href="@update">Update status handbook page</a>.', array('@modules' => url('admin/build/modules'), '@update' => 'http://drupal.org/handbook/modules/update')));
+  drupal_set_message('Drupal can check periodically for important bug fixes and security releases using the new update status module. This module can be turned on from the <a href="'. url('admin/build/modules') .'">modules administration page</a>. For more information please read the <a href="http://drupal.org/handbook/modules/update">Update status handbook page</a>.');
 
   return $ret;
 }
@@ -2239,7 +2239,7 @@ function system_update_6038() {
   if (db_table_exists('profile_fields')) {
     $ret[] = update_sql("UPDATE {profile_fields} SET category = 'Account settings' WHERE LOWER(category) = 'account'");
     if ($affectedrows = db_affected_rows()) {
-      drupal_set_message(t('There were @affectedrows profile fields that used a reserved category name. They have been assigned to the category "Account settings".', array('@affectedrows' => $affectedrows)));
+      drupal_set_message('There were '. $affectedrows .' profile fields that used a reserved category name. They have been assigned to the category "Account settings".');
     }
   }
   return $ret;
