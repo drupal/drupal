@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.412 2008/01/21 21:47:08 goba Exp $
+// $Id: theme.inc,v 1.413 2008/01/24 09:42:50 goba Exp $
 
 /**
  * @file
@@ -1748,6 +1748,7 @@ function template_preprocess_page(&$variables) {
   $variables['head']              = drupal_get_html_head();
   $variables['help']              = theme('help');
   $variables['language']          = $GLOBALS['language'];
+  $variables['language']->dir     = $GLOBALS['language']->direction ? 'rtl' : 'ltr';
   $variables['logo']              = theme_get_setting('logo');
   $variables['messages']          = $variables['show_messages'] ? theme('status_messages') : '';
   $variables['mission']           = isset($mission) ? $mission : '';

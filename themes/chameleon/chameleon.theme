@@ -1,5 +1,5 @@
 <?php
-// $Id: chameleon.theme,v 1.75 2008/01/07 13:49:37 goba Exp $
+// $Id: chameleon.theme,v 1.76 2008/01/24 09:42:53 goba Exp $
 
 /**
  * @file
@@ -14,7 +14,8 @@ function chameleon_theme($existing, $type, $theme, $path) {
 }
 
 function chameleon_page($content, $show_blocks = TRUE, $show_messages = TRUE) {
-  $language = isset($GLOBALS['language']) ? $GLOBALS['language']->language : NULL;
+  $language = $GLOBALS['language']->language;
+  $direction = $GLOBALS['language']->direction ? 'rtl' : 'ltr';
 
   if (theme_get_setting('toggle_favicon')) {
     drupal_set_html_head('<link rel="shortcut icon" href="'. check_url(theme_get_setting('favicon')) .'" type="image/x-icon" />');
@@ -27,7 +28,7 @@ function chameleon_page($content, $show_blocks = TRUE, $show_messages = TRUE) {
   $blocks_right = theme_blocks('right');
 
   $output  = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n";
-  $output .= "<html xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"$language\" xml:lang=\"$language\">\n";
+  $output .= "<html xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"$language\" xml:lang=\"$language\" dir=\"$direction\">\n";
   $output .= "<head>\n";
   $output .= " <title>". ($title ? strip_tags($title) ." | ". variable_get("site_name", "Drupal") : variable_get("site_name", "Drupal") ." | ". variable_get("site_slogan", "")) ."</title>\n";
   $output .= drupal_get_html_head();

@@ -1,5 +1,5 @@
 <?php
-// $Id: page.tpl.php,v 1.10 2007/12/08 14:06:22 goba Exp $
+// $Id: page.tpl.php,v 1.11 2008/01/24 09:42:51 goba Exp $
 
 /**
  * @file page.tpl.php
@@ -21,6 +21,7 @@
  * Page metadata:
  * - $language: (object) The language the site is being displayed in.
  *   $language->language contains its textual representation.
+ *   $language->dir contains the language direction. It will either be 'ltr' or 'rtl'.
  * - $head_title: A modified version of the page title, for use in the TITLE tag.
  * - $head: Markup for the HEAD section (including meta tags, keyword tags, and
  *   so on).
@@ -76,7 +77,7 @@
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php print $language->language ?>" lang="<?php print $language->language ?>">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php print $language->language ?>" lang="<?php print $language->language ?>" dir="<?php print $language->dir ?>">
 
 <head>
   <title><?php print $head_title; ?></title>
