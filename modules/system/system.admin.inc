@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.58 2008/01/17 16:08:35 goba Exp $
+// $Id: system.admin.inc,v 1.59 2008/01/24 10:59:29 goba Exp $
 
 /**
  * @file
@@ -1774,7 +1774,7 @@ function system_sql() {
   $output .= '<h2>'. t('Query performance') .'</h2>';
   $output .= _system_sql($data, array(
    'Select_full_join' => t('The number of joins without an index; should be zero.'),
-   'Select_range_check' => t('The number of joins without an index; should be zero.'),
+   'Select_range_check' => t('The number of joins without keys that check for key usage after each row; should be zero.'),
    'Sort_scan' => t('The number of sorts done without using an index; should be zero.'),
    'Table_locks_immediate' => t('The number of times a lock could be acquired immediately.'),
    'Table_locks_waited' => t('The number of times the server had to wait for a lock.')
