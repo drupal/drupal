@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.413 2008/01/24 09:42:50 goba Exp $
+// $Id: theme.inc,v 1.414 2008/01/24 11:00:57 goba Exp $
 
 /**
  * @file
@@ -1890,7 +1890,7 @@ function template_preprocess_node(&$variables) {
  * series of template file suggestions. If none are found, the default
  * block.tpl.php is used.
  *
- * Most themes utilize their own copy of page.tpl.php. The default is located
+ * Most themes utilize their own copy of block.tpl.php. The default is located
  * inside "modules/system/block.tpl.php". Look in there for the full list of
  * variables.
  *
