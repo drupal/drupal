@@ -247,6 +247,7 @@ function template_preprocess_maintenance_page(&$variables) {
   $variables['head']              = drupal_get_html_head();
   $variables['help']              = '';
   $variables['language']          = $GLOBALS['language'];
+  $variables['language']->dir     = $GLOBALS['language']->direction ? 'rtl' : 'ltr';
   $variables['logo']              = theme_get_setting('logo');
   $variables['messages']          = $variables['show_messages'] ? theme('status_messages') : '';
   $variables['mission']           = '';
