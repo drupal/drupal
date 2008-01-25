@@ -62,7 +62,7 @@
   <?php endif; ?>
 
   <?php if ($terms): ?>
-    <span class="terms"><?php print $terms ?></span>
+    <div class="terms terms-inline"><?php print $terms ?></div>
   <?php endif;?>
   </div>
 

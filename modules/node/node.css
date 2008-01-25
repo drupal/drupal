@@ -39,3 +39,6 @@ td.revision-current {
   float: none;
   display: block;
 }
+.terms-inline {
+  display: inline;
+}
