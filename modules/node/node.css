@@ -1,4 +1,4 @@
-/* $Id: node.css,v 1.4 2007/07/24 21:33:53 goba Exp $ */
+/* $Id: node.css,v 1.5 2008/01/25 21:21:44 goba Exp $ */
 
 .node-unpublished {
   background-color: #fff4f4;
@@ -38,4 +38,7 @@ td.revision-current {
 .node-form .attachments fieldset {
   float: none;
   display: block;
+}
+.terms-inline {
+  display: inline;
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: node.tpl.php,v 1.3 2007/08/28 11:35:33 goba Exp $
+// $Id: node.tpl.php,v 1.4 2008/01/25 21:21:44 goba Exp $
 
 /**
  * @file node.tpl.php
@@ -62,7 +62,7 @@
   <?php endif; ?>
 
   <?php if ($terms): ?>
-    <span class="terms"><?php print $terms ?></span>
+    <div class="terms terms-inline"><?php print $terms ?></div>
   <?php endif;?>
   </div>
 
