@@ -32,7 +32,7 @@ function update_get_projects() {
 /**
  * Populate an array of project data.
  */
-function _update_process_info_list(&$projects, &$list, $project_type) {
+function _update_process_info_list(&$projects, $list, $project_type) {
   foreach ($list as $file) {
     if (empty($file->status)) {
       // Skip disabled modules or themes.
