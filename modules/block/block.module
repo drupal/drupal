@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.297 2007/12/24 10:33:39 goba Exp $
+// $Id: block.module,v 1.298 2008/01/25 10:56:59 goba Exp $
 
 /**
  * @file
@@ -235,6 +235,8 @@ function _block_rehash() {
   }
 
   $blocks = array();
+  // Valid region names for the theme.
+  $regions = system_region_list($theme_key);
 
   foreach (module_list() as $module) {
     $module_blocks = module_invoke($module, 'block', 'list');
@@ -265,8 +267,15 @@ function _block_rehash() {
           // do not need to update the database here.
           // Add 'info' to this block.
           $old_blocks[$module][$delta]['info'] = $block['info'];
-          // Set region to none if not enabled.
-          $old_blocks[$module][$delta]['region'] = $old_blocks[$module][$delta]['status'] ? $old_blocks[$module][$delta]['region'] : BLOCK_REGION_NONE;
+          // If the region name does not exist, disable the block and assign it to none.
+          if (!empty($old_blocks[$module][$delta]['region']) && !isset($regions[$old_blocks[$module][$delta]['region']])) {
+            drupal_set_message(t('The block %info was assigned to the invalid region %region and has been disabled.', array('%info' => $old_blocks[$module][$delta]['info'], '%region' => $old_blocks[$module][$delta]['region'])), 'warning');
+            $old_blocks[$module][$delta]['status'] = 0;
+            $old_blocks[$module][$delta]['region'] = BLOCK_REGION_NONE;
+          }
+          else {
+            $old_blocks[$module][$delta]['region'] = $old_blocks[$module][$delta]['status'] ? $old_blocks[$module][$delta]['region'] : BLOCK_REGION_NONE;
+          }
           // Add this block to the list of blocks we return.
           $blocks[] = $old_blocks[$module][$delta];
           // Remove this block from the list of blocks to be deleted.
