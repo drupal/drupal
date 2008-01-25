@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.112 2008/01/07 19:43:28 goba Exp $
+// $Id: install.php,v 1.113 2008/01/25 12:36:37 goba Exp $
 
 require_once './includes/install.inc';
 
@@ -434,7 +434,7 @@ function install_select_profile() {
   }
   elseif (sizeof($profiles) > 1) {
     foreach ($profiles as $profile) {
-      if ($_POST['profile'] == $profile->name) {
+      if (!empty($_POST['profile']) && ($_POST['profile'] == $profile->name)) {
         return $profile->name;
       }
     }
