@@ -1,5 +1,5 @@
 <?php
-// $Id: update.compare.inc,v 1.5 2008/01/22 07:45:18 goba Exp $
+// $Id: update.compare.inc,v 1.6 2008/01/25 12:34:48 goba Exp $
 
 /**
  * @file
@@ -32,7 +32,7 @@ function update_get_projects() {
 /**
  * Populate an array of project data.
  */
-function _update_process_info_list(&$projects, &$list, $project_type) {
+function _update_process_info_list(&$projects, $list, $project_type) {
   foreach ($list as $file) {
     if (empty($file->status)) {
       // Skip disabled modules or themes.
