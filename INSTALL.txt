@@ -1,4 +1,4 @@
-// $Id: INSTALL.txt,v 1.58 2008/01/24 10:46:54 goba Exp $
+// $Id: INSTALL.txt,v 1.59 2008/01/25 21:17:50 goba Exp $
 
 CONTENTS OF THIS FILE
 ---------------------
@@ -24,9 +24,9 @@ or greater is recommended to assure you can safely transfer the database.
 For more detailed information about Drupal requirements, see "Requirements"
 (http://drupal.org/requirements) in the Drupal Handbook.
 
-Guidelines for setting up a server environment with a variety of operating
-systems and in special cases are available in the Drupal handbook
-(http://drupal.org/node/260).
+For detailed information on how to configure a test server environment using
+a variety of operating systems and web servers, see "Local server setup"
+(http://drupal.org/node/157602) in the Drupal Handbook.
 
 OPTIONAL REQUIREMENTS
 ---------------------
