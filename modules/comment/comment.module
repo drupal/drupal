@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.616 2008/01/10 15:03:53 goba Exp $
+// $Id: comment.module,v 1.617 2008/01/25 16:19:12 goba Exp $
 
 /**
  * @file
@@ -542,7 +542,7 @@ function comment_form_alter(&$form, $form_state, $form_id) {
         COMMENT_ANONYMOUS_MUST_CONTACT => t('Anonymous posters must leave their contact information')),
       '#description' => t('This option is enabled when anonymous users have permission to post comments on the <a href="@url">permissions page</a>.', array('@url' => url('admin/user/permissions', array('fragment' => 'module-comment')))),
     );
-    if (!user_access('post comments', user_load(array('uid' => 0)))) {
+    if (!user_access('post comments', drupal_anonymous_user())) {
       $form['comment']['comment_anonymous']['#disabled'] = TRUE;
     }
     $form['comment']['comment_subject_field'] = array(

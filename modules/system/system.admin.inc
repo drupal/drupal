@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.59 2008/01/24 10:59:29 goba Exp $
+// $Id: system.admin.inc,v 1.60 2008/01/25 16:19:13 goba Exp $
 
 /**
  * @file
@@ -582,7 +582,7 @@ function _system_is_incompatible(&$incompatible, $files, $file) {
   }
   // The 'dependencies' key in .info files was a string in Drupal 5, but changed
   // to an array in Drupal 6. If it is not an array, the module is not
-  // compatible and we can skip the check below which requires an array. 
+  // compatible and we can skip the check below which requires an array.
   if (!is_array($file->info['dependencies'])) {
     $file->info['dependencies'] = array();
     $incompatible[$file->name] = TRUE;
@@ -1686,7 +1686,6 @@ function system_clean_url_settings() {
  * Menu callback: displays the site status report. Can also be used as a pure check.
  *
  * @param $check
- *
  *   If true, only returns a boolean whether there are system status errors.
  */
 function system_status($check = FALSE) {
@@ -1694,13 +1693,16 @@ function system_status($check = FALSE) {
   include_once './includes/install.inc';
   drupal_load_updates();
 
-  // Check run-time requirements and status information
+  // Check run-time requirements and status information.
   $requirements = module_invoke_all('requirements', 'runtime');
   usort($requirements, '_system_sort_requirements');
 
   if ($check) {
     return drupal_requirements_severity($requirements) == REQUIREMENT_ERROR;
   }
+  // MySQL import might have set the uid of the anonymous user to autoincrement
+  // value. Let's try fixing it. See http://drupal.org/node/204411
+  db_query("UPDATE {users} SET uid = uid - uid WHERE name = '' AND pass = '' AND status = 0");
 
   return theme('status_report', $requirements);
 }
