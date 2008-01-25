@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.259 2008/01/21 15:17:01 goba Exp $
+// $Id: form.inc,v 1.260 2008/01/25 16:24:48 goba Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -907,9 +907,14 @@ function form_builder($form_id, $form, &$form_state) {
   // Now that we've processed everything, we can go back to handle the funky
   // Internet Explorer button-click scenario.
   _form_builder_ie_cleanup($form, $form_state);
-
-  // After handling the special IE case, we no longer need the buttons collection.
-  unset($form_state['buttons']);
+  
+  // We shoud keep the buttons array until the IE clean up function
+  // has recognized the submit button so the form has been marked
+  // as submitted. If we already know which button was submitted,
+  // we don't need the array.
+  if (!empty($form_state['submitted'])) {
+    unset($form_state['buttons']);
+  }
 
   // If some callback set #cache, we need to flip a static flag so later it
   // can be found.
