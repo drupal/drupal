@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.446 2008/01/15 08:16:45 dries Exp $
+// $Id: forum.module,v 1.447 2008/01/25 21:39:26 goba Exp $
 
 /**
  * @file
@@ -353,10 +353,10 @@ function forum_taxonomy($op, $type, $term = NULL) {
  * Implementation of hook_form_alter().
  */
 function forum_form_alter(&$form, $form_state, $form_id) {
-  // Hide critical options from forum vocabulary
-  if ($form_id == 'taxonomy_form_vocabulary') {
-    $vid = variable_get('forum_nav_vocabulary', '');
-    if (isset($form['vid']) && $form['vid']['#value'] == $vid) {
+  $vid = variable_get('forum_nav_vocabulary', '');
+  if (isset($form['vid']) && $form['vid']['#value'] == $vid) {
+    // Hide critical options from forum vocabulary.
+    if ($form_id == 'taxonomy_form_vocabulary') {
       $form['help_forum_vocab'] = array(
         '#value' => t('This is the designated forum vocabulary. Some of the normal vocabulary options have been removed.'),
         '#weight' => -1,
@@ -369,10 +369,10 @@ function forum_form_alter(&$form, $form_state, $form_id) {
       $form['settings']['multiple'] = array('#type' => 'value', '#value' => FALSE);
       unset($form['delete']);
     }
-  }
-  // Hide multiple parents select from forum terms.
-  if ($form_id == 'taxonomy_form_term') {
-    unset($form['advanced']['parent']);
+    // Hide multiple parents select from forum terms.
+    elseif ($form_id == 'taxonomy_form_term') {
+      $form['advanced']['parent']['#access'] = FALSE;
+    }    
   }
   if ($form_id == 'forum_node_form') {
     // Make the vocabulary required for 'real' forum-nodes.
