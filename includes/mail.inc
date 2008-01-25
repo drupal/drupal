@@ -1,5 +1,5 @@
 <?php
-// $Id: mail.inc,v 1.7 2007/09/04 21:10:45 dries Exp $
+// $Id: mail.inc,v 1.8 2008/01/25 17:04:00 goba Exp $
 
 /**
  * Compose and optionally send an e-mail message.
@@ -276,6 +276,7 @@ function drupal_html_to_text($string, $allowed_tags = NULL) {
   // Replace inline <a> tags with the text of link and a footnote.
   // 'See <a href="http://drupal.org">the Drupal site</a>' becomes
   // 'See the Drupal site [1]' with the URL included as a footnote.
+  _drupal_html_to_mail_urls(NULL, TRUE);
   $pattern = '@(<a[^>]+?href="([^"]*)"[^>]*?>(.+?)</a>)@i';
   $string = preg_replace_callback($pattern, '_drupal_html_to_mail_urls', $string);
   $urls = _drupal_html_to_mail_urls();
@@ -429,17 +430,24 @@ function _drupal_wrap_mail_line(&$line, $key, $values) {
  *
  * Keeps track of URLs and replaces them with placeholder tokens.
  */
-function _drupal_html_to_mail_urls($match = NULL) {
+function _drupal_html_to_mail_urls($match = NULL, $reset = FALSE) {
   global $base_url, $base_path;
   static $urls = array(), $regexp;
-  if (empty($regexp)) {
-    $regexp = '@^'. preg_quote($base_path, '@') .'@';
+  
+  if ($reset) {
+    // Reset internal URL list.
+    $urls = array();
   }
-  if ($match) {
-    list(, , $url, $label) = $match;
-    // Ensure all URLs are absolute.
-    $urls[] = strpos($url, '://') ? $url : preg_replace($regexp, $base_url .'/', $url);
-    return $label .' ['. count($urls) .']';
+  else {
+    if (empty($regexp)) {
+      $regexp = '@^'. preg_quote($base_path, '@') .'@';
+    }
+    if ($match) {
+      list(, , $url, $label) = $match;
+      // Ensure all URLs are absolute.
+      $urls[] = strpos($url, '://') ? $url : preg_replace($regexp, $base_url .'/', $url);
+      return $label .' ['. count($urls) .']';
+    }
   }
   return $urls;
 }
