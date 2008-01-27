@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.249 2008/01/21 16:30:37 goba Exp $
+// $Id: CHANGELOG.txt,v 1.250 2008/01/27 17:55:14 goba Exp $
 
 Drupal 6.0, xxxx-xx-xx (development version)
 ----------------------
@@ -47,7 +47,7 @@ Drupal 6.0, xxxx-xx-xx (development version)
     * Dynamically check password strength and confirmation.
     * Refactored poll administration.
     * Implemented drag-and-drop positioning for blocks, menu items, taxonomy
-      terms, forums, profile fields, and input format filters.
+      vocabularies and terms, forums, profile fields, and input format filters.
 - Theme system:
     * Added .info files to themes and made it easier to specify regions and
       features.
