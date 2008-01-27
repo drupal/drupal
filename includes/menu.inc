@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.248 2008/01/22 17:19:28 goba Exp $
+// $Id: menu.inc,v 1.249 2008/01/27 17:43:23 goba Exp $
 
 /**
  * @file
@@ -1486,6 +1486,12 @@ function menu_get_active_trail() {
  */
 function menu_get_active_breadcrumb() {
   $breadcrumb = array();
+  
+  // No breadcrumb for the front page.
+  if (drupal_is_front_page()) {
+    return $breadcrumb;
+  }
+
   $item = menu_get_item();
   if ($item && $item['access']) {
     $active_trail = menu_get_active_trail();
