@@ -1486,6 +1486,12 @@ function menu_get_active_trail() {
  */
 function menu_get_active_breadcrumb() {
   $breadcrumb = array();
+  
+  // No breadcrumb for the front page.
+  if (drupal_is_front_page()) {
+    return $breadcrumb;
+  }
+
   $item = menu_get_item();
   if ($item && $item['access']) {
     $active_trail = menu_get_active_trail();
