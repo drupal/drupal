@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.889 2008/01/22 07:51:56 goba Exp $
+// $Id: user.module,v 1.890 2008/01/27 20:00:46 goba Exp $
 
 /**
  * @file
@@ -324,7 +324,7 @@ function user_save($account, $array = array(), $category = 'account') {
       // must abort to avoid overwirting their account.
       return FALSE;
     }
-    
+
     // Build the initial user object.
     $array['uid'] = db_last_insert_id('users', 'uid');
     $user = user_load(array('uid' => $array['uid']));
@@ -1361,7 +1361,14 @@ function user_external_login_register($name, $module) {
   $user = user_load(array('name' => $name));
   if (!isset($user->uid)) {
     // Register this new user.
-    $userinfo = array('name' => $name, 'pass' => user_password(), 'init' => $name, 'status' => 1, "authname_$module" => $name);
+    $userinfo = array(
+      'name' => $name,
+      'pass' => user_password(),
+      'init' => $name,
+      'status' => 1,
+      "authname_$module" => $name,
+      'access' => time()
+    );
     $account = user_save('', $userinfo);
     // Terminate if an error occured during user_save().
     if (!$account) {
