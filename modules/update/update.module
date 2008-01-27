@@ -379,7 +379,7 @@ function update_flush_caches() {
  * Invalidates any cached data relating to update status.
  */
 function update_invalidate_cache() {
-  cache_clear_all('update_info', 'cache_update');
+  cache_clear_all('*', 'cache_update', TRUE);
 }
 
 /**

@@ -26,6 +26,13 @@ function _update_refresh() {
   global $base_url;
   include_once './modules/update/update.compare.inc';
 
+  // Since we're fetching new available update data, we want to clear
+  // everything in our cache, to ensure we recompute the status. Note that
+  // this does not cause update_get_projects() to be recomputed twice in the
+  // same page load (e.g. when manually checking) since that function stashes
+  // its answer in a static array.
+  update_invalidate_cache();
+
   $available = array();
   $data = array();
   $site_key = md5($base_url . drupal_get_private_key());
