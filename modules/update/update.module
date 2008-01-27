@@ -1,5 +1,5 @@
 <?php
-// $Id: update.module,v 1.15 2008/01/22 07:56:07 goba Exp $
+// $Id: update.module,v 1.16 2008/01/27 17:50:10 goba Exp $
 
 /**
  * @file
@@ -379,7 +379,7 @@ function update_flush_caches() {
  * Invalidates any cached data relating to update status.
  */
 function update_invalidate_cache() {
-  cache_clear_all('update_info', 'cache_update');
+  cache_clear_all('*', 'cache_update', TRUE);
 }
 
 /**

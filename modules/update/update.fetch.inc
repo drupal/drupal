@@ -1,5 +1,5 @@
 <?php
-// $Id: update.fetch.inc,v 1.5 2007/12/20 08:57:55 goba Exp $
+// $Id: update.fetch.inc,v 1.6 2008/01/27 17:50:10 goba Exp $
 
 /**
  * @file
@@ -25,6 +25,13 @@ function update_manual_status() {
 function _update_refresh() {
   global $base_url;
   include_once './modules/update/update.compare.inc';
+
+  // Since we're fetching new available update data, we want to clear
+  // everything in our cache, to ensure we recompute the status. Note that
+  // this does not cause update_get_projects() to be recomputed twice in the
+  // same page load (e.g. when manually checking) since that function stashes
+  // its answer in a static array.
+  update_invalidate_cache();
 
   $available = array();
   $data = array();
