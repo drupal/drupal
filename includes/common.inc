@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.752 2008/01/16 10:37:30 goba Exp $
+// $Id: common.inc,v 1.753 2008/01/27 19:57:36 goba Exp $
 
 /**
  * @file
@@ -1314,26 +1314,26 @@ function url($path = NULL, $options = array()) {
     // The base_url might be rewritten from the language rewrite in domain mode.
     $options['base_url'] = $base_url;
   }
-  $base = $options['absolute'] ? $options['base_url'] .'/' : base_path();
 
   // Preserve the original path before aliasing.
   $original_path = $path;
 
   // The special path '<front>' links to the default front page.
-  if (!empty($path) && $path != '<front>') {
-    if (!$options['alias']) {
-      $path = drupal_get_path_alias($path, isset($options['language']) ? $options['language']->language : '');
-    }
-    if (function_exists('custom_url_rewrite_outbound')) {
-      // Modules may alter outbound links by reference.
-      custom_url_rewrite_outbound($path, $options, $original_path);
-    }
-    $path = drupal_urlencode($options['prefix'] . $path);
+  if ($path == '<front>') {
+    $path = '';
   }
-  else {
-    // Will be empty if there is no language prefix.
-    $path = trim($options['prefix'], '/');
+  elseif (!empty($path) && !$options['alias']) {
+    $path = drupal_get_path_alias($path, isset($options['language']) ? $options['language']->language : '');
   }
+
+  if (function_exists('custom_url_rewrite_outbound')) {
+    // Modules may alter outbound links by reference.
+    custom_url_rewrite_outbound($path, $options, $original_path);
+  }
+
+  $base = $options['absolute'] ? $options['base_url'] .'/' : base_path();
+  $prefix = empty($path) ? rtrim($options['prefix'], '/') : $options['prefix'];
+  $path = drupal_urlencode($prefix . $path);
 
   if ($clean_url) {
     // With Clean URLs.
