@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.942 2008/01/27 18:03:05 goba Exp $
+// $Id: node.module,v 1.943 2008/01/27 18:13:04 goba Exp $
 
 /**
  * @file
@@ -1664,7 +1664,7 @@ function node_feed($nids = FALSE, $channel = array()) {
 
     // Allow modules to add additional item fields and/or modify $item
     $extra = node_invoke_nodeapi($item, 'rss item');
-    $extra = array_merge($extra, array(array('key' => 'pubDate', 'value' => date('r', $item->created)), array('key' => 'dc:creator', 'value' => $item->name), array('key' => 'guid', 'value' => $item->nid .' at '. $base_url, 'attributes' => array('isPermaLink' => 'false'))));
+    $extra = array_merge($extra, array(array('key' => 'pubDate', 'value' => format_date($item->created, 'custom', 'r')), array('key' => 'dc:creator', 'value' => $item->name), array('key' => 'guid', 'value' => $item->nid .' at '. $base_url, 'attributes' => array('isPermaLink' => 'false'))));
     foreach ($extra as $element) {
       if (isset($element['namespace'])) {
         $namespaces = array_merge($namespaces, $element['namespace']);
