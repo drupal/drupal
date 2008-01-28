@@ -543,7 +543,7 @@ function file_save_upload($source, $validators = array(), $dest = FALSE, $replac
     }
 
     $file->source = $source;
-    $file->destination = file_destination(file_create_path($dest .'/'. $file->filename), FILE_EXISTS_RENAME);
+    $file->destination = file_destination(file_create_path($dest .'/'. $file->filename), $replace);
     $file->filesize = $_FILES['files']['size'][$source];
 
     // Call the validation functions.
