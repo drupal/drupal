@@ -437,17 +437,17 @@ function file_delete($path) {
 }
 
 /**
- * Determine the total amount of disk space used by a single user's files, or
- * the filesystem as a whole.
+ * Determine total disk space used by a single user or the whole filesystem.
  *
- * @param $uid An optional, user id. A NULL value returns the total space used
+ * @param $uid
+ *   An optional user id. A NULL value returns the total space used
  *   by all files.
  */
 function file_space_used($uid = NULL) {
-  if (is_null($uid)) {
-    return db_result(db_query('SELECT SUM(filesize) FROM {files} WHERE uid = %d', $uid));
+  if (isset($uid)) {
+    return (int) db_result(db_query('SELECT SUM(filesize) FROM {files} WHERE uid = %d', $uid));
   }
-  return db_result(db_query('SELECT SUM(filesize) FROM {files}'));
+  return (int) db_result(db_query('SELECT SUM(filesize) FROM {files}'));
 }
 
 /**

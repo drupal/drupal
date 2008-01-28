@@ -580,6 +580,8 @@ function system_block($op = 'list', $delta = 0, $edit = NULL) {
       $blocks[0] = array(
         'info' => t('Powered by Drupal'),
         'weight' => '10',
+         // Not worth caching.
+        'cache' => BLOCK_NO_CACHE,
       );
       return $blocks;
     case 'configure':
