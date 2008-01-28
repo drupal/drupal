@@ -23,7 +23,7 @@
 /**
  * Identifies a content type which has translation support enabled.
  */
-define ('TRANSLATION_ENABLED', 2);
+define('TRANSLATION_ENABLED', 2);
 
 /**
  * Implementation of hook_help().
