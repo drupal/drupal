@@ -1,5 +1,5 @@
 <?php
-// $Id: translation.module,v 1.22 2008/01/09 11:51:54 goba Exp $
+// $Id: translation.module,v 1.23 2008/01/28 11:38:58 goba Exp $
 
 /**
  * @file
@@ -23,7 +23,7 @@
 /**
  * Identifies a content type which has translation support enabled.
  */
-define ('TRANSLATION_ENABLED', 2);
+define('TRANSLATION_ENABLED', 2);
 
 /**
  * Implementation of hook_help().
