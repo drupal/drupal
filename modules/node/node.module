@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.943 2008/01/27 18:13:04 goba Exp $
+// $Id: node.module,v 1.944 2008/01/28 15:51:29 goba Exp $
 
 /**
  * @file
@@ -1644,8 +1644,8 @@ function node_feed($nids = FALSE, $channel = array()) {
   foreach ($nids as $nid) {
     // Load the specified node:
     $item = node_load($nid);
-    $node->build_mode = NODE_BUILD_RSS;
-    $link = url("node/$nid", array('absolute' => TRUE));
+    $item->build_mode = NODE_BUILD_RSS;
+    $item->link = url("node/$nid", array('absolute' => TRUE));
 
     if ($item_length != 'title') {
       $teaser = ($item_length == 'teaser') ? TRUE : FALSE;
@@ -1687,7 +1687,7 @@ function node_feed($nids = FALSE, $channel = array()) {
         break;
     }
 
-    $items .= format_rss_item($item->title, $link, $item_text, $extra);
+    $items .= format_rss_item($item->title, $item->link, $item_text, $extra);
   }
 
   $channel_defaults = array(
