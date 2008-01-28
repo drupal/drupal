@@ -985,7 +985,9 @@ function _form_builder_handle_input_element($form_id, &$form, &$form_state, $com
         $form['#value'] = $function($form);
       }
       // Final catch. If we haven't set a value yet, use the explicit default value.
-      if (!isset($form['#value'])) {
+      // Avoid image buttons (which come with garbage value), so we only get value
+      // for the button actually clicked.
+      if (!isset($form['#value']) && empty($form['#has_garbage_value'])) {
         $form['#value'] = isset($form['#default_value']) ? $form['#default_value'] : '';
       }
     }
