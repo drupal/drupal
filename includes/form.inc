@@ -1129,7 +1129,7 @@ function form_type_image_button_value($form, $edit = FALSE) {
           }
           return NULL;
         }
-        $post = $array[$element_name];
+        $post = $post[$element_name];
       }
       return $form['#return_value'];
     }
