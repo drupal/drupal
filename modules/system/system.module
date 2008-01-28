@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.580 2008/01/24 10:46:54 goba Exp $
+// $Id: system.module,v 1.581 2008/01/28 19:56:27 goba Exp $
 
 /**
  * @file
@@ -580,6 +580,8 @@ function system_block($op = 'list', $delta = 0, $edit = NULL) {
       $blocks[0] = array(
         'info' => t('Powered by Drupal'),
         'weight' => '10',
+         // Not worth caching.
+        'cache' => BLOCK_NO_CACHE,
       );
       return $blocks;
     case 'configure':

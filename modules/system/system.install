@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.235 2008/01/24 10:41:17 goba Exp $
+// $Id: system.install,v 1.236 2008/01/28 19:56:27 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -68,7 +68,7 @@ function system_requirements($phase) {
     'title' => $t('PHP register globals'),
   );
   $register_globals = trim(ini_get('register_globals'));
-  // Unfortunately, ini_get() may return many different values, and we can't 
+  // Unfortunately, ini_get() may return many different values, and we can't
   // be certain which values mean 'on', so we instead check for 'not off'
   // since we never want to tell the user that their site is secure
   // (register_globals off), when it is in fact on. We can only guarantee
@@ -393,9 +393,9 @@ function system_install() {
 
   db_query("INSERT INTO {variable} (name, value) VALUES ('%s', '%s')", 'theme_default', 's:7:"garland";');
   db_query("UPDATE {system} SET status = %d WHERE type = '%s' AND name = '%s'", 1, 'theme', 'garland');
-  db_query("INSERT INTO {blocks} (module, delta, theme, status, weight, region, pages) VALUES ('%s', '%s', '%s', %d, %d, '%s', '%s')", 'user', '0', 'garland', 1, 0, 'left', '');
-  db_query("INSERT INTO {blocks} (module, delta, theme, status, weight, region, pages) VALUES ('%s', '%s', '%s', %d, %d, '%s', '%s')", 'user', '1', 'garland', 1, 0, 'left', '');
-  db_query("INSERT INTO {blocks} (module, delta, theme, status, weight, region, pages) VALUES ('%s', '%s', '%s', %d, %d, '%s', '%s')", 'system', '0', 'garland', 1, 10, 'footer', '');
+  db_query("INSERT INTO {blocks} (module, delta, theme, status, weight, region, pages, cache) VALUES ('%s', '%s', '%s', %d, %d, '%s', '%s', %d)", 'user', '0', 'garland', 1, 0, 'left', '', -1);
+  db_query("INSERT INTO {blocks} (module, delta, theme, status, weight, region, pages, cache) VALUES ('%s', '%s', '%s', %d, %d, '%s', '%s', %d)", 'user', '1', 'garland', 1, 0, 'left', '', -1);
+  db_query("INSERT INTO {blocks} (module, delta, theme, status, weight, region, pages, cache) VALUES ('%s', '%s', '%s', %d, %d, '%s', '%s', %d)", 'system', '0', 'garland', 1, 10, 'footer', '', -1);
 
   db_query("INSERT INTO {node_access} (nid, gid, realm, grant_view, grant_update, grant_delete) VALUES (%d, %d, '%s', %d, %d, %d)", 0, 0, 'all', 1, 0, 0);
 
@@ -2476,6 +2476,17 @@ function system_update_6046() {
     variable_set('file_directory_path', 'files');
     $ret[] = array('success' => TRUE, 'query' => "variable_set('file_directory_path')");
   }
+  return $ret;
+}
+
+/**
+ * Fix cache mode for blocks inserted in system_install() in fresh installs of previous RC.
+ */
+function system_update_6047() {
+  $ret = array();
+  $ret[] = update_sql("UPDATE {blocks} SET cache = %d WHERE module = '%s' AND delta = '%s'", -1, 'user', '0');
+  $ret[] = update_sql("UPDATE {blocks} SET cache = %d WHERE module = '%s' AND delta = '%s'", -1, 'user', '1');
+  $ret[] = update_sql("UPDATE {blocks} SET cache = %d WHERE module = '%s' AND delta = '%s'", -1, 'system', '0');
   return $ret;
 }
 
