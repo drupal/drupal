@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.251 2008/01/28 16:05:17 goba Exp $
+// $Id: menu.inc,v 1.252 2008/01/28 19:09:19 goba Exp $
 
 /**
  * @file
@@ -451,7 +451,7 @@ function _menu_check_access(&$item, $map) {
 
 /**
  * Localize the router item title using t() or another callback.
- * 
+ *
  * Translate the title and description to allow storage of English title
  * strings in the database, yet display of them in the language required
  * by the current user.
@@ -834,7 +834,13 @@ function menu_tree_page_data($menu_name = 'navigation') {
         // Build and run the query, and build the tree.
         if ($item['access']) {
           // Check whether a menu link exists that corresponds to the current path.
-          $parents = db_fetch_array(db_query("SELECT p1, p2, p3, p4, p5, p6, p7, p8 FROM {menu_links} WHERE menu_name = '%s' AND link_path = '%s'", $menu_name, $item['href']));
+          $args = array($menu_name, $item['href']);
+          $placeholders = "'%s'";
+          if (drupal_is_front_page()) {
+            $args[] = '<front>';
+            $placeholders .= ", '%s'";
+          }
+          $parents = db_fetch_array(db_query("SELECT p1, p2, p3, p4, p5, p6, p7, p8 FROM {menu_links} WHERE menu_name = '%s' AND link_path IN (". $placeholders .")", $args));
 
           if (empty($parents)) {
             // If no link exists, we may be on a local task that's not in the links.
