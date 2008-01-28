@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.260 2008/01/25 16:24:48 goba Exp $
+// $Id: form.inc,v 1.261 2008/01/28 00:15:34 goba Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -985,7 +985,9 @@ function _form_builder_handle_input_element($form_id, &$form, &$form_state, $com
         $form['#value'] = $function($form);
       }
       // Final catch. If we haven't set a value yet, use the explicit default value.
-      if (!isset($form['#value'])) {
+      // Avoid image buttons (which come with garbage value), so we only get value
+      // for the button actually clicked.
+      if (!isset($form['#value']) && empty($form['#has_garbage_value'])) {
         $form['#value'] = isset($form['#default_value']) ? $form['#default_value'] : '';
       }
     }
