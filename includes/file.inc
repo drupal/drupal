@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.118 2008/01/09 10:39:48 goba Exp $
+// $Id: file.inc,v 1.119 2008/01/28 16:05:17 goba Exp $
 
 /**
  * @file
@@ -978,3 +978,7 @@ function file_upload_max_size() {
   }
   return $max_size;
 }
+
+/**
+ * @} End of "defgroup file".
+ */

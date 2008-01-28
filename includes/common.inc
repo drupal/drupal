@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.753 2008/01/27 19:57:36 goba Exp $
+// $Id: common.inc,v 1.754 2008/01/28 16:05:17 goba Exp $
 
 /**
  * @file
@@ -844,6 +844,10 @@ function valid_url($url, $absolute = FALSE) {
     return preg_match("/^". $allowed_characters ."+$/i", $url);
   }
 }
+
+/**
+ * @} End of "defgroup validation".
+ */
 
 /**
  * Register an event for the current visitor (hostname/IP) to the flood control mechanism.

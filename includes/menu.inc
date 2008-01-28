@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.250 2008/01/28 15:55:25 goba Exp $
+// $Id: menu.inc,v 1.251 2008/01/28 16:05:17 goba Exp $
 
 /**
  * @file
@@ -2337,3 +2337,7 @@ function menu_valid_path($form_item) {
   $menu_admin = FALSE;
   return $item && $item['access'];
 }
+
+/**
+ * @} End of "defgroup menu".
+ */
