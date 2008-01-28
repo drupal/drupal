@@ -846,6 +846,10 @@ function valid_url($url, $absolute = FALSE) {
 }
 
 /**
+ * @} End of "defgroup validation".
+ */
+
+/**
  * Register an event for the current visitor (hostname/IP) to the flood control mechanism.
  *
  * @param $name

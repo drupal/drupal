@@ -2337,3 +2337,7 @@ function menu_valid_path($form_item) {
   $menu_admin = FALSE;
   return $item && $item['access'];
 }
+
+/**
+ * @} End of "defgroup menu".
+ */

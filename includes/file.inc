@@ -978,3 +978,7 @@ function file_upload_max_size() {
   }
   return $max_size;
 }
+
+/**
+ * @} End of "defgroup file".
+ */
