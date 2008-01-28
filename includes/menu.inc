@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.249 2008/01/27 17:43:23 goba Exp $
+// $Id: menu.inc,v 1.250 2008/01/28 15:55:25 goba Exp $
 
 /**
  * @file
@@ -1262,7 +1262,7 @@ function menu_local_tasks($level = 0, $return_root = FALSE) {
           if ($item['type'] == MENU_DEFAULT_LOCAL_TASK) {
             // Find the first parent which is not a default local task.
             for ($p = $item['tab_parent']; $tasks[$p]['type'] == MENU_DEFAULT_LOCAL_TASK; $p = $tasks[$p]['tab_parent']);
-            $link = theme('menu_item_link', array('title' => $item['title'], 'href' => $tasks[$p]['href']));
+            $link = theme('menu_item_link', array('href' => $tasks[$p]['href']) + $item);
             $tabs_current .= theme('menu_local_task', $link, TRUE);
             $next_path = $item['path'];
           }
@@ -1294,7 +1294,7 @@ function menu_local_tasks($level = 0, $return_root = FALSE) {
           if ($item['type'] == MENU_DEFAULT_LOCAL_TASK) {
             // Find the first parent which is not a default local task.
             for ($p = $item['tab_parent']; $tasks[$p]['type'] == MENU_DEFAULT_LOCAL_TASK; $p = $tasks[$p]['tab_parent']);
-            $link = theme('menu_item_link', array('title' => $item['title'], 'href' => $tasks[$p]['href']));
+            $link = theme('menu_item_link', array('href' => $tasks[$p]['href']) + $item);
             if ($item['path'] == $router_item['path']) {
               $root_path = $tasks[$p]['path'];
             }
