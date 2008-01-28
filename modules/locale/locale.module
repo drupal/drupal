@@ -125,7 +125,7 @@ function locale_menu() {
   // Translation functionality
   $items['admin/build/translate'] = array(
     'title' => 'Translate interface',
-    'description' => 'Translate the built in interface as well as menu items and taxonomies.',
+    'description' => 'Translate the built in interface and optionally other text.',
     'page callback' => 'locale_inc_callback',
     'page arguments' => array('locale_translate_overview_screen'), // not a form, just a table
     'access arguments' => array('translate interface'),
