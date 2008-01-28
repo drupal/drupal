@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.211 2008/01/09 11:51:54 goba Exp $
+// $Id: locale.module,v 1.212 2008/01/28 17:16:34 goba Exp $
 
 /**
  * @file
@@ -125,7 +125,7 @@ function locale_menu() {
   // Translation functionality
   $items['admin/build/translate'] = array(
     'title' => 'Translate interface',
-    'description' => 'Translate the built in interface as well as menu items and taxonomies.',
+    'description' => 'Translate the built in interface and optionally other text.',
     'page callback' => 'locale_inc_callback',
     'page arguments' => array('locale_translate_overview_screen'), // not a form, just a table
     'access arguments' => array('translate interface'),
