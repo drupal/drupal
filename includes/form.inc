@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.261 2008/01/28 00:15:34 goba Exp $
+// $Id: form.inc,v 1.262 2008/01/28 12:09:12 goba Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -1129,7 +1129,7 @@ function form_type_image_button_value($form, $edit = FALSE) {
           }
           return NULL;
         }
-        $post = $array[$element_name];
+        $post = $post[$element_name];
       }
       return $form['#return_value'];
     }
