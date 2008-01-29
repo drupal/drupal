@@ -1,8 +1,8 @@
 // $Id$
 
 Drupal.behaviors.openid = function (context) {
-  var $loginElements = $("#edit-name-wrapper, #edit-pass-wrapper, a.openid-link");
-  var $openidElements = $("#edit-openid-url-wrapper, a.user-link");
+  var $loginElements = $("#edit-name-wrapper, #edit-pass-wrapper, li.openid-link");
+  var $openidElements = $("#edit-openid-url-wrapper, li.user-link");
 
   // This behavior attaches by ID, so is only valid once on a page.
   if (!$("#edit-openid-url.openid-processed").size() && $("#edit-openid-url").val()) {
@@ -11,7 +11,7 @@ Drupal.behaviors.openid = function (context) {
     // Use .css("display", "block") instead of .show() to be Konqueror friendly.
     $openidElements.css("display", "block");
   }
-  $("a.openid-link:not(.openid-processed)", context)
+  $("li.openid-link:not(.openid-processed)", context)
     .addClass('openid-processed')
     .click( function() {
        $loginElements.hide();
@@ -23,7 +23,7 @@ Drupal.behaviors.openid = function (context) {
       $("#edit-openid-url")[0].focus();
       return false;
     });
-  $("a.user-link:not(.openid-processed)", context)
+  $("li.user-link:not(.openid-processed)", context)
     .addClass('openid-processed')
     .click(function() {
        $openidElements.hide();
