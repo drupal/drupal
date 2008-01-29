@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.890 2008/01/27 20:00:46 goba Exp $
+// $Id: user.module,v 1.891 2008/01/29 18:56:56 goba Exp $
 
 /**
  * @file
@@ -1339,8 +1339,10 @@ function user_authenticate_finalize(&$edit) {
 }
 
 /**
- * A validate handler on the login form. Update user's login timestamp, fire
- * hook_user('login), and generate new session ID.
+ * Submit handler for the login form. Redirects the user to a page.
+ *
+ * The user is redirected to the My Account page. Setting the destination in
+ * the query string (as done by the user login block) overrides the redirect.
  */
 function user_login_submit($form, &$form_state) {
   global $user;
