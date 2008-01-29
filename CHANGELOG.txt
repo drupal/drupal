@@ -1,7 +1,9 @@
 // $Id$
 
-Drupal 5.7, xxxx-xx-xx
+Drupal 5.7, 2008-01-28
 ----------------------
+- fixed the input format configuration page.
+- fixed a variety of small bugs.
 
 Drupal 5.6, 2008-01-10
 ----------------------
