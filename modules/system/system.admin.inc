@@ -1675,7 +1675,7 @@ function system_clean_url_settings() {
       $form['clean_url']['#suffix'] = '<p>'. t('<a href="@clean_url">Run the clean url test</a>.', array('@clean_url' => base_path() .'admin/settings/clean-urls')) .'</p></div>';
     }
     else {
-      $form['clean_url']['#description'] .= ' '. t('Your server has been successfully tested to support this feature.');
+      $form['clean_url']['#description'] .= ' <div class="ok">'. t('Your server has been successfully tested to support this feature.') .'</div>';
     }
   }
 
