@@ -1,5 +1,5 @@
 <?php
-// $Id: cache.inc,v 1.16 2007/11/26 16:19:37 dries Exp $
+// $Id: cache.inc,v 1.17 2008/01/29 11:36:06 goba Exp $
 
 /**
  * Return data from the persistent cache. Data may be stored as either plain text or as serialized data.
@@ -17,9 +17,10 @@ function cache_get($cid, $table = 'cache') {
   // Garbage collection necessary when enforcing a minimum cache lifetime
   $cache_flush = variable_get('cache_flush', 0);
   if ($cache_flush && ($cache_flush + variable_get('cache_lifetime', 0) <= time())) {
+    // Reset the variable immediately to prevent a meltdown in heavy load situations.
+    variable_set('cache_flush', 0);
     // Time to flush old cache data
     db_query("DELETE FROM {". $table ."} WHERE expire != %d AND expire <= %d", CACHE_PERMANENT, $cache_flush);
-    variable_set('cache_flush', 0);
   }
 
   $cache = db_fetch_object(db_query("SELECT data, created, headers, expire, serialized FROM {". $table ."} WHERE cid = '%s'", $cid));
