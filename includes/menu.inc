@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.252 2008/01/28 19:09:19 goba Exp $
+// $Id: menu.inc,v 1.253 2008/01/29 11:01:32 goba Exp $
 
 /**
  * @file
@@ -361,7 +361,11 @@ function menu_execute_active_handler($path = NULL) {
  * @param $map
  *   An array of path arguments (ex: array('node', '5'))
  * @return
- *   Returns TRUE for success, FALSE if an object cannot be loaded
+ *   Returns TRUE for success, FALSE if an object cannot be loaded.
+ *   Names of object loading functions are placed in $item['load_functions'].
+ *   Loaded objects are placed in $map[]; keys are the same as keys in the 
+ *   $item['load_functions'] array.
+ *   $item['access'] is set to FALSE if an object cannot be loaded.
  */
 function _menu_load_objects(&$item, &$map) {
   if ($load_functions = $item['load_functions']) {
@@ -465,6 +469,14 @@ function _menu_check_access(&$item, $map) {
  * @param $link_translate
  *   TRUE if we are translating a menu link item; FALSE if we are
  *   translating a menu router item.
+ * @return
+ *   No return value.
+ *   $item['title'] is localized according to $item['title_callback'].
+ *   If an item's callback is check_plain(), $item['options']['html'] becomes 
+ *   TRUE.
+ *   $item['description'] is translated using t().
+ *   When doing link translation and the $item['options']['attributes']['title'] 
+ *   (link title attribute) matches the description, it is translated as well.
  */
 function _menu_item_localize(&$item, $map, $link_translate = FALSE) {
   $callback = $item['title_callback'];
@@ -606,6 +618,8 @@ function menu_tail_to_arg($arg, $map, $index) {
  *   $item['access'] becomes TRUE if the item is accessible, FALSE otherwise.
  *   $item['href'] is generated from link_path, possibly by to_arg functions.
  *   $item['title'] is generated from link_title, and may be localized.
+ *   $item['options'] is unserialized; it is also changed within the call here 
+ *   to _menu_item_localize().
  */
 function _menu_link_translate(&$item) {
   $item['options'] = unserialize($item['options']);
