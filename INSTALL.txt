@@ -1,4 +1,4 @@
-// $Id: INSTALL.txt,v 1.59 2008/01/25 21:17:50 goba Exp $
+// $Id: INSTALL.txt,v 1.60 2008/01/29 19:03:15 goba Exp $
 
 CONTENTS OF THIS FILE
 ---------------------
@@ -136,7 +136,7 @@ INSTALLATION
    running FastCGI can run into problems if the $base_url variable is left
    commented out (see http://bugs.php.net/bug.php?id=19656).
 
-6. REVIEW FILE SYSTEM STORAGE SETTINGS
+6. REVIEW FILE SYSTEM STORAGE SETTINGS AND FILE PERMISSIONS
 
    The files directory created in step 4 is the default file system path used
    to store all uploaded files, as well as some temporary files created by Drupal.
@@ -181,6 +181,24 @@ INSTALLATION
    unexpected problems on an existing site. If you modify the file system path
    on an existing site, remember to copy all files from the original location
    to the new location.
+   
+   Some administrators suggest making the documentation files, especially
+   CHANGELOG.txt, non-readable so that the exact version of Drupal you are
+   running is slightly more difficult to determine. If you wish to implement
+   this optional security measure, use the following command from a shell or
+   system prompt (while in the installation directory):
+
+          chmod a-r CHANGELOG.txt
+
+   Note that the example only affects CHANGELOG.txt. To completely hide
+   all documentation files from public view, repeat this command for each of
+   the Drupal documentation files in the installation directory, substituting the
+   name of each file for CHANGELOG.txt in the example.
+
+   For more information on setting file permissions, see "Modifying Linux, Unix,
+   and Mac file permissions" (http://drupal.org/node/202483) or "Modifying
+   Windows file permissions" (http://drupal.org/node/202491) in the online
+   handbook.
 
 7. CRON MAINTENANCE TASKS
 
