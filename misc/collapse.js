@@ -1,11 +1,13 @@
-// $Id: collapse.js,v 1.16 2007/09/12 18:29:32 goba Exp $
+// $Id: collapse.js,v 1.17 2008/01/29 10:58:25 goba Exp $
 
 /**
  * Toggle the visibility of a fieldset using smooth animations
  */
 Drupal.toggleFieldset = function(fieldset) {
   if ($(fieldset).is('.collapsed')) {
-    var content = $('> div', fieldset);
+    // Action div containers are processed separately because of a IE bug
+    // that alters the default submit button behavior.
+    var content = $('> div:not(.action)', fieldset);
     $(fieldset).removeClass('collapsed');
     content.hide();
     content.slideDown( {
@@ -14,6 +16,7 @@ Drupal.toggleFieldset = function(fieldset) {
       complete: function() {
         Drupal.collapseScrollIntoView(this.parentNode);
         this.parentNode.animating = false;
+        $('div.action', fieldset).show();
       },
       step: function() {
         // Scroll the fieldset into view
@@ -22,7 +25,8 @@ Drupal.toggleFieldset = function(fieldset) {
     });
   }
   else {
-    var content = $('> div', fieldset).slideUp('fast', function() {
+    $('div.action', fieldset).hide();
+    var content = $('> div:not(.action)', fieldset).slideUp('fast', function() {
       $(this.parentNode).addClass('collapsed');
       this.parentNode.animating = false;
     });
@@ -67,7 +71,7 @@ Drupal.behaviors.collapse = function (context) {
         return false;
       }))
       .after($('<div class="fieldset-wrapper"></div>')
-      .append(fieldset.children(':not(legend)')))
+      .append(fieldset.children(':not(legend):not(.action)')))
       .addClass('collapse-processed');
   });
 };
