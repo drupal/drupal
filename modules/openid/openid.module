@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.module,v 1.16 2008/01/10 15:03:53 goba Exp $
+// $Id: openid.module,v 1.17 2008/01/29 18:41:40 goba Exp $
 
 /**
  * @file
@@ -85,8 +85,22 @@ function openid_form_alter(&$form, $form_state, $form_id) {
       $form['#validate'] = array('openid_login_validate');
     }
 
-    $form['openid_link'] = array('#value' => l(t('Log in using OpenID'), '#', array('attributes' => array('class' => 'openid-link'))), '#weight' => 3);
-    $form['user_link'] = array('#value' => l(t('Cancel OpenID login'), '#', array('attributes' => array('class' => 'user-link'))), '#weight' => 3);
+    $items = array();
+    $items[] = array(
+      'data' => l(t('Log in using OpenID'), '#'),
+      'class' => 'openid-link',
+    );
+    $items[] = array(
+      'data' => l(t('Cancel OpenID login'), '#'),
+      'class' => 'user-link',
+    );
+    
+    $form['openid_links'] = array(
+      '#value' => theme('item_list', $items),
+      '#weight' => 1,
+    );
+
+    $form['links']['#weight'] = 2;
 
     $form['openid_url'] = array(
       '#type' => 'textfield',
@@ -94,7 +108,7 @@ function openid_form_alter(&$form, $form_state, $form_id) {
       '#size' => ($form_id == 'user_login') ? 58 : 13,
       '#maxlength' => 255,
       '#weight' => -1,
-      '#description' => l(t('What is OpenID?'), 'http://openid.net/', array('external' => TRUE))
+      '#description' => l(t('What is OpenID?'), 'http://openid.net/', array('external' => TRUE)),
     );
     $form['openid.return_to'] = array('#type' => 'hidden', '#value' => url('openid/authenticate', array('absolute' => TRUE, 'query' => drupal_get_destination())));
   }
