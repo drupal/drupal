@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.236 2008/01/28 19:56:27 goba Exp $
+// $Id: system.install,v 1.237 2008/01/29 10:50:15 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -2484,9 +2484,8 @@ function system_update_6046() {
  */
 function system_update_6047() {
   $ret = array();
-  $ret[] = update_sql("UPDATE {blocks} SET cache = %d WHERE module = '%s' AND delta = '%s'", -1, 'user', '0');
-  $ret[] = update_sql("UPDATE {blocks} SET cache = %d WHERE module = '%s' AND delta = '%s'", -1, 'user', '1');
-  $ret[] = update_sql("UPDATE {blocks} SET cache = %d WHERE module = '%s' AND delta = '%s'", -1, 'system', '0');
+  $ret[] = update_sql("UPDATE {blocks} SET cache = -1 WHERE module = 'user' AND delta IN ('0', '1')");
+  $ret[] = update_sql("UPDATE {blocks} SET cache = -1 WHERE module = 'system' AND delta = '0'");
   return $ret;
 }
 
