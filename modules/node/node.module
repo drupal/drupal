@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.944 2008/01/28 15:51:29 goba Exp $
+// $Id: node.module,v 1.945 2008/01/29 11:08:17 goba Exp $
 
 /**
  * @file
@@ -780,7 +780,7 @@ function node_validate($node, $form = array()) {
   $type = node_get_types('type', $node);
 
   // Make sure the body has the minimum number of words.
-  // todo use a better word counting algorithm that will work in other languages
+  // TODO : use a better word counting algorithm that will work in other languages
   if (!empty($type->min_word_count) && isset($node->body) && count(explode(' ', $node->body)) < $type->min_word_count) {
     form_set_error('body', t('The body of your @type is too short. You need at least %words words.', array('%words' => $type->min_word_count, '@type' => $type->name)));
   }
@@ -903,8 +903,7 @@ function node_save(&$node) {
   $node->format = isset($node->format) ? $node->format : FILTER_FORMAT_DEFAULT;
   $update_node = TRUE;
 
-  //Generate the node table query and the
-  //the node_revisions table query
+  // Generate the node table query and the node_revisions table query.
   if ($node->is_new) {
     drupal_write_record('node', $node);
     _node_save_revision($node, $user->uid);
@@ -925,7 +924,7 @@ function node_save(&$node) {
     db_query('UPDATE {node} SET vid = %d WHERE nid = %d', $node->vid, $node->nid);
   }
 
- // Call the node specific callback (if any):
+  // Call the node specific callback (if any).
   node_invoke($node, $op);
   node_invoke_nodeapi($node, $op);
 
@@ -935,7 +934,6 @@ function node_save(&$node) {
   // Clear the page and block caches.
   cache_clear_all();
 }
-
 
 /**
  * Helper function to save a revision with the uid of the current user.
@@ -1277,15 +1275,17 @@ function node_search($op = 'search', $keys = NULL) {
         $node->body .= module_invoke('taxonomy', 'nodeapi', $node, 'update index');
 
         $extra = node_invoke_nodeapi($node, 'search result');
-        $results[] = array('link' => url('node/'. $item->sid, array('absolute' => TRUE)),
-                           'type' => check_plain(node_get_types('name', $node)),
-                           'title' => $node->title,
-                           'user' => theme('username', $node),
-                           'date' => $node->changed,
-                           'node' => $node,
-                           'extra' => $extra,
-                           'score' => $item->score / $total,
-                           'snippet' => search_excerpt($keys, $node->body));
+        $results[] = array(
+          'link' => url('node/'. $item->sid, array('absolute' => TRUE)),
+          'type' => check_plain(node_get_types('name', $node)),
+          'title' => $node->title,
+          'user' => theme('username', $node),
+          'date' => $node->changed,
+          'node' => $node,
+          'extra' => $extra,
+          'score' => $item->score / $total,
+          'snippet' => search_excerpt($keys, $node->body),
+        );
       }
       return $results;
   }
@@ -1575,6 +1575,9 @@ function node_page_title($node) {
   return $node->title;
 }
 
+/**
+ * Implementation of hook_init().
+ */
 function node_init() {
   drupal_add_css(drupal_get_path('module', 'node') .'/node.css');
 }

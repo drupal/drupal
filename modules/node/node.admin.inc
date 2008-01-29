@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.17 2007/12/28 12:02:51 dries Exp $
+// $Id: node.admin.inc,v 1.18 2008/01/29 11:08:17 goba Exp $
 
 /**
  * @file
@@ -16,9 +16,15 @@ function node_configure() {
     $status = '<p>'. t('If the site is experiencing problems with permissions to content, you may have to rebuild the permissions cache. Possible causes for permission problems are disabling modules or configuration changes to permissions. Rebuilding will remove all privileges to posts, and replace them with permissions based on the current modules and settings.') .'</p>';
     $status .= '<p>'. t('Rebuilding may take some time if there is a lot of content or complex permission settings. After rebuilding has completed posts will automatically use the new permissions.') .'</p>';
 
-    $form['access'] = array('#type' => 'fieldset', '#title' => t('Node access status'));
+    $form['access'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Node access status'),
+    );
     $form['access']['status'] = array('#value' => $status);
-    $form['access']['rebuild'] = array('#type' => 'submit', '#value' => t('Rebuild permissions'));
+    $form['access']['rebuild'] = array(
+      '#type' => 'submit',
+      '#value' => t('Rebuild permissions'),
+    );
   }
 
   $form['default_nodes_main'] = array(
@@ -28,15 +34,28 @@ function node_configure() {
   );
   $form['teaser_length'] = array(
     '#type' => 'select', '#title' => t('Length of trimmed posts'), '#default_value' => variable_get('teaser_length', 600),
-    '#options' => array(0 => t('Unlimited'), 200 => t('200 characters'), 400 => t('400 characters'), 600 => t('600 characters'),
-      800 => t('800 characters'), 1000 => t('1000 characters'), 1200 => t('1200 characters'), 1400 => t('1400 characters'),
-      1600 => t('1600 characters'), 1800 => t('1800 characters'), 2000 => t('2000 characters')),
+    '#options' => array(
+      0 => t('Unlimited'),
+      200 => t('200 characters'),
+      400 => t('400 characters'),
+      600 => t('600 characters'),
+      800 => t('800 characters'),
+      1000 => t('1000 characters'),
+      1200 => t('1200 characters'),
+      1400 => t('1400 characters'),
+      1600 => t('1600 characters'),
+      1800 => t('1800 characters'),
+      2000 => t('2000 characters'),
+    ),
     '#description' => t("The maximum number of characters used in the trimmed version of a post. Drupal will use this setting to determine at which offset long posts should be trimmed. The trimmed version of a post is typically used as a teaser when displaying the post on the main page, in XML feeds, etc. To disable teasers, set to 'Unlimited'. Note that this setting will only affect new or updated content and will not affect existing teasers.")
   );
 
   $form['node_preview'] = array(
-    '#type' => 'radios', '#title' => t('Preview post'), '#default_value' => variable_get('node_preview', 0),
-    '#options' => array(t('Optional'), t('Required')), '#description' => t('Must users preview posts before submitting?')
+    '#type' => 'radios',
+    '#title' => t('Preview post'),
+    '#default_value' => variable_get('node_preview', 0),
+    '#options' => array(t('Optional'), t('Required')),
+    '#description' => t('Must users preview posts before submitting?'),
   );
 
   $form['#validate'] = array('node_configure_validate');
@@ -118,14 +137,23 @@ function node_node_operations() {
  */
 function node_filters() {
   // Regular filters
-  $filters['status'] = array('title' => t('status'),
-    'options' => array('status-1'   => t('published'), 'status-0' => t('not published'),
-                       'promote-1'  => t('promoted'),  'promote-0' => t('not promoted'),
-                       'sticky-1'   => t('sticky'),    'sticky-0' => t('not sticky'))
+  $filters['status'] = array(
+    'title' => t('status'),
+    'options' => array(
+      'status-1' => t('published'),
+      'status-0' => t('not published'),
+      'promote-1' => t('promoted'),
+      'promote-0' => t('not promoted'),
+      'sticky-1' => t('sticky'),
+      'sticky-0' => t('not sticky'),
+    ),
   );
   // Include translation states if we have this module enabled
   if (module_exists('translation')) {
-    $filters['status']['options'] += array('translate-0' => t('up to date translation'), 'translate-1' => t('outdated translation'));
+    $filters['status']['options'] += array(
+      'translate-0' => t('Up to date translation'),
+      'translate-1' => t('Outdated translation'),
+    );
   }
 
   $filters['type'] = array('title' => t('type'), 'options' => node_get_types('names'));
@@ -187,7 +215,8 @@ function node_filter_form() {
   $filters = node_filters();
 
   $i = 0;
-  $form['filters'] = array('#type' => 'fieldset',
+  $form['filters'] = array(
+    '#type' => 'fieldset',
     '#title' => t('Show only items where'),
     '#theme' => 'node_filters',
   );
@@ -311,41 +340,6 @@ function node_filter_form_submit($form, &$form_state) {
 }
 
 /**
- * Submit the node administration update form.
- */
-function node_admin_nodes_submit($form, &$form_state) {
-  $operations = module_invoke_all('node_operations');
-  $operation = $operations[$form_state['values']['operation']];
-  // Filter out unchecked nodes
-  $nodes = array_filter($form_state['values']['nodes']);
-  if ($function = $operation['callback']) {
-    // Add in callback arguments if present.
-    if (isset($operation['callback arguments'])) {
-      $args = array_merge(array($nodes), $operation['callback arguments']);
-    }
-    else {
-      $args = array($nodes);
-    }
-    call_user_func_array($function, $args);
-
-    cache_clear_all();
-  }
-  else {
-    // We need to rebuild the form to go to a second step.  For example, to
-    // show the confirmation form for the deletion of nodes.
-    $form_state['rebuild'] = TRUE;
-  }
-}
-
-function node_admin_nodes_validate($form, &$form_state) {
-  $nodes = array_filter($form_state['values']['nodes']);
-  if (count($nodes) == 0) {
-    form_set_error('', t('No items selected.'));
-  }
-}
-
-
-/**
  * Make mass update of nodes, changing all nodes in the $nodes array
  * to update them with the field values in $updates.
  *
@@ -459,6 +453,9 @@ function node_admin_content($form_state) {
   return $form;
 }
 
+/**
+ * Form builder: Builds the node administration overview.
+ */
 function node_admin_nodes() {
 
   $filter = node_build_filter_query();
@@ -469,7 +466,8 @@ function node_admin_nodes() {
   $count = db_result(db_query("SELECT COUNT(*) FROM {node} n WHERE language != ''"));
   $multilanguage = (module_exists('locale') || $count);
 
-  $form['options'] = array('#type' => 'fieldset',
+  $form['options'] = array(
+    '#type' => 'fieldset',
     '#title' => t('Update options'),
     '#prefix' => '<div class="container-inline">',
     '#suffix' => '</div>',
@@ -478,7 +476,11 @@ function node_admin_nodes() {
   foreach (module_invoke_all('node_operations') as $operation => $array) {
     $options[$operation] = $array['label'];
   }
-  $form['options']['operation'] = array('#type' => 'select', '#options' => $options, '#default_value' => 'approve');
+  $form['options']['operation'] = array(
+    '#type' => 'select',
+    '#options' => $options,
+    '#default_value' => 'approve',
+  );
   $form['options']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Update'),
@@ -505,6 +507,49 @@ function node_admin_nodes() {
   $form['#theme'] = 'node_admin_nodes';
   return $form;
 }
+
+/**
+ * Validate node_admin_nodes form submissions.
+ * 
+ * Check if any nodes have been selected to perform the chosen
+ * 'Update option' on.
+ */
+function node_admin_nodes_validate($form, &$form_state) {
+  $nodes = array_filter($form_state['values']['nodes']);
+  if (count($nodes) == 0) {
+    form_set_error('', t('No items selected.'));
+  }
+}
+
+/**
+ * Process node_admin_nodes form submissions.
+ * 
+ * Execute the chosen 'Update option' on the selected nodes.
+ */
+function node_admin_nodes_submit($form, &$form_state) {
+  $operations = module_invoke_all('node_operations');
+  $operation = $operations[$form_state['values']['operation']];
+  // Filter out unchecked nodes
+  $nodes = array_filter($form_state['values']['nodes']);
+  if ($function = $operation['callback']) {
+    // Add in callback arguments if present.
+    if (isset($operation['callback arguments'])) {
+      $args = array_merge(array($nodes), $operation['callback arguments']);
+    }
+    else {
+      $args = array($nodes);
+    }
+    call_user_func_array($function, $args);
+
+    cache_clear_all();
+  }
+  else {
+    // We need to rebuild the form to go to a second step.  For example, to
+    // show the confirmation form for the deletion of nodes.
+    $form_state['rebuild'] = TRUE;
+  }
+}
+
 
 /**
  * Theme node administration overview.
@@ -560,7 +605,12 @@ function node_multiple_delete_confirm(&$form_state, $nodes) {
   // array_filter returns only elements with TRUE values
   foreach ($nodes as $nid => $value) {
     $title = db_result(db_query('SELECT title FROM {node} WHERE nid = %d', $nid));
-    $form['nodes'][$nid] = array('#type' => 'hidden', '#value' => $nid, '#prefix' => '<li>', '#suffix' => check_plain($title) ."</li>\n");
+    $form['nodes'][$nid] = array(
+      '#type' => 'hidden',
+      '#value' => $nid,
+      '#prefix' => '<li>',
+      '#suffix' => check_plain($title) ."</li>\n",
+    );
   }
   $form['operation'] = array('#type' => 'hidden', '#value' => 'delete');
   $form['#submit'][] = 'node_multiple_delete_confirm_submit';

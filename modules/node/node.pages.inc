@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.26 2008/01/10 15:57:10 goba Exp $
+// $Id: node.pages.inc,v 1.27 2008/01/29 11:08:17 goba Exp $
 
 /**
  * @file
@@ -361,7 +361,7 @@ function theme_node_form($form) {
  */
 function node_preview($node) {
   if (node_access('create', $node) || node_access('update', $node)) {
-    // Load the user's name when needed:
+    // Load the user's name when needed.
     if (isset($node->name)) {
       // The use of isset() is mandatory in the context of user IDs, because
       // user ID 0 denotes the anonymous user.
@@ -391,7 +391,7 @@ function node_preview($node) {
       }
     }
 
-    // Display a preview of the node:
+    // Display a preview of the node.
     // Previewing alters $node so it needs to be cloned.
     if (!form_get_errors()) {
       $cloned_node = drupal_clone($node);
@@ -514,7 +514,6 @@ function node_delete_confirm_submit($form, &$form_state) {
   }
 
   $form_state['redirect'] = '<front>';
-  return;
 }
 
 /**
