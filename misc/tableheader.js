@@ -1,8 +1,14 @@
-// $Id: tableheader.js,v 1.15 2008/01/23 09:48:10 goba Exp $
+// $Id: tableheader.js,v 1.16 2008/01/30 10:17:39 goba Exp $
+
+Drupal.tableHeaderDoScroll = function() {
+  if (typeof(Drupal.tableHeaderOnScroll)=='function') {
+    Drupal.tableHeaderOnScroll();
+  }
+};
 
 Drupal.behaviors.tableHeader = function (context) {
   // This breaks in anything less than IE 7. Prevent it from running.
-  if (jQuery.browser.msie && parseInt(jQuery.browser.version) < 7) {
+  if (jQuery.browser.msie && parseInt(jQuery.browser.version, 10) < 7) {
     return;
   }
 
@@ -16,7 +22,7 @@ Drupal.behaviors.tableHeader = function (context) {
       top: '0px'
     });
 
-    var headerClone = $(headerClone)[0];
+    headerClone = $(headerClone)[0];
     headers.push(headerClone);
 
     // Store parent table.
@@ -44,7 +50,7 @@ Drupal.behaviors.tableHeader = function (context) {
         var cellWidth = parentCell.eq(index).css('width');
         // Exception for IE7.
         if (cellWidth == 'auto') {
-          var cellWidth = parentCell.get(index).clientWidth +'px';
+          cellWidth = parentCell.get(index).clientWidth +'px';
         }
         $(this).css('width', cellWidth);
       });
@@ -56,16 +62,22 @@ Drupal.behaviors.tableHeader = function (context) {
     var vOffset = (document.documentElement.scrollTop || document.body.scrollTop) - e.vPosition;
     var visState = (vOffset > 0 && vOffset < e.vLength) ? 'visible' : 'hidden';
     $(e).css({left: -hScroll + e.hPosition +'px', visibility: visState});
-  };
+  }
+
+  // Only attach to scrollbars once, even if Drupal.attachBehaviors is called
+  //  multiple times.
+  if (!$('body').hasClass('tableHeader-processed')) {
+    $('body').addClass('tableHeader-processed');
+    $(window).scroll(Drupal.tableHeaderDoScroll);
+    $(document.documentElement).scroll(Drupal.tableHeaderDoScroll);
+  }
 
   // Track scrolling.
-  var scroll = function() {
+  Drupal.tableHeaderOnScroll = function() {
     $(headers).each(function () {
       tracker(this);
     });
   };
-  $(window).scroll(scroll);
-  $(document.documentElement).scroll(scroll);
 
   // Track resizing.
   var time = null;
