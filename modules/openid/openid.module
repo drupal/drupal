@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.module,v 1.17 2008/01/29 18:41:40 goba Exp $
+// $Id: openid.module,v 1.18 2008/01/30 10:14:42 goba Exp $
 
 /**
  * @file
@@ -151,7 +151,7 @@ function openid_login_validate($form, &$form_state) {
  * @param $return_to The endpoint to return to from the OpenID Provider
  */
 function openid_begin($claimed_id, $return_to = '', $form_values = array()) {
-  include_once drupal_get_path('module', 'openid') .'/openid.inc';
+  module_load_include('inc', 'openid');
 
   $claimed_id = _openid_normalize($claimed_id);
 
@@ -213,7 +213,7 @@ function openid_begin($claimed_id, $return_to = '', $form_values = array()) {
  *   $response['status'] set to one of 'success', 'failed' or 'cancel'.
  */
 function openid_complete($response) {
-  include_once drupal_get_path('module', 'openid') .'/openid.inc';
+  module_load_include('inc', 'openid');
 
   // Default to failed response
   $response['status'] = 'failed';
@@ -247,8 +247,8 @@ function openid_complete($response) {
  * URI, etc).
  */
 function openid_discovery($claimed_id) {
-  include_once drupal_get_path('module', 'openid') .'/openid.inc';
-  include_once drupal_get_path('module', 'openid') .'/xrds.inc';
+  module_load_include('inc', 'openid');
+  module_load_include('inc', 'openid', 'xrds');
 
   $services = array();
 
@@ -318,7 +318,7 @@ function openid_discovery($claimed_id) {
  * @return $assoc_handle The association handle.
  */
 function openid_association($op_endpoint) {
-  include_once drupal_get_path('module', 'openid') .'/openid.inc';
+  module_load_include('inc', 'openid');
 
   // Remove Old Associations:
   db_query("DELETE FROM {openid_association} WHERE created + expires_in < %d", time());
@@ -369,7 +369,7 @@ function openid_association($op_endpoint) {
  * @param $response Response values from the OpenID Provider.
  */
 function openid_authentication($response) {
-  include_once drupal_get_path('module', 'openid') .'/openid.inc';
+  module_load_include('inc', 'openid');
 
   $identity = $response['openid.identity'];
 
@@ -423,7 +423,7 @@ function openid_authentication($response) {
 }
 
 function openid_association_request($public) {
-  include_once drupal_get_path('module', 'openid') .'/openid.inc';
+  module_load_include('inc', 'openid');
 
   $request = array(
     'openid.ns' => OPENID_NS_2_0,
@@ -441,7 +441,7 @@ function openid_association_request($public) {
 }
 
 function openid_authentication_request($claimed_id, $identity, $return_to = '', $assoc_handle = '', $version = 2) {
-  include_once drupal_get_path('module', 'openid') .'/openid.inc';
+  module_load_include('inc', 'openid');
 
   $realm = ($return_to) ? $return_to : url('', array('absolute' => TRUE));
 
@@ -480,7 +480,7 @@ function openid_authentication_request($claimed_id, $identity, $return_to = '', 
  * @return boolean
  */
 function openid_verify_assertion($op_endpoint, $response) {
-  include_once drupal_get_path('module', 'openid') .'/openid.inc';
+  module_load_include('inc', 'openid');
 
   $valid = FALSE;
 

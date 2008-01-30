@@ -1,5 +1,5 @@
 <?php
-// $Id: update.module,v 1.16 2008/01/27 17:50:10 goba Exp $
+// $Id: update.module,v 1.17 2008/01/30 10:14:42 goba Exp $
 
 /**
  * @file
@@ -191,7 +191,7 @@ function update_theme() {
 function update_requirements($phase) {
   if ($phase == 'runtime') {
     if ($available = update_get_available(FALSE)) {
-      include_once './modules/update/update.compare.inc';
+      module_load_include('inc', 'update', 'update.compare');
       $data = update_calculate_project_data($available);
       // First, populate the requirements for core:
       $requirements['update_core'] = _update_requirement_check($data['drupal'], 'core');
@@ -337,7 +337,7 @@ function _update_no_data() {
  * @see update_get_projects()
  */
 function update_get_available($refresh = FALSE) {
-  include_once './modules/update/update.compare.inc';
+  module_load_include('inc', 'update', 'update.compare');
   $available = array();
 
   // First, make sure that none of the .info files have a change time
@@ -386,7 +386,7 @@ function update_invalidate_cache() {
  * Wrapper to load the include file and then refresh the release data.
  */
 function update_refresh() {
-  include_once './modules/update/update.fetch.inc';
+  module_load_include('inc', 'update', 'update.fetch');
   return _update_refresh();
 }
 

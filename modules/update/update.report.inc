@@ -1,5 +1,5 @@
 <?php
-// $Id: update.report.inc,v 1.8 2008/01/10 14:14:54 goba Exp $
+// $Id: update.report.inc,v 1.9 2008/01/30 10:14:42 goba Exp $
 
 /**
  * @file
@@ -11,7 +11,7 @@
  */
 function update_status() {
   if ($available = update_get_available(TRUE)) {
-    include_once './modules/update/update.compare.inc';
+    module_load_include('inc', 'update', 'update.compare');
     $data = update_calculate_project_data($available);
     return theme('update_report', $data);
   }
