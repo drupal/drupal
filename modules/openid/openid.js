@@ -1,12 +1,12 @@
-// $Id: openid.js,v 1.5 2008/01/29 18:41:40 goba Exp $
+// $Id: openid.js,v 1.6 2008/01/30 22:11:22 goba Exp $
 
 Drupal.behaviors.openid = function (context) {
   var $loginElements = $("#edit-name-wrapper, #edit-pass-wrapper, li.openid-link");
-  var $openidElements = $("#edit-openid-url-wrapper, li.user-link");
+  var $openidElements = $("#edit-openid-identifier-wrapper, li.user-link");
 
   // This behavior attaches by ID, so is only valid once on a page.
-  if (!$("#edit-openid-url.openid-processed").size() && $("#edit-openid-url").val()) {
-    $("#edit-openid-url").addClass('openid-processed');
+  if (!$("#edit-openid-identifier.openid-processed").size() && $("#edit-openid-identifier").val()) {
+    $("#edit-openid-identifier").addClass('openid-processed');
     $loginElements.hide();
     // Use .css("display", "block") instead of .show() to be Konqueror friendly.
     $openidElements.css("display", "block");
@@ -19,8 +19,8 @@ Drupal.behaviors.openid = function (context) {
       // Remove possible error message.
       $("#edit-name, #edit-pass").removeClass("error");
       $("div.messages.error").hide();
-      // Set focus on OpenID URL field.
-      $("#edit-openid-url")[0].focus();
+      // Set focus on OpenID Identifier field.
+      $("#edit-openid-identifier")[0].focus();
       return false;
     });
   $("li.user-link:not(.openid-processed)", context)
@@ -28,8 +28,8 @@ Drupal.behaviors.openid = function (context) {
     .click(function() {
        $openidElements.hide();
        $loginElements.css("display", "block");
-      // Clear OpenID URL field and remove possible error message.
-      $("#edit-openid-url").val('').removeClass("error");
+      // Clear OpenID Identifier field and remove possible error message.
+      $("#edit-openid-identifier").val('').removeClass("error");
       $("div.messages.error").css("display", "block");
       // Set focus on username field.
       $("#edit-name")[0].focus();

@@ -1,18 +1,18 @@
-/* $Id: openid.css,v 1.4 2008/01/29 18:41:40 goba Exp $ */
+/* $Id: openid.css,v 1.5 2008/01/30 22:11:22 goba Exp $ */
 
-#edit-openid-url {
+#edit-openid-identifier {
   background-image: url("login-bg.png");
   background-position: 0% 50%;
   background-repeat: no-repeat;
   padding-left: 20px;
 }
 
-div#edit-openid-url-wrapper {
+div#edit-openid-identifier-wrapper {
   display: block;
 }
 
-html.js #user-login-form div#edit-openid-url-wrapper,
-html.js #user-login div#edit-openid-url-wrapper {
+html.js #user-login-form div#edit-openid-identifier-wrapper,
+html.js #user-login div#edit-openid-identifier-wrapper {
   display: none;
 }
 

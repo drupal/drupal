@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.inc,v 1.7 2007/12/28 12:02:52 dries Exp $
+// $Id: openid.inc,v 1.8 2008/01/30 22:11:22 goba Exp $
 
 /**
  * @file
@@ -193,7 +193,7 @@ function _openid_link_href($rel, $html) {
   $rel = preg_quote($rel);
   preg_match('|<link\s+rel=["\'](.*)'. $rel .'(.*)["\'](.*)/?>|iUs', $html, $matches);
   if (isset($matches[3])) {
-    preg_match('|href=["\']([^"]+)["\']|iU', $matches[0], $href);
+    preg_match('|href=["\']([^"]+)["\']|iU', $matches[3], $href);
     return trim($href[1]);
   }
   return FALSE;
@@ -206,7 +206,9 @@ function _openid_meta_httpequiv($equiv, $html) {
   preg_match('|<meta\s+http-equiv=["\']'. $equiv .'["\'](.*)/?>|iUs', $html, $matches);
   if (isset($matches[1])) {
     preg_match('|content=["\']([^"]+)["\']|iUs', $matches[1], $content);
-    return $content[1];
+    if (isset($content[1])) {
+      return $content[1];
+    }
   }
   return FALSE;
 }
@@ -382,23 +384,40 @@ function _openid_get_bytes($num_bytes) {
   return $bytes;
 }
 
-/**
- * Fix PHP's habit of replacing '.' by '_' in posted data.
- */
-function _openid_fix_post(&$post) {
-  $extensions = module_invoke_all('openid', 'extension');
-  foreach ($post as $key => $value) {
-    if (strpos($key, 'openid_') === 0) {
-      $fixed_key = str_replace('openid_', 'openid.', $key);
-      $fixed_key = str_replace('openid.ns_', 'openid.ns.', $fixed_key);
-      $fixed_key = str_replace('openid.sreg_', 'openid.sreg.', $fixed_key);
-      foreach ($extensions as $ext) {
-        $fixed_key = str_replace('openid.'. $ext .'_', 'openid.'. $ext .'.', $fixed_key);
+function _openid_response($str = NULL) {
+  $data = array();
+  
+  if (isset($_SERVER['REQUEST_METHOD'])) {
+    $data = _openid_get_params($_SERVER['QUERY_STRING']);
+
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+      $str = file_get_contents('php://input');
+
+      $post = array();
+      if ($str !== false) {
+        $post = _openid_get_params($str);
       }
-      unset($post[$key]);
-      $post[$fixed_key] = $value;
+
+      $data = array_merge($data, $post);
     }
   }
+
+  return $data;
+}
+
+function _openid_get_params($str) {
+  $chunks = explode("&", $str);
+
+  $data = array();
+  foreach ($chunks as $chunk) {
+    $parts = explode("=", $chunk, 2);
+
+    if (count($parts) == 2) {
+      list($k, $v) = $parts;
+      $data[$k] = urldecode($v);
+    }
+  }
+  return $data;
 }
 
 /**

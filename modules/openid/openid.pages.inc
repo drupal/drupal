@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.pages.inc,v 1.4 2008/01/08 10:35:42 goba Exp $
+// $Id: openid.pages.inc,v 1.5 2008/01/30 22:11:22 goba Exp $
 
 /**
  * @file
@@ -10,7 +10,7 @@
  * Menu callback; Process an OpenID authentication.
  */
 function openid_authentication_page() {
-  $result = openid_complete($_REQUEST);
+  $result = openid_complete();
   switch ($result['status']) {
     case 'success':
       return openid_authentication($result);
@@ -32,10 +32,11 @@ function openid_user_identities($account) {
   drupal_add_css(drupal_get_path('module', 'openid') .'/openid.css', 'module');
 
   // Check to see if we got a response
-  $result = openid_complete($_REQUEST);
+  $result = openid_complete();
   if ($result['status'] == 'success') {
-    db_query("INSERT INTO {authmap} (uid, authname, module) VALUES (%d, '%s','openid')", $account->uid, $result['openid.identity']);
-    drupal_set_message(t('Successfully added %identity', array('%identity' => $result['openid.identity'])));
+    $identity = $result['openid.claimed_id'];
+    db_query("INSERT INTO {authmap} (uid, authname, module) VALUES (%d, '%s','openid')", $account->uid, $identity);
+    drupal_set_message(t('Successfully added %identity', array('%identity' => $identity)));
   }
 
   $header = array(t('OpenID'), t('Operations'));
@@ -58,7 +59,7 @@ function openid_user_identities($account) {
  * @see openid_user_add_validate()
  */
 function openid_user_add() {
-  $form['openid_url'] = array(
+  $form['openid_identifier'] = array(
     '#type' => 'textfield',
     '#title' => t('OpenID'),
   );
@@ -68,13 +69,13 @@ function openid_user_add() {
 
 function openid_user_add_validate($form, &$form_state) {
   // Check for existing entries.
-  $claimed_id = _openid_normalize($form_state['values']['openid_url']);
+  $claimed_id = _openid_normalize($form_state['values']['openid_identifier']);
   if (db_result(db_query("SELECT authname FROM {authmap} WHERE authname='%s'", $claimed_id))) {
-    form_set_error('openid_url', t('That OpenID is already in use on this site.'));
+    form_set_error('openid_identifier', t('That OpenID is already in use on this site.'));
   }
   else {
     $return_to = url('user/'. arg(1) .'/openid', array('absolute' => TRUE));
-    openid_begin($form_state['values']['openid_url'], $return_to);
+    openid_begin($form_state['values']['openid_identifier'], $return_to);
   }
 }
 

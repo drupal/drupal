@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.module,v 1.18 2008/01/30 10:14:42 goba Exp $
+// $Id: openid.module,v 1.19 2008/01/30 22:11:22 goba Exp $
 
 /**
  * @file
@@ -62,7 +62,7 @@ function openid_help($path, $arg) {
  * Implementation of hook_user().
  */
 function openid_user($op, &$edit, &$account, $category = NULL) {
-  if ($op == 'insert' && isset($_SESSION['openid'])) {
+  if ($op == 'insert' && isset($_SESSION['openid']['values'])) {
     // The user has registered after trying to login via OpenID.
     if (variable_get('user_email_verification', TRUE)) {
       drupal_set_message(t('Once you have verified your email address, you may log in via OpenID.'));
@@ -78,7 +78,7 @@ function openid_form_alter(&$form, $form_state, $form_id) {
   if ($form_id == 'user_login_block' || $form_id == 'user_login') {
     drupal_add_css(drupal_get_path('module', 'openid') .'/openid.css', 'module');
     drupal_add_js(drupal_get_path('module', 'openid') .'/openid.js');
-    if (!empty($form_state['post']['openid_url'])) {
+    if (!empty($form_state['post']['openid_identifier'])) {
       $form['name']['#required'] = FALSE;
       $form['pass']['#required'] = FALSE;
       unset($form['#submit']);
@@ -102,7 +102,7 @@ function openid_form_alter(&$form, $form_state, $form_id) {
 
     $form['links']['#weight'] = 2;
 
-    $form['openid_url'] = array(
+    $form['openid_identifier'] = array(
       '#type' => 'textfield',
       '#title' => t('Log in using OpenID'),
       '#size' => ($form_id == 'user_login') ? 58 : 13,
@@ -115,15 +115,15 @@ function openid_form_alter(&$form, $form_state, $form_id) {
   elseif ($form_id == 'user_register' && isset($_SESSION['openid'])) {
     // We were unable to auto-register a new user. Prefill the registration
     // form with the values we have.
-    $form['name']['#default_value'] = $_SESSION['openid']['name'];
-    $form['mail']['#default_value'] = $_SESSION['openid']['mail'];
+    $form['name']['#default_value'] = $_SESSION['openid']['values']['name'];
+    $form['mail']['#default_value'] = $_SESSION['openid']['values']['mail'];
     // If user_email_verification is off, hide the password field and just fill
     // with random password to avoid confusion.
     if (!variable_get('user_email_verification', TRUE)) {
       $form['pass']['#type'] = 'hidden';
       $form['pass']['#value'] = user_password();
     }
-    $form['auth_openid'] = array('#type' => 'hidden', '#value' => $_SESSION['openid']['auth_openid']);
+    $form['auth_openid'] = array('#type' => 'hidden', '#value' => $_SESSION['openid']['values']['auth_openid']);
   }
   return $form;
 }
@@ -137,7 +137,7 @@ function openid_login_validate($form, &$form_state) {
     $return_to = url('', array('absolute' => TRUE));
   }
 
-  openid_begin($form_state['values']['openid_url'], $return_to, $form_state['values']);
+  openid_begin($form_state['values']['openid_identifier'], $return_to, $form_state['values']);
 }
 
 /**
@@ -157,19 +157,19 @@ function openid_begin($claimed_id, $return_to = '', $form_values = array()) {
 
   $services = openid_discovery($claimed_id);
   if (count($services) == 0) {
-    form_set_error('openid_url', t('Sorry, that is not a valid OpenID. Please ensure you have spelled your ID correctly.'));
+    form_set_error('openid_identifier', t('Sorry, that is not a valid OpenID. Please ensure you have spelled your ID correctly.'));
     return;
   }
 
-  $op_endpoint = $services[0]['uri'];
-  // Store the discovered endpoint in the session (so we don't have to rediscover).
-  $_SESSION['openid_op_endpoint'] = $op_endpoint;
-  // Store the claimed_id in the session (for handling delegation).
-  $_SESSION['openid_claimed_id'] = $claimed_id;
+  // Store discovered information in the users' session so we don't have to rediscover.
+  $_SESSION['openid']['service'] = $services[0];
+  // Store the claimed id
+  $_SESSION['openid']['claimed_id'] = $claimed_id;
   // Store the login form values so we can pass them to
   // user_exteral_login later.
-  $_SESSION['openid_user_login_values'] = $form_values;
+  $_SESSION['openid']['user_login_values'] = $form_values;
 
+  $op_endpoint = $services[0]['uri'];
   // If bcmath is present, then create an association
   $assoc_handle = '';
   if (function_exists('bcadd')) {
@@ -191,8 +191,8 @@ function openid_begin($claimed_id, $return_to = '', $form_values = array()) {
   }
 
   if (isset($services[0]['types']) && is_array($services[0]['types']) && in_array(OPENID_NS_2_0 .'/server', $services[0]['types'])) {
-    $identity = 'http://openid.net/identifier_select/2.0';
-  }
+    $identity = 'http://specs.openid.net/auth/2.0/identifier_select';
+  }  
   $authn_request = openid_authentication_request($claimed_id, $identity, $return_to, $assoc_handle, $services[0]['version']);
 
   if ($services[0]['version'] == 2) {
@@ -207,29 +207,42 @@ function openid_begin($claimed_id, $return_to = '', $form_values = array()) {
  * Completes OpenID authentication by validating returned data from the OpenID
  * Provider.
  *
- * @param $response Array of returned from the OpenID provider (typically $_REQUEST).
+ * @param $response Array of returned values from the OpenID Provider.
  *
  * @return $response Response values for further processing with
  *   $response['status'] set to one of 'success', 'failed' or 'cancel'.
  */
-function openid_complete($response) {
+function openid_complete($response = array()) {
   module_load_include('inc', 'openid');
 
+  if (count($response) == 0) {
+    $response = _openid_response();
+  }
+  
   // Default to failed response
   $response['status'] = 'failed';
-  if (isset($_SESSION['openid_op_endpoint']) && isset($_SESSION['openid_claimed_id'])) {
-    _openid_fix_post($response);
-    $op_endpoint = $_SESSION['openid_op_endpoint'];
-    $claimed_id = $_SESSION['openid_claimed_id'];
-    unset($_SESSION['openid_op_endpoint']);
-    unset($_SESSION['openid_claimed_id']);
+  if (isset($_SESSION['openid']['service']['uri']) && isset($_SESSION['openid']['claimed_id'])) {
+    $service = $_SESSION['openid']['service'];
+    $claimed_id = $_SESSION['openid']['claimed_id'];
+    unset($_SESSION['openid']['service']);
+    unset($_SESSION['openid']['claimed_id']);
     if (isset($response['openid.mode'])) {
       if ($response['openid.mode'] == 'cancel') {
         $response['status'] = 'cancel';
       }
       else {
-        if (openid_verify_assertion($op_endpoint, $response)) {
-          $response['openid.identity'] = $claimed_id;
+        if (openid_verify_assertion($service['uri'], $response)) {
+          // If the returned claimed_id is different from the session claimed_id,
+          // then we need to do discovery and make sure the op_endpoint matches.
+          if ($service['version'] == 2 && $response['openid.claimed_id'] != $claimed_id) {
+            $disco = openid_discovery($response['openid.claimed_id']);
+            if ($disco[0]['uri'] != $service['uri']) {
+              return $response;
+            }
+          }
+          else {
+            $response['openid.claimed_id'] = $claimed_id;
+          }
           $response['status'] = 'success';
         }
       }
@@ -371,12 +384,12 @@ function openid_association($op_endpoint) {
 function openid_authentication($response) {
   module_load_include('inc', 'openid');
 
-  $identity = $response['openid.identity'];
+  $identity = $response['openid.claimed_id'];
 
   $account = user_external_load($identity);
   if (isset($account->uid)) {
     if (!variable_get('user_email_verification', TRUE) || $account->login) {
-      user_external_login($account, $_SESSION['openid_user_login_values']);
+      user_external_login($account, $_SESSION['openid']['user_login_values']);
     }
     else {
       drupal_set_message(t('You must validate your email address for this account before logging in via OpenID'));
@@ -398,7 +411,7 @@ function openid_authentication($response) {
       // We were unable to register a valid new user, redirect to standard
       // user/register and prefill with the values we received.
       drupal_set_message(t('OpenID registration failed for the reasons listed. You may register now, or if you already have an account you can <a href="@login">log in</a> now and add your OpenID under "My Account"', array('@login' => url('user/login'))), 'error');
-      $_SESSION['openid'] = $form_state['values'];
+      $_SESSION['openid']['values'] = $form_state['values'];
       // We'll want to redirect back to the same place.
       $destination = drupal_get_destination();
       unset($_REQUEST['destination']);
@@ -443,8 +456,6 @@ function openid_association_request($public) {
 function openid_authentication_request($claimed_id, $identity, $return_to = '', $assoc_handle = '', $version = 2) {
   module_load_include('inc', 'openid');
 
-  $realm = ($return_to) ? $return_to : url('', array('absolute' => TRUE));
-
   $ns = ($version == 2) ? OPENID_NS_2_0 : OPENID_NS_1_0;
   $request =  array(
     'openid.ns' => $ns,
@@ -456,7 +467,7 @@ function openid_authentication_request($claimed_id, $identity, $return_to = '', 
   );
 
   if ($version == 2) {
-    $request['openid.realm'] = $realm;
+    $request['openid.realm'] = url('', array('absolute' => TRUE));
   }
   else {
     $request['openid.trust_root'] = $realm;
