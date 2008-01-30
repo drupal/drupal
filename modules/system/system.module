@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.581 2008/01/28 19:56:27 goba Exp $
+// $Id: system.module,v 1.582 2008/01/30 20:30:35 goba Exp $
 
 /**
  * @file
@@ -35,11 +35,6 @@ define('DRUPAL_MINIMUM_MYSQL',  '4.1.1');
  * Minimum supported version of PostgreSQL, if it is used.
  */
 define('DRUPAL_MINIMUM_PGSQL',  '7.4');
-
-/**
- * Minimum supported version of Apache, if it is used.
- */
-define('DRUPAL_MINIMUM_APACHE', '1.3');
 
 /**
  * Maximum age of temporary files in seconds.

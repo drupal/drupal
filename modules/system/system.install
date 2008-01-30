@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.237 2008/01/29 10:50:15 goba Exp $
+// $Id: system.install,v 1.238 2008/01/30 20:30:35 goba Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -24,34 +24,12 @@ function system_requirements($phase) {
     );
   }
 
-  // Test web server
+  // Web server information.
   $software = $_SERVER['SERVER_SOFTWARE'];
   $requirements['webserver'] = array(
     'title' => $t('Web server'),
     'value' => $software,
   );
-  // Use server info string, if present.
-  if ($software && preg_match('![0-9]!', $software)) {
-    list($server, $version) = split('[ /]', $software);
-    switch ($server) {
-      case 'Apache':
-        if (version_compare($version, DRUPAL_MINIMUM_APACHE) < 0) {
-          $requirements['webserver']['description'] = $t('Your Apache server is too old. Drupal requires at least Apache %version.', array('%version' => DRUPAL_MINIMUM_APACHE));
-          $requirements['webserver']['severity'] = REQUIREMENT_ERROR;
-        }
-        break;
-
-      default:
-        $requirements['webserver']['description'] = $t('The web server you\'re using has not been tested with Drupal and might not work properly.');
-        $requirements['webserver']['severity'] = REQUIREMENT_WARNING;
-        break;
-    }
-  }
-  else {
-    $requirements['webserver']['value'] = $software ? $software : $t('Unknown');
-    $requirements['webserver']['description'] = $t('Unable to determine your web server type and version. Drupal might not work properly.');
-    $requirements['webserver']['severity'] = REQUIREMENT_WARNING;
-  }
 
   // Test PHP version
   $requirements['php'] = array(
