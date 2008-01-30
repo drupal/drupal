@@ -24,7 +24,7 @@ function update_manual_status() {
  */
 function _update_refresh() {
   global $base_url;
-  include_once './modules/update/update.compare.inc';
+  module_load_include('inc', 'update', 'update.compare');
 
   // Since we're fetching new available update data, we want to clear
   // everything in our cache, to ensure we recompute the status. Note that

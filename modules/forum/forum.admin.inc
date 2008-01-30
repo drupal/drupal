@@ -215,7 +215,7 @@ function forum_admin_settings() {
  * Returns an overview list of existing forums and containers
  */
 function forum_overview(&$form_state) {
-  include_once(drupal_get_path('module', 'taxonomy') .'/taxonomy.admin.inc');
+  module_load_include('inc', 'taxonomy', 'taxonomy.admin');
 
   $vid = variable_get('forum_nav_vocabulary', '');
   $vocabulary = taxonomy_vocabulary_load($vid);
