@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.253 2008/01/29 11:01:32 goba Exp $
+// $Id: menu.inc,v 1.254 2008/01/30 21:01:20 goba Exp $
 
 /**
  * @file
@@ -1694,14 +1694,26 @@ function _menu_navigation_links_rebuild($menu) {
       }
     }
   }
-  $result = db_query("SELECT ml.link_path, ml.mlid, ml.router_path, ml.updated FROM {menu_links} ml WHERE ml.updated = 1");
+  $placeholders = db_placeholders($menu, 'varchar');
+  $paths = array_keys($menu);
+  // Updated items and customized items which router paths are gone need new
+  // router paths.
+  $result = db_query("SELECT ml.link_path, ml.mlid, ml.router_path, ml.updated FROM {menu_links} ml WHERE ml.updated = 1 OR (router_path NOT IN ($placeholders) AND external = 0 AND customized = 1)", $paths);
   while ($item = db_fetch_array($result)) {
     $router_path = _menu_find_router_path($menu, $item['link_path']);
     if (!empty($router_path) && ($router_path != $item['router_path'] || $item['updated'])) {
       // If the router path and the link path matches, it's surely a working
       // item, so we clear the updated flag.
-      db_query("UPDATE {menu_links} SET router_path = '%s', updated = %d WHERE mlid = %d", $router_path, $router_path != $item['link_path'], $item['mlid']);
+      $updated = $item['updated'] && $router_path != $item['link_path'];
+      db_query("UPDATE {menu_links} SET router_path = '%s', updated = %d WHERE mlid = %d", $router_path, $updated, $item['mlid']);
     }
+  }
+  // Find any items where their router path does not exist any more.
+  $result = db_query('SELECT * FROM {menu_links} WHERE router_path NOT IN ('. $placeholders .') AND external = 0 AND updated = 0 AND customized = 0 ORDER BY depth DESC', array_keys($menu));
+  // Remove all such items. Starting from those with the greatest depth will
+  // minimize the amount of re-parenting done by menu_link_delete().
+  while ($item = db_fetch_array($result)) {
+    _menu_delete_item($item, TRUE);
   }
 }
 
@@ -1727,11 +1739,14 @@ function menu_link_delete($mlid, $path = NULL) {
 
 /**
  * Helper function for menu_link_delete; deletes a single menu link.
+ *
+ * @param $item
+ *   Item to be deleted.
+ * @param $force
+ *   Forces deletion. Internal use only, setting to TRUE is discouraged.
  */
-function _menu_delete_item($item) {
-  // System-created items are never deleted. Updated items are an exception,
-  // as they can be broken.
-  if ($item && ($item['module'] != 'system' || $item['updated'])) {
+function _menu_delete_item($item, $force = FALSE) {
+  if ($item && ($item['module'] != 'system' || $item['updated'] || $force)) {
     // Children get re-attached to the item's parent.
     if ($item['has_children']) {
       $result = db_query("SELECT mlid FROM {menu_links} WHERE plid = %d", $item['mlid']);
