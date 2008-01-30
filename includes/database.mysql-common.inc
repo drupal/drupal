@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysql-common.inc,v 1.16 2007/12/23 13:22:12 goba Exp $
+// $Id: database.mysql-common.inc,v 1.17 2008/01/30 14:34:29 goba Exp $
 
 /**
  * @file
@@ -201,8 +201,8 @@ function db_type_map() {
     'varchar:normal'  => 'VARCHAR',
     'char:normal'     => 'CHAR',
 
-    'text:tiny'       => 'SMALLTEXT',
-    'text:small'      => 'SMALLTEXT',
+    'text:tiny'       => 'TINYTEXT',
+    'text:small'      => 'TINYTEXT',
     'text:medium'     => 'MEDIUMTEXT',
     'text:big'        => 'LONGTEXT',
     'text:normal'     => 'TEXT',
