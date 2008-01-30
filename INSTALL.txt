@@ -1,4 +1,4 @@
-// $Id: INSTALL.txt,v 1.60 2008/01/29 19:03:15 goba Exp $
+// $Id: INSTALL.txt,v 1.61 2008/01/30 11:37:33 goba Exp $
 
 CONTENTS OF THIS FILE
 ---------------------
@@ -22,30 +22,31 @@ PostgreSQL have been tested to a lesser extent. When using MySQL, version 4.1.1
 or greater is recommended to assure you can safely transfer the database.
 
 For more detailed information about Drupal requirements, see "Requirements"
-(http://drupal.org/requirements) in the Drupal Handbook.
+(http://drupal.org/requirements) in the Drupal handbook.
 
 For detailed information on how to configure a test server environment using
 a variety of operating systems and web servers, see "Local server setup"
-(http://drupal.org/node/157602) in the Drupal Handbook.
+(http://drupal.org/node/157602) in the Drupal handbook.
 
 OPTIONAL REQUIREMENTS
 ---------------------
 
 - To use XML-based services such as the Blogger API and RSS syndication,
-you will need PHP's XML extension. This extension is enabled by default.
+  you will need PHP's XML extension. This extension is enabled by default.
 
-- If you want support for clean URLs, you'll need mod_rewrite and the ability
-to use local .htaccess files.
+- To use Drupal's "Clean URLs" feature on an Apache web server, you will need
+  the mod_rewrite module and the ability to use local .htaccess files. For
+  Clean URLs support on IIS, see "Using Clean URLs with IIS"
+  (http://drupal.org/node/3854) in the Drupal handbook.
 
 - Various Drupal features require that the web server process (for
-  example, httpd) needs to be able to initiate outbound connections.
-  This is usually possible, but some hosting providers or server
-  configurations forbid such connections. The features that depend on
-  this functionality include the integrated "Update status" module
-  which downloads information about available updates of Drupal core
-  and any installed contributed modules and themes, the ability to log
-  in via OpenID, fetching aggregator feeds, or use other
-  network-dependent services.
+  example, httpd) be able to initiate outbound connections. This is usually
+  possible, but some hosting providers or server configurations forbid such
+  connections. The features that depend on this functionality include the
+  integrated "Update status" module (which downloads information about
+  available updates of Drupal core and any installed contributed modules and
+  themes), the ability to log in via OpenID, fetching aggregator feeds, or
+  other network-dependent services.
 
 
 INSTALLATION
@@ -172,7 +173,7 @@ INSTALLATION
      * Access the file system path settings in Drupal by selecting these
        menu items from the Navigation menu:
 
-           administer > site configuration > file system
+           Administer > Site configuration > File system
 
        Enter the path to the new location (e.g.: uploads) at the File
        System Path prompt.
@@ -318,4 +319,5 @@ For platform specific configuration issues and other installation and
 administration assistance, please consult the Drupal handbook at
 http://drupal.org/handbook. You can view the wide range of other support options
 available at http://drupal.org/support.
+
 
