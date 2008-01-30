@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.262 2008/01/28 12:09:12 goba Exp $
+// $Id: form.inc,v 1.263 2008/01/30 21:42:17 goba Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -649,6 +649,8 @@ function drupal_redirect_form($form, $redirect = NULL) {
  *   theming, and hook_form_alter functions.
  */
 function _form_validate($elements, &$form_state, $form_id = NULL) {
+  static $complete_form;
+
   // Also used in the installer, pre-database setup.
   $t = get_t();
 
@@ -696,16 +698,19 @@ function _form_validate($elements, &$form_state, $form_id = NULL) {
       }
     }
 
-    // Call user-defined form level validators.
+    // Call user-defined form level validators and store a copy of the full
+    // form so that element-specific validators can examine the entire structure
+    // if necessary.
     if (isset($form_id)) {
       form_execute_handlers('validate', $elements, $form_state);
+      $complete_form = $elements;
     }
     // Call any element-specific validators. These must act on the element
     // #value data.
     elseif (isset($elements['#element_validate'])) {
       foreach ($elements['#element_validate'] as $function) {
         if (function_exists($function))  {
-          $function($elements, $form_state);
+          $function($elements, $form_state, $complete_form);
         }
       }
     }
