@@ -201,8 +201,8 @@ function db_type_map() {
     'varchar:normal'  => 'VARCHAR',
     'char:normal'     => 'CHAR',
 
-    'text:tiny'       => 'SMALLTEXT',
-    'text:small'      => 'SMALLTEXT',
+    'text:tiny'       => 'TINYTEXT',
+    'text:small'      => 'TINYTEXT',
     'text:medium'     => 'MEDIUMTEXT',
     'text:big'        => 'LONGTEXT',
     'text:normal'     => 'TEXT',
