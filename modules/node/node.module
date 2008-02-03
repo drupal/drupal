@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.946 2008/02/03 19:07:32 goba Exp $
+// $Id: node.module,v 1.947 2008/02/03 19:41:47 goba Exp $
 
 /**
  * @file
@@ -328,7 +328,7 @@ function node_teaser($body, $format = NULL, $size = NULL) {
   }
 
   // If we have a short body, the entire body is the teaser.
-  if (strlen($body) <= $size) {
+  if (drupal_strlen($body) <= $size) {
     return $body;
   }
 
