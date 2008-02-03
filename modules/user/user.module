@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.891 2008/01/29 18:56:56 goba Exp $
+// $Id: user.module,v 1.892 2008/02/03 19:23:01 goba Exp $
 
 /**
  * @file
@@ -25,7 +25,7 @@ function user_module_invoke($type, &$array, &$user, $category = NULL) {
 }
 
 /**
- * Implementation of hook_theme()
+ * Implementation of hook_theme().
  */
 function user_theme() {
   return array(
@@ -94,7 +94,7 @@ function user_external_load($authname) {
  * The user object must already be authenticated. This function verifies
  * that the user account is not blocked/denied and then performs the login,
  * updates the login timestamp in the database, invokes hook_user('login'),
- * regenerates the session, etc.
+ * and regenerates the session.
  *
  * @param $account
  *    An authenticated user object to be set as the currently logged
@@ -113,6 +113,7 @@ function user_external_login($account, $edit = array()) {
     $state['values']['name'] = $account->name;
   }
 
+  // Check if user is blocked or denied by access rules.
   user_login_name_validate($form, $state, (array)$account);
   if (form_get_errors()) {
     // Invalid login.
@@ -134,7 +135,8 @@ function user_external_login($account, $edit = array()) {
  *   user, such as user name or e-mail address.
  *
  * @return
- *   A fully-loaded $user object upon successful user load or FALSE if user cannot be loaded.
+ *   A fully-loaded $user object upon successful user load or FALSE if user
+ *   cannot be loaded.
  */
 function user_load($array = array()) {
   // Dynamically compose a SQL query:
@@ -195,8 +197,9 @@ function user_load($array = array()) {
  *   omitted, a new user will be added.
  *
  * @param $array
- *   An array of fields and values to save. For example array('name' => 'My name');
- *   Setting a field to NULL deletes it from the data column.
+ *   (optional) An array of fields and values to save. For example,
+ *   array('name' => 'My name'); Setting a field to NULL deletes it from
+ *   the data column.
  *
  * @param $category
  *   (optional) The category for storing profile information in.
@@ -223,7 +226,7 @@ function user_save($account, $array = array(), $category = 'account') {
       }
       else if ((substr($key, 0, 4) !== 'auth') && ($key != 'pass')) {
         if (in_array($key, $user_fields)) {
-          // Save standard fields
+          // Save standard fields.
           $query .= "$key = '%s', ";
           $v[] = $value;
         }
@@ -247,7 +250,7 @@ function user_save($account, $array = array(), $category = 'account') {
       return FALSE;
     }
 
-    // Reload user roles if provided
+    // Reload user roles if provided.
     if (isset($array['roles']) && is_array($array['roles'])) {
       db_query('DELETE FROM {users_roles} WHERE uid = %d', $account->uid);
 
@@ -270,12 +273,12 @@ function user_save($account, $array = array(), $category = 'account') {
       sess_regenerate();
     }
 
-    // Refresh user object
+    // Refresh user object.
     $user = user_load(array('uid' => $account->uid));
 
     // Send emails after we have the new user object.
     if (isset($array['status']) && $array['status'] != $account->status) {
-      // The user's status is changing, conditionally send notification email.
+      // The user's status is changing; conditionally send notification email.
       $op = $array['status'] == 1 ? 'status_activated' : 'status_blocked';
       _user_mail_notify($op, $user);
     }
@@ -283,7 +286,8 @@ function user_save($account, $array = array(), $category = 'account') {
     user_module_invoke('after_update', $array, $user, $category);
   }
   else {
-    if (!isset($array['created'])) {    // Allow 'created' to be set by the caller
+    // Allow 'created' to be set by the caller.
+    if (!isset($array['created'])) {
       $array['created'] = time();
     }
     // Consider users created by an administrator as already logged in, so
@@ -292,7 +296,7 @@ function user_save($account, $array = array(), $category = 'account') {
       $array['access'] = time();
     }
 
-    // Note, we wait with saving the data column to prevent module-handled
+    // Note: we wait to save the data column to prevent module-handled
     // fields from being saved there. We cannot invoke hook_user('insert') here
     // because we don't have a fully initialized user object yet.
     foreach ($array as $key => $value) {
@@ -320,8 +324,8 @@ function user_save($account, $array = array(), $category = 'account') {
     }
     $success = db_query('INSERT INTO {users} ('. implode(', ', $fields) .') VALUES ('. implode(', ', $s) .')', $values);
     if (!$success) {
-      // On a failed INSERT some other existing user's uid may be returned.  We
-      // must abort to avoid overwirting their account.
+      // On a failed INSERT some other existing user's uid may be returned.
+      // We must abort to avoid overwriting their account.
       return FALSE;
     }
 
@@ -331,7 +335,7 @@ function user_save($account, $array = array(), $category = 'account') {
 
     user_module_invoke('insert', $array, $user, $category);
 
-    // Build and save the serialized data field now
+    // Build and save the serialized data field now.
     $data = array();
     foreach ($array as $key => $value) {
       if ((substr($key, 0, 4) !== 'auth') && ($key != 'roles') && (!in_array($key, $user_fields)) && ($value !== NULL)) {
@@ -354,7 +358,7 @@ function user_save($account, $array = array(), $category = 'account') {
     $user = user_load(array('uid' => $array['uid']));
   }
 
-  // Save distributed authentication mappings
+  // Save distributed authentication mappings.
   $authmaps = array();
   foreach ($array as $key => $value) {
     if (substr($key, 0, 4) == 'auth') {
@@ -434,7 +438,7 @@ function user_password($length = 10) {
   // This variable contains the list of allowable characters for the
   // password. Note that the number 0 and the letter 'O' have been
   // removed to avoid confusion between the two. The same is true
-  // of 'I', 1, and l.
+  // of 'I', 1, and 'l'.
   $allowable_characters = 'abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 
   // Zero-based count of characters in the allowable list:
@@ -506,9 +510,9 @@ function user_access($string, $account = NULL, $reset = FALSE) {
 }
 
 /**
- * Checks for usernames blocked by user administration
+ * Checks for usernames blocked by user administration.
  *
- * @return boolean TRUE for blocked users, FALSE for active
+ * @return boolean TRUE for blocked users, FALSE for active.
  */
 function user_is_blocked($name) {
   $deny = db_fetch_object(db_query("SELECT name FROM {users} WHERE status = 0 AND name = LOWER('%s')", $name));
@@ -525,7 +529,7 @@ function user_fields() {
       $fields = array_keys($field);
     }
     else {
-      // Make sure we return the default fields at least
+      // Make sure we return the default fields at least.
       $fields = array('uid', 'name', 'pass', 'mail', 'picture', 'mode', 'sort', 'threshold', 'theme', 'signature', 'created', 'access', 'login', 'status', 'timezone', 'language', 'init', 'data');
     }
   }
@@ -926,7 +930,7 @@ function user_menu() {
     'file' => 'user.pages.inc',
   );
 
-  // Admin user pages
+  // Admin user pages.
   $items['admin/user'] = array(
     'title' => 'User management',
     'description' => "Manage your site's users, groups and access to site features.",
@@ -964,7 +968,7 @@ function user_menu() {
     'file' => 'user.admin.inc',
   );
 
-  // Admin access pages
+  // Admin access pages.
   $items['admin/user/permissions'] = array(
     'title' => 'Permissions',
     'description' => 'Determine access to features by selecting permissions for roles.',
@@ -1170,8 +1174,12 @@ function user_page_title($account) {
 }
 
 /**
- * Accepts an user object, $account, or a DA name and returns an associative
- * array of modules and DA names. Called at external login.
+ * Discover which external authentication module(s) authenticated a username.
+ *
+ * @param $authname
+ *   A username used by an external authentication module.
+ * @return
+ *   An associative array with module as key and username as value.
  */
 function user_get_authmaps($authname = NULL) {
   $result = db_query("SELECT authname, module FROM {authmap} WHERE authname = '%s'", $authname);
@@ -1184,6 +1192,18 @@ function user_get_authmaps($authname = NULL) {
   return $has_rows ? $authmaps : 0;
 }
 
+/**
+ * Save mappings of which external authentication module(s) authenticated
+ * a user. Maps external usernames to user ids in the users table.
+ *
+ * @param $account
+ *   A user object.
+ * @param $authmaps
+ *   An associative array with a compound key and the username as the value.
+ *   The key is made up of 'authname_' plus the name of the external authentication
+ *   module.
+ * @see user_external_login_register()
+ */
 function user_set_authmaps($account, $authmaps) {
   foreach ($authmaps as $key => $value) {
     $module = explode('_', $key, 2);
@@ -1240,15 +1260,13 @@ function user_login(&$form_state, $msg = '') {
 /**
  * Set up a series for validators which check for blocked/denied users,
  * then authenticate against local database, then return an error if
- * authentication fails. Distributed authentication modules (e.g.
- * drupal.module) are welcome to use hook_form_alter() to change this
- * series in order to authenticate against their user database instead
- * of local users table.
+ * authentication fails. Distributed authentication modules are welcome 
+ * to use hook_form_alter() to change this series in order to 
+ * authenticate against their user database instead of the local users 
+ * table.
  *
  * We use three validators instead of one since external authentication
- * modules usually only need to alter the second validator. See
- * drupal_form_alter() in drupal.module for an example of altering
- * this series of validators.
+ * modules usually only need to alter the second validator.
  *
  * @see user_login_name_validate()
  * @see user_login_authenticate_validate()
@@ -1261,7 +1279,8 @@ function user_login_default_validators() {
 }
 
 /**
- * A FAPI validate handler. Sets an error is supplied username has been blocked or denied access.
+ * A FAPI validate handler. Sets an error if supplied username has been blocked
+ * or denied access.
  */
 function user_login_name_validate($form, &$form_state) {
   if (isset($form_state['values']['name'])) {
@@ -1645,10 +1664,12 @@ function _user_mail_text($key, $language = NULL, $variables = array()) {
  * @param $membersonly
  *   Set this to TRUE to exclude the 'anonymous' role.
  * @param $permission
- *   A string containing a permission. If set, only roles containing that permission are returned.
+ *   A string containing a permission. If set, only roles containing that
+ *   permission are returned.
  *
  * @return
- *   An associative array with the role id as the key and the role name as value.
+ *   An associative array with the role id as the key and the role name as
+ *   value.
  */
 function user_roles($membersonly = FALSE, $permission = NULL) {
   // System roles take the first two positions.
@@ -1730,7 +1751,8 @@ function user_user_operations($form_state = array()) {
     }
   }
 
-  // If the form has been posted, we need to insert the proper data for role editing if necessary.
+  // If the form has been posted, we need to insert the proper data for
+  // role editing if necessary.
   if (!empty($form_state['submitted'])) {
     $operation_rid = explode('-', $form_state['values']['operation']);
     $operation = $operation_rid[0];
@@ -1814,7 +1836,7 @@ function user_multiple_delete_confirm(&$form_state) {
   $edit = $form_state['post'];
 
   $form['accounts'] = array('#prefix' => '<ul>', '#suffix' => '</ul>', '#tree' => TRUE);
-  // array_filter returns only elements with TRUE values
+  // array_filter() returns only elements with TRUE values.
   foreach (array_filter($edit['accounts']) as $uid => $value) {
     $user = db_result(db_query('SELECT name FROM {users} WHERE uid = %d', $uid));
     $form['accounts'][$uid] = array('#type' => 'hidden', '#value' => $uid, '#prefix' => '<li>', '#suffix' => check_plain($user) ."</li>\n");
@@ -1947,8 +1969,9 @@ function user_build_filter_query() {
   $where = $args = $join = array();
   foreach ($_SESSION['user_overview_filter'] as $filter) {
     list($key, $value) = $filter;
-    // This checks to see if this permission filter is an enabled permission for the authenticated role.
-    // If so, then all users would be listed, and we can skip adding it to the filter query.
+    // This checks to see if this permission filter is an enabled permission for
+    // the authenticated role. If so, then all users would be listed, and we can
+    // skip adding it to the filter query.
     if ($key == 'permission') {
       $account = new stdClass();
       $account->uid = 'user_filter';
@@ -2108,7 +2131,8 @@ function _user_mail_notify($op, $account, $language = NULL) {
 }
 
 /**
- * Add javascript and string translations for dynamic password validation (strength and confirmation checking).
+ * Add javascript and string translations for dynamic password validation
+ * (strength and confirmation checking).
  *
  * This is an internal function that makes it easier to manage the translation
  * strings that need to be passed to the javascript code.
@@ -2242,7 +2266,8 @@ function user_register_submit($form, &$form_state) {
   $notify = isset($form_state['values']['notify']) ? $form_state['values']['notify'] : NULL;
   $from = variable_get('site_mail', ini_get('sendmail_from'));
   if (isset($form_state['values']['roles'])) {
-    $roles = array_filter($form_state['values']['roles']);     // Remove unset roles
+    // Remove unset roles.
+    $roles = array_filter($form_state['values']['roles']);
   }
   else {
     $roles = array();
@@ -2253,7 +2278,8 @@ function user_register_submit($form, &$form_state) {
     $form_state['redirect'] = 'user/register';
     return;
   }
-  //the unset below is needed to prevent these form values from being saved as user data
+  // The unset below is needed to prevent these form values from being saved as
+  // user data.
   unset($form_state['values']['form_token'], $form_state['values']['submit'], $form_state['values']['op'], $form_state['values']['notify'], $form_state['values']['form_id'], $form_state['values']['affiliates'], $form_state['values']['destination']);
 
   $merge_data = array('pass' => $pass, 'init' => $mail, 'roles' => $roles);
@@ -2291,7 +2317,8 @@ function user_register_submit($form, &$form_state) {
       drupal_set_message(t('Created a new user account for <a href="@url">%name</a>. No e-mail has been sent.', array('@url' => url("user/$account->uid"), '%name' => $account->name)));
     }
     else if (!variable_get('user_email_verification', TRUE) && $account->status && !$admin) {
-      // No e-mail verification is required, create new user account, and login user immediately.
+      // No e-mail verification is required, create new user account, and login
+      // user immediately.
       _user_mail_notify('register_no_approval_required', $account);
       if (user_authenticate(array_merge($form_state['values'], $merge_data))) {
         drupal_set_message(t('Registration successful. You are now logged in.'));
@@ -2354,7 +2381,8 @@ function user_register() {
      '#type' => 'checkbox',
      '#title' => t('Notify user of new account')
     );
-    // Redirect back to page which initiated the create request; usually admin/user/user/create
+    // Redirect back to page which initiated the create request;
+    // usually admin/user/user/create.
     $form['destination'] = array('#type' => 'hidden', '#value' => $_GET['q']);
   }
 
