@@ -1,5 +1,5 @@
 <?php
-// $Id: update.compare.inc,v 1.7 2008/01/27 17:50:10 goba Exp $
+// $Id: update.compare.inc,v 1.8 2008/02/03 19:34:02 goba Exp $
 
 /**
  * @file
@@ -390,13 +390,14 @@ function update_calculate_project_data($available) {
 
         // See if this is a higher major version than our target and yet still
         // supported. If so, record it as an "Also available" release.
-        if ($release['version_major'] > $target_major &&
-            in_array($release['version_major'], $supported_majors)) {
-          if (!isset($available[$project]['also'])) {
-            $available[$project]['also'] = array();
-          }
-          if (!isset($available[$project]['also'][$release['version_major']])) {
-            $available[$project]['also'][$release['version_major']] = $version;
+        if ($release['version_major'] > $target_major) {
+          if (in_array($release['version_major'], $supported_majors)) {
+            if (!isset($available[$project]['also'])) {
+              $available[$project]['also'] = array();
+            }
+            if (!isset($available[$project]['also'][$release['version_major']])) {
+              $available[$project]['also'][$release['version_major']] = $version;
+            }
           }
           // Otherwise, this release can't matter to us, since it's neither
           // from the release series we're currently using nor the recommended
