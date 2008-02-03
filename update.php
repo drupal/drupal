@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.251 2008/01/30 22:13:25 goba Exp $
+// $Id: update.php,v 1.252 2008/02/03 18:41:16 goba Exp $
 
 /**
  * @file
@@ -364,7 +364,7 @@ function update_info_page() {
   _drupal_flush_css_js();
   // Flush the cache of all data for the update status module.
   if (db_table_exists('cache_update')) {
-    cache_clear_all('*', 'cache_update', '*');
+    cache_clear_all('*', 'cache_update', TRUE);
   }
 
   update_task_list('info');
