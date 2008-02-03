@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.18 2008/01/29 11:08:17 goba Exp $
+// $Id: node.admin.inc,v 1.19 2008/02/03 19:39:52 goba Exp $
 
 /**
  * @file
@@ -448,6 +448,7 @@ function node_admin_content($form_state) {
   }
   $form = node_filter_form();
 
+  $form['#theme'] = 'node_filter_form';
   $form['admin']  = node_admin_nodes();
 
   return $form;
