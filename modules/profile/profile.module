@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.235 2007/12/31 08:54:37 dries Exp $
+// $Id: profile.module,v 1.236 2008/02/03 19:36:46 goba Exp $
 
 /**
  * @file
@@ -311,7 +311,7 @@ function profile_view_profile(&$user) {
       if (!isset($user->content[$field->category])) {
         $user->content[$field->category] = array(
           '#type' => 'user_profile_category',
-          '#title' => check_plain($field->category),
+          '#title' => $field->category,
         );
       }
 
