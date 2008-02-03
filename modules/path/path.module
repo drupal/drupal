@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.137 2007/12/23 15:32:36 goba Exp $
+// $Id: path.module,v 1.138 2008/02/03 19:20:35 goba Exp $
 
 /**
  * @file
@@ -130,7 +130,8 @@ function path_set_alias($path = NULL, $alias = NULL, $pid = NULL, $language = ''
  * than through the administrative interface.
  */
 function path_nodeapi(&$node, $op, $arg) {
-  if (user_access('create url aliases') || user_access('administer url aliases')) {
+  // Permissions are required for everything except node loading.
+  if (user_access('create url aliases') || user_access('administer url aliases') || ($op == 'load')) {
     $language = isset($node->language) ? $node->language : '';
     switch ($op) {
       case 'validate':
