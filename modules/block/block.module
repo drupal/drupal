@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.298 2008/01/25 10:56:59 goba Exp $
+// $Id: block.module,v 1.299 2008/02/03 19:12:57 goba Exp $
 
 /**
  * @file
@@ -348,19 +348,18 @@ function block_box_save($edit, $delta) {
  * Allow users to decide which custom blocks to display when they visit
  * the site.
  */
-function block_user($type, $edit, &$user, $category = NULL) {
-  global $user;
+function block_user($type, $edit, &$account, $category = NULL) {
   switch ($type) {
     case 'form':
       if ($category == 'account') {
-        $rids = array_keys($user->roles);
+        $rids = array_keys($account->roles);
         $result = db_query("SELECT DISTINCT b.* FROM {blocks} b LEFT JOIN {blocks_roles} r ON b.module = r.module AND b.delta = r.delta WHERE b.status = 1 AND b.custom != 0 AND (r.rid IN (". db_placeholders($rids) .") OR r.rid IS NULL) ORDER BY b.weight, b.module", $rids);
         $form['block'] = array('#type' => 'fieldset', '#title' => t('Block configuration'), '#weight' => 3, '#collapsible' => TRUE, '#tree' => TRUE);
         while ($block = db_fetch_object($result)) {
           $data = module_invoke($block->module, 'block', 'list');
           if ($data[$block->delta]['info']) {
             $return = TRUE;
-            $form['block'][$block->module][$block->delta] = array('#type' => 'checkbox', '#title' => check_plain($data[$block->delta]['info']), '#default_value' => isset($user->block[$block->module][$block->delta]) ? $user->block[$block->module][$block->delta] : ($block->custom == 1));
+            $form['block'][$block->module][$block->delta] = array('#type' => 'checkbox', '#title' => check_plain($data[$block->delta]['info']), '#default_value' => isset($account->block[$block->module][$block->delta]) ? $account->block[$block->module][$block->delta] : ($block->custom == 1));
           }
         }
 
