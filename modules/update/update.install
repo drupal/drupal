@@ -1,5 +1,5 @@
 <?php
-// $Id: update.install,v 1.3 2007/10/10 11:39:34 goba Exp $
+// $Id: update.install,v 1.4 2008/02/03 18:38:14 goba Exp $
 
 /**
  * Implementation of hook_install().
@@ -7,6 +7,8 @@
 function update_install() {
   // Create cache table.
   drupal_install_schema('update');
+  // Remove stale variables from update_status 5.x contrib, if any.
+  _update_remove_update_status_variables();
 }
 
 /**
@@ -38,3 +40,25 @@ function update_schema() {
   return $schema;
 }
 
+/**
+ * Private helper to clear out stale variables from update_status 5.x contrib. 
+ *
+ * @see update_install()
+ * @see update_update_6000()
+ */
+function _update_remove_update_status_variables() {
+  variable_del('update_status_settings');
+  variable_del('update_status_notify_emails');
+  variable_del('update_status_check_frequency');
+  variable_del('update_status_notification_threshold');
+  variable_del('update_status_last');
+  variable_del('update_status_fetch_url');
+}
+
+/**
+ * Clear out stale variables from update_status.
+ */
+function update_update_6000() {
+  _update_remove_update_status_variables();
+  return array();
+}

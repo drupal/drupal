@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.252 2008/01/30 23:07:41 goba Exp $
+// $Id: CHANGELOG.txt,v 1.253 2008/02/03 18:38:14 goba Exp $
 
 Drupal 6.0, xxxx-xx-xx (development version)
 ----------------------
@@ -90,6 +90,8 @@ Drupal 6.0, xxxx-xx-xx (development version)
 - Added support for triggering configurable actions.
 - Added the Update status module to automatically check for available updates
   and warn sites if they are missing security updates or newer versions.
+  Sites deploying from CVS should use http://drupal.org/project/cvs_deploy.
+  Advanced settings provided by http://drupal.org/project/update_advanced.
 - Upgraded the core JavaScript library to jQuery version 1.2.
 - Added a new Schema API, which provides built-in support for core and
   contributed modules to work with databases other than MySQL.
