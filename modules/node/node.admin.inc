@@ -448,6 +448,7 @@ function node_admin_content($form_state) {
   }
   $form = node_filter_form();
 
+  $form['#theme'] = 'node_filter_form';
   $form['admin']  = node_admin_nodes();
 
   return $form;
