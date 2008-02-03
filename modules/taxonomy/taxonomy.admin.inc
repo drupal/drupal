@@ -673,7 +673,7 @@ function taxonomy_form_term(&$form_state, $vocabulary, $edit = array()) {
 
   $form['advanced'] = array(
     '#type' => 'fieldset',
-    '#title' => 'Advanced options',
+    '#title' => t('Advanced options'),
     '#collapsible' => TRUE,
     '#collapsed' => $vocabulary->hierarchy > 1 ? FALSE : TRUE,
   );
