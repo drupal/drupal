@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.21 2008/01/08 10:35:42 goba Exp $
+// $Id: taxonomy.admin.inc,v 1.22 2008/02/03 19:27:56 goba Exp $
 
 /**
  * @file
@@ -673,7 +673,7 @@ function taxonomy_form_term(&$form_state, $vocabulary, $edit = array()) {
 
   $form['advanced'] = array(
     '#type' => 'fieldset',
-    '#title' => 'Advanced options',
+    '#title' => t('Advanced options'),
     '#collapsible' => TRUE,
     '#collapsed' => $vocabulary->hierarchy > 1 ? FALSE : TRUE,
   );
