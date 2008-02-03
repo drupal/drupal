@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.945 2008/01/29 11:08:17 goba Exp $
+// $Id: node.module,v 1.946 2008/02/03 19:07:32 goba Exp $
 
 /**
  * @file
@@ -823,8 +823,10 @@ function node_submit($node) {
   if (!isset($node->teaser)) {
     if (isset($node->body)) {
       $node->teaser = node_teaser($node->body, isset($node->format) ? $node->format : NULL);
-      // Chop off the teaser from the body if needed.
-      if (empty($node->teaser_include) && $node->teaser == substr($node->body, 0, strlen($node->teaser))) {
+      // Chop off the teaser from the body if needed. The teaser_include
+      // property might not be set (eg. in Blog API postings), so only act on
+      // it, if it was set with a given value.
+      if (isset($node->teaser_include) && !$node->teaser_include && $node->teaser == substr($node->body, 0, strlen($node->teaser))) {
         $node->body = substr($node->body, strlen($node->teaser));
       }
     }
