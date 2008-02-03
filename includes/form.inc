@@ -274,12 +274,13 @@ function form_set_cache($form_build_id, $form, $form_state) {
  *
  * // Create a new node
  * $form_state = array();
+ * module_load_include('inc', 'node', 'node.pages');
  * $node = array('type' => 'story');
  * $form_state['values']['title'] = 'My node';
  * $form_state['values']['body'] = 'This is the body text!';
  * $form_state['values']['name'] = 'robo-user';
  * $form_state['values']['op'] = t('Save');
- * drupal_execute('story_node_form', $form_state, $node);
+ * drupal_execute('story_node_form', $form_state, (object)$node);
  */
 function drupal_execute($form_id, &$form_state) {
   $args = func_get_args();

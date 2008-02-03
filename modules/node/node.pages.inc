@@ -464,6 +464,7 @@ function node_form_submit($form, &$form_state) {
   }
   if ($node->nid) {
     unset($form_state['rebuild']);
+    $form_state['nid'] = $node->nid;
     $form_state['redirect'] = 'node/'. $node->nid;
   }
   else {
