@@ -80,10 +80,6 @@ XML-RPC SERVER/CLIENT
 M: John VanDyk <http://drupal.org/user/2375/contact>
 S: maintained
 
-DEBIAN PACKAGE
-M: Hilko Bengen <bengen@debian.org>
-S: maintained
-
 TRANSLATIONS COORDINATOR
 M: Gerhard Killesreiter <gerhard@killesreiter.de>
 S: maintained
