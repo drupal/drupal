@@ -2167,8 +2167,8 @@ function theme_system_themes_form($form) {
 
     // Fetch info
     $info = $form[$key]['info']['#value'];
-
-    $description = $info['description'];
+    // Localize theme description.
+    $description = t($info['description']);
     // Make sure it is compatible and render the checkbox if so.
     if (isset($form['status']['#incompatible_themes_core'][$key])) {
       unset($form['status'][$key]);
