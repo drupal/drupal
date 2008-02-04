@@ -1,4 +1,4 @@
-// $Id: MAINTAINERS.txt,v 1.18 2007/10/03 17:17:25 dries Exp $
+// $Id: MAINTAINERS.txt,v 1.19 2008/02/04 10:26:49 goba Exp $
 
 List of maintainers
 --------------------------------------------------------------------------------
@@ -78,10 +78,6 @@ S: maintained
 
 XML-RPC SERVER/CLIENT
 M: John VanDyk <http://drupal.org/user/2375/contact>
-S: maintained
-
-DEBIAN PACKAGE
-M: Hilko Bengen <bengen@debian.org>
 S: maintained
 
 TRANSLATIONS COORDINATOR
