@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.62 2008/02/04 12:07:23 goba Exp $
+// $Id: system.admin.inc,v 1.63 2008/02/04 12:35:48 goba Exp $
 
 /**
  * @file
@@ -2167,8 +2167,8 @@ function theme_system_themes_form($form) {
 
     // Fetch info
     $info = $form[$key]['info']['#value'];
-
-    $description = $info['description'];
+    // Localize theme description.
+    $description = t($info['description']);
     // Make sure it is compatible and render the checkbox if so.
     if (isset($form['status']['#incompatible_themes_core'][$key])) {
       unset($form['status'][$key]);
