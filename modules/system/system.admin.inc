@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.61 2008/01/29 10:56:13 goba Exp $
+// $Id: system.admin.inc,v 1.62 2008/02/04 12:07:23 goba Exp $
 
 /**
  * @file
@@ -35,8 +35,8 @@ function system_main_admin_page($arg = NULL) {
       }
       // The link 'description' either derived from the hook_menu 'description'
       // or entered by the user via menu module is saved as the title attribute.
-      if (!empty($item['options']['attributes']['title'])) {
-        $item['description'] = $item['options']['attributes']['title'];
+      if (!empty($item['localized_options']['attributes']['title'])) {
+        $item['description'] = $item['localized_options']['attributes']['title'];
       }
       $block = $item;
       $block['content'] = '';
@@ -1856,18 +1856,14 @@ function theme_admin_block_content($content) {
   if (system_admin_compact_mode()) {
     $output = '<ul class="menu">';
     foreach ($content as $item) {
-      if (empty($item['attributes'])) {
-        $item['attributes'] = array();
-      }
-      $item['attributes'] += array('title' => $item['description']);
-      $output .= '<li class="leaf">'. l($item['title'], $item['href'], $item['options']) .'</li>';
+      $output .= '<li class="leaf">'. l($item['title'], $item['href'], $item['localized_options']) .'</li>';
     }
     $output .= '</ul>';
   }
   else {
     $output = '<dl class="admin-list">';
     foreach ($content as $item) {
-      $output .= '<dt>'. l($item['title'], $item['href'], $item['options']) .'</dt>';
+      $output .= '<dt>'. l($item['title'], $item['href'], $item['localized_options']) .'</dt>';
       $output .= '<dd>'. $item['description'] .'</dd>';
     }
     $output .= '</dl>';

@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.584 2008/01/30 23:07:41 goba Exp $
+// $Id: system.module,v 1.585 2008/02/04 12:07:23 goba Exp $
 
 /**
  * @file
@@ -629,8 +629,8 @@ function system_admin_menu_block($item) {
     }
     // The link 'description' either derived from the hook_menu 'description' or
     // entered by the user via menu module is saved as the title attribute.
-    if (!empty($item['options']['attributes']['title'])) {
-      $item['description'] = $item['options']['attributes']['title'];
+    if (!empty($item['localized_options']['attributes']['title'])) {
+      $item['description'] = $item['localized_options']['attributes']['title'];
     }
     // Prepare for sorting as in function _menu_tree_check_access().
     // The weight is offset so it is always positive, with a uniform 5-digits.

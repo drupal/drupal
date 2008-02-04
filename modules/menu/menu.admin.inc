@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.admin.inc,v 1.25 2008/01/21 12:12:44 goba Exp $
+// $Id: menu.admin.inc,v 1.26 2008/02/04 12:07:23 goba Exp $
 
 /**
  * @file
@@ -14,7 +14,7 @@ function menu_overview_page() {
   $content = array();
   while ($menu = db_fetch_array($result)) {
     $menu['href'] = 'admin/build/menu-customize/'. $menu['menu_name'];
-    $menu['options'] = array();
+    $menu['localized_options'] = array();
     $content[] = $menu;
   }
   return theme('admin_block_content', $content);
@@ -29,7 +29,7 @@ function menu_overview_page() {
 function menu_overview_form(&$form_state, $menu) {
   global $menu_admin;
   $sql = "
-    SELECT m.load_functions, m.to_arg_functions, m.access_callback, m.access_arguments, m.page_callback, m.page_arguments, m.title, m.title_callback, m.title_arguments, m.type, ml.*
+    SELECT m.load_functions, m.to_arg_functions, m.access_callback, m.access_arguments, m.page_callback, m.page_arguments, m.title, m.title_callback, m.title_arguments, m.type, m.description, ml.*
     FROM {menu_links} ml LEFT JOIN {menu_router} m ON m.path = ml.router_path
     WHERE ml.menu_name = '%s'
     ORDER BY p1 ASC, p2 ASC, p3 ASC, p4 ASC, p5 ASC, p6 ASC, p7 ASC, p8 ASC, p9 ASC";
@@ -69,7 +69,7 @@ function _menu_overview_tree_form($tree) {
       $mlid = 'mlid:'. $item['mlid'];
       $form[$mlid]['#item'] = $item;
       $form[$mlid]['#attributes'] = $item['hidden'] ? array('class' => 'menu-disabled') : array('class' => 'menu-enabled');
-      $form[$mlid]['title']['#value'] = l($item['title'], $item['href'], $item['options']) . ($item['hidden'] ? ' ('. t('disabled') .')' : '');
+      $form[$mlid]['title']['#value'] = l($item['title'], $item['href'], $item['localized_options']) . ($item['hidden'] ? ' ('. t('disabled') .')' : '');
       $form[$mlid]['hidden'] = array(
         '#type' => 'checkbox',
         '#default_value' => !$item['hidden'],

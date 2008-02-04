@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.254 2008/01/30 21:01:20 goba Exp $
+// $Id: menu.inc,v 1.255 2008/02/04 12:07:23 goba Exp $
 
 /**
  * @file
@@ -480,6 +480,7 @@ function _menu_check_access(&$item, $map) {
  */
 function _menu_item_localize(&$item, $map, $link_translate = FALSE) {
   $callback = $item['title_callback'];
+  $item['localized_options'] = $item['options'];
   // If we are not doing link translation or if the title matches the
   // link title of its router item, localize it.
   if (!$link_translate || (!empty($item['title']) && ($item['title'] == $item['link_title']))) {
@@ -502,7 +503,7 @@ function _menu_item_localize(&$item, $map, $link_translate = FALSE) {
       }
       // Avoid calling check_plain again on l() function.
       if ($callback == 'check_plain') {
-        $item['options']['html'] = TRUE;
+        $item['localized_options']['html'] = TRUE;
       }
     }
   }
@@ -515,7 +516,7 @@ function _menu_item_localize(&$item, $map, $link_translate = FALSE) {
     $original_description = $item['description'];
     $item['description'] = t($item['description']);
     if ($link_translate && $item['options']['attributes']['title'] == $original_description) {
-      $item['options']['attributes']['title'] = $item['description'];
+      $item['localized_options']['attributes']['title'] = $item['description'];
     }
   }
 }
@@ -619,7 +620,7 @@ function menu_tail_to_arg($arg, $map, $index) {
  *   $item['href'] is generated from link_path, possibly by to_arg functions.
  *   $item['title'] is generated from link_title, and may be localized.
  *   $item['options'] is unserialized; it is also changed within the call here 
- *   to _menu_item_localize().
+ *   to $item['localized_options'] by _menu_item_localize().
  */
 function _menu_link_translate(&$item) {
   $item['options'] = unserialize($item['options']);
@@ -1061,11 +1062,11 @@ function _menu_tree_data($result, $parents, $depth, $previous_element = '') {
  * @ingroup themeable
  */
 function theme_menu_item_link($link) {
-  if (empty($link['options'])) {
-    $link['options'] = array();
+  if (empty($link['localized_options'])) {
+    $link['localized_options'] = array();
   }
 
-  return l($link['title'], $link['href'], $link['options']);
+  return l($link['title'], $link['href'], $link['localized_options']);
 }
 
 /**
@@ -1216,7 +1217,7 @@ function menu_navigation_links($menu_name, $level = 0) {
   $links = array();
   foreach ($tree as $item) {
     if (!$item['link']['hidden']) {
-      $l = $item['link']['options'];
+      $l = $item['link']['localized_options'];
       $l['href'] = $item['link']['href'];
       $l['title'] = $item['link']['title'];
       // Keyed with unique menu id to generate classes from theme_links().
@@ -1442,7 +1443,7 @@ function menu_set_active_trail($new_trail = NULL) {
   }
   elseif (!isset($trail)) {
     $trail = array();
-    $trail[] = array('title' => t('Home'), 'href' => '<front>', 'options' => array(), 'type' => 0);
+    $trail[] = array('title' => t('Home'), 'href' => '<front>', 'localized_options' => array(), 'type' => 0);
     $item = menu_get_item();
 
     // Check whether the current item is a local task (displayed as a tab).
@@ -1517,7 +1518,7 @@ function menu_get_active_breadcrumb() {
     $active_trail = menu_get_active_trail();
 
     foreach ($active_trail as $parent) {
-      $breadcrumb[] = l($parent['title'], $parent['href'], $parent['options']);
+      $breadcrumb[] = l($parent['title'], $parent['href'], $parent['localized_options']);
     }
     $end = end($active_trail);
 
