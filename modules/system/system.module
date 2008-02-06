@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.585 2008/02/04 12:07:23 goba Exp $
+// $Id: system.module,v 1.586 2008/02/06 19:52:54 dries Exp $
 
 /**
  * @file
@@ -1639,6 +1639,7 @@ function system_send_email_action($object, $context) {
     case 'comment':
       $comment = $context['comment'];
       $node = node_load($comment->nid);
+      break;
     case 'user':
       // Because this is not an action of type 'user' the user
       // object is not passed as $object, but it will still be available
