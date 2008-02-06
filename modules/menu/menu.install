@@ -7,7 +7,7 @@
 function menu_install() {
   // Create tables.
   drupal_install_schema('menu');
-  
+
   $t = get_t();
   db_query("INSERT INTO {menu_custom} (menu_name, title, description) VALUES ('%s', '%s', '%s')", 'navigation', $t('Navigation'), $t('The navigation menu is provided by Drupal and is the main interactive menu for any site. It is usually the only menu that contains personalized links for authenticated users, and is often not even visible to anonymous users.'));
   db_query("INSERT INTO {menu_custom} (menu_name, title, description) VALUES ('%s', '%s', '%s')", 'primary-links', $t('Primary links'), $t('Primary links are often used at the theme layer to show the major sections of a site. A typical representation for primary links would be tabs along the top.'));

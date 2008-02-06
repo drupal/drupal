@@ -386,7 +386,7 @@ function _openid_get_bytes($num_bytes) {
 
 function _openid_response($str = NULL) {
   $data = array();
-  
+
   if (isset($_SERVER['REQUEST_METHOD'])) {
     $data = _openid_get_params($_SERVER['QUERY_STRING']);
 

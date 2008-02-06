@@ -32,7 +32,7 @@ function blog_perm() {
 function blog_access($op, $node, $account) {
   switch ($op) {
     case 'create':
-      // Anonymous users cannot post even if they have the permission. 
+      // Anonymous users cannot post even if they have the permission.
       return user_access('create blog entries', $account) && $account->uid;
     case 'update':
       return user_access('edit any blog entry', $account) || (user_access('edit own blog entries', $account) && ($node->uid == $account->uid));

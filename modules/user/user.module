@@ -1260,9 +1260,9 @@ function user_login(&$form_state, $msg = '') {
 /**
  * Set up a series for validators which check for blocked/denied users,
  * then authenticate against local database, then return an error if
- * authentication fails. Distributed authentication modules are welcome 
- * to use hook_form_alter() to change this series in order to 
- * authenticate against their user database instead of the local users 
+ * authentication fails. Distributed authentication modules are welcome
+ * to use hook_form_alter() to change this series in order to
+ * authenticate against their user database instead of the local users
  * table.
  *
  * We use three validators instead of one since external authentication

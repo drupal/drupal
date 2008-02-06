@@ -511,7 +511,7 @@ function node_admin_nodes() {
 
 /**
  * Validate node_admin_nodes form submissions.
- * 
+ *
  * Check if any nodes have been selected to perform the chosen
  * 'Update option' on.
  */
@@ -524,7 +524,7 @@ function node_admin_nodes_validate($form, &$form_state) {
 
 /**
  * Process node_admin_nodes form submissions.
- * 
+ *
  * Execute the chosen 'Update option' on the selected nodes.
  */
 function node_admin_nodes_submit($form, &$form_state) {

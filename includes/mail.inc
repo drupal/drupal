@@ -433,7 +433,7 @@ function _drupal_wrap_mail_line(&$line, $key, $values) {
 function _drupal_html_to_mail_urls($match = NULL, $reset = FALSE) {
   global $base_url, $base_path;
   static $urls = array(), $regexp;
-  
+
   if ($reset) {
     // Reset internal URL list.
     $urls = array();

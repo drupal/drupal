@@ -164,7 +164,7 @@ function locale_update_6004() {
 
 /**
  * Change language setting variable of content types.
- * 
+ *
  * Use language_content_type_<content_type> instead of language_<content_type>
  * so content types such as 'default', 'count' or 'negotiation' will not
  * interfere with language variables.

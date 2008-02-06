@@ -57,7 +57,7 @@ function taxonomy_term_page($str_tids = '', $depth = 0, $op = 'page') {
           }
 
           $result = taxonomy_select_nodes($tids, $terms['operator'], $depth, FALSE);
-          $items = array(); 
+          $items = array();
           while ($row = db_fetch_object($result)) {
             $items[] = $row->nid;
           }

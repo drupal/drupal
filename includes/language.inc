@@ -17,7 +17,7 @@ function language_initialize() {
   // Get a list of enabled languages.
   $languages = language_list('enabled');
   $languages = $languages[1];
-  
+
   switch ($mode) {
     case LANGUAGE_NEGOTIATION_NONE:
       return language_default();

@@ -916,7 +916,7 @@ function install_check_requirements($profile, $verify) {
         drupal_set_message($message, 'warning');
       }
     }
-  } 
+  }
 }
 
 /**
