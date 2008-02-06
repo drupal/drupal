@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.297 2008/01/09 09:51:34 goba Exp $
+// $Id: blog.module,v 1.298 2008/02/06 19:38:27 dries Exp $
 
 /**
  * @file
@@ -32,7 +32,7 @@ function blog_perm() {
 function blog_access($op, $node, $account) {
   switch ($op) {
     case 'create':
-      // Anonymous users cannot post even if they have the permission. 
+      // Anonymous users cannot post even if they have the permission.
       return user_access('create blog entries', $account) && $account->uid;
     case 'update':
       return user_access('edit any blog entry', $account) || (user_access('edit own blog entries', $account) && ($node->uid == $account->uid));

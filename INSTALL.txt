@@ -1,4 +1,4 @@
-// $Id: INSTALL.txt,v 1.61 2008/01/30 11:37:33 goba Exp $
+// $Id: INSTALL.txt,v 1.62 2008/02/06 19:38:26 dries Exp $
 
 CONTENTS OF THIS FILE
 ---------------------
@@ -182,7 +182,7 @@ INSTALLATION
    unexpected problems on an existing site. If you modify the file system path
    on an existing site, remember to copy all files from the original location
    to the new location.
-   
+
    Some administrators suggest making the documentation files, especially
    CHANGELOG.txt, non-readable so that the exact version of Drupal you are
    running is slightly more difficult to determine. If you wish to implement

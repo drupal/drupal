@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.module,v 1.19 2008/01/30 22:11:22 goba Exp $
+// $Id: openid.module,v 1.20 2008/02/06 19:38:27 dries Exp $
 
 /**
  * @file
@@ -94,7 +94,7 @@ function openid_form_alter(&$form, $form_state, $form_id) {
       'data' => l(t('Cancel OpenID login'), '#'),
       'class' => 'user-link',
     );
-    
+
     $form['openid_links'] = array(
       '#value' => theme('item_list', $items),
       '#weight' => 1,
@@ -192,7 +192,7 @@ function openid_begin($claimed_id, $return_to = '', $form_values = array()) {
 
   if (isset($services[0]['types']) && is_array($services[0]['types']) && in_array(OPENID_NS_2_0 .'/server', $services[0]['types'])) {
     $identity = 'http://specs.openid.net/auth/2.0/identifier_select';
-  }  
+  }
   $authn_request = openid_authentication_request($claimed_id, $identity, $return_to, $assoc_handle, $services[0]['version']);
 
   if ($services[0]['version'] == 2) {
@@ -218,7 +218,7 @@ function openid_complete($response = array()) {
   if (count($response) == 0) {
     $response = _openid_response();
   }
-  
+
   // Default to failed response
   $response['status'] = 'failed';
   if (isset($_SESSION['openid']['service']['uri']) && isset($_SESSION['openid']['claimed_id'])) {

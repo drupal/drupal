@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.265 2008/02/04 10:23:32 goba Exp $
+// $Id: form.inc,v 1.266 2008/02/06 19:38:26 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -8,9 +8,9 @@
  *
  * All modules should declare their form builder functions to be in this
  * group and each builder function should reference its validate and submit
- * functions using \@see. Conversely, validate and submit functions should 
+ * functions using \@see. Conversely, validate and submit functions should
  * reference the form builder function using \@see. For examples, of this see
- * system_modules_uninstall() or user_pass(), the latter of which has the 
+ * system_modules_uninstall() or user_pass(), the latter of which has the
  * following in its doxygen documentation:
  *
  * \@ingroup forms
@@ -913,7 +913,7 @@ function form_builder($form_id, $form, &$form_state) {
   // Now that we've processed everything, we can go back to handle the funky
   // Internet Explorer button-click scenario.
   _form_builder_ie_cleanup($form, $form_state);
-  
+
   // We shoud keep the buttons array until the IE clean up function
   // has recognized the submit button so the form has been marked
   // as submitted. If we already know which button was submitted,

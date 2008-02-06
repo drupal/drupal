@@ -1,4 +1,4 @@
-// $Id: drupal.js,v 1.41 2008/01/04 11:53:21 goba Exp $
+// $Id: drupal.js,v 1.42 2008/02/06 19:38:26 dries Exp $
 
 var Drupal = Drupal || { 'settings': {}, 'behaviors': {}, 'themes': {}, 'locale': {} };
 
@@ -271,7 +271,9 @@ if (Drupal.jsEnabled) {
   // 'js enabled' cookie
   document.cookie = 'has_js=1; path=/';
   // Attach all behaviors.
-  $(document).ready(Drupal.attachBehaviors);
+  $(document).ready(function() {
+    Drupal.attachBehaviors(this);
+  });
 }
 
 /**

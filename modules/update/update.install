@@ -1,5 +1,5 @@
 <?php
-// $Id: update.install,v 1.4 2008/02/03 18:38:14 goba Exp $
+// $Id: update.install,v 1.5 2008/02/06 19:38:28 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -41,7 +41,7 @@ function update_schema() {
 }
 
 /**
- * Private helper to clear out stale variables from update_status 5.x contrib. 
+ * Private helper to clear out stale variables from update_status 5.x contrib.
  *
  * @see update_install()
  * @see update_update_6000()

@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.255 2008/02/04 12:07:23 goba Exp $
+// $Id: menu.inc,v 1.256 2008/02/06 19:38:26 dries Exp $
 
 /**
  * @file
@@ -363,7 +363,7 @@ function menu_execute_active_handler($path = NULL) {
  * @return
  *   Returns TRUE for success, FALSE if an object cannot be loaded.
  *   Names of object loading functions are placed in $item['load_functions'].
- *   Loaded objects are placed in $map[]; keys are the same as keys in the 
+ *   Loaded objects are placed in $map[]; keys are the same as keys in the
  *   $item['load_functions'] array.
  *   $item['access'] is set to FALSE if an object cannot be loaded.
  */
@@ -472,10 +472,10 @@ function _menu_check_access(&$item, $map) {
  * @return
  *   No return value.
  *   $item['title'] is localized according to $item['title_callback'].
- *   If an item's callback is check_plain(), $item['options']['html'] becomes 
+ *   If an item's callback is check_plain(), $item['options']['html'] becomes
  *   TRUE.
  *   $item['description'] is translated using t().
- *   When doing link translation and the $item['options']['attributes']['title'] 
+ *   When doing link translation and the $item['options']['attributes']['title']
  *   (link title attribute) matches the description, it is translated as well.
  */
 function _menu_item_localize(&$item, $map, $link_translate = FALSE) {
@@ -619,7 +619,7 @@ function menu_tail_to_arg($arg, $map, $index) {
  *   $item['access'] becomes TRUE if the item is accessible, FALSE otherwise.
  *   $item['href'] is generated from link_path, possibly by to_arg functions.
  *   $item['title'] is generated from link_title, and may be localized.
- *   $item['options'] is unserialized; it is also changed within the call here 
+ *   $item['options'] is unserialized; it is also changed within the call here
  *   to $item['localized_options'] by _menu_item_localize().
  */
 function _menu_link_translate(&$item) {
@@ -1507,7 +1507,7 @@ function menu_get_active_trail() {
  */
 function menu_get_active_breadcrumb() {
   $breadcrumb = array();
-  
+
   // No breadcrumb for the front page.
   if (drupal_is_front_page()) {
     return $breadcrumb;

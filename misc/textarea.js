@@ -1,10 +1,10 @@
-// $Id: textarea.js,v 1.22 2008/01/17 19:31:56 goba Exp $
+// $Id: textarea.js,v 1.23 2008/02/06 19:38:26 dries Exp $
 
 Drupal.behaviors.textarea = function(context) {
   $('textarea.resizable:not(.textarea-processed)', context).each(function() {
     // Avoid non-processed teasers.
     if ($(this).is(('textarea.teaser:not(.teaser-processed)'))) {
-      return false;  
+      return false;
     }
     var textarea = $(this).addClass('textarea-processed'), staticOffset = null;
 

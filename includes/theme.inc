@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.415 2008/01/27 19:47:06 goba Exp $
+// $Id: theme.inc,v 1.416 2008/02/06 19:38:26 dries Exp $
 
 /**
  * @file
@@ -1454,9 +1454,9 @@ function theme_more_help_link($url) {
 
 /**
  * Return code that emits an XML icon.
- * 
+ *
  * For most use cases, this function has been superseded by theme_feed_icon().
- * 
+ *
  * @see theme_feed_icon()
  * @param $url
  *   The url of the feed.

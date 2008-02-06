@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.pages.inc,v 1.9 2008/01/18 16:23:57 goba Exp $
+// $Id: taxonomy.pages.inc,v 1.10 2008/02/06 19:38:28 dries Exp $
 
 /**
  * @file
@@ -57,7 +57,7 @@ function taxonomy_term_page($str_tids = '', $depth = 0, $op = 'page') {
           }
 
           $result = taxonomy_select_nodes($tids, $terms['operator'], $depth, FALSE);
-          $items = array(); 
+          $items = array();
           while ($row = db_fetch_object($result)) {
             $items[] = $row->nid;
           }

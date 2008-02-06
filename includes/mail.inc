@@ -1,5 +1,5 @@
 <?php
-// $Id: mail.inc,v 1.8 2008/01/25 17:04:00 goba Exp $
+// $Id: mail.inc,v 1.9 2008/02/06 19:38:26 dries Exp $
 
 /**
  * Compose and optionally send an e-mail message.
@@ -433,7 +433,7 @@ function _drupal_wrap_mail_line(&$line, $key, $values) {
 function _drupal_html_to_mail_urls($match = NULL, $reset = FALSE) {
   global $base_url, $base_path;
   static $urls = array(), $regexp;
-  
+
   if ($reset) {
     // Reset internal URL list.
     $urls = array();

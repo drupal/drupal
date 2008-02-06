@@ -1,5 +1,5 @@
 <?php
-// $Id: image.gd.inc,v 1.4 2008/01/15 10:17:42 goba Exp $
+// $Id: image.gd.inc,v 1.5 2008/02/06 19:38:26 dries Exp $
 
 /**
  * @file
@@ -38,7 +38,7 @@ function image_gd_settings() {
       '#field_suffix' => t('%'),
     );
     $form['#element_validate'] = array('image_gd_settings_validate');
-    
+
     return $form;
   }
   else {

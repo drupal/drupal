@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.448 2008/01/30 15:35:47 goba Exp $
+// $Id: forum.module,v 1.449 2008/02/06 19:38:27 dries Exp $
 
 /**
  * @file
@@ -372,7 +372,7 @@ function forum_form_alter(&$form, $form_state, $form_id) {
     // Hide multiple parents select from forum terms.
     elseif ($form_id == 'taxonomy_form_term') {
       $form['advanced']['parent']['#access'] = FALSE;
-    }    
+    }
   }
   if ($form_id == 'forum_node_form') {
     // Make the vocabulary required for 'real' forum-nodes.

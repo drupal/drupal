@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.install,v 1.27 2008/01/10 14:35:24 goba Exp $
+// $Id: locale.install,v 1.28 2008/02/06 19:38:27 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -164,7 +164,7 @@ function locale_update_6004() {
 
 /**
  * Change language setting variable of content types.
- * 
+ *
  * Use language_content_type_<content_type> instead of language_<content_type>
  * so content types such as 'default', 'count' or 'negotiation' will not
  * interfere with language variables.

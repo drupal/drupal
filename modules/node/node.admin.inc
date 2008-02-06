@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.19 2008/02/03 19:39:52 goba Exp $
+// $Id: node.admin.inc,v 1.20 2008/02/06 19:38:27 dries Exp $
 
 /**
  * @file
@@ -511,7 +511,7 @@ function node_admin_nodes() {
 
 /**
  * Validate node_admin_nodes form submissions.
- * 
+ *
  * Check if any nodes have been selected to perform the chosen
  * 'Update option' on.
  */
@@ -524,7 +524,7 @@ function node_admin_nodes_validate($form, &$form_state) {
 
 /**
  * Process node_admin_nodes form submissions.
- * 
+ *
  * Execute the chosen 'Update option' on the selected nodes.
  */
 function node_admin_nodes_submit($form, &$form_state) {

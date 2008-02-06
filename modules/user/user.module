@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.892 2008/02/03 19:23:01 goba Exp $
+// $Id: user.module,v 1.893 2008/02/06 19:38:28 dries Exp $
 
 /**
  * @file
@@ -1260,9 +1260,9 @@ function user_login(&$form_state, $msg = '') {
 /**
  * Set up a series for validators which check for blocked/denied users,
  * then authenticate against local database, then return an error if
- * authentication fails. Distributed authentication modules are welcome 
- * to use hook_form_alter() to change this series in order to 
- * authenticate against their user database instead of the local users 
+ * authentication fails. Distributed authentication modules are welcome
+ * to use hook_form_alter() to change this series in order to
+ * authenticate against their user database instead of the local users
  * table.
  *
  * We use three validators instead of one since external authentication

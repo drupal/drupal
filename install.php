@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.113 2008/01/25 12:36:37 goba Exp $
+// $Id: install.php,v 1.114 2008/02/06 19:38:26 dries Exp $
 
 require_once './includes/install.inc';
 
@@ -916,7 +916,7 @@ function install_check_requirements($profile, $verify) {
         drupal_set_message($message, 'warning');
       }
     }
-  } 
+  }
 }
 
 /**

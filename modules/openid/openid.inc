@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.inc,v 1.8 2008/01/30 22:11:22 goba Exp $
+// $Id: openid.inc,v 1.9 2008/02/06 19:38:27 dries Exp $
 
 /**
  * @file
@@ -386,7 +386,7 @@ function _openid_get_bytes($num_bytes) {
 
 function _openid_response($str = NULL) {
   $data = array();
-  
+
   if (isset($_SERVER['REQUEST_METHOD'])) {
     $data = _openid_get_params($_SERVER['QUERY_STRING']);
 

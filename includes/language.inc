@@ -1,5 +1,5 @@
 <?php
-// $Id: language.inc,v 1.14 2008/01/06 16:46:02 goba Exp $
+// $Id: language.inc,v 1.15 2008/02/06 19:38:26 dries Exp $
 
 /**
  * @file
@@ -17,7 +17,7 @@ function language_initialize() {
   // Get a list of enabled languages.
   $languages = language_list('enabled');
   $languages = $languages[1];
-  
+
   switch ($mode) {
     case LANGUAGE_NEGOTIATION_NONE:
       return language_default();
