@@ -1,4 +1,4 @@
-/* $Id: update.css,v 1.3 2007/09/10 18:11:22 goba Exp $ */
+/* $Id: update.css,v 1.4 2008/02/06 20:01:41 dries Exp $ */
 
 .update .project {
   font-weight: bold;
@@ -16,6 +16,10 @@
 
 .update .version-status .icon {
   padding-left: .5em; /* LTR */
+}
+
+.update .version-date {
+  white-space: nowrap;
 }
 
 .update .info {
