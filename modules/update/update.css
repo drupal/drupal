@@ -18,6 +18,10 @@
   padding-left: .5em; /* LTR */
 }
 
+.update .version-date {
+  white-space: nowrap;
+}
+
 .update .info {
   margin: 0;
   padding: 1em 1em .25em 1em;

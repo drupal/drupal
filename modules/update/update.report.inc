@@ -102,7 +102,7 @@ function theme_update_report($data) {
     }
     $row .= ' '. check_plain($project['existing_version']);
     if ($project['install_type'] == 'dev' && !empty($project['datestamp'])) {
-      $row .= ' ('. format_date($project['datestamp'], 'custom', 'Y-M-d') .') ';
+      $row .= ' <span class="version-date">('. format_date($project['datestamp'], 'custom', 'Y-M-d') .')</span>';
     }
     $row .= "</div>\n";
 
@@ -221,7 +221,7 @@ function theme_update_version($version, $tag, $class) {
   $output .= '<td class="version-title">'. $tag ."</td>\n";
   $output .= '<td class="version-details">';
   $output .= l($version['version'], $version['release_link']);
-  $output .= ' ('. format_date($version['date'], 'custom', 'Y-M-d') .') ';
+  $output .= ' <span class="version-date">('. format_date($version['date'], 'custom', 'Y-M-d') .')</span>';
   $output .= "</td>\n";
   $output .= '<td class="version-links">';
   $links = array();
