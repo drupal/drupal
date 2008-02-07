@@ -629,6 +629,7 @@ function _menu_link_translate(&$item) {
     $map = array();
     $item['href'] = $item['link_path'];
     $item['title'] = $item['link_title'];
+    $item['localized_options'] = $item['options'];
   }
   else {
     $map = explode('/', $item['link_path']);
