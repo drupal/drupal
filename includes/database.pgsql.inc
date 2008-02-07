@@ -610,7 +610,7 @@ function _db_create_field_sql($name, $spec) {
     $sql .= '('. $spec['length'] .')';
   }
   elseif (isset($spec['precision']) && isset($spec['scale'])) {
-    $sql .= '('. $spec['scale'] .', '. $spec['precision'] .')';
+    $sql .= '('. $spec['precision'] .', '. $spec['scale'] .')';
   }
 
   if (isset($spec['not null']) && $spec['not null']) {
