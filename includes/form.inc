@@ -8,9 +8,9 @@
  *
  * All modules should declare their form builder functions to be in this
  * group and each builder function should reference its validate and submit
- * functions using \@see. Conversely, validate and submit functions should 
+ * functions using \@see. Conversely, validate and submit functions should
  * reference the form builder function using \@see. For examples, of this see
- * system_modules_uninstall() or user_pass(), the latter of which has the 
+ * system_modules_uninstall() or user_pass(), the latter of which has the
  * following in its doxygen documentation:
  *
  * \@ingroup forms
@@ -849,6 +849,7 @@ function form_builder($form_id, $form, &$form_state) {
   }
 
   if (isset($form['#type']) && $form['#type'] == 'form') {
+    $cache = NULL;
     $complete_form = $form;
     if (!empty($form['#programmed'])) {
       $form_state['submitted'] = TRUE;
@@ -913,7 +914,7 @@ function form_builder($form_id, $form, &$form_state) {
   // Now that we've processed everything, we can go back to handle the funky
   // Internet Explorer button-click scenario.
   _form_builder_ie_cleanup($form, $form_state);
-  
+
   // We shoud keep the buttons array until the IE clean up function
   // has recognized the submit button so the form has been marked
   // as submitted. If we already know which button was submitted,
