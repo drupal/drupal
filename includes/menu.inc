@@ -949,7 +949,7 @@ function menu_tree_check_access(&$tree, $node_links = array()) {
     // Use db_rewrite_sql to evaluate view access without loading each full node.
     $nids = array_keys($node_links);
     $placeholders = '%d'. str_repeat(', %d', count($nids) - 1);
-    $result = db_query(db_rewrite_sql("SELECT n.nid FROM {node} n WHERE n.nid IN (". $placeholders .")"), $nids);
+    $result = db_query(db_rewrite_sql("SELECT n.nid FROM {node} n WHERE n.status = 1 AND n.nid IN (". $placeholders .")"), $nids);
     while ($node = db_fetch_array($result)) {
       $nid = $node['nid'];
       foreach ($node_links[$nid] as $mlid => $link) {
