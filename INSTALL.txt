@@ -1,4 +1,4 @@
-// $Id: INSTALL.txt,v 1.62 2008/02/06 19:38:26 dries Exp $
+// $Id: INSTALL.txt,v 1.63 2008/02/08 02:52:39 dries Exp $
 
 CONTENTS OF THIS FILE
 ---------------------
@@ -101,7 +101,7 @@ INSTALLATION
 4. RUN THE INSTALL SCRIPT
 
    To run the install script point your browser to the base URL of your website
-   (i.e. http://www.example.com).
+   (e.g., http://www.example.com).
 
    You will be guided through several screens to set up the database,
    create tables, add the first user account and provide basic web

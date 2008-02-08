@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.22 2008/02/03 19:27:56 goba Exp $
+// $Id: taxonomy.admin.inc,v 1.23 2008/02/08 02:52:39 dries Exp $
 
 /**
  * @file
@@ -122,7 +122,7 @@ function taxonomy_form_vocabulary(&$form_state, $edit = array()) {
     '#title' => t('Vocabulary name'),
     '#default_value' => $edit['name'],
     '#maxlength' => 255,
-    '#description' => t('The name for this vocabulary. i.e. <em>"Tags"</em>.'),
+    '#description' => t('The name for this vocabulary, e.g., <em>"Tags"</em>.'),
     '#required' => TRUE,
   );
   $form['identification']['description'] = array('#type' => 'textarea',
@@ -134,7 +134,7 @@ function taxonomy_form_vocabulary(&$form_state, $edit = array()) {
     '#title' => t('Help text'),
     '#maxlength' => 255,
     '#default_value' => $edit['help'],
-    '#description' => t('Instructions to present to the user when selecting terms. i.e. <em>"Enter a comma separated list of words".</em>'),
+    '#description' => t('Instructions to present to the user when selecting terms, e.g., <em>"Enter a comma separated list of words"</em>.'),
   );
   $form['content_types'] = array(
     '#type' => 'fieldset',
