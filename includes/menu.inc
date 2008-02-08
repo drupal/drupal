@@ -1173,7 +1173,7 @@ function menu_list_system_menus() {
  * Return an array of links to be rendered as the Primary links.
  */
 function menu_primary_links() {
-  return menu_navigation_links('primary-links');
+  return menu_navigation_links(variable_get('menu_primary_links_source', 'primary-links'));
 }
 
 /**
@@ -1183,11 +1183,11 @@ function menu_secondary_links() {
 
   // If the secondary menu source is set as the primary menu, we display the
   // second level of the primary menu.
-  if (variable_get('menu_secondary_links_source', 'secondary-links') == 'primary-links') {
-    return menu_navigation_links('primary-links', 1);
+  if (variable_get('menu_secondary_links_source', 'secondary-links') == variable_get('menu_primary_links_source', 'primary-links')) {
+    return menu_navigation_links(variable_get('menu_primary_links_source', 'primary-links'), 1);
   }
   else {
-    return menu_navigation_links('secondary-links', 0);
+    return menu_navigation_links(variable_get('menu_secondary_links_source', 'secondary-links'), 0);
   }
 }
 
