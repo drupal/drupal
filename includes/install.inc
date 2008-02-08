@@ -234,11 +234,11 @@ function drupal_rewrite_settings($settings = array(), $prefix = '') {
 
     $fp = fopen($settings_file, 'w');
     if ($fp && fwrite($fp, $buffer) === FALSE) {
-        drupal_set_message(st('Failed to modify %settings, please verify the file permissions.', array('%settings' => $settings_file)), 'error');
+      drupal_set_message(st('Failed to modify %settings, please verify the file permissions.', array('%settings' => $settings_file)), 'error');
     }
   }
   else {
-    drupal_set_message(st('Failed to open %settings, please verify the file permissions.', array('%settings' => $settings_file)), 'error');
+    drupal_set_message(st('Failed to open %settings, please verify the file permissions.', array('%settings' => $default_settings)), 'error');
   }
 }
 
