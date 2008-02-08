@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysql-common.inc,v 1.17 2008/01/30 14:34:29 goba Exp $
+// $Id: database.mysql-common.inc,v 1.18 2008/02/08 03:24:05 dries Exp $
 
 /**
  * @file
@@ -160,7 +160,7 @@ function _db_create_field_sql($name, $spec) {
     $sql .= '('. $spec['length'] .')';
   }
   elseif (isset($spec['precision']) && isset($spec['scale'])) {
-    $sql .= '('. $spec['scale'] .', '. $spec['precision'] .')';
+    $sql .= '('. $spec['precision'] .', '. $spec['scale'] .')';
   }
 
   if (!empty($spec['unsigned'])) {

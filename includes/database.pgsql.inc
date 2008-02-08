@@ -1,5 +1,5 @@
 <?php
-// $Id: database.pgsql.inc,v 1.68 2008/01/04 09:31:48 goba Exp $
+// $Id: database.pgsql.inc,v 1.69 2008/02/08 03:24:05 dries Exp $
 
 /**
  * @file
@@ -610,7 +610,7 @@ function _db_create_field_sql($name, $spec) {
     $sql .= '('. $spec['length'] .')';
   }
   elseif (isset($spec['precision']) && isset($spec['scale'])) {
-    $sql .= '('. $spec['scale'] .', '. $spec['precision'] .')';
+    $sql .= '('. $spec['precision'] .', '. $spec['scale'] .')';
   }
 
   if (isset($spec['not null']) && $spec['not null']) {
