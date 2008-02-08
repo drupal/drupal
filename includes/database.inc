@@ -328,22 +328,30 @@ function db_rewrite_sql($query, $primary_table = 'n', $primary_field = 'nid',  $
       )[^()]+WHERE)
     }x';
     preg_match($pattern, $query, $matches);
-    if ($where) {
+    if (!$where) {
+      $where = '1 = 1';
+    }
+    if ($matches) {
       $n = strlen($matches[1]);
       $second_part = substr($query, $n);
       $first_part = substr($matches[1], 0, $n - 5) ." $join WHERE $where AND ( ";
       // PHP 4 does not support strrpos for strings. We emulate it.
       $haystack_reverse = strrev($second_part);
-      // No need to use strrev on the needle, we supply GROUP, ORDER, LIMIT
-      // reversed.
-      foreach (array('PUORG', 'REDRO', 'TIMIL') as $needle_reverse) {
-        $pos = strpos($haystack_reverse, $needle_reverse);
-        if ($pos !== FALSE) {
-          // All needles are five characters long.
-          $pos += 5;
-          break;
-        }
+    }
+    else {
+      $haystack_reverse = strrev($query);
+    }
+    // No need to use strrev on the needle, we supply GROUP, ORDER, LIMIT
+    // reversed.
+    foreach (array('PUORG', 'REDRO', 'TIMIL') as $needle_reverse) {
+      $pos = strpos($haystack_reverse, $needle_reverse);
+      if ($pos !== FALSE) {
+        // All needles are five characters long.
+        $pos += 5;
+        break;
       }
+    }
+    if ($matches) {
       if ($pos === FALSE) {
         $query = $first_part . $second_part .')';
       }
@@ -351,8 +359,11 @@ function db_rewrite_sql($query, $primary_table = 'n', $primary_field = 'nid',  $
         $query = $first_part . substr($second_part, 0, -$pos) .')'. substr($second_part, -$pos);
       }
     }
+    elseif ($pos === FALSE) {
+      $query .= " $join WHERE $where";
+    }
     else {
-      $query = $matches[1] ." $join ". substr($query, strlen($matches[1]));
+      $query = substr($query, 0, -$pos) . " $join WHERE $where " . substr($query, -$pos);
     }
   }
 
