@@ -1,4 +1,4 @@
-// $Id: system.js,v 1.14 2007/12/17 23:43:43 goba Exp $
+// $Id: system.js,v 1.15 2008/02/08 02:50:19 dries Exp $
 
 /**
  * Internal function to check using Ajax if clean URLs can be enabled on the
@@ -24,11 +24,12 @@ Drupal.behaviors.cleanURLsSettingsCheck = function(context) {
       // Check was successful.
       $("#clean-url input.form-radio").attr("disabled", false);
       $("#clean-url .description span").append('<div class="ok">'+ Drupal.t('Your server has been successfully tested to support this feature.') +"</div>");
-      $("#testing").toggle();
+      $("#testing").hide();
     },
     error: function() {
       // Check failed.
       $("#clean-url .description span").append('<div class="warning">'+ Drupal.t('Your system configuration does not currently support this feature. The <a href="http://drupal.org/node/15365">handbook page on Clean URLs</a> has additional troubleshooting information.') +"</div>");
+      $("#testing").hide();
     }
   });
   $("#clean-url").addClass('clean-url-processed');
@@ -51,12 +52,14 @@ Drupal.cleanURLsInstallCheck = function() {
     success: function () {
       // Check was successful.
       $("#clean-url input.form-radio").attr("disabled", false);
-      $("#clean-url .description span").append('<div class="ok">'+ Drupal.settings.cleanURL.success +"</div>");
       $("#clean-url input.form-radio").attr("checked", 1);
+      $("#clean-url .description span").append('<div class="ok">'+ Drupal.settings.cleanURL.success +"</div>");
+      $("#testing").hide();
     },
     error: function() {
       // Check failed.
       $("#clean-url .description span").append('<div class="warning">'+ Drupal.settings.cleanURL.failure +"</div>");
+      $("#testing").hide();
     }
   });
   $("#clean-url").addClass('clean-url-processed');
