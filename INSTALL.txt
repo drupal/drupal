@@ -1,4 +1,4 @@
-// $Id: INSTALL.txt,v 1.63 2008/02/08 02:52:39 dries Exp $
+// $Id: INSTALL.txt,v 1.64 2008/02/08 03:13:12 dries Exp $
 
 CONTENTS OF THIS FILE
 ---------------------
@@ -315,9 +315,16 @@ configuration, see step 6 above.
 MORE INFORMATION
 ----------------
 
-For platform specific configuration issues and other installation and
-administration assistance, please consult the Drupal handbook at
-http://drupal.org/handbook. You can view the wide range of other support options
-available at http://drupal.org/support.
+- For additional documentation, see the online Drupal handbook at
+  http://drupal.org/handbook.
 
+- For a list of security announcements, see the "Security announcements" page
+  at http://drupal.org/security (available as an RSS feed). This page also
+  describes how to subscribe to these announcements via e-mail.
 
+- For information about the Drupal security process, or to find out how to report
+  a potential security issue to the Drupal security team, see the "Security team"
+  page at http://drupal.org/security-team.
+
+- For information about the wide range of available support options, see the
+  "Support" page at http://drupal.org/support.
