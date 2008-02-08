@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.449 2008/02/06 19:38:27 dries Exp $
+// $Id: forum.module,v 1.450 2008/02/08 03:10:32 dries Exp $
 
 /**
  * @file
@@ -949,5 +949,5 @@ function _forum_get_topic_order($sortby) {
 
 function _forum_get_topic_order_sql($sortby) {
   $order = _forum_get_topic_order($sortby);
-  return $order['field'] .' '. $order['sort'];
+  return $order['field'] .' '. strtoupper($order['sort']);
 }
