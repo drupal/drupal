@@ -690,9 +690,16 @@ Drupal.tableDrag.prototype.updateField = function(changedRow, group) {
           $('option', targetElement).each(function() {
             values.push(this.value);
           });
+          var maxVal = values[values.length - 1];
           // Populate the values in the siblings.
           $(targetClass, siblings).each(function() {
-            this.value = values.shift();
+            // If there are more items than possible values, assign the maximum value to the row. 
+            if (values.length > 0) {
+              this.value = values.shift();
+            }
+            else {
+              this.value = maxVal;
+            }
           });
         }
         else {
