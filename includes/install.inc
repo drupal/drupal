@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.56 2007/12/19 11:15:18 goba Exp $
+// $Id: install.inc,v 1.57 2008/02/10 07:46:13 dries Exp $
 
 define('SCHEMA_UNINSTALLED', -1);
 define('SCHEMA_INSTALLED', 0);
@@ -234,11 +234,11 @@ function drupal_rewrite_settings($settings = array(), $prefix = '') {
 
     $fp = fopen($settings_file, 'w');
     if ($fp && fwrite($fp, $buffer) === FALSE) {
-        drupal_set_message(st('Failed to modify %settings, please verify the file permissions.', array('%settings' => $settings_file)), 'error');
+      drupal_set_message(st('Failed to modify %settings, please verify the file permissions.', array('%settings' => $settings_file)), 'error');
     }
   }
   else {
-    drupal_set_message(st('Failed to open %settings, please verify the file permissions.', array('%settings' => $settings_file)), 'error');
+    drupal_set_message(st('Failed to open %settings, please verify the file permissions.', array('%settings' => $default_settings)), 'error');
   }
 }
 

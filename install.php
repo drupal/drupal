@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.114 2008/02/06 19:38:26 dries Exp $
+// $Id: install.php,v 1.115 2008/02/10 07:46:13 dries Exp $
 
 require_once './includes/install.inc';
 
@@ -159,7 +159,7 @@ function install_verify_settings() {
     $db_host = urldecode($url['host']);
     $db_port = isset($url['port']) ? urldecode($url['port']) : '';
     $db_path = ltrim(urldecode($url['path']), '/');
-    $settings_file = './'. conf_path() .'/settings.php';
+    $settings_file = './'. conf_path(FALSE, TRUE) .'/settings.php';
 
     $form_state = array();
     _install_settings_form_validate($db_prefix, $db_type, $db_user, $db_pass, $db_host, $db_port, $db_path, $settings_file, $form_state);
@@ -182,7 +182,7 @@ function install_change_settings($profile = 'default', $install_locale = '') {
   $db_host = isset($url['host']) ? urldecode($url['host']) : '';
   $db_port = isset($url['port']) ? urldecode($url['port']) : '';
   $db_path = ltrim(urldecode($url['path']), '/');
-  $conf_path = './'. conf_path();
+  $conf_path = './'. conf_path(FALSE, TRUE);
   $settings_file = $conf_path .'/settings.php';
 
   // We always need this because we want to run form_get_errors.
@@ -866,7 +866,7 @@ function install_check_requirements($profile, $verify) {
   // If Drupal is not set up already, we need to create a settings file.
   if (!$verify) {
     $writable = FALSE;
-    $conf_path = './'. conf_path();
+    $conf_path = './'. conf_path(FALSE, TRUE);
     $settings_file = $conf_path .'/settings.php';
     $file = $conf_path;
     // Verify that the directory exists.
