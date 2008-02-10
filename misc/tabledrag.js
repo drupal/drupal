@@ -1,4 +1,4 @@
-// $Id: tabledrag.js,v 1.13 2007/12/19 10:58:35 goba Exp $
+// $Id: tabledrag.js,v 1.14 2008/02/10 19:14:08 dries Exp $
 
 /**
  * Drag and drop table rows with field manipulation.
@@ -690,9 +690,16 @@ Drupal.tableDrag.prototype.updateField = function(changedRow, group) {
           $('option', targetElement).each(function() {
             values.push(this.value);
           });
+          var maxVal = values[values.length - 1];
           // Populate the values in the siblings.
           $(targetClass, siblings).each(function() {
-            this.value = values.shift();
+            // If there are more items than possible values, assign the maximum value to the row.
+            if (values.length > 0) {
+              this.value = values.shift();
+            }
+            else {
+              this.value = maxVal;
+            }
           });
         }
         else {
