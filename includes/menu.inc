@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.259 2008/02/10 07:33:02 dries Exp $
+// $Id: menu.inc,v 1.260 2008/02/10 07:35:40 dries Exp $
 
 /**
  * @file
@@ -2353,8 +2353,11 @@ function _menu_site_is_offline() {
     // Check if the user has administration privileges.
     if (user_access('administer site configuration')) {
       // Ensure that the off-line message is displayed only once [allowing for
-      // page redirects].
-      drupal_set_message(t('Operating in off-line mode.'), 'status', FALSE);
+      // page redirects], and specifically suppress its display on the site
+      // maintenance page.
+      if (drupal_get_normal_path($_GET['q']) != 'admin/settings/site-maintenance') {
+        drupal_set_message(t('Operating in off-line mode.'), 'status', FALSE);
+      }
     }
     else {
       // Anonymous users get a FALSE at the login prompt, TRUE otherwise.
