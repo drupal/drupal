@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.261 2008/02/10 19:29:29 dries Exp $
+// $Id: menu.inc,v 1.262 2008/02/10 19:49:37 dries Exp $
 
 /**
  * @file
@@ -629,6 +629,7 @@ function _menu_link_translate(&$item) {
     $map = array();
     $item['href'] = $item['link_path'];
     $item['title'] = $item['link_title'];
+    $item['localized_options'] = $item['options'];
   }
   else {
     $map = explode('/', $item['link_path']);

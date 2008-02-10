@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.454 2008/01/08 10:35:41 goba Exp $
+// $Id: book.module,v 1.455 2008/02/10 19:49:37 dries Exp $
 
 /**
  * @file
@@ -622,7 +622,7 @@ function book_build_active_trail($book_link) {
 
   if (!isset($trail)) {
     $trail = array();
-    $trail[] = array('title' => t('Home'), 'href' => '<front>', 'options' => array());
+    $trail[] = array('title' => t('Home'), 'href' => '<front>', 'localized_options' => array());
 
     $tree = menu_tree_all_data($book_link['menu_name'], $book_link);
     $curr = array_shift($tree);
