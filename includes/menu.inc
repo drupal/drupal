@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.258 2008/02/06 19:52:54 dries Exp $
+// $Id: menu.inc,v 1.259 2008/02/10 07:33:02 dries Exp $
 
 /**
  * @file
@@ -1809,23 +1809,43 @@ function menu_link_save(&$item) {
     'customized' => 0,
     'updated' => 0,
   );
-  $menu_name = $item['menu_name'];
   $existing_item = FALSE;
   if (isset($item['mlid'])) {
     $existing_item = db_fetch_array(db_query("SELECT * FROM {menu_links} WHERE mlid = %d", $item['mlid']));
   }
 
-  // Find the parent - it must be in the same menu.
   if (isset($item['plid'])) {
-    $parent = db_fetch_array(db_query("SELECT * FROM {menu_links} WHERE menu_name = '%s' AND mlid = %d", $menu_name, $item['plid']));
+    $parent = db_fetch_array(db_query("SELECT * FROM {menu_links} WHERE mlid = %d", $item['plid']));
   }
   else {
+    // Find the parent - it must be unique.
     $parent_path = $item['link_path'];
+    $where = "WHERE link_path = '%s'";
+    // Only links derived from router items should have module == 'system', and
+    // we want to find the parent even if it's in a different menu.
+    if ($item['module'] == 'system') {
+      $where .= " AND module = '%s'";
+      $arg2 = 'system';
+    }
+    else {
+      // If not derived from a router item, we respect the specified menu name.
+      $where .= " AND menu_name = '%s'";
+      $arg2 = $item['menu_name'];
+    }
     do {
+      $parent = FALSE;
       $parent_path = substr($parent_path, 0, strrpos($parent_path, '/'));
-      $parent = db_fetch_array(db_query("SELECT * FROM {menu_links} WHERE menu_name = '%s' AND link_path = '%s'", $menu_name, $parent_path));
+      $result = db_query("SELECT COUNT(*) FROM {menu_links} ". $where, $parent_path, $arg2);
+      // Only valid if we get a unique result.
+      if (db_result($result) == 1) {
+        $parent = db_fetch_array(db_query("SELECT * FROM {menu_links} ". $where, $parent_path, $arg2));
+      }
     } while ($parent === FALSE && $parent_path);
   }
+  if ($parent !== FALSE) {
+    $item['menu_name'] = $parent['menu_name'];
+  }
+  $menu_name = $item['menu_name'];
   // Menu callbacks need to be in the links table for breadcrumbs, but can't
   // be parents if they are generated directly from a router item.
   if (empty($parent['mlid']) || $parent['hidden'] < 0) {
