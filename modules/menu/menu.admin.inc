@@ -80,6 +80,7 @@ function _menu_overview_tree_form($tree) {
       );
       $form[$mlid]['weight'] = array(
         '#type' => 'weight',
+        '#delta' => 50,
         '#default_value' => isset($form_state[$mlid]['weight']) ? $form_state[$mlid]['weight'] : $item['weight'],
       );
       $form[$mlid]['mlid'] = array(
