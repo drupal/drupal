@@ -1,12 +1,16 @@
 <?php
-// $Id: upload.install,v 1.6 2007/12/18 12:59:22 dries Exp $
+// $Id: upload.install,v 1.7 2008/02/10 19:09:58 dries Exp $
 
 /**
  * Implementation of hook_install().
  */
 function upload_install() {
-  // Create tables.
-  drupal_install_schema('upload');
+  // Create table. The upload table might have been created in the Drupal 5
+  // to Drupal 6 upgrade, and was migrated from the file_revisions table. So
+  // in this case, there is no need to create the table, it is already there.
+  if (!db_table_exists('upload')) {
+    drupal_install_schema('upload');
+  }
 }
 
 /**
