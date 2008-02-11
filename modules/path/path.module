@@ -211,7 +211,7 @@ function path_form($edit = '') {
  * than through the administrative interface.
  */
 function path_nodeapi(&$node, $op, $arg) {
-  if (user_access('create url aliases') || user_access('administer url aliases')) {
+  if (user_access('create url aliases') || user_access('administer url aliases') || ($op == 'load')) {
     switch ($op) {
       case 'validate':
         $node->path = trim($node->path);
