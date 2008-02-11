@@ -373,12 +373,15 @@ function drupal_install_system() {
  *   The module to uninstall.
  */
 function drupal_uninstall_module($module) {
+  // First, retrieve all the module's menu paths from db.
+  drupal_load('module', $module);
+  $paths = module_invoke($module, 'menu');
+
+  // Uninstall the module(s).
   module_load_install($module);
   module_invoke($module, 'uninstall');
 
-  // Remove menu links for paths declared by this module.
-  drupal_load('module', $module);
-  $paths = module_invoke($module, 'menu');
+  // Now remove the menu links for all paths declared by this module.
   if (!empty($paths)) {
     $paths = array_keys($paths);
     // Clean out the names of load functions.
