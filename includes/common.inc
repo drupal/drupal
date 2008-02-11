@@ -352,8 +352,10 @@ function drupal_not_found() {
     menu_set_active_item('');
   }
 
-  if (empty($return)) {
+  if (empty($return) || $return == MENU_NOT_FOUND || $return == MENU_ACCESS_DENIED) {
     drupal_set_title(t('Page not found'));
+    menu_set_active_item('');
+    $return = '';
   }
   // To conserve CPU and bandwidth, omit the blocks
   print theme('page', $return, FALSE);
@@ -366,7 +368,7 @@ function drupal_access_denied() {
   drupal_set_header('HTTP/1.1 403 Forbidden');
   watchdog('access denied', check_plain($_GET['q']), WATCHDOG_WARNING);
 
-// Keep old path for reference
+  // Keep old path for reference
   if (!isset($_REQUEST['destination'])) {
     $_REQUEST['destination'] = $_GET['q'];
   }
@@ -381,8 +383,9 @@ function drupal_access_denied() {
     menu_set_active_item('');
   }
 
-  if (empty($return)) {
+  if (empty($return) || $return == MENU_NOT_FOUND || $return == MENU_ACCESS_DENIED) {
     drupal_set_title(t('Access denied'));
+    menu_set_active_item('');
     $return = t('You are not authorized to access this page.');
   }
   print theme('page', $return);
