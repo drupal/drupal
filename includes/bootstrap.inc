@@ -503,6 +503,9 @@ function page_get_cache($status_only = FALSE) {
   static $status = FALSE;
   global $user, $base_root;
 
+  if ($status_only) {
+    return $status;
+  }
   $cache = NULL;
 
   if (!$user->uid && $_SERVER['REQUEST_METHOD'] == 'GET' && count(drupal_set_message()) == 0) {
@@ -514,7 +517,7 @@ function page_get_cache($status_only = FALSE) {
     }
   }
 
-  return $status_only ? $status : $cache;
+  return $cache;
 }
 
 /**
