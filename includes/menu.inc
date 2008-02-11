@@ -975,7 +975,7 @@ function _menu_get_active_trail_in_submenu($pid) {
     $count = 0;
     while ($path && !$count) {
       foreach ($menu['items'] as $key => $item) {
-        if (isset($item['path']) && $item['path'] == $path) {
+        if (isset($item['path']) && ($item['path'] == $path || ($item['path'] == '<front>' && drupal_is_front_page()))) {
           $trails[$count] = array();
           $mid = $key;
           while ($mid && $menu['items'][$mid]) {
