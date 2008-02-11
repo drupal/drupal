@@ -336,6 +336,14 @@ function profile_field_form_validate($form_id, $form_values) {
   if (db_result(db_query("SELECT fid FROM {profile_fields} WHERE name = '%s'". $query_suffix, $args2))) {
     form_set_error('name', t('The specified name is already in use.'));
   }
+  if ($form_values['visibility'] == PROFILE_HIDDEN) {
+    if ($form_values['required']) {
+      form_set_error('required', t('A hidden field cannot be required.'));
+    }
+    if ($form_values['register']) {
+      form_set_error('register', t('A hidden field cannot be set to visible on the user registration form.'));
+    }
+  }
 }
 
 /**
