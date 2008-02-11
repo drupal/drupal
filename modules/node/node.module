@@ -1747,7 +1747,7 @@ function node_revision_revert_confirm_submit($form_id, $form_values) {
   node_save($node);
 
   drupal_set_message(t('%title has been reverted back to the revision from %revision-date', array('%revision-date' => format_date($node->revision_timestamp), '%title' => $node->title)));
-  watchdog('content', t('@type: reverted %title revision %revision.', array('@type' => t($node->type), '%title' => $node->title, '%revision' => $revision)));
+  watchdog('content', t('@type: reverted %title revision %revision.', array('@type' => t($node->type), '%title' => $node->title, '%revision' => $node->vid)));
 
   return 'node/'. $node->nid .'/revisions';
 }
