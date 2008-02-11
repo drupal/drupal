@@ -265,8 +265,10 @@ function color_scheme_form_submit($form_id, $values) {
     $paths['files'][] = $paths['target'] . $base;
   }
 
-  // Render new images
-  _color_render_images($theme, $info, $paths, $palette);
+  // Render new images, if base image exists
+  if ($info['base_image']) {
+    _color_render_images($theme, $info, $paths, $palette);
+  }
 
   // Rewrite stylesheet
   _color_rewrite_stylesheet($theme, $info, $paths, $palette);
