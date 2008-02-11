@@ -2213,7 +2213,7 @@ function node_add($type = NULL) {
         $title = t('Add a new @s.', array('@s' => $type->name));
         $out = '<dt>'. l(drupal_ucfirst($type->name), "node/add/$type_url_str", array('title' => $title)) .'</dt>';
         $out .= '<dd>'. filter_xss_admin($type->description) .'</dd>';
-        $item[$type->type] = $out;
+        $item[$type->name] = $out;
       }
     }
 
