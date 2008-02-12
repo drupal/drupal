@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.587 2008/02/12 13:55:57 dries Exp $
+// $Id: system.module,v 1.588 2008/02/12 14:04:46 dries Exp $
 
 /**
  * @file
@@ -29,7 +29,7 @@ define('DRUPAL_MINIMUM_PHP_MEMORY_LIMIT',    '16M');
 /**
  * Minimum supported version of MySQL, if it is used.
  */
-define('DRUPAL_MINIMUM_MYSQL',  '4.1.1');
+define('DRUPAL_MINIMUM_MYSQL',  '5.0');
 
 /**
  * Minimum supported version of PostgreSQL, if it is used.
