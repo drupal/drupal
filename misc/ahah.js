@@ -1,4 +1,4 @@
-// $Id: ahah.js,v 1.7 2008/01/04 11:53:21 goba Exp $
+// $Id: ahah.js,v 1.8 2008/02/12 13:52:33 dries Exp $
 
 /**
  * Provides AJAX-like page updating via AHAH (Asynchronous HTML and HTTP).
@@ -38,6 +38,7 @@ Drupal.ahah = function(base, element_settings) {
   this.element = element_settings.element;
   this.selector = element_settings.selector;
   this.event = element_settings.event;
+  this.keypress = element_settings.keypress;
   this.url = element_settings.url;
   this.wrapper = '#'+ element_settings.wrapper;
   this.effect = element_settings.effect;
@@ -98,6 +99,18 @@ Drupal.ahah = function(base, element_settings) {
     $(element_settings.element).parents('form').ajaxSubmit(options);
     return false;
   });
+  // If necessary, enable keyboard submission so that AHAH behaviors
+  // can be triggered through keyboard input as well as e.g. a mousedown
+  // action.
+  if (element_settings.keypress) {
+    $(element_settings.element).keypress(function(event) {
+      // Detect enter key.
+      if (event.keyCode == 13) {
+        $(element_settings.element).trigger(element_settings.event);
+        return false;
+      }
+    });
+  }
 };
 
 /**
