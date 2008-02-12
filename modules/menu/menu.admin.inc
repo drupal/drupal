@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.admin.inc,v 1.27 2008/02/10 19:14:08 dries Exp $
+// $Id: menu.admin.inc,v 1.28 2008/02/12 13:43:21 dries Exp $
 
 /**
  * @file
@@ -318,6 +318,7 @@ function menu_edit_item(&$form_state, $type, $item, $menu) {
   $form['menu']['weight'] = array(
     '#type' => 'weight',
     '#title' => t('Weight'),
+    '#delta' => 50,
     '#default_value' => $item['weight'],
     '#description' => t('Optional. In the menu, the heavier items will sink and the lighter items will be positioned nearer the top.'),
   );

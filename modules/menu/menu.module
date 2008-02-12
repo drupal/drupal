@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.157 2008/01/08 15:49:09 goba Exp $
+// $Id: menu.module,v 1.158 2008/02/12 13:43:21 dries Exp $
 
 /**
  * @file
@@ -406,6 +406,7 @@ function menu_form_alter(&$form, $form_state, $form_id) {
     $form['menu']['weight'] = array(
       '#type' => 'weight',
       '#title' => t('Weight'),
+      '#delta' => 50,
       '#default_value' => $item['weight'],
       '#description' => t('Optional. In the menu, the heavier items will sink and the lighter items will be positioned nearer the top.'),
     );
