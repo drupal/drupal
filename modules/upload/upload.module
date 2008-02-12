@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.197 2007/12/31 08:46:44 dries Exp $
+// $Id: upload.module,v 1.198 2008/02/12 13:49:01 dries Exp $
 
 /**
  * @file
@@ -168,13 +168,6 @@ function upload_file_download($file) {
 function upload_node_form_submit($form, &$form_state) {
   global $user;
 
-  // $_SESSION['upload_current_file'] tracks the fid of the file submitted this page request.
-  // form_builder sets the value of file->list to 0 for checkboxes added to a form after
-  // it has been submitted. Since unchecked checkboxes have no return value and do not
-  // get a key in _POST form_builder has no way of knowing the difference between a check
-  // box that wasn't present on the last form build, and a checkbox that is unchecked.
-  unset($_SESSION['upload_current_file']);
-
   $limits = _upload_file_limits($user);
   $validators = array(
     'file_validate_extensions' => array($limits['extensions']),
@@ -187,7 +180,6 @@ function upload_node_form_submit($form, &$form_state) {
     $file->list = variable_get('upload_list_default', 1);
     $file->description = $file->filename;
     $file->weight = 0;
-    $_SESSION['upload_current_file'] = $file->fid;
     $_SESSION['upload_files'][$file->fid] = $file;
   }
 
@@ -493,12 +485,6 @@ function _upload_form($node) {
       $form['files'][$key]['size'] = array('#value' => format_size($file->filesize));
       $form['files'][$key]['remove'] = array('#type' => 'checkbox', '#default_value' => !empty($file->remove));
       $form['files'][$key]['list'] = array('#type' => 'checkbox',  '#default_value' => $file->list);
-      // If the file was uploaded this page request, set value. this fixes the
-      // problem formapi has recognizing new checkboxes. see comments in
-      // _upload_prepare.
-      if (isset($_SESSION['upload_current_file']) && $_SESSION['upload_current_file'] == $file->fid) {
-        $form['files'][$key]['list']['#value'] = variable_get('upload_list_default', 1);
-      }
       $form['files'][$key]['weight'] = array('#type' => 'weight', '#delta' => count($node->files), '#default_value' => $file->weight);
       $form['files'][$key]['filename'] = array('#type' => 'value',  '#value' => $file->filename);
       $form['files'][$key]['filepath'] = array('#type' => 'value',  '#value' => $file->filepath);
