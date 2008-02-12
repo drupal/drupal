@@ -1749,7 +1749,13 @@ function form_expand_ahah($element) {
       case 'submit':
       case 'button':
       case 'image_button':
-        $element['#ahah']['event'] = 'click';
+        // Use the mousedown instead of the click event because form
+        // submission via pressing the enter key triggers a click event on
+        // submit inputs, inappropriately triggering AHAH behaviors.
+        $element['#ahah']['event'] = 'mousedown';
+        // Attach an additional event handler so that AHAH behaviours
+        // can be triggered still via keyboard input.
+        $element['#ahah']['keypress'] = TRUE;
         break;
       case 'password':
       case 'textfield':
@@ -1773,6 +1779,7 @@ function form_expand_ahah($element) {
     $ahah_binding = array(
       'url'      => url($element['#ahah']['path']),
       'event'    => $element['#ahah']['event'],
+      'keypress' => empty($element['#ahah']['keypress']) ? NULL : $element['#ahah']['keypress'],
       'wrapper'  => empty($element['#ahah']['wrapper']) ? NULL : $element['#ahah']['wrapper'],
       'selector' => empty($element['#ahah']['selector']) ? '#'. $element['#id'] : $element['#ahah']['selector'],
       'effect'   => empty($element['#ahah']['effect']) ? 'none' : $element['#ahah']['effect'],
