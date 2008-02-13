@@ -1032,7 +1032,7 @@ function node_prepare($node, $teaser = FALSE) {
   // First we'll overwrite the existing node teaser and body with
   // the filtered copies! Then, we'll stick those into the content
   // array and set the read more flag if appropriate.
-  $node->readmore = (strlen($node->teaser) < strlen($node->body));
+  $node->readmore = $node->teaser != $node->body;
 
   if ($teaser == FALSE) {
     $node->body = check_markup($node->body, $node->format, FALSE);
