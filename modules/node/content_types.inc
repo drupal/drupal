@@ -364,8 +364,8 @@ function node_node_type($op, $info) {
 function node_type_reset(&$type) {
   $info_array = module_invoke_all('node_info');
   if (isset($info_array[$type->orig_type])) {
+    $info_array[$type->orig_type]['type'] = $type->orig_type; 
     $info = _node_type_set_defaults($info_array[$type->orig_type]);
-    $info['type'] = $type->orig_type;
 
     foreach ($info as $field => $value) {
       $type->$field = $value;
