@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.23 2008/02/08 02:52:39 dries Exp $
+// $Id: taxonomy.admin.inc,v 1.24 2008/02/14 18:41:16 dries Exp $
 
 /**
  * @file
@@ -113,6 +113,10 @@ function taxonomy_form_vocabulary(&$form_state, $edit = array()) {
     'required' => 0,
     'weight' => 0,
   );
+  // Check whether we need a deletion confirmation form.
+  if (isset($form_state['confirm_delete']) && isset($form_state['values']['vid'])) {
+    return taxonomy_vocabulary_confirm_delete($form_state, $form_state['values']['vid']);
+  }
   $form['identification'] = array(
     '#type' => 'fieldset',
     '#title' => t('Identification'),
@@ -195,6 +199,12 @@ function taxonomy_form_vocabulary(&$form_state, $edit = array()) {
  * Accept the form submission for a vocabulary and save the results.
  */
 function taxonomy_form_vocabulary_submit($form, &$form_state) {
+  if ($form_state['clicked_button']['#value'] == t('Delete')) {
+    // Rebuild the form to confirm vocabulary deletion.
+    $form_state['rebuild'] = TRUE;
+    $form_state['confirm_delete'] = TRUE;
+    return;
+  }
   // Fix up the nodes array to remove unchecked nodes.
   $form_state['values']['nodes'] = array_filter($form_state['values']['nodes']);
   switch (taxonomy_save_vocabulary($form_state['values'])) {
@@ -217,9 +227,6 @@ function taxonomy_form_vocabulary_submit($form, &$form_state) {
  * Page to edit a vocabulary.
  */
 function taxonomy_admin_vocabulary_edit($vocabulary) {
-  if ((isset($_POST['op']) && $_POST['op'] == t('Delete')) || isset($_POST['confirm'])) {
-    return drupal_get_form('taxonomy_vocabulary_confirm_delete', $vocabulary->vid);
-  }
   return drupal_get_form('taxonomy_form_vocabulary', (array)$vocabulary);
 }
 
@@ -866,9 +873,11 @@ function taxonomy_term_confirm_delete_submit($form, &$form_state) {
 function taxonomy_vocabulary_confirm_delete(&$form_state, $vid) {
   $vocabulary = taxonomy_vocabulary_load($vid);
 
+  $form['#id'] = 'taxonomy_vocabulary_confirm_delete';
   $form['type'] = array('#type' => 'value', '#value' => 'vocabulary');
   $form['vid'] = array('#type' => 'value', '#value' => $vid);
   $form['name'] = array('#type' => 'value', '#value' => $vocabulary->name);
+  $form['#submit'] = array('taxonomy_vocabulary_confirm_delete_submit');
   return confirm_form($form,
                   t('Are you sure you want to delete the vocabulary %title?',
                   array('%title' => $vocabulary->name)),
