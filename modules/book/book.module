@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.455 2008/02/10 19:49:37 dries Exp $
+// $Id: book.module,v 1.456 2008/02/14 18:32:14 dries Exp $
 
 /**
  * @file
@@ -682,6 +682,10 @@ function book_nodeapi(&$node, $op, $teaser, $page) {
       // Always save a revision for non-administrators.
       if (!empty($node->book['bid']) && !user_access('administer nodes')) {
         $node->revision = 1;
+      }
+      // Make sure a new node gets a new menu link.
+      if (empty($node->nid)) {
+        $node->book['mlid'] = NULL;
       }
       break;
     case 'insert':
