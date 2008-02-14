@@ -514,7 +514,7 @@ function system_menu() {
  * Menu item access callback - only admin or enabled themes can be accessed.
  */
 function _system_themes_access($theme) {
-  return $theme->status || $theme->name == variable_get('admin_theme', '0');
+  return user_access('administer site configuration') && ($theme->status || $theme->name == variable_get('admin_theme', '0'));
 }
 
 /**
