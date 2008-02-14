@@ -99,7 +99,7 @@ function filter_admin_format_form(&$form_state, $format) {
   }
 
   $form['name'] = array('#type' => 'textfield',
-    '#title' => 'Name',
+    '#title' => t('Name'),
     '#default_value' => $format->name,
     '#description' => t('Specify a unique name for this filter format.'),
     '#required' => TRUE,
