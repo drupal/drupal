@@ -1568,13 +1568,6 @@ function base_path() {
 }
 
 /**
- * Provide a substitute clone() function for PHP4.
- */
-function drupal_clone($object) {
-  return version_compare(phpversion(), '5.0') < 0 ? $object : clone($object);
-}
-
-/**
  * Add a <link> tag to the page's HEAD.
  */
 function drupal_add_link($attributes) {

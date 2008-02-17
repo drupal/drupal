@@ -106,7 +106,7 @@ function contact_mail_page() {
  */
 function contact_mail_page_validate($form, &$form_state) {
   if (!$form_state['values']['cid']) {
-    form_set_error('category', t('You must select a valid category.'));
+    form_set_error('cid', t('You must select a valid category.'));
   }
   if (!valid_email_address($form_state['values']['mail'])) {
     form_set_error('mail', t('You must enter a valid e-mail address.'));
