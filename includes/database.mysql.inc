@@ -79,7 +79,8 @@ function db_connect($url) {
     // Show error screen otherwise
     _db_error_page(mysql_error());
   }
-
+  // Require ANSI mode to improve SQL portability.
+  mysql_query("SET SESSION sql_mode='ANSI'", $connection);
   // Force UTF-8.
   mysql_query('SET NAMES "utf8"', $connection);
   return $connection;

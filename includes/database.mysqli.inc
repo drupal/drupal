@@ -120,6 +120,8 @@ function _db_query($query, $debug = 0) {
   }
 
   if (!mysqli_errno($active_db)) {
+    // Require ANSI mode to improve SQL portability.
+    mysqli_query($active_db, "SET SESSION sql_mode='ANSI'");
     return $result;
   }
   else {
