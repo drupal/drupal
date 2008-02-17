@@ -1,5 +1,5 @@
 <?php
-// $Id: session.inc,v 1.45 2008/02/14 18:43:32 dries Exp $
+// $Id: session.inc,v 1.46 2008/02/17 20:03:42 dries Exp $
 
 /**
  * @file
@@ -149,7 +149,7 @@ function sess_gc($lifetime) {
  *
  * This function allows the caller to temporarily disable writing of session data,
  * should the request end while performing potentially dangerous operations, such as
- * manipulating the global $user object.
+ * manipulating the global $user object.  See http://drupal.org/node/218104 for usage
  *
  * @param $status
  *   Disables writing of session data when FALSE, (re-)enables writing when TRUE.
