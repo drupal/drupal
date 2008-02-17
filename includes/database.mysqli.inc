@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysqli.inc,v 1.54 2008/01/23 09:59:29 goba Exp $
+// $Id: database.mysqli.inc,v 1.55 2008/02/17 19:39:11 dries Exp $
 
 /**
  * @file
@@ -120,6 +120,8 @@ function _db_query($query, $debug = 0) {
   }
 
   if (!mysqli_errno($active_db)) {
+    // Require ANSI mode to improve SQL portability.
+    mysqli_query($active_db, "SET SESSION sql_mode='ANSI'");
     return $result;
   }
   else {

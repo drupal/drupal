@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysql.inc,v 1.89 2008/01/24 10:46:54 goba Exp $
+// $Id: database.mysql.inc,v 1.90 2008/02/17 19:39:11 dries Exp $
 
 /**
  * @file
@@ -79,7 +79,8 @@ function db_connect($url) {
     // Show error screen otherwise
     _db_error_page(mysql_error());
   }
-
+  // Require ANSI mode to improve SQL portability.
+  mysql_query("SET SESSION sql_mode='ANSI'", $connection);
   // Force UTF-8.
   mysql_query('SET NAMES "utf8"', $connection);
   return $connection;
