@@ -1,6 +1,6 @@
 #!/usr/bin/php
 <?php
-// $Id: drupal.sh,v 1.4 2007/07/02 14:41:37 dries Exp $
+// $Id: drupal.sh,v 1.5 2008/02/17 20:09:52 dries Exp $
 
 /**
  * Drupal shell execution script
@@ -14,7 +14,7 @@
  */
 $script = basename(array_shift($_SERVER['argv']));
 
-if (in_array('--help', $_SERVER['argv'])) {
+if (in_array('--help', $_SERVER['argv']) || empty($_SERVER['argv'])) {
   echo <<<EOF
 
 Execute a Drupal page from the shell.
