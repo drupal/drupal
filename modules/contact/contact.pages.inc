@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.pages.inc,v 1.6 2008/01/16 22:56:21 goba Exp $
+// $Id: contact.pages.inc,v 1.7 2008/02/17 19:29:07 dries Exp $
 
 /**
  * @file
@@ -106,7 +106,7 @@ function contact_mail_page() {
  */
 function contact_mail_page_validate($form, &$form_state) {
   if (!$form_state['values']['cid']) {
-    form_set_error('category', t('You must select a valid category.'));
+    form_set_error('cid', t('You must select a valid category.'));
   }
   if (!valid_email_address($form_state['values']['mail'])) {
     form_set_error('mail', t('You must enter a valid e-mail address.'));

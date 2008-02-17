@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.756 2008/01/30 23:07:41 goba Exp $
+// $Id: common.inc,v 1.757 2008/02/17 19:29:06 dries Exp $
 
 /**
  * @file
@@ -1565,13 +1565,6 @@ function drupal_get_path($type, $name) {
  */
 function base_path() {
   return $GLOBALS['base_path'];
-}
-
-/**
- * Provide a substitute clone() function for PHP4.
- */
-function drupal_clone($object) {
-  return version_compare(phpversion(), '5.0') < 0 ? $object : clone($object);
 }
 
 /**

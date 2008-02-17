@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.28 2008/02/03 19:26:10 goba Exp $
+// $Id: node.pages.inc,v 1.29 2008/02/17 19:29:07 dries Exp $
 
 /**
  * @file
@@ -394,7 +394,7 @@ function node_preview($node) {
     // Display a preview of the node.
     // Previewing alters $node so it needs to be cloned.
     if (!form_get_errors()) {
-      $cloned_node = drupal_clone($node);
+      $cloned_node = clone $node;
       $cloned_node->build_mode = NODE_BUILD_PREVIEW;
       $output = theme('node_preview', $cloned_node);
     }
@@ -432,7 +432,7 @@ function theme_node_preview($node) {
   if ($preview_trimmed_version) {
     drupal_set_message(t('The trimmed version of your post shows what your post looks like when promoted to the main page or when exported for syndication.<span class="no-js"> You can insert the delimiter "&lt;!--break--&gt;" (without the quotes) to fine-tune where your post gets split.</span>'));
     $output .= '<h3>'. t('Preview trimmed version') .'</h3>';
-    $output .= node_view(drupal_clone($node), 1, FALSE, 0);
+    $output .= node_view(clone $node, 1, FALSE, 0);
     $output .= '<h3>'. t('Preview full version') .'</h3>';
     $output .= node_view($node, 0, FALSE, 0);
   }

@@ -1,4 +1,4 @@
-// $Id: INSTALL.txt,v 1.64 2008/02/08 03:13:12 dries Exp $
+// $Id: INSTALL.txt,v 1.65 2008/02/17 19:29:06 dries Exp $
 
 CONTENTS OF THIS FILE
 ---------------------
@@ -18,7 +18,7 @@ Drupal requires a web server, PHP 4 (4.3.5 or greater) or PHP 5
 (http://www.php.net/) and either MySQL (http://www.mysql.com/) or PostgreSQL
 (http://www.postgresql.org/). The Apache web server and MySQL database are
 recommended; other web server and database combinations such as IIS and
-PostgreSQL have been tested to a lesser extent. When using MySQL, version 4.1.1
+PostgreSQL have been tested to a lesser extent. When using MySQL, version 5.0
 or greater is recommended to assure you can safely transfer the database.
 
 For more detailed information about Drupal requirements, see "Requirements"

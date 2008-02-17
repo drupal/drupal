@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.414 2008/01/27 17:55:15 goba Exp $
+// $Id: taxonomy.module,v 1.415 2008/02/17 19:29:07 dries Exp $
 
 /**
  * @file
@@ -838,7 +838,7 @@ function taxonomy_get_tree($vid, $parent = 0, $depth = -1, $max_depth = NULL) {
   if (!empty($children[$vid][$parent])) {
     foreach ($children[$vid][$parent] as $child) {
       if ($max_depth > $depth) {
-        $term = drupal_clone($terms[$vid][$child]);
+        $term = clone $terms[$vid][$child];
         $term->depth = $depth;
         // The "parent" attribute is not useful, as it would show one parent only.
         unset($term->parent);
