@@ -14,7 +14,7 @@
  */
 $script = basename(array_shift($_SERVER['argv']));
 
-if (in_array('--help', $_SERVER['argv'])) {
+if (in_array('--help', $_SERVER['argv']) || empty($_SERVER['argv'])) {
   echo <<<EOF
 
 Execute a Drupal page from the shell.
