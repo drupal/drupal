@@ -1,5 +1,5 @@
 <?php
-// $Id: actions.inc,v 1.8 2007/12/31 14:51:04 goba Exp $
+// $Id: actions.inc,v 1.9 2008/02/17 22:15:04 dries Exp $
 
 /**
  * @file
@@ -22,8 +22,6 @@
  * @param $object
  *   Parameter that will be passed along to the callback. Typically the
  *   object that the action will act on; a node, user or comment object.
- *   If the action does not act on an object, pass a dummy object. This
- *   is necessary to support PHP 4 object referencing.
  * @param $context
  *   Parameter that will be passed along to the callback. $context is a
  *   keyed array containing extra information about what is currently
@@ -39,7 +37,7 @@
  *   An associative array containing the result of the function that
  *   performs the action, keyed on action ID.
  */
-function actions_do($action_ids, &$object, $context = NULL, $a1 = NULL, $a2 = NULL) {
+function actions_do($action_ids, $object = NULL, $context = NULL, $a1 = NULL, $a2 = NULL) {
   static $stack;
   $stack++;
   if ($stack > variable_get('actions_max_stack', 35)) {

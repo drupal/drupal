@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.module,v 1.13 2008/01/21 20:08:15 goba Exp $
+// $Id: trigger.module,v 1.14 2008/02/17 22:15:04 dries Exp $
 
 /**
  * @file
@@ -299,8 +299,7 @@ function trigger_comment($a1, $op) {
       actions_do($aid, $objects[$action_info['type']], $context);
     }
     else {
-      $comment = (object) $a1;
-      actions_do($aid, $comment, $context);
+      actions_do($aid, (object) $a1, $context);
     }
   }
 }
@@ -393,8 +392,7 @@ function trigger_taxonomy($op, $type, $array) {
     'op' => $op
   );
   foreach ($aids as $aid => $action_info) {
-    $taxonomy_object = (object) $array;
-    actions_do($aid, $taxonomy_object, $context);
+    actions_do($aid, (object) $array, $context);
   }
 }
 
