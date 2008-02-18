@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.module,v 1.20 2008/02/06 19:38:27 dries Exp $
+// $Id: openid.module,v 1.21 2008/02/18 19:34:08 dries Exp $
 
 /**
  * @file
@@ -403,7 +403,6 @@ function openid_authentication($response) {
     $form_state['values']['pass']  = user_password();
     $form_state['values']['status'] = variable_get('user_register', 1) == 1;
     $form_state['values']['response'] = $response;
-    $form_state['values']['auth_openid'] = $identity;
     $form = drupal_retrieve_form('user_register', $form_state);
     drupal_prepare_form('user_register', $form, $form_state);
     drupal_validate_form('user_register', $form, $form_state);
@@ -425,6 +424,7 @@ function openid_authentication($response) {
         drupal_set_message(t("Error saving user account."), 'error');
         drupal_goto();
       }
+      user_set_authmaps($account, array("authname_openid" => $identity));
       user_external_login($account);
     }
     drupal_redirect_form($form, $form_state['redirect']);

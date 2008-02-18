@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.894 2008/02/18 16:53:36 dries Exp $
+// $Id: user.module,v 1.895 2008/02/18 19:34:08 dries Exp $
 
 /**
  * @file
@@ -230,10 +230,9 @@ function user_save($account, $array = array(), $category = 'account') {
       $array['access'] = time();
     }
     foreach ($array as $key => $value) {
-      // Fields that don't pertain to the users, users_roles, or
-      // authmap tables are automatically serialized into the
-      // users.data column. Authmap fields always begin with 'auth'.
-      if ($key != 'roles' && substr($key, 0, 4) !== 'auth' && empty($user_fields[$key])) {
+      // Fields that don't pertain to the users or user_roles
+      // automatically serialized into the users.data column.
+      if ($key != 'roles' && empty($user_fields[$key])) {
         if ($value === NULL) {
           unset($data[$key]);
         }
@@ -314,7 +313,7 @@ function user_save($account, $array = array(), $category = 'account') {
     // fields from being saved there.
     $data = array();
     foreach ($array as $key => $value) {
-      if ((substr($key, 0, 4) !== 'auth') && ($key != 'roles') && (empty($user_fields[$key])) && ($value !== NULL)) {
+      if (($key != 'roles') && (empty($user_fields[$key])) && ($value !== NULL)) {
         $data[$key] = $value;
       }
     }
@@ -335,17 +334,6 @@ function user_save($account, $array = array(), $category = 'account') {
 
     // Build the finished user object.
     $user = user_load(array('uid' => $array['uid']));
-  }
-
-  // Save distributed authentication mappings.
-  $authmaps = array();
-  foreach ($array as $key => $value) {
-    if (substr($key, 0, 4) == 'auth') {
-      $authmaps[$key] = $value;
-    }
-  }
-  if (sizeof($authmaps) > 0) {
-    user_set_authmaps($user, $authmaps);
   }
 
   return $user;
@@ -1349,7 +1337,6 @@ function user_external_login_register($name, $module) {
       'pass' => user_password(),
       'init' => $name,
       'status' => 1,
-      "authname_$module" => $name,
       'access' => time()
     );
     $account = user_save('', $userinfo);
@@ -1358,6 +1345,7 @@ function user_external_login_register($name, $module) {
       drupal_set_message(t("Error saving user account."), 'error');
       return;
     }
+    user_set_authmaps($account, array("authname_$module" => $name));
     $user = $account;
     watchdog('user', 'New external user: %name using module %module.', array('%name' => $name, '%module' => $module), WATCHDOG_NOTICE, l(t('edit'), 'user/'. $user->uid .'/edit'));
   }
