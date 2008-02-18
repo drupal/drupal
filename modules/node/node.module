@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.948 2008/02/17 19:29:07 dries Exp $
+// $Id: node.module,v 1.949 2008/02/18 17:48:05 dries Exp $
 
 /**
  * @file
@@ -2618,7 +2618,7 @@ function node_make_unsticky_action(&$node, $context = array()) {
  */
 function node_promote_action(&$node, $context = array()) {
   $node->promote = 1;
-  watchdog('action', 'Promoted @type %title to front page.', array('@type' => node_get_types('type', $node), '%title' => $node->title));
+  watchdog('action', 'Promoted @type %title to front page.', array('@type' => node_get_types('name', $node), '%title' => $node->title));
 }
 
 /**
@@ -2627,7 +2627,7 @@ function node_promote_action(&$node, $context = array()) {
  */
 function node_unpromote_action(&$node, $context = array()) {
   $node->promote = 0;
-  watchdog('action', 'Removed @type %title from front page.', array('@type' => node_get_types('type', $node), '%title' => $node->title));
+  watchdog('action', 'Removed @type %title from front page.', array('@type' => node_get_types('name', $node), '%title' => $node->title));
 }
 
 /**
@@ -2636,7 +2636,7 @@ function node_unpromote_action(&$node, $context = array()) {
  */
 function node_save_action($node) {
   node_save($node);
-  watchdog('action', 'Saved @type %title', array('@type' => node_get_types('type', $node), '%title' => $node->title));
+  watchdog('action', 'Saved @type %title', array('@type' => node_get_types('name', $node), '%title' => $node->title));
 }
 
 /**
