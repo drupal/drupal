@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.757 2008/02/17 19:29:06 dries Exp $
+// $Id: common.inc,v 1.758 2008/02/18 16:53:36 dries Exp $
 
 /**
  * @file
@@ -3273,10 +3273,22 @@ function drupal_write_record($table, &$object, $update = array()) {
       if (empty($info['serialize'])) {
         $values[] = $object->$field;
       }
-      else {
+      elseif (!empty($object->$field)) {
         $values[] = serialize($object->$field);
       }
+      else {
+        $values[] = '';
+      }
     }
+  }
+
+  if (empty($fields)) {
+    // No changes requested.
+    // If we began with an array, convert back so we don't surprise the caller.
+    if ($array) {
+      $object = (array)$object;
+    }
+    return;
   }
 
   // Build the SQL.

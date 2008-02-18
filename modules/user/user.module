@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.893 2008/02/06 19:38:28 dries Exp $
+// $Id: user.module,v 1.894 2008/02/18 16:53:36 dries Exp $
 
 /**
  * @file
@@ -197,9 +197,11 @@ function user_load($array = array()) {
  *   omitted, a new user will be added.
  *
  * @param $array
- *   (optional) An array of fields and values to save. For example,
- *   array('name' => 'My name'); Setting a field to NULL deletes it from
- *   the data column.
+ *   An array of fields and values to save. For example array('name'
+ *   => 'My name').  Keys that do not belong to columns in the user-related
+ *   tables are added to the a serialized array in the 'data' column
+ *   and will be loaded in the $user->data array by user_load().
+ *   Setting a field to NULL deletes it from the data column.
  *
  * @param $category
  *   (optional) The category for storing profile information in.
@@ -208,11 +210,19 @@ function user_load($array = array()) {
  *   A fully-loaded $user object upon successful save or FALSE if the save failed.
  */
 function user_save($account, $array = array(), $category = 'account') {
-  // Dynamically compose a SQL query:
-  $user_fields = user_fields();
+  $table = drupal_get_schema('users');
+  $user_fields = $table['fields'];
+
+  if (!empty($array['pass'])) {
+    $array['pass'] = md5($array['pass']);
+  }
+  else {
+    // Avoid overwriting an existing password with a blank password.
+    unset($array['pass']);
+  }
+
   if (is_object($account) && $account->uid) {
     user_module_invoke('update', $array, $account, $category);
-    $query = '';
     $data = unserialize(db_result(db_query('SELECT data FROM {users} WHERE uid = %d', $account->uid)));
     // Consider users edited by an administrator as logged in, if they haven't
     // already, so anonymous users can view the profile (if allowed).
@@ -220,31 +230,23 @@ function user_save($account, $array = array(), $category = 'account') {
       $array['access'] = time();
     }
     foreach ($array as $key => $value) {
-      if ($key == 'pass' && !empty($value)) {
-        $query .= "$key = '%s', ";
-        $v[] = md5($value);
-      }
-      else if ((substr($key, 0, 4) !== 'auth') && ($key != 'pass')) {
-        if (in_array($key, $user_fields)) {
-          // Save standard fields.
-          $query .= "$key = '%s', ";
-          $v[] = $value;
+      // Fields that don't pertain to the users, users_roles, or
+      // authmap tables are automatically serialized into the
+      // users.data column. Authmap fields always begin with 'auth'.
+      if ($key != 'roles' && substr($key, 0, 4) !== 'auth' && empty($user_fields[$key])) {
+        if ($value === NULL) {
+          unset($data[$key]);
         }
-        else if ($key != 'roles') {
-          // Roles is a special case: it used below.
-          if ($value === NULL) {
-            unset($data[$key]);
-          }
-          else {
-            $data[$key] = $value;
-          }
+        else {
+          $data[$key] = $value;
         }
       }
     }
-    $query .= "data = '%s' ";
-    $v[] = serialize($data);
 
-    $success = db_query("UPDATE {users} SET $query WHERE uid = %d", array_merge($v, array($account->uid)));
+    $array['data'] = $data;
+    $array['uid'] = $account->uid;
+    // Save changes to the users table.
+    $success = drupal_write_record('users', $array, 'uid');
     if (!$success) {
       // The query failed - better to abort the save than risk further data loss.
       return FALSE;
@@ -296,33 +298,7 @@ function user_save($account, $array = array(), $category = 'account') {
       $array['access'] = time();
     }
 
-    // Note: we wait to save the data column to prevent module-handled
-    // fields from being saved there. We cannot invoke hook_user('insert') here
-    // because we don't have a fully initialized user object yet.
-    foreach ($array as $key => $value) {
-      switch ($key) {
-        case 'pass':
-          $fields[] = $key;
-          $values[] = md5($value);
-          $s[] = "'%s'";
-          break;
-        case 'mode':       case 'sort':     case 'timezone':
-        case 'threshold':  case 'created':  case 'access':
-        case 'login':      case 'status':
-          $fields[] = $key;
-          $values[] = $value;
-          $s[] = "%d";
-          break;
-        default:
-          if (substr($key, 0, 4) !== 'auth' && in_array($key, $user_fields)) {
-            $fields[] = $key;
-            $values[] = $value;
-            $s[] = "'%s'";
-          }
-          break;
-      }
-    }
-    $success = db_query('INSERT INTO {users} ('. implode(', ', $fields) .') VALUES ('. implode(', ', $s) .')', $values);
+    $success = drupal_write_record('users', $array);
     if (!$success) {
       // On a failed INSERT some other existing user's uid may be returned.
       // We must abort to avoid overwriting their account.
@@ -330,19 +306,22 @@ function user_save($account, $array = array(), $category = 'account') {
     }
 
     // Build the initial user object.
-    $array['uid'] = db_last_insert_id('users', 'uid');
     $user = user_load(array('uid' => $array['uid']));
 
     user_module_invoke('insert', $array, $user, $category);
 
-    // Build and save the serialized data field now.
+    // Note, we wait with saving the data column to prevent module-handled
+    // fields from being saved there.
     $data = array();
     foreach ($array as $key => $value) {
-      if ((substr($key, 0, 4) !== 'auth') && ($key != 'roles') && (!in_array($key, $user_fields)) && ($value !== NULL)) {
+      if ((substr($key, 0, 4) !== 'auth') && ($key != 'roles') && (empty($user_fields[$key])) && ($value !== NULL)) {
         $data[$key] = $value;
       }
     }
-    db_query("UPDATE {users} SET data = '%s' WHERE uid = %d", serialize($data), $user->uid);
+    if (!empty($data)) {
+      $data_array = array('uid' => $user->uid, 'data' => $data);
+      drupal_write_record('users', $data_array, 'uid');
+    }
 
     // Save user roles (delete just to be safe).
     if (isset($array['roles']) && is_array($array['roles'])) {
@@ -518,23 +497,6 @@ function user_is_blocked($name) {
   $deny = db_fetch_object(db_query("SELECT name FROM {users} WHERE status = 0 AND name = LOWER('%s')", $name));
 
   return $deny;
-}
-
-function user_fields() {
-  static $fields;
-
-  if (!$fields) {
-    $result = db_query('SELECT * FROM {users} WHERE uid = 1');
-    if ($field = db_fetch_array($result)) {
-      $fields = array_keys($field);
-    }
-    else {
-      // Make sure we return the default fields at least.
-      $fields = array('uid', 'name', 'pass', 'mail', 'picture', 'mode', 'sort', 'threshold', 'theme', 'signature', 'created', 'access', 'login', 'status', 'timezone', 'language', 'init', 'data');
-    }
-  }
-
-  return $fields;
 }
 
 /**
@@ -2280,7 +2242,7 @@ function user_register_submit($form, &$form_state) {
   }
   // The unset below is needed to prevent these form values from being saved as
   // user data.
-  unset($form_state['values']['form_token'], $form_state['values']['submit'], $form_state['values']['op'], $form_state['values']['notify'], $form_state['values']['form_id'], $form_state['values']['affiliates'], $form_state['values']['destination']);
+  unset($form_state['values']['form_token'], $form_state['values']['submit'], $form_state['values']['op'], $form_state['values']['notify'], $form_state['values']['form_id'], $form_state['values']['affiliates'], $form_state['values']['destination'], $form_state['values']['form_build_id']);
 
   $merge_data = array('pass' => $pass, 'init' => $mail, 'roles' => $roles);
   if (!$admin) {

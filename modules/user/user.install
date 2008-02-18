@@ -1,5 +1,5 @@
 <?php
-// $Id: user.install,v 1.5 2008/01/08 07:46:41 goba Exp $
+// $Id: user.install,v 1.6 2008/02/18 16:53:36 dries Exp $
 
 /**
  * Implementation of hook_schema().
@@ -247,6 +247,7 @@ function user_schema() {
         'type' => 'text',
         'not null' => FALSE,
         'size' => 'big',
+        'serialize' => TRUE,
         'description' => t('A serialized array of name value pairs that are related to the user. Any form values posted during user edit are stored and are loaded into the $user object during user_load(). Use of this field is discouraged and it will likely disappear in a future version of Drupal.'),
       ),
     ),

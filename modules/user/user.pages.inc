@@ -1,5 +1,5 @@
 <?php
-// $Id: user.pages.inc,v 1.11 2008/01/08 10:35:43 goba Exp $
+// $Id: user.pages.inc,v 1.12 2008/02/18 16:53:37 dries Exp $
 
 /**
  * @file
@@ -270,7 +270,7 @@ function user_profile_form_validate($form, &$form_state) {
 function user_profile_form_submit($form, &$form_state) {
   $account = $form_state['values']['_account'];
   $category = $form_state['values']['_category'];
-  unset($form_state['values']['_account'], $form_state['values']['op'], $form_state['values']['submit'], $form_state['values']['delete'], $form_state['values']['form_token'], $form_state['values']['form_id'], $form_state['values']['_category']);
+  unset($form_state['values']['_account'], $form_state['values']['op'], $form_state['values']['submit'], $form_state['values']['delete'], $form_state['values']['form_token'], $form_state['values']['form_id'], $form_state['values']['_category'], $form_state['values']['form_build_id']);
   user_module_invoke('submit', $form_state['values'], $account, $category);
   user_save($account, $form_state['values'], $category);
 
@@ -336,7 +336,7 @@ function user_edit_validate($form, &$form_state) {
 function user_edit_submit($form, &$form_state) {
   $account = $form_state['values']['_account'];
   $category = $form_state['values']['_category'];
-  unset($form_state['values']['_account'], $form_state['values']['op'], $form_state['values']['submit'], $form_state['values']['delete'], $form_state['values']['form_token'], $form_state['values']['form_id'], $form_state['values']['_category']);
+  unset($form_state['values']['_account'], $form_state['values']['op'], $form_state['values']['submit'], $form_state['values']['delete'], $form_state['values']['form_token'], $form_state['values']['form_id'], $form_state['values']['_category'], $form_state['values']['form_build_id']);
   user_module_invoke('submit', $form_state['values'], $account, $category);
   user_save($account, $form_state['values'], $category);
 
