@@ -1,6 +1,6 @@
-; $Id: node.info,v 1.4 2007/06/08 05:50:55 dries Exp $
+; $Id: node.info,v 1.5 2008/02/18 19:19:46 dries Exp $
 name = Node
 description = Allows content to be submitted to the site and displayed on pages.
 package = Core - required
 version = VERSION
-core = 6.x
+core = 7.x

@@ -1,6 +1,6 @@
-; $Id: upload.info,v 1.4 2007/06/08 05:50:57 dries Exp $
+; $Id: upload.info,v 1.5 2008/02/18 19:19:48 dries Exp $
 name = Upload
 description = Allows users to upload and attach files to content.
 package = Core - optional
 version = VERSION
-core = 6.x
+core = 7.x

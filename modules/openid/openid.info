@@ -1,6 +1,6 @@
-; $Id: openid.info,v 1.2 2007/06/22 22:26:43 unconed Exp $
+; $Id: openid.info,v 1.3 2008/02/18 19:19:46 dries Exp $
 name = OpenID
 description = "Allows users to log into your site using OpenID."
 version = VERSION
 package = Core - optional
-core = 6.x
+core = 7.x

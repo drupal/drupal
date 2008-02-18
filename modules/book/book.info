@@ -1,6 +1,6 @@
-; $Id: book.info,v 1.5 2007/07/30 18:20:21 dries Exp $
+; $Id: book.info,v 1.6 2008/02/18 19:19:44 dries Exp $
 name = Book
 description = Allows users to structure site pages in a hierarchy or outline.
 package = Core - optional
 version = VERSION
-core = 6.x
+core = 7.x

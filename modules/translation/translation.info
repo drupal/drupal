@@ -1,7 +1,7 @@
-; $Id: translation.info,v 1.1 2007/06/15 18:40:14 goba Exp $
+; $Id: translation.info,v 1.2 2008/02/18 19:19:47 dries Exp $
 name = Content translation
 description = Allows content to be translated into different languages.
 dependencies[] = locale
 package = Core - optional
 version = VERSION
-core = 6.x
+core = 7.x

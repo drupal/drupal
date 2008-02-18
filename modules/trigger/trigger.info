@@ -1,6 +1,6 @@
-; $Id: trigger.info,v 1.1 2007/09/11 14:50:05 goba Exp $
+; $Id: trigger.info,v 1.2 2008/02/18 19:19:48 dries Exp $
 name = Trigger
 description = Enables actions to be fired on certain system events, such as when new content is created.
 package = Core - optional
 version = VERSION
-core = 6.x
+core = 7.x

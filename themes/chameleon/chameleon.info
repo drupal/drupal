@@ -1,4 +1,4 @@
-; $Id: chameleon.info,v 1.4 2007/07/01 23:27:31 goba Exp $
+; $Id: chameleon.info,v 1.5 2008/02/18 19:19:48 dries Exp $
 name = Chameleon
 description = Minimalist tabled theme with light colors.
 regions[left] = Left sidebar
@@ -10,4 +10,4 @@ features[] = slogan
 stylesheets[all][] = style.css
 stylesheets[all][] = common.css
 version = VERSION
-core = 6.x
+core = 7.x

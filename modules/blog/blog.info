@@ -1,6 +1,6 @@
-; $Id: blog.info,v 1.5 2007/06/08 05:50:53 dries Exp $
+; $Id: blog.info,v 1.6 2008/02/18 19:19:44 dries Exp $
 name = Blog
 description = Enables keeping easily and regularly updated user web pages or blogs.
 package = Core - optional
 version = VERSION
-core = 6.x
+core = 7.x

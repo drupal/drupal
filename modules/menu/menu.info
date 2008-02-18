@@ -1,6 +1,6 @@
-; $Id: menu.info,v 1.4 2007/06/08 05:50:55 dries Exp $
+; $Id: menu.info,v 1.5 2008/02/18 19:19:45 dries Exp $
 name = Menu
 description = Allows administrators to customize the site navigation menu.
 package = Core - optional
 version = VERSION
-core = 6.x
+core = 7.x

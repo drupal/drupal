@@ -1,6 +1,6 @@
-; $Id: help.info,v 1.4 2007/06/08 05:50:54 dries Exp $
+; $Id: help.info,v 1.5 2008/02/18 19:19:45 dries Exp $
 name = Help
 description = Manages the display of online help.
 package = Core - optional
 version = VERSION
-core = 6.x
+core = 7.x

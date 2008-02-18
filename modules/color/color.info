@@ -1,6 +1,6 @@
-; $Id: color.info,v 1.3 2007/06/08 05:50:54 dries Exp $
+; $Id: color.info,v 1.4 2008/02/18 19:19:44 dries Exp $
 name = Color
 description = Allows the user to change the color scheme of certain themes.
 package = Core - optional
 version = VERSION
-core = 6.x
+core = 7.x

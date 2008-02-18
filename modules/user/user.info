@@ -1,6 +1,6 @@
-; $Id: user.info,v 1.4 2007/06/08 05:50:57 dries Exp $
+; $Id: user.info,v 1.5 2008/02/18 19:19:48 dries Exp $
 name = User
 description = Manages the user registration and login system.
 package = Core - required
 version = VERSION
-core = 6.x
+core = 7.x

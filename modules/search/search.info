@@ -1,6 +1,6 @@
-; $Id: search.info,v 1.4 2007/06/08 05:50:55 dries Exp $
+; $Id: search.info,v 1.5 2008/02/18 19:19:46 dries Exp $
 name = Search
 description = Enables site-wide keyword searching.
 package = Core - optional
 version = VERSION
-core = 6.x
+core = 7.x

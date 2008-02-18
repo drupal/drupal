@@ -1,6 +1,6 @@
-; $Id: system.info,v 1.4 2007/06/08 05:50:56 dries Exp $
+; $Id: system.info,v 1.5 2008/02/18 19:19:47 dries Exp $
 name = System
 description = Handles general site configuration for administrators.
 package = Core - required
 version = VERSION
-core = 6.x
+core = 7.x
