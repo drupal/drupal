@@ -3,4 +3,4 @@ name = Search
 description = Enables site-wide keyword searching.
 package = Core - optional
 version = VERSION
-core = 6.x
+core = 7.x

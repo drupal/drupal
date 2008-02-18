@@ -3,4 +3,4 @@ name = Color
 description = Allows the user to change the color scheme of certain themes.
 package = Core - optional
 version = VERSION
-core = 6.x
+core = 7.x

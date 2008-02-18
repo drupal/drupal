@@ -3,4 +3,4 @@ name = Node
 description = Allows content to be submitted to the site and displayed on pages.
 package = Core - required
 version = VERSION
-core = 6.x
+core = 7.x

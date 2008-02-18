@@ -3,4 +3,4 @@ name = Ping
 description = Alerts other sites when your site has been updated.
 package = Core - optional
 version = VERSION
-core = 6.x
+core = 7.x

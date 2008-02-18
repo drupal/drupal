@@ -2,6 +2,6 @@
 name = Minnelli
 description = Tableless, recolorable, multi-column, fixed width theme.
 version = VERSION
-core = 6.x
+core = 7.x
 base theme = garland
 stylesheets[all][] = minnelli.css

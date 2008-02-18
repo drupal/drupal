@@ -3,4 +3,4 @@ name = Contact
 description = Enables the use of both personal and site-wide contact forms.
 package = Core - optional
 version = VERSION
-core = 6.x
+core = 7.x

@@ -5,4 +5,4 @@ dependencies[] = taxonomy
 dependencies[] = comment
 package = Core - optional
 version = VERSION
-core = 6.x
+core = 7.x

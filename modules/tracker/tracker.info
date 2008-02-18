@@ -4,4 +4,4 @@ description = Enables tracking of recent posts for users.
 dependencies[] = comment
 package = Core - optional
 version = VERSION
-core = 6.x
+core = 7.x

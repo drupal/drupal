@@ -3,4 +3,4 @@ name = Blog
 description = Enables keeping easily and regularly updated user web pages or blogs.
 package = Core - optional
 version = VERSION
-core = 6.x
+core = 7.x

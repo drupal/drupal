@@ -3,4 +3,4 @@ name = Profile
 description = Supports configurable user profiles.
 package = Core - optional
 version = VERSION
-core = 6.x
+core = 7.x

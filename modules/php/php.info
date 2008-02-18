@@ -3,4 +3,4 @@ name = PHP filter
 description = Allows embedded PHP code/snippets to be evaluated.
 package = Core - optional
 version = VERSION
-core = 6.x
+core = 7.x

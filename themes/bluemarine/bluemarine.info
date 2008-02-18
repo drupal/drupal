@@ -2,5 +2,5 @@
 name = Bluemarine
 description = Table-based multi-column theme with a marine and ash color scheme.
 version = VERSION
-core = 6.x
+core = 7.x
 engine = phptemplate

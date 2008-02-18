@@ -2,5 +2,5 @@
 name = Pushbutton
 description = Tabled, multi-column theme in blue and orange tones.
 version = VERSION
-core = 6.x
+core = 7.x
 engine = phptemplate

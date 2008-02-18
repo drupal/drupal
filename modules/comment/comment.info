@@ -3,4 +3,4 @@ name = Comment
 description = Allows users to comment on and discuss published content.
 package = Core - optional
 version = VERSION
-core = 6.x
+core = 7.x
