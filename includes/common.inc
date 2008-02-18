@@ -3273,10 +3273,22 @@ function drupal_write_record($table, &$object, $update = array()) {
       if (empty($info['serialize'])) {
         $values[] = $object->$field;
       }
-      else {
+      elseif (!empty($object->$field)) {
         $values[] = serialize($object->$field);
       }
+      else {
+        $values[] = '';
+      }
     }
+  }
+
+  if (empty($fields)) {
+    // No changes requested.
+    // If we began with an array, convert back so we don't surprise the caller.
+    if ($array) {
+      $object = (array)$object;
+    }
+    return;
   }
 
   // Build the SQL.

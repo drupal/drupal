@@ -293,7 +293,8 @@ function profile_field_form_validate($form, &$form_state) {
     form_set_error('name', t('The specified form name contains one or more illegal characters. Spaces or any other special characters except dash (-) and underscore (_) are not allowed.'));
   }
 
-  if (in_array($form_state['values']['name'], user_fields())) {
+  $users_table = drupal_get_schema('users');
+  if (!empty($users_table['fields'][$form_state['values']['name']])) {
     form_set_error('name', t('The specified form name is reserved for use by Drupal.'));
   }
   // Validate the category:
