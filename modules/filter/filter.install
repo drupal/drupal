@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.install,v 1.5 2007/12/18 12:59:21 dries Exp $
+// $Id: filter.install,v 1.6 2008/02/19 14:07:21 dries Exp $
 
 /**
  * Implementation of hook_schema().
@@ -78,6 +78,13 @@ function filter_schema() {
         'size' => 'tiny',
         'description' => t('Flag to indicate whether format is cachable. (1 = cachable, 0 = not cachable)'),
       ),
+      'weight' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+        'description' => t('Weight of input format to use when listing.'),
+      )
     ),
     'primary key' => array('format'),
     'unique keys' => array('name' => array('name')),
@@ -89,3 +96,11 @@ function filter_schema() {
   return $schema;
 }
 
+/**
+ * Add a weight column to the filter formats table.
+ */
+function filter_update_7000() {
+  $ret = array();
+  db_add_field($ret, 'filter_formats', 'weight', array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny'));
+  return $ret;
+}

@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.admin.inc,v 1.9 2008/02/14 18:39:18 dries Exp $
+// $Id: filter.admin.inc,v 1.10 2008/02/19 14:07:21 dries Exp $
 
 /**
  * @file
@@ -19,6 +19,7 @@ function filter_admin_overview() {
   $formats = filter_formats();
   $error = FALSE;
 
+  $form = array('#tree' => TRUE);
   foreach ($formats as $id => $format) {
     $roles = array();
     foreach (user_roles() as $rid => $name) {
@@ -29,13 +30,14 @@ function filter_admin_overview() {
     }
     $default = ($id == variable_get('filter_default_format', 1));
     $options[$id] = '';
-    $form[$format->name]['id'] = array('#value' => $id);
-    $form[$format->name]['roles'] = array('#value' => $default ? t('All roles may use default format') : ($roles ? implode(', ', $roles) : t('No roles may use this format')));
-    $form[$format->name]['configure'] = array('#value' => l(t('configure'), 'admin/settings/filters/'. $id));
-    $form[$format->name]['delete'] = array('#value' => $default ? '' : l(t('delete'), 'admin/settings/filters/delete/'. $id));
+    $form[$id]['name'] = array('#value' => $format->name);
+    $form[$id]['roles'] = array('#value' => $default ? t('All roles may use default format') : ($roles ? implode(', ', $roles) : t('No roles may use this format')));
+    $form[$id]['configure'] = array('#value' => l(t('configure'), 'admin/settings/filters/'. $id));
+    $form[$id]['delete'] = array('#value' => $default ? '' : l(t('delete'), 'admin/settings/filters/delete/'. $id));
+    $form[$id]['weight'] = array('#type' => 'weight', '#default_value' => $format->weight);
   }
   $form['default'] = array('#type' => 'radios', '#options' => $options, '#default_value' => variable_get('filter_default_format', 1));
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Set default format'));
+  $form['submit'] = array('#type' => 'submit', '#value' => t('Save changes'));
   return $form;
 }
 
@@ -45,6 +47,13 @@ function filter_admin_overview_submit($form, &$form_state) {
     drupal_set_message(t('Default format updated.'));
     variable_set('filter_default_format', $form_state['values']['default']);
   }
+  foreach ($form_state['values'] as $id => $data) {
+    if (is_array($data) && isset($data['weight'])) {
+      // Only update if this is a form element with weight.
+      db_query("UPDATE {filter_formats} SET weight = %d WHERE format = %d", $data['weight'], $id);
+    }
+  }
+  drupal_set_message(t('The input format ordering has been saved.'));
 }
 
 /**
@@ -54,21 +63,28 @@ function filter_admin_overview_submit($form, &$form_state) {
  */
 function theme_filter_admin_overview($form) {
   $rows = array();
-  foreach ($form as $name => $element) {
+  foreach ($form as $id => $element) {
     if (isset($element['roles']) && is_array($element['roles'])) {
+      $element['weight']['#attributes']['class'] = 'input-format-order-weight';
       $rows[] = array(
-        drupal_render($form['default'][$element['id']['#value']]),
-        check_plain($name),
-        drupal_render($element['roles']),
-        drupal_render($element['configure']),
-        drupal_render($element['delete'])
+        'data' => array(
+          check_plain($element['name']['#value']),
+          drupal_render($element['roles']),
+          drupal_render($form['default'][$id]),
+          drupal_render($element['weight']),
+          drupal_render($element['configure']),
+          drupal_render($element['delete']),
+        ),
+        'class' => 'draggable',
       );
-      unset($form[$name]);
+      unset($form[$id]);
     }
   }
-  $header = array(t('Default'), t('Name'), t('Roles'), array('data' => t('Operations'), 'colspan' => 2));
-  $output = theme('table', $header, $rows);
+  $header = array(t('Name'), t('Roles'), t('Default'), t('Weight'), array('data' => t('Operations'), 'colspan' => 2));
+  $output = theme('table', $header, $rows, array('id' => 'input-format-order'));
   $output .= drupal_render($form);
+
+  drupal_add_tabledrag('input-format-order', 'order', 'sibling', 'input-format-order-weight');
 
   return $output;
 }

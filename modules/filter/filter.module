@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.204 2008/01/21 15:08:24 goba Exp $
+// $Id: filter.module,v 1.205 2008/02/19 14:07:21 dries Exp $
 
 /**
  * @file
@@ -22,12 +22,12 @@ function filter_help($path, $arg) {
     case 'admin/help#filter':
       $output = '<p>'. t("The filter module allows administrators to configure text input formats for use on your site. An input format defines the HTML tags, codes, and other input allowed in both content and comments, and is a key feature in guarding against potentially damaging input from malicious users. Two input formats included by default are <em>Filtered HTML</em> (which allows only an administrator-approved subset of HTML tags) and <em>Full HTML</em> (which allows the full set of HTML tags). Additional input formats may be created by an administrator.") .'</p>';
       $output .= '<p>'. t('Each input format uses filters to manipulate text, and most input formats apply several different filters to text in a specific order. Each filter is designed for a specific purpose, and generally either adds, removes or transforms elements within user-entered text before it is displayed. A filter does not change the actual content of a post, but instead, modifies it temporarily before it is displayed. A filter may remove unapproved HTML tags, for instance, while another automatically adds HTML to make links referenced in text clickable.') .'</p>';
-      $output .= '<p>'. t('Users can choose between the available input formats when creating or editing content. Administrators can configure which input formats are available to which user roles, as well as choose a default input format.') .'</p>';
+      $output .= '<p>'. t('Users with access to more than one input format can use the <em>Input format</em> fieldset to choose between available input formats when creating or editing multi-line content. Administrators determine the input formats available to each user role, select a default input format, and control the order of formats listed in the <em>Input format</em> fieldset.') .'</p>';
       $output .= '<p>'. t('For more information, see the online handbook entry for <a href="@filter">Filter module</a>.', array('@filter' => 'http://drupal.org/handbook/modules/filter/')) .'</p>';
       return $output;
     case 'admin/settings/filters':
-      $output = '<p>'. t('<em>Input formats</em> define a way of processing user-supplied text in Drupal. Each input format uses filters to manipulate text, and most input formats apply several different filters to text, in a specific order. Each filter is designed to accomplish a specific purpose, and generally either removes elements from or adds elements to text before it is displayed. Users can choose between the available input formats when submitting content.') .'</p>';
-      $output .= '<p>'. t('Use the list below to configure which input formats are available to which roles, as well as choose a default input format (used for imported content, for example). The default format is always available to users. All input formats are available to users in a role with the "administer filters" permission.') .'</p>';
+      $output = '<p>'. t('Use the list below to review the input formats available to each user role, to select a default input format, and to control the order of formats listed in the <em>Input format</em> fieldset. (The <em>Input format</em> fieldset is displayed below textareas when users with access to more than one input format create multi-line content.) The input format selected as <em>Default</em> is available to all users and, unless another format is selected, is applied to all content. All input formats are available to users in roles with the "administer filters" permission.') .'</p>';
+      $output .= '<p>'. t('Since input formats, if available, are presented in the same order as the list below, it may be helpful to arrange the formats in descending order of your preference for their use. To change the order of an input format, grab a drag-and-drop handle under the <em>Name</em> column and drag to a new location in the list. (Grab a handle by clicking and holding the mouse while hovering over a handle icon.) Remember that your changes will not be saved until you click the <em>Save changes</em> button at the bottom of the page.') .'</p>';
       return $output;
     case 'admin/settings/filters/%':
       return '<p>'. t('Every <em>filter</em> performs one particular change on the user input, for example stripping out malicious HTML or making URLs clickable. Choose which filters you want to apply to text in this input format. If you notice some filters are causing conflicts in the output, you can <a href="@rearrange">rearrange them</a>.', array('@rearrange' => url('admin/settings/filters/'. $arg[3] .'/order'))) .'</p>';
@@ -308,7 +308,7 @@ function filter_formats($index = NULL) {
       $args[] = variable_get('filter_default_format', 1);
     }
 
-    $result = db_query($query, $args);
+    $result = db_query($query .' ORDER by weight', $args);
     while ($format = db_fetch_object($result)) {
       $formats[$format->format] = $format;
     }
