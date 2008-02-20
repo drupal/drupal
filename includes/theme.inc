@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.416 2008/02/06 19:38:26 dries Exp $
+// $Id: theme.inc,v 1.417 2008/02/20 13:39:29 dries Exp $
 
 /**
  * @file
@@ -576,7 +576,7 @@ function theme() {
   global $theme_path;
   $temp = $theme_path;
   // point path_to_theme() to the currently used theme path:
-  $theme_path = $hooks[$hook]['theme path'];
+  $theme_path = $info['theme path'];
 
   // Include a file if the theme function or preprocess function is held elsewhere.
   if (!empty($info['file'])) {
@@ -612,7 +612,7 @@ function theme() {
     if (isset($theme_engine)) {
       // If theme or theme engine is implementing this, it may have
       // a different extension and a different renderer.
-      if ($hooks[$hook]['type'] != 'module') {
+      if ($info['type'] != 'module') {
         if (function_exists($theme_engine .'_render_template')) {
           $render_function = $theme_engine .'_render_template';
         }
@@ -652,9 +652,9 @@ function theme() {
     }
 
     if (empty($template_file)) {
-      $template_file = $hooks[$hook]['template'] . $extension;
-      if (isset($hooks[$hook]['path'])) {
-        $template_file = $hooks[$hook]['path'] .'/'. $template_file;
+      $template_file = $info['template'] . $extension;
+      if (isset($info['path'])) {
+        $template_file = $info['path'] .'/'. $template_file;
       }
     }
     $output = $render_function($template_file, $variables);
