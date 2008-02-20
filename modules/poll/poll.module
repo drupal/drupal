@@ -54,7 +54,14 @@ function poll_theme() {
  * Implementation of hook_perm().
  */
 function poll_perm() {
-  return array('create poll content', 'delete own poll content', 'delete any poll content', 'edit any poll content', 'edit own poll content', 'vote on polls', 'cancel own vote', 'inspect all votes');
+  $perms = node_list_permissions('poll');
+  $perms += array(
+    'vote on polls' => t('Cast votes on polls.'),
+    'cancel own vote' => t('Retract and optionally change own votes.'),
+    'inspect all votes' => t('View voting results.'),
+  );
+
+  return $perms;
 }
 
 /**

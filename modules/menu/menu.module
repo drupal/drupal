@@ -37,7 +37,9 @@ function menu_help($path, $arg) {
  * Implementation of hook_perm().
  */
 function menu_perm() {
-  return array('administer menu');
+  return array(
+    'administer menu' => t('Manage menus and menu items.'),
+  );
 }
 
 /**

@@ -69,7 +69,10 @@ function statistics_exit() {
  * Implementation of hook_perm().
  */
 function statistics_perm() {
-  return array('access statistics', 'view post access counter');
+  return array(
+    'access statistics' => t('View content access statistics.'),
+    'view post access counter' => t('View the total number of times a piece of content has been accessed.'),
+  );
 }
 
 /**

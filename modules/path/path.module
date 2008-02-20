@@ -206,7 +206,10 @@ function path_form_alter(&$form, $form_state, $form_id) {
  * Implementation of hook_perm().
  */
 function path_perm() {
-  return array('create url aliases', 'administer url aliases');
+  return array(
+    'create url aliases' => t('Manage URL aliases on content.'),
+    'administer url aliases' => t('Manage URL aliases across the entire website.'),
+  );
 }
 
 /**

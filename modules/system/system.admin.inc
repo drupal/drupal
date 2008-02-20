@@ -82,18 +82,6 @@ function system_admin_menu_block_page() {
 }
 
 /**
- * Menu callback; Sets whether the admin menu is in compact mode or not.
- *
- * @param $mode
- *   Valid values are 'on' and 'off'.
- */
-function system_admin_compact_page($mode = 'off') {
-  global $user;
-  user_save($user, array('admin_compact_mode' => ($mode == 'on')));
-  drupal_goto('admin');
-}
-
-/**
  * Menu callback; prints a listing of admin tasks for each installed module.
  */
 function system_admin_by_module() {
@@ -1899,14 +1887,7 @@ function theme_admin_page($blocks) {
   }
 
   $output = '<div class="admin clear-block">';
-  $output .= '<div class="compact-link">';
-  if (system_admin_compact_mode()) {
-    $output .= l(t('Show descriptions'), 'admin/compact/off', array('title' => t('Expand layout to include descriptions.')));
-  }
-  else {
-    $output .= l(t('Hide descriptions'), 'admin/compact/on', array('title' => t('Compress layout by hiding descriptions.')));
-  }
-  $output .= '</div>';
+  $output .= theme('system_compact_link');
 
   foreach ($container as $id => $data) {
     $output .= '<div class="'. $id .' clear-block">';

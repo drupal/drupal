@@ -4,6 +4,7 @@ Drupal 7.0, xxxx-xx-xx (development version)
 ----------------------
 - Usability:
     * Implemented drag-and-drop positioning for input format listings.
+    * Provide descriptions for permissions on the administration page.
 
 Drupal 6.0, 2008-02-13
 ----------------------

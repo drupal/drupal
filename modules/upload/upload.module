@@ -43,7 +43,10 @@ function upload_theme() {
  * Implementation of hook_perm().
  */
 function upload_perm() {
-  return array('upload files', 'view uploaded files');
+  return array(
+    'upload files' => t('Attach images and other files to content.'),
+    'view uploaded files' => t('View and download files attached to content.'),
+  );
 }
 
 /**

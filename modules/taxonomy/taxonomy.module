@@ -10,7 +10,9 @@
  * Implementation of hook_perm().
  */
 function taxonomy_perm() {
-  return array('administer taxonomy');
+  return array(
+    'administer taxonomy' => t('Manage taxonomy vocabularies and terms.'),
+  );
 }
 
 /**

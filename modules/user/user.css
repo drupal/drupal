@@ -6,6 +6,9 @@
 #permissions td.permission {
   padding-left: 1.5em; /* LTR */
 }
+#permissions tr.odd .form-item, tr.even .form-item {
+  white-space: normal;
+}
 #access-rules .access-type, #access-rules .rule-type {
   margin-right: 1em; /* LTR */
   float: left; /* LTR */

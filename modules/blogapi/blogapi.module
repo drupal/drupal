@@ -24,7 +24,9 @@ function blogapi_help($path, $arg) {
  * Implementation of hook_perm().
  */
 function blogapi_perm() {
-  return array('administer content with blog api');
+  return array(
+    'administer content with blog api' => t('Manage website content from external tools.'),
+  );
 }
 
 /**
