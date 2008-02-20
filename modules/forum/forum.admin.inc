@@ -173,8 +173,8 @@ function forum_confirm_delete(&$form_state, $tid) {
  */
 function forum_confirm_delete_submit($form, &$form_state) {
   taxonomy_del_term($form_state['values']['tid']);
-  drupal_set_message(t('The forum %term and all sub-forums and associated posts have been deleted.', array('%term' => $form_state['values']['name'])));
-  watchdog('content', 'forum: deleted %term and all its sub-forums and associated posts.', array('%term' => $form_state['values']['name']));
+  drupal_set_message(t('The forum %term and all sub-forums have been deleted.', array('%term' => $form_state['values']['name'])));
+  watchdog('content', 'forum: deleted %term and all its sub-forums.', array('%term' => $form_state['values']['name']));
 
   $form_state['redirect'] = 'admin/content/forum';
   return;
