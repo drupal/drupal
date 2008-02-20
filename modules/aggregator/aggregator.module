@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.374 2008/01/15 08:06:32 dries Exp $
+// $Id: aggregator.module,v 1.375 2008/02/20 13:46:37 dries Exp $
 
 /**
  * @file
@@ -277,7 +277,10 @@ function _aggregator_has_categories() {
  * Implementation of hook_perm().
  */
 function aggregator_perm() {
-  return array('administer news feeds', 'access news feeds');
+  return array(
+    'administer news feeds' => t('Add, edit or delete news feeds that are aggregated to your site.'),
+    'access news feeds' => t('View aggregated news feed items.'),
+  );
 }
 
 /**

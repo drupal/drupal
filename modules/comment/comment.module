@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.618 2008/02/06 19:38:27 dries Exp $
+// $Id: comment.module,v 1.619 2008/02/20 13:46:39 dries Exp $
 
 /**
  * @file
@@ -271,7 +271,12 @@ function comment_node_type($op, $info) {
  * Implementation of hook_perm().
  */
 function comment_perm() {
-  return array('access comments', 'post comments', 'administer comments', 'post comments without approval');
+  return array(
+    'access comments' => t('View comments attached to content.'),
+    'post comments' => t('Add comments to content (approval required).'),
+    'post comments without approval' => t('Add comments to content (no approval required).'),
+    'administer comments' => t('Manage and approve comments, and configure comment administration settings.'),
+  );
 }
 
 /**

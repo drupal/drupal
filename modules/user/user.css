@@ -1,10 +1,13 @@
-/* $Id: user.css,v 1.7 2007/06/21 04:38:41 unconed Exp $ */
+/* $Id: user.css,v 1.8 2008/02/20 13:46:43 dries Exp $ */
 
 #permissions td.module {
   font-weight: bold;
 }
 #permissions td.permission {
   padding-left: 1.5em; /* LTR */
+}
+#permissions tr.odd .form-item, tr.even .form-item {
+  white-space: normal;
 }
 #access-rules .access-type, #access-rules .rule-type {
   margin-right: 1em; /* LTR */

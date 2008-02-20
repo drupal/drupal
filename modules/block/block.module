@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.299 2008/02/03 19:12:57 goba Exp $
+// $Id: block.module,v 1.300 2008/02/20 13:46:38 dries Exp $
 
 /**
  * @file
@@ -110,7 +110,10 @@ function block_theme() {
  * Implementation of hook_perm().
  */
 function block_perm() {
-  return array('administer blocks', 'use PHP for block visibility');
+  return array(
+    'administer blocks' => t('Select which blocks are displayed, and arrange them on the page.'),
+    'use PHP for block visibility' => t('Enter PHP code in the field for block visibility settings. %warning', array('%warning' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
+  );
 }
 
 /**

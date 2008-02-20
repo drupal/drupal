@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.213 2008/02/06 19:38:27 dries Exp $
+// $Id: locale.module,v 1.214 2008/02/20 13:46:39 dries Exp $
 
 /**
  * @file
@@ -186,7 +186,10 @@ function locale_inc_callback() {
  * Implementation of hook_perm().
  */
 function locale_perm() {
-  return array('administer languages', 'translate interface');
+  return array(
+    'administer languages' => t('Manage the languages in which the website content and interface text may be displayed.'),
+    'translate interface' => t('Translate the text of the website interface.'),
+  );
 }
 
 /**

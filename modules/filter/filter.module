@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.205 2008/02/19 14:07:21 dries Exp $
+// $Id: filter.module,v 1.206 2008/02/20 13:46:39 dries Exp $
 
 /**
  * @file
@@ -150,7 +150,9 @@ function filter_admin_format_title($format) {
  * Implementation of hook_perm().
  */
 function filter_perm() {
-  return array('administer filters');
+  return array(
+    'administer filters' => t('Manage input formats and filters, and select which roles may use them. %warning', array('%warning' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
+  );
 }
 
 /**

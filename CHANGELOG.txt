@@ -1,9 +1,10 @@
-// $Id: CHANGELOG.txt,v 1.255 2008/02/19 14:07:20 dries Exp $
+// $Id: CHANGELOG.txt,v 1.256 2008/02/20 13:46:36 dries Exp $
 
 Drupal 7.0, xxxx-xx-xx (development version)
 ----------------------
 - Usability:
     * Implemented drag-and-drop positioning for input format listings.
+    * Provide descriptions for permissions on the administration page.
 
 Drupal 6.0, 2008-02-13
 ----------------------

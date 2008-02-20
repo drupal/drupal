@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.591 2008/02/18 19:19:47 dries Exp $
+// $Id: system.module,v 1.592 2008/02/20 13:46:41 dries Exp $
 
 /**
  * @file
@@ -148,6 +148,7 @@ function system_theme() {
     'system_powered_by' => array(
       'arguments' => array('image_path' => NULL),
     ),
+    'system_compact_link' => array(),
   ));
 }
 
@@ -155,7 +156,14 @@ function system_theme() {
  * Implementation of hook_perm().
  */
 function system_perm() {
-  return array('administer site configuration', 'access administration pages', 'administer actions', 'access site reports', 'select different theme', 'administer files');
+  return array(
+    'administer site configuration' => t('Configure site-wide settings such as module or theme administration settings.'),
+    'access administration pages' => t('View the administration panel and browse the help system.'),
+    'administer actions' => t('Manage the actions defined for your site.'),
+    'access site reports' => t('View reports from system logs and other status information.'),
+    'select different theme' => t('Select a theme other than the default theme set by the site administrator.'),
+    'administer files' => t('Manage user-uploaded files.'),
+  );
 }
 
 /**
@@ -1159,6 +1167,18 @@ function system_admin_compact_mode() {
 }
 
 /**
+ * Menu callback; Sets whether the admin menu is in compact mode or not.
+ *
+ * @param $mode
+ *   Valid values are 'on' and 'off'.
+ */
+function system_admin_compact_page($mode = 'off') {
+  global $user;
+  user_save($user, array('admin_compact_mode' => ($mode == 'on')));
+  drupal_goto(drupal_get_destination());
+}
+
+/**
  * Generate a list of tasks offered by a specified module.
  *
  * @param $module
@@ -1874,4 +1894,22 @@ function system_check_http_request() {
 function theme_system_powered_by($image_path) {
   $image = theme('image', $image_path, t('Powered by Drupal, an open source content management system'), t('Powered by Drupal, an open source content management system'));
   return l($image, 'http://drupal.org', array('html' => TRUE, 'absolute' => TRUE, 'external' => TRUE));
+}
+
+/**
+ * Display the link to show or hide inline help descriptions.
+ *
+ * @ingroup themeable
+ */
+function theme_system_compact_link() {
+  $output = '<div class="compact-link">';
+  if (system_admin_compact_mode()) {
+    $output .= l(t('Show descriptions'), 'admin/compact/off', array('title' => t('Expand layout to include descriptions.'), 'query' => drupal_get_destination()));
+  }
+  else {
+    $output .= l(t('Hide descriptions'), 'admin/compact/on', array('title' => t('Compress layout by hiding descriptions.'), 'query' => drupal_get_destination()));
+  }
+  $output .= '</div>';
+
+  return $output;
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.198 2008/02/12 13:49:01 dries Exp $
+// $Id: upload.module,v 1.199 2008/02/20 13:46:42 dries Exp $
 
 /**
  * @file
@@ -43,7 +43,10 @@ function upload_theme() {
  * Implementation of hook_perm().
  */
 function upload_perm() {
-  return array('upload files', 'view uploaded files');
+  return array(
+    'upload files' => t('Attach images and other files to content.'),
+    'view uploaded files' => t('View and download files attached to content.'),
+  );
 }
 
 /**

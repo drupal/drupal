@@ -1,5 +1,5 @@
 <?php
-// $Id: translation.module,v 1.23 2008/01/28 11:38:58 goba Exp $
+// $Id: translation.module,v 1.24 2008/02/20 13:46:42 dries Exp $
 
 /**
  * @file
@@ -86,7 +86,9 @@ function _translation_tab_access($node) {
  * Implementation of hook_perm().
  */
 function translation_perm() {
-  return array('translate content');
+  return array(
+    'translate content' => t('Translate website content.'),
+  );
 }
 
 /**

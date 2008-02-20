@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.103 2008/01/16 12:46:52 goba Exp $
+// $Id: contact.module,v 1.104 2008/02/20 13:46:39 dries Exp $
 
 /**
  * @file
@@ -36,8 +36,12 @@ function contact_help($path, $arg) {
  * Implementation of hook_perm
  */
 function contact_perm() {
-  return array('access site-wide contact form', 'administer site-wide contact form');
+  return array(
+    'access site-wide contact form' => t('Send feedback to administrators via e-mail using the site-wide contact form.'),
+    'administer site-wide contact form' => t('Configure site-wide contact form administration settings.'),
+  );
 }
+
 /**
  * Implementation of hook_menu().
  */

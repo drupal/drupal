@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.272 2008/01/04 09:31:48 goba Exp $
+// $Id: statistics.module,v 1.273 2008/02/20 13:46:40 dries Exp $
 
 /**
  * @file
@@ -69,7 +69,10 @@ function statistics_exit() {
  * Implementation of hook_perm().
  */
 function statistics_perm() {
-  return array('access statistics', 'view post access counter');
+  return array(
+    'access statistics' => t('View content access statistics.'),
+    'view post access counter' => t('View the total number of times a piece of content has been accessed.'),
+  );
 }
 
 /**

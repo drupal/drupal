@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.238 2008/01/30 20:30:35 goba Exp $
+// $Id: system.install,v 1.239 2008/02/20 13:46:41 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -2471,3 +2471,42 @@ function system_update_6047() {
  * @} End of "defgroup updates-5.x-to-6.x"
  * The next series of updates should start at 7000.
  */
+
+/**
+ * @defgroup updates-6.x-to-7.x System updates from 6.x to 7.x
+ * @{
+ */
+
+/**
+ * Rename blog and forum permissions to be consistent with other content types.
+ */
+function system_update_7000() {
+  $ret = array();
+  $result = db_query("SELECT rid, perm FROM {permission} ORDER BY rid");
+  while ($role = db_fetch_object($result)) {
+    $renamed_permission = preg_replace('/(?<=^|,\ )create\ blog\ entries(?=,|$)/', 'create blog content', $role->perm);
+    $renamed_permission = preg_replace('/(?<=^|,\ )edit\ own\ blog\ entries(?=,|$)/', 'edit own blog content', $role->perm);
+    $renamed_permission = preg_replace('/(?<=^|,\ )edit\ any\ blog\ entry(?=,|$)/', 'edit any blog content', $role->perm);
+    $renamed_permission = preg_replace('/(?<=^|,\ )delete\ own\ blog\ entries(?=,|$)/', 'delete own blog content', $role->perm);
+    $renamed_permission = preg_replace('/(?<=^|,\ )delete\ any\ blog\ entry(?=,|$)/', 'delete any blog content', $role->perm);
+
+    $renamed_permission = preg_replace('/(?<=^|,\ )create\ forum\ topics(?=,|$)/', 'create forum content', $role->perm);
+    $renamed_permission = preg_replace('/(?<=^|,\ )delete\ any\ forum\ topic(?=,|$)/', 'delete any forum content', $role->perm);
+    $renamed_permission = preg_replace('/(?<=^|,\ )delete\ own\ forum\ topics(?=,|$)/', 'delete own forum content', $role->perm);
+    $renamed_permission = preg_replace('/(?<=^|,\ )edit\ any\ forum\ topic(?=,|$)/', 'edit any forum content', $role->perm);
+    $renamed_permission = preg_replace('/(?<=^|,\ )edit\ own\ forum\ topics(?=,|$)/', 'edit own forum content', $role->perm);
+
+    if ($renamed_permission != $role->perm) {
+      $ret[] = update_sql("UPDATE {permission} SET perm = '$renamed_permission' WHERE rid = $role->rid");
+    }
+  }
+
+  return $ret;
+}
+
+/**
+ * @} End of "defgroup updates-6.x-to-7.x"
+ * The next series of updates should start at 8000.
+ */
+
+

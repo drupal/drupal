@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.116 2008/02/12 13:54:43 dries Exp $
+// $Id: blogapi.module,v 1.117 2008/02/20 13:46:39 dries Exp $
 
 /**
  * @file
@@ -24,7 +24,9 @@ function blogapi_help($path, $arg) {
  * Implementation of hook_perm().
  */
 function blogapi_perm() {
-  return array('administer content with blog api');
+  return array(
+    'administer content with blog api' => t('Manage website content from external tools.'),
+  );
 }
 
 /**

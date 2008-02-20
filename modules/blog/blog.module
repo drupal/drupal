@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.298 2008/02/06 19:38:27 dries Exp $
+// $Id: blog.module,v 1.299 2008/02/20 13:46:38 dries Exp $
 
 /**
  * @file
@@ -23,7 +23,7 @@ function blog_node_info() {
  * Implementation of hook_perm().
  */
 function blog_perm() {
-  return array('create blog entries', 'delete own blog entries', 'delete any blog entry', 'edit own blog entries', 'edit any blog entry');
+  return node_list_permissions('blog');
 }
 
 /**
@@ -33,11 +33,11 @@ function blog_access($op, $node, $account) {
   switch ($op) {
     case 'create':
       // Anonymous users cannot post even if they have the permission.
-      return user_access('create blog entries', $account) && $account->uid;
+      return user_access('create blog content', $account) && $account->uid;
     case 'update':
-      return user_access('edit any blog entry', $account) || (user_access('edit own blog entries', $account) && ($node->uid == $account->uid));
+      return user_access('edit any blog content', $account) || (user_access('edit own blog content', $account) && ($node->uid == $account->uid));
     case 'delete':
-      return user_access('delete any blog entry', $account) || (user_access('delete own blog entries', $account) && ($node->uid == $account->uid));
+      return user_access('delete any blog content', $account) || (user_access('delete own blog content', $account) && ($node->uid == $account->uid));
   }
 }
 
@@ -45,7 +45,7 @@ function blog_access($op, $node, $account) {
  * Implementation of hook_user().
  */
 function blog_user($type, &$edit, &$user) {
-  if ($type == 'view' && user_access('create blog entries', $user)) {
+  if ($type == 'view' && user_access('create blog content', $user)) {
     $user->content['summary']['blog'] =  array(
       '#type' => 'user_profile_item',
       '#title' => t('Blog'),
@@ -145,7 +145,7 @@ function blog_menu() {
     'page callback' => 'blog_page_user',
     'page arguments' => array(1),
     'access callback' => 'user_access',
-    'access arguments' => array('create blog entries', 1),
+    'access arguments' => array('create blog content', 1),
     'file' => 'blog.pages.inc',
   );
   $items['blog/%user/feed'] = array(

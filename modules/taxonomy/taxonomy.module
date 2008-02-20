@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.415 2008/02/17 19:29:07 dries Exp $
+// $Id: taxonomy.module,v 1.416 2008/02/20 13:46:42 dries Exp $
 
 /**
  * @file
@@ -10,7 +10,9 @@
  * Implementation of hook_perm().
  */
 function taxonomy_perm() {
-  return array('administer taxonomy');
+  return array(
+    'administer taxonomy' => t('Manage taxonomy vocabularies and terms.'),
+  );
 }
 
 /**

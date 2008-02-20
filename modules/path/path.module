@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.138 2008/02/03 19:20:35 goba Exp $
+// $Id: path.module,v 1.139 2008/02/20 13:46:40 dries Exp $
 
 /**
  * @file
@@ -206,7 +206,10 @@ function path_form_alter(&$form, $form_state, $form_id) {
  * Implementation of hook_perm().
  */
 function path_perm() {
-  return array('create url aliases', 'administer url aliases');
+  return array(
+    'create url aliases' => t('Manage URL aliases on content.'),
+    'administer url aliases' => t('Manage URL aliases across the entire website.'),
+  );
 }
 
 /**

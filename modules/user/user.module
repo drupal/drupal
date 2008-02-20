@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.895 2008/02/18 19:34:08 dries Exp $
+// $Id: user.module,v 1.896 2008/02/20 13:46:43 dries Exp $
 
 /**
  * @file
@@ -491,7 +491,12 @@ function user_is_blocked($name) {
  * Implementation of hook_perm().
  */
 function user_perm() {
-  return array('administer permissions', 'administer users', 'access user profiles', 'change own username');
+   return array(
+     'administer permissions' => t('Manage the permissions assigned to user roles. %warning', array('%warning' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
+     'administer users' => t('Manage or block users, and manage their role assignments.'),
+     'access user profiles' => t('View profiles of users on the site, which may contain personal information.'),
+     'change own username' => t('Select a different username.'),
+   );
 }
 
 /**

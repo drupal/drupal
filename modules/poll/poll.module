@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.263 2008/01/15 07:57:46 dries Exp $
+// $Id: poll.module,v 1.264 2008/02/20 13:46:40 dries Exp $
 
 /**
  * @file
@@ -54,7 +54,14 @@ function poll_theme() {
  * Implementation of hook_perm().
  */
 function poll_perm() {
-  return array('create poll content', 'delete own poll content', 'delete any poll content', 'edit any poll content', 'edit own poll content', 'vote on polls', 'cancel own vote', 'inspect all votes');
+  $perms = node_list_permissions('poll');
+  $perms += array(
+    'vote on polls' => t('Cast votes on polls.'),
+    'cancel own vote' => t('Retract and optionally change own votes.'),
+    'inspect all votes' => t('View voting results.'),
+  );
+
+  return $perms;
 }
 
 /**
