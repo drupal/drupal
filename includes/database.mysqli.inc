@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysqli.inc,v 1.55 2008/02/17 19:39:11 dries Exp $
+// $Id: database.mysqli.inc,v 1.56 2008/02/21 20:12:47 dries Exp $
 
 /**
  * @file
@@ -81,6 +81,8 @@ function db_connect($url) {
 
   // Force UTF-8.
   mysqli_query($connection, 'SET NAMES "utf8"');
+  // Require ANSI mode to improve SQL portability.
+  mysqli_query($connection, "SET SESSION sql_mode='ANSI'");
 
   return $connection;
 }
@@ -120,8 +122,6 @@ function _db_query($query, $debug = 0) {
   }
 
   if (!mysqli_errno($active_db)) {
-    // Require ANSI mode to improve SQL portability.
-    mysqli_query($active_db, "SET SESSION sql_mode='ANSI'");
     return $result;
   }
   else {
