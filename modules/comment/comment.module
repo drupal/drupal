@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.619 2008/02/20 13:46:39 dries Exp $
+// $Id: comment.module,v 1.620 2008/02/21 19:38:07 dries Exp $
 
 /**
  * @file
@@ -284,15 +284,32 @@ function comment_perm() {
  *
  * Generates a block with the most recent comments.
  */
-function comment_block($op = 'list', $delta = 0) {
-  if ($op == 'list') {
-    $blocks[0]['info'] = t('Recent comments');
-    return $blocks;
-  }
-  else if ($op == 'view' && user_access('access comments')) {
-    $block['subject'] = t('Recent comments');
-    $block['content'] = theme('comment_block');
-    return $block;
+function comment_block($op = 'list', $delta = 0, $edit = array()) {
+  switch ($op) {
+    case 'list':
+      $blocks[0]['info'] = t('Recent comments');
+      return $blocks;
+
+    case 'configure':
+      $form['comment_block_count'] = array(
+        '#type' => 'select',
+        '#title' => t('Number of recent comments'),
+        '#default_value' => variable_get('comment_block_count', 10),
+        '#options' => drupal_map_assoc(array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 25, 30)),
+        '#description' => t('Number of comments to display in block with recent comments.'),
+      );
+      return $form;
+
+    case 'save':
+      variable_set('comment_block_count', (int)$edit['comment_block_count']);
+      break;
+
+    case 'view':
+      if (user_access('access comments')) {
+        $block['subject'] = t('Recent comments');
+        $block['content'] = theme('comment_block');
+        return $block;
+      }
   }
 }
 
@@ -396,7 +413,8 @@ function comment_new_page_count($num_comments, $new_replies, $node) {
  */
 function theme_comment_block() {
   $items = array();
-  foreach (comment_get_recent() as $comment) {
+  $number = variable_get('comment_block_count', 10);
+  foreach (comment_get_recent($number) as $comment) {
     $items[] = l($comment->subject, 'node/'. $comment->nid, array('fragment' => 'comment-'. $comment->cid)) .'<br />'. t('@time ago', array('@time' => format_interval(time() - $comment->timestamp)));
   }
   if ($items) {
