@@ -22,26 +22,6 @@ DirectoryIndex index.php
 # Override PHP settings. More in sites/default/settings.php
 # but the following cannot be changed at runtime.
 
-# PHP 4, Apache 1.
-<IfModule mod_php4.c>
-  php_value magic_quotes_gpc                0
-  php_value register_globals                0
-  php_value session.auto_start              0
-  php_value mbstring.http_input             pass
-  php_value mbstring.http_output            pass
-  php_value mbstring.encoding_translation   0
-</IfModule>
-
-# PHP 4, Apache 2.
-<IfModule sapi_apache2.c>
-  php_value magic_quotes_gpc                0
-  php_value register_globals                0
-  php_value session.auto_start              0
-  php_value mbstring.http_input             pass
-  php_value mbstring.http_output            pass
-  php_value mbstring.encoding_translation   0
-</IfModule>
-
 # PHP 5, Apache 1 and 2.
 <IfModule mod_php5.c>
   php_value magic_quotes_gpc                0
@@ -100,4 +80,4 @@ DirectoryIndex index.php
   RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
 </IfModule>
 
-# $Id: .htaccess,v 1.90 2007/10/05 14:43:23 dries Exp $
+# $Id: .htaccess,v 1.91 2008/02/21 19:45:47 dries Exp $
