@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.262 2008/02/10 19:49:37 dries Exp $
+// $Id: menu.inc,v 1.263 2008/02/23 08:10:03 dries Exp $
 
 /**
  * @file
@@ -1693,11 +1693,13 @@ function _menu_navigation_links_rebuild($menu) {
     array_multisort($sort, SORT_NUMERIC, $menu_links);
 
     foreach ($menu_links as $item) {
-      $existing_item = db_fetch_array(db_query("SELECT mlid, menu_name, plid, customized FROM {menu_links} WHERE link_path = '%s' AND module = '%s'", $item['link_path'], 'system'));
+      $existing_item = db_fetch_array(db_query("SELECT mlid, menu_name, plid, customized, has_children, updated FROM {menu_links} WHERE link_path = '%s' AND module = '%s'", $item['link_path'], 'system'));
       if ($existing_item) {
         $item['mlid'] = $existing_item['mlid'];
         $item['menu_name'] = $existing_item['menu_name'];
         $item['plid'] = $existing_item['plid'];
+        $item['has_children'] = $existing_item['has_children'];
+        $item['updated'] = $existing_item['updated'];
       }
       if (!$existing_item || !$existing_item['customized']) {
         menu_link_save($item);
@@ -1719,7 +1721,7 @@ function _menu_navigation_links_rebuild($menu) {
     }
   }
   // Find any items where their router path does not exist any more.
-  $result = db_query('SELECT * FROM {menu_links} WHERE router_path NOT IN ('. $placeholders .') AND external = 0 AND updated = 0 AND customized = 0 ORDER BY depth DESC', array_keys($menu));
+  $result = db_query("SELECT * FROM {menu_links} WHERE router_path NOT IN ($placeholders) AND external = 0 AND updated = 0 AND customized = 0 ORDER BY depth DESC", $paths);
   // Remove all such items. Starting from those with the greatest depth will
   // minimize the amount of re-parenting done by menu_link_delete().
   while ($item = db_fetch_array($result)) {
