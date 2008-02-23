@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.239 2008/02/20 13:46:41 dries Exp $
+// $Id: system.install,v 1.240 2008/02/23 08:13:09 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -1703,6 +1703,23 @@ function system_update_6020() {
  */
 function system_update_6021() {
   $ret = array('#finished' => 0);
+  $menus = array(
+    'navigation' => array(
+      'menu_name' => 'navigation',
+      'title' => 'Navigation',
+      'description' => 'The navigation menu is provided by Drupal and is the main interactive menu for any site. It is usually the only menu that contains personalized links for authenticated users, and is often not even visible to anonymous users.',
+    ),
+    'primary-links' => array(
+      'menu_name' => 'primary-links',
+      'title' => 'Primary links',
+      'description' => 'Primary links are often used at the theme layer to show the major sections of a site. A typical representation for primary links would be tabs along the top.',
+    ),
+    'secondary-links' => array(
+      'menu_name' => 'secondary-links',
+      'title' => 'Secondary links',
+      'description' => 'Secondary links are often used for pages like legal notices, contact details, and other secondary navigation items that play a lesser role than primary links',
+    ),
+  );
   // Multi-part update
   if (!isset($_SESSION['system_update_6021'])) {
     db_add_field($ret, 'menu', 'converted', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0, 'size' => 'tiny'));
@@ -1710,17 +1727,6 @@ function system_update_6021() {
     $_SESSION['menu_menu_map'] = array(1 => 'navigation');
     // 0 => FALSE is for new menus, 1 => FALSE is for the navigation.
     $_SESSION['menu_item_map'] = array(0 => FALSE, 1 => FALSE);
-    if ($secondary = variable_get('menu_secondary_menu', 0)) {
-      $_SESSION['menu_menu_map'][$secondary] = 'secondary-links';
-      $_SESSION['menu_item_map'][$secondary] = FALSE;
-    }
-    if ($primary = variable_get('menu_primary_menu', 0)) {
-      $_SESSION['menu_menu_map'][$primary] = 'primary-links';
-      $_SESSION['menu_item_map'][$primary] = FALSE;
-      if ($primary == $secondary) {
-        variable_set('menu_secondary_links_source', 'primary-links');
-      }
-    }
     $table = array(
       'fields' => array(
         'menu_name'   => array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''),
@@ -1730,32 +1736,7 @@ function system_update_6021() {
       'primary key' => array('menu_name'),
     );
     db_create_table($ret, 'menu_custom', $table);
-    $menus = array(
-      'navigation' => array(
-        'menu_name' => 'navigation',
-        'title' => 'Navigation',
-        'description' => 'The navigation menu is provided by Drupal and is the main interactive menu for any site. It is usually the only menu that contains personalized links for authenticated users, and is often not even visible to anonymous users.',
-      ),
-      'primary-links' => array(
-        'menu_name' => 'primary-links',
-        'title' => 'Primary links',
-        'description' => 'Primary links are often used at the theme layer to show the major sections of a site. A typical representation for primary links would be tabs along the top.',
-      ),
-      'secondary-links' => array(
-        'menu_name' => 'secondary-links',
-        'title' => 'Secondary links',
-        'description' => 'Secondary links are often used for pages like legal notices, contact details, and other secondary navigation items that play a lesser role than primary links',
-      ),
-    );
-    // Save user-defined titles.
-    foreach (array($primary, $secondary) as $mid) {
-      if ($item = db_fetch_array(db_query('SELECT * FROM {menu} WHERE mid = %d', $mid))) {
-        $menus[$_SESSION['menu_menu_map'][$mid]]['title']  = $item['title'];
-      }
-    }
-    foreach ($menus as $menu) {
-      db_query("INSERT INTO {menu_custom} (menu_name, title, description) VALUES ('%s', '%s', '%s')", $menu);
-    }
+    db_query("INSERT INTO {menu_custom} (menu_name, title, description) VALUES ('%s', '%s', '%s')", $menus['navigation']);
     $_SESSION['system_update_6021'] = 0;
   }
 
@@ -1845,10 +1826,73 @@ function system_update_6021() {
       // every non-alpanumeric character from the menu name.
       $ret[] = update_sql("DELETE FROM {menu_links} WHERE menu_name IN ('". implode("', '", $_SESSION['menu_bogus_menus']) ."')");
     }
+
+    $menu_primary_menu = variable_get('menu_primary_menu', 0);
+    // Ensure that we wind up with a system menu named 'primary-links'.
+    if (isset($_SESSION['menu_menu_map'][2])) {
+      // The primary links menu that ships with Drupal 5 has mid = 2.  If this
+      // menu hasn't been deleted by the site admin, we use that.
+      $updated_primary_links_menu = 2;
+    }
+    elseif (isset($_SESSION['menu_menu_map'][$menu_primary_menu]) && $menu_primary_menu > 1) {
+      // Otherwise, we use the menu that is currently assigned to the primary
+      // links region of the theme, as long as it exists and isn't the
+      // Navigation menu.
+      $updated_primary_links_menu = $menu_primary_menu;
+    }
+    else {
+      // As a last resort, create 'primary-links' as a new menu.
+      $updated_primary_links_menu = 0;
+      db_query("INSERT INTO {menu_custom} (menu_name, title, description) VALUES ('%s', '%s', '%s')", $menus['primary-links']);
+    }
+
+    if ($updated_primary_links_menu) {
+      // Change the existing menu name to 'primary-links'.
+      $replace = array('%new_name' => 'primary-links', '%desc' => $menus['primary-links']['description'], '%old_name' => $_SESSION['menu_menu_map'][$updated_primary_links_menu]);
+      $ret[] = update_sql(strtr("UPDATE {menu_custom} SET menu_name = '%new_name', description = '%desc' WHERE menu_name = '%old_name'", $replace));
+      $ret[] = update_sql("UPDATE {menu_links} SET menu_name = 'primary-links' WHERE menu_name = '". $_SESSION['menu_menu_map'][$updated_primary_links_menu] ."'");
+      $_SESSION['menu_menu_map'][$updated_primary_links_menu] = 'primary-links';
+    }
+
+    $menu_secondary_menu = variable_get('menu_secondary_menu', 0);
+    // Ensure that we wind up with a system menu named 'secondary-links'.
+    if (isset($_SESSION['menu_menu_map'][$menu_secondary_menu]) && $menu_secondary_menu > 1 && $menu_secondary_menu != $updated_primary_links_menu) {
+      // We use the menu that is currently assigned to the secondary links
+      // region of the theme, as long as (a) it exists, (b) it isn't the
+      // Navigation menu, (c) it isn't the same menu we assigned as the
+      // system 'primary-links' menu above, and (d) it isn't the same menu
+      // assigned to the primary links region of the theme.
+      $updated_secondary_links_menu = $menu_secondary_menu;
+    }
+    else {
+      // Otherwise, create 'secondary-links' as a new menu.
+      $updated_secondary_links_menu = 0;
+      db_query("INSERT INTO {menu_custom} (menu_name, title, description) VALUES ('%s', '%s', '%s')", $menus['secondary-links']);
+    }
+
+    if ($updated_secondary_links_menu) {
+      // Change the existing menu name to 'secondary-links'.
+      $replace = array('%new_name' => 'secondary-links', '%desc' => $menus['secondary-links']['description'], '%old_name' => $_SESSION['menu_menu_map'][$updated_secondary_links_menu]);
+      $ret[] = update_sql(strtr("UPDATE {menu_custom} SET menu_name = '%new_name', description = '%desc' WHERE menu_name = '%old_name'", $replace));
+      $ret[] = update_sql("UPDATE {menu_links} SET menu_name = 'secondary-links' WHERE menu_name = '". $_SESSION['menu_menu_map'][$updated_secondary_links_menu] ."'");
+      $_SESSION['menu_menu_map'][$updated_secondary_links_menu] = 'secondary-links';
+    }
+
     // Update menu OTF preferences.
     $mid = variable_get('menu_parent_items', 0);
-    $menu_name = $mid ? $_SESSION['menu_menu_map'][$mid] : 'navigation';
+    $menu_name = ($mid && isset($_SESSION['menu_menu_map'][$mid])) ? $_SESSION['menu_menu_map'][$mid] : 'navigation';
     variable_set('menu_default_node_menu', $menu_name);
+    variable_del('menu_parent_items');
+
+    // Update the source of the primary and secondary links.
+    $menu_name = ($menu_primary_menu && isset($_SESSION['menu_menu_map'][$menu_primary_menu])) ? $_SESSION['menu_menu_map'][$menu_primary_menu] : '';
+    variable_set('menu_primary_links_source', $menu_name);
+    variable_del('menu_primary_menu');
+
+    $menu_name = ($menu_secondary_menu && isset($_SESSION['menu_menu_map'][$menu_secondary_menu])) ? $_SESSION['menu_menu_map'][$menu_secondary_menu] : '';
+    variable_set('menu_secondary_links_source', $menu_name);
+    variable_del('menu_secondary_menu');
+
     // Skip the navigation menu - it is handled by the user module.
     unset($_SESSION['menu_menu_map'][1]);
     // Update the deltas for all menu module blocks.
@@ -1858,7 +1902,7 @@ function system_update_6021() {
       $ret[] = update_sql("UPDATE {blocks} SET delta = '". $menu_name ."' WHERE module = 'menu' AND delta = '". $mid ."'");
       $ret[] = update_sql("UPDATE {blocks_roles} SET delta = '". $menu_name ."' WHERE module = 'menu' AND delta = '". $mid ."'");
     }
-    $ret[] = array('success' => TRUE, 'query' => 'Relocated '. $_SESSION['system_update_6021'] .'existing items to the new menu system.');
+    $ret[] = array('success' => TRUE, 'query' => 'Relocated '. $_SESSION['system_update_6021'] .' existing items to the new menu system.');
     $ret[] = update_sql("DROP TABLE {menu}");
     unset($_SESSION['system_update_6021'], $_SESSION['system_update_6021_max'], $_SESSION['menu_menu_map'], $_SESSION['menu_item_map'], $_SESSION['menu_bogus_menus']);
     // Create the menu overview links - also calls menu_rebuild(). If menu is

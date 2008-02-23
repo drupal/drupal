@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.admin.inc,v 1.28 2008/02/12 13:43:21 dries Exp $
+// $Id: menu.admin.inc,v 1.29 2008/02/23 08:13:09 dries Exp $
 
 /**
  * @file
@@ -604,21 +604,33 @@ function menu_configure() {
   );
 
   $menu_options = menu_get_menus();
-  $form['menu_default_node_menu'] = array('#type' => 'select',
+  $form['menu_default_node_menu'] = array(
+    '#type' => 'select',
     '#title' => t('Default menu for content'),
     '#default_value' => variable_get('menu_default_node_menu', 'primary-links'),
     '#options' => $menu_options,
     '#description' => t('Choose the menu to be the default in the menu options in the content authoring form.'),
   );
 
-  $secondary_options = array('secondary-links' => $menu_options['secondary-links'],  'primary-links' => $menu_options['primary-links']);
+  $primary = variable_get('menu_primary_links_source', 'primary-links');
+  $primary_options = array_merge($menu_options, array('' => t('No primary links')));
+  $form['menu_primary_links_source'] = array(
+    '#type' => 'select',
+    '#title' => t('Source for the primary links'),
+    '#default_value' => $primary,
+    '#options' => $primary_options,
+    '#tree' => FALSE,
+    '#description' => t('Select what should be displayed as the primary links.'),
+  );
+
+  $secondary_options = array_merge($menu_options, array('' => t('No secondary links')));
   $form["menu_secondary_links_source"] = array(
-    '#type' => 'radios',
+    '#type' => 'select',
     '#title' => t('Source for the secondary links'),
     '#default_value' => variable_get('menu_secondary_links_source', 'secondary-links'),
     '#options' => $secondary_options,
     '#tree' => FALSE,
-    '#description' => t('Select what should be displayed as the secondary links. If %primary is chosen, the children of the active primary menu link (if any) will be shown instead of the links in the %secondary menu.', array('%secondary' => $menu_options['secondary-links'],  '%primary' => $menu_options['primary-links'])),
+    '#description' => t('Select what should be displayed as the secondary links. You can choose the same menu for secondary links as for primary links (currently %primary). If you do this, the children of the active primary menu link will be displayed as secondary links.', array('%primary' => $primary_options[$primary])),
   );
 
   return system_settings_form($form);
