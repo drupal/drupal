@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.620 2008/02/21 19:38:07 dries Exp $
+// $Id: comment.module,v 1.621 2008/02/23 08:02:48 dries Exp $
 
 /**
  * @file
@@ -296,7 +296,7 @@ function comment_block($op = 'list', $delta = 0, $edit = array()) {
         '#title' => t('Number of recent comments'),
         '#default_value' => variable_get('comment_block_count', 10),
         '#options' => drupal_map_assoc(array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 25, 30)),
-        '#description' => t('Number of comments to display in block with recent comments.'),
+        '#description' => t('Number of comments displayed in the <em>Recent comments</em> block.'),
       );
       return $form;
 
