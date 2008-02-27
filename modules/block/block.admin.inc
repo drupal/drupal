@@ -123,8 +123,7 @@ function _block_compare($a, $b) {
     return $status;
   }
   // Sort by region (in the order defined by theme .info file).
-  $place = $regions[$a['region']] - $regions[$b['region']];
-  if ($place) {
+  if ((!empty($a['region']) && !empty($b['region'])) && ($place = ($regions[$a['region']] - $regions[$b['region']]))) {
     return $place;
   }
   // Sort by weight.
