@@ -1,5 +1,8 @@
 // $Id$
 
+Drupal 6.2-dev, xxxx-xx-xx (development version)
+----------------------
+
 Drupal 6.1, 2008-02-27
 ----------------------
 - fixed a variety of small bugs.
