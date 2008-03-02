@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.416 2008/02/20 13:46:42 dries Exp $
+// $Id: taxonomy.module,v 1.417 2008/03/02 05:58:40 dries Exp $
 
 /**
  * @file
@@ -433,7 +433,9 @@ function taxonomy_form_all($free_tags = 0) {
   $vocabularies = taxonomy_get_vocabularies();
   $options = array();
   foreach ($vocabularies as $vid => $vocabulary) {
-    if ($vocabulary->tags && !$free_tags) { continue; }
+    if ($vocabulary->tags && !$free_tags) {
+      continue;
+    }
     $tree = taxonomy_get_tree($vid);
     if ($tree && (count($tree) > 0)) {
       $options[$vocabulary->name] = array();
