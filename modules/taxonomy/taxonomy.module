@@ -433,7 +433,9 @@ function taxonomy_form_all($free_tags = 0) {
   $vocabularies = taxonomy_get_vocabularies();
   $options = array();
   foreach ($vocabularies as $vid => $vocabulary) {
-    if ($vocabulary->tags && !$free_tags) { continue; }
+    if ($vocabulary->tags && !$free_tags) {
+      continue;
+    }
     $tree = taxonomy_get_tree($vid);
     if ($tree && (count($tree) > 0)) {
       $options[$vocabulary->name] = array();
