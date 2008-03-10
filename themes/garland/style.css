@@ -1,8 +1,8 @@
-/* $Id: style.css,v 1.38 2008/01/18 16:14:56 goba Exp $ */
+/* $Id: style.css,v 1.39 2008/03/10 18:23:07 dries Exp $ */
 
 /**
- * Garland, for Drupal 5.0
- * Stefan Nagtegaal, iStyledThis [dot] nl
+ * Garland, for Drupal 7.0
+ * Stefan Nagtegaal, robuustdesign [dot] nl
  * Steven Wittens, acko [dot] net`
  *
  * If you use a customized color scheme, you must regenerate it after
@@ -16,17 +16,17 @@ body {
   margin: 0;
   padding: 0;
   background: #edf5fa;
-  font: 12px/170% Verdana, sans-serif;
+  font: 76%/170% Verdana, sans-serif;
   color: #494949;
 }
 
 input {
-  font: 12px/100% Verdana, sans-serif;
+  font: 1em/100% Verdana, sans-serif;
   color: #494949;
 }
 
 textarea, select {
-  font: 12px/160% Verdana, sans-serif;
+  font: 1em/160% Verdana, sans-serif;
   color: #494949;
 }
 
@@ -124,7 +124,7 @@ ul li, ul.menu li, .item-list ul li, li.leaf {
   padding: 0 0 .2em 1.5em;
   list-style-type: none;
   list-style-image: none;
-  background: transparent url(images/menu-leaf.gif) no-repeat 1px .35em; /* LTR */
+  background: transparent url(images/menu-leaf.gif) no-repeat 1px .5em; /* LTR */
 }
 
 ol li {
@@ -137,7 +137,7 @@ ul li.expanded {
 }
 
 ul li.collapsed {
-  background: transparent url(images/menu-collapsed.gif) no-repeat 0px .35em; /* LTR */
+  background: transparent url(images/menu-collapsed.gif) no-repeat 0px .4em; /* LTR */
 }
 
 ul li.leaf a, ul li.expanded a, ul li.collapsed a {
@@ -265,13 +265,23 @@ span.submitted, .description {
   color: #898989;
 }
 
-.messages, .preview {
+.preview {
   margin: .75em 0 .75em;
   padding: .5em 1em;
 }
 
+.messages {
+  margin: .75em 0 .75em;
+  padding: .1em .5em .15em;
+}
+
 .messages ul {
   margin: 0;
+}
+
+.messages li {
+  margin: 0;
+  padding: 0 0 0 1.3em; /* LTR */
 }
 
 .form-checkboxes, .form-radios, .form-checkboxes .form-item, .form-radios .form-item {

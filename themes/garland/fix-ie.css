@@ -1,16 +1,14 @@
-/* $Id: fix-ie.css,v 1.8 2007/11/26 19:46:52 goba Exp $ */
+/* $Id: fix-ie.css,v 1.9 2008/03/10 18:23:07 dries Exp $ */
 
 /**
- * Garland, for Drupal 5.0
- * Stefan Nagtegaal, iStyledThis [dot] nl
+ * Garland, for Drupal 7.0
+ * Stefan Nagtegaal, robuustdesign [dot] nl
  * Steven Wittens, acko [dot] net
  */
 
 body {
   /* Center layout */
   text-align: center;
-  /* Allow text resizing */
-  font-size: 80%;
 }
 
 #header-region, #wrapper #container {
