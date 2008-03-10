@@ -12,6 +12,8 @@
 body, input, textarea, select {
   color: #000;
   background: none;
+  font-family: Verdana, sans-serif;
+  font-size: 11pt;
 }
 
 ul.primary-links, ul.secondary-links,
@@ -19,7 +21,7 @@ ul.primary-links, ul.secondary-links,
   display: none;
 }
 
-body.sidebars, body.sideber-left, body.sidebar-right, body {
+body.sidebars, body.sidebar-left, body.sidebar-right, body {
   width: 640px;
 }
 

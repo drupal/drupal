@@ -1,10 +1,14 @@
 /* $Id$ */
 
+/**
+ * Garland, for Drupal 7.0
+ * Stefan Nagtegaal, robuustdesign [dot] nl
+ * Steven Wittens, acko [dot] net
+ */
+
 body {
   /* Center layout */
   text-align: center;
-  /* Allow text resizing */
-  font-size: 80%;
 }
 
 #squeeze {
