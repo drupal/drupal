@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.20 2008/02/06 19:38:27 dries Exp $
+// $Id: node.admin.inc,v 1.21 2008/03/11 08:17:56 dries Exp $
 
 /**
  * @file
@@ -10,8 +10,9 @@
  * Menu callback; presents general node configuration options.
  */
 function node_configure() {
-  // Only show rebuild button if there is 0 or more than 2 rows in node_access table,
-  // or if there are modules that implement node_grant.
+  // Only show rebuild button if there are either 0, or 2 or more, rows
+  // in the {node_access} table, or if there are modules that
+  // implement hook_node_grants().
   if (db_result(db_query('SELECT COUNT(*) FROM {node_access}')) != 1 || count(module_implements('node_grants')) > 0) {
     $status = '<p>'. t('If the site is experiencing problems with permissions to content, you may have to rebuild the permissions cache. Possible causes for permission problems are disabling modules or configuration changes to permissions. Rebuilding will remove all privileges to posts, and replace them with permissions based on the current modules and settings.') .'</p>';
     $status .= '<p>'. t('Rebuilding may take some time if there is a lot of content or complex permission settings. After rebuilding has completed posts will automatically use the new permissions.') .'</p>';
