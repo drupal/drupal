@@ -1,10 +1,13 @@
-// $Id: CHANGELOG.txt,v 1.256 2008/02/20 13:46:36 dries Exp $
+// $Id: CHANGELOG.txt,v 1.257 2008/03/11 08:13:14 dries Exp $
 
 Drupal 7.0, xxxx-xx-xx (development version)
 ----------------------
 - Usability:
     * Implemented drag-and-drop positioning for input format listings.
     * Provide descriptions for permissions on the administration page.
+- Removed ping module:
+    * This module has been removed from the core download. Contributed
+      alternatives are available.
 
 Drupal 6.0, 2008-02-13
 ----------------------

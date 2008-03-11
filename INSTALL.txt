@@ -1,4 +1,4 @@
-// $Id: INSTALL.txt,v 1.65 2008/02/17 19:29:06 dries Exp $
+// $Id: INSTALL.txt,v 1.66 2008/03/11 08:13:14 dries Exp $
 
 CONTENTS OF THIS FILE
 ---------------------
@@ -206,8 +206,8 @@ INSTALLATION
    Many Drupal modules have periodic tasks that must be triggered by a cron
    maintenance task, including search module (to build and update the index
    used for keyword searching), aggregator module (to retrieve feeds from other
-   sites), ping module (to notify other sites about new or updated content), and
-   system module (to perform routine maintenance and pruning on system tables).
+   sites), and system module (to perform routine maintenance and pruning on
+   system tables).
    To activate these tasks, call the cron page by visiting
    http://www.example.com/cron.php, which, in turn, executes tasks on behalf
    of installed modules.
