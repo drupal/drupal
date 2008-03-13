@@ -1,14 +1,5 @@
 /* $Id$ */
 
-/**
- * Garland, for Drupal 5.0
- * Stefan Nagtegaal, iStyledThis [dot] nl
- * Steven Wittens, acko [dot] net`
- *
- * If you use a customized color scheme, you must regenerate it after
- * modifying this file.
- */
-
 body, input, textarea, select {
   color: #000;
   background: none;

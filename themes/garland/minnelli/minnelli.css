@@ -1,11 +1,5 @@
 /* $Id$ */
 
-/**
- * Minnelli, for Drupal 7.0
- * Stefan Nagtegaal, robuustdesign [dot] nl
- * Steven Wittens, acko [dot] net
- */
-
 body #wrapper #container {
   width: 560px;
 }

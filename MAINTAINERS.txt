@@ -84,5 +84,9 @@ TRANSLATIONS COORDINATOR
 M: Gerhard Killesreiter <gerhard@killesreiter.de>
 S: maintained
 
+GARLAND THEME
+M: Stefan Nagtegaal <stefan@robuustdesign.nl>
+S: maintained
+
 THE REST:
 M: Dries <dries@drupal.org>
