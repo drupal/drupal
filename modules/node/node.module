@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.950 2008/02/20 13:46:40 dries Exp $
+// $Id: node.module,v 1.951 2008/03/13 21:26:08 dries Exp $
 
 /**
  * @file
@@ -1734,9 +1734,9 @@ function node_page_default() {
     $output .= theme('pager', NULL, variable_get('default_nodes_main', 10));
   }
   else {
-    $default_message = t('<h1 class="title">Welcome to your new Drupal website!</h1><p>Please follow these steps to set up and start using your website:</p>');
+    $default_message = '<h1 class="title">'. t('Welcome to your new Drupal website!') .'</h1>';
+    $default_message .= '<p>'. t('Please follow these steps to set up and start using your website:') .'</p>';
     $default_message .= '<ol>';
-
     $default_message .= '<li>'. t('<strong>Configure your website</strong> Once logged in, visit the <a href="@admin">administration section</a>, where you can <a href="@config">customize and configure</a> all aspects of your website.', array('@admin' => url('admin'), '@config' => url('admin/settings'))) .'</li>';
     $default_message .= '<li>'. t('<strong>Enable additional functionality</strong> Next, visit the <a href="@modules">module list</a> and enable features which suit your specific needs. You can find additional modules in the <a href="@download_modules">Drupal modules download section</a>.', array('@modules' => url('admin/build/modules'), '@download_modules' => 'http://drupal.org/project/modules')) .'</li>';
     $default_message .= '<li>'. t('<strong>Customize your website design</strong> To change the "look and feel" of your website, visit the <a href="@themes">themes section</a>. You may choose from one of the included themes or download additional themes from the <a href="@download_themes">Drupal themes download section</a>.', array('@themes' => url('admin/build/themes'), '@download_themes' => 'http://drupal.org/project/themes')) .'</li>';

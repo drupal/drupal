@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.139 2008/02/20 13:46:40 dries Exp $
+// $Id: path.module,v 1.140 2008/03/13 21:26:09 dries Exp $
 
 /**
  * @file
@@ -13,14 +13,11 @@ function path_help($path, $arg) {
   switch ($path) {
     case 'admin/help#path':
       $output = '<p>'. t('The path module allows you to specify aliases for Drupal URLs. Such aliases improve readability of URLs for your users and may help internet search engines to index your content more effectively. More than one alias may be created for a given page.') .'</p>';
-      $output .= t('<p>Some examples of URL aliases are:</p>
-<ul>
-<li>user/login =&gt; login</li>
-<li>image/tid/16 =&gt; store</li>
-<li>taxonomy/term/7+19+20+21 =&gt; store/products/whirlygigs</li>
-<li>node/3 =&gt; contact</li>
-</ul>
-');
+      $output .= '<p>'. t('Some examples of URL aliases are:') .'</p>';
+      $output .= '<ul><li>'. t('%alias for the path %path', array('%alias' => 'login', '%path' => 'user/login')) .'</li>';
+      $output .= '<li>'. t('%alias for the path %path', array('%alias' => 'store', '%path' => 'image/tid/16')) .'</li>';
+      $output .= '<li>'. t('%alias for the path %path', array('%alias' => 'store/products/whirlygigs', '%path' => 'taxonomy/term/7+19+20+21')) .'</li>';
+      $output .= '<li>'. t('%alias for the path %path', array('%alias' => 'contact', '%path' => 'node/3')) .'</li></ul>';
       $output .= '<p>'. t('The path module enables appropriately permissioned users to specify an optional alias in all node input and editing forms, and provides an interface to view and edit all URL aliases. The two permissions related to URL aliasing are <em>administer url aliases</em> and <em>create url aliases</em>. ') .'</p>';
       $output .= '<p>'. t('This module also provides user-defined mass URL aliasing capabilities, which is useful if you wish to uniformly use URLs different from the default. For example, you may want to have your URLs presented in a different language. Access to the Drupal source code on the web server is required to set up mass URL aliasing. ') .'</p>';
       $output .= '<p>'. t('For more information, see the online handbook entry for <a href="@path">Path module</a>.', array('@path' => 'http://drupal.org/handbook/modules/path/')) .'</p>';
