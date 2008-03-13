@@ -1,13 +1,4 @@
-/* $Id: print.css,v 1.4 2008/03/10 18:23:07 dries Exp $ */
-
-/**
- * Garland, for Drupal 5.0
- * Stefan Nagtegaal, iStyledThis [dot] nl
- * Steven Wittens, acko [dot] net`
- *
- * If you use a customized color scheme, you must regenerate it after
- * modifying this file.
- */
+/* $Id: print.css,v 1.5 2008/03/13 20:02:18 dries Exp $ */
 
 body, input, textarea, select {
   color: #000;
