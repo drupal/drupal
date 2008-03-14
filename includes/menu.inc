@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.264 2008/02/23 08:13:09 dries Exp $
+// $Id: menu.inc,v 1.265 2008/03/14 08:51:37 dries Exp $
 
 /**
  * @file
@@ -773,16 +773,22 @@ function menu_tree_all_data($menu_name = 'navigation', $item = NULL) {
 
   // Use $mlid as a flag for whether the data being loaded is for the whole tree.
   $mlid = isset($item['mlid']) ? $item['mlid'] : 0;
-  // Generate the cache ID.
-  $cid = 'links:'. $menu_name .':all:'. $mlid;
+  // Generate a cache ID (cid) specific for this $menu_name and $item.
+  $cid = 'links:'. $menu_name .':all-cid:'. $mlid;
 
   if (!isset($tree[$cid])) {
     // If the static variable doesn't have the data, check {cache_menu}.
     $cache = cache_get($cid, 'cache_menu');
     if ($cache && isset($cache->data)) {
-      $data = $cache->data;
+      // If the cache entry exists, it will just be the cid for the actual data.
+      // This avoids duplication of large amounts of data.
+      $cache = cache_get($cache->data, 'cache_menu');
+      if ($cache && isset($cache->data)) {
+        $data = $cache->data;
+      }
     }
-    else {
+    // If the tree data was not in the cache, $data will be NULL.
+    if (!isset($data)) {
       // Build and run the query, and build the tree.
       if ($mlid) {
         // The tree is for a single item, so we need to match the values in its
@@ -814,8 +820,13 @@ function menu_tree_all_data($menu_name = 'navigation', $item = NULL) {
         ORDER BY p1 ASC, p2 ASC, p3 ASC, p4 ASC, p5 ASC, p6 ASC, p7 ASC, p8 ASC, p9 ASC", $args), $parents);
       $data['node_links'] = array();
       menu_tree_collect_node_links($data['tree'], $data['node_links']);
-      // Cache the data.
-      cache_set($cid, $data, 'cache_menu');
+      // Cache the data, if it is not already in the cache.
+      $tree_cid = _menu_tree_cid($menu_name, $data);
+      if (!cache_get($tree_cid, 'cache_menu')) {
+        cache_set($tree_cid, $data, 'cache_menu');
+      }
+      // Cache the cid of the (shared) data using the menu and item-specific cid.
+      cache_set($cid, $tree_cid, 'cache_menu');
     }
     // Check access for the current user to each item in the tree.
     menu_tree_check_access($data['tree'], $data['node_links']);
@@ -845,16 +856,22 @@ function menu_tree_page_data($menu_name = 'navigation') {
 
   // Load the menu item corresponding to the current page.
   if ($item = menu_get_item()) {
-    // Generate the cache ID.
-    $cid = 'links:'. $menu_name .':page:'. $item['href'] .':'. (int)$item['access'];
+    // Generate a cache ID (cid) specific for this page.
+    $cid = 'links:'. $menu_name .':page-cid:'. $item['href'] .':'. (int)$item['access'];
 
     if (!isset($tree[$cid])) {
       // If the static variable doesn't have the data, check {cache_menu}.
       $cache = cache_get($cid, 'cache_menu');
       if ($cache && isset($cache->data)) {
-        $data = $cache->data;
+        // If the cache entry exists, it will just be the cid for the actual data.
+        // This avoids duplication of large amounts of data.
+        $cache = cache_get($cache->data, 'cache_menu');
+        if ($cache && isset($cache->data)) {
+          $data = $cache->data;
+        }
       }
-      else {
+      // If the tree data was not in the cache, $data will be NULL.
+      if (!isset($data)) {
         // Build and run the query, and build the tree.
         if ($item['access']) {
           // Check whether a menu link exists that corresponds to the current path.
@@ -910,8 +927,13 @@ function menu_tree_page_data($menu_name = 'navigation') {
           ORDER BY p1 ASC, p2 ASC, p3 ASC, p4 ASC, p5 ASC, p6 ASC, p7 ASC, p8 ASC, p9 ASC", $args), $parents);
         $data['node_links'] = array();
         menu_tree_collect_node_links($data['tree'], $data['node_links']);
-        // Cache the data.
-        cache_set($cid, $data, 'cache_menu');
+        // Cache the data, if it is not already in the cache.
+        $tree_cid = _menu_tree_cid($menu_name, $data);
+        if (!cache_get($tree_cid, 'cache_menu')) {
+          cache_set($tree_cid, $data, 'cache_menu');
+        }
+        // Cache the cid of the (shared) data using the page-specific cid.
+        cache_set($cid, $tree_cid, 'cache_menu');
       }
       // Check access for the current user to each item in the tree.
       menu_tree_check_access($data['tree'], $data['node_links']);
@@ -921,6 +943,13 @@ function menu_tree_page_data($menu_name = 'navigation') {
   }
 
   return array();
+}
+
+/**
+ * Helper function - compute the real cache ID for menu tree data.
+ */
+function _menu_tree_cid($menu_name, $data) {
+  return 'links:'. $menu_name .':tree-data:'. md5(serialize($data));
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.457 2008/02/20 13:46:39 dries Exp $
+// $Id: book.module,v 1.458 2008/03/14 08:51:37 dries Exp $
 
 /**
  * @file
@@ -1049,14 +1049,21 @@ function book_link_load($mlid) {
 function book_menu_subtree_data($item) {
   static $tree = array();
 
-  $cid = 'links:'. $item['menu_name'] .':subtree:'. $item['mlid'];
+  // Generate a cache ID (cid) specific for this $menu_name and $item.
+  $cid = 'links:'. $item['menu_name'] .':subtree-cid:'. $item['mlid'];
 
   if (!isset($tree[$cid])) {
     $cache = cache_get($cid, 'cache_menu');
     if ($cache && isset($cache->data)) {
-      $data = $cache->data;
+      // If the cache entry exists, it will just be the cid for the actual data.
+      // This avoids duplication of large amounts of data.
+      $cache = cache_get($cache->data, 'cache_menu');
+      if ($cache && isset($cache->data)) {
+        $data = $cache->data;
+      }
     }
-    else {
+    // If the subtree data was not in the cache, $data will be NULL.
+    if (!isset($data)) {
       $match = array("menu_name = '%s'");
       $args = array($item['menu_name']);
       $i = 1;
@@ -1075,8 +1082,14 @@ function book_menu_subtree_data($item) {
       $data['tree'] = menu_tree_data(db_query($sql, $args), array(), $item['depth']);
       $data['node_links'] = array();
       menu_tree_collect_node_links($data['tree'], $data['node_links']);
-      // Cache the data.
-      cache_set($cid, $data, 'cache_menu');
+      // Compute the real cid for book subtree data.
+      $tree_cid = 'links:'. $menu_name .':subtree-data:'. md5(serialize($data));
+      // Cache the data, if it is not already in the cache.
+      if (!cache_get($tree_cid, 'cache_menu')) {
+        cache_set($tree_cid, $data, 'cache_menu');
+      }
+      // Cache the cid of the (shared) data using the menu and item-specific cid.
+      cache_set($cid, $tree_cid, 'cache_menu');
     }
     // Check access for the current user to each item in the tree.
     menu_tree_check_access($data['tree'], $data['node_links']);
