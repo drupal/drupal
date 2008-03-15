@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.install,v 1.12 2007/12/18 12:59:22 dries Exp $
+// $Id: profile.install,v 1.13 2008/03/15 12:31:29 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -108,8 +108,12 @@ function profile_schema() {
         'description' => t('List of options to be used in a list selection field.'),
       ),
     ),
-    'indexes' => array('category' => array('category')),
-    'unique keys' => array('name' => array('name')),
+    'indexes' => array(
+      'category' => array('category'),
+    ),
+    'unique keys' => array(
+      'name' => array('name'),
+    ),
     'primary key' => array('fid'),
   );
 
@@ -144,4 +148,3 @@ function profile_schema() {
 
   return $schema;
 }
-

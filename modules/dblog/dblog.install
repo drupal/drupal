@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.install,v 1.6 2007/11/04 14:33:06 goba Exp $
+// $Id: dblog.install,v 1.7 2008/03/15 12:31:28 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -96,9 +96,10 @@ function dblog_schema() {
       ),
     ),
     'primary key' => array('wid'),
-    'indexes' => array('type' => array('type')),
+    'indexes' => array(
+      'type' => array('type'),
+    ),
   );
 
   return $schema;
 }
-

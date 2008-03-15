@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.install,v 1.16 2007/12/31 16:58:34 goba Exp $
+// $Id: forum.install,v 1.17 2008/03/15 12:31:28 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -92,7 +92,7 @@ function forum_schema() {
     ),
     'indexes' => array(
       'nid' => array('nid'),
-      'tid' => array('tid')
+      'tid' => array('tid'),
     ),
     'primary key' => array('vid'),
   );

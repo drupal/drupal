@@ -1,5 +1,5 @@
 <?php
-// $Id: search.install,v 1.14 2007/12/28 10:53:27 dries Exp $
+// $Id: search.install,v 1.15 2008/03/15 12:31:29 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -55,7 +55,9 @@ function search_schema() {
         'description' => t('Set to force node reindexing.'),
       ),
     ),
-    'unique keys' => array('sid_type' => array('sid', 'type')),
+    'unique keys' => array(
+      'sid_type' => array('sid', 'type'),
+    ),
   );
 
   $schema['search_index'] = array(
@@ -89,9 +91,11 @@ function search_schema() {
     ),
     'indexes' => array(
       'sid_type' => array('sid', 'type'),
-      'word' => array('word')
+      'word' => array('word'),
     ),
-    'unique keys' => array('word_sid_type' => array('word', 'sid', 'type')),
+    'unique keys' => array(
+      'word_sid_type' => array('word', 'sid', 'type'),
+    ),
   );
 
   $schema['search_total'] = array(
@@ -145,9 +149,10 @@ function search_schema() {
       ),
     ),
     'primary key' => array('sid', 'type', 'nid'),
-    'indexes' => array('nid' => array('nid')),
+    'indexes' => array(
+      'nid' => array('nid'),
+    ),
   );
 
   return $schema;
 }
-

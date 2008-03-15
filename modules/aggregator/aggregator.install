@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.install,v 1.14 2007/12/18 12:59:20 dries Exp $
+// $Id: aggregator.install,v 1.15 2008/03/15 12:31:28 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -56,7 +56,9 @@ function aggregator_schema() {
       )
     ),
     'primary key' => array('cid'),
-    'unique keys' => array('title' => array('title')),
+    'unique keys' => array(
+      'title' => array('title'),
+    ),
   );
 
   $schema['aggregator_category_feed'] = array(
@@ -76,7 +78,9 @@ function aggregator_schema() {
       )
     ),
     'primary key' => array('cid', 'fid'),
-    'indexes' => array('fid' => array('fid')),
+    'indexes' => array(
+      'fid' => array('fid'),
+    ),
   );
 
   $schema['aggregator_category_item'] = array(
@@ -96,7 +100,9 @@ function aggregator_schema() {
       )
     ),
     'primary key' => array('cid', 'iid'),
-    'indexes' => array('iid' => array('iid')),
+    'indexes' => array(
+      'iid' => array('iid'),
+    ),
   );
 
   $schema['aggregator_feed'] = array(
@@ -234,7 +240,9 @@ function aggregator_schema() {
       )
     ),
     'primary key' => array('iid'),
-    'indexes' => array('fid' => array('fid')),
+    'indexes' => array(
+      'fid' => array('fid'),
+    ),
   );
 
   return $schema;

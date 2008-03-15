@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.install,v 1.6 2008/02/19 14:07:21 dries Exp $
+// $Id: filter.install,v 1.7 2008/03/15 12:31:28 dries Exp $
 
 /**
  * Implementation of hook_schema().
@@ -87,7 +87,9 @@ function filter_schema() {
       )
     ),
     'primary key' => array('format'),
-    'unique keys' => array('name' => array('name')),
+    'unique keys' => array(
+      'name' => array('name'),
+    ),
   );
 
   $schema['cache_filter'] = drupal_get_schema_unprocessed('system', 'cache');

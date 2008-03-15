@@ -1,5 +1,5 @@
 <?php
-// $Id: block.install,v 1.8 2007/12/18 12:59:20 dries Exp $
+// $Id: block.install,v 1.9 2008/03/15 12:31:28 dries Exp $
 
 /**
  * Implementation of hook_schema().
@@ -114,7 +114,7 @@ function block_schema() {
         'not null' => TRUE,
         'description' => t("The block's origin module, from {blocks}.module."),
       ),
-      'delta'  => array(
+      'delta' => array(
         'type' => 'varchar',
         'length' => 32,
         'not null' => TRUE,
@@ -127,11 +127,7 @@ function block_schema() {
         'description' => t("The user's role ID from {users_roles}.rid."),
       ),
     ),
-    'primary key' => array(
-      'module',
-      'delta',
-      'rid'
-    ),
+    'primary key' => array('module', 'delta', 'rid'),
     'indexes' => array(
       'rid' => array('rid'),
     ),
@@ -142,7 +138,7 @@ function block_schema() {
     'fields' => array(
       'bid' => array(
         'type' => 'serial',
-  'unsigned' => TRUE,
+        'unsigned' => TRUE,
         'not null' => TRUE,
         'description' => t("The block's {blocks}.bid."),
       ),
@@ -167,7 +163,9 @@ function block_schema() {
         'description' => t("Block body's {filter_formats}.format; for example, 1 = Filtered HTML."),
       )
     ),
-    'unique keys' => array('info' => array('info')),
+    'unique keys' => array(
+      'info' => array('info'),
+    ),
     'primary key' => array('bid'),
   );
 

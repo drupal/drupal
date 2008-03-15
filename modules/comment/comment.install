@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.install,v 1.19 2008/01/16 21:45:30 goba Exp $
+// $Id: comment.install,v 1.20 2008/03/15 12:31:28 dries Exp $
 
 /**
  * Implementation of hook_enable().
@@ -165,9 +165,10 @@ function comment_schema() {
       )
     ),
     'indexes' => array(
-      'pid'    => array('pid'),
-      'nid'    => array('nid'),
-      'status' => array('status'), // This index is probably unused
+      'pid' => array('pid'),
+      'nid' => array('nid'),
+      // This index is probably unused.
+      'status' => array('status'),
     ),
     'primary key' => array('cid'),
   );
@@ -210,10 +211,9 @@ function comment_schema() {
     ),
     'primary key' => array('nid'),
     'indexes' => array(
-      'node_comment_timestamp' => array('last_comment_timestamp')
+      'node_comment_timestamp' => array('last_comment_timestamp'),
     ),
   );
 
   return $schema;
 }
-
