@@ -108,8 +108,12 @@ function profile_schema() {
         'description' => t('List of options to be used in a list selection field.'),
       ),
     ),
-    'indexes' => array('category' => array('category')),
-    'unique keys' => array('name' => array('name')),
+    'indexes' => array(
+      'category' => array('category'),
+    ),
+    'unique keys' => array(
+      'name' => array('name'),
+    ),
     'primary key' => array('fid'),
   );
 
@@ -144,4 +148,3 @@ function profile_schema() {
 
   return $schema;
 }
-

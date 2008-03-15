@@ -68,7 +68,9 @@ function user_schema() {
         'description' => t('Module which is controlling the authentication.'),
       ),
     ),
-    'unique keys' => array('authname' => array('authname')),
+    'unique keys' => array(
+      'authname' => array('authname'),
+    ),
     'primary key' => array('aid'),
   );
 
@@ -102,7 +104,9 @@ function user_schema() {
       ),
     ),
     'primary key' => array('pid'),
-    'indexes' => array('rid' => array('rid')),
+    'indexes' => array(
+      'rid' => array('rid'),
+    ),
   );
 
   $schema['role'] = array(
@@ -122,7 +126,9 @@ function user_schema() {
         'description' => t('Unique role name.'),
       ),
     ),
-    'unique keys' => array('name' => array('name')),
+    'unique keys' => array(
+      'name' => array('name'),
+    ),
     'primary key' => array('rid'),
   );
 

@@ -92,7 +92,7 @@ function forum_schema() {
     ),
     'indexes' => array(
       'nid' => array('nid'),
-      'tid' => array('tid')
+      'tid' => array('tid'),
     ),
     'primary key' => array('vid'),
   );

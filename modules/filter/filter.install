@@ -87,7 +87,9 @@ function filter_schema() {
       )
     ),
     'primary key' => array('format'),
-    'unique keys' => array('name' => array('name')),
+    'unique keys' => array(
+      'name' => array('name'),
+    ),
   );
 
   $schema['cache_filter'] = drupal_get_schema_unprocessed('system', 'cache');

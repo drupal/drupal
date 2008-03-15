@@ -96,9 +96,10 @@ function dblog_schema() {
       ),
     ),
     'primary key' => array('wid'),
-    'indexes' => array('type' => array('type')),
+    'indexes' => array(
+      'type' => array('type'),
+    ),
   );
 
   return $schema;
 }
-
