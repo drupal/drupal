@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.267 2008/02/12 13:52:32 dries Exp $
+// $Id: form.inc,v 1.268 2008/03/15 11:02:47 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -664,10 +664,11 @@ function _form_validate($elements, &$form_state, $form_id = NULL) {
   // Validate the current input.
   if (!isset($elements['#validated']) || !$elements['#validated']) {
     if (isset($elements['#needs_validation'])) {
-      // We only check for trimmed string length being zero. 0 might be
-      // a possible value with some field types, such as radio buttons, so
-      // empty() is not usable here.
-      if ($elements['#required'] && strlen(trim($elements['#value'])) == 0) {
+      // Make sure a value is passed when the field is required.
+      // A simple call to empty() will not cut it here as some fields, like
+      // checkboxes, can return a valid value of '0'. Instead, check the
+      // length if it's a string, and the item count if it's an array.
+      if ($elements['#required'] && (!count($elements['#value']) || (is_string($elements['#value']) && strlen(trim($elements['#value'])) == 0))) {
         form_error($elements, $t('!name field is required.', array('!name' => $elements['#title'])));
       }
 
