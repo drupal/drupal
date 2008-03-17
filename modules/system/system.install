@@ -170,11 +170,14 @@ function system_requirements($phase) {
       }
     }
 
+    $description .= ' '. $t('You can <a href="@cron">run cron manually</a>.', array('@cron' => url('admin/reports/status/run-cron')));
+    $description .= '<br />'. $t('To run cron from outside the site, go to <a href="!cron">!cron</a>', array('!cron' => url('cron.php', array('absolute' => true, 'query' => 'cron_key='. variable_get('cron_key', 'drupal')))));
+
     $requirements['cron'] = array(
       'title' => $t('Cron maintenance tasks'),
       'severity' => $severity,
       'value' => $summary,
-      'description' => $description .' '. $t('You can <a href="@cron">run cron manually</a>.', array('@cron' => url('admin/reports/status/run-cron'))),
+      'description' => $description
     );
   }
 
@@ -404,6 +407,10 @@ function system_install() {
   db_query("INSERT INTO {variable} (name, value) VALUES ('%s','%s')", 'filter_html_1', 'i:1;');
 
   db_query("INSERT INTO {variable} (name, value) VALUES ('%s', '%s')", 'node_options_forum', 'a:1:{i:0;s:6:"status";}');
+
+  $cron_key = md5(time());
+
+  db_query("INSERT INTO {variable} (name, value) VALUES ('%s', '%s')", 'cron_key', serialize($cron_key));
 }
 
 /**

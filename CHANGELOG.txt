@@ -2,6 +2,8 @@
 
 Drupal 7.0, xxxx-xx-xx (development version)
 ----------------------
+- Security:
+    * Protected cron.php -- cron will only run if the proper key is provided.
 - Usability:
     * Implemented drag-and-drop positioning for input format listings.
     * Provide descriptions for permissions on the administration page.

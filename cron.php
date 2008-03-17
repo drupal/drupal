@@ -8,4 +8,6 @@
 
 include_once './includes/bootstrap.inc';
 drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
-drupal_cron_run();
+if (isset($_GET['cron_key']) && variable_get('cron_key', 'drupal') == $_GET['cron_key']) {
+  drupal_cron_run();
+}
