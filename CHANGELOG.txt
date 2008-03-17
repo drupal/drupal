@@ -1,7 +1,9 @@
-// $Id: CHANGELOG.txt,v 1.257 2008/03/11 08:13:14 dries Exp $
+// $Id: CHANGELOG.txt,v 1.258 2008/03/17 16:53:58 dries Exp $
 
 Drupal 7.0, xxxx-xx-xx (development version)
 ----------------------
+- Security:
+    * Protected cron.php -- cron will only run if the proper key is provided.
 - Usability:
     * Implemented drag-and-drop positioning for input format listings.
     * Provide descriptions for permissions on the administration page.

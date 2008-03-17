@@ -1,4 +1,4 @@
-// $Id: INSTALL.txt,v 1.66 2008/03/11 08:13:14 dries Exp $
+// $Id: INSTALL.txt,v 1.67 2008/03/17 16:53:58 dries Exp $
 
 CONTENTS OF THIS FILE
 ---------------------
@@ -207,20 +207,30 @@ INSTALLATION
    maintenance task, including search module (to build and update the index
    used for keyword searching), aggregator module (to retrieve feeds from other
    sites), and system module (to perform routine maintenance and pruning on
-   system tables).
-   To activate these tasks, call the cron page by visiting
-   http://www.example.com/cron.php, which, in turn, executes tasks on behalf
-   of installed modules.
+   system tables). To activate these tasks, visit the page "cron.php", which
+   executes maintenance tasks on behalf of installed modules. The URL of the
+   cron.php page requires a "cron key" to protect against unauthorized access.
+   Each cron key is automatically generated during installation and is specific
+   to your site. The full URL of the page, with cron key, is available in the
+   "Cron maintenance tasks" section of the "Status report page" at:
 
-   Most systems support the crontab utility for scheduling tasks like this. The
-   following example crontab line will activate the cron tasks automatically on
-   the hour:
+          Administer > Reports > Status report
 
-   0   *   *   *   *   wget -O - -q -t 1 http://www.example.com/cron.php
+   Most systems support using a crontab utility for automatically executing
+   tasks like visiting the cron.php page. The following example crontab line
+   uses wget to automatically visit the cron.php page each hour, on the hour:
+
+   0   *   *   *   *   wget -O - -q -t 1 http://www.example.com/cron.php?cron_key=RANDOMTEXT
+
+   Replace the text "http://www.example.com/cron.php?cron_key=RANDOMTEXT" in the
+   example with the full URL displayed under "Cron maintenance tasks" on the
+   "Status report" page.
 
    More information about cron maintenance tasks are available in the help pages
-   and in Drupal's online handbook at http://drupal.org/cron. Example scripts can
-   be found in the scripts/ directory.
+   and in Drupal's online handbook at http://drupal.org/cron. Example cron scripts
+   can be found in the scripts/ directory. (Note that these scripts must be
+   customized similar to the above example, to add your site-specific cron key
+   and domain name.)
 
 DRUPAL ADMINISTRATION
 ---------------------
