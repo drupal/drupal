@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.759 2008/02/20 13:38:32 dries Exp $
+// $Id: common.inc,v 1.760 2008/03/17 17:01:05 dries Exp $
 
 /**
  * @file
@@ -2255,38 +2255,8 @@ function drupal_clear_js_cache() {
  * We use HTML-safe strings, i.e. with <, > and & escaped.
  */
 function drupal_to_js($var) {
-  switch (gettype($var)) {
-    case 'boolean':
-      return $var ? 'true' : 'false'; // Lowercase necessary!
-    case 'integer':
-    case 'double':
-      return $var;
-    case 'resource':
-    case 'string':
-      return '"'. str_replace(array("\r", "\n", "<", ">", "&"),
-                              array('\r', '\n', '\x3c', '\x3e', '\x26'),
-                              addslashes($var)) .'"';
-    case 'array':
-      // Arrays in JSON can't be associative. If the array is empty or if it
-      // has sequential whole number keys starting with 0, it's not associative
-      // so we can go ahead and convert it as an array.
-      if (empty ($var) || array_keys($var) === range(0, sizeof($var) - 1)) {
-        $output = array();
-        foreach ($var as $v) {
-          $output[] = drupal_to_js($v);
-        }
-        return '[ '. implode(', ', $output) .' ]';
-      }
-      // Otherwise, fall through to convert the array as an object.
-    case 'object':
-      $output = array();
-      foreach ($var as $k => $v) {
-        $output[] = drupal_to_js(strval($k)) .': '. drupal_to_js($v);
-      }
-      return '{ '. implode(', ', $output) .' }';
-    default:
-      return 'null';
-  }
+  // json_encode() does not escape <, > and &, so we do it with str_replace()
+  return str_replace(array("<", ">", "&"), array('\x3c', '\x3e', '\x26'), json_encode($var));
 }
 
 /**
