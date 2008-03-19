@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.265 2008/03/14 08:51:37 dries Exp $
+// $Id: menu.inc,v 1.266 2008/03/19 07:38:29 dries Exp $
 
 /**
  * @file
@@ -175,14 +175,13 @@ define('MENU_MAX_DEPTH', 9);
  * Returns the ancestors (and relevant placeholders) for any given path.
  *
  * For example, the ancestors of node/12345/edit are:
- *
- * node/12345/edit
- * node/12345/%
- * node/%/edit
- * node/%/%
- * node/12345
- * node/%
- * node
+ * - node/12345/edit
+ * - node/12345/%
+ * - node/%/edit
+ * - node/%/%
+ * - node/12345
+ * - node/%
+ * - node
  *
  * To generate these, we will use binary numbers. Each bit represents a
  * part of the path. If the bit is 1, then it represents the original
@@ -682,7 +681,7 @@ function _menu_link_translate(&$item) {
  *   The expected position for $type object. For node/%node this is 1, for
  *   comment/reply/%node this is 2. Defaults to 1.
  * @param $path
- *   See @menu_get_item for more on this. Defaults to the current path.
+ *   See menu_get_item() for more on this. Defaults to the current path.
  */
 function menu_get_object($type = 'node', $position = 1, $path = NULL) {
   $router_item = menu_get_item($path);
@@ -1811,14 +1810,14 @@ function _menu_delete_item($item, $force = FALSE) {
  *
  * @param $item
  *   An array representing a menu link item. The only mandatory keys are
- *   link_path and link_title. Possible keys are
- *     menu_name   default is navigation
- *     weight      default is 0
- *     expanded    whether the item is expanded.
- *     options     An array of options, @see l for more.
- *     mlid        Set to an existing value, or 0 or NULL to insert a new link.
- *     plid        The mlid of the parent.
- *     router_path The path of the relevant router item.
+ *   link_path and link_title. Possible keys are:
+ *   - menu_name   default is navigation
+ *   - weight      default is 0
+ *   - expanded    whether the item is expanded.
+ *   - options     An array of options, @see l for more.
+ *   - mlid        Set to an existing value, or 0 or NULL to insert a new link.
+ *   - plid        The mlid of the parent.
+ *   - router_path The path of the relevant router item.
  */
 function menu_link_save(&$item) {
   $menu = menu_router_build();
