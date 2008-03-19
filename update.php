@@ -125,8 +125,12 @@ function db_change_column(&$ret, $table, $column, $column_new, $type, $attribute
   $ret[] = update_sql("ALTER TABLE {". $table ."} RENAME $column TO ". $column ."_old");
   $ret[] = update_sql("ALTER TABLE {". $table ."} ADD $column_new $type");
   $ret[] = update_sql("UPDATE {". $table ."} SET $column_new = ". $column ."_old");
-  if ($default) { $ret[] = update_sql("ALTER TABLE {". $table ."} ALTER $column_new SET $default"); }
-  if ($not_null) { $ret[] = update_sql("ALTER TABLE {". $table ."} ALTER $column_new SET NOT NULL"); }
+  if ($default) {
+    $ret[] = update_sql("ALTER TABLE {". $table ."} ALTER $column_new SET $default");
+  }
+  if ($not_null) {
+    $ret[] = update_sql("ALTER TABLE {". $table ."} ALTER $column_new SET NOT NULL");
+  }
   $ret[] = update_sql("ALTER TABLE {". $table ."} DROP ". $column ."_old");
 }
 
