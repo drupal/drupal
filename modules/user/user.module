@@ -1892,7 +1892,7 @@ function user_filters() {
   foreach (module_list() as $module) {
     if ($permissions = module_invoke($module, 'perm')) {
       asort($permissions);
-      foreach ($permissions as $permission) {
+      foreach ($permissions as $permission => $description) {
         $options[t('@module module', array('@module' => $module))][$permission] = t($permission);
       }
     }
