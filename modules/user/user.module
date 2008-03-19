@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.896 2008/02/20 13:46:43 dries Exp $
+// $Id: user.module,v 1.897 2008/03/19 07:35:15 dries Exp $
 
 /**
  * @file
@@ -1892,7 +1892,7 @@ function user_filters() {
   foreach (module_list() as $module) {
     if ($permissions = module_invoke($module, 'perm')) {
       asort($permissions);
-      foreach ($permissions as $permission) {
+      foreach ($permissions as $permission => $description) {
         $options[t('@module module', array('@module' => $module))][$permission] = t($permission);
       }
     }
