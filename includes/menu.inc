@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.266 2008/03/19 07:38:29 dries Exp $
+// $Id: menu.inc,v 1.267 2008/03/21 08:32:24 dries Exp $
 
 /**
  * @file
@@ -1736,8 +1736,7 @@ function _menu_navigation_links_rebuild($menu) {
   }
   $placeholders = db_placeholders($menu, 'varchar');
   $paths = array_keys($menu);
-  // Updated items and customized items which router paths are gone need new
-  // router paths.
+  // Updated and customized items whose router paths are gone need new ones.
   $result = db_query("SELECT ml.link_path, ml.mlid, ml.router_path, ml.updated FROM {menu_links} ml WHERE ml.updated = 1 OR (router_path NOT IN ($placeholders) AND external = 0 AND customized = 1)", $paths);
   while ($item = db_fetch_array($result)) {
     $router_path = _menu_find_router_path($menu, $item['link_path']);
@@ -1748,7 +1747,7 @@ function _menu_navigation_links_rebuild($menu) {
       db_query("UPDATE {menu_links} SET router_path = '%s', updated = %d WHERE mlid = %d", $router_path, $updated, $item['mlid']);
     }
   }
-  // Find any items where their router path does not exist any more.
+  // Find any item whose router path does not exist any more.
   $result = db_query("SELECT * FROM {menu_links} WHERE router_path NOT IN ($placeholders) AND external = 0 AND updated = 0 AND customized = 0 ORDER BY depth DESC", $paths);
   // Remove all such items. Starting from those with the greatest depth will
   // minimize the amount of re-parenting done by menu_link_delete().
