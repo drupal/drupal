@@ -1485,6 +1485,7 @@ function node_menu() {
       'title' => $type->name,
       'page callback' => 'drupal_get_form',
       'page arguments' => array('node_type_form', $type),
+      'access arguments' => array('administer content types'),
       'file' => 'content_types.inc',
       'type' => MENU_CALLBACK,
     );
