@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.300 2008/02/20 13:46:38 dries Exp $
+// $Id: block.module,v 1.301 2008/03/21 08:41:25 dries Exp $
 
 /**
  * @file
@@ -397,53 +397,92 @@ function block_user($type, $edit, &$account, $category = NULL) {
  *   array key instead of <i>module</i>_<i>delta</i>.
  */
 function block_list($region) {
-  global $user, $theme_key;
-
   static $blocks = array();
 
   if (!count($blocks)) {
-    $rids = array_keys($user->roles);
-    $result = db_query(db_rewrite_sql("SELECT DISTINCT b.* FROM {blocks} b LEFT JOIN {blocks_roles} r ON b.module = r.module AND b.delta = r.delta WHERE b.theme = '%s' AND b.status = 1 AND (r.rid IN (". db_placeholders($rids) .") OR r.rid IS NULL) ORDER BY b.region, b.weight, b.module", 'b', 'bid'), array_merge(array($theme_key), $rids));
-    while ($block = db_fetch_object($result)) {
-      if (!isset($blocks[$block->region])) {
-        $blocks[$block->region] = array();
-      }
-      // Use the user's block visibility setting, if necessary
-      if ($block->custom != 0) {
-        if ($user->uid && isset($user->block[$block->module][$block->delta])) {
-          $enabled = $user->block[$block->module][$block->delta];
-        }
-        else {
-          $enabled = ($block->custom == 1);
-        }
+    $blocks = _block_load_blocks();
+  }
+
+  // Create an empty array if there were no entries
+  if (!isset($blocks[$region])) {
+    $blocks[$region] = array();
+  }
+
+  $blocks[$region] = _block_render_blocks($blocks[$region]);
+
+  return $blocks[$region];
+}
+
+/**
+ * Load blocks information from the database
+ */
+function _block_load_blocks() {
+  global $user, $theme_key;
+
+  $blocks = array();
+  $rids = array_keys($user->roles);
+  $result = db_query(db_rewrite_sql("SELECT DISTINCT b.* FROM {blocks} b LEFT JOIN {blocks_roles} r ON b.module = r.module AND b.delta = r.delta WHERE b.theme = '%s' AND b.status = 1 AND (r.rid IN (". db_placeholders($rids) .") OR r.rid IS NULL) ORDER BY b.region, b.weight, b.module", 'b', 'bid'), array_merge(array($theme_key), $rids));
+  while ($block = db_fetch_object($result)) {
+    if (!isset($blocks[$block->region])) {
+      $blocks[$block->region] = array();
+    }
+    // Use the user's block visibility setting, if necessary
+    if ($block->custom != 0) {
+      if ($user->uid && isset($user->block[$block->module][$block->delta])) {
+        $enabled = $user->block[$block->module][$block->delta];
       }
       else {
-        $enabled = TRUE;
+        $enabled = ($block->custom == 1);
       }
+    }
+    else {
+      $enabled = TRUE;
+    }
 
-      // Match path if necessary
-      if ($block->pages) {
-        if ($block->visibility < 2) {
-          $path = drupal_get_path_alias($_GET['q']);
-          // Compare with the internal and path alias (if any).
-          $page_match = drupal_match_path($path, $block->pages);
-          if ($path != $_GET['q']) {
-            $page_match = $page_match || drupal_match_path($_GET['q'], $block->pages);
-          }
-          // When $block->visibility has a value of 0, the block is displayed on
-          // all pages except those listed in $block->pages. When set to 1, it
-          // is displayed only on those pages listed in $block->pages.
-          $page_match = !($block->visibility xor $page_match);
+    // Match path if necessary
+    if ($block->pages) {
+      if ($block->visibility < 2) {
+        $path = drupal_get_path_alias($_GET['q']);
+        // Compare with the internal and path alias (if any).
+        $page_match = drupal_match_path($path, $block->pages);
+        if ($path != $_GET['q']) {
+          $page_match = $page_match || drupal_match_path($_GET['q'], $block->pages);
         }
-        else {
-          $page_match = drupal_eval($block->pages);
-        }
+        // When $block->visibility has a value of 0, the block is displayed on
+        // all pages except those listed in $block->pages. When set to 1, it
+        // is displayed only on those pages listed in $block->pages.
+        $page_match = !($block->visibility xor $page_match);
       }
       else {
-        $page_match = TRUE;
+        $page_match = drupal_eval($block->pages);
       }
+    }
+    else {
+      $page_match = TRUE;
+    }
+    $block->enabled = $enabled;
+    $block->page_match = $page_match;
+    $blocks[$block->region]["{$block->module}_{$block->delta}"] = $block;
+  }
+  return $blocks;
+}
 
-      if ($enabled && $page_match) {
+/**
+ * Render the content and subject for a set of blocks.
+ *
+ * @param $region_blocks
+ *   An array of block objects such as returned for one region by _block_load_blocks()
+ *
+ * @return
+ *   An array of visible or not-throttled blocks with subject and content rendered.
+ */
+function _block_render_blocks($region_blocks) {
+  foreach ($region_blocks as $key => $block) {
+    // Render the block content if it has not been created already.
+    if (!isset($block->content)) {
+      // Erase the block from the static array - we'll put it back if it has content.
+      unset($region_blocks[$key]);
+      if ($block->enabled && $block->page_match) {
         // Check the current throttle status and see if block should be displayed
         // based on server load.
         if (!($block->throttle && (module_invoke('throttle', 'status') > 0))) {
@@ -475,16 +514,12 @@ function block_list($region) {
           if (!isset($block->subject)) {
             $block->subject = '';
           }
-          $blocks[$block->region]["{$block->module}_{$block->delta}"] = $block;
+          $region_blocks["{$block->module}_{$block->delta}"] = $block;
         }
       }
     }
   }
-  // Create an empty array if there were no entries
-  if (!isset($blocks[$region])) {
-    $blocks[$region] = array();
-  }
-  return $blocks[$region];
+  return $region_blocks;
 }
 
 /**
