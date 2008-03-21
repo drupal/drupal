@@ -1,5 +1,5 @@
 <?php
-// $Id: default.settings.php,v 1.8 2007/12/20 09:35:10 goba Exp $
+// $Id: default.settings.php,v 1.9 2008/03/21 09:16:37 dries Exp $
 
 /**
  * @file
@@ -182,7 +182,7 @@ ini_set('url_rewriter.tags',        '');
  * theme. It is located inside 'modules/system/maintenance-page.tpl.php'.
  * Note: This setting does not apply to installation and update pages.
  */
-#   'maintenance_theme' => 'minnelli',
+#   'maintenance_theme' => 'minnelli', // Leave the comma here.
 /**
  * reverse_proxy accepts a boolean value.
  *
@@ -197,9 +197,9 @@ ini_set('url_rewriter.tags',        '');
  * IP address information is captured in Drupal's session management,
  * logging, statistics and access management systems; if you are unsure
  * about this setting, do not have a reverse proxy, or Drupal operates in
- * a shared hosting environment, this setting should be set to disabled.
+ * a shared hosting environment, this setting should remain commented out.
  */
-#   'reverse_proxy' => TRUE,
+#   'reverse_proxy' => TRUE, // Leave the comma here.
 /**
  * reverse_proxy accepts an array of IP addresses.
  *
@@ -210,7 +210,7 @@ ini_set('url_rewriter.tags',        '');
  * reverse proxies. Otherwise, the client could directly connect to
  * your web server spoofing the X-Forwarded-For headers.
  */
-#   'reverse_proxy_addresses' => array('a.b.c.d', ...),
+#   'reverse_proxy_addresses' => array('a.b.c.d', ...), // Leave the comma here.
 # );
 
 /**
