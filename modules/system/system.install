@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.243 2008/03/17 16:53:58 dries Exp $
+// $Id: system.install,v 1.244 2008/03/21 08:52:25 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -408,9 +408,9 @@ function system_install() {
 
   db_query("INSERT INTO {variable} (name, value) VALUES ('%s', '%s')", 'node_options_forum', 'a:1:{i:0;s:6:"status";}');
 
-  $cron_key = md5(time());
+  $cron_key = serialize(md5(mt_rand()));
 
-  db_query("INSERT INTO {variable} (name, value) VALUES ('%s', '%s')", 'cron_key', serialize($cron_key));
+  db_query("INSERT INTO {variable} (name, value) VALUES ('%s', '%s')", 'cron_key', $cron_key);
 }
 
 /**
@@ -2657,6 +2657,17 @@ function system_update_7000() {
 
   return $ret;
 }
+
+/**
+ * Generate a cron key and save it in the variables table
+ */
+function system_update_7001() {
+  $ret = array();
+  variable_set('cron_key', md5(mt_rand()));
+  $ret[] = array('success' => TRUE, 'query' => "variable_set('cron_key')");
+  return $ret;
+}
+
 
 /**
  * @} End of "defgroup updates-6.x-to-7.x"
