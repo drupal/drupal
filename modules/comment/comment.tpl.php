@@ -14,7 +14,7 @@
  * - $picture: Authors picture.
  * - $signature: Authors signature.
  * - $status: Comment status. Possible values are:
- *   comment-unpublished, comment-published or comment-review.
+ *   comment-unpublished, comment-published or comment-preview.
  * - $submitted: By line with date and time.
  * - $title: Linked title.
  *
