@@ -1347,7 +1347,7 @@ function system_performance_settings() {
  */
 function system_clear_cache_submit(&$form_state, $form) {
   drupal_flush_all_caches();
-  drupal_set_message('Caches cleared.');
+  drupal_set_message(t('Caches cleared.'));
 }
 
 /**
