@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.65 2008/03/13 21:26:09 dries Exp $
+// $Id: system.admin.inc,v 1.66 2008/03/23 14:46:49 dries Exp $
 
 /**
  * @file
@@ -1347,7 +1347,7 @@ function system_performance_settings() {
  */
 function system_clear_cache_submit(&$form_state, $form) {
   drupal_flush_all_caches();
-  drupal_set_message('Caches cleared.');
+  drupal_set_message(t('Caches cleared.'));
 }
 
 /**
