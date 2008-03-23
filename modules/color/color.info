@@ -1,6 +1,6 @@
 ; $Id$
 name = Color
-description = Allows the user to change the color scheme of certain themes.
+description = Allows administrators to change the color scheme of compatible themes.
 package = Core - optional
 version = VERSION
 core = 7.x
