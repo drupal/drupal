@@ -51,7 +51,8 @@ Drupal.checkPlain = function(str) {
   str = String(str);
   var replace = { '&': '&amp;', '"': '&quot;', '<': '&lt;', '>': '&gt;' };
   for (var character in replace) {
-    str = str.replace(character, replace[character]);
+    var regex = new RegExp(character, 'g');
+    str = str.replace(regex, replace[character]);
   }
   return str;
 };
