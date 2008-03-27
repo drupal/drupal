@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.951 2008/03/13 21:26:08 dries Exp $
+// $Id: node.module,v 1.952 2008/03/27 07:32:00 dries Exp $
 
 /**
  * @file
@@ -1152,7 +1152,7 @@ function node_search($op = 'search', $keys = NULL) {
 
     case 'status':
       $total = db_result(db_query('SELECT COUNT(*) FROM {node} WHERE status = 1'));
-      $remaining = db_result(db_query("SELECT COUNT(*) FROM {node} n LEFT JOIN {search_dataset} d ON d.type = 'node' AND d.sid = n.nid WHERE d.sid IS NULL OR d.reindex <> 0"));
+      $remaining = db_result(db_query("SELECT COUNT(*) FROM {node} n LEFT JOIN {search_dataset} d ON d.type = 'node' AND d.sid = n.nid WHERE n.status = 1 AND d.sid IS NULL OR d.reindex <> 0"));
       return array('remaining' => $remaining, 'total' => $total);
 
     case 'admin':
