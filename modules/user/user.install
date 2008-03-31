@@ -1,5 +1,5 @@
 <?php
-// $Id: user.install,v 1.7 2008/03/15 12:31:29 dries Exp $
+// $Id: user.install,v 1.8 2008/03/31 20:50:05 dries Exp $
 
 /**
  * Implementation of hook_schema().
@@ -150,10 +150,10 @@ function user_schema() {
       ),
       'pass' => array(
         'type' => 'varchar',
-        'length' => 32,
+        'length' => 128,
         'not null' => TRUE,
         'default' => '',
-        'description' => t("User's password (md5 hash)."),
+        'description' => t("User's password (hashed)."),
       ),
       'mail' => array(
         'type' => 'varchar',
@@ -294,4 +294,56 @@ function user_schema() {
 
   return $schema;
 }
+
+/**
+ * @defgroup user-updates-6.x-to-7.x User updates from 6.x to 7.x
+ * @{
+ */
+
+/**
+ * Increase the length of the password field to accommodate better hashes.
+ *
+ * Also re-hashes all current passwords to improve security. This may be a
+ * lengthy process, and is performed batch-wise.
+ */
+function user_update_7000(&$sandbox) {
+  $ret = array('#finished' => 0);
+  // Lower than DRUPAL_HASH_COUNT to make the update run at a reasonable speed.
+  $hash_count_log2 = 11;
+  // Multi-part update.
+  if (!isset($sandbox['user_from'])) {
+    db_change_field($ret, 'users', 'pass', 'pass', array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''));
+    $sandbox['user_from'] = 0;
+    $sandbox['user_count'] = db_result(db_query("SELECT COUNT(uid) FROM {users}"));
+  }
+  else {
+    require_once variable_get('password_inc', './includes/password.inc');
+    //  Hash again all current hashed passwords.
+    $has_rows = FALSE;
+    // Update this many per page load.
+    $count = 1000;
+    $result = db_query_range("SELECT uid, pass FROM {users} WHERE uid > 0 ORDER BY uid", $sandbox['user_from'], $count);
+    while ($account = db_fetch_array($result)) {
+       $has_rows = TRUE;
+       $new_hash = user_hash_password($account['pass'], $hash_count_log2);
+       if ($new_hash) {
+         // Indicate an updated password.
+         $new_hash  = 'U'. $new_hash;
+         db_query("UPDATE {users} SET pass = '%s' WHERE uid = %d", $new_hash, $account['uid']);
+       }
+    }
+    $ret['#finished'] = $sandbox['user_from']/$sandbox['user_count'];
+    $sandbox['user_from'] += $count;
+    if (!$has_rows) {
+      $ret['#finished'] = 1;
+      $ret[] = array('success' => TRUE, 'query' => "UPDATE {users} SET pass = 'U'. user_hash_password(pass) WHERE uid > 0");
+    }
+  }
+  return $ret;
+}
+
+/**
+ * @} End of "defgroup user-updates-6.x-to-7.x"
+ * The next series of updates should start at 8000.
+ */
 

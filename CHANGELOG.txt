@@ -1,9 +1,14 @@
-// $Id: CHANGELOG.txt,v 1.258 2008/03/17 16:53:58 dries Exp $
+// $Id: CHANGELOG.txt,v 1.259 2008/03/31 20:50:05 dries Exp $
 
 Drupal 7.0, xxxx-xx-xx (development version)
 ----------------------
 - Security:
     * Protected cron.php -- cron will only run if the proper key is provided.
+    * Changed to much stronger password hashes that are also compatible with the
+      Portable PHP password hashing framework.
+    * Implemented a pluggable password hashing API (similar to how an alternate
+      cache mechanism can be used) to allow developers to readily substitute
+      an alternative hashing and authentication scheme.
 - Usability:
     * Implemented drag-and-drop positioning for input format listings.
     * Provide descriptions for permissions on the administration page.

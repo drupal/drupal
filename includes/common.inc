@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.761 2008/03/31 18:17:21 dries Exp $
+// $Id: common.inc,v 1.762 2008/03/31 20:50:05 dries Exp $
 
 /**
  * @file
@@ -2308,6 +2308,44 @@ function drupal_urlencode($text) {
 }
 
 /**
+ * Returns a string of highly randomized bytes (over the full 8-bit range).
+ *
+ * This function is better than simply calling mt_rand() or any other built-in
+ * PHP function because it can return a long string of bytes (compared to < 4
+ * bytes normally from mt_rand()) and uses the best available pseudo-random source.
+ *
+ * @param $count
+ *   The number of characters (bytes) to return in the string.
+ */
+function drupal_random_bytes($count)  {
+  static $random_state;
+  // We initialize with the somewhat random PHP process ID on the first call.
+  if (empty($random_state)) {
+    $random_state = getmypid();
+  }
+  $output = '';
+  // /dev/urandom is available on many *nix systems and is considered the best
+  // commonly available pseudo-random source.
+  if ($fh = @fopen('/dev/urandom', 'rb')) {
+    $output = fread($fh, $count);
+    fclose($fh);
+  }
+  // If /dev/urandom is not available or returns no bytes, this loop will
+  // generate a good set of pseudo-random bytes on any system.
+  // Note that it may be important that our $random_state is passed
+  // through md5() prior to being rolled into $output, that the two md5()
+  // invocations are different, and that the extra input into the first one -
+  // the microtime() - is prepended rather than appended.  This is to avoid
+  // directly leaking $random_state via the $output stream, which could
+  // allow for trivial prediction of further "random" numbers.
+  while (strlen($output) < $count) {
+    $random_state = md5(microtime() . mt_rand() . $random_state);
+    $output .= md5(mt_rand() . $random_state, TRUE);
+  }
+  return substr($output, 0, $count);
+}
+
+/**
  * Ensure the private key variable used to generate tokens is set.
  *
  * @return
@@ -2315,7 +2353,7 @@ function drupal_urlencode($text) {
  */
 function drupal_get_private_key() {
   if (!($key = variable_get('drupal_private_key', 0))) {
-    $key = md5(uniqid(mt_rand(), true)) . md5(uniqid(mt_rand(), true));
+    $key = md5(drupal_random_bytes(64));
     variable_set('drupal_private_key', $key);
   }
   return $key;
