@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.760 2008/03/17 17:01:05 dries Exp $
+// $Id: common.inc,v 1.761 2008/03/31 18:17:21 dries Exp $
 
 /**
  * @file
@@ -3490,6 +3490,7 @@ function drupal_flush_all_caches() {
 
   drupal_clear_css_cache();
   drupal_clear_js_cache();
+  system_theme_data();
   drupal_rebuild_theme_registry();
   menu_rebuild();
   node_types_rebuild();
