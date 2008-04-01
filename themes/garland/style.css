@@ -784,9 +784,6 @@ ul.links li, ul.inline li {
 /**
  * Menu.module
  */
-tr.menu-disabled {
-  opacity: 0.5;
-}
 tr.odd td.menu-disabled {
   background-color: #edf5fa;
 }
