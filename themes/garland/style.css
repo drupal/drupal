@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.41 2008/04/01 19:34:06 dries Exp $ */
+/* $Id: style.css,v 1.42 2008/04/01 19:38:37 dries Exp $ */
 
 /**
  * Generic elements
@@ -784,9 +784,6 @@ ul.links li, ul.inline li {
 /**
  * Menu.module
  */
-tr.menu-disabled {
-  opacity: 0.5;
-}
 tr.odd td.menu-disabled {
   background-color: #edf5fa;
 }
