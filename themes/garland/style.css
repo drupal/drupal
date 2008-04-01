@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.40 2008/03/13 20:02:18 dries Exp $ */
+/* $Id: style.css,v 1.41 2008/04/01 19:34:06 dries Exp $ */
 
 /**
  * Generic elements
@@ -214,7 +214,7 @@ tr.even {
 }
 
 tr.drag {
-  background-color: #fffff0;
+  background-color: #ffb;
 }
 
 tr.drag-previous {
