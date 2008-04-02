@@ -1,5 +1,5 @@
 <?php
-// $Id: mail.inc,v 1.10 2008/03/15 11:59:37 dries Exp $
+// $Id: mail.inc,v 1.11 2008/04/02 20:15:59 dries Exp $
 
 /**
  * Compose and optionally send an e-mail message.
@@ -184,12 +184,12 @@ function drupal_mail_send($message) {
     return mail(
       $message['to'],
       mime_header_encode($message['subject']),
-      // Note: e-mail uses CRLF for line-endings, but PHP's API requires LF
-      // for the message body.
+      // Note: e-mail uses CRLF for line-endings, but PHP's API requires LF.
       // They will appear correctly in the actual e-mail that is sent.
       str_replace("\r", '', $message['body']),
-      // For headers, PHP's API requires that we use CRLF normally.
-      join("\r\n", $mimeheaders)
+      // For headers, PHP's API suggests that we use CRLF normally,
+      // but some MTAs incorrecly replace LF with CRLF. See #234403.
+      join("\n", $mimeheaders)
     );
   }
 }
