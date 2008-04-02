@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.418 2008/03/25 14:10:01 dries Exp $
+// $Id: theme.inc,v 1.419 2008/04/02 20:23:14 dries Exp $
 
 /**
  * @file
@@ -1449,7 +1449,7 @@ function theme_item_list($items = array(), $title = NULL, $type = 'ul', $attribu
  * Returns code that emits the 'more help'-link.
  */
 function theme_more_help_link($url) {
-  return '<div class="more-help-link">'. t('[<a href="@link">more help...</a>]', array('@link' => check_url($url))) .'</div>';
+  return '<div class="more-help-link">'. t('<a href="@link">More help</a>', array('@link' => check_url($url))) .'</div>';
 }
 
 /**

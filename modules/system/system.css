@@ -1,4 +1,4 @@
-/* $Id: system.css,v 1.48 2008/01/09 09:56:39 goba Exp $ */
+/* $Id: system.css,v 1.49 2008/04/02 20:23:15 dries Exp $ */
 
 /*
 ** HTML elements
@@ -153,11 +153,15 @@ tr.merge-up, tr.merge-up td, tr.merge-up th {
 .marker, .form-required {
   color: #f00;
 }
-.more-link {
+.more-help-link {
   text-align: right; /* LTR */
 }
-.more-help-link {
-  font-size: 0.85em;
+.more-help-link a {
+  padding: 1px 0 1px 20px;
+  background-image: url(../../misc/help.png);
+  background-repeat: no-repeat;
+}
+.more-link {
   text-align: right; /* LTR */
 }
 .nowrap {
