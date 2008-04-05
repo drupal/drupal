@@ -388,7 +388,7 @@ function forum_form(&$node) {
   $form['title'] = array('#type' => 'textfield', '#title' => check_plain($type->title_label), '#default_value' => $node->title, '#required' => TRUE, '#weight' => -5);
 
   if ($node->nid) {
-    $forum_terms = taxonomy_node_get_terms_by_vocabulary(_forum_get_vid(), $node->nid);
+    $forum_terms = taxonomy_node_get_terms_by_vocabulary($node->nid, _forum_get_vid());
     // if editing, give option to leave shadows
     $shadow = (count($forum_terms) > 1);
     $form['shadow'] = array('#type' => 'checkbox', '#title' => t('Leave shadow copy'), '#default_value' => $shadow, '#description' => t('If you move this topic, you can leave a link in the old forum to the new forum.'));
