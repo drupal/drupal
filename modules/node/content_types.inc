@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.50 2008/01/27 18:03:05 goba Exp $
+// $Id: content_types.inc,v 1.51 2008/04/06 18:50:12 dries Exp $
 
 /**
  * @file
@@ -332,10 +332,10 @@ function node_type_form_submit($form, &$form_state) {
   }
   elseif ($status == SAVED_NEW) {
     drupal_set_message(t('The content type %name has been added.', $t_args));
-    watchdog('node', 'Added content type %name.', $t_args, WATCHDOG_NOTICE, l(t('view'), 'admin/content/types'));
+    watchdog('node', 'Added content type %name.', $t_args, WATCHDOG_NOTICE, l(t('view'), 'admin/build/types'));
   }
 
-  $form_state['redirect'] = 'admin/content/types';
+  $form_state['redirect'] = 'admin/build/types';
   return;
 }
 
@@ -390,7 +390,7 @@ function node_type_delete_confirm(&$form_state, $type) {
 
   $caption .= '<p>'. t('This action cannot be undone.') .'</p>';
 
-  return confirm_form($form, $message, 'admin/content/types', $caption, t('Delete'));
+  return confirm_form($form, $message, 'admin/build/types', $caption, t('Delete'));
 }
 
 /**
@@ -406,6 +406,6 @@ function node_type_delete_confirm_submit($form, &$form_state) {
   node_types_rebuild();
   menu_rebuild();
 
-  $form_state['redirect'] = 'admin/content/types';
+  $form_state['redirect'] = 'admin/build/types';
   return;
 }

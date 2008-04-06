@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.install,v 1.28 2008/02/06 19:38:27 dries Exp $
+// $Id: locale.install,v 1.29 2008/04/06 18:50:12 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -186,7 +186,7 @@ function locale_update_6005() {
       // The language_negotiation setting is not reset, but
       // the user is alerted that this setting possibly was overwritten
       variable_set('language_content_type_negotiation', $setting);
-      drupal_set_message('The language negotiation setting was possibly overwritten by a content type of the same name. Check the '. l('language configuration page', 'admin/settings/language/configure') .' and the '. l('<em>'. $content_type->name ."</em> content type's multilingual support settings", 'admin/content/types/negotiation', array('html' => TRUE)) .' to configure them correctly.');
+      drupal_set_message('The language negotiation setting was possibly overwritten by a content type of the same name. Check the '. l('language configuration page', 'admin/settings/language/configure') .' and the '. l('<em>'. $content_type->name ."</em> content type's multilingual support settings", 'admin/build/types/negotiation', array('html' => TRUE)) .' to configure them correctly.');
     }
     elseif (!is_null($setting)) {
       // Change the language setting variable for any other content type.

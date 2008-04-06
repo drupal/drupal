@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.621 2008/02/23 08:02:48 dries Exp $
+// $Id: comment.module,v 1.622 2008/04/06 18:50:11 dries Exp $
 
 /**
  * @file
@@ -126,7 +126,7 @@ define('COMMENT_PREVIEW_REQUIRED', 1);
 function comment_help($path, $arg) {
   switch ($path) {
     case 'admin/help#comment':
-      $output = '<p>'. t('The comment module allows visitors to comment on your posts, creating ad hoc discussion boards. Any <a href="@content-type">content type</a> may have its <em>Default comment setting</em> set to <em>Read/Write</em> to allow comments, or <em>Disabled</em>, to prevent comments. Comment display settings and other controls may also be customized for each content type (some display settings are customizable by individual users).', array('@content-type' => url('admin/content/types'))) .'</p>';
+      $output = '<p>'. t('The comment module allows visitors to comment on your posts, creating ad hoc discussion boards. Any <a href="@content-type">content type</a> may have its <em>Default comment setting</em> set to <em>Read/Write</em> to allow comments, or <em>Disabled</em>, to prevent comments. Comment display settings and other controls may also be customized for each content type (some display settings are customizable by individual users).', array('@content-type' => url('admin/build/types'))) .'</p>';
       $output .= '<p>'. t('Comment permissions are assigned to user roles, and are used to determine whether anonymous users (or other roles) are allowed to comment on posts. If anonymous users are allowed to comment, their individual contact information may be retained in cookies stored on their local computer for use in later comment submissions. When a comment has no replies, it may be (optionally) edited by its author. The comment module uses the same input formats and HTML tags available when creating other forms of content.') .'</p>';
       $output .= '<p>'. t('For more information, see the online handbook entry for <a href="@comment">Comment module</a>.', array('@comment' => 'http://drupal.org/handbook/modules/comment/')) .'</p>';
       return $output;
