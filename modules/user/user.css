@@ -9,16 +9,6 @@
 #permissions tr.odd .form-item, tr.even .form-item {
   white-space: normal;
 }
-#access-rules .access-type, #access-rules .rule-type {
-  margin-right: 1em; /* LTR */
-  float: left; /* LTR */
-}
-#access-rules .access-type .form-item, #access-rules .rule-type .form-item {
-  margin-top: 0;
-}
-#access-rules .mask {
-  clear: both;
-}
 #user-login-form {
   text-align: center;
 }
