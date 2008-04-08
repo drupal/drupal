@@ -1,5 +1,5 @@
 <?php
-// $Id: default.settings.php,v 1.9 2008/03/21 09:16:37 dries Exp $
+// $Id: default.settings.php,v 1.10 2008/04/08 22:50:55 dries Exp $
 
 /**
  * @file
@@ -225,4 +225,27 @@ ini_set('url_rewriter.tags',        '');
 # $conf['locale_custom_strings_en'] = array(
 #   'forum'      => 'Discussion board',
 #   '@count min' => '@count minutes',
+# );
+
+/**
+ *
+ * IP blocking:
+ *
+ * To bypass database queries for denied IP addresses, use this setting.
+ * Drupal queries the {blocked_ips} table by default on every page request
+ * for both authenticated and anonymous users. This allows the system to
+ * block IP addresses from within the administrative interface and before any
+ * modules are loaded. However on high traffic websites you may want to avoid
+ * this query, allowing you to bypass database access altogether for anonymous
+ * users under certain caching configurations.
+ *
+ * If using this setting, you will need to add back any IP addresses which
+ * you may have blocked via the administrative interface. Each element of this
+ * array represents a blocked IP address. Uncommenting the array and leaving it
+ * empty will have the effect of disabling IP blocking on your site.
+ *
+ * Remove the leading hash signs to enable.
+ */
+# $conf['blocked_ips'] = array(
+#   'a.b.c.d',
 # );

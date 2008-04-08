@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.898 2008/03/31 20:50:05 dries Exp $
+// $Id: user.module,v 1.899 2008/04/08 22:50:55 dries Exp $
 
 /**
  * @file
@@ -92,7 +92,7 @@ function user_external_load($authname) {
  * Perform standard Drupal login operations for a user object.
  *
  * The user object must already be authenticated. This function verifies
- * that the user account is not blocked/denied and then performs the login,
+ * that the user account is not blocked and then performs the login,
  * updates the login timestamp in the database, invokes hook_user('login'),
  * and regenerates the session.
  *
@@ -113,7 +113,7 @@ function user_external_login($account, $edit = array()) {
     $state['values']['name'] = $account->name;
   }
 
-  // Check if user is blocked or denied by access rules.
+  // Check if user is blocked.
   user_login_name_validate($form, $state, (array)$account);
   if (form_get_errors()) {
     // Invalid login.
@@ -952,43 +952,6 @@ function user_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'user.admin.inc',
   );
-  $items['admin/user/rules'] = array(
-    'title' => 'Access rules',
-    'description' => 'List and create rules to disallow usernames, e-mail addresses, and IP addresses.',
-    'page callback' => 'user_admin_access',
-    'access arguments' => array('administer permissions'),
-    'file' => 'user.admin.inc',
-  );
-  $items['admin/user/rules/list'] = array(
-    'title' => 'List',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -10,
-  );
-  $items['admin/user/rules/add'] = array(
-    'title' => 'Add rule',
-    'page callback' => 'user_admin_access_add',
-    'type' => MENU_LOCAL_TASK,
-    'file' => 'user.admin.inc',
-  );
-  $items['admin/user/rules/check'] = array(
-    'title' => 'Check rules',
-    'page callback' => 'user_admin_access_check',
-    'type' => MENU_LOCAL_TASK,
-    'file' => 'user.admin.inc',
-  );
-  $items['admin/user/rules/edit'] = array(
-    'title' => 'Edit rule',
-    'page callback' => 'user_admin_access_edit',
-    'type' => MENU_CALLBACK,
-    'file' => 'user.admin.inc',
-  );
-  $items['admin/user/rules/delete'] = array(
-    'title' => 'Delete rule',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('user_admin_access_delete_confirm'),
-    'type' => MENU_CALLBACK,
-    'file' => 'user.admin.inc',
-  );
 
   $items['logout'] = array(
     'title' => 'Log out',
@@ -1219,7 +1182,7 @@ function user_login(&$form_state, $msg = '') {
 }
 
 /**
- * Set up a series for validators which check for blocked/denied users,
+ * Set up a series for validators which check for blocked users,
  * then authenticate against local database, then return an error if
  * authentication fails. Distributed authentication modules are welcome
  * to use hook_form_alter() to change this series in order to
@@ -1240,18 +1203,13 @@ function user_login_default_validators() {
 }
 
 /**
- * A FAPI validate handler. Sets an error if supplied username has been blocked
- * or denied access.
+ * A FAPI validate handler. Sets an error if supplied username has been blocked.
  */
 function user_login_name_validate($form, &$form_state) {
   if (isset($form_state['values']['name'])) {
     if (user_is_blocked($form_state['values']['name'])) {
       // blocked in user administration
       form_set_error('name', t('The username %name has not been activated or is blocked.', array('%name' => $form_state['values']['name'])));
-    }
-    else if (drupal_is_denied('user', $form_state['values']['name'])) {
-      // denied by access controls
-      form_set_error('name', t('The name %name is a reserved username.', array('%name' => $form_state['values']['name'])));
     }
   }
 }
@@ -1504,9 +1462,6 @@ function _user_edit_validate($uid, &$edit) {
     else if (db_result(db_query("SELECT COUNT(*) FROM {users} WHERE uid != %d AND LOWER(name) = LOWER('%s')", $uid, $edit['name'])) > 0) {
       form_set_error('name', t('The name %name is already taken.', array('%name' => $edit['name'])));
     }
-    else if (drupal_is_denied('user', $edit['name'])) {
-      form_set_error('name', t('The name %name has been denied access.', array('%name' => $edit['name'])));
-    }
   }
 
   // Validate the e-mail address:
@@ -1515,9 +1470,6 @@ function _user_edit_validate($uid, &$edit) {
   }
   else if (db_result(db_query("SELECT COUNT(*) FROM {users} WHERE uid != %d AND LOWER(mail) = LOWER('%s')", $uid, $edit['mail'])) > 0) {
     form_set_error('mail', t('The e-mail address %email is already registered. <a href="@password">Have you forgotten your password?</a>', array('%email' => $edit['mail'], '@password' => url('user/password'))));
-  }
-  else if (drupal_is_denied('mail', $edit['mail'])) {
-    form_set_error('mail', t('The e-mail address %email has been denied access.', array('%email' => $edit['mail'])));
   }
 }
 
@@ -1853,8 +1805,6 @@ function user_help($path, $arg) {
     case 'admin/user/user/create':
     case 'admin/user/user/account/create':
       return '<p>'. t("This web page allows administrators to register new users. Users' e-mail addresses and usernames must be unique.") .'</p>';
-    case 'admin/user/rules':
-      return '<p>'. t('Set up username and e-mail address access rules for new <em>and</em> existing accounts (currently logged in accounts will not be logged out). If a username or e-mail address for an account matches any deny rule, but not an allow rule, then the account will not be allowed to be created or to log in. A host rule is effective for every page view, not just registrations.') .'</p>';
     case 'admin/user/permissions':
       return '<p>'. t('Permissions let you control what users can do on your site. Each user role (defined on the <a href="@role">user roles page</a>) has its own set of permissions. For example, you could give users classified as "Administrators" permission to "administer nodes" but deny this power to ordinary, "authenticated" users. You can use permissions to reveal new features to privileged users (those with subscriptions, for example). Permissions also allow trusted users to share the administrative burden of running a busy site.', array('@role' => url('admin/user/roles'))) .'</p>';
     case 'admin/user/roles':
@@ -2181,12 +2131,6 @@ function user_action_info() {
       'configurable' => FALSE,
       'hooks' => array(),
     ),
-    'user_block_ip_action' => array(
-      'description' => t('Ban IP address of current user'),
-      'type' => 'user',
-      'configurable' => FALSE,
-      'hooks' => array(),
-    ),
   );
 }
 
@@ -2208,16 +2152,6 @@ function user_block_user_action(&$object, $context = array()) {
   db_query("UPDATE {users} SET status = 0 WHERE uid = %d", $uid);
   sess_destroy_uid($uid);
   watchdog('action', 'Blocked user %name.', array('%name' => check_plain($user->name)));
-}
-
-/**
- * Implementation of a Drupal action.
- * Adds an access rule that blocks the user's IP address.
- */
-function user_block_ip_action() {
-  $ip = ip_address();
-  db_query("INSERT INTO {access} (mask, type, status) VALUES ('%s', '%s', %d)", $ip, 'host', 0);
-  watchdog('action', 'Banned IP address %ip', array('%ip' => $ip));
 }
 
 /**

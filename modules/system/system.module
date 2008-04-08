@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.594 2008/04/01 20:05:15 dries Exp $
+// $Id: system.module,v 1.595 2008/04/08 22:50:55 dries Exp $
 
 /**
  * @file
@@ -99,6 +99,8 @@ function system_help($path, $arg) {
       return $output;
     case 'admin/settings/actions/configure':
       return t('An advanced action offers additional configuration options which may be filled out below. Changing the <em>Description</em> field is recommended, in order to better identify the precise action taking place. This description will be displayed in modules such as the trigger module when assigning actions to system events, so it is best if it is as descriptive as possible (for example, "Send e-mail to Moderation Team" rather than simply "Send e-mail").');
+    case 'admin/settings/ip-blocking':
+      return '<p>'. t('IP addresses listed here are blocked from your site before any modules are loaded. You may add IP addresses to the list, or delete existing entries.') .'</p>';
     case 'admin/reports/status':
       return '<p>'. t("Here you can find a short overview of your site's parameters as well as any problems detected with your installation. It may be useful to copy and paste this information into support requests filed on drupal.org's support forums and project issue queues.") .'</p>';
   }
@@ -163,6 +165,7 @@ function system_perm() {
     'access site reports' => t('View reports from system logs and other status information.'),
     'select different theme' => t('Select a theme other than the default theme set by the site administrator.'),
     'administer files' => t('Manage user-uploaded files.'),
+    'block IP addresses' => t('Block IP addresses from accessing your site.'),
   );
 }
 
@@ -486,6 +489,23 @@ function system_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  // IP address blocking.
+  $items['admin/settings/ip-blocking'] = array(
+    'title' => 'IP address blocking',
+    'description' => 'Manage blocked IP addresses.',
+    'page callback' => 'system_ip_blocking',
+    'access arguments' => array('block IP addresses'),
+    'file' => 'system.admin.inc',
+  );
+  $items['admin/settings/ip-blocking/delete/%blocked_ip'] = array(
+    'title' => 'Delete IP address',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('system_ip_blocking_delete', 4),
+    'access arguments' => array('block IP addresses'),
+    'type' => MENU_CALLBACK,
+    'file' => 'system.admin.inc',
+  );
+
   // Settings:
   $items['admin/settings/site-information'] = array(
     'title' => 'Site information',
@@ -633,6 +653,20 @@ function system_menu() {
     'file' => 'system.admin.inc',
   );
   return $items;
+}
+
+/**
+ * Retrieve a blocked IP address from the database.
+ *
+ * @param $iid integer
+ *   The ID of the blocked IP address to retrieve.
+ *
+ * @return
+ *   The blocked IP address from the database as an array.
+ */
+function blocked_ip_load($iid) {
+  $blocked_ip = db_fetch_array(db_query("SELECT * FROM {blocked_ips} WHERE iid = %d", $iid));
+  return $blocked_ip;
 }
 
 /**
@@ -1408,6 +1442,12 @@ function system_action_info() {
         'taxonomy' => array('insert', 'update', 'delete'),
       )
     ),
+    'system_block_ip_action' => array(
+      'description' => t('Ban IP address of current user'),
+      'type' => 'user',
+      'configurable' => FALSE,
+      'hooks' => array(),
+    ),
     'system_goto_action' => array(
       'description' => t('Redirect to URL'),
       'type' => 'system',
@@ -1961,6 +2001,16 @@ function system_goto_action_submit($form, $form_state) {
 
 function system_goto_action($object, $context) {
   drupal_goto($context['url']);
+}
+
+/**
+ * Implementation of a Drupal action.
+ * Blocks the user's IP address.
+ */
+function system_block_ip_action() {
+  $ip = ip_address();
+  db_query("INSERT INTO {blocked_ips} (ip) VALUES ('%s')", $ip);;
+  watchdog('action', 'Banned IP address %ip', array('%ip' => $ip));
 }
 
 /**

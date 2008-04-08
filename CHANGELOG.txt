@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.259 2008/03/31 20:50:05 dries Exp $
+// $Id: CHANGELOG.txt,v 1.260 2008/04/08 22:50:54 dries Exp $
 
 Drupal 7.0, xxxx-xx-xx (development version)
 ----------------------
@@ -15,6 +15,11 @@ Drupal 7.0, xxxx-xx-xx (development version)
 - Removed ping module:
     * This module has been removed from the core download. Contributed
       alternatives are available.
+- Removed access rules:
+    * The access rules capability of user module has been stripped down to a
+      simple method for blocking IP addresses. E-mail and username restrictions
+      are now available in a contributed module. IP address range blocking is
+      no longer supported and should be done at the server level.
 
 Drupal 6.0, 2008-02-13
 ----------------------

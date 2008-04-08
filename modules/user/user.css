@@ -1,4 +1,4 @@
-/* $Id: user.css,v 1.8 2008/02/20 13:46:43 dries Exp $ */
+/* $Id: user.css,v 1.9 2008/04/08 22:50:55 dries Exp $ */
 
 #permissions td.module {
   font-weight: bold;
@@ -8,16 +8,6 @@
 }
 #permissions tr.odd .form-item, tr.even .form-item {
   white-space: normal;
-}
-#access-rules .access-type, #access-rules .rule-type {
-  margin-right: 1em; /* LTR */
-  float: left; /* LTR */
-}
-#access-rules .access-type .form-item, #access-rules .rule-type .form-item {
-  margin-top: 0;
-}
-#access-rules .mask {
-  clear: both;
 }
 #user-login-form {
   text-align: center;

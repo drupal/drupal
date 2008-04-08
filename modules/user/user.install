@@ -1,43 +1,10 @@
 <?php
-// $Id: user.install,v 1.8 2008/03/31 20:50:05 dries Exp $
+// $Id: user.install,v 1.9 2008/04/08 22:50:55 dries Exp $
 
 /**
  * Implementation of hook_schema().
  */
 function user_schema() {
-  $schema['access'] = array(
-    'description' => t('Stores site access rules.'),
-    'fields' => array(
-      'aid' => array(
-        'type' => 'serial',
-        'not null' => TRUE,
-        'description' => t('Primary Key: Unique access ID.'),
-      ),
-      'mask' => array(
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => t('Text mask used for filtering access.'),
-      ),
-      'type' => array(
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => t('Type of access rule: name, mail or host.'),
-      ),
-      'status' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'tiny',
-        'description' => t('Whether rule is to allow(1) or deny(0) access.'),
-      ),
-    ),
-    'primary key' => array('aid'),
-  );
-
   $schema['authmap'] = array(
     'description' => t('Stores distributed authentication mapping.'),
     'fields' => array(

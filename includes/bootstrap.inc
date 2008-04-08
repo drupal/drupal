@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.206 2008/01/10 22:47:17 goba Exp $
+// $Id: bootstrap.inc,v 1.207 2008/04/08 22:50:54 dries Exp $
 
 /**
  * @file
@@ -847,31 +847,30 @@ function drupal_get_messages($type = NULL, $clear_queue = TRUE) {
 }
 
 /**
- * Perform an access check for a given mask and rule type. Rules are usually
- * created via admin/user/rules page.
+ * Check to see if an IP address has been blocked.
  *
- * If any allow rule matches, access is allowed. Otherwise, if any deny rule
- * matches, access is denied.  If no rule matches, access is allowed.
+ * Blocked IP addresses are stored in the database by default. However for
+ * performance reasons we allow an override in settings.php. This allows us
+ * to avoid querying the database at this critical stage of the bootstrap if
+ * an administrative interface for IP address blocking is not required.
  *
- * @param $type string
- *   Type of access to check: Allowed values are:
- *     - 'host': host name or IP address
- *     - 'mail': e-mail address
- *     - 'user': username
- * @param $mask string
- *   String or mask to test: '_' matches any character, '%' matches any
- *   number of characters.
+ * @param $ip string
+ *   IP address to check.
  * @return bool
  *   TRUE if access is denied, FALSE if access is allowed.
  */
-function drupal_is_denied($type, $mask) {
-  // Because this function is called for every page request, both cached
-  // and non-cached pages, we tried to optimize it as much as possible.
-  // We deny access if the only matching records in the {access} table have
-  // status 0 (deny). If any have status 1 (allow), or if there are no
-  // matching records, we allow access.
-  $sql = "SELECT 1 FROM {access} WHERE type = '%s' AND LOWER('%s') LIKE LOWER(mask) AND status = %d";
-  return db_result(db_query_range($sql, $type, $mask, 0, 0, 1)) && !db_result(db_query_range($sql, $type, $mask, 1, 0, 1));
+function drupal_is_denied($ip) {
+  // Because this function is called on every page request, we first check
+  // for an array of IP addresses in settings.php before querying the
+  // database.
+  $blocked_ips = variable_get('blocked_ips', NULL);
+  if (isset($blocked_ips) && is_array($blocked_ips)) {
+    return in_array($ip, $blocked_ips);
+  }
+  else {
+    $sql = "SELECT 1 FROM {blocked_ips} WHERE ip = '%s'";
+    return (bool) db_result(db_query($sql, $ip));
+  }
 }
 
 /**
@@ -953,8 +952,8 @@ function _drupal_bootstrap($phase) {
       break;
 
     case DRUPAL_BOOTSTRAP_ACCESS:
-      // Deny access to hosts which were banned - t() is not yet available.
-      if (drupal_is_denied('host', ip_address())) {
+      // Deny access to blocked IP addresses - t() is not yet available.
+      if (drupal_is_denied(ip_address())) {
         header('HTTP/1.1 403 Forbidden');
         print 'Sorry, '. check_plain(ip_address()) .' has been banned.';
         exit();

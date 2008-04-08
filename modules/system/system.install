@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.244 2008/03/21 08:52:25 dries Exp $
+// $Id: system.install,v 1.245 2008/04/08 22:50:55 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -525,6 +525,29 @@ function system_schema() {
     'indexes' => array(
       'token' => array('token'),
     ),
+  );
+
+  $schema['blocked_ips'] = array(
+    'description' => t('Stores blocked IP addresses.'),
+    'fields' => array(
+       'iid' => array(
+        'description' => t('Primary Key: unique ID for IP addresses.'),
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'ip' => array(
+        'description' => t('IP address'),
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+    ),
+    'indexes' => array(
+      'blocked_ip' => array('ip'),
+    ),
+    'primary key' => array('iid'),
   );
 
   $schema['cache'] = array(
@@ -2665,6 +2688,70 @@ function system_update_7001() {
   $ret = array();
   variable_set('cron_key', md5(mt_rand()));
   $ret[] = array('success' => TRUE, 'query' => "variable_set('cron_key')");
+  return $ret;
+}
+
+/**
+ * Add a table to store blocked IP addresses.
+ */
+function system_update_7002() {
+  $ret = array();
+  $schema['blocked_ips'] = array(
+    'description' => t('Stores blocked IP addresses.'),
+    'fields' => array(
+      'iid' => array(
+        'description' => t('Primary Key: unique ID for IP addresses.'),
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'ip' => array(
+        'description' => t('IP address'),
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+    ),
+    'indexes' => array(
+      'blocked_ip' => array('ip'),
+    ),
+    'primary key' => array('iid'),
+  );
+
+  db_create_table($ret, 'blocked_ips', $schema['blocked_ips']);
+
+  return $ret;
+}
+
+/**
+ * Update {blocked_ips} with valid IP addresses from {access}.
+ */
+function system_update_7003() {
+  $ret = array();
+  $type = 'host';
+  $result = db_query("SELECT mask FROM {access} WHERE status = %d AND TYPE = '%s'", 0, $type);
+  while ($blocked = db_fetch_object($result)) {
+    if (filter_var($blocked->mask, FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE) !== FALSE) {
+      $ret[] = update_sql("INSERT INTO {blocked_ips} (ip) VALUES ('$blocked->mask')");
+    }
+    else {
+      $invalid_host = check_plain($blocked->mask);
+      $ret[] = array('success' => TRUE, 'query' => 'The host '. $invalid_host .' is no longer blocked because it is not a valid IP address.');
+    }
+  }
+  if (isset($invalid_host)) {
+    drupal_set_message('Drupal no longer supports wildcard IP address blocking. Visitors whose IP addresses match ranges you have previously set using <em>access rules</em> will no longer be blocked from your site when you take it out of maintenance mode. See the <a href="http://drupal.org/node/24302">IP address and referrer blocking Handbook page</a> for alternative methods.', 'warning');
+    $ret[] = array('success' => TRUE, 'query' => '');
+  }
+  // Make sure not to block any IP addresses that were specifically allowed by access rules.
+  if (!empty($result)) {
+    $result = db_query("SELECT mask FROM {access} WHERE status = %d AND type = '%s'", 1, $type);
+    while ($allowed = db_fetch_object($result)) {
+      $ret[] = update_sql("DELETE FROM {blocked_ips} WHERE LOWER(ip) LIKE LOWER('$allowed->mask')");
+    }
+  }
+
   return $ret;
 }
 

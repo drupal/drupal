@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.67 2008/04/06 18:50:12 dries Exp $
+// $Id: system.admin.inc,v 1.68 2008/04/08 22:50:54 dries Exp $
 
 /**
  * @file
@@ -1103,6 +1103,94 @@ function system_modules_uninstall_submit($form, &$form_state) {
   else {
     $form_state['storage'] = $form_state['values'];
   }
+}
+
+/**
+ * Menu callback. Display blocked IP addresses.
+ */
+function system_ip_blocking() {
+  $output = '';
+  $rows = array();
+  $header = array(t('IP address'), t('Operations'));
+  $result = db_query('SELECT * FROM {blocked_ips}');
+  while ($ip = db_fetch_object($result)) {
+    $rows[] = array(
+      $ip->ip,
+      l(t('delete'), "admin/settings/ip-blocking/delete/$ip->iid"),
+    );
+  }
+
+  $output .= theme('table', $header, $rows);
+
+  $output .= drupal_get_form('system_ip_blocking_form');
+
+  return $output;
+}
+
+/**
+ * Define the form for blocking IP addresses.
+ *
+ * @ingroup forms
+ * @see system_ip_blocking_form_validate()
+ * @see system_ip_blocking_form_submit()
+ */
+function system_ip_blocking_form($form_state) {
+  $form['ip'] = array(
+    '#title' => t('IP address'),
+    '#type' => 'textfield',
+    '#size' => 64,
+    '#maxlength' => 32,
+    '#description' => t('Enter a valid IP address.'),
+  );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save'),
+  );
+  $form['#submit'][] = 'system_ip_blocking_form_submit';
+  $form['#validate'][] = 'system_ip_blocking_form_validate';
+  return $form;
+}
+
+function system_ip_blocking_form_validate($form, &$form_state) {
+  $ip = $form_state['values']['ip'];
+  if (db_result(db_query("SELECT * FROM {blocked_ips} WHERE ip = '%s'", $ip))) {
+    form_set_error('ip', t('This IP address is already blocked.'));
+  }
+  else if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE) == FALSE) {
+    form_set_error('ip', t('Please enter a valid IP address.'));
+  }
+}
+
+function system_ip_blocking_form_submit($form, &$form_state) {
+  $ip = $form_state['values']['ip'];
+  db_query("INSERT INTO {blocked_ips} (ip) VALUES ('%s')", $ip);
+  drupal_set_message(t('The IP address %ip has been blocked.', array('%ip' => $ip)));
+  $form_state['redirect'] = 'admin/settings/ip-blocking';
+  return;
+}
+
+/**
+ * IP deletion confirm page.
+ *
+ * @see system_ip_blocking_delete_submit()
+ */
+function system_ip_blocking_delete(&$form_state, $iid) {
+  $form['blocked_ip'] = array(
+    '#type' => 'value',
+    '#value' => $iid,
+  );
+  return confirm_form($form, t('Are you sure you want to delete %ip?', array('%ip' => $iid['ip'])), 'admin/settings/ip-blocking', t('This action cannot be undone.'), t('Delete'), t('Cancel'));
+}
+
+/**
+ * Process system_ip_blocking_delete form submissions.
+ */
+function system_ip_blocking_delete_submit($form, &$form_state) {
+  $blocked_ip = $form_state['values']['blocked_ip'];
+  db_query("DELETE FROM {blocked_ips} WHERE iid = %d", $blocked_ip['iid']);
+  watchdog('user', 'Deleted %ip', array('%ip' => $blocked_ip['ip']));
+  drupal_set_message(t('The IP address %ip was deleted.', array('%ip' => $blocked_ip['ip'])));
+  $form_state['redirect'] = 'admin/settings/ip-blocking';
 }
 
 /**
