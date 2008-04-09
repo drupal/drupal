@@ -54,11 +54,11 @@ function _update_refresh() {
     $frequency = variable_get('update_check_frequency', 1);
     cache_set('update_info', $available, 'cache_update', time() + (60 * 60 * 24 * $frequency));
     variable_set('update_last_check', time());
-    watchdog('update', 'Fetched information about all available new releases and updates.', array(), WATCHDOG_NOTICE, l('view', 'admin/reports/updates'));
+    watchdog('update', 'Fetched information about all available new releases and updates.', array(), WATCHDOG_NOTICE, l(t('view'), 'admin/reports/updates'));
   }
   else {
     module_invoke('system', 'check_http_request');
-    watchdog('update', 'Unable to fetch any information about available new releases and updates.', array(), WATCHDOG_ERROR, l('view', 'admin/reports/updates'));
+    watchdog('update', 'Unable to fetch any information about available new releases and updates.', array(), WATCHDOG_ERROR, l(t('view'), 'admin/reports/updates'));
   }
   return $available;
 }
