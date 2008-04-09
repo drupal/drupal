@@ -211,6 +211,7 @@ function comment_menu() {
   $items['admin/content/comment/approval'] = array(
     'title' => 'Approval queue',
     'page arguments' => array('approval'),
+    'access arguments' => array('administer comments'),
     'type' => MENU_LOCAL_TASK,
     'file' => 'comment.admin.inc',
   );

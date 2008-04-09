@@ -32,6 +32,7 @@ function syslog_menu() {
     'description'    => 'Settings for syslog logging. Syslog is an operating system administrative logging tool used in systems management and security auditing. Most suited to medium and large sites, syslog provides filtering tools that allow messages to be routed by type and severity.',
     'page callback'  => 'drupal_get_form',
     'page arguments' => array('syslog_admin_settings'),
+    'access arguments' => array('administer site configuration'),
   );
   return $items;
 }

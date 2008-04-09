@@ -82,6 +82,7 @@ function filter_menu() {
   $items['admin/settings/filters/add'] = array(
     'title' => 'Add input format',
     'page callback' => 'filter_admin_format_page',
+    'access arguments' => array('administer filters'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 1,
     'file' => 'filter.admin.inc',
@@ -90,6 +91,7 @@ function filter_menu() {
     'title' => 'Delete input format',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('filter_admin_delete'),
+    'access arguments' => array('administer filters'),
     'type' => MENU_CALLBACK,
     'file' => 'filter.admin.inc',
   );
@@ -120,6 +122,7 @@ function filter_menu() {
     'title' => 'Configure',
     'page callback' => 'filter_admin_configure_page',
     'page arguments' => array(3),
+    'access arguments' => array('administer filters'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 1,
     'file' => 'filter.admin.inc',
@@ -128,6 +131,7 @@ function filter_menu() {
     'title' => 'Rearrange',
     'page callback' => 'filter_admin_order_page',
     'page arguments' => array(3),
+    'access arguments' => array('administer filters'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 2,
     'file' => 'filter.admin.inc',

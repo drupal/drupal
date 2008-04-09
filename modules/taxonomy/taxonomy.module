@@ -128,6 +128,7 @@ function taxonomy_menu() {
     'title' => 'Add vocabulary',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('taxonomy_form_vocabulary'),
+    'access arguments' => array('administer taxonomy'),
     'type' => MENU_LOCAL_TASK,
     'parent' => 'admin/content/taxonomy',
     'file' => 'taxonomy.admin.inc',
@@ -137,6 +138,7 @@ function taxonomy_menu() {
     'title' => 'Edit vocabulary',
     'page callback' => 'taxonomy_admin_vocabulary_edit',
     'page arguments' => array(5),
+    'access arguments' => array('administer taxonomy'),
     'type' => MENU_CALLBACK,
     'file' => 'taxonomy.admin.inc',
   );
@@ -144,6 +146,7 @@ function taxonomy_menu() {
   $items['admin/content/taxonomy/edit/term'] = array(
     'title' => 'Edit term',
     'page callback' => 'taxonomy_admin_term_edit',
+    'access arguments' => array('administer taxonomy'),
     'type' => MENU_CALLBACK,
     'file' => 'taxonomy.admin.inc',
   );
@@ -183,6 +186,7 @@ function taxonomy_menu() {
     'title' => 'Add term',
     'page callback' => 'taxonomy_add_term_page',
     'page arguments' => array(3),
+    'access arguments' => array('administer taxonomy'),
     'type' => MENU_LOCAL_TASK,
     'parent' => 'admin/content/taxonomy/%taxonomy_vocabulary',
     'file' => 'taxonomy.admin.inc',
