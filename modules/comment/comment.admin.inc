@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.admin.inc,v 1.4 2008/01/08 10:35:41 goba Exp $
+// $Id: comment.admin.inc,v 1.5 2008/04/10 10:13:57 dries Exp $
 
 /**
  * @file
@@ -103,7 +103,7 @@ function comment_admin_overview_submit($form, &$form_state) {
       if ($value) {
         // perform the update action, then refresh node statistics
         db_query($query, $cid);
-        $comment = _comment_load($cid);
+        $comment = comment_load($cid);
         _comment_update_node_statistics($comment->nid);
         // Allow modules to respond to the updating of a comment.
         comment_invoke_comment($comment, $form_state['values']['operation']);
@@ -170,7 +170,7 @@ function comment_multiple_delete_confirm(&$form_state) {
   // array_filter() returns only elements with actual values
   $comment_counter = 0;
   foreach (array_filter($edit['comments']) as $cid => $value) {
-    $comment = _comment_load($cid);
+    $comment = comment_load($cid);
     if (is_object($comment) && is_numeric($comment->cid)) {
       $subject = db_result(db_query('SELECT subject FROM {comments} WHERE cid = %d', $cid));
       $form['comments'][$cid] = array('#type' => 'hidden', '#value' => $cid, '#prefix' => '<li>', '#suffix' => check_plain($subject) .'</li>');
@@ -199,7 +199,7 @@ function comment_multiple_delete_confirm(&$form_state) {
 function comment_multiple_delete_confirm_submit($form, &$form_state) {
   if ($form_state['values']['confirm']) {
     foreach ($form_state['values']['comments'] as $cid => $value) {
-      $comment = _comment_load($cid);
+      $comment = comment_load($cid);
       _comment_delete_thread($comment);
       _comment_update_node_statistics($comment->nid);
     }
