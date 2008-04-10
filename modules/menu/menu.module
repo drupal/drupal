@@ -260,7 +260,7 @@ function menu_reset_item($item) {
 /**
  * Implementation of hook_block().
  */
-function menu_block($op = 'list', $delta = 0) {
+function menu_block($op = 'list', $delta = '') {
   $menus = menu_get_menus();
   // The Navigation menu is handled by the user module.
   unset($menus['navigation']);

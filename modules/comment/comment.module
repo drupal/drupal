@@ -284,10 +284,10 @@ function comment_perm() {
  *
  * Generates a block with the most recent comments.
  */
-function comment_block($op = 'list', $delta = 0, $edit = array()) {
+function comment_block($op = 'list', $delta = '', $edit = array()) {
   switch ($op) {
     case 'list':
-      $blocks[0]['info'] = t('Recent comments');
+      $blocks['recent']['info'] = t('Recent comments');
       return $blocks;
 
     case 'configure':

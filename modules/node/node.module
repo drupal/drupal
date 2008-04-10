@@ -1607,11 +1607,11 @@ function node_revision_list($node) {
 /**
  * Implementation of hook_block().
  */
-function node_block($op = 'list', $delta = 0) {
+function node_block($op = 'list', $delta = '') {
   if ($op == 'list') {
-    $blocks[0]['info'] = t('Syndicate');
+    $blocks['syndicate']['info'] = t('Syndicate');
     // Not worth caching.
-    $blocks[0]['cache'] = BLOCK_NO_CACHE;
+    $blocks['syndicate']['cache'] = BLOCK_NO_CACHE;
     return $blocks;
   }
   else if ($op == 'view') {

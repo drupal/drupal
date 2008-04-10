@@ -57,8 +57,8 @@ function forum_uninstall() {
   variable_del('forum_hot_topic');
   variable_del('forum_per_page');
   variable_del('forum_order');
-  variable_del('forum_block_num_0');
-  variable_del('forum_block_num_1');
+  variable_del('forum_block_num_active');
+  variable_del('forum_block_num_new');
 }
 
 /**

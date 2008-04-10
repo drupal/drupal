@@ -242,13 +242,13 @@ function statistics_get($nid) {
 /**
  * Implementation of hook_block().
  */
-function statistics_block($op = 'list', $delta = 0, $edit = array()) {
+function statistics_block($op = 'list', $delta = '', $edit = array()) {
   switch ($op) {
     case 'list':
       if (variable_get('statistics_count_content_views', 0)) {
-        $blocks[0]['info'] = t('Popular content');
+        $blocks['popular']['info'] = t('Popular content');
         // Too dynamic to cache.
-        $blocks[0]['cache'] = BLOCK_NO_CACHE;
+        $blocks['popular']['cache'] = BLOCK_NO_CACHE;
         return $blocks;
       }
       break;
