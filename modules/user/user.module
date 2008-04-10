@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.899 2008/04/08 22:50:55 dries Exp $
+// $Id: user.module,v 1.900 2008/04/10 01:35:31 dries Exp $
 
 /**
  * @file
@@ -1148,7 +1148,7 @@ function user_set_authmaps($account, $authmaps) {
  *
  * @ingroup forms
  */
-function user_login(&$form_state, $msg = '') {
+function user_login(&$form_state) {
   global $user;
 
   // If we are already logged on, go to the user page instead.
@@ -1157,9 +1157,6 @@ function user_login(&$form_state, $msg = '') {
   }
 
   // Display login form:
-  if ($msg) {
-    $form['message'] = array('#value' => '<p>'. check_plain($msg) .'</p>');
-  }
   $form['name'] = array('#type' => 'textfield',
     '#title' => t('Username'),
     '#size' => 60,
