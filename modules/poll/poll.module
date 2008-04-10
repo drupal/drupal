@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.264 2008/02/20 13:46:40 dries Exp $
+// $Id: poll.module,v 1.265 2008/04/10 10:28:23 dries Exp $
 
 /**
  * @file
@@ -134,10 +134,10 @@ function _poll_menu_access($node, $perm, $inspect_allowvotes) {
  *
  * Generates a block containing the latest poll.
  */
-function poll_block($op = 'list', $delta = 0) {
+function poll_block($op = 'list', $delta = '') {
   if (user_access('access content')) {
     if ($op == 'list') {
-      $blocks[0]['info'] = t('Most recent poll');
+      $blocks['recent']['info'] = t('Most recent poll');
       return $blocks;
     }
     else if ($op == 'view') {

@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.214 2008/02/20 13:46:39 dries Exp $
+// $Id: locale.module,v 1.215 2008/04/10 10:28:22 dries Exp $
 
 /**
  * @file
@@ -556,11 +556,11 @@ function locale_update_js_files() {
  * Implementation of hook_block().
  * Displays a language switcher. Translation links may be provided by other modules.
  */
-function locale_block($op = 'list', $delta = 0) {
+function locale_block($op = 'list', $delta = '') {
   if ($op == 'list') {
-    $block[0]['info'] = t('Language switcher');
+    $block['language-switcher']['info'] = t('Language switcher');
     // Not worth caching.
-    $block[0]['cache'] = BLOCK_NO_CACHE;
+    $block['language-switcher']['cache'] = BLOCK_NO_CACHE;
     return $block;
   }
 

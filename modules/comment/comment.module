@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.624 2008/04/10 10:13:57 dries Exp $
+// $Id: comment.module,v 1.625 2008/04/10 10:28:22 dries Exp $
 
 /**
  * @file
@@ -284,10 +284,10 @@ function comment_perm() {
  *
  * Generates a block with the most recent comments.
  */
-function comment_block($op = 'list', $delta = 0, $edit = array()) {
+function comment_block($op = 'list', $delta = '', $edit = array()) {
   switch ($op) {
     case 'list':
-      $blocks[0]['info'] = t('Recent comments');
+      $blocks['recent']['info'] = t('Recent comments');
       return $blocks;
 
     case 'configure':

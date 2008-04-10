@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.236 2008/02/03 19:36:46 goba Exp $
+// $Id: profile.module,v 1.237 2008/04/10 10:28:23 dries Exp $
 
 /**
  * @file
@@ -131,14 +131,14 @@ function profile_menu() {
 /**
  * Implementation of hook_block().
  */
-function profile_block($op = 'list', $delta = 0, $edit = array()) {
+function profile_block($op = 'list', $delta = '', $edit = array()) {
 
   if ($op == 'list') {
-    $blocks[0]['info'] = t('Author information');
-    $blocks[0]['cache'] = BLOCK_CACHE_PER_PAGE | BLOCK_CACHE_PER_ROLE;
+    $blocks['author-information']['info'] = t('Author information');
+    $blocks['author-information']['cache'] = BLOCK_CACHE_PER_PAGE | BLOCK_CACHE_PER_ROLE;
     return $blocks;
   }
-  else if ($op == 'configure' && $delta == 0) {
+  else if ($op == 'configure') {
     // Compile a list of fields to show
     $fields = array();
     $result = db_query('SELECT name, title, weight, visibility FROM {profile_fields} WHERE visibility IN (%d, %d) ORDER BY weight', PROFILE_PUBLIC, PROFILE_PUBLIC_LISTINGS);
@@ -146,7 +146,8 @@ function profile_block($op = 'list', $delta = 0, $edit = array()) {
       $fields[$record->name] = check_plain($record->title);
     }
     $fields['user_profile'] = t('Link to full user profile');
-    $form['profile_block_author_fields'] = array('#type' => 'checkboxes',
+    $form['profile_block_author_fields'] = array(
+      '#type' => 'checkboxes',
       '#title' => t('Profile fields to display'),
       '#default_value' => variable_get('profile_block_author_fields', NULL),
       '#options' => $fields,
@@ -154,7 +155,7 @@ function profile_block($op = 'list', $delta = 0, $edit = array()) {
     );
     return $form;
   }
-  else if ($op == 'save' && $delta == 0) {
+  else if ($op == 'save') {
     variable_set('profile_block_author_fields', $edit['profile_block_author_fields']);
   }
   else if ($op == 'view') {

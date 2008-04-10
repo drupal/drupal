@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.42 2008/04/01 19:38:37 dries Exp $ */
+/* $Id: style.css,v 1.43 2008/04/10 10:28:23 dries Exp $ */
 
 /**
  * Generic elements
@@ -865,17 +865,17 @@ html.js fieldset.collapsed legend a {
 /**
  * Syndication icons and block
  */
-#block-node-0 h2 {
+#block-node-syndicate h2 {
   float: left; /* LTR */
   padding-right: 20px; /* LTR */
 }
 
-#block-node-0 img, .feed-icon {
+#block-node-syndicate img, .feed-icon {
   float: right; /* LTR */
   padding-top: 4px;
 }
 
-#block-node-0 .content {
+#block-node-syndicate .content {
   clear: right; /* LTR */
 }
 

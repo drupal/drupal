@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.159 2008/02/20 13:46:40 dries Exp $
+// $Id: menu.module,v 1.160 2008/04/10 10:28:22 dries Exp $
 
 /**
  * @file
@@ -260,7 +260,7 @@ function menu_reset_item($item) {
 /**
  * Implementation of hook_block().
  */
-function menu_block($op = 'list', $delta = 0) {
+function menu_block($op = 'list', $delta = '') {
   $menus = menu_get_menus();
   // The Navigation menu is handled by the user module.
   unset($menus['navigation']);

@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.595 2008/04/08 22:50:55 dries Exp $
+// $Id: system.module,v 1.596 2008/04/10 10:28:23 dries Exp $
 
 /**
  * @file
@@ -728,10 +728,10 @@ function system_user($type, $edit, &$user, $category = NULL) {
  *
  * Generate a block with a promotional link to Drupal.org.
  */
-function system_block($op = 'list', $delta = 0, $edit = NULL) {
+function system_block($op = 'list', $delta = '', $edit = NULL) {
   switch ($op) {
     case 'list':
-      $blocks[0] = array(
+      $blocks['powered-by'] = array(
         'info' => t('Powered by Drupal'),
         'weight' => '10',
          // Not worth caching.

@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.install,v 1.17 2008/03/15 12:31:28 dries Exp $
+// $Id: forum.install,v 1.18 2008/04/10 10:28:22 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -57,8 +57,8 @@ function forum_uninstall() {
   variable_del('forum_hot_topic');
   variable_del('forum_per_page');
   variable_del('forum_order');
-  variable_del('forum_block_num_0');
-  variable_del('forum_block_num_1');
+  variable_del('forum_block_num_active');
+  variable_del('forum_block_num_new');
 }
 
 /**

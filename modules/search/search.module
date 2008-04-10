@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.252 2008/04/02 20:13:37 dries Exp $
+// $Id: search.module,v 1.253 2008/04/10 10:28:23 dries Exp $
 
 /**
  * @file
@@ -151,11 +151,11 @@ function search_perm() {
 /**
  * Implementation of hook_block().
  */
-function search_block($op = 'list', $delta = 0) {
+function search_block($op = 'list', $delta = '') {
   if ($op == 'list') {
-    $blocks[0]['info'] = t('Search form');
+    $blocks['form']['info'] = t('Search form');
     // Not worth caching.
-    $blocks[0]['cache'] = BLOCK_NO_CACHE;
+    $blocks['form']['cache'] = BLOCK_NO_CACHE;
     return $blocks;
   }
   else if ($op == 'view' && user_access('search content')) {

@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.900 2008/04/10 01:35:31 dries Exp $
+// $Id: user.module,v 1.901 2008/04/10 10:28:23 dries Exp $
 
 /**
  * @file
@@ -635,27 +635,27 @@ function user_login_block() {
 /**
  * Implementation of hook_block().
  */
-function user_block($op = 'list', $delta = 0, $edit = array()) {
+function user_block($op = 'list', $delta = '', $edit = array()) {
   global $user;
 
   if ($op == 'list') {
-    $blocks[0]['info'] = t('User login');
+    $blocks['login']['info'] = t('User login');
     // Not worth caching.
-    $blocks[0]['cache'] = BLOCK_NO_CACHE;
+    $blocks['login']['cache'] = BLOCK_NO_CACHE;
 
-    $blocks[1]['info'] = t('Navigation');
+    $blocks['navigation']['info'] = t('Navigation');
     // Menu blocks can't be cached because each menu item can have
     // a custom access callback. menu.inc manages its own caching.
-    $blocks[1]['cache'] = BLOCK_NO_CACHE;
+    $blocks['navigation']['cache'] = BLOCK_NO_CACHE;
 
-    $blocks[2]['info'] = t('Who\'s new');
+    $blocks['new']['info'] = t('Who\'s new');
 
     // Too dynamic to cache.
-    $blocks[3]['info'] = t('Who\'s online');
-    $blocks[3]['cache'] = BLOCK_NO_CACHE;
+    $blocks['online']['info'] = t('Who\'s online');
+    $blocks['online']['cache'] = BLOCK_NO_CACHE;
     return $blocks;
   }
-  else if ($op == 'configure' && $delta == 2) {
+  else if ($op == 'configure' && $delta == 'new') {
     $form['user_block_whois_new_count'] = array(
       '#type' => 'select',
       '#title' => t('Number of users to display'),
@@ -664,17 +664,17 @@ function user_block($op = 'list', $delta = 0, $edit = array()) {
     );
     return $form;
   }
-  else if ($op == 'configure' && $delta == 3) {
+  else if ($op == 'configure' && $delta == 'online') {
     $period = drupal_map_assoc(array(30, 60, 120, 180, 300, 600, 900, 1800, 2700, 3600, 5400, 7200, 10800, 21600, 43200, 86400), 'format_interval');
     $form['user_block_seconds_online'] = array('#type' => 'select', '#title' => t('User activity'), '#default_value' => variable_get('user_block_seconds_online', 900), '#options' => $period, '#description' => t('A user is considered online for this long after they have last viewed a page.'));
     $form['user_block_max_list_count'] = array('#type' => 'select', '#title' => t('User list length'), '#default_value' => variable_get('user_block_max_list_count', 10), '#options' => drupal_map_assoc(array(0, 5, 10, 15, 20, 25, 30, 40, 50, 75, 100)), '#description' => t('Maximum number of currently online users to display.'));
 
     return $form;
   }
-  else if ($op == 'save' && $delta == 2) {
+  else if ($op == 'save' && $delta == 'new') {
     variable_set('user_block_whois_new_count', $edit['user_block_whois_new_count']);
   }
-  else if ($op == 'save' && $delta == 3) {
+  else if ($op == 'save' && $delta == 'online') {
     variable_set('user_block_seconds_online', $edit['user_block_seconds_online']);
     variable_set('user_block_max_list_count', $edit['user_block_max_list_count']);
   }
@@ -682,7 +682,7 @@ function user_block($op = 'list', $delta = 0, $edit = array()) {
     $block = array();
 
     switch ($delta) {
-      case 0:
+      case 'login':
         // For usability's sake, avoid showing two login forms on one page.
         if (!$user->uid && !(arg(0) == 'user' && !is_numeric(arg(1)))) {
 
@@ -691,14 +691,14 @@ function user_block($op = 'list', $delta = 0, $edit = array()) {
         }
         return $block;
 
-      case 1:
+      case 'navigation':
         if ($menu = menu_tree()) {
           $block['subject'] = $user->uid ? check_plain($user->name) : t('Navigation');
           $block['content'] = $menu;
         }
         return $block;
 
-      case 2:
+      case 'new':
         if (user_access('access content')) {
           // Retrieve a list of new users who have subsequently accessed the site successfully.
           $result = db_query_range('SELECT uid, name FROM {users} WHERE status != 0 AND access != 0 ORDER BY created DESC', 0, variable_get('user_block_whois_new_count', 5));
@@ -712,7 +712,7 @@ function user_block($op = 'list', $delta = 0, $edit = array()) {
         }
         return $block;
 
-      case 3:
+      case 'online':
         if (user_access('access content')) {
           // Count users active within the defined period.
           $interval = time() - variable_get('user_block_seconds_online', 900);

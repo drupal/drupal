@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.452 2008/02/20 13:46:39 dries Exp $
+// $Id: forum.module,v 1.453 2008/04/10 10:28:22 dries Exp $
 
 /**
  * @file
@@ -401,11 +401,11 @@ function forum_load($node) {
  * Generates a block containing the currently active forum topics and the
  * most recently added forum topics.
  */
-function forum_block($op = 'list', $delta = 0, $edit = array()) {
+function forum_block($op = 'list', $delta = '', $edit = array()) {
   switch ($op) {
     case 'list':
-      $blocks[0]['info'] = t('Active forum topics');
-      $blocks[1]['info'] = t('New forum topics');
+      $blocks['active']['info'] = t('Active forum topics');
+      $blocks['new']['info'] = t('New forum topics');
       return $blocks;
 
     case 'configure':
@@ -419,17 +419,17 @@ function forum_block($op = 'list', $delta = 0, $edit = array()) {
     case 'view':
       if (user_access('access content')) {
         switch ($delta) {
-          case 0:
+          case 'active':
             $title = t('Active forum topics');
             $sql = db_rewrite_sql("SELECT n.nid, n.title, l.comment_count, l.last_comment_timestamp FROM {node} n INNER JOIN {term_node} tn ON tn.vid = n.vid INNER JOIN {term_data} td ON td.tid = tn.tid INNER JOIN {node_comment_statistics} l ON n.nid = l.nid WHERE n.status = 1 AND td.vid = %d ORDER BY l.last_comment_timestamp DESC");
-            $result = db_query_range($sql, variable_get('forum_nav_vocabulary', ''), 0, variable_get('forum_block_num_0', '5'));
+            $result = db_query_range($sql, variable_get('forum_nav_vocabulary', ''), 0, variable_get('forum_block_num_active', '5'));
             $content = node_title_list($result);
             break;
 
-          case 1:
+          case 'new':
             $title = t('New forum topics');
             $sql = db_rewrite_sql("SELECT n.nid, n.title, l.comment_count FROM {node} n INNER JOIN {term_node} tn ON tn.vid = n.vid INNER JOIN {term_data} td ON td.tid = tn.tid INNER JOIN {node_comment_statistics} l ON n.nid = l.nid WHERE n.status = 1 AND td.vid = %d ORDER BY n.nid DESC");
-            $result = db_query_range($sql, variable_get('forum_nav_vocabulary', ''), 0, variable_get('forum_block_num_1', '5'));
+            $result = db_query_range($sql, variable_get('forum_nav_vocabulary', ''), 0, variable_get('forum_block_num_new', '5'));
             $content = node_title_list($result);
             break;
         }

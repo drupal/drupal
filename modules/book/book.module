@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.458 2008/03/14 08:51:37 dries Exp $
+// $Id: book.module,v 1.459 2008/04/10 10:28:22 dries Exp $
 
 /**
  * @file
@@ -178,12 +178,12 @@ function book_init() {
  * Displays the book table of contents in a block when the current page is a
  * single-node view of a book node.
  */
-function book_block($op = 'list', $delta = 0, $edit = array()) {
+function book_block($op = 'list', $delta = '', $edit = array()) {
   $block = array();
   switch ($op) {
     case 'list':
-      $block[0]['info'] = t('Book navigation');
-      $block[0]['cache'] = BLOCK_CACHE_PER_PAGE | BLOCK_CACHE_PER_ROLE;
+      $block['navigation']['info'] = t('Book navigation');
+      $block['navigation']['cache'] = BLOCK_CACHE_PER_PAGE | BLOCK_CACHE_PER_ROLE;
       return $block;
     case 'view':
       $current_bid = 0;

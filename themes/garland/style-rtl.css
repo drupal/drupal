@@ -1,4 +1,4 @@
-/* $Id: style-rtl.css,v 1.8 2008/03/13 20:02:18 dries Exp $ */
+/* $Id: style-rtl.css,v 1.9 2008/04/10 10:28:23 dries Exp $ */
 
 html {
   direction: rtl;
@@ -220,17 +220,17 @@ html.js fieldset.collapsed legend a {
 /**
  * Syndication Block
  */
-#block-node-0 h2 {
+#block-node-syndicate h2 {
   float: right;
   padding-right: 0;
   padding-left: 20px;
 }
 
-#block-node-0 img {
+#block-node-syndicate img {
   float: left;
 }
 
-#block-node-0 .content {
+#block-node-syndicate .content {
   clear: left;
 }
 

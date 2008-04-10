@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.245 2008/04/08 22:50:55 dries Exp $
+// $Id: system.install,v 1.246 2008/04/10 10:28:23 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -374,9 +374,9 @@ function system_install() {
 
   db_query("INSERT INTO {variable} (name, value) VALUES ('%s', '%s')", 'theme_default', 's:7:"garland";');
   db_query("UPDATE {system} SET status = %d WHERE type = '%s' AND name = '%s'", 1, 'theme', 'garland');
-  db_query("INSERT INTO {blocks} (module, delta, theme, status, weight, region, pages, cache) VALUES ('%s', '%s', '%s', %d, %d, '%s', '%s', %d)", 'user', '0', 'garland', 1, 0, 'left', '', -1);
-  db_query("INSERT INTO {blocks} (module, delta, theme, status, weight, region, pages, cache) VALUES ('%s', '%s', '%s', %d, %d, '%s', '%s', %d)", 'user', '1', 'garland', 1, 0, 'left', '', -1);
-  db_query("INSERT INTO {blocks} (module, delta, theme, status, weight, region, pages, cache) VALUES ('%s', '%s', '%s', %d, %d, '%s', '%s', %d)", 'system', '0', 'garland', 1, 10, 'footer', '', -1);
+  db_query("INSERT INTO {blocks} (module, delta, theme, status, weight, region, pages, cache) VALUES ('%s', '%s', '%s', %d, %d, '%s', '%s', %d)", 'user', 'login', 'garland', 1, 0, 'left', '', -1);
+  db_query("INSERT INTO {blocks} (module, delta, theme, status, weight, region, pages, cache) VALUES ('%s', '%s', '%s', %d, %d, '%s', '%s', %d)", 'user', 'navigation', 'garland', 1, 0, 'left', '', -1);
+  db_query("INSERT INTO {blocks} (module, delta, theme, status, weight, region, pages, cache) VALUES ('%s', '%s', '%s', %d, %d, '%s', '%s', %d)", 'system', 'powered-by', 'garland', 1, 10, 'footer', '', -1);
 
   db_query("INSERT INTO {node_access} (nid, gid, realm, grant_view, grant_update, grant_delete) VALUES (%d, %d, '%s', %d, %d, %d)", 0, 0, 'all', 1, 0, 0);
 
@@ -2755,6 +2755,95 @@ function system_update_7003() {
   return $ret;
 }
 
+/**
+ * Remove hardcoded numeric deltas from all blocks in core.
+ */
+function system_update_7004(&$sandbox) {
+  $ret = array();
+  // Get an array of the renamed block deltas, organized by module.
+  $renamed_deltas = array(
+    'blog' => array('0' => 'recent'),
+    'book' => array('0' => 'navigation'),
+    'comment' => array('0' => 'recent'),
+    'forum' => array(
+      '0' => 'active',
+      '1' => 'new',
+    ),
+    'locale' => array('0' => 'language-switcher'),
+    'node' => array('0' => 'syndicate'),
+    'poll' => array('0' => 'recent'),
+    'profile' => array('0' => 'author-information'),
+    'search' => array('0' => 'form'),
+    'statistics' => array('0' => 'popular'),
+    'system' => array('0' => 'powered-by'),
+    'user' => array(
+      '0' => 'login',
+      '1' => 'navigation',
+      '2' => 'new',
+      '3' => 'online',
+    ),
+  );
+  // Loop through each block and make changes to the core block tables.
+  // Only run this the first time through the batch update.
+  if (!isset($sandbox['progress'])) {
+    $block_tables = array('blocks', 'blocks_roles');
+    foreach ($block_tables as $table) {
+      foreach ($renamed_deltas as $module => $deltas) {
+        foreach ($deltas as $old_delta => $new_delta) {
+          // Only do the update if the old block actually exists.
+          if (db_result(db_query("SELECT COUNT(*) FROM {". $table ."} WHERE module = '%s' AND delta = '%s'", $module, $old_delta))) {
+            $ret[] = update_sql("UPDATE {". $table ."} SET delta = '". $new_delta ."' WHERE module = '". $module ."' AND delta = '". $old_delta ."'");
+          }
+        }
+      }
+    }
+    // Rename forum module's block variables.
+    $forum_block_num_0 = variable_get('forum_block_num_0', NULL);
+    if (isset($forum_block_num_0)) {
+      variable_set('forum_block_num_active', $forum_block_num_0);
+      variable_del('forum_block_num_0');
+    }
+    $forum_block_num_1 = variable_get('forum_block_num_1', NULL);
+    if (isset($forum_block_num_1)) {
+      variable_set('forum_block_num_new', $forum_block_num_1);
+      variable_del('forum_block_num_1');
+    }
+    // Initialize batch update information.
+    $sandbox['progress'] = 0;
+    $sandbox['last_user_processed'] = -1;
+    $sandbox['max'] = db_result(db_query("SELECT COUNT(*) FROM {users} WHERE data IS NOT NULL"));
+  }
+  // Now do the batch update of the user-specific block visibility settings.
+  $limit = 100;
+  $result = db_query_range("SELECT uid, data FROM {users} WHERE uid > %d AND data IS NOT NULL", $sandbox['last_user_processed'], 0, $limit);
+  while ($row = db_fetch_object($result)) {
+    $data = unserialize($row->data);
+    $user_needs_update = FALSE;
+    foreach ($renamed_deltas as $module => $deltas) {
+      foreach ($deltas as $old_delta => $new_delta) {
+        if (isset($data['block'][$module][$old_delta])) {
+          // Transfer the old block visibility settings to the newly-renamed
+          // block, and mark this user for a database update.
+          $data['block'][$module][$new_delta] = $data['block'][$module][$old_delta];
+          unset($data['block'][$module][$old_delta]);
+          $user_needs_update = TRUE;
+        }
+      }
+    }
+    // Update the current user.
+    if ($user_needs_update) {
+      db_query("UPDATE {users} SET data = '%s' WHERE uid = %d", serialize($data), $row->uid);
+    }
+    // Update our progress information for the batch update.
+    $sandbox['progress']++;
+    $sandbox['last_user_processed'] = $row->uid;
+  }
+  // Indicate our current progress to the batch update system.
+  if ($sandbox['progress'] < $sandbox['max']) {
+    $ret['#finished'] = $sandbox['progress'] / $sandbox['max'];
+  }
+  return $ret;
+}
 
 /**
  * @} End of "defgroup updates-6.x-to-7.x"

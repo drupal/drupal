@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.299 2008/02/20 13:46:38 dries Exp $
+// $Id: blog.module,v 1.300 2008/04/10 10:28:22 dries Exp $
 
 /**
  * @file
@@ -172,10 +172,10 @@ function blog_menu() {
  *
  * Displays the most recent 10 blog titles.
  */
-function blog_block($op = 'list', $delta = 0) {
+function blog_block($op = 'list', $delta = '') {
   global $user;
   if ($op == 'list') {
-    $block[0]['info'] = t('Recent blog posts');
+    $block['recent']['info'] = t('Recent blog posts');
     return $block;
   }
   else if ($op == 'view') {

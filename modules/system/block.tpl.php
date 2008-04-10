@@ -1,5 +1,5 @@
 <?php
-// $Id: block.tpl.php,v 1.4 2007/09/01 05:42:48 dries Exp $
+// $Id: block.tpl.php,v 1.5 2008/04/10 10:28:23 dries Exp $
 
 /**
  * @file block.tpl.php
@@ -10,7 +10,7 @@
  * - $block->subject: Block title.
  * - $block->content: Block content.
  * - $block->module: Module that generated the block.
- * - $block->delta: This is a numeric id connected to each module.
+ * - $block->delta: An ID for the block, unique within each module.
  * - $block->region: The block region embedding the current block.
  *
  * Helper variables:
