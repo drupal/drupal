@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.622 2008/04/06 18:50:11 dries Exp $
+// $Id: comment.module,v 1.623 2008/04/10 01:45:38 dries Exp $
 
 /**
  * @file
@@ -976,13 +976,13 @@ function comment_render($node, $cid = 0) {
     }
     else {
       // Multiple comment view
-      $query_count = 'SELECT COUNT(*) FROM {comments} WHERE nid = %d';
+      $query_count = 'SELECT COUNT(*) FROM {comments} c WHERE c.nid = %d';
       $query = 'SELECT c.cid as cid, c.pid, c.nid, c.subject, c.comment, c.format, c.timestamp, c.name, c.mail, c.homepage, u.uid, u.name AS registered_name, u.signature, u.picture, u.data, c.thread, c.status FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.nid = %d';
 
       $query_args = array($nid);
       if (!user_access('administer comments')) {
         $query .= ' AND c.status = %d';
-        $query_count .= ' AND status = %d';
+        $query_count .= ' AND c.status = %d';
         $query_args[] = COMMENT_PUBLISHED;
       }
 
