@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.install,v 1.7 2008/03/15 12:31:28 dries Exp $
+// $Id: filter.install,v 1.8 2008/04/11 02:55:55 dries Exp $
 
 /**
  * Implementation of hook_schema().
@@ -104,5 +104,21 @@ function filter_schema() {
 function filter_update_7000() {
   $ret = array();
   db_add_field($ret, 'filter_formats', 'weight', array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny'));
+  return $ret;
+}
+
+/**
+ * Break out "escape HTML filter" option to its own filter.
+ */
+function filter_update_7001() {
+  $ret = array();
+  $result = db_query("SELECT format FROM {filter_formats}");
+  while ($format = db_fetch_object($result)) {
+    // Deprecated constants FILTER_HTML_STRIP = 1 and FILTER_HTML_ESCAPE = 2.
+    if (variable_get('filter_html_'. $format->format, 1) == 2) {
+      $ret[] = update_sql("INSERT INTO {filters} (format, module, delta, weight) VALUES (". $format->format .", 'filter', 4, 0)");
+    }
+    variable_del('filter_html_'. $format->format);
+  }
   return $ret;
 }
