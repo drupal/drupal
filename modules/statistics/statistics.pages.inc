@@ -15,7 +15,7 @@ function statistics_node_tracker() {
         array('data' => t('User'), 'field' => 'u.name'),
         array('data' => t('Operations')));
 
-    $result = pager_query('SELECT a.aid, a.timestamp, a.url, a.uid, u.name FROM {accesslog} a LEFT JOIN {users} u ON a.uid = u.uid WHERE a.path LIKE \'node/%d%%\''. tablesort_sql($header), 30, 0, NULL, $node->nid);
+    $result = pager_query('SELECT a.aid, a.timestamp, a.url, a.uid, u.name FROM {accesslog} a LEFT JOIN {users} u ON a.uid = u.uid WHERE a.path LIKE \'node/%d%%\'' . tablesort_sql($header), 30, 0, NULL, $node->nid);
     $rows = array();
     while ($log = db_fetch_object($result)) {
       $rows[] = array(
@@ -47,7 +47,7 @@ function statistics_user_tracker() {
         array('data' => t('Page'), 'field' => 'path'),
         array('data' => t('Operations')));
 
-    $result = pager_query('SELECT aid, timestamp, path, title FROM {accesslog} WHERE uid = %d'. tablesort_sql($header), 30, 0, NULL, $account->uid);
+    $result = pager_query('SELECT aid, timestamp, path, title FROM {accesslog} WHERE uid = %d' . tablesort_sql($header), 30, 0, NULL, $account->uid);
     $rows = array();
     while ($log = db_fetch_object($result)) {
       $rows[] = array(

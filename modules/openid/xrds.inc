@@ -36,8 +36,8 @@ function _xrds_element_end(&$parser, $name) {
 
   $name = _xrds_strip_namespace($name);
   if ($name == 'SERVICE') {
-    if (in_array(OPENID_NS_2_0 .'/signon', $xrds_current_service['types']) ||
-        in_array(OPENID_NS_2_0 .'/server', $xrds_current_service['types'])) {
+    if (in_array(OPENID_NS_2_0 . '/signon', $xrds_current_service['types']) ||
+        in_array(OPENID_NS_2_0 . '/server', $xrds_current_service['types'])) {
       $xrds_current_service['version'] = 2;
     }
     elseif (in_array(OPENID_NS_1_1, $xrds_current_service['types']) ||

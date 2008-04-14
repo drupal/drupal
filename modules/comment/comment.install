@@ -51,7 +51,7 @@ function comment_update_6002() {
   foreach ($settings as $setting => $default) {
     $value = variable_get($setting, $default);
     foreach ($types as $type => $object) {
-      variable_set($setting .'_'. $type, $value);
+      variable_set($setting . '_' . $type, $value);
     }
     variable_del($setting);
   }

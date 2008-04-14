@@ -1,7 +1,7 @@
 <?php
 // $Id$
 ?>
-<div class="comment<?php print ' '. $status; ?>">
+<div class="comment<?php print ' ' . $status; ?>">
   <?php if ($picture) : ?>
     <?php print $picture ?>
   <?php endif; ?>

@@ -110,7 +110,7 @@ function sess_regenerate() {
  */
 function sess_count($timestamp = 0, $anonymous = true) {
   $query = $anonymous ? ' AND uid = 0' : ' AND uid > 0';
-  return db_result(db_query('SELECT COUNT(sid) AS count FROM {sessions} WHERE timestamp >= %d'. $query, $timestamp));
+  return db_result(db_query('SELECT COUNT(sid) AS count FROM {sessions} WHERE timestamp >= %d' . $query, $timestamp));
 }
 
 /**

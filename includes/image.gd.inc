@@ -183,7 +183,7 @@ function image_gd_crop($source, $destination, $x, $y, $width, $height) {
  */
 function image_gd_open($file, $extension) {
   $extension = str_replace('jpg', 'jpeg', $extension);
-  $open_func = 'imageCreateFrom'. $extension;
+  $open_func = 'imageCreateFrom' . $extension;
   if (!function_exists($open_func)) {
     return FALSE;
   }
@@ -204,7 +204,7 @@ function image_gd_open($file, $extension) {
  */
 function image_gd_close($res, $destination, $extension) {
   $extension = str_replace('jpg', 'jpeg', $extension);
-  $close_func = 'image'. $extension;
+  $close_func = 'image' . $extension;
   if (!function_exists($close_func)) {
     return FALSE;
   }

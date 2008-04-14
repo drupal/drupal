@@ -78,7 +78,7 @@ function _batch_progress_page_js() {
   $url = url($batch['url'], array('query' => array('id' => $batch['id'])));
   $js_setting = array(
     'batch' => array(
-      'errorMessage' => $current_set['error_message'] .'<br/>'. $batch['error_message'],
+      'errorMessage' => $current_set['error_message'] . '<br/>' . $batch['error_message'],
       'initMessage' => $current_set['init_message'],
       'uri' => $url,
     ),
@@ -132,7 +132,7 @@ function _batch_progress_page_nojs() {
     // function), it will output whatever is in the output buffer,
     // followed by the error message.
     ob_start();
-    $fallback = $current_set['error_message'] .'<br/>'. $batch['error_message'];
+    $fallback = $current_set['error_message'] . '<br/>' . $batch['error_message'];
     $fallback = theme('maintenance_page', $fallback, FALSE, FALSE);
 
     // We strip the end of the page using a marker in the template, so any
@@ -153,7 +153,7 @@ function _batch_progress_page_nojs() {
   }
 
   $url = url($batch['url'], array('query' => array('id' => $batch['id'], 'op' => $new_op)));
-  drupal_set_html_head('<meta http-equiv="Refresh" content="0; URL='. $url .'">');
+  drupal_set_html_head('<meta http-equiv="Refresh" content="0; URL=' . $url . '">');
   $output = theme('progress_bar', $percentage, $message);
   return $output;
 }
@@ -243,7 +243,7 @@ function _batch_process() {
       '@current'    => floor($current),
       '@percentage' => $percentage,
       );
-    $message = strtr($progress_message, $values) .'<br/>';
+    $message = strtr($progress_message, $values) . '<br/>';
     $message .= $task_message ? $task_message : '&nbsp';
 
     return array($percentage, $message);

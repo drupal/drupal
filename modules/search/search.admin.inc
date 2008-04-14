@@ -45,8 +45,8 @@ function search_admin_settings() {
     }
   }
   $count = format_plural($remaining, 'There is 1 item left to index.', 'There are @count items left to index.');
-  $percentage = ((int)min(100, 100 * ($total - $remaining) / max(1, $total))) .'%';
-  $status = '<p><strong>'. t('%percentage of the site has been indexed.', array('%percentage' => $percentage)) .' '. $count .'</strong></p>';
+  $percentage = ((int)min(100, 100 * ($total - $remaining) / max(1, $total))) . '%';
+  $status = '<p><strong>' . t('%percentage of the site has been indexed.', array('%percentage' => $percentage)) . ' ' . $count . '</strong></p>';
   $form['status'] = array('#type' => 'fieldset', '#title' => t('Indexing status'));
   $form['status']['status'] = array('#value' => $status);
   $form['status']['wipe'] = array('#type' => 'submit', '#value' => t('Re-index site'));

@@ -65,8 +65,8 @@ function actions_do($action_ids, $object = NULL, $context = NULL, $a1 = NULL, $a
     if ($where) {
       $where_clause = implode(' ', $where);
       // Strip off leading 'OR '.
-      $where_clause = '('. strstr($where_clause, " ") .')';
-      $result_db = db_query('SELECT * FROM {actions} WHERE '. $where_clause, $where_values);
+      $where_clause = '(' . strstr($where_clause, " ") . ')';
+      $result_db = db_query('SELECT * FROM {actions} WHERE ' . $where_clause, $where_values);
       while ($action = db_fetch_object($result_db)) {
         $actions[$action->aid] = $action->parameters ? unserialize($action->parameters) : array();
         $actions[$action->aid]['callback'] = $action->callback;

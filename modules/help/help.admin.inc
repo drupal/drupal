@@ -11,8 +11,8 @@
  */
 function help_main() {
   // Add CSS
-  drupal_add_css(drupal_get_path('module', 'help') .'/help.css', 'module', 'all', FALSE);
-  $output = '<h2>'. t('Help topics') .'</h2><p>'. t('Help is available on the following items:') .'</p>'. help_links_as_list();
+  drupal_add_css(drupal_get_path('module', 'help') . '/help.css', 'module', 'all', FALSE);
+  $output = '<h2>' . t('Help topics') . '</h2><p>' . t('Help is available on the following items:') . '</p>' . help_links_as_list();
   return $output;
 }
 
@@ -22,7 +22,7 @@ function help_main() {
 function help_page($name) {
   $output = '';
   if (module_hook($name, 'help')) {
-    $module = drupal_parse_info_file(drupal_get_path('module', $name) .'/'. $name .'.info');
+    $module = drupal_parse_info_file(drupal_get_path('module', $name) . '/' . $name . '.info');
     drupal_set_title($module['name']);
 
     $temp = module_invoke($name, 'help', "admin/help#$name", drupal_help_arg());
@@ -63,9 +63,9 @@ function help_links_as_list() {
   $output = '<div class="clear-block"><div class="help-items"><ul>';
   $i = 0;
   foreach ($modules as $module => $name) {
-    $output .= '<li>'. l($name, 'admin/help/'. $module) .'</li>';
+    $output .= '<li>' . l($name, 'admin/help/' . $module) . '</li>';
     if (($i + 1) % $break == 0 && ($i + 1) != $count) {
-      $output .= '</ul></div><div class="help-items'. ($i + 1 == $break * 3 ? ' help-items-last' : '') .'"><ul>';
+      $output .= '</ul></div><div class="help-items' . ($i + 1 == $break * 3 ? ' help-items-last' : '') . '"><ul>';
     }
     $i++;
   }

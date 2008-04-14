@@ -136,7 +136,7 @@ function language_url_rewrite(&$path, &$options) {
 
       case LANGUAGE_NEGOTIATION_PATH:
         if (!empty($options['language']->prefix)) {
-          $options['prefix'] = $options['language']->prefix .'/';
+          $options['prefix'] = $options['language']->prefix . '/';
         }
         break;
     }

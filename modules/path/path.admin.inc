@@ -220,7 +220,7 @@ function path_admin_filter_form(&$form_state, $keys = '') {
  * Process filter form submission when the Filter button is pressed.
  */
 function path_admin_filter_form_submit_filter($form, &$form_state) {
-  $form_state['redirect'] = 'admin/build/path/list/'. trim($form_state['values']['filter']);
+  $form_state['redirect'] = 'admin/build/path/list/' . trim($form_state['values']['filter']);
 }
 
 /**

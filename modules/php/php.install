@@ -17,7 +17,7 @@ function php_install() {
     // Enable the PHP evaluator filter.
     db_query("INSERT INTO {filters} (format, module, delta, weight) VALUES (%d, 'php', 0, 0)", $format);
 
-    drupal_set_message(t('A !php-code input format has been created.', array('!php-code' => l('PHP code', 'admin/settings/filters/'. $format))));
+    drupal_set_message(t('A !php-code input format has been created.', array('!php-code' => l('PHP code', 'admin/settings/filters/' . $format))));
   }
 }
 

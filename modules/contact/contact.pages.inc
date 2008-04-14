@@ -143,7 +143,7 @@ function contact_mail_page_submit($form, &$form_state) {
   }
 
   flood_register_event('contact');
-  watchdog('mail', '%name-from sent an e-mail regarding %category.', array('%name-from' => $values['name'] ." [$from]", '%category' => $contact['category']));
+  watchdog('mail', '%name-from sent an e-mail regarding %category.', array('%name-from' => $values['name'] . " [$from]", '%category' => $contact['category']));
   drupal_set_message(t('Your message has been sent.'));
 
   // Jump to home page rather than back to contact page to avoid
@@ -177,7 +177,7 @@ function contact_mail_user(&$form_state, $recipient) {
   $form['recipient'] = array('#type' => 'value', '#value' => $recipient);
   $form['from'] = array('#type' => 'item',
     '#title' => t('From'),
-    '#value' => check_plain($user->name) .' &lt;'. check_plain($user->mail) .'&gt;',
+    '#value' => check_plain($user->name) . ' &lt;' . check_plain($user->mail) . '&gt;',
   );
   $form['to'] = array('#type' => 'item',
     '#title' => t('To'),
