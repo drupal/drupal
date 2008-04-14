@@ -465,7 +465,7 @@ function _xmlrpc() {
  */
 function xmlrpc_errno() {
   $error = xmlrpc_error();
-  return $error->code;
+  return ($error != NULL ? $error->code : NULL);
 }
 
 /**
@@ -473,5 +473,5 @@ function xmlrpc_errno() {
  */
 function xmlrpc_error_msg() {
   $error = xmlrpc_error();
-  return $error->message;
+  return ($error != NULL ? $error->message : NULL);
 }
