@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.51 2008/04/06 18:50:12 dries Exp $
+// $Id: content_types.inc,v 1.52 2008/04/14 17:48:38 dries Exp $
 
 /**
  * @file
@@ -20,16 +20,16 @@ function node_overview_types() {
     if (node_hook($type, 'form')) {
       $type_url_str = str_replace('_', '-', $type->type);
       $row = array(
-        l($name, 'admin/content/node-type/'. $type_url_str),
+        l($name, 'admin/content/node-type/' . $type_url_str),
         check_plain($type->type),
         filter_xss_admin($type->description),
       );
       // Set the edit column.
-      $row[] = array('data' => l(t('edit'), 'admin/content/node-type/'. $type_url_str));
+      $row[] = array('data' => l(t('edit'), 'admin/content/node-type/' . $type_url_str));
 
       // Set the delete column.
       if ($type->custom) {
-        $row[] = array('data' => l(t('delete'), 'admin/content/node-type/'. $type_url_str .'/delete'));
+        $row[] = array('data' => l(t('delete'), 'admin/content/node-type/' . $type_url_str . '/delete'));
       }
       else {
         $row[] = array('data' => '');
@@ -152,7 +152,7 @@ function node_type_form(&$form_state, $type = NULL) {
   );
   $form['workflow']['node_options'] = array('#type' => 'checkboxes',
     '#title' => t('Default options'),
-    '#default_value' => variable_get('node_options_'. $type->type, array('status', 'promote')),
+    '#default_value' => variable_get('node_options_' . $type->type, array('status', 'promote')),
     '#options' => array(
       'status' => t('Published'),
       'promote' => t('Promoted to front page'),
@@ -280,7 +280,7 @@ function node_type_form_submit($form, &$form_state) {
     node_type_reset($type);
   }
   elseif ($op == t('Delete content type')) {
-    $form_state['redirect'] = 'admin/content/node-type/'. str_replace('_', '-', $type->old_type) .'/delete';
+    $form_state['redirect'] = 'admin/content/node-type/' . str_replace('_', '-', $type->old_type) . '/delete';
     return;
   }
 
@@ -300,8 +300,8 @@ function node_type_form_submit($form, &$form_state) {
 
   // Save or reset persistent variable values.
   foreach ($variables as $key => $value) {
-    $variable_new = $key .'_'. $type->type;
-    $variable_old = $key .'_'. $type->old_type;
+    $variable_new = $key . '_' . $type->type;
+    $variable_old = $key . '_' . $type->old_type;
 
     if ($op == t('Reset to defaults')) {
       variable_del($variable_old);
@@ -385,10 +385,10 @@ function node_type_delete_confirm(&$form_state, $type) {
 
   $num_nodes = db_result(db_query("SELECT COUNT(*) FROM {node} WHERE type = '%s'", $type->type));
   if ($num_nodes) {
-    $caption .= '<p>'. format_plural($num_nodes, '<strong>Warning:</strong> there is currently 1 %type post on your site. It may not be able to be displayed or edited correctly, once you have removed this content type.', '<strong>Warning:</strong> there are currently @count %type posts on your site. They may not be able to be displayed or edited correctly, once you have removed this content type.', array('%type' => $type->name)) .'</p>';
+    $caption .= '<p>' . format_plural($num_nodes, '<strong>Warning:</strong> there is currently 1 %type post on your site. It may not be able to be displayed or edited correctly, once you have removed this content type.', '<strong>Warning:</strong> there are currently @count %type posts on your site. They may not be able to be displayed or edited correctly, once you have removed this content type.', array('%type' => $type->name)) . '</p>';
   }
 
-  $caption .= '<p>'. t('This action cannot be undone.') .'</p>';
+  $caption .= '<p>' . t('This action cannot be undone.') . '</p>';
 
   return confirm_form($form, $message, 'admin/build/types', $caption, t('Delete'));
 }

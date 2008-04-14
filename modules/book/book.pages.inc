@@ -1,5 +1,5 @@
 <?php
-// $Id: book.pages.inc,v 1.5 2007/12/22 23:24:24 goba Exp $
+// $Id: book.pages.inc,v 1.6 2008/04/14 17:48:36 dries Exp $
 
 /**
  * @file
@@ -43,7 +43,7 @@ function book_export($type, $nid) {
 
   $type = drupal_strtolower($type);
 
-  $export_function = 'book_export_'. $type;
+  $export_function = 'book_export_' . $type;
 
   if (function_exists($export_function)) {
     print call_user_func($export_function, $nid);
@@ -144,7 +144,7 @@ function book_outline_form(&$form_state, $node) {
  * @see book_outline_form()
  */
 function book_remove_button_submit($form, &$form_state) {
-  $form_state['redirect'] = 'node/'. $form['#node']->nid .'/outline/remove';
+  $form_state['redirect'] = 'node/' . $form['#node']->nid . '/outline/remove';
 }
 
 /**
@@ -154,7 +154,7 @@ function book_remove_button_submit($form, &$form_state) {
  */
 function book_outline_form_submit($form, &$form_state) {
   $node = $form['#node'];
-  $form_state['redirect'] = "node/". $node->nid;
+  $form_state['redirect'] = "node/" . $node->nid;
   $book_link = $form_state['values']['book'];
   if (!$book_link['bid']) {
     drupal_set_message(t('No changes were made'));
@@ -167,7 +167,7 @@ function book_outline_form_submit($form, &$form_state) {
     if ($node->book['parent_mismatch']) {
       // This will usually only happen when JS is disabled.
       drupal_set_message(t('The post has been added to the selected book. You may now position it relative to other pages.'));
-      $form_state['redirect'] = "node/". $node->nid ."/outline";
+      $form_state['redirect'] = "node/" . $node->nid . "/outline";
     }
     else {
       drupal_set_message(t('The book outline has been updated.'));
@@ -196,7 +196,7 @@ function book_remove_form(&$form_state, $node) {
     $description = t('%title may be added to hierarchy again using the Outline tab.', $title);
   }
 
-  return confirm_form($form, t('Are you sure you want to remove %title from the book hierarchy?', $title), 'node/'. $node->nid, $description, t('Remove'));
+  return confirm_form($form, t('Are you sure you want to remove %title from the book hierarchy?', $title), 'node/' . $node->nid, $description, t('Remove'));
 }
 
 /**
@@ -212,7 +212,7 @@ function book_remove_form_submit($form, &$form_state) {
     db_query('DELETE FROM {book} WHERE nid = %d', $node->nid);
     drupal_set_message(t('The post has been removed from the book.'));
   }
-  $form_state['redirect'] = 'node/'. $node->nid;
+  $form_state['redirect'] = 'node/' . $node->nid;
 }
 
 /**
@@ -231,7 +231,7 @@ function book_remove_form_submit($form, &$form_state) {
  *   Prints the replacement HTML in JSON format.
  */
 function book_form_update() {
-  $cid = 'form_'. $_POST['form_build_id'];
+  $cid = 'form_' . $_POST['form_build_id'];
   $bid = $_POST['book']['bid'];
   $cache = cache_get($cid, 'cache_form');
   if ($cache) {

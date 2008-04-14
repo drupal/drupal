@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.install,v 1.20 2008/03/15 12:31:28 dries Exp $
+// $Id: comment.install,v 1.21 2008/04/14 17:48:36 dries Exp $
 
 /**
  * Implementation of hook_enable().
@@ -51,7 +51,7 @@ function comment_update_6002() {
   foreach ($settings as $setting => $default) {
     $value = variable_get($setting, $default);
     foreach ($types as $type => $object) {
-      variable_set($setting .'_'. $type, $value);
+      variable_set($setting . '_' . $type, $value);
     }
     variable_del($setting);
   }

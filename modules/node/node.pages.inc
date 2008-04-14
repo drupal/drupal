@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.29 2008/02/17 19:29:07 dries Exp $
+// $Id: node.pages.inc,v 1.30 2008/04/14 17:48:38 dries Exp $
 
 /**
  * @file
@@ -12,7 +12,7 @@
  */
 function node_page_edit($node) {
   drupal_set_title($node->title);
-  return drupal_get_form($node->type .'_node_form', $node);
+  return drupal_get_form($node->type . '_node_form', $node);
 }
 
 function node_add_page() {
@@ -32,8 +32,8 @@ function theme_node_add_list($content) {
   if ($content) {
     $output = '<dl class="node-type-list">';
     foreach ($content as $item) {
-      $output .= '<dt>'. l($item['title'], $item['href'], $item['options']) .'</dt>';
-      $output .= '<dd>'. filter_xss_admin($item['description']) .'</dd>';
+      $output .= '<dt>' . l($item['title'], $item['href'], $item['options']) . '</dt>';
+      $output .= '<dd>' . filter_xss_admin($item['description']) . '</dd>';
     }
     $output .= '</dl>';
   }
@@ -55,7 +55,7 @@ function node_add($type) {
     $node = array('uid' => $user->uid, 'name' => (isset($user->name) ? $user->name : ''), 'type' => $type, 'language' => '');
 
     drupal_set_title(t('Create @name', array('@name' => $types[$type]->name)));
-    $output = drupal_get_form($type .'_node_form', $node);
+    $output = drupal_get_form($type . '_node_form', $node);
   }
 
   return $output;
@@ -67,7 +67,7 @@ function node_form_validate($form, &$form_state) {
 
 function node_object_prepare(&$node) {
   // Set up default values, if required.
-  $node_options = variable_get('node_options_'. $node->type, array('status', 'promote'));
+  $node_options = variable_get('node_options_' . $node->type, array('status', 'promote'));
   // If this is a new node, fill in the default values.
   if (!isset($node->nid)) {
     foreach (array('status', 'promote', 'sticky') as $key) {
@@ -249,7 +249,7 @@ function node_form(&$form_state, $node) {
     );
   }
   $form['#validate'][] = 'node_form_validate';
-  $form['#theme'] = array($node->type .'_node_form', 'node_form');
+  $form['#theme'] = array($node->type . '_node_form', 'node_form');
   return $form;
 }
 
@@ -306,7 +306,7 @@ function node_form_delete_submit($form, &$form_state) {
     unset($_REQUEST['destination']);
   }
   $node = $form['#node'];
-  $form_state['redirect'] = array('node/'. $node->nid .'/delete', $destination);
+  $form_state['redirect'] = array('node/' . $node->nid . '/delete', $destination);
 }
 
 
@@ -431,9 +431,9 @@ function theme_node_preview($node) {
 
   if ($preview_trimmed_version) {
     drupal_set_message(t('The trimmed version of your post shows what your post looks like when promoted to the main page or when exported for syndication.<span class="no-js"> You can insert the delimiter "&lt;!--break--&gt;" (without the quotes) to fine-tune where your post gets split.</span>'));
-    $output .= '<h3>'. t('Preview trimmed version') .'</h3>';
+    $output .= '<h3>' . t('Preview trimmed version') . '</h3>';
     $output .= node_view(clone $node, 1, FALSE, 0);
-    $output .= '<h3>'. t('Preview full version') .'</h3>';
+    $output .= '<h3>' . t('Preview full version') . '</h3>';
     $output .= node_view($node, 0, FALSE, 0);
   }
   else {
@@ -450,7 +450,7 @@ function node_form_submit($form, &$form_state) {
   $node = node_form_submit_build_node($form, $form_state);
   $insert = empty($node->nid);
   node_save($node);
-  $node_link = l(t('view'), 'node/'. $node->nid);
+  $node_link = l(t('view'), 'node/' . $node->nid);
   $watchdog_args = array('@type' => $node->type, '%title' => $node->title);
   $t_args = array('@type' => node_get_types('name', $node), '%title' => $node->title);
 
@@ -465,7 +465,7 @@ function node_form_submit($form, &$form_state) {
   if ($node->nid) {
     unset($form_state['rebuild']);
     $form_state['nid'] = $node->nid;
-    $form_state['redirect'] = 'node/'. $node->nid;
+    $form_state['redirect'] = 'node/' . $node->nid;
   }
   else {
     // In the unlikely case something went wrong on save, the node will be
@@ -499,7 +499,7 @@ function node_delete_confirm(&$form_state, $node) {
 
   return confirm_form($form,
     t('Are you sure you want to delete %title?', array('%title' => $node->title)),
-    isset($_GET['destination']) ? $_GET['destination'] : 'node/'. $node->nid,
+    isset($_GET['destination']) ? $_GET['destination'] : 'node/' . $node->nid,
     t('This action cannot be undone.'),
     t('Delete'),
     t('Cancel')
@@ -542,13 +542,13 @@ function node_revision_overview($node) {
 
     if ($revision->current_vid > 0) {
       $row[] = array('data' => t('!date by !username', array('!date' => l(format_date($revision->timestamp, 'small'), "node/$node->nid"), '!username' => theme('username', $revision)))
-                               . (($revision->log != '') ? '<p class="revision-log">'. filter_xss($revision->log) .'</p>' : ''),
+                               . (($revision->log != '') ? '<p class="revision-log">' . filter_xss($revision->log) . '</p>' : ''),
                      'class' => 'revision-current');
       $operations[] = array('data' => theme('placeholder', t('current revision')), 'class' => 'revision-current', 'colspan' => 2);
     }
     else {
       $row[] = t('!date by !username', array('!date' => l(format_date($revision->timestamp, 'small'), "node/$node->nid/revisions/$revision->vid/view"), '!username' => theme('username', $revision)))
-               . (($revision->log != '') ? '<p class="revision-log">'. filter_xss($revision->log) .'</p>' : '');
+               . (($revision->log != '') ? '<p class="revision-log">' . filter_xss($revision->log) . '</p>' : '');
       if ($revert_permission) {
         $operations[] = l(t('revert'), "node/$node->nid/revisions/$revision->vid/revert");
       }
@@ -567,7 +567,7 @@ function node_revision_overview($node) {
  */
 function node_revision_revert_confirm($form_state, $node_revision) {
   $form['#node_revision'] = $node_revision;
-  return confirm_form($form, t('Are you sure you want to revert to the revision from %revision-date?', array('%revision-date' => format_date($node_revision->revision_timestamp))), 'node/'. $node_revision->nid .'/revisions', '', t('Revert'), t('Cancel'));
+  return confirm_form($form, t('Are you sure you want to revert to the revision from %revision-date?', array('%revision-date' => format_date($node_revision->revision_timestamp))), 'node/' . $node_revision->nid . '/revisions', '', t('Revert'), t('Cancel'));
 }
 
 function node_revision_revert_confirm_submit($form, &$form_state) {
@@ -582,12 +582,12 @@ function node_revision_revert_confirm_submit($form, &$form_state) {
 
   watchdog('content', '@type: reverted %title revision %revision.', array('@type' => $node_revision->type, '%title' => $node_revision->title, '%revision' => $node_revision->vid));
   drupal_set_message(t('@type %title has been reverted back to the revision from %revision-date.', array('@type' => node_get_types('name', $node_revision), '%title' => $node_revision->title, '%revision-date' => format_date($node_revision->revision_timestamp))));
-  $form_state['redirect'] = 'node/'. $node_revision->nid .'/revisions';
+  $form_state['redirect'] = 'node/' . $node_revision->nid . '/revisions';
 }
 
 function node_revision_delete_confirm($form_state, $node_revision) {
   $form['#node_revision'] = $node_revision;
-  return confirm_form($form, t('Are you sure you want to delete the revision from %revision-date?', array('%revision-date' => format_date($node_revision->revision_timestamp))), 'node/'. $node_revision->nid .'/revisions', t('This action cannot be undone.'), t('Delete'), t('Cancel'));
+  return confirm_form($form, t('Are you sure you want to delete the revision from %revision-date?', array('%revision-date' => format_date($node_revision->revision_timestamp))), 'node/' . $node_revision->nid . '/revisions', t('This action cannot be undone.'), t('Delete'), t('Cancel'));
 }
 
 function node_revision_delete_confirm_submit($form, &$form_state) {
@@ -596,7 +596,7 @@ function node_revision_delete_confirm_submit($form, &$form_state) {
   node_invoke_nodeapi($node_revision, 'delete revision');
   watchdog('content', '@type: deleted %title revision %revision.', array('@type' => $node_revision->type, '%title' => $node_revision->title, '%revision' => $node_revision->vid));
   drupal_set_message(t('Revision from %revision-date of @type %title has been deleted.', array('%revision-date' => format_date($node_revision->revision_timestamp), '@type' => node_get_types('name', $node_revision), '%title' => $node_revision->title)));
-  $form_state['redirect'] = 'node/'. $node_revision->nid;
+  $form_state['redirect'] = 'node/' . $node_revision->nid;
   if (db_result(db_query('SELECT COUNT(vid) FROM {node_revisions} WHERE nid = %d', $node_revision->nid)) > 1) {
     $form_state['redirect'] .= '/revisions';
   }

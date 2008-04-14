@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.install,v 1.8 2008/04/11 02:55:55 dries Exp $
+// $Id: filter.install,v 1.9 2008/04/14 17:48:37 dries Exp $
 
 /**
  * Implementation of hook_schema().
@@ -115,10 +115,10 @@ function filter_update_7001() {
   $result = db_query("SELECT format FROM {filter_formats}");
   while ($format = db_fetch_object($result)) {
     // Deprecated constants FILTER_HTML_STRIP = 1 and FILTER_HTML_ESCAPE = 2.
-    if (variable_get('filter_html_'. $format->format, 1) == 2) {
-      $ret[] = update_sql("INSERT INTO {filters} (format, module, delta, weight) VALUES (". $format->format .", 'filter', 4, 0)");
+    if (variable_get('filter_html_' . $format->format, 1) == 2) {
+      $ret[] = update_sql("INSERT INTO {filters} (format, module, delta, weight) VALUES (" . $format->format . ", 'filter', 4, 0)");
     }
-    variable_del('filter_html_'. $format->format);
+    variable_del('filter_html_' . $format->format);
   }
   return $ret;
 }

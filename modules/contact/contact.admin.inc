@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.admin.inc,v 1.3 2007/11/09 07:55:13 dries Exp $
+// $Id: contact.admin.inc,v 1.4 2008/04/14 17:48:36 dries Exp $
 
 /**
  * @file
@@ -13,7 +13,7 @@ function contact_admin_categories() {
   $result = db_query('SELECT cid, category, recipients, selected FROM {contact} ORDER BY weight, category');
   $rows = array();
   while ($category = db_fetch_object($result)) {
-    $rows[] = array($category->category, $category->recipients, ($category->selected ? t('Yes') : t('No')), l(t('edit'), 'admin/build/contact/edit/'. $category->cid), l(t('delete'), 'admin/build/contact/delete/'. $category->cid));
+    $rows[] = array($category->category, $category->recipients, ($category->selected ? t('Yes') : t('No')), l(t('edit'), 'admin/build/contact/edit/' . $category->cid), l(t('delete'), 'admin/build/contact/delete/' . $category->cid));
   }
   $header = array(t('Category'), t('Recipients'), t('Selected'), array('data' => t('Operations'), 'colspan' => 2));
 
@@ -46,7 +46,7 @@ function contact_admin_edit($form_state = array(), $op, $contact = NULL) {
   $form['recipients'] = array('#type' => 'textarea',
     '#title' => t('Recipients'),
     '#default_value' => $contact['recipients'],
-    '#description' => t("Example: 'webmaster@example.com' or 'sales@example.com,support@example.com'. To specify multiple recipients, separate each e-mail address with a comma."),
+    '#description' => t("Example: 'webmaster@example.com' or 'sales@example.com,support@example.com' . To specify multiple recipients, separate each e-mail address with a comma."),
     '#required' => TRUE,
   );
   $form['reply'] = array('#type' => 'textarea',

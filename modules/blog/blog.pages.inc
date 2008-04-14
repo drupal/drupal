@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.pages.inc,v 1.7 2008/02/10 18:58:28 dries Exp $
+// $Id: blog.pages.inc,v 1.8 2008/04/14 17:48:35 dries Exp $
 
 /**
  * @file
@@ -44,7 +44,7 @@ function blog_page_user($account) {
       drupal_set_message(t('!author has not created any blog entries.', array('!author' => theme('username', $account))));
     }
   }
-  drupal_add_feed(url('blog/'. $account->uid .'/feed'), t('RSS - !title', array('!title' => $title)));
+  drupal_add_feed(url('blog/' . $account->uid . '/feed'), t('RSS - !title', array('!title' => $title)));
 
   return $output;
 }
@@ -88,8 +88,8 @@ function blog_page_last() {
  */
 function blog_feed_user($account) {
   $result = db_query_range(db_rewrite_sql("SELECT n.nid, n.created FROM {node} n  WHERE n.type = 'blog' AND n.uid = %d AND n.status = 1 ORDER BY n.created DESC"), $account->uid, 0, variable_get('feed_default_items', 10));
-  $channel['title'] = $account->name ."'s blog";
-  $channel['link'] = url('blog/'. $account->uid, array('absolute' => TRUE));
+  $channel['title'] = $account->name . "'s blog";
+  $channel['link'] = url('blog/' . $account->uid, array('absolute' => TRUE));
 
   $items = array();
   while ($row = db_fetch_object($result)) {
@@ -103,7 +103,7 @@ function blog_feed_user($account) {
  */
 function blog_feed_last() {
   $result = db_query_range(db_rewrite_sql("SELECT n.nid, n.created FROM {node} n WHERE n.type = 'blog' AND n.status = 1 ORDER BY n.created DESC"), 0, variable_get('feed_default_items', 10));
-  $channel['title'] = variable_get('site_name', 'Drupal') .' blogs';
+  $channel['title'] = variable_get('site_name', 'Drupal') . ' blogs';
   $channel['link'] = url('blog', array('absolute' => TRUE));
 
   $items = array();

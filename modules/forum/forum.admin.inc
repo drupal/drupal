@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.admin.inc,v 1.9 2008/02/20 13:55:42 dries Exp $
+// $Id: forum.admin.inc,v 1.10 2008/04/14 17:48:37 dries Exp $
 
 /**
  * @file
@@ -225,12 +225,12 @@ function forum_overview(&$form_state) {
   foreach (element_children($form) as $key) {
     if (isset($form[$key]['#term'])) {
       $term = $form[$key]['#term'];
-      $form[$key]['view']['#value'] = l($term['name'], 'forum/'. $term['tid']);
+      $form[$key]['view']['#value'] = l($term['name'], 'forum/' . $term['tid']);
       if (in_array($form[$key]['#term']['tid'], variable_get('forum_containers', array()))) {
-        $form[$key]['edit']['#value'] = l(t('edit container'), 'admin/content/forum/edit/container/'. $term['tid']);
+        $form[$key]['edit']['#value'] = l(t('edit container'), 'admin/content/forum/edit/container/' . $term['tid']);
       }
       else {
-        $form[$key]['edit']['#value'] = l(t('edit forum'), 'admin/content/forum/edit/forum/'. $term['tid']);
+        $form[$key]['edit']['#value'] = l(t('edit forum'), 'admin/content/forum/edit/forum/' . $term['tid']);
       }
     }
   }
@@ -242,7 +242,7 @@ function forum_overview(&$form_state) {
   $form['#theme'] = 'taxonomy_overview_terms';
   $form['#submit'] = array('taxonomy_overview_terms_submit'); // Use the existing taxonomy overview submit handler.
   $form['#validate'] = array('taxonomy_overview_terms_validate');
-  $form['#empty_text'] = '<em>'. t('There are no existing containers or forums. Containers and forums may be added using the <a href="@container">add container</a> and <a href="@forum">add forum</a> pages.', array('@container' => url('admin/content/forum/add/container'), '@forum' => url('admin/content/forum/add/forum'))) .'</em>';
+  $form['#empty_text'] = '<em>' . t('There are no existing containers or forums. Containers and forums may be added using the <a href="@container">add container</a> and <a href="@forum">add forum</a> pages.', array('@container' => url('admin/content/forum/add/container'), '@forum' => url('admin/content/forum/add/forum'))) . '</em>';
   return $form;
 }
 
@@ -274,7 +274,7 @@ function _forum_parent_select($tid, $title, $child_type) {
   $exclude[] = $tid;
 
   $tree = taxonomy_get_tree($vid);
-  $options[0] = '<'. t('root') .'>';
+  $options[0] = '<' . t('root') . '>';
   if ($tree) {
     foreach ($tree as $term) {
       if (!in_array($term->tid, $exclude)) {

@@ -1,5 +1,5 @@
 <?php
-// $Id: search.pages.inc,v 1.4 2007/12/06 09:51:01 goba Exp $
+// $Id: search.pages.inc,v 1.5 2008/04/14 17:48:41 dries Exp $
 
 /**
  * @file
@@ -26,7 +26,7 @@ function search_view($type = 'node') {
     $results = '';
     if (trim($keys)) {
       // Log the search keys:
-      watchdog('search', '%keys (@type).', array('%keys' => $keys, '@type' => module_invoke($type, 'search', 'name')), WATCHDOG_NOTICE, l(t('results'), 'search/'. $type .'/'. $keys));
+      watchdog('search', '%keys (@type).', array('%keys' => $keys, '@type' => module_invoke($type, 'search', 'name')), WATCHDOG_NOTICE, l(t('results'), 'search/' . $type . '/' . $keys));
 
       // Collect the search results:
       $results = search_data($keys, $type);
@@ -65,7 +65,7 @@ function template_preprocess_search_results(&$variables) {
   }
   $variables['pager'] = theme('pager', NULL, 10, 0);
   // Provide alternate search results template.
-  $variables['template_files'][] = 'search-results-'. $variables['type'];
+  $variables['template_files'][] = 'search-results-' . $variables['type'];
 }
 
 /**
@@ -101,7 +101,7 @@ function template_preprocess_search_result(&$variables) {
   $variables['info_split'] = $info;
   $variables['info'] = implode(' - ', $info);
   // Provide alternate search result template.
-  $variables['template_files'][] = 'search-result-'. $variables['type'];
+  $variables['template_files'][] = 'search-result-' . $variables['type'];
 }
 
 /**
@@ -125,6 +125,6 @@ function search_form_submit($form, &$form_state) {
   }
 
   $type = $form_state['values']['module'] ? $form_state['values']['module'] : 'node';
-  $form_state['redirect'] = 'search/'. $type .'/'. $keys;
+  $form_state['redirect'] = 'search/' . $type . '/' . $keys;
   return;
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: book.install,v 1.20 2008/01/10 18:13:42 goba Exp $
+// $Id: book.install,v 1.21 2008/04/14 17:48:35 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -212,9 +212,9 @@ function book_update_6000() {
 
       $book += array(
         'module' => 'book',
-        'link_path' => 'node/'. $book['nid'],
+        'link_path' => 'node/' . $book['nid'],
         'router_path' => 'node/%',
-        'menu_name' => 'book-toc-'. $book['bid'],
+        'menu_name' => 'book-toc-' . $book['bid'],
       );
       $book = array_merge($book, db_fetch_array(db_query("SELECT title AS link_title FROM {node} WHERE nid = %d", $book['nid'])));
 

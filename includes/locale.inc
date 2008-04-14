@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.174 2008/01/09 21:36:13 goba Exp $
+// $Id: locale.inc,v 1.175 2008/04/14 17:48:33 dries Exp $
 
 /**
  * @file
@@ -78,12 +78,12 @@ function theme_locale_languages_overview_form($form) {
       $rows[] = array(
         array('data' => drupal_render($form['enabled'][$key]), 'align' => 'center'),
         check_plain($key),
-        '<strong>'. drupal_render($form['name'][$key]) .'</strong>',
+        '<strong>' . drupal_render($form['name'][$key]) . '</strong>',
         drupal_render($form['native'][$key]),
         drupal_render($form['direction'][$key]),
         drupal_render($form['site_default'][$key]),
         drupal_render($form['weight'][$key]),
-        l(t('edit'), 'admin/settings/language/edit/'. $key) . (($key != 'en' && $key != $default->language) ? ' '. l(t('delete'), 'admin/settings/language/delete/'. $key) : '')
+        l(t('edit'), 'admin/settings/language/edit/' . $key) . (($key != 'en' && $key != $default->language) ? ' ' . l(t('delete'), 'admin/settings/language/delete/' . $key) : '')
       );
     }
   }
@@ -412,7 +412,7 @@ function locale_languages_delete_form_submit($form, &$form_state) {
   if (isset($languages[$form_state['values']['langcode']])) {
     // Remove translations first.
     db_query("DELETE FROM {locales_target} WHERE language = '%s'", $form_state['values']['langcode']);
-    cache_clear_all('locale:'. $form_state['values']['langcode'], 'cache');
+    cache_clear_all('locale:' . $form_state['values']['langcode'], 'cache');
     // With no translations, this removes existing JavaScript translations file.
     _locale_rebuild_js($form_state['values']['langcode']);
     // Remove the language.
@@ -500,7 +500,7 @@ function locale_translate_overview_screen() {
   foreach ($languages as $langcode => $language) {
     $rows[$langcode] = array('name' => ($langcode == 'en' ? t('English (built-in)') : t($language->name)));
     foreach ($groups as $group => $name) {
-      $rows[$langcode][$group] = ($langcode == 'en' ? t('n/a') : '0/'. (isset($groupsums[$group]) ? $groupsums[$group] : 0) .' (0%)');
+      $rows[$langcode][$group] = ($langcode == 'en' ? t('n/a') : '0/' . (isset($groupsums[$group]) ? $groupsums[$group] : 0) . ' (0%)');
     }
   }
 
@@ -508,7 +508,7 @@ function locale_translate_overview_screen() {
   $translations = db_query("SELECT COUNT(*) AS translation, t.language, s.textgroup FROM {locales_source} s INNER JOIN {locales_target} t ON s.lid = t.lid GROUP BY textgroup, language");
   while ($data = db_fetch_object($translations)) {
     $ratio = (!empty($groupsums[$data->textgroup]) && $data->translation > 0) ? round(($data->translation/$groupsums[$data->textgroup])*100., 2) : 0;
-    $rows[$data->language][$data->textgroup] = $data->translation .'/'. $groupsums[$data->textgroup] ." ($ratio%)";
+    $rows[$data->language][$data->textgroup] = $data->translation . '/' . $groupsums[$data->textgroup] . " ($ratio%)";
   }
 
   return theme('table', $headers, $rows);
@@ -1062,7 +1062,7 @@ function _locale_import_read_po($op, $file, $mode = NULL, $lang = NULL, $group =
         _locale_import_message('The translation file %filename contains a syntax error on line %line.', $file, $lineno);
         return FALSE;
       }
-      $current["msgid"] = $current["msgid"] ."\0". $quoted;
+      $current["msgid"] = $current["msgid"] . "\0" . $quoted;
       $context = "MSGID_PLURAL";
     }
     elseif (!strncmp("msgid", $line, 5)) {
@@ -1453,13 +1453,13 @@ function _locale_import_parse_arithmetic($string) {
       if (!empty($prec[$op])) {
         $f = "";
         if ($op == ":") {
-          $f = $elstk[$i - 2] ."):". $elstk[$i - 1] .")";
+          $f = $elstk[$i - 2] . "):" . $elstk[$i - 1] . ")";
         }
         elseif ($op == "?") {
-          $f = "(". $elstk[$i - 2] ."?(". $elstk[$i - 1];
+          $f = "(" . $elstk[$i - 2] . "?(" . $elstk[$i - 1];
         }
         else {
-          $f = "(". $elstk[$i - 2] . $op . $elstk[$i - 1] .")";
+          $f = "(" . $elstk[$i - 2] . $op . $elstk[$i - 1] . ")";
         }
         array_splice($elstk, $i - 2, 3, $f);
         break;
@@ -1506,7 +1506,7 @@ function _locale_import_tokenize_formula($formula) {
         case 3:
         case 4:
           if ($next == '=') {
-            $tokens[] = $formula[$i] .'=';
+            $tokens[] = $formula[$i] . '=';
             $i++;
           }
           else {
@@ -1572,7 +1572,7 @@ function _locale_import_append_plural($entry, $key) {
 function _locale_import_shorten_comments($comment) {
   $comm = '';
   while (count($comment)) {
-    $test = $comm . substr(array_shift($comment), 1) .', ';
+    $test = $comm . substr(array_shift($comment), 1) . ', ';
     if (strlen($comm) < 130) {
       $comm = $test;
     }
@@ -1623,10 +1623,10 @@ function _locale_parse_js_file($filepath) {
 
   // Match all calls to Drupal.t() in an array.
   // Note: \s also matches newlines with the 's' modifier.
-  preg_match_all('~[^\w]Drupal\s*\.\s*t\s*\(\s*('. LOCALE_JS_STRING .')\s*[,\)]~s', $file, $t_matches);
+  preg_match_all('~[^\w]Drupal\s*\.\s*t\s*\(\s*(' . LOCALE_JS_STRING . ')\s*[,\)]~s', $file, $t_matches);
 
   // Match all Drupal.formatPlural() calls in another array.
-  preg_match_all('~[^\w]Drupal\s*\.\s*formatPlural\s*\(\s*.+?\s*,\s*('. LOCALE_JS_STRING .')\s*,\s*((?:(?:\'(?:\\\\\'|[^\'])*@count(?:\\\\\'|[^\'])*\'|"(?:\\\\"|[^"])*@count(?:\\\\"|[^"])*")(?:\s*\+\s*)?)+)\s*[,\)]~s', $file, $plural_matches);
+  preg_match_all('~[^\w]Drupal\s*\.\s*formatPlural\s*\(\s*.+?\s*,\s*(' . LOCALE_JS_STRING . ')\s*,\s*((?:(?:\'(?:\\\\\'|[^\'])*@count(?:\\\\\'|[^\'])*\'|"(?:\\\\"|[^"])*@count(?:\\\\"|[^"])*")(?:\s*\+\s*)?)+)\s*[,\)]~s', $file, $plural_matches);
 
   // Loop through all matches and process them.
   $all_matches = array_merge($plural_matches[1], $t_matches[1]);
@@ -1725,21 +1725,21 @@ function _locale_export_po_generate($language = NULL, $strings = array(), $heade
 
   if (!isset($header)) {
     if (isset($language)) {
-      $header = '# '. $language->name .' translation of '. variable_get('site_name', 'Drupal') ."\n";
-      $header .= '# Generated by '. $user->name .' <'. $user->mail .">\n";
+      $header = '# ' . $language->name . ' translation of ' . variable_get('site_name', 'Drupal') . "\n";
+      $header .= '# Generated by ' . $user->name . ' <' . $user->mail . ">\n";
       $header .= "#\n";
       $header .= "msgid \"\"\n";
       $header .= "msgstr \"\"\n";
       $header .= "\"Project-Id-Version: PROJECT VERSION\\n\"\n";
-      $header .= "\"POT-Creation-Date: ". date("Y-m-d H:iO") ."\\n\"\n";
-      $header .= "\"PO-Revision-Date: ". date("Y-m-d H:iO") ."\\n\"\n";
+      $header .= "\"POT-Creation-Date: " . date("Y-m-d H:iO") . "\\n\"\n";
+      $header .= "\"PO-Revision-Date: " . date("Y-m-d H:iO") . "\\n\"\n";
       $header .= "\"Last-Translator: NAME <EMAIL@ADDRESS>\\n\"\n";
       $header .= "\"Language-Team: LANGUAGE <EMAIL@ADDRESS>\\n\"\n";
       $header .= "\"MIME-Version: 1.0\\n\"\n";
       $header .= "\"Content-Type: text/plain; charset=utf-8\\n\"\n";
       $header .= "\"Content-Transfer-Encoding: 8bit\\n\"\n";
       if ($language->formula && $language->plurals) {
-        $header .= "\"Plural-Forms: nplurals=". $language->plurals ."; plural=". strtr($language->formula, array('$' => '')) .";\\n\"\n";
+        $header .= "\"Plural-Forms: nplurals=" . $language->plurals . "; plural=" . strtr($language->formula, array('$' => '')) . ";\\n\"\n";
       }
     }
     else {
@@ -1749,7 +1749,7 @@ function _locale_export_po_generate($language = NULL, $strings = array(), $heade
       $header .= "msgid \"\"\n";
       $header .= "msgstr \"\"\n";
       $header .= "\"Project-Id-Version: PROJECT VERSION\\n\"\n";
-      $header .= "\"POT-Creation-Date: ". date("Y-m-d H:iO") ."\\n\"\n";
+      $header .= "\"POT-Creation-Date: " . date("Y-m-d H:iO") . "\\n\"\n";
       $header .= "\"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\\n\"\n";
       $header .= "\"Last-Translator: NAME <EMAIL@ADDRESS>\\n\"\n";
       $header .= "\"Language-Team: LANGUAGE <EMAIL@ADDRESS>\\n\"\n";
@@ -1760,22 +1760,22 @@ function _locale_export_po_generate($language = NULL, $strings = array(), $heade
     }
   }
 
-  $output = $header ."\n";
+  $output = $header . "\n";
 
   foreach ($strings as $lid => $string) {
     // Only process non-children, children are output below their parent.
     if (!isset($string['child'])) {
       if ($string['comment']) {
-        $output .= '#: '. $string['comment'] ."\n";
+        $output .= '#: ' . $string['comment'] . "\n";
       }
-      $output .= 'msgid '. _locale_export_string($string['source']);
+      $output .= 'msgid ' . _locale_export_string($string['source']);
       if (!empty($string['plural'])) {
         $plural = $string['plural'];
-        $output .= 'msgid_plural '. _locale_export_string($strings[$plural]['source']);
+        $output .= 'msgid_plural ' . _locale_export_string($strings[$plural]['source']);
         if (isset($language)) {
           $translation = $string['translation'];
           for ($i = 0; $i < $language->plurals; $i++) {
-            $output .= 'msgstr['. $i .'] '. _locale_export_string($translation);
+            $output .= 'msgstr[' . $i . '] ' . _locale_export_string($translation);
             if ($plural) {
               $translation = _locale_export_remove_plural($strings[$plural]['translation']);
               $plural = isset($strings[$plural]['plural']) ? $strings[$plural]['plural'] : 0;
@@ -1786,12 +1786,12 @@ function _locale_export_po_generate($language = NULL, $strings = array(), $heade
           }
         }
         else {
-          $output .= 'msgstr[0] ""'."\n";
-          $output .= 'msgstr[1] ""'."\n";
+          $output .= 'msgstr[0] ""' . "\n";
+          $output .= 'msgstr[1] ""' . "\n";
         }
       }
       else {
-        $output .= 'msgstr '. _locale_export_string($string['translation']);
+        $output .= 'msgstr ' . _locale_export_string($string['translation']);
       }
       $output .= "\n";
     }
@@ -1812,7 +1812,7 @@ function _locale_export_po_generate($language = NULL, $strings = array(), $heade
 function _locale_export_po($language = NULL, $output = NULL) {
   // Log the export event.
   if (isset($language)) {
-    $filename = $language->language .'.po';
+    $filename = $language->language . '.po';
     watchdog('locale', 'Exported %locale translation file: %filename.', array('%locale' => $language->name, '%filename' => $filename));
   }
   else {
@@ -1850,7 +1850,7 @@ function _locale_export_string($str) {
 
   // Multiline string
   if (count($parts) > 1) {
-    return "\"\"\n\"". implode("\"\n\"", $parts) ."\"\n";
+    return "\"\"\n\"" . implode("\"\n\"", $parts) . "\"\n";
   }
   // Single line string
   elseif (count($parts) == 1) {
@@ -1878,7 +1878,7 @@ function _locale_export_wrap($str, $len) {
       $nstr = 0;
     }
     elseif (strlen("$cur $word") > $len) {
-      $ret[] = $cur ." ";
+      $ret[] = $cur . " ";
       $cur = $word;
     }
     else {
@@ -1946,7 +1946,7 @@ function _locale_translate_seek() {
     switch ($query['language']) {
       // Force search in source strings
       case "en":
-        $sql = $join ." WHERE s.source LIKE '%%%s%%' $grouplimit ORDER BY s.source";
+        $sql = $join . " WHERE s.source LIKE '%%%s%%' $grouplimit ORDER BY s.source";
         $arguments = array($query['string']); // $where is not used, discard its arguments
         if (!empty($grouplimit)) {
           $arguments[] = $query['group'];
@@ -1979,7 +1979,7 @@ function _locale_translate_seek() {
     foreach ($arr as $lid => $value) {
       $rows[] = array(
         $value['group'],
-        array('data' => check_plain(truncate_utf8($value['source'], 150, FALSE, TRUE)) .'<br /><small>'. $value['location'] .'</small>'),
+        array('data' => check_plain(truncate_utf8($value['source'], 150, FALSE, TRUE)) . '<br /><small>' . $value['location'] . '</small>'),
         array('data' => _locale_translate_language_list($value['languages'], $limit_language), 'align' => 'center'),
         array('data' => l(t('edit'), "admin/build/translate/edit/$lid"), 'class' => 'nowrap'),
         array('data' => l(t('delete'), "admin/build/translate/delete/$lid"), 'class' => 'nowrap'),
@@ -2038,12 +2038,12 @@ function _locale_invalidate_js($langcode = NULL) {
     $languages = language_list();
     unset($languages['en']);
     foreach ($languages as $lcode => $data) {
-      $parsed['refresh:'. $lcode] = 'waiting';
+      $parsed['refresh:' . $lcode] = 'waiting';
     }
   }
   else {
     // Invalidate single language.
-    $parsed['refresh:'. $langcode] = 'waiting';
+    $parsed['refresh:' . $langcode] = 'waiting';
   }
 
   variable_set('javascript_parsed', $parsed);
@@ -2108,7 +2108,7 @@ function _locale_rebuild_js($langcode = NULL) {
       $data .= "'pluralFormula': function(\$n) { return Number({$language->formula}); }, ";
     }
 
-    $data .= "'strings': ". drupal_to_js($translations) ." };";
+    $data .= "'strings': " . drupal_to_js($translations) . " };";
     $data_hash = md5($data);
   }
 
@@ -2118,7 +2118,7 @@ function _locale_rebuild_js($langcode = NULL) {
 
   // Delete old file, if we have no translations anymore, or a different file to be saved.
   if (!empty($language->javascript) && (!$data || $language->javascript != $data_hash)) {
-    file_delete(file_create_path($dir .'/'. $language->language .'_'. $language->javascript .'.js'));
+    file_delete(file_create_path($dir . '/' . $language->language . '_' . $language->javascript . '.js'));
     $language->javascript = '';
     $status = 'deleted';
   }
@@ -2129,7 +2129,7 @@ function _locale_rebuild_js($langcode = NULL) {
     file_check_directory($dir, TRUE);
 
     // Save the file.
-    $dest = $dir .'/'. $language->language .'_'. $data_hash .'.js';
+    $dest = $dir . '/' . $language->language . '_' . $data_hash . '.js';
     if (file_save_data($data, $dest)) {
       $language->javascript = $data_hash;
       $status = ($status == 'deleted') ? 'updated' : 'created';
@@ -2180,14 +2180,14 @@ function _locale_rebuild_js($langcode = NULL) {
  */
 function _locale_translate_language_list($translation, $limit_language) {
   // Add CSS
-  drupal_add_css(drupal_get_path('module', 'locale') .'/locale.css', 'module', 'all', FALSE);
+  drupal_add_css(drupal_get_path('module', 'locale') . '/locale.css', 'module', 'all', FALSE);
 
   $languages = language_list();
   unset($languages['en']);
   $output = '';
   foreach ($languages as $langcode => $language) {
     if (!$limit_language || $limit_language == $langcode) {
-      $output .= (!empty($translation[$langcode])) ? $langcode .' ' : "<em class=\"locale-untranslated\">$langcode</em> ";
+      $output .= (!empty($translation[$langcode])) ? $langcode . ' ' : "<em class=\"locale-untranslated\">$langcode</em> ";
     }
   }
 
@@ -2442,7 +2442,7 @@ function locale_batch_by_language($langcode, $finished = NULL, $skip = array()) 
   $components = array();
   $query = "SELECT name, filename FROM {system} WHERE status = 1";
   if (count($skip)) {
-    $query .= " AND name NOT IN (". db_placeholders($skip, 'varchar') .")";
+    $query .= " AND name NOT IN (" . db_placeholders($skip, 'varchar') . ")";
   }
   $result = db_query($query, $skip);
   while ($component = db_fetch_object($result)) {
@@ -2450,7 +2450,7 @@ function locale_batch_by_language($langcode, $finished = NULL, $skip = array()) 
     // with names ending with $langcode.po. This allows for filenames
     // like node-module.de.po to let translators use small files and
     // be able to import in smaller chunks.
-    $files = array_merge($files, file_scan_directory(dirname($component->filename) .'/translations', '(^|\.)'. $langcode .'\.po$', array('.', '..', 'CVS'), 0, FALSE));
+    $files = array_merge($files, file_scan_directory(dirname($component->filename) . '/translations', '(^|\.)' . $langcode . '\.po$', array('.', '..', 'CVS'), 0, FALSE));
     $components[] = $component->name;
   }
 
@@ -2482,7 +2482,7 @@ function locale_batch_by_component($components, $finished = '_locale_batch_syste
         // as $langcode.po or with names ending with $langcode.po. This allows
         // for filenames like node-module.de.po to let translators use small
         // files and be able to import in smaller chunks.
-        $files = array_merge($files, file_scan_directory(dirname($component->filename) .'/translations', '(^|\.)('. $language_list .')\.po$', array('.', '..', 'CVS'), 0, FALSE));
+        $files = array_merge($files, file_scan_directory(dirname($component->filename) . '/translations', '(^|\.)(' . $language_list . ')\.po$', array('.', '..', 'CVS'), 0, FALSE));
       }
     }
     return _locale_batch_build($files, $finished);

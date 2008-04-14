@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.207 2008/04/08 22:50:54 dries Exp $
+// $Id: bootstrap.inc,v 1.208 2008/04/14 17:48:33 dries Exp $
 
 /**
  * @file
@@ -277,8 +277,8 @@ function conf_init() {
   global $db_url, $db_prefix, $cookie_domain, $conf, $installed_profile, $update_free_access;
   $conf = array();
 
-  if (file_exists('./'. conf_path() .'/settings.php')) {
-    include_once './'. conf_path() .'/settings.php';
+  if (file_exists('./' . conf_path() . '/settings.php')) {
+    include_once './' . conf_path() . '/settings.php';
   }
 
   if (isset($base_url)) {
@@ -287,7 +287,7 @@ function conf_init() {
     if (!isset($parts['path'])) {
       $parts['path'] = '';
     }
-    $base_path = $parts['path'] .'/';
+    $base_path = $parts['path'] . '/';
     // Build $base_root (everything until first slash after "scheme://").
     $base_root = substr($base_url, 0, strlen($base_url) - strlen($parts['path']));
   }
@@ -297,7 +297,7 @@ function conf_init() {
 
     // As $_SERVER['HTTP_HOST'] is user input, ensure it only contains
     // characters allowed in hostnames.
-    $base_url = $base_root .= '://'. preg_replace('/[^a-z0-9-:._]/i', '', $_SERVER['HTTP_HOST']);
+    $base_url = $base_root .= '://' . preg_replace('/[^a-z0-9-:._]/i', '', $_SERVER['HTTP_HOST']);
 
     // $_SERVER['SCRIPT_NAME'] can, in contrast to $_SERVER['PHP_SELF'], not
     // be modified by a visitor.
@@ -330,13 +330,13 @@ function conf_init() {
     $cookie_domain = substr($cookie_domain, 4);
   }
   $cookie_domain = explode(':', $cookie_domain);
-  $cookie_domain = '.'. $cookie_domain[0];
+  $cookie_domain = '.' . $cookie_domain[0];
   // Per RFC 2109, cookie domains must contain at least one dot other than the
   // first. For hosts such as 'localhost' or IP Addresses we don't set a cookie domain.
   if (count(explode('.', $cookie_domain)) > 2 && !is_numeric(str_replace('.', '', $cookie_domain))) {
     ini_set('session.cookie_domain', $cookie_domain);
   }
-  session_name('SESS'. md5($session_name));
+  session_name('SESS' . md5($session_name));
 }
 
 /**
@@ -566,7 +566,7 @@ function drupal_load($type, $name) {
  */
 function drupal_page_header() {
   header("Expires: Sun, 19 Nov 1978 05:00:00 GMT");
-  header("Last-Modified: ". gmdate("D, d M Y H:i:s") ." GMT");
+  header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
   header("Cache-Control: store, no-cache, must-revalidate");
   header("Cache-Control: post-check=0, pre-check=0", FALSE);
 }
@@ -582,8 +582,8 @@ function drupal_page_header() {
  */
 function drupal_page_cache_header($cache) {
   // Set default values:
-  $last_modified = gmdate('D, d M Y H:i:s', $cache->created) .' GMT';
-  $etag = '"'. md5($last_modified) .'"';
+  $last_modified = gmdate('D, d M Y H:i:s', $cache->created) . ' GMT';
+  $etag = '"' . md5($last_modified) . '"';
 
   // See if the client has provided the required HTTP headers:
   $if_modified_since = isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? stripslashes($_SERVER['HTTP_IF_MODIFIED_SINCE']) : FALSE;
@@ -720,10 +720,10 @@ function request_uri() {
   }
   else {
     if (isset($_SERVER['argv'])) {
-      $uri = $_SERVER['SCRIPT_NAME'] .'?'. $_SERVER['argv'][0];
+      $uri = $_SERVER['SCRIPT_NAME'] . '?' . $_SERVER['argv'][0];
     }
     elseif (isset($_SERVER['QUERY_STRING'])) {
-      $uri = $_SERVER['SCRIPT_NAME'] .'?'. $_SERVER['QUERY_STRING'];
+      $uri = $_SERVER['SCRIPT_NAME'] . '?' . $_SERVER['QUERY_STRING'];
     }
     else {
       $uri = $_SERVER['SCRIPT_NAME'];
@@ -955,7 +955,7 @@ function _drupal_bootstrap($phase) {
       // Deny access to blocked IP addresses - t() is not yet available.
       if (drupal_is_denied(ip_address())) {
         header('HTTP/1.1 403 Forbidden');
-        print 'Sorry, '. check_plain(ip_address()) .' has been banned.';
+        print 'Sorry, ' . check_plain(ip_address()) . ' has been banned.';
         exit();
       }
       break;

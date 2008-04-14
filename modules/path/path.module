@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.140 2008/03/13 21:26:09 dries Exp $
+// $Id: path.module,v 1.141 2008/04/14 17:48:38 dries Exp $
 
 /**
  * @file
@@ -12,20 +12,20 @@
 function path_help($path, $arg) {
   switch ($path) {
     case 'admin/help#path':
-      $output = '<p>'. t('The path module allows you to specify aliases for Drupal URLs. Such aliases improve readability of URLs for your users and may help internet search engines to index your content more effectively. More than one alias may be created for a given page.') .'</p>';
-      $output .= '<p>'. t('Some examples of URL aliases are:') .'</p>';
-      $output .= '<ul><li>'. t('%alias for the path %path', array('%alias' => 'login', '%path' => 'user/login')) .'</li>';
-      $output .= '<li>'. t('%alias for the path %path', array('%alias' => 'store', '%path' => 'image/tid/16')) .'</li>';
-      $output .= '<li>'. t('%alias for the path %path', array('%alias' => 'store/products/whirlygigs', '%path' => 'taxonomy/term/7+19+20+21')) .'</li>';
-      $output .= '<li>'. t('%alias for the path %path', array('%alias' => 'contact', '%path' => 'node/3')) .'</li></ul>';
-      $output .= '<p>'. t('The path module enables appropriately permissioned users to specify an optional alias in all node input and editing forms, and provides an interface to view and edit all URL aliases. The two permissions related to URL aliasing are <em>administer url aliases</em> and <em>create url aliases</em>. ') .'</p>';
-      $output .= '<p>'. t('This module also provides user-defined mass URL aliasing capabilities, which is useful if you wish to uniformly use URLs different from the default. For example, you may want to have your URLs presented in a different language. Access to the Drupal source code on the web server is required to set up mass URL aliasing. ') .'</p>';
-      $output .= '<p>'. t('For more information, see the online handbook entry for <a href="@path">Path module</a>.', array('@path' => 'http://drupal.org/handbook/modules/path/')) .'</p>';
+      $output = '<p>' . t('The path module allows you to specify aliases for Drupal URLs. Such aliases improve readability of URLs for your users and may help internet search engines to index your content more effectively. More than one alias may be created for a given page.') . '</p>';
+      $output .= '<p>' . t('Some examples of URL aliases are:') . '</p>';
+      $output .= '<ul><li>' . t('%alias for the path %path', array('%alias' => 'login', '%path' => 'user/login')) . '</li>';
+      $output .= '<li>' . t('%alias for the path %path', array('%alias' => 'store', '%path' => 'image/tid/16')) . '</li>';
+      $output .= '<li>' . t('%alias for the path %path', array('%alias' => 'store/products/whirlygigs', '%path' => 'taxonomy/term/7+19+20+21')) . '</li>';
+      $output .= '<li>' . t('%alias for the path %path', array('%alias' => 'contact', '%path' => 'node/3')) . '</li></ul>';
+      $output .= '<p>' . t('The path module enables appropriately permissioned users to specify an optional alias in all node input and editing forms, and provides an interface to view and edit all URL aliases. The two permissions related to URL aliasing are <em>administer url aliases</em> and <em>create url aliases</em>. ') . '</p>';
+      $output .= '<p>' . t('This module also provides user-defined mass URL aliasing capabilities, which is useful if you wish to uniformly use URLs different from the default. For example, you may want to have your URLs presented in a different language. Access to the Drupal source code on the web server is required to set up mass URL aliasing. ') . '</p>';
+      $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@path">Path module</a>.', array('@path' => 'http://drupal.org/handbook/modules/path/')) . '</p>';
       return $output;
     case 'admin/build/path':
-      return '<p>'. t("Drupal provides complete control over URLs through aliasing, which is often used to make URLs more readable or easy to remember. For example, the alias 'about' may be mapped onto the post at the system path 'node/1', creating a more meaningful URL. Each system path can have multiple aliases.") .'</p>';
+      return '<p>' . t("Drupal provides complete control over URLs through aliasing, which is often used to make URLs more readable or easy to remember. For example, the alias 'about' may be mapped onto the post at the system path 'node/1', creating a more meaningful URL. Each system path can have multiple aliases.") . '</p>';
     case 'admin/build/path/add':
-      return '<p>'. t('Enter the path you wish to create the alias for, followed by the name of the new alias.') .'</p>';
+      return '<p>' . t('Enter the path you wish to create the alias for, followed by the name of the new alias.') . '</p>';
   }
 }
 
@@ -139,7 +139,7 @@ function path_nodeapi(&$node, $op, $arg) {
         break;
 
       case 'load':
-        $path = 'node/'. $node->nid;
+        $path = 'node/' . $node->nid;
         $alias = drupal_get_path_alias($path, $language);
         if ($path != $alias) {
           $node->path = $alias;
@@ -150,16 +150,16 @@ function path_nodeapi(&$node, $op, $arg) {
         // Don't try to insert if path is NULL. We may have already set
         // the alias ahead of time.
         if (isset($node->path)) {
-          path_set_alias('node/'. $node->nid, $node->path, NULL, $language);
+          path_set_alias('node/' . $node->nid, $node->path, NULL, $language);
         }
         break;
 
       case 'update':
-        path_set_alias('node/'. $node->nid, isset($node->path) ? $node->path : NULL, isset($node->pid) ? $node->pid : NULL, $language);
+        path_set_alias('node/' . $node->nid, isset($node->path) ? $node->path : NULL, isset($node->pid) ? $node->pid : NULL, $language);
         break;
 
       case 'delete':
-        $path = 'node/'. $node->nid;
+        $path = 'node/' . $node->nid;
         if (drupal_get_path_alias($path) != $path) {
           path_set_alias($path);
         }
@@ -172,7 +172,7 @@ function path_nodeapi(&$node, $op, $arg) {
  * Implementation of hook_form_alter().
  */
 function path_form_alter(&$form, $form_state, $form_id) {
-  if (isset($form['type']) && isset($form['#node']) && $form['type']['#value'] .'_node_form' == $form_id) {
+  if (isset($form['type']) && isset($form['#node']) && $form['type']['#value'] . '_node_form' == $form_id) {
     $path = isset($form['#node']->path) ? $form['#node']->path : NULL;
     $form['path'] = array(
       '#type' => 'fieldset',

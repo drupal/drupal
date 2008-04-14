@@ -1,7 +1,7 @@
 <?php
-// $Id: comment.tpl.php,v 1.10 2008/01/04 19:24:24 goba Exp $
+// $Id: comment.tpl.php,v 1.11 2008/04/14 17:48:46 dries Exp $
 ?>
-<div class="comment<?php print ($comment->new) ? ' comment-new' : ''; print ' '. $status; print ' '. $zebra; ?>">
+<div class="comment<?php print ($comment->new) ? ' comment-new' : ''; print ' ' . $status; print ' ' . $zebra; ?>">
 
   <div class="clear-block">
   <?php if ($submitted): ?>

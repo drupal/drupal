@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.268 2008/03/15 11:02:47 dries Exp $
+// $Id: form.inc,v 1.269 2008/04/14 17:48:33 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -100,7 +100,7 @@ function drupal_get_form($form_id) {
       array_unshift($args_temp, $form_id);
 
       $form = call_user_func_array('drupal_retrieve_form', $args_temp);
-      $form_build_id = 'form-'. md5(mt_rand());
+      $form_build_id = 'form-' . md5(mt_rand());
       $form['#build_id'] = $form_build_id;
       drupal_prepare_form($form_id, $form, $form_state);
       // Store a copy of the unprocessed form for caching and indicate that it
@@ -196,7 +196,7 @@ function drupal_rebuild_form($form_id, &$form_state, $args, $form_build_id = NUL
 
   if (!isset($form_build_id)) {
     // We need a new build_id for the new version of the form.
-    $form_build_id = 'form-'. md5(mt_rand());
+    $form_build_id = 'form-' . md5(mt_rand());
   }
   $form['#build_id'] = $form_build_id;
   drupal_prepare_form($form_id, $form, $form_state);
@@ -219,9 +219,9 @@ function drupal_rebuild_form($form_id, &$form_state, $args, $form_build_id = NUL
  * Fetch a form from cache.
  */
 function form_get_cache($form_build_id, &$form_state) {
-  if ($cached = cache_get('form_'. $form_build_id, 'cache_form')) {
+  if ($cached = cache_get('form_' . $form_build_id, 'cache_form')) {
     $form = $cached->data;
-    if ($cached = cache_get('storage_'. $form_build_id, 'cache_form')) {
+    if ($cached = cache_get('storage_' . $form_build_id, 'cache_form')) {
       $form_state['storage'] = $cached->data;
     }
     return $form;
@@ -234,9 +234,9 @@ function form_get_cache($form_build_id, &$form_state) {
 function form_set_cache($form_build_id, $form, $form_state) {
   $expire = max(ini_get('session.cookie_lifetime'), 86400);
 
-  cache_set('form_'. $form_build_id, $form, 'cache_form', $expire);
+  cache_set('form_' . $form_build_id, $form, 'cache_form', $expire);
   if (!empty($form_state['storage'])) {
-    cache_set('storage_'. $form_build_id, $form_state['storage'], 'cache_form', $expire);
+    cache_set('storage_' . $form_build_id, $form_state['storage'], 'cache_form', $expire);
   }
 }
 
@@ -404,8 +404,8 @@ function drupal_process_form($form_id, &$form, &$form_state) {
       // here, as we've finished with them. The in-memory copies are still
       // here, though.
       if (variable_get('cache', CACHE_DISABLED) == CACHE_DISABLED && !empty($form_state['values']['form_build_id'])) {
-        cache_clear_all('form_'. $form_state['values']['form_build_id'], 'cache_form');
-        cache_clear_all('storage_'. $form_state['values']['form_build_id'], 'cache_form');
+        cache_clear_all('form_' . $form_state['values']['form_build_id'], 'cache_form');
+        cache_clear_all('storage_' . $form_state['values']['form_build_id'], 'cache_form');
       }
 
       // If batches were set in the submit handlers, we process them now,
@@ -483,7 +483,7 @@ function drupal_prepare_form($form_id, &$form, &$form_state) {
   else if (isset($user->uid) && $user->uid && !$form['#programmed']) {
     $form['#token'] = $form_id;
     $form['form_token'] = array(
-      '#id' => form_clean_id('edit-'. $form_id .'-form-token'),
+      '#id' => form_clean_id('edit-' . $form_id . '-form-token'),
       '#type' => 'token',
       '#default_value' => drupal_get_token($form['#token']),
     );
@@ -503,15 +503,15 @@ function drupal_prepare_form($form_id, &$form, &$form_state) {
   $form += _element_info('form');
 
   if (!isset($form['#validate'])) {
-    if (function_exists($form_id .'_validate')) {
-      $form['#validate'] = array($form_id .'_validate');
+    if (function_exists($form_id . '_validate')) {
+      $form['#validate'] = array($form_id . '_validate');
     }
   }
 
   if (!isset($form['#submit'])) {
-    if (function_exists($form_id .'_submit')) {
+    if (function_exists($form_id . '_submit')) {
       // We set submit here so that it can be altered.
-      $form['#submit'] = array($form_id .'_submit');
+      $form['#submit'] = array($form_id . '_submit');
     }
   }
 
@@ -523,7 +523,7 @@ function drupal_prepare_form($form_id, &$form, &$form_state) {
   // @todo: Remove this in Drupal 7.
   $data = &$form;
   $data['__drupal_alter_by_ref'] = array(&$form_state);
-  drupal_alter('form_'. $form_id, $data);
+  drupal_alter('form_' . $form_id, $data);
 
   // __drupal_alter_by_ref is unset in the drupal_alter() function, we need
   // to repopulate it to ensure both calls get the data.
@@ -737,11 +737,11 @@ function _form_validate($elements, &$form_state, $form_id = NULL) {
  */
 function form_execute_handlers($type, &$form, &$form_state) {
   $return = FALSE;
-  if (isset($form_state[$type .'_handlers'])) {
-    $handlers = $form_state[$type .'_handlers'];
+  if (isset($form_state[$type . '_handlers'])) {
+    $handlers = $form_state[$type . '_handlers'];
   }
-  elseif (isset($form['#'. $type])) {
-    $handlers = $form['#'. $type];
+  elseif (isset($form['#' . $type])) {
+    $handlers = $form['#' . $type];
   }
   else {
     $handlers = array();
@@ -948,15 +948,15 @@ function _form_builder_handle_input_element($form_id, &$form, &$form_state, $com
       // To make it easier to handle $_FILES in file.inc, we place all
       // file fields in the 'files' array. Also, we do not support
       // nested file names.
-      $form['#name'] = 'files['. $form['#name'] .']';
+      $form['#name'] = 'files[' . $form['#name'] . ']';
     }
     elseif (count($form['#parents'])) {
-      $form['#name'] .= '['. implode('][', $form['#parents']) .']';
+      $form['#name'] .= '[' . implode('][', $form['#parents']) . ']';
     }
     array_unshift($form['#parents'], $name);
   }
   if (!isset($form['#id'])) {
-    $form['#id'] = form_clean_id('edit-'. implode('-', $form['#parents']));
+    $form['#id'] = form_clean_id('edit-' . implode('-', $form['#parents']));
   }
 
   unset($edit);
@@ -965,7 +965,7 @@ function _form_builder_handle_input_element($form_id, &$form, &$form_state, $com
   }
 
   if (!isset($form['#value']) && !array_key_exists('#value', $form)) {
-    $function = !empty($form['#value_callback']) ? $form['#value_callback'] : 'form_type_'. $form['#type'] .'_value';
+    $function = !empty($form['#value_callback']) ? $form['#value_callback'] : 'form_type_' . $form['#type'] . '_value';
     if (($form['#programmed']) || ((!isset($form['#access']) || $form['#access']) && isset($form['#post']) && (isset($form['#post']['form_id']) && $form['#post']['form_id'] == $form_id))) {
       $edit = $form['#post'];
       foreach ($form['#parents'] as $parent) {
@@ -1131,7 +1131,7 @@ function form_type_image_button_value($form, $edit = FALSE) {
         }
 
         if (!isset($post[$element_name])) {
-          if (isset($post[$element_name .'_x'])) {
+          if (isset($post[$element_name . '_x'])) {
             return $form['#return_value'];
           }
           return NULL;
@@ -1375,10 +1375,10 @@ function form_options_flatten($array, $reset = TRUE) {
  */
 function theme_select($element) {
   $select = '';
-  $size = $element['#size'] ? ' size="'. $element['#size'] .'"' : '';
+  $size = $element['#size'] ? ' size="' . $element['#size'] . '"' : '';
   _form_set_class($element, array('form-select'));
   $multiple = $element['#multiple'];
-  return theme('form_element', $element, '<select name="'. $element['#name'] .''. ($multiple ? '[]' : '') .'"'. ($multiple ? ' multiple="multiple" ' : '') . drupal_attributes($element['#attributes']) .' id="'. $element['#id'] .'" '. $size .'>'. form_select_options($element) .'</select>');
+  return theme('form_element', $element, '<select name="' . $element['#name'] . '' . ($multiple ? '[]' : '') . '"' . ($multiple ? ' multiple="multiple" ' : '') . drupal_attributes($element['#attributes']) . ' id="' . $element['#id'] . '" ' . $size . '>' . form_select_options($element) . '</select>');
 }
 
 function form_select_options($element, $choices = NULL) {
@@ -1392,7 +1392,7 @@ function form_select_options($element, $choices = NULL) {
   $options = '';
   foreach ($choices as $key => $choice) {
     if (is_array($choice)) {
-      $options .= '<optgroup label="'. $key .'">';
+      $options .= '<optgroup label="' . $key . '">';
       $options .= form_select_options($element, $choice);
       $options .= '</optgroup>';
     }
@@ -1407,7 +1407,7 @@ function form_select_options($element, $choices = NULL) {
       else {
         $selected = '';
       }
-      $options .= '<option value="'. check_plain($key) .'"'. $selected .'>'. check_plain($choice) .'</option>';
+      $options .= '<option value="' . check_plain($key) . '"' . $selected . '>' . check_plain($choice) . '</option>';
     }
   }
   return $options;
@@ -1488,7 +1488,7 @@ function theme_fieldset($element) {
     }
   }
 
-  return '<fieldset'. drupal_attributes($element['#attributes']) .'>'. ($element['#title'] ? '<legend>'. $element['#title'] .'</legend>' : '') . (isset($element['#description']) && $element['#description'] ? '<div class="description">'. $element['#description'] .'</div>' : '') . (!empty($element['#children']) ? $element['#children'] : '') . $element['#value'] ."</fieldset>\n";
+  return '<fieldset' . drupal_attributes($element['#attributes']) . '>' . ($element['#title'] ? '<legend>' . $element['#title'] . '</legend>' : '') . (isset($element['#description']) && $element['#description'] ? '<div class="description">' . $element['#description'] . '</div>' : '') . (!empty($element['#children']) ? $element['#children'] : '') . $element['#value'] . "</fieldset>\n";
 }
 
 /**
@@ -1505,12 +1505,12 @@ function theme_fieldset($element) {
 function theme_radio($element) {
   _form_set_class($element, array('form-radio'));
   $output = '<input type="radio" ';
-  $output .= 'name="'. $element['#name'] .'" ';
-  $output .= 'value="'. $element['#return_value'] .'" ';
+  $output .= 'name="' . $element['#name'] . '" ';
+  $output .= 'value="' . $element['#return_value'] . '" ';
   $output .= (check_plain($element['#value']) == $element['#return_value']) ? ' checked="checked" ' : ' ';
-  $output .= drupal_attributes($element['#attributes']) .' />';
+  $output .= drupal_attributes($element['#attributes']) . ' />';
   if (!is_null($element['#title'])) {
-    $output = '<label class="option">'. $output .' '. $element['#title'] .'</label>';
+    $output = '<label class="option">' . $output . ' ' . $element['#title'] . '</label>';
   }
 
   unset($element['#title']);
@@ -1531,9 +1531,9 @@ function theme_radio($element) {
 function theme_radios($element) {
   $class = 'form-radios';
   if (isset($element['#attributes']['class'])) {
-    $class .= ' '. $element['#attributes']['class'];
+    $class .= ' ' . $element['#attributes']['class'];
   }
-  $element['#children'] = '<div class="'. $class .'">'. (!empty($element['#children']) ? $element['#children'] : '') .'</div>';
+  $element['#children'] = '<div class="' . $class . '">' . (!empty($element['#children']) ? $element['#children'] : '') . '</div>';
   if ($element['#title'] || $element['#description']) {
     unset($element['#id']);
     return theme('form_element', $element, $element['#children']);
@@ -1623,7 +1623,7 @@ function password_confirm_validate($form, &$form_state) {
  * @ingroup themeable
  */
 function theme_date($element) {
-  return theme('form_element', $element, '<div class="container-inline">'. $element['#children'] .'</div>');
+  return theme('form_element', $element, '<div class="container-inline">' . $element['#children'] . '</div>');
 }
 
 /**
@@ -1720,7 +1720,7 @@ function expand_radios($element) {
           '#default_value' => isset($element['#default_value']) ? $element['#default_value'] : NULL,
           '#attributes' => $element['#attributes'],
           '#parents' => $element['#parents'],
-          '#id' => form_clean_id('edit-'. implode('-', $parents_for_id)),
+          '#id' => form_clean_id('edit-' . implode('-', $parents_for_id)),
         );
       }
     }
@@ -1782,7 +1782,7 @@ function form_expand_ahah($element) {
       'event'    => $element['#ahah']['event'],
       'keypress' => empty($element['#ahah']['keypress']) ? NULL : $element['#ahah']['keypress'],
       'wrapper'  => empty($element['#ahah']['wrapper']) ? NULL : $element['#ahah']['wrapper'],
-      'selector' => empty($element['#ahah']['selector']) ? '#'. $element['#id'] : $element['#ahah']['selector'],
+      'selector' => empty($element['#ahah']['selector']) ? '#' . $element['#id'] : $element['#ahah']['selector'],
       'effect'   => empty($element['#ahah']['effect']) ? 'none' : $element['#ahah']['effect'],
       'method'   => empty($element['#ahah']['method']) ? 'replace' : $element['#ahah']['method'],
       'progress' => empty($element['#ahah']['progress']) ? array('type' => 'throbber') : $element['#ahah']['progress'],
@@ -1841,14 +1841,14 @@ function theme_checkbox($element) {
   _form_set_class($element, array('form-checkbox'));
   $checkbox = '<input ';
   $checkbox .= 'type="checkbox" ';
-  $checkbox .= 'name="'. $element['#name'] .'" ';
-  $checkbox .= 'id="'. $element['#id'] .'" ' ;
-  $checkbox .= 'value="'. $element['#return_value'] .'" ';
+  $checkbox .= 'name="' . $element['#name'] . '" ';
+  $checkbox .= 'id="' . $element['#id'] . '" ' ;
+  $checkbox .= 'value="' . $element['#return_value'] . '" ';
   $checkbox .= $element['#value'] ? ' checked="checked" ' : ' ';
-  $checkbox .= drupal_attributes($element['#attributes']) .' />';
+  $checkbox .= drupal_attributes($element['#attributes']) . ' />';
 
   if (!is_null($element['#title'])) {
-    $checkbox = '<label class="option">'. $checkbox .' '. $element['#title'] .'</label>';
+    $checkbox = '<label class="option">' . $checkbox . ' ' . $element['#title'] . '</label>';
   }
 
   unset($element['#title']);
@@ -1868,9 +1868,9 @@ function theme_checkbox($element) {
 function theme_checkboxes($element) {
   $class = 'form-checkboxes';
   if (isset($element['#attributes']['class'])) {
-    $class .= ' '. $element['#attributes']['class'];
+    $class .= ' ' . $element['#attributes']['class'];
   }
-  $element['#children'] = '<div class="'. $class .'">'. (!empty($element['#children']) ? $element['#children'] : '') .'</div>';
+  $element['#children'] = '<div class="' . $class . '">' . (!empty($element['#children']) ? $element['#children'] : '') . '</div>';
   if ($element['#title'] || $element['#description']) {
     unset($element['#id']);
     return theme('form_element', $element, $element['#children']);
@@ -1913,13 +1913,13 @@ function theme_submit($element) {
 function theme_button($element) {
   // Make sure not to overwrite classes.
   if (isset($element['#attributes']['class'])) {
-    $element['#attributes']['class'] = 'form-'. $element['#button_type'] .' '. $element['#attributes']['class'];
+    $element['#attributes']['class'] = 'form-' . $element['#button_type'] . ' ' . $element['#attributes']['class'];
   }
   else {
-    $element['#attributes']['class'] = 'form-'. $element['#button_type'];
+    $element['#attributes']['class'] = 'form-' . $element['#button_type'];
   }
 
-  return '<input type="submit" '. (empty($element['#name']) ? '' : 'name="'. $element['#name'] .'" ') .'id="'. $element['#id'] .'" value="'. check_plain($element['#value']) .'" '. drupal_attributes($element['#attributes']) ." />\n";
+  return '<input type="submit" ' . (empty($element['#name']) ? '' : 'name="' . $element['#name'] . '" ') . 'id="' . $element['#id'] . '" value="' . check_plain($element['#value']) . '" ' . drupal_attributes($element['#attributes']) . " />\n";
 }
 
 /**
@@ -1930,18 +1930,18 @@ function theme_button($element) {
 function theme_image_button($element) {
   // Make sure not to overwrite classes.
   if (isset($element['#attributes']['class'])) {
-    $element['#attributes']['class'] = 'form-'. $element['#button_type'] .' '. $element['#attributes']['class'];
+    $element['#attributes']['class'] = 'form-' . $element['#button_type'] . ' ' . $element['#attributes']['class'];
   }
   else {
-    $element['#attributes']['class'] = 'form-'. $element['#button_type'];
+    $element['#attributes']['class'] = 'form-' . $element['#button_type'];
   }
 
-  return '<input type="image" name="'. $element['#name'] .'" '.
-    (!empty($element['#value']) ? ('value="'. check_plain($element['#value']) .'" ') : '') .
-    'id="'. $element['#id'] .'" '.
+  return '<input type="image" name="' . $element['#name'] . '" ' .
+    (!empty($element['#value']) ? ('value="' . check_plain($element['#value']) . '" ') : '') .
+    'id="' . $element['#id'] . '" ' .
     drupal_attributes($element['#attributes']) .
-    ' src="'. base_path() . $element['#src'] .'" '.
-    (!empty($element['#title']) ? 'alt="'. check_plain($element['#title']) .'" title="'. check_plain($element['#title']) .'" ' : '' ) .
+    ' src="' . base_path() . $element['#src'] . '" ' .
+    (!empty($element['#title']) ? 'alt="' . check_plain($element['#title']) . '" title="' . check_plain($element['#title']) . '" ' : '' ) .
     "/>\n";
 }
 
@@ -1957,7 +1957,7 @@ function theme_image_button($element) {
  * @ingroup themeable
  */
 function theme_hidden($element) {
-  return '<input type="hidden" name="'. $element['#name'] .'" id="'. $element['#id'] .'" value="'. check_plain($element['#value']) ."\" ". drupal_attributes($element['#attributes']) ." />\n";
+  return '<input type="hidden" name="' . $element['#name'] . '" id="' . $element['#id'] . '" value="' . check_plain($element['#value']) . "\" " . drupal_attributes($element['#attributes']) . " />\n";
 }
 
 /**
@@ -1981,8 +1981,8 @@ function theme_token($element) {
  * @ingroup themeable
  */
 function theme_textfield($element) {
-  $size = empty($element['#size']) ? '' : ' size="'. $element['#size'] .'"';
-  $maxlength = empty($element['#maxlength']) ? '' : ' maxlength="'. $element['#maxlength'] .'"';
+  $size = empty($element['#size']) ? '' : ' size="' . $element['#size'] . '"';
+  $maxlength = empty($element['#maxlength']) ? '' : ' maxlength="' . $element['#maxlength'] . '"';
   $class = array('form-text');
   $extra = '';
   $output = '';
@@ -1990,18 +1990,18 @@ function theme_textfield($element) {
   if ($element['#autocomplete_path']) {
     drupal_add_js('misc/autocomplete.js');
     $class[] = 'form-autocomplete';
-    $extra =  '<input class="autocomplete" type="hidden" id="'. $element['#id'] .'-autocomplete" value="'. check_url(url($element['#autocomplete_path'], array('absolute' => TRUE))) .'" disabled="disabled" />';
+    $extra =  '<input class="autocomplete" type="hidden" id="' . $element['#id'] . '-autocomplete" value="' . check_url(url($element['#autocomplete_path'], array('absolute' => TRUE))) . '" disabled="disabled" />';
   }
   _form_set_class($element, $class);
 
   if (isset($element['#field_prefix'])) {
-    $output .= '<span class="field-prefix">'. $element['#field_prefix'] .'</span> ';
+    $output .= '<span class="field-prefix">' . $element['#field_prefix'] . '</span> ';
   }
 
-  $output .= '<input type="text"'. $maxlength .' name="'. $element['#name'] .'" id="'. $element['#id'] .'"'. $size .' value="'. check_plain($element['#value']) .'"'. drupal_attributes($element['#attributes']) .' />';
+  $output .= '<input type="text"' . $maxlength . ' name="' . $element['#name'] . '" id="' . $element['#id'] . '"' . $size . ' value="' . check_plain($element['#value']) . '"' . drupal_attributes($element['#attributes']) . ' />';
 
   if (isset($element['#field_suffix'])) {
-    $output .= ' <span class="field-suffix">'. $element['#field_suffix'] .'</span>';
+    $output .= ' <span class="field-suffix">' . $element['#field_suffix'] . '</span>';
   }
 
   return theme('form_element', $element, $output) . $extra;
@@ -2020,8 +2020,8 @@ function theme_textfield($element) {
  */
 function theme_form($element) {
   // Anonymous div to satisfy XHTML compliance.
-  $action = $element['#action'] ? 'action="'. check_url($element['#action']) .'" ' : '';
-  return '<form '. $action .' accept-charset="UTF-8" method="'. $element['#method'] .'" id="'. $element['#id'] .'"'. drupal_attributes($element['#attributes']) .">\n<div>". $element['#children'] ."\n</div></form>\n";
+  $action = $element['#action'] ? 'action="' . check_url($element['#action']) . '" ' : '';
+  return '<form ' . $action . ' accept-charset="UTF-8" method="' . $element['#method'] . '" id="' . $element['#id'] . '"' . drupal_attributes($element['#attributes']) . ">\n<div>" . $element['#children'] . "\n</div></form>\n";
 }
 
 /**
@@ -2054,7 +2054,7 @@ function theme_textarea($element) {
   }
 
   _form_set_class($element, $class);
-  return theme('form_element', $element, '<textarea cols="'. $element['#cols'] .'" rows="'. $element['#rows'] .'" name="'. $element['#name'] .'" id="'. $element['#id'] .'" '. drupal_attributes($element['#attributes']) .'>'. check_plain($element['#value']) .'</textarea>');
+  return theme('form_element', $element, '<textarea cols="' . $element['#cols'] . '" rows="' . $element['#rows'] . '" name="' . $element['#name'] . '" id="' . $element['#id'] . '" ' . drupal_attributes($element['#attributes']) . '>' . check_plain($element['#value']) . '</textarea>');
 }
 
 /**
@@ -2087,11 +2087,11 @@ function theme_markup($element) {
  * @ingroup themeable
  */
 function theme_password($element) {
-  $size = $element['#size'] ? ' size="'. $element['#size'] .'" ' : '';
-  $maxlength = $element['#maxlength'] ? ' maxlength="'. $element['#maxlength'] .'" ' : '';
+  $size = $element['#size'] ? ' size="' . $element['#size'] . '" ' : '';
+  $maxlength = $element['#maxlength'] ? ' maxlength="' . $element['#maxlength'] . '" ' : '';
 
   _form_set_class($element, array('form-text'));
-  $output = '<input type="password" name="'. $element['#name'] .'" id="'. $element['#id'] .'" '. $maxlength . $size . drupal_attributes($element['#attributes']) .' />';
+  $output = '<input type="password" name="' . $element['#name'] . '" id="' . $element['#id'] . '" ' . $maxlength . $size . drupal_attributes($element['#attributes']) . ' />';
   return theme('form_element', $element, $output);
 }
 
@@ -2132,7 +2132,7 @@ function process_weight($element) {
  */
 function theme_file($element) {
   _form_set_class($element, array('form-file'));
-  return theme('form_element', $element, '<input type="file" name="'. $element['#name'] .'"'. ($element['#attributes'] ? ' '. drupal_attributes($element['#attributes']) : '') .' id="'. $element['#id'] .'" size="'. $element['#size'] ."\" />\n");
+  return theme('form_element', $element, '<input type="file" name="' . $element['#name'] . '"' . ($element['#attributes'] ? ' ' . drupal_attributes($element['#attributes']) : '') . ' id="' . $element['#id'] . '" size="' . $element['#size'] . "\" />\n");
 }
 
 /**
@@ -2154,25 +2154,25 @@ function theme_form_element($element, $value) {
 
   $output = '<div class="form-item"';
   if (!empty($element['#id'])) {
-    $output .= ' id="'. $element['#id'] .'-wrapper"';
+    $output .= ' id="' . $element['#id'] . '-wrapper"';
   }
   $output .= ">\n";
-  $required = !empty($element['#required']) ? '<span class="form-required" title="'. $t('This field is required.') .'">*</span>' : '';
+  $required = !empty($element['#required']) ? '<span class="form-required" title="' . $t('This field is required.') . '">*</span>' : '';
 
   if (!empty($element['#title'])) {
     $title = $element['#title'];
     if (!empty($element['#id'])) {
-      $output .= ' <label for="'. $element['#id'] .'">'. $t('!title: !required', array('!title' => filter_xss_admin($title), '!required' => $required)) ."</label>\n";
+      $output .= ' <label for="' . $element['#id'] . '">' . $t('!title: !required', array('!title' => filter_xss_admin($title), '!required' => $required)) . "</label>\n";
     }
     else {
-      $output .= ' <label>'. $t('!title: !required', array('!title' => filter_xss_admin($title), '!required' => $required)) ."</label>\n";
+      $output .= ' <label>' . $t('!title: !required', array('!title' => filter_xss_admin($title), '!required' => $required)) . "</label>\n";
     }
   }
 
   $output .= " $value\n";
 
   if (!empty($element['#description'])) {
-    $output .= ' <div class="description">'. $element['#description'] ."</div>\n";
+    $output .= ' <div class="description">' . $element['#description'] . "</div>\n";
   }
 
   $output .= "</div>\n";
@@ -2235,7 +2235,7 @@ function form_clean_id($id = NULL, $flush = FALSE) {
   // outputting duplicate IDs, which would break JS code and XHTML
   // validity anyways. For now, it's an acceptable stopgap solution.
   if (isset($seen_ids[$id])) {
-    $id = $id .'-'. $seen_ids[$id]++;
+    $id = $id . '-' . $seen_ids[$id]++;
   }
   else {
     $seen_ids[$id] = 1;
@@ -2296,7 +2296,7 @@ function form_clean_id($id = NULL, $flush = FALSE) {
  *   //   and the batch processing can continue to the next operation.
  *
  *   $node = node_load(array('uid' => $uid, 'type' => $type));
- *   $context['results'][] = $node->nid .' : '. $node->title;
+ *   $context['results'][] = $node->nid . ' : ' . $node->title;
  *   $context['message'] = $node->title;
  * }
  *
@@ -2311,7 +2311,7 @@ function form_clean_id($id = NULL, $flush = FALSE) {
  *   $result = db_query_range("SELECT nid FROM {node} WHERE nid > %d ORDER BY nid ASC", $context['sandbox']['current_node'], 0, $limit);
  *   while ($row = db_fetch_array($result)) {
  *     $node = node_load($row['nid'], NULL, TRUE);
- *     $context['results'][] = $node->nid .' : '. $node->title;
+ *     $context['results'][] = $node->nid . ' : ' . $node->title;
  *     $context['sandbox']['progress']++;
  *     $context['sandbox']['current_node'] = $node->nid;
  *     $context['message'] = $node->title;
@@ -2483,7 +2483,7 @@ function batch_process($redirect = NULL, $url = NULL) {
       // Actually store the batch data and the token generated form the batch id.
       db_query("UPDATE {batch} SET token = '%s', batch = '%s' WHERE bid = %d", drupal_get_token($batch['id']), serialize($batch), $batch['id']);
 
-      drupal_goto($batch['url'], 'op=start&id='. $batch['id']);
+      drupal_goto($batch['url'], 'op=start&id=' . $batch['id']);
     }
     else {
       // Non-progressive execution: bypass the whole progressbar workflow

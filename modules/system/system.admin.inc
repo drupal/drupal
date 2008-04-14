@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.69 2008/04/10 01:43:32 dries Exp $
+// $Id: system.admin.inc,v 1.70 2008/04/14 17:48:41 dries Exp $
 
 /**
  * @file
@@ -47,7 +47,7 @@ function system_main_admin_page($arg = NULL) {
       $block['content'] .= theme('admin_block_content', system_admin_menu_block($item));
       // Prepare for sorting as in function _menu_tree_check_access().
       // The weight is offset so it is always positive, with a uniform 5-digits.
-      $blocks[(50000 + $item['weight']) .' '. $item['title'] .' '. $item['mlid']] = $block;
+      $blocks[(50000 + $item['weight']) . ' ' . $item['title'] . ' ' . $item['mlid']] = $block;
     }
   }
   if ($blocks) {
@@ -143,7 +143,7 @@ function system_admin_theme_settings() {
 
   uasort($themes, 'system_sort_modules_by_info_name');
 
-  $options[0] = '<'. t('System default') .'>';
+  $options[0] = '<' . t('System default') . '>';
   foreach ($themes as $theme) {
     $options[$theme->name] = $theme->info['name'];
   }
@@ -204,7 +204,7 @@ function system_themes_form() {
     $options[$theme->name] = '';
 
     if (!empty($theme->status) || $theme->name == variable_get('admin_theme', '0')) {
-      $form[$theme->name]['operations'] = array('#value' => l(t('configure'), 'admin/build/themes/settings/'. $theme->name) );
+      $form[$theme->name]['operations'] = array('#value' => l(t('configure'), 'admin/build/themes/settings/' . $theme->name) );
     }
     else {
       // Dummy element for drupal_render. Cleaner than adding a check in the theme function.
@@ -319,7 +319,7 @@ function system_theme_settings(&$form_state, $key = '') {
   // Default settings are defined in theme_get_settings() in includes/theme.inc
   if ($key) {
     $settings = theme_get_settings($key);
-    $var = str_replace('/', '_', 'theme_'. $key .'_settings');
+    $var = str_replace('/', '_', 'theme_' . $key . '_settings');
     $themes = system_theme_data();
     $features = $themes[$key]->info['features'];
   }
@@ -333,7 +333,7 @@ function system_theme_settings(&$form_state, $key = '') {
   // Check for a new uploaded logo, and use that instead.
   if ($file = file_save_upload('logo_upload', array('file_validate_is_image' => array()))) {
     $parts = pathinfo($file->filename);
-    $filename = ($key) ? str_replace('/', '_', $key) .'_logo.'. $parts['extension'] : 'logo.'. $parts['extension'];
+    $filename = ($key) ? str_replace('/', '_', $key) . '_logo.' . $parts['extension'] : 'logo.' . $parts['extension'];
 
     // The image was saved using file_save_upload() and was added to the
     // files table as a temporary file. We'll make a copy and let the garbage
@@ -348,7 +348,7 @@ function system_theme_settings(&$form_state, $key = '') {
   // Check for a new uploaded favicon, and use that instead.
   if ($file = file_save_upload('favicon_upload')) {
     $parts = pathinfo($file->filename);
-    $filename = ($key) ? str_replace('/', '_', $key) .'_favicon.'. $parts['extension'] : 'favicon.'. $parts['extension'];
+    $filename = ($key) ? str_replace('/', '_', $key) . '_favicon.' . $parts['extension'] : 'favicon.' . $parts['extension'];
 
     // The image was saved using file_save_upload() and was added to the
     // files table as a temporary file. We'll make a copy and let the garbage
@@ -391,10 +391,10 @@ function system_theme_settings(&$form_state, $key = '') {
   );
   foreach ($toggles as $name => $title) {
     if ((!$key) || in_array($name, $features)) {
-      $form['theme_settings']['toggle_'. $name] = array('#type' => 'checkbox', '#title' => $title, '#default_value' => $settings['toggle_'. $name]);
+      $form['theme_settings']['toggle_' . $name] = array('#type' => 'checkbox', '#title' => $title, '#default_value' => $settings['toggle_' . $name]);
       // Disable checkboxes for features not supported in the current configuration.
-      if (isset($disabled['toggle_'. $name])) {
-        $form['theme_settings']['toggle_'. $name]['#disabled'] = TRUE;
+      if (isset($disabled['toggle_' . $name])) {
+        $form['theme_settings']['toggle_' . $name]['#disabled'] = TRUE;
       }
     }
   }
@@ -485,18 +485,18 @@ function system_theme_settings(&$form_state, $key = '') {
 
   if ($key) {
     // Include the theme's theme-settings.php file
-    $filename = './'. str_replace("/$key.info", '', $themes[$key]->filename) .'/theme-settings.php';
+    $filename = './' . str_replace("/$key.info", '', $themes[$key]->filename) . '/theme-settings.php';
     if (!file_exists($filename) and !empty($themes[$key]->info['base theme'])) {
       // If the theme doesn't have a theme-settings.php file, use the base theme's.
       $base = $themes[$key]->info['base theme'];
-      $filename = './'. str_replace("/$base.info", '', $themes[$base]->filename) .'/theme-settings.php';
+      $filename = './' . str_replace("/$base.info", '', $themes[$base]->filename) . '/theme-settings.php';
     }
     if (file_exists($filename)) {
       require_once $filename;
     }
 
     // Call engine-specific settings.
-    $function = $themes[$key]->prefix .'_engine_settings';
+    $function = $themes[$key]->prefix . '_engine_settings';
     if (function_exists($function)) {
       $group = $function($settings);
       if (!empty($group)) {
@@ -505,9 +505,9 @@ function system_theme_settings(&$form_state, $key = '') {
       }
     }
     // Call theme-specific settings.
-    $function = $key .'_settings';
+    $function = $key . '_settings';
     if (!function_exists($function)) {
-      $function = $themes[$key]->prefix .'_settings';
+      $function = $themes[$key]->prefix . '_settings';
     }
     if (function_exists($function)) {
       $group = $function($settings);
@@ -1049,7 +1049,7 @@ function system_modules_uninstall_confirm_form($storage) {
 
   // Construct the hidden form elements and list items.
   foreach (array_filter($storage['uninstall']) as $module => $value) {
-    $info = drupal_parse_info_file(dirname(drupal_get_filename('module', $module)) .'/'. $module .'.info');
+    $info = drupal_parse_info_file(dirname(drupal_get_filename('module', $module)) . '/' . $module . '.info');
     $uninstall[] = $info['name'];
     $form['uninstall'][$module] = array('#type' => 'hidden',
       '#value' => 1,
@@ -1060,7 +1060,7 @@ function system_modules_uninstall_confirm_form($storage) {
   if (isset($uninstall)) {
     $form['#confirmed'] = TRUE;
     $form['uninstall']['#tree'] = TRUE;
-    $form['modules'] = array('#value' => '<p>'. t('The following modules will be completely uninstalled from your site, and <em>all data from these modules will be lost</em>!') .'</p>'. theme('item_list', $uninstall));
+    $form['modules'] = array('#value' => '<p>' . t('The following modules will be completely uninstalled from your site, and <em>all data from these modules will be lost</em>!') . '</p>' . theme('item_list', $uninstall));
     $form = confirm_form(
       $form,
       t('Confirm uninstall'),
@@ -1328,16 +1328,16 @@ function system_logging_overview() {
  */
 function system_performance_settings() {
 
-  $description = '<p>'. t("The normal cache mode is suitable for most sites and does not cause any side effects. The aggressive cache mode causes Drupal to skip the loading (boot) and unloading (exit) of enabled modules when serving a cached page. This results in an additional performance boost but can cause unwanted side effects.") .'</p>';
+  $description = '<p>' . t("The normal cache mode is suitable for most sites and does not cause any side effects. The aggressive cache mode causes Drupal to skip the loading (boot) and unloading (exit) of enabled modules when serving a cached page. This results in an additional performance boost but can cause unwanted side effects.") . '</p>';
 
   $problem_modules = array_unique(array_merge(module_implements('boot'), module_implements('exit')));
   sort($problem_modules);
 
   if (count($problem_modules) > 0) {
-    $description .= '<p>'. t('<strong class="error">The following enabled modules are incompatible with aggressive mode caching and will not function properly: %modules</strong>', array('%modules' => implode(', ', $problem_modules))) .'.</p>';
+    $description .= '<p>' . t('<strong class="error">The following enabled modules are incompatible with aggressive mode caching and will not function properly: %modules</strong>', array('%modules' => implode(', ', $problem_modules))) . '.</p>';
   }
   else {
-    $description .= '<p>'. t('<strong class="ok">Currently, all enabled modules are compatible with the aggressive caching policy.</strong> Please note, if you use aggressive caching and enable new modules, you will need to check this page again to ensure compatibility.') .'</p>';
+    $description .= '<p>' . t('<strong class="ok">Currently, all enabled modules are compatible with the aggressive caching policy.</strong> Please note, if you use aggressive caching and enable new modules, you will need to check this page again to ensure compatibility.') . '</p>';
   }
   $form['page_cache'] = array(
     '#type' => 'fieldset',
@@ -1354,7 +1354,7 @@ function system_performance_settings() {
   );
 
   $period = drupal_map_assoc(array(0, 60, 180, 300, 600, 900, 1800, 2700, 3600, 10800, 21600, 32400, 43200, 86400), 'format_interval');
-  $period[0] = '<'. t('none') .'>';
+  $period[0] = '<' . t('none') . '>';
   $form['page_cache']['cache_lifetime'] = array(
     '#type' => 'select',
     '#title' => t('Minimum cache lifetime'),
@@ -1388,7 +1388,7 @@ function system_performance_settings() {
   $form['bandwidth_optimizations'] = array(
     '#type' => 'fieldset',
     '#title' => t('Bandwidth optimizations'),
-    '#description' => '<p>'. t('Drupal can automatically optimize external resources like CSS and JavaScript, which can reduce both the size and number of requests made to your website. CSS files can be aggregated and compressed into a single file, while JavaScript files are aggregated (but not compressed). These optional optimizations may reduce server load, bandwidth requirements, and page loading times.') .'</p><p>'. t('These options are disabled if you have not set up your files directory, or if your download method is set to private.') .'</p>'
+    '#description' => '<p>' . t('Drupal can automatically optimize external resources like CSS and JavaScript, which can reduce both the size and number of requests made to your website. CSS files can be aggregated and compressed into a single file, while JavaScript files are aggregated (but not compressed). These optional optimizations may reduce server load, bandwidth requirements, and page loading times.') . '</p><p>' . t('These options are disabled if you have not set up your files directory, or if your download method is set to private.') . '</p>'
   );
 
   $directory = file_directory_path();
@@ -1534,7 +1534,7 @@ function system_rss_feeds_settings() {
  * @see system_date_time_settings_submit()
  */
 function system_date_time_settings() {
-  drupal_add_js(drupal_get_path('module', 'system') .'/system.js', 'module');
+  drupal_add_js(drupal_get_path('module', 'system') . '/system.js', 'module');
   drupal_add_js(array('dateTime' => array('lookup' => url('admin/settings/date-time/lookup'))), 'setting');
 
   // Date settings:
@@ -1742,16 +1742,16 @@ function system_clean_url_settings() {
 
   if (!variable_get('clean_url', 0)) {
     if (strpos(request_uri(), '?q=') !== FALSE) {
-      drupal_add_js(drupal_get_path('module', 'system') .'/system.js', 'module');
+      drupal_add_js(drupal_get_path('module', 'system') . '/system.js', 'module');
 
-      $form['clean_url']['#description'] .= ' <span>'. t('Before enabling clean URLs, you must perform a test to determine if your server is properly configured. If you are able to see this page again after clicking the "Run the clean URL test" link, the test has succeeded and the radio buttons above will be available. If instead you are directed to a "Page not found" error, you will need to change the configuration of your server. The <a href="@handbook">handbook page on Clean URLs</a> has additional troubleshooting information.', array('@handbook' => 'http://drupal.org/node/15365')) .'</span>';
+      $form['clean_url']['#description'] .= ' <span>' . t('Before enabling clean URLs, you must perform a test to determine if your server is properly configured. If you are able to see this page again after clicking the "Run the clean URL test" link, the test has succeeded and the radio buttons above will be available. If instead you are directed to a "Page not found" error, you will need to change the configuration of your server. The <a href="@handbook">handbook page on Clean URLs</a> has additional troubleshooting information.', array('@handbook' => 'http://drupal.org/node/15365')) . '</span>';
 
       $form['clean_url']['#disabled'] = TRUE;
       $form['clean_url']['#prefix'] = '<div id="clean-url">';
-      $form['clean_url']['#suffix'] = '<p>'. t('<a href="@clean_url">Run the clean url test</a>.', array('@clean_url' => base_path() .'admin/settings/clean-urls')) .'</p></div>';
+      $form['clean_url']['#suffix'] = '<p>' . t('<a href="@clean_url">Run the clean url test</a>.', array('@clean_url' => base_path() . 'admin/settings/clean-urls')) . '</p></div>';
     }
     else {
-      $form['clean_url']['#description'] .= ' <div class="ok">'. t('Your server has been successfully tested to support this feature.') .'</div>';
+      $form['clean_url']['#description'] .= ' <div class="ok">' . t('Your server has been successfully tested to support this feature.') . '</div>';
     }
   }
 
@@ -1839,7 +1839,7 @@ function system_sql() {
     $data[$entry->Variable_name] = $entry->Value;
   }
 
-  $output  = '<h2>'. t('Command counters') .'</h2>';
+  $output  = '<h2>' . t('Command counters') . '</h2>';
   $output .= _system_sql($data, array(
    'Com_select' => t('The number of <code>SELECT</code>-statements.'),
    'Com_insert' => t('The number of <code>INSERT</code>-statements.'),
@@ -1849,7 +1849,7 @@ function system_sql() {
    'Com_unlock_tables' => t('The number of table unlocks.')
   ));
 
-  $output .= '<h2>'. t('Query performance') .'</h2>';
+  $output .= '<h2>' . t('Query performance') . '</h2>';
   $output .= _system_sql($data, array(
    'Select_full_join' => t('The number of joins without an index; should be zero.'),
    'Select_range_check' => t('The number of joins without keys that check for key usage after each row; should be zero.'),
@@ -1858,8 +1858,8 @@ function system_sql() {
    'Table_locks_waited' => t('The number of times the server had to wait for a lock.')
   ));
 
-  $output .= '<h2>'. t('Query cache information') .'</h2>';
-  $output .= '<p>'. t('The MySQL query cache can improve performance of your site by storing the result of queries. Then, if an identical query is received later, the MySQL server retrieves the result from the query cache rather than parsing and executing the statement again.') .'</p>';
+  $output .= '<h2>' . t('Query cache information') . '</h2>';
+  $output .= '<p>' . t('The MySQL query cache can improve performance of your site by storing the result of queries. Then, if an identical query is received later, the MySQL server retrieves the result from the query cache rather than parsing and executing the statement again.') . '</p>';
   $output .= _system_sql($data, array(
    'Qcache_queries_in_cache' => t('The number of queries in the query cache.'),
    'Qcache_hits' => t('The number of times MySQL found previous results in the cache.'),
@@ -1932,15 +1932,15 @@ function theme_admin_block_content($content) {
   if (system_admin_compact_mode()) {
     $output = '<ul class="menu">';
     foreach ($content as $item) {
-      $output .= '<li class="leaf">'. l($item['title'], $item['href'], $item['localized_options']) .'</li>';
+      $output .= '<li class="leaf">' . l($item['title'], $item['href'], $item['localized_options']) . '</li>';
     }
     $output .= '</ul>';
   }
   else {
     $output = '<dl class="admin-list">';
     foreach ($content as $item) {
-      $output .= '<dt>'. l($item['title'], $item['href'], $item['localized_options']) .'</dt>';
-      $output .= '<dd>'. $item['description'] .'</dd>';
+      $output .= '<dt>' . l($item['title'], $item['href'], $item['localized_options']) . '</dt>';
+      $output .= '<dd>' . $item['description'] . '</dd>';
     }
     $output .= '</dl>';
   }
@@ -1978,7 +1978,7 @@ function theme_admin_page($blocks) {
   $output .= theme('system_compact_link');
 
   foreach ($container as $id => $data) {
-    $output .= '<div class="'. $id .' clear-block">';
+    $output .= '<div class="' . $id . ' clear-block">';
     $output .= $data;
     $output .= '</div>';
   }
@@ -2024,7 +2024,7 @@ function theme_system_admin_by_module($menu_items) {
 
   $output = '<div class="admin clear-block">';
   foreach ($container as $id => $data) {
-    $output .= '<div class="'. $id .' clear-block">';
+    $output .= '<div class="' . $id . ' clear-block">';
     $output .= $data;
     $output .= '</div>';
   }
@@ -2053,15 +2053,15 @@ function theme_status_report(&$requirements) {
         REQUIREMENT_WARNING => 'warning',
         REQUIREMENT_ERROR => 'error',
       );
-      $class = $classes[isset($requirement['severity']) ? (int)$requirement['severity'] : 0] .' '. $class;
+      $class = $classes[isset($requirement['severity']) ? (int)$requirement['severity'] : 0] . ' ' . $class;
 
       // Output table row(s)
       if (!empty($requirement['description'])) {
-        $output .= '<tr class="'. $class .' merge-down"><th>'. $requirement['title'] .'</th><td>'. $requirement['value'] .'</td></tr>';
-        $output .= '<tr class="'. $class .' merge-up"><td colspan="2">'. $requirement['description'] .'</td></tr>';
+        $output .= '<tr class="' . $class . ' merge-down"><th>' . $requirement['title'] . '</th><td>' . $requirement['value'] . '</td></tr>';
+        $output .= '<tr class="' . $class . ' merge-up"><td colspan="2">' . $requirement['description'] . '</td></tr>';
       }
       else {
-        $output .= '<tr class="'. $class .'"><th>'. $requirement['title'] .'</th><td>'. $requirement['value'] .'</td></tr>';
+        $output .= '<tr class="' . $class . '"><th>' . $requirement['title'] . '</th><td>' . $requirement['value'] . '</td></tr>';
       }
     }
   }
@@ -2112,7 +2112,7 @@ function theme_system_modules($form) {
       if (isset($form['status']['#incompatible_modules_core'][$key])) {
         unset($form['status'][$key]);
         $status = theme('image', 'misc/watchdog-error.png', t('incompatible'), t('Incompatible with this version of Drupal core'));
-        $description .= '<div class="incompatible">'. t('This version is incompatible with the !core_version version of Drupal core.', array('!core_version' => VERSION)) .'</div>';
+        $description .= '<div class="incompatible">' . t('This version is incompatible with the !core_version version of Drupal core.', array('!core_version' => VERSION)) . '</div>';
       }
       elseif (isset($form['status']['#incompatible_modules_php'][$key])) {
         unset($form['status'][$key]);
@@ -2121,7 +2121,7 @@ function theme_system_modules($form) {
         if (substr_count($php_required, '.') < 2) {
           $php_required .= '.*';
         }
-        $description .= '<div class="incompatible">'. t('This module requires PHP version @php_required and is incompatible with PHP version !php_version.', array('@php_required' => $php_required, '!php_version' => phpversion())) .'</div>';
+        $description .= '<div class="incompatible">' . t('This module requires PHP version @php_required and is incompatible with PHP version !php_version.', array('@php_required' => $php_required, '!php_version' => phpversion())) . '</div>';
       }
       else {
         $status = drupal_render($form['status'][$key]);
@@ -2133,10 +2133,10 @@ function theme_system_modules($form) {
 
       // Add labels only when there is also a checkbox.
       if (isset($form['status'][$key])) {
-        $row[] = '<strong><label for="'. $form['status'][$key]['#id'] .'">'. drupal_render($form['name'][$key]) .'</label></strong>';
+        $row[] = '<strong><label for="' . $form['status'][$key]['#id'] . '">' . drupal_render($form['name'][$key]) . '</label></strong>';
       }
       else {
-        $row[] = '<strong>'. drupal_render($form['name'][$key]) .'</strong>';
+        $row[] = '<strong>' . drupal_render($form['name'][$key]) . '</strong>';
       }
 
       $row[] = drupal_render($form['version'][$key]);
@@ -2182,7 +2182,7 @@ function theme_system_modules_uninstall($form) {
   foreach (element_children($form['modules']) as $module) {
     $rows[] = array(
       array('data' => drupal_render($form['uninstall'][$module]), 'align' => 'center'),
-      '<strong>'. drupal_render($form['modules'][$module]['name']) .'</strong>',
+      '<strong>' . drupal_render($form['modules'][$module]['name']) . '</strong>',
       array('data' => drupal_render($form['modules'][$module]['description']), 'class' => 'description'),
     );
   }
@@ -2242,7 +2242,7 @@ function theme_system_themes_form($form) {
     if (isset($form['status']['#incompatible_themes_core'][$key])) {
       unset($form['status'][$key]);
       $status = theme('image', 'misc/watchdog-error.png', t('incompatible'), t('Incompatible with this version of Drupal core'));
-      $description .= '<div class="incompatible">'. t('This version is incompatible with the !core_version version of Drupal core.', array('!core_version' => VERSION)) .'</div>';
+      $description .= '<div class="incompatible">' . t('This version is incompatible with the !core_version version of Drupal core.', array('!core_version' => VERSION)) . '</div>';
     }
     elseif (isset($form['status']['#incompatible_themes_php'][$key])) {
       unset($form['status'][$key]);
@@ -2251,14 +2251,14 @@ function theme_system_themes_form($form) {
       if (substr_count($php_required, '.') < 2) {
         $php_required .= '.*';
       }
-      $description .= '<div class="incompatible">'. t('This theme requires PHP version @php_required and is incompatible with PHP version !php_version.', array('@php_required' => $php_required, '!php_version' => phpversion())) .'</div>';
+      $description .= '<div class="incompatible">' . t('This theme requires PHP version @php_required and is incompatible with PHP version !php_version.', array('@php_required' => $php_required, '!php_version' => phpversion())) . '</div>';
     }
     else {
       $status = drupal_render($form['status'][$key]);
     }
 
     // Style theme info
-    $theme = '<div class="theme-info"><h2>'. $info['name'] .'</h2><div class="description">'. $description .'</div></div>';
+    $theme = '<div class="theme-info"><h2>' . $info['name'] . '</h2><div class="description">' . $description . '</div></div>';
 
     // Build rows
     $row = array();

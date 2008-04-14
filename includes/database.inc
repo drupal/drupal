@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.92 2008/01/08 16:03:31 goba Exp $
+// $Id: database.inc,v 1.93 2008/04/14 17:48:33 dries Exp $
 
 /**
  * @file
@@ -87,13 +87,13 @@ function db_prefix_tables($sql) {
       $tmp = $db_prefix;
       unset($tmp['default']);
       foreach ($tmp as $key => $val) {
-        $sql = strtr($sql, array('{'. $key .'}' => $val . $key));
+        $sql = strtr($sql, array('{' . $key . '}' => $val . $key));
       }
       return strtr($sql, array('{' => $db_prefix['default'], '}' => ''));
     }
     else {
       foreach ($db_prefix as $key => $val) {
-        $sql = strtr($sql, array('{'. $key .'}' => $val . $key));
+        $sql = strtr($sql, array('{' . $key . '}' => $val . $key));
       }
       return strtr($sql, array('{' => '', '}' => ''));
     }
@@ -146,7 +146,7 @@ function db_set_active($name = 'default') {
       include_once $handler;
     }
     else {
-      _db_error_page("The database type '". $db_type ."' is unsupported. Please use either 'mysql' or 'mysqli' for MySQL, or 'pgsql' for PostgreSQL databases.");
+      _db_error_page("The database type '" . $db_type . "' is unsupported. Please use either 'mysql' or 'mysqli' for MySQL, or 'pgsql' for PostgreSQL databases.");
     }
 
     $db_conns[$name] = db_connect($connect_url);
@@ -180,7 +180,7 @@ function _db_error_page($error = '') {
   $message .= '<hr /><p><small>If you are the maintainer of this site, please check your database settings in the <code>settings.php</code> file and ensure that your hosting provider\'s database server is running. For more help, see the <a href="http://drupal.org/node/258">handbook</a>, or contact your hosting provider.</small></p>';
 
   if ($error && ini_get('display_errors')) {
-    $message .= '<p><small>The '. theme('placeholder', $db_type) .' error was: '. theme('placeholder', $error) .'.</small></p>';
+    $message .= '<p><small>The ' . theme('placeholder', $db_type) . ' error was: ' . theme('placeholder', $error) . '.</small></p>';
   }
 
   print theme('maintenance_page', $message);
@@ -282,7 +282,7 @@ function _db_rewrite_sql($query = '', $primary_table = 'n', $primary_field = 'ni
     }
   }
 
-  $where = empty($where) ? '' : '('. implode(') AND (', $where) .')';
+  $where = empty($where) ? '' : '(' . implode(') AND (', $where) . ')';
   $join = empty($join) ? '' : implode(' ', $join);
 
   return array($join, $where, $distinct);
@@ -331,7 +331,7 @@ function db_rewrite_sql($query, $primary_table = 'n', $primary_field = 'nid',  $
     if ($where) {
       $n = strlen($matches[1]);
       $second_part = substr($query, $n);
-      $first_part = substr($matches[1], 0, $n - 5) ." $join WHERE $where AND ( ";
+      $first_part = substr($matches[1], 0, $n - 5) . " $join WHERE $where AND ( ";
       // PHP 4 does not support strrpos for strings. We emulate it.
       $haystack_reverse = strrev($second_part);
       // No need to use strrev on the needle, we supply GROUP, ORDER, LIMIT
@@ -345,14 +345,14 @@ function db_rewrite_sql($query, $primary_table = 'n', $primary_field = 'nid',  $
         }
       }
       if ($pos === FALSE) {
-        $query = $first_part . $second_part .')';
+        $query = $first_part . $second_part . ')';
       }
       else {
-        $query = $first_part . substr($second_part, 0, -$pos) .')'. substr($second_part, -$pos);
+        $query = $first_part . substr($second_part, 0, -$pos) . ')' . substr($second_part, -$pos);
       }
     }
     else {
-      $query = $matches[1] ." $join ". substr($query, strlen($matches[1]));
+      $query = $matches[1] . " $join " . substr($query, strlen($matches[1]));
     }
   }
 
@@ -564,7 +564,7 @@ function db_type_placeholder($type) {
 
   // There is no safe value to return here, so return something that
   // will cause the query to fail.
-  return 'unsupported type '. $type .'for db_type_placeholder';
+  return 'unsupported type ' . $type . 'for db_type_placeholder';
 }
 
 /**

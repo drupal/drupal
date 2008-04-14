@@ -1,5 +1,5 @@
 <?php
-// $Id: template.php,v 1.16 2007/10/11 09:51:29 goba Exp $
+// $Id: template.php,v 1.17 2008/04/14 17:48:46 dries Exp $
 
 /**
  * Sets the body-tag class attribute.
@@ -20,7 +20,7 @@ function phptemplate_body_class($left, $right) {
   }
 
   if (isset($class)) {
-    print ' class="'. $class .'"';
+    print ' class="' . $class . '"';
   }
 }
 
@@ -33,7 +33,7 @@ function phptemplate_body_class($left, $right) {
  */
 function phptemplate_breadcrumb($breadcrumb) {
   if (!empty($breadcrumb)) {
-    return '<div class="breadcrumb">'. implode(' › ', $breadcrumb) .'</div>';
+    return '<div class="breadcrumb">' . implode(' › ', $breadcrumb) . '</div>';
   }
 }
 
@@ -42,10 +42,10 @@ function phptemplate_breadcrumb($breadcrumb) {
  */
 function phptemplate_comment_wrapper($content, $node) {
   if (!$content || $node->type == 'forum') {
-    return '<div id="comments">'. $content .'</div>';
+    return '<div id="comments">' . $content . '</div>';
   }
   else {
-    return '<div id="comments"><h2 class="comments">'. t('Comments') .'</h2>'. $content .'</div>';
+    return '<div id="comments"><h2 class="comments">' . t('Comments') . '</h2>' . $content . '</div>';
   }
 }
 
@@ -93,9 +93,9 @@ function phptemplate_node_submitted($node) {
 function phptemplate_get_ie_styles() {
   global $language;
 
-  $iecss = '<link type="text/css" rel="stylesheet" media="all" href="'. base_path() . path_to_theme() .'/fix-ie.css" />';
+  $iecss = '<link type="text/css" rel="stylesheet" media="all" href="' . base_path() . path_to_theme() . '/fix-ie.css" />';
   if (defined('LANGUAGE_RTL') && $language->direction == LANGUAGE_RTL) {
-    $iecss .= '<style type="text/css" media="all">@import "'. base_path() . path_to_theme() .'/fix-ie-rtl.css";</style>';
+    $iecss .= '<style type="text/css" media="all">@import "' . base_path() . path_to_theme() . '/fix-ie-rtl.css";</style>';
   }
 
   return $iecss;

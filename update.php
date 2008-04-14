@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.253 2008/03/19 07:36:28 dries Exp $
+// $Id: update.php,v 1.254 2008/04/14 17:48:33 dries Exp $
 
 /**
  * @file
@@ -66,15 +66,15 @@ function db_add_column(&$ret, $table, $column, $type, $attributes = array()) {
     }
   }
 
-  $ret[] = update_sql("ALTER TABLE {". $table ."} ADD $column $type");
+  $ret[] = update_sql("ALTER TABLE {" . $table . "} ADD $column $type");
   if (!empty($default)) {
-    $ret[] = update_sql("ALTER TABLE {". $table ."} ALTER $column SET $default");
+    $ret[] = update_sql("ALTER TABLE {" . $table . "} ALTER $column SET $default");
   }
   if (!empty($not_null)) {
     if (!empty($default)) {
-      $ret[] = update_sql("UPDATE {". $table ."} SET $column = $default_val");
+      $ret[] = update_sql("UPDATE {" . $table . "} SET $column = $default_val");
     }
-    $ret[] = update_sql("ALTER TABLE {". $table ."} ALTER $column SET NOT NULL");
+    $ret[] = update_sql("ALTER TABLE {" . $table . "} ALTER $column SET NOT NULL");
   }
 }
 
@@ -122,16 +122,16 @@ function db_change_column(&$ret, $table, $column, $column_new, $type, $attribute
     }
   }
 
-  $ret[] = update_sql("ALTER TABLE {". $table ."} RENAME $column TO ". $column ."_old");
-  $ret[] = update_sql("ALTER TABLE {". $table ."} ADD $column_new $type");
-  $ret[] = update_sql("UPDATE {". $table ."} SET $column_new = ". $column ."_old");
+  $ret[] = update_sql("ALTER TABLE {" . $table . "} RENAME $column TO " . $column . "_old");
+  $ret[] = update_sql("ALTER TABLE {" . $table . "} ADD $column_new $type");
+  $ret[] = update_sql("UPDATE {" . $table . "} SET $column_new = " . $column . "_old");
   if ($default) {
-    $ret[] = update_sql("ALTER TABLE {". $table ."} ALTER $column_new SET $default");
+    $ret[] = update_sql("ALTER TABLE {" . $table . "} ALTER $column_new SET $default");
   }
   if ($not_null) {
-    $ret[] = update_sql("ALTER TABLE {". $table ."} ALTER $column_new SET NOT NULL");
+    $ret[] = update_sql("ALTER TABLE {" . $table . "} ALTER $column_new SET NOT NULL");
   }
-  $ret[] = update_sql("ALTER TABLE {". $table ."} DROP ". $column ."_old");
+  $ret[] = update_sql("ALTER TABLE {" . $table . "} DROP " . $column . "_old");
 }
 
 /**
@@ -159,7 +159,7 @@ function update_do_one($module, $number, &$context) {
     return;
   }
 
-  $function = $module .'_update_'. $number;
+  $function = $module . '_update_' . $number;
   if (function_exists($function)) {
     $ret = $function($context['sandbox']);
   }
@@ -185,7 +185,7 @@ function update_do_one($module, $number, &$context) {
     drupal_set_installed_schema_version($module, $number);
   }
 
-  $context['message'] = 'Updating '. check_plain($module) .' module';
+  $context['message'] = 'Updating ' . check_plain($module) . ' module';
 }
 
 function update_selection_page() {
@@ -223,7 +223,7 @@ function update_script_selection_form() {
       $last_removed = module_invoke($module, 'update_last_removed');
       if ($schema_version < $last_removed) {
         $form['start'][$module] = array(
-          '#value'  => '<em>'. $module .'</em> module can not be updated. Its schema version is '. $schema_version .'. Updates up to and including '. $last_removed .' have been removed in this release. In order to update <em>'. $module .'</em> module, you will first <a href="http://drupal.org/upgrade">need to upgrade</a> to the last version in which these updates were available.',
+          '#value'  => '<em>' . $module . '</em> module can not be updated. Its schema version is ' . $schema_version . '. Updates up to and including ' . $last_removed . ' have been removed in this release. In order to update <em>' . $module . '</em> module, you will first <a href="http://drupal.org/upgrade">need to upgrade</a> to the last version in which these updates were available.',
           '#prefix' => '<div class="warning">',
           '#suffix' => '</div>',
         );
@@ -241,7 +241,7 @@ function update_script_selection_form() {
       }
       $form['start'][$module] = array(
         '#type' => 'select',
-        '#title' => $module .' module',
+        '#title' => $module . ' module',
         '#default_value' => $default,
         '#options' => $updates,
       );
@@ -285,7 +285,7 @@ function update_batch() {
     'finished' => 'update_finished',
   );
   batch_set($batch);
-  batch_process($base_url .'/update.php?op=results', $base_url .'/update.php');
+  batch_process($base_url . '/update.php?op=results', $base_url . '/update.php');
 }
 
 function update_finished($success, $results, $operations) {
@@ -300,24 +300,24 @@ function update_finished($success, $results, $operations) {
 function update_results_page() {
   drupal_set_title('Drupal database update');
   // NOTE: we can't use l() here because the URL would point to 'update.php?q=admin'.
-  $links[] = '<a href="'. base_path() .'">Main page</a>';
-  $links[] = '<a href="'. base_path() .'?q=admin">Administration pages</a>';
+  $links[] = '<a href="' . base_path() . '">Main page</a>';
+  $links[] = '<a href="' . base_path() . '?q=admin">Administration pages</a>';
 
   update_task_list();
   // Report end result
   if (module_exists('dblog')) {
-    $log_message = ' All errors have been <a href="'. base_path() .'?q=admin/reports/dblog">logged</a>.';
+    $log_message = ' All errors have been <a href="' . base_path() . '?q=admin/reports/dblog">logged</a>.';
   }
   else {
     $log_message = ' All errors have been logged.';
   }
 
   if ($_SESSION['update_success']) {
-    $output = '<p>Updates were attempted. If you see no failures below, you may proceed happily to the <a href="'. base_path() .'?q=admin">administration pages</a>. Otherwise, you may need to update your database manually.'. $log_message .'</p>';
+    $output = '<p>Updates were attempted. If you see no failures below, you may proceed happily to the <a href="' . base_path() . '?q=admin">administration pages</a>. Otherwise, you may need to update your database manually.' . $log_message . '</p>';
   }
   else {
     list($module, $version) = array_pop(reset($_SESSION['updates_remaining']));
-    $output = '<p class="error">The update process was aborted prematurely while running <strong>update #'. $version .' in '. $module .'.module</strong>.'. $log_message;
+    $output = '<p class="error">The update process was aborted prematurely while running <strong>update #' . $version . ' in ' . $module . '.module</strong>.' . $log_message;
     if (module_exists('dblog')) {
       $output .= ' You may need to check the <code>watchdog</code> database table manually.';
     }
@@ -335,17 +335,17 @@ function update_results_page() {
     $output .= '<div id="update-results">';
     $output .= '<h2>The following queries were executed</h2>';
     foreach ($_SESSION['update_results'] as $module => $updates) {
-      $output .= '<h3>'. $module .' module</h3>';
+      $output .= '<h3>' . $module . ' module</h3>';
       foreach ($updates as $number => $queries) {
         if ($number != '#abort') {
-          $output .= '<h4>Update #'. $number .'</h4>';
+          $output .= '<h4>Update #' . $number . '</h4>';
           $output .= '<ul>';
           foreach ($queries as $query) {
             if ($query['success']) {
-              $output .= '<li class="success">'. $query['query'] .'</li>';
+              $output .= '<li class="success">' . $query['query'] . '</li>';
             }
             else {
-              $output .= '<li class="failure"><strong>Failed:</strong> '. $query['query'] .'</li>';
+              $output .= '<li class="failure"><strong>Failed:</strong> ' . $query['query'] . '</li>';
             }
           }
           if (!count($queries)) {
@@ -377,7 +377,7 @@ function update_info_page() {
   $output .= "<ol>\n";
   $output .= "<li><strong>Back up your database</strong>. This process will change your database values and in case of emergency you may need to revert to a backup.</li>\n";
   $output .= "<li><strong>Back up your code</strong>. Hint: when backing up module code, do not leave that backup in the 'modules' or 'sites/*/modules' directories as this may confuse Drupal's auto-discovery mechanism.</li>\n";
-  $output .= '<li>Put your site into <a href="'. base_path() .'?q=admin/settings/site-maintenance">maintenance mode</a>.</li>'."\n";
+  $output .= '<li>Put your site into <a href="' . base_path() . '?q=admin/settings/site-maintenance">maintenance mode</a>.</li>' . "\n";
   $output .= "<li>Install your new files in the appropriate location, as described in the handbook.</li>\n";
   $output .= "</ol>\n";
   $output .= "<p>When you have performed the steps above, you may proceed.</p>\n";
@@ -439,7 +439,7 @@ function update_fix_compatibility() {
     }
   }
   if (!empty($incompatible)) {
-    $ret[] = update_sql("UPDATE {system} SET status = 0 WHERE name IN ('". implode("','", $incompatible) ."')");
+    $ret[] = update_sql("UPDATE {system} SET status = 0 WHERE name IN ('" . implode("','", $incompatible) . "')");
   }
   return $ret;
 }
@@ -555,7 +555,7 @@ function update_check_requirements() {
       if (isset($requirement['severity']) && $requirement['severity'] != REQUIREMENT_OK) {
         $message = isset($requirement['description']) ? $requirement['description'] : '';
         if (isset($requirement['value']) && $requirement['value']) {
-          $message .= ' (Currently using '. $requirement['title'] .' '. $requirement['value'] .')';
+          $message .= ' (Currently using ' . $requirement['title'] . ' ' . $requirement['value'] . ')';
         }
         drupal_set_message($message, 'warning');
       }

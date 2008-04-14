@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.admin.inc,v 1.10 2008/02/19 14:07:21 dries Exp $
+// $Id: filter.admin.inc,v 1.11 2008/04/14 17:48:37 dries Exp $
 
 /**
  * @file
@@ -32,8 +32,8 @@ function filter_admin_overview() {
     $options[$id] = '';
     $form[$id]['name'] = array('#value' => $format->name);
     $form[$id]['roles'] = array('#value' => $default ? t('All roles may use default format') : ($roles ? implode(', ', $roles) : t('No roles may use this format')));
-    $form[$id]['configure'] = array('#value' => l(t('configure'), 'admin/settings/filters/'. $id));
-    $form[$id]['delete'] = array('#value' => $default ? '' : l(t('delete'), 'admin/settings/filters/delete/'. $id));
+    $form[$id]['configure'] = array('#value' => l(t('configure'), 'admin/settings/filters/' . $id));
+    $form[$id]['delete'] = array('#value' => $default ? '' : l(t('delete'), 'admin/settings/filters/delete/' . $id));
     $form[$id]['weight'] = array('#type' => 'weight', '#default_value' => $format->weight);
   }
   $form['default'] = array('#type' => 'radios', '#options' => $options, '#default_value' => variable_get('filter_default_format', 1));
@@ -159,14 +159,14 @@ function filter_admin_format_form(&$form_state, $format) {
 
     // Composition tips (guidelines)
     $tips = _filter_tips($format->format, FALSE);
-    $extra = '<p>'. l(t('More information about formatting options'), 'filter/tips') .'</p>';
+    $extra = '<p>' . l(t('More information about formatting options'), 'filter/tips') . '</p>';
     $tiplist = theme('filter_tips', $tips, FALSE, $extra);
     if (!$tiplist) {
-      $tiplist = '<p>'. t('No guidelines available.') .'</p>';
+      $tiplist = '<p>' . t('No guidelines available.') . '</p>';
     }
-    $group = '<p>'. t('These are the guidelines that users will see for posting in this input format. They are automatically generated from the filter settings.') .'</p>';
+    $group = '<p>' . t('These are the guidelines that users will see for posting in this input format. They are automatically generated from the filter settings.') . '</p>';
     $group .= $tiplist;
-    $form['tips'] = array('#value' => '<h2>'. t('Formatting guidelines') .'</h2>'. $group);
+    $form['tips'] = array('#value' => '<h2>' . t('Formatting guidelines') . '</h2>' . $group);
   }
   $form['submit'] = array('#type' => 'submit', '#value' => t('Save configuration'));
 
@@ -231,20 +231,20 @@ function filter_admin_format_form_submit($form, &$form_state) {
     }
   }
   if (!empty($form_state['values']['default_format'])) {
-    $roles = ','. implode(',', array_keys(user_roles())) .',';
+    $roles = ',' . implode(',', array_keys(user_roles())) . ',';
   }
   else {
-    $roles = ','. implode(',', $roles) .',';
+    $roles = ',' . implode(',', $roles) . ',';
   }
 
   db_query("UPDATE {filter_formats} SET cache = %d, name='%s', roles = '%s' WHERE format = %d", $cache, $name, $roles, $format);
 
-  cache_clear_all($format .':', 'cache_filter', TRUE);
+  cache_clear_all($format . ':', 'cache_filter', TRUE);
 
   // If a new filter was added, return to the main list of filters. Otherwise, stay on edit filter page to show new changes.
   $return = 'admin/settings/filters';
   if (!empty($new)) {
-    $return .= '/'. $format;
+    $return .= '/' . $format;
   }
   $form_state['redirect'] = $return;
   return;
@@ -290,7 +290,7 @@ function filter_admin_delete_submit($form, &$form_state) {
   db_query("UPDATE {comments} SET format = %d WHERE format = %d", $default, $form_state['values']['format']);
   db_query("UPDATE {boxes} SET format = %d WHERE format = %d", $default, $form_state['values']['format']);
 
-  cache_clear_all($form_state['values']['format'] .':', 'cache_filter', TRUE);
+  cache_clear_all($form_state['values']['format'] . ':', 'cache_filter', TRUE);
   drupal_set_message(t('Deleted input format %format.', array('%format' => $form_state['values']['name'])));
 
   $form_state['redirect'] = 'admin/settings/filters';
@@ -336,7 +336,7 @@ function filter_admin_configure(&$form_state, $format) {
  * Clear the filter's cache when configuration settings are saved.
  */
 function filter_admin_configure_submit($form, &$form_state) {
-  cache_clear_all($form_state['values']['format'] .':', 'cache_filter', TRUE);
+  cache_clear_all($form_state['values']['format'] . ':', 'cache_filter', TRUE);
 }
 
 /**
@@ -406,5 +406,5 @@ function filter_admin_order_submit($form, &$form_state) {
   }
   drupal_set_message(t('The filter ordering has been saved.'));
 
-  cache_clear_all($form_state['values']['format'] .':', 'cache_filter', TRUE);
+  cache_clear_all($form_state['values']['format'] . ':', 'cache_filter', TRUE);
 }

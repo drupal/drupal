@@ -1,5 +1,5 @@
 <?php
-// $Id: tablesort.inc,v 1.47 2008/01/04 09:31:48 goba Exp $
+// $Id: tablesort.inc,v 1.48 2008/04/14 17:48:33 dries Exp $
 
 /**
  * @file
@@ -86,9 +86,9 @@ function tablesort_header($cell, $header, $ts) {
     }
 
     if (!empty($ts['query_string'])) {
-      $ts['query_string'] = '&'. $ts['query_string'];
+      $ts['query_string'] = '&' . $ts['query_string'];
     }
-    $cell['data'] = l($cell['data'] . $image, $_GET['q'], array('attributes' => array('title' => $title), 'query' => 'sort='. $ts['sort'] .'&order='. urlencode($cell['data']) . $ts['query_string'], 'html' => TRUE));
+    $cell['data'] = l($cell['data'] . $image, $_GET['q'], array('attributes' => array('title' => $title), 'query' => 'sort=' . $ts['sort'] . '&order=' . urlencode($cell['data']) . $ts['query_string'], 'html' => TRUE));
 
     unset($cell['field'], $cell['sort']);
   }

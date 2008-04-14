@@ -1,5 +1,5 @@
 <?php
-// $Id: xrds.inc,v 1.2 2007/10/15 09:40:42 goba Exp $
+// $Id: xrds.inc,v 1.3 2008/04/14 17:48:38 dries Exp $
 
 // Global variables to track parsing state
 $xrds_open_elements = array();
@@ -36,8 +36,8 @@ function _xrds_element_end(&$parser, $name) {
 
   $name = _xrds_strip_namespace($name);
   if ($name == 'SERVICE') {
-    if (in_array(OPENID_NS_2_0 .'/signon', $xrds_current_service['types']) ||
-        in_array(OPENID_NS_2_0 .'/server', $xrds_current_service['types'])) {
+    if (in_array(OPENID_NS_2_0 . '/signon', $xrds_current_service['types']) ||
+        in_array(OPENID_NS_2_0 . '/server', $xrds_current_service['types'])) {
       $xrds_current_service['version'] = 2;
     }
     elseif (in_array(OPENID_NS_1_1, $xrds_current_service['types']) ||

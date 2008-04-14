@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.122 2008/02/17 20:01:49 dries Exp $
+// $Id: file.inc,v 1.123 2008/04/14 17:48:33 dries Exp $
 
 /**
  * @file
@@ -40,14 +40,14 @@ define('FILE_STATUS_PERMANENT', 1);
  */
 function file_create_url($path) {
   // Strip file_directory_path from $path. We only include relative paths in urls.
-  if (strpos($path, file_directory_path() .'/') === 0) {
+  if (strpos($path, file_directory_path() . '/') === 0) {
     $path = trim(substr($path, strlen(file_directory_path())), '\\/');
   }
   switch (variable_get('file_downloads', FILE_DOWNLOADS_PUBLIC)) {
     case FILE_DOWNLOADS_PUBLIC:
-      return $GLOBALS['base_url'] .'/'. file_directory_path() .'/'. str_replace('\\', '/', $path);
+      return $GLOBALS['base_url'] . '/' . file_directory_path() . '/' . str_replace('\\', '/', $path);
     case FILE_DOWNLOADS_PRIVATE:
-      return url('system/files/'. $path, array('absolute' => TRUE));
+      return url('system/files/' . $path, array('absolute' => TRUE));
   }
 }
 
@@ -75,8 +75,8 @@ function file_create_path($dest = 0) {
     return $dest;
   }
   // Not found, try again with prefixed directory path.
-  else if (file_check_location($file_path .'/'. $dest, $file_path)) {
-    return $file_path .'/'. $dest;
+  else if (file_check_location($file_path . '/' . $dest, $file_path)) {
+    return $file_path . '/' . $dest;
   }
   // File not found.
   return FALSE;
@@ -128,10 +128,10 @@ function file_check_directory(&$directory, $mode = 0, $form_item = NULL) {
     $htaccess_lines = "SetHandler Drupal_Security_Do_Not_Remove_See_SA_2006_006\nOptions None\nOptions +FollowSymLinks";
     if (($fp = fopen("$directory/.htaccess", 'w')) && fputs($fp, $htaccess_lines)) {
       fclose($fp);
-      chmod($directory .'/.htaccess', 0664);
+      chmod($directory . '/.htaccess', 0664);
     }
     else {
-      $variables = array('%directory' => $directory, '!htaccess' => '<br />'. nl2br(check_plain($htaccess_lines)));
+      $variables = array('%directory' => $directory, '!htaccess' => '<br />' . nl2br(check_plain($htaccess_lines)));
       form_set_error($form_item, t("Security warning: Couldn't write .htaccess file. Please create a .htaccess file in your %directory directory which contains the following lines: <code>!htaccess</code>", $variables));
       watchdog('security', "Security warning: Couldn't write .htaccess file. Please create a .htaccess file in your %directory directory which contains the following lines: <code>!htaccess</code>", $variables, WATCHDOG_ERROR);
     }
@@ -185,7 +185,7 @@ function file_check_location($source, $directory = '') {
   }
   else {
     // This file does not yet exist
-    $source = realpath(dirname($source)) .'/'. basename($source);
+    $source = realpath(dirname($source)) . '/' . basename($source);
   }
   $directory = realpath($directory);
   if ($directory && strpos($source, $directory) !== 0) {
@@ -244,7 +244,7 @@ function file_copy(&$source, $dest = 0, $replace = FILE_EXISTS_RENAME) {
 
   // If the destination file is not specified then use the filename of the source file.
   $basename = $basename ? $basename : basename($source);
-  $dest = $directory .'/'. $basename;
+  $dest = $directory . '/' . $basename;
 
   // Make sure source and destination filenames are not the same, makes no sense
   // to copy it if they are. In fact copying the file will most likely result in
@@ -369,12 +369,12 @@ function file_munge_filename($filename, $extensions, $alerts = TRUE) {
     // end of each section that could be a file extension but isn't in the list
     // of allowed extensions.
     foreach ($filename_parts as $filename_part) {
-      $new_filename .= '.'. $filename_part;
+      $new_filename .= '.' . $filename_part;
       if (!in_array($filename_part, $whitelist) && preg_match("/^[a-zA-Z]{2,5}\d?$/", $filename_part)) {
         $new_filename .= '_';
       }
     }
-    $filename = $new_filename .'.'. $final_extension;
+    $filename = $new_filename . '.' . $final_extension;
 
     if ($alerts && $original != $filename) {
       drupal_set_message(t('For security reasons, your upload has been renamed to %filename.', array('%filename' => $filename)));
@@ -403,7 +403,7 @@ function file_unmunge_filename($filename) {
  * @return
  */
 function file_create_filename($basename, $directory) {
-  $dest = $directory .'/'. $basename;
+  $dest = $directory . '/' . $basename;
 
   if (file_exists($dest)) {
     // Destination file already exists, generate an alternative.
@@ -417,7 +417,7 @@ function file_create_filename($basename, $directory) {
 
     $counter = 0;
     do {
-      $dest = $directory .'/'. $name .'_'. $counter++ . $ext;
+      $dest = $directory . '/' . $name . '_' . $counter++ . $ext;
     } while (file_exists($dest));
   }
 
@@ -519,7 +519,7 @@ function file_save_upload($source, $validators = array(), $dest = FALSE, $replac
     // @todo: this should not be here. we need to figure out the right place.
     $extensions = '';
     foreach ($user->roles as $rid => $name) {
-      $extensions .= ' '. variable_get("upload_extensions_$rid",
+      $extensions .= ' ' . variable_get("upload_extensions_$rid",
       variable_get('upload_extensions_default', 'jpg jpeg gif png txt html doc xls pdf ppt pps odt ods odp'));
     }
 
@@ -543,7 +543,7 @@ function file_save_upload($source, $validators = array(), $dest = FALSE, $replac
     }
 
     $file->source = $source;
-    $file->destination = file_destination(file_create_path($dest .'/'. $file->filename), $replace);
+    $file->destination = file_destination(file_create_path($dest . '/' . $file->filename), $replace);
     $file->filesize = $_FILES['files']['size'][$source];
 
     // Call the validation functions.
@@ -557,10 +557,10 @@ function file_save_upload($source, $validators = array(), $dest = FALSE, $replac
     if (!empty($errors)) {
       $message = t('The selected file %name could not be uploaded.', array('%name' => $file->filename));
       if (count($errors) > 1) {
-        $message .= '<ul><li>'. implode('</li><li>', $errors) .'</li></ul>';
+        $message .= '<ul><li>' . implode('</li><li>', $errors) . '</li></ul>';
       }
       else {
-        $message .= ' '. array_pop($errors);
+        $message .= ' ' . array_pop($errors);
       }
       form_set_error($source, $message);
       return 0;
@@ -623,7 +623,7 @@ function file_validate_extensions($file, $extensions) {
 
   // Bypass validation for uid  = 1.
   if ($user->uid != 1) {
-    $regex = '/\.('. ereg_replace(' +', '|', preg_quote($extensions)) .')$/i';
+    $regex = '/\.(' . ereg_replace(' +', '|', preg_quote($extensions)) . ')$/i';
     if (!preg_match($regex, $file->filename)) {
       $errors[] = t('Only files with the following extensions are allowed: %files-allowed.', array('%files-allowed' => $extensions));
     }
@@ -946,7 +946,7 @@ function file_directory_temp() {
     }
 
     // if a directory has been found, use it, otherwise default to 'files/tmp' or 'files\\tmp';
-    $temporary_directory = $temporary_directory ? $temporary_directory : file_directory_path() . $path_delimiter .'tmp';
+    $temporary_directory = $temporary_directory ? $temporary_directory : file_directory_path() . $path_delimiter . 'tmp';
     variable_set('file_directory_temp', $temporary_directory);
   }
 
@@ -959,7 +959,7 @@ function file_directory_temp() {
  * @return A string containing the path to Drupal's 'files' directory.
  */
 function file_directory_path() {
-  return variable_get('file_directory_path', conf_path() .'/files');
+  return variable_get('file_directory_path', conf_path() . '/files');
 }
 
 /**

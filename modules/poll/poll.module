@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.265 2008/04/10 10:28:23 dries Exp $
+// $Id: poll.module,v 1.266 2008/04/14 17:48:41 dries Exp $
 
 /**
  * @file
@@ -13,9 +13,9 @@
 function poll_help($path, $arg) {
   switch ($path) {
     case 'admin/help#poll':
-      $output = '<p>'. t('The poll module can be used to create simple polls for site users. A poll is a simple, multiple choice questionnaire which displays the cumulative results of the answers to the poll. Having polls on the site is a good way to receive feedback from community members.') .'</p>';
-      $output .= '<p>'. t('When creating a poll, enter the question being posed, as well as the potential choices (and beginning vote counts for each choice). The status and duration (length of time the poll remains active for new votes) can also be specified. Use the <a href="@poll">poll</a> menu item to view all current polls. To vote in or view the results of a specific poll, click on the poll itself.', array('@poll' => url('poll'))) .'</p>';
-      $output .= '<p>'. t('For more information, see the online handbook entry for <a href="@poll">Poll module</a>.', array('@poll' => 'http://drupal.org/handbook/modules/poll/')) .'</p>';
+      $output = '<p>' . t('The poll module can be used to create simple polls for site users. A poll is a simple, multiple choice questionnaire which displays the cumulative results of the answers to the poll. Having polls on the site is a good way to receive feedback from community members.') . '</p>';
+      $output .= '<p>' . t('When creating a poll, enter the question being posed, as well as the potential choices (and beginning vote counts for each choice). The status and duration (length of time the poll remains active for new votes) can also be specified. Use the <a href="@poll">poll</a> menu item to view all current polls. To vote in or view the results of a specific poll, click on the poll itself.', array('@poll' => url('poll'))) . '</p>';
+      $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@poll">Poll module</a>.', array('@poll' => 'http://drupal.org/handbook/modules/poll/')) . '</p>';
       return $output;
   }
 }
@@ -24,7 +24,7 @@ function poll_help($path, $arg) {
  * Implementation of hook_init().
  */
 function poll_init() {
-  drupal_add_css(drupal_get_path('module', 'poll') .'/poll.css');
+  drupal_add_css(drupal_get_path('module', 'poll') . '/poll.css');
 }
 
 /**
@@ -164,7 +164,7 @@ function poll_block($op = 'list', $delta = '') {
  * Closes polls that have exceeded their allowed runtime.
  */
 function poll_cron() {
-  $result = db_query('SELECT p.nid FROM {poll} p INNER JOIN {node} n ON p.nid = n.nid WHERE (n.created + p.runtime) < '. time() .' AND p.active = 1 AND p.runtime != 0');
+  $result = db_query('SELECT p.nid FROM {poll} p INNER JOIN {node} n ON p.nid = n.nid WHERE (n.created + p.runtime) < ' . time() . ' AND p.active = 1 AND p.runtime != 0');
   while ($poll = db_fetch_object($result)) {
     db_query("UPDATE {poll} SET active = 0 WHERE nid = %d", $poll->nid);
   }
@@ -359,7 +359,7 @@ function poll_choice_js() {
   // Render the new output.
   $choice_form = $form['choice_wrapper']['choice'];
   unset($choice_form['#prefix'], $choice_form['#suffix']); // Prevent duplicate wrappers.
-  $choice_form[$delta]['#attributes']['class'] = empty($choice_form[$delta]['#attributes']['class']) ? 'ahah-new-content' : $choice_form[$delta]['#attributes']['class'] .' ahah-new-content';
+  $choice_form[$delta]['#attributes']['class'] = empty($choice_form[$delta]['#attributes']['class']) ? 'ahah-new-content' : $choice_form[$delta]['#attributes']['class'] . ' ahah-new-content';
   $choice_form[$delta]['chvotes']['#value'] = 0;
   $output = theme('status_messages') . drupal_render($choice_form);
 
@@ -517,7 +517,7 @@ function poll_view($node, $teaser = FALSE, $page = FALSE, $block = FALSE) {
     $links = module_invoke_all('link', 'node', $node, 1);
     $links[] = array('title' => t('Older polls'), 'href' => 'poll', 'attributes' => array('title' => t('View the list of polls on this site.')));
     if ($node->allowvotes && $block) {
-      $links[] = array('title' => t('Results'), 'href' => 'node/'. $node->nid .'/results', 'attributes' => array('title' => t('View the current poll results.')));
+      $links[] = array('title' => t('Results'), 'href' => 'node/' . $node->nid . '/results', 'attributes' => array('title' => t('View the current poll results.')));
     }
 
     $node->links = $links;
@@ -546,7 +546,7 @@ function poll_teaser($node) {
   if (is_array($node->choice)) {
     foreach ($node->choice as $k => $choice) {
       if ($choice['chtext'] != '') {
-        $teaser .= '* '. check_plain($choice['chtext']) ."\n";
+        $teaser .= '* ' . check_plain($choice['chtext']) . "\n";
       }
     }
   }
@@ -676,7 +676,7 @@ function poll_view_results(&$node, $teaser, $page, $block) {
  */
 function theme_poll_choices($form) {
   // Change the button title to reflect the behavior when using JavaScript.
-  drupal_add_js('if (Drupal.jsEnabled) { $(document).ready(function() { $("#edit-poll-more").val("'. t('Add another choice') .'"); }); }', 'inline');
+  drupal_add_js('if (Drupal.jsEnabled) { $(document).ready(function() { $("#edit-poll-more").val("' . t('Add another choice') . '"); }); }', 'inline');
 
   $rows = array();
   $headers = array(

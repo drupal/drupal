@@ -1,5 +1,5 @@
 <?php
-// $Id: image.inc,v 1.24 2008/01/28 16:05:17 goba Exp $
+// $Id: image.inc,v 1.25 2008/04/14 17:48:33 dries Exp $
 
 /**
  * @file
@@ -42,7 +42,7 @@ function image_get_available_toolkits() {
   $output = array();
   foreach ($toolkits as $file => $toolkit) {
     include_once "./$file";
-    $function = str_replace('.', '_', $toolkit->name) .'_info';
+    $function = str_replace('.', '_', $toolkit->name) . '_info';
     if (function_exists($function)) {
       $info = $function();
       $output[$info['name']] = $info['title'];
@@ -63,7 +63,7 @@ function image_get_toolkit() {
 
   if (!$toolkit) {
     $toolkit = variable_get('image_toolkit', 'gd');
-    $toolkit_file = './includes/image.'. $toolkit .'.inc';
+    $toolkit_file = './includes/image.' . $toolkit . '.inc';
     if (isset($toolkit) && file_exists($toolkit_file)) {
       include_once $toolkit_file;
     }
@@ -87,7 +87,7 @@ function image_get_toolkit() {
  */
 function image_toolkit_invoke($method, $params = array()) {
   if ($toolkit = image_get_toolkit()) {
-    $function = 'image_'. $toolkit .'_'. $method;
+    $function = 'image_' . $toolkit . '_' . $method;
     if (function_exists($function)) {
       return call_user_func_array($function, $params);
     }

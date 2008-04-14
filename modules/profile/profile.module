@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.237 2008/04/10 10:28:23 dries Exp $
+// $Id: profile.module,v 1.238 2008/04/14 17:48:41 dries Exp $
 
 /**
  * @file
@@ -32,19 +32,19 @@ define('PROFILE_HIDDEN', 4);
 function profile_help($path, $arg) {
   switch ($path) {
     case 'admin/help#profile':
-      $output = '<p>'. t('The profile module allows custom fields (such as country, full name, or age) to be defined and displayed in the <em>My Account</em> section. This permits users of a site to share more information about themselves, and can help community-based sites organize users around specific information.') .'</p>';
-      $output .= '<p>'. t('The following types of fields can be added to a user profile:') .'</p>';
-      $output .= '<ul><li>'. t('single-line textfield') .'</li>';
-      $output .= '<li>'. t('multi-line textfield') .'</li>';
-      $output .= '<li>'. t('checkbox') .'</li>';
-      $output .= '<li>'. t('list selection') .'</li>';
-      $output .= '<li>'. t('freeform list') .'</li>';
-      $output .= '<li>'. t('URL') .'</li>';
-      $output .= '<li>'. t('date') .'</li></ul>';
-      $output .= '<p>'. t('For more information, see the online handbook entry for <a href="@profile">Profile module</a>.', array('@profile' => 'http://drupal.org/handbook/modules/profile/')) .'</p>';
+      $output = '<p>' . t('The profile module allows custom fields (such as country, full name, or age) to be defined and displayed in the <em>My Account</em> section. This permits users of a site to share more information about themselves, and can help community-based sites organize users around specific information.') . '</p>';
+      $output .= '<p>' . t('The following types of fields can be added to a user profile:') . '</p>';
+      $output .= '<ul><li>' . t('single-line textfield') . '</li>';
+      $output .= '<li>' . t('multi-line textfield') . '</li>';
+      $output .= '<li>' . t('checkbox') . '</li>';
+      $output .= '<li>' . t('list selection') . '</li>';
+      $output .= '<li>' . t('freeform list') . '</li>';
+      $output .= '<li>' . t('URL') . '</li>';
+      $output .= '<li>' . t('date') . '</li></ul>';
+      $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@profile">Profile module</a>.', array('@profile' => 'http://drupal.org/handbook/modules/profile/')) . '</p>';
       return $output;
     case 'admin/user/profile':
-      return '<p>'. t("This page displays a list of the existing custom profile fields to be displayed on a user's <em>My Account</em> page. To provide structure, similar or related fields may be placed inside a category. To add a new category (or edit an existing one), edit a profile field and provide a new category name. To change the category of a field or the order of fields within a category, grab a drag-and-drop handle under the Title column and drag the field to a new location in the list. (Grab a handle by clicking and holding the mouse while hovering over a handle icon.) Remember that your changes will not be saved until you click the <em>Save configuration</em> button at the bottom of the page.") .'</p>';
+      return '<p>' . t("This page displays a list of the existing custom profile fields to be displayed on a user's <em>My Account</em> page. To provide structure, similar or related fields may be placed inside a category. To add a new category (or edit an existing one), edit a profile field and provide a new category name. To change the category of a field or the order of fields within a category, grab a drag-and-drop handle under the Title column and drag the field to a new location in the list. (Grab a handle by clicking and holding the mouse while hovering over a handle icon.) Remember that your changes will not be saved until you click the <em>Save configuration</em> button at the bottom of the page.") . '</p>';
   }
 }
 
@@ -183,7 +183,7 @@ function profile_block($op = 'list', $delta = '', $edit = array()) {
         }
 
         if (isset($use_fields['user_profile']) && $use_fields['user_profile']) {
-          $output .= '<div>'. l(t('View full user profile'), 'user/'. $account->uid) .'</div>';
+          $output .= '<div>' . l(t('View full user profile'), 'user/' . $account->uid) . '</div>';
         }
       }
 
@@ -258,11 +258,11 @@ function profile_view_field($user, $field) {
         return check_markup($value);
       case 'textfield':
       case 'selection':
-        return $browse ? l($value, 'profile/'. $field->name .'/'. $value) : check_plain($value);
+        return $browse ? l($value, 'profile/' . $field->name . '/' . $value) : check_plain($value);
       case 'checkbox':
-        return $browse ? l($field->title, 'profile/'. $field->name) : check_plain($field->title);
+        return $browse ? l($field->title, 'profile/' . $field->name) : check_plain($field->title);
       case 'url':
-        return '<a href="'. check_url($value) .'">'. check_plain($value) .'</a>';
+        return '<a href="' . check_url($value) . '">' . check_plain($value) . '</a>';
       case 'date':
         $format = substr(variable_get('date_format_short', 'm/d/Y - H:i'), 0, 5);
         // Note: Avoid PHP's date() because it does not handle dates before
@@ -283,7 +283,7 @@ function profile_view_field($user, $field) {
         $fields = array();
         foreach ($values as $value) {
           if ($value = trim($value)) {
-            $fields[] = $browse ? l($value, 'profile/'. $field->name .'/'. $value) : check_plain($value);
+            $fields[] = $browse ? l($value, 'profile/' . $field->name . '/' . $value) : check_plain($value);
           }
         }
         return implode(', ', $fields);
@@ -321,7 +321,7 @@ function profile_view_profile(&$user) {
         '#title' => $title,
         '#value' => $value,
         '#weight' => $field->weight,
-        '#attributes' => array('class' => 'profile-'. $field->name),
+        '#attributes' => array('class' => 'profile-' . $field->name),
       );
     }
   }
@@ -331,11 +331,11 @@ function _profile_form_explanation($field) {
   $output = $field->explanation;
 
   if ($field->type == 'list') {
-    $output .= ' '. t('Put each item on a separate line or separate them by commas. No HTML allowed.');
+    $output .= ' ' . t('Put each item on a separate line or separate them by commas. No HTML allowed.');
   }
 
   if ($field->visibility == PROFILE_PRIVATE) {
-    $output .= ' '. t('The content of this field is kept private and will not be shown publicly.');
+    $output .= ' ' . t('The content of this field is kept private and will not be shown publicly.');
   }
 
   return $output;
@@ -361,7 +361,7 @@ function profile_form_profile($edit, $user, $category, $register = FALSE) {
           '#required' => $field->required,
         );
         if ($field->autocomplete) {
-          $fields[$category][$field->name]['#autocomplete_path'] = "profile/autocomplete/". $field->fid;
+          $fields[$category][$field->name]['#autocomplete_path'] = "profile/autocomplete/" . $field->fid;
         }
         break;
       case 'textarea':
@@ -534,7 +534,7 @@ function template_preprocess_profile_wrapper(&$variables) {
   if ($field = arg(1)) {
     $variables['current_field'] = $field;
     // Supply an alternate template suggestion based on the browsable field.
-    $variables['template_files'][] = 'profile-wrapper-'. $field;
+    $variables['template_files'][] = 'profile-wrapper-' . $field;
   }
 }
 

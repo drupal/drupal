@@ -1,5 +1,5 @@
 <?php
-// $Id: translation.pages.inc,v 1.2 2008/01/07 13:18:40 goba Exp $
+// $Id: translation.pages.inc,v 1.3 2008/04/14 17:48:42 dries Exp $
 
 /**
  * @file
@@ -33,21 +33,21 @@ function translation_node_overview($node) {
       // Existing translation in the translation set: display status.
       // We load the full node to check whether the user can edit it.
       $translation_node = node_load($translations[$language->language]->nid);
-      $title = l($translation_node->title, 'node/'. $translation_node->nid);
+      $title = l($translation_node->title, 'node/' . $translation_node->nid);
       if (node_access('update', $translation_node)) {
         $options[] = l(t('edit'), "node/$translation_node->nid/edit");
       }
       $status = $translation_node->status ? t('Published') : t('Not published');
-      $status .= $translation_node->translate ? ' - <span class="marker">'. t('outdated') .'</span>' : '';
+      $status .= $translation_node->translate ? ' - <span class="marker">' . t('outdated') . '</span>' : '';
       if ($translation_node->nid == $tnid) {
-        $language_name = '<strong>'. $language_name .'</strong> (source)';
+        $language_name = '<strong>' . $language_name . '</strong> (source)';
       }
     }
     else {
       // No such translation in the set yet: help user to create it.
       $title = t('n/a');
       if (node_access('create', $node)) {
-        $options[] = l(t('add translation'), 'node/add/'. str_replace('_', '-', $node->type), array('query' => "translation=$node->nid&language=$language->language"));
+        $options[] = l(t('add translation'), 'node/add/' . str_replace('_', '-', $node->type), array('query' => "translation=$node->nid&language=$language->language"));
       }
       $status = t('Not translated');
     }

@@ -1,5 +1,5 @@
 <?php
-// $Id: mail.inc,v 1.11 2008/04/02 20:15:59 dries Exp $
+// $Id: mail.inc,v 1.12 2008/04/14 17:48:33 dries Exp $
 
 /**
  * Compose and optionally send an e-mail message.
@@ -85,7 +85,7 @@ function drupal_mail($module, $key, $to, $language, $params = array(), $from = N
 
   // Bundle up the variables into a structured array for altering.
   $message = array(
-    'id'       => $module .'_'. $key,
+    'id'       => $module . '_' . $key,
     'to'       => $to,
     'from'     => isset($from) ? $from : $default_from,
     'language' => $language,
@@ -115,7 +115,7 @@ function drupal_mail($module, $key, $to, $language, $params = array(), $from = N
   // Build the e-mail (get subject and body, allow additional headers) by
   // invoking hook_mail() on this module. We cannot use module_invoke() as
   // we need to have $message by reference in hook_mail().
-  if (function_exists($function = $module .'_mail')) {
+  if (function_exists($function = $module . '_mail')) {
     $function($key, $message, $params);
   }
 
@@ -173,13 +173,13 @@ function drupal_mail($module, $key, $to, $language, $params = array(), $from = N
 function drupal_mail_send($message) {
   // Allow for a custom mail backend.
   if (variable_get('smtp_library', '') && file_exists(variable_get('smtp_library', ''))) {
-    include_once './'. variable_get('smtp_library', '');
+    include_once './' . variable_get('smtp_library', '');
     return drupal_mail_wrapper($message);
   }
   else {
     $mimeheaders = array();
     foreach ($message['headers'] as $name => $value) {
-      $mimeheaders[] = $name .': '. mime_header_encode($value);
+      $mimeheaders[] = $name . ': ' . mime_header_encode($value);
     }
     return mail(
       $message['to'],
@@ -286,7 +286,7 @@ function drupal_html_to_text($string, $allowed_tags = NULL) {
   if (count($urls)) {
     $footnotes .= "\n";
     for ($i = 0, $max = count($urls); $i < $max; $i++) {
-      $footnotes .= '['. ($i + 1) .'] '. $urls[$i] ."\n";
+      $footnotes .= '[' . ($i + 1) . '] ' . $urls[$i] . "\n";
     }
   }
 
@@ -326,7 +326,7 @@ function drupal_html_to_text($string, $allowed_tags = NULL) {
           $indent[] = count($lists) ? ' "' : '>';
           break;
         case 'li':
-          $indent[] = is_numeric($lists[0]) ? ' '. $lists[0]++ .') ' : ' * ';
+          $indent[] = is_numeric($lists[0]) ? ' ' . $lists[0]++ . ') ' : ' * ';
           break;
         case 'dd':
           $indent[] = '    ';
@@ -340,7 +340,7 @@ function drupal_html_to_text($string, $allowed_tags = NULL) {
         case '/blockquote':
           if (count($lists)) {
             // Append closing quote for inline quotes (immediately).
-            $output = rtrim($output, "> \n") ."\"\n";
+            $output = rtrim($output, "> \n") . "\"\n";
             $chunk = ''; // Ensure blank new-line.
           }
           // Fall-through
@@ -377,7 +377,7 @@ function drupal_html_to_text($string, $allowed_tags = NULL) {
         // Horizontal rulers
         case 'hr':
           // Insert immediately.
-          $output .= drupal_wrap_mail('', implode('', $indent)) ."\n";
+          $output .= drupal_wrap_mail('', implode('', $indent)) . "\n";
           $output = _drupal_html_to_text_pad($output, '-');
           break;
 
@@ -404,7 +404,7 @@ function drupal_html_to_text($string, $allowed_tags = NULL) {
         $chunk = $casing($chunk);
       }
       // Format it and apply the current indentation.
-      $output .= drupal_wrap_mail($chunk, implode('', $indent)) ."\n";
+      $output .= drupal_wrap_mail($chunk, implode('', $indent)) . "\n";
       // Remove non-quotation markers from indentation.
       $indent = array_map('_drupal_html_to_text_clean', $indent);
     }
@@ -442,13 +442,13 @@ function _drupal_html_to_mail_urls($match = NULL, $reset = FALSE) {
   }
   else {
     if (empty($regexp)) {
-      $regexp = '@^'. preg_quote($base_path, '@') .'@';
+      $regexp = '@^' . preg_quote($base_path, '@') . '@';
     }
     if ($match) {
       list(, , $url, $label) = $match;
       // Ensure all URLs are absolute.
-      $urls[] = strpos($url, '://') ? $url : preg_replace($regexp, $base_url .'/', $url);
-      return $label .' ['. count($urls) .']';
+      $urls[] = strpos($url, '://') ? $url : preg_replace($regexp, $base_url . '/', $url);
+      return $label . ' [' . count($urls) . ']';
     }
   }
   return $urls;
@@ -477,5 +477,5 @@ function _drupal_html_to_text_pad($text, $pad, $prefix = '') {
   }
   $n = max(0, 79 - (strlen($text) - $p));
   // Add prefix and padding, and restore linebreak.
-  return $text . $prefix . str_repeat($pad, $n - strlen($prefix)) ."\n";
+  return $text . $prefix . str_repeat($pad, $n - strlen($prefix)) . "\n";
 }

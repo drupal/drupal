@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.115 2007/12/27 12:31:05 goba Exp $
+// $Id: module.inc,v 1.116 2008/04/14 17:48:33 dries Exp $
 
 /**
  * @file
@@ -113,7 +113,7 @@ function module_rebuild_cache() {
 
   foreach ($files as $filename => $file) {
     // Look for the info file.
-    $file->info = drupal_parse_info_file(dirname($file->filename) .'/'. $file->name .'.info');
+    $file->info = drupal_parse_info_file(dirname($file->filename) . '/' . $file->name . '.info');
 
     // Skip modules that don't provide info.
     if (empty($file->info)) {
@@ -256,7 +256,7 @@ function module_load_include($type, $module, $name = NULL) {
     $name = $module;
   }
 
-  $file = './'. drupal_get_path('module', $module) ."/$name.$type";
+  $file = './' . drupal_get_path('module', $module) . "/$name.$type";
 
   if (is_file($file)) {
     require_once $file;
@@ -383,7 +383,7 @@ function module_disable($module_list) {
  *   implemented in that module.
  */
 function module_hook($module, $hook) {
-  return function_exists($module .'_'. $hook);
+  return function_exists($module . '_' . $hook);
 }
 
 /**
@@ -445,7 +445,7 @@ function module_invoke() {
   $module = $args[0];
   $hook = $args[1];
   unset($args[0], $args[1]);
-  $function = $module .'_'. $hook;
+  $function = $module . '_' . $hook;
   if (module_hook($module, $hook)) {
     return call_user_func_array($function, $args);
   }
@@ -467,7 +467,7 @@ function module_invoke_all() {
   unset($args[0]);
   $return = array();
   foreach (module_implements($hook) as $module) {
-    $function = $module .'_'. $hook;
+    $function = $module . '_' . $hook;
     $result = call_user_func_array($function, $args);
     if (isset($result) && is_array($result)) {
       $return = array_merge_recursive($return, $result);

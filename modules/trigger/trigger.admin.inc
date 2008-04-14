@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.admin.inc,v 1.5 2008/01/08 10:35:43 goba Exp $
+// $Id: trigger.admin.inc,v 1.6 2008/04/14 17:48:43 dries Exp $
 
 /**
  * @file
@@ -29,7 +29,7 @@ function trigger_assign($type = NULL) {
   foreach ($hooks as $module => $hook) {
     if (isset($hook[$type])) {
       foreach ($hook[$type] as $op => $description) {
-        $form_id = 'trigger_'. $type .'_'. $op .'_assign_form';
+        $form_id = 'trigger_' . $type . '_' . $op . '_assign_form';
         $output .= drupal_get_form($form_id, $type, $op, $description['runs when']);
       }
     }
@@ -68,7 +68,7 @@ function trigger_unassign($form_state, $hook = NULL, $op = NULL, $aid = NULL) {
   $action = actions_function_lookup($aid);
   $actions = actions_get_all_actions();
 
-  $destination = 'admin/build/trigger/'. ($hook == 'nodeapi' ? 'node' : $hook);
+  $destination = 'admin/build/trigger/' . ($hook == 'nodeapi' ? 'node' : $hook);
 
   return confirm_form($form,
     t('Are you sure you want to unassign the action %title?', array('%title' => $actions[$action]['description'])),
@@ -87,7 +87,7 @@ function trigger_unassign_submit($form, &$form_state) {
     watchdog('actions', 'Action %action has been unassigned.',  array('%action' => check_plain($actions[$aid]['description'])));
     drupal_set_message(t('Action %action has been unassigned.', array('%action' => $actions[$aid]['description'])));
     $hook = $form_values['hook'] == 'nodeapi' ? 'node' : $form_values['hook'];
-    $form_state['redirect'] = 'admin/build/trigger/'. $hook;
+    $form_state['redirect'] = 'admin/build/trigger/' . $hook;
   }
   else {
     drupal_goto('admin/build/trigger');
@@ -151,7 +151,7 @@ function trigger_assign_form($form_state, $hook, $op, $description) {
   foreach ($actions as $aid => $description) {
     $form[$op]['assigned']['#value'][$aid] = array(
       'description' => $description,
-      'link' => l(t('unassign'), "admin/build/trigger/unassign/$hook/$op/". md5($aid))
+      'link' => l(t('unassign'), "admin/build/trigger/unassign/$hook/$op/" . md5($aid))
     );
   }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: update.fetch.inc,v 1.8 2008/03/31 18:24:46 dries Exp $
+// $Id: update.fetch.inc,v 1.9 2008/04/14 17:48:43 dries Exp $
 
 /**
  * @file
@@ -85,7 +85,7 @@ function _update_build_fetch_url($project, $site_key = '') {
   }
   $name = $project['name'];
   $url = $project['info']['project status url'];
-  $url .= '/'. $name .'/'. DRUPAL_CORE_COMPATIBILITY;
+  $url .= '/' . $name . '/' . DRUPAL_CORE_COMPATIBILITY;
   if (!empty($site_key)) {
     $url .= (strpos($url, '?') === TRUE) ? '&' : '?';
     $url .= 'site_key=';
@@ -112,7 +112,7 @@ function _update_cron_notify() {
   $status = update_requirements('runtime');
   $params = array();
   foreach (array('core', 'contrib') as $report_type) {
-    $type = 'update_'. $report_type;
+    $type = 'update_' . $report_type;
     if (isset($status[$type]['severity'])
         && $status[$type]['severity'] == REQUIREMENT_ERROR) {
       $params[$report_type] = $status[$type]['reason'];

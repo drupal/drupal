@@ -1,5 +1,5 @@
 <?php
-// $Id: database.pgsql.inc,v 1.69 2008/02/08 03:24:05 dries Exp $
+// $Id: database.pgsql.inc,v 1.70 2008/04/14 17:48:33 dries Exp $
 
 /**
  * @file
@@ -55,19 +55,19 @@ function db_connect($url) {
 
   // Decode url-encoded information in the db connection string
   if (isset($url['user'])) {
-    $conn_string .= ' user='. urldecode($url['user']);
+    $conn_string .= ' user=' . urldecode($url['user']);
   }
   if (isset($url['pass'])) {
-    $conn_string .= ' password='. urldecode($url['pass']);
+    $conn_string .= ' password=' . urldecode($url['pass']);
   }
   if (isset($url['host'])) {
-    $conn_string .= ' host='. urldecode($url['host']);
+    $conn_string .= ' host=' . urldecode($url['host']);
   }
   if (isset($url['path'])) {
-    $conn_string .= ' dbname='. substr(urldecode($url['path']), 1);
+    $conn_string .= ' dbname=' . substr(urldecode($url['path']), 1);
   }
   if (isset($url['port'])) {
-    $conn_string .= ' port='. urldecode($url['port']);
+    $conn_string .= ' port=' . urldecode($url['port']);
   }
 
   // pg_last_error() does not return a useful error message for database
@@ -139,7 +139,7 @@ function _db_query($query, $debug = 0) {
 
   if (variable_get('dev_query', 0)) {
     $bt = debug_backtrace();
-    $query = $bt[2]['function'] ."\n". $query;
+    $query = $bt[2]['function'] . "\n" . $query;
     list($usec, $sec) = explode(' ', microtime());
     $stop = (float)$usec + (float)$sec;
     $diff = $stop - $timer;
@@ -147,7 +147,7 @@ function _db_query($query, $debug = 0) {
   }
 
   if ($debug) {
-    print '<p>query: '. $query .'<br />error:'. pg_last_error($active_db) .'</p>';
+    print '<p>query: ' . $query . '<br />error:' . pg_last_error($active_db) . '</p>';
   }
 
   if ($last_result !== FALSE) {
@@ -156,7 +156,7 @@ function _db_query($query, $debug = 0) {
   else {
     // Indicate to drupal_error_handler that this is a database error.
     ${DB_ERROR} = TRUE;
-    trigger_error(check_plain(pg_last_error($active_db) ."\nquery: ". $query), E_USER_WARNING);
+    trigger_error(check_plain(pg_last_error($active_db) . "\nquery: " . $query), E_USER_WARNING);
     return FALSE;
   }
 }
@@ -228,7 +228,7 @@ function db_error() {
  *   The name of the autoincrement field.
  */
 function db_last_insert_id($table, $field) {
-  return db_result(db_query("SELECT CURRVAL('{". db_escape_table($table) ."}_". db_escape_table($field) ."_seq')"));
+  return db_result(db_query("SELECT CURRVAL('{" . db_escape_table($table) . "}_" . db_escape_table($field) . "_seq')"));
 }
 
 /**
@@ -280,7 +280,7 @@ function db_query_range($query) {
   }
   _db_query_callback($args, TRUE);
   $query = preg_replace_callback(DB_QUERY_REGEXP, '_db_query_callback', $query);
-  $query .= ' LIMIT '. (int)$count .' OFFSET '. (int)$from;
+  $query .= ' LIMIT ' . (int)$count . ' OFFSET ' . (int)$from;
   return _db_query($query);
 }
 
@@ -321,7 +321,7 @@ function db_query_temporary($query) {
   $tablename = array_pop($args);
   array_shift($args);
 
-  $query = preg_replace('/^SELECT/i', 'CREATE TEMPORARY TABLE '. $tablename .' AS SELECT', db_prefix_tables($query));
+  $query = preg_replace('/^SELECT/i', 'CREATE TEMPORARY TABLE ' . $tablename . ' AS SELECT', db_prefix_tables($query));
   if (isset($args[0]) and is_array($args[0])) { // 'All arguments in one array' syntax
     $args = $args[0];
   }
@@ -340,7 +340,7 @@ function db_query_temporary($query) {
  *  Encoded data.
  */
 function db_encode_blob($data) {
-  return "'". pg_escape_bytea($data) ."'";
+  return "'" . pg_escape_bytea($data) . "'";
 }
 
 /**
@@ -369,7 +369,7 @@ function db_escape_string($text) {
  * This function automatically starts a transaction.
  */
 function db_lock_table($table) {
-  db_query('BEGIN; LOCK TABLE {'. db_escape_table($table) .'} IN EXCLUSIVE MODE');
+  db_query('BEGIN; LOCK TABLE {' . db_escape_table($table) . '} IN EXCLUSIVE MODE');
 }
 
 /**
@@ -384,14 +384,14 @@ function db_unlock_tables() {
  * Check if a table exists.
  */
 function db_table_exists($table) {
-  return (bool) db_result(db_query("SELECT COUNT(*) FROM pg_class WHERE relname = '{". db_escape_table($table) ."}'"));
+  return (bool) db_result(db_query("SELECT COUNT(*) FROM pg_class WHERE relname = '{" . db_escape_table($table) . "}'"));
 }
 
 /**
  * Check if a column exists in the given table.
  */
 function db_column_exists($table, $column) {
-  return (bool) db_result(db_query("SELECT COUNT(pg_attribute.attname) FROM pg_class, pg_attribute WHERE pg_attribute.attrelid = pg_class.oid AND pg_class.relname = '{". db_escape_table($table) ."}' AND attname = '". db_escape_table($column) ."'"));
+  return (bool) db_result(db_query("SELECT COUNT(pg_attribute.attname) FROM pg_class, pg_attribute WHERE pg_attribute.attrelid = pg_class.oid AND pg_class.relname = '{" . db_escape_table($table) . "}' AND attname = '" . db_escape_table($column) . "'"));
 }
 
 /**
@@ -418,10 +418,10 @@ function db_check_setup() {
  * @return SQL query with the DISTINCT wrapper surrounding the given table.field.
  */
 function db_distinct_field($table, $field, $query) {
-  $field_to_select = 'DISTINCT ON ('. $table .'.'. $field .") $table.$field";
+  $field_to_select = 'DISTINCT ON (' . $table . '.' . $field . ") $table.$field";
   // (?<!text) is a negative look-behind (no need to rewrite queries that already use DISTINCT).
-  $query = preg_replace('/(SELECT.*)(?:'. $table .'\.|\s)(?<!DISTINCT\()(?<!DISTINCT\('. $table .'\.)'. $field .'(.*FROM )/AUsi', '\1 '. $field_to_select .'\2', $query);
-  $query = preg_replace('/(ORDER BY )(?!'. $table .'\.'. $field .')/', '\1'."$table.$field, ", $query);
+  $query = preg_replace('/(SELECT.*)(?:' . $table . '\.|\s)(?<!DISTINCT\()(?<!DISTINCT\(' . $table . '\.)' . $field . '(.*FROM )/AUsi', '\1 ' . $field_to_select . '\2', $query);
+  $query = preg_replace('/(ORDER BY )(?!' . $table . '\.' . $field . ')/', '\1' . "$table.$field, ", $query);
   return $query;
 }
 
@@ -498,15 +498,15 @@ function db_create_table_sql($name, $table) {
 
   $sql_keys = array();
   if (isset($table['primary key']) && is_array($table['primary key'])) {
-    $sql_keys[] = 'PRIMARY KEY ('. implode(', ', $table['primary key']) .')';
+    $sql_keys[] = 'PRIMARY KEY (' . implode(', ', $table['primary key']) . ')';
   }
   if (isset($table['unique keys']) && is_array($table['unique keys'])) {
     foreach ($table['unique keys'] as $key_name => $key) {
-      $sql_keys[] = 'CONSTRAINT {'. $name .'}_'. $key_name .'_key UNIQUE ('. implode(', ', $key) .')';
+      $sql_keys[] = 'CONSTRAINT {' . $name . '}_' . $key_name . '_key UNIQUE (' . implode(', ', $key) . ')';
     }
   }
 
-  $sql = "CREATE TABLE {". $name ."} (\n\t";
+  $sql = "CREATE TABLE {" . $name . "} (\n\t";
   $sql .= implode(",\n\t", $sql_fields);
   if (count($sql_keys) > 0) {
     $sql .= ",\n\t";
@@ -525,8 +525,8 @@ function db_create_table_sql($name, $table) {
 }
 
 function _db_create_index_sql($table, $name, $fields) {
-  $query = 'CREATE INDEX {'. $table .'}_'. $name .'_idx ON {'. $table .'} (';
-  $query .= _db_create_key_sql($fields) .')';
+  $query = 'CREATE INDEX {' . $table . '}_' . $name . '_idx ON {' . $table . '} (';
+  $query .= _db_create_key_sql($fields) . ')';
   return $query;
 }
 
@@ -534,7 +534,7 @@ function _db_create_key_sql($fields) {
   $ret = array();
   foreach ($fields as $field) {
     if (is_array($field)) {
-      $ret[] = 'substr('. $field[0] .', 1, '. $field[1] .')';
+      $ret[] = 'substr(' . $field[0] . ', 1, ' . $field[1] . ')';
     }
     else {
       $ret[] = $field;
@@ -572,7 +572,7 @@ function _db_process_field($field) {
   // Set the correct database-engine specific datatype.
   if (!isset($field['pgsql_type'])) {
     $map = db_type_map();
-    $field['pgsql_type'] = $map[$field['type'] .':'. $field['size']];
+    $field['pgsql_type'] = $map[$field['type'] . ':' . $field['size']];
   }
   if ($field['type'] == 'serial') {
     unset($field['not null']);
@@ -592,7 +592,7 @@ function _db_process_field($field) {
  *    The field specification, as per the schema data structure format.
  */
 function _db_create_field_sql($name, $spec) {
-  $sql = $name .' '. $spec['pgsql_type'];
+  $sql = $name . ' ' . $spec['pgsql_type'];
 
   if ($spec['type'] == 'serial') {
     unset($spec['not null']);
@@ -607,17 +607,17 @@ function _db_create_field_sql($name, $spec) {
   }
 
   if (!empty($spec['length'])) {
-    $sql .= '('. $spec['length'] .')';
+    $sql .= '(' . $spec['length'] . ')';
   }
   elseif (isset($spec['precision']) && isset($spec['scale'])) {
-    $sql .= '('. $spec['precision'] .', '. $spec['scale'] .')';
+    $sql .= '(' . $spec['precision'] . ', ' . $spec['scale'] . ')';
   }
 
   if (isset($spec['not null']) && $spec['not null']) {
     $sql .= ' NOT NULL';
   }
   if (isset($spec['default'])) {
-    $default = is_string($spec['default']) ? "'". $spec['default'] ."'" : $spec['default'];
+    $default = is_string($spec['default']) ? "'" . $spec['default'] . "'" : $spec['default'];
     $sql .= " default $default";
   }
 
@@ -635,7 +635,7 @@ function _db_create_field_sql($name, $spec) {
  *   The new name for the table.
  */
 function db_rename_table(&$ret, $table, $new_name) {
-  $ret[] = update_sql('ALTER TABLE {'. $table .'} RENAME TO {'. $new_name .'}');
+  $ret[] = update_sql('ALTER TABLE {' . $table . '} RENAME TO {' . $new_name . '}');
 }
 
 /**
@@ -647,7 +647,7 @@ function db_rename_table(&$ret, $table, $new_name) {
  *   The table to be dropped.
  */
 function db_drop_table(&$ret, $table) {
-  $ret[] = update_sql('DROP TABLE {'. $table .'}');
+  $ret[] = update_sql('DROP TABLE {' . $table . '}');
 }
 
 /**
@@ -679,17 +679,17 @@ function db_add_field(&$ret, $table, $field, $spec, $new_keys = array()) {
     $fixnull = TRUE;
     $spec['not null'] = FALSE;
   }
-  $query = 'ALTER TABLE {'. $table .'} ADD COLUMN ';
+  $query = 'ALTER TABLE {' . $table . '} ADD COLUMN ';
   $query .= _db_create_field_sql($field, _db_process_field($spec));
   $ret[] = update_sql($query);
   if (isset($spec['initial'])) {
     // All this because update_sql does not support %-placeholders.
-    $sql = 'UPDATE {'. $table .'} SET '. $field .' = '. db_type_placeholder($spec['type']);
+    $sql = 'UPDATE {' . $table . '} SET ' . $field . ' = ' . db_type_placeholder($spec['type']);
     $result = db_query($sql, $spec['initial']);
-    $ret[] = array('success' => $result !== FALSE, 'query' => check_plain($sql .' ('. $spec['initial'] .')'));
+    $ret[] = array('success' => $result !== FALSE, 'query' => check_plain($sql . ' (' . $spec['initial'] . ')'));
   }
   if ($fixnull) {
-    $ret[] = update_sql("ALTER TABLE {". $table ."} ALTER $field SET NOT NULL");
+    $ret[] = update_sql("ALTER TABLE {" . $table . "} ALTER $field SET NOT NULL");
   }
   if (isset($new_keys)) {
     _db_create_keys($ret, $table, $new_keys);
@@ -707,7 +707,7 @@ function db_add_field(&$ret, $table, $field, $spec, $new_keys = array()) {
  *   The field to be dropped.
  */
 function db_drop_field(&$ret, $table, $field) {
-  $ret[] = update_sql('ALTER TABLE {'. $table .'} DROP COLUMN '. $field);
+  $ret[] = update_sql('ALTER TABLE {' . $table . '} DROP COLUMN ' . $field);
 }
 
 /**
@@ -730,7 +730,7 @@ function db_field_set_default(&$ret, $table, $field, $default) {
     $default = is_string($default) ? "'$default'" : $default;
   }
 
-  $ret[] = update_sql('ALTER TABLE {'. $table .'} ALTER COLUMN '. $field .' SET DEFAULT '. $default);
+  $ret[] = update_sql('ALTER TABLE {' . $table . '} ALTER COLUMN ' . $field . ' SET DEFAULT ' . $default);
 }
 
 /**
@@ -744,7 +744,7 @@ function db_field_set_default(&$ret, $table, $field, $default) {
  *   The field to be altered.
  */
 function db_field_set_no_default(&$ret, $table, $field) {
-  $ret[] = update_sql('ALTER TABLE {'. $table .'} ALTER COLUMN '. $field .' DROP DEFAULT');
+  $ret[] = update_sql('ALTER TABLE {' . $table . '} ALTER COLUMN ' . $field . ' DROP DEFAULT');
 }
 
 /**
@@ -758,8 +758,8 @@ function db_field_set_no_default(&$ret, $table, $field) {
  *   Fields for the primary key.
  */
 function db_add_primary_key(&$ret, $table, $fields) {
-  $ret[] = update_sql('ALTER TABLE {'. $table .'} ADD PRIMARY KEY ('.
-    implode(',', $fields) .')');
+  $ret[] = update_sql('ALTER TABLE {' . $table . '} ADD PRIMARY KEY (' .
+    implode(',', $fields) . ')');
 }
 
 /**
@@ -771,7 +771,7 @@ function db_add_primary_key(&$ret, $table, $fields) {
  *   The table to be altered.
  */
 function db_drop_primary_key(&$ret, $table) {
-  $ret[] = update_sql('ALTER TABLE {'. $table .'} DROP CONSTRAINT {'. $table .'}_pkey');
+  $ret[] = update_sql('ALTER TABLE {' . $table . '} DROP CONSTRAINT {' . $table . '}_pkey');
 }
 
 /**
@@ -787,9 +787,9 @@ function db_drop_primary_key(&$ret, $table) {
  *   An array of field names.
  */
 function db_add_unique_key(&$ret, $table, $name, $fields) {
-  $name = '{'. $table .'}_'. $name .'_key';
-  $ret[] = update_sql('ALTER TABLE {'. $table .'} ADD CONSTRAINT '.
-    $name .' UNIQUE ('. implode(',', $fields) .')');
+  $name = '{' . $table . '}_' . $name . '_key';
+  $ret[] = update_sql('ALTER TABLE {' . $table . '} ADD CONSTRAINT ' .
+    $name . ' UNIQUE (' . implode(',', $fields) . ')');
 }
 
 /**
@@ -803,8 +803,8 @@ function db_add_unique_key(&$ret, $table, $name, $fields) {
  *   The name of the key.
  */
 function db_drop_unique_key(&$ret, $table, $name) {
-  $name = '{'. $table .'}_'. $name .'_key';
-  $ret[] = update_sql('ALTER TABLE {'. $table .'} DROP CONSTRAINT '. $name);
+  $name = '{' . $table . '}_' . $name . '_key';
+  $ret[] = update_sql('ALTER TABLE {' . $table . '} DROP CONSTRAINT ' . $name);
 }
 
 /**
@@ -834,8 +834,8 @@ function db_add_index(&$ret, $table, $name, $fields) {
  *   The name of the index.
  */
 function db_drop_index(&$ret, $table, $name) {
-  $name = '{'. $table .'}_'. $name .'_idx';
-  $ret[] = update_sql('DROP INDEX '. $name);
+  $name = '{' . $table . '}_' . $name . '_idx';
+  $ret[] = update_sql('DROP INDEX ' . $name);
 }
 
 /**
@@ -901,19 +901,19 @@ function db_drop_index(&$ret, $table, $name) {
  *   table specification but without the 'fields' element.
  */
 function db_change_field(&$ret, $table, $field, $field_new, $spec, $new_keys = array()) {
-  $ret[] = update_sql("ALTER TABLE {". $table ."} RENAME $field TO ". $field ."_old");
+  $ret[] = update_sql("ALTER TABLE {" . $table . "} RENAME $field TO " . $field . "_old");
   $not_null = isset($spec['not null']) ? $spec['not null'] : FALSE;
   unset($spec['not null']);
 
   db_add_field($ret, $table, "$field_new", $spec);
 
-  $ret[] = update_sql("UPDATE {". $table ."} SET $field_new = ". $field ."_old");
+  $ret[] = update_sql("UPDATE {" . $table . "} SET $field_new = " . $field . "_old");
 
   if ($not_null) {
-    $ret[] = update_sql("ALTER TABLE {". $table ."} ALTER $field_new SET NOT NULL");
+    $ret[] = update_sql("ALTER TABLE {" . $table . "} ALTER $field_new SET NOT NULL");
   }
 
-  db_drop_field($ret, $table, $field .'_old');
+  db_drop_field($ret, $table, $field . '_old');
 
   if (isset($new_keys)) {
     _db_create_keys($ret, $table, $new_keys);

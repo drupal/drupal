@@ -1,5 +1,5 @@
 <?php
-// $Id: path.admin.inc,v 1.7 2008/01/08 10:35:42 goba Exp $
+// $Id: path.admin.inc,v 1.8 2008/04/14 17:48:38 dries Exp $
 
 /**
  * @file
@@ -220,7 +220,7 @@ function path_admin_filter_form(&$form_state, $keys = '') {
  * Process filter form submission when the Filter button is pressed.
  */
 function path_admin_filter_form_submit_filter($form, &$form_state) {
-  $form_state['redirect'] = 'admin/build/path/list/'. trim($form_state['values']['filter']);
+  $form_state['redirect'] = 'admin/build/path/list/' . trim($form_state['values']['filter']);
 }
 
 /**

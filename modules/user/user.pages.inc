@@ -1,5 +1,5 @@
 <?php
-// $Id: user.pages.inc,v 1.12 2008/02/18 16:53:37 dries Exp $
+// $Id: user.pages.inc,v 1.13 2008/04/14 17:48:43 dries Exp $
 
 /**
  * @file
@@ -102,11 +102,11 @@ function user_pass_reset(&$form_state, $uid, $timestamp, $hashed_pass, $action =
           // user, which invalidates further use of the one-time login link.
           user_authenticate_finalize($form_state['values']);
           drupal_set_message(t('You have just used your one-time login link. It is no longer necessary to use this link to login. Please change your password.'));
-          drupal_goto('user/'. $user->uid .'/edit');
+          drupal_goto('user/' . $user->uid . '/edit');
         }
         else {
           $form['message'] = array('#value' => t('<p>This is a one-time login for %user_name and will expire on %expiration_date.</p><p>Click on this button to login to the site and change your password.</p>', array('%user_name' => $account->name, '%expiration_date' => format_date($timestamp + $timeout))));
-          $form['help'] = array('#value' => '<p>'. t('This login can be used only once.') .'</p>');
+          $form['help'] = array('#value' => '<p>' . t('This login can be used only once.') . '</p>');
           $form['submit'] = array('#type' => 'submit', '#value' => t('Log in'));
           $form['#action'] = url("user/reset/$uid/$timestamp/$hashed_pass/login");
           return $form;
@@ -291,7 +291,7 @@ function user_edit_delete_submit($form, &$form_state) {
     unset($_REQUEST['destination']);
   }
   // Note: We redirect from user/uid/edit to user/uid/delete to make the tabs disappear.
-  $form_state['redirect'] = array("user/". $form_state['values']['_account']->uid ."/delete", $destination);
+  $form_state['redirect'] = array("user/" . $form_state['values']['_account']->uid . "/delete", $destination);
 }
 
 /**
@@ -306,7 +306,7 @@ function user_confirm_delete(&$form_state, $account) {
 
   return confirm_form($form,
     t('Are you sure you want to delete the account %name?', array('%name' => $account->name)),
-    'user/'. $account->uid,
+    'user/' . $account->uid,
     t('All submissions made by this user will be attributed to the anonymous account. This action cannot be undone.'),
     t('Delete'), t('Cancel'));
 }
@@ -356,7 +356,7 @@ function user_edit_submit($form, &$form_state) {
 function user_page() {
   global $user;
   if ($user->uid) {
-    menu_set_active_item('user/'. $user->uid);
+    menu_set_active_item('user/' . $user->uid);
     return menu_execute_active_handler();
   }
   else {

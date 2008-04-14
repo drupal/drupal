@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.199 2008/02/20 13:46:42 dries Exp $
+// $Id: upload.module,v 1.200 2008/04/14 17:48:43 dries Exp $
 
 /**
  * @file
@@ -13,12 +13,12 @@
 function upload_help($path, $arg) {
   switch ($path) {
     case 'admin/help#upload':
-      $output = '<p>'. t('The upload module allows users to upload files to the site. The ability to upload files is important for members of a community who want to share work. It is also useful to administrators who want to keep uploaded files connected to posts.') .'</p>';
-      $output .= '<p>'. t('Users with the upload files permission can upload attachments to posts. Uploads may be enabled for specific content types on the content types settings page. Each user role can be customized to limit or control the file size of uploads, or the maximum dimension of image files.') .'</p>';
-      $output .= '<p>'. t('For more information, see the online handbook entry for <a href="@upload">Upload module</a>.', array('@upload' => 'http://drupal.org/handbook/modules/upload/')) .'</p>';
+      $output = '<p>' . t('The upload module allows users to upload files to the site. The ability to upload files is important for members of a community who want to share work. It is also useful to administrators who want to keep uploaded files connected to posts.') . '</p>';
+      $output .= '<p>' . t('Users with the upload files permission can upload attachments to posts. Uploads may be enabled for specific content types on the content types settings page. Each user role can be customized to limit or control the file size of uploads, or the maximum dimension of image files.') . '</p>';
+      $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@upload">Upload module</a>.', array('@upload' => 'http://drupal.org/handbook/modules/upload/')) . '</p>';
       return $output;
     case 'admin/settings/upload':
-      return '<p>'. t('Users with the <a href="@permissions">upload files permission</a> can upload attachments. Users with the <a href="@permissions">view uploaded files permission</a> can view uploaded attachments. You can choose which post types can take attachments on the <a href="@types">content types settings</a> page.', array('@permissions' => url('admin/user/permissions'), '@types' => url('admin/settings/types'))) .'</p>';
+      return '<p>' . t('Users with the <a href="@permissions">upload files permission</a> can upload attachments. Users with the <a href="@permissions">view uploaded files permission</a> can view uploaded attachments. You can choose which post types can take attachments on the <a href="@types">content types settings</a> page.', array('@permissions' => url('admin/user/permissions'), '@types' => url('admin/settings/types'))) . '</p>';
   }
 }
 
@@ -155,8 +155,8 @@ function upload_file_download($file) {
   $result = db_query("SELECT f.* FROM {files} f INNER JOIN {upload} u ON f.fid = u.fid WHERE filepath = '%s'", $file);
   if ($file = db_fetch_object($result)) {
     return array(
-      'Content-Type: '. $file->filemime,
-      'Content-Length: '. $file->filesize,
+      'Content-Type: ' . $file->filemime,
+      'Content-Length: ' . $file->filesize,
     );
   }
 }
@@ -213,14 +213,14 @@ function upload_form_alter(&$form, $form_state, $form_id) {
     $form['workflow']['upload'] = array(
       '#type' => 'radios',
       '#title' => t('Attachments'),
-      '#default_value' => variable_get('upload_'. $form['#node_type']->type, 1),
+      '#default_value' => variable_get('upload_' . $form['#node_type']->type, 1),
       '#options' => array(t('Disabled'), t('Enabled')),
     );
   }
 
   if (isset($form['type']) && isset($form['#node'])) {
     $node = $form['#node'];
-    if ($form['type']['#value'] .'_node_form' == $form_id && variable_get("upload_$node->type", TRUE)) {
+    if ($form['type']['#value'] . '_node_form' == $form_id && variable_get("upload_$node->type", TRUE)) {
       // Attachments fieldset
       $form['attachments'] = array(
         '#type' => 'fieldset',
@@ -248,10 +248,10 @@ function upload_form_alter(&$form, $form_state, $form_id) {
       if (!file_check_directory($path, FILE_CREATE_DIRECTORY) || !file_check_directory($temp, FILE_CREATE_DIRECTORY)) {
         $form['attachments']['#description'] =  t('File attachments are disabled. The file directories have not been properly configured.');
         if (user_access('administer site configuration')) {
-          $form['attachments']['#description'] .= ' '. t('Please visit the <a href="@admin-file-system">file system configuration page</a>.', array('@admin-file-system' => url('admin/settings/file-system')));
+          $form['attachments']['#description'] .= ' ' . t('Please visit the <a href="@admin-file-system">file system configuration page</a>.', array('@admin-file-system' => url('admin/settings/file-system')));
         }
         else {
-          $form['attachments']['#description'] .= ' '. t('Please contact the site administrator.');
+          $form['attachments']['#description'] .= ' ' . t('Please contact the site administrator.');
         }
       }
       else {
@@ -483,7 +483,7 @@ function _upload_form($node) {
     foreach ($node->files as $key => $file) {
       $file = (object)$file;
       $description = file_create_url($file->filepath);
-      $description = "<small>". check_plain($description) ."</small>";
+      $description = "<small>" . check_plain($description) . "</small>";
       $form['files'][$key]['description'] = array('#type' => 'textfield', '#default_value' => !empty($file->description) ? $file->description : $file->filename, '#maxlength' => 256, '#description' => $description );
       $form['files'][$key]['size'] = array('#value' => format_size($file->filesize));
       $form['files'][$key]['remove'] = array('#type' => 'checkbox', '#default_value' => !empty($file->remove));
@@ -580,7 +580,7 @@ function upload_load($node) {
  */
 function upload_js() {
   // Load the form from the Form API cache.
-  $cache = cache_get('form_'. $_POST['form_build_id'], 'cache_form');
+  $cache = cache_get('form_' . $_POST['form_build_id'], 'cache_form');
 
   // We only do the upload.module part of the node validation process.
   $node = (object)$_POST;
@@ -616,7 +616,7 @@ function upload_js() {
 
   // Add the new element to the stored form state and resave.
   $cache->data['attachments']['wrapper'] = array_merge($cache->data['attachments']['wrapper'], $form);
-  cache_set('form_'. $_POST['form_build_id'], $cache->data, 'cache_form', $cache->expire);
+  cache_set('form_' . $_POST['form_build_id'], $cache->data, 'cache_form', $cache->expire);
 
   // Render the form for output.
   $form += array(

@@ -1,5 +1,5 @@
 <?php
-// $Id: maintenance-page.tpl.php,v 1.3 2008/01/24 09:42:53 goba Exp $
+// $Id: maintenance-page.tpl.php,v 1.4 2008/04/14 17:48:46 dries Exp $
 
 /**
  * @file maintenance-page.tpl.php
@@ -44,16 +44,16 @@
           }
           $site_title = implode(' ', $site_fields);
           if ($site_fields) {
-            $site_fields[0] = '<span>'. $site_fields[0] .'</span>';
+            $site_fields[0] = '<span>' . $site_fields[0] . '</span>';
           }
           $site_html = implode(' ', $site_fields);
 
           if ($logo || $site_title) {
-            print '<h1><a href="'. check_url($base_path) .'" title="'. $site_title .'">';
+            print '<h1><a href="' . check_url($base_path) . '" title="' . $site_title . '">';
             if ($logo) {
-              print '<img src="'. check_url($logo) .'" alt="'. $site_title .'" id="logo" />';
+              print '<img src="' . check_url($logo) . '" alt="' . $site_title . '" id="logo" />';
             }
-            print $site_html .'</a></h1>';
+            print $site_html . '</a></h1>';
           }
         ?>
         </div>
@@ -68,7 +68,7 @@
       <?php endif; ?>
 
       <div id="center"><div id="squeeze"><div class="right-corner"><div class="left-corner">
-          <?php if ($title): print '<h2'. ($tabs ? ' class="with-tabs"' : '') .'>'. $title .'</h2>'; endif; ?>
+          <?php if ($title): print '<h2' . ($tabs ? ' class="with-tabs"' : '') . '>' . $title . '</h2>'; endif; ?>
           <?php print $help; ?>
           <?php print $messages; ?>
           <div class="clear-block">

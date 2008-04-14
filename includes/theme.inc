@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.419 2008/04/02 20:23:14 dries Exp $
+// $Id: theme.inc,v 1.420 2008/04/14 17:48:33 dries Exp $
 
 /**
  * @file
@@ -153,14 +153,14 @@ function _init_theme($theme, $base_theme = array(), $registry_callback = '_theme
   // Initialize the theme.
   if (isset($theme->engine)) {
     // Include the engine.
-    include_once './'. $theme->owner;
+    include_once './' . $theme->owner;
 
     $theme_engine = $theme->engine;
-    if (function_exists($theme_engine .'_init')) {
+    if (function_exists($theme_engine . '_init')) {
       foreach ($base_theme as $base) {
-        call_user_func($theme_engine .'_init', $base);
+        call_user_func($theme_engine . '_init', $base);
       }
-      call_user_func($theme_engine .'_init', $theme);
+      call_user_func($theme_engine . '_init', $theme);
     }
   }
   else {
@@ -168,12 +168,12 @@ function _init_theme($theme, $base_theme = array(), $registry_callback = '_theme
     foreach ($base_theme as $base) {
       // Include the theme file or the engine.
       if (!empty($base->owner)) {
-        include_once './'. $base->owner;
+        include_once './' . $base->owner;
       }
     }
     // and our theme gets one too.
     if (!empty($theme->owner)) {
-      include_once './'. $theme->owner;
+      include_once './' . $theme->owner;
     }
   }
 
@@ -261,7 +261,7 @@ function drupal_rebuild_theme_registry() {
  * over how and when the preprocess functions are run.
  */
 function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
-  $function = $name .'_theme';
+  $function = $name . '_theme';
   if (function_exists($function)) {
     $result = $function($cache, $type, $theme, $path);
 
@@ -271,7 +271,7 @@ function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
       // if function and file are left out, default to standard naming
       // conventions.
       if (!isset($info['template']) && !isset($info['function'])) {
-        $result[$hook]['function'] = ($type == 'module' ? 'theme_' : $name .'_') . $hook;
+        $result[$hook]['function'] = ($type == 'module' ? 'theme_' : $name . '_') . $hook;
       }
       // If a path is set in the info, use what was set. Otherwise use the
       // default path. This is mostly so system.module can declare theme
@@ -279,15 +279,15 @@ function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
       // All files are included to be safe. Conditionally included
       // files can prevent them from getting registered.
       if (isset($info['file']) && !isset($info['path'])) {
-        $result[$hook]['file'] = $path .'/'. $info['file'];
+        $result[$hook]['file'] = $path . '/' . $info['file'];
         include_once($result[$hook]['file']);
       }
       elseif (isset($info['file']) && isset($info['path'])) {
-        include_once($info['path'] .'/'. $info['file']);
+        include_once($info['path'] . '/' . $info['file']);
       }
 
       if (isset($info['template']) && !isset($info['path'])) {
-        $result[$hook]['template'] = $path .'/'. $info['template'];
+        $result[$hook]['template'] = $path . '/' . $info['template'];
       }
       // If 'arguments' have been defined previously, carry them forward.
       // This should happen if a theme overrides a Drupal defined theme
@@ -316,7 +316,7 @@ function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
         }
         elseif ($type == 'theme_engine') {
           // Theme engines get an extra set that come before the normally named preprocessors.
-          $prefixes[] = $name .'_engine';
+          $prefixes[] = $name . '_engine';
           // The theme engine also registers on behalf of the theme. The theme or engine name can be used.
           $prefixes[] = $name;
           $prefixes[] = $theme;
@@ -327,11 +327,11 @@ function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
         }
 
         foreach ($prefixes as $prefix) {
-          if (function_exists($prefix .'_preprocess')) {
-            $info['preprocess functions'][] = $prefix .'_preprocess';
+          if (function_exists($prefix . '_preprocess')) {
+            $info['preprocess functions'][] = $prefix . '_preprocess';
           }
-          if (function_exists($prefix .'_preprocess_'. $hook)) {
-            $info['preprocess functions'][] = $prefix .'_preprocess_'. $hook;
+          if (function_exists($prefix . '_preprocess_' . $hook)) {
+            $info['preprocess functions'][] = $prefix . '_preprocess_' . $hook;
           }
         }
       }
@@ -582,7 +582,7 @@ function theme() {
   if (!empty($info['file'])) {
     $include_file = $info['file'];
     if (isset($info['path'])) {
-      $include_file = $info['path'] .'/'. $include_file;
+      $include_file = $info['path'] . '/' . $include_file;
     }
     include_once($include_file);
   }
@@ -613,10 +613,10 @@ function theme() {
       // If theme or theme engine is implementing this, it may have
       // a different extension and a different renderer.
       if ($info['type'] != 'module') {
-        if (function_exists($theme_engine .'_render_template')) {
-          $render_function = $theme_engine .'_render_template';
+        if (function_exists($theme_engine . '_render_template')) {
+          $render_function = $theme_engine . '_render_template';
         }
-        $extension_function = $theme_engine .'_extension';
+        $extension_function = $theme_engine . '_extension';
         if (function_exists($extension_function)) {
           $extension = $extension_function();
         }
@@ -654,7 +654,7 @@ function theme() {
     if (empty($template_file)) {
       $template_file = $info['template'] . $extension;
       if (isset($info['path'])) {
-        $template_file = $info['path'] .'/'. $template_file;
+        $template_file = $info['path'] . '/' . $template_file;
       }
     }
     $output = $render_function($template_file, $variables);
@@ -678,7 +678,7 @@ function drupal_discover_template($paths, $suggestions, $extension = '.tpl.php')
   foreach ($suggestions as $suggestion) {
     if (!empty($suggestion)) {
       foreach ($paths as $path) {
-        if (file_exists($file = $path .'/'. $suggestion . $extension)) {
+        if (file_exists($file = $path . '/' . $suggestion . $extension)) {
           return $file;
         }
       }
@@ -718,10 +718,10 @@ function drupal_find_theme_functions($cache, $prefixes) {
   foreach ($cache as $hook => $info) {
     foreach ($prefixes as $prefix) {
       if (!empty($info['pattern'])) {
-        $matches = preg_grep('/^'. $prefix .'_'. $info['pattern'] .'/', $functions['user']);
+        $matches = preg_grep('/^' . $prefix . '_' . $info['pattern'] . '/', $functions['user']);
         if ($matches) {
           foreach ($matches as $match) {
-            $new_hook = str_replace($prefix .'_', '', $match);
+            $new_hook = str_replace($prefix . '_', '', $match);
             $templates[$new_hook] = array(
               'function' => $match,
               'arguments' => $info['arguments'],
@@ -729,9 +729,9 @@ function drupal_find_theme_functions($cache, $prefixes) {
           }
         }
       }
-      if (function_exists($prefix .'_'. $hook)) {
+      if (function_exists($prefix . '_' . $hook)) {
         $templates[$hook] = array(
-          'function' => $prefix .'_'. $hook,
+          'function' => $prefix . '_' . $hook,
         );
       }
     }
@@ -774,7 +774,7 @@ function drupal_find_theme_templates($cache, $extension, $path) {
   $subtheme_paths = isset($theme_paths[$theme]) ? $theme_paths[$theme] : array();
 
   // Escape the periods in the extension.
-  $regex = str_replace('.', '\.', $extension) .'$';
+  $regex = str_replace('.', '\.', $extension) . '$';
   // Because drupal_system_listing works the way it does, we check for real
   // templates separately from checking for patterns.
   $files = drupal_system_listing($regex, $path, 'name', 0);
@@ -808,7 +808,7 @@ function drupal_find_theme_templates($cache, $extension, $path) {
       // for the purposes of searching.
       $pattern = strtr($info['pattern'], '_', '-');
 
-      $matches = preg_grep('/^'. $pattern .'/', $patterns);
+      $matches = preg_grep('/^' . $pattern . '/', $patterns);
       if ($matches) {
         foreach ($matches as $match) {
           $file = substr($match, 0, strpos($match, '.'));
@@ -865,13 +865,13 @@ function theme_get_settings($key = NULL) {
 
   if (module_exists('node')) {
     foreach (node_get_types() as $type => $name) {
-      $defaults['toggle_node_info_'. $type] = 1;
+      $defaults['toggle_node_info_' . $type] = 1;
     }
   }
   $settings = array_merge($defaults, variable_get('theme_settings', array()));
 
   if ($key) {
-    $settings = array_merge($settings, variable_get(str_replace('/', '_', 'theme_'. $key .'_settings'), array()));
+    $settings = array_merge($settings, variable_get(str_replace('/', '_', 'theme_' . $key . '_settings'), array()));
   }
 
   // Only offer search box if search.module is enabled.
@@ -918,7 +918,7 @@ function theme_get_setting($setting_name, $refresh = FALSE) {
 
     if ($settings['toggle_logo']) {
       if ($settings['default_logo']) {
-        $settings['logo'] = base_path() . dirname($theme_object->filename) .'/logo.png';
+        $settings['logo'] = base_path() . dirname($theme_object->filename) . '/logo.png';
       }
       elseif ($settings['logo_path']) {
         $settings['logo'] = base_path() . $settings['logo_path'];
@@ -927,11 +927,11 @@ function theme_get_setting($setting_name, $refresh = FALSE) {
 
     if ($settings['toggle_favicon']) {
       if ($settings['default_favicon']) {
-        if (file_exists($favicon = dirname($theme_object->filename) .'/favicon.ico')) {
+        if (file_exists($favicon = dirname($theme_object->filename) . '/favicon.ico')) {
           $settings['favicon'] = base_path() . $favicon;
         }
         else {
-          $settings['favicon'] = base_path() .'misc/favicon.ico';
+          $settings['favicon'] = base_path() . 'misc/favicon.ico';
         }
       }
       elseif ($settings['favicon_path']) {
@@ -1042,7 +1042,7 @@ function theme_render_template($file, $variables) {
  *   The formatted text (html).
  */
 function theme_placeholder($text) {
-  return '<em>'. check_plain($text) .'</em>';
+  return '<em>' . check_plain($text) . '</em>';
 }
 
 /**
@@ -1062,7 +1062,7 @@ function theme_status_messages($display = NULL) {
     if (count($messages) > 1) {
       $output .= " <ul>\n";
       foreach ($messages as $message) {
-        $output .= '  <li>'. $message ."</li>\n";
+        $output .= '  <li>' . $message . "</li>\n";
       }
       $output .= " </ul>\n";
     }
@@ -1088,7 +1088,7 @@ function theme_links($links, $attributes = array('class' => 'links')) {
   $output = '';
 
   if (count($links) > 0) {
-    $output = '<ul'. drupal_attributes($attributes) .'>';
+    $output = '<ul' . drupal_attributes($attributes) . '>';
 
     $num_links = count($links);
     $i = 1;
@@ -1106,7 +1106,7 @@ function theme_links($links, $attributes = array('class' => 'links')) {
       if (isset($link['href']) && ($link['href'] == $_GET['q'] || ($link['href'] == '<front>' && drupal_is_front_page()))) {
         $class .= ' active';
       }
-      $output .= '<li class="'. $class .'">';
+      $output .= '<li class="' . $class . '">';
 
       if (isset($link['href'])) {
         // Pass in $link as $options, they share the same keys.
@@ -1121,7 +1121,7 @@ function theme_links($links, $attributes = array('class' => 'links')) {
         if (isset($link['attributes'])) {
           $span_attributes = drupal_attributes($link['attributes']);
         }
-        $output .= '<span'. $span_attributes .'>'. $link['title'] .'</span>';
+        $output .= '<span' . $span_attributes . '>' . $link['title'] . '</span>';
       }
 
       $i++;
@@ -1154,7 +1154,7 @@ function theme_image($path, $alt = '', $title = '', $attributes = NULL, $getsize
   if (!$getsize || (is_file($path) && (list($width, $height, $type, $image_attributes) = @getimagesize($path)))) {
     $attributes = drupal_attributes($attributes);
     $url = (url($path) == $path) ? $path : (base_path() . $path);
-    return '<img src="'. check_url($url) .'" alt="'. check_plain($alt) .'" title="'. check_plain($title) .'" '. (isset($image_attributes) ? $image_attributes : '') . $attributes .' />';
+    return '<img src="' . check_url($url) . '" alt="' . check_plain($alt) . '" title="' . check_plain($title) . '" ' . (isset($image_attributes) ? $image_attributes : '') . $attributes . ' />';
   }
 }
 
@@ -1167,7 +1167,7 @@ function theme_image($path, $alt = '', $title = '', $attributes = NULL, $getsize
  */
 function theme_breadcrumb($breadcrumb) {
   if (!empty($breadcrumb)) {
-    return '<div class="breadcrumb">'. implode(' » ', $breadcrumb) .'</div>';
+    return '<div class="breadcrumb">' . implode(' » ', $breadcrumb) . '</div>';
   }
 }
 
@@ -1178,7 +1178,7 @@ function theme_breadcrumb($breadcrumb) {
  */
 function theme_help() {
   if ($help = menu_get_active_help()) {
-    return '<div class="help">'. $help .'</div>';
+    return '<div class="help">' . $help . '</div>';
   }
 }
 
@@ -1189,7 +1189,7 @@ function theme_help() {
  *   An array of links.
  */
 function theme_submenu($links) {
-  return '<div class="submenu">'. implode(' | ', $links) .'</div>';
+  return '<div class="submenu">' . implode(' | ', $links) . '</div>';
 }
 
 /**
@@ -1242,13 +1242,13 @@ function theme_table($header, $rows, $attributes = array(), $caption = NULL) {
     drupal_add_js('misc/tableheader.js');
     // Add 'sticky-enabled' class to the table to identify it for JS.
     // This is needed to target tables constructed by this function.
-    $attributes['class'] = empty($attributes['class']) ? 'sticky-enabled' : ($attributes['class'] .' sticky-enabled');
+    $attributes['class'] = empty($attributes['class']) ? 'sticky-enabled' : ($attributes['class'] . ' sticky-enabled');
   }
 
-  $output = '<table'. drupal_attributes($attributes) .">\n";
+  $output = '<table' . drupal_attributes($attributes) . ">\n";
 
   if (isset($caption)) {
-    $output .= '<caption>'. $caption ."</caption>\n";
+    $output .= '<caption>' . $caption . "</caption>\n";
   }
 
   // Format the table header:
@@ -1294,14 +1294,14 @@ function theme_table($header, $rows, $attributes = array(), $caption = NULL) {
         // Add odd/even class
         $class = $flip[$class];
         if (isset($attributes['class'])) {
-          $attributes['class'] .= ' '. $class;
+          $attributes['class'] .= ' ' . $class;
         }
         else {
           $attributes['class'] = $class;
         }
 
         // Build row
-        $output .= ' <tr'. drupal_attributes($attributes) .'>';
+        $output .= ' <tr' . drupal_attributes($attributes) . '>';
         $i = 0;
         foreach ($cells as $cell) {
           $cell = tablesort_cell($cell, $header, $ts, $i++);
@@ -1356,7 +1356,7 @@ function theme_tablesort_indicator($style) {
  *   A string containing the box output.
  */
 function theme_box($title, $content, $region = 'main') {
-  $output = '<h2 class="title">'. $title .'</h2><div>'. $content .'</div>';
+  $output = '<h2 class="title">' . $title . '</h2><div>' . $content . '</div>';
   return $output;
 }
 
@@ -1374,10 +1374,10 @@ function theme_mark($type = MARK_NEW) {
   global $user;
   if ($user->uid) {
     if ($type == MARK_NEW) {
-      return ' <span class="marker">'. t('new') .'</span>';
+      return ' <span class="marker">' . t('new') . '</span>';
     }
     else if ($type == MARK_UPDATED) {
-      return ' <span class="marker">'. t('updated') .'</span>';
+      return ' <span class="marker">' . t('updated') . '</span>';
     }
   }
 }
@@ -1403,11 +1403,11 @@ function theme_mark($type = MARK_NEW) {
 function theme_item_list($items = array(), $title = NULL, $type = 'ul', $attributes = NULL) {
   $output = '<div class="item-list">';
   if (isset($title)) {
-    $output .= '<h3>'. $title .'</h3>';
+    $output .= '<h3>' . $title . '</h3>';
   }
 
   if (!empty($items)) {
-    $output .= "<$type". drupal_attributes($attributes) .'>';
+    $output .= "<$type" . drupal_attributes($attributes) . '>';
     $num_items = count($items);
     foreach ($items as $i => $item) {
       $attributes = array();
@@ -1432,12 +1432,12 @@ function theme_item_list($items = array(), $title = NULL, $type = 'ul', $attribu
         $data .= theme_item_list($children, NULL, $type, $attributes); // Render nested list
       }
       if ($i == 0) {
-        $attributes['class'] = empty($attributes['class']) ? 'first' : ($attributes['class'] .' first');
+        $attributes['class'] = empty($attributes['class']) ? 'first' : ($attributes['class'] . ' first');
       }
       if ($i == $num_items - 1) {
-        $attributes['class'] = empty($attributes['class']) ? 'last' : ($attributes['class'] .' last');
+        $attributes['class'] = empty($attributes['class']) ? 'last' : ($attributes['class'] . ' last');
       }
-      $output .= '<li'. drupal_attributes($attributes) .'>'. $data ."</li>\n";
+      $output .= '<li' . drupal_attributes($attributes) . '>' . $data . "</li>\n";
     }
     $output .= "</$type>";
   }
@@ -1449,7 +1449,7 @@ function theme_item_list($items = array(), $title = NULL, $type = 'ul', $attribu
  * Returns code that emits the 'more help'-link.
  */
 function theme_more_help_link($url) {
-  return '<div class="more-help-link">'. t('<a href="@link">More help</a>', array('@link' => check_url($url))) .'</div>';
+  return '<div class="more-help-link">' . t('<a href="@link">More help</a>', array('@link' => check_url($url))) . '</div>';
 }
 
 /**
@@ -1463,7 +1463,7 @@ function theme_more_help_link($url) {
  */
 function theme_xml_icon($url) {
   if ($image = theme('image', 'misc/xml.png', t('XML feed'), t('XML feed'))) {
-    return '<a href="'. check_url($url) .'" class="xml-icon">'. $image .'</a>';
+    return '<a href="' . check_url($url) . '" class="xml-icon">' . $image . '</a>';
   }
 }
 
@@ -1477,7 +1477,7 @@ function theme_xml_icon($url) {
   */
 function theme_feed_icon($url, $title) {
   if ($image = theme('image', 'misc/feed.png', t('Syndicate content'), $title)) {
-    return '<a href="'. check_url($url) .'" class="feed-icon">'. $image .'</a>';
+    return '<a href="' . check_url($url) . '" class="feed-icon">' . $image . '</a>';
   }
 }
 
@@ -1490,7 +1490,7 @@ function theme_feed_icon($url, $title) {
  *   A descriptive verb for the link, like 'Read more'
  */
 function theme_more_link($url, $title) {
-  return '<div class="more-link">'. t('<a href="@link" title="@title">more</a>', array('@link' => check_url($url), '@title' => $title)) .'</div>';
+  return '<div class="more-link">' . t('<a href="@link" title="@title">more</a>', array('@link' => check_url($url), '@title' => $title)) . '</div>';
 }
 
 /**
@@ -1545,14 +1545,14 @@ function theme_username($object) {
   if ($object->uid && $object->name) {
     // Shorten the name when it is too long or it will break many tables.
     if (drupal_strlen($object->name) > 20) {
-      $name = drupal_substr($object->name, 0, 15) .'...';
+      $name = drupal_substr($object->name, 0, 15) . '...';
     }
     else {
       $name = $object->name;
     }
 
     if (user_access('access user profiles')) {
-      $output = l($name, 'user/'. $object->uid, array('title' => t('View user profile.')));
+      $output = l($name, 'user/' . $object->uid, array('title' => t('View user profile.')));
     }
     else {
       $output = check_plain($name);
@@ -1570,7 +1570,7 @@ function theme_username($object) {
       $output = check_plain($object->name);
     }
 
-    $output .= ' ('. t('not verified') .')';
+    $output .= ' (' . t('not verified') . ')';
   }
   else {
     $output = variable_get('anonymous', t('Anonymous'));
@@ -1591,9 +1591,9 @@ function theme_username($object) {
  */
 function theme_progress_bar($percent, $message) {
   $output = '<div id="progress" class="progress">';
-  $output .= '<div class="bar"><div class="filled" style="width: '. $percent .'%"></div></div>';
-  $output .= '<div class="percentage">'. $percent .'%</div>';
-  $output .= '<div class="message">'. $message .'</div>';
+  $output .= '<div class="bar"><div class="filled" style="width: ' . $percent . '%"></div></div>';
+  $output .= '<div class="percentage">' . $percent . '%</div>';
+  $output .= '<div class="message">' . $message . '</div>';
   $output .= '</div>';
 
   return $output;
@@ -1702,7 +1702,7 @@ function template_preprocess(&$variables, $hook) {
 function template_preprocess_page(&$variables) {
   // Add favicon
   if (theme_get_setting('toggle_favicon')) {
-    drupal_set_html_head('<link rel="shortcut icon" href="'. check_url(theme_get_setting('favicon')) .'" type="image/x-icon" />');
+    drupal_set_html_head('<link rel="shortcut icon" href="' . check_url(theme_get_setting('favicon')) . '" type="image/x-icon" />');
   }
 
   global $theme;
@@ -1786,10 +1786,10 @@ function template_preprocess_page(&$variables) {
   // type (e.g. node, admin, user, etc.). To avoid illegal characters in the class,
   // we're removing everything disallowed. We are not using 'a-z' as that might leave
   // in certain international characters (e.g. German umlauts).
-  $body_classes[] = preg_replace('![^abcdefghijklmnopqrstuvwxyz0-9-_]+!s', '', 'page-'. form_clean_id(drupal_strtolower(arg(0))));
+  $body_classes[] = preg_replace('![^abcdefghijklmnopqrstuvwxyz0-9-_]+!s', '', 'page-' . form_clean_id(drupal_strtolower(arg(0))));
   // If on an individual node page, add the node type.
   if (isset($variables['node']) && $variables['node']->type) {
-    $body_classes[] = 'node-type-'. form_clean_id($variables['node']->type);
+    $body_classes[] = 'node-type-' . form_clean_id($variables['node']->type);
   }
   // Add information about the number of sidebars.
   if ($variables['layout'] == 'both') {
@@ -1799,7 +1799,7 @@ function template_preprocess_page(&$variables) {
     $body_classes[] = 'no-sidebars';
   }
   else {
-    $body_classes[] = 'one-sidebar sidebar-'. $variables['layout'];
+    $body_classes[] = 'one-sidebar sidebar-' . $variables['layout'];
   }
   // Implode with spaces.
   $variables['body_classes'] = implode(' ', $body_classes);
@@ -1818,9 +1818,9 @@ function template_preprocess_page(&$variables) {
   $suggestion = 'page';
   $suggestions = array();
   while ($arg = arg($i++)) {
-    $suggestions[] = $suggestion .'-'. $arg;
+    $suggestions[] = $suggestion . '-' . $arg;
     if (!is_numeric($arg)) {
-      $suggestion .= '-'. $arg;
+      $suggestion .= '-' . $arg;
     }
   }
   if (drupal_is_front_page()) {
@@ -1868,7 +1868,7 @@ function template_preprocess_node(&$variables) {
   $variables['date']      = format_date($node->created);
   $variables['links']     = !empty($node->links) ? theme('links', $node->links, array('class' => 'links inline')) : '';
   $variables['name']      = theme('username', $node);
-  $variables['node_url']  = url('node/'. $node->nid);
+  $variables['node_url']  = url('node/' . $node->nid);
   $variables['terms']     = theme('links', $variables['taxonomy'], array('class' => 'links inline'));
   $variables['title']     = check_plain($node->title);
 
@@ -1876,7 +1876,7 @@ function template_preprocess_node(&$variables) {
   $variables = array_merge((array)$node, $variables);
 
   // Display info only on certain node types.
-  if (theme_get_setting('toggle_node_info_'. $node->type)) {
+  if (theme_get_setting('toggle_node_info_' . $node->type)) {
     $variables['submitted'] = theme('node_submitted', $node);
     $variables['picture'] = theme_get_setting('toggle_node_user_picture') ? theme('user_picture', $node) : '';
   }
@@ -1885,7 +1885,7 @@ function template_preprocess_node(&$variables) {
     $variables['picture'] = '';
   }
   // Clean up name so there are no underscores.
-  $variables['template_files'][] = 'node-'. $node->type;
+  $variables['template_files'][] = 'node-' . $node->type;
 }
 
 /**
@@ -1915,8 +1915,8 @@ function template_preprocess_block(&$variables) {
   $variables['block_zebra'] = ($block_counter[$variables['block']->region] % 2) ? 'odd' : 'even';
   $variables['block_id'] = $block_counter[$variables['block']->region]++;
 
-  $variables['template_files'][] = 'block-'. $variables['block']->region;
-  $variables['template_files'][] = 'block-'. $variables['block']->module;
-  $variables['template_files'][] = 'block-'. $variables['block']->module .'-'. $variables['block']->delta;
+  $variables['template_files'][] = 'block-' . $variables['block']->region;
+  $variables['template_files'][] = 'block-' . $variables['block']->module;
+  $variables['template_files'][] = 'block-' . $variables['block']->module . '-' . $variables['block']->delta;
 }
 

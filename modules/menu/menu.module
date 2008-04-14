@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.160 2008/04/10 10:28:22 dries Exp $
+// $Id: menu.module,v 1.161 2008/04/14 17:48:37 dries Exp $
 
 /**
  * @file
@@ -18,18 +18,18 @@ define('MENU_MAX_MENU_NAME_LENGTH_UI', 27);
 function menu_help($path, $arg) {
   switch ($path) {
     case 'admin/help#menu':
-      $output = '<p>'. t("The menu module provides an interface to control and customize Drupal's powerful menu system. Menus are a hierarchical collection of links, or menu items, used to navigate a website, and are positioned and displayed using Drupal's flexible block system. By default, three menus are created during installation: <em>Navigation</em>, <em>Primary links</em>, and <em>Secondary links</em>. The <em>Navigation</em> menu contains most links necessary for working with and navigating your site, and is often displayed in either the left or right sidebar. Most Drupal themes also provide support for <em>Primary links</em> and <em>Secondary links</em>, by displaying them in either the header or footer of each page. By default, <em>Primary links</em> and <em>Secondary links</em> contain no menu items but may be configured to contain custom menu items specific to your site.") .'</p>';
-      $output .= '<p>'. t('The <a href="@menu">menus page</a> displays all menus currently available on your site. Select a menu from this list to add or edit a menu item, or to rearrange items within the menu. Create new menus using the <a href="@add-menu">add menu page</a> (the block containing a new menu must also be enabled on the <a href="@blocks">blocks administration page</a>).', array('@menu' => url('admin/build/menu'), '@add-menu' => url('admin/build/menu/add'), '@blocks' => url('admin/build/block'))) .'</p>';
-      $output .= '<p>'. t('For more information, see the online handbook entry for <a href="@menu">Menu module</a>.', array('@menu' => 'http://drupal.org/handbook/modules/menu/')) .'</p>';
+      $output = '<p>' . t("The menu module provides an interface to control and customize Drupal's powerful menu system. Menus are a hierarchical collection of links, or menu items, used to navigate a website, and are positioned and displayed using Drupal's flexible block system. By default, three menus are created during installation: <em>Navigation</em>, <em>Primary links</em>, and <em>Secondary links</em>. The <em>Navigation</em> menu contains most links necessary for working with and navigating your site, and is often displayed in either the left or right sidebar. Most Drupal themes also provide support for <em>Primary links</em> and <em>Secondary links</em>, by displaying them in either the header or footer of each page. By default, <em>Primary links</em> and <em>Secondary links</em> contain no menu items but may be configured to contain custom menu items specific to your site.") . '</p>';
+      $output .= '<p>' . t('The <a href="@menu">menus page</a> displays all menus currently available on your site. Select a menu from this list to add or edit a menu item, or to rearrange items within the menu. Create new menus using the <a href="@add-menu">add menu page</a> (the block containing a new menu must also be enabled on the <a href="@blocks">blocks administration page</a>).', array('@menu' => url('admin/build/menu'), '@add-menu' => url('admin/build/menu/add'), '@blocks' => url('admin/build/block'))) . '</p>';
+      $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@menu">Menu module</a>.', array('@menu' => 'http://drupal.org/handbook/modules/menu/')) . '</p>';
       return $output;
     case 'admin/build/menu':
-      return '<p>'. t('Menus are a collection of links (menu items) used to navigate a website. The menus currently available on your site are displayed below. Select a menu from this list to manage its menu items.') .'</p>';
+      return '<p>' . t('Menus are a collection of links (menu items) used to navigate a website. The menus currently available on your site are displayed below. Select a menu from this list to manage its menu items.') . '</p>';
     case 'admin/build/menu/add':
-      return '<p>'. t('Enter the name for your new menu. Remember to enable the newly created block in the <a href="@blocks">blocks administration page</a>.', array('@blocks' => url('admin/build/block'))) .'</p>';
+      return '<p>' . t('Enter the name for your new menu. Remember to enable the newly created block in the <a href="@blocks">blocks administration page</a>.', array('@blocks' => url('admin/build/block'))) . '</p>';
     case 'admin/build/menu-customize/%':
-      return '<p>'. t('To rearrange menu items, grab a drag-and-drop handle under the <em>Menu item</em> column and drag the items (or group of items) to a new location in the list. (Grab a handle by clicking and holding the mouse while hovering over a handle icon.) Remember that your changes will not be saved until you click the <em>Save configuration</em> button at the bottom of the page.') .'<p>';
+      return '<p>' . t('To rearrange menu items, grab a drag-and-drop handle under the <em>Menu item</em> column and drag the items (or group of items) to a new location in the list. (Grab a handle by clicking and holding the mouse while hovering over a handle icon.) Remember that your changes will not be saved until you click the <em>Save configuration</em> button at the bottom of the page.') . '<p>';
     case 'admin/build/menu/item/add':
-      return '<p>'. t('Enter the title and path for your new menu item.') .'</p>';
+      return '<p>' . t('Enter the title and path for your new menu item.') . '</p>';
   }
 }
 
@@ -164,7 +164,7 @@ function menu_enable() {
   while ($menu = db_fetch_array($result)) {
     $link['mlid'] = 0;
     $link['link_title'] = $menu['title'];
-    $link['link_path'] = 'admin/build/menu-customize/'. $menu['menu_name'];
+    $link['link_path'] = 'admin/build/menu-customize/' . $menu['menu_name'];
     if (!db_result(db_query("SELECT mlid FROM {menu_links} WHERE link_path = '%s' AND plid = %d", $link['link_path'], $link['plid']))) {
       menu_link_save($link);
     }
@@ -216,7 +216,7 @@ function menu_parent_options($menus, $item) {
 
   foreach ($menus as $menu_name => $title) {
     $tree = menu_tree_all_data($menu_name, NULL);
-    $options[$menu_name .':0'] = '<'. $title .'>';
+    $options[$menu_name . ':0'] = '<' . $title . '>';
     _menu_parents_recurse($tree, $menu_name, '--', $options, $item['mlid'], $limit);
   }
   return $options;
@@ -232,13 +232,13 @@ function _menu_parents_recurse($tree, $menu_name, $indent, &$options, $exclude, 
       break;
     }
     if ($data['link']['mlid'] != $exclude && $data['link']['hidden'] >= 0) {
-      $title = $indent .' '. truncate_utf8($data['link']['title'], 30, TRUE, FALSE);
+      $title = $indent . ' ' . truncate_utf8($data['link']['title'], 30, TRUE, FALSE);
       if ($data['link']['hidden']) {
-        $title .= ' ('. t('disabled') .')';
+        $title .= ' (' . t('disabled') . ')';
       }
-      $options[$menu_name .':'. $data['link']['mlid']] = $title;
+      $options[$menu_name . ':' . $data['link']['mlid']] = $title;
       if ($data['below']) {
-        _menu_parents_recurse($data['below'], $menu_name, $indent .'--', $options, $exclude, $depth_limit);
+        _menu_parents_recurse($data['below'], $menu_name, $indent . '--', $options, $exclude, $depth_limit);
       }
     }
   }
@@ -351,7 +351,7 @@ function _menu_parent_depth_limit($item) {
  * Implementation of hook_form_alter(). Adds menu item fields to the node form.
  */
 function menu_form_alter(&$form, $form_state, $form_id) {
-  if (isset($form['#node']) && $form['#node']->type .'_node_form' == $form_id) {
+  if (isset($form['#node']) && $form['#node']->type . '_node_form' == $form_id) {
     // Note - doing this to make sure the delete checkbox stays in the form.
     $form['#cache'] = TRUE;
 
@@ -391,7 +391,7 @@ function menu_form_alter(&$form, $form_state, $form_id) {
     );
     // Generate a list of possible parents (not including this item or descendants).
     $options = menu_parent_options(menu_get_menus(), $item);
-    $default = $item['menu_name'] .':'. $item['plid'];
+    $default = $item['menu_name'] . ':' . $item['plid'];
     if (!isset($options[$default])) {
       $default = 'primary-links:0';
     }
@@ -436,7 +436,7 @@ function menu_get_menus($all = TRUE) {
   $system_menus = menu_list_system_menus();
   $sql = 'SELECT * FROM {menu_custom}';
   if (!$all) {
-    $sql .= ' WHERE menu_name NOT IN ('. implode(',', array_fill(0, count($system_menus), "'%s'")) .')';
+    $sql .= ' WHERE menu_name NOT IN (' . implode(',', array_fill(0, count($system_menus), "'%s'")) . ')';
   }
   $sql .= ' ORDER BY title';
   $result = db_query($sql, $system_menus);

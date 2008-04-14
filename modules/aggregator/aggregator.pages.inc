@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.pages.inc,v 1.12 2008/01/08 10:35:40 goba Exp $
+// $Id: aggregator.pages.inc,v 1.13 2008/04/14 17:48:34 dries Exp $
 
 /**
  * @file
@@ -13,7 +13,7 @@
  *   The items HTML.
  */
 function aggregator_page_last() {
-  drupal_add_feed(url('aggregator/rss'), variable_get('site_name', 'Drupal') .' '. t('aggregator'));
+  drupal_add_feed(url('aggregator/rss'), variable_get('site_name', 'Drupal') . ' ' . t('aggregator'));
 
   $items = aggregator_feed_items_load('SELECT i.*, f.title AS ftitle, f.link AS flink FROM {aggregator_item} i INNER JOIN {aggregator_feed} f ON i.fid = f.fid ORDER BY i.timestamp DESC, i.iid DESC');
 
@@ -42,7 +42,7 @@ function aggregator_page_source($arg1, $arg2 = NULL) {
 
   // It is safe to include the fid in the query because it's loaded from the
   // database by aggregator_feed_load.
-  $items = aggregator_feed_items_load('SELECT * FROM {aggregator_item} WHERE fid = '. $feed->fid .' ORDER BY timestamp DESC, iid DESC');
+  $items = aggregator_feed_items_load('SELECT * FROM {aggregator_item} WHERE fid = ' . $feed->fid . ' ORDER BY timestamp DESC, iid DESC');
 
   return _aggregator_page_list($items, arg(3), $feed_source);
 }
@@ -65,11 +65,11 @@ function aggregator_page_category($arg1, $arg2 = NULL) {
   // $form_state and $arg2 is $category. Otherwise, $arg1 is $category.
   $category = is_array($arg2) ? $arg2 : $arg1;
 
-  drupal_add_feed(url('aggregator/rss/'. $category['cid']), variable_get('site_name', 'Drupal') .' '. t('aggregator - @title', array('@title' => $category['title'])));
+  drupal_add_feed(url('aggregator/rss/' . $category['cid']), variable_get('site_name', 'Drupal') . ' ' . t('aggregator - @title', array('@title' => $category['title'])));
 
   // It is safe to include the cid in the query because it's loaded from the
   // database by aggregator_category_load.
-  $items = aggregator_feed_items_load('SELECT i.*, f.title AS ftitle, f.link AS flink FROM {aggregator_category_item} c LEFT JOIN {aggregator_item} i ON c.iid = i.iid LEFT JOIN {aggregator_feed} f ON i.fid = f.fid WHERE cid = '. $category['cid'] .' ORDER BY timestamp DESC, i.iid DESC');
+  $items = aggregator_feed_items_load('SELECT i.*, f.title AS ftitle, f.link AS flink FROM {aggregator_category_item} c LEFT JOIN {aggregator_item} i ON c.iid = i.iid LEFT JOIN {aggregator_feed} f ON i.fid = f.fid WHERE cid = ' . $category['cid'] . ' ORDER BY timestamp DESC, i.iid DESC');
 
   return _aggregator_page_list($items, arg(3));
 }
@@ -267,7 +267,7 @@ function template_preprocess_aggregator_item(&$variables) {
 
   $variables['categories'] = array();
   foreach ($item->categories as $category) {
-    $variables['categories'][$category->cid] = l($category->title, 'aggregator/categories/'. $category->cid);
+    $variables['categories'][$category->cid] = l($category->title, 'aggregator/categories/' . $category->cid);
   }
 }
 
@@ -287,7 +287,7 @@ function aggregator_page_sources() {
         $summary_items[] = theme('aggregator_summary_item', $item);
       }
     }
-    $feed->url = url('aggregator/sources/'. $feed->fid);
+    $feed->url = url('aggregator/sources/' . $feed->fid);
     $output .= theme('aggregator_summary_items', $summary_items, $feed);
   }
   $output .= theme('feed_icon', url('aggregator/opml'), t('OPML feed'));
@@ -310,7 +310,7 @@ function aggregator_page_categories() {
         $summary_items[] = theme('aggregator_summary_item', $item);
       }
     }
-    $category->url = url('aggregator/categories/'. $category->cid);
+    $category->url = url('aggregator/categories/' . $category->cid);
     $output .= theme('aggregator_summary_items', $summary_items, $category);
   }
 
@@ -361,7 +361,7 @@ function theme_aggregator_page_rss($feeds, $category = NULL) {
       case 'teaser':
         $teaser = node_teaser($feed->description);
         if ($teaser != $feed->description) {
-          $teaser .= '<p><a href="'. check_url($feed->link) .'">'. t('read more') ."</a></p>\n";
+          $teaser .= '<p><a href="' . check_url($feed->link) . '">' . t('read more') . "</a></p>\n";
         }
         $feed->description = $teaser;
         break;
@@ -369,11 +369,11 @@ function theme_aggregator_page_rss($feeds, $category = NULL) {
         $feed->description = '';
         break;
     }
-    $items .= format_rss_item($feed->ftitle .': '. $feed->title, $feed->link, $feed->description, array('pubDate' => date('r', $feed->timestamp)));
+    $items .= format_rss_item($feed->ftitle . ': ' . $feed->title, $feed->link, $feed->description, array('pubDate' => date('r', $feed->timestamp)));
   }
 
   $site_name = variable_get('site_name', 'Drupal');
-  $url = url((isset($category) ? 'aggregator/categories/'. $category->cid : 'aggregator'), array('absolute' => TRUE));
+  $url = url((isset($category) ? 'aggregator/categories/' . $category->cid : 'aggregator'), array('absolute' => TRUE));
   $description = isset($category) ? t('@site_name - aggregated feeds in category @title', array('@site_name' => $site_name, '@title' => $category->title)) : t('@site_name - aggregated feeds', array('@site_name' => $site_name));
 
   $output = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
@@ -422,12 +422,12 @@ function theme_aggregator_page_opml($feeds) {
   $output = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
   $output .= "<opml version=\"1.1\">\n";
   $output .= "<head>\n";
-  $output .= '<title>'. check_plain(variable_get('site_name', 'Drupal')) ."</title>\n";
-  $output .= '<dateModified>'. gmdate('r') ."</dateModified>\n";
+  $output .= '<title>' . check_plain(variable_get('site_name', 'Drupal')) . "</title>\n";
+  $output .= '<dateModified>' . gmdate('r') . "</dateModified>\n";
   $output .= "</head>\n";
   $output .= "<body>\n";
   foreach ($feeds as $feed) {
-    $output .= '<outline text="'. check_plain($feed->title) .'" xmlUrl="'. check_url($feed->url) ."\" />\n";
+    $output .= '<outline text="' . check_plain($feed->title) . '" xmlUrl="' . check_url($feed->url) . "\" />\n";
   }
   $output .= "</body>\n";
   $output .= "</opml>\n";

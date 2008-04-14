@@ -1,5 +1,5 @@
 <?php
-// $Id: block.tpl.php,v 1.5 2008/04/10 10:28:23 dries Exp $
+// $Id: block.tpl.php,v 1.6 2008/04/14 17:48:41 dries Exp $
 
 /**
  * @file block.tpl.php
@@ -26,7 +26,7 @@
  * @see template_preprocess_block()
  */
 ?>
-<div id="block-<?php print $block->module .'-'. $block->delta; ?>" class="block block-<?php print $block->module ?>">
+<div id="block-<?php print $block->module . '-' . $block->delta; ?>" class="block block-<?php print $block->module ?>">
 <?php if ($block->subject): ?>
   <h2><?php print $block->subject ?></h2>
 <?php endif;?>

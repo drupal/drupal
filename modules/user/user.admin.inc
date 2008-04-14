@@ -1,5 +1,5 @@
 <?php
-// $Id: user.admin.inc,v 1.20 2008/04/08 22:50:55 dries Exp $
+// $Id: user.admin.inc,v 1.21 2008/04/14 17:48:43 dries Exp $
 
 /**
  * @file
@@ -139,9 +139,9 @@ function user_admin_account() {
     t('Operations')
   );
 
-  $sql = 'SELECT DISTINCT u.uid, u.name, u.status, u.created, u.access FROM {users} u LEFT JOIN {users_roles} ur ON u.uid = ur.uid '. $filter['join'] .' WHERE u.uid != 0 '. $filter['where'];
+  $sql = 'SELECT DISTINCT u.uid, u.name, u.status, u.created, u.access FROM {users} u LEFT JOIN {users_roles} ur ON u.uid = ur.uid ' . $filter['join'] . ' WHERE u.uid != 0 ' . $filter['where'];
   $sql .= tablesort_sql($header);
-  $query_count = 'SELECT COUNT(DISTINCT u.uid) FROM {users} u LEFT JOIN {users_roles} ur ON u.uid = ur.uid '. $filter['join'] .' WHERE u.uid != 0 '. $filter['where'];
+  $query_count = 'SELECT COUNT(DISTINCT u.uid) FROM {users} u LEFT JOIN {users_roles} ur ON u.uid = ur.uid ' . $filter['join'] . ' WHERE u.uid != 0 ' . $filter['where'];
   $result = pager_query($sql, 50, 0, $query_count, $filter['args']);
 
   $form['options'] = array(
@@ -243,14 +243,14 @@ function user_admin_settings() {
   );
   // These email tokens are shared for all settings, so just define
   // the list once to help ensure they stay in sync.
-  $email_token_help = t('Available variables are:') .' !username, !site, !password, !uri, !uri_brief, !mailto, !date, !login_uri, !edit_uri, !login_url.';
+  $email_token_help = t('Available variables are:') . ' !username, !site, !password, !uri, !uri_brief, !mailto, !date, !login_uri, !edit_uri, !login_url.';
 
   $form['email']['admin_created'] = array(
     '#type' => 'fieldset',
     '#title' => t('Welcome, new user created by administrator'),
     '#collapsible' => TRUE,
     '#collapsed' => (variable_get('user_register', 1) != 0),
-    '#description' => t('Customize welcome e-mail messages sent to new member accounts created by an administrator.') .' '. $email_token_help,
+    '#description' => t('Customize welcome e-mail messages sent to new member accounts created by an administrator.') . ' ' . $email_token_help,
   );
   $form['email']['admin_created']['user_mail_register_admin_created_subject'] = array(
     '#type' => 'textfield',
@@ -270,7 +270,7 @@ function user_admin_settings() {
     '#title' => t('Welcome, no approval required'),
     '#collapsible' => TRUE,
     '#collapsed' => (variable_get('user_register', 1) != 1),
-    '#description' => t('Customize welcome e-mail messages sent to new members upon registering, when no administrator approval is required.') .' '. $email_token_help
+    '#description' => t('Customize welcome e-mail messages sent to new members upon registering, when no administrator approval is required.') . ' ' . $email_token_help
   );
   $form['email']['no_approval_required']['user_mail_register_no_approval_required_subject'] = array(
     '#type' => 'textfield',
@@ -290,7 +290,7 @@ function user_admin_settings() {
     '#title' => t('Welcome, awaiting administrator approval'),
     '#collapsible' => TRUE,
     '#collapsed' => (variable_get('user_register', 1) != 2),
-    '#description' => t('Customize welcome e-mail messages sent to new members upon registering, when administrative approval is required.') .' '. $email_token_help,
+    '#description' => t('Customize welcome e-mail messages sent to new members upon registering, when administrative approval is required.') . ' ' . $email_token_help,
   );
   $form['email']['pending_approval']['user_mail_register_pending_approval_subject'] = array(
     '#type' => 'textfield',
@@ -310,7 +310,7 @@ function user_admin_settings() {
     '#title' => t('Password recovery email'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
-    '#description' => t('Customize e-mail messages sent to users who request a new password.') .' '. $email_token_help,
+    '#description' => t('Customize e-mail messages sent to users who request a new password.') . ' ' . $email_token_help,
   );
   $form['email']['password_reset']['user_mail_password_reset_subject'] = array(
     '#type' => 'textfield',
@@ -330,7 +330,7 @@ function user_admin_settings() {
     '#title' => t('Account activation email'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
-    '#description' => t('Enable and customize e-mail messages sent to users upon account activation (when an administrator activates an account of a user who has already registered, on a site where administrative approval is required).') .' '. $email_token_help,
+    '#description' => t('Enable and customize e-mail messages sent to users upon account activation (when an administrator activates an account of a user who has already registered, on a site where administrative approval is required).') . ' ' . $email_token_help,
   );
   $form['email']['activated']['user_mail_status_activated_notify'] = array(
     '#type' => 'checkbox',
@@ -355,7 +355,7 @@ function user_admin_settings() {
     '#title' => t('Account blocked email'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
-    '#description' => t('Enable and customize e-mail messages sent to users when their accounts are blocked.') .' '. $email_token_help,
+    '#description' => t('Enable and customize e-mail messages sent to users when their accounts are blocked.') . ' ' . $email_token_help,
   );
   $form['email']['blocked']['user_mail_status_blocked_notify'] = array(
     '#type' => 'checkbox',
@@ -380,7 +380,7 @@ function user_admin_settings() {
     '#title' => t('Account deleted email'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
-    '#description' => t('Enable and customize e-mail messages sent to users when their accounts are deleted.') .' '. $email_token_help,
+    '#description' => t('Enable and customize e-mail messages sent to users when their accounts are deleted.') . ' ' . $email_token_help,
   );
   $form['email']['deleted']['user_mail_status_deleted_notify'] = array(
     '#type' => 'checkbox',
@@ -431,7 +431,7 @@ function user_admin_settings() {
     '#prefix' => '<div class="user-admin-picture-radios">',
     '#suffix' => '</div>',
   );
-  drupal_add_js(drupal_get_path('module', 'user') .'/user.js');
+  drupal_add_js(drupal_get_path('module', 'user') . '/user.js');
   // If JS is enabled, and the radio is defaulting to off, hide all
   // the settings on page load via .css using the js-hide class so
   // that there's no flicker.
@@ -440,7 +440,7 @@ function user_admin_settings() {
     $css_class .= ' js-hide';
   }
   $form['pictures']['settings'] = array(
-    '#prefix' => '<div class="'. $css_class .'">',
+    '#prefix' => '<div class="' . $css_class . '">',
     '#suffix' => '</div>',
   );
   $form['pictures']['settings']['user_picture_path'] = array(
@@ -449,7 +449,7 @@ function user_admin_settings() {
     '#default_value' => variable_get('user_picture_path', 'pictures'),
     '#size' => 30,
     '#maxlength' => 255,
-    '#description' => t('Subdirectory in the directory %dir where pictures will be stored.', array('%dir' => file_directory_path() .'/')),
+    '#description' => t('Subdirectory in the directory %dir where pictures will be stored.', array('%dir' => file_directory_path() . '/')),
   );
   $form['pictures']['settings']['user_picture_default'] = array(
     '#type' => 'textfield',
@@ -505,7 +505,7 @@ function user_admin_perm($form_state, $rid = NULL) {
   // always search for "$perm," to make sure we do not confuse
   // permissions that are substrings of each other.
   while ($role = db_fetch_object($result)) {
-    $role_permissions[$role->rid] = $role->perm .',';
+    $role_permissions[$role->rid] = $role->perm . ',';
   }
 
   // Retrieve role names for columns.
@@ -537,7 +537,7 @@ function user_admin_perm($form_state, $rid = NULL) {
         );
         foreach ($role_names as $rid => $name) {
           // Builds arrays for checked boxes for each role
-          if (strpos($role_permissions[$rid], $perm .',') !== FALSE) {
+          if (strpos($role_permissions[$rid], $perm . ',') !== FALSE) {
             $status[$rid][] = $perm;
           }
         }
@@ -589,7 +589,7 @@ function theme_user_admin_perm($form) {
       $row = array();
       // Module name
       if (is_numeric($key)) {
-        $row[] = array('data' => t('@module module', array('@module' => drupal_render($form['permission'][$key]))), 'class' => 'module', 'id' => 'module-'. $form['permission'][$key]['#value'], 'colspan' => count($form['role_names']) + 1);
+        $row[] = array('data' => t('@module module', array('@module' => drupal_render($form['permission'][$key]))), 'class' => 'module', 'id' => 'module-' . $form['permission'][$key]['#value'], 'colspan' => count($form['role_names']) + 1);
       }
       else {
         // Permission row.
@@ -599,7 +599,7 @@ function theme_user_admin_perm($form) {
         );
         foreach (element_children($form['checkboxes']) as $rid) {
           if (is_array($form['checkboxes'][$rid])) {
-            $row[] = array('data' => drupal_render($form['checkboxes'][$rid][$key]), 'class' => 'checkbox', 'title' => $roles[$rid] .' : '. t($key));
+            $row[] = array('data' => drupal_render($form['checkboxes'][$rid][$key]), 'class' => 'checkbox', 'title' => $roles[$rid] . ' : ' . t($key));
           }
         }
       }
@@ -764,9 +764,9 @@ function theme_user_admin_account($form) {
 function theme_user_admin_new_role($form) {
   $header = array(t('Name'), array('data' => t('Operations'), 'colspan' => 2));
   foreach (user_roles() as $rid => $name) {
-    $edit_permissions = l(t('edit permissions'), 'admin/user/permissions/'. $rid);
+    $edit_permissions = l(t('edit permissions'), 'admin/user/permissions/' . $rid);
     if (!in_array($rid, array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID))) {
-      $rows[] = array($name, l(t('edit role'), 'admin/user/roles/edit/'. $rid), $edit_permissions);
+      $rows[] = array($name, l(t('edit role'), 'admin/user/roles/edit/' . $rid), $edit_permissions);
     }
     else {
       $rows[] = array($name, t('locked'), $edit_permissions);
@@ -802,17 +802,17 @@ function theme_user_filters($form) {
   $output = '<ul class="clear-block">';
   if (!empty($form['current'])) {
     foreach (element_children($form['current']) as $key) {
-      $output .= '<li>'. drupal_render($form['current'][$key]) .'</li>';
+      $output .= '<li>' . drupal_render($form['current'][$key]) . '</li>';
     }
   }
 
-  $output .= '<li><dl class="multiselect">'. (!empty($form['current']) ? '<dt><em>'. t('and') .'</em> '. t('where') .'</dt>' : '') .'<dd class="a">';
+  $output .= '<li><dl class="multiselect">' . (!empty($form['current']) ? '<dt><em>' . t('and') . '</em> ' . t('where') . '</dt>' : '') . '<dd class="a">';
   foreach (element_children($form['filter']) as $key) {
     $output .= drupal_render($form['filter'][$key]);
   }
   $output .= '</dd>';
 
-  $output .= '<dt>'. t('is') .'</dt><dd class="b">';
+  $output .= '<dt>' . t('is') . '</dt><dd class="b">';
 
   foreach (element_children($form['status']) as $key) {
     $output .= drupal_render($form['status'][$key]);
@@ -820,7 +820,7 @@ function theme_user_filters($form) {
   $output .= '</dd>';
 
   $output .= '</dl>';
-  $output .= '<div class="container-inline" id="user-admin-buttons">'. drupal_render($form['buttons']) .'</div>';
+  $output .= '<div class="container-inline" id="user-admin-buttons">' . drupal_render($form['buttons']) . '</div>';
   $output .= '</li></ul>';
 
   return $output;

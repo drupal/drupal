@@ -1,5 +1,5 @@
 <?php
-// $Id: throttle.module,v 1.83 2007/12/14 18:08:49 goba Exp $
+// $Id: throttle.module,v 1.84 2008/04/14 17:48:42 dries Exp $
 
 /**
  * @file
@@ -101,7 +101,7 @@ function throttle_exit() {
       if ($throttle) {
         variable_set('throttle_level', 0);
         // Note: unorthodox format_plural() usage due to Gettext plural limitations.
-        $message = format_plural($users, '1 user', '@count users') .', ';
+        $message = format_plural($users, '1 user', '@count users') . ', ';
         $message .= format_plural($guests, '1 guest accessing site; throttle disabled', '@count guests accessing site; throttle disabled');
       }
     }
@@ -118,11 +118,11 @@ function throttle_exit() {
 function throttle_help($path, $arg) {
   switch ($path) {
     case 'admin/help#throttle':
-      $output = '<p>'. t('The throttle module provides a congestion control mechanism that automatically adjusts to a surge in incoming traffic. If your site is referenced by a popular website, or experiences a "Denial of Service" (DoS) attack, your webserver might become overwhelmed. The throttle mechanism is utilized by modules to temporarily disable CPU-intensive functionality, increasing performance. For instance, via the throttle module, modules may choose to disable resource-intensive blocks or the code within the site theme may temporarily disable user pictures in posts.') .'</p>';
-      $output .= '<p>'. t('The congestion control throttle can be automatically enabled when the number of anonymous or authenticated users currently visiting the site exceeds a specified threshold.') .'</p>';
-      $output .= '<p>'. t('For more information, see the online handbook entry for <a href="@throttle">Throttle module</a>.', array('@throttle' => 'http://drupal.org/handbook/modules/throttle/')) .'</p>';
+      $output = '<p>' . t('The throttle module provides a congestion control mechanism that automatically adjusts to a surge in incoming traffic. If your site is referenced by a popular website, or experiences a "Denial of Service" (DoS) attack, your webserver might become overwhelmed. The throttle mechanism is utilized by modules to temporarily disable CPU-intensive functionality, increasing performance. For instance, via the throttle module, modules may choose to disable resource-intensive blocks or the code within the site theme may temporarily disable user pictures in posts.') . '</p>';
+      $output .= '<p>' . t('The congestion control throttle can be automatically enabled when the number of anonymous or authenticated users currently visiting the site exceeds a specified threshold.') . '</p>';
+      $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@throttle">Throttle module</a>.', array('@throttle' => 'http://drupal.org/handbook/modules/throttle/')) . '</p>';
       return $output;
     case 'admin/settings/throttle':
-      return '<p>'. t('The throttle module provides a congestion control mechanism that automatically adjusts to a surge in incoming traffic. If your site is referenced by a popular website, or experiences a "Denial of Service" (DoS) attack, your webserver might become overwhelmed. The throttle mechanism is utilized by modules to temporarily disable CPU-intensive functionality, increasing performance.') .'</p>';
+      return '<p>' . t('The throttle module provides a congestion control mechanism that automatically adjusts to a surge in incoming traffic. If your site is referenced by a popular website, or experiences a "Denial of Service" (DoS) attack, your webserver might become overwhelmed. The throttle mechanism is utilized by modules to temporarily disable CPU-intensive functionality, increasing performance.') . '</p>';
   }
 }

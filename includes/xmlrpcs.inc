@@ -1,5 +1,5 @@
 <?php
-// $Id: xmlrpcs.inc,v 1.24 2007/12/31 08:54:36 dries Exp $
+// $Id: xmlrpcs.inc,v 1.25 2008/04/14 17:48:33 dries Exp $
 
 /**
  * The main entry point for XML-RPC requests.
@@ -77,9 +77,9 @@ function xmlrpc_server($callbacks) {
 <methodResponse>
   <params>
   <param>
-    <value>'.
+    <value>' .
     xmlrpc_value_get_xml($r)
-    .'</value>
+    . '</value>
   </param>
   </params>
 </methodResponse>
@@ -105,11 +105,11 @@ function xmlrpc_server_error($error, $message = FALSE) {
 }
 
 function xmlrpc_server_output($xml) {
-  $xml = '<?xml version="1.0"?>'."\n". $xml;
+  $xml = '<?xml version="1.0"?>' . "\n" . $xml;
   header('Connection: close');
-  header('Content-Length: '. strlen($xml));
+  header('Content-Length: ' . strlen($xml));
   header('Content-Type: text/xml');
-  header('Date: '. date('r'));
+  header('Date: ' . date('r'));
   echo $xml;
   exit;
 }

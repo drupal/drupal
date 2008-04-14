@@ -1,5 +1,5 @@
 <?php
-// $Id: image.gd.inc,v 1.5 2008/02/06 19:38:26 dries Exp $
+// $Id: image.gd.inc,v 1.6 2008/04/14 17:48:33 dries Exp $
 
 /**
  * @file
@@ -183,7 +183,7 @@ function image_gd_crop($source, $destination, $x, $y, $width, $height) {
  */
 function image_gd_open($file, $extension) {
   $extension = str_replace('jpg', 'jpeg', $extension);
-  $open_func = 'imageCreateFrom'. $extension;
+  $open_func = 'imageCreateFrom' . $extension;
   if (!function_exists($open_func)) {
     return FALSE;
   }
@@ -204,7 +204,7 @@ function image_gd_open($file, $extension) {
  */
 function image_gd_close($res, $destination, $extension) {
   $extension = str_replace('jpg', 'jpeg', $extension);
-  $close_func = 'image'. $extension;
+  $close_func = 'image' . $extension;
   if (!function_exists($close_func)) {
     return FALSE;
   }

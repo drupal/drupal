@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.21 2008/03/11 08:17:56 dries Exp $
+// $Id: node.admin.inc,v 1.22 2008/04/14 17:48:38 dries Exp $
 
 /**
  * @file
@@ -14,8 +14,8 @@ function node_configure() {
   // in the {node_access} table, or if there are modules that
   // implement hook_node_grants().
   if (db_result(db_query('SELECT COUNT(*) FROM {node_access}')) != 1 || count(module_implements('node_grants')) > 0) {
-    $status = '<p>'. t('If the site is experiencing problems with permissions to content, you may have to rebuild the permissions cache. Possible causes for permission problems are disabling modules or configuration changes to permissions. Rebuilding will remove all privileges to posts, and replace them with permissions based on the current modules and settings.') .'</p>';
-    $status .= '<p>'. t('Rebuilding may take some time if there is a lot of content or complex permission settings. After rebuilding has completed posts will automatically use the new permissions.') .'</p>';
+    $status = '<p>' . t('If the site is experiencing problems with permissions to content, you may have to rebuild the permissions cache. Possible causes for permission problems are disabling modules or configuration changes to permissions. Rebuilding will remove all privileges to posts, and replace them with permissions based on the current modules and settings.') . '</p>';
+    $status .= '<p>' . t('Rebuilding may take some time if there is a lot of content or complex permission settings. After rebuilding has completed posts will automatically use the new permissions.') . '</p>';
 
     $form['access'] = array(
       '#type' => 'fieldset',
@@ -48,7 +48,7 @@ function node_configure() {
       1800 => t('1800 characters'),
       2000 => t('2000 characters'),
     ),
-    '#description' => t("The maximum number of characters used in the trimmed version of a post. Drupal will use this setting to determine at which offset long posts should be trimmed. The trimmed version of a post is typically used as a teaser when displaying the post on the main page, in XML feeds, etc. To disable teasers, set to 'Unlimited'. Note that this setting will only affect new or updated content and will not affect existing teasers.")
+    '#description' => t("The maximum number of characters used in the trimmed version of a post. Drupal will use this setting to determine at which offset long posts should be trimmed. The trimmed version of a post is typically used as a teaser when displaying the post on the main page, in XML feeds, etc. To disable teasers, set to 'Unlimited' . Note that this setting will only affect new or updated content and will not affect existing teasers.")
   );
 
   $form['node_preview'] = array(
@@ -186,7 +186,7 @@ function node_build_filter_query() {
       case 'status':
         // Note: no exploitable hole as $key/$value have already been checked when submitted
         list($key, $value) = explode('-', $value, 2);
-        $where[] = 'n.'. $key .' = %d';
+        $where[] = 'n.' . $key . ' = %d';
         break;
       case 'category':
         $table = "tn$index";
@@ -202,7 +202,7 @@ function node_build_filter_query() {
     }
     $args[] = $value;
   }
-  $where = count($where) ? 'WHERE '. implode(' AND ', $where) : '';
+  $where = count($where) ? 'WHERE ' . implode(' AND ', $where) : '';
 
   return array('where' => $where, 'join' => $join, 'args' => $args);
 }
@@ -288,17 +288,17 @@ function theme_node_filters($form) {
   $output .= '<ul class="clear-block">';
   if (!empty($form['current'])) {
     foreach (element_children($form['current']) as $key) {
-      $output .= '<li>'. drupal_render($form['current'][$key]) .'</li>';
+      $output .= '<li>' . drupal_render($form['current'][$key]) . '</li>';
     }
   }
 
-  $output .= '<li><dl class="multiselect">'. (!empty($form['current']) ? '<dt><em>'. t('and') .'</em> '. t('where') .'</dt>' : '') .'<dd class="a">';
+  $output .= '<li><dl class="multiselect">' . (!empty($form['current']) ? '<dt><em>' . t('and') . '</em> ' . t('where') . '</dt>' : '') . '<dd class="a">';
   foreach (element_children($form['filter']) as $key) {
     $output .= drupal_render($form['filter'][$key]);
   }
   $output .= '</dd>';
 
-  $output .= '<dt>'. t('is') .'</dt><dd class="b">';
+  $output .= '<dt>' . t('is') . '</dt><dd class="b">';
 
   foreach (element_children($form['status']) as $key) {
     $output .= drupal_render($form['status'][$key]);
@@ -306,7 +306,7 @@ function theme_node_filters($form) {
   $output .= '</dd>';
 
   $output .= '</dl>';
-  $output .= '<div class="container-inline" id="node-admin-buttons">'. drupal_render($form['buttons']) .'</div>';
+  $output .= '<div class="container-inline" id="node-admin-buttons">' . drupal_render($form['buttons']) . '</div>';
   $output .= '</li></ul>';
 
   return $output;
@@ -370,7 +370,7 @@ function node_mass_update($nodes, $updates) {
       'error_message' => t('The update has encountered an error.'),
       // The operations do not live in the .module file, so we need to
       // tell the batch engine which file to load before calling them.
-      'file' => drupal_get_path('module', 'node') .'/node.admin.inc',
+      'file' => drupal_get_path('module', 'node') . '/node.admin.inc',
     );
     batch_set($batch);
   }
@@ -412,7 +412,7 @@ function _node_mass_update_batch_process($nodes, $updates, &$context) {
     $node = _node_mass_update_helper($nid, $updates);
 
     // Store result for post-processing in the finished callback.
-    $context['results'][] = l($node->title, 'node/'. $node->nid);
+    $context['results'][] = l($node->title, 'node/' . $node->nid);
 
     // Update our progress information.
     $context['sandbox']['progress']++;
@@ -462,7 +462,7 @@ function node_admin_nodes() {
 
   $filter = node_build_filter_query();
 
-  $result = pager_query(db_rewrite_sql('SELECT n.*, u.name FROM {node} n '. $filter['join'] .' INNER JOIN {users} u ON n.uid = u.uid '. $filter['where'] .' ORDER BY n.changed DESC'), 50, 0, NULL, $filter['args']);
+  $result = pager_query(db_rewrite_sql('SELECT n.*, u.name FROM {node} n ' . $filter['join'] . ' INNER JOIN {users} u ON n.uid = u.uid ' . $filter['where'] . ' ORDER BY n.changed DESC'), 50, 0, NULL, $filter['args']);
 
   // Enable language column if locale is enabled or if we have any node with language
   $count = db_result(db_query("SELECT COUNT(*) FROM {node} n WHERE language != ''"));
@@ -495,14 +495,14 @@ function node_admin_nodes() {
   while ($node = db_fetch_object($result)) {
     $nodes[$node->nid] = '';
     $options = empty($node->language) ? array() : array('language' => $languages[$node->language]);
-    $form['title'][$node->nid] = array('#value' => l($node->title, 'node/'. $node->nid, $options) .' '. theme('mark', node_mark($node->nid, $node->changed)));
+    $form['title'][$node->nid] = array('#value' => l($node->title, 'node/' . $node->nid, $options) . ' ' . theme('mark', node_mark($node->nid, $node->changed)));
     $form['name'][$node->nid] =  array('#value' => check_plain(node_get_types('name', $node)));
     $form['username'][$node->nid] = array('#value' => theme('username', $node));
     $form['status'][$node->nid] =  array('#value' => ($node->status ? t('published') : t('not published')));
     if ($multilanguage) {
       $form['language'][$node->nid] = array('#value' => empty($node->language) ? t('Language neutral') : t($languages[$node->language]->name));
     }
-    $form['operations'][$node->nid] = array('#value' => l(t('edit'), 'node/'. $node->nid .'/edit', array('query' => $destination)));
+    $form['operations'][$node->nid] = array('#value' => l(t('edit'), 'node/' . $node->nid . '/edit', array('query' => $destination)));
   }
   $form['nodes'] = array('#type' => 'checkboxes', '#options' => $nodes);
   $form['pager'] = array('#value' => theme('pager', NULL, 50, 0));
@@ -611,7 +611,7 @@ function node_multiple_delete_confirm(&$form_state, $nodes) {
       '#type' => 'hidden',
       '#value' => $nid,
       '#prefix' => '<li>',
-      '#suffix' => check_plain($title) ."</li>\n",
+      '#suffix' => check_plain($title) . "</li>\n",
     );
   }
   $form['operation'] = array('#type' => 'hidden', '#value' => 'delete');

@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.inc,v 1.9 2008/02/06 19:38:27 dries Exp $
+// $Id: openid.inc,v 1.10 2008/04/14 17:48:38 dries Exp $
 
 /**
  * @file
@@ -7,10 +7,10 @@
  */
 
 // Diffie-Hellman Key Exchange Default Value.
-define('OPENID_DH_DEFAULT_MOD', '155172898181473697471232257763715539915724801'.
-       '966915404479707795314057629378541917580651227423698188993727816152646631'.
-       '438561595825688188889951272158842675419950341258706556549803580104870537'.
-       '681476726513255747040765857479291291572334510643245094715007229621094194'.
+define('OPENID_DH_DEFAULT_MOD', '155172898181473697471232257763715539915724801' .
+       '966915404479707795314057629378541917580651227423698188993727816152646631' .
+       '438561595825688188889951272158842675419950341258706556549803580104870537' .
+       '681476726513255747040765857479291291572334510643245094715007229621094194' .
        '349783925984760375594985848253359305585439638443');
 
 // Constants for Diffie-Hellman key exchange computations.
@@ -29,11 +29,11 @@ define('OPENID_NS_1_0', 'http://openid.net/signon/1.0');
 function openid_redirect_http($url, $message) {
   $query = array();
   foreach ($message as $key => $val) {
-    $query[] = $key .'='. urlencode($val);
+    $query[] = $key . '=' . urlencode($val);
   }
 
   $sep = (strpos($url, '?') === FALSE) ? '?' : '&';
-  header('Location: '. $url . $sep . implode('&', $query), TRUE, 302);
+  header('Location: ' . $url . $sep . implode('&', $query), TRUE, 302);
   exit;
 }
 
@@ -41,7 +41,7 @@ function openid_redirect_http($url, $message) {
  * Creates a js auto-submit redirect for (for the 2.x protocol)
  */
 function openid_redirect($url, $message) {
-  $output = '<html><head><title>'. t('OpenID redirect') ."</title></head>\n<body>";
+  $output = '<html><head><title>' . t('OpenID redirect') . "</title></head>\n<body>";
   $output .= drupal_get_form('openid_redirect_form', $url, $message);
   $output .= '<script type="text/javascript">document.getElementById("openid-redirect-form").submit();</script>';
   $output .= "</body></html>\n";
@@ -109,7 +109,7 @@ function _openid_normalize_url($url) {
   $normalized_url = $url;
 
   if (stristr($url, '://') === FALSE) {
-    $normalized_url = 'http://'. $url;
+    $normalized_url = 'http://' . $url;
   }
 
   if (substr_count($normalized_url, '/') < 3) {
@@ -148,7 +148,7 @@ function _openid_encode_message($message) {
       if ($encoded_message != '') {
         $encoded_message .= '&';
       }
-      $encoded_message .= rawurlencode(trim($parts[0])) .'='. rawurlencode(trim($parts[1]));
+      $encoded_message .= rawurlencode(trim($parts[0])) . '=' . rawurlencode(trim($parts[1]));
     }
   }
 
@@ -191,7 +191,7 @@ function _openid_nonce() {
  */
 function _openid_link_href($rel, $html) {
   $rel = preg_quote($rel);
-  preg_match('|<link\s+rel=["\'](.*)'. $rel .'(.*)["\'](.*)/?>|iUs', $html, $matches);
+  preg_match('|<link\s+rel=["\'](.*)' . $rel . '(.*)["\'](.*)/?>|iUs', $html, $matches);
   if (isset($matches[3])) {
     preg_match('|href=["\']([^"]+)["\']|iU', $matches[3], $href);
     return trim($href[1]);
@@ -203,7 +203,7 @@ function _openid_link_href($rel, $html) {
  * Pull the http-equiv attribute out of an html meta element
  */
 function _openid_meta_httpequiv($equiv, $html) {
-  preg_match('|<meta\s+http-equiv=["\']'. $equiv .'["\'](.*)/?>|iUs', $html, $matches);
+  preg_match('|<meta\s+http-equiv=["\']' . $equiv . '["\'](.*)/?>|iUs', $html, $matches);
   if (isset($matches[1])) {
     preg_match('|content=["\']([^"]+)["\']|iUs', $matches[1], $content);
     if (isset($content[1])) {
@@ -226,8 +226,8 @@ function _openid_signature($association, $message_array, $keys_to_sign) {
   $sign_data = array();
 
   foreach ($keys_to_sign as $key) {
-    if (isset($message_array['openid.'. $key])) {
-      $sign_data[$key] = $message_array['openid.'. $key];
+    if (isset($message_array['openid.' . $key])) {
+      $sign_data[$key] = $message_array['openid.' . $key];
     }
   }
 
@@ -356,7 +356,7 @@ function _openid_dh_rand($stop) {
   }
 
   do {
-    $bytes = "\x00". _openid_get_bytes($nbytes);
+    $bytes = "\x00" . _openid_get_bytes($nbytes);
     $n = _openid_dh_binary_to_long($bytes);
     // Keep looping if this value is in the low duplicated range.
   } while (bccomp($n, $duplicate) < 0);

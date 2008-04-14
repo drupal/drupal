@@ -1,5 +1,5 @@
 <?php
-// $Id: actions.inc,v 1.9 2008/02/17 22:15:04 dries Exp $
+// $Id: actions.inc,v 1.10 2008/04/14 17:48:33 dries Exp $
 
 /**
  * @file
@@ -65,8 +65,8 @@ function actions_do($action_ids, $object = NULL, $context = NULL, $a1 = NULL, $a
     if ($where) {
       $where_clause = implode(' ', $where);
       // Strip off leading 'OR '.
-      $where_clause = '('. strstr($where_clause, " ") .')';
-      $result_db = db_query('SELECT * FROM {actions} WHERE '. $where_clause, $where_values);
+      $where_clause = '(' . strstr($where_clause, " ") . ')';
+      $result_db = db_query('SELECT * FROM {actions} WHERE ' . $where_clause, $where_values);
       while ($action = db_fetch_object($result_db)) {
         $actions[$action->aid] = $action->parameters ? unserialize($action->parameters) : array();
         $actions[$action->aid]['callback'] = $action->callback;

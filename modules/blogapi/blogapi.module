@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.117 2008/02/20 13:46:39 dries Exp $
+// $Id: blogapi.module,v 1.118 2008/04/14 17:48:35 dries Exp $
 
 /**
  * @file
@@ -12,10 +12,10 @@
 function blogapi_help($path, $arg) {
   switch ($path) {
     case 'admin/help#blogapi':
-      $output = '<p>'. t("The Blog API module allows your site's users to access and post to their blogs from external blogging clients. External blogging clients are available for a wide range of desktop operating systems, and generally provide a feature-rich graphical environment for creating and editing posts.") .'</p>';
-      $output .= '<p>'. t('<a href="@ecto-link">Ecto</a>, a blogging client available for both Mac OS X and Microsoft Windows, can be used with Blog API. Blog API also supports <a href="@blogger-api">Blogger API</a>, <a href="@metaweblog-api">MetaWeblog API</a>, and most of the <a href="@movabletype-api">Movable Type API</a>. Blogging clients and other services (e.g. <a href="@flickr">Flickr\'s</a> "post to blog") that support these APIs may also be compatible.', array('@ecto-link' => url('http://infinite-sushi.com/software/ecto/'), '@blogger-api' => url('http://www.blogger.com/developers/api/1_docs/'), '@metaweblog-api' => url('http://www.xmlrpc.com/metaWeblogApi'), '@movabletype-api' => url('http://www.movabletype.org/docs/mtmanual_programmatic.html'), '@flickr' => url('http://www.flickr.com'))) .'</p>';
-      $output .= '<p>'. t('Select the content types available to external clients on the <a href="@blogapi-settings">Blog API settings page</a>. If supported and available, each content type will be displayed as a separate "blog" by the external client.', array('@blogapi-settings' => url('admin/settings/blogapi'))) .'</p>';
-      $output .= '<p>'. t('For more information, see the online handbook entry for <a href="@blogapi">Blog API module</a>.', array('@blogapi' => url('http://drupal.org/handbook/modules/blogapi/'))) .'</p>';
+      $output = '<p>' . t("The Blog API module allows your site's users to access and post to their blogs from external blogging clients. External blogging clients are available for a wide range of desktop operating systems, and generally provide a feature-rich graphical environment for creating and editing posts.") . '</p>';
+      $output .= '<p>' . t('<a href="@ecto-link">Ecto</a>, a blogging client available for both Mac OS X and Microsoft Windows, can be used with Blog API. Blog API also supports <a href="@blogger-api">Blogger API</a>, <a href="@metaweblog-api">MetaWeblog API</a>, and most of the <a href="@movabletype-api">Movable Type API</a>. Blogging clients and other services (e.g. <a href="@flickr">Flickr\'s</a> "post to blog") that support these APIs may also be compatible.', array('@ecto-link' => url('http://infinite-sushi.com/software/ecto/'), '@blogger-api' => url('http://www.blogger.com/developers/api/1_docs/'), '@metaweblog-api' => url('http://www.xmlrpc.com/metaWeblogApi'), '@movabletype-api' => url('http://www.movabletype.org/docs/mtmanual_programmatic.html'), '@flickr' => url('http://www.flickr.com'))) . '</p>';
+      $output .= '<p>' . t('Select the content types available to external clients on the <a href="@blogapi-settings">Blog API settings page</a>. If supported and available, each content type will be displayed as a separate "blog" by the external client.', array('@blogapi-settings' => url('admin/settings/blogapi'))) . '</p>';
+      $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@blogapi">Blog API module</a>.', array('@blogapi' => url('http://drupal.org/handbook/modules/blogapi/'))) . '</p>';
       return $output;
   }
 }
@@ -147,7 +147,7 @@ function blogapi_blogger_get_users_blogs($appid, $username, $password) {
     $types = _blogapi_get_node_types();
     $structs = array();
     foreach ($types as $type) {
-      $structs[] = array('url' => url('blog/'. $user->uid, array('absolute' => TRUE)), 'blogid' => $type, 'blogName' => $user->name .": ". $type);
+      $structs[] = array('url' => url('blog/' . $user->uid, array('absolute' => TRUE)), 'blogid' => $type, 'blogName' => $user->name . ": " . $type);
     }
     return $structs;
   }
@@ -170,7 +170,7 @@ function blogapi_blogger_get_user_info($appkey, $username, $password) {
       'firstname' => $name[0],
       'nickname' => $user->name,
       'email' => $user->mail,
-      'url' => url('blog/'. $user->uid, array('absolute' => TRUE)));
+      'url' => url('blog/' . $user->uid, array('absolute' => TRUE)));
   }
   else {
     return blogapi_error($user);
@@ -194,11 +194,11 @@ function blogapi_blogger_new_post($appkey, $blogid, $username, $password, $conte
   $edit = array();
   $edit['type'] = $blogid;
   // get the node type defaults
-  $node_type_default = variable_get('node_options_'. $edit['type'], array('status', 'promote'));
+  $node_type_default = variable_get('node_options_' . $edit['type'], array('status', 'promote'));
   $edit['uid'] = $user->uid;
   $edit['name'] = $user->name;
   $edit['promote'] = in_array('promote', $node_type_default);
-  $edit['comment'] = variable_get('comment_'. $edit['type'], 2);
+  $edit['comment'] = variable_get('comment_' . $edit['type'], 2);
   $edit['revision'] = in_array('revision', $node_type_default);
   $edit['format'] = FILTER_FORMAT_DEFAULT;
   $edit['status'] = $publish;
@@ -405,7 +405,7 @@ function blogapi_metaweblog_get_category_list($blogid, $username, $password) {
       foreach ($terms as $term) {
         $term_name = $term->name;
         foreach (module_invoke('taxonomy', 'get_parents', $term->tid, 'tid') as $parent) {
-          $term_name = $parent->name .'/'. $term_name;
+          $term_name = $parent->name . '/' . $term_name;
         }
         $categories[] = array('categoryName' => $term_name, 'categoryId' => $term->tid);
       }
@@ -442,7 +442,7 @@ function blogapi_mt_get_post_categories($postid, $username, $password) {
   foreach ($terms as $term) {
     $term_name = $term->name;
     foreach (module_invoke('taxonomy', 'get_parents', $term->tid, 'tid') as $parent) {
-      $term_name = $parent->name .'/'. $term_name;
+      $term_name = $parent->name . '/' . $term_name;
     }
     $categories[] = array('categoryName' => $term_name, 'categoryId' => $term->tid, 'isPrimary' => TRUE);
   }
@@ -604,7 +604,7 @@ function blogapi_init() {
 function blogapi_rsd() {
   global $base_url;
 
-  $xmlrpc = $base_url .'/xmlrpc.php';
+  $xmlrpc = $base_url . '/xmlrpc.php';
   $base = url('', array('absolute' => TRUE));
   $blogid = 1; # until we figure out how to handle multiple bloggers
 
@@ -653,10 +653,10 @@ function _blogapi_mt_extra(&$node, $struct) {
   // merge the 3 body sections (description, mt_excerpt, mt_text_more) into
   // one body
   if ($struct['mt_excerpt']) {
-    $node->body = $struct['mt_excerpt'] .'<!--break-->'. $node->body;
+    $node->body = $struct['mt_excerpt'] . '<!--break-->' . $node->body;
   }
   if ($struct['mt_text_more']) {
-    $node->body = $node->body .'<!--extended-->'. $struct['mt_text_more'];
+    $node->body = $node->body . '<!--extended-->' . $struct['mt_text_more'];
   }
 
   // mt_convert_breaks
@@ -680,8 +680,8 @@ function _blogapi_get_post($node, $bodies = TRUE) {
     'dateCreated' => xmlrpc_date($node->created),
     'title' => $node->title,
     'postid' => $node->nid,
-    'link' => url('node/'. $node->nid, array('absolute' => TRUE)),
-    'permaLink' => url('node/'. $node->nid, array('absolute' => TRUE)),
+    'link' => url('node/' . $node->nid, array('absolute' => TRUE)),
+    'permaLink' => url('node/' . $node->nid, array('absolute' => TRUE)),
   );
   if ($bodies) {
     if ($node->comment == 1) {

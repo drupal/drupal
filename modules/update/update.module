@@ -1,5 +1,5 @@
 <?php
-// $Id: update.module,v 1.17 2008/01/30 10:14:42 goba Exp $
+// $Id: update.module,v 1.18 2008/04/14 17:48:43 dries Exp $
 
 /**
  * @file
@@ -58,15 +58,15 @@ define('UPDATE_UNKNOWN', -2);
 function update_help($path, $arg) {
   switch ($path) {
     case 'admin/reports/updates':
-      $output = '<p>'. t('Here you can find information about available updates for your installed modules and themes. Note that each module or theme is part of a "project", which may or may not have the same name, and might include multiple modules or themes within it.') .'</p>';
-      $output .= '<p>'. t('To extend the functionality or to change the look of your site, a number of contributed <a href="@modules">modules</a> and <a href="@themes">themes</a> are available.', array('@modules' => 'http://drupal.org/project/modules', '@themes' => 'http://drupal.org/project/themes')) .'</p>';
+      $output = '<p>' . t('Here you can find information about available updates for your installed modules and themes. Note that each module or theme is part of a "project", which may or may not have the same name, and might include multiple modules or themes within it.') . '</p>';
+      $output .= '<p>' . t('To extend the functionality or to change the look of your site, a number of contributed <a href="@modules">modules</a> and <a href="@themes">themes</a> are available.', array('@modules' => 'http://drupal.org/project/modules', '@themes' => 'http://drupal.org/project/themes')) . '</p>';
       return $output;
     case 'admin/build/themes':
     case 'admin/build/modules':
       include_once './includes/install.inc';
       $status = update_requirements('runtime');
       foreach (array('core', 'contrib') as $report_type) {
-        $type = 'update_'. $report_type;
+        $type = 'update_' . $report_type;
         if (isset($status[$type]['severity'])) {
           if ($status[$type]['severity'] == REQUIREMENT_ERROR) {
             drupal_set_message($status[$type]['description'], 'error');
@@ -76,7 +76,7 @@ function update_help($path, $arg) {
           }
         }
       }
-      return '<p>'. t('See the <a href="@available_updates">available updates</a> page for information on installed modules and themes with new versions released.', array('@available_updates' => url('admin/reports/updates'))) .'</p>';
+      return '<p>' . t('See the <a href="@available_updates">available updates</a> page for information on installed modules and themes with new versions released.', array('@available_updates' => url('admin/reports/updates'))) . '</p>';
 
     case 'admin/reports/updates/settings':
     case 'admin/reports/status':
@@ -84,10 +84,10 @@ function update_help($path, $arg) {
       break;
 
     case 'admin/help#update':
-      $output = '<p>'. t("The Update status module periodically checks for new versions of your site's software (including contributed modules and themes), and alerts you to available updates.") .'</p>';
-      $output .= '<p>'. t('The <a href="@update-report">report of available updates</a> will alert you when new releases are available for download. You may configure options for update checking frequency and notifications at the <a href="@update-settings">Update status module settings page</a>.', array('@update-report' => url('admin/reports/updates'), '@update-settings' => url('admin/reports/updates/settings'))) .'</p>';
-      $output .= '<p>'. t('Please note that in order to provide this information, anonymous usage statistics are sent to drupal.org. If desired, you may disable the Update status module from the <a href="@modules">module administration page</a>.', array('@modules' => url('admin/build/modules'))) .'</p>';
-      $output .= '<p>'. t('For more information, see the online handbook entry for <a href="@update">Update status module</a>.', array('@update' => 'http://drupal.org/handbook/modules/update')) .'</p>';
+      $output = '<p>' . t("The Update status module periodically checks for new versions of your site's software (including contributed modules and themes), and alerts you to available updates.") . '</p>';
+      $output .= '<p>' . t('The <a href="@update-report">report of available updates</a> will alert you when new releases are available for download. You may configure options for update checking frequency and notifications at the <a href="@update-settings">Update status module settings page</a>.', array('@update-report' => url('admin/reports/updates'), '@update-settings' => url('admin/reports/updates/settings'))) . '</p>';
+      $output .= '<p>' . t('Please note that in order to provide this information, anonymous usage statistics are sent to drupal.org. If desired, you may disable the Update status module from the <a href="@modules">module administration page</a>.', array('@modules' => url('admin/build/modules'))) . '</p>';
+      $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@update">Update status module</a>.', array('@update' => 'http://drupal.org/handbook/modules/update')) . '</p>';
       return $output;
 
     default:
@@ -98,7 +98,7 @@ function update_help($path, $arg) {
         include_once './includes/install.inc';
         $status = update_requirements('runtime');
         foreach (array('core', 'contrib') as $report_type) {
-          $type = 'update_'. $report_type;
+          $type = 'update_' . $report_type;
           if (isset($status[$type])
               && isset($status[$type]['reason'])
               && $status[$type]['reason'] === UPDATE_NOT_SECURE) {
@@ -274,7 +274,7 @@ function _update_requirement_check($project, $type) {
       $requirement_label = t('Up to date');
   }
   if ($status != UPDATE_CURRENT && $type == 'core' && isset($project['recommended'])) {
-    $requirement_label .= ' '. t('(version @version available)', array('@version' => $project['recommended']));
+    $requirement_label .= ' ' . t('(version @version available)', array('@version' => $project['recommended']));
   }
   $requirement['value'] = l($requirement_label, 'admin/reports/updates');
   return $requirement;
@@ -416,7 +416,7 @@ function update_mail($key, &$message, $params) {
   foreach ($params as $msg_type => $msg_reason) {
     $message['body'][] = _update_message_text($msg_type, $msg_reason, FALSE, $language);
   }
-  $message['body'][] = t('See the available updates page for more information:', array(), $langcode) ."\n". url('admin/reports/updates', array('absolute' => TRUE, 'language' => $language));
+  $message['body'][] = t('See the available updates page for more information:', array(), $langcode) . "\n" . url('admin/reports/updates', array('absolute' => TRUE, 'language' => $language));
 }
 
 /**
@@ -491,7 +491,7 @@ function _update_message_text($msg_type, $msg_reason, $report_link = FALSE, $lan
   }
 
   if ($report_link) {
-    $text .= ' '. t('See the <a href="@available_updates">available updates</a> page for more information.', array('@available_updates' => url('admin/reports/updates', array('language' => $language))), $langcode);
+    $text .= ' ' . t('See the <a href="@available_updates">available updates</a> page for more information.', array('@available_updates' => url('admin/reports/updates', array('language' => $language))), $langcode);
   }
 
   return $text;

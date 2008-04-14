@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.116 2008/02/10 19:03:47 dries Exp $
+// $Id: install.php,v 1.117 2008/04/14 17:48:33 dries Exp $
 
 require_once './includes/install.inc';
 
@@ -159,7 +159,7 @@ function install_verify_settings() {
     $db_host = urldecode($url['host']);
     $db_port = isset($url['port']) ? urldecode($url['port']) : '';
     $db_path = ltrim(urldecode($url['path']), '/');
-    $settings_file = './'. conf_path(FALSE, TRUE) .'/settings.php';
+    $settings_file = './' . conf_path(FALSE, TRUE) . '/settings.php';
 
     $form_state = array();
     _install_settings_form_validate($db_prefix, $db_type, $db_user, $db_pass, $db_host, $db_port, $db_path, $settings_file, $form_state);
@@ -182,8 +182,8 @@ function install_change_settings($profile = 'default', $install_locale = '') {
   $db_host = isset($url['host']) ? urldecode($url['host']) : '';
   $db_port = isset($url['port']) ? urldecode($url['port']) : '';
   $db_path = ltrim(urldecode($url['path']), '/');
-  $conf_path = './'. conf_path(FALSE, TRUE);
-  $settings_file = $conf_path .'/settings.php';
+  $conf_path = './' . conf_path(FALSE, TRUE);
+  $settings_file = $conf_path . '/settings.php';
 
   // We always need this because we want to run form_get_errors.
   include_once './includes/form.inc';
@@ -227,7 +227,7 @@ function install_settings_form(&$form_state, $profile, $install_locale, $setting
     $form['basic_options'] = array(
       '#type' => 'fieldset',
       '#title' => st('Basic options'),
-      '#description' => '<p>'. st('To set up your @drupal database, enter the following information.', array('@drupal' => drupal_install_profile_name())) .'</p>',
+      '#description' => '<p>' . st('To set up your @drupal database, enter the following information.', array('@drupal' => drupal_install_profile_name())) . '</p>',
     );
 
     if (count($db_types) > 1) {
@@ -312,7 +312,7 @@ function install_settings_form(&$form_state, $profile, $install_locale, $setting
     );
 
     // Table prefix
-    $prefix = ($profile == 'default') ? 'drupal_' : $profile .'_';
+    $prefix = ($profile == 'default') ? 'drupal_' : $profile . '_';
     $form['advanced_options']['db_prefix'] = array(
       '#type' => 'textfield',
       '#title' => st('Table prefix'),
@@ -330,7 +330,7 @@ function install_settings_form(&$form_state, $profile, $install_locale, $setting
     $form['errors'] = array();
     $form['settings_file'] = array('#type' => 'value', '#value' => $settings_file);
     $form['_db_url'] = array('#type' => 'value');
-    $form['#action'] = "install.php?profile=$profile". ($install_locale ? "&locale=$install_locale" : '');
+    $form['#action'] = "install.php?profile=$profile" . ($install_locale ? "&locale=$install_locale" : '');
     $form['#redirect'] = FALSE;
   }
   return $form;
@@ -370,13 +370,13 @@ function _install_settings_form_validate($db_prefix, $db_type, $db_user, $db_pas
   }
   else {
     // Verify
-    $db_url = $db_type .'://'. urlencode($db_user) . ($db_pass ? ':'. urlencode($db_pass) : '') .'@'. ($db_host ? urlencode($db_host) : 'localhost') . ($db_port ? ":$db_port" : '') .'/'. urlencode($db_path);
+    $db_url = $db_type . '://' . urlencode($db_user) . ($db_pass ? ':' . urlencode($db_pass) : '') . '@' . ($db_host ? urlencode($db_host) : 'localhost') . ($db_port ? ":$db_port" : '') . '/' . urlencode($db_path);
     if (isset($form)) {
       form_set_value($form['_db_url'], $db_url, $form_state);
     }
     $success = array();
 
-    $function = 'drupal_test_'. $db_type;
+    $function = 'drupal_test_' . $db_type;
     if (!$function($db_url, $success)) {
       if (isset($success['CONNECT'])) {
         form_set_error('db_type', st('In order for Drupal to work, and to continue with the installation process, you must resolve all permission issues reported above. We were able to verify that we have permission for the following commands: %commands. For more help with configuring your database server, see the <a href="http://drupal.org/node/258">Installation and upgrading handbook</a>. If you are unsure what any of this means you should probably contact your hosting provider.', array('%commands' => implode($success, ', '))));
@@ -406,7 +406,7 @@ function install_settings_form_submit($form, &$form_state) {
   drupal_rewrite_settings($settings);
 
   // Continue to install profile step
-  install_goto("install.php?profile=$profile". ($install_locale ? "&locale=$install_locale" : ''));
+  install_goto("install.php?profile=$profile" . ($install_locale ? "&locale=$install_locale" : ''));
 }
 
 /**
@@ -454,7 +454,7 @@ function install_select_profile_form(&$form_state, $profiles) {
   foreach ($profiles as $profile) {
     include_once($profile->filename);
     // Load profile details.
-    $function = $profile->name .'_profile_details';
+    $function = $profile->name . '_profile_details';
     if (function_exists($function)) {
       $details = $function();
     }
@@ -480,7 +480,7 @@ function install_select_profile_form(&$form_state, $profiles) {
  * Find all .po files for the current profile.
  */
 function install_find_locales($profilename) {
-  $locales = file_scan_directory('./profiles/'. $profilename .'/translations', '\.po$', array('.', '..', 'CVS'), 0, FALSE);
+  $locales = file_scan_directory('./profiles/' . $profilename . '/translations', '\.po$', array('.', '..', 'CVS'), 0, FALSE);
   array_unshift($locales, (object) array('name' => 'en'));
   return $locales;
 }
@@ -507,16 +507,16 @@ function install_select_locale($profilename) {
       install_task_list('locale-select');
       drupal_set_title(st('Choose language'));
       if (!empty($_GET['localize'])) {
-        $output = '<p>'. st('With the addition of an appropriate translation package, this installer is capable of proceeding in another language of your choice. To install and use Drupal in a language other than English:') .'</p>';
-        $output .= '<ul><li>'. st('Determine if <a href="@translations" target="_blank">a translation of this Drupal version</a> is available in your language of choice. A translation is provided via a translation package; each translation package enables the display of a specific version of Drupal in a specific language. Not all languages are available for every version of Drupal.', array('@translations' => 'http://drupal.org/project/translations')) .'</li>';
-        $output .= '<li>'. st('If an alternative translation package of your choice is available, download and extract its contents to your Drupal root directory.') .'</li>';
-        $output .= '<li>'. st('Return to choose language using the second link below and select your desired language from the displayed list. Reloading the page allows the list to automatically adjust to the presence of new translation packages.') .'</li>';
-        $output .= '</ul><p>'. st('Alternatively, to install and use Drupal in English, or to defer the selection of an alternative language until after installation, select the first link below.') .'</p>';
-        $output .= '<p>'. st('How should the installation continue?') .'</p>';
-        $output .= '<ul><li><a href="install.php?profile='. $profilename .'&amp;locale=en">'. st('Continue installation in English') .'</a></li><li><a href="install.php?profile='. $profilename .'">'. st('Return to choose a language') .'</a></li></ul>';
+        $output = '<p>' . st('With the addition of an appropriate translation package, this installer is capable of proceeding in another language of your choice. To install and use Drupal in a language other than English:') . '</p>';
+        $output .= '<ul><li>' . st('Determine if <a href="@translations" target="_blank">a translation of this Drupal version</a> is available in your language of choice. A translation is provided via a translation package; each translation package enables the display of a specific version of Drupal in a specific language. Not all languages are available for every version of Drupal.', array('@translations' => 'http://drupal.org/project/translations')) . '</li>';
+        $output .= '<li>' . st('If an alternative translation package of your choice is available, download and extract its contents to your Drupal root directory.') . '</li>';
+        $output .= '<li>' . st('Return to choose language using the second link below and select your desired language from the displayed list. Reloading the page allows the list to automatically adjust to the presence of new translation packages.') . '</li>';
+        $output .= '</ul><p>' . st('Alternatively, to install and use Drupal in English, or to defer the selection of an alternative language until after installation, select the first link below.') . '</p>';
+        $output .= '<p>' . st('How should the installation continue?') . '</p>';
+        $output .= '<ul><li><a href="install.php?profile=' . $profilename . '&amp;locale=en">' . st('Continue installation in English') . '</a></li><li><a href="install.php?profile=' . $profilename . '">' . st('Return to choose a language') . '</a></li></ul>';
       }
       else {
-        $output = '<ul><li><a href="install.php?profile='. $profilename .'&amp;locale=en">'. st('Install Drupal in English') .'</a></li><li><a href="install.php?profile='. $profilename .'&amp;localize=true">'. st('Learn how to install Drupal in other languages') .'</a></li></ul>';
+        $output = '<ul><li><a href="install.php?profile=' . $profilename . '&amp;locale=en">' . st('Install Drupal in English') . '</a></li><li><a href="install.php?profile=' . $profilename . '&amp;localize=true">' . st('Learn how to install Drupal in other languages') . '</a></li></ul>';
       }
       print theme('install_page', $output);
       exit;
@@ -527,7 +527,7 @@ function install_select_locale($profilename) {
   }
   else {
     // Allow profile to pre-select the language, skipping the selection.
-    $function = $profilename .'_profile_details';
+    $function = $profilename . '_profile_details';
     if (function_exists($function)) {
       $details = $function();
       if (isset($details['language'])) {
@@ -563,13 +563,13 @@ function install_select_locale_form(&$form_state, $locales) {
     // Try to use verbose locale name
     $name = $locale->name;
     if (isset($languages[$name])) {
-      $name = $languages[$name][0] . (isset($languages[$name][1]) ? ' '. st('(@language)', array('@language' => $languages[$name][1])) : '');
+      $name = $languages[$name][0] . (isset($languages[$name][1]) ? ' ' . st('(@language)', array('@language' => $languages[$name][1])) : '');
     }
     $form['locale'][$locale->name] = array(
       '#type' => 'radio',
       '#return_value' => $locale->name,
       '#default_value' => ($locale->name == 'en' ? TRUE : FALSE),
-      '#title' => $name . ($locale->name == 'en' ? ' '. st('(built-in)') : ''),
+      '#title' => $name . ($locale->name == 'en' ? ' ' . st('(built-in)') : ''),
       '#parents' => array('locale')
     );
   }
@@ -586,7 +586,7 @@ function install_select_locale_form(&$form_state, $locales) {
 function install_no_profile_error() {
   install_task_list('profile-select');
   drupal_set_title(st('No profiles available'));
-  print theme('install_page', '<p>'. st('We were unable to find any installer profiles. Installer profiles tell us what modules to enable and what schema to install in the database. A profile is necessary to continue with the installation process.') .'</p>');
+  print theme('install_page', '<p>' . st('We were unable to find any installer profiles. Installer profiles tell us what modules to enable and what schema to install in the database. A profile is necessary to continue with the installation process.') . '</p>');
   exit;
 }
 
@@ -614,7 +614,7 @@ function install_tasks($profile, $task) {
   $_SESSION['messages'] = $messages;
 
   // URL used to direct page requests.
-  $url = $base_url .'/install.php?locale='. $install_locale .'&profile='. $profile;
+  $url = $base_url . '/install.php?locale=' . $install_locale . '&profile=' . $profile;
 
   // Build a page for final tasks.
   if (empty($task)) {
@@ -697,8 +697,8 @@ function install_tasks($profile, $task) {
       drupal_set_title(st('Configure site'));
 
       // Warn about settings.php permissions risk
-      $settings_dir = './'. conf_path();
-      $settings_file = $settings_dir .'/settings.php';
+      $settings_dir = './' . conf_path();
+      $settings_file = $settings_dir . '/settings.php';
       if (!drupal_verify_install_file($settings_file, FILE_EXIST|FILE_READABLE|FILE_NOT_WRITABLE) || !drupal_verify_install_file($settings_dir, FILE_NOT_WRITABLE, 'dir')) {
         drupal_set_message(st('All necessary changes to %dir and %file have been made, so you should remove write permissions to them now in order to avoid security risks. If you are unsure how to do so, please consult the <a href="@handbook_url">on-line handbook</a>.', array('%dir' => $settings_dir, '%file' => $settings_file, '@handbook_url' => 'http://drupal.org/getting-started')), 'error');
       }
@@ -708,7 +708,7 @@ function install_tasks($profile, $task) {
 
       // Add JavaScript validation.
       _user_password_dynamic_validation();
-      drupal_add_js(drupal_get_path('module', 'system') .'/system.js', 'module');
+      drupal_add_js(drupal_get_path('module', 'system') . '/system.js', 'module');
       // We add these strings as settings because JavaScript translation does not
       // work on install time.
       drupal_add_js(array('copyFieldValue' => array('edit-site-mail' => array('edit-account-mail')), 'cleanURL' => array('success' => st('Your server has been successfully tested to support this feature.'), 'failure' => st('Your system configuration does not currently support this feature. The <a href="http://drupal.org/node/15365">handbook page on Clean URLs</a> has additional troubleshooting information.'), 'testing' => st('Testing clean URLs...'))), 'setting');
@@ -733,7 +733,7 @@ if (Drupal.jsEnabled) {
   // reserved for profiles, hand over the control to the profile,
   // so it can run any number of custom tasks it defines.
   if (!in_array($task, install_reserved_tasks())) {
-    $function = $profile .'_profile_tasks';
+    $function = $profile . '_profile_tasks';
     if (function_exists($function)) {
       // The profile needs to run more code, maybe even more tasks.
       // $task is sent through as a reference and may be changed!
@@ -778,8 +778,8 @@ if (Drupal.jsEnabled) {
   if ($task == 'finished') {
     drupal_set_title(st('@drupal installation complete', array('@drupal' => drupal_install_profile_name())));
     $messages = drupal_set_message();
-    $output = '<p>'. st('Congratulations, @drupal has been successfully installed.', array('@drupal' => drupal_install_profile_name())) .'</p>';
-    $output .= '<p>'. (isset($messages['error']) ? st('Please review the messages above before continuing on to <a href="@url">your new site</a>.', array('@url' => url(''))) : st('You may now visit <a href="@url">your new site</a>.', array('@url' => url('')))) .'</p>';
+    $output = '<p>' . st('Congratulations, @drupal has been successfully installed.', array('@drupal' => drupal_install_profile_name())) . '</p>';
+    $output .= '<p>' . (isset($messages['error']) ? st('Please review the messages above before continuing on to <a href="@url">your new site</a>.', array('@url' => url(''))) : st('You may now visit <a href="@url">your new site</a>.', array('@url' => url('')))) . '</p>';
     $task = 'done';
   }
 
@@ -821,7 +821,7 @@ function _install_module_batch($module, $module_name, &$context) {
   // steps.
   module_enable(array($module));
   $context['results'][] = $module;
-  $context['message'] = 'Installed '. $module_name .' module.';
+  $context['message'] = 'Installed ' . $module_name . ' module.';
 }
 
 /**
@@ -866,8 +866,8 @@ function install_check_requirements($profile, $verify) {
   // If Drupal is not set up already, we need to create a settings file.
   if (!$verify) {
     $writable = FALSE;
-    $conf_path = './'. conf_path(FALSE, TRUE);
-    $settings_file = $conf_path .'/settings.php';
+    $conf_path = './' . conf_path(FALSE, TRUE);
+    $settings_file = $conf_path . '/settings.php';
     $file = $conf_path;
     // Verify that the directory exists.
     if (drupal_verify_install_file($conf_path, FILE_EXIST, 'dir')) {
@@ -899,7 +899,7 @@ function install_check_requirements($profile, $verify) {
       if (isset($requirement['severity']) && $requirement['severity'] == REQUIREMENT_ERROR) {
         $message = $requirement['description'];
         if (isset($requirement['value']) && $requirement['value']) {
-          $message .= ' ('. st('Currently using !item !version', array('!item' => $requirement['title'], '!version' => $requirement['value'])) .')';
+          $message .= ' (' . st('Currently using !item !version', array('!item' => $requirement['title'], '!version' => $requirement['value'])) . ')';
         }
         drupal_set_message($message, 'error');
       }
@@ -911,7 +911,7 @@ function install_check_requirements($profile, $verify) {
       if (isset($requirement['severity']) && $requirement['severity'] == REQUIREMENT_WARNING) {
         $message = $requirement['description'];
         if (isset($requirement['value']) && $requirement['value']) {
-          $message .= ' ('. st('Currently using !item !version', array('!item' => $requirement['title'], '!version' => $requirement['value'])) .')';
+          $message .= ' (' . st('Currently using !item !version', array('!item' => $requirement['title'], '!version' => $requirement['value'])) . ')';
         }
         drupal_set_message($message, 'warning');
       }
@@ -947,7 +947,7 @@ function install_task_list($active = NULL) {
 
   // Add tasks defined by the profile.
   if ($profile) {
-    $function = $profile .'_profile_task_list';
+    $function = $profile . '_profile_task_list';
     if (function_exists($function)) {
       $result = $function();
       if (is_array($result)) {
@@ -1013,7 +1013,7 @@ function install_configure_form(&$form_state, $url) {
   );
   $form['admin_account']['account']['#tree'] = TRUE;
   $form['admin_account']['markup'] = array(
-    '#value' => '<p class="description">'. st('The administrator account has complete access to the site; it will automatically be granted all permissions and can perform any administrative activity. This will be the only account that can perform certain activities, so keep its credentials safe.') .'</p>',
+    '#value' => '<p class="description">' . st('The administrator account has complete access to the site; it will automatically be granted all permissions and can perform any administrative activity. This will be the only account that can perform certain activities, so keep its credentials safe.') . '</p>',
     '#weight' => -10,
   );
 
@@ -1085,7 +1085,7 @@ function install_configure_form(&$form_state, $url) {
   // Allow the profile to alter this form. $form_state isn't available
   // here, but to conform to the hook_form_alter() signature, we pass
   // an empty array.
-  $hook_form_alter = $_GET['profile'] .'_form_alter';
+  $hook_form_alter = $_GET['profile'] . '_form_alter';
   if (function_exists($hook_form_alter)) {
     $hook_form_alter($form, array(), 'install_configure');
   }

@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.pages.inc,v 1.2 2007/11/10 17:41:18 dries Exp $
+// $Id: filter.pages.inc,v 1.3 2008/04/14 17:48:37 dries Exp $
 
 /**
  * @file
@@ -32,7 +32,7 @@ function theme_filter_tips($tips, $long = FALSE, $extra = '') {
 
   $multiple = count($tips) > 1;
   if ($multiple) {
-    $output = t('input formats') .':';
+    $output = t('input formats') . ':';
   }
 
   if (count($tips)) {
@@ -42,13 +42,13 @@ function theme_filter_tips($tips, $long = FALSE, $extra = '') {
     foreach ($tips as $name => $tiplist) {
       if ($multiple) {
         $output .= '<li>';
-        $output .= '<strong>'. $name .'</strong>:<br />';
+        $output .= '<strong>' . $name . '</strong>:<br />';
       }
 
       if (count($tiplist) > 0) {
         $output .= '<ul class="tips">';
         foreach ($tiplist as $tip) {
-          $output .= '<li'. ($long ? ' id="filter-'. str_replace("/", "-", $tip['id']) .'">' : '>') . $tip['tip'] .'</li>';
+          $output .= '<li' . ($long ? ' id="filter-' . str_replace("/", "-", $tip['id']) . '">' : '>') . $tip['tip'] . '</li>';
         }
         $output .= '</ul>';
       }

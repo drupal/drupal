@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.453 2008/04/10 10:28:22 dries Exp $
+// $Id: forum.module,v 1.454 2008/04/14 17:48:37 dries Exp $
 
 /**
  * @file
@@ -12,23 +12,23 @@
 function forum_help($path, $arg) {
   switch ($path) {
     case 'admin/help#forum':
-      $output = '<p>'. t('The forum module lets you create threaded discussion forums with functionality similar to other message board systems. Forums are useful because they allow community members to discuss topics with one another while ensuring those conversations are archived for later reference. The <a href="@create-topic">forum topic</a> menu item (under <em>Create content</em> on the Navigation menu) creates the initial post of a new threaded discussion, or thread.', array('@create-topic' => url('node/add/forum'))) .'</p>';
-      $output .= '<p>'. t('A threaded discussion occurs as people leave comments on a forum topic (or on other comments within that topic). A forum topic is contained within a forum, which may hold many similar or related forum topics. Forums are (optionally) nested within a container, which may hold many similar or related forums. Both containers and forums may be nested within other containers and forums, and provide structure for your message board. By carefully planning this structure, you make it easier for users to find and comment on a specific forum topic.') .'</p>';
-      $output .= '<p>'. t('When administering a forum, note that:') .'</p>';
-      $output .= '<ul><li>'. t('a forum topic (and all of its comments) may be moved between forums by selecting a different forum while editing a forum topic.') .'</li>';
-      $output .= '<li>'. t('when moving a forum topic between forums, the <em>Leave shadow copy</em> option creates a link in the original forum pointing to the new location.') .'</li>';
-      $output .= '<li>'. t('selecting <em>Read only</em> under <em>Comment settings</em> while editing a forum topic will lock (prevent new comments) on the thread.') .'</li>';
-      $output .= '<li>'. t('selecting <em>Disabled</em> under <em>Comment settings</em> while editing a forum topic will hide all existing comments on the thread, and prevent new ones.') .'</li></ul>';
-      $output .= '<p>'. t('For more information, see the online handbook entry for <a href="@forum">Forum module</a>.', array('@forum' => 'http://drupal.org/handbook/modules/forum/')) .'</p>';
+      $output = '<p>' . t('The forum module lets you create threaded discussion forums with functionality similar to other message board systems. Forums are useful because they allow community members to discuss topics with one another while ensuring those conversations are archived for later reference. The <a href="@create-topic">forum topic</a> menu item (under <em>Create content</em> on the Navigation menu) creates the initial post of a new threaded discussion, or thread.', array('@create-topic' => url('node/add/forum'))) . '</p>';
+      $output .= '<p>' . t('A threaded discussion occurs as people leave comments on a forum topic (or on other comments within that topic). A forum topic is contained within a forum, which may hold many similar or related forum topics. Forums are (optionally) nested within a container, which may hold many similar or related forums. Both containers and forums may be nested within other containers and forums, and provide structure for your message board. By carefully planning this structure, you make it easier for users to find and comment on a specific forum topic.') . '</p>';
+      $output .= '<p>' . t('When administering a forum, note that:') . '</p>';
+      $output .= '<ul><li>' . t('a forum topic (and all of its comments) may be moved between forums by selecting a different forum while editing a forum topic.') . '</li>';
+      $output .= '<li>' . t('when moving a forum topic between forums, the <em>Leave shadow copy</em> option creates a link in the original forum pointing to the new location.') . '</li>';
+      $output .= '<li>' . t('selecting <em>Read only</em> under <em>Comment settings</em> while editing a forum topic will lock (prevent new comments) on the thread.') . '</li>';
+      $output .= '<li>' . t('selecting <em>Disabled</em> under <em>Comment settings</em> while editing a forum topic will hide all existing comments on the thread, and prevent new ones.') . '</li></ul>';
+      $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@forum">Forum module</a>.', array('@forum' => 'http://drupal.org/handbook/modules/forum/')) . '</p>';
       return $output;
     case 'admin/content/forum':
-      return '<p>'. t('This page displays a list of existing forums and containers. Containers (optionally) hold forums, and forums hold forum topics (a forum topic is the initial post to a threaded discussion). To provide structure, both containers and forums may be placed inside other containers and forums. To rearrange forums and containers, grab a drag-and-drop handle under the <em>Name</em> column and drag the forum or container to a new location in the list. (Grab a handle by clicking and holding the mouse while hovering over a handle icon.) Remember that your changes will not be saved until you click the <em>Save</em> button at the bottom of the page.') .'</p>';
+      return '<p>' . t('This page displays a list of existing forums and containers. Containers (optionally) hold forums, and forums hold forum topics (a forum topic is the initial post to a threaded discussion). To provide structure, both containers and forums may be placed inside other containers and forums. To rearrange forums and containers, grab a drag-and-drop handle under the <em>Name</em> column and drag the forum or container to a new location in the list. (Grab a handle by clicking and holding the mouse while hovering over a handle icon.) Remember that your changes will not be saved until you click the <em>Save</em> button at the bottom of the page.') . '</p>';
     case 'admin/content/forum/add/container':
-      return '<p>'. t('By grouping related or similar forums, containers help organize forums. For example, a container named "Food" may hold two forums named "Fruit" and "Vegetables", respectively.') .'</p>';
+      return '<p>' . t('By grouping related or similar forums, containers help organize forums. For example, a container named "Food" may hold two forums named "Fruit" and "Vegetables", respectively.') . '</p>';
     case 'admin/content/forum/add/forum':
-      return '<p>'. t('A forum holds related or similar forum topics (a forum topic is the initial post to a threaded discussion). For example, a forum named "Fruit" may contain forum topics titled "Apples" and "Bananas", respectively.') .'</p>';
+      return '<p>' . t('A forum holds related or similar forum topics (a forum topic is the initial post to a threaded discussion). For example, a forum named "Fruit" may contain forum topics titled "Apples" and "Bananas", respectively.') . '</p>';
     case 'admin/content/forum/settings':
-      return '<p>'. t('These settings allow you to adjust the display of your forum topics. The content types available for use within a forum may be selected by editing the <em>Content types</em> on the <a href="@forum-vocabulary">forum vocabulary page</a>.', array('@forum-vocabulary' => url('admin/content/taxonomy/edit/vocabulary/'. variable_get('forum_nav_vocabulary', '')))) .'</p>';
+      return '<p>' . t('These settings allow you to adjust the display of your forum topics. The content types available for use within a forum may be selected by editing the <em>Content types</em> on the <a href="@forum-vocabulary">forum vocabulary page</a>.', array('@forum-vocabulary' => url('admin/content/taxonomy/edit/vocabulary/' . variable_get('forum_nav_vocabulary', '')))) . '</p>';
   }
 }
 
@@ -154,7 +154,7 @@ function forum_menu() {
  * Implementation of hook_init().
  */
 function forum_init() {
-  drupal_add_css(drupal_get_path('module', 'forum') .'/forum.css');
+  drupal_add_css(drupal_get_path('module', 'forum') . '/forum.css');
 }
 
 /**
@@ -194,7 +194,7 @@ function forum_nodeapi(&$node, $op, $teaser, $page) {
         if ($parents = taxonomy_get_parents_all($node->tid)) {
           $parents = array_reverse($parents);
           foreach ($parents as $p) {
-            $breadcrumb[] = l($p->name, 'forum/'. $p->tid);
+            $breadcrumb[] = l($p->name, 'forum/' . $p->tid);
           }
         }
         drupal_set_breadcrumb($breadcrumb);
@@ -409,11 +409,11 @@ function forum_block($op = 'list', $delta = '', $edit = array()) {
       return $blocks;
 
     case 'configure':
-      $form['forum_block_num_'. $delta] = array('#type' => 'select', '#title' => t('Number of topics'), '#default_value' => variable_get('forum_block_num_'. $delta, '5'), '#options' => drupal_map_assoc(array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)));
+      $form['forum_block_num_' . $delta] = array('#type' => 'select', '#title' => t('Number of topics'), '#default_value' => variable_get('forum_block_num_' . $delta, '5'), '#options' => drupal_map_assoc(array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)));
       return $form;
 
     case 'save':
-      variable_set('forum_block_num_'. $delta, $edit['forum_block_num_'. $delta]);
+      variable_set('forum_block_num_' . $delta, $edit['forum_block_num_' . $delta]);
       break;
 
     case 'view':
@@ -661,7 +661,7 @@ function template_preprocess_forums(&$variables) {
         $title = $p->name;
       }
       else {
-        $breadcrumb[] = l($p->name, 'forum/'. $p->tid);
+        $breadcrumb[] = l($p->name, 'forum/' . $p->tid);
       }
     }
   }
@@ -678,7 +678,7 @@ function template_preprocess_forums(&$variables) {
       if (node_access('create', $type)) {
         // Fetch the "General" name of the content type;
         // Push the link with title and url to the array.
-        $forum_types[$type] = array('title' => t('Post new @node_type', array('@node_type' => node_get_types('name', $type))), 'href' => 'node/add/'. str_replace('_', '-', $type) .'/'. $variables['tid']);
+        $forum_types[$type] = array('title' => t('Post new @node_type', array('@node_type' => node_get_types('name', $type))), 'href' => 'node/add/' . str_replace('_', '-', $type) . '/' . $variables['tid']);
       }
     }
 
@@ -703,7 +703,7 @@ function template_preprocess_forums(&$variables) {
 
     if ($variables['tid'] && !in_array($variables['tid'], variable_get('forum_containers', array()))) {
       $variables['topics'] = theme('forum_topic_list', $variables['tid'], $variables['topics'], $variables['sortby'], $variables['forum_per_page']);
-      drupal_add_feed(url('taxonomy/term/'. $variables['tid'] .'/0/feed'), 'RSS - '. $title);
+      drupal_add_feed(url('taxonomy/term/' . $variables['tid'] . '/0/feed'), 'RSS - ' . $title);
     }
     else {
       $variables['topics'] = '';
@@ -713,16 +713,16 @@ function template_preprocess_forums(&$variables) {
     // Check both variables to be safe then the inverse. Forums with topic ID's take precedence.
     if ($variables['forums'] && !$variables['topics']) {
       $variables['template_files'][] = 'forums-containers';
-      $variables['template_files'][] = 'forums-'. $variables['tid'];
-      $variables['template_files'][] = 'forums-containers-'. $variables['tid'];
+      $variables['template_files'][] = 'forums-' . $variables['tid'];
+      $variables['template_files'][] = 'forums-containers-' . $variables['tid'];
     }
     elseif (!$variables['forums'] && $variables['topics']) {
       $variables['template_files'][] = 'forums-topics';
-      $variables['template_files'][] = 'forums-'. $variables['tid'];
-      $variables['template_files'][] = 'forums-topics-'. $variables['tid'];
+      $variables['template_files'][] = 'forums-' . $variables['tid'];
+      $variables['template_files'][] = 'forums-topics-' . $variables['tid'];
     }
     else {
-      $variables['template_files'][] = 'forums-'. $variables['tid'];
+      $variables['template_files'][] = 'forums-' . $variables['tid'];
     }
 
   }
@@ -885,7 +885,7 @@ function template_preprocess_forum_topic_navigation(&$variables) {
   $output = '';
 
   // get previous and next topic
-  $sql = "SELECT n.nid, n.title, n.sticky, l.comment_count, l.last_comment_timestamp FROM {node} n INNER JOIN {node_comment_statistics} l ON n.nid = l.nid INNER JOIN {term_node} r ON n.nid = r.nid AND r.tid = %d WHERE n.status = 1 ORDER BY n.sticky DESC, ". _forum_get_topic_order_sql(variable_get('forum_order', 1));
+  $sql = "SELECT n.nid, n.title, n.sticky, l.comment_count, l.last_comment_timestamp FROM {node} n INNER JOIN {node_comment_statistics} l ON n.nid = l.nid INNER JOIN {term_node} r ON n.nid = r.nid AND r.tid = %d WHERE n.status = 1 ORDER BY n.sticky DESC, " . _forum_get_topic_order_sql(variable_get('forum_order', 1));
   $result = db_query(db_rewrite_sql($sql), isset($variables['node']->tid) ? $variables['node']->tid : 0);
 
   $stop = $variables['prev'] = $variables['next'] = 0;
@@ -953,5 +953,5 @@ function _forum_get_topic_order($sortby) {
 
 function _forum_get_topic_order_sql($sortby) {
   $order = _forum_get_topic_order($sortby);
-  return $order['field'] .' '. strtoupper($order['sort']);
+  return $order['field'] . ' ' . strtoupper($order['sort']);
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.955 2008/04/10 10:28:22 dries Exp $
+// $Id: node.module,v 1.956 2008/04/14 17:48:38 dries Exp $
 
 /**
  * @file
@@ -36,28 +36,28 @@ function node_help($path, $arg) {
 
   switch ($path) {
     case 'admin/help#node':
-      $output = '<p>'. t('The node module manages content on your site, and stores all posts (regardless of type) as a "node". In addition to basic publishing settings, including whether the post has been published, promoted to the site front page, or should remain present (or sticky) at the top of lists, the node module also records basic information about the author of a post. Optional revision control over edits is available. For additional functionality, the node module is often extended by other modules.') .'</p>';
-      $output .= '<p>'. t('Though each post on your site is a node, each post is also of a particular <a href="@content-type">content type</a>. <a href="@content-type">Content types</a> are used to define the characteristics of a post, including the title and description of the fields displayed on its add and edit pages. Each content type may have different default settings for <em>Publishing options</em> and other workflow controls. By default, the two content types in a standard Drupal installation are <em>Page</em> and <em>Story</em>. Use the <a href="@content-type">content types page</a> to add new or edit existing content types. Additional content types also become available as you enable additional core, contributed and custom modules.', array('@content-type' => url('admin/build/types'))) .'</p>';
-      $output .= '<p>'. t('The administrative <a href="@content">content page</a> allows you to review and manage your site content. The <a href="@post-settings">post settings page</a> sets certain options for the display of posts. The node module makes a number of permissions available for each content type, which may be set by role on the <a href="@permissions">permissions page</a>.', array('@content' => url('admin/content/node'), '@post-settings' => url('admin/content/node-settings'), '@permissions' => url('admin/user/permissions'))) .'</p>';
-      $output .= '<p>'. t('For more information, see the online handbook entry for <a href="@node">Node module</a>.', array('@node' => 'http://drupal.org/handbook/modules/node/')) .'</p>';
+      $output = '<p>' . t('The node module manages content on your site, and stores all posts (regardless of type) as a "node" . In addition to basic publishing settings, including whether the post has been published, promoted to the site front page, or should remain present (or sticky) at the top of lists, the node module also records basic information about the author of a post. Optional revision control over edits is available. For additional functionality, the node module is often extended by other modules.') . '</p>';
+      $output .= '<p>' . t('Though each post on your site is a node, each post is also of a particular <a href="@content-type">content type</a>. <a href="@content-type">Content types</a> are used to define the characteristics of a post, including the title and description of the fields displayed on its add and edit pages. Each content type may have different default settings for <em>Publishing options</em> and other workflow controls. By default, the two content types in a standard Drupal installation are <em>Page</em> and <em>Story</em>. Use the <a href="@content-type">content types page</a> to add new or edit existing content types. Additional content types also become available as you enable additional core, contributed and custom modules.', array('@content-type' => url('admin/build/types'))) . '</p>';
+      $output .= '<p>' . t('The administrative <a href="@content">content page</a> allows you to review and manage your site content. The <a href="@post-settings">post settings page</a> sets certain options for the display of posts. The node module makes a number of permissions available for each content type, which may be set by role on the <a href="@permissions">permissions page</a>.', array('@content' => url('admin/content/node'), '@post-settings' => url('admin/content/node-settings'), '@permissions' => url('admin/user/permissions'))) . '</p>';
+      $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@node">Node module</a>.', array('@node' => 'http://drupal.org/handbook/modules/node/')) . '</p>';
       return $output;
     case 'admin/content/node':
       return ' '; // Return a non-null value so that the 'more help' link is shown.
     case 'admin/build/types':
-      return '<p>'. t('Below is a list of all the content types on your site. All posts that exist on your site are instances of one of these content types.') .'</p>';
+      return '<p>' . t('Below is a list of all the content types on your site. All posts that exist on your site are instances of one of these content types.') . '</p>';
     case 'admin/build/types/add':
-      return '<p>'. t('To create a new content type, enter the human-readable name, the machine-readable name, and all other relevant fields that are on this page. Once created, users of your site will be able to create posts that are instances of this content type.') .'</p>';
+      return '<p>' . t('To create a new content type, enter the human-readable name, the machine-readable name, and all other relevant fields that are on this page. Once created, users of your site will be able to create posts that are instances of this content type.') . '</p>';
     case 'node/%/revisions':
-      return '<p>'. t('The revisions let you track differences between multiple versions of a post.') .'</p>';
+      return '<p>' . t('The revisions let you track differences between multiple versions of a post.') . '</p>';
     case 'node/%/edit':
       $node = node_load($arg[1]);
       $type = node_get_types('type', $node->type);
-      return (!empty($type->help) ? '<p>'. filter_xss_admin($type->help) .'</p>' : '');
+      return (!empty($type->help) ? '<p>' . filter_xss_admin($type->help) . '</p>' : '');
   }
 
   if ($arg[0] == 'node' && $arg[1] == 'add' && $arg[2]) {
     $type = node_get_types('type', str_replace('-', '_', $arg[2]));
-    return (!empty($type->help) ? '<p>'. filter_xss_admin($type->help) .'</p>' : '');
+    return (!empty($type->help) ? '<p>' . filter_xss_admin($type->help) . '</p>' : '');
   }
 }
 
@@ -135,7 +135,7 @@ function node_title_list($result, $title = NULL) {
   $items = array();
   $num_rows = FALSE;
   while ($node = db_fetch_object($result)) {
-    $items[] = l($node->title, 'node/'. $node->nid, !empty($node->comment_count) ? array('title' => format_plural($node->comment_count, '1 comment', '@count comments')) : array());
+    $items[] = l($node->title, 'node/' . $node->nid, !empty($node->comment_count) ? array('title' => format_plural($node->comment_count, '1 comment', '@count comments')) : array());
     $num_rows = TRUE;
   }
 
@@ -219,11 +219,11 @@ function node_teaser_js(&$form, &$form_state) {
     // Glue the teaser to the body.
     if (trim($form_state['values']['teaser_js'])) {
       // Space the teaser from the body
-      $body = trim($form_state['values']['teaser_js']) ."\r\n<!--break-->\r\n". trim($form_state['values']['body']);
+      $body = trim($form_state['values']['teaser_js']) . "\r\n<!--break-->\r\n" . trim($form_state['values']['body']);
     }
     else {
       // Empty teaser, no spaces.
-      $body = '<!--break-->'. $form_state['values']['body'];
+      $body = '<!--break-->' . $form_state['values']['body'];
     }
     // Pass updated body value on to preview/submit form processing.
     form_set_value($form['body'], $body, $form_state);
@@ -649,7 +649,7 @@ function node_invoke(&$node, $hook, $a2 = NULL, $a3 = NULL, $a4 = NULL) {
     if ($module == 'node') {
       $module = 'node_content'; // Avoid function name collisions.
     }
-    $function = $module .'_'. $hook;
+    $function = $module . '_' . $hook;
     return ($function($node, $a2, $a3, $a4));
   }
 }
@@ -669,7 +669,7 @@ function node_invoke(&$node, $hook, $a2 = NULL, $a3 = NULL, $a4 = NULL) {
 function node_invoke_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
   $return = array();
   foreach (module_implements('nodeapi') as $name) {
-    $function = $name .'_nodeapi';
+    $function = $name . '_nodeapi';
     $result = $function($node, $op, $a3, $a4);
     if (isset($result) && is_array($result)) {
       $return = array_merge($return, $result);
@@ -716,7 +716,7 @@ function node_load($param = array(), $revision = NULL, $reset = NULL) {
   elseif (is_array($param)) {
     // Turn the conditions into a query.
     foreach ($param as $key => $value) {
-      $cond[] = 'n.'. db_escape_string($key) ." = '%s'";
+      $cond[] = 'n.' . db_escape_string($key) . " = '%s'";
       $arguments[] = $value;
     }
     $cond = implode(' AND ', $cond);
@@ -743,10 +743,10 @@ function node_load($param = array(), $revision = NULL, $reset = NULL) {
   // No db_rewrite_sql is applied so as to get complete indexing for search.
   if ($revision) {
     array_unshift($arguments, $revision);
-    $node = db_fetch_object(db_query('SELECT '. $fields .' FROM {node} n INNER JOIN {users} u ON u.uid = n.uid INNER JOIN {node_revisions} r ON r.nid = n.nid AND r.vid = %d WHERE '. $cond, $arguments));
+    $node = db_fetch_object(db_query('SELECT ' . $fields . ' FROM {node} n INNER JOIN {users} u ON u.uid = n.uid INNER JOIN {node_revisions} r ON r.nid = n.nid AND r.vid = %d WHERE ' . $cond, $arguments));
   }
   else {
-    $node = db_fetch_object(db_query('SELECT '. $fields .' FROM {node} n INNER JOIN {users} u ON u.uid = n.uid INNER JOIN {node_revisions} r ON r.vid = n.vid WHERE '. $cond, $arguments));
+    $node = db_fetch_object(db_query('SELECT ' . $fields . ' FROM {node} n INNER JOIN {users} u ON u.uid = n.uid INNER JOIN {node_revisions} r ON r.vid = n.vid WHERE ' . $cond, $arguments));
   }
 
   if ($node && $node->nid) {
@@ -1113,7 +1113,7 @@ function node_show($node, $cid, $message = FALSE) {
  * @ingroup themeable
  */
 function theme_node_log_message($log) {
-  return '<div class="log"><div class="title">'. t('Log') .':</div>'. $log .'</div>';
+  return '<div class="log"><div class="title">' . t('Log') . ':</div>' . $log . '</div>';
 }
 
 /**
@@ -1164,7 +1164,7 @@ function node_search($op = 'search', $keys = NULL) {
       );
       $form['content_ranking']['#theme'] = 'node_search_admin';
       $form['content_ranking']['info'] = array(
-        '#value' => '<em>'. t('The following numbers control which properties the content search should favor when ordering the results. Higher numbers mean more influence, zero means the property is ignored. Changing these numbers does not require the search index to be rebuilt. Changes take effect immediately.') .'</em>'
+        '#value' => '<em>' . t('The following numbers control which properties the content search should favor when ordering the results. Higher numbers mean more influence, zero means the property is ignored. Changing these numbers does not require the search index to be rebuilt. Changes take effect immediately.') . '</em>'
       );
 
       $ranking = array('node_rank_relevance' => t('Keyword relevance'),
@@ -1200,7 +1200,7 @@ function node_search($op = 'search', $keys = NULL) {
           $types[] = "n.type = '%s'";
           $arguments1[] = $t;
         }
-        $conditions1 .= ' AND ('. implode(' OR ', $types) .')';
+        $conditions1 .= ' AND (' . implode(' OR ', $types) . ')';
         $keys = search_query_insert($keys, 'type');
       }
 
@@ -1210,7 +1210,7 @@ function node_search($op = 'search', $keys = NULL) {
           $categories[] = "tn.tid = %d";
           $arguments1[] = $c;
         }
-        $conditions1 .= ' AND ('. implode(' OR ', $categories) .')';
+        $conditions1 .= ' AND (' . implode(' OR ', $categories) . ')';
         $join1 .= ' INNER JOIN {term_node} tn ON n.vid = tn.vid';
         $keys = search_query_insert($keys, 'category');
       }
@@ -1259,10 +1259,10 @@ function node_search($op = 'search', $keys = NULL) {
         $join2 .= ' LEFT JOIN {node_counter} nc ON nc.nid = i.sid';
         $total += $weight;
       }
-      $select2 = (count($ranking) ? implode(' + ', $ranking) : 'i.relevance') .' AS score';
+      $select2 = (count($ranking) ? implode(' + ', $ranking) : 'i.relevance') . ' AS score';
 
       // Do search
-      $find = do_search($keys, 'node', 'INNER JOIN {node} n ON n.nid = i.sid '. $join1 .' INNER JOIN {users} u ON n.uid = u.uid', $conditions1 . (empty($where1) ? '' : ' AND '. $where1), $arguments1, $select2, $join2, $arguments2);
+      $find = do_search($keys, 'node', 'INNER JOIN {node} n ON n.nid = i.sid ' . $join1 . ' INNER JOIN {users} u ON n.uid = u.uid', $conditions1 . (empty($where1) ? '' : ' AND ' . $where1), $arguments1, $select2, $join2, $arguments2);
 
       // Load results
       $results = array();
@@ -1280,7 +1280,7 @@ function node_search($op = 'search', $keys = NULL) {
 
         $extra = node_invoke_nodeapi($node, 'search result');
         $results[] = array(
-          'link' => url('node/'. $item->sid, array('absolute' => TRUE)),
+          'link' => url('node/' . $item->sid, array('absolute' => TRUE)),
           'type' => check_plain(node_get_types('name', $node)),
           'title' => $node->title,
           'user' => theme('username', $node),
@@ -1473,7 +1473,7 @@ function node_menu() {
   );
   foreach (node_get_types('types', NULL, TRUE) as $type) {
     $type_url_str = str_replace('_', '-', $type->type);
-    $items['node/add/'. $type_url_str] = array(
+    $items['node/add/' . $type_url_str] = array(
       'title' => drupal_ucfirst($type->name),
       'title callback' => 'check_plain',
       'page callback' => 'node_add',
@@ -1483,18 +1483,18 @@ function node_menu() {
       'description' => $type->description,
       'file' => 'node.pages.inc',
     );
-    $items['admin/content/node-type/'. $type_url_str] = array(
+    $items['admin/content/node-type/' . $type_url_str] = array(
       'title' => $type->name,
       'page callback' => 'drupal_get_form',
       'page arguments' => array('node_type_form', $type),
       'file' => 'content_types.inc',
       'type' => MENU_CALLBACK,
     );
-    $items['admin/content/node-type/'. $type_url_str .'/edit'] = array(
+    $items['admin/content/node-type/' . $type_url_str . '/edit'] = array(
       'title' => 'Edit',
       'type' => MENU_DEFAULT_LOCAL_TASK,
     );
-    $items['admin/content/node-type/'. $type_url_str .'/delete'] = array(
+    $items['admin/content/node-type/' . $type_url_str . '/delete'] = array(
       'title' => 'Delete',
       'page arguments' => array('node_type_delete_confirm', $type),
       'file' => 'content_types.inc',
@@ -1583,7 +1583,7 @@ function node_page_title($node) {
  * Implementation of hook_init().
  */
 function node_init() {
-  drupal_add_css(drupal_get_path('module', 'node') .'/node.css');
+  drupal_add_css(drupal_get_path('module', 'node') . '/node.css');
 }
 
 function node_last_changed($nid) {
@@ -1671,7 +1671,7 @@ function node_feed($nids = FALSE, $channel = array()) {
 
     // Allow modules to add additional item fields and/or modify $item
     $extra = node_invoke_nodeapi($item, 'rss item');
-    $extra = array_merge($extra, array(array('key' => 'pubDate', 'value' => format_date($item->created, 'custom', 'r')), array('key' => 'dc:creator', 'value' => $item->name), array('key' => 'guid', 'value' => $item->nid .' at '. $base_url, 'attributes' => array('isPermaLink' => 'false'))));
+    $extra = array_merge($extra, array(array('key' => 'pubDate', 'value' => format_date($item->created, 'custom', 'r')), array('key' => 'dc:creator', 'value' => $item->name), array('key' => 'guid', 'value' => $item->nid . ' at ' . $base_url, 'attributes' => array('isPermaLink' => 'false'))));
     foreach ($extra as $element) {
       if (isset($element['namespace'])) {
         $namespaces = array_merge($namespaces, $element['namespace']);
@@ -1686,7 +1686,7 @@ function node_feed($nids = FALSE, $channel = array()) {
       case 'teaser':
         $item_text = $item->teaser;
         if (!empty($item->readmore)) {
-          $item_text .= '<p>'. l(t('read more'), 'node/'. $item->nid, array('absolute' => TRUE, 'attributes' => array('target' => '_blank'))) .'</p>';
+          $item_text .= '<p>' . l(t('read more'), 'node/' . $item->nid, array('absolute' => TRUE, 'attributes' => array('target' => '_blank'))) . '</p>';
         }
         break;
       case 'title':
@@ -1707,7 +1707,7 @@ function node_feed($nids = FALSE, $channel = array()) {
   $channel = array_merge($channel_defaults, $channel);
 
   $output = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
-  $output .= "<rss version=\"". $channel["version"] ."\" xml:base=\"". $base_url ."\" ". drupal_attributes($namespaces) .">\n";
+  $output .= "<rss version=\"" . $channel["version"] . "\" xml:base=\"" . $base_url . "\" " . drupal_attributes($namespaces) . ">\n";
   $output .= format_rss_channel($channel['title'], $channel['link'], $channel['description'], $items, $channel['language']);
   $output .= "</rss>\n";
 
@@ -1730,21 +1730,21 @@ function node_page_default() {
 
   if ($num_rows) {
     $feed_url = url('rss.xml', array('absolute' => TRUE));
-    drupal_add_feed($feed_url, variable_get('site_name', 'Drupal') .' '. t('RSS'));
+    drupal_add_feed($feed_url, variable_get('site_name', 'Drupal') . ' ' . t('RSS'));
     $output .= theme('pager', NULL, variable_get('default_nodes_main', 10));
   }
   else {
-    $default_message = '<h1 class="title">'. t('Welcome to your new Drupal website!') .'</h1>';
-    $default_message .= '<p>'. t('Please follow these steps to set up and start using your website:') .'</p>';
+    $default_message = '<h1 class="title">' . t('Welcome to your new Drupal website!') . '</h1>';
+    $default_message .= '<p>' . t('Please follow these steps to set up and start using your website:') . '</p>';
     $default_message .= '<ol>';
-    $default_message .= '<li>'. t('<strong>Configure your website</strong> Once logged in, visit the <a href="@admin">administration section</a>, where you can <a href="@config">customize and configure</a> all aspects of your website.', array('@admin' => url('admin'), '@config' => url('admin/settings'))) .'</li>';
-    $default_message .= '<li>'. t('<strong>Enable additional functionality</strong> Next, visit the <a href="@modules">module list</a> and enable features which suit your specific needs. You can find additional modules in the <a href="@download_modules">Drupal modules download section</a>.', array('@modules' => url('admin/build/modules'), '@download_modules' => 'http://drupal.org/project/modules')) .'</li>';
-    $default_message .= '<li>'. t('<strong>Customize your website design</strong> To change the "look and feel" of your website, visit the <a href="@themes">themes section</a>. You may choose from one of the included themes or download additional themes from the <a href="@download_themes">Drupal themes download section</a>.', array('@themes' => url('admin/build/themes'), '@download_themes' => 'http://drupal.org/project/themes')) .'</li>';
-    $default_message .= '<li>'. t('<strong>Start posting content</strong> Finally, you can <a href="@content">create content</a> for your website. This message will disappear once you have promoted a post to the front page.', array('@content' => url('node/add'))) .'</li>';
+    $default_message .= '<li>' . t('<strong>Configure your website</strong> Once logged in, visit the <a href="@admin">administration section</a>, where you can <a href="@config">customize and configure</a> all aspects of your website.', array('@admin' => url('admin'), '@config' => url('admin/settings'))) . '</li>';
+    $default_message .= '<li>' . t('<strong>Enable additional functionality</strong> Next, visit the <a href="@modules">module list</a> and enable features which suit your specific needs. You can find additional modules in the <a href="@download_modules">Drupal modules download section</a>.', array('@modules' => url('admin/build/modules'), '@download_modules' => 'http://drupal.org/project/modules')) . '</li>';
+    $default_message .= '<li>' . t('<strong>Customize your website design</strong> To change the "look and feel" of your website, visit the <a href="@themes">themes section</a>. You may choose from one of the included themes or download additional themes from the <a href="@download_themes">Drupal themes download section</a>.', array('@themes' => url('admin/build/themes'), '@download_themes' => 'http://drupal.org/project/themes')) . '</li>';
+    $default_message .= '<li>' . t('<strong>Start posting content</strong> Finally, you can <a href="@content">create content</a> for your website. This message will disappear once you have promoted a post to the front page.', array('@content' => url('node/add'))) . '</li>';
     $default_message .= '</ol>';
-    $default_message .= '<p>'. t('For more information, please refer to the <a href="@help">help section</a>, or the <a href="@handbook">online Drupal handbooks</a>. You may also post at the <a href="@forum">Drupal forum</a>, or view the wide range of <a href="@support">other support options</a> available.', array('@help' => url('admin/help'), '@handbook' => 'http://drupal.org/handbooks', '@forum' => 'http://drupal.org/forum', '@support' => 'http://drupal.org/support')) .'</p>';
+    $default_message .= '<p>' . t('For more information, please refer to the <a href="@help">help section</a>, or the <a href="@handbook">online Drupal handbooks</a>. You may also post at the <a href="@forum">Drupal forum</a>, or view the wide range of <a href="@support">other support options</a> available.', array('@help' => url('admin/help'), '@handbook' => 'http://drupal.org/handbooks', '@forum' => 'http://drupal.org/forum', '@support' => 'http://drupal.org/support')) . '</p>';
 
-    $output = '<div id="first-time">'. $default_message .'</div>';
+    $output = '<div id="first-time">' . $default_message . '</div>';
   }
   drupal_set_title('');
 
@@ -1793,7 +1793,7 @@ function _node_index_node($node) {
   $node = node_build_content($node, FALSE, FALSE);
   $node->body = drupal_render($node->content);
 
-  $text = '<h1>'. check_plain($node->title) .'</h1>'. $node->body;
+  $text = '<h1>' . check_plain($node->title) . '</h1>' . $node->body;
 
   // Fetch extra data normally not visible
   $extra = node_invoke_nodeapi($node, 'update index');
@@ -1895,17 +1895,17 @@ function node_search_validate($form, &$form_state) {
     $keys = search_query_insert($keys, 'category', implode(',', $form_state['values']['category']));
   }
   if ($form_state['values']['or'] != '') {
-    if (preg_match_all('/ ("[^"]+"|[^" ]+)/i', ' '. $form_state['values']['or'], $matches)) {
-      $keys .= ' '. implode(' OR ', $matches[1]);
+    if (preg_match_all('/ ("[^"]+"|[^" ]+)/i', ' ' . $form_state['values']['or'], $matches)) {
+      $keys .= ' ' . implode(' OR ', $matches[1]);
     }
   }
   if ($form_state['values']['negative'] != '') {
-    if (preg_match_all('/ ("[^"]+"|[^" ]+)/i', ' '. $form_state['values']['negative'], $matches)) {
-      $keys .= ' -'. implode(' -', $matches[1]);
+    if (preg_match_all('/ ("[^"]+"|[^" ]+)/i', ' ' . $form_state['values']['negative'], $matches)) {
+      $keys .= ' -' . implode(' -', $matches[1]);
     }
   }
   if ($form_state['values']['phrase'] != '') {
-    $keys .= ' "'. str_replace('"', ' ', $form_state['values']['phrase']) .'"';
+    $keys .= ' "' . str_replace('"', ' ', $form_state['values']['phrase']) . '"';
   }
   if (!empty($keys)) {
     form_set_value($form['basic']['inline']['processed_keys'], trim($keys), $form_state);
@@ -2014,7 +2014,7 @@ function node_access($op, $node, $account = NULL) {
 
     $grants_sql = '';
     if (count($grants)) {
-      $grants_sql = 'AND ('. implode(' OR ', $grants) .')';
+      $grants_sql = 'AND (' . implode(' OR ', $grants) . ')';
     }
 
     $sql = "SELECT COUNT(*) FROM {node_access} WHERE (nid = 0 OR nid = %d) $grants_sql AND grant_$op >= 1";
@@ -2047,7 +2047,7 @@ function _node_access_join_sql($node_alias = 'n', $node_access_alias = 'na') {
     return '';
   }
 
-  return 'INNER JOIN {node_access} '. $node_access_alias .' ON '. $node_access_alias .'.nid = '. $node_alias .'.nid';
+  return 'INNER JOIN {node_access} ' . $node_access_alias . ' ON ' . $node_access_alias . '.nid = ' . $node_alias . '.nid';
 }
 
 /**
@@ -2078,7 +2078,7 @@ function _node_access_where_sql($op = 'view', $node_access_alias = 'na', $accoun
 
   $grants_sql = '';
   if (count($grants)) {
-    $grants_sql = 'AND ('. implode(' OR ', $grants) .')';
+    $grants_sql = 'AND (' . implode(' OR ', $grants) . ')';
   }
 
   $sql = "$node_access_alias.grant_$op >= 1 $grants_sql";
@@ -2126,7 +2126,7 @@ function node_access_view_all_nodes() {
 
     $grants_sql = '';
     if (count($grants)) {
-      $grants_sql = 'AND ('. implode(' OR ', $grants) .')';
+      $grants_sql = 'AND (' . implode(' OR ', $grants) . ')';
     }
 
     $sql = "SELECT COUNT(*) FROM {node_access} WHERE nid = 0 $grants_sql AND grant_view >= 1";
@@ -2385,17 +2385,17 @@ function node_content_access($op, $node, $account) {
   $type = is_string($node) ? $node : (is_array($node) ? $node['type'] : $node->type);
 
   if ($op == 'create') {
-    return user_access('create '. $type .' content', $account);
+    return user_access('create ' . $type . ' content', $account);
   }
 
   if ($op == 'update') {
-    if (user_access('edit any '. $type .' content', $account) || (user_access('edit own '. $type .' content', $account) && ($account->uid == $node->uid))) {
+    if (user_access('edit any ' . $type . ' content', $account) || (user_access('edit own ' . $type . ' content', $account) && ($account->uid == $node->uid))) {
       return TRUE;
     }
   }
 
   if ($op == 'delete') {
-    if (user_access('delete any '. $type .' content', $account) || (user_access('delete own '. $type .' content', $account) && ($account->uid == $node->uid))) {
+    if (user_access('delete any ' . $type . ' content', $account) || (user_access('delete own ' . $type . ' content', $account) && ($account->uid == $node->uid))) {
       return TRUE;
     }
   }
@@ -2437,7 +2437,7 @@ function node_forms() {
   $forms = array();
   if ($types = node_get_types()) {
     foreach (array_keys($types) as $type) {
-      $forms[$type .'_node_form']['callback'] = 'node_form';
+      $forms[$type . '_node_form']['callback'] = 'node_form';
     }
   }
   return $forms;
@@ -2705,7 +2705,7 @@ function node_unpublish_by_keyword_action_form($context) {
   $form['keywords'] = array(
     '#title' => t('Keywords'),
     '#type' => 'textarea',
-    '#description' => t('The post will be unpublished if it contains any of the character sequences above. Use a comma-separated list of character sequences. Example: funny, bungee jumping, "Company, Inc.". Character sequences are case-sensitive.'),
+    '#description' => t('The post will be unpublished if it contains any of the character sequences above. Use a comma-separated list of character sequences. Example: funny, bungee jumping, "Company, Inc." . Character sequences are case-sensitive.'),
     '#default_value' => isset($context['keywords']) ? drupal_implode_tags($context['keywords']) : '',
   );
   return $form;

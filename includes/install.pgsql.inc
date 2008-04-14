@@ -1,5 +1,5 @@
 <?php
-// $Id: install.pgsql.inc,v 1.6 2007/10/22 15:22:39 dries Exp $
+// $Id: install.pgsql.inc,v 1.7 2008/04/14 17:48:33 dries Exp $
 
 // PostgreSQL specific install functions
 
@@ -30,19 +30,19 @@ function drupal_test_pgsql($url, &$success) {
 
   // Decode url-encoded information in the db connection string
   if (isset($url['user'])) {
-    $conn_string .= ' user='. urldecode($url['user']);
+    $conn_string .= ' user=' . urldecode($url['user']);
   }
   if (isset($url['pass'])) {
-    $conn_string .= ' password='. urldecode($url['pass']);
+    $conn_string .= ' password=' . urldecode($url['pass']);
   }
   if (isset($url['host'])) {
-    $conn_string .= ' host='. urldecode($url['host']);
+    $conn_string .= ' host=' . urldecode($url['host']);
   }
   if (isset($url['path'])) {
-    $conn_string .= ' dbname='. substr(urldecode($url['path']), 1);
+    $conn_string .= ' dbname=' . substr(urldecode($url['path']), 1);
   }
   if (isset($url['port'])) {
-    $conn_string .= ' port='. urldecode($url['port']);
+    $conn_string .= ' port=' . urldecode($url['port']);
   }
 
   // Test connecting to the database.

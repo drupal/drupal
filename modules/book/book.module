@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.459 2008/04/10 10:28:22 dries Exp $
+// $Id: book.module,v 1.460 2008/04/14 17:48:35 dries Exp $
 
 /**
  * @file
@@ -60,14 +60,14 @@ function book_link($type, $node = NULL, $teaser = FALSE) {
       if ((user_access('add content to books') || user_access('administer book outlines')) && node_access('create', $child_type) && $node->status == 1 && $node->book['depth'] < MENU_MAX_DEPTH) {
         $links['book_add_child'] = array(
           'title' => t('Add child page'),
-          'href' => "node/add/". str_replace('_', '-', $child_type),
-          'query' => "parent=". $node->book['mlid'],
+          'href' => "node/add/" . str_replace('_', '-', $child_type),
+          'query' => "parent=" . $node->book['mlid'],
         );
       }
       if (user_access('access printer-friendly version')) {
         $links['book_printer'] = array(
           'title' => t('Printer-friendly version'),
-          'href' => 'book/export/html/'. $node->nid,
+          'href' => 'book/export/html/' . $node->nid,
           'attributes' => array('title' => t('Show a printer-friendly version of this book page and its sub-pages.'))
         );
       }
@@ -169,7 +169,7 @@ function _book_outline_remove_access($node) {
  * Implementation of hook_init(). Add's the book module's CSS.
  */
 function book_init() {
-  drupal_add_css(drupal_get_path('module', 'book') .'/book.css');
+  drupal_add_css(drupal_get_path('module', 'book') . '/book.css');
 }
 
 /**
@@ -269,7 +269,7 @@ function book_get_books() {
       $nids[] = $book['bid'];
     }
     if ($nids) {
-      $result2 = db_query(db_rewrite_sql("SELECT n.type, n.title, b.*, ml.* FROM {book} b INNER JOIN {node} n on b.nid = n.nid INNER JOIN {menu_links} ml ON b.mlid = ml.mlid WHERE n.nid IN (". implode(',', $nids) .") AND n.status = 1 ORDER BY ml.weight, ml.link_title"));
+      $result2 = db_query(db_rewrite_sql("SELECT n.type, n.title, b.*, ml.* FROM {book} b INNER JOIN {node} n on b.nid = n.nid INNER JOIN {menu_links} ml ON b.mlid = ml.mlid WHERE n.nid IN (" . implode(',', $nids) . ") AND n.status = 1 ORDER BY ml.weight, ml.link_title"));
       while ($link = db_fetch_array($result2)) {
         $link['href'] = $link['link_path'];
         $link['options'] = unserialize($link['options']);
@@ -288,7 +288,7 @@ function book_get_books() {
  */
 function book_form_alter(&$form, $form_state, $form_id) {
 
-  if (isset($form['type']) && isset($form['#node']) && $form['type']['#value'] .'_node_form' == $form_id) {
+  if (isset($form['type']) && isset($form['#node']) && $form['type']['#value'] . '_node_form' == $form_id) {
     // Add elements to the node form
     $node = $form['#node'];
 
@@ -339,14 +339,14 @@ function _book_parent_select($book_link) {
   if ($book_link['nid'] === $book_link['bid']) {
     // This is a book - at the top level.
     if ($book_link['original_bid'] === $book_link['bid']) {
-      $form['#prefix'] .= '<em>'. t('This is the top-level page in this book.') .'</em>';
+      $form['#prefix'] .= '<em>' . t('This is the top-level page in this book.') . '</em>';
     }
     else {
-      $form['#prefix'] .= '<em>'. t('This will be the top-level page in this book.') .'</em>';
+      $form['#prefix'] .= '<em>' . t('This will be the top-level page in this book.') . '</em>';
     }
   }
   elseif (!$book_link['bid']) {
-    $form['#prefix'] .= '<em>'. t('No book selected.') .'</em>';
+    $form['#prefix'] .= '<em>' . t('No book selected.') . '</em>';
   }
   else {
     $form = array(
@@ -410,11 +410,11 @@ function _book_add_form_elements(&$form, $node) {
 
   if (user_access('create new books') && ($nid == 'new' || ($nid != $node->book['original_bid']))) {
     // The node can become a new book, if it is not one already.
-    $options = array($nid => '<'. t('create a new book') .'>') + $options;
+    $options = array($nid => '<' . t('create a new book') . '>') + $options;
   }
   if (!$node->book['mlid']) {
     // The node is not currently in a the hierarchy.
-    $options = array(0 => '<'. t('none') .'>') + $options;
+    $options = array(0 => '<' . t('none') . '>') + $options;
   }
 
   // Add a drop-down to select the destination book.
@@ -447,7 +447,7 @@ function _book_update_outline(&$node) {
   }
   $new = empty($node->book['mlid']);
 
-  $node->book['link_path'] = 'node/'. $node->nid;
+  $node->book['link_path'] = 'node/' . $node->nid;
   $node->book['link_title'] = $node->title;
   $node->book['parent_mismatch'] = FALSE; // The normal case.
 
@@ -494,14 +494,14 @@ function book_update_bid($book_link) {
     $match[] = "p$i = %d";
     $args[] = $book_link["p$i"];
   }
-  $result = db_query("SELECT mlid FROM {menu_links} WHERE ". implode(' AND ', $match), $args);
+  $result = db_query("SELECT mlid FROM {menu_links} WHERE " . implode(' AND ', $match), $args);
 
   $mlids = array();
   while ($a = db_fetch_array($result)) {
     $mlids[] = $a['mlid'];
   }
   if ($mlids) {
-    db_query("UPDATE {book} SET bid = %d WHERE mlid IN (". implode(',', $mlids) .")", $book_link['bid']);
+    db_query("UPDATE {book} SET bid = %d WHERE mlid IN (" . implode(',', $mlids) . ")", $book_link['bid']);
   }
 }
 
@@ -616,7 +616,7 @@ function book_children($book_link) {
  * Generate the corresponding menu name from a book ID.
  */
 function book_menu_name($bid) {
-  return 'book-toc-'. $bid;
+  return 'book-toc-' . $bid;
 }
 
 /**
@@ -765,7 +765,7 @@ function book_form_node_delete_confirm_alter(&$form, $form_state) {
 
   if (isset($node->book) && $node->book['has_children']) {
     $form['book_warning'] = array(
-      '#value' => '<p>'. t('%title is part of a book outline, and has associated child pages. If you proceed with deletion, the child pages will be relocated automatically.', array('%title' => $node->title)) .'</p>',
+      '#value' => '<p>' . t('%title is part of a book outline, and has associated child pages. If you proceed with deletion, the child pages will be relocated automatically.', array('%title' => $node->title)) . '</p>',
       '#weight' => -10,
     );
   }
@@ -792,7 +792,7 @@ function template_preprocess_book_navigation(&$variables) {
   // Provide extra variables for themers. Not needed by default.
   $variables['book_id'] = $book_link['bid'];
   $variables['book_title'] = check_plain($book_link['link_title']);
-  $variables['book_url'] = 'node/'. $book_link['bid'];
+  $variables['book_url'] = 'node/' . $book_link['bid'];
   $variables['current_depth'] = $book_link['depth'];
 
   $variables['tree'] = '';
@@ -844,9 +844,9 @@ function _book_toc_recurse($tree, $indent, &$toc, $exclude, $depth_limit) {
       break;
     }
     if (!in_array($data['link']['mlid'], $exclude)) {
-      $toc[$data['link']['mlid']] = $indent .' '. truncate_utf8($data['link']['title'], 30, TRUE, TRUE);
+      $toc[$data['link']['mlid']] = $indent . ' ' . truncate_utf8($data['link']['title'], 30, TRUE, TRUE);
       if ($data['below']) {
-        _book_toc_recurse($data['below'], $indent .'--', $toc, $exclude, $depth_limit);
+        _book_toc_recurse($data['below'], $indent . '--', $toc, $exclude, $depth_limit);
       }
     }
   }
@@ -1008,17 +1008,17 @@ function book_node_type($op, $type) {
 function book_help($path, $arg) {
   switch ($path) {
     case 'admin/help#book':
-      $output = '<p>'. t('The book module is suited for creating structured, multi-page hypertexts such as site resource guides, manuals, and Frequently Asked Questions (FAQs). It permits a document to have chapters, sections, subsections, etc. Authors with suitable permissions can add pages to a collaborative book, placing them into the existing document by adding them to a table of contents menu.') .'</p>';
-      $output .= '<p>'. t('Pages in the book hierarchy have navigation elements at the bottom of the page for moving through the text. These links lead to the previous and next pages in the book, and to the level above the current page in the book\'s structure. More comprehensive navigation may be provided by enabling the <em>book navigation block</em> on the <a href="@admin-block">blocks administration page</a>.', array('@admin-block' => url('admin/build/block'))) .'</p>';
-      $output .= '<p>'. t('Users can select the <em>printer-friendly version</em> link visible at the bottom of a book page to generate a printer-friendly display of the page and all of its subsections. ') .'</p>';
-      $output .= '<p>'. t("Users with the <em>administer book outlines</em> permission can add a post of any content type to a book, by selecting the appropriate book while editing the post or by using the interface available on the post's <em>outline</em> tab.") .'</p>';
-      $output .= '<p>'. t('Administrators can view a list of all books on the <a href="@admin-node-book">book administration page</a>. The <em>Outline</em> page for each book allows section titles to be edited or rearranged.', array('@admin-node-book' => url('admin/content/book'))) .'</p>';
-      $output .= '<p>'. t('For more information, see the online handbook entry for <a href="@book">Book module</a>.', array('@book' => 'http://drupal.org/handbook/modules/book/')) .'</p>';
+      $output = '<p>' . t('The book module is suited for creating structured, multi-page hypertexts such as site resource guides, manuals, and Frequently Asked Questions (FAQs). It permits a document to have chapters, sections, subsections, etc. Authors with suitable permissions can add pages to a collaborative book, placing them into the existing document by adding them to a table of contents menu.') . '</p>';
+      $output .= '<p>' . t('Pages in the book hierarchy have navigation elements at the bottom of the page for moving through the text. These links lead to the previous and next pages in the book, and to the level above the current page in the book\'s structure. More comprehensive navigation may be provided by enabling the <em>book navigation block</em> on the <a href="@admin-block">blocks administration page</a>.', array('@admin-block' => url('admin/build/block'))) . '</p>';
+      $output .= '<p>' . t('Users can select the <em>printer-friendly version</em> link visible at the bottom of a book page to generate a printer-friendly display of the page and all of its subsections. ') . '</p>';
+      $output .= '<p>' . t("Users with the <em>administer book outlines</em> permission can add a post of any content type to a book, by selecting the appropriate book while editing the post or by using the interface available on the post's <em>outline</em> tab.") . '</p>';
+      $output .= '<p>' . t('Administrators can view a list of all books on the <a href="@admin-node-book">book administration page</a>. The <em>Outline</em> page for each book allows section titles to be edited or rearranged.', array('@admin-node-book' => url('admin/content/book'))) . '</p>';
+      $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@book">Book module</a>.', array('@book' => 'http://drupal.org/handbook/modules/book/')) . '</p>';
       return $output;
     case 'admin/content/book':
-      return '<p>'. t('The book module offers a means to organize a collection of related posts, collectively known as a book. When viewed, these posts automatically display links to adjacent book pages, providing a simple navigation system for creating and reviewing structured content.') .'</p>';
+      return '<p>' . t('The book module offers a means to organize a collection of related posts, collectively known as a book. When viewed, these posts automatically display links to adjacent book pages, providing a simple navigation system for creating and reviewing structured content.') . '</p>';
     case 'node/%/outline':
-      return '<p>'. t('The outline feature allows you to include posts in the <a href="@book">book hierarchy</a>, as well as move them within the hierarchy or to <a href="@book-admin">reorder an entire book</a>.', array('@book' => url('book'), '@book-admin' => url('admin/content/book'))) .'</p>';
+      return '<p>' . t('The outline feature allows you to include posts in the <a href="@book">book hierarchy</a>, as well as move them within the hierarchy or to <a href="@book-admin">reorder an entire book</a>.', array('@book' => url('book'), '@book-admin' => url('admin/content/book'))) . '</p>';
   }
 }
 
@@ -1050,7 +1050,7 @@ function book_menu_subtree_data($item) {
   static $tree = array();
 
   // Generate a cache ID (cid) specific for this $menu_name and $item.
-  $cid = 'links:'. $item['menu_name'] .':subtree-cid:'. $item['mlid'];
+  $cid = 'links:' . $item['menu_name'] . ':subtree-cid:' . $item['mlid'];
 
   if (!isset($tree[$cid])) {
     $cache = cache_get($cid, 'cache_menu');
@@ -1076,14 +1076,14 @@ function book_menu_subtree_data($item) {
         SELECT b.*, m.load_functions, m.to_arg_functions, m.access_callback, m.access_arguments, m.page_callback, m.page_arguments, m.title, m.title_callback, m.title_arguments, m.type, ml.*
         FROM {menu_links} ml INNER JOIN {menu_router} m ON m.path = ml.router_path
         INNER JOIN {book} b ON ml.mlid = b.mlid
-        WHERE ". implode(' AND ', $match) ."
+        WHERE " . implode(' AND ', $match) . "
         ORDER BY p1 ASC, p2 ASC, p3 ASC, p4 ASC, p5 ASC, p6 ASC, p7 ASC, p8 ASC, p9 ASC";
 
       $data['tree'] = menu_tree_data(db_query($sql, $args), array(), $item['depth']);
       $data['node_links'] = array();
       menu_tree_collect_node_links($data['tree'], $data['node_links']);
       // Compute the real cid for book subtree data.
-      $tree_cid = 'links:'. $menu_name .':subtree-data:'. md5(serialize($data));
+      $tree_cid = 'links:' . $menu_name . ':subtree-data:' . md5(serialize($data));
       // Cache the data, if it is not already in the cache.
       if (!cache_get($tree_cid, 'cache_menu')) {
         cache_set($tree_cid, $data, 'cache_menu');

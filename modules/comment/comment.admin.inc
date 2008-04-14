@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.admin.inc,v 1.5 2008/04/10 10:13:57 dries Exp $
+// $Id: comment.admin.inc,v 1.6 2008/04/14 17:48:36 dries Exp $
 
 /**
  * @file
@@ -57,18 +57,18 @@ function comment_admin_overview($type = 'new', $arg) {
     array('data' => t('Time'), 'field' => 'timestamp', 'sort' => 'desc'),
     array('data' => t('Operations'))
   ));
-  $result = pager_query('SELECT c.subject, c.nid, c.cid, c.comment, c.timestamp, c.status, c.name, c.homepage, u.name AS registered_name, u.uid, n.title as node_title FROM {comments} c INNER JOIN {users} u ON u.uid = c.uid INNER JOIN {node} n ON n.nid = c.nid WHERE c.status = %d'. tablesort_sql($form['header']['#value']), 50, 0, NULL, $status);
+  $result = pager_query('SELECT c.subject, c.nid, c.cid, c.comment, c.timestamp, c.status, c.name, c.homepage, u.name AS registered_name, u.uid, n.title as node_title FROM {comments} c INNER JOIN {users} u ON u.uid = c.uid INNER JOIN {node} n ON n.nid = c.nid WHERE c.status = %d' . tablesort_sql($form['header']['#value']), 50, 0, NULL, $status);
 
   // build a table listing the appropriate comments
   $destination = drupal_get_destination();
   while ($comment = db_fetch_object($result)) {
     $comments[$comment->cid] = '';
     $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
-    $form['subject'][$comment->cid] = array('#value' => l($comment->subject, 'node/'. $comment->nid, array('title' => truncate_utf8($comment->comment, 128), 'fragment' => 'comment-'. $comment->cid)));
+    $form['subject'][$comment->cid] = array('#value' => l($comment->subject, 'node/' . $comment->nid, array('title' => truncate_utf8($comment->comment, 128), 'fragment' => 'comment-' . $comment->cid)));
     $form['username'][$comment->cid] = array('#value' => theme('username', $comment));
-    $form['node_title'][$comment->cid] = array('#value' => l($comment->node_title, 'node/'. $comment->nid));
+    $form['node_title'][$comment->cid] = array('#value' => l($comment->node_title, 'node/' . $comment->nid));
     $form['timestamp'][$comment->cid] = array('#value' => format_date($comment->timestamp, 'small'));
-    $form['operations'][$comment->cid] = array('#value' => l(t('edit'), 'comment/edit/'. $comment->cid, array('query' => $destination)));
+    $form['operations'][$comment->cid] = array('#value' => l(t('edit'), 'comment/edit/' . $comment->cid, array('query' => $destination)));
   }
   $form['comments'] = array('#type' => 'checkboxes', '#options' => isset($comments) ? $comments: array());
   $form['pager'] = array('#value' => theme('pager', NULL, 50, 0));
@@ -108,7 +108,7 @@ function comment_admin_overview_submit($form, &$form_state) {
         // Allow modules to respond to the updating of a comment.
         comment_invoke_comment($comment, $form_state['values']['operation']);
         // Add an entry to the watchdog log.
-        watchdog('content', 'Comment: updated %subject.', array('%subject' => $comment->subject), WATCHDOG_NOTICE, l(t('view'), 'node/'. $comment->nid, array('fragment' => 'comment-'. $comment->cid)));
+        watchdog('content', 'Comment: updated %subject.', array('%subject' => $comment->subject), WATCHDOG_NOTICE, l(t('view'), 'node/' . $comment->nid, array('fragment' => 'comment-' . $comment->cid)));
       }
     }
     cache_clear_all();
@@ -173,7 +173,7 @@ function comment_multiple_delete_confirm(&$form_state) {
     $comment = comment_load($cid);
     if (is_object($comment) && is_numeric($comment->cid)) {
       $subject = db_result(db_query('SELECT subject FROM {comments} WHERE cid = %d', $cid));
-      $form['comments'][$cid] = array('#type' => 'hidden', '#value' => $cid, '#prefix' => '<li>', '#suffix' => check_plain($subject) .'</li>');
+      $form['comments'][$cid] = array('#type' => 'hidden', '#value' => $cid, '#prefix' => '<li>', '#suffix' => check_plain($subject) . '</li>');
       $comment_counter++;
     }
   }
@@ -243,7 +243,7 @@ function comment_confirm_delete(&$form_state, $comment) {
   return confirm_form(
     $form,
     t('Are you sure you want to delete the comment %title?', array('%title' => $comment->subject)),
-    'node/'. $comment->nid,
+    'node/' . $comment->nid,
     t('Any replies to this comment will be lost. This action cannot be undone.'),
     t('Delete'),
     t('Cancel'),

@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.install,v 1.1 2008/01/09 09:51:34 goba Exp $
+// $Id: blogapi.install,v 1.2 2008/04/14 17:48:35 dries Exp $
 
 /**
  * @defgroup updates-5.x-to-6.x Blog API updates from 5.x to 6.x
@@ -10,7 +10,7 @@
  * Inform users about the new permission.
  */
 function blogapi_update_6000() {
-  drupal_set_message("Blog API module does not depend on blog module's permissions anymore, but provides its own 'administer content with blog api' permission instead. Until <a href=\"". url('admin/user/permissions', array('fragment' => 'module-blogapi')) .'">this permission is assigned</a> to at least one user role, only the site administrator will be able to use Blog API features.');
+  drupal_set_message("Blog API module does not depend on blog module's permissions anymore, but provides its own 'administer content with blog api' permission instead. Until <a href=\"" . url('admin/user/permissions', array('fragment' => 'module-blogapi')) . '">this permission is assigned</a> to at least one user role, only the site administrator will be able to use Blog API features.');
   return array();
 }
 

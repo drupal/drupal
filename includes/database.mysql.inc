@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysql.inc,v 1.90 2008/02/17 19:39:11 dries Exp $
+// $Id: database.mysql.inc,v 1.91 2008/04/14 17:48:33 dries Exp $
 
 /**
  * @file
@@ -65,7 +65,7 @@ function db_connect($url) {
 
   // Allow for non-standard MySQL port.
   if (isset($url['port'])) {
-    $url['host'] = $url['host'] .':'. $url['port'];
+    $url['host'] = $url['host'] . ':' . $url['port'];
   }
 
   // - TRUE makes mysql_connect() always open a new link, even if
@@ -103,13 +103,13 @@ function _db_query($query, $debug = 0) {
     $name = $user->uid ? $user->name : variable_get('anonymous', 'Anonymous');
     // str_replace() to prevent SQL injection via username or anonymous name.
     $name = str_replace(array('*', '/'), '', $name);
-    $query = '/* '. $name .' : '. $bt[2]['function'] .' */ '. $query;
+    $query = '/* ' . $name . ' : ' . $bt[2]['function'] . ' */ ' . $query;
   }
 
   $result = mysql_query($query, $active_db);
 
   if (variable_get('dev_query', 0)) {
-    $query = $bt[2]['function'] ."\n". $query;
+    $query = $bt[2]['function'] . "\n" . $query;
     list($usec, $sec) = explode(' ', microtime());
     $stop = (float)$usec + (float)$sec;
     $diff = $stop - $timer;
@@ -117,7 +117,7 @@ function _db_query($query, $debug = 0) {
   }
 
   if ($debug) {
-    print '<p>query: '. $query .'<br />error:'. mysql_error($active_db) .'</p>';
+    print '<p>query: ' . $query . '<br />error:' . mysql_error($active_db) . '</p>';
   }
 
   if (!mysql_errno($active_db)) {
@@ -126,7 +126,7 @@ function _db_query($query, $debug = 0) {
   else {
     // Indicate to drupal_error_handler that this is a database error.
     ${DB_ERROR} = TRUE;
-    trigger_error(check_plain(mysql_error($active_db) ."\nquery: ". $query), E_USER_WARNING);
+    trigger_error(check_plain(mysql_error($active_db) . "\nquery: " . $query), E_USER_WARNING);
     return FALSE;
   }
 }
@@ -239,7 +239,7 @@ function db_query_range($query) {
   }
   _db_query_callback($args, TRUE);
   $query = preg_replace_callback(DB_QUERY_REGEXP, '_db_query_callback', $query);
-  $query .= ' LIMIT '. (int)$from .', '. (int)$count;
+  $query .= ' LIMIT ' . (int)$from . ', ' . (int)$count;
   return _db_query($query);
 }
 
@@ -280,7 +280,7 @@ function db_query_temporary($query) {
   $tablename = array_pop($args);
   array_shift($args);
 
-  $query = preg_replace('/^SELECT/i', 'CREATE TEMPORARY TABLE '. $tablename .' Engine=HEAP SELECT', db_prefix_tables($query));
+  $query = preg_replace('/^SELECT/i', 'CREATE TEMPORARY TABLE ' . $tablename . ' Engine=HEAP SELECT', db_prefix_tables($query));
   if (isset($args[0]) and is_array($args[0])) { // 'All arguments in one array' syntax
     $args = $args[0];
   }
@@ -299,7 +299,7 @@ function db_query_temporary($query) {
  */
 function db_encode_blob($data) {
   global $active_db;
-  return "'". mysql_real_escape_string($data, $active_db) ."'";
+  return "'" . mysql_real_escape_string($data, $active_db) . "'";
 }
 
 /**
@@ -326,7 +326,7 @@ function db_escape_string($text) {
  * Lock a table.
  */
 function db_lock_table($table) {
-  db_query('LOCK TABLES {'. db_escape_table($table) .'} WRITE');
+  db_query('LOCK TABLES {' . db_escape_table($table) . '} WRITE');
 }
 
 /**
@@ -340,14 +340,14 @@ function db_unlock_tables() {
  * Check if a table exists.
  */
 function db_table_exists($table) {
-  return (bool) db_fetch_object(db_query("SHOW TABLES LIKE '{". db_escape_table($table) ."}'"));
+  return (bool) db_fetch_object(db_query("SHOW TABLES LIKE '{" . db_escape_table($table) . "}'"));
 }
 
 /**
  * Check if a column exists in the given table.
  */
 function db_column_exists($table, $column) {
-  return (bool) db_fetch_object(db_query("SHOW COLUMNS FROM {". db_escape_table($table) ."} LIKE '". db_escape_table($column) ."'"));
+  return (bool) db_fetch_object(db_query("SHOW COLUMNS FROM {" . db_escape_table($table) . "} LIKE '" . db_escape_table($column) . "'"));
 }
 
 /**
@@ -362,9 +362,9 @@ function db_column_exists($table, $column) {
  * @return SQL query with the DISTINCT wrapper surrounding the given table.field.
  */
 function db_distinct_field($table, $field, $query) {
-  $field_to_select = 'DISTINCT('. $table .'.'. $field .')';
+  $field_to_select = 'DISTINCT(' . $table . '.' . $field . ')';
   // (?<!text) is a negative look-behind (no need to rewrite queries that already use DISTINCT).
-  return preg_replace('/(SELECT.*)(?:'. $table .'\.|\s)(?<!DISTINCT\()(?<!DISTINCT\('. $table .'\.)'. $field .'(.*FROM )/AUsi', '\1 '. $field_to_select .'\2', $query);
+  return preg_replace('/(SELECT.*)(?:' . $table . '\.|\s)(?<!DISTINCT\()(?<!DISTINCT\(' . $table . '\.)' . $field . '(.*FROM )/AUsi', '\1 ' . $field_to_select . '\2', $query);
 }
 
 /**

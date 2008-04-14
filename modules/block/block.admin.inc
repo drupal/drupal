@@ -1,5 +1,5 @@
 <?php
-// $Id: block.admin.inc,v 1.14 2007/12/22 23:24:24 goba Exp $
+// $Id: block.admin.inc,v 1.15 2008/04/14 17:48:34 dries Exp $
 
 /**
  * @file
@@ -29,23 +29,23 @@ function block_admin_display_form(&$form_state, $blocks, $theme = NULL) {
   global $theme_key, $custom_theme;
 
   // Add CSS
-  drupal_add_css(drupal_get_path('module', 'block') .'/block.css', 'module', 'all', FALSE);
+  drupal_add_css(drupal_get_path('module', 'block') . '/block.css', 'module', 'all', FALSE);
 
   // If non-default theme configuration has been selected, set the custom theme.
   $custom_theme = isset($theme) ? $theme : variable_get('theme_default', 'garland');
   init_theme();
 
   $throttle = module_exists('throttle');
-  $block_regions = system_region_list($theme_key) + array(BLOCK_REGION_NONE => '<'. t('none') .'>');
+  $block_regions = system_region_list($theme_key) + array(BLOCK_REGION_NONE => '<' . t('none') . '>');
 
   // Build form tree
   $form = array(
-    '#action' => arg(3) ? url('admin/build/block/list/'. $theme_key) : url('admin/build/block'),
+    '#action' => arg(3) ? url('admin/build/block/list/' . $theme_key) : url('admin/build/block'),
     '#tree' => TRUE,
   );
 
   foreach ($blocks as $i => $block) {
-    $key = $block['module'] .'_'. $block['delta'];
+    $key = $block['module'] . '_' . $block['delta'];
     $form[$key]['module'] = array(
       '#type' => 'value',
       '#value' => $block['module'],
@@ -74,9 +74,9 @@ function block_admin_display_form(&$form_state, $blocks, $theme = NULL) {
     if ($throttle) {
       $form[$key]['throttle'] = array('#type' => 'checkbox', '#default_value' => isset($block['throttle']) ? $block['throttle'] : FALSE);
     }
-    $form[$key]['configure'] = array('#value' => l(t('configure'), 'admin/build/block/configure/'. $block['module'] .'/'. $block['delta']));
+    $form[$key]['configure'] = array('#value' => l(t('configure'), 'admin/build/block/configure/' . $block['module'] . '/' . $block['delta']));
     if ($block['module'] == 'block') {
-      $form[$key]['delete'] = array('#value' => l(t('delete'), 'admin/build/block/delete/'. $block['delta']));
+      $form[$key]['delete'] = array('#value' => l(t('delete'), 'admin/build/block/delete/' . $block['delta']));
     }
   }
 
@@ -234,7 +234,7 @@ function block_admin_configure(&$form_state, $module = NULL, $delta = 0) {
 
     if ($access) {
       $options[] = t('Show if the following PHP code returns <code>TRUE</code> (PHP-mode, experts only).');
-      $description .= ' '. t('If the PHP-mode is chosen, enter PHP code between %php. Note that executing incorrect PHP-code can break your Drupal site.', array('%php' => '<?php ?>'));
+      $description .= ' ' . t('If the PHP-mode is chosen, enter PHP code between %php. Note that executing incorrect PHP-code can break your Drupal site.', array('%php' => '<?php ?>'));
     }
     $form['page_vis_settings']['visibility'] = array(
       '#type' => 'radios',
@@ -359,7 +359,7 @@ function template_preprocess_block_admin_display_form(&$variables) {
 
   foreach ($block_regions as $key => $value) {
     // Highlight regions on page to provide visual reference.
-    drupal_set_content($key, '<div class="block-region">'. $value .'</div>');
+    drupal_set_content($key, '<div class="block-region">' . $value . '</div>');
     // Initialize an empty array for the region.
     $variables['block_listing'][$key] = array();
   }
@@ -378,8 +378,8 @@ function template_preprocess_block_admin_display_form(&$variables) {
       $region = $block['region']['#default_value'];
 
       // Set special classes needed for table drag and drop.
-      $variables['form'][$i]['region']['#attributes']['class'] = 'block-region-select block-region-'. $region;
-      $variables['form'][$i]['weight']['#attributes']['class'] = 'block-weight block-weight-'. $region;
+      $variables['form'][$i]['region']['#attributes']['class'] = 'block-region-select block-region-' . $region;
+      $variables['form'][$i]['weight']['#attributes']['class'] = 'block-weight block-weight-' . $region;
 
       $variables['block_listing'][$region][$i]->row_class = isset($block['#attributes']['class']) ? $block['#attributes']['class'] : '';
       $variables['block_listing'][$region][$i]->block_modified = isset($block['#attributes']['class']) && strpos($block['#attributes']['class'], 'block-modified') !== FALSE ? TRUE : FALSE;

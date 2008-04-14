@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.pages.inc,v 1.5 2008/01/30 22:11:22 goba Exp $
+// $Id: openid.pages.inc,v 1.6 2008/04/14 17:48:38 dries Exp $
 
 /**
  * @file
@@ -29,7 +29,7 @@ function openid_authentication_page() {
  */
 function openid_user_identities($account) {
   drupal_set_title(check_plain($account->name));
-  drupal_add_css(drupal_get_path('module', 'openid') .'/openid.css', 'module');
+  drupal_add_css(drupal_get_path('module', 'openid') . '/openid.css', 'module');
 
   // Check to see if we got a response
   $result = openid_complete();
@@ -44,7 +44,7 @@ function openid_user_identities($account) {
 
   $result = db_query("SELECT * FROM {authmap} WHERE module='openid' AND uid=%d", $account->uid);
   while ($identity = db_fetch_object($result)) {
-    $rows[] = array($identity->authname, l(t('Delete'), 'user/'. $account->uid .'/openid/delete/'. $identity->aid));
+    $rows[] = array($identity->authname, l(t('Delete'), 'user/' . $account->uid . '/openid/delete/' . $identity->aid));
   }
 
   $output = theme('table', $header, $rows);
@@ -74,7 +74,7 @@ function openid_user_add_validate($form, &$form_state) {
     form_set_error('openid_identifier', t('That OpenID is already in use on this site.'));
   }
   else {
-    $return_to = url('user/'. arg(1) .'/openid', array('absolute' => TRUE));
+    $return_to = url('user/' . arg(1) . '/openid', array('absolute' => TRUE));
     openid_begin($form_state['values']['openid_identifier'], $return_to);
   }
 }
@@ -87,5 +87,5 @@ function openid_user_delete($account, $aid = 0) {
   if (db_affected_rows()) {
     drupal_set_message(t('OpenID deleted.'));
   }
-  drupal_goto('user/'. $account->uid .'/openid');
+  drupal_goto('user/' . $account->uid . '/openid');
 }

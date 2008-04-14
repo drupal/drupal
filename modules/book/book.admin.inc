@@ -1,5 +1,5 @@
 <?php
-// $Id: book.admin.inc,v 1.8 2008/01/08 10:35:41 goba Exp $
+// $Id: book.admin.inc,v 1.9 2008/04/14 17:48:35 dries Exp $
 
 /**
  * @file
@@ -12,7 +12,7 @@
 function book_admin_overview() {
   $rows = array();
   foreach (book_get_books() as $book) {
-    $rows[] = array(l($book['title'], $book['href'], $book['options']), l(t('edit order and titles'), "admin/content/book/". $book['nid']));
+    $rows[] = array(l($book['title'], $book['href'], $book['options']), l(t('edit order and titles'), "admin/content/book/" . $book['nid']));
   }
   $headers = array(t('Book'), t('Operations'));
 
@@ -115,7 +115,7 @@ function book_admin_edit_submit($form, &$form_state) {
         $node->revision = 1;
         $node->log = t('Title changed from %original to %current.', array('%original' => $node->title, '%current' => $values['title']));
         node_save($node);
-        watchdog('content', 'book: updated %title.', array('%title' => $node->title), WATCHDOG_NOTICE, l(t('view'), 'node/'. $node->nid));
+        watchdog('content', 'book: updated %title.', array('%title' => $node->title), WATCHDOG_NOTICE, l(t('view'), 'node/' . $node->nid));
       }
     }
   }
@@ -212,14 +212,14 @@ function theme_book_admin_table($form) {
       drupal_render($form[$key]['weight']),
       drupal_render($form[$key]['plid']) . drupal_render($form[$key]['mlid']),
       l(t('view'), $href),
-      $access ? l(t('edit'), 'node/'. $nid .'/edit', array('query' => $destination)) : '&nbsp',
-      $access ? l(t('delete'), 'node/'. $nid .'/delete', array('query' => $destination) )  : '&nbsp',
+      $access ? l(t('edit'), 'node/' . $nid . '/edit', array('query' => $destination)) : '&nbsp',
+      $access ? l(t('delete'), 'node/' . $nid . '/delete', array('query' => $destination) )  : '&nbsp',
     );
     $row = array('data' => $data);
     if (isset($form[$key]['#attributes'])) {
       $row = array_merge($row, $form[$key]['#attributes']);
     }
-    $row['class'] = empty($row['class']) ? 'draggable' : $row['class'] .' draggable';
+    $row['class'] = empty($row['class']) ? 'draggable' : $row['class'] . ' draggable';
     $rows[] = $row;
   }
 

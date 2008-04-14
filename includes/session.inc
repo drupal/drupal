@@ -1,5 +1,5 @@
 <?php
-// $Id: session.inc,v 1.46 2008/02/17 20:03:42 dries Exp $
+// $Id: session.inc,v 1.47 2008/04/14 17:48:33 dries Exp $
 
 /**
  * @file
@@ -110,7 +110,7 @@ function sess_regenerate() {
  */
 function sess_count($timestamp = 0, $anonymous = true) {
   $query = $anonymous ? ' AND uid = 0' : ' AND uid > 0';
-  return db_result(db_query('SELECT COUNT(sid) AS count FROM {sessions} WHERE timestamp >= %d'. $query, $timestamp));
+  return db_result(db_query('SELECT COUNT(sid) AS count FROM {sessions} WHERE timestamp >= %d' . $query, $timestamp));
 }
 
 /**

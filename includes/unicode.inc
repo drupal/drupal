@@ -1,5 +1,5 @@
 <?php
-// $Id: unicode.inc,v 1.29 2007/12/28 12:02:50 dries Exp $
+// $Id: unicode.inc,v 1.30 2008/04/14 17:48:33 dries Exp $
 
 /**
  * Indicates an error during check for PHP unicode support.
@@ -178,7 +178,7 @@ function drupal_convert_to_utf8($data, $encoding) {
     $out = @mb_convert_encoding($data, 'utf-8', $encoding);
   }
   else if (function_exists('recode_string')) {
-    $out = @recode_string($encoding .'..utf-8', $data);
+    $out = @recode_string($encoding . '..utf-8', $data);
   }
   else {
     watchdog('php', 'Unsupported encoding %s. Please install iconv, GNU recode or mbstring for PHP.', array('%s' => $encoding), WATCHDOG_ERROR);
@@ -283,7 +283,7 @@ function mime_header_encode($string) {
     $output = '';
     while ($len > 0) {
       $chunk = drupal_truncate_bytes($string, $chunk_size);
-      $output .= ' =?UTF-8?B?'. base64_encode($chunk) ."?=\n";
+      $output .= ' =?UTF-8?B?' . base64_encode($chunk) . "?=\n";
       $c = strlen($chunk);
       $string = substr($string, $c);
       $len -= $c;

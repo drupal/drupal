@@ -1,5 +1,5 @@
 <?php
-// $Id: php.install,v 1.1 2007/04/24 10:54:34 dries Exp $
+// $Id: php.install,v 1.2 2008/04/14 17:48:41 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -17,7 +17,7 @@ function php_install() {
     // Enable the PHP evaluator filter.
     db_query("INSERT INTO {filters} (format, module, delta, weight) VALUES (%d, 'php', 0, 0)", $format);
 
-    drupal_set_message(t('A !php-code input format has been created.', array('!php-code' => l('PHP code', 'admin/settings/filters/'. $format))));
+    drupal_set_message(t('A !php-code input format has been created.', array('!php-code' => l('PHP code', 'admin/settings/filters/' . $format))));
   }
 }
 

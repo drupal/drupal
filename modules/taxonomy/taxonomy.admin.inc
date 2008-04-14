@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.24 2008/02/14 18:41:16 dries Exp $
+// $Id: taxonomy.admin.inc,v 1.25 2008/04/14 17:48:42 dries Exp $
 
 /**
  * @file
@@ -210,11 +210,11 @@ function taxonomy_form_vocabulary_submit($form, &$form_state) {
   switch (taxonomy_save_vocabulary($form_state['values'])) {
     case SAVED_NEW:
       drupal_set_message(t('Created new vocabulary %name.', array('%name' => $form_state['values']['name'])));
-      watchdog('taxonomy', 'Created new vocabulary %name.', array('%name' => $form_state['values']['name']), WATCHDOG_NOTICE, l(t('edit'), 'admin/content/taxonomy/edit/vocabulary/'. $form_state['values']['vid']));
+      watchdog('taxonomy', 'Created new vocabulary %name.', array('%name' => $form_state['values']['name']), WATCHDOG_NOTICE, l(t('edit'), 'admin/content/taxonomy/edit/vocabulary/' . $form_state['values']['vid']));
       break;
     case SAVED_UPDATED:
       drupal_set_message(t('Updated vocabulary %name.', array('%name' => $form_state['values']['name'])));
-      watchdog('taxonomy', 'Updated vocabulary %name.', array('%name' => $form_state['values']['name']), WATCHDOG_NOTICE, l(t('edit'), 'admin/content/taxonomy/edit/vocabulary/'. $form_state['values']['vid']));
+      watchdog('taxonomy', 'Updated vocabulary %name.', array('%name' => $form_state['values']['name']), WATCHDOG_NOTICE, l(t('edit'), 'admin/content/taxonomy/edit/vocabulary/' . $form_state['values']['vid']));
       break;
   }
 
@@ -288,7 +288,7 @@ function taxonomy_overview_terms(&$form_state, $vocabulary) {
     $results = pager_query(db_rewrite_sql('SELECT t.*, h.parent FROM {term_data} t INNER JOIN {term_hierarchy} h ON t.tid = h.tid WHERE t.vid = %d ORDER BY weight, name', 't', 'tid'), $page_increment, 0, NULL, $vocabulary->vid);
     $total_entries = db_query(db_rewrite_sql('SELECT count(*) FROM {term_data} t INNER JOIN {term_hierarchy} h ON t.tid = h.tid WHERE t.vid = %d'), $page_increment, 0, NULL, $vocabulary->vid);
     while ($term = db_fetch_object($results)) {
-      $key = 'tid:'. $term->tid .':0';
+      $key = 'tid:' . $term->tid . ':0';
       $current_page[$key] = $term;
       $page_entries++;
     }
@@ -342,7 +342,7 @@ function taxonomy_overview_terms(&$form_state, $vocabulary) {
       // Finally, if we've gotten down this far, we're rendering a term on this page.
       $page_entries++;
       $term_deltas[$term->tid] = isset($term_deltas[$term->tid]) ? $term_deltas[$term->tid] + 1 : 0;
-      $key = 'tid:'. $term->tid .':'. $term_deltas[$term->tid];
+      $key = 'tid:' . $term->tid . ':' . $term_deltas[$term->tid];
 
       // Keep track of the first term displayed on this page.
       if ($page_entries == 1) {
@@ -426,7 +426,7 @@ function taxonomy_overview_terms(&$form_state, $vocabulary) {
     );
     $form['destination'] = array(
       '#type' => 'hidden',
-      '#value' => $_GET['q'] . (isset($_GET['page']) ? '?page='. $_GET['page'] : '')
+      '#value' => $_GET['q'] . (isset($_GET['page']) ? '?page=' . $_GET['page'] : '')
     );
   }
 
@@ -554,9 +554,9 @@ function theme_taxonomy_overview_terms($form) {
   if ($form['#parent_fields']) {
     drupal_add_tabledrag('taxonomy', 'match', 'parent', 'term-parent', 'term-parent', 'term-id', FALSE);
     drupal_add_tabledrag('taxonomy', 'depth', 'group', 'term-depth', NULL, NULL, FALSE);
-    drupal_add_js(drupal_get_path('module', 'taxonomy') .'/taxonomy.js');
+    drupal_add_js(drupal_get_path('module', 'taxonomy') . '/taxonomy.js');
     drupal_add_js(array('taxonomy' => array('backPeddle' => $back_peddle, 'forwardPeddle' => $forward_peddle)), 'setting');
-    drupal_add_css(drupal_get_path('module', 'taxonomy') .'/taxonomy.css');
+    drupal_add_css(drupal_get_path('module', 'taxonomy') . '/taxonomy.css');
   }
 
   $errors = form_get_errors() != FALSE ? form_get_errors() : array();
@@ -699,8 +699,8 @@ function taxonomy_form_term(&$form_state, $vocabulary, $edit = array()) {
     }
     $exclude[] = $edit['tid'];
 
-    $form['advanced']['parent'] = _taxonomy_term_select(t('Parents'), 'parent', $parent, $vocabulary->vid, t('Parent terms') .'.', 1, '<'. t('root') .'>', $exclude);
-    $form['advanced']['relations'] = _taxonomy_term_select(t('Related terms'), 'relations', array_keys(taxonomy_get_related($edit['tid'])), $vocabulary->vid, NULL, 1, '<'. t('none') .'>', array($edit['tid']));
+    $form['advanced']['parent'] = _taxonomy_term_select(t('Parents'), 'parent', $parent, $vocabulary->vid, t('Parent terms') . '.', 1, '<' . t('root') . '>', $exclude);
+    $form['advanced']['relations'] = _taxonomy_term_select(t('Related terms'), 'relations', array_keys(taxonomy_get_related($edit['tid'])), $vocabulary->vid, NULL, 1, '<' . t('none') . '>', array($edit['tid']));
   }
   $form['advanced']['synonyms'] = array(
     '#type' => 'textarea',
@@ -773,11 +773,11 @@ function taxonomy_form_term_submit($form, &$form_state) {
   switch (taxonomy_save_term($form_state['values'])) {
     case SAVED_NEW:
       drupal_set_message(t('Created new term %term.', array('%term' => $form_state['values']['name'])));
-      watchdog('taxonomy', 'Created new term %term.', array('%term' => $form_state['values']['name']), WATCHDOG_NOTICE, l(t('edit'), 'admin/content/taxonomy/edit/term/'. $form_state['values']['tid']));
+      watchdog('taxonomy', 'Created new term %term.', array('%term' => $form_state['values']['name']), WATCHDOG_NOTICE, l(t('edit'), 'admin/content/taxonomy/edit/term/' . $form_state['values']['tid']));
       break;
     case SAVED_UPDATED:
       drupal_set_message(t('Updated term %term.', array('%term' => $form_state['values']['name'])));
-      watchdog('taxonomy', 'Updated term %term.', array('%term' => $form_state['values']['name']), WATCHDOG_NOTICE, l(t('edit'), 'admin/content/taxonomy/edit/term/'. $form_state['values']['tid']));
+      watchdog('taxonomy', 'Updated term %term.', array('%term' => $form_state['values']['name']), WATCHDOG_NOTICE, l(t('edit'), 'admin/content/taxonomy/edit/term/' . $form_state['values']['tid']));
       break;
   }
 
@@ -823,8 +823,8 @@ function taxonomy_term_confirm_parents(&$form_state, $vocabulary) {
     );
   }
   $question = t('Set multiple term parents?');
-  $description = '<p>'. t("Adding multiple parents to a term will cause the %vocabulary vocabulary to look for multiple parents on every term. Because multiple parents are not supported when using the drag and drop outline interface, drag and drop will be disabled if you enable this option. If you choose to have multiple parents, you will only be able to set parents by using the term edit form.", array('%vocabulary' => $vocabulary->name)) .'</p>';
-  $description .= '<p>'. t("You may re-enable the drag and drop interface at any time by reducing multiple parents to a single parent for the terms in this vocabulary.") .'</p>';
+  $description = '<p>' . t("Adding multiple parents to a term will cause the %vocabulary vocabulary to look for multiple parents on every term. Because multiple parents are not supported when using the drag and drop outline interface, drag and drop will be disabled if you enable this option. If you choose to have multiple parents, you will only be able to set parents by using the term edit form.", array('%vocabulary' => $vocabulary->name)) . '</p>';
+  $description .= '<p>' . t("You may re-enable the drag and drop interface at any time by reducing multiple parents to a single parent for the terms in this vocabulary.") . '</p>';
   return confirm_form($form, $question, drupal_get_destination(), $description, t('Set multiple parents'));
 }
 
@@ -916,7 +916,7 @@ function taxonomy_vocabulary_confirm_reset_alphabetical(&$form_state, $vid) {
   return confirm_form($form,
                   t('Are you sure you want to reset the vocabulary %title to alphabetical order?',
                   array('%title' => $vocabulary->name)),
-                  'admin/content/taxonomy/'. $vid,
+                  'admin/content/taxonomy/' . $vid,
                   t('Resetting a vocabulary will discard all custom ordering and sort items alphabetically.'),
                   t('Reset to alphabetical'),
                   t('Cancel'));
@@ -931,5 +931,5 @@ function taxonomy_vocabulary_confirm_reset_alphabetical_submit($form, &$form_sta
   db_query('UPDATE {term_data} t SET weight = 0 WHERE vid = %d', $form_state['values']['vid']);
   drupal_set_message(t('Reset vocabulary %name to alphabetical order.', array('%name' => $form_state['values']['name'])));
   watchdog('taxonomy', 'Reset vocabulary %name to alphabetical order.', array('%name' => $form_state['values']['name']), WATCHDOG_NOTICE);
-  $form_state['redirect'] = 'admin/content/taxonomy/'. $form_state['values']['vid'];
+  $form_state['redirect'] = 'admin/content/taxonomy/' . $form_state['values']['vid'];
 }

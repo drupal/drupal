@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.tpl.php,v 1.5 2008/03/10 18:25:48 dries Exp $
+// $Id: comment.tpl.php,v 1.6 2008/04/14 17:48:36 dries Exp $
 
 /**
  * @file comment.tpl.php
@@ -26,7 +26,7 @@
  * @see theme_comment()
  */
 ?>
-<div class="comment<?php print ($comment->new) ? ' comment-new' : ''; print ' '. $status ?> clear-block">
+<div class="comment<?php print ($comment->new) ? ' comment-new' : ''; print ' ' . $status ?> clear-block">
   <?php print $picture ?>
 
   <?php if ($comment->new): ?>

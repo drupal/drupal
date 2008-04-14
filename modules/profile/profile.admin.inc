@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.admin.inc,v 1.9 2008/02/18 16:53:36 dries Exp $
+// $Id: profile.admin.inc,v 1.10 2008/04/14 17:48:41 dries Exp $
 
 /**
  * @file
@@ -52,10 +52,10 @@ function profile_admin_overview() {
   }
   $form['#tree'] = TRUE;
 
-  $addnewfields = '<h2>'. t('Add new field') .'</h2>';
+  $addnewfields = '<h2>' . t('Add new field') . '</h2>';
   $addnewfields .= '<ul>';
   foreach (_profile_field_types() as $key => $value) {
-    $addnewfields .= '<li>'. l($value, "admin/user/profile/add/$key") .'</li>';
+    $addnewfields .= '<li>' . l($value, "admin/user/profile/add/$key") . '</li>';
   }
   $addnewfields .= '</ul>';
   $form['addnewfields'] = array('#value' => $addnewfields);
@@ -91,10 +91,10 @@ function profile_admin_overview_submit($form, &$form_state) {
  * @see profile_admin_overview()
  */
 function theme_profile_admin_overview($form) {
-  drupal_add_css(drupal_get_path('module', 'profile') .'/profile.css');
+  drupal_add_css(drupal_get_path('module', 'profile') . '/profile.css');
   // Add javascript if there's more than one field.
   if (isset($form['submit'])) {
-    drupal_add_js(drupal_get_path('module', 'profile') .'/profile.js');
+    drupal_add_js(drupal_get_path('module', 'profile') . '/profile.js');
   }
 
   $rows = array();
@@ -110,21 +110,21 @@ function theme_profile_admin_overview($form) {
         // Category classes are given numeric IDs because there's no guarantee
         // class names won't contain invalid characters.
         $categories[$category] = $category_number;
-        $category_field['#attributes']['class'] = 'profile-category profile-category-'. $category_number;
+        $category_field['#attributes']['class'] = 'profile-category profile-category-' . $category_number;
         $rows[] = array(array('data' => $category, 'colspan' => 7, 'class' => 'category'));
-        $rows[] = array('data' => array(array('data' => '<em>'. t('No fields in this category. If this category remains empty when saved, it will be removed.') .'</em>', 'colspan' => 7)), 'class' => 'category-'. $category_number .'-message category-message category-populated');
+        $rows[] = array('data' => array(array('data' => '<em>' . t('No fields in this category. If this category remains empty when saved, it will be removed.') . '</em>', 'colspan' => 7)), 'class' => 'category-' . $category_number . '-message category-message category-populated');
 
         // Make it dragable only if there is more than one field
         if (isset($form['submit'])) {
-          drupal_add_tabledrag('profile-fields', 'order', 'sibling', 'profile-weight', 'profile-weight-'. $category_number);
-          drupal_add_tabledrag('profile-fields', 'match', 'sibling', 'profile-category', 'profile-category-'. $category_number);
+          drupal_add_tabledrag('profile-fields', 'order', 'sibling', 'profile-weight', 'profile-weight-' . $category_number);
+          drupal_add_tabledrag('profile-fields', 'match', 'sibling', 'profile-category', 'profile-category-' . $category_number);
         }
         $category_number++;
       }
 
       // Add special drag and drop classes that group fields together.
-      $field['weight']['#attributes']['class'] = 'profile-weight profile-weight-'. $categories[$category];
-      $field['category']['#attributes']['class'] = 'profile-category profile-category-'. $categories[$category];
+      $field['weight']['#attributes']['class'] = 'profile-weight profile-weight-' . $categories[$category];
+      $field['category']['#attributes']['class'] = 'profile-category profile-category-' . $categories[$category];
 
       // Add the row
       $row = array();
@@ -251,14 +251,14 @@ Unless you know what you are doing, it is highly recommended that you prefix the
     $form['fields']['page'] = array('#type' => 'textfield',
       '#title' => t('Page title'),
       '#default_value' => $edit['page'],
-      '#description' => t('To enable browsing this field by value, enter a title for the resulting page. The word <code>%value</code> will be substituted with the corresponding value. An example page title is "People whose favorite color is %value". This is only applicable for a public field.'),
+      '#description' => t('To enable browsing this field by value, enter a title for the resulting page. The word <code>%value</code> will be substituted with the corresponding value. An example page title is "People whose favorite color is %value" . This is only applicable for a public field.'),
     );
   }
   else if ($type == 'checkbox') {
     $form['fields']['page'] = array('#type' => 'textfield',
       '#title' => t('Page title'),
       '#default_value' => $edit['page'],
-      '#description' => t('To enable browsing this field by value, enter a title for the resulting page. An example page title is "People who are employed". This is only applicable for a public field.'),
+      '#description' => t('To enable browsing this field by value, enter a title for the resulting page. An example page title is "People who are employed" . This is only applicable for a public field.'),
     );
   }
   $form['fields']['weight'] = array('#type' => 'weight',
@@ -313,10 +313,10 @@ function profile_field_form_validate($form, &$form_state) {
     $query_suffix = ' AND fid != %d';
   }
 
-  if (db_result(db_query("SELECT fid FROM {profile_fields} WHERE title = '%s' AND category = '%s'". $query_suffix, $args1))) {
+  if (db_result(db_query("SELECT fid FROM {profile_fields} WHERE title = '%s' AND category = '%s'" . $query_suffix, $args1))) {
     form_set_error('title', t('The specified title is already in use.'));
   }
-  if (db_result(db_query("SELECT fid FROM {profile_fields} WHERE name = '%s'". $query_suffix, $args2))) {
+  if (db_result(db_query("SELECT fid FROM {profile_fields} WHERE name = '%s'" . $query_suffix, $args2))) {
     form_set_error('name', t('The specified name is already in use.'));
   }
   if ($form_state['values']['visibility'] == PROFILE_HIDDEN) {
@@ -371,7 +371,7 @@ function profile_field_delete(&$form_state, $fid) {
 
   return confirm_form($form,
     t('Are you sure you want to delete the field %field?', array('%field' => $field->title)), 'admin/user/profile',
-    t('This action cannot be undone. If users have entered values into this field in their profile, these entries will also be deleted. If you want to keep the user-entered data, instead of deleting the field you may wish to <a href="@edit-field">edit this field</a> and change it to a hidden profile field so that it may only be accessed by administrators.', array('@edit-field' => url('admin/user/profile/edit/'. $fid))),
+    t('This action cannot be undone. If users have entered values into this field in their profile, these entries will also be deleted. If you want to keep the user-entered data, instead of deleting the field you may wish to <a href="@edit-field">edit this field</a> and change it to a hidden profile field so that it may only be accessed by administrators.', array('@edit-field' => url('admin/user/profile/edit/' . $fid))),
     t('Delete'), t('Cancel'));
 }
 

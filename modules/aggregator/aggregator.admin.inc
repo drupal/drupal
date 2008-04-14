@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.admin.inc,v 1.7 2008/01/10 22:47:17 goba Exp $
+// $Id: aggregator.admin.inc,v 1.8 2008/04/14 17:48:34 dries Exp $
 
 /**
  * @file
@@ -22,7 +22,7 @@ function aggregator_admin_overview() {
 function aggregator_view() {
   $result = db_query('SELECT f.*, COUNT(i.iid) AS items FROM {aggregator_feed} f LEFT JOIN {aggregator_item} i ON f.fid = i.fid GROUP BY f.fid, f.title, f.url, f.refresh, f.checked, f.link, f.description, f.etag, f.modified, f.image, f.block ORDER BY f.title');
 
-  $output = '<h3>'. t('Feed overview') .'</h3>';
+  $output = '<h3>' . t('Feed overview') . '</h3>';
 
   $header = array(t('Title'), t('Items'), t('Last update'), t('Next update'), array('data' => t('Operations'), 'colspan' => '3'));
   $rows = array();
@@ -33,7 +33,7 @@ function aggregator_view() {
 
   $result = db_query('SELECT c.cid, c.title, count(ci.iid) as items FROM {aggregator_category} c LEFT JOIN {aggregator_category_item} ci ON c.cid = ci.cid GROUP BY c.cid, c.title ORDER BY title');
 
-  $output .= '<h3>'. t('Category overview') .'</h3>';
+  $output .= '<h3>' . t('Category overview') . '</h3>';
 
   $header = array(t('Title'), t('Items'), t('Operations'));
   $rows = array();
@@ -153,7 +153,7 @@ function aggregator_form_feed_submit($form, &$form_state) {
         return;
       }
       else {
-        $form_state['redirect'] = 'aggregator/sources/'. $form_state['values']['fid'];
+        $form_state['redirect'] = 'aggregator/sources/' . $form_state['values']['fid'];
         return;
       }
     }
@@ -317,7 +317,7 @@ function aggregator_form_category_submit($form, &$form_state) {
         return;
       }
       else {
-        $form_state['redirect'] = 'aggregator/categories/'. $form_state['values']['cid'];
+        $form_state['redirect'] = 'aggregator/categories/' . $form_state['values']['cid'];
         return;
       }
     }

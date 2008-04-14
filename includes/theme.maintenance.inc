@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.maintenance.inc,v 1.11 2008/02/06 19:38:26 dries Exp $
+// $Id: theme.maintenance.inc,v 1.12 2008/04/14 17:48:33 dries Exp $
 
 /**
  * @file
@@ -62,10 +62,10 @@ function _drupal_maintenance_theme() {
 
   // These are usually added from system_init() -except maintenance.css.
   // When the database is inactive it's not called so we add it here.
-  drupal_add_css(drupal_get_path('module', 'system') .'/defaults.css', 'module');
-  drupal_add_css(drupal_get_path('module', 'system') .'/system.css', 'module');
-  drupal_add_css(drupal_get_path('module', 'system') .'/system-menus.css', 'module');
-  drupal_add_css(drupal_get_path('module', 'system') .'/maintenance.css', 'module');
+  drupal_add_css(drupal_get_path('module', 'system') . '/defaults.css', 'module');
+  drupal_add_css(drupal_get_path('module', 'system') . '/system.css', 'module');
+  drupal_add_css(drupal_get_path('module', 'system') . '/system-menus.css', 'module');
+  drupal_add_css(drupal_get_path('module', 'system') . '/maintenance.css', 'module');
 }
 
 /**
@@ -92,7 +92,7 @@ function theme_task_list($items, $active = NULL) {
     else {
       $class = $done ? 'done' : '';
     }
-    $output .= '<li class="'. $class .'">'. $item .'</li>';
+    $output .= '<li class="' . $class . '">' . $item . '</li>';
   }
   $output .= '</ol>';
   return $output;
@@ -120,22 +120,22 @@ function theme_install_page($content) {
   $messages = drupal_set_message();
   if (isset($messages['error'])) {
     $title = count($messages['error']) > 1 ? st('The following errors must be resolved before you can continue the installation process') : st('The following error must be resolved before you can continue the installation process');
-    $variables['messages'] .= '<h3>'. $title .':</h3>';
+    $variables['messages'] .= '<h3>' . $title . ':</h3>';
     $variables['messages'] .= theme('status_messages', 'error');
-    $variables['content'] .= '<p>'. st('Please check the error messages and <a href="!url">try again</a>.', array('!url' => request_uri())) .'</p>';
+    $variables['content'] .= '<p>' . st('Please check the error messages and <a href="!url">try again</a>.', array('!url' => request_uri())) . '</p>';
   }
 
   // Special handling of warning messages
   if (isset($messages['warning'])) {
     $title = count($messages['warning']) > 1 ? st('The following installation warnings should be carefully reviewed') : st('The following installation warning should be carefully reviewed');
-    $variables['messages'] .= '<h4>'. $title .':</h4>';
+    $variables['messages'] .= '<h4>' . $title . ':</h4>';
     $variables['messages'] .= theme('status_messages', 'warning');
   }
 
   // Special handling of status messages
   if (isset($messages['status'])) {
     $title = count($messages['status']) > 1 ? st('The following installation warnings should be carefully reviewed, but in most cases may be safely ignored') : st('The following installation warning should be carefully reviewed, but in most cases may be safely ignored');
-    $variables['messages'] .= '<h4>'. $title .':</h4>';
+    $variables['messages'] .= '<h4>' . $title . ':</h4>';
     $variables['messages'] .= theme('status_messages', 'status');
   }
 
@@ -173,7 +173,7 @@ function theme_update_page($content, $show_messages = TRUE) {
   $messages = drupal_set_message();
   if (isset($messages['warning'])) {
     $title = count($messages['warning']) > 1 ? 'The following update warnings should be carefully reviewed before continuing' : 'The following update warning should be carefully reviewed before continuing';
-    $variables['messages'] .= '<h4>'. $title .':</h4>';
+    $variables['messages'] .= '<h4>' . $title . ':</h4>';
     $variables['messages'] .= theme('status_messages', 'warning');
   }
 
@@ -205,7 +205,7 @@ function theme_update_page($content, $show_messages = TRUE) {
 function template_preprocess_maintenance_page(&$variables) {
   // Add favicon
   if (theme_get_setting('toggle_favicon')) {
-    drupal_set_html_head('<link rel="shortcut icon" href="'. check_url(theme_get_setting('favicon')) .'" type="image/x-icon" />');
+    drupal_set_html_head('<link rel="shortcut icon" href="' . check_url(theme_get_setting('favicon')) . '" type="image/x-icon" />');
   }
 
   global $theme;
@@ -276,7 +276,7 @@ function template_preprocess_maintenance_page(&$variables) {
     $body_classes[] = 'no-sidebars';
   }
   else {
-    $body_classes[] = 'one-sidebar sidebar-'. $variables['layout'];
+    $body_classes[] = 'one-sidebar sidebar-' . $variables['layout'];
   }
   $variables['body_classes'] = implode(' ', $body_classes);
 

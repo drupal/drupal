@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.pages.inc,v 1.4 2007/12/14 09:50:41 goba Exp $
+// $Id: poll.pages.inc,v 1.5 2008/04/14 17:48:41 dries Exp $
 
 /**
  * @file
@@ -17,7 +17,7 @@ function poll_page() {
   $result = pager_query($sql, 15, 0, $count_sql);
   $output = '<ul>';
   while ($node = db_fetch_object($result)) {
-    $output .= '<li>'. l($node->title, "node/$node->nid") .' - '. format_plural($node->votes, '1 vote', '@count votes') .' - '. ($node->active ? t('open') : t('closed')) .'</li>';
+    $output .= '<li>' . l($node->title, "node/$node->nid") . ' - ' . format_plural($node->votes, '1 vote', '@count votes') . ' - ' . ($node->active ? t('open') : t('closed')) . '</li>';
   }
   $output .= '</ul>';
   $output .= theme("pager", NULL, 15);
@@ -34,7 +34,7 @@ function poll_votes($node) {
   $header[] = array('data' => t('Visitor'), 'field' => 'u.name');
   $header[] = array('data' => t('Vote'), 'field' => 'pv.chorder');
 
-  $result = pager_query("SELECT pv.chorder, pv.uid, pv.hostname, u.name FROM {poll_votes} pv LEFT JOIN {users} u ON pv.uid = u.uid WHERE pv.nid = %d". tablesort_sql($header), 20, 0, NULL, $node->nid);
+  $result = pager_query("SELECT pv.chorder, pv.uid, pv.hostname, u.name FROM {poll_votes} pv LEFT JOIN {users} u ON pv.uid = u.uid WHERE pv.nid = %d" . tablesort_sql($header), 20, 0, NULL, $node->nid);
   $rows = array();
   while ($vote = db_fetch_object($result)) {
     $rows[] = array(

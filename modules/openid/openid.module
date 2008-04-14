@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.module,v 1.21 2008/02/18 19:34:08 dries Exp $
+// $Id: openid.module,v 1.22 2008/04/14 17:48:38 dries Exp $
 
 /**
  * @file
@@ -43,17 +43,17 @@ function openid_help($path, $arg) {
   switch ($path) {
 
   case 'user/%/openid':
-      $output = '<p>'. t('This site supports <a href="@openid-net">OpenID</a>, a secure way to log into many websites using a single username and password. OpenID can reduce the necessity of managing many usernames and passwords for many websites.', array('@openid-net' => url('http://openid.net'))) .'</p>';
-      $output .= '<p>'. t('To use OpenID you must first establish an identity on a public or private OpenID server. If you do not have an OpenID and would like one, look into one of the <a href="@openid-providers">free public providers</a>. You can find out more about OpenID at <a href="@openid-net">this website</a>.', array('@openid-providers' => url('http://openid.net/wiki/index.php/OpenIDServers'), '@openid-net' => url('http://openid.net'))) .'</p>';
-      $output .= '<p>'. t('If you already have an OpenID, enter the URL to your OpenID server below (e.g. myusername.openidprovider.com). Next time you login, you will be able to use this URL instead of a regular username and password. You can have multiple OpenID servers if you like; just keep adding them here.') .'</p>';
+      $output = '<p>' . t('This site supports <a href="@openid-net">OpenID</a>, a secure way to log into many websites using a single username and password. OpenID can reduce the necessity of managing many usernames and passwords for many websites.', array('@openid-net' => url('http://openid.net'))) . '</p>';
+      $output .= '<p>' . t('To use OpenID you must first establish an identity on a public or private OpenID server. If you do not have an OpenID and would like one, look into one of the <a href="@openid-providers">free public providers</a>. You can find out more about OpenID at <a href="@openid-net">this website</a>.', array('@openid-providers' => url('http://openid.net/wiki/index.php/OpenIDServers'), '@openid-net' => url('http://openid.net'))) . '</p>';
+      $output .= '<p>' . t('If you already have an OpenID, enter the URL to your OpenID server below (e.g. myusername.openidprovider.com). Next time you login, you will be able to use this URL instead of a regular username and password. You can have multiple OpenID servers if you like; just keep adding them here.') . '</p>';
       return $output;
 
     case 'admin/help#openid':
-      $output = '<p>'. t('OpenID is a secure method for logging into many websites with a single username and password. It does not require special software, and it does not share passwords with any site to which it is associated; including your site.') .'</p>';
-      $output .= '<p>'. t('Users can create accounts using their OpenID, assign one or more OpenIDs to an existing account, and log in using an OpenID. This lowers the barrier to registration, which is good for the site, and offers convenience and security to the users. OpenID is not a trust system, so email verification is still necessary. The benefit stems from the fact that users can have a single password that they can use on many websites. This means they can easily update their single password from a centralized location, rather than having to change dozens of passwords individually.') .'</p>';
-      $output .= '<p>'. t('The basic concept is as follows: A user has an account on an OpenID server. This account provides them with a unique URL (such as myusername.openidprovider.com). When the user comes to your site, they are presented with the option of entering this URL. Your site then communicates with the OpenID server, asking it to verify the identity of the user. If the user is logged into their OpenID server, the server communicates back to your site, verifying the user. If they are not logged in, the OpenID server will ask the user for their password. At no point does your site record, or need to record the user\'s password.') .'</p>';
-      $output .= '<p>'. t('More information on OpenID is available at <a href="@openid-net">OpenID.net</a>.', array('@openid-net' => url('http://openid.net'))) .'</p>';
-      $output .= '<p>'. t('For more information, see the online handbook entry for <a href="@handbook">OpenID module</a>.', array('@handbook' => 'http://drupal.org/handbook/modules/openid')) .'</p>';
+      $output = '<p>' . t('OpenID is a secure method for logging into many websites with a single username and password. It does not require special software, and it does not share passwords with any site to which it is associated; including your site.') . '</p>';
+      $output .= '<p>' . t('Users can create accounts using their OpenID, assign one or more OpenIDs to an existing account, and log in using an OpenID. This lowers the barrier to registration, which is good for the site, and offers convenience and security to the users. OpenID is not a trust system, so email verification is still necessary. The benefit stems from the fact that users can have a single password that they can use on many websites. This means they can easily update their single password from a centralized location, rather than having to change dozens of passwords individually.') . '</p>';
+      $output .= '<p>' . t('The basic concept is as follows: A user has an account on an OpenID server. This account provides them with a unique URL (such as myusername.openidprovider.com). When the user comes to your site, they are presented with the option of entering this URL. Your site then communicates with the OpenID server, asking it to verify the identity of the user. If the user is logged into their OpenID server, the server communicates back to your site, verifying the user. If they are not logged in, the OpenID server will ask the user for their password. At no point does your site record, or need to record the user\'s password.') . '</p>';
+      $output .= '<p>' . t('More information on OpenID is available at <a href="@openid-net">OpenID.net</a>.', array('@openid-net' => url('http://openid.net'))) . '</p>';
+      $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@handbook">OpenID module</a>.', array('@handbook' => 'http://drupal.org/handbook/modules/openid')) . '</p>';
       return $output;
   }
 }
@@ -76,8 +76,8 @@ function openid_user($op, &$edit, &$account, $category = NULL) {
  */
 function openid_form_alter(&$form, $form_state, $form_id) {
   if ($form_id == 'user_login_block' || $form_id == 'user_login') {
-    drupal_add_css(drupal_get_path('module', 'openid') .'/openid.css', 'module');
-    drupal_add_js(drupal_get_path('module', 'openid') .'/openid.js');
+    drupal_add_css(drupal_get_path('module', 'openid') . '/openid.css', 'module');
+    drupal_add_js(drupal_get_path('module', 'openid') . '/openid.js');
     if (!empty($form_state['post']['openid_identifier'])) {
       $form['name']['#required'] = FALSE;
       $form['pass']['#required'] = FALSE;
@@ -190,7 +190,7 @@ function openid_begin($claimed_id, $return_to = '', $form_values = array()) {
     $identity = $claimed_id;
   }
 
-  if (isset($services[0]['types']) && is_array($services[0]['types']) && in_array(OPENID_NS_2_0 .'/server', $services[0]['types'])) {
+  if (isset($services[0]['types']) && is_array($services[0]['types']) && in_array(OPENID_NS_2_0 . '/server', $services[0]['types'])) {
     $identity = 'http://specs.openid.net/auth/2.0/identifier_select';
   }
   $authn_request = openid_authentication_request($claimed_id, $identity, $return_to, $assoc_handle, $services[0]['version']);
@@ -267,7 +267,7 @@ function openid_discovery($claimed_id) {
 
   $xrds_url = $claimed_id;
   if (_openid_is_xri($claimed_id)) {
-    $xrds_url = 'http://xri.net/'. $claimed_id;
+    $xrds_url = 'http://xri.net/' . $claimed_id;
   }
   $url = @parse_url($xrds_url);
   if ($url['scheme'] == 'http' || $url['scheme'] == 'https') {

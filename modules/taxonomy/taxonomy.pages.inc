@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.pages.inc,v 1.10 2008/02/06 19:38:28 dries Exp $
+// $Id: taxonomy.pages.inc,v 1.11 2008/04/14 17:48:42 dries Exp $
 
 /**
  * @file
@@ -16,7 +16,7 @@ function taxonomy_term_page($str_tids = '', $depth = 0, $op = 'page') {
   }
 
   if ($terms['tids']) {
-    $result = db_query(db_rewrite_sql('SELECT t.tid, t.name FROM {term_data} t WHERE t.tid IN ('. db_placeholders($terms['tids']) .')', 't', 'tid'), $terms['tids']);
+    $result = db_query(db_rewrite_sql('SELECT t.tid, t.name FROM {term_data} t WHERE t.tid IN (' . db_placeholders($terms['tids']) . ')', 't', 'tid'), $terms['tids']);
     $tids = array(); // we rebuild the $tids-array so it only contains terms the user has access to.
     $names = array();
     while ($term = db_fetch_object($result)) {
@@ -35,20 +35,20 @@ function taxonomy_term_page($str_tids = '', $depth = 0, $op = 'page') {
           $breadcrumb = array();
           while ($parents = taxonomy_get_parents($current->tid)) {
             $current = array_shift($parents);
-            $breadcrumb[] = l($current->name, 'taxonomy/term/'. $current->tid);
+            $breadcrumb[] = l($current->name, 'taxonomy/term/' . $current->tid);
           }
           $breadcrumb[] = l(t('Home'), NULL);
           $breadcrumb = array_reverse($breadcrumb);
           drupal_set_breadcrumb($breadcrumb);
 
           $output = theme('taxonomy_term_page', $tids, taxonomy_select_nodes($tids, $terms['operator'], $depth, TRUE));
-          drupal_add_feed(url('taxonomy/term/'. $str_tids .'/'. $depth .'/feed'), 'RSS - '. $title);
+          drupal_add_feed(url('taxonomy/term/' . $str_tids . '/' . $depth . '/feed'), 'RSS - ' . $title);
           return $output;
           break;
 
         case 'feed':
-          $channel['link'] = url('taxonomy/term/'. $str_tids .'/'. $depth, array('absolute' => TRUE));
-          $channel['title'] = variable_get('site_name', 'Drupal') .' - '. $title;
+          $channel['link'] = url('taxonomy/term/' . $str_tids . '/' . $depth, array('absolute' => TRUE));
+          $channel['title'] = variable_get('site_name', 'Drupal') . ' - ' . $title;
           // Only display the description if we have a single term, to avoid clutter and confusion.
           if (count($tids) == 1) {
             $term = taxonomy_get_term($tids[0]);
@@ -86,7 +86,7 @@ function taxonomy_term_page($str_tids = '', $depth = 0, $op = 'page') {
  * @ingroup themeable
  */
 function theme_taxonomy_term_page($tids, $result) {
-  drupal_add_css(drupal_get_path('module', 'taxonomy') .'/taxonomy.css');
+  drupal_add_css(drupal_get_path('module', 'taxonomy') . '/taxonomy.css');
 
   $output = '';
 
@@ -121,13 +121,13 @@ function taxonomy_autocomplete($vid, $string = '') {
   if ($last_string != '') {
     $result = db_query_range(db_rewrite_sql("SELECT t.tid, t.name FROM {term_data} t WHERE t.vid = %d AND LOWER(t.name) LIKE LOWER('%%%s%%')", 't', 'tid'), $vid, $last_string, 0, 10);
 
-    $prefix = count($array) ? implode(', ', $array) .', ' : '';
+    $prefix = count($array) ? implode(', ', $array) . ', ' : '';
 
     while ($tag = db_fetch_object($result)) {
       $n = $tag->name;
       // Commas and quotes in terms are special cases, so encode 'em.
       if (strpos($tag->name, ',') !== FALSE || strpos($tag->name, '"') !== FALSE) {
-        $n = '"'. str_replace('"', '""', $tag->name) .'"';
+        $n = '"' . str_replace('"', '""', $tag->name) . '"';
       }
       $matches[$prefix . $n] = check_plain($tag->name);
     }

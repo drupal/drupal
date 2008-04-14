@@ -1,7 +1,7 @@
 <?php
-// $Id: comment.tpl.php,v 1.6 2008/01/04 19:24:24 goba Exp $
+// $Id: comment.tpl.php,v 1.7 2008/04/14 17:48:46 dries Exp $
 ?>
-<div class="comment<?php print ' '. $status; ?>">
+<div class="comment<?php print ' ' . $status; ?>">
   <?php if ($picture) : ?>
     <?php print $picture ?>
   <?php endif; ?>

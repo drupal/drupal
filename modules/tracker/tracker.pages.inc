@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.pages.inc,v 1.5 2007/11/28 10:29:20 dries Exp $
+// $Id: tracker.pages.inc,v 1.6 2008/04/14 17:48:42 dries Exp $
 
 /**
  * @file
@@ -12,7 +12,7 @@
  */
 function tracker_page($account = NULL, $set_title = FALSE) {
   // Add CSS
-  drupal_add_css(drupal_get_path('module', 'tracker') .'/tracker.css', 'module', 'all', FALSE);
+  drupal_add_css(drupal_get_path('module', 'tracker') . '/tracker.css', 'module', 'all', FALSE);
 
   if ($account) {
     if ($set_title) {
@@ -51,7 +51,7 @@ function tracker_page($account = NULL, $set_title = FALSE) {
 
     $rows[] = array(
       check_plain(node_get_types('name', $node->type)),
-      l($node->title, "node/$node->nid") .' '. theme('mark', node_mark($node->nid, $node->changed)),
+      l($node->title, "node/$node->nid") . ' ' . theme('mark', node_mark($node->nid, $node->changed)),
       theme('username', $node),
       array('class' => 'replies', 'data' => $comments),
       t('!time ago', array('!time' => format_interval(time() - $node->last_updated)))

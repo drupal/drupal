@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.58 2008/02/12 13:45:16 dries Exp $
+// $Id: install.inc,v 1.59 2008/04/14 17:48:33 dries Exp $
 
 define('SCHEMA_UNINSTALLED', -1);
 define('SCHEMA_INSTALLED', 0);
@@ -42,8 +42,8 @@ function drupal_get_schema_versions($module) {
   $updates = array();
   $functions = get_defined_functions();
   foreach ($functions['user'] as $function) {
-    if (strpos($function, $module .'_update_') === 0) {
-      $version = substr($function, strlen($module .'_update_'));
+    if (strpos($function, $module . '_update_') === 0) {
+      $version = substr($function, strlen($module . '_update_'));
       if (is_numeric($version)) {
         $updates[] = $version;
       }
@@ -110,7 +110,7 @@ function drupal_install_profile_name() {
 
   if (!isset($name)) {
     // Load profile details.
-    $function = $profile .'_profile_details';
+    $function = $profile . '_profile_details';
     if (function_exists($function)) {
       $details = $function();
     }
@@ -134,7 +134,7 @@ function drupal_detect_baseurl($file = 'install.php') {
   global $profile;
   $proto = $_SERVER['HTTPS'] ? 'https://' : 'http://';
   $host = $_SERVER['SERVER_NAME'];
-  $port = ($_SERVER['SERVER_PORT'] == 80 ? '' : ':'. $_SERVER['SERVER_PORT']);
+  $port = ($_SERVER['SERVER_PORT'] == 80 ? '' : ':' . $_SERVER['SERVER_PORT']);
   $uri = preg_replace("/\?.*/", '', $_SERVER['REQUEST_URI']);
   $dir = str_replace("/$file", '', $uri);
 
@@ -152,9 +152,9 @@ function drupal_detect_database_types() {
   $databases = array();
 
   foreach (array('mysql', 'mysqli', 'pgsql') as $type) {
-    if (file_exists('./includes/install.'. $type .'.inc')) {
-      include_once './includes/install.'. $type .'.inc';
-      $function = $type .'_is_available';
+    if (file_exists('./includes/install.' . $type . '.inc')) {
+      include_once './includes/install.' . $type . '.inc';
+      $function = $type . '_is_available';
       if ($function()) {
         $databases[$type] = $type;
       }
@@ -173,7 +173,7 @@ function drupal_detect_database_types() {
  */
 function drupal_rewrite_settings($settings = array(), $prefix = '') {
   $default_settings = './sites/default/default.settings.php';
-  $settings_file = './'. conf_path(FALSE, TRUE) .'/'. $prefix .'settings.php';
+  $settings_file = './' . conf_path(FALSE, TRUE) . '/' . $prefix . 'settings.php';
 
   // Build list of setting names and insert the values into the global namespace.
   $keys = array();
@@ -197,7 +197,7 @@ function drupal_rewrite_settings($settings = array(), $prefix = '') {
         preg_match('/define\(\s*[\'"]([A-Z_-]+)[\'"]\s*,(.*?)\);/', $line, $variable);
         if (in_array($variable[1], $keys)) {
           $setting = $settings[$variable[1]];
-          $buffer .= str_replace($variable[2], " '". $setting['value'] ."'", $line);
+          $buffer .= str_replace($variable[2], " '" . $setting['value'] . "'", $line);
           unset($settings[$variable[1]]);
           unset($settings[$variable[2]]);
         }
@@ -212,7 +212,7 @@ function drupal_rewrite_settings($settings = array(), $prefix = '') {
           // Write new value to settings.php in the following format:
           //    $'setting' = 'value'; // 'comment'
           $setting = $settings[$variable[1]];
-          $buffer .= '$'. $variable[1] ." = '". $setting['value'] ."';". (!empty($setting['comment']) ? ' // '. $setting['comment'] ."\n" : "\n");
+          $buffer .= '$' . $variable[1] . " = '" . $setting['value'] . "';" . (!empty($setting['comment']) ? ' // ' . $setting['comment'] . "\n" : "\n");
           unset($settings[$variable[1]]);
         }
         else {
@@ -228,7 +228,7 @@ function drupal_rewrite_settings($settings = array(), $prefix = '') {
     // Add required settings that were missing from settings.php.
     foreach ($settings as $setting => $data) {
       if ($data['required']) {
-        $buffer .= "\$$setting = '". $data['value'] ."';\n";
+        $buffer .= "\$$setting = '" . $data['value'] . "';\n";
       }
     }
 
@@ -251,7 +251,7 @@ function drupal_rewrite_settings($settings = array(), $prefix = '') {
 function drupal_get_install_files($module_list = array()) {
   $installs = array();
   foreach ($module_list as $module) {
-    $installs = array_merge($installs, drupal_system_listing($module .'.install$', 'modules'));
+    $installs = array_merge($installs, drupal_system_listing($module . '.install$', 'modules'));
   }
   return $installs;
 }
@@ -279,7 +279,7 @@ function drupal_verify_profile($profile, $locale) {
   require_once($profile_file);
 
   // Get a list of modules required by this profile.
-  $function = $profile .'_profile_modules';
+  $function = $profile . '_profile_modules';
   $module_list = array_merge(drupal_required_modules(), $function(), ($locale != 'en' ? array('locale') : array()));
 
   // Get a list of modules that exist in Drupal's assorted subdirectories.
@@ -355,11 +355,11 @@ function _drupal_install_module($module) {
  */
 function drupal_install_system() {
   $system_path = dirname(drupal_get_filename('module', 'system', NULL));
-  require_once './'. $system_path .'/system.install';
+  require_once './' . $system_path . '/system.install';
   module_invoke('system', 'install');
   $system_versions = drupal_get_schema_versions('system');
   $system_version = $system_versions ? max($system_versions) : SCHEMA_INSTALLED;
-  db_query("INSERT INTO {system} (filename, name, type, owner, status, throttle, bootstrap, schema_version) VALUES('%s', '%s', '%s', '%s', %d, %d, %d, %d)", $system_path .'/system.module', 'system', 'module', '', 1, 0, 0, $system_version);
+  db_query("INSERT INTO {system} (filename, name, type, owner, status, throttle, bootstrap, schema_version) VALUES('%s', '%s', '%s', '%s', %d, %d, %d, %d)", $system_path . '/system.module', 'system', 'module', '', 1, 0, 0, $system_version);
   // Now that we've installed things properly, bootstrap the full Drupal environment
   drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
   module_rebuild_cache();
@@ -396,7 +396,7 @@ function drupal_uninstall_module($module) {
     }
     $placeholders = implode(', ', array_fill(0, count($paths), "'%s'"));
 
-    $result = db_query('SELECT * FROM {menu_links} WHERE router_path IN ('. $placeholders .') AND external = 0 ORDER BY depth DESC', $paths);
+    $result = db_query('SELECT * FROM {menu_links} WHERE router_path IN (' . $placeholders . ') AND external = 0 ORDER BY depth DESC', $paths);
     // Remove all such items. Starting from those with the greatest depth will
     // minimize the amount of re-parenting done by menu_link_delete().
     while ($item = db_fetch_array($result)) {
@@ -427,7 +427,7 @@ function drupal_verify_install_file($file, $mask = NULL, $type = 'file') {
   }
   // Verify that the file is the type of file it is supposed to be.
   if (isset($type) && file_exists($file)) {
-    $check = 'is_'. $type;
+    $check = 'is_' . $type;
     if (!function_exists($check) || !$check($file)) {
       $return = FALSE;
     }
@@ -614,7 +614,7 @@ function drupal_install_fix_file($file, $mask, $message = TRUE) {
  */
 function install_goto($path) {
   global $base_url;
-  header('Location: '. $base_url .'/'. $path);
+  header('Location: ' . $base_url . '/' . $path);
   header('Cache-Control: no-cache'); // Not a permanent redirect.
   exit();
 }
@@ -630,7 +630,7 @@ function st($string, $args = array()) {
 
   if (!isset($locale_strings)) {
     $locale_strings = array();
-    $filename = './profiles/'. $profile .'/translations/'. $install_locale .'.po';
+    $filename = './profiles/' . $profile . '/translations/' . $install_locale . '.po';
     if (file_exists($filename)) {
       require_once './includes/locale.inc';
       $file = (object) array('filepath' => $filename);
@@ -650,7 +650,7 @@ function st($string, $args = array()) {
       // Escaped and placeholder
       case '%':
       default:
-        $args[$key] = '<em>'. check_plain($value) .'</em>';
+        $args[$key] = '<em>' . check_plain($value) . '</em>';
         break;
       // Pass-through
       case '!':
@@ -677,7 +677,7 @@ function drupal_check_profile($profile) {
   require_once($profile_file);
 
   // Get a list of modules required by this profile.
-  $function = $profile .'_profile_modules';
+  $function = $profile . '_profile_modules';
   $module_list = array_unique(array_merge(drupal_required_modules(), $function()));
 
   // Get a list of all .install files.
@@ -724,7 +724,7 @@ function drupal_check_module($module) {
         if (isset($requirement['severity']) && $requirement['severity'] == REQUIREMENT_ERROR) {
           $message = $requirement['description'];
           if (isset($requirement['value']) && $requirement['value']) {
-            $message .= ' ('. t('Currently using !item !version', array('!item' => $requirement['title'], '!version' => $requirement['value'])) .')';
+            $message .= ' (' . t('Currently using !item !version', array('!item' => $requirement['title'], '!version' => $requirement['value'])) . ')';
           }
           drupal_set_message($message, 'error');
         }

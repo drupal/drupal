@@ -1,5 +1,5 @@
 <?php
-// $Id: page.tpl.php,v 1.18 2008/01/24 09:42:53 goba Exp $
+// $Id: page.tpl.php,v 1.19 2008/04/14 17:48:46 dries Exp $
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php print $language->language ?>" lang="<?php print $language->language ?>" dir="<?php print $language->dir ?>">
@@ -33,16 +33,16 @@
           }
           $site_title = implode(' ', $site_fields);
           if ($site_fields) {
-            $site_fields[0] = '<span>'. $site_fields[0] .'</span>';
+            $site_fields[0] = '<span>' . $site_fields[0] . '</span>';
           }
           $site_html = implode(' ', $site_fields);
 
           if ($logo || $site_title) {
-            print '<h1><a href="'. check_url($front_page) .'" title="'. $site_title .'">';
+            print '<h1><a href="' . check_url($front_page) . '" title="' . $site_title . '">';
             if ($logo) {
-              print '<img src="'. check_url($logo) .'" alt="'. $site_title .'" id="logo" />';
+              print '<img src="' . check_url($logo) . '" alt="' . $site_title . '" id="logo" />';
             }
-            print $site_html .'</a></h1>';
+            print $site_html . '</a></h1>';
           }
         ?>
         </div>
@@ -65,11 +65,11 @@
 
       <div id="center"><div id="squeeze"><div class="right-corner"><div class="left-corner">
           <?php print $breadcrumb; ?>
-          <?php if ($mission): print '<div id="mission">'. $mission .'</div>'; endif; ?>
+          <?php if ($mission): print '<div id="mission">' . $mission . '</div>'; endif; ?>
           <?php if ($tabs): print '<div id="tabs-wrapper" class="clear-block">'; endif; ?>
-          <?php if ($title): print '<h2'. ($tabs ? ' class="with-tabs"' : '') .'>'. $title .'</h2>'; endif; ?>
-          <?php if ($tabs): print '<ul class="tabs primary">'. $tabs .'</ul></div>'; endif; ?>
-          <?php if ($tabs2): print '<ul class="tabs secondary">'. $tabs2 .'</ul>'; endif; ?>
+          <?php if ($title): print '<h2' . ($tabs ? ' class="with-tabs"' : '') . '>' . $title . '</h2>'; endif; ?>
+          <?php if ($tabs): print '<ul class="tabs primary">' . $tabs . '</ul></div>'; endif; ?>
+          <?php if ($tabs2): print '<ul class="tabs secondary">' . $tabs2 . '</ul>'; endif; ?>
           <?php if ($show_messages && $messages): print $messages; endif; ?>
           <?php print $help; ?>
           <div class="clear-block">

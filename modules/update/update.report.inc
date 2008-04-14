@@ -1,5 +1,5 @@
 <?php
-// $Id: update.report.inc,v 1.11 2008/02/06 20:01:41 dries Exp $
+// $Id: update.report.inc,v 1.12 2008/04/14 17:48:43 dries Exp $
 
 /**
  * @file
@@ -27,12 +27,12 @@ function update_status() {
  */
 function theme_update_report($data) {
   $last = variable_get('update_last_check', 0);
-  $output = '<div class="update checked">'. ($last ? t('Last checked: @time ago', array('@time' => format_interval(time() - $last))) : t('Last checked: never'));
-  $output .= ' <span class="check-manually">('. l(t('Check manually'), 'admin/reports/updates/check') .')</span>';
+  $output = '<div class="update checked">' . ($last ? t('Last checked: @time ago', array('@time' => format_interval(time() - $last))) : t('Last checked: never'));
+  $output .= ' <span class="check-manually">(' . l(t('Check manually'), 'admin/reports/updates/check') . ')</span>';
   $output .= "</div>\n";
 
   if (!is_array($data)) {
-    $output .= '<p>'. $data .'</p>';
+    $output .= '<p>' . $data . '</p>';
     return $output;
   }
 
@@ -67,25 +67,25 @@ function theme_update_report($data) {
     $row = '<div class="version-status">';
     switch ($project['status']) {
       case UPDATE_NOT_SECURE:
-        $row .= '<span class="security-error">'. t('Security update required!') .'</span>';
+        $row .= '<span class="security-error">' . t('Security update required!') . '</span>';
         break;
       case UPDATE_REVOKED:
-        $row .= '<span class="revoked">'. t('Revoked!') .'</span>';
+        $row .= '<span class="revoked">' . t('Revoked!') . '</span>';
         break;
       case UPDATE_NOT_SUPPORTED:
-        $row .= '<span class="not-supported">'. t('Not supported!') .'</span>';
+        $row .= '<span class="not-supported">' . t('Not supported!') . '</span>';
         break;
       case UPDATE_NOT_CURRENT:
-        $row .= '<span class="not-current">'. t('Update available') .'</span>';
+        $row .= '<span class="not-current">' . t('Update available') . '</span>';
         break;
       case UPDATE_CURRENT:
-        $row .= '<span class="current">'. t('Up to date') .'</span>';
+        $row .= '<span class="current">' . t('Up to date') . '</span>';
         break;
       default:
         $row .= check_plain($project['reason']);
         break;
     }
-    $row .= '<span class="icon">'. $icon .'</span>';
+    $row .= '<span class="icon">' . $icon . '</span>';
     $row .= "</div>\n";
 
     $row .= '<div class="project">';
@@ -100,9 +100,9 @@ function theme_update_report($data) {
     else {
       $row .= check_plain($project['name']);
     }
-    $row .= ' '. check_plain($project['existing_version']);
+    $row .= ' ' . check_plain($project['existing_version']);
     if ($project['install_type'] == 'dev' && !empty($project['datestamp'])) {
-      $row .= ' <span class="version-date">('. format_date($project['datestamp'], 'custom', 'Y-M-d') .')</span>';
+      $row .= ' <span class="version-date">(' . format_date($project['datestamp'], 'custom', 'Y-M-d') . ')</span>';
     }
     $row .= "</div>\n";
 
@@ -140,7 +140,7 @@ function theme_update_report($data) {
         // Now, print any security updates.
         if (!empty($project['security updates'])) {
           foreach ($project['security updates'] as $security_update) {
-            $row .= theme('update_version', $security_update, t('Security update:'), 'version-security'. $security_class);
+            $row .= theme('update_version', $security_update, t('Security update:'), 'version-security' . $security_class);
           }
         }
       }
@@ -166,10 +166,10 @@ function theme_update_report($data) {
 
     $row .= "<div class=\"info\">\n";
     if (!empty($project['extra'])) {
-      $row .= '<div class="extra">'."\n";
+      $row .= '<div class="extra">' . "\n";
       foreach ($project['extra'] as $key => $value) {
-        $row .= '<div class="'. $value['class'] .'">';
-        $row .= check_plain($value['label']) .': ';
+        $row .= '<div class="' . $value['class'] . '">';
+        $row .= check_plain($value['label']) . ': ';
         $row .= theme('placeholder', $value['data']);
         $row .= "</div>\n";
       }
@@ -201,11 +201,11 @@ function theme_update_report($data) {
   );
   foreach ($project_types as $type_name => $type_label) {
     if (!empty($rows[$type_name])) {
-      $output .= "\n<h3>". $type_label ."</h3>\n";
+      $output .= "\n<h3>" . $type_label . "</h3>\n";
       $output .= theme('table', $header, $rows[$type_name], array('class' => 'update'));
     }
   }
-  drupal_add_css(drupal_get_path('module', 'update') .'/update.css');
+  drupal_add_css(drupal_get_path('module', 'update') . '/update.css');
   return $output;
 }
 
@@ -216,12 +216,12 @@ function theme_update_report($data) {
  */
 function theme_update_version($version, $tag, $class) {
   $output = '';
-  $output .= '<table class="version '. $class .'">';
+  $output .= '<table class="version ' . $class . '">';
   $output .= '<tr>';
-  $output .= '<td class="version-title">'. $tag ."</td>\n";
+  $output .= '<td class="version-title">' . $tag . "</td>\n";
   $output .= '<td class="version-details">';
   $output .= l($version['version'], $version['release_link']);
-  $output .= ' <span class="version-date">('. format_date($version['date'], 'custom', 'Y-M-d') .')</span>';
+  $output .= ' <span class="version-date">(' . format_date($version['date'], 'custom', 'Y-M-d') . ')</span>';
   $output .= "</td>\n";
   $output .= '<td class="version-links">';
   $links = array();

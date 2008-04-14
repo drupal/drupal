@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.763 2008/04/10 10:19:01 dries Exp $
+// $Id: common.inc,v 1.764 2008/04/14 17:48:33 dries Exp $
 
 /**
  * @file
@@ -105,7 +105,7 @@ function drupal_set_html_head($data = NULL) {
   static $stored_head = '';
 
   if (!is_null($data)) {
-    $stored_head .= $data ."\n";
+    $stored_head .= $data . "\n";
   }
   return $stored_head;
 }
@@ -209,7 +209,7 @@ function drupal_query_string_encode($query, $exclude = array(), $parent = '') {
   foreach ($query as $key => $value) {
     $key = drupal_urlencode($key);
     if ($parent) {
-      $key = $parent .'['. $key .']';
+      $key = $parent . '[' . $key . ']';
     }
 
     if (in_array($key, $exclude)) {
@@ -220,7 +220,7 @@ function drupal_query_string_encode($query, $exclude = array(), $parent = '') {
       $params[] = drupal_query_string_encode($value, $exclude, $key);
     }
     else {
-      $params[] = $key .'='. drupal_urlencode($value);
+      $params[] = $key . '=' . drupal_urlencode($value);
     }
   }
 
@@ -239,16 +239,16 @@ function drupal_query_string_encode($query, $exclude = array(), $parent = '') {
  */
 function drupal_get_destination() {
   if (isset($_REQUEST['destination'])) {
-    return 'destination='. urlencode($_REQUEST['destination']);
+    return 'destination=' . urlencode($_REQUEST['destination']);
   }
   else {
     // Use $_GET here to retrieve the original path in source form.
     $path = isset($_GET['q']) ? $_GET['q'] : '';
     $query = drupal_query_string_encode($_GET, array('q'));
     if ($query != '') {
-      $path .= '?'. $query;
+      $path .= '?' . $query;
     }
-    return 'destination='. urlencode($path);
+    return 'destination=' . urlencode($path);
   }
 }
 
@@ -316,7 +316,7 @@ function drupal_goto($path = '', $query = NULL, $fragment = NULL, $http_response
   // need all session data written to the database before redirecting.
   session_write_close();
 
-  header('Location: '. $url, TRUE, $http_response_code);
+  header('Location: ' . $url, TRUE, $http_response_code);
 
   // The "Location" header sends a redirect status code to the HTTP daemon. In
   // some cases this can be wrong, so we make sure none of the code below the
@@ -438,17 +438,17 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
   switch ($uri['scheme']) {
     case 'http':
       $port = isset($uri['port']) ? $uri['port'] : 80;
-      $host = $uri['host'] . ($port != 80 ? ':'. $port : '');
+      $host = $uri['host'] . ($port != 80 ? ':' . $port : '');
       $fp = @fsockopen($uri['host'], $port, $errno, $errstr, 15);
       break;
     case 'https':
       // Note: Only works for PHP 4.3 compiled with OpenSSL.
       $port = isset($uri['port']) ? $uri['port'] : 443;
-      $host = $uri['host'] . ($port != 443 ? ':'. $port : '');
-      $fp = @fsockopen('ssl://'. $uri['host'], $port, $errno, $errstr, 20);
+      $host = $uri['host'] . ($port != 443 ? ':' . $port : '');
+      $fp = @fsockopen('ssl://' . $uri['host'], $port, $errno, $errstr, 20);
       break;
     default:
-      $result->error = 'invalid schema '. $uri['scheme'];
+      $result->error = 'invalid schema ' . $uri['scheme'];
       return $result;
   }
 
@@ -464,7 +464,7 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
   // Construct the path to act on.
   $path = isset($uri['path']) ? $uri['path'] : '/';
   if (isset($uri['query'])) {
-    $path .= '?'. $uri['query'];
+    $path .= '?' . $uri['query'];
   }
 
   // Create HTTP request.
@@ -474,23 +474,23 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
     // host that do not take into account the port number.
     'Host' => "Host: $host",
     'User-Agent' => 'User-Agent: Drupal (+http://drupal.org/)',
-    'Content-Length' => 'Content-Length: '. strlen($data)
+    'Content-Length' => 'Content-Length: ' . strlen($data)
   );
 
   // If the server url has a user then attempt to use basic authentication
   if (isset($uri['user'])) {
-    $defaults['Authorization'] = 'Authorization: Basic '. base64_encode($uri['user'] . (!empty($uri['pass']) ? ":". $uri['pass'] : ''));
+    $defaults['Authorization'] = 'Authorization: Basic ' . base64_encode($uri['user'] . (!empty($uri['pass']) ? ":" . $uri['pass'] : ''));
   }
 
   foreach ($headers as $header => $value) {
-    $defaults[$header] = $header .': '. $value;
+    $defaults[$header] = $header . ': ' . $value;
   }
 
-  $request = $method .' '. $path ." HTTP/1.0\r\n";
+  $request = $method . ' ' . $path . " HTTP/1.0\r\n";
   $request .= implode("\r\n", $defaults);
   $request .= "\r\n\r\n";
   if ($data) {
-    $request .= $data ."\r\n";
+    $request .= $data . "\r\n";
   }
   $result->request = $request;
 
@@ -516,7 +516,7 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
     if (isset($result->headers[$header]) && $header == 'Set-Cookie') {
       // RFC 2109: the Set-Cookie response header comprises the token Set-
       // Cookie:, followed by a comma-separated list of one or more cookies.
-      $result->headers[$header] .= ','. trim($value);
+      $result->headers[$header] .= ',' . trim($value);
     }
     else {
       $result->headers[$header] = trim($value);
@@ -599,7 +599,7 @@ function drupal_error_handler($errno, $message, $filename, $line, $context) {
       }
     }
 
-    $entry = $types[$errno] .': '. $message .' in '. $filename .' on line '. $line .'.';
+    $entry = $types[$errno] . ': ' . $message . ' in ' . $filename . ' on line ' . $line . '.';
 
     // Force display of error messages in update.php.
     if (variable_get('error_level', 1) == 1 || strstr($_SERVER['SCRIPT_NAME'], 'update.php')) {
@@ -719,7 +719,7 @@ function fix_gpc_magic() {
  *
  * Here is an example of t() used correctly:
  * @code
- *   $output .= '<p>'. t('Go to the <a href="@contact-page">contact page</a>.', array('@contact-page' => url('contact'))) .'</p>';
+ *   $output .= '<p>' . t('Go to the <a href="@contact-page">contact page</a>.', array('@contact-page' => url('contact'))) . '</p>';
  * @endcode
  *
  * Also avoid escaping quotation marks wherever possible.
@@ -761,7 +761,7 @@ function t($string, $args = array(), $langcode = NULL) {
   // handful of string replacements. See settings.php for examples.
   // Cache the $custom_strings variable to improve performance.
   if (!isset($custom_strings[$langcode])) {
-    $custom_strings[$langcode] = variable_get('locale_custom_strings_'. $langcode, array());
+    $custom_strings[$langcode] = variable_get('locale_custom_strings_' . $langcode, array());
   }
   // Custom strings work for English too, even if locale module is disabled.
   if (isset($custom_strings[$langcode][$string])) {
@@ -838,10 +838,10 @@ function valid_email_address($mail) {
 function valid_url($url, $absolute = FALSE) {
   $allowed_characters = '[a-z0-9\/:_\-_\.\?\$,;~=#&%\+]';
   if ($absolute) {
-    return preg_match("/^(http|https|ftp):\/\/". $allowed_characters ."+$/i", $url);
+    return preg_match("/^(http|https|ftp):\/\/" . $allowed_characters . "+$/i", $url);
   }
   else {
-    return preg_match("/^". $allowed_characters ."+$/i", $url);
+    return preg_match("/^" . $allowed_characters . "+$/i", $url);
   }
 }
 
@@ -904,14 +904,14 @@ function format_rss_channel($title, $link, $description, $items, $langcode = NUL
   $langcode = $langcode ? $langcode : $language->language;
 
   $output = "<channel>\n";
-  $output .= ' <title>'. check_plain($title) ."</title>\n";
-  $output .= ' <link>'. check_url($link) ."</link>\n";
+  $output .= ' <title>' . check_plain($title) . "</title>\n";
+  $output .= ' <link>' . check_url($link) . "</link>\n";
 
   // The RSS 2.0 "spec" doesn't indicate HTML can be used in the description.
   // We strip all HTML tags, but need to prevent double encoding from properly
   // escaped source data (such as &amp becoming &amp;amp;).
-  $output .= ' <description>'. check_plain(decode_entities(strip_tags($description))) ."</description>\n";
-  $output .= ' <language>'. check_plain($langcode) ."</language>\n";
+  $output .= ' <description>' . check_plain(decode_entities(strip_tags($description))) . "</description>\n";
+  $output .= ' <language>' . check_plain($langcode) . "</language>\n";
   $output .= format_xml_elements($args);
   $output .= $items;
   $output .= "</channel>\n";
@@ -926,9 +926,9 @@ function format_rss_channel($title, $link, $description, $items, $langcode = NUL
  */
 function format_rss_item($title, $link, $description, $args = array()) {
   $output = "<item>\n";
-  $output .= ' <title>'. check_plain($title) ."</title>\n";
-  $output .= ' <link>'. check_url($link) ."</link>\n";
-  $output .= ' <description>'. check_plain($description) ."</description>\n";
+  $output .= ' <title>' . check_plain($title) . "</title>\n";
+  $output .= ' <link>' . check_url($link) . "</link>\n";
+  $output .= ' <description>' . check_plain($description) . "</description>\n";
   $output .= format_xml_elements($args);
   $output .= "</item>\n";
 
@@ -954,13 +954,13 @@ function format_xml_elements($array) {
   foreach ($array as $key => $value) {
     if (is_numeric($key)) {
       if ($value['key']) {
-        $output .= ' <'. $value['key'];
+        $output .= ' <' . $value['key'];
         if (isset($value['attributes']) && is_array($value['attributes'])) {
           $output .= drupal_attributes($value['attributes']);
         }
 
         if ($value['value'] != '') {
-          $output .= '>'. (is_array($value['value']) ? format_xml_elements($value['value']) : check_plain($value['value'])) .'</'. $value['key'] .">\n";
+          $output .= '>' . (is_array($value['value']) ? format_xml_elements($value['value']) : check_plain($value['value'])) . '</' . $value['key'] . ">\n";
         }
         else {
           $output .= " />\n";
@@ -968,7 +968,7 @@ function format_xml_elements($array) {
       }
     }
     else {
-      $output .= ' <'. $key .'>'. (is_array($value) ? format_xml_elements($value) : check_plain($value)) ."</$key>\n";
+      $output .= ' <' . $key . '>' . (is_array($value) ? format_xml_elements($value) : check_plain($value)) . "</$key>\n";
     }
   }
   return $output;
@@ -1040,8 +1040,8 @@ function format_plural($count, $singular, $plural, $args = array(), $langcode = 
         return t($plural, $args, $langcode);
       default:
         unset($args['@count']);
-        $args['@count['. $index .']'] = $count;
-        return t(strtr($plural, array('@count' => '@count['. $index .']')), $args, $langcode);
+        $args['@count[' . $index . ']'] = $count;
+        return t(strtr($plural, array('@count' => '@count[' . $index . ']')), $args, $langcode);
     }
   }
 }
@@ -1187,7 +1187,7 @@ function format_date($timestamp, $type = 'medium', $format = '', $timezone = NUL
       // Special treatment for long month names: May is both an abbreviation
       // and a full month name in English, but other languages have
       // different abbreviations.
-      $date .= trim(t('!long-month-name '. gmdate($c, $timestamp), array('!long-month-name' => ''), $langcode));
+      $date .= trim(t('!long-month-name ' . gmdate($c, $timestamp), array('!long-month-name' => ''), $langcode));
     }
     else if (strpos('BdgGhHiIjLmnsStTUwWYyz', $c) !== FALSE) {
       $date .= gmdate($c, $timestamp);
@@ -1276,7 +1276,7 @@ function url($path = NULL, $options = array()) {
     language_url_rewrite($path, $options);
   }
   if ($options['fragment']) {
-    $options['fragment'] = '#'. $options['fragment'];
+    $options['fragment'] = '#' . $options['fragment'];
   }
   if (is_array($options['query'])) {
     $options['query'] = drupal_query_string_encode($options['query']);
@@ -1287,7 +1287,7 @@ function url($path = NULL, $options = array()) {
     if (strpos($path, '#') !== FALSE) {
       list($path, $old_fragment) = explode('#', $path, 2);
       if (isset($old_fragment) && !$options['fragment']) {
-        $options['fragment'] = '#'. $old_fragment;
+        $options['fragment'] = '#' . $old_fragment;
       }
     }
     // Append the query.
@@ -1335,14 +1335,14 @@ function url($path = NULL, $options = array()) {
     custom_url_rewrite_outbound($path, $options, $original_path);
   }
 
-  $base = $options['absolute'] ? $options['base_url'] .'/' : base_path();
+  $base = $options['absolute'] ? $options['base_url'] . '/' : base_path();
   $prefix = empty($path) ? rtrim($options['prefix'], '/') : $options['prefix'];
   $path = drupal_urlencode($prefix . $path);
 
   if ($clean_url) {
     // With Clean URLs.
     if ($options['query']) {
-      return $base . $path .'?'. $options['query'] . $options['fragment'];
+      return $base . $path . '?' . $options['query'] . $options['fragment'];
     }
     else {
       return $base . $path . $options['fragment'];
@@ -1352,13 +1352,13 @@ function url($path = NULL, $options = array()) {
     // Without Clean URLs.
     $variables = array();
     if (!empty($path)) {
-      $variables[] = 'q='. $path;
+      $variables[] = 'q=' . $path;
     }
     if (!empty($options['query'])) {
       $variables[] = $options['query'];
     }
     if ($query = join('&', $variables)) {
-      return $base . $script .'?'. $query . $options['fragment'];
+      return $base . $script . '?' . $query . $options['fragment'];
     }
     else {
       return $base . $options['fragment'];
@@ -1378,7 +1378,7 @@ function drupal_attributes($attributes = array()) {
   if (is_array($attributes)) {
     $t = '';
     foreach ($attributes as $key => $value) {
-      $t .= " $key=".'"'. check_plain($value) .'"';
+      $t .= " $key=" . '"' . check_plain($value) . '"';
     }
     return $t;
   }
@@ -1450,7 +1450,7 @@ function l($text, $path, $options = array()) {
     $options['attributes']['title'] = strip_tags($options['attributes']['title']);
   }
 
-  return '<a href="'. check_url(url($path, $options)) .'"'. drupal_attributes($options['attributes']) .'>'. ($options['html'] ? $text : check_plain($text)) .'</a>';
+  return '<a href="' . check_url(url($path, $options)) . '"' . drupal_attributes($options['attributes']) . '>' . ($options['html'] ? $text : check_plain($text)) . '</a>';
 }
 
 /**
@@ -1534,7 +1534,7 @@ function drupal_eval($code) {
   }
 
   ob_start();
-  print eval('?>'. $code);
+  print eval('?>' . $code);
   $output = ob_get_contents();
   ob_end_clean();
 
@@ -1571,7 +1571,7 @@ function base_path() {
  * Add a <link> tag to the page's HEAD.
  */
 function drupal_add_link($attributes) {
-  drupal_set_html_head('<link'. drupal_attributes($attributes) ." />\n");
+  drupal_set_html_head('<link' . drupal_attributes($attributes) . " />\n");
 }
 
 /**
@@ -1688,7 +1688,7 @@ function drupal_get_css($css = NULL) {
   // browser-caching. The string changes on every update or full cache
   // flush, forcing browsers to load a new copy of the files, as the
   // URL changed.
-  $query_string = '?'. substr(variable_get('css_js_query_string', '0'), 0, 1);
+  $query_string = '?' . substr(variable_get('css_js_query_string', '0'), 0, 1);
 
   foreach ($css as $media => $types) {
     // If CSS preprocessing is off, we still need to output the styles.
@@ -1713,24 +1713,24 @@ function drupal_get_css($css = NULL) {
           // If a CSS file is not to be preprocessed and it's a module CSS file, it needs to *always* appear at the *top*,
           // regardless of whether preprocessing is on or off.
           if (!$preprocess && $type == 'module') {
-            $no_module_preprocess .= '<link type="text/css" rel="stylesheet" media="'. $media .'" href="'. base_path() . $file . $query_string .'" />'."\n";
+            $no_module_preprocess .= '<link type="text/css" rel="stylesheet" media="' . $media . '" href="' . base_path() . $file . $query_string . '" />' . "\n";
           }
           // If a CSS file is not to be preprocessed and it's a theme CSS file, it needs to *always* appear at the *bottom*,
           // regardless of whether preprocessing is on or off.
           else if (!$preprocess && $type == 'theme') {
-            $no_theme_preprocess .= '<link type="text/css" rel="stylesheet" media="'. $media .'" href="'. base_path() . $file . $query_string .'" />'."\n";
+            $no_theme_preprocess .= '<link type="text/css" rel="stylesheet" media="' . $media . '" href="' . base_path() . $file . $query_string . '" />' . "\n";
           }
           else {
-            $output .= '<link type="text/css" rel="stylesheet" media="'. $media .'" href="'. base_path() . $file . $query_string .'" />'."\n";
+            $output .= '<link type="text/css" rel="stylesheet" media="' . $media . '" href="' . base_path() . $file . $query_string . '" />' . "\n";
           }
         }
       }
     }
 
     if ($is_writable && $preprocess_css) {
-      $filename = md5(serialize($types) . $query_string) .'.css';
+      $filename = md5(serialize($types) . $query_string) . '.css';
       $preprocess_file = drupal_build_css_cache($types, $filename);
-      $output .= '<link type="text/css" rel="stylesheet" media="'. $media .'" href="'. base_path() . $preprocess_file .'" />'."\n";
+      $output .= '<link type="text/css" rel="stylesheet" media="' . $media . '" href="' . base_path() . $preprocess_file . '" />' . "\n";
     }
   }
 
@@ -1755,14 +1755,14 @@ function drupal_build_css_cache($types, $filename) {
   $csspath = file_create_path('css');
   file_check_directory($csspath, FILE_CREATE_DIRECTORY);
 
-  if (!file_exists($csspath .'/'. $filename)) {
+  if (!file_exists($csspath . '/' . $filename)) {
     // Build aggregate CSS file.
     foreach ($types as $type) {
       foreach ($type as $file => $cache) {
         if ($cache) {
           $contents = drupal_load_stylesheet($file, TRUE);
           // Return the path to where this CSS file originated from.
-          $base = base_path() . dirname($file) .'/';
+          $base = base_path() . dirname($file) . '/';
           _drupal_build_css_path(NULL, $base);
           // Prefix all paths within this CSS file, ignoring external and absolute paths.
           $data .= preg_replace_callback('/url\([\'"]?(?![a-z]+:|\/+)([^\'")]+)[\'"]?\)/i', '_drupal_build_css_path', $contents);
@@ -1778,9 +1778,9 @@ function drupal_build_css_cache($types, $filename) {
     $data = implode('', $matches[0]) . $data;
 
     // Create the CSS file.
-    file_save_data($data, $csspath .'/'. $filename, FILE_EXISTS_REPLACE);
+    file_save_data($data, $csspath . '/' . $filename, FILE_EXISTS_REPLACE);
   }
-  return $csspath .'/'. $filename;
+  return $csspath . '/' . $filename;
 }
 
 /**
@@ -1802,7 +1802,7 @@ function _drupal_build_css_path($matches, $base = NULL) {
     $last = $path;
     $path = preg_replace('`(^|/)(?!../)([^/]+)/../`', '$1', $path);
   }
-  return 'url('. $path .')';
+  return 'url(' . $path . ')';
 }
 
 /**
@@ -1872,7 +1872,7 @@ function _drupal_load_stylesheet($matches) {
   // Load the imported stylesheet and replace @import commands in there as well.
   $file = drupal_load_stylesheet($filename);
   // Alter all url() paths, but not external.
-  return preg_replace('/url\(([\'"]?)(?![a-z]+:)([^\'")]+)[\'"]?\)?;/i', 'url(\1'. dirname($filename) .'/', $file);
+  return preg_replace('/url\(([\'"]?)(?![a-z]+:)([^\'")]+)[\'"]?\)?;/i', 'url(\1' . dirname($filename) . '/', $file);
 }
 
 /**
@@ -2039,7 +2039,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
   // URL changed. Files that should not be cached (see drupal_add_js())
   // get time() as query-string instead, to enforce reload on every
   // page request.
-  $query_string = '?'. substr(variable_get('css_js_query_string', '0'), 0, 1);
+  $query_string = '?' . substr(variable_get('css_js_query_string', '0'), 0, 1);
 
   foreach ($javascript as $type => $data) {
 
@@ -2047,11 +2047,11 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
 
     switch ($type) {
       case 'setting':
-        $output .= '<script type="text/javascript">jQuery.extend(Drupal.settings, '. drupal_to_js(call_user_func_array('array_merge_recursive', $data)) .");</script>\n";
+        $output .= '<script type="text/javascript">jQuery.extend(Drupal.settings, ' . drupal_to_js(call_user_func_array('array_merge_recursive', $data)) . ");</script>\n";
         break;
       case 'inline':
         foreach ($data as $info) {
-          $output .= '<script type="text/javascript"'. ($info['defer'] ? ' defer="defer"' : '') .'>'. $info['code'] ."</script>\n";
+          $output .= '<script type="text/javascript"' . ($info['defer'] ? ' defer="defer"' : '') . '>' . $info['code'] . "</script>\n";
         }
         break;
       default:
@@ -2059,7 +2059,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
         // Additionally, go through any remaining scripts if JS preprocessing is on and output the non-cached ones.
         foreach ($data as $path => $info) {
           if (!$info['preprocess'] || !$is_writable || !$preprocess_js) {
-            $no_preprocess[$type] .= '<script type="text/javascript"'. ($info['defer'] ? ' defer="defer"' : '') .' src="'. base_path() . $path . ($info['cache'] ? $query_string : '?'. time()) ."\"></script>\n";
+            $no_preprocess[$type] .= '<script type="text/javascript"' . ($info['defer'] ? ' defer="defer"' : '') . ' src="' . base_path() . $path . ($info['cache'] ? $query_string : '?' . time()) . "\"></script>\n";
           }
           else {
             $files[$path] = $info;
@@ -2070,9 +2070,9 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
 
   // Aggregate any remaining JS files that haven't already been output.
   if ($is_writable && $preprocess_js && count($files) > 0) {
-    $filename = md5(serialize($files) . $query_string) .'.js';
+    $filename = md5(serialize($files) . $query_string) . '.js';
     $preprocess_file = drupal_build_js_cache($files, $filename);
-    $preprocessed .= '<script type="text/javascript" src="'. base_path() . $preprocess_file .'"></script>'."\n";
+    $preprocessed .= '<script type="text/javascript" src="' . base_path() . $preprocess_file . '"></script>' . "\n";
   }
 
   // Keep the order of JS files consistent as some are preprocessed and others are not.
@@ -2131,16 +2131,16 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
  * the block regions on the admin/build/block page), a separate subgroup class
  * must also be added to differentiate the groups.
  * @code
- * $form['my_elements'][$region][$delta]['weight']['#attributes']['class'] = "my-elements-weight my-elements-weight-". $region;
+ * $form['my_elements'][$region][$delta]['weight']['#attributes']['class'] = "my-elements-weight my-elements-weight-" . $region;
  * @endcode
  *
  * $group is still 'my-element-weight', and the additional $subgroup variable
- * will be passed in as 'my-elements-weight-'. $region. This also means that
+ * will be passed in as 'my-elements-weight-' . $region. This also means that
  * you'll need to call drupal_add_tabledrag() once for every region added.
  *
  * @code
  * foreach ($regions as $region) {
- *   drupal_add_tabledrag('my-module-table', 'order', 'sibling', 'my-elements-weight', 'my-elements-weight-'. $region);
+ *   drupal_add_tabledrag('my-module-table', 'order', 'sibling', 'my-elements-weight', 'my-elements-weight-' . $region);
  * }
  * @endcode
  *
@@ -2227,20 +2227,20 @@ function drupal_build_js_cache($files, $filename) {
   $jspath = file_create_path('js');
   file_check_directory($jspath, FILE_CREATE_DIRECTORY);
 
-  if (!file_exists($jspath .'/'. $filename)) {
+  if (!file_exists($jspath . '/' . $filename)) {
     // Build aggregate JS file.
     foreach ($files as $path => $info) {
       if ($info['preprocess']) {
         // Append a ';' after each JS file to prevent them from running together.
-        $contents .= file_get_contents($path) .';';
+        $contents .= file_get_contents($path) . ';';
       }
     }
 
     // Create the JS file.
-    file_save_data($contents, $jspath .'/'. $filename, FILE_EXISTS_REPLACE);
+    file_save_data($contents, $jspath . '/' . $filename, FILE_EXISTS_REPLACE);
   }
 
-  return $jspath .'/'. $filename;
+  return $jspath . '/' . $filename;
 }
 
 /**
@@ -2598,7 +2598,7 @@ function drupal_system_listing($mask, $directory, $key = 'name', $min_depth = 1)
   $files = array();
 
   // Always search sites/all/* as well as the global directories
-  $searchdir[] = 'sites/all/'. $directory;
+  $searchdir[] = 'sites/all/' . $directory;
 
   // The 'profiles' directory contains pristine collections of modules and
   // themes as organized by a distribution.  It is pristine in the same way
@@ -2663,8 +2663,8 @@ function drupal_alter($type, &$data) {
   array_shift($additional_args);
   $args = array_merge($args, $additional_args);
 
-  foreach (module_implements($type .'_alter') as $module) {
-    $function = $module .'_'. $type .'_alter';
+  foreach (module_implements($type . '_alter') as $module) {
+    $function = $module . '_' . $type . '_alter';
     call_user_func_array($function, $args);
   }
 }
@@ -3293,7 +3293,7 @@ function drupal_write_record($table, &$object, $update = array()) {
   // Build the SQL.
   $query = '';
   if (!count($update)) {
-    $query = "INSERT INTO {". $table ."} (". implode(', ', $fields) .') VALUES ('. implode(', ', $placeholders) .')';
+    $query = "INSERT INTO {" . $table . "} (" . implode(', ', $fields) . ') VALUES (' . implode(', ', $placeholders) . ')';
     $return = SAVED_NEW;
   }
   else {
@@ -3302,15 +3302,15 @@ function drupal_write_record($table, &$object, $update = array()) {
       if ($query) {
         $query .= ', ';
       }
-      $query .= $field .' = '. $placeholders[$id];
+      $query .= $field . ' = ' . $placeholders[$id];
     }
 
     foreach ($update as $key){
-      $conditions[] = "$key = ". db_type_placeholder($schema['fields'][$key]['type']);
+      $conditions[] = "$key = " . db_type_placeholder($schema['fields'][$key]['type']);
       $values[] = $object->$key;
     }
 
-    $query = "UPDATE {". $table ."} SET $query WHERE ". implode(' AND ', $conditions);
+    $query = "UPDATE {" . $table . "} SET $query WHERE " . implode(' AND ', $conditions);
     $return = SAVED_UPDATED;
   }
 
@@ -3510,7 +3510,7 @@ function drupal_implode_tags($tags) {
   foreach ($tags as $tag) {
     // Commas and quotes in tag names are special cases, so encode them.
     if (strpos($tag, ',') !== FALSE || strpos($tag, '"') !== FALSE) {
-      $tag = '"'. str_replace('"', '""', $tag) .'"';
+      $tag = '"' . str_replace('"', '""', $tag) . '"';
     }
 
     $encoded_tags[] = $tag;

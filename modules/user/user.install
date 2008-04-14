@@ -1,5 +1,5 @@
 <?php
-// $Id: user.install,v 1.9 2008/04/08 22:50:55 dries Exp $
+// $Id: user.install,v 1.10 2008/04/14 17:48:43 dries Exp $
 
 /**
  * Implementation of hook_schema().
@@ -295,7 +295,7 @@ function user_update_7000(&$sandbox) {
        $new_hash = user_hash_password($account['pass'], $hash_count_log2);
        if ($new_hash) {
          // Indicate an updated password.
-         $new_hash  = 'U'. $new_hash;
+         $new_hash  = 'U' . $new_hash;
          db_query("UPDATE {users} SET pass = '%s' WHERE uid = %d", $new_hash, $account['uid']);
        }
     }
@@ -303,7 +303,7 @@ function user_update_7000(&$sandbox) {
     $sandbox['user_from'] += $count;
     if (!$has_rows) {
       $ret['#finished'] = 1;
-      $ret[] = array('success' => TRUE, 'query' => "UPDATE {users} SET pass = 'U'. user_hash_password(pass) WHERE uid > 0");
+      $ret[] = array('success' => TRUE, 'query' => "UPDATE {users} SET pass = 'U' . user_hash_password(pass) WHERE uid > 0");
     }
   }
   return $ret;

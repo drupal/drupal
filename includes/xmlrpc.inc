@@ -1,5 +1,5 @@
 <?php
-// $Id: xmlrpc.inc,v 1.48 2008/03/15 12:59:22 dries Exp $
+// $Id: xmlrpc.inc,v 1.49 2008/04/14 17:48:33 dries Exp $
 
 /**
  * @file
@@ -90,32 +90,32 @@ function xmlrpc_value_calculate_type(&$xmlrpc_value) {
 function xmlrpc_value_get_xml($xmlrpc_value) {
   switch ($xmlrpc_value->type) {
     case 'boolean':
-      return '<boolean>'. (($xmlrpc_value->data) ? '1' : '0') .'</boolean>';
+      return '<boolean>' . (($xmlrpc_value->data) ? '1' : '0') . '</boolean>';
       break;
     case 'int':
-      return '<int>'. $xmlrpc_value->data .'</int>';
+      return '<int>' . $xmlrpc_value->data . '</int>';
       break;
     case 'double':
-      return '<double>'. $xmlrpc_value->data .'</double>';
+      return '<double>' . $xmlrpc_value->data . '</double>';
       break;
     case 'string':
       // Note: we don't escape apostrophes because of the many blogging clients
       // that don't support numerical entities (and XML in general) properly.
-      return '<string>'. htmlspecialchars($xmlrpc_value->data) .'</string>';
+      return '<string>' . htmlspecialchars($xmlrpc_value->data) . '</string>';
       break;
     case 'array':
-      $return = '<array><data>'."\n";
+      $return = '<array><data>' . "\n";
       foreach ($xmlrpc_value->data as $item) {
-        $return .= '  <value>'. xmlrpc_value_get_xml($item) ."</value>\n";
+        $return .= '  <value>' . xmlrpc_value_get_xml($item) . "</value>\n";
       }
       $return .= '</data></array>';
       return $return;
       break;
     case 'struct':
-      $return = '<struct>'."\n";
+      $return = '<struct>' . "\n";
       foreach ($xmlrpc_value->data as $name => $value) {
-        $return .= "  <member><name>". check_plain($name) ."</name><value>";
-        $return .= xmlrpc_value_get_xml($value) ."</value></member>\n";
+        $return .= "  <member><name>" . check_plain($name) . "</name><value>";
+        $return .= xmlrpc_value_get_xml($value) . "</value></member>\n";
       }
       $return .= '</struct>';
       return $return;
@@ -158,7 +158,7 @@ function xmlrpc_message($message) {
  */
 function xmlrpc_message_parse(&$xmlrpc_message) {
   // First remove the XML declaration
-  $xmlrpc_message->message = preg_replace('/<\?xml(.*)?\?'.'>/', '', $xmlrpc_message->message);
+  $xmlrpc_message->message = preg_replace('/<\?xml(.*)?\?' . '>/', '', $xmlrpc_message->message);
   if (trim($xmlrpc_message->message) == '') {
     return FALSE;
   }
@@ -403,7 +403,7 @@ function xmlrpc_date($time) {
 }
 
 function xmlrpc_date_get_xml($xmlrpc_date) {
-  return '<dateTime.iso8601>'. $xmlrpc_date->year . $xmlrpc_date->month . $xmlrpc_date->day .'T'. $xmlrpc_date->hour .':'. $xmlrpc_date->minute .':'. $xmlrpc_date->second .'</dateTime.iso8601>';
+  return '<dateTime.iso8601>' . $xmlrpc_date->year . $xmlrpc_date->month . $xmlrpc_date->day . 'T' . $xmlrpc_date->hour . ':' . $xmlrpc_date->minute . ':' . $xmlrpc_date->second . '</dateTime.iso8601>';
 }
 
 function xmlrpc_base64($data) {
@@ -414,7 +414,7 @@ function xmlrpc_base64($data) {
 }
 
 function xmlrpc_base64_get_xml($xmlrpc_base64) {
-  return '<base64>'. base64_encode($xmlrpc_base64->data) .'</base64>';
+  return '<base64>' . base64_encode($xmlrpc_base64->data) . '</base64>';
 }
 
 /**

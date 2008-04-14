@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.246 2008/04/10 10:28:23 dries Exp $
+// $Id: system.install,v 1.247 2008/04/14 17:48:41 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -81,13 +81,13 @@ function system_requirements($phase) {
 
     if (!empty($description)) {
       if ($php_ini_path = get_cfg_var('cfg_file_path')) {
-        $description .= ' '. $t('Increase the memory limit by editing the memory_limit parameter in the file %configuration-file and then restart your web server (or contact your system administrator or hosting provider for assistance).', array('%configuration-file' => $php_ini_path));
+        $description .= ' ' . $t('Increase the memory limit by editing the memory_limit parameter in the file %configuration-file and then restart your web server (or contact your system administrator or hosting provider for assistance).', array('%configuration-file' => $php_ini_path));
       }
       else {
-        $description .= ' '. $t('Contact your system administrator or hosting provider for assistance with increasing your PHP memory limit.');
+        $description .= ' ' . $t('Contact your system administrator or hosting provider for assistance with increasing your PHP memory limit.');
       }
 
-      $requirements['php_memory_limit']['description'] = $description .' '. $t('See the <a href="@url">Drupal requirements</a> for more information.', array('@url' => 'http://drupal.org/requirements'));
+      $requirements['php_memory_limit']['description'] = $description . ' ' . $t('See the <a href="@url">Drupal requirements</a> for more information.', array('@url' => 'http://drupal.org/requirements'));
       $requirements['php_memory_limit']['severity'] = REQUIREMENT_WARNING;
     }
   }
@@ -101,7 +101,7 @@ function system_requirements($phase) {
   // Test settings.php file writability
   if ($phase == 'runtime') {
     $conf_dir = drupal_verify_install_file(conf_path(), FILE_NOT_WRITABLE, 'dir');
-    $conf_file = drupal_verify_install_file(conf_path() .'/settings.php', FILE_EXIST|FILE_READABLE|FILE_NOT_WRITABLE);
+    $conf_file = drupal_verify_install_file(conf_path() . '/settings.php', FILE_EXIST|FILE_READABLE|FILE_NOT_WRITABLE);
     if (!$conf_dir || !$conf_file) {
       $requirements['settings.php'] = array(
         'value' => $t('Not protected'),
@@ -112,7 +112,7 @@ function system_requirements($phase) {
         $requirements['settings.php']['description'] .= $t('The directory %file is not protected from modifications and poses a security risk. You must change the directory\'s permissions to be non-writable. ', array('%file' => conf_path()));
       }
       if (!$conf_file) {
-        $requirements['settings.php']['description'] .= $t('The file %file is not protected from modifications and poses a security risk. You must change the file\'s permissions to be non-writable.', array('%file' => conf_path() .'/settings.php'));
+        $requirements['settings.php']['description'] .= $t('The file %file is not protected from modifications and poses a security risk. You must change the file\'s permissions to be non-writable.', array('%file' => conf_path() . '/settings.php'));
       }
     }
     else {
@@ -160,18 +160,18 @@ function system_requirements($phase) {
     // Set summary and description based on values determined above.
     if ($never_run) {
       $summary = $t('Never run');
-      $description = $t('Cron has not run.') .' '. $help;
+      $description = $t('Cron has not run.') . ' ' . $help;
     }
     else {
       $summary = $t('Last run !time ago', array('!time' => format_interval(time() - $cron_last)));
       $description = '';
       if ($severity != REQUIREMENT_OK) {
-        $description = $t('Cron has not run recently.') .' '. $help;
+        $description = $t('Cron has not run recently.') . ' ' . $help;
       }
     }
 
-    $description .= ' '. $t('You can <a href="@cron">run cron manually</a>.', array('@cron' => url('admin/reports/status/run-cron')));
-    $description .= '<br />'. $t('To run cron from outside the site, go to <a href="!cron">!cron</a>', array('!cron' => url('cron.php', array('absolute' => true, 'query' => 'cron_key='. variable_get('cron_key', 'drupal')))));
+    $description .= ' ' . $t('You can <a href="@cron">run cron manually</a>.', array('@cron' => url('admin/reports/status/run-cron')));
+    $description .= '<br />' . $t('To run cron from outside the site, go to <a href="!cron">!cron</a>', array('!cron' => url('cron.php', array('absolute' => true, 'query' => 'cron_key=' . variable_get('cron_key', 'drupal')))));
 
     $requirements['cron'] = array(
       'title' => $t('Cron maintenance tasks'),
@@ -205,12 +205,12 @@ function system_requirements($phase) {
     }
     // The files directory requirement check is done only during install and runtime.
     if ($phase == 'runtime') {
-      $description = $error .' '. $t('You may need to set the correct directory at the <a href="@admin-file-system">file system settings page</a> or change the current directory\'s permissions so that it is writable.', array('@admin-file-system' => url('admin/settings/file-system')));
+      $description = $error . ' ' . $t('You may need to set the correct directory at the <a href="@admin-file-system">file system settings page</a> or change the current directory\'s permissions so that it is writable.', array('@admin-file-system' => url('admin/settings/file-system')));
     }
     elseif ($phase == 'install') {
       // For the installer UI, we need different wording. 'value' will
       // be treated as version, so provide none there.
-      $description = $error .' '. $t('An automated attempt to create this directory failed, possibly due to a permissions problem. To proceed with the installation, either create the directory and modify its permissions manually, or ensure that the installer has the permissions to create it automatically. For more information, please see INSTALL.txt or the <a href="@handbook_url">on-line handbook</a>.', array('@handbook_url' => 'http://drupal.org/server-permissions'));
+      $description = $error . ' ' . $t('An automated attempt to create this directory failed, possibly due to a permissions problem. To proceed with the installation, either create the directory and modify its permissions manually, or ensure that the installer has the permissions to create it automatically. For more information, please see INSTALL.txt or the <a href="@handbook_url">on-line handbook</a>.', array('@handbook_url' => 'http://drupal.org/server-permissions'));
       $requirements['file system']['value'] = '';
     }
     if (!empty($description)) {
@@ -243,7 +243,7 @@ function system_requirements($phase) {
         if (max($updates) > $default) {
           $requirements['update']['severity'] = REQUIREMENT_ERROR;
           $requirements['update']['value'] = $t('Out of date');
-          $requirements['update']['description'] = $t('Some modules have database schema updates to install. You should run the <a href="@update">database update script</a> immediately.', array('@update' => base_path() .'update.php'));
+          $requirements['update']['description'] = $t('Some modules have database schema updates to install. You should run the <a href="@update">database update script</a> immediately.', array('@update' => base_path() . 'update.php'));
           break;
         }
       }
@@ -1130,7 +1130,7 @@ function system_schema() {
         'default' => '',
       ),
       'owner' => array(
-        'description' => t("A theme's 'parent'. Can be either a theme or an engine."),
+        'description' => t("A theme's 'parent' . Can be either a theme or an engine."),
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
@@ -1397,9 +1397,9 @@ function system_update_6006() {
  */
 function system_update_6007() {
   $ret = array();
-  $ret[] = update_sql("UPDATE {watchdog} SET severity = ". WATCHDOG_NOTICE ." WHERE severity = 0");
-  $ret[] = update_sql("UPDATE {watchdog} SET severity = ". WATCHDOG_WARNING ." WHERE severity = 1");
-  $ret[] = update_sql("UPDATE {watchdog} SET severity = ". WATCHDOG_ERROR ." WHERE severity = 2");
+  $ret[] = update_sql("UPDATE {watchdog} SET severity = " . WATCHDOG_NOTICE . " WHERE severity = 0");
+  $ret[] = update_sql("UPDATE {watchdog} SET severity = " . WATCHDOG_WARNING . " WHERE severity = 1");
+  $ret[] = update_sql("UPDATE {watchdog} SET severity = " . WATCHDOG_ERROR . " WHERE severity = 2");
   return $ret;
 }
 
@@ -1592,15 +1592,15 @@ function system_update_6017() {
   );
   foreach ($var_names as $old => $new) {
     foreach (array('_subject', '_body') as $suffix) {
-      $old_name = 'user_mail_'. $old . $suffix;
-      $new_name = 'user_mail_'. $new . $suffix;
+      $old_name = 'user_mail_' . $old . $suffix;
+      $new_name = 'user_mail_' . $new . $suffix;
       if ($old_val = variable_get($old_name, FALSE)) {
         variable_set($new_name, $old_val);
         variable_del($old_name);
         $ret[] = array('success' => TRUE, 'query' => "variable_set($new_name)");
         $ret[] = array('success' => TRUE, 'query' => "variable_del($old_name)");
         if ($old_name == 'user_mail_approval_body') {
-          drupal_set_message('Saving an old value of the welcome message body for users that are pending administrator approval. However, you should consider modifying this text, since Drupal can now be configured to automatically notify users and send them their login information when their accounts are approved. See the <a href="'. url('admin/user/settings') .'">User settings</a> page for details.');
+          drupal_set_message('Saving an old value of the welcome message body for users that are pending administrator approval. However, you should consider modifying this text, since Drupal can now be configured to automatically notify users and send them their login information when their accounts are approved. See the <a href="' . url('admin/user/settings') . '">User settings</a> page for details.');
         }
       }
     }
@@ -1627,7 +1627,7 @@ function system_update_6018() {
   while ($format = db_fetch_object($result)) {
     $weight = db_result(db_query("SELECT MAX(weight) FROM {filters} WHERE format = %d", $format->format));
     db_query("INSERT INTO {filters} (format, module, delta, weight) VALUES (%d, '%s', %d, %d)", $format->format, 'filter', 3, max(10, $weight + 1));
-    $ret[] = array('success' => TRUE, 'query' => "HTML corrector filter added to the '". $format->name ."' input format.");
+    $ret[] = array('success' => TRUE, 'query' => "HTML corrector filter added to the '" . $format->name . "' input format.");
   }
 
   return $ret;
@@ -1732,16 +1732,16 @@ function system_update_6019() {
 
       // Remove default => 0, set auto increment.
       $new_uid = 1 + db_result(db_query('SELECT MAX(uid) FROM {users}'));
-      $ret[] = update_sql('UPDATE {users} SET uid = '. $new_uid .' WHERE uid = 0');
+      $ret[] = update_sql('UPDATE {users} SET uid = ' . $new_uid . ' WHERE uid = 0');
       db_drop_primary_key($ret, 'users');
       db_change_field($ret, 'users', 'uid', 'uid', array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE), array('primary key' => array('uid')));
-      $ret[] = update_sql('UPDATE {users} SET uid = 0 WHERE uid = '. $new_uid);
+      $ret[] = update_sql('UPDATE {users} SET uid = 0 WHERE uid = ' . $new_uid);
 
       // Special field names.
       $map = array('node_revisions' => 'vid');
       // Make sure these tables have proper auto_increment fields.
       foreach (array('boxes', 'files', 'node', 'node_revisions') as $table) {
-        $field = isset($map[$table]) ? $map[$table] : $table[0] .'id';
+        $field = isset($map[$table]) ? $map[$table] : $table[0] . 'id';
         db_drop_primary_key($ret, $table);
         db_change_field($ret, $table, $field, $field, array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE), array('primary key' => array($field)));
       }
@@ -1930,7 +1930,7 @@ function system_update_6021() {
       $_SESSION['menu_item_map'][$item['mid']] = array('mlid' => $item['mlid'], 'menu_name' => $item['menu_name']);
     }
     elseif (!isset($_SESSION['menu_menu_map'][$item['mid']])) {
-      $item['menu_name'] = 'menu-'. preg_replace('/[^a-zA-Z0-9]/', '-', strtolower($item['title']));
+      $item['menu_name'] = 'menu-' . preg_replace('/[^a-zA-Z0-9]/', '-', strtolower($item['title']));
       $item['menu_name'] = substr($item['menu_name'], 0, 20);
       $original_menu_name = $item['menu_name'];
       $i = 0;
@@ -1957,7 +1957,7 @@ function system_update_6021() {
     if (!empty($_SESSION['menu_bogus_menus'])) {
       // Remove entries in bogus menus. This is secure because we deleted
       // every non-alpanumeric character from the menu name.
-      $ret[] = update_sql("DELETE FROM {menu_links} WHERE menu_name IN ('". implode("', '", $_SESSION['menu_bogus_menus']) ."')");
+      $ret[] = update_sql("DELETE FROM {menu_links} WHERE menu_name IN ('" . implode("', '", $_SESSION['menu_bogus_menus']) . "')");
     }
 
     $menu_primary_menu = variable_get('menu_primary_menu', 0);
@@ -1983,7 +1983,7 @@ function system_update_6021() {
       // Change the existing menu name to 'primary-links'.
       $replace = array('%new_name' => 'primary-links', '%desc' => $menus['primary-links']['description'], '%old_name' => $_SESSION['menu_menu_map'][$updated_primary_links_menu]);
       $ret[] = update_sql(strtr("UPDATE {menu_custom} SET menu_name = '%new_name', description = '%desc' WHERE menu_name = '%old_name'", $replace));
-      $ret[] = update_sql("UPDATE {menu_links} SET menu_name = 'primary-links' WHERE menu_name = '". $_SESSION['menu_menu_map'][$updated_primary_links_menu] ."'");
+      $ret[] = update_sql("UPDATE {menu_links} SET menu_name = 'primary-links' WHERE menu_name = '" . $_SESSION['menu_menu_map'][$updated_primary_links_menu] . "'");
       $_SESSION['menu_menu_map'][$updated_primary_links_menu] = 'primary-links';
     }
 
@@ -2007,7 +2007,7 @@ function system_update_6021() {
       // Change the existing menu name to 'secondary-links'.
       $replace = array('%new_name' => 'secondary-links', '%desc' => $menus['secondary-links']['description'], '%old_name' => $_SESSION['menu_menu_map'][$updated_secondary_links_menu]);
       $ret[] = update_sql(strtr("UPDATE {menu_custom} SET menu_name = '%new_name', description = '%desc' WHERE menu_name = '%old_name'", $replace));
-      $ret[] = update_sql("UPDATE {menu_links} SET menu_name = 'secondary-links' WHERE menu_name = '". $_SESSION['menu_menu_map'][$updated_secondary_links_menu] ."'");
+      $ret[] = update_sql("UPDATE {menu_links} SET menu_name = 'secondary-links' WHERE menu_name = '" . $_SESSION['menu_menu_map'][$updated_secondary_links_menu] . "'");
       $_SESSION['menu_menu_map'][$updated_secondary_links_menu] = 'secondary-links';
     }
 
@@ -2032,10 +2032,10 @@ function system_update_6021() {
     foreach ($_SESSION['menu_menu_map'] as $mid => $menu_name) {
       // This is again secure because we deleted every non-alpanumeric
       // character from the menu name.
-      $ret[] = update_sql("UPDATE {blocks} SET delta = '". $menu_name ."' WHERE module = 'menu' AND delta = '". $mid ."'");
-      $ret[] = update_sql("UPDATE {blocks_roles} SET delta = '". $menu_name ."' WHERE module = 'menu' AND delta = '". $mid ."'");
+      $ret[] = update_sql("UPDATE {blocks} SET delta = '" . $menu_name . "' WHERE module = 'menu' AND delta = '" . $mid . "'");
+      $ret[] = update_sql("UPDATE {blocks_roles} SET delta = '" . $menu_name . "' WHERE module = 'menu' AND delta = '" . $mid . "'");
     }
-    $ret[] = array('success' => TRUE, 'query' => 'Relocated '. $_SESSION['system_update_6021'] .' existing items to the new menu system.');
+    $ret[] = array('success' => TRUE, 'query' => 'Relocated ' . $_SESSION['system_update_6021'] . ' existing items to the new menu system.');
     $ret[] = update_sql("DROP TABLE {menu}");
     unset($_SESSION['system_update_6021'], $_SESSION['system_update_6021_max'], $_SESSION['menu_menu_map'], $_SESSION['menu_item_map'], $_SESSION['menu_bogus_menus']);
     // Create the menu overview links - also calls menu_rebuild(). If menu is
@@ -2134,7 +2134,7 @@ function system_update_6026() {
   $ret = array();
 
   // Notify user that new update module exists.
-  drupal_set_message('Drupal can check periodically for important bug fixes and security releases using the new update status module. This module can be turned on from the <a href="'. url('admin/build/modules') .'">modules administration page</a>. For more information please read the <a href="http://drupal.org/handbook/modules/update">Update status handbook page</a>.');
+  drupal_set_message('Drupal can check periodically for important bug fixes and security releases using the new update status module. This module can be turned on from the <a href="' . url('admin/build/modules') . '">modules administration page</a>. For more information please read the <a href="http://drupal.org/handbook/modules/update">Update status handbook page</a>.');
 
   return $ret;
 }
@@ -2394,7 +2394,7 @@ function system_update_6038() {
   if (db_table_exists('profile_fields')) {
     $ret[] = update_sql("UPDATE {profile_fields} SET category = 'Account settings' WHERE LOWER(category) = 'account'");
     if ($affectedrows = db_affected_rows()) {
-      drupal_set_message('There were '. $affectedrows .' profile fields that used a reserved category name. They have been assigned to the category "Account settings".');
+      drupal_set_message('There were ' . $affectedrows . ' profile fields that used a reserved category name. They have been assigned to the category "Account settings".');
     }
   }
   return $ret;
@@ -2438,7 +2438,7 @@ function system_update_6041() {
   $vid = intval(variable_get('forum_nav_vocabulary', ''));
   if (db_table_exists('vocabulary') && $vid) {
     $ret[] = update_sql("UPDATE {vocabulary} SET required = 0 WHERE vid = " . $vid);
-    $ret[] = update_sql("UPDATE {system} SET weight = ". $weight ." WHERE name = 'forum'");
+    $ret[] = update_sql("UPDATE {system} SET weight = " . $weight . " WHERE name = 'forum'");
   }
   return $ret;
 }
@@ -2448,10 +2448,10 @@ function system_update_6041() {
  */
 function system_update_6042() {
   foreach (list_themes() as $theme) {
-    $stylesheet = variable_get('color_'. $theme->name .'_stylesheet', NULL);
+    $stylesheet = variable_get('color_' . $theme->name . '_stylesheet', NULL);
     if (!empty($stylesheet)) {
-      variable_set('color_'. $theme->name .'_stylesheets', array($stylesheet));
-      variable_del('color_'. $theme->name .'_stylesheet');
+      variable_set('color_' . $theme->name . '_stylesheets', array($stylesheet));
+      variable_del('color_' . $theme->name . '_stylesheet');
     }
   }
   return array();
@@ -2616,7 +2616,7 @@ function system_update_6045() {
 
   // Notify user that delete permissions may have been changed. This was in
   // effect since system_update_6039(), but there was no user notice.
-  drupal_set_message('Drupal now has separate edit and delete permissions. Previously, users who were able to edit content were automatically allowed to delete it. For added security, delete permissions for individual core content types have been <strong>removed</strong> from all roles on your site (only roles with the "administer nodes" permission can now delete these types of content). If you would like to reenable any individual delete permissions, you can do this at the <a href="'. url('admin/user/permissions', array('fragment' => 'module-node')) .'">permissions page</a>.');
+  drupal_set_message('Drupal now has separate edit and delete permissions. Previously, users who were able to edit content were automatically allowed to delete it. For added security, delete permissions for individual core content types have been <strong>removed</strong> from all roles on your site (only roles with the "administer nodes" permission can now delete these types of content). If you would like to reenable any individual delete permissions, you can do this at the <a href="' . url('admin/user/permissions', array('fragment' => 'module-node')) . '">permissions page</a>.');
   return $ret;
 }
 
@@ -2737,7 +2737,7 @@ function system_update_7003() {
     }
     else {
       $invalid_host = check_plain($blocked->mask);
-      $ret[] = array('success' => TRUE, 'query' => 'The host '. $invalid_host .' is no longer blocked because it is not a valid IP address.');
+      $ret[] = array('success' => TRUE, 'query' => 'The host ' . $invalid_host . ' is no longer blocked because it is not a valid IP address.');
     }
   }
   if (isset($invalid_host)) {
@@ -2791,8 +2791,8 @@ function system_update_7004(&$sandbox) {
       foreach ($renamed_deltas as $module => $deltas) {
         foreach ($deltas as $old_delta => $new_delta) {
           // Only do the update if the old block actually exists.
-          if (db_result(db_query("SELECT COUNT(*) FROM {". $table ."} WHERE module = '%s' AND delta = '%s'", $module, $old_delta))) {
-            $ret[] = update_sql("UPDATE {". $table ."} SET delta = '". $new_delta ."' WHERE module = '". $module ."' AND delta = '". $old_delta ."'");
+          if (db_result(db_query("SELECT COUNT(*) FROM {" . $table . "} WHERE module = '%s' AND delta = '%s'", $module, $old_delta))) {
+            $ret[] = update_sql("UPDATE {" . $table . "} SET delta = '" . $new_delta . "' WHERE module = '" . $module . "' AND delta = '" . $old_delta . "'");
           }
         }
       }

@@ -1,5 +1,5 @@
 <?php
-// $Id: comment-folded.tpl.php,v 1.2 2007/08/07 08:39:35 goba Exp $
+// $Id: comment-folded.tpl.php,v 1.3 2008/04/14 17:48:36 dries Exp $
 
 /**
  * @file comment-folded.tpl.php
@@ -17,5 +17,5 @@
  */
 ?>
 <div class="comment-folded">
-  <span class="subject"><?php print $title .' '. $new; ?></span><span class="credit"><?php print t('by') .' '. $author; ?></span>
+  <span class="subject"><?php print $title . ' ' . $new; ?></span><span class="credit"><?php print t('by') . ' ' . $author; ?></span>
 </div>

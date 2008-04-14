@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.253 2008/04/10 10:28:23 dries Exp $
+// $Id: search.module,v 1.254 2008/04/14 17:48:41 dries Exp $
 
 /**
  * @file
@@ -20,32 +20,32 @@
  * No     Number, Other
  */
 define('PREG_CLASS_SEARCH_EXCLUDE',
-'\x{0}-\x{2f}\x{3a}-\x{40}\x{5b}-\x{60}\x{7b}-\x{bf}\x{d7}\x{f7}\x{2b0}-'.
-'\x{385}\x{387}\x{3f6}\x{482}-\x{489}\x{559}-\x{55f}\x{589}-\x{5c7}\x{5f3}-'.
-'\x{61f}\x{640}\x{64b}-\x{65e}\x{66a}-\x{66d}\x{670}\x{6d4}\x{6d6}-\x{6ed}'.
-'\x{6fd}\x{6fe}\x{700}-\x{70f}\x{711}\x{730}-\x{74a}\x{7a6}-\x{7b0}\x{901}-'.
-'\x{903}\x{93c}\x{93e}-\x{94d}\x{951}-\x{954}\x{962}-\x{965}\x{970}\x{981}-'.
-'\x{983}\x{9bc}\x{9be}-\x{9cd}\x{9d7}\x{9e2}\x{9e3}\x{9f2}-\x{a03}\x{a3c}-'.
-'\x{a4d}\x{a70}\x{a71}\x{a81}-\x{a83}\x{abc}\x{abe}-\x{acd}\x{ae2}\x{ae3}'.
-'\x{af1}-\x{b03}\x{b3c}\x{b3e}-\x{b57}\x{b70}\x{b82}\x{bbe}-\x{bd7}\x{bf0}-'.
-'\x{c03}\x{c3e}-\x{c56}\x{c82}\x{c83}\x{cbc}\x{cbe}-\x{cd6}\x{d02}\x{d03}'.
-'\x{d3e}-\x{d57}\x{d82}\x{d83}\x{dca}-\x{df4}\x{e31}\x{e34}-\x{e3f}\x{e46}-'.
-'\x{e4f}\x{e5a}\x{e5b}\x{eb1}\x{eb4}-\x{ebc}\x{ec6}-\x{ecd}\x{f01}-\x{f1f}'.
-'\x{f2a}-\x{f3f}\x{f71}-\x{f87}\x{f90}-\x{fd1}\x{102c}-\x{1039}\x{104a}-'.
-'\x{104f}\x{1056}-\x{1059}\x{10fb}\x{10fc}\x{135f}-\x{137c}\x{1390}-\x{1399}'.
-'\x{166d}\x{166e}\x{1680}\x{169b}\x{169c}\x{16eb}-\x{16f0}\x{1712}-\x{1714}'.
-'\x{1732}-\x{1736}\x{1752}\x{1753}\x{1772}\x{1773}\x{17b4}-\x{17db}\x{17dd}'.
-'\x{17f0}-\x{180e}\x{1843}\x{18a9}\x{1920}-\x{1945}\x{19b0}-\x{19c0}\x{19c8}'.
-'\x{19c9}\x{19de}-\x{19ff}\x{1a17}-\x{1a1f}\x{1d2c}-\x{1d61}\x{1d78}\x{1d9b}-'.
-'\x{1dc3}\x{1fbd}\x{1fbf}-\x{1fc1}\x{1fcd}-\x{1fcf}\x{1fdd}-\x{1fdf}\x{1fed}-'.
-'\x{1fef}\x{1ffd}-\x{2070}\x{2074}-\x{207e}\x{2080}-\x{2101}\x{2103}-\x{2106}'.
-'\x{2108}\x{2109}\x{2114}\x{2116}-\x{2118}\x{211e}-\x{2123}\x{2125}\x{2127}'.
-'\x{2129}\x{212e}\x{2132}\x{213a}\x{213b}\x{2140}-\x{2144}\x{214a}-\x{2b13}'.
-'\x{2ce5}-\x{2cff}\x{2d6f}\x{2e00}-\x{3005}\x{3007}-\x{303b}\x{303d}-\x{303f}'.
-'\x{3099}-\x{309e}\x{30a0}\x{30fb}-\x{30fe}\x{3190}-\x{319f}\x{31c0}-\x{31cf}'.
-'\x{3200}-\x{33ff}\x{4dc0}-\x{4dff}\x{a015}\x{a490}-\x{a716}\x{a802}\x{a806}'.
-'\x{a80b}\x{a823}-\x{a82b}\x{d800}-\x{f8ff}\x{fb1e}\x{fb29}\x{fd3e}\x{fd3f}'.
-'\x{fdfc}-\x{fe6b}\x{feff}-\x{ff0f}\x{ff1a}-\x{ff20}\x{ff3b}-\x{ff40}\x{ff5b}-'.
+'\x{0}-\x{2f}\x{3a}-\x{40}\x{5b}-\x{60}\x{7b}-\x{bf}\x{d7}\x{f7}\x{2b0}-' .
+'\x{385}\x{387}\x{3f6}\x{482}-\x{489}\x{559}-\x{55f}\x{589}-\x{5c7}\x{5f3}-' .
+'\x{61f}\x{640}\x{64b}-\x{65e}\x{66a}-\x{66d}\x{670}\x{6d4}\x{6d6}-\x{6ed}' .
+'\x{6fd}\x{6fe}\x{700}-\x{70f}\x{711}\x{730}-\x{74a}\x{7a6}-\x{7b0}\x{901}-' .
+'\x{903}\x{93c}\x{93e}-\x{94d}\x{951}-\x{954}\x{962}-\x{965}\x{970}\x{981}-' .
+'\x{983}\x{9bc}\x{9be}-\x{9cd}\x{9d7}\x{9e2}\x{9e3}\x{9f2}-\x{a03}\x{a3c}-' .
+'\x{a4d}\x{a70}\x{a71}\x{a81}-\x{a83}\x{abc}\x{abe}-\x{acd}\x{ae2}\x{ae3}' .
+'\x{af1}-\x{b03}\x{b3c}\x{b3e}-\x{b57}\x{b70}\x{b82}\x{bbe}-\x{bd7}\x{bf0}-' .
+'\x{c03}\x{c3e}-\x{c56}\x{c82}\x{c83}\x{cbc}\x{cbe}-\x{cd6}\x{d02}\x{d03}' .
+'\x{d3e}-\x{d57}\x{d82}\x{d83}\x{dca}-\x{df4}\x{e31}\x{e34}-\x{e3f}\x{e46}-' .
+'\x{e4f}\x{e5a}\x{e5b}\x{eb1}\x{eb4}-\x{ebc}\x{ec6}-\x{ecd}\x{f01}-\x{f1f}' .
+'\x{f2a}-\x{f3f}\x{f71}-\x{f87}\x{f90}-\x{fd1}\x{102c}-\x{1039}\x{104a}-' .
+'\x{104f}\x{1056}-\x{1059}\x{10fb}\x{10fc}\x{135f}-\x{137c}\x{1390}-\x{1399}' .
+'\x{166d}\x{166e}\x{1680}\x{169b}\x{169c}\x{16eb}-\x{16f0}\x{1712}-\x{1714}' .
+'\x{1732}-\x{1736}\x{1752}\x{1753}\x{1772}\x{1773}\x{17b4}-\x{17db}\x{17dd}' .
+'\x{17f0}-\x{180e}\x{1843}\x{18a9}\x{1920}-\x{1945}\x{19b0}-\x{19c0}\x{19c8}' .
+'\x{19c9}\x{19de}-\x{19ff}\x{1a17}-\x{1a1f}\x{1d2c}-\x{1d61}\x{1d78}\x{1d9b}-' .
+'\x{1dc3}\x{1fbd}\x{1fbf}-\x{1fc1}\x{1fcd}-\x{1fcf}\x{1fdd}-\x{1fdf}\x{1fed}-' .
+'\x{1fef}\x{1ffd}-\x{2070}\x{2074}-\x{207e}\x{2080}-\x{2101}\x{2103}-\x{2106}' .
+'\x{2108}\x{2109}\x{2114}\x{2116}-\x{2118}\x{211e}-\x{2123}\x{2125}\x{2127}' .
+'\x{2129}\x{212e}\x{2132}\x{213a}\x{213b}\x{2140}-\x{2144}\x{214a}-\x{2b13}' .
+'\x{2ce5}-\x{2cff}\x{2d6f}\x{2e00}-\x{3005}\x{3007}-\x{303b}\x{303d}-\x{303f}' .
+'\x{3099}-\x{309e}\x{30a0}\x{30fb}-\x{30fe}\x{3190}-\x{319f}\x{31c0}-\x{31cf}' .
+'\x{3200}-\x{33ff}\x{4dc0}-\x{4dff}\x{a015}\x{a490}-\x{a716}\x{a802}\x{a806}' .
+'\x{a80b}\x{a823}-\x{a82b}\x{d800}-\x{f8ff}\x{fb1e}\x{fb29}\x{fd3e}\x{fd3f}' .
+'\x{fdfc}-\x{fe6b}\x{feff}-\x{ff0f}\x{ff1a}-\x{ff20}\x{ff3b}-\x{ff40}\x{ff5b}-' .
 '\x{ff65}\x{ff70}\x{ff9e}\x{ff9f}\x{ffe0}-\x{fffd}');
 
 /**
@@ -87,7 +87,7 @@ define('PREG_CLASS_PUNCTUATION',
  * (Chinese, Japanese, Korean).
  * Contains kana and BMP ideographs.
  */
-define('PREG_CLASS_CJK', '\x{3041}-\x{30ff}\x{31f0}-\x{31ff}\x{3400}-\x{4db5}'.
+define('PREG_CLASS_CJK', '\x{3041}-\x{30ff}\x{31f0}-\x{31ff}\x{3400}-\x{4db5}' .
 '\x{4e00}-\x{9fbb}\x{f900}-\x{fad9}');
 
 /**
@@ -96,12 +96,12 @@ define('PREG_CLASS_CJK', '\x{3041}-\x{30ff}\x{31f0}-\x{31ff}\x{3400}-\x{4db5}'.
 function search_help($path, $arg) {
   switch ($path) {
     case 'admin/help#search':
-      $output = '<p>'. t('The search module adds the ability to search for content by keywords. Search is often the only practical way to find content on a large site, and is useful for finding both users and posts.') .'</p>';
-      $output .= '<p>'. t('To provide keyword searching, the search engine maintains an index of words found in your site\'s content. To build and maintain this index, a correctly configured <a href="@cron">cron maintenance task</a> is required. Indexing behavior can be adjusted using the <a href="@searchsettings">search settings page</a>; for example, the <em>Number of items to index per cron run</em> sets the maximum number of items indexed in each pass of a <a href="@cron">cron maintenance task</a>. If necessary, reduce this number to prevent timeouts and memory errors when indexing.', array('@cron' => url('admin/reports/status'), '@searchsettings' => url('admin/settings/search'))) .'</p>';
-      $output .= '<p>'. t('For more information, see the online handbook entry for <a href="@search">Search module</a>.', array('@search' => 'http://drupal.org/handbook/modules/search/')) .'</p>';
+      $output = '<p>' . t('The search module adds the ability to search for content by keywords. Search is often the only practical way to find content on a large site, and is useful for finding both users and posts.') . '</p>';
+      $output .= '<p>' . t('To provide keyword searching, the search engine maintains an index of words found in your site\'s content. To build and maintain this index, a correctly configured <a href="@cron">cron maintenance task</a> is required. Indexing behavior can be adjusted using the <a href="@searchsettings">search settings page</a>; for example, the <em>Number of items to index per cron run</em> sets the maximum number of items indexed in each pass of a <a href="@cron">cron maintenance task</a>. If necessary, reduce this number to prevent timeouts and memory errors when indexing.', array('@cron' => url('admin/reports/status'), '@searchsettings' => url('admin/settings/search'))) . '</p>';
+      $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@search">Search module</a>.', array('@search' => 'http://drupal.org/handbook/modules/search/')) . '</p>';
       return $output;
     case 'admin/settings/search':
-      return '<p>'. t('The search engine maintains an index of words found in your site\'s content. To build and maintain this index, a correctly configured <a href="@cron">cron maintenance task</a> is required. Indexing behavior can be adjusted using the settings below.', array('@cron' => url('admin/reports/status'))) .'</p>';
+      return '<p>' . t('The search engine maintains an index of words found in your site\'s content. To build and maintain this index, a correctly configured <a href="@cron">cron maintenance task</a> is required. Indexing behavior can be adjusted using the settings below.', array('@cron' => url('admin/reports/status'))) . '</p>';
     case 'search#noresults':
       return t('<ul>
 <li>Check if your spelling is correct.</li>
@@ -203,7 +203,7 @@ function search_menu() {
   );
 
   foreach (module_implements('search') as $name) {
-    $items['search/'. $name .'/%menu_tail'] = array(
+    $items['search/' . $name . '/%menu_tail'] = array(
       'title callback' => 'module_invoke',
       'title arguments' => array($name, 'search', 'name', TRUE),
       'page callback' => 'search_view',
@@ -317,7 +317,7 @@ function search_simplify($text) {
 
   // Simple CJK handling
   if (variable_get('overlap_cjk', TRUE)) {
-    $text = preg_replace_callback('/['. PREG_CLASS_CJK .']+/u', 'search_expand_cjk', $text);
+    $text = preg_replace_callback('/[' . PREG_CLASS_CJK . ']+/u', 'search_expand_cjk', $text);
   }
 
   // To improve searching for numerical data such as dates, IP addresses
@@ -326,7 +326,7 @@ function search_simplify($text) {
   // This also means that searching for e.g. '20/03/1984' also returns
   // results with '20-03-1984' in them.
   // Readable regexp: ([number]+)[punctuation]+(?=[number])
-  $text = preg_replace('/(['. PREG_CLASS_NUMBERS .']+)['. PREG_CLASS_PUNCTUATION .']+(?=['. PREG_CLASS_NUMBERS .'])/u', '\1', $text);
+  $text = preg_replace('/([' . PREG_CLASS_NUMBERS . ']+)[' . PREG_CLASS_PUNCTUATION . ']+(?=[' . PREG_CLASS_NUMBERS . '])/u', '\1', $text);
 
   // The dot, underscore and dash are simply removed. This allows meaningful
   // search behavior with acronyms and URLs.
@@ -334,7 +334,7 @@ function search_simplify($text) {
 
   // With the exception of the rules above, we consider all punctuation,
   // marks, spacers, etc, to be a word boundary.
-  $text = preg_replace('/['. PREG_CLASS_SEARCH_EXCLUDE .']+/u', ' ', $text);
+  $text = preg_replace('/[' . PREG_CLASS_SEARCH_EXCLUDE . ']+/u', ' ', $text);
 
   return $text;
 }
@@ -349,7 +349,7 @@ function search_expand_cjk($matches) {
   $l = drupal_strlen($str);
   // Passthrough short words
   if ($l <= $min) {
-    return ' '. $str .' ';
+    return ' ' . $str . ' ';
   }
   $tokens = ' ';
   // FIFO queue of characters
@@ -361,7 +361,7 @@ function search_expand_cjk($matches) {
     $str = substr($str, strlen($current));
     $chars[] = $current;
     if ($i >= $min - 1) {
-      $tokens .= implode('', $chars) .' ';
+      $tokens .= implode('', $chars) . ' ';
       array_shift($chars);
     }
   }
@@ -425,7 +425,7 @@ function search_index($sid, $type, $text) {
 
   // Link matching
   global $base_url;
-  $node_regexp = '@href=[\'"]?(?:'. preg_quote($base_url, '@') .'/|'. preg_quote(base_path(), '@') .')(?:\?q=)?/?((?![a-z]+:)[^\'">]+)[\'">]@i';
+  $node_regexp = '@href=[\'"]?(?:' . preg_quote($base_url, '@') . '/|' . preg_quote(base_path(), '@') . ')(?:\?q=)?/?((?![a-z]+:)[^\'">]+)[\'">]@i';
 
   // Multipliers for scores of words inside certain HTML tags.
   // Note: 'a' must be included for link ranking to work.
@@ -445,7 +445,7 @@ function search_index($sid, $type, $text) {
   // Strip off all ignored tags to speed up processing, but insert space before/after
   // them to keep word boundaries.
   $text = str_replace(array('<', '>'), array(' <', '> '), $text);
-  $text = strip_tags($text, '<'. implode('><', array_keys($tags)) .'>');
+  $text = strip_tags($text, '<' . implode('><', array_keys($tags)) . '>');
 
   // Split HTML tags from plain text.
   $split = preg_split('/\s*<([^>]+?)>\s*/', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
@@ -528,7 +528,7 @@ function search_index($sid, $type, $text) {
         $words = search_index_split($value);
         foreach ($words as $word) {
           // Add word to accumulator
-          $accum .= $word .' ';
+          $accum .= $word . ' ';
           $num = is_numeric($word);
           // Check wordlength
           if ($num || drupal_strlen($word) >= $minimum_word_size) {
@@ -639,7 +639,7 @@ function search_nodeapi(&$node, $op, $teaser = NULL, $page = NULL) {
       while ($link = db_fetch_object($result)) {
         $output[] = $link->caption;
       }
-      return '<a>('. implode(', ', $output) .')</a>';
+      return '<a>(' . implode(', ', $output) . ')</a>';
     // Reindex the node when it is updated.  The node is automatically indexed
     // when it is added, simply by being added to the node table.
     case 'update':
@@ -668,7 +668,7 @@ function search_comment($a1, $op) {
  * Extract a module-specific search option from a search query. e.g. 'type:book'
  */
 function search_query_extract($keys, $option) {
-  if (preg_match('/(^| )'. $option .':([^ ]*)( |$)/i', $keys, $matches)) {
+  if (preg_match('/(^| )' . $option . ':([^ ]*)( |$)/i', $keys, $matches)) {
     return $matches[2];
   }
 }
@@ -679,10 +679,10 @@ function search_query_extract($keys, $option) {
  */
 function search_query_insert($keys, $option, $value = '') {
   if (search_query_extract($keys, $option)) {
-    $keys = trim(preg_replace('/(^| )'. $option .':[^ ]*/i', '', $keys));
+    $keys = trim(preg_replace('/(^| )' . $option . ':[^ ]*/i', '', $keys));
   }
   if ($value != '') {
-    $keys .= ' '. $option .':'. $value;
+    $keys .= ' ' . $option . ':' . $value;
   }
   return $keys;
 }
@@ -711,7 +711,7 @@ function search_parse_query($text) {
   $keys = array('positive' => array(), 'negative' => array());
 
   // Tokenize query string
-  preg_match_all('/ (-?)("[^"]+"|[^" ]+)/i', ' '. $text, $matches, PREG_SET_ORDER);
+  preg_match_all('/ (-?)("[^"]+"|[^" ]+)/i', ' ' . $text, $matches, PREG_SET_ORDER);
 
   if (count($matches) < 1) {
     return NULL;
@@ -795,7 +795,7 @@ function search_parse_query($text) {
         }
       }
       if (count($queryor)) {
-        $query[] = '('. implode(' OR ', $queryor) .')';
+        $query[] = '(' . implode(' OR ', $queryor) . ')';
         // A group of OR keywords only needs to match once
         $matches += ($any > 0);
       }
@@ -857,7 +857,7 @@ function _search_parse_query(&$word, &$scores, $not = FALSE) {
     }
   }
   // Return matching snippet and number of added words
-  return array("d.data ". ($not ? 'NOT ' : '') ."LIKE '%% %s %%'", $num_new_scores, $num_valid_words);
+  return array("d.data " . ($not ? 'NOT ' : '') . "LIKE '%% %s %%'", $num_new_scores, $num_valid_words);
 }
 
 /**
@@ -946,7 +946,7 @@ function do_search($keywords, $type, $join1 = '', $where1 = '1', $arguments1 = a
   if (!$normalize) {
     return array();
   }
-  $columns2 = str_replace('i.relevance', '('. (1.0 / $normalize) .' * SUM(i.score * t.count))', $columns2);
+  $columns2 = str_replace('i.relevance', '(' . (1.0 / $normalize) . ' * SUM(i.score * t.count))', $columns2);
 
   // Build query to retrieve results.
   $select = "SELECT i.type, i.sid, $columns2 FROM {search_index} i $join $join2 WHERE $conditions GROUP BY i.type, i.sid HAVING COUNT(*) >= %d";
@@ -1023,10 +1023,10 @@ function search_get_keys() {
 function search_form(&$form_state, $action = '', $keys = '', $type = NULL, $prompt = NULL) {
 
   // Add CSS
-  drupal_add_css(drupal_get_path('module', 'search') .'/search.css', 'module', 'all', FALSE);
+  drupal_add_css(drupal_get_path('module', 'search') . '/search.css', 'module', 'all', FALSE);
 
   if (!$action) {
-    $action = url('search/'. $type);
+    $action = url('search/' . $type);
   }
   if (is_null($prompt)) {
     $prompt = t('Enter your keywords');
@@ -1081,7 +1081,7 @@ function search_box(&$form_state, $form_id) {
  */
 function search_box_form_submit($form, &$form_state) {
   $form_id = $form['form_id']['#value'];
-  $form_state['redirect'] = 'search/node/'. trim($form_state['values'][$form_id]);
+  $form_state['redirect'] = 'search/node/' . trim($form_state['values'][$form_id]);
 }
 
 /**
@@ -1173,14 +1173,14 @@ function search_data($keys = NULL, $type = 'node') {
  */
 function search_excerpt($keys, $text) {
   // We highlight around non-indexable or CJK characters.
-  $boundary = '(?:(?<=['. PREG_CLASS_SEARCH_EXCLUDE . PREG_CLASS_CJK .'])|(?=['. PREG_CLASS_SEARCH_EXCLUDE . PREG_CLASS_CJK .']))';
+  $boundary = '(?:(?<=[' . PREG_CLASS_SEARCH_EXCLUDE . PREG_CLASS_CJK . '])|(?=[' . PREG_CLASS_SEARCH_EXCLUDE . PREG_CLASS_CJK . ']))';
 
   // Extract positive keywords and phrases
-  preg_match_all('/ ("([^"]+)"|(?!OR)([^" ]+))/', ' '. $keys, $matches);
+  preg_match_all('/ ("([^"]+)"|(?!OR)([^" ]+))/', ' ' . $keys, $matches);
   $keys = array_merge($matches[2], $matches[3]);
 
   // Prepare text
-  $text = ' '. strip_tags(str_replace(array('<', '>'), array(' <', '> '), $text)) .' ';
+  $text = ' ' . strip_tags(str_replace(array('<', '>'), array(' <', '> '), $text)) . ' ';
   array_walk($keys, '_search_excerpt_replace');
   $workkeys = $keys;
 
@@ -1208,7 +1208,7 @@ function search_excerpt($keys, $text) {
       }
       // Locate a keyword (position $p), then locate a space in front (position
       // $q) and behind it (position $s)
-      if (preg_match('/'. $boundary . $key . $boundary .'/iu', $text, $match, PREG_OFFSET_CAPTURE, $included[$key])) {
+      if (preg_match('/' . $boundary . $key . $boundary . '/iu', $text, $match, PREG_OFFSET_CAPTURE, $included[$key])) {
         $p = $match[0][1];
         if (($q = strpos($text, ' ', max(0, $p - 60))) !== FALSE) {
           $end = substr($text, $p, 80);
@@ -1233,7 +1233,7 @@ function search_excerpt($keys, $text) {
 
   // If we didn't find anything, return the beginning.
   if (count($ranges) == 0) {
-    return truncate_utf8($text, 256) .' ...';
+    return truncate_utf8($text, 256) . ' ...';
   }
 
   // Sort the text ranges by starting position.
@@ -1263,10 +1263,10 @@ function search_excerpt($keys, $text) {
   foreach ($newranges as $from => $to) {
     $out[] = substr($text, $from, $to - $from);
   }
-  $text = (isset($newranges[0]) ? '' : '... ') . implode(' ... ', $out) .' ...';
+  $text = (isset($newranges[0]) ? '' : '... ') . implode(' ... ', $out) . ' ...';
 
   // Highlight keywords. Must be done at once to prevent conflicts ('strong' and '<strong>').
-  $text = preg_replace('/'. $boundary .'('. implode('|', $keys) .')'. $boundary .'/iu', '<strong>\0</strong>', $text);
+  $text = preg_replace('/' . $boundary . '(' . implode('|', $keys) . ')' . $boundary . '/iu', '<strong>\0</strong>', $text);
   return $text;
 }
 

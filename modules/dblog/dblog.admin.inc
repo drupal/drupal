@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.admin.inc,v 1.6 2008/01/08 10:35:41 goba Exp $
+// $Id: dblog.admin.inc,v 1.7 2008/04/14 17:48:36 dries Exp $
 
 /**
  * @file
@@ -55,7 +55,7 @@ function dblog_overview() {
   $sql = "SELECT w.wid, w.uid, w.severity, w.type, w.timestamp, w.message, w.variables, w.link, u.name FROM {watchdog} w INNER JOIN {users} u ON w.uid = u.uid";
   $tablesort = tablesort_sql($header);
   if (!empty($filter['where'])) {
-    $result = pager_query($sql ." WHERE ". $filter['where'] . $tablesort, 50, 0, NULL, $filter['args']);
+    $result = pager_query($sql . " WHERE " . $filter['where'] . $tablesort, 50, 0, NULL, $filter['args']);
   }
   else {
     $result = pager_query($sql . $tablesort, 50);
@@ -68,12 +68,12 @@ function dblog_overview() {
         $icons[$dblog->severity],
         t($dblog->type),
         format_date($dblog->timestamp, 'small'),
-        l(truncate_utf8(_dblog_format_message($dblog), 56, TRUE, TRUE), 'admin/reports/event/'. $dblog->wid, array('html' => TRUE)),
+        l(truncate_utf8(_dblog_format_message($dblog), 56, TRUE, TRUE), 'admin/reports/event/' . $dblog->wid, array('html' => TRUE)),
         theme('username', $dblog),
         $dblog->link,
       ),
       // Attributes for tr
-      'class' => "dblog-". preg_replace('/[^a-z]/i', '-', $dblog->type) .' '. $classes[$dblog->severity]
+      'class' => "dblog-" . preg_replace('/[^a-z]/i', '-', $dblog->type) . ' ' . $classes[$dblog->severity]
     );
   }
 
@@ -98,7 +98,7 @@ function dblog_top($type) {
     array('data' => t('Message'), 'field' => 'message')
   );
 
-  $result = pager_query("SELECT COUNT(wid) AS count, message, variables FROM {watchdog} WHERE type = '%s' GROUP BY message, variables ". tablesort_sql($header), 30, 0, "SELECT COUNT(DISTINCT(message)) FROM {watchdog} WHERE type = '%s'", $type);
+  $result = pager_query("SELECT COUNT(wid) AS count, message, variables FROM {watchdog} WHERE type = '%s' GROUP BY message, variables " . tablesort_sql($header), 30, 0, "SELECT COUNT(DISTINCT(message)) FROM {watchdog} WHERE type = '%s'", $type);
 
   $rows = array();
   while ($dblog = db_fetch_object($result)) {
@@ -186,7 +186,7 @@ function dblog_build_filter_query() {
       $args[] = $value;
     }
     if (!empty($filter_where)) {
-      $where[] = '('. implode(' OR ', $filter_where) .')';
+      $where[] = '(' . implode(' OR ', $filter_where) . ')';
     }
   }
   $where = !empty($where) ? implode(' AND ', $where) : '';

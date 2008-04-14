@@ -1,5 +1,5 @@
 <?php
-// $Id: language.inc,v 1.15 2008/02/06 19:38:26 dries Exp $
+// $Id: language.inc,v 1.16 2008/04/14 17:48:33 dries Exp $
 
 /**
  * @file
@@ -136,7 +136,7 @@ function language_url_rewrite(&$path, &$options) {
 
       case LANGUAGE_NEGOTIATION_PATH:
         if (!empty($options['language']->prefix)) {
-          $options['prefix'] = $options['language']->prefix .'/';
+          $options['prefix'] = $options['language']->prefix . '/';
         }
         break;
     }

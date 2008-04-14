@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.module,v 1.22 2008/04/02 19:40:35 dries Exp $
+// $Id: dblog.module,v 1.23 2008/04/14 17:48:36 dries Exp $
 
 /**
  * @file
@@ -18,12 +18,12 @@
 function dblog_help($path, $arg) {
   switch ($path) {
     case 'admin/help#dblog':
-      $output = '<p>'. t('The dblog module monitors your system, capturing system events in a log to be reviewed by an authorized individual at a later time. This is useful for site administrators who want a quick overview of activities on their site. The logs also record the sequence of events, so it can be useful for debugging site errors.') .'</p>';
-      $output .= '<p>'. t('The dblog log is simply a list of recorded events containing usage data, performance data, errors, warnings and operational information. Administrators should check the dblog report on a regular basis to ensure their site is working properly.') .'</p>';
-      $output .= '<p>'. t('For more information, see the online handbook entry for <a href="@dblog">Dblog module</a>.', array('@dblog' => 'http://drupal.org/handbook/modules/dblog/')) .'</p>';
+      $output = '<p>' . t('The dblog module monitors your system, capturing system events in a log to be reviewed by an authorized individual at a later time. This is useful for site administrators who want a quick overview of activities on their site. The logs also record the sequence of events, so it can be useful for debugging site errors.') . '</p>';
+      $output .= '<p>' . t('The dblog log is simply a list of recorded events containing usage data, performance data, errors, warnings and operational information. Administrators should check the dblog report on a regular basis to ensure their site is working properly.') . '</p>';
+      $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@dblog">Dblog module</a>.', array('@dblog' => 'http://drupal.org/handbook/modules/dblog/')) . '</p>';
       return $output;
     case 'admin/reports/dblog':
-      return '<p>'. t('The dblog module monitors your website, capturing system events in a log to be reviewed by an authorized individual at a later time. The dblog log is simply a list of recorded events containing usage data, performance data, errors, warnings and operational information. It is vital to check the dblog report on a regular basis as it is often the only way to tell what is going on.') .'</p>';
+      return '<p>' . t('The dblog module monitors your website, capturing system events in a log to be reviewed by an authorized individual at a later time. The dblog log is simply a list of recorded events containing usage data, performance data, errors, warnings and operational information. It is vital to check the dblog report on a regular basis as it is often the only way to tell what is going on.') . '</p>';
   }
 }
 
@@ -84,7 +84,7 @@ function dblog_menu() {
 function dblog_init() {
   if (arg(0) == 'admin' && arg(1) == 'reports') {
     // Add the CSS for this module
-    drupal_add_css(drupal_get_path('module', 'dblog') .'/dblog.css', 'module', 'all', FALSE);
+    drupal_add_css(drupal_get_path('module', 'dblog') . '/dblog.css', 'module', 'all', FALSE);
   }
 }
 
@@ -153,7 +153,7 @@ function theme_dblog_filters($form) {
   foreach (element_children($form['status']) as $key) {
     $output .= drupal_render($form['status'][$key]);
   }
-  $output .= '<div id="dblog-admin-buttons">'. drupal_render($form['buttons']) .'</div>';
+  $output .= '<div id="dblog-admin-buttons">' . drupal_render($form['buttons']) . '</div>';
   return $output;
 }
 
