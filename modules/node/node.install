@@ -1,5 +1,5 @@
 <?php
-// $Id: node.install,v 1.5 2008/03/15 12:31:28 dries Exp $
+// $Id: node.install,v 1.6 2008/04/15 08:39:03 dries Exp $
 
 /**
  * Implementation of hook_schema().
@@ -36,7 +36,7 @@ function node_schema() {
         'default' => '',
       ),
       'title' => array(
-        'description' => t('The title of this node, always treated a non-markup plain text.'),
+        'description' => t('The title of this node, always treated as non-markup plain text.'),
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
@@ -73,7 +73,7 @@ function node_schema() {
         'default' => 0,
       ),
       'promote' => array(
-        'description' => t('Boolean indicating whether the node should displayed on the front page.'),
+        'description' => t('Boolean indicating whether the node should be displayed on the front page.'),
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
