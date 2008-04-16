@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.260 2008/04/08 22:50:54 dries Exp $
+// $Id: CHANGELOG.txt,v 1.261 2008/04/16 11:35:51 dries Exp $
 
 Drupal 7.0, xxxx-xx-xx (development version)
 ----------------------
@@ -20,6 +20,9 @@ Drupal 7.0, xxxx-xx-xx (development version)
       simple method for blocking IP addresses. E-mail and username restrictions
       are now available in a contributed module. IP address range blocking is
       no longer supported and should be done at the server level.
+- Removed throttle module:
+    * The throttle module has been removed. Alternative methods to improve
+      performance are available in core and contributed modules.
 
 Drupal 6.0, 2008-02-13
 ----------------------

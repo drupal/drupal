@@ -1,5 +1,5 @@
 <?php
-// $Id: block.admin.inc,v 1.15 2008/04/14 17:48:34 dries Exp $
+// $Id: block.admin.inc,v 1.16 2008/04/16 11:35:51 dries Exp $
 
 /**
  * @file
@@ -35,7 +35,6 @@ function block_admin_display_form(&$form_state, $blocks, $theme = NULL) {
   $custom_theme = isset($theme) ? $theme : variable_get('theme_default', 'garland');
   init_theme();
 
-  $throttle = module_exists('throttle');
   $block_regions = system_region_list($theme_key) + array(BLOCK_REGION_NONE => '<' . t('none') . '>');
 
   // Build form tree
@@ -70,10 +69,6 @@ function block_admin_display_form(&$form_state, $blocks, $theme = NULL) {
       '#default_value' => $block['region'],
       '#options' => $block_regions,
     );
-
-    if ($throttle) {
-      $form[$key]['throttle'] = array('#type' => 'checkbox', '#default_value' => isset($block['throttle']) ? $block['throttle'] : FALSE);
-    }
     $form[$key]['configure'] = array('#value' => l(t('configure'), 'admin/build/block/configure/' . $block['module'] . '/' . $block['delta']));
     if ($block['module'] == 'block') {
       $form[$key]['delete'] = array('#value' => l(t('delete'), 'admin/build/block/delete/' . $block['delta']));
@@ -95,7 +90,7 @@ function block_admin_display_form_submit($form, &$form_state) {
   foreach ($form_state['values'] as $block) {
     $block['status'] = $block['region'] != BLOCK_REGION_NONE;
     $block['region'] = $block['status'] ? $block['region'] : '';
-    db_query("UPDATE {blocks} SET status = %d, weight = %d, region = '%s', throttle = %d WHERE module = '%s' AND delta = '%s' AND theme = '%s'", $block['status'], $block['weight'], $block['region'], isset($block['throttle']) ? $block['throttle'] : 0, $block['module'], $block['delta'], $block['theme']);
+    db_query("UPDATE {blocks} SET status = %d, weight = %d, region = '%s' WHERE module = '%s' AND delta = '%s' AND theme = '%s'", $block['status'], $block['weight'], $block['region'], $block['module'], $block['delta'], $block['theme']);
   }
   drupal_set_message(t('The block settings have been updated.'));
   cache_clear_all();
@@ -354,7 +349,6 @@ function template_preprocess_block_admin_display_form(&$variables) {
   global $theme_key;
 
   $block_regions = system_region_list($theme_key);
-  $variables['throttle'] = module_exists('throttle');
   $variables['block_regions'] = $block_regions + array(BLOCK_REGION_NONE => t('Disabled'));
 
   foreach ($block_regions as $key => $value) {
@@ -386,7 +380,6 @@ function template_preprocess_block_admin_display_form(&$variables) {
       $variables['block_listing'][$region][$i]->block_title =  drupal_render($block['info']);
       $variables['block_listing'][$region][$i]->region_select = drupal_render($block['region']) . drupal_render($block['theme']);
       $variables['block_listing'][$region][$i]->weight_select = drupal_render($block['weight']);
-      $variables['block_listing'][$region][$i]->throttle_check = $variables['throttle'] ? drupal_render($block['throttle']) : '';
       $variables['block_listing'][$region][$i]->configure_link = drupal_render($block['configure']);
       $variables['block_listing'][$region][$i]->delete_link = !empty($block['delete']) ? drupal_render($block['delete']) : '';
       $variables['block_listing'][$region][$i]->printed = FALSE;

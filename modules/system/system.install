@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.249 2008/04/16 11:26:28 dries Exp $
+// $Id: system.install,v 1.250 2008/04/16 11:35:52 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -1141,13 +1141,6 @@ function system_schema() {
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-      ),
-      'throttle' => array(
-        'description' => t('Boolean indicating whether this item is disabled when the throttle.module disables throttleable items.'),
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'tiny',
       ),
       'throttle' => array(
         'description' => t('Boolean indicating whether this item is disabled when the throttle.module disables throttleable items.'),
@@ -2849,6 +2842,21 @@ function system_update_7004(&$sandbox) {
   if ($sandbox['progress'] < $sandbox['max']) {
     $ret['#finished'] = $sandbox['progress'] / $sandbox['max'];
   }
+  return $ret;
+}
+
+/**
+ * Remove throttle columns and variables.
+ */
+function system_update_7005() {
+  $ret = array();
+  db_drop_field($ret, 'blocks', 'throttle');
+  db_drop_field($ret, 'system', 'throttle');
+  variable_del('throttle_user');
+  variable_del('throttle_anonymous');
+  variable_del('throttle_level');
+  variable_del('throttle_probability_limiter');
+
   return $ret;
 }
 

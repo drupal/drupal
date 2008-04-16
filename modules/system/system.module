@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.597 2008/04/14 17:48:41 dries Exp $
+// $Id: system.module,v 1.598 2008/04/16 11:35:52 dries Exp $
 
 /**
  * @file
@@ -73,11 +73,7 @@ function system_help($path, $arg) {
     case 'admin/build/themes/settings':
       return '<p>' . t('These options control the default display settings for your entire site, across all themes. Unless they have been overridden by a specific theme, these settings will be used.') . '</p>';
     case 'admin/build/modules':
-      $output = '<p>' . t('Modules are plugins that extend Drupal\'s core functionality. Enable modules by selecting the <em>Enabled</em> checkboxes below and clicking the <em>Save configuration</em> button. Once a module is enabled, new <a href="@permissions">permissions</a> may be available. To reduce server load, modules with their <em>Throttle</em> checkbox selected are temporarily disabled when your site becomes extremely busy. (Note that the <em>Throttle</em> checkbox is only available if the Throttle module is enabled.)', array('@permissions' => url('admin/user/permissions')));
-      if (module_exists('throttle')) {
-        $output .= ' ' . t('The auto-throttle functionality must be enabled on the <a href="@throttle">throttle configuration page</a> after having enabled the throttle module.', array('@throttle' => url('admin/settings/throttle')));
-      }
-      $output .= '</p>';
+      $output = '<p>' . t('Modules are plugins that extend Drupal\'s core functionality. Enable modules by selecting the <em>Enabled</em> checkboxes below and clicking the <em>Save configuration</em> button. Once a module is enabled, new <a href="@permissions">permissions</a> may be available.)', array('@permissions' => url('admin/user/permissions'))) . '</p>';
       $output .= '<p>' . t('It is important that <a href="@update-php">update.php</a> is run every time a module is updated to a newer version.', array('@update-php' => $base_url . '/update.php')) . '</p>';
       $output .= '<p>' . t('You can find all administration tasks belonging to a particular module on the <a href="@by-module">administration by module page</a>.', array('@by-module' => url('admin/by-module'))) . '</p>';
       $output .= '<p>' . t('To extend the functionality of your site, a number of <a href="@modules">contributed modules</a> are available.', array('@modules' => 'http://drupal.org/project/modules')) . '</p>';
@@ -899,7 +895,7 @@ function system_check_directory($form_element) {
  */
 function system_get_files_database(&$files, $type) {
   // Extract current files from database.
-  $result = db_query("SELECT filename, name, type, status, throttle, schema_version FROM {system} WHERE type = '%s'", $type);
+  $result = db_query("SELECT filename, name, type, status, schema_version FROM {system} WHERE type = '%s'", $type);
   while ($file = db_fetch_object($result)) {
     if (isset($files[$file->name]) && is_object($files[$file->name])) {
       $file->old_filename = $file->filename;
@@ -969,7 +965,7 @@ function system_theme_data() {
       $theme->owner = '';
     }
 
-    db_query("INSERT INTO {system} (name, owner, info, type, filename, status, throttle, bootstrap) VALUES ('%s', '%s', '%s', '%s', '%s', %d, %d, %d)", $theme->name, $theme->owner, serialize($theme->info), 'theme', $theme->filename, isset($theme->status) ? $theme->status : 0, 0, 0);
+    db_query("INSERT INTO {system} (name, owner, info, type, filename, status, bootstrap) VALUES ('%s', '%s', '%s', '%s', '%s', %d, %d)", $theme->name, $theme->owner, serialize($theme->info), 'theme', $theme->filename, isset($theme->status) ? $theme->status : 0, 0);
   }
 
   return $themes;
@@ -1155,8 +1151,8 @@ function system_initialize_theme_blocks($theme) {
       if (!array_key_exists($block['region'], $regions)) {
         $block['region'] = system_default_region($theme);
       }
-      db_query("INSERT INTO {blocks} (module, delta, theme, status, weight, region, visibility, pages, custom, throttle, cache) VALUES ('%s', '%s', '%s', %d, %d, '%s', %d, '%s', %d, %d, %d)",
-          $block['module'], $block['delta'], $theme, $block['status'], $block['weight'], $block['region'], $block['visibility'], $block['pages'], $block['custom'], $block['throttle'], $block['cache']);
+      db_query("INSERT INTO {blocks} (module, delta, theme, status, weight, region, visibility, pages, custom, cache) VALUES ('%s', '%s', '%s', %d, %d, '%s', %d, '%s', %d, %d)",
+          $block['module'], $block['delta'], $theme, $block['status'], $block['weight'], $block['region'], $block['visibility'], $block['pages'], $block['custom'], $block['cache']);
     }
   }
 }

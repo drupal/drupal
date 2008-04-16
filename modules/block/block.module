@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.302 2008/04/14 17:48:34 dries Exp $
+// $Id: block.module,v 1.303 2008/04/16 11:35:51 dries Exp $
 
 /**
  * @file
@@ -72,7 +72,6 @@ function block_help($path, $arg) {
       $output .= '<p>' . t('When working with blocks, remember that:') . '</p>';
       $output .= '<ul><li>' . t('since not all themes implement the same regions, or display regions in the same way, blocks are positioned on a per-theme basis.') . '</li>';
       $output .= '<li>' . t('disabled blocks, or blocks not in a region, are never shown.') . '</li>';
-      $output .= '<li>' . t('when throttle module is enabled, throttled blocks (blocks with the <em>Throttle</em> checkbox selected) are hidden during high server loads.') . '</li>';
       $output .= '<li>' . t('blocks can be configured to be visible only on certain pages.') . '</li>';
       $output .= '<li>' . t('blocks can be configured to be visible only when specific conditions are true.') . '</li>';
       $output .= '<li>' . t('blocks can be configured to be visible only for certain user roles.') . '</li>';
@@ -81,11 +80,7 @@ function block_help($path, $arg) {
       $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@block">Block module</a>.', array('@block' => 'http://drupal.org/handbook/modules/block/')) . '</p>';
       return $output;
     case 'admin/build/block':
-      $throttle = module_exists('throttle');
       $output = '<p>' . t('This page provides a drag-and-drop interface for assigning a block to a region, and for controlling the order of blocks within regions. To change the region or order of a block, grab a drag-and-drop handle under the <em>Block</em> column and drag the block to a new location in the list. (Grab a handle by clicking and holding the mouse while hovering over a handle icon.) Since not all themes implement the same regions, or display regions in the same way, blocks are positioned on a per-theme basis. Remember that your changes will not be saved until you click the <em>Save blocks</em> button at the bottom of the page.') . '</p>';
-      if ($throttle) {
-        $output .= '<p>' . t('To reduce CPU usage, database traffic or bandwidth, blocks may be automatically disabled during high server loads by selecting their <em>Throttle</em> checkbox. Adjust throttle thresholds on the <a href="@throttleconfig">throttle configuration page</a>.', array('@throttleconfig' => url('admin/settings/throttle'))) . '</p>';
-      }
       $output .= '<p>' . t('Click the <em>configure</em> link next to each block to configure its specific title and visibility settings. Use the <a href="@add-block">add block page</a> to create a custom block.', array('@add-block' => url('admin/build/block/add'))) . '</p>';
       return $output;
     case 'admin/build/block/add':
@@ -474,7 +469,7 @@ function _block_load_blocks() {
  *   An array of block objects such as returned for one region by _block_load_blocks()
  *
  * @return
- *   An array of visible or not-throttled blocks with subject and content rendered.
+ *   An array of visible blocks with subject and content rendered.
  */
 function _block_render_blocks($region_blocks) {
   foreach ($region_blocks as $key => $block) {
@@ -483,26 +478,22 @@ function _block_render_blocks($region_blocks) {
       // Erase the block from the static array - we'll put it back if it has content.
       unset($region_blocks[$key]);
       if ($block->enabled && $block->page_match) {
-        // Check the current throttle status and see if block should be displayed
-        // based on server load.
-        if (!($block->throttle && (module_invoke('throttle', 'status') > 0))) {
-          // Try fetching the block from cache. Block caching is not compatible with
-          // node_access modules. We also preserve the submission of forms in blocks,
-          // by fetching from cache only if the request method is 'GET'.
-          if (!count(module_implements('node_grants')) && $_SERVER['REQUEST_METHOD'] == 'GET' && ($cid = _block_get_cache_id($block)) && ($cache = cache_get($cid, 'cache_block'))) {
-            $array = $cache->data;
+        // Try fetching the block from cache. Block caching is not compatible with
+        // node_access modules. We also preserve the submission of forms in blocks,
+        // by fetching from cache only if the request method is 'GET'.
+        if (!count(module_implements('node_grants')) && $_SERVER['REQUEST_METHOD'] == 'GET' && ($cid = _block_get_cache_id($block)) && ($cache = cache_get($cid, 'cache_block'))) {
+          $array = $cache->data;
+        }
+        else {
+          $array = module_invoke($block->module, 'block', 'view', $block->delta);
+          if (isset($cid)) {
+            cache_set($cid, $array, 'cache_block', CACHE_TEMPORARY);
           }
-          else {
-            $array = module_invoke($block->module, 'block', 'view', $block->delta);
-            if (isset($cid)) {
-              cache_set($cid, $array, 'cache_block', CACHE_TEMPORARY);
-            }
-          }
+        }
 
-          if (isset($array) && is_array($array)) {
-            foreach ($array as $k => $v) {
-              $block->$k = $v;
-            }
+        if (isset($array) && is_array($array)) {
+          foreach ($array as $k => $v) {
+            $block->$k = $v;
           }
         }
         if (isset($block->content) && $block->content) {

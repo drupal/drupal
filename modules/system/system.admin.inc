@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.70 2008/04/14 17:48:41 dries Exp $
+// $Id: system.admin.inc,v 1.71 2008/04/16 11:35:52 dries Exp $
 
 /**
  * @file
@@ -588,7 +588,6 @@ function _system_is_incompatible(&$incompatible, $files, $file) {
 /**
  * Menu callback; provides module enable/disable interface.
  *
- * Modules can be enabled or disabled and set for throttling if the throttle module is enabled.
  * The list of modules gets populated by module.info files, which contain each module's name,
  * description and dependencies.
  * @see drupal_parse_info_file for information on module.info descriptors.
@@ -642,7 +641,6 @@ function system_modules($form_state = array()) {
 
   // Array for disabling checkboxes in callback system_module_disable.
   $disabled = array();
-  $throttle = array();
   // Traverse the files retrieved and build the form.
   foreach ($files as $filename => $file) {
     $form['name'][$filename] = array('#value' => $file->info['name']);
@@ -657,9 +655,6 @@ function system_modules($form_state = array()) {
     }
     if ($file->status) {
       $status[] = $file->name;
-    }
-    if ($file->throttle) {
-      $throttle[] = $file->name;
     }
 
     $dependencies = array();
@@ -735,21 +730,6 @@ function system_modules($form_state = array()) {
     '#incompatible_modules_core' => $incompatible_core,
     '#incompatible_modules_php' => $incompatible_php,
   );
-
-  // Handle throttle checkboxes, including overriding the
-  // generated checkboxes for required modules.
-  if (module_exists('throttle')) {
-    $form['throttle'] = array(
-      '#type' => 'checkboxes',
-      '#default_value' => $throttle,
-      '#options' => $options,
-      '#process' => array(
-        'expand_checkboxes',
-        'system_modules_disable',
-      ),
-      '#disabled_modules' => array_merge($modules_required, array('throttle')),
-    );
-  }
 
   $form['buttons']['submit'] = array(
     '#type' => 'submit',
@@ -859,13 +839,6 @@ function system_modules_submit($form, &$form_state) {
   }
   else {
     $dependencies = NULL;
-  }
-
-  // Update throttle settings, if present
-  if (isset($form_state['values']['throttle'])) {
-    foreach ($form_state['values']['throttle'] as $key => $choice) {
-      db_query("UPDATE {system} SET throttle = %d WHERE type = 'module' and name = '%s'", $choice ? 1 : 0, $key);
-    }
   }
 
   // If there where unmet dependencies and they haven't confirmed don't process
@@ -2085,9 +2058,6 @@ function theme_system_modules($form) {
   // Individual table headers.
   $header = array();
   $header[] = array('data' => t('Enabled'), 'class' => 'checkbox');
-  if (module_exists('throttle')) {
-    $header[] = array('data' => t('Throttle'), 'class' => 'checkbox');
-  }
   $header[] = t('Name');
   $header[] = t('Version');
   $header[] = t('Description');
@@ -2127,9 +2097,6 @@ function theme_system_modules($form) {
         $status = drupal_render($form['status'][$key]);
       }
       $row[] = array('data' => $status, 'class' => 'checkbox');
-      if (module_exists('throttle')) {
-        $row[] = array('data' => drupal_render($form['throttle'][$key]), 'class' => 'checkbox');
-      }
 
       // Add labels only when there is also a checkbox.
       if (isset($form['status'][$key])) {

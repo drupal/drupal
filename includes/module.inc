@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.116 2008/04/14 17:48:33 dries Exp $
+// $Id: module.inc,v 1.117 2008/04/16 11:35:51 dries Exp $
 
 /**
  * @file
@@ -58,21 +58,15 @@ function module_list($refresh = FALSE, $bootstrap = TRUE, $sort = FALSE, $fixed_
     }
     else {
       if ($bootstrap) {
-        $result = db_query("SELECT name, filename, throttle FROM {system} WHERE type = 'module' AND status = 1 AND bootstrap = 1 ORDER BY weight ASC, filename ASC");
+        $result = db_query("SELECT name, filename FROM {system} WHERE type = 'module' AND status = 1 AND bootstrap = 1 ORDER BY weight ASC, filename ASC");
       }
       else {
-        $result = db_query("SELECT name, filename, throttle FROM {system} WHERE type = 'module' AND status = 1 ORDER BY weight ASC, filename ASC");
+        $result = db_query("SELECT name, filename FROM {system} WHERE type = 'module' AND status = 1 ORDER BY weight ASC, filename ASC");
       }
       while ($module = db_fetch_object($result)) {
         if (file_exists($module->filename)) {
-          // Determine the current throttle status and see if the module should be
-          // loaded based on server load. We have to directly access the throttle
-          // variables, since throttle.module may not be loaded yet.
-          $throttle = ($module->throttle && variable_get('throttle_level', 0) > 0);
-          if (!$throttle) {
-            drupal_get_filename('module', $module->name, $module->filename);
-            $list[$module->name] = $module->name;
-          }
+          drupal_get_filename('module', $module->name, $module->filename);
+          $list[$module->name] = $module->name;
         }
       }
     }
@@ -143,8 +137,7 @@ function module_rebuild_cache() {
     else {
       // This is a new module.
       $files[$filename]->status = 0;
-      $files[$filename]->throttle = 0;
-      db_query("INSERT INTO {system} (name, info, type, filename, status, throttle, bootstrap) VALUES ('%s', '%s', '%s', '%s', %d, %d, %d)", $file->name, serialize($files[$filename]->info), 'module', $file->filename, 0, 0, $bootstrap);
+      db_query("INSERT INTO {system} (name, info, type, filename, status, bootstrap) VALUES ('%s', '%s', '%s', '%s', %d, %d)", $file->name, serialize($files[$filename]->info), 'module', $file->filename, 0, $bootstrap);
     }
   }
   $files = _module_build_dependencies($files);
@@ -289,7 +282,7 @@ function module_enable($module_list) {
     $existing = db_fetch_object(db_query("SELECT status FROM {system} WHERE type = '%s' AND name = '%s'", 'module', $module));
     if ($existing->status == 0) {
       module_load_install($module);
-      db_query("UPDATE {system} SET status = %d, throttle = %d WHERE type = '%s' AND name = '%s'", 1, 0, 'module', $module);
+      db_query("UPDATE {system} SET status = %d WHERE type = '%s' AND name = '%s'", 1, 'module', $module);
       drupal_load('module', $module);
       $invoke_modules[] = $module;
     }
@@ -331,7 +324,7 @@ function module_disable($module_list) {
 
       module_load_install($module);
       module_invoke($module, 'disable');
-      db_query("UPDATE {system} SET status = %d, throttle = %d WHERE type = '%s' AND name = '%s'", 0, 0, 'module', $module);
+      db_query("UPDATE {system} SET status = %d WHERE type = '%s' AND name = '%s'", 0, 'module', $module);
       $invoke_modules[] = $module;
     }
   }
