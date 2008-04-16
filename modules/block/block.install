@@ -62,13 +62,6 @@ function block_schema() {
         'size' => 'tiny',
         'description' => t('Flag to indicate how users may control visibility of the block. (0 = Users cannot control, 1 = On by default, but can be hidden, 2 = Hidden by default, but can be shown)'),
       ),
-      'throttle' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'tiny',
-        'description' => t('Flag to indicate whether or not to remove block when website traffic is high. (1 = throttle, 0 = do not throttle)'),
-      ),
       'visibility' => array(
         'type' => 'int',
         'not null' => TRUE,
