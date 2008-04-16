@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.248 2008/04/15 07:44:54 dries Exp $
+// $Id: system.install,v 1.249 2008/04/16 11:26:28 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -750,7 +750,7 @@ function system_schema() {
         'default' => '',
       ),
       'to_arg_functions' => array(
-        'description' => t('A serialized array of function names (like user_uid_optional_to_arg) to be called to replace a part of the router path with another string.'),
+        'description' => t('A serialized array of function names (like user_current_to_arg) to be called to replace a part of the router path with another string.'),
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
@@ -1141,6 +1141,13 @@ function system_schema() {
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
+      ),
+      'throttle' => array(
+        'description' => t('Boolean indicating whether this item is disabled when the throttle.module disables throttleable items.'),
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
       ),
       'throttle' => array(
         'description' => t('Boolean indicating whether this item is disabled when the throttle.module disables throttleable items.'),

@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.626 2008/04/14 17:48:36 dries Exp $
+// $Id: comment.module,v 1.627 2008/04/16 11:26:28 dries Exp $
 
 /**
  * @file
@@ -49,26 +49,6 @@ define('COMMENT_ORDER_NEWEST_FIRST', 1);
  * Comments are ordered by date - oldest first.
  */
 define('COMMENT_ORDER_OLDEST_FIRST', 2);
-
-/**
- * Comment controls should be shown above the comment list.
- */
-define('COMMENT_CONTROLS_ABOVE', 0);
-
-/**
- * Comment controls should be shown below the comment list.
- */
-define('COMMENT_CONTROLS_BELOW', 1);
-
-/**
- * Comment controls should be shown both above and below the comment list.
- */
-define('COMMENT_CONTROLS_ABOVE_BELOW', 2);
-
-/**
- * Comment controls are hidden.
- */
-define('COMMENT_CONTROLS_HIDDEN', 3);
 
 /**
  * Anonymous posters may not enter their contact information.
@@ -126,7 +106,7 @@ define('COMMENT_PREVIEW_REQUIRED', 1);
 function comment_help($path, $arg) {
   switch ($path) {
     case 'admin/help#comment':
-      $output = '<p>' . t('The comment module allows visitors to comment on your posts, creating ad hoc discussion boards. Any <a href="@content-type">content type</a> may have its <em>Default comment setting</em> set to <em>Read/Write</em> to allow comments, or <em>Disabled</em>, to prevent comments. Comment display settings and other controls may also be customized for each content type (some display settings are customizable by individual users).', array('@content-type' => url('admin/build/types'))) . '</p>';
+      $output = '<p>' . t('The comment module allows visitors to comment on your posts, creating ad hoc discussion boards. Any <a href="@content-type">content type</a> may have its <em>Default comment setting</em> set to <em>Read/Write</em> to allow comments, or <em>Disabled</em>, to prevent comments. Comment display settings and other controls may also be customized for each content type.', array('@content-type' => url('admin/build/types'))) . '</p>';
       $output .= '<p>' . t('Comment permissions are assigned to user roles, and are used to determine whether anonymous users (or other roles) are allowed to comment on posts. If anonymous users are allowed to comment, their individual contact information may be retained in cookies stored on their local computer for use in later comment submissions. When a comment has no replies, it may be (optionally) edited by its author. The comment module uses the same input formats and HTML tags available when creating other forms of content.') . '</p>';
       $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@comment">Comment module</a>.', array('@comment' => 'http://drupal.org/handbook/modules/comment/')) . '</p>';
       return $output;
@@ -153,9 +133,6 @@ function comment_theme() {
     ),
     'comment_view' => array(
       'arguments' => array('comment' => NULL, 'node' => NULL, 'links' => array(), 'visible' => 1),
-    ),
-    'comment_controls' => array(
-      'arguments' => array('form' => NULL),
     ),
     'comment' => array(
       'template' => 'comment',
@@ -252,7 +229,6 @@ function comment_node_type($op, $info) {
     'comment_default_mode',
     'comment_default_order',
     'comment_default_per_page',
-    'comment_controls',
     'comment_anonymous',
     'comment_subject_field',
     'comment_preview',
@@ -543,17 +519,6 @@ function comment_form_alter(&$form, $form_state, $form_id) {
       '#default_value' => variable_get('comment_default_per_page_' . $form['#node_type']->type, 50),
       '#options' => _comment_per_page(),
       '#description' => t('Default number of comments for each page: more comments are distributed in several pages.'),
-    );
-    $form['comment']['comment_controls'] = array(
-      '#type' => 'radios',
-      '#title' => t('Comment controls'),
-      '#default_value' => variable_get('comment_controls_' . $form['#node_type']->type, COMMENT_CONTROLS_HIDDEN),
-      '#options' => array(
-        t('Display above the comments'),
-        t('Display below the comments'),
-        t('Display above and below the comments'),
-        t('Do not display')),
-      '#description' => t('Position of the comment controls box. The comment controls let the user change the default display mode and display order of comments.'),
     );
     $form['comment']['comment_anonymous'] = array(
       '#type' => 'radios',
@@ -1052,17 +1017,8 @@ function comment_render($node, $cid = 0) {
         $comments .= '</div>';
       }
 
-      $comment_controls = variable_get('comment_controls_' . $node->type, COMMENT_CONTROLS_HIDDEN);
-      if ($num_rows && ($comment_controls == COMMENT_CONTROLS_ABOVE || $comment_controls == COMMENT_CONTROLS_ABOVE_BELOW)) {
-        $output .= drupal_get_form('comment_controls', $mode, $order, $comments_per_page);
-      }
-
       $output .= $comments;
       $output .= theme('pager', NULL, $comments_per_page, 0);
-
-      if ($num_rows && ($comment_controls == COMMENT_CONTROLS_BELOW || $comment_controls == COMMENT_CONTROLS_ABOVE_BELOW)) {
-        $output .= drupal_get_form('comment_controls', $mode, $order, $comments_per_page);
-      }
     }
 
     // If enabled, show new comment form if it's not already being displayed.
@@ -1608,88 +1564,6 @@ function theme_comment_view($comment, $node, $links = array(), $visible = TRUE) 
   return $output;
 }
 
-
-/**
- * Build a comment control form.
- *
- * @param $mode
- *   Comment display mode.
- * @param $order
- *   Comment order mode.
- * @param $comments_per_page
- *   Comments per page.
- * @ingroup forms
- */
-function comment_controls($mode = COMMENT_MODE_THREADED_EXPANDED, $order = COMMENT_ORDER_NEWEST_FIRST, $comments_per_page = 50) {
-  $form['mode'] = array('#type' => 'select',
-    '#default_value' => $mode,
-    '#options' => _comment_get_modes(),
-    '#weight' => 1,
-  );
-  $form['order'] = array(
-    '#type' => 'select',
-    '#default_value' => $order,
-    '#options' => _comment_get_orders(),
-    '#weight' => 2,
-  );
-  foreach (_comment_per_page() as $i) {
-    $options[$i] = t('!a comments per page', array('!a' => $i));
-  }
-  $form['comments_per_page'] = array('#type' => 'select',
-    '#default_value' => $comments_per_page,
-    '#options' => $options,
-    '#weight' => 3,
-  );
-
-  $form['submit'] = array('#type' => 'submit',
-    '#value' => t('Save settings'),
-    '#weight' => 20,
-  );
-
-  return $form;
-}
-
-/**
- * Theme comment controls box where the user can change the default display mode and display order of comments.
- *
- * @param $form
- *   The form structure.
- * @ingroup themeable
- */
-function theme_comment_controls($form) {
-  $output = '<div class="container-inline">';
-  $output .=  drupal_render($form);
-  $output .= '</div>';
-  $output .= '<div class="description">' . t('Select your preferred way to display the comments and click "Save settings" to activate your changes.') . '</div>';
-  return theme('box', t('Comment viewing options'), $output);
-}
-
-/**
- * Process comment_controls form submissions.
- */
-function comment_controls_submit($form, &$form_state) {
-  global $user;
-
-  $mode = $form_state['values']['mode'];
-  $order = $form_state['values']['order'];
-  $comments_per_page = $form_state['values']['comments_per_page'];
-
-  if ($user->uid) {
-    $account = user_save($user, array('mode' => $mode, 'sort' => $order, 'comments_per_page' => $comments_per_page));
-    // Terminate if an error occured during user_save().
-    if (!$account) {
-      drupal_set_message(t("Error saving user account."), 'error');
-      return;
-    }
-    $user = $account;
-  }
-  else {
-    $_SESSION['comment_mode'] = $mode;
-    $_SESSION['comment_sort'] = $order;
-    $_SESSION['comment_comments_per_page'] = $comments_per_page;
-  }
-}
-
 /**
  * Process variables for comment.tpl.php.
  *
@@ -1834,7 +1708,6 @@ function template_preprocess_comment_wrapper(&$variables) {
   // Provide contextual information.
   $variables['display_mode']  = _comment_get_display_setting('mode', $variables['node']);
   $variables['display_order'] = _comment_get_display_setting('sort', $variables['node']);
-  $variables['comment_controls_state'] = variable_get('comment_controls_' . $variables['node']->type, COMMENT_CONTROLS_HIDDEN);
   $variables['template_files'][] = 'comment-wrapper-' . $variables['node']->type;
 }
 
@@ -1898,40 +1771,18 @@ function _comment_per_page() {
  *   The comment node in question.
  */
 function _comment_get_display_setting($setting, $node) {
-  global $user;
 
-  if (isset($_GET[$setting])) {
-    $value = $_GET[$setting];
+  switch ($setting) {
+    case 'mode':
+      $value = variable_get('comment_default_mode_' . $node->type, COMMENT_MODE_THREADED_EXPANDED);
+      break;
+    case 'sort':
+      $value = variable_get('comment_default_order_' . $node->type, COMMENT_ORDER_NEWEST_FIRST);
+      break;
+    case 'comments_per_page':
+      $value = variable_get('comment_default_per_page_' . $node->type, 50);
   }
-  else {
-    // get the setting's site default
-    switch ($setting) {
-      case 'mode':
-        $default = variable_get('comment_default_mode_' . $node->type, COMMENT_MODE_THREADED_EXPANDED);
-        break;
-      case 'sort':
-        $default = variable_get('comment_default_order_' . $node->type, COMMENT_ORDER_NEWEST_FIRST);
-        break;
-      case 'comments_per_page':
-        $default = variable_get('comment_default_per_page_' . $node->type, 50);
-    }
-    if (variable_get('comment_controls_' . $node->type, COMMENT_CONTROLS_HIDDEN) == COMMENT_CONTROLS_HIDDEN) {
-      // if comment controls are disabled use site default
-      $value = $default;
-    }
-    else {
-      // otherwise use the user's setting if set
-      if (isset($user->$setting) && $user->$setting) {
-        $value = $user->$setting;
-      }
-      else if (isset($_SESSION['comment_' . $setting]) && $_SESSION['comment_' . $setting]) {
-        $value = $_SESSION['comment_' . $setting];
-      }
-      else {
-        $value = $default;
-      }
-    }
-  }
+
   return $value;
 }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: user.install,v 1.10 2008/04/14 17:48:43 dries Exp $
+// $Id: user.install,v 1.11 2008/04/16 11:26:29 dries Exp $
 
 /**
  * Implementation of hook_schema().
@@ -128,27 +128,6 @@ function user_schema() {
         'not null' => FALSE,
         'default' => '',
         'description' => t("User's email address."),
-      ),
-      'mode' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'tiny',
-        'description' => t('Per-user comment display mode (threaded vs. flat), used by the {comment} module.'),
-      ),
-      'sort' => array(
-        'type' => 'int',
-        'not null' => FALSE,
-        'default' => 0,
-        'size' => 'tiny',
-        'description' => t('Per-user comment sort order (newest vs. oldest first), used by the {comment} module.'),
-      ),
-      'threshold' => array(
-        'type' => 'int',
-        'not null' => FALSE,
-        'default' => 0,
-        'size' => 'tiny',
-        'description' => t('Previously used by the {comment} module for per-user preferences; no longer used.'),
       ),
       'theme' => array(
         'type' => 'varchar',
@@ -306,6 +285,21 @@ function user_update_7000(&$sandbox) {
       $ret[] = array('success' => TRUE, 'query' => "UPDATE {users} SET pass = 'U' . user_hash_password(pass) WHERE uid > 0");
     }
   }
+  return $ret;
+}
+
+/**
+ * Remove the 'threshold', 'mode' and 'sort' columns from the {user} table.
+ *
+ * These fields were previously used to store per-user comment settings.
+ */
+
+function user_update_7001() {
+  $ret = array();
+  db_drop_field($ret, 'users', 'threshold');
+  db_drop_field($ret, 'users', 'mode');
+  db_drop_field($ret, 'users', 'sort');
+
   return $ret;
 }
 
