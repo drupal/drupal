@@ -1,6 +1,0 @@
-; $Id: throttle.info,v 1.5 2008/02/18 19:19:47 dries Exp $
-name = Throttle
-description = Handles the auto-throttling mechanism, to control site congestion.
-package = Core - optional
-version = VERSION
-core = 7.x
