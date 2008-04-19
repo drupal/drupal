@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.pages.inc,v 1.9 2008/04/14 17:48:36 dries Exp $
+// $Id: contact.pages.inc,v 1.10 2008/04/19 14:44:34 dries Exp $
 
 /**
  * @file
@@ -158,7 +158,7 @@ function contact_user_page($account) {
   global $user;
 
   if (!valid_email_address($user->mail)) {
-    $output = t('You need to provide a valid e-mail address to contact other users. Please update your <a href="@url">user information</a> and try again.', array('@url' => url("user/$user->uid/edit")));
+    $output = t('You need to provide a valid e-mail address to contact other users. Please update your <a href="@url">user information</a> and try again.', array('@url' => url("user/$user->uid/edit", array('query' => 'destination=' . drupal_get_destination()))));
   }
   else if (!flood_is_allowed('contact', variable_get('contact_hourly_threshold', 3)) && !user_access('administer site-wide contact form')) {
     $output = t("You cannot send more than %number messages per hour. Please try again later.", array('%number' => variable_get('contact_hourly_threshold', 3)));
