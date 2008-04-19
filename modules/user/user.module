@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.902 2008/04/14 17:48:43 dries Exp $
+// $Id: user.module,v 1.903 2008/04/19 17:10:50 dries Exp $
 
 /**
  * @file
@@ -371,7 +371,9 @@ function user_validate_name($name) {
 }
 
 function user_validate_mail($mail) {
-  if (!$mail) return t('You must enter an e-mail address.');
+  if (!$mail) {
+    return t('You must enter an e-mail address.');
+  }
   if (!valid_email_address($mail)) {
     return t('The e-mail address %mail is not valid.', array('%mail' => $mail));
   }
@@ -891,7 +893,7 @@ function user_menu() {
     'file' => 'user.pages.inc',
   );
 
-  // Admin user pages.
+  // User administration pages.
   $items['admin/user'] = array(
     'title' => 'User management',
     'description' => "Manage your site's users, groups and access to site features.",
@@ -929,7 +931,7 @@ function user_menu() {
     'file' => 'user.admin.inc',
   );
 
-  // Admin access pages.
+  // Permission administration pages.
   $items['admin/user/permissions'] = array(
     'title' => 'Permissions',
     'description' => 'Determine access to features by selecting permissions for roles.',
@@ -1203,11 +1205,9 @@ function user_login_default_validators() {
  * A FAPI validate handler. Sets an error if supplied username has been blocked.
  */
 function user_login_name_validate($form, &$form_state) {
-  if (isset($form_state['values']['name'])) {
-    if (user_is_blocked($form_state['values']['name'])) {
-      // blocked in user administration
-      form_set_error('name', t('The username %name has not been activated or is blocked.', array('%name' => $form_state['values']['name'])));
-    }
+  if (isset($form_state['values']['name']) && user_is_blocked($form_state['values']['name'])) {
+    // Blocked in user administration.
+    form_set_error('name', t('The username %name has not been activated or is blocked.', array('%name' => $form_state['values']['name'])));
   }
 }
 
