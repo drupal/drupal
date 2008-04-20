@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.957 2008/04/19 22:17:57 dries Exp $
+// $Id: node.module,v 1.958 2008/04/20 05:31:27 dries Exp $
 
 /**
  * @file
@@ -1215,6 +1215,16 @@ function node_search($op = 'search', $keys = NULL) {
         $keys = search_query_insert($keys, 'category');
       }
 
+      if ($languages = search_query_extract($keys, 'language')) {
+        $categories = array();
+        foreach (explode(',', $languages) as $l) {
+          $categories[] = "n.language = '%s'";
+          $arguments1[] = $l;
+        }
+        $conditions1 .= ' AND (' . implode(' OR ', $categories) . ')';
+        $keys = search_query_insert($keys, 'language');
+      }
+
       // Build ranking expression (we try to map each parameter to a
       // uniform distribution in the range 0..1).
       $ranking = array();
@@ -1871,6 +1881,22 @@ function node_form_alter(&$form, $form_state, $form_id) {
       '#suffix' => '</div>',
     );
 
+    // Languages:
+    $language_options = array();
+    foreach (language_list('language') as $key => $object) {
+      $language_options[$key] = $object->name;
+    }
+    if (count($language_options) > 1) {
+      $form['advanced']['language'] = array(
+        '#type' => 'checkboxes',
+        '#title' => t('Languages'),
+        '#prefix' => '<div class="criterion">',
+        '#suffix' => '</div>',
+        '#options' => $language_options,
+      );
+    }
+
+
     $form['#validate'][] = 'node_search_validate';
   }
 }
@@ -1893,6 +1919,9 @@ function node_search_validate($form, &$form_state) {
 
   if (isset($form_state['values']['category']) && is_array($form_state['values']['category'])) {
     $keys = search_query_insert($keys, 'category', implode(',', $form_state['values']['category']));
+  }
+  if (isset($form_state['values']['language']) && is_array($form_state['values']['language'])) {
+    $keys = search_query_insert($keys, 'language', implode(',', array_filter($form_state['values']['language'])));
   }
   if ($form_state['values']['or'] != '') {
     if (preg_match_all('/ ("[^"]+"|[^" ]+)/i', ' ' . $form_state['values']['or'], $matches)) {
