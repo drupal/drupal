@@ -23,6 +23,7 @@ function help_menu() {
       'title' => $module,
       'page callback' => 'help_page',
       'page arguments' => array(2),
+      'access arguments' => array('access administration pages'),
       'type' => MENU_CALLBACK,
       'file' => 'help.admin.inc',
     );
