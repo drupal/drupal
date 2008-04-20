@@ -1,0 +1,205 @@
+<?php
+// $Id: user.test,v 1.1 2008/04/20 18:23:33 dries Exp $
+
+class UserRegistrationTestCase extends DrupalWebTestCase {
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('User registration'),
+      'description' => t('Registers a user, fails login, resets password, successfully logs in with the one time password, changes password, logs out, successfully logs in with the new password, visits profile page.'),
+      'group' => t('User')
+    );
+  }
+
+  /**
+   * Registers a user, fails login, resets password, successfully logs in with the one time password,
+   * changes password, logs out, successfully logs in with the new password, visits profile page.
+   *
+   * Assumes that the profile module is disabled.
+   */
+  function testUserRegistration() {
+    // Set user registration to "Visitors can create accounts and no administrator approval is required."
+    variable_set('user_register', 1);
+
+    $edit = array();
+    $edit['name'] = $name = $this->randomName();
+    $edit['mail'] = $mail = $edit['name'] .'@example.com';
+    $this->drupalPost('user/register', $edit, t('Create new account'));
+    $this->assertText(t('Your password and further instructions have been sent to your e-mail address.'), t('User registered successfully.'));
+
+    // Check database for created user.
+    $user = user_load($edit);
+    $this->assertTrue($user, t('User found in database.'));
+    $this->assertTrue($user->uid > 0, t('User has valid user id.'));
+
+    // Check user fields.
+    $this->assertEqual($user->name, $name, t('Username matches.'));
+    $this->assertEqual($user->mail, $mail, t('E-mail address matches.'));
+    $this->assertEqual($user->mode, 0, t('Correct mode field.'));
+    $this->assertEqual($user->sort, 0, t('Correct sort field.'));
+    $this->assertEqual($user->threshold, 0, t('Correct treshold field.'));
+    $this->assertEqual($user->theme, '', t('Correct theme field.'));
+    $this->assertEqual($user->signature, '', t('Correct signature field.'));
+    $this->assertTrue(($user->created > time() - 20 ), 0, t('Correct creation time.'));
+    $this->assertEqual($user->status, variable_get('user_register', 1) == 1 ? 1 : 0, t('Correct status field.'));
+    $this->assertEqual($user->timezone, variable_get('date_default_timezone', NULL), t('Correct timezone field.'));
+    $this->assertEqual($user->language, '', t('Correct language field.'));
+    $this->assertEqual($user->picture, '', t('Correct picture field.'));
+    $this->assertEqual($user->init, $mail, t('Correct init field.'));
+
+    // Attempt to login with incorrect password.
+    $edit = array();
+    $edit['name'] = $name;
+    $edit['pass'] = 'foo';
+    $this->drupalPost('user', $edit, t('Log in'));
+    $this->assertText(t('Sorry, unrecognized username or password. Have you forgotten your password?'), t('Invalid login attempt failed.'));
+
+    // Login using password reset page.
+    $url = user_pass_reset_url($user);
+    sleep(1); // TODO Find better way.
+    $this->drupalGet($url);
+    $this->assertText(t('This login can be used only once.'), t('Login can be used only once.'));
+
+    $this->drupalPost(NULL, NULL, t('Log in'));
+    $this->assertText(t('You have just used your one-time login link. It is no longer necessary to use this link to login. Please change your password.'), t('This link is no longer valid.'));
+
+    // Change user password.
+    $new_pass = user_password();
+    $edit = array();
+    $edit['pass[pass1]'] = $new_pass;
+    $edit['pass[pass2]'] = $new_pass;
+    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->assertText(t('The changes have been saved.'), t('Password changed to @password', array('@password' => $new_pass)));
+
+    // Make sure password changes are present in database.
+    require_once variable_get('password_inc', './includes/password.inc');
+
+    $user = user_load(array('uid' => $user->uid));
+    $this->assertTrue(user_check_password($new_pass, $user), t('Correct password in database.'));
+
+    // Logout of user account.
+    $this->clickLink(t('Log out'));
+    $this->assertNoText($user->name, t('Logged out.'));
+
+    // Login user.
+    $edit = array();
+    $edit['name'] = $user->name;
+    $edit['pass'] = $new_pass;
+    $this->drupalPost('user', $edit, t('Log in'));
+    $this->assertText(t('Log out'), t('Logged in.'));
+
+    $this->assertText($user->name, t('[logged in] Username found.'));
+    $this->assertNoText(t('Sorry. Unrecognized username or password.'), t('[logged in] No message for unrecognized username or password.'));
+    $this->assertNoText(t('User login'), t('[logged in] No user login form present.'));
+
+    $this->drupalGet('user');
+    $this->assertText($user->name, t('[user auth] Not login page.'));
+    $this->assertText(t('View'), t('[user auth] Found view tab on the profile page.'));
+    $this->assertText(t('Edit'), t('[user auth] Found edit tab on the profile page.'));
+  }
+}
+
+
+class UserValidationTestCase extends DrupalWebTestCase {
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('Username/e-mail validation'),
+      'description' => t('Verify that username/email validity checks behave as designed.'),
+      'group' => t('User')
+    );
+  }
+
+  // Username validation.
+  function testMinLengthName() {
+    $name = '';
+    $result = user_validate_name($name);
+    $this->assertNotNull($result, 'Excessively short username');
+  }
+
+  function testValidCharsName() {
+    $name = 'ab/';
+    $result = user_validate_name($name);
+    $this->assertNotNull($result, 'Invalid chars in username');
+  }
+
+  function testMaxLengthName() {
+    $name = str_repeat('a', 61);
+    $result = user_validate_name($name);
+    $this->assertNotNull($result, 'Excessively long username');
+  }
+
+  function testValidName() {
+    $name = 'abc';
+    $result = user_validate_name($name);
+    $this->assertNull($result, 'Valid username');
+  }
+
+  // Mail validation.
+  function testMinLengthMail() {
+    $name = '';
+    $result = user_validate_mail($name);
+    $this->assertNotNull($result, 'Empty mail');
+  }
+
+  function testInValidMail() {
+    $name = 'abc';
+    $result = user_validate_mail($name);
+    $this->assertNotNull($result, 'Invalid mail');
+  }
+
+  function testValidMail() {
+    $name = 'absdsdsdc@dsdsde.com';
+    $result = user_validate_mail($name);
+    $this->assertNull($result, 'Valid mail');
+  }
+}
+
+
+class UserDeleteTestCase extends DrupalWebTestCase {
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('User delete'),
+      'description' => t('Registers a user and deletes it.'),
+      'group' => t('User')
+    );
+  }
+
+  /**
+   * Registers a user and deletes it.
+   */
+  function testUserRegistration() {
+    // Set user registration to "Visitors can create accounts and no administrator approval is required."
+    variable_set('user_register', 1);
+
+    $edit = array();
+    $edit['name'] = $this->randomName();
+    $edit['mail'] = $edit['name'] .'@example.com';
+    $this->drupalPost('user/register', $edit, t('Create new account'));
+    $this->assertText(t('Your password and further instructions have been sent to your e-mail address.'), t('User registered successfully.'));
+
+    $user = user_load($edit);
+
+    // Create admin user to delete registered user.
+    $admin_user = $this->drupalCreateUser(array('administer users'));
+    $this->drupalLogin($admin_user);
+
+    // Delete user.
+    $this->drupalGet('user/'. $user->uid .'/edit');
+    $this->drupalPost(NULL, NULL, t('Delete'));
+    $this->assertRaw(t('Are you sure you want to delete the account %name?', array('%name' => $user->name)), t('[confirm deletion] Asks for confirmation.'));
+    $this->assertText(t('All submissions made by this user will be attributed to the anonymous account. This action cannot be undone.'), t('[confirm deletion] Inform that all submissions will be attributed to anonymouse account.'));
+
+    // Confirm deletion.
+    $this->drupalPost(NULL, NULL, t('Delete'));
+    $this->assertRaw(t('%name has been deleted.', array('%name' => $user->name)), t('User deleted'));
+    $this->assertFalse(user_load($edit), t('User is not found in the database'));
+  }
+}

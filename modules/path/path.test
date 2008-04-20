@@ -1,0 +1,139 @@
+<?php
+// $Id: path.test,v 1.1 2008/04/20 18:23:28 dries Exp $
+
+class PathTestCase extends DrupalWebTestCase {
+  function getInfo() {
+    return array(
+      'name' => t('Path alias functionality'),
+      'description' => t('Add, edit, delete, and change alias and verify its consistency in the database.'),
+      'group' => t('Path'),
+    );
+  }
+
+  /**
+   * Create user, setup permissions, log user in, and create a node.
+   */
+  function setUp() {
+    parent::setUp('path');
+    // create and login user
+    $web_user = $this->drupalCreateUser(array('edit own page content', 'create page content', 'administer url aliases', 'create url aliases'));
+    $this->drupalLogin($web_user);
+  }
+
+  /**
+   * Test alias functionality through the admin interfaces.
+   */
+  function testAdminAlias() {
+    // create test node
+    $node1 = $this->createNode();
+
+    // create alias
+    $edit = array();
+    $edit['src'] = 'node/' . $node1->nid;
+    $edit['dst'] = $this->randomName(8);
+    $this->drupalPost('admin/build/path/add', $edit, t('Create new alias'));
+
+    // confirm that the alias works
+    $this->drupalGet($edit['dst']);
+    $this->assertText($node1->title, 'Alias works.');
+
+    // change alias
+    $pid = $this->getPID($edit['dst']);
+
+    $previous = $edit['dst'];
+    $edit['dst'] = $this->randomName(8);
+    $this->drupalPost('admin/build/path/edit/' . $pid, $edit, t('Update alias'));
+
+    // confirm that the alias works
+    $this->drupalGet($edit['dst']);
+    $this->assertText($node1->title, 'Changed alias works.');
+
+    // make sure that previous alias no longer works
+    $this->drupalGet($previous);
+    $this->assertNoText($node1->title, 'Previous alias no longer works.');
+    $this->assertResponse(404);
+
+    // create second test node
+    $node2 = $this->createNode();
+
+    // set alias to second test node
+    $edit['src'] = 'node/' . $node2->nid;
+    // leave $edit['dst'] the same
+    $this->drupalPost('admin/build/path/add', $edit, t('Create new alias'));
+
+    // confirm that the alias didn't make a duplicate
+    $this->assertRaw(t('The alias %alias is already in use in this language.', array('%alias' => $edit['dst'])), 'Attempt to move alias was rejected.');
+
+    // delete alias
+    $this->drupalPost('admin/build/path/delete/' . $pid, array(), t('Confirm'));
+
+    // confirm that the alias no longer works
+    $this->drupalGet($edit['dst']);
+    $this->assertNoText($node1->title, 'Alias was successfully deleted.');
+  }
+
+  /**
+   * Test alias functionality through the node interfaces.
+   */
+  function testNodeAlias() {
+    // create test node
+    $node1 = $this->createNode();
+
+    // create alias
+    $edit = array();
+    $edit['path'] = $this->randomName(8);
+    $this->drupalPost('node/' . $node1->nid . '/edit', $edit, t('Save'));
+
+    // confirm that the alias works
+    $this->drupalGet($edit['path']);
+    $this->assertText($node1->title, 'Alias works.');
+
+    // change alias
+    $previous = $edit['path'];
+    $edit['path'] = $this->randomName(8);
+    $this->drupalPost('node/' . $node1->nid . '/edit', $edit, t('Save'));
+
+    // confirm that the alias works
+    $this->drupalGet($edit['path']);
+    $this->assertText($node1->title, 'Changed alias works.');
+
+    // make sure that previous alias no longer works
+    $this->drupalGet($previous);
+    $this->assertNoText($node1->title, 'Previous alias no longer works.');
+    $this->assertResponse(404);
+
+    // create second test node
+    $node2 = $this->createNode();
+
+    // set alias to second test node
+    // leave $edit['path'] the same
+    $this->drupalPost('node/' . $node2->nid . '/edit', $edit, t('Save'));
+
+    // confirm that the alias didn't make a duplicate
+    $this->assertText(t('The path is already in use.'), 'Attempt to moved alias was rejected.');
+
+    // delete alias
+    $this->drupalPost('node/' . $node1->nid . '/edit', array('path' => ''), t('Save'));
+
+    // confirm that the alias no longer works
+    $this->drupalGet($edit['path']);
+    $this->assertNoText($node1->title, 'Alias was successfully deleted.');
+  }
+
+  function getPID($dst) {
+    return db_result(db_query("SELECT pid FROM {url_alias} WHERE dst = '%s'", $dst));
+  }
+
+  function createNode() {
+    $edit = array();
+    $edit['title'] = '!SimpleTest test node! ' . $this->randomName(10);
+    $edit['body'] = '!SimpleTest test body! ' . $this->randomName(32) . ' ' . $this->randomName(32);
+    $this->drupalPost('node/add/page', $edit, t('Save'));
+
+    // check to make sure the node was created
+    $node = node_load(array('title' => $edit['title']));
+    $this->assertNotNull(($node === FALSE ? NULL : $node), 'Node found in database. %s');
+
+    return $node;
+  }
+}

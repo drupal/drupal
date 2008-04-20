@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.262 2008/04/20 05:31:27 dries Exp $
+// $Id: CHANGELOG.txt,v 1.263 2008/04/20 18:24:07 dries Exp $
 
 Drupal 7.0, xxxx-xx-xx (development version)
 ----------------------
@@ -14,6 +14,8 @@ Drupal 7.0, xxxx-xx-xx (development version)
     * Provide descriptions for permissions on the administration page.
 - Search:
     * Made it possible to language-aware searches.
+- Testing:
+    * Added test framework and tests.
 - Removed ping module:
     * This module has been removed from the core download. Contributed
       alternatives are available.

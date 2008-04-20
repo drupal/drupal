@@ -1,0 +1,372 @@
+<?php
+// $Id: comment.test,v 1.1 2008/04/20 18:23:24 dries Exp $
+
+class CommentTestCase extends DrupalWebTestCase {
+  protected $admin_user;
+  protected $web_user;
+  protected $node;
+
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('Comment functionality'),
+      'description' => t('Thoroughly test comment administration and user interfaces.'),
+      'group' => t('Comment'),
+    );
+  }
+
+  /**
+   * Implementation of setUp().
+   */
+  function setUp() {
+    parent::setUp('comment');
+    // Create users.
+    $this->admin_user = $this->drupalCreateUser(array('administer content types', 'administer comments', 'administer permissions'));
+    $this->web_user = $this->drupalCreateUser(array('access comments', 'post comments', 'create story content'));
+
+    $this->drupalLogin($this->web_user);
+    $this->node = $this->drupalCreateNode(array('type' => 'story'));
+    $this->assertTrue($this->node, t('Story node created.'));
+    $this->drupalLogout();
+  }
+
+  /**
+   * Test comment interface.
+   */
+  function testCommentInterface() {
+    // Set comments to not have subject.
+    $this->drupalLogin($this->admin_user);
+    $this->setCommentPreview(TRUE);
+    $this->setCommentSubject(FALSE);
+    $this->drupalLogout();
+
+    // Post comment without subject.
+    $this->drupalLogin($this->web_user);
+    $this->drupalGet('comment/reply/'. $this->node->nid);
+    $this->assertNoFieldByName('subject', '', t('Subject field not found.'));
+
+    // Set comments to have subject and preview to required.
+    $this->drupalLogout();
+    $this->drupalLogin($this->admin_user);
+    $this->setCommentSubject(TRUE);
+    $this->setCommentPreview(TRUE);
+    $this->drupalLogout();
+
+    // Create comment that requires preview.
+    $this->drupalLogin($this->web_user);
+    $comment = $this->postComment($this->node, $this->randomName(), $this->randomName());
+    $this->assertTrue($this->commentExists($comment), t('Comment found.'));
+
+    // Reply to comment.
+    $this->drupalGet('comment/reply/'. $this->node->nid .'/'. $comment->id);
+    $reply = $this->postComment(NULL, $this->randomName(), $this->randomName());
+    $this->assertTrue($this->commentExists($reply, TRUE), t('Reply found.'));
+
+    // Edit reply.
+    $this->drupalGet('comment/edit/'. $reply->id);
+    $reply = $this->postComment(NULL, $this->randomName(), $this->randomName());
+    $this->assertTrue($this->commentExists($reply, TRUE), t('Modified reply found.'));
+
+    // Delete comment and make sure that reply is also removed.
+    $this->drupalLogout();
+    $this->drupalLogin($this->admin_user);
+    $this->deleteComment($comment);
+
+    $this->drupalGet('node/'. $this->node->nid);
+    $this->assertFalse($this->commentExists($comment), t('Comment not found.'));
+    $this->assertFalse($this->commentExists($reply, TRUE), t('Reply not found.'));
+  }
+
+  /**
+   * Test comment form on node page.
+   */
+  function testFormOnPage() {
+    // Enabled comment form on node page.
+    $this->drupalLogin($this->admin_user);
+    $this->setCommentForm(TRUE);
+    $this->drupalLogout();
+
+    // Submit comment through node form.
+    $this->drupalLogin($this->web_user);
+    $this->drupalGet('node/'. $this->node->nid);
+    $form_comment = $this->postComment(NULL, $this->randomName(), $this->randomName());
+    $this->assertTrue($this->commentExists($form_comment), t('Form comment found.'));
+
+    // Disable comment form on node page.
+    $this->drupalLogout();
+    $this->drupalLogin($this->admin_user);
+    $this->setCommentForm(FALSE);
+  }
+
+  /**
+   * Test anonymous comment functionality.
+   */
+  function testAnonymous() {
+    $this->drupalLogin($this->admin_user);
+    // Enabled anonymous user comments.
+    $this->setAnonymousUserComment(TRUE, TRUE);
+    $this->setCommentAnonymous('0'); // Ensure that doesn't require contact info.
+    $this->drupalLogout();
+
+    // Post anonymous comment without contact info.
+    $anonymous_comment1 = $this->postComment($this->node, $this->randomName(), $this->randomName());
+    $this->assertTrue($this->commentExists($anonymous_comment1), t('Anonymous comment without contact info found.'));
+
+    // Allow contact info.
+    $this->drupalLogin($this->admin_user);
+    $this->setCommentAnonymous('1');
+    $this->drupalLogout();
+
+    // Post anonymous comment with contact info (optional).
+    $this->drupalGet('comment/reply/'. $this->node->nid);
+    $this->assertTrue($this->commentContactInfoAvailable(), t('Contact information available.'));
+
+    $anonymous_comment2 = $this->postComment($this->node, $this->randomName(), $this->randomName());
+    $this->assertTrue($this->commentExists($anonymous_comment2), t('Anonymous comment with contact info (optional) found.'));
+
+    // Require contact info.
+    $this->drupalLogin($this->admin_user);
+    $this->setCommentAnonymous('2');
+    $this->drupalLogout();
+
+    // Try to post comment with contact info (required).
+    $this->drupalGet('comment/reply/'. $this->node->nid);
+    $this->assertTrue($this->commentContactInfoAvailable(), t('Contact information available.'));
+
+    $anonymous_comment3 = $this->postComment($this->node, $this->randomName(), $this->randomName(), TRUE, TRUE);
+    $this->assertText(t('E-mail field is required.'), t('E-mail required.')); // Name should have 'Anonymous' for value by default.
+    $this->assertFalse($this->commentExists($anonymous_comment3), t('Anonymous comment with contact info (required) not found.'));
+
+    // Post comment with contact info (required).
+    $anonymous_comment3 = $this->postComment($this->node, $this->randomName(), $this->randomName(), FALSE, array('mail' => 'tester@simpletest.org'));
+    $this->assertTrue($this->commentExists($anonymous_comment3), t('Anonymous comment with contact info (required) found.'));
+
+    // Unpublish comment.
+    $this->drupalLogin($this->admin_user);
+    $this->performCommentOperation($anonymous_comment3, 'unpublish');
+
+    $this->drupalGet('admin/content/comment/approval');
+    $this->assertRaw('comments['. $anonymous_comment3->id .']', t('Comment was unpublished.'));
+
+    // Publish comment.
+    $this->performCommentOperation($anonymous_comment3, 'publish', TRUE);
+
+    $this->drupalGet('admin/content/comment');
+    $this->assertRaw('comments['. $anonymous_comment3->id .']', t('Comment was published.'));
+
+    // Delete comment.
+    $this->performCommentOperation($anonymous_comment3, 'delete');
+
+    $this->drupalGet('admin/content/comment');
+    $this->assertNoRaw('comments['. $anonymous_comment3->id .']', t('Comment was deleted.'));
+
+    // Set anonymouse comments to require approval.
+    $this->setAnonymousUserComment(TRUE, FALSE);
+    $this->setCommentAnonymous('0'); // Ensure that doesn't require contact info.
+    $this->drupalLogout();
+
+    // Post anonymous comment without contact info.
+    $subject = $this->randomName();
+    $body = $this->randomName();
+    $this->postComment($this->node, $subject, $body, TRUE, TRUE); // Set $contact to true so that it won't check for id and message.
+    $this->assertText(t('Your comment has been queued for moderation by site administrators and will be published after approval.'), t('Comment requires approval.'));
+
+    // Get unaproved comment id.
+    $this->drupalLogin($this->admin_user);
+    $anonymous_comment4 = $this->getUnaprovedComment($subject);
+    $anonymous_comment4 = (object) array('id' => $anonymous_comment4, 'subject' => $subject, 'comment' => $body);
+    $this->drupalLogout();
+
+    $this->assertFalse($this->commentExists($anonymous_comment4), t('Anonymous comment was not published.'));
+
+    // Approve comment.
+    $this->drupalLogin($this->admin_user);
+    $this->performCommentOperation($anonymous_comment4, 'publish', TRUE);
+    $this->drupalLogout();
+
+    $this->drupalGet('node/'. $this->node->nid);
+    $this->assertTrue($this->commentExists($anonymous_comment4), t('Anonymous comment visible.'));
+
+    // Reset.
+    $this->drupalLogin($this->admin_user);
+    $this->setAnonymousUserComment(FALSE, FALSE);
+  }
+
+  /**
+   * Post comment.
+   *
+   * @param object $node Node to post comment on.
+   * @param string $subject Comment subject.
+   * @param string $comment Comment body.
+   * @param boolean $preview Should preview be required.
+   * @param mixed $contact Set to NULL for no contact info, TRUE to ignore success checking, and array of values to set contact info.
+   */
+  function postComment($node, $subject, $comment, $preview = TRUE, $contact = NULL) {
+    $edit = array();
+    $edit['subject'] = $subject;
+    $edit['comment'] = $comment;
+    if ($contact !== NULL && is_array($contact)) {
+      $edit += $contact;
+    }
+    if ($node !== NULL) {
+      $this->drupalGet('comment/reply/'. $node->nid);
+    }
+    if ($preview) {
+      $this->assertNoFieldByName('op', t('Save'), t('Save button not found.')); // Preview required so no save button should be found.
+      $this->drupalPost(NULL, $edit, t('Preview'));
+    }
+    $this->drupalPost(NULL, $edit, t('Save'));
+
+    $match = array();
+    // Get comment ID
+    preg_match('/#comment-([^"]+)/', $this->getURL(), $match);
+    // get comment
+    if ($contact !== TRUE) { // If true then attempting to find error message.
+      $this->assertText($subject, 'Comment posted.');
+      $this->assertTrue((!empty($match) && !empty($match[1])), t('Comment id found.'));
+    }
+    if (isset($match[1])) {
+      return (object) array('id' => $match[1], 'subject' => $subject, 'comment' => $comment);
+    }
+  }
+
+  /**
+   * Checks current pag for specified comment.
+   *
+   * @param object $comment Comment object.
+   * @param boolean $reply The comment is a reply to another comment.
+   * @return boolean Comment found.
+   */
+  function commentExists($comment, $reply = FALSE) {
+    if ($comment && is_object($comment)) {
+      $regex = '/'. ($reply ? '<div class="indented">(.*?)' : '');
+      $regex .= '<a id="comment-'. $comment->id .'"(.*?)'; // Comment anchor.
+      $regex .= '<div(.*?)'; // Begin in comment div.
+      $regex .= $comment->subject .'(.*?)'; // Match subject.
+      $regex .= $comment->comment .'(.*?)'; // Match comment.
+      $regex .= '<\/div>/s'; // Dot matches newlines and ensure that match doesn't bleed outside comment div.
+      return preg_match($regex, $this->drupalGetContent());
+    }
+    else {
+      return FALSE;
+    }
+  }
+
+  /**
+   * Delete comment.
+   *
+   * @param object $comment Comment to delete.
+   */
+  function deleteComment($comment) {
+    $this->drupalPost('comment/delete/'. $comment->id, array(), t('Delete'));
+    $this->assertText(t('The comment and all its replies have been deleted.'), t('Comment deleted.'));
+  }
+
+  /**
+   * Set comment subject setting.
+   *
+   * @param boolean $enabled Subject value.
+   */
+  function setCommentSubject($enabled) {
+    $this->setCommentSettings('comment_subject_field', ($enabled ? '1' : '0'), 'Comment subject '. ($enabled ? 'enabled' : 'disabled') .'.');
+  }
+
+  /**
+   * Set comment preview setting.
+   *
+   * @param boolean $required Preview value.
+   */
+  function setCommentPreview($required) {
+    $this->setCommentSettings('comment_preview', ($required ? '1' : '0'), 'Comment preview '. ($required ? 'required' : 'optional') .'.');
+  }
+
+  /**
+   * Set comment form setting.
+   *
+   * @param boolean $enabled Form value.
+   */
+  function setCommentForm($enabled) {
+    $this->setCommentSettings('comment_form_location', ($enabled ? '1' : '3'), 'Comment controls '. ($enabled ? 'enabled' : 'disabled') .'.');
+  }
+
+  /**
+   * Set comment anonymous level setting.
+   *
+   * @param integer $level Anonymous level.
+   */
+  function setCommentAnonymous($level) {
+    $this->setCommentSettings('comment_anonymous', $level, 'Anonymous commenting set to level '. $level .'.');
+  }
+
+  /**
+   * Set comment setting for story content type.
+   *
+   * @param string $name Name of variable.
+   * @param string $vale Value of variable.
+   * @param string $message Status message to display.
+   */
+  function setCommentSettings($name, $value, $message) {
+    variable_set($name .'_story', $value);
+    $this->assertTrue(TRUE, t($message)); // Display status message.
+  }
+
+  /**
+   * Set anonymous comment setting.
+   *
+   * @param boolean $enabled Allow anonymous commenting.
+   * @param boolean $without_approval Allow anonymous commenting without approval.
+   */
+  function setAnonymousUserComment($enabled, $without_approval) {
+    $edit = array();
+    $edit['1[access comments]'] = $enabled;
+    $edit['1[post comments]'] = $enabled;
+    $edit['1[post comments without approval]'] = $without_approval;
+    $this->drupalPost('admin/user/permissions', $edit, t('Save permissions'));
+    $this->assertText(t('The changes have been saved.'), t('Anonymous user comments '. ($enabled ? 'enabled' : 'disabled') .'.'));
+  }
+
+  /**
+   * Check for contact info.
+   *
+   * @return boolean Contact info is avialable.
+   */
+  function commentContactInfoAvailable() {
+    return preg_match('/(input).*?(name="name").*?(input).*?(name="mail").*?(input).*?(name="homepage")/s', $this->drupalGetContent());
+  }
+
+  /**
+   * Perform the specified operation on the specified comment.
+   *
+   * @param object $comment Comment to perform operation on.
+   * @param string $operation Operation to perform.
+   * @param boolean $aproval Operation is found on approval page.
+   */
+  function performCommentOperation($comment, $operation, $approval = FALSE) {
+    $edit = array();
+    $edit['operation'] = $operation;
+    $edit['comments['. $comment->id .']'] = TRUE;
+    $this->drupalPost('admin/content/comment'. ($approval ? '/approval' : ''), $edit, t('Update'));
+
+    if ($operation == 'delete') {
+      $this->drupalPost(NULL, array(), t('Delete comments'));
+      $this->assertText(t('The comments have been deleted.'), t('Operation "'. $operation .'" was performed on comment.'));
+    }
+    else {
+      $this->assertText(t('The update has been performed.'), t('Operation "'. $operation .'" was performed on comment.'));
+    }
+  }
+
+  /**
+   * Get the comment id for an unaproved comment.
+   *
+   * @param string $subject Comment subject to find.
+   * @return integer Comment id.
+   */
+  function getUnaprovedComment($subject) {
+    $this->drupalGet('admin/content/comment/approval');
+    preg_match('/href="(.*?)#comment-([^"]+)"(.*?)>('. $subject .')/', $this->drupalGetContent(), $match);
+    return $match[2];
+  }
+}

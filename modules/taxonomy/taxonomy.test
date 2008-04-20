@@ -1,0 +1,394 @@
+<?php
+// $Id: taxonomy.test,v 1.1 2008/04/20 18:23:31 dries Exp $
+
+class TaxonomyVocabularyFunctionsTestCase extends DrupalWebTestCase {
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('Vocabulary functions'),
+      'description' => t('Create/Edit/Delete vocabulary and assert that all fields were properly saved.'),
+      'group' => t('Taxonomy')
+    );
+  }
+
+  /**
+   * Create/Edit/Delete vocabulary and assert that all fields were properly saved.
+   */
+  function testVocabularyFunctions() {
+    //preparing data
+    $vid = 0;
+    $name = $this->randomName(200);
+    $description = $this->randomName(200);
+    $help = $this->randomName(200);
+    $hierarchy = rand(0,2); // Hierarchy 0,1,2
+    $multiple = rand(0,1); // multiple 0,1
+    $required = rand(0,1); // required 0,1
+    $relations = rand(0,1);
+    $tags = rand(0,1);
+    $weight = rand(-9,9);
+    $module = 'taxonomy';
+    $nodesList = array_keys(node_get_types());
+    $maxNodes = rand(1, count($nodesList));
+    $nodes = array();
+    for($i = 0; $i < $maxNodes; $i++) {
+      $nodes[$nodesList[$i]] = $nodesList[$i];
+      $nodesBak[$nodesList[$i]] = $nodesList[$i];
+    }
+    $_t = array('vid', 'name', 'description', 'help', 'relations', 'hierarchy', 'multiple',
+      'required', 'tags', 'module', 'weight', 'nodes');
+    $edit = array();
+    foreach($_t as $key)
+      $edit[$key] = $$key;
+
+    // Exec save function.
+    taxonomy_save_vocabulary($edit);
+    // After save we use $nodesBak.
+    ksort($nodesBak);
+    $edit['nodes'] = $nodesBak;
+    $vocabularies = taxonomy_get_vocabularies();
+    foreach($vocabularies as $voc) {
+      if ($voc->name == $name) {
+        $vid = $voc->vid;
+        break;
+      }
+    }
+    $edit['vid'] = $vid;
+    // Get data using function.
+    $getEdit = taxonomy_vocabulary_load($vid);
+    foreach($getEdit as $key => $value ) {
+      $this->assertEqual($value, $edit[$key], t('Checking value of @key.', array('@key' => $key)));
+    }
+
+    // Delete vocabulary to avoid exception messages we create array with empty fields.
+    $deleteArray = array();
+    foreach($getEdit as $key => $v) {
+      $deleteArray[$key] = 0;
+    }
+    $deleteArray['vid'] = $vid;
+    taxonomy_save_vocabulary($deleteArray);
+    // Checking if we deleted voc.
+    $vocabularies = taxonomy_get_vocabularies();
+    $vid = 0;
+    foreach($vocabularies as $voc) {
+      if ($voc->name == $name) {
+        $vid = $voc->vid;
+        break;
+      }
+    }
+    $this->assertEqual($vid, 0, t('Deleted vocabulary (@vid)', array('@vid' => $vid)));
+  }
+}
+
+
+class TaxonomyTermFunctionsTestCase extends DrupalWebTestCase {
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('Term functions'),
+      'description' => t('Testing save/update/delete terms.'),
+      'group' => t('Taxonomy')
+    );
+  }
+
+  /**
+   * Test term related functions.
+   */
+  function testTermsFunctions() {
+    // Preparing data: vocabulary, hierarchy -> disabled, related terms = on.
+    $edit = array();
+    $_t = array('vid', 'name', 'description', 'help', 'relations', 'hierarchy', 'multiple',
+        'required', 'tags', 'module', 'weight', 'nodes');
+    foreach($_t as $key ) {
+      $edit[$key] = 0;
+    }
+    $name = $this->randomName(20);
+    $relation = 1;
+    $edit['name'] = $name;
+    taxonomy_save_vocabulary($edit);
+
+    // Create term.
+    $termname = $this->randomName(20);
+    $termdesc = $this->randomName(200);
+    $termweight = rand(-9, 9);
+    $randSyn = rand(0, 9);
+    $synonyms = array();
+    for($i = 0; $i < $randSyn; $i++) {
+      $synonyms[] = $this->randomName(20);
+    }
+    $termsyn = implode("\n", $synonyms);
+    $data = array('name' => $termname, 'description' => $termdesc, 'weight' => $termweight, 'synonyms' => $termsyn, 'vid' => $edit['vid'], 'tid' => 0, 'relations' => 0);
+    taxonomy_save_term($data);
+
+    // Retrieve term and check all fields.
+    $_tArray = taxonomy_get_term_by_name($termname);
+    $getTerm = $_tArray[0];
+    $checkField = array('name', 'description', 'weight', 'vid');
+    foreach($checkField as $v) {
+      $this->assertEqual($data[$v], $getTerm->$v, t('Checking value of the term (@v).', array('@v' => $v)));
+    }
+    $getSynonyms = taxonomy_get_synonyms($getTerm->tid);
+    $this->assertEqual(sort($synonyms), sort($getSynonyms), 'Checking synonyms');
+
+    // Creating related terms.
+    $relations = array();
+    $staryTid = $getTerm->tid;
+    $relations[] = $staryTid;
+    $termname = $this->randomName(20);
+    $data = array('name' => $termname, 'description' => '', 'weight' => 0, 'synonyms' => 0, 'vid' => $edit['vid'], 'tid' => 0, 'relations' => array($staryTid));
+    taxonomy_save_term($data);
+    $_tArray = taxonomy_get_term_by_name($termname);
+    $getTerm = $_tArray[0];
+    $relations[] = $getTerm->tid;
+
+    // Creating another term related to 2 terms above.
+    $termname = $this->randomName(20);
+    $data = array('name' => $termname, 'description' => '', 'weight' => 0, 'synonyms' => 0, 'vid' => $edit['vid'], 'tid' => 0, 'relations' => array($staryTid, $getTerm->tid));
+    taxonomy_save_term($data);
+    $_tArray = taxonomy_get_term_by_name($termname);
+    $getTerm = $_tArray[0];
+
+    // Check related terms.
+    $related = taxonomy_get_related($getTerm->tid);
+    foreach($relations as $rTid) {
+      $this->assertTrue(array_key_exists($rTid, $related), t('Checking relations (@rTid).', array('@rTid' => $rTid)));
+    }
+
+    // Delete vocabulary.
+    $edit['name'] = 0;
+    taxonomy_save_vocabulary($edit);
+  }
+
+  /**
+   * Test single hierarchy terms.
+   */
+  function testTermsFunctionsSingleHierarchy() {
+    // Preparing data: vocabulary hierarchy->single.
+    $edit = array();
+    $_t = array('vid', 'name', 'description', 'help', 'relations', 'hierarchy', 'multiple',
+        'required', 'tags', 'module', 'weight', 'nodes');
+    foreach($_t as $key ) {
+      $edit[$key] = 0;
+    }
+
+    // Create vocab.
+    $name = $this->randomName(20);
+    $edit['hierarchy'] = 1;
+    $edit['name'] = $name;
+    taxonomy_save_vocabulary($edit);
+
+    // Create 1st term.
+    $termname = $this->randomName(20);
+    $data = array('name' => $termname, 'description' => '', 'weight' => 0, 'synonyms' => '', 'vid' => $edit['vid'], 'tid' => 0, 'relations' => 0);
+    taxonomy_save_term($data);
+    $_tArray = taxonomy_get_term_by_name($termname);
+    $parent = $_tArray[0];
+
+    // Create 2nd term as a child.
+    $termname = $this->randomName(20);
+    $data = array('name' => $termname, 'description' => '', 'weight' => 0, 'synonyms' => '', 'vid' => $edit['vid'], 'tid' => 0, 'relations' => 0, 'parent' => array($parent->tid));
+    taxonomy_save_term($data);
+    $_tArray = taxonomy_get_term_by_name($termname);
+    $children = $_tArray[0];
+
+    // Check hierarchy.
+    $getChildren = taxonomy_get_children($parent->tid);
+    $getParent = taxonomy_get_parents($children->tid);
+    $this->assertEqual($parent,$getParent[$parent->tid], t('Checking parents.'));
+    $this->assertEqual($children,$getChildren[$children->tid], t('Checking children.'));
+
+    // Delete vocabulary.
+    $edit['name'] = 0;
+    taxonomy_save_vocabulary($edit);
+  }
+
+  /**
+   * Test multiple hierarchy terms.
+   */
+  function testTermsFunctionsMultipleHierarchy() {
+    // Preparing data: vocabulary hierarchy->single.
+    $edit = array();
+    $_t = array('vid', 'name', 'description', 'help', 'relations', 'hierarchy', 'multiple',
+        'required', 'tags', 'module', 'weight', 'nodes');
+    foreach($_t as $key )
+      $edit[$key] = 0;
+
+    $name = $this->randomName(20);
+    $edit['hierarchy'] = 1;
+    $edit['name'] = $name;
+    taxonomy_save_vocabulary($edit);
+
+    // Create 1st term.
+    $parent = array();
+    $termname = $this->randomName(20);
+    $data = array('name' => $termname, 'description' => '', 'weight' => 0, 'synonyms' => '', 'vid' => $edit['vid'], 'tid' => 0, 'relations' => 0);
+    taxonomy_save_term($data);
+    $_tArray = taxonomy_get_term_by_name($termname);
+    $parent[] = $_tArray[0]->tid;
+
+    // Create 2nd term.
+    $termname = $this->randomName(20);
+    $data = array('name' => $termname, 'description' => '', 'weight' => 0, 'synonyms' => '', 'vid' => $edit['vid'], 'tid' => 0, 'relations' => 0);
+    taxonomy_save_term($data);
+    $_tArray = taxonomy_get_term_by_name($termname);
+    $parent[] = $_tArray[0]->tid;
+
+    // Create 3rd term as a child.
+    $termname = $this->randomName(20);
+    $data = array('name' => $termname, 'description' => '', 'weight' => 0, 'synonyms' => '', 'vid' => $edit['vid'], 'tid' => 0, 'relations' => 0, 'parent' => array($parent));
+    taxonomy_save_term($data);
+    $_tArray = taxonomy_get_term_by_name($termname);
+    $children = $_tArray[0];
+
+    $getParent = taxonomy_get_parents($children->tid);
+    foreach($parent as $p) {
+      $this->assertTrue(array_key_exists($p, $getParent), t('Checking parents (@p)', array('@p' => $p)));
+      //$this->assertEqual($parent,$getParent[$parent->tid], 'Checking parents');
+    }
+
+    // Delete vocabulary.
+    $edit['name'] = 0;
+    taxonomy_save_vocabulary($edit);
+  }
+
+}
+
+class TaxonomyTestNodeApiTestCase extends DrupalWebTestCase {
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('Taxonomy nodeapi'),
+      'description' => t('Save & edit a node and assert that taxonomy terms are saved/loaded properly.'),
+      'group' => t('Taxonomy')
+    );
+  }
+
+  /*
+   * Save & edit a node and assert that taxonomy terms are saved/loaded properly.
+   */
+  function testTaxonomyNode() {
+    // Preparing data: vocabulary hierarchy->single, multiple -> on.
+    $edit = array();
+    $_t = array('vid', 'name', 'description', 'help', 'relations', 'hierarchy', 'multiple',
+        'required', 'tags', 'module', 'weight', 'nodes');
+    foreach($_t as $key) {
+      $edit[$key] = 0;
+    }
+
+    $name = $this->randomName(20);
+    $edit['hierarchy'] = 1;
+    $edit['multiple'] = 1;
+    $edit['name'] = $name;
+    $edit['nodes'] = array('article' => 'article');
+    taxonomy_save_vocabulary($edit);
+    $vid = $edit['vid']; // We need to persist vid after $edit is unset().
+
+    $parent = array();
+    $patternArray = array();
+
+    // Create 1st term.
+    $termname = $this->randomName(20);
+    $data = array('name' => $termname, 'description' => '', 'weight' => 0, 'synonyms' => '', 'vid' => $vid, 'tid' => 0, 'relations' => 0);
+    taxonomy_save_term($data);
+    $_tArray = taxonomy_get_term_by_name($termname);
+    $parent[$_tArray[0]->tid] = $_tArray[0]->tid;
+    $patternArray['term name 1'] = $termname;
+
+    // Create 2nd term.
+    $termname = $this->randomName(20);
+    $data = array('name' => $termname, 'description' => '', 'weight' => 0, 'synonyms' => '', 'vid' => $vid, 'tid' => 0, 'relations' => 0);
+    taxonomy_save_term($data);
+    $_tArray = taxonomy_get_term_by_name($termname);
+    $parent[$_tArray[0]->tid] = $_tArray[0]->tid;
+    $patternArray['term name 2'] = $termname;
+
+    // Create test user and login.
+    $perm = array('access content', 'create article content', 'edit own article content', 'delete own article content');
+    $account = $this->drupalCreateUser($perm);
+    $this->drupalLogin($account);
+
+    // Why is this printing out the user profile page?
+    // Go to node/add/article.
+    // Try to create article.
+    $title = $this->randomName();
+    $body = $this->randomName(100);
+    $edit = array('title' => $title, 'body' => $body, "taxonomy[$vid][]" => $parent);
+
+    $this->drupalPost('node/add/article', $edit, t('Save'));
+
+    $patternArray['body text'] = $body;
+    $patternArray['title'] = $title;
+
+    $node = node_load(array('title' => $title));
+
+    $this->drupalGet("node/$node->nid");
+    foreach($patternArray as $name => $termPattern) {
+      $this->assertText($termPattern, "Checking $name");
+    }
+
+    // Checking database fields.
+    $result = db_query('SELECT tid FROM {term_node} WHERE nid = %d', $node->nid);
+    while ($nodeRow = db_fetch_array($result)) {
+      $this->assertTrue(in_array($nodeRow['tid'], $parent), 'Checking database record');
+    }
+
+    // Ok, lets create new terms, and change this node.
+    array_pop($parent);
+
+    // create 1st term
+    $termname = $this->randomName(20);
+    $data = array('name' => $termname, 'description' => '', 'weight' => 0, 'synonyms' => '', 'vid' => $vid, 'tid' => 0, 'relations' => 0);
+    taxonomy_save_term($data);
+    $_tArray = taxonomy_get_term_by_name($termname);
+    $parent[] = $_tArray[0]->tid;
+    $patternArray['term name 2'] = $termname;
+
+    // create 2nd term
+    $termname = $this->randomName(20);
+    $data = array('name' => $termname, 'description' => '', 'weight' => 0, 'synonyms' => '', 'vid' => $vid, 'tid' => 0, 'relations' => 0);
+    taxonomy_save_term($data);
+    $_tArray = taxonomy_get_term_by_name($termname);
+    $parent[] = $_tArray[0]->tid;
+    $patternArray['term name 3'] = $termname;
+
+    $edit = array('title' => $title, 'body' => $body, "taxonomy[$vid][]" => $parent);
+
+    $this->drupalPost('node/'. $node->nid .'/edit', $edit, t('Save'));
+
+    // TODO Do a MUCH better check here of the information msg.
+    $patternArray['information message'] = 'been updated';
+    foreach($patternArray as $name => $termPattern) {
+      $this->assertText($termPattern, t('Checking @name.', array('@name' => $name)));
+    }
+
+    // Checking database fields.
+    $node = node_load(array('title' => $title));
+    $result = db_query('SELECT tid FROM {term_node} WHERE vid = %d', $node->vid);
+    while ($nodeRow = db_fetch_array($result)) {
+      $this->assertTrue(in_array($nodeRow['tid'], $parent), t('Checking database field.'));
+    }
+
+    // Delete node through browser.
+    $this->drupalPost('node/'. $node->nid .'/delete', array(), t('Delete'));
+    // Checking after delete.
+    $this->drupalGet("node/".$node->nid);
+    $this->assertNoText($termname, t('Checking if node exists'));
+    // Checking database fields.
+    $num_rows = db_result(db_query('SELECT COUNT(*) FROM {term_node} WHERE nid = %d', $node->nid));
+    $this->assertEqual($num_rows, 0, t('Checking database field after deletion'));
+
+    // Delete vocabulary to avoid exception messages create array with empty fields.
+    $edit = array();
+    foreach($_t as $key ) {
+      $edit[$key] = 0;
+    }
+    $edit['name'] = 0;
+    $edit['vid'] = $vid;
+    taxonomy_save_vocabulary($edit);
+  }
+}

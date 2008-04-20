@@ -1,0 +1,478 @@
+<?php
+// $Id: simpletest.module,v 1.1 2008/04/20 18:23:29 dries Exp $
+
+/**
+ * Implementation of hook_help().
+ */
+function simpletest_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#simpletest':
+      $output  = '<p>'. t('The SimpleTest module is a framework for running automated unit tests in Drupal. It can be used to verify a working state of Drupal before and after any code changes, or as a means for developers to write and execute tests for their modules.') .'</p>';
+      $output .= '<p>'. t('Visit <a href="@admin-simpletest">Administer >> Site building >> SimpleTest</a> to display a list of available tests. For comprehensive testing, select <em>all</em> tests, or individually select tests for more targeted testing. Note that it might take several minutes for all tests to complete.)', array('@admin-simpletest' => url('admin/build/testing'))) .'</p>';
+      $output .= '<p>'. t('After the tests have run, a message will be displayed next to each test group indicating whether tests within it passed, failed, or had exceptions. A pass means that a test returned the expected results, while fail means that it did not. An exception normally indicates an error outside of the test, such as a PHP warning or notice. If there were fails or exceptions, the results are expanded, and the tests that had issues will be indicated in red or pink rows. Use these results to refine your code and tests until all tests return a pass.') .'</p>';
+      $output .= '<p>'. t('For more information on creating and modifying your own tests, see the <a href="@simpletest-api">SimpleTest API Documentation</a> in the Drupal handbook.', array('@simpletest-api' => 'http://drupal.org/simpletest')) .'</p>';
+      $output .= '<p>'. t('For more information, see the online handbook entry for <a href="@simpletest">SimpleTest module</a>.', array('@simpletest' => 'http://drupal.org/handbook/modules/simpletest')) .'</p>';
+      return $output;
+  }
+}
+
+/**
+ * Implementation of hook_menu().
+ */
+function simpletest_menu() {
+  $items['admin/build/testing'] = array(
+    'title' => 'Testing',
+    'page callback' => 'simpletest_entrypoint',
+    'description' => 'Run tests against Drupal core and your active modules. These tests help assure that your site code is working as designed.',
+    'access arguments' => array('administer unit tests'),
+  );
+  $items['admin/settings/testing'] = array(
+    'title' => 'Testing',
+    'description' => 'Configure SimpleTest framework.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('simpletest_settings'),
+    'access arguments' => array('access administration pages'),
+  );
+  return $items;
+}
+
+/**
+ * Implementation of hook_perm().
+ */
+function simpletest_perm() {
+  return array(
+    'administer unit tests' => t('Manage and run automated testing. %warning', array('%warning' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
+  );
+}
+
+/**
+ * Implemenation of hook_theme().
+ */
+function simpletest_theme() {
+  return array(
+    'simpletest_overview_form' => array(
+      'arguments' => array('form' => NULL)
+    ),
+  );
+}
+
+/**
+ * Try to load the simepletest
+ * @return boolean TRUE if the load succeeded
+ */
+function simpletest_load() {
+  global $user;
+  static $loaded;
+  if (!$loaded) {
+    $loaded = TRUE;
+    if ($user->uid != 1) {
+      drupal_set_message(t('It is strongly suggested to run the tests with the first user!'));
+    }
+    $path = drupal_get_path('module', 'simpletest') .'/';
+    foreach (array('simpletest.php', 'unit_tester.php', 'reporter.php', 'drupal_reporter.php', 'drupal_web_test_case.php', 'drupal_test_suite.php') as $file) {
+      require_once($path . $file);
+    }
+  }
+}
+
+/**
+ * Menu callback for both running tests and listing possible tests
+ */
+function simpletest_entrypoint() {
+  simpletest_load();
+  drupal_add_css(drupal_get_path('module', 'simpletest') .'/simpletest.css', 'module');
+  drupal_add_js(drupal_get_path('module', 'simpletest') .'/simpletest.js', 'module');
+  $output = drupal_get_form('simpletest_overview_form');
+
+  if (simpletest_running_output()) {
+    return simpletest_running_output() . $output;
+  }
+  else {
+    return $output;
+  }
+}
+
+function simpletest_running_output($output = NULL) {
+  static $o;
+  if ($output != NULL) {
+    $o = $output;
+  }
+  return $o;
+}
+
+/**
+ * Form callback;  make the form to run tests
+ */
+function simpletest_overview_form() {
+  $output = array(
+    '#theme' => 'simpletest_overview_form'
+  );
+
+  $total_test = &simpletest_get_total_test();
+
+  $test_instances = $total_test->getTestInstances();
+  uasort($test_instances, 'simpletest_compare_instances');
+
+  foreach ($test_instances as $group_test) {
+    $group = array();
+    $tests = $group_test->getTestInstances();
+    $group_class = str_replace(' ', '-', strtolower($group_test->getLabel()));
+    $group['tests'] = array(
+      '#type' => 'fieldset',
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+      '#title' => 'Tests',
+      '#attributes' => array('class' => $group_class),
+    );
+    foreach ($tests as $test) {
+      $test_info = $test->getInfo();
+      $group['tests'][get_class($test)] = array(
+        '#type' => 'checkbox',
+        '#title' => $test_info['name'],
+        '#default_value' => 0,
+        '#description' => $test_info['description'],
+      );
+    }
+    $output[] = $group + array(
+      '#type' => 'fieldset',
+      '#collapsible' => FALSE,
+      '#title' => $group_test->getLabel(),
+      '#attributes' => array('class' => 'all-tests'),
+    );
+  }
+
+  $output['run'] = array(
+    '#type' => 'fieldset',
+    '#collapsible' => FALSE,
+    '#collapsed' => FALSE,
+    '#title' => t('Run tests'),
+  );
+  $output['run']['running_options'] = array(
+    '#type' => 'radios',
+    '#default_value' => 'selected_tests',
+    '#options' => array(
+      'all_tests' => t('Run all tests (WARNING, this may take a long time)'),
+      'selected_tests' => t('Run selected tests'),
+    ),
+  );
+  $output['run']['op'] = array(
+    '#type' => 'submit',
+    '#value' => t('Run tests'),
+    '#submit' => array('simpletest_run_selected_tests')
+  );
+
+  $output['reset'] = array(
+    '#type' => 'fieldset',
+    '#collapsible' => FALSE,
+    '#collapsed' => FALSE,
+    '#title' => t('Clean test environment'),
+    '#description' => t('Remove tables with the prefix "simpletest" and temporary directories that are left over from tests that crashed.')
+  );
+  $output['reset']['op'] = array(
+    '#type' => 'submit',
+    '#value' => t('Clean environment'),
+    '#submit' => array('simpletest_clean_environment')
+  );
+  return $output;
+}
+
+/**
+ * Theme the SimpleTest form that provides test selection.
+ *
+ * @ingroup themeable
+ */
+function theme_simpletest_overview_form($form) {
+  $header = array(
+    array('data' => t('Run'), 'class' => 'simpletest_run checkbox'),
+    array('data' => t('Test'), 'class' => 'simpletest_test'),
+    array('data' => t('Description'), 'class' => 'simpletest_description'),
+  );
+  $js = array(
+    'images' => array(
+      theme('image', 'misc/menu-collapsed.png', 'Expand', 'Expand'),
+      theme('image', 'misc/menu-expanded.png', 'Collapsed', 'Collapsed'),
+    ),
+  );
+
+  // Go through each test group and create a row:
+  $rows = array();
+  foreach (element_children($form) as $gid) {
+    if (isset($form[$gid]['tests'])) {
+      $element = &$form[$gid];
+      $test_class = strtolower(trim(preg_replace("/[^\w\d]/", "-",$element["#title"])));
+
+      $row = array();
+      $row[] = array('id' => $test_class, 'class' => 'simpletest-select-all');
+      $row[] = array(
+        'data' =>  '<div class="simpletest-image" id="simpletest-test-group-'. $test_class .'">'. $js['images'][0] .'</div>&nbsp;<label for="'. $test_class .'-select-all" class="simpletest-group-label">'. $element['#title'] .'</label>',
+        'style' => 'font-weight: bold;'
+      );
+      $row[] = $element['#description'];
+      $rows[] = array('data' => $row, 'class' => 'simpletest-group');
+      $current_js = array('testClass' => $test_class .'-test', 'testNames' => array(), 'imageDirection' => 0, 'clickActive' => FALSE);
+
+      // Go through each test in the group and create table rows setting them to invisible:
+      foreach (element_children($element['tests']) as $test_name) {
+        $current_js['testNames'][] = 'edit-'. $test_name;
+        $test = $element['tests'][$test_name];
+        foreach (array('title', 'description') as $key) {
+          $$key = $test['#'. $key];
+          unset($test['#'. $key]);
+        }
+        $test['#name'] = $test_name;
+        $themed_test = drupal_render($test);
+        $row = array();
+        $row[] = $themed_test;
+        $row[] = theme('indentation', 1) .'<label for="edit-'. $test_name .'">'. $title .'</label>';
+        $row[] = '<div class="description">'. $description .'</div>';
+        $rows[] = array('data' => $row, 'style' => 'display: none;', 'class' => $test_class .'-test');
+      }
+      $js['simpletest-test-group-'. $test_class] = $current_js;
+      unset($form[$gid]); // Remove test group from form.
+    }
+  }
+  drupal_add_js(array('simpleTest' => $js), 'setting');
+
+  // Output test groups:
+  $output = '';
+  if (count($rows)) {
+    $output .= theme('table', $header, $rows, array('id' => 'simpletest-form-table'));
+  }
+
+  // Output the rest of the form, excluded test groups which have been removed:
+  $output .= drupal_render($form);
+
+  return $output;
+}
+
+/**
+ * Compare two test instance objects for use in sorting.
+ */
+function simpletest_compare_instances(&$a, &$b) {
+  if (substr_compare($a->_label, $b->_label, 0) > 0) {
+    return 1;
+  }
+  return -1;
+}
+
+/**
+ * Run selected tests.
+ */
+function simpletest_run_selected_tests($form, &$form_state) {
+  $form_state['redirect'] = FALSE;
+  $output = '';
+  switch ($form_state['values']['running_options']) {
+    case 'all_tests':
+      $output = simpletest_run_tests();
+      break;
+    case 'selected_tests':
+      $tests_list = array();
+      foreach ($form_state['values'] as $item => $value) {
+        if ($value === 1 && strpos($item, 'selectall') === FALSE) {
+           $tests_list[] = $item;
+        }
+      }
+      if (count($tests_list) > 0 ) {
+        $output = simpletest_run_tests($tests_list);
+        break;
+      }
+      // Fall through
+    default:
+      drupal_set_message(t('No test has been selected.'), 'error');
+  }
+
+  simpletest_running_output($output);
+  return FALSE;
+}
+
+/**
+ * Remove all temporary database tables and directories.
+ */
+function simpletest_clean_environment() {
+  simpletest_clean_database();
+  simpletest_clean_temporary_directories();
+}
+
+/**
+ * Removed prefixed talbes from the database that are left over from crashed tests.
+ */
+function simpletest_clean_database() {
+  $tables = simpletest_get_like_tables();
+
+  $ret = array();
+  foreach ($tables as $table) {
+    db_drop_table($ret, $table);
+  }
+
+  if (count($ret) > 0) {
+    drupal_set_message(t('Removed @count left over tables.', array('@count' => count($ret))));
+  }
+  else {
+    drupal_set_message(t('No left over tables to remove.'));
+  }
+}
+
+/**
+ * Find all tables that are like the specified base table name.
+ *
+ * @param string $base_table Base table name.
+ * @param boolean $count Return the table count instead of list of tables.
+ * @return mixed Array of matching tables or count of tables.
+ */
+function simpletest_get_like_tables($base_table = 'simpletest', $count = FALSE) {
+  global $db_url, $db_prefix;
+  $url = parse_url($db_url);
+  $database = substr($url['path'], 1);
+  $select = $count ? 'COUNT(table_name)' : 'table_name';
+  $result = db_query("SELECT $select FROM information_schema.tables WHERE table_schema = '$database' AND table_name LIKE '$db_prefix$base_table%'");
+
+  if ($count) {
+    return db_result($result);
+  }
+  $tables = array();
+  while ($table = db_result($result)) {
+    $tables[] = $table;
+  }
+  return $tables;
+}
+
+/**
+ * Find all left over temporary directories and remove them.
+ */
+function simpletest_clean_temporary_directories() {
+  $files = scandir(file_directory_path());
+  $count = 0;
+  foreach ($files as $file) {
+    $path = file_directory_path() .'/'. $file;
+    if (is_dir($path) && preg_match('/^simpletest\d+/', $file)) {
+      simpletest_clean_temporary_directory($path);
+      $count++;
+    }
+  }
+
+  if ($count > 0) {
+    drupal_set_message(t('Removed @count temporary directories.', array('@count' => $count)));
+  }
+  else {
+    drupal_set_message(t('No temporary directories to remove.'));
+  }
+}
+
+/**
+ * Remove all files from specified firectory and then remove directory.
+ *
+ * @param string $path Directory path.
+ */
+function simpletest_clean_temporary_directory($path) {
+  $files = scandir($path);
+  foreach ($files as $file) {
+    if ($file != '.' && $file != '..') {
+      $file_path = "$path/$file";
+      if (is_dir($file_path)) {
+        simpletest_clean_temporary_directory($file_path);
+      }
+      else {
+        file_delete($file_path);
+      }
+    }
+  }
+  rmdir($path);
+}
+
+/**
+ * Actually runs tests
+ * @param array $test_list list of tests to run or DEFAULT NULL run all tests
+ * @param boolean $html_reporter TRUE if you want results in simple html, FALSE for full drupal page
+ */
+function simpletest_run_tests($test_list = NULL, $reporter = 'drupal') {
+  static $test_running;
+  if (!$test_running) {
+    $test_running = TRUE;
+    $test = simpletest_get_total_test($test_list);
+    switch ($reporter) {
+      case 'text':
+        $reporter = &new TextReporter();
+        break;
+      case 'xml':
+        $reporter = &new XMLReporter();
+        break;
+      case 'html':
+        $reporter = &new HtmlReporter();
+        break;
+      case 'drupal':
+        $reporter = &new DrupalReporter();
+        break;
+    }
+
+    cache_clear_all();
+    $results = $test->run($reporter);
+    $test_running = FALSE;
+
+    switch (get_class($reporter)) {
+      case 'TextReporter':
+      case 'XMLReporter':
+      case 'HtmlReporter':
+        return $results;
+      case 'DrupalReporter':
+        return $reporter->getOutput();
+    }
+  }
+}
+
+/**
+ * This function makes sure no unnecessary copies of the DrupalTests object are instantiated
+ * @param  array $classes list of all classes the test should concern or
+ *                        DEFAULT NULL
+ * @return DrupalTests object
+ */
+function &simpletest_get_total_test($classes = NULL) {
+  static $total_test;
+  if (!$total_test) {
+    simpletest_load();
+    $total_test = &new DrupalTests();
+  }
+  if (!is_null($classes)) {
+    $dut = new DrupalTests($classes);
+    return $dut;
+  }
+  return $total_test;
+}
+
+function simpletest_settings() {
+  $form = array();
+
+  $form['http_auth'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('HTTP authentication'),
+    '#description' => t('If needed, enter a username and password for reaching your web site. This is not a drupal username/password.') .
+                      t('This is a login presented by your web server. Most sites may leave this section empty.'),
+  );
+  $form['http_auth']['simpletest_httpauth'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Use http authentication'),
+    '#default_value' => variable_get('simpletest_httpauth', FALSE),
+  );
+  $form['http_auth']['simpletest_httpauth_username'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Username'),
+    '#default_value' => variable_get('simpletest_httpauth_username', ''),
+  );
+  $form['http_auth']['simpletest_httpauth_pass'] = array(
+    '#title' => t('Password'),
+    '#type' => 'password',
+    '#default_value' => variable_get('simpletest_httpauth_pass', ''),
+  );
+  $form['devel'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Devel module settings'),
+    '#description' => t('Devel module can cause problems if you have query log enabled. It will output a few thousand queries and crash your browser'),
+  );
+  $form['devel']['simpletest_devel'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Use devel query log on test result pages'),
+    '#default_value' => variable_get('simpletest_devel', FALSE),
+  );
+
+  return system_settings_form($form);
+
+}

@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.93 2008/04/14 17:48:33 dries Exp $
+// $Id: database.inc,v 1.94 2008/04/20 18:23:21 dries Exp $
 
 /**
  * @file
@@ -122,7 +122,7 @@ function db_prefix_tables($sql) {
  * @return the name of the previously active database or FALSE if non was found.
  */
 function db_set_active($name = 'default') {
-  global $db_url, $db_type, $active_db;
+  global $db_url, $db_type, $active_db, $db_prefix;
   static $db_conns, $active_name = FALSE;
 
   if (empty($db_url)) {
@@ -150,6 +150,12 @@ function db_set_active($name = 'default') {
     }
 
     $db_conns[$name] = db_connect($connect_url);
+    // We need to pass around the simpletest database prefix in the request
+    // and we put that in the user_agent header.
+    if (preg_match("/^simpletest\d+$/", $_SERVER['HTTP_USER_AGENT'])) {
+      $db_prefix = $_SERVER['HTTP_USER_AGENT'];
+    }
+
   }
 
   $previous_name = $active_name;

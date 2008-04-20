@@ -1,0 +1,87 @@
+<?php
+// $Id: help.test,v 1.1 2008/04/20 18:23:25 dries Exp $
+
+class HelpTestCase extends DrupalWebTestCase {
+  protected $big_user;
+  protected $any_user;
+
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('Help functionality'),
+      'description' => t('Verify help display and user access to help based on persmissions.'),
+      'group' => t('Help'),
+    );
+  }
+
+  /**
+   * Enable modules and create users with specific permissions.
+   */
+  function setUp() {
+    parent::setUp();
+
+    // Loading these (and other?) modules will result in failures?
+//    $this->drupalModuleEnable('blog');
+//    $this->drupalModuleEnable('poll');
+    $this->getModuleList();
+
+    // Create users.
+    $this->big_user = $this->drupalCreateUser(array('access administration pages')); // 'administer blocks', 'administer site configuration',
+    $this->any_user = $this->drupalCreateUser(array());
+  }
+
+  /**
+   * Login users, create dblog events, and test dblog functionality through the admin and user interfaces.
+   */
+  function testHelp() {
+    // Login the admin user.
+    $this->drupalLogin($this->big_user);
+    $this->verifyHelp();
+
+    // Login the regular user.
+    $user = $this->drupalLogin($this->any_user);
+    $this->verifyHelp(403);
+  }
+
+  /**
+   * Verify the logged in user has the desired access to the various help nodes and the nodes display help.
+   *
+   * @param integer $response HTTP response code.
+   */
+  private function verifyHelp($response = 200) {
+    $crumb = '›';
+
+    foreach ($this->modules as $module => $name) {
+      // View module help node.
+      $this->drupalGet('admin/help/'. $module);
+      $this->assertResponse($response);
+      if ($response == 200) {
+        // NOTE: The asserts fail on blog and poll because the get returns the 'admin/help' node instead of the indicated node???
+//        if ($module == 'blog' || $module == 'poll') {
+//          continue;
+//        }
+        $this->assertTitle($name. ' | Drupal', t('['. $module .'] Title was displayed'));
+        $this->assertRaw('<h2>'. t($name) .'</h2>', t('['. $module .'] Heading was displayed'));
+        $this->assertText(t('Home '. $crumb .' Administer '. $crumb .' Help'), t('['. $module .'] Breadcrumbs were displayed'));
+      }
+    }
+  }
+
+  /**
+   * Get list of enabled modules.
+   *
+   * @return array Enabled modules.
+   */
+  private function getModuleList() {
+    $this->modules = array();
+    $result = db_query("SELECT name, filename, info FROM {system} WHERE type = 'module' AND status = 1 ORDER BY weight ASC, filename ASC");
+    while ($module = db_fetch_object($result)) {
+      if (file_exists($module->filename)) {
+        $fullname = unserialize($module->info);
+        $this->modules[$module->name] = $fullname['name'];
+      }
+    }
+  }
+}

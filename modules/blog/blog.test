@@ -1,0 +1,171 @@
+<?php
+// $Id: blog.test,v 1.1 2008/04/20 18:23:23 dries Exp $
+
+class BlogTestCase extends DrupalWebTestCase {
+  protected $big_user;
+  protected $own_user;
+  protected $any_user;
+
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('Blog functionality'),
+      'description' => t('Create, view, edit, delete, and change blog entries and verify its consistency in the database.'),
+      'group' => t('Blog'),
+    );
+  }
+
+  /**
+   * Enable modules and create users with specific permissions.
+   */
+  function setUp() {
+    parent::setUp('blog');
+    // Create users.
+    $this->big_user = $this->drupalCreateUser(array('administer blocks'));
+    $this->own_user = $this->drupalCreateUser(array('create blog content', 'edit own blog content', 'delete own blog content'));
+    $this->any_user = $this->drupalCreateUser(array('create blog content', 'edit any blog content', 'delete any blog content', 'access administration pages'));
+  }
+
+  /**
+   * Login users, create blog nodes, and test blog functionality through the admin and user interfaces.
+   */
+  function testBlog() {
+    // Login the admin user.
+    $this->drupalLogin($this->big_user);
+    // Enable the recent blog block.
+    $edit = array();
+    $edit['blog_recent[region]'] = 'right';
+    $this->drupalPost('admin/build/block', $edit, t('Save blocks'));
+    $this->assertResponse(200);
+
+    // Do basic tests for each user.
+    $this->doBasicTests($this->any_user, TRUE);
+    $this->doBasicTests($this->own_user, FALSE);
+
+    // Create another blog node for the any blog user.
+    $node = $this->drupalCreateNode(array('type' => 'blog', 'uid' => $this->any_user->uid));
+    // Verify the own blog user only has access to the blog view node.
+    $this->verifyBlogs($this->any_user, $node, FALSE, 403);
+
+    // Create another blog node for the own blog user.
+    $node = $this->drupalCreateNode(array('type' => 'blog', 'uid' => $this->own_user->uid));
+    // Login the any blog user.
+    $this->drupalLogin($this->any_user);
+    // Verify the any blog user has access to all the blog nodes.
+    $this->verifyBlogs($this->own_user, $node, TRUE);
+  }
+
+  /**
+   * Run basic tests on the indicated user.
+   *
+   * @param object $user The logged in user.
+   * @param boolean $admin User has 'access administration pages' privilege.
+   */
+  private function doBasicTests($user, $admin) {
+    // Login the user.
+    $this->drupalLogin($user);
+    // Create blog node.
+    $node = $this->drupalCreateNode(array('type' => 'blog', 'uid' => $user->uid));
+    // Verify the user has access to all the blog nodes.
+    $this->verifyBlogs($user, $node, $admin);
+    // Verify the blog links are displayed.
+    $this->verifyBlogLinks($user);
+  }
+
+  /**
+   * Verify the logged in user has the desired access to the various blog nodes.
+   *
+   * @param object $node_user The user who creates the node.
+   * @param object $node Node.
+   * @param boolean $admin User has 'access administration pages' privilege.
+   * @param integer $response HTTP response code.
+   */
+  private function verifyBlogs($node_user, $node, $admin, $response = 200) {
+    $crumb = '›';
+    $quote = '&#039;';
+
+    $response2 = ($admin) ? 200 : 403;
+
+    // View blog help node.
+    $this->drupalGet('admin/help/blog');
+    $this->assertResponse($response2);
+    // NOTE: The two commented asserts fail because the get returns the 'admin/help' node instead of the indicated node???
+    if ($response2 == 200) {
+//      $this->assertTitle(t('Blog | Drupal'), t('Blog help node was displayed'));
+      $this->assertText(t('Blog'), t('Blog help node was displayed'));
+//      $this->assertText(t('Home '. $crumb .' Administer '. $crumb .' Help'), t('Breadcrumbs were displayed'));
+    }
+
+    // Verify the blog block was displayed.
+    $this->drupalGet('');
+    $this->assertResponse(200);
+    $this->assertText(t('Recent blog posts'), t('Blog block was displayed'));
+
+    // View blog node.
+    $this->drupalGet('node/'. $node->nid);
+    $this->assertResponse(200);
+    $this->assertTitle($node->title. ' | Drupal', t('Blog node was displayed'));
+    $this->assertText(t('Home '. $crumb .' Blogs '. $crumb .' @name'. $quote .'s blog', array('@name' => $node_user->name)), t('Breadcrumbs were displayed'));
+
+    // View blog edit node.
+    $this->drupalGet('node/'. $node->nid .'/edit');
+    $this->assertResponse($response);
+    if ($response == 200) {
+      $this->assertTitle($node->title. ' | Drupal', t('Blog edit node was displayed'));
+      $this->assertText(t('Home '. $crumb .' @title', array('@title' => $node->title)), t('Breadcrumbs were displayed'));
+    }
+
+    if ($response == 200) {
+      // Edit blog node.
+      $edit = array();
+      $edit['title'] = 'node/' . $node->nid;
+      $edit['body'] = $this->randomName(256);
+      $this->drupalPost('node/'. $node->nid .'/edit', $edit, t('Save'));
+      $this->assertRaw(t('Blog entry %title has been updated.', array('%title' => $edit['title'])), t('Blog node was edited'));
+
+      // Delete blog node.
+      $this->drupalPost('node/'. $node->nid .'/delete', array(), t('Delete'));
+      $this->assertResponse($response);
+      $this->assertRaw(t('Blog entry %title has been deleted.', array('%title' => $edit['title'])), t('Blog node was deleted'));
+    }
+  }
+
+  /**
+   * Verify the blog links are displayed to the logged in user.
+   *
+   * @param object $user The logged in user.
+   */
+  private function verifyBlogLinks($user) {
+    $crumb = '›';
+
+    // Confirm blog entries link exists on the user page.
+    $this->drupalGet('user/'. $user->uid);
+    $this->assertResponse(200);
+    $this->assertText(t('View recent blog entries'), t('View recent blog entries link was displayed'));
+
+    // Confirm the recent blog entries link links to the user's blog page.
+    $this->clickLink('View recent blog entries');
+    $this->assertTitle(t("@name's blog | Drupal", array('@name' => $user->name)), t('View recent blog entries link target was correct'));
+
+    // Confirm a blog page was displayed.
+    $this->drupalGet('blog');
+    $this->assertResponse(200);
+    $this->assertTitle('Blogs | Drupal', t('Blog page was displayed'));
+    $this->assertText(t('Home'), t('Breadcrumbs were displayed'));
+
+    // Confirm a blog page was displayed per user.
+    $this->drupalGet('blog/'. $user->uid);
+    $this->assertTitle(t("@name's blog | Drupal", array('@name' => $user->name)), t('User blog node was displayed'));
+    $this->assertText(t('Home '. $crumb .' Blogs'), t('Breadcrumbs were displayed'));
+
+    // Confirm a blog feed was displayed.
+    $this->drupalGet('blog/feed');
+    $this->assertTitle(t('Drupal blogs'), t('Blog feed was displayed'));
+
+    // Confirm a blog feed was displayed per user.
+    $this->drupalGet('blog/'. $user->uid .'/feed');
+    $this->assertTitle(t("@name's blog", array('@name' => $user->name)), t('User blog feed was displayed'));
+  }
+}

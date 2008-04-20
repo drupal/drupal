@@ -1,0 +1,159 @@
+<?php
+// $Id: blogapi.test,v 1.1 2008/04/20 18:23:24 dries Exp $
+
+class BlogAPITestCase extends DrupalWebTestCase {
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('Blog API functionality'),
+      'description' => t('Create, edit, and delete post; upload file; and set/get categories.'),
+      'group' => t('Blog API'),
+    );
+  }
+
+  /**
+   * Implementation of setUp().
+   */
+  function setUp() {
+    parent::setUp('blog', 'blogapi', 'taxonomy');
+  }
+
+  /**
+   * Create, edit, and delete post; upload file; and set/get categories.
+   */
+  function testBlogAPI() {
+    // Create admin user and taxononmy for later use.
+    $admin_user = $this->drupalCreateUser(array('administer taxonomy'));
+    $this->drupalLogin($admin_user);
+    $vid = $this->addVocabulary('simpletest_vocab');
+    $term = $this->addTerm($vid, 'simpletest_term1');
+    $this->drupalLogout();
+
+    // Create user.
+    $web_user = $this->drupalCreateUser(array('create blog content', 'delete own blog content', 'edit own blog content', 'administer content with blog api'));
+    $this->drupalLogin($web_user);
+
+    // Init common variables.
+    $local = url('xmlrpc.php', array('absolute' => TRUE));
+    $appid = 'simpletest';
+
+    // Get user's blog.
+    $result = xmlrpc($local, 'blogger.getUsersBlogs', $appid, $web_user->name, $web_user->pass_raw);
+    $this->assertTrue($result, t('Request for user\'s blogs returned correctly.'));
+
+    if ($result !== FALSE) {
+      if ($this->assertTrue(array_key_exists('blogid', $result[0]), t('Blog found.'))) {
+        $blog_id = $result[0]['blogid'];
+      }
+    }
+
+    // Create post.
+    $content = $this->randomName(32);
+    $result = xmlrpc($local, 'blogger.newPost', $appid, $blog_id, $web_user->name, $web_user->pass_raw, $content, TRUE);
+    $this->assertTrue($result, t('Post created.'));
+
+    $nid = $result;
+
+    // Check recent posts.
+    $result = xmlrpc($local, 'blogger.getRecentPosts', $appid, $blog_id, $web_user->name, $web_user->pass_raw, 5);
+    $this->assertTrue($result, t('Recent post list retreived.'));
+
+    if ($result !== FALSE && array_key_exists('title', $result[0])) {
+      $this->assertEqual($content, $result[0]['title'], t('Post found.'));
+    }
+    else
+      $this->assertTrue(false, 'Post found.');
+
+    // Edit post.
+    $content_new = $this->randomName(10);
+    $result = xmlrpc($local, 'blogger.editPost', $appid, $nid, $web_user->name, $web_user->pass_raw, $content_new, TRUE);
+    $this->assertTrue($result, t('Post successfully modified.'));
+
+    // Upload file.
+    $file = current($this->drupalGetTestFiles('text'));
+    $file_contents = file_get_contents($file->filename);
+    $file = array();
+    $file['name'] = $this->randomName() .'.txt';
+    $file['type'] = 'text';
+    $file['bits'] = xmlrpc_base64($file_contents);
+    $result = xmlrpc($local, 'metaWeblog.newMediaObject', $blog_id, $web_user->name, $web_user->pass_raw, $file);
+    $this->assertTrue($result, t('File successfully uploaded.'));
+
+    $url = (array_key_exists('url', $result) ? $result['url'] : '');
+
+    // Check uploaded file.
+    $this->drupalGet($url);
+    $this->assertEqual($this->drupalGetContent(), $file_contents, t('Uploaded contents verified.'));
+
+    // Set post categories.
+    $categories = array(array('categoryId' => $term));
+    $result = xmlrpc($local, 'mt.setPostCategories', $nid, $web_user->name, $web_user->pass_raw, $categories);
+    $this->assertTrue($result, t('Post categories set.'));
+
+    // Get post categories.
+    $result = xmlrpc($local, 'mt.getPostCategories', $nid, $web_user->name, $web_user->pass_raw);
+    $this->assertTrue($result, t('Category list successfully retreived.'));
+
+    if ($result !== FALSE && array_key_exists('categoryId', $result[0])) {
+      $this->assertEqual($term, $result[0]['categoryId'], t('Category list verified.'));
+    }
+
+    // Delete post.
+    $result = xmlrpc($local, 'blogger.deletePost', $appid, $nid, $web_user->name, $web_user->pass_raw, TRUE);
+    $this->assertTrue($result, t('Post successfully deleted.'));
+  }
+
+  /**
+   * Add taxonomy vocabulary.
+   *
+   * @param string $vocab Vocabulary name.
+   * @return interger Vocab id.
+   */
+  function addVocabulary($vocab) {
+    $edit = array();
+    $edit['name'] = $vocab;
+    $edit['nodes[blog]'] = TRUE;
+    $this->drupalPost('admin/content/taxonomy/add/vocabulary', $edit, t('Save'));
+    $this->assertRaw(t('Created new vocabulary %vocab.', array('%vocab' => $edit['name'])), t('Taxonomy vocabulary added.'));
+
+    $vocab_arr = taxonomy_get_vocabularies();
+    $vid = NULL;
+    foreach ($vocab_arr as $vocab_item) {
+      if ($vocab_item->name == $vocab) {
+        $vid = $vocab_item->vid;
+        break;
+      }
+    }
+
+    $this->assertNotNull($vid, t('Vocabulary found in database.'));
+    return $vid;
+  }
+
+  /**
+   * Add a taxonomy term to vocabulary.
+   *
+   * @param integer $vid Vocabulary id.
+   * @param string $term Term name.
+   * @return interger Term id.
+   */
+  function addTerm($vid, $term) {
+    $edit = array();
+    $edit['name'] = $term;
+    $this->drupalPost('admin/content/taxonomy/'. $vid .'/add/term', $edit, t('Save'));
+    $this->assertRaw(t('Created new term %term.', array('%term' => $edit['name'])), t('Taxonomy term added.'));
+
+    $tree = taxonomy_get_tree($vid);
+    $tid = NULL;
+    foreach ($tree as $tree_term) {
+      if ($tree_term->name == $term) {
+        $tid = $tree_term->tid;
+        break;
+      }
+    }
+
+    $this->assertNotNull($tid, t('Term found in database.'));
+    return $tid;
+  }
+}

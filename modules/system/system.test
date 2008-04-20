@@ -1,0 +1,128 @@
+<?php
+// $Id: system.test,v 1.1 2008/04/20 18:23:31 dries Exp $
+
+class EnableDisableCoreTestCase extends DrupalWebTestCase {
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('Module list functionality'),
+      'description' => t('Enable/disable core module and confirm table creation/deletion. Enable module without dependecy enabled.'),
+      'group' => t('System')
+    );
+  }
+
+  /**
+   * Implementation of setUp().
+   */
+  function setUp() {
+    parent::setUp();
+
+    $admin_user = $this->drupalCreateUser(array('access administration pages', 'administer site configuration'));
+    $this->drupalLogin($admin_user);
+  }
+
+  /**
+   * Enable a module, check the database for related tables, disable module,
+   * check for related tables, unistall module, check for related tables.
+   */
+  function testEnableDisable() {
+    $admin_user = $this->drupalCreateUser(array('access administration pages', 'administer site configuration'));
+    $this->drupalLogin($admin_user);
+
+    // Enable aggregator, and check tables.
+    $this->assertModules(array('aggregator'), FALSE);
+    $this->assertTableCount('aggregator', FALSE);
+
+    $edit = array();
+    $edit['status[aggregator]'] = 'aggregator';
+    $this->drupalPost('admin/build/modules', $edit, t('Save configuration'));
+    $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
+
+    $this->assertModules(array('aggregator'), TRUE);
+    $this->assertTableCount('aggregator', TRUE);
+
+    // Disable aggregator, check tables, uninstall aggregator, check tables.
+    $edit = array();
+    $edit['status[aggregator]'] = FALSE;
+    $this->drupalPost('admin/build/modules', $edit, t('Save configuration'));
+    $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
+
+    $this->assertModules(array('aggregator'), FALSE);
+    $this->assertTableCount('aggregator', TRUE);
+
+    $edit = array();
+    $edit['uninstall[aggregator]'] = 'aggregator';
+    $this->drupalPost('admin/build/modules/uninstall', $edit, t('Uninstall'));
+
+    $this->drupalPost(NULL, NULL, t('Uninstall'));
+    $this->assertText(t('The selected modules have been uninstalled.'), t('Modules status has been updated.'));
+
+    $this->assertModules(array('aggregator'), FALSE);
+    $this->assertTableCount('aggregator', FALSE);
+  }
+
+  /**
+   * Attempt to enable translation module without locale enabled.
+   */
+  function testEnableWithoutDependency () {
+    $admin_user = $this->drupalCreateUser(array('access administration pages', 'administer site configuration'));
+    $this->drupalLogin($admin_user);
+
+    // Attempt to enable content translation without locale enabled.
+    $edit = array();
+    $edit['status[translation]'] = 'translation';
+    $this->drupalPost('admin/build/modules', $edit, t('Save configuration'));
+    $this->assertText(t('Some required modules must be enabled'), t('Dependecy required.'));
+
+    $this->assertModules(array('translation', 'locale'), FALSE);
+
+    // Assert that the locale tables weren't enabled.
+    $this->assertTableCount('languages', FALSE);
+    $this->assertTableCount('locale', FALSE);
+
+    $this->drupalPost(NULL, NULL, t('Continue'));
+    $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
+
+    $this->assertModules(array('translation', 'locale'), TRUE);
+
+    // Assert that the locale tables were enabled.
+    $this->assertTableCount('languages', TRUE);
+    $this->assertTableCount('locale', TRUE);
+  }
+
+  /**
+   * Assert tables that begin with the specified base table name.
+   *
+   * @param string $base_table Begginning of table name to look for.
+   * @param boolean $count Assert tables that match specified base table.
+   * @return boolean Tables with specified base table.
+   */
+  function assertTableCount($base_table, $count) {
+    $match_count = simpletest_get_like_tables($base_table, TRUE);
+
+    if ($count) {
+      return $this->assertTrue($match_count, t('Tables matching "@base_table" found.', array('@base_table' => $base_table)));
+    }
+    return $this->assertFalse($match_count, t('Tables matching "@base_table" not found.', array('@base_table' => $base_table)));
+  }
+
+  /**
+   * Assert the list of modules are enabled or disabled.
+   *
+   * @param array $modules Modules to check.
+   * @param boolean $enabled Module state.
+   */
+  function assertModules(array $modules, $enabled) {
+    module_list(TRUE, FALSE);
+    foreach ($modules as $module) {
+      if ($enabled) {
+        $this->assertTrue(module_exists($module) == $enabled, t('Module "@module" is enabled.', array('@module' => $module)));
+      }
+      else {
+        $this->assertTrue(module_exists($module) == $enabled, t('Module "@module" not enabled.', array('@module' => $module)));
+      }
+    }
+  }
+}

@@ -1,0 +1,370 @@
+<?php
+// $Id: dblog.test,v 1.1 2008/04/20 18:23:24 dries Exp $
+
+class DBLogTestCase extends DrupalWebTestCase {
+  protected $big_user;
+  protected $any_user;
+
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('DBLog functionality'),
+      'description' => t('Generate events and verify dblog entries; verify user access to log reports based on persmissions.'),
+      'group' => t('DBLog'),
+    );
+  }
+
+  /**
+   * Enable modules and create users with specific permissions.
+   */
+  function setUp() {
+    parent::setUp('dblog', 'blog', 'poll');
+    // Create users.
+    $this->big_user = $this->drupalCreateUser(array('administer site configuration', 'access administration pages', 'access site reports', 'administer users'));
+    $this->any_user = $this->drupalCreateUser(array());
+  }
+
+  /**
+   * Login users, create dblog events, and test dblog functionality through the admin and user interfaces.
+   */
+  function testDBLog() {
+    // Login the admin user.
+    $this->drupalLogin($this->big_user);
+
+    $row_limit = 100;
+    $this->verifyRowLimit($row_limit);
+    $this->verifyCron($row_limit);
+    $this->verifyEvents();
+    $this->verifyReports();
+
+    // Login the regular user.
+    $user = $this->drupalLogin($this->any_user);
+    $this->verifyReports(403);
+  }
+
+  /**
+   * Verify setting of the dblog row limit.
+   *
+   * @param integer $count Log row limit.
+   */
+  private function verifyRowLimit($row_limit) {
+    // Change the dblog row limit.
+    $edit = array();
+    $edit['dblog_row_limit'] = $row_limit;
+    $this->drupalPost('admin/settings/logging/dblog', $edit, t('Save configuration'));
+    $this->assertResponse(200);
+    // Reload variable cache (since the global $conf array was changed in another "process" when the settings page above was posted).
+    $this->reloadVariables();
+    // Check row limit variable.
+    $current_limit = variable_get('dblog_row_limit', 1000);
+    $this->assertTrue($current_limit == $row_limit, t('[Cache] Row limit variable of @count equals row limit of @limit', array('@count' => $current_limit, '@limit' => $row_limit)));
+    // Verify dblog row limit equals specified row limit.
+    $current_limit = unserialize(db_result(db_query("SELECT value FROM {variable} WHERE name = '%s'", 'dblog_row_limit')));
+    $this->assertTrue($current_limit == $row_limit, t('[Variable table] Row limit variable of @count equals row limit of @limit', array('@count' => $current_limit, '@limit' => $row_limit)));
+  }
+
+  /**
+   * Verify cron applies the dblog row limit.
+   *
+   * @param integer $count Log row limit.
+   */
+  private function verifyCron($row_limit) {
+    // Generate additional log entries.
+    $this->generateLogEntries($row_limit + 10);
+    // Verify dblog row count exceeds row limit.
+    $count = db_result(db_query('SELECT COUNT(wid) FROM {watchdog}'));
+    $this->assertTrue($count > $row_limit, t('Dblog row count of @count exceeds row limit of @limit', array('@count' => $count, '@limit' => $row_limit)));
+
+    // Run cron job.
+    $this->drupalGet('admin/reports/status/run-cron');
+    $this->assertResponse(200);
+    $this->assertText(t('Cron ran successfully'), t('Cron ran successfully'));
+    // Verify dblog row count equals row limit plus one because cron adds a record after it runs.
+    $count = db_result(db_query('SELECT COUNT(wid) FROM {watchdog}'));
+    $this->assertTrue($count == $row_limit + 1, t('Dblog row count of @count equals row limit of @limit plus one', array('@count' => $count, '@limit' => $row_limit)));
+  }
+
+  /**
+   * Generate dblog entries.
+   *
+   * @param integer $count Log row limit.
+   */
+  private function generateLogEntries($count) {
+    global $base_root;
+
+    // Prepare the fields to be logged
+    $log = array(
+      'type'        => 'custom',
+      'message'     => 'Log entry added to test the dblog row limit.',
+      'variables'   => array(),
+      'severity'    => WATCHDOG_NOTICE,
+      'link'        => NULL,
+      'user'        => $this->big_user,
+      'request_uri' => $base_root . request_uri(),
+      'referer'     => referer_uri(),
+      'ip'          => ip_address(),
+      'timestamp'   => time(),
+      );
+    $message = 'Log entry added to test the dblog row limit.';
+    for ($i = 0; $i < $count; $i++) {
+      $log['message'] = $i. ' => ' .$message;
+      dblog_watchdog($log);
+    }
+  }
+
+  /**
+   * Verify the logged in user has the desired access to the various dblog nodes.
+   *
+   * @param integer $response HTTP response code.
+   */
+  private function verifyReports($response = 200) {
+    $quote = '&#039;';
+
+    // View dblog help node.
+    $this->drupalGet('admin/help/dblog');
+    $this->assertResponse($response);
+    if ($response == 200) {
+      $this->assertText(t('Database logging'), t('DBLog help was displayed'));
+    }
+
+    // View dblog report node.
+    $this->drupalGet('admin/reports/dblog');
+    $this->assertResponse($response);
+    if ($response == 200) {
+      $this->assertText(t('Recent log entries'), t('DBLog report was displayed'));
+    }
+
+    // View dblog page-not-found report node.
+    $this->drupalGet('admin/reports/page-not-found');
+    $this->assertResponse($response);
+    if ($response == 200) {
+      $this->assertText(t('Top '. $quote .'page not found'. $quote .' errors'), t('DBLog page-not-found report was displayed'));
+    }
+
+    // View dblog access-denied report node.
+    $this->drupalGet('admin/reports/access-denied');
+    $this->assertResponse($response);
+    if ($response == 200) {
+      $this->assertText(t('Top '. $quote .'access denied'. $quote .' errors'), t('DBLog access-denied report was displayed'));
+    }
+
+    // View dblog event node.
+    $this->drupalGet('admin/reports/event/1');
+    $this->assertResponse($response);
+    if ($response == 200) {
+      $this->assertText(t('Details'), t('DBLog event node was displayed'));
+    }
+  }
+
+  /**
+   * Verify events.
+   */
+  private function verifyEvents() {
+    // Invoke events.
+    $this->doUser();
+    $this->doNode('article');
+    $this->doNode('blog');
+    $this->doNode('page');
+    $this->doNode('poll');
+
+    // When a user is deleted, any content they created remains but the uid = 0. Their blog entry shows as "'s blog" on the home page.
+    // Records in the watchdog table related to that user have the uid set to zero.
+  }
+
+  /**
+   * Generate and verify user events.
+   *
+   */
+  private function doUser()
+  {
+    // Set user variables.
+    $name = $this->randomName();
+    $pass = user_password();
+    // Add user using form to generate add user event (which is not triggered by drupalCreateUser).
+    $edit = array();
+    $edit['name'] = $name;
+    $edit['mail'] = $name .'@example.com';
+    $edit['pass[pass1]'] = $pass;
+    $edit['pass[pass2]'] = $pass;
+    $edit['status'] = 1;
+    $this->drupalPost('admin/user/user/create', $edit, t('Create new account'));
+    $this->assertResponse(200);
+    // Retrieve user object.
+    $user = user_load(array('name' => $name)); //, 'pass' => $pass, 'status' => 1));
+    $this->assertTrue($user != null, t('User @name was loaded', array('@name' => $name)));
+    $user->pass_raw = $pass; // Needed by drupalLogin.
+    // Login user.
+    $this->drupalLogin($user);
+    // Logout user.
+    $this->drupalLogout();
+    // Fetch row ids in watchdog that relate to the user.
+    $result = db_query('SELECT wid FROM {watchdog} WHERE uid = %d', $user->uid);
+    while ($row = db_fetch_array($result)) {
+      $ids[] = $row['wid'];
+    }
+    $count_before = (isset($ids)) ? count($ids) : 0;
+    $this->assertTrue($count_before > 0, t('DBLog contains @count records for @name', array('@count' => $count_before, '@name' => $user->name)));
+    // Delete user.
+    user_delete(array(), $user->uid);
+    // Count rows that have uids for the user.
+    $count = db_result(db_query('SELECT COUNT(wid) FROM {watchdog} WHERE uid = %d', $user->uid));
+    $this->assertTrue($count == 0, t('DBLog contains @count records for @name', array('@count' => $count, '@name' => $user->name)));
+    // Fetch row ids in watchdog that previously related to the deleted user.
+    $result = db_query('SELECT wid FROM {watchdog} WHERE uid = 0 AND wid IN (%s)', implode(', ', $ids));
+    unset($ids);
+    while ($row = db_fetch_array($result)) {
+      $ids[] = $row['wid'];
+    }
+    $count_after = (isset($ids)) ? count($ids) : 0;
+    $this->assertTrue($count_after == $count_before, t('DBLog contains @count records for @name that now have uid = 0', array('@count' => $count_before, '@name' => $user->name)));
+    unset($ids);
+    // Fetch row ids in watchdog that relate to the user.
+    $result = db_query('SELECT wid FROM {watchdog} WHERE uid = %d', $user->uid);
+    while ($row = db_fetch_array($result)) {
+      $ids[] = $row['wid'];
+    }
+    $this->assertTrue(!isset($ids), t('DBLog contains no records for @name', array('@name' => $user->name)));
+
+    // Login the admin user.
+    $this->drupalLogin($this->big_user);
+    // View the dblog report.
+    $this->drupalGet('admin/reports/dblog');
+    $this->assertResponse(200);
+
+    // Verify events were recorded.
+    // Add user.
+    // Default display includes name and email address; if too long then email is replaced by three periods.
+    // $this->assertRaw(t('New user: %name (%mail)', array('%name' => $edit['name'], '%mail' => $edit['mail'])), t('DBLog event was recorded: [add user]'));
+    $this->assertRaw(t('New user: %name', array('%name' => $name)), t('DBLog event was recorded: [add user]'));
+    // Login user.
+    $this->assertRaw(t('Session opened for %name', array('%name' => $name)), t('DBLog event was recorded: [login user]'));
+    // Logout user.
+    $this->assertRaw(t('Session closed for %name', array('%name' => $name)), t('DBLog event was recorded: [logout user]'));
+    // Delete user.
+    $this->assertRaw(t('Deleted user: %name', array('%name' => $name)), t('DBLog event was recorded: [delete user]'));
+  }
+
+  /**
+   * Generate and verify node events.
+   *
+   * @param string $type Content type.
+   */
+  private function doNode($type) {
+    // Create user.
+    $perm = array('create '. $type .' content', 'edit own '. $type .' content', 'delete own '. $type .' content');
+    $user = $this->drupalCreateUser($perm);
+    // Login user.
+    $this->drupalLogin($user);
+
+    // Create node using form to generate add content event (which is not triggered by drupalCreateNode).
+    $edit = $this->getContent($type);
+    $title = $edit['title'];
+    $this->drupalPost('node/add/'. $type, $edit, t('Save'));
+    $this->assertResponse(200);
+    // Retrieve node object.
+    $node = node_load(array('title' => $title));
+    $this->assertTrue($node != null, t('Node @title was loaded', array('@title' => $title)));
+    // Edit node.
+    $edit = $this->getContentUpdate($type);
+    $this->drupalPost('node/'. $node->nid .'/edit', $edit, t('Save'));
+    $this->assertResponse(200);
+    // Delete node.
+    $this->drupalPost('node/'. $node->nid .'/delete', array(), t('Delete'));
+    $this->assertResponse(200);
+    // View node (to generate page not found event).
+    $this->drupalGet('node/'. $node->nid);
+    $this->assertResponse(404);
+    // View the dblog report (to generate access denied event).
+    $this->drupalGet('admin/reports/dblog');
+    $this->assertResponse(403);
+
+    // Login the admin user.
+    $this->drupalLogin($this->big_user);
+    // View the dblog report.
+    $this->drupalGet('admin/reports/dblog');
+    $this->assertResponse(200);
+
+    // Verify events were recorded.
+    // Content added.
+    $this->assertRaw(t('@type: added %title', array('@type' => $type, '%title' => $title)), t('DBLog event was recorded: [content added]'));
+    // Content updated.
+    $this->assertRaw(t('@type: updated %title', array('@type' => $type, '%title' => $title)), t('DBLog event was recorded: [content updated]'));
+    // Content deleted.
+    $this->assertRaw(t('@type: deleted %title', array('@type' => $type, '%title' => $title)), t('DBLog event was recorded: [content deleted]'));
+
+    // View dblog access-denied report node.
+    $this->drupalGet('admin/reports/access-denied');
+    $this->assertResponse(200);
+    // Access denied.
+    $this->assertText(t('admin/reports/dblog'), t('DBLog event was recorded: [access denied]'));
+
+    // View dblog page-not-found report node.
+    $this->drupalGet('admin/reports/page-not-found');
+    $this->assertResponse(200);
+    // Page not found.
+    $this->assertText(t('node/@nid', array('@nid' => $node->nid)), t('DBLog event was recorded: [page not found]'));
+  }
+
+  /**
+   * Create content based on content type.
+   *
+   * @param string $type Content type.
+   * @return array Content.
+   */
+  private function getContent($type) {
+    switch ($type) {
+      case 'poll':
+        $content = array(
+          'title'     => $this->randomName(8),
+          'choice[0][chtext]'  => $this->randomName(32),
+          'choice[1][chtext]'  => $this->randomName(32),
+        );
+      break;
+
+      default:
+        $content = array(
+          'title'     => $this->randomName(8),
+          'body'      => $this->randomName(32),
+        );
+      break;
+    }
+    return $content;
+  }
+
+  /**
+   * Create content update based on content type.
+   *
+   * @param string $type Content type.
+   * @return array Content.
+   */
+  private function getContentUpdate($type) {
+    switch ($type) {
+      case 'poll':
+        $content = array(
+          'choice[0][chtext]'  => $this->randomName(32),
+          'choice[1][chtext]'  => $this->randomName(32),
+        );
+      break;
+
+      default:
+        $content = array(
+          'body'      => $this->randomName(32),
+        );
+      break;
+    }
+    return $content;
+  }
+
+  /**
+   * Reload variables table.
+   */
+  private function reloadVariables() {
+    global $conf;
+
+    cache_clear_all('variables', 'cache');
+    $conf = variable_init();
+    $this->assertTrue($conf, t('Variables reloaded'));
+  }
+}

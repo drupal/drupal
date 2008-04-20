@@ -1,0 +1,111 @@
+<?php
+// $Id: block.test,v 1.1 2008/04/20 18:23:22 dries Exp $
+
+class BlockTestCase extends DrupalWebTestCase {
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('Block functionality'),
+      'description' => t('Add, edit and delete custom block. Configure and move a module-defined block.'),
+      'group' => t('Block'),
+    );
+  }
+
+  /**
+   * Implementation of setUp().
+   */
+  function setUp() {
+    parent::setUp();
+
+    // Create and login user
+    $admin_user = $this->drupalCreateUser(array('administer blocks'));
+    $this->drupalLogin($admin_user);
+  }
+
+  /**
+   * Test creating custom block (i.e. box), moving it to a specific region and then deleting it.
+   */
+  function testBox() {
+    // Add a new box by filling out the input form on the admin/build/block/add page.
+    $box = array();
+    $box['info'] = $this->randomName(8);
+    $box['title'] = $this->randomName(8);
+    $box['body'] = $this->randomName(32);
+    $this->drupalPost('admin/build/block/add', $box, t('Save block'));
+
+    // Confirm that the box has been created, and then query the created bid.
+    $this->assertText(t('The block has been created.'), t('Box successfully created.'));
+    $bid = db_result(db_query("SELECT bid FROM {boxes} WHERE info = '%s'", array($box['info'])));
+
+    // Check to see if the box was created by checking that it's in the database..
+    $this->assertNotNull($bid, t('Box found in database'));
+
+    // Set the created box to a specific region.
+    // TODO: Implement full region checking.
+    $edit = array();
+    $edit['block_'. $bid .'[region]'] = 'left';
+    $this->drupalPost('admin/build/block', $edit, t('Save blocks'));
+
+    // Confirm that the box was moved to the proper region.
+    $this->assertText(t('The block settings have been updated.'), t('Box successfully moved to left region.'));
+
+    // Confirm that the box is being displayed.
+    $this->assertText(t($box['title']), t('Box successfully being displayed on the page.'));
+
+    // Delete the created box & verify that it's been deleted and no longer appearing on the page.
+    $this->drupalPost('admin/build/block/delete/'. $bid, array(), t('Delete'));
+    $this->assertRaw(t('The block %title has been removed.', array('%title' => $box['info'])), t('Box successfully deleted.'));
+    $this->assertNoText(t($box['title']), t('Box no longer appears on page.'));
+  }
+
+  /**
+   * Test configuring and moving a module-define block to specific regions.
+   */
+  function testBlock() {
+    // Select the Navigation block to be configured and moved.
+    $block = array();
+    $block['module'] = 'user';
+    $block['delta'] = 'navigation';
+    $block['title'] = $this->randomName(8);
+
+    // Set block title to confirm that interface works and override any custom titles.
+    $this->drupalPost('admin/build/block/configure/'. $block['module'] .'/'. $block['delta'], array('title' => $block['title']), t('Save block'));
+    $this->assertText(t('The block configuration has been saved.'), t('Block title set.'));
+    $bid = db_result(db_query("SELECT bid FROM {blocks} WHERE module = '%s' AND delta = %d", array($block['module'], $block['delta'])));
+
+    // Check to see if the block was created by checking that it's in the database.
+    $this->assertNotNull($bid, t('Block found in database'));
+
+    // Set the created block to a specific region.
+    $edit = array();
+    $edit[$block['module'] .'_'. $block['delta'] .'[region]'] = 'left';
+    $this->drupalPost('admin/build/block', $edit, t('Save blocks'));
+
+    // Confirm that the block was moved to the proper region.
+    // TODO: Implement full region checking.
+    $this->assertText(t('The block settings have been updated.'), t('Block successfully moved to left region.'));
+
+    // Confirm that the block is being displayed.
+    $this->assertText(t($block['title']), t('Block successfully being displayed on the page.'));
+
+    // Set the block to the disabled region.
+    $edit = array();
+    $edit[$block['module'] .'_'. $block['delta'] .'[region]'] = '-1';
+    $this->drupalPost('admin/build/block', $edit, t('Save blocks'));
+
+    // Confirm that the block was moved to the proper region.
+    $this->assertText(t('The block settings have been updated.'), t('Block successfully move to disabled region.'));
+    $this->assertNoText(t($block['title']), t('Block no longer appears on page.'));
+
+    // For convenience of developers, put the navigation block back.
+    $edit = array();
+    $edit[$block['module'] .'_'. $block['delta'] .'[region]'] = 'left';
+    $this->drupalPost('admin/build/block', $edit, t('Save blocks'));
+    $this->assertText(t('The block settings have been updated.'), t('Block successfully move to disabled region.'));
+
+    $this->drupalPost('admin/build/block/configure/'. $block['module'] .'/'. $block['delta'], array('title' => 'Navigation'), t('Save block'));
+    $this->assertText(t('The block configuration has been saved.'), t('Block title set.'));
+  }
+}

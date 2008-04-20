@@ -1,0 +1,435 @@
+<?php
+// $Id: menu.test,v 1.1 2008/04/20 18:23:27 dries Exp $
+
+class MenuTestCase extends DrupalWebTestCase {
+  protected $big_user;
+  protected $std_user;
+  protected $menu;
+  protected $items;
+
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('Menu item creation/deletion'),
+      'description' => t('Add a custom menu, add menu items to the custom menu and Navigation menu, check their data, and delete them using the menu module UI.'),
+      'group' => t('Menu')
+    );
+  }
+
+  /**
+   * Implementation of setUp().
+   */
+  function setUp() {
+    parent::setUp('menu');
+    // Create users.
+    $this->big_user = $this->drupalCreateUser(array('administer blocks', 'administer menu', 'create article content'));
+    $this->std_user = $this->drupalCreateUser(array());
+  }
+
+  /**
+   * Login users, add menus and menu items, and test menu functionality through the admin and user interfaces.
+   */
+  function testMenu() {
+    // Login the user.
+    $this->drupalLogin($this->big_user);
+    $this->items = array();
+
+    // Do standard menu tests.
+    $this->doStandardMenuTests();
+
+    // Do custom menu tests.
+    $this->doCustomMenuTests();
+
+    // Do standard user tests.
+    // Login the user.
+    $this->drupalLogin($this->std_user);
+    $this->verifyAccess(403);
+    foreach ($this->items as $item) {
+      $node = node_load(substr($item['link_path'], 5)); // Paths were set as 'node/$nid'.
+      $this->verifyMenuItem($item, $node);
+    }
+
+    // Login the user.
+    $this->drupalLogin($this->big_user);
+
+    // Delete menu items.
+    foreach ($this->items as $item) {
+      $this->deleteMenuItem($item);
+    }
+
+    // Delete custom menu.
+    $this->deleteCustomMenu($this->menu);
+
+    // Modify and reset a standard menu item.
+    $item = $this->getStandardMenuItem();
+    $old_title = $item['link_title'];
+    $this->modifyMenuItem($item);
+    $item = menu_link_load($item['mlid']);
+    $this->resetMenuItem($item, $old_title);
+  }
+
+  /**
+   * Test standard menu functionality using navigation menu.
+   *
+   */
+  function doStandardMenuTests() {
+    $this->doMenuTests();
+    $this->addInvalidMenuItem();
+  }
+
+  /**
+   * Test custom menu functionality using navigation menu.
+   *
+   */
+  function doCustomMenuTests() {
+    $this->menu = $this->addCustomMenu();
+    $this->doMenuTests($this->menu['menu_name']);
+    $this->addInvalidMenuItem($this->menu['menu_name']);
+  }
+
+  /**
+   * Add custom menu.
+   *
+   */
+  function addCustomMenu() {
+    // Add custom menu.
+    $this->drupalGet('admin/build/menu/add');
+    $menu_name = substr(md5($this->randomName(16)), 0, 20);
+    $title = $this->randomName(16);
+    $edit = array (
+      'menu_name' => $menu_name,
+      'description' => '',
+      'title' =>  $title,
+    );
+    $this->drupalPost('admin/build/menu/add', $edit, t('Save'));
+    // Unlike most other modules, there is no confirmation message displayed.
+//    $this->assertText(t('The menu settings have been updated.'), t('Menu link was added'));
+
+    $this->drupalGet('admin/build/menu');
+    $this->assertText($title, 'Menu created');
+
+    // Enable the custom menu block.
+    $menu_name = 'menu-'. $menu_name; // Drupal prepends the name with 'menu-'.
+    $edit = array();
+    $edit['menu_'. $menu_name .'[region]'] = 'left';
+    $this->drupalPost('admin/build/block', $edit, t('Save blocks'));
+    $this->assertResponse(200);
+    $this->assertText(t('The block settings have been updated.'), t('Custom menu block was enabled'));
+
+    return menu_load($menu_name);
+  }
+
+  /**
+   * Delete custom menu.
+   *
+   * @param string $menu_name Custom menu name.
+   */
+  function deleteCustomMenu($menu) {
+    $menu_name = $this->menu['menu_name'];
+    $title = $this->menu['title'];
+
+    // Delete custom menu.
+    $this->drupalPost("admin/build/menu-customize/$menu_name/delete", array(), t('Delete'));
+    $this->assertResponse(200);
+    $this->assertRaw(t('The custom menu %title has been deleted.', array('%title' => $title)), t('Custom menu was deleted'));
+    $this->assertFalse(menu_load($menu_name), 'Custom menu was deleted');
+  }
+
+  /**
+   * Test menu functionality using navigation menu.
+   *
+   */
+  function doMenuTests($menu_name = 'navigation') {
+    // Add nodes to use as links for menu items.
+    $node1 = $this->drupalCreateNode(array('type' => 'article', 'uid' => $this->big_user->uid));
+    $node2 = $this->drupalCreateNode(array('type' => 'article', 'uid' => $this->big_user->uid));
+
+    // Add menu items.
+    $item1 = $this->addMenuItem(0, 'node/'. $node1->nid, $menu_name);
+    $item2 = $this->addMenuItem($item1['mlid'], 'node/'. $node2->nid, $menu_name);
+
+    // Verify menu items.
+    $this->verifyMenuItem($item1, $node1);
+    $this->verifyMenuItem($item2, $node2, $item1, $node1);
+
+    // Modify menu items.
+    $this->modifyMenuItem($item1);
+    $this->modifyMenuItem($item2);
+
+    // Toggle menu items.
+    $this->toggleMenuItem($item1);
+    $this->toggleMenuItem($item2);
+
+    // Save menu items for later tests.
+    $this->items[] = $item1;
+    $this->items[] = $item2;
+  }
+
+  /**
+   * Add a menu item using the menu module UI.
+   *
+   * @param integer $plid Parent menu link id.
+   * @param string $link Link path.
+   * @param string $menu_name Menu name.
+   * @return object Menu item created.
+   */
+  function addMenuItem($plid = 0, $link = '<front>', $menu_name = 'navigation') {
+    // View add menu item page.
+    $this->drupalGet("admin/build/menu-customize/$menu_name/add");
+    $this->assertResponse(200);
+
+    $title = '!link_'. $this->randomName(16);
+    $edit = array (
+      'menu[link_path]' => $link,
+      'menu[link_title]' => $title,
+      'menu[description]' => '',
+      'menu[enabled]' => TRUE, // Use this to disable the menu and test.
+      'menu[expanded]' => TRUE, // Setting this to true should test whether it works when we do the std_user tests.
+      'menu[parent]' =>  $menu_name .':'. $plid,
+      'menu[weight]' => '0',
+    );
+
+    // Add menu item.
+    $this->drupalPost("admin/build/menu-customize/$menu_name/add", $edit, t('Save'));
+    $this->assertResponse(200);
+    // Unlike most other modules, there is no confirmation message displayed.
+//    $this->assertText(t('The menu item %title has been added.', array('%title' => $title)), t('Menu item was added'));
+    $this->assertText($title, 'Menu item was added');
+
+    // Retrieve menu item.
+    $item = db_fetch_array(db_query("SELECT * FROM {menu_links} WHERE link_title = '%s'", $title));
+
+    // Check the structure in the DB of the two menu items.
+    // In general, if $n = $item['depth'] then $item['p'. $n] == $item['mlid'] and $item['p'. ($n - 1)] == $item['plid'] (unless depth == 0).
+    // All $item['p'. $n] for $n > depth must be 0.
+    // We know link1 is at the top level, so $item1['deptj'] == 1 and $item1['plid'] == 0.
+    // We know that the parent of link2 is link1, so $item2['plid'] == $item1['mlid'].
+    // Both menu items were created in the navigation menu.
+    $this->assertTrue($item['menu_name'] == $menu_name && $item['plid'] == $plid && $item['link_path'] == $link && $item['link_title'] == $title, 'Menu item has correct data');
+    if ($plid == 0) {
+      $this->assertTrue($item['depth'] == 1 && !$item['has_children'] && $item['p1'] == $item['mlid'] && $item['p2'] == 0, 'Menu item has correct data');
+    }
+    else {
+      $this->assertTrue($item['depth'] == 2 && !$item['has_children'] && $item['p1'] == $plid && $item['p2'] == $item['mlid'], 'Menu item has correct data');
+    }
+
+    return $item;
+  }
+
+  /**
+   * Attempt to add menu item with invalid path or no access permission.
+   *
+   * @param string $menu_name Menu name.
+   */
+  function addInvalidMenuItem($menu_name = 'navigation') {
+    foreach (array('-&-', 'admin/user/permissions') as $link_path) {
+      $edit = array (
+        'menu[link_path]' => $link_path,
+        'menu[link_title]' => 'title',
+      );
+      $this->drupalPost("admin/build/menu-customize/$menu_name/add", $edit, t('Save'));
+      $this->assertRaw(t("The path '@path' is either invalid or you do not have access to it.", array('@path' => $link_path)), 'Menu item was not created');
+    }
+  }
+
+  /**
+   * Verify a menu item using the menu module UI.
+   *
+   * @param object $item Menu item.
+   * @param object $item_node Menu item content node.
+   * @param object $parent Parent menu item.
+   * @param object $parent_node Parent menu item content node.
+   */
+  function verifyMenuItem($item, $item_node, $parent = NULL, $parent_node = NULL) {
+    // View home page.
+    $this->drupalGet('');
+    $this->assertResponse(200);
+
+    // Verify parent menu item.
+    if (isset($parent)) {
+      // Verify menu item.
+      $title = $parent['link_title'];
+      $this->assertText($title, 'Parent menu item was displayed');
+
+      // Verify menu item link.
+      $this->clickLink($title);
+      $title = $parent_node->title;
+      $this->assertTitle(t("@title | Drupal", array('@title' => $title)), t('Parent menu item link target was correct'));
+    }
+
+    // Verify menu item.
+    $title = $item['link_title'];
+    $this->assertText($title, 'Menu item was displayed');
+
+    // Verify menu item link.
+    $this->clickLink($title);
+    $title = $item_node->title;
+    $this->assertTitle(t("@title | Drupal", array('@title' => $title)), t('Menu item link target was correct'));
+  }
+
+  /**
+   * Modify a menu item using the menu module UI.
+   *
+   * @param object &$item Menu item passed by reference.
+   */
+  function modifyMenuItem(&$item) {
+    $item['link_title'] = $this->randomName(16);
+
+    $mlid = $item['mlid'];
+    $title = $item['link_title'];
+
+    // Edit menu item.
+    $edit = array();
+    $edit['menu[link_title]'] = $title;
+    $this->drupalPost("admin/build/menu/item/$mlid/edit", $edit, t('Save'));
+    $this->assertResponse(200);
+    // Unlike most other modules, there is no confirmation message displayed.
+//    $this->assertRaw(t('The menu item %title has been updated.', array('%title' => $title)), t('Menu item was edited'));
+
+    // Verify menu item.
+    $this->drupalGet('admin/build/menu-customize/'. $item['menu_name']);
+    $this->assertText($title, 'Menu item was edited');
+  }
+
+  /**
+   * Reset a standard menu item using the menu module UI.
+   *
+   * @param object $item Menu item.
+   * @param string $old_title Original title for menu item.
+   */
+  function resetMenuItem($item, $old_title) {
+    $mlid = $item['mlid'];
+    $title = $item['link_title'];
+
+    // Reset menu item.
+    $this->drupalPost("admin/build/menu/item/$mlid/reset", array(), t('Reset'));
+    $this->assertResponse(200);
+    $this->assertRaw(t('The menu item was reset to its default settings.'), t('Menu item was reset'));
+
+    // Verify menu item.
+    $this->drupalGet('');
+    $this->assertNoText($title, 'Menu item was reset');
+
+    // Verify menu item.
+    $this->drupalGet('');
+    $this->assertText($old_title, 'Menu item was reset');
+  }
+
+  /**
+   * Delete a menu item using the menu module UI.
+   *
+   * @param object $item Menu item.
+   */
+  function deleteMenuItem($item) {
+    $mlid = $item['mlid'];
+    $title = $item['link_title'];
+
+    // Delete menu item.
+    $this->drupalPost("admin/build/menu/item/$mlid/delete", array(), t('Confirm'));
+    $this->assertResponse(200);
+    $this->assertRaw(t('The menu item %title has been deleted.', array('%title' => $title)), t('Menu item was deleted'));
+
+    // Verify deletion.
+    $this->drupalGet('');
+    $this->assertNoText($title, 'Menu item was deleted');
+  }
+
+  /**
+   * Alternately disable and enable a menu item.
+   *
+   * @param object $item Menu item.
+   */
+  function toggleMenuItem($item) {
+    $mlid = $item['mlid'];
+    $title = $item['link_title'];
+
+    // Edit menu item.
+    $edit = array();
+    $edit['menu[enabled]'] = FALSE;
+    $this->drupalPost("admin/build/menu/item/$mlid/edit", $edit, t('Save'));
+    $this->assertResponse(200);
+    // Unlike most other modules, there is no confirmation message displayed.
+//    $this->assertRaw(t('The menu item %title has been updated.', array('%title' => $title)), t('Menu item was edited'));
+
+    // Verify menu item.
+    $this->drupalGet('');
+    $this->assertNoText($title, 'Menu item was not displayed');
+
+    // Edit menu item.
+    $edit['menu[enabled]'] = TRUE;
+    $this->drupalPost("admin/build/menu/item/$mlid/edit", $edit, t('Save'));
+    $this->assertResponse(200);
+
+    // Verify menu item.
+    $this->drupalGet('');
+    $this->assertText($title, 'Menu item was displayed');
+  }
+
+  /**
+   * Get standard menu item.
+   *
+   */
+  private function getStandardMenuItem()
+  {
+    // Retrieve menu link id (presumably the Log out menu item, but not necessary).
+    $mlid = db_result(db_query("SELECT MIN(mlid) FROM {menu_links} WHERE module = 'system' AND hidden = 0 AND has_children = 0"));
+    $this->assertTrue($mlid > 0, 'Standard menu link id was found');
+    // Load menu item.
+    // Use api function so that link is translated for rendering.
+    $item = menu_link_load($mlid);
+    $this->assertTrue((bool)$item, 'Standard menu item was loaded');
+    return $item;
+  }
+
+  /**
+   * Verify the logged in user has the desired access to the various menu nodes.
+   *
+   * @param integer $response HTTP response code.
+   */
+  private function verifyAccess($response = 200) {
+    // View menu help node.
+    $this->drupalGet('admin/help/menu');
+    $this->assertResponse($response);
+    if ($response == 200) {
+      $this->assertText(t('Menu'), t('Menu help was displayed'));
+    }
+
+    // View menu build overview node.
+    $this->drupalGet('admin/build/menu');
+    $this->assertResponse($response);
+    if ($response == 200) {
+      $this->assertText(t('Menus'), t('Menu build overview node was displayed'));
+    }
+
+    // View navigation menu customization node.
+    $this->drupalGet('admin/build/menu-customize/navigation');
+        $this->assertResponse($response);
+    if ($response == 200) {
+      $this->assertText(t('Navigation'), t('Navigation menu node was displayed'));
+    }
+
+    // View menu edit node.
+    $item = $this->getStandardMenuItem();
+    $this->drupalGet('admin/build/menu/item/'. $item['mlid'] .'/edit');
+    $this->assertResponse($response);
+    if ($response == 200) {
+      $this->assertText(t('Edit menu item'), t('Menu edit node was displayed'));
+    }
+
+    // View menu settings node.
+    $this->drupalGet('admin/build/menu/settings');
+    $this->assertResponse($response);
+    if ($response == 200) {
+      $this->assertText(t('Menus'), t('Menu settings node was displayed'));
+    }
+
+    // View add menu node.
+    $this->drupalGet('admin/build/menu/add');
+    $this->assertResponse($response);
+    if ($response == 200) {
+      $this->assertText(t('Menus'), t('Add menu node was displayed'));
+    }
+  }
+}

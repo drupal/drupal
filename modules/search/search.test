@@ -1,0 +1,162 @@
+<?php
+// $Id: search.test,v 1.1 2008/04/20 18:23:29 dries Exp $
+
+define('SEARCH_TYPE', '_test_');
+
+class SearchMatchTestCase extends DrupalWebTestCase {
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('Search engine queries'),
+      'description' => t('Indexes content and queries it.'),
+      'group' => t('Search'),
+    );
+  }
+
+  /**
+   * Implementation setUp().
+   */
+  function setUp() {
+    parent::setUp('search');
+  }
+
+  /**
+   * Test search indexing.
+   */
+  function testMatching() {
+    $this->_setup();
+    $this->_testQueries();
+  }
+
+  /**
+   * Set up a small index of items to test against.
+   */
+  function _setup() {
+    variable_set('minimum_word_size', 3);
+
+    for ($i = 1; $i <= 7; ++$i) {
+      search_index($i, SEARCH_TYPE, $this->getText($i));
+    }
+    search_update_totals();
+  }
+
+  /**
+   * Helper method for generating snippets of content.
+   *
+   * Generated items to test against:
+   *   1  ipsum
+   *   2  dolore sit
+   *   3  sit am ut
+   *   4  am ut enim am
+   *   5  ut enim am minim veniam
+   *   6  enim am minim veniam es cillum
+   *   7  am minim veniam es cillum dolore eu
+   */
+  function getText($n) {
+    $words = explode(' ', "Ipsum dolore sit am. Ut enim am minim veniam. Es cillum dolore eu.");
+    return implode(' ', array_slice($words, $n - 1, $n));
+  }
+
+  /**
+   * Run predefine queries looking for indexed terms.
+   */
+  function _testQueries() {
+    /*
+      Note: OR queries that include short words in OR groups are only accepted
+      if the ORed terms are ANDed with at least one long word in the rest of the query.
+
+      e.g. enim dolore OR ut = enim (dolore OR ut) = (enim dolor) OR (enim ut) -> good
+      e.g. dolore OR ut = (dolore) OR (ut) -> bad
+
+      This is a design limitation to avoid full table scans.
+    */
+    $queries = array(
+      // Simple AND queries.
+      'ipsum' => array(1),
+      'enim' => array(4, 5, 6),
+      'xxxxx' => array(),
+      'enim minim' => array(5, 6),
+      'enim xxxxx' => array(),
+      'dolore eu' => array(7),
+      'dolore xx' => array(),
+      'ut minim' => array(5),
+      'xx minim' => array(),
+      'enim veniam am minim ut' => array(5),
+      // Simple OR queries.
+      'dolore OR ipsum' => array(1, 2, 7),
+      'dolore OR xxxxx' => array(2, 7),
+      'dolore OR ipsum OR enim' => array(1, 2, 4, 5, 6, 7),
+      'ipsum OR dolore sit OR cillum' => array(2, 7),
+      'minim dolore OR ipsum' => array(7),
+      'dolore OR ipsum veniam' => array(7),
+      'minim dolore OR ipsum OR enim' => array(5, 6, 7),
+      'dolore xx OR yy' => array(),
+      'xxxxx dolore OR ipsum' => array(),
+      // Negative queries.
+      'dolore -sit' => array(7),
+      'dolore -eu' => array(2),
+      'dolore -xxxxx' => array(2, 7),
+      'dolore -xx' => array(2, 7),
+      // Phrase queries.
+      '"dolore sit"' => array(2),
+      '"sit dolore"' => array(),
+      '"am minim veniam es"' => array(6, 7),
+      '"minim am veniam es"' => array(),
+      // Mixed queries.
+      '"am minim veniam es" OR dolore' => array(2, 6, 7),
+      '"minim am veniam es" OR "dolore sit"' => array(2),
+      '"minim am veniam es" OR "sit dolore"' => array(),
+      '"am minim veniam es" -eu' => array(6),
+      '"am minim veniam" -"cillum dolore"' => array(5, 6),
+      '"am minim veniam" -"dolore cillum"' => array(5, 6, 7),
+      'xxxxx "minim am veniam es" OR dolore' => array(),
+      'xx "minim am veniam es" OR dolore' => array()
+    );
+    foreach ($queries as $query => $results) {
+      $set = do_search($query, SEARCH_TYPE);
+      $this->_testQueryMatching($query, $set, $results);
+      $this->_testQueryScores($query, $set, $results);
+    }
+  }
+
+  /**
+   * Test the matching abilities of the engine.
+   *
+   * Verify if a query produces the correct results.
+   */
+  function _testQueryMatching($query, $set, $results) {
+    // Get result IDs.
+    $found = array();
+    foreach ($set as $item) {
+      $found[] = $item->sid;
+    }
+
+    // Compare $results and $found.
+    sort($found);
+    sort($results);
+    $this->assertEqual($found, $results, "Query matching '$query'");
+  }
+
+  /**
+   * Test the scoring abilities of the engine.
+   *
+   * Verify if a query produces normalized, monotonous scores.
+   */
+  function _testQueryScores($query, $set, $results) {
+    // Get result scores.
+    $scores = array();
+    foreach ($set as $item) {
+      $scores[] = $item->score;
+    }
+
+    // Check order.
+    $sorted = $scores;
+    sort($sorted);
+    $this->assertEqual($scores, array_reverse($sorted), "Query order '$query'");
+
+    // Check range.
+    $this->assertEqual(!count($scores) || (min($scores) > 0.0 && max($scores) <= 1.0001), TRUE, "Query scoring '$query'");
+  }
+}

@@ -1,0 +1,154 @@
+<?php
+// $Id: book.test,v 1.1 2008/04/20 18:23:24 dries Exp $
+
+class BookTestCase extends DrupalWebTestCase {
+  protected $book;
+
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('Book functionality'),
+      'description' => t('Create a book, add pages, and test book interface.'),
+      'group' => t('Book'),
+    );
+  }
+
+  /**
+   * Implementation of setUp().
+   */
+  function setUp() {
+    parent::setUp('book');
+  }
+
+  /**
+   * Test book funcitonality through node interfaces.
+   */
+  function testBook() {
+    // Create users.
+    $book_author = $this->drupalCreateUser(array('create new books', 'create book content', 'add content to books'));
+    $web_user = $this->drupalCreateUser(array('access printer-friendly version'));
+
+    // Create new book.
+    $this->drupalLogin($book_author);
+
+    $this->book = $this->createBookNode('new');
+    $book = $this->book;
+
+    /*
+     * Add page hiearchy to book.
+     * Book
+     *  |- Node 0
+     *   |- Node 1
+     *   |- Node 2
+     *  |- Node 3
+     *  |- Node 4
+     */
+    $nodes = array();
+    $nodes[] = $this->createBookNode($book->nid); // Node 0.
+    $nodes[] = $this->createBookNode($book->nid, $nodes[0]->book['mlid']); // Node 1.
+    $nodes[] = $this->createBookNode($book->nid, $nodes[0]->book['mlid']); // Node 2.
+    $nodes[] = $this->createBookNode($book->nid); // Node 3.
+    $nodes[] = $this->createBookNode($book->nid); // Node 4.
+
+    $this->drupalLogout();
+
+    // Check to make sure that book pages display properly.
+    $this->drupalLogin($web_user);
+
+    $this->checkBookNode($book, array($nodes[0], $nodes[3], $nodes[4]), false, false, $nodes[0]);
+    $this->checkBookNode($nodes[0], array($nodes[1], $nodes[2]), $book, $book, $nodes[1]);
+    $this->checkBookNode($nodes[1], NULL, $nodes[0], $nodes[0], $nodes[2]);
+    $this->checkBookNode($nodes[2], NULL, $nodes[1], $nodes[0], $nodes[3]);
+    $this->checkBookNode($nodes[3], NULL, $nodes[2], $book, $nodes[4]);
+    $this->checkBookNode($nodes[4], NULL, $nodes[3], $book, false);
+  }
+
+  /**
+   * Checks the outline of sub-pages; previous, up, and next; and check printer friendly version.
+   *
+   * @param Node $node Node to check.
+   * @param array $nodes Nodes that should be in outline.
+   * @param Node $previous Previous link node.
+   * @param Node $up Up link node.
+   * @param Node $next Next link node.
+   */
+  function checkBookNode($node, $nodes, $previous = false, $up = false, $next = false) {
+    static $number = 0;
+    $this->drupalGet('node/' . $node->nid);
+
+    // Check outline structure.
+    if ($nodes !== NULL) {
+      $this->assertPattern($this->generateOutlinePattern($nodes), t('Node ' . $number . ' outline confirmed.'));
+    }
+    else {
+      $this->pass(t('Node ' . $number . ' doesn\'t have outline.'));
+    }
+
+    // Check previous, up, and next links.
+    if ($previous) {
+      $this->assertRaw(l('‹ ' . $previous->title, 'node/' . $previous->nid, array('attributes' => array('class' => 'page-previous', 'title' => t('Go to previous page')))), t('Prevoius page link found.'));
+    }
+    if ($up) {
+      $this->assertRaw(l('up', 'node/' . $up->nid, array('attributes' => array('class' => 'page-up', 'title' => t('Go to parent page')))), t('Up page link found.'));
+    }
+    if ($next) {
+      $this->assertRaw(l($next->title . ' ›', 'node/' . $next->nid, array('attributes' => array('class' => 'page-next', 'title' => t('Go to next page')))), t('Next page link found.'));
+    }
+
+    // Check printer friendly version.
+    $this->drupalGet('book/export/html/' . $node->nid);
+    $this->assertText($node->title, t('Printer friendly title found.'));
+    $node->body = str_replace('<!--break-->', '', $node->body);
+    $this->assertRaw(check_markup($node->body, $node->format), t('Printer friendly body found.'));
+
+    $number++;
+  }
+
+  /**
+   * Create a regular expression to check for the sub-nodes in the outline.
+   *
+   * @param array $nodes Nodes to check in outline.
+   */
+  function generateOutlinePattern($nodes) {
+    $outline = '';
+    foreach ($nodes as $node) {
+      $outline .= '(node\/' . $node->nid . ')(.*?)(' . $node->title . ')(.*?)';
+    }
+
+    return '/<div id="book-navigation-' . $this->book->nid . '"(.*?)<ul(.*?)' . $outline . '<\/ul>/s';
+  }
+
+  /**
+   * Create book node.
+   *
+   * @param integer $book_nid Book node id or set to 'new' to create new book.
+   * @param integer $parent Parent book reference id.
+   */
+  function createBookNode($book_nid, $parent = NULL) {
+    static $number = 0; // Used to ensure that when sorted nodes stay in same order.
+
+    $edit = array();
+    $edit['title'] = $number . ' - SimpleTest test node ' . $this->randomName(10);
+    $edit['body'] = 'SimpleTest test body ' . $this->randomName(32) . ' ' . $this->randomName(32);
+    $edit['book[bid]'] = $book_nid;
+
+    if ($parent !== NULL) {
+      $this->drupalPost('node/add/book', $edit, t('Change book (update list of parents)'));
+
+      $edit['book[plid]'] = $parent;
+      $this->drupalPost(NULL, $edit, t('Save'));
+    }
+    else {
+      $this->drupalPost('node/add/book', $edit, t('Save'));
+    }
+
+    // Check to make sure the book node was created.
+    $node = node_load(array('title' => $edit['title']));
+    $this->assertNotNull(($node === FALSE ? NULL : $node), t('Book node found in database.'));
+    $number++;
+
+    return $node;
+  }
+}

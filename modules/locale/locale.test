@@ -1,0 +1,116 @@
+<?php
+// $Id: locale.test,v 1.1 2008/04/20 18:23:26 dries Exp $
+
+class LocaleTestCase extends DrupalWebTestCase {
+  /**
+   * Implementation of getInfo() for information
+   */
+  function getInfo() {
+    return array(
+      'name' => t('String translate'),
+      'description' => 'Adds a new locale and translates its name',
+      'group' => 'Locale',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('locale');
+  }
+
+  function testlocaleModuleTest() {
+    global $base_url;
+
+    // User to add and remove language.
+    $admin_user = $this->drupalCreateUser(array('administer languages', 'access administration pages'));
+    // User to translate and delete string.
+    $translate_user = $this->drupalCreateUser(array('translate interface', 'access administration pages'));
+    // Code for the language.
+    $langcode = str_replace('simpletest_', 'si-', $this->randomName(6));
+    // The English name for the language. This will be translated.
+    $name = $this->randomName(16);
+    // The native name for the language.
+    $native = $this->randomName(16);
+    // The domain prefix. Not tested yet.
+    $prefix = strtolower(str_replace('si-', '', $langcode));
+    // This is the language indicator on the translation search screen for
+    // untranslated strings. Copied straight from locale.inc.
+    $language_indicator = "<em class=\"locale-untranslated\">$langcode</em> ";
+    // This will be the translation of $name.
+    $translation = $this->randomName(16);
+
+    // Add language.
+    $this->drupalLogin($admin_user);
+    $edit = array (
+      'langcode' => $langcode,
+      'name' => $name,
+      'native' => $native,
+      'prefix' => $prefix,
+      'direction' => '0',
+    );
+    $this->drupalPost('admin/settings/language/add', $edit, t('Add custom language'));
+    // Add string.
+    t($name, array(), $langcode);
+    // Reset locale cache.
+    locale(NULL, NULL, TRUE);
+    $this->assertText($langcode, 'Language code found');
+    $this->assertText($name, 'Name found');
+    $this->assertText($native, 'Native found');
+    // No t() here, we do not want to add this string to the database and it's
+    // surely not translated yet.
+    $this->assertText($native, 'Test language added');
+    $this->drupalGet('logout');
+
+    // Search for the name and translate it.
+    $this->drupalLogin($translate_user);
+    $search = array (
+      'string' => $name,
+      'language' => 'all',
+      'translation' => 'all',
+      'group' => 'all',
+    );
+    $this->drupalPost('admin/build/translate/search', $search, t('Search'));
+    // assertText seems to remove the input field where $name always could be
+    // found, so this is not a false assert. See how assertNoText succeeds
+    // later.
+    $this->assertText($name, 'Search found the name');
+    $this->assertRaw($language_indicator, 'Name is untranslated');
+    // It's presumed that this is the only result. Given the random name, it's
+    // reasonable.
+    $this->clickLink(t('edit'));
+    // We save the lid from the path.
+    $lid = preg_replace('/\D/', '', substr($this->getUrl(), strlen($base_url)));
+    // No t() here, it's surely not translated yet.
+    $this->assertText($name, 'name found on edit screen');
+    $edit = array (
+      "translations[$langcode]" => $translation,
+    );
+    $this->drupalPost(NULL, $edit, t('Save translations'));
+    $this->assertText(t('The string has been saved.'), 'The string has been saved.');
+    $this->assertTrue($name != $translation && t($name, array(), $langcode) == $translation, 't() works');
+    $this->drupalPost('admin/build/translate/search', $search, t('Search'));
+    // The indicator should not be here.
+    $this->assertNoRaw($language_indicator, 'String is translated');
+    $this->drupalGet('logout');
+
+    // Delete the language
+    $this->drupalLogin($admin_user);
+    $path = 'admin/settings/language/delete/'. $langcode;
+    // This a confirm form, we do not need any fields changed.
+    $this->drupalPost($path, array(), t('Delete'));
+    // We need raw here because %locale will add HTML.
+    $this->assertRaw(t('The language %locale has been removed.', array('%locale' => $name)), 'The test language has been removed.');
+    // Reload to remove $name.
+    $this->drupalGet($path);
+    $this->assertNoText($langcode, 'Language code not found');
+    $this->assertNoText($name, 'Name not found');
+    $this->assertNoText($native, 'Native not found');
+    $this->drupalGet('logout');
+
+    // Delete the name string.
+    $this->drupalLogin($translate_user);
+    $this->drupalGet('admin/build/translate/delete/'. $lid);
+    $this->assertText(t('The string has been removed.'), 'The string has been removed message.');
+    $this->drupalPost('admin/build/translate/search', $search, t('Search'));
+    $this->assertNoText($name, 'Search now can not find the name');
+  }
+}

@@ -1,0 +1,6 @@
+; $Id: simpletest.info,v 1.1 2008/04/20 18:23:29 dries Exp $
+name = "SimpleTest"
+description = "Provides a framework for unit and functional testing."
+package = Core - optional
+version = VERSION
+core = 7.x

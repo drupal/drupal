@@ -1,0 +1,92 @@
+<?php
+// $Id: poll.test,v 1.1 2008/04/20 18:23:28 dries Exp $
+
+class PollTestCase extends DrupalWebTestCase {
+
+  function pollCreate($standalone = TRUE) {
+    $this->assertTrue(TRUE, 'Poll create' . $standalone);
+    $web_user = $this->drupalCreateUser(array('create poll content', 'access content'));
+    $this->drupalLogin($web_user);
+    $title = $this->randomName();
+    $edit = array (
+      'title' => $title,
+      'choice[0][chtext]' => 'choice 1',
+      'choice[1][chtext]' => 'choice 2',
+    );
+    $this->drupalPost('node/add/poll', $edit, t('More choices'));
+    $edit = array(
+      'title' => $title,
+      'choice[0][chtext]' => 'choice 1',
+      'choice[1][chtext]' => 'choice 2',
+      'choice[2][chtext]' => 'choice 3',
+      'choice[3][chtext]' => 'choice 4',
+      'choice[4][chtext]' => 'choice 5',
+      'choice[5][chtext]' => 'choice 6',
+      'choice[6][chtext]' => 'choice 7',
+    );
+    if ($standalone) {
+      $this->drupalPost(NULL, $edit, t('Preview'));
+      for ($i = 0; $i <= 6; $i++) {
+        $bar = theme('poll_bar', $edit['choice['. $i .'][chtext]'], NULL, 0, FALSE, FALSE);
+        $this->assertTrue($bar, "bar $i is themed");
+        $this->assertRaw($bar, "bar $i found in preview");
+      }
+    }
+    $this->drupalPost(NULL, $edit, t('Save'));
+    $node = node_load(array('title' => $title));
+    $this->nid = $node->nid;
+    $this->assertRaw(t('@type %title has been created.', array('@type' => node_get_types('name', 'poll'), '%title' => $title)), 'Poll has been created.');
+    $this->assertTrue($this->nid, t('Poll has been found in the database'));
+  }
+
+}
+
+class PollCreateTestCase extends PollTestCase {
+
+  /**
+   * Implementation of getInfo() for information
+   */
+  function getInfo() {
+    return array('name' => t('Poll create'), 'description' => 'Adds "more choices", previews and creates a poll.', 'group' => t('Poll'));
+  }
+
+  function setUp() {
+    parent::setUp('poll');
+  }
+
+  function testPollCreate() {
+    $this->pollCreate(TRUE);
+  }
+}
+
+class PollVoteTestCase extends PollTestCase {
+  /**
+   * Implementation of getInfo() for information
+   */
+  function getInfo() {
+    return array('name' => t('Poll vote'), 'description' => 'Vote on a poll', 'group' => t('Poll'));
+  }
+
+  function setUp() {
+    parent::setUp('poll');
+  }
+
+  function tearDown() {
+    parent::tearDown();
+  }
+
+  function testPollVote() {
+    $this->pollCreate(FALSE);
+    $this->drupalGet('logout');
+    $web_user = $this->drupalCreateUser(array('cancel own vote', 'inspect all votes', 'vote on polls', 'access content'));
+    $this->drupalLogin($web_user);
+    $edit = array (
+      'choice' => '1',
+    );
+    $this->drupalPost('node/'. $this->nid, $edit, t('Vote'));
+    $this->assertText('Your vote was recorded.', 'Your vote was recorded.');
+    $this->drupalGet("node/$this->nid/votes");
+    $this->assertText(t('This table lists all the recorded votes for this poll. If anonymous users are allowed to vote, they will be identified by the IP address of the computer they used when they voted.'), 'Vote table text.');
+    $this->assertText('choice 2', 'vote recorded');
+  }
+}
