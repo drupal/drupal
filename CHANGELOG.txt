@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.263 2008/04/20 18:24:07 dries Exp $
+// $Id: CHANGELOG.txt,v 1.264 2008/04/22 09:18:47 dries Exp $
 
 Drupal 7.0, xxxx-xx-xx (development version)
 ----------------------
@@ -6,27 +6,26 @@ Drupal 7.0, xxxx-xx-xx (development version)
     * Protected cron.php -- cron will only run if the proper key is provided.
     * Changed to much stronger password hashes that are also compatible with the
       Portable PHP password hashing framework.
-    * Implemented a pluggable password hashing API (similar to how an alternate
-      cache mechanism can be used) to allow developers to readily substitute
-      an alternative hashing and authentication scheme.
+    * Implemented a pluggable password hashing API that supports alternative
+      hashing and authentication schemes.
 - Usability:
     * Implemented drag-and-drop positioning for input format listings.
-    * Provide descriptions for permissions on the administration page.
+    * Provided descriptions for user permissions.
 - Search:
-    * Made it possible to language-aware searches.
+    * Added support for language-aware searches.
 - Testing:
     * Added test framework and tests.
 - Removed ping module:
-    * This module has been removed from the core download. Contributed
-      alternatives are available.
-- Removed access rules:
-    * The access rules capability of user module has been stripped down to a
-      simple method for blocking IP addresses. E-mail and username restrictions
-      are now available in a contributed module. IP address range blocking is
-      no longer supported and should be done at the server level.
+    * Contributed modules with similar functionality are available.
+- Refactored the "access rules" component of user module:
+    * The user module now provides a simple interface for blocking single
+      IP addresses. Previous user module functionality for restricting certain
+      e-mail addresses and usernames are available as a contributed module.
+      Further, IP address range blocking is no longer supported and should be
+      implemented at the operating system level.
 - Removed throttle module:
-    * The throttle module has been removed. Alternative methods to improve
-      performance are available in core and contributed modules.
+    * Alternative methods for improving performance are available in other core and
+      contributed modules.
 
 Drupal 6.0, 2008-02-13
 ----------------------
