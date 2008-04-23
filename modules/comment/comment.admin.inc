@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.admin.inc,v 1.6 2008/04/14 17:48:36 dries Exp $
+// $Id: comment.admin.inc,v 1.7 2008/04/23 18:05:58 dries Exp $
 
 /**
  * @file
@@ -277,7 +277,7 @@ function comment_confirm_delete_submit($form, &$form_state) {
  */
 function _comment_delete_thread($comment) {
   if (!is_object($comment) || !is_numeric($comment->cid)) {
-    watchdog('content', 'Cannot delete non-existent comment.', WATCHDOG_WARNING);
+    watchdog('content', 'Cannot delete non-existent comment.', array(), WATCHDOG_WARNING);
     return;
   }
 
