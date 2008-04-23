@@ -43,6 +43,7 @@ function path_menu() {
   $items['admin/build/path/edit'] = array(
     'title' => 'Edit alias',
     'page callback' => 'path_admin_edit',
+    'access arguments' => array('administer url aliases'),
     'type' => MENU_CALLBACK,
     'file' => 'path.admin.inc',
   );
@@ -50,6 +51,7 @@ function path_menu() {
     'title' => 'Delete alias',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('path_admin_delete_confirm'),
+    'access arguments' => array('administer url aliases'),
     'type' => MENU_CALLBACK,
     'file' => 'path.admin.inc',
   );

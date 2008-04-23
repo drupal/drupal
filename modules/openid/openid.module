@@ -30,6 +30,8 @@ function openid_menu() {
     'title' => 'Delete OpenID',
     'page callback' => 'openid_user_delete',
     'page arguments' => array(1),
+    'access callback' => 'user_edit_access',
+    'access arguments' => array(1),
     'type' => MENU_CALLBACK,
     'file' => 'openid.pages.inc',
   );

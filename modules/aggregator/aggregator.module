@@ -201,6 +201,7 @@ function aggregator_menu() {
   $items['aggregator/sources/%aggregator_feed'] = array(
     'page callback' => 'aggregator_page_source',
     'page arguments' => array(2),
+    'access arguments' => array('access news feeds'),
     'type' => MENU_CALLBACK,
     'file' => 'aggregator.pages.inc',
   );

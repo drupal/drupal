@@ -198,6 +198,7 @@ function search_menu() {
     'description' => 'View most popular search phrases.',
     'page callback' => 'dblog_top',
     'page arguments' => array('search'),
+    'access arguments' => array('access site reports'),
     'file' => 'dblog.admin.inc',
     'file path' => drupal_get_path('module', 'dblog'),
   );
