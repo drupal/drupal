@@ -277,7 +277,7 @@ function comment_confirm_delete_submit($form, &$form_state) {
  */
 function _comment_delete_thread($comment) {
   if (!is_object($comment) || !is_numeric($comment->cid)) {
-    watchdog('content', 'Cannot delete non-existent comment.', WATCHDOG_WARNING);
+    watchdog('content', 'Cannot delete non-existent comment.', array(), WATCHDOG_WARNING);
     return;
   }
 
