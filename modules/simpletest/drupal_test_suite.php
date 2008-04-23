@@ -1,18 +1,19 @@
 <?php
-// $Id: drupal_test_suite.php,v 1.1 2008/04/20 18:34:43 dries Exp $
+// $Id: drupal_test_suite.php,v 1.2 2008/04/23 17:49:50 dries Exp $
 
 /**
- * Implementes getTestInstances to allow access to the test objects from outside
+ * Implements getTestInstances to allow access to the test objects from outside.
  */
 class DrupalTestSuite extends TestSuite {
-  var $_cleanupModules   = array();
+  var $_cleanupModules = array();
 
   function DrupalTestSuite($label) {
     $this->TestSuite($label);
   }
 
   /**
-   * @return array of instantiated tests that this GroupTests holds
+   * @return
+   *   An array of instantiated tests that this GroupTests holds.
    */
   function getTestInstances() {
     for ($i = 0, $count = count($this->_test_cases); $i < $count; $i++) {
@@ -27,25 +28,20 @@ class DrupalTestSuite extends TestSuite {
 
 class DrupalTests extends DrupalTestSuite {
   /**
-   * Constructor
-   * @param array   $class_list  list containing the classes of tests to be processed
-   *                             default: NULL - run all tests
+   * Constructor for the DrupalTests class.
+   *
+   * @param array $class_list
+   *   List containing the classes of tests to be processed,
+   *   defaults to process all tests.
    */
   function DrupalTests($class_list = NULL) {
     static $classes;
     $this->DrupalTestSuite('Drupal Unit Tests');
 
-    /* Tricky part to avoid double inclusion */
+    // Tricky part to avoid double inclusion.
     if (!$classes) {
 
-      $files = array();
-      foreach (array_keys(module_rebuild_cache()) as $module) {
-        $module_path = drupal_get_path('module', $module);
-        $test = $module_path . "/$module.test";
-        if (file_exists($test)) {
-          $files[] = $test;
-        }
-      }
+      $files = $this->getFiles();
 
       $existing_classes = get_declared_classes();
       foreach ($files as $file) {
@@ -62,10 +58,9 @@ class DrupalTests extends DrupalTestSuite {
     }
     $groups = array();
     foreach ($classes as $class) {
-      if (!is_subclass_of($class, 'DrupalWebTestCase') && !is_subclass_of($class, 'DrupalUnitTestCase')) {
-        continue;
+      if ($this->classIsTest($class)) {
+        $this->_addClassToGroups($groups, $class);
       }
-      $this->_addClassToGroups($groups, $class);
     }
     foreach ($groups as $group_name => $group) {
       $group_test = &new DrupalTestSuite($group_name);
@@ -77,9 +72,12 @@ class DrupalTests extends DrupalTestSuite {
   }
 
   /**
-   * Adds a class to a groups array specified by the getInfo of the group
-   * @param array  $groups Group of categorized tests
-   * @param string $class  Name of a class
+   * Adds a class to a groups array specified by the getInfo() of the group.
+   *
+   * @param array $groups
+   *   Group of categorized tests.
+   * @param string $class
+   *   Name of the class.
    */
   function _addClassToGroups(&$groups, $class) {
     $test = &new $class();
@@ -95,27 +93,55 @@ class DrupalTests extends DrupalTestSuite {
    * The Drupal version uses paintHeader instead of paintGroupStart
    * to avoid collapsing of the very top level.
    *
-   * @param SimpleReporter $reporter    Current test reporter.
+   * @param SimpleReporter $reporter
+   *   Current test reporter.
    * @access public
    */
   function run(&$reporter) {
-    cache_clear_all();
     @set_time_limit(0);
     ignore_user_abort(TRUE);
 
-    // Disable devel output, check simpletest settings page
+    $this->cleanupBeforeRun();
+    $result = parent::run($reporter);
+    return $result;
+  }
+
+  /**
+   * Gets the files which contains the tests.
+   *
+   * @return
+   *   A list of files that contains the tests.
+   */
+  function getFiles() {
+    $files = array();
+    foreach (array_keys(module_rebuild_cache()) as $module) {
+      $module_path = drupal_get_path('module', $module);
+      $test = $module_path . "/$module.test";
+      if (file_exists($test)) {
+        $files[] = $test;
+      }
+    }
+    return $files;
+  }
+
+  /**
+   * Determines whether the class is a test.
+   *
+   * @return
+   *   TRUE / FALSE depending on whether the class is a test.
+   */
+  function classIsTest($class) {
+    return is_subclass_of($class, 'DrupalWebTestCase');
+  }
+
+  /**
+   * Called before the tests are run.
+   */
+  function cleanupBeforeRun() {
+    cache_clear_all();
+    // Disable devel output, check simpletest settings page.
     if (!variable_get('simpletest_devel', FALSE)) {
       $GLOBALS['devel_shutdown'] = FALSE;
     }
-
-    $result = parent::run($reporter);
-
-    // Restores modules
-    foreach ($this->_cleanupModules as $name => $status) {
-      db_query("UPDATE {system} SET status = %d WHERE name = '%s' AND type = 'module'", $status, $name);
-    }
-    $this->_cleanupModules = array();
-
-    return $result;
   }
 }
