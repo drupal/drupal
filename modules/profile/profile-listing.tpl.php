@@ -1,5 +1,5 @@
 <?php
-// $Id: profile-listing.tpl.php,v 1.2 2007/08/07 08:39:35 goba Exp $
+// $Id: profile-listing.tpl.php,v 1.3 2008/04/23 18:25:08 dries Exp $
 
 /**
  * @file profile-listing.tpl.php
@@ -36,7 +36,7 @@
  * @see template_preprocess_profile_listing()
  */
 ?>
-<div class="profile">
+<div class="profile clear-block">
   <?php print $picture; ?>
 
   <div class="name">
