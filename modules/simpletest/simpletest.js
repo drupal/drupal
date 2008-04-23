@@ -1,4 +1,4 @@
-// $Id: simpletest.js,v 1.1 2008/04/20 18:23:29 dries Exp $
+// $Id: simpletest.js,v 1.2 2008/04/23 18:50:49 dries Exp $
 
 Drupal.behaviors.simpleTestMenuCollapse = function() {
   // Adds expand-collapse functionality.
@@ -29,7 +29,7 @@ Drupal.behaviors.simpleTestMenuCollapse = function() {
 }
 Drupal.behaviors.simpleTestSelectAll = function() {
   $('td.simpletest-select-all').each(function() {
-    var checkboxes = Drupal.settings.simpleTest['simpletest-test-group-'+ $(this).attr('id')].testNames,
+    var checkboxes = Drupal.settings.simpleTest['simpletest-test-group-'+ $(this).attr('id')].testNames, totalCheckboxes = 0,
       checkbox = $('<input type="checkbox" class="form-checkbox" id="'+ $(this).attr('id') +'-select-all" />').change(function() {
       var checked = !!($(this).attr('checked'));
       for (var i = 0; i < checkboxes.length; i++) {
@@ -39,7 +39,7 @@ Drupal.behaviors.simpleTestSelectAll = function() {
     }).data('simpletest-checked-tests', 0);
     var self = $(this);
     for (var i = 0; i < checkboxes.length; i++) {
-      $('#'+ checkboxes[i]).change(function() {
+      if ($('#'+ checkboxes[i]).change(function() {
         if (checkbox.attr('checked') == 'checked') {
           checkbox.attr('checked', '');
         }
@@ -51,7 +51,12 @@ Drupal.behaviors.simpleTestSelectAll = function() {
         else {
           checkbox.attr('checked', '');
         }
-      });
+      }).attr('checked') == 'checked') {
+        totalCheckboxes++;
+      }
+    }
+    if (totalCheckboxes == checkboxes.length) {
+      $(checkbox).attr('checked', 'checked');
     }
     $(this).append(checkbox);
   });
