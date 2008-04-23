@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.454 2008/04/14 17:48:37 dries Exp $
+// $Id: forum.module,v 1.455 2008/04/23 20:01:51 dries Exp $
 
 /**
  * @file
@@ -106,6 +106,7 @@ function forum_menu() {
     'title' => 'Add container',
     'page callback' => 'forum_form_main',
     'page arguments' => array('container'),
+    'access arguments' => array('administer forums'),
     'type' => MENU_LOCAL_TASK,
     'parent' => 'admin/content/forum',
     'file' => 'forum.admin.inc',
@@ -114,6 +115,7 @@ function forum_menu() {
     'title' => 'Add forum',
     'page callback' => 'forum_form_main',
     'page arguments' => array('forum'),
+    'access arguments' => array('administer forums'),
     'type' => MENU_LOCAL_TASK,
     'parent' => 'admin/content/forum',
     'file' => 'forum.admin.inc',
@@ -122,6 +124,7 @@ function forum_menu() {
     'title' => 'Settings',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('forum_admin_settings'),
+    'access arguments' => array('administer forums'),
     'weight' => 5,
     'type' => MENU_LOCAL_TASK,
     'parent' => 'admin/content/forum',
@@ -129,6 +132,7 @@ function forum_menu() {
   );
   $items['admin/content/forum/edit/%forum_term'] = array(
     'page callback' => 'forum_form_main',
+    'access arguments' => array('administer forums'),
     'type' => MENU_CALLBACK,
     'file' => 'forum.admin.inc',
   );
@@ -136,6 +140,7 @@ function forum_menu() {
     'title' => 'Edit container',
     'page callback' => 'forum_form_main',
     'page arguments' => array('container', 5),
+    'access arguments' => array('administer forums'),
     'type' => MENU_CALLBACK,
     'file' => 'forum.admin.inc',
   );
@@ -143,6 +148,7 @@ function forum_menu() {
     'title' => 'Edit forum',
     'page callback' => 'forum_form_main',
     'page arguments' => array('forum', 5),
+    'access arguments' => array('administer forums'),
     'type' => MENU_CALLBACK,
     'file' => 'forum.admin.inc',
   );

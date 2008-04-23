@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.598 2008/04/16 11:35:52 dries Exp $
+// $Id: system.module,v 1.599 2008/04/23 20:01:54 dries Exp $
 
 /**
  * @file
@@ -336,18 +336,21 @@ function system_menu() {
   $items['admin/compact'] = array(
     'title' => 'Compact mode',
     'page callback' => 'system_admin_compact_page',
+    'access arguments' => array('access administration pages'),
     'type' => MENU_CALLBACK,
     'file' => 'system.admin.inc',
   );
   $items['admin/by-task'] = array(
     'title' => 'By task',
     'page callback' => 'system_main_admin_page',
+    'access arguments' => array('access administration pages'),
     'file' => 'system.admin.inc',
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
   $items['admin/by-module'] = array(
     'title' => 'By module',
     'page callback' => 'system_admin_by_module',
+    'access arguments' => array('access administration pages'),
     'file' => 'system.admin.inc',
     'type' => MENU_LOCAL_TASK,
     'weight' => 2,
@@ -358,6 +361,7 @@ function system_menu() {
     'position' => 'left',
     'weight' => -10,
     'page callback' => 'system_admin_menu_block_page',
+    'access arguments' => array('access administration pages'),
     'file' => 'system.admin.inc',
   );
 
@@ -368,6 +372,7 @@ function system_menu() {
     'position' => 'right',
     'weight' => -5,
     'page callback' => 'system_settings_overview',
+    'access arguments' => array('access administration pages'),
     'file' => 'system.admin.inc',
   );
   $items['admin/build'] = array(
@@ -376,6 +381,7 @@ function system_menu() {
     'position' => 'right',
     'weight' => -10,
     'page callback' => 'system_admin_menu_block_page',
+    'access arguments' => array('access administration pages'),
     'file' => 'system.admin.inc',
   );
   $items['admin/settings/admin'] = array(
@@ -406,6 +412,7 @@ function system_menu() {
   $items['admin/build/themes/settings'] = array(
     'title' => 'Configure',
     'page arguments' => array('system_theme_settings'),
+    'access arguments' => array('administer site configuration'),
     'type' => MENU_LOCAL_TASK,
   );
   // Theme configuration subtabs
@@ -440,15 +447,18 @@ function system_menu() {
   );
   $items['admin/build/modules/list/confirm'] = array(
     'title' => 'List',
+    'access arguments' => array('administer site configuration'),
     'type' => MENU_CALLBACK,
   );
   $items['admin/build/modules/uninstall'] = array(
     'title' => 'Uninstall',
     'page arguments' => array('system_modules_uninstall'),
+    'access arguments' => array('administer site configuration'),
     'type' => MENU_LOCAL_TASK,
   );
   $items['admin/build/modules/uninstall/confirm'] = array(
     'title' => 'Uninstall',
+    'access arguments' => array('administer site configuration'),
     'type' => MENU_CALLBACK,
   );
 
@@ -470,6 +480,7 @@ function system_menu() {
     'title' => 'Configure an advanced action',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_actions_configure'),
+    'access arguments' => array('administer actions'),
     'type' => MENU_CALLBACK,
   );
   $items['admin/settings/actions/delete/%actions'] = array(
@@ -477,11 +488,13 @@ function system_menu() {
     'description' => 'Delete an action.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_actions_delete_form', 4),
+    'access arguments' => array('administer actions'),
     'type' => MENU_CALLBACK,
   );
   $items['admin/settings/actions/orphan'] = array(
     'title' => 'Remove orphans',
     'page callback' => 'system_actions_remove_orphans',
+    'access arguments' => array('administer actions'),
     'type' => MENU_CALLBACK,
   );
 
@@ -570,6 +583,7 @@ function system_menu() {
     'title' => 'Date and time lookup',
     'type' => MENU_CALLBACK,
     'page callback' => 'system_date_time_lookup',
+    'access arguments' => array('administer site configuration'),
     'file' => 'system.admin.inc',
   );
   $items['admin/settings/site-maintenance'] = array(
@@ -626,18 +640,21 @@ function system_menu() {
   $items['admin/reports/status/run-cron'] = array(
     'title' => 'Run cron',
     'page callback' => 'system_run_cron',
+    'access arguments' => array('administer site configuration'),
     'type' => MENU_CALLBACK,
     'file' => 'system.admin.inc',
   );
   $items['admin/reports/status/php'] = array(
     'title' => 'PHP',
     'page callback' => 'system_php',
+    'access arguments' => array('administer site configuration'),
     'type' => MENU_CALLBACK,
     'file' => 'system.admin.inc',
   );
   $items['admin/reports/status/sql'] = array(
     'title' => 'SQL',
     'page callback' => 'system_sql',
+    'access arguments' => array('administer site configuration'),
     'type' => MENU_CALLBACK,
     'file' => 'system.admin.inc',
   );

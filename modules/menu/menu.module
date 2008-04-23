@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.161 2008/04/14 17:48:37 dries Exp $
+// $Id: menu.module,v 1.162 2008/04/23 20:01:52 dries Exp $
 
 /**
  * @file
@@ -65,6 +65,7 @@ function menu_menu() {
     'title' => 'Add menu',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('menu_edit_menu', 'add'),
+    'access arguments' => array('administer menu'),
     'type' => MENU_LOCAL_TASK,
     'file' => 'menu.admin.inc',
   );
@@ -72,6 +73,7 @@ function menu_menu() {
     'title' => 'Settings',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('menu_configure'),
+    'access arguments' => array('administer menu'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 5,
     'file' => 'menu.admin.inc',
@@ -96,6 +98,7 @@ function menu_menu() {
     'title' => 'Add item',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('menu_edit_item', 'add', NULL, 3),
+    'access arguments' => array('administer menu'),
     'type' => MENU_LOCAL_TASK,
     'file' => 'menu.admin.inc',
   );
@@ -103,6 +106,7 @@ function menu_menu() {
     'title' => 'Edit menu',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('menu_edit_menu', 'edit', 3),
+    'access arguments' => array('administer menu'),
     'type' => MENU_LOCAL_TASK,
     'file' => 'menu.admin.inc',
   );
@@ -110,6 +114,7 @@ function menu_menu() {
     'title' => 'Delete menu',
     'page callback' => 'menu_delete_menu_page',
     'page arguments' => array(3),
+    'access arguments' => array('administer menu'),
     'type' => MENU_CALLBACK,
     'file' => 'menu.admin.inc',
   );
@@ -117,6 +122,7 @@ function menu_menu() {
     'title' => 'Edit menu item',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('menu_edit_item', 'edit', 4, NULL),
+    'access arguments' => array('administer menu'),
     'type' => MENU_CALLBACK,
     'file' => 'menu.admin.inc',
   );
@@ -124,6 +130,7 @@ function menu_menu() {
     'title' => 'Reset menu item',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('menu_reset_item_confirm', 4),
+    'access arguments' => array('administer menu'),
     'type' => MENU_CALLBACK,
     'file' => 'menu.admin.inc',
   );
@@ -131,6 +138,7 @@ function menu_menu() {
     'title' => 'Delete menu item',
     'page callback' => 'menu_item_delete_page',
     'page arguments' => array(4),
+    'access arguments' => array('administer menu'),
     'type' => MENU_CALLBACK,
     'file' => 'menu.admin.inc',
   );

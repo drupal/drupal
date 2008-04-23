@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.254 2008/04/14 17:48:41 dries Exp $
+// $Id: search.module,v 1.255 2008/04/23 20:01:53 dries Exp $
 
 /**
  * @file
@@ -198,6 +198,7 @@ function search_menu() {
     'description' => 'View most popular search phrases.',
     'page callback' => 'dblog_top',
     'page arguments' => array('search'),
+    'access arguments' => array('access site reports'),
     'file' => 'dblog.admin.inc',
     'file path' => drupal_get_path('module', 'dblog'),
   );

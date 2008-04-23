@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.module,v 1.155 2008/04/14 17:48:42 dries Exp $
+// $Id: tracker.module,v 1.156 2008/04/23 20:01:56 dries Exp $
 
 /**
  * @file
@@ -33,11 +33,11 @@ function tracker_menu() {
   $items['tracker/all'] = array(
     'title' => 'All recent posts',
     'type' => MENU_DEFAULT_LOCAL_TASK,
-    'access callback' => 'user_is_logged_in',
   );
-  $items['tracker/%user_current'] = array(
+  $items['tracker/%user_uid_optional'] = array(
     'title' => 'My recent posts',
-    'access callback' => 'user_is_logged_in',
+    'access callback' => '_tracker_myrecent_access',
+    'access arguments' => array(1),
     'page arguments' => array(1),
     'type' => MENU_LOCAL_TASK,
   );
@@ -46,6 +46,8 @@ function tracker_menu() {
     'title' => 'Track',
     'page callback' => 'tracker_page',
     'page arguments' => array(1, TRUE),
+    'access callback' => '_tracker_user_access',
+    'access arguments' => array(1),
     'type' => MENU_LOCAL_TASK,
     'file' => 'tracker.pages.inc',
   );
@@ -55,3 +57,19 @@ function tracker_menu() {
   );
   return $items;
 }
+
+/**
+ * Access callback for tracker/%user_uid_optional
+ */
+function _tracker_myrecent_access($account) {
+  // This path is only allowed for authenticated users looking at their own posts.
+  return $account->uid && ($GLOBALS['user']->uid == $account->uid) && user_access('access content');
+}
+
+/**
+ * Access callback for user/%user/track
+ */
+function _tracker_user_access($account) {
+  return user_view_access($account) && user_access('access content');
+}
+

@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.268 2008/04/14 17:48:33 dries Exp $
+// $Id: menu.inc,v 1.269 2008/04/23 20:01:47 dries Exp $
 
 /**
  * @file
@@ -2275,9 +2275,10 @@ function _menu_router_build($callbacks) {
         if (!isset($item['tab_root']) && !$parent['_tab']) {
           $item['tab_root'] = $parent_path;
         }
-        // If a callback is not found, we try to find the first parent that
-        // has a callback.
-        if (!isset($item['access callback']) && isset($parent['access callback'])) {
+        // If an access callback is not found for a default local task we use
+        // the callback from the parent, since we expect them to be identical.
+        // In all other cases, the access parameters must be specified.
+        if (($item['type'] == MENU_DEFAULT_LOCAL_TASK) && !isset($item['access callback']) && isset($parent['access callback'])) {
           $item['access callback'] = $parent['access callback'];
           if (!isset($item['access arguments']) && isset($parent['access arguments'])) {
             $item['access arguments'] = $parent['access arguments'];

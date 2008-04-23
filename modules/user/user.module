@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.903 2008/04/19 17:10:50 dries Exp $
+// $Id: user.module,v 1.904 2008/04/23 20:01:56 dries Exp $
 
 /**
  * @file
@@ -830,6 +830,9 @@ function user_view_access($account) {
     );
 }
 
+/**
+ * Access callback for user account editing.
+ */
 function user_edit_access($account) {
   return (($GLOBALS['user']->uid == $account->uid) || user_access('administer users')) && $account->uid > 0;
 }
@@ -919,6 +922,7 @@ function user_menu() {
   $items['admin/user/user/create'] = array(
     'title' => 'Add user',
     'page arguments' => array('create'),
+    'access arguments' => array('administer users'),
     'type' => MENU_LOCAL_TASK,
     'file' => 'user.admin.inc',
   );
@@ -951,6 +955,7 @@ function user_menu() {
   $items['admin/user/roles/edit'] = array(
     'title' => 'Edit role',
     'page arguments' => array('user_admin_role'),
+    'access arguments' => array('administer permissions'),
     'type' => MENU_CALLBACK,
     'file' => 'user.admin.inc',
   );
@@ -963,7 +968,7 @@ function user_menu() {
     'file' => 'user.pages.inc',
   );
 
-  $items['user/%user_current'] = array(
+  $items['user/%user_uid_optional'] = array(
     'title' => 'My account',
     'title callback' => 'user_page_title',
     'title arguments' => array(1),
@@ -1018,8 +1023,8 @@ function user_menu() {
           'title arguments' => array($category['title']),
           'page callback' => 'user_edit',
           'page arguments' => array(1, 3),
-          'access callback' => isset($category['access callback']) ? $category['access callback'] : TRUE,
-          'access arguments' => isset($category['access arguments']) ? $category['access arguments'] : array(),
+          'access callback' => isset($category['access callback']) ? $category['access callback'] : 'user_edit_access',
+          'access arguments' => isset($category['access arguments']) ? $category['access arguments'] : array(1),
           'type' => MENU_LOCAL_TASK,
           'weight' => $category['weight'],
           'load arguments' => array('%map', '%index'),
@@ -1036,8 +1041,8 @@ function user_init() {
   drupal_add_css(drupal_get_path('module', 'user') . '/user.css', 'module');
 }
 
-function user_current_load($arg) {
-  return user_load($arg ? $arg : $GLOBALS['user']->uid);
+function user_uid_optional_load($arg) {
+  return user_load(isset($arg) ? $arg : $GLOBALS['user']->uid);
 }
 
 /**
@@ -1082,7 +1087,7 @@ function user_category_load($uid, &$map, $index) {
 /**
  * Returns the user id of the currently logged in user.
  */
-function user_current_to_arg($arg) {
+function user_uid_optional_to_arg($arg) {
   // Give back the current user uid when called from eg. tracker, aka.
   // with an empty arg. Also use the current user uid when called from
   // the menu with a % for the current account link.

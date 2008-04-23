@@ -1,5 +1,5 @@
 <?php
-// $Id: test_case.php,v 1.1 2008/04/20 18:34:43 dries Exp $
+// $Id: test_case.php,v 1.2 2008/04/23 20:01:53 dries Exp $
 
 /**
  *    Basic test case. This is the smallest unit of a test
@@ -12,7 +12,7 @@ class SimpleTestCase {
   var $_reporter;
   var $_observers;
   var $_should_skip = false;
-  
+
   /**
    *    Sets up the test with no display.
    *    @param string $label    If no test name is given then
@@ -24,7 +24,7 @@ class SimpleTestCase {
       $this->_label = $label;
     }
   }
-  
+
   /**
    *    Accessor for the test name for subclasses.
    *    @return string           Name of the test.
@@ -33,7 +33,7 @@ class SimpleTestCase {
   function getLabel() {
     return $this->_label ? $this->_label : get_class($this);
   }
-  
+
   /**
    *    This is a placeholder for skipping tests. In this
    *    method you place skipIf() and skipUnless() calls to
@@ -41,12 +41,12 @@ class SimpleTestCase {
    *    @access public
    */
   function skip() {}
-  
+
   /**
    *    Will issue a message to the reporter and tell the test
    *    case to skip if the incoming flag is true.
    *    @param string $should_skip    Condition causing the tests to be skipped.
-   *    @param string $message    	Text of skip condition.
+   *    @param string $message      Text of skip condition.
    *    @access public
    */
   function skipIf($should_skip, $message = '%s') {
@@ -56,18 +56,18 @@ class SimpleTestCase {
       $this->_reporter->paintSkip($message . $this->getAssertionLine());
     }
   }
-  
+
   /**
    *    Will issue a message to the reporter and tell the test
    *    case to skip if the incoming flag is false.
    *    @param string $shouldnt_skip  Condition causing the tests to be run.
-   *    @param string $message    	Text of skip condition.
+   *    @param string $message      Text of skip condition.
    *    @access public
    */
   function skipUnless($shouldnt_skip, $message = false) {
     $this->skipIf(!$shouldnt_skip, $message);
   }
-  
+
   /**
    *    Used to invoke the single tests.
    *    @return SimpleInvoker        Individual test runner.
@@ -80,7 +80,7 @@ class SimpleTestCase {
     }
     return $invoker;
   }
-  
+
   /**
    *    Uses reflection to run every method within itself
    *    starting with the string "test" unless a method
@@ -117,7 +117,7 @@ class SimpleTestCase {
     unset($this->_reporter);
     return $reporter->getStatus();
   }
-  
+
   /**
    *    Gets a list of test names. Normally that will
    *    be all internal methods that start with the
@@ -135,7 +135,7 @@ class SimpleTestCase {
     }
     return $methods;
   }
-  
+
   /**
    *    Tests to see if the method is a test that should
    *    be run. Currently any method that starts with 'test'
@@ -150,7 +150,7 @@ class SimpleTestCase {
     }
     return false;
   }
-  
+
   /**
    *    Announces the start of the test.
    *    @param string $method    Test method just started.
@@ -160,7 +160,7 @@ class SimpleTestCase {
     $this->_reporter->paintMethodStart($method);
     $this->_observers = array();
   }
-  
+
   /**
    *    Sets up unit test wide variables at the start
    *    of each test method. To be overridden in
@@ -168,14 +168,14 @@ class SimpleTestCase {
    *    @access public
    */
   function setUp() {}
-  
+
   /**
    *    Clears the data set in the setUp() method call.
    *    To be overridden by the user in actual user test cases.
    *    @access public
    */
   function tearDown() {}
-  
+
   /**
    *    Announces the end of the test. Includes private clean up.
    *    @param string $method    Test method just finished.
@@ -187,7 +187,7 @@ class SimpleTestCase {
     }
     $this->_reporter->paintMethodEnd($method);
   }
-  
+
   /**
    *    Sets up an observer for the test end.
    *    @param object $observer    Must have atTestEnd()
@@ -197,7 +197,7 @@ class SimpleTestCase {
   function tell(&$observer) {
     $this->_observers[] = &$observer;
   }
-  
+
   /**
    *    @deprecated
    */
@@ -208,7 +208,7 @@ class SimpleTestCase {
     $this->_reporter->paintPass($message . $this->getAssertionLine(), $group);
     return TRUE;
   }
-  
+
   /**
    *    Sends a fail event with a message.
    *    @param string $message        Message to send.
@@ -221,7 +221,7 @@ class SimpleTestCase {
     $this->_reporter->paintFail($message . $this->getAssertionLine(), $group);
     return FALSE;
   }
-  
+
   /**
    *    Formats a PHP error and dispatches it to the
    *    reporter.
@@ -237,7 +237,7 @@ class SimpleTestCase {
     }
     $this->_reporter->paintError("Unexpected PHP error [$message] severity [$severity] in [$file line $line]");
   }
-  
+
   /**
    *    Formats an exception and dispatches it to the
    *    reporter.
@@ -247,7 +247,7 @@ class SimpleTestCase {
   function exception($exception) {
     $this->_reporter->paintException($exception);
   }
-  
+
   /**
    *    @deprecated
    */
@@ -257,7 +257,7 @@ class SimpleTestCase {
     }
     $this->_reporter->paintSignal($type, $payload);
   }
-  
+
   /**
    *    Runs an expectation directly, for extending the
    *    tests with new expectation classes.
@@ -277,12 +277,12 @@ class SimpleTestCase {
   }
 
   /**
-   *	  @deprecated
+   *    @deprecated
    */
   function assertExpectation(&$expectation, $compare, $message = '%s', $group = 'Other') {
     return $this->assert($expectation, $compare, $message, $group);
   }
-  
+
   /**
    *    Uses a stack trace to find the line of an assertion.
    *    @return string           Line number of first assert*
@@ -300,7 +300,7 @@ class SimpleTestCase {
   function sendMessage($message) {
     $this->_reporter->PaintMessage($message);
   }
-  
+
   /**
    *    Accessor for the number of subtests.
    *    @return integer           Number of test cases.
@@ -316,7 +316,7 @@ class SimpleTestCase {
  *  Helps to extract test cases automatically from a file.
  */
 class SimpleFileLoader {
-  
+
   /**
    *    Builds a test suite from a library of test cases.
    *    The new suite is composed into this one.
@@ -333,7 +333,7 @@ class SimpleFileLoader {
     $suite = &$this->createSuiteFromClasses($test_file, $classes);
     return $suite;
   }
-  
+
   /**
    *    Calculates the incoming test cases. Skips abstract
    *    and ignored classes.
@@ -355,7 +355,7 @@ class SimpleFileLoader {
     }
     return $classes;
   }
-  
+
   /**
    *    Builds a test suite from a class list.
    *    @param string $title       Title of new group.
@@ -384,13 +384,13 @@ class SimpleFileLoader {
  *    This is a composite test class for combining
  *    test cases and other RunnableTest classes into
  *    a group test.
- *    @package		SimpleTest
- *    @subpackage	UnitTester
+ *    @package    SimpleTest
+ *    @subpackage  UnitTester
  */
 class TestSuite {
   var $_label;
   var $_test_cases;
-  
+
   /**
    *    Sets the name of the test suite.
    *    @param string $label    Name sent at the start and end
@@ -401,7 +401,7 @@ class TestSuite {
     $this->_label = $label;
     $this->_test_cases = array();
   }
-  
+
   /**
    *    Accessor for the test name for subclasses. If the suite
    *    wraps a single test case the label defaults to the name of that test.
@@ -416,14 +416,14 @@ class TestSuite {
       return $this->_label;
     }
   }
-  
+
   /**
    *    @deprecated
    */
   function addTestCase(&$test_case) {
     $this->_test_cases[] = &$test_case;
   }
-  
+
   /**
    *    @deprecated
    */
@@ -435,7 +435,7 @@ class TestSuite {
       $this->_test_cases[] = $class;
     }
   }
-  
+
   /**
    *    Adds a test into the suite by instance or class. The class will
    *    be instantiated if it's a test suite.
@@ -455,14 +455,14 @@ class TestSuite {
       $this->_test_cases[] = $class;
     }
   }
-  
+
   /**
    *    @deprecated
    */
   function addTestFile($test_file) {
     $this->addFile($test_file);
   }
-  
+
   /**
    *    Builds a test suite from a library of test cases.
    *    The new suite is composed into this one.
@@ -474,7 +474,7 @@ class TestSuite {
     $extractor = new SimpleFileLoader();
     $this->add($extractor->load($test_file));
   }
-  
+
   /**
    *    Delegates to a visiting collector to add test
    *    files.
@@ -485,7 +485,7 @@ class TestSuite {
   function collect($path, &$collector) {
     $collector->collect($this, $path);
   }
-  
+
   /**
    *    Invokes run() on all of the held test cases, instantiating
    *    them if necessary.
@@ -508,7 +508,7 @@ class TestSuite {
     $reporter->paintGroupEnd($this->getLabel());
     return $reporter->getStatus();
   }
-  
+
   /**
    *    Number of contained test cases.
    *    @return integer     Total count of cases in the group.
@@ -526,7 +526,7 @@ class TestSuite {
     }
     return $count;
   }
-  
+
   /**
    *    Test to see if a class is derived from the
    *    SimpleTestCase class.
@@ -546,8 +546,8 @@ class TestSuite {
 }
 
 /**
- *    @package		SimpleTest
- *    @subpackage	UnitTester
+ *    @package    SimpleTest
+ *    @subpackage  UnitTester
  *    @deprecated
  */
 class GroupTest extends TestSuite {}
@@ -555,13 +555,13 @@ class GroupTest extends TestSuite {}
 /**
  *    This is a failing group test for when a test suite hasn't
  *    loaded properly.
- *    @package		SimpleTest
- *    @subpackage	UnitTester
+ *    @package    SimpleTest
+ *    @subpackage  UnitTester
  */
 class BadTestSuite {
   var $_label;
   var $_error;
-  
+
   /**
    *    Sets the name of the test suite and error message.
    *    @param string $label    Name sent at the start and end
@@ -572,7 +572,7 @@ class BadTestSuite {
     $this->_label = $label;
     $this->_error = $error;
   }
-  
+
   /**
    *    Accessor for the test name for subclasses.
    *    @return string           Name of the test.
@@ -581,7 +581,7 @@ class BadTestSuite {
   function getLabel() {
     return $this->_label;
   }
-  
+
   /**
    *    Sends a single error to the reporter.
    *    @param SimpleReporter $reporter    Current test reporter.
@@ -594,7 +594,7 @@ class BadTestSuite {
     $reporter->paintGroupEnd($this->getLabel());
     return $reporter->getStatus();
   }
-  
+
   /**
    *    Number of contained test cases. Always zero.
    *    @return integer     Total count of cases in the group.
@@ -606,8 +606,8 @@ class BadTestSuite {
 }
 
 /**
- *    @package		SimpleTest
- *    @subpackage	UnitTester
+ *    @package    SimpleTest
+ *    @subpackage  UnitTester
  *    @deprecated
  */
 class BadGroupTest extends BadTestSuite {}

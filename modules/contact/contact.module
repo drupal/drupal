@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.module,v 1.105 2008/04/14 17:48:36 dries Exp $
+// $Id: contact.module,v 1.106 2008/04/23 20:01:49 dries Exp $
 
 /**
  * @file
@@ -63,6 +63,7 @@ function contact_menu() {
     'title' => 'Add category',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('contact_admin_edit', 3),
+    'access arguments' => array('administer site-wide contact form'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 1,
     'file' => 'contact.admin.inc',
@@ -71,6 +72,7 @@ function contact_menu() {
     'title' => 'Edit contact category',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('contact_admin_edit', 3, 4),
+    'access arguments' => array('administer site-wide contact form'),
     'type' => MENU_CALLBACK,
     'file' => 'contact.admin.inc',
   );
@@ -78,6 +80,7 @@ function contact_menu() {
     'title' => 'Delete contact',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('contact_admin_delete', 4),
+    'access arguments' => array('administer site-wide contact form'),
     'type' => MENU_CALLBACK,
     'file' => 'contact.admin.inc',
   );
@@ -85,6 +88,7 @@ function contact_menu() {
     'title' => 'Settings',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('contact_admin_settings'),
+    'access arguments' => array('administer site-wide contact form'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 2,
     'file' => 'contact.admin.inc',

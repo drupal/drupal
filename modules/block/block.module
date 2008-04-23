@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.303 2008/04/16 11:35:51 dries Exp $
+// $Id: block.module,v 1.304 2008/04/23 20:01:48 dries Exp $
 
 /**
  * @file
@@ -130,6 +130,7 @@ function block_menu() {
   $items['admin/build/block/list/js'] = array(
     'title' => 'JavaScript List Form',
     'page callback' => 'block_admin_display_js',
+    'access arguments' => array('administer blocks'),
     'type' => MENU_CALLBACK,
     'file' => 'block.admin.inc',
   );
@@ -137,6 +138,7 @@ function block_menu() {
     'title' => 'Configure block',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('block_admin_configure'),
+    'access arguments' => array('administer blocks'),
     'type' => MENU_CALLBACK,
     'file' => 'block.admin.inc',
   );
@@ -144,6 +146,7 @@ function block_menu() {
     'title' => 'Delete block',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('block_box_delete'),
+    'access arguments' => array('administer blocks'),
     'type' => MENU_CALLBACK,
     'file' => 'block.admin.inc',
   );
@@ -151,6 +154,7 @@ function block_menu() {
     'title' => 'Add block',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('block_add_block_form'),
+    'access arguments' => array('administer blocks'),
     'type' => MENU_LOCAL_TASK,
     'file' => 'block.admin.inc',
   );

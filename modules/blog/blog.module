@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.301 2008/04/14 17:48:34 dries Exp $
+// $Id: blog.module,v 1.302 2008/04/23 20:01:48 dries Exp $
 
 /**
  * @file
@@ -140,19 +140,20 @@ function blog_menu() {
     'type' => MENU_SUGGESTED_ITEM,
     'file' => 'blog.pages.inc',
   );
-  $items['blog/%user_current'] = array(
+  $items['blog/%user_uid_optional'] = array(
     'title' => 'My blog',
     'page callback' => 'blog_page_user',
     'page arguments' => array(1),
-    'access callback' => 'user_access',
-    'access arguments' => array('create blog content', 1),
+    'access callback' => 'blog_page_user_access',
+    'access arguments' => array(1),
     'file' => 'blog.pages.inc',
   );
   $items['blog/%user/feed'] = array(
     'title' => 'Blogs',
     'page callback' => 'blog_feed_user',
     'page arguments' => array(1),
-    'access arguments' => array('access content'),
+    'access callback' => 'blog_page_user_access',
+    'access arguments' => array(1),
     'type' => MENU_CALLBACK,
     'file' => 'blog.pages.inc',
   );
@@ -165,6 +166,23 @@ function blog_menu() {
   );
 
   return $items;
+}
+
+/**
+ * Access callback for user blog pages.
+ */
+function blog_page_user_access($account) {
+  // The visitor must be able to access the site's content.
+  // For a blog to 'exist' the user must either be able to
+  // create new blog entries, or it must have existing posts.
+  return $account->uid && user_access('access content') && (user_access('create blog entries', $account) || _blog_post_exists($account));
+}
+
+/**
+ * Helper function to determine if a user has blog posts already.
+ */
+function _blog_post_exists($account) {
+  return (bool)db_result(db_query_range(db_rewrite_sql("SELECT 1 FROM {node} n WHERE n.type = 'blog' AND n.uid = %d AND n.status = 1"), $account->uid, 0, 1));
 }
 
 /**
