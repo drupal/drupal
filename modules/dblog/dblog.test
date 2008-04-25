@@ -169,16 +169,16 @@ class DBLogTestCase extends DrupalWebTestCase {
     $this->doNode('page');
     $this->doNode('poll');
 
-    // When a user is deleted, any content they created remains but the uid = 0. Their blog entry shows as "'s blog" on the home page.
-    // Records in the watchdog table related to that user have the uid set to zero.
+    // When a user is deleted, any content they created remains but the
+    // uid = 0. Their blog entry shows as "'s blog" on the home page. Records
+    // in the watchdog table related to that user have the uid set to zero.
   }
 
   /**
    * Generate and verify user events.
    *
    */
-  private function doUser()
-  {
+  private function doUser() {
     // Set user variables.
     $name = $this->randomName();
     $pass = user_password();

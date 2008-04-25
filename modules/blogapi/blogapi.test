@@ -21,7 +21,7 @@ class BlogAPITestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Create, edit, and delete post; upload file; and set/get categories.
+   * Create, edit, and delete post; upload file; set/get categories.
    */
   function testBlogAPI() {
     // Create admin user and taxononmy for later use.
