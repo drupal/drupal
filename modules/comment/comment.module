@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.629 2008/04/25 17:59:36 dries Exp $
+// $Id: comment.module,v 1.630 2008/04/25 18:34:05 dries Exp $
 
 /**
  * @file
@@ -582,9 +582,7 @@ function comment_form_alter(&$form, $form_state, $form_id) {
 function comment_nodeapi(&$node, $op, $arg = 0) {
   switch ($op) {
     case 'load':
-      if (variable_get('comment_' . $node->type, COMMENT_NODE_READ_WRITE) != COMMENT_NODE_DISABLED) {
-        return db_fetch_array(db_query("SELECT last_comment_timestamp, last_comment_name, comment_count FROM {node_comment_statistics} WHERE nid = %d", $node->nid));
-      }
+      return db_fetch_array(db_query("SELECT last_comment_timestamp, last_comment_name, comment_count FROM {node_comment_statistics} WHERE nid = %d", $node->nid));
       break;
 
     case 'prepare':
