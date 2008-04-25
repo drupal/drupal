@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.460 2008/04/14 17:48:35 dries Exp $
+// $Id: book.module,v 1.461 2008/04/25 17:51:30 dries Exp $
 
 /**
  * @file
@@ -658,13 +658,15 @@ function book_build_active_trail($book_link) {
 function book_nodeapi(&$node, $op, $teaser, $page) {
   switch ($op) {
     case 'load':
-      // Note - we cannot use book_link_load() because it will call node_load()
-      $info['book'] = db_fetch_array(db_query('SELECT * FROM {book} b INNER JOIN {menu_links} ml ON b.mlid = ml.mlid WHERE b.nid = %d', $node->nid));
-      if ($info['book']) {
-        $info['book']['href'] = $info['book']['link_path'];
-        $info['book']['title'] = $info['book']['link_title'];
-        $info['book']['options'] = unserialize($info['book']['options']);
-        return $info;
+      if (in_array($node->type, variable_get('book_allowed_types', array('book')))) {
+        // Note - we cannot use book_link_load() because it will call node_load()
+        $info['book'] = db_fetch_array(db_query('SELECT * FROM {book} b INNER JOIN {menu_links} ml ON b.mlid = ml.mlid WHERE b.nid = %d', $node->nid));
+        if ($info['book']) {
+          $info['book']['href'] = $info['book']['link_path'];
+          $info['book']['title'] = $info['book']['link_title'];
+          $info['book']['options'] = unserialize($info['book']['options']);
+          return $info;
+        }
       }
       break;
     case 'view':
