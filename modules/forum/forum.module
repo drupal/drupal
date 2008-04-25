@@ -313,11 +313,11 @@ function forum_node_info() {
 function forum_access($op, $node, $account) {
   switch ($op) {
     case 'create':
-      return user_access('create forum topics', $account);
+      return user_access('create forum topics', $account) ? TRUE : NULL;
     case 'update':
-      return user_access('edit any forum topic', $account) || (user_access('edit own forum topics', $account) && ($account->uid == $node->uid));
+      return user_access('edit any forum topic', $account) || (user_access('edit own forum topics', $account) && ($account->uid == $node->uid)) ? TRUE : NULL;
     case 'delete':
-      return user_access('delete any forum topic', $account) || (user_access('delete own forum topics', $account) && ($account->uid == $node->uid));
+      return user_access('delete any forum topic', $account) || (user_access('delete own forum topics', $account) && ($account->uid == $node->uid)) ? TRUE : NULL;
   }
 }
 

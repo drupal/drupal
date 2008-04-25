@@ -63,11 +63,11 @@ function poll_perm() {
 function poll_access($op, $node, $account) {
   switch ($op) {
     case 'create':
-      return user_access('create poll content', $account);
+      return user_access('create poll content', $account) ? TRUE : NULL;
     case 'update':
-      return user_access('edit any poll content', $account) || (user_access('edit own poll content', $account) && ($node->uid == $account->uid));
+      return user_access('edit any poll content', $account) || (user_access('edit own poll content', $account) && ($node->uid == $account->uid)) ? TRUE : NULL;
     case 'delete':
-      return user_access('delete any poll content', $account) || (user_access('delete own poll content', $account) && ($node->uid == $account->uid));
+      return user_access('delete any poll content', $account) || (user_access('delete own poll content', $account) && ($node->uid == $account->uid)) ? TRUE : NULL;
   }
 }
 
