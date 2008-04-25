@@ -157,9 +157,8 @@ tr.merge-up, tr.merge-up td, tr.merge-up th {
   text-align: right; /* LTR */
 }
 .more-help-link a {
-  padding: 1px 0 1px 20px;
-  background-image: url(../../misc/help.png);
-  background-repeat: no-repeat;
+  padding: 1px 0 1px 20px; /* LTR */
+  background: url(../../misc/help.png) 0 50% no-repeat; /* LTR */
 }
 .more-link {
   text-align: right; /* LTR */

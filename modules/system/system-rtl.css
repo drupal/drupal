@@ -22,6 +22,10 @@ thead th {
 .more-help-link {
   text-align: left;
 }
+.more-help-link a {
+  padding: 1px 20px 1px 0;
+  background-position: 100% 50%;
+}
 
 dl.multiselect dt, dl.multiselect dd {
   float: right;
