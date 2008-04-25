@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.test,v 1.1 2008/04/20 18:23:23 dries Exp $
+// $Id: blog.test,v 1.2 2008/04/25 18:26:00 dries Exp $
 
 class BlogTestCase extends DrupalWebTestCase {
   protected $big_user;
@@ -145,7 +145,7 @@ class BlogTestCase extends DrupalWebTestCase {
     $this->assertResponse(200);
     $this->assertText(t('View recent blog entries'), t('View recent blog entries link was displayed'));
 
-    // Confirm the recent blog entries link links to the user's blog page.
+    // Confirm the recent blog entries link goes to the user's blog page.
     $this->clickLink('View recent blog entries');
     $this->assertTitle(t("@name's blog | Drupal", array('@name' => $user->name)), t('View recent blog entries link target was correct'));
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.test,v 1.1 2008/04/20 18:23:24 dries Exp $
+// $Id: dblog.test,v 1.2 2008/04/25 18:26:01 dries Exp $
 
 class DBLogTestCase extends DrupalWebTestCase {
   protected $big_user;
@@ -169,16 +169,16 @@ class DBLogTestCase extends DrupalWebTestCase {
     $this->doNode('page');
     $this->doNode('poll');
 
-    // When a user is deleted, any content they created remains but the uid = 0. Their blog entry shows as "'s blog" on the home page.
-    // Records in the watchdog table related to that user have the uid set to zero.
+    // When a user is deleted, any content they created remains but the
+    // uid = 0. Their blog entry shows as "'s blog" on the home page. Records
+    // in the watchdog table related to that user have the uid set to zero.
   }
 
   /**
    * Generate and verify user events.
    *
    */
-  private function doUser()
-  {
+  private function doUser() {
     // Set user variables.
     $name = $this->randomName();
     $pass = user_password();

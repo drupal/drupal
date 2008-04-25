@@ -1,5 +1,5 @@
 <?php
-// $Id: book.test,v 1.1 2008/04/20 18:23:24 dries Exp $
+// $Id: book.test,v 1.2 2008/04/25 18:26:01 dries Exp $
 
 class BookTestCase extends DrupalWebTestCase {
   protected $book;
@@ -23,7 +23,7 @@ class BookTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Test book funcitonality through node interfaces.
+   * Test book functionality through node interfaces.
    */
   function testBook() {
     // Create users.
@@ -37,7 +37,7 @@ class BookTestCase extends DrupalWebTestCase {
     $book = $this->book;
 
     /*
-     * Add page hiearchy to book.
+     * Add page hierarchy to book.
      * Book
      *  |- Node 0
      *   |- Node 1
@@ -54,7 +54,7 @@ class BookTestCase extends DrupalWebTestCase {
 
     $this->drupalLogout();
 
-    // Check to make sure that book pages display properly.
+    // Check that book pages display.
     $this->drupalLogin($web_user);
 
     $this->checkBookNode($book, array($nodes[0], $nodes[3], $nodes[4]), false, false, $nodes[0]);
@@ -66,7 +66,7 @@ class BookTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Checks the outline of sub-pages; previous, up, and next; and check printer friendly version.
+   * Check the outline of sub-pages; previous, up, and next; and printer friendly version.
    *
    * @param Node $node Node to check.
    * @param array $nodes Nodes that should be in outline.

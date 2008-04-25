@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.test,v 1.1 2008/04/20 18:23:26 dries Exp $
+// $Id: locale.test,v 1.2 2008/04/25 18:26:01 dries Exp $
 
 class LocaleTestCase extends DrupalWebTestCase {
   /**
@@ -92,7 +92,7 @@ class LocaleTestCase extends DrupalWebTestCase {
     $this->assertNoRaw($language_indicator, 'String is translated');
     $this->drupalGet('logout');
 
-    // Delete the language
+    // Delete the language.
     $this->drupalLogin($admin_user);
     $path = 'admin/settings/language/delete/'. $langcode;
     // This a confirm form, we do not need any fields changed.

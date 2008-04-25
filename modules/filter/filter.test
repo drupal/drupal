@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.test,v 1.1 2008/04/20 18:23:25 dries Exp $
+// $Id: filter.test,v 1.2 2008/04/25 18:26:01 dries Exp $
 
 class FilterTestCase extends DrupalWebTestCase {
   /**
@@ -128,19 +128,19 @@ class FilterTestCase extends DrupalWebTestCase {
     $this->drupalLogin($admin_user);
 
     // Clean up.
-    // Allowed tags
+    // Allowed tags.
     $edit = array();
     $edit['allowed_html_1'] = '<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd>';
     $this->drupalPost('admin/settings/filters/'. $filtered .'/configure', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), t('Changes reverted.'));
 
-    // Full HTML
+    // Full HTML.
     $edit = array();
     $edit['roles[2]'] = FALSE;
     $this->drupalPost('admin/settings/filters/'. $full, $edit, t('Save configuration'));
     $this->assertText(t('The input format settings have been updated.'), t('Full HTML format successfully reverted.'));
 
-    // Filter order
+    // Filter order.
     $edit = array();
     $edit['weights[filter/'. $second_filter .']'] = 2;
     $edit['weights[filter/'. $first_filter .']'] = 1;

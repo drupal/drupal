@@ -1,7 +1,10 @@
 <?php
-// $Id: profile.test,v 1.1 2008/04/20 18:23:28 dries Exp $
+// $Id: profile.test,v 1.2 2008/04/25 18:26:02 dries Exp $
 
 class ProfileTestSingleTestCase extends DrupalWebTestCase {
+  /**
+   * Implementation of getInfo().
+   */
   function getInfo() {
     $modules = (module_list());
     return array('name' => 'Test single field', 'description' => "Testing profile module with add/edit/delete new fields into profile page" , 'group' => t('Profile'));
@@ -13,7 +16,7 @@ class ProfileTestSingleTestCase extends DrupalWebTestCase {
       db_query('DELETE FROM {role} WHERE rid = %d', $id);
       db_query('DELETE FROM {permission} WHERE rid = %d', $id);
 
-      // Update the users who have this role set:
+      // Update the users who have this role set.
       $result = db_query('SELECT DISTINCT(ur1.uid) FROM {users_roles} ur1 LEFT JOIN {users_roles} ur2 ON ur2.uid = ur1.uid WHERE ur1.rid = %d AND ur2.rid != ur1.rid', $id);
       $uid = array();
 
@@ -45,7 +48,7 @@ class ProfileTestSingleTestCase extends DrupalWebTestCase {
 
   function testProfileSingle() {
     $this->drupalModuleEnable('profile');
-    // create test user
+    // Create test user.
     $edit['name'] = 'Profile '. $this->randomName(5);
     $edit['perm'] = 'access administration pages, administer site configuration, administer users';
     $rid = $this->_rolesApi('add', $edit );
@@ -55,13 +58,12 @@ class ProfileTestSingleTestCase extends DrupalWebTestCase {
     unset($edit);
     $edit['roles'] = array($rid => $rid);
     $user = user_save('', array('name' => $name, 'pass' => $pass, 'init' => $mail, 'mail' => $mail, 'roles' => $edit['roles'], 'status' => 1));
-    //log in
+    // Log in.
     $edit = array('name' => $name, 'pass' => $pass);
     $this->drupalPost('user', $edit, t('Log in'));
 
-    //wartosci
     $my_category = 'Simpletest';
-    //single line textfield
+    // Single line textfield.
     $title = "single_" . $this->randomName(10);
     $form_name = 'profile_' . $title;
     $explanation = $this->randomName(50);
@@ -74,17 +76,17 @@ class ProfileTestSingleTestCase extends DrupalWebTestCase {
     $fid = db_result(db_query('SELECT fid FROM {profile_fields} WHERE title = "%s"', $title));
     $single_field = array('title' => $title, 'form_name' => $form_name, 'explanation' => $explanation);
 
-    // checking simple fields
+    // Checking simple fields.
     $this->drupalGet("user/". $user->uid. "/edit/$my_category");
 
-    // checking field
+    // Checking field.
     $this->assertField($form_name , t('Found form named @name', array('@name' => $form_name)));
-    // checking name
+    // Checking name.
     $this->assertText($title, "Checking title for ". $title);
-    // checking explanation
+    // Checking explanation.
     $this->assertText($explanation, "Checking explanation for ". $title);
 
-    // ok, now let put some data
+    // Insert some data.
     unset($edit);
     $edit = array();
     $checking = array();
@@ -92,27 +94,27 @@ class ProfileTestSingleTestCase extends DrupalWebTestCase {
     $this->drupalPost("user/". $user->uid. "/edit/$my_category", $edit, t('Save') , 0);
     $this->drupalGet("user/". $user->uid);
 
-    // checking profile page
+    // Check profile page.
     $this->assertText($edit[$form_name], "Checking ". $edit[$form_name]);
     $this->assertText($title, "Checking $title");
-    // update field
+    // Update field.
     $new_title = $this->randomName(20);
     $this->drupalPost("admin/user/profile/edit/$fid", array('title' => $new_title), t('Save field') , 0);
     $this->drupalGet("admin/user/profile");
     $this->assertText($new_title, "Checking updated field");
-    // deleting field
+    // Delete field.
     $this->drupalPost("admin/user/profile/delete/$fid", array(), t('Delete'), 0);
     $this->drupalGet("admin/user/profile");
     $this->assertNoText($new_title, "Checking deleted field $title");
 
-    // delete test user and roles
+    // Delete test user and roles.
     if ($user->uid > 0) {
       db_query('DELETE FROM {users} WHERE uid =%d', $user->uid);
       db_query('DELETE FROM {users_roles} WHERE uid = %d', $user->uid);
       module_invoke_all('user', 'delete', '', $user);
     }
 
-    //delete roles
+    // Delete roles.
     $edit['rid'] = $rid;
     $this->_rolesApi('delete', $edit);
   }
@@ -120,6 +122,9 @@ class ProfileTestSingleTestCase extends DrupalWebTestCase {
 }
 
 class ProfileTestTextareaTestCase extends DrupalWebTestCase {
+  /**
+   * Implementation of getInfo().
+   */
   function getInfo() {
     $modules = (module_list());
     return array('name' => 'Test textarea field', 'description' => "Testing profile module with add/edit/delete new fields into profile page" , 'group' => t('Profile'));
@@ -131,7 +136,7 @@ class ProfileTestTextareaTestCase extends DrupalWebTestCase {
       db_query('DELETE FROM {role} WHERE rid = %d', $id);
       db_query('DELETE FROM {permission} WHERE rid = %d', $id);
 
-      // Update the users who have this role set:
+      // Update the users who have this role set.
       $result = db_query('SELECT DISTINCT(ur1.uid) FROM {users_roles} ur1 LEFT JOIN {users_roles} ur2 ON ur2.uid = ur1.uid WHERE ur1.rid = %d AND ur2.rid != ur1.rid', $id);
       $uid = array();
 
@@ -163,7 +168,7 @@ class ProfileTestTextareaTestCase extends DrupalWebTestCase {
 
   function testProfileSingle() {
     $this->drupalModuleEnable('profile');
-    // create test user
+    // Create test user.
     $edit['name'] = 'Profile '. $this->randomName(5);
      $edit['perm'] = 'access content, administer users, administer site configuration, access administration pages, access configuration pages, access user profiles';
     $rid = $this->_rolesApi('add', $edit );
@@ -177,9 +182,8 @@ class ProfileTestTextareaTestCase extends DrupalWebTestCase {
     $edit = array('name' => $name, 'pass' => $pass);
     $this->drupalPost('user', $edit, t('Log in'), 0 );
 
-    //wartosci
     $my_category = 'Simpletest';
-    //single line textfield
+    // Single line textfield.
     $title = "single_" . $this->randomName(10);
     $form_name = 'profile_' . $title;
     $explanation = $this->randomName(50);
@@ -188,10 +192,10 @@ class ProfileTestTextareaTestCase extends DrupalWebTestCase {
     $fid = db_result(db_query('SELECT fid FROM {profile_fields} WHERE title = "%s"', $title));
     $single_field = array('title' => $title, 'form_name' => $form_name, 'explanation' => $explanation);
 
-    // checking simple fields
+    // Checking simple fields.
     $this->drupalGet("user/". $user->uid. "/edit/$my_category");
 
-    // checking field
+    // Checking field.
     $this->assertField($form_name, '');
     // checking name
     $this->assertText($title, "Checking title for ". $title);

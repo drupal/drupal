@@ -1,5 +1,5 @@
 <?php
-// $Id: path.test,v 1.1 2008/04/20 18:23:28 dries Exp $
+// $Id: path.test,v 1.2 2008/04/25 18:26:02 dries Exp $
 
 class PathTestCase extends DrupalWebTestCase {
   function getInfo() {
@@ -27,47 +27,47 @@ class PathTestCase extends DrupalWebTestCase {
     // create test node
     $node1 = $this->createNode();
 
-    // create alias
+    // Create alias.
     $edit = array();
     $edit['src'] = 'node/' . $node1->nid;
     $edit['dst'] = $this->randomName(8);
     $this->drupalPost('admin/build/path/add', $edit, t('Create new alias'));
 
-    // confirm that the alias works
+    // Confirm that the alias works.
     $this->drupalGet($edit['dst']);
     $this->assertText($node1->title, 'Alias works.');
 
-    // change alias
+    // Change alias.
     $pid = $this->getPID($edit['dst']);
 
     $previous = $edit['dst'];
     $edit['dst'] = $this->randomName(8);
     $this->drupalPost('admin/build/path/edit/' . $pid, $edit, t('Update alias'));
 
-    // confirm that the alias works
+    // Confirm that the alias works.
     $this->drupalGet($edit['dst']);
     $this->assertText($node1->title, 'Changed alias works.');
 
-    // make sure that previous alias no longer works
+    // Confirm that previous alias no longer works.
     $this->drupalGet($previous);
     $this->assertNoText($node1->title, 'Previous alias no longer works.');
     $this->assertResponse(404);
 
-    // create second test node
+    // Create second test node.
     $node2 = $this->createNode();
 
-    // set alias to second test node
+    // Set alias to second test node.
     $edit['src'] = 'node/' . $node2->nid;
     // leave $edit['dst'] the same
     $this->drupalPost('admin/build/path/add', $edit, t('Create new alias'));
 
-    // confirm that the alias didn't make a duplicate
+    // Confirm no duplicate was created.
     $this->assertRaw(t('The alias %alias is already in use in this language.', array('%alias' => $edit['dst'])), 'Attempt to move alias was rejected.');
 
-    // delete alias
+    // Delete alias.
     $this->drupalPost('admin/build/path/delete/' . $pid, array(), t('Confirm'));
 
-    // confirm that the alias no longer works
+    // Confirm that the alias no longer works.
     $this->drupalGet($edit['dst']);
     $this->assertNoText($node1->title, 'Alias was successfully deleted.');
   }
@@ -76,46 +76,46 @@ class PathTestCase extends DrupalWebTestCase {
    * Test alias functionality through the node interfaces.
    */
   function testNodeAlias() {
-    // create test node
+    // Create test node.
     $node1 = $this->createNode();
 
-    // create alias
+    // Create alias.
     $edit = array();
     $edit['path'] = $this->randomName(8);
     $this->drupalPost('node/' . $node1->nid . '/edit', $edit, t('Save'));
 
-    // confirm that the alias works
+    // Confirm that the alias works.
     $this->drupalGet($edit['path']);
     $this->assertText($node1->title, 'Alias works.');
 
-    // change alias
+    // Change alias.
     $previous = $edit['path'];
     $edit['path'] = $this->randomName(8);
     $this->drupalPost('node/' . $node1->nid . '/edit', $edit, t('Save'));
 
-    // confirm that the alias works
+    // Confirm that the alias works.
     $this->drupalGet($edit['path']);
     $this->assertText($node1->title, 'Changed alias works.');
 
-    // make sure that previous alias no longer works
+    // Make sure that previous alias no longer works.
     $this->drupalGet($previous);
     $this->assertNoText($node1->title, 'Previous alias no longer works.');
     $this->assertResponse(404);
 
-    // create second test node
+    // Create second test node.
     $node2 = $this->createNode();
 
-    // set alias to second test node
-    // leave $edit['path'] the same
+    // Set alias to second test node.
+    // Leave $edit['path'] the same.
     $this->drupalPost('node/' . $node2->nid . '/edit', $edit, t('Save'));
 
-    // confirm that the alias didn't make a duplicate
+    // Confirm that the alias didn't make a duplicate.
     $this->assertText(t('The path is already in use.'), 'Attempt to moved alias was rejected.');
 
-    // delete alias
+    // Delete alias.
     $this->drupalPost('node/' . $node1->nid . '/edit', array('path' => ''), t('Save'));
 
-    // confirm that the alias no longer works
+    // Confirm that the alias no longer works.
     $this->drupalGet($edit['path']);
     $this->assertNoText($node1->title, 'Alias was successfully deleted.');
   }
@@ -130,7 +130,7 @@ class PathTestCase extends DrupalWebTestCase {
     $edit['body'] = '!SimpleTest test body! ' . $this->randomName(32) . ' ' . $this->randomName(32);
     $this->drupalPost('node/add/page', $edit, t('Save'));
 
-    // check to make sure the node was created
+    // Check to make sure the node was created.
     $node = node_load(array('title' => $edit['title']));
     $this->assertNotNull(($node === FALSE ? NULL : $node), 'Node found in database. %s');
 

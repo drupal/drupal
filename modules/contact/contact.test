@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.test,v 1.1 2008/04/20 18:23:24 dries Exp $
+// $Id: contact.test,v 1.2 2008/04/25 18:26:01 dries Exp $
 
 class ContactTestCase extends DrupalWebTestCase {
   /**
@@ -60,7 +60,7 @@ class ContactTestCase extends DrupalWebTestCase {
     $this->addCategory($category = $this->randomName(16), implode(',', array($recipients[0], $recipients[1], $recipients[2])), '', FALSE);
     $this->assertRaw(t('Category %category has been added.', array('%category' => $category)), t('Category successfully added.'));
 
-    // Clear food table in preparation for flood test and allow other checks to complete.
+    // Clear flood table in preparation for flood test and allow other checks to complete.
     $this->assertTrue(db_query('DELETE FROM {flood}'), t('Flood table emptied.'));
 
     // Check to see that anonymous user cannot see contact page without permission.

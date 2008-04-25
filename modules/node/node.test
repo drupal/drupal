@@ -1,5 +1,5 @@
 <?php
-// $Id: node.test,v 1.1 2008/04/20 18:23:28 dries Exp $
+// $Id: node.test,v 1.2 2008/04/25 18:26:01 dries Exp $
 
 class NodeRevisionsTestCase extends DrupalWebTestCase {
   /**
@@ -45,7 +45,7 @@ class NodeRevisionsTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Simpletest test. Tests to make sure the correct revision text appears on "view revisions" page.
+   * Confirm the correct revision text appears on "view revisions" page.
    */
   function testNodeRevisions() {
     // Get $log, $text, $vid, $node.
@@ -58,7 +58,7 @@ class NodeRevisionsTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Simpletest test. Tests to make sure the correct log message appears on "revisions overview" page.
+   * Confirm the correct log message appears on "revisions overview" page.
    */
   function testLogMessage() {
     // Get $log, $text, $vid, $node.
@@ -71,7 +71,7 @@ class NodeRevisionsTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Simpletest test. Tests to make sure the that revisions revert properly.
+   * Confirm that revisions revert properly.
    */
   function testRevisionRevert() {
     // Get $log, $text, $vid, $node.
@@ -85,7 +85,7 @@ class NodeRevisionsTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Simpletest test. Tests to make sure the revision deletes properly.
+   * Confirm revisions delete properly.
    */
   function testRevisionDelete() {
     // Get $log, $text, $vid, $node.
@@ -120,11 +120,8 @@ class NodeTeaserTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Simpletest test. Tests an edge case where if the first sentence is a
-   * question and subsequent sentences are not.
-   * This failed in drupal 5.
-   * Test and patch for drupal 6 (committed) from
-   * http://drupal.org/node/180425
+   * Tests an edge case where if the first sentence is a question and
+   * subsequent sentences are not.
    */
   function testFirstSentenceQuestion() {
     $body = 'A question? A sentence. Another sentence.';
@@ -142,8 +139,7 @@ class NodeTeaserTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Simpletest test. Runs a test adapted from
-   * http://drupal.org/node/180425#comment-634230
+   * Test various teaser length edge cases.
    */
   function testLength() {
     // This body string tests a number of edge cases.
@@ -301,6 +297,10 @@ class PageEditTestCase extends DrupalWebTestCase {
 }
 
 class PagePreviewTestCase extends DrupalWebTestCase {
+
+  /**
+   * Implementation of getInfo().
+   */
   function getInfo() {
     return array(
    'name'  => 'Page preview test',
@@ -308,10 +308,13 @@ class PagePreviewTestCase extends DrupalWebTestCase {
    'group' => t('Node'));
   }
 
+  /**
+   * Test node previews.
+   */
   function testPagePreview() {
-    /* Prepare settings */
+    // Prepare settings.
     variable_set('node_options_page', array('status', 'promote'));
-    /* Prepare a user to do the stuff */
+    // Prepare a user to do the stuff.
     $web_user = $this->drupalCreateUser(array('edit own page content', 'create page content'));
     $this->drupalLogin($web_user);
 
@@ -334,7 +337,7 @@ class PagePreviewTestCase extends DrupalWebTestCase {
 class PageCreationTestCase extends  DrupalWebTestCase {
 
   /**
-   * Implementation of getInfo() for information
+   * Implementation of getInfo().
    */
   function getInfo() {
     return array(
@@ -345,10 +348,10 @@ class PageCreationTestCase extends  DrupalWebTestCase {
   }
 
   function testPageCreation() {
-    /* Prepare settings */
+    // Prepare settings.
     variable_set('node_options_page', array('status', 'promote'));
 
-    /* Prepare a user to do the stuff */
+    // Prepare a user to do the stuff.
     $web_user = $this->drupalCreateUser(array('edit own page content', 'create page content'));
     $this->drupalLogin($web_user);
 
@@ -367,7 +370,7 @@ class PageCreationTestCase extends  DrupalWebTestCase {
 
 class PageViewTestCase extends DrupalWebTestCase {
   /**
-   * Implementation of getInfo() for information
+   * Implementation of getInfo().
    */
   function getInfo() {
     return array(
@@ -380,16 +383,16 @@ class PageViewTestCase extends DrupalWebTestCase {
   }
 
   function testPageView() {
-    /* Prepare a node to view */
+    // Prepare a node to view
     global $user;
     $node = $this->drupalCreateNode();
     $this->assertNotNull(node_load($node->nid), 'Node created');
 
-    /* Tries to edit with anonymous user */
+    // Tries to edit with anonymous user
     $html = $this->drupalGet("node/$node->nid/edit");
     $this->assertResponse(403);
 
-    /* Prepare a user to request the node view */
+    // Prepare a user to request the node view
     $test_user = $this->drupalCreateUser(array('access content'));
     $this->drupalLogin($test_user);
 
