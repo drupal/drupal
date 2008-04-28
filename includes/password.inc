@@ -45,7 +45,7 @@ function _password_itoa64() {
  * @return
  *   Encoded string
  */
-function  _password_base64_encode($input, $count)  {
+function _password_base64_encode($input, $count)  {
   $output = '';
   $i = 0;
   $itoa64 = _password_itoa64();

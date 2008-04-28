@@ -4,7 +4,7 @@ body #wrapper #container {
   width: 560px;
 }
 
-body.sidebars #wrapper #container {
+body.two-sidebars #wrapper #container {
   width: 980px;
 }
 

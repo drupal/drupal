@@ -241,6 +241,7 @@ function template_preprocess_maintenance_page(&$variables) {
   }
   $variables['head_title']        = implode(' | ', $head_title);
   $variables['base_path']         = base_path();
+  $variables['front_page']        = url();
   $variables['breadcrumb']        = '';
   $variables['feed_icons']        = '';
   $variables['footer_message']    = filter_xss_admin(variable_get('site_footer', FALSE));

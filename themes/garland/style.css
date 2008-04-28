@@ -384,7 +384,7 @@ table .form-button, table .form-submit {
 }
 
 /* With 3 columns, require a minimum width of 1000px to ensure there is enough horizontal space. */
-body.sidebars {
+body.two-sidebars {
   min-width: 980px;
 }
 /* With 2 columns, require a minimum width of 800px. */
@@ -405,7 +405,7 @@ body.sidebar-left #center {
 body.sidebar-right #center {
   margin-right: -210px;
 }
-body.sidebars #center {
+body.two-sidebars #center {
   margin: 0 -210px;
 }
 
@@ -416,7 +416,7 @@ body.sidebar-left #squeeze {
 body.sidebar-right #squeeze {
   margin-right: 210px;
 }
-body.sidebars #squeeze {
+body.two-sidebars #squeeze {
   margin: 0 210px;
 }
 
@@ -505,7 +505,7 @@ body.sidebar-right #footer {
   margin-right: -210px;
 }
 
-body.sidebars #footer {
+body.two-sidebars #footer {
   margin: 0 -210px;
 }
 

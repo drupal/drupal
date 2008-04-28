@@ -2,36 +2,13 @@
 // $Id$
 
 /**
- * Sets the body-tag class attribute.
- *
- * Adds 'sidebar-left', 'sidebar-right' or 'sidebars' classes as needed.
- */
-function phptemplate_body_class($left, $right) {
-  if ($left != '' && $right != '') {
-    $class = 'sidebars';
-  }
-  else {
-    if ($left != '') {
-      $class = 'sidebar-left';
-    }
-    if ($right != '') {
-      $class = 'sidebar-right';
-    }
-  }
-
-  if (isset($class)) {
-    print ' class="' . $class . '"';
-  }
-}
-
-/**
  * Return a themed breadcrumb trail.
  *
  * @param $breadcrumb
  *   An array containing the breadcrumb links.
  * @return a string containing the breadcrumb output.
  */
-function phptemplate_breadcrumb($breadcrumb) {
+function garland_breadcrumb($breadcrumb) {
   if (!empty($breadcrumb)) {
     return '<div class="breadcrumb">' . implode(' › ', $breadcrumb) . '</div>';
   }
@@ -40,7 +17,7 @@ function phptemplate_breadcrumb($breadcrumb) {
 /**
  * Allow themable wrapping of all comments.
  */
-function phptemplate_comment_wrapper($content, $node) {
+function garland_comment_wrapper($content, $node) {
   if (!$content || $node->type == 'forum') {
     return '<div id="comments">' . $content . '</div>';
   }
@@ -50,10 +27,27 @@ function phptemplate_comment_wrapper($content, $node) {
 }
 
 /**
- * Override or insert PHPTemplate variables into the templates.
+ * Override or insert variables into the page template.
  */
-function phptemplate_preprocess_page(&$vars) {
+function garland_preprocess_page(&$vars) {
   $vars['tabs2'] = menu_secondary_local_tasks();
+  $vars['primary_nav'] = isset($vars['primary_links']) ? theme('links', $vars['primary_links'], array('class' => 'links primary-links')) : FALSE;
+  $vars['secondary_nav'] = isset($vars['secondary_links']) ? theme('links', $vars['secondary_links'], array('class' => 'links secondary-links')) : FALSE;
+  $vars['ie_styles'] = garland_get_ie_styles();
+
+  // Prepare header
+  $site_fields = array();
+  if (!empty($vars['site_name'])) {
+    $site_fields[] = check_plain($vars['site_name']);
+  }
+  if (!empty($vars['site_slogan'])) {
+    $site_fields[] = check_plain($vars['site_slogan']);
+  }
+  $vars['site_title'] = implode(' ', $site_fields);
+  if (!empty($site_fields)) {
+    $site_fields[0] = '<span>'. $site_fields[0] .'</span>';
+  }
+  $vars['site_html'] = implode(' ', $site_fields);
 
   // Hook into color.module
   if (module_exists('color')) {
@@ -64,13 +58,14 @@ function phptemplate_preprocess_page(&$vars) {
 /**
  * Returns the rendered local tasks. The default implementation renders
  * them as tabs. Overridden to split the secondary tasks.
- *
- * @ingroup themeable
  */
-function phptemplate_menu_local_tasks() {
+function garland_menu_local_tasks() {
   return menu_primary_local_tasks();
 }
 
+/**
+ * Format the "Submitted by username on date/time" for each comment.
+ */
 function phptemplate_comment_submitted($comment) {
   return t('!datetime — !username',
     array(
@@ -79,7 +74,10 @@ function phptemplate_comment_submitted($comment) {
     ));
 }
 
-function phptemplate_node_submitted($node) {
+/**
+ * Format the "Submitted by username on date/time" for each node.
+ */
+function garland_node_submitted($node) {
   return t('!datetime — !username',
     array(
       '!username' => theme('username', $node),
@@ -90,13 +88,13 @@ function phptemplate_node_submitted($node) {
 /**
  * Generates IE CSS links for LTR and RTL languages.
  */
-function phptemplate_get_ie_styles() {
+function garland_get_ie_styles() {
   global $language;
 
-  $iecss = '<link type="text/css" rel="stylesheet" media="all" href="' . base_path() . path_to_theme() . '/fix-ie.css" />';
+  $ie_styles = '<link type="text/css" rel="stylesheet" media="all" href="' . base_path() . path_to_theme() . '/fix-ie.css" />'. "\n";
   if (defined('LANGUAGE_RTL') && $language->direction == LANGUAGE_RTL) {
-    $iecss .= '<style type="text/css" media="all">@import "' . base_path() . path_to_theme() . '/fix-ie-rtl.css";</style>';
+    $ie_styles .= '      <style type="text/css" media="all">@import "' . base_path() . path_to_theme() . '/fix-ie-rtl.css";</style>'. "\n";
   }
 
-  return $iecss;
+  return $ie_styles;
 }

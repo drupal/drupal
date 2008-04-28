@@ -20,10 +20,10 @@
     <?php print $styles ?>
     <?php print $scripts ?>
     <!--[if lt IE 7]>
-      <?php print phptemplate_get_ie_styles(); ?>
+      <?php print garland_get_ie_styles(); ?>
     <![endif]-->
   </head>
-  <body<?php print phptemplate_body_class($left, $right); ?>>
+  <body class="<?php print $body_classes ?>">
 
 <!-- Layout -->
   <div id="header-region" class="clear-block"><?php print $header; ?></div>
@@ -68,9 +68,9 @@
       <?php endif; ?>
 
       <div id="center"><div id="squeeze"><div class="right-corner"><div class="left-corner">
-          <?php if ($title): print '<h2' . ($tabs ? ' class="with-tabs"' : '') . '>' . $title . '</h2>'; endif; ?>
-          <?php print $help; ?>
+          <?php if ($title): ?><h2><?php print $title ?></h2><?php endif; ?>
           <?php print $messages; ?>
+          <?php print $help; ?>
           <div class="clear-block">
             <?php print $content ?>
           </div>
