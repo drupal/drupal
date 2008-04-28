@@ -1,10 +1,10 @@
-/* $Id: minnelli.css,v 1.5 2008/03/13 20:02:18 dries Exp $ */
+/* $Id: minnelli.css,v 1.6 2008/04/28 09:25:27 dries Exp $ */
 
 body #wrapper #container {
   width: 560px;
 }
 
-body.sidebars #wrapper #container {
+body.two-sidebars #wrapper #container {
   width: 980px;
 }
 

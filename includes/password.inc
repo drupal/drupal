@@ -1,5 +1,5 @@
 <?php
-// $Id: password.inc,v 1.1 2008/04/01 06:25:31 dries Exp $
+// $Id: password.inc,v 1.2 2008/04/28 09:25:26 dries Exp $
 
 /**
  * @file
@@ -45,7 +45,7 @@ function _password_itoa64() {
  * @return
  *   Encoded string
  */
-function  _password_base64_encode($input, $count)  {
+function _password_base64_encode($input, $count)  {
   $output = '';
   $i = 0;
   $itoa64 = _password_itoa64();

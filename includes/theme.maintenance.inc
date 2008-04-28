@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.maintenance.inc,v 1.12 2008/04/14 17:48:33 dries Exp $
+// $Id: theme.maintenance.inc,v 1.13 2008/04/28 09:25:26 dries Exp $
 
 /**
  * @file
@@ -241,6 +241,7 @@ function template_preprocess_maintenance_page(&$variables) {
   }
   $variables['head_title']        = implode(' | ', $head_title);
   $variables['base_path']         = base_path();
+  $variables['front_page']        = url();
   $variables['breadcrumb']        = '';
   $variables['feed_icons']        = '';
   $variables['footer_message']    = filter_xss_admin(variable_get('site_footer', FALSE));

@@ -1,4 +1,4 @@
-/* $Id: print.css,v 1.5 2008/03/13 20:02:18 dries Exp $ */
+/* $Id: print.css,v 1.6 2008/04/28 09:25:27 dries Exp $ */
 
 body, input, textarea, select {
   color: #000;
@@ -12,12 +12,12 @@ ul.primary-links, ul.secondary-links,
   display: none;
 }
 
-body.sidebars, body.sidebar-left, body.sidebar-right, body {
+body.two-sidebars, body.sidebar-left, body.sidebar-right, body {
   width: 640px;
 }
 
-body.sidebar-left #center, body.sidebar-right #center, body.sidebars #center,
-body.sidebar-left #squeeze, body.sidebar-right #squeeze, body.sidebars #squeeze {
+body.sidebar-left #center, body.sidebar-right #center, body.two-sidebars #center,
+body.sidebar-left #squeeze, body.sidebar-right #squeeze, body.two-sidebars #squeeze {
   margin: 0;
 }
 
