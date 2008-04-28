@@ -96,3 +96,40 @@ function simpletest_uninstall() {
   variable_del('simpletest_httpauth_pass');
   variable_del('simpletest_devel');
 }
+
+/**
+ * Check that the cURL extension exists for PHP.
+ */
+function simpletest_requirements($phase) {
+  $requirements = array();
+  $t = get_t();
+
+  $has_curl = function_exists('curl_init');
+
+  switch ($phase) {
+    case 'runtime':
+      $requirements['simpletest'] = array(
+        'title' => $t('cURL'),
+        'value' => $has_curl ? $t('Enabled') : $t('Not found'),
+        'severity' => $has_curl ? REQUIREMENT_OK : REQUIREMENT_ERROR,
+      );
+      break;
+    case 'install':
+      if ($has_curl) {
+        $requirements['simpletest'] = array(
+          'title' => $t('cURL'),
+          'severity' => REQUIREMENT_OK,
+        );
+      }
+      else {
+        $requirements['simpletest'] = array(
+          'title' => $t('cURL'),
+          'severity' => REQUIREMENT_ERROR,
+          'description' => $t('Simpletest could not be installed because the PHP <a href="!curl_url">cURL</a> library is not available.', array('!curl_url' => 'http://php.net/manual/en/curl.setup.php')),
+        );
+      }
+      break;
+  }
+
+  return $requirements;
+}
