@@ -345,7 +345,7 @@ function aggregator_form_category_validate($form_id, $form_values) {
   if ($form_values['op'] == t('Submit')) {
     // Check for duplicate titles
     if (isset($form_values['cid'])) {
-      $category = db_fetch_object(db_query("SELECT cid FROM {aggregator_category} WHERE title = '%s' AND cid != %d", $form_values['title'], $form_values['cid']));
+      $category = db_fetch_object(db_query("SELECT cid FROM {aggregator_category} WHERE title = '%s' AND cid <> %d", $form_values['title'], $form_values['cid']));
     }
     else {
       $category = db_fetch_object(db_query("SELECT cid FROM {aggregator_category} WHERE title = '%s'", $form_values['title']));
@@ -476,10 +476,10 @@ function aggregator_form_feed_validate($form_id, $form_values) {
   if ($form_values['op'] == t('Submit')) {
     // Check for duplicate titles
     if (isset($form_values['fid'])) {
-      $result = db_query("SELECT title, url FROM {aggregator_feed} WHERE (title = '%s' OR url='%s') AND fid != %d", $form_values['title'], $form_values['url'], $form_values['fid']);
+      $result = db_query("SELECT title, url FROM {aggregator_feed} WHERE (title = '%s' OR url = '%s') AND fid <> %d", $form_values['title'], $form_values['url'], $form_values['fid']);
     }
     else {
-      $result = db_query("SELECT title, url FROM {aggregator_feed} WHERE title = '%s' OR url='%s'", $form_values['title'], $form_values['url']);
+      $result = db_query("SELECT title, url FROM {aggregator_feed} WHERE title = '%s' OR url = '%s'", $form_values['title'], $form_values['url']);
     }
     while ($feed = db_fetch_object($result)) {
       if (strcasecmp($feed->title, $form_values['title']) == 0) {
