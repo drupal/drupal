@@ -1949,9 +1949,9 @@ function node_submit($node) {
     else {
       $node->uid = 0;
     }
-
-    $node->created = $node->date ? strtotime($node->date) : NULL;
   }
+
+  $node->created = !empty($node->date) ? strtotime($node->date) : time();
 
   // Do node-type-specific validation checks.
   node_invoke($node, 'submit');
@@ -2005,16 +2005,14 @@ function node_form_validate($form_id, $form_values, $form) {
 }
 
 function node_object_prepare(&$node) {
-  if (user_access('administer nodes')) {
-    // Set up default values, if required.
-    if (!isset($node->created)) {
-      $node->created = time();
-    }
-
-    if (!isset($node->date)) {
-      $node->date = format_date($node->created, 'custom', 'Y-m-d H:i:s O');
-    }
+  // Set up default values, if required.
+  if (!isset($node->created)) {
+    $node->created = time();
   }
+  if (!isset($node->date)) {
+    $node->date = format_date($node->created, 'custom', 'Y-m-d H:i:s O');
+  }
+
   node_invoke($node, 'prepare');
   node_invoke_nodeapi($node, 'prepare');
 }
@@ -2086,9 +2084,9 @@ function node_form($node, $form_values = NULL) {
     '#weight' => 20,
   );
   $form['author']['name'] = array('#type' => 'textfield', '#title' => t('Authored by'), '#maxlength' => 60, '#autocomplete_path' => 'user/autocomplete', '#default_value' => $node->name ? $node->name : '', '#weight' => -1, '#description' => t('Leave blank for %anonymous.', array('%anonymous' => variable_get('anonymous', t('Anonymous')))));
-  $form['author']['date'] = array('#type' => 'textfield', '#title' => t('Authored on'), '#maxlength' => 25, '#description' => t('Format: %time. Leave blank to use the time of form submission.', array('%time' => $node->date)));
+  $form['author']['date'] = array('#type' => 'textfield', '#title' => t('Authored on'), '#maxlength' => 25, '#description' => t('Format: %time. Leave blank to use the time of form submission.', array('%time' => !empty($node->date) ? $node->date : format_date($node->created, 'custom', 'Y-m-d H:i:s O'))));
 
-  if (isset($node->nid)) {
+  if (isset($node->date)) {
     $form['author']['date']['#default_value'] = $node->date;
   }
 
@@ -2252,10 +2250,6 @@ function node_preview($node) {
       $node->picture = $user->picture;
     }
 
-    // Set the timestamps when needed:
-    if ($node->date) {
-      $node->created = strtotime($node->date);
-    }
     $node->changed = time();
 
     // Extract a teaser, if it hasn't been set (e.g. by a module-provided
