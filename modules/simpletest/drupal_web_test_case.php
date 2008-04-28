@@ -456,7 +456,7 @@ class DrupalWebTestCase extends UnitTestCase {
     $this->_content = curl_exec($this->ch);
     $this->plain_text = FALSE;
     $this->elements = FALSE;
-    $this->assertTrue($this->_content, t('!method to !url, response is !length bytes.', array('!method' => isset($curl_options[CURLOPT_POSTFIELDS]) ? 'POST' : 'GET', '!url' => $url, '!length' => strlen($this->_content))), t('Browser'));
+    $this->assertTrue($this->_content, t('!method to !url, response is !length bytes.', array('!method' => empty($curl_options[CURLOPT_POSTFIELDS]) ? 'GET' : 'POST', '!url' => $url, '!length' => strlen($this->_content))), t('Browser'));
     return $this->_content;
   }
 
@@ -499,7 +499,11 @@ class DrupalWebTestCase extends UnitTestCase {
    */
   function drupalGet($path, $options = array()) {
     $options['absolute'] = TRUE;
-    return $this->curlExec(array(CURLOPT_URL => url($path, $options)));
+
+    // We re-using a CURL connection here.  If that connection still has certain
+    // options set, it might change the GET into a POST.  Make sure we clear out
+    // previous options.
+    return $this->curlExec(array(CURLOPT_URL => url($path, $options), CURLOPT_POST => FALSE, CURLOPT_POSTFIELDS => array()));
   }
 
   /**
@@ -568,7 +572,7 @@ class DrupalWebTestCase extends UnitTestCase {
             }
             $post = implode('&', $post);
           }
-          return $this->curlExec(array(CURLOPT_URL => $action, CURLOPT_POSTFIELDS => $post));
+          return $this->curlExec(array(CURLOPT_URL => $action, CURLOPT_POSTFIELDS => $post, CURLOPT_POST => TRUE));
         }
       }
       // We have not found a form which contained all fields of $edit.
