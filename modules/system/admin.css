@@ -1,4 +1,4 @@
-/* $Id: admin.css,v 1.18 2007/12/22 23:24:25 goba Exp $ */
+/* $Id: admin.css,v 1.19 2008/04/30 06:48:27 dries Exp $ */
 
 /*
 ** Formatting for administration page
@@ -43,6 +43,9 @@ table.package {
 }
 table.package .description {
   width: 100%;
+}
+table.package .version {
+  direction: ltr;
 }
 div.admin-dependencies, div.admin-required {
   font-size: 0.9em;

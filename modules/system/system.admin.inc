@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.72 2008/04/30 06:39:26 dries Exp $
+// $Id: system.admin.inc,v 1.73 2008/04/30 06:48:27 dries Exp $
 
 /**
  * @file
@@ -2106,7 +2106,7 @@ function theme_system_modules($form) {
         $row[] = '<strong>' . drupal_render($form['name'][$key]) . '</strong>';
       }
 
-      $row[] = drupal_render($form['version'][$key]);
+      $row[] = array('data' => drupal_render($form['version'][$key]), 'class' => 'version');
       $row[] = array('data' => $description, 'class' => 'description');
       $rows[] = $row;
     }
