@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.71 2008/04/16 11:35:52 dries Exp $
+// $Id: system.admin.inc,v 1.72 2008/04/30 06:39:26 dries Exp $
 
 /**
  * @file
@@ -2149,7 +2149,7 @@ function theme_system_modules_uninstall($form) {
   foreach (element_children($form['modules']) as $module) {
     $rows[] = array(
       array('data' => drupal_render($form['uninstall'][$module]), 'align' => 'center'),
-      '<strong>' . drupal_render($form['modules'][$module]['name']) . '</strong>',
+      '<strong><label for="' . $form['uninstall'][$module]['#id'] . '">' . drupal_render($form['modules'][$module]['name']) . '</label></strong>',
       array('data' => drupal_render($form['modules'][$module]['description']), 'class' => 'description'),
     );
   }
