@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.2 2008/04/28 08:36:06 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.3 2008/04/30 06:45:43 dries Exp $
 
 /**
  * Test case for typical Drupal tests.
@@ -385,7 +385,7 @@ class DrupalWebTestCase extends UnitTestCase {
     global $db_prefix;
     if (preg_match('/simpletest\d+/', $db_prefix)) {
       // Delete temporary files directory and reset files directory path.
-//      simpletest_clean_temporary_directory(file_directory_path());
+      simpletest_clean_temporary_directory(file_directory_path());
       variable_set('file_directory_path', $this->original_file_directory);
 
       $schema = drupal_get_schema(NULL, TRUE);
