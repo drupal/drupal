@@ -2106,7 +2106,7 @@ function theme_system_modules($form) {
         $row[] = '<strong>' . drupal_render($form['name'][$key]) . '</strong>';
       }
 
-      $row[] = drupal_render($form['version'][$key]);
+      $row[] = array('data' => drupal_render($form['version'][$key]), 'class' => 'version');
       $row[] = array('data' => $description, 'class' => 'description');
       $rows[] = $row;
     }

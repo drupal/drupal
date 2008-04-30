@@ -44,6 +44,9 @@ table.package {
 table.package .description {
   width: 100%;
 }
+table.package .version {
+  direction: ltr;
+}
 div.admin-dependencies, div.admin-required {
   font-size: 0.9em;
   color: #444;
