@@ -23,6 +23,10 @@ class UserRegistrationTestCase extends DrupalWebTestCase {
     // Set user registration to "Visitors can create accounts and no administrator approval is required."
     variable_set('user_register', 1);
 
+    // Enable user configurable timezone, and set the default timezone to +1 hour (or +3600 seconds).
+    variable_set('configurable_timezones', 1);
+    variable_set('date_default_timezone', 3600);
+
     $edit = array();
     $edit['name'] = $name = $this->randomName();
     $edit['mail'] = $mail = $edit['name'] .'@example.com';
@@ -42,7 +46,7 @@ class UserRegistrationTestCase extends DrupalWebTestCase {
     $this->assertEqual($user->threshold, 0, t('Correct treshold field.'));
     $this->assertEqual($user->theme, '', t('Correct theme field.'));
     $this->assertEqual($user->signature, '', t('Correct signature field.'));
-    $this->assertTrue(($user->created > time() - 20 ), 0, t('Correct creation time.'));
+    $this->assertTrue(($user->created > time() - 20 ), t('Correct creation time.'));
     $this->assertEqual($user->status, variable_get('user_register', 1) == 1 ? 1 : 0, t('Correct status field.'));
     $this->assertEqual($user->timezone, variable_get('date_default_timezone', NULL), t('Correct timezone field.'));
     $this->assertEqual($user->language, '', t('Correct language field.'));
