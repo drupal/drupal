@@ -95,41 +95,45 @@ Drupal.tableDrag = function(table, tableSettings) {
  * Hide the columns containing form elements according to the settings for
  * this tableDrag instance.
  */
-Drupal.tableDrag.prototype.hideColumns = function() {
+Drupal.tableDrag.prototype.hideColumns = function(){
   for (var group in this.tableSettings) {
     // Find the first field in this group.
     for (var d in this.tableSettings[group]) {
-      if ($('.' + this.tableSettings[group][d]['target'], this.table).size()) {
+      var field = $('.' + this.tableSettings[group][d]['target'] + ':first', this.table);
+      if (field.size() && this.tableSettings[group][d]['hidden']) {
         var hidden = this.tableSettings[group][d]['hidden'];
-        var field = $('.' + this.tableSettings[group][d]['target'] + ':first', this.table);
-        var cell = field.parents('td:first, th:first');
+        var cell = field.parents('td:first');
         break;
       }
     }
+
     // Hide the column containing this field.
     if (hidden && cell[0] && cell.css('display') != 'none') {
       // Add 1 to our indexes. The nth-child selector is 1 based, not 0 based.
-      var columnIndex = $('td', field.parents('tr:first')).index(cell.get(0)) + 1;
-      var headerIndex = $('td:not(:hidden)', field.parents('tr:first')).index(cell.get(0)) + 1;
-      $('tbody tr', this.table).each(function() {
-        // Find and hide the cell in the table body.
-        var cell = $('td:nth-child('+ columnIndex +')', this);
-        if (cell.size()) {
-          cell.css('display', 'none');
-        }
-        // We might be dealing with a row spanning the entire table.
-        // Reduce the colspan on the first cell to prevent the cell from
-        // overshooting the table.
-        else {
-          cell = $('td:first', this);
-          cell.attr('colspan', cell.attr('colspan') - 1);
-        }
-      });
-      $('thead tr', this.table).each(function() {
-        // Remove table header cells entirely (Safari doesn't hide properly).
-        var th = $('th:nth-child('+ headerIndex +')', this);
-        if (th.size()) {
-          th.remove();
+      var columnIndex = $('td', cell.parent()).index(cell.get(0)) + 1;
+      var headerIndex = $('td:not(:hidden)', cell.parent()).index(cell.get(0)) + 1;
+      $('tr', this.table).each(function(){
+        var row = $(this);
+        var parentTag = row.parent().get(0).tagName.toLowerCase();
+        var index = (parentTag == 'thead') ? headerIndex : columnIndex;
+
+        // Adjust the index to take into account colspans.
+        row.children().each(function(n) {
+          if (n < index) {
+            index -= (this.colSpan && this.colSpan > 1) ? this.colSpan - 1 : 0;
+          }
+        });
+        if (index > 0) {
+          cell = row.children(':nth-child(' + index + ')');
+          if (cell[0].colSpan > 1) {
+            // If this cell has a colspan, simply reduce it.
+            cell[0].colSpan = cell[0].colSpan - 1;
+          }
+          else {
+            // Hide table body cells, but remove table header cells entirely
+            // (Safari doesn't hide properly).
+            parentTag == 'thead' ? cell.remove() : cell.css('display', 'none');
+          }
         }
       });
     }
