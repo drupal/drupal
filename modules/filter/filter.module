@@ -217,12 +217,12 @@ function filter_filter_tips($delta, $format, $long = FALSE) {
               // Assumes and describes dt and dd.
               'dl' => array( t('Definition lists are similar to other HTML lists. &lt;dl&gt; begins the definition list, &lt;dt&gt; begins the definition term and &lt;dd&gt; begins the definition description.'), '<dl> <dt>' . t('First term') . '</dt> <dd>' . t('First definition') . '</dd> <dt>' . t('Second term') . '</dt> <dd>' . t('Second definition') . '</dd> </dl>'),
               'dt' => NULL, 'dd' => NULL,
-              'h1' => array( t('Header'), '<h1>' . t('Title') . '</h1>'),
-              'h2' => array( t('Header'), '<h2>' . t('Subtitle') . '</h2>'),
-              'h3' => array( t('Header'), '<h3>' . t('Subtitle three') . '</h3>'),
-              'h4' => array( t('Header'), '<h4>' . t('Subtitle four') . '</h4>'),
-              'h5' => array( t('Header'), '<h5>' . t('Subtitle five') . '</h5>'),
-              'h6' => array( t('Header'), '<h6>' . t('Subtitle six') . '</h6>')
+              'h1' => array( t('Heading'), '<h1>' . t('Title') . '</h1>'),
+              'h2' => array( t('Heading'), '<h2>' . t('Subtitle') . '</h2>'),
+              'h3' => array( t('Heading'), '<h3>' . t('Subtitle three') . '</h3>'),
+              'h4' => array( t('Heading'), '<h4>' . t('Subtitle four') . '</h4>'),
+              'h5' => array( t('Heading'), '<h5>' . t('Subtitle five') . '</h5>'),
+              'h6' => array( t('Heading'), '<h6>' . t('Subtitle six') . '</h6>')
             );
             $header = array(t('Tag Description'), t('You Type'), t('You Get'));
             preg_match_all('/<([a-z0-9]+)[^a-z0-9]/i', $allowed_html, $out);
