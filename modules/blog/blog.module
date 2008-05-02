@@ -49,7 +49,7 @@ function blog_user($type, &$edit, &$user) {
     $user->content['summary']['blog'] =  array(
       '#type' => 'user_profile_item',
       '#title' => t('Blog'),
-      '#value' => l(t('View recent blog entries'), "blog/$user->uid", array('title' => t("Read @username's latest blog entries.", array('@username' => $user->name)))),
+      '#value' => l(t('View recent blog entries'), "blog/$user->uid", array('attributes' => array('title' => t("Read @username's latest blog entries.", array('@username' => $user->name))))),
       '#attributes' => array('class' => 'blog'),
     );
   }
