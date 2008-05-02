@@ -520,7 +520,7 @@ function book_get_flat_menu($book_link) {
   static $flat = array();
 
   if (!isset($flat[$book_link['mlid']])) {
-    // Call menu_tree_full_data() to take advantage of the menu system's caching.
+    // Call menu_tree_all_data() to take advantage of the menu system's caching.
     $tree = menu_tree_all_data($book_link['menu_name'], $book_link);
     $flat[$book_link['mlid']] = array();
     _book_flatten_menu($tree, $flat[$book_link['mlid']]);
