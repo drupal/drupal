@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.420 2008/04/14 17:48:33 dries Exp $
+// $Id: theme.inc,v 1.421 2008/05/02 15:11:04 dries Exp $
 
 /**
  * @file
@@ -1552,7 +1552,7 @@ function theme_username($object) {
     }
 
     if (user_access('access user profiles')) {
-      $output = l($name, 'user/' . $object->uid, array('title' => t('View user profile.')));
+      $output = l($name, 'user/' . $object->uid, array('attributes' => array('title' => t('View user profile.'))));
     }
     else {
       $output = check_plain($name);
@@ -1564,7 +1564,7 @@ function theme_username($object) {
     // aggregator modules). This clause enables modules to display
     // the true author of the content.
     if (!empty($object->homepage)) {
-      $output = l($object->name, $object->homepage, array('rel' => 'nofollow'));
+      $output = l($object->name, $object->homepage, array('attributes' => array('rel' => 'nofollow')));
     }
     else {
       $output = check_plain($object->name);

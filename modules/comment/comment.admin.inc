@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.admin.inc,v 1.7 2008/04/23 18:05:58 dries Exp $
+// $Id: comment.admin.inc,v 1.8 2008/05/02 15:11:04 dries Exp $
 
 /**
  * @file
@@ -64,7 +64,7 @@ function comment_admin_overview($type = 'new', $arg) {
   while ($comment = db_fetch_object($result)) {
     $comments[$comment->cid] = '';
     $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
-    $form['subject'][$comment->cid] = array('#value' => l($comment->subject, 'node/' . $comment->nid, array('title' => truncate_utf8($comment->comment, 128), 'fragment' => 'comment-' . $comment->cid)));
+    $form['subject'][$comment->cid] = array('#value' => l($comment->subject, 'node/' . $comment->nid, array('attributes' => array('title' => truncate_utf8($comment->comment, 128)), 'fragment' => 'comment-' . $comment->cid)));
     $form['username'][$comment->cid] = array('#value' => theme('username', $comment));
     $form['node_title'][$comment->cid] = array('#value' => l($comment->node_title, 'node/' . $comment->nid));
     $form['timestamp'][$comment->cid] = array('#value' => format_date($comment->timestamp, 'small'));
