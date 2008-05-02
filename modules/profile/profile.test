@@ -1,979 +1,211 @@
 <?php
 // $Id$
 
-class ProfileTestSingleTestCase extends DrupalWebTestCase {
+class ProfileTestCase extends DrupalWebTestCase {
+  protected $admin_user;
+  protected $normal_user;
   /**
    * Implementation of getInfo().
    */
   function getInfo() {
-    $modules = (module_list());
-    return array('name' => 'Test single field', 'description' => "Testing profile module with add/edit/delete new fields into profile page" , 'group' => t('Profile'));
+    return array(
+      'name' => 'Test single field',
+      'description' => t('Testing profile module with add/edit/delete new fields into profile page') ,
+      'group' => t('Profile'));
   }
 
-  function _rolesApi($op, $edit) {
-    if ($op == 'delete') {
-      $id = $edit['rid'];
-      db_query('DELETE FROM {role} WHERE rid = %d', $id);
-      db_query('DELETE FROM {permission} WHERE rid = %d', $id);
-
-      // Update the users who have this role set.
-      $result = db_query('SELECT DISTINCT(ur1.uid) FROM {users_roles} ur1 LEFT JOIN {users_roles} ur2 ON ur2.uid = ur1.uid WHERE ur1.rid = %d AND ur2.rid != ur1.rid', $id);
-      $uid = array();
-
-      while ($u = db_fetch_object($result)) {
-        $uid[] = $u->uid;
-      }
-
-      if ($uid) {
-        db_query('DELETE FROM {users_roles} WHERE rid = %d AND uid IN (%s)', $id, implode(', ', $uid));
-      }
-
-      // Users with only the deleted role are put back in the authenticated users pool.
-      db_query('UPDATE {users_roles} SET rid = %d WHERE rid = %d', DRUPAL_AUTHENTICATED_RID, $id);
-
-    }
-    else if ($op == 'add') {
-      if (isset($edit['name'])) {
-        db_query("INSERT INTO {role} (name) VALUES ('%s')", $edit['name']);
-        $result = db_query("SELECT rid FROM {role} WHERE name = '%s'", $edit['name']);
-        $rid = db_result($result);
-        db_query("INSERT INTO {permission} (rid, perm) VALUES (%d, '%s')", $rid, $edit['perm']);
-        return $rid;
-      }
-      else {
-        return 0;
-      }
-    }
-  }
-
-  function testProfileSingle() {
+  function setUp() {
+    parent::setUp();
+    variable_set('user_register', 1);
     $this->drupalModuleEnable('profile');
-    // Create test user.
-    $edit['name'] = 'Profile '. $this->randomName(5);
-    $edit['perm'] = 'access administration pages, administer site configuration, administer users';
-    $rid = $this->_rolesApi('add', $edit );
-    $name = $this->randomName();
-    $pass = $this->randomName();
-    $mail = "$name@example.com";
-    unset($edit);
-    $edit['roles'] = array($rid => $rid);
-    $user = user_save('', array('name' => $name, 'pass' => $pass, 'init' => $mail, 'mail' => $mail, 'roles' => $edit['roles'], 'status' => 1));
-    // Log in.
-    $edit = array('name' => $name, 'pass' => $pass);
-    $this->drupalPost('user', $edit, t('Log in'));
 
-    $my_category = 'Simpletest';
-    // Single line textfield.
-    $title = "single_" . $this->randomName(10);
-    $form_name = 'profile_' . $title;
-    $explanation = $this->randomName(50);
-    $edit = array('category' => $my_category,
-                  'title' => $title,
-                  'name' => $form_name,
-                  'explanation' => $explanation,
-                  );
-    $this->drupalPost('admin/user/profile/add/textfield', $edit, t('Save field'), 0);
-    $fid = db_result(db_query('SELECT fid FROM {profile_fields} WHERE title = "%s"', $title));
-    $single_field = array('title' => $title, 'form_name' => $form_name, 'explanation' => $explanation);
+    $this->admin_user = $this->drupalCreateUser(array('administer users', 'access user profiles'));
 
-    // Checking simple fields.
-    $this->drupalGet("user/". $user->uid. "/edit/$my_category");
+    // This is the user whose profile will be edited.
+    $this->normal_user = $this->drupalCreateUser();
+  }
 
-    // Checking field.
-    $this->assertField($form_name , t('Found form named @name', array('@name' => $form_name)));
-    // Checking name.
-    $this->assertText($title, "Checking title for ". $title);
-    // Checking explanation.
-    $this->assertText($explanation, "Checking explanation for ". $title);
+  /**
+   * Test each of the field types. List selection and date fields are tested
+   * separately because they need some special handling.
+   */
+  function testProfileFields() {
+    // Set test values for every field type.
+    $field_types = array(
+      'textfield' => $this->randomName(),
+      'textarea' => $this->randomName(),
+      'list' => $this->randomName(),
+      'checkbox' => 1,
+      'url' => 'http://www.' . $this->randomName(10). '.org',
+    );
 
-    // Insert some data.
-    unset($edit);
-    $edit = array();
-    $checking = array();
-    $edit[$form_name] = $this->randomName(20);
-    $this->drupalPost("user/". $user->uid. "/edit/$my_category", $edit, t('Save') , 0);
-    $this->drupalGet("user/". $user->uid);
+    // For each field type, create a field, give it a value and delete the field.
+    foreach ($field_types as $type => $value) {
+      $field = $this->createProfileField($type);
+      $this->setProfileField($field, $value);
+      $this->deleteProfileField($field);
+    }
+  }
+
+  /**
+   * Create a list selection field, give it a value, and delete the field.
+   */
+  function testProfileSelectionField() {
+    $edit = array(
+      'options' => implode("\n", range(1, 10)),
+    );
+    $field = $this->createProfileField('selection', 'simpletest', $edit);
+
+    $this->setProfileField($field, rand(1, 10));
+
+    $this->deleteProfileField($field);
+  }
+
+  /**
+   * Create a date field, give it a value, and delete the field.
+   */
+  function testProfileDateField() {
+    variable_set('date_format_short', 'm/d/Y - H:i');
+    $field = $this->createProfileField('date');
+
+    // Set date to January 09, 1983
+    $edit = array(
+      $field['form_name'] .'[month]' => 1,
+      $field['form_name'] .'[day]' => 9,
+      $field['form_name'] .'[year]' => 1983,
+    );
+
+    $this->drupalPost('user/' . $this->normal_user->uid . '/edit/' . $field['category'], $edit, t('Save'));
 
     // Check profile page.
-    $this->assertText($edit[$form_name], "Checking ". $edit[$form_name]);
-    $this->assertText($title, "Checking $title");
-    // Update field.
-    $new_title = $this->randomName(20);
-    $this->drupalPost("admin/user/profile/edit/$fid", array('title' => $new_title), t('Save field') , 0);
-    $this->drupalGet("admin/user/profile");
-    $this->assertText($new_title, "Checking updated field");
-    // Delete field.
-    $this->drupalPost("admin/user/profile/delete/$fid", array(), t('Delete'), 0);
-    $this->drupalGet("admin/user/profile");
-    $this->assertNoText($new_title, "Checking deleted field $title");
+    $this->drupalGet('user/' . $this->normal_user->uid);
+    $this->assertText($field['title'], t('Found profile field with title %title', array('%title' => $field['title'])));
 
-    // Delete test user and roles.
-    if ($user->uid > 0) {
-      db_query('DELETE FROM {users} WHERE uid =%d', $user->uid);
-      db_query('DELETE FROM {users_roles} WHERE uid = %d', $user->uid);
-      module_invoke_all('user', 'delete', '', $user);
-    }
+    $this->assertText('01/09/1983', t('Found date profile field.'));
 
-    // Delete roles.
-    $edit['rid'] = $rid;
-    $this->_rolesApi('delete', $edit);
+    $this->deleteProfileField($field);
   }
 
-}
+  function testProfileFieldWeights() {
+    $category = $this->randomName();
+    $field1 = $this->createProfileField('textfield', $category, array('weight' => 1));
+    $field2 = $this->createProfileField('textfield', $category, array('weight' => -1));
 
-class ProfileTestTextareaTestCase extends DrupalWebTestCase {
+    $this->setProfileField($field1, $this->randomName(4, 'first_'));
+    $this->setProfileField($field2, $this->randomName(4, 'second_'));
+
+    $profile_edit = $this->drupalGet('user/' . $this->normal_user->uid . '/edit/' . $category);
+    $this->assertTrue(strpos($profile_edit, $field1['title']) > strpos($profile_edit, $field2['title']), t('Profile field weights are respected on the user edit form.'));
+
+    $profile_page = $this->drupalGet('user/' . $this->normal_user->uid);
+    $this->assertTrue(strpos($profile_page, $field1['title']) > strpos($profile_page, $field2['title']), t('Profile field weights are respected on the user profile page.'));
+  }
+
   /**
-   * Implementation of getInfo().
+   * TODO:
+   * - Test field visibility
+   * - Test profile browsing
+   * - Test autocomplete
+   * - Test required fields
+   * - Test fields on registration form
+   * - Test updating fields
    */
-  function getInfo() {
-    $modules = (module_list());
-    return array('name' => 'Test textarea field', 'description' => "Testing profile module with add/edit/delete new fields into profile page" , 'group' => t('Profile'));
-  }
 
-  function _rolesApi($op, $edit) {
-    if ($op == 'delete') {
-      $id = $edit['rid'];
-      db_query('DELETE FROM {role} WHERE rid = %d', $id);
-      db_query('DELETE FROM {permission} WHERE rid = %d', $id);
+  /**
+   * Create a profile field.
+   *
+   * @param $type
+   *   The field type to be created.
+   * @param $category
+   *   The category in which the field should be created.
+   * @param $edit
+   *   Additional parameters to be submitted.
+   * @return
+   *   The fid of the field that was just created.
+   */
+  function createProfileField($type = 'textfield', $category = 'simpletest', $edit = array()) {
+    $this->drupalLogin($this->admin_user);
 
-      // Update the users who have this role set.
-      $result = db_query('SELECT DISTINCT(ur1.uid) FROM {users_roles} ur1 LEFT JOIN {users_roles} ur2 ON ur2.uid = ur1.uid WHERE ur1.rid = %d AND ur2.rid != ur1.rid', $id);
-      $uid = array();
+    $edit['title'] = $title = $this->randomName(4, $type . '_');
+    $edit['name'] = $form_name = 'profile_' . $title;
+    $edit['category'] = $category;
+    $edit['explanation'] = $this->randomName(50);
 
-      while ($u = db_fetch_object($result)) {
-        $uid[] = $u->uid;
-      }
+    $this->drupalPost('admin/user/profile/add/' . $type, $edit, t('Save field'));
+    $fid = db_result(db_query("SELECT fid FROM {profile_fields} WHERE title = '%s'", $title));
+    $this->assertTrue($fid, t('New Profile field has been entered in the database'));
 
-      if ($uid) {
-        db_query('DELETE FROM {users_roles} WHERE rid = %d AND uid IN (%s)', $id, implode(', ', $uid));
-      }
-
-      // Users with only the deleted role are put back in the authenticated users pool.
-      db_query('UPDATE {users_roles} SET rid = %d WHERE rid = %d', DRUPAL_AUTHENTICATED_RID, $id);
-
-    }
-    else if ($op == 'add') {
-      if (isset($edit['name'])) {
-        db_query("INSERT INTO {role} (name) VALUES ('%s')", $edit['name']);
-        $result = db_query("SELECT rid FROM {role} WHERE name = '%s'", $edit['name']);
-        $rid = db_result($result);
-        db_query("INSERT INTO {permission} (rid, perm) VALUES (%d, '%s')", $rid, $edit['perm']);
-        return $rid;
-      }
-      else {
-        return 0;
-      }
-    }
-  }
-
-  function testProfileSingle() {
-    $this->drupalModuleEnable('profile');
-    // Create test user.
-    $edit['name'] = 'Profile '. $this->randomName(5);
-     $edit['perm'] = 'access content, administer users, administer site configuration, access administration pages, access configuration pages, access user profiles';
-    $rid = $this->_rolesApi('add', $edit );
-    $name = $this->randomName();
-    $pass = $this->randomName();
-    $mail = "$name@example.com";
-    unset($edit);
-    $edit['roles'] = array($rid => $rid);
-    $user = user_save('', array('name' => $name, 'pass' => $pass, 'init' => $mail, 'mail' => $mail, 'roles' => $edit['roles'], 'status' => 1));
-    //log in
-    $edit = array('name' => $name, 'pass' => $pass);
-    $this->drupalPost('user', $edit, t('Log in'), 0 );
-
-    $my_category = 'Simpletest';
-    // Single line textfield.
-    $title = "single_" . $this->randomName(10);
-    $form_name = 'profile_' . $title;
-    $explanation = $this->randomName(50);
-    $edit = array('category' => $my_category, 'title' => $title, 'name' => $form_name, 'explanation' => $explanation);
-    $this->drupalPost("admin/user/profile/add/textarea", $edit, t('Save field'), 0);
-    $fid = db_result(db_query('SELECT fid FROM {profile_fields} WHERE title = "%s"', $title));
-    $single_field = array('title' => $title, 'form_name' => $form_name, 'explanation' => $explanation);
-
-    // Checking simple fields.
-    $this->drupalGet("user/". $user->uid. "/edit/$my_category");
+    // Check that the new field is appearing on the user edit form.
+    $this->drupalGet('user/' . $this->admin_user->uid . '/edit/' .$category);
 
     // Checking field.
-    $this->assertField($form_name, '');
-    // checking name
-    $this->assertText($title, "Checking title for ". $title);
-    // checking explanation
-    $this->assertText($explanation, "Checking explanation for ". $title);
-
-    // ok, now let put some data
-    unset($edit);
-    $edit = array();
-    $checking = array();
-    $edit[$form_name] = $this->randomName(20);
-    $this->drupalPost("user/". $user->uid. "/edit/$my_category", $edit, t('Save'), 0);
-    $this->drupalGet("user/". $user->uid);
-
-    // checking profile page
-    $this->assertText($edit[$form_name], "Checking ". $edit[$form_name]);
-    $this->assertText($title, "Checking $title");
-    // update field
-    $new_title = $this->randomName(20);
-    $this->drupalPost("admin/user/profile/edit/$fid", array('title' => $new_title), t('Save field'), 0);
-    $this->drupalGet("admin/user/profile");
-    $this->assertText($new_title, "Checking updated field");
-    // deleting field
-    $this->drupalPost("admin/user/profile/delete/$fid", array(), t('Delete'), 0);
-    $this->drupalGet("admin/user/profile");
-    $this->assertNoText($new_title, "Checking deleted field $title");
-
-    // delete test user and roles
-    if ($user->uid > 0) {
-      db_query('DELETE FROM {users} WHERE uid =%d', $user->uid);
-      db_query('DELETE FROM {users_roles} WHERE uid = %d', $user->uid);
-      module_invoke_all('user', 'delete', '', $user);
+    if ($type == 'date') {
+      $this->assertField($form_name . '[month]', t('Found month selection field'));
+      $this->assertField($form_name . '[day]', t('Found day selection field'));
+      $this->assertField($form_name . '[year]', t('Found day selection field'));
+    }
+    else {
+      $this->assertField($form_name , t('Found form named @name', array('@name' => $form_name)));
     }
 
-    //delete roles
-    $edit['rid'] = $rid;
-    $this->_rolesApi('delete', $edit);
+    // Checking name.
+    $this->assertText($title, t('Checking title for field %title', array('%title' => $title)));
+    // Checking explanation.
+    $this->assertText($edit['explanation'], t('Checking explanation for field %title', array('%title' => $title)));
+
+    return array(
+      'fid' => $fid,
+      'type' => $type,
+      'form_name' => $form_name,
+      'title' => $title,
+      'category' => $category,
+    );
+  }
+
+  /**
+   * Set the profile field to a random value
+   *
+   * @param $field
+   *   The field that should be set.
+   * @param $value
+   *   The value for the field, defaults to a random string.
+   * @return
+   *   The value that has been assigned to
+   */
+  function setProfileField($field, $value = NULL) {
+    $this->drupalLogin($this->normal_user);
+
+    if (!isset($value)) {
+      $value = $this->randomName();
+    }
+
+    $edit = array(
+      $field['form_name'] => $value,
+    );
+    $this->drupalPost('user/' . $this->normal_user->uid . '/edit/' . $field['category'], $edit, t('Save'));
+
+    // Check profile page.
+    $content = $this->drupalGet('user/' . $this->normal_user->uid);
+    $this->assertText($field['title'], t('Found profile field with title %title', array('%title' => $field['title'])));
+
+    if ($field['type'] != 'checkbox') {
+      // $value must be cast to a string in order to be found by assertText.
+      $this->assertText("$value", t('Found profile field with value %value', array('%value' => $value)));
+    }
+
+    return $value;
+  }
+
+  /**
+   * Delete a profile field.
+   *
+   * @param $field
+   *   The field to be deleted.
+   */
+  function deleteProfileField($field) {
+    $this->drupalLogin($this->admin_user);
+    $this->drupalPost('admin/user/profile/delete/' . $field['fid'], array(), t('Delete'));
+    $this->drupalGet('admin/user/profile');
+    $this->assertNoText($field['title'], t('Checking deleted field %title', array('%title' => $field['title'])));
   }
 }
-
-
-class ProfileTestFreelistTestCase extends DrupalWebTestCase {
-  function getInfo() {
-    $modules = (module_list());
-    return array('name' => 'Test freelist field', 'description' => "Testing profile module with add/edit/delete new fields into profile page" , 'group' => t('Profile'));
-  }
-
-  function _rolesApi($op, $edit) {
-    if ($op == 'delete') {
-      $id = $edit['rid'];
-      db_query('DELETE FROM {role} WHERE rid = %d', $id);
-      db_query('DELETE FROM {permission} WHERE rid = %d', $id);
-
-      // Update the users who have this role set:
-      $result = db_query('SELECT DISTINCT(ur1.uid) FROM {users_roles} ur1 LEFT JOIN {users_roles} ur2 ON ur2.uid = ur1.uid WHERE ur1.rid = %d AND ur2.rid != ur1.rid', $id);
-      $uid = array();
-
-      while ($u = db_fetch_object($result)) {
-        $uid[] = $u->uid;
-      }
-
-      if ($uid) {
-        db_query('DELETE FROM {users_roles} WHERE rid = %d AND uid IN (%s)', $id, implode(', ', $uid));
-      }
-
-      // Users with only the deleted role are put back in the authenticated users pool.
-      db_query('UPDATE {users_roles} SET rid = %d WHERE rid = %d', DRUPAL_AUTHENTICATED_RID, $id);
-
-    }
-    else if ($op == 'add') {
-      if (isset($edit['name'])) {
-        db_query("INSERT INTO {role} (name) VALUES ('%s')", $edit['name']);
-        $result = db_query("SELECT rid FROM {role} WHERE name = '%s'", $edit['name']);
-        $rid = db_result($result);
-        db_query("INSERT INTO {permission} (rid, perm) VALUES (%d, '%s')", $rid, $edit['perm']);
-        return $rid;
-      }
-      else {
-        return 0;
-      }
-    }
-  }
-
-  function testProfileSingle() {
-    $this->drupalModuleEnable('profile');
-    // create test user
-    $edit['name'] = 'Profile '. $this->randomName(5);
-    $edit['perm'] = 'access content, administer users, administer site configuration, access administration pages, access configuration pages, access user profiles';
-    $rid = $this->_rolesApi('add', $edit );
-    $name = $this->randomName();
-    $pass = $this->randomName();
-    $mail = "$name@example.com";
-    unset($edit);
-    $edit['roles'] = array($rid => $rid);
-    $user = user_save('', array('name' => $name, 'pass' => $pass, 'init' => $mail, 'mail' => $mail, 'roles' => $edit['roles'], 'status' => 1));
-    //log in
-    $edit = array('name' => $name, 'pass' => $pass);
-    $this->drupalPost('user', $edit, t('Log in'), 0 );
-
-    //wartosci
-    $my_category = 'Simpletest';
-    //single line textfield
-    $title = "single_" . $this->randomName(10);
-    $form_name = 'profile_' . $title;
-    $explanation = $this->randomName(50);
-    $edit = array('category' => $my_category, 'title' => $title, 'name' => $form_name, 'explanation' => $explanation);
-    $this->drupalPost("admin/user/profile/add/list", $edit, t('Save field'), 0);
-    $fid = db_result(db_query('SELECT fid FROM {profile_fields} WHERE title = "%s"', $title));
-    $single_field = array('title' => $title, 'form_name' => $form_name, 'explanation' => $explanation);
-
-    // checking simple fields
-    $this->drupalGet("user/". $user->uid. "/edit/$my_category");
-
-    // checking field
-    $this->assertField($form_name, '');
-    // checking name
-    $this->assertText($title, "Checking title for ". $title);
-    // checking explanation
-    $this->assertText($explanation, "Checking explanation for ". $title);
-
-    // ok, now let put some data
-    unset($edit);
-    $edit = array();
-    $checking = array();
-    $edit[$form_name] = $this->randomName(20);
-    $this->drupalPost("user/". $user->uid. "/edit/$my_category", $edit, t('Save'), 0);
-    $this->drupalGet("user/". $user->uid);
-
-    // checking profile page
-    $this->assertText($edit[$form_name], "Checking ". $edit[$form_name]);
-    $this->assertText($title, "Checking $title");
-    // update field
-    $new_title = $this->randomName(20);
-    $this->drupalPost("admin/user/profile/edit/$fid", array('title' => $new_title), t('Save field'), 0);
-    $this->drupalGet("admin/user/profile");
-    $this->assertText($new_title, "Checking updated field");
-    // deleting field
-    $this->drupalPost("admin/user/profile/delete/$fid", array(), t('Delete'), 0);
-    $this->drupalGet("admin/user/profile");
-    $this->assertNoText($new_title, "Checking deleted field $title");
-
-    // delete test user and roles
-    if ($user->uid > 0) {
-      db_query('DELETE FROM {users} WHERE uid =%d', $user->uid);
-      db_query('DELETE FROM {users_roles} WHERE uid = %d', $user->uid);
-      module_invoke_all('user', 'delete', '', $user);
-    }
-
-    //delete roles
-    $edit['rid'] = $rid;
-    $this->_rolesApi('delete', $edit);
-  }
-
-}
-
-
-class ProfileTestCheckboxTestCase extends DrupalWebTestCase {
-  function getInfo() {
-    $modules = (module_list());
-    return array('name' => 'Test checkbox field', 'description' => "Testing profile module with add/edit/delete new fields into profile page" , 'group' => t('Profile'));
-  }
-
-  function _rolesApi($op, $edit) {
-    if ($op == 'delete') {
-      $id = $edit['rid'];
-      db_query('DELETE FROM {role} WHERE rid = %d', $id);
-      db_query('DELETE FROM {permission} WHERE rid = %d', $id);
-
-      // Update the users who have this role set:
-      $result = db_query('SELECT DISTINCT(ur1.uid) FROM {users_roles} ur1 LEFT JOIN {users_roles} ur2 ON ur2.uid = ur1.uid WHERE ur1.rid = %d AND ur2.rid != ur1.rid', $id);
-      $uid = array();
-
-      while ($u = db_fetch_object($result)) {
-        $uid[] = $u->uid;
-      }
-
-      if ($uid) {
-        db_query('DELETE FROM {users_roles} WHERE rid = %d AND uid IN (%s)', $id, implode(', ', $uid));
-      }
-
-      // Users with only the deleted role are put back in the authenticated users pool.
-      db_query('UPDATE {users_roles} SET rid = %d WHERE rid = %d', DRUPAL_AUTHENTICATED_RID, $id);
-
-    }
-    else if ($op == 'add') {
-      if (isset($edit['name'])) {
-        db_query("INSERT INTO {role} (name) VALUES ('%s')", $edit['name']);
-        $result = db_query("SELECT rid FROM {role} WHERE name = '%s'", $edit['name']);
-        $rid = db_result($result);
-        db_query("INSERT INTO {permission} (rid, perm) VALUES (%d, '%s')", $rid, $edit['perm']);
-        return $rid;
-      }
-      else {
-        return 0;
-      }
-    }
-  }
-
-   function testProfileCheckbox() {
-    $this->drupalModuleEnable('profile');
-    // create test user
-    $edit['name'] = 'Profile '. $this->randomName(5);
-    $edit['perm'] = 'access content, administer users, administer site configuration, access administration pages, access configuration pages, access user profiles';
-    $rid = $this->_rolesApi('add', $edit );
-    $name = $this->randomName();
-    $pass = $this->randomName();
-    $mail = "$name@example.com";
-    unset($edit);
-    $edit['roles'] = array($rid => $rid);
-    $user = user_save('', array('name' => $name, 'pass' => $pass, 'init' => $mail, 'mail' => $mail, 'roles' => $edit['roles'], 'status' => 1));
-    //log in
-    $edit = array('name' => $name, 'pass' => $pass);
-    $this->drupalPost('user', $edit, t('Log in'), 0);
-
-    //wartosci
-    $my_category = 'Simpletest';
-    //single line textfield
-    $title = "single_" . $this->randomName(10);
-    $form_name = 'profile_' . $title;
-    $explanation = $this->randomName(50);
-    $edit = array('category' => $my_category, 'title' => $title, 'name' => $form_name, 'explanation' => $explanation);
-    $this->drupalPost("admin/user/profile/add/checkbox", $edit, t('Save field'), 0);
-    $fid = db_result(db_query('SELECT fid FROM {profile_fields} WHERE title = "%s"', $title));
-    $single_field = array('title' => $title, 'form_name' => $form_name, 'explanation' => $explanation);
-
-    // checking simple fields
-    $this->drupalGet("user/". $user->uid. "/edit/$my_category");
-
-    // checking field
-    $this->assertField($form_name, false);
-    // checking name
-    $this->assertText($title, "Checking title for ". $title);
-    // checking explanation
-    $this->assertText($explanation, "Checking explanation for ". $title);
-
-    // ok, now let put some data
-    unset($edit);
-    $edit = array();
-    $checking = array();
-    $edit[$form_name] = 1;
-    $this->drupalPost("user/". $user->uid. "/edit/$my_category", $edit, t('Save'), 0);
-    $this->drupalGet("user/". $user->uid);
-    // checking profile page
-    $this->assertText($title, "Checking checkbox");
-    $this->assertText($title, "Checking $title");
-    // update field
-    $new_title = $this->randomName(10);
-    $this->drupalPost("admin/user/profile/edit/$fid", array('title' => $new_title), t('Save field'), 0);
-    $this->drupalGet("admin/user/profile");
-    $this->assertText($new_title, "Checking updated field");
-    // deleting field
-    $this->drupalPost("admin/user/profile/delete/$fid", array(), t('Delete'), 0);
-    $this->drupalGet("admin/user/profile");
-    $this->assertNoText($new_title, "Checking deleted field $title");
-
-    // delete test user and roles
-    if ($user->uid > 0) {
-      db_query('DELETE FROM {users} WHERE uid =%d', $user->uid);
-      db_query('DELETE FROM {users_roles} WHERE uid = %d', $user->uid);
-      module_invoke_all('user', 'delete', '', $user);
-    }
-
-    //delete roles
-    $edit['rid'] = $rid;
-    $this->_rolesApi('delete', $edit);
-   }
-}
-
-class ProfileTestUrlTestCase extends DrupalWebTestCase {
-  function getInfo() {
-    $modules = (module_list());
-    return array('name' => 'Test URL field', 'description' => "Testing profile module with add/edit/delete new fields into profile page" , 'group' => t('Profile'));
-  }
-
-  function _rolesApi($op, $edit) {
-    if ($op == 'delete') {
-      $id = $edit['rid'];
-      db_query('DELETE FROM {role} WHERE rid = %d', $id);
-      db_query('DELETE FROM {permission} WHERE rid = %d', $id);
-
-      // Update the users who have this role set:
-      $result = db_query('SELECT DISTINCT(ur1.uid) FROM {users_roles} ur1 LEFT JOIN {users_roles} ur2 ON ur2.uid = ur1.uid WHERE ur1.rid = %d AND ur2.rid != ur1.rid', $id);
-      $uid = array();
-
-      while ($u = db_fetch_object($result)) {
-        $uid[] = $u->uid;
-      }
-
-      if ($uid) {
-        db_query('DELETE FROM {users_roles} WHERE rid = %d AND uid IN (%s)', $id, implode(', ', $uid));
-      }
-
-      // Users with only the deleted role are put back in the authenticated users pool.
-      db_query('UPDATE {users_roles} SET rid = %d WHERE rid = %d', DRUPAL_AUTHENTICATED_RID, $id);
-
-    }
-    else if ($op == 'add') {
-      if (isset($edit['name'])) {
-        db_query("INSERT INTO {role} (name) VALUES ('%s')", $edit['name']);
-        $result = db_query("SELECT rid FROM {role} WHERE name = '%s'", $edit['name']);
-        $rid = db_result($result);
-        db_query("INSERT INTO {permission} (rid, perm) VALUES (%d, '%s')", $rid, $edit['perm']);
-        return $rid;
-      }
-      else {
-        return 0;
-      }
-    }
-  }
-
-  function testProfileSingle() {
-    variable_set('user_register',1);
-    $this->drupalModuleEnable('profile');
-    // create test user
-    $edit['name'] = 'Profile '. $this->randomName(5);
-    $edit['perm'] = 'access content, administer users, administer site configuration, access administration pages, access configuration pages, access user profiles';
-    $rid = $this->_rolesApi('add', $edit );
-    $name = $this->randomName();
-    $pass = $this->randomName();
-    $mail = "$name@example.com";
-    unset($edit);
-    $edit['roles'] = array($rid => $rid);
-    $user = user_save('', array('name' => $name, 'pass' => $pass, 'init' => $mail, 'mail' => $mail, 'roles' => $edit['roles'], 'status' => 1));
-    //log in
-    $edit = array('name' => $name, 'pass' => $pass);
-    $this->drupalPost('user', $edit, t('Log in'), 0);
-
-    //wartosci
-    $my_category = 'Simpletest';
-    //single line textfield
-    $title = "single_" . $this->randomName(10);
-    $form_name = 'profile_' . $title;
-    $explanation = $this->randomName(50);
-    $edit = array('category' => $my_category, 'title' => $title, 'name' => $form_name, 'explanation' => $explanation);
-    $this->drupalPost("admin/user/profile/add/url", $edit, t('Save field'), 0);
-    $fid = db_result(db_query("SELECT fid FROM {profile_fields} WHERE title = '%s'", $title));
-    $single_field = array('title' => $title, 'form_name' => $form_name, 'explanation' => $explanation);
-
-    // checking simple fields
-    $this->drupalGet("user/". $user->uid. "/edit/$my_category");
-
-    // checking field
-    $this->assertField($form_name, '');
-    // checking name
-    $this->assertText($title, "Checking title for ". $title);
-    // checking explanation
-    $this->assertText($explanation, "Checking explanation for ". $title);
-
-    // ok, now let put some data
-    unset($edit);
-    $edit = array();
-    $checking = array();
-    $edit[$form_name] = 'http://www.' . $this->randomName(10). '.org';
-    $this->drupalPost("user/". $user->uid. "/edit/$my_category", $edit, t('Save'), 0);
-    $this->drupalGet("user/". $user->uid);
-
-    // checking profile page
-    $this->assertText($edit[$form_name], "Checking ". $edit[$form_name]);
-    $this->assertText($title, "Checking $title");
-    // update field
-    $new_title = $this->randomName(20);
-    $this->drupalPost("admin/user/profile/edit/$fid", array('title' => $new_title), t('Save field'), 0);
-    $this->drupalGet("admin/user/profile");
-    $this->assertText($new_title, "Checking updated field");
-    // deleting field
-    $this->drupalPost("admin/user/profile/delete/$fid", array(), t('Delete'), 0);
-    $this->drupalGet("admin/user/profile");
-    $this->assertNoText($new_title, "Checking deleted field $title");
-
-    // delete test user and roles
-    if ($user->uid > 0) {
-      db_query('DELETE FROM {users} WHERE uid =%d', $user->uid);
-      db_query('DELETE FROM {users_roles} WHERE uid = %d', $user->uid);
-      module_invoke_all('user', 'delete', '', $user);
-    }
-
-    //delete roles
-    $edit['rid'] = $rid;
-    $this->_rolesApi('delete', $edit);
-
-    }
-}
-
-class ProfileTestSelectionTestCase extends DrupalWebTestCase {
-  function getInfo() {
-    $modules = (module_list());
-    return array('name' => 'Test selection field', 'description' => "Testing profile module with add/edit/delete new fields into profile page" , 'group' => t('Profile'));
-  }
-
-  function _rolesApi($op, $edit) {
-    if ($op == 'delete') {
-      $id = $edit['rid'];
-      db_query('DELETE FROM {role} WHERE rid = %d', $id);
-      db_query('DELETE FROM {permission} WHERE rid = %d', $id);
-
-      // Update the users who have this role set:
-      $result = db_query('SELECT DISTINCT(ur1.uid) FROM {users_roles} ur1 LEFT JOIN {users_roles} ur2 ON ur2.uid = ur1.uid WHERE ur1.rid = %d AND ur2.rid != ur1.rid', $id);
-      $uid = array();
-
-      while ($u = db_fetch_object($result)) {
-        $uid[] = $u->uid;
-      }
-
-      if ($uid) {
-        db_query('DELETE FROM {users_roles} WHERE rid = %d AND uid IN (%s)', $id, implode(', ', $uid));
-      }
-
-      // Users with only the deleted role are put back in the authenticated users pool.
-      db_query('UPDATE {users_roles} SET rid = %d WHERE rid = %d', DRUPAL_AUTHENTICATED_RID, $id);
-
-    }
-    else if ($op == 'add') {
-      if (isset($edit['name'])) {
-        db_query("INSERT INTO {role} (name) VALUES ('%s')", $edit['name']);
-        $result = db_query("SELECT rid FROM {role} WHERE name = '%s'", $edit['name']);
-        $rid = db_result($result);
-        db_query("INSERT INTO {permission} (rid, perm) VALUES (%d, '%s')", $rid, $edit['perm']);
-        return $rid;
-      }
-      else {
-        return 0;
-      }
-    }
-  }
-
-  function testProfileSingle() {
-    $this->drupalModuleEnable('profile');
-    // create test user
-    $edit['name'] = 'Profile '. $this->randomName(5);
-    $edit['perm'] = 'access content, administer users, administer site configuration, access administration pages, access configuration pages, access user profiles';
-    $rid = $this->_rolesApi('add', $edit );
-    $name = $this->randomName();
-    $pass = $this->randomName();
-    $mail = "$name@example.com";
-    unset($edit);
-    $edit['roles'] = array($rid => $rid);
-    $user = user_save('', array('name' => $name, 'pass' => $pass, 'init' => $mail, 'mail' => $mail, 'roles' => $edit['roles'], 'status' => 1));
-    //log in
-    $edit = array('name' => $name, 'pass' => $pass);
-    $this->drupalPost('user', $edit, t('Log in'), 0);
-
-    //wartosci
-    $my_category = 'Simpletest';
-    //single line textfield
-    $title = "single_" . $this->randomName(10);
-    $form_name = 'profile_' . $title;
-    $explanation = $this->randomName(50);
-    $options = "";
-    for($i = 0; $i < 3; $i++)
-      $options .= $this->randomName(8) . "\n";
-    $edit = array('category' => $my_category, 'title' => $title, 'name' => $form_name, 'explanation' => $explanation, 'options' => $options);
-    $this->drupalPost("admin/user/profile/add/selection", $edit, t('Save field'), 0);
-    $fid = db_result(db_query("SELECT fid FROM {profile_fields} WHERE title = '%s'", $title));
-    $single_field = array('title' => $title, 'form_name' => $form_name, 'explanation' => $explanation);
-
-    // checking simple fields
-    $this->drupalGet("user/". $user->uid. "/edit/$my_category");
-    // checking name
-    $this->assertText($title, "Checking title for ". $title);
-    // checking explanation
-    $this->assertText($explanation, "Checking explanation for ". $title);
-    // can we choose something which doesn't come from the list ?
-    //$this->assertFalse($this->setField('edit['.$form_name .']', $this->randomName(10)));
-    // or can we choose each of our options
-    $op_tab = explode("\n", $options,3);
-    //foreach($op_tab as $option)
-      //$this->assertTrue($this->setField($form_name, $option));
-
-
-    // ok, now let put some data
-    unset($edit);
-    $edit = array();
-    $checking = array();
-    $element = rand(0,2);
-    $key = $form_name;
-    $edit[$key] = rtrim($op_tab[$element]);
-    $this->drupalPost("user/". $user->uid. "/edit/$my_category", $edit, t('Save'), 0);
-    $this->drupalGet("user/". $user->uid);
-
-    // checking profile page
-    $this->assertText($edit[$form_name], "Checking ". $edit[$form_name]);
-    $this->assertText($title, "Checking $title");
-    // update field
-    $new_title = $this->randomName(20);
-    $this->drupalPost("admin/user/profile/edit/$fid", array('title' => $new_title), t('Save field'), 0);
-    $this->drupalGet("admin/user/profile");
-    $this->assertText($new_title, "Checking updated field");
-    // deleting field
-    $this->drupalPost("admin/user/profile/delete/$fid", array(), t('Delete'), 0);
-    $this->drupalGet("admin/user/profile");
-    $this->assertNoText($new_title, "Checking deleted field $title");
-
-    // delete test user and roles
-    if ($user->uid > 0) {
-      db_query('DELETE FROM {users} WHERE uid =%d', $user->uid);
-      db_query('DELETE FROM {users_roles} WHERE uid = %d', $user->uid);
-      module_invoke_all('user', 'delete', '', $user);
-    }
-
-    //delete roles
-    $edit['rid'] = $rid;
-    $this->_rolesApi('delete', $edit);
-
-  }
-
-}
-
-
-class ProfileTestDateTestCase extends DrupalWebTestCase {
-  function getInfo() {
-    $modules = (module_list());
-    return array('name' => 'Test date field', 'description' => "Testing profile module with add/edit/delete new fields into profile page" , 'group' => t('Profile'));
-  }
-
-  function _rolesApi($op, $edit) {
-    if ($op == 'delete') {
-      $id = $edit['rid'];
-      db_query('DELETE FROM {role} WHERE rid = %d', $id);
-      db_query('DELETE FROM {permission} WHERE rid = %d', $id);
-
-      // Update the users who have this role set:
-      $result = db_query('SELECT DISTINCT(ur1.uid) FROM {users_roles} ur1 LEFT JOIN {users_roles} ur2 ON ur2.uid = ur1.uid WHERE ur1.rid = %d AND ur2.rid != ur1.rid', $id);
-      $uid = array();
-
-      while ($u = db_fetch_object($result)) {
-        $uid[] = $u->uid;
-      }
-
-      if ($uid) {
-        db_query('DELETE FROM {users_roles} WHERE rid = %d AND uid IN (%s)', $id, implode(', ', $uid));
-      }
-
-      // Users with only the deleted role are put back in the authenticated users pool.
-      db_query('UPDATE {users_roles} SET rid = %d WHERE rid = %d', DRUPAL_AUTHENTICATED_RID, $id);
-
-    }
-    else if ($op == 'add') {
-      if (isset($edit['name'])) {
-        db_query("INSERT INTO {role} (name) VALUES ('%s')", $edit['name']);
-        $result = db_query("SELECT rid FROM {role} WHERE name = '%s'", $edit['name']);
-        $rid = db_result($result);
-        db_query("INSERT INTO {permission} (rid, perm) VALUES (%d, '%s')", $rid, $edit['perm']);
-        return $rid;
-      }
-      else {
-        return 0;
-      }
-    }
-  }
-
-  function testProfileSingle() {
-    $this->drupalModuleEnable('profile');
-    // create test user
-    $edit['name'] = 'Profile '. $this->randomName(5);
-    $edit['perm'] = 'access content, administer users, administer site configuration, access administration pages, access configuration pages, access user profiles';
-    $rid = $this->_rolesApi('add', $edit );
-    $name = $this->randomName();
-    $pass = $this->randomName();
-    $mail = "$name@example.com";
-    unset($edit);
-    $edit['roles'] = array($rid => $rid);
-    $user = user_save('', array('name' => $name, 'pass' => $pass, 'init' => $mail, 'mail' => $mail, 'roles' => $edit['roles'], 'status' => 1));
-    //log in
-    $edit = array('name' => $name, 'pass' => $pass);
-    $this->drupalPost('user', $edit, t('Log in'), 0);
-
-    //wartosci
-    $my_category = 'Simpletest';
-    //single line textfield
-    $title = "single_" . $this->randomName(10);
-    $form_name = 'profile_' . $title;
-    $explanation = $this->randomName(50);
- /*   $options = "";
-    for($i = 0; $i < 3; $i++)
-      $options .= $this->randomName(8) . "\n";*/
-    $edit = array('category' => $my_category, 'title' => $title, 'name' => $form_name, 'explanation' => $explanation);
-    $this->drupalPost("admin/user/profile/add/date", $edit, t('Save field'), 0);
-    $fid = db_result(db_query("SELECT fid FROM {profile_fields} WHERE title = '%s'", $title));
-    $single_field = array('title' => $title, 'form_name' => $form_name, 'explanation' => $explanation);
-
-    // checking simple fields
-    $this->drupalGet("user/". $user->uid. "/edit/$my_category");
-    // checking name
-    $this->assertText($title, "Checking title for ". $title);
-    // checking explanation
-    $this->assertText($explanation, "Checking explanation for ". $title);
-    // checking days/month/years
-    //foreach(array('year', 'month', 'day') as $field)
-      //$this->assertFalse($this->setField('edit['.$form_name .']['. $field .']', $this->randomName(4)), 'Checking data field ['.$field.']');
-    // ok, now let put some data
-    // date 9-01-1983
-    unset($edit);
-    foreach(array('year' => 1983, 'month' => 'Jan', 'day' => 9) as $field => $v) {
-      $key = $form_name . '[' . $field . ']';
-      $edit[$key] = $v;
-    }
-
-    list($format) = explode(' - ', variable_get('date_format_short', 'm/d/Y'), 2);
-
-    $replace = array('d' => sprintf('%02d', 9),
-                       'j' => 9,
-                       'm' => sprintf('%02d', '1'),
-                       'M' => map_month(1),
-                       'Y' => 1983);
-    $data = strtr($format, $replace);
-    $this->drupalPost("user/". $user->uid. "/edit/$my_category", $edit, t('Save'), 0);
-    $this->drupalGet("user/". $user->uid);
-
-    // checking profile page
-    $this->assertText($data, "Checking date $data");
-    $this->assertText($title, "Checking $title");
-    // update field
-    $new_title = $this->randomName(20);
-    $this->drupalPost("admin/user/profile/edit/$fid", array('title' => $new_title), t('Save field'), 0);
-    $this->drupalGet("admin/user/profile");
-    $this->assertText($new_title, "Checking updated field");
-    // deleting field
-    $this->drupalPost("admin/user/profile/delete/$fid", array(), t('Delete'), 0);
-    $this->drupalGet("admin/user/profile");
-    $this->assertNoText($new_title, "Checking deleted field $title");
-
-    // delete test user and roles
-    if ($user->uid > 0) {
-      db_query('DELETE FROM {users} WHERE uid =%d', $user->uid);
-      db_query('DELETE FROM {users_roles} WHERE uid = %d', $user->uid);
-      module_invoke_all('user', 'delete', '', $user);
-    }
-
-    //delete roles
-    $edit['rid'] = $rid;
-    $this->_rolesApi('delete', $edit);
-
-  }
-
-}
-
-
-class ProfileTest2TestCase extends DrupalWebTestCase {
-  function getInfo() {
-    $modules = (module_list());
-    return array('name' => 'Test other fields', 'description' => "Testing weight, title page, required" , 'group' => t('Profile'));
-  }
-
-  function _rolesApi($op, $edit) {
-    if ($op == 'delete') {
-      $id = $edit['rid'];
-      db_query('DELETE FROM {role} WHERE rid = %d', $id);
-      db_query('DELETE FROM {permission} WHERE rid = %d', $id);
-
-      // Update the users who have this role set:
-      $result = db_query('SELECT DISTINCT(ur1.uid) FROM {users_roles} ur1 LEFT JOIN {users_roles} ur2 ON ur2.uid = ur1.uid WHERE ur1.rid = %d AND ur2.rid != ur1.rid', $id);
-      $uid = array();
-
-      while ($u = db_fetch_object($result)) {
-        $uid[] = $u->uid;
-      }
-
-      if ($uid) {
-        db_query('DELETE FROM {users_roles} WHERE rid = %d AND uid IN (%s)', $id, implode(', ', $uid));
-      }
-
-      // Users with only the deleted role are put back in the authenticated users pool.
-      db_query('UPDATE {users_roles} SET rid = %d WHERE rid = %d', DRUPAL_AUTHENTICATED_RID, $id);
-
-    }
-    else if ($op == 'add') {
-      if (isset($edit['name'])) {
-        db_query("INSERT INTO {role} (name) VALUES ('%s')", $edit['name']);
-        $result = db_query("SELECT rid FROM {role} WHERE name = '%s'", $edit['name']);
-        $rid = db_result($result);
-        db_query("INSERT INTO {permission} (rid, perm) VALUES (%d, '%s')", $rid, $edit['perm']);
-        return $rid;
-      }
-      else {
-        return 0;
-      }
-    }
-
-  }
-
-  function testProfileOtherFields() {
-    $this->drupalModuleEnable('profile');
-    // create test user
-    $edit['name'] = 'Profile '. $this->randomName(5);
-    $edit['perm'] = 'access content, administer users, access user profiles, administer site configuration, access administration pages, access configuration pages, access user profiles';
-    $rid = $this->_rolesApi('add', $edit );
-    $name = $this->randomName();
-    $pass = $this->randomName();
-    $mail = "$name@example.com";
-    unset($edit);
-    $edit['roles'] = array($rid => $rid);
-    $user = user_save('', array('name' => $name, 'pass' => $pass, 'init' => $mail, 'mail' => $mail, 'roles' => $edit['roles'], 'status' => 1));
-    //log in
-    $edit = array('name' => $name, 'pass' => $pass);
-    $this->drupalPost('user', $edit, t('Log in'), 0);
-    //wartosci
-    $my_category = $this->randomName(10);
-    //single line textfield
-    $title = "first_" . $this->randomName(10);
-    $form_name = 'profile_' . $title;
-    // weight
-    $weight = 3;
-    $edit = array('category' => $my_category, 'title' => $title, 'name' => $form_name, 'weight' => $weight, 'required' => 1);
-    $this->drupalPost("admin/user/profile/add/textfield", $edit, t('Save field'), 0);
-    $fid = db_result(db_query('SELECT fid FROM {profile_fields} WHERE title = "%s"', $title));
-    $sfield1 = array('fid'=> $fid, 'title' => $title);
-    //second one line textfield
-    $title = "second_" . $this->randomName(10);
-    $form_name = 'profile_' . $title;
-    // weight
-    $weight = -2;
-    $edit = array('category' => $my_category, 'title' => $title, 'name' => $form_name, 'weight' => $weight, 'register' => 1, 'required' => 1);
-    $this->drupalPost("admin/user/profile/add/textfield", $edit, t('Save field'), 0);
-    $fid = db_result(db_query('SELECT fid FROM {profile_fields} WHERE title = "%s"', $title));
-    $sfield2 = array('fid'=> $fid, 'title' => $title);
-    // checking
-    $this->drupalGet("user/". $user->uid. "/edit/$my_category");
-    $content = $this->drupalGetContent();
-    $pos1 = strpos($content, $sfield1['title']);
-    $pos2 = strpos($content, $sfield2['title']);
-    $this->assertTrue($pos2 < $pos1, 'Checking weight field');
-    $delete_fields = array();
-    $delete_fields[] = $sfield1['fid'];
-    $delete_fields[] = $sfield2['fid'];
-    // check if this field is visible in registration form
-    // logout
-    $this->drupalGet("logout");
-    $this->drupalGet("user/register");
-    $this->assertNoText($sfield1['title'], 'Field is not visible in registration form');
-    $this->assertText($sfield2['title'], 'Field is visible in registration form');
-    // try to register
-    $fname = $this->randomName(5, 'simpletest_');
-    $fmail = "$fname@drupaltest.example.com";
-    $edit = array('name' => $fname,
-               'mail' => $fmail);
-    $this->drupalPost('user/register', $edit, t('Create new account'), 0);
-    //$key = t('The field %field is required.', array('%field' => $title));
-    //$this->assertText($key, 'Checking error message');
-    //log in
-    $edit = array('name' => $name, 'pass' => $pass);
-    $this->drupalPost('user', $edit, t('Log in'), 0);
-    // TITLE
-    //selection
-    $title =  $this->randomName(10);
-    $form_name = 'profile_' . $title;
-    $page_title = $this->randomName(5) . " %value";
-    $options = "";
-    for($i = 0; $i < 3; $i++)
-      $options .= $this->randomName(8) . "\n";
-    $edit = array('category' => $my_category, 'title' => $title, 'name' => $form_name, 'page' => $page_title, 'options' => $options);
-    $this->drupalPost("admin/user/profile/add/selection", $edit, t('Save field'), 0);
-    $fid = db_result(db_query('SELECT fid FROM {profile_fields} WHERE title = "%s"', $title));
-    $element = rand(0,2);
-    $op_tab = explode("\n", $options,3);
-    $choice = rtrim($op_tab[$element]);
-    // checking
-    $this->drupalGet("profile/". $form_name. "/$choice");
-    $title = str_replace("%value", $choice, $page_title);
-
-    $this->assertTitle($title. ' | '. variable_get('site_name', 'Drupal'), "Checking title $title");
-    $this->assertText($title, "Checking $title in content");
-    $delete_fields[] = $fid;
-
-    foreach($delete_fields as $delfid) {
-      $this->drupalPost("admin/user/profile/delete/".$delfid, array(), t('Delete'), 0 );
-    }
-    // delete test user and roles
-    if ($user->uid > 0) {
-      db_query('DELETE FROM {users} WHERE uid =' .
-          ' %d', $user->uid);
-      db_query('DELETE FROM {users_roles} WHERE uid = %d', $user->uid);
-      module_invoke_all('user', 'delete', '', $user);
-    }
-    //delete roles
-    $edit['rid'] = $rid;
-    $this->_rolesApi('delete', $edit);
-
-  }
-}
-
-?>
