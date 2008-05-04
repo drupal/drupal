@@ -1,18 +1,12 @@
 <?php
 // $Id$
 
+/**
+ * A class for common methods for testing profile fields.
+ */
 class ProfileTestCase extends DrupalWebTestCase {
   protected $admin_user;
   protected $normal_user;
-  /**
-   * Implementation of getInfo().
-   */
-  function getInfo() {
-    return array(
-      'name' => 'Test single field',
-      'description' => t('Testing profile module with add/edit/delete new fields into profile page') ,
-      'group' => t('Profile'));
-  }
 
   function setUp() {
     parent::setUp();
@@ -24,92 +18,6 @@ class ProfileTestCase extends DrupalWebTestCase {
     // This is the user whose profile will be edited.
     $this->normal_user = $this->drupalCreateUser();
   }
-
-  /**
-   * Test each of the field types. List selection and date fields are tested
-   * separately because they need some special handling.
-   */
-  function testProfileFields() {
-    // Set test values for every field type.
-    $field_types = array(
-      'textfield' => $this->randomName(),
-      'textarea' => $this->randomName(),
-      'list' => $this->randomName(),
-      'checkbox' => 1,
-      'url' => 'http://www.' . $this->randomName(10). '.org',
-    );
-
-    // For each field type, create a field, give it a value and delete the field.
-    foreach ($field_types as $type => $value) {
-      $field = $this->createProfileField($type);
-      $this->setProfileField($field, $value);
-      $this->deleteProfileField($field);
-    }
-  }
-
-  /**
-   * Create a list selection field, give it a value, and delete the field.
-   */
-  function testProfileSelectionField() {
-    $edit = array(
-      'options' => implode("\n", range(1, 10)),
-    );
-    $field = $this->createProfileField('selection', 'simpletest', $edit);
-
-    $this->setProfileField($field, rand(1, 10));
-
-    $this->deleteProfileField($field);
-  }
-
-  /**
-   * Create a date field, give it a value, and delete the field.
-   */
-  function testProfileDateField() {
-    variable_set('date_format_short', 'm/d/Y - H:i');
-    $field = $this->createProfileField('date');
-
-    // Set date to January 09, 1983
-    $edit = array(
-      $field['form_name'] .'[month]' => 1,
-      $field['form_name'] .'[day]' => 9,
-      $field['form_name'] .'[year]' => 1983,
-    );
-
-    $this->drupalPost('user/' . $this->normal_user->uid . '/edit/' . $field['category'], $edit, t('Save'));
-
-    // Check profile page.
-    $this->drupalGet('user/' . $this->normal_user->uid);
-    $this->assertText($field['title'], t('Found profile field with title %title', array('%title' => $field['title'])));
-
-    $this->assertText('01/09/1983', t('Found date profile field.'));
-
-    $this->deleteProfileField($field);
-  }
-
-  function testProfileFieldWeights() {
-    $category = $this->randomName();
-    $field1 = $this->createProfileField('textfield', $category, array('weight' => 1));
-    $field2 = $this->createProfileField('textfield', $category, array('weight' => -1));
-
-    $this->setProfileField($field1, $this->randomName(4, 'first_'));
-    $this->setProfileField($field2, $this->randomName(4, 'second_'));
-
-    $profile_edit = $this->drupalGet('user/' . $this->normal_user->uid . '/edit/' . $category);
-    $this->assertTrue(strpos($profile_edit, $field1['title']) > strpos($profile_edit, $field2['title']), t('Profile field weights are respected on the user edit form.'));
-
-    $profile_page = $this->drupalGet('user/' . $this->normal_user->uid);
-    $this->assertTrue(strpos($profile_page, $field1['title']) > strpos($profile_page, $field2['title']), t('Profile field weights are respected on the user profile page.'));
-  }
-
-  /**
-   * TODO:
-   * - Test field visibility
-   * - Test profile browsing
-   * - Test autocomplete
-   * - Test required fields
-   * - Test fields on registration form
-   * - Test updating fields
-   */
 
   /**
    * Create a profile field.
@@ -124,8 +32,6 @@ class ProfileTestCase extends DrupalWebTestCase {
    *   The fid of the field that was just created.
    */
   function createProfileField($type = 'textfield', $category = 'simpletest', $edit = array()) {
-    $this->drupalLogin($this->admin_user);
-
     $edit['title'] = $title = $this->randomName(4, $type . '_');
     $edit['name'] = $form_name = 'profile_' . $title;
     $edit['category'] = $category;
@@ -173,7 +79,6 @@ class ProfileTestCase extends DrupalWebTestCase {
    *   The value that has been assigned to
    */
   function setProfileField($field, $value = NULL) {
-    $this->drupalLogin($this->normal_user);
 
     if (!isset($value)) {
       $value = $this->randomName();
@@ -203,9 +108,154 @@ class ProfileTestCase extends DrupalWebTestCase {
    *   The field to be deleted.
    */
   function deleteProfileField($field) {
-    $this->drupalLogin($this->admin_user);
     $this->drupalPost('admin/user/profile/delete/' . $field['fid'], array(), t('Delete'));
     $this->drupalGet('admin/user/profile');
     $this->assertNoText($field['title'], t('Checking deleted field %title', array('%title' => $field['title'])));
   }
 }
+
+class ProfileTestFields extends ProfileTestCase {
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => 'Test single fields',
+      'description' => t('Testing profile module with add/edit/delete textfield, textarea, list, checkbox, and url fields into profile page') ,
+      'group' => t('Profile'));
+  }
+
+  /**
+   * Test each of the field types. List selection and date fields are tested
+   * separately because they need some special handling.
+   */
+  function testProfileFields() {
+    $this->drupalLogin($this->admin_user);
+
+    // Set test values for every field type.
+    $field_types = array(
+      'textfield' => $this->randomName(),
+      'textarea' => $this->randomName(),
+      'list' => $this->randomName(),
+      'checkbox' => 1,
+      'url' => 'http://www.' . $this->randomName(10). '.org',
+    );
+
+    // For each field type, create a field, give it a value and delete the field.
+    foreach ($field_types as $type => $value) {
+      $field = $this->createProfileField($type);
+      $this->setProfileField($field, $value);
+      $this->deleteProfileField($field);
+    }
+  }
+}
+
+class ProfileTestSelect extends ProfileTestCase {
+
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => 'Test select field',
+      'description' => t('Testing profile module with add/edit/delete a select field') ,
+      'group' => t('Profile'));
+  }
+
+  /**
+   * Create a list selection field, give it a value, and delete the field.
+   */
+  function testProfileSelectionField() {
+    $this->drupalLogin($this->admin_user);
+
+    $edit = array(
+      'options' => implode("\n", range(1, 10)),
+    );
+    $field = $this->createProfileField('selection', 'simpletest', $edit);
+
+    $this->setProfileField($field, rand(1, 10));
+
+    $this->deleteProfileField($field);
+  }
+}
+
+class ProfileTestDate extends ProfileTestCase {
+
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => 'Test date field',
+      'description' => t('Testing profile module with add/edit/delete a date field') ,
+      'group' => t('Profile'));
+  }
+
+  /**
+   * Create a date field, give it a value, and delete the field.
+   */
+  function testProfileDateField() {
+    $this->drupalLogin($this->admin_user);
+
+    variable_set('date_format_short', 'm/d/Y - H:i');
+    $field = $this->createProfileField('date');
+
+    // Set date to January 09, 1983
+    $edit = array(
+      $field['form_name'] .'[month]' => 1,
+      $field['form_name'] .'[day]' => 9,
+      $field['form_name'] .'[year]' => 1983,
+    );
+
+    $this->drupalPost('user/' . $this->normal_user->uid . '/edit/' . $field['category'], $edit, t('Save'));
+
+    // Check profile page.
+    $this->drupalGet('user/' . $this->normal_user->uid);
+    $this->assertText($field['title'], t('Found profile field with title %title', array('%title' => $field['title'])));
+
+    $this->assertText('01/09/1983', t('Found date profile field.'));
+
+    $this->deleteProfileField($field);
+  }
+}
+
+class ProfileTestWeights extends ProfileTestCase {
+
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => 'Test field weights',
+      'description' => t('Testing profile modules weigting of fields') ,
+      'group' => t('Profile'));
+  }
+
+  function testProfileFieldWeights() {
+    $this->drupalLogin($this->admin_user);
+
+    $category = $this->randomName();
+    $field1 = $this->createProfileField('textfield', $category, array('weight' => 1));
+    $field2 = $this->createProfileField('textfield', $category, array('weight' => -1));
+
+    $this->setProfileField($field1, $this->randomName(4, 'first_'));
+    $this->setProfileField($field2, $this->randomName(4, 'second_'));
+
+    $profile_edit = $this->drupalGet('user/' . $this->normal_user->uid . '/edit/' . $category);
+    $this->assertTrue(strpos($profile_edit, $field1['title']) > strpos($profile_edit, $field2['title']), t('Profile field weights are respected on the user edit form.'));
+
+    $profile_page = $this->drupalGet('user/' . $this->normal_user->uid);
+    $this->assertTrue(strpos($profile_page, $field1['title']) > strpos($profile_page, $field2['title']), t('Profile field weights are respected on the user profile page.'));
+  }
+}
+
+  /**
+   * TODO:
+   * - Test field visibility
+   * - Test profile browsing
+   * - Test autocomplete
+   * - Test required fields
+   * - Test fields on registration form
+   * - Test updating fields
+   */
+
