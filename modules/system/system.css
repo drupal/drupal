@@ -163,6 +163,10 @@ tr.merge-up, tr.merge-up td, tr.merge-up th {
 .more-link {
   text-align: right; /* LTR */
 }
+.module-help {
+  margin-left: 1em; /* LTR */
+  float: right; /* LTR */
+}
 .nowrap {
   white-space: nowrap;
 }

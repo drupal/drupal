@@ -639,6 +639,8 @@ function system_modules($form_state = array()) {
     }
   }
 
+  // Used when checking if module implements a help page.
+  $help_arg = module_exists('help') ? drupal_help_arg() : FALSE;
   // Array for disabling checkboxes in callback system_module_disable.
   $disabled = array();
   // Traverse the files retrieved and build the form.
@@ -646,6 +648,15 @@ function system_modules($form_state = array()) {
     $form['name'][$filename] = array('#value' => $file->info['name']);
     $form['version'][$filename] = array('#value' => $file->info['version']);
     $form['description'][$filename] = array('#value' => t($file->info['description']));
+
+    // Generate link for module's help page, if there is one.
+    if ($help_arg && module_hook($filename, 'help')) {
+      if (module_invoke($filename, 'help', "admin/help#$filename", $help_arg)) {
+        // Module has a help page.
+        $form['help'][$filename] = array('#value' => theme('more_help_link', url("admin/help/$filename")));
+      }
+    }
+
     $options[$filename] = '';
     // Ensure this module is compatible with this version of core and php.
     if (_system_is_incompatible($incompatible_core, $files, $file) || _system_is_incompatible($incompatible_php, $files, $file)) {
@@ -2078,7 +2089,11 @@ function theme_system_modules($form) {
     $rows = array();
     foreach ($modules as $key => $module) {
       $row = array();
-      $description = drupal_render($form['description'][$key]);
+      $description = '';
+      if (isset($form['help'][$key])) {
+        $description = '<div class="module-help">'. drupal_render($form['help'][$key]) .'</div>';
+      }
+      $description .= drupal_render($form['description'][$key]);
       if (isset($form['status']['#incompatible_modules_core'][$key])) {
         unset($form['status'][$key]);
         $status = theme('image', 'misc/watchdog-error.png', t('incompatible'), t('Incompatible with this version of Drupal core'));

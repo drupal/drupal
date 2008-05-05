@@ -250,6 +250,10 @@ span.submitted, .description {
   color: #898989;
 }
 
+.description .more-help-link {
+  font-size: 0.92em;
+}
+
 .description {
   line-height: 150%;
   margin-bottom: 0.75em;
