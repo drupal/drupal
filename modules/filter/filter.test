@@ -1,7 +1,7 @@
 <?php
 // $Id$
 
-class FilterTestCase extends DrupalWebTestCase {
+class FilterAdminTestCase extends DrupalWebTestCase {
   /**
    * Implementation of getInfo().
    */
@@ -16,7 +16,7 @@ class FilterTestCase extends DrupalWebTestCase {
   /**
    * Test filter administration functionality.
    */
-  function testFilter() {
+  function testFilterAdmin() {
     $first_filter = 2; // URL filter.
     $second_filter = 1; // Line filter.
 
@@ -34,12 +34,12 @@ class FilterTestCase extends DrupalWebTestCase {
     $this->drupalPost('admin/settings/filters', $edit, t('Save changes'));
     $this->assertText(t('Default format updated.'), t('Default filter updated successfully.'));
 
-    $this->assertNoRaw('admin/settings/filters/delete/'. $full, t('Delete link not found.'));
+    $this->assertNoRaw('admin/settings/filters/delete/' . $full, t('Delete link not found.'));
 
     // Add an additional tag.
     $edit = array();
-    $edit['allowed_html_1'] = '<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd>'.' <quote>'; // Adding <quote> tag.
-    $this->drupalPost('admin/settings/filters/'. $filtered .'/configure', $edit, t('Save configuration'));
+    $edit['allowed_html_1'] = '<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd>' . ' <quote>'; // Adding <quote> tag.
+    $this->drupalPost('admin/settings/filters/' . $filtered .'/configure', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), t('Allowed HTML tag added.'));
 
     $this->assertRaw(htmlentities($edit['allowed_html_1']), t('Tag displayed.'));
@@ -49,9 +49,9 @@ class FilterTestCase extends DrupalWebTestCase {
 
     // Reorder filters.
     $edit = array();
-    $edit['weights[filter/'. $second_filter .']'] = 1;
-    $edit['weights[filter/'. $first_filter .']'] = 2;
-    $this->drupalPost('admin/settings/filters/'. $filtered .'/order', $edit, t('Save configuration'));
+    $edit['weights[filter/' . $second_filter .']'] = 1;
+    $edit['weights[filter/' . $first_filter .']'] = 2;
+    $this->drupalPost('admin/settings/filters/' . $filtered . '/order', $edit, t('Save configuration'));
     $this->assertText(t('The filter ordering has been saved.'), t('Order saved successfully.'));
 
     $result = db_query('SELECT * FROM {filters} WHERE format = %d ORDER BY weight ASC', $filtered);
@@ -67,8 +67,8 @@ class FilterTestCase extends DrupalWebTestCase {
     $edit = array();
     $edit['name'] = $this->randomName();
     $edit['roles[2]'] = TRUE;
-    $edit['filters[filter/'. $second_filter .']'] = TRUE;
-    $edit['filters[filter/'. $first_filter .']'] = TRUE;
+    $edit['filters[filter/' . $second_filter . ']'] = TRUE;
+    $edit['filters[filter/' . $first_filter . ']'] = TRUE;
     $this->drupalPost('admin/settings/filters/add', $edit, t('Save configuration'));
     $this->assertRaw(t('Added input format %format.', array('%format' => $edit['name'])), t('New filter created.'));
 
@@ -77,11 +77,11 @@ class FilterTestCase extends DrupalWebTestCase {
 
     if ($format !== NULL) {
       $this->assertFieldByName('roles[2]', '', t('Role found.'));
-      $this->assertFieldByName('filters[filter/'. $second_filter .']', '', t('Line break filter found.'));
-      $this->assertFieldByName('filters[filter/'. $first_filter .']', '', t('Url filter found.'));
+      $this->assertFieldByName('filters[filter/' . $second_filter . ']', '', t('Line break filter found.'));
+      $this->assertFieldByName('filters[filter/' . $first_filter . ']', '', t('Url filter found.'));
 
       // Delete new filter.
-      $this->drupalPost('admin/settings/filters/delete/'. $format->format, array(), t('Delete'));
+      $this->drupalPost('admin/settings/filters/delete/' . $format->format, array(), t('Delete'));
       $this->assertRaw(t('Deleted input format %format.', array('%format' => $edit['name'])), t('Format successfully deleted.'));
     }
 
@@ -91,12 +91,12 @@ class FilterTestCase extends DrupalWebTestCase {
     $this->drupalPost('admin/settings/filters', $edit, t('Save changes'));
     $this->assertText(t('Default format updated.'), t('Default filter updated successfully.'));
 
-    $this->assertNoRaw('admin/settings/filters/delete/'. $filtered, t('Delete link not found.'));
+    $this->assertNoRaw('admin/settings/filters/delete/' . $filtered, t('Delete link not found.'));
 
     // Allow authenticated users on full HTML.
     $edit = array();
     $edit['roles[2]'] = TRUE;
-    $this->drupalPost('admin/settings/filters/'. $full, $edit, t('Save configuration'));
+    $this->drupalPost('admin/settings/filters/' . $full, $edit, t('Save configuration'));
     $this->assertText(t('The input format settings have been updated.'), t('Full HTML format successfully updated.'));
 
     // Switch user.
@@ -112,7 +112,7 @@ class FilterTestCase extends DrupalWebTestCase {
 
     $edit = array();
     $edit['title'] = $this->randomName();
-    $edit['body'] = $body .'<random>'. $extra_text .'</random>';
+    $edit['body'] = $body . '<random>' . $extra_text . '</random>';
     $edit['format'] = $filtered;
     $this->drupalPost('node/add/page', $edit, t('Save'));
     $this->assertRaw(t('Page %title has been created.', array('%title' => $edit['title'])), t('Filtered node created.'));
@@ -120,7 +120,7 @@ class FilterTestCase extends DrupalWebTestCase {
     $node = node_load(array('title' => $edit['title']));
     $this->assertTrue($node, t('Node found in database.'));
 
-    $this->drupalGet('node/'. $node->nid);
+    $this->drupalGet('node/' . $node->nid);
     $this->assertText($body . $extra_text, t('Filter removed invalid tag.'));
 
     // Switch user.
@@ -131,20 +131,20 @@ class FilterTestCase extends DrupalWebTestCase {
     // Allowed tags.
     $edit = array();
     $edit['allowed_html_1'] = '<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd>';
-    $this->drupalPost('admin/settings/filters/'. $filtered .'/configure', $edit, t('Save configuration'));
+    $this->drupalPost('admin/settings/filters/' . $filtered .'/configure', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), t('Changes reverted.'));
 
     // Full HTML.
     $edit = array();
     $edit['roles[2]'] = FALSE;
-    $this->drupalPost('admin/settings/filters/'. $full, $edit, t('Save configuration'));
+    $this->drupalPost('admin/settings/filters/' . $full, $edit, t('Save configuration'));
     $this->assertText(t('The input format settings have been updated.'), t('Full HTML format successfully reverted.'));
 
     // Filter order.
     $edit = array();
-    $edit['weights[filter/'. $second_filter .']'] = 2;
-    $edit['weights[filter/'. $first_filter .']'] = 1;
-    $this->drupalPost('admin/settings/filters/'. $filtered .'/order', $edit, t('Save configuration'));
+    $edit['weights[filter/' . $second_filter .']'] = 2;
+    $edit['weights[filter/' . $first_filter .']'] = 1;
+    $this->drupalPost('admin/settings/filters/' . $filtered .'/order', $edit, t('Save configuration'));
     $this->assertText(t('The filter ordering has been saved.'), t('Order successfully reverted.'));
   }
 
@@ -178,5 +178,177 @@ class FilterTestCase extends DrupalWebTestCase {
    */
   function getFilter($name) {
     return db_fetch_object(db_query("SELECT * FROM {filter_formats} WHERE name = '%s'", $name));
+  }
+}
+
+class FilterTestCase extends DrupalWebTestCase {
+  protected $format;
+
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('Core filters'),
+      'description' => t('Filter each filter individually: Convert URLs into links, Convert line breaks, Correct broken HTML, Escape all HTML, Limit allowed HTML tags.'),
+      'group' => t('Filter'),
+    );
+  }
+
+  /**
+   * Implementation of setUp().
+   */
+  function setUp() {
+    parent::setUp();
+  }
+
+  /**
+   * Test the URL filter
+   */
+  function testUrlFilter() {
+    $url_filter = 2;
+
+    $format = $this->createFormat($url_filter);
+
+$body=<<<END
+Testing wwwstring with period at end www.test1.com. Testing email with period at end person@test2.com. Testing HTTP URL with period at end http://www.test3.com. Also test <code>using www.test4.com the code tag</code>.
+
+<blockquote>
+Test inside blockquote tag www.test5.com. email with person@test6.com. and url http://www.test7.com. And also <code>using www.test8.com the code tag and also inside <em>www.test9.com em tags</em> bla bla</code>.
+</blockquote>
+
+<code>One more simple code tag test? http://www.test10.com abc</code>
+
+Test the really simple cases next:
+
+http://www.test11.com
+www.test12.com
+person@test13.com
+<code>www.test14.com</code>
+
+What about tags that don't exist <x>like x say www.test15.com</x>? And what about tag <pooh>beginning www.test16.com with p?</pooh>
+
+Test &lt;br/&gt;: This is a www.test17.com. test <strong>with</strong> some http://www.test18.com various tags within the paragraph. *<br/> Also it is important www.test19.com to *<br/> test multiple different url's and wwwstrings http://www.test20.com urls in same paragraph. *<br/>I mean it www.test21.com many of them person@test22.com after each http://www.test23.com other *img*<img/> abc. This is just a www.test24.com paragraph with some http://www.test25.com urls thrown in. This is just a www.test26.com paragraph person@test27.com with some http://www.test28.com urls thrown in.
+
+<script>
+<!--
+  //Anything inside a javascript section should not be converted
+  testurl = "http://www.test29.com";
+-->
+</script>
+
+Again some simple tests inside various tags:
+
+<a href="foo">http://www.test30.com</a>
+<strong>http://www.test31.com</strong>
+<em>http://www.test32.com</em>
+
+And also test ftp URL ftp://ftp.test33.com.
+
+The old URL filter has problems with <a title="kind of link www.test41.com with text" href="http://www.test42.com">this kind of link</a> with www address as part of text in title. www.test43.com
+
+<dl>
+<dt>www.test44.com</dt>
+<dd>http://www.test45.com</dd>
+<dd>person@test46.com</dd>
+<dt>check www.test47.com</dt>
+<dd>this with some text around: http://www.test48.com not so easy person@test49.com now?</dd>
+</dl>
+
+<!-- This url www.test50.com is inside a comment -->
+
+hello.... there!
+END;
+
+
+
+    $edit = array();
+    $edit['title'] = $this->randomName();
+    $edit['body'] = $body;
+    $edit['format'] = $format->format;
+    $edit['type'] = 'page';
+    $page = $this->drupalCreateNode($edit);
+
+    $this->drupalGet('node/' .$page->nid);
+    $this->assertRaw('href="http://www.test1.com"', t('Parse simple www-string but not the end-of-sentence period.'));
+    $this->assertRaw('href="mailto:person@test2.com"', t('Parse simple email string but not the end-of-sentence period.'));
+    $this->assertRaw('href="http://www.test3.com"', t('Parse simple HTTP URL but not the end-of-sentence period.'));
+    $this->assertNoRaw('href="http://www.test4.com"', t('Do not parse simple HTTP URL inside code tags.'));
+    $this->assertRaw('href="http://www.test5.com"', t('Parse www-string inside blockquote tag.'));
+    $this->assertRaw('href="mailto:person@test6.com"', t('Parse email string inside blockquote tag.'));
+    $this->assertRaw('href="http://www.test7.com"', t('Parse HTTP URL inside blockquote tag'));
+    $this->assertNoRaw('href="http://www.test8.com"', t('Do not parse simple HTTP URL inside code tags.'));
+    $this->assertNoRaw('href="http://www.test9.com"', t('Do not parse simple HTTP URL inside em nested inside code tags.'));
+    $this->assertNoRaw('href="http://www.test10.com"', t('Do not parse simple HTTP URL inside code tags.'));
+    $this->assertRaw('href="http://www.test11.com"', t('Parse simple HTTP URL.'));
+    $this->assertRaw('href="http://www.test12.com"', t('Parse simple www-string.'));
+    $this->assertRaw('href="mailto:person@test13.com"', t('Parse simple email string.'));
+    $this->assertNoRaw('href="http://www.test14.com"', t('Do not parse simple HTTP URL inside code tags.'));
+    $this->assertRaw('href="http://www.test15.com"', t('Parse www-string inside tag not part of HTML spec ( <x> ).'));
+    $this->assertRaw('href="http://www.test16.com"', t('Parse www-string inside tag not part of HTML spec but beginning with p ( <pooh> ).'));
+    $this->assertRaw('href="http://www.test17.com"', t('Parse multiple www-strings inside same paragraph.'));
+    $this->assertRaw('href="http://www.test18.com"', t('Parse multiple www-strings inside same paragraph.'));
+    $this->assertRaw('href="http://www.test19.com"', t('Parse multiple www-strings inside same paragraph.'));
+    $this->assertRaw('href="http://www.test20.com"', t('Parse multiple www-strings inside same paragraph limited with <br>.'));
+    $this->assertRaw('href="http://www.test21.com"', t('Parse multiple www-strings inside same paragraph limited with <br>.'));
+    $this->assertRaw('href="mailto:person@test22.com"', t('Parse email string with multiple www-strings inside same paragraph limited with <br>.'));
+    $this->assertRaw('href="http://www.test23.com"', t('Parse multiple www-strings inside same paragraph limited with <br>.'));
+    $this->assertRaw('href="http://www.test24.com"', t('Parse multiple www-strings inside same paragraph limited with <br> and <img>.'));
+    $this->assertRaw('href="http://www.test25.com"', t('Parse multiple www-strings inside same paragraph limited with <br> and <img>.'));
+    $this->assertRaw('href="http://www.test26.com"', t('Parse multiple www-strings inside same paragraph limited with <br> and <img>.'));
+    $this->assertRaw('href="mailto:person@test27.com"', t('Parse email string with multiple www-strings inside same paragraph limited with <br> and <img>.'));
+    $this->assertRaw('href="http://www.test28.com"', t('Parse multiple www-strings inside same paragraph limited with <br> and <img>.'));
+    $this->assertNoRaw('href="http://www.test29.com"', t('Do not parse URL inside a script element (part of javascript code).'));
+    $this->assertNoRaw('href="http://www.test30.com"', t('Do not parse URL inside an a element.'));
+    $this->assertRaw('href="http://www.test31.com"', t('Parse URL inside strong tag.'));
+    $this->assertRaw('href="http://www.test32.com"', t('Parse URL inside em tag.'));
+    $this->assertRaw('href="ftp://ftp.test33.com"', t('Parse ftp:// URL.'));
+    $this->assertNoRaw('href="http://www.test41.com"', t('Do not parse www-strings inside an a element title attribute.'));
+    $this->assertNoRaw('<a href="http://www.test42.com"', t('Do not parse URL that is already the href attribute of a link.'));
+    $this->assertRaw('href="http://www.test44.com"', t('Parse www-string inside dl dt tags.'));
+    $this->assertRaw('href="http://www.test45.com"', t('Parse URL inside dl dd tags.'));
+    $this->assertRaw('href="mailto:person@test46.com"', t('Parse email string inside dl dd tags.'));
+    $this->assertRaw('href="http://www.test47.com"', t('Parse www-string with text inside dl dd tags.'));
+    $this->assertRaw('href="http://www.test48.com"', t('Parse URL with text inside dl dd tags.'));
+    $this->assertRaw('href="mailto:person@test49.com"', t('Parse email string with text inside dl dd tags.'));
+    $this->assertNoRaw('href="http://www.test50.com"', t('Do not parse URL that is inside HTML comment.'));
+    $this->assertRaw('hello.... there!', t('Verify that last part of normal text is preserved intact.'));
+
+
+    $this->deleteFormat($format);
+  }
+
+  /**
+   * Test the line break filter
+   */
+  function testLineBreakFilter() {
+
+  }
+
+  /**
+   * Test the HTML filter
+   */
+  function testHtmlFilter() {
+
+  }
+
+  function createFormat($filter) {
+    $admin_user = $this->drupalCreateUser(array('administer filters, create page content'));
+    $this->drupalLogin($admin_user);
+
+    $edit = array(
+      'name' => $this->randomName(),
+      'roles[2]' => TRUE,
+      'filters[filter/' . $filter . ']' => TRUE,
+    );
+    $this->drupalPost('admin/settings/filters/add', $edit, t('Save configuration'));
+    return db_fetch_object(db_query("SELECT * FROM {filter_formats} WHERE name = '%s'", $edit['name']));
+  }
+
+  function deleteFormat($format) {
+    if ($format !== NULL) {
+      // Delete new filter.
+      $this->drupalPost('admin/settings/filters/delete/' . $format->format, array(), t('Delete'));
+    }
   }
 }
