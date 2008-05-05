@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.44 2008/04/28 09:25:27 dries Exp $ */
+/* $Id: style.css,v 1.45 2008/05/05 21:10:48 dries Exp $ */
 
 /**
  * Generic elements
@@ -248,6 +248,10 @@ span.form-required {
 span.submitted, .description {
   font-size: 0.92em;
   color: #898989;
+}
+
+.description .more-help-link {
+  font-size: 0.92em;
 }
 
 .description {

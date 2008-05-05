@@ -1,4 +1,4 @@
-/* $Id: system.css,v 1.50 2008/04/25 18:28:18 dries Exp $ */
+/* $Id: system.css,v 1.51 2008/05/05 21:10:48 dries Exp $ */
 
 /*
 ** HTML elements
@@ -162,6 +162,10 @@ tr.merge-up, tr.merge-up td, tr.merge-up th {
 }
 .more-link {
   text-align: right; /* LTR */
+}
+.module-help {
+  margin-left: 1em; /* LTR */
+  float: right; /* LTR */
 }
 .nowrap {
   white-space: nowrap;
