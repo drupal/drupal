@@ -1257,6 +1257,9 @@ function menu_navigation_links($menu_name, $level = 0) {
       $l = $item['link']['localized_options'];
       $l['href'] = $item['link']['href'];
       $l['title'] = $item['link']['title'];
+      if ($item['link']['in_active_trail']) {
+        $l['attributes'] = array('class' => 'active-trail');
+      }
       // Keyed with unique menu id to generate classes from theme_links().
       $links['menu-' . $item['link']['mlid']] = $l;
     }
