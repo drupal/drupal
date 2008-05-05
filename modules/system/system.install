@@ -750,7 +750,7 @@ function system_schema() {
         'default' => '',
       ),
       'to_arg_functions' => array(
-        'description' => t('A serialized array of function names (like user_current_to_arg) to be called to replace a part of the router path with another string.'),
+        'description' => t('A serialized array of function names (like user_uid_optional_to_arg) to be called to replace a part of the router path with another string.'),
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
