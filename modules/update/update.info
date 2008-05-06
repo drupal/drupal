@@ -1,6 +1,11 @@
-; $Id: update.info,v 1.2 2008/02/18 19:19:48 dries Exp $
+; $Id: update.info,v 1.3 2008/05/06 12:18:53 dries Exp $
 name = Update status
 description = Checks the status of available updates for Drupal and your installed modules and themes.
 version = VERSION
 package = Core - optional
 core = 7.x
+files[] = update.module
+files[] = update.compare.inc
+files[] = update.fetch.inc
+files[] = update.report.inc
+files[] = update.settings.inc

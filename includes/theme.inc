@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.421 2008/05/02 15:11:04 dries Exp $
+// $Id: theme.inc,v 1.422 2008/05/06 12:18:45 dries Exp $
 
 /**
  * @file
@@ -177,7 +177,9 @@ function _init_theme($theme, $base_theme = array(), $registry_callback = '_theme
     }
   }
 
-  $registry_callback($theme, $base_theme, $theme_engine);
+  if (drupal_function_exists($registry_callback)) {
+    $registry_callback($theme, $base_theme, $theme_engine);
+  }
 }
 
 /**
@@ -628,7 +630,7 @@ function theme() {
       // call_user_func_array.
       $args = array(&$variables, $hook);
       foreach ($info['preprocess functions'] as $preprocess_function) {
-        if (function_exists($preprocess_function)) {
+        if (drupal_function_exists($preprocess_function)) {
           call_user_func_array($preprocess_function, $args);
         }
       }

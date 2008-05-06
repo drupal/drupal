@@ -1,4 +1,4 @@
-; $Id: forum.info,v 1.7 2008/02/18 19:19:45 dries Exp $
+; $Id: forum.info,v 1.8 2008/05/06 12:18:47 dries Exp $
 name = Forum
 description = Enables threaded discussions about general topics.
 dependencies[] = taxonomy
@@ -6,3 +6,6 @@ dependencies[] = comment
 package = Core - optional
 version = VERSION
 core = 7.x
+files[] = forum.module
+files[] = forum.admin.inc
+files[] = forum.pages.inc

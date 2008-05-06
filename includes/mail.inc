@@ -1,5 +1,5 @@
 <?php
-// $Id: mail.inc,v 1.12 2008/04/14 17:48:33 dries Exp $
+// $Id: mail.inc,v 1.13 2008/05/06 12:18:45 dries Exp $
 
 /**
  * Compose and optionally send an e-mail message.
@@ -115,7 +115,7 @@ function drupal_mail($module, $key, $to, $language, $params = array(), $from = N
   // Build the e-mail (get subject and body, allow additional headers) by
   // invoking hook_mail() on this module. We cannot use module_invoke() as
   // we need to have $message by reference in hook_mail().
-  if (function_exists($function = $module . '_mail')) {
+  if (drupal_function_exists($function = $module . '_mail')) {
     $function($key, $message, $params);
   }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.117 2008/04/14 17:48:33 dries Exp $
+// $Id: install.php,v 1.118 2008/05/06 12:18:44 dries Exp $
 
 require_once './includes/install.inc';
 
@@ -785,8 +785,8 @@ if (Drupal.jsEnabled) {
 
   // The end of the install process. Remember profile used.
   if ($task == 'done') {
-    // Rebuild menu to get content type links registered by the profile,
-    // and possibly any other menu items created through the tasks.
+    // Rebuild menu and registry to get content type links registered by the
+    // profile, and possibly any other menu items created through the tasks.
     menu_rebuild();
 
     // Register actions declared by any modules.

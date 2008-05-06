@@ -1,6 +1,7 @@
-; $Id: syslog.info,v 1.3 2008/02/18 19:19:47 dries Exp $
+; $Id: syslog.info,v 1.4 2008/05/06 12:18:50 dries Exp $
 name = Syslog
 description = Logs and records system events to syslog.
 package = Core - optional
 version = VERSION
 core = 7.x
+files[] = syslog.module

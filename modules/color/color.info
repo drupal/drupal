@@ -1,6 +1,7 @@
-; $Id: color.info,v 1.5 2008/03/23 14:49:29 dries Exp $
+; $Id: color.info,v 1.6 2008/05/06 12:18:46 dries Exp $
 name = Color
 description = Allows administrators to change the color scheme of compatible themes.
 package = Core - optional
 version = VERSION
 core = 7.x
+files[] = color.module

@@ -1,5 +1,5 @@
 <?php
-// $Id: xmlrpcs.inc,v 1.26 2008/04/28 10:04:05 dries Exp $
+// $Id: xmlrpcs.inc,v 1.27 2008/05/06 12:18:45 dries Exp $
 
 /**
  * The main entry point for XML-RPC requests.
@@ -202,7 +202,7 @@ function xmlrpc_server_call($xmlrpc_server, $methodname, $args) {
     }
   }
 
-  if (!function_exists($method)) {
+  if (!drupal_function_exists($method)) {
     return xmlrpc_error(-32601, t('Server error. Requested function @method does not exist.', array("@method" => $method)));
   }
   // Call the mapped function

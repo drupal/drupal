@@ -1,6 +1,9 @@
-; $Id: taxonomy.info,v 1.5 2008/02/18 19:19:47 dries Exp $
+; $Id: taxonomy.info,v 1.6 2008/05/06 12:18:51 dries Exp $
 name = Taxonomy
 description = Enables the categorization of content.
 package = Core - optional
 version = VERSION
 core = 7.x
+files[] = taxonomy.module
+files[] = taxonomy.admin.inc
+files[] = taxonomy.pages.inc

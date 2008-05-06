@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.60 2008/04/16 11:35:51 dries Exp $
+// $Id: install.inc,v 1.61 2008/05/06 12:18:45 dries Exp $
 
 define('SCHEMA_UNINSTALLED', -1);
 define('SCHEMA_INSTALLED', 0);
@@ -687,8 +687,9 @@ function drupal_check_profile($profile) {
   $requirements = array();
   foreach ($installs as $install) {
     require_once $install->filename;
-    if (module_hook($install->name, 'requirements')) {
-      $requirements = array_merge($requirements, module_invoke($install->name, 'requirements', 'install'));
+    $function = $install->name. '_requirements';
+    if (function_exists($function)) {
+      $requirements = array_merge($requirements, $function('install'));
     }
   }
   return $requirements;
