@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_test_suite.php,v 1.2 2008/04/23 17:49:50 dries Exp $
+// $Id: drupal_test_suite.php,v 1.3 2008/05/06 11:21:10 dries Exp $
 
 /**
  * Implements getTestInstances to allow access to the test objects from outside.
@@ -120,6 +120,9 @@ class DrupalTests extends DrupalTestSuite {
       if (file_exists($test)) {
         $files[] = $test;
       }
+    }
+    foreach (file_scan_directory('includes', '\.test$') as $file) {
+      $files[] = $file->filename;
     }
     return $files;
   }
