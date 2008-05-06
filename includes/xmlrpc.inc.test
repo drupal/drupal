@@ -1,7 +1,7 @@
 <?php
 // $Id$
 
-class XMLRPCValidator1Test extends DrupalUnitTestCase {
+class XMLRPCValidator1Test extends DrupalWebTestCase {
   function getInfo() {
     return array('name'  => t('XML-RPC validator1'),
                  'description'  => t('See !validator-link. note: simpletest_xmlrpc.module must be enabled', array('!validator-link' => l('the xmlrpc validator1 specification', 'http://www.xmlrpc.com/validator1Docs'))),

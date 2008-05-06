@@ -121,6 +121,9 @@ class DrupalTests extends DrupalTestSuite {
         $files[] = $test;
       }
     }
+    foreach (file_scan_directory('includes', '\.test$') as $file) {
+      $files[] = $file->filename;
+    }
     return $files;
   }
 
