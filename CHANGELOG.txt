@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.264 2008/04/22 09:18:47 dries Exp $
+// $Id: CHANGELOG.txt,v 1.265 2008/05/06 15:39:36 dries Exp $
 
 Drupal 7.0, xxxx-xx-xx (development version)
 ----------------------
@@ -26,6 +26,10 @@ Drupal 7.0, xxxx-xx-xx (development version)
 - Removed throttle module:
     * Alternative methods for improving performance are available in other core and
       contributed modules.
+- Added code registry:
+    * Modules now declare their includable files via their .info file.  That
+      allows Drupal to scan files when a module is enabled and then lazy-load
+      code as needed, resulting in significant performance and memory improvements.
 
 Drupal 6.0, 2008-02-13
 ----------------------
