@@ -4,3 +4,6 @@ description = Handles the filtering of content in preparation for display.
 package = Core - required
 version = VERSION
 core = 7.x
+files[] = filter.module
+files[] = filter.admin.inc
+files[] = filter.pages.inc

@@ -626,7 +626,8 @@ function _node_type_set_defaults($info) {
 function node_hook(&$node, $hook) {
   $module = node_get_types('module', $node);
   if ($module == 'node') {
-    $module = 'node_content'; // Avoid function name collisions.
+    // Avoid function name collisions.
+    $module = 'node_content';
   }
   return module_hook($module, $hook);
 }
@@ -926,7 +927,9 @@ function node_save(&$node) {
     db_query('UPDATE {node} SET vid = %d WHERE nid = %d', $node->vid, $node->nid);
   }
 
-  // Call the node specific callback (if any).
+  // Call the node specific callback (if any). This can be
+  // node_invoke($node, 'insert') or
+  // node_invoke($node, 'update').
   node_invoke($node, $op);
   node_invoke_nodeapi($node, $op);
 
@@ -1416,7 +1419,6 @@ function node_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('node_admin_content'),
     'access arguments' => array('administer nodes'),
-    'file' => 'node.admin.inc',
   );
 
   $items['admin/content/node/overview'] = array(
@@ -1431,12 +1433,10 @@ function node_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('node_configure'),
     'access arguments' => array('administer nodes'),
-    'file' => 'node.admin.inc',
   );
   $items['admin/content/node-settings/rebuild'] = array(
     'title' => 'Rebuild permissions',
     'page arguments' => array('node_configure_rebuild_confirm'),
-    'file' => 'node.admin.inc',
     // Any user than can potentially trigger a node_acess_needs_rebuild(TRUE)
     // has to be allowed access to the 'node access rebuild' confirm form.
     'access arguments' => array('access administration pages'),
@@ -1448,7 +1448,6 @@ function node_menu() {
     'description' => 'Manage posts by content type, including default status, front page promotion, etc.',
     'page callback' => 'node_overview_types',
     'access arguments' => array('administer content types'),
-    'file' => 'content_types.inc',
   );
   $items['admin/build/types/list'] = array(
     'title' => 'List',
@@ -1460,7 +1459,6 @@ function node_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('node_type_form'),
     'access arguments' => array('administer content types'),
-    'file' => 'content_types.inc',
     'type' => MENU_LOCAL_TASK,
   );
   $items['node'] = array(
@@ -1474,7 +1472,6 @@ function node_menu() {
     'page callback' => 'node_add_page',
     'access callback' => '_node_add_access',
     'weight' => 1,
-    'file' => 'node.pages.inc',
   );
   $items['rss.xml'] = array(
     'title' => 'RSS feed',
@@ -1492,14 +1489,12 @@ function node_menu() {
       'access callback' => 'node_access',
       'access arguments' => array('create', $type->type),
       'description' => $type->description,
-      'file' => 'node.pages.inc',
     );
     $items['admin/content/node-type/' . $type_url_str] = array(
       'title' => $type->name,
       'page callback' => 'drupal_get_form',
       'page arguments' => array('node_type_form', $type),
       'access arguments' => array('administer content types'),
-      'file' => 'content_types.inc',
       'type' => MENU_CALLBACK,
     );
     $items['admin/content/node-type/' . $type_url_str . '/edit'] = array(
@@ -1510,7 +1505,6 @@ function node_menu() {
       'title' => 'Delete',
       'page arguments' => array('node_type_delete_confirm', $type),
       'access arguments' => array('administer content types'),
-      'file' => 'content_types.inc',
       'type' => MENU_CALLBACK,
     );
   }
@@ -1533,7 +1527,6 @@ function node_menu() {
     'access callback' => 'node_access',
     'access arguments' => array('update', 1),
     'weight' => 1,
-    'file' => 'node.pages.inc',
     'type' => MENU_LOCAL_TASK,
   );
   $items['node/%node/delete'] = array(
@@ -1542,7 +1535,6 @@ function node_menu() {
     'page arguments' => array('node_delete_confirm', 1),
     'access callback' => 'node_access',
     'access arguments' => array('delete', 1),
-    'file' => 'node.pages.inc',
     'weight' => 1,
     'type' => MENU_CALLBACK);
   $items['node/%node/revisions'] = array(
@@ -1552,7 +1544,6 @@ function node_menu() {
     'access callback' => '_node_revision_access',
     'access arguments' => array(1),
     'weight' => 2,
-    'file' => 'node.pages.inc',
     'type' => MENU_LOCAL_TASK,
   );
   $items['node/%node/revisions/%/view'] = array(
@@ -1571,7 +1562,6 @@ function node_menu() {
     'page arguments' => array('node_revision_revert_confirm', 1),
     'access callback' => '_node_revision_access',
     'access arguments' => array(1, 'update'),
-    'file' => 'node.pages.inc',
     'type' => MENU_CALLBACK,
   );
   $items['node/%node/revisions/%/delete'] = array(
@@ -1581,7 +1571,6 @@ function node_menu() {
     'page arguments' => array('node_revision_delete_confirm', 1),
     'access callback' => '_node_revision_access',
     'access arguments' => array(1, 'delete'),
-    'file' => 'node.pages.inc',
     'type' => MENU_CALLBACK,
   );
   return $items;
@@ -2025,8 +2014,8 @@ function node_access($op, $node, $account = NULL) {
     return FALSE;
   }
 
-  // Can't use node_invoke(), because the access hook takes the $op parameter
-  // before the $node parameter.
+  // Can't use node_invoke('access', $node), because the access hook takes the
+  // $op parameter before the $node parameter.
   $module = node_get_types('module', $node);
   if ($module == 'node') {
     $module = 'node_content'; // Avoid function name collisions.

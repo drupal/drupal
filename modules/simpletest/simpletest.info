@@ -4,3 +4,4 @@ description = "Provides a framework for unit and functional testing."
 package = Core - optional
 version = VERSION
 core = 7.x
+files[] = simpletest.module

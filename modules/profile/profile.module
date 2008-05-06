@@ -81,7 +81,6 @@ function profile_menu() {
     'page callback' => 'profile_browse',
     'access arguments' => array('access user profiles'),
     'type' => MENU_SUGGESTED_ITEM,
-    'file' => 'profile.pages.inc',
   );
   $items['admin/user/profile'] = array(
     'title' => 'Profiles',
@@ -89,7 +88,6 @@ function profile_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('profile_admin_overview'),
     'access arguments' => array('administer users'),
-    'file' => 'profile.admin.inc',
   );
   $items['admin/user/profile/add'] = array(
     'title' => 'Add field',
@@ -97,14 +95,12 @@ function profile_menu() {
     'page arguments' => array('profile_field_form'),
     'access arguments' => array('administer users'),
     'type' => MENU_CALLBACK,
-    'file' => 'profile.admin.inc',
   );
   $items['admin/user/profile/autocomplete'] = array(
     'title' => 'Profile category autocomplete',
     'page callback' => 'profile_admin_settings_autocomplete',
     'access arguments' => array('administer users'),
     'type' => MENU_CALLBACK,
-    'file' => 'profile.admin.inc',
   );
   $items['admin/user/profile/edit'] = array(
     'title' => 'Edit field',
@@ -112,7 +108,6 @@ function profile_menu() {
     'page arguments' => array('profile_field_form'),
     'access arguments' => array('administer users'),
     'type' => MENU_CALLBACK,
-    'file' => 'profile.admin.inc',
   );
   $items['admin/user/profile/delete'] = array(
     'title' => 'Delete field',
@@ -120,14 +115,12 @@ function profile_menu() {
     'page arguments' => array('profile_field_delete'),
     'access arguments' => array('administer users'),
     'type' => MENU_CALLBACK,
-    'file' => 'profile.admin.inc',
   );
   $items['profile/autocomplete'] = array(
     'title' => 'Profile autocomplete',
     'page callback' => 'profile_autocomplete',
     'access arguments' => array('access user profiles'),
     'type' => MENU_CALLBACK,
-    'file' => 'profile.pages.inc',
   );
   return $items;
 }

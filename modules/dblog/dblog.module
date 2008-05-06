@@ -48,16 +48,13 @@ function dblog_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('dblog_admin_settings'),
     'access arguments' => array('administer site configuration'),
-    'file' => 'dblog.admin.inc',
   );
-
   $items['admin/reports/dblog'] = array(
     'title' => 'Recent log entries',
     'description' => 'View events that have recently been logged.',
     'page callback' => 'dblog_overview',
     'access arguments' => array('access site reports'),
     'weight' => -1,
-    'file' => 'dblog.admin.inc',
   );
   $items['admin/reports/page-not-found'] = array(
     'title' => "Top 'page not found' errors",
@@ -65,7 +62,6 @@ function dblog_menu() {
     'page callback' => 'dblog_top',
     'page arguments' => array('page not found'),
     'access arguments' => array('access site reports'),
-    'file' => 'dblog.admin.inc',
   );
   $items['admin/reports/access-denied'] = array(
     'title' => "Top 'access denied' errors",
@@ -73,7 +69,6 @@ function dblog_menu() {
     'page callback' => 'dblog_top',
     'page arguments' => array('access denied'),
     'access arguments' => array('access site reports'),
-    'file' => 'dblog.admin.inc',
   );
   $items['admin/reports/event/%'] = array(
     'title' => 'Details',
@@ -81,7 +76,6 @@ function dblog_menu() {
     'page arguments' => array(3),
     'access arguments' => array('access site reports'),
     'type' => MENU_CALLBACK,
-    'file' => 'dblog.admin.inc',
   );
   return $items;
 }

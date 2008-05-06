@@ -4,3 +4,7 @@ description = "Allows users to log into your site using OpenID."
 version = VERSION
 package = Core - optional
 core = 7.x
+files[] = openid.module
+files[] = openid.inc
+files[] = openid.pages.inc
+files[] = xrds.inc

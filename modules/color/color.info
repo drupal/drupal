@@ -4,3 +4,4 @@ description = Allows administrators to change the color scheme of compatible the
 package = Core - optional
 version = VERSION
 core = 7.x
+files[] = color.module

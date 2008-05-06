@@ -4,3 +4,5 @@ description = Logs and records system events to the database.
 package = Core - optional
 version = VERSION
 core = 7.x
+files[] = dblog.module
+files[] = dblog.admin.inc

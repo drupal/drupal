@@ -4,3 +4,6 @@ description = Enables site-wide keyword searching.
 package = Core - optional
 version = VERSION
 core = 7.x
+files[] = search.module
+files[] = search.admin.inc
+files[] = search.pages.inc

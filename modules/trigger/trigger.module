@@ -41,7 +41,6 @@ function trigger_menu() {
     'page callback' => 'trigger_assign',
     'access callback' => 'trigger_access_check',
     'access arguments' => array('node'),
-    'file' => 'trigger.admin.inc',
   );
   // We don't use a menu wildcard here because these are tabs,
   // not invisible items.
@@ -52,7 +51,6 @@ function trigger_menu() {
     'access callback' => 'trigger_access_check',
     'access arguments' => array('node'),
     'type' => MENU_LOCAL_TASK,
-    'file' => 'trigger.admin.inc',
   );
   $items['admin/build/trigger/user'] = array(
     'title' => 'Users',
@@ -61,7 +59,6 @@ function trigger_menu() {
     'access callback' => 'trigger_access_check',
     'access arguments' => array('user'),
     'type' => MENU_LOCAL_TASK,
-    'file' => 'trigger.admin.inc',
   );
   $items['admin/build/trigger/comment'] = array(
     'title' => 'Comments',
@@ -70,7 +67,6 @@ function trigger_menu() {
     'access callback' => 'trigger_access_check',
     'access arguments' => array('comment'),
     'type' => MENU_LOCAL_TASK,
-    'file' => 'trigger.admin.inc',
   );
   $items['admin/build/trigger/taxonomy'] = array(
     'title' => 'Taxonomy',
@@ -79,7 +75,6 @@ function trigger_menu() {
     'access callback' => 'trigger_access_check',
     'access arguments' => array('taxonomy'),
     'type' => MENU_LOCAL_TASK,
-    'file' => 'trigger.admin.inc',
   );
   $items['admin/build/trigger/cron'] = array(
     'title' => 'Cron',
@@ -87,7 +82,6 @@ function trigger_menu() {
     'page arguments' => array('cron'),
     'access arguments' => array('administer actions'),
     'type' => MENU_LOCAL_TASK,
-    'file' => 'trigger.admin.inc',
   );
 
   // We want contributed modules to be able to describe
@@ -107,7 +101,6 @@ function trigger_menu() {
       'page arguments' => array($module),
       'access arguments' => array($module),
       'type' => MENU_LOCAL_TASK,
-      'file' => 'trigger.admin.inc',
     );
   }
   $items['admin/build/trigger/unassign'] = array(
@@ -117,7 +110,6 @@ function trigger_menu() {
     'page arguments' => array('trigger_unassign'),
     'access arguments' => array('administer actions'),
     'type' => MENU_CALLBACK,
-    'file' => 'trigger.admin.inc',
   );
 
   return $items;

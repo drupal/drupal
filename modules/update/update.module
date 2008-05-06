@@ -121,14 +121,12 @@ function update_menu() {
     'description' => 'Get a status report about available updates for your installed modules and themes.',
     'page callback' => 'update_status',
     'access arguments' => array('administer site configuration'),
-    'file' => 'update.report.inc',
     'weight' => 10,
   );
   $items['admin/reports/updates/list'] = array(
     'title' => 'List',
     'page callback' => 'update_status',
     'access arguments' => array('administer site configuration'),
-    'file' => 'update.report.inc',
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
   $items['admin/reports/updates/settings'] = array(
@@ -136,14 +134,12 @@ function update_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('update_settings'),
     'access arguments' => array('administer site configuration'),
-    'file' => 'update.settings.inc',
     'type' => MENU_LOCAL_TASK,
   );
   $items['admin/reports/updates/check'] = array(
     'title' => 'Manual update check',
     'page callback' => 'update_manual_status',
     'access arguments' => array('administer site configuration'),
-    'file' => 'update.fetch.inc',
     'type' => MENU_CALLBACK,
   );
 

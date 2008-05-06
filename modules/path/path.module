@@ -38,14 +38,12 @@ function path_menu() {
     'description' => "Change your site's URL paths by aliasing them.",
     'page callback' => 'path_admin_overview',
     'access arguments' => array('administer url aliases'),
-    'file' => 'path.admin.inc',
   );
   $items['admin/build/path/edit'] = array(
     'title' => 'Edit alias',
     'page callback' => 'path_admin_edit',
     'access arguments' => array('administer url aliases'),
     'type' => MENU_CALLBACK,
-    'file' => 'path.admin.inc',
   );
   $items['admin/build/path/delete'] = array(
     'title' => 'Delete alias',
@@ -53,7 +51,6 @@ function path_menu() {
     'page arguments' => array('path_admin_delete_confirm'),
     'access arguments' => array('administer url aliases'),
     'type' => MENU_CALLBACK,
-    'file' => 'path.admin.inc',
   );
   $items['admin/build/path/list'] = array(
     'title' => 'List',
@@ -65,7 +62,6 @@ function path_menu() {
     'page callback' => 'path_admin_edit',
     'access arguments' => array('administer url aliases'),
     'type' => MENU_LOCAL_TASK,
-    'file' => 'path.admin.inc',
   );
 
   return $items;

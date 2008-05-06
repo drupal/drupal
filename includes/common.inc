@@ -1460,11 +1460,15 @@ function l($text, $path, $options = array()) {
  * react to the closing of the page by calling hook_exit().
  */
 function drupal_page_footer() {
+
   if (variable_get('cache', CACHE_DISABLED) != CACHE_DISABLED) {
     page_set_cache();
   }
 
   module_invoke_all('exit');
+
+  registry_cache_hook_implementations(FALSE, TRUE);
+  registry_cache_path_files();
 }
 
 /**
@@ -2700,7 +2704,7 @@ function drupal_render(&$elements) {
   // element is rendered into the final text.
   if (isset($elements['#pre_render'])) {
     foreach ($elements['#pre_render'] as $function) {
-      if (function_exists($function)) {
+      if (drupal_function_exists($function)) {
         $elements = $function($elements);
       }
     }
@@ -2762,7 +2766,7 @@ function drupal_render(&$elements) {
     // which allows the output'ed text to be filtered.
     if (isset($elements['#post_render'])) {
       foreach ($elements['#post_render'] as $function) {
-        if (function_exists($function)) {
+        if (drupal_function_exists($function)) {
           $content = $function($content, $elements);
         }
       }
@@ -3142,7 +3146,7 @@ function drupal_uninstall_schema($module) {
  */
 function drupal_get_schema_unprocessed($module, $table = NULL) {
   // Load the .install file to get hook_schema.
-  module_load_include('install', $module);
+  module_load_install($module);
   $schema = module_invoke($module, 'schema');
 
   if (!is_null($table) && isset($schema[$table])) {
@@ -3528,6 +3532,7 @@ function drupal_flush_all_caches() {
   // Change query-strings on css/js files to enforce reload for all users.
   _drupal_flush_css_js();
 
+  drupal_rebuild_code_registry();
   drupal_clear_css_cache();
   drupal_clear_js_cache();
   system_theme_data();
@@ -3536,7 +3541,7 @@ function drupal_flush_all_caches() {
   node_types_rebuild();
   // Don't clear cache_form - in-progress form submissions may break.
   // Ordered so clearing the page cache will always be the last action.
-  $core = array('cache', 'cache_block', 'cache_filter', 'cache_page');
+  $core = array('cache', 'cache_block', 'cache_filter', 'cache_registry', 'cache_page');
   $cache_tables = array_merge(module_invoke_all('flush_caches'), $core);
   foreach ($cache_tables as $table) {
     cache_clear_all('*', $table, TRUE);

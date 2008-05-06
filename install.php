@@ -785,8 +785,8 @@ if (Drupal.jsEnabled) {
 
   // The end of the install process. Remember profile used.
   if ($task == 'done') {
-    // Rebuild menu to get content type links registered by the profile,
-    // and possibly any other menu items created through the tasks.
+    // Rebuild menu and registry to get content type links registered by the
+    // profile, and possibly any other menu items created through the tasks.
     menu_rebuild();
 
     // Register actions declared by any modules.

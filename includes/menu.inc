@@ -339,11 +339,16 @@ function menu_execute_active_handler($path = NULL) {
     menu_rebuild();
   }
   if ($router_item = menu_get_item($path)) {
-    if ($router_item['access']) {
-      if ($router_item['file']) {
-        require_once($router_item['file']);
+    $cache = cache_get('registry:' . $router_item['path'], 'cache_registry');
+    if (!empty($cache->data)) {
+      foreach(explode(';', $cache->data) as $file) {
+        require_once($file);
       }
-      return call_user_func_array($router_item['page_callback'], $router_item['page_arguments']);
+    }
+    if ($router_item['access']) {
+      if (drupal_function_exists($router_item['page_callback'])) {
+        return call_user_func_array($router_item['page_callback'], $router_item['page_arguments']);
+      }
     }
     else {
       return MENU_ACCESS_DENIED;
@@ -1665,7 +1670,7 @@ function menu_router_build($reset = FALSE) {
       // We need to manually call each module so that we can know which module
       // a given item came from.
       $callbacks = array();
-      foreach (module_implements('menu') as $module) {
+      foreach (module_implements('menu', NULL, TRUE) as $module) {
         $router_items = call_user_func($module . '_menu');
         if (isset($router_items) && is_array($router_items)) {
           foreach (array_keys($router_items) as $path) {
@@ -2201,12 +2206,12 @@ function _menu_router_build($callbacks) {
           $load_functions[$k] = NULL;
         }
         else {
-          if (function_exists($matches[1] . '_to_arg')) {
+          if (drupal_function_exists($matches[1] . '_to_arg')) {
             $to_arg_functions[$k] = $matches[1] . '_to_arg';
             $load_functions[$k] = NULL;
             $match = TRUE;
           }
-          if (function_exists($matches[1] . '_load')) {
+          if (drupal_function_exists($matches[1] . '_load')) {
             $function = $matches[1] . '_load';
             // Create an array of arguments that will be passed to the _load
             // function when this menu path is checked, if 'load arguments'
@@ -2293,12 +2298,6 @@ function _menu_router_build($callbacks) {
           if (!isset($item['page arguments']) && isset($parent['page arguments'])) {
             $item['page arguments'] = $parent['page arguments'];
           }
-          if (!isset($item['file']) && isset($parent['file'])) {
-            $item['file'] = $parent['file'];
-          }
-          if (!isset($item['file path']) && isset($parent['file path'])) {
-            $item['file path'] = $parent['file path'];
-          }
         }
       }
     }
@@ -2326,16 +2325,7 @@ function _menu_router_build($callbacks) {
       'tab_parent' => '',
       'tab_root' => $path,
       'path' => $path,
-      'file' => '',
-      'file path' => '',
-      'include file' => '',
     );
-
-    // Calculate out the file to be included for each callback, if any.
-    if ($item['file']) {
-      $file_path = $item['file path'] ? $item['file path'] : drupal_get_path('module', $item['module']);
-      $item['include file'] = $file_path . '/' . $item['file'];
-    }
 
     $title_arguments = $item['title arguments'] ? serialize($item['title arguments']) : '';
     db_query("INSERT INTO {menu_router}
@@ -2343,17 +2333,17 @@ function _menu_router_build($callbacks) {
       access_arguments, page_callback, page_arguments, fit,
       number_parts, tab_parent, tab_root,
       title, title_callback, title_arguments,
-      type, block_callback, description, position, weight, file)
+      type, block_callback, description, position, weight)
       VALUES ('%s', '%s', '%s', '%s',
       '%s', '%s', '%s', %d,
       %d, '%s', '%s',
       '%s', '%s', '%s',
-      %d, '%s', '%s', '%s', %d, '%s')",
+      %d, '%s', '%s', '%s', %d)",
       $path, $item['load_functions'], $item['to_arg_functions'], $item['access callback'],
       serialize($item['access arguments']), $item['page callback'], serialize($item['page arguments']), $item['_fit'],
       $item['_number_parts'], $item['tab_parent'], $item['tab_root'],
       $item['title'], $item['title callback'], $title_arguments,
-      $item['type'], $item['block callback'], $item['description'], $item['position'], $item['weight'], $item['include file']);
+      $item['type'], $item['block callback'], $item['description'], $item['position'], $item['weight']);
   }
   // Sort the masks so they are in order of descending fit, and store them.
   $masks = array_keys($masks);

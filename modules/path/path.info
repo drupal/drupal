@@ -4,3 +4,5 @@ description = Allows users to rename URLs.
 package = Core - optional
 version = VERSION
 core = 7.x
+files[] = path.module
+files[] = path.admin.inc

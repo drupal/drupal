@@ -4,3 +4,5 @@ description = Handles general site configuration for administrators.
 package = Core - required
 version = VERSION
 core = 7.x
+files[] = system.module
+files[] = system.admin.inc

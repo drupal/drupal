@@ -603,6 +603,8 @@ function system_schema() {
   $schema['cache_page']['description'] = t('Cache table used to store compressed pages for anonymous users, if page caching is enabled.');
   $schema['cache_menu'] = $schema['cache'];
   $schema['cache_menu']['description'] = t('Cache table for the menu system to store router information as well as generated link trees for various menu/page/user combinations.');
+  $schema['cache_registry'] = $schema['cache'];
+  $schema['cache_registry']['description'] = t('Cache table for the code registry system to remember what code files need to be loaded on any given page.');
 
   $schema['files'] = array(
     'description' => t('Stores information for uploaded files.'),
@@ -859,11 +861,6 @@ function system_schema() {
         'not null' => TRUE,
         'default' => 0,
       ),
-      'file' => array(
-        'description' => t('The file to include for this element, usually the page callback function lives in this file.'),
-        'type' => 'text',
-        'size' => 'medium',
-      ),
     ),
     'indexes' => array(
       'fit' => array('fit'),
@@ -1054,6 +1051,52 @@ function system_schema() {
       'router_path' => array(array('router_path', 128)),
     ),
     'primary key' => array('mlid'),
+  );
+
+  $schema['registry'] = array(
+    'description' => t("Each record is a function, class, or interface name and the file it is in."),
+    'fields' => array(
+      'name'   => array(
+        'description' => t('The name of the function, class, or interface.'),
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'type'   => array(
+        'description' => t('Either function or class or interface.'),
+        'type' => 'varchar',
+        'length' => 9,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'filename'   => array(
+        'description' => t('Name of the file.'),
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ),
+    ),
+    'primary key' => array('name', 'type'),
+  );
+
+  $schema['registry_file'] = array(
+    'description' => t("Files parsed to build the registry."),
+    'fields' => array(
+      'filename'   => array(
+        'description' => t('Path to the file.'),
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ),
+      'md5'  => array(
+        'description' => t("Md5 hash of the file's contents when last parsed."),
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+      ),
+    ),
+    'primary key' => array('filename'),
   );
 
   $schema['sessions'] = array(
@@ -2682,7 +2725,7 @@ function system_update_7000() {
 }
 
 /**
- * Generate a cron key and save it in the variables table
+ * Generate a cron key and save it in the variables table.
  */
 function system_update_7001() {
   $ret = array();
@@ -2861,8 +2904,48 @@ function system_update_7005() {
 }
 
 /**
+ * Registry tables and drop the file key of the menu router, since it is no
+ * longer needed.
+ */
+function system_update_7006() {
+  $ret = array();
+  db_drop_field($ret, 'menu_router', 'file');
+  $schema['registry'] = array(
+    'fields' => array(
+      'name'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'type'   => array('type' => 'varchar', 'length' => 9, 'not null' => TRUE, 'default' => ''),
+      'filename'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+    ),
+    'primary key' => array('name', 'type'),
+  );
+  $schema['registry_file'] = array(
+    'fields' => array(
+      'filename'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'md5'   => array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''),
+    ),
+    'primary key' => array('filename'),
+  );
+  $schema['cache_registry'] = array(
+    'fields' => array(
+      'cid'        => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'data'       => array('type' => 'blob', 'not null' => FALSE, 'size' => 'big'),
+      'expire'     => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'created'    => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'headers'    => array('type' => 'text', 'not null' => FALSE),
+      'serialized' => array('type' => 'int', 'size' => 'small', 'not null' => TRUE, 'default' => 0)
+    ),
+    'indexes' => array('expire' => array('expire')),
+    'primary key' => array('cid'),
+  );
+  db_create_table($ret, 'cache_registry', $schema['cache_registry']);
+  db_create_table($ret, 'registry', $schema['registry']);
+  db_create_table($ret, 'registry_file', $schema['registry_file']);
+  drupal_rebuild_code_registry();
+  return $ret;
+}
+
+/**
  * @} End of "defgroup updates-6.x-to-7.x"
  * The next series of updates should start at 8000.
  */
-
 

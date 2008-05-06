@@ -4,3 +4,7 @@ description = Allows content to be submitted to the site and displayed on pages.
 package = Core - required
 version = VERSION
 core = 7.x
+files[] = node.module
+files[] = content_types.inc
+files[] = node.admin.inc
+files[] = node.pages.inc

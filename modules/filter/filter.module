@@ -73,7 +73,6 @@ function filter_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('filter_admin_overview'),
     'access arguments' => array('administer filters'),
-    'file' => 'filter.admin.inc',
   );
   $items['admin/settings/filters/list'] = array(
     'title' => 'List',
@@ -85,7 +84,6 @@ function filter_menu() {
     'access arguments' => array('administer filters'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 1,
-    'file' => 'filter.admin.inc',
   );
   $items['admin/settings/filters/delete'] = array(
     'title' => 'Delete input format',
@@ -93,14 +91,12 @@ function filter_menu() {
     'page arguments' => array('filter_admin_delete'),
     'access arguments' => array('administer filters'),
     'type' => MENU_CALLBACK,
-    'file' => 'filter.admin.inc',
   );
   $items['filter/tips'] = array(
     'title' => 'Compose tips',
     'page callback' => 'filter_tips_long',
     'access callback' => TRUE,
     'type' => MENU_SUGGESTED_ITEM,
-    'file' => 'filter.pages.inc',
   );
   $items['admin/settings/filters/%filter_format'] = array(
     'type' => MENU_CALLBACK,
@@ -109,14 +105,11 @@ function filter_menu() {
     'page callback' => 'filter_admin_format_page',
     'page arguments' => array(3),
     'access arguments' => array('administer filters'),
-    'file' => 'filter.admin.inc',
   );
-
   $items['admin/settings/filters/%filter_format/edit'] = array(
     'title' => 'Edit',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => 0,
-    'file' => 'filter.admin.inc',
   );
   $items['admin/settings/filters/%filter_format/configure'] = array(
     'title' => 'Configure',
@@ -125,7 +118,6 @@ function filter_menu() {
     'access arguments' => array('administer filters'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 1,
-    'file' => 'filter.admin.inc',
   );
   $items['admin/settings/filters/%filter_format/order'] = array(
     'title' => 'Rearrange',
@@ -134,7 +126,6 @@ function filter_menu() {
     'access arguments' => array('administer filters'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 2,
-    'file' => 'filter.admin.inc',
   );
   return $items;
 }

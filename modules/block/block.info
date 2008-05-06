@@ -4,3 +4,5 @@ description = Controls the boxes that are displayed around the main content.
 package = Core - required
 version = VERSION
 core = 7.x
+files[] = block.module
+files[] = block.admin.inc

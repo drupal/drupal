@@ -15,7 +15,6 @@ function help_menu() {
     'page callback' => 'help_main',
     'access arguments' => array('access administration pages'),
     'weight' => 9,
-    'file' => 'help.admin.inc',
   );
 
   foreach (module_implements('help', TRUE) as $module) {
@@ -25,7 +24,6 @@ function help_menu() {
       'page arguments' => array(2),
       'access arguments' => array('access administration pages'),
       'type' => MENU_CALLBACK,
-      'file' => 'help.admin.inc',
     );
   }
 

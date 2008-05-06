@@ -4,3 +4,6 @@ description = Supports configurable user profiles.
 package = Core - optional
 version = VERSION
 core = 7.x
+files[] = profile.module
+files[] = profile.admin.inc
+files[] = profile.pages.inc

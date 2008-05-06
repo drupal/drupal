@@ -176,7 +176,6 @@ function comment_menu() {
     'description' => 'List and edit site comments and the comment moderation queue.',
     'page callback' => 'comment_admin',
     'access arguments' => array('administer comments'),
-    'file' => 'comment.admin.inc',
   );
 
   // Tabs:
@@ -190,7 +189,6 @@ function comment_menu() {
     'page arguments' => array('approval'),
     'access arguments' => array('administer comments'),
     'type' => MENU_LOCAL_TASK,
-    'file' => 'comment.admin.inc',
   );
 
   $items['comment/delete'] = array(
@@ -198,7 +196,6 @@ function comment_menu() {
     'page callback' => 'comment_delete',
     'access arguments' => array('administer comments'),
     'type' => MENU_CALLBACK,
-    'file' => 'comment.admin.inc',
   );
 
   $items['comment/edit'] = array(
@@ -206,7 +203,6 @@ function comment_menu() {
     'page callback' => 'comment_edit',
     'access arguments' => array('post comments'),
     'type' => MENU_CALLBACK,
-    'file' => 'comment.pages.inc',
   );
   $items['comment/reply/%node'] = array(
     'title' => 'Reply to comment',
@@ -215,7 +211,6 @@ function comment_menu() {
     'access callback' => 'node_access',
     'access arguments' => array('view', 2),
     'type' => MENU_CALLBACK,
-    'file' => 'comment.pages.inc',
   );
 
   return $items;

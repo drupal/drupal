@@ -117,7 +117,6 @@ function taxonomy_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('taxonomy_overview_vocabularies'),
     'access arguments' => array('administer taxonomy'),
-    'file' => 'taxonomy.admin.inc',
   );
 
   $items['admin/content/taxonomy/list'] = array(
@@ -133,7 +132,6 @@ function taxonomy_menu() {
     'access arguments' => array('administer taxonomy'),
     'type' => MENU_LOCAL_TASK,
     'parent' => 'admin/content/taxonomy',
-    'file' => 'taxonomy.admin.inc',
   );
 
   $items['admin/content/taxonomy/edit/vocabulary/%taxonomy_vocabulary'] = array(
@@ -142,7 +140,6 @@ function taxonomy_menu() {
     'page arguments' => array(5),
     'access arguments' => array('administer taxonomy'),
     'type' => MENU_CALLBACK,
-    'file' => 'taxonomy.admin.inc',
   );
 
   $items['admin/content/taxonomy/edit/term'] = array(
@@ -150,7 +147,6 @@ function taxonomy_menu() {
     'page callback' => 'taxonomy_admin_term_edit',
     'access arguments' => array('administer taxonomy'),
     'type' => MENU_CALLBACK,
-    'file' => 'taxonomy.admin.inc',
   );
 
   $items['taxonomy/term/%'] = array(
@@ -159,7 +155,6 @@ function taxonomy_menu() {
     'page arguments' => array(2),
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
-    'file' => 'taxonomy.pages.inc',
   );
 
   $items['taxonomy/autocomplete'] = array(
@@ -167,7 +162,6 @@ function taxonomy_menu() {
     'page callback' => 'taxonomy_autocomplete',
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
-    'file' => 'taxonomy.pages.inc',
   );
   $items['admin/content/taxonomy/%taxonomy_vocabulary'] = array(
     'title' => 'List terms',
@@ -175,7 +169,6 @@ function taxonomy_menu() {
     'page arguments' => array('taxonomy_overview_terms', 3),
     'access arguments' => array('administer taxonomy'),
     'type' => MENU_CALLBACK,
-    'file' => 'taxonomy.admin.inc',
   );
 
   $items['admin/content/taxonomy/%taxonomy_vocabulary/list'] = array(
@@ -191,7 +184,6 @@ function taxonomy_menu() {
     'access arguments' => array('administer taxonomy'),
     'type' => MENU_LOCAL_TASK,
     'parent' => 'admin/content/taxonomy/%taxonomy_vocabulary',
-    'file' => 'taxonomy.admin.inc',
   );
 
   return $items;

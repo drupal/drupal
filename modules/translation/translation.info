@@ -5,3 +5,5 @@ dependencies[] = locale
 package = Core - optional
 version = VERSION
 core = 7.x
+files[] = translation.module
+files[] = translation.pages.inc

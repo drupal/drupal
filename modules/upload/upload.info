@@ -4,3 +4,5 @@ description = Allows users to upload and attach files to content.
 package = Core - optional
 version = VERSION
 core = 7.x
+files[] = upload.module
+files[] = upload.admin.inc

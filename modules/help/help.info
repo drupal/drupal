@@ -4,3 +4,5 @@ description = Manages the display of online help.
 package = Core - optional
 version = VERSION
 core = 7.x
+files[] = help.module
+files[] = help.admin.inc

@@ -177,7 +177,9 @@ function _init_theme($theme, $base_theme = array(), $registry_callback = '_theme
     }
   }
 
-  $registry_callback($theme, $base_theme, $theme_engine);
+  if (drupal_function_exists($registry_callback)) {
+    $registry_callback($theme, $base_theme, $theme_engine);
+  }
 }
 
 /**
@@ -628,7 +630,7 @@ function theme() {
       // call_user_func_array.
       $args = array(&$variables, $hook);
       foreach ($info['preprocess functions'] as $preprocess_function) {
-        if (function_exists($preprocess_function)) {
+        if (drupal_function_exists($preprocess_function)) {
           call_user_func_array($preprocess_function, $args);
         }
       }

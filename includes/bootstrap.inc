@@ -949,6 +949,9 @@ function _drupal_bootstrap($phase) {
       // Initialize the default database.
       require_once './includes/database.inc';
       db_set_active();
+      // Register autoload functions so that we can access classes and interfaces.
+      spl_autoload_register('drupal_autoload_class');
+      spl_autoload_register('drupal_autoload_interface');
       break;
 
     case DRUPAL_BOOTSTRAP_ACCESS:
@@ -1134,3 +1137,182 @@ function ip_address() {
 
   return $ip_address;
 }
+
+/**
+ * @ingroup registry
+ * @{
+ */
+
+/**
+ * Confirm that a function is available.
+ *
+ * If the function is already available, this function does nothing.
+ * If the function is not available, it tries to load the file where the
+ * function lives. If the file is not available, it returns false, so that it
+ * can be used as a drop-in replacement for function_exists().
+ *
+ * @param $function
+ *   The name of the function to check or load.
+ * @return
+ *   TRUE if the function is now available, FALSE otherwise.
+ */
+function drupal_function_exists($function) {
+  static $checked = array();
+
+  if (defined('MAINTENANCE_MODE')) {
+    return function_exists($function);
+  }
+
+  if (isset($checked[$function])) {
+    return $checked[$function];
+  }
+  $checked[$function] = FALSE;
+
+  if (function_exists($function)) {
+    registry_mark_code('function', $function);
+    $checked[$function] = TRUE;
+    return TRUE;
+  }
+
+  $file = db_result(db_query("SELECT filename FROM {registry} WHERE name = '%s' AND type = '%s'", $function, 'function'));
+  if ($file) {
+    require_once($file);
+    $checked[$function] = function_exists($function);
+    if ($checked[$function]) {
+      registry_mark_code('function', $function);
+    }
+  }
+
+  return $checked[$function];
+}
+
+/**
+ * Confirm that an interface is available.
+ *
+ * This function parallels drupal_function_exists(), but is rarely
+ * called directly. Instead, it is registered as an spl_autoload()
+ * handler, and PHP calls it for us when necessary.
+ *
+ * @param $interface
+ *   The name of the interface to check or load.
+ * @return
+ *   TRUE if the interface is currently available, FALSE otherwise.
+ */
+function drupal_autoload_interface($interface) {
+  return _registry_check_code('interface', $interface);
+}
+
+/**
+ * Confirm that a class is available.
+ *
+ * This function parallels drupal_function_exists(), but is rarely
+ * called directly. Instead, it is registered as an spl_autoload()
+ * handler, and PHP calls it for us when necessary.
+ *
+ * @param $class
+ *   The name of the class to check or load.
+ * @return
+ *   TRUE if the class is currently available, FALSE otherwise.
+ */
+function drupal_autoload_class($class) {
+  return _registry_check_code('class', $class);
+}
+
+/**
+ * Helper for registry_check_{interface, class}.
+ */
+function _registry_check_code($type, $name) {
+  $file = db_result(db_query("SELECT filename FROM {registry} WHERE name = '%s' AND type = '%s'", $name, $type));
+  if ($file) {
+    require_once($file);
+    registry_mark_code($type, $name);
+    return TRUE;
+  }
+}
+
+/**
+ * Collect the resources used for this request.
+ *
+ * @param $type
+ *   The type of resource.
+ * @param $name
+ *   The name of the resource.
+ * @param $return
+ *   Boolean flag to indicate whether to return the resources.
+ */
+function registry_mark_code($type, $name, $return = FALSE) {
+  static $resources = array();
+
+  if ($type && $name) {
+    if (!isset($resources[$type])) {
+      $resources[$type] = array();
+    }
+    if (!in_array($name, $resources[$type])) {
+      $resources[$type][] = $name;
+    }
+  }
+
+  if ($return) {
+    return $resources;
+  }
+}
+
+/**
+ * Rescan all enabled modules and rebuild the registry.
+ *
+ * Rescans all code in modules or includes directory, storing a mapping of
+ * each function, file, and hook implementation in the database.
+ */
+function drupal_rebuild_code_registry() {
+  require_once './includes/registry.inc';
+  _drupal_rebuild_code_registry();
+}
+
+/**
+ * Save hook implementations cache.
+ *
+ * @param $hook
+ *   Array with the hook name and list of modules that implement it.
+ * @param $write_to_persistent_cache
+ *   Whether to write to the persistent cache.
+ */
+function registry_cache_hook_implementations($hook, $write_to_persistent_cache = FALSE) {
+  static $implementations;
+
+  if ($hook) {
+    // Newer is always better, so overwrite anything that's come before.
+    $implementations[$hook['hook']] = $hook['modules'];
+  }
+
+  if ($write_to_persistent_cache === TRUE) {
+    cache_set('hooks', $implementations, 'cache_registry');
+  }
+}
+
+/**
+ * Save the files required by the registry for this path.
+ */
+function registry_cache_path_files() {
+  if ($used_code = registry_mark_code(NULL, NULL, TRUE)) {
+    $files = array();
+    $type_sql = array();
+    $params = array();
+    foreach ($used_code as $type => $names) {
+      $type_sql[] = "(name IN (" . db_placeholders($names, 'varchar') . ") AND type = '%s')";
+      $params = array_merge($params, $names);
+      $params[] = $type;
+    }
+    $res = db_query("SELECT DISTINCT filename FROM {registry} WHERE " . implode(' OR ', $type_sql), $params);
+    while ($row = db_fetch_object($res)) {
+      $files[] = $row->filename;
+    }
+    if ($files) {
+      $menu = menu_get_item();
+      cache_set('registry:' . $menu['path'], implode(';', $files), 'cache_registry');
+    }
+  }
+}
+
+/**
+ * @} End of "ingroup registry".
+ */

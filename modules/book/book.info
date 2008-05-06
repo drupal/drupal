@@ -4,3 +4,6 @@ description = Allows users to structure site pages in a hierarchy or outline.
 package = Core - optional
 version = VERSION
 core = 7.x
+files[] = book.module
+files[] = book.admin.inc
+files[] = book.pages.inc

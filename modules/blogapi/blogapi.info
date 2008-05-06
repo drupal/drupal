@@ -4,3 +4,4 @@ description = Allows users to post content using applications that support XML-R
 package = Core - optional
 version = VERSION
 core = 7.x
+files[] = blogapi.module

@@ -4,3 +4,5 @@ description = Enables actions to be fired on certain system events, such as when
 package = Core - optional
 version = VERSION
 core = 7.x
+files[] = trigger.module
+files[] = trigger.admin.inc

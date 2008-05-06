@@ -4,3 +4,6 @@ description = Enables the categorization of content.
 package = Core - optional
 version = VERSION
 core = 7.x
+files[] = taxonomy.module
+files[] = taxonomy.admin.inc
+files[] = taxonomy.pages.inc

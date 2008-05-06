@@ -852,7 +852,6 @@ function user_menu() {
     'access callback' => 'user_access',
     'access arguments' => array('access user profiles'),
     'type' => MENU_CALLBACK,
-    'file' => 'user.pages.inc',
   );
 
   // Registration and login pages.
@@ -861,7 +860,6 @@ function user_menu() {
     'page callback' => 'user_page',
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
-    'file' => 'user.pages.inc',
   );
 
   $items['user/login'] = array(
@@ -876,7 +874,6 @@ function user_menu() {
     'page arguments' => array('user_register'),
     'access callback' => 'user_register_access',
     'type' => MENU_LOCAL_TASK,
-    'file' => 'user.pages.inc',
   );
 
   $items['user/password'] = array(
@@ -885,7 +882,6 @@ function user_menu() {
     'page arguments' => array('user_pass'),
     'access callback' => 'user_is_anonymous',
     'type' => MENU_LOCAL_TASK,
-    'file' => 'user.pages.inc',
   );
   $items['user/reset/%/%/%'] = array(
     'title' => 'Reset password',
@@ -893,7 +889,6 @@ function user_menu() {
     'page arguments' => array('user_pass_reset', 2, 3, 4),
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
-    'file' => 'user.pages.inc',
   );
 
   // User administration pages.
@@ -903,8 +898,6 @@ function user_menu() {
     'position' => 'left',
     'page callback' => 'system_admin_menu_block_page',
     'access arguments' => array('access administration pages'),
-    'file' => 'system.admin.inc',
-    'file path' => drupal_get_path('module', 'system'),
   );
   $items['admin/user/user'] = array(
     'title' => 'Users',
@@ -912,7 +905,6 @@ function user_menu() {
     'page callback' => 'user_admin',
     'page arguments' => array('list'),
     'access arguments' => array('administer users'),
-    'file' => 'user.admin.inc',
   );
   $items['admin/user/user/list'] = array(
     'title' => 'List',
@@ -924,7 +916,6 @@ function user_menu() {
     'page arguments' => array('create'),
     'access arguments' => array('administer users'),
     'type' => MENU_LOCAL_TASK,
-    'file' => 'user.admin.inc',
   );
   $items['admin/user/settings'] = array(
     'title' => 'User settings',
@@ -932,7 +923,6 @@ function user_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('user_admin_settings'),
     'access arguments' => array('administer users'),
-    'file' => 'user.admin.inc',
   );
 
   // Permission administration pages.
@@ -942,7 +932,6 @@ function user_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('user_admin_perm'),
     'access arguments' => array('administer permissions'),
-    'file' => 'user.admin.inc',
   );
   $items['admin/user/roles'] = array(
     'title' => 'Roles',
@@ -950,14 +939,12 @@ function user_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('user_admin_new_role'),
     'access arguments' => array('administer permissions'),
-    'file' => 'user.admin.inc',
   );
   $items['admin/user/roles/edit'] = array(
     'title' => 'Edit role',
     'page arguments' => array('user_admin_role'),
     'access arguments' => array('administer permissions'),
     'type' => MENU_CALLBACK,
-    'file' => 'user.admin.inc',
   );
 
   $items['logout'] = array(
@@ -965,7 +952,6 @@ function user_menu() {
     'access callback' => 'user_is_logged_in',
     'page callback' => 'user_logout',
     'weight' => 10,
-    'file' => 'user.pages.inc',
   );
 
   $items['user/%user_uid_optional'] = array(
@@ -977,7 +963,6 @@ function user_menu() {
     'access callback' => 'user_view_access',
     'access arguments' => array(1),
     'parent' => '',
-    'file' => 'user.pages.inc',
   );
 
   $items['user/%user/view'] = array(
@@ -993,7 +978,6 @@ function user_menu() {
     'access callback' => 'user_access',
     'access arguments' => array('administer users'),
     'type' => MENU_CALLBACK,
-    'file' => 'user.pages.inc',
   );
 
   $items['user/%user_category/edit'] = array(
@@ -1004,7 +988,6 @@ function user_menu() {
     'access arguments' => array(1),
     'type' => MENU_LOCAL_TASK,
     'load arguments' => array('%map', '%index'),
-    'file' => 'user.pages.inc',
   );
 
   $items['user/%user_category/edit/account'] = array(
@@ -1029,7 +1012,6 @@ function user_menu() {
           'weight' => $category['weight'],
           'load arguments' => array('%map', '%index'),
           'tab_parent' => 'user/%/edit',
-          'file' => 'user.pages.inc',
         );
       }
     }

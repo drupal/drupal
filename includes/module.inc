@@ -221,7 +221,7 @@ function _module_build_dependencies($files) {
  */
 function module_exists($module) {
   $list = module_list();
-  return array_key_exists($module, $list);
+  return isset($list[$module]);
 }
 
 /**
@@ -231,7 +231,14 @@ function module_load_install($module) {
   // Make sure the installation API is available
   include_once './includes/install.inc';
 
-  module_load_include('install', $module);
+  $file = module_load_include('install', $module);
+  // Ensure that you can module_invoke something inside the newly-loaded
+  // file during install.
+  $module_list = module_list();
+  if (!isset($module_list[$module])) {
+    $module_list[$module]['filename'] = $file;
+    module_list(TRUE, FALSE, FALSE, $module_list);
+  }
 }
 
 /**
@@ -253,6 +260,7 @@ function module_load_include($type, $module, $name = NULL) {
 
   if (is_file($file)) {
     require_once $file;
+    return $file;
   }
   else {
     return FALSE;
@@ -292,7 +300,7 @@ function module_enable($module_list) {
     // Refresh the module list to include the new enabled module.
     module_list(TRUE, FALSE);
     // Force to regenerate the stored list of hook implementations.
-    module_implements('', FALSE, TRUE);
+    drupal_rebuild_code_registry();
   }
 
   foreach ($invoke_modules as $module) {
@@ -301,7 +309,7 @@ function module_enable($module_list) {
     // We check for the existence of node_access_needs_rebuild() since
     // at install time, module_enable() could be called while node.module
     // is not enabled yet.
-    if (function_exists('node_access_needs_rebuild') && !node_access_needs_rebuild() && module_hook($module, 'node_grants')) {
+    if (drupal_function_exists('node_access_needs_rebuild') && !node_access_needs_rebuild() && module_hook($module, 'node_grants')) {
       node_access_needs_rebuild(TRUE);
     }
   }
@@ -333,7 +341,7 @@ function module_disable($module_list) {
     // Refresh the module list to exclude the disabled modules.
     module_list(TRUE, FALSE);
     // Force to regenerate the stored list of hook implementations.
-    module_implements('', FALSE, TRUE);
+    drupal_rebuild_code_registry();
   }
 
   // If there remains no more node_access module, rebuilding will be
@@ -376,7 +384,13 @@ function module_disable($module_list) {
  *   implemented in that module.
  */
 function module_hook($module, $hook) {
-  return function_exists($module . '_' . $hook);
+  $function = $module . '_' . $hook;
+  if (defined('MAINTENANCE_MODE')) {
+    return function_exists($function);
+  }
+  else {
+    return drupal_function_exists($function);
+  }
 }
 
 /**
@@ -395,22 +409,26 @@ function module_hook($module, $hook) {
  *   An array with the names of the modules which are implementing this hook.
  */
 function module_implements($hook, $sort = FALSE, $refresh = FALSE) {
-  static $implementations;
+  static $implementations = array();
 
   if ($refresh) {
     $implementations = array();
-    return;
+  }
+  else if (!defined('MAINTENANCE_MODE') && empty($implementations)) {
+    if ($cache = cache_get('hooks', 'cache_registry')) {
+      $implementations = $cache->data;
+    }
   }
 
   if (!isset($implementations[$hook])) {
     $implementations[$hook] = array();
-    $list = module_list(FALSE, TRUE, $sort);
-    foreach ($list as $module) {
+    foreach (module_list() as $module) {
       if (module_hook($module, $hook)) {
         $implementations[$hook][] = $module;
       }
     }
   }
+  registry_cache_hook_implementations(array('hook' => $hook, 'modules' => $implementations[$hook]));
 
   // The explicit cast forces a copy to be made. This is needed because
   // $implementations[$hook] is only a reference to an element of
@@ -438,9 +456,8 @@ function module_invoke() {
   $module = $args[0];
   $hook = $args[1];
   unset($args[0], $args[1]);
-  $function = $module . '_' . $hook;
   if (module_hook($module, $hook)) {
-    return call_user_func_array($function, $args);
+    return call_user_func_array($module . '_' . $hook, $args);
   }
 }
 /**
@@ -461,12 +478,14 @@ function module_invoke_all() {
   $return = array();
   foreach (module_implements($hook) as $module) {
     $function = $module . '_' . $hook;
-    $result = call_user_func_array($function, $args);
-    if (isset($result) && is_array($result)) {
-      $return = array_merge_recursive($return, $result);
-    }
-    else if (isset($result)) {
-      $return[] = $result;
+    if (drupal_function_exists($function)) {
+      $result = call_user_func_array($function, $args);
+      if (isset($result) && is_array($result)) {
+        $return = array_merge_recursive($return, $result);
+      }
+      else if (isset($result)) {
+        $return[] = $result;
+      }
     }
   }
 

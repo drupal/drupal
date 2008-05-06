@@ -4,3 +4,6 @@ description = Logs access statistics for your site.
 package = Core - optional
 version = VERSION
 core = 7.x
+files[] = statistics.module
+files[] = statistics.admin.inc
+files[] = statistics.pages.inc

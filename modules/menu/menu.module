@@ -52,14 +52,11 @@ function menu_menu() {
     'page callback' => 'menu_overview_page',
     'access callback' => 'user_access',
     'access arguments' => array('administer menu'),
-    'file' => 'menu.admin.inc',
   );
-
   $items['admin/build/menu/list'] = array(
     'title' => 'List menus',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10,
-    'file' => 'menu.admin.inc',
   );
   $items['admin/build/menu/add'] = array(
     'title' => 'Add menu',
@@ -67,7 +64,6 @@ function menu_menu() {
     'page arguments' => array('menu_edit_menu', 'add'),
     'access arguments' => array('administer menu'),
     'type' => MENU_LOCAL_TASK,
-    'file' => 'menu.admin.inc',
   );
   $items['admin/build/menu/settings'] = array(
     'title' => 'Settings',
@@ -76,7 +72,6 @@ function menu_menu() {
     'access arguments' => array('administer menu'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 5,
-    'file' => 'menu.admin.inc',
   );
   $items['admin/build/menu-customize/%menu'] = array(
     'title' => 'Customize menu',
@@ -86,13 +81,11 @@ function menu_menu() {
     'title arguments' => array(3),
     'access arguments' => array('administer menu'),
     'type' => MENU_CALLBACK,
-    'file' => 'menu.admin.inc',
   );
   $items['admin/build/menu-customize/%menu/list'] = array(
     'title' => 'List items',
     'weight' => -10,
     'type' => MENU_DEFAULT_LOCAL_TASK,
-    'file' => 'menu.admin.inc',
   );
   $items['admin/build/menu-customize/%menu/add'] = array(
     'title' => 'Add item',
@@ -100,7 +93,6 @@ function menu_menu() {
     'page arguments' => array('menu_edit_item', 'add', NULL, 3),
     'access arguments' => array('administer menu'),
     'type' => MENU_LOCAL_TASK,
-    'file' => 'menu.admin.inc',
   );
   $items['admin/build/menu-customize/%menu/edit'] = array(
     'title' => 'Edit menu',
@@ -108,7 +100,6 @@ function menu_menu() {
     'page arguments' => array('menu_edit_menu', 'edit', 3),
     'access arguments' => array('administer menu'),
     'type' => MENU_LOCAL_TASK,
-    'file' => 'menu.admin.inc',
   );
   $items['admin/build/menu-customize/%menu/delete'] = array(
     'title' => 'Delete menu',
@@ -116,7 +107,6 @@ function menu_menu() {
     'page arguments' => array(3),
     'access arguments' => array('administer menu'),
     'type' => MENU_CALLBACK,
-    'file' => 'menu.admin.inc',
   );
   $items['admin/build/menu/item/%menu_link/edit'] = array(
     'title' => 'Edit menu item',
@@ -124,7 +114,6 @@ function menu_menu() {
     'page arguments' => array('menu_edit_item', 'edit', 4, NULL),
     'access arguments' => array('administer menu'),
     'type' => MENU_CALLBACK,
-    'file' => 'menu.admin.inc',
   );
   $items['admin/build/menu/item/%menu_link/reset'] = array(
     'title' => 'Reset menu item',
@@ -132,7 +121,6 @@ function menu_menu() {
     'page arguments' => array('menu_reset_item_confirm', 4),
     'access arguments' => array('administer menu'),
     'type' => MENU_CALLBACK,
-    'file' => 'menu.admin.inc',
   );
   $items['admin/build/menu/item/%menu_link/delete'] = array(
     'title' => 'Delete menu item',
@@ -140,9 +128,7 @@ function menu_menu() {
     'page arguments' => array(4),
     'access arguments' => array('administer menu'),
     'type' => MENU_CALLBACK,
-    'file' => 'menu.admin.inc',
   );
-
   return $items;
 }
 

@@ -327,7 +327,7 @@ function drupal_retrieve_form($form_id, &$form_state) {
 
   // We first check to see if there's a function named after the $form_id.
   // If there is, we simply pass the arguments on to it to get the form.
-  if (!function_exists($form_id)) {
+  if (!drupal_function_exists($form_id)) {
     // In cases where many form_ids need to share a central constructor function,
     // such as the node editing form, modules can implement hook_forms(). It
     // maps one or more form_ids to the correct constructor functions.
@@ -348,6 +348,7 @@ function drupal_retrieve_form($form_id, &$form_state) {
     }
     if (isset($form_definition['callback'])) {
       $callback = $form_definition['callback'];
+      drupal_function_exists($callback);
     }
   }
 
@@ -504,13 +505,13 @@ function drupal_prepare_form($form_id, &$form, &$form_state) {
   $form += _element_info('form');
 
   if (!isset($form['#validate'])) {
-    if (function_exists($form_id . '_validate')) {
+    if (drupal_function_exists($form_id . '_validate')) {
       $form['#validate'] = array($form_id . '_validate');
     }
   }
 
   if (!isset($form['#submit'])) {
-    if (function_exists($form_id . '_submit')) {
+    if (drupal_function_exists($form_id . '_submit')) {
       // We set submit here so that it can be altered.
       $form['#submit'] = array($form_id . '_submit');
     }
@@ -712,7 +713,7 @@ function _form_validate($elements, &$form_state, $form_id = NULL) {
     // #value data.
     elseif (isset($elements['#element_validate'])) {
       foreach ($elements['#element_validate'] as $function) {
-        if (function_exists($function))  {
+        if (drupal_function_exists($function))  {
           $function($elements, $form_state, $complete_form);
         }
       }
@@ -749,7 +750,7 @@ function form_execute_handlers($type, &$form, &$form_state) {
   }
 
   foreach ($handlers as $function) {
-    if (function_exists($function))  {
+    if (drupal_function_exists($function))  {
       if ($type == 'submit' && ($batch =& batch_get())) {
         // Some previous _submit handler has set a batch. We store the call
         // in a special 'control' batch set, for execution at the correct
@@ -1032,7 +1033,7 @@ function _form_builder_handle_input_element($form_id, &$form, &$form_state, $com
   // checkboxes and files.
   if (isset($form['#process']) && !$form['#processed']) {
     foreach ($form['#process'] as $process) {
-      if (function_exists($process)) {
+      if (drupal_function_exists($process)) {
         $form = $process($form, isset($edit) ? $edit : NULL, $form_state, $complete_form);
       }
     }
