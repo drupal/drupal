@@ -41,38 +41,26 @@ function user_schema() {
     'primary key' => array('aid'),
   );
 
-  $schema['permission'] = array(
-    'description' => t('Stores permissions for users.'),
+  $schema['role_permission'] = array(
+    'description' => t('Stores the permissions assigned to user roles.'),
     'fields' => array(
-      'pid' => array(
-        'type' => 'serial',
-        'not null' => TRUE,
-        'description' => t('Primary Key: Unique permission ID.'),
-      ),
       'rid' => array(
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
-        'default' => 0,
-        'description' => t('The {role}.rid to which the permissions are assigned.'),
+        'description' => t('Foreign Key: {role}.rid.'),
       ),
-      'perm' => array(
-        'type' => 'text',
-        'not null' => FALSE,
-        'size' => 'big',
-        'description' => t('List of permissions being assigned.'),
-      ),
-      'tid' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
+      'permission' => array(
+        'type' => 'varchar',
+        'length' => 64,
         'not null' => TRUE,
-        'default' => 0,
-        'description' => t('Originally intended for taxonomy-based permissions, but never used.'),
+        'default' => '',
+        'description' => t('A single permission granted to the role identified by rid.'),
       ),
     ),
-    'primary key' => array('pid'),
+    'primary key' => array('rid', 'permission'),
     'indexes' => array(
-      'rid' => array('rid'),
+      'permission' => array('permission'),
     ),
   );
 
@@ -83,7 +71,7 @@ function user_schema() {
         'type' => 'serial',
         'unsigned' => TRUE,
         'not null' => TRUE,
-        'description' => t('Primary Key: Unique role id.'),
+        'description' => t('Primary Key: Unique role ID.'),
       ),
       'name' => array(
         'type' => 'varchar',

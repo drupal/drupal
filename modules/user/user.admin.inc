@@ -493,27 +493,20 @@ function user_admin_settings() {
  * @see theme_user_admin_perm()
  */
 function user_admin_perm($form_state, $rid = NULL) {
-  if (is_numeric($rid)) {
-    $result = db_query('SELECT r.rid, p.perm FROM {role} r LEFT JOIN {permission} p ON r.rid = p.rid WHERE r.rid = %d', $rid);
-  }
-  else {
-    $result = db_query('SELECT r.rid, p.perm FROM {role} r LEFT JOIN {permission} p ON r.rid = p.rid ORDER BY name');
-  }
-
-  // Compile role array:
-  // Add a comma at the end so when searching for a permission, we can
-  // always search for "$perm," to make sure we do not confuse
-  // permissions that are substrings of each other.
-  while ($role = db_fetch_object($result)) {
-    $role_permissions[$role->rid] = $role->perm . ',';
-  }
 
   // Retrieve role names for columns.
   $role_names = user_roles();
   if (is_numeric($rid)) {
     $role_names = array($rid => $role_names[$rid]);
   }
+  // Fetch permissions for all roles or the one selected role.
+  $role_permissions = user_role_permissions($role_names);
 
+  // Store $role_names for use when saving the data.
+  $form['role_names'] = array(
+    '#type' => 'value',
+    '#value' => $role_names,
+  );
   // Render role/permission overview:
   $options = array();
   $hide_descriptions = !system_admin_compact_mode();
@@ -537,7 +530,7 @@ function user_admin_perm($form_state, $rid = NULL) {
         );
         foreach ($role_names as $rid => $name) {
           // Builds arrays for checked boxes for each role
-          if (strpos($role_permissions[$rid], $perm . ',') !== FALSE) {
+          if (isset($role_permissions[$rid][$perm])) {
             $status[$rid][] = $perm;
           }
         }
@@ -555,24 +548,24 @@ function user_admin_perm($form_state, $rid = NULL) {
   return $form;
 }
 
+/**
+ * Save permissions selected on the administer permissions page.
+ *
+ * @see user_admin_perm
+ */
 function user_admin_perm_submit($form, &$form_state) {
-  // Save permissions:
-  $result = db_query('SELECT * FROM {role}');
-  while ($role = db_fetch_object($result)) {
-    if (isset($form_state['values'][$role->rid])) {
-      // Delete, so if we clear every checkbox we reset that role;
-      // otherwise permissions are active and denied everywhere.
-      db_query('DELETE FROM {permission} WHERE rid = %d', $role->rid);
-      $form_state['values'][$role->rid] = array_filter($form_state['values'][$role->rid]);
-      if (count($form_state['values'][$role->rid])) {
-        db_query("INSERT INTO {permission} (rid, perm) VALUES (%d, '%s')", $role->rid, implode(', ', array_keys($form_state['values'][$role->rid])));
-      }
+  foreach ($form_state['values']['role_names'] as $rid => $name) {
+    $checked = array_filter($form_state['values'][$rid]);
+    // Delete existing permissions for the role. This handles "unchecking" checkboxes.
+    db_query("DELETE FROM {role_permission} WHERE rid = %d", $rid);
+    foreach ($checked as $permission) {
+      db_query("INSERT INTO {role_permission} (rid, permission) VALUES (%d, '%s')", $rid, $permission);
     }
   }
 
   drupal_set_message(t('The changes have been saved.'));
 
-  // Clear the cached pages
+  // Clear the cached pages and blocks.
   cache_clear_all();
 }
 
@@ -697,7 +690,7 @@ function user_admin_role_submit($form, &$form_state) {
   }
   else if ($form_state['values']['op'] == t('Delete role')) {
     db_query('DELETE FROM {role} WHERE rid = %d', $form_state['values']['rid']);
-    db_query('DELETE FROM {permission} WHERE rid = %d', $form_state['values']['rid']);
+    db_query('DELETE FROM {role_permission} WHERE rid = %d', $form_state['values']['rid']);
     // Update the users who have this role set:
     db_query('DELETE FROM {users_roles} WHERE rid = %d', $form_state['values']['rid']);
 

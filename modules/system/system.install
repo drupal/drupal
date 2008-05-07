@@ -366,11 +366,18 @@ function system_install() {
   // This sets uid 1 (superuser). We skip uid 2 but that's not a big problem.
   db_query("UPDATE {users} SET uid = 1 WHERE name = '%s'", 'placeholder-for-uid-1');
 
+  // Built-in roles.
   db_query("INSERT INTO {role} (name) VALUES ('%s')", 'anonymous user');
   db_query("INSERT INTO {role} (name) VALUES ('%s')", 'authenticated user');
 
-  db_query("INSERT INTO {permission} (rid, perm, tid) VALUES (%d, '%s', %d)", 1, 'access content', 0);
-  db_query("INSERT INTO {permission} (rid, perm, tid) VALUES (%d, '%s', %d)", 2, 'access comments, access content, post comments, post comments without approval', 0);
+  // Anonymous role permissions.
+  db_query("INSERT INTO {role_permission} (rid, permission) VALUES (%d, '%s')", 1, 'access content');
+
+  // Authenticated role permissions.
+  db_query("INSERT INTO {role_permission} (rid, permission) VALUES (%d, '%s')", 2, 'access comments');
+  db_query("INSERT INTO {role_permission} (rid, permission) VALUES (%d, '%s')", 2, 'access content');
+  db_query("INSERT INTO {role_permission} (rid, permission) VALUES (%d, '%s')", 2, 'post comments');
+  db_query("INSERT INTO {role_permission} (rid, permission) VALUES (%d, '%s')", 2, 'post comments without approval');
 
   db_query("INSERT INTO {variable} (name, value) VALUES ('%s', '%s')", 'theme_default', 's:7:"garland";');
   db_query("UPDATE {system} SET status = %d WHERE type = '%s' AND name = '%s'", 1, 'theme', 'garland');
@@ -2943,6 +2950,51 @@ function system_update_7006() {
   drupal_rebuild_code_registry();
   return $ret;
 }
+
+/**
+ * Convert to new method of storing permissions.
+ *
+ * This update is in system.install rather than user.install so that
+ * all modules can use the updated permission scheme during their updates.
+ */
+function system_update_7007() {
+  $ret = array();
+
+  $schema['role_permission'] = array(
+    'fields' => array(
+      'rid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'permission' => array(
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+    ),
+    'primary key' => array('rid', 'permission'),
+    'indexes' => array(
+      'permission' => array('permission'),
+    ),
+  );
+
+  db_create_table($ret, 'role_permission', $schema['role_permission']);
+
+  // Copy the permissions from the old {permission} table to the new {role_permission} table.
+  $result = db_query("SELECT rid, perm FROM {permission} ORDER BY rid ASC");
+  while ($role = db_fetch_object($result)) {
+    foreach (explode(', ', $role->perm) as $perm) {
+      db_query("INSERT INTO {role_permission} (rid, permission) VALUES (%d, '%s')", $role->rid, $perm);
+    }
+    $ret[] = array('success' => TRUE, 'query' => "Inserted into {role_permission} the permissions for role ID " . $role->rid);
+  }
+  db_drop_table($ret, 'permission');
+
+  return $ret;
+}
+
 
 /**
  * @} End of "defgroup updates-6.x-to-7.x"
