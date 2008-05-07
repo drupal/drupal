@@ -231,14 +231,7 @@ function module_load_install($module) {
   // Make sure the installation API is available
   include_once './includes/install.inc';
 
-  $file = module_load_include('install', $module);
-  // Ensure that you can module_invoke something inside the newly-loaded
-  // file during install.
-  $module_list = module_list();
-  if (!isset($module_list[$module])) {
-    $module_list[$module]['filename'] = $file;
-    module_list(TRUE, FALSE, FALSE, $module_list);
-  }
+  module_load_include('install', $module);
 }
 
 /**
