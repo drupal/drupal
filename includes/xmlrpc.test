@@ -1,5 +1,5 @@
 <?php
-// $Id: xmlrpc.inc.test,v 1.2 2008/05/06 11:21:10 dries Exp $
+// $Id: xmlrpc.test,v 1.1 2008/05/07 06:50:10 dries Exp $
 
 class XMLRPCValidator1Test extends DrupalWebTestCase {
   function getInfo() {
