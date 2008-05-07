@@ -25,7 +25,7 @@ class RegistryParseFileTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * testRegistryParseFile 
+   * testRegistryParseFile
    */
   function testRegistryParseFile() {
     _registry_parse_file($this->fileName, $this->getFileContents());
@@ -36,7 +36,7 @@ class RegistryParseFileTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * getFileContents 
+   * getFileContents
    */
   function getFileContents() {
     $file_contents = <<<CONTENTS
