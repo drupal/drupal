@@ -52,10 +52,6 @@ pre {
   font-size: 12px;
   border: 1px solid #ddd;
 }
-table {
-  /* make <td> sizes relative to body size! */
-  font-size: 1em;
-}
 .form-item label {
   font-size: 1em;
   color: #222;
@@ -74,29 +70,94 @@ table {
 /*
 ** Page layout blocks / IDs
 */
-#header, #content {
-  width: 100%;
+
+body {
+  min-width: 56em;
+  /* Background color needed to fill the sidebars for the length of the page. */
+  background-color: #ddd;
 }
+
+.layout-columns {
+  padding: 0 18em;
+}
+
+.sidebar-left .layout-columns {
+  padding-right: 0;
+}
+
+.sidebar-right .layout-columns {
+  padding-left: 0;
+}
+
+.layout-columns .column {
+  position: relative;
+  float: left; /* LTR */
+}
+
+#main {
+  width: 100%;
+  background-color: #fff;
+}
+#main .inner {
+  padding: 1em 1.5em 3em 1.5em;
+}
+
+#sidebar-left, #sidebar-right {
+  width: 16em;
+  padding: 1em;
+  margin-right: -18em; /* LTR */
+  background-color: #ddd;
+}
+
+#sidebar-left {
+  right: 18em; /* LTR */
+}
+
 #header {
+  padding: .2em;
   background-color: #69c;
 }
-#logo {
-  vertical-align: middle;
-  border: 0;
-}
-#logo img {
+.logo {
   float: left; /* LTR */
   padding: 0 1em;
   border: 0;
+}
+.site-name {
+  margin: 0.6em 0 0 ;
+  font-size: 2em;
+  white-space: nowrap;
+}
+.site-name a:link, .site-name a:visited {
+  color: #fff;
+}
+.site-name a:hover {
+  color: #369;
+  text-decoration: none;
+}
+.site-slogan {
+  font-size: 1em;
+  color: #eee;
+  display: block;
+  margin: 0;
+  font-style: italic;
+  font-weight: bold;
+}
+.search-box {
+  float: right; /* LTR */
+  margin: 1em;
 }
 #menu {
   padding: 0.5em 0.5em 0 0.5em; /* LTR */
   text-align: right; /* LTR */
   vertical-align: middle;
 }
+#header-region {
+  clear: both;
+}
+
 #navlist {
   font-size: 1.0em;
-  padding: 0 0.8em 1.2em 0; /* LTR */
+  padding: 0 0.8em 0.5em 0; /* LTR */
   color: #9cf;
 }
 #navlist a {
@@ -137,30 +198,6 @@ ul.links li.first {
   color: #9cf;
   font-weight: bold;
 }
-.site-name {
-  margin: 0.6em 0 0 ;
-  padding: 0;
-  font-size: 2em;
-}
-.site-name a:link, .site-name a:visited {
-  color: #fff;
-}
-.site-name a:hover {
-  color: #369;
-  text-decoration: none;
-}
-.site-slogan {
-  font-size: 1em;
-  color: #eee;
-  display: block;
-  margin: 0;
-  font-style: italic;
-  font-weight: bold;
-}
-#main {
-  /* padding in px not ex because IE messes up 100% width tables otherwise */
-  padding: 10px;
-}
 #mission, .node .content, .comment .content {
   line-height: 1.4em;
 }
@@ -180,17 +217,12 @@ ul.links li.first {
 .error {
   border-color: red;
 }
-#sidebar-left, #sidebar-right {
-  background-color: #ddd;
-  width: 16em;
-  /* padding in px not ex because IE messes up 100% width tables otherwise */
-  padding: 10px;
-  vertical-align: top;
-}
+
 #footer {
   background-color: #eee;
   padding: 1em;
   font-size: 0.8em;
+  clear: both;
 }
 
 /*

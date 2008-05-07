@@ -2,8 +2,21 @@
 body {
   direction: rtl;
 }
-#logo img {
+.layout-columns .column {
   float: right;
+}
+#sidebar-left, #sidebar-right {
+  margin-right: 0;
+  margin-left:  -18em;
+}
+#sidebar-left {
+  right: -18em;
+}
+.logo {
+  float: right;
+}
+.search-box {
+  float: left; /* LTR */
 }
 #menu {
   padding: 0.5em 0.5em 0 0.5em;
@@ -15,6 +28,7 @@ body {
 #subnavlist {
   padding: 0.5em 0 0.4em 1.2em;
 }
+
 ul.links li {
   border-right: 1px solid #9cf;
   border-left: none;

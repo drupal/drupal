@@ -11,53 +11,45 @@
   <script type="text/javascript"><?php /* Needed to avoid Flash of Unstyle Content in IE */ ?> </script>
 </head>
 
-<body>
+<body class="<?php print $body_classes; ?>">
+  <div id="header" class="clear-block">
+    <?php if ($search_box) { ?><div class="search-box"><?php print $search_box ?></div><?php }; ?>
+    <?php if ($logo) { ?><a class="logo" href="<?php print $front_page ?>" title="<?php print t('Home') ?>"><img src="<?php print $logo ?>" alt="<?php print t('Home') ?>" /></a><?php } ?>
+    <?php if ($site_name) { ?><h1 class='site-name'><a href="<?php print $front_page ?>" title="<?php print t('Home') ?>"><?php print $site_name ?></a></h1><?php }; ?>
+    <?php if ($site_slogan) { ?><div class='site-slogan'><?php print $site_slogan ?></div><?php } ?>
 
-<table border="0" cellpadding="0" cellspacing="0" id="header">
-  <tr>
-    <td id="logo">
-      <?php if ($logo) { ?><a href="<?php print $front_page ?>" title="<?php print t('Home') ?>"><img src="<?php print $logo ?>" alt="<?php print t('Home') ?>" /></a><?php } ?>
-      <?php if ($site_name) { ?><h1 class='site-name'><a href="<?php print $front_page ?>" title="<?php print t('Home') ?>"><?php print $site_name ?></a></h1><?php } ?>
-      <?php if ($site_slogan) { ?><div class='site-slogan'><?php print $site_slogan ?></div><?php } ?>
-    </td>
-    <td id="menu">
-      <?php if (isset($secondary_links)) { ?><?php print theme('links', $secondary_links, array('class' => 'links', 'id' => 'subnavlist')) ?><?php } ?>
+    <div id="menu">
+      <?php if (isset($secondary_links)) { ?><?php print theme('links', $secondary_links, array('class' => 'links', 'id' => 'subnavlist')); ?><?php } ?>
       <?php if (isset($primary_links)) { ?><?php print theme('links', $primary_links, array('class' => 'links', 'id' => 'navlist')) ?><?php } ?>
-      <?php print $search_box ?>
-    </td>
-  </tr>
-  <tr>
-    <td colspan="2"><div><?php print $header ?></div></td>
-  </tr>
-</table>
+    </div>
 
-<table border="0" cellpadding="0" cellspacing="0" id="content">
-  <tr>
-    <?php if ($left) { ?><td id="sidebar-left">
-      <?php print $left ?>
-    </td><?php } ?>
-    <td valign="top">
+    <div id="header-region"><?php print $header ?></div>
+  </div>
+
+  <div class="layout-columns">
+    <?php if ($left) { ?><div id="sidebar-left" class="column"><?php print $left ?></div><?php } ?>
+
+    <div id="main" class="column">
       <?php if ($mission) { ?><div id="mission"><?php print $mission ?></div><?php } ?>
-      <div id="main">
+      <div class="inner">
         <?php print $breadcrumb ?>
         <h1 class="title"><?php print $title ?></h1>
-        <div class="tabs"><?php print $tabs ?></div>
-        <?php if ($show_messages) { print $messages; } ?>
+        <?php if ($tabs) { ?><div class="tabs"><?php print $tabs ?></div><?php } ?>
         <?php print $help ?>
+        <?php if ($show_messages) { print $messages; } ?>
         <?php print $content; ?>
         <?php print $feed_icons; ?>
       </div>
-    </td>
-    <?php if ($right) { ?><td id="sidebar-right">
-      <?php print $right ?>
-    </td><?php } ?>
-  </tr>
-</table>
+    </div>
 
-<div id="footer">
-  <?php print $footer_message ?>
-  <?php print $footer ?>
-</div>
+    <?php if ($right) { ?><div id="sidebar-right" class="column"><?php print $right ?></div><?php } ?>
+  </div>
+
+  <div id="footer">
+    <?php print $footer_message ?>
+    <?php print $footer ?>
+  </div>
+
 <?php print $closure ?>
 </body>
 </html>

@@ -30,6 +30,8 @@ Drupal 7.0, xxxx-xx-xx (development version)
     * Modules now declare their includable files via their .info file.  That
       allows Drupal to scan files when a module is enabled and then lazy-load
       code as needed, resulting in significant performance and memory improvements.
+- Theme system:
+    * Converted the 'bluemarine' theme to a tableless layout.
 
 Drupal 6.0, 2008-02-13
 ----------------------
