@@ -1104,9 +1104,9 @@ function system_ip_blocking() {
     );
   }
 
-  $output .= theme('table', $header, $rows);
-
   $output .= drupal_get_form('system_ip_blocking_form');
+
+  $output .= theme('table', $header, $rows);
 
   return $output;
 }
@@ -1124,6 +1124,7 @@ function system_ip_blocking_form($form_state) {
     '#type' => 'textfield',
     '#size' => 64,
     '#maxlength' => 32,
+    '#default_value' => arg(3),
     '#description' => t('Enter a valid IP address.'),
   );
   $form['submit'] = array(

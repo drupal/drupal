@@ -79,18 +79,18 @@ function statistics_top_visitors() {
     array('data' => t('Hits'), 'field' => 'hits', 'sort' => 'desc'),
     array('data' => t('Visitor'), 'field' => 'u.name'),
     array('data' => t('Total page generation time'), 'field' => 'total'),
-    array('data' => t('Operations'))
+    array('data' => user_access('block IP addresses') ? t('Operations') : '', 'colspan' => 2),
   );
 
-  $sql = "SELECT COUNT(a.uid) AS hits, a.uid, u.name, a.hostname, SUM(a.timer) AS total, ac.aid FROM {accesslog} a LEFT JOIN {access} ac ON ac.type = 'host' AND LOWER(a.hostname) LIKE (ac.mask) LEFT JOIN {users} u ON a.uid = u.uid GROUP BY a.hostname, a.uid, u.name, ac.aid" . tablesort_sql($header);
+  $sql = "SELECT COUNT(a.uid) AS hits, a.uid, u.name, a.hostname, SUM(a.timer) AS total, bl.iid FROM {accesslog} a LEFT JOIN {blocked_ips} bl ON a.hostname = bl.ip LEFT JOIN {users} u ON a.uid = u.uid GROUP BY a.hostname, a.uid, u.name, bl.iid" . tablesort_sql($header);
   $sql_cnt = "SELECT COUNT(DISTINCT(CONCAT(uid, hostname))) FROM {accesslog}";
   $result = pager_query($sql, 30, 0, $sql_cnt);
 
   $rows = array();
   while ($account = db_fetch_object($result)) {
     $qs = drupal_get_destination();
-    $ban_link = $account->aid ? l(t('unban'), "admin/user/rules/delete/$account->aid", array('query' => $qs)) : l(t('ban'), "admin/user/rules/add/$account->hostname/host", array('query' => $qs));
-    $rows[] = array($account->hits, ($account->uid ? theme('username', $account) : $account->hostname), format_interval(round($account->total / 1000)), $ban_link);
+    $ban_link =  $account->iid ? l(t('unblock IP address'), "admin/settings/ip-blocking/delete/$account->iid", array('query' => $qs)) : l(t('block IP address'), "admin/settings/ip-blocking/$account->hostname", array('query' => $qs));
+    $rows[] = array($account->hits, ($account->uid ? theme('username', $account) : $account->hostname), format_interval(round($account->total / 1000)), (user_access('block IP addresses') && !$account->uid) ? $ban_link : '');
   }
 
   if (empty($rows)) {
