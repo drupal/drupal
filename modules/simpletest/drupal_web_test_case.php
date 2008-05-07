@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.3 2008/04/30 06:45:43 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.4 2008/05/07 19:34:23 dries Exp $
 
 /**
  * Test case for typical Drupal tests.
@@ -273,9 +273,7 @@ class DrupalWebTestCase extends UnitTestCase {
   private function _drupalCreateRole($permissions = NULL) {
     // Generate string version of permissions list.
     if ($permissions === NULL) {
-      $permission_string = 'access comments, access content, post comments, post comments without approval';
-    } else {
-      $permission_string = implode(', ', $permissions);
+      $permissions = array('access comments', 'access content', 'post comments', 'post comments without approval');
     }
 
     // Create new role.
@@ -285,8 +283,11 @@ class DrupalWebTestCase extends UnitTestCase {
     $this->assertTrue($role, t('Created role of name: @role_name, id: @rid', array('@role_name' => $role_name, '@rid' => (isset($role->rid) ? $role->rid : t('-n/a-')))), t('Role'));
     if ($role && !empty($role->rid)) {
       // Assign permissions to role and mark it for clean-up.
-      db_query("INSERT INTO {permission} (rid, perm) VALUES (%d, '%s')", $role->rid, $permission_string);
-      $this->assertTrue(db_affected_rows(), t('Created permissions: @perms', array('@perms' => $permission_string)), t('Role'));
+      foreach ($permissions as $permission_string) {
+        db_query("INSERT INTO {role_permission} (rid, permission) VALUES (%d, '%s')", $role->rid, $permission_string);
+      }
+      $count = db_result(db_query("SELECT COUNT(*) FROM {role_permission} WHERE rid = %d", $role->rid));
+      $this->assertTrue($count == count($permissions), t('Created permissions: @perms', array('@perms' => implode(', ', $permissions))), t('Role'));
       return $role->rid;
     }
     else {

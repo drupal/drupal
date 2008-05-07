@@ -1,5 +1,5 @@
 <?php
-// $Id: user.test,v 1.2 2008/04/30 06:43:30 dries Exp $
+// $Id: user.test,v 1.3 2008/05/07 19:34:24 dries Exp $
 
 class UserRegistrationTestCase extends DrupalWebTestCase {
   /**
@@ -206,4 +206,58 @@ class UserDeleteTestCase extends DrupalWebTestCase {
     $this->assertRaw(t('%name has been deleted.', array('%name' => $user->name)), t('User deleted'));
     $this->assertFalse(user_load($edit), t('User is not found in the database'));
   }
+}
+
+
+class UserPermissionsTestCase extends DrupalWebTestCase {
+  protected $admin_user;
+  protected $rid;
+
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('Role permissions'),
+      'description' => t('Verify that role permissions can be added and removed via the permissions page.'),
+      'group' => t('User')
+    );
+  }
+
+  function setUp() {
+    parent::setUp();
+
+    $this->admin_user = $this->drupalCreateUser(array('administer permissions', 'access user profiles'));
+
+    // Find the new role ID - it must be the maximum.
+    $all_rids = array_keys($this->admin_user->roles);
+    sort($all_rids);
+    $this->rid = array_pop($all_rids);
+  }
+
+  /**
+   * Change user permissions and check user_access().
+   */
+  function testUserPermissionChanges() {
+    $this->drupalLogin($this->admin_user);
+    $rid = $this->rid;
+    $account = $this->admin_user;
+
+    // Add a permission.
+    $this->assertFalse(user_access('administer nodes', $account, TRUE), t('User does not have "administer nodes" permission.'));
+    $edit = array();
+    $edit[$rid . '[administer nodes]'] = TRUE;
+    $this->drupalPost('admin/user/permissions', $edit, t('Save permissions'));
+    $this->assertText(t('The changes have been saved.'), t('Successful save message displayed.'));
+    $this->assertTrue(user_access('administer nodes', $account, TRUE), t('User now has "administer nodes" permission.'));
+
+    // Remove a permission.
+    $this->assertTrue(user_access('access user profiles', $account, TRUE), t('User has "access user profiles" permission.'));
+    $edit = array();
+    $edit[$rid . '[access user profiles]'] = FALSE;
+    $this->drupalPost('admin/user/permissions', $edit, t('Save permissions'));
+    $this->assertText(t('The changes have been saved.'), t('Successful save message displayed.'));
+    $this->assertFalse(user_access('access user profiles', $account, TRUE), t('User no longer has "access user profiles" permission.'));
+  }
+
 }
