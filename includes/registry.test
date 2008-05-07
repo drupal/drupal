@@ -1,0 +1,56 @@
+<?php
+
+class RegistryParseFileTestCase extends DrupalWebTestCase {
+
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('Registry parse file test'),
+      'description' => t('Parse a simple file and check that its resources are saved to the database.'),
+      'group' => t('System')
+    );
+  }
+
+  /**
+   * Implementation of setUp().
+   */
+  function setUp() {
+    $this->fileName = 'registry_test_' . md5(rand());
+    $this->functionName = 'registry_test_function' . md5(rand());
+    $this->className = 'registry_test_class' . md5(rand());
+    $this->interfaceName = 'registry_test_interface' . md5(rand());
+    parent::setUp();
+  }
+
+  /**
+   * testRegistryParseFile 
+   */
+  function testRegistryParseFile() {
+    _registry_parse_file($this->fileName, $this->getFileContents());
+    foreach (array('functionName', 'className', 'interfaceName') as $resource) {
+      $foundName = db_result(db_query("SELECT name FROM {registry} WHERE name = '%s'", $this->$resource));
+      $this->assertTrue($this->$resource == $foundName, t('Resource "@resource" found.', array('@resource' => $this->$resource)));
+    }
+  }
+
+  /**
+   * getFileContents 
+   */
+  function getFileContents() {
+    $file_contents = <<<CONTENTS
+<?php
+
+function {$this->functionName}() {}
+
+class {$this->className} {}
+
+interface {$this->interfaceName} {}
+
+CONTENTS;
+    return $file_contents;
+  }
+
+}
+
