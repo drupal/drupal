@@ -1,5 +1,5 @@
 <?php
-// $Id: cron.php,v 1.37 2008/03/17 16:53:58 dries Exp $
+// $Id: cron.php,v 1.38 2008/05/09 19:23:48 dries Exp $
 
 /**
  * @file
@@ -10,4 +10,7 @@ include_once './includes/bootstrap.inc';
 drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 if (isset($_GET['cron_key']) && variable_get('cron_key', 'drupal') == $_GET['cron_key']) {
   drupal_cron_run();
+}
+else {
+  watchdog('cron', 'Cron did not run because an invalid key used.', array(), WATCHDOG_NOTICE);
 }
