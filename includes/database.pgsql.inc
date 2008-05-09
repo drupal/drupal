@@ -597,12 +597,30 @@ function _db_create_field_sql($name, $spec) {
   if ($spec['type'] == 'serial') {
     unset($spec['not null']);
   }
+
+  // pgsql does not have unsigned types but supports constraints to
+  // restricted a signed field to be non-negative (e.g. CHECK (VALUE
+  // >= 0)).  system.module defines {,small,big}int_unsigned as the
+  // corresponding integer type with this constraint but does not do
+  // so for serial or numeric types.  It probably would have been
+  // cleaner to unify unsigned handling but, for now, we use the
+  // *int_unsigned types for int and otherwise apply a column
+  // constraint explicitly.
   if (!empty($spec['unsigned'])) {
-    if ($spec['type'] == 'serial') {
-      $sql .= " CHECK ($name >= 0)";
-    }
-    else {
-      $sql .= '_unsigned';
+    switch ($spec['type']) {
+      case 'int':
+        $sql .= '_unsigned';
+        break;
+      case 'serial':
+      case 'float':
+        $sql .= " CHECK ($name >= 0)";
+        break;
+      case 'numeric':
+        // handled below
+        break;
+      default:
+        // unsigned is not supported on other column types
+        break;
     }
   }
 
@@ -611,6 +629,11 @@ function _db_create_field_sql($name, $spec) {
   }
   elseif (isset($spec['precision']) && isset($spec['scale'])) {
     $sql .= '(' . $spec['precision'] . ', ' . $spec['scale'] . ')';
+  }
+
+  // For numeric columns this has to come after (precision,scale).
+  if ($spec['type'] == 'numeric' && !empty($spec['unsigned'])) {
+    $sql .= " CHECK ($name >= 0)";
   }
 
   if (isset($spec['not null']) && $spec['not null']) {
