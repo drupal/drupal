@@ -7,11 +7,11 @@
 function simpletest_help($path, $arg) {
   switch ($path) {
     case 'admin/help#simpletest':
-      $output  = '<p>'. t('The SimpleTest module is a framework for running automated unit tests in Drupal. It can be used to verify a working state of Drupal before and after any code changes, or as a means for developers to write and execute tests for their modules.') .'</p>';
-      $output .= '<p>'. t('Visit <a href="@admin-simpletest">Administer >> Site building >> SimpleTest</a> to display a list of available tests. For comprehensive testing, select <em>all</em> tests, or individually select tests for more targeted testing. Note that it might take several minutes for all tests to complete.)', array('@admin-simpletest' => url('admin/build/testing'))) .'</p>';
-      $output .= '<p>'. t('After the tests have run, a message will be displayed next to each test group indicating whether tests within it passed, failed, or had exceptions. A pass means that a test returned the expected results, while fail means that it did not. An exception normally indicates an error outside of the test, such as a PHP warning or notice. If there were fails or exceptions, the results are expanded, and the tests that had issues will be indicated in red or pink rows. Use these results to refine your code and tests until all tests return a pass.') .'</p>';
-      $output .= '<p>'. t('For more information on creating and modifying your own tests, see the <a href="@simpletest-api">SimpleTest API Documentation</a> in the Drupal handbook.', array('@simpletest-api' => 'http://drupal.org/simpletest')) .'</p>';
-      $output .= '<p>'. t('For more information, see the online handbook entry for <a href="@simpletest">SimpleTest module</a>.', array('@simpletest' => 'http://drupal.org/handbook/modules/simpletest')) .'</p>';
+      $output  = '<p>' . t('The SimpleTest module is a framework for running automated unit tests in Drupal. It can be used to verify a working state of Drupal before and after any code changes, or as a means for developers to write and execute tests for their modules.') .'</p>';
+      $output .= '<p>' . t('Visit <a href="@admin-simpletest">Administer >> Site building >> SimpleTest</a> to display a list of available tests. For comprehensive testing, select <em>all</em> tests, or individually select tests for more targeted testing. Note that it might take several minutes for all tests to complete.)', array('@admin-simpletest' => url('admin/build/testing'))) .'</p>';
+      $output .= '<p>' . t('After the tests have run, a message will be displayed next to each test group indicating whether tests within it passed, failed, or had exceptions. A pass means that a test returned the expected results, while fail means that it did not. An exception normally indicates an error outside of the test, such as a PHP warning or notice. If there were fails or exceptions, the results are expanded, and the tests that had issues will be indicated in red or pink rows. Use these results to refine your code and tests until all tests return a pass.') .'</p>';
+      $output .= '<p>' . t('For more information on creating and modifying your own tests, see the <a href="@simpletest-api">SimpleTest API Documentation</a> in the Drupal handbook.', array('@simpletest-api' => 'http://drupal.org/simpletest')) .'</p>';
+      $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@simpletest">SimpleTest module</a>.', array('@simpletest' => 'http://drupal.org/handbook/modules/simpletest')) .'</p>';
       return $output;
   }
 }
@@ -68,7 +68,7 @@ function simpletest_load() {
     if ($user->uid != 1) {
       drupal_set_message(t('It is strongly suggested to run the tests with the first user!'));
     }
-    $path = drupal_get_path('module', 'simpletest') .'/';
+    $path = drupal_get_path('module', 'simpletest') . '/';
     foreach (array('simpletest.php', 'unit_tester.php', 'reporter.php', 'drupal_reporter.php', 'drupal_web_test_case.php', 'drupal_test_suite.php') as $file) {
       require_once($path . $file);
     }
@@ -80,8 +80,8 @@ function simpletest_load() {
  */
 function simpletest_entrypoint() {
   simpletest_load();
-  drupal_add_css(drupal_get_path('module', 'simpletest') .'/simpletest.css', 'module');
-  drupal_add_js(drupal_get_path('module', 'simpletest') .'/simpletest.js', 'module');
+  drupal_add_css(drupal_get_path('module', 'simpletest') . '/simpletest.css', 'module');
+  drupal_add_js(drupal_get_path('module', 'simpletest') . '/simpletest.js', 'module');
   $output = drupal_get_form('simpletest_overview_form');
 
   if (simpletest_running_output()) {
@@ -204,30 +204,30 @@ function theme_simpletest_overview_form($form) {
       $row = array();
       $row[] = array('id' => $test_class, 'class' => 'simpletest-select-all');
       $row[] = array(
-        'data' =>  '<div class="simpletest-image" id="simpletest-test-group-'. $test_class .'">'. $js['images'][0] .'</div>&nbsp;<label for="'. $test_class .'-select-all" class="simpletest-group-label">'. $element['#title'] .'</label>',
+        'data' =>  '<div class="simpletest-image" id="simpletest-test-group-' . $test_class . '">' . $js['images'][0] . '</div>&nbsp;<label for="' . $test_class . '-select-all" class="simpletest-group-label">' . $element['#title'] . '</label>',
         'style' => 'font-weight: bold;'
       );
       $row[] = $element['#description'];
       $rows[] = array('data' => $row, 'class' => 'simpletest-group');
-      $current_js = array('testClass' => $test_class .'-test', 'testNames' => array(), 'imageDirection' => 0, 'clickActive' => FALSE);
+      $current_js = array('testClass' => $test_class . '-test', 'testNames' => array(), 'imageDirection' => 0, 'clickActive' => FALSE);
 
       // Go through each test in the group and create table rows setting them to invisible:
       foreach (element_children($element['tests']) as $test_name) {
-        $current_js['testNames'][] = 'edit-'. $test_name;
+        $current_js['testNames'][] = 'edit-' . $test_name;
         $test = $element['tests'][$test_name];
         foreach (array('title', 'description') as $key) {
-          $$key = $test['#'. $key];
-          unset($test['#'. $key]);
+          $$key = $test['#' . $key];
+          unset($test['#' . $key]);
         }
         $test['#name'] = $test_name;
         $themed_test = drupal_render($test);
         $row = array();
         $row[] = $themed_test;
-        $row[] = theme('indentation', 1) .'<label for="edit-'. $test_name .'">'. $title .'</label>';
-        $row[] = '<div class="description">'. $description .'</div>';
-        $rows[] = array('data' => $row, 'style' => 'display: none;', 'class' => $test_class .'-test');
+        $row[] = theme('indentation', 1) . '<label for="edit-' . $test_name . '">' . $title . '</label>';
+        $row[] = '<div class="description">' . $description . '</div>';
+        $rows[] = array('data' => $row, 'style' => 'display: none;', 'class' => $test_class . '-test');
       }
-      $js['simpletest-test-group-'. $test_class] = $current_js;
+      $js['simpletest-test-group-' . $test_class] = $current_js;
       unset($form[$gid]); // Remove test group from form.
     }
   }
@@ -343,7 +343,7 @@ function simpletest_clean_temporary_directories() {
   $files = scandir(file_directory_path());
   $count = 0;
   foreach ($files as $file) {
-    $path = file_directory_path() .'/'. $file;
+    $path = file_directory_path() . '/' . $file;
     if (is_dir($path) && preg_match('/^simpletest\d+/', $file)) {
       simpletest_clean_temporary_directory($path);
       $count++;

@@ -184,8 +184,8 @@ class XmlReporter extends SimpleReporter {
         print $this->_getIndent(1);
         print "<" . $this->_namespace . "exception>";
         $message = 'Unexpected exception of type [' . get_class($exception) .
-                '] with message ['. $exception->getMessage() .
-                '] in ['. $exception->getFile() .
+                '] with message [' . $exception->getMessage() .
+                '] in [' . $exception->getFile() .
                 ' line ' . $exception->getLine() . ']';
         print $this->toParsedXml($message);
         print "</" . $this->_namespace . "exception>\n";

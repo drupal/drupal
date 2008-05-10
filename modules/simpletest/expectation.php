@@ -108,7 +108,7 @@ class AnythingExpectation extends SimpleExpectation {
    */
   function testMessage($compare) {
     $dumper = &$this->_getDumper();
-    return 'Anything always matches ['. $dumper->describeValue($compare) .']';
+    return 'Anything always matches [' . $dumper->describeValue($compare) . ']';
   }
 }
 
@@ -138,7 +138,7 @@ class TrueExpectation extends SimpleExpectation {
    */
   function testMessage($compare) {
     $dumper = &$this->_getDumper();
-    return 'Expected true, got ['. $dumper->describeValue($compare) .']';
+    return 'Expected true, got [' . $dumper->describeValue($compare) . ']';
   }
 }
 

@@ -29,10 +29,10 @@ function simpletest_install() {
     // Copy other test files for consistency.
     $files = file_scan_directory($path, '(html|image|javascript|php|sql)-.*');
     if (count($files) == 0) {
-      $original = drupal_get_path('module', 'simpletest') .'/files';
+      $original = drupal_get_path('module', 'simpletest') . '/files';
       $files = file_scan_directory($original, '(html|image|javascript|php|sql)-.*');
       foreach ($files as $file) {
-        file_copy($file->filename, $path .'/'. $file->basename);
+        file_copy($file->filename, $path . '/' . $file->basename);
       }
       $generated = TRUE;
     }
@@ -70,7 +70,7 @@ function simpletest_generate_file($filename, $width, $lines, $type = 'binary-tex
   // Create filename.
   $path = file_directory_path() . '/simpletest/';
   $count = simpletest_get_file_count($path, $filename);
-  file_put_contents($path . $filename .'-'. ($count + 1) .'.txt', $text);
+  file_put_contents($path . $filename . '-' . ($count + 1) . '.txt', $text);
 }
 
 /**
@@ -80,7 +80,7 @@ function simpletest_get_file_count($directory, $filename) {
   $files = scandir($directory);
   $count = 0;
   foreach ($files as $file) {
-    if (preg_match('/'. $filename .'.*?/', $file)) {
+    if (preg_match('/' . $filename . '.*?/', $file)) {
       $count++;
     }
   }

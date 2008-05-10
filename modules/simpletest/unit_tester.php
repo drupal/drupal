@@ -47,7 +47,7 @@ class UnitTestCase extends SimpleTestCase {
    */
   function assertFalse($result, $message = '%s', $group = 'Other') {
     $dumper = &new SimpleDumper();
-    $message = sprintf($message, 'Expected false, got ['. $dumper->describeValue($result) .']');
+    $message = sprintf($message, 'Expected false, got [' . $dumper->describeValue($result) . ']');
     return $this->assertTrue(!$result, $message, $group);
   }
 
@@ -60,7 +60,7 @@ class UnitTestCase extends SimpleTestCase {
    */
   function assertNull($value, $message = '%s', $group = 'Other') {
     $dumper = &new SimpleDumper();
-    $message = sprintf($message, '['. $dumper->describeValue($value) .'] should be null');
+    $message = sprintf($message, '[' . $dumper->describeValue($value) . '] should be null');
     return $this->assertTrue(!isset($value), $message, $group);
   }
 
@@ -73,7 +73,7 @@ class UnitTestCase extends SimpleTestCase {
    */
   function assertNotNull($value, $message = '%s', $group = 'Other') {
     $dumper = &new SimpleDumper();
-    $message = sprintf($message, '['. $dumper->describeValue($value) .'] should not be null');
+    $message = sprintf($message, '[' . $dumper->describeValue($value) . '] should not be null');
     return $this->assertTrue(isset($value), $message, $group);
   }
 
@@ -88,7 +88,7 @@ class UnitTestCase extends SimpleTestCase {
    */
   function assertEqual($first, $second, $message = '%s', $group = 'Other') {
     $dumper = &new SimpleDumper();
-    $message = sprintf($message, 'Expected '. $dumper->describeValue($first) .', got ['. $dumper->describeValue($second) .']');
+    $message = sprintf($message, 'Expected ' . $dumper->describeValue($first) . ', got [' . $dumper->describeValue($second) . ']');
     $this->assertTrue($first == $second, $message, $group);
   }
 
@@ -103,7 +103,7 @@ class UnitTestCase extends SimpleTestCase {
    */
   function assertNotEqual($first, $second, $message = '%s', $group = 'Other') {
     $dumper = &new SimpleDumper();
-    $message = sprintf($message, 'Expected '. $dumper->describeValue($first) .', not equal to '. $dumper->describeValue($second));
+    $message = sprintf($message, 'Expected ' . $dumper->describeValue($first) . ', not equal to ' . $dumper->describeValue($second));
     $this->assertTrue($first != $second, $message, $group);
   }
 
@@ -118,7 +118,7 @@ class UnitTestCase extends SimpleTestCase {
    */
   function assertIdentical($first, $second, $message = '%s', $group = 'Other') {
     $dumper = &new SimpleDumper();
-    $message = sprintf($message, 'Expected '. $dumper->describeValue($first) .', got ['. $dumper->describeValue($second) .']');
+    $message = sprintf($message, 'Expected ' . $dumper->describeValue($first) . ', got [' . $dumper->describeValue($second) . ']');
     $this->assertTrue($first === $second, $message, $group);
   }
 
@@ -133,7 +133,7 @@ class UnitTestCase extends SimpleTestCase {
    */
   function assertNotIdentical($first, $second, $message = '%s', $group = 'Other') {
     $dumper = &new SimpleDumper();
-    $message = sprintf($message, 'Expected '. $dumper->describeValue($first) .', not identical to '. $dumper->describeValue($second));
+    $message = sprintf($message, 'Expected ' . $dumper->describeValue($first) . ', not identical to ' . $dumper->describeValue($second));
     $this->assertTrue($first !== $second, $message, $group);
   }
 
@@ -149,11 +149,11 @@ class UnitTestCase extends SimpleTestCase {
    */
   function assertPattern($pattern, $subject, $message = '%s', $group = 'Other') {
     $dumper  = &new SimpleDumper();
-    $replace = 'Pattern '. $pattern .' detected in ['. $dumper->describeValue($subject) .']';
+    $replace = 'Pattern ' . $pattern . ' detected in [' . $dumper->describeValue($subject) . ']';
     $found   = preg_match($pattern, $subject, $matches);
     if ($found) {
       $position = strpos($subject, $matches[0]);
-      $replace .= ' in region ['. $dumper->clipString($subject, 100, $position) .']';
+      $replace .= ' in region [' . $dumper->clipString($subject, 100, $position) . ']';
     }
     $message = sprintf($message, $replace);
     $this->assertTrue($found, $message, $group);
@@ -172,7 +172,7 @@ class UnitTestCase extends SimpleTestCase {
   function assertNoPattern($pattern, $subject, $message = '%s', $group = 'Other') {
     $dumper  = &new SimpleDumper();
     $found   = preg_match($pattern, $subject);
-    $message = sprintf($message, 'Pattern '. $pattern .' not detected in ['. $dumper->describeValue($subject) .']');
+    $message = sprintf($message, 'Pattern ' . $pattern . ' not detected in [' . $dumper->describeValue($subject) . ']');
     $this->assertFalse($found, $message, $group = 'Other');
   }
 }

@@ -135,8 +135,8 @@ class DrupalWebTestCase extends UnitTestCase {
     // Make sure type is valid.
     if (in_array($type, array('binary', 'html', 'image', 'javascript', 'php', 'sql', 'text'))) {
      // Use original file directory instead of one created during setUp().
-      $path = $this->original_file_directory .'/simpletest';
-      $files = file_scan_directory($path, $type .'\-.*');
+      $path = $this->original_file_directory . '/simpletest';
+      $files = file_scan_directory($path, $type . '\-.*');
 
       // If size is set then remove any files that are not of that size.
       if ($size !== NULL) {
@@ -203,6 +203,11 @@ class DrupalWebTestCase extends UnitTestCase {
     menu_rebuild();
     cache_clear_all('schema', 'cache');
     module_rebuild_cache();
+
+    if (module_exists($name)) {
+      $this->pass(t('@name enabled.', array('@name' =>  $name)), t('Module'));
+      return TRUE;
+    }
   }
 
   /**
@@ -227,6 +232,11 @@ class DrupalWebTestCase extends UnitTestCase {
     menu_rebuild();
     cache_clear_all('schema', 'cache');
     module_rebuild_cache();
+
+    if (!module_exists($name)) {
+      $this->pass(t('@name disabled.', array('@name' =>  $name)), t('Module'));
+      return TRUE;
+    }
   }
 
   /**
@@ -247,7 +257,7 @@ class DrupalWebTestCase extends UnitTestCase {
     // Create a user assigned to that role.
     $edit = array();
     $edit['name']   = $this->randomName();
-    $edit['mail']   = $edit['name'] .'@example.com';
+    $edit['mail']   = $edit['name'] . '@example.com';
     $edit['roles']  = array($rid => $rid);
     $edit['pass']   = user_password();
     $edit['status'] = 1;
@@ -355,7 +365,7 @@ class DrupalWebTestCase extends UnitTestCase {
     global $db_prefix;
     $this->db_prefix_original = $db_prefix;
     $clean_url_original = variable_get('clean_url', 0);
-    $db_prefix = 'simpletest'. mt_rand(1000, 1000000);
+    $db_prefix = 'simpletest' . mt_rand(1000, 1000000);
     include_once './includes/install.inc';
     drupal_install_system();
     $modules = array_unique(array_merge(func_get_args(), drupal_verify_profile('default', 'en')));
@@ -373,7 +383,7 @@ class DrupalWebTestCase extends UnitTestCase {
 
     // Use temporary files directory with the same prefix as database.
     $this->original_file_directory = file_directory_path();
-    variable_set('file_directory_path', file_directory_path() .'/'. $db_prefix);
+    variable_set('file_directory_path', file_directory_path() . '/' . $db_prefix);
     file_check_directory(file_directory_path(), TRUE); // Create the files directory.
     parent::setUp();
   }
@@ -436,7 +446,7 @@ class DrupalWebTestCase extends UnitTestCase {
       }
       if (!isset($curl_options[CURLOPT_USERPWD]) && ($auth = variable_get('simpletest_httpauth_username', ''))) {
         if ($pass = variable_get('simpletest_httpauth_pass', '')) {
-          $auth .= ':'. $pass;
+          $auth .= ':' . $pass;
         }
         $curl_options[CURLOPT_USERPWD] = $auth;
       }
@@ -560,7 +570,7 @@ class DrupalWebTestCase extends UnitTestCase {
               }
             }
             foreach ($upload as $key => $file) {
-              $post[$key] = '@'. realpath($file);
+              $post[$key] = '@' . realpath($file);
             }
           }
           else {
@@ -569,7 +579,7 @@ class DrupalWebTestCase extends UnitTestCase {
             foreach ($post_array as $key => $value) {
               // Whethet this needs to be urlencode or rawurlencode, is not
               // quite clear, but this seems to be the better choice.
-              $post[] = urlencode($key) .'='. urlencode($value);
+              $post[] = urlencode($key) . '=' . urlencode($value);
             }
             $post = implode('&', $post);
           }
@@ -644,7 +654,7 @@ class DrupalWebTestCase extends UnitTestCase {
               if (is_array($new_value)) {
                 $option_value= (string)$option['value'];
                 if (in_array($option_value, $new_value)) {
-                  $post[$key .'['. $index++ .']'] = $option_value;
+                  $post[$key . '[' . $index++ . ']'] = $option_value;
                   $done = TRUE;
                   unset($edit[$name]);
                 }
@@ -682,7 +692,7 @@ class DrupalWebTestCase extends UnitTestCase {
                   $post[$name] = (string)$option['value'];
                 }
                 else {
-                  $post[$key .'['. $index++ .']'] = (string)$option['value'];
+                  $post[$key . '[' . $index++ . ']'] = (string)$option['value'];
                 }
               }
             }
@@ -748,7 +758,7 @@ class DrupalWebTestCase extends UnitTestCase {
     $url_before = $this->getUrl();
     $ret = FALSE;
     if ($this->parse()) {
-      $urls = $this->elements->xpath('//a[text()="'. $label .'"]');
+      $urls = $this->elements->xpath('//a[text()="' . $label . '"]');
       if (isset($urls[$index])) {
         $url_target = $this->getAbsoluteUrl($urls[$index]['href']);
         $curl_options = array(CURLOPT_URL => $url_target);
@@ -867,7 +877,7 @@ class DrupalWebTestCase extends UnitTestCase {
       $this->plain_text = filter_xss($this->_content, array());
     }
     if (!$message) {
-      $message = '"'. $text .'"'. ($not_exists ? ' not found.' : ' found.');
+      $message = '"' . $text . '"' . ($not_exists ? ' not found.' : ' found.');
     }
     return $this->assertTrue($not_exists == (strpos($this->plain_text, $text) === FALSE), $message, $group);
   }
@@ -902,7 +912,7 @@ class DrupalWebTestCase extends UnitTestCase {
    * @return boolean TRUE on pass.
    */
   function assertTitle($title, $message, $group = 'Other') {
-    return $this->assertTrue($this->parse() && $this->elements->xpath('//title[text()="'. $title .'"]'), $message, $group);
+    return $this->assertTrue($this->parse() && $this->elements->xpath('//title[text()="' . $title . '"]'), $message, $group);
   }
 
   /**
@@ -1015,7 +1025,7 @@ class DrupalWebTestCase extends UnitTestCase {
    * @return boolean Assertion result.
    */
   function assertField($field, $message = '', $group = 'Other') {
-    return $this->assertFieldByXPath($this->_constructFieldXpath('name', $field) .'|'. $this->_constructFieldXpath('id', $field), '', $message, $group);
+    return $this->assertFieldByXPath($this->_constructFieldXpath('name', $field) . '|' . $this->_constructFieldXpath('id', $field), '', $message, $group);
   }
 
   /**
@@ -1026,7 +1036,7 @@ class DrupalWebTestCase extends UnitTestCase {
    * @return boolean Assertion result.
    */
   function assertNoField($field, $message = '', $group = 'Other') {
-    return $this->assertNoFieldByXPath($this->_constructFieldXpath('name', $field) .'|'. $this->_constructFieldXpath('id', $field), '', $message, $group);
+    return $this->assertNoFieldByXPath($this->_constructFieldXpath('name', $field) . '|' . $this->_constructFieldXpath('id', $field), '', $message, $group);
   }
 
   /**
@@ -1037,7 +1047,7 @@ class DrupalWebTestCase extends UnitTestCase {
    * @return string XPath for specified values.
    */
   function _constructFieldXpath($attribute, $value) {
-    return '//textarea[@'. $attribute .'="'. $value .'"]|//input[@'. $attribute .'="'. $value .'"]|//select[@'. $attribute .'="'. $value .'"]';
+    return '//textarea[@' . $attribute . '="' . $value . '"]|//input[@' . $attribute . '="' . $value . '"]|//select[@' . $attribute . '="' . $value . '"]';
   }
 
   /**

@@ -128,7 +128,7 @@ class HtmlReporter extends SimpleReporter {
     $breadcrumb = $this->getTestList();
     array_shift($breadcrumb);
     print implode(" -&gt; ", $breadcrumb);
-    $message = 'Unexpected exception of type ['. get_class($exception) .'] with message ['. $exception->getMessage() .'] in ['. $exception->getFile() .' line '. $exception->getLine() .']';
+    $message = 'Unexpected exception of type [' . get_class($exception) . '] with message [' . $exception->getMessage() . '] in [' . $exception->getFile() . ' line ' . $exception->getLine() . ']';
     print " -&gt; <strong>". $this->_htmlEntities($message) ."</strong><br />\n";
   }
 
@@ -152,7 +152,7 @@ class HtmlReporter extends SimpleReporter {
    *    @access public
    */
   function paintFormattedMessage($message) {
-    print '<pre>'. $this->_htmlEntities($message) .'</pre>';
+    print '<pre>' . $this->_htmlEntities($message) . '</pre>';
   }
 
   /**
@@ -253,7 +253,7 @@ class TextReporter extends SimpleReporter {
    */
   function paintException($exception) {
     parent::paintException($exception);
-    $message = 'Unexpected exception of type ['. get_class($exception) .'] with message ['. $exception->getMessage() .'] in ['. $exception->getFile() .' line '. $exception->getLine() .']';
+    $message = 'Unexpected exception of type [' . get_class($exception) . '] with message [' . $exception->getMessage() . '] in [' . $exception->getFile() . ' line ' . $exception->getLine() . ']';
     print "Exception ". $this->getExceptionCount() ."!\n$message\n";
     $breadcrumb = $this->getTestList();
     array_shift($breadcrumb);

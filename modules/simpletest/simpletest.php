@@ -1,17 +1,17 @@
 <?php
 // $Id$
 
-require_once dirname(__FILE__) .'/test_case.php';
-require_once dirname(__FILE__) .'/unit_tester.php';
-require_once dirname(__FILE__) .'/expectation.php';
-require_once dirname(__FILE__) .'/invoker.php';
-require_once dirname(__FILE__) .'/scorer.php';
-require_once dirname(__FILE__) .'/reporter.php';
-require_once dirname(__FILE__) .'/default_reporter.php';
-require_once dirname(__FILE__) .'/dumper.php';
-require_once dirname(__FILE__) .'/errors.php';
-require_once dirname(__FILE__) .'/exceptions.php';
-require_once dirname(__FILE__) .'/xml.php';
+require_once dirname(__FILE__) . '/test_case.php';
+require_once dirname(__FILE__) . '/unit_tester.php';
+require_once dirname(__FILE__) . '/expectation.php';
+require_once dirname(__FILE__) . '/invoker.php';
+require_once dirname(__FILE__) . '/scorer.php';
+require_once dirname(__FILE__) . '/reporter.php';
+require_once dirname(__FILE__) . '/default_reporter.php';
+require_once dirname(__FILE__) . '/dumper.php';
+require_once dirname(__FILE__) . '/errors.php';
+require_once dirname(__FILE__) . '/exceptions.php';
+require_once dirname(__FILE__) . '/xml.php';
 
 /**
  * Registry and test context. Includes a few

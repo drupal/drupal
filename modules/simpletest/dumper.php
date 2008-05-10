@@ -48,7 +48,7 @@ class SimpleDumper {
     }
     $functions = array('bool', 'string', 'integer', 'float', 'array', 'resource', 'object');
     foreach ($functions as $function) {
-      $function_name = 'is_'. $function;
+      $function_name = 'is_' . $function;
       if ($function_name($value)) {
         return ucfirst($function);
       }

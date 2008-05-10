@@ -23,7 +23,7 @@ class DrupalReporter extends SimpleReporter {
 
   function DrupalReporter($character_set = 'ISO-8859-1') {
     $this->SimpleReporter();
-    drupal_add_css(drupal_get_path('module', 'simpletest') .'/simpletest.css');
+    drupal_add_css(drupal_get_path('module', 'simpletest') . '/simpletest.css');
     $this->_character_set = $character_set;
   }
 
@@ -226,7 +226,7 @@ class DrupalReporter extends SimpleReporter {
     if (!$weight) {
       $weight = $this->weight++;
     }
-    $write['content'.$this->content_count++] = array(
+    $write['content' . $this->content_count++] = array(
       '#value' => '<div class=' . $class .'>' . $msg . '</div>',
       '#weight' => $weight,
     );
