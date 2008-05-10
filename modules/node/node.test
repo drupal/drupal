@@ -1,5 +1,5 @@
 <?php
-// $Id: node.test,v 1.2 2008/04/25 18:26:01 dries Exp $
+// $Id: node.test,v 1.3 2008/05/10 07:05:40 dries Exp $
 
 class NodeRevisionsTestCase extends DrupalWebTestCase {
   /**
@@ -377,7 +377,7 @@ class PageViewTestCase extends DrupalWebTestCase {
       'name' => t('Unauthorized node view'),
       'description' => t('Creates a node of type page and then an unpermissioned user attempts to edit the node, '
         . 'before tries with an anonymous user. Asserts failure.'
-        . '</ br>WARNING: This is based on default registered user permuissions (no administer nodes).')
+        . '</ br>WARNING: This is based on default registered user permissions (no administer nodes).')
       , 'group' => t('Node'),
   );
   }
