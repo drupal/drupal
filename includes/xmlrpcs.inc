@@ -149,7 +149,7 @@ function xmlrpc_server_call($xmlrpc_server, $methodname, $args) {
   }
   // Has this method been mapped to a Drupal function by us or by modules?
   if (!isset($xmlrpc_server->callbacks[$methodname])) {
-    return xmlrpc_error(-32601, t('Server error. Requested method %methodname not specified.', array("%methodname" => $xmlrpc_server->message->methodname)));
+    return xmlrpc_error(-32601, t('Server error. Requested method @methodname not specified.', array("@methodname" => $xmlrpc_server->message->methodname)));
   }
   $method = $xmlrpc_server->callbacks[$methodname];
   $signature = $xmlrpc_server->signatures[$methodname];
@@ -208,7 +208,7 @@ function xmlrpc_server_call($xmlrpc_server, $methodname, $args) {
   }
   */
   if (!function_exists($method)) {
-    return xmlrpc_error(-32601, t('Server error. Requested function %method does not exist.', array("%method" => $method)));
+    return xmlrpc_error(-32601, t('Server error. Requested function @method does not exist.', array("@method" => $method)));
   }
   // Call the mapped function
   return call_user_func_array($method, $args);
@@ -293,10 +293,10 @@ function xmlrpc_server_get_capabilities() {
 function xmlrpc_server_method_signature($methodname) {
   $xmlrpc_server = xmlrpc_server_get();
   if (!isset($xmlrpc_server->callbacks[$methodname])) {
-    return xmlrpc_error(-32601, t('Server error. Requested method %methodname not specified.', array("%methodname" => $methodname)));
+    return xmlrpc_error(-32601, t('Server error. Requested method @methodname not specified.', array("@methodname" => $methodname)));
   }
   if (!is_array($xmlrpc_server->signatures[$methodname])) {
-    return xmlrpc_error(-32601, t('Server error. Requested method %methodname signature not specified.', array("%methodname" => $methodname)));
+    return xmlrpc_error(-32601, t('Server error. Requested method @methodname signature not specified.', array("@methodname" => $methodname)));
   }
   // We array of types
   $return = array();
