@@ -126,3 +126,72 @@ class EnableDisableCoreTestCase extends DrupalWebTestCase {
     }
   }
 }
+
+class IPAddressBlocking extends DrupalWebTestCase {
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('IP address blocking'),
+      'description' => t('Tests IP address blocking.'),
+      'group' => t('System')
+    );
+  }
+
+  /**
+   * Implementation of setUp().
+   */
+  function setUp() {
+    parent::setUp();
+
+    // Create user.
+    $this->blocking_user = $this->drupalCreateUser(array('block IP addresses', 'access statistics'));
+  }
+
+  /**
+   * Tests a variety of user input to confirm correct validation and saving of data.
+   */
+  function testIPAddressValidation() {
+    $this->drupalLogin($this->blocking_user);
+    $this->drupalGet('admin/settings/ip-blocking');
+
+    // Block a valid IP address.
+    $edit = array();
+    $edit['ip'] = '192.168.1.1';
+    $this->drupalPost('admin/settings/ip-blocking', $edit, t('Save'));
+    $ip = db_result(db_query("SELECT iid from {blocked_ips} WHERE ip = '%s'", $edit['ip']));
+    $this->assertNotNull($ip, t('IP address found in database'));
+    $this->assertRaw(t('The IP address %ip has been blocked.', array('%ip' => $edit['ip'])), t('IP address was blocked.'));
+
+    // Try to block an IP address that's already blocked.
+    $edit = array();
+    $edit['ip'] = '192.168.1.1';
+    $this->drupalPost('admin/settings/ip-blocking', $edit, t('Save'));
+    $this->assertText(t('This IP address is already blocked.'));
+
+    // Try to block a reserved IP address.
+    $edit = array();
+    $edit['ip'] = '255.255.255.255';
+    $this->drupalPost('admin/settings/ip-blocking', $edit, t('Save'));
+    $this->assertText(t('Please enter a valid IP address.'));
+
+    // Try to block a reserved IP address.
+    $edit = array();
+    $edit['ip'] = 'test.example.com';
+    $this->drupalPost('admin/settings/ip-blocking', $edit, t('Save'));
+    $this->assertText(t('Please enter a valid IP address.'));
+
+    // Submit an empty form.
+    $edit = array();
+    $edit['ip'] = '';
+    $this->drupalPost('admin/settings/ip-blocking', $edit, t('Save'));
+    $this->assertText(t('Please enter a valid IP address.'));
+
+    // Submit your own IP address. This fails, although it works when testing manually.
+    $edit = array();
+    $edit['ip'] = ip_address();
+    $this->drupalPost('admin/settings/ip-blocking', $edit, t('Save'));
+    $this->assertText(t('You may not block your own IP address.'));
+  }
+}
