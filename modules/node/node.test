@@ -377,7 +377,7 @@ class PageViewTestCase extends DrupalWebTestCase {
       'name' => t('Unauthorized node view'),
       'description' => t('Creates a node of type page and then an unpermissioned user attempts to edit the node, '
         . 'before tries with an anonymous user. Asserts failure.'
-        . '</ br>WARNING: This is based on default registered user permuissions (no administer nodes).')
+        . '</ br>WARNING: This is based on default registered user permissions (no administer nodes).')
       , 'group' => t('Node'),
   );
   }
