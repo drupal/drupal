@@ -1006,7 +1006,13 @@ function user_authenticate($name, $pass) {
         }
         $registered_user = user_load(array('name' => $name));
         if (!$registered_user->uid) { // Register this new user.
-          $userinfo = array('name' => $name, 'pass' => user_password(), 'init' => $name, 'status' => 1);
+          $userinfo = array(
+            'name' => $name, 
+            'pass' => user_password(), 
+            'init' => $name, 
+            'status' => 1, 
+            'access' => time(),
+          );
           if ($server) {
             $userinfo["authname_$module"] = $name;
           }
