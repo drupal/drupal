@@ -1500,18 +1500,18 @@ function node_menu() {
       'access arguments' => array('create', $type->type),
       'description' => $type->description,
     );
-    $items['admin/content/node-type/' . $type_url_str] = array(
+    $items['admin/build/node-type/' . $type_url_str] = array(
       'title' => $type->name,
       'page callback' => 'drupal_get_form',
       'page arguments' => array('node_type_form', $type),
       'access arguments' => array('administer content types'),
       'type' => MENU_CALLBACK,
     );
-    $items['admin/content/node-type/' . $type_url_str . '/edit'] = array(
+    $items['admin/build/node-type/' . $type_url_str . '/edit'] = array(
       'title' => 'Edit',
       'type' => MENU_DEFAULT_LOCAL_TASK,
     );
-    $items['admin/content/node-type/' . $type_url_str . '/delete'] = array(
+    $items['admin/build/node-type/' . $type_url_str . '/delete'] = array(
       'title' => 'Delete',
       'page arguments' => array('node_type_delete_confirm', $type),
       'access arguments' => array('administer content types'),
