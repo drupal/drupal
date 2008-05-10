@@ -27,7 +27,7 @@ function menu_help($path, $arg) {
     case 'admin/build/menu/add':
       return '<p>' . t('Enter the name for your new menu. Remember to enable the newly created block in the <a href="@blocks">blocks administration page</a>.', array('@blocks' => url('admin/build/block'))) . '</p>';
     case 'admin/build/menu-customize/%':
-      return '<p>' . t('To rearrange menu items, grab a drag-and-drop handle under the <em>Menu item</em> column and drag the items (or group of items) to a new location in the list. (Grab a handle by clicking and holding the mouse while hovering over a handle icon.) Remember that your changes will not be saved until you click the <em>Save configuration</em> button at the bottom of the page.') . '<p>';
+      return '<p>' . t('To rearrange menu items, grab a drag-and-drop handle under the <em>Menu item</em> column and drag the items (or group of items) to a new location in the list. (Grab a handle by clicking and holding the mouse while hovering over a handle icon.) Remember that your changes will not be saved until you click the <em>Save configuration</em> button at the bottom of the page.') . '</p>';
     case 'admin/build/menu/item/add':
       return '<p>' . t('Enter the title and path for your new menu item.') . '</p>';
   }
