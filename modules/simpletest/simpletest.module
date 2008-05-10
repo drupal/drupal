@@ -205,7 +205,6 @@ function theme_simpletest_overview_form($form) {
       $row[] = array('id' => $test_class, 'class' => 'simpletest-select-all');
       $row[] = array(
         'data' =>  '<div class="simpletest-image" id="simpletest-test-group-' . $test_class . '">' . $js['images'][0] . '</div>&nbsp;<label for="' . $test_class . '-select-all" class="simpletest-group-label">' . $element['#title'] . '</label>',
-        'style' => 'font-weight: bold;'
       );
       $row[] = $element['#description'];
       $rows[] = array('data' => $row, 'class' => 'simpletest-group');
