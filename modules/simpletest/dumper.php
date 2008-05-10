@@ -1,5 +1,5 @@
 <?php
-// $Id: dumper.php,v 1.1 2008/04/20 18:34:43 dries Exp $
+// $Id: dumper.php,v 1.2 2008/05/10 06:55:09 dries Exp $
 
 /**
  * Displays variables as text and does diffs.
@@ -48,7 +48,7 @@ class SimpleDumper {
     }
     $functions = array('bool', 'string', 'integer', 'float', 'array', 'resource', 'object');
     foreach ($functions as $function) {
-      $function_name = 'is_'. $function;
+      $function_name = 'is_' . $function;
       if ($function_name($value)) {
         return ucfirst($function);
       }

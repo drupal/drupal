@@ -1,5 +1,5 @@
 <?php
-// $Id: expectation.php,v 1.1 2008/04/20 18:34:43 dries Exp $
+// $Id: expectation.php,v 1.2 2008/05/10 06:55:09 dries Exp $
 
 /**
  *    Assertion that can display failure information.
@@ -108,7 +108,7 @@ class AnythingExpectation extends SimpleExpectation {
    */
   function testMessage($compare) {
     $dumper = &$this->_getDumper();
-    return 'Anything always matches ['. $dumper->describeValue($compare) .']';
+    return 'Anything always matches [' . $dumper->describeValue($compare) . ']';
   }
 }
 
@@ -138,7 +138,7 @@ class TrueExpectation extends SimpleExpectation {
    */
   function testMessage($compare) {
     $dumper = &$this->_getDumper();
-    return 'Expected true, got ['. $dumper->describeValue($compare) .']';
+    return 'Expected true, got [' . $dumper->describeValue($compare) . ']';
   }
 }
 

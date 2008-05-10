@@ -1,5 +1,5 @@
 <?php
-// $Id: xml.php,v 1.1 2008/04/20 18:34:43 dries Exp $
+// $Id: xml.php,v 1.2 2008/05/10 06:55:09 dries Exp $
 
 // ---------------------------------------
 //      This file will be removed
@@ -184,8 +184,8 @@ class XmlReporter extends SimpleReporter {
         print $this->_getIndent(1);
         print "<" . $this->_namespace . "exception>";
         $message = 'Unexpected exception of type [' . get_class($exception) .
-                '] with message ['. $exception->getMessage() .
-                '] in ['. $exception->getFile() .
+                '] with message [' . $exception->getMessage() .
+                '] in [' . $exception->getFile() .
                 ' line ' . $exception->getLine() . ']';
         print $this->toParsedXml($message);
         print "</" . $this->_namespace . "exception>\n";

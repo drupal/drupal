@@ -1,5 +1,5 @@
 <?php
-// $Id: test_case.php,v 1.2 2008/04/23 20:01:53 dries Exp $
+// $Id: test_case.php,v 1.3 2008/05/10 06:55:09 dries Exp $
 
 /**
  *    Basic test case. This is the smallest unit of a test
@@ -52,7 +52,7 @@ class SimpleTestCase {
   function skipIf($should_skip, $message = '%s') {
     if ($should_skip && !$this->_should_skip) {
       $this->_should_skip = true;
-      $message = sprintf($message, 'Skipping ['. get_class($this) .']');
+      $message = sprintf($message, 'Skipping [' . get_class($this) . ']');
       $this->_reporter->paintSkip($message . $this->getAssertionLine());
     }
   }
@@ -589,8 +589,8 @@ class BadTestSuite {
    */
   function run(&$reporter) {
     $reporter->paintGroupStart($this->getLabel(), $this->getSize());
-    $reporter->paintFail('Bad TestSuite ['. $this->getLabel() .
-      '] with error ['. $this->_error .']');
+    $reporter->paintFail('Bad TestSuite [' . $this->getLabel() .
+      '] with error [' . $this->_error . ']');
     $reporter->paintGroupEnd($this->getLabel());
     return $reporter->getStatus();
   }

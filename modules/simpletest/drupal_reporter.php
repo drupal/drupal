@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_reporter.php,v 1.1 2008/04/20 18:34:43 dries Exp $
+// $Id: drupal_reporter.php,v 1.2 2008/05/10 06:55:09 dries Exp $
 
 /**
  * Minimal drupal displayer. Accumulates output to $_output.
@@ -23,7 +23,7 @@ class DrupalReporter extends SimpleReporter {
 
   function DrupalReporter($character_set = 'ISO-8859-1') {
     $this->SimpleReporter();
-    drupal_add_css(drupal_get_path('module', 'simpletest') .'/simpletest.css');
+    drupal_add_css(drupal_get_path('module', 'simpletest') . '/simpletest.css');
     $this->_character_set = $character_set;
   }
 
@@ -226,7 +226,7 @@ class DrupalReporter extends SimpleReporter {
     if (!$weight) {
       $weight = $this->weight++;
     }
-    $write['content'.$this->content_count++] = array(
+    $write['content' . $this->content_count++] = array(
       '#value' => '<div class=' . $class .'>' . $msg . '</div>',
       '#weight' => $weight,
     );
