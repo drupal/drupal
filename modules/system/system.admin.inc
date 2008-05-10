@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.75 2008/05/07 19:17:50 dries Exp $
+// $Id: system.admin.inc,v 1.76 2008/05/10 07:32:02 dries Exp $
 
 /**
  * @file
@@ -1137,9 +1137,12 @@ function system_ip_blocking_form($form_state) {
 }
 
 function system_ip_blocking_form_validate($form, &$form_state) {
-  $ip = $form_state['values']['ip'];
+  $ip = trim($form_state['values']['ip']);
   if (db_result(db_query("SELECT * FROM {blocked_ips} WHERE ip = '%s'", $ip))) {
     form_set_error('ip', t('This IP address is already blocked.'));
+  }
+  else if ($ip == ip_address()) {
+    form_set_error('ip', t('You may not block your own IP address.'));
   }
   else if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE) == FALSE) {
     form_set_error('ip', t('Please enter a valid IP address.'));
@@ -1147,7 +1150,7 @@ function system_ip_blocking_form_validate($form, &$form_state) {
 }
 
 function system_ip_blocking_form_submit($form, &$form_state) {
-  $ip = $form_state['values']['ip'];
+  $ip = trim($form_state['values']['ip']);
   db_query("INSERT INTO {blocked_ips} (ip) VALUES ('%s')", $ip);
   drupal_set_message(t('The IP address %ip has been blocked.', array('%ip' => $ip)));
   $form_state['redirect'] = 'admin/settings/ip-blocking';
