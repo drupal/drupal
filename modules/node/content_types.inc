@@ -20,16 +20,16 @@ function node_overview_types() {
     if (node_hook($type, 'form')) {
       $type_url_str = str_replace('_', '-', $type->type);
       $row = array(
-        l($name, 'admin/content/node-type/' . $type_url_str),
+        l($name, 'admin/build/node-type/' . $type_url_str),
         check_plain($type->type),
         filter_xss_admin($type->description),
       );
       // Set the edit column.
-      $row[] = array('data' => l(t('edit'), 'admin/content/node-type/' . $type_url_str));
+      $row[] = array('data' => l(t('edit'), 'admin/build/node-type/' . $type_url_str));
 
       // Set the delete column.
       if ($type->custom) {
-        $row[] = array('data' => l(t('delete'), 'admin/content/node-type/' . $type_url_str . '/delete'));
+        $row[] = array('data' => l(t('delete'), 'admin/build/node-type/' . $type_url_str . '/delete'));
       }
       else {
         $row[] = array('data' => '');
@@ -280,7 +280,7 @@ function node_type_form_submit($form, &$form_state) {
     node_type_reset($type);
   }
   elseif ($op == t('Delete content type')) {
-    $form_state['redirect'] = 'admin/content/node-type/' . str_replace('_', '-', $type->old_type) . '/delete';
+    $form_state['redirect'] = 'admin/build/node-type/' . str_replace('_', '-', $type->old_type) . '/delete';
     return;
   }
 
