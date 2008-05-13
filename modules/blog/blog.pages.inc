@@ -110,6 +110,5 @@ function blog_feed_last() {
   while ($row = db_fetch_object($result)) {
     $items[] = $row->nid;
   }
-
   node_feed($items, $channel);
 }

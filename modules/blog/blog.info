@@ -1,4 +1,5 @@
 ; $Id$
+
 name = Blog
 description = Enables keeping easily and regularly updated user web pages or blogs.
 package = Core - optional

@@ -60,8 +60,10 @@ class BlogTestCase extends DrupalWebTestCase {
   /**
    * Run basic tests on the indicated user.
    *
-   * @param object $user The logged in user.
-   * @param boolean $admin User has 'access administration pages' privilege.
+   * @param object $user
+   *   The logged in user.
+   * @param boolean $admin
+   *   User has 'access administration pages' privilege.
    */
   private function doBasicTests($user, $admin) {
     // Login the user.
@@ -77,10 +79,14 @@ class BlogTestCase extends DrupalWebTestCase {
   /**
    * Verify the logged in user has the desired access to the various blog nodes.
    *
-   * @param object $node_user The user who creates the node.
-   * @param object $node Node.
-   * @param boolean $admin User has 'access administration pages' privilege.
-   * @param integer $response HTTP response code.
+   * @param object $node_user
+   *   The user who creates the node.
+   * @param object $node
+   *   A node object.
+   * @param boolean $admin
+   *   User has 'access administration pages' privilege.
+   * @param integer $response
+   *   HTTP response code.
    */
   private function verifyBlogs($node_user, $node, $admin, $response = 200) {
     $crumb = '›';
@@ -91,11 +97,10 @@ class BlogTestCase extends DrupalWebTestCase {
     // View blog help node.
     $this->drupalGet('admin/help/blog');
     $this->assertResponse($response2);
-    // NOTE: The two commented asserts fail because the get returns the 'admin/help' node instead of the indicated node???
     if ($response2 == 200) {
-//      $this->assertTitle(t('Blog | Drupal'), t('Blog help node was displayed'));
+      $this->assertTitle(t('Blog | Drupal'), t('Blog help node was displayed'));
       $this->assertText(t('Blog'), t('Blog help node was displayed'));
-//      $this->assertText(t('Home '. $crumb .' Administer '. $crumb .' Help'), t('Breadcrumbs were displayed'));
+      $this->assertText(t('Home '. $crumb .' Administer '. $crumb .' Help'), t('Breadcrumbs were displayed'));
     }
 
     // Verify the blog block was displayed.
@@ -135,7 +140,8 @@ class BlogTestCase extends DrupalWebTestCase {
   /**
    * Verify the blog links are displayed to the logged in user.
    *
-   * @param object $user The logged in user.
+   * @param object $user
+   *   The logged in user.
    */
   private function verifyBlogLinks($user) {
     $crumb = '›';

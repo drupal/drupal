@@ -61,7 +61,7 @@ function blog_user($type, &$edit, &$user) {
 function blog_help($path, $arg) {
   switch ($path) {
     case 'admin/help#blog':
-      $output = '<p>' . t('The blog module allows registered users to maintain an online journal, or <em>blog</em>. Blogs are made up of individual <em>blog entries</em>, and the blog entries are most often displayed in descending order by creation time.') . '</p>';
+      $output  = '<p>' . t('The blog module allows registered users to maintain an online journal, or <em>blog</em>. Blogs are made up of individual <em>blog entries</em>, and the blog entries are most often displayed in descending order by creation time.') . '</p>';
       $output .= '<p>' . t('There is an (optional) <em>Blogs</em> menu item added to the Navigation menu, which displays all blogs available on your site, and a <em>My blog</em> item displaying the current user\'s blog entries. The <em>Blog entry</em> menu item under <em>Create content</em> allows new blog entries to be created.') . '</p>';
       $output .= '<p>' . t('Each blog entry is displayed with an automatic link to other blogs created by the same user. By default, blog entries have comments enabled and are automatically promoted to the site front page. The blog module also creates a <em>Recent blog posts</em> block that may be enabled at the <a href="@blocks">blocks administration page</a>.', array('@blocks' => url('admin/build/block'))) . '</p>';
       $output .= '<p>' . t('When using the aggregator module an automatic <em>blog it</em> icon is displayed next to the items in a feed\'s <em>latest items</em> block. Clicking this icon populates a <em>blog entry</em> with a title (the title of the feed item) and body (a link to the source item on its original site and illustrative content suitable for use in a block quote). Blog authors can use this feature to easily comment on items of interest that appear in aggregator feeds from other sites. To use this feature, be sure to <a href="@modules">enable</a> the aggregator module, <a href="@feeds">add and configure</a> a feed from another site, and <a href="@blocks">position</a> the feed\'s <em>latest items</em> block.', array('@modules' => url('admin/build/modules'), '@feeds' => url('admin/content/aggregator'), '@blocks' => url('admin/build/block'))) . '</p>';
@@ -78,7 +78,6 @@ function blog_form(&$node) {
   $iid = isset($_GET['iid']) ? (int)$_GET['iid'] : 0;
   $type = node_get_types('type', $node);
 
-
   if (empty($node->body)) {
     // If the user clicked a "blog it" link, we load the data from the
     // database and quote it in the blog.
@@ -91,11 +90,11 @@ function blog_form(&$node) {
       // Note: $item->description has been validated on aggregation.
       $node->body = '<a href="' . check_url($item->link) . '">' . check_plain($item->title) . '</a> - <em>' . $item->description . '</em> [<a href="' . check_url($item->flink) . '">' . check_plain($item->ftitle) . "</a>]\n";
     }
-
   }
 
   $form['title'] = array('#type' => 'textfield', '#title' => check_plain($type->title_label), '#required' => TRUE, '#default_value' => !empty($node->title) ? $node->title : NULL, '#weight' => -5);
   $form['body_field'] = node_body_field($node, $type->body_label, $type->min_word_count);
+
   return $form;
 }
 
@@ -104,9 +103,10 @@ function blog_form(&$node) {
  */
 function blog_view($node, $teaser = FALSE, $page = FALSE) {
   if ($page) {
-    // Breadcrumb navigation
+    // Breadcrumb navigation.
     drupal_set_breadcrumb(array(l(t('Home'), NULL), l(t('Blogs'), 'blog'), l(t("@name's blog", array('@name' => $node->name)), 'blog/' . $node->uid)));
   }
+
   return node_prepare($node, $teaser);
 }
 
@@ -121,7 +121,7 @@ function blog_link($type, $node = NULL, $teaser = FALSE) {
       $links['blog_usernames_blog'] = array(
         'title' => t("@username's blog", array('@username' => $node->name)),
         'href' => "blog/$node->uid",
-        'attributes' => array('title' => t("Read @username's latest blog entries.", array('@username' => $node->name)))
+        'attributes' => array('title' => t("Read @username's latest blog entries.", array('@username' => $node->name))),
       );
     }
   }
@@ -192,7 +192,7 @@ function blog_block($op = 'list', $delta = '') {
     $block['recent']['info'] = t('Recent blog posts');
     return $block;
   }
-  else if ($op == 'view') {
+  elseif ($op == 'view') {
     if (user_access('access content')) {
       $result = db_query_range(db_rewrite_sql("SELECT n.nid, n.title, n.created FROM {node} n WHERE n.type = 'blog' AND n.status = 1 ORDER BY n.created DESC"), 0, 10);
       if ($node_title_list = node_title_list($result)) {
