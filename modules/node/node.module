@@ -1285,7 +1285,7 @@ function node_search($op = 'search', $keys = NULL) {
       }
 
       // Do search.
-      $find = do_search($keys, 'node', 'INNER JOIN {node} n ON n.nid = i.sid ' . $join1 . ' INNER JOIN {users} u ON n.uid = u.uid', $conditions1 . (empty($where1) ? '' : ' AND ' . $where1), $arguments1, $select2, $join2, $arguments2);
+      $find = do_search($keys, 'node', 'INNER JOIN {node} n ON n.nid = i.sid ' . $join1, $conditions1 . (empty($where1) ? '' : ' AND ' . $where1), $arguments1, $select2, $join2, $arguments2);
 
       // Load results.
       $results = array();
