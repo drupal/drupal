@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.pages.inc,v 1.8 2008/04/14 17:48:35 dries Exp $
+// $Id: blog.pages.inc,v 1.9 2008/05/13 18:15:07 dries Exp $
 
 /**
  * @file
@@ -110,6 +110,5 @@ function blog_feed_last() {
   while ($row = db_fetch_object($result)) {
     $items[] = $row->nid;
   }
-
   node_feed($items, $channel);
 }
