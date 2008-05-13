@@ -519,7 +519,6 @@ function page_get_cache() {
  */
 function bootstrap_invoke_all($hook) {
   foreach (module_list(TRUE, TRUE) as $module) {
-    drupal_load('module', $module);
     module_invoke($module, $hook);
   }
 }
@@ -1285,7 +1284,11 @@ function registry_cache_hook_implementations($hook, $write_to_persistent_cache =
   }
 
   if ($write_to_persistent_cache === TRUE) {
-    cache_set('hooks', $implementations, 'cache_registry');
+    // Only write this to cache if the implementations data we are going to cache
+    // is different to what we loaded earlier in the request.
+    if ($implementations != registry_get_hook_implementations_cache()) {
+      cache_set('hooks', $implementations, 'cache_registry');
+    }
   }
 }
 
@@ -1307,12 +1310,53 @@ function registry_cache_path_files() {
       $files[] = $row->filename;
     }
     if ($files) {
-      $menu = menu_get_item();
-      cache_set('registry:' . $menu['path'], implode(';', $files), 'cache_registry');
+      sort($files);
+      // Only write this to cache if the file list we are going to cache
+      // is different to what we loaded earlier in the request.
+      if ($files != registry_load_path_files(TRUE)) {
+        $menu = menu_get_item();
+        cache_set('registry:' . $menu['path'], implode(';', $files), 'cache_registry');
+      }
     }
   }
 }
 
 /**
+ * registry_load_path_files
+ */
+function registry_load_path_files($return = FALSE) {
+  static $file_cache_data = array();
+  if ($return) {
+    sort($file_cache_data);
+    return $file_cache_data;
+  }
+  $menu = menu_get_item();
+  $cache = cache_get('registry:' . $menu['path'], 'cache_registry');
+  if (!empty($cache->data)) {
+    foreach(explode(';', $cache->data) as $file) {
+      require_once($file);
+      $file_cache_data[] = $file;
+    }
+  }
+}
+
+/**
+ * registry_get_hook_implementations_cache
+ */
+function registry_get_hook_implementations_cache() {
+  static $implementations;
+  if ($implementations === NULL) {
+    if ($cache = cache_get('hooks', 'cache_registry')) {
+      $implementations = $cache->data;
+    }
+    else {
+      $implementations = array();
+    }
+  }
+  return $implementations;
+}
+
+/**
  * @} End of "ingroup registry".
  */
+

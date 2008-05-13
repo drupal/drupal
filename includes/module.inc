@@ -408,9 +408,7 @@ function module_implements($hook, $sort = FALSE, $refresh = FALSE) {
     $implementations = array();
   }
   else if (!defined('MAINTENANCE_MODE') && empty($implementations)) {
-    if ($cache = cache_get('hooks', 'cache_registry')) {
-      $implementations = $cache->data;
-    }
+    $implementations = registry_get_hook_implementations_cache();
   }
 
   if (!isset($implementations[$hook])) {
