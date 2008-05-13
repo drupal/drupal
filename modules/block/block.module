@@ -320,12 +320,12 @@ function theme_block_admin_display($form) {
       // Output region header
       if ($status && $region != $last_region) {
         $region_title = t('@region', array('@region' => drupal_ucfirst($block_regions[$region])));
-        $rows[] = array(array('data' => $region_title, 'class' => 'region', 'colspan' => ($throttle ? 7 : 6)));
+        $rows[] = array(array('data' => $region_title, 'class' => 'region', 'colspan' => ($throttle ? 6 : 5)));
         $last_region = $region;
       }
       // Output disabled header
       elseif ($status != $last_status) {
-        $rows[] = array(array('data' => t('Disabled'), 'class' => 'region', 'colspan' => ($throttle ? 7 : 6)));
+        $rows[] = array(array('data' => t('Disabled'), 'class' => 'region', 'colspan' => ($throttle ? 6 : 5)));
         $last_status = $status;
       }
 
