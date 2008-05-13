@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.119 2008/05/07 06:39:57 dries Exp $
+// $Id: module.inc,v 1.120 2008/05/13 17:38:42 dries Exp $
 
 /**
  * @file
@@ -408,9 +408,7 @@ function module_implements($hook, $sort = FALSE, $refresh = FALSE) {
     $implementations = array();
   }
   else if (!defined('MAINTENANCE_MODE') && empty($implementations)) {
-    if ($cache = cache_get('hooks', 'cache_registry')) {
-      $implementations = $cache->data;
-    }
+    $implementations = registry_get_hook_implementations_cache();
   }
 
   if (!isset($implementations[$hook])) {

@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.271 2008/05/06 12:18:45 dries Exp $
+// $Id: menu.inc,v 1.272 2008/05/13 17:38:42 dries Exp $
 
 /**
  * @file
@@ -339,12 +339,7 @@ function menu_execute_active_handler($path = NULL) {
     menu_rebuild();
   }
   if ($router_item = menu_get_item($path)) {
-    $cache = cache_get('registry:' . $router_item['path'], 'cache_registry');
-    if (!empty($cache->data)) {
-      foreach(explode(';', $cache->data) as $file) {
-        require_once($file);
-      }
-    }
+    registry_load_path_files();
     if ($router_item['access']) {
       if (drupal_function_exists($router_item['page_callback'])) {
         return call_user_func_array($router_item['page_callback'], $router_item['page_arguments']);
