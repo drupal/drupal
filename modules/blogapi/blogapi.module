@@ -139,9 +139,7 @@ function blogapi_xmlrpc() {
 /**
  * Blogging API callback. Finds the URL of a user's blog.
  */
-
 function blogapi_blogger_get_users_blogs($appid, $username, $password) {
-
   $user = blogapi_validate_user($username, $password);
   if ($user->uid) {
     $types = _blogapi_get_node_types();
@@ -149,6 +147,7 @@ function blogapi_blogger_get_users_blogs($appid, $username, $password) {
     foreach ($types as $type) {
       $structs[] = array('url' => url('blog/' . $user->uid, array('absolute' => TRUE)), 'blogid' => $type, 'blogName' => $user->name . ": " . $type);
     }
+
     return $structs;
   }
   else {
@@ -193,7 +192,7 @@ function blogapi_blogger_new_post($appkey, $blogid, $username, $password, $conte
 
   $edit = array();
   $edit['type'] = $blogid;
-  // get the node type defaults
+  // Get the node type defaults.
   $node_type_default = variable_get('node_options_' . $edit['type'], array('status', 'promote'));
   $edit['uid'] = $user->uid;
   $edit['name'] = $user->name;
@@ -203,7 +202,7 @@ function blogapi_blogger_new_post($appkey, $blogid, $username, $password, $conte
   $edit['format'] = FILTER_FORMAT_DEFAULT;
   $edit['status'] = $publish;
 
-  // check for bloggerAPI vs. metaWeblogAPI
+  // Check for bloggerAPI vs. metaWeblogAPI.
   if (is_array($content)) {
     $edit['title'] = $content['title'];
     $edit['body'] = $content['description'];
@@ -233,7 +232,7 @@ function blogapi_blogger_new_post($appkey, $blogid, $username, $password, $conte
   node_save($node);
   if ($node->nid) {
     watchdog('content', '@type: added %title using blog API.', array('@type' => $node->type, '%title' => $node->title), WATCHDOG_NOTICE, l(t('view'), "node/$node->nid"));
-    // blogger.newPost returns a string so we cast the nid to a string by putting it in double quotes:
+    // blogger.newPost returns a string so we cast the nid to a string by putting it in double quotes.
     return "$node->nid";
   }
 
@@ -244,7 +243,6 @@ function blogapi_blogger_new_post($appkey, $blogid, $username, $password, $conte
  * Blogging API callback. Modifies the specified blog node.
  */
 function blogapi_blogger_edit_post($appkey, $postid, $username, $password, $content, $publish) {
-
   $user = blogapi_validate_user($username, $password);
 
   if (!$user->uid) {
@@ -349,6 +347,7 @@ function blogapi_blogger_get_recent_posts($appkey, $blogid, $username, $password
   while ($blog = db_fetch_object($result)) {
     $blogs[] = _blogapi_get_post($blog, $bodies);
   }
+
   return $blogs;
 }
 
@@ -411,6 +410,7 @@ function blogapi_metaweblog_get_category_list($blogid, $username, $password) {
       }
     }
   }
+
   return $categories;
 }
 
@@ -465,6 +465,7 @@ function blogapi_mt_set_post_categories($postid, $username, $password, $categori
     $node->taxonomy[] = $category['categoryId'];
   }
   node_save($node);
+
   return TRUE;
 }
 
@@ -487,14 +488,16 @@ function blogapi_mt_supported_text_filters() {
 }
 
 /**
- * Blogging API callback. Publishes the given node
+ * Blogging API callback. Publishes the given node.
  */
 function blogap_mti_publish_post($postid, $username, $password) {
   $user = blogapi_validate_user($username, $password);
+
   if (!$user->uid) {
     return blogapi_error($user);
   }
   $node = node_load($postid);
+
   if (!$node) {
     return blogapi_error(t('Invalid post.'));
   }
@@ -514,6 +517,7 @@ function blogap_mti_publish_post($postid, $username, $password) {
  */
 function blogapi_error($message) {
   static $xmlrpcusererr;
+
   if (!is_array($message)) {
     $message = array($message);
   }
@@ -555,9 +559,13 @@ function blogapi_blogger_title(&$contents) {
   else {
     list($title, $contents) = explode("\n", $contents, 2);
   }
+
   return $title;
 }
 
+/**
+ * Add some settings to the admin_settings form.
+ */
 function blogapi_admin_settings() {
   $node_types = array_map('check_plain', node_get_types('names'));
   $defaults = isset($node_types['blog']) ? array('blog' => 1) : array();
@@ -573,6 +581,9 @@ function blogapi_admin_settings() {
   return system_settings_form($form);
 }
 
+/**
+ * Implementation of hook_menu().
+ */
 function blogapi_menu() {
   $items['blogapi/rsd'] = array(
     'title' => 'RSD',
@@ -592,6 +603,9 @@ function blogapi_menu() {
   return $items;
 }
 
+/**
+ * Implementaton of hook_init().
+ */
 function blogapi_init() {
   if (drupal_is_front_page()) {
     drupal_add_link(array('rel' => 'EditURI',
@@ -635,7 +649,6 @@ function _blogapi_mt_extra(&$node, $struct) {
     $node = (object)$node;
   }
 
-  // mt_allow_comments
   if (array_key_exists('mt_allow_comments', $struct)) {
     switch ($struct['mt_allow_comments']) {
       case 0:
@@ -650,8 +663,7 @@ function _blogapi_mt_extra(&$node, $struct) {
     }
   }
 
-  // merge the 3 body sections (description, mt_excerpt, mt_text_more) into
-  // one body
+  // Merge the 3 body sections (description, mt_excerpt, mt_text_more) into one body.
   if ($struct['mt_excerpt']) {
     $node->body = $struct['mt_excerpt'] . '<!--break-->' . $node->body;
   }
@@ -659,12 +671,10 @@ function _blogapi_mt_extra(&$node, $struct) {
     $node->body = $node->body . '<!--extended-->' . $struct['mt_text_more'];
   }
 
-  // mt_convert_breaks
   if ($struct['mt_convert_breaks']) {
     $node->format = $struct['mt_convert_breaks'];
   }
 
-  // dateCreated
   if ($struct['dateCreated']) {
     $node->date = format_date(mktime($struct['dateCreated']->hour, $struct['dateCreated']->minute, $struct['dateCreated']->second, $struct['dateCreated']->month, $struct['dateCreated']->day, $struct['dateCreated']->year), 'custom', 'Y-m-d H:i:s O');
   }
@@ -683,11 +693,12 @@ function _blogapi_get_post($node, $bodies = TRUE) {
     'link' => url('node/' . $node->nid, array('absolute' => TRUE)),
     'permaLink' => url('node/' . $node->nid, array('absolute' => TRUE)),
   );
+
   if ($bodies) {
     if ($node->comment == 1) {
       $comment = 2;
     }
-    else if ($node->comment == 2) {
+    elseif ($node->comment == 2) {
       $comment = 1;
     }
     $xmlrpcval['content'] = "<title>$node->title</title>$node->body";
@@ -714,6 +725,7 @@ function _blogapi_validate_blogid($blogid) {
   if (in_array($blogid, $types, TRUE)) {
     return TRUE;
   }
+
   return blogapi_error(t("Blog API module is not configured to support the %type content type, or you don't have sufficient permissions to post this type of content.", array('%type' => $blogid)));
 }
 

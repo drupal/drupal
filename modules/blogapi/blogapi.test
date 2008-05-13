@@ -108,8 +108,10 @@ class BlogAPITestCase extends DrupalWebTestCase {
   /**
    * Add taxonomy vocabulary.
    *
-   * @param string $vocab Vocabulary name.
-   * @return interger Vocab id.
+   * @param string $vocab
+   *   Vocabulary name.
+   * @return integer
+   *   The vocab ID.
    */
   function addVocabulary($vocab) {
     $edit = array();
@@ -128,15 +130,18 @@ class BlogAPITestCase extends DrupalWebTestCase {
     }
 
     $this->assertNotNull($vid, t('Vocabulary found in database.'));
+
     return $vid;
   }
 
   /**
    * Add a taxonomy term to vocabulary.
    *
-   * @param integer $vid Vocabulary id.
+   * @param integer $vid
+   *   Vocabulary ID.
    * @param string $term Term name.
-   * @return interger Term id.
+   * @return interger
+   *   The Term ID.
    */
   function addTerm($vid, $term) {
     $edit = array();
@@ -154,6 +159,7 @@ class BlogAPITestCase extends DrupalWebTestCase {
     }
 
     $this->assertNotNull($tid, t('Term found in database.'));
+
     return $tid;
   }
 }
