@@ -1,8 +1,8 @@
 <?php
-// $Id: comment-folded.tpl.php,v 1.3 2008/04/14 17:48:36 dries Exp $
+// $Id: comment-folded.tpl.php,v 1.4 2008/05/14 13:12:40 dries Exp $
 
 /**
- * @file comment-folded.tpl.php
+ * @file
  * Default theme implementation for folded comments.
  *
  * Available variables:

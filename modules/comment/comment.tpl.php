@@ -1,8 +1,8 @@
 <?php
-// $Id: comment.tpl.php,v 1.6 2008/04/14 17:48:36 dries Exp $
+// $Id: comment.tpl.php,v 1.7 2008/05/14 13:12:41 dries Exp $
 
 /**
- * @file comment.tpl.php
+ * @file
  * Default theme implementation for comments.
  *
  * Available variables:

@@ -1,6 +1,6 @@
-// $Id: comment.js,v 1.5 2007/09/12 18:29:32 goba Exp $
+// $Id: comment.js,v 1.6 2008/05/14 13:12:40 dries Exp $
 
-Drupal.behaviors.comment = function (context) {
+Drupal.behaviors.comment = function(context) {
   var parts = new Array("name", "homepage", "mail");
   var cookie = '';
   for (i=0;i<3;i++) {

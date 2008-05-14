@@ -1,8 +1,8 @@
 <?php
-// $Id: comment-wrapper.tpl.php,v 1.3 2008/04/16 11:26:28 dries Exp $
+// $Id: comment-wrapper.tpl.php,v 1.4 2008/05/14 13:12:40 dries Exp $
 
 /**
- * @file comment-wrapper.tpl.php
+ * @file
  * Default theme implementation to wrap comments.
  *
  * Available variables:
