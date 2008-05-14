@@ -146,13 +146,13 @@ function _upload_file_limits($user) {
 /**
  * Implementation of hook_file_download().
  */
-function upload_file_download($file) {
-  if (!user_access('view uploaded files')) {
-    return -1;
-  }
-  $file = file_create_path($file);
+function upload_file_download($filepath) {
+  $filepath = file_create_path($filepath);
   $result = db_query("SELECT f.* FROM {files} f INNER JOIN {upload} u ON f.fid = u.fid WHERE filepath = '%s'", $file);
   if ($file = db_fetch_object($result)) {
+    if (!user_access('view uploaded files')) {
+      return -1;
+    }
     return array(
       'Content-Type: ' . $file->filemime,
       'Content-Length: ' . $file->filesize,
