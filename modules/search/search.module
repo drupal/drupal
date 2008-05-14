@@ -1043,9 +1043,6 @@ function search_box($form_id) {
     '#attributes' => array('title' => t('Enter the terms you wish to search for.')),
   );
   $form['submit'] = array('#type' => 'submit', '#value' => t('Search'));
-  // Always go to the search page since the search form is not guaranteed to be
-  // on every page.
-  $form['#action'] = url('search/node');
   $form['#base'] = 'search_box_form';
 
   return $form;
