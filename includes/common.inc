@@ -2008,10 +2008,10 @@ function drupal_add_js($data = NULL, $type = 'module', $scope = 'header', $defer
  * are added to the page. Then, all settings are output, followed by 'inline'
  * JavaScript code. If running update.php, all preprocessing is disabled.
  *
- * @parameter $scope
+ * @param $scope
  *   (optional) The scope for which the JavaScript rules should be returned.
  *   Defaults to 'header'.
- * @parameter $javascript
+ * @param $javascript
  *   (optional) An array with all JavaScript code. Defaults to the default
  *   JavaScript array for the given scope.
  * @return
