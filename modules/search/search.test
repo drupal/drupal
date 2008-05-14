@@ -160,3 +160,91 @@ class SearchMatchTestCase extends DrupalWebTestCase {
     $this->assertEqual(!count($scores) || (min($scores) > 0.0 && max($scores) <= 1.0001), TRUE, "Query scoring '$query'");
   }
 }
+
+class SearchRankingTestCase extends DrupalWebTestCase {
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('Search engine ranking'),
+      'description' => t('Indexes content and tests ranking factors.'),
+      'group' => t('Search'),
+    );
+  }
+
+  /**
+   * Implementation setUp().
+   */
+  function setUp() {
+    parent::setUp('search');
+  }
+
+  function testRankings() {
+    // Enable modules that are tested.
+    $this->drupalModuleEnable('search');
+    $this->drupalModuleEnable('statistics');
+    $this->drupalModuleEnable('comment');
+
+    // Login with sufficient privileges.
+    $this->drupalLogin($this->drupalCreateUser(array('post comments without approval', 'create page content')));
+
+    // Build a list of the rankings to test.
+    $node_ranks = array('sticky', 'promote', 'relevance', 'recent', 'comments', 'views');
+
+    // Create nodes for testing.
+    foreach ($node_ranks as $node_rank) {
+      $settings = array('type' => 'page', 'title' => 'Drupal rocks', 'body' => "Drupal's search rocks");
+      foreach (array(0, 1) as $num) {
+        if ($num == 1) {
+          switch ($node_rank) {
+            case 'sticky':
+            case 'promote':
+              $settings[$node_rank] = 1;
+              break;
+            case 'relevance':
+              $settings['body'] .= " really rocks";
+              break;
+            case 'recent':
+              $settings['created'] = time() + 3600;
+              break;
+            case 'comments':
+              $settings['comment'] = 2;
+              break;
+          }
+        }
+        $nodes[$node_rank][$num] = $this->drupalCreateNode($settings);
+      }
+    }
+
+    // Update the search index.
+    node_update_index();
+    search_update_totals();
+
+    // Add a comment to one of the nodes.
+    $edit = array('subject' => 'my comment title', 'comment' => 'some random comment');
+    $this->drupalGet('comment/reply/'. $nodes['comments'][1]->nid);
+    $this->drupalPost(NULL, $edit, t('Preview'));
+    $this->drupalPost(NULL, $edit, t('Save'));
+
+    // Enable counting of statistics.
+    variable_set('statistics_count_content_views', 1);
+
+    // Then View one of the nodes a bunch of times.
+    for ($i = 0; $i < 5; $i ++) {
+      $this->drupalGet('node/' . $nodes['views'][1]->nid);
+    }
+
+    // Test each of the possible rankings.
+    foreach ($node_ranks as $node_rank) {
+      // Disable all relevancy rankings except the one we are testing.
+      foreach ($node_ranks as $var) {
+        variable_set('node_rank_'. $var, $var == $node_rank ? 10 : 0);
+      }
+
+      // Do the search and assert the results.
+      $set = node_search('search', 'rocks');
+      $this->assertEqual($set[0]['node']->nid, $nodes[$node_rank][1]->nid, 'Search ranking "'. $node_rank .'" order.');
+    }
+  }
+}

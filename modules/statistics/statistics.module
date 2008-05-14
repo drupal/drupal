@@ -314,3 +314,20 @@ function statistics_nodeapi(&$node, $op, $arg = 0) {
       db_query('DELETE FROM {node_counter} WHERE nid = %d', $node->nid);
   }
 }
+
+/**
+ * Implementation of hook_ranking().
+ */
+function statistics_ranking() {
+  if (variable_get('statistics_count_content_views', 0)) {
+    return array(
+      'views' => array(
+        'title' => t('Number of views'),
+        'join' => 'LEFT JOIN {node_counter} node_counter ON node_counter.nid = i.sid',
+        // Inverse law that maps the highest view count on the site to 1 and 0 to 0.
+        'score' => '2.0 - 2.0 / (1.0 + node_counter.totalcount * %f)',
+        'arguments' => array(variable_get('node_cron_views_scale', 0)),
+      ),
+    );
+  }
+}
