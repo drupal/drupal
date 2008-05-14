@@ -423,20 +423,22 @@ function search_index($sid, $type, $text) {
   global $base_url;
   $node_regexp = '@href=[\'"]?(?:' . preg_quote($base_url, '@') . '/|' . preg_quote(base_path(), '@') . ')(?:\?q=)?/?((?![a-z]+:)[^\'">]+)[\'">]@i';
 
-  // Multipliers for scores of words inside certain HTML tags.
+  // Multipliers for scores of words inside certain HTML tags.  The weights are stored
+  // in a variable so that modules can overwrite the default weights.
   // Note: 'a' must be included for link ranking to work.
-  $tags = array('h1' => 25,
-                'h2' => 18,
-                'h3' => 15,
-                'h4' => 12,
-                'h5' => 9,
-                'h6' => 6,
-                'u' => 3,
-                'b' => 3,
-                'i' => 3,
-                'strong' => 3,
-                'em' => 3,
-                'a' => 10);
+  $tags = variable_get('search_tag_weights', array(
+    'h1' => 25,
+    'h2' => 18,
+    'h3' => 15,
+    'h4' => 12,
+    'h5' => 9,
+    'h6' => 6,
+    'u' => 3,
+    'b' => 3,
+    'i' => 3,
+    'strong' => 3,
+    'em' => 3,
+    'a' => 10));
 
   // Strip off all ignored tags to speed up processing, but insert space before/after
   // them to keep word boundaries.
