@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.631 2008/05/06 12:18:47 dries Exp $
+// $Id: comment.module,v 1.632 2008/05/14 11:10:51 dries Exp $
 
 /**
  * @file
@@ -1969,4 +1969,19 @@ function comment_unpublish_by_keyword_action($comment, $context) {
       break;
     }
   }
+}
+
+/**
+ * Implementation of hook_ranking().
+ */
+function comment_ranking() {
+  return array(
+    'comments' => array(
+      'title' => t('Number of comments'),
+      'join' => 'LEFT JOIN {node_comment_statistics} node_comment_statistics ON node_comment_statistics.nid = i.sid',
+      // Inverse law that maps the highest reply count on the site to 1 and 0 to 0.
+      'score' => '2.0 - 2.0 / (1.0 + node_comment_statistics.comment_count * %f)',
+      'arguments' => array(variable_get('node_cron_comments_scale', 0)),
+    ),
+  );
 }
