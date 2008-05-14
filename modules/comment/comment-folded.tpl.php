@@ -2,7 +2,7 @@
 // $Id$
 
 /**
- * @file comment-folded.tpl.php
+ * @file
  * Default theme implementation for folded comments.
  *
  * Available variables:

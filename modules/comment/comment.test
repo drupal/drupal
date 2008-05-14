@@ -207,26 +207,30 @@ class CommentTestCase extends DrupalWebTestCase {
     $edit = array();
     $edit['subject'] = $subject;
     $edit['comment'] = $comment;
+
     if ($contact !== NULL && is_array($contact)) {
       $edit += $contact;
     }
+
     if ($node !== NULL) {
       $this->drupalGet('comment/reply/'. $node->nid);
     }
+
     if ($preview) {
       $this->assertNoFieldByName('op', t('Save'), t('Save button not found.')); // Preview required so no save button should be found.
       $this->drupalPost(NULL, $edit, t('Preview'));
     }
     $this->drupalPost(NULL, $edit, t('Save'));
-
     $match = array();
     // Get comment ID
     preg_match('/#comment-([^"]+)/', $this->getURL(), $match);
-    // get comment
+
+    // Get comment.
     if ($contact !== TRUE) { // If true then attempting to find error message.
       $this->assertText($subject, 'Comment posted.');
       $this->assertTrue((!empty($match) && !empty($match[1])), t('Comment id found.'));
     }
+
     if (isset($match[1])) {
       return (object) array('id' => $match[1], 'subject' => $subject, 'comment' => $comment);
     }
@@ -247,6 +251,7 @@ class CommentTestCase extends DrupalWebTestCase {
       $regex .= $comment->subject .'(.*?)'; // Match subject.
       $regex .= $comment->comment .'(.*?)'; // Match comment.
       $regex .= '<\/div>/s'; // Dot matches newlines and ensure that match doesn't bleed outside comment div.
+
       return preg_match($regex, $this->drupalGetContent());
     }
     else {
@@ -257,7 +262,8 @@ class CommentTestCase extends DrupalWebTestCase {
   /**
    * Delete comment.
    *
-   * @param object $comment Comment to delete.
+   * @param object $comment
+   *   Comment to delete.
    */
   function deleteComment($comment) {
     $this->drupalPost('comment/delete/'. $comment->id, array(), t('Delete'));
@@ -267,7 +273,8 @@ class CommentTestCase extends DrupalWebTestCase {
   /**
    * Set comment subject setting.
    *
-   * @param boolean $enabled Subject value.
+   * @param boolean $enabled
+   *   Subject value.
    */
   function setCommentSubject($enabled) {
     $this->setCommentSettings('comment_subject_field', ($enabled ? '1' : '0'), 'Comment subject '. ($enabled ? 'enabled' : 'disabled') .'.');
@@ -276,7 +283,8 @@ class CommentTestCase extends DrupalWebTestCase {
   /**
    * Set comment preview setting.
    *
-   * @param boolean $required Preview value.
+   * @param boolean $required
+   *   Preview value.
    */
   function setCommentPreview($required) {
     $this->setCommentSettings('comment_preview', ($required ? '1' : '0'), 'Comment preview '. ($required ? 'required' : 'optional') .'.');
@@ -285,7 +293,8 @@ class CommentTestCase extends DrupalWebTestCase {
   /**
    * Set comment form setting.
    *
-   * @param boolean $enabled Form value.
+   * @param boolean $enabled
+   *   Form value.
    */
   function setCommentForm($enabled) {
     $this->setCommentSettings('comment_form_location', ($enabled ? '1' : '3'), 'Comment controls '. ($enabled ? 'enabled' : 'disabled') .'.');
@@ -294,7 +303,8 @@ class CommentTestCase extends DrupalWebTestCase {
   /**
    * Set comment anonymous level setting.
    *
-   * @param integer $level Anonymous level.
+   * @param integer $level
+   *   Anonymous level.
    */
   function setCommentAnonymous($level) {
     $this->setCommentSettings('comment_anonymous', $level, 'Anonymous commenting set to level '. $level .'.');
@@ -303,9 +313,12 @@ class CommentTestCase extends DrupalWebTestCase {
   /**
    * Set comment setting for story content type.
    *
-   * @param string $name Name of variable.
-   * @param string $vale Value of variable.
-   * @param string $message Status message to display.
+   * @param string $name
+   *   Name of variable.
+   * @param string $value
+   *   Value of variable.
+   * @param string $message
+   *   Status message to display.
    */
   function setCommentSettings($name, $value, $message) {
     variable_set($name .'_story', $value);
@@ -315,8 +328,10 @@ class CommentTestCase extends DrupalWebTestCase {
   /**
    * Set anonymous comment setting.
    *
-   * @param boolean $enabled Allow anonymous commenting.
-   * @param boolean $without_approval Allow anonymous commenting without approval.
+   * @param boolean $enabled
+   *   Allow anonymous commenting.
+   * @param boolean $without_approval
+   *   Allow anonymous commenting without approval.
    */
   function setAnonymousUserComment($enabled, $without_approval) {
     $edit = array();
@@ -330,7 +345,7 @@ class CommentTestCase extends DrupalWebTestCase {
   /**
    * Check for contact info.
    *
-   * @return boolean Contact info is avialable.
+   * @return boolean Contact info is available.
    */
   function commentContactInfoAvailable() {
     return preg_match('/(input).*?(name="name").*?(input).*?(name="mail").*?(input).*?(name="homepage")/s', $this->drupalGetContent());
@@ -339,9 +354,12 @@ class CommentTestCase extends DrupalWebTestCase {
   /**
    * Perform the specified operation on the specified comment.
    *
-   * @param object $comment Comment to perform operation on.
-   * @param string $operation Operation to perform.
-   * @param boolean $aproval Operation is found on approval page.
+   * @param object $comment
+   *   Comment to perform operation on.
+   * @param string $operation
+   *   Operation to perform.
+   * @param boolean $aproval
+   *   Operation is found on approval page.
    */
   function performCommentOperation($comment, $operation, $approval = FALSE) {
     $edit = array();
@@ -359,14 +377,17 @@ class CommentTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Get the comment id for an unaproved comment.
+   * Get the comment ID for an unaproved comment.
    *
-   * @param string $subject Comment subject to find.
-   * @return integer Comment id.
+   * @param string $subject
+   *   Comment subject to find.
+   * @return integer
+   *   Comment id.
    */
   function getUnaprovedComment($subject) {
     $this->drupalGet('admin/content/comment/approval');
     preg_match('/href="(.*?)#comment-([^"]+)"(.*?)>('. $subject .')/', $this->drupalGetContent(), $match);
+
     return $match[2];
   }
 }

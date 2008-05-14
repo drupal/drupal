@@ -2,7 +2,7 @@
 // $Id$
 
 /**
- * @file comment.tpl.php
+ * @file
  * Default theme implementation for comments.
  *
  * Available variables:

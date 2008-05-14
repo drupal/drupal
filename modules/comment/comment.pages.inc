@@ -15,10 +15,10 @@
  */
 function comment_edit($cid) {
   global $user;
-
   $comment = db_fetch_object(db_query('SELECT c.*, u.uid, u.name AS registered_name, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d', $cid));
   $comment = drupal_unpack($comment);
   $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
+
   if (comment_access('edit', $comment)) {
     return comment_form_box((array)$comment);
   }
@@ -52,7 +52,6 @@ function comment_reply($node, $pid = NULL) {
   // Set the breadcrumb trail.
   drupal_set_breadcrumb(array(l(t('Home'), NULL), l($node->title, 'node/' . $node->nid)));
   $op = isset($_POST['op']) ? $_POST['op'] : '';
-
   $output = '';
 
   if (user_access('access comments')) {
@@ -69,10 +68,10 @@ function comment_reply($node, $pid = NULL) {
     else {
       // $pid indicates that this is a reply to a comment.
       if ($pid) {
-        // load the comment whose cid = $pid
+        // Load the comment whose cid = $pid
         if ($comment = db_fetch_object(db_query('SELECT c.*, u.uid, u.name AS registered_name, u.signature, u.picture, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = %d', $pid, COMMENT_PUBLISHED))) {
-          // If that comment exists, make sure that the current comment and the parent comment both
-          // belong to the same parent node.
+          // If that comment exists, make sure that the current comment and the
+          // parent comment both belong to the same parent node.
           if ($comment->nid != $node->nid) {
             // Attempting to reply to a comment not belonging to the current nid.
             drupal_set_message(t('The comment you are replying to does not exist.'), 'error');

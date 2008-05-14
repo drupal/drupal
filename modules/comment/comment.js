@@ -1,6 +1,6 @@
 // $Id$
 
-Drupal.behaviors.comment = function (context) {
+Drupal.behaviors.comment = function(context) {
   var parts = new Array("name", "homepage", "mail");
   var cookie = '';
   for (i=0;i<3;i++) {
