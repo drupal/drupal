@@ -82,7 +82,7 @@ Drupal.behaviors.blockDrag = function(context) {
           rowObject.swap('after', this);
         }
       }
-      // This region has become empty
+      // This region has become empty.
       if ($(this).next('tr').is(':not(.draggable)') || $(this).next('tr').size() == 0) {
         $(this).removeClass('region-populated').addClass('region-empty');
       }

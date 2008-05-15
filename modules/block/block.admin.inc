@@ -15,7 +15,7 @@ function block_admin_display($theme = NULL) {
   // If non-default theme configuration has been selected, set the custom theme.
   $custom_theme = isset($theme) ? $theme : variable_get('theme_default', 'garland');
 
-  // Fetch and sort blocks
+  // Fetch and sort blocks.
   $blocks = _block_rehash();
   usort($blocks, '_block_compare');
 
@@ -28,7 +28,6 @@ function block_admin_display($theme = NULL) {
 function block_admin_display_form(&$form_state, $blocks, $theme = NULL) {
   global $theme_key, $custom_theme;
 
-  // Add CSS
   drupal_add_css(drupal_get_path('module', 'block') . '/block.css', 'module', 'all', FALSE);
 
   // If non-default theme configuration has been selected, set the custom theme.
@@ -37,7 +36,7 @@ function block_admin_display_form(&$form_state, $blocks, $theme = NULL) {
 
   $block_regions = system_region_list($theme_key) + array(BLOCK_REGION_NONE => '<' . t('none') . '>');
 
-  // Build form tree
+  // Build the form tree.
   $form = array(
     '#action' => arg(3) ? url('admin/build/block/list/' . $theme_key) : url('admin/build/block'),
     '#tree' => TRUE,
@@ -54,11 +53,11 @@ function block_admin_display_form(&$form_state, $blocks, $theme = NULL) {
       '#value' => $block['delta'],
     );
     $form[$key]['info'] = array(
-      '#value' => check_plain($block['info'])
+      '#value' => check_plain($block['info']),
     );
     $form[$key]['theme'] = array(
       '#type' => 'hidden',
-      '#value' => $theme_key
+      '#value' => $theme_key,
     );
     $form[$key]['weight'] = array(
       '#type' => 'weight',
@@ -69,9 +68,15 @@ function block_admin_display_form(&$form_state, $blocks, $theme = NULL) {
       '#default_value' => $block['region'],
       '#options' => $block_regions,
     );
-    $form[$key]['configure'] = array('#value' => l(t('configure'), 'admin/build/block/configure/' . $block['module'] . '/' . $block['delta']));
+    $form[$key]['configure'] = array(
+      '#value' => l(t('configure'),
+      'admin/build/block/configure/' . $block['module'] . '/' . $block['delta']),
+    );
     if ($block['module'] == 'block') {
-      $form[$key]['delete'] = array('#value' => l(t('delete'), 'admin/build/block/delete/' . $block['delta']));
+      $form[$key]['delete'] = array(
+        '#value' => l(t('delete'),
+        'admin/build/block/delete/' . $block['delta']),
+      );
     }
   }
 
@@ -84,7 +89,7 @@ function block_admin_display_form(&$form_state, $blocks, $theme = NULL) {
 }
 
 /**
- * Process main blocks administration form submission.
+ * Process main blocks administration form submissions.
  */
 function block_admin_display_form_submit($form, &$form_state) {
   foreach ($form_state['values'] as $block) {
@@ -135,9 +140,14 @@ function _block_compare($a, $b) {
  * Menu callback; displays the block configuration form.
  */
 function block_admin_configure(&$form_state, $module = NULL, $delta = 0) {
-
-  $form['module'] = array('#type' => 'value', '#value' => $module);
-  $form['delta'] = array('#type' => 'value', '#value' => $delta);
+  $form['module'] = array(
+    '#type' => 'value',
+    '#value' => $module,
+  );
+  $form['delta'] = array(
+    '#type' => 'value',
+    '#value' => $delta,
+  );
 
   $edit = db_fetch_array(db_query("SELECT pages, visibility, custom, title FROM {blocks} WHERE module = '%s' AND delta = '%s'", $module, $delta));
 
@@ -154,7 +164,6 @@ function block_admin_configure(&$form_state, $module = NULL, $delta = 0) {
     '#default_value' => $edit['title'],
     '#weight' => -18,
   );
-
 
   // Module-specific block configurations.
   if ($settings = module_invoke($module, 'block', 'configure', $delta)) {
@@ -187,7 +196,7 @@ function block_admin_configure(&$form_state, $module = NULL, $delta = 0) {
     '#default_value' => $edit['custom'],
   );
 
-  // Role-based visibility settings
+  // Role-based visibility settings.
   $default_role_options = array();
   $result = db_query("SELECT rid FROM {blocks_roles} WHERE module = '%s' AND delta = '%s'", $module, $delta);
   while ($role = db_fetch_object($result)) {
@@ -216,8 +225,8 @@ function block_admin_configure(&$form_state, $module = NULL, $delta = 0) {
     '#title' => t('Page specific visibility settings'),
     '#collapsible' => TRUE,
   );
-  $access = user_access('use PHP for block visibility');
 
+  $access = user_access('use PHP for block visibility');
   if ($edit['visibility'] == 2 && !$access) {
     $form['page_vis_settings'] = array();
     $form['page_vis_settings']['visibility'] = array('#type' => 'value', '#value' => 2);
@@ -310,6 +319,7 @@ function block_add_block_form_submit($form, &$form_state) {
   cache_clear_all();
 
   $form_state['redirect'] = 'admin/build/block';
+
   return;
 }
 

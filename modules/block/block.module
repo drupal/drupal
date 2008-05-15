@@ -6,10 +6,7 @@
  * Controls the boxes that are displayed around the main content.
  */
 
-/**
- * Denotes that a block is not enabled in any region and should not
- * be shown.
- */
+// Denotes that a block is not enabled in any region and should not be shown.
 define('BLOCK_REGION_NONE', -1);
 
 /**
@@ -89,7 +86,7 @@ function block_help($path, $arg) {
 }
 
 /**
- * Implementation of hook_theme()
+ * Implementation of hook_theme().
  */
 function block_theme() {
   return array(
@@ -168,7 +165,7 @@ function block_menu() {
 }
 
 /**
- * Menu item access callback - only admin or enabled themes can be accessed
+ * Menu item access callback - only admin or enabled themes can be accessed.
  */
 function _block_themes_access($theme) {
   return user_access('administer blocks') && ($theme->status || $theme->name == variable_get('admin_theme', '0'));
@@ -396,7 +393,7 @@ function block_list($region) {
     $blocks = _block_load_blocks();
   }
 
-  // Create an empty array if there were no entries
+  // Create an empty array if there were no entries.
   if (!isset($blocks[$region])) {
     $blocks[$region] = array();
   }
@@ -407,7 +404,7 @@ function block_list($region) {
 }
 
 /**
- * Load blocks information from the database
+ * Load blocks information from the database.
  */
 function _block_load_blocks() {
   global $user, $theme_key;
@@ -419,7 +416,7 @@ function _block_load_blocks() {
     if (!isset($blocks[$block->region])) {
       $blocks[$block->region] = array();
     }
-    // Use the user's block visibility setting, if necessary
+    // Use the user's block visibility setting, if necessary.
     if ($block->custom != 0) {
       if ($user->uid && isset($user->block[$block->module][$block->delta])) {
         $enabled = $user->block[$block->module][$block->delta];
@@ -432,7 +429,7 @@ function _block_load_blocks() {
       $enabled = TRUE;
     }
 
-    // Match path if necessary
+    // Match path if necessary.
     if ($block->pages) {
       if ($block->visibility < 2) {
         $path = drupal_get_path_alias($_GET['q']);
@@ -457,6 +454,7 @@ function _block_load_blocks() {
     $block->page_match = $page_match;
     $blocks[$block->region]["{$block->module}_{$block->delta}"] = $block;
   }
+
   return $blocks;
 }
 
@@ -464,7 +462,7 @@ function _block_load_blocks() {
  * Render the content and subject for a set of blocks.
  *
  * @param $region_blocks
- *   An array of block objects such as returned for one region by _block_load_blocks()
+ *   An array of block objects such as returned for one region by _block_load_blocks().
  *
  * @return
  *   An array of visible blocks with subject and content rendered.

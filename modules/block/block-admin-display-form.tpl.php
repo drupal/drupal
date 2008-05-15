@@ -2,7 +2,7 @@
 // $Id$
 
 /**
- * @file block-admin-display-form.tpl.php
+ * @file
  * Default theme implementation to configure blocks.
  *
  * Available variables:
