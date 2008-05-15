@@ -1150,7 +1150,7 @@ function _node_rankings() {
   );
   if ($ranking = module_invoke_all('ranking')) {
     foreach ($ranking as $rank => $values) {
-      if ($node_rank = variable_get('node_rank_'. $rank, 5)) {
+      if ($node_rank = variable_get('node_rank_'. $rank, 0)) {
         // If the table defined in the ranking isn't already joined, then add it.
         if (isset($values['join']) && !isset($rankings['join'][$values['join']])) {
           $rankings['join'][$values['join']] = $values['join'];
@@ -1210,7 +1210,7 @@ function node_search($op = 'search', $keys = NULL) {
           '#title' => $values['title'],
           '#type' => 'select',
           '#options' => $options,
-          '#default_value' => variable_get('node_rank_'. $var, 5),
+          '#default_value' => variable_get('node_rank_'. $var, 0),
         );
       }
       return $form;
