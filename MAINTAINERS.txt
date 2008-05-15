@@ -14,7 +14,6 @@ LEGEND
                         do much other than throw the odd patch in.
       "orphan"        : no current maintainer, but maybe you could take
                         the role as you write new code?
-- W: website with status or information
 
 --------------------------------------------------------------------------------
 
