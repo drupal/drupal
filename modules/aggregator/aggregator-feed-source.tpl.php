@@ -1,11 +1,11 @@
 <?php
-// $Id: aggregator-feed-source.tpl.php,v 1.1 2007/09/13 08:02:38 goba Exp $
+// $Id: aggregator-feed-source.tpl.php,v 1.2 2008/05/15 21:27:32 dries Exp $
 
 /**
- * @file aggregator-feed-source.tpl.php
+ * @file
  * Default theme implementation to present the source of the feed.
  *
- * The contents are render above feed listings when browsing source feeds.
+ * The contents are rendered above feed listings when browsing source feeds.
  * For example, "example.com/aggregator/sources/1".
  *
  * Available variables:

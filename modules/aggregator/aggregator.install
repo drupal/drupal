@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.install,v 1.15 2008/03/15 12:31:28 dries Exp $
+// $Id: aggregator.install,v 1.16 2008/05/15 21:27:32 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -230,7 +230,7 @@ function aggregator_schema() {
       'timestamp' => array(
         'type' => 'int',
         'not null' => FALSE,
-        'description' => t('Post date of feed item, as a Unix timestamp.'),
+        'description' => t('Posted date of the feed item, as a Unix timestamp.'),
       ),
       'guid' => array(
         'type' => 'varchar',

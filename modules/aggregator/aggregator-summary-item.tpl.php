@@ -1,8 +1,8 @@
 <?php
-// $Id: aggregator-summary-item.tpl.php,v 1.1 2007/09/13 08:02:38 goba Exp $
+// $Id: aggregator-summary-item.tpl.php,v 1.2 2008/05/15 21:27:32 dries Exp $
 
 /**
- * @file aggregator-summary-item.tpl.php
+ * @file
  * Default theme implementation to present a linked feed item for summaries.
  *
  * Available variables:
@@ -16,4 +16,9 @@
  * @see template_preprocess_aggregator_summary_item()
  */
 ?>
-<a href="<?php print $feed_url; ?>"><?php print $feed_title; ?></a> <span class="age"><?php print $feed_age; ?></span><?php if ($source_url) : ?>, <span class="source"><a href="<?php print $source_url; ?>"><?php print $source_title; ?></a></span><?php endif; ?>
+<a href="<?php print $feed_url; ?>"><?php print $feed_title; ?></a>
+<span class="age"><?php print $feed_age; ?></span>
+
+<?php if ($source_url) : ?>,
+<span class="source"><a href="<?php print $source_url; ?>"><?php print $source_title; ?></a></span>
+<?php endif; ?>

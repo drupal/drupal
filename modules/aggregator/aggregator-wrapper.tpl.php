@@ -1,8 +1,8 @@
 <?php
-// $Id: aggregator-wrapper.tpl.php,v 1.1 2007/09/13 08:02:38 goba Exp $
+// $Id: aggregator-wrapper.tpl.php,v 1.2 2008/05/15 21:27:32 dries Exp $
 
 /**
- * @file comment-wrapper.tpl.php
+ * @file
  * Default theme implementation to wrap aggregator content.
  *
  * Available variables:
