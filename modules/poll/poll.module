@@ -227,11 +227,23 @@ function poll_form(&$node, $form_state) {
   );
 
   // Add the current choices to the form.
-  for ($delta = 0; $delta < $choice_count; $delta++) {
-    $text = isset($node->choice[$delta]['chtext']) ? $node->choice[$delta]['chtext'] : '';
-    $votes = isset($node->choice[$delta]['chvotes']) ? $node->choice[$delta]['chvotes'] : 0;
+  $delta = 0;
+  $weight = 0;
+  if (isset($node->choice)) {
+    $delta = count($node->choice);
+    $weight = -$delta;
+    foreach ($node->choice as $chid => $choice) {
+      $key = 'chid:'. $chid;
+      $form['choice_wrapper']['choice'][$key] = _poll_choice_form($key, $choice['chid'], $choice['chtext'], $choice['chvotes'], $choice['weight'], $choice_count);
+      $weight = ($choice['weight'] > $weight) ? $choice['weight'] : $weight;
+    }
+  }
 
-    $form['choice_wrapper']['choice'][$delta] = _poll_choice_form($delta, $text, $votes);
+  // Add initial or additional choices.
+  $existing_delta = $delta;
+  for ($delta; $delta < $choice_count; $delta++) {
+    $key = 'new:'. ($delta - $existing_delta);
+    $form['choice_wrapper']['choice'][$key] = _poll_choice_form($key, NULL, '', 0, $weight, $choice_count);
   }
 
   // We name our button 'poll_more' to avoid conflicts with other modules using
@@ -251,30 +263,30 @@ function poll_form(&$node, $form_state) {
   );
 
   // Poll attributes
-  $_duration = array(0 => t('Unlimited')) + drupal_map_assoc(array(86400, 172800, 345600, 604800, 1209600, 2419200, 4838400, 9676800, 31536000), "format_interval");
-  $_active = array(0 => t('Closed'), 1 => t('Active'));
+  $duration = array(0 => t('Unlimited')) + drupal_map_assoc(array(86400, 172800, 345600, 604800, 1209600, 2419200, 4838400, 9676800, 31536000), "format_interval");
+  $active = array(0 => t('Closed'), 1 => t('Active'));
 
-  if ($admin) {
-    $form['settings'] = array(
-      '#type' => 'fieldset',
-      '#collapsible' => TRUE,
-      '#title' => t('Poll settings'),
-      '#weight' => -3,
-    );
+  $form['settings'] = array(
+    '#type' => 'fieldset',
+    '#collapsible' => TRUE,
+    '#title' => t('Poll settings'),
+    '#weight' => -3,
+    '#access' => $admin,
+  );
 
-    $form['settings']['active'] = array(
-      '#type' => 'radios',
-      '#title' => t('Poll status'),
-      '#default_value' => isset($node->active) ? $node->active : 1,
-      '#options' => $_active,
-      '#description' => t('When a poll is closed, visitors can no longer vote for it.')
-    );
-  }
+  $form['settings']['active'] = array(
+    '#type' => 'radios',
+    '#title' => t('Poll status'),
+    '#default_value' => isset($node->active) ? $node->active : 1,
+    '#options' => $active,
+    '#description' => t('When a poll is closed, visitors can no longer vote for it.'),
+    '#access' => $admin,
+  );
   $form['settings']['runtime'] = array(
     '#type' => 'select',
     '#title' => t('Poll duration'),
     '#default_value' => isset($node->runtime) ? $node->runtime : 0,
-    '#options' => $_duration,
+    '#options' => $duration,
     '#description' => t('After this period, the poll will be closed automatically.'),
   );
 
@@ -296,7 +308,7 @@ function poll_more_choices_submit($form, &$form_state) {
   }
 }
 
-function _poll_choice_form($delta, $value = '', $votes = 0) {
+function _poll_choice_form($key, $chid = NULL, $value = '', $votes = 0, $weight = 0, $size = 10) {
   $admin = user_access('administer nodes');
 
   $form = array(
@@ -305,23 +317,33 @@ function _poll_choice_form($delta, $value = '', $votes = 0) {
 
   // We'll manually set the #parents property of these fields so that
   // their values appear in the $form_state['values']['choice'] array.
-  $form['chtext'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Choice @n', array('@n' => ($delta + 1))),
-    '#default_value' => $value,
-    '#parents' => array('choice', $delta, 'chtext'),
+  $form['chid'] = array(
+    '#type' => 'value',
+    '#value' => $chid,
+    '#parents' => array('choice', $key, 'chid'),
   );
 
-  if ($admin) {
-    $form['chvotes'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Votes for choice @n', array('@n' => ($delta + 1))),
-      '#default_value' => $votes,
-      '#size' => 5,
-      '#maxlength' => 7,
-      '#parents' => array('choice', $delta, 'chvotes'),
-    );
-  }
+  $form['chtext'] = array(
+    '#type' => 'textfield',
+    '#default_value' => $value,
+    '#parents' => array('choice', $key, 'chtext'),
+  );
+
+  $form['chvotes'] = array(
+    '#type' => 'textfield',
+    '#default_value' => $votes,
+    '#size' => 5,
+    '#maxlength' => 7,
+    '#parents' => array('choice', $key, 'chvotes'),
+    '#access' => user_access('administer nodes'),
+  );
+
+  $form['weight'] = array(
+    '#type' => 'weight',
+    '#default_value' => $weight,
+    '#delta' => $size,
+    '#parents' => array('choice', $key, 'weight'),
+  );
 
   return $form;
 }
@@ -330,20 +352,39 @@ function _poll_choice_form($delta, $value = '', $votes = 0) {
  * Menu callback for AHAH additions.
  */
 function poll_choice_js() {
+  // Add the new element to the stored form state. Without adding the element
+  // to the form, Drupal is not aware of this new elements existence and will
+  // not process it. We retreive the cached form, add the element, and resave.
+  $form_build_id = $_POST['form_build_id'];
+  $form_state = array('submitted' => FALSE);
+  $form = form_get_cache($form_build_id, $form_state);
+
   $delta = count($_POST['choice']);
+  $key = isset($form['#node']->choice) ? 'new:'. ($delta - count($form['#node']->choice)) : 'new:'. $delta;
+
+  // Match the new choice at the current greatest weight.
+  $weight = 0;
+  foreach ($_POST['choice'] as $choice) {
+    $weight = $choice['weight'] > $weight ? $choice['weight'] : $weight;
+  }
 
   // Build our new form element.
-  $form_element = _poll_choice_form($delta);
+  $form_element = _poll_choice_form($key, NULL, NULL, NULL, $weight, $delta + 1);
   drupal_alter('form', $form_element, array(), 'poll_choice_js');
 
-  // Build the new form.
-  $form_state = array('submitted' => FALSE);
-  $form_build_id = $_POST['form_build_id'];
-  // Add the new element to the stored form. Without adding the element to the
-  // form, Drupal is not aware of this new elements existence and will not
-  // process it. We retreive the cached form, add the element, and resave.
-  $form = form_get_cache($form_build_id, $form_state);
-  $form['choice_wrapper']['choice'][$delta] = $form_element;
+  // Dynamically increase the delta of the weight field for every field added.
+  foreach(element_children($form['choice_wrapper']['choice']) as $n) {
+    $form['choice_wrapper']['choice'][$n]['weight']['#delta'] = $delta + 1;
+  }
+
+  // Add the new poll choice.
+  $form['choice_wrapper']['choice'][$key] = $form_element;
+
+  // Reorder the form to use the same order as post.
+  $order = array_flip(array_keys($_POST['choice']));
+  $form['choice_wrapper']['choice'] = array_merge($order, $form['choice_wrapper']['choice']);
+
+  // Resave the cache.
   form_set_cache($form_build_id, $form, $form_state);
   $form += array(
     '#post' => $_POST,
@@ -356,8 +397,8 @@ function poll_choice_js() {
   // Render the new output.
   $choice_form = $form['choice_wrapper']['choice'];
   unset($choice_form['#prefix'], $choice_form['#suffix']); // Prevent duplicate wrappers.
-  $choice_form[$delta]['#attributes']['class'] = empty($choice_form[$delta]['#attributes']['class']) ? 'ahah-new-content' : $choice_form[$delta]['#attributes']['class'] . ' ahah-new-content';
-  $choice_form[$delta]['chvotes']['#value'] = 0;
+  $choice_form[$key]['#attributes']['class'] = empty($choice_form[$key]['#attributes']['class']) ? 'ahah-new-content' : $choice_form[$key]['#attributes']['class'] .' ahah-new-content';
+  $choice_form[$key]['chvotes']['#value'] = 0;
   $output = theme('status_messages') . drupal_render($choice_form);
 
   drupal_json(array('status' => TRUE, 'data' => $output));
@@ -405,22 +446,22 @@ function poll_load($node) {
   $poll = db_fetch_object(db_query("SELECT runtime, active FROM {poll} WHERE nid = %d", $node->nid));
 
   // Load the appropriate choices into the $poll object.
-  $result = db_query("SELECT chtext, chvotes, chorder FROM {poll_choices} WHERE nid = %d ORDER BY chorder", $node->nid);
+  $result = db_query("SELECT chid, chtext, chvotes, weight FROM {poll_choices} WHERE nid = %d ORDER BY weight", $node->nid);
   while ($choice = db_fetch_array($result)) {
-    $poll->choice[$choice['chorder']] = $choice;
+    $poll->choice[$choice['chid']] = $choice;
   }
 
   // Determine whether or not this user is allowed to vote.
   $poll->allowvotes = FALSE;
   if (user_access('vote on polls') && $poll->active) {
     if ($user->uid) {
-      $result = db_fetch_object(db_query('SELECT chorder FROM {poll_votes} WHERE nid = %d AND uid = %d', $node->nid, $user->uid));
+      $result = db_fetch_object(db_query('SELECT chid FROM {poll_votes} WHERE nid = %d AND uid = %d', $node->nid, $user->uid));
     }
     else {
-      $result = db_fetch_object(db_query("SELECT chorder FROM {poll_votes} WHERE nid = %d AND hostname = '%s'", $node->nid, ip_address()));
+      $result = db_fetch_object(db_query("SELECT chid FROM {poll_votes} WHERE nid = %d AND hostname = '%s'", $node->nid, ip_address()));
     }
-    if (isset($result->chorder)) {
-      $poll->vote = $result->chorder;
+    if (isset($result->chid)) {
+      $poll->vote = $result->chid;
     }
     else {
       $poll->vote = -1;
@@ -444,10 +485,9 @@ function poll_insert($node) {
 
   db_query("INSERT INTO {poll} (nid, runtime, active) VALUES (%d, %d, %d)", $node->nid, $node->runtime, $node->active);
 
-  $i = 0;
   foreach ($node->choice as $choice) {
     if ($choice['chtext'] != '') {
-      db_query("INSERT INTO {poll_choices} (nid, chtext, chvotes, chorder) VALUES (%d, '%s', %d, %d)", $node->nid, $choice['chtext'], $choice['chvotes'], $i++);
+      db_query("INSERT INTO {poll_choices} (nid, chtext, chvotes, weight) VALUES (%d, '%s', %d, %d)", $node->nid, $choice['chtext'], $choice['chvotes'], $choice['weight']);
     }
   }
 }
@@ -459,29 +499,19 @@ function poll_update($node) {
   // Update poll settings.
   db_query('UPDATE {poll} SET runtime = %d, active = %d WHERE nid = %d', $node->runtime, $node->active, $node->nid);
 
-  // Clean poll choices.
-  db_query('DELETE FROM {poll_choices} WHERE nid = %d', $node->nid);
-
-  // Poll choices come in the same order with the same numbers as they are in
-  // the database, but some might have an empty title, which signifies that
-  // they should be removed. We remove all votes to the removed options, so
-  // people who voted on them can vote again.
-  $new_chorder = 0;
-  foreach ($node->choice as $old_chorder => $choice) {
-    $chvotes = isset($choice['chvotes']) ? (int)$choice['chvotes'] : 0;
-    $chtext = $choice['chtext'];
-
-    if (!empty($chtext)) {
-      db_query("INSERT INTO {poll_choices} (nid, chtext, chvotes, chorder) VALUES (%d, '%s', %d, %d)", $node->nid, $chtext, $chvotes, $new_chorder);
-      if ($new_chorder != $old_chorder) {
-        // We can only remove items in the middle, not add, so
-        // new_chorder is always <= old_chorder, making this safe.
-        db_query("UPDATE {poll_votes} SET chorder = %d WHERE nid = %d AND chorder = %d", $new_chorder, $node->nid, $old_chorder);
+  // Poll choices with empty titles signifies removal. We remove all votes to
+  // the removed options, so people who voted on them can vote again.
+  foreach ($node->choice as $key => $choice) {
+    if (!empty($choice['chtext'])) {
+      if (isset($choice['chid'])) {
+        db_query("UPDATE {poll_choices} SET chtext = '%s', chvotes = %d, weight = %d WHERE chid = %d", $choice['chtext'], (int)$choice['chvotes'], $choice['weight'], $choice['chid']);
       }
-      $new_chorder++;
+      else {
+        db_query("INSERT INTO {poll_choices} (nid, chtext, chvotes, weight) VALUES (%d, '%s', %d, %d)", $node->nid, $choice['chtext'], (int)$choice['chvotes'], $choice['weight']);
+      }
     }
     else {
-      db_query("DELETE FROM {poll_votes} WHERE nid = %d AND chorder = %d", $node->nid, $old_chorder);
+      db_query("DELETE FROM {poll_votes} WHERE nid = %d AND chid = %d", $node->nid, $key);
     }
   }
 }
@@ -607,14 +637,14 @@ function poll_vote($form, &$form_state) {
 
   global $user;
   if ($user->uid) {
-    db_query('INSERT INTO {poll_votes} (nid, chorder, uid) VALUES (%d, %d, %d)', $node->nid, $choice, $user->uid);
+    db_query('INSERT INTO {poll_votes} (nid, chid, uid) VALUES (%d, %d, %d)', $node->nid, $choice, $user->uid);
   }
   else {
-    db_query("INSERT INTO {poll_votes} (nid, chorder, hostname) VALUES (%d, %d, '%s')", $node->nid, $choice, ip_address());
+    db_query("INSERT INTO {poll_votes} (nid, chid, hostname) VALUES (%d, %d, '%s')", $node->nid, $choice, ip_address());
   }
 
   // Add one to the votes.
-  db_query("UPDATE {poll_choices} SET chvotes = chvotes + 1 WHERE nid = %d AND chorder = %d", $node->nid, $choice);
+  db_query("UPDATE {poll_choices} SET chvotes = chvotes + 1 WHERE chid = %d", $choice);
 
   cache_clear_all();
   drupal_set_message(t('Your vote was recorded.'));
@@ -672,35 +702,40 @@ function poll_view_results(&$node, $teaser, $page, $block) {
  * @ingroup themeable
  */
 function theme_poll_choices($form) {
-  // Change the button title to reflect the behavior when using JavaScript.
-  drupal_add_js('if (Drupal.jsEnabled) { $(document).ready(function() { $("#edit-poll-more").val("' . t('Add another choice') . '"); }); }', 'inline');
+  drupal_add_tabledrag('poll-choice-table', 'order', 'sibling', 'poll-weight');
 
+  $delta = 0;
   $rows = array();
   $headers = array(
+    '',
     t('Choice'),
     t('Vote count'),
+    t('Weight'),
   );
 
   foreach (element_children($form) as $key) {
-    // No need to print the field title every time.
-    unset($form[$key]['chtext']['#title'], $form[$key]['chvotes']['#title']);
+    $delta++;
+    // Set special classes for drag and drop updating.
+    $form[$key]['weight']['#attributes']['class'] = 'poll-weight';
 
     // Build the table row.
     $row = array(
       'data' => array(
-        array('data' => drupal_render($form[$key]['chtext']), 'class' => 'poll-chtext'),
-        array('data' => drupal_render($form[$key]['chvotes']), 'class' => 'poll-chvotes'),
+        array('class' => 'choice-flag'),
+        drupal_render($form[$key]['chtext']),
+        drupal_render($form[$key]['chvotes']),
+        drupal_render($form[$key]['weight']),
       ),
+      'class' => 'draggable',
     );
 
-    // Add additional attributes to the row, such as a class for this row.
-    if (isset($form[$key]['#attributes'])) {
-      $row = array_merge($row, $form[$key]['#attributes']);
-    }
+    // Add any additional classes set on the row.
+    $row['class'] .= isset($form[$key]['#attributes']['class']) ? ' '. $form[$key]['#attributes']['class'] : '';
+
     $rows[] = $row;
   }
 
-  $output = theme('table', $headers, $rows);
+  $output = theme('table', $headers, $rows, array('id' => 'poll-choice-table'));
   $output .= drupal_render($form);
   return $output;
 }
@@ -784,7 +819,7 @@ function poll_cancel($form, &$form_state) {
   }
 
   // Subtract from the votes.
-  db_query("UPDATE {poll_choices} SET chvotes = chvotes - 1 WHERE nid = %d AND chorder = %d", $node->nid, $node->vote);
+  db_query("UPDATE {poll_choices} SET chvotes = chvotes - 1 WHERE chid = %d", $node->vote);
 }
 
 /**

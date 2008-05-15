@@ -33,13 +33,14 @@ function poll_votes($node) {
 
   $header[] = array('data' => t('Visitor'), 'field' => 'u.name');
   $header[] = array('data' => t('Vote'), 'field' => 'pv.chorder');
+  $header[] = array('data' => t('Vote'), 'field' => 'pc.weight');
 
-  $result = pager_query("SELECT pv.chorder, pv.uid, pv.hostname, u.name FROM {poll_votes} pv LEFT JOIN {users} u ON pv.uid = u.uid WHERE pv.nid = %d" . tablesort_sql($header), 20, 0, NULL, $node->nid);
+  $result = pager_query("SELECT pv.chid, pv.uid, pv.hostname, u.name FROM {poll_votes} pv INNER JOIN {poll_choices} pc ON pv.chid = pc.chid LEFT JOIN {users} u ON pv.uid = u.uid WHERE pv.nid = %d". tablesort_sql($header), 20, 0, NULL, $node->nid);
   $rows = array();
   while ($vote = db_fetch_object($result)) {
     $rows[] = array(
       $vote->name ? theme('username', $vote) : check_plain($vote->hostname),
-      check_plain($node->choice[$vote->chorder]['chtext']));
+      check_plain($node->choice[$vote->chid]['chtext']));
   }
   $output .= theme('table', $header, $rows);
   $output .= theme('pager', NULL, 20, 0);

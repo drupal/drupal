@@ -77,8 +77,9 @@ function poll_schema() {
         'default' => 0,
         'description' => t('The total number of votes this choice has received by all users.'),
       ),
-      'chorder' => array(
+      'weight' => array(
         'type' => 'int',
+        'size' => 'tiny',
         'not null' => TRUE,
         'default' => 0,
         'description' => t('The sort order of this choice among all choices for the same node.'),
@@ -93,6 +94,12 @@ function poll_schema() {
   $schema['poll_votes'] = array(
     'description' => t('Stores per-{users} votes for each {poll}.'),
     'fields' => array(
+      'chid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => t("The {users}'s vote for this poll."),
+      ),
       'nid' => array(
         'type' => 'int',
         'unsigned' => TRUE,
@@ -106,12 +113,6 @@ function poll_schema() {
         'default' => 0,
         'description' => t('The {users}.uid this vote is from unless the voter was anonymous.'),
       ),
-      'chorder' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => -1,
-        'description' => t("The {users}'s vote for this poll."),
-      ),
       'hostname' => array(
         'type' => 'varchar',
         'length' => 128,
@@ -122,6 +123,7 @@ function poll_schema() {
     ),
     'primary key' => array('nid', 'uid', 'hostname'),
     'indexes' => array(
+      'chid'     => array('chid'),
       'hostname' => array('hostname'),
       'uid' => array('uid'),
     ),

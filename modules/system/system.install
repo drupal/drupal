@@ -2997,6 +2997,27 @@ function system_update_7007() {
 
 
 /**
+ * Use the poll_choice primary key to record votes in poll_votes rather than
+ * the choice order. Rename chorder to weight.
+ */
+function system_update_7008() {
+  $ret = array();
+  if (db_table_exists('poll_votes')) {
+    // Add chid column and convert existing votes.
+    db_add_field($ret, 'poll_votes', 'chid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0));
+    db_add_index($ret, 'poll_votes', 'chid', array('chid'));
+    $ret[] = update_sql("UPDATE {poll_votes} v SET chid = (SELECT chid FROM {poll_choices} c WHERE v.chorder = c.chorder AND v.nid = c.nid)");
+    // Remove old chorder column.
+    db_drop_field($ret, 'poll_votes', 'chorder');
+  }
+  if (db_table_exists('poll_choices')) {
+    // Change the chorder column to weight in poll_choices.
+    db_change_field($ret, 'poll_choices', 'chorder', 'weight', array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny'));
+  }
+  return $ret;
+}
+
+/**
  * @} End of "defgroup updates-6.x-to-7.x"
  * The next series of updates should start at 8000.
  */
