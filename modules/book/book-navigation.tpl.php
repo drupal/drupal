@@ -2,7 +2,7 @@
 // $Id$
 
 /**
- * @file book-navigation.tpl.php
+ * @file
  * Default theme implementation to navigate books. Presented under nodes that
  * are a part of book outlines.
  *

@@ -46,6 +46,7 @@ function book_admin_settings() {
   );
   $form['array_filter'] = array('#type' => 'value', '#value' => TRUE);
   $form['#validate'][] = 'book_admin_settings_validate';
+
   return system_settings_form($form);
 }
 
@@ -77,6 +78,7 @@ function book_admin_edit($form_state, $node) {
     '#type' => 'submit',
     '#value' => t('Save book pages'),
   );
+
   return $form;
 }
 
@@ -139,6 +141,7 @@ function _book_admin_table($node) {
   if ($tree['below']) {
     _book_admin_table_tree($tree['below'], $form);
   }
+
   return $form;
 }
 
@@ -246,5 +249,6 @@ function _book_admin_compare($a, $b) {
   if ($weight) {
     return $weight;
   }
+
   return strncmp($a['link']['title'], $b['link']['title']);
 }

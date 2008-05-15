@@ -40,7 +40,6 @@ function book_render() {
  *   in a format determined by the $type parameter.
  */
 function book_export($type, $nid) {
-
   $type = drupal_strtolower($type);
 
   $export_function = 'book_export_' . $type;
@@ -79,6 +78,7 @@ function book_export_html($nid) {
       $tree = book_menu_subtree_data($node->book);
       $contents = book_export_traverse($tree, 'book_node_export');
     }
+
     return theme('book_export_html', $node->title, $contents, $node->book['depth']);
   }
   else {
@@ -103,7 +103,6 @@ function book_outline($node) {
  * @ingroup forms
  */
 function book_outline_form(&$form_state, $node) {
-
   if (!isset($node->book)) {
     // The node is not part of any book yet - set default options.
     $node->book = _book_link_defaults($node->nid);
@@ -111,6 +110,7 @@ function book_outline_form(&$form_state, $node) {
   else {
     $node->book['original_bid'] = $node->book['bid'];
   }
+
   // Find the depth limit for the parent select.
   if (!isset($node->book['parent_depth_limit'])) {
     $node->book['parent_depth_limit'] = _book_parent_depth_limit($node->book);
@@ -158,6 +158,7 @@ function book_outline_form_submit($form, &$form_state) {
   $book_link = $form_state['values']['book'];
   if (!$book_link['bid']) {
     drupal_set_message(t('No changes were made'));
+
     return;
   }
 
@@ -244,7 +245,6 @@ function book_form_update() {
       // Get the new options and update the cache.
       $form['book']['plid'] = _book_parent_select($book_link);
       cache_set($cid, $form, 'cache_form', $cache->expire);
-
       // Build and render the new select element, then return it in JSON format.
       $form_state = array();
       $form['#post'] = array();

@@ -23,7 +23,7 @@ function book_uninstall() {
 }
 
 function _book_install_type_create() {
-  // Create an additional node type
+  // Create an additional node type.
   $book_node_type = array(
     'type' => 'book',
     'name' => t('Book page'),
@@ -149,7 +149,7 @@ function book_update_6000() {
   }
   elseif ($_SESSION['book_update_6000_orphans']) {
     // Do the first batched part of the update - collect orphans.
-    $update_count = 400; // Update this many at a time
+    $update_count = 400; // Update this many at a time.
 
     $result = db_query_range("SELECT * FROM {book_temp}", $_SESSION['book_update_6000_orphans']['from'], $update_count);
     $has_rows = FALSE;
@@ -175,7 +175,6 @@ function book_update_6000() {
       $_SESSION['book_update_6000_orphans']['from'] += $update_count;
     }
     else {
-      // Done with this part
       if (!empty($_SESSION['book_update_6000_orphans']['book'])) {
         // The orphans' parent is added last, so it will be processed first.
         $_SESSION['book_update_6000'][] = $_SESSION['book_update_6000_orphans']['book'];
@@ -183,17 +182,18 @@ function book_update_6000() {
       $_SESSION['book_update_6000_orphans'] = FALSE;
     }
     $ret['#finished'] = FALSE;
+
     return $ret;
   }
   else {
-    // Do the next batched part of the update
+    // Run the next batched part of the update.
     $update_count = 100; // Update this many at a time
 
     while ($update_count && $_SESSION['book_update_6000']) {
       // Get the last node off the stack.
       $book = array_pop($_SESSION['book_update_6000']);
 
-      // Add all of this node's children to the stack
+      // Add all of this node's children to the stack.
       $result = db_query("SELECT * FROM {book_temp} WHERE parent = %d", $book['nid']);
       while ($a = db_fetch_array($result)) {
         $_SESSION['book_update_6000'][] = $a;
@@ -205,7 +205,7 @@ function book_update_6000() {
         $book = array_merge($book, $parent);
       }
       else {
-        // There is not a parent - this is a new book.
+        // There is no parent - this is a new book.
         $book['plid'] = 0;
         $book['bid'] = $book['nid'];
       }
@@ -286,5 +286,3 @@ function book_schema() {
 
   return $schema;
 }
-
-

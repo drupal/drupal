@@ -68,11 +68,16 @@ class BookTestCase extends DrupalWebTestCase {
   /**
    * Check the outline of sub-pages; previous, up, and next; and printer friendly version.
    *
-   * @param Node $node Node to check.
-   * @param array $nodes Nodes that should be in outline.
-   * @param Node $previous Previous link node.
-   * @param Node $up Up link node.
-   * @param Node $next Next link node.
+   * @param Node $node
+   *   Node to check.
+   * @param array $nodes
+   *   Nodes that should be in outline.
+   * @param Node $previous
+   *   Previous link node.
+   * @param Node $up
+   *   Up link node.
+   * @param Node $next
+   *   Next link node.
    */
   function checkBookNode($node, $nodes, $previous = false, $up = false, $next = false) {
     static $number = 0;
@@ -90,9 +95,11 @@ class BookTestCase extends DrupalWebTestCase {
     if ($previous) {
       $this->assertRaw(l('‹ ' . $previous->title, 'node/' . $previous->nid, array('attributes' => array('class' => 'page-previous', 'title' => t('Go to previous page')))), t('Prevoius page link found.'));
     }
+
     if ($up) {
       $this->assertRaw(l('up', 'node/' . $up->nid, array('attributes' => array('class' => 'page-up', 'title' => t('Go to parent page')))), t('Up page link found.'));
     }
+
     if ($next) {
       $this->assertRaw(l($next->title . ' ›', 'node/' . $next->nid, array('attributes' => array('class' => 'page-next', 'title' => t('Go to next page')))), t('Next page link found.'));
     }

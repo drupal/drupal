@@ -2,7 +2,7 @@
 // $Id$
 
 /**
- * @file book-node-export-html.tpl.php
+ * @file
  * Default theme implementation for rendering a single node in a printer
  * friendly outline.
  *
