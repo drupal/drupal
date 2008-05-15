@@ -1,4 +1,4 @@
-// $Id: MAINTAINERS.txt,v 1.20 2008/03/13 20:02:18 dries Exp $
+// $Id: MAINTAINERS.txt,v 1.21 2008/05/15 22:13:28 dries Exp $
 
 List of maintainers
 --------------------------------------------------------------------------------
@@ -14,7 +14,6 @@ LEGEND
                         do much other than throw the odd patch in.
       "orphan"        : no current maintainer, but maybe you could take
                         the role as you write new code?
-- W: website with status or information
 
 --------------------------------------------------------------------------------
 
