@@ -2,7 +2,7 @@
 // $Id$
 
 /**
- * @file aggregator-item.tpl.php
+ * @file
  * Default theme implementation to format an individual feed item for display
  * on the aggregator page.
  *

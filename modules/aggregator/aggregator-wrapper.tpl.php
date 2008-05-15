@@ -2,7 +2,7 @@
 // $Id$
 
 /**
- * @file comment-wrapper.tpl.php
+ * @file
  * Default theme implementation to wrap aggregator content.
  *
  * Available variables:

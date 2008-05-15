@@ -2,7 +2,7 @@
 // $Id$
 
 /**
- * @file aggregator-summary-items.tpl.php
+ * @file
  * Default theme implementation to present feeds as list items.
  *
  * Each iteration generates a single feed source or category.

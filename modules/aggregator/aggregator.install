@@ -230,7 +230,7 @@ function aggregator_schema() {
       'timestamp' => array(
         'type' => 'int',
         'not null' => FALSE,
-        'description' => t('Post date of feed item, as a Unix timestamp.'),
+        'description' => t('Posted date of the feed item, as a Unix timestamp.'),
       ),
       'guid' => array(
         'type' => 'varchar',

@@ -60,18 +60,18 @@ class AggregatorTestCase extends DrupalWebTestCase {
    * @param object $feed Feed object representing the feed.
    */
   function updateFeedItems(&$feed) {
-    // First, let's ensure we could get to the rss xml
+    // First, let's ensure we can get to the rss xml.
     $this->drupalGet('rss.xml');
     $this->assertResponse(200, t('rss.xml is reachable.'));
 
-    // our tests are based off of rss.xml, so let's find out how many elements should be related
+    // Our tests are based off of rss.xml, so let's find out how many elements should be related.
     $feed_count = db_result(db_query_range(db_rewrite_sql('SELECT COUNT(*) FROM {node} n WHERE n.promote = 1 AND n.status = 1'), 0, variable_get('feed_default_items', 10)));
     $feed_count = $feed_count > 10 ? 10 : $feed_count;
 
-    // refresh the feed (simulated link click)
+    // Refresh the feed (simulated link click).
     $this->drupalGet('admin/content/aggregator/update/'. $feed->fid);
 
-    // ensure we have the right number of items
+    // Ensure we have the right number of items.
     $result = db_query('SELECT iid FROM {aggregator_item} WHERE fid = %d', $feed->fid);
     $items = array();
     $feed->items = array();

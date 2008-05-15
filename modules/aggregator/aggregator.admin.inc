@@ -80,7 +80,7 @@ function aggregator_form_feed(&$form_state, $edit = array('refresh' => 900, 'tit
     '#description' => t('The length of time between feed updates. (Requires a correctly configured <a href="@cron">cron maintenance task</a>.)', array('@cron' => url('admin/reports/status'))),
   );
 
-  // Handling of categories:
+  // Handling of categories.
   $options = array();
   $values = array();
   $categories = db_query('SELECT c.cid, c.title, f.fid FROM {aggregator_category} c LEFT JOIN {aggregator_category_feed} f ON c.cid = f.cid AND f.fid = %d ORDER BY title', $edit['fid']);
@@ -89,25 +89,35 @@ function aggregator_form_feed(&$form_state, $edit = array('refresh' => 900, 'tit
     if ($category->fid) $values[] = $category->cid;
   }
   if ($options) {
-    $form['category'] = array('#type' => 'checkboxes',
+    $form['category'] = array(
+      '#type' => 'checkboxes',
       '#title' => t('Categorize news items'),
       '#default_value' => $values,
       '#options' => $options,
       '#description' => t('New feed items are automatically filed in the checked categories.'),
     );
   }
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Save'));
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save'),
+  );
 
   if ($edit['fid']) {
-    $form['delete'] = array('#type' => 'submit', '#value' => t('Delete'));
-    $form['fid'] = array('#type' => 'hidden', '#value' => $edit['fid']);
+    $form['delete'] = array(
+      '#type' => 'submit',
+      '#value' => t('Delete'),
+    );
+    $form['fid'] = array(
+      '#type' => 'hidden',
+      '#value' => $edit['fid'],
+    );
   }
 
   return $form;
 }
 
 /**
- * Validate aggregator_form_feed form submissions.
+ * Validate aggregator_form_feed() form submissions.
  */
 function aggregator_form_feed_validate($form, &$form_state) {
   if ($form_state['values']['op'] == t('Save')) {
@@ -134,14 +144,14 @@ function aggregator_form_feed_validate($form, &$form_state) {
 }
 
 /**
- * Process aggregator_form_feed form submissions.
+ * Process aggregator_form_feed() form submissions.
  *
  * @todo Add delete confirmation dialog.
  */
 function aggregator_form_feed_submit($form, &$form_state) {
   if ($form_state['values']['op'] == t('Delete')) {
     $title = $form_state['values']['title'];
-    // Unset the title:
+    // Unset the title.
     unset($form_state['values']['title']);
   }
   aggregator_save_feed($form_state['values']);
@@ -227,25 +237,25 @@ function aggregator_admin_settings() {
   $form['aggregator_allowed_html_tags'] = array(
     '#type' => 'textfield', '#title' => t('Allowed HTML tags'), '#size' => 80, '#maxlength' => 255,
     '#default_value' => variable_get('aggregator_allowed_html_tags', '<a> <b> <br> <dd> <dl> <dt> <em> <i> <li> <ol> <p> <strong> <u> <ul>'),
-    '#description' => t('A space-separated list of HTML tags allowed in the content of feed items. (Tags in this list are not removed by Drupal.)')
+    '#description' => t('A space-separated list of HTML tags allowed in the content of feed items. (Tags in this list are not removed by Drupal.)'),
   );
 
   $form['aggregator_summary_items'] = array(
     '#type' => 'select', '#title' => t('Items shown in sources and categories pages') ,
     '#default_value' => variable_get('aggregator_summary_items', 3), '#options' => $items,
-    '#description' => t('Number of feed items displayed in feed and category summary pages.')
+    '#description' => t('Number of feed items displayed in feed and category summary pages.'),
   );
 
   $form['aggregator_clear'] = array(
     '#type' => 'select', '#title' => t('Discard items older than'),
     '#default_value' => variable_get('aggregator_clear', 9676800), '#options' => $period,
-    '#description' => t('The length of time to retain feed items before discarding. (Requires a correctly configured <a href="@cron">cron maintenance task</a>.)', array('@cron' => url('admin/reports/status')))
+    '#description' => t('The length of time to retain feed items before discarding. (Requires a correctly configured <a href="@cron">cron maintenance task</a>.)', array('@cron' => url('admin/reports/status'))),
   );
 
   $form['aggregator_category_selector'] = array(
     '#type' => 'radios', '#title' => t('Category selection type'), '#default_value' => variable_get('aggregator_category_selector', 'checkboxes'),
     '#options' => array('checkboxes' => t('checkboxes'), 'select' => t('multiple selector')),
-    '#description' => t('The type of category selection widget displayed on categorization pages. (For a small number of categories, checkboxes are easier to use, while a multiple selector work well with large numbers of categories.)')
+    '#description' => t('The type of category selection widget displayed on categorization pages. (For a small number of categories, checkboxes are easier to use, while a multiple selector work well with large numbers of categories.)'),
   );
 
   return system_settings_form($form);
@@ -305,7 +315,7 @@ function aggregator_form_category_validate($form, &$form_state) {
 function aggregator_form_category_submit($form, &$form_state) {
   if ($form_state['values']['op'] == t('Delete')) {
     $title = $form_state['values']['title'];
-    // Unset the title:
+    // Unset the title.
     unset($form_state['values']['title']);
   }
   aggregator_save_category($form_state['values']);

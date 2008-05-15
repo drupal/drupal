@@ -30,7 +30,7 @@ function aggregator_page_last() {
  * @param $arg2
  *   If there are two arguments then $arg2 is feed.
  * @return
- *   The items HTML.
+ *   The item's HTML.
  */
 function aggregator_page_source($arg1, $arg2 = NULL) {
   // If there are two arguments then this function is the categorize form, and
@@ -95,6 +95,7 @@ function aggregator_feed_items_load($sql) {
       $items[$item->iid] = $item;
     }
   }
+
   return $items;
 }
 
@@ -125,6 +126,7 @@ function _aggregator_page_list($items, $op, $feed_source = '') {
     }
     $output = theme('aggregator_wrapper', $output);
   }
+
   return $output;
 }
 
@@ -145,11 +147,15 @@ function aggregator_categorize_items($items, $feed_source = '') {
   $form['#submit'][] = 'aggregator_categorize_items_submit';
   $form['#validate'][] = 'aggregator_categorize_items_validate';
   $form['#theme'] = 'aggregator_categorize_items';
-  $form['feed_source'] = array('#value' => $feed_source);
+  $form['feed_source'] = array(
+    '#value' => $feed_source,
+  );
   $categories = array();
   $done = FALSE;
   $form['items'] = array();
-  $form['categories'] = array('#tree' => TRUE);
+  $form['categories'] = array(
+    '#tree' => TRUE,
+  );
   foreach ($items as $item) {
     $form['items'][$item->iid] = array('#value' => theme('aggregator_item', $item));
     $form['categories'][$item->iid] = array();
@@ -178,7 +184,7 @@ function aggregator_categorize_items($items, $feed_source = '') {
 }
 
 /**
- * Validate aggregator_categorize_items form submissions.
+ * Validate aggregator_categorize_items() form submissions.
  */
 function aggregator_categorize_items_validate($form, &$form_state) {
   if (!user_access('administer news feeds')) {
@@ -187,7 +193,7 @@ function aggregator_categorize_items_validate($form, &$form_state) {
 }
 
 /**
- * Process aggregator_categorize_items form submissions.
+ * Process aggregator_categorize_items() form submissions.
  */
 function aggregator_categorize_items_submit($form, &$form_state) {
   if (!empty($form_state['values']['categories'])) {
@@ -228,6 +234,7 @@ function theme_aggregator_categorize_items($form) {
   $output .= theme('table', array('', t('Categorize')), $rows);
   $output .= drupal_render($form['submit']);
   $output .= drupal_render($form);
+
   return theme('aggregator_wrapper', $output);
 }
 
@@ -322,13 +329,13 @@ function aggregator_page_categories() {
  */
 function aggregator_page_rss() {
   $result = NULL;
-  // arg(2) is the passed cid, only select for that category
+  // arg(2) is the passed cid, only select for that category.
   if (arg(2)) {
     $category = db_fetch_object(db_query('SELECT cid, title FROM {aggregator_category} WHERE cid = %d', arg(2)));
     $sql = 'SELECT i.*, f.title AS ftitle, f.link AS flink FROM {aggregator_category_item} c LEFT JOIN {aggregator_item} i ON c.iid = i.iid LEFT JOIN {aggregator_feed} f ON i.fid = f.fid WHERE cid = %d ORDER BY timestamp DESC, i.iid DESC';
     $result = db_query_range($sql, $category->cid, 0, variable_get('feed_default_items', 10));
   }
-  // or, get the default aggregator items
+  // Or, get the default aggregator items.
   else {
     $category = NULL;
     $sql = 'SELECT i.*, f.title AS ftitle, f.link AS flink FROM {aggregator_item} i INNER JOIN {aggregator_feed} f ON i.fid = f.fid ORDER BY i.timestamp DESC, i.iid DESC';
@@ -339,6 +346,7 @@ function aggregator_page_rss() {
   while ($item = db_fetch_object($result)) {
     $feeds[] = $item;
   }
+
   return theme('aggregator_page_rss', $feeds, $category);
 }
 
@@ -376,7 +384,7 @@ function theme_aggregator_page_rss($feeds, $category = NULL) {
   $url = url((isset($category) ? 'aggregator/categories/' . $category->cid : 'aggregator'), array('absolute' => TRUE));
   $description = isset($category) ? t('@site_name - aggregated feeds in category @title', array('@site_name' => $site_name, '@title' => $category->title)) : t('@site_name - aggregated feeds', array('@site_name' => $site_name));
 
-  $output = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
+  $output  = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
   $output .= "<rss version=\"2.0\">\n";
   $output .= format_rss_channel(t('@site_name aggregator', array('@site_name' => $site_name)), $url, $description, $items);
   $output .= "</rss>\n";
@@ -416,10 +424,9 @@ function aggregator_page_opml($cid = NULL) {
  * @ingroup themeable
  */
 function theme_aggregator_page_opml($feeds) {
-
   drupal_set_header('Content-Type: text/xml; charset=utf-8');
 
-  $output = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
+  $output  = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
   $output .= "<opml version=\"1.1\">\n";
   $output .= "<head>\n";
   $output .= '<title>' . check_plain(variable_get('site_name', 'Drupal')) . "</title>\n";
