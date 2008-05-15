@@ -1,8 +1,8 @@
 <?php
-// $Id: book-export-html.tpl.php,v 1.1 2007/11/04 14:29:09 goba Exp $
+// $Id: book-export-html.tpl.php,v 1.2 2008/05/15 21:19:24 dries Exp $
 
 /**
- * @file book-export-html.tpl.php
+ * @file
  * Default theme implementation for printed version of book outline.
  *
  * Available variables:
@@ -45,9 +45,7 @@
       <div class="section-<?php print $i; ?>">
       <?php $div_close .= '</div>'; ?>
     <?php endfor; ?>
-
     <?php print $contents; ?>
     <?php print $div_close; ?>
-
   </body>
 </html>

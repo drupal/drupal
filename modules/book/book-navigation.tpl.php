@@ -1,8 +1,8 @@
 <?php
-// $Id: book-navigation.tpl.php,v 1.1 2007/11/04 14:29:09 goba Exp $
+// $Id: book-navigation.tpl.php,v 1.2 2008/05/15 21:19:24 dries Exp $
 
 /**
- * @file book-navigation.tpl.php
+ * @file
  * Default theme implementation to navigate books. Presented under nodes that
  * are a part of book outlines.
  *
