@@ -1,4 +1,4 @@
-// $Id: block.js,v 1.2 2007/12/16 10:36:53 goba Exp $
+// $Id: block.js,v 1.3 2008/05/15 21:30:02 dries Exp $
 
 /**
  * Move a block in the blocks table from one region to another via select list.
@@ -82,7 +82,7 @@ Drupal.behaviors.blockDrag = function(context) {
           rowObject.swap('after', this);
         }
       }
-      // This region has become empty
+      // This region has become empty.
       if ($(this).next('tr').is(':not(.draggable)') || $(this).next('tr').size() == 0) {
         $(this).removeClass('region-populated').addClass('region-empty');
       }

@@ -1,8 +1,8 @@
 <?php
-// $Id: block-admin-display-form.tpl.php,v 1.5 2008/04/16 11:35:51 dries Exp $
+// $Id: block-admin-display-form.tpl.php,v 1.6 2008/05/15 21:30:02 dries Exp $
 
 /**
- * @file block-admin-display-form.tpl.php
+ * @file
  * Default theme implementation to configure blocks.
  *
  * Available variables:
