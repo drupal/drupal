@@ -349,6 +349,9 @@ function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
       elseif (isset($cache[$hook]['preprocess functions']) && is_array($cache[$hook]['preprocess functions'])) {
         $info['preprocess functions'] = array_merge($cache[$hook]['preprocess functions'], $info['preprocess functions']);
       }
+      elseif (isset($info['original hook']) && isset($cache[$info['original hook']]['preprocess functions']) && is_array($cache[$info['original hook']]['preprocess functions'])) {
+        $info['preprocess functions'] = array_merge($cache[$info['original hook']]['preprocess functions'], $info['preprocess functions']);
+      }
       $result[$hook]['preprocess functions'] = $info['preprocess functions'];
     }
 
@@ -731,7 +734,6 @@ function drupal_find_theme_functions($cache, $prefixes) {
               'function' => $match,
               'arguments' => $info['arguments'],
               'original hook' => $hook,
-              'preprocess functions' => $info['preprocess functions'],
             );
           }
         }
@@ -825,7 +827,6 @@ function drupal_find_theme_templates($cache, $extension, $path) {
             'path' => dirname($files[$match]->filename),
             'arguments' => $info['arguments'],
             'original hook' => $hook,
-            'preprocess functions' => $info['preprocess functions'],
           );
         }
       }
