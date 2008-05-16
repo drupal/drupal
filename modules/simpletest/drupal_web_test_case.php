@@ -190,8 +190,7 @@ class DrupalWebTestCase extends UnitTestCase {
    */
   function drupalModuleEnable($name) {
     if (module_exists($name)) {
-      $this->pass(t('@name module already enabled', array('@name' => $name)), t('Module'));
-      return TRUE;
+      return $this->pass(t('@name module already enabled', array('@name' => $name)), t('Module'));
     }
     $this->_modules[$name] = $name;
     $form_state['values'] = array('status' => $this->_modules, 'op' => t('Save configuration'));
@@ -204,10 +203,7 @@ class DrupalWebTestCase extends UnitTestCase {
     cache_clear_all('schema', 'cache');
     module_rebuild_cache();
 
-    if (module_exists($name)) {
-      $this->pass(t('@name enabled.', array('@name' =>  $name)), t('Module'));
-      return TRUE;
-    }
+    return $this->assertTrue(module_exists($name), t('@name enabled.', array('@name' =>  $name)), t('Module'));
   }
 
   /**
@@ -219,8 +215,7 @@ class DrupalWebTestCase extends UnitTestCase {
    */
   function drupalModuleDisable($name) {
     if (!module_exists($name)) {
-      $this->pass(t('@name module already disabled', array('@name' => $name)), t('Module'));
-      return TRUE;
+      return $this->pass(t('@name module already disabled', array('@name' => $name)), t('Module'));
     }
     unset($this->_modules[$key]);
     $form_state['values'] = array('status' => $this->_modules, 'op' => t('Save configuration'));
@@ -233,10 +228,7 @@ class DrupalWebTestCase extends UnitTestCase {
     cache_clear_all('schema', 'cache');
     module_rebuild_cache();
 
-    if (!module_exists($name)) {
-      $this->pass(t('@name disabled.', array('@name' =>  $name)), t('Module'));
-      return TRUE;
-    }
+    return $this->assertTrue(!module_exists($name), t('@name disabled.', array('@name' =>  $name)), t('Module'));
   }
 
   /**
