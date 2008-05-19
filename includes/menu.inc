@@ -1658,7 +1658,6 @@ function menu_router_build($reset = FALSE) {
       $menu = $cache->data;
     }
     else {
-      db_query('DELETE FROM {menu_router}');
       // We need to manually call each module so that we can know which module
       // a given item came from.
       $callbacks = array();
@@ -1674,7 +1673,6 @@ function menu_router_build($reset = FALSE) {
       // Alter the menu as defined in modules, keys are like user/%user.
       drupal_alter('menu', $callbacks);
       $menu = _menu_router_build($callbacks);
-      cache_set('router:', $menu, 'cache_menu');
     }
   }
   return $menu;
@@ -2254,6 +2252,13 @@ function _menu_router_build($callbacks) {
   }
   array_multisort($sort, SORT_NUMERIC, $menu);
 
+  if (!$menu) {
+    // We must have a serious error - there is no data to save.
+    watchdog('php', 'Menu router rebuild failed - some paths may not work correctly.', array(), WATCHDOG_ERROR);
+    return array();
+  }
+  // Delete the existing router since we have some data to replace it.
+  db_query('DELETE FROM {menu_router}');
   // Apply inheritance rules.
   foreach ($menu as $path => $v) {
     $item = &$menu[$path];
@@ -2356,6 +2361,7 @@ function _menu_router_build($callbacks) {
   $masks = array_keys($masks);
   rsort($masks);
   variable_set('menu_masks', $masks);
+  cache_set('router:', $menu, 'cache_menu');
   return $menu;
 }
 
