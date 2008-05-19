@@ -1,4 +1,4 @@
-// $Id: drupal.js,v 1.43 2008/03/23 14:55:26 dries Exp $
+// $Id: drupal.js,v 1.44 2008/05/19 19:42:18 dries Exp $
 
 var Drupal = Drupal || { 'settings': {}, 'behaviors': {}, 'themes': {}, 'locale': {} };
 
@@ -36,12 +36,10 @@ Drupal.jsEnabled = document.getElementsByTagName && document.createElement && do
  */
 Drupal.attachBehaviors = function(context) {
   context = context || document;
-  if (Drupal.jsEnabled) {
-    // Execute all of them.
-    jQuery.each(Drupal.behaviors, function() {
-      this(context);
-    });
-  }
+  // Execute all of them.
+  jQuery.each(Drupal.behaviors, function() {
+    this(context);
+  });
 };
 
 /**
