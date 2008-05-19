@@ -1,5 +1,5 @@
 <?php
-// $Id: mail.inc,v 1.13 2008/05/06 12:18:45 dries Exp $
+// $Id: mail.inc,v 1.14 2008/05/19 19:25:24 dries Exp $
 
 /**
  * Compose and optionally send an e-mail message.
@@ -272,8 +272,8 @@ function drupal_html_to_text($string, $allowed_tags = NULL) {
   $string = _filter_htmlcorrector(filter_xss($string, $allowed_tags));
 
   // Apply inline styles.
-  $string = preg_replace('!</?(em|i)>!i', '/', $string);
-  $string = preg_replace('!</?(strong|b)>!i', '*', $string);
+  $string = preg_replace('!</?(em|i)((?> +)[^>]*)?>!i', '/', $string);
+  $string = preg_replace('!</?(strong|b)((?> +)[^>]*)?>!i', '*', $string);
 
   // Replace inline <a> tags with the text of link and a footnote.
   // 'See <a href="http://drupal.org">the Drupal site</a>' becomes
