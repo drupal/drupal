@@ -5,14 +5,14 @@ function color_requirements($phase) {
   $requirements = array();
 
   if ($phase == 'runtime') {
-    // Check GD library
+    // Check for the PHP GD library.
     if (function_exists('imagegd2')) {
       $info = gd_info();
       $requirements['gd'] = array(
         'value' => $info['GD Version'],
       );
 
-      // Check PNG support
+      // Check for PNG support.
       if (function_exists('imagecreatefrompng')) {
         $requirements['gd']['severity'] = REQUIREMENT_OK;
       }

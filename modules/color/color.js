@@ -11,17 +11,17 @@ Drupal.behaviors.color = function (context) {
   var locks = [];
   var focused = null;
 
-  // Add Farbtastic
+  // Add Farbtastic.
   $(form).prepend('<div id="placeholder"></div>').addClass('color-processed');
   var farb = $.farbtastic('#placeholder');
 
-  // Decode reference colors to HSL
+  // Decode reference colors to HSL.
   var reference = Drupal.settings.color.reference;
   for (i in reference) {
     reference[i] = farb.RGBToHSL(farb.unpack(reference[i]));
   }
 
-  // Build preview
+  // Build a preview.
   $('#preview:not(.color-processed)')
     .append('<div id="gradient"></div>')
     .addClass('color-processed');
@@ -31,7 +31,7 @@ Drupal.behaviors.color = function (context) {
     gradient.append('<div class="gradient-line"></div>');
   }
 
-  // Fix preview background in IE6
+  // Fix preview background in IE6.
   if (navigator.appVersion.match(/MSIE [0-6]\./)) {
     var e = $('#preview #img')[0];
     var image = e.currentStyle.backgroundImage;
@@ -39,7 +39,7 @@ Drupal.behaviors.color = function (context) {
     e.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=crop, src='" + image.substring(5, image.length - 2) + "')";
   }
 
-  // Set up colorscheme selector
+  // Set up colorscheme selector.
   $('#edit-scheme', form).change(function () {
     var colors = this.options[this.selectedIndex].value;
     if (colors != '') {
@@ -55,14 +55,14 @@ Drupal.behaviors.color = function (context) {
    * Render the preview.
    */
   function preview() {
-    // Solid background
+    // Solid background.
     $('#preview', form).css('backgroundColor', inputs[0].value);
 
     // Text preview
     $('#text', form).css('color', inputs[4].value);
     $('#text a, #text h2', form).css('color', inputs[1].value);
 
-    // Set up gradient
+    // Set up gradient.
     var top = farb.unpack(inputs[2].value);
     var bottom = farb.unpack(inputs[3].value);
     if (top && bottom) {
@@ -72,7 +72,7 @@ Drupal.behaviors.color = function (context) {
       }
       var accum = top;
 
-      // Render gradient lines
+      // Render gradient lines.
       $('#gradient > div', form).each(function () {
         for (i in accum) {
           accum[i] += delta[i];
@@ -92,13 +92,13 @@ Drupal.behaviors.color = function (context) {
    *                        then shift_color(d, b, a) == c.
    */
   function shift_color(given, ref1, ref2) {
-    // Convert to HSL
+    // Convert to HSL.
     given = farb.RGBToHSL(farb.unpack(given));
 
-    // Hue: apply delta
+    // Hue: apply delta.
     given[0] += ref2[0] - ref1[0];
 
-    // Saturation: interpolate
+    // Saturation: interpolate.
     if (ref1[1] == 0 || ref2[1] == 0) {
       given[1] = ref2[1];
     }
@@ -112,7 +112,7 @@ Drupal.behaviors.color = function (context) {
       }
     }
 
-    // Luminance: interpolate
+    // Luminance: interpolate.
     if (ref1[2] == 0 || ref2[2] == 0) {
       given[2] = ref2[2];
     }
@@ -133,17 +133,17 @@ Drupal.behaviors.color = function (context) {
    * Callback for Farbtastic when a new color is chosen.
    */
   function callback(input, color, propagate, colorscheme) {
-    // Set background/foreground color
+    // Set background/foreground colors.
     $(input).css({
       backgroundColor: color,
       'color': farb.RGBToHSL(farb.unpack(color))[2] > 0.5 ? '#000' : '#fff'
     });
 
-    // Change input value
+    // Change input value.
     if (input.value && input.value != color) {
       input.value = color;
 
-      // Update locked values
+      // Update locked values.
       if (propagate) {
         var i = input.i;
         for (j = i + 1; ; ++j) {
@@ -157,11 +157,11 @@ Drupal.behaviors.color = function (context) {
           callback(inputs[j], matched, false);
         }
 
-        // Update preview
+        // Update preview.
         preview();
       }
 
-      // Reset colorscheme selector
+      // Reset colorscheme selector.
       if (!colorscheme) {
         resetScheme();
       }
@@ -181,12 +181,12 @@ Drupal.behaviors.color = function (context) {
   // Focus the Farbtastic on a particular field.
   function focus() {
     var input = this;
-    // Remove old bindings
+    // Remove old bindings.
     focused && $(focused).unbind('keyup', farb.updateValue)
         .unbind('keyup', preview).unbind('keyup', resetScheme)
         .parent().removeClass('item-selected');
 
-    // Add new bindings
+    // Add new bindings.
     focused = this;
     farb.linkTo(function (color) { callback(input, color, true, false); });
     farb.setColor(this.value);
@@ -194,7 +194,7 @@ Drupal.behaviors.color = function (context) {
       .parent().addClass('item-selected');
   }
 
-  // Initialize color fields
+  // Initialize color fields.
   $('#palette input.form-text', form)
   .each(function () {
     // Extract palette field name
@@ -203,7 +203,7 @@ Drupal.behaviors.color = function (context) {
     // Link to color picker temporarily to initialize.
     farb.linkTo(function () {}).setColor('#000').linkTo(this);
 
-    // Add lock
+    // Add lock.
     var i = inputs.length;
     if (inputs.length) {
       var lock = $('<div class="lock"></div>').toggle(
@@ -230,7 +230,7 @@ Drupal.behaviors.color = function (context) {
       locks.push(lock);
     };
 
-    // Add hook
+    // Add hook.
     var hook = $('<div class="hook"></div>');
     $(this).after(hook);
     hooks.push(hook);
@@ -243,9 +243,9 @@ Drupal.behaviors.color = function (context) {
 
   $('#palette label', form);
 
-  // Focus first color
+  // Focus first color.
   focus.call(inputs[0]);
 
-  // Render preview
+  // Render preview.
   preview();
 };

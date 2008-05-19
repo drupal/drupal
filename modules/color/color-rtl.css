@@ -21,7 +21,6 @@
   margin-right: 0;
   margin-left: 5px;
 }
-
 #palette .hook {
   float: right;
 }
@@ -34,7 +33,6 @@
 #palette .both {
   background-position: 0 -54px;
 }
-
 #palette .lock {
   float: right;
   right: -10px;

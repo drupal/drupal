@@ -11,6 +11,7 @@ function color_help($path, $arg) {
       $output .= '<p>' . t("It is important to remember that color module saves a modified copy of the theme's specified stylesheets in the files directory. This means that if you make any manual changes to your theme's stylesheet, you must save your color settings again, even if they haven't changed. This causes the color module generated version of the stylesheets in the files directory to be recreated using the new version of the original file.") . '</p>';
       $output .= '<p>' . t('To change the color settings for a compatible theme, select the "configure" link for the theme on the <a href="@themes">themes administration page</a>.', array('@themes' => url('admin/build/themes'))) . '</p>';
       $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@color">Color module</a>.', array('@color' => 'http://drupal.org/handbook/modules/color/')) . '</p>';
+
       return $output;
   }
 }
@@ -132,7 +133,7 @@ function color_get_info($theme) {
  * Helper function to retrieve the color palette for a particular theme.
  */
 function color_get_palette($theme, $default = false) {
-  // Fetch and expand default palette
+  // Fetch and expand default palette.
   $fields = array('base', 'link', 'top', 'bottom', 'text');
   $info = color_get_info($theme);
   $keys = array_keys($info['schemes']);
@@ -140,7 +141,7 @@ function color_get_palette($theme, $default = false) {
     $palette[$fields[$k]] = $scheme;
   }
 
-  // Load variable
+  // Load variable.
   return $default ? $palette : variable_get('color_' . $theme . '_palette', $palette);
 }
 
@@ -151,23 +152,23 @@ function color_scheme_form(&$form_state, $theme) {
   $base = drupal_get_path('module', 'color');
   $info = color_get_info($theme);
 
-  // Add Farbtastic color picker
+  // Add Farbtastic color picker.
   drupal_add_css('misc/farbtastic/farbtastic.css', 'module', 'all', FALSE);
   drupal_add_js('misc/farbtastic/farbtastic.js');
 
-  // Add custom CSS/JS
+  // Add custom CSS and JS.
   drupal_add_css($base . '/color.css', 'module', 'all', FALSE);
   drupal_add_js($base . '/color.js');
   drupal_add_js(array('color' => array(
     'reference' => color_get_palette($theme, true)
   )), 'setting');
 
-  // See if we're using a predefined scheme
+  // See if we're using a predefined scheme.
   $current = implode(',', variable_get('color_' . $theme . '_palette', array()));
   // Note: we use the original theme when the default scheme is chosen.
   $current = isset($info['schemes'][$current]) ? $current : ($current == '' ? reset($info['schemes']) : '');
 
-  // Add scheme selector
+  // Add scheme selector.
   $info['schemes'][''] = t('Custom');
   $form['scheme'] = array(
     '#type' => 'select',
@@ -176,14 +177,14 @@ function color_scheme_form(&$form_state, $theme) {
     '#default_value' => $current,
   );
 
-  // Add palette fields
+  // Add palette fields.
   $palette = color_get_palette($theme);
   $names = array(
     'base' => t('Base color'),
     'link' => t('Link color'),
     'top' => t('Header top'),
     'bottom' => t('Header bottom'),
-    'text' => t('Text color')
+    'text' => t('Text color'),
   );
   $form['palette']['#tree'] = true;
   foreach ($palette as $name => $value) {
@@ -201,36 +202,31 @@ function color_scheme_form(&$form_state, $theme) {
 }
 
 /**
- * Theme color form.
+ * Theme the color form.
  *
  * @ingroup @themeable
  */
 function theme_color_scheme_form($form) {
-  // Include stylesheet
   $theme = $form['theme']['#value'];
   $info = $form['info']['#value'];
   $path = drupal_get_path('theme', $theme) . '/';
   drupal_add_css($path . $info['preview_css']);
-  $output = '';
-  // Wrapper
-  $output .= '<div class="color-form clear-block">';
 
+  $output  = '';
+  $output .= '<div class="color-form clear-block">';
   // Color schemes
   $output .= drupal_render($form['scheme']);
-
   // Palette
   $output .= '<div id="palette" class="clear-block">';
   foreach (element_children($form['palette']) as $name) {
     $output .= drupal_render($form['palette'][$name]);
   }
   $output .= '</div>';
-
   // Preview
   $output .= drupal_render($form);
   $output .= '<h2>' . t('Preview') . '</h2>';
   $output .= '<div id="preview"><div id="text"><h2>Lorem ipsum dolor</h2><p>Sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud <a href="#">exercitation ullamco</a> laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p></div><div id="img" style="background-image: url(' . base_path() . $path . $info['preview_image'] . ')"></div></div>';
-
-  // Close wrapper
+  // Close the wrapper div.
   $output .= '</div>';
 
   return $output;
@@ -240,14 +236,14 @@ function theme_color_scheme_form($form) {
  * Submit handler for color change form.
  */
 function color_scheme_form_submit($form, &$form_state) {
-  // Get theme coloring info
+  // Get theme coloring info.
   if (!isset($form_state['values']['info'])) {
     return;
   }
   $theme = $form_state['values']['theme'];
   $info = $form_state['values']['info'];
 
-  // Resolve palette
+  // Resolve palette.
   $palette = $form_state['values']['palette'];
   if ($form_state['values']['scheme'] != '') {
     $scheme = explode(',', $form_state['values']['scheme']);
@@ -273,7 +269,7 @@ function color_scheme_form_submit($form, &$form_state) {
     }
   }
 
-  // Delete old files
+  // Delete old files.
   foreach (variable_get('color_' . $theme . '_files', array()) as $file) {
     @unlink($file);
   }
@@ -317,7 +313,7 @@ function color_scheme_form_submit($form, &$form_state) {
     $paths['files'][] = $paths['target'] . $base;
   }
 
-  // Render new images, if image provided.
+  // Render new images, if image has been provided.
   if ($info['base_image']) {
     _color_render_images($theme, $info, $paths, $palette);
   }
@@ -368,8 +364,7 @@ function color_scheme_form_submit($form, &$form_state) {
  */
 function _color_rewrite_stylesheet($theme, &$info, &$paths, $palette, $style) {
   $themes = list_themes();
-
-  // Prepare color conversion table
+  // Prepare color conversion table.
   $conversion = $palette;
   unset($conversion['base']);
   foreach ($conversion as $k => $v) {
@@ -389,7 +384,7 @@ function _color_rewrite_stylesheet($theme, &$info, &$paths, $palette, $style) {
   $output = '';
   $base = 'base';
 
-  // Iterate over all parts.
+  // Iterate over all the parts.
   foreach ($style as $chunk) {
     if ($is_color) {
       $chunk = drupal_strtolower($chunk);
@@ -410,7 +405,7 @@ function _color_rewrite_stylesheet($theme, &$info, &$paths, $palette, $style) {
         $base = 'link';
       }
       // 'color:' styles. Use text.
-      else if (preg_match('/(?<!-)color[^{:]*:[^{#]*$/i', $chunk)) {
+      elseif (preg_match('/(?<!-)color[^{:]*:[^{#]*$/i', $chunk)) {
         $base = 'text';
       }
       // Reset back to base.
@@ -440,8 +435,6 @@ function _color_rewrite_stylesheet($theme, &$info, &$paths, $palette, $style) {
  * Save the rewritten stylesheet to disk.
  */
 function _color_save_stylesheet($file, $style, &$paths) {
-
-  // Write new stylesheet.
   file_save_data($style, $file, FILE_EXISTS_REPLACE);
   $paths['files'][] = $file;
 
@@ -527,9 +520,8 @@ function _color_render_images($theme, &$info, &$paths, $palette) {
  *                   space.
  */
 function _color_shift($given, $ref1, $ref2, $target) {
-
   // We assume that ref2 is a blend of ref1 and target and find
-  // delta based on the length of the difference vectors:
+  // delta based on the length of the difference vectors.
 
   // delta = 1 - |ref2 - ref1| / |white - ref1|
   $target = _color_unpack($target, true);
@@ -592,6 +584,7 @@ function _color_blend($img, $hex1, $hex2, $alpha) {
   for ($i = 0; $i < 3; ++$i) {
     $out[] = $in1[$i] + ($in2[$i] - $in1[$i]) * $alpha;
   }
+
   return call_user_func_array('imagecolorallocate', $out);
 }
 
@@ -606,6 +599,7 @@ function _color_unpack($hex, $normalize = false) {
   for ($i = 16; $i >= 0; $i -= 8) {
     $out[] = (($c >> $i) & 0xFF) / ($normalize ? 255 : 1);
   }
+
   return $out;
 }
 
@@ -617,11 +611,12 @@ function _color_pack($rgb, $normalize = false) {
   foreach ($rgb as $k => $v) {
     $out |= (($v * ($normalize ? 255 : 1)) << (16 - $k * 8));
   }
+
   return '#' . str_pad(dechex($out), 6, 0, STR_PAD_LEFT);
 }
 
 /**
- * Convert a HSL triplet into RGB
+ * Convert a HSL triplet into RGB.
  */
 function _color_hsl2rgb($hsl) {
   $h = $hsl[0];
@@ -629,6 +624,7 @@ function _color_hsl2rgb($hsl) {
   $l = $hsl[2];
   $m2 = ($l <= 0.5) ? $l * ($s + 1) : $l + $s - $l*$s;
   $m1 = $l * 2 - $m2;
+
   return array(
     _color_hue2rgb($m1, $m2, $h + 0.33333),
     _color_hue2rgb($m1, $m2, $h),
@@ -644,6 +640,7 @@ function _color_hue2rgb($m1, $m2, $h) {
   if ($h * 6 < 1) return $m1 + ($m2 - $m1) * $h * 6;
   if ($h * 2 < 1) return $m2;
   if ($h * 3 < 2) return $m1 + ($m2 - $m1) * (0.66666 - $h) * 6;
+
   return $m1;
 }
 
@@ -659,9 +656,11 @@ function _color_rgb2hsl($rgb) {
   $delta = $max - $min;
   $l = ($min + $max) / 2;
   $s = 0;
+
   if ($l > 0 && $l < 1) {
     $s = $delta / ($l < 0.5 ? (2 * $l) : (2 - 2 * $l));
   }
+
   $h = 0;
   if ($delta > 0) {
     if ($max == $r && $max != $g) $h += ($g - $b) / $delta;
@@ -669,5 +668,6 @@ function _color_rgb2hsl($rgb) {
     if ($max == $b && $max != $r) $h += (4 + ($r - $g) / $delta);
     $h /= 6;
   }
+
   return array($h, $s, $l);
 }
