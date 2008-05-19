@@ -2,6 +2,8 @@
 // $Id$
 
 class EnableDisableCoreTestCase extends DrupalWebTestCase {
+  protected $admin_user;
+
   /**
    * Implementation of getInfo().
    */
@@ -19,8 +21,8 @@ class EnableDisableCoreTestCase extends DrupalWebTestCase {
   function setUp() {
     parent::setUp();
 
-    $admin_user = $this->drupalCreateUser(array('access administration pages', 'administer site configuration'));
-    $this->drupalLogin($admin_user);
+    $this->admin_user = $this->drupalCreateUser(array('access administration pages', 'administer site configuration'));
+    $this->drupalLogin($this->admin_user);
   }
 
   /**
@@ -28,9 +30,6 @@ class EnableDisableCoreTestCase extends DrupalWebTestCase {
    * check for related tables, unistall module, check for related tables.
    */
   function testEnableDisable() {
-    $admin_user = $this->drupalCreateUser(array('access administration pages', 'administer site configuration'));
-    $this->drupalLogin($admin_user);
-
     // Enable aggregator, and check tables.
     $this->assertModules(array('aggregator'), FALSE);
     $this->assertTableCount('aggregator', FALSE);
@@ -67,9 +66,6 @@ class EnableDisableCoreTestCase extends DrupalWebTestCase {
    * Attempt to enable translation module without locale enabled.
    */
   function testEnableWithoutDependency () {
-    $admin_user = $this->drupalCreateUser(array('access administration pages', 'administer site configuration'));
-    $this->drupalLogin($admin_user);
-
     // Attempt to enable content translation without locale enabled.
     $edit = array();
     $edit['status[translation]'] = 'translation';
@@ -128,6 +124,8 @@ class EnableDisableCoreTestCase extends DrupalWebTestCase {
 }
 
 class IPAddressBlocking extends DrupalWebTestCase {
+  protected $blocking_user;
+
   /**
    * Implementation of getInfo().
    */
@@ -147,13 +145,13 @@ class IPAddressBlocking extends DrupalWebTestCase {
 
     // Create user.
     $this->blocking_user = $this->drupalCreateUser(array('block IP addresses', 'access statistics'));
+    $this->drupalLogin($this->blocking_user);
   }
 
   /**
    * Tests a variety of user input to confirm correct validation and saving of data.
    */
   function testIPAddressValidation() {
-    $this->drupalLogin($this->blocking_user);
     $this->drupalGet('admin/settings/ip-blocking');
 
     // Block a valid IP address.
