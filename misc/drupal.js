@@ -36,12 +36,10 @@ Drupal.jsEnabled = document.getElementsByTagName && document.createElement && do
  */
 Drupal.attachBehaviors = function(context) {
   context = context || document;
-  if (Drupal.jsEnabled) {
-    // Execute all of them.
-    jQuery.each(Drupal.behaviors, function() {
-      this(context);
-    });
-  }
+  // Execute all of them.
+  jQuery.each(Drupal.behaviors, function() {
+    this(context);
+  });
 };
 
 /**
