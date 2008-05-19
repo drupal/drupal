@@ -1901,10 +1901,10 @@ function theme_admin_page($blocks) {
   $output = '<div class="admin clear-block">';
   $output .= '<div class="compact-link">';
   if (system_admin_compact_mode()) {
-    $output .= l(t('Show descriptions'), 'admin/compact/off', array('title' => t('Expand layout to include descriptions.')));
+    $output .= l(t('Show descriptions'), 'admin/compact/off', array('attributes' => array('title' => t('Expand layout to include descriptions.'))));
   }
   else {
-    $output .= l(t('Hide descriptions'), 'admin/compact/on', array('title' => t('Compress layout by hiding descriptions.')));
+    $output .= l(t('Hide descriptions'), 'admin/compact/on', array('attributes' => array('title' => t('Compress layout by hiding descriptions.'))));
   }
   $output .= '</div>';
 

@@ -664,9 +664,9 @@ function user_login_block() {
   );
   $items = array();
   if (variable_get('user_register', 1)) {
-    $items[] = l(t('Create new account'), 'user/register', array('title' => t('Create a new user account.')));
+    $items[] = l(t('Create new account'), 'user/register', array('attributes' => array('title' => t('Create a new user account.'))));
   }
-  $items[] = l(t('Request new password'), 'user/password', array('title' => t('Request new password via e-mail.')));
+  $items[] = l(t('Request new password'), 'user/password', array('attributes' => array('title' => t('Request new password via e-mail.'))));
   $form['links'] = array('#value' => theme('item_list', $items));
   return $form;
 }
