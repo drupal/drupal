@@ -579,7 +579,7 @@ class DrupalWebTestCase extends UnitTestCase {
         }
       }
       // We have not found a form which contained all fields of $edit.
-      $this->fail(t('Found the requested form'));
+      $this->fail(t('Found the requested form at @path', array('@path' => $path)));
       $this->assertTrue($submit_matches, t('Found the @submit button', array('@submit' => $submit)));
       foreach ($edit as $name => $value) {
         $this->fail(t('Failed to set field @name to @value', array('@name' => $name, '@value' => $value)));
