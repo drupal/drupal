@@ -9,6 +9,7 @@ class DrupalWebTestCase extends UnitTestCase {
   protected $_content;
   protected $plain_text;
   protected $ch;
+  protected $elements;
   protected $_modules = array();
   // We do not reuse the cookies in further runs, so we do not need a file
   // but we still need cookie handling, so we set the jar to NULL
@@ -489,6 +490,9 @@ class DrupalWebTestCase extends UnitTestCase {
         // we can just simply import our DOM tree.
         $this->elements = simplexml_import_dom($htmlDom);
       }
+    }
+    if (!$this->elements) {
+      $this->fail(t('Parsed page successfully.'), t('Browser'));
     }
     return $this->elements;
   }
