@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.7 2008/05/20 20:28:05 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.8 2008/05/22 19:32:52 dries Exp $
 
 /**
  * Test case for typical Drupal tests.
@@ -9,6 +9,7 @@ class DrupalWebTestCase extends UnitTestCase {
   protected $_content;
   protected $plain_text;
   protected $ch;
+  protected $elements;
   protected $_modules = array();
   // We do not reuse the cookies in further runs, so we do not need a file
   // but we still need cookie handling, so we set the jar to NULL
@@ -489,6 +490,9 @@ class DrupalWebTestCase extends UnitTestCase {
         // we can just simply import our DOM tree.
         $this->elements = simplexml_import_dom($htmlDom);
       }
+    }
+    if (!$this->elements) {
+      $this->fail(t('Parsed page successfully.'), t('Browser'));
     }
     return $this->elements;
   }
