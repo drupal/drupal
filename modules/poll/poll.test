@@ -3,42 +3,76 @@
 
 class PollTestCase extends DrupalWebTestCase {
 
-  function pollCreate($standalone = TRUE) {
-    $this->assertTrue(TRUE, 'Poll create' . $standalone);
+  /**
+   * Creates a poll.
+   *
+   * @param string $title The title of the poll.
+   * @param array $choices Choices.
+   * @param boolean $test_preview Whether to test if the preview is working or not.
+   * @return integer The nid of the created poll, or FALSE on error.
+   */
+  function pollCreate($title, $choices, $test_preview = TRUE) {
+    $this->assertTrue(TRUE, 'Create a poll');
+
     $web_user = $this->drupalCreateUser(array('create poll content', 'access content'));
     $this->drupalLogin($web_user);
-    $title = $this->randomName();
-    $edit = array (
-      'title' => $title,
-      'choice[0][chtext]' => 'choice 1',
-      'choice[1][chtext]' => 'choice 2',
-    );
-    $this->drupalPost('node/add/poll', $edit, t('More choices'));
-    $edit = array(
-      'title' => $title,
-      'choice[0][chtext]' => 'choice 1',
-      'choice[1][chtext]' => 'choice 2',
-      'choice[2][chtext]' => 'choice 3',
-      'choice[3][chtext]' => 'choice 4',
-      'choice[4][chtext]' => 'choice 5',
-      'choice[5][chtext]' => 'choice 6',
-      'choice[6][chtext]' => 'choice 7',
-    );
-    if ($standalone) {
-      $this->drupalPost(NULL, $edit, t('Preview'));
-      for ($i = 0; $i <= 6; $i++) {
-        $bar = theme('poll_bar', $edit['choice['. $i .'][chtext]'], NULL, 0, FALSE, FALSE);
-        $this->assertTrue($bar, "bar $i is themed");
-        $this->assertRaw($bar, "bar $i found in preview");
+
+    // Get the form first to initialize the state of the internal browser
+    $this->drupalGet('node/add/poll');
+    
+    // Prepare a form with two choices
+    list($edit, $index) = $this->_pollGenerateEdit($title, $choices);
+
+    if (count($choices) > 2) {
+      // Re-submit the form while the choices are all in
+      while($index < count($choices)) {
+        $this->drupalPost(NULL, $edit, t('More choices'));
+        list($edit, $index) = $this->_pollGenerateEdit($title, $choices, $index);
       }
     }
+
+    if ($test_preview) {
+      $this->drupalPost(NULL, $edit, t('Preview'));
+      foreach($choices as $k => $choice_text) {
+        $this->assertRaw($choice_text, "Choice $k found in preview");
+        $themed_bar = theme('poll_bar', $choice_text, 0, 0, FALSE, FALSE);
+        $this->assertRaw($themed_bar, "Choice $k bar is themed");
+      }
+      list($edit, $index) = $this->_pollGenerateEdit($title, $choices, $index);
+    }
+
     $this->drupalPost(NULL, $edit, t('Save'));
     $node = node_load(array('title' => $title));
-    $this->nid = $node->nid;
     $this->assertRaw(t('@type %title has been created.', array('@type' => node_get_types('name', 'poll'), '%title' => $title)), 'Poll has been created.');
-    $this->assertTrue($this->nid, t('Poll has been found in the database'));
+    $this->assertTrue($node->nid, t('Poll has been found in the database'));
+
+    return isset($node->nid) ? $node->nid : FALSE;
   }
 
+  function _pollGenerateEdit($title, $choices, $index = 0) {
+    $max_new_choices = $index == 0 ? 2 : 5;
+    $already_submitted_choices = array_slice($choices, 0, $index);
+    $new_choices = array_values(array_slice($choices, $index, $max_new_choices));
+    
+    $edit = array(
+      'title' => $title
+    );
+    foreach($already_submitted_choices as $k => $text) {
+      $edit['choice[chid:' . $k . '][chtext]'] = $text;
+    }
+    foreach($new_choices as $k => $text) {
+      $edit['choice[new:' . $k . '][chtext]'] = $text;
+    }
+    return array($edit, count($already_submitted_choices) + count($new_choices));
+  }
+  
+  function _generateChoices($count = 7) {
+    $choices = array();
+    for($i = 1; $i <= $count; $i++) {
+      $choices[] = $this->randomName();
+    }
+    return $choices;
+  }
 }
 
 class PollCreateTestCase extends PollTestCase {
@@ -55,7 +89,9 @@ class PollCreateTestCase extends PollTestCase {
   }
 
   function testPollCreate() {
-    $this->pollCreate(TRUE);
+    $title = $this->randomName();
+    $choices = $this->_generateChoices(7);
+    $this->pollCreate($title, $choices, TRUE);
   }
 }
 
@@ -76,17 +112,24 @@ class PollVoteTestCase extends PollTestCase {
   }
 
   function testPollVote() {
-    $this->pollCreate(FALSE);
+    $title = $this->randomName();
+    $choices = $this->_generateChoices(7);
+    $poll_nid = $this->pollCreate($title, $choices, FALSE);
     $this->drupalGet('logout');
+
     $web_user = $this->drupalCreateUser(array('cancel own vote', 'inspect all votes', 'vote on polls', 'access content'));
     $this->drupalLogin($web_user);
+    
+    // Record a vote for the first choice.
     $edit = array (
       'choice' => '1',
     );
-    $this->drupalPost('node/'. $this->nid, $edit, t('Vote'));
+    $this->drupalPost('node/'. $poll_nid, $edit, t('Vote'));
     $this->assertText('Your vote was recorded.', 'Your vote was recorded.');
-    $this->drupalGet("node/$this->nid/votes");
+
+    $this->drupalGet("node/$poll_nid/votes");
     $this->assertText(t('This table lists all the recorded votes for this poll. If anonymous users are allowed to vote, they will be identified by the IP address of the computer they used when they voted.'), 'Vote table text.');
-    $this->assertText('choice 2', 'vote recorded');
+    $this->assertText($choices[0], 'Vote recorded');
   }
 }
+
