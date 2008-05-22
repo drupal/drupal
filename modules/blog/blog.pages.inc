@@ -16,7 +16,7 @@ function blog_page_user($account) {
 
   $items = array();
 
-  if (($account->uid == $user->uid) && user_access('create blog entries')) {
+  if (($account->uid == $user->uid) && user_access('create blog content')) {
     $items[] = l(t('Post new blog entry.'), "node/add/blog");
   }
   else if ($account->uid == $user->uid) {

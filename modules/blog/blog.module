@@ -171,7 +171,7 @@ function blog_page_user_access($account) {
   // The visitor must be able to access the site's content.
   // For a blog to 'exist' the user must either be able to
   // create new blog entries, or it must have existing posts.
-  return $account->uid && user_access('access content') && (user_access('create blog entries', $account) || _blog_post_exists($account));
+  return $account->uid && user_access('access content') && (user_access('create blog content', $account) || _blog_post_exists($account));
 }
 
 /**
