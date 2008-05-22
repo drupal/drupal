@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.pages.inc,v 1.9 2008/05/13 18:15:07 dries Exp $
+// $Id: blog.pages.inc,v 1.10 2008/05/22 19:27:13 dries Exp $
 
 /**
  * @file
@@ -16,7 +16,7 @@ function blog_page_user($account) {
 
   $items = array();
 
-  if (($account->uid == $user->uid) && user_access('create blog entries')) {
+  if (($account->uid == $user->uid) && user_access('create blog content')) {
     $items[] = l(t('Post new blog entry.'), "node/add/blog");
   }
   else if ($account->uid == $user->uid) {
