@@ -37,8 +37,8 @@ class TranslationTestCase extends DrupalWebTestCase {
     $this->addLanguage('es');
 
     // Set page content type to use multilingual support with translation.
-    $this->drupalGet('admin/content/node-type/page');
-    $this->drupalPost('admin/content/node-type/page', array('language_content_type' => '2'), t('Save content type'));
+    $this->drupalGet('admin/build/node-type/page');
+    $this->drupalPost('admin/build/node-type/page', array('language_content_type' => '2'), t('Save content type'));
     $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Page')), t('Page content type has been updated.'));
 
     $this->drupalLogout();
