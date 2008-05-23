@@ -1234,10 +1234,40 @@ function theme_submenu($links) {
  *   An array of HTML attributes to apply to the table tag.
  * @param $caption
  *   A localized string to use for the <caption> tag.
+ * @param $colgroups
+ *   An array of column groups. Each element of the array can be either:
+ *   - An array of columns, each of which is an associative array of HTML attributes
+ *     applied to the COL element.
+ *   - An array of attributes applied to the COLGROUP element, which must include a
+ *     "data" attribute. To add attributes to COL elements, set the "data" attribute
+ *     with an array of columns, each of which is an associative array of HTML attributes.
+ *   Here's an example for $colgroup:
+ *   @verbatim
+ *   $colgroup = array(
+ *     // COLGROUP with one COL element.
+ *     array(
+ *       array(
+ *         'class' => 'funky', // Attribute for the COL element.
+ *       ),
+ *     ),
+ *     // Colgroup with attributes and inner COL elements.
+ *     array(
+ *       'data' => array(
+ *         array(
+ *           'class' => 'funky', // Attribute for the COL element.
+ *         ),
+ *       ),
+ *       'class' => 'jazzy', // Attribute for the COLGROUP element.
+ *     ),
+ *   );
+ *   @endverbatim
+ *   These optional tags are used to group and set properties on columns
+ *   within a table. For example, one may easily group three columns and
+ *   apply same background style to all.
  * @return
  *   An HTML string representing the table.
  */
-function theme_table($header, $rows, $attributes = array(), $caption = NULL) {
+function theme_table($header, $rows, $attributes = array(), $caption = NULL, $colgroups = array()) {
 
   // Add sticky headers, if applicable.
   if (count($header)) {
@@ -1251,6 +1281,41 @@ function theme_table($header, $rows, $attributes = array(), $caption = NULL) {
 
   if (isset($caption)) {
     $output .= '<caption>' . $caption . "</caption>\n";
+  }
+
+  // Format the table columns:
+  if (count($colgroups)) {
+    foreach ($colgroups as $number => $colgroup) {
+      $attributes = array();
+
+      // Check if we're dealing with a simple or complex column
+      if (isset($colgroup['data'])) {
+        foreach ($colgroup as $key => $value) {
+          if ($key == 'data') {
+            $cols = $value;
+          }
+          else {
+            $attributes[$key] = $value;
+          }
+        }
+      }
+      else {
+        $cols = $colgroup;
+      }
+
+      // Build colgroup
+      if (is_array($cols) && count($cols)) {
+        $output .= ' <colgroup' . drupal_attributes($attributes) . '>';
+        $i = 0;
+        foreach ($cols as $col) {
+          $output .= ' <col' . drupal_attributes($col) . ' />';
+        }
+        $output .= " </colgroup>\n";
+      }
+      else {
+        $output .= ' <colgroup' . drupal_attributes($attributes) . " />\n";
+      }
+    }
   }
 
   // Format the table header:
