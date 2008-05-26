@@ -864,6 +864,7 @@ function _upload_image($file) {
     if ($width && $height) {
       $result = image_scale($file->filepath, $file->filepath, $width, $height);
       if ($result) {
+        clearstatcache();
         $file->filesize = filesize($file->filepath);
         drupal_set_message(t('The image was resized to fit within the maximum allowed resolution of %resolution pixels.', array('%resolution' => variable_get('upload_max_resolution', 0))));
       }
