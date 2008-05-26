@@ -161,6 +161,41 @@ class SearchMatchTestCase extends DrupalWebTestCase {
   }
 }
 
+class SearchBikeShed extends DrupalWebTestCase {
+  protected $searching_user;
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('Bike shed'),
+      'description' => t('Tests the bike shed text on the no results page.'),
+      'group' => t('Search')
+    );
+  }
+
+  /**
+   * Implementation of setUp().
+   */
+  function setUp() {
+    parent::setUp('search');
+
+    // Create user.
+    $this->searching_user = $this->drupalCreateUser(array('search content'));
+  }
+  
+  function testFailedSearch() {
+    $this->drupalLogin($this->searching_user);
+    $this->drupalGet('search/node');
+    $this->assertText(t('Enter your keywords'));
+
+    $edit = array();
+    $edit['keys'] = 'bike shed ' . $this->randomName();
+    $this->drupalPost('search/node', $edit, t('Search'));
+    $this->assertText(t('Consider loosening your query with OR. bike OR shed will often show more results than bike shed.'), t('Help text is displayed when search returns no results.'));
+  }
+}
+
 class SearchRankingTestCase extends DrupalWebTestCase {
   /**
    * Implementation of getInfo().
