@@ -3,6 +3,9 @@
 
 require_once './includes/install.inc';
 
+/**
+ * Global flag to indicate that site is in installation mode.
+ */
 define('MAINTENANCE_MODE', 'install');
 
 /**

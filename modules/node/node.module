@@ -3,17 +3,46 @@
 
 /**
  * @file
- * The core that allows content to be submitted to the site. Modules and scripts may
- * programmatically submit nodes using the usual form API pattern.
+ * The core that allows content to be submitted to the site. Modules and
+ * scripts may programmatically submit nodes using the usual form API pattern.
  */
 
+/**
+ * Nodes changed before this time are always marked as read.
+ *
+ * Nodes changed after this time may be marked new, updated, or read, depending
+ * on their state for the current user. Defaults to 30 days ago.
+ */
 define('NODE_NEW_LIMIT', time() - 30 * 24 * 60 * 60);
 
+/**
+ * Node is being built before being viewed normally.
+ */
 define('NODE_BUILD_NORMAL', 0);
+
+/**
+ * Node is being built before being previewed.
+ */
 define('NODE_BUILD_PREVIEW', 1);
+
+/**
+ * Node is being built before being indexed by search module.
+ */
 define('NODE_BUILD_SEARCH_INDEX', 2);
+
+/**
+ * Node is being built before being displayed as a search result.
+ */
 define('NODE_BUILD_SEARCH_RESULT', 3);
+
+/**
+ * Node is being built before being displayed as part of an RSS feed.
+ */
 define('NODE_BUILD_RSS', 4);
+
+/**
+ * Node is being built before being printed.
+ */
 define('NODE_BUILD_PRINT', 5);
 
 /**

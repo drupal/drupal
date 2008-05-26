@@ -6,7 +6,14 @@
  * Enables the user registration and login system.
  */
 
+/**
+ * Maximum length of username text field.
+ */
 define('USERNAME_MAX_LENGTH', 60);
+
+/**
+ * Maximum length of user e-mail text field.
+ */
 define('EMAIL_MAX_LENGTH', 64);
 
 /**

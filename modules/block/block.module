@@ -6,7 +6,9 @@
  * Controls the boxes that are displayed around the main content.
  */
 
-// Denotes that a block is not enabled in any region and should not be shown.
+/**
+ * Denotes that a block is not enabled in any region and should not be shown.
+ */
 define('BLOCK_REGION_NONE', -1);
 
 /**

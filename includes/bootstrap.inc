@@ -35,19 +35,68 @@ define('CACHE_NORMAL', 1);
 define('CACHE_AGGRESSIVE', 2);
 
 /**
+ * Log message severity -- Emergency: system is unusable.
  *
- * Severity levels, as defined in RFC 3164 http://www.faqs.org/rfcs/rfc3164.html
  * @see watchdog()
  * @see watchdog_severity_levels()
  */
-define('WATCHDOG_EMERG',    0); // Emergency: system is unusable
-define('WATCHDOG_ALERT',    1); // Alert: action must be taken immediately
-define('WATCHDOG_CRITICAL', 2); // Critical: critical conditions
-define('WATCHDOG_ERROR',    3); // Error: error conditions
-define('WATCHDOG_WARNING',  4); // Warning: warning conditions
-define('WATCHDOG_NOTICE',   5); // Notice: normal but significant condition
-define('WATCHDOG_INFO',     6); // Informational: informational messages
-define('WATCHDOG_DEBUG',    7); // Debug: debug-level messages
+define('WATCHDOG_EMERG', 0);
+
+/**
+ * Log message severity -- Alert: action must be taken immediately.
+ *
+ * @see watchdog()
+ * @see watchdog_severity_levels()
+ */
+define('WATCHDOG_ALERT', 1);
+
+/**
+ * Log message severity -- Critical: critical conditions.
+ *
+ * @see watchdog()
+ * @see watchdog_severity_levels()
+ */
+define('WATCHDOG_CRITICAL', 2);
+
+/**
+ * Log message severity -- Error: error conditions.
+ *
+ * @see watchdog()
+ * @see watchdog_severity_levels()
+ */
+define('WATCHDOG_ERROR', 3);
+
+/**
+ * Log message severity -- Warning: warning conditions.
+ *
+ * @see watchdog()
+ * @see watchdog_severity_levels()
+ */
+define('WATCHDOG_WARNING', 4);
+
+/**
+ * Log message severity -- Notice: normal but significant condition.
+ *
+ * @see watchdog()
+ * @see watchdog_severity_levels()
+ */
+define('WATCHDOG_NOTICE', 5);
+
+/**
+ * Log message severity -- Informational: informational messages.
+ *
+ * @see watchdog()
+ * @see watchdog_severity_levels()
+ */
+define('WATCHDOG_INFO', 6);
+
+/**
+ * Log message severity -- Debug: debug-level messages.
+ *
+ * @see watchdog()
+ * @see watchdog_severity_levels()
+ */
+define('WATCHDOG_DEBUG', 7);
 
 /**
  * First bootstrap phase: initialize configuration.

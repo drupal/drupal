@@ -22,9 +22,13 @@
 define('DRUPAL_HASH_COUNT', 14);
 
 /**
- * The min and max allowed log2 number of iterations for password stretching.
+ * The minimum allowed log2 number of iterations for password stretching.
  */
 define('DRUPAL_MIN_HASH_COUNT', 7);
+
+/**
+ * The maximum allowed log2 number of iterations for password stretching.
+ */
 define('DRUPAL_MAX_HASH_COUNT', 30);
 
 /**

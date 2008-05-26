@@ -12,24 +12,62 @@
  * Common file handling functions.
  */
 
+/**
+ * Flag to indicate that the 'public' file download method is enabled.
+ *
+ * When using this method, files are available from a regular HTTP request,
+ * which provides no additional access restrictions.
+ */
 define('FILE_DOWNLOADS_PUBLIC', 1);
+
+/**
+ * Flag to indicate that the 'private' file download method is enabled.
+ *
+ * When using this method, all file requests are served by Drupal, during which
+ * access-control checking can be performed.
+ */
 define('FILE_DOWNLOADS_PRIVATE', 2);
+
+/**
+ * Flag used by file_create_directory() -- create directory if not present.
+ */
 define('FILE_CREATE_DIRECTORY', 1);
+
+/**
+ * Flag used by file_create_directory() -- file permissions may be changed.
+ */
 define('FILE_MODIFY_PERMISSIONS', 2);
+
+/**
+ * Flag for dealing with existing files: Append number until filename is unique.
+ */
 define('FILE_EXISTS_RENAME', 0);
+
+/**
+ * Flag for dealing with existing files: Replace the existing file.
+ */
 define('FILE_EXISTS_REPLACE', 1);
+
+/**
+ * Flag for dealing with existing files: Do nothing and return FALSE.
+ */
 define('FILE_EXISTS_ERROR', 2);
 
 /**
- * A files status can be one of two values: temporary or permanent. The status
- * for each file Drupal manages is stored in the {files} tables. If the status
- * is temporary Drupal's file garbage collection will delete the file and
- * remove it from the files table after a set period of time.
+ * File status -- File has been temporarily saved to the {files} tables.
  *
- * If you wish to add custom statuses for use by contrib modules please expand as
- * binary flags and consider the first 8 bits reserved. (0,1,2,4,8,16,32,64,128)
+ * Drupal's file garbage collection will delete the file and remove it from the
+ * files table after a set period of time.
  */
 define('FILE_STATUS_TEMPORARY', 0);
+
+/**
+ * File status -- File has been permanently saved to the {files} tables.
+ *
+ * If you wish to add custom statuses for use by contrib modules please expand
+ * as binary flags and consider the first 8 bits reserved.
+ * (0,1,2,4,8,16,32,64,128).
+ */
 define('FILE_STATUS_PERMANENT', 1);
 
 /**

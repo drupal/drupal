@@ -6,21 +6,48 @@
  * OpenID utility functions.
  */
 
-// Diffie-Hellman Key Exchange Default Value.
+/**
+ * Diffie-Hellman Key Exchange Default Value.
+ *
+ * This is used to establish an association between the Relying Party and the
+ * OpenID Provider.
+ *
+ * See RFC 2631: http://www.ietf.org/rfc/rfc2631.txt
+ */
 define('OPENID_DH_DEFAULT_MOD', '155172898181473697471232257763715539915724801' .
        '966915404479707795314057629378541917580651227423698188993727816152646631' .
        '438561595825688188889951272158842675419950341258706556549803580104870537' .
        '681476726513255747040765857479291291572334510643245094715007229621094194' .
        '349783925984760375594985848253359305585439638443');
 
-// Constants for Diffie-Hellman key exchange computations.
+/**
+ * Diffie-Hellman generator; used for Diffie-Hellman key exchange computations.
+ */
 define('OPENID_DH_DEFAULT_GEN', '2');
+
+/**
+ * SHA-1 hash block size; used for Diffie-Hellman key exchange computations.
+ */
 define('OPENID_SHA1_BLOCKSIZE', 64);
+
+/**
+ * Random number generator; used for Diffie-Hellman key exchange computations.
+ */
 define('OPENID_RAND_SOURCE', '/dev/urandom');
 
-// OpenID namespace URLs
+/**
+ * OpenID Authentication 2.0 namespace URL.
+ */
 define('OPENID_NS_2_0', 'http://specs.openid.net/auth/2.0');
+
+/**
+ * OpenID Authentication 1.1 namespace URL; used for backwards-compatibility.
+ */
 define('OPENID_NS_1_1', 'http://openid.net/signon/1.1');
+
+/**
+ * OpenID Authentication 1.0 namespace URL; used for backwards-compatibility.
+ */
 define('OPENID_NS_1_0', 'http://openid.net/signon/1.0');
 
 /**

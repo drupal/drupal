@@ -3464,10 +3464,12 @@ function drupal_parse_info_file($filename) {
 }
 
 /**
+ * Severity levels, as defined in RFC 3164: http://www.ietf.org/rfc/rfc3164.txt.
+ *
  * @return
  *   Array of the possible severity levels for log messages.
  *
- * @see watchdog
+ * @see watchdog()
  */
 function watchdog_severity_levels() {
   return array(

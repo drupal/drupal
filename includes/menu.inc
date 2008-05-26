@@ -77,12 +77,39 @@
  * Flags for use in the "type" attribute of menu items.
  */
 
+/**
+ * Internal menu flag -- menu item is the root of the menu tree.
+ */
 define('MENU_IS_ROOT', 0x0001);
+
+/**
+ * Internal menu flag -- menu item is visible in the menu tree.
+ */
 define('MENU_VISIBLE_IN_TREE', 0x0002);
+
+/**
+ * Internal menu flag -- menu item is visible in the breadcrumb.
+ */
 define('MENU_VISIBLE_IN_BREADCRUMB', 0x0004);
+
+/**
+ * Internal menu flag -- menu item links back to its parnet.
+ */
 define('MENU_LINKS_TO_PARENT', 0x0008);
+
+/**
+ * Internal menu flag -- menu item can be modified by administrator.
+ */
 define('MENU_MODIFIED_BY_ADMIN', 0x0020);
+
+/**
+ * Internal menu flag -- menu item was created by administrator.
+ */
 define('MENU_CREATED_BY_ADMIN', 0x0040);
+
+/**
+ * Internal menu flag -- menu item is a local task.
+ */
 define('MENU_IS_LOCAL_TASK', 0x0080);
 
 /**
@@ -97,6 +124,8 @@ define('MENU_IS_LOCAL_TASK', 0x0080);
  */
 
 /**
+ * Menu type -- A "normal" menu item that's shown in menu and breadcrumbs.
+ *
  * Normal menu items show up in the menu tree and can be moved/hidden by
  * the administrator. Use this for most menu items. It is the default value if
  * no menu item type is specified.
@@ -104,12 +133,16 @@ define('MENU_IS_LOCAL_TASK', 0x0080);
 define('MENU_NORMAL_ITEM', MENU_VISIBLE_IN_TREE | MENU_VISIBLE_IN_BREADCRUMB);
 
 /**
+ * Menu type -- A hidden, internal callback, typically used for API calls.
+ *
  * Callbacks simply register a path so that the correct function is fired
  * when the URL is accessed. They are not shown in the menu.
  */
 define('MENU_CALLBACK', MENU_VISIBLE_IN_BREADCRUMB);
 
 /**
+ * Menu type -- A normal menu item, hidden until enabled by an administrator.
+ *
  * Modules may "suggest" menu items that the administrator may enable. They act
  * just as callbacks do until enabled, at which time they act like normal items.
  * Note for the value: 0x0010 was a flag which is no longer used, but this way
@@ -118,13 +151,17 @@ define('MENU_CALLBACK', MENU_VISIBLE_IN_BREADCRUMB);
 define('MENU_SUGGESTED_ITEM', MENU_VISIBLE_IN_BREADCRUMB | 0x0010);
 
 /**
- * Local tasks are rendered as tabs by default. Use this for menu items that
- * describe actions to be performed on their parent item. An example is the path
- * "node/52/edit", which performs the "edit" task on "node/52".
+ * Menu type -- A task specific to the parent item, usually rendered as a tab.
+ *
+ * Local tasks are menu items that describe actions to be performed on their
+ * parent item. An example is the path "node/52/edit", which performs the
+ * "edit" task on "node/52".
  */
 define('MENU_LOCAL_TASK', MENU_IS_LOCAL_TASK);
 
 /**
+ * Menu type -- The "default" local task, which is initially active.
+ *
  * Every set of local tasks should provide one "default" task, that links to the
  * same path as its parent when clicked.
  */
@@ -140,9 +177,24 @@ define('MENU_DEFAULT_LOCAL_TASK', MENU_IS_LOCAL_TASK | MENU_LINKS_TO_PARENT);
  * Status codes for menu callbacks.
  */
 
+/**
+ * Internal menu status code -- Menu item was found.
+ */
 define('MENU_FOUND', 1);
+
+/**
+ * Internal menu status code -- Menu item was not found.
+ */
 define('MENU_NOT_FOUND', 2);
+
+/**
+ * Internal menu status code -- Menu item access is denied.
+ */
 define('MENU_ACCESS_DENIED', 3);
+
+/**
+ * Internal menu status code -- Menu item inaccessible because site is offline.
+ */
 define('MENU_SITE_OFFLINE', 4);
 
 /**

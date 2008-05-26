@@ -3,9 +3,12 @@
 
 /**
  * @file
- *   Administration functions for locale.module.
+ * Administration functions for locale.module.
  */
 
+/**
+ * Regular expression pattern used to localize JavaScript strings.
+ */
 define('LOCALE_JS_STRING', '(?:(?:\'(?:\\\\\'|[^\'])*\'|"(?:\\\\"|[^"])*")(?:\s*\+\s*)?)+');
 
 /**
