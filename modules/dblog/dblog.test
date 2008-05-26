@@ -318,15 +318,15 @@ class DBLogTestCase extends DrupalWebTestCase {
       case 'poll':
         $content = array(
           'title'     => $this->randomName(8),
-          'choice[0][chtext]'  => $this->randomName(32),
-          'choice[1][chtext]'  => $this->randomName(32),
+          'choice[new:0][chtext]' => $this->randomName(32),
+          'choice[new:1][chtext]' => $this->randomName(32),
         );
       break;
 
       default:
         $content = array(
-          'title'     => $this->randomName(8),
-          'body'      => $this->randomName(32),
+          'title' => $this->randomName(8),
+          'body' => $this->randomName(32),
         );
       break;
     }
@@ -343,14 +343,14 @@ class DBLogTestCase extends DrupalWebTestCase {
     switch ($type) {
       case 'poll':
         $content = array(
-          'choice[0][chtext]'  => $this->randomName(32),
-          'choice[1][chtext]'  => $this->randomName(32),
+          'choice[chid:1][chtext]' => $this->randomName(32),
+          'choice[chid:2][chtext]' => $this->randomName(32),
         );
       break;
 
       default:
         $content = array(
-          'body'      => $this->randomName(32),
+          'body' => $this->randomName(32),
         );
       break;
     }
