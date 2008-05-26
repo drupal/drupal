@@ -21,6 +21,13 @@ function blogapi_help($section) {
 }
 
 /**
+ * Implementation of hook_perm().
+ */
+function blogapi_perm() {
+  return array('administer content with blog api');
+}
+
+/**
  * Implementation of hook_xmlrpc().
  */
 function blogapi_xmlrpc() {
@@ -510,7 +517,7 @@ function blogapi_validate_user($username, $password) {
   $user = user_authenticate($username, $password);
 
   if ($user->uid) {
-    if (user_access('edit own blog', $user)) {
+    if (user_access('administer content with blog api', $user)) {
       return $user;
     }
     else {
