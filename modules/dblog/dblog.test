@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.test,v 1.2 2008/04/25 18:26:01 dries Exp $
+// $Id: dblog.test,v 1.3 2008/05/26 17:31:59 dries Exp $
 
 class DBLogTestCase extends DrupalWebTestCase {
   protected $big_user;
@@ -318,15 +318,15 @@ class DBLogTestCase extends DrupalWebTestCase {
       case 'poll':
         $content = array(
           'title'     => $this->randomName(8),
-          'choice[0][chtext]'  => $this->randomName(32),
-          'choice[1][chtext]'  => $this->randomName(32),
+          'choice[new:0][chtext]' => $this->randomName(32),
+          'choice[new:1][chtext]' => $this->randomName(32),
         );
       break;
 
       default:
         $content = array(
-          'title'     => $this->randomName(8),
-          'body'      => $this->randomName(32),
+          'title' => $this->randomName(8),
+          'body' => $this->randomName(32),
         );
       break;
     }
@@ -343,14 +343,14 @@ class DBLogTestCase extends DrupalWebTestCase {
     switch ($type) {
       case 'poll':
         $content = array(
-          'choice[0][chtext]'  => $this->randomName(32),
-          'choice[1][chtext]'  => $this->randomName(32),
+          'choice[chid:1][chtext]' => $this->randomName(32),
+          'choice[chid:2][chtext]' => $this->randomName(32),
         );
       break;
 
       default:
         $content = array(
-          'body'      => $this->randomName(32),
+          'body' => $this->randomName(32),
         );
       break;
     }
