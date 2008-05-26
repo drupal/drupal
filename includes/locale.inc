@@ -1,11 +1,14 @@
 <?php
-// $Id: locale.inc,v 1.175 2008/04/14 17:48:33 dries Exp $
+// $Id: locale.inc,v 1.176 2008/05/26 17:12:54 dries Exp $
 
 /**
  * @file
- *   Administration functions for locale.module.
+ * Administration functions for locale.module.
  */
 
+/**
+ * Regular expression pattern used to localize JavaScript strings.
+ */
 define('LOCALE_JS_STRING', '(?:(?:\'(?:\\\\\'|[^\'])*\'|"(?:\\\\"|[^"])*")(?:\s*\+\s*)?)+');
 
 /**

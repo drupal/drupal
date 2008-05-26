@@ -1,8 +1,11 @@
 <?php
-// $Id: install.php,v 1.118 2008/05/06 12:18:44 dries Exp $
+// $Id: install.php,v 1.119 2008/05/26 17:12:54 dries Exp $
 
 require_once './includes/install.inc';
 
+/**
+ * Global flag to indicate that site is in installation mode.
+ */
 define('MAINTENANCE_MODE', 'install');
 
 /**

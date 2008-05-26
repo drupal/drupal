@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.423 2008/05/23 08:28:30 dries Exp $
+// $Id: theme.inc,v 1.424 2008/05/26 17:12:54 dries Exp $
 
 /**
  * @file
@@ -18,9 +18,22 @@
  * Markers used by theme_mark() and node_mark() to designate content.
  * @see theme_mark(), node_mark()
  */
-define('MARK_READ',    0);
-define('MARK_NEW',     1);
+
+/**
+ * Mark content as read.
+ */
+define('MARK_READ', 0);
+
+/**
+ * Mark content as being new.
+ */
+define('MARK_NEW', 1);
+
+/**
+ * Mark content as being updated.
+ */
 define('MARK_UPDATED', 2);
+
 /**
  * @} End of "Content markers".
  */

@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.768 2008/05/16 01:23:31 dries Exp $
+// $Id: common.inc,v 1.769 2008/05/26 17:12:54 dries Exp $
 
 /**
  * @file
@@ -3464,10 +3464,12 @@ function drupal_parse_info_file($filename) {
 }
 
 /**
+ * Severity levels, as defined in RFC 3164: http://www.ietf.org/rfc/rfc3164.txt.
+ *
  * @return
  *   Array of the possible severity levels for log messages.
  *
- * @see watchdog
+ * @see watchdog()
  */
 function watchdog_severity_levels() {
   return array(

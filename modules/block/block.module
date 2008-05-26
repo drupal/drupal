@@ -1,12 +1,14 @@
 <?php
-// $Id: block.module,v 1.306 2008/05/15 21:30:02 dries Exp $
+// $Id: block.module,v 1.307 2008/05/26 17:12:54 dries Exp $
 
 /**
  * @file
  * Controls the boxes that are displayed around the main content.
  */
 
-// Denotes that a block is not enabled in any region and should not be shown.
+/**
+ * Denotes that a block is not enabled in any region and should not be shown.
+ */
 define('BLOCK_REGION_NONE', -1);
 
 /**

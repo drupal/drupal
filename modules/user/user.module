@@ -1,12 +1,19 @@
 <?php
-// $Id: user.module,v 1.908 2008/05/17 17:02:56 dries Exp $
+// $Id: user.module,v 1.909 2008/05/26 17:12:55 dries Exp $
 
 /**
  * @file
  * Enables the user registration and login system.
  */
 
+/**
+ * Maximum length of username text field.
+ */
 define('USERNAME_MAX_LENGTH', 60);
+
+/**
+ * Maximum length of user e-mail text field.
+ */
 define('EMAIL_MAX_LENGTH', 64);
 
 /**
