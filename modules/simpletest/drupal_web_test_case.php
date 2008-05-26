@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.8 2008/05/22 19:32:52 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.9 2008/05/26 17:36:08 dries Exp $
 
 /**
  * Test case for typical Drupal tests.
@@ -460,7 +460,7 @@ class DrupalWebTestCase extends UnitTestCase {
     $this->_content = curl_exec($this->ch);
     $this->plain_text = FALSE;
     $this->elements = FALSE;
-    $this->assertTrue($this->_content, t('!method to !url, response is !length bytes.', array('!method' => empty($curl_options[CURLOPT_POSTFIELDS]) ? 'GET' : 'POST', '!url' => $url, '!length' => strlen($this->_content))), t('Browser'));
+    $this->assertTrue($this->_content !== FALSE, t('!method to !url, response is !length bytes.', array('!method' => empty($curl_options[CURLOPT_POSTFIELDS]) ? 'GET' : 'POST', '!url' => $url, '!length' => strlen($this->_content))), t('Browser'));
     return $this->_content;
   }
 
