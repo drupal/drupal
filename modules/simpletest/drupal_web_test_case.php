@@ -460,7 +460,7 @@ class DrupalWebTestCase extends UnitTestCase {
     $this->_content = curl_exec($this->ch);
     $this->plain_text = FALSE;
     $this->elements = FALSE;
-    $this->assertTrue($this->_content, t('!method to !url, response is !length bytes.', array('!method' => empty($curl_options[CURLOPT_POSTFIELDS]) ? 'GET' : 'POST', '!url' => $url, '!length' => strlen($this->_content))), t('Browser'));
+    $this->assertTrue($this->_content !== FALSE, t('!method to !url, response is !length bytes.', array('!method' => empty($curl_options[CURLOPT_POSTFIELDS]) ? 'GET' : 'POST', '!url' => $url, '!length' => strlen($this->_content))), t('Browser'));
     return $this->_content;
   }
 
