@@ -1659,10 +1659,10 @@ function _drupal_add_js($data, $type, $scope, $defer, $cache) {
  * are added to the page. Then, all settings are output, followed by 'inline'
  * JavaScript code.
  *
- * @parameter $scope
+ * @param $scope
  *   (optional) The scope for which the JavaScript rules should be returned.
  *   Defaults to 'header'.
- * @parameter $javascript
+ * @param $javascript
  *   (optional) An array with all JavaScript code. Defaults to the default
  *   JavaScript array for the given scope.
  * @return
