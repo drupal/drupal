@@ -1,0 +1,168 @@
+<?php
+// $Id$
+
+class SimpleTestTestCase extends DrupalWebTestCase {
+  protected $results;
+
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('SimpleTest functionality'),
+      'description' => t('Test SimpleTest\'s web interface: check that the intended tests were
+                          run and ensure that test reports display the intended results. Also
+                          test SimpleTest\'s internal browser and API\'s both explicitly and
+                          implicitly.'),
+      'group' => t('SimpleTest')
+    );
+  }
+
+  /**
+   * Implementation of setUp().
+   */
+  function setUp() {
+    parent::setUp('simpletest');
+
+    // Create and login user
+    $admin_user = $this->drupalCreateUser(array('administer unit tests'));
+    $this->drupalLogin($admin_user);
+  }
+
+  /**
+   * Test the internal browsers functionality.
+   */
+  function testInternalBrowser() {
+    global $conf;
+    if (!$this->inCURL()) {
+      $this->drupalGet('node');
+      $this->assertTitle(variable_get('site_name', 'Drupal'), t('Site title matches.'));
+    }
+  }
+
+  /**
+   * Make sure that tests selected through the web interface are run and
+   * that the results are displayed correctly.
+   */
+  function testWebTestRunner() {
+    $this->pass = t('SimpleTest pass.');
+    $this->fail = t('SimpleTest fail.');
+
+    if ($this->inCURL()) {
+      // Only run following code if this test is running itself through a CURL request.
+      $this->stubTest();
+    }
+    else {
+      // Run this test from web interface.
+      $this->drupalGet('admin/build/testing');
+      $this->assertText(t('It is strongly suggested to run the tests with the first user!'));
+
+      $edit = array();
+      $edit['SimpleTestTestCase'] = TRUE;
+      $this->drupalPost(NULL, $edit, t('Run tests'));
+
+      $this->getTestResults();
+
+      $this->confirmStubTestResults();
+    }
+  }
+
+  /**
+   * Test to be run and the results confirmed.
+   */
+  function stubTest() {
+    $this->pass($this->pass);
+    $this->fail($this->fail);
+  }
+
+  /**
+   * Confirm that the stub test produced the desired results.
+   */
+  function confirmStubTestResults() {
+    $this->assertAssertion($this->pass, '[Other]', 'Pass');
+    $this->assertAssertion($this->fail, '[Other]', 'Fail');
+  }
+
+  /**
+   * Assert that an assertion with the specified values is displayed
+   * in the test results.
+   *
+   * @param string $message Assertion message.
+   * @param string $type Assertion type.
+   * @param string $status Assertion status.
+   * @return Assertion result.
+   */
+  function assertAssertion($message, $type, $status) {
+    $found = FALSE;
+    foreach ($this->results['assertions'] as $assertion) {
+      if ($assertion['message'] == $message &&
+          $assertion['type'] == $type &&
+          $assertion['status'] == $status) {
+        $found = TRUE;
+        break;
+      }
+    }
+    return $this->assertTrue($found, t('Found assertion {"@message", "@type", "@status"}.', array('@message' => $message, '@type' => $type, '@status' => $status)));
+  }
+
+  /**
+   * Get the results from a test and store them in the class array $results.
+   */
+  function getTestResults() {
+    $results = array();
+
+    if ($this->parse()) {
+      if ($fieldset = $this->getResultFieldSet()) {
+        // Code assumes this is the only test in group.
+        $results['summary'] = $this->asText($fieldset->div[1]);
+        $results['name'] = $this->asText($fieldset->fieldset->legend);
+
+        $results['assertions'] = array();
+        $tbody = $fieldset->fieldset->div[2]->table->tbody;
+        foreach ($tbody->tr as $row) {
+          $assertion = array();
+          $assertion['message'] = $this->asText($row->td[0]);
+          $assertion['type'] = $this->asText($row->td[1]);
+          $assertion['status'] = $this->asText($row->td[2]);
+          $results['assertions'][] = $assertion;
+        }
+      }
+    }
+    $this->results = $results;
+  }
+
+  /**
+   * Get the fieldset containing the results for group this test is in.
+   *
+   * @return fieldset containing the results for group this test is in.
+   */
+  function getResultFieldSet() {
+    $fieldsets = $this->elements->xpath('//fieldset');
+    $info = $this->getInfo();
+    foreach ($fieldsets as $fieldset) {
+      if ($fieldset->legend == $info['group']) {
+        return $fieldset;
+      }
+    }
+    return FALSE;
+  }
+
+  /**
+   * Extract the text contained by the element.
+   *
+   * @param SimpleXMLElement $element Element to extract text from.
+   * @return string Extracted text.
+   */
+  function asText(SimpleXMLElement $element) {
+    return strip_tags($element->asXML());
+  }
+
+  /**
+   * Check if the test is being run from inside a CURL request.
+   *
+   * @return The test is being run from inside a CURL request.
+   */
+  function inCURL() {
+    return preg_match("/^simpletest\d+/", $_SERVER['HTTP_USER_AGENT']);
+  }
+}
