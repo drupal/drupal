@@ -55,8 +55,7 @@ class DBLogTestCase extends DrupalWebTestCase {
     $edit['dblog_row_limit'] = $row_limit;
     $this->drupalPost('admin/settings/logging/dblog', $edit, t('Save configuration'));
     $this->assertResponse(200);
-    // Reload variable cache (since the global $conf array was changed in another "process" when the settings page above was posted).
-    $this->reloadVariables();
+
     // Check row limit variable.
     $current_limit = variable_get('dblog_row_limit', 1000);
     $this->assertTrue($current_limit == $row_limit, t('[Cache] Row limit variable of @count equals row limit of @limit', array('@count' => $current_limit, '@limit' => $row_limit)));
@@ -355,16 +354,5 @@ class DBLogTestCase extends DrupalWebTestCase {
       break;
     }
     return $content;
-  }
-
-  /**
-   * Reload variables table.
-   */
-  private function reloadVariables() {
-    global $conf;
-
-    cache_clear_all('variables', 'cache');
-    $conf = variable_init();
-    $this->assertTrue($conf, t('Variables reloaded'));
   }
 }

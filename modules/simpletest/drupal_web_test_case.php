@@ -16,7 +16,8 @@ class DrupalWebTestCase extends UnitTestCase {
   protected $cookie_file = NULL;
   // Overwrite this any time to supply cURL options as necessary,
   // DrupalTestCase itself never sets this but always obeys whats set.
-  protected $curl_options         = array();
+  protected $curl_options = array();
+  protected $db_prefix_original;
   protected $original_file_directory;
 
   /**
@@ -356,20 +357,35 @@ class DrupalWebTestCase extends UnitTestCase {
    */
   function setUp() {
     global $db_prefix;
+
+    // Store necessary current values before switching to prefixed database.
     $this->db_prefix_original = $db_prefix;
     $clean_url_original = variable_get('clean_url', 0);
+
+    // Generate temporary prefixed database to ensure that tests have a clean starting point.
     $db_prefix = 'simpletest' . mt_rand(1000, 1000000);
     include_once './includes/install.inc';
     drupal_install_system();
+
+    // Add the specified modules to the list of modules in the default profile.
     $modules = array_unique(array_merge(func_get_args(), drupal_verify_profile('default', 'en')));
     drupal_install_modules($modules);
+
+    // Store the list of modules for use in subsequent drupalModuleEnable calls.
     $this->_modules = drupal_map_assoc($modules);
     $this->_modules['system'] = 'system';
+
+    // Run defualt profile tasks.
     $task = 'profile';
     default_profile_tasks($task, '');
+
+    // Rebuild caches.
     menu_rebuild();
     actions_synchronize();
     _drupal_flush_css_js();
+    $this->refreshVariables();
+
+    // Restore necessary variables.
     variable_set('install_profile', 'default');
     variable_set('install_task', 'profile-finished');
     variable_set('clean_url', $clean_url_original);
@@ -378,7 +394,26 @@ class DrupalWebTestCase extends UnitTestCase {
     $this->original_file_directory = file_directory_path();
     variable_set('file_directory_path', file_directory_path() . '/' . $db_prefix);
     file_check_directory(file_directory_path(), TRUE); // Create the files directory.
+
     parent::setUp();
+  }
+
+  /**
+   * Refresh the in-memory set of variables. Useful after a page request is made
+   * that changes a variable in a different thread.
+   *
+   * In other words calling a settings page with $this->drupalPost() with a changed
+   * value would update a variable to reflect that change, but in the thread that
+   * made the call (thread running the test) the changed variable would not be
+   * picked up.
+   *
+   * This method clears the variables cache and loads a fresh copy from the database
+   * to ensure that the most up-to-date set of variables is loaded.
+   */
+  function refreshVariables() {
+    global $conf;
+    cache_clear_all('variables', 'cache');
+    $conf = variable_init();
   }
 
   /**
@@ -392,13 +427,20 @@ class DrupalWebTestCase extends UnitTestCase {
       simpletest_clean_temporary_directory(file_directory_path());
       variable_set('file_directory_path', $this->original_file_directory);
 
+      // Remove all prefixed tables (all the tables in the schema).
       $schema = drupal_get_schema(NULL, TRUE);
       $ret = array();
       foreach ($schema as $name => $table) {
         db_drop_table($ret, $name);
       }
+
+      // Return the database prefix to the original.
       $db_prefix = $this->db_prefix_original;
+
+      // Ensure that the internal logged in variable is reset.
       $this->_logged_in = FALSE;
+
+      // Close the CURL handler.
       $this->curlClose();
     }
     parent::tearDown();
@@ -510,7 +552,9 @@ class DrupalWebTestCase extends UnitTestCase {
     // We re-using a CURL connection here.  If that connection still has certain
     // options set, it might change the GET into a POST.  Make sure we clear out
     // previous options.
-    return $this->curlExec(array(CURLOPT_URL => url($path, $options), CURLOPT_POST => FALSE, CURLOPT_POSTFIELDS => array()));
+    $out = $this->curlExec(array(CURLOPT_URL => url($path, $options), CURLOPT_POST => FALSE, CURLOPT_POSTFIELDS => array()));
+    $this->refreshVariables(); // Ensure that any changes to variables in the other thread are picked up.
+    return $out;
   }
 
   /**
@@ -579,7 +623,9 @@ class DrupalWebTestCase extends UnitTestCase {
             }
             $post = implode('&', $post);
           }
-          return $this->curlExec(array(CURLOPT_URL => $action, CURLOPT_POSTFIELDS => $post, CURLOPT_POST => TRUE));
+          $out = $this->curlExec(array(CURLOPT_URL => $action, CURLOPT_POSTFIELDS => $post, CURLOPT_POST => TRUE));
+          $this->refreshVariables(); // Ensure that any changes to variables in the other thread are picked up.
+          return $out;
         }
       }
       // We have not found a form which contained all fields of $edit.

@@ -36,8 +36,6 @@ class ContactTestCase extends DrupalWebTestCase {
     $this->drupalPost('admin/build/contact/settings', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), t('Setting successfully saved.'));
 
-    $this->reloadVariables();
-
     // Delete old categories to ensure that new categories are used.
     $this->deleteCategories();
 
@@ -127,7 +125,6 @@ class ContactTestCase extends DrupalWebTestCase {
 
     // Reload variables.
     $this->drupalLogout();
-    $this->reloadVariables();
 
     // Create web users and attempt to use personal contact forms with default set to true.
     $web_user1 = $this->drupalCreateUser(array());
@@ -156,7 +153,6 @@ class ContactTestCase extends DrupalWebTestCase {
 
     // Reload variables.
     $this->drupalLogout();
-    $this->reloadVariables();
 
     // Create web users and attempt to use personal contact forms with default set to false.
     $web_user3 = $this->drupalCreateUser(array());
@@ -251,16 +247,5 @@ class ContactTestCase extends DrupalWebTestCase {
 
     $this->drupalPost('admin/user/permissions', $edit, t('Save permissions'));
     $this->assertText(t('The changes have been saved.'), t(' [permission] Saved changes.'));
-  }
-
-  /**
-   * Reload variables table.
-   */
-  function reloadVariables() {
-    global $conf;
-
-    cache_clear_all('variables', 'cache');
-    $conf = variable_init();
-    $this->assertTrue($conf, t('Variables reloaded.'));
   }
 }

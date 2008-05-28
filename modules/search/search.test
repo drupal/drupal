@@ -183,7 +183,7 @@ class SearchBikeShed extends DrupalWebTestCase {
     // Create user.
     $this->searching_user = $this->drupalCreateUser(array('search content'));
   }
-  
+
   function testFailedSearch() {
     $this->drupalLogin($this->searching_user);
     $this->drupalGet('search/node');
