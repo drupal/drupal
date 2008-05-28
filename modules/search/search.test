@@ -1,5 +1,5 @@
 <?php
-// $Id: search.test,v 1.3 2008/05/26 17:22:59 dries Exp $
+// $Id: search.test,v 1.4 2008/05/28 13:11:11 dries Exp $
 
 define('SEARCH_TYPE', '_test_');
 
@@ -183,7 +183,7 @@ class SearchBikeShed extends DrupalWebTestCase {
     // Create user.
     $this->searching_user = $this->drupalCreateUser(array('search content'));
   }
-  
+
   function testFailedSearch() {
     $this->drupalLogin($this->searching_user);
     $this->drupalGet('search/node');
