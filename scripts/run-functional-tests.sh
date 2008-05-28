@@ -27,20 +27,22 @@ Example:      {$script} Profile
 All arguments are long options.
 
   --help      Print this page.
-  
+
+  --list      Display all available test groups.
+
   --clean     Cleans up database tables or directories from previous, failed,
               tests and then exits (no tests are run).
 
-   --url      Immediately preceeds a URL to set the host and path. You will
-              need this parameter if Drupal is in a subdirectory on your 
+  --url       Immediately preceeds a URL to set the host and path. You will
+              need this parameter if Drupal is in a subdirectory on your
               localhost and you have not set \$base_url in settings.php.
 
-   --reporter Immediatly preceeds the name of the output reporter to use.  This 
+  --reporter  Immediatly preceeds the name of the output reporter to use.  This
               Defaults to "text", while other options include "xml" and "html".
 
-   --all      Run all available tests.
+  --all       Run all available tests.
 
-   --class    Run tests identified by speficic class names.
+  --class     Run tests identified by speficic class names.
 
   <test1>[,<test2>[,<test3> ...]]
 
@@ -52,7 +54,7 @@ All arguments are long options.
               specific test classes whose test methods will be run.  Tests must
               be separated by commas.  Ignored if --all is specified.
 
-To run this script you will normally invoke it from the root directory of your 
+To run this script you will normally invoke it from the root directory of your
 Drupal installation as
 
 php  ./scripts/{$script}
@@ -61,6 +63,7 @@ EOF;
   exit;
 }
 
+$list = FALSE;
 $clean = FALSE;
 $all = FALSE;
 $class_names = FALSE;
@@ -68,6 +71,9 @@ $test_names = array();
 
 while ($param = array_shift($_SERVER['argv'])) {
   switch ($param) {
+    case '--list':
+      $list = TRUE;
+      break;
     case '--url':
       $url = array_shift($_SERVER['argv']);
       $parsed = parse_url($url);
@@ -132,6 +138,15 @@ $GLOBALS['user'] = user_load(1);
 $total_test = &simpletest_get_total_test();
 
 $test_instances = $total_test->getTestInstances();
+
+if ($list) {
+  // Display all availabe tests.
+  echo("Available test groups:\n----------------------\n");
+  foreach ($test_instances as $group_test) {
+    echo($group_test->getLabel() . "\n");
+  }
+  exit;
+}
 
 if ($all) {
   $test_list = NULL;
