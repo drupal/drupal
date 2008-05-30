@@ -358,7 +358,7 @@ class TaxonomyTestNodeApiTestCase extends DrupalWebTestCase {
 
     $edit = array('title' => $title, 'body' => $body, "taxonomy[$vid][]" => $parent);
 
-    $this->drupalPost('node/'. $node->nid .'/edit', $edit, t('Save'));
+    $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
 
     // TODO Do a MUCH better check here of the information msg.
     $patternArray['information message'] = 'been updated';
@@ -374,9 +374,9 @@ class TaxonomyTestNodeApiTestCase extends DrupalWebTestCase {
     }
 
     // Delete node through browser.
-    $this->drupalPost('node/'. $node->nid .'/delete', array(), t('Delete'));
+    $this->drupalPost('node/' . $node->nid . '/delete', array(), t('Delete'));
     // Checking after delete.
-    $this->drupalGet("node/".$node->nid);
+    $this->drupalGet("node/" . $node->nid);
     $this->assertNoText($termname, t('Checking if node exists'));
     // Checking database fields.
     $num_rows = db_result(db_query('SELECT COUNT(*) FROM {term_node} WHERE nid = %d', $node->nid));

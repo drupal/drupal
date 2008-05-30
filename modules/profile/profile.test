@@ -42,7 +42,7 @@ class ProfileTestCase extends DrupalWebTestCase {
     $this->assertTrue($fid, t('New Profile field has been entered in the database'));
 
     // Check that the new field is appearing on the user edit form.
-    $this->drupalGet('user/' . $this->admin_user->uid . '/edit/' .$category);
+    $this->drupalGet('user/' . $this->admin_user->uid . '/edit/' . $category);
 
     // Checking field.
     if ($type == 'date') {
@@ -202,9 +202,9 @@ class ProfileTestDate extends ProfileTestCase {
 
     // Set date to January 09, 1983
     $edit = array(
-      $field['form_name'] .'[month]' => 1,
-      $field['form_name'] .'[day]' => 9,
-      $field['form_name'] .'[year]' => 1983,
+      $field['form_name'] . '[month]' => 1,
+      $field['form_name'] . '[day]' => 9,
+      $field['form_name'] . '[year]' => 1983,
     );
 
     $this->drupalPost('user/' . $this->normal_user->uid . '/edit/' . $field['category'], $edit, t('Save'));

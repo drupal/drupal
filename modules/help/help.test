@@ -55,16 +55,16 @@ class HelpTestCase extends DrupalWebTestCase {
 
     foreach ($this->modules as $module => $name) {
       // View module help node.
-      $this->drupalGet('admin/help/'. $module);
+      $this->drupalGet('admin/help/' . $module);
       $this->assertResponse($response);
       if ($response == 200) {
         // NOTE: The asserts fail on blog and poll because the get returns the 'admin/help' node instead of the indicated node???
 //        if ($module == 'blog' || $module == 'poll') {
 //          continue;
 //        }
-        $this->assertTitle($name. ' | Drupal', t('['. $module .'] Title was displayed'));
-        $this->assertRaw('<h2>'. t($name) .'</h2>', t('['. $module .'] Heading was displayed'));
-        $this->assertText(t('Home '. $crumb .' Administer '. $crumb .' Help'), t('['. $module .'] Breadcrumbs were displayed'));
+        $this->assertTitle($name . ' | Drupal', t('[' . $module . '] Title was displayed'));
+        $this->assertRaw('<h2>' . t($name) . '</h2>', t('[' . $module . '] Heading was displayed'));
+        $this->assertText(t('Home ' . $crumb . ' Administer ' . $crumb . ' Help'), t('[' . $module . '] Breadcrumbs were displayed'));
       }
     }
   }

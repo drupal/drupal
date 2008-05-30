@@ -50,7 +50,7 @@ class PHPTestCase extends DrupalWebTestCase {
     // Change filter to PHP filter and see that PHP code is evaluated.
     $edit = array();
     $edit['format'] = 3;
-    $this->drupalPost('node/'. $node->nid .'/edit', $edit, t('Save'));
+    $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
     $this->assertRaw(t('Page %title has been updated.', array('%title' => $node->title)), t('PHP code filter turned on.'));
 
     // Make sure that the PHP code shows up as text.
@@ -72,7 +72,7 @@ class PHPTestCase extends DrupalWebTestCase {
     $this->assertText('print', t('PHP code is displayed.'));
 
     // Make sure that user doesn't have access to filter.
-    $this->drupalGet('node/'. $node->nid .'/edit');
+    $this->drupalGet('node/' . $node->nid . '/edit');
     $this->assertNoFieldByName('format', '3', t('Format not available.'));
   }
 
@@ -86,7 +86,7 @@ class PHPTestCase extends DrupalWebTestCase {
     $node = $this->drupalCreateNode(array('uid' => $user->uid));
     $edit = array();
     $edit['body'] = '<?php print "SimpleTest PHP was executed!"; ?>';
-    $this->drupalPost('node/'. $node->nid .'/edit', $edit, t('Save'));
+    $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
     $this->assertRaw(t('Page %title has been updated.', array('%title' => $node->title)), t('PHP code inserted into node.'));
     return $node;
   }

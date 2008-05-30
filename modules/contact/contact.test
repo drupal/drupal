@@ -44,7 +44,7 @@ class ContactTestCase extends DrupalWebTestCase {
     $invalid_recipients = array('invalid', 'invalid@', /*'invalid@site', 'invalid@site.',*/ '@site.', '@site.com');
     foreach ($invalid_recipients as $invalid_recipient) {
       $this->addCategory($this->randomName(16), $invalid_recipient, '', FALSE);
-      $this->assertRaw(t('%recipient is an invalid e-mail address.', array('%recipient' => $invalid_recipient)), t('Caught invalid recipient ('. $invalid_recipient .').'));
+      $this->assertRaw(t('%recipient is an invalid e-mail address.', array('%recipient' => $invalid_recipient)), t('Caught invalid recipient (' . $invalid_recipient . ').'));
     }
 
     // Create valid categories.
@@ -132,7 +132,7 @@ class ContactTestCase extends DrupalWebTestCase {
 
     $this->drupalLogin($web_user1);
 
-    $this->drupalGet('user/'. $web_user2->uid .'/contact');
+    $this->drupalGet('user/' . $web_user2->uid . '/contact');
     $this->assertResponse(200, t('Access to personal contact form granted.'));
 
     $edit = array();
@@ -160,7 +160,7 @@ class ContactTestCase extends DrupalWebTestCase {
 
     $this->drupalLogin($web_user3);
 
-    $this->drupalGet('user/'. $web_user4->uid .'/contact');
+    $this->drupalGet('user/' . $web_user4->uid . '/contact');
     $this->assertResponse(403, t('Access to personal contact form denied.'));
   }
 
@@ -207,7 +207,7 @@ class ContactTestCase extends DrupalWebTestCase {
     $categories = $this->getCategories();
     foreach ($categories as $category) {
       $category_name = db_result(db_query('SELECT category FROM {contact} WHERE cid = %d', array($category)));
-      $this->drupalPost('admin/build/contact/delete/'. $category, array(), t('Delete'));
+      $this->drupalPost('admin/build/contact/delete/' . $category, array(), t('Delete'));
       $this->assertRaw(t('Category %category has been deleted.', array('%category' => $category_name)), t('Category deleted sucessfully.'));
     }
   }
@@ -236,13 +236,13 @@ class ContactTestCase extends DrupalWebTestCase {
     // Get role id (rid) for specified role.
     $rid = db_result(db_query("SELECT rid FROM {role} WHERE name = '%s'", array($role)));
     if ($rid === FALSE) {
-      $this->fail(t(' [permission] Role "'. $role .'" not found.'));
+      $this->fail(t(' [permission] Role "' . $role . '" not found.'));
     }
 
     // Create edit array from permission.
     $edit = array();
     foreach ($permissions as $name => $value) {
-      $edit[$rid .'['. $name .']'] = $value;
+      $edit[$rid . '[' . $name . ']'] = $value;
     }
 
     $this->drupalPost('admin/user/permissions', $edit, t('Save permissions'));

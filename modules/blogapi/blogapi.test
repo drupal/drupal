@@ -75,7 +75,7 @@ class BlogAPITestCase extends DrupalWebTestCase {
     $file = current($this->drupalGetTestFiles('text'));
     $file_contents = file_get_contents($file->filename);
     $file = array();
-    $file['name'] = $this->randomName() .'.txt';
+    $file['name'] = $this->randomName() . '.txt';
     $file['type'] = 'text';
     $file['bits'] = xmlrpc_base64($file_contents);
     $result = xmlrpc($local, 'metaWeblog.newMediaObject', $blog_id, $web_user->name, $web_user->pass_raw, $file);
@@ -146,7 +146,7 @@ class BlogAPITestCase extends DrupalWebTestCase {
   function addTerm($vid, $term) {
     $edit = array();
     $edit['name'] = $term;
-    $this->drupalPost('admin/content/taxonomy/'. $vid .'/add/term', $edit, t('Save'));
+    $this->drupalPost('admin/content/taxonomy/' . $vid . '/add/term', $edit, t('Save'));
     $this->assertRaw(t('Created new term %term.', array('%term' => $edit['name'])), t('Taxonomy term added.'));
 
     $tree = taxonomy_get_tree($vid);

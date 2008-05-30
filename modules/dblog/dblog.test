@@ -108,7 +108,7 @@ class DBLogTestCase extends DrupalWebTestCase {
       );
     $message = 'Log entry added to test the dblog row limit.';
     for ($i = 0; $i < $count; $i++) {
-      $log['message'] = $i. ' => ' .$message;
+      $log['message'] = $i . ' => ' . $message;
       dblog_watchdog($log);
     }
   }
@@ -139,14 +139,14 @@ class DBLogTestCase extends DrupalWebTestCase {
     $this->drupalGet('admin/reports/page-not-found');
     $this->assertResponse($response);
     if ($response == 200) {
-      $this->assertText(t('Top '. $quote .'page not found'. $quote .' errors'), t('DBLog page-not-found report was displayed'));
+      $this->assertText(t('Top ' . $quote . 'page not found' . $quote . ' errors'), t('DBLog page-not-found report was displayed'));
     }
 
     // View dblog access-denied report node.
     $this->drupalGet('admin/reports/access-denied');
     $this->assertResponse($response);
     if ($response == 200) {
-      $this->assertText(t('Top '. $quote .'access denied'. $quote .' errors'), t('DBLog access-denied report was displayed'));
+      $this->assertText(t('Top ' . $quote . 'access denied' . $quote . ' errors'), t('DBLog access-denied report was displayed'));
     }
 
     // View dblog event node.
@@ -184,7 +184,7 @@ class DBLogTestCase extends DrupalWebTestCase {
     // Add user using form to generate add user event (which is not triggered by drupalCreateUser).
     $edit = array();
     $edit['name'] = $name;
-    $edit['mail'] = $name .'@example.com';
+    $edit['mail'] = $name . '@example.com';
     $edit['pass[pass1]'] = $pass;
     $edit['pass[pass2]'] = $pass;
     $edit['status'] = 1;
@@ -252,7 +252,7 @@ class DBLogTestCase extends DrupalWebTestCase {
    */
   private function doNode($type) {
     // Create user.
-    $perm = array('create '. $type .' content', 'edit own '. $type .' content', 'delete own '. $type .' content');
+    $perm = array('create ' . $type . ' content', 'edit own ' . $type . ' content', 'delete own ' . $type . ' content');
     $user = $this->drupalCreateUser($perm);
     // Login user.
     $this->drupalLogin($user);
@@ -260,20 +260,20 @@ class DBLogTestCase extends DrupalWebTestCase {
     // Create node using form to generate add content event (which is not triggered by drupalCreateNode).
     $edit = $this->getContent($type);
     $title = $edit['title'];
-    $this->drupalPost('node/add/'. $type, $edit, t('Save'));
+    $this->drupalPost('node/add/' . $type, $edit, t('Save'));
     $this->assertResponse(200);
     // Retrieve node object.
     $node = node_load(array('title' => $title));
     $this->assertTrue($node != null, t('Node @title was loaded', array('@title' => $title)));
     // Edit node.
     $edit = $this->getContentUpdate($type);
-    $this->drupalPost('node/'. $node->nid .'/edit', $edit, t('Save'));
+    $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
     $this->assertResponse(200);
     // Delete node.
-    $this->drupalPost('node/'. $node->nid .'/delete', array(), t('Delete'));
+    $this->drupalPost('node/' . $node->nid . '/delete', array(), t('Delete'));
     $this->assertResponse(200);
     // View node (to generate page not found event).
-    $this->drupalGet('node/'. $node->nid);
+    $this->drupalGet('node/' . $node->nid);
     $this->assertResponse(404);
     // View the dblog report (to generate access denied event).
     $this->drupalGet('admin/reports/dblog');

@@ -100,7 +100,7 @@ class BlogTestCase extends DrupalWebTestCase {
     if ($response2 == 200) {
       $this->assertTitle(t('Blog | Drupal'), t('Blog help node was displayed'));
       $this->assertText(t('Blog'), t('Blog help node was displayed'));
-      $this->assertText(t('Home '. $crumb .' Administer '. $crumb .' Help'), t('Breadcrumbs were displayed'));
+      $this->assertText(t('Home ' . $crumb . ' Administer ' . $crumb . ' Help'), t('Breadcrumbs were displayed'));
     }
 
     // Verify the blog block was displayed.
@@ -109,17 +109,17 @@ class BlogTestCase extends DrupalWebTestCase {
     $this->assertText(t('Recent blog posts'), t('Blog block was displayed'));
 
     // View blog node.
-    $this->drupalGet('node/'. $node->nid);
+    $this->drupalGet('node/' . $node->nid);
     $this->assertResponse(200);
     $this->assertTitle($node->title. ' | Drupal', t('Blog node was displayed'));
-    $this->assertText(t('Home '. $crumb .' Blogs '. $crumb .' @name'. $quote .'s blog', array('@name' => $node_user->name)), t('Breadcrumbs were displayed'));
+    $this->assertText(t('Home ' . $crumb . ' Blogs ' . $crumb . ' @name' . $quote . 's blog', array('@name' => $node_user->name)), t('Breadcrumbs were displayed'));
 
     // View blog edit node.
-    $this->drupalGet('node/'. $node->nid .'/edit');
+    $this->drupalGet('node/' . $node->nid . '/edit');
     $this->assertResponse($response);
     if ($response == 200) {
       $this->assertTitle($node->title. ' | Drupal', t('Blog edit node was displayed'));
-      $this->assertText(t('Home '. $crumb .' @title', array('@title' => $node->title)), t('Breadcrumbs were displayed'));
+      $this->assertText(t('Home ' . $crumb . ' @title', array('@title' => $node->title)), t('Breadcrumbs were displayed'));
     }
 
     if ($response == 200) {
@@ -127,11 +127,11 @@ class BlogTestCase extends DrupalWebTestCase {
       $edit = array();
       $edit['title'] = 'node/' . $node->nid;
       $edit['body'] = $this->randomName(256);
-      $this->drupalPost('node/'. $node->nid .'/edit', $edit, t('Save'));
+      $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
       $this->assertRaw(t('Blog entry %title has been updated.', array('%title' => $edit['title'])), t('Blog node was edited'));
 
       // Delete blog node.
-      $this->drupalPost('node/'. $node->nid .'/delete', array(), t('Delete'));
+      $this->drupalPost('node/' . $node->nid . '/delete', array(), t('Delete'));
       $this->assertResponse($response);
       $this->assertRaw(t('Blog entry %title has been deleted.', array('%title' => $edit['title'])), t('Blog node was deleted'));
     }
@@ -147,7 +147,7 @@ class BlogTestCase extends DrupalWebTestCase {
     $crumb = '›';
 
     // Confirm blog entries link exists on the user page.
-    $this->drupalGet('user/'. $user->uid);
+    $this->drupalGet('user/' . $user->uid);
     $this->assertResponse(200);
     $this->assertText(t('View recent blog entries'), t('View recent blog entries link was displayed'));
 
@@ -162,16 +162,16 @@ class BlogTestCase extends DrupalWebTestCase {
     $this->assertText(t('Home'), t('Breadcrumbs were displayed'));
 
     // Confirm a blog page was displayed per user.
-    $this->drupalGet('blog/'. $user->uid);
+    $this->drupalGet('blog/' . $user->uid);
     $this->assertTitle(t("@name's blog | Drupal", array('@name' => $user->name)), t('User blog node was displayed'));
-    $this->assertText(t('Home '. $crumb .' Blogs'), t('Breadcrumbs were displayed'));
+    $this->assertText(t('Home ' . $crumb . ' Blogs'), t('Breadcrumbs were displayed'));
 
     // Confirm a blog feed was displayed.
     $this->drupalGet('blog/feed');
     $this->assertTitle(t('Drupal blogs'), t('Blog feed was displayed'));
 
     // Confirm a blog feed was displayed per user.
-    $this->drupalGet('blog/'. $user->uid .'/feed');
+    $this->drupalGet('blog/' . $user->uid . '/feed');
     $this->assertTitle(t("@name's blog", array('@name' => $user->name)), t('User blog feed was displayed'));
   }
 }

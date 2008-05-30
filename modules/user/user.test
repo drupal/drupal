@@ -29,7 +29,7 @@ class UserRegistrationTestCase extends DrupalWebTestCase {
 
     $edit = array();
     $edit['name'] = $name = $this->randomName();
-    $edit['mail'] = $mail = $edit['name'] .'@example.com';
+    $edit['mail'] = $mail = $edit['name'] . '@example.com';
     $this->drupalPost('user/register', $edit, t('Create new account'));
     $this->assertText(t('Your password and further instructions have been sent to your e-mail address.'), t('User registered successfully.'));
 
@@ -185,7 +185,7 @@ class UserDeleteTestCase extends DrupalWebTestCase {
 
     $edit = array();
     $edit['name'] = $this->randomName();
-    $edit['mail'] = $edit['name'] .'@example.com';
+    $edit['mail'] = $edit['name'] . '@example.com';
     $this->drupalPost('user/register', $edit, t('Create new account'));
     $this->assertText(t('Your password and further instructions have been sent to your e-mail address.'), t('User registered successfully.'));
 
@@ -196,7 +196,7 @@ class UserDeleteTestCase extends DrupalWebTestCase {
     $this->drupalLogin($admin_user);
 
     // Delete user.
-    $this->drupalGet('user/'. $user->uid .'/edit');
+    $this->drupalGet('user/' . $user->uid . '/edit');
     $this->drupalPost(NULL, NULL, t('Delete'));
     $this->assertRaw(t('Are you sure you want to delete the account %name?', array('%name' => $user->name)), t('[confirm deletion] Asks for confirmation.'));
     $this->assertText(t('All submissions made by this user will be attributed to the anonymous account. This action cannot be undone.'), t('[confirm deletion] Inform that all submissions will be attributed to anonymouse account.'));

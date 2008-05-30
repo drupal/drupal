@@ -39,7 +39,7 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     // Add an additional tag.
     $edit = array();
     $edit['allowed_html_1'] = '<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd>' . ' <quote>'; // Adding <quote> tag.
-    $this->drupalPost('admin/settings/filters/' . $filtered .'/configure', $edit, t('Save configuration'));
+    $this->drupalPost('admin/settings/filters/' . $filtered . '/configure', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), t('Allowed HTML tag added.'));
 
     $this->assertRaw(htmlentities($edit['allowed_html_1']), t('Tag displayed.'));
@@ -49,8 +49,8 @@ class FilterAdminTestCase extends DrupalWebTestCase {
 
     // Reorder filters.
     $edit = array();
-    $edit['weights[filter/' . $second_filter .']'] = 1;
-    $edit['weights[filter/' . $first_filter .']'] = 2;
+    $edit['weights[filter/' . $second_filter . ']'] = 1;
+    $edit['weights[filter/' . $first_filter . ']'] = 2;
     $this->drupalPost('admin/settings/filters/' . $filtered . '/order', $edit, t('Save configuration'));
     $this->assertText(t('The filter ordering has been saved.'), t('Order saved successfully.'));
 
@@ -131,7 +131,7 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     // Allowed tags.
     $edit = array();
     $edit['allowed_html_1'] = '<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd>';
-    $this->drupalPost('admin/settings/filters/' . $filtered .'/configure', $edit, t('Save configuration'));
+    $this->drupalPost('admin/settings/filters/' . $filtered . '/configure', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), t('Changes reverted.'));
 
     // Full HTML.
@@ -142,9 +142,9 @@ class FilterAdminTestCase extends DrupalWebTestCase {
 
     // Filter order.
     $edit = array();
-    $edit['weights[filter/' . $second_filter .']'] = 2;
-    $edit['weights[filter/' . $first_filter .']'] = 1;
-    $this->drupalPost('admin/settings/filters/' . $filtered .'/order', $edit, t('Save configuration'));
+    $edit['weights[filter/' . $second_filter . ']'] = 2;
+    $edit['weights[filter/' . $first_filter . ']'] = 1;
+    $this->drupalPost('admin/settings/filters/' . $filtered . '/order', $edit, t('Save configuration'));
     $this->assertText(t('The filter ordering has been saved.'), t('Order successfully reverted.'));
   }
 
@@ -269,7 +269,7 @@ END;
     $edit['type'] = 'page';
     $page = $this->drupalCreateNode($edit);
 
-    $this->drupalGet('node/' .$page->nid);
+    $this->drupalGet('node/' . $page->nid);
     $this->assertRaw('href="http://www.test1.com"', t('Parse simple www-string but not the end-of-sentence period.'));
     $this->assertRaw('href="mailto:person@test2.com"', t('Parse simple email string but not the end-of-sentence period.'));
     $this->assertRaw('href="http://www.test3.com"', t('Parse simple HTTP URL but not the end-of-sentence period.'));

@@ -258,7 +258,7 @@ class SearchRankingTestCase extends DrupalWebTestCase {
 
     // Add a comment to one of the nodes.
     $edit = array('subject' => 'my comment title', 'comment' => 'some random comment');
-    $this->drupalGet('comment/reply/'. $nodes['comments'][1]->nid);
+    $this->drupalGet('comment/reply/' . $nodes['comments'][1]->nid);
     $this->drupalPost(NULL, $edit, t('Preview'));
     $this->drupalPost(NULL, $edit, t('Save'));
 
@@ -274,12 +274,12 @@ class SearchRankingTestCase extends DrupalWebTestCase {
     foreach ($node_ranks as $node_rank) {
       // Disable all relevancy rankings except the one we are testing.
       foreach ($node_ranks as $var) {
-        variable_set('node_rank_'. $var, $var == $node_rank ? 10 : 0);
+        variable_set('node_rank_' . $var, $var == $node_rank ? 10 : 0);
       }
 
       // Do the search and assert the results.
       $set = node_search('search', 'rocks');
-      $this->assertEqual($set[0]['node']->nid, $nodes[$node_rank][1]->nid, 'Search ranking "'. $node_rank .'" order.');
+      $this->assertEqual($set[0]['node']->nid, $nodes[$node_rank][1]->nid, 'Search ranking "' . $node_rank . '" order.');
     }
   }
 }

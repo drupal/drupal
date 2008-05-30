@@ -45,7 +45,7 @@ class BlockTestCase extends DrupalWebTestCase {
     // Set the created box to a specific region.
     // TODO: Implement full region checking.
     $edit = array();
-    $edit['block_'. $bid .'[region]'] = 'left';
+    $edit['block_' . $bid . '[region]'] = 'left';
     $this->drupalPost('admin/build/block', $edit, t('Save blocks'));
 
     // Confirm that the box was moved to the proper region.
@@ -55,7 +55,7 @@ class BlockTestCase extends DrupalWebTestCase {
     $this->assertText(t($box['title']), t('Box successfully being displayed on the page.'));
 
     // Delete the created box & verify that it's been deleted and no longer appearing on the page.
-    $this->drupalPost('admin/build/block/delete/'. $bid, array(), t('Delete'));
+    $this->drupalPost('admin/build/block/delete/' . $bid, array(), t('Delete'));
     $this->assertRaw(t('The block %title has been removed.', array('%title' => $box['info'])), t('Box successfully deleted.'));
     $this->assertNoText(t($box['title']), t('Box no longer appears on page.'));
   }
@@ -71,7 +71,7 @@ class BlockTestCase extends DrupalWebTestCase {
     $block['title'] = $this->randomName(8);
 
     // Set block title to confirm that interface works and override any custom titles.
-    $this->drupalPost('admin/build/block/configure/'. $block['module'] .'/'. $block['delta'], array('title' => $block['title']), t('Save block'));
+    $this->drupalPost('admin/build/block/configure/' . $block['module'] . '/' . $block['delta'], array('title' => $block['title']), t('Save block'));
     $this->assertText(t('The block configuration has been saved.'), t('Block title set.'));
     $bid = db_result(db_query("SELECT bid FROM {blocks} WHERE module = '%s' AND delta = %d", array($block['module'], $block['delta'])));
 
@@ -80,7 +80,7 @@ class BlockTestCase extends DrupalWebTestCase {
 
     // Set the created block to a specific region.
     $edit = array();
-    $edit[$block['module'] .'_'. $block['delta'] .'[region]'] = 'left';
+    $edit[$block['module'] . '_' . $block['delta'] . '[region]'] = 'left';
     $this->drupalPost('admin/build/block', $edit, t('Save blocks'));
 
     // Confirm that the block was moved to the proper region.
@@ -92,7 +92,7 @@ class BlockTestCase extends DrupalWebTestCase {
 
     // Set the block to the disabled region.
     $edit = array();
-    $edit[$block['module'] .'_'. $block['delta'] .'[region]'] = '-1';
+    $edit[$block['module'] . '_' . $block['delta'] . '[region]'] = '-1';
     $this->drupalPost('admin/build/block', $edit, t('Save blocks'));
 
     // Confirm that the block was moved to the proper region.
@@ -101,11 +101,11 @@ class BlockTestCase extends DrupalWebTestCase {
 
     // For convenience of developers, put the navigation block back.
     $edit = array();
-    $edit[$block['module'] .'_'. $block['delta'] .'[region]'] = 'left';
+    $edit[$block['module'] . '_' . $block['delta'] . '[region]'] = 'left';
     $this->drupalPost('admin/build/block', $edit, t('Save blocks'));
     $this->assertText(t('The block settings have been updated.'), t('Block successfully move to disabled region.'));
 
-    $this->drupalPost('admin/build/block/configure/'. $block['module'] .'/'. $block['delta'], array('title' => 'Navigation'), t('Save block'));
+    $this->drupalPost('admin/build/block/configure/' . $block['module'] . '/' . $block['delta'], array('title' => 'Navigation'), t('Save block'));
     $this->assertText(t('The block configuration has been saved.'), t('Block title set.'));
   }
 }

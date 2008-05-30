@@ -111,9 +111,9 @@ class MenuTestCase extends DrupalWebTestCase {
     $this->assertText($title, 'Menu created');
 
     // Enable the custom menu block.
-    $menu_name = 'menu-'. $menu_name; // Drupal prepends the name with 'menu-'.
+    $menu_name = 'menu-' . $menu_name; // Drupal prepends the name with 'menu-'.
     $edit = array();
-    $edit['menu_'. $menu_name .'[region]'] = 'left';
+    $edit['menu_' . $menu_name . '[region]'] = 'left';
     $this->drupalPost('admin/build/block', $edit, t('Save blocks'));
     $this->assertResponse(200);
     $this->assertText(t('The block settings have been updated.'), t('Custom menu block was enabled'));
@@ -147,8 +147,8 @@ class MenuTestCase extends DrupalWebTestCase {
     $node2 = $this->drupalCreateNode(array('type' => 'article', 'uid' => $this->big_user->uid));
 
     // Add menu items.
-    $item1 = $this->addMenuItem(0, 'node/'. $node1->nid, $menu_name);
-    $item2 = $this->addMenuItem($item1['mlid'], 'node/'. $node2->nid, $menu_name);
+    $item1 = $this->addMenuItem(0, 'node/' . $node1->nid, $menu_name);
+    $item2 = $this->addMenuItem($item1['mlid'], 'node/' . $node2->nid, $menu_name);
 
     // Verify menu items.
     $this->verifyMenuItem($item1, $node1);
@@ -180,14 +180,14 @@ class MenuTestCase extends DrupalWebTestCase {
     $this->drupalGet("admin/build/menu-customize/$menu_name/add");
     $this->assertResponse(200);
 
-    $title = '!link_'. $this->randomName(16);
+    $title = '!link_' . $this->randomName(16);
     $edit = array (
       'menu[link_path]' => $link,
       'menu[link_title]' => $title,
       'menu[description]' => '',
       'menu[enabled]' => TRUE, // Use this to disable the menu and test.
       'menu[expanded]' => TRUE, // Setting this to true should test whether it works when we do the std_user tests.
-      'menu[parent]' =>  $menu_name .':'. $plid,
+      'menu[parent]' =>  $menu_name . ':' . $plid,
       'menu[weight]' => '0',
     );
 
@@ -202,8 +202,8 @@ class MenuTestCase extends DrupalWebTestCase {
     $item = db_fetch_array(db_query("SELECT * FROM {menu_links} WHERE link_title = '%s'", $title));
 
     // Check the structure in the DB of the two menu items.
-    // In general, if $n = $item['depth'] then $item['p'. $n] == $item['mlid'] and $item['p'. ($n - 1)] == $item['plid'] (unless depth == 0).
-    // All $item['p'. $n] for $n > depth must be 0.
+    // In general, if $n = $item['depth'] then $item['p'. $n] == $item['mlid'] and $item['p' . ($n - 1)] == $item['plid'] (unless depth == 0).
+    // All $item['p' . $n] for $n > depth must be 0.
     // We know link1 is at the top level, so $item1['deptj'] == 1 and $item1['plid'] == 0.
     // We know that the parent of link2 is link1, so $item2['plid'] == $item1['mlid'].
     // Both menu items were created in the navigation menu.
@@ -289,7 +289,7 @@ class MenuTestCase extends DrupalWebTestCase {
 //    $this->assertRaw(t('The menu item %title has been updated.', array('%title' => $title)), t('Menu item was edited'));
 
     // Verify menu item.
-    $this->drupalGet('admin/build/menu-customize/'. $item['menu_name']);
+    $this->drupalGet('admin/build/menu-customize/' . $item['menu_name']);
     $this->assertText($title, 'Menu item was edited');
   }
 
@@ -412,7 +412,7 @@ class MenuTestCase extends DrupalWebTestCase {
 
     // View menu edit node.
     $item = $this->getStandardMenuItem();
-    $this->drupalGet('admin/build/menu/item/'. $item['mlid'] .'/edit');
+    $this->drupalGet('admin/build/menu/item/' . $item['mlid'] . '/edit');
     $this->assertResponse($response);
     if ($response == 200) {
       $this->assertText(t('Edit menu item'), t('Menu edit node was displayed'));

@@ -34,7 +34,7 @@ class AggregatorTestCase extends DrupalWebTestCase {
    * @param object $feed Feed object representing the feed.
    */
   function deleteFeed($feed) {
-    $this->drupalPost('admin/content/aggregator/edit/feed/'. $feed->fid, array(), t('Delete'));
+    $this->drupalPost('admin/content/aggregator/edit/feed/' . $feed->fid, array(), t('Delete'));
     $this->assertRaw(t('The feed %title has been deleted.', array('%title' => $feed->title)), t('Feed deleted successfully.'));
   }
 
@@ -45,7 +45,7 @@ class AggregatorTestCase extends DrupalWebTestCase {
    */
   function getFeedEditArray() {
     $feed_name = $this->randomName(10, self::$prefix);
-    $feed_url = url(NULL, array('absolute' => TRUE)) .'rss.xml?feed='. $feed_name;
+    $feed_url = url(NULL, array('absolute' => TRUE)) . 'rss.xml?feed=' . $feed_name;
     $edit = array(
       'title' => $feed_name,
       'url' => $feed_url,
@@ -69,7 +69,7 @@ class AggregatorTestCase extends DrupalWebTestCase {
     $feed_count = $feed_count > 10 ? 10 : $feed_count;
 
     // Refresh the feed (simulated link click).
-    $this->drupalGet('admin/content/aggregator/update/'. $feed->fid);
+    $this->drupalGet('admin/content/aggregator/update/' . $feed->fid);
 
     // Ensure we have the right number of items.
     $result = db_query('SELECT iid FROM {aggregator_item} WHERE fid = %d', $feed->fid);
@@ -141,7 +141,7 @@ class AddFeedTestCase extends AggregatorTestCase {
     $this->assertTrue($this->uniqueFeed($feed->title, $feed->url), t('The feed is unique.'));
 
     // Check feed source.
-    $this->drupalGet('aggregator/sources/'. $feed->fid);
+    $this->drupalGet('aggregator/sources/' . $feed->fid);
     $this->assertResponse(200, t('Feed source exists.'));
     $this->assertText($feed->title, t('Page title'));
 
@@ -171,7 +171,7 @@ class UpdateFeedTestCase extends AggregatorTestCase {
     // Get new feed data array and modify newly created feed.
     $edit = $this->getFeedEditArray();
     $edit['refresh'] =  1800; // Change refresh value.
-    $this->drupalPost('admin/content/aggregator/edit/feed/'. $feed->fid, $edit, t('Save'));
+    $this->drupalPost('admin/content/aggregator/edit/feed/' . $feed->fid, $edit, t('Save'));
     $this->assertRaw(t('The feed %name has been updated.', array('%name' => $edit['title'])), t('The feed %name has been updated.', array('%name' => $edit['title'])));
 
     // Check feed data.
@@ -179,7 +179,7 @@ class UpdateFeedTestCase extends AggregatorTestCase {
     $this->assertTrue($this->uniqueFeed($edit['title'], $edit['url']), t('The feed is unique.'));
 
     // Check feed source.
-    $this->drupalGet('aggregator/sources/'. $feed->fid);
+    $this->drupalGet('aggregator/sources/' . $feed->fid);
     $this->assertResponse(200, t('Feed source exists.'));
     $this->assertText($edit['title'], t('Page title'));
 
@@ -211,7 +211,7 @@ class RemoveFeedTestCase extends AggregatorTestCase {
     $this->deleteFeed($feed);
 
     // Check feed source.
-    $this->drupalGet('aggregator/sources/'. $feed->fid);
+    $this->drupalGet('aggregator/sources/' . $feed->fid);
     $this->assertResponse(404, t('Deleted feed source does not exists.'));
 
     // Check database for feed.

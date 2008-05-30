@@ -44,7 +44,7 @@ class CommentTestCase extends DrupalWebTestCase {
 
     // Post comment without subject.
     $this->drupalLogin($this->web_user);
-    $this->drupalGet('comment/reply/'. $this->node->nid);
+    $this->drupalGet('comment/reply/' . $this->node->nid);
     $this->assertNoFieldByName('subject', '', t('Subject field not found.'));
 
     // Set comments to have subject and preview to required.
@@ -60,12 +60,12 @@ class CommentTestCase extends DrupalWebTestCase {
     $this->assertTrue($this->commentExists($comment), t('Comment found.'));
 
     // Reply to comment.
-    $this->drupalGet('comment/reply/'. $this->node->nid .'/'. $comment->id);
+    $this->drupalGet('comment/reply/' . $this->node->nid . '/' . $comment->id);
     $reply = $this->postComment(NULL, $this->randomName(), $this->randomName());
     $this->assertTrue($this->commentExists($reply, TRUE), t('Reply found.'));
 
     // Edit reply.
-    $this->drupalGet('comment/edit/'. $reply->id);
+    $this->drupalGet('comment/edit/' . $reply->id);
     $reply = $this->postComment(NULL, $this->randomName(), $this->randomName());
     $this->assertTrue($this->commentExists($reply, TRUE), t('Modified reply found.'));
 
@@ -74,7 +74,7 @@ class CommentTestCase extends DrupalWebTestCase {
     $this->drupalLogin($this->admin_user);
     $this->deleteComment($comment);
 
-    $this->drupalGet('node/'. $this->node->nid);
+    $this->drupalGet('node/' . $this->node->nid);
     $this->assertFalse($this->commentExists($comment), t('Comment not found.'));
     $this->assertFalse($this->commentExists($reply, TRUE), t('Reply not found.'));
   }
@@ -90,7 +90,7 @@ class CommentTestCase extends DrupalWebTestCase {
 
     // Submit comment through node form.
     $this->drupalLogin($this->web_user);
-    $this->drupalGet('node/'. $this->node->nid);
+    $this->drupalGet('node/' . $this->node->nid);
     $form_comment = $this->postComment(NULL, $this->randomName(), $this->randomName());
     $this->assertTrue($this->commentExists($form_comment), t('Form comment found.'));
 
@@ -120,7 +120,7 @@ class CommentTestCase extends DrupalWebTestCase {
     $this->drupalLogout();
 
     // Post anonymous comment with contact info (optional).
-    $this->drupalGet('comment/reply/'. $this->node->nid);
+    $this->drupalGet('comment/reply/' . $this->node->nid);
     $this->assertTrue($this->commentContactInfoAvailable(), t('Contact information available.'));
 
     $anonymous_comment2 = $this->postComment($this->node, $this->randomName(), $this->randomName());
@@ -132,7 +132,7 @@ class CommentTestCase extends DrupalWebTestCase {
     $this->drupalLogout();
 
     // Try to post comment with contact info (required).
-    $this->drupalGet('comment/reply/'. $this->node->nid);
+    $this->drupalGet('comment/reply/' . $this->node->nid);
     $this->assertTrue($this->commentContactInfoAvailable(), t('Contact information available.'));
 
     $anonymous_comment3 = $this->postComment($this->node, $this->randomName(), $this->randomName(), TRUE, TRUE);
@@ -148,19 +148,19 @@ class CommentTestCase extends DrupalWebTestCase {
     $this->performCommentOperation($anonymous_comment3, 'unpublish');
 
     $this->drupalGet('admin/content/comment/approval');
-    $this->assertRaw('comments['. $anonymous_comment3->id .']', t('Comment was unpublished.'));
+    $this->assertRaw('comments[' . $anonymous_comment3->id . ']', t('Comment was unpublished.'));
 
     // Publish comment.
     $this->performCommentOperation($anonymous_comment3, 'publish', TRUE);
 
     $this->drupalGet('admin/content/comment');
-    $this->assertRaw('comments['. $anonymous_comment3->id .']', t('Comment was published.'));
+    $this->assertRaw('comments[' . $anonymous_comment3->id . ']', t('Comment was published.'));
 
     // Delete comment.
     $this->performCommentOperation($anonymous_comment3, 'delete');
 
     $this->drupalGet('admin/content/comment');
-    $this->assertNoRaw('comments['. $anonymous_comment3->id .']', t('Comment was deleted.'));
+    $this->assertNoRaw('comments[' . $anonymous_comment3->id . ']', t('Comment was deleted.'));
 
     // Set anonymouse comments to require approval.
     $this->setAnonymousUserComment(TRUE, FALSE);
@@ -186,7 +186,7 @@ class CommentTestCase extends DrupalWebTestCase {
     $this->performCommentOperation($anonymous_comment4, 'publish', TRUE);
     $this->drupalLogout();
 
-    $this->drupalGet('node/'. $this->node->nid);
+    $this->drupalGet('node/' . $this->node->nid);
     $this->assertTrue($this->commentExists($anonymous_comment4), t('Anonymous comment visible.'));
 
     // Reset.
@@ -213,7 +213,7 @@ class CommentTestCase extends DrupalWebTestCase {
     }
 
     if ($node !== NULL) {
-      $this->drupalGet('comment/reply/'. $node->nid);
+      $this->drupalGet('comment/reply/' . $node->nid);
     }
 
     if ($preview) {
@@ -245,11 +245,11 @@ class CommentTestCase extends DrupalWebTestCase {
    */
   function commentExists($comment, $reply = FALSE) {
     if ($comment && is_object($comment)) {
-      $regex = '/'. ($reply ? '<div class="indented">(.*?)' : '');
-      $regex .= '<a id="comment-'. $comment->id .'"(.*?)'; // Comment anchor.
+      $regex = '/' . ($reply ? '<div class="indented">(.*?)' : '');
+      $regex .= '<a id="comment-' . $comment->id . '"(.*?)'; // Comment anchor.
       $regex .= '<div(.*?)'; // Begin in comment div.
-      $regex .= $comment->subject .'(.*?)'; // Match subject.
-      $regex .= $comment->comment .'(.*?)'; // Match comment.
+      $regex .= $comment->subject . '(.*?)'; // Match subject.
+      $regex .= $comment->comment . '(.*?)'; // Match comment.
       $regex .= '<\/div>/s'; // Dot matches newlines and ensure that match doesn't bleed outside comment div.
 
       return preg_match($regex, $this->drupalGetContent());
@@ -266,7 +266,7 @@ class CommentTestCase extends DrupalWebTestCase {
    *   Comment to delete.
    */
   function deleteComment($comment) {
-    $this->drupalPost('comment/delete/'. $comment->id, array(), t('Delete'));
+    $this->drupalPost('comment/delete/' . $comment->id, array(), t('Delete'));
     $this->assertText(t('The comment and all its replies have been deleted.'), t('Comment deleted.'));
   }
 
@@ -277,7 +277,7 @@ class CommentTestCase extends DrupalWebTestCase {
    *   Subject value.
    */
   function setCommentSubject($enabled) {
-    $this->setCommentSettings('comment_subject_field', ($enabled ? '1' : '0'), 'Comment subject '. ($enabled ? 'enabled' : 'disabled') .'.');
+    $this->setCommentSettings('comment_subject_field', ($enabled ? '1' : '0'), 'Comment subject ' . ($enabled ? 'enabled' : 'disabled') . '.');
   }
 
   /**
@@ -287,7 +287,7 @@ class CommentTestCase extends DrupalWebTestCase {
    *   Preview value.
    */
   function setCommentPreview($required) {
-    $this->setCommentSettings('comment_preview', ($required ? '1' : '0'), 'Comment preview '. ($required ? 'required' : 'optional') .'.');
+    $this->setCommentSettings('comment_preview', ($required ? '1' : '0'), 'Comment preview ' . ($required ? 'required' : 'optional') . '.');
   }
 
   /**
@@ -297,7 +297,7 @@ class CommentTestCase extends DrupalWebTestCase {
    *   Form value.
    */
   function setCommentForm($enabled) {
-    $this->setCommentSettings('comment_form_location', ($enabled ? '1' : '3'), 'Comment controls '. ($enabled ? 'enabled' : 'disabled') .'.');
+    $this->setCommentSettings('comment_form_location', ($enabled ? '1' : '3'), 'Comment controls ' . ($enabled ? 'enabled' : 'disabled') . '.');
   }
 
   /**
@@ -307,7 +307,7 @@ class CommentTestCase extends DrupalWebTestCase {
    *   Anonymous level.
    */
   function setCommentAnonymous($level) {
-    $this->setCommentSettings('comment_anonymous', $level, 'Anonymous commenting set to level '. $level .'.');
+    $this->setCommentSettings('comment_anonymous', $level, 'Anonymous commenting set to level ' . $level . '.');
   }
 
   /**
@@ -321,7 +321,7 @@ class CommentTestCase extends DrupalWebTestCase {
    *   Status message to display.
    */
   function setCommentSettings($name, $value, $message) {
-    variable_set($name .'_story', $value);
+    variable_set($name . '_story', $value);
     $this->assertTrue(TRUE, t($message)); // Display status message.
   }
 
@@ -339,7 +339,7 @@ class CommentTestCase extends DrupalWebTestCase {
     $edit['1[post comments]'] = $enabled;
     $edit['1[post comments without approval]'] = $without_approval;
     $this->drupalPost('admin/user/permissions', $edit, t('Save permissions'));
-    $this->assertText(t('The changes have been saved.'), t('Anonymous user comments '. ($enabled ? 'enabled' : 'disabled') .'.'));
+    $this->assertText(t('The changes have been saved.'), t('Anonymous user comments ' . ($enabled ? 'enabled' : 'disabled') . '.'));
   }
 
   /**
@@ -364,15 +364,15 @@ class CommentTestCase extends DrupalWebTestCase {
   function performCommentOperation($comment, $operation, $approval = FALSE) {
     $edit = array();
     $edit['operation'] = $operation;
-    $edit['comments['. $comment->id .']'] = TRUE;
-    $this->drupalPost('admin/content/comment'. ($approval ? '/approval' : ''), $edit, t('Update'));
+    $edit['comments[' . $comment->id . ']'] = TRUE;
+    $this->drupalPost('admin/content/comment' . ($approval ? '/approval' : ''), $edit, t('Update'));
 
     if ($operation == 'delete') {
       $this->drupalPost(NULL, array(), t('Delete comments'));
-      $this->assertText(t('The comments have been deleted.'), t('Operation "'. $operation .'" was performed on comment.'));
+      $this->assertText(t('The comments have been deleted.'), t('Operation "' . $operation . '" was performed on comment.'));
     }
     else {
-      $this->assertText(t('The update has been performed.'), t('Operation "'. $operation .'" was performed on comment.'));
+      $this->assertText(t('The update has been performed.'), t('Operation "' . $operation . '" was performed on comment.'));
     }
   }
 
@@ -386,7 +386,7 @@ class CommentTestCase extends DrupalWebTestCase {
    */
   function getUnaprovedComment($subject) {
     $this->drupalGet('admin/content/comment/approval');
-    preg_match('/href="(.*?)#comment-([^"]+)"(.*?)>('. $subject .')/', $this->drupalGetContent(), $match);
+    preg_match('/href="(.*?)#comment-([^"]+)"(.*?)>(' . $subject . ')/', $this->drupalGetContent(), $match);
 
     return $match[2];
   }

@@ -45,29 +45,29 @@ class TranslationTestCase extends DrupalWebTestCase {
     $this->drupalLogin($translator);
 
     // Create page in English.
-    $node_title = 'Test Translation '. $this->randomName();
+    $node_title = 'Test Translation ' . $this->randomName();
     $node = $this->createPage($node_title, 'Node body.', 'en');
 
     // Submit translation in Spanish.
-    $node_trans_title = 'Test Traduccion '. $this->randomName();
+    $node_trans_title = 'Test Traduccion ' . $this->randomName();
     $node_trans = $this->createTranslation($node->nid, $node_trans_title, 'Nodo cuerpo.', 'es');
 
     // Update origninal and mark translation as outdated.
     $edit = array();
     $edit['body'] = 'Node body. Additional Text.';
     $edit['translation[retranslate]'] = TRUE;
-    $this->drupalPost('node/'. $node->nid .'/edit', $edit, t('Save'));
+    $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
     $this->assertRaw(t('Page %title has been updated.', array('%title' => $node_title)), t('Original node updated.'));
 
     // Check to make sure that interface shows translation as outdated
-    $this->drupalGet('node/'. $node->nid .'/translate');
-    $this->assertRaw('<span class="marker">'. t('outdated') .'</span>', t('Translation marked as outdated.'));
+    $this->drupalGet('node/' . $node->nid . '/translate');
+    $this->assertRaw('<span class="marker">' . t('outdated') . '</span>', t('Translation marked as outdated.'));
 
     // Update translation and mark as updated.
     $edit = array();
     $edit['body'] = 'Nodo cuerpo. Texto adicional.';
     $edit['translation[status]'] = FALSE;
-    $this->drupalPost('node/'. $node_trans->nid .'/edit', $edit, t('Save'));
+    $this->drupalPost('node/' . $node_trans->nid . '/edit', $edit, t('Save'));
     $this->assertRaw(t('Page %title has been updated.', array('%title' => $node_trans_title)), t('Translated node updated.'));
   }
 
@@ -81,7 +81,7 @@ class TranslationTestCase extends DrupalWebTestCase {
     // Check to make sure that language has not already been installed.
     $this->drupalGet('admin/settings/language');
 
-    if (strpos($this->drupalGetContent(), 'enabled['. $language_code .']') === FALSE) {
+    if (strpos($this->drupalGetContent(), 'enabled[' . $language_code . ']') === FALSE) {
       // Doesn't have language installed so add it.
       $edit = array();
       $edit['langcode'] = $language_code;
@@ -96,8 +96,8 @@ class TranslationTestCase extends DrupalWebTestCase {
     }
     else {
       // Ensure that it is enabled.
-      $this->assertTrue(true, 'Language ['. $language_code .'] already installed.');
-      $this->drupalPost(NULL, array('enabled['. $language_code .']' => TRUE), t('Save configuration'));
+      $this->assertTrue(true, 'Language [' . $language_code . '] already installed.');
+      $this->drupalPost(NULL, array('enabled[' . $language_code . ']' => TRUE), t('Save configuration'));
 
       $this->assertRaw(t('Configuration saved.'), t('Language successfully enabled.'));
     }
