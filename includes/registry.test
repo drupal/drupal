@@ -111,7 +111,7 @@ class RegistryParseFilesTestCase extends DrupalWebTestCase {
       }
       // Test that we have the right md5.
       $md5 = db_result(db_query("SELECT md5 FROM {registry_file} WHERE filename = '%s'", './' . $this->$fileType->fileName));
-      $this->assertTrue(md5($this->$fileType->contents) == $md5, t('MD5 for "@filename" matched.'.$fileType.$md5, array('@filename' => $this->$fileType->fileName)));
+      $this->assertTrue(md5($this->$fileType->contents) == $md5, t('MD5 for "@filename" matched.' . $fileType . $md5, array('@filename' => $this->$fileType->fileName)));
     }
   }
 

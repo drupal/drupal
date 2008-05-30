@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.test,v 1.1 2008/05/15 20:51:58 dries Exp $
+// $Id: tracker.test,v 1.2 2008/05/30 07:30:53 dries Exp $
 
 class TrackerTest extends DrupalWebTestCase {
   protected $user;
@@ -89,19 +89,19 @@ class TrackerTest extends DrupalWebTestCase {
     $node = $this->drupalCreateNode($edit);
 
     $this->drupalGet('tracker');
-    $this->assertPattern('/'. $edit['title'] . '.*new/', t('New nodes are flagged as such in the tracker listing.'));
+    $this->assertPattern('/' . $edit['title'] . '.*new/', t('New nodes are flagged as such in the tracker listing.'));
 
     $this->drupalGet('node/' . $node->nid);
     $this->drupalGet('tracker');
-    $this->assertNoPattern('/'. $edit['title'] . '.*new/', t('Visited nodes are not flagged as new.'));
+    $this->assertNoPattern('/' . $edit['title'] . '.*new/', t('Visited nodes are not flagged as new.'));
 
     $this->drupalLogin($this->other_user);
     $this->drupalGet('tracker');
-    $this->assertPattern('/'. $edit['title'] . '.*new/', t('For another user, new nodes are flagged as such in the tracker listing.'));
+    $this->assertPattern('/' . $edit['title'] . '.*new/', t('For another user, new nodes are flagged as such in the tracker listing.'));
 
     $this->drupalGet('node/' . $node->nid);
     $this->drupalGet('tracker');
-    $this->assertNoPattern('/'. $edit['title'] . '.*new/', t('For another user, visited nodes are not flagged as new.'));
+    $this->assertNoPattern('/' . $edit['title'] . '.*new/', t('For another user, visited nodes are not flagged as new.'));
   }
 
   /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: syslog.test,v 1.1 2008/04/20 18:23:30 dries Exp $
+// $Id: syslog.test,v 1.2 2008/05/30 07:30:52 dries Exp $
 
 class SyslogTestCase extends DrupalWebTestCase {
   /**
@@ -34,7 +34,7 @@ class SyslogTestCase extends DrupalWebTestCase {
 
     $this->drupalGet('admin/settings/logging/syslog');
     if ($this->parse()) {
-      $field = $this->elements->xpath('//option[@value="'. $edit['syslog_facility'] .'"]'); // Should be one field.
+      $field = $this->elements->xpath('//option[@value="' . $edit['syslog_facility'] . '"]'); // Should be one field.
       $this->assertTrue($field[0]['selected'] == 'selected', t('Facility value saved.'));
     }
   }
