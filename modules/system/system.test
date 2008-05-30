@@ -132,7 +132,7 @@ class IPAddressBlocking extends DrupalWebTestCase {
   function getInfo() {
     return array(
       'name' => t('IP address blocking'),
-      'description' => t('Tests IP address blocking.'),
+      'description' => t('Test IP address blocking.'),
       'group' => t('System')
     );
   }
@@ -149,7 +149,7 @@ class IPAddressBlocking extends DrupalWebTestCase {
   }
 
   /**
-   * Tests a variety of user input to confirm correct validation and saving of data.
+   * Test a variety of user input to confirm correct validation and saving of data.
    */
   function testIPAddressValidation() {
     $this->drupalGet('admin/settings/ip-blocking');
@@ -191,5 +191,40 @@ class IPAddressBlocking extends DrupalWebTestCase {
     $edit['ip'] = ip_address();
     $this->drupalPost('admin/settings/ip-blocking', $edit, t('Save'));
     $this->assertText(t('You may not block your own IP address.'));
+  }
+}
+
+class CronRun extends DrupalWebTestCase {
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('Cron run'),
+      'description' => t('Test cron run.'),
+      'group' => t('System')
+    );
+  }
+
+  /**
+   * Test cron runs.
+   */
+  function testCronRun() {
+    // Run cron anonymously without any cron key.
+    $this->drupalGet('cron.php');
+    $this->assertResponse(403);
+
+    // Run cron anonymously with a random cron key.
+    $key = $this->randomName(16);
+    $this->drupalGet('cron.php', array('query' => 'cron_key=' . $key));
+    $this->assertResponse(403);
+
+    // Run cron anonymously with the valid cron key.
+    $key = variable_get('cron_key', 'drupal');
+    $this->drupalGet('cron.php', array('query' => 'cron_key=' . $key));
+    $this->assertResponse(200);
+
+    // Execute cron directly.
+    $this->assertTrue(drupal_cron_run(), t('Cron ran successfully.'));
   }
 }
