@@ -191,7 +191,7 @@ class ForumTestCase extends DrupalWebTestCase {
     );
 
     // Create forum.
-    $this->drupalPost('admin/content/forum/add/' . $type, $edit, t('Save'));
+    $this->drupalPost('admin/build/forum/add/' . $type, $edit, t('Save'));
     $this->assertResponse(200);
     $type = ($type == 'container') ? 'forum container' : 'forum';
     $this->assertRaw(t('Created new @type %term.', array('%term' => $name, '@type' => t($type))), t(ucfirst($type) . ' was created'));
