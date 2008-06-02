@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.test,v 1.2 2008/05/30 07:30:53 dries Exp $
+// $Id: trigger.test,v 1.3 2008/06/02 17:39:12 dries Exp $
 
 class TriggerContentTestCase extends DrupalWebTestCase {
   var $_cleanup_roles = array();
@@ -62,7 +62,7 @@ class TriggerContentTestCase extends DrupalWebTestCase {
 
       // Test 3: The action should be able to be unassigned from a trigger.
       $this->drupalPost('admin/build/trigger/unassign/nodeapi/presave/' . $hash, array(), t('Unassign'));
-      $this->assertRaw(t('Action %action has been unassigned.', array('%action' => 'Publish post')), t('Check to make sure the @action action can be unassigned from the trigger.', array('@action' => $info['name'])));
+      $this->assertRaw(t('Action %action has been unassigned.', array('%action' => ucfirst($info['name']))), t('Check to make sure the @action action can be unassigned from the trigger.', array('@action' => $info['name'])));
       $assigned = db_result(db_query("SELECT COUNT(*) FROM {trigger_assignments} WHERE aid IN ('" . implode("','", $content_actions) . "')"));
       $this->assertFalse($assigned, t('Check to make sure unassign worked properly at the database level.'));
     }
