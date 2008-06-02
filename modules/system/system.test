@@ -123,7 +123,7 @@ class EnableDisableCoreTestCase extends DrupalWebTestCase {
   }
 }
 
-class IPAddressBlocking extends DrupalWebTestCase {
+class IPAddressBlockingTestCase extends DrupalWebTestCase {
   protected $blocking_user;
 
   /**
@@ -194,7 +194,7 @@ class IPAddressBlocking extends DrupalWebTestCase {
   }
 }
 
-class CronRun extends DrupalWebTestCase {
+class CronRunTestCase extends DrupalWebTestCase {
   /**
    * Implementation of getInfo().
    */
@@ -226,5 +226,72 @@ class CronRun extends DrupalWebTestCase {
 
     // Execute cron directly.
     $this->assertTrue(drupal_cron_run(), t('Cron ran successfully.'));
+  }
+}
+
+class AdminOverviewTestCase extends DrupalWebTestCase {
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('Admin overview'),
+      'description' => t('Confirm that the admin overview page appears as expected.'),
+      'group' => t('System')
+    );
+  }
+
+  /**
+   * Test the overview page by task.
+   */
+  function testAdminOverview() {
+    $admin_user1 = $this->drupalCreateUser(array('access administration pages'));
+    $this->drupalLogin($admin_user1);
+
+    $this->drupalGet('admin');
+    $this->checkOverview();
+
+    $this->drupalGet('admin/by-module');
+    $this->checkOverview();
+
+    // Comments on permissions follow the format: [task], [module] that the permission relates to.
+    $permissions = array();
+    $permissions[] = 'access administration pages';
+    $permissions[] = 'administer comments'; // Content management, Comment.
+    $permissions[] = 'administer blocks'; // Site building, Block.
+    $permissions[] = 'administer filters'; // Site configuration, Filter.
+    $permissions[] = 'administer users'; // User management, User.
+    $permissions[] = 'access site reports'; // Reports, Database logging.
+    $admin_user2 = $this->drupalCreateUser($permissions);
+    $this->drupalLogin($admin_user2);
+
+    $this->drupalGet('admin');
+    $this->checkOverview(array(t('Content management'), t('User management'), t('Reports'), t('Site building'), t('Site configuration')));
+
+    $this->drupalGet('admin/by-module');
+    $this->checkOverview(array(t('Comment'), t('Block'), t('Filter'), t('User'), t('Database logging')));
+  }
+
+  /**
+   * Check the overview page panels.
+   *
+   * @param array $panels List of panels to be found.
+   */
+  function checkOverview(array $panels = array()) {
+    if ($this->parse()) {
+      $found = 0;
+      $extra = 0;
+      $divs = $this->elements->xpath("//div[@class='admin-panel']");
+      foreach ($divs as $panel) {
+        if (in_array(trim($panel->h3), $panels)) {
+          $found++;
+        }
+        else {
+          $extra++;
+        }
+      }
+      $this->assertTrue(count($panels) == $found, t('Required panels found.'));
+      $this->assertFalse($extra, t('No extra panels found.'));
+    }
   }
 }
