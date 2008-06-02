@@ -368,7 +368,8 @@ class DrupalWebTestCase extends UnitTestCase {
     drupal_install_system();
 
     // Add the specified modules to the list of modules in the default profile.
-    $modules = array_unique(array_merge(func_get_args(), drupal_verify_profile('default', 'en')));
+    $args = func_get_args();
+    $modules = array_unique(array_merge(drupal_verify_profile('default', 'en'), $args));
     drupal_install_modules($modules);
 
     // Store the list of modules for use in subsequent drupalModuleEnable calls.
