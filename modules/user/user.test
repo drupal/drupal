@@ -41,9 +41,6 @@ class UserRegistrationTestCase extends DrupalWebTestCase {
     // Check user fields.
     $this->assertEqual($user->name, $name, t('Username matches.'));
     $this->assertEqual($user->mail, $mail, t('E-mail address matches.'));
-    $this->assertEqual($user->mode, 0, t('Correct mode field.'));
-    $this->assertEqual($user->sort, 0, t('Correct sort field.'));
-    $this->assertEqual($user->threshold, 0, t('Correct treshold field.'));
     $this->assertEqual($user->theme, '', t('Correct theme field.'));
     $this->assertEqual($user->signature, '', t('Correct signature field.'));
     $this->assertTrue(($user->created > time() - 20 ), t('Correct creation time.'));
