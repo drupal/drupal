@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.633 2008/05/14 13:12:40 dries Exp $
+// $Id: comment.module,v 1.634 2008/06/03 16:30:20 dries Exp $
 
 /**
  * @file
@@ -210,6 +210,13 @@ function comment_menu() {
     'page arguments' => array(2),
     'access callback' => 'node_access',
     'access arguments' => array('view', 2),
+    'type' => MENU_CALLBACK,
+  );
+  $items['comment/approve'] = array(
+    'title' => 'Approve to comment',
+    'page callback' => 'comment_approve',
+    'page arguments' => array(2),
+    'access arguments' => array('administer comments'),
     'type' => MENU_CALLBACK,
   );
 
@@ -808,6 +815,12 @@ function comment_links($comment, $return = 1) {
         'title' => t('reply'),
         'href' => "comment/reply/$comment->nid/$comment->cid"
       );
+      if ($comment->status == COMMENT_NOT_PUBLISHED) {
+        $links['comment_approve'] = array(
+          'title' => t('approve'),
+          'href' => "comment/approve/$comment->cid"
+        );
+      }
     }
     elseif (user_access('post comments')) {
       if (comment_access('edit', $comment)) {
