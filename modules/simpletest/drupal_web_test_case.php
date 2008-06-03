@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.12 2008/06/03 13:45:07 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.13 2008/06/03 19:53:42 dries Exp $
 
 /**
  * Test case for typical Drupal tests.
@@ -440,6 +440,12 @@ class DrupalWebTestCase extends UnitTestCase {
 
       // Ensure that the internal logged in variable is reset.
       $this->_logged_in = FALSE;
+
+      // Reload module list to ensure that test module hooks aren't called after tests.
+      module_list(TRUE);
+
+      // Rebuild caches.
+      $this->refreshVariables();
 
       // Close the CURL handler.
       $this->curlClose();
