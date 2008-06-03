@@ -559,10 +559,8 @@ class DrupalWebTestCase extends UnitTestCase {
   }
 
   /**
-   * Do a post request on a drupal page.
-   * It will be done as usual post request with SimpleBrowser
-   * By $reporting you specify if this request does assertions or not
-   * Warning: empty ("") returns will cause fails with $reporting
+   * Execute a POST request on a Drupal page.
+   * It will be done as usual POST request with SimpleBrowser.
    *
    * @param string  $path
    *   Location of the post form. Either a Drupal path or an absolute path or
@@ -572,7 +570,7 @@ class DrupalWebTestCase extends UnitTestCase {
    *   (where possible) to the values indicated. A checkbox can be set to
    *   TRUE to be checked and FALSE to be unchecked.
    * @param string $submit
-   *   Untranslated value, id or name of the submit button.
+   *   Value of the submit button.
    * @param $tamper
    *   If this is set to TRUE then you can post anything, otherwise hidden and
    *   nonexistent fields are not posted.
@@ -600,7 +598,7 @@ class DrupalWebTestCase extends UnitTestCase {
           $action = isset($form['action']) ? $this->getAbsoluteUrl($form['action']) : $this->getUrl();
         }
         // We post only if we managed to handle every field in edit and the
-        // submit button matches;
+        // submit button matches.
         if (!$edit && $submit_matches) {
           // This part is not pretty. There is very little I can do.
           if ($upload) {
@@ -618,14 +616,15 @@ class DrupalWebTestCase extends UnitTestCase {
             $post_array = $post;
             $post = array();
             foreach ($post_array as $key => $value) {
-              // Whethet this needs to be urlencode or rawurlencode, is not
+              // Whether this needs to be urlencode or rawurlencode, is not
               // quite clear, but this seems to be the better choice.
               $post[] = urlencode($key) . '=' . urlencode($value);
             }
             $post = implode('&', $post);
           }
           $out = $this->curlExec(array(CURLOPT_URL => $action, CURLOPT_POSTFIELDS => $post, CURLOPT_POST => TRUE));
-          $this->refreshVariables(); // Ensure that any changes to variables in the other thread are picked up.
+          // Ensure that any changes to variables in the other thread are picked up.
+          $this->refreshVariables(); 
           return $out;
         }
       }
@@ -640,14 +639,19 @@ class DrupalWebTestCase extends UnitTestCase {
 
   /**
    * Handle form input related to drupalPost(). Ensure that the specified fields
-   * exist and attempt to create POST data in the correct manor for the particular
+   * exist and attempt to create POST data in the correct manner for the particular
    * field type.
    *
-   * @param array $post Reference to array of post values.
-   * @param array $edit Reference to array of edit values to be checked against the form.
-   * @param string $submit Form submit button value.
-   * @param array $form Array of form elements.
-   * @return boolean Submit value matches a valid submit input in the form.
+   * @param array $post 
+   *   Reference to array of post values.
+   * @param array $edit 
+   *   Reference to array of edit values to be checked against the form.
+   * @param string $submit 
+   *   Form submit button value.
+   * @param array $form 
+   *   Array of form elements.
+   * @return boolean 
+   *   Submit value matches a valid submit input in the form.
    */
   protected function handleForm(&$post, &$edit, &$upload, $submit, $form) {
     // Retrieve the form elements.
