@@ -441,6 +441,12 @@ class DrupalWebTestCase extends UnitTestCase {
       // Ensure that the internal logged in variable is reset.
       $this->_logged_in = FALSE;
 
+      // Reload module list to ensure that test module hooks aren't called after tests.
+      module_list(TRUE);
+
+      // Rebuild caches.
+      $this->refreshVariables();
+
       // Close the CURL handler.
       $this->curlClose();
     }
