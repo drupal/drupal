@@ -12,9 +12,13 @@ class XMLRPCValidator1Test extends DrupalWebTestCase {
       'group' => t('XML-RPC')
     );
   }
+  
+  function setUp() {
+    parent::setUp('simpletest_xmlrpc');
+  }
 
   function test_run_all_tests() {
-    if (!$this->drupalModuleEnable('simpletest_xmlrpc')) {
+    if (!module_exists('simpletest_xmlrpc')) {
       return FALSE;
     }
     $xml_url = url(NULL, array('absolute' => TRUE)) . 'xmlrpc.php';

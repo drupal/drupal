@@ -212,15 +212,10 @@ class SearchRankingTestCase extends DrupalWebTestCase {
    * Implementation setUp().
    */
   function setUp() {
-    parent::setUp('search');
+    parent::setUp('search', 'statistics', 'comment');
   }
 
   function testRankings() {
-    // Enable modules that are tested.
-    $this->drupalModuleEnable('search');
-    $this->drupalModuleEnable('statistics');
-    $this->drupalModuleEnable('comment');
-
     // Login with sufficient privileges.
     $this->drupalLogin($this->drupalCreateUser(array('post comments without approval', 'create page content')));
 

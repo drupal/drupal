@@ -10,7 +10,6 @@ class DrupalWebTestCase extends UnitTestCase {
   protected $plain_text;
   protected $ch;
   protected $elements;
-  protected $_modules = array();
   // We do not reuse the cookies in further runs, so we do not need a file
   // but we still need cookie handling, so we set the jar to NULL
   protected $cookie_file = NULL;
@@ -183,57 +182,6 @@ class DrupalWebTestCase extends UnitTestCase {
   }
 
   /**
-   * Enables a drupal module in the test database. Any module that is not
-   * part of the required core modules needs to be enabled in order to use
-   * it in a test.
-   *
-   * @param string $name Name of the module to enable.
-   * @return boolean Success.
-   */
-  function drupalModuleEnable($name) {
-    if (module_exists($name)) {
-      return $this->pass(t('@name module already enabled', array('@name' => $name)), t('Module'));
-    }
-    $this->_modules[$name] = $name;
-    $form_state['values'] = array('status' => $this->_modules, 'op' => t('Save configuration'));
-    drupal_execute('system_modules', $form_state);
-
-    //rebuilding all caches
-    drupal_rebuild_theme_registry();
-    node_types_rebuild();
-    menu_rebuild();
-    cache_clear_all('schema', 'cache');
-    module_rebuild_cache();
-
-    return $this->assertTrue(module_exists($name), t('@name enabled.', array('@name' =>  $name)), t('Module'));
-  }
-
-  /**
-   * Disables a drupal module in the test database.
-   *
-   * @param string $name Name of the module.
-   * @return boolean Success.
-   * @see drupalModuleEnable()
-   */
-  function drupalModuleDisable($name) {
-    if (!module_exists($name)) {
-      return $this->pass(t('@name module already disabled', array('@name' => $name)), t('Module'));
-    }
-    unset($this->_modules[$key]);
-    $form_state['values'] = array('status' => $this->_modules, 'op' => t('Save configuration'));
-    drupal_execute('system_modules', $form_state);
-
-    //rebuilding all caches
-    drupal_rebuild_theme_registry();
-    node_types_rebuild();
-    menu_rebuild();
-    cache_clear_all('schema', 'cache');
-    module_rebuild_cache();
-
-    return $this->assertTrue(!module_exists($name), t('@name disabled.', array('@name' =>  $name)), t('Module'));
-  }
-
-  /**
    * Create a user with a given set of permissions. The permissions correspond to the
    * names given on the privileges page.
    *
@@ -348,12 +296,14 @@ class DrupalWebTestCase extends UnitTestCase {
   }
 
   /**
-   * Generates a random database prefix and runs the install scripts on the prefixed database.
-   * After installation many caches are flushed and the internal browser is setup so that the page
-   * requests will run on the new prefix. A temporary files directory is created with the same name
-   * as the database prefix.
+   * Generates a random database prefix, runs the install scripts on the 
+   * prefixed database and enable the specified modules. After installation 
+   * many caches are flushed and the internal browser is setup so that the 
+   * page requests will run on the new prefix. A temporary files directory 
+   * is created with the same name as the database prefix.
    *
-   * @param ... List modules to enable.
+   * @param ... 
+   *   List of modules to enable for the duration of the test.
    */
   function setUp() {
     global $db_prefix;
@@ -372,11 +322,7 @@ class DrupalWebTestCase extends UnitTestCase {
     $modules = array_unique(array_merge(drupal_verify_profile('default', 'en'), $args));
     drupal_install_modules($modules);
 
-    // Store the list of modules for use in subsequent drupalModuleEnable calls.
-    $this->_modules = drupal_map_assoc($modules);
-    $this->_modules['system'] = 'system';
-
-    // Run defualt profile tasks.
+    // Run default profile tasks.
     $task = 'profile';
     default_profile_tasks($task, '');
 
