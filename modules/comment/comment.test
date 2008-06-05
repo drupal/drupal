@@ -27,8 +27,8 @@ class CommentTestCase extends DrupalWebTestCase {
     $this->web_user = $this->drupalCreateUser(array('access comments', 'post comments', 'create story content'));
 
     $this->drupalLogin($this->web_user);
-    $this->node = $this->drupalCreateNode(array('type' => 'story'));
-    $this->assertTrue($this->node, t('Story node created.'));
+    $this->node = $this->drupalCreateNode(array('type' => 'article'));
+    $this->assertTrue($this->node, t('Article node created.'));
     $this->drupalLogout();
   }
 
@@ -140,7 +140,7 @@ class CommentTestCase extends DrupalWebTestCase {
     $this->assertFalse($this->commentExists($anonymous_comment3), t('Anonymous comment with contact info (required) not found.'));
 
     // Post comment with contact info (required).
-    $anonymous_comment3 = $this->postComment($this->node, $this->randomName(), $this->randomName(), FALSE, array('mail' => 'tester@simpletest.org'));
+    $anonymous_comment3 = $this->postComment($this->node, $this->randomName(), $this->randomName(), TRUE, array('mail' => 'tester@simpletest.org'));
     $this->assertTrue($this->commentExists($anonymous_comment3), t('Anonymous comment with contact info (required) found.'));
 
     // Unpublish comment.
@@ -353,7 +353,7 @@ class CommentTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Set comment setting for story content type.
+   * Set comment setting for article content type.
    *
    * @param string $name
    *   Name of variable.
@@ -363,7 +363,7 @@ class CommentTestCase extends DrupalWebTestCase {
    *   Status message to display.
    */
   function setCommentSettings($name, $value, $message) {
-    variable_set($name . '_story', $value);
+    variable_set($name . '_article', $value);
     $this->assertTrue(TRUE, t($message)); // Display status message.
   }
 
