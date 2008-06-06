@@ -236,7 +236,7 @@ function _batch_process() {
     }
 
     $current    = $total - $remaining + $finished;
-    $percentage = $total ? floor($current / $total * 100) : 100;
+    $percentage = $total ? round($current / $total * 100) : 100;
     $values = array(
       '@remaining'  => $remaining,
       '@total'      => $total,
