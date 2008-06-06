@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.14 2008/06/05 21:55:45 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.15 2008/06/06 10:36:44 dries Exp $
 
 /**
  * Test case for typical Drupal tests.
@@ -552,29 +552,11 @@ class DrupalWebTestCase extends UnitTestCase {
         // We post only if we managed to handle every field in edit and the
         // submit button matches.
         if (!$edit && $submit_matches) {
-          // This part is not pretty. There is very little I can do.
-          if ($upload) {
-            foreach ($post as &$value) {
-              if (strlen($value) > 0 && $value[0] == '@') {
-                $this->fail(t("Can't upload and post a value starting with @"));
-                return FALSE;
-              }
-            }
-            foreach ($upload as $key => $file) {
-              $post[$key] = '@' . realpath($file);
-            }
+          // cURL will handle file upload for us if asked kindly.
+          foreach ($upload as $key => $file) {
+            $post[$key] = '@' . realpath($file);
           }
-          else {
-            $post_array = $post;
-            $post = array();
-            foreach ($post_array as $key => $value) {
-              // Whether this needs to be urlencode or rawurlencode, is not
-              // quite clear, but this seems to be the better choice.
-              $post[] = urlencode($key) . '=' . urlencode($value);
-            }
-            $post = implode('&', $post);
-          }
-          $out = $this->curlExec(array(CURLOPT_URL => $action, CURLOPT_POSTFIELDS => $post, CURLOPT_POST => TRUE));
+          $out = $this->curlExec(array(CURLOPT_URL => $action, CURLOPT_POST => TRUE, CURLOPT_POSTFIELDS => $post));
           // Ensure that any changes to variables in the other thread are picked up.
           $this->refreshVariables(); 
           return $out;
