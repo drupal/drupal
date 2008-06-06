@@ -200,6 +200,9 @@ class FilterTestCase extends DrupalWebTestCase {
    */
   function setUp() {
     parent::setUp();
+
+    $admin_user = $this->drupalCreateUser(array('administer filters', 'create page content'));
+    $this->drupalLogin($admin_user);
   }
 
   /**
@@ -333,9 +336,6 @@ END;
   }
 
   function createFormat($filter) {
-    $admin_user = $this->drupalCreateUser(array('administer filters, create page content'));
-    $this->drupalLogin($admin_user);
-
     $edit = array(
       'name' => $this->randomName(),
       'roles[2]' => TRUE,
