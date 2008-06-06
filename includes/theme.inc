@@ -1480,7 +1480,7 @@ function theme_mark($type = MARK_NEW) {
  * @return
  *   A string containing the list output.
  */
-function theme_item_list($items = array(), $title = NULL, $type = 'ul', $attributes = NULL) {
+function theme_item_list($items = array(), $title = NULL, $type = 'ul', $attributes = array()) {
   $output = '<div class="item-list">';
   if (isset($title)) {
     $output .= '<h3>' . $title . '</h3>';
