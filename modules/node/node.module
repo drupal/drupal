@@ -139,7 +139,20 @@ function node_mark($nid, $timestamp) {
 }
 
 /**
- * Automatically generate a teaser for a node body in a given format.
+ * Automatically generate a teaser for a node body.
+ *
+ * If the end of the teaser is not indicated using the <!--break--> delimiter
+ * then we try to end it at a sensible place, such as the end of a paragraph,
+ * a line break, or the end of a sentence (in that order of preference).
+ *
+ * @param $body
+ *   The content for which a teaser will be generated.
+ * @param $format
+ *   The format of the content. If the content contains PHP code, we do not
+ *   split it up to prevent parse errors. If the line break filter is present
+ *   then we treat newlines embedded in $body as line breaks.
+ * @return
+ *   The generated teaser.
  */
 function node_teaser($body, $format = NULL) {
 
@@ -169,40 +182,67 @@ function node_teaser($body, $format = NULL) {
   }
 
   // If we have a short body, the entire body is the teaser.
-  if (strlen($body) < $size) {
+  if (strlen($body) <= $size) {
     return $body;
   }
 
+  // If the delimiter has not been specified, try to split at paragraph or
+  // sentence boundaries.
+
   // The teaser may not be longer than maximum length specified. Initial slice.
   $teaser = truncate_utf8($body, $size);
-  $position = 0;
-  // Cache the reverse of the teaser.
+
+  // Store the actual length of the UTF8 string -- which might not be the same
+  // as $size.
+  $max_rpos = strlen($teaser);
+
+  // How much to cut off the end of the teaser so that it doesn't end in the
+  // middle of a paragraph, sentence, or word.
+  // Initialize it to maximum in order to find the minimum.
+  $min_rpos = $max_rpos;
+
+  // Store the reverse of the teaser.  We use strpos on the reversed needle and
+  // haystack for speed and convenience.
   $reversed = strrev($teaser);
 
-  // In some cases, no delimiter has been specified. In this case, we try to
-  // split at paragraph boundaries.
-  $breakpoints = array('</p>' => 0, '<br />' => 6, '<br>' => 4, "\n" => 1);
-  // We use strpos on the reversed needle and haystack for speed.
-  foreach ($breakpoints as $point => $offset) {
-    $length = strpos($reversed, strrev($point));
-    if ($length !== FALSE) {
-      $position = - $length - $offset;
-      return ($position == 0) ? $teaser : substr($teaser, 0, $position);
+  // Build an array of arrays of break points grouped by preference.
+  $break_points = array();
+
+  // A paragraph near the end of sliced teaser is most preferable.
+  $break_points[] = array('</p>' => 0);
+
+  // If no complete paragraph then treat line breaks as paragraphs.
+  $line_breaks = array('<br />' => 6, '<br>' => 4);
+  // Newline only indicates a line break if line break converter
+  // filter is present.
+  if (isset($filters['filter/2'])) {
+    $line_breaks["\n"] = 1;
+  }
+  $break_points[] = $line_breaks;
+
+  // If the first paragraph is too long, split at the end of a sentence.
+  $break_points[] = array('. ' => 1, '! ' => 1, '? ' => 1, '。' => 0, '؟ ' => 1);
+
+  // Iterate over the groups of break points until a break point is found.
+  foreach ($break_points as $points) {
+    // Look for each break point, starting at the end of the teaser.
+    foreach ($points as $point => $offset) {
+      // The teaser is already reversed, but the break point isn't.
+      $rpos = strpos($reversed, strrev($point));
+      if ($rpos !== FALSE) {
+        $min_rpos = min($rpos + $offset, $min_rpos);
+      }
+    }
+
+    // If a break point was found in this group, slice and return the teaser.
+    if ($min_rpos !== $max_rpos) {
+      // Don't slice with length 0.  Length must be <0 to slice from RHS.
+      return ($min_rpos === 0) ? $teaser : substr($teaser, 0, 0 - $min_rpos);
     }
   }
 
-  // When even the first paragraph is too long, we try to split at the end of
-  // the last full sentence.
-  $breakpoints = array('. ' => 1, '! ' => 1, '? ' => 1, '。' => 0, '؟ ' => 1);
-  $min_length = strlen($reversed);
-  foreach ($breakpoints as $point => $offset) {
-    $length = strpos($reversed, strrev($point));
-    if ($length !== FALSE) {
-      $min_length = min($length, $min_length);
-      $position = 0 - $length - $offset;
-    }
-  }
-  return ($position == 0) ? $teaser : substr($teaser, 0, $position);
+  // If a break point was not found, still return a teaser.
+  return $teaser;
 }
 
 /**
