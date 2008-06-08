@@ -1,5 +1,5 @@
 <?php
-// $Id: reporter.php,v 1.2 2008/05/10 06:55:09 dries Exp $
+// $Id: reporter.php,v 1.3 2008/06/08 19:50:54 dries Exp $
 
 /**
  *    Sample minimal test displayer. Generates only
@@ -210,9 +210,9 @@ class TextReporter extends SimpleReporter {
       print "OK\n";
     }
     else {
-      print "FAILURES!!!\n";
+      print "FAILURES\n";
     }
-    print "Test cases run: ". $this->getTestCaseProgress() ."/". $this->getTestCaseCount() .", Passes: ". $this->getPassCount() .", Failures: ". $this->getFailCount() .", Exceptions: ". $this->getExceptionCount() ."\n";
+    print "Test cases run: ". $this->getTestCaseProgress() ."/". $this->getTestCaseCount() .", passes: ". $this->getPassCount() .", failures: ". $this->getFailCount() .", exceptions: ". $this->getExceptionCount() ."\n";
   }
 
   /**

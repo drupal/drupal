@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_test_suite.php,v 1.3 2008/05/06 11:21:10 dries Exp $
+// $Id: drupal_test_suite.php,v 1.4 2008/06/08 19:50:54 dries Exp $
 
 /**
  * Implements getTestInstances to allow access to the test objects from outside.
@@ -36,7 +36,7 @@ class DrupalTests extends DrupalTestSuite {
    */
   function DrupalTests($class_list = NULL) {
     static $classes;
-    $this->DrupalTestSuite('Drupal Unit Tests');
+    $this->DrupalTestSuite('Drupal unit tests');
 
     // Tricky part to avoid double inclusion.
     if (!$classes) {

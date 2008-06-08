@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_reporter.php,v 1.2 2008/05/10 06:55:09 dries Exp $
+// $Id: drupal_reporter.php,v 1.3 2008/06/08 19:50:54 dries Exp $
 
 /**
  * Minimal drupal displayer. Accumulates output to $_output.
@@ -252,6 +252,6 @@ class DrupalReporter extends SimpleReporter {
 }
 
 function unit_tests($args, $reporter) {
-  return $reporter->form['Drupal Unit Tests'];
+  return $reporter->form['Drupal unit tests'];
 }
 ?>
