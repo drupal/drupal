@@ -302,7 +302,7 @@ class UserPictureTestCase extends DrupalWebTestCase {
         $this->assertText(t('The changes have been saved.'));
 
         // Check if image is displayed in user's profile page.
-        $this->assertRaw(file_create_url($picture_url), t("Image is displayed in user's profile page"));
+        $this->assertRaw(file_create_url($picture_path), t("Image is displayed in user's profile page"));
 
         // Check if file is located in proper directory.
         $this->assertTrue(is_file($picture_path), t('File is located in proper directory'));
@@ -404,9 +404,10 @@ class UserPictureTestCase extends DrupalWebTestCase {
   function saveUserPicture($image) {
     $edit = array('files[picture_upload]' => realpath($image->filename));
     $this->drupalPost('user/' . $this->user->uid.'/edit', $edit, t('Save'));
-    
+
+    $img_info = image_get_info($image->filename);
     $picture_dir = variable_get('user_picture_path', 'pictures');
-    $pic_path = file_directory_path() .'/'.$picture_dir .'/picture-'.$this->user->uid.'.jpg';
+    $pic_path = file_directory_path() . '/' . $picture_dir . '/picture-' . $this->user->uid . '.' . $img_info['extension'];
 
     return $pic_path;
   }

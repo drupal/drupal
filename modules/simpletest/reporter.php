@@ -210,9 +210,9 @@ class TextReporter extends SimpleReporter {
       print "OK\n";
     }
     else {
-      print "FAILURES!!!\n";
+      print "FAILURES\n";
     }
-    print "Test cases run: ". $this->getTestCaseProgress() ."/". $this->getTestCaseCount() .", Passes: ". $this->getPassCount() .", Failures: ". $this->getFailCount() .", Exceptions: ". $this->getExceptionCount() ."\n";
+    print "Test cases run: ". $this->getTestCaseProgress() ."/". $this->getTestCaseCount() .", passes: ". $this->getPassCount() .", failures: ". $this->getFailCount() .", exceptions: ". $this->getExceptionCount() ."\n";
   }
 
   /**

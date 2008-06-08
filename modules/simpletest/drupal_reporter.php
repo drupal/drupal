@@ -252,6 +252,6 @@ class DrupalReporter extends SimpleReporter {
 }
 
 function unit_tests($args, $reporter) {
-  return $reporter->form['Drupal Unit Tests'];
+  return $reporter->form['Drupal unit tests'];
 }
 ?>

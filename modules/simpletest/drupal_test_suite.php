@@ -36,7 +36,7 @@ class DrupalTests extends DrupalTestSuite {
    */
   function DrupalTests($class_list = NULL) {
     static $classes;
-    $this->DrupalTestSuite('Drupal Unit Tests');
+    $this->DrupalTestSuite('Drupal unit tests');
 
     // Tricky part to avoid double inclusion.
     if (!$classes) {
