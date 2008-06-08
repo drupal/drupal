@@ -191,8 +191,7 @@ class DrupalWebTestCase extends UnitTestCase {
    */
   function drupalCreateUser($permissions = NULL) {
     // Create a role with the given permission set.
-    $rid = $this->_drupalCreateRole($permissions);
-    if (!$rid) {
+    if (!($rid = $this->_drupalCreateRole($permissions))) {
       return FALSE;
     }
 
@@ -228,6 +227,10 @@ class DrupalWebTestCase extends UnitTestCase {
       $permissions = array('access comments', 'access content', 'post comments', 'post comments without approval');
     }
 
+    if (!$this->checkPermissions($permissions)) {
+      return FALSE;
+    }
+
     // Create new role.
     $role_name = $this->randomName();
     db_query("INSERT INTO {role} (name) VALUES ('%s')", $role_name);
@@ -245,6 +248,30 @@ class DrupalWebTestCase extends UnitTestCase {
     else {
       return FALSE;
     }
+  }
+
+  /**
+   * Check to make sure that the array of permissions are valid.
+   *
+   * @param array $permissions Permissions to check.
+   * @param boolean $reset Reset cached available permissions.
+   * @return boolean Valid.
+   */
+  private function checkPermissions(array $permissions, $reset = FALSE) {
+    static $available;
+
+    if (!isset($available) || $reset) {
+      $available = array_keys(module_invoke_all('perm'));
+    }
+
+    $valid = TRUE;
+    foreach ($permissions as $permission) {
+      if (!in_array($permission, $available)) {
+        $this->fail(t('Invalid permission %permission.', array('%permission' => $permission)), t('Role'));
+        $valid = FALSE;
+      }
+    }
+    return $valid;
   }
 
   /**
@@ -331,6 +358,7 @@ class DrupalWebTestCase extends UnitTestCase {
     actions_synchronize();
     _drupal_flush_css_js();
     $this->refreshVariables();
+    $this->checkPermissions(array(), TRUE);
 
     // Restore necessary variables.
     variable_set('install_profile', 'default');

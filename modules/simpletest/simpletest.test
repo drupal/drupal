@@ -22,11 +22,16 @@ class SimpleTestTestCase extends DrupalWebTestCase {
    * Implementation of setUp().
    */
   function setUp() {
-    parent::setUp('simpletest');
+    if (!$this->inCURL()) {
+      parent::setUp('simpletest');
 
-    // Create and login user
-    $admin_user = $this->drupalCreateUser(array('administer unit tests'));
-    $this->drupalLogin($admin_user);
+      // Create and login user
+      $admin_user = $this->drupalCreateUser(array('administer unit tests'));
+      $this->drupalLogin($admin_user);
+    }
+    else {
+      parent::setUp();
+    }
   }
 
   /**
@@ -47,6 +52,8 @@ class SimpleTestTestCase extends DrupalWebTestCase {
   function testWebTestRunner() {
     $this->pass = t('SimpleTest pass.');
     $this->fail = t('SimpleTest fail.');
+    $this->valid_permission = 'access content';
+    $this->invalid_permission = 'invalid permission';
 
     if ($this->inCURL()) {
       // Only run following code if this test is running itself through a CURL request.
@@ -73,6 +80,9 @@ class SimpleTestTestCase extends DrupalWebTestCase {
   function stubTest() {
     $this->pass($this->pass);
     $this->fail($this->fail);
+
+    $this->drupalCreateUser(array($this->valid_permission));
+    $this->drupalCreateUser(array($this->invalid_permission));
   }
 
   /**
@@ -81,6 +91,9 @@ class SimpleTestTestCase extends DrupalWebTestCase {
   function confirmStubTestResults() {
     $this->assertAssertion($this->pass, '[Other]', 'Pass');
     $this->assertAssertion($this->fail, '[Other]', 'Fail');
+
+    $this->assertAssertion(t('Created permissions: @perms', array('@perms' => $this->valid_permission)), '[Role]', 'Pass');
+    $this->assertAssertion(t('Invalid permission %permission.', array('%permission' => $this->invalid_permission)), '[Role]', 'Fail');
   }
 
   /**
@@ -93,6 +106,7 @@ class SimpleTestTestCase extends DrupalWebTestCase {
    * @return Assertion result.
    */
   function assertAssertion($message, $type, $status) {
+    $message = trim(strip_tags($message));
     $found = FALSE;
     foreach ($this->results['assertions'] as $assertion) {
       if ($assertion['message'] == $message &&
@@ -154,7 +168,7 @@ class SimpleTestTestCase extends DrupalWebTestCase {
    * @return string Extracted text.
    */
   function asText(SimpleXMLElement $element) {
-    return strip_tags($element->asXML());
+    return trim(strip_tags($element->asXML()));
   }
 
   /**
