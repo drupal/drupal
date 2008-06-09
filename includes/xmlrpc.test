@@ -12,7 +12,7 @@ class XMLRPCValidator1Test extends DrupalWebTestCase {
       'group' => t('XML-RPC')
     );
   }
-  
+
   function setUp() {
     parent::setUp('simpletest_xmlrpc');
   }

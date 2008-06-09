@@ -208,7 +208,7 @@ class UserDeleteTestCase extends DrupalWebTestCase {
 class UserPictureTestCase extends DrupalWebTestCase {
   protected $user;
   protected $_directory_test;
-  
+
   function getInfo() {
     return array(
       'name' => t('Upload user picture'),
@@ -216,18 +216,18 @@ class UserPictureTestCase extends DrupalWebTestCase {
       'group' => t('User')
     );
   }
-  
+
   function setUp() {
     parent::setUp();
     // Enable user pictures.
     variable_set('user_pictures', 1);
-    
+
     $this->user = $this->drupalCreateUser();
-    
+
     // Test if directories specified in settings exist in filesystem.
     $file_dir = file_directory_path();
     $file_check = file_check_directory($file_dir, FILE_CREATE_DIRECTORY, 'file_directory_path');
-    
+
     $picture_dir = variable_get('user_picture_path', 'pictures');
     $picture_path = $file_dir .'/'.$picture_dir;
 
@@ -267,7 +267,7 @@ class UserPictureTestCase extends DrupalWebTestCase {
         variable_set('user_picture_file_size', $test_size);
 
         $pic_path = $this->saveUserPicture($image);
-        
+
         // check if image is displayed in user's profile page
         $this->assertRaw(file_create_url($pic_path), "Image is displayed in user's profile page");
 
@@ -291,7 +291,7 @@ class UserPictureTestCase extends DrupalWebTestCase {
 
         $image = current($this->drupalGetTestFiles('image'));
         $info = image_get_info($image->filename);
-        
+
         // Set new variables.
         $test_dim = ($info['width'] + 10) . 'x' . ($info['height'] + 10);
         $test_size = filesize($image->filename);
@@ -324,7 +324,7 @@ class UserPictureTestCase extends DrupalWebTestCase {
 
         $image = current($this->drupalGetTestFiles('image'));
         $info = image_get_info($image->filename);
-        
+
         // Set new variables.
         $test_size = floor(filesize($image->filename) / 1000) + 1;
         $test_dim = ($info['width'] - 10) . 'x' . ($info['height'] - 10);
@@ -380,7 +380,7 @@ class UserPictureTestCase extends DrupalWebTestCase {
   function testPictureIsValid() {
     if ($this->_directory_test) {
       $this->drupalLogin($this->user);
-      
+
       $image = current($this->drupalGetTestFiles('image'));
       $info = image_get_info($image->filename);
 
@@ -400,7 +400,7 @@ class UserPictureTestCase extends DrupalWebTestCase {
       $this->assertTrue(is_file($pic_path), t('File is located in proper directory'));
     }
   }
-  
+
   function saveUserPicture($image) {
     $edit = array('files[picture_upload]' => realpath($image->filename));
     $this->drupalPost('user/' . $this->user->uid.'/edit', $edit, t('Save'));

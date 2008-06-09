@@ -323,13 +323,13 @@ class DrupalWebTestCase extends UnitTestCase {
   }
 
   /**
-   * Generates a random database prefix, runs the install scripts on the 
-   * prefixed database and enable the specified modules. After installation 
-   * many caches are flushed and the internal browser is setup so that the 
-   * page requests will run on the new prefix. A temporary files directory 
+   * Generates a random database prefix, runs the install scripts on the
+   * prefixed database and enable the specified modules. After installation
+   * many caches are flushed and the internal browser is setup so that the
+   * page requests will run on the new prefix. A temporary files directory
    * is created with the same name as the database prefix.
    *
-   * @param ... 
+   * @param ...
    *   List of modules to enable for the duration of the test.
    */
   function setUp() {
@@ -586,7 +586,7 @@ class DrupalWebTestCase extends UnitTestCase {
           }
           $out = $this->curlExec(array(CURLOPT_URL => $action, CURLOPT_POST => TRUE, CURLOPT_POSTFIELDS => $post));
           // Ensure that any changes to variables in the other thread are picked up.
-          $this->refreshVariables(); 
+          $this->refreshVariables();
           return $out;
         }
       }
@@ -604,15 +604,15 @@ class DrupalWebTestCase extends UnitTestCase {
    * exist and attempt to create POST data in the correct manner for the particular
    * field type.
    *
-   * @param array $post 
+   * @param array $post
    *   Reference to array of post values.
-   * @param array $edit 
+   * @param array $edit
    *   Reference to array of edit values to be checked against the form.
-   * @param string $submit 
+   * @param string $submit
    *   Form submit button value.
-   * @param array $form 
+   * @param array $form
    *   Array of form elements.
-   * @return boolean 
+   * @return boolean
    *   Submit value matches a valid submit input in the form.
    */
   protected function handleForm(&$post, &$edit, &$upload, $submit, $form) {
