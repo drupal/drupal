@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.421 2008/06/07 13:41:48 dries Exp $
+// $Id: taxonomy.module,v 1.422 2008/06/09 07:28:35 dries Exp $
 
 /**
  * @file
@@ -51,7 +51,7 @@ function taxonomy_link($type, $node = NULL) {
   if ($type == 'taxonomy terms' && $node != NULL) {
     $links = array();
     // If previewing, the terms must be converted to objects first.
-    if ($node->build_mode == NODE_BUILD_PREVIEW) {
+    if (isset($node->build_mode) && $node->build_mode == NODE_BUILD_PREVIEW) {
       $node->taxonomy = taxonomy_preview_terms($node);
     }
     if (!empty($node->taxonomy)) {
