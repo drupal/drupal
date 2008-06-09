@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.634 2008/06/03 16:30:20 dries Exp $
+// $Id: comment.module,v 1.635 2008/06/09 07:07:36 dries Exp $
 
 /**
  * @file
@@ -739,7 +739,10 @@ function comment_save($edit) {
           }
         }
 
-        $edit['timestamp'] = time();
+        if (empty($edit['timestamp'])) {
+          $edit['timestamp'] = time();
+        }
+
         if ($edit['uid'] === $user->uid) { // '===' Need to modify anonymous users as well.
           $edit['name'] = $user->name;
         }
