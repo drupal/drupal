@@ -24,7 +24,7 @@ class CommentTestCase extends DrupalWebTestCase {
     parent::setUp('comment');
     // Create users.
     $this->admin_user = $this->drupalCreateUser(array('administer content types', 'administer comments', 'administer permissions'));
-    $this->web_user = $this->drupalCreateUser(array('access comments', 'post comments', 'create story content'));
+    $this->web_user = $this->drupalCreateUser(array('access comments', 'post comments', 'create article content'));
 
     $this->drupalLogin($this->web_user);
     $this->node = $this->drupalCreateNode(array('type' => 'article'));

@@ -144,7 +144,7 @@ class IPAddressBlockingTestCase extends DrupalWebTestCase {
     parent::setUp();
 
     // Create user.
-    $this->blocking_user = $this->drupalCreateUser(array('block IP addresses', 'access statistics'));
+    $this->blocking_user = $this->drupalCreateUser(array('block IP addresses'));
     $this->drupalLogin($this->blocking_user);
   }
 
