@@ -1,0 +1,54 @@
+<?php
+
+class CommonFormatSizeTestCase extends DrupalWebTestCase {
+
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('Format size test'),
+      'description' => t('Parse a predefined amount of bytes and compare the output with the expected value.'),
+      'group' => t('System')
+    );
+  }
+
+  /**
+   * Implementation of setUp().
+   */
+  function setUp() {
+    $this->exact_test_cases = array(
+      '1 byte'    => 1, // byte
+      '1 KB'      => 1000, // kilobyte
+      '1 MB'      => 1000000, // megabyte
+      '1 GB'      => 1000000000, // gigabyte
+      '1 TB'      => 1000000000000, // terabyte
+      '1 PB'      => 1000000000000000, // petabyte
+      '1 EB'      => 1000000000000000000, // exabyte
+      '1 ZB'      => 1000000000000000000000, // zettabyte
+      '1 YB'      => 1000000000000000000000000, // yottabyte
+    );
+    $this->rounded_test_cases = array(
+      '2 bytes'   => 2, // bytes
+      '1 MB'      => 999999, // 1 MB (not 1000 kilobyte!)
+      '3.62 MB'   => 3623651, // megabytes
+      '67.23 PB'  => 67234178751368124, // petabytes
+      '235.35 YB' => 235346823821125814962843827, // yottabytes
+    );
+    parent::setUp();
+  }
+
+  /**
+   * testCommonFormatSize
+   */
+  function testCommonFormatSize() {
+    foreach (array($this->exact_test_cases, $this->rounded_test_cases) as $test_cases) {
+      foreach ($test_cases as $expected => $size) {
+        $this->assertTrue(
+          ($result = format_size($size, NULL)) == $expected,
+          $expected . " == " . $result . " (" . $size . " bytes) %s"
+        );
+      }
+    }
+  }
+}

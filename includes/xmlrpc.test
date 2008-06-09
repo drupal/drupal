@@ -1,5 +1,5 @@
 <?php
-// $Id: xmlrpc.test,v 1.3 2008/06/05 21:55:44 dries Exp $
+// $Id: xmlrpc.test,v 1.4 2008/06/09 08:11:44 dries Exp $
 
 class XMLRPCValidator1Test extends DrupalWebTestCase {
   /**
@@ -12,7 +12,7 @@ class XMLRPCValidator1Test extends DrupalWebTestCase {
       'group' => t('XML-RPC')
     );
   }
-  
+
   function setUp() {
     parent::setUp('simpletest_xmlrpc');
   }

@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.770 2008/05/30 17:41:51 dries Exp $
+// $Id: common.inc,v 1.771 2008/06/09 08:11:44 dries Exp $
 
 /**
  * @file
@@ -1079,17 +1079,21 @@ function parse_size($size) {
  *   A translated string representation of the size.
  */
 function format_size($size, $langcode = NULL) {
-  if ($size < 1024) {
+  if ($size < 1000) {
     return format_plural($size, '1 byte', '@count bytes', array(), $langcode);
   }
   else {
-    $size = round($size / 1024, 2);
-    $suffix = t('KB', array(), $langcode);
-    if ($size >= 1024) {
-      $size = round($size / 1024, 2);
-      $suffix = t('MB', array(), $langcode);
+    $size = $size / 1000; // convert bytes to kilobytes (1000 bytes)
+    $units = array('KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
+    foreach ($units as $suffix) {
+      if (round($size, 2) >= 1000) {
+        $size = $size / 1000;
+      }
+      else {
+        break;
+      }
     }
-    return t('@size @suffix', array('@size' => $size, '@suffix' => $suffix), $langcode);
+    return t('@size @suffix', array('@size' => round($size, 2), '@suffix' => $suffix), $langcode);
   }
 }
 
