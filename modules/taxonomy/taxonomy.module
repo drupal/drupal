@@ -51,7 +51,7 @@ function taxonomy_link($type, $node = NULL) {
   if ($type == 'taxonomy terms' && $node != NULL) {
     $links = array();
     // If previewing, the terms must be converted to objects first.
-    if ($node->build_mode == NODE_BUILD_PREVIEW) {
+    if (isset($node->build_mode) && $node->build_mode == NODE_BUILD_PREVIEW) {
       $node->taxonomy = taxonomy_preview_terms($node);
     }
     if (!empty($node->taxonomy)) {
