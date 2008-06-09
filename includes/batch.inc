@@ -1,5 +1,5 @@
 <?php
-// $Id: batch.inc,v 1.16 2008/06/06 16:53:48 dries Exp $
+// $Id: batch.inc,v 1.17 2008/06/09 06:59:41 dries Exp $
 
 /**
  * @file Batch processing API for processes to run in multiple HTTP requests.
@@ -236,7 +236,7 @@ function _batch_process() {
     }
 
     $current    = $total - $remaining + $finished;
-    $percentage = $total ? round($current / $total * 100) : 100;
+    $percentage = $total ? floor($current / $total * 100) : 100;
     $values = array(
       '@remaining'  => $remaining,
       '@total'      => $total,
