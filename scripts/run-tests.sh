@@ -1,6 +1,6 @@
 #!/usr/bin/php
 <?php
-// $Id: run-functional-tests.sh,v 1.3 2008/05/28 12:35:32 dries Exp $
+// $Id: run-tests.sh,v 1.1 2008/06/09 07:37:05 dries Exp $
 
 /**
  * @file
