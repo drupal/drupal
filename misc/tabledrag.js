@@ -1,4 +1,4 @@
-// $Id: tabledrag.js,v 1.15 2008/05/02 15:20:39 dries Exp $
+// $Id: tabledrag.js,v 1.16 2008/06/10 19:42:28 dries Exp $
 
 /**
  * Drag and drop table rows with field manipulation.
@@ -486,7 +486,7 @@ Drupal.tableDrag.prototype.getPosition = function(element){
   // cells, grab the firstChild of the row and use that instead.
   // http://jacob.peargrove.com/blog/2006/technical/table-row-offsettop-bug-in-safari
   if (element.offsetHeight == 0) {
-    element = element.firstChild; // a table cell
+    element = element.firstChild; // A table cell.
   }
 
   while (element.offsetParent){
