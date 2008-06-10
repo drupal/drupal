@@ -621,13 +621,14 @@ class DrupalWebTestCase extends UnitTestCase {
     $submit_matches = FALSE;
     foreach ($elements as $element) {
       // SimpleXML objects need string casting all the time.
-      $name = (string)$element['name'];
+      $name = (string) $element['name'];
+      $id = (string) $element['id'];
       // This can either be the type of <input> or the name of the tag itself
       // for <select> or <textarea>.
       $type = isset($element['type']) ? (string)$element['type'] : $element->getName();
       $value = isset($element['value']) ? (string)$element['value'] : '';
       $done = FALSE;
-      if (isset($edit[$name])) {
+      if (isset($edit[$name]) || isset($edit[$id])) {
         switch ($type) {
           case 'text':
           case 'textarea':
