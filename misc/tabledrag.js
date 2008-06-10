@@ -486,7 +486,7 @@ Drupal.tableDrag.prototype.getPosition = function(element){
   // cells, grab the firstChild of the row and use that instead.
   // http://jacob.peargrove.com/blog/2006/technical/table-row-offsettop-bug-in-safari
   if (element.offsetHeight == 0) {
-    element = element.firstChild; // a table cell
+    element = element.firstChild; // A table cell.
   }
 
   while (element.offsetParent){
