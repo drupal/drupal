@@ -87,8 +87,8 @@ Drupal.tableDrag = function(table, tableSettings) {
 
   // Add mouse bindings to the document. The self variable is passed along
   // as event handlers do not have direct access to the tableDrag object.
-  $(document).bind('mousemove', function(event) { self.dragRow(event, self); return false; });
-  $(document).bind('mouseup', function(event) { self.dropRow(event, self); });
+  $(document).bind('mousemove', function(event) { return self.dragRow(event, self); });
+  $(document).bind('mouseup', function(event) { return self.dropRow(event, self); });
 };
 
 /**
@@ -415,6 +415,8 @@ Drupal.tableDrag.prototype.dragRow = function(event, self) {
       self.dragObject.indentMousePos.x += self.indentAmount * indentChange * self.rtl;
       self.indentCount = Math.max(self.indentCount, self.rowObject.indents);
     }
+
+    return false;
   }
 };
 
