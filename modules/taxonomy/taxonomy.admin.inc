@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.25 2008/04/14 17:48:42 dries Exp $
+// $Id: taxonomy.admin.inc,v 1.26 2008/06/12 19:07:36 dries Exp $
 
 /**
  * @file
@@ -85,7 +85,7 @@ function theme_taxonomy_overview_vocabularies($form) {
     $rows[] = array(array('data' => t('No vocabularies available.'), 'colspan' => '5'));
   }
 
-  $header = array(t('Name'), t('Type'));
+  $header = array(t('Vocabulary name'), t('Content types'));
   if (isset($form['submit'])) {
     $header[] = t('Weight');
     drupal_add_tabledrag('taxonomy', 'order', 'sibling', 'vocabulary-weight');

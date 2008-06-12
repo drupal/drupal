@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.53 2008/05/13 17:37:58 dries Exp $
+// $Id: content_types.inc,v 1.54 2008/06/12 19:07:36 dries Exp $
 
 /**
  * @file
@@ -20,7 +20,7 @@ function node_overview_types() {
     if (node_hook($type, 'form')) {
       $type_url_str = str_replace('_', '-', $type->type);
       $row = array(
-        l($name, 'admin/build/node-type/' . $type_url_str),
+        check_plain($name),
         check_plain($type->type),
         filter_xss_admin($type->description),
       );
