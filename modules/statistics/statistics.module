@@ -43,7 +43,7 @@ function statistics_help($path, $arg) {
  * This is where statistics are gathered on page accesses.
  */
 function statistics_exit() {
-  global $user, $recent_activity;
+  global $user;
 
   drupal_bootstrap(DRUPAL_BOOTSTRAP_PATH);
 
