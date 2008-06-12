@@ -622,8 +622,11 @@ function _menu_translate(&$router_item, $map, $to_arg = FALSE) {
   $router_item['href'] = implode('/', $link_map);
   $router_item['options'] = array();
   _menu_check_access($router_item, $map);
-
-  _menu_item_localize($router_item, $map);
+  
+  // For performance, don't localize an item the user can't access.
+  if ($router_item['access']) {
+    _menu_item_localize($router_item, $map);
+  }
 
   return $map;
 }
@@ -701,8 +704,10 @@ function _menu_link_translate(&$item) {
       }
       _menu_check_access($item, $map);
     }
-
-    _menu_item_localize($item, $map, TRUE);
+    // For performance, don't localize a link the user can't access.
+    if ($item['access']) {
+      _menu_item_localize($item, $map, TRUE);
+    }
   }
 
   // Allow other customizations - e.g. adding a page-specific query string to the
