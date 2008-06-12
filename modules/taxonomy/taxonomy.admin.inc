@@ -85,7 +85,7 @@ function theme_taxonomy_overview_vocabularies($form) {
     $rows[] = array(array('data' => t('No vocabularies available.'), 'colspan' => '5'));
   }
 
-  $header = array(t('Name'), t('Type'));
+  $header = array(t('Vocabulary name'), t('Content types'));
   if (isset($form['submit'])) {
     $header[] = t('Weight');
     drupal_add_tabledrag('taxonomy', 'order', 'sibling', 'vocabulary-weight');
