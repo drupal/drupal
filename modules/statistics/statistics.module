@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.278 2008/05/14 11:10:54 dries Exp $
+// $Id: statistics.module,v 1.279 2008/06/12 18:46:51 dries Exp $
 
 /**
  * @file
@@ -43,7 +43,7 @@ function statistics_help($path, $arg) {
  * This is where statistics are gathered on page accesses.
  */
 function statistics_exit() {
-  global $user, $recent_activity;
+  global $user;
 
   drupal_bootstrap(DRUPAL_BOOTSTRAP_PATH);
 
