@@ -69,10 +69,20 @@ class CommentTestCase extends DrupalWebTestCase {
     $reply = $this->postComment(NULL, $this->randomName(), $this->randomName());
     $this->assertTrue($this->commentExists($reply, TRUE), t('Modified reply found.'));
 
+    // Pager
+    $this->setCommentsPerPage(2);
+    $comment_new_page = $this->postComment($this->node, $this->randomName(), $this->randomName());
+    $this->drupalGet('node/' . $this->node->nid);
+    $this->assertTrue($this->commentExists($comment) && $this->commentExists($comment_new_page), t('Page one exists. %s'));
+    $this->drupalGet('node/' . $this->node->nid, array('query' => 'page=1'));
+    $this->assertTrue($this->commentExists($reply, TRUE), t('Page two exists. %s'));
+    $this->setCommentsPerPage(50);
+
     // Delete comment and make sure that reply is also removed.
     $this->drupalLogout();
     $this->drupalLogin($this->admin_user);
     $this->deleteComment($comment);
+    $this->deleteComment($comment_new_page);
 
     $this->drupalGet('node/' . $this->node->nid);
     $this->assertFalse($this->commentExists($comment), t('Comment not found.'));
@@ -294,7 +304,7 @@ class CommentTestCase extends DrupalWebTestCase {
       $regex .= $comment->comment . '(.*?)'; // Match comment.
       $regex .= '<\/div>/s'; // Dot matches newlines and ensure that match doesn't bleed outside comment div.
 
-      return preg_match($regex, $this->drupalGetContent());
+      return (boolean)preg_match($regex, $this->drupalGetContent());
     }
     else {
       return FALSE;
@@ -350,6 +360,16 @@ class CommentTestCase extends DrupalWebTestCase {
    */
   function setCommentAnonymous($level) {
     $this->setCommentSettings('comment_anonymous', $level, 'Anonymous commenting set to level ' . $level . '.');
+  }
+
+  /**
+   * Set the default number of comments per page.
+   *
+   * @param integer $comments
+   *   Comments per page value.
+   */
+  function setCommentsPerPage($number) {
+    $this->setCommentSettings('comment_default_per_page', $number, 'Number of comments per page set to ' . $number .'.');
   }
 
   /**
