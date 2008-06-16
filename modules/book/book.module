@@ -676,17 +676,15 @@ function book_build_active_trail($book_link) {
 function book_nodeapi(&$node, $op, $teaser, $page) {
   switch ($op) {
     case 'load':
-      if (in_array($node->type, variable_get('book_allowed_types', array('book')))) {
-        // Note - we cannot use book_link_load() because it will call node_load().
-        $info['book'] = db_fetch_array(db_query('SELECT * FROM {book} b INNER JOIN {menu_links} ml ON b.mlid = ml.mlid WHERE b.nid = %d', $node->nid));
+      // Note - we cannot use book_link_load() because it will call node_load().
+      $info['book'] = db_fetch_array(db_query('SELECT * FROM {book} b INNER JOIN {menu_links} ml ON b.mlid = ml.mlid WHERE b.nid = %d', $node->nid));
 
-        if ($info['book']) {
-          $info['book']['href'] = $info['book']['link_path'];
-          $info['book']['title'] = $info['book']['link_title'];
-          $info['book']['options'] = unserialize($info['book']['options']);
+      if ($info['book']) {
+        $info['book']['href'] = $info['book']['link_path'];
+        $info['book']['title'] = $info['book']['link_title'];
+        $info['book']['options'] = unserialize($info['book']['options']);
 
-          return $info;
-        }
+        return $info;
       }
       break;
 
