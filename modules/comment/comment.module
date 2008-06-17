@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.636 2008/06/14 16:02:49 dries Exp $
+// $Id: comment.module,v 1.637 2008/06/17 00:52:00 dries Exp $
 
 /**
  * @file
@@ -592,7 +592,7 @@ function comment_nodeapi(&$node, $op, $arg = 0) {
       if ($node->comment != COMMENT_NODE_DISABLED) {
         return db_fetch_array(db_query("SELECT last_comment_timestamp, last_comment_name, comment_count FROM {node_comment_statistics} WHERE nid = %d", $node->nid));
       }
-      return array('last_comment_timestamp' => $node->created, 'last_comment_name' => '', 'commenet_count' => 0);
+      return array('last_comment_timestamp' => $node->created, 'last_comment_name' => '', 'comment_count' => 0);
 
     case 'prepare':
       if (!isset($node->comment)) {
