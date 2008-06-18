@@ -418,10 +418,9 @@ function comment_link($type, $node = NULL, $teaser = FALSE) {
     if ($teaser) {
       // Main page: display the number of comments that have been posted.
       if (user_access('access comments')) {
-        $all = comment_num_all($node->nid);
-        if ($all) {
+        if ($node->comment_count) {
           $links['comment_comments'] = array(
-            'title' => format_plural($all, '1 comment', '@count comments'),
+            'title' => format_plural($node->comment_count, '1 comment', '@count comments'),
             'href' => "node/$node->nid",
             'attributes' => array('title' => t('Jump to the first comment of this posting.')),
             'fragment' => 'comments'
@@ -432,7 +431,7 @@ function comment_link($type, $node = NULL, $teaser = FALSE) {
             $links['comment_new_comments'] = array(
               'title' => format_plural($new, '1 new comment', '@count new comments'),
               'href' => "node/$node->nid",
-              'query' => comment_new_page_count($all, $new, $node),
+              'query' => comment_new_page_count($node->comment_count, $new, $node),
               'attributes' => array('title' => t('Jump to the first new comment of this posting.')),
               'fragment' => 'new'
             );
@@ -1083,24 +1082,6 @@ function comment_operations($action = NULL) {
  */
 function comment_load($cid) {
   return db_fetch_object(db_query('SELECT * FROM {comments} WHERE cid = %d', $cid));
-}
-
-/**
- * Get comment count for a node.
- *
- * @param $nid
- *   The node id.
- * @return
- *   The comment count.
- */
-function comment_num_all($nid) {
-  static $cache;
-
-  if (!isset($cache[$nid])) {
-    $cache[$nid] = db_result(db_query('SELECT comment_count FROM {node_comment_statistics} WHERE nid = %d', $nid));
-  }
-
-  return $cache[$nid];
 }
 
 /**
