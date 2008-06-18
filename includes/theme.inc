@@ -1464,9 +1464,9 @@ function theme_more_help_link($url) {
 
 /**
  * Return code that emits an XML icon.
- * 
+ *
  * For most use cases, this function has been superseded by theme_feed_icon().
- * 
+ *
  * @see theme_feed_icon()
  * @param $url
  *   The url of the feed.
