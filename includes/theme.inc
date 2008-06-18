@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.426 2008/06/06 01:50:20 dries Exp $
+// $Id: theme.inc,v 1.427 2008/06/18 16:22:13 dries Exp $
 
 /**
  * @file
@@ -1965,7 +1965,8 @@ function template_preprocess_node(&$variables) {
     $variables['picture'] = '';
   }
   // Clean up name so there are no underscores.
-  $variables['template_files'][] = 'node-' . $node->type;
+  $variables['template_files'][] = 'node-' . str_replace('_', '-', $node->type);
+  $variables['template_files'][] = 'node-' . $node->nid;
 }
 
 /**
