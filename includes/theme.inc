@@ -1965,7 +1965,8 @@ function template_preprocess_node(&$variables) {
     $variables['picture'] = '';
   }
   // Clean up name so there are no underscores.
-  $variables['template_files'][] = 'node-' . $node->type;
+  $variables['template_files'][] = 'node-' . str_replace('_', '-', $node->type);
+  $variables['template_files'][] = 'node-' . $node->nid;
 }
 
 /**
