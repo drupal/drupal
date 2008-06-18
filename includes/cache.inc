@@ -10,6 +10,7 @@
  * @param $table
  *   The table $table to store the data in. Valid core values are 'cache_filter',
  *   'cache_menu', 'cache_page', or 'cache' for the default cache.
+ * @return The cache or FALSE on failure.
  */
 function cache_get($cid, $table = 'cache') {
   global $user;
@@ -41,7 +42,7 @@ function cache_get($cid, $table = 'cache') {
     else {
       if ($user->cache > $cache->created) {
         // This cache data is too old and thus not valid for us, ignore it.
-        return 0;
+        return FALSE;
       }
       else {
         $cache->data = db_decode_blob($cache->data);
@@ -52,7 +53,7 @@ function cache_get($cid, $table = 'cache') {
     }
     return $cache;
   }
-  return 0;
+  return FALSE;
 }
 
 /**

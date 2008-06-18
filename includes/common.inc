@@ -819,7 +819,7 @@ function valid_email_address($mail) {
   $ipv4 = '[0-9]{1,3}(\.[0-9]{1,3}){3}';
   $ipv6 = '[0-9a-fA-F]{1,4}(\:[0-9a-fA-F]{1,4}){7}';
 
-  return preg_match("/^$user@($domain|(\[($ipv4|$ipv6)\]))$/", $mail);
+  return (bool)preg_match("/^$user@($domain|(\[($ipv4|$ipv6)\]))$/", $mail);
 }
 
 /**
@@ -838,10 +838,10 @@ function valid_email_address($mail) {
 function valid_url($url, $absolute = FALSE) {
   $allowed_characters = '[a-z0-9\/:_\-_\.\?\$,;~=#&%\+]';
   if ($absolute) {
-    return preg_match("/^(http|https|ftp):\/\/" . $allowed_characters . "+$/i", $url);
+    return (bool)preg_match("/^(http|https|ftp):\/\/" . $allowed_characters . "+$/i", $url);
   }
   else {
-    return preg_match("/^" . $allowed_characters . "+$/i", $url);
+    return (bool)preg_match("/^" . $allowed_characters . "+$/i", $url);
   }
 }
 

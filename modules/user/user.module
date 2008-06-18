@@ -91,7 +91,7 @@ function user_external_load($authname) {
     return user_load($user);
   }
   else {
-    return 0;
+    return FALSE;
   }
 }
 

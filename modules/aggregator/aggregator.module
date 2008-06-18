@@ -680,7 +680,7 @@ function aggregator_parse_w3cdtf($date_str) {
  * @param $feed
  *   An associative array describing the feed to be parsed.
  * @return
- *   0 on error, 1 otherwise.
+ *   FALSE on error, TRUE otherwise.
  */
 function aggregator_parse_feed(&$data, $feed) {
   global $items, $image, $channel;
@@ -699,7 +699,7 @@ function aggregator_parse_feed(&$data, $feed) {
   if (!xml_parse($xml_parser, $data, 1)) {
     watchdog('aggregator', 'The feed from %site seems to be broken, due to an error "%error" on line %line.', array('%site' => $feed['title'], '%error' => xml_error_string(xml_get_error_code($xml_parser)), '%line' => xml_get_current_line_number($xml_parser)), WATCHDOG_WARNING);
     drupal_set_message(t('The feed from %site seems to be broken, because of error "%error" on line %line.', array('%site' => $feed['title'], '%error' => xml_error_string(xml_get_error_code($xml_parser)), '%line' => xml_get_current_line_number($xml_parser))), 'error');
-    return 0;
+    return FALSE;
   }
   xml_parser_free($xml_parser);
 
@@ -801,7 +801,7 @@ function aggregator_parse_feed(&$data, $feed) {
     db_query('DELETE FROM {aggregator_item} WHERE fid = %d AND timestamp < %d', $feed['fid'], $age);
   }
 
-  return 1;
+  return TRUE;
 }
 
 /**

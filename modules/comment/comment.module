@@ -1129,6 +1129,7 @@ function comment_num_replies($pid) {
  * @param $timestamp
  *   Time to count from (defaults to time of last user access
  *   to node).
+ * @return The result or FALSE on error.
  */
 function comment_num_new($nid, $timestamp = 0) {
   global $user;
@@ -1146,7 +1147,7 @@ function comment_num_new($nid, $timestamp = 0) {
     return $result;
   }
   else {
-    return 0;
+    return FALSE;
   }
 
 }

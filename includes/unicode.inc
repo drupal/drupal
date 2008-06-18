@@ -121,7 +121,7 @@ function unicode_requirements() {
  * @param &$data
  *   The XML data which will be parsed later.
  * @return
- *   An XML parser object.
+ *   An XML parser object or FALSE on error.
  */
 function drupal_xml_parser_create(&$data) {
   // Default XML encoding is UTF-8
@@ -149,7 +149,7 @@ function drupal_xml_parser_create(&$data) {
     }
     else {
       watchdog('php', 'Could not convert XML encoding %s to UTF-8.', array('%s' => $encoding), WATCHDOG_WARNING);
-      return 0;
+      return FALSE;
     }
   }
 

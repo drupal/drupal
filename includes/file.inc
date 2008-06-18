@@ -214,7 +214,7 @@ function file_check_path(&$path) {
  *
  * @param $source A string set to the file to check.
  * @param $directory A string where the file should be located.
- * @return 0 for invalid path or the real path of the source.
+ * @return FALSE for invalid path or the real path of the source.
  */
 function file_check_location($source, $directory = '') {
   $check = realpath($source);
@@ -227,7 +227,7 @@ function file_check_location($source, $directory = '') {
   }
   $directory = realpath($directory);
   if ($directory && strpos($source, $directory) !== 0) {
-    return 0;
+    return FALSE;
   }
   return $source;
 }
@@ -262,7 +262,7 @@ function file_copy(&$source, $dest = 0, $replace = FILE_EXISTS_RENAME) {
     $source = is_object($source) ? $source->filepath : $source;
     drupal_set_message(t('The selected file %file could not be uploaded, because the destination %directory is not properly configured.', array('%file' => $source, '%directory' => $dest)), 'error');
     watchdog('file system', 'The selected file %file could not be uploaded, because the destination %directory could not be found, or because its permissions do not allow the file to be written.', array('%file' => $source, '%directory' => $dest), WATCHDOG_ERROR);
-    return 0;
+    return FALSE;
   }
 
   // Process a file upload object.
@@ -277,7 +277,7 @@ function file_copy(&$source, $dest = 0, $replace = FILE_EXISTS_RENAME) {
   $source = realpath($source);
   if (!file_exists($source)) {
     drupal_set_message(t('The selected file %file could not be copied, because no file by that name exists. Please check that you supplied the correct filename.', array('%file' => $source)), 'error');
-    return 0;
+    return FALSE;
   }
 
   // If the destination file is not specified then use the filename of the source file.
@@ -295,7 +295,7 @@ function file_copy(&$source, $dest = 0, $replace = FILE_EXISTS_RENAME) {
 
     if (!@copy($source, $dest)) {
       drupal_set_message(t('The selected file %file could not be copied.', array('%file' => $source)), 'error');
-      return 0;
+      return FALSE;
     }
 
     // Give everyone read access so that FTP'd users or
@@ -314,7 +314,7 @@ function file_copy(&$source, $dest = 0, $replace = FILE_EXISTS_RENAME) {
     $source = $dest;
   }
 
-  return 1; // Everything went ok.
+  return TRUE; // Everything went ok.
 }
 
 /**
@@ -363,7 +363,7 @@ function file_destination($destination, $replace) {
  *   - FILE_EXISTS_REPLACE - Replace the existing file
  *   - FILE_EXISTS_RENAME - Append _{incrementing number} until the filename is unique
  *   - FILE_EXISTS_ERROR - Do nothing and return FALSE.
- * @return True for success, FALSE for failure.
+ * @return TRUE for success, FALSE for failure.
  */
 function file_move(&$source, $dest = 0, $replace = FILE_EXISTS_RENAME) {
   $path_original = is_object($source) ? $source->filepath : $source;
@@ -372,11 +372,11 @@ function file_move(&$source, $dest = 0, $replace = FILE_EXISTS_RENAME) {
     $path_current = is_object($source) ? $source->filepath : $source;
 
     if ($path_original == $path_current || file_delete($path_original)) {
-      return 1;
+      return TRUE;
     }
     drupal_set_message(t('The removal of the original file %file has failed.', array('%file' => $path_original)), 'error');
   }
-  return 0;
+  return FALSE;
 }
 
 /**
@@ -513,7 +513,7 @@ function file_space_used($uid = NULL) {
  *   destination directory should overwritten. A false value will generate a
  *   new, unique filename in the destination directory.
  * @return
- *   An object containing the file information, or 0 in the event of an error.
+ *   An object containing the file information, or FALSE in the event of an error.
  */
 function file_save_upload($source, $validators = array(), $dest = FALSE, $replace = FILE_EXISTS_RENAME) {
   global $user;
@@ -540,17 +540,17 @@ function file_save_upload($source, $validators = array(), $dest = FALSE, $replac
       case UPLOAD_ERR_INI_SIZE:
       case UPLOAD_ERR_FORM_SIZE:
         drupal_set_message(t('The file %file could not be saved, because it exceeds %maxsize, the maximum allowed size for uploads.', array('%file' => $source, '%maxsize' => format_size(file_upload_max_size()))), 'error');
-        return 0;
+        return FALSE;
 
       case UPLOAD_ERR_PARTIAL:
       case UPLOAD_ERR_NO_FILE:
         drupal_set_message(t('The file %file could not be saved, because the upload did not complete.', array('%file' => $source)), 'error');
-        return 0;
+        return FALSE;
 
         // Unknown error
       default:
         drupal_set_message(t('The file %file could not be saved. An unknown error has occurred.', array('%file' => $source)), 'error');
-        return 0;
+        return FALSE;
     }
 
     // Build the list of non-munged extensions.
@@ -601,7 +601,7 @@ function file_save_upload($source, $validators = array(), $dest = FALSE, $replac
         $message .= ' ' . array_pop($errors);
       }
       form_set_error($source, $message);
-      return 0;
+      return FALSE;
     }
 
     // Move uploaded files from PHP's upload_tmp_dir to Drupal's temporary directory.
@@ -610,7 +610,7 @@ function file_save_upload($source, $validators = array(), $dest = FALSE, $replac
     if (!move_uploaded_file($_FILES['files']['tmp_name'][$source], $file->filepath)) {
       form_set_error($source, t('File upload error. Could not move uploaded file.'));
       watchdog('file', 'Upload error. Could not move uploaded file %file to destination %destination.', array('%file' => $file->filename, '%destination' => $file->filepath));
-      return 0;
+      return FALSE;
     }
 
     // If we made it this far it's safe to record this file in the database.
@@ -623,7 +623,7 @@ function file_save_upload($source, $validators = array(), $dest = FALSE, $replac
     $upload_cache[$source] = $file;
     return $file;
   }
-  return 0;
+  return FALSE;
 }
 
 /**
@@ -786,7 +786,7 @@ function file_validate_image_resolution(&$file, $maximum_dimensions = 0, $minimu
  *   - FILE_EXISTS_RENAME - Append _{incrementing number} until the filename is unique
  *   - FILE_EXISTS_ERROR - Do nothing and return FALSE.
  *
- * @return A string containing the resulting filename or 0 on error
+ * @return A string containing the resulting filename or FALSE on error
  */
 function file_save_data($data, $dest, $replace = FILE_EXISTS_RENAME) {
   $temp = file_directory_temp();
@@ -794,13 +794,13 @@ function file_save_data($data, $dest, $replace = FILE_EXISTS_RENAME) {
   $file = tempnam(realpath($temp), 'file');
   if (!$fp = fopen($file, 'wb')) {
     drupal_set_message(t('The file could not be created.'), 'error');
-    return 0;
+    return FALSE;
   }
   fwrite($fp, $data);
   fclose($fp);
 
   if (!file_move($file, $dest, $replace)) {
-    return 0;
+    return FALSE;
   }
 
   return $file;
