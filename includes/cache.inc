@@ -1,5 +1,5 @@
 <?php
-// $Id: cache.inc,v 1.18 2008/04/14 17:48:33 dries Exp $
+// $Id: cache.inc,v 1.19 2008/06/18 03:36:23 dries Exp $
 
 /**
  * Return data from the persistent cache. Data may be stored as either plain text or as serialized data.
@@ -10,6 +10,7 @@
  * @param $table
  *   The table $table to store the data in. Valid core values are 'cache_filter',
  *   'cache_menu', 'cache_page', or 'cache' for the default cache.
+ * @return The cache or FALSE on failure.
  */
 function cache_get($cid, $table = 'cache') {
   global $user;
@@ -41,7 +42,7 @@ function cache_get($cid, $table = 'cache') {
     else {
       if ($user->cache > $cache->created) {
         // This cache data is too old and thus not valid for us, ignore it.
-        return 0;
+        return FALSE;
       }
       else {
         $cache->data = db_decode_blob($cache->data);
@@ -52,7 +53,7 @@ function cache_get($cid, $table = 'cache') {
     }
     return $cache;
   }
-  return 0;
+  return FALSE;
 }
 
 /**

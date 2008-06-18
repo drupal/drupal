@@ -1,5 +1,5 @@
 <?php
-// $Id: unicode.inc,v 1.30 2008/04/14 17:48:33 dries Exp $
+// $Id: unicode.inc,v 1.31 2008/06/18 03:36:23 dries Exp $
 
 /**
  * Indicates an error during check for PHP unicode support.
@@ -121,7 +121,7 @@ function unicode_requirements() {
  * @param &$data
  *   The XML data which will be parsed later.
  * @return
- *   An XML parser object.
+ *   An XML parser object or FALSE on error.
  */
 function drupal_xml_parser_create(&$data) {
   // Default XML encoding is UTF-8
@@ -149,7 +149,7 @@ function drupal_xml_parser_create(&$data) {
     }
     else {
       watchdog('php', 'Could not convert XML encoding %s to UTF-8.', array('%s' => $encoding), WATCHDOG_WARNING);
-      return 0;
+      return FALSE;
     }
   }
 

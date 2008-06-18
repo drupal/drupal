@@ -1,5 +1,5 @@
 <?php
-// $Id: batch.inc,v 1.17 2008/06/09 06:59:41 dries Exp $
+// $Id: batch.inc,v 1.18 2008/06/18 03:36:23 dries Exp $
 
 /**
  * @file Batch processing API for processes to run in multiple HTTP requests.
@@ -179,7 +179,7 @@ function _batch_process() {
       include_once($current_set['file']);
     }
 
-    $finished = 1;
+    $finished = TRUE;
     $task_message = '';
     if ((list($function, $args) = reset($current_set['operations'])) && function_exists($function)) {
       // Build the 'context' array, execute the function call,
@@ -189,9 +189,9 @@ function _batch_process() {
       call_user_func_array($function, array_merge($args, array(&$batch_context)));
     }
 
-    if ($finished == 1) {
+    if ($finished == TRUE) {
       // Make sure this step isn't counted double when computing $current.
-      $finished = 0;
+      $finished = FALSE;
       // Remove the operation and clear the sandbox.
       array_shift($current_set['operations']);
       $current_set['sandbox'] = array();

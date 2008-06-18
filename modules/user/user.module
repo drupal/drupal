@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.909 2008/05/26 17:12:55 dries Exp $
+// $Id: user.module,v 1.910 2008/06/18 03:36:24 dries Exp $
 
 /**
  * @file
@@ -91,7 +91,7 @@ function user_external_load($authname) {
     return user_load($user);
   }
   else {
-    return 0;
+    return FALSE;
   }
 }
 
