@@ -1410,9 +1410,10 @@ function comment_form(&$form_state, $edit, $title = NULL) {
     '#value' => !empty($edit['uid']) ? $edit['uid'] : NULL,
   );
 
-  // Only show save button if preview is optional or if we are in preview mode.
-  // We show the save button in preview mode even if there are form errors so that
-  // optional form elements (e.g., captcha) can be updated in preview mode.
+  // Only show the save button if comment previews are optional or if we are
+  // already previewing the submission.  However, if there are form errors,
+  // we hide the save button no matter what, so that optional form elements
+  // (e.g., captchas) can be updated.
   if (!form_get_errors() && ((variable_get('comment_preview_' . $node->type, COMMENT_PREVIEW_REQUIRED) == COMMENT_PREVIEW_OPTIONAL) || ($op == t('Preview')) || ($op == t('Save')))) {
     $form['submit'] = array(
       '#type' => 'submit',
