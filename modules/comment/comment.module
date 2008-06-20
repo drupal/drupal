@@ -509,21 +509,21 @@ function comment_form_alter(&$form, $form_state, $form_id) {
       '#title' => t('Default display mode'),
       '#default_value' => variable_get('comment_default_mode_' . $form['#node_type']->type, COMMENT_MODE_THREADED_EXPANDED),
       '#options' => _comment_get_modes(),
-      '#description' => t('The default view for comments. Expanded views display the body of the comment. Threaded views keep replies together.'),
+      '#description' => t('Expanded views display the body of the comment. Threaded views keep replies together.'),
     );
     $form['comment']['comment_default_order'] = array(
       '#type' => 'radios',
-      '#title' => t('Default display order'),
+      '#title' => t('Display order'),
       '#default_value' => variable_get('comment_default_order_' . $form['#node_type']->type, COMMENT_ORDER_NEWEST_FIRST),
       '#options' => _comment_get_orders(),
-      '#description' => t('The default sorting for new users and anonymous users while viewing comments. These users may change their view using the comment control panel. For registered users, this change is remembered as a persistent user preference.'),
+      '#description' => t('Comments are displayed in ascending or descending order.'),
     );
     $form['comment']['comment_default_per_page'] = array(
       '#type' => 'select',
-      '#title' => t('Default comments per page'),
+      '#title' => t('Comments per page'),
       '#default_value' => variable_get('comment_default_per_page_' . $form['#node_type']->type, 50),
       '#options' => _comment_per_page(),
-      '#description' => t('Default number of comments for each page: more comments are distributed in several pages.'),
+      '#description' => t('Additional comments will be displayed on separate pages.'),
     );
     $form['comment']['comment_anonymous'] = array(
       '#type' => 'radios',
