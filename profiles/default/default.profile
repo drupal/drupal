@@ -133,6 +133,12 @@ function default_profile_tasks(&$task, $url) {
   $theme_settings['toggle_node_info_page'] = FALSE;
   variable_set('theme_settings', $theme_settings);
 
+  // Create a default tags vocabulary for articles. 
+  $description = st('Tags are used to group your articles into different categories.');
+  $help = st('Enter a comma separated list of words.');
+  db_query("INSERT INTO {vocabulary} VALUES (1, 'Tags', '%s', '%s', 0, 0, 0, 0, 1, 'taxonomy', 0);", $description, $help);
+  db_query("INSERT INTO {vocabulary_node_types} VALUES (1, 'article');");
+
   // Update the menu router information.
   menu_rebuild();
 }
