@@ -1,5 +1,5 @@
 <?php
-// $Id: default.profile,v 1.23 2008/03/10 18:15:14 dries Exp $
+// $Id: default.profile,v 1.24 2008/06/21 18:20:48 dries Exp $
 
 /**
  * Return an array of the modules to be enabled when this profile is installed.
@@ -132,6 +132,12 @@ function default_profile_tasks(&$task, $url) {
   $theme_settings = variable_get('theme_settings', array());
   $theme_settings['toggle_node_info_page'] = FALSE;
   variable_set('theme_settings', $theme_settings);
+
+  // Create a default tags vocabulary for articles. 
+  $description = st('Tags are used to group your articles into different categories.');
+  $help = st('Enter a comma separated list of words.');
+  db_query("INSERT INTO {vocabulary} VALUES (1, 'Tags', '%s', '%s', 0, 0, 0, 0, 1, 'taxonomy', 0);", $description, $help);
+  db_query("INSERT INTO {vocabulary_node_types} VALUES (1, 'article');");
 
   // Update the menu router information.
   menu_rebuild();
