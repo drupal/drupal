@@ -137,9 +137,11 @@ function path_nodeapi(&$node, $op, $arg) {
     $language = isset($node->language) ? $node->language : '';
     switch ($op) {
       case 'validate':
-        $node->path = trim($node->path);
-        if (db_result(db_query("SELECT COUNT(dst) FROM {url_alias} WHERE dst = '%s' AND src != '%s' AND language = '%s'", $node->path, "node/$node->nid", $language))) {
-          form_set_error('path', t('The path is already in use.'));
+        if (isset($node->path)) {
+          $node->path = trim($node->path);
+          if (db_result(db_query("SELECT COUNT(dst) FROM {url_alias} WHERE dst = '%s' AND src != '%s' AND language = '%s'", $node->path, "node/$node->nid", $language))) {
+            form_set_error('path', t('The path is already in use.'));
+          }
         }
         break;
 
