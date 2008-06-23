@@ -75,6 +75,9 @@ function db_connect($url) {
   }
   $url['host'] = urldecode($url['host']);
   $url['path'] = urldecode($url['path']);
+  if (!isset($url['port'])) {
+    $url['port'] = NULL;
+  }
 
   $connection = mysqli_init();
   @mysqli_real_connect($connection, $url['host'], $url['user'], $url['pass'], substr($url['path'], 1), $url['port'], NULL, MYSQLI_CLIENT_FOUND_ROWS);
