@@ -766,17 +766,20 @@ function theme_table($header, $rows, $attributes = array(), $caption = NULL) {
   // Format the table header:
   if (count($header)) {
     $ts = tablesort_init($header);
-    $output .= ' <thead><tr>';
+    // HTML requires that the thead tag has tr tags in it follwed by tbody
+    // tags. Using ternary operator to check and see if we have any rows.
+    $output .= (count($rows) ? ' <thead><tr>' : ' <tr>');
     foreach ($header as $cell) {
       $cell = tablesort_header($cell, $header, $ts);
       $output .= _theme_table_cell($cell, TRUE);
     }
-    $output .= " </tr></thead>\n";
+    // Using ternary operator to close the tags based on whether or not there are rows
+    $output .= (count($rows) ? " </tr></thead>\n" : "</tr>\n");
   }
 
   // Format the table rows:
-  $output .= "<tbody>\n";
   if (count($rows)) {
+    $output .= "<tbody>\n";
     $flip = array('even' => 'odd', 'odd' => 'even');
     $class = 'even';
     foreach ($rows as $number => $row) {
@@ -815,9 +818,10 @@ function theme_table($header, $rows, $attributes = array(), $caption = NULL) {
       }
       $output .= " </tr>\n";
     }
+    $output .= "</tbody>\n";
   }
 
-  $output .= "</tbody></table>\n";
+  $output .= "</table>\n";
   return $output;
 }
 
