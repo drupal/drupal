@@ -1,4 +1,4 @@
-/* $Id: simpletest.css,v 1.1 2008/04/20 18:23:29 dries Exp $ */
+/* $Id: simpletest.css,v 1.2 2008/06/24 21:51:02 dries Exp $ */
 
 /* Addon for the simpletest module */
 #simpletest {
@@ -25,11 +25,11 @@ table#simpletest-form-table tr.simpletest-group td {
 }
 
 div.simpletest-pass {
-  background: #b6ffb6;
+  color: #33a333;
 }
 
 div.simpletest-fail {
-  background: #ffc9c9;
+  color: #a30000;
 }
 
 tr.simpletest-pass.odd {

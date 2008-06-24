@@ -1,5 +1,5 @@
 <?php
-// $Id: batch.inc,v 1.19 2008/06/21 18:24:20 dries Exp $
+// $Id: batch.inc,v 1.20 2008/06/24 21:51:02 dries Exp $
 
 /**
  * @file Batch processing API for processes to run in multiple HTTP requests.
@@ -21,6 +21,13 @@ function _batch_page() {
 
   // Register database update for end of processing.
   register_shutdown_function('_batch_shutdown');
+
+  // Add batch-specific css.
+  foreach ($batch['sets'] as $batch_set) {
+    foreach ($batch_set['css'] as $css) {
+      drupal_add_css($css);
+    }
+  }
 
   $op = isset($_REQUEST['op']) ? $_REQUEST['op'] : '';
   $output = NULL;
