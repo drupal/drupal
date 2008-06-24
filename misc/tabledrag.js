@@ -446,7 +446,7 @@ Drupal.tableDrag.prototype.dropRow = function(event, self) {
 
       self.rowObject.markChanged();
       if (self.changed == false) {
-        $(Drupal.theme('tableDragChangedWarning')).insertAfter(self.table).hide().fadeIn('slow');
+        $(Drupal.theme('tableDragChangedWarning')).insertBefore(self.table).hide().fadeIn('slow');
         self.changed = true;
       }
     }
