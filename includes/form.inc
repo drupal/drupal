@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.272 2008/05/06 12:18:45 dries Exp $
+// $Id: form.inc,v 1.273 2008/06/24 17:01:32 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -852,6 +852,7 @@ function form_builder($form_id, $form, &$form_state) {
   }
 
   if (isset($form['#type']) && $form['#type'] == 'form') {
+    $cache = NULL;
     $complete_form = $form;
     if (!empty($form['#programmed'])) {
       $form_state['submitted'] = TRUE;
