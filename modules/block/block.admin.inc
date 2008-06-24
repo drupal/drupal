@@ -322,7 +322,7 @@ function block_add_block_form_submit($form, &$form_state) {
  */
 function block_box_delete(&$form_state, $bid = 0) {
   $box = block_box_get($bid);
-  $form['info'] = array('#type' => 'hidden', '#value' => $box['info'] ? $box['info'] : $box['title']);
+  $form['info'] = array('#type' => 'hidden', '#value' => $box['info']);
   $form['bid'] = array('#type' => 'hidden', '#value' => $bid);
 
   return confirm_form($form, t('Are you sure you want to delete the block %name?', array('%name' => $box['info'])), 'admin/build/block', '', t('Delete'), t('Cancel'));
