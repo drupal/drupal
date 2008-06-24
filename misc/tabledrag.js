@@ -1,4 +1,4 @@
-// $Id: tabledrag.js,v 1.17 2008/06/12 19:13:17 dries Exp $
+// $Id: tabledrag.js,v 1.18 2008/06/24 16:52:18 dries Exp $
 
 /**
  * Drag and drop table rows with field manipulation.
@@ -446,7 +446,7 @@ Drupal.tableDrag.prototype.dropRow = function(event, self) {
 
       self.rowObject.markChanged();
       if (self.changed == false) {
-        $(Drupal.theme('tableDragChangedWarning')).insertAfter(self.table).hide().fadeIn('slow');
+        $(Drupal.theme('tableDragChangedWarning')).insertBefore(self.table).hide().fadeIn('slow');
         self.changed = true;
       }
     }
