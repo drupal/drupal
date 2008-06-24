@@ -25,11 +25,11 @@ table#simpletest-form-table tr.simpletest-group td {
 }
 
 div.simpletest-pass {
-  background: #b6ffb6;
+  color: #33a333;
 }
 
 div.simpletest-fail {
-  background: #ffc9c9;
+  color: #a30000;
 }
 
 tr.simpletest-pass.odd {

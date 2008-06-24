@@ -1,14 +1,18 @@
 <?php
 // $Id$
 
-class ContactTestCase extends DrupalWebTestCase {
+/**
+ * Test the sitewide contact form.
+ */
+class ContactSitewideTestCase extends DrupalWebTestCase {
+
   /**
    * Implementation of getInfo().
    */
   function getInfo() {
     return array(
-      'name' => t('Contact functionality'),
-      'description' => t('Test site-wide contact form and personal contact form functionality.'),
+      'name' => t('Site-wide contact form'),
+      'description' => t('Tests site-wide contact form functionality.'),
       'group' => t('Contact'),
     );
   }
@@ -111,60 +115,6 @@ class ContactTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Test personal contact form.
-   */
-  function testPersonalContact() {
-    $admin_user = $this->drupalCreateUser(array('administer site-wide contact form'));
-    $this->drupalLogin($admin_user);
-
-    // Enable the personal contact form.
-    $edit = array();
-    $edit['contact_default_status'] = TRUE;
-    $this->drupalPost('admin/build/contact/settings', $edit, t('Save configuration'));
-    $this->assertText(t('The configuration options have been saved.'), t('Setting successfully saved.'));
-
-    // Reload variables.
-    $this->drupalLogout();
-
-    // Create web users and attempt to use personal contact forms with default set to true.
-    $web_user1 = $this->drupalCreateUser(array());
-    $web_user2 = $this->drupalCreateUser(array());
-
-    $this->drupalLogin($web_user1);
-
-    $this->drupalGet('user/' . $web_user2->uid . '/contact');
-    $this->assertResponse(200, t('Access to personal contact form granted.'));
-
-    $edit = array();
-    $edit['subject'] = $this->randomName(16);
-    $edit['message'] = $this->randomName(64);
-    $this->drupalPost(NULL, $edit, t('Send e-mail'));
-    $this->assertText(t('The message has been sent.'), t('Message sent.'));
-
-    $this->drupalLogout();
-
-    $this->drupalLogin($admin_user);
-
-    // Disable the personal contact form.
-    $edit = array();
-    $edit['contact_default_status'] = FALSE;
-    $this->drupalPost('admin/build/contact/settings', $edit, t('Save configuration'));
-    $this->assertText(t('The configuration options have been saved.'), t('Setting successfully saved.'));
-
-    // Reload variables.
-    $this->drupalLogout();
-
-    // Create web users and attempt to use personal contact forms with default set to false.
-    $web_user3 = $this->drupalCreateUser(array());
-    $web_user4 = $this->drupalCreateUser(array());
-
-    $this->drupalLogin($web_user3);
-
-    $this->drupalGet('user/' . $web_user4->uid . '/contact');
-    $this->assertResponse(403, t('Access to personal contact form denied.'));
-  }
-
-  /**
    * Add a category.
    *
    * @param string $category Name of category.
@@ -247,5 +197,83 @@ class ContactTestCase extends DrupalWebTestCase {
 
     $this->drupalPost('admin/user/permissions', $edit, t('Save permissions'));
     $this->assertText(t('The changes have been saved.'), t(' [permission] Saved changes.'));
+  }
+}
+
+/**
+ * Test the personal contact form.
+ */
+class ContactPersonalTestCase extends DrupalWebTestCase {
+
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('Personal contact form'),
+      'description' => t('Tests personal contact form functionality.'),
+      'group' => t('Contact'),
+    );
+  }
+
+  /**
+   * Implementation of setUp().
+   */
+  function setUp() {
+    parent::setUp('contact');
+  }
+
+  /**
+   * Test personal contact form.
+   */
+  function testPersonalContact() {
+    $admin_user = $this->drupalCreateUser(array('administer site-wide contact form'));
+    $this->drupalLogin($admin_user);
+
+    // Enable the personal contact form.
+    $edit = array();
+    $edit['contact_default_status'] = TRUE;
+    $this->drupalPost('admin/build/contact/settings', $edit, t('Save configuration'));
+    $this->assertText(t('The configuration options have been saved.'), t('Setting successfully saved.'));
+
+    // Reload variables.
+    $this->drupalLogout();
+
+    // Create web users and attempt to use personal contact forms with default set to true.
+    $web_user1 = $this->drupalCreateUser(array());
+    $web_user2 = $this->drupalCreateUser(array());
+
+    $this->drupalLogin($web_user1);
+
+    $this->drupalGet('user/' . $web_user2->uid . '/contact');
+    $this->assertResponse(200, t('Access to personal contact form granted.'));
+
+    $edit = array();
+    $edit['subject'] = $this->randomName(16);
+    $edit['message'] = $this->randomName(64);
+    $this->drupalPost(NULL, $edit, t('Send e-mail'));
+    $this->assertText(t('The message has been sent.'), t('Message sent.'));
+
+    $this->drupalLogout();
+
+    $this->drupalLogin($admin_user);
+
+    // Disable the personal contact form.
+    $edit = array();
+    $edit['contact_default_status'] = FALSE;
+    $this->drupalPost('admin/build/contact/settings', $edit, t('Save configuration'));
+    $this->assertText(t('The configuration options have been saved.'), t('Setting successfully saved.'));
+
+    // Reload variables.
+    $this->drupalLogout();
+
+    // Create web users and attempt to use personal contact forms with default set to false.
+    $web_user3 = $this->drupalCreateUser(array());
+    $web_user4 = $this->drupalCreateUser(array());
+
+    $this->drupalLogin($web_user3);
+
+    $this->drupalGet('user/' . $web_user4->uid . '/contact');
+    $this->assertResponse(403, t('Access to personal contact form denied.'));
   }
 }

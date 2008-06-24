@@ -1,4 +1,4 @@
-#!/usr/bin/php
+#!/Applications/MAMP/bin/php5/bin/php
 <?php
 // $Id$
 
@@ -37,9 +37,6 @@ All arguments are long options.
               need this parameter if Drupal is in a subdirectory on your
               localhost and you have not set \$base_url in settings.php.
 
-  --reporter  Immediatly preceeds the name of the output reporter to use.  This
-              Defaults to "text", while other options include "xml" and "html".
-
   --all       Run all available tests.
 
   --class     Run tests identified by speficic class names.
@@ -67,6 +64,7 @@ $list = FALSE;
 $clean = FALSE;
 $all = FALSE;
 $class_names = FALSE;
+$verbose = FALSE;
 $test_names = array();
 
 while ($param = array_shift($_SERVER['argv'])) {
@@ -89,12 +87,6 @@ while ($param = array_shift($_SERVER['argv'])) {
     case '--clean':
       $clean = TRUE;
       break;
-    case '--reporter':
-      $reporter = array_shift($_SERVER['argv']);
-      if (!in_array($reporter, array("text", "xml", "html"))) {
-        $reporter = "text";
-      }
-      break;
     default:
       $test_names += explode(',', $param);
       break;
@@ -116,8 +108,7 @@ require_once './includes/bootstrap.inc';
 drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 
 if (!module_exists('simpletest')) {
-  echo("ERROR: The simpletest module must be enabled before this script can run.\n");
-  exit;
+  die(t('Error: The simpletest module must be enabled before this script can run.') ."\n");
 }
 
 if ($clean) {
@@ -131,34 +122,28 @@ if ($clean) {
   exit;
 }
 
-// Run tests as user #1.
-$GLOBALS['user'] = user_load(1);
-
-//Load simpletest files
-$total_test = &simpletest_get_total_test();
-
-$test_instances = $total_test->getTestInstances();
-
-if ($list) {
-  // Display all availabe tests.
-  echo("Available test groups:\n----------------------\n");
-  foreach ($test_instances as $group_test) {
-    echo($group_test->getLabel() . "\n");
-  }
-  exit;
-}
+$tests = simpletest_get_all_tests();
+$test_list = array();
 
 if ($all) {
-  $test_list = NULL;
+  $test_list = $tests;
+}
+else if ($class_names) {
+  foreach ($test_names as $test) {
+    if (isset($tests[$test])) {
+      $test_list[$test] = $tests[$test];
+    }
+  }
 }
 else {
-  if ($class_names) {
-    $test_list = _run_tests_check_classes($test_names, $test_instances);
-  }
-  else {
-    $test_list = _run_tests_find_classes($test_names, $test_instances);
+  $groups = simpletest_categorize_tests($tests);
+  foreach ($test_names as $test) {
+    if (isset($groups[$test])) {
+      $test_list += $groups[$test];
+    }
   }
 }
+
 if (empty($test_list) && !$all) {
   echo("ERROR: No valid tests were specified.\n");
   exit;
@@ -171,55 +156,30 @@ if (!ini_get('safe_mode')) {
 }
 
 // Tell the user about what tests are to be run.
-if (!$all && $reporter == 'text') {
+if (!$all) {
   echo("Tests to be run:\n");
-  foreach ($test_list as $name) {
-    echo("- " . $name . "\n");
+  foreach ($test_list as $instance) {
+    $info = $instance->getInfo();
+    echo("- " . $info['name'] . "\n");
   }
   echo("\n");
 }
 
-simpletest_run_tests(array_keys($test_list), $reporter);
+db_query('INSERT INTO {simpletest_test_id} VALUES (default)');
+$test_id = db_last_insert_id('simpletest_test_id', 'test_id');
 
-// Utility functions:
-/**
- * Check that each class name exists as a test, return the list of valid ones.
- */
-function _run_tests_check_classes($test_names, $test_instances) {
-  $test_list = array();
-  $test_names = array_flip($test_names);
+$test_results = array('#pass' => 0, '#fail' => 0, '#exception' => 0);
 
-  foreach ($test_instances as $group_test) {
-    $tests = $group_test->getTestInstances();
-    foreach ($tests as $test) {
-      $class = get_class($test);
-      $info = $test->getInfo();
-      if (isset($test_names[$class])) {
-        $test_list[$class] = $info['name'];
-      }
-    }
+foreach ($test_list as $class => $instance) {
+  $instance = new $class($test_id);
+  $instance->run();
+  $info = $instance->getInfo();
+  $test_results[$class] = $instance->_results;
+  foreach ($test_results[$class] as $key => $value) {
+    $test_results[$key] += $value;
   }
-  return $test_list;
+  echo(t('@name: @summary', array('@name' => $info['name'], '@summary' => _simpletest_format_summary_line($test_results[$class]))) . "\n");
 }
 
-/**
- * Check that each group name exists, return the list of class in valid groups.
- */
-function _run_tests_find_classes($test_names, &$test_instances) {
-  $test_list = array();
-  $test_names = array_flip($test_names);
-
-  uasort($test_instances, 'simpletest_compare_instances');
-  foreach ($test_instances as $group_test) {
-    $group = $group_test->getLabel();
-    if (isset($test_names[$group])) {
-      $tests = $group_test->getTestInstances();
-      foreach ($tests as $test) {
-        $info = $test->getInfo();
-        $test_list[get_class($test)] = $info['name'];
-      }
-    }
-  }
-  return $test_list;
-}
+echo(_simpletest_format_summary_line($test_results) . "\n");
 

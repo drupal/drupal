@@ -22,6 +22,13 @@ function _batch_page() {
   // Register database update for end of processing.
   register_shutdown_function('_batch_shutdown');
 
+  // Add batch-specific css.
+  foreach ($batch['sets'] as $batch_set) {
+    foreach ($batch_set['css'] as $css) {
+      drupal_add_css($css);
+    }
+  }
+
   $op = isset($_REQUEST['op']) ? $_REQUEST['op'] : '';
   $output = NULL;
   switch ($op) {

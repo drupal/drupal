@@ -1,17 +1,10 @@
 <?php
 // $Id$
 
+/**
+ * Base PHP test case class.
+ */
 class PHPTestCase extends DrupalWebTestCase {
-  /**
-   * Implementation of getInfo().
-   */
-  function getInfo() {
-    return array(
-      'name' => t('PHP filter functionality'),
-      'description' => t('Make sure that PHP filter evaluates PHP code when enabled and that users who don\'t have access to filter can\'t see it'),
-      'group' => t('PHP'),
-    );
-  }
 
   /**
    * Implementation of getInfo().
@@ -26,6 +19,37 @@ class PHPTestCase extends DrupalWebTestCase {
     // Confirm that the PHP filter is #3.
     $this->drupalGet('admin/settings/filters/3');
     $this->assertText('PHP code', t('On PHP code filter page.'));
+  }
+
+  /**
+   * Create a test node with PHP code in the body.
+   *
+   * @param stdObject User object to create node for.
+   * @return stdObject Node object.
+   */
+  function createNodeWithCode($user) {
+    $node = $this->drupalCreateNode(array('uid' => $user->uid));
+    $edit = array();
+    $edit['body'] = '<?php print "SimpleTest PHP was executed!"; ?>';
+    $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
+    $this->assertRaw(t('Page %title has been updated.', array('%title' => $node->title)), t('PHP code inserted into node.'));
+    return $node;
+  }
+}
+
+/**
+ * Tests to make sure the PHP filter actually evaluates PHP code when used.
+ */
+class PHPFitlerTestCase extends PHPTestCase {
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('PHP filter functionality'),
+      'description' => t('Make sure that PHP filter properly evaluates PHP code when enabled.'),
+      'group' => t('PHP'),
+    );
   }
 
   /**
@@ -57,6 +81,22 @@ class PHPTestCase extends DrupalWebTestCase {
     $this->assertNoText('print', t('PHP code isn\'t displayed.'));
     $this->assertText('SimpleTest PHP was executed!', t('PHP code has been evaluated.'));
   }
+}
+
+/**
+ * Tests to make sure access to the PHP filter is properly restricted.
+ */
+class PHPAccessTestCase extends PHPTestCase {
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('PHP filter access check'),
+      'description' => t('Make sure that users who don\'t have access to the PHP filter can\'t see it.'),
+      'group' => t('PHP'),
+    );
+  }
 
   /**
    * Make sure that user can't use the PHP filter when not given access.
@@ -74,20 +114,5 @@ class PHPTestCase extends DrupalWebTestCase {
     // Make sure that user doesn't have access to filter.
     $this->drupalGet('node/' . $node->nid . '/edit');
     $this->assertNoFieldByName('format', '3', t('Format not available.'));
-  }
-
-  /**
-   * Create a test node with PHP code in the body.
-   *
-   * @param stdObject User object to create node for.
-   * @return stdObject Node object.
-   */
-  function createNodeWithCode($user) {
-    $node = $this->drupalCreateNode(array('uid' => $user->uid));
-    $edit = array();
-    $edit['body'] = '<?php print "SimpleTest PHP was executed!"; ?>';
-    $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
-    $this->assertRaw(t('Page %title has been updated.', array('%title' => $node->title)), t('PHP code inserted into node.'));
-    return $node;
   }
 }

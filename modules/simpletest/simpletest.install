@@ -5,6 +5,7 @@
  * Implementation of hook_install().
  */
 function simpletest_install() {
+  drupal_install_schema('simpletest');
   // Check for files directory.
   $path = file_directory_path() . '/simpletest';
   if (file_check_directory($path, FILE_CREATE_DIRECTORY)) {
@@ -95,6 +96,7 @@ function simpletest_uninstall() {
   variable_del('simpletest_httpauth_username');
   variable_del('simpletest_httpauth_pass');
   variable_del('simpletest_devel');
+  drupal_uninstall_schema('simpletest');
 }
 
 /**
@@ -132,4 +134,126 @@ function simpletest_requirements($phase) {
   }
 
   return $requirements;
+}
+
+function simpletest_schema() {
+  $schema['simpletest'] = array(
+    'description' => t('Stores simpletest messages'),
+    'fields' => array(
+      'message_id'  => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => t('Primary Key: Unique simpletest message ID.'),
+      ),
+      'test_id' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => t('Test id, messages belonging to the same id are reported together'),
+      ),
+      'test_class' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => t('The name of the class that created this message.'),
+      ),
+      'status' => array(
+        'type' => 'varchar',
+        'length' => 9,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => t('Message status. Core understands pass, fail, exception.'),
+      ),
+      'message' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => t('The message itself.'),
+      ),
+      'message_group' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => t('The message group this message belongs to. For example: warning, browser, user.'),
+      ),
+      'caller' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => t('Name of the caller function or method that created this message.'),
+      ),
+      'line' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => t('Line number of the caller.'),
+      ),
+      'file' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => t('Name of the file where the caller is.'),
+      ),
+    ),
+    'primary key' => array('message_id'),
+    'indexes' => array(
+      'reporter' => array('test_class, message_id'),
+    ),
+  );
+  $schema['simpletest_test_id'] = array(
+    'description' => t('Stores simpletest test IDs.'),
+    'fields' => array(
+      'message_id'  => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => t('Primary Key: Unique simpletest ID.'),
+      ),
+    ),
+    'primary key' => array('message_id'),
+  );
+  return $schema;
+}
+
+/**
+ * Create the simpletest tables.
+ */
+function simpletest_update_7000() {
+  $ret = array();
+  $schema = array();
+
+  $schema['simpletest'] = array(
+    'fields' => array(
+      'message_id'  => array('type' => 'serial', 'not null' => TRUE),
+      'test_id' => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'test_class' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'status' => array('type' => 'varchar', 'length' => 9, 'not null' => TRUE, 'default' => ''),
+      'message' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'message_group' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'caller' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'line' => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'file' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+    ),
+    'primary key' => array('message_id'),
+    'indexes' => array(
+      'reporter' => array('test_class, message_id'),
+    ),
+  );
+
+  $schema['simpletest_test_id'] = array(
+    'fields' => array(
+      'message_id'  => array('type' => 'serial', 'not null' => TRUE),
+    ),
+    'primary key' => array('message_id'),
+  );
+
+  foreach ($schema as $name => $definition) {
+    db_create_table($ret, $name, $definition);
+  }
+
+  return $ret;
 }

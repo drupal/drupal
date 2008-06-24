@@ -62,7 +62,6 @@ class SimpleTestTestCase extends DrupalWebTestCase {
     else {
       // Run this test from web interface.
       $this->drupalGet('admin/build/testing');
-      $this->assertText(t('It is strongly suggested to run the tests with the first user!'));
 
       $edit = array();
       $edit['SimpleTestTestCase'] = TRUE;
@@ -89,11 +88,11 @@ class SimpleTestTestCase extends DrupalWebTestCase {
    * Confirm that the stub test produced the desired results.
    */
   function confirmStubTestResults() {
-    $this->assertAssertion($this->pass, '[Other]', 'Pass');
-    $this->assertAssertion($this->fail, '[Other]', 'Fail');
+    $this->assertAssertion($this->pass, 'Other', 'Pass');
+    $this->assertAssertion($this->fail, 'Other', 'Fail');
 
-    $this->assertAssertion(t('Created permissions: @perms', array('@perms' => $this->valid_permission)), '[Role]', 'Pass');
-    $this->assertAssertion(t('Invalid permission %permission.', array('%permission' => $this->invalid_permission)), '[Role]', 'Fail');
+    $this->assertAssertion(t('Created permissions: @perms', array('@perms' => $this->valid_permission)), 'Role', 'Pass');
+    $this->assertAssertion(t('Invalid permission %permission.', array('%permission' => $this->invalid_permission)), 'Role', 'Fail');
   }
 
   /**
@@ -128,16 +127,17 @@ class SimpleTestTestCase extends DrupalWebTestCase {
     if ($this->parse()) {
       if ($fieldset = $this->getResultFieldSet()) {
         // Code assumes this is the only test in group.
-        $results['summary'] = $this->asText($fieldset->div[1]);
+        $results['summary'] = $this->asText($fieldset->div);
         $results['name'] = $this->asText($fieldset->fieldset->legend);
 
         $results['assertions'] = array();
-        $tbody = $fieldset->fieldset->div[2]->table->tbody;
+        $tbody = $fieldset->fieldset->table->tbody;
         foreach ($tbody->tr as $row) {
           $assertion = array();
           $assertion['message'] = $this->asText($row->td[0]);
           $assertion['type'] = $this->asText($row->td[1]);
-          $assertion['status'] = $this->asText($row->td[2]);
+          $ok_url = (url('misc/watchdog-ok.png') == 'misc/watchdog-ok.png') ? 'misc/watchdog-ok.png' : (base_path() . 'misc/watchdog-ok.png');
+          $assertion['status'] = ($row->td[5]->img['src'] == $ok_url) ? 'Pass' : 'Fail';
           $results['assertions'][] = $assertion;
         }
       }
@@ -164,10 +164,15 @@ class SimpleTestTestCase extends DrupalWebTestCase {
   /**
    * Extract the text contained by the element.
    *
-   * @param SimpleXMLElement $element Element to extract text from.
-   * @return string Extracted text.
+   * @param $element
+   *   Element to extract text from.
+   * @return
+   *   Extracted text.
    */
   function asText(SimpleXMLElement $element) {
+    if (!is_object($element)) {
+      return $this->fail('The element is not an element.');
+    }
     return trim(strip_tags($element->asXML()));
   }
 

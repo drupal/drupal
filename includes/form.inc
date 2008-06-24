@@ -2387,6 +2387,7 @@ function form_clean_id($id = NULL, $flush = FALSE) {
  *       'operations' and 'finished' functions, for instance if they don't
  *       reside in the original '.module' file. The path should be relative to
  *       the base_path(), and thus should be built using drupal_get_path().
+ *     'css' : an array of paths to CSS files to be used on the progress page.
  *
  * Operations are added as new batch sets. Batch sets are used to ensure
  * clean code independence, ensuring that several batches submitted by
@@ -2419,6 +2420,7 @@ function batch_set($batch_definition) {
       'init_message' => $t('Initializing.'),
       'progress_message' => $t('Remaining @remaining of @total.'),
       'error_message' => $t('An error has occurred.'),
+      'css' => array(),
     );
     $batch_set = $init + $batch_definition + $defaults;
 
