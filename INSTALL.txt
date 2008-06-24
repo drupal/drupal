@@ -1,4 +1,4 @@
-// $Id: INSTALL.txt,v 1.68 2008/05/07 20:05:58 dries Exp $
+// $Id: INSTALL.txt,v 1.69 2008/06/24 17:04:38 dries Exp $
 
 CONTENTS OF THIS FILE
 ---------------------
@@ -27,8 +27,8 @@ For detailed information on how to configure a test server environment using
 a variety of operating systems and web servers, see "Local server setup"
 (http://drupal.org/node/157602) in the Drupal handbook.
 
-OPTIONAL REQUIREMENTS
----------------------
+OPTIONAL TASKS
+--------------
 
 - To use XML-based services such as the Blogger API and RSS syndication,
   you will need PHP's XML extension. This extension is enabled by default.
