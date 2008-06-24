@@ -27,8 +27,8 @@ For detailed information on how to configure a test server environment using
 a variety of operating systems and web servers, see "Local server setup"
 (http://drupal.org/node/157602) in the Drupal handbook.
 
-OPTIONAL REQUIREMENTS
----------------------
+OPTIONAL TASKS
+--------------
 
 - To use XML-based services such as the Blogger API and RSS syndication,
   you will need PHP's XML extension. This extension is enabled by default.
