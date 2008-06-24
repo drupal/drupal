@@ -56,7 +56,7 @@ function comment_reply($node, $pid = NULL) {
 
   if (user_access('access comments')) {
     // The user is previewing a comment prior to submitting it.
-    if ($op == t('Preview comment')) {
+    if ($op == t('Preview')) {
       if (user_access('post comments')) {
         $output .= comment_form_box(array('pid' => $pid, 'nid' => $node->nid), NULL);
       }

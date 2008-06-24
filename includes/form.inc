@@ -852,6 +852,7 @@ function form_builder($form_id, $form, &$form_state) {
   }
 
   if (isset($form['#type']) && $form['#type'] == 'form') {
+    $cache = NULL;
     $complete_form = $form;
     if (!empty($form['#programmed'])) {
       $form_state['submitted'] = TRUE;

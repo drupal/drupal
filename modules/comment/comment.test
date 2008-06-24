@@ -68,7 +68,7 @@ class CommentTestCase extends DrupalWebTestCase {
     $this->drupalGet('comment/edit/' . $reply->id);
     $reply = $this->postComment(NULL, $this->randomName(), $this->randomName());
     $this->assertTrue($this->commentExists($reply, TRUE), t('Modified reply found.'));
-    
+
     // Correct link count
     $this->drupalGet('node');
     $this->assertRaw('2 comments', t('Link to the 2 comments exist.'));
