@@ -907,23 +907,22 @@ function node_save(&$node) {
 
   // Generate the node table query and the node_revisions table query.
   if ($node->is_new) {
-    drupal_write_record('node', $node);
     _node_save_revision($node, $user->uid);
+    drupal_write_record('node', $node);
+    db_query('UPDATE {node_revisions} SET nid = %d WHERE vid = %d', $node->nid, $node->vid);
     $op = 'insert';
   }
   else {
     drupal_write_record('node', $node, 'nid');
     if (!empty($node->revision)) {
       _node_save_revision($node, $user->uid);
+      db_query('UPDATE {node} SET vid = %d WHERE nid = %d', $node->vid, $node->nid);
     }
     else {
       _node_save_revision($node, $user->uid, 'vid');
       $update_node = FALSE;
     }
     $op = 'update';
-  }
-  if ($update_node) {
-    db_query('UPDATE {node} SET vid = %d WHERE nid = %d', $node->vid, $node->nid);
   }
 
   // Call the node specific callback (if any).
