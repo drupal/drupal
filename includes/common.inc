@@ -3231,7 +3231,7 @@ function drupal_write_record($table, &$object, $update = array()) {
   if (empty($schema)) {
     return FALSE;
   }
-  
+
   // Convert to an object if needed.
   if (is_array($object)) {
     $object = (object) $object;
@@ -3251,8 +3251,11 @@ function drupal_write_record($table, &$object, $update = array()) {
       continue;
     }
 
-    // For inserts, populate defaults from Schema if not already provided
-    if (!isset($object->$field) && !count($update) && isset($info['default'])) {
+    // array_key_exists() is used to catch fields explicitly set to NULL.
+    // We try a faster isset() first to preserve performance.
+
+    // For inserts, populate defaults from Schema if not already provided.
+    if (!count($update) && isset($info['default']) && !isset($object->$field) && !array_key_exists($field, $object)) {
       $object->$field = $info['default'];
     }
 
@@ -3260,19 +3263,19 @@ function drupal_write_record($table, &$object, $update = array()) {
     if ($info['type'] == 'serial') {
       $serials[] = $field;
       // Ignore values for serials when inserting data. Unsupported.
-      unset($object->$field);
+      continue;
     }
 
     // Build arrays for the fields, placeholders, and values in our query.
-    if (isset($object->$field)) {
+    if (isset($object->$field) || array_key_exists($field, $object)) {
       $fields[] = $field;
-      $placeholders[] = db_type_placeholder($info['type']);
-
-      if (empty($info['serialize'])) {
-        $values[] = $object->$field;
+      if (isset($object->$field)) {
+        $placeholders[] = db_type_placeholder($info['type']);
+        $values[] = empty($info['serialize']) ? $object->$field : serialize($object->$field);
       }
       else {
-        $values[] = serialize($object->$field);
+        $placeholders[] = '%s';
+        $values[] = 'NULL';
       }
     }
   }
